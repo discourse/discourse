@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Group < ActiveRecord::Base
+  # TODO(2021-05-26): remove
+  self.ignored_columns = %w{
+    automatic_membership_retroactive
+    flair_url
+  }
+
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
@@ -21,6 +27,8 @@ class Group < ActiveRecord::Base
   has_many :group_histories, dependent: :destroy
   has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
+
+  belongs_to :flair_upload, class_name: 'Upload'
 
   has_and_belongs_to_many :web_hooks
 
@@ -49,7 +57,6 @@ class Group < ActiveRecord::Base
 
   def remove_review_groups
     Category.where(review_group_id: self.id).update_all(review_group_id: nil)
-    Category.where(review_group_id: self.id).update_all(review_group_id: nil)
   end
 
   validate :name_format_validator
@@ -57,7 +64,6 @@ class Group < ActiveRecord::Base
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
-  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url.exclude?('fa-') }
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
@@ -83,6 +89,8 @@ class Group < ActiveRecord::Base
     owners_mods_and_admins: 4,
     everyone: 99
   }
+
+  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
 
   def self.visibility_levels
     @visibility_levels = Enum.new(
@@ -261,19 +269,9 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.plugin_editable_group_custom_fields
-    @plugin_editable_group_custom_fields ||= {}
-  end
-
   def self.register_plugin_editable_group_custom_field(custom_field_name, plugin)
-    plugin_editable_group_custom_fields[custom_field_name] = plugin
-  end
-
-  def self.editable_group_custom_fields
-    plugin_editable_group_custom_fields.reduce([]) do |fields, (k, v)|
-      next(fields) unless v.enabled?
-      fields << k
-    end.uniq
+    Discourse.deprecate("Editable group custom fields should be registered using the plugin API", since: "v2.4.0.beta4", drop_from: "v2.5.0")
+    DiscoursePluginRegistry.register_editable_group_custom_field(custom_field_name, plugin)
   end
 
   def downcase_incoming_email
@@ -617,16 +615,15 @@ class Group < ActiveRecord::Base
   PUBLISH_CATEGORIES_LIMIT = 10
 
   def add(user, notify: false, automatic: false)
-    self.users.push(user) unless self.users.include?(user)
+    return self if self.users.include?(user)
+
+    self.users.push(user)
 
     if notify
       Notification.create!(
         notification_type: Notification.types[:membership_request_accepted],
         user_id: user.id,
-        data: {
-          group_id: id,
-          group_name: name
-        }.to_json
+        data: { group_id: id, group_name: name }.to_json
       )
     end
 
@@ -644,9 +641,11 @@ class Group < ActiveRecord::Base
   end
 
   def remove(user)
-    self.group_users.where(user: user).each(&:destroy)
+    result = self.group_users.where(user: user).each(&:destroy)
+    return false if result.blank?
     user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
     DiscourseEvent.trigger(:user_removed_from_group, user, self)
+    true
   end
 
   def add_owner(user)
@@ -744,6 +743,15 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def flair_type
+    return :icon if flair_icon.present?
+    return :image if flair_upload_id.present?
+  end
+
+  def flair_url
+    flair_icon.presence || flair_upload&.short_path
+  end
+
   protected
 
   def name_format_validator
@@ -768,12 +776,10 @@ class Group < ActiveRecord::Base
   def automatic_membership_email_domains_format_validator
     return if self.automatic_membership_email_domains.blank?
 
-    domains = self.automatic_membership_email_domains.split("|")
-    domains.each do |domain|
-      domain.sub!(/^https?:\/\//, '')
-      domain.sub!(/\/.*$/, '')
-      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+    domains = Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
+      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain))
     end
+
     self.automatic_membership_email_domains = domains.join("|")
   end
 
@@ -789,7 +795,7 @@ class Group < ActiveRecord::Base
   end
 
   def automatic_group_membership
-    if self.automatic_membership_retroactive
+    if self.automatic_membership_email_domains.present?
       Jobs.enqueue(:automatic_group_membership, group_id: self.id)
     end
   end
@@ -840,6 +846,32 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.automatic_membership_users(domains, group_id = nil)
+    pattern = "@(#{domains.gsub('.', '\.')})$"
+
+    users = User.joins(:user_emails).where("user_emails.email ~* ?", pattern).activated.where(staged: false)
+    users = users.where("users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)", group_id) if group_id.present?
+
+    users
+  end
+
+  def self.get_valid_email_domains(value)
+    valid_domains = []
+
+    value.split("|").each do |domain|
+      domain.sub!(/^https?:\/\//, '')
+      domain.sub!(/\/.*$/, '')
+
+      if domain =~ Group::VALID_DOMAIN_REGEX
+        valid_domains << domain
+      else
+        yield domain if block_given?
+      end
+    end
+
+    valid_domains
+  end
+
   private
 
   def validate_grant_trust_level
@@ -885,13 +917,11 @@ end
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
 #  automatic_membership_email_domains :text
-#  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
 #  title                              :string
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
-#  flair_url                          :string
 #  flair_bg_color                     :string
 #  flair_color                        :string
 #  bio_raw                            :text
@@ -902,11 +932,13 @@ end
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
-#  publish_read_state                 :boolean          default(FALSE), not null
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  publish_read_state                 :boolean          default(FALSE), not null
 #  members_visibility_level           :integer          default(0), not null
+#  flair_icon                         :string
+#  flair_upload_id                    :integer
 #
 # Indexes
 #

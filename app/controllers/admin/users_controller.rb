@@ -20,6 +20,7 @@ class Admin::UsersController < Admin::AdminController
                                     :remove_group,
                                     :primary_group,
                                     :anonymize,
+                                    :merge,
                                     :reset_bounce_score,
                                     :disable_second_factor,
                                     :delete_posts_batch]
@@ -197,7 +198,9 @@ class Admin::UsersController < Admin::AdminController
 
   def add_group
     group = Group.find(params[:group_id].to_i)
-    return render_json_error group unless group && !group.automatic
+
+    raise Discourse::NotFound unless group
+    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
 
     group.add(@user)
     GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
@@ -207,7 +210,9 @@ class Admin::UsersController < Admin::AdminController
 
   def remove_group
     group = Group.find(params[:group_id].to_i)
-    return render_json_error group unless group && !group.automatic
+
+    raise Discourse::NotFound unless group
+    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
 
     group.remove(@user)
     GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
@@ -458,47 +463,28 @@ class Admin::UsersController < Admin::AdminController
     render json: { total: AdminUserIndexQuery.new(params).count_users }
   end
 
-  def invite_admin
-    raise Discourse::InvalidAccess.new unless is_api?
-
-    email = params[:email]
-    unless user = User.find_by_email(email)
-      name = params[:name] if params[:name].present?
-      username = params[:username] if params[:username].present?
-
-      user = User.new(email: email)
-      user.password = SecureRandom.hex
-      user.username = UserNameSuggester.suggest(username || name || email)
-      user.name = User.suggest_name(name || username || email)
-    end
-
-    user.active = true
-    user.save!
-    user.grant_admin!
-    user.change_trust_level!(4)
-    user.email_tokens.update_all confirmed: true
-
-    email_token = user.email_tokens.create(email: user.email)
-
-    unless params[:send_email] == '0' || params[:send_email] == 'false'
-      Jobs.enqueue(:critical_user_email,
-                    type: :account_created,
-                    user_id: user.id,
-                    email_token: email_token.token)
-    end
-
-    render json: success_json.merge!(
-      password_url: "#{Discourse.base_url}#{password_reset_token_path(token: email_token.token)}"
-    )
-
-  end
-
   def anonymize
     guardian.ensure_can_anonymize_user!(@user)
     if user = UserAnonymizer.new(@user, current_user).make_anonymous
       render json: success_json.merge(username: user.username)
     else
       render json: failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
+    end
+  end
+
+  def merge
+    target_username = params.require(:target_username)
+    target_user = User.find_by_username(target_username)
+    raise Discourse::NotFound if target_user.blank?
+
+    guardian.ensure_can_merge_users!(@user, target_user)
+    serializer_opts = { root: false, scope: guardian }
+
+    if user = UserMerger.new(@user, target_user, current_user).merge!
+      user_json = AdminDetailedUserSerializer.new(user, serializer_opts).as_json
+      render json: success_json.merge(merged: true, user: user_json)
+    else
+      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, serializer_opts).as_json)
     end
   end
 

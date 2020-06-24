@@ -6,7 +6,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:user_ids) unless args[:user_ids]
 
       post_revision = PostRevision.find_by(id: args[:post_revision_id])
-      raise Discourse::InvalidParameters.new(:post_revision_id) unless post_revision
+      return if post_revision.nil?
 
       ActiveRecord::Base.transaction do
         User.where(id: args[:user_ids]).find_each do |user|

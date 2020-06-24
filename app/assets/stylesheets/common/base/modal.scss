@@ -29,9 +29,6 @@
 }
 
 .modal-open {
-  .dropdown-menu {
-    z-index: z("modal", "dropdown");
-  }
   .popover {
     z-index: z("modal", "popover");
   }
@@ -140,6 +137,14 @@
   height: 100%;
   z-index: z("modal", "content");
   overflow: auto;
+
+  html.keyboard-visible body.ios-safari-composer-hacks & {
+    height: calc(var(--composer-vh, 1vh) * 100);
+    .modal-inner-container {
+      max-height: 100%;
+      margin-bottom: 0px;
+    }
+  }
 
   &:not(.history-modal) {
     .modal-body:not(.reorder-categories):not(.poll-ui-builder) {
@@ -457,6 +462,32 @@
   }
 }
 
+.edit-category-tab-tags {
+  .select-kit {
+    &.tag-chooser {
+      width: 100%;
+
+      .select-kit-filter,
+      .filter-input {
+        display: flex;
+        flex: 1 0 250px;
+      }
+
+      .mobile-view & {
+        .no-content,
+        .is-loading,
+        &.select-kit.is-expanded .select-kit-collection {
+          width: 95%;
+        }
+      }
+    }
+  }
+}
+
+#category-min-tags-from-group {
+  min-height: 36px;
+}
+
 .incoming-email-modal {
   .btn {
     transition: none;
@@ -568,7 +599,7 @@
   }
 }
 
-.flag-modal {
+.flag-modal-body {
   max-height: 450px;
   .flag-action-type-details {
     width: 100%;
@@ -658,6 +689,54 @@
   }
 }
 
+.publish-page-modal {
+  .modal-body {
+    p.publish-description {
+      margin-top: 0;
+    }
+    input.publish-slug {
+      width: 100%;
+    }
+
+    .publish-url {
+      margin-bottom: 1em;
+      .example-url,
+      .invalid-slug {
+        font-weight: bold;
+      }
+    }
+
+    .publish-slug:disabled {
+      cursor: not-allowed;
+    }
+
+    .controls {
+      margin-bottom: 1em;
+
+      .description {
+        margin: 0;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+
+    .close-publish-page {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+}
+
+.ignore-duration-with-username-modal {
+  .future-date-input {
+    margin-top: 1em;
+  }
+}
+
 .modal:not(.has-tabs) {
   .modal-tab {
     position: absolute;
@@ -676,8 +755,8 @@
 
       .modal-tab {
         list-style: none;
-        padding: s(1 2);
-        margin-right: s(1);
+        padding: 4px 8px;
+        margin-right: 4px;
         cursor: pointer;
 
         &.is-active {
@@ -687,7 +766,7 @@
           &.single-tab {
             background: none;
             color: $primary;
-            padding: s(1 0);
+            padding: 4px 0;
           }
         }
       }

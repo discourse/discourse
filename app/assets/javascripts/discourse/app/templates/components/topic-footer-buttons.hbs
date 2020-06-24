@@ -1,0 +1,67 @@
+<div class="topic-footer-main-buttons">
+  {{topic-admin-menu-button
+    topic=topic
+    openUpwards="true"
+    toggleMultiSelect=toggleMultiSelect
+    deleteTopic=deleteTopic
+    recoverTopic=recoverTopic
+    toggleFeaturedOnProfile=toggleFeaturedOnProfile
+    toggleClosed=toggleClosed
+    toggleArchived=toggleArchived
+    toggleVisibility=toggleVisibility
+    showTopicStatusUpdate=showTopicStatusUpdate
+    showFeatureTopic=showFeatureTopic
+    showChangeTimestamp=showChangeTimestamp
+    resetBumpDate=resetBumpDate
+    convertToPublicTopic=convertToPublicTopic
+    convertToPrivateMessage=convertToPrivateMessage
+  }}
+
+  {{#if site.mobileView}}
+    {{topic-footer-mobile-dropdown topic=topic content=dropdownButtons}}
+  {{/if}}
+
+  {{#each inlineButtons as |button|}}
+    {{d-button
+      id=(concat "topic-footer-button-" button.id)
+      class=(concat "btn-default topic-footer-button " button.classNames)
+      action=button.action
+      icon=button.icon
+      translatedLabel=button.label
+      translatedTitle=button.title
+      translatedAriaLabel=button.ariaLabel
+      disabled=button.disabled}}
+  {{/each}}
+
+  {{plugin-outlet name="topic-footer-main-buttons-before-create"
+                  args=(hash topic=topic)
+                  tagName=""
+                  connectorTagName="span"}}
+
+  {{#if topic.details.can_create_post}}
+    {{d-button class="btn-primary create"
+               icon="reply"
+               action=replyToPost
+               label="topic.reply.title"
+               title="topic.reply.help"}}
+  {{/if}}
+
+  {{plugin-outlet name="after-topic-footer-main-buttons"
+                  args=(hash topic=topic)
+                  tagName=""
+                  connectorTagName="span"}}
+</div>
+
+{{pinned-button pinned=topic.pinned topic=topic}}
+
+{{#if showNotificationsButton}}
+  {{topic-notifications-button
+    notificationLevel=topic.details.notification_level
+    topic=topic
+  }}
+{{/if}}
+
+{{plugin-outlet name="after-topic-footer-buttons"
+                args=(hash topic=topic)
+                tagName=""
+                connectorTagName="span"}}

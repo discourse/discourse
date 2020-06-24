@@ -60,21 +60,21 @@ describe 'rate limiter integration' do
 
     global_setting :max_admin_api_reqs_per_key_per_minute, 1
 
-    get '/admin/api/keys.json', params: {
-      api_key: api_key.key,
-      api_username: admin.username
+    get '/admin/api/keys.json', headers: {
+      HTTP_API_KEY: api_key.key,
+      HTTP_API_USERNAME: admin.username
     }
 
     expect(response.status).to eq(200)
 
-    get '/admin/api/keys.json', params: {
-      api_key: api_key.key,
-      api_username: admin.username
+    get '/admin/api/keys.json', headers: {
+      HTTP_API_KEY: api_key.key,
+      HTTP_API_USERNAME: admin.username
     }
 
     expect(response.status).to eq(429)
 
-    data = JSON.parse(response.body)
+    data = response.parsed_body
 
     expect(response.headers['Retry-After']).to eq(60)
     expect(data["extras"]["wait_seconds"]).to eq(60)

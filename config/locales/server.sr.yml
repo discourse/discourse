@@ -80,8 +80,6 @@ sr:
   page_num: "Strana %{num}"
   home_title: "Home"
   topics_in_category: "Teme u '%{category}' kategoriji"
-  num_posts: "Postovi:"
-  num_participants: "Učesnici: "
   read_full_topic: "Pročitajte celu temu"
   rss_description:
     latest: "Poslednje teme"
@@ -218,7 +216,6 @@ sr:
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
     pending_users_reminder_delay: "Obavesti moderatore ako novi korisnik čeka na odobrenje duže nego ovoliko časova. Podesiti na -1 da bi se onemogućile notifikacije."
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
-    max_image_megapixels: "Maksimalan dozvoljeni broj megapiksela za slike."
     topic_views_heat_low: "Nakon ovoliko pregleda, polje pregleda je blago označeno."
     topic_views_heat_medium: "Nakon ovoliko pregleda, polje pregleda je umereno označeno."
     topic_views_heat_high: "Nakon ovoliko pregleda, polje pregleda je jako označeno."
@@ -263,11 +260,16 @@ sr:
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
   search:
+    within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorije"
       user: "Korisnici"
+  publish_page:
+    slug_errors:
+      invalid: "sadrži nevažeće karaktere."
   login:
     admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
+    not_available: "Nije dostupno. Pokušajte %{suggestion}?"
   admin:
     email:
       sent_test: "poslato!"

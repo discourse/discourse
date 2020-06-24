@@ -1,0 +1,403 @@
+{{#discourse-topic multiSelect=multiSelect enteredAt=enteredAt topic=model hasScrolled=hasScrolled}}
+  {{#if model}}
+    {{add-category-tag-classes category=model.category tags=model.tags}}
+    <div class="container">
+      {{discourse-banner user=currentUser banner=site.banner overlay=hasScrolled hide=model.errorLoading}}
+    </div>
+  {{/if}}
+
+  {{#if showSharedDraftControls}}
+    {{shared-draft-controls topic=model}}
+  {{/if}}
+
+  {{plugin-outlet name="topic-above-post-stream" args=(hash model=model)}}
+
+  {{#if model.postStream.loaded}}
+    {{#if model.postStream.firstPostPresent}}
+      {{#topic-title cancelled=(action "cancelEditingTopic") save=(action "finishedEditingTopic") model=model}}
+        {{#if editingTopic}}
+          <div class="edit-topic-title">
+            {{private-message-glyph isVisible=model.isPrivateMessage}}
+
+            {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+
+            {{#if showCategoryChooser}}
+              {{category-chooser
+                class="small"
+                value=buffered.category_id
+                onChange=(action "topicCategoryChanged")
+              }}
+            {{/if}}
+
+            {{#if canEditTags}}
+              {{mini-tag-chooser
+                value=buffered.tags
+                onChange=(action "topicTagsChanged")
+                options=(hash
+                  filterable=true
+                  categoryId=buffered.category_id
+                  minimum=minimumRequiredTags
+                )
+              }}
+            {{/if}}
+
+            {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
+
+            <div class="edit-controls">
+              {{d-button action=(action "finishedEditingTopic") class="btn-primary submit-edit" icon="check"}}
+              {{d-button action=(action "cancelEditingTopic") class="btn-default cancel-edit" icon="times"}}
+
+              {{#if canRemoveTopicFeaturedLink}}
+                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title={{i18n "composer.remove_featured_link"}}>
+                  {{d-icon "times-circle"}}
+                  {{featuredLinkDomain}}
+                </a>
+              {{/if}}
+            </div>
+          </div>
+
+        {{else}}
+          <h1 data-topic-id={{model.id}}>
+            {{#unless model.is_warning}}
+              {{#if siteSettings.enable_personal_messages}}
+                {{private-message-glyph
+                  isVisible=model.isPrivateMessage
+                  href=pmPath
+                  title="topic_statuses.personal_message.title"
+                  ariaLabel="user.messages.inbox"
+                }}
+              {{else}}
+                {{private-message-glyph isVisible=model.isPrivateMessage}}
+              {{/if}}
+            {{/unless}}
+
+            {{#if model.details.loaded}}
+              {{topic-status topic=model}}
+              <a href={{model.url}} {{action "jumpTop"}} class="fancy-title">
+                {{html-safe model.fancyTitle}}
+              </a>
+            {{/if}}
+
+            {{#if model.details.can_edit}}
+              <a href {{action "editTopic"}} class="edit-topic" title={{i18n "edit"}}>{{d-icon "pencil-alt"}}</a>
+            {{/if}}
+          </h1>
+
+          {{topic-category topic=model class="topic-category"}}
+        {{/if}}
+      {{/topic-title}}
+
+      {{#if model.publishedPage}}
+        <div class="published-page-notice">
+          <div class="details">
+            {{#if model.publishedPage.public}}
+              <span class="is-public">{{i18n "topic.publish_page.public"}}</span>
+            {{/if}}
+            {{i18n "topic.publish_page.topic_published"}}
+            <div>
+              <a href={{model.publishedPage.url}} target="_blank" rel="noopener noreferrer">{{model.publishedPage.url}}</a>
+            </div>
+          </div>
+          <div class="controls">
+            {{d-button
+              icon="file"
+              label="topic.publish_page.publishing_settings"
+              action=(route-action "showPagePublish")
+            }}
+          </div>
+        </div>
+      {{/if}}
+
+    {{/if}}
+
+    <div class="container posts">
+      <div class="selected-posts {{unless multiSelect "hidden"}}">
+        {{selected-posts
+          selectedPostsCount=selectedPostsCount
+          canSelectAll=canSelectAll
+          canDeselectAll=canDeselectAll
+          canDeleteSelected=canDeleteSelected
+          canMergeTopic=canMergeTopic
+          canChangeOwner=canChangeOwner
+          canMergePosts=canMergePosts
+          toggleMultiSelect=(action "toggleMultiSelect")
+          mergePosts=(action "mergePosts")
+          deleteSelected=(action "deleteSelected")
+          deselectAll=(action "deselectAll")
+          selectAll=(action "selectAll")
+        }}
+      </div>
+
+      {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
+        {{#if info.renderTimeline}}
+          {{topic-timeline
+            topic=model
+            notificationLevel=model.details.notification_level
+            prevEvent=info.prevEvent
+            fullscreen=info.topicProgressExpanded
+            enteredIndex=enteredIndex
+            loading=model.postStream.loading
+            jumpToPost=(action "jumpToPost")
+            jumpTop=(action "jumpTop")
+            jumpBottom=(action "jumpBottom")
+            jumpEnd=(action "jumpEnd")
+            jumpToPostPrompt=(action "jumpToPostPrompt")
+            jumpToIndex=(action "jumpToIndex")
+            replyToPost=(action "replyToPost")
+            toggleMultiSelect=(action "toggleMultiSelect")
+            deleteTopic=(action "deleteTopic")
+            recoverTopic=(action "recoverTopic")
+            toggleClosed=(action "toggleClosed")
+            toggleArchived=(action "toggleArchived")
+            toggleVisibility=(action "toggleVisibility")
+            showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+            showFeatureTopic=(route-action "showFeatureTopic")
+            showChangeTimestamp=(route-action "showChangeTimestamp")
+            resetBumpDate=(action "resetBumpDate")
+            convertToPublicTopic=(action "convertToPublicTopic")
+            convertToPrivateMessage=(action "convertToPrivateMessage")}}
+        {{else}}
+          {{#topic-progress
+            prevEvent=info.prevEvent
+            topic=model
+            expanded=info.topicProgressExpanded
+            jumpToPost=(action "jumpToPost")}}
+            {{plugin-outlet name="before-topic-progress" args=(hash model=model jumpToPost=(action "jumpToPost"))}}
+            {{topic-admin-menu-button
+              topic=model
+              openUpwards="true"
+              rightSide="true"
+              toggleMultiSelect=(action "toggleMultiSelect")
+              deleteTopic=(action "deleteTopic")
+              recoverTopic=(action "recoverTopic")
+              toggleClosed=(action "toggleClosed")
+              toggleArchived=(action "toggleArchived")
+              toggleVisibility=(action "toggleVisibility")
+              showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+              showFeatureTopic=(route-action "showFeatureTopic")
+              showChangeTimestamp=(route-action "showChangeTimestamp")
+              resetBumpDate=(action "resetBumpDate")
+              convertToPublicTopic=(action "convertToPublicTopic")
+              convertToPrivateMessage=(action "convertToPrivateMessage")}}
+          {{/topic-progress}}
+        {{/if}}
+      {{/topic-navigation}}
+
+      <div class="row">
+        <section class="topic-area" id="topic" data-topic-id={{model.id}}>
+
+          <div class="posts-wrapper">
+            {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
+
+            {{plugin-outlet name="topic-above-posts" args=(hash model=model)}}
+
+            {{#unless model.postStream.loadingFilter}}
+              {{scrolling-post-stream
+                posts=postsToRender
+                canCreatePost=model.details.can_create_post
+                multiSelect=multiSelect
+                selectedPostsCount=selectedPostsCount
+                selectedQuery=selectedQuery
+                gaps=model.postStream.gaps
+                showReadIndicator=model.show_read_indicator
+                showFlags=(action "showPostFlags")
+                editPost=(action "editPost")
+                showHistory=(route-action "showHistory")
+                showLogin=(route-action "showLogin")
+                showRawEmail=(route-action "showRawEmail")
+                deletePost=(action "deletePost")
+                recoverPost=(action "recoverPost")
+                expandHidden=(action "expandHidden")
+                toggleBookmark=(action "toggleBookmark")
+                togglePostType=(action "togglePostType")
+                rebakePost=(action "rebakePost")
+                changePostOwner=(action "changePostOwner")
+                grantBadge=(action "grantBadge")
+                addNotice=(action "addNotice")
+                removeNotice=(action "removeNotice")
+                lockPost=(action "lockPost")
+                unlockPost=(action "unlockPost")
+                unhidePost=(action "unhidePost")
+                replyToPost=(action "replyToPost")
+                toggleWiki=(action "toggleWiki")
+                toggleSummary=(action "toggleSummary")
+                removeAllowedUser=(action "removeAllowedUser")
+                removeAllowedGroup=(action "removeAllowedGroup")
+                topVisibleChanged=(action "topVisibleChanged")
+                currentPostChanged=(action "currentPostChanged")
+                currentPostScrolled=(action "currentPostScrolled")
+                bottomVisibleChanged=(action "bottomVisibleChanged")
+                togglePostSelection=(action "togglePostSelection")
+                selectReplies=(action "selectReplies")
+                selectBelow=(action "selectBelow")
+                fillGapBefore=(action "fillGapBefore")
+                fillGapAfter=(action "fillGapAfter")
+                showInvite=(route-action "showInvite")
+                showPagePublish=(route-action "showPagePublish")}}
+            {{/unless}}
+
+            {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
+          </div>
+          <div id="topic-bottom"></div>
+
+          {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
+            {{#if loadedAllPosts}}
+
+              {{#if model.pending_posts}}
+                <div class="pending-posts">
+                  {{#each model.pending_posts as |pending|}}
+                    <div class="reviewable-item">
+                      <div class="reviewable-meta-data">
+                        <span class="reviewable-type">
+                          {{i18n "review.awaiting_approval"}}
+                        </span>
+                        <span class="created-at">
+                          {{age-with-tooltip pending.created_at}}
+                        </span>
+                      </div>
+                      <div class="post-contents-wrapper">
+                        {{reviewable-created-by user=currentUser tagName=""}}
+                        <div class="post-contents">
+                          {{reviewable-created-by-name user=currentUser tagName=""}}
+                          <div class="post-body">{{cook-text pending.raw}}</div>
+                        </div>
+                      </div>
+                      <div class="reviewable-actions">
+                        {{d-button
+                          class="btn-danger"
+                          label="review.delete"
+                          icon="trash-alt"
+                          action=(action "deletePending" pending) }}
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{/if}}
+
+              {{#if model.queued_posts_count}}
+                <div class="has-pending-posts">
+                  <div>
+                    {{html-safe (i18n "review.topic_has_pending" count=model.queued_posts_count)}}
+                  </div>
+
+                  {{#link-to "review" (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
+                    {{i18n "review.view_pending"}}
+                  {{/link-to}}
+                </div>
+              {{/if}}
+
+              {{#if model.private_topic_timer.execute_at}}
+                {{topic-timer-info
+                    topicClosed=model.closed
+                    statusType=model.private_topic_timer.status_type
+                    executeAt=model.private_topic_timer.execute_at
+                    duration=model.private_topic_timer.duration
+                    removeTopicTimer=(action "removeTopicTimer" model.private_topic_timer.status_type "private_topic_timer")}}
+              {{/if}}
+
+              {{topic-timer-info
+                  topicClosed=model.closed
+                  statusType=model.topic_timer.status_type
+                  executeAt=model.topic_timer.execute_at
+                  basedOnLastPost=model.topic_timer.based_on_last_post
+                  duration=model.topic_timer.duration
+                  categoryId=model.topic_timer.category_id
+                  removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
+
+              {{#if session.showSignupCta}}
+                {{! replace "Log In to Reply" with the infobox }}
+                {{signup-cta}}
+              {{else}}
+                {{#if currentUser}}
+                  {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
+
+                  {{topic-footer-buttons
+                    topic=model
+                    toggleMultiSelect=(action "toggleMultiSelect")
+                    deleteTopic=(action "deleteTopic")
+                    recoverTopic=(action "recoverTopic")
+                    toggleClosed=(action "toggleClosed")
+                    toggleArchived=(action "toggleArchived")
+                    toggleVisibility=(action "toggleVisibility")
+                    showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+                    showFeatureTopic=(route-action "showFeatureTopic")
+                    showChangeTimestamp=(route-action "showChangeTimestamp")
+                    resetBumpDate=(action "resetBumpDate")
+                    convertToPublicTopic=(action "convertToPublicTopic")
+                    convertToPrivateMessage=(action "convertToPrivateMessage")
+                    toggleBookmark=(action "toggleBookmark")
+                    showFlagTopic=(route-action "showFlagTopic")
+                    toggleArchiveMessage=(action "toggleArchiveMessage")
+                    editFirstPost=(action "editFirstPost")
+                    deferTopic=(action "deferTopic")
+                    replyToPost=(action "replyToPost")}}
+                {{else}}
+                  <div id="topic-footer-buttons">
+                    {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}
+                  </div>
+                {{/if}}
+              {{/if}}
+
+              {{#if showSelectedPostsAtBottom}}
+                <div class="selected-posts {{unless multiSelect "hidden"}}">
+                  {{selected-posts
+                    selectedPostsCount=selectedPostsCount
+                    canSelectAll=canSelectAll
+                    canDeselectAll=canDeselectAll
+                    canDeleteSelected=canDeleteSelected
+                    canMergeTopic=canMergeTopic
+                    canChangeOwner=canChangeOwner
+                    canMergePosts=canMergePosts
+                    toggleMultiSelect=(action "toggleMultiSelect")
+                    mergePosts=(action "mergePosts")
+                    deleteSelected=(action "deleteSelected")
+                    deselectAll=(action "deselectAll")
+                    selectAll=(action "selectAll")
+                  }}
+                </div>
+              {{/if}}
+
+              {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
+              <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
+                {{#if model.relatedMessages.length}}
+                  {{related-messages topic=model}}
+                {{/if}}
+                {{#if model.suggestedTopics.length}}
+                  {{suggested-topics topic=model}}
+                {{/if}}
+              </div>
+            {{/if}}
+          {{/conditional-loading-spinner}}
+
+        </section>
+      </div>
+
+    </div>
+  {{else}}
+    <div class="container">
+      {{#conditional-loading-spinner condition=noErrorYet}}
+        {{#if model.errorHtml}}
+          <div class="not-found">{{html-safe model.errorHtml}}</div>
+        {{else}}
+          <div class="topic-error">
+            <div>{{model.errorMessage}}</div>
+            {{#if model.noRetry}}
+              {{#unless currentUser}}
+                {{d-button action=(route-action "showLogin") class="btn-primary topic-retry" icon="user" label="log_in"}}
+              {{/unless}}
+            {{else}}
+              {{d-button action=(action "retryLoading") class="btn-primary topic-retry" icon="sync" label="errors.buttons.again"}}
+            {{/if}}
+          </div>
+          {{conditional-loading-spinner condition=retrying}}
+        {{/if}}
+      {{/conditional-loading-spinner}}
+    </div>
+  {{/if}}
+
+  {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
+
+  {{#if embedQuoteButton}}
+    {{quote-button quoteState=quoteState selectText=(action "selectText")}}
+  {{/if}}
+{{/discourse-topic}}

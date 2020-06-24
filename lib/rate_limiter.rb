@@ -102,6 +102,12 @@ class RateLimiter
   def rollback!
     return if RateLimiter.disabled?
     redis.lpop(prefixed_key)
+  rescue Redis::CommandError => e
+    if e.message =~ /READONLY/
+      # TODO,switch to in-memory rate limiter
+    else
+      raise
+    end
   end
 
   def remaining

@@ -67,7 +67,9 @@ div.poll {
   }
 
   .poll-voters:not(:empty) {
+    min-height: 30px;
     margin-bottom: 0.25em;
+
     li {
       display: inline;
     }
@@ -76,6 +78,10 @@ div.poll {
   .poll-voters-toggle-expand {
     width: 100%;
     text-align: center;
+
+    .spinner {
+      margin-top: 0.25em;
+    }
   }
 
   .results {
@@ -192,5 +198,11 @@ body.crawler {
     .poll-button {
       display: none;
     }
+  }
+}
+
+.poll-ui-builder {
+  .poll-date input {
+    height: 30px;
   }
 }

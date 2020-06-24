@@ -41,7 +41,7 @@ module PrettyText
 
     def category_hashtag_lookup(category_slug)
       if category = Category.query_from_hashtag_slug(category_slug)
-        [category.url_with_id, category_slug]
+        [category.url, category_slug]
       else
         nil
       end
@@ -68,7 +68,7 @@ module PrettyText
           sha1, url, extension, original_filename, secure = row
 
           if short_urls = reverse_map[sha1]
-            secure_media = FileHelper.is_supported_media?(original_filename) && SiteSetting.secure_media? && secure
+            secure_media = SiteSetting.secure_media? && secure
 
             short_urls.each do |short_url|
               result[short_url] = {
@@ -106,7 +106,7 @@ module PrettyText
       is_tag = text =~ /#{tag_postfix}$/
 
       if !is_tag && category = Category.query_from_hashtag_slug(text)
-        [category.url_with_id, text]
+        [category.url, text]
       elsif (!is_tag && tag = Tag.find_by(name: text)) ||
             (is_tag && tag = Tag.find_by(name: text.gsub!("#{tag_postfix}", '')))
         ["#{Discourse.base_url}/tag/#{tag.name}", text]

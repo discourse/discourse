@@ -1,0 +1,82 @@
+{{#if categories}}
+  <div class="category-list {{if showTopics "with-topics"}}">
+    {{#each categories as |c|}}
+      {{plugin-outlet name="category-list-above-each-category" connectorTagName="" tagName="" args=(hash category=c)}}
+      <div data-category-id={{c.id}} data-notification-level={{c.notificationLevelString}} style={{border-color c.color}} class="category-list-item category {{if c.isMuted "muted"}}">
+        <table class="topic-list">
+          <tbody>
+            <tr>
+              <th class="main-link">
+                {{category-title-link category=c}}
+              </th>
+            </tr>
+            {{#unless c.isMuted}}
+              {{#if c.description_excerpt}}
+                <tr class="category-description">
+                  <td colspan="3">
+                    {{html-safe c.description_excerpt}}
+                  </td>
+                </tr>
+              {{/if}}
+              {{#if showTopics}}
+                {{#each c.topics as |t|}}
+                  {{mobile-category-topic topic=t}}
+                {{/each}}
+              {{/if}}
+              {{#if c.isGrandParent}}
+                {{#each c.subcategories as |subcategory|}}
+                  <tr data-category-id={{c.id}} style={{border-color subcategory.color}} class="subcategory-list-item category">
+                    <td>
+                      {{category-title-link tagName="h4" category=subcategory}}
+                      <div class="subcategories-list">
+                        {{#if subcategory.subcategories}}
+                          <div class="subcategories">
+                            {{#each subcategory.subcategories as |subsubcategory|}}
+                              {{#unless subsubcategory.isMuted}}
+                                {{category-link subsubcategory}}
+                              {{/unless}}
+                            {{/each}}
+                          </div>
+                        {{/if}}
+                      </div>
+                    </td>
+                  </tr>
+                {{/each}}
+              {{else if c.subcategories}}
+                <tr class="subcategories-list">
+                  <td>
+                    <div class="subcategories">
+                      {{#each c.subcategories as |subcategory|}}
+                        {{#unless subcategory.isMuted}}
+                          {{category-link subcategory}}
+                        {{/unless}}
+                      {{/each}}
+                    </div>
+                  </td>
+                </tr>
+              {{/if}}
+            {{/unless}}
+          </tbody>
+        </table>
+        <footer class="clearfix">
+          <figure title={{i18n "all_time_desc"}}>
+            {{number c.topics_all_time}}
+            <figcaption>{{i18n "all_time"}}</figcaption>
+          </figure>
+          {{#if c.pickMonth}}
+            <figure title={{i18n "month_desc"}}>
+              {{number c.topics_month}}
+              <figcaption>/ {{i18n "month"}}</figcaption>
+            </figure>
+          {{/if}}
+          {{#if c.pickWeek}}
+            <figure title={{i18n "week_desc"}}>
+              {{number c.topics_week}}
+              <figcaption>/ {{i18n "week"}}</figcaption>
+            </figure>
+          {{/if}}
+        </footer>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

@@ -42,7 +42,40 @@ module Discourse
     end
 
     def self.pretty_logs(logs)
-      logs.join("\n".freeze)
+      logs.join("\n")
+    end
+
+    def self.atomic_write_file(destination, contents)
+      begin
+        return if File.read(destination) == contents
+      rescue Errno::ENOENT
+      end
+
+      FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
+      temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
+
+      File.open(temp_destination, "w") do |fd|
+        fd.write(contents)
+        fd.fsync()
+      end
+
+      File.rename(temp_destination, destination)
+
+      nil
+    end
+
+    def self.atomic_ln_s(source, destination)
+      begin
+        return if File.readlink(destination) == source
+      rescue Errno::ENOENT, Errno::EINVAL
+      end
+
+      FileUtils.mkdir_p(File.join(Rails.root, 'tmp'))
+      temp_destination = File.join(Rails.root, 'tmp', SecureRandom.hex)
+      execute_command('ln', '-s', source, temp_destination)
+      File.rename(temp_destination, destination)
+
+      nil
     end
 
     private
@@ -238,6 +271,10 @@ module Discourse
   def self.find_plugin_css_assets(args)
     plugins = self.find_plugins(args)
 
+    plugins = plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(:css, args[:request]) }
+    end
+
     assets = []
 
     targets = [nil]
@@ -256,9 +293,15 @@ module Discourse
   end
 
   def self.find_plugin_js_assets(args)
-    self.find_plugins(args).find_all do |plugin|
+    plugins = self.find_plugins(args).select do |plugin|
       plugin.js_asset_exists?
-    end.map { |plugin| "plugins/#{plugin.directory_name}" }
+    end
+
+    plugins = plugins.select do |plugin|
+      plugin.asset_filters.all? { |b| b.call(:js, args[:request]) }
+    end
+
+    plugins.map { |plugin| "plugins/#{plugin.directory_name}" }
   end
 
   def self.assets_digest
@@ -385,19 +428,21 @@ module Discourse
     alias_method :base_url_no_path, :base_url_no_prefix
   end
 
-  READONLY_MODE_KEY_TTL  ||= 60
-  READONLY_MODE_KEY      ||= 'readonly_mode'
-  PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'
-  USER_READONLY_MODE_KEY ||= 'readonly_mode:user'
+  READONLY_MODE_KEY_TTL      ||= 60
+  READONLY_MODE_KEY          ||= 'readonly_mode'
+  PG_READONLY_MODE_KEY       ||= 'readonly_mode:postgres'
+  USER_READONLY_MODE_KEY     ||= 'readonly_mode:user'
+  PG_FORCE_READONLY_MODE_KEY ||= 'readonly_mode:postgres_force'
 
   READONLY_KEYS ||= [
     READONLY_MODE_KEY,
     PG_READONLY_MODE_KEY,
-    USER_READONLY_MODE_KEY
+    USER_READONLY_MODE_KEY,
+    PG_FORCE_READONLY_MODE_KEY
   ]
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY)
-    if key == USER_READONLY_MODE_KEY
+    if key == USER_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
       Discourse.redis.set(key, 1)
     else
       Discourse.redis.setex(key, READONLY_MODE_KEY_TTL, 1)
@@ -405,7 +450,6 @@ module Discourse
     end
 
     MessageBus.publish(readonly_channel, true)
-    Site.clear_anon_cache!
     true
   end
 
@@ -441,12 +485,29 @@ module Discourse
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
     Discourse.redis.del(key)
     MessageBus.publish(readonly_channel, false)
-    Site.clear_anon_cache!
+    true
+  end
+
+  def self.enable_pg_force_readonly_mode
+    RailsMultisite::ConnectionManagement.each_connection do
+      enable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
+      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
+    end
+
+    true
+  end
+
+  def self.disable_pg_force_readonly_mode
+    RailsMultisite::ConnectionManagement.each_connection do
+      disable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
+      Sidekiq.unpause!
+    end
+
     true
   end
 
   def self.readonly_mode?(keys = READONLY_KEYS)
-    recently_readonly? || Discourse.redis.mget(*keys).compact.present?
+    recently_readonly? || Discourse.redis.exists?(*keys)
   end
 
   def self.pg_readonly_mode?
@@ -475,12 +536,21 @@ module Discourse
     postgres_last_read_only[Discourse.redis.namespace] = Time.zone.now
   end
 
+  def self.clear_postgres_readonly!
+    postgres_last_read_only[Discourse.redis.namespace] = nil
+  end
+
   def self.received_redis_readonly!
     redis_last_read_only[Discourse.redis.namespace] = Time.zone.now
   end
 
+  def self.clear_redis_readonly!
+    redis_last_read_only[Discourse.redis.namespace] = nil
+  end
+
   def self.clear_readonly!
-    postgres_last_read_only[Discourse.redis.namespace] = redis_last_read_only[Discourse.redis.namespace] = nil
+    clear_redis_readonly!
+    clear_postgres_readonly!
     Site.clear_anon_cache!
     true
   end
@@ -609,20 +679,19 @@ module Discourse
     # note: some of this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     MessageBus.after_fork
     SiteSetting.after_fork
-    Discourse.redis._client.reconnect
+    Discourse.redis.reconnect
     Rails.cache.reconnect
     Discourse.cache.reconnect
     Logster.store.redis.reconnect
     # shuts down all connections in the pool
-    Sidekiq.redis_pool.shutdown { |c| nil }
+    Sidekiq.redis_pool.shutdown { |conn| conn.disconnect!  }
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
-    start_connection_reaper
 
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
 
-    Tilt::ES6ModuleTranspilerTemplate.reset_context if defined? Tilt::ES6ModuleTranspilerTemplate
+    DiscourseJsProcessor::Transpiler.reset_context if defined? DiscourseJsProcessor::Transpiler
     JsLocaleHelper.reset_context if defined? JsLocaleHelper
     nil
   end
@@ -694,44 +763,10 @@ module Discourse
       )
     else
       # no logster ... fallback
-      Rails.logger.warn("#{message} #{e}")
+      Rails.logger.warn("#{message} #{e}\n#{e.backtrace.join("\n")}")
     end
   rescue
     STDERR.puts "Failed to report exception #{e} #{message}"
-  end
-
-  def self.start_connection_reaper
-    return if GlobalSetting.connection_reaper_age < 1 ||
-              GlobalSetting.connection_reaper_interval < 1
-
-    # this helps keep connection counts in check
-    Thread.new do
-      while true
-        begin
-          sleep GlobalSetting.connection_reaper_interval
-          reap_connections(GlobalSetting.connection_reaper_age)
-        rescue => e
-          Discourse.warn_exception(e, message: "Error reaping connections")
-        end
-      end
-    end
-  end
-
-  def self.reap_connections(idle)
-    pools = []
-    ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
-
-    pools.each do |pool|
-      # reap recovers connections that were aborted
-      # eg a thread died or a dev forgot to check it in
-      # flush removes idle connections
-      # after fork we have "deadpools" so ignore them, they have been discarded
-      # so @connections is set to nil
-      if pool.connections
-        pool.reap
-        pool.flush(idle)
-      end
-    end
   end
 
   def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
@@ -768,7 +803,7 @@ module Discourse
     warning
   end
 
-  SIDEKIQ_NAMESPACE ||= 'sidekiq'.freeze
+  SIDEKIQ_NAMESPACE ||= 'sidekiq'
 
   def self.sidekiq_redis_config
     conf = GlobalSetting.redis_config.dup
@@ -826,7 +861,7 @@ module Discourse
 
     # load up schema cache for all multisite assuming all dbs have
     # an identical schema
-    RailsMultisite::ConnectionManagement.each_connection do
+    RailsMultisite::ConnectionManagement.safe_each_connection do
       dup_cache = schema_cache.dup
       # this line is not really needed, but just in case the
       # underlying implementation changes lets give it a shot

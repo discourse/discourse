@@ -2,8 +2,8 @@
 
 # name: discourse-presence
 # about: Show which users are writing a reply to a topic
-# version: 1.0
-# authors: André Pereira, David Taylor
+# version: 2.0
+# authors: André Pereira, David Taylor, tgxworld
 # url: https://github.com/discourse/discourse/tree/master/plugins/discourse-presence
 
 enabled_site_setting :presence_enabled
@@ -15,89 +15,23 @@ PLUGIN_NAME ||= -"discourse-presence"
 
 after_initialize do
 
+  MessageBus.register_client_message_filter('/presence/') do |message|
+    published_at = message.data["published_at"]
+
+    if published_at
+      (Time.zone.now.to_i - published_at) <= ::Presence::MAX_BACKLOG_AGE_SECONDS
+    else
+      false
+    end
+  end
+
   module ::Presence
+    MAX_BACKLOG_AGE_SECONDS = 10
+
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
       isolate_namespace Presence
     end
-  end
-
-  module ::Presence::PresenceManager
-    MAX_BACKLOG_AGE ||= 60
-
-    def self.get_redis_key(type, id)
-      "presence:#{type}:#{id}"
-    end
-
-    def self.get_messagebus_channel(type, id)
-      "/presence/#{type}/#{id}"
-    end
-
-    # return true if a key was added
-    def self.add(type, id, user_id)
-      key = get_redis_key(type, id)
-      result = Discourse.redis.hset(key, user_id, Time.zone.now)
-      Discourse.redis.expire(key, MAX_BACKLOG_AGE)
-      result
-    end
-
-    # return true if a key was deleted
-    def self.remove(type, id, user_id)
-      key = get_redis_key(type, id)
-      Discourse.redis.expire(key, MAX_BACKLOG_AGE)
-      Discourse.redis.hdel(key, user_id) > 0
-    end
-
-    def self.get_users(type, id)
-      user_ids = Discourse.redis.hkeys(get_redis_key(type, id)).map(&:to_i)
-      User.where(id: user_ids)
-    end
-
-    def self.publish(type, id)
-      users = get_users(type, id)
-      serialized_users = users.map { |u| BasicUserSerializer.new(u, root: false) }
-      message = { users: serialized_users, time: Time.now.to_i }
-      messagebus_channel = get_messagebus_channel(type, id)
-
-      topic = type == 'post' ? Post.find_by(id: id).topic : Topic.find_by(id: id)
-
-      if topic.private_message?
-        user_ids = User.where('admin OR moderator').pluck(:id) + topic.allowed_users.pluck(:id)
-        group_ids = topic.allowed_groups.pluck(:id)
-
-        MessageBus.publish(
-          messagebus_channel,
-          message.as_json,
-          user_ids: user_ids,
-          group_ids: group_ids,
-          max_backlog_age: MAX_BACKLOG_AGE
-        )
-      else
-        MessageBus.publish(
-          messagebus_channel,
-          message.as_json,
-          group_ids: topic.secure_group_ids,
-          max_backlog_age: MAX_BACKLOG_AGE
-        )
-      end
-
-      users
-    end
-
-    def self.cleanup(type, id)
-      has_changed = false
-
-      # Delete entries older than 20 seconds
-      hash = Discourse.redis.hgetall(get_redis_key(type, id))
-      hash.each do |user_id, time|
-        if Time.zone.now - Time.parse(time) >= 20
-          has_changed |= remove(type, id, user_id)
-        end
-      end
-
-      has_changed
-    end
-
   end
 
   require_dependency "application_controller"
@@ -105,71 +39,135 @@ after_initialize do
   class Presence::PresencesController < ::ApplicationController
     requires_plugin PLUGIN_NAME
     before_action :ensure_logged_in
+    before_action :ensure_presence_enabled
 
-    ACTIONS ||= [-"edit", -"reply"].freeze
+    EDITING_STATE = 'editing'
+    REPLYING_STATE = 'replying'
+    CLOSED_STATE = 'closed'
 
-    def publish
-      raise Discourse::NotFound if current_user.blank? || current_user.user_option.hide_profile_and_presence?
-
-      data = params.permit(
-        :response_needed,
-        current: [:action, :topic_id, :post_id],
-        previous: [:action, :topic_id, :post_id]
-      )
-
-      payload = {}
-
-      if data[:previous] && data[:previous][:action].in?(ACTIONS)
-        type = data[:previous][:post_id] ? 'post' : 'topic'
-        id = data[:previous][:post_id] ? data[:previous][:post_id] : data[:previous][:topic_id]
-
-        topic = type == 'post' ? Post.find_by(id: id)&.topic : Topic.find_by(id: id)
-
-        if topic
-          guardian.ensure_can_see!(topic)
-
-          Presence::PresenceManager.remove(type, id, current_user.id)
-          Presence::PresenceManager.cleanup(type, id)
-          Presence::PresenceManager.publish(type, id)
-        end
+    def handle_message
+      [:state, :topic_id].each do |key|
+        raise ActionController::ParameterMissing.new(key) unless params.key?(key)
       end
 
-      if data[:current] && data[:current][:action].in?(ACTIONS)
-        type = data[:current][:post_id] ? 'post' : 'topic'
-        id = data[:current][:post_id] ? data[:current][:post_id] : data[:current][:topic_id]
+      topic_id = permitted_params[:topic_id]
+      topic = Topic.find_by(id: topic_id)
 
-        topic = type == 'post' ? Post.find_by(id: id)&.topic : Topic.find_by(id: id)
+      raise Discourse::InvalidParameters.new(:topic_id) unless topic
+      guardian.ensure_can_see!(topic)
 
-        if topic
-          guardian.ensure_can_see!(topic)
+      post = nil
 
-          Presence::PresenceManager.add(type, id, current_user.id)
-          Presence::PresenceManager.cleanup(type, id)
-          users = Presence::PresenceManager.publish(type, id)
+      if (permitted_params[:post_id])
+        if (permitted_params[:state] != EDITING_STATE)
+          raise Discourse::InvalidParameters.new(:state)
+        end
 
-          if data[:response_needed]
-            messagebus_channel = Presence::PresenceManager.get_messagebus_channel(type, id)
-            users ||= Presence::PresenceManager.get_users(type, id)
-            payload = json_payload(messagebus_channel, users)
+        post = Post.find_by(id: permitted_params[:post_id])
+        raise Discourse::InvalidParameters.new(:topic_id) unless post
+
+        guardian.ensure_can_edit!(post)
+      end
+
+      opts = {
+        max_backlog_age: Presence::MAX_BACKLOG_AGE_SECONDS
+      }
+
+      if permitted_params[:staff_only]
+        opts[:group_ids] = [Group::AUTO_GROUPS[:staff]]
+      else
+        case permitted_params[:state]
+        when EDITING_STATE
+          opts[:group_ids] = [Group::AUTO_GROUPS[:staff]]
+
+          if !post.locked? && !permitted_params[:is_whisper]
+            opts[:user_ids] = [post.user_id]
+
+            if topic.private_message?
+              if post.wiki
+                opts[:user_ids] = opts[:user_ids].concat(
+                  topic.allowed_users.where(
+                    "trust_level >= ? AND NOT admin OR moderator",
+                    SiteSetting.min_trust_to_edit_wiki_post
+                  ).pluck(:id)
+                )
+
+                opts[:user_ids].uniq!
+
+                # Ignore trust level and just publish to all allowed groups since
+                # trying to figure out which users in the allowed groups have
+                # the necessary trust levels can lead to a large array of user ids
+                # if the groups are big.
+                opts[:group_ids] = opts[:group_ids].concat(
+                  topic.allowed_groups.pluck(:id)
+                )
+              end
+            else
+              if post.wiki
+                opts[:group_ids] << Group::AUTO_GROUPS[:"trust_level_#{SiteSetting.min_trust_to_edit_wiki_post}"]
+              elsif SiteSetting.trusted_users_can_edit_others?
+                opts[:group_ids] << Group::AUTO_GROUPS[:trust_level_4]
+              end
+            end
+          end
+        when REPLYING_STATE
+          if permitted_params[:is_whisper]
+            opts[:group_ids] = [Group::AUTO_GROUPS[:staff]]
+          elsif topic.private_message?
+            opts[:user_ids] = topic.allowed_users.pluck(:id)
+
+            opts[:group_ids] = [Group::AUTO_GROUPS[:staff]].concat(
+              topic.allowed_groups.pluck(:id)
+            )
+          else
+            opts[:group_ids] = topic.secure_group_ids
+          end
+        when CLOSED_STATE
+          if topic.private_message?
+            opts[:user_ids] = topic.allowed_users.pluck(:id)
+
+            opts[:group_ids] = [Group::AUTO_GROUPS[:staff]].concat(
+              topic.allowed_groups.pluck(:id)
+            )
+          else
+            opts[:group_ids] = topic.secure_group_ids
           end
         end
       end
 
-      render json: payload
-    end
-
-    def json_payload(channel, users)
-      {
-        messagebus_channel: channel,
-        messagebus_id: MessageBus.last_id(channel),
-        users: users.limit(SiteSetting.presence_max_users_shown).map { |u| BasicUserSerializer.new(u, root: false) }
+      payload = {
+        user: BasicUserSerializer.new(current_user, root: false).as_json,
+        state: permitted_params[:state],
+        is_whisper: permitted_params[:is_whisper].present?,
+        published_at: Time.zone.now.to_i
       }
+
+      if (post_id = permitted_params[:post_id]).present?
+        payload[:post_id] = post_id
+      end
+
+      MessageBus.publish("/presence/#{topic_id}", payload, opts)
+
+      render json: success_json
     end
 
+    private
+
+    def ensure_presence_enabled
+      if !SiteSetting.presence_enabled ||
+         current_user.user_option.hide_profile_and_presence?
+
+        raise Discourse::NotFound
+      end
+    end
+
+    def permitted_params
+      params.permit(:state, :topic_id, :post_id, :is_whisper, :staff_only)
+    end
   end
 
   Presence::Engine.routes.draw do
-    post '/publish' => 'presences#publish'
+    post '/publish' => 'presences#handle_message'
   end
 
   Discourse::Application.routes.append do

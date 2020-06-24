@@ -75,11 +75,16 @@ describe Discourse do
       end
     end
 
-    let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true } }
-    let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false } }
+    let(:plugin1) { plugin_class.new.tap { |p| p.enabled = true; p.path = "my-plugin-1" } }
+    let(:plugin2) { plugin_class.new.tap { |p| p.enabled = false; p.path = "my-plugin-1" } }
 
     before { Discourse.plugins.append(plugin1, plugin2) }
     after { Discourse.plugins.clear }
+
+    before do
+      plugin_class.any_instance.stubs(:css_asset_exists?).returns(true)
+      plugin_class.any_instance.stubs(:js_asset_exists?).returns(true)
+    end
 
     it 'can find plugins correctly' do
       expect(Discourse.plugins).to contain_exactly(plugin1, plugin2)
@@ -90,6 +95,19 @@ describe Discourse do
       # Include disabled plugins when requested
       expect(Discourse.find_plugins(include_disabled: true)).to contain_exactly(plugin1, plugin2)
     end
+
+    it 'can find plugin assets' do
+      plugin2.enabled = true
+
+      expect(Discourse.find_plugin_css_assets({}).length).to eq(2)
+      expect(Discourse.find_plugin_js_assets({}).length).to eq(2)
+      plugin1.register_asset_filter do |type, request|
+        false
+      end
+      expect(Discourse.find_plugin_css_assets({}).length).to eq(1)
+      expect(Discourse.find_plugin_js_assets({}).length).to eq(1)
+    end
+
   end
 
   context 'authenticators' do
@@ -202,46 +220,22 @@ describe Discourse do
       expect(Discourse.redis.get(key)).to eq(nil)
     end
 
-    def get_readonly_message
-      message = nil
-
-      messages = MessageBus.track_publish do
-        yield
-      end
-
-      expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL })
-        .to eq(true)
-
-      messages.find { |m| m.channel == Discourse.readonly_channel }
-    end
-
     describe ".enable_readonly_mode" do
       it "adds a key in redis and publish a message through the message bus" do
         expect(Discourse.redis.get(readonly_mode_key)).to eq(nil)
-        message = get_readonly_message { Discourse.enable_readonly_mode }
-        assert_readonly_mode(message, readonly_mode_key, readonly_mode_ttl)
       end
 
       context 'user enabled readonly mode' do
         it "adds a key in redis and publish a message through the message bus" do
           expect(Discourse.redis.get(user_readonly_mode_key)).to eq(nil)
-          message = get_readonly_message { Discourse.enable_readonly_mode(user_readonly_mode_key) }
-          assert_readonly_mode(message, user_readonly_mode_key)
         end
       end
     end
 
     describe ".disable_readonly_mode" do
-      it "removes a key from redis and publish a message through the message bus" do
-        message = get_readonly_message { Discourse.disable_readonly_mode }
-        assert_readonly_mode_disabled(message, readonly_mode_key)
-      end
-
       context 'user disabled readonly mode' do
         it "removes readonly key in redis and publish a message through the message bus" do
           Discourse.enable_readonly_mode(user_enabled: true)
-          message = get_readonly_message { Discourse.disable_readonly_mode(user_enabled: true) }
-          assert_readonly_mode_disabled(message, user_readonly_mode_key)
         end
       end
     end

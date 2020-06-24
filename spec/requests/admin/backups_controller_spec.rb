@@ -35,7 +35,7 @@ RSpec.describe Admin::BackupsController do
   end
 
   after do
-    Discourse.redis.flushall
+    Discourse.redis.flushdb
 
     @paths&.each { |path| File.delete(path) if File.exists?(path) }
     @paths = nil
@@ -67,7 +67,7 @@ RSpec.describe Admin::BackupsController do
           get "/admin/backups.json"
           expect(response.status).to eq(200)
 
-          filenames = JSON.parse(response.body).map { |backup| backup["filename"] }
+          filenames = response.parsed_body.map { |backup| backup["filename"] }
           expect(filenames).to include(backup_filename)
           expect(filenames).to include(backup_filename2)
         end

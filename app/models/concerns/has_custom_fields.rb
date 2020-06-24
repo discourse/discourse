@@ -142,6 +142,10 @@ module HasCustomFields
     super
   end
 
+  def custom_fields_preloaded?
+    !!@preloaded_custom_fields
+  end
+
   def custom_field_preloaded?(name)
     @preloaded_custom_fields && @preloaded_custom_fields.key?(name)
   end

@@ -342,7 +342,6 @@ describe ApplicationHelper do
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_logo_url)
 
         SiteSetting.logo = nil
-        SiteSetting.logo_url = nil
 
         expect(helper.crawlable_meta_data).to include(Upload.find(SiteIconManager::SKETCH_LOGO_ID).url)
       end

@@ -45,10 +45,11 @@ hu:
       unrecognized_extension: "Ismeretlen fájlkiterjesztés: %{extension}"
     import_error:
       generic: Hiba történt a téma importálásákor
-      about_json: "Importálási hiba: az about.json nem létezik vagy érvénytelen"
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
+      modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
       unpack_failed: "A fájl kibontása sikertelen"
+      file_too_big: "A kibontott fájl túl nagy."
       unknown_file_type: "A feltöltött fájl nem tűnik érvényes Discourse témának."
     errors:
       component_no_user_selectable: "A téma összetevőit nem választhatja ki a felhasználó"
@@ -57,7 +58,6 @@ hu:
       no_multilevels_components: "A gyermektémákat tartalmazó témák nem lehet maguk is gyermektémák"
     settings_errors:
       invalid_yaml: "A megadott YAML érvénytelen."
-      data_type_not_a_number: "A(z) „%{name}” típus beállítása nem támogatott. A támogatott típusok: „integer”, „bool”, „list” és „enum”."
       name_too_long: "Az egyik beállítás neve túl hosszú. A legnagyobb hossz 255"
       default_value_missing: "A(z) „%{name}” beállításnak nincs alapértelmezett értéke."
       default_not_match_type: "A(z) „%{name}” beállítás alapértelmezett értékének típusa nem egyezik a beállítás típusával."
@@ -222,9 +222,6 @@ hu:
   topics_in_category: "Témák a(z) „%{category}” kategóriában"
   rss_posts_in_topic: "A(z) „%{topic}” RSS hírcsatornája"
   rss_topics_in_category: "A(z) „%{category}” témáinak RSS hírcsatornája"
-  author_wrote: "%{author} írta:"
-  num_posts: "Bejegyzések:"
-  num_participants: "Résztvevők:"
   read_full_topic: "Teljes téma elolvasása"
   private_message_abbrev: "Üzenet"
   rss_description:
@@ -245,6 +242,12 @@ hu:
   too_late_to_edit: "Ez a bejegyzés túl régen lett létrehozva. Már nem lehet szerkeszteni vagy törölni."
   revert_version_same: "A jelenlegi verzió megegyezik azzal a verzióval amire vissza szeretne térni."
   excerpt_image: "kép"
+  bookmarks:
+    reminders:
+      later_today: "A mai nap folyamán"
+      tomorrow: "Holnap"
+      next_week: "Jövő héten"
+      next_month: "Jövő hónapban"
   groups:
     errors:
       can_not_modify_automatic: "Nem módosíthat egy automata csoportot"
@@ -784,6 +787,7 @@ hu:
       category: "Kategóriák"
       topic: "Eredmények"
       user: "Felhasználók"
+    results_page: "Keresési eredmény: '%{term}'"
   original_poster: "Eredeti szerző"
   most_posts: "Legtöbb bejegyzés"
   most_recent_poster: "Legutóbbi szerzők"
@@ -791,6 +795,10 @@ hu:
   redirected_to_top_reasons:
     new_user: "Üdv a közösségünkben! Ezek a legnépszerűbb témakörök."
     not_seen_in_a_month: "Üdv újra itt! Régóta nem láttuk. Ezek a legnépszerűbb témakörök, amióta távol volt."
+  publish_page:
+    slug_errors:
+      blank: "nem lehet üres"
+      invalid: "érvénytelen karaktereket tartalmaz"
   topic_statuses:
     autoclosed_disabled: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
     autoclosed_disabled_lastpost: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
@@ -803,6 +811,7 @@ hu:
     suspended: "Nem jelentkezhet be eddig: %{date}."
     suspended_with_reason: "A fiók felfüggesztve eddig: %{date}: %{reason}"
     errors: "%{errors}"
+    not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
     omniauth_error_unknown: "A bejelentkezési valamiért nem sikerült, próbálja meg újra."
     omniauth_confirm_button: "Folytatás"
@@ -1019,7 +1028,6 @@ hu:
       why: "Egy kis összefoglaló a(z) %{site_link} oldalról, hogy mik történtek a legutóbbi látogatása (%{last_seen_at}) óta."
       since_last_visit: "Utolsó látogatása óta"
       new_topics: "Új téma"
-      unread_messages: "Olvasatlan üzenet"
       unread_notifications: "Olvasatlan értesítés"
       liked_received: "Kapott kedvelés"
       new_users: "Új felhasználó"
@@ -1270,6 +1278,11 @@ hu:
   joined: "Csatlakozott"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
+      group_mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
+      quoted: '%{username} idézett itt: "%{topic}" - %{site_title}'
+      replied: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
+      posted: '%{username} hozzászólt itt: "%{topic}" - %{site_title}'
       confirm_title: "Értesítések bekapcsolva – %{site_title}"
       confirm_body: "Siker! Értesítések engedélyezve."
       custom: "Értesítés %{username} felhasználótól itt: %{site_title}"

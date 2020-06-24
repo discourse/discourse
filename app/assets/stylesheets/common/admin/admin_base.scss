@@ -244,7 +244,7 @@ $mobile-breakpoint: 700px;
       width: 100%;
       max-width: 800px;
     }
-    .save-messages,
+    .save-button,
     .title {
       margin-bottom: 1em;
     }
@@ -423,9 +423,6 @@ $mobile-breakpoint: 700px;
   }
   .controls {
     @include clearfix;
-    .save-messages {
-      margin-top: 1em;
-    }
   }
 }
 
@@ -934,6 +931,20 @@ table#user-badges {
   }
 }
 
+.simple-list-input {
+  display: flex;
+
+  .add-value-input {
+    margin: 0;
+    box-sizing: border-box;
+    flex: 1 0 0px;
+  }
+
+  .add-value-btn {
+    margin-left: 0.25em;
+  }
+}
+
 // Mobile view text-inputs need some padding
 .mobile-view .admin-contents {
   input[type="text"] {
@@ -982,3 +993,4 @@ a.inline-editable-field {
 @import "common/admin/admin_report_table";
 @import "common/admin/admin_report_inline_table";
 @import "common/admin/admin_intro";
+@import "common/admin/admin_emojis";

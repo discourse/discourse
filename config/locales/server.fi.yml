@@ -45,7 +45,7 @@ fi:
       unrecognized_extension: "Tuntematon tiedostomuoto: %{extension}"
     import_error:
       generic: Teeman tuomisessa tapahtui virhe
-      about_json: "Virhe tuomisessa: about.json -tiedostoa ei ole olemassa tai se ei kelpaa"
+      about_json: "Virhe tuotaessa: about.json ei ole olemassa tai ei kelpaa. Oletko varma, että tämä on Discourse-teema?"
       about_json_values: "about.json sisältää arvoja, jotka eivät kelpaa: %{errors}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei ole pääsyoikeutta tai tietovarastoa ei löytynyt"
       unpack_failed: "Tiedoston purku epäonnistui"
@@ -59,7 +59,7 @@ fi:
       optimized_link: Optimoidut kuvalinkit ovat lyhytikäisiä eikä niitä tulisi sisällyttää teeman lähdekoodiin.
     settings_errors:
       invalid_yaml: "Annettu YAML ei kelpaa"
-      data_type_not_a_number: "Ei voi asettaa tietotyypiksi %{name}. Tuettuja tyyppejä ovat integer, blool, list ja enum."
+      data_type_not_a_number: "Tietotyypiksi ei ole mahdollista asettaa `%{name}`. Tuettuja tietotyyppejä ovat `integer`, `bool`, `list`, `enum` ja `upload`"
       name_too_long: "Jollain asetuksella on liian pitkä nimi. Enimmäispituus on 255."
       default_value_missing: "Asetuksella \"%{name}\" ei ole oletusarvoa"
       default_not_match_type: "Asetuksen \"%{name}\" oletusarvo ei sovi asetuksen tyyppiin."
@@ -299,9 +299,6 @@ fi:
   topics_in_category: "Ketjut alueella '%{category}'"
   rss_posts_in_topic: "ketjun '%{topic}' RSS syöte"
   rss_topics_in_category: "RSS syötteet alueen '%{category}' ketjuista"
-  author_wrote: "%{author} kirjoitti:"
-  num_posts: "Viestit:"
-  num_participants: "Osallistujat:"
   read_full_topic: "Lue koko ketju"
   private_message_abbrev: "YV"
   rss_description:
@@ -328,14 +325,15 @@ fi:
   bookmarks:
     errors:
       already_bookmarked_post: "Samaa viestiä ei voi kirjanmerkitä kahdesti."
-      time_must_be_provided: "kaikkiin muistutuksiin paitsi '%{reminder_type}' tarvitaan aika"
+      cannot_set_past_reminder: "Kirjanmerkkimuistutusta ei voi asettaa menneisyyteen."
+      cannot_set_reminder_in_distant_future: "Kirjanmerkkimuistutusta ei voi asettaa yli 10 vuoden päähän tulevaisuuteen."
     reminders:
       at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
-      later_today: "Myöhemmin tänään  <br/>{{date}}"
-      next_business_day: "Seuraavana arkipäivänä <br/>{{date}}"
-      tomorrow: "Huomenna <br/>{{date}}"
-      next_week: "Ensi viikolla <br/>{{date}}"
-      next_month: "Ensi kuussa <br/>{{date}}"
+      later_today: "Myöhemmin tänään"
+      next_business_day: "Seuraavana arkipäivänä"
+      tomorrow: "Huomenna"
+      next_week: "Ensi viikolla"
+      next_month: "Ensi kuussa"
       custom: "Valitse päivämäärä ja kellonaika"
   groups:
     success:
@@ -366,7 +364,10 @@ fi:
       trust_level_4: "luottamustaso_4"
     request_membership_pm:
       title: "Jäsenhakemus ryhmään @%{group_name}"
-      handle: "käsittele jäsenyyshakemus"
+    request_accepted_pm:
+      title: "Sinut hyväksyttiin ryhmään @%{group_name}"
+      body: |
+        Pyyntösi ryhmään @%{group_name} liittymiseksi on hyväksytty ja olet nyt jäsen.
     view_hidden_topic_request_reason: "Haluaisin liittyä ryhmään '%{group_name}', jotta pääsen [tähän ketjuun](%{topic_url})"
   education:
     until_posts:
@@ -413,7 +414,7 @@ fi:
 
       Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
 
-      Oletko varma, että annat muillekin riittävästi aikaa jakaa omia ajatuksiaan? Voisit kutsua heitä tänne?
+      Ketju voisi olla vielä parempi, jos useammilla olisi tilaa jakaa omia näkökulmiaan. Voisit kutsua heitä tänne?
     get_a_room: |
       ### Rohkaise kaikkia osallistumaan keskusteluun
 
@@ -458,6 +459,7 @@ fi:
               no_user_selected: "Sinun täytyy valita kelpaava käyttäjä."
               reply_by_email_disabled: "Sähköpostilla vastaaminen ei ole käytössä."
               target_user_not_found: "Ei löydetty yhtä niistä käyttäjistä, joille lähetät viestiä."
+              unable_to_update: "Ketjun päivittäminen epäonnistui."
             featured_link:
               invalid: "ei ole käypä. URL:in tulisi sisältää http:// tai https://."
               invalid_category: "ei voi muokata tällä alueella."
@@ -476,6 +478,10 @@ fi:
               same_as_password: "on sama kuin salasanasi."
             ip_address:
               signup_not_allowed: "Liittyminen ei ole sallittu tälle tilille."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "Tätä ketjua et voi valikoida profiiliisi."
         user_email:
           attributes:
             user_id:
@@ -744,7 +750,6 @@ fi:
     confirm: "Vahvista"
     authorizing_new:
       title: "Vahvista uusi sähköpostiosoite"
-      description: "Vahvista, että haluat vaihtaa uudeksi sähköpostiosoitteeksesi:"
     authorizing_old:
       title: "Vaihda sähköpostiosoitettasi"
       description: "Vahvista sähköpostiosoitteesi vaihdos"
@@ -792,7 +797,7 @@ fi:
       short_description: '<a href="%{base_path}/guidelines">Palstan sääntöjen</a> vastainen'
       long_form: "liputti tämän sopimattomaksi"
     notify_user:
-      title: "Lähetä käyttäjälle @{{username}} viesti."
+      title: "Lähetä käyttäjälle @%{username} viesti."
       description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
       short_description: "Haluan keskustella viestistä kirjoittajan kanssa suoraan ja henkilökohtaisesti."
       long_form: "lähetä käyttäjälle viesti"
@@ -1072,6 +1077,7 @@ fi:
       labels:
         level: Taso
       description: "Kuinka monta käyttäjää on milläkin luottamustasolla."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "Käyttäjät tyypeittäin"
       xaxis: "Tyyppi"
@@ -1264,7 +1270,6 @@ fi:
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan %{env} moodissa."
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusisäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
-    gc_warning: 'Palvelimesi käyttää Rubyn oletuksia roskienkeräyksessä, mikä ei tarjoa parasta mahdollista suorituskykyä. Tässä ketjussa on suorituskyvyn optimoisesta: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     queue_size_warning: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosess(e)issa tai sinun voi täytyä lisätä Sidekiq workerien määrää."
     memory_warning: "Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa."
@@ -1291,6 +1296,7 @@ fi:
     unreachable_themes: "Näille teemoille ei löytynyt päivityksiä:"
     watched_word_regexp_error: "Säännöllinen lauseke %{action}-tyypin tarkkailuille sanoille ei kelpaa. Käy läpi <a href='%{base_path}/admin/logs/watched_words'>Tarkkaillut sanat -asetuksesi</a> tai poista käytöstä 'watched words regular expressions' -sivustoasetus."
   site_settings:
+    display_local_time_in_user_card: "Näytä käyttäjän aikavyöhykkeeseen perustuva paikallinen aika hänen käyttäjäkortissaan."
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Tämän Discourse-ympäristön oletuskieli. Voit korvata systeemin luomien alueiden ja ketjujen tekstejä kohteessa <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Mukauta / Tekstit</a>."
@@ -1331,7 +1337,6 @@ fi:
     crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
     download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan (prosenteissa)"
-    download_remote_images_max_days_old: "Älä lataa linkattuja kuvia viesteistä, jotka ovat yli n päivää vanhoja."
     disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu lista."
     editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin lokiin."
     editing_grace_period_max_diff: "Kuinka monen merkin muutos sallitaan katumusaikana. Jos muutos on isompi tallennetaan uusi viestirevisio (luottamustasolla 0 ja 1)."
@@ -1372,8 +1377,6 @@ fi:
     enforce_second_factor: "Pakottaa käyttäjiä ottamaan kaksivaiheisen tunnistautumisen käyttöön. Voit pakottaa sen kaikille valitsemalla \"kaikki\". Vaihtoehto \"henkilökunta\" pakottaa sen vain henkilökunnalle."
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot / muut riippuvuudet ovat myös HTTPS-yhteensopivia?"
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
-    summary_posts_required: "Montako viestiä ketjussa täytyy olla, jotta ketjun tiivistelmä otetaan käyttöön"
-    summary_likes_required: "Montako tykkäystä ketjussa pitää olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
     summary_max_results: "Maksimimäärä viestejä, jotka näytetään ketjun tiivistelmässä"
     enable_personal_messages: "Salli luottamustason 1 saavuttaneiden käyttäjien (\"min trust level to send messages\" on säädettävissä) lähettää yksityisviestejä ja vastata niihin. Huomioi, että henkilökunta voi aina lähettää yksityisviestejä."
@@ -1506,7 +1509,6 @@ fi:
     discord_client_id: 'Discordin Client ID (Tarvitsetko? Käy Discordin <a href="https://discordapp.com/developers/applications/me">kehittäjäportaalissa</a>)'
     discord_secret: "Discordin Secret Key"
     discord_trusted_guilds: 'Salli vain näiden Discord-kiltojen jäsenten kirjautua Discordin avulla. Käytä killan numeerista ID:tä. Jos tarvitset lisätietoa, ohjeet löytyy <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">täältä</a>. Jätä tyhjäksi, jos et halua rajoittaa killan perusteella.'
-    readonly_mode_during_backup: "Ota käyttöön vain luku -tila, kun otetaan varmuuskopiota"
     enable_backups: "Salli ylläpitäjien tehdä varmuuskopioita palstasta"
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
@@ -1515,7 +1517,6 @@ fi:
     s3_backup_bucket: "Amazon S3 bucket johon varmuuskopiot ladataan. VAROITUS: Varmista, että se on yksityinen."
     s3_endpoint: "Kohdeasemaksi voidaan vaihtaa muu S3-yhteensopiva palvelu kuten DigitalOcean Spaces tai Minio. VAROITUS: Jätä tyhjäksi, jos käytät AWS S3:a."
     s3_configure_tombstone_policy: "Ota käyttöön tombstone-hakemiston automaattinen tyhjennys.  TÄRKEÄÄ: Jos ei käytössä, tilaa ei vapaudu kun ladattuja tiedostoja poistetaan."
-    s3_disable_cleanup: "Älä poista varmuuskopiota S3:sta, kun se poistetaan paikallisesti."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä on pois käytöstä, vain tietokanta varmuuskopioidaan."
     backup_location: "SIjainti, jonne varmuuskopiot säilötään. TÄRKEÄÄ: S3 vaatii toimiakseen, että käyvät S3-käyttöoikeustiedot on syötetty Tiedostot-asetuksiin."
@@ -1635,13 +1636,11 @@ fi:
     desktop_category_page_style: "/Keskustelualueet-sivun visuaalinen tyyli."
     category_colors: "Lista alueiden sallituista väriarvoista, heksadesimaaleina."
     category_style: "Aluemerkin tyyli."
-    max_image_size_kb: "Liitetyn kuvan suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
     max_attachment_size_kb: "Liitetyn tiedoston suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
     authorized_extensions: "Liitetiedostojen sallitut tiedostopäätteet (käytä '*' salliaksesi kaikki tiedostotyypit)"
     authorized_extensions_for_staff: "Luettelo tiedostopäätteistä, jotka ovat sallittuja henkilökunnan jäsenille niiden lisäksi, jotka on määritelty sivustoasetuksella \"authorized_extensions\". (salli asettamalla * kaikki tiedostotyypit)"
     theme_authorized_extensions: "Teemalatausten liitetiedostojen sallitut tiedostopäätteet (käytä '*' salliaksesi kaikki tiedostotyypit)"
     max_similar_results: "Kuinka monta samankaltaista ketjua näytetään viestikentän päällä uutta ketjua aloitettaessa. Vertailu perustuu sekä otsikkoon että leipätekstiin."
-    max_image_megapixels: "Kuvan enimmäiskoko megapikseleinä."
     title_prettify: "Estä yleiset kirjoitusvirheet otsikossa, kuten pelkät isot kirjaimet, pieni ensimmäinen kirjain, useat !- ja ?-merkit ym."
     title_remove_extraneous_space: "Poista lopettavia välimerkkejä edeltävät tyhjät merkit."
     automatic_topic_heat_values: 'Päivitä "topic views heat" ja "topic post like heat" -asetuksia sivuston aktiivisuuden perusteella automaattisesti.'
@@ -1816,7 +1815,6 @@ fi:
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
     prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta liitetiedostoja. VAROITUS: tämä estää viestin liitettyjen muiden tiedostojen, kuin kuvien käyttämisen sivustolla."
-    secure_media: 'Rajoita pääsyä ladattuihin mediatiedostoihin (kuvat, video, äänitiedostot). Jos "kirjautuminen vaaditaan" -tila on käytössä, vain kirjautuneilla käyttäjillä on pääsy mediatiedostoihin. Muussa tapauksessa vain pääsyä rajoitetaan vain yksityiskeskusteluiden medialatauksiin. Huomioi: S3-lataukset tulee olla käytössä ennen tämän asetuksen käyttöönottoa.'
     slug_generation_method: "Valitse polkulyhenteen luomisen metodi. 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
     enable_emoji: "Ota emoji käyttöön"
     enable_emoji_shortcuts: "Yleiset tekstiemojit kuten :) :p :( muunnetaan emojeiksi"
@@ -1895,7 +1893,6 @@ fi:
     city_for_disputes: "Kaupunki jonka oikeudessa riidat ratkotaan"
     shared_drafts_category: "Ota käyttöön jaetut luonnokset -toiminto määrittämällä alue, joka on ketjuluonnoksille varattu. Alueen ketjut eivät näy ketjulistauksissa henkilökunnankaan jäsenille."
     push_notifications_prompt: "Näytä käyttäjäsuostumuspyyntö."
-    push_notifications_icon: "Kuvakemerkki, joka näkyy ilmoituksen kulmassa. Vaadittu koko on 96×96."
     short_title: "Lyhyttä nimeä käytetään käyttäjän kotiruudussa (home screen), käynnistyssovelluksissa (launcher) ja muissa tilanteissa, joissa tilaa on rajallisesti. Sen tulisi olla enintään 12 merkin pituinen."
     dashboard_general_tab_activity_metrics: "Valitse raportit, jotka näytetään aktiivisuusmittareina Yleistä-välilehdellä."
     errors:
@@ -1997,6 +1994,10 @@ fi:
       other: "%{count} viestiä siirrettiin yksityisviestiketjuun: %{topic_link}"
   change_owner:
     post_revision_text: "Vaihtoi omistajaa"
+  publish_page:
+    slug_errors:
+      blank: "ei voi olla tyhjä"
+      invalid: "sisältää epäkelpoja merkkejä"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Tämä yksityisketju suljettiin automaattisesti sen saavutettua vastausten maksimimäärän %{count}."
@@ -2608,10 +2609,6 @@ fi:
     email_reject_bad_destination_address:
       title: "Sähköposti hylätty - tuntematon vastaanottajaosoite"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Tuntematon Vastaanottaja: -osoite"
-      text_body_template: |
-        Pahoittelut, sähköpostin lähettäminen kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
-
-        Viestisi kohdesähköpostiosoitteet olivat tuntemattomia tai sähköpostiviestin ID-otsikkotietoa (engl. Message-ID) on muutettu. Varmistu, että lähetät oikeaan henkilökunnan antamaan sähköpostiosoitteeseen.
     email_reject_old_destination:
       title: "Sähköposti hylätty - vanha kohde"
       subject_template: "[%{email_prefix}] Sähköpostiongelma -- Yrität vastata vanhaan ilmoitukseen"
@@ -3067,7 +3064,6 @@ fi:
       why: "Lyhyt kooste siitä mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
       since_last_visit: "Viime vierailusi jälkeen"
       new_topics: "Uutta ketjua"
-      unread_messages: "Lukematonta viestiä"
       unread_notifications: "Lukematonta ilmoitusta"
       liked_received: "Saatua tykkäystä"
       new_users: "Uutta käyttäjää"
@@ -3146,6 +3142,8 @@ fi:
         Vahvista nykyinen sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
     notify_old_email:
       title: "Ilmoita vanhaan sähköpostiosoitteeseen"
       subject_template: "[%{email_prefix}] Sähköpostiosoitteesi on vaihdettu"
@@ -3537,7 +3535,7 @@ fi:
       name: Hyvä vastaus
       description: Vastaus sai 10 tykkäystä
       long_description: |
-        Tämä ansiomerkki myönnetään, kun vastauksesi saa 10 tykkäykstä. Teit sillä vaikutuksen yhteisöön ja edistit keskustelua!
+        Tämä ansiomerkki myönnetään, kun vastauksesi saa 10 tykkäystä. Teit sillä vaikutuksen yhteisöön ja edistit keskustelua!
     good_post:
       name: Erinomainen vastaus
       description: Vastaus sai 25 tykkäystä
@@ -3670,7 +3668,6 @@ fi:
         Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi viitenä päivänä. Kiitos kun vaivaudut aktiivisesti kannustamaan muita hyviin keskusteluihin joka päivä!
     crazy_in_love:
       name: Korviaan myöten rakastunut
-      description: Käytti 50 päivittäistä tykkäystä 20 päivänä
       long_description: |
         Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki %{max_likes_per_day} päivittäistä tykkäystäsi 20 päivänä. Vau! Esimerkillistä muiden palstan käyttäjien kannustamista!
     thank_you:

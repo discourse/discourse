@@ -52,6 +52,12 @@ describe EmbeddableHost do
     expect(eh.host).to eq('discourse.localhost')
   end
 
+  it "supports multiple hyphens" do
+    eh = EmbeddableHost.new(host: 'deploy-preview-1--example.example.app')
+    expect(eh).to be_valid
+    expect(eh.host).to eq('deploy-preview-1--example.example.app')
+  end
+
   it "rejects misspellings of localhost" do
     eh = EmbeddableHost.new(host: 'alocalhost')
     expect(eh).not_to be_valid

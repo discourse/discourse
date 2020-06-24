@@ -254,6 +254,10 @@ class SessionController < ApplicationController
 
       render_sso_error(text: text || I18n.t("sso.unknown_error"), status: 500)
 
+    rescue DiscourseSingleSignOn::BlankExternalId
+
+      render_sso_error(text: I18n.t("sso.blank_id_error"), status: 500)
+
     rescue => e
       message = +"Failed to create or lookup user: #{e}."
       message << "  "
@@ -364,6 +368,7 @@ class SessionController < ApplicationController
       elsif payload = login_error_check(user)
         return render json: payload
       else
+        user.update_timezone_if_missing(params[:timezone])
         log_on_user(user)
         return render json: success_json
       end
@@ -396,13 +401,21 @@ class SessionController < ApplicationController
   def forgot_password
     params.require(:login)
 
+    if ScreenedIpAddress.should_block?(request.remote_ip)
+      return render_json_error(I18n.t("login.reset_not_allowed_from_ip_address"))
+    end
+
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    RateLimiter.new(nil, "forgot-password-login-hour-#{params[:login].to_s[0..100]}", 12, 1.hour).performed!
-    RateLimiter.new(nil, "forgot-password-login-min-#{params[:login].to_s[0..100]}", 3, 1.minute).performed!
-
     user = User.find_by_username_or_email(params[:login])
+
+    if user
+      RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
+    else
+      RateLimiter.new(nil, "forgot-password-login-hour-#{params[:login].to_s[0..100]}", 5, 1.hour).performed!
+    end
+
     user_presence = user.present? && user.human? && !user.staged
     if user_presence
       email_token = user.email_tokens.create(email: user.email)

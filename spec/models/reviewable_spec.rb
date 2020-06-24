@@ -159,11 +159,11 @@ RSpec.describe Reviewable, type: :model do
           r0 = Fabricate(:reviewable, score: 100, created_at: 3.months.ago)
           r1 = Fabricate(:reviewable, score: 999, created_at: 1.month.ago)
 
-          list = Reviewable.list_for(user, sort_order: 'priority')
+          list = Reviewable.list_for(user, sort_order: 'score')
           expect(list[0].id).to eq(r1.id)
           expect(list[1].id).to eq(r0.id)
 
-          list = Reviewable.list_for(user, sort_order: 'priority_asc')
+          list = Reviewable.list_for(user, sort_order: 'score_asc')
           expect(list[0].id).to eq(r0.id)
           expect(list[1].id).to eq(r1.id)
 
@@ -181,10 +181,11 @@ RSpec.describe Reviewable, type: :model do
             SiteSetting.reviewable_default_visibility = :high
             Reviewable.set_priorities(high: 10)
             @queued_post = Fabricate(:reviewable_queued_post, score: 0, target: post)
+            @queued_user = Fabricate(:reviewable_user, score: 0)
           end
 
           it 'includes queued posts when searching for pending reviewables' do
-            expect(Reviewable.list_for(user)).to contain_exactly(@queued_post)
+            expect(Reviewable.list_for(user)).to contain_exactly(@queued_post, @queued_user)
           end
 
           it 'excludes pending queued posts when applying a different status filter' do
@@ -477,6 +478,33 @@ RSpec.describe Reviewable, type: :model do
 
       expect(results.size).to eq(1)
       expect(results.first).to eq first_reviewable
+    end
+
+    context "when listing for a moderator with a custom filter that joins tables with same named columns" do
+      it "should not error" do
+        first_reviewable = Fabricate(:reviewable)
+        second_reviewable = Fabricate(:reviewable)
+        custom_filter = [
+          :troublemaker,
+          Proc.new do |results, value|
+            results.joins(<<~SQL
+          INNER JOIN posts p ON p.id = target_id
+          INNER JOIN topics t ON t.id = p.topic_id
+          INNER JOIN topic_custom_fields tcf ON tcf.topic_id = t.id
+          INNER JOIN users u ON u.id = tcf.value::integer
+                          SQL
+                         )
+              .where(target_type: Post.name)
+              .where('tcf.name = ?', 'troublemaker_user_id')
+              .where('u.username = ?', value)
+          end
+        ]
+
+        Reviewable.add_custom_filter(custom_filter)
+        mod = Fabricate(:moderator)
+        results = Reviewable.list_for(mod, additional_filters: { troublemaker: 'badguy' })
+        expect { results.first }.not_to raise_error
+      end
     end
   end
 

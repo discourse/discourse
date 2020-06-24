@@ -1,0 +1,31 @@
+<div class="topic-poster">
+  {{#user-link user=topic.lastPosterUser}}
+    {{avatar topic.lastPosterUser imageSize="large"}}
+  {{/user-link}}
+  {{#if topic.lastPosterGroup}}
+    {{avatar-flair
+      flairURL=topic.lastPosterGroup.flair_url
+      flairBgColor=topic.lastPosterGroup.flair_bg_color
+      flairColor=topic.lastPosterGroup.flair_color
+      groupName=topic.lastPosterGroup.name}}
+  {{/if}}
+</div>
+<div class="main-link">
+  <div class="top-row">
+    {{raw "topic-status" topic=topic}}
+    {{topic-link topic}}
+    {{#if topic.featured_link}}
+      {{topic-featured-link topic}}
+    {{/if}}
+    {{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
+  </div>
+  <div class="bottom-row">
+    {{category-link topic.category}}{{discourse-tags topic mode="list"}}{{! intentionally inline to avoid whitespace}}
+  </div>
+</div>
+<div class="topic-stats">
+  {{raw "list/posts-count-column" topic=topic tagName="div"}}
+  <div class="topic-last-activity">
+    <a href={{topic.lastPostUrl}} title={{topic.bumpedAtTitle}}>{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
+  </div>
+</div>

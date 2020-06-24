@@ -10,7 +10,6 @@ class BasicGroupSerializer < ApplicationSerializer
              :messageable_level,
              :visibility_level,
              :automatic_membership_email_domains,
-             :automatic_membership_retroactive,
              :primary_group,
              :title,
              :grant_trust_level,
@@ -53,10 +52,6 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def include_automatic_membership_email_domains?
-    scope.is_admin?
-  end
-
-  def include_automatic_membership_retroactive?
     scope.is_admin?
   end
 

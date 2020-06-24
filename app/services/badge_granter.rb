@@ -2,6 +2,14 @@
 
 class BadgeGranter
 
+  def self.disable_queue
+    @queue_disabled = true
+  end
+
+  def self.enable_queue
+    @queue_disabled = false
+  end
+
   def initialize(badge, user, opts = {})
     @badge, @user, @opts = badge, user, opts
     @granted_by = opts[:granted_by] || Discourse.system_user
@@ -16,7 +24,8 @@ class BadgeGranter
     return unless badge.enabled?
 
     system_user_id = Discourse.system_user.id
-    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: Time.now } }
+    now = Time.zone.now
+    user_badges = users.map { |u| { badge_id: badge.id, user_id: u.id, granted_by_id: system_user_id, granted_at: now, created_at: now } }
     granted_badges = UserBadge.insert_all(user_badges, returning: %i[user_id])
 
     users.each do |user|
@@ -115,7 +124,7 @@ class BadgeGranter
   end
 
   def self.queue_badge_grant(type, opt)
-    return unless SiteSetting.enable_badges
+    return if !SiteSetting.enable_badges || @queue_disabled
     payload = nil
 
     case type
@@ -179,7 +188,7 @@ class BadgeGranter
   end
 
   def self.queue_key
-    "badge_queue".freeze
+    "badge_queue"
   end
 
   # Options:
@@ -222,13 +231,21 @@ class BadgeGranter
     BadgeGranter.contract_checks!(sql, opts)
 
     # hack to allow for params, otherwise sanitizer will trigger sprintf
-    count_sql = "SELECT COUNT(*) count FROM (#{sql}) q WHERE :backfill = :backfill"
+    count_sql = <<~SQL
+      SELECT COUNT(*) count
+                 FROM (
+                        #{sql}
+                      ) q
+                WHERE :backfill = :backfill
+    SQL
     grant_count = DB.query_single(count_sql, params).first.to_i
 
     grants_sql = if opts[:target_posts]
       <<~SQL
         SELECT u.id, u.username, q.post_id, t.title, q.granted_at
-          FROM (#{sql}) q
+          FROM (
+                 #{sql}
+               ) q
           JOIN users u on u.id = q.user_id
      LEFT JOIN badge_posts p on p.id = q.post_id
      LEFT JOIN topics t on t.id = p.topic_id
@@ -238,7 +255,9 @@ class BadgeGranter
     else
       <<~SQL
         SELECT u.id, u.username, q.granted_at
-         FROM (#{sql}) q
+         FROM (
+                #{sql}
+              ) q
          JOIN users u on u.id = q.user_id
         WHERE :backfill = :backfill
         LIMIT 10
@@ -293,13 +312,15 @@ class BadgeGranter
 
     sql = <<~SQL
       DELETE FROM user_badges
-       WHERE id IN (
-         SELECT ub.id
-           FROM user_badges ub
-      LEFT JOIN (#{badge.query}) q ON q.user_id = ub.user_id
-         #{post_clause}
-         WHERE ub.badge_id = :id AND q.user_id IS NULL
-      )
+        WHERE id IN (
+          SELECT ub.id
+          FROM user_badges ub
+          LEFT JOIN (
+            #{badge.query}
+          ) q ON q.user_id = ub.user_id
+          #{post_clause}
+          WHERE ub.badge_id = :id AND q.user_id IS NULL
+        )
     SQL
 
     DB.exec(
@@ -313,9 +334,11 @@ class BadgeGranter
 
     sql = <<~SQL
       WITH w as (
-        INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, post_id)
-        SELECT :id, q.user_id, q.granted_at, -1, #{post_id_field}
-          FROM (#{badge.query}) q
+        INSERT INTO user_badges(badge_id, user_id, granted_at, granted_by_id, created_at, post_id)
+        SELECT :id, q.user_id, q.granted_at, -1, current_timestamp, #{post_id_field}
+          FROM (
+                 #{badge.query}
+               ) q
      LEFT JOIN user_badges ub ON ub.badge_id = :id AND ub.user_id = q.user_id
         #{post_clause}
         /*where*/
@@ -396,7 +419,7 @@ class BadgeGranter
   end
 
   def self.send_notification(user_id, username, locale, badge)
-    I18n.with_locale(notification_locale(locale)) do
+    notification = I18n.with_locale(notification_locale(locale)) do
       Notification.create!(
         user_id: user_id,
         notification_type: Notification.types[:granted_badge],
@@ -409,6 +432,10 @@ class BadgeGranter
         }.to_json
       )
     end
+
+    DiscourseEvent.trigger(:user_badge_granted, badge, user_id)
+
+    notification
   end
 
 end

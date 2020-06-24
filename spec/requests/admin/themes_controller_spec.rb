@@ -17,30 +17,32 @@ describe Admin::ThemesController do
     it 'can generate key pairs' do
       post "/admin/themes/generate_key_pair.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["private_key"]).to include("RSA PRIVATE KEY")
       expect(json["public_key"]).to include("ssh-rsa ")
     end
   end
 
   describe '#upload_asset' do
+    let(:file) { file_from_fixtures("fake.woff2", "woff2") }
+    let(:filename) { File.basename(file) }
     let(:upload) do
-      Rack::Test::UploadedFile.new(file_from_fixtures("fake.woff2", "woff2"))
+      Rack::Test::UploadedFile.new(file)
     end
 
     it 'can create a theme upload' do
       post "/admin/themes/upload_asset.json", params: { file: upload }
       expect(response.status).to eq(201)
 
-      upload = Upload.find_by(original_filename: "fake.woff2")
+      upload = Upload.find_by(original_filename: filename)
 
       expect(upload.id).not_to be_nil
-      expect(JSON.parse(response.body)["upload_id"]).to eq(upload.id)
+      expect(response.parsed_body["upload_id"]).to eq(upload.id)
     end
 
     context "when trying to upload an existing file" do
-      let(:uploaded_file) { Upload.find_by(original_filename: "fake.woff2") }
-      let(:response_json) { JSON.parse(response.body) }
+      let(:uploaded_file) { Upload.find_by(original_filename: filename) }
+      let(:response_json) { response.parsed_body }
 
       before do
         post "/admin/themes/upload_asset.json", params: { file: upload }
@@ -77,7 +79,7 @@ describe Admin::ThemesController do
         expect(response.status).to eq(201)
       end.to change { Theme.count }.by (1)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["theme"]["name"]).to eq("Awesome Theme")
       expect(json["theme"]["theme_fields"].length).to eq(3)
@@ -85,6 +87,7 @@ describe Admin::ThemesController do
   end
 
   describe '#import' do
+
     let(:theme_json_file) do
       Rack::Test::UploadedFile.new(file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json"), "application/json")
     end
@@ -95,6 +98,40 @@ describe Admin::ThemesController do
 
     let(:image) do
       file_from_fixtures("logo.png")
+    end
+
+    context 'when theme whitelist mode is enabled' do
+      before do
+        GlobalSetting.reset_whitelisted_theme_ids!
+        global_setting :whitelisted_theme_repos, "https://github.com/discourse/discourse-brand-header"
+      end
+
+      after do
+        GlobalSetting.reset_whitelisted_theme_ids!
+      end
+
+      it "allows whitelisted imports" do
+        RemoteTheme.stubs(:import_theme)
+        post "/admin/themes/import.json", params: {
+          remote: '    https://github.com/discourse/discourse-brand-header       '
+        }
+
+        expect(response.status).to eq(201)
+      end
+
+      it "bans non whtielisted imports" do
+        RemoteTheme.stubs(:import_theme)
+        post "/admin/themes/import.json", params: {
+          remote: '    https://bad.com/discourse/discourse-brand-header       '
+        }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "bans json file import" do
+        post "/admin/themes/import.json", params: { theme: theme_json_file }
+        expect(response.status).to eq(403)
+      end
     end
 
     it 'can import a theme from Git' do
@@ -110,7 +147,7 @@ describe Admin::ThemesController do
       post "/admin/themes/import.json", params: { theme: theme_json_file }
       expect(response.status).to eq(201)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
       expect(json["theme"]["theme_fields"].length).to eq(2)
@@ -118,13 +155,13 @@ describe Admin::ThemesController do
     end
 
     it 'imports a theme from an archive' do
-      existing_theme = Fabricate(:theme, name: "Header Icons")
+      _existing_theme = Fabricate(:theme, name: "Header Icons")
 
       expect do
         post "/admin/themes/import.json", params: { theme: theme_archive }
       end.to change { Theme.count }.by (1)
       expect(response.status).to eq(201)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["theme_fields"].length).to eq(5)
@@ -133,13 +170,13 @@ describe Admin::ThemesController do
 
     it 'updates an existing theme from an archive by name' do
       # Old theme CLI method, remove Jan 2020
-      existing_theme = Fabricate(:theme, name: "Header Icons")
+      _existing_theme = Fabricate(:theme, name: "Header Icons")
 
       expect do
         post "/admin/themes/import.json", params: { bundle: theme_archive }
       end.to change { Theme.count }.by (0)
       expect(response.status).to eq(201)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["theme_fields"].length).to eq(5)
@@ -148,7 +185,7 @@ describe Admin::ThemesController do
 
     it 'updates an existing theme from an archive by id' do
       # Used by theme CLI
-      existing_theme = Fabricate(:theme, name: "Header Icons")
+      _existing_theme = Fabricate(:theme, name: "Header Icons")
       other_existing_theme = Fabricate(:theme, name: "Some other name")
 
       messages = MessageBus.track_publish do
@@ -157,7 +194,7 @@ describe Admin::ThemesController do
         end.to change { Theme.count }.by (0)
       end
       expect(response.status).to eq(201)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       # Ensure only one refresh message is sent.
       # More than 1 is wasteful, and can trigger unusual race conditions in the client
@@ -179,7 +216,7 @@ describe Admin::ThemesController do
         post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: nil }
       end.to change { Theme.count }.by (1)
       expect(response.status).to eq(201)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["theme"]["name"]).to eq("Header Icons")
       expect(json["theme"]["id"]).not_to eq(existing_theme.id)
@@ -213,7 +250,7 @@ describe Admin::ThemesController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["extras"]["color_schemes"].length).to eq(2)
       theme_json = json["themes"].find { |t| t["id"] == theme.id }
@@ -233,7 +270,7 @@ describe Admin::ThemesController do
 
       expect(response.status).to eq(201)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json["theme"]["theme_fields"].length).to eq(1)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
@@ -271,6 +308,34 @@ describe Admin::ThemesController do
       expect(SiteSetting.default_theme_id).to eq(-1)
     end
 
+    context 'when theme whitelist mode is enabled' do
+      before do
+        GlobalSetting.reset_whitelisted_theme_ids!
+        global_setting :whitelisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+      end
+
+      after do
+        GlobalSetting.reset_whitelisted_theme_ids!
+      end
+
+      it 'unconditionally bans theme_fields from updating' do
+        r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
+        theme.update!(remote_theme_id: r.id)
+
+        put "/admin/themes/#{theme.id}.json", params: {
+          theme: {
+            name: 'my test name',
+            theme_fields: [
+              { name: 'scss', target: 'common', value: '' },
+              { name: 'scss', target: 'desktop', value: 'body{color: blue;}' },
+            ]
+          }
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
     it 'updates a theme' do
       theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
       theme.save
@@ -293,7 +358,7 @@ describe Admin::ThemesController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       fields = json["theme"]["theme_fields"].sort { |a, b| a["value"] <=> b["value"] }
 
@@ -329,7 +394,7 @@ describe Admin::ThemesController do
 
       # Response correct
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["theme"]["translations"][0]["value"]).to eq("overridenstring")
 
       # Database correct
@@ -347,7 +412,7 @@ describe Admin::ThemesController do
       }
       # Response correct
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["theme"]["translations"][0]["value"]).to eq("defaultstring")
 
       # Database correct
@@ -380,7 +445,7 @@ describe Admin::ThemesController do
         }
       }
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["theme"]["enabled"]).to eq(false)
       expect(UserHistory.where(
         context: child.id.to_s,
@@ -415,7 +480,7 @@ describe Admin::ThemesController do
         }
       }
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(UserHistory.where(
         context: child.id.to_s,
@@ -441,7 +506,7 @@ describe Admin::ThemesController do
         theme: { remote_update: true }
       }
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)["errors"].first).to eq("error message")
+      expect(response.parsed_body["errors"].first).to eq("error message")
     end
 
     it 'returns the right error message' do
@@ -452,7 +517,7 @@ describe Admin::ThemesController do
       }
 
       expect(response.status).to eq(400)
-      expect(JSON.parse(response.body)["errors"].first).to include(I18n.t("themes.errors.component_no_default"))
+      expect(response.parsed_body["errors"].first).to include(I18n.t("themes.errors.component_no_default"))
     end
   end
 
@@ -512,7 +577,7 @@ describe Admin::ThemesController do
       }
 
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["bg"]).to eq("green")
+      expect(response.parsed_body["bg"]).to eq("green")
 
       theme.reload
       expect(theme.included_settings[:bg]).to eq("green")

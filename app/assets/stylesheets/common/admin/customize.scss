@@ -487,9 +487,13 @@
     .hex-input {
       width: 80px;
       margin-bottom: 0;
+      margin-right: 6px;
     }
     .hex {
       text-align: center;
+    }
+    .color-input {
+      display: flex;
     }
     h3 {
       margin: 0;
@@ -556,7 +560,7 @@
 }
 
 #custom_emoji {
-  width: 27%;
+  width: 100%;
 }
 
 .modal-body .inputs .branch {
@@ -619,7 +623,7 @@
   }
 
   .select-kit {
-    width: 150px;
+    width: 200px;
   }
   input {
     margin: 5px 0;

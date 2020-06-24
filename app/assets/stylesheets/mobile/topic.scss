@@ -217,3 +217,28 @@ sub sub {
   align-items: center;
   flex-wrap: wrap;
 }
+
+@media screen and (max-height: 600px) {
+  .topic-admin-popup-menu {
+    box-sizing: border-box;
+    padding: 0.25em;
+
+    ul {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+
+      @media screen and (max-width: 550px) {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .popup-menu-btn {
+        @include ellipsis;
+      }
+
+      li {
+        border: 0;
+        min-width: 0;
+      }
+    }
+  }
+}

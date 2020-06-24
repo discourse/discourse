@@ -186,16 +186,18 @@ class ThemeJavascriptCompiler
     raise CompileError.new e.instance_variable_get(:@error) # e.message contains the entire template, which could be very long
   end
 
+  def raw_template_name(name)
+    name = name.sub(/\.(raw|hbr)$/, '')
+    name.inspect
+  end
+
   def append_raw_template(name, hbs_template)
-    name = name.sub(/\.raw$/, '')
-    name = name.sub(/\.hbr$/, '.hbs')
-    name = name.inspect
     compiled = RawTemplatePrecompiler.new(@theme_id).compile(hbs_template)
     @content << <<~JS
       (function() {
-        if ('Discourse' in window) {
-          Discourse.RAW_TEMPLATES[#{name}] = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
-        }
+        const addRawTemplate = requirejs('discourse-common/lib/raw-templates').addRawTemplate;
+        const template = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
+        addRawTemplate(#{raw_template_name(name)}, template);
       })();
     JS
   rescue Barber::PrecompilerError => e
@@ -212,8 +214,8 @@ class ThemeJavascriptCompiler
 
   def append_module(script, name, include_variables: true)
     script = "#{theme_variables}#{script}" if include_variables
-    template = Tilt::ES6ModuleTranspilerTemplate.new {}
-    @content << template.module_transpile(script, "", name)
+    transpiler = DiscourseJsProcessor::Transpiler.new
+    @content << transpiler.perform(script, "", name)
   rescue MiniRacer::RuntimeError => ex
     raise CompileError.new ex.message
   end
@@ -235,7 +237,7 @@ class ThemeJavascriptCompiler
   end
 
   def transpile(es6_source, version)
-    template = Tilt::ES6ModuleTranspilerTemplate.new {}
+    transpiler = DiscourseJsProcessor::Transpiler.new(skip_module: true)
     wrapped = <<~PLUGIN_API_JS
       (function() {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
@@ -252,7 +254,7 @@ class ThemeJavascriptCompiler
       })();
     PLUGIN_API_JS
 
-    template.babel_transpile(wrapped)
+    transpiler.perform(wrapped)
   rescue MiniRacer::RuntimeError => ex
     raise CompileError.new ex.message
   end

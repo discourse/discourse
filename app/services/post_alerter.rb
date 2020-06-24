@@ -8,6 +8,11 @@ class PostAlerter
     post
   end
 
+  def self.post_edited(post, opts = {})
+    PostAlerter.new(opts).after_save_post(post, false)
+    post
+  end
+
   def initialize(default_opts = {})
     @default_opts = default_opts
   end
@@ -96,7 +101,7 @@ class PostAlerter
       if post.topic.private_message?
         notify_pm_users(post, reply_to_user, notified)
       elsif notify_about_reply?(post)
-        notify_post_users(post, notified)
+        notify_post_users(post, notified, new_record: new_record)
       end
     end
 
@@ -251,6 +256,7 @@ class PostAlerter
   end
 
   def should_notify_edit?(notification, post, opts)
+    notification.created_at < 1.day.ago ||
     notification.data_hash["display_username"] != (opts[:display_username].presence || post.user.username)
   end
 
@@ -261,7 +267,6 @@ class PostAlerter
   end
 
   def should_notify_previous?(user, post, notification, opts)
-    return false unless notification
     case notification.notification_type
     when Notification.types[:edited] then should_notify_edit?(notification, post, opts)
     when Notification.types[:liked]  then should_notify_like?(user, notification)
@@ -280,7 +285,7 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
-    return if user.blank? || user.bot?
+    return if user.blank? || user.bot? || post.blank?
     return if (topic = post.topic).blank?
 
     is_liked = type == Notification.types[:liked]
@@ -331,7 +336,14 @@ class PostAlerter
     # Don't notify the same user about the same type of notification on the same post
     existing_notification_of_same_type = existing_notifications.find { |n| n.notification_type == type }
 
-    return if existing_notifications.present? && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
+    if existing_notification_of_same_type && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
+      return
+    end
+
+    # linked, quoted, mentioned may be suppressed if you already have a reply notification
+    if type == Notification.types[:quoted] || type == Notification.types[:linked] || type == Notification.types[:mentioned]
+      return if existing_notifications.find { |n| n.notification_type == Notification.types[:replied] }
+    end
 
     notification_data = {}
 
@@ -451,6 +463,7 @@ class PostAlerter
         .where("push_url IS NOT NULL AND push_url <> ''")
         .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
         .where("revoked_at IS NULL")
+        .order(client_id: :asc)
         .pluck(:client_id, :push_url)
 
       if clients.length > 0
@@ -554,7 +567,7 @@ class PostAlerter
     end
   end
 
-  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true)
+  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true, new_record: false)
     return unless post.topic
 
     warn_if_not_sidekiq
@@ -615,8 +628,10 @@ class PostAlerter
     already_seen_user_ids = Set.new TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
 
     each_user_in_batches(notify) do |user|
-      notification_type = already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
-      create_notification(user, notification_type, post)
+      notification_type = !new_record && already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
+      opts = {}
+      opts[:display_username] = post.last_editor.username if notification_type == Notification.types[:edited]
+      create_notification(user, notification_type, post, opts)
     end
   end
 

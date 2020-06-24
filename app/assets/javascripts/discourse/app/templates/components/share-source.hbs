@@ -1,0 +1,7 @@
+<a href {{action "share" source}} title={{source.title}} aria-label={{source.title}}>
+  {{#if source.icon}}
+    {{d-icon source.icon}}
+  {{else}}
+    {{html-safe source.htmlIcon}}
+  {{/if}}
+</a>

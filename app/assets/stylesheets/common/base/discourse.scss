@@ -422,7 +422,7 @@ table {
   align-items: center;
 }
 
-.unread-private-messages {
+.unread-high-priority-notifications {
   color: $secondary;
   background: $success;
 
@@ -640,6 +640,56 @@ table {
   display: inline;
 }
 
+.pref-email {
+  .row {
+    border-bottom: 1px solid #ddd;
+    margin: 5px 0px;
+    padding-bottom: 5px;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .email-first {
+    font-size: 1.1em;
+  }
+
+  .email-second {
+    color: $primary-medium;
+
+    .primary {
+      color: $success;
+      font-weight: bold;
+    }
+
+    .unconfirmed {
+      font-style: italic;
+    }
+  }
+
+  .email-dropdown {
+    float: right;
+
+    .btn,
+    .btn:hover {
+      background: transparent;
+
+      .d-icon {
+        color: $primary-high;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    width: 120px;
+
+    & .icon {
+      margin-top: auto;
+    }
+  }
+}
+
 .pref-auth-tokens {
   .row {
     border-bottom: 1px solid #ddd;
@@ -687,14 +737,6 @@ table {
       }
     }
   }
-
-  .dropdown-menu {
-    width: 120px;
-
-    & .icon {
-      margin-top: auto;
-    }
-  }
 }
 
 .topic-statuses {
@@ -714,7 +756,7 @@ table {
     }
   }
 
-  .d-icon-envelope {
+  .topic-status-warning .d-icon-envelope {
     color: $danger;
   }
 }

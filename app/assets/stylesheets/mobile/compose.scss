@@ -26,9 +26,10 @@
 
   body.ios-safari-composer-hacks &.open {
     height: calc(var(--composer-vh, 1vh) * 100);
-    .reply-area {
-      padding-bottom: 0px;
-    }
+  }
+
+  .keyboard-visible body.ios-safari-composer-hacks &.open .reply-area {
+    padding-bottom: 0px;
   }
 
   .reply-to {
@@ -56,13 +57,13 @@
   }
 
   .toggler {
-    margin-left: -5px;
     .d-icon-chevron-down {
       vertical-align: text-top;
     }
   }
 
   &.draft {
+    z-index: z("footer-nav") + 1;
     padding-bottom: env(safe-area-inset-bottom);
 
     .toggle-toolbar,
@@ -81,9 +82,6 @@
 
   .category-input {
     margin-bottom: 5px;
-    .category-chooser {
-      width: 100% !important;
-    }
   }
 
   .submit-panel {
@@ -205,10 +203,6 @@
           font-size: $font-0;
         }
       }
-    }
-
-    .title-and-category .select-kit {
-      min-width: unset;
     }
   }
 

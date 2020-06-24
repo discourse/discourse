@@ -2,7 +2,7 @@
   {{#if model.icon}}
     {{d-icon model.icon}}
   {{/if}}
-  <a href="{{model.reportUrl}}">{{model.title}}</a>
+  <a href={{model.reportUrl}}>{{model.title}}</a>
 </div>
 
 <div class="cell value today-count">{{number model.todayCount}}</div>

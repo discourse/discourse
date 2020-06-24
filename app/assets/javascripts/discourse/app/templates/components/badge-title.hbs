@@ -1,0 +1,33 @@
+<section class="user-content">
+  <form class="form-horizontal">
+
+    <div class="control-group">
+      <div class="controls">
+        <h3>{{i18n "badges.select_badge_for_title"}}</h3>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        {{combo-box
+          value=selectedUserBadgeId
+          nameProperty="badge.name"
+          content=selectableUserBadges
+          onChange=(action (mut selectedUserBadgeId))
+        }}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        {{d-button
+          class="btn-primary"
+          action=(action "save")
+          disabled=saving
+          label=(if saving "saving" "save")}}
+        {{#if saved}}{{i18n "saved"}}{{/if}}
+      </div>
+    </div>
+
+  </form>
+</section>

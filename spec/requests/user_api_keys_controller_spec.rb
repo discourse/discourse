@@ -205,7 +205,7 @@ describe UserApiKeysController do
       expect(parsed["nonce"]).to eq(args[:nonce])
       expect(parsed["push"]).to eq(true)
 
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.with_key(parsed["key"]).first
 
       expect(api_key.user_id).to eq(user.id)
       expect(api_key.scopes.sort).to eq(["push", "message_bus", "notifications", "session_info", "one_time_password"].sort)
@@ -238,11 +238,11 @@ describe UserApiKeysController do
       SiteSetting.min_trust_level_for_user_api_key = 0
       post "/user-api-key", params: args
       expect(response.status).not_to eq(302)
-      payload = Nokogiri::HTML(response.body).at('code').content
+      payload = Nokogiri::HTML5(response.body).at('code').content
       encrypted = Base64.decode64(payload)
       key = OpenSSL::PKey::RSA.new(private_key)
       parsed = JSON.parse(key.private_decrypt(encrypted))
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.with_key(parsed["key"]).first
       expect(api_key.user_id).to eq(user.id)
     end
 
@@ -255,11 +255,11 @@ describe UserApiKeysController do
       SiteSetting.min_trust_level_for_user_api_key = 0
       post "/user-api-key.json", params: args
       expect(response.status).not_to eq(302)
-      payload = JSON.parse(response.body)["payload"]
+      payload = response.parsed_body["payload"]
       encrypted = Base64.decode64(payload)
       key = OpenSSL::PKey::RSA.new(private_key)
       parsed = JSON.parse(key.private_decrypt(encrypted))
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.with_key(parsed["key"]).first
       expect(api_key.user_id).to eq(user.id)
 
     end

@@ -51,6 +51,8 @@ class UserSerializer < UserCardSerializer
                      :ignored_usernames,
                      :mailing_list_posts_per_day,
                      :can_change_bio,
+                     :can_change_location,
+                     :can_change_website,
                      :user_api_keys,
                      :user_auth_tokens
 
@@ -74,6 +76,10 @@ class UserSerializer < UserCardSerializer
 
   def group_users
     object.group_users.order(:group_id)
+  end
+
+  def include_group_users?
+    (object.id && object.id == scope.user.try(:id)) || scope.is_staff?
   end
 
   def include_associated_accounts?
@@ -106,6 +112,14 @@ class UserSerializer < UserCardSerializer
 
   def can_change_bio
     !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
+  end
+
+  def can_change_location
+    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_location)
+  end
+
+  def can_change_website
+    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_website)
   end
 
   def user_api_keys
@@ -268,6 +282,18 @@ class UserSerializer < UserCardSerializer
 
   def profile_background_upload_url
     object.profile_background_upload&.url
+  end
+
+  private
+
+  def custom_field_keys
+    fields = super
+
+    if scope.can_edit?(object)
+      fields += DiscoursePluginRegistry.serialized_current_user_fields.to_a
+    end
+
+    fields
   end
 
 end

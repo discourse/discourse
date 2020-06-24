@@ -1,0 +1,32 @@
+<div class="container">
+  {{discourse-banner user=currentUser banner=site.banner}}
+</div>
+
+<div class="list-controls">
+  <div class="container">
+    {{#if canAdminTags}}
+      {{tags-admin-dropdown actionsMapping=actionsMapping}}
+    {{/if}}
+    <h2>{{i18n "tagging.tags"}}</h2>
+  </div>
+</div>
+
+<div class="tag-sort-options">
+  {{i18n "tagging.sort_by"}}
+  <span class="tag-sort-count {{if sortedByCount "active"}}"><a href {{action "sortByCount"}}>{{i18n "tagging.sort_by_count"}}</a></span>
+  <span class="tag-sort-name {{if sortedByName "active"}}"><a href {{action "sortById"}}>{{i18n "tagging.sort_by_name"}}</a></span>
+</div>
+
+<hr>
+
+{{#each model.extras.categories as |category|}}
+  {{tag-list tags=category.tags sortProperties=sortProperties categoryId=category.id}}
+{{/each}}
+
+{{#each model.extras.tag_groups as |tagGroup|}}
+  {{tag-list tags=tagGroup.tags sortProperties=sortProperties tagGroupName=tagGroup.name}}
+{{/each}}
+
+{{#if model}}
+  {{tag-list tags=model sortProperties=sortProperties titleKey=otherTagsTitleKey}}
+{{/if}}

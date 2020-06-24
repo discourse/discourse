@@ -68,6 +68,10 @@
           display: contents;
         }
       }
+
+      a.widget-link {
+        color: $tertiary;
+      }
     }
 
     .main-results {
@@ -265,6 +269,10 @@
     }
 
     .topic-title {
+      overflow-wrap: anywhere;
+      @supports not (overflow-wrap: anywhere) {
+        word-break: break-word;
+      }
       margin-right: 0.25em;
     }
   }

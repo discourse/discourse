@@ -276,6 +276,8 @@ class PostDestroyer
   end
 
   def notify_deletion(reviewable)
+    return if @post.user.blank?
+
     allowed_user = @user.human? && @user.staff?
     return unless allowed_user && rs = reviewable.reviewable_scores.order('created_at DESC').first
 
@@ -346,11 +348,6 @@ class PostDestroyer
         author.user_stat.post_count -= 1
       end
       author.user_stat.topic_count -= 1 if @post.is_first_post?
-    end
-
-    # We don't count replies to your own topics in topic_reply_count
-    if @topic && author.id != @topic.user_id
-      author.user_stat.update_topic_reply_count
     end
 
     author.user_stat.save!

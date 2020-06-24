@@ -39,12 +39,12 @@ class ApplicationController < ActionController::Base
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
   before_action :preload_json
+  before_action :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
-  after_action  :add_noindex_header, if: -> { is_feed_request? }
 
   layout :set_layout
 
@@ -124,7 +124,7 @@ class ApplicationController < ActionController::Base
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
-    raise Discourse::ReadOnly
+    rescue_with_handler(Discourse::ReadOnly.new) || raise
   end
 
   rescue_from ActionController::ParameterMissing do |e|
@@ -212,7 +212,9 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::ReadOnly do
-    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+    unless response_body
+      render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+    end
   end
 
   def redirect_with_client_support(url, options)
@@ -243,12 +245,20 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
-    error_page_opts = {
-      title: opts[:custom_message_translated] || I18n.t(opts[:custom_message] || "page_not_found.title"),
-      status: status_code,
-      group: opts[:group]
-    }
+    if opts[:custom_message_translated]
+      title = message = opts[:custom_message_translated]
+    elsif opts[:custom_message]
+      title = message = I18n.t(opts[:custom_message])
+    else
+      message = I18n.t(type)
+      if status_code == 403
+        title = I18n.t("page_forbidden.title")
+      else
+        title = I18n.t("page_not_found.title")
+      end
+    end
+
+    error_page_opts = { title: title, status: status_code, group: opts[:group] }
 
     if show_json_errors
       opts = { type: type, status: status_code }
@@ -376,8 +386,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_theme
-    return if request.xhr? || request.format == "json" || request.format == "js"
-    return if request.method != "GET"
+    return if request.format == "js"
 
     resolve_safe_mode
     return if request.env[NO_CUSTOM]
@@ -405,7 +414,9 @@ class ApplicationController < ActionController::Base
     end
 
     if theme_ids.blank? && SiteSetting.default_theme_id != -1
-      theme_ids << SiteSetting.default_theme_id
+      if guardian.allow_themes?([SiteSetting.default_theme_id])
+        theme_ids << SiteSetting.default_theme_id
+      end
     end
 
     @theme_ids = request.env[:resolved_theme_ids] = theme_ids
@@ -528,6 +539,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("customHTML", custom_html_json)
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
+    store_preloaded("isReadOnly", @readonly_mode.to_s)
   end
 
   def preload_current_user_data
@@ -650,7 +662,7 @@ class ApplicationController < ActionController::Base
   def check_xhr
     # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
     return if !request.get? && (is_api? || is_user_api?)
-    raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
+    raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
   end
 
   def self.requires_login(arg = {})
@@ -749,7 +761,7 @@ class ApplicationController < ActionController::Base
     return if !current_user
     return if !should_enforce_2fa?
 
-    redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
+    redirect_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     if !request.fullpath.start_with?(redirect_path)
       redirect_to path(redirect_path)
       nil
@@ -807,7 +819,13 @@ class ApplicationController < ActionController::Base
   end
 
   def add_noindex_header
-    response.headers['X-Robots-Tag'] = 'noindex'
+    if request.get?
+      if SiteSetting.allow_index_in_robots_txt
+        response.headers['X-Robots-Tag'] = 'noindex'
+      else
+        response.headers['X-Robots-Tag'] = 'noindex, nofollow'
+      end
+    end
   end
 
   protected

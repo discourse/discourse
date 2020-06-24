@@ -11,9 +11,9 @@ describe CategoriesController do
     it 'web crawler view has correct urls for subfolder install' do
       set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
-      html = Nokogiri::HTML(response.body)
+      html = Nokogiri::HTML5(response.body)
       expect(html.css('body.crawler')).to be_present
-      expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
+      expect(html.css("a[href=\"/forum/c/#{category.slug}/#{category.id}\"]")).to be_present
     end
 
     it "properly preloads topic list" do
@@ -46,7 +46,7 @@ describe CategoriesController do
     end
 
     it "respects permalinks before redirecting /category paths to /c paths" do
-      perm = Permalink.create!(url: "category/something", category_id: category.id)
+      _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
       get "/category/something"
       expect(response.status).to eq(301)
@@ -129,7 +129,7 @@ describe CategoriesController do
           }
 
           expect(response.status).to eq(422)
-          expect(JSON.parse(response.body)['errors']).to be_present
+          expect(response.parsed_body['errors']).to be_present
         end
       end
 
@@ -156,7 +156,7 @@ describe CategoriesController do
           }
 
           expect(response.status).to eq(200)
-          cat_json = ::JSON.parse(response.body)['category']
+          cat_json = response.parsed_body['category']
           expect(cat_json).to be_present
           expect(cat_json['reviewable_by_group_name']).to eq(group.name)
           expect(cat_json['name']).to eq('hello')
@@ -218,11 +218,15 @@ describe CategoriesController do
 
       it "deletes the record" do
         sign_in(admin)
+
+        id = Fabricate(:topic_timer, category: category).id
+
         expect do
           delete "/categories/#{category.slug}.json"
         end.to change(Category, :count).by(-1)
         expect(response.status).to eq(200)
         expect(UserHistory.count).to eq(1)
+        expect(TopicTimer.where(id: id).exists?).to eq(false)
       end
     end
   end
@@ -321,7 +325,7 @@ describe CategoriesController do
       end
 
       it "returns 422 if email_in address is already in use for other category" do
-        other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
+        _other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
 
         put "/categories/#{category.id}.json", params: {
           name: "Email",
@@ -448,8 +452,9 @@ describe CategoriesController do
       end
 
       it 'rejects blank' do
-        put "/category/#{category.id}/slug.json", params: { slug: nil }
+        put "/category/#{category.id}/slug.json", params: { slug: '   ' }
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["Slug can't be blank"])
       end
 
       it 'accepts valid custom slug' do
@@ -476,8 +481,9 @@ describe CategoriesController do
       end
 
       it 'rejects invalid custom slug' do
-        put "/category/#{category.id}/slug.json", params: { slug: '  ' }
+        put "/category/#{category.id}/slug.json", params: { slug: '.' }
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["Slug is invalid"])
       end
     end
   end
@@ -491,21 +497,21 @@ describe CategoriesController do
       SiteSetting.categories_topics = 5
 
       get '/categories_and_latest.json'
-      expect(JSON.parse(response.body)['topic_list']['topics'].size).to eq(5)
+      expect(response.parsed_body['topic_list']['topics'].size).to eq(5)
     end
 
     it 'works when SiteSetting.categories_topics is null' do
       SiteSetting.categories_topics = 0
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(2) # 'Uncategorized' and category
       expect(json['topic_list']['topics'].size).to eq(5)
 
       Fabricate(:category, parent_category: category)
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(2)
       expect(json['topic_list']['topics'].size).to eq(5)
 
@@ -513,7 +519,7 @@ describe CategoriesController do
       Fabricate(:category)
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(4)
       expect(json['topic_list']['topics'].size).to eq(6)
     end

@@ -1,0 +1,13 @@
+<div id="second-factor">
+  <h3>{{secondFactorTitle}}</h3>
+  {{#if optionalText}}
+    <p>{{html-safe optionalText}}</p>
+  {{/if}}
+  <p>{{secondFactorDescription}}</p>
+  {{yield}}
+  {{#if showToggleMethodLink}}
+    <p>
+      <a href="" class="toggle-second-factor-method" {{action "toggleSecondFactorMethod"}}>{{ i18n linkText }}</a>
+    </p>
+  {{/if}}
+</div>

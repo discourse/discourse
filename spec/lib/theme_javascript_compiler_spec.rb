@@ -110,4 +110,21 @@ describe ThemeJavascriptCompiler do
     end
   end
 
+  describe "#append_raw_template" do
+    let(:compiler) { ThemeJavascriptCompiler.new(1, 'marks') }
+    it 'uses the correct template paths' do
+      template = "<h1>hello</h1>"
+      name = "/path/to/templates1"
+      compiler.append_raw_template("#{name}.raw", template)
+      expect(compiler.content.to_s).to include("addRawTemplate(\"#{name}\"")
+
+      name = "/path/to/templates2"
+      compiler.append_raw_template("#{name}.hbr", template)
+      expect(compiler.content.to_s).to include("addRawTemplate(\"#{name}\"")
+
+      name = "/path/to/templates3"
+      compiler.append_raw_template("#{name}.hbs", template)
+      expect(compiler.content.to_s).to include("addRawTemplate(\"#{name}.hbs\"")
+    end
+  end
 end

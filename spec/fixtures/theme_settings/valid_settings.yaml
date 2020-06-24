@@ -68,3 +68,7 @@ enum_setting_03:
     - 10
     - 100
     - 1000
+
+upload_setting:
+  type: upload
+  default: ""

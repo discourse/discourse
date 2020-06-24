@@ -12,6 +12,8 @@ module Jobs
       TopicTimer.transaction do
         TopicPublisher.new(topic, Discourse.system_user, topic_timer.category_id).publish!
       end
+
+      Topic.find(topic.id).inherit_auto_close_from_category
     end
   end
 end

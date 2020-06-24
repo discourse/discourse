@@ -34,9 +34,6 @@ module BackupRestore
 
       update_metadata
 
-      ### READ-ONLY / START ###
-      enable_readonly_mode
-
       begin
         pause_sidekiq
         wait_for_sidekiq
@@ -44,9 +41,6 @@ module BackupRestore
       ensure
         unpause_sidekiq
       end
-
-      disable_readonly_mode
-      ### READ-ONLY / END ###
 
       log "Finalizing backup..."
 
@@ -106,7 +100,6 @@ module BackupRestore
         end
 
       @logs = []
-      @readonly_mode_was_enabled = Discourse.readonly_mode? || !SiteSetting.readonly_mode_during_backup
     end
 
     def listen_for_shutdown_signal
@@ -132,12 +125,6 @@ module BackupRestore
       BackupMetadata.create!(name: "s3_cdn_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil)
       BackupMetadata.create!(name: "db_name", value: RailsMultisite::ConnectionManagement.current_db)
       BackupMetadata.create!(name: "multisite", value: Rails.configuration.multisite)
-    end
-
-    def enable_readonly_mode
-      return if @readonly_mode_was_enabled
-      log "Enabling readonly mode..."
-      Discourse.enable_readonly_mode
     end
 
     def pause_sidekiq
@@ -207,6 +194,7 @@ module BackupRestore
       [ password_argument,            # pass the password to pg_dump (if any)
         "pg_dump",                    # the pg_dump command
         "--schema=public",            # only public schema
+        "-T public.pg_*",             # exclude tables and views whose name starts with "pg_"
         "--file='#{@dump_filename}'", # output to the dump.sql file
         "--no-owner",                 # do not output commands to set ownership of objects
         "--no-privileges",            # prevent dumping of access privileges
@@ -303,19 +291,16 @@ module BackupRestore
           log "Failed to download file with upload ID #{upload.id} from S3", ex
         end
 
-        if File.exists?(filename)
-          Discourse::Utils.execute_command(
-            'tar', '--append', '--file', tar_filename, upload_directory,
-            failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1],
-            chdir: @tmp_directory
-          )
-
-          File.delete(filename)
-        end
-
         count += 1
         log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
       end
+
+      log "Appending uploads to archive..."
+      Discourse::Utils.execute_command(
+        'tar', '--append', '--file', tar_filename, upload_directory,
+        failure_message: "Failed to append uploads to archive.", success_status_codes: [0, 1],
+        chdir: @tmp_directory
+      )
 
       log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
     end
@@ -364,7 +349,6 @@ module BackupRestore
       log "Cleaning stuff up..."
       delete_uploaded_archive
       remove_tar_leftovers
-      disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       refresh_disk_space
     end
@@ -409,14 +393,6 @@ module BackupRestore
       Sidekiq.unpause!
     rescue => ex
       log "Something went wrong while unpausing Sidekiq.", ex
-    end
-
-    def disable_readonly_mode
-      return if @readonly_mode_was_enabled
-      log "Disabling readonly mode..."
-      Discourse.disable_readonly_mode
-    rescue => ex
-      log "Something went wrong while disabling readonly mode.", ex
     end
 
     def mark_backup_as_not_running

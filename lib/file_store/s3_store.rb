@@ -53,8 +53,16 @@ module FileStore
         cache_control: 'max-age=31556952, public, immutable',
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
-      # add a "content disposition" header for "attachments"
-      options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_media?(filename)
+
+      # add a "content disposition: attachment" header with the original filename
+      # for everything but images. audio and video will still stream correctly in
+      # HTML players, and when a direct link is provided to any file but an image
+      # it will download correctly in the browser.
+      if !FileHelper.is_supported_image?(filename)
+        options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+          disposition: "attachment", filename: filename
+        )
+      end
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
 
@@ -79,12 +87,35 @@ module FileStore
     def has_been_uploaded?(url)
       return false if url.blank?
 
+      begin
+        parsed_url = URI.parse(UrlHelper.encode(url))
+      rescue URI::InvalidURIError, URI::InvalidComponentError
+        return false
+      end
+
       base_hostname = URI.parse(absolute_base_url).hostname
-      return true if url[base_hostname]
+      if url[base_hostname]
+        # if the hostnames match it means the upload is in the same
+        # bucket on s3. however, the bucket folder path may differ in
+        # some cases, and we do not want to assume the url is uploaded
+        # here. e.g. the path of the current site could be /prod and the
+        # other site could be /staging
+        if s3_bucket_folder_path.present?
+          return parsed_url.path.starts_with?("/#{s3_bucket_folder_path}")
+        else
+          return true
+        end
+        return false
+      end
 
       return false if SiteSetting.Upload.s3_cdn_url.blank?
       cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
-      cdn_hostname.presence && url[cdn_hostname]
+      return true if cdn_hostname.presence && url[cdn_hostname]
+      false
+    end
+
+    def s3_bucket_folder_path
+      @s3_helper.s3_bucket_folder_path
     end
 
     def s3_bucket_name
@@ -198,7 +229,7 @@ module FileStore
       FileUtils.symlink(source_path, public_upload_path)
 
       FileStore::ToS3Migration.new(
-        s3_options: FileStore::ToS3Migration.s3_options_from_env,
+        s3_options: FileStore::ToS3Migration.s3_options_from_site_settings,
         migrate_to_multisite: Rails.configuration.multisite,
       ).migrate
 

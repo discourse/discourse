@@ -46,7 +46,7 @@ RSpec.describe Admin::GroupsController do
       end
 
       after do
-        Group.plugin_editable_group_custom_fields.clear
+        DiscoursePluginRegistry.reset!
       end
 
       it "only updates allowed user fields" do
@@ -63,7 +63,7 @@ RSpec.describe Admin::GroupsController do
       end
 
       it "is secure when there are no registered editable fields" do
-        Group.plugin_editable_group_custom_fields.clear
+        DiscoursePluginRegistry.reset!
         params = group_params
         params[:group].merge!(custom_fields: { test: :hello1, test2: :hello2 })
 
@@ -88,12 +88,39 @@ RSpec.describe Admin::GroupsController do
 
       expect(response.status).to eq(200)
 
-      response_body = JSON.parse(response.body)
+      response_body = response.parsed_body
 
       expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
 
       expect(group.group_users.where(owner: true).map(&:user))
         .to contain_exactly(user, admin)
+    end
+
+    it 'returns not-found error when there is no group' do
+      group.destroy!
+
+      put "/admin/groups/#{group.id}/owners.json", params: {
+        group: {
+          usernames: user.username
+        }
+      }
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does not allow adding owners to an automatic group' do
+      group.update!(automatic: true)
+
+      expect do
+        put "/admin/groups/#{group.id}/owners.json", params: {
+          group: {
+            usernames: user.username
+          }
+        }
+      end.to_not change { group.group_users.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
     end
   end
 
@@ -107,6 +134,27 @@ RSpec.describe Admin::GroupsController do
 
       expect(response.status).to eq(200)
       expect(group.group_users.where(owner: true)).to eq([])
+    end
+
+    it 'returns not-found error when there is no group' do
+      group.destroy!
+
+      delete "/admin/groups/#{group.id}/owners.json", params: {
+        user_id: user.id
+      }
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does not allow removing owners from an automatic group' do
+      group.update!(automatic: true)
+
+      delete "/admin/groups/#{group.id}/owners.json", params: {
+        user_id: user.id
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
     end
   end
 
@@ -142,7 +190,7 @@ RSpec.describe Admin::GroupsController do
       expect(user2.title).to eq("WAT")
       expect(user2.trust_level).to eq(4)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['message']).to eq("2 users have been added to the group.")
       expect(json['users_not_added'][0]).to eq("doesnt_exist")
     end
@@ -173,6 +221,33 @@ RSpec.describe Admin::GroupsController do
         expect(response.status).to eq(200)
         expect(Group.find_by(id: group.id)).to eq(nil)
       end
+    end
+  end
+
+  describe '#automatic_membership_count' do
+    it 'returns count of users whose emails match the domain' do
+      Fabricate(:user, email: 'user1@somedomain.org')
+      Fabricate(:user, email: 'user1@somedomain.com')
+      Fabricate(:user, email: 'user1@notsomedomain.com')
+      group = Fabricate(:group)
+
+      put "/admin/groups/automatic_membership_count.json", params: {
+        automatic_membership_email_domains: 'somedomain.org|somedomain.com',
+        id: group.id
+      }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user_count"]).to eq(2)
+    end
+
+    it "doesn't responde with 500 if domain is invalid" do
+      group = Fabricate(:group)
+
+      put "/admin/groups/automatic_membership_count.json", params: {
+        automatic_membership_email_domains: '@somedomain.org|@somedomain.com',
+        id: group.id
+      }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user_count"]).to eq(0)
     end
   end
 end

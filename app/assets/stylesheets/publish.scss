@@ -1,0 +1,32 @@
+@import "common";
+
+.published-page-wrapper {
+  margin: 2em auto;
+  max-width: 800px;
+}
+
+.published-page {
+  background-color: $secondary;
+  color: $primary;
+}
+
+.published-page-title {
+  color: $header_primary;
+}
+
+.published-page-author {
+  margin-top: 1em;
+  margin-bottom: 2em;
+  display: flex;
+
+  .avatar {
+    margin-right: 1em;
+  }
+  .topic-created-at {
+    color: $primary-medium;
+  }
+}
+
+.published-page-body {
+  font-size: 1.25em;
+}

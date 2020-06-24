@@ -79,7 +79,7 @@
 }
 
 @media only screen and (max-device-width: 568px) {
-  .modal .flag-modal .flag-message {
+  .modal .flag-modal-body .flag-message {
     height: 3em;
   }
 }
@@ -115,6 +115,10 @@
   .modal-inner-container {
     max-height: 90vh;
     overflow: auto;
+  }
+
+  &.insert-hyperlink-modal .modal-inner-container {
+    overflow: visible;
   }
 }
 

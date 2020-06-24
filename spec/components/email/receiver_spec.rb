@@ -656,8 +656,11 @@ describe Email::Receiver do
     end
 
     it "ensures posts aren't dated in the future" do
+      # PostCreator doesn't provide sub-second accuracy for created_at
+      now = freeze_time Time.zone.now.round
+
       expect { process(:from_the_future) }.to change { topic.posts.count }
-      expect(topic.posts.last.created_at).to be_within(1.minute).of(DateTime.now)
+      expect(topic.posts.last.created_at).to eq_time(now)
     end
 
     it "accepts emails with wrong reply key if the system knows about the forwarded email" do
@@ -1527,5 +1530,40 @@ describe Email::Receiver do
       expect(text).to eq(stripped_text)
     end
 
+  end
+
+  describe "replying to digest" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:digest_message_id) { "7402d8ae-1c6e-44bc-9948-48e007839bcc@localhost" }
+    fab!(:email_log) { Fabricate(:email_log,
+      user: user,
+      email_type: 'digest',
+      to_address: user.email,
+      message_id: digest_message_id
+    )}
+    let(:email) {
+      <<~EOF
+      MIME-Version: 1.0
+      Date: Tue, 01 Jan 2019 00:00:00 +0300
+      From: someone <#{user.email}>
+      To: Discourse <#{SiteSetting.notification_email}>
+      Message-ID: <CANtGPwC3ZmWSxnnEuJHfosbtc9d0-ZV02b_7KuyircDt4peDC2@mail.gmail.com>
+      In-Reply-To: <#{digest_message_id}>
+      Subject: Re: [Discourse] Summary
+      References: <#{digest_message_id}>
+      Content-Type: text/plain; charset="UTF-8"
+
+      hello there! I like the digest!
+
+      EOF
+    }
+
+    before do
+      Jobs.run_immediately!
+    end
+
+    it 'returns a ReplyToDigestError' do
+      expect { Email::Receiver.new(email).process! }.to raise_error(Email::Receiver::ReplyToDigestError)
+    end
   end
 end

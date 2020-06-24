@@ -1,0 +1,43 @@
+{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories}}
+
+{{#if showCategoryAdmin}}
+  {{categories-admin-dropdown
+    onChange=(action "selectCategoryAdminDropdownAction")
+    options=(hash
+      triggerOnChangeOnTab=false
+    )
+  }}
+{{/if}}
+
+{{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+
+{{#if showCategoryNotifications}}
+  {{category-notifications-button
+    value=category.notification_level
+    category=category
+    onChange=(action "changeCategoryNotificationLevel")
+  }}
+{{/if}}
+
+{{plugin-outlet name="before-create-topic-button"
+  args=(hash
+    canCreateTopic=canCreateTopic
+    createTopicDisabled=createTopicDisabled
+    createTopicLabel=createTopicLabel)
+}}
+
+{{create-topic-button
+  canCreateTopic=canCreateTopic
+  action=(action "clickCreateTopicButton")
+  disabled=createTopicButtonDisabled
+  label=createTopicLabel
+  btnClass=createTopicClass
+}}
+
+{{#if showCategoryEdit}}
+  {{d-button
+    class="btn-default edit-category"
+    action=editCategory
+    icon="wrench"
+    label="category.edit"}}
+{{/if}}

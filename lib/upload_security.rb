@@ -14,6 +14,7 @@
 # on the current secure? status, otherwise there would be a lot of additional
 # complex queries and joins to perform.
 class UploadSecurity
+  PUBLIC_TYPES = %w[avatar custom_emoji profile_background card_background]
   def initialize(upload, opts = {})
     @upload = upload
     @opts = opts
@@ -23,21 +24,13 @@ class UploadSecurity
   def should_be_secure?
     return false if !SiteSetting.secure_media?
     return false if uploading_in_public_context?
-    (secure_attachment? || supported_media?) && uploading_in_secure_context?
+    uploading_in_secure_context?
   end
 
   private
 
   def uploading_in_public_context?
     @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji? || based_on_regular_emoji?
-  end
-
-  def supported_media?
-    FileHelper.is_supported_media?(@upload.original_filename)
-  end
-
-  def secure_attachment?
-    !supported_media? && SiteSetting.prevent_anons_from_downloading_files
   end
 
   def uploading_in_secure_context?
@@ -57,14 +50,11 @@ class UploadSecurity
   # if there is no access control post id and the upload is currently secure, we
   # do not want to make it un-secure to avoid unintentionally exposing it
   def access_control_post_has_secure_media?
-    # if the post is deleted the access_control_post will be blank...
-    # TODO: deal with this in a better way
-    return false if @upload.access_control_post.blank?
     @upload.access_control_post.with_secure_media?
   end
 
   def public_type?
-    %w[avatar custom_emoji profile_background card_background].include?(@upload_type)
+    PUBLIC_TYPES.include?(@upload_type)
   end
 
   def uploading_in_composer?

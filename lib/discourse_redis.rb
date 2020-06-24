@@ -5,141 +5,6 @@
 #
 
 class DiscourseRedis
-  class FallbackHandler
-    include Singleton
-
-    MASTER_ROLE_STATUS = "role:master".freeze
-    MASTER_LOADING_STATUS = "loading:1".freeze
-    MASTER_LOADED_STATUS = "loading:0".freeze
-    CONNECTION_TYPES = %w{normal pubsub}.each(&:freeze)
-
-    def initialize
-      @master = true
-      @running = false
-      @mutex = Mutex.new
-      @slave_config = DiscourseRedis.slave_config
-      @message_bus_keepalive_interval = MessageBus.keepalive_interval
-    end
-
-    def verify_master
-      synchronize do
-        return if @thread && @thread.alive?
-
-        @thread = Thread.new do
-          loop do
-            begin
-              thread = Thread.new { initiate_fallback_to_master }
-              thread.join
-              break if synchronize { @master }
-              sleep 5
-            ensure
-              thread.kill
-            end
-          end
-        end
-      end
-    end
-
-    def initiate_fallback_to_master
-      success = false
-
-      begin
-        redis_config = DiscourseRedis.config.dup
-        redis_config.delete(:connector)
-        master_client = ::Redis::Client.new(redis_config)
-        logger.warn "#{log_prefix}: Checking connection to master server..."
-        info = master_client.call([:info])
-
-        if info.include?(MASTER_LOADED_STATUS) && info.include?(MASTER_ROLE_STATUS)
-          begin
-            logger.warn "#{log_prefix}: Master server is active, killing all connections to slave..."
-
-            self.master = true
-            slave_client = ::Redis::Client.new(@slave_config)
-
-            CONNECTION_TYPES.each do |connection_type|
-              slave_client.call([:client, [:kill, 'type', connection_type]])
-            end
-
-            MessageBus.keepalive_interval = @message_bus_keepalive_interval
-            Discourse.clear_readonly!
-            Discourse.request_refresh!
-            success = true
-          ensure
-            slave_client&.disconnect
-          end
-        end
-      rescue => e
-        logger.warn "#{log_prefix}: Connection to Master server failed with '#{e.message}'"
-      ensure
-        master_client&.disconnect
-      end
-
-      success
-    end
-
-    def master
-      synchronize { @master }
-    end
-
-    def master=(args)
-      synchronize do
-        @master = args
-
-        # Disables MessageBus keepalive when Redis is in readonly mode
-        MessageBus.keepalive_interval = 0 if !@master
-      end
-    end
-
-    private
-
-    def synchronize
-      @mutex.synchronize { yield }
-    end
-
-    def logger
-      Rails.logger
-    end
-
-    def log_prefix
-      "#{self.class}"
-    end
-  end
-
-  class Connector < Redis::Client::Connector
-    def initialize(options)
-      super(options)
-      @slave_options = DiscourseRedis.slave_config(options)
-      @fallback_handler = DiscourseRedis::FallbackHandler.instance
-    end
-
-    def resolve(client = nil)
-      if !@fallback_handler.master
-        @fallback_handler.verify_master
-        return @slave_options
-      end
-
-      begin
-        options = @options.dup
-        options.delete(:connector)
-        client ||= Redis::Client.new(options)
-
-        loading = client.call([:info, :persistence]).include?(
-          DiscourseRedis::FallbackHandler::MASTER_LOADING_STATUS
-        )
-
-        loading ? @slave_options : @options
-      rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
-        raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
-        @fallback_handler.master = false
-        @fallback_handler.verify_master
-        raise ex
-      ensure
-        client.disconnect
-      end
-    end
-  end
-
   def self.raw_connection(config = nil)
     config ||= self.config
     Redis.new(config)
@@ -149,18 +14,10 @@ class DiscourseRedis
     GlobalSetting.redis_config
   end
 
-  def self.slave_config(options = config)
-    options.dup.merge!(host: options[:slave_host], port: options[:slave_port])
-  end
-
   def initialize(config = nil, namespace: true)
     @config = config || DiscourseRedis.config
     @redis = DiscourseRedis.raw_connection(@config.dup)
     @namespace = namespace
-  end
-
-  def self.fallback_handler
-    @fallback_handler ||= DiscourseRedis::FallbackHandler.instance
   end
 
   def without_namespace
@@ -172,11 +29,6 @@ class DiscourseRedis
     yield
   rescue Redis::CommandError => ex
     if ex.message =~ /READONLY/
-      unless Discourse.recently_readonly? || Rails.env.test?
-        STDERR.puts "WARN: Redis is in a readonly state. Performed a noop"
-      end
-
-      fallback_handler.verify_master if !fallback_handler.master
       Discourse.received_redis_readonly!
       nil
     else
@@ -194,7 +46,7 @@ class DiscourseRedis
   end
 
   # Proxy key methods through, but prefix the keys with the namespace
-  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :exists, :expire, :expireat, :get, :getbit, :getrange, :getset,
+  [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :expire, :expireat, :get, :getbit, :getrange, :getset,
    :hdel, :hexists, :hget, :hgetall, :hincrby, :hincrbyfloat, :hkeys, :hlen, :hmget, :hmset, :hset, :hsetnx, :hvals, :incr,
    :incrby, :incrbyfloat, :lindex, :linsert, :llen, :lpop, :lpush, :lpushx, :lrange, :lrem, :lset, :ltrim,
    :mapped_hmset, :mapped_hmget, :mapped_mget, :mapped_mset, :mapped_msetnx, :move, :mset,
@@ -206,6 +58,16 @@ class DiscourseRedis
       args[0] = "#{namespace}:#{args[0]}" if @namespace
       DiscourseRedis.ignore_readonly { @redis.public_send(m, *args) }
     end
+  end
+
+  def exists(*args)
+    args.map! { |a| "#{namespace}:#{a}" } if @namespace
+    DiscourseRedis.ignore_readonly { @redis.exists(*args) }
+  end
+
+  def exists?(*args)
+    args.map! { |a| "#{namespace}:#{a}" } if @namespace
+    DiscourseRedis.ignore_readonly { @redis.exists?(*args) }
   end
 
   def mget(*args)
@@ -263,12 +125,6 @@ class DiscourseRedis
   def delete_prefixed(prefix)
     DiscourseRedis.ignore_readonly do
       keys("#{prefix}*").each { |k| Discourse.redis.del(k) }
-    end
-  end
-
-  def flushdb
-    DiscourseRedis.ignore_readonly do
-      keys.each { |k| del(k) }
     end
   end
 

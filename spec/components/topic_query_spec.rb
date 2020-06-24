@@ -75,15 +75,13 @@ describe TopicQuery do
   end
 
   context "prioritize_pinned_topics" do
-
     it "does the pagination correctly" do
-
       num_topics = 15
       per_page = 3
 
       topics = []
       (num_topics - 1).downto(0).each do |i|
-        topics[i] = Fabricate(:topic)
+        topics[i] = freeze_time(i.seconds.ago) { Fabricate(:topic) }
       end
 
       topic_query = TopicQuery.new(user)
@@ -99,7 +97,6 @@ describe TopicQuery do
         page: 1)
       ).to eq(topics[per_page...num_topics])
     end
-
   end
 
   context 'bookmarks' do
@@ -268,7 +265,7 @@ describe TopicQuery do
   end
 
   context 'muted categories' do
-    it 'is removed from new and latest lists' do
+    it 'is removed from top, new and latest lists' do
       category = Fabricate(:category_with_definition)
       topic = Fabricate(:topic, category: category)
       CategoryUser.create!(user_id: user.id,
@@ -276,6 +273,8 @@ describe TopicQuery do
                            notification_level: CategoryUser.notification_levels[:muted])
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
+      TopTopic.create!(topic: topic, all_score: 1)
+      expect(topic_query.list_top_for(:all).topics.map(&:id)).not_to include(topic.id)
     end
   end
 
@@ -926,7 +925,7 @@ describe TopicQuery do
           let!(:user) { group_user }
 
           it 'should return the group topics' do
-            expect(suggested_topics).to eq([private_group_topic.id, private_message.id])
+            expect(suggested_topics).to match_array([private_group_topic.id, private_message.id])
           end
         end
 

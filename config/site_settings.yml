@@ -62,30 +62,18 @@ branding:
     default: -5
     client: true
     type: upload
-  logo_url:
-    hidden: true
-    default: "/images/d-logo-sketch.png"
   logo_small:
     default: -6
     client: true
     type: upload
-  logo_small_url:
-    hidden: true
-    default: "/images/d-logo-sketch-small.png"
   digest_logo:
     default: ""
     client: true
     type: upload
-  digest_logo_url:
-    hidden: true
-    default: ""
   mobile_logo:
     default: ""
     client: true
     type: upload
-  mobile_logo_url:
-    hidden: true
-    default: ""
   large_icon:
     default: ""
     client: true
@@ -93,37 +81,25 @@ branding:
   manifest_icon:
     default: ""
     type: upload
-  large_icon_url:
-    hidden: true
-    default: ""
   favicon:
     default: ""
     client: true
     type: upload
-  favicon_url:
-    hidden: true
-    default: "/images/default-favicon.ico"
   apple_touch_icon:
     default: ""
     client: true
     type: upload
-  apple_touch_icon_url:
-    hidden: true
-    default: "/images/default-apple-touch-icon.png"
   opengraph_image:
     default: ""
     type: upload
-  default_opengraph_image_url:
-    hidden: true
-    default: ""
   twitter_summary_large_image:
     default: ""
     type: upload
-  twitter_summary_large_image_url:
-    hidden: true
-    default: ""
 
 basic:
+  display_local_time_in_user_card:
+    client: true
+    default: false
   allow_user_locale:
     client: true
     default: false
@@ -145,11 +121,11 @@ basic:
   suggested_topics_unread_max_days_old:
     default: 90
     min: 0
-    max: 10000
+    max: 36500
   suggested_topics_max_days_old:
     default: 365
     min: 7
-    max: 10000
+    max: 36500
   ga_universal_tracking_code:
     client: true
     default: ""
@@ -186,7 +162,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "read|like|share|flag|edit|bookmark|bookmarkWithReminder|delete|admin|reply"
+    default: "read|like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
       - read
@@ -198,11 +174,10 @@ basic:
       - bookmark
       - admin
       - reply
-      - bookmarkWithReminder
   post_menu_hidden_items:
     client: true
     type: list
-    default: "flag|bookmark|bookmarkWithReminder|edit|delete|admin"
+    default: "flag|bookmark|edit|delete|admin"
     allow_any: false
     choices:
       - like
@@ -213,7 +188,6 @@ basic:
       - bookmark
       - admin
       - reply
-      - bookmarkWithReminder
   share_links:
     client: true
     type: list
@@ -291,7 +265,7 @@ basic:
     default: false
   enable_bookmarks_with_reminders:
     client: true
-    default: false
+    default: true
     hidden: true
   push_notifications_prompt:
     default: true
@@ -299,9 +273,6 @@ basic:
   push_notifications_icon:
     default: ""
     type: upload
-  push_notifications_icon_url:
-    hidden: true
-    default: ""
   short_title:
     default: ""
     max: 12
@@ -332,6 +303,7 @@ login:
   must_approve_users:
     client: true
     default: false
+  invite_code: ""
   enable_local_logins:
     client: true
     default: true
@@ -392,7 +364,7 @@ login:
     default: false
   github_client_id:
     default: ""
-    regex: "^[a-f0-9]+$"
+    regex: "^[a-zA-Z0-9\\.]+$"
   github_client_secret:
     default: ""
     regex: "^[a-f0-9]+$"
@@ -446,12 +418,17 @@ login:
     default: false
     client: true
   sso_overrides_profile_background: false
+  sso_overrides_location: false
+  sso_overrides_website: false
   sso_overrides_card_background: false
   sso_not_approved_url: ""
   email_domains_blacklist:
     default: "mailinator.com"
     type: list
   email_domains_whitelist:
+    default: ""
+    type: list
+  auto_approve_email_domains:
     default: ""
     type: list
   hide_email_address_taken: false
@@ -523,6 +500,7 @@ users:
     default: true
   invite_expiry_days:
     default: 30
+    max: 36500
   invites_per_page:
     client: true
     default: 40
@@ -534,6 +512,9 @@ users:
     client: true
     default: 15
     min: 1
+  delete_user_self_max_post_count:
+    default: 1
+    min: -1
   redirect_users_to_top_page: true
   prioritize_username_in_ux:
     client: true
@@ -543,6 +524,7 @@ users:
     min: 1
   purge_unactivated_users_grace_period_days:
     default: 14
+    max: 36500
   public_user_custom_fields:
     type: list
     default: ""
@@ -585,15 +567,29 @@ users:
     default: 365
     client: true
     min: 1
+    max: 36500
   clean_up_inactive_users_after_days:
     default: 730
     min: 0
-    max: 3650
+    max: 36500
+  clean_up_unused_staged_users_after_days:
+    default: 365
+    min: 0
+    max: 36500
   user_selected_primary_groups:
     default: false
     client: true
   max_notifications_per_user:
     default: 10000
+  gravatar_name:
+    default: Gravatar
+    client: true
+  gravatar_base_url:
+    default: www.gravatar.com
+    client: true
+  gravatar_login_url:
+    default: /emails
+    client: true
 
 groups:
   enable_group_directory:
@@ -633,7 +629,7 @@ posting:
   max_post_length:
     client: true
     default: 32000
-    max: 99000
+    max: 150000
   topic_featured_link_enabled:
     client: true
     default: true
@@ -690,6 +686,7 @@ posting:
     default: true
     refresh: true
   allow_duplicate_topic_titles: false
+  allow_duplicate_topic_titles_category: false
   min_title_similar_length:
     client: true
     default: 10
@@ -796,6 +793,12 @@ posting:
       ja: 120
       zh_CN: 120
       zh_TW: 120
+  topic_excerpt_maxlength:
+    default: 220
+    locale_default:
+      ja: 120
+      zh_CN: 120
+      zh_TW: 120
   show_pinned_excerpt_mobile:
     client: true
     default: true
@@ -807,6 +810,7 @@ posting:
     default: false
   show_time_gap_days:
     default: 7
+    max: 36500
     client: true
   short_progress_text_threshold:
     client: true
@@ -825,6 +829,9 @@ posting:
     type: list
     client: true
     list_type: compact
+  show_copy_button_on_codeblocks:
+    client: true
+    default: false
   delete_old_hidden_posts: true
   enable_emoji:
     default: true
@@ -858,7 +865,7 @@ posting:
     default: 0
     enum: "TrustLevelSetting"
   approve_suspect_users:
-    default: false
+    default: true
   approve_unless_staged:
     default: false
   notify_about_queued_posts_after:
@@ -876,12 +883,11 @@ posting:
       - code-fences
   embed_any_origin: false
   embed_topics_list: false
-  embed_truncate:
-    default: true
-  embed_support_markdown:
-    default: false
-  embed_whitelist_selector:
-    default: ""
+  embed_set_canonical_url: false
+  embed_unlisted: false
+  embed_truncate: true
+  embed_support_markdown: false
+  embed_whitelist_selector: ""
   allowed_href_schemes:
     client: true
     default: ""
@@ -899,6 +905,7 @@ posting:
     client: true
   old_post_notice_days:
     default: 14
+    max: 36500
     client: true
   new_user_notice_tl:
     default: 2
@@ -908,6 +915,11 @@ posting:
     enum: "TrustLevelSetting"
   returning_users_days:
     default: 120
+    max: 36500
+  enable_page_publishing:
+    default: false
+  show_published_pages_login_required:
+    default: false
 
 email:
   email_time_window_mins:
@@ -935,6 +947,7 @@ email:
     max: 20
   suppress_digest_email_after_days:
     default: 365
+    max: 36500
   digest_suppress_categories:
     type: category_list
     default: ""
@@ -942,7 +955,9 @@ email:
     default: false
     client: true
   apply_custom_styles_to_digest: true
-  email_accent_bg_color: "#2F70AC"
+  email_accent_bg_color:
+    type: color
+    default: "#2F70AC"
   email_accent_fg_color: "#FFFFFF"
   email_link_color: "#006699"
   show_topic_featured_link_in_digest: false
@@ -1013,8 +1028,10 @@ email:
     default: false
   disallow_reply_by_email_after_days:
     default: 90
+    max: 36500
   delete_email_logs_after_days:
     default: 90
+    max: 36500
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
@@ -1044,6 +1061,7 @@ email:
     min: 2
   reset_bounce_score_after_days:
     default: 30
+    max: 36500
   attachment_content_type_blacklist:
     type: list
     default: "pkcs7|x-vcard"
@@ -1076,7 +1094,13 @@ email:
   post_excerpts_in_emails: false
   raw_email_max_length: 220000
   raw_rejected_email_max_length: 4000
-  delete_rejected_email_after_days: 90
+  delete_rejected_email_after_days:
+    default: 90
+    max: 36500
+  enable_secondary_emails:
+    client: true
+    default: true
+    hidden: true
 
 files:
   max_image_size_kb:
@@ -1131,10 +1155,6 @@ files:
   download_remote_images_to_local:
     default: true
   download_remote_images_threshold: 10
-  download_remote_images_max_days_old:
-    default: 30
-    min: 1
-    max: 10000
   disabled_image_download_domains:
     type: list
     default: ""
@@ -1143,6 +1163,7 @@ files:
   clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days:
     default: 30
+    max: 36500
   prevent_anons_from_downloading_files:
     default: false
     client: true
@@ -1169,6 +1190,12 @@ files:
   s3_endpoint:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+  s3_http_continue_timeout:
+    default: 1
+    hidden: true
+  s3_install_cors_rule:
+    default: true
+    hidden: true
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
@@ -1214,6 +1241,7 @@ files:
   selectable_avatars_enabled:
     default: false
     client: true
+    validator: "SelectableAvatarsEnabledValidator"
   selectable_avatars:
     default: ""
     type: uploaded_image_list
@@ -1290,6 +1318,7 @@ trust:
   tl2_requires_time_spent_mins: 60
   tl2_requires_days_visited:
     default: 15
+    max: 36500
   tl2_requires_likes_received: 1
   tl2_requires_likes_given: 1
   tl2_requires_topic_reply_count: 3
@@ -1299,6 +1328,7 @@ trust:
     max: 1000000
   tl3_requires_days_visited:
     default: 50
+    max: 36500
   tl3_requires_topics_replied_to:
     default: 10
   tl3_requires_topics_viewed:
@@ -1350,7 +1380,8 @@ security:
       - Lax
       - Strict
       - Disabled
-    regex: "^(Lax|Strict|Disabled)$"
+      - None
+    regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   moderators_create_categories: false
@@ -1407,14 +1438,17 @@ security:
   content_security_policy_collect_reports:
     default: false
   content_security_policy_script_src:
-    type: list
+    type: simple_list
     default: ""
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
-    max: 2000
+    max: 36500
   allow_embedding_site_in_an_iframe:
     default: false
+    hidden: true
+  send_old_credential_reminder_days:
+    default: 0
     hidden: true
 
 onebox:
@@ -1480,7 +1514,7 @@ spam:
   auto_silence_fast_typers_max_trust_level: 0
   auto_silence_first_post_regex: ""
   high_trust_flaggers_auto_hide_posts: true
-  cooldown_hours_until_reflag: 
+  cooldown_hours_until_reflag:
     default: 24
     min: 0
 
@@ -1508,6 +1542,12 @@ rate_limits:
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
+  rate_limit_search_anon:
+    hidden: true
+    default: 15
+  rate_limit_search_user:
+    hidden: true
+    default: 30
   max_topics_per_day: 20
   max_personal_messages_per_day: 20
   max_likes_per_day: 50
@@ -1542,6 +1582,11 @@ rate_limits:
   max_post_deletions_per_day:
     min: 1
     default: 10
+  invite_link_max_redemptions_limit:
+    min: 2
+    max: 1000000
+    default: 5000
+    client: true
 
 developer:
   force_hostname:
@@ -1649,8 +1694,6 @@ backups:
   enable_backups:
     default: true
     client: true
-  readonly_mode_during_backup:
-    default: false
   allow_restore:
     default: false
   backup_location:
@@ -1823,12 +1866,15 @@ uncategorized:
   # Cold map thresholds
   cold_age_days_low:
     default: 14
+    max: 36500
     client: true
   cold_age_days_medium:
     default: 90
+    max: 36500
     client: true
   cold_age_days_high:
     default: 180
+    max: 36500
     client: true
 
   # Warnings
@@ -1887,6 +1933,7 @@ uncategorized:
 
   delete_drafts_older_than_n_days:
     default: 180
+    max: 36500
 
   backup_drafts_to_pm_length:
     default: 0
@@ -1950,7 +1997,7 @@ uncategorized:
     hidden: true
 
   pwa_display_browser_regex:
-    default: "iPad|iPhone"
+    default: "a^"
     hidden: true
 
   app_association_android:
@@ -1983,11 +2030,6 @@ uncategorized:
 
   overridden_robots_txt:
     default: ""
-    hidden: true
-
-  enable_new_user_card_route:
-    default: false
-    client: true
     hidden: true
 
 user_preferences:
@@ -2082,6 +2124,7 @@ user_preferences:
 api:
   retain_web_hook_events_period_days:
     default: 30
+    max: 36500
   retry_web_hook_events:
     default: false
   api_key_last_used_epoch:
@@ -2089,6 +2132,7 @@ api:
     hidden: true
   revoke_api_keys_days:
     default: 180
+    max: 36500
 
 user_api:
   allow_user_api_keys:
@@ -2112,6 +2156,7 @@ user_api:
     type: list
   expire_user_api_keys_days:
     default: 180
+    max: 36500
 
 tags:
   tagging_enabled:
@@ -2175,6 +2220,22 @@ tags:
     client: true
 
 dashboard:
+  dashboard_hidden_reports:
+    client: true
+    type: list
+    list_type: compact
+    default: ""
+    allow_any: true
+  dashboard_visible_tabs:
+    client: true
+    type: list
+    list_type: compact
+    default: "moderation|security|reports"
+    allow_any: false
+    choices:
+      - moderation
+      - security
+      - reports
   dashboard_general_tab_activity_metrics:
     client: true
     type: list

@@ -145,9 +145,30 @@ describe PostActionCreator do
         before { reviewable.perform(admin, :ignore) }
 
         it "fails because the post was recently reviewed" do
+          freeze_time 10.seconds.from_now
           result = PostActionCreator.create(user, post, :inappropriate)
 
           expect(result.success?).to eq(false)
+        end
+
+        it "succeeds with other flag action types" do
+          freeze_time 10.seconds.from_now
+          spam_result = PostActionCreator.create(user, post, :spam)
+
+          expect(reviewable.reload.pending?).to eq(true)
+        end
+
+        it "fails when other flag action types are open" do
+          freeze_time 10.seconds.from_now
+          spam_result = PostActionCreator.create(user, post, :spam)
+
+          inappropriate_result = PostActionCreator.create(Fabricate(:user), post, :inappropriate)
+
+          reviewable.reload
+
+          expect(inappropriate_result.success?).to eq(false)
+          expect(reviewable.pending?).to eq(true)
+          expect(reviewable.reviewable_scores.select(&:pending?).count).to eq(1)
         end
 
         it "succesfully flags the post if it was reviewed more than 24 hours ago" do

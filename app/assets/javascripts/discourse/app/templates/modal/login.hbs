@@ -1,0 +1,86 @@
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
+  {{plugin-outlet name="login-before-modal-body" tagName=""}}
+  {{#d-modal-body title="login.title" class=modalBodyClasses}}
+
+    {{#if canLoginLocal}}
+      <form id="login-form" method="post">
+        <div id="credentials" class={{credentialsClass}}>
+          <table>
+            <tbody>
+              <tr>
+                <td><label for="login-account-name">{{i18n "login.username"}}</label></td>
+                <td>{{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus" disabled=disableLoginFields}}</td>
+              </tr>
+              <tr>
+                <td><label for="login-account-password">{{i18n "login.password"}}</label></td>
+                <td>{{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn disabled=disableLoginFields}}</td>
+                <td><a href id="forgot-password-link" {{action "forgotPassword"}}>{{i18n "forgot_password.action"}}</a></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><div class="caps-lock-warning {{unless capsLockOn "hidden"}}">{{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}</div></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {{#second-factor-form
+          secondFactorMethod=secondFactorMethod
+          secondFactorToken=secondFactorToken
+          class=secondFactorClass
+          backupEnabled=backupEnabled
+          isLogin=true}}
+          {{#if showSecurityKey}}
+            {{#security-key-form
+              allowedCredentialIds=securityKeyAllowedCredentialIds
+              challenge=securityKeyChallenge
+              showSecurityKey=showSecurityKey
+              showSecondFactor=showSecondFactor
+              secondFactorMethod=secondFactorMethod
+              otherMethodAllowed=otherMethodAllowed
+              action=(action "authenticateSecurityKey")}}
+            {{/security-key-form}}
+          {{else}}
+            {{second-factor-input value=secondFactorToken inputId="login-second-factor" secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+          {{/if}}
+        {{/second-factor-form}}
+      </form>
+    {{/if}}
+    {{#if showLoginButtons}}
+      {{login-buttons
+        showLoginWithEmailLink=showLoginWithEmailLink
+        processingEmailLink=processingEmailLink
+        emailLogin=(action "emailLogin")
+        externalLogin=(action "externalLogin")}}
+    {{/if}}
+  {{/d-modal-body}}
+
+  <div class="modal-footer">
+    {{#if canLoginLocal}}
+      {{#unless showSecurityKey }}
+        {{d-button
+          action=(action "login")
+          id="login-button"
+          form="login-form"
+          icon="unlock"
+          label=loginButtonLabel
+          disabled=loginDisabled
+          class="btn btn-large btn-primary"}}
+      {{/unless}}
+
+      {{#if showSignupLink}}
+        {{d-button
+          class="btn-large"
+          id="new-account-link"
+          action=(action "createAccount")
+          label="create_account.title"}}
+      {{/if}}
+    {{/if}}
+
+    {{conditional-loading-spinner condition=showSpinner size="small"}}
+  </div>
+
+  {{plugin-outlet name="login-after-modal-footer" tagName=""}}
+
+  <div class={{alertClass}} id="login-alert">{{alert}}</div>
+{{/login-modal}}

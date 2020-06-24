@@ -222,7 +222,7 @@ class StaffActionLogger
 
   def log_theme_setting_change(setting_name, previous_value, new_value, theme, opts = {})
     raise Discourse::InvalidParameters.new(:theme) unless theme
-    raise Discourse::InvalidParameters.new(:setting_name) unless theme.included_settings.has_key?(setting_name)
+    raise Discourse::InvalidParameters.new(:setting_name) unless theme.cached_settings.has_key?(setting_name)
 
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:change_theme_setting],
@@ -726,6 +726,52 @@ class StaffActionLogger
       action: UserHistory.actions[:api_key_update],
       details: I18n.t("staff_action_logs.api_key.restored")
     ))
+  end
+
+  def log_published_page(topic_id, slug)
+    UserHistory.create!(params.merge(
+      subject: slug,
+      topic_id: topic_id,
+      action: UserHistory.actions[:page_published]
+    ))
+  end
+
+  def log_unpublished_page(topic_id, slug)
+    UserHistory.create!(params.merge(
+      subject: slug,
+      topic_id: topic_id,
+      action: UserHistory.actions[:page_unpublished]
+    ))
+  end
+
+  def log_add_email(user)
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      action: UserHistory.actions[:add_email],
+      acting_user_id: @admin.id,
+      target_user_id: user.id
+    )
+  end
+
+  def log_update_email(user)
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      action: UserHistory.actions[:update_email],
+      acting_user_id: @admin.id,
+      target_user_id: user.id
+    )
+  end
+
+  def log_destroy_email(user)
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      action: UserHistory.actions[:destroy_email],
+      acting_user_id: @admin.id,
+      target_user_id: user.id
+    )
   end
 
   private

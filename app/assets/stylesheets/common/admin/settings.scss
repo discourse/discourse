@@ -37,6 +37,9 @@
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
+      .image-uploader {
+        display: flex;
+      }
       .uploaded-image-preview {
         background-size: contain;
         background-repeat: no-repeat;
@@ -95,6 +98,15 @@
     h3 {
       font-size: $font-0;
       font-weight: normal;
+    }
+
+    &.color {
+      .color-picker {
+        display: flex;
+        .picker + .sp-replacer {
+          border-left: none;
+        }
+      }
     }
   }
   .setting.overridden {

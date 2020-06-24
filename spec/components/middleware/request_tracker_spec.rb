@@ -15,6 +15,15 @@ describe Middleware::RequestTracker do
     }.merge(opts)
   end
 
+  before do
+    ApplicationRequest.enable
+  end
+
+  after do
+    ApplicationRequest.disable
+    ApplicationRequest.clear_cache!
+  end
+
   context "full request" do
     before do
       @orig = WebCrawlerRequest.autoflush
@@ -79,10 +88,18 @@ describe Middleware::RequestTracker do
 
       Middleware::RequestTracker.log_request(data)
 
+      # /srv/status is never a tracked view because content-type is text/plain
+      data = Middleware::RequestTracker.get_data(env(
+        "HTTP_USER_AGENT" => "kube-probe/1.18",
+        "REQUEST_URI" => "/srv/status?shutdown_ok=1",
+      ), ["200", { "Content-Type" => 'text/plain' }], 0.1)
+
+      Middleware::RequestTracker.log_request(data)
+
       ApplicationRequest.write_cache!
 
-      expect(ApplicationRequest.http_total.first.count).to eq(3)
-      expect(ApplicationRequest.http_2xx.first.count).to eq(3)
+      expect(ApplicationRequest.http_total.first.count).to eq(4)
+      expect(ApplicationRequest.http_2xx.first.count).to eq(4)
 
       expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)

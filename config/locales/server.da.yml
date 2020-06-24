@@ -45,7 +45,6 @@ da:
       unrecognized_extension: "Ikke anerkendt filtypenavn: %{extension}"
     import_error:
       generic: Der opstod en fejl under importen af dette tema
-      about_json: "Importfejl: about.json findes ikke eller er ugyldig"
       about_json_values: "about.json indeholder ugyldige værdier: %{errors}"
       git: "Fejl ved kloning af git repo, adgang nægtes, eller depot findes ikke"
       unpack_failed: "Kunne ikke pakke filen ud"
@@ -57,7 +56,6 @@ da:
       no_multilevels_components: "Temaer med børnetemaer kan ikke selv være børn af andre temaer"
     settings_errors:
       invalid_yaml: "Forsynet YAML er ugyldig."
-      data_type_not_a_number: "Indstillingen `%{name}`s type er ikke understøttet. Understøttede typer er `integer`, `bool`, `list` og `enum`"
       name_too_long: "Der er en indstilling med et for langt navn. Maksimal længde er 255"
       default_value_missing: "Indstilling af `%{name}` har ingen standard værdi"
       default_not_match_type: "Indstilling af `%{name}`s standard værdi's type stemmer ikke overens med den type fundet i indstillingerne."
@@ -221,7 +219,7 @@ da:
     in_reply_to: "▶ %{username}"
     replies:
       one: "%{count} svar"
-      other: "%{count} svarer"
+      other: "%{count} svar"
     last_reply: "Sidste svar"
     created: "Oprettet"
   no_mentions_allowed: "Beklager, du kan ikke nævne andre brugere."
@@ -265,9 +263,6 @@ da:
   topics_in_category: "Emner i kategorien '%{category}'"
   rss_posts_in_topic: "RSS-feed for emnet '%{topic}'"
   rss_topics_in_category: "RSS-feed for emner i kategorien '%{category}'"
-  author_wrote: "%{author} skrev:"
-  num_posts: "Indlæg:"
-  num_participants: "Deltagere:"
   read_full_topic: "Læs hele emnet"
   private_message_abbrev: "Besked"
   rss_description:
@@ -293,9 +288,10 @@ da:
   excerpt_image: "billede"
   bookmarks:
     reminders:
-      tomorrow: "I morgen <br/>{{date}}"
-      next_week: "Næste uge <br/>{{date}}"
-      next_month: "Næste måned <br/>{{date}}"
+      later_today: "Senere i dag"
+      tomorrow: "I morgen"
+      next_week: "Næste uge"
+      next_month: "Næste Månede"
       custom: "Valgfri dato og tid"
   groups:
     success:
@@ -610,7 +606,7 @@ da:
       title: "Upassende"
       long_form: "markerede dette som stødende"
     notify_user:
-      title: "Send @{{username}} en besked"
+      title: "Send @%{username} en besked"
       long_form: "sendt besked til brugeren"
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -948,7 +944,6 @@ da:
     crawl_images: "Hent billeder fra eksterne URLs for at indsætte de korrekte bredde og højde dimensioner."
     download_remote_images_to_local: "Konverter eksterne billeder til lokale billeder ved at downloade dem; dette forebygger at billeder ikke forsvinder."
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
-    download_remote_images_max_days_old: "Undlade at downloade billeder til indlæg der er mere end n dage gamle."
     disabled_image_download_domains: "Eksterne billeder vil ikke blive hentet fra disse domæner. Afgrænset liste."
     editing_grace_period: "For (n) sekunder efter postering, vil redigering ikke skabe et nyt indlæg."
     edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."
@@ -967,8 +962,6 @@ da:
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
     summary_score_threshold: "Påkrævet minimum score for et indlæg til at blive inkluderet i 'opsummering af emne'"
-    summary_posts_required: "Minimum antal indlæg i et emne, før 'opsummer dette emne' er aktiveret"
-    summary_likes_required: "Minimum antal likes på et emne før 'opsummer dette emne' er aktiveret"
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
     enable_personal_messages: "Tillad Trust Level 1 (kan konfigureres minimum trust level til at sende beskeder), brugere til at sende og svare på beskeder. Bemærk at moderatorer beskeder, uanset hvad."
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
@@ -1009,7 +1002,6 @@ da:
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     enable_instagram_logins: "Aktivér Instagram-login, kræver instagram_consumer_key og instagram_consumer_secret"
-    readonly_mode_during_backup: "Slå \"read-only\" tilstand til mens der foretages backup"
     active_user_rate_limit_secs: "Hvor ofte vi opdaterer feltet 'last_seen_at', i sekunder."
     previous_visit_timeout_hours: "Hvor lang tid et besøg varer før vi regner det med i det 'forrige' besøg, i timer."
     max_likes_per_day: "Maksimalt antal likes per bruger per dag."
@@ -1107,12 +1099,17 @@ da:
       category: "Kategorier"
       topic: "Resultater"
       user: "Brugere"
+    results_page: "Søgeresultater for '%{term}'"
   original_poster: "Oprindelig forfatter"
   most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
   frequent_poster: "Hyppig forfatter"
   redirected_to_top_reasons:
     new_user: "Velkommen til fællesskabet! Dette er de seneste mest populære emner."
+  publish_page:
+    slug_errors:
+      blank: "kan ikke være tom"
+      invalid: "indeholder ugyldige tegn"
   topic_statuses:
     autoclosed_enabled_days:
       one: "Dette emne blev automatisk lukket efter %{count} dag. Nye svar er ikke længere tilladt."
@@ -1167,7 +1164,7 @@ da:
     activated_by_staff: "Aktiveret af hjælperteamet"
     new_user_typed_too_fast: "Ny bruger tastede for hurtigt"
     username:
-      short: "skal være på mindst %{{min}} tegn."
+      short: "skal være på mindst %%{min} tegn."
       long: "skal være kortere end %{max} tegn"
       unique: "skal være unik"
       blank: "skal udfyldes"
@@ -1485,7 +1482,6 @@ da:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"
       new_topics: "Nye emner"
-      unread_messages: "Ulæste beskeder"
       unread_notifications: "Ulæste beskeder"
       liked_received: "Modtagne \"Synes om\""
       new_users: "Nye brugere"
@@ -1517,6 +1513,8 @@ da:
     confirm_new_email:
       subject_template: "[%{email_prefix}] Bekræft din nye e-mail-adresse"
     confirm_old_email:
+      subject_template: "[%{email_prefix}] Bekræft din nuværende e-mail-adresse"
+    confirm_old_email_add:
       subject_template: "[%{email_prefix}] Bekræft din nuværende e-mail-adresse"
     notify_old_email:
       subject_template: "[%{email_prefix}] Din e-mail-adresse er ændret"
@@ -1793,8 +1791,16 @@ da:
   joined: "Tilmeldt"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
+      quoted: '%{username} citerede dig i "%{topic}" - %{site_title}'
+      replied: '%{username} svarede dig i "%{topic}" - %{site_title}'
+      posted: '%{username} skrev i "%{topic}" - %{site_title}'
+      linked: '%{username} linkede til dit indlæg fra "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} oprettet et nyt emne"%{topic}" - %{site_title}'
       confirm_title: "Notifikationer aktiveret - %{site_title}"
       confirm_body: "Succes! notifikationer er aktiveret."
+      custom: "Notifikation fra %{username}på %{site_title}"
   reviewables:
     priorities:
       low: "Lav"

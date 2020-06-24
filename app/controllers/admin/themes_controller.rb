@@ -14,6 +14,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def upload_asset
+
+    ban_in_whitelist_mode!
+
     path = params[:file].path
 
     hijack do
@@ -49,6 +52,9 @@ class Admin::ThemesController < Admin::AdminController
   def import
     @theme = nil
     if params[:theme] && params[:theme].content_type == "application/json"
+
+      ban_in_whitelist_mode!
+
       # .dcstyle.json import. Deprecated, but still available to allow conversion
       json = JSON::parse(params[:theme].read)
       theme = json['theme']
@@ -85,21 +91,28 @@ class Admin::ThemesController < Admin::AdminController
       else
         render json: @theme.errors, status: :unprocessable_entity
       end
-    elsif params[:remote]
+    elsif remote = params[:remote]
+
+      guardian.ensure_allowed_theme_repo_import!(remote.strip)
+
       begin
         branch = params[:branch] ? params[:branch] : nil
-        @theme = RemoteTheme.import_theme(params[:remote], theme_user, private_key: params[:private_key], branch: branch)
+        @theme = RemoteTheme.import_theme(remote, theme_user, private_key: params[:private_key], branch: branch)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
     elsif params[:bundle] || (params[:theme] && THEME_CONTENT_TYPES.include?(params[:theme].content_type))
+
+      ban_in_whitelist_mode!
+
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
+      update_components = params[:components]
       match_theme_by_name = !!params[:bundle] && !params.key?(:theme_id) # Old theme CLI behavior, match by name. Remove Jan 2020
       begin
-        @theme = RemoteTheme.update_zipped_theme(bundle.path, bundle.original_filename, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id)
+        @theme = RemoteTheme.update_zipped_theme(bundle.path, bundle.original_filename, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id, update_components: update_components)
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
@@ -138,6 +151,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def create
+
+    ban_in_whitelist_mode!
+
     @theme = Theme.new(name: theme_params[:name],
                        user_id: theme_user.id,
                        user_selectable: theme_params[:user_selectable] || false,
@@ -269,17 +285,21 @@ class Admin::ThemesController < Admin::AdminController
     setting_name = params[:name].to_sym
     new_value = params[:value] || nil
 
-    previous_value = @theme.included_settings[setting_name]
+    previous_value = @theme.cached_settings[setting_name]
     @theme.update_setting(setting_name, new_value)
     @theme.save
 
     log_theme_setting_change(setting_name, previous_value, new_value)
 
-    updated_setting = @theme.included_settings.select { |key, val| key == setting_name }
+    updated_setting = @theme.cached_settings.select { |key, val| key == setting_name }
     render json: updated_setting, status: :ok
   end
 
   private
+
+  def ban_in_whitelist_mode!
+    raise Discourse::InvalidAccess if !GlobalSetting.whitelisted_theme_ids.nil?
+  end
 
   def add_relative_themes!(kind, ids)
     expected = ids.map(&:to_i)
@@ -337,6 +357,8 @@ class Admin::ThemesController < Admin::AdminController
 
   def set_fields
     return unless fields = theme_params[:theme_fields]
+
+    ban_in_whitelist_mode!
 
     fields.each do |field|
       @theme.set_field(

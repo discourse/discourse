@@ -1,0 +1,53 @@
+{{#d-section pageClass="users"}}
+  {{#load-more selector=".directory tbody tr" action=(action "loadMore")}}
+    <div class="container">
+      <div class="users-directory directory">
+        {{plugin-outlet name="users-top" connectorTagName="div" args=(hash model=model)}}
+        <div class="directory-controls">
+          <div class="period-controls">
+            {{period-chooser period=period onChange=(action (mut period)) fullDay=false}}
+            {{#if lastUpdatedAt}}
+              <div class="directory-last-updated">
+                {{i18n "directory.last_updated"}}
+                {{lastUpdatedAt}}
+              </div>
+            {{/if}}
+          </div>
+          {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+        </div>
+
+        {{#conditional-loading-spinner condition=isLoading}}
+          {{#if model.length}}
+
+            <table>
+              <thead>
+                <th>{{i18n "directory.total_rows" count=model.totalRows}}</th>
+                {{table-header-toggle field="likes_received" order=order asc=asc icon="heart"}}
+                {{table-header-toggle field="likes_given" order=order asc=asc icon="heart"}}
+                {{table-header-toggle field="topic_count" order=order asc=asc}}
+                {{table-header-toggle field="post_count" order=order asc=asc}}
+                {{table-header-toggle field="topics_entered" order=order asc=asc}}
+                {{table-header-toggle field="posts_read" order=order asc=asc}}
+                {{table-header-toggle field="days_visited" order=order asc=asc}}
+                {{#if showTimeRead}}
+                  <th>{{i18n "directory.time_read"}}</th>
+                {{/if}}
+              </thead>
+              <tbody>
+                {{#each model as |item|}}
+                  {{directory-item item=item showTimeRead=showTimeRead}}
+                {{/each}}
+              </tbody>
+            </table>
+
+            {{conditional-loading-spinner condition=model.loadingMore}}
+          {{else}}
+            <div class="clearfix"></div>
+            <p>{{i18n "directory.no_results"}}</p>
+          {{/if}}
+        {{/conditional-loading-spinner}}
+
+      </div>
+    </div>
+  {{/load-more}}
+{{/d-section}}

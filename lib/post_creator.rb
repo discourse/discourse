@@ -96,7 +96,7 @@ class PostCreator
     end
 
     if @opts[:target_usernames].present? && !skip_validations? && !@user.staff?
-      names = @opts[:target_usernames].split(',')
+      names = @opts[:target_usernames].split(',').flatten.map(&:downcase)
 
       # Make sure max_allowed_message_recipients setting is respected
       max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
@@ -111,7 +111,7 @@ class PostCreator
       end
 
       # Make sure none of the users have muted the creator
-      users = User.where(username: names).pluck(:id, :username).to_h
+      users = User.where(username_lower: names).pluck(:id, :username).to_h
 
       User
         .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
@@ -240,7 +240,7 @@ class PostCreator
   end
 
   def self.track_post_stats
-    Rails.env != "test".freeze || @track_post_stats
+    Rails.env != "test" || @track_post_stats
   end
 
   def self.track_post_stats=(val)
@@ -303,7 +303,7 @@ class PostCreator
 
   def draft_key
     @draft_key ||= @opts[:draft_key]
-    @draft_key ||= @topic ? "topic_#{@topic.id}" : "new_topic"
+    @draft_key ||= @topic ? @topic.draft_key : Draft::NEW_TOPIC
   end
 
   def build_post_stats
@@ -383,9 +383,8 @@ class PostCreator
   end
 
   def update_uploads_secure_status
-    if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
-      @post.update_uploads_secure_status
-    end
+    return if !SiteSetting.secure_media?
+    @post.update_uploads_secure_status
   end
 
   def handle_spam
@@ -474,11 +473,12 @@ class PostCreator
 
       if topic_timer &&
          topic_timer.based_on_last_post &&
-         topic_timer.duration > 0
+         topic_timer.duration.to_i > 0
 
         @topic.set_or_create_timer(TopicTimer.types[:close],
-          topic_timer.duration,
-          based_on_last_post: topic_timer.based_on_last_post
+          nil,
+          based_on_last_post: topic_timer.based_on_last_post,
+          duration: topic_timer.duration
         )
       end
     end
@@ -498,7 +498,12 @@ class PostCreator
     end
 
     post.extract_quoted_post_numbers
-    post.created_at = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
+
+    post.created_at = if @opts[:created_at].is_a?(Time)
+      @opts[:created_at]
+    elsif @opts[:created_at].present?
+      Time.zone.parse(@opts[:created_at].to_s)
+    end
 
     if fields = @opts[:custom_fields]
       post.custom_fields = fields
@@ -536,11 +541,6 @@ class PostCreator
     unless @post.topic.private_message?
       @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular] && !@post.is_first_post?
       @user.user_stat.topic_count += 1 if @post.is_first_post?
-    end
-
-    # We don't count replies to your own topics
-    if !@opts[:import_mode] && @user.id != @topic.user_id
-      @user.user_stat.update_topic_reply_count
     end
 
     @user.user_stat.save!

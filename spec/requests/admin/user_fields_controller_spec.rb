@@ -49,7 +49,7 @@ describe Admin::UserFieldsController do
       it "returns a list of user fields" do
         get "/admin/customize/user_fields.json"
         expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['user_fields']).to be_present
       end
     end

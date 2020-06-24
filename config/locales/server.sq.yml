@@ -127,9 +127,6 @@ sq:
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "Burimi RSS i '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
-  author_wrote: "%{author} shkruajti:"
-  num_posts: "Postime:"
-  num_participants: "Pjesëmarrësit:"
   read_full_topic: "Lexo temën e plotë"
   private_message_abbrev: "Msg"
   rss_description:
@@ -352,7 +349,7 @@ sq:
       title: "i papërshtatshëm"
       long_form: "sinjalizoi këtë postim si të papërshtatshëm"
     notify_user:
-      title: "Dërgoji @{{username}} një mesazh"
+      title: "Dërgoji @%{username} një mesazh"
       long_form: "messaged user"
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -642,8 +639,6 @@ sq:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
-    summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
-    summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -755,7 +750,6 @@ sq:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
-    max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
@@ -869,6 +863,10 @@ sq:
   redirected_to_top_reasons:
     new_user: "Welcome to our community! These are the most popular recent topics."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
+  publish_page:
+    slug_errors:
+      blank: "nuk mund të lihet bosh"
+      invalid: "përmban karaktere jo të vlefshëm"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeje."
@@ -1160,6 +1158,8 @@ sq:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
     confirm_old_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën e tanishme të emailit "
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Konfirmoni adresën e tanishme të emailit "
     notify_old_email:
       text_body_template: |
         Ky është një mesazh automatik që ju njofton se adresa juaj email për
@@ -1350,7 +1350,6 @@ sq:
       name: Zemërhapur
     crazy_in_love:
       name: Zemërluan
-      description: Ka dhënë 50 pëlqime në ditë mbi 20 herë
     thank_you:
       name: Faleminderit
       description: Ka pëlqyer 20 postime dhe ka dhënë 10 pëlqime
@@ -1415,6 +1414,14 @@ sq:
       emoji:
         title: "Emoji"
   joined: "Anëtarësuar"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
+      quoted: '%{username} ju ka cituar në "%{topic}" - %{site_title}'
+      replied: '%{username} ju u përgjigj në "%{topic}" - %{site_title}'
+      posted: '%{username} postoi në "%{topic}" - %{site_title}'
+      linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
   reviewables:
     actions:
       agree_and_suspend:

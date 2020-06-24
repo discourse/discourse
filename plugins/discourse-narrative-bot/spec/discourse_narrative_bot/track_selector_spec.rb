@@ -319,7 +319,7 @@ describe DiscourseNarrativeBot::TrackSelector do
                 )
 
                 BadgeGranter.grant(
-                  Badge.find_by(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME),
+                  Badge.find_by(name: DiscourseNarrativeBot::NewUserNarrative.badge_name),
                   user
                 )
 
@@ -472,7 +472,7 @@ describe DiscourseNarrativeBot::TrackSelector do
           let(:post) { Fabricate(:post, topic: topic) }
 
           after do
-            Discourse.redis.flushall
+            Discourse.redis.flushdb
           end
 
           describe 'when random reply massage has been displayed in the last 6 hours' do

@@ -162,6 +162,15 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
+    it "correctly redirects for Unicode usernames" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.unicode_usernames = true
+      user = sign_in(Fabricate(:unicode_user))
+
+      get "/"
+      expect(response).to redirect_to("/u/#{user.encoded_username}/preferences/second-factor")
+    end
+
     context "when enforcing second factor for staff" do
       before do
         SiteSetting.enforce_second_factor = "staff"
@@ -232,7 +241,7 @@ RSpec.describe ApplicationController do
 
       expect(log).not_to include('exception app middleware')
 
-      expect(JSON.parse(response.body)).to eq(
+      expect(response.parsed_body).to eq(
         "status" => 400,
         "error" => "Bad Request"
       )
@@ -245,7 +254,7 @@ RSpec.describe ApplicationController do
       get "/search/query.json", params: { trem: "misspelled term" }
 
       expect(response.status).to eq(400)
-      expect(JSON.parse(response.body)).to eq(
+      expect(response.parsed_body).to eq(
         "errors" => ["param is missing or the value is empty: term"]
       )
     end
@@ -305,7 +314,7 @@ RSpec.describe ApplicationController do
         permalink = Permalink.create!(url: trashed_topic.relative_url, category_id: category.id)
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
-        expect(response).to redirect_to("/forum/c/#{category.slug}")
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}")
 
         permalink.destroy
         permalink = Permalink.create!(url: trashed_topic.relative_url, post_id: new_topic.posts.last.id)
@@ -604,5 +613,19 @@ RSpec.describe ApplicationController do
     get '/', headers: { HTTP_ACCEPT: '*/*' }
     expect(response.status).to eq(200)
     expect(response.body).to include('Discourse')
+  end
+
+  it 'has canonical tag' do
+    get '/', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/" })
+    get '/?query_param=true', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/" })
+    get '/latest?page=2&additional_param=true', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/latest?page=2" })
+    get '/404', headers: { HTTP_ACCEPT: '*/*' }
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/404" })
+    topic = create_post.topic
+    get "/t/#{topic.slug}/#{topic.id}"
+    expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
   end
 end

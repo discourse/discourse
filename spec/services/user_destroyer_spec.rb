@@ -332,6 +332,26 @@ describe UserDestroyer do
       end
     end
 
+    describe "Destroying a user with security key" do
+      let!(:security_key) { Fabricate(:user_security_key_with_random_credential, user: user) }
+      fab!(:admin) { Fabricate(:admin) }
+
+      it "removes the security key" do
+        UserDestroyer.new(admin).destroy(user)
+        expect(UserSecurityKey.where(user_id: user.id).count).to eq(0)
+      end
+    end
+
+    describe "Destroying a user with a bookmark" do
+      let!(:bookmark) { Fabricate(:bookmark, user: user) }
+      fab!(:admin) { Fabricate(:admin) }
+
+      it "removes the bookmark" do
+        UserDestroyer.new(admin).destroy(user)
+        expect(Bookmark.where(user_id: user.id).count).to eq(0)
+      end
+    end
+
     context 'user got an email' do
       let!(:email_log) { Fabricate(:email_log, user: user) }
 
@@ -368,6 +388,17 @@ describe UserDestroyer do
         d = UserDestroyer.new(admin)
         expect {
           d.destroy(user)
+        }.to change { User.count }.by(-1)
+      end
+
+      it 'can delete the user if they were to fall into another trust level and have no email' do
+        g2 = Fabricate(:group, grant_trust_level: 1)
+        g2.add(user)
+
+        UserEmail.where(user: user).delete_all
+        user.reload
+        expect {
+          UserDestroyer.new(admin).destroy(user)
         }.to change { User.count }.by(-1)
       end
     end

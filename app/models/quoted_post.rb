@@ -9,7 +9,7 @@ class QuotedPost < ActiveRecord::Base
   #  we are double parsing this fragment, this may be worth optimising later
   def self.extract_from(post)
 
-    doc = Nokogiri::HTML.fragment(post.cooked)
+    doc = Nokogiri::HTML5.fragment(post.cooked)
 
     uniq = {}
 

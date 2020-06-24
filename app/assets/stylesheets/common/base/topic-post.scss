@@ -116,6 +116,12 @@
   a {
     word-wrap: break-word;
   }
+
+  del,
+  ins {
+    text-decoration: none;
+  }
+
   ins {
     background-color: dark-light-choose(
       $success-low,
@@ -258,6 +264,16 @@ blockquote {
   }
 }
 
+.small-user-list .unknown {
+  display: inline-block;
+  background-color: $primary-low;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 0.25em;
+}
+
 .post-hidden {
   .topic-avatar,
   .cooked,
@@ -365,6 +381,7 @@ blockquote {
   td {
     vertical-align: top;
     padding: 1px;
+    word-wrap: anywhere;
   }
 
   .topic-links {
@@ -464,7 +481,8 @@ blockquote {
 .user-card-avatar,
 .topic-map .poster,
 .user-profile-avatar,
-.user-image {
+.user-image,
+.latest-topic-list-item {
   .avatar-flair {
     display: flex;
     align-items: center;
@@ -479,7 +497,8 @@ blockquote {
 .topic-avatar .avatar-flair,
 .avatar-flair-preview .avatar-flair,
 .collapsed-info .user-profile-avatar .avatar-flair,
-.user-image .avatar-flair {
+.user-image .avatar-flair,
+.latest-topic-list-item .avatar-flair {
   background-size: 20px 20px;
   width: 20px;
   height: 20px;
@@ -552,8 +571,18 @@ blockquote {
   .cooked {
     overflow: hidden;
   }
+  .group-request {
+    border-top: 1px solid $primary-low;
+    padding-top: 0.5em;
+  }
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
+  }
+  .deleted & {
+    // Disable so the deleted background is visible immediately
+    &.highlighted {
+      animation: none;
+    }
   }
 }
 
@@ -596,21 +625,49 @@ pre {
   }
 }
 
-kbd {
-  background-color: $secondary;
-  border: 1px solid $primary-low;
-  border-radius: 3px;
-  box-shadow: shadow("kbd");
-  background: dark-light-choose(#fafafa, #333);
-  border: 1px solid dark-light-choose(#ccc, #555);
-  border-bottom: medium none dark-light-choose(#fff, #000);
+.copy-codeblocks {
+  display: block;
+  position: relative;
+  overflow: visible;
 
+  .copy-cmd {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-height: 0;
+    font-size: $font-down-2;
+    min-height: 0;
+    font-size: $font-down-2;
+    user-select: none;
+
+    &.copied {
+      .d-icon {
+        color: $tertiary;
+      }
+    }
+
+    .d-icon {
+      pointer-events: none;
+      margin-right: 0;
+    }
+  }
+}
+
+kbd {
+  align-items: center;
+  background: dark-light-choose(#fafafa, #303030);
+  border: 1px solid dark-light-choose(#d0d0d0, #505050);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  box-sizing: border-box;
   color: $primary;
-  display: inline-block;
+  display: inline-flex;
   font-size: $font-down-1;
+  justify-content: center;
   line-height: $line-height-large;
-  margin: 0 0.1em;
-  padding: 0.1em 0.6em;
+  margin: 0 0.15em;
+  min-width: 24px;
+  padding: 0.15em 0.6em;
 
   // don't allow more than 3 nested elements to prevent FF from crashing
   // cf. http://what.thedailywtf.com/t/nested-elements/7927
@@ -759,11 +816,12 @@ blockquote > *:last-child {
 }
 
 a.mention {
+  align-items: baseline;
+  display: inline-flex;
   font-weight: bold;
   font-size: 0.93em;
-  color: $primary;
   color: dark-light-choose($primary-high, $secondary-low);
-  padding: 2px 4px;
+  padding: 1px 4px;
   background: $primary-low;
   border-radius: 8px;
 }
@@ -785,12 +843,6 @@ a.mention-group {
     padding: 2px 4px;
     background: $primary-low;
     border-radius: 8px;
-  }
-}
-
-.popup-menu {
-  h3 {
-    margin-top: 0;
   }
 }
 
@@ -847,6 +899,7 @@ a.mention-group {
 }
 
 .broken-image {
+  display: inline-flex;
   color: dark-light-choose($primary-low-mid, $secondary-high);
   border: 1px solid $primary-low;
   font-size: $font-up-5;
@@ -959,10 +1012,63 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  .reason {
-    color: $primary-high;
-    display: inline;
-    margin: 0 0 0 8px;
-    line-height: $line-height-medium;
+  padding: 0.5em 0;
+
+  .topic-footer-main-buttons {
+    margin: 0 0 -0.5em 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    > .btn {
+      margin: 0 0.5em 0.5em 0;
+      display: inline-flex;
+      align-items: center;
+
+      .d-button-label {
+        display: flex;
+        flex: 1 0 auto;
+        align-items: center;
+      }
+    }
+
+    .topic-admin-menu-button-container {
+      display: inline-flex;
+    }
+
+    .topic-admin-menu-button-container > span:not(:empty) {
+      margin: 0 0.5em 0.5em 0;
+    }
   }
+
+  .pinned-button:not(.is-hidden) + .topic-notifications-button {
+    margin-top: 0;
+  }
+
+  .pinned-button,
+  .topic-notifications-button {
+    margin: 1em 0;
+
+    .reason {
+      color: $primary-high;
+      display: inline-flex;
+      margin: 0;
+      align-items: center;
+
+      .text {
+        margin-left: 0.5em;
+      }
+    }
+  }
+}
+
+.post-admin-menu {
+  display: inline-flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: auto;
+  max-width: 320px;
+  position: absolute;
+  text-align: left;
+  bottom: -2px;
+  right: 15px;
 }

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Controller from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
@@ -15,8 +16,14 @@ export default Controller.extend({
   closedPollResult: "on_close",
   staffPollResult: "staff_only",
   pollChartTypes: [
-    { name: BAR_CHART_TYPE.capitalize(), value: BAR_CHART_TYPE },
-    { name: PIE_CHART_TYPE.capitalize(), value: PIE_CHART_TYPE }
+    {
+      name: I18n.t("poll.ui_builder.poll_chart_type.bar"),
+      value: BAR_CHART_TYPE
+    },
+    {
+      name: I18n.t("poll.ui_builder.poll_chart_type.pie"),
+      value: PIE_CHART_TYPE
+    }
   ],
 
   pollType: null,
@@ -91,7 +98,7 @@ export default Controller.extend({
       .map(g => {
         // prevents group "everyone" to be listed
         if (g.id !== 0) {
-          return { name: g.name, value: g.name };
+          return { name: g.name };
         }
       })
       .filter(Boolean);
@@ -245,7 +252,9 @@ export default Controller.extend({
     if (publicPoll) pollHeader += ` public=true`;
     if (chartType && pollType !== "number")
       pollHeader += ` chartType=${chartType}`;
-    if (pollGroups) pollHeader += ` groups=${pollGroups}`;
+    if (pollGroups && pollGroups.length > 0) {
+      pollHeader += ` groups=${pollGroups}`;
+    }
     if (autoClose) {
       let closeDate = moment(
         date + " " + time,

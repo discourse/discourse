@@ -110,6 +110,10 @@ module SiteSettingExtension
     @secret_settings ||= []
   end
 
+  def plugins
+    @plugins ||= {}
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
 
@@ -135,7 +139,7 @@ module SiteSettingExtension
       if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
-        unless val.nil? || (val == ''.freeze)
+        unless val.nil? || (val == '')
           shadowed_val = val
           hidden_settings << name
           shadowed_settings << name
@@ -156,6 +160,10 @@ module SiteSettingExtension
 
       if opts[:secret]
         secret_settings << name
+      end
+
+      if opts[:plugin]
+        plugins[name] = opts[:plugin]
       end
 
       type_supervisor.load_setting(
@@ -245,6 +253,8 @@ module SiteSettingExtension
         secret: secret_settings.include?(s),
         placeholder: placeholder(s)
       }.merge!(type_hash)
+
+      opts[:plugin] = plugins[s] if plugins[s]
 
       opts
     end.unshift(locale_setting_hash)

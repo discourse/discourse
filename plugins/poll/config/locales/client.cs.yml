@@ -19,24 +19,6 @@ cs:
         many: "hlasů celkem"
         other: "hlasů celkem"
       average_rating: "Průměrné hodnocení: <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Zvolte alespoň <strong>%{count}</strong> možnost."
-            few: "Zvolte alespoň <strong>%{count}</strong> možnosti."
-            many: "Zvolte alespoň <strong>%{count}</strong> možností."
-            other: "Zvolte alespoň <strong>%{count}</strong> možností."
-          up_to_max_options:
-            one: "Zvolte maximálně <strong>%{count}</strong> možnost."
-            few: "Zvolte maximálně <strong>%{count}</strong> možnosti."
-            many: "Zvolte maximálně <strong>%{count}</strong> možností"
-            other: "Zvolte maximálně <strong>%{count}</strong> možností"
-          x_options:
-            one: "Zvolte <strong>%{count}</strong> možnost."
-            few: "Zvolte <strong>%{count}</strong> možnosti."
-            many: "Zvolte <strong>%{count}</strong> možností"
-            other: "Zvolte <strong>%{count}</strong> možností"
-          between_min_and_max_options: "Zvolte mezi <strong>%{min}</strong> a <strong>%{max}</strong> možnostmi"
       cast-votes:
         title: "Hlasujte"
         label: "Hlasovat nyní!"

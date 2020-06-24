@@ -44,6 +44,22 @@ describe WebHook do
       expect(post_hook.payload_url).to eq("https://example.com")
     end
 
+    it "excludes disabled plugin web_hooks" do
+      web_hook_event_types = WebHookEventType.active.find_by(name: 'solved')
+      expect(web_hook_event_types).to eq(nil)
+    end
+
+    it "includes non-plugin web_hooks" do
+      web_hook_event_types = WebHookEventType.active.where(name: 'topic')
+      expect(web_hook_event_types.count).to eq(1)
+    end
+
+    it "includes enabled plugin web_hooks" do
+      SiteSetting.stubs(:solved_enabled).returns(true)
+      web_hook_event_types = WebHookEventType.active.where(name: 'solved')
+      expect(web_hook_event_types.count).to eq(1)
+    end
+
     describe '#active_web_hooks' do
       it "returns unique hooks" do
         post_hook.web_hook_event_types << WebHookEventType.find_by(name: 'topic')
@@ -469,6 +485,31 @@ describe WebHook do
       expect(job_args["event_name"]).to eq("reviewable_transitioned_to")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(reviewable.id)
+    end
+
+    it 'should enqueue the right hooks for badge grants' do
+      Fabricate(:user_badge_web_hook)
+      badge = Fabricate(:badge)
+      badge.multiple_grant = true
+      badge.show_posts = true
+      badge.save
+
+      now = Time.now
+      freeze_time now
+
+      BadgeGranter.grant(badge, user, granted_by: admin, post_id: post.id)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+      expect(job_args["event_name"]).to eq("user_badge_granted")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["badge_id"]).to eq(badge.id)
+      expect(payload["user_id"]).to eq(user.id)
+      expect(payload["granted_by_id"]).to eq(admin.id)
+      # be_within required because rounding occurs
+      expect(Time.zone.parse(payload["granted_at"]).to_f).to be_within(0.001).of(now.to_f)
+      expect(payload["post_id"]).to eq(post.id)
+
+      # Future work: revoke badge hook
     end
   end
 end

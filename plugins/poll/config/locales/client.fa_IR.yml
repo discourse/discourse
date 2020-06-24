@@ -17,18 +17,6 @@ fa_IR:
       average_rating: "میانگین امتیاز: <strong>%{average}</strong>."
       public:
         title: "آرا <strong>عمومی</strong> هستند."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "حداقل <strong>%{count}</strong> گزینه انتخاب کنید."
-            other: "حداقل <strong>%{count}</strong> گزینه انتخاب کنید."
-          up_to_max_options:
-            one: "حداکثر <strong>%{count}</strong> گزینه انتخاب کنید"
-            other: "حداکثر <strong>%{count}</strong> گزینه انتخاب کنید"
-          x_options:
-            one: "<strong>%{count}</strong> گزینه انتخاب کنید"
-            other: "<strong>%{count}</strong> گزینه انتخاب کنید"
-          between_min_and_max_options: "بین <strong>%{min}</strong> تا <strong>%{max}</strong> گزینه انتخاب کنید"
       cast-votes:
         title: "انداختن رأی شما"
         label: "رای بدهید!"
@@ -37,6 +25,7 @@ fa_IR:
         label: "نتایج را نشان بده"
       hide-results:
         title: "برگشتن به رای گیری "
+        label: "نمایش رأی"
       export-results:
         label: "خروجی گرفتن"
       open:
@@ -54,7 +43,9 @@ fa_IR:
         title: ساخت نظرسنجی
         insert: درج نظر سنجی
         help:
+          options_count: حداقل 1 گزینه را وارد کنید
           invalid_values: مقدار حداقل می بایست کمتر از مقدار حداکثر باشد.
+          min_step_value: حداقل مقدار مرحله 1 است
         poll_type:
           label: نوع
           regular: یک انتخابی

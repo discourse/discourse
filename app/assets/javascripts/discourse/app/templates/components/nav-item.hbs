@@ -1,0 +1,7 @@
+{{#if routeParam}}
+  {{#link-to route routeParam}}{{contents}}{{/link-to}}
+{{else if route}}
+  {{#link-to route}}{{contents}}{{/link-to}}
+{{else}}
+  <a href={{get-url path}} data-auto-route="true">{{contents}}</a>
+{{/if}}

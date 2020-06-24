@@ -27,7 +27,7 @@ describe Admin::BadgesController do
         }
 
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["grant_count"]).to be > 0
+        expect(response.parsed_body["grant_count"]).to be > 0
       end
 
       it 'does not allow anything if enable_badge_sql is disabled' do
@@ -49,7 +49,7 @@ describe Admin::BadgesController do
           name: 'test', query: 'select 1 as user_id, null as granted_at', badge_type_id: 1
         }
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(response.status).to eq(200)
         expect(json["badge"]["name"]).to eq('test')
         expect(json["badge"]["query"]).to eq('select 1 as user_id, null as granted_at')
@@ -76,7 +76,7 @@ describe Admin::BadgesController do
 
         expect(groupings2.map { |g| g.name }).to eq(names)
         expect((groupings.map(&:id) - groupings2.map { |g| g.id }).compact).to be_blank
-        expect(::JSON.parse(response.body)["badge_groupings"].length).to eq(groupings2.length)
+        expect(response.parsed_body["badge_groupings"].length).to eq(groupings2.length)
       end
     end
 
@@ -85,7 +85,7 @@ describe Admin::BadgesController do
         get "/admin/badges/types.json"
 
         expect(response.status).to eq(200)
-        expect(::JSON.parse(response.body)["badge_types"]).to be_present
+        expect(response.parsed_body["badge_types"]).to be_present
       end
     end
 
@@ -179,6 +179,8 @@ describe Admin::BadgesController do
     end
 
     describe '#mass_award' do
+      before { @user = Fabricate(:user, email: 'user1@test.com', username: 'username1') }
+
       it 'does nothing when there is no file' do
         post "/admin/badges/award/#{badge.id}.json", params: { file: '' }
 
@@ -202,23 +204,31 @@ describe Admin::BadgesController do
       it 'awards the badge using a list of user emails' do
         Jobs.run_immediately!
 
-        user = Fabricate(:user, email: 'user1@test.com')
         file = file_from_fixtures('user_emails.csv', 'csv')
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
+        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
       end
 
       it 'awards the badge using a list of usernames' do
         Jobs.run_immediately!
 
-        user = Fabricate(:user, username: 'username1')
         file = file_from_fixtures('usernames.csv', 'csv')
 
         post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
 
-        expect(UserBadge.exists?(user: user, badge: badge)).to eq(true)
+        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
+      end
+
+      it 'works with a CSV containing nil values' do
+        Jobs.run_immediately!
+
+        file = file_from_fixtures('usernames_with_nil_values.csv', 'csv')
+
+        post "/admin/badges/award/#{badge.id}.json", params: { file: fixture_file_upload(file) }
+
+        expect(UserBadge.exists?(user: @user, badge: badge)).to eq(true)
       end
     end
   end

@@ -21,7 +21,7 @@ describe Admin::EmailStylesController do
       get '/admin/customize/email_style.json'
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)['email_style']
+      json = response.parsed_body['email_style']
       expect(json['html']).to eq(default_html)
       expect(json['css']).to eq(default_css)
     end
@@ -32,7 +32,7 @@ describe Admin::EmailStylesController do
       get '/admin/customize/email_style.json'
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)['email_style']
+      json = response.parsed_body['email_style']
       expect(json['html']).to eq("For you: %{email_content}")
       expect(json['css']).to eq(".user-name { font-size: 24px; }")
     end
@@ -59,7 +59,7 @@ describe Admin::EmailStylesController do
         email_style: valid_params.merge(html: 'No email content')
       }
       expect(response.status).to eq(422)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['errors']).to include(
         I18n.t(
           'email_style.html_missing_placeholder',

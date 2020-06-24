@@ -10,6 +10,11 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
+  self.ignored_columns = [
+    "avg_time", # TODO(2021-01-04): remove
+    "image_url" # TODO(2021-06-01): remove
+  ]
+
   cattr_accessor :plugin_permitted_create_params
   self.plugin_permitted_create_params = {}
 
@@ -33,7 +38,7 @@ class Post < ActiveRecord::Base
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
 
-  has_many :post_uploads
+  has_many :post_uploads, dependent: :delete_all
   has_many :uploads, through: :post_uploads
 
   has_one :post_stat
@@ -47,6 +52,8 @@ class Post < ActiveRecord::Base
   has_many :revisions, -> { order(:number) }, foreign_key: :post_id, class_name: 'PostRevision'
 
   has_many :user_actions, foreign_key: :target_post_id
+
+  belongs_to :image_upload, class_name: "Upload"
 
   validates_with PostValidator, unless: :skip_validation
 
@@ -127,7 +134,8 @@ class Post < ActiveRecord::Base
                                  flagged_by_tl3_user: 4,
                                  email_spam_header_found: 5,
                                  flagged_by_tl4_user: 6,
-                                 email_authentication_result_header: 7)
+                                 email_authentication_result_header: 7,
+                                 imported_as_unlisted: 8)
   end
 
   def self.types
@@ -151,14 +159,6 @@ class Post < ActiveRecord::Base
 
   def self.find_by_detail(key, value)
     includes(:post_details).find_by(post_details: { key: key, value: value })
-  end
-
-  def self.excerpt_size=(sz)
-    @excerpt_size = sz
-  end
-
-  def self.excerpt_size
-    @excerpt_size || 220
   end
 
   def whisper?
@@ -255,7 +255,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.white_listed_image_classes
-    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji']
+    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji', 'ytp-thumbnail-image']
   end
 
   def post_analyzer
@@ -476,7 +476,7 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, Post.excerpt_size, strip_links: true, strip_images: true, post: self)
+    Post.excerpt(cooked, SiteSetting.topic_excerpt_maxlength, strip_links: true, strip_images: true, post: self)
   end
 
   def is_first_post?
@@ -652,6 +652,10 @@ class Post < ActiveRecord::Base
       baked_version: BAKED_VERSION
     )
 
+    if is_first_post?
+      topic&.update_excerpt(excerpt_for_topic)
+    end
+
     if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)
       save_custom_fields
@@ -706,7 +710,7 @@ class Post < ActiveRecord::Base
       self.cooked = cook(raw, topic_id: topic_id)
     end
 
-    self.baked_at = Time.new
+    self.baked_at = Time.zone.now
     self.baked_version = BAKED_VERSION
   end
 
@@ -746,28 +750,36 @@ class Post < ActiveRecord::Base
   end
 
   # Enqueue post processing for this post
-  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false)
+  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false, skip_pull_hotlinked_images: false)
     args = {
-      post_id: id,
       bypass_bump: bypass_bump,
+      cooking_options: self.cooking_options,
       new_post: new_post,
+      post_id: id,
+      skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
-    args[:image_sizes] = image_sizes if image_sizes.present?
-    args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
-    args[:cooking_options] = self.cooking_options
 
-    if priority && priority != :normal
-      args[:queue] = priority.to_s
-    end
+    args[:image_sizes] = image_sizes if self.image_sizes.present?
+    args[:invalidate_oneboxes] = true if self.invalidate_oneboxes.present?
+    args[:queue] = priority.to_s if priority && priority != :normal
 
     Jobs.enqueue(:process_post, args)
     DiscourseEvent.trigger(:after_trigger_post_process, self)
   end
 
-  def self.public_posts_count_per_day(start_date, end_date, category_id = nil)
-    result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
+  def self.public_posts_count_per_day(start_date, end_date, category_id = nil, include_subcategories = false)
+    result = public_posts
+      .where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
       .where(post_type: Post.types[:regular])
-    result = result.where('topics.category_id = ?', category_id) if category_id
+
+    if category_id
+      if include_subcategories
+        result = result.where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
+      else
+        result = result.where('topics.category_id = ?', category_id)
+      end
+    end
+
     result
       .group('date(posts.created_at)')
       .order('date(posts.created_at)')
@@ -910,8 +922,8 @@ class Post < ActiveRecord::Base
       if SiteSetting.secure_media?
         Upload.where(
           id: upload_ids, access_control_post_id: nil
-        ).where.not(
-          id: CustomEmoji.pluck(:upload_id)
+        ).where(
+          'id NOT IN (SELECT upload_id FROM custom_emojis)'
         ).update_all(
           access_control_post_id: self.id
         )
@@ -940,9 +952,10 @@ class Post < ActiveRecord::Base
       /\/uploads\/short-url\/[a-zA-Z0-9]+(\.[a-z0-9]+)?/
     ]
 
-    fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    fragments ||= Nokogiri::HTML5::fragment(self.cooked)
+    selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
 
-    links = fragments.css("a/@href", "img/@src").map do |media|
+    links = selectors.map do |media|
       src = media.value
       next if src.blank?
 
@@ -1048,6 +1061,10 @@ class Post < ActiveRecord::Base
     Upload.where(access_control_post_id: self.id)
   end
 
+  def image_url
+    image_upload&.url
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1096,7 +1113,6 @@ end
 #  like_count              :integer          default(0), not null
 #  incoming_link_count     :integer          default(0), not null
 #  bookmark_count          :integer          default(0), not null
-#  avg_time                :integer
 #  score                   :float
 #  reads                   :integer          default(0), not null
 #  post_type               :integer          default(1), not null
@@ -1129,8 +1145,8 @@ end
 #  raw_email               :text
 #  public_version          :integer          default(1), not null
 #  action_code             :string
-#  image_url               :string
 #  locked_by_id            :integer
+#  image_upload_id         :bigint
 #
 # Indexes
 #
@@ -1139,6 +1155,7 @@ end
 #  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                      (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
 #  index_posts_on_id_and_baked_version       (id DESC,baked_version) WHERE (deleted_at IS NULL)
+#  index_posts_on_image_upload_id            (image_upload_id)
 #  index_posts_on_reply_to_post_number       (reply_to_post_number)
 #  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE

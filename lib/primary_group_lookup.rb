@@ -13,7 +13,7 @@ class PrimaryGroupLookup
   private
 
   def self.lookup_columns
-    @lookup_columns ||= %i{id name flair_url flair_bg_color flair_color}
+    @lookup_columns ||= %i{id name flair_icon flair_upload_id flair_bg_color flair_color}
   end
 
   def users
@@ -29,7 +29,7 @@ class PrimaryGroupLookup
     group_ids = users_with_primary_group.map(&:primary_group_id)
     group_ids.uniq!
 
-    Group.where(id: group_ids).select(self.class.lookup_columns)
+    Group.includes(:flair_upload).where(id: group_ids).select(self.class.lookup_columns)
       .each { |g| group_lookup[g.id] = g }
 
     hash = {}

@@ -1,0 +1,30 @@
+<div class="user-image">
+  <div class="user-image-inner">
+    <a href={{this.userPath}} data-user-card={{@user.username}}>{{avatar @user imageSize="large"}}</a>
+    {{#if @user.primary_group_name}}
+      {{avatar-flair
+        flairURL=@user.primary_group_flair_url
+        flairBgColor=@user.primary_group_flair_bg_color
+        flairColor=@user.primary_group_flair_color
+        groupName=@user.primary_group_name}}
+    {{/if}}
+  </div>
+</div>
+
+<div class="user-detail">
+  <div class="name-line">
+    <span class="username"><a href={{this.userPath}} data-user-card={{@user.username}}>{{format-username @user.username}}</a></span>
+    <span class="name">{{this.name}}</span>
+    {{plugin-outlet name="after-user-name" connectorTagName="span" args=(hash user=user)}}
+  </div>
+  <div class="title">{{@user.title}}</div>
+
+  {{#if hasBlock}}
+    <div class="details">
+      {{yield}}
+    </div>
+  {{/if}}
+
+</div>
+
+{{plugin-outlet name="after-user-info" args=(hash user=user)}}

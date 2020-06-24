@@ -1,0 +1,113 @@
+{{#d-modal-body id="bookmark-reminder-modal"}}
+  {{#conditional-loading-spinner condition=loading}}
+    {{#if errorMessage}}
+      <div class="control-group">
+        <div class="controls">
+          <div class="alert alert-error">{{errorMessage}}</div>
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="control-group bookmark-name-wrap">
+      {{input id="bookmark-name" value=model.name name="bookmark-name" class="bookmark-name" enter=(action "saveAndClose") placeholder=(i18n "post.bookmarks.name_placeholder")}}
+      {{d-button icon="cog" action=(action "toggleOptionsPanel") class="bookmark-options-button"}}
+    </div>
+
+    <div class="bookmark-options-panel">
+      <label for="delete_when_reminder_sent">
+        {{i18n "bookmarks.delete_when_reminder_sent"}}
+        {{input id="delete_when_reminder_sent" type="checkbox" checked=options.deleteWhenReminderSent}}
+      </label>
+    </div>
+
+    {{#if showExistingReminderAt }}
+      <div class="alert alert-info existing-reminder-at-alert">
+        {{d-icon "far-clock"}}
+        <span>{{i18n "bookmarks.reminders.existing_reminder"}} {{existingReminderAtFormatted}}</span>
+      </div>
+    {{/if}}
+
+    <div class="control-group">
+      <label class="control-label" for="set_reminder">
+        {{i18n "post.bookmarks.set_reminder"}}
+      </label>
+
+      {{#if userHasTimezoneSet}}
+        {{#tap-tile-grid activeTile=selectedReminderType as |grid|}}
+          {{#if showLaterToday}}
+            {{#tap-tile icon="far-moon" tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+              <div class="tap-tile-title">{{i18n "bookmarks.reminders.later_today"}}</div>
+              <div class="tap-tile-date">{{laterTodayFormatted}}</div>
+            {{/tap-tile}}
+          {{/if}}
+          {{#tap-tile icon="far-sun" tileId=reminderTypes.TOMORROW activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+            <div class="tap-tile-title">{{i18n "bookmarks.reminders.tomorrow"}}</div>
+            <div class="tap-tile-date">{{tomorrowFormatted}}</div>
+          {{/tap-tile}}
+          {{#if showLaterThisWeek}}
+            {{#tap-tile icon="angle-double-right" tileId=reminderTypes.LATER_THIS_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+              <div class="tap-tile-title">{{i18n "bookmarks.reminders.later_this_week"}}</div>
+              <div class="tap-tile-date">{{laterThisWeekFormatted}}</div>
+            {{/tap-tile}}
+          {{/if}}
+          {{#tap-tile icon="briefcase" tileId=reminderTypes.START_OF_NEXT_BUSINESS_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+            <div class="tap-tile-title">{{i18n "bookmarks.reminders.start_of_next_business_week"}}</div>
+            <div class="tap-tile-date">{{startNextBusinessWeekFormatted}}</div>
+          {{/tap-tile}}
+          {{#tap-tile icon="far-clock" tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+            <div class="tap-tile-title">{{i18n "bookmarks.reminders.next_week"}}</div>
+            <div class="tap-tile-date">{{nextWeekFormatted}}</div>
+          {{/tap-tile}}
+          {{#tap-tile icon="far-calendar-plus" tileId=reminderTypes.NEXT_MONTH activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+            <div class="tap-tile-title">{{i18n "bookmarks.reminders.next_month"}}</div>
+            <div class="tap-tile-date">{{nextMonthFormatted}}</div>
+          {{/tap-tile}}
+          {{#tap-tile icon="calendar-alt" tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+            <div class="tap-tile-title">{{i18n "bookmarks.reminders.custom"}}</div>
+          {{/tap-tile}}
+
+          {{#if customDateTimeSelected}}
+            <div class="control-group custom-date-time-wrap">
+              <div class="tap-tile-date-input">
+                {{d-icon "calendar-alt"}}
+                {{date-picker-future
+                  value=customReminderDate
+                  onSelect=(action (mut customReminderDate))
+                  id="bookmark-custom-date"
+                }}
+              </div>
+              <div class="tap-tile-time-input">
+                {{d-icon "far-clock"}}
+                {{input placeholder="--:--" id="bookmark-custom-time" type="time" class="time-input" value=customReminderTime}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if showLastCustom}}
+            {{#tap-tile icon="undo" tileId=reminderTypes.LAST_CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+              <div class="tap-tile-title">{{i18n "bookmarks.reminders.last_custom"}}</div>
+              <div class="tap-tile-date">{{lastCustomFormatted}}</div>
+            {{/tap-tile}}
+          {{/if}}
+
+          {{#tap-tile icon="ban" tileId=reminderTypes.NONE activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+            <div class="tap-tile-title">{{i18n "bookmarks.reminders.none"}}</div>
+          {{/tap-tile}}
+        {{/tap-tile-grid}}
+
+      {{else}}
+        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-uri))}}</div>
+      {{/if}}
+    </div>
+
+    <div class="control-group">
+      {{d-button id="save-bookmark" label="bookmarks.save" class="btn-primary" action=(action "saveAndClose")}}
+      {{d-modal-cancel close=(action "closeWithoutSavingBookmark")}}
+      {{#if showDelete}}
+        <div class="pull-right">
+          {{d-button id="delete-bookmark" icon="trash-alt" class="btn-danger" action=(action "delete")}}
+        </div>
+      {{/if}}
+    </div>
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}

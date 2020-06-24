@@ -1,0 +1,16 @@
+<div aria-role="heading" aria-level="2" class="table-heading">
+  {{i18n (concat "filters." filter ".title")}}
+</div>
+
+{{#if topics}}
+  {{#each topics as |t|}}
+    {{latest-topic-list-item topic=t}}
+  {{/each}}
+  <div class="more-topics">
+    <a href={{get-url (concat "/" filter)}} class="btn btn-default pull-right">{{i18n "more"}}</a>
+  </div>
+{{else}}
+  <div class="no-topics">
+    <h3>{{i18n (concat "topics.none." filter)}}</h3>
+  </div>
+{{/if}}

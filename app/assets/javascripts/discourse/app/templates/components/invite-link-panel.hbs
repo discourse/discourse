@@ -1,0 +1,59 @@
+{{#if inviteModel.error}}
+  <div class="alert alert-error">
+    {{html-safe errorMessage}}
+  </div>
+{{/if}}
+
+<div class="body">
+  {{#if inviteModel.finished}}
+    {{generated-invite-link link=inviteModel.inviteLink}}
+  {{else}}
+
+    <div class="group-access-control">
+      <label class="instructions">
+        {{i18n "topic.automatically_add_to_groups"}}
+      </label>
+      {{group-selector
+        fullWidthWrap=true
+        groupFinder=groupFinder
+        groupNames=inviteModel.groupNames
+        placeholderKey="topic.invite_private.group_name"}}
+    </div>
+
+    <div class="max-redemptions-allowed">
+      <label class="instructions">
+        {{i18n 'user.invited.invite_link.max_redemptions_allowed_label'}}
+      </label>
+      {{input type="number" value=maxRedemptionAllowed class="max-redemptions-allowed-input" min="2" max=siteSettings.invite_link_max_redemptions_limit}}
+    </div>
+
+    <div class="invite-link-expires-at">
+      <label class="instructions">
+        {{i18n 'user.invited.invite_link.expires_at'}}
+      </label>
+      {{future-date-input
+        includeDateTime=true
+        includeMidFuture=true
+        clearable=true
+        onChangeInput=(action (mut inviteExpiresAt))
+      }}
+    </div>
+
+  {{/if}}
+</div>
+
+<div class="footer">
+  {{#if inviteModel.finished}}
+    {{d-button
+      class="btn-primary"
+      action=(route-action "closeModal")
+      label="close"}}
+  {{else}}
+    {{d-button
+        icon="link"
+        action=(action "generateMultipleUseInviteLink")
+        class="btn-primary generate-invite-link"
+        disabled=disabled
+        label="user.invited.generate_link"}}
+  {{/if}}
+</div>

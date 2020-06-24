@@ -86,11 +86,6 @@ describe SvgSprite do
     expect(SvgSprite.all_icons).not_to include("  fab-facebook-messenger  ")
   end
 
-  it 'includes Font Awesome 4.7 icons from badges' do
-    Fabricate(:badge, name: 'Custom Icon Badge', icon: 'fa-gamepad')
-    expect(SvgSprite.all_icons).to include("gamepad")
-  end
-
   it 'includes Font Awesome 5 icons from badges' do
     Fabricate(:badge, name: 'Custom Icon Badge', icon: 'far fa-building')
     expect(SvgSprite.all_icons).to include("far-building")
@@ -140,6 +135,16 @@ describe SvgSprite do
     parent_theme = Fabricate(:theme)
     parent_theme.add_relative_theme!(:child, theme)
     expect(SvgSprite.all_icons([parent_theme.id])).to include("dragon")
+  end
+
+  it 'includes icons defined in theme modifiers' do
+    theme = Fabricate(:theme)
+
+    expect(SvgSprite.all_icons([theme.id])).not_to include("dragon")
+
+    theme.theme_modifier_set.svg_icons = ["dragon"]
+    theme.save!
+    expect(SvgSprite.all_icons([theme.id])).to include("dragon")
   end
 
   it 'includes custom icons from a sprite in a theme' do
@@ -205,13 +210,8 @@ describe SvgSprite do
     expect(SvgSprite.all_icons).to include("fab-bandcamp")
   end
 
-  it "includes Font Awesome 4.7 icons as group flair" do
-    group = Fabricate(:group, flair_url: "fa-air-freshener")
-    expect(SvgSprite.bundle).to match(/air-freshener/)
-  end
-
-  it "includes Font Awesome 5 icons as group flair" do
-    group = Fabricate(:group, flair_url: "far fa-building")
-    expect(SvgSprite.bundle).to match(/building/)
+  it "includes Font Awesome icon from groups" do
+    group = Fabricate(:group, flair_icon: "far-building")
+    expect(SvgSprite.bundle).to match(/far-building/)
   end
 end

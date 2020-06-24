@@ -18,7 +18,7 @@
   }
   z-index: z("composer", "content");
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
-    max-width 250ms ease;
+    max-width 250ms ease, padding-bottom 250ms ease;
   background-color: $secondary;
   box-shadow: shadow("composer");
 
@@ -98,7 +98,7 @@
     display: flex;
     align-items: center;
     .d-icon {
-      color: $primary-medium;
+      color: $primary-high;
     }
     .reply-details {
       max-width: calc(100% - 175px);
@@ -166,7 +166,11 @@
   }
 
   .whisper {
-    margin-right: 0.25em;
+    margin: 0 0.25em;
+  }
+
+  .unlist {
+    margin-left: 0.25em;
   }
 
   .display-edit-reason {
@@ -494,5 +498,11 @@ body.ios-safari-composer-hacks {
     &.open {
       height: calc(var(--composer-vh, 1vh) * 100);
     }
+  }
+}
+
+body:not(.ios-safari-composer-hacks) {
+  #reply-control.open {
+    padding-bottom: var(--composer-ipad-padding);
   }
 }

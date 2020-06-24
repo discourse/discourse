@@ -9,7 +9,7 @@
     flex-direction: column;
     align-items: stretch;
     min-height: 75px;
-    padding: s(0 6);
+    padding: 0 24px;
     order: 2;
 
     button {
@@ -39,7 +39,8 @@
 
   #modal-alert {
     max-width: 100%;
-    padding: s(2 4);
+    margin-bottom: 0;
+    padding: 8px 16px;
   }
 
   .login-modal {
@@ -68,7 +69,7 @@
   #login-form {
     box-sizing: border-box;
     flex: 1 0 auto;
-    padding: s(0 6);
+    padding: 0 24px;
     + #login-buttons {
       border-left: 1px solid $primary-low; // Only show border when login-form is present
     }
@@ -171,7 +172,7 @@
     }
     form {
       box-sizing: border-box;
-      padding: s(4 6);
+      padding: 16px 24px;
       margin-bottom: 0;
       max-height: 475px;
       @media screen and (max-height: 650px) {

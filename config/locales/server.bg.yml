@@ -151,9 +151,6 @@ bg:
   topics_in_category: "Теми в '%{category}' група"
   rss_posts_in_topic: "RSS поддържа '%{topic}'"
   rss_topics_in_category: "RSS поддържа темите в '%{category}' категория"
-  author_wrote: "%{author} написа:"
-  num_posts: "Публикации:"
-  num_participants: "Участници:"
   read_full_topic: "Прочети цялата тема"
   private_message_abbrev: "Съобщение"
   rss_description:
@@ -174,6 +171,15 @@ bg:
   too_late_to_edit: "Това мнение е създадено много отдавна. То вече не може да се променя или да бъде изтрито."
   revert_version_same: "Текущата версия е същата като версията, към която се опитвате да се върнете."
   excerpt_image: "изображение"
+  bookmarks:
+    reminders:
+      at_desktop: "Следващия път, когато съм на компютъра"
+      later_today: "По-късно днес"
+      next_business_day: "Следващия работен ден"
+      tomorrow: "Утре"
+      next_week: "Следваща седмица"
+      next_month: "Следващия месец"
+      custom: "Друга дата и час"
   groups:
     errors:
       invalid_domain: "'%{domain}' е невалиден домейн."
@@ -399,7 +405,7 @@ bg:
       title: "Неприлично"
       long_form: "Маркирахте това като неприлично"
     notify_user:
-      title: "Изпрати съобщение до @{{username}}"
+      title: "Изпрати съобщение до @%{username}"
       long_form: "оведомен потребител"
       email_title: 'Вашата публикация в "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -459,6 +465,7 @@ bg:
   reports:
     default:
       labels:
+        count: Брой
         day: Ден
     post_edits:
       labels:
@@ -469,6 +476,7 @@ bg:
     user_flagging_ratio:
       labels:
         user: Потребител
+        score: Точки
     moderators_activity:
       labels:
         moderator: Модератор
@@ -688,8 +696,6 @@ bg:
     notification_email: "Подател: имейлът се използва при изпращане на всички системни съобщения. Посоченият тук домейн трябва да се конфигурира правилно със SPF, DKIM и PTR данни за успешна доставка."
     email_custom_headers: "Разделен със знака \"|\" списък от персонализирани имейл хедъри. "
     summary_score_threshold: "Минимална оценка необходима за една публикация, за да бъде включена в \"Обобщи тази тема\""
-    summary_posts_required: "Минимум публикации в темата преди \"Обобщи тази тема\" да бъде активирано"
-    summary_likes_required: "Минимум харесвания в темата преди \"Обобщи тази тема\" да бъде активирано"
     summary_percent_filter: "Когато потребителят кликне върху \"Обобщи тази тема\", се показват % от най-добрите публикации "
     enable_long_polling: "Системата за обработка на известия, да използва long polling - заявки с дълго изчакване / дълъг интервал "
     long_polling_base_url: "Основен URL използван за long polling - проверка на дълги интервали (когато се използва CDN за динамично съдръжание, уверете се, че тази стойност е настроена към основното съдържание) Например: http://origin.site.com"
@@ -802,7 +808,6 @@ bg:
     min_title_similar_length: "Минимална дължина на заглавието на темата, като тя ще бъде проверена за наличие на подобна."
     category_colors: "Списък от шестнадесетични цветови стойности разрешени за категориите."
     category_style: "Визуален стил за категорията със значки."
-    max_image_size_kb: "Максимален размер за качване на избражение в kB. Това също трябва да се конфигурира в nginx конфигурацията (client_max_body_size), apache или прокси сървъра."
     max_attachment_size_kb: "Максимална големина на прикачените файлове в kB. Това също трябва да се конфигурира в nginx (client_max_body_size), apache или прокси сървъра."
     authorized_extensions: "Списък от разширения на файлове разрешени за качване (използвайте '*' за да разрешите всички)"
     max_similar_results: "Брой подобни теми показвани на потребителя при създаването на нова тема. Сравнението е базирано на заглавието и текста на темата."
@@ -910,6 +915,7 @@ bg:
       category: "Категории"
       topic: "Резултати"
       user: "Потребители"
+    results_page: "Резултати от търсенето на '%{term}'"
   original_poster: "Автор"
   most_posts: "Повечето мнения"
   most_recent_poster: "Последен Автор"
@@ -917,6 +923,10 @@ bg:
   redirected_to_top_reasons:
     new_user: "Добре дошли в нашата общност! Това са най-популярните последни теми. "
     not_seen_in_a_month: "Добре дошли отново! Това са най-популярните теми за времето, през което Ви нямаше."
+  publish_page:
+    slug_errors:
+      blank: "не може да бъде празно"
+      invalid: "съдържа невалидни знаци"
   topic_statuses:
     autoclosed_enabled_days:
       one: "Тази тема ще се затвори автоматично след %{count} ден. Нови отговори вече не се допускат."
@@ -1249,6 +1259,8 @@ bg:
       description: Получени 2 харесвания на 100 публикации
     admired:
       description: Получил 5 харесвания за 300 публикации
+    out_of_love:
+      name: От любов
     crazy_in_love:
       name: Луди от любов
     thank_you:
@@ -1352,6 +1364,12 @@ bg:
       confirm_title: "Включени известявания - %{site_title}"
       confirm_body: "Успех! Известяването е включено."
   reviewables:
+    priorities:
+      medium: "Среден"
+      high: "Висок"
+    sensitivity:
+      medium: "Среден"
+      high: "Висок"
     actions:
       agree_and_suspend:
         title: "Преустанови потребител"

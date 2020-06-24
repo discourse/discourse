@@ -1,0 +1,19 @@
+<div class="published-page-wrapper">
+  <div class="published-page-header">
+    <h1 class="published-page-title"><%= @topic.title %></h1>
+
+    <div class="published-page-author">
+      <img width="45" height="45" src="<%= @topic.user.avatar_template.gsub('{size}', '90') %>" class="avatar">
+      <div class="published-page-author-details">
+        <div class="username"><%= @topic.user.username %></div>
+        <div class="topic-created-at"><%= short_date(@topic.created_at) %></div>
+      </div>
+    </div>
+
+    <%- if @topic.first_post.present? %>
+      <div class="published-page-body">
+        <%= @topic.first_post.cooked.html_safe %>
+      </div>
+    <%- end -%>
+  </div>
+</div>

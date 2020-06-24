@@ -103,6 +103,15 @@ describe SiteSettings::Validations do
         SiteSetting.s3_backup_bucket = "my-awesome-bucket/foo"
         expect { validate("my-awesome-bucket/foo/uploads") }.to raise_error(Discourse::InvalidParameters, error_message)
       end
+
+      it "cannot be made blank unless the setting is false" do
+        SiteSetting.s3_backup_bucket = "really-real-cool-bucket"
+        SiteSetting.enable_s3_uploads = true
+
+        expect { validate("") }.to raise_error(Discourse::InvalidParameters)
+        SiteSetting.enable_s3_uploads = false
+        validate("")
+      end
     end
   end
 

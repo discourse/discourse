@@ -1,7 +1,8 @@
-// there are (n) new or updated topics, click to show
 .alert.alert-info {
-  margin: 0;
+  margin-bottom: 0.5em;
   &.clickable {
+    // there are (n) new or updated topics, click to show
+    margin-bottom: 0;
     padding: 1em;
   }
 }

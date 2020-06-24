@@ -1,0 +1,169 @@
+<section class="user-preferences solo-preference second-factor">
+  {{#conditional-loading-spinner condition=loading}}
+    <form class="form-horizontal">
+      {{#if showEnforcedNotice}}
+        <div class="control-group">
+          <div class="controls">
+            <div class="alert alert-error">{{i18n "user.second_factor.enforced_notice"}}</div>
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if displayOAuthWarning}}
+        <div class="control-group">
+          <div class="controls">
+            {{i18n "user.second_factor.oauth_enabled_warning"}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if errorMessage}}
+        <div class="control-group">
+          <div class="controls">
+            <div class="alert alert-error">{{errorMessage}}</div>
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if loaded}}
+        <div class="control-group totp">
+          <div class="controls">
+            <h2>{{i18n "user.second_factor.totp.title"}}</h2>
+            {{d-button action=(action "createTotp")
+              class="btn-primary new-totp"
+              icon="plus"
+              disabled=loading
+              label="user.second_factor.totp.add"}}
+            {{#each totps as |totp|}}
+              <div class="second-factor-item">
+                {{#if totp.name}}
+                  {{totp.name}}
+                {{else}}
+                  {{i18n "user.second_factor.totp.default_name"}}
+                {{/if}}
+
+                {{#if isCurrentUser}}
+                  {{d-button action=(action "editSecondFactor" totp)
+                    class="btn-default btn-small btn-icon pad-left no-text edit"
+                    disabled=loading
+                    icon="pencil-alt"
+                    aria-label="user.second_factor.edit"
+                    title="user.second_factor.edit"
+                  }}
+                {{/if}}
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <div class="control-group security-key">
+          <div class="controls">
+            <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
+            {{d-button action=(action "createSecurityKey")
+              class="btn-primary new-security-key"
+              icon="plus"
+              disabled=loading
+              label="user.second_factor.security_key.add"}}
+            {{#each security_keys as |security_key|}}
+              <div class="second-factor-item">
+                {{#if security_key.name}}
+                  {{security_key.name}}
+                {{else}}
+                  {{i18n "user.second_factor.security_key.default_name"}}
+                {{/if}}
+
+                {{#if isCurrentUser}}
+                  {{d-button action=(action "editSecurityKey" security_key)
+                    class="btn-default btn-small btn-icon pad-left no-text edit"
+                    disabled=loading
+                    icon="pencil-alt"
+                    aria-label="user.second_factor.edit"
+                    title="user.second_factor.edit"
+                  }}
+                {{/if}}
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <div class="control-group pref-second-factor-backup">
+          <div class="controls pref-second-factor-backup">
+            <h2>{{i18n "user.second_factor_backup.title"}}</h2>
+            {{#if model.second_factor_enabled}}
+              {{#if model.second_factor_backup_enabled}}
+                {{html-safe (i18n "user.second_factor_backup.manage" count=model.second_factor_remaining_backup_codes)}}
+              {{else}}
+                {{i18n "user.second_factor_backup.enable_long"}}
+              {{/if}}
+
+              {{#if isCurrentUser}}
+                {{d-button action=(action "editSecondFactorBackup")
+                  class="btn-default btn-small btn-icon pad-left no-text edit edit-2fa-backup"
+                  disabled=loading
+                  icon="pencil-alt"
+                  aria-label="user.second_factor.edit"
+                  title="user.second_factor.edit"
+                }}
+              {{/if}}
+            {{else}}
+              {{i18n "user.second_factor_backup.enable_prerequisites"}}
+            {{/if}}
+          </div>
+        </div>
+
+        {{#if model.second_factor_enabled}}
+          {{#unless showEnforcedNotice}}
+            <div class="control-group">
+              <div class="controls">
+                {{d-button
+                  class="btn-danger"
+                  icon="ban"
+                  action=(action "disableAllSecondFactors")
+                  disabled=loading
+                  label="disable"}}
+              </div>
+            </div>
+          {{/unless}}
+        {{/if}}
+      {{else}}
+        <div class="control-group">
+          <label class="control-label">{{i18n "user.password.title"}}</label>
+
+          <div class="controls">
+            <div>
+              {{text-field value=password
+                id="password"
+                type="password"
+                classNames="input-large"
+                autofocus="autofocus"}}
+            </div>
+            <div class="instructions">
+              {{i18n "user.second_factor.confirm_password_description"}}
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            {{d-button
+              class="btn-primary"
+              type="submit"
+              action=(action "confirmPassword")
+              disabled=loading
+              label="continue"}}
+
+            {{#unless showEnforcedNotice}}
+              {{cancel-link route="preferences.account" args=model.username}}
+            {{/unless}}
+          </div>
+          <div class="controls" style="margin-top: 5px">
+            {{resetPasswordProgress}}
+            {{#unless resetPasswordLoading}}
+              <a href class="instructions" {{action "resetPassword"}}>{{ i18n "user.second_factor.forgot_password" }}</a>
+            {{/unless}}
+          </div>
+        </div>
+      {{/if}}
+    </form>
+  {{/conditional-loading-spinner}}
+</section>

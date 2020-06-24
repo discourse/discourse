@@ -58,7 +58,6 @@ class ImportScripts::Base
       update_post_timings
       update_feature_topic_users
       update_category_featured_topics
-      update_topic_count_replies
       reset_topic_counters
     end
 
@@ -78,10 +77,15 @@ class ImportScripts::Base
       min_personal_message_post_length: 1,
       min_personal_message_title_length: 1,
       allow_duplicate_topic_titles: true,
+      allow_duplicate_topic_titles_category: false,
       disable_emails: 'yes',
       max_attachment_size_kb: 102400,
       max_image_size_kb: 102400,
-      authorized_extensions: '*'
+      authorized_extensions: '*',
+      clean_up_inactive_users_after_days: 0,
+      clean_up_unused_staged_users_after_days: 0,
+      clean_up_uploads: false,
+      clean_orphan_uploads_grace_period_hours: 1800
     }
   end
 
@@ -215,24 +219,28 @@ class ImportScripts::Base
   def all_records_exist?(type, import_ids)
     return false if import_ids.empty?
 
-    connection = ActiveRecord::Base.connection.raw_connection
-    connection.exec('CREATE TEMP TABLE import_ids(val text PRIMARY KEY)')
+    ActiveRecord::Base.transaction do
+      begin
+        connection = ActiveRecord::Base.connection.raw_connection
+        connection.exec('CREATE TEMP TABLE import_ids(val text PRIMARY KEY)')
 
-    import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
+        import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
 
-    connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
+        connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
 
-    existing = "#{type.to_s.classify}CustomField".constantize
-    existing = existing.where(name: 'import_id')
-      .joins('JOIN import_ids ON val = value')
-      .count
+        existing = "#{type.to_s.classify}CustomField".constantize
+        existing = existing.where(name: 'import_id')
+          .joins('JOIN import_ids ON val = value')
+          .count
 
-    if existing == import_ids.length
-      puts "Skipping #{import_ids.length} already imported #{type}"
-      true
+        if existing == import_ids.length
+          puts "Skipping #{import_ids.length} already imported #{type}"
+          true
+        end
+      ensure
+        connection.exec('DROP TABLE import_ids') unless connection.nil?
+      end
     end
-  ensure
-    connection.exec('DROP TABLE import_ids') unless connection.nil?
   end
 
   def created_user(user)
@@ -365,8 +373,6 @@ class ImportScripts::Base
     if u.custom_fields['import_email']
       u.suspended_at = Time.zone.at(Time.now)
       u.suspended_till = 200.years.from_now
-      ban_reason = 'Invalid email address on import'
-      u.active = false
       u.save!
 
       user_option = u.user_option
@@ -375,7 +381,7 @@ class ImportScripts::Base
       user_option.email_messages_level = UserOption.email_level_types[:never]
       user_option.save!
       if u.save
-        StaffActionLogger.new(Discourse.system_user).log_user_suspend(u, ban_reason)
+        StaffActionLogger.new(Discourse.system_user).log_user_suspend(u, 'Invalid email address on import')
       else
         Rails.logger.error("Failed to suspend user #{u.username}. #{u.errors.try(:full_messages).try(:inspect)}")
       end
@@ -600,9 +606,10 @@ class ImportScripts::Base
           skipped += 1
           puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
         else
-          result = PostActionCreator.create(user, post, :bookmark)
-          created += 1 if result.success?
-          skipped += 1 if result.failed?
+          result = BookmarkManager.new(user).create(post_id: post.id)
+
+          created += 1 if result.errors.none?
+          skipped += 1 if result.errors.any?
         end
       end
 
@@ -678,24 +685,11 @@ class ImportScripts::Base
       FROM users u1
       JOIN lpa ON lpa.user_id = u1.id
       WHERE u1.id = users.id
-        AND users.last_posted_at <> lpa.last_posted_at
+        AND users.last_posted_at IS DISTINCT FROM lpa.last_posted_at
     SQL
   end
 
   def update_user_stats
-    puts "", "Updating topic reply counts..."
-
-    count = 0
-    total = User.real.count
-
-    User.real.find_each do |u|
-      u.create_user_stat if u.user_stat.nil?
-      us = u.user_stat
-      us.update_topic_reply_count
-      us.save
-      print_status(count += 1, total, get_start_time("user_stats"))
-    end
-
     puts "", "Updating first_post_created_at..."
 
     DB.exec <<~SQL
@@ -709,7 +703,7 @@ class ImportScripts::Base
       FROM user_stats u1
       JOIN sub ON sub.user_id = u1.user_id
       WHERE u1.user_id = user_stats.user_id
-        AND user_stats.first_post_created_at <> sub.first_post_created_at
+        AND user_stats.first_post_created_at IS DISTINCT FROM sub.first_post_created_at
     SQL
 
     puts "", "Updating user post_count..."
@@ -797,19 +791,6 @@ class ImportScripts::Base
     Category.find_each do |category|
       CategoryFeaturedTopic.feature_topics_for(category)
       print_status(count += 1, total, get_start_time("category_featured_topics"))
-    end
-  end
-
-  def update_topic_count_replies
-    puts "", "Updating user topic reply counts"
-
-    count = 0
-    total = User.real.count
-
-    User.real.find_each do |u|
-      u.user_stat.update_topic_reply_count
-      u.user_stat.save!
-      print_status(count += 1, total, get_start_time("topic_count_replies"))
     end
   end
 

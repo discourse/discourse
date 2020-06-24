@@ -2,7 +2,7 @@
 
 Fabricator(:upload) do
   user
-  sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
+  sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest("#{n}#{Process.pid}") } }
   original_filename "logo.png"
   filesize 1234
   width 100
@@ -21,6 +21,20 @@ Fabricator(:upload) do
   extension "png"
 end
 
+Fabricator(:image_upload, from: :upload) do
+  after_create do |upload|
+    file = Tempfile.new(['fabricated', '.png'])
+    `convert -size #{upload.width}x#{upload.height} xc:white "#{file.path}"`
+
+    upload.url = Discourse.store.store_upload(file, upload)
+    upload.sha1 = Upload.generate_digest(file.path)
+
+    WebMock
+      .stub_request(:get, "http://#{Discourse.current_hostname}#{upload.url}")
+      .to_return(status: 200, body: File.new(file.path))
+  end
+end
+
 Fabricator(:video_upload, from: :upload) do
   original_filename "video.mp4"
   width nil
@@ -31,7 +45,7 @@ Fabricator(:video_upload, from: :upload) do
 end
 
 Fabricator(:secure_upload, from: :upload) do
-  secure { true }
+  secure true
   sha1 { SecureRandom.hex(20) }
   original_sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
 end
@@ -52,8 +66,22 @@ Fabricator(:upload_s3, from: :upload) do
   end
 end
 
+Fabricator(:s3_image_upload, from: :upload_s3) do
+  after_create do |upload|
+    file = Tempfile.new(['fabricated', '.png'])
+    `convert -size #{upload.width}x#{upload.height} xc:white "#{file.path}"`
+
+    Discourse.store.store_upload(file, upload)
+    upload.sha1 = Upload.generate_digest(file.path)
+
+    WebMock
+      .stub_request(:get, upload.url)
+      .to_return(status: 200, body: File.new(file.path))
+  end
+end
+
 Fabricator(:secure_upload_s3, from: :upload_s3) do
-  secure { true }
+  secure true
   sha1 { SecureRandom.hex(20) }
   original_sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
 end

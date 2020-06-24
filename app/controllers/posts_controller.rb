@@ -106,6 +106,7 @@ class PostsController < ApplicationController
   def user_posts_feed
     params.require(:username)
     user = fetch_user_from_params
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
     posts = Post.public_posts
       .where(user_id: user.id)
@@ -488,34 +489,13 @@ class PostsController < ApplicationController
     render body: nil
   end
 
-  def bookmark
-    if params[:bookmarked] == "true"
-      post = find_post_from_params
-      result = PostActionCreator.create(current_user, post, :bookmark)
-      return render_json_error(result) if result.failed?
-    else
-      post_action = PostAction.find_by(post_id: params[:post_id], user_id: current_user.id)
-      raise Discourse::NotFound unless post_action
-
-      post = Post.with_deleted.find_by(id: post_action&.post_id)
-      raise Discourse::NotFound unless post
-
-      result = PostActionDestroyer.destroy(current_user, post, :bookmark)
-      return render_json_error(result) if result.failed?
-    end
-
-    topic_user = TopicUser.get(post.topic, current_user)
-    render_json_dump(topic_bookmarked: topic_user.try(:bookmarked))
-  end
-
   def destroy_bookmark
     params.require(:post_id)
 
-    existing_bookmark = Bookmark.find_by(post_id: params[:post_id], user_id: current_user.id)
-    existing_bookmark.destroy if existing_bookmark.present?
+    bookmark_id = Bookmark.where(post_id: params[:post_id], user_id: current_user.id).pluck_first(:id)
+    result = BookmarkManager.new(current_user).destroy(bookmark_id)
 
-    topic_bookmarked = Bookmark.exists?(topic_id: existing_bookmark.topic_id, user_id: current_user.id)
-    render json: success_json.merge(topic_bookmarked: topic_bookmarked)
+    render json: success_json.merge(result)
   end
 
   def wiki
@@ -768,8 +748,8 @@ class PostsController < ApplicationController
     end
 
     if recipients
-      recipients = recipients.split(",")
-      groups = Group.messageable(current_user).where('name in (?)', recipients).pluck('name')
+      recipients = recipients.split(",").map(&:downcase)
+      groups = Group.messageable(current_user).where('lower(name) in (?)', recipients).pluck('lower(name)')
       recipients -= groups
       emails = recipients.select { |user| user.match(/@/) }
       recipients -= emails

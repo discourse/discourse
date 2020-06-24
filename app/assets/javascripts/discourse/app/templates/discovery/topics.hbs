@@ -1,0 +1,113 @@
+{{#if redirectedReason}}
+  <div class="alert alert-info">{{redirectedReason}}</div>
+{{/if}}
+
+{{#if showDismissAtTop}}
+  <div class="row dismiss-container-top">
+    {{#if showDismissRead}}
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-topics-top"
+        action=(action "dismissReadPosts")
+        title="topics.bulk.dismiss_tooltip"
+        label="topics.bulk.dismiss_button"}}
+    {{/if}}
+    {{#if showResetNew}}
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-new-top"
+        action=(action "resetNew")
+        icon="check"
+        label="topics.bulk.dismiss_new"}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if model.sharedDrafts}}
+  {{topic-list
+    class="shared-drafts"
+    listTitle="shared_drafts.title"
+    top=top
+    hideCategory="true"
+    category=category
+    topics=model.sharedDrafts
+    discoveryList=true}}
+{{/if}}
+
+{{bulk-select-button selected=selected action=(action "refresh") category=category}}
+
+{{#discovery-topics-list model=model refresh=(action "refresh") incomingCount=topicTrackingState.incomingCount as |discoveryTopicList|}}
+  {{#if top}}
+    <div class="top-lists">
+      {{period-chooser period=period action=(action "changePeriod") fullDay=false}}
+    </div>
+  {{else}}
+    {{#if topicTrackingState.hasIncoming}}
+      <div class="show-more {{if hasTopics "has-topics"}}">
+        <a tabindex="0" href {{action "showInserted"}} class="alert alert-info clickable">
+          {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+        </a>
+      </div>
+    {{/if}}
+  {{/if}}
+  {{plugin-outlet name="before-topic-list" args=(hash category=category)}}
+
+  {{#if hasTopics}}
+    {{topic-list
+      highlightLastVisited=true
+      top=top
+      showTopicPostBadges=showTopicPostBadges
+      showPosters=true
+      canBulkSelect=canBulkSelect
+      changeSort=(action "changeSort")
+      toggleBulkSelect=(action "toggleBulkSelect")
+      hideCategory=model.hideCategory
+      order=order
+      ascending=ascending
+      bulkSelectEnabled=bulkSelectEnabled
+      selected=selected
+      expandGloballyPinned=expandGloballyPinned
+      expandAllPinned=expandAllPinned
+      category=category
+      topics=model.topics
+      discoveryList=true
+      scrollOnLoad=true
+      onScroll=discoveryTopicList.saveScrollPosition}}
+  {{/if}}
+
+  {{plugin-outlet name="after-topic-list" args=(hash category=category)}}
+{{/discovery-topics-list}}
+
+<footer class="topic-list-bottom">
+  {{conditional-loading-spinner condition=model.loadingMore}}
+  {{#if allLoaded}}
+    {{#if showDismissRead}}
+      {{d-button
+        class="btn-default dismiss-read"
+        id="dismiss-topics"
+        action=(action "dismissReadPosts")
+        title="topics.bulk.dismiss_tooltip"
+        label="topics.bulk.dismiss_button"}}
+    {{/if}}
+    {{#if showResetNew}}
+      {{d-button
+        class="btn-default dismiss-read"
+        action=(action "resetNew")
+        id="dismiss-new"
+        icon="check"
+        label="topics.bulk.dismiss_new"}}
+    {{/if}}
+
+    {{#footer-message education=footerEducation message=footerMessage}}
+      {{#if latest}}
+        {{#if canCreateTopicOnCategory}}<a href {{action "createTopic"}}>{{i18n "topic.suggest_create_topic"}}</a>{{/if}}
+      {{else if top}}
+        {{#link-to "discovery.categories"}}{{i18n "topic.browse_all_categories"}}{{/link-to}}, {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}} {{i18n "or"}} {{i18n "filters.top.other_periods"}}
+        {{top-period-buttons period=period action=(action "changePeriod")}}
+      {{else}}
+        {{#link-to "discovery.categories"}} {{i18n "topic.browse_all_categories"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}
+      {{/if}}
+    {{/footer-message}}
+
+  {{/if}}
+</footer>

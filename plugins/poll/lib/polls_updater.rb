@@ -93,7 +93,7 @@ module DiscoursePoll
 
         if has_changed
           polls = ::Poll.includes(poll_options: :poll_votes).where(post: post)
-          polls = ActiveModel::ArraySerializer.new(polls, each_serializer: PollSerializer, root: false).as_json
+          polls = ActiveModel::ArraySerializer.new(polls, each_serializer: PollSerializer, root: false, scope: Guardian.new(nil)).as_json
           post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
         end
       end

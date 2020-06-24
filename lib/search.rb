@@ -72,7 +72,18 @@ class Search
         require 'cppjieba_rb' unless defined? CppjiebaRb
         mode = (purpose == :query ? :query : :mix)
         data = CppjiebaRb.segment(search_data, mode: mode)
-        data = CppjiebaRb.filter_stop_word(data).join(' ')
+
+        # TODO: we still want to tokenize here but the current stopword list is too wide
+        # in cppjieba leading to words such as volume to be skipped. PG already has an English
+        # stopword list so use that vs relying on cppjieba
+        if ts_config != 'english'
+          data = CppjiebaRb.filter_stop_word(data)
+        else
+          data = data.filter { |s| s.present? }
+        end
+
+        data = data.join(' ')
+
       else
         data.squish!
       end
@@ -176,7 +187,7 @@ class Search
       @search_context = @guardian.user
     end
 
-    if @search_all_topics
+    if @search_all_topics && @guardian.user
       @opts[:type_filter] = "all_topics"
     end
 
@@ -343,14 +354,6 @@ class Search
     posts.where("topics.pinned_at IS NOT NULL")
   end
 
-  advanced_filter(/^in:unpinned$/) do |posts|
-    if @guardian.user
-      posts.where("topics.pinned_at IS NOT NULL AND topics.id IN (
-                  SELECT topic_id FROM topic_users WHERE user_id = ? AND cleared_pinned_at IS NOT NULL
-                 )", @guardian.user.id)
-    end
-  end
-
   advanced_filter(/^in:wiki$/) do |posts, match|
     posts.where(wiki: true)
   end
@@ -364,17 +367,24 @@ class Search
     end
   end
 
-  advanced_filter(/^in:(likes|bookmarks)$/) do |posts, match|
-    if @guardian.user
-      post_action_type = PostActionType.types[:like] if match == "likes"
-      post_action_type = PostActionType.types[:bookmark] if match == "bookmarks"
+  def post_action_type_filter(posts, post_action_type)
+    posts.where("posts.id IN (
+      SELECT pa.post_id FROM post_actions pa
+      WHERE pa.user_id = #{@guardian.user.id} AND
+            pa.post_action_type_id = #{post_action_type} AND
+            deleted_at IS NULL
+    )")
+  end
 
-      posts.where("posts.id IN (
-                            SELECT pa.post_id FROM post_actions pa
-                            WHERE pa.user_id = #{@guardian.user.id} AND
-                                  pa.post_action_type_id = #{post_action_type} AND
-                                  deleted_at IS NULL
-                         )")
+  advanced_filter(/^in:(likes)$/) do |posts, match|
+    if @guardian.user
+      post_action_type_filter(posts, PostActionType.types[:like])
+    end
+  end
+
+  advanced_filter(/^in:(bookmarks)$/) do |posts, match|
+    if @guardian.user
+      posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
     end
   end
 
@@ -427,7 +437,7 @@ class Search
   end
 
   advanced_filter(/^with:images$/) do |posts|
-    posts.where("posts.image_url IS NOT NULL")
+    posts.where("posts.image_upload_id IS NOT NULL")
   end
 
   advanced_filter(/^category:(.+)$/) do |posts, match|
@@ -462,20 +472,16 @@ class Search
     next unless category_slug
 
     if subcategory_slug
-      # sub category
-      parent_category_id = Category
-        .where(
-          "lower(slug) = ? AND parent_category_id IS NULL", category_slug.downcase
-        )
-        .pluck(:id)
-        .first
 
-      category_id = Category
-        .where("lower(slug) = ? AND parent_category_id = ?",
-          subcategory_slug.downcase, parent_category_id
-        )
-        .pluck(:id)
-        .first
+      category_id, _ = DB.query_single(<<~SQL, category_slug.downcase, subcategory_slug.downcase)
+        SELECT sub.id
+        FROM categories sub
+        JOIN categories c ON sub.parent_category_id = c.id
+        WHERE LOWER(c.slug)  = ? AND LOWER(sub.slug) = ?
+        ORDER BY c.id
+        LIMIT 1
+      SQL
+
     else
       # main category
       if category_slug[0] == "="
@@ -901,12 +907,36 @@ class Search
         posts = categories_ignored(posts) unless @category_filter_matched
         posts
       end
-
-    if @order == :latest || (@term.blank? && !@order)
+    if @order == :latest
       if opts[:aggregate_search]
         posts = posts.order("MAX(posts.created_at) DESC")
       else
         posts = posts.reorder("posts.created_at DESC")
+      end
+    elsif @term.blank? && !@order
+      data_ranking = <<~SQL
+      (
+        CASE categories.search_priority
+        WHEN #{Searchable::PRIORITIES[:very_low]}
+        THEN #{SiteSetting.category_search_priority_very_low_weight}
+        WHEN #{Searchable::PRIORITIES[:low]}
+        THEN #{SiteSetting.category_search_priority_low_weight}
+        WHEN #{Searchable::PRIORITIES[:high]}
+        THEN #{SiteSetting.category_search_priority_high_weight}
+        WHEN #{Searchable::PRIORITIES[:very_high]}
+        THEN #{SiteSetting.category_search_priority_very_high_weight}
+        ELSE
+          CASE WHEN topics.closed
+          THEN 0.9
+          ELSE 1
+          END
+        END
+      )
+      SQL
+      if opts[:aggregate_search]
+        posts = posts.order("MAX(#{data_ranking}) DESC").order("MAX(posts.created_at) DESC")
+      else
+        posts = posts.order("#{data_ranking} DESC").order("posts.created_at DESC")
       end
     elsif @order == :latest_topic
       if opts[:aggregate_search]

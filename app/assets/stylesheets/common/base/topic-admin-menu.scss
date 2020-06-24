@@ -1,46 +1,12 @@
 // Styles for the topic admin menu
 
-.show-topic-admin {
-  position: fixed;
-  top: 120px;
-  right: 10px;
-  z-index: z("dropdown");
-  height: 35px;
-}
-
-.popup-menu {
-  background-color: $secondary;
-  width: 215px;
-  padding: 10px;
-  border: 1px solid $primary-low;
-  z-index: z("dropdown");
-  box-shadow: shadow("card");
-
-  ul {
-    list-style: none;
-    margin: 10px 0 0 0;
-  }
-
-  .btn {
-    text-align: left;
-  }
-
-  button {
-    width: 100%;
-    margin-bottom: 5px;
-  }
-
-  .header {
-    .close-button {
-      display: none;
-    }
-  }
-
+.topic-admin-popup-menu {
   @include breakpoint(mobile-extra-large) {
-    width: 100%;
+    width: calc(100% - 20px);
+    margin: 0 10px;
     padding: 0;
     padding-bottom: env(safe-area-inset-bottom);
-    z-index: 1000;
+    z-index: z("modal", "popover");
 
     @keyframes slideUp {
       0% {
@@ -51,30 +17,22 @@
       }
     }
     animation: slideUp 0.3s;
+  }
 
-    .header {
-      padding: 10px 0 0 10px;
-      display: flex;
-      justify-content: space-between;
-      .close-button {
-        display: block;
-        background: transparent;
-      }
-    }
-    ul {
-      margin-top: 0;
-    }
+  .mobile-view & {
+    z-index: z("modal", "popover");
   }
 }
 
 .modal-body.feature-topic {
-  max-height: 500px;
+  max-height: 70vh !important ;
+  padding: 0 1em;
   input.date-picker {
     margin: 0;
   }
   .feature-section {
     display: block;
-    padding: 1em 0;
+    padding: 1.25em 0;
     &:not(:last-of-type) {
       border-bottom: 1px solid $primary-low;
     }
@@ -89,10 +47,20 @@
       }
       p {
         margin: 10px 0 0;
+        max-width: 31em;
       }
     }
     .with-validation {
       position: relative;
+
+      > span {
+        display: flex;
+        align-items: flex-start;
+        > .d-icon {
+          padding-top: 0.75em;
+          margin-right: 0.5em;
+        }
+      }
     }
   }
 }
@@ -104,17 +72,15 @@
 }
 
 .desktop-view .feature-topic-modal {
-  .feature-topic {
-    overflow: visible;
-  }
-
-  .modal-inner-container {
-    min-width: 700px;
-  }
-
   .pin-until {
     position: relative;
     display: inline-block;
+  }
+  .modal-inner-container {
+    overflow: visible;
+  }
+  .modal-footer {
+    background: $secondary;
   }
 }
 
@@ -124,6 +90,11 @@
     clear: both;
     max-width: 90%;
     margin: 0;
+  }
+  .badge-wrapper {
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 19em;
   }
 }
 

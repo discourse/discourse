@@ -7,8 +7,15 @@ class PostActionCreator
 
   # Shortcut methods for easier invocation
   class << self
-    def create(created_by, post, action_key, message: nil, created_at: nil)
-      new(created_by, post, PostActionType.types[action_key], message: message, created_at: created_at).perform
+    def create(created_by, post, action_key, message: nil, created_at: nil, reason: nil)
+      new(
+        created_by,
+        post,
+        PostActionType.types[action_key],
+        message: message,
+        created_at: created_at,
+        reason: reason
+      ).perform
     end
 
     [:like, :off_topic, :spam, :inappropriate, :bookmark].each do |action|
@@ -31,7 +38,8 @@ class PostActionCreator
     message: nil,
     take_action: false,
     flag_topic: false,
-    created_at: nil
+    created_at: nil,
+    reason: nil
   )
     @created_by = created_by
     @created_at = created_at || Time.zone.now
@@ -46,12 +54,11 @@ class PostActionCreator
     @message = message
     @flag_topic = flag_topic
     @meta_post = nil
+    @reason = reason
   end
 
-  def perform
-    result = CreateResult.new
-
-    unless guardian.post_can_act?(
+  def post_can_act?
+    guardian.post_can_act?(
       @post,
       @post_action_name,
       opts: {
@@ -59,6 +66,12 @@ class PostActionCreator
         taken_actions: PostAction.counts_for([@post].compact, @created_by)[@post&.id]
       }
     )
+  end
+
+  def perform
+    result = CreateResult.new
+
+    unless post_can_act?
       result.forbidden = true
       result.add_error(I18n.t("invalid_access"))
       return result
@@ -128,11 +141,11 @@ private
 
   def cannot_flag_again?(reviewable)
     return false if @post_action_type_id == PostActionType.types[:notify_moderators]
-    flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id }
+    flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id && rs.status != ReviewableScore.statuses[:pending] }
     not_edited_since_last_review = @post.last_version_at.blank? || reviewable.updated_at > @post.last_version_at
     handled_recently = reviewable.updated_at > SiteSetting.cooldown_hours_until_reflag.to_i.hours.ago
 
-    !reviewable.pending? && flag_type_already_used && not_edited_since_last_review && handled_recently
+    flag_type_already_used && not_edited_since_last_review && handled_recently
   end
 
   def notify_subscribers
@@ -302,6 +315,7 @@ private
       created_at: @created_at,
       take_action: @take_action,
       meta_topic_id: @meta_post&.topic_id,
+      reason: @reason
     )
   end
 

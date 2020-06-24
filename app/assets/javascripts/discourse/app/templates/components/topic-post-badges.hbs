@@ -1,0 +1,9 @@
+{{#if unread }}
+  &nbsp;<a href={{url}} title={{i18n "topic.unread_posts" count=unread}} class="badge badge-notification unread">{{unread}}</a>
+{{/if}}
+{{#if newPosts}}
+  &nbsp;<a href={{url}} title={{i18n "topic.total_unread_posts" count=newPosts}} class="badge badge-notification new-posts">{{newPosts}}</a>
+{{/if}}
+{{#if unseen}}
+  &nbsp;<a href={{url}} title={{i18n "topic.new"}} class="badge badge-notification new-topic">{{newDotText}}</a>
+{{/if}}

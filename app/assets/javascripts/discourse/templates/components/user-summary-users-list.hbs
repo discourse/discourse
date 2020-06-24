@@ -1,9 +1,0 @@
-{{#if users}}
-  <ul>
-    {{#each users as |user|}}
-      {{yield user}}
-    {{/each}}
-  </ul>
-{{else}}
-  <p>{{i18n (concat "user.summary." none)}}</p>
-{{/if}}

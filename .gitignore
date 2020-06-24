@@ -54,7 +54,7 @@ bootsnap-compile-cache/
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
 !/plugins/discourse-local-dates
-!/plugins/discourse-internet-explorer
+!/plugins/discourse-unsupported-browser
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -122,7 +122,7 @@ vendor/bundle/*
 *.swn
 
 # ignore nodejs files
-/node_modules
+node_modules
 /package-lock.json
 
 /vendor/data/GeoLite2-City.mmdb
@@ -132,3 +132,12 @@ vendor/bundle/*
 
 # ignore auto-generated plugin js assets
 /app/assets/javascripts/plugins/*
+
+# ignore generated api documentation files
+openapi/*
+
+# ember-cli generated
+dist
+
+# Copyright Deposits
+copyright

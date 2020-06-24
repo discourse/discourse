@@ -169,22 +169,6 @@ RSpec.describe EmailController do
     end
   end
 
-  context '#preferences_redirect' do
-    it 'requires you to be logged in' do
-      get "/email_preferences.json"
-      expect(response.status).to eq(403)
-    end
-
-    context 'when logged in' do
-      let!(:user) { sign_in(Fabricate(:user)) }
-
-      it 'redirects to your user preferences' do
-        get "/email_preferences.json"
-        expect(response).to redirect_to("/u/#{user.username}/preferences")
-      end
-    end
-  end
-
   context '#unsubscribe' do
     it 'displays not found if key is not found' do
       navigate_to_unsubscribe(SecureRandom.hex)
@@ -231,7 +215,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option").map(&:inner_text)).to eq(slow_digest_frequencies)
       end
 
@@ -242,7 +226,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(six_months_freq.to_s)
       end
 
@@ -253,7 +237,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(never_frequency.to_s)
       end
     end

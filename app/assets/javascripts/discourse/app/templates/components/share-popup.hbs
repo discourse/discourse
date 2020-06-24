@@ -1,0 +1,39 @@
+<div class="title">
+  <h3>{{html-safe shareTitle}}</h3>
+
+  {{#if date}}
+    <span class="date">{{displayDate}}</span>
+  {{/if}}
+</div>
+
+<div>
+  <input type="text">
+</div>
+
+<div class="actions">
+  <div class="sources">
+    {{#each sources as |s|}}
+      {{share-source source=s title=model.title action=(action "share")}}
+    {{/each}}
+  </div>
+
+  <div class="alt-actions">
+    {{#if topic.details.can_reply_as_new_topic}}
+      <div class="reply-as-new-topic">
+        {{#if topic.isPrivateMessage}}
+          <a href class="new-topic" {{action "replyAsNewTopic"}} aria-label={{i18n "post.reply_as_new_private_message"}} title={{i18n "post.reply_as_new_private_message"}}>
+            {{d-icon "plus"}}
+            {{i18n "user.new_private_message"}}
+          </a>
+        {{else}}
+          <a href class="new-topic" {{action "replyAsNewTopic"}} aria-label={{i18n "post.reply_as_new_topic"}} title={{i18n "post.reply_as_new_topic"}}>
+            {{d-icon "plus"}}
+            {{i18n "topic.create"}}
+          </a>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{d-button action="close" class="btn btn-flat close" icon="times" aria-label="share.close" title="share.close"}}
+  </div>
+</div>

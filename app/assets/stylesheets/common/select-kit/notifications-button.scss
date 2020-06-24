@@ -3,17 +3,12 @@
     &.notifications-button {
       .select-kit-body {
         max-width: 400px;
-        width: 400px;
-
-        @media screen and (max-width: 767px) {
-          width: auto;
-        }
       }
 
       .select-kit-row {
         .icons {
-          -ms-flex-item-align: start;
           align-self: flex-start;
+          margin-right: 0.75em;
         }
       }
     }

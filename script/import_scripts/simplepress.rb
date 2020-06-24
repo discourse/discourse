@@ -195,6 +195,11 @@ class ImportScripts::SimplePress < ImportScripts::Base
   def process_simplepress_post(raw, import_id)
     s = raw.dup
 
+    # fix invalid byte sequence in UTF-8 (ArgumentError)
+    unless s.valid_encoding?
+      s.force_encoding("UTF-8")
+    end
+
     # convert the quote line
     s.gsub!(/\[quote='([^']+)'.*?pid='(\d+).*?\]/) {
       "[quote=\"#{convert_username($1, import_id)}, " + post_id_to_post_num_and_topic($2, import_id) + '"]'

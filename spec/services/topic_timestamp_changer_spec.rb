@@ -26,39 +26,32 @@ describe TopicTimestampChanger do
         TopicTimestampChanger.new(topic: topic, timestamp: new_timestamp.to_f).change!
 
         topic.reload
-        [:created_at, :updated_at, :bumped_at].each do |column|
-          expect(topic.public_send(column)).to be_within(1.second).of(new_timestamp)
-        end
+        expect(topic.created_at).to eq_time(new_timestamp)
+        expect(topic.updated_at).to eq_time(new_timestamp)
+        expect(topic.bumped_at).to eq_time(new_timestamp)
 
         p1.reload
-        [:created_at, :updated_at].each do |column|
-          expect(p1.public_send(column)).to be_within(1.second).of(new_timestamp)
-        end
+        expect(p1.created_at).to eq_time(new_timestamp)
+        expect(p1.updated_at).to eq_time(new_timestamp)
 
         p2.reload
-        [:created_at, :updated_at].each do |column|
-          expect(p2.public_send(column)).to be_within(1.second).of(new_timestamp + 1.day)
-        end
+        expect(p2.created_at).to eq_time(new_timestamp + 1.day)
+        expect(p2.updated_at).to eq_time(new_timestamp + 1.day)
 
-        expect(topic.last_posted_at).to be_within(1.second).of(p2.reload.created_at)
+        expect(topic.last_posted_at).to eq_time(p2.reload.created_at)
       end
 
       describe 'when posts have timestamps in the future' do
-        let(:new_timestamp) { Time.zone.now }
-        let(:p3) { Fabricate(:post, topic: topic, created_at: new_timestamp + 3.day) }
-
         it 'should set the new timestamp as the default timestamp' do
-          freeze_time
+          new_timestamp = freeze_time
 
-          p3
-
+          p3 = Fabricate(:post, topic: topic, created_at: new_timestamp + 3.days)
           TopicTimestampChanger.new(topic: topic, timestamp: new_timestamp.to_f).change!
 
           p3.reload
 
-          [:created_at, :updated_at].each do |column|
-            expect(p3.public_send(column)).to be_within(1.second).of(new_timestamp)
-          end
+          expect(p3.created_at).to eq_time(new_timestamp)
+          expect(p3.updated_at).to eq_time(new_timestamp)
         end
       end
     end

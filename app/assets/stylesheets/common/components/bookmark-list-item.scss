@@ -1,0 +1,28 @@
+.bookmark-list {
+  th.post-metadata {
+    text-align: center;
+  }
+}
+
+.bookmark-list-item {
+  td.post-metadata {
+    text-align: center;
+  }
+  .bookmark-metadata {
+    font-size: $font-down-2;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.2em;
+
+    &-item {
+      margin-right: 0.5em;
+      display: flex;
+      align-items: center;
+    }
+
+    .d-icon {
+      margin-right: 0.2em;
+    }
+  }
+}

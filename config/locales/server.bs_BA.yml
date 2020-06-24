@@ -45,7 +45,6 @@ bs_BA:
       unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
       generic: Došlo je do pogreške prilikom uvoza te teme
-      about_json: "Greška uvoza: about.json ne postoji ili je nevažeća"
       about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
       unpack_failed: "Otpakivanje datoteke nije uspelo"
@@ -57,7 +56,6 @@ bs_BA:
       no_multilevels_components: "Teme s dječjim temama ne mogu biti same teme djeteta"
     settings_errors:
       invalid_yaml: "Korišteni YAML fajl nije validan."
-      data_type_not_a_number: "Postavka tipa `%{name}` nije podržana. Podržani tipovi su `integer`, `bool`, `list` i `enum`"
       name_too_long: "Postoji postavka sa predugim imenom. Maksimalna dužina je 255"
       default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost"
       default_not_match_type: "Postavka `%{name}` default uobičajena vrijednosti se ne podudara sa tipom postavke."
@@ -142,15 +140,20 @@ bs_BA:
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "RSS feed of '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
-  author_wrote: "%{author} wrote:"
-  num_posts: "Posts:"
-  num_participants: "Participants:"
   read_full_topic: "Read full topic"
   private_message_abbrev: "PM"
   rss_description:
     latest: "Latest topics"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   excerpt_image: "slika"
+  bookmarks:
+    reminders:
+      at_desktop: "Sljedeći put sam za svojim desktop kompjuterom"
+      later_today: "Kasnije danas"
+      tomorrow: "Sutra"
+      next_week: "Sljedeće sedmice"
+      next_month: "Sljedeći mjesec"
+      custom: "Ciljano vrijeme i datum"
   groups:
     default_names:
       everyone: "everyone"
@@ -499,12 +502,14 @@ bs_BA:
     http_5xx_reqs:
       xaxis: "Day"
     http_total_reqs:
+      title: "Suma"
       xaxis: "Day"
     time_to_first_response:
       xaxis: "Day"
       yaxis: "Prosječno vrijeme (hours)"
     topics_with_no_response:
       xaxis: "Day"
+      yaxis: "Suma"
     mobile_visits:
       xaxis: "Day"
       yaxis: "Number of visits"
@@ -559,8 +564,6 @@ bs_BA:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
-    summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
-    summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -652,7 +655,6 @@ bs_BA:
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     category_colors: "A list of hexadecimal color values allowed for categories."
-    max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
@@ -727,6 +729,7 @@ bs_BA:
       category: "Kategorije"
       topic: "Rezultati"
       user: "Korisnici"
+    results_page: "Pretraži za termin '%{term}'"
   original_poster: "Originalni Autor"
   most_posts: "Najviše postova"
   most_recent_poster: "Posljednji Autor"
@@ -734,10 +737,18 @@ bs_BA:
   redirected_to_top_reasons:
     new_user: "Dobrodošli u našu zajednicu! Ovo su najnovije popularne teme."
     not_seen_in_a_month: "Dobrodošli nazad! Nismo vas odavno vidjeli. Ovo su najnovije popularne teme od vaše zadnje posjete."
+  publish_page:
+    slug_errors:
+      invalid: "contains invalid characters"
   topic_statuses:
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "Ova tema je sada otvorena. Novi postovi su dozvoljeni."
   login:
+    security_key_description: "Kada ste pripremili vaš fizikalni sigurnosni ključ (physical security key), pritisnite ispod dugme Prijava pomoću sigurnosnog ključa."
+    security_key_alternative: "Pokušaj na drugi način"
+    security_key_authenticate: "Prijava pomoću sigurnosnog ključa"
+    security_key_not_allowed_error: "Ovaj proces prijave pomoću sigurnosnog ključa je ili vremenski istekao ili je odkazan."
+    security_key_no_matching_credential_error: "Nisu pronađeni korisnički podatci koristeći navedeni sigurnosni ključ."
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Netačan nadimak, email ili šifra"
     wait_approval: "Hvala vam što ste se prijavili. We will notify you when your account has been approved."
@@ -941,6 +952,7 @@ bs_BA:
     title: "Oznake"
   finish_installation:
     register:
+      button: "Registriraj"
       help: "Registriraj novi račun kako bi počeo"
     resend_email:
       title: "Pošalji ponovo email aktivacije"
@@ -984,8 +996,16 @@ bs_BA:
   joined: "Registrovan"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'
+      quoted: '%{username} vas je citirao/la u "%{topic}" - %{site_title}'
+      replied: '%{username} vam je odgovorio/la u "%{topic}" - %{site_title}'
+      posted: '%{username} je objavio/la "%{topic}" - %{site_title}'
+      linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti uključene - %{site_title}"
       confirm_body: "Uspješno! Obavijesti su sada uključene."
+      custom: "Obavijest od %{username} na %{site_title}"
   reviewables:
     priorities:
       low: "Nisko"

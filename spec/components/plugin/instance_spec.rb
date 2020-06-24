@@ -502,21 +502,6 @@ describe Plugin::Instance do
     end
   end
 
-  describe '#enabled_site_setting_filter' do
-    describe 'when filter is blank' do
-      it 'should return the right value' do
-        expect(Plugin::Instance.new.enabled_site_setting_filter).to eq(nil)
-      end
-    end
-
-    it 'should set the right value' do
-      instance = Plugin::Instance.new
-      instance.enabled_site_setting_filter('test')
-
-      expect(instance.enabled_site_setting_filter).to eq('test')
-    end
-  end
-
   describe '#register_reviewable_types' do
     it 'Overrides the existing Reviewable types adding new ones' do
       current_types = Reviewable.types
@@ -536,6 +521,36 @@ describe Plugin::Instance do
       Plugin::Instance.new.extend_list_method Reviewable, :types, [new_element]
 
       expect(Reviewable.types).to match_array(current_list << new_element)
+    end
+  end
+
+  describe '#register_emoji' do
+    before do
+      Plugin::CustomEmoji.clear_cache
+    end
+
+    after do
+      Plugin::CustomEmoji.clear_cache
+    end
+
+    it 'allows to register an emoji' do
+      Plugin::Instance.new.register_emoji("foo", "/foo/bar.png")
+
+      custom_emoji = Emoji.custom.first
+
+      expect(custom_emoji.name).to eq("foo")
+      expect(custom_emoji.url).to eq("/foo/bar.png")
+      expect(custom_emoji.group).to eq(Emoji::DEFAULT_GROUP)
+    end
+
+    it 'allows to register an emoji with a group' do
+      Plugin::Instance.new.register_emoji("bar", "/baz/bar.png", "baz")
+
+      custom_emoji = Emoji.custom.first
+
+      expect(custom_emoji.name).to eq("bar")
+      expect(custom_emoji.url).to eq("/baz/bar.png")
+      expect(custom_emoji.group).to eq("baz")
     end
   end
 end

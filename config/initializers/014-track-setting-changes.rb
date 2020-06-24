@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
+  Category.clear_subcategory_ids if name === :max_category_nesting
+
   # Enabling `must_approve_users` on an existing site is odd, so we assume that the
   # existing users are approved.
   if name == :must_approve_users && new_value == true
-    User.where(approved: false).update_all(approved: true)
+
+    User.where(approved: false)
+      .joins("LEFT JOIN reviewables r ON r.target_id = users.id")
+      .where(r: { id: nil }).update_all(approved: true)
   end
 
   if name == :emoji_set
@@ -31,8 +36,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   end
 
   Jobs.enqueue(:update_s3_inventory) if [:enable_s3_inventory, :s3_upload_bucket].include?(name)
-
-  Jobs.enqueue(:update_private_uploads_acl) if name == :prevent_anons_from_downloading_files
 
   SvgSprite.expire_cache if name.to_s.include?("_icon")
 

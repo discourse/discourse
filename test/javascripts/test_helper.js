@@ -1,5 +1,6 @@
-/*global document, sinon, QUnit, Logster */
+// discourse-skip-module
 
+/*global document, sinon, QUnit, Logster */
 //= require env
 //= require jquery.debug
 //= require jquery.ui.widget
@@ -10,15 +11,13 @@
 //= require fake_xml_http_request
 //= require route-recognizer/dist/route-recognizer
 //= require pretender/pretender
-//= require discourse-loader
-//= require preload-store
-
 //= require locales/i18n
 //= require locales/en_US
+//= require discourse-loader
 
 // Stuff we need to load first
 //= require vendor
-//= require ember-shim
+//= require discourse-shims
 //= require pretty-text-bundle
 //= require markdown-it-bundle
 //= require application
@@ -43,6 +42,9 @@
 //
 //= require jquery.magnific-popup.min.js
 
+const buildResolver = require("discourse-common/resolver").buildResolver;
+window.setResolver(buildResolver("discourse").create({ namespace: Discourse }));
+
 sinon.config = {
   injectIntoThis: false,
   injectInto: null,
@@ -51,10 +53,10 @@ sinon.config = {
   useFakeServer: false
 };
 
-window.inTestEnv = true;
+let MessageBus = require("message-bus-client").default;
 
 // Stop the message bus so we don't get ajax calls
-window.MessageBus.stop();
+MessageBus.stop();
 
 // Trick JSHint into allow document.write
 var d = document;
@@ -77,7 +79,7 @@ if (window.Logster) {
   window.Logster = { enabled: false };
 }
 
-var pretender = require("helpers/create-pretender", null, null, false),
+var createPretender = require("helpers/create-pretender", null, null, false),
   fixtures = require("fixtures/site-fixtures", null, null, false).default,
   flushMap = require("discourse/models/store", null, null, false).flushMap,
   ScrollingDOMMethods = require("discourse/mixins/scrolling", null, null, false)
@@ -102,13 +104,42 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
-  server = pretender.default();
+  server = createPretender.default;
+  createPretender.applyDefaultHandlers(server);
+  server.handlers = [];
+
+  server.prepareBody = function(body) {
+    if (body && typeof body === "object") {
+      return JSON.stringify(body);
+    }
+    return body;
+  };
+
+  if (QUnit.config.logAllRequests) {
+    server.handledRequest = function(verb, path, request) {
+      console.log("REQ: " + verb + " " + path);
+    };
+  }
+
+  server.unhandledRequest = function(verb, path) {
+    if (QUnit.config.logAllRequests) {
+      console.log("REQ: " + verb + " " + path + " missing");
+    }
+
+    const error =
+      "Unhandled request in test environment: " + path + " (" + verb + ")";
+    window.console.error(error);
+    throw error;
+  };
+
+  server.checkPassthrough = request =>
+    request.requestHeaders["Discourse-Script"];
 
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
-      parsePostData: pretender.parsePostData,
-      response: pretender.response,
-      success: pretender.success
+      parsePostData: createPretender.parsePostData,
+      response: createPretender.response,
+      success: createPretender.success
     };
 
     applyPretender(
@@ -120,8 +151,10 @@ QUnit.testStart(function(ctx) {
 
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
-  Discourse.BaseUri = "";
-  Discourse.BaseUrl = "http://localhost:3000";
+
+  let getURL = require("discourse-common/lib/get-url");
+  getURL.setupURL(null, "http://localhost:3000", "");
+  getURL.setupS3CDN(null, null);
 
   let User = require("discourse/models/user").default;
   let Session = require("discourse/models/session").default;
@@ -134,7 +167,7 @@ QUnit.testStart(function(ctx) {
     _DiscourseURL.redirectedTo = url;
   };
 
-  var ps = require("preload-store").default;
+  var ps = require("discourse/lib/preload-store").default;
   ps.reset();
 
   window.sandbox = sinon;
@@ -153,25 +186,16 @@ QUnit.testDone(function() {
   $(".modal-backdrop").remove();
   flushMap();
 
-  server.shutdown();
-
-  window.server = null;
-
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
-  var appEvents = window.Discourse.__container__.lookup("service:app-events");
-  var events = appEvents.__proto__._events;
-  Object.keys(events).forEach(function(eventKey) {
-    var event = events[eventKey];
-    event.forEach(function(listener) {
-      if (appEvents.has(eventKey)) {
-        appEvents.off(eventKey, listener.target, listener.fn);
-      }
-    });
-  });
+  require("discourse/services/app-events").clearAppEventsCache(
+    window.Discourse.__container__
+  );
 
-  window.MessageBus.unsubscribe("*");
+  MessageBus.unsubscribe("*");
+  delete window.server;
+  window.Mousetrap.reset();
 });
 
 // Load ES6 tests

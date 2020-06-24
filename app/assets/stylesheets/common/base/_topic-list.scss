@@ -52,6 +52,20 @@
   a.title:not(.badge-notification) {
     color: $primary-medium;
   }
+  span.badge-category {
+    color: $primary-medium;
+  }
+  a.discourse-tag {
+    color: $primary-medium;
+  }
+}
+
+.topic-list-item {
+  .post-excerpt {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-size: $font-down-2;
+  }
 }
 
 .topic-list-main-link {
@@ -215,6 +229,10 @@
   color: #9b764f !important;
 }
 
+.topic-list .heatmap-high {
+  font-weight: bold;
+}
+
 .loading .topic-list {
   border: 0;
   box-shadow: none;
@@ -274,7 +292,9 @@ ol.category-breadcrumb {
 }
 
 .top-title-buttons {
-  display: inline;
+  display: inline-flex;
+  margin: 0.25em 0;
+  flex-wrap: wrap;
 
   button {
     margin-right: 0.5em;

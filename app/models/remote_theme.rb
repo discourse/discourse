@@ -30,16 +30,22 @@ class RemoteTheme < ActiveRecord::Base
     raise ImportError.new I18n.t("themes.import_error.about_json")
   end
 
-  def self.update_zipped_theme(filename, original_filename, match_theme: false, user: Discourse.system_user, theme_id: nil)
+  def self.update_zipped_theme(filename, original_filename, match_theme: false, user: Discourse.system_user, theme_id: nil, update_components: nil)
     importer = ThemeStore::ZipImporter.new(filename, original_filename)
     importer.import!
 
     theme_info = RemoteTheme.extract_theme_info(importer)
     theme = Theme.find_by(name: theme_info["name"]) if match_theme # Old theme CLI method, remove Jan 2020
     theme = Theme.find_by(id: theme_id) if theme_id # New theme CLI method
-    theme ||= Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+
+    existing = true
+    if theme.blank?
+      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"])
+      existing = false
+    end
 
     theme.component = theme_info["component"].to_s == "true"
+    theme.child_components = child_components = theme_info["components"].presence || []
 
     remote_theme = new
     remote_theme.theme = theme
@@ -47,6 +53,19 @@ class RemoteTheme < ActiveRecord::Base
     remote_theme.update_from_remote(importer, skip_update: true)
 
     theme.save!
+
+    if existing && update_components.present? && update_components != "none"
+      child_components = child_components.map { |url| ThemeStore::GitImporter.new(url.strip).url }
+
+      if update_components == "sync"
+        ChildTheme.joins(child_theme: :remote_theme).where("remote_themes.remote_url NOT IN (?)", child_components).delete_all
+      end
+
+      child_components -= theme.child_themes.joins(:remote_theme).where("remote_themes.remote_url IN (?)", child_components).pluck("remote_themes.remote_url")
+      theme.child_components = child_components
+      theme.update_child_components
+    end
+
     theme
   ensure
     begin
@@ -63,6 +82,7 @@ class RemoteTheme < ActiveRecord::Base
     theme_info = RemoteTheme.extract_theme_info(importer)
     component = [true, "true"].include?(theme_info["component"])
     theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
+    theme.child_components = theme_info["components"].presence || []
 
     remote_theme = new
     theme.remote_theme = remote_theme
@@ -141,6 +161,13 @@ class RemoteTheme < ActiveRecord::Base
     end
     if !self.valid?
       raise ImportError, I18n.t("themes.import_error.about_json_values", errors: self.errors.full_messages.join(","))
+    end
+
+    ThemeModifierSet.modifiers.keys.each do |modifier_name|
+      theme.theme_modifier_set.public_send(:"#{modifier_name}=", theme_info.dig("modifiers", modifier_name.to_s))
+    end
+    if !theme.theme_modifier_set.valid?
+      raise ImportError, I18n.t("themes.import_error.modifier_values", errors: theme.theme_modifier_set.errors.full_messages.join(","))
     end
 
     importer.all_files.each do |filename|

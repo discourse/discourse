@@ -40,15 +40,16 @@ describe DirectoryItemsController do
     it "succeeds with a valid value" do
       get '/directory_items.json', params: { period: 'all' }
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json).to be_present
       expect(json['directory_items']).to be_present
-      expect(json['total_rows_directory_items']).to be_present
-      expect(json['load_more_directory_items']).to be_present
+      expect(json['meta']['total_rows_directory_items']).to be_present
+      expect(json['meta']['load_more_directory_items']).to be_present
+      expect(json['meta']['last_updated_at']).to be_present
 
       expect(json['directory_items'].length).to eq(4)
-      expect(json['total_rows_directory_items']).to eq(4)
+      expect(json['meta']['total_rows_directory_items']).to eq(4)
     end
 
     it "fails when the directory is disabled" do
@@ -62,10 +63,10 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', name: 'eviltrout' }
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to be_present
       expect(json['directory_items'].length).to eq(1)
-      expect(json['total_rows_directory_items']).to eq(1)
+      expect(json['meta']['total_rows_directory_items']).to eq(1)
       expect(json['directory_items'][0]['user']['username']).to eq('eviltrout')
     end
 
@@ -73,10 +74,10 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', name: 'stage_user' }
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to be_present
       expect(json['directory_items'].length).to eq(1)
-      expect(json['total_rows_directory_items']).to eq(1)
+      expect(json['meta']['total_rows_directory_items']).to eq(1)
       expect(json['directory_items'][0]['user']['username']).to eq('stage_user')
     end
 
@@ -84,10 +85,10 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', exclude_usernames: "stage_user,eviltrout" }
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to be_present
       expect(json['directory_items'].length).to eq(2)
-      expect(json['total_rows_directory_items']).to eq(2)
+      expect(json['meta']['total_rows_directory_items']).to eq(2)
       expect(json['directory_items'][0]['user']['username']).to eq(walter_white.username) | eq(user.username)
       expect(json['directory_items'][1]['user']['username']).to eq(walter_white.username) | eq(user.username)
     end
@@ -96,10 +97,10 @@ describe DirectoryItemsController do
       get '/directory_items.json', params: { period: 'all', group: group.name }
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to be_present
       expect(json['directory_items'].length).to eq(2)
-      expect(json['total_rows_directory_items']).to eq(2)
+      expect(json['meta']['total_rows_directory_items']).to eq(2)
       expect(json['directory_items'][0]['user']['username']).to eq(evil_trout.username) | eq(stage_user.username)
       expect(json['directory_items'][1]['user']['username']).to eq(evil_trout.username) | eq(stage_user.username)
     end

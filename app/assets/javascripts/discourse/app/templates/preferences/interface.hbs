@@ -1,0 +1,105 @@
+{{plugin-outlet name="user-preferences-interface-top" args=(hash model=model save=(action "save"))}}
+
+{{#if showThemeSelector}}
+  <div class="control-group theme">
+    <label class="control-label">{{i18n "user.theme"}}</label>
+    <div class="controls">
+      {{combo-box
+        content=userSelectableThemes
+        value=themeId
+      }}
+    </div>
+    {{#if themeIdChanged}}
+      <p class="alert alert-success save-theme-alert">{{i18n "user.save_to_change_theme" save_text=(i18n "save") }}</p>
+    {{/if}}
+    {{#if showThemeSetDefault}}
+      <div class="controls">
+        {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}
+
+<div class="control-group text-size">
+  <label class="control-label">{{i18n "user.text_size.title"}}</label>
+  <div class="controls">
+    {{combo-box
+      valueProperty="value"
+      content=textSizes
+      value=textSize
+      onChange=(action "selectTextSize")
+    }}
+  </div>
+  {{#if showTextSetDefault}}
+    <div class="controls">
+      {{preference-checkbox labelKey="user.text_size_default_on_all_devices" checked=makeTextSizeDefault}}
+    </div>
+  {{/if}}
+</div>
+
+{{#if siteSettings.allow_user_locale}}
+  <div class="control-group pref-locale">
+    <label class="control-label">{{i18n "user.locale.title"}}</label>
+    <div class="controls">
+      {{combo-box
+        valueProperty="value"
+        content=availableLocales
+        value=model.locale
+        onChange=(action (mut model.locale))
+        options=(hash
+          filterable=true
+          none="user.locale.default"
+        )
+      }}
+    </div>
+    <div class="instructions">
+      {{i18n "user.locale.instructions"}}
+    </div>
+  </div>
+{{/if}}
+
+<div class="control-group home">
+  <label class="control-label">{{i18n "user.home"}}</label>
+  <div class="controls">
+    {{combo-box
+      content=userSelectableHome
+      valueProperty="value"
+      value=homepageId
+      onChange=(action (mut model.user_option.homepage_id))
+    }}
+  </div>
+</div>
+
+<div class="control-group other">
+  <label class="control-label">{{i18n "user.other_settings"}}</label>
+
+  {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=model.user_option.external_links_in_new_tab class="pref-external-links"}}
+  {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting class="pref-enable-quoting"}}
+  {{preference-checkbox labelKey="user.enable_defer" checked=model.user_option.enable_defer class="pref-defer-undread"}}
+  {{#if siteSettings.automatically_unpin_topics}}
+    {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics  class="pref-auto-unpin"}}
+  {{/if}}
+  {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence  class="pref-hide-profile"}}
+  {{#if isiPad}}
+    {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks  class="pref-safari-hacks"}}
+  {{/if}}
+  {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon  class="pref-dynamic-favicon"}}
+  <div class="controls controls-dropdown pref-page-title">
+    <label for="user-email-level">{{i18n "user.title_count_mode.title"}}</label>
+    {{combo-box
+      valueProperty="value"
+      content=titleCountModes
+      value=model.user_option.title_count_mode
+      id="user-title-count-mode"
+      onChange=(action (mut model.user_option.title_count_mode))
+    }}
+  </div>
+</div>
+
+{{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}
+
+<br>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+{{save-controls model=model action=(action "save") saved=saved}}

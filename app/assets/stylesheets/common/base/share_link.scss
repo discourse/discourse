@@ -6,7 +6,7 @@
   z-index: z("dropdown");
   box-shadow: shadow("card");
   background-color: $secondary;
-  padding: s(2 2 1 2);
+  padding: 8px 8px 4px 8px;
   width: 300px;
   display: none;
   &.visible {
@@ -15,15 +15,9 @@
   input[type="text"] {
     width: 100%;
   }
-  .share-for-touch .overflow-ellipsis {
-    clear: both;
-  }
-  .share-for-touch {
-    margin: 14px 0;
-  }
 
   .title {
-    margin-bottom: s(1);
+    margin-bottom: 4px;
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -52,7 +46,7 @@
     }
   }
   .social-link {
-    margin-right: s(2);
+    margin-right: 8px;
     font-size: $font-up-4;
     .d-icon {
       color: dark-light-choose($tertiary, white);
@@ -75,7 +69,7 @@
   .actions {
     display: flex;
     align-items: flex-end;
-    margin-top: s(2);
+    margin-top: 8px;
 
     .sources {
       display: flex;
@@ -85,7 +79,7 @@
       max-width: 45%;
 
       .social-link {
-        margin-right: s(2);
+        margin-right: 8px;
       }
     }
 
@@ -102,16 +96,8 @@
       }
 
       .new-topic {
-        margin-right: s(4);
+        margin-right: 16px;
       }
     }
   }
-}
-
-.discourse-no-touch #share-link .share-for-touch {
-  display: none;
-}
-
-.discourse-touch #share-link input[type="text"] {
-  display: none;
 }

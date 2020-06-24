@@ -9,6 +9,7 @@
   .user-stream-item {
     background-color: $secondary;
     border-bottom: 1px solid $primary-low;
+    padding: 1em 0.53em;
 
     &.moderator-action {
       background-color: $highlight-medium;
@@ -38,10 +39,14 @@
   .time,
   .delete-info,
   .draft-type {
-    display: block;
     float: right;
     color: $primary-medium;
     font-size: $font-down-2;
+  }
+
+  .notification .time {
+    margin-left: auto;
+    float: none;
   }
 
   .draft-type {
@@ -101,12 +106,6 @@
       span:first-child {
         color: $primary;
       }
-    }
-
-    .time {
-      display: inline-block;
-      margin-left: 10px;
-      float: none;
     }
 
     // common/base/header.scss

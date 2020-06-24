@@ -4,10 +4,6 @@
     background: $secondary;
     border-radius: 0;
 
-    .select-kit-body {
-      width: 100%;
-    }
-
     .select-kit-row {
       margin: 5px;
       min-height: 1px;
@@ -53,6 +49,7 @@
       .multi-select-header {
         border-radius: 0;
         box-shadow: none;
+        outline: none;
       }
 
       .select-kit-body {

@@ -11,11 +11,13 @@ class Admin::ReportsController < Admin::AdminController
     reports = reports_methods.map do |name|
       type = name.to_s.gsub('report_', '')
       description = I18n.t("reports.#{type}.description", default: '')
+      description_link = I18n.t("reports.#{type}.description_link", default: '')
 
       {
         type: type,
         title: I18n.t("reports.#{type}.title"),
         description: description.presence ? description : nil,
+        description_link: description_link.presence ? description_link : nil
       }
     end
 

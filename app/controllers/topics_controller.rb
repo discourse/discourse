@@ -87,19 +87,15 @@ class TopicsController < ApplicationController
 
       raise ex
     rescue Discourse::NotLoggedIn => ex
-      if !SiteSetting.detailed_404
-        raise Discourse::NotFound
-      else
-        raise ex
-      end
+      raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     rescue Discourse::InvalidAccess => ex
       # If the user can't see the topic, clean up notifications for it.
       Notification.remove_for(current_user.id, params[:topic_id]) if current_user
 
       deleted = guardian.can_see_topic?(ex.obj, false) ||
-                (!guardian.can_see_topic?(ex.obj) &&
-                 ex.obj&.access_topic_via_group &&
-                 ex.obj.deleted_at)
+        (!guardian.can_see_topic?(ex.obj) &&
+         ex.obj&.access_topic_via_group &&
+         ex.obj.deleted_at)
 
       if SiteSetting.detailed_404
         if deleted
@@ -231,11 +227,14 @@ class TopicsController < ApplicationController
 
     fetch_topic_view(options)
 
-    render_json_dump(TopicViewPostsSerializer.new(@topic_view,
-      scope: guardian,
-      root: false,
-      include_raw: !!params[:include_raw]
-    ))
+    render_json_dump(
+      TopicViewPostsSerializer.new(
+        @topic_view,
+        scope: guardian,
+        root: false,
+        include_raw: !!params[:include_raw]
+      )
+    )
   end
 
   def excerpts
@@ -261,12 +260,12 @@ class TopicsController < ApplicationController
       .joins("LEFT JOIN users u on u.id = posts.user_id")
       .pluck(:id, :cooked, :username)
       .map do |post_id, cooked, username|
-        {
-          post_id: post_id,
-          username: username,
-          excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true)
-        }
-      end
+      {
+        post_id: post_id,
+        username: username,
+        excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true)
+      }
+    end
 
     render json: @posts.to_json
   end
@@ -342,6 +341,8 @@ class TopicsController < ApplicationController
             end
           end
 
+          invalid_tags = Tag.where_name(invalid_tags).pluck(:name)
+
           if !invalid_tags.empty?
             if (invalid_tags & DiscourseTagging.hidden_tag_names).present?
               return render_json_error(I18n.t('category.errors.disallowed_tags_generic'))
@@ -367,6 +368,10 @@ class TopicsController < ApplicationController
     if changes.length > 0
       first_post = topic.ordered_posts.first
       success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
+
+      if !success && topic.errors.blank?
+        topic.errors.add(:base, :unable_to_update)
+      end
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
@@ -435,16 +440,19 @@ class TopicsController < ApplicationController
       rescue
         invalid_param(:status_type)
       end
+    based_on_last_post = params[:based_on_last_post]
+    params.require(:duration) if based_on_last_post
 
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
 
     options = {
       by_user: current_user,
-      based_on_last_post: params[:based_on_last_post]
+      based_on_last_post: based_on_last_post
     }
 
     options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
+    options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
     topic_status_update = topic.set_or_create_timer(
       status_type,
@@ -485,18 +493,7 @@ class TopicsController < ApplicationController
 
   def remove_bookmarks
     topic = Topic.find(params[:topic_id].to_i)
-
-    if SiteSetting.enable_bookmarks_with_reminders?
-      Bookmark.where(user_id: current_user.id, topic_id: topic.id).destroy_all
-    else
-      PostAction.joins(:post)
-        .where(user_id: current_user.id)
-        .where('topic_id = ?', topic.id).each do |pa|
-
-        PostActionDestroyer.destroy(current_user, pa.post, :bookmark)
-      end
-    end
-
+    BookmarkManager.new(current_user).destroy_for_topic(topic)
     render body: nil
   end
 
@@ -547,14 +544,11 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
 
-    if SiteSetting.enable_bookmarks_with_reminders?
-      if Bookmark.exists?(user: current_user, post: first_post)
-        return render_json_error(I18n.t("bookmark.topic_already_bookmarked"), status: 403)
-      end
-      Bookmark.create(user: current_user, post: first_post, topic: topic)
-    else
-      result = PostActionCreator.create(current_user, first_post, :bookmark)
-      return render_json_error(result) if result.failed?
+    bookmark_manager = BookmarkManager.new(current_user)
+    bookmark_manager.create(post_id: first_post.id)
+
+    if bookmark_manager.errors.any?
+      return render_json_error(bookmark_manager, status: 400)
     end
 
     render body: nil
@@ -621,9 +615,9 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     unless pm_has_slots?(topic)
-      return render_json_error(I18n.t("pm_reached_recipients_limit",
-        recipients_limit: SiteSetting.max_allowed_message_recipients
-      ))
+      return render_json_error(
+        I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
+      )
     end
 
     if topic.private_message?
@@ -647,9 +641,9 @@ class TopicsController < ApplicationController
     )
 
     unless pm_has_slots?(topic)
-      return render_json_error(I18n.t("pm_reached_recipients_limit",
-        recipients_limit: SiteSetting.max_allowed_message_recipients
-      ))
+      return render_json_error(
+        I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
+      )
     end
 
     guardian.ensure_can_invite_to!(topic)
@@ -676,7 +670,8 @@ class TopicsController < ApplicationController
 
           if group_names.present?
             json.merge!(errors: [
-              I18n.t("topic_invite.failed_to_invite",
+              I18n.t(
+                "topic_invite.failed_to_invite",
                 group_names: group_names
               )
             ])
@@ -949,11 +944,7 @@ class TopicsController < ApplicationController
     begin
       guardian.ensure_can_see!(topic)
     rescue Discourse::InvalidAccess => ex
-      if !SiteSetting.detailed_404
-        raise Discourse::NotFound
-      else
-        raise ex
-      end
+      raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     end
 
     url = topic.relative_url
@@ -1014,7 +1005,8 @@ class TopicsController < ApplicationController
       return
     end
 
-    topic_view_serializer = TopicViewSerializer.new(@topic_view,
+    topic_view_serializer = TopicViewSerializer.new(
+      @topic_view,
       scope: guardian,
       root: false,
       include_raw: !!params[:include_raw]
@@ -1022,6 +1014,8 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
+        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags : []
+        @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
         @description_meta = @topic_view.topic.excerpt.present? ? @topic_view.topic.excerpt : @topic_view.summary
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show

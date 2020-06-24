@@ -7,6 +7,10 @@ describe Theme do
     Theme.clear_cache!
   end
 
+  before do
+    I18n.locale = :en
+  end
+
   fab! :user do
     Fabricate(:user)
   end
@@ -657,8 +661,8 @@ HTML
     end
 
     it "can create a hash of overridden values" do
-      en_translation = ThemeField.create!(theme_id: theme.id, name: "en_US", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
-        en_US:
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
           group_of_translations:
             translation1: en test1
       YAML
@@ -668,7 +672,7 @@ HTML
       theme.update_translation("group_of_translations.translation1", "overriddentest2")
       theme.reload
       expect(theme.translation_override_hash).to eq(
-        "en_US" => {
+        "en" => {
           "group_of_translations" => {
             "translation1" => "overriddentest1"
           }
@@ -712,7 +716,7 @@ HTML
       first_common_value = Theme.lookup_field(child.id, :desktop, "header")
       first_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
 
-      stub_const(ThemeField, :COMPILER_VERSION, "SOME_NEW_HASH") do
+      Theme.stubs(:compiler_version).returns("SOME_NEW_HASH") do
         second_common_value = Theme.lookup_field(child.id, :desktop, "header")
         second_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
 
@@ -725,6 +729,19 @@ HTML
         expect(new_common_compiler_version).to eq("SOME_NEW_HASH")
         expect(new_extra_js_compiler_version).to eq("SOME_NEW_HASH")
       end
+    end
+
+    it 'recompiles when the hostname changes' do
+      theme.set_field(target: :settings, name: :yaml, value: "name: bob")
+      theme_field = theme.set_field(target: :common, name: :after_header, value: '<script>console.log("hello world");</script>')
+      theme.save!
+
+      expect(Theme.lookup_field(theme.id, :common, :after_header)).to include("_ws=#{Discourse.current_hostname}")
+
+      SiteSetting.force_hostname = "someotherhostname.com"
+      Theme.clear_cache!
+
+      expect(Theme.lookup_field(theme.id, :common, :after_header)).to include("_ws=someotherhostname.com")
     end
   end
 end

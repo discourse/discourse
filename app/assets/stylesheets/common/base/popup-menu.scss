@@ -1,0 +1,59 @@
+.popup-menu {
+  background-color: $secondary;
+  width: 14em;
+  border: 1px solid $primary-low;
+  z-index: z("dropdown");
+  box-shadow: shadow("card");
+
+  ul {
+    margin: 0;
+    list-style: none;
+
+    li {
+      border-bottom: 1px solid rgba($primary-low, 0.5);
+
+      &:last-child {
+        border: none;
+      }
+    }
+  }
+
+  .btn {
+    text-align: left;
+    background: none;
+    width: 100%;
+    padding: 0.75em;
+    border-radius: 0;
+
+    .d-icon {
+      color: $primary-medium;
+    }
+
+    &:hover {
+      color: $primary;
+      background: $tertiary-low;
+
+      .d-icon {
+        color: $primary-medium;
+      }
+    }
+
+    &.popup-menu-btn-danger {
+      .d-icon {
+        color: $danger;
+      }
+
+      .d-button-label {
+        color: $primary;
+      }
+
+      &:hover {
+        .d-icon,
+        .d-button-label {
+          color: $danger;
+        }
+        background: $danger-low;
+      }
+    }
+  }
+}

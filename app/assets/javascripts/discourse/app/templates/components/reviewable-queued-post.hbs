@@ -1,0 +1,27 @@
+{{#reviewable-topic-link reviewable=reviewable tagName=""}}
+  <div class="title-text">
+    {{d-icon "plus-square" title="review.new_topic"}}
+    {{reviewable.payload.title}}
+  </div>
+  {{category-badge reviewable.category}}
+  {{reviewable-tags tags=reviewable.payload.tags tagName=""}}
+  {{#if reviewable.payload.via_email}}
+    <a href {{action "showRawEmail"}} class="show-raw-email">
+      {{d-icon "far-envelope" title="post.via_email"}}
+    </a>
+  {{/if}}
+{{/reviewable-topic-link}}
+
+<div class="post-contents-wrapper">
+  {{reviewable-created-by user=reviewable.created_by tagName=""}}
+
+  <div class="post-contents">
+    {{reviewable-post-header reviewable=reviewable createdBy=reviewable.created_by tagName=""}}
+
+    <div class="post-body">
+      {{cook-text reviewable.payload.raw}}
+    </div>
+
+    {{yield}}
+  </div>
+</div>

@@ -140,18 +140,32 @@ table.group-members {
   color: $primary;
 }
 
-.form-vertical {
-  .group-flair-inputs {
-    display: inline-block;
-  }
+.group-flair-inputs {
+  display: inline-block;
 
   .avatar-flair-preview {
     position: relative;
     width: 45px;
 
     .avatar-wrapper {
-      background-color: #f4f4f4;
+      background-color: $primary-very-low;
     }
+  }
+
+  .radios {
+    margin-bottom: 5px;
+  }
+
+  .radio-label {
+    display: inline-flex;
+    padding-right: 10px;
+    margin-bottom: 0;
+    align-items: center;
+  }
+
+  .uploaded-image-preview {
+    height: 75px;
+    width: 275px;
   }
 }
 

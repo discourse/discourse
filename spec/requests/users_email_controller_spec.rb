@@ -49,6 +49,17 @@ describe UsersEmailController do
         updater.change_to('new.n.cool@example.com')
       end
 
+      it 'includes security_key_allowed_credential_ids in a hidden field' do
+        key1 = Fabricate(:user_security_key_with_random_credential, user: user)
+        key2 = Fabricate(:user_security_key_with_random_credential, user: user)
+
+        get "/u/confirm-new-email/#{user.email_tokens.last.token}"
+
+        doc = Nokogiri::HTML5(response.body)
+        credential_ids = doc.css("#security-key-allowed-credential-ids").first["value"].split(",")
+        expect(credential_ids).to contain_exactly(key1.credential_id, key2.credential_id)
+      end
+
       it 'confirms with a correct token' do
         user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
 
@@ -261,6 +272,21 @@ describe UsersEmailController do
     end
   end
 
+  describe '#create' do
+    let(:new_email) { 'bubblegum@adventuretime.ooo' }
+
+    it 'has an email token' do
+      sign_in(user)
+
+      expect { post "/u/#{user.username}/preferences/email.json", params: { email: new_email } }
+        .to change(EmailChangeRequest, :count)
+
+      emailChangeRequest = EmailChangeRequest.last
+      expect(emailChangeRequest.old_email).to eq(nil)
+      expect(emailChangeRequest.new_email).to eq(new_email)
+    end
+  end
+
   describe '#update' do
     let(:new_email) { 'bubblegum@adventuretime.ooo' }
 
@@ -282,7 +308,7 @@ describe UsersEmailController do
       it 'raises an error without an invalid email' do
         put "/u/#{user.username}/preferences/email.json", params: { email: "sam@not-email.com'" }
         expect(response.status).to eq(422)
-        expect(response.body).to include("email is invalid")
+        expect(response.body).to include("Email is invalid")
       end
 
       it "raises an error if you can't edit the user's email" do

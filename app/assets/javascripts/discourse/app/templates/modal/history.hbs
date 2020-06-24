@@ -1,0 +1,143 @@
+{{#d-modal-body title="history" maxHeight="70%"}}
+  <div id="revision">
+    <div id="revision-details">
+      {{d-icon "pencil-alt"}}
+      {{#link-to "user" model.username}}
+        {{bound-avatar-template model.avatar_template "small"}} {{model.username}}
+      {{/link-to}}
+      {{plugin-outlet name="revision-user-details-after" noTags=true args=(hash model=model)}}
+      <span class="date">{{bound-date model.created_at}}</span>
+      {{#if model.edit_reason}}
+        &mdash; <span class="edit-reason">{{model.edit_reason}}</span>
+      {{/if}}
+      {{#unless site.mobileView}}
+        {{#if model.user_changes}}
+          &mdash; {{bound-avatar-template model.user_changes.previous.avatar_template "small"}} {{model.user_changes.previous.username}}
+          &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
+        {{/if}}
+        {{#if model.wiki_changes}}
+          &mdash; {{disabled-icon icon="far-edit" disabled=wikiDisabled}}
+        {{/if}}
+        {{#if model.post_type_changes}}
+          &mdash; {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
+        {{/if}}
+        {{#if model.category_id_changes}}
+          &mdash; {{html-safe previousCategory}} &rarr; {{html-safe currentCategory}}
+        {{/if}}
+      {{/unless}}
+    </div>
+
+    <div id="display-modes">
+      {{d-button action=(action "displayInline")
+          icon="far-square"
+          label="post.revisions.displays.inline.button"
+          title="post.revisions.displays.inline.title"
+          class=inlineClass}}
+      {{#unless site.mobileView}}
+        {{d-button action=(action "displaySideBySide")
+            icon="columns"
+            label="post.revisions.displays.side_by_side.button"
+            title="post.revisions.displays.side_by_side.title"
+            class=sideBySideClass}}
+
+        {{d-button action=(action "displaySideBySideMarkdown")
+            icon="columns"
+            label="post.revisions.displays.side_by_side_markdown.button"
+            title="post.revisions.displays.side_by_side_markdown.title"
+            class=sideBySideMarkdownClass}}
+      {{/unless}}
+    </div>
+  </div>
+  <div id="revisions" data-post-id={{model.post_id}} class={{hiddenClasses}}>
+    {{#if model.title_changes}}
+      <div class="row">
+        <h2>{{html-safe titleDiff}}</h2>
+      </div>
+    {{/if}}
+    {{#if site.mobileView}}
+      {{#if user_changes}}
+        <div class="row">
+          {{bound-avatar-template model.user_changes.previous.avatar_template "small"}} {{model.user_changes.previous.username}}
+          &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
+        </div>
+      {{/if}}
+      {{#if model.wiki_changes}}
+        <div class="row">
+          {{disabled-icon icon="far-edit" disabled=wikiDisabled}}
+        </div>
+      {{/if}}
+      {{#if model.post_type_changes}}
+        <div class="row">
+          {{disabled-icon icon="shield-alt" disabled=postTypeDisabled}}
+        </div>
+      {{/if}}
+      {{#if model.category_id_changes}}
+        <div class="row">
+          {{html-safe previousCategory}} &rarr; {{html-safe currentCategory}}
+        </div>
+      {{/if}}
+    {{/if}}
+    {{#if model.tags_changes}}
+      <div class="row">
+        {{i18n "tagging.changed"}}
+        {{#each previousTagChanges as |t|}}
+          {{discourse-tag t}}
+        {{/each}}
+        &rarr;
+        &nbsp;
+        {{#each currentTagChanges as |t|}}
+          {{discourse-tag t}}
+        {{/each}}
+      </div>
+    {{/if}}
+    {{#if model.featured_link_changes}}
+      <div class="row">
+        {{model.featured_link_changes.previous}}
+        &rarr;
+        {{model.featured_link_changes.current}}
+      </div>
+    {{/if}}
+
+    {{plugin-outlet name="post-revisions" args=(hash model=model)}}
+
+    {{#links-redirect class="row"}}
+      {{html-safe bodyDiff}}
+    {{/links-redirect}}
+  </div>
+{{/d-modal-body}}
+{{#if topicController}}
+  <div class="modal-footer">
+    <div id="revision-controls">
+      {{d-button class="btn-default" action=(action "loadFirstVersion") icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
+      {{d-button class="btn-default" action=(action "loadPreviousVersion") icon="backward" title="post.revisions.controls.previous" disabled=loadPreviousDisabled}}
+      <div id="revision-numbers" class={{unless displayRevisions "invisible"}}>
+        {{#conditional-loading-spinner condition=loading size="small"}}
+          {{html-safe revisionsText}}
+        {{/conditional-loading-spinner}}
+      </div>
+      {{d-button class="btn-default" action=(action "loadNextVersion") icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
+      {{d-button class="btn-default" action=(action "loadLastVersion") icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
+    </div>
+
+    <div id="revision-footer-buttons">
+      {{#if displayEdit}}
+        {{d-button action=(action "editPost")
+            icon="pencil-alt"
+            class="btn-default"
+            label=editButtonLabel}}
+      {{/if}}
+
+      {{#if displayRevert}}
+        {{d-button action=(action "revertToVersion") icon="undo" translatedLabel=revertToRevisionText class="btn-danger" disabled=loading}}
+      {{/if}}
+
+      {{#if displayHide}}
+        {{d-button action=(action "hideVersion") icon="far-eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
+      {{/if}}
+
+      {{#if displayShow}}
+        {{d-button action=(action "showVersion") icon="far-eye" label="post.revisions.controls.show" class="btn-default" disabled=loading}}
+      {{/if}}
+    </div>
+  </div>
+{{/if}}

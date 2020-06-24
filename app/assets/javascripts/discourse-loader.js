@@ -1,26 +1,28 @@
 var define, requirejs;
 
 (function() {
-  // In future versions of ember we don't need this
-  var EMBER_MODULES = {};
+  var JS_MODULES = {};
   var ALIASES = {
     "ember-addons/ember-computed-decorators":
-      "discourse-common/utils/decorators"
+      "discourse-common/utils/decorators",
+    "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
+    "preload-store": "discourse/lib/preload-store"
   };
+
+  // In future versions of ember we don't need this
   if (typeof Ember !== "undefined") {
-    EMBER_MODULES = {
+    JS_MODULES = {
       jquery: { default: $ },
       "@ember/array": {
         default: Ember.Array,
-        A: Ember.A
+        A: Ember.A,
+        isArray: Ember.isArray
       },
       "@ember/array/proxy": {
         default: Ember.ArrayProxy
       },
       "@ember/component": {
-        default: Ember.Component,
-        TextArea: Ember.TextArea,
-        TextField: Ember.TextField
+        default: Ember.Component
       },
       "@ember/controller": {
         default: Ember.Controller,
@@ -34,7 +36,6 @@ var define, requirejs;
         default: Ember.Object,
         get: Ember.get,
         getProperties: Ember.getProperties,
-        guidFor: Ember.guidFor,
         set: Ember.set,
         setProperties: Ember.setProperties,
         computed: Ember.computed,
@@ -76,6 +77,7 @@ var define, requirejs;
       },
       "@ember/object/mixin": { default: Ember.Mixin },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
+      "@ember/object/promise-proxy-mixin": { default: Ember.PromiseProxyMixin },
       "@ember/object/evented": {
         default: Ember.Evented,
         on: Ember.on
@@ -99,14 +101,13 @@ var define, requirejs;
         inject: Ember.inject.service
       },
       "@ember/utils": {
-        isPresent: Ember.isPresent,
         isBlank: Ember.isBlank,
         isEmpty: Ember.isEmpty,
-        isNone: Ember.isNone
+        isNone: Ember.isNone,
+        isPresent: Ember.isPresent
       },
       rsvp: {
         default: Ember.RSVP,
-        EventTarget: Ember.RSVP.EventTarget,
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
         all: Ember.RSVP.all
@@ -128,11 +129,21 @@ var define, requirejs;
       "@ember/component/helper": {
         default: Ember.Helper
       },
+      "@ember/component/text-field": {
+        default: Ember.TextField
+      },
+      "@ember/component/text-area": {
+        default: Ember.TextArea
+      },
       "@ember/error": {
         default: Ember.error
       },
       "@ember/object/internals": {
         guidFor: Ember.guidFor
+      },
+      I18n: {
+        // eslint-disable-next-line
+        default: I18n
       }
     };
   }
@@ -258,6 +269,14 @@ var define, requirejs;
   function requireFrom(name, origin) {
     name = transformForAliases(name);
 
+    if (name === "discourse") {
+      // eslint-disable-next-line no-console
+      console.log(
+        "discourse has been moved to `discourse/app` - please update your code"
+      );
+      name = "discourse/app";
+    }
+
     if (name === "discourse/models/input-validation") {
       // eslint-disable-next-line no-console
       console.log(
@@ -266,7 +285,7 @@ var define, requirejs;
       name = "@ember/object";
     }
 
-    var mod = EMBER_MODULES[name] || registry[name];
+    var mod = JS_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
         "Could not find module `" + name + "` imported from `" + origin + "`"
@@ -289,8 +308,8 @@ var define, requirejs;
 
   requirejs = require = function(name) {
     name = transformForAliases(name);
-    if (EMBER_MODULES[name]) {
-      return EMBER_MODULES[name];
+    if (JS_MODULES[name]) {
+      return JS_MODULES[name];
     }
 
     var mod = registry[name];

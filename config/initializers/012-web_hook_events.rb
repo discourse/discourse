@@ -26,7 +26,7 @@ end
 end
 
 DiscourseEvent.on(:post_edited) do |post, topic_changed|
-  if post.topic
+  unless post.topic&.trashed?
     WebHook.enqueue_post_hooks(:post_edited, post)
 
     if post.is_first_post? && topic_changed
@@ -71,6 +71,16 @@ end
 ).each do |event|
   DiscourseEvent.on(event) do |tag|
     WebHook.enqueue_object_hooks(:tag, tag, event, TagSerializer)
+  end
+end
+
+%i(
+  user_badge_granted
+).each do |event|
+  # user_badge_revoked
+  DiscourseEvent.on(event) do |badge, user_id|
+    ub = UserBadge.find_by(badge: badge, user_id: user_id)
+    WebHook.enqueue_object_hooks(:user_badge, ub, event, UserBadgeSerializer)
   end
 end
 

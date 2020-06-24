@@ -10,7 +10,7 @@ module Jobs
     end
 
     def execute(args)
-      Discourse.redis.set(self.class.heartbeat_key, Time.new.to_i.to_s)
+      Discourse.redis.set(self.class.heartbeat_key, Time.now.to_i.to_s)
     end
 
     def self.last_heartbeat

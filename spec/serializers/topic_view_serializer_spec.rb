@@ -46,15 +46,35 @@ describe TopicViewSerializer do
   end
 
   describe '#image_url' do
-    let(:image_url) { 'http://meta.discourse.org/images/welcome/discourse-edit-post-animated.gif' }
+    let(:image_upload) { Fabricate(:image_upload, width: 5000, height: 5000) }
 
     describe 'when a topic has an image' do
-      it 'should return the image url' do
-        topic.update!(image_url: image_url)
+      before { topic.update!(image_upload_id: image_upload.id) }
 
+      it 'should return the image url' do
         json = serialize_topic(topic, user)
 
-        expect(json[:image_url]).to eq(image_url)
+        expect(json[:image_url]).to end_with(image_upload.url)
+      end
+
+      it 'should have thumbnails' do
+        SiteSetting.create_thumbnails = true
+
+        Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
+        json = nil
+
+        expect do
+          json = serialize_topic(topic, user)
+        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
+
+        topic.generate_thumbnails!
+
+        expect do
+          json = serialize_topic(topic, user)
+        end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
+
+        # Original + Optimized
+        expect(json[:thumbnails].length).to eq(2)
       end
     end
 
@@ -258,6 +278,16 @@ describe TopicViewSerializer do
       expect(details[:allowed_groups].find { |ag| ag[:id] == group.id }).to be_present
     end
 
+    it "has can_publish_page if possible" do
+      SiteSetting.enable_page_publishing = true
+
+      json = serialize_topic(topic, user)
+      expect(json[:details][:can_publish_page]).to be_blank
+
+      json = serialize_topic(topic, admin)
+      expect(json[:details][:can_publish_page]).to eq(true)
+    end
+
     context "can_edit_tags" do
       before do
         SiteSetting.tagging_enabled = true
@@ -275,6 +305,42 @@ describe TopicViewSerializer do
 
         json = serialize_topic(topic, user)
         expect(json[:details][:can_edit_tags]).to eq(true)
+      end
+    end
+  end
+
+  context "published_page" do
+    fab!(:published_page) { Fabricate(:published_page, topic: topic) }
+
+    context "page publishing is disabled" do
+      before do
+        SiteSetting.enable_page_publishing = false
+      end
+
+      it "doesn't return the published page if not enabled" do
+        json = serialize_topic(topic, admin)
+        expect(json[:published_page]).to be_blank
+      end
+    end
+
+    context "page publishing is enabled" do
+      before do
+        SiteSetting.enable_page_publishing = true
+      end
+
+      context "not staff" do
+        it "doesn't return the published page" do
+          json = serialize_topic(topic, user)
+          expect(json[:published_page]).to be_blank
+        end
+      end
+
+      context "staff" do
+        it "returns the published page" do
+          json = serialize_topic(topic, admin)
+          expect(json[:published_page]).to be_present
+          expect(json[:published_page][:slug]).to eq(published_page.slug)
+        end
       end
     end
   end

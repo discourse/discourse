@@ -33,6 +33,7 @@ class UserBadgesController < ApplicationController
     params.permit [:grouped]
 
     user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
     user_badges = user.user_badges
 
     if params[:grouped]

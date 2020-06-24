@@ -68,10 +68,9 @@ end
 
 begin
   require 'facter'
+  raise LoadError if Gem::Version.new(Facter.version) < Gem::Version.new("4.0")
 rescue LoadError
   run "gem install facter"
-  # Facter requires CFPropertyList, but doesn't install it.
-  run "gem install CFPropertyList"
   puts "please rerun script"
   exit
 end
@@ -229,7 +228,7 @@ begin
               'Api-Username' => "admin1" }
 
   # asset precompilation is a dog, wget to force it
-  run "wget http://127.0.0.1:#{@port}/ -o /dev/null -O /dev/null"
+  run "curl -s -o /dev/null http://127.0.0.1:#{@port}/"
 
   redirect_response = `curl -s -I "http://127.0.0.1:#{@port}/t/i-am-a-topic-used-for-perf-tests"`
   if redirect_response !~ /301 Moved Permanently/
@@ -286,7 +285,7 @@ begin
 
   # Prevent using external facts because it breaks when running in the
   # discourse/discourse_bench docker container.
-  Facter::Util::Config.external_facts_dirs = []
+  Facter.reset
   facts = Facter.to_hash
 
   facts.delete_if { |k, v|

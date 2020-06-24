@@ -1,0 +1,73 @@
+<div class="control-group notifications">
+  <label class="control-label">{{i18n "user.notifications"}}</label>
+
+  <div class="controls controls-dropdown">
+    <label>{{i18n "user.new_topic_duration.label"}}</label>
+    {{combo-box
+      class="duration"
+      valueProperty="value"
+      content=considerNewTopicOptions
+      value=model.user_option.new_topic_duration_minutes
+      onChange=(action (mut model.user_option.new_topic_duration_minutes))
+    }}
+  </div>
+
+  <div class="controls controls-dropdown">
+    <label>{{i18n "user.auto_track_topics"}}</label>
+    {{combo-box
+      valueProperty="value"
+      content=autoTrackDurations
+      value=model.user_option.auto_track_topics_after_msecs
+      onChange=(action (mut model.user_option.auto_track_topics_after_msecs))
+    }}
+  </div>
+
+  <div class="controls controls-dropdown">
+    <label>{{i18n "user.notification_level_when_replying"}}</label>
+    {{combo-box
+      valueProperty="value"
+      content=notificationLevelsForReplying
+      value=model.user_option.notification_level_when_replying
+      onChange=(action (mut model.user_option.notification_level_when_replying))
+    }}
+  </div>
+
+  <div class="controls controls-dropdown">
+    <label>{{i18n "user.like_notification_frequency.title"}}</label>
+    {{combo-box
+      valueProperty="value"
+      content=likeNotificationFrequencies
+      value=model.user_option.like_notification_frequency
+      onChange=(action (mut model.user_option.like_notification_frequency))
+    }}
+  </div>
+</div>
+
+{{#unless isIOS}}
+  <div class="control-group desktop-notifications">
+    <label class="control-label">{{i18n "user.desktop_notifications.label"}}</label>
+    {{desktop-notification-config}}
+    <div class="instructions">{{i18n "user.desktop_notifications.each_browser_note"}}</div>
+    {{plugin-outlet name="user-preferences-desktop-notifications" args=(hash model=model save=(action "save"))}}
+  </div>
+{{/unless}}
+
+{{#if siteSettings.enable_personal_messages}}
+  <div class="control-group private-messages">
+    <label class="control-label">{{i18n "user.private_messages"}}</label>
+
+    <div class="controls">
+      {{preference-checkbox
+          labelKey="user.allow_private_messages"
+          checked=model.user_option.allow_private_messages}}
+    </div>
+  </div>
+{{/if}}
+
+{{plugin-outlet name="user-preferences-notifications" args=(hash model=model save=(action "save"))}}
+
+<br>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+{{save-controls model=model action=(action "save") saved=saved}}

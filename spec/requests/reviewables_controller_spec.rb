@@ -48,7 +48,7 @@ describe ReviewablesController do
       it "returns empty JSON when nothing to review" do
         get "/review.json"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to eq([])
       end
 
@@ -57,7 +57,7 @@ describe ReviewablesController do
 
         get "/review.json"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_present
 
         json_review = json['reviewables'][0]
@@ -79,14 +79,14 @@ describe ReviewablesController do
       it "supports filtering by score" do
         get "/review.json?min_score=1000"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_blank
       end
 
       it "supports offsets" do
         get "/review.json?offset=100"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_blank
       end
 
@@ -94,7 +94,7 @@ describe ReviewablesController do
         Fabricate(:reviewable)
         get "/review.json?type=ReviewableUser"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_present
       end
 
@@ -108,23 +108,23 @@ describe ReviewablesController do
 
         get "/review.json?type=ReviewableUser&status=pending"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_blank
 
         Fabricate(:reviewable, status: Reviewable.statuses[:approved])
         get "/review.json?type=ReviewableUser&status=approved"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_present
 
         get "/review.json?type=ReviewableUser&status=reviewed"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_present
 
         get "/review.json?type=ReviewableUser&status=all"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_present
       end
 
@@ -138,18 +138,18 @@ describe ReviewablesController do
         r = Fabricate(:reviewable)
         get "/review.json?category_id=#{other_category.id}"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_blank
 
         get "/review.json?category_id=#{r.category_id}"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_present
 
         # By default all categories are returned
         get "/review.json"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewables']).to be_present
       end
 
@@ -162,7 +162,7 @@ describe ReviewablesController do
 
         get "/review.json"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
 
         json_review = json['reviewables'][0]
         expect(json_review['id']).to eq(reviewable.id)
@@ -173,7 +173,7 @@ describe ReviewablesController do
         let(:from) { 3.days.ago.strftime('%F') }
         let(:to) { 1.day.ago.strftime('%F') }
 
-        let(:reviewables) { ::JSON.parse(response.body)['reviewables'] }
+        let(:reviewables) { response.parsed_body['reviewables'] }
 
         it 'returns an empty array when no reviewable matches the date range' do
           reviewable = Fabricate(:reviewable)
@@ -192,6 +192,32 @@ describe ReviewablesController do
           expect(json_review['id']).to eq(reviewable.id)
         end
       end
+
+      context "with user custom field" do
+        before do
+          plugin = Plugin::Instance.new
+          plugin.whitelist_public_user_custom_field :public_field
+        end
+
+        after do
+          DiscoursePluginRegistry.reset!
+        end
+
+        it "returns user data with custom fields" do
+          user = Fabricate(:user)
+          user.custom_fields["public_field"] = "public"
+          user.custom_fields["private_field"] = "private"
+          user.save!
+
+          reviewable = Fabricate(:reviewable, target_created_by: user)
+
+          get "/review.json"
+          json = response.parsed_body
+          expect(json['users']).to be_present
+          expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id && u['custom_fields']['public_field'] == 'public' }).to eq(true)
+          expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id && u['custom_fields']['private_field'] == 'private' }).to eq(false)
+        end
+      end
     end
 
     context "#show" do
@@ -205,7 +231,7 @@ describe ReviewablesController do
           get "/review/#{reviewable.id}.json"
           expect(response.code).to eq("200")
 
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
           expect(json['reviewable']['id']).to eq(reviewable.id)
         end
 
@@ -238,7 +264,7 @@ describe ReviewablesController do
         it "returns the conversation" do
           get "/review/#{reviewable.id}.json"
           expect(response.code).to eq("200")
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
 
           score = json['reviewable_scores'][0]
           conversation_id = score['reviewable_conversation_id']
@@ -272,7 +298,7 @@ describe ReviewablesController do
           get "/review/#{reviewable.id}/explain.json"
           expect(response.code).to eq("200")
 
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
           expect(json['reviewable_explanation']['id']).to eq(reviewable.id)
           expect(json['reviewable_explanation']['total_score']).to eq(reviewable.score)
         end
@@ -311,7 +337,7 @@ describe ReviewablesController do
         version = qp.version
         put "/review/#{qp.id}/perform/approve_post.json?version=#{version}"
         expect(response.code).to eq("422")
-        result = ::JSON.parse(response.body)
+        result = response.parsed_body
         expect(result['errors']).to be_present
         expect(qp.reload.version).to eq(version)
       end
@@ -319,7 +345,7 @@ describe ReviewablesController do
       it "requires a version parameter" do
         put "/review/#{reviewable.id}/perform/approve_user.json"
         expect(response.code).to eq("422")
-        result = ::JSON.parse(response.body)
+        result = response.parsed_body
         expect(result['errors']).to be_present
       end
 
@@ -328,7 +354,7 @@ describe ReviewablesController do
 
         put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewable_perform_result']['success']).to eq(true)
         expect(json['reviewable_perform_result']['version']).to eq(1)
         expect(json['reviewable_perform_result']['transition_to']).to eq('approved')
@@ -354,6 +380,7 @@ describe ReviewablesController do
           ReviewableClaimedTopic.create!(topic_id: qp.topic_id, user: Fabricate(:admin))
           put "/review/#{qp.id}/perform/approve_post.json?version=#{qp.version}"
           expect(response.code).to eq("422")
+          expect(response.parsed_body["errors"]).to match_array(["This item has been claimed by another user."])
         end
 
         it "works when claims are optional" do
@@ -367,7 +394,7 @@ describe ReviewablesController do
         it "fails when the version is wrong" do
           put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version + 1}"
           expect(response.code).to eq("409")
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
           expect(json['errors']).to be_present
         end
       end
@@ -383,7 +410,7 @@ describe ReviewablesController do
       it "returns empty json for no reviewables" do
         get "/review/topics.json"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewable_topics']).to be_blank
       end
 
@@ -395,7 +422,7 @@ describe ReviewablesController do
 
         get "/review/topics.json"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         json_topic = json['reviewable_topics'].find { |rt| rt['id'] == post0.topic_id }
         expect(json_topic['claimed_by_id']).to eq(moderator.id)
 
@@ -412,7 +439,7 @@ describe ReviewablesController do
         get "/review/topics.json"
         expect(response.code).to eq("200")
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewable_topics']).to be_present
 
         json_topic = json['reviewable_topics'].find { |rt| rt['id'] == post0.topic_id }
@@ -429,7 +456,7 @@ describe ReviewablesController do
       it "renders the settings as JSON" do
         get "/review/settings.json"
         expect(response.code).to eq("200")
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['reviewable_settings']).to be_present
         expect(json['reviewable_score_types']).to be_present
       end
@@ -525,7 +552,7 @@ describe ReviewablesController do
         )
         expect(history).to be_present
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['payload']['raw']).to eq('new raw content')
         expect(json['version'] > 0).to eq(true)
       end
@@ -553,7 +580,7 @@ describe ReviewablesController do
         expect(reviewable_topic.payload['tags']).to eq(['t2', 't3', 't1'])
         expect(reviewable_topic.category_id).to eq(new_category_id)
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['payload']['raw']).to eq('new topic op')
         expect(json['payload']['title']).to eq('new topic title')
         expect(json['payload']['extra']).to be_blank
@@ -563,7 +590,7 @@ describe ReviewablesController do
     end
 
     context "#destroy" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:admin) }
 
       before do
         sign_in(user)

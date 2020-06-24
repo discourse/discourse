@@ -1,0 +1,17 @@
+<section class="user-secondary-navigation">
+  {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list" currentPath=router._router.currentPath}}
+    <li>
+      {{#link-to "group.messages.inbox" model.name}}
+        {{i18n "user.messages.inbox"}}
+      {{/link-to}}
+    </li>
+    <li>
+      {{#link-to "group.messages.archive" model.name}}
+        {{i18n "user.messages.archive"}}
+      {{/link-to}}
+    </li>
+  {{/mobile-nav}}
+</section>
+<section class="user-content">
+  {{outlet}}
+</section>

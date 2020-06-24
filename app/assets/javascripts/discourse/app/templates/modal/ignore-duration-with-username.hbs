@@ -1,0 +1,27 @@
+{{#d-modal-body title="user.user_notifications.ignore_duration_title" autoFocus="false"}}
+  <div class="controls tracking-controls">
+    <label>{{d-icon "far-eye-slash" class="icon"}} {{i18n "user.user_notifications.ignore_duration_username"}}</label>
+    {{user-selector excludeCurrentUser=true
+                    single=true
+                    class="user-selector"
+                    usernames=ignoredUsername}}
+  </div>
+  {{future-date-input
+    label="user.user_notifications.ignore_duration_when"
+    input=(readonly ignoredUntil)
+    includeWeekend=true
+    includeDateTime=false
+    includeMidFuture=true
+    includeFarFuture=true
+    onChangeInput=(action (mut ignoredUntil))
+  }}
+  <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button class="btn-primary"
+             disabled=saveDisabled
+             label="user.user_notifications.ignore_duration_save"
+             action=(action "ignore")}}
+  {{conditional-loading-spinner size="small" condition=loading}}
+</div>

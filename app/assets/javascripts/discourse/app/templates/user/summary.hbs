@@ -1,0 +1,165 @@
+{{#d-section pageClass="user-summary" tagName=""}}
+  <div class="user-content">
+    {{#if model.can_see_summary_stats}}
+      <div class="top-section stats-section">
+        <h3 class="stats-title">{{i18n "user.summary.stats"}}</h3>
+        <ul>
+          <li>
+            {{user-stat value=model.days_visited label="user.summary.days_visited"}}
+          </li>
+          <li>
+            {{user-stat value=timeRead label="user.summary.time_read" type="string"}}
+          </li>
+          {{#if showRecentTimeRead}}
+            <li>
+              {{user-stat value=recentTimeRead label="user.summary.recent_time_read" type="string"}}
+            </li>
+          {{/if}}
+          <li>
+            {{user-stat value=model.topics_entered label="user.summary.topics_entered"}}
+          </li>
+          <li>
+            {{user-stat value=model.posts_read_count label="user.summary.posts_read"}}
+          </li>
+          <li class="linked-stat">
+            {{#link-to "userActivity.likesGiven"}}
+              {{user-stat value=model.likes_given icon="heart" label="user.summary.likes_given"}}
+            {{/link-to}}
+          </li>
+          {{#if model.bookmark_count}}
+            <li class="linked-stat">
+              {{#link-to "userActivity.bookmarks"}}
+                {{user-stat value=model.bookmark_count label="user.summary.bookmark_count"}}
+              {{/link-to}}
+            </li>
+          {{/if}}
+          <li class="linked-stat">
+            {{#link-to "userActivity.topics"}}
+              {{user-stat value=model.topic_count label="user.summary.topic_count"}}
+            {{/link-to}}
+          </li>
+          <li class="linked-stat">
+            {{#link-to "userActivity.replies"}}
+              {{user-stat value=model.post_count label="user.summary.post_count"}}
+            {{/link-to}}
+          </li>
+          <li>
+            {{user-stat value=model.likes_received icon="heart" label="user.summary.likes_received"}}
+          </li>
+          {{plugin-outlet name="user-summary-stat" tagName="" connectorTagName="li" args=(hash model=model)}}
+        </ul>
+      </div>
+    {{/if}}
+
+    <div class="top-section">
+      {{#user-summary-section title="top_replies" class="replies-section pull-left"}}
+        {{#user-summary-topics-list type="replies" items=model.replies user=user as |reply|}}
+          {{user-summary-topic
+            createdAt=reply.createdAt
+            topic=reply.topic
+            likes=reply.like_count
+            url=reply.url}}
+        {{/user-summary-topics-list}}
+      {{/user-summary-section}}
+
+      {{#user-summary-section title="top_topics" class="topics-section pull-right"}}
+        {{#user-summary-topics-list type="topics" items=model.topics user=user as |topic|}}
+          {{user-summary-topic
+            createdAt=topic.created_at
+            topic=topic
+            likes=topic.like_count
+            url=topic.url}}
+        {{/user-summary-topics-list}}
+      {{/user-summary-section}}
+    </div>
+
+    <div class="top-section">
+      {{#user-summary-section title="top_links" class="links-section pull-left"}}
+        {{#if model.links.length}}
+          <ul>
+            {{!-- template-lint-disable --}}
+            {{#each model.links as |link|}}
+              <li>
+                <a class='domain'
+                   href={{link.url}}
+                   title={{link.title}}
+                   rel='noopener {{unless user.removeNoFollow 'nofollow ugc'}}'
+                   target='_blank'>
+                  {{shorten-url link.url}}
+                </a>
+                <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=link.clicks}}'>{{number link.clicks}}</span>
+                <br>
+                <a href="{{link.post_url}}">{{html-safe link.topic.fancyTitle}}</a>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <p>{{i18n "user.summary.no_links"}}</p>
+        {{/if}}
+      {{/user-summary-section}}
+
+      {{#user-summary-section title="most_replied_to_users" class="summary-user-list replied-section pull-right"}}
+        {{#user-summary-users-list none="no_replies" users=model.most_replied_to_users as |user|}}
+          {{user-summary-user user=user icon="reply" countClass="replies"}}
+        {{/user-summary-users-list}}
+      {{/user-summary-section}}
+    </div>
+
+    <div class="top-section most-liked-section">
+      {{#user-summary-section title="most_liked_by" class="summary-user-list liked-by-section pull-left"}}
+        {{#user-summary-users-list none="no_likes" users=model.most_liked_by_users as |user|}}
+          {{user-summary-user user=user icon="heart" countClass="likes"}}
+        {{/user-summary-users-list}}
+      {{/user-summary-section}}
+
+      {{#user-summary-section title="most_liked_users" class="summary-user-list liked-section pull-right"}}
+        {{#user-summary-users-list none="no_likes" users=model.most_liked_users as |user|}}
+          {{user-summary-user user=user icon="heart" countClass="likes"}}
+        {{/user-summary-users-list}}
+      {{/user-summary-section}}
+    </div>
+
+    {{#if model.top_categories.length}}
+      <div class="top-section top-categories-section">
+        {{#user-summary-section title="top_categories" class="summary-category-list pull-left"}}
+          <table>
+            <thead>
+              <th class="category-link"></th>
+              <th class="topic-count">{{i18n "user.summary.topics"}}</th>
+              <th class="reply-count">{{i18n "user.summary.replies"}}</th>
+            </thead>
+            <tbody>
+              {{#each model.top_categories as |category|}}
+                <tr>
+                  <td class="category-link">
+                    {{category-link category allowUncategorized="true" hideParent=false}}
+                  </td>
+                  <td class="topic-count">
+                    {{user-summary-category-search user=user category=category count=category.topic_count}}
+                  </td>
+                  <td class="reply-count">
+                    {{user-summary-category-search user=user category=category count=category.post_count}}
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        {{/user-summary-section}}
+      </div>
+    {{/if}}
+
+    {{#if siteSettings.enable_badges}}
+      <div class="top-section badges-section">
+        <h3 class="stats-title">{{i18n "user.summary.top_badges"}}</h3>
+        {{#each model.badges as |badge|}}
+          {{badge-card badge=badge count=badge.count username=user.username_lower}}
+        {{else}}
+          <p>{{i18n "user.summary.no_badges"}}</p>
+        {{/each}}
+        {{#if moreBadges}}
+          <p>{{#link-to "user.badges" user class="more"}}{{i18n "user.summary.more_badges"}}{{/link-to}}</p>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+{{/d-section}}

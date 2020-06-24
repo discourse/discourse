@@ -32,7 +32,7 @@ RSpec.describe Admin::SearchLogsController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json[0]['term']).to eq('ruby')
       expect(json[0]['searches']).to eq(1)
       expect(json[0]['ctr']).to eq(0)
@@ -67,7 +67,7 @@ RSpec.describe Admin::SearchLogsController do
 
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['term']['type']).to eq('search_log_term')
       expect(json['term']['search_result']).to be_present
     end

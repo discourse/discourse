@@ -3,12 +3,18 @@
 {{#if showVersionChecks}}
   <div class="section-top">
     <div class="version-checks">
-      {{partial "admin/templates/version-checks"}}
+      {{version-checks versionCheck=versionCheck tagName=""}}
     </div>
   </div>
 {{/if}}
 
-{{partial "admin/templates/dashboard-problems"}}
+{{dashboard-problems
+  loadingProblems=loadingProblems
+  foundProblems=foundProblems
+  problems=problems
+  problemsTimestamp=problemsTimestamp
+  refreshProblems=(action "refreshProblems")
+}}
 
 <ul class="navigation">
   <li class="navigation-item general">
@@ -16,21 +22,30 @@
       {{i18n "admin.dashboard.general_tab"}}
     {{/link-to}}
   </li>
-  <li class="navigation-item moderation">
-    {{#link-to "admin.dashboardModeration" class="navigation-link"}}
-      {{i18n "admin.dashboard.moderation_tab"}}
-    {{/link-to}}
-  </li>
-  <li class="navigation-item security">
-    {{#link-to "admin.dashboardSecurity" class="navigation-link"}}
-      {{i18n "admin.dashboard.security_tab"}}
-    {{/link-to}}
-  </li>
-  <li class="navigation-item reports">
-    {{#link-to "admin.dashboardReports" class="navigation-link"}}
-      {{i18n "admin.dashboard.reports_tab"}}
-    {{/link-to}}
-  </li>
+
+  {{#if isModerationTabVisible}}
+    <li class="navigation-item moderation">
+      {{#link-to "admin.dashboardModeration" class="navigation-link"}}
+        {{i18n "admin.dashboard.moderation_tab"}}
+      {{/link-to}}
+    </li>
+  {{/if}}
+
+  {{#if isSecurityTabVisible}}
+    <li class="navigation-item security">
+      {{#link-to "admin.dashboardSecurity" class="navigation-link"}}
+        {{i18n "admin.dashboard.security_tab"}}
+      {{/link-to}}
+    </li>
+  {{/if}}
+
+  {{#if isReportsTabVisible}}
+    <li class="navigation-item reports">
+      {{#link-to "admin.dashboardReports" class="navigation-link"}}
+        {{i18n "admin.dashboard.reports_tab"}}
+      {{/link-to}}
+    </li>
+  {{/if}}
 </ul>
 
 {{outlet}}

@@ -42,7 +42,6 @@ sw:
       git: "Tatizo limetokea wakati wa kunakili weko la git, hauna ruhusa au weko haijapatikana"
     settings_errors:
       invalid_yaml: "YAML iliyowekwa ni batili."
-      data_type_not_a_number: "Aina ya mpangilio `%{name}` hauruhusiwi. Aina zinazoruhusiwa ni `namba kamili`, `bool`, `orodha` na `enum`"
       name_too_long: "Kuna mpangilio wenye jina lefu sana. Kiwango cha juu cha urefu ni 255"
       default_value_missing: "Mpangilio wa `%{name}` hauna thamani"
       default_out_range: "Mpangilio `%{name}` chaguo-msingi haupo kwenye namba zilizotajwa."
@@ -169,9 +168,6 @@ sw:
   topics_in_category: "Mada ndani ya kategoria '%{category}'"
   rss_posts_in_topic: "Mlisho wavuti wa '%{topic}'"
   rss_topics_in_category: "Mlisho wavuti wa mada za kategoria '%{category}'"
-  author_wrote: "%{author} ameandika:"
-  num_posts: "Machapisho:"
-  num_participants: "Mshiriki:"
   read_full_topic: "Soma mada yote"
   private_message_abbrev: "Msg"
   rss_description:
@@ -194,6 +190,12 @@ sw:
   too_late_to_edit: "Chapisho lilitengenezwa kitambo sana. Haiwezi kufanyiwa uhariri au kufutwa."
   revert_version_same: "Toleo la sasa ni sawa na toleo unalo jaribu kurudisha."
   excerpt_image: "Picha"
+  bookmarks:
+    reminders:
+      later_today: "Baada ya mda leo"
+      tomorrow: "Kesho"
+      next_week: "Wiki Ijayo"
+      next_month: "Mwezi ujao"
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' sio kiwango cha uaminifu."
@@ -443,7 +445,7 @@ sw:
       title: "Haifai"
       long_form: "imeripotiwa kuwa haiko sawa"
     notify_user:
-      title: "Mtumie @{{username}} ujumbe"
+      title: "Mtumie @%{username} ujumbe"
       description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
       short_description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
       long_form: "mtumiaji aliepokea ujumbe"
@@ -772,7 +774,6 @@ sw:
     educate_until_posts: "Mtumiaji akianza kuandika machapisho mapya (n), onyesha paneli ya ufundishaji kwenye sehemu ya kuandika maneno."
     title: "jina kwenye tovuti, kama linalotumika kwenye kichwa cha lebo."
     site_description: "Elezea tovuti hii kwenye sentensi moja, kama ilivyo kwenye maelezo ya lebo ya meta"
-    download_remote_images_max_days_old: "Usipakue picha kutoka ufikivu kutoka mbali kwa ajili ya machapisho ambayo ni zaidi ya siku n."
     editing_grace_period: "Kwa sekundi (n) baada ya kuchapisha, uhariri hautatengeneza nakala mpya kwenye historia ya chapisho."
     staff_edit_locks_post: "Machapisho hayataweza kufanyiwa uhariri kama yakihaririwa na wafanyakazi"
     edit_history_visible_to_public: "Ruhusu kila mtu aone matoleo ya kabla ya chapisho lililofanyiwa uhariri. Ikisitishwa, wasaidizi tu wataweza kuona."
@@ -783,8 +784,6 @@ sw:
     onebox_domains_blacklist: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
     inline_onebox_domains_whitelist: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
-    summary_posts_required: "Kiwango cha chini cha machapisho ndani ya mada kabla 'Fupisha Mada' haijaonyeshwa"
-    summary_likes_required: "Kiwango cha chini cha likes ndani ya mada kabla 'Mada kufupishwa' haijaruhusiwa"
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
     enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
     enable_system_message_replies: "Waruhusu watumiaji wajibu ujumbe wa mfumo,hata kama ujumbe binafsi umezuiliwa."
@@ -818,7 +817,6 @@ sw:
     enable_instagram_logins: "Ruhusu Uhalalishaji wa Instagram, inahitaji instagram_consumer_key na instagram_consumer_secret"
     instagram_consumer_key: "Ufunguo wa uhalalishaji wa Mtumiaji kupitia Instagram"
     instagram_consumer_secret: "Uhalalishaji wa Siri wa Mtumiaji kupitia Instagram"
-    readonly_mode_during_backup: "Ruhusu hali-tumizi ya usomaji tu kipindi cha chelezo"
     enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
     allow_restore: "ruhusu urejeshaji, itabadilisha taarifa zote za tovuti! Acha iwe hapana, badilisha kama unataka kurejesha chelezo"
     maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
@@ -996,6 +994,10 @@ sw:
     errors:
       different_topics: "Machapisho kutoka mada tofauti hayawezi kuunganishwa."
       different_users: "Machapisho kutoka watumiaji tofauti hayawezi kuunganishwa."
+  publish_page:
+    slug_errors:
+      blank: "haiwezi kubaki wazi"
+      invalid: "ina herufi batili"
   topic_statuses:
     autoclosed_disabled: "Mada hii imefunguliwa. Majibu mapya yanaruhusiwa."
     autoclosed_disabled_lastpost: "Hii mada iko wazi. Majibu mapya yanakaribishwa."
@@ -1340,10 +1342,6 @@ sw:
     email_reject_bad_destination_address:
       title: "Barua Pepe Kataa Anwani ya Mpokeaji Sio Sawa"
       subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Haijulikani Inapoenda: Anwani"
-      text_body_template: |
-        Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
-
-        Barua pepe zote za kupokea ujumbe hazijulikani, au Utambulisho wa Kichwa cha Ujumbe kwenye barua pepe umebadilishwa. Tafadhali hakikisha unatuma kwenda kwa barua pepe zilizotolewa na wasaidizi wetu.
     email_reject_topic_not_found:
       title: "Barua Pepe Kataza Mada Hajapatikana"
       subject_template: "[%{email_prefix}] Tatizo la Barua Pepe -- Mada Haijapatikana"
@@ -1655,7 +1653,6 @@ sw:
       why: "Muhtasari Mfupi wa %{site_link} toka mara ya mwisho ulivyotembelea %{last_seen_at}"
       since_last_visit: "Kutoka mara ya mwisho ulivyotembelea"
       new_topics: "Mada Mpya"
-      unread_messages: "Ujumbe ambao Haujasomwa"
       unread_notifications: "Taarifa ambazo Hazijasomwa"
       liked_received: "Upendo Uliopokelewa"
       new_users: "Watumiaji Wapya"
@@ -1715,6 +1712,8 @@ sw:
       subject_template: "[%{email_prefix}] Thibitisha barua pepe mpya"
     confirm_old_email:
       title: "Thibitisha Barua pepe ya Zamani"
+      subject_template: "[%{email_prefix}] Thibitisha barua pepe ya sasa"
+    confirm_old_email_add:
       subject_template: "[%{email_prefix}] Thibitisha barua pepe ya sasa"
     notify_old_email:
       title: "Ijulishe Barua Pepe ya Zamani"
@@ -2040,7 +2039,6 @@ sw:
       name: Upendo wa Hali ya Juu
     crazy_in_love:
       name: Imejaa Upendo
-      description: Umetumia upendo 50 mara 20 ndani ya siku moja
     thank_you:
       name: Asante
       description: ana upendo 20 kwenye machapisho na ametoa upendo 10
@@ -2203,6 +2201,12 @@ sw:
   joined: "Alijiunga"
   discourse_push_notifications:
     popup:
+      mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'
+      group_mentioned: '%{jina la mtumiaji} amekutaja kwenye "%{mada}" - %{jina la_tovuti}'
+      quoted: '%{jina la mtumiaji} amekunukulu kwenye "%{mada}" - %{jina la_tovuti}'
+      replied: '%{jina la mtumiaji} amekujibu kwenye "%{mada}" - %{jina la_tovuti}'
+      posted: '%{jina la mtumiaji} amechapisha kwenye "%{mada}" - %{jina la_tovuti}'
+      linked: '%{jina la mtumiaji} ametengeneza kiungo kutoka kwenye "%{mada}" - %{jina la_tovuti}'
       confirm_title: "Taarifa mubashara zimewezeshwa - %{site_title}"
       confirm_body: "Taarifa mubashara zimewezeshwa kikamilifu"
   reviewables:

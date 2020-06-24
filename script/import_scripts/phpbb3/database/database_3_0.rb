@@ -83,7 +83,7 @@ module ImportScripts::PhpBB3
           CASE WHEN u.user_type = #{Constants::USER_TYPE_IGNORE} THEN p.post_username ELSE NULL END post_username
         FROM #{@table_prefix}posts p
           JOIN #{@table_prefix}topics t ON (p.topic_id = t.topic_id)
-          JOIN #{@table_prefix}users u ON (p.poster_id = u.user_id)
+          LEFT OUTER JOIN #{@table_prefix}users u ON (p.poster_id = u.user_id)
         WHERE p.post_id > #{last_post_id}
         ORDER BY p.post_id
         LIMIT #{@batch_size}

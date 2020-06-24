@@ -78,7 +78,7 @@ module Oneboxer
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(string_or_doc, extra_paths: [])
     doc = string_or_doc
-    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
 
     onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
     if onebox_links.present?
@@ -94,14 +94,14 @@ module Oneboxer
 
   def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc
-    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
     changed = false
 
     each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
 
       if onebox
-        parsed_onebox = Nokogiri::HTML::fragment(onebox)
+        parsed_onebox = Nokogiri::HTML5::fragment(onebox)
         next unless parsed_onebox.children.count > 0
 
         if element&.parent&.node_name&.downcase == "p" &&
@@ -219,9 +219,7 @@ module Oneboxer
       end
     end
 
-    topic = Topic.find_by(id: route[:topic_id])
-
-    return unless topic
+    return unless topic = Topic.find_by(id: route[:id] || route[:topic_id])
     return if topic.private_message?
 
     if current_category.blank? || current_category.id != topic.category_id
@@ -261,7 +259,7 @@ module Oneboxer
         quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")
+      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.mustache")
       Mustache.render(template, args)
     end
   end
@@ -287,7 +285,7 @@ module Oneboxer
         original_url: url
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.hbs")
+      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.mustache")
       Mustache.render(template, args)
     else
       nil
@@ -315,7 +313,8 @@ module Oneboxer
 
       options = {
         max_width: 695,
-        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX
+        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
+        hostname: GlobalSetting.hostname,
       }
 
       options[:cookie] = fd.cookie if fd.cookie

@@ -3,18 +3,29 @@ pre-commit:
   commands:
     rubocop:
       glob: "*.rb"
-      run: bundle exec rubocop {staged_files}
-    eslint:
+      run: bundle exec rubocop --parallel {staged_files}
+    prettier:
       glob: "*.{js,es6}"
       exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
+      run: yarn prettier --list-different {staged_files}
+    eslint-es6:
+      glob: "*.es6"
+      exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
       run: yarn eslint --ext .es6 -f compact {staged_files}
+    eslint-js:
+      glob: "*.js"
+      exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
+      run: yarn eslint -f compact {staged_files}
     ember-template-lint:
-      run: yarn run ember-template-lint app
+      run: yarn run ember-template-lint {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
       # database.yml is an erb file not a yaml file
       exclude: "database.yml"
       run: bundle exec yaml-lint {staged_files}
+    i18n-lint:
+      glob: "**/{client,server}.en.yml"
+      run: bundle exec ruby script/i18n_lint.rb {staged_files}
 
 commands: &commands
   bundle-install:
@@ -43,13 +54,18 @@ lints:
     prettier:
       glob: "{app/assets/stylesheets/**/*.scss,app/assets/javascripts/**/*.es6,test/javascripts/**/*.es6}"
       run: yarn prettier --list-different {all_files}
-    eslint-assets:
+    eslint-assets-es6:
       run: yarn eslint --ext .es6 app/assets/javascripts
+    eslint-assets-js:
+      run: yarn eslint app/assets/javascripts
     eslint-test:
       run: yarn eslint --ext .es6 test/javascripts
     eslint-plugins-assets:
-      run: yarn eslint --ext .es6 plugins/**/assets/javascripts
+      run: yarn eslint --global I18n --ext .es6 plugins/**/assets/javascripts
     eslint-plugins-test:
-      run: yarn eslint --ext .es6 plugins/**/test/javascripts
+      run: yarn eslint --global I18n --ext .es6 plugins/**/test/javascripts
     eslint-assets-tests:
       run: yarn eslint app/assets/javascripts test/javascripts
+    i18n-lint:
+      glob: "**/{client,server}.en.yml"
+      run: bundle exec ruby script/i18n_lint.rb {all_files}

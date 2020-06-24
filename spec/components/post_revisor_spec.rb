@@ -6,7 +6,7 @@ require 'post_revisor'
 describe PostRevisor do
 
   fab!(:topic) { Fabricate(:topic) }
-  fab!(:newuser) { Fabricate(:newuser) }
+  fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
@@ -138,7 +138,7 @@ describe PostRevisor do
         expect(post.version).to eq(1)
         expect(post.public_version).to eq(1)
         expect(post.revisions.size).to eq(0)
-        expect(post.last_version_at).to eq(first_version_at)
+        expect(post.last_version_at).to eq_time(first_version_at)
         expect(subject.category_changed).to be_blank
       end
 
@@ -196,6 +196,19 @@ describe PostRevisor do
           subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
         }.to change { post.topic.bumped_at }
       end
+
+      it "should send muted and latest message" do
+        TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
+        messages = MessageBus.track_publish("/latest") do
+          subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
+        end
+
+        muted_message = messages.find { |message| message.data["message_type"] == "muted" }
+        latest_message = messages.find { |message| message.data["message_type"] == "latest" }
+
+        expect(muted_message.data["topic_id"]).to eq(topic.id)
+        expect(latest_message.data["topic_id"]).to eq(topic.id)
+      end
     end
 
     describe 'edit reasons' do
@@ -209,6 +222,7 @@ describe PostRevisor do
       end
 
       it "resets the edit_reason attribute in post model" do
+        freeze_time
         SiteSetting.editing_grace_period = 5
         post = Fabricate(:post, raw: 'hello world')
         revisor = PostRevisor.new(post)
@@ -216,7 +230,7 @@ describe PostRevisor do
         post.reload
         expect(post.edit_reason).to eq('this is my reason')
 
-        revisor.revise!(post.user, { raw: 'hello world4321' }, revised_at: post.updated_at + 6.second)
+        revisor.revise!(post.user, { raw: 'hello world4321' }, revised_at: post.updated_at + 7.seconds)
         post.reload
         expect(post.edit_reason).not_to be_present
       end

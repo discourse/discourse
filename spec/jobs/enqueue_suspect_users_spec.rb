@@ -39,5 +39,46 @@ describe Jobs::EnqueueSuspectUsers do
 
       expect(score.reason).to eq('suspect_user')
     end
+
+    it 'only enqueues non-approved users' do
+      suspect_user.update!(approved: true)
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
+    it 'does nothing if must_approve_users is set to true' do
+      SiteSetting.must_approve_users = true
+      suspect_user.update!(approved: false)
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
+    it 'ignores users created more than six months ago' do
+      suspect_user.update!(created_at: 1.year.ago)
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
+    it 'ignores users that were imported from another site' do
+      suspect_user.upsert_custom_fields({ import_id: 'fake_id' })
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
+
+    it 'enqueues a suspect users with custom fields' do
+      suspect_user.upsert_custom_fields({ field_a: 'value', field_b: 'value' })
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(true)
+    end
   end
 end

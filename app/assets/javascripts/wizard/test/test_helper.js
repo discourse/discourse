@@ -1,15 +1,18 @@
+// discourse-skip-module
 /*global document, sinon, Logster, QUnit */
 
 //= require env
 //= require jquery.debug
 //= require ember.debug
+//= require locales/i18n
+//= require locales/en_US
 //= require discourse-loader
 //= require jquery.debug
 //= require handlebars
 //= require ember-template-compiler
 //= require qunit/qunit/qunit
 //= require ember-qunit
-//= require ember-shim
+//= require discourse-shims
 //= require wizard-application
 //= require wizard-vendor
 //= require helpers/assertions
@@ -17,7 +20,6 @@
 //= require_tree ./acceptance
 //= require_tree ./models
 //= require_tree ./components
-//= require locales/en_US
 //= require fake_xml_http_request
 //= require route-recognizer/dist/route-recognizer
 //= require pretender/pretender

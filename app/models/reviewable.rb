@@ -406,7 +406,7 @@ class Reviewable < ActiveRecord::Base
   def self.viewable_by(user, order: nil, preload: true)
     return none unless user.present?
 
-    result = self.order(order || 'score desc, created_at desc')
+    result = self.order(order || 'reviewables.score desc, reviewables.created_at desc')
 
     if preload
       result = result.includes(
@@ -422,10 +422,10 @@ class Reviewable < ActiveRecord::Base
     group_ids = SiteSetting.enable_category_group_review? ? user.group_users.pluck(:group_id) : []
 
     result.where(
-      '(reviewable_by_moderator AND :staff) OR (reviewable_by_group_id IN (:group_ids))',
+      '(reviewables.reviewable_by_moderator AND :staff) OR (reviewables.reviewable_by_group_id IN (:group_ids))',
       staff: user.staff?,
       group_ids: group_ids
-    ).where("category_id IS NULL OR category_id IN (?)", Guardian.new(user).allowed_category_ids)
+    ).where("reviewables.category_id IS NULL OR reviewables.category_id IN (?)", Guardian.new(user).allowed_category_ids)
   end
 
   def self.pending_count(user)
@@ -450,14 +450,14 @@ class Reviewable < ActiveRecord::Base
     min_score = Reviewable.min_score_for_priority(priority)
 
     order = case sort_order
-            when 'priority_asc'
-              'score ASC, created_at DESC'
+            when 'score_asc'
+              'reviewables.score ASC, reviewables.created_at DESC'
             when 'created_at'
-              'created_at DESC, score DESC'
+              'reviewables.created_at DESC, reviewables.score DESC'
             when 'created_at_asc'
-              'created_at ASC, score DESC'
+              'reviewables.created_at ASC, reviewables.score DESC'
             else
-              'score DESC, created_at DESC'
+              'reviewables.score DESC, reviewables.created_at DESC'
     end
 
     if username.present?
@@ -469,16 +469,19 @@ class Reviewable < ActiveRecord::Base
     result = viewable_by(user, order: order)
 
     result = by_status(result, status)
-    result = result.where(type: type) if type
-    result = result.where(category_id: category_id) if category_id
-    result = result.where(topic_id: topic_id) if topic_id
-    result = result.where("created_at >= ?", from_date) if from_date
-    result = result.where("created_at <= ?", to_date) if to_date
+    result = result.where('reviewables.type = ?', type) if type
+    result = result.where('reviewables.category_id = ?', category_id) if category_id
+    result = result.where('reviewables.topic_id = ?', topic_id) if topic_id
+    result = result.where("reviewables.created_at >= ?", from_date) if from_date
+    result = result.where("reviewables.created_at <= ?", to_date) if to_date
 
     if min_score > 0 && status == :pending && type.nil?
-      result = result.where("score >= ? OR type = ?", min_score, ReviewableQueuedPost.name)
+      result = result.where(
+        "reviewables.score >= ? OR reviewables.type IN (?)",
+        min_score, [ReviewableQueuedPost.name, ReviewableUser.name]
+      )
     elsif min_score > 0
-      result = result.where("score >= ?", min_score)
+      result = result.where("reviewables.score >= ?", min_score)
     end
 
     if !custom_filters.empty?
@@ -494,7 +497,8 @@ class Reviewable < ActiveRecord::Base
     # If a reviewable doesn't have a target, allow us to filter on who created that reviewable.
     if user_id
       result = result.where(
-        "(target_created_by_id IS NULL AND created_by_id = :user_id) OR (target_created_by_id = :user_id)",
+        "(reviewables.target_created_by_id IS NULL AND reviewables.created_by_id = :user_id)
+        OR (reviewables.target_created_by_id = :user_id)",
         user_id: user_id
       )
     end
@@ -531,10 +535,18 @@ class Reviewable < ActiveRecord::Base
     ReviewableScore.joins(reviewable: :topic).where("reviewables.type = ?", name)
   end
 
-  def self.count_by_date(start_date, end_date, category_id = nil)
-    scores_with_topics
-      .where('reviewable_scores.created_at BETWEEN ? AND ?', start_date, end_date)
-      .where("topics.category_id = COALESCE(?, topics.category_id)", category_id)
+  def self.count_by_date(start_date, end_date, category_id = nil, include_subcategories = false)
+    query = scores_with_topics.where('reviewable_scores.created_at BETWEEN ? AND ?', start_date, end_date)
+
+    if category_id
+      if include_subcategories
+        query = query.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
+      else
+        query = query.where("topics.category_id = ?", category_id)
+      end
+    end
+
+    query
       .group("date(reviewable_scores.created_at)")
       .order('date(reviewable_scores.created_at)')
       .count

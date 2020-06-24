@@ -16,6 +16,7 @@ fa_IR:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, ژانویه, فوریه, مارچ, آپریل, می, جون, جولای, آگوست, سپتامبر, اکتبر, نوامبر, دسامبر]
     <<: *datetime_formats
@@ -44,7 +45,6 @@ fa_IR:
       unrecognized_extension: "پرونده افزونه شناسایی نشد:%{extension}"
     import_error:
       generic: خطایی در هنگام وارد کردن پوسته اتفاق افتاده
-      about_json: "خطا در وارد کردن: about.json وجود ندارد یا نامعتبر است"
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
   emails:
@@ -195,9 +195,6 @@ fa_IR:
   topics_in_category: "موضوعات دسته‌بندی '%{category}'"
   rss_posts_in_topic: "خوراک '%{topic}'"
   rss_topics_in_category: "خوارک موضوعات دسته‌‌بندی '%{category}'"
-  author_wrote: "%{author} نوشت:"
-  num_posts: "فرسته‌ها:"
-  num_participants: "شرکت کنندگان :"
   read_full_topic: "مشاهده متن کامل موضوع"
   private_message_abbrev: "پیام"
   rss_description:
@@ -219,6 +216,15 @@ fa_IR:
   too_late_to_edit: "آن فرسته خیلی وقت پیش ساخته شده. دیگر امکان ویرایش یا حذف آن وجود ندارد."
   revert_version_same: "نسخه فعلی همان نسخه‌ای است که می‌خواهید به آن برگردید."
   excerpt_image: "تصویر"
+  bookmarks:
+    reminders:
+      at_desktop: "بار آینده من پشت میزم هستم"
+      later_today: "امروز"
+      next_business_day: "روز کاری بعدی"
+      tomorrow: "فردا"
+      next_week: "هفته بعد"
+      next_month: "ماه بعد"
+      custom: "درج تاریخ و ساعت"
   groups:
     errors:
       can_not_modify_automatic: "نمی‌توانید گروه‌های خودکار را تغییر دهید."
@@ -522,7 +528,7 @@ fa_IR:
       title: "نامناسب"
       long_form: "به عنوان نامناسب علامت گذاری شده"
     notify_user:
-      title: "فرستادن پیام به @{{username}}"
+      title: "فرستادن پیام به @%{username}"
       long_form: "به کاربر پیام داده شد"
       email_title: 'فرسته‌ی شما در « %{title} »'
       email_body: "%{link}\n\n%{message}"
@@ -859,7 +865,6 @@ fa_IR:
     crawl_images: "بازیابی تصاویر از URL‌های خارجی برای وارد کردن طول و عرض صحیح. "
     download_remote_images_to_local: "تبدیل عکس‌های خارجی به عکس های محلی با دانلود کردن آنها، این مانع از شکستن عکس‌ها می شود."
     download_remote_images_threshold: "حداقل فضای دیسک مورد نیاز برای دانلود عکس‌های خارجی به هاست (به درصد)"
-    download_remote_images_max_days_old: "تصاویر خارجی را برای فرسته‌های قدیمی‌تر از n روز بارگیری نکن."
     disabled_image_download_domains: "عکس‌های خارجی هرگز از این دامنه‌ها دانلود نخواهند شد. لیست Pipe-delimited"
     editing_grace_period: "ویرایش کردن تا (n) ثانیه بعد از ارسال فرسته، نسخه جدیدی در تاریخچه ایجاد نمی‌کند."
     edit_history_visible_to_public: "به همه اجازه بده تا نسخه قبلی نوشته ویرایش شده را ببینند. وقتی غیر‌فعال است٬ فقی اعضای همکار می‌توانند ببینند."
@@ -880,8 +885,6 @@ fa_IR:
     force_https: "اجبار به استفاده از HTTPS ، تا زمانی که HTTPS را کامل تنظیم نکرده‌اید این گزینه را فعال نکنید. آیا تمام CDN ها و شبکه‌های اجتماعی جهت ورود را بررسی کردید و تمام لوگو‌ها و وابستگی‌ها بدون مشکل با HTTPS کار می‌کنند؟"
     same_site_cookies: "استفاده از همان کوکی ها، آن‌ها از تمام درخواست های vector cross site جلوگیری می‌کنند(Lax یا Strict). توجه: این کار سختگیرانه فقط در سایت‌هایی که ورود اجباری دارند و از SSO استفاده می‌کنند قابل استفاده است."
     summary_score_threshold: "حداقل امتیاز برای یک نوشته که بتواند شامل \" خلاصه این موضوع\" شود"
-    summary_posts_required: "حداقل نوشته‌ها در این جستار قبل از اینکه \" خلاصه این موضوع\" فعال شود"
-    summary_likes_required: "حداقل پسندها در این جستار قبل از اینکه \" خلاصه این موضوع\" فعال شود"
     summary_percent_filter: "وقتی کاربر بر روی ' خلاصه این موضوع' کلیک کرد٬‌ % بهترین نوشته‌ها را نشان بده"
     enable_personal_messages: "اجازه ارسال پیام به کاربران سطح اعتماد 1 (قابل تنظیم با حداقل سطح اعتماد برای ارسال پیام). توجه کنید که همکاران در هر شرایطی می‌توانند پیام ارسال کنند."
     enable_long_polling: "message bus استفاده شده برای آگاه سازی می تواند برای رای گیری طولانی استفاده شود. "
@@ -951,12 +954,10 @@ fa_IR:
     enable_instagram_logins: "فعالسازی ورود با اینستاگرام، نیازمند \ninstagram_consumer_key and instagram_consumer_secret"
     instagram_consumer_key: "Consumer key اینستاگرام"
     instagram_consumer_secret: "Consumer secret اینستاگرام"
-    readonly_mode_during_backup: "فعالسازی حالت فقط خواندنی برای گرفتن نسخه پشتیبان"
     allow_restore: "اجازه بازیابی بده، که می‌تواند تمام اطلاعات سایت را جایگزین کند! نادرست را رها کن مگر اینکه قصد بازیابی نسخه پشتیبان را داری "
     maximum_backups: "حداکثر تعداد پشتیبان برای نگه داری بر روی دیسک. نسخه های پشتیبان قدیمی بطور خودکار پاک شده است"
     automatic_backups_enabled: "فعالسازی پشتیبان‌گیری خودکار در بازه زمانی مشخص"
     s3_backup_bucket: "میزبان راه‌دور برای نگهداری از نسخه‌های پشتیبان. اخطار: مطمئن شوید که میزبان خصوصی است. "
-    s3_disable_cleanup: "غیر‌فعال‌سازی حذف نسخه پشتیبان از S3 وقتی در هاست حذف می‌شود."
     backup_time_of_day: "زمان UTC روز برای رخ دادن نسخه پشتیبان."
     backup_with_uploads: "قراردادن فایل های بارگذاری شده در نسخه های پشتیبان. غیر فعال کردن این بخش باعث تهیه نسخه پشتیبان از دیتابیس می‌شود."
     active_user_rate_limit_secs: "چگونه فیلد 'last_seen_at' را به روز کنیم، واحد ثانیه "
@@ -1048,12 +1049,10 @@ fa_IR:
     desktop_category_page_style: "سبک بصری برای صفحه‌ی دسته‌بندی"
     category_colors: "لیست مقادیر رنگ هگزا دسیمال مجاز برای دسته‌بندی‌ها."
     category_style: "سبک بصری برای نشان دسته‌بندی"
-    max_image_size_kb: "حداکثر سایز عکس بارگزاری شده با واحد کیلوبایت. این باید در پیکربندی nginx باشد (client_max_body_size) / همچنین apache یا proxy."
     max_attachment_size_kb: "حداکثر سایز فایل پیوست شده به واحد کیلوبایت. این باید در پیکربندی nginx باشد (client_max_body_size) / همچنین apache یا proxy."
     authorized_extensions: "لیست پسوند‌های مجاز فایل برای بارگذاری ( از '*' برای اجازه به تمام فایل‌ها استفاده کنید)"
     theme_authorized_extensions: "لیست پسوند‌های قابل بارگذاری برای قالب (از '*' برای اجازه به تمامی فایل‌ها استفاده کنید)"
     max_similar_results: "چند موضوع مشابه زیر ویرایشگر وقتی که موضوع جدید ایجاد می شود، نمایش داده شود. مقایسه بر اساس عنوان و متن است. "
-    max_image_megapixels: "حداکثر اندازه تصاویر با واحد مگاپیکسل."
     title_prettify: "از غلط های املایی و اشتباهات رایج جلوگیری کن٬ از جمله همه حروف بزرگ٬‌ حرف کوچک اولین کاراکتر، ! و ؟ چندگانه . اضافه در پایان و غیره."
     topic_views_heat_low: "بعد از این تعداد بازدید، فیلد تعداد بازدید بسیار پر‌رنگ می‌شود."
     topic_views_heat_medium: "بعد از این تعداد بازدید، فیلد تعداد بازدید پر‌رنگ می‌شود."
@@ -1251,6 +1250,7 @@ fa_IR:
       category: "دسته‌ها"
       topic: "نتایج"
       user: "کاربران"
+    results_page: "نتایج جستجو برای '%{term}'"
   sso:
     login_error: "خطا در ورود"
     not_found: "حساب کاربری پیدا نشد. لطفا با مدیریت سایت تماس بگیرید."
@@ -1283,6 +1283,10 @@ fa_IR:
     existing_topic_moderator_post:
       one: "یک نوشته به مبحث موجود منتقل شد: %{topic_link}"
       other: "%{count} نوشته به مبحث موجود منتقل شد: %{topic_link}"
+  publish_page:
+    slug_errors:
+      blank: "نمی‌تواند خالی باشد"
+      invalid: "شامل نویسه‌های نامعتبر است"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "این پیام بعد از رسیدن به حداکثر تعداد پاسخ‌ها %{count} بسته شد."
@@ -1330,6 +1334,7 @@ fa_IR:
     autoclosed_disabled_lastpost: "این موضوع در حال حاضر باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
     auto_deleted_by_timer: "به صورت خودکار توسط زمان‌سنج حذف شده."
   login:
+    security_key_alternative: "روش دیگری را امتحان کنید"
     security_key_authenticate: "تأیید اعتبار با کلید امنیتی"
     security_key_not_allowed_error: "مراحل تأیید اعتبار کلید امنیتی به پایان رسیده است یا لغو شده است."
     not_approved: "حساب کاربری شما هنوز تایید نشده است. وقتی شما آماده ورود به سیستم شوید به شما اطلاع داده می شود."
@@ -1835,7 +1840,6 @@ fa_IR:
       why: "یک گزارش کوتاه از %{site_link} از آخرین باری که بازدید کردید در %{last_seen_at}"
       since_last_visit: "از آخرین بازدید شما"
       new_topics: "موضوعات جدید"
-      unread_messages: "پیام‌های خوانده نشده"
       unread_notifications: "اطلاعیه‌های خوانده نشده"
       liked_received: "پسند‌های دریافت شده"
       new_users: "کاربران جدید"
@@ -1883,6 +1887,8 @@ fa_IR:
       subject_template: "[%{email_prefix}] ایمیل جدیدتان را تایید کنید"
     confirm_old_email:
       title: "تایید ایمیل قبلی"
+      subject_template: "[%{email_prefix}] ایمیل فعلی خود را تایید کنید"
+    confirm_old_email_add:
       subject_template: "[%{email_prefix}] ایمیل فعلی خود را تایید کنید"
     notify_old_email:
       title: "اعلام ایمیل قبلی"
@@ -2102,7 +2108,6 @@ fa_IR:
       name: مهرورز
     crazy_in_love:
       name: الهه‌ی مهر
-      description: در 20 روز، روزانه 50 نوشته را پسندیده است.
     thank_you:
       name: سپاس‌گزاریم
       description: 20 نوشته پسندیده شده دارد و 10 نوشته را پسندیده است.
@@ -2260,8 +2265,16 @@ fa_IR:
   joined: "ملحق شده"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'
+      group_mentioned: '%{username} در "%{topic}" - %{site_title} به شما اشاره کرد'
+      quoted: '%{username} از شما در "%{topic}" - %{site_title} نقل قول کرد '
+      replied: '%{username} در "%{topic}" - %{site_title} به شما پاسخ داد'
+      posted: '%{username} در "%{topic}" - %{site_title} مطلبی نوشت'
+      linked: '%{username} در "%{topic}" - %{site_title} به نوشته‌ی شما پیوندی قرار داد'
+      watching_first_post: '%{username} یک مبحث جدید در "%{topic}" - %{site_title} ساخته'
       confirm_title: "اعلانات فعال شد - %{site_title}"
       confirm_body: "موفق شدید. اگاهسازی‌ها فعال شدند."
+      custom: "اعلان از طرف %{username} بر روی %{site_title}"
   reviewables:
     priorities:
       low: "کم"

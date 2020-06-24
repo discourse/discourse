@@ -106,7 +106,7 @@ describe PostSerializer do
   end
 
   context "a hidden post with add_raw enabled" do
-    let(:user) { Fabricate.build(:user, id: 101) }
+    let(:user) { Fabricate.build(:user, id: -99999) }
     let(:raw)  { "Raw contents of the post." }
 
     context "a public post" do
@@ -235,32 +235,12 @@ describe PostSerializer do
       s
     end
 
-    context "when a user post action for the bookmark exists" do
-      before do
-        PostActionCreator.create(current_user, post, :bookmark)
-      end
-
-      it "returns true" do
-        expect(serialized.as_json[:bookmarked]).to eq(true)
-      end
-    end
-
-    context "when a user post action for the bookmark does not exist" do
-      it "does not return the bookmarked attribute" do
-        expect(serialized.as_json.key?(:bookmarked)).to eq(false)
-      end
-    end
-
     context "when a Bookmark record exists for the user on the post" do
       let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: current_user, post: post) }
 
-      context "when the site setting for bookmarks with reminders is enabled" do
-        before do
-          SiteSetting.enable_bookmarks_with_reminders = true
-        end
-
+      context "bookmarks with reminders" do
         it "returns true" do
-          expect(serialized.as_json[:bookmarked_with_reminder]).to eq(true)
+          expect(serialized.as_json[:bookmarked]).to eq(true)
         end
 
         it "returns the reminder_at for the bookmark" do
@@ -270,19 +250,9 @@ describe PostSerializer do
         context "if topic_view is blank" do
           let(:topic_view) { nil }
 
-          it "does not return the bookmarked_with_reminder attribute" do
-            expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
+          it "does not return the bookmarked attribute" do
+            expect(serialized.as_json.key?(:bookmarked)).to eq(false)
           end
-        end
-      end
-
-      context "when the site setting for bookmarks with reminders is disabled" do
-        it "does not return the bookmarked_with_reminder attribute" do
-          expect(serialized.as_json.key?(:bookmarked_with_reminder)).to eq(false)
-        end
-
-        it "does not return the bookmark_reminder_at attribute" do
-          expect(serialized.as_json.key?(:bookmark_reminder_at)).to eq(false)
         end
       end
     end

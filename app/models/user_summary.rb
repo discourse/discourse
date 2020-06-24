@@ -112,15 +112,16 @@ class UserSummary
     @user.id
   end
 
+  def user
+    @user
+  end
+
   def user_stat
     @user.user_stat
   end
 
   def bookmark_count
-    UserAction
-      .where(user: @user)
-      .where(action_type: UserAction::BOOKMARK)
-      .count
+    Bookmark.where(user: @user).count
   end
 
   def recent_time_read

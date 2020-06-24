@@ -1,0 +1,42 @@
+<div>
+  <ul class="nav nav-pills">
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="general"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="security"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="settings"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="images"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab tab="topic-template"}}
+    {{#if siteSettings.tagging_enabled}}
+      {{edit-category-tab panels=panels selectedTab=selectedTab tab="tags"}}
+    {{/if}}
+  </ul>
+
+  {{#d-modal-body}}
+    {{#each panels as |tab|}}
+      {{component tab selectedTab=selectedTab category=model registerValidator=(action "registerValidator")}}
+    {{/each}}
+  {{/d-modal-body}}
+
+  <div class="modal-footer">
+    {{d-button id="save-category" class="btn-primary" disabled=disabled action=(action "saveCategory") label=saveLabel}}
+
+    {{#if model.can_delete}}
+      {{d-button class="btn-danger pull-right"
+                 disabled=deleteDisabled
+                 action=(action "deleteCategory")
+                 icon="far-trash-alt"
+                 label="category.delete"}}
+    {{else if model.id}}
+      <div class="disable_info_wrap">
+        {{d-button disabled=deleteDisabled
+                   class="btn-default disable-no-hover"
+                   action=(action "toggleDeleteTooltip")
+                   icon="question-circle"
+                   label="category.delete"}}
+
+        <div class="cannot_delete_reason {{if hiddenTooltip "hidden" ""}}">
+          {{html-safe model.cannot_delete_reason}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="modal-outer-container">
+  <div class="modal-middle-container">
+    <div class="modal-inner-container">
+      <div class="modal-header">
+        {{#if dismissable}}
+          {{d-button icon="times" action=(route-action "closeModal" "initiatedByCloseButton") class="btn-flat modal-close close" title="modal.close"}}
+        {{/if}}
+
+        {{#if panels}}
+          <ul class="modal-tabs">
+            {{#each panels as |panel|}}
+              {{modal-tab
+                panel=panel
+                panelsLength=panels.length
+                selectedPanel=selectedPanel
+                onSelectPanel=onSelectPanel}}
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class="title">
+            <h3>{{title}}</h3>
+
+            {{#if subtitle}}
+              <p>{{subtitle}}</p>
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
+
+      <div id="modal-alert"></div>
+
+      {{yield}}
+
+      {{#each errors as |error|}}
+        <div class="alert alert-error">
+          <button type="button" class="close" data-dismiss="alert" aria-label={{i18n "modal.dismiss_error"}}>×</button>
+          {{error}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div>

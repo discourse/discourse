@@ -45,7 +45,6 @@ ca:
       unrecognized_extension: "Extensió de fitxer no reconeguda: %{extension}"
     import_error:
       generic: Hi ha hagut un error important l'aparença.
-      about_json: "Error d'importació: about.json no existeix o no és vàlid"
       about_json_values: "about.json conté valors no vàlids: %{errors}"
       git: "S'ha produït un error clonant el dipòsit git, s'ha denegat l'accés o no s'ha trobat el dipòsit."
       unpack_failed: "Error en desempaquetar el fitxer"
@@ -58,7 +57,6 @@ ca:
       no_multilevels_components: "Les aparences amb aparences filla no poden ser elles mateixes aparences  filles."
     settings_errors:
       invalid_yaml: "El YAML proveït no és vàlid"
-      data_type_not_a_number: "El paràmetre de tipus `%{name}` no és admès. Els tipus admesos són `integer`, `bool`, `list` i `enum`."
       name_too_long: "Hi ha un paràmetre amb un nom massa llarg. La longitud màxima és 255."
       default_value_missing: "El paràmetre `%{name}` no té un valor per defecte."
       default_not_match_type: "El tipus del valor per defecte del paràmetre `%{name}` no coincideix amb el tipus del paràmetre."
@@ -290,9 +288,6 @@ ca:
   topics_in_category: "Temes en la categoria '%{category}' "
   rss_posts_in_topic: "Sindicació RSS del tema '%{topic}'"
   rss_topics_in_category: "Sindicació RSS de temes de la categoria '%{category}' "
-  author_wrote: "%{author} ha escrit:"
-  num_posts: "Publicacions:"
-  num_participants: "Participants:"
   read_full_topic: "Llegeix tot el tema"
   private_message_abbrev: "Missatge"
   rss_description:
@@ -316,6 +311,12 @@ ca:
   edit_conflict: "Aquesta publicació ha estat editada per un altre usuari i els vostres canvis no es poden desar."
   revert_version_same: "La versió actual és la mateixa que la versió que intenteu revertir."
   excerpt_image: "imatge"
+  bookmarks:
+    reminders:
+      later_today: "Més tard avui"
+      tomorrow: "Demà"
+      next_week: "La setmana que ve"
+      next_month: "El mes que ve"
   groups:
     success:
       bulk_add:
@@ -345,7 +346,6 @@ ca:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Sol·licitud d'afiliació a @%{group_name}"
-      handle: "gestiona la sol·licitud d'afiliació"
     view_hidden_topic_request_reason: "Voldria unir-me al grup '%{group_name}' de manera que tingui accés a [aquest tema](%{topic_url})"
   education:
     until_posts:
@@ -387,12 +387,6 @@ ca:
       Podeu editar la vostra darrera resposta per a afegir una citació. Per a fer-ho, seleccioneu text i premeu el botó de <b>cita resposta</b> que apareixerà.
 
       És més fàcil seguir un tema quan té poques respostes en profunditat que no pas moltes respostes curtes i individuals.
-    dominating_topic: |
-      ### Deixeu que altres s'afegeixin a la conversa
-
-      Aquest tema us resulta clarament important. Heu publicat més del %{percent}% de les respostes aquí.
-
-      Encara seria millor si deixéssiu temps a altres persones per a compartir els seus punts de vista. Els podeu convidar?
     get_a_room: |
       ### Anima tothom a participar en la conversa
 
@@ -723,7 +717,6 @@ ca:
     confirm: "Confirma"
     authorizing_new:
       title: "Confirmeu la vostra nova adreça electrònica"
-      description: "Confirmeu que voleu canviar la vostra nova adreça de correu electrònic a:"
     authorizing_old:
       title: "Canvieu la vostra adreça de correu electrònic"
       description: "Confirmeu el canvi d’adreça electrònica"
@@ -771,7 +764,7 @@ ca:
       short_description: 'Una violació de les <a href="%{base_path}/guidelines">directrius de la nostra comunitat</a>'
       long_form: "marcat amb bandera com a inapropiat"
     notify_user:
-      title: "Envia un missatge a @{{username}}"
+      title: "Envia un missatge a @%{username}"
       description: "Vull parlar amb aquesta persona directament i personalment sobre la seva publicació."
       short_description: "Vull parlar amb aquesta persona directament i personalment sobre la seva publicació."
       long_form: "usuari contactat"
@@ -1233,7 +1226,6 @@ ca:
   dashboard:
     rails_env_warning: "El vostre servidor s'executa en mode %{env}."
     host_names_warning: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
-    gc_warning: 'El servidor utilitza paràmetres d''alliberament de recursos (garbage collection) de Ruby per defecte que no us donaran el millor rendiment. Llegiu aquest article sobre l''ajust de rendiment: <a href="https://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a> .'
     sidekiq_warning: 'Sidekiq no s''està executant. Sidekiq fa que moltes tasques, com ara enviar correus electrònics, s''executin de manera asincrònica. Assegureu-vos que s''executa almenys un procés Sidekiq. <a href="https://github.com/mperham/sidekiq" target="_blank">Obtingueu informació sobre Sidekiq aquí</a> .'
     queue_size_warning: "El nombre de tasques en cua és de %{queue_size}, que és elevat. Això podria indicar un problema amb un o més processos, o potser us cal afegir més treballadors de <i>Sidekiq</i>."
     memory_warning: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
@@ -1298,7 +1290,6 @@ ca:
     crawl_images: "Recupera imatges d'adreces URL remotes per a inserir-hi les dimensions correctes d'amplada i alçada."
     download_remote_images_to_local: "Converteix les imatges remotes en imatges locals en descarregar-les. Això evita les imatges trencades."
     download_remote_images_threshold: "L'espai mínim necessari en el disc per a descarregar imatges remotes en local (percentatge)"
-    download_remote_images_max_days_old: "No descarreguis imatges remotes per a publicacions que tenen més de N dies."
     disabled_image_download_domains: "Les imatges remotes no es descarregaran mai des d'aquests dominis. Llista delimitada amb barres verticals."
     editing_grace_period: "Durant (n) segons després de publicar, l'edició no crearà una nova versió en l'historial de publicació."
     editing_grace_period_max_diff: "Nombre màxim de canvis de caràcter permesos en el període de gràcia d'edició. Si se'n canvien més, emmagatzema una altra revisió de publicació (nivells de confiança 0 i 1)."
@@ -1341,8 +1332,7 @@ ca:
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
     same_site_cookies: "Utilitza les mateixes galetes del lloc web. Eliminen tots els vectors Cross Site Request Forgery (falsificació de petició entre llocs) en els navegadors compatibles (Lax o Strict). Advertència: Strict sols funcionarà en llocs que forcin l'inici de sessió i utilitzin SSO."
     summary_score_threshold: "La puntuació mínima requerida perquè una publicació sigui inclosa en 'Resumeix aquest tema'"
-    summary_posts_required: "Publicacions mínimes en un tema abans que sigui activat 'Resumeix aquest tema'"
-    summary_likes_required: "Nombre mínim de 'M'agrades' en un tema abans que sigui activat 'Resumeix aquest tema'"
+    summary_likes_required: "Nombre mínim de 'M'agrada' en un tema abans que sigui activat 'Resumeix aquest tema'. Els canvis en aquesta configuració s'aplicaran retroactivament dins d'una setmana."
     summary_percent_filter: "Quan un usuari fa clic en 'Resumeix aquest tema', mostra el % superior de les publicacions"
     summary_max_results: "Nombre màxim de publicacions retornades per \"Resumeix aquest tema\""
     enable_personal_messages: "Permet que els usuaris amb nivell de confiança 1 puguin crear missatges i respondre-hi (configurable amb nivell de confiança mínim per a enviar missatges). Observeu que l'equip responsable sempre pot enviar tota mena de missatges."
@@ -1478,7 +1468,6 @@ ca:
     discord_client_id: 'Identificador de client Discord (si us en cal un, visiteu <a href="https://discordapp.com/developers/applications/me">el portal de desenvolupadors Discord</a>)'
     discord_secret: "Clau secreta de Discord"
     discord_trusted_guilds: 'Permet sols als membres d''aquests gremis Discord iniciar sessió mitjançant Discord. Utilitzeu l''identificador numèric per al gremi. Per a obtenir més informació, consulteu les instruccions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Deixeu-ho en blanc per a permetre qualsevol gremi.'
-    readonly_mode_during_backup: "Activa el mode només de lectura mentre es fa la còpia de seguretat"
     enable_backups: "Permet als administradors crear còpies de seguretat del fòrum"
     allow_restore: "Permet restaurar, cosa que pot reemplaçar TOTES les dades del lloc web! Deixeu-ho com a \"fals\" si no preteneu restaurar una còpia de seguretat."
     maximum_backups: "Nombre màxim de còpies de seguretat que es mantenen en el disc. Les còpies més antigues seran suprimides automàticament."
@@ -1487,7 +1476,6 @@ ca:
     s3_backup_bucket: "Bucket remot que contindrà les còpies de seguretat. ATENCIÓ: Assegureu-vos que és un bucket privat."
     s3_endpoint: "El punt final es pot modificar per a fer còpies de seguretat en un servei compatible amb S3 com ara DigitalOcean Spaces o Minio. AVÍS: Deixeu-ho en blanc si feu servir AWS S3."
     s3_configure_tombstone_policy: "Activa la política de supressió automàtica per a càrregues 'tombstone'. IMPORTANT: si és desactivat, no es reclamarà cap espai després de suprimir les càrregues."
-    s3_disable_cleanup: "Inhabilita l'eliminació de còpies de seguretat de S3 quan s'eliminin localment."
     enable_s3_inventory: "Genera reports i verifica les càrregues de fitxers mitjançant l'inventari d'Amazon S3. IMPORTANT: Requereix credencials S3 vàlides (tant identificador de clau d'accés com clau d'accés secreta)."
     backup_time_of_day: "Hora del dia (UTC) en què s'hauria de fer la còpia de seguretat."
     backup_with_uploads: "Inclou els fitxers carregats en les còpies de seguretat planificades. Si s'inhabilita, només es farà còpia de seguretat de la base de dades."
@@ -1520,6 +1508,7 @@ ca:
     max_post_deletions_per_day: "Nombre màxim de publicacions que pot suprimir un usuari per dia."
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
+    categories_topics: "Nombre de temes en la pàgina /categories. Si es posa a 0, s'intentarà automàticament trobar un valor per a mantenir les dues columnes simètriques (categories i temes)."
     suggested_topics: "Nombre de temes recomanats que es mostren a baix d'un tema."
     limit_suggested_to_category: "Mostra solament temes de la categoria actual en els temes recomanats."
     suggested_topics_max_days_old: "Els temes recomanats no haurien de tenir més de n dies."
@@ -1608,13 +1597,13 @@ ca:
     desktop_category_page_style: "Estil visual per a la pàgina /categories."
     category_colors: "Llista de valors de color hexadecimal permesos per a categories."
     category_style: "Estil visual per a insígnies de categoria."
-    max_image_size_kb: "Mida màxima de càrrega d'imatge en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
+    max_image_size_kb: "Mida màxima de càrrega d'imatge en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també. Les imatges més grans que aquest límit i més petites que client_max_body_size es redimensionaran en la càrrega."
     max_attachment_size_kb: "Mida màxima de càrrega de fitxers adjunts en kB. Cal configurar-ho en nginx (client_max_body_size) / apache o en el proxy també."
     authorized_extensions: "Llista d'extensions de fitxer permeses per a carregar (feu servir '*' per a habilitar tota mena de fitxers)"
     authorized_extensions_for_staff: "Llista d'extensions permeses als usuaris de l'equip responsable en carregar fitxers a més de la llista definida en el paràmetre `authorized_extensions` de la configuració. (Feu servir \"*\" per a habilitar tots els tipus de fitxers.)"
     theme_authorized_extensions: "Llista d'extensions de fitxers permeses per a càrregues d'aparences (utilitzeu '*' per a permetre tots els tipus de fitxers)"
     max_similar_results: "Quants temes semblants es mostren per damunt de l'editor quan es redacta un tema nou. La comparació es basa en el títol i el cos."
-    max_image_megapixels: "Nombre màxim de megapíxels permesos en una imatge."
+    max_image_megapixels: "Nombre màxim de megapíxels permesos en una imatge. Es rebutjaran les imatges amb un nombre més alt de megapíxels. "
     title_prettify: "Evita errades tipogràfiques freqüents en el títol, incloent-hi tot en majúscula, primer caràcter en minúscula, exclamacions i interrogants múltiples, punts extres al final, etc."
     title_remove_extraneous_space: "Elimina els espais blancs de davant de la puntuació final."
     automatic_topic_heat_values: 'Actualitza automàticament els paràmetres de "topic views heat" i "topic post like heat" basant-se en l''activitat del lloc web. '
@@ -1869,7 +1858,6 @@ ca:
     city_for_disputes: "Ciutat per a les disputes"
     shared_drafts_category: "Activa la funció 'Esborranys compartits' designant una categoria per als esborranys de tema. Els temes d'aquesta categoria seran suprimits de les llistes de temes per als usuaris de l'equip responsable."
     push_notifications_prompt: "Mostra la sol·licitud de consentiment de l'usuari."
-    push_notifications_icon: "Icona d'insígnia que apareix a la zona de notificació. La mida requerida és de 96 × 96."
     short_title: "El títol curt s'utilitzarà en la pantalla d'inici de l'usuari, en el llançador o en altres llocs on l'espai sigui limitat. Hauria de limitar-se a 12 caràcters."
     dashboard_general_tab_activity_metrics: "Trieu reports que es mostraran com a mètriques d'activitat en la pestanya general."
     errors:
@@ -1969,6 +1957,10 @@ ca:
       other: "%{count} publicacions s'han combinat en un missatge existent: %{topic_link}"
   change_owner:
     post_revision_text: "Propietat transferida"
+  publish_page:
+    slug_errors:
+      blank: "no pot ser buit"
+      invalid: "conté caràcters no vàlids"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Aquest missatge s'ha tancat automàticament després d'arribar al límit màxim d'%{count} resposta."
@@ -2354,10 +2346,6 @@ ca:
     email_reject_bad_destination_address:
       title: "Correu rebutjat: adreça de destinació no vàlida"
       subject_template: "[%{email_prefix}] Problema de correu electrònic: adreça de destinatari desconeguda"
-      text_body_template: |
-        Ho sentim, però el vostre missatge de correu a %{destination} (titulat %{former_title}) no ha funcionat.
-
-        No es reconeix cap de les adreces de correu electrònic de destinació, o bé s'ha modificat la capçalera de missatge/ID del correu. Assegureu-vos que envieu a l'adreça correcta proporcionada per l'equip responsable.
     email_reject_old_destination:
       title: "Correu rebutjat: destinació antiga"
       subject_template: "[%{email_prefix}] Problema de correu electrònic: heu intentat respondre a una notificació antiga"
@@ -2701,7 +2689,6 @@ ca:
       why: "Un resum breu de %{site_link} des de la vostra darrera visita el  %{last_seen_at}"
       since_last_visit: "Des de la vostra darrera visita"
       new_topics: "Temes nous"
-      unread_messages: "Missatges no llegits"
       unread_notifications: "Alertes sense llegir"
       liked_received: "M'agrades rebuts"
       new_users: "Usuaris nous"
@@ -2714,6 +2701,7 @@ ca:
       unsubscribe: "Aquest resum és enviat des de %{site_link} quan no us hem vist en molt de temps. Canvieu %{email_preferences_link} o %{unsubscribe_link} per a cancel·lar la subscripció."
       your_email_settings: "la vostra configuració de correu"
       click_here: "feu clic aquí"
+      from: "%{site_name}"
       preheader: "Un resum breu des de la vostra darrera visita el %{last_seen_at}"
     forgot_password:
       title: "Contrasenya oblidada"
@@ -2749,6 +2737,8 @@ ca:
       title: "Confirmeu l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] Confirmeu la vostra adreça de correu actual"
       text_body_template: "Abans de canviar la vostra adreça electrònica, necessitem que confirmeu que controleu\nel compte de correu electrònic actual. Després de completar aquest pas, us haurem de confirmar \nla nova adreça electrònica. \n\nConfirmeu la vostra adreça electrònica actual per a %{site_name} fent clic en l'enllaç següent:\n\n%{base_url}/u/confirm-old-email/%{email_token}\n"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Confirmeu la vostra adreça de correu actual"
     notify_old_email:
       title: "Notifica l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] La vostra adreça de correu ha canviat"
@@ -3038,11 +3028,17 @@ ca:
         Aquesta insígnia es concedeix quan rebeu 5 'M'agrada' en 300 publicacions diferents. Molt bé! La comunitat admira les vostres aportacions freqüents i d'alta gran qualitat a les converses!
     out_of_love:
       name: Sense amor
+      description: "S'han fet servir %{max_likes_per_day} 'm'agrada' en un dia"
+      long_description: |
+        Aquesta insígnia es concedeix quan gasteu tots els %{max_likes_per_day} dels vostres 'M'agrada' diaris. Dedicar un temps a mostrar estima per les publicacions que us han agradat encoratja els membres de la comunitat a crear discussions encara millors en el futur.
     higher_love:
       name: Un amor més elevat
+      long_description: |
+        Aquesta insígnia es concedeix quan gasteu tots els %{max_likes_per_day} dels vostres 'M'agrada' diaris durant 5 dies. Gràcies per animar activament les millors converses cada dia.
     crazy_in_love:
       name: Boig d'amor
-      description: Ha fet servir 50 'M'agrada' en un dia 20 vegades
+      long_description: |
+        Aquesta insígnia es concedeix quan utilitzeu tots els vostres %{max_likes_per_day} 'm'agrada' diaris durant vint dies. Oh! Sou un model per a animar els companys de comunitat!
     thank_you:
       name: Gràcies
       description: Té 20 publicacions amb 'm'agrada' i ha donat 10 'm'agrada'

@@ -890,12 +890,9 @@ describe Guardian do
           expect(Guardian.new(moderator).can_see?(post_revision)).to be_truthy
         end
 
-        it 'is true for trust level 4' do
-          expect(Guardian.new(trust_level_4).can_see?(post_revision)).to be_truthy
-        end
-
-        it 'is false for trust level lower than 4' do
+        it 'is false for trust level equal or lower than 4' do
           expect(Guardian.new(trust_level_3).can_see?(post_revision)).to be_falsey
+          expect(Guardian.new(trust_level_4).can_see?(post_revision)).to be_falsey
         end
       end
     end
@@ -2743,6 +2740,7 @@ describe Guardian do
   end
 
   describe '#can_export_entity?' do
+    let(:anonymous_guardian) { Guardian.new }
     let(:user_guardian) { Guardian.new(user) }
     let(:moderator_guardian) { Guardian.new(moderator) }
     let(:admin_guardian) { Guardian.new(admin) }
@@ -2757,6 +2755,10 @@ describe Guardian do
       expect(user_guardian.can_export_entity?('staff_action')).to be_falsey
       expect(moderator_guardian.can_export_entity?('staff_action')).to be_truthy
       expect(admin_guardian.can_export_entity?('staff_action')).to be_truthy
+    end
+
+    it 'does not allow anonymous to export' do
+      expect(anonymous_guardian.can_export_entity?('user_archive')).to be_falsey
     end
   end
 
@@ -2863,6 +2865,32 @@ describe Guardian do
   describe "#allow_themes?" do
     let!(:theme) { Fabricate(:theme) }
     let!(:theme2) { Fabricate(:theme) }
+
+    context "whitelist mode" do
+      before do
+        GlobalSetting.reset_whitelisted_theme_ids!
+        global_setting :whitelisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+      end
+
+      after do
+        GlobalSetting.reset_whitelisted_theme_ids!
+      end
+
+      it "should respect theme whitelisting" do
+        r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
+        theme.update!(remote_theme_id: r.id)
+
+        guardian = Guardian.new(admin)
+
+        expect(guardian.allow_themes?([theme.id, theme2.id], include_preview: true)).to eq(false)
+
+        expect(guardian.allow_themes?([theme.id], include_preview: true)).to eq(true)
+
+        expect(guardian.allowed_theme_repo_import?('https://x.com/git')).to eq(true)
+        expect(guardian.allowed_theme_repo_import?('https:/evil.com/git')).to eq(false)
+
+      end
+    end
 
     it "allows staff to use any themes" do
       expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(false)
@@ -3415,8 +3443,23 @@ describe Guardian do
       end
     end
 
+    context 'trust_level >= 2 user' do
+      fab!(:topic_creator) { build(:user, trust_level: 2) }
+      fab!(:topic) { Fabricate(:topic, user: topic_creator) }
+
+      before do
+        topic.allowed_users << topic_creator
+        topic.allowed_users << another_user
+      end
+
+      it 'should be true' do
+        expect(Guardian.new(topic_creator).can_remove_allowed_users?(topic))
+          .to eq(true)
+      end
+    end
+
     context 'normal user' do
-      fab!(:topic) { Fabricate(:topic, user: Fabricate(:user)) }
+      fab!(:topic) { Fabricate(:topic, user: Fabricate(:user, trust_level: 1)) }
 
       before do
         topic.allowed_users << user
@@ -3460,6 +3503,21 @@ describe Guardian do
         end
       end
     end
+
+    context "anonymous users" do
+      fab!(:topic) { Fabricate(:topic) }
+
+      it 'should be false' do
+        expect(Guardian.new.can_remove_allowed_users?(topic)).to eq(false)
+      end
+
+      it 'should be false when the topic does not have a user (for example because the user was removed)' do
+        DB.exec("UPDATE topics SET user_id=NULL WHERE id=#{topic.id}")
+        topic.reload
+
+        expect(Guardian.new.can_remove_allowed_users?(topic)).to eq(false)
+      end
+    end
   end
 
   describe '#auth_token' do
@@ -3469,6 +3527,38 @@ describe Guardian do
 
       guardian = Guardian.new(user, Rack::Request.new(env))
       expect(guardian.auth_token).to eq(token.auth_token)
+    end
+  end
+
+  describe "can_publish_page?" do
+    context "when disabled" do
+      it "is false for staff" do
+        expect(Guardian.new(admin).can_publish_page?(topic)).to eq(false)
+      end
+    end
+
+    context "when enabled" do
+      before do
+        SiteSetting.enable_page_publishing = true
+      end
+
+      it "is false for anonymous users" do
+        expect(Guardian.new.can_publish_page?(topic)).to eq(false)
+      end
+
+      it "is false for regular users" do
+        expect(Guardian.new(user).can_publish_page?(topic)).to eq(false)
+      end
+
+      it "is true for staff" do
+        expect(Guardian.new(moderator).can_publish_page?(topic)).to eq(true)
+        expect(Guardian.new(admin).can_publish_page?(topic)).to eq(true)
+      end
+
+      it "is false if the topic is a private message" do
+        post = Fabricate(:private_message_post, user: admin)
+        expect(Guardian.new(admin).can_publish_page?(post.topic)).to eq(false)
+      end
     end
   end
 end

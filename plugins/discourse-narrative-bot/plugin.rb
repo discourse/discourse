@@ -55,6 +55,7 @@ after_initialize do
 
   module ::DiscourseNarrativeBot
     PLUGIN_NAME = "discourse-narrative-bot".freeze
+    BOT_USER_ID = -2
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -92,10 +93,10 @@ after_initialize do
 
         user = User.find_by(id: params[:user_id])
         raise Discourse::NotFound if user.blank?
-        cdn_avatar_url = fetch_avatar_url(user)
 
         hijack do
-          generator = CertificateGenerator.new(user, params[:date], cdn_avatar_url)
+          avatar_data = fetch_avatar(user)
+          generator = CertificateGenerator.new(user, params[:date], avatar_data)
 
           svg = params[:type] == 'advanced' ? generator.advanced_user_track : generator.new_user_track
 
@@ -107,7 +108,7 @@ after_initialize do
 
       private
 
-      def fetch_avatar_url(user)
+      def fetch_avatar(user)
         avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
         FileHelper.download(
           avatar_url.to_s,
@@ -178,7 +179,7 @@ after_initialize do
   self.on(:post_created) do |post, options|
     user = post.user
 
-    if user.enqueue_narrative_bot_job? && !options[:skip_bot]
+    if user&.enqueue_narrative_bot_job? && !options[:skip_bot]
       Jobs.enqueue(:bot_input,
         user_id: user.id,
         post_id: post.id,
@@ -188,7 +189,7 @@ after_initialize do
   end
 
   self.on(:post_edited) do |post|
-    if post.user.enqueue_narrative_bot_job?
+    if post.user&.enqueue_narrative_bot_job?
       Jobs.enqueue(:bot_input,
         user_id: post.user.id,
         post_id: post.id,
@@ -198,7 +199,7 @@ after_initialize do
   end
 
   self.on(:post_destroyed) do |post, options, user|
-    if user.enqueue_narrative_bot_job? && !options[:skip_bot]
+    if user&.enqueue_narrative_bot_job? && !options[:skip_bot]
       Jobs.enqueue(:bot_input,
         user_id: user.id,
         post_id: post.id,
@@ -209,7 +210,7 @@ after_initialize do
   end
 
   self.on(:post_recovered) do |post, _, user|
-    if user.enqueue_narrative_bot_job?
+    if user&.enqueue_narrative_bot_job?
       Jobs.enqueue(:bot_input,
         user_id: user.id,
         post_id: post.id,
@@ -240,6 +241,12 @@ after_initialize do
     end
   end
 
+  self.add_model_callback(Bookmark, :after_commit, on: :create) do
+    if self.post && self.user.enqueue_narrative_bot_job?
+      Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: :bookmark)
+    end
+  end
+
   self.on(:topic_notification_level_changed) do |_, user_id, topic_id|
     user = User.find_by(id: user_id)
 
@@ -265,4 +272,9 @@ after_initialize do
       end
     end
   end
+
+  UserAvatar.register_custom_user_gravatar_email_hash(
+    DiscourseNarrativeBot::BOT_USER_ID,
+    "discobot@discourse.org"
+  )
 end

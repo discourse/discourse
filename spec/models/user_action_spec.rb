@@ -226,22 +226,19 @@ describe UserAction do
   end
 
   describe 'when a user posts a new topic' do
-    def process_alerts(post)
-      PostAlerter.post_created(post)
-    end
-
     before do
-      @post = create_post(created_at: DateTime.now - 100)
-      process_alerts(@post)
+      freeze_time(100.days.ago) do
+        @post = create_post
+        PostAlerter.post_created(@post)
+      end
     end
 
     describe 'topic action' do
-      before do
-        @action = @post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC)
-      end
       it 'should exist' do
+        @action = @post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC)
+
         expect(@action).not_to eq(nil)
-        expect(@action.created_at).to be_within(1).of(@post.topic.created_at)
+        expect(@action.created_at).to eq_time(@post.topic.created_at)
       end
     end
 
@@ -256,7 +253,7 @@ describe UserAction do
 
         @response = PostCreator.new(@other_user, reply_to_post_number: 1, topic_id: @post.topic_id, raw: "perhaps @#{@mentioned.username} knows how this works?").create
 
-        process_alerts(@response)
+        PostAlerter.post_created(@response)
       end
 
       it 'should log user actions correctly' do

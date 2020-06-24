@@ -200,9 +200,6 @@ cs:
   topics_in_category: "Témata v kategorii '%{category}'"
   rss_posts_in_topic: "RSS feed tématu '%{topic}'"
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
-  author_wrote: "%{author} napsal:"
-  num_posts: "Příspěvky:"
-  num_participants: "Účastníci:"
   read_full_topic: "Číst celé téma"
   private_message_abbrev: "Msg"
   rss_description:
@@ -225,6 +222,12 @@ cs:
   too_late_to_edit: "Tento příspěvek byl vytvořen velmi dávno. Už ho není možné smazat ani upravovat."
   revert_version_same: "Aktuální verze je stejná jako verze, na kterou se pokoušíte vrátit."
   excerpt_image: "obrázek"
+  bookmarks:
+    reminders:
+      later_today: "Později během dnešního dne"
+      tomorrow: "Zítra"
+      next_week: "Další týden"
+      next_month: "Další měsíc"
   groups:
     errors:
       can_not_modify_automatic: "Nelze měnit automatické skupiny"
@@ -561,7 +564,7 @@ cs:
       title: "Nevhodné"
       long_form: "nahlášeno jako nevhodné"
     notify_user:
-      title: "Poslat @{{username}} zprávu"
+      title: "Poslat @%{username} zprávu"
       long_form: "obeslaný uživatel"
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
@@ -873,9 +876,11 @@ cs:
       min_username_length_range: "Nemůžete nastavit minimum nad maximum."
       max_username_length_range: "Nemůžete nastavit maximum pod minimum."
   search:
+    within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorie"
       user: "Uživatelé"
+    results_page: "Výsledky hledání pro '%{term}'"
   original_poster: "Autor tématu"
   most_posts: "Více příspěvků"
   most_recent_poster: "Poslední přispěvatel"
@@ -883,6 +888,10 @@ cs:
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
+  publish_page:
+    slug_errors:
+      blank: "nemůže zůstat prázdné"
+      invalid: "obsahuje neplatné znaky"
   topic_statuses:
     autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     autoclosed_disabled_lastpost: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
@@ -960,7 +969,6 @@ cs:
       why: "Krátký souhrn z webu %{site_link} od poslední návštěvy v %{last_seen_at}"
       since_last_visit: "Od poslední návštěvy"
       new_topics: "Nová témata"
-      unread_messages: "Nepřečtené zprávy"
       liked_received: "Obdržených 'líbí se'"
       new_users: "Noví uživatelé"
       popular_topics: "Populární témata"
@@ -1158,6 +1166,12 @@ cs:
   joined: "Účet vytvořen"
   discourse_push_notifications:
     popup:
+      mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
+      group_mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
+      quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
+      replied: '%{username} vám odpověděl v "%{topic}" - %{site_title}'
+      posted: '%{username} přispěl do "%{topic}" - %{site_title}'
+      linked: '%{username} odkázal na vás příspěvek v "%{topic}" - %{site_title}'
       confirm_title: "Upozornění zapnuta - %{site_title}"
       confirm_body: "Upozornění úspěšně zapnuta."
   reviewables:

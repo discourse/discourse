@@ -209,7 +209,7 @@ class BulkImport::Vanilla < BulkImport::Base
 
       User.find_each do |u|
         count += 1
-        print "\r%7d - %6d/sec".freeze % [count, count.to_f / (Time.now - start)]
+        print "\r%7d - %6d/sec" % [count, count.to_f / (Time.now - start)]
 
         next unless u.custom_fields["import_id"]
 
@@ -276,7 +276,7 @@ class BulkImport::Vanilla < BulkImport::Base
 
       Post.where("raw LIKE '%/us.v-cdn.net/%' OR raw LIKE '%[attachment%'").find_each do |post|
         count += 1
-        print "\r%7d - %6d/sec".freeze % [count, count.to_f / (Time.now - start)]
+        print "\r%7d - %6d/sec" % [count, count.to_f / (Time.now - start)]
         new_raw = post.raw.dup
 
         new_raw.gsub!(attachment_regex) do |s|
@@ -613,7 +613,7 @@ class BulkImport::Vanilla < BulkImport::Base
           )
         end
 
-        print "\r%7d - %6d/sec".freeze % [count, count.to_f / (Time.now - start)] if count % 5000 == 0
+        print "\r%7d - %6d/sec" % [count, count.to_f / (Time.now - start)] if count % 5000 == 0
       end
     end
 
@@ -645,7 +645,7 @@ class BulkImport::Vanilla < BulkImport::Base
           end
         end
 
-        print "\r%7d - %6d/sec".freeze % [count, count.to_f / (Time.now - start)] if count % 5000 == 0
+        print "\r%7d - %6d/sec" % [count, count.to_f / (Time.now - start)] if count % 5000 == 0
       end
     end
   end

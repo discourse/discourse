@@ -25,13 +25,13 @@ describe UserGuardian do
   end
 
   let :already_uploaded do
-    u = Upload.new(user_id: 999, id: 2)
+    u = Upload.new(user_id: 9999, id: 2)
     user_avatar.custom_upload_id = u.id
     u
   end
 
   let :not_my_upload do
-    Upload.new(user_id: 999, id: 3)
+    Upload.new(user_id: 9999, id: 3)
   end
 
   let(:moderator_upload) do
@@ -303,6 +303,30 @@ describe UserGuardian do
         Fabricate(:post, user: user, topic: topic)
         expect(guardian.can_delete_user?(user)).to eq(false)
       end
+
+      it "isn't allowed when site admin blocked self deletion" do
+        expect(user.first_post_created_at).to be_nil
+
+        SiteSetting.delete_user_self_max_post_count = -1
+        expect(guardian.can_delete_user?(user)).to eq(false)
+      end
+
+      it "correctly respects the delete_user_self_max_post_count setting" do
+        SiteSetting.delete_user_self_max_post_count = 0
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user)
+
+        expect(guardian.can_delete_user?(user)).to eq(false)
+        SiteSetting.delete_user_self_max_post_count = 1
+        expect(guardian.can_delete_user?(user)).to eq(true)
+
+        Fabricate(:post, user: user)
+
+        expect(guardian.can_delete_user?(user)).to eq(false)
+        SiteSetting.delete_user_self_max_post_count = 2
+        expect(guardian.can_delete_user?(user)).to eq(true)
+      end
     end
 
     context "for moderators" do
@@ -315,6 +339,75 @@ describe UserGuardian do
       let(:guardian) { Guardian.new(admin) }
       include_examples "can_delete_user examples"
       include_examples "can_delete_user staff examples"
+    end
+  end
+
+  describe "#can_merge_user?" do
+    shared_examples "can_merge_user examples" do
+      it "isn't allowed if user is a staff" do
+        staff = Fabricate(:moderator)
+        expect(guardian.can_merge_user?(staff)).to eq(false)
+      end
+    end
+
+    context "for moderators" do
+      let(:guardian) { Guardian.new(moderator) }
+      include_examples "can_merge_user examples"
+
+      it "isn't allowed if current_user is not an admin" do
+        expect(guardian.can_merge_user?(user)).to eq(false)
+      end
+    end
+
+    context "for admins" do
+      let(:guardian) { Guardian.new(admin) }
+      include_examples "can_merge_user examples"
+    end
+  end
+
+  describe "#can_see_review_queue?" do
+    it 'returns true when the user is a staff member' do
+      guardian = Guardian.new(moderator)
+      expect(guardian.can_see_review_queue?).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      guardian = Guardian.new(user)
+      expect(guardian.can_see_review_queue?).to eq(false)
+    end
+
+    it "returns true when the user's group can review an item in the queue" do
+      group = Fabricate(:group)
+      group.add(user)
+      guardian = Guardian.new(user)
+      SiteSetting.enable_category_group_review = true
+
+      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: nil)
+
+      expect(guardian.can_see_review_queue?).to eq(true)
+    end
+
+    it 'returns false if category group review is disabled' do
+      group = Fabricate(:group)
+      group.add(user)
+      guardian = Guardian.new(user)
+      SiteSetting.enable_category_group_review = false
+
+      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: nil)
+
+      expect(guardian.can_see_review_queue?).to eq(false)
+    end
+
+    it 'returns false if the reviewable is under a read restricted category' do
+      group = Fabricate(:group)
+      group.add(user)
+      guardian = Guardian.new(user)
+      SiteSetting.enable_category_group_review = true
+      category = Fabricate(:category, read_restricted: true)
+
+      Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: category)
+
+      expect(guardian.can_see_review_queue?).to eq(false)
     end
   end
 end

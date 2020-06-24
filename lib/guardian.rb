@@ -319,7 +319,7 @@ class Guardian
   # Support sites that have to approve users
   def can_access_forum?
     return true unless SiteSetting.must_approve_users?
-    return false unless @user
+    return false if anonymous?
 
     # Staff can't lock themselves out of a site
     return true if is_staff?
@@ -383,6 +383,10 @@ class Guardian
     user.admin?
   end
 
+  def can_send_invite_links?(user)
+    user.staff?
+  end
+
   def can_send_multiple_invites?(user)
     user.staff?
   end
@@ -442,7 +446,7 @@ class Guardian
   end
 
   def can_export_entity?(entity)
-    return false unless @user
+    return false if anonymous?
     return true if is_admin?
     return entity != 'user_list' if is_moderator?
 
@@ -471,8 +475,26 @@ class Guardian
     @user.staff? || @user.trust_level >= TrustLevel.levels[:member]
   end
 
+  def allowed_theme_repo_import?(repo)
+    return false if !@user.admin?
+
+    whitelisted_repos = GlobalSetting.whitelisted_theme_repos
+    if !whitelisted_repos.blank?
+      urls = whitelisted_repos.split(",").map(&:strip)
+      return urls.include?(repo)
+    end
+
+    true
+  end
+
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
+
+    if whitelisted_theme_ids = GlobalSetting.whitelisted_theme_ids
+      if (theme_ids - whitelisted_theme_ids).present?
+        return false
+      end
+    end
 
     if include_preview && is_staff? && (theme_ids - Theme.theme_ids).blank?
       return true
@@ -483,6 +505,18 @@ class Guardian
 
     Theme.user_theme_ids.include?(parent) &&
       (components - Theme.components_for(parent)).empty?
+  end
+
+  def can_publish_page?(topic)
+    return false unless SiteSetting.enable_page_publishing?
+    return false if topic.blank?
+    return false if topic.private_message?
+    return false unless can_see_topic?(topic)
+    is_staff?
+  end
+
+  def can_see_about_stats?
+    true
   end
 
   def auth_token

@@ -4,20 +4,21 @@ class UsersController < ApplicationController
   skip_before_action :authorize_mini_profiler, only: [:avatar]
 
   requires_login only: [
-    :username, :update, :user_preferences_redirect, :upload_user_image,
+    :username, :update, :upload_user_image,
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor_totp,
     :enable_second_factor_totp, :disable_second_factor, :list_second_factors,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
-    :create_second_factor_security_key, :feature_topic, :clear_featured_topic
+    :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
+    :bookmarks, :invited
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset_show, :password_reset_update, :update, :account_created,
-    :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
+    :activate_account, :perform_account_activation, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
-    :feature_topic, :clear_featured_topic
+    :feature_topic, :clear_featured_topic, :bookmarks
   ]
 
   before_action :second_factor_check_confirmed_password, only: [
@@ -47,7 +48,7 @@ class UsersController < ApplicationController
                                                             :admin_login,
                                                             :confirm_admin]
 
-  after_action :add_noindex_header, only: [:show]
+  after_action :add_noindex_header, only: [:show, :my_redirect]
 
   def index
   end
@@ -99,13 +100,33 @@ class UsersController < ApplicationController
     show(for_card: true)
   end
 
+  def cards
+    return redirect_to path('/login') if SiteSetting.hide_user_profiles_from_public && !current_user
+
+    user_ids = params.require(:user_ids).split(",").map(&:to_i)
+    raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
+
+    users = User.where(id: user_ids).includes(:user_option,
+                                              :user_stat,
+                                              :default_featured_user_badges,
+                                              :user_profile,
+                                              :card_background_upload,
+                                              :primary_group,
+                                              :primary_email
+                                            )
+
+    users = users.filter { |u| guardian.can_see_profile?(u) }
+
+    preload_fields = User.whitelisted_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    User.preload_custom_fields(users, preload_fields)
+    User.preload_recent_time_read(users)
+
+    render json: users, each_serializer: UserCardSerializer
+  end
+
   def badges
     raise Discourse::NotFound unless SiteSetting.enable_badges?
     show
-  end
-
-  def user_preferences_redirect
-    redirect_to email_preferences_path(current_user.username_lower)
   end
 
   def update
@@ -174,14 +195,82 @@ class UsersController < ApplicationController
     end
 
     email, *secondary_emails = user.emails
+    unconfirmed_emails = user.unconfirmed_emails
 
     render json: {
       email: email,
       secondary_emails: secondary_emails,
+      unconfirmed_emails: unconfirmed_emails,
       associated_accounts: user.associated_accounts
     }
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
+  end
+
+  def update_primary_email
+    if !SiteSetting.enable_secondary_emails
+      return render json: failed_json, status: 410
+    end
+
+    params.require(:email)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit_email!(user)
+
+    old_primary = user.primary_email
+    if old_primary.email == params[:email]
+      return render json: success_json
+    end
+
+    new_primary = user.user_emails.find_by(email: params[:email])
+    if new_primary.blank?
+      return render json: failed_json.merge(errors: [I18n.t("change_email.doesnt_exist")]), status: 428
+    end
+
+    User.transaction do
+      old_primary.update!(primary: false)
+      new_primary.update!(primary: true)
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_update_email(user)
+      else
+        UserHistory.create!(action: UserHistory.actions[:update_email], acting_user_id: user.id)
+      end
+    end
+
+    render json: success_json
+  end
+
+  def destroy_email
+    if !SiteSetting.enable_secondary_emails
+      return render json: failed_json, status: 410
+    end
+
+    params.require(:email)
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    user_email = user.user_emails.find_by(email: params[:email])
+    if user_email&.primary
+      return render json: failed_json, status: 428
+    end
+
+    ActiveRecord::Base.transaction do
+      if user_email
+        user_email.destroy
+      elsif
+        user.email_change_requests.where(new_email: params[:email]).destroy_all
+      end
+
+      if current_user.staff? && current_user != user
+        StaffActionLogger.new(current_user).log_destroy_email(user)
+      else
+        UserHistory.create(action: UserHistory.actions[:destroy_email], acting_user_id: user.id)
+      end
+    end
+
+    render json: success_json
   end
 
   def topic_tracking_state
@@ -248,7 +337,7 @@ class UsersController < ApplicationController
       cookies[:destination_url] = path("/my/#{params[:path]}")
       redirect_to path("/login-preferences")
     else
-      redirect_to(path("/u/#{current_user.username}/#{params[:path]}"))
+      redirect_to(path("/u/#{current_user.encoded_username}/#{params[:path]}"))
     end
   end
 
@@ -276,24 +365,42 @@ class UsersController < ApplicationController
   def invited
     guardian.ensure_can_invite_to_forum!
 
-    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     offset = params[:offset].to_i || 0
-    filter_by = params[:filter]
+    filter_by = params[:filter] || "redeemed"
+    inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
 
     invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
       Invite.find_pending_invites_from(inviter, offset)
-    else
+    elsif filter_by == "redeemed"
       Invite.find_redeemed_invites_from(inviter, offset)
+    else
+      []
     end
 
     show_emails = guardian.can_see_invite_emails?(inviter)
-    if params[:search].present?
+    if params[:search].present? && invites.present?
       filter_sql = '(LOWER(users.username) LIKE :filter)'
       filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
       invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
     end
-    render_json_dump invites: serialize_data(invites.to_a, InviteSerializer, show_emails: show_emails),
-                     can_see_invite_details: guardian.can_see_invite_details?(inviter)
+
+    render json: MultiJson.dump(InvitedSerializer.new(
+      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter, type: filter_by),
+      scope: guardian,
+      root: false
+    ))
+  end
+
+  def invite_links
+    guardian.ensure_can_invite_to_forum!
+
+    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    guardian.ensure_can_see_invite_details!(inviter)
+
+    offset = params[:offset].to_i || 0
+    invites = Invite.find_links_invites_from(inviter, offset)
+
+    render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
   end
 
   def invited_count
@@ -303,8 +410,9 @@ class UsersController < ApplicationController
 
     pending_count = Invite.find_pending_invites_count(inviter)
     redeemed_count = Invite.find_redeemed_invites_count(inviter)
+    links_count = Invite.find_links_invites_count(inviter)
 
-    render json: { counts: { pending: pending_count, redeemed: redeemed_count,
+    render json: { counts: { pending: pending_count, redeemed: redeemed_count, links: links_count,
                              total: (pending_count.to_i + redeemed_count.to_i) } }
   end
 
@@ -385,6 +493,7 @@ class UsersController < ApplicationController
   def create
     params.require(:email)
     params.require(:username)
+    params.require(:invite_code) if SiteSetting.require_invite_code
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -399,6 +508,10 @@ class UsersController < ApplicationController
       return fail_with("login.email_too_long")
     end
 
+    if SiteSetting.require_invite_code && SiteSetting.invite_code.strip.downcase != params[:invite_code].strip.downcase
+      return fail_with("login.wrong_invite_code")
+    end
+
     if clashing_with_existing_route?(params[:username]) || User.reserved_username?(params[:username])
       return fail_with("login.reserved_username")
     end
@@ -406,11 +519,22 @@ class UsersController < ApplicationController
     params[:locale] ||= I18n.locale unless current_user
 
     new_user_params = user_params.except(:timezone)
-    user = User.unstage(new_user_params)
-    user = User.new(new_user_params) if user.nil?
 
-    # Handle API approval
-    ReviewableUser.set_approved_fields!(user, current_user) if user.approved?
+    user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
+
+    if user
+      user.active = false
+      user.unstage!
+    end
+
+    user ||= User.new
+    user.attributes = new_user_params
+
+    # Handle API approval and
+    # auto approve users based on auto_approve_email_domains setting
+    if user.approved? || EmailValidator.can_auto_approve_user?(user.email)
+      ReviewableUser.set_approved_fields!(user, current_user)
+    end
 
     # Handle custom fields
     user_fields = UserField.all
@@ -432,7 +556,7 @@ class UsersController < ApplicationController
 
     authentication = UserAuthenticator.new(user, session)
 
-    if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
+    if !authentication.has_authenticator? && !SiteSetting.enable_local_logins && !(current_user&.admin? && is_api?)
       return render body: nil, status: :forbidden
     end
 
@@ -462,8 +586,10 @@ class UsersController < ApplicationController
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
 
-      # If the user was created as active, they might need to be approved
-      user.create_reviewable if user.active?
+      # If the user was created as active this will
+      # ensure their email is confirmed and
+      # add them to the review queue if they need to be approved
+      user.activate if user.active?
 
       render json: {
         success: true,
@@ -594,6 +720,7 @@ class UsersController < ApplicationController
       # if we have run into no errors then the user is a-ok to
       # change the password
       if @user.errors.empty?
+        @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
         @user.user_auth_tokens.destroy_all
@@ -724,6 +851,7 @@ class UsersController < ApplicationController
     end
 
     json = success_json
+    json[:hide_taken] = SiteSetting.hide_email_address_taken
     json[:user_found] = user_presence unless SiteSetting.hide_email_address_taken
     render json: json
   rescue RateLimiter::LimitExceeded
@@ -1050,6 +1178,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
 
     if params[:notification_level] == "ignore"
+      @error_message = "ignore_error"
       guardian.ensure_can_ignore_user!(user)
       MutedUser.where(user: current_user, muted_user: user).delete_all
       ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
@@ -1059,6 +1188,7 @@ class UsersController < ApplicationController
         IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
       end
     elsif params[:notification_level] == "mute"
+      @error_message = "mute_error"
       guardian.ensure_can_mute_user!(user)
       IgnoredUser.where(user: current_user, ignored_user: user).delete_all
       MutedUser.find_or_create_by!(user: current_user, muted_user: user)
@@ -1068,6 +1198,8 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
+  rescue Discourse::InvalidAccess => e
+    render_json_error(I18n.t("notification_level.#{@error_message}"))
   end
 
   def read_faq
@@ -1085,7 +1217,10 @@ class UsersController < ApplicationController
 
     result = {}
 
-    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
+    %W{
+      number_of_deleted_posts number_of_flagged_posts number_of_flags_given
+      number_of_suspensions warnings_received_count number_of_rejected_posts
+    }.each do |info|
       result[info] = @user.public_send(info)
     end
 
@@ -1173,7 +1308,7 @@ class UsersController < ApplicationController
       challenge: challenge_session.challenge,
       rp_id: challenge_session.rp_id,
       rp_name: challenge_session.rp_name,
-      supported_algoriths: ::Webauthn::SUPPORTED_ALGORITHMS,
+      supported_algorithms: ::Webauthn::SUPPORTED_ALGORITHMS,
       user_secure_id: current_user.create_or_fetch_secure_identifier,
       existing_active_credential_ids: current_user.second_factor_security_key_credential_ids
     )
@@ -1211,8 +1346,12 @@ class UsersController < ApplicationController
   end
 
   def enable_second_factor_totp
-    params.require(:second_factor_token)
-    params.require(:name)
+    if params[:second_factor_token].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_code"))
+    end
+    if params[:name].blank?
+      return render json: failed_json.merge(error: I18n.t("login.missing_second_factor_name"))
+    end
     auth_token = params[:second_factor_token]
 
     totp_data = secure_session["staged-totp-#{current_user.id}"]
@@ -1319,7 +1458,7 @@ class UsersController < ApplicationController
     if params[:token_id]
       token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
       # The user should not be able to revoke the auth token of current session.
-      raise Discourse::InvalidParameters.new(:token_id) if guardian.auth_token == token.auth_token
+      raise Discourse::InvalidParameters.new(:token_id) if !token || guardian.auth_token == token.auth_token
       UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
@@ -1334,7 +1473,10 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     topic = Topic.find(params[:topic_id].to_i)
 
-    raise Discourse::InvalidAccess.new unless topic && guardian.can_feature_topic?(user, topic)
+    if !guardian.can_feature_topic?(user, topic)
+      return render_json_error(I18n.t('activerecord.errors.models.user_profile.attributes.featured_topic_id.invalid'), 403)
+    end
+
     user.user_profile.update(featured_topic_id: topic.id)
     render json: success_json
   end
@@ -1344,6 +1486,32 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
     user.user_profile.update(featured_topic_id: nil)
     render json: success_json
+  end
+
+  def bookmarks
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    respond_to do |format|
+      format.json do
+        bookmark_list = UserBookmarkList.new(user: user, guardian: guardian, params: params)
+        bookmark_list.load
+
+        if bookmark_list.bookmarks.empty?
+          render json: {
+            bookmarks: [],
+            no_results_help: I18n.t("user_activity.no_bookmarks.self")
+          }
+        else
+          page = params[:page].to_i + 1
+          bookmark_list.more_bookmarks_url = "#{Discourse.base_path}/u/#{params[:username]}/bookmarks.json?page=#{page}"
+          render_serialized(bookmark_list, UserBookmarkListSerializer)
+        end
+      end
+      format.ics do
+        @bookmark_reminders = Bookmark.where(user_id: user.id).where.not(reminder_at: nil).joins(:topic)
+      end
+    end
   end
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'

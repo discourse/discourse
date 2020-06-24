@@ -9,10 +9,8 @@ module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
     'onpdiff' => 'ONPDiff',
     'onceoff' => 'Jobs',
     'pop3_polling_enabled_setting_validator' => 'POP3PollingEnabledSettingValidator',
-    'postgresql_fallback_adapter' => 'PostgreSQLFallbackHandler',
     'regular' => 'Jobs',
     'scheduled' => 'Jobs',
-    'source_url' => 'SourceURL',
     'topic_query_sql' => 'TopicQuerySQL',
     'version' => 'Discourse',
   }

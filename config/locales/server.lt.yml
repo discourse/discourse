@@ -126,9 +126,6 @@ lt:
   home_title: "Pradinis"
   topics_in_category: "Temos kategorijoje '%{category}'"
   rss_posts_in_topic: "RSS iš '%{topic}'"
-  author_wrote: "%{author} parašė:"
-  num_posts: "Pranešimai:"
-  num_participants: "Dalyviai:"
   read_full_topic: "Skaityti pilną temą"
   private_message_abbrev: "Žinutė"
   rss_description:
@@ -150,6 +147,12 @@ lt:
     badge: "%{display_name} ženklelis puslapyje %{site_title}"
   too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
   excerpt_image: "paveikslėlis"
+  bookmarks:
+    reminders:
+      later_today: "Šiandien vėliau"
+      tomorrow: "Rytoj"
+      next_week: "Kitą savaitę"
+      next_month: "Kitą mėnesį"
   groups:
     default_names:
       everyone: "visi"
@@ -393,7 +396,7 @@ lt:
     inappropriate:
       title: "Nederamas"
     notify_user:
-      title: "Siųsti @{{username}} žinutę"
+      title: "Siųsti @%{username} žinutę"
       long_form: "išsiuntėte nariui"
       email_title: 'Jūsų įrašas temote "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -626,13 +629,20 @@ lt:
   site_settings:
     enable_emoji: "Įgalinti Emoji"
   search:
+    within_post: "#%{post_number} nuo %{username}"
     types:
       category: "Kategorijos"
       topic: "Rezultatai"
       user: "Vartotojai"
+    results_page: "Paieškos rezultatai ir '%{term}'"
+  publish_page:
+    slug_errors:
+      blank: "negali būti tuščia"
+      invalid: "turi neleistinų simbolių"
   login:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
+    not_available: "Negalimas. Gal pabandykite %{suggestion}?"
     omniauth_confirm_button: "Tęsti"
     second_factor_title: "Dviejų veiksmų autentifikavimas"
   admin:
@@ -1054,6 +1064,12 @@ lt:
   joined: "Prisijungė"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
+      quoted: '%{username} pacitavo tave "%{topic}" - %{site_title}'
+      replied: '%{username} atsakė tau "%{topic}" - %{site_title}'
+      posted: '%{username} paskelbė "%{topic}" - %{site_title}'
+      linked: '%{username} panaudojo tavo įrašą "%{topic}" - %{site_title}'
       confirm_title: "Pranešimai įgalinti - %{site_title} svetainėje"
       confirm_body: "Pavyko! Pranešimai buvo įgalinti."
   staff_action_logs:

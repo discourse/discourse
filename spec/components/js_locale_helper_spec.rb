@@ -130,7 +130,7 @@ describe JsLocaleHelper do
     end
   end
 
-  it 'performs fallbacks to english if a translation is not available' do
+  it 'performs fallbacks to English if a translation is not available' do
     JsLocaleHelper.set_translations('en', "en" => {
         "js" => {
           "only_english" => "1-en",
@@ -161,12 +161,12 @@ describe JsLocaleHelper do
     expected = {
       "none" => "[uk.js.none]",
       "only_english" => "1-en",
-      "only_site" => "2-ru",
-      "english_and_site" => "3-ru",
+      "only_site" => "[uk.js.only_site]",
+      "english_and_site" => "3-en",
       "only_user" => "4-uk",
       "english_and_user" => "5-uk",
       "site_and_user" => "6-uk",
-      "all_three" => "7-uk",
+      "all_three" => "7-uk"
     }
 
     SiteSetting.default_locale = 'ru'
@@ -178,9 +178,9 @@ describe JsLocaleHelper do
     ctx.eval(JsLocaleHelper.output_locale(I18n.locale))
     ctx.eval('I18n.defaultLocale = "ru";')
 
-    expect(ctx.eval('I18n.translations.en.js').keys).to contain_exactly("only_english")
-    expect(ctx.eval('I18n.translations.ru.js').keys).to contain_exactly("only_site", "english_and_site")
+    expect(ctx.eval('I18n.translations').keys).to contain_exactly("uk", "en")
     expect(ctx.eval('I18n.translations.uk.js').keys).to contain_exactly("all_three", "english_and_user", "only_user", "site_and_user")
+    expect(ctx.eval('I18n.translations.en.js').keys).to contain_exactly("only_english", "english_and_site")
 
     expected.each do |key, expect|
       expect(ctx.eval("I18n.t(#{"js.#{key}".inspect})")).to eq(expect)

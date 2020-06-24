@@ -95,7 +95,8 @@ module BackupRestore
       raise DatabaseRestoreError.new("psql failed: #{last_line}") if Process.last_status&.exitstatus != 0
     end
 
-    # Removes unwanted SQL added by certain versions of pg_dump.
+    # Removes unwanted SQL added by certain versions of pg_dump and modifies
+    # the dump so that it works on the current version of PostgreSQL.
     def sed_command
       unwanted_sql = [
         "DROP SCHEMA", # Discourse <= v1.5
@@ -104,11 +105,15 @@ module BackupRestore
         "SET default_table_access_method" # PostgreSQL 12
       ].join("|")
 
-      "sed -E '/^(#{unwanted_sql})/d'"
+      command = "sed -E '/^(#{unwanted_sql})/d' #{@db_dump_path}"
+      if BackupRestore.postgresql_major_version < 11
+        command = "#{command} | sed -E 's/^(CREATE TRIGGER.+EXECUTE) FUNCTION/\\1 PROCEDURE/'"
+      end
+      command
     end
 
     def restore_dump_command
-      "#{sed_command} #{@db_dump_path} | #{self.class.psql_command} 2>&1"
+      "#{sed_command} | #{self.class.psql_command} 2>&1"
     end
 
     def self.psql_command
@@ -134,7 +139,11 @@ module BackupRestore
       log "Migrating the database..."
 
       log Discourse::Utils.execute_command(
-        { "SKIP_POST_DEPLOYMENT_MIGRATIONS" => "0" },
+        {
+          "SKIP_POST_DEPLOYMENT_MIGRATIONS" => "0",
+          "SKIP_OPTIMIZE_ICONS" => "1",
+          "DISABLE_TRANSLATION_OVERRIDES" => "1"
+        },
         "rake db:migrate",
         failure_message: "Failed to migrate database.",
         chdir: Rails.root

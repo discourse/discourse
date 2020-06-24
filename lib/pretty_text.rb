@@ -23,19 +23,19 @@ module PrettyText
 
     erb_name = "#{filename}.js.es6.erb"
     return erb_name if File.file?("#{root}#{erb_name}")
+
+    erb_name = "#{filename}.js.erb"
+    return erb_name if File.file?("#{root}#{erb_name}")
   end
 
   def self.apply_es6_file(ctx, root_path, part_name)
     filename = find_file(root_path, part_name)
     if filename
       source = File.read("#{root_path}#{filename}")
+      source = ERB.new(source).result(binding) if filename =~ /\.erb$/
 
-      if filename =~ /\.erb$/
-        source = ERB.new(source).result(binding)
-      end
-
-      template = Tilt::ES6ModuleTranspilerTemplate.new {}
-      transpiled = template.module_transpile(source, "#{Rails.root}/app/assets/javascripts/", part_name)
+      transpiler = DiscourseJsProcessor::Transpiler.new
+      transpiled = transpiler.perform(source, "#{Rails.root}/app/assets/javascripts/", part_name)
       ctx.eval(transpiled)
     else
       # Look for vendored stuff
@@ -58,14 +58,14 @@ module PrettyText
       elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
         path = Regexp.last_match[2]
         Dir["#{root_path}/#{path}/**"].sort.each do |f|
-          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js.es6$/, ''))
+          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js(.es6)?$/, ''))
         end
       end
     end
   end
 
   def self.create_es6_context
-    ctx = MiniRacer::Context.new(timeout: 15000)
+    ctx = MiniRacer::Context.new(timeout: 25000, ensure_gc_after_idle: 2000)
 
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
@@ -75,18 +75,21 @@ module PrettyText
     end
     ctx.eval("__PRETTY_TEXT = true")
 
+    PrettyText::Helpers.instance_methods.each do |method|
+      ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
+    end
+
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
+    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     ctx_load_manifest(ctx, "pretty-text-bundle.js")
     ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
-    apply_es6_file(ctx, root_path, "discourse/lib/to-markdown")
-    apply_es6_file(ctx, root_path, "discourse/lib/utilities")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
+    apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
+    apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
-    PrettyText::Helpers.instance_methods.each do |method|
-      ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
-    end
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 
@@ -97,7 +100,7 @@ module PrettyText
     to_load.uniq.each do |f|
       if f =~ /^.+assets\/javascripts\//
         root = Regexp.last_match[0]
-        apply_es6_file(ctx, root, f.sub(root, '').sub(/\.js\.es6$/, ''))
+        apply_es6_file(ctx, root, f.sub(root, '').sub(/\.js(\.es6)?$/, ''))
       end
     end
 
@@ -122,6 +125,10 @@ module PrettyText
     end
 
     @ctx
+  end
+
+  def self.reset_translations
+    v8.eval("__resetTranslationTree()")
   end
 
   def self.reset_context
@@ -157,6 +164,7 @@ module PrettyText
         __optInput.getTopicInfo = __getTopicInfo;
         __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
+        __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupUploadUrls = __lookupUploadUrls;
         __optInput.censoredRegexp = #{WordWatcher.word_matcher_regexp(:censor)&.source.to_json};
@@ -258,7 +266,7 @@ module PrettyText
 
     sanitized = markdown(working_text, options)
 
-    doc = Nokogiri::HTML.fragment(sanitized)
+    doc = Nokogiri::HTML5.fragment(sanitized)
 
     if !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
       add_rel_nofollow_to_user_content(doc)
@@ -268,7 +276,11 @@ module PrettyText
       add_mentions(doc, user_id: opts[:user_id])
     end
 
-    doc.to_html
+    scrubber = Loofah::Scrubber.new do |node|
+      node.remove if node.name == 'script'
+    end
+    loofah_fragment = Loofah.fragment(doc.to_html)
+    loofah_fragment.scrub!(scrubber).to_html
   end
 
   def self.add_rel_nofollow_to_user_content(doc)
@@ -281,7 +293,7 @@ module PrettyText
     doc.css("a").each do |l|
       href = l["href"].to_s
       begin
-        uri = URI(href)
+        uri = URI(UrlHelper.encode_component(href))
         site_uri ||= URI(Discourse.base_url)
 
         if !uri.host.present? ||
@@ -304,14 +316,14 @@ module PrettyText
 
   def self.extract_links(html)
     links = []
-    doc = Nokogiri::HTML.fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
 
     # remove href inside quotes & elided part
     doc.css("aside.quote a, .elided a").each { |a| a["href"] = "" }
 
     # extract all links
     doc.css("a").each do |a|
-      if a["href"].present? && a["href"][0] != "#".freeze
+      if a["href"].present? && a["href"][0] != "#"
         links << DetectedLink.new(a["href"], false)
       end
     end
@@ -337,7 +349,7 @@ module PrettyText
 
   def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
-    doc = Nokogiri::HTML.fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)
@@ -349,7 +361,7 @@ module PrettyText
     return string if string.blank?
 
     # If the user is not basic, strip links from their bio
-    fragment = Nokogiri::HTML.fragment(string)
+    fragment = Nokogiri::HTML5.fragment(string)
     fragment.css('a').each { |a| a.replace(a.inner_html) }
     fragment.to_html
   end
@@ -394,14 +406,14 @@ module PrettyText
   def self.strip_secure_media(doc)
     doc.css("a[href]").each do |a|
       if Upload.secure_media_url?(a["href"])
-        target = %w(video audio).include?(a&.parent&.parent&.name) ? a.parent.parent : a
+        target = %w(video audio).include?(a&.parent&.name) ? a.parent : a
         target.replace "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
       end
     end
   end
 
   def self.format_for_email(html, post = nil)
-    doc = Nokogiri::HTML.fragment(html)
+    doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_cooked, doc, post)
     strip_secure_media(doc) if post&.with_secure_media?
     strip_image_wrapping(doc)
@@ -461,13 +473,13 @@ module PrettyText
 
         case type
         when USER_TYPE
-          element['href'] = "#{Discourse::base_uri}/u/#{name}"
+          element['href'] = "#{Discourse::base_uri}/u/#{UrlHelper.encode_component(name)}"
         when GROUP_MENTIONABLE_TYPE
           element['class'] = 'mention-group notify'
-          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
+          element['href'] = "#{Discourse::base_uri}/groups/#{UrlHelper.encode_component(name)}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
-          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
+          element['href'] = "#{Discourse::base_uri}/groups/#{UrlHelper.encode_component(name)}"
         end
       end
     end

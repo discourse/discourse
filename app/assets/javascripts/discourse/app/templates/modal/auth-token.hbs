@@ -1,0 +1,39 @@
+{{#d-modal-body title="user.auth_tokens.was_this_you"}}
+  <div>
+    <p>{{i18n "user.auth_tokens.was_this_you_description"}}</p>
+    <p>{{html-safe (i18n "user.second_factor.extended_description")}}</p>
+  </div>
+
+  <div>
+    <h3>{{i18n "user.auth_tokens.details"}}</h3>
+    <ul style="list-style-type:none">
+      <li>{{d-icon "far-clock"}} {{format-date model.seen_at}}</li>
+      <li>{{d-icon "map-marker-alt"}} {{model.location}}</li>
+      <li>{{d-icon model.icon}} {{i18n "user.auth_tokens.browser_and_device" browser=model.browser device=model.device}}</li>
+    </ul>
+  </div>
+
+  {{#if latest_post}}
+    <div>
+      <h3>
+        {{i18n "user.auth_tokens.latest_post"}}
+        <a href {{action "toggleExpanded"}}>{{d-icon (if expanded "caret-up" "caret-down")}}</a>
+      </h3>
+
+      {{#if expanded}}
+        <blockquote>{{html-safe latest_post.cooked}}</blockquote>
+      {{else}}
+        <blockquote>{{html-safe latest_post.excerpt}}</blockquote>
+      {{/if}}
+    </div>
+  {{/if}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button
+    class="btn-primary"
+    action=(action "highlightSecure")
+    icon="lock"
+    label="user.auth_tokens.secure_account"}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
+</div>

@@ -5,7 +5,8 @@
 
 .topic-list tr.selected td:first-child,
 .topic-list-item.selected td:first-child,
-.latest-topic-list-item.selected {
+.latest-topic-list-item.selected,
+.search-results .fps-result.selected {
   box-shadow: inset 3px 0 0 $danger; // needs to be inset for Edge
 }
 
@@ -26,30 +27,44 @@
   max-height: 560px;
 }
 
+.keyboard-shortcuts-modal .modal-inner-container {
+  max-width: 880px;
+}
+
 #keyboard-shortcuts-help {
-  div.row {
-    width: 100%;
-    div {
-      float: left;
-      width: 32%;
-    }
+  display: flex;
+
+  .column {
+    width: 33.3%;
   }
+
   ul {
     list-style: none;
+    margin-bottom: 2rem;
     margin-left: 0;
 
     li {
-      margin: 5px 0;
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    span {
+      background: $primary-very-low;
+      border-radius: 3px;
+      display: inline-flex;
+      margin: 0 6px;
+      padding: 2px 1px 4px;
+    }
+
+    span:first-child {
+      margin-left: 0;
     }
 
     kbd {
-      font-size: $base-font-size;
       font-family: $base-font-family;
-      margin: 0;
-      color: dark-light-choose(#444, #aaa);
       font-weight: bold;
-      padding: 2px 6px;
-      white-space: nowrap;
     }
   }
 }

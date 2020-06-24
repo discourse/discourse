@@ -37,12 +37,10 @@ class Admin::SiteSettingsController < Admin::AdminController
           new_value = UserOption.title_count_modes[new_value.to_sym]
         end
 
-        UserOption.where(user_option => previous_value).update_all(user_option => new_value)
+        attrs = { user_option => new_value }
+        attrs[:email_digests] = (new_value.to_i != 0) if id == "default_email_digest_frequency"
 
-        if id == "default_email_digest_frequency"
-          disable_digests = new_value == 0
-          UserOption.where(user_option => 0, email_digests: !disable_digests).update_all(email_digests: disable_digests)
-        end
+        UserOption.where(user_option => previous_value).update_all(attrs)
       elsif id.start_with?("default_categories_")
         previous_category_ids = previous_value.split("|")
         new_category_ids = new_value.split("|")
@@ -63,7 +61,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         (new_category_ids - previous_category_ids).each do |category_id|
           skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
 
-          User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          User.real.where(staged: false).where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
             category_users = []
             users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
             CategoryUser.insert_all!(category_users)
@@ -90,7 +88,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         (new_tag_ids - previous_tag_ids).each do |tag_id|
           skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
 
-          User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          User.real.where(staged: false).where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
             tag_users = []
             users.each { |user| tag_users << { tag_id: tag_id, user_id: user.id, notification_level: notification_level, created_at: now, updated_at: now } }
             TagUser.insert_all!(tag_users)
@@ -137,8 +135,10 @@ class Admin::SiteSettingsController < Admin::AdminController
 
       user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)
       user_ids += User
+        .real
         .joins("CROSS JOIN categories c")
         .joins("LEFT JOIN category_users cu ON users.id = cu.user_id AND c.id = cu.category_id")
+        .where(staged: false)
         .where("c.id IN (?) AND cu.notification_level IS NULL", new_category_ids - previous_category_ids)
         .distinct
         .pluck("users.id")
@@ -161,8 +161,10 @@ class Admin::SiteSettingsController < Admin::AdminController
 
       user_ids = TagUser.where(tag_id: previous_tag_ids - new_tag_ids, notification_level: notification_level).distinct.pluck(:user_id)
       user_ids += User
+        .real
         .joins("CROSS JOIN tags t")
         .joins("LEFT JOIN tag_users tu ON users.id = tu.user_id AND t.id = tu.tag_id")
+        .where(staged: false)
         .where("t.id IN (?) AND tu.notification_level IS NULL", new_tag_ids - previous_tag_ids)
         .distinct
         .pluck("users.id")

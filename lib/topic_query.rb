@@ -19,12 +19,6 @@ class TopicQuery
         int.call(x) && x.to_i.between?(0, PG_MAX_INT)
       end
 
-      array_int_or_int = lambda do |x|
-        int.call(x) || (
-          Array === x && x.length > 0 && x.all?(&int)
-        )
-      end
-
       {
         max_posts: zero_up_to_max_int,
         min_posts: zero_up_to_max_int,
@@ -271,6 +265,7 @@ class TopicQuery
   def list_top_for(period)
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
+      topics = remove_muted_categories(topics, @user)
       topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
       if period == :yearly && @user.try(:trust_level) == TrustLevel[0]
         topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
@@ -464,7 +459,7 @@ class TopicQuery
 
   def latest_results(options = {})
     result = default_results(options)
-    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
+    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted"
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
@@ -675,7 +670,7 @@ class TopicQuery
       if options[:no_subcategories]
         result = result.where('categories.id = ?', category_id)
       else
-        result = result.where(<<~SQL, subcategory_ids: subcategory_ids(category_id), category_id: category_id)
+        result = result.where(<<~SQL, subcategory_ids: Category.subcategory_ids(category_id), category_id: category_id)
           categories.id in (:subcategory_ids) AND (
             categories.topic_id <> topics.id OR categories.id = :category_id
           )
@@ -833,6 +828,8 @@ class TopicQuery
     result = result.where('topics.deleted_at IS NULL') if require_deleted_clause
     result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
     result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
+
+    result = preload_thumbnails(result)
 
     result = TopicQuery.apply_custom_filters(result, self)
 
@@ -1054,6 +1051,10 @@ class TopicQuery
     end
 
     result.order('topics.bumped_at DESC')
+  end
+
+  def preload_thumbnails(result)
+    result.preload(:image_upload, topic_thumbnails: :optimized_image)
   end
 
   private

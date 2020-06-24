@@ -220,9 +220,6 @@ ar:
   topics_in_category: "المواضيع في قسم '%{category}'"
   rss_posts_in_topic: "مغذي RSS لـ'%{topic}'"
   rss_topics_in_category: "تغذية RSS للموضوعات من قسم'%{category}'"
-  author_wrote: "كتب %{author}:"
-  num_posts: "المنشورات:"
-  num_participants: "المشاركون:"
   read_full_topic: "اقرأ كامل الموضوع"
   private_message_abbrev: "رسالة"
   rss_description:
@@ -241,6 +238,10 @@ ar:
   bookmarks:
     reminders:
       at_desktop: "في المرة القادمة سأكون عند مكتبي"
+      later_today: "في وقت لاحق اليوم"
+      tomorrow: "غداً"
+      next_week: "الاسبوع القادم"
+      next_month: "الشهر القادم"
   groups:
     errors:
       can_not_modify_automatic: "لا يمكنك تعديل مجموعة تم انشائها تلقائيا"
@@ -608,7 +609,7 @@ ar:
       title: "غير مناسب"
       long_form: "ترفع علم هذا عن صورة غير ملائمة"
     notify_user:
-      title: "أرسل رسالة إلى @{{username}}"
+      title: "أرسل رسالة إلى @%{username}"
       long_form: "العضو أرسل"
       email_title: 'منشورك في "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -928,7 +929,6 @@ ar:
     crawl_images: "جلب الصور من الروابط لادراج الأبعاد الصحيحة."
     download_remote_images_to_local: "تحويل الصور البعيدة إلى صور محلية بواسطة تحميلها؛ بإستثناء الصور التالفة"
     download_remote_images_threshold: "ادني مساحه للقرص ضروربه لتحميل الصور البعيده محليا ( في المئه) "
-    download_remote_images_max_days_old: "لا تقم بتحميل الصور من مواقع اخرى للمنشورات اﻷقدم من هذا عدد من اﻷيام."
     disabled_image_download_domains: "الصور البعيدة لن يتم تنزيلها من هذا المجال. قائمة Pipe-delimited."
     editing_grace_period: "خلال هذا العدد من الثواني بعد نشر المنشور، تعديل المنشور لن يقوم بانشاء نسخة جديدة في السجل الخاص بالتعديل ."
     edit_history_visible_to_public: "اسمح لاي شخص ان يرى النسخ السابقه للمنشورات المعدله. عندما يتم تعطيلها.،فقط اعضاء فريق العمل يمكنهم رؤيتها "
@@ -948,8 +948,6 @@ ar:
     email_custom_headers: "قائمة قناة محددة لرؤوس بريد إلكتروني مخصص."
     force_https: "ارغام الموقع على استخدام HTTPS فقط. تحذير: لا تفعل هذا الاختيار الا بعد التأكد أن HTTPS مفعلة وتعمل بالكامل فى جميع أنحاء الموقع! هل اختبرت جميع الخوادم CDN، جميع تسجيلات الدخول من شبكات التواصل الاجتماعى، أية صور أو تبعيات خارجية للتأكد من أنها كلها متوافقه مع HTTPS؟"
     summary_score_threshold: "الحد الأدنى للنقاط المطلوبة لتضمين مشاركة في \"تلخيص هذا الموضوع\""
-    summary_posts_required: "الحد الأدنى للمشاركات في الموضوع قبل \"تلخيص هذا الموضوع\" مفعل."
-    summary_likes_required: "الحد الأدنى للإعجابات في الموضوع قبل \"تلخيص هذا الموضوع\" مفعل."
     summary_percent_filter: "عندما يضغط المستخدم على \"تلخيص هذا الموضوع\"، يظهر أعلى % o المشاركات."
     enable_long_polling: "ناقل الرسالة المستخدم للاشعارات يمكن أن يستخدم التصويت الطويل."
     long_polling_base_url: "قاعدة URL تستخدم للتصويت الطويل (عندما CDN يخدم المحتوى الديناميكي, تأكد لتعيين هذا لسحب الأصل) eg: http://origin.site.com"
@@ -1011,12 +1009,10 @@ ar:
     enable_instagram_logins: "تفعيل تسجيل الدخول عن طريق حساب انستغرام."
     instagram_consumer_key: "مفتاح المستهلك لنظام تسجيل الدخول بحساب انستجرام."
     instagram_consumer_secret: "رقم المستهلك السري لنظام تسجيل الدخول بحساب انستجرام."
-    readonly_mode_during_backup: "فعّل وضع القراءة فقط أثناء أخذ نسخة احتياطيّة"
     allow_restore: "تسمح استعادة، والتي يمكن أن تحل محل ALL بيانات الموقع! ترك كاذبة إلا إذا كنت تخطط لاستعادة نسخة احتياطية"
     maximum_backups: "أكبر قدر ممكن من النسخ الاحتياطي للحفاظ على القرص. يتم حذف النسخ الاحتياطية القديمة تلقائيا"
     automatic_backups_enabled: "فعل النسخ الإحتياطي التلقائي بشكل متكرر كما هو محدد."
     s3_backup_bucket: "الرفع عن بعد لإجراء نسخ إحتياطية. تحذير : تأكد من أنه رفع خاص."
-    s3_disable_cleanup: "عطل النسخ الاحتياطيه المحذوفه من S3 عندما يتم حذفها محلياً"
     backup_time_of_day: "الوقت الذي يجب ان تأخد النسخ الاحتياطية فيه."
     backup_with_uploads: "إضافة التحميلات ل النسخ الإحتياطية. إلغاء هذة الخاصية سوف تؤدي إلى أخذ نسخ إحتياطية من قاعدة البيانات فقط."
     active_user_rate_limit_secs: "كيف في كثير من الأحيان نقوم بتحديث حقل 'last_seen_at، في ثوان"
@@ -1086,7 +1082,6 @@ ar:
     desktop_category_page_style: "أسلوب العرض لصفحة الأقسام."
     category_colors: "قائمة الألوان المسموحة لتمييز الأقسام بترميز الhexadecimal."
     category_style: "أسلوب العرض لشارة القسم."
-    max_image_size_kb: "الحجم الاقص لتحميل صوره بالكيلو بايت.هذا يجب ضبطه في nginx (client_max_body_size) /اباتشي او البروكسي"
     max_attachment_size_kb: "أقصى حجم لتحميل المرفقات الملفات بالكيلوبايت. وهذا يجب أن يتم تكوينه في nginx (client_max_body_size) / أباتشي أو الوكيل. "
     authorized_extensions: "قائمة بالملفات المسموح رفعها (أستخدم '*' للسماح لجميع الأنواع)"
     max_similar_results: "عدد المواضيع المشابهة لتُعرض فوق المحرّر عند إنشاء موضوع جديد. المقارنة تعتمد عنوان الموضوع ومتنه."
@@ -1242,6 +1237,10 @@ ar:
     errors:
       different_topics: "المشاركات من موضوعين مختلفين لايُمكن دمجهم"
       different_users: "المشاركات من اعضاء مختلفين لايُمكن دمجهم"
+  publish_page:
+    slug_errors:
+      blank: "لا يمكن جعله فارغا."
+      invalid: "يحتوي احرف غير صالحة "
   topic_statuses:
     autoclosed_enabled_days:
       zero: "هذا الموضوع تم اغلاقه تلقائيا بعد 1 يوم .الردود الجديده غير متوفره بعد الان."
@@ -1455,6 +1454,8 @@ ar:
     confirm_new_email:
       subject_template: "أكّد عنوان بريد الإلكتروني الجديد %{email_prefix}"
     confirm_old_email:
+      subject_template: "أكّد عنوان بريد الإلكتروني الحالي %{email_prefix}"
+    confirm_old_email_add:
       subject_template: "أكّد عنوان بريد الإلكتروني الحالي %{email_prefix}"
     notify_old_email:
       subject_template: "عنوان بريد الإلكتروني تم تغييرة %{email_prefix}"
@@ -1723,7 +1724,6 @@ ar:
       name: مُحب كبير
     crazy_in_love:
       name: مُحب مجنون
-      description: نشرت 50 اعجابا يوميا لمدة 20 يوم
     thank_you:
       name: شكرًا لك
       description: تم الاعجاب ب(20) منشورا لك و اعجبت ب(10) منشورات
@@ -1815,6 +1815,14 @@ ar:
       finished:
         title: "نسخة دسكورس جاهزة!"
   joined: "انضم"
+  discourse_push_notifications:
+    popup:
+      mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'
+      group_mentioned: 'أشار %{username} إليك في "%{topic}" - %{site_title}'
+      quoted: 'اقتبس %{username} كلامك في "%{topic}" - %{site_title}'
+      replied: 'ردّ %{username} عليك في "%{topic}" - %{site_title}'
+      posted: 'نشر %{username} في "%{topic}" - %{site_title}'
+      linked: '%{username} وضع رابطا لمنشورك في "%{topic}" - %{site_title}'
   reviewables:
     actions:
       agree_and_suspend:

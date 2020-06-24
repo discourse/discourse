@@ -1,0 +1,17 @@
+{{#if displayCount}}
+  <a href={{url}} title={{i18n "badges.granted" count=displayCount}} class="grant-count">{{displayCount}}</a>
+{{/if}}
+{{#if badge.has_badge}}
+  <a href={{url}} class="check-display status-checked">{{d-icon "check"}}</a>
+{{/if}}
+<div class="badge-contents">
+  <div class="badge-icon {{badge.badgeTypeClassName}}">
+    <a href={{url}}>{{icon-or-image badge}}</a>
+  </div>
+  <div class="badge-info">
+    <div class="badge-info-item">
+      <h3><a href={{url}} class="badge-link">{{badge.name}}</a></h3>
+      <div class="badge-summary">{{html-safe summary}}</div>
+    </div>
+  </div>
+</div>

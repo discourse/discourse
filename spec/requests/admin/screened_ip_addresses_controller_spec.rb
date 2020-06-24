@@ -24,13 +24,13 @@ describe Admin::ScreenedIpAddressesController do
       get "/admin/logs/screened_ip_addresses.json", params: { filter: "1.2.*" }
 
       expect(response.status).to eq(200)
-      result = JSON.parse(response.body)
+      result = response.parsed_body
       expect(result.length).to eq(3)
 
       get "/admin/logs/screened_ip_addresses.json", params: { filter: "4.5.6.7" }
 
       expect(response.status).to eq(200)
-      result = JSON.parse(response.body)
+      result = response.parsed_body
       expect(result.length).to eq(1)
     end
   end

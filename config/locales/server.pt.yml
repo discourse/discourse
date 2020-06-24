@@ -45,7 +45,6 @@ pt:
       unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro durante a importação do tema
-      about_json: "Erro de Importação: about.json não existe ou é inválido"
       about_json_values: "about.json possui valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório de git, acesso foi negado ou o repositório não existe"
       unpack_failed: "Falha ao desempacotar o ficheiro"
@@ -57,7 +56,6 @@ pt:
       no_multilevels_components: "Temas com temas descendentes não pode ser temas descendentes"
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
-      data_type_not_a_number: "Tipo de configuração `%{name}` não é suportado. Tipos suportados são `integer`, `bool`, `lista` e `enum`."
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
       default_value_missing: "A configuração `%{name}` não tem um valor predefinido"
       default_not_match_type: "O tipo do valor predefinido para a configuração `%{name}` não é igual ao esperado pela configuração."
@@ -240,9 +238,6 @@ pt:
   topics_in_category: "Tópicos na categoria '%{category}'"
   rss_posts_in_topic: "Feed RSS de '%{topic}'"
   rss_topics_in_category: "Feed RSS dos tópicos da categoria '%{category}'"
-  author_wrote: "%{author} escreveu:"
-  num_posts: "Mensagens:"
-  num_participants: "Participantes:"
   read_full_topic: "Ler tópico completo"
   private_message_abbrev: "Msg"
   rss_description:
@@ -263,6 +258,12 @@ pt:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   revert_version_same: "A versão actual é o mesma versão para a qual está a tentar reverter."
   excerpt_image: "imagem"
+  bookmarks:
+    reminders:
+      later_today: "Hoje, mais tarde"
+      tomorrow: "Amanhã"
+      next_week: "Próxima semana"
+      next_month: "Próximo mês"
   groups:
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
@@ -529,7 +530,7 @@ pt:
       title: "Inapropriado"
       long_form: "sinalizou isto como inapropriado"
     notify_user:
-      title: "Enviar uma mensagem a @{{username}}"
+      title: "Enviar uma mensagem a @%{username}"
       long_form: "utilizador com mensagens"
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -858,7 +859,6 @@ pt:
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
     download_remote_images_to_local: "Converta as imagens remotas em imagens locais transferindo-as; isto previne imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir imagens remotas localmente (em percentagem)"
-    download_remote_images_max_days_old: "Não transferir imagens remotas para publicações que têm mais de n dias."
     disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. "
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
@@ -878,8 +878,6 @@ pt:
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
-    summary_posts_required: "Número mínimo de mensagens num tópico antes que 'Resumir Este Tópico' seja ativo."
-    summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores % de mensagens"
     enable_personal_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens. Note que a equipa de apoio pode mandar mensagens de qualquer maneira."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
@@ -944,12 +942,10 @@ pt:
     enable_instagram_logins: "Activar autenticação pelo Instagram, requer instagram_consumer_key e instagram_consumer_secret"
     instagram_consumer_key: "Chave de consumidor para a autenticação via Instagram"
     instagram_consumer_secret: "Segredo de consumidor para a autenticação via Instagram"
-    readonly_mode_during_backup: "Activar modo de leitura penas durante a realização de uma cópia de segurança"
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
-    s3_disable_cleanup: "Desactive a remoção das cópias de segurança do S3 quando removidas localmente."
     backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
     backup_with_uploads: "Incluir carregamentos em cópias de segurança agendadas. Desativar isto irá salvaguardar apenas a base de dados."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
@@ -1036,7 +1032,6 @@ pt:
     desktop_category_page_style: "Estilo visual para a página de categorias."
     category_colors: "Lista de valores hexadecimais das cores permitidas nas categorias."
     category_style: "Estilo visível para distintivos de categorias."
-    max_image_size_kb: "Tamanho máximo da imagem carregada em kB. Este deverá ser configurado em nginx (client_max_body_size) / apache ou também proxy."
     max_attachment_size_kb: "Tamanho máximo dos anexos carregados em kB. Este deverá ser configurado em nginx (client_max_body_size) / apache ou também proxy."
     authorized_extensions: "Lista de extensões permitidas para carregamento (utilizar '*' para ativar todos os tipos de ficheiros)"
     max_similar_results: "Quantos tópicos semelhantes a serem exibidos acima do editor ao compor um novo tópico. A comparação é baseada no título e no corpo."
@@ -1232,6 +1227,7 @@ pt:
       category: "Categorias"
       topic: "Resultados"
       user: "Utilizadores"
+    results_page: "Resultados da pesquisa por '%{term}'"
   sso:
     login_error: "Erro de Início de Sessão"
     not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
@@ -1252,6 +1248,10 @@ pt:
     errors:
       different_topics: "Publicações pertencentes a tópicos diferentes não podem ser unidas."
       different_users: "Publicações pertencentes a utilizadores diferentes não podem ser unidas."
+  publish_page:
+    slug_errors:
+      blank: "não pode estar em branco"
+      invalid: "contem caracteres inválidos"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Esta mensagem foi automaticamente fechada após atingir o limite máximo de %{count} resposta."
@@ -1654,7 +1654,6 @@ pt:
       why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"
-      unread_messages: "Mensagens Não Lidas"
       unread_notifications: "Notificações Não Lidas"
       liked_received: "Gostos Recebidos"
       new_users: "Novos Utilizadores"
@@ -1965,7 +1964,6 @@ pt:
       name: Amor superior
     crazy_in_love:
       name: Amando Loucamente
-      description: Utilizou 50 gostos num dia 20 vezes
     thank_you:
       name: Obrigado
       description: Tem 20 publicações gostadas e deu 10 gostos
@@ -2106,6 +2104,13 @@ pt:
   joined: "Juntou-se"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
+      quoted: '%{username} citou-o em "%{topic}" - %{site_title}'
+      replied: '%{username} respondeu-lhe em "%{topic}" - %{site_title}'
+      posted: '%{username} publicou em "%{topic}" - %{site_title}'
+      linked: '%{username} ligou à sua publicação de "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
       confirm_title: "Notificações ativas - %{site_title}"
       confirm_body: "Sucesso! As notificações foram ativadas."
   reviewables:

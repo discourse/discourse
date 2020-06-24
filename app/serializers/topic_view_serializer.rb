@@ -61,6 +61,7 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
+    :bookmark_reminder_at,
     :message_archived,
     :topic_timer,
     :private_topic_timer,
@@ -70,11 +71,15 @@ class TopicViewSerializer < ApplicationSerializer
     :destination_category_id,
     :pm_with_non_human_user,
     :queued_posts_count,
-    :show_read_indicator
+    :show_read_indicator,
+    :requested_group_name,
+    :thumbnails
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
   has_many :pending_posts, serializer: TopicPendingPostSerializer, root: false, embed: :objects
+
+  has_one :published_page, embed: :objects
 
   def details
     object
@@ -182,7 +187,15 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def bookmarked
-    object.topic_user&.bookmarked
+    object.has_bookmarks?
+  end
+
+  def include_bookmark_reminder_at?
+    bookmarked
+  end
+
+  def bookmark_reminder_at
+    object.first_post_bookmark_reminder_at
   end
 
   def topic_timer
@@ -250,5 +263,31 @@ class TopicViewSerializer < ApplicationSerializer
 
   def show_read_indicator
     object.show_read_indicator?
+  end
+
+  def requested_group_name
+    if scope&.user
+      group = Group
+        .joins('JOIN group_users ON groups.id = group_users.group_id')
+        .find_by(
+          id: object.topic.custom_fields['requested_group_id'].to_i,
+          group_users: { user_id: scope.user.id, owner: true }
+        )
+
+      group.name if group
+    end
+  end
+
+  def include_requested_group_name?
+    object.personal_message
+  end
+
+  def include_published_page?
+    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
+  end
+
+  def thumbnails
+    extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
+    object.topic.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
   end
 end

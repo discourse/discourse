@@ -1,0 +1,25 @@
+{{#d-modal-body class="change-ownership"}}
+  <span>
+    {{html-safe (i18n (if selectedPostsUsername "topic.change_owner.instructions" "topic.change_owner.instructions_without_old_user")
+        count=selectedPostsCount
+        old_user=selectedPostsUsername
+      )
+    }}
+  </span>
+
+  <form>
+    <label></label>
+    {{user-selector single="true"
+                    usernames=new_user
+                    placeholderKey="topic.change_owner.placeholder"
+                    autocomplete="discourse"}}
+  </form>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button
+    class="btn-primary"
+    action=(action "changeOwnershipOfPosts")
+    disabled=buttonDisabled
+    label=(if saving "saving" "topic.change_owner.action")}}
+</div>

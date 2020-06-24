@@ -1,0 +1,66 @@
+{{#if noContent}}
+  <div class="alert alert-info">{{noResultsHelp}}</div>
+{{else}}
+  {{#conditional-loading-spinner condition=loading}}
+    {{#load-more selector=".bookmark-list tr" action=(action "loadMore")}}
+      <table class="topic-list bookmark-list">
+        <thead>
+          <th>{{i18n "topic.title"}}</th>
+          <th>&nbsp;</th>
+          <th class="post-metadata">{{i18n "post.bookmarks.updated"}}</th>
+          <th class="post-metadata">{{i18n "activity"}}</th>
+          <th>&nbsp;</th>
+        </thead>
+        <tbody>
+          {{#each content as |bookmark|}}
+            <tr class="topic-list-item bookmark-list-item">
+              <td class="main-link">
+                <span class="link-top-line">
+                  <div class="bookmark-metadata">
+                    {{#if bookmark.name}}
+                      <span class="bookmark-metadata-item">
+                        {{d-icon "info-circle"}}{{bookmark.name}}
+                      </span>
+                    {{/if}}
+                    {{#if bookmark.reminder_at}}
+                      <span class="bookmark-metadata-item">
+                        {{d-icon "far-clock"}}{{bookmark.formattedReminder}}
+                      </span>
+                    {{/if}}
+                  </div>
+
+                  {{topic-status topic=bookmark}}
+                  {{topic-link bookmark}}
+                </span>
+                {{#if bookmark.excerpt}}
+                  <p class="post-excerpt">{{html-safe bookmark.excerpt}}</p>
+                {{/if}}
+                <div class="link-bottom-line">
+                  {{category-link bookmark.category}}
+                  {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
+                </div>
+              </td>
+              <td>
+                {{#if bookmark.post_user_avatar_template}}
+                  <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}}>
+                    {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
+                  </a>
+                {{/if}}
+              </td>
+              <td class="post-metadata">{{format-date bookmark.updated_at format="tiny"}}</td>
+              {{raw "list/activity-column" topic=bookmark class="num post-metadata" tagName="td"}}
+              <td>
+                {{bookmark-actions-dropdown
+                  bookmark=bookmark
+                  removeBookmark=(action "removeBookmark")
+                  editBookmark=(action "editBookmark")
+                }}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{conditional-loading-spinner condition=loadingMore}}
+    {{/load-more}}
+  {{/conditional-loading-spinner}}
+{{/if}}

@@ -33,13 +33,17 @@ class MetadataController < ApplicationController
       end
     end
 
+    scheme_id = view_context.scheme_id
+    primary_color = ColorScheme.hex_for_name('primary', scheme_id)
+    icon_url_base = UrlHelper.absolute("/svg-sprite/#{Discourse.current_hostname}/icon/#{primary_color}")
+
     manifest = {
       name: SiteSetting.title,
       short_name: SiteSetting.short_title.presence || SiteSetting.title.truncate(12, separator: ' ', omission: ''),
       display: display,
       start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
-      background_color: "##{ColorScheme.hex_for_name('secondary', view_context.scheme_id)}",
-      theme_color: "##{ColorScheme.hex_for_name('header_background', view_context.scheme_id)}",
+      background_color: "##{ColorScheme.hex_for_name('secondary', scheme_id)}",
+      theme_color: "##{ColorScheme.hex_for_name('header_background', scheme_id)}",
       icons: [
       ],
       share_target: {
@@ -50,7 +54,57 @@ class MetadataController < ApplicationController
           title: "title",
           text: "body"
         }
-      }
+      },
+      shortcuts: [
+        {
+          name: I18n.t('js.topic.create_long'),
+          short_name: I18n.t('js.topic.create'),
+          url: "/new-topic",
+          icons: [
+            {
+              src: "#{icon_url_base}/plus.svg",
+              sizes: "131x150",
+              type: "image/svg"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.user.messages.inbox'),
+          short_name: I18n.t('js.user.messages.inbox'),
+          url: "/my/messages",
+          icons: [
+            {
+              src: "#{icon_url_base}/envelope.svg",
+              sizes: "150x150",
+              type: "image/svg"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.user.bookmarks'),
+          short_name: I18n.t('js.user.bookmarks'),
+          url: "/my/bookmarks",
+          icons: [
+            {
+              src: "#{icon_url_base}/bookmark.svg",
+              sizes: "113x150",
+              type: "image/svg"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.filters.top.title'),
+          short_name: I18n.t('js.filters.top.title'),
+          url: "/top",
+          icons: [
+            {
+              src: "#{icon_url_base}/signal.svg",
+              sizes: "188x150",
+              type: "image/svg"
+            }
+          ]
+        }
+      ]
     }
 
     logo = SiteSetting.site_manifest_icon_url

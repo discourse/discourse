@@ -37,7 +37,8 @@ class AdminUserIndexQuery
   end
 
   def custom_direction
-    asc = params[:ascending]
+    Discourse.deprecate(":ascending is deprecated please use :asc instead", output_in_test: true) if params[:ascending]
+    asc = params[:asc] || params[:ascending]
     asc.present? && asc ? "ASC" : "DESC"
   end
 
@@ -78,16 +79,6 @@ class AdminUserIndexQuery
     end
   end
 
-  def suspect_users
-    @query
-      .activated
-      .human_users
-      .joins(:user_profile, :user_stat)
-      .where("users.created_at <= ?", 1.day.ago)
-      .where("LENGTH(COALESCE(user_profiles.bio_raw, user_profiles.website, '')) > 0")
-      .where("user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1")
-  end
-
   def filter_by_query_classification
     case params[:query]
     when 'staff'      then @query.where("admin or moderator")
@@ -96,7 +87,6 @@ class AdminUserIndexQuery
     when 'silenced'   then @query.silenced
     when 'suspended'  then @query.suspended
     when 'pending'    then @query.not_suspended.where(approved: false, active: true)
-    when 'suspect'    then suspect_users
     when 'staged'     then @query.where(staged: true)
     end
   end

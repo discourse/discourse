@@ -224,11 +224,11 @@ describe UserAnonymizer do
       end
 
       it "removes invites" do
-        Fabricate(:invite, user: user)
-        Fabricate(:invite, user: another_user)
+        Fabricate(:invited_user, invite: Fabricate(:invite), user: user)
+        Fabricate(:invited_user, invite: Fabricate(:invite), user: another_user)
 
-        expect { make_anonymous }.to change { Invite.count }.by(-1)
-        expect(Invite.where(user_id: user.id).count).to eq(0)
+        expect { make_anonymous }.to change { InvitedUser.count }.by(-1)
+        expect(InvitedUser.where(user_id: user.id).count).to eq(0)
       end
 
       it "removes email tokens" do

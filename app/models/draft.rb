@@ -9,7 +9,9 @@ class Draft < ActiveRecord::Base
 
   class OutOfSequence < StandardError; end
 
-  def self.set(user, key, sequence, data, owner = nil, retry_not_unique: true)
+  def self.set(user, key, sequence, data, owner = nil)
+    return 0 if !User.human_user_id?(user.id)
+
     if SiteSetting.backup_drafts_to_pm_length > 0 && SiteSetting.backup_drafts_to_pm_length < data.length
       backup_draft(user, key, sequence, data)
     end
@@ -43,17 +45,17 @@ class Draft < ActiveRecord::Base
         raise Draft::OutOfSequence
       end
 
-      if owner && current_owner && current_owner != owner
-        sequence += 1
+      sequence += 1
 
-        DraftSequence.upsert({
-            sequence: sequence,
-            draft_key: key,
-            user_id: user.id,
-          },
-          unique_by: [:user_id, :draft_key]
-        )
-      end
+      # we need to keep upping our sequence on every save
+      # if we do not do that there are bad race conditions
+      DraftSequence.upsert({
+          sequence: sequence,
+          draft_key: key,
+          user_id: user.id,
+        },
+        unique_by: [:user_id, :draft_key]
+      )
 
       DB.exec(<<~SQL, id: draft_id, sequence: sequence, data: data, owner: owner || current_owner)
         UPDATE drafts
@@ -61,36 +63,40 @@ class Draft < ActiveRecord::Base
              , data = :data
              , revisions = revisions + 1
              , owner = :owner
+             , updated_at = CURRENT_TIMESTAMP
          WHERE id = :id
       SQL
 
     elsif sequence != current_sequence
       raise Draft::OutOfSequence
     else
-      begin
-        Draft.create!(
-          user_id: user.id,
-          draft_key: key,
-          data: data,
-          sequence: sequence,
-          owner: owner
-        )
-      rescue ActiveRecord::RecordNotUnique => e
-        # we need this to be fast and with minimal locking, in some cases we can have a race condition
-        # around 2 controller actions calling for draft creation at the exact same time
-        # to avoid complex locking and a distributed mutex, since this is so rare, simply add a single retry
-        if retry_not_unique
-          set(user, key, sequence, data, owenr, retry_not_unique: false)
-        else
-          raise e
-        end
-      end
+      opts = {
+        user_id: user.id,
+        draft_key: key,
+        data: data,
+        sequence: sequence,
+        owner: owner
+      }
+
+      DB.exec(<<~SQL, opts)
+        INSERT INTO drafts (user_id, draft_key, data, sequence, owner, created_at, updated_at)
+        VALUES (:user_id, :draft_key, :data, :sequence, :owner, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        ON CONFLICT (user_id, draft_key) DO
+        UPDATE
+        SET
+          sequence = :sequence,
+          data = :data,
+          revisions = drafts.revisions + 1,
+          owner = :owner,
+          updated_at = CURRENT_TIMESTAMP
+      SQL
     end
 
     sequence
   end
 
   def self.get(user, key, sequence)
+    return if !user || !user.id || !User.human_user_id?(user.id)
 
     opts = {
       user_id: user.id,
@@ -125,6 +131,8 @@ class Draft < ActiveRecord::Base
   end
 
   def self.clear(user, key, sequence)
+    return if !user || !user.id || !User.human_user_id?(user.id)
+
     current_sequence = DraftSequence.current(user, key)
 
     # bad caller is a reason to complain
@@ -334,7 +342,7 @@ end
 #  data       :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  sequence   :integer          default(0), not null
+#  sequence   :bigint           default(0), not null
 #  revisions  :integer          default(1), not null
 #  owner      :string
 #

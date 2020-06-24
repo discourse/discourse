@@ -41,7 +41,7 @@ module DiscourseNarrativeBot
       tutorial_recover: {
         next_state: :tutorial_category_hashtag,
         next_instructions: Proc.new do
-          category = Category.secured.last
+          category = Category.secured(Guardian.new(@user)).last
           slug = category.slug
 
           if parent_category = category.parent_category
@@ -82,7 +82,7 @@ module DiscourseNarrativeBot
       },
 
       tutorial_poll: {
-        prerequisite: Proc.new { SiteSetting.poll_enabled },
+        prerequisite: Proc.new { SiteSetting.poll_enabled && @user.has_trust_level?(SiteSetting.poll_minimum_trust_level_to_create) },
         next_state: :tutorial_details,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
         reply: {
@@ -97,6 +97,10 @@ module DiscourseNarrativeBot
         }
       }
     }
+
+    def self.badge_name
+      BADGE_NAME
+    end
 
     def self.reset_trigger
       I18n.t('discourse_narrative_bot.advanced_user_narrative.reset_trigger')
@@ -276,7 +280,7 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css('.hashtag').size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css('.hashtag').size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.category_hashtag.reply", i18n_post_args)}
 
@@ -327,7 +331,7 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css(".poll").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css(".poll").size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.poll.reply", i18n_post_args)}
 
@@ -350,7 +354,7 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      if Nokogiri::HTML.fragment(@post.cooked).css("details").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css("details").size > 0
         reply_to(@post, I18n.t("#{I18N_KEY}.details.reply", i18n_post_args))
       else
         reply_to(@post, I18n.t("#{I18N_KEY}.details.not_found", i18n_post_args)) unless @data[:attempted]

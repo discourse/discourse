@@ -1,0 +1,16 @@
+{{#if category}}
+  <div class="category-status">
+    {{#if hasParentCategory}}
+      {{#unless hideParentCategory}}
+        {{badgeForParentCategory}}
+      {{/unless}}
+    {{/if}}
+    {{badgeForCategory}}
+  </div>
+
+  {{#if shouldDisplayDescription}}
+    <div class="category-desc">{{dir-span description}}</div>
+  {{/if}}
+{{else}}
+  {{html-safe label}}
+{{/if}}

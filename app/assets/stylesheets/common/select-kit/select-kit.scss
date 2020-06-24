@@ -1,16 +1,11 @@
 .select-kit {
   border: none;
-  min-width: 220px;
   box-sizing: border-box;
   display: inline-block;
   flex-direction: column;
   position: relative;
   vertical-align: middle;
   user-select: none;
-
-  &.is-hidden {
-    display: none;
-  }
 
   &.is-disabled {
     pointer-events: none;
@@ -22,9 +17,6 @@
     .select-kit-body {
       display: flex;
       flex-direction: column;
-      left: 0;
-      position: absolute;
-      top: 0;
       align-items: center;
       justify-content: center;
     }
@@ -67,11 +59,18 @@
     flex-direction: row;
     min-height: 30px;
 
+    .d-icon-spinner {
+      -webkit-animation: rotate-forever 1s infinite linear;
+      animation: rotate-forever 1s infinite linear;
+    }
+
     .selected-name {
       text-align: left;
       flex: 0 1 auto;
+      align-items: center;
       color: inherit;
       display: flex;
+      outline: none;
 
       .d-icon + .name {
         margin-left: 0.5em;
@@ -79,6 +78,14 @@
 
       .name {
         display: inline-block;
+        > .d-icon {
+          margin-left: 0.5em;
+          margin-right: 0;
+        }
+      }
+
+      > .d-icon {
+        margin-right: 0;
       }
 
       &.select-kit-selected-color {
@@ -101,8 +108,10 @@
 
     .caret-icon {
       margin-left: auto;
+      margin-right: 0;
       padding-left: 5px;
       pointer-events: none;
+      color: inherit;
     }
 
     .d-button-label {
@@ -123,18 +132,17 @@
     display: none;
     background: $secondary;
     box-sizing: border-box;
-    min-width: inherit;
   }
 
   .select-kit-row {
     cursor: pointer;
-    line-height: $line-height-medium;
     outline: none;
     display: flex;
     flex: 1 0 auto;
     box-sizing: border-box;
     align-items: center;
     justify-content: flex-start;
+    padding: 0.75em;
 
     .name {
       margin: 0;
@@ -179,7 +187,7 @@
     -webkit-overflow-scrolling: touch;
     margin: 0;
     padding: 0;
-    max-height: 200px;
+    max-height: 250px;
     width: 100%;
 
     .validation-message {

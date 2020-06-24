@@ -185,9 +185,6 @@ ro:
   topics_in_category: "Subiecte în categoria '%{category}'"
   rss_posts_in_topic: "RSS din '%{topic}'"
   rss_topics_in_category: "RSS de subiecte din categoria '%{category}'"
-  author_wrote: "%{author} a scris:"
-  num_posts: "Mesaje:"
-  num_participants: "Participanți:"
   read_full_topic: "Citește întregul subiect"
   private_message_abbrev: "Msg"
   rss_description:
@@ -202,6 +199,12 @@ ro:
   too_late_to_edit: "Acea postare este prea veche. Nu mai poate fi editată sau ștearsă."
   revert_version_same: "Versiunea curentă este identică cu cea la care încerci să revii."
   excerpt_image: "imagine"
+  bookmarks:
+    reminders:
+      later_today: "Mai târziu azi"
+      tomorrow: "Mâine"
+      next_week: "Săptămâna viitoare"
+      next_month: "Luna viitoare"
   groups:
     errors:
       can_not_modify_automatic: "Nu poți modifica un grup automat"
@@ -487,7 +490,7 @@ ro:
       title: "Necorespunzător"
       long_form: "marcat ca necorespunzător"
     notify_user:
-      title: "Trimite-i un mesaj lui @{{username}}"
+      title: "Trimite-i un mesaj lui @%{username}"
       long_form: "utilizator căruia i-a fost trimis mesaj"
       email_title: 'Postarea ta din "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -537,6 +540,7 @@ ro:
         make: "Acest subiect este de acum un banner. Va apărea în susul fiecărei pagini până când opțiunea va fi anulată de către utilizator."
         remove: "Acest subiect nu mai este un banner. Nu va mai apărea în susul fiecărei pagini."
   unsubscribed:
+    description: "Setările de email pentru <b>%{email}</b>au fost actualizate. Pentru a schimba setările de email, <a href='%{url}'>du-te la setări.</a>"
     topic_description: "Pentru a te abona din nou la %{link}, folosește controlul de notificări din partea dreaptă-jos a subiectului"
   unsubscribe:
     title: "Dezabonare"
@@ -814,7 +818,6 @@ ro:
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_to_local: "Transformă imaginile la distanță în imagini locale descărcându-le; asta previne imaginile stricate."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
-    download_remote_images_max_days_old: "Nu descărca imaginile de la distanță pentru postări care sunt mai vechi de n zile."
     disabled_image_download_domains: "Imaginile la distanță nu vor mai fi descărcate de pe aceste domenii. Listă delimitată de simbolul | (pipe)."
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
     edit_history_visible_to_public: "Permite tuturor să vadă versiunile precedente ale unei postări editate. Când e dezactivat, ele pot fi văzute doar de membrii echipei."
@@ -834,8 +837,6 @@ ro:
     email_custom_headers: "O listă delimitată cu simbolul | (pipe) a header-elor personalizate de email"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
-    summary_posts_required: "Minimul de postări într-un subiect înainte de a se activa 'Rezumă acest subiect'."
-    summary_likes_required: "Minimul de aprecieri într-un subiect înainte de a se activa 'Rezumă acest subiect'."
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
     enable_personal_messages: "Acordă nivelul de încredere 1 (configurabil via nivel minim de încredere pentru trimiterea de mesaje) utilizatorilor, pentru a le permite să creeze și să răspundă la mesaje. Atenție: echipa poate oricând să trimită mesaje, indiferent de setări."
     enable_long_polling: "Bus-ul de mesaje folosit pentru notificări poate utiliza long polling."
@@ -901,12 +902,10 @@ ro:
     enable_instagram_logins: "Activează autentificarea prin Instagram, necesită instagram_consumer_key și instagram_consumer_secret"
     instagram_consumer_key: "Cheie consumator pentru autentificarea Instagram"
     instagram_consumer_secret: "Autentificare Instagram pe bază de secret consumator"
-    readonly_mode_during_backup: "Activează modul exclusiv-citire în timpul operațiunii de backup"
     allow_restore: "Bifează-l doar dacă dorești să restaurezi un fișier de backup. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
-    s3_disable_cleanup: "Dezactivează eliminarea backup-urilor de pe S3 când sunt șterse local."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
     backup_with_uploads: "Include încărcări în backup-urile programate. Dezactivarea acestei opțiuni va face backup doar la baza de date."
     active_user_rate_limit_secs: "Cât de des se actualizează câmpul 'last_seen_at', în secunde"
@@ -993,7 +992,6 @@ ro:
     desktop_category_page_style: "Stil vizual pentru pagina /categories ."
     category_colors: "O listă hexazecimală de valori de culori permise pentru categorii."
     category_style: "Stil vizual pentru categoria ecusoane."
-    max_image_size_kb: "Mărimea maximă a unei imagini încărcate în kB. Aceasta trebuie configurată în nginx (client_max_body_size) / apache sau proxy."
     max_attachment_size_kb: "Mărimea maximă a unui atașament de fișiere încărcate în Kb. Aceasta trebuie configurata în nginx (client_max_body_size) / apache sau proxy."
     authorized_extensions: "O listă de extensii de fișiere permise la încărcare (folosiți '*' pentru activarea tuturor tipurilor de fișiere)"
     max_similar_results: "Câte subiecte similare vor fi afișate deasupra editorului atunci când se compune un subiect nou. Comparația se face după titlu și pe conținut."
@@ -1190,6 +1188,7 @@ ro:
       category: "Categorii"
       topic: "Rezultate"
       user: "Utilizatori"
+    results_page: "Caută rezultate pentru '%{term}'"
   sso:
     not_found: "Contul tău nu a putut fi găsit. Te rugăm contactează administratorul site-ului."
     account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."
@@ -1210,6 +1209,10 @@ ro:
     errors:
       different_topics: "Postările care aparțin unor subiecte diferite nu pot fi comasate."
       different_users: "Postările care aparțin unor utilizatori diferiți nu pot fi comasate."
+  publish_page:
+    slug_errors:
+      blank: "nu poate fi gol"
+      invalid: "conține caractere invalide"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Acest mesaj va fi închis automat după ce atinge limita de maximă de un răspuns."
@@ -1586,7 +1589,6 @@ ro:
       why: "Un rezumat scurt al %{site_link} de la ultima ta vizită din %{last_seen_at}."
       since_last_visit: "De la ultima ta vizită"
       new_topics: "Subiecte noi"
-      unread_messages: "Mesaje necitite"
       unread_notifications: "Notificări necitite"
       liked_received: "Aprecieri primite"
       new_users: "Utilizatori noi"
@@ -1594,6 +1596,8 @@ ro:
       follow_topic: "Urmărește acest subiect"
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
+      unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Poți schimba %{email_preferences_link} sau, pentru a te dezabona, %{unsubscribe_link}"
+      your_email_settings: "setările de email"
       click_here: "click aici"
       preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
     forgot_password:
@@ -1872,7 +1876,6 @@ ro:
       name: Înaltă stimă
     crazy_in_love:
       name: Maximă stimă
-      description: Ai folosit de 20 de ori 50 de aprecieri pe zi
     thank_you:
       name: Mulțumesc
       description: Ai 20 de postări apreciate și ai dat 10 apreiceri

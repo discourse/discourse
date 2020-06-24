@@ -73,9 +73,7 @@ describe BackupRestore::UploadsRestorer do
   def uploads_path(database)
     path = File.join("uploads", database)
 
-    if Discourse.is_parallel_test?
-      path = File.join(path, ENV['TEST_ENV_NUMBER'].presence || '1')
-    end
+    path = File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
 
     "/#{path}/"
   end

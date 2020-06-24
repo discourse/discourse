@@ -9,6 +9,7 @@ class ListableTopicSerializer < BasicTopicSerializer
              :last_posted_at,
              :bumped,
              :bumped_at,
+             :archetype,
              :unseen,
              :last_read_post_number,
              :unread,
@@ -24,9 +25,19 @@ class ListableTopicSerializer < BasicTopicSerializer
              :bookmarked,
              :liked,
              :unicode_title,
-             :unread_by_group_member
+             :unread_by_group_member,
+             :thumbnails
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
+
+  def image_url
+    object.image_url
+  end
+
+  def thumbnails
+    extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
+    object.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
+  end
 
   def include_unicode_title?
     object.title.match?(/:[\w\-+]+:/)
@@ -110,7 +121,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   alias :include_new_posts? :has_user_data
 
   def include_excerpt?
-    pinned || SiteSetting.always_include_topic_excerpts
+    pinned || SiteSetting.always_include_topic_excerpts || ThemeModifierHelper.new(request: scope.request).serialize_topic_excerpts
   end
 
   def pinned

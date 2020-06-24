@@ -1,0 +1,159 @@
+{{#d-modal-body class="feature-topic"}}
+  {{#if model.pinned_at}}
+    <div class="feature-section">
+      <div class="desc">
+        {{#if model.pinned_globally}}
+          <p>
+            {{#conditional-loading-spinner size="small" condition=loading}}
+              {{#if pinnedGloballyCount}}
+                {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount)}}
+              {{else}}
+                {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
+              {{/if}}
+            {{/conditional-loading-spinner}}
+          </p>
+          <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
+        {{else}}
+          <p>
+            {{#conditional-loading-spinner size="small" condition=loading}}
+              {{html-safe alreadyPinnedMessage}}
+            {{/conditional-loading-spinner}}
+          </p>
+          <p>{{i18n "topic.feature_topic.pin_note"}}</p>
+        {{/if}}
+        <p>{{html-safe unPinMessage}}</p>
+        <p>{{d-button action=(action "unpin") icon="thumbtack" label="topic.feature.unpin" class="btn-primary"}}</p>
+      </div>
+    </div>
+  {{else}}
+    <div class="feature-section">
+      <div class="desc">
+        <p>
+          {{#conditional-loading-spinner size="small" condition=loading}}
+            {{html-safe alreadyPinnedMessage}}
+          {{/conditional-loading-spinner}}
+        </p>
+        <p>
+          {{i18n "topic.feature_topic.pin_note"}}
+        </p>
+        {{#if site.isMobileDevice}}
+          <p>
+            {{html-safe pinMessage}}
+          </p>
+          <p class="with-validation">
+            {{future-date-input
+              class="pin-until"
+              includeFarFuture=true
+              clearable=true
+              input=model.pinnedInCategoryUntil
+              onChangeInput=(action (mut model.pinnedInCategoryUntil))
+            }}
+            {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
+          </p>
+        {{else}}
+          <p class="with-validation">
+            {{html-safe pinMessage}}
+            <span>
+              {{d-icon "far-clock"}}
+              {{future-date-input
+                class="pin-until"
+                includeFarFuture=true
+                clearable=true
+                input=model.pinnedInCategoryUntil
+                onChangeInput=(action (mut model.pinnedInCategoryUntil))
+              }}
+              {{popup-input-tip validation=pinInCategoryValidation shownAt=pinInCategoryTipShownAt}}
+            </span>
+          </p>
+        {{/if}}
+        <p>
+          {{d-button action=(action "pin") icon="thumbtack" label="topic.feature.pin" class="btn-primary"}}
+        </p>
+      </div>
+    </div>
+    <div class="feature-section">
+      <div class="desc">
+        <p>
+          {{#conditional-loading-spinner size="small" condition=loading}}
+            {{#if pinnedGloballyCount}}
+              {{html-safe (i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount)}}
+            {{else}}
+              {{html-safe (i18n "topic.feature_topic.not_pinned_globally")}}
+            {{/if}}
+          {{/conditional-loading-spinner}}
+        </p>
+        <p>
+          {{i18n "topic.feature_topic.global_pin_note"}}
+        </p>
+        {{#if site.isMobileDevice}}
+          <p>
+            {{i18n "topic.feature_topic.pin_globally"}}
+          </p>
+          <p class="with-validation">
+            {{future-date-input
+              class="pin-until"
+              includeFarFuture=true
+              clearable=true
+              input=model.pinnedGloballyUntil
+              onChangeInput=(action (mut model.pinnedGloballyUntil))
+            }}
+            {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
+          </p>
+        {{else}}
+          <p class="with-validation">
+            {{i18n "topic.feature_topic.pin_globally"}}
+            <span>
+              {{d-icon "far-clock"}}
+              {{future-date-input
+                class="pin-until"
+                includeFarFuture=true
+                clearable=true
+                input=model.pinnedGloballyUntil
+                onChangeInput=(action (mut model.pinnedGloballyUntil))
+              }}
+              {{popup-input-tip validation=pinGloballyValidation shownAt=pinGloballyTipShownAt}}
+            </span>
+          </p>
+        {{/if}}
+        <p>
+          {{d-button action=(action "pinGlobally") icon="thumbtack" label="topic.feature.pin_globally" class="btn-primary"}}
+        </p>
+      </div>
+    </div>
+  {{/if}}
+  {{#if currentUser.staff}}
+    <div class="feature-section">
+      <div class="desc">
+        <p>
+          {{#conditional-loading-spinner size="small" condition=loading}}
+            {{#if bannerCount}}
+              {{html-safe (i18n "topic.feature_topic.banner_exists")}}
+            {{else}}
+              {{html-safe (i18n "topic.feature_topic.no_banner_exists")}}
+            {{/if}}
+          {{/conditional-loading-spinner}}
+        </p>
+        <p>
+          {{i18n "topic.feature_topic.banner_note"}}
+        </p>
+        <p>
+          {{#if model.isBanner}}
+            {{i18n "topic.feature_topic.remove_banner"}}
+          {{else}}
+            {{i18n "topic.feature_topic.make_banner"}}
+          {{/if}}
+        </p>
+        <p>
+          {{#if model.isBanner}}
+            {{d-button action=(action "removeBanner") icon="thumbtack" label="topic.feature.remove_banner" class="btn-primary"}}
+          {{else}}
+            {{d-button action=(action "makeBanner") icon="thumbtack" label="topic.feature.make_banner" class="btn-primary"}}
+          {{/if}}
+        </p>
+      </div>
+    </div>
+  {{/if}}
+{{/d-modal-body}}
+<div class="modal-footer">
+  {{d-modal-cancel close=(route-action "closeModal")}}
+</div>

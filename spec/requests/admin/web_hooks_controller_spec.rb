@@ -34,7 +34,7 @@ describe Admin::WebHooksController do
 
         expect(response.status).to eq(200)
 
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["web_hook"]["payload_url"]).to eq("https://meta.discourse.org/")
         expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:web_hook_create]).count).to eq(1)
       end
@@ -54,7 +54,7 @@ describe Admin::WebHooksController do
         }
 
         expect(response.status).to eq(422)
-        response_body = JSON.parse(response.body)
+        response_body = response.parsed_body
 
         expect(response_body["errors"]).to be_present
       end

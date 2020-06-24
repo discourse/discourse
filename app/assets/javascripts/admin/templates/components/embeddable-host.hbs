@@ -3,10 +3,10 @@
     <div class="label">{{i18n "admin.embedding.host"}}</div>
     {{input value=buffered.host placeholder="example.com" enter=(action "save") class="host-name"}}
   </td>
-	<td class="editing-input">
+  <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.class_name"}}</div>
     {{input value=buffered.class_name placeholder="class" enter=(action "save") class="class-name"}}
-	</td>
+  </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.path_whitelist"}}</div>
     {{input value=buffered.path_whitelist placeholder="/blog/.*" enter=(action "save") class="path-whitelist"}}
@@ -30,6 +30,6 @@
   <td><div class="label">{{i18n "admin.embedding.category"}}</div>{{category-badge host.category}}</td>
   <td class="controls">
     {{d-button icon="pencil-alt" action=(action "edit")}}
-    {{d-button icon="far-trash-alt" action=(action "delete") class='btn-danger'}}
+    {{d-button icon="far-trash-alt" action=(action "delete") class="btn-danger"}}
   </td>
 {{/if}}

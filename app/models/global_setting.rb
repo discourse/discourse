@@ -134,17 +134,18 @@ class GlobalSetting
       end
     end
 
-    hash["adapter"] = "postgresql_fallback" if hash["replica_host"]
-
     hostnames = [ hostname ]
     hostnames << backup_hostname if backup_hostname.present?
 
     hostnames << URI.parse(cdn_url).host if cdn_url.present?
+    hostnames << cdn_origin_hostname if cdn_origin_hostname.present?
 
     hash["host_names"] = hostnames
     hash["database"] = db_name
-
     hash["prepared_statements"] = !!self.db_prepared_statements
+    hash["idle_timeout"] = connection_reaper_age if connection_reaper_age.present?
+    hash["reaping_frequency"] = connection_reaper_interval if connection_reaper_interval.present?
+    hash["advisory_locks"] = !!self.db_advisory_locks
 
     { "production" => hash }
   end
@@ -162,16 +163,17 @@ class GlobalSetting
         c[:host] = redis_host if redis_host
         c[:port] = redis_port if redis_port
 
-        if redis_slave_host && redis_slave_port
-          c[:slave_host] = redis_slave_host
-          c[:slave_port] = redis_slave_port
-          c[:connector] = DiscourseRedis::Connector
+        if redis_slave_host && redis_slave_port && defined?(RailsFailover)
+          c[:replica_host] = redis_slave_host
+          c[:replica_port] = redis_slave_port
+          c[:connector] = RailsFailover::Redis::Connector
         end
 
         c[:password] = redis_password if redis_password.present?
         c[:db] = redis_db if redis_db != 0
         c[:db] = 1 if Rails.env == "test"
         c[:id] = nil if redis_skip_client_commands
+        c[:ssl] = true if redis_use_ssl
 
         c.freeze
       end
@@ -186,18 +188,36 @@ class GlobalSetting
         c[:port] = message_bus_redis_port if message_bus_redis_port
 
         if message_bus_redis_slave_host && message_bus_redis_slave_port
-          c[:slave_host] = message_bus_redis_slave_host
-          c[:slave_port] = message_bus_redis_slave_port
-          c[:connector] = DiscourseRedis::Connector
+          c[:replica_host] = message_bus_redis_slave_host
+          c[:replica_port] = message_bus_redis_slave_port
+          c[:connector] = RailsFailover::Redis::Connector
         end
 
         c[:password] = message_bus_redis_password if message_bus_redis_password.present?
         c[:db] = message_bus_redis_db if message_bus_redis_db != 0
         c[:db] = 1 if Rails.env == "test"
         c[:id] = nil if message_bus_redis_skip_client_commands
+        c[:ssl] = true if redis_use_ssl
 
         c.freeze
       end
+  end
+
+  # test only
+  def self.reset_whitelisted_theme_ids!
+    @whitelisted_theme_ids = nil
+  end
+
+  def self.whitelisted_theme_ids
+    return nil if whitelisted_theme_repos.blank?
+
+    @whitelisted_theme_ids ||= begin
+      urls = whitelisted_theme_repos.split(",").map(&:strip)
+      Theme
+        .joins(:remote_theme)
+        .where('remote_themes.remote_url in (?)', urls)
+        .pluck(:id)
+    end
   end
 
   def self.add_default(name, default)

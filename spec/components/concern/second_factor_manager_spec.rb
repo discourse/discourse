@@ -69,7 +69,7 @@ RSpec.describe SecondFactorManager do
         token = user.user_second_factors.totps.first.totp_object.now
 
         expect(user.authenticate_totp(token)).to eq(true)
-        expect(user.user_second_factors.totps.first.last_used).to eq_time(DateTime.now)
+        expect(user.user_second_factors.totps.first.last_used).to eq_time(Time.zone.now)
         expect(user.authenticate_totp(token)).to eq(false)
       end
     end

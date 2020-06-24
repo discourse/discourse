@@ -24,7 +24,7 @@ class CategoriesController < ApplicationController
     parent_category = Category.find_by_slug(params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
 
     category_options = {
-      is_homepage: current_homepage == "categories".freeze,
+      is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: include_topics(parent_category)
     }
@@ -53,11 +53,11 @@ class CategoriesController < ApplicationController
           no_definitions: true
         }
 
-        if style == "categories_and_latest_topics".freeze
+        if style == "categories_and_latest_topics"
           @topic_list = TopicQuery.new(current_user, topic_options).list_latest
           @topic_list.more_topics_url = url_for(public_send("latest_path"))
-        elsif style == "categories_and_top_topics".freeze
-          @topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+        elsif style == "categories_and_top_topics"
+          @topic_list = TopicQuery.new(current_user, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
           @topic_list.more_topics_url = url_for(public_send("top_path"))
         end
 
@@ -179,7 +179,10 @@ class CategoriesController < ApplicationController
 
     custom_slug = params[:slug].to_s
 
-    if custom_slug.present? && @category.update(slug: custom_slug)
+    if custom_slug.blank?
+      error = @category.errors.full_message(:slug, I18n.t('errors.messages.blank'))
+      render_json_error(error)
+    elsif @category.update(slug: custom_slug)
       render json: success_json
     else
       render_json_error(@category)
@@ -242,7 +245,7 @@ class CategoriesController < ApplicationController
     discourse_expires_in 1.minute
 
     category_options = {
-      is_homepage: current_homepage == "categories".freeze,
+      is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: false
     }
@@ -325,6 +328,8 @@ class CategoriesController < ApplicationController
         :allow_global_tags,
         :required_tag_group_name,
         :min_tags_from_required_group,
+        :read_only_banner,
+        :default_list_filter,
         custom_fields: [params[:custom_fields].try(:keys)],
         permissions: [*p.try(:keys)],
         allowed_tags: [],
@@ -351,8 +356,8 @@ class CategoriesController < ApplicationController
     view_context.mobile_view? ||
       params[:include_topics] ||
       (parent_category && parent_category.subcategory_list_includes_topics?) ||
-      style == "categories_with_featured_topics".freeze ||
-      style == "categories_boxes_with_topics".freeze ||
-      style == "categories_with_top_topics".freeze
+      style == "categories_with_featured_topics" ||
+      style == "categories_boxes_with_topics" ||
+      style == "categories_with_top_topics"
   end
 end

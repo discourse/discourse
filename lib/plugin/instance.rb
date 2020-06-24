@@ -6,21 +6,30 @@ require_dependency 'plugin/metadata'
 require_dependency 'auth'
 
 class Plugin::CustomEmoji
+  CACHE_KEY ||= "plugin-emoji"
   def self.cache_key
-    @@cache_key ||= "plugin-emoji"
+    @@cache_key ||= CACHE_KEY
   end
 
   def self.emojis
     @@emojis ||= {}
   end
 
-  def self.register(name, url)
-    @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
-    emojis[name] = url
+  def self.clear_cache
+    @@cache_key = CACHE_KEY
+    @@emojis = {}
+    @@translations = {}
   end
 
-  def self.unregister(name)
-    emojis.delete(name)
+  def self.register(name, url, group = Emoji::DEFAULT_GROUP)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + name + group)[0..10]
+    new_group = emojis[group] || {}
+    new_group[name] = url
+    emojis[group] = new_group
+  end
+
+  def self.unregister(name, group = Emoji::DEFAULT_GROUP)
+    emojis[group].delete(name)
   end
 
   def self.translations
@@ -49,6 +58,7 @@ class Plugin::Instance
    :styles,
    :themes,
    :csp_extensions,
+   :asset_filters
  ].each do |att|
     class_eval %Q{
       def #{att}
@@ -57,8 +67,19 @@ class Plugin::Instance
     }
   end
 
+  # If plugins provide `transpile_js: true` in their metadata we will
+  # transpile regular JS files in the assets folders. Going forward,
+  # all plugins should do this.
+  def transpile_js
+    metadata.try(:transpile_js) == "true"
+  end
+
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
+  end
+
+  def seed_fu_filter(filter = nil)
+    @seed_fu_filter = filter
   end
 
   def self.find_all(parent_path)
@@ -139,27 +160,33 @@ class Plugin::Instance
   end
 
   def whitelist_staff_user_custom_field(field)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_staff_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
+    DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
   end
 
   def whitelist_public_user_custom_field(field)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_public_custom_field(field, plugin) # plugin.enabled? is checked at runtime
-    end
+    DiscoursePluginRegistry.register_public_user_custom_field(field, self)
   end
 
   def register_editable_user_custom_field(field, staff_only: false)
-    reloadable_patch do |plugin|
-      ::User.register_plugin_editable_user_custom_field(field, plugin, staff_only: staff_only) # plugin.enabled? is checked at runtime
+    if staff_only
+      DiscoursePluginRegistry.register_staff_editable_user_custom_field(field, self)
+    else
+      DiscoursePluginRegistry.register_self_editable_user_custom_field(field, self)
     end
   end
 
   def register_editable_group_custom_field(field)
-    reloadable_patch do |plugin|
-      ::Group.register_plugin_editable_group_custom_field(field, plugin) # plugin.enabled? is checked at runtime
+    DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
+  end
+
+  # Request a new size for topic thumbnails
+  # Will respect plugin enabled setting is enabled
+  # Size should be an array with two elements [max_width, max_height]
+  def register_topic_thumbnail_size(size)
+    if !(size.kind_of?(Array) && size.length == 2)
+      raise ArgumentError.new("Topic thumbnail dimension is not valid")
     end
+    DiscoursePluginRegistry.register_topic_thumbnail_size(size, self)
   end
 
   def custom_avatar_column(column)
@@ -392,6 +419,10 @@ class Plugin::Instance
     SeedFu.fixture_paths.concat(paths)
   end
 
+  def register_seedfu_filter(filter = nil)
+    DiscoursePluginRegistry.register_seedfu_filter(filter)
+  end
+
   def listen_for(event_name)
     return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
@@ -413,6 +444,14 @@ class Plugin::Instance
     csp_extensions << extension
   end
 
+  # Register a block to run when adding css and js assets
+  # Two arguments will be passed: (type, request)
+  # Type is :css or :js. `request` is an instance of Rack::Request
+  # When using this, make sure to consider the effect on AnonymousCache
+  def register_asset_filter(&blk)
+    asset_filters << blk
+  end
+
   # @option opts [String] :name
   # @option opts [String] :nativeName
   # @option opts [String] :fallbackLocale
@@ -422,7 +461,6 @@ class Plugin::Instance
   end
 
   def register_custom_html(hash)
-    DiscoursePluginRegistry.custom_html ||= {}
     DiscoursePluginRegistry.custom_html.merge!(hash)
   end
 
@@ -462,8 +500,9 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_seed_path_builder(&block)
   end
 
-  def register_emoji(name, url)
-    Plugin::CustomEmoji.register(name, url)
+  def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
+    Plugin::CustomEmoji.register(name, url, group)
+    Emoji.clear_cache
   end
 
   def translate_emoji(from, to)
@@ -493,16 +532,26 @@ class Plugin::Instance
   def activate!
 
     if @path
+      root_dir_name = File.dirname(@path)
+
       # Automatically include all ES6 JS and hbs files
-      root_path = "#{File.dirname(@path)}/assets/javascripts"
+      root_path = "#{root_dir_name}/assets/javascripts"
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
       DiscoursePluginRegistry.register_glob(root_path, 'hbr')
 
-      admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
+      admin_path = "#{root_dir_name}/admin/assets/javascripts"
       DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbr', admin: true)
+
+      if transpile_js
+        DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+        DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+
+        test_path = "#{root_dir_name}/test/javascripts"
+        DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, '').sub(/^\/*/, '')
+      end
     end
 
     self.instance_eval File.read(path), path
@@ -543,12 +592,11 @@ class Plugin::Instance
 
       Discourse::Utils.execute_command('mkdir', '-p', target)
       target << name.gsub(/\s/, "_")
-      # TODO a cleaner way of registering and unregistering
-      Discourse::Utils.execute_command('rm', '-f', target)
-      Discourse::Utils.execute_command('ln', '-s', public_data, target)
+
+      Discourse::Utils.atomic_ln_s(public_data, target)
     end
 
-    ensure_directory(Plugin::Instance.js_path)
+    ensure_directory(js_file_path)
 
     contents = []
     handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
@@ -558,12 +606,15 @@ class Plugin::Instance
       contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
     end
 
-    File.delete(js_file_path) if js_asset_exists?
-
     if contents.present?
       contents.insert(0, "<%")
       contents << "%>"
-      write_asset(js_file_path, contents.join("\n"))
+      Discourse::Utils.atomic_write_file(js_file_path, contents.join("\n"))
+    else
+      begin
+        File.delete(js_file_path)
+      rescue Errno::ENOENT
+      end
     end
   end
 
@@ -605,11 +656,7 @@ class Plugin::Instance
   end
 
   def enabled_site_setting_filter(filter = nil)
-    if filter
-      @enabled_setting_filter = filter
-    else
-      @enabled_setting_filter
-    end
+    STDERR.puts("`enabled_site_setting_filter` is deprecated")
   end
 
   def enabled_site_setting(setting = nil)
@@ -641,11 +688,15 @@ class Plugin::Instance
     if @path
       # Automatically include all ES6 JS and hbs files
       root_path = "#{File.dirname(@path)}/assets/javascripts"
+      admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
 
-      Dir.glob("#{root_path}/**/*") do |f|
+      Dir.glob(["#{root_path}/**/*", "#{admin_path}/**/*"]) do |f|
+        f_str = f.to_s
         if File.directory?(f)
           yield [f, true]
-        elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs") || f.to_s.ends_with?(".hbr")
+        elsif f_str.ends_with?(".js.es6") || f_str.ends_with?(".hbs") || f_str.ends_with?(".hbr")
+          yield [f, false]
+        elsif transpile_js && f_str.ends_with?(".js")
           yield [f, false]
         end
       end

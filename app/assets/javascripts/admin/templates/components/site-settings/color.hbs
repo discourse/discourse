@@ -1,0 +1,9 @@
+{{color-input
+  hexValue=(readonly value)
+  valid=valid
+  onlyHex=false
+  styleSelection=false
+  onChangeColor=(action "onChangeColor")
+}}
+{{setting-validation-message message=validationMessage}}
+<div class="desc">{{html-safe setting.description}}</div>

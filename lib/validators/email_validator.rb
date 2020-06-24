@@ -3,6 +3,10 @@
 class EmailValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
+    unless value =~ EmailValidator.email_regex
+      record.errors.add(attribute, I18n.t(:'user.email.invalid'))
+    end
+
     unless EmailValidator.allowed?(value)
       record.errors.add(attribute, I18n.t(:'user.email.not_allowed'))
     end
@@ -20,6 +24,14 @@ class EmailValidator < ActiveModel::EachValidator
     end
 
     true
+  end
+
+  def self.can_auto_approve_user?(email)
+    if (setting = SiteSetting.auto_approve_email_domains).present?
+      return !!(EmailValidator.allowed?(email) && email_in_restriction_setting?(setting, email))
+    end
+
+    false
   end
 
   def self.email_in_restriction_setting?(setting, value)

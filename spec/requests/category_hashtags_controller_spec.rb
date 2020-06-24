@@ -17,8 +17,8 @@ describe CategoryHashtagsController do
           get "/category_hashtags/check.json", params: { category_slugs: [category.slug, 'none'] }
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)).to eq(
-            "valid" => [{ "slug" => category.hashtag_slug, "url" => category.url_with_id }]
+          expect(response.parsed_body).to eq(
+            "valid" => [{ "slug" => category.hashtag_slug, "url" => category.url }]
           )
         end
 
@@ -29,7 +29,7 @@ describe CategoryHashtagsController do
           get "/category_hashtags/check.json", params: { category_slugs: [private_category.slug] }
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)).to eq("valid" => [])
+          expect(response.parsed_body).to eq("valid" => [])
         end
       end
 
@@ -44,8 +44,8 @@ describe CategoryHashtagsController do
             params: { category_slugs: [private_category.slug] }
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)).to eq(
-            "valid" => [{ "slug" => private_category.hashtag_slug, "url" => private_category.url_with_id }]
+          expect(response.parsed_body).to eq(
+            "valid" => [{ "slug" => private_category.hashtag_slug, "url" => private_category.url }]
           )
         end
       end

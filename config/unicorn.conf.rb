@@ -2,7 +2,7 @@
 
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
-if ENV["LOGSTASH_UNICORN_URI"]
+if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
   require_relative '../lib/discourse_logstash_logger'
   logger DiscourseLogstashLogger.logger(uri: ENV['LOGSTASH_UNICORN_URI'], type: :unicorn)
 end
@@ -95,6 +95,13 @@ before_fork do |server, worker|
         Demon::Sidekiq.stop
       end
 
+      # Trap USR1, so we can re-issue to sidekiq workers
+      # but chain the default unicorn implementation as well
+      old_handler = Signal.trap("USR1") do
+        Demon::Sidekiq.kill("USR1")
+        old_handler.call
+      end
+
       class ::Unicorn::HttpServer
         alias :master_sleep_orig :master_sleep
 
@@ -130,9 +137,9 @@ before_fork do |server, worker|
 
         def check_sidekiq_heartbeat
           @sidekiq_heartbeat_interval ||= 30.minutes
-          @sidekiq_next_heartbeat_check ||= Time.new.to_i + @sidekiq_heartbeat_interval
+          @sidekiq_next_heartbeat_check ||= Time.now.to_i + @sidekiq_heartbeat_interval
 
-          if @sidekiq_next_heartbeat_check < Time.new.to_i
+          if @sidekiq_next_heartbeat_check < Time.now.to_i
 
             last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
             restart = false
@@ -142,20 +149,20 @@ before_fork do |server, worker|
               restart = true
             end
 
-            if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
+            if last_heartbeat < Time.now.to_i - @sidekiq_heartbeat_interval
               STDERR.puts "Sidekiq heartbeat test failed, restarting"
               Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
 
               restart = true
             end
-            @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
+            @sidekiq_next_heartbeat_check = Time.now.to_i + @sidekiq_heartbeat_interval
 
             if restart
               Demon::Sidekiq.restart
               sleep 10
               force_kill_rogue_sidekiq
             end
-            Discourse.redis._client.disconnect
+            Discourse.redis.close
           end
         end
 
@@ -170,7 +177,7 @@ before_fork do |server, worker|
 
   end
 
-  Discourse.redis._client.disconnect
+  Discourse.redis.close
 
   # Throttle the master from forking too quickly by sleeping.  Due
   # to the implementation of standard Unix signal handlers, this
