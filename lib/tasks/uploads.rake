@@ -105,6 +105,10 @@ def wait_for_queue_tasks(max_queue_tasks)
   end
 end
 
+def tag(post)
+  "#{post.id}: #{post.topic_id}/#{post.post_number} - https://#{GlobalSetting.hostname}#{post.url}"
+end
+
 def guess_filename(url, raw)
   begin
     uri = URI.parse("http:#{url}")
@@ -121,6 +125,27 @@ def guess_filename(url, raw)
   ensure
     f.try(:close!) rescue nil
   end
+end
+
+def download_s3_upload(upload, max_file_size)
+  download_attempts_remaining = 3
+  file = nil
+  while file.nil? && download_attempts_remaining > 0
+    file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
+    # work-around for intermittent download failures
+    # This can be a temporary error if download from S3 fails
+    sleep 1 if file.nil?
+    download_attempts_remaining -= 1
+  end
+  file
+end
+
+def create_local_upload(upload, file, user_id)
+  filename = upload.original_filename
+  origin = upload.origin
+  upload.destroy
+
+  UploadCreator.new(file, filename, origin: origin).create_for(user_id)
 end
 
 def migrate_all_from_s3(max: nil, limit: nil)
@@ -141,6 +166,7 @@ def migrate_from_s3(max: nil, limit: nil)
   # treat "0" the same as nil input; 0 means no limit and no max
   limit = limit.to_i if limit && limit != "0"
   max = max.to_i if max && max != "0"
+  max = [limit, max].min if limit && max
 
   # regexps from from app/assets/javascripts/discourse/app/lib/uploads.js
   is_video = /\.(mov|mp4|webm|m4v|3gp|ogv|avi|mpeg|ogv)$/i
@@ -161,7 +187,7 @@ def migrate_from_s3(max: nil, limit: nil)
   migrate_posts.find_each do |post|
     begin
       updated = false
-      post_tag = "#{post.id}: #{post.topic_id}/#{post.post_number} - https://#{GlobalSetting.hostname}#{post.url}"
+      post_tag = tag post
 
       # Some uploads previously dropped a plain URL in raw, rather than a `[...](upload://)`.
       post.raw.gsub!(/((https?:)?(\/\/[\w.-]+amazonaws\.com|#{Regexp.quote(SiteSetting.Upload.absolute_base_url)})\/(original|optimized)\/([a-z0-9]+\/)+\h{40}([\w.-]+)?)/i) do |url|
@@ -204,21 +230,9 @@ def migrate_from_s3(max: nil, limit: nil)
           if sha1 = Upload.sha1_from_short_url(url)
             if upload = Upload.find_by(sha1: sha1)
               if upload.url.start_with?("//")
-                download_attempts_remaining = 3
-                file = nil
-                while file.nil? && download_attempts_remaining > 0
-                  file = FileHelper.download("http:#{upload.url}", max_file_size: max_file_size, tmp_file_name: "from_s3", follow_redirect: true)
-                  # work-around for intermittent download failures
-                  sleep 1 if file.nil?
-                  download_attempts_remaining -= 1
-                end
-                # This can be a temporary error if download from S3 fails
+                file = download_s3_upload(upload, max_file_size)
                 raise "#{url} not found for #{post_tag}" if file.nil?
-                filename = upload.original_filename
-                origin = upload.origin
-                upload.destroy
-
-                new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
+                new_upload = create_local_upload(upload, file, post.user_id || -1)
                 if new_upload&.save
                   raise "Error: upload url #{url} changed to #{new_upload.short_url}, should be unchanged." if url != new_upload.short_url
                   updated = true
@@ -260,7 +274,112 @@ def migrate_from_s3(max: nil, limit: nil)
     end
   end
 
-  puts "Done!"
+  puts "All Post uploads migrated.  Migrating profile uploads..."
+
+  profiles_migrated = 0
+  migrate_profiles = UserProfile
+    .where("card_background_upload_id != 0 OR profile_background_upload_id != 0")
+  migrate_profiles = migrate_profiles.limit(limit) if limit
+
+  migrate_profiles.find_each do |profile|
+    puts "Migrating profile for #{profile.user.username} (#{profile.user.id})" if max
+    migrate_card = false
+    migrate_profile = false
+    if profile.card_background_upload&.url&.start_with?('//')
+      migrate_card = true
+    end
+    if profile.profile_background_upload&.url&.start_with?('//')
+      migrate_profile = true
+    end
+
+    if migrate_card
+      background_upload = profile.card_background_upload
+      puts "Card: #{background_upload.url}" if max
+      file = download_s3_upload(background_upload, max_file_size)
+      raise "#{url} not found for #{profile.user.name}" if file.nil?
+    end
+    if migrate_profile
+      profile_upload = profile.profile_background_upload
+      puts "Background: #{profile_upload.url}" if max
+      file = download_s3_upload(profile_upload, max_file_size)
+      raise "#{url} not found for #{profile.user.name}" if file.nil?
+    end
+
+    # These need to both be after the download but before setting new in case the same image was provided for both
+    profile.clear_card_background if migrate_card
+    profile.clear_profile_background if migrate_profile
+
+    if migrate_card
+      new_background = create_local_upload(background_upload, file, profile.user.id || -1)
+      profile.upload_card_background(new_background)
+    end
+    if migrate_profile
+      new_profile = create_local_upload(profile_upload, file, profile.user.id || -1)
+      profile.upload_profile_background(new_profile)
+    end
+
+    if migrate_card || migrate_profile
+      profile.save!
+      profiles_migrated += 1
+    end
+    if max && profiles_migrated >= max
+      puts "Modification limit #{max} reached, halting migration"
+      return
+    end
+    wait_for_queue_tasks max_queue_tasks
+  end
+
+  puts "All profiles uploads migrated.  Migrating other non-post uploads..."
+
+  migrated_uploads = 0
+  migrate_uploads = Upload
+    .where("url LIKE '//%'")
+  migrate_uploads = migrate_uploads.limit(limit) if limit
+  migrate_uploads.find_each do |upload|
+    file = download_s3_upload(upload, max_file_size)
+    raise "File not found for #{upload.url}" if file.nil?
+    new_upload = create_local_upload(upload, file, -1)
+    if new_upload&.save
+      migrated_uploads += 1
+      puts "\nDownloaded #{migrated_uploads}/#{max}: #{upload.url} to #{new_upload.url}\n" if max
+    end
+    if max && migrated_uploads >= max
+      puts "Modification limit #{max} reached, halting non-post upload migration"
+      return
+    end
+    wait_for_queue_tasks max_queue_tasks
+  end
+
+  # If multiple posts referenced the same upload, only the first found will have been rebaked, so
+  # look for old URLs in cooked output.  This is also required to incoporate non-post uploads such
+  # as avatars cooked into replies.
+  puts "All non-post uploads migrated.  Rebaking any other affected posts..."
+
+  rebaked_posts = 0
+  rebake_posts = Post
+    .where("user_id > 0")
+    .where("cooked LIKE '%.s3%.amazonaws.com/%' OR cooked LIKE '%#{SiteSetting.Upload.absolute_base_url}%'")
+  rebake_posts = rebake_posts.limit(limit) if limit
+
+  rebake_posts.find_each do |post|
+    post_tag = tag post
+    post.rebake!
+    rebaked_posts += 1
+    if max
+      # max is for debugging purposes, so be verbose
+      puts "\nRebaked #{rebaked_posts}/#{max}: #{post_tag}\n"
+    else
+      putc "#"
+    end
+    if max && rebaked_posts >= max
+      puts "Modification limit #{max} reached, halting rebake"
+      return
+    end
+    # don't spam the default queue, limit rate of modification
+    wait_for_queue_tasks max_queue_tasks
+  end
+
+  puts "Migration complete"
 end
 
 ################################################################################
