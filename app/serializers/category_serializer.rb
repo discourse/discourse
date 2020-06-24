@@ -81,6 +81,10 @@ class CategorySerializer < SiteCategorySerializer
     scope && scope.can_edit?(object)
   end
 
+  def include_notification_level?
+    scope && scope.user
+  end
+
   def notification_level
     user = scope && scope.user
     object.notification_level ||
