@@ -55,12 +55,12 @@ export default function(name, opts) {
     });
 
     andThen(() => {
-      try {
-        opts.test.call(this, assert);
-      } finally {
-        if (opts.afterEach) {
-          opts.afterEach.call(opts);
-        }
+      return opts.test.call(this, assert);
+    }).finally(() => {
+      if (opts.afterEach) {
+        andThen(() => {
+          return opts.afterEach.call(opts);
+        });
       }
     });
   });
