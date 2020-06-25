@@ -3,7 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
-  let(:discobot_user) { ::DiscourseNarrativeBot::Base.new.discobot_user }
+  let(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  let(:discobot_user) { narrative_bot.discobot_user }
+  let(:discobot_username) { narrative_bot.discobot_username }
   let(:first_post) { Fabricate(:post, user: discobot_user) }
   let(:user) { Fabricate(:user) }
 
@@ -175,7 +177,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: "@#{discobot_user.username} #{skip_trigger.upcase}")
+            post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
