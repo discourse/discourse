@@ -283,9 +283,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     let(:s3_bucket) { resource.bucket(SiteSetting.s3_upload_bucket) }
     let(:s3_helper) { store.s3_helper }
 
-    it "returns false for blank urls" do
-      url = ""
-      expect(store.has_been_uploaded?(url)).to eq(false)
+    it "returns false for blank urls and bad urls" do
+      expect(store.has_been_uploaded?("")).to eq(false)
+      expect(store.has_been_uploaded?("http://test@test.com:test/test.git")).to eq(false)
+      expect(store.has_been_uploaded?("http:///+test@test.com/test.git")).to eq(false)
     end
 
     it "returns true if the base hostname is the same for both urls" do
