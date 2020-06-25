@@ -14,6 +14,11 @@ export default function highlightSyntax($elem) {
   }
 
   $(selector, $elem).each(function(i, e) {
+    // Large code blocks can cause crashes or slowdowns
+    if (e.innerHTML.length > 30000) {
+      return;
+    }
+
     $(e).removeClass("lang-auto");
     loadScript(path).then(() => {
       customHighlightJSLanguages();
