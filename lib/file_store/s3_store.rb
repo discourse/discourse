@@ -89,7 +89,10 @@ module FileStore
 
       begin
         parsed_url = URI.parse(UrlHelper.encode(url))
-      rescue URI::InvalidURIError, URI::InvalidComponentError
+      rescue
+        # There are many exceptions possible here including Addressable::URI:: excpetions
+        # and URI:: exceptions, catch all may seem wide, but it makes no sense to raise ever
+        # on an invalid url here
         return false
       end
 
