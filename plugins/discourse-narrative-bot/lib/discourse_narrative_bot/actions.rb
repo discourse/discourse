@@ -8,6 +8,10 @@ module DiscourseNarrativeBot
       @discobot ||= User.find(-2)
     end
 
+    def discobot_username
+      self.discobot_user.username_lower
+    end
+
     private
 
     def reply_to(post, raw, opts = {}, post_alert_options = {})
@@ -73,7 +77,7 @@ module DiscourseNarrativeBot
       valid = false
 
       doc.css(".mention").each do |mention|
-        if User.normalize_username(mention.text) == "@#{self.discobot_user.username_lower}"
+        if User.normalize_username(mention.text) == "@#{self.discobot_username}"
           valid = true
           break
         end
