@@ -10,14 +10,6 @@ class RobotsTxtController < ApplicationController
   DISALLOWED_PATHS ||= %w{
     /auth/
     /assets/browser-update*.js
-    /users/
-    /u/
-    /my/
-    /badges/
-    /search
-    /search/
-    /tags
-    /tags/
     /email/
     /session
     /session/
@@ -27,11 +19,6 @@ class RobotsTxtController < ApplicationController
     /user-api-key/
     /*?api_key*
     /*?*api_key*
-    /groups
-    /groups/
-    /t/*/*.rss
-    /tags/*.rss
-    /c/*.rss
   }
 
   def index
