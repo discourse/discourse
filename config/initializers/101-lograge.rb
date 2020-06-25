@@ -24,7 +24,7 @@ if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || (ENV[
             if controller.respond_to?(:current_user)
               controller.current_user&.username
             end
-          rescue Discourse::InvalidAccess, Discourse::ReadOnly
+          rescue Discourse::InvalidAccess, Discourse::ReadOnly, ActiveRecord::ReadOnlyError
             nil
           end
 
