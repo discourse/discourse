@@ -736,7 +736,7 @@ class TopicQuery
     result = result.listable_topics
 
     # Don't include the category topics if excluded
-    if options[:no_definitions]
+    if options[:no_definitions] && !SiteSetting.always_show_category_definitions
       result = result.where('COALESCE(categories.topic_id, 0) <> topics.id')
     end
 

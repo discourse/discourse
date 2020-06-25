@@ -2030,6 +2030,9 @@ uncategorized:
   overridden_robots_txt:
     default: ""
     hidden: true
+  always_show_category_definitions:
+    default: false
+    hidden: true
 
 user_preferences:
   default_email_digest_frequency:
