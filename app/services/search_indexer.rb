@@ -17,6 +17,8 @@ class SearchIndexer
   end
 
   def self.inject_extra_terms(raw)
+    return raw if !SiteSetting.search_inject_extra_terms
+
     # insert some extra words for I.am.a.word so "word" is tokenized
     # I.am.a.word becomes I.am.a.word am a word
     raw.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|

@@ -1730,6 +1730,9 @@ backups:
     hidden: true
 
 search:
+  search_inject_extra_terms:
+    default: true
+    hidden: true
   min_search_term_length:
     client: true
     default: 3
