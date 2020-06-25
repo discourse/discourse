@@ -157,11 +157,13 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   SeedFu.seed(seed_paths, /001_refresh/)
 
   execute_concurently(concurrency, exceptions) do |db|
-    puts "Seeding #{db}"
-    SeedFu.seed(seed_paths)
 
     if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
       SiteIconManager.ensure_optimized!
+      if ENV['SKIP_SEED'] != '1'
+        puts "Seeding #{db}"
+        SeedFu.seed(seed_paths)
+      end
     end
   end
 
