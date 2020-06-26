@@ -21,12 +21,14 @@ module Discourse
 
     (0..[current_split.size, needed_split.size].max).each do |idx|
       current_str = current_split[idx] || ''
+      needed_str = needed_split[idx] || ''
 
       c0 = (needed_split[idx] || '').sub('beta', '').to_i
       c1 = (current_str || '').sub('beta', '').to_i
 
       # beta is less than stable
       return false if current_str.include?('beta') && (c0 == 0) && (c1 > 0)
+      return true if needed_str.include?('beta') && (c1 == 0) && (c0 > 0)
 
       return true if c1 > c0
       return false if c0 > c1
