@@ -118,6 +118,40 @@ describe TopicViewSerializer do
         expect(json[:suggested_topics]).to eq(nil)
       end
     end
+
+    describe 'with private messages' do
+      let!(:topic) do
+        Fabricate(:private_message_topic,
+          highest_post_number: 1,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: user)
+          ]
+        )
+      end
+
+      let!(:topic2) do
+        Fabricate(:private_message_topic,
+          highest_post_number: 1,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: user)
+          ]
+        )
+      end
+
+      it 'includes suggested topics' do
+        TopicUser.change(user, topic2.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        json = serialize_topic(topic, user)
+        expect(json[:suggested_topics].map { |t| t[:id] }).to contain_exactly(topic2.id)
+      end
+
+      it 'does not include suggested topics if all PMs are read' do
+        TopicUser.update_last_read(user, topic2.id, 1, 1, 0)
+
+        json = serialize_topic(topic, user)
+        expect(json[:suggested_topics]).to eq([])
+      end
+    end
   end
 
   describe 'when tags added to private message topics' do
