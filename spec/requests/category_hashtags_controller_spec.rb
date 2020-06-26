@@ -78,7 +78,8 @@ describe CategoryHashtagsController do
           expect(response.parsed_body).to eq("valid" => [
             { "slug" => category.slug, "url" => category.url },
             { "slug" => "#{category.slug}:#{subcategory.slug}", "url" => subcategory.url },
-            { "slug" => "#{category.slug}:#{subcategory.slug}:#{subsubcategory.slug}", "url" => subsubcategory.url }
+            { "slug" => "#{category.slug}:#{subcategory.slug}:#{subsubcategory.slug}", "url" => subsubcategory.url },
+            { "slug" => "#{subcategory.slug}:#{subsubcategory.slug}", "url" => subsubcategory.url }
           ])
         end
       end
