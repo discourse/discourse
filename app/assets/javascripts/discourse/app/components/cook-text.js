@@ -4,7 +4,6 @@ import { cookAsync } from "discourse/lib/text";
 import { ajax } from "discourse/lib/ajax";
 
 const CookText = Component.extend({
-  tagName: "",
   cooked: null,
 
   didReceiveAttrs() {
