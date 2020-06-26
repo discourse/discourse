@@ -452,7 +452,10 @@ module ApplicationHelper
 
   def preloaded_json
     return '{}' if @preloaded.blank?
-    MultiJson.dump(@preloaded)
+    # I dislike that there is a gsub as opposed to a gsub!
+    #  but we can not be mucking with user input, I wonder if there is a way
+    #  to inject this safty deeper in the library or even in AM serializer
+    MultiJson.dump(@preloaded).gsub("</", "<\\/")
   end
 
   def client_side_setup_data
