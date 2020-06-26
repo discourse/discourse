@@ -21,3 +21,12 @@ if !Theme.exists?
 
   default_theme.set_default!
 end
+
+FontThemeInstaller.install(
+  [{
+    name: "Oxanium Font",
+    font_family_name: "Oxanium",
+    regular_font: "oxanium-regular.woff2",
+    bold_font: "oxanium-bold.woff2"
+  }]
+)
