@@ -97,6 +97,18 @@ class StdOutDemux
   end
 end
 
+class SeedHelper
+  def self.paths
+    DiscoursePluginRegistry.seed_paths
+  end
+
+  def self.filter
+    # Allows a plugin to exclude any specified seed data files from running
+    DiscoursePluginRegistry.seedfu_filter.any? ?
+      /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/ : nil
+  end
+end
+
 task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |_, args|
   if ENV["RAILS_ENV"] != "production"
     raise "Multisite migrate is only supported in production"
@@ -153,14 +165,12 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
     ActiveRecord::Tasks::DatabaseTasks.migrate
   end
 
-  seed_paths = DiscoursePluginRegistry.seed_paths
-  SeedFu.seed(seed_paths, /001_refresh/)
+  SeedFu.seed(SeedHelper.paths, /001_refresh/)
 
   execute_concurently(concurrency, exceptions) do |db|
-    if ENV['SKIP_SEED'] != '1'
-      puts "Seeding #{db}"
-      SeedFu.seed(seed_paths)
-    end
+
+    puts "Seeding #{db}"
+    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
     if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
       SiteIconManager.ensure_optimized!
@@ -203,12 +213,7 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   end
 
   SeedFu.quiet = true
-
-  # Allows a plugin to exclude any specified seed data files from running
-  filter = DiscoursePluginRegistry.seedfu_filter.any? ?
-    /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/ : nil
-
-  SeedFu.seed(DiscoursePluginRegistry.seed_paths, filter)
+  SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
   if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
     SiteIconManager.ensure_optimized!
