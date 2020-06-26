@@ -19,14 +19,14 @@ export default {
     if (isTesting()) {
       return;
     }
-    const preloadedDataElement = document.getElementById("data-preloaded");
+
+    const preloaded = document.querySelector('[type="text/discourse-preload"]');
+    const preloadedData = JSON.parse(preloaded.text.trim());
     const setupData = document.getElementById("data-discourse-setup").dataset;
 
-    if (preloadedDataElement) {
-      const preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
-
-      Object.keys(preloaded).forEach(function(key) {
-        PreloadStore.store(key, JSON.parse(preloaded[key]));
+    if (preloadedData) {
+      Object.keys(preloadedData).forEach(function(key) {
+        PreloadStore.store(key, preloadedData[key]);
 
         if (setupData.debugPreloadedAppData === "true") {
           /* eslint-disable no-console */

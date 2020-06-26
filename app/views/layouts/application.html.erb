@@ -108,7 +108,9 @@
       </form>
     <% end %>
 
-    <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+    <script type="text/discourse-preload">
+      <%= preloaded_json.html_safe %>
+    </script>
     <%= preload_script "start-discourse" %>
 
     <%= yield :data %>

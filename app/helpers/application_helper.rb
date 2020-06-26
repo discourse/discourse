@@ -452,7 +452,7 @@ module ApplicationHelper
 
   def preloaded_json
     return '{}' if @preloaded.blank?
-    @preloaded.transform_values { |value| escape_unicode(value) }.to_json
+    MultiJson.dump(@preloaded)
   end
 
   def client_side_setup_data

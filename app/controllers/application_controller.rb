@@ -345,7 +345,7 @@ class ApplicationController < ActionController::Base
     # I dislike that there is a gsub as opposed to a gsub!
     #  but we can not be mucking with user input, I wonder if there is a way
     #  to inject this safty deeper in the library or even in AM serializer
-    @preloaded[key] = json.gsub("</", "<\\/")
+    @preloaded[key] = JSON.parse(json)
   end
 
   # If we are rendering HTML, preload the session data
