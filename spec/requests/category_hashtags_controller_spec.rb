@@ -1,31 +1,30 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe CategoryHashtagsController do
-  describe "check" do
-    describe "logged in" do
+  fab!(:category) { Fabricate(:category) }
 
-      describe "regular user" do
+  let(:group) { Fabricate(:group) }
+  let(:private_category) { Fabricate(:private_category, group: group) }
+
+  describe "#check" do
+    context "when logged in" do
+      context "as regular user" do
         before do
           sign_in(Fabricate(:user))
         end
 
-        it 'only returns the categories that are valid' do
-          category = Fabricate(:category)
-
-          get "/category_hashtags/check.json", params: { category_slugs: [category.slug, 'none'] }
+        it "returns only valid categories" do
+          get "/category_hashtags/check.json", params: { category_slugs: [category.slug, private_category.slug, "none"] }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "valid" => [{ "slug" => category.hashtag_slug, "url" => category.url }]
+            "valid" => [{ "slug" => category.slug, "url" => category.url }]
           )
         end
 
-        it 'does not return restricted categories for a normal user' do
-          group = Fabricate(:group)
-          private_category = Fabricate(:private_category, group: group)
-
+        it "does not return restricted categories" do
           get "/category_hashtags/check.json", params: { category_slugs: [private_category.slug] }
 
           expect(response.status).to eq(200)
@@ -33,26 +32,60 @@ describe CategoryHashtagsController do
         end
       end
 
-      describe "admin user" do
-        it 'returns restricted categories for an admin' do
-          admin = sign_in(Fabricate(:admin))
-          group = Fabricate(:group)
-          group.add(admin)
-          private_category = Fabricate(:private_category, group: group)
+      context "as admin" do
+        fab!(:admin) { Fabricate(:admin) }
 
-          get "/category_hashtags/check.json",
-            params: { category_slugs: [private_category.slug] }
+        before do
+          sign_in(admin)
+        end
+
+        it "returns restricted categories" do
+          group.add(admin)
+
+          get "/category_hashtags/check.json", params: { category_slugs: [private_category.slug] }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "valid" => [{ "slug" => private_category.hashtag_slug, "url" => private_category.url }]
+            "valid" => [{ "slug" => private_category.slug, "url" => private_category.url }]
           )
+        end
+      end
+
+      context "with sub-sub-categories" do
+        let(:category) { Fabricate(:category_with_definition) }
+        let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+        let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
+
+        before do
+          SiteSetting.max_category_nesting = 3
+          sign_in(Fabricate(:user))
+        end
+
+        it "works" do
+          get "/category_hashtags/check.json", params: {
+            category_slugs: [
+              category.slug,
+              "#{category.slug}:#{subcategory.slug}",
+              "#{category.slug}:#{subcategory.slug}:#{subsubcategory.slug}",
+              "#{category.slug}:#{subsubcategory.slug}",
+              subcategory.slug,
+              "#{subcategory.slug}:#{subsubcategory.slug}",
+              subsubcategory.slug
+            ]
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq("valid" => [
+            { "slug" => category.slug, "url" => category.url },
+            { "slug" => "#{category.slug}:#{subcategory.slug}", "url" => subcategory.url },
+            { "slug" => "#{category.slug}:#{subcategory.slug}:#{subsubcategory.slug}", "url" => subsubcategory.url }
+          ])
         end
       end
     end
 
-    describe "not logged in" do
-      it 'raises an exception' do
+    context "when not logged in" do
+      it "returns invalid access" do
         get "/category_hashtags/check.json", params: { category_slugs: [] }
         expect(response.status).to eq(403)
       end

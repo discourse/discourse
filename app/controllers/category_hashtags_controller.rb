@@ -9,7 +9,7 @@ class CategoryHashtagsController < ApplicationController
     ids = category_slugs.map { |category_slug| Category.query_from_hashtag_slug(category_slug).try(:id) }
 
     valid_categories = Category.secured(guardian).where(id: ids).map do |category|
-      { slug: category.hashtag_slug, url: category.url }
+      { slug: category.slug_path.join(':'), url: category.url }
     end.compact
 
     render json: { valid: valid_categories }
