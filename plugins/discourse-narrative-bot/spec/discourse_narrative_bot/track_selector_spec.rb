@@ -416,6 +416,15 @@ describe DiscourseNarrativeBot::TrackSelector do
             expect(new_post.raw).to eq(random_mention_reply)
           end
 
+          it 'works with french locale' do
+            I18n.with_locale("fr") do
+              post.update!(raw: "@discobot afficher l'aide")
+              described_class.new(:reply, user, post_id: post.id).select
+              # gsub'ing to ensure non-breaking whitespaces matches regular whitespaces
+              expect(Post.last.raw.gsub(/[[:space:]]+/, " ")).to eq(help_message.gsub(/[[:space:]]+/, " "))
+            end
+          end
+
           it 'should not rate limit help message' do
             post.update!(raw: '@discobot')
             other_post = Fabricate(:post, raw: 'discobot', topic: post.topic)
