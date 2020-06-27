@@ -224,6 +224,8 @@ def migrate_from_s3(max: nil, limit: nil)
                   updated = true
                 end
               end
+            else
+              puts "Missing upload for #{url} (#{sha1}) in #{post_tag}"
             end
           end
 
@@ -409,6 +411,52 @@ def clean_up_uploads
 
   puts "Removing empty directories..."
   puts `find #{uploads_directory} -type d -empty -exec rmdir {} \\;`
+
+  puts "Done!"
+end
+
+################################################################################
+#                         report missing uploads                               #
+################################################################################
+
+# This might be used to repair after various failures
+task "uploads:report_missing_uploads" => :environment do
+  ENV["RAILS_DB"] ? report_missing_uploads : report_missing_uploads_all_sites
+end
+
+def report_missing_uploads_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { report_missing_uploads }
+end
+
+def report_missing_uploads
+  db = RailsMultisite::ConnectionManagement.current_db
+  found_missing = 0
+  found_errors = 0
+
+  puts "Finding missing uploads for '#{db}'..."
+
+  Post
+    .where("user_id > 0")
+    .where("raw LIKE '%upload://%'")
+    .find_each do |post|
+    post_tag = "#{post.id}: #{post.topic_id}/#{post.post_number} - https://#{GlobalSetting.hostname}#{post.url}"
+    post.raw.scan(/upload:\/\/[0-9a-zA-Z]+\.\w+/) do |url|
+      if sha1 = Upload.sha1_from_short_url(url)
+        if !Upload.find_by(sha1: sha1)
+          puts "No #{sha1} upload exists for #{url} in #{post_tag}"
+          found_missing += 1
+        end
+      else
+        puts "Failed to decode #{url} to SHA1 in #{post_tag}"
+        found_errors += 1
+      end
+    end
+  end
+
+  if found_missing + found_errors > 0
+    puts "#{found_missing} missing URLs, #{found_errors} decoding errors"
+    exit 1
+  end
 
   puts "Done!"
 end

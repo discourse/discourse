@@ -344,4 +344,43 @@ RSpec.describe "tasks/uploads" do
       )
     end
   end
+
+  describe "uploads:report_missing_uploads" do
+    let(:upload1) { Fabricate(:upload) }
+    let(:upload2) { Fabricate(:upload) }
+
+    let!(:url1) { "upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png" } # base62_sha1 from logo.png
+    let!(:url2) { "upload://oEreXc9X7kL1gm1PHfb0URLl2DJ.png" } # base62_sha1 from logo-dev.png
+    let!(:url3) { "upload://f8eEpV0Qe43VM76yxhNAXK7dmv49X7kL1m0DGR49.png" } # intentionally fail
+
+    let(:user_id) { 1 }
+
+    def invoke_task
+      capture_stdout do
+        Rake::Task['uploads:report_missing_uploads'].invoke
+      end
+    end
+
+    it "succeeds when no failures" do
+      post = Fabricate(:post, raw: "[foo](#{url1})")
+      PostUpload.create(post: post, upload: upload1)
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png")).once()
+      invoke_task
+    end
+
+    it "fails if partial success in one post" do
+      post = Fabricate(:post, raw: "[foo](#{url2}) [bar](#{url3})")
+      PostUpload.create(post: post, upload: upload2)
+      expect { invoke_task }.to raise_error(SystemExit)
+    end
+
+    it "fails if one post is good and another is bad" do
+      post1 = Fabricate(:post, raw: "[foo](#{url1})")
+      PostUpload.create(post: post1, upload: upload1)
+      post2 = Fabricate(:post, raw: "[bar](#{url3})")
+      # Do not upload
+      expect { invoke_task }.to raise_error(SystemExit)
+    end
+
+  end
 end
