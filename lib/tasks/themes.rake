@@ -51,6 +51,33 @@ task "themes:install" => :environment do |task, args|
   end
 end
 
+desc "Uninstall themes & theme components"
+task "themes:uninstall" => :environment do |task, args|
+  theme_args = (STDIN.tty?) ? '' : STDIN.read
+  use_json = theme_args == ''
+
+  theme_args = begin
+                 puts ARGV
+                 use_json ? JSON.parse(ARGV.last.gsub('--', '')) : YAML::load(theme_args)
+               rescue
+                 puts use_json ? "Invalid JSON input. \n#{ARGV.last}" : "Invalid YML: \n#{theme_args}"
+                 exit 1
+               end
+
+  log, counts = ThemesInstallTask.uninstall(theme_args)
+
+  puts log
+
+  puts
+  puts "Results:"
+  puts " Uninstalled: #{counts[:uninstalled]}"
+  puts " Errors:    #{counts[:errors]}"
+
+  if counts[:errors] > 0
+    exit 1
+  end
+end
+
 desc "List all the installed themes on the site"
 task "themes:audit" => :environment do
   components = Set.new

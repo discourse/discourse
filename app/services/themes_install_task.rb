@@ -29,6 +29,26 @@ class ThemesInstallTask
 
   attr_reader :url, :options
 
+  def self.uninstall(themes)
+    counts = { uninstalled: 0, errors: 0 }
+    log = []
+    themes.each do |name, val|
+      installer = new(val)
+      next if installer.url.nil?
+
+      if installer.theme_exists?
+        installer.uninstall
+        log << "#{name}: is installed. Uninstalling."
+        counts[:uninstalled] += 1
+      else
+        log << "#{name}: is not installed. Can't uninstall"
+        counts[:errors] += 1
+      end
+    end
+
+    [log, counts]
+  end
+
   def initialize(url_or_options = nil)
     if url_or_options.is_a?(Hash)
       url_or_options.deep_symbolize_keys!
@@ -57,6 +77,10 @@ class ThemesInstallTask
     @theme = RemoteTheme.import_theme(@url, Discourse.system_user, private_key: @options[:private_key], branch: @options[:branch])
     @theme.set_default! if @options.fetch(:default, false)
     add_component_to_all_themes
+  end
+
+  def uninstall
+    @remote_theme.uninstall
   end
 
   def update
