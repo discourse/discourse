@@ -2030,7 +2030,7 @@ uncategorized:
   overridden_robots_txt:
     default: ""
     hidden: true
-  always_show_category_definitions:
+  show_category_definitions_in_topic_lists:
     default: false
     hidden: true
 
