@@ -148,6 +148,8 @@ describe ThemesInstallTask do
 
         scss = "body { background-color: black; }"
 
+        expect(theme.theme_fields.find_by(name: 'scss', value: scss)).to be_nil
+
         File.write("#{component_repo}/common/common.scss", scss)
 
         `cd #{component_repo} && git add common/common.scss`
