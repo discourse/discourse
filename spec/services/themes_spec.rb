@@ -141,7 +141,7 @@ describe ThemesInstallTask do
         end
       end
 
-      it 'updates installed theme' do
+      it 'updates theme fields' do
         ThemesInstallTask.install({ "some_theme": component_repo })
         theme = Theme.find_by(name: THEME_NAME)
         remote = theme.remote_theme
