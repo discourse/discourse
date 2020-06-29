@@ -30,11 +30,19 @@ describe Discourse::VERSION do
       expect(Discourse.has_needed_version?('1.12.0', '2.12.5')).to eq(false)
     end
 
-    it "works for beta comparisons" do
+    it "works for beta comparisons when current_version is beta" do
       expect(Discourse.has_needed_version?('1.3.0.beta3', '1.2.9')).to eq(true)
       expect(Discourse.has_needed_version?('1.3.0.beta3', '1.3.0.beta1')).to eq(true)
       expect(Discourse.has_needed_version?('1.3.0.beta3', '1.3.0.beta4')).to eq(false)
       expect(Discourse.has_needed_version?('1.3.0.beta3', '1.3.0')).to eq(false)
+    end
+
+    it "works for beta comparisons when needed_version is beta" do
+      expect(Discourse.has_needed_version?('1.2.0', '1.3.0.beta3')).to eq(false)
+      expect(Discourse.has_needed_version?('1.2.9', '1.3.0.beta3')).to eq(false)
+      expect(Discourse.has_needed_version?('1.3.0.beta1', '1.3.0.beta3')).to eq(false)
+      expect(Discourse.has_needed_version?('1.3.0.beta4', '1.3.0.beta3')).to eq(true)
+      expect(Discourse.has_needed_version?('1.3.0', '1.3.0.beta3')).to eq(true)
     end
 
   end
