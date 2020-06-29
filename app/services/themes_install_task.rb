@@ -61,6 +61,7 @@ class ThemesInstallTask
 
   def update
     @remote_theme.update_from_remote
+    @theme.save
     add_component_to_all_themes
   end
 
