@@ -247,8 +247,12 @@ class Search
         single_topic(@term.to_i)
       else
         begin
-          route = Rails.application.routes.recognize_path(@term)
-          single_topic(route[:topic_id]) if route[:topic_id].present?
+          if route = Discourse.route_for(@term)
+            if route[:controller] == "topics" && route[:action] == "show"
+              topic_id = (route[:id] || route[:topic_id]).to_i
+              single_topic(topic_id) if topic_id > 0
+            end
+          end
         rescue ActionController::RoutingError
         end
       end

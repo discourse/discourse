@@ -276,20 +276,25 @@ class TopicLink < ActiveRecord::Base
       internal = true
 
       # We aren't interested in tracking internal links to users
-      return nil if route[:controller] == 'users'
+      return nil if route[:controller] == "users"
 
-      topic_id = route[:topic_id].to_i
+      topic_id = route[:topic_id]
+      topic_slug = route[:slug]
       post_number = route[:post_number] || 1
-      topic_slug = route[:id]
 
-      # Store the canonical URL
-      topic = Topic.find_by(id: topic_id)
-      topic ||= Topic.find_by(slug: topic_slug) if topic_slug
-      topic_id = nil unless topic
+      if route[:controller] == "topics" && route[:action] == "show"
+        topic_id ||= route[:id]
+        topic_slug ||= route[:id]
+      end
+
+      topic = Topic.find_by(id: topic_id) if topic_id
+      topic ||= Topic.find_by(slug: topic_slug) if topic_slug.present?
 
       if topic.present?
         url = +"#{Discourse.base_url_no_prefix}#{topic.relative_url}"
         url << "/#{post_number}" if post_number.to_i > 1
+      else
+        topic_id = nil
       end
     end
 
@@ -314,7 +319,7 @@ class TopicLink < ActiveRecord::Base
       domain: parsed.host,
       internal: internal,
       link_topic_id: topic&.id,
-      link_post_id: reflected_post.try(:id),
+      link_post_id: reflected_post&.id,
       quote: link.is_quote,
       extension: file_extension,
     )
