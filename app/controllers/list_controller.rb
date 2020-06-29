@@ -52,7 +52,9 @@ class ListController < ApplicationController
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
       user = list_target_user
-      list_opts[:no_definitions] = true if params[:category].blank? && filter == :latest
+      if params[:category].blank? && filter == :latest && !SiteSetting.show_category_definitions_in_topic_lists
+        list_opts[:no_definitions] = true
+      end
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 

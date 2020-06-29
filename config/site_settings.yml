@@ -2034,6 +2034,9 @@ uncategorized:
   overridden_robots_txt:
     default: ""
     hidden: true
+  show_category_definitions_in_topic_lists:
+    default: false
+    hidden: true
 
 user_preferences:
   default_email_digest_frequency:
