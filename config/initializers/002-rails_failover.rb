@@ -55,7 +55,10 @@ if defined?(RailsFailover::ActiveRecord)
       Discourse::PG_FORCE_READONLY_MODE_KEY
     )
   rescue => e
-    Rails.logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
+    unless e.is_a?(Redis::CannotConnectError)
+      Rails.logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
+    end
+
     false
   end
 end
