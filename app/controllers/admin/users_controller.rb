@@ -361,9 +361,11 @@ class Admin::UsersController < Admin::AdminController
   def disable_second_factor
     guardian.ensure_can_disable_second_factor!(@user)
     user_second_factor = @user.user_second_factors
-    raise Discourse::InvalidParameters unless !user_second_factor.empty?
+    user_security_key = @user.security_keys
+    raise Discourse::InvalidParameters if user_second_factor.empty? && user_security_key.empty?
 
     user_second_factor.destroy_all
+    user_security_key.destroy_all
     StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
 
     Jobs.enqueue(
