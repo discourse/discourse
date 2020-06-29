@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe ThemesInstallTask do
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     Discourse::Application.load_tasks
@@ -139,8 +140,33 @@ describe ThemesInstallTask do
           expect(ChildTheme.find_by(parent_theme_id: parent_theme.id, child_theme_id: theme.id).nil?).to eq(false)
         end
       end
+
+      it 'updates theme fields' do
+        ThemesInstallTask.install({ "some_theme": component_repo })
+        theme = Theme.find_by(name: THEME_NAME)
+        remote = theme.remote_theme
+
+        scss = "body { background-color: black; }"
+
+        expect(theme.theme_fields.find_by(name: 'scss', value: scss)).to be_nil
+
+        File.write("#{component_repo}/common/common.scss", scss)
+
+        `cd #{component_repo} && git add common/common.scss`
+        `cd #{component_repo} && git commit -am "update"`
+
+        remote.update_remote_version
+        expect(remote.commits_behind).to eq(1)
+        expect(remote.remote_version).to eq(`cd #{component_repo} && git rev-parse HEAD`.strip)
+
+        ThemesInstallTask.install({ "some_theme": component_repo })
+
+        expect(theme.theme_fields.find_by(name: 'scss', value: scss)).not_to be_nil
+        expect(remote.reload.commits_behind).to eq(0)
+      end
     end
   end
+
   describe '#theme_exists?' do
     it 'can use https or ssh and find the same repo' do
       remote_theme = RemoteTheme.create!(
@@ -149,7 +175,7 @@ describe ThemesInstallTask do
         remote_version: "21122230dbfed804067849393c3332083ddd0c07",
         commits_behind: 2
       )
-      Fabricate(:theme, remote_theme: remote_theme)
+      Fabricate(:theme, remote_theme: remote_theme, user: admin)
 
       # https
       installer = ThemesInstallTask.new({ "url": "https://github.com/org/testtheme" })
