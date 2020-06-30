@@ -36,7 +36,7 @@
         <div class="container">
           <div class="groups-boxes">
             {{#each groups as |group|}}
-              {{#link-to "group.members" group.name class="group-box"}}
+              {{#link-to "group.members" group.name classNames=(concat "group-box " group.name)}}
                 <div class="group-box-inner">
                   <div class="group-info-wrapper">
                     {{#if group.flair_url}}
