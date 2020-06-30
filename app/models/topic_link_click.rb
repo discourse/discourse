@@ -92,7 +92,7 @@ class TopicLinkClick < ActiveRecord::Base
 
       return nil unless uri
 
-      # Only redirect to whitelisted hostnames
+      # Only redirect to allowlisted hostnames
       return url if WHITELISTED_REDIRECT_HOSTNAMES.include?(uri.hostname) || is_cdn_link
 
       return nil

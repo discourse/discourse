@@ -381,8 +381,8 @@ describe UsersEmailController do
         expect(response).to_not be_successful
       end
 
-      it 'raises an error when new email domain is not present in email_domains_whitelist site setting' do
-        SiteSetting.email_domains_whitelist = "discourse.org"
+      it 'raises an error when new email domain is not present in email_domains_allowlist site setting' do
+        SiteSetting.email_domains_allowlist = "discourse.org"
 
         put "/u/#{user.username}/preferences/email.json", params: {
           email: new_email

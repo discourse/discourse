@@ -31,9 +31,9 @@ class EmbeddableHost < ActiveRecord::Base
     path << "?" << uri.query if uri.query.present?
 
     where("lower(host) = ?", host).each do |eh|
-      return eh if eh.path_whitelist.blank?
+      return eh if eh.path_allowlist.blank?
 
-      path_regexp = Regexp.new(eh.path_whitelist)
+      path_regexp = Regexp.new(eh.path_allowlist)
       return eh if path_regexp.match(path) || path_regexp.match(UrlHelper.unencode(path))
     end
 
@@ -78,6 +78,6 @@ end
 #  category_id    :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  path_whitelist :string
+#  path_allowlist :string
 #  class_name     :string
 #

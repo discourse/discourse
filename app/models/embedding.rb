@@ -11,9 +11,9 @@ class Embedding < OpenStruct
        embed_title_scrubber
        embed_truncate
        embed_unlisted
-       embed_whitelist_selector
+       embed_allowlist_selector
        embed_blacklist_selector
-       embed_classname_whitelist)
+       embed_classname_allowlist)
   end
 
   def base_url

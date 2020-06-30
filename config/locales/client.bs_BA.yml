@@ -3748,7 +3748,7 @@ bs_BA:
           domain: "Domain"
         screened_ips:
           title: "Screened IPs"
-          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
+          description: 'IP addresses that are being watched. Use "Allow" to allowlist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
           roll_up_confirm: "Jeste li sigurni da želite preusmjeriti obično prikazane IP adrese u podmreže?"
           rolled_up_some_subnets: "Uspješno unesene IP zabrane unosa u ove podmreže: %{subnets}."
@@ -4208,7 +4208,7 @@ bs_BA:
         title: "Embedding"
         host: "Dozvoljeni domaćini"
         class_name: "Naziv klase"
-        path_whitelist: "Bela lista puta"
+        path_allowlist: "Bela lista puta"
         edit: "uredi"
         category: "Post u kategoriju"
         add_host: "Dodaj host"
@@ -4216,9 +4216,9 @@ bs_BA:
         crawling_settings: "Postavke Crawlera"
         embed_title_scrubber: "Regular expression korišten za čistku naslova objava"
         embed_truncate: "Skrati embedovane objave"
-        embed_whitelist_selector: "CSS selector za elemente koji su dozvoljeni u embeds"
+        embed_allowlist_selector: "CSS selector za elemente koji su dozvoljeni u embeds"
         embed_blacklist_selector: "CSS selector za elemente koji su odstranjeni sa embeds"
-        embed_classname_whitelist: "Dopuštena CSS class imena"
+        embed_classname_allowlist: "Dopuštena CSS class imena"
         save: "Sačuvaj Embedding postavke"
       permalink:
         title: "Permalink-ovi"

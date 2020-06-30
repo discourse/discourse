@@ -55,8 +55,8 @@ class RobotsTxtController < ApplicationController
       agents: []
     }
 
-    if SiteSetting.whitelisted_crawler_user_agents.present?
-      SiteSetting.whitelisted_crawler_user_agents.split('|').each do |agent|
+    if SiteSetting.allowlisted_crawler_user_agents.present?
+      SiteSetting.allowlisted_crawler_user_agents.split('|').each do |agent|
         result[:agents] << { name: agent, disallow: deny_paths }
       end
 

@@ -30,8 +30,8 @@ describe EmailValidator do
       expect(blocks?('sam@googlemail.com')).to eq(false)
     end
 
-    it "blocks based on email_domains_whitelist" do
-      SiteSetting.email_domains_whitelist = "googlemail.com|email.com"
+    it "blocks based on email_domains_allowlist" do
+      SiteSetting.email_domains_allowlist = "googlemail.com|email.com"
       expect(blocks?('sam@email.com')).to eq(false)
       expect(blocks?('sam@EMAIL.com')).to eq(false)
       expect(blocks?('sam@bob.email.com')).to eq(false)
@@ -49,8 +49,8 @@ describe EmailValidator do
       expect(EmailValidator.can_auto_approve_user?("foobar@example.com")).to eq(true)
     end
 
-    it "returns false if domain not present in email_domains_whitelist" do
-      SiteSetting.email_domains_whitelist = "googlemail.com"
+    it "returns false if domain not present in email_domains_allowlist" do
+      SiteSetting.email_domains_allowlist = "googlemail.com"
       SiteSetting.auto_approve_email_domains = "example.com|googlemail.com"
 
       expect(EmailValidator.can_auto_approve_user?("foobar@example.com")).to eq(false)

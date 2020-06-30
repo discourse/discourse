@@ -814,48 +814,48 @@ describe User do
       expect(u).not_to be_valid
     end
 
-    it 'whitelist should reject some emails based on the email_domains_whitelist site setting' do
-      SiteSetting.email_domains_whitelist = 'vaynermedia.com'
+    it 'allowlist should reject some emails based on the email_domains_allowlist site setting' do
+      SiteSetting.email_domains_allowlist = 'vaynermedia.com'
       user = Fabricate.build(:user, email: 'notgood@mailinator.com')
       expect(user).not_to be_valid
       expect(user.errors.messages[:primary_email]).to include(I18n.t('user.email.not_allowed'))
       expect(Fabricate.build(:user, email: 'sbauch@vaynermedia.com')).to be_valid
     end
 
-    it 'should reject some emails based on the email_domains_whitelist site setting when whitelisting multiple domains' do
-      SiteSetting.email_domains_whitelist = 'vaynermedia.com|gmail.com'
+    it 'should reject some emails based on the email_domains_allowlist site setting when allowlisting multiple domains' do
+      SiteSetting.email_domains_allowlist = 'vaynermedia.com|gmail.com'
       expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
       expect(Fabricate.build(:user, email: 'notgood@trashmail.net')).not_to be_valid
       expect(Fabricate.build(:user, email: 'mailinator.com@gmail.com')).to be_valid
       expect(Fabricate.build(:user, email: 'mailinator.com@vaynermedia.com')).to be_valid
     end
 
-    it 'should accept some emails based on the email_domains_whitelist site setting ignoring case' do
-      SiteSetting.email_domains_whitelist = 'vaynermedia.com'
+    it 'should accept some emails based on the email_domains_allowlist site setting ignoring case' do
+      SiteSetting.email_domains_allowlist = 'vaynermedia.com'
       expect(Fabricate.build(:user, email: 'good@VAYNERMEDIA.COM')).to be_valid
     end
 
-    it 'whitelist should accept developer emails' do
+    it 'allowlist should accept developer emails' do
       Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
-      SiteSetting.email_domains_whitelist = 'awesome.org'
+      SiteSetting.email_domains_allowlist = 'awesome.org'
       expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
     end
 
-    it 'email whitelist should not be used to validate existing records' do
-      u = Fabricate(:user, email: 'in_before_whitelisted@fakemail.com')
+    it 'email allowlist should not be used to validate existing records' do
+      u = Fabricate(:user, email: 'in_before_allowlisted@fakemail.com')
       SiteSetting.email_domains_blacklist = 'vaynermedia.com'
       expect(u).to be_valid
     end
 
-    it 'email whitelist should be used when email is being changed' do
-      SiteSetting.email_domains_whitelist = 'vaynermedia.com'
+    it 'email allowlist should be used when email is being changed' do
+      SiteSetting.email_domains_allowlist = 'vaynermedia.com'
       u = Fabricate(:user, email: 'good@vaynermedia.com')
       u.email = 'nope@mailinator.com'
       expect(u).not_to be_valid
     end
 
     it "doesn't validate email address for staged users" do
-      SiteSetting.email_domains_whitelist = "foo.com"
+      SiteSetting.email_domains_allowlist = "foo.com"
       SiteSetting.email_domains_blacklist = "bar.com"
 
       user = Fabricate.build(:user, staged: true, email: "foo@bar.com")

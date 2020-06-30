@@ -3297,7 +3297,7 @@ sw:
         title: "Ambatanisha"
         host: "Ruhusu Wenyeji"
         class_name: "Jina la Class"
-        path_whitelist: "Njia au anwani Zilizoruhusiwa"
+        path_allowlist: "Njia au anwani Zilizoruhusiwa"
         edit: "hariri"
         category: "Andika kwenye Kikundi"
         add_host: "Ongeza Mwenyeji"
@@ -3308,7 +3308,7 @@ sw:
         embed_post_limit: "Kiwango cha Juu cha Kupachika machapisho"
         embed_title_scrubber: "Neno linalotumika kufuta vichwa vya machapisho"
         embed_truncate: "Fupisha machapisho yaliyopachikwa"
-        embed_classname_whitelist: "Ruhusu majina ya madarasa ya CSS "
+        embed_classname_allowlist: "Ruhusu majina ya madarasa ya CSS "
         save: "Hifadhi Mipangilio Iliyopachikwa"
       permalink:
         title: "Anwani za mtandao"

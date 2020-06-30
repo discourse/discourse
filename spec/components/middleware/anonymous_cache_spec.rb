@@ -215,8 +215,8 @@ describe Middleware::AnonymousCache::Helper do
       @status, @response_header, @response = middleware.call(@env)
     end
 
-    it "applies whitelisted_crawler_user_agents correctly" do
-      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+    it "applies allowlisted_crawler_user_agents correctly" do
+      SiteSetting.allowlisted_crawler_user_agents = 'Googlebot'
 
       get '/', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
@@ -236,7 +236,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "doesn't block api requests" do
-      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.allowlisted_crawler_user_agents = 'Googlebot'
       api_key = Fabricate(:api_key)
 
       get "/latest?api_key=#{api_key.key}&api_username=system", headers: {

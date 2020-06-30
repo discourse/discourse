@@ -102,14 +102,14 @@ class SiteSetting < ActiveRecord::Base
     :default_locale,
     :attachment_content_type_blacklist,
     :attachment_filename_blacklist,
-    :unicode_username_character_whitelist,
+    :unicode_username_character_allowlist,
     :markdown_typographer_quotation_marks
   ]
 
   def self.reset_cached_settings!
     @attachment_content_type_blacklist_regex = nil
     @attachment_filename_blacklist_regex = nil
-    @unicode_username_whitelist_regex = nil
+    @unicode_username_allowlist_regex = nil
   end
 
   def self.attachment_content_type_blacklist_regex
@@ -120,9 +120,9 @@ class SiteSetting < ActiveRecord::Base
     @attachment_filename_blacklist_regex ||= Regexp.union(SiteSetting.attachment_filename_blacklist.split("|"))
   end
 
-  def self.unicode_username_character_whitelist_regex
-    @unicode_username_whitelist_regex ||= SiteSetting.unicode_username_character_whitelist.present? \
-      ? Regexp.new(SiteSetting.unicode_username_character_whitelist) : nil
+  def self.unicode_username_character_allowlist_regex
+    @unicode_username_allowlist_regex ||= SiteSetting.unicode_username_character_allowlist.present? \
+      ? Regexp.new(SiteSetting.unicode_username_character_allowlist) : nil
   end
 
   # helpers for getting s3 settings that fallback to global

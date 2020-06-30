@@ -102,7 +102,7 @@ export class Tag {
     ];
   }
 
-  static whitelists() {
+  static allowlists() {
     return ["ins", "del", "small", "big", "kbd", "ruby", "rt", "rb", "rp"];
   }
 
@@ -192,7 +192,7 @@ export class Tag {
     };
   }
 
-  static whitelist(name) {
+  static allowlist(name) {
     return class extends Tag {
       constructor() {
         super(name, `<${name}>`, `</${name}>`);
@@ -526,7 +526,7 @@ function tags() {
     ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
     ...Tag.slices().map(s => Tag.slice(s, "\n")),
     ...Tag.emphases().map(e => Tag.emphasis(e[0], e[1])),
-    ...Tag.whitelists().map(t => Tag.whitelist(t)),
+    ...Tag.allowlists().map(t => Tag.allowlist(t)),
     Tag.aside(),
     Tag.cell("td"),
     Tag.cell("th"),

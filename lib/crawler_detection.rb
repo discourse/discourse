@@ -39,15 +39,15 @@ module CrawlerDetection
 
   # Given a user_agent that returns true from crawler?, should its request be allowed?
   def self.allow_crawler?(user_agent)
-    return true if SiteSetting.whitelisted_crawler_user_agents.blank? &&
+    return true if SiteSetting.allowlisted_crawler_user_agents.blank? &&
       SiteSetting.blacklisted_crawler_user_agents.blank?
 
-    @whitelisted_matchers ||= {}
+    @allowlisted_matchers ||= {}
     @blacklisted_matchers ||= {}
 
-    if SiteSetting.whitelisted_crawler_user_agents.present?
-      whitelisted = @whitelisted_matchers[SiteSetting.whitelisted_crawler_user_agents] ||= to_matcher(SiteSetting.whitelisted_crawler_user_agents)
-      !user_agent.nil? && user_agent.match?(whitelisted)
+    if SiteSetting.allowlisted_crawler_user_agents.present?
+      allowlisted = @allowlisted_matchers[SiteSetting.allowlisted_crawler_user_agents] ||= to_matcher(SiteSetting.allowlisted_crawler_user_agents)
+      !user_agent.nil? && user_agent.match?(allowlisted)
     else
       blacklisted = @blacklisted_matchers[SiteSetting.blacklisted_crawler_user_agents] ||= to_matcher(SiteSetting.blacklisted_crawler_user_agents)
       user_agent.nil? || !user_agent.match?(blacklisted)

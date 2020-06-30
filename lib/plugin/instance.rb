@@ -160,11 +160,11 @@ class Plugin::Instance
     end
   end
 
-  def whitelist_staff_user_custom_field(field)
+  def allowlist_staff_user_custom_field(field)
     DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
   end
 
-  def whitelist_public_user_custom_field(field)
+  def allowlist_public_user_custom_field(field)
     DiscoursePluginRegistry.register_public_user_custom_field(field, self)
   end
 
@@ -256,10 +256,10 @@ class Plugin::Instance
     end
   end
 
-  # Add a post_custom_fields_whitelister block to the TopicView, respecting if the plugin is enabled
-  def topic_view_post_custom_fields_whitelister(&block)
+  # Add a post_custom_fields_allowlister block to the TopicView, respecting if the plugin is enabled
+  def topic_view_post_custom_fields_allowlister(&block)
     reloadable_patch do |plugin|
-      ::TopicView.add_post_custom_fields_whitelister do |user|
+      ::TopicView.add_post_custom_fields_allowlister do |user|
         plugin.enabled? ? block.call(user) : []
       end
     end

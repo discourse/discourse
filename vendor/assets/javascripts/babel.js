@@ -50966,7 +50966,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var regexSingleEscape = /["'\\\b\f\n\r\t]/;
 
 		var regexDigit = /[0-9]/;
-		var regexWhitelist = /[ !#-&\(-\[\]-~]/;
+		var regexAllowlist = /[ !#-&\(-\[\]-~]/;
 
 		var jsesc = function jsesc(argument, options) {
 			// Handle options
@@ -51133,7 +51133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 				}
 				if (!options.escapeEverything) {
-					if (regexWhitelist.test(character)) {
+					if (regexAllowlist.test(character)) {
 						// It’s a printable ASCII character that is not `"`, `'` or `\`,
 						// so don’t escape it.
 						result += character;

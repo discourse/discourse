@@ -289,7 +289,7 @@ module Email
     end
 
     def is_auto_generated?
-      return false if SiteSetting.auto_generated_whitelist.split('|').include?(@from_email)
+      return false if SiteSetting.auto_generated_allowlist.split('|').include?(@from_email)
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
       @mail[:from].to_s[/(mailer[\-_]?daemon|post[\-_]?master|no[\-_]?reply)@/i] ||
       @mail[:subject].to_s[/^\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i] ||
@@ -1009,18 +1009,18 @@ module Email
       raise InvalidPostAction.new if result.failed? && result.forbidden
     end
 
-    def is_whitelisted_attachment?(attachment)
+    def is_allowlisted_attachment?(attachment)
       attachment.content_type !~ SiteSetting.attachment_content_type_blacklist_regex &&
       attachment.filename !~ SiteSetting.attachment_filename_blacklist_regex
     end
 
     def attachments
       @attachments ||= begin
-        attachments = @mail.attachments.select { |attachment| is_whitelisted_attachment?(attachment) }
-        attachments << @mail if @mail.attachment? && is_whitelisted_attachment?(@mail)
+        attachments = @mail.attachments.select { |attachment| is_allowlisted_attachment?(attachment) }
+        attachments << @mail if @mail.attachment? && is_allowlisted_attachment?(@mail)
 
         @mail.parts.each do |part|
-          attachments << part if part.attachment? && is_whitelisted_attachment?(part)
+          attachments << part if part.attachment? && is_allowlisted_attachment?(part)
         end
 
         attachments.uniq!

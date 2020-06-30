@@ -66,7 +66,7 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include("'report-sample'")
     end
 
-    it 'whitelists Google Analytics and Tag Manager when integrated' do
+    it 'allowlists Google Analytics and Tag Manager when integrated' do
       SiteSetting.ga_universal_tracking_code = 'UA-12345678-9'
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
@@ -75,7 +75,7 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
     end
 
-    it 'whitelists CDN assets when integrated' do
+    it 'allowlists CDN assets when integrated' do
       set_cdn_url('https://cdn.com')
 
       script_srcs = parse(policy)['script-src']

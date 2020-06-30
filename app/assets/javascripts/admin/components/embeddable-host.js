@@ -42,7 +42,7 @@ export default Component.extend(bufferedProperty("host"), {
 
       const props = this.buffered.getProperties(
         "host",
-        "path_whitelist",
+        "path_allowlist",
         "class_name"
       );
       props.category_id = this.categoryId;

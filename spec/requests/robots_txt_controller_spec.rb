@@ -93,8 +93,8 @@ RSpec.describe RobotsTxtController do
         expect(response.body[i..-1]).to include("Disallow: /auth/")
       end
 
-      it "can whitelist user agents" do
-        SiteSetting.whitelisted_crawler_user_agents = "Googlebot|Twitterbot"
+      it "can allowlist user agents" do
+        SiteSetting.allowlisted_crawler_user_agents = "Googlebot|Twitterbot"
         get '/robots.txt'
         expect(response.body).to include('User-agent: Googlebot')
         expect(response.body).to include('User-agent: Twitterbot')
@@ -117,8 +117,8 @@ RSpec.describe RobotsTxtController do
         expect_allowed_and_disallowed_sections(allow_index, disallow_index)
       end
 
-      it "ignores blacklist if whitelist is set" do
-        SiteSetting.whitelisted_crawler_user_agents = "Googlebot|Twitterbot"
+      it "ignores blacklist if allowlist is set" do
+        SiteSetting.allowlisted_crawler_user_agents = "Googlebot|Twitterbot"
         SiteSetting.blacklisted_crawler_user_agents = "Bananabot"
         get '/robots.txt'
         expect(response.body).to_not include('Bananabot')

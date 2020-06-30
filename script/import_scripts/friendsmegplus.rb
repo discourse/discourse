@@ -73,7 +73,7 @@ class ImportScripts::FMGP < ImportScripts::Base
 
     # G+ user IDs whose posts are useful; if this is set, include only
     # posts (and non-blacklisted comments) authored by these IDs
-    @whitelist = nil
+    @allowlist = nil
 
     # Tags to apply to every topic; empty Array to not have any tags applied everywhere
     @globaltags = [ "gplus" ]
@@ -119,8 +119,8 @@ class ImportScripts::FMGP < ImportScripts::Base
         @usermap = load_fmgp_json(arg)
       elsif arg.end_with?('blacklist.json')
         @blacklist = load_fmgp_json(arg).map { |i| i.to_s }.to_set
-      elsif arg.end_with?('whitelist.json')
-        @whitelist = load_fmgp_json(arg).map { |i| i.to_s }.to_set
+      elsif arg.end_with?('allowlist.json')
+        @allowlist = load_fmgp_json(arg).map { |i| i.to_s }.to_set
       elsif arg.end_with?('.json')
         @feeds << load_fmgp_json(arg)
       elsif arg == '--dry-run'
@@ -389,8 +389,8 @@ class ImportScripts::FMGP < ImportScripts::Base
       @topics_skipped += 1
     else
       # new post
-      if !@whitelist.nil? && !@whitelist.include?(post["author"]["id"])
-        # only ignore non-whitelisted if whitelist defined
+      if !@allowlist.nil? && !@allowlist.include?(post["author"]["id"])
+        # only ignore non-allowlisted if allowlist defined
         return
       end
       postmap = make_postmap(post, category, nil)

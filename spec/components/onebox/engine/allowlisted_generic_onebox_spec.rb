@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'oneboxer'
 
-describe Onebox::Engine::WhitelistedGenericOnebox do
+describe Onebox::Engine::AllowlistedGenericOnebox do
 
   describe ".===" do
 
@@ -18,11 +18,11 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
 
   end
 
-  it "whitelists iframes" do
-    whitelisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://whitelist.ed/iframes.json" />'
+  it "allowlists iframes" do
+    allowlisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://allowlist.ed/iframes.json" />'
     blacklisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://blacklist.ed/iframes.json" />'
 
-    whitelisted_oembed = {
+    allowlisted_oembed = {
       type: "rich",
       height: "100",
       html: "<iframe src='https://ifram.es/foo/bar'></iframe>"
@@ -37,13 +37,13 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
     stub_request(:get, "https://blacklist.ed/iframes").to_return(status: 200, body: blacklisted_body)
     stub_request(:get, "https://blacklist.ed/iframes.json").to_return(status: 200, body: blacklisted_oembed.to_json)
 
-    stub_request(:get, "https://whitelist.ed/iframes").to_return(status: 200, body: whitelisted_body)
-    stub_request(:get, "https://whitelist.ed/iframes.json").to_return(status: 200, body: whitelisted_oembed.to_json)
+    stub_request(:get, "https://allowlist.ed/iframes").to_return(status: 200, body: allowlisted_body)
+    stub_request(:get, "https://allowlist.ed/iframes.json").to_return(status: 200, body: allowlisted_oembed.to_json)
 
     SiteSetting.allowed_iframes = "discourse.org|https://ifram.es"
 
     expect(Onebox.preview("https://blacklist.ed/iframes").to_s).to be_empty
-    expect(Onebox.preview("https://whitelist.ed/iframes").to_s).to match("iframe src")
+    expect(Onebox.preview("https://allowlist.ed/iframes").to_s).to match("iframe src")
   end
 
 end

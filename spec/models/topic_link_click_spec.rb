@@ -47,7 +47,7 @@ describe TopicLinkClick do
         click = TopicLinkClick.create_from(url: "http://url-that-doesnt-exist.com", post_id: @post.id, ip: '127.0.0.1')
         expect(click).to eq(nil)
 
-        # redirects if whitelisted
+        # redirects if allowlisted
         click = TopicLinkClick.create_from(url: "https://www.youtube.com/watch?v=jYd_5aggzd4", post_id: @post.id, ip: '127.0.0.1')
         expect(click).to eq("https://www.youtube.com/watch?v=jYd_5aggzd4")
 

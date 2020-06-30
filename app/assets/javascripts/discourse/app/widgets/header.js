@@ -515,11 +515,11 @@ export default createWidget("header", {
       .lookup("service:router")
       .get("_router.currentPath");
     const blacklist = [/^discovery\.categories/];
-    const whitelist = [/^topic\./];
+    const allowlist = [/^topic\./];
     const check = function(regex) {
       return !!currentPath.match(regex);
     };
-    let showSearch = whitelist.any(check) && !blacklist.any(check);
+    let showSearch = allowlist.any(check) && !blacklist.any(check);
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {

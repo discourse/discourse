@@ -1331,7 +1331,7 @@ sl:
 
         [Preverite uporabnika](%{user_url}).
 
-        To se lahko spremeni preko `newuser_spam_host_threshold` in `white_listed_spam_host_domains` nastavitev sistema. Razmislite, da bi dodali %{domains} na belo listo, če naj bi bile izvzete.
+        To se lahko spremeni preko `newuser_spam_host_threshold` in `allow_listed_spam_host_domains` nastavitev sistema. Razmislite, da bi dodali %{domains} na belo listo, če naj bi bile izvzete.
     unsilenced:
       title: "Od-utišan"
       subject_template: "Uporabniški račun ni več na čakanju"

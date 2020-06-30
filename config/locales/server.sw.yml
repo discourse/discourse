@@ -782,7 +782,7 @@ sw:
     max_image_height: "Kiwango cha juu cha urefu wa kijipicha za picha kwenye chapisho"
     add_rel_nofollow_to_user_content: 'Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: "rake machapishi:rebake"'
     onebox_domains_blacklist: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
-    inline_onebox_domains_whitelist: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
+    inline_onebox_domains_allowlist: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
     enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
@@ -891,7 +891,7 @@ sw:
     cold_age_days_medium: "Baada ya siku nyingi za majadiliano, tarehe ya mwisho ya shughuli itaangaza kiasi."
     cold_age_days_high: "Baada ya siku hizi nyingi za majadiliano, tarehe ya mwisho ya shughuli itaangaza kiasi."
     newuser_spam_host_threshold: "Mara ngapi mtumiaji mpya anaweza kuchapisha kiungo kwenye komputa mwenyeji ndani ya machapisho ya `newuser_spam_host_threshold` kabla ya taarifa kuitwa barua taka."
-    white_listed_spam_host_domains: "Orodha ya vikoa vilivyotengwa kutoka kwenye majaribio ya komputa mwenyeji ya barua taka. Watumiaji wapya hawatazuiliwa kutengeneza machapisho yenye viungo kwenda kwenye vikoa hivi."
+    allow_listed_spam_host_domains: "Orodha ya vikoa vilivyotengwa kutoka kwenye majaribio ya komputa mwenyeji ya barua taka. Watumiaji wapya hawatazuiliwa kutengeneza machapisho yenye viungo kwenda kwenye vikoa hivi."
     topic_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
     user_profile_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
     max_new_accounts_per_registration_ip: "Kama kuna akaunti 0 zenye kiwango (n) cha uaminifu kutoka kwenye anwani hii ya mtandao (na hakuna hata mmoja ambaye ni msaidizi or kwenye kiwango cha 2 cha uaminifu au zaidi), kataa usajili kutoka kwenye anwani hiyo."

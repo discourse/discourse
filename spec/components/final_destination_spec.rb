@@ -432,8 +432,8 @@ describe FinalDestination do
       expect(fd("https://cdn.example.com/some/asset").is_dest_valid?).to eq(true)
     end
 
-    it 'supports whitelisting via a site setting' do
-      SiteSetting.whitelist_internal_hosts = 'private-host.com'
+    it 'supports allowlisting via a site setting' do
+      SiteSetting.allowlist_internal_hosts = 'private-host.com'
       expect(fd("https://private-host.com/some/url").is_dest_valid?).to eq(true)
     end
   end

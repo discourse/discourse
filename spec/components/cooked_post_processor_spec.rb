@@ -1600,7 +1600,7 @@ describe CookedPostProcessor do
     context "onebox" do
       before do
         Oneboxer.stubs(:onebox).with(anything, anything).returns(nil)
-        Oneboxer.stubs(:onebox).with('https://discourse.org', anything).returns("<aside class=\"onebox whitelistedgeneric\">the rest of the onebox</aside>")
+        Oneboxer.stubs(:onebox).with('https://discourse.org', anything).returns("<aside class=\"onebox allowlistedgeneric\">the rest of the onebox</aside>")
       end
 
       it "awards the badge for using an onebox" do

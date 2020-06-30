@@ -125,7 +125,7 @@ describe PostsController do
       let(:url) { "/posts/#{post.id}/reply-history.json" }
     end
 
-    it "returns the replies with whitelisted user custom fields" do
+    it "returns the replies with allowlisted user custom fields" do
       parent = Fabricate(:post)
       child = Fabricate(:post, topic: parent.topic, reply_to_post_number: parent.post_number)
 
