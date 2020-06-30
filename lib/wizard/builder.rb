@@ -204,9 +204,34 @@ class Wizard
         end
       end
 
-      @wizard.append_step('themes-further-reading') do |step|
-        step.banner = "further-reading.png"
-        step.add_field(id: 'popular-themes', type: 'component')
+      # 'themes-further-reading'
+      @wizard.append_step('fonts') do |step|
+        # step.banner = "further-reading.png"
+        # step.add_field(id: 'popular-themes', type: 'component')
+        fonts = step.add_field(
+          id: 'fonts',
+          type: 'component',
+          required: false,
+          value: -1
+        )
+
+        # font_theme_components = Theme.where(name: FontThemeInstaller::FONT_LIST.map { |f| f[:name] }).all
+
+        # font_theme_components.each do |f|
+        #   fonts.add_choice(f.id, data: { name: f.font_family_name, regular: f.regular_font, bold: f.bold_font })
+        # end
+
+        FontThemeInstaller::FONT_LIST.each do |f|
+          fonts.add_choice(f[:name], { name: f[:font_family_name] })
+        end
+
+        step.on_update do |updater|
+          # To add to all themes:
+          # Theme.where(component: false).each do |parent_theme|
+          #   next if ChildTheme.where(parent_theme_id: parent_theme.id, child_theme_id: font_theme.id).exists?
+          #   parent_theme.add_relative_theme!(:child, font_theme)
+          # end
+        end
       end
 
       @wizard.append_step('logos') do |step|

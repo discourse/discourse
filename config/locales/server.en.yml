@@ -4650,6 +4650,10 @@ en:
       colors:
         title: "Theme"
 
+      fonts:
+        title: "Font"
+        description: "Choose a font for your Discourse:"
+
       themes_further_reading:
         title: "Themes"
         description:

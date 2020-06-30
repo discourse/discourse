@@ -14,6 +14,13 @@ class FontThemeInstaller
     @bold_font_filename = attrs[:bold_font]
   end
 
+  FONT_LIST = [{
+    name: "Oxanium Font",
+    font_family_name: "Oxanium",
+    regular_font: "oxanium-regular.woff2",
+    bold_font: "oxanium-bold.woff2"
+  }]
+
   DEFAULT_SCSS = <<~SCSS
     @font-face {
       font-family: $family-name;

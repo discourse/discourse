@@ -1,0 +1,13 @@
+<div>
+  Font choices go here... field id = '{{field.id}}'
+</div>
+<ul>
+  {{#each field.choices as |choice|}}
+    <li>
+      {{radio-button radioValue=choice.id
+                     label=choice.label
+                     value=field.id
+                     onChange=(action "changed")}}
+    </li>
+  {{/each}}
+</ul>
