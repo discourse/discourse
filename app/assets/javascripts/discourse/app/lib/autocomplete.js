@@ -9,6 +9,7 @@ import Site from "discourse/models/site";
   @module $.fn.autocomplete
 **/
 
+export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
 const allowedLettersRegex = /[\s\t\[\{\(\/]/;
 
@@ -351,8 +352,6 @@ export default function(options) {
       left: left + "px"
     });
   }
-
-  const SKIP = "skip";
 
   function dataSource(term, opts) {
     if (prevTerm === term) {

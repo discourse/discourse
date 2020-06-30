@@ -29,6 +29,7 @@ import { emojiUrlFor } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { isTesting } from "discourse-common/config/environment";
+import { SKIP } from "discourse/lib/autocomplete";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -480,7 +481,7 @@ export default Component.extend({
           term = term.toLowerCase();
 
           if (term.length < this.siteSettings.emoji_autocomplete_min_chars) {
-            return resolve([]);
+            return resolve(SKIP);
           }
 
           if (term === "") {
