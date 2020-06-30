@@ -62,15 +62,17 @@
   }}
 </div>
 
-<div class="control-group">
-  <label>
-    {{input type="checkbox"
-          checked=model.publish_read_state
-          class="groups-form-publish-read-state"}}
+{{#if currentUser.admin}}
+  <div class="control-group">
+    <label>
+      {{input type="checkbox"
+            checked=model.publish_read_state
+            class="groups-form-publish-read-state"}}
 
-    {{i18n "admin.groups.manage.interaction.publish_read_state"}}
-  </label>
-</div>
+      {{i18n "admin.groups.manage.interaction.publish_read_state"}}
+    </label>
+  </div>
+{{/if}}
 
 {{#if showEmailSettings}}
   <div class="control-group">
