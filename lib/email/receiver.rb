@@ -1056,9 +1056,9 @@ module Email
               if raw[attachment.url]
                 raw.sub!(attachment.url, upload.url)
 
-                InlineUploads.match_img(raw) do |match, src, replacement, _|
+                InlineUploads.match_img(raw, uploads: { upload.url => upload }) do |match, src, replacement, _|
                   if src == upload.url
-                    raw = raw.sub(match, replacement.gsub(InlineUploads::PLACEHOLDER, upload.short_url))
+                    raw = raw.sub(match, replacement)
                   end
                 end
               elsif raw[/\[image:.*?\d+[^\]]*\]/i]
@@ -1109,6 +1109,7 @@ module Email
       # only add elided part in messages
       if options[:elided].present? && (SiteSetting.always_show_trimmed_content || is_private_message)
         options[:raw] << Email::Receiver.elided_html(options[:elided])
+        options[:elided] = ""
       end
 
       options

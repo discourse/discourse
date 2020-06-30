@@ -587,15 +587,7 @@ describe Email::Receiver do
       <details class='elided'>
       <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
 
-      ![|300x200](upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png)
-
-      </details>
-
-
-      <details class='elided'>
-      <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
-
-      <img src="cid:56990c92d6c64_7cb53ffbb986020047616@foo.bar.mail" width="300" height="200">
+      ![logo.png|300x200](upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png)
 
       </details>
       MD
