@@ -52,34 +52,44 @@ describe CategoryHashtagsController do
       end
 
       context "with sub-sub-categories" do
-        let(:category) { Fabricate(:category_with_definition) }
-        let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
-        let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
-
         before do
           SiteSetting.max_category_nesting = 3
           sign_in(Fabricate(:user))
         end
 
         it "works" do
+          foo = Fabricate(:category_with_definition, slug: "foo")
+          foobar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: foo.id)
+          foobarbaz = Fabricate(:category_with_definition, slug: "baz", parent_category_id: foobar.id)
+
+          qux = Fabricate(:category_with_definition, slug: "qux")
+          quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
+          quxbarbaz = Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
+
           get "/category_hashtags/check.json", params: {
             category_slugs: [
-              category.slug,
-              "#{category.slug}:#{subcategory.slug}",
-              "#{category.slug}:#{subcategory.slug}:#{subsubcategory.slug}",
-              "#{category.slug}:#{subsubcategory.slug}",
-              subcategory.slug,
-              "#{subcategory.slug}:#{subsubcategory.slug}",
-              subsubcategory.slug
+              ":",
+              "foo",
+              "bar",
+              "baz",
+              "foo:bar",
+              "bar:baz",
+              "foo:bar:baz", # should not work
+              "qux",
+              "qux:bar",
+              "qux:bar:baz" # should not work
             ]
           }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq("valid" => [
-            { "slug" => category.slug, "url" => category.url },
-            { "slug" => "#{category.slug}:#{subcategory.slug}", "url" => subcategory.url },
-            { "slug" => "#{category.slug}:#{subcategory.slug}:#{subsubcategory.slug}", "url" => subsubcategory.url },
-            { "slug" => "#{subcategory.slug}:#{subsubcategory.slug}", "url" => subsubcategory.url }
+            { "slug" => "foo",     "url" => foo.url },
+            { "slug" => "bar",     "url" => foobar.url },
+            { "slug" => "foo:bar", "url" => foobar.url },
+            { "slug" => "baz",     "url" => foobarbaz.url },
+            { "slug" => "bar:baz", "url" => foobarbaz.url },
+            { "slug" => "qux",     "url" => qux.url },
+            { "slug" => "qux:bar", "url" => quxbar.url }
           ])
         end
       end
