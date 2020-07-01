@@ -148,7 +148,7 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def replace_flags(settings: ::FlagSettings.new)
+  def replace_flags(settings: ::FlagSettings.new, score_type_names: [])
     next_flag_id = ReviewableScore.types.values.max + 1
 
     yield(settings, next_flag_id)
@@ -156,6 +156,7 @@ class Plugin::Instance
     reloadable_patch do |plugin|
       ::PostActionType.replace_flag_settings(settings)
       ::ReviewableScore.reload_types
+      ::ReviewableScore.add_new_types(score_type_names)
     end
   end
 
