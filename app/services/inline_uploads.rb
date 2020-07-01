@@ -199,9 +199,7 @@ class InlineUploads
 
   def self.match_img(markdown, external_src: false, uploads: nil)
     markdown.scan(/(<(?!img)[^<>]+\/?>)?(\s*)(<img [^>\n]+>)/i) do |match|
-      # rubocop:disable Discourse/NoNokogiriHtmlFragment
-      node = Nokogiri::HTML::fragment(match[2].strip).children[0]
-      # rubocop:enable Discourse/NoNokogiriHtmlFragment
+      node = Nokogiri::HTML5::fragment(match[2].strip).children[0]
       src =  node.attributes["src"]&.value
 
       if src && (matched_uploads(src).present? || external_src)

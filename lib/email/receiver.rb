@@ -1111,8 +1111,6 @@ module Email
         options[:raw] << Email::Receiver.elided_html(options[:elided])
         options[:elided] = ""
       end
-
-      options
     end
 
     def create_post(options = {})
