@@ -51,17 +51,14 @@ module Onebox
 
       raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
 
-      uri = URI(location)
-      uri = URI("#{domain}#{location}") if !uri.host
+      uri = Addressable::URI.parse(location)
+      uri = Addressable::URI.join(domain, uri) if !uri.host
 
       result = StringIO.new
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.is_a?(URI::HTTPS)) do |http|
+      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.normalized_scheme == 'https') do |http|
         http.open_timeout = Onebox.options.connect_timeout
         http.read_timeout = Onebox.options.timeout
-        if uri.is_a?(URI::HTTPS)
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        end
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # Work around path building bugs
 
         headers ||= {}
 
@@ -76,10 +73,12 @@ module Onebox
         http.request(request) do |response|
 
           if cookie = response.get_fields('set-cookie')
-            header = { 'Cookie' => cookie.join }
+            # HACK: If this breaks again in the future, use HTTP::CookieJar from gem 'http-cookie'
+            # See test: it "does not send cookies to the wrong domain"
+            redir_header = { 'Cookie' => cookie.join('; ') }
           end
 
-          header = nil unless header.is_a? Hash
+          redir_header = nil unless redir_header.is_a? Hash
 
           code = response.code.to_i
           unless code === 200
@@ -88,7 +87,7 @@ module Onebox
               response['location'],
               limit - 1,
               "#{uri.scheme}://#{uri.host}",
-              header
+              redir_header
             )
           end
 

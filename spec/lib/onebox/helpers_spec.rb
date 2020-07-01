@@ -44,6 +44,53 @@ RSpec.describe Onebox::Helpers do
     end
   end
 
+  describe "redirects" do
+    describe "redirect limit" do
+      before do
+        (1..6).each do |i|
+          FakeWeb.register_uri(:get, "https://httpbin.org/redirect/#{i}", location: "https://httpbin.org/redirect/#{i - 1}", body: "", status: [302, "Found"])
+        end
+        fake("https://httpbin.org/redirect/0", "<!DOCTYPE html><p>success</p>")
+      end
+
+      it "can follow redirects" do
+        expect(described_class.fetch_response("https://httpbin.org/redirect/2")).to match("success")
+      end
+
+      it "errors on long redirect chains" do
+        expect {
+          described_class.fetch_response("https://httpbin.org/redirect/6")
+        }.to raise_error(Net::HTTPError, /redirect too deep/)
+      end
+    end
+
+    describe "cookie handling" do
+      it "naively forwards cookies to the next request" do
+        FakeWeb.register_uri(:get, "https://httpbin.org/cookies/set/a/b",
+                             location: "/cookies",
+                             'set-cookie': "a=b; Path=/",
+                             status: [302, "Found"])
+        fake("https://httpbin.org/cookies", "success, cookie readback not implemented")
+
+        expect(described_class.fetch_response('https://httpbin.org/cookies/set/a/b')).to match("success")
+        expect(FakeWeb.last_request.to_hash['cookie'][0]).to match("a=b")
+      end
+
+      it "does not send cookies to the wrong domain" do
+        skip("unimplemented")
+
+        FakeWeb.register_uri(:get, "https://httpbin.org/cookies/set/a/b",
+                             location: "https://evil.com/show_cookies",
+                             'set-cookie': "a=b; Path=/",
+                             status: [302, "Found"])
+        fake("https://evil.com/show_cookies", "success, cookie readback not implemented")
+
+        described_class.fetch_response('https://httpbin.org/cookies/set/a/b')
+        expect(FakeWeb.last_request.to_hash['cookie']).to be_nil
+      end
+    end
+  end
+
   describe "user_agent" do
     before do
       fake("http://example.com/some-resource", body: 'test')
