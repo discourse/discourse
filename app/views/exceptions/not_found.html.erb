@@ -17,7 +17,7 @@
     <div class="page-not-found-search">
       <h2><%= t 'page_not_found.search_title' %></h2>
       <p>
-        <form action='/search' id='discourse-search'>
+        <form action='<%= path "/search" %>' id='discourse-search'>
           <input type="text" name="q" value="<%= @slug %>">
           <button class="btn btn-primary"><%= t 'page_not_found.search_button' %></button>
         </form>
