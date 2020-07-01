@@ -15,7 +15,9 @@ function updateFound($hashtags, categorySlugs) {
       const $hashtag = $(hashtag);
 
       if (link) {
-        replaceSpan($hashtag, categorySlug, link);
+        if ($hashtag.data("type") !== "tag") {
+          replaceSpan($hashtag, categorySlug, link, "category");
+        }
       } else if (checkedCategoryHashtags.indexOf(categorySlug) !== -1) {
         $hashtag.addClass(testedClass);
       }
@@ -24,7 +26,7 @@ function updateFound($hashtags, categorySlugs) {
 }
 
 export function linkSeenCategoryHashtags($elem) {
-  const $hashtags = $(`span.hashtag:not(.${testedClass})`, $elem);
+  const $hashtags = $(`span.hashtag:not(.${testedClass}), a.hashtag`, $elem);
   const unseen = [];
 
   if ($hashtags.length) {
