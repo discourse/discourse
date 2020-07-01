@@ -1,6 +1,10 @@
 <div class="page-not-found">
   <h1 class="title"><%= @title %></h1>
 
+  <%- if (@group&.allow_membership_requests || @group&.public_admission) && !current_user %>
+    <a href="<%= path "/login" %>" class='btn btn-primary'><%= SvgSprite.raw_svg('fa-user') %><%= I18n.t('log_in') %></a>
+  <%- end %>
+
   <%- if @group&.allow_membership_requests %>
     <a href="<%= group_path @group.name %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user-plus') %> <%= I18n.t('not_in_group.request_membership') %></a>
   <%- elsif @group&.public_admission %>
