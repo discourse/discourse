@@ -463,6 +463,7 @@ function transformUserFieldToLabel(fieldName) {
 
 createWidget("discourse-poll-grouped-pies", {
   tagName: "div.poll-grouped-pies",
+
   buildAttributes(attrs) {
     return {
       id: `poll-results-grouped-pie-charts-${attrs.id}`
@@ -483,14 +484,27 @@ createWidget("discourse-poll-grouped-pies", {
       icon: "far-eye-slash",
       action: "toggleGroupedPieCharts"
     });
-    const select = h(
-      `select#${fieldSelectId}.poll-group-by-selector`,
-      { value: attrs.groupBy },
-      attrs.groupableUserFields.map(field => {
-        return h("option", { value: field }, transformUserFieldToLabel(field));
-      })
+
+    const select = this.attach("widget-dropdown", {
+      id: fieldSelectId,
+      class: "poll-group-by-selector",
+      translatedLabel: transformUserFieldToLabel(attrs.groupedBy),
+      content: attrs.groupableUserFields.map(field => ({
+        id: field,
+        translatedLabel: transformUserFieldToLabel(field)
+      })),
+      onChange: option => {
+        this.sendWidgetAction("refreshCharts", option.id);
+      },
+      options: {
+        caret: true
+      }
+    });
+
+    // TODO: label
+    contents.push(
+      h("div.poll-grouped-pies-controls", [btn, "Breakdown", select])
     );
-    contents.push(h("div.poll-grouped-pies-controls", [btn, select]));
 
     ajax("/polls/grouped_poll_results.json", {
       data: {
@@ -557,13 +571,6 @@ createWidget("discourse-poll-grouped-pies", {
         }
       });
     return contents;
-  },
-
-  click(e) {
-    let select = $(e.target).closest("select");
-    if (select.length) {
-      this.sendWidgetAction("refreshCharts", select[0].value);
-    }
   }
 });
 
