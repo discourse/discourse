@@ -82,7 +82,7 @@ describe CategoryHashtagsController do
           }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body).to eq("valid" => [
+          expect(response.parsed_body["valid"]).to contain_exactly(
             { "slug" => "foo",     "url" => foo.url },
             { "slug" => "bar",     "url" => foobar.url },
             { "slug" => "foo:bar", "url" => foobar.url },
@@ -90,7 +90,7 @@ describe CategoryHashtagsController do
             { "slug" => "bar:baz", "url" => foobarbaz.url },
             { "slug" => "qux",     "url" => qux.url },
             { "slug" => "qux:bar", "url" => quxbar.url }
-          ])
+          )
         end
       end
     end
