@@ -31,3 +31,6 @@ c4644c61d97c823b7dd940ffaf0967a104f4b58c
 
 # Add rubocop to our build.
 5012d46cbd3bcf79b7351f7d2d41003496a796c5
+
+# Make rubocop happy again.
+ad5082d969ab1f60b5c5b1e89a616117906289f8
