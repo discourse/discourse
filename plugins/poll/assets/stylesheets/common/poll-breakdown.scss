@@ -5,8 +5,8 @@
   }
 
   .modal-body {
-    align-items: stretch;
-    display: flex;
+    display: grid;
+    grid: auto-flow / 1fr 2fr;
     padding: 0;
   }
 
@@ -24,6 +24,7 @@
 
 .poll-breakdown-sidebar {
   background: hsl(0, 0%, 92%);
+  box-sizing: border-box;
   display: flex;
   flex-basis: 30%;
   flex-direction: column;
@@ -34,12 +35,13 @@
 
 .poll-breakdown-title {
   font-weight: 600;
-  margin-top: 0;
+  margin: 0;
   text-align: center;
 }
 
 .poll-breakdown-total-votes {
   align-self: center;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
@@ -64,11 +66,12 @@
 }
 
 .poll-breakdown-body {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   height: 100%;
-  padding: 1rem;
+  padding: 1rem 2rem;
 }
 
 .poll-breakdown-body-header {
