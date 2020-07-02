@@ -251,6 +251,12 @@ module FileStore
     )
       opts = { expires_in: expires_in }
 
+      if force_download && filename
+        opts[:response_content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+          disposition: "attachment", filename: filename
+        )
+      end
+
       obj = @s3_helper.object(url)
       obj.presigned_url(:get, opts)
     end
