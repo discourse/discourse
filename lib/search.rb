@@ -942,7 +942,7 @@ class Search
         TS_RANK_CD(
           post_search_data.search_data,
           #{ts_query(weight_filter: weights)},
-          #{Sitesetting.search_ranking_normalization}|32
+          #{SiteSetting.search_ranking_normalization}|32
         ) *
         (
           CASE categories.search_priority
