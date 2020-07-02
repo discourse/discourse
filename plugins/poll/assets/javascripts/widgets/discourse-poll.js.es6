@@ -11,8 +11,8 @@ import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
 import { getColors } from "../lib/chart-colors";
-import { classify } from "@ember/string";
 import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
+import showModal from "discourse/lib/show-modal";
 
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
@@ -453,127 +453,6 @@ createWidget("discourse-poll-info", {
   }
 });
 
-function transformUserFieldToLabel(fieldName) {
-  let transformed = fieldName.split("_").filter(Boolean);
-  if (transformed.length > 1) {
-    transformed[0] = classify(transformed[0]);
-  }
-  return transformed.join(" ");
-}
-
-createWidget("discourse-poll-grouped-pies", {
-  tagName: "div.poll-grouped-pies",
-
-  buildAttributes(attrs) {
-    return {
-      id: `poll-results-grouped-pie-charts-${attrs.id}`
-    };
-  },
-
-  html(attrs) {
-    const fields = Object.assign({}, attrs.groupableUserFields);
-    const fieldSelectId = `field-select-${attrs.id}`;
-    attrs.groupedBy = attrs.groupedBy || fields[0];
-
-    let contents = [];
-
-    const btn = this.attach("button", {
-      className: "btn-default poll-group-by-toggle",
-      label: "poll.ungroup-results.label",
-      title: "poll.ungroup-results.title",
-      icon: "far-eye-slash",
-      action: "toggleGroupedPieCharts"
-    });
-
-    const select = this.attach("widget-dropdown", {
-      id: fieldSelectId,
-      class: "poll-group-by-selector",
-      translatedLabel: transformUserFieldToLabel(attrs.groupedBy),
-      content: attrs.groupableUserFields.map(field => ({
-        id: field,
-        translatedLabel: transformUserFieldToLabel(field)
-      })),
-      onChange: option => {
-        this.sendWidgetAction("refreshCharts", option.id);
-      },
-      options: {
-        caret: true
-      }
-    });
-
-    // TODO: label
-    contents.push(
-      h("div.poll-grouped-pies-controls", [btn, "Breakdown", select])
-    );
-
-    ajax("/polls/grouped_poll_results.json", {
-      data: {
-        post_id: attrs.post.id,
-        poll_name: attrs.poll.name,
-        user_field_name: attrs.groupedBy
-      }
-    })
-      .catch(error => {
-        if (error) {
-          popupAjaxError(error);
-        } else {
-          bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
-        }
-      })
-      .then(result => {
-        let groupBySelect = document.getElementById(fieldSelectId);
-        if (!groupBySelect) return;
-
-        groupBySelect.value = attrs.groupedBy;
-        const parent = document.getElementById(
-          `poll-results-grouped-pie-charts-${attrs.id}`
-        );
-
-        for (
-          let chartIdx = 0;
-          chartIdx < result.grouped_results.length;
-          chartIdx++
-        ) {
-          const data = result.grouped_results[chartIdx].options.mapBy("votes");
-          const labels = result.grouped_results[chartIdx].options.mapBy("html");
-          const chartConfig = pieChartConfig(data, labels, {
-            aspectRatio: 1.2
-          });
-          const canvasId = `pie-${attrs.id}-${chartIdx}`;
-          let el = document.querySelector(`#${canvasId}`);
-          if (!el) {
-            const container = document.createElement("div");
-            container.classList.add("poll-grouped-pie-container");
-
-            const label = document.createElement("label");
-            label.classList.add("poll-pie-label");
-            label.textContent = result.grouped_results[chartIdx].group;
-
-            const canvas = document.createElement("canvas");
-            canvas.classList.add(`poll-grouped-pie-${attrs.id}`);
-            canvas.id = canvasId;
-
-            container.appendChild(label);
-            container.appendChild(canvas);
-            parent.appendChild(container);
-            // eslint-disable-next-line
-            new Chart(canvas.getContext("2d"), chartConfig);
-          } else {
-            // eslint-disable-next-line
-            Chart.helpers.each(Chart.instances, function(instance) {
-              if (instance.chart.canvas.id === canvasId && el.$chartjs) {
-                instance.destroy();
-                // eslint-disable-next-line
-                new Chart(el.getContext("2d"), chartConfig);
-              }
-            });
-          }
-        }
-      });
-    return contents;
-  }
-});
-
 function clearPieChart(id) {
   let el = document.querySelector(`#poll-results-chart-${id}`);
   el && el.parentNode.removeChild(el);
@@ -614,31 +493,28 @@ createWidget("discourse-poll-pie-chart", {
       return contents;
     }
 
-    let btn;
-    let chart;
-    if (attrs.groupResults && attrs.groupableUserFields.length > 0) {
-      chart = this.attach("discourse-poll-grouped-pies", attrs);
-      clearPieChart(attrs.id);
-    } else {
-      if (attrs.groupableUserFields.length) {
-        btn = this.attach("button", {
-          className: "btn-default poll-group-by-toggle",
-          label: "poll.group-results.label",
-          title: "poll.group-results.title",
-          icon: "far-eye",
-          action: "toggleGroupedPieCharts"
-        });
-      }
+    if (attrs.groupableUserFields.length) {
+      const button = this.attach("button", {
+        className: "btn-default poll-group-by-toggle", // TODO: rename class too? see below
+        label: "poll.group-results.label",
+        title: "poll.group-results.title",
+        icon: "far-eye",
+        action: "toggleGroupedPieCharts" // TODO: rename to "show breakdown"?
+      });
 
-      chart = this.attach("discourse-poll-pie-canvas", attrs);
+      contents.push(button);
     }
-    contents.push(btn);
+
+    const chart = this.attach("discourse-poll-pie-canvas", attrs);
     contents.push(chart);
+
     contents.push(h(`div#poll-results-legend-${attrs.id}.pie-chart-legends`));
+
     return contents;
   }
 });
 
+// TODO: Extract
 function pieChartConfig(data, labels, opts = {}) {
   const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
   const strippedLabels = labels.map(l => stripHtml(l));
@@ -1080,18 +956,6 @@ export default createWidget("discourse-poll", {
   },
 
   toggleGroupedPieCharts() {
-    this.attrs.groupResults = !this.attrs.groupResults;
-  },
-
-  refreshCharts(newGroupedByValue) {
-    let el = document.getElementById(
-      `poll-results-grouped-pie-charts-${this.attrs.id}`
-    );
-    Array.from(el.getElementsByClassName("poll-grouped-pie-container")).forEach(
-      container => {
-        el.removeChild(container);
-      }
-    );
-    this.attrs.groupedBy = newGroupedByValue;
+    showModal("poll-breakdown", { model: this.attrs });
   }
 });

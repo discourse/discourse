@@ -149,7 +149,7 @@ div.poll {
   }
 
   .poll-results-chart {
-    height: 310px;
+    height: 320px;
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -157,28 +157,13 @@ div.poll {
   .poll-group-by-toggle {
     margin-bottom: 10px;
   }
-
-  .poll-group-by-selector {
-    height: 30px;
-  }
-
-  .poll-grouped-pie-container {
-    display: inline-block;
-    position: relative;
-    padding: 15px 0;
-
-    .poll-pie-label {
-      display: block;
-      text-align: center;
-    }
-  }
 }
 
 div.poll.pie {
   .poll-container {
     display: inline-block;
-    height: 310px;
-    max-height: 310px;
+    height: 320px;
+    max-height: 320px;
     overflow-y: auto;
 
     .poll-grouped-pie-container {

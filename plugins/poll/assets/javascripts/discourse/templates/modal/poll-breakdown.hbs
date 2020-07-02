@@ -1,0 +1,38 @@
+{{!-- TODO: I18n --}}
+{{#d-modal-body rawTitle="Poll results"}}
+  <div class="poll-breakdown-sidebar">
+    {{!-- TODO: ??? --}}
+    <p class="poll-breakdown-title">{{this.model.post.topic.title}}</p>
+
+    {{!-- TODO: I18n --}}
+    <span class="poll-breakdown-total-votes">{{this.model.poll.voters}} votes</span>
+
+    {{!-- TODO --}}
+    <ul class="poll-breakdown-options">
+      {{#each this.model.poll.options as |option|}}
+        <li class="poll-breakdown-option">
+          <span class="poll-breakdown-option-color"></span>
+          <span>{{{option.html}}}</span>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class="poll-breakdown-body">
+    <div class="poll-breakdown-body-header">
+      {{!-- TODO: I18n --}}
+      <label class="poll-breakdown-body-header-label">Breakdown</label>
+
+      {{combo-box
+        content=this.groupableUserFields
+        value=this.groupedBy
+        nameProperty="label"
+        valueProperty="id"
+        class="poll-breakdown-dropdown"
+        onChange=(action this.setGrouping)
+      }}
+    </div>
+
+    <div class="poll-breakdown-charts"></div>
+  </div>
+{{/d-modal-body}}
