@@ -1,0 +1,35 @@
+name: Dog Food
+on:
+  push:
+    branches:
+      - dogfood
+jobs:
+  build:
+    name: Deploy Dog Food
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install SSH key
+        uses: JimCronqvist/action-ssh@master
+        with:
+          hosts: supercoder@dev-forum-2.nexf.org
+          privateKey: ${{ secrets.SSH_KEY_OF_NEXFORUM }}
+          command: |
+            sudo su
+            cd /var/discourse
+            git reset --hard
+            git clean -f
+            git remote add upstream https://github.com/nexfoundation/discourse_docker.git
+            git fetch upstream nexforum
+            branch=$(git branch | grep "nexforum")
+            if [ "$branch" = "* nexforum" ]
+            then
+              git pull
+            elif [ "$branch" = "  nexforum" ]
+            then
+              git checkout nexforum
+            else
+              git checkout -b nexforum upstream/nexforum
+            fi
+            ./launcher rebuild app
