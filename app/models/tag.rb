@@ -39,6 +39,8 @@ class Tag < ActiveRecord::Base
   belongs_to :target_tag, class_name: "Tag", optional: true
   has_many :synonyms, class_name: "Tag", foreign_key: "target_tag_id", dependent: :destroy
 
+  has_one :tag_search_data, dependent: :delete
+
   after_save :index_search
   after_save :update_synonym_associations
 
