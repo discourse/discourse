@@ -1730,6 +1730,9 @@ backups:
     hidden: true
 
 search:
+  search_ranking_normalization:
+    default: '1'
+    hidden: true
   search_inject_extra_terms:
     default: true
     hidden: true
