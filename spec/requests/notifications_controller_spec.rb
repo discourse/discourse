@@ -74,6 +74,24 @@ describe NotificationsController do
           Discourse.clear_redis_readonly!
         end
 
+        it "get notifications with all filters" do
+          notification = Fabricate(:notification, user: user)
+          notification2 = Fabricate(:notification, user: user)
+          put "/notifications/mark-read.json", params: { id: notification.id }
+          expect(response.status).to eq(200)
+
+          get "/notifications.json"
+          expect(JSON.parse(response.body)['notifications'].length).to be >= 2
+
+          get "/notifications.json", params: { filter: "read" }
+          expect(JSON.parse(response.body)['notifications'].length).to be >= 1
+          expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(true)
+
+          get "/notifications.json", params: { filter: "unread" }
+          expect(JSON.parse(response.body)['notifications'].length).to be >= 1
+          expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(false)
+        end
+
         context 'when username params is not valid' do
           it 'should raise the right error' do
             get "/notifications.json", params: { username: 'somedude' }
