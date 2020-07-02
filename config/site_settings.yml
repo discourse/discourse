@@ -1172,7 +1172,6 @@ files:
     client: true
   secure_media_cache_seconds:
     default: 300
-    client: false
     hidden: true
   enable_s3_uploads:
     default: false
