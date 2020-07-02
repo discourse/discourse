@@ -101,10 +101,18 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def image_url
+  def image_url(enqueue_if_missing: false)
     thumbnail = topic_thumbnails.detect do |record|
       record.max_width == Topic.share_thumbnail_size[0] &&
         record.max_height == Topic.share_thumbnail_size[1]
+    end
+
+    if thumbnail.nil? &&
+        image_upload &&
+        SiteSetting.create_thumbnails &&
+        enqueue_if_missing &&
+        Discourse.redis.set(thumbnail_job_redis_key([]), 1, nx: true, ex: 1.minute)
+      Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id })
     end
 
     raw_url = thumbnail&.optimized_image&.url || image_upload&.url
