@@ -16,7 +16,7 @@ class UploadSerializer < ApplicationSerializer
              :human_filesize
 
   def url
-    return object.url if !object.secure || !SiteSetting.secure_media?
+    return Discourse.store.cdn_url(object.url) if !object.secure || !SiteSetting.secure_media?
     UrlHelper.cook_url(object.url, secure: object.secure)
   end
 end
