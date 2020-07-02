@@ -214,6 +214,10 @@ class TagsController < ::ApplicationController
       exclude_has_synonyms: params[:excludeHasSynonyms]
     }
 
+    if filter_params[:limit] && filter_params[:limit].to_i < 0
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
     if params[:categoryId]
       filter_params[:category] = Category.find_by_id(params[:categoryId])
     end
