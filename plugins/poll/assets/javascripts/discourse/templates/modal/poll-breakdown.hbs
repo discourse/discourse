@@ -9,9 +9,9 @@
 
     {{!-- TODO --}}
     <ul class="poll-breakdown-options">
-      {{#each this.model.poll.options as |option|}}
+      {{#each this.model.poll.options as |option index|}}
         <li class="poll-breakdown-option">
-          <span class="poll-breakdown-option-color"></span>
+          <span class="poll-breakdown-option-color" style={{html-safe (concat "background: " (get this.optionColors index))}}></span>
           <span>{{{option.html}}}</span>
         </li>
       {{/each}}

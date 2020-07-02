@@ -58,6 +58,11 @@ export default Controller.extend(ModalFunctionality, {
     }));
   },
 
+  @discourseComputed("model.poll.options.length")
+  optionColors(optionsCount) {
+    return getColors(optionsCount);
+  },
+
   onShow() {
     console.log(this.model);
     this.set("groupedBy", this.model.groupableUserFields[0]);

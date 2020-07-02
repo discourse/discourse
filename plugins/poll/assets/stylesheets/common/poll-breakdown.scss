@@ -23,7 +23,7 @@
 }
 
 .poll-breakdown-sidebar {
-  background: hsl(0, 0%, 95%);
+  background: hsl(0, 0%, 92%);
   display: flex;
   flex-basis: 30%;
   flex-direction: column;
@@ -56,7 +56,7 @@
 }
 
 .poll-breakdown-option-color {
-  background: rgb(133, 199, 184);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   flex: 0 0 auto;
   height: 0.5rem;
   margin-right: 0.66rem;
