@@ -52,6 +52,7 @@ class Post < ActiveRecord::Base
   has_many :revisions, -> { order(:number) }, foreign_key: :post_id, class_name: 'PostRevision'
 
   has_many :user_actions, foreign_key: :target_post_id
+  has_one :post_search_data, dependent: :delete
 
   belongs_to :image_upload, class_name: "Upload"
 
