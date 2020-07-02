@@ -1,12 +1,13 @@
 .poll-breakdown-modal {
   .modal-inner-container {
-    max-width: unset;
-    width: 90%;
+    max-width: 90vw;
+    min-width: 50vw;
   }
 
   .modal-body {
     display: grid;
     grid: auto-flow / 1fr 2fr;
+    min-height: 50vh;
     padding: 0;
   }
 
@@ -43,12 +44,13 @@
   align-self: center;
   font-size: 1.2rem;
   font-weight: 600;
+  margin-top: 0.5rem;
 }
 
 .poll-breakdown-options {
   list-style: none;
   margin-left: 0;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .poll-breakdown-option {
