@@ -153,8 +153,9 @@ class UploadsController < ApplicationController
       return render_404 if current_user.nil?
     end
 
+    # defaults to public: false, so only cached by the client browser
     cache_seconds = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS - SECURE_REDIRECT_GRACE_SECONDS
-    expires_in cache_seconds.seconds # defaults to public: false, so only cached by the client browser
+    expires_in cache_seconds.seconds
 
     # url_for figures out the full URL, handling multisite DBs,
     # and will return a presigned URL for the upload
@@ -162,7 +163,9 @@ class UploadsController < ApplicationController
       return redirect_to Discourse.store.url_for(upload)
     end
 
-    redirect_to Discourse.store.signed_url_for_path(path_with_ext)
+    redirect_to Discourse.store.signed_url_for_path(
+      path_with_ext, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+    )
   end
 
   def metadata

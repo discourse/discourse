@@ -8,7 +8,13 @@ class S3Helper
 
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
 
-  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 15
+  ##
+  # Controls the following:
+  #
+  # * cache time for secure-media URLs
+  # * expiry time for S3 presigned URLs, which include backup downloads and
+  #   any upload that has a private ACL (e.g. secure uploads)
+  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 300
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_client = options.delete(:client)
