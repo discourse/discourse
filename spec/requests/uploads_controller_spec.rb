@@ -42,6 +42,13 @@ describe UploadsController do
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
       end
 
+      it 'returns "raw" url for site settings' do
+        set_cdn_url "https://awesome.com"
+        post "/uploads.json", params: { file: logo, type: "site_setting", for_site_setting: "true" }
+        expect(response.status).to eq 200
+        expect(response.parsed_body["url"]).to start_with("/uploads/default/")
+      end
+
       it 'returns cdn url' do
         set_cdn_url "https://awesome.com"
         post "/uploads.json", params: { file: logo, type: "composer" }
