@@ -22,8 +22,8 @@ RSpec.describe UploadSerializer do
 
     context "when secure media is disabled" do
       it "just returns the normal URL, otherwise S3 errors are encountered" do
-        json_data = JSON.load(subject.to_json)
-        expect(json_data['url']).to eq(upload.url)
+        UrlHelper.expects(:cook_url).with(upload.url, secure: false)
+        subject.to_json
       end
     end
 
