@@ -50,8 +50,9 @@ export default Component.extend({
   },
 
   didInsertElement() {
-    loadScript("/javascripts/Chart.min.js").then(() =>
-      this.refreshChart.apply(this)
-    );
+    loadScript("/javascripts/Chart.min.js").then(() => {
+      window.Chart.plugins.unregister(window.ChartDataLabels);
+      this.refreshChart.apply(this);
+    });
   }
 });

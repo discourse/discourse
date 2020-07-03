@@ -9,49 +9,43 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 import { getColors } from "../lib/chart-colors";
 
-function stripHtml(html) {
-  var doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.body.textContent || "";
-}
-
-// TODO: Extract, see discourse-poll.js.es6
-function pieChartConfig(data, labels, opts = {}) {
-  const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
-  const strippedLabels = labels.map(l => stripHtml(l));
+function pieChartConfig(data) {
   return {
     type: PIE_CHART_TYPE,
+    plugins: [window.ChartDataLabels],
     data: {
       datasets: [
         {
           data,
           backgroundColor: getColors(data.length)
         }
-      ],
-      labels: strippedLabels
+      ]
     },
     options: {
-      responsive: true,
-      aspectRatio,
-      animation: { duration: 0 },
-      legend: { display: false },
-      tooltips: {
-        enabled: true,
-        callbacks: {
-          label(tooltipItem, pieData) {
-            const { datasetIndex, index } = tooltipItem;
-            return pieData.datasets[datasetIndex].data[index];
+      plugins: {
+        datalabels: {
+          color: "#333",
+          backgroundColor: "rgba(255, 255, 255, 0.5)",
+          borderRadius: 2,
+          font: {
+            family: getComputedStyle(document.body).fontFamily,
+            size: 16
+          },
+          padding: {
+            top: 2,
+            right: 6,
+            bottom: 2,
+            left: 6
+          },
+          formatter(value) {
+            return value > 0 ? value : "";
           }
         }
       },
-      // TODO: is this needed?
-      legendCallback: function(chart) {
-        let legends = "";
-        for (let i = 0; i < labels.length; i++) {
-          legends += `<div class="legend"><span class="swatch" style="background-color:
-            ${chart.data.datasets[0].backgroundColor[i]}"></span>${labels[i]}</div>`;
-        }
-        return legends;
-      }
+      responsive: true,
+      aspectRatio: 1.1,
+      animation: { duration: 0 },
+      tooltips: false
     }
   };
 }
@@ -116,10 +110,7 @@ export default Controller.extend(ModalFunctionality, {
           chartIdx++
         ) {
           const data = result.grouped_results[chartIdx].options.mapBy("votes");
-          const labels = result.grouped_results[chartIdx].options.mapBy("html");
-          const chartConfig = pieChartConfig(data, labels, {
-            aspectRatio: 1.2
-          });
+          const chartConfig = pieChartConfig(data);
           const canvasId = `pie-${model.id}-${chartIdx}`;
           let el = document.querySelector(`#${canvasId}`);
 

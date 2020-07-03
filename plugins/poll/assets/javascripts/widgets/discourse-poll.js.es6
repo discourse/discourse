@@ -463,6 +463,7 @@ createWidget("discourse-poll-pie-canvas", {
 
   init(attrs) {
     loadScript("/javascripts/Chart.min.js").then(() => {
+      window.Chart.plugins.unregister(window.ChartDataLabels);
       const data = attrs.poll.options.mapBy("votes");
       const labels = attrs.poll.options.mapBy("html");
       const config = pieChartConfig(data, labels);
