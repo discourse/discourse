@@ -73,7 +73,6 @@ class UploadCreator
       # between uploads instead of the sha1, and to get around various
       # access/permission issues for uploads
       if !SiteSetting.secure_media
-
         # do we already have that upload?
         @upload = Upload.find_by(sha1: sha1)
 
@@ -85,6 +84,7 @@ class UploadCreator
 
         # return the previous upload if any
         if @upload
+          add_metadata!
           UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
           return @upload
         end
@@ -121,14 +121,7 @@ class UploadCreator
         @upload.width, @upload.height = @image_info.size
       end
 
-      @upload.for_private_message = true if @opts[:for_private_message]
-      @upload.for_group_message   = true if @opts[:for_group_message]
-      @upload.for_theme           = true if @opts[:for_theme]
-      @upload.for_export          = true if @opts[:for_export]
-      @upload.for_site_setting    = true if @opts[:for_site_setting]
-      @upload.for_gravatar        = true if @opts[:for_gravatar]
-      @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
-
+      add_metadata!
       return @upload unless @upload.save
 
       # store the file and update its url
@@ -373,6 +366,16 @@ class UploadCreator
 
   def svg_whitelist_xpath
     @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+  end
+
+  def add_metadata!
+    @upload.for_private_message = true if @opts[:for_private_message]
+    @upload.for_group_message   = true if @opts[:for_group_message]
+    @upload.for_theme           = true if @opts[:for_theme]
+    @upload.for_export          = true if @opts[:for_export]
+    @upload.for_site_setting    = true if @opts[:for_site_setting]
+    @upload.for_gravatar        = true if @opts[:for_gravatar]
+    @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
   end
 
 end
