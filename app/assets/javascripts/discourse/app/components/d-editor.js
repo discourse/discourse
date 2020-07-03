@@ -440,7 +440,7 @@ export default Component.extend({
           return false;
         }
 
-        const matches = /(?:^|[>.,\/#!$%^&*;:{}=\-_`~()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+        const matches = /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
           text.substring(0, cp)
         );
 
