@@ -5,7 +5,7 @@ import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 
 const validTagHashtags = {};
 const checkedTagHashtags = [];
-const testedClass = "tag-hashtag-tested";
+const testedClass = "hashtag-tag-tested";
 
 function updateFound($hashtags, tagValues) {
   schedule("afterRender", () => {
