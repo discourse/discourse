@@ -58,9 +58,9 @@ export default Controller.extend(ModalFunctionality, {
     }));
   },
 
-  @discourseComputed("model.poll.options.length")
-  optionColors(optionsCount) {
-    return getColors(optionsCount);
+  @discourseComputed("model.poll.options")
+  totalVotes(options) {
+    return options.reduce((sum, option) => sum + option.votes, 0);
   },
 
   onShow() {

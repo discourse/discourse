@@ -7,13 +7,14 @@
     {{!-- TODO: I18n --}}
     <span class="poll-breakdown-total-votes">{{this.model.poll.voters}} votes</span>
 
-    {{!-- TODO --}}
     <ul class="poll-breakdown-options">
       {{#each this.model.poll.options as |option index|}}
-        <li class="poll-breakdown-option">
-          <span class="poll-breakdown-option-color" style={{html-safe (concat "background: " (get this.optionColors index))}}></span>
-          <span>{{{option.html}}}</span>
-        </li>
+        {{poll-breakdown-option
+          option=option
+          index=index
+          totalVotes=this.totalVotes
+          optionsCount=this.model.poll.options.length
+        }}
       {{/each}}
     </ul>
   </div>
