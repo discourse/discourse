@@ -34,6 +34,16 @@ function pieChartConfig(data, labels, opts = {}) {
       aspectRatio,
       animation: { duration: 0 },
       legend: { display: false },
+      tooltips: {
+        enabled: true,
+        callbacks: {
+          label(tooltipItem, pieData) {
+            const { datasetIndex, index } = tooltipItem;
+            return pieData.datasets[datasetIndex].data[index];
+          }
+        }
+      },
+      // TODO: is this needed?
       legendCallback: function(chart) {
         let legends = "";
         for (let i = 0; i < labels.length; i++) {
