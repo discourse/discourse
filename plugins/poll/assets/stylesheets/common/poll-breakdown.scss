@@ -92,16 +92,16 @@
 }
 
 .poll-breakdown-body-header {
+  align-items: center;
   border-bottom: 1px solid #ccc;
   display: flex;
   flex: 0 0 auto;
-  font-size: 1.4rem;
-  font-weight: 600;
   padding-bottom: 0.5rem;
 }
 
 .poll-breakdown-body-header-label {
-  line-height: 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
   margin: 0;
 }
 
