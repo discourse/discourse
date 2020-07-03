@@ -508,13 +508,17 @@ class PostAlerter
   end
 
   def extract_linked_users(post)
-    post.topic_links.where(reflection: false).map do |link|
+    users = post.topic_links.where(reflection: false).map do |link|
       linked_post = link.link_post
       if !linked_post && topic = link.link_topic
         linked_post = topic.posts.find_by(post_number: 1)
       end
       (linked_post && post.user_id != linked_post.user_id && linked_post.user) || nil
     end.compact
+
+    DiscourseEvent.trigger(:after_extract_linked_users, users, post)
+
+    users
   end
 
   # Notify a bunch of users
