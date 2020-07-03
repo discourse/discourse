@@ -24,6 +24,7 @@
 }
 
 .poll-breakdown-sidebar {
+  align-items: center;
   background: hsl(0, 0%, 92%);
   box-sizing: border-box;
   display: flex;
@@ -41,29 +42,29 @@
 }
 
 .poll-breakdown-total-votes {
-  align-self: center;
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 0.5rem;
 }
 
 .poll-breakdown-options {
+  display: grid;
   list-style: none;
-  margin-left: 0;
-  margin-top: 1.5rem;
+  margin: 1.5rem 0 0 0;
+  row-gap: 1rem;
 }
 
 .poll-breakdown-option {
   align-items: center;
-  display: flex;
-  margin-bottom: 1rem;
+  display: grid;
+  grid: auto / auto-flow;
+  column-gap: 0.66rem;
+  justify-content: flex-start;
 }
 
 .poll-breakdown-option-color {
   border: 1px solid rgba(0, 0, 0, 0.15);
-  flex: 0 0 auto;
   height: 0.5rem;
-  margin-right: 0.66rem;
   width: 0.8rem;
 }
 
