@@ -10,14 +10,19 @@ import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 import { getColors } from "../lib/chart-colors";
 
 function pieChartConfig(data) {
+  const transformedData = data.filter(value => value > 0);
+  const colors = getColors(data.length).filter(
+    (color, index) => data[index] > 0
+  );
+
   return {
     type: PIE_CHART_TYPE,
     plugins: [window.ChartDataLabels],
     data: {
       datasets: [
         {
-          data,
-          backgroundColor: getColors(data.length)
+          data: transformedData,
+          backgroundColor: colors
         }
       ]
     },
