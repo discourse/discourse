@@ -76,8 +76,19 @@ module Jobs
       result.find_each do |upload|
         if upload.sha1.present?
           encoded_sha = Base62.encode(upload.sha1.hex)
-          next if ReviewableQueuedPost.pending.where("payload->>'raw' LIKE '%#{upload.sha1}%' OR payload->>'raw' LIKE '%#{encoded_sha}%'").exists?
+
+          reviewables = ReviewableQueuedPost.where("payload->>'raw' LIKE '%#{upload.sha1}%' OR payload->>'raw' LIKE '%#{encoded_sha}%'")
+          next if reviewables.pending.exists?
           next if Draft.where("data LIKE '%#{upload.sha1}%' OR data LIKE '%#{encoded_sha}%'").exists?
+
+          upload_regex = Regexp.new("!\\[[^\\]]*\\]\s*\\(#{Regexp.escape(upload.short_url)}\\)")
+          reviewables.find_each do |reviewable|
+            raw = reviewable.payload["raw"]
+            raw.gsub!(upload_regex, I18n.t("image_removed"))
+            reviewable.payload["raw"] = raw
+            reviewable.save
+          end
+
           upload.destroy
         else
           upload.delete
