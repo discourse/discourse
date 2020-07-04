@@ -37,11 +37,11 @@ const controllerOpts = {
     changeSort(sortBy) {
       if (sortBy === this.order) {
         this.toggleProperty("ascending");
+        this.model.refreshSort(sortBy, this.ascending);
       } else {
-        this.setProperties({ order: sortBy, ascending: this.ascending });
+        this.setProperties({ order: sortBy, ascending: false });
+        this.model.refreshSort(sortBy, false);
       }
-
-      this.model.refreshSort(sortBy, this.ascending);
     },
 
     // Show newly inserted topics
