@@ -120,13 +120,18 @@ export default Controller.extend(ModalFunctionality, {
           return;
         }
 
+        this.set("charts", []);
+        this.set("dataSets", []);
+
         for (
           let chartIdx = 0;
           chartIdx < result.grouped_results.length;
           chartIdx++
         ) {
           const data = result.grouped_results[chartIdx].options.mapBy("votes");
-          const chartConfig = pieChartConfig(data);
+          this.dataSets[chartIdx] = data;
+
+          const chartConfig = pieChartConfig(data, this.displayMode);
           const canvasId = `pie-${model.id}-${chartIdx}`;
           let el = document.querySelector(`#${canvasId}`);
 
@@ -156,7 +161,8 @@ export default Controller.extend(ModalFunctionality, {
             parent.appendChild(container);
 
             // eslint-disable-next-line
-            new Chart(canvas.getContext("2d"), chartConfig);
+            const chart = new Chart(canvas.getContext("2d"), chartConfig);
+            this.charts.push(chart);
           }
         }
       });
@@ -171,8 +177,13 @@ export default Controller.extend(ModalFunctionality, {
   @action
   onSelectPanel(panel) {
     this.set("displayMode", panel.id);
-    // TODO: avoid full refresh, try to change the options and redraw
-    this.refreshCharts();
+
+    this.charts.forEach((chart, index) => {
+      const config = pieChartConfig(this.dataSets[index], this.displayMode);
+      chart.data.datasets = config.data.datasets;
+      chart.options = config.options;
+      chart.update();
+    });
   }
 });
 
