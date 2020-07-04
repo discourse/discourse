@@ -50,7 +50,10 @@ export default function(name, opts) {
     });
 
     if (controller.actions.onSelectPanel) {
-      modalController.set("onSelectPanel", controller.actions.onSelectPanel);
+      modalController.set(
+        "onSelectPanel",
+        controller.actions.onSelectPanel.bind(controller)
+      );
     }
 
     modalController.set(
