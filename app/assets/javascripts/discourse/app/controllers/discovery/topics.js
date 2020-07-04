@@ -21,7 +21,7 @@ const controllerOpts = {
   showTopicPostBadges: not("discoveryTopics.new"),
   redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
-  order: "default",
+  order: null,
   ascending: false,
   expandGloballyPinned: false,
   expandAllPinned: false,
@@ -38,7 +38,7 @@ const controllerOpts = {
       if (sortBy === this.order) {
         this.toggleProperty("ascending");
       } else {
-        this.setProperties({ order: sortBy, ascending: false });
+        this.setProperties({ order: sortBy, ascending: this.ascending });
       }
 
       this.model.refreshSort(sortBy, this.ascending);
