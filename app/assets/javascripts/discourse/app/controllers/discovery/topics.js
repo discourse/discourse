@@ -41,7 +41,7 @@ const controllerOpts = {
         this.setProperties({ order: sortBy, ascending: this.ascending });
       }
 
-      this.model.refreshSort(sortBy, this.ascending);
+      this.model.refreshSort(sortBy, false);
     },
 
     // Show newly inserted topics
