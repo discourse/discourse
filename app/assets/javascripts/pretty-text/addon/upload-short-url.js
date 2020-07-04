@@ -1,4 +1,6 @@
 import { debounce } from "@ember/runloop";
+import I18n from "I18n";
+
 let _cache = {};
 
 export function lookupCachedUploadUrl(shortUrl) {
@@ -43,7 +45,13 @@ export function resetCache() {
   _cache = {};
 }
 
-function retrieveCachedUrl(upload, siteSettings, dataAttribute, callback) {
+function retrieveCachedUrl(
+  upload,
+  siteSettings,
+  dataAttribute,
+  opts,
+  callback
+) {
   const cachedUpload = lookupCachedUploadUrl(
     upload.getAttribute(`data-${dataAttribute}`)
   );
@@ -53,6 +61,10 @@ function retrieveCachedUrl(upload, siteSettings, dataAttribute, callback) {
     upload.removeAttribute(`data-${dataAttribute}`);
     if (url !== MISSING) {
       callback(url);
+    } else if (opts && opts.removeMissing) {
+      const stub = document.createElement("p");
+      stub.innerHTML = I18n.t("image_removed");
+      upload.parentNode.replaceChild(stub, upload);
     }
   }
 }
@@ -79,23 +91,23 @@ function getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings) {
   return cachedUpload.short_path;
 }
 
-function _loadCachedShortUrls(uploadElements, siteSettings) {
+function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
   uploadElements.forEach(upload => {
     switch (upload.tagName) {
       case "A":
-        retrieveCachedUrl(upload, siteSettings, "orig-href", url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-href", opts, url => {
           upload.href = url;
         });
 
         break;
       case "IMG":
-        retrieveCachedUrl(upload, siteSettings, "orig-src", url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, url => {
           upload.src = url;
         });
 
         break;
       case "SOURCE": // video/audio tag > source tag
-        retrieveCachedUrl(upload, siteSettings, "orig-src", url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, url => {
           if (url.startsWith(`//${window.location.host}`)) {
             let hostRegex = new RegExp("//" + window.location.host, "g");
             url = url.replace(hostRegex, "");
@@ -120,7 +132,7 @@ function _loadCachedShortUrls(uploadElements, siteSettings) {
   });
 }
 
-function _loadShortUrls(uploads, ajax, siteSettings) {
+function _loadShortUrls(uploads, ajax, siteSettings, opts) {
   let urls = [...uploads].map(upload => {
     return (
       upload.getAttribute("data-orig-src") ||
@@ -129,17 +141,17 @@ function _loadShortUrls(uploads, ajax, siteSettings) {
   });
 
   return lookupUncachedUploadUrls(urls, ajax).then(() =>
-    _loadCachedShortUrls(uploads, siteSettings)
+    _loadCachedShortUrls(uploads, siteSettings, opts)
   );
 }
 
-export function resolveAllShortUrls(ajax, siteSettings, scope) {
+export function resolveAllShortUrls(ajax, siteSettings, scope, opts) {
   const attributes =
     "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
   let shortUploadElements = scope.querySelectorAll(attributes);
 
   if (shortUploadElements.length > 0) {
-    _loadCachedShortUrls(shortUploadElements, siteSettings);
+    _loadCachedShortUrls(shortUploadElements, siteSettings, opts);
 
     shortUploadElements = scope.querySelectorAll(attributes);
     if (shortUploadElements.length > 0) {
@@ -150,6 +162,7 @@ export function resolveAllShortUrls(ajax, siteSettings, scope) {
         shortUploadElements,
         ajax,
         siteSettings,
+        opts,
         450,
         true
       );

@@ -17,7 +17,7 @@ const CookText = Component.extend({
 
   @afterRender
   _resolveUrls() {
-    resolveAllShortUrls(ajax, this.siteSettings, this.element);
+    resolveAllShortUrls(ajax, this.siteSettings, this.element, this.opts);
   }
 });
 
