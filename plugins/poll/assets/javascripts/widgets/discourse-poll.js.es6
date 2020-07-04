@@ -957,6 +957,12 @@ export default createWidget("discourse-poll", {
   },
 
   toggleGroupedPieCharts() {
-    showModal("poll-breakdown", { model: this.attrs });
+    // TODO: I18n, icons?
+    const panels = [
+      { id: "percentage", rawTitle: "Percentage" },
+      { id: "count", rawTitle: "Count" }
+    ];
+
+    showModal("poll-breakdown", { model: this.attrs, panels });
   }
 });

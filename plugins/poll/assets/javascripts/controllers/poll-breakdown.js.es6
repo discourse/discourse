@@ -9,8 +9,10 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 import { getColors } from "../lib/chart-colors";
 
-function pieChartConfig(data) {
-  const transformedData = data.filter(value => value > 0);
+// TODO: Move inside the component?
+function pieChartConfig(data, displayMode) {
+  const transformedData = data.filter(votes => votes > 0);
+  const totalVotes = transformedData.reduce((sum, votes) => sum + votes, 0);
   const colors = getColors(data.length).filter(
     (color, index) => data[index] > 0
   );
@@ -42,8 +44,16 @@ function pieChartConfig(data) {
             bottom: 2,
             left: 6
           },
-          formatter(value) {
-            return value > 0 ? value : "";
+          formatter(votes) {
+            if (displayMode !== "percentage") {
+              return votes;
+            }
+
+            const percent = I18n.toNumber((votes / totalVotes) * 100.0, {
+              precision: 1
+            });
+
+            return `${percent}%`;
           }
         }
       },
@@ -58,6 +68,7 @@ function pieChartConfig(data) {
 export default Controller.extend(ModalFunctionality, {
   model: null,
   groupedBy: null,
+  displayMode: "percentage",
 
   @discourseComputed("model.groupableUserFields")
   groupableUserFields(fields) {
@@ -154,6 +165,13 @@ export default Controller.extend(ModalFunctionality, {
   @action
   setGrouping(value) {
     this.set("groupedBy", value); // TODO: rename to groupBy
+    this.refreshCharts();
+  },
+
+  @action
+  onSelectPanel(panel) {
+    this.set("displayMode", panel.id);
+    // TODO: avoid full refresh, try to change the options and redraw
     this.refreshCharts();
   }
 });

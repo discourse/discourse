@@ -4,6 +4,10 @@
     min-width: 50vw;
   }
 
+  .modal-tabs {
+    justify-content: flex-end;
+  }
+
   .modal-body {
     display: grid;
     grid: auto-flow / 1fr 2fr;
@@ -11,6 +15,7 @@
     padding: 0;
   }
 
+  // TODO: move this?
   .poll-grouped-pie-container {
     padding-top: 1rem;
     position: relative;

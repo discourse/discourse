@@ -7,6 +7,11 @@ import { getColors } from "../lib/chart-colors";
 export default Component.extend({
   tagName: "",
 
+  @discourseComputed("displayMode")
+  showPercentage(displayMode) {
+    return displayMode === "percentage";
+  },
+
   @discourseComputed("option.votes", "totalVotes")
   percent(votes, total) {
     return I18n.toNumber((votes / total) * 100.0, { precision: 1 });
