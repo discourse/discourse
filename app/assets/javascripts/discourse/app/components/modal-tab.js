@@ -1,6 +1,8 @@
-import { equal, alias } from "@ember/object/computed";
+import I18n from "I18n";
 import Component from "@ember/component";
+import { equal } from "@ember/object/computed";
 import { propertyEqual } from "discourse/lib/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "li",
@@ -10,8 +12,12 @@ export default Component.extend({
   panelsLength: null,
   classNameBindings: ["isActive", "singleTab", "panel.id"],
   singleTab: equal("panelsLength", 1),
-  title: alias("panel.title"),
   isActive: propertyEqual("panel.id", "selectedPanel.id"),
+
+  @discourseComputed("panel.title", "panel.rawTitle")
+  title(title, rawTitle) {
+    return title ? I18n.t(title) : rawTitle;
+  },
 
   click() {
     this.onSelectPanel(this.panel);
