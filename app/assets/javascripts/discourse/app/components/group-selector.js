@@ -25,6 +25,7 @@ export default Component.extend({
     let groupNames = this.groupNames;
 
     $(this.element.querySelector("input")).autocomplete({
+      debounced: true,
       allowAny: false,
       items: _.isArray(groupNames)
         ? groupNames
