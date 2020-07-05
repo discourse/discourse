@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import LocalDateBuilder from "./local-date-builder";
 
 const UTC = "Etc/UTC";
@@ -68,13 +69,21 @@ QUnit.test("date", assert => {
       { formated: "March 22, 2020" },
       "it displays the date without time"
     );
-
-    assert.buildsCorrectDate(
-      { date: "2020-04-11", time: "11:00" },
-      { formated: "April 11, 2020 1:00 PM" },
-      "it displays the date with time"
-    );
   });
+});
+
+QUnit.test("date and time", assert => {
+  assert.buildsCorrectDate(
+    { date: "2020-04-11", time: "11:00" },
+    { formated: "April 11, 2020 1:00 PM" },
+    "it displays the date with time"
+  );
+
+  assert.buildsCorrectDate(
+    { date: "2020-04-11", time: "11:05:12", format: "LTS" },
+    { formated: "1:05:12 PM" },
+    "it displays full time (hours, minutes, seconds)"
+  );
 });
 
 QUnit.test("option[format]", assert => {
