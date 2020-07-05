@@ -1858,6 +1858,9 @@ en:
           label: Reply as linked topic
           desc: Create a new topic linked to this topic
           confirm: You have a new topic draft saved, which will be overwritten if you create a linked topic.
+        reply_as_new_group_message:
+          label: Reply as new group message
+          desc: Create a new private message with the same recipients
         reply_as_private_message:
           label: New message
           desc: Create a new personal message
