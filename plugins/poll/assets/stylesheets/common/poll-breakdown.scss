@@ -55,15 +55,24 @@
   display: grid;
   list-style: none;
   margin: 1.5rem 0 0 0;
-  row-gap: 1rem;
+  row-gap: 0.25rem;
+  width: 100%;
 }
 
 .poll-breakdown-option {
   align-items: center;
-  display: grid;
   column-gap: 0.66rem;
+  cursor: pointer;
+  display: grid;
   grid-template-columns: 2.5rem 1fr;
+  row-gap: 0.1rem;
   justify-content: start;
+  padding: 0.5rem 1rem;
+
+  &:hover {
+    border-radius: 5px;
+    background: $primary-low-mid;
+  }
 }
 
 .poll-breakdown-option-color {
