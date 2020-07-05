@@ -646,4 +646,30 @@ RSpec.describe ListController do
       expect(response.status).to eq(404)
     end
   end
+
+  describe "set_category" do
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
+
+    before do
+      SiteSetting.max_category_nesting = 3
+    end
+
+    it "redirects to URL with the updated slug" do
+      get "/c/hello/world/bye/#{subsubcategory.id}"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
+    end
+
+    context "with subfolder" do
+      it "redirects to URL containing the updated slug" do
+        set_subfolder "/forum"
+        get "/c/hello/world/bye/#{subsubcategory.id}"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
+      end
+    end
+  end
 end
