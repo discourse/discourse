@@ -244,8 +244,19 @@ describe TopicView do
       end
 
       it "generates a canonical correctly for paged results" do
-        expect(TopicView.new(1234, user, post_number: 10 * TopicView.chunk_size)
-          .canonical_path).to eql("/1234?page=10")
+        5.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2)
+          .canonical_path).to eql("/1234?page=3")
+      end
+
+      it "generates canonical path correctly by skipping whisper posts" do
+        2.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+        2.times { |i| Fabricate(:whisper, post_number: i + 3, topic: topic) }
+        Fabricate(:post, post_number: 5, topic: topic)
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2)
+          .canonical_path).to eql("/1234?page=2")
       end
     end
 
