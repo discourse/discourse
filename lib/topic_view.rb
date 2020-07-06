@@ -122,7 +122,7 @@ class TopicView
       if @page > 1
         "?page=#{@page}"
       else
-        posts_count = unfiltered_posts.where("post_number <= ?", @post_number).count
+        posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
         page = ((posts_count - 1) / @limit) + 1
         page > 1 ? "?page=#{page}" : ""
       end
