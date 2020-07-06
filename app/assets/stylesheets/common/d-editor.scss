@@ -197,8 +197,11 @@
   --resizer-height: 1.75em;
   position: relative;
   display: inline-block;
-  padding-bottom: var(--resizer-height);
-  margin-bottom: calc(var(--resizer-height) * -1);
+  .desktop-view & {
+    // need the extra space on mobile because controls are always visible
+    padding-bottom: var(--resizer-height);
+    margin-bottom: calc(var(--resizer-height) * -1);
+  }
 
   img {
     padding-bottom: 0;
