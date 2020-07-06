@@ -61,8 +61,6 @@ class S3Inventory
               WHERE #{model.table_name}.etag IS NULL AND
                 #{model.table_name}.url = #{table_name}.url")
 
-            list_missing_post_uploads if type == "original"
-
             uploads = (model == Upload) ? model.by_users.where("updated_at < ?", inventory_date) : model
             missing_uploads = uploads
               .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
@@ -85,45 +83,6 @@ class S3Inventory
         cleanup!
       end
     end
-  end
-
-  def list_missing_post_uploads
-    log "Listing missing post uploads..."
-
-    missing = Post.find_missing_uploads(include_local_upload: false) do |post, _, _, sha1|
-      next if sha1.blank?
-
-      upload_id = nil
-      result = connection.exec("SELECT * FROM #{table_name} WHERE url LIKE '%original/%/#{sha1}%'")
-
-      if result.count >= 1
-        begin
-          url = result[0]["url"]
-          key = url.sub(/^#{Discourse.store.absolute_base_url}\//, "")
-          data = @s3_helper.object(key).data
-          filename = (data.content_disposition&.match(/filename=\"(.*)\"/) || [])[1]
-
-          upload = Upload.new(
-            user_id: Discourse.system_user.id,
-            original_filename: filename || File.basename(key),
-            filesize: data.content_length,
-            url: url,
-            sha1: sha1,
-            etag: result[0]["etag"]
-          )
-          upload.save!(validate: false)
-          upload_id = upload.id
-          post.link_post_uploads
-        rescue Aws::S3::Errors::NotFound
-          next
-        end
-      end
-
-      upload_id
-    end
-
-    Discourse.stats.set("missing_post_uploads", missing[:count])
-    log "#{missing[:count]} post uploads are missing."
   end
 
   def download_inventory_file_to_tmp_directory(file)
