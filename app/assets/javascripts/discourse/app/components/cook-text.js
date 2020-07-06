@@ -1,7 +1,7 @@
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import { cookAsync } from "discourse/lib/text";
 import { ajax } from "discourse/lib/ajax";
+import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 
 const CookText = Component.extend({
   cooked: null,
@@ -10,13 +10,10 @@ const CookText = Component.extend({
     this._super(...arguments);
     cookAsync(this.rawText).then(cooked => {
       this.set("cooked", cooked);
-      // no choice but to defer this cause
-      // pretty text may only be loaded now
-      next(() =>
-        window
-          .requireModule("pretty-text/upload-short-url")
-          .resolveAllShortUrls(ajax, this.siteSettings, this.element)
-      );
+
+      if (this.element && !this.isDestroying && !this.isDestroyed) {
+        return resolveAllShortUrls(ajax, this.siteSettings, this.element);
+      }
     });
   }
 });
