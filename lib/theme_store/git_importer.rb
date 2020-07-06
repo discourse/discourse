@@ -23,6 +23,12 @@ class ThemeStore::GitImporter
     else
       import_public!
     end
+    if version = Discourse.find_compatible_git_resource(@temp_folder)
+      Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
+        Rails.logger.warn "git reset --hard #{version}"
+        return runner.exec("git", "reset", "--hard", version)
+      end
+    end
   end
 
   def diff_local_changes(remote_theme_id)
