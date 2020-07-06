@@ -343,6 +343,7 @@ class ListController < ApplicationController
     if current_slug != real_slug
       url = request.fullpath.gsub(current_slug, real_slug)
       redirect_to path(url), status: 301
+      return
     end
 
     params[:category] = @category.id.to_s
