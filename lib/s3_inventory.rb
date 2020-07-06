@@ -58,8 +58,9 @@ class S3Inventory
             connection.async_exec("UPDATE #{model.table_name}
               SET etag = #{table_name}.etag
               FROM #{table_name}
-              WHERE #{model.table_name}.etag IS NULL
-                AND #{model.table_name}.url = #{table_name}.url")
+              WHERE #{model.table_name}.etag IS NULL AND
+                #{model.table_name}.etag <> #{table_name}.etag AND
+                #{model.table_name}.url = #{table_name}.url")
 
             list_missing_post_uploads if type == "original"
 
