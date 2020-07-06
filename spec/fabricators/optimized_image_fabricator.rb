@@ -6,6 +6,7 @@ Fabricator(:optimized_image) do
   extension ".png"
   width 100
   height 200
+  filesize 654
   version OptimizedImage::VERSION
 
   after_build do |optimized_image, _|
