@@ -124,6 +124,10 @@ pre code {
 // Tables
 // --------------------------------------------------
 
+table {
+  border-collapse: collapse;
+}
+
 tbody {
   border-top: 3px solid $primary-low;
 }
