@@ -95,6 +95,7 @@ class Topic < ActiveRecord::Base
     return nil unless SiteSetting.create_thumbnails
     return nil unless original = image_upload
     return nil unless original.width && original.height
+    extra_sizes = [] unless extra_sizes.kind_of?(Array)
 
     (Topic.thumbnail_sizes + extra_sizes).each do |dim|
       TopicThumbnail.find_or_create_for!(original, max_width: dim[0], max_height: dim[1])
