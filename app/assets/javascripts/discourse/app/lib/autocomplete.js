@@ -1,4 +1,5 @@
-import { cancel, later } from "@ember/runloop";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import { debounce, cancel, later } from "@ember/runloop";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { setCaretPosition, caretPosition } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
@@ -413,6 +414,14 @@ export default function(options) {
   }
 
   $(this).on("keyup.autocomplete", function(e) {
+    if (options.debounced) {
+      debounce(this, performAutocomplete, e, INPUT_DELAY);
+    } else {
+      performAutocomplete(e);
+    }
+  });
+
+  function performAutocomplete(e) {
     if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
 
     let cp = caretPosition(me[0]);
@@ -445,7 +454,7 @@ export default function(options) {
       let term = me.val().substring(completeStart + (options.key ? 1 : 0), cp);
       updateAutoComplete(dataSource(term, options));
     }
-  });
+  }
 
   $(this).on("keydown.autocomplete", function(e) {
     var c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
