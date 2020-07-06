@@ -555,6 +555,11 @@ describe Plugin::Instance do
   end
 
   describe '#replace_flags' do
+    after do
+      PostActionType.replace_flag_settings(nil)
+      ReviewableScore.reload_types
+    end
+
     let(:original_flags) { PostActionType.flag_settings }
 
     it 'adds a new flag' do
