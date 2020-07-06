@@ -24,7 +24,7 @@ export default class LocalDateBuilder {
 
   build() {
     const [year, month, day] = this.date.split("-").map(x => parseInt(x, 10));
-    const [hour, minute] = (this.time || "")
+    const [hour, minute, second] = (this.time || "")
       .split(":")
       .map(x => (x ? parseInt(x, 10) : undefined));
 
@@ -42,6 +42,7 @@ export default class LocalDateBuilder {
       day,
       hour,
       minute,
+      second,
       timezone: this.timezone,
       localTimezone: this.localTimezone
     });
