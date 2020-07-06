@@ -12,42 +12,15 @@ describe "Topic Thumbnails" do
     def get_topic
       Discourse.redis.del(topic.thumbnail_job_redis_key(Topic.thumbnail_sizes))
       get '/latest.json'
+      expect(response.status).to eq(200)
       response.parsed_body["topic_list"]["topics"][0]
     end
 
-    it "includes thumbnails" do
-      topic_json = nil
-      expect do
-        topic_json = get_topic
-      end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
+    it "does not include thumbnails by default" do
 
-      thumbnails = topic_json["thumbnails"]
+      topic_json = get_topic
 
-      # Original only. Optimized not yet generated
-      expect(thumbnails.length).to eq(1)
-
-      # Original
-      expect(thumbnails[0]["max_width"]).to eq(nil)
-      expect(thumbnails[0]["max_height"]).to eq(nil)
-      expect(thumbnails[0]["width"]).to eq(image.width)
-      expect(thumbnails[0]["height"]).to eq(image.height)
-      expect(thumbnails[0]["url"]).to end_with(image.url)
-
-      # Run the job
-      args = Jobs::GenerateTopicThumbnails.jobs.last["args"].first
-      Jobs::GenerateTopicThumbnails.new.execute(args.with_indifferent_access)
-
-      # Re-request
-      expect do
-        topic_json = get_topic
-      end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(0)
-      thumbnails = topic_json["thumbnails"]
-
-      expect(thumbnails[1]["max_width"]).to eq(Topic.share_thumbnail_size[0])
-      expect(thumbnails[1]["max_height"]).to eq(Topic.share_thumbnail_size[1])
-      expect(thumbnails[1]["width"]).to eq(1024)
-      expect(thumbnails[1]["height"]).to eq(1024)
-      expect(thumbnails[1]["url"]).to include("/optimized/")
+      expect(topic_json["thumbnails"]).to eq(nil)
     end
 
     context "with a theme" do
@@ -69,6 +42,18 @@ describe "Topic Thumbnails" do
           topic_json = get_topic
         end.to change { Jobs::GenerateTopicThumbnails.jobs.size }.by(1)
 
+        thumbnails = topic_json["thumbnails"]
+
+        # Original only. Optimized not yet generated
+        expect(thumbnails.length).to eq(1)
+
+        # Original
+        expect(thumbnails[0]["max_width"]).to eq(nil)
+        expect(thumbnails[0]["max_height"]).to eq(nil)
+        expect(thumbnails[0]["width"]).to eq(image.width)
+        expect(thumbnails[0]["height"]).to eq(image.height)
+        expect(thumbnails[0]["url"]).to end_with(image.url)
+
         # Run the job
         args = Jobs::GenerateTopicThumbnails.jobs.last["args"].first
         Jobs::GenerateTopicThumbnails.new.execute(args.with_indifferent_access)
@@ -82,6 +67,14 @@ describe "Topic Thumbnails" do
 
         # Original + Optimized + 3 theme requests
         expect(thumbnails.length).to eq(5)
+
+        # Check first optimized
+        expect(thumbnails[1]["max_width"]).to eq(Topic.share_thumbnail_size[0])
+        expect(thumbnails[1]["max_height"]).to eq(Topic.share_thumbnail_size[1])
+        expect(thumbnails[1]["width"]).to eq(1024)
+        expect(thumbnails[1]["height"]).to eq(1024)
+        expect(thumbnails[1]["url"]).to include("/optimized/")
+
       end
     end
 
