@@ -71,6 +71,8 @@ describe EmailStyle do
       subject(:mail_html) { Email::Renderer.new(mail).html }
 
       it "customizations are applied to html part of emails" do
+        SiteSetting.default_email_in_reply_to = true
+
         expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
         matches = mail_html.match(/<div style="([^"]+)">#{post.raw}/)
         expect(matches[1]).to include('color: #FAB;') # custom
