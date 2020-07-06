@@ -2063,7 +2063,7 @@ user_preferences:
     enum: "PreviousRepliesSiteSetting"
     default: 2
   default_email_in_reply_to:
-    default: true
+    default: false
 
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"
