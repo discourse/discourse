@@ -139,3 +139,13 @@ tr {
 ruby > rt {
   font-size: 72%; // ~10px with 14px base
 }
+
+// Buttons (was in normalized)
+// --------------------------------------------------
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer;
+}
