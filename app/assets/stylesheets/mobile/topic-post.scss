@@ -28,6 +28,8 @@ span.badge-posts {
 
 .topic-post {
   nav.post-controls {
+    display: flex;
+
     color: dark-light-choose($primary-low-mid, $secondary-high);
     .actions {
       display: flex;
