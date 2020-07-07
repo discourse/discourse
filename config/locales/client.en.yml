@@ -3791,7 +3791,6 @@ en:
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
           body: "Body"
-          none_selected: "Select an email template to begin editing."
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
 
