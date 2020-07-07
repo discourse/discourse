@@ -347,11 +347,10 @@ class ListController < ApplicationController
     end
 
     current_slug = params.require(:category_slug_path_with_id)
-    real_slug = "#{@category.slug_path.join("/")}/#{@category.id}"
+    real_slug = @category.full_slug("/")
     if current_slug != real_slug
       url = request.fullpath.gsub(current_slug, real_slug)
-      redirect_to path(url), status: 301
-      return
+      return redirect_to path(url), status: 301
     end
 
     params[:category] = @category.id.to_s
