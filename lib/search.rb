@@ -794,9 +794,7 @@ class Search
 
   PHRASE_MATCH_REGEXP_PATTERN = '"([^"]+)"'
 
-  def posts_query(limit, opts = nil)
-    opts ||= {}
-
+  def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
       .joins(:post_search_data, :topic)
       .joins("LEFT JOIN categories ON categories.id = topics.category_id")
@@ -805,13 +803,13 @@ class Search
 
     posts = posts.where("topics.visible") unless is_topic_search
 
-    if opts[:type_filter] === "private_messages" || (is_topic_search && @search_context.private_message?)
+    if type_filter === "private_messages" || (is_topic_search && @search_context.private_message?)
       posts = posts.where("topics.archetype =  ?", Archetype.private_message)
 
        unless @guardian.is_admin?
          posts = posts.private_posts_for_user(@guardian.user)
        end
-    elsif opts[:type_filter] === "all_topics"
+    elsif type_filter === "all_topics"
       private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
       private_posts = private_posts.private_posts_for_user(@guardian.user)
 
@@ -861,7 +859,7 @@ class Search
     posts =
       if @search_context.present?
         if @search_context.is_a?(User)
-          if opts[:type_filter] === "private_messages"
+          if type_filter === "private_messages"
             @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
@@ -886,14 +884,58 @@ class Search
         posts = categories_ignored(posts) unless @category_filter_matched
         posts
       end
+
+    if aggregate_search
+      aggregate_relation = Post.unscoped
+        .select(
+          "subquery.topic_id id",
+          "(ARRAY_AGG(subquery.post_number))[1] post_number",
+        )
+        .group("subquery.topic_id")
+
+      posts = posts.select(posts.arel.projections)
+    end
+
     if @order == :latest
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(posts.created_at) DESC")
-      else
-        posts = posts.reorder("posts.created_at DESC")
+      posts = posts.reorder("posts.created_at DESC")
+
+      if aggregate_search
+        aggregate_relation = aggregate_relation
+          .select("MAX(subquery.created_at) created_at")
+          .order("created_at DESC")
       end
-    elsif @term.blank? && !@order
-      data_ranking = <<~SQL
+    elsif @order == :latest_topic
+      posts = posts.order("topic_created_at DESC")
+
+      if aggregate_search
+        posts = posts.select("topics.created_at topic_created_at")
+
+        aggregate_relation = aggregate_relation
+          .select("MAX(subquery.topic_created_at) topic_created_at")
+          .order("topic_created_at DESC")
+      end
+    elsif @order == :views
+      posts = posts.order("topic_views DESC")
+
+      if aggregate_search
+        posts = posts.select("topics.views topic_views")
+
+        aggregate_relation = aggregate_relation
+          .select("MAX(subquery.topic_views) topic_views")
+          .order("topic_views DESC")
+      end
+    elsif @order == :likes
+      posts = posts.order("posts.like_count DESC")
+    else
+      rank = <<~SQL
+      TS_RANK_CD(
+        post_search_data.search_data,
+        #{@term.blank? ? '' : ts_query(weight_filter: weights)},
+        #{SiteSetting.search_ranking_normalization}|32
+      )
+      SQL
+
+      category_priority_weights = <<~SQL
       (
         CASE categories.search_priority
         WHEN #{Searchable::PRIORITIES[:very_low]}
@@ -912,70 +954,35 @@ class Search
         END
       )
       SQL
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(#{data_ranking}) DESC").order("MAX(posts.created_at) DESC")
-      else
-        posts = posts.order("#{data_ranking} DESC").order("posts.created_at DESC")
-      end
-    elsif @order == :latest_topic
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(topics.created_at) DESC")
-      else
-        posts = posts.order("topics.created_at DESC")
-      end
-    elsif @order == :views
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(topics.views) DESC")
-      else
-        posts = posts.order("topics.views DESC")
-      end
-    elsif @order == :likes
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(posts.like_count) DESC")
-      else
-        posts = posts.order("posts.like_count DESC")
-      end
-    else
-      data_ranking = <<~SQL
-      (
-        TS_RANK_CD(
-          post_search_data.search_data,
-          #{ts_query(weight_filter: weights)},
-          #{SiteSetting.search_ranking_normalization}|32
-        ) *
-        (
-          CASE categories.search_priority
-          WHEN #{Searchable::PRIORITIES[:very_low]}
-          THEN #{SiteSetting.category_search_priority_very_low_weight}
-          WHEN #{Searchable::PRIORITIES[:low]}
-          THEN #{SiteSetting.category_search_priority_low_weight}
-          WHEN #{Searchable::PRIORITIES[:high]}
-          THEN #{SiteSetting.category_search_priority_high_weight}
-          WHEN #{Searchable::PRIORITIES[:very_high]}
-          THEN #{SiteSetting.category_search_priority_very_high_weight}
-          ELSE
-            CASE WHEN topics.closed
-            THEN 0.9
-            ELSE 1
-            END
-          END
-        )
-      )
-      SQL
 
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(#{data_ranking}) DESC")
-      else
-        posts = posts.order("#{data_ranking} DESC")
-      end
+      data_ranking =
+        if @term.blank?
+          "(#{category_priority_weights})"
+        else
+          "(#{rank} * #{category_priority_weights})"
+        end
 
-      posts = posts.order("topics.bumped_at DESC")
+      if aggregate_search
+        posts = posts.select("#{data_ranking} rank", "topics.bumped_at topic_bumped_at")
+          .order("rank DESC", "topic_bumped_at DESC")
+
+        aggregate_relation = aggregate_relation
+          .select("MAX(subquery.rank) rank", "MAX(subquery.topic_bumped_at) topic_bumped_at")
+          .order("rank DESC", "topic_bumped_at DESC")
+      else
+        posts = posts.order("#{data_ranking} DESC", "topics.bumped_at DESC")
+      end
     end
 
     if secure_category_ids.present?
       posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
     else
       posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
+    end
+
+    if aggregate_search
+      posts = yield(posts) if block_given?
+      posts = aggregate_relation.from(posts)
     end
 
     posts = posts.offset(offset)
@@ -1032,29 +1039,42 @@ class Search
   end
 
   def aggregate_post_sql(opts)
-    min_or_max = @order == :latest ? "max" : "min"
-
-    query =
-      if @order == :likes
-        # likes are a pain to aggregate so skip
-        posts_query(limit, type_filter: opts[:type_filter])
-          .select('topics.id', "posts.post_number")
-      else
-        posts_query(limit, aggregate_search: true, type_filter: opts[:type_filter])
-          .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
-          .group('topics.id')
-      end
+    default_opts = {
+      type_filter: opts[:type_filter]
+    }
 
     min_id = Search.min_post_id
-    if min_id > 0
-      low_set = query.dup.where("post_search_data.post_id < #{min_id}")
-      high_set = query.where("post_search_data.post_id >= #{min_id}")
 
-      return { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
+    if @order == :likes
+      # likes are a pain to aggregate so skip
+      query = posts_query(limit, **default_opts).select('topics.id', 'posts.post_number')
+
+      if min_id > 0
+        low_set = query.dup.where("post_search_data.post_id < #{min_id}")
+        high_set = query.where("post_search_data.post_id >= #{min_id}")
+
+        { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
+      else
+        { default: wrap_rows(query) }
+      end
+    else
+      query = posts_query(limit, **default_opts, aggregate_search: true) do |posts|
+        if min_id > 0
+          posts.select("post_search_data.post_id post_search_data_post_id")
+        else
+          posts
+        end
+      end
+
+      if min_id > 0
+        low_set = query.dup.where("subquery.post_search_data_post_id < #{min_id}")
+        high_set = query.where("subquery.post_search_data_post_id >= #{min_id}")
+
+        { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
+      else
+        { default: wrap_rows(query) }
+      end
     end
-
-    # double wrapping so we get correct row numbers
-    { default: wrap_rows(query) }
   end
 
   def aggregate_posts(post_sql)

@@ -175,7 +175,6 @@ describe Search do
                                    raw: 'hello from mars, we just landed') }
 
     it 'searches correctly' do
-
       expect do
         Search.execute('mars', type_filter: 'private_messages')
       end.to raise_error(Discourse::InvalidAccess)
@@ -368,6 +367,121 @@ describe Search do
     end
   end
 
+  context 'posts' do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
+
+    let!(:reply) do
+      Fabricate(:post_with_long_raw_content,
+        topic: topic,
+        user: topic.user,
+      ).tap { |post| post.update!(raw: "#{post.raw} elephant") }
+    end
+
+    let(:expected_blurb) do
+      "...quire content longer than the typical test post raw content. It really is some long content, folks. elephant"
+    end
+
+    it 'returns the post' do
+      result = Search.execute('elephant',
+        type_filter: 'topic',
+        include_blurbs: true
+      )
+
+      expect(result.posts).to contain_exactly(reply)
+      expect(result.blurb(reply)).to eq(expected_blurb)
+    end
+
+    it 'returns the right post and blurb for searches with phrase' do
+      result = Search.execute('"elephant"',
+        type_filter: 'topic',
+        include_blurbs: true
+      )
+
+      expect(result.posts).to contain_exactly(reply)
+      expect(result.blurb(reply)).to eq(expected_blurb)
+    end
+
+    it 'does not allow a post with repeated words to dominate the ranking' do
+      category = Fabricate(:category_with_definition, name: "winter is coming")
+
+      post = Fabricate(:post,
+        raw: "I think winter will end soon",
+        topic: Fabricate(:topic,
+          title: "dragon john snow winter",
+          category: category
+        )
+      )
+
+      post2 = Fabricate(:post,
+        raw: "I think #{'winter' * 20} will end soon",
+        topic: Fabricate(:topic, title: "dragon john snow summer", category: category)
+      )
+
+      result = Search.execute('winter')
+
+      expect(result.posts.pluck(:id)).to eq([
+        post.id, category.topic.first_post.id, post2.id
+      ])
+    end
+
+    it 'applies a small penalty to closed topic when ranking' do
+      post = Fabricate(:post,
+        raw: "My weekly update",
+        topic: Fabricate(:topic,
+          title: "A topic that will be closed",
+          closed: true
+        )
+      )
+
+      post2 = Fabricate(:post,
+        raw: "My weekly update",
+        topic: Fabricate(:topic,
+          title: "A topic that will be open"
+        )
+      )
+
+      result = Search.execute('weekly update')
+      expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
+    end
+
+    it 'aggregates searches in a topic by returning the post with the highest rank' do
+      post = Fabricate(:post, topic: topic, raw: "this is a play post")
+      post2 = Fabricate(:post, topic: topic, raw: "play playing played")
+      post3 = Fabricate(:post, raw: "this is a play post")
+
+      results = Search.execute('play')
+
+      expect(results.posts.map(&:id)).to eq([
+        post2.id,
+        post3.id
+      ])
+    end
+
+    it "allows the configuration of search to prefer recent posts" do
+      SiteSetting.search_prefer_recent_posts = true
+      SiteSetting.search_recent_posts_size = 1
+      post = Fabricate(:post, topic: topic, raw: "this is a play post")
+
+      results = Search.execute('play post')
+
+      expect(results.posts.map(&:id)).to eq([
+        post.id
+      ])
+
+      post2 = Fabricate(:post, raw: "this is a play post")
+
+      results = Search.execute('play post')
+
+      expect(results.posts.map(&:id)).to eq([
+        post2.id,
+        post.id
+      ])
+    ensure
+      Discourse.cache.clear
+    end
+  end
+
   context 'topics' do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
@@ -432,80 +546,6 @@ describe Search do
       it 'returns a result correctly' do
         expect(result.posts.length).to eq(1)
         expect(result.posts[0].id).to eq(post.id)
-      end
-    end
-
-    context 'searching for a post' do
-      let!(:reply) do
-        Fabricate(:post_with_long_raw_content,
-          topic: topic,
-          user: topic.user,
-        ).tap { |post| post.update!(raw: "#{post.raw} elephant") }
-      end
-
-      let(:expected_blurb) do
-        "...quire content longer than the typical test post raw content. It really is some long content, folks. elephant"
-      end
-
-      it 'returns the post' do
-        result = Search.execute('elephant',
-          type_filter: 'topic'
-        )
-
-        expect(result.posts).to contain_exactly(reply)
-        expect(result.blurb(reply)).to eq(expected_blurb)
-      end
-
-      it 'returns the right post and blurb for searches with phrase' do
-        result = Search.execute('"elephant"',
-          type_filter: 'topic'
-        )
-
-        expect(result.posts).to contain_exactly(reply)
-        expect(result.blurb(reply)).to eq(expected_blurb)
-      end
-
-      it 'does not allow a post with repeated words to dominate the ranking' do
-        category = Fabricate(:category_with_definition, name: "winter is coming")
-
-        post = Fabricate(:post,
-          raw: "I think winter will end soon",
-          topic: Fabricate(:topic,
-            title: "dragon john snow winter",
-            category: category
-          )
-        )
-
-        post2 = Fabricate(:post,
-          raw: "I think #{'winter' * 20} will end soon",
-          topic: Fabricate(:topic, title: "dragon john snow summer", category: category)
-        )
-
-        result = Search.execute('winter')
-
-        expect(result.posts.pluck(:id)).to eq([
-          post.id, category.topic.first_post.id, post2.id
-        ])
-      end
-
-      it 'applies a small penalty to closed topic when ranking' do
-        post = Fabricate(:post,
-          raw: "My weekly update",
-          topic: Fabricate(:topic,
-            title: "A topic that will be closed",
-            closed: true
-          )
-        )
-
-        post2 = Fabricate(:post,
-          raw: "My weekly update",
-          topic: Fabricate(:topic,
-            title: "A topic that will be open"
-          )
-        )
-
-        result = Search.execute('weekly update')
-        expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
       end
     end
 
@@ -681,18 +721,19 @@ describe Search do
 
       it "should return posts in the right order" do
         raw = "The pure genuine evian"
-        post = freeze_time(10.seconds.from_now) { Fabricate(:post, topic: category.topic, raw: raw) }
-        post2 = freeze_time(20.seconds.from_now) { Fabricate(:post, topic: category2.topic, raw: raw) }
+        post = Fabricate(:post, topic: category.topic, raw: raw)
+        post2 = Fabricate(:post, topic: category2.topic, raw: raw)
+        post2.topic.update!(bumped_at: 10.seconds.from_now)
 
         search = Search.execute(raw)
 
-        expect(search.posts).to eq([post2, post])
+        expect(search.posts.map(&:id)).to eq([post2.id, post.id])
 
         category.update!(search_priority: Searchable::PRIORITIES[:high])
 
         search = Search.execute(raw)
 
-        expect(search.posts).to eq([post, post2])
+        expect(search.posts.map(&:id)).to eq([post.id, post2.id])
       end
     end
 
@@ -1192,6 +1233,18 @@ describe Search do
       ])
     end
 
+    it 'can order by topic views' do
+      topic = Fabricate(:topic, views: 1)
+      topic2 = Fabricate(:topic, views: 2)
+      post = Fabricate(:post, raw: 'Topic', topic: topic)
+      post2 = Fabricate(:post, raw: 'Topic', topic: topic2)
+
+      expect(Search.execute('Topic order:views').posts.map(&:id)).to eq([
+        post2.id,
+        post.id
+      ])
+    end
+
     it 'can tokenize dots' do
       post = Fabricate(:post, raw: 'Will.2000 Will.Bob.Bill...')
       expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
@@ -1343,8 +1396,10 @@ describe Search do
 
         expect(Search.execute('bakey tags:lunch order:latest').posts.map(&:id))
           .to eq([post8.id, post7.id])
+
         expect(Search.execute('#food tags:lunch order:latest').posts.map(&:id))
           .to eq([post8.id, post7.id])
+
         expect(Search.execute('#food tags:lunch order:likes').posts.map(&:id))
           .to eq([post7.id, post8.id])
       end
