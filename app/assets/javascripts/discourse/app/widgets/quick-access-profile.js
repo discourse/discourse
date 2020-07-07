@@ -3,6 +3,12 @@ import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
 import { Promise } from "rsvp";
 
+const _extraItems = [];
+
+export function addQuickAccessProfileItem(item) {
+  _extraItems.push(item);
+}
+
 createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   tagName: "div.quick-access-panel.quick-access-profile",
 
@@ -22,10 +28,12 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   },
 
   _getItems() {
-    const items = this._getDefaultItems();
+    let items = this._getDefaultItems();
     if (this._showToggleAnonymousButton()) {
       items.push(this._toggleAnonymousButton());
     }
+    items = items.concat(_extraItems);
+
     if (this.attrs.showLogoutButton) {
       items.push(this._logOutButton());
     }
