@@ -1678,6 +1678,10 @@ en:
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
 
+    base_font_setting:
+      default: "Helvetica/Arial"
+      oxanium: "Oxanium"
+
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"

@@ -289,6 +289,9 @@ basic:
   vapid_base_url:
     default: ""
     hidden: true
+  base_font:
+    default: "Helvetica"
+    enum: "BaseFontSetting"
 
 login:
   invite_only:
@@ -379,7 +382,7 @@ login:
   discord_trusted_guilds:
     default: ""
     type: list
-  external_auth_skip_create_confirm: 
+  external_auth_skip_create_confirm:
     default: false
     client: true
   enable_sso:
