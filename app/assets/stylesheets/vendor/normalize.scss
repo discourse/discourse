@@ -706,3 +706,13 @@ select,
 textarea {
   color: inherit;
 }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td,
+th {
+  padding: 0;
+}
