@@ -4234,7 +4234,7 @@ tr_TR:
         embed_title_scrubber: "Gönderilerin başlığını temizlemek için kullanılan düzenli ifade"
         embed_truncate: "Saklı gönderileri kırp"
         embed_allowlist_selector: "Gömülü olarak izin verilen öğeler için CSS seçici"
-        embed_blacklist_selector: "Gömülmüş öğelerden kaldırılan öğeler için CSS seçici"
+        embed_blocklist_selector: "Gömülmüş öğelerden kaldırılan öğeler için CSS seçici"
         embed_classname_allowlist: "İzin verilen CSS sınıfı isimleri"
         save: "Gömme Ayarlarını Kaydet"
       permalink:

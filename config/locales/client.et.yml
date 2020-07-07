@@ -3236,7 +3236,7 @@ et:
         embed_title_scrubber: "Regex postituste päiste puhastamiseks"
         embed_truncate: "Lühenda sängitatud postitused"
         embed_allowlist_selector: "CSS valik elementidele, mida lubada sängitamistes"
-        embed_blacklist_selector: "CSS valik elementidele, mida eemaldada sängitamistes"
+        embed_blocklist_selector: "CSS valik elementidele, mida eemaldada sängitamistes"
         embed_classname_allowlist: "CSS klasside lubatud nimed"
         save: "Salvesta sängitamise sätted"
       permalink:

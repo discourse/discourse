@@ -371,8 +371,8 @@ describe UsersEmailController do
         end
       end
 
-      it 'raises an error when new email domain is present in email_domains_blacklist site setting' do
-        SiteSetting.email_domains_blacklist = "mailinator.com"
+      it 'raises an error when new email domain is present in email_domains_blocklist site setting' do
+        SiteSetting.email_domains_blocklist = "mailinator.com"
 
         put "/u/#{user.username}/preferences/email.json", params: {
           email: "not_good@mailinator.com"

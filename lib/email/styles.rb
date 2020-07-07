@@ -152,7 +152,7 @@ module Email
       # iframes can't go in emails, so replace them with clickable links
       @fragment.css('iframe').each do |i|
         begin
-          # sometimes, iframes are blacklisted...
+          # sometimes, iframes are blocklisted...
           if i["src"].blank?
             i.remove
             next

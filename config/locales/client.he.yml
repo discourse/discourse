@@ -4700,7 +4700,7 @@ he:
         embed_truncate: "חיתוך הפרסומים המוטמעים."
         embed_unlisted: "נושאים שיובאו לא יופיעו ברשימה עד שתתווסף אליהם תגובה."
         embed_allowlist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
-        embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
+        embed_blocklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
         embed_classname_allowlist: "שמות מחלקות CSS מאושרות"
         save: "שמירת הגדרות הטמעה"
       permalink:

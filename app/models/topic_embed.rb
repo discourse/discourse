@@ -125,7 +125,7 @@ class TopicEmbed < ActiveRecord::Base
     }
 
     opts[:allowlist] = SiteSetting.embed_allowlist_selector if SiteSetting.embed_allowlist_selector.present?
-    opts[:blacklist] = SiteSetting.embed_blacklist_selector if SiteSetting.embed_blacklist_selector.present?
+    opts[:blocklist] = SiteSetting.embed_blocklist_selector if SiteSetting.embed_blocklist_selector.present?
     embed_classname_allowlist = SiteSetting.embed_classname_allowlist if SiteSetting.embed_classname_allowlist.present?
 
     response = FetchResponse.new

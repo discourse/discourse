@@ -3614,7 +3614,7 @@ nb_NO:
         embed_title_scrubber: "Regulære uttrykk brukt til å finne og korrigere feil i titler"
         embed_truncate: "Forkort de innebygde innleggene"
         embed_allowlist_selector: "CSS-velger for elementer som tillates i innbygginger"
-        embed_blacklist_selector: "CSS-velger for element som fjernes fra innbygginger"
+        embed_blocklist_selector: "CSS-velger for element som fjernes fra innbygginger"
         embed_classname_allowlist: "Tillatte navn for CSS-klasser"
         save: "Lagre innbyggingsinnstillinger"
       permalink:

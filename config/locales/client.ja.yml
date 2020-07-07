@@ -3190,7 +3190,7 @@ ja:
         settings: "埋め込みの設定"
         embed_truncate: "埋め込まれた投稿を削除する"
         embed_allowlist_selector: "埋め込みで許可される要素のCSSセレクタ"
-        embed_blacklist_selector: "埋め込みから削除された要素のCSSセレクタ"
+        embed_blocklist_selector: "埋め込みから削除された要素のCSSセレクタ"
         embed_classname_allowlist: "許可されたCSSクラス名"
         save: "埋め込みの設定を保存"
       permalink:

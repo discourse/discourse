@@ -3177,7 +3177,7 @@ lt:
         embed_post_limit: "Maskimalus įterpiamų įrašų skaičius"
         embed_truncate: "Truncate the embedded posts"
         embed_allowlist_selector: "CSS selector for elements that are allowed in embeds"
-        embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
+        embed_blocklist_selector: "CSS selector for elements that are removed from embeds"
         embed_classname_allowlist: "Leidžiamos CSS klasės"
         save: "Išsaugoti Įterpimo Nustatymus"
       permalink:

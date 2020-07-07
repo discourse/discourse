@@ -4420,7 +4420,7 @@ it:
         embed_truncate: "Tronca i messaggi incorporati"
         embed_unlisted: "Gli argomenti importati non saranno visibili fino a quando non ci sarà una risposta."
         embed_allowlist_selector: "Selettore CSS per gli elementi da permettere negli embed"
-        embed_blacklist_selector: "Selettore CSS per gli elementi da rimuovere dagli embed"
+        embed_blocklist_selector: "Selettore CSS per gli elementi da rimuovere dagli embed"
         embed_classname_allowlist: "Classi CSS permesse"
         save: "Salva Impostazioni Inclusione"
       permalink:

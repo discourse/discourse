@@ -320,7 +320,7 @@ class FinalDestination
 
   def private_ranges
     FinalDestination.standard_private_ranges +
-      SiteSetting.blacklist_ip_blocks.split('|').map { |r| IPAddr.new(r) rescue nil }.compact
+      SiteSetting.blocklist_ip_blocks.split('|').map { |r| IPAddr.new(r) rescue nil }.compact
   end
 
   def log(log_level, message)

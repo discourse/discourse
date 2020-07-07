@@ -4274,7 +4274,7 @@ de:
         embed_title_scrubber: "Regulärer Ausdruck (Regex) um den Titel eines Beitrags zu bereinigen"
         embed_truncate: "Kürze die eingebetteten Beiträge"
         embed_allowlist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
-        embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
+        embed_blocklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
         embed_classname_allowlist: "Erlaubte CSS-Klassen"
         save: "Einbettungseinstellungen speichern"
       permalink:

@@ -3715,7 +3715,7 @@ cs:
         embed_title_scrubber: "Běžný výraz užívaný k vyčištění názvů příspěvků"
         embed_truncate: "Useknout zabudované příspěvky"
         embed_allowlist_selector: "Volba CSS pro prvky, které jsou povoleny ve vložení."
-        embed_blacklist_selector: "Volba CSS pro prvky, které jsou odstraněny z vložení."
+        embed_blocklist_selector: "Volba CSS pro prvky, které jsou odstraněny z vložení."
         embed_classname_allowlist: "Povolená jména CSS tříd"
         save: "Uložit nastavení zabudování"
       permalink:

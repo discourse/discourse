@@ -70,7 +70,7 @@ class ImportScripts::Base
 
   def get_site_settings_for_import
     {
-      email_domains_blacklist: '',
+      email_domains_blocklist: '',
       min_topic_title_length: 1,
       min_post_length: 1,
       min_first_post_length: 1,

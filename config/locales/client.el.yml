@@ -3194,7 +3194,7 @@ el:
         embed_title_scrubber: "Regular expression που χρησιμοποιείται για την λήψη των τίτλων των αναρτήσεων"
         embed_truncate: "Truncate the embedded posts"
         embed_allowlist_selector: "CSS selector για στοιχεία που επιτρέπονται στα συγχωνευμένα"
-        embed_blacklist_selector: "CSS selector για στοιχεία που έχουν απομακρυνθεί από τα συγχωνευμένα"
+        embed_blocklist_selector: "CSS selector για στοιχεία που έχουν απομακρυνθεί από τα συγχωνευμένα"
         embed_classname_allowlist: "Επιτρεπόμενα CSS class names"
         save: "Αποθήκευση των ρυθμίσεων Embedding "
       permalink:

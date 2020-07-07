@@ -755,60 +755,60 @@ describe User do
       expect(user).to be_valid
     end
 
-    it 'should reject some emails based on the email_domains_blacklist site setting' do
-      SiteSetting.email_domains_blacklist = 'mailinator.com'
+    it 'should reject some emails based on the email_domains_blocklist site setting' do
+      SiteSetting.email_domains_blocklist = 'mailinator.com'
       expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
       expect(Fabricate.build(:user, email: 'mailinator@gmail.com')).to be_valid
     end
 
-    it 'should reject some emails based on the email_domains_blacklist site setting' do
-      SiteSetting.email_domains_blacklist = 'mailinator.com|trashmail.net'
+    it 'should reject some emails based on the email_domains_blocklist site setting' do
+      SiteSetting.email_domains_blocklist = 'mailinator.com|trashmail.net'
       expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
       expect(Fabricate.build(:user, email: 'notgood@trashmail.net')).not_to be_valid
       expect(Fabricate.build(:user, email: 'mailinator.com@gmail.com')).to be_valid
     end
 
     it 'should not reject partial matches' do
-      SiteSetting.email_domains_blacklist = 'mail.com'
+      SiteSetting.email_domains_blocklist = 'mail.com'
       expect(Fabricate.build(:user, email: 'mailinator@gmail.com')).to be_valid
     end
 
-    it 'should reject some emails based on the email_domains_blacklist site setting ignoring case' do
-      SiteSetting.email_domains_blacklist = 'trashmail.net'
+    it 'should reject some emails based on the email_domains_blocklist site setting ignoring case' do
+      SiteSetting.email_domains_blocklist = 'trashmail.net'
       expect(Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET')).not_to be_valid
     end
 
-    it 'should reject emails based on the email_domains_blacklist site setting matching subdomain' do
-      SiteSetting.email_domains_blacklist = 'domain.com'
+    it 'should reject emails based on the email_domains_blocklist site setting matching subdomain' do
+      SiteSetting.email_domains_blocklist = 'domain.com'
       expect(Fabricate.build(:user, email: 'notgood@sub.domain.com')).not_to be_valid
     end
 
-    it 'skips the blacklist if skip_email_validation is set' do
-      SiteSetting.email_domains_blacklist = 'domain.com'
+    it 'skips the blocklist if skip_email_validation is set' do
+      SiteSetting.email_domains_blocklist = 'domain.com'
       user = Fabricate.build(:user, email: 'notgood@sub.domain.com')
       user.skip_email_validation = true
       expect(user).to be_valid
     end
 
-    it 'blacklist should not reject developer emails' do
+    it 'blocklist should not reject developer emails' do
       Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
-      SiteSetting.email_domains_blacklist = 'discourse.org'
+      SiteSetting.email_domains_blocklist = 'discourse.org'
       expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
     end
 
     it 'should not interpret a period as a wildcard' do
-      SiteSetting.email_domains_blacklist = 'trashmail.net'
+      SiteSetting.email_domains_blocklist = 'trashmail.net'
       expect(Fabricate.build(:user, email: 'good@trashmailinet.com')).to be_valid
     end
 
     it 'should not be used to validate existing records' do
-      u = Fabricate(:user, email: 'in_before_blacklisted@fakemail.com')
-      SiteSetting.email_domains_blacklist = 'fakemail.com'
+      u = Fabricate(:user, email: 'in_before_blocklisted@fakemail.com')
+      SiteSetting.email_domains_blocklist = 'fakemail.com'
       expect(u).to be_valid
     end
 
     it 'should be used when email is being changed' do
-      SiteSetting.email_domains_blacklist = 'mailinator.com'
+      SiteSetting.email_domains_blocklist = 'mailinator.com'
       u = Fabricate(:user, email: 'good@gmail.com')
       u.email = 'nope@mailinator.com'
       expect(u).not_to be_valid
@@ -843,7 +843,7 @@ describe User do
 
     it 'email allowlist should not be used to validate existing records' do
       u = Fabricate(:user, email: 'in_before_allowlisted@fakemail.com')
-      SiteSetting.email_domains_blacklist = 'vaynermedia.com'
+      SiteSetting.email_domains_blocklist = 'vaynermedia.com'
       expect(u).to be_valid
     end
 
@@ -856,7 +856,7 @@ describe User do
 
     it "doesn't validate email address for staged users" do
       SiteSetting.email_domains_allowlist = "foo.com"
-      SiteSetting.email_domains_blacklist = "bar.com"
+      SiteSetting.email_domains_blocklist = "bar.com"
 
       user = Fabricate.build(:user, staged: true, email: "foo@bar.com")
 

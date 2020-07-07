@@ -12,7 +12,7 @@ class Embedding < OpenStruct
        embed_truncate
        embed_unlisted
        embed_allowlist_selector
-       embed_blacklist_selector
+       embed_blocklist_selector
        embed_classname_allowlist)
   end
 

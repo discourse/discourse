@@ -4496,7 +4496,7 @@ uk:
         embed_title_scrubber: "Регулярний вираз, що використовується для очищення заголовка повідомлень"
         embed_truncate: "Обрізати вбудовані повідомлення."
         embed_allowlist_selector: "Селектори CSS які дозволені для використання."
-        embed_blacklist_selector: "Селектори CSS які заборонені для використання."
+        embed_blocklist_selector: "Селектори CSS які заборонені для використання."
         embed_classname_allowlist: "Дозволені імена класів CSS"
         save: "Зберегти налаштування вбудовування"
       permalink:

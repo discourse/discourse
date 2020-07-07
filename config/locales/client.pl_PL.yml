@@ -4376,7 +4376,7 @@ pl_PL:
         embed_title_scrubber: "Wyrażenie regularne używane do czyszczenia tytuł postów"
         embed_truncate: "Skracaj treść osadzanych wpisów"
         embed_allowlist_selector: "Selektor CSS elementów jakie mogą być osadzane"
-        embed_blacklist_selector: "Selektor CSS elementów jakie są usuwane podczas osadzania"
+        embed_blocklist_selector: "Selektor CSS elementów jakie są usuwane podczas osadzania"
         embed_classname_allowlist: "Dozwolone nazwy klas CSS"
         save: "Zapisz"
       permalink:

@@ -4383,7 +4383,7 @@ es:
         embed_truncate: "Truncar las publicaciones insertadas"
         embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
         embed_allowlist_selector: "Selector CSS para elementos permitidos en los insertados"
-        embed_blacklist_selector: "Selector CSS para los elementos que se eliminan de los insertados"
+        embed_blocklist_selector: "Selector CSS para los elementos que se eliminan de los insertados"
         embed_classname_allowlist: "Clases CSS permitidas"
         save: "Guardar ajustes de insertado"
       permalink:

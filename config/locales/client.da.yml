@@ -4078,7 +4078,7 @@ da:
         embed_title_scrubber: "Regular expression er brugt til at gøre titler pæne på indlæg"
         embed_truncate: "Beskær de indlejrede indlæg"
         embed_allowlist_selector: "CSS-selektorer for elementer der er tilladte i indlejringer"
-        embed_blacklist_selector: "CSS-selektorer for elementer der fjernes fra indlejringer"
+        embed_blocklist_selector: "CSS-selektorer for elementer der fjernes fra indlejringer"
         embed_classname_allowlist: "Tillad CSS class names"
         save: "Gem indlejrings-indstillinger"
       permalink:

@@ -245,8 +245,8 @@ describe Middleware::AnonymousCache::Helper do
       expect(@status).to eq(200)
     end
 
-    it "applies blacklisted_crawler_user_agents correctly" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+    it "applies blocklisted_crawler_user_agents correctly" do
+      SiteSetting.blocklisted_crawler_user_agents = 'Googlebot'
 
       get '/', headers: non_crawler
       expect(@status).to eq(200)
@@ -265,7 +265,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "should never block robots.txt" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocklisted_crawler_user_agents = 'Googlebot'
 
       get '/robots.txt', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
@@ -275,7 +275,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "should never block srv/status" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocklisted_crawler_user_agents = 'Googlebot'
 
       get '/srv/status', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
@@ -285,7 +285,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "blocked crawlers shouldn't log page views" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocklisted_crawler_user_agents = 'Googlebot'
 
       get '/', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
@@ -295,7 +295,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "blocks json requests" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocklisted_crawler_user_agents = 'Googlebot'
 
       get '/srv/status.json', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'

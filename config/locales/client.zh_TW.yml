@@ -3812,7 +3812,7 @@ zh_TW:
         embed_title_scrubber: "從貼文中提取標題的正則表達式 \"regular expression\""
         embed_truncate: "截斷嵌入的貼文"
         embed_allowlist_selector: "使用 CSS 選擇器選擇允許的嵌入元素"
-        embed_blacklist_selector: "使用 CSS 選擇器移除嵌入元素"
+        embed_blocklist_selector: "使用 CSS 選擇器移除嵌入元素"
         embed_classname_allowlist: "允許 CSS class 名稱"
         save: "儲存崁入設定"
       permalink:

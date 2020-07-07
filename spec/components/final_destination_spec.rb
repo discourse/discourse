@@ -396,7 +396,7 @@ describe FinalDestination do
     end
 
     it "returns false for IPV6 via site settings" do
-      SiteSetting.blacklist_ip_blocks = '2001:abc:de::/48|2002:abc:de::/48'
+      SiteSetting.blocklist_ip_blocks = '2001:abc:de::/48|2002:abc:de::/48'
       expect(fd('https://[2001:abc:de:01:0:3f0:6a65:c2bf]').is_dest_valid?).to eq(false)
       expect(fd('https://[2002:abc:de:01:0:3f0:6a65:c2bf]').is_dest_valid?).to eq(false)
       expect(fd('https://internal-ipv6.com').is_dest_valid?).to eq(false)
@@ -404,7 +404,7 @@ describe FinalDestination do
     end
 
     it "ignores invalid ranges" do
-      SiteSetting.blacklist_ip_blocks = '2001:abc:de::/48|eviltrout'
+      SiteSetting.blocklist_ip_blocks = '2001:abc:de::/48|eviltrout'
       expect(fd('https://[2001:abc:de:01:0:3f0:6a65:c2bf]').is_dest_valid?).to eq(false)
     end
 

@@ -443,7 +443,7 @@ login:
   sso_overrides_website: false
   sso_overrides_card_background: false
   sso_not_approved_url: ""
-  email_domains_blacklist:
+  email_domains_blocklist:
     default: "mailinator.com"
     type: list
   email_domains_allowlist:
@@ -1109,11 +1109,11 @@ email:
   reset_bounce_score_after_days:
     default: 30
     max: 36500
-  attachment_content_type_blacklist:
+  attachment_content_type_blocklist:
     type: list
     default: "pkcs7|x-vcard"
     list_type: compact
-  attachment_filename_blacklist:
+  attachment_filename_blocklist:
     type: list
     default: "smime.p7s|signature.asc|winmail.dat"
     list_type: compact
@@ -1459,7 +1459,7 @@ security:
   use_admin_ip_allowlist:
     default: false
     client: true
-  blacklist_ip_blocks:
+  blocklist_ip_blocks:
     default: ""
     type: list
     list_type: compact
@@ -1474,7 +1474,7 @@ security:
     type: list
     default: ""
     list_type: compact
-  blacklisted_crawler_user_agents:
+  blocklisted_crawler_user_agents:
     type: list
     default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
@@ -1511,7 +1511,7 @@ onebox:
       ja: 200
       zh_CN: 200
       zh_TW: 200
-  onebox_domains_blacklist:
+  onebox_domains_blocklist:
     default: ""
     type: list
     list_type: compact
@@ -1728,7 +1728,7 @@ embedding:
   embed_title_scrubber:
     default: ""
     hidden: true
-  embed_blacklist_selector:
+  embed_blocklist_selector:
     default: ""
     hidden: true
   embed_classname_allowlist:

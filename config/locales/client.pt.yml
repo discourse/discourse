@@ -3343,7 +3343,7 @@ pt:
         embed_title_scrubber: "Expressão regular usada para filtrar o título de publicações"
         embed_truncate: "Truncar as publicações incorporadas"
         embed_allowlist_selector: "Seletor CSS para elementos que são permitidos nas incorporações"
-        embed_blacklist_selector: "Seletor CSS para elementos que são removidos das incorporações"
+        embed_blocklist_selector: "Seletor CSS para elementos que são removidos das incorporações"
         embed_classname_allowlist: "Nomes de classes CSS permitidas"
         save: "Guardar Configurações de Incorporação"
       permalink:

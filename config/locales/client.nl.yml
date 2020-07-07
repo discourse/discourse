@@ -4435,7 +4435,7 @@ nl:
         embed_truncate: "Ingebedde berichten inkorten"
         embed_unlisted: "Geïmporteerde topics worden onzichtbaar totdat er antwoord is."
         embed_allowlist_selector: "CSS-selector voor elementen die bij inbedding worden toegestaan"
-        embed_blacklist_selector: "CSS-selector voor elementen die bij inbedding worden verwijderd"
+        embed_blocklist_selector: "CSS-selector voor elementen die bij inbedding worden verwijderd"
         embed_classname_allowlist: "Toegestane CSS-klassenamen"
         save: "Inbeddingsinstellingen opslaan"
       permalink:

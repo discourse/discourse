@@ -781,7 +781,7 @@ sw:
     max_image_width: "Kiwango cha juu cha upana wa kijipicha za picha kwenye chapisho"
     max_image_height: "Kiwango cha juu cha urefu wa kijipicha za picha kwenye chapisho"
     add_rel_nofollow_to_user_content: 'Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: "rake machapishi:rebake"'
-    onebox_domains_blacklist: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
+    onebox_domains_blocklist: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
     inline_onebox_domains_allowlist: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"

@@ -19,7 +19,7 @@ class EmailValidator < ActiveModel::EachValidator
   def self.allowed?(email)
     if (setting = SiteSetting.email_domains_allowlist).present?
       return email_in_restriction_setting?(setting, email) || is_developer?(email)
-    elsif (setting = SiteSetting.email_domains_blacklist).present?
+    elsif (setting = SiteSetting.email_domains_blocklist).present?
       return !(email_in_restriction_setting?(setting, email) && !is_developer?(email))
     end
 

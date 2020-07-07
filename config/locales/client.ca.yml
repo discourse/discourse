@@ -4168,7 +4168,7 @@ ca:
         embed_title_scrubber: "Expressió regular emprada per a depurar el títol de les publicacions"
         embed_truncate: "Trunca les publicacions incrustades"
         embed_allowlist_selector: "Selector de CSS per a elements permesos en les incrustacions"
-        embed_blacklist_selector: "Selector de CSS per a elements que han estat eliminats de les incrustacions"
+        embed_blocklist_selector: "Selector de CSS per a elements que han estat eliminats de les incrustacions"
         embed_classname_allowlist: "Noms permesos de classes de CSS"
         save: "Desa la configuració d'incrustacions"
       permalink:

@@ -3067,7 +3067,7 @@ lv:
         embed_title_scrubber: "(Regular expression used to scrub the title of posts)"
         embed_truncate: "Saīsināt iegultos ierakstus"
         embed_allowlist_selector: "(CSS selector for elements that are allowed in embeds)"
-        embed_blacklist_selector: "(CSS selector for elements that are removed from embeds)"
+        embed_blocklist_selector: "(CSS selector for elements that are removed from embeds)"
         embed_classname_allowlist: "Atļautie CSS nosaukumi (Allowed CSS class names)"
         save: "Saglabāt iegulšanas iestatījumus"
       permalink:

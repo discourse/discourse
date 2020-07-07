@@ -4440,7 +4440,7 @@ fr:
         embed_truncate: "Tronquer les messages intégrés"
         embed_unlisted: "Les sujets importés seront invisibles jusqu'à la prochaine réponse."
         embed_allowlist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus intégrés"
-        embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus intégrés"
+        embed_blocklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus intégrés"
         embed_classname_allowlist: "Classes CSS autorisées"
         save: "Sauvegarder les paramètres d'intégration"
       permalink:

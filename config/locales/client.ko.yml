@@ -4150,7 +4150,7 @@ ko:
         embed_truncate: "임베드된 글 뒷부분 잘라내기"
         embed_unlisted: "가져온 주제는 답변이있을 때까지 나열되지 않습니다."
         embed_allowlist_selector: "CSS selector for elements that are allowed in embeds"
-        embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
+        embed_blocklist_selector: "CSS selector for elements that are removed from embeds"
         embed_classname_allowlist: "허용된 CSS 클래스"
         save: "삽입(Embedding) 설정 저장하기"
       permalink:

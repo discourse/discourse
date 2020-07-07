@@ -61,9 +61,9 @@ class RobotsTxtController < ApplicationController
       end
 
       result[:agents] << { name: '*', disallow: deny_all }
-    elsif SiteSetting.blacklisted_crawler_user_agents.present?
+    elsif SiteSetting.blocklisted_crawler_user_agents.present?
       result[:agents] << { name: '*', disallow: deny_paths }
-      SiteSetting.blacklisted_crawler_user_agents.split('|').each do |agent|
+      SiteSetting.blocklisted_crawler_user_agents.split('|').each do |agent|
         result[:agents] << { name: agent, disallow: deny_all }
       end
     else

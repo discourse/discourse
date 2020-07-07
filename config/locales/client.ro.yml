@@ -3326,7 +3326,7 @@ ro:
         embed_title_scrubber: "Expresie obișnuită pentru a curăța titlurile postărilor"
         embed_truncate: "Scurtează postările embedded."
         embed_allowlist_selector: "Selector CSS pentru elemente care nu sunt permise în embeds."
-        embed_blacklist_selector: "Selector CSS pentru elemente care sunt șterse din emebds."
+        embed_blocklist_selector: "Selector CSS pentru elemente care sunt șterse din emebds."
         embed_classname_allowlist: "Nume de clase CSS permise"
         save: "Salvați setările pentru embeding"
       permalink:

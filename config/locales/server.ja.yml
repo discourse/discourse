@@ -828,7 +828,7 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
     email_token_valid_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを何時間有効にするか"
     enable_badges: "バッジ機能を有効にする"
-    email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
+    email_domains_blocklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
     email_domains_allowlist: "ユーザー登録に必要なパイプ区切りのメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"

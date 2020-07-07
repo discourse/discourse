@@ -4399,7 +4399,7 @@ pt_BR:
         embed_truncate: "Truncar as postagens incorporadas"
         embed_unlisted: "Os tópicos importados não serão listados até que haja uma resposta."
         embed_allowlist_selector: "Seletor de CSS para elementos que são permitidos na incorporação"
-        embed_blacklist_selector: "Seletor de CSS para elementos que são removidos da incorporação"
+        embed_blocklist_selector: "Seletor de CSS para elementos que são removidos da incorporação"
         embed_classname_allowlist: "Nomes de classes CSS permitidas"
         save: "Salvar Configurações de Incorporação"
       permalink:

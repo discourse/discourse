@@ -3934,7 +3934,7 @@ fa_IR:
         embed_title_scrubber: "regular expression‌ی که برای بهینه‌سازی عنوان نوشته استفاده می‌شود"
         embed_truncate: "کوتاه کردن نوشته های جاسازی شده"
         embed_allowlist_selector: "انتخاب کننده CSS برای المان هایی که اجازه دارند جاسازی شوند"
-        embed_blacklist_selector: "انتخاب کننده CSS برای المان هایی که از جاسازی پاک شده اند"
+        embed_blocklist_selector: "انتخاب کننده CSS برای المان هایی که از جاسازی پاک شده اند"
         embed_classname_allowlist: " دسترسی به کلاس های CSS"
         save: "ذخیره تنظیمات کدهای جاساز"
       permalink:

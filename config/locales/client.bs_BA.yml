@@ -4217,7 +4217,7 @@ bs_BA:
         embed_title_scrubber: "Regular expression korišten za čistku naslova objava"
         embed_truncate: "Skrati embedovane objave"
         embed_allowlist_selector: "CSS selector za elemente koji su dozvoljeni u embeds"
-        embed_blacklist_selector: "CSS selector za elemente koji su odstranjeni sa embeds"
+        embed_blocklist_selector: "CSS selector za elemente koji su odstranjeni sa embeds"
         embed_classname_allowlist: "Dopuštena CSS class imena"
         save: "Sačuvaj Embedding postavke"
       permalink:

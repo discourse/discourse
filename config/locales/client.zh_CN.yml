@@ -4307,7 +4307,7 @@ zh_CN:
         embed_truncate: "截断嵌入的帖子"
         embed_unlisted: "直到有一个回复前，导入的主题不会被列出。"
         embed_allowlist_selector: "允许嵌入的CSS选择器"
-        embed_blacklist_selector: "移除嵌入的CSS选择器"
+        embed_blocklist_selector: "移除嵌入的CSS选择器"
         embed_classname_allowlist: "允许CSS类名"
         save: "保存嵌入设置"
       permalink:

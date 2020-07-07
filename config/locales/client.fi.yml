@@ -4415,7 +4415,7 @@ fi:
         embed_title_scrubber: "Säännöllinen lauseke, jolla riisutaan viestien otsikkoja"
         embed_truncate: "Typistä upotetut viestit"
         embed_allowlist_selector: "CSS valitsin elementeille, jotka sallitaan upotetuissa viesteissä"
-        embed_blacklist_selector: "CSS valitstin elementeille, jotka poistetaan upotetuista viesteistä"
+        embed_blocklist_selector: "CSS valitstin elementeille, jotka poistetaan upotetuista viesteistä"
         embed_classname_allowlist: "Sallitut CSS luokat"
         save: "Tallenna upotusasetukset"
       permalink:

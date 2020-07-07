@@ -4088,7 +4088,7 @@ ur:
         embed_title_scrubber: "پوسٹس کے عنوان صاف کرنے کیلئے استعمال ہونے والا رَیگولَر اَیکسپرَیشن"
         embed_truncate: "اَیمبَیڈ کی گئی پوسٹس کو تراشیں"
         embed_allowlist_selector: "عناصر کیلئے CSS سلیکٹر جن کی اَیمبَیڈ میں اجازت ہے"
-        embed_blacklist_selector: "عناصر کیلئے CSS سلیکٹر جن کو اَیمبَیڈ سے ہٹایا گیا ہے"
+        embed_blocklist_selector: "عناصر کیلئے CSS سلیکٹر جن کو اَیمبَیڈ سے ہٹایا گیا ہے"
         embed_classname_allowlist: "اجازت یافتہ CSS کلاسوں کے نام"
         save: "اَیمبَیڈ کرنے کی سیٹِنگ محفوظ کریں"
       permalink:

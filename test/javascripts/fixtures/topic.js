@@ -3534,9 +3534,9 @@ export default {
         },
         {
           id: 26628,
-          title: "Embed blacklist selector is broken",
-          fancy_title: "Embed blacklist selector is broken",
-          slug: "embed-blacklist-selector-is-broken",
+          title: "Embed blocklist selector is broken",
+          fancy_title: "Embed blocklist selector is broken",
+          slug: "embed-blocklist-selector-is-broken",
           posts_count: 11,
           reply_count: 7,
           highest_post_number: 11,

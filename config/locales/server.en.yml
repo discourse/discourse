@@ -139,7 +139,7 @@ en:
         bounced_email_error: "Email is a bounced email report."
         screened_email_error: "Happens when the sender's email address was already screened."
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
-        email_not_allowed: "Happens when the email address is not on the allowlist or is on the blacklist."
+        email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
       unrecognized_error: "Unrecognized Error"
     secure_media_placeholder: "Redacted: this site has secure media enabled, visit the topic to see the attached image/audio/video."
 
@@ -1485,7 +1485,7 @@ en:
     show_pinned_excerpt_mobile: "Show excerpt on pinned topics in mobile view."
     show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
-    onebox_domains_blacklist: "A list of domains that will never be oneboxed."
+    onebox_domains_blocklist: "A list of domains that will never be oneboxed."
     inline_onebox_domains_allowlist: "A list of domains that will be oneboxed in miniature form if linked without a title"
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
@@ -1561,11 +1561,11 @@ en:
     moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
-    blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
+    blocklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowlist_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
     allowlisted_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
-    blacklisted_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
+    blocklisted_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive"
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     content_security_policy: "Enable Content-Security-Policy"
@@ -1601,7 +1601,7 @@ en:
     enable_whispers: "Allow staff private communication within topics."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
-    email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
+    email_domains_blocklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
     email_domains_allowlist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved."
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup and from the forgot password form."
@@ -1943,8 +1943,8 @@ en:
     bounce_score_threshold: "Max bounce score before we will stop emailing a user."
     reset_bounce_score_after_days: "Automatically reset bounce score after X days."
 
-    attachment_content_type_blacklist: "List of keywords used to blacklist attachments based on the content type."
-    attachment_filename_blacklist: "List of keywords used to blacklist attachments based on the filename."
+    attachment_content_type_blocklist: "List of keywords used to blocklist attachments based on the content type."
+    attachment_filename_blocklist: "List of keywords used to blocklist attachments based on the filename."
 
     forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
@@ -2642,7 +2642,7 @@ en:
 
       - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
 
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
+      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blocklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
       - We highly recommend you **send a test email to [mail-tester.com][mt]** to verify that all the above is working correctly.
 

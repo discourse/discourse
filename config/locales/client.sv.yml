@@ -4438,7 +4438,7 @@ sv:
         embed_truncate: "Trunkera de inbäddade inläggen"
         embed_unlisted: "Importerade ämnen kommer att vara olistade tills dess att det finns ett svar."
         embed_allowlist_selector: "CSS-väljare för element som tillåts bäddas in"
-        embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar"
+        embed_blocklist_selector: "CSS-väljare för element som tas bort från inbäddningar"
         embed_classname_allowlist: "Tillåtna CSS klassnamn"
         save: "Spara inbäddningsinställningar"
       permalink:

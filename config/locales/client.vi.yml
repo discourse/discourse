@@ -3048,7 +3048,7 @@ vi:
         embed_post_limit: "Số lượng tối đa bài viết được nhúng"
         embed_truncate: "Cắt ngắn các bài viết được nhúng"
         embed_allowlist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng"
-        embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
+        embed_blocklist_selector: "CSS selector for elements that are removed from embeds"
         save: "Lưu thiết lập nhúng"
       permalink:
         title: "Liên kết cố định"

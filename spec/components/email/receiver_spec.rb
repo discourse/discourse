@@ -28,13 +28,13 @@ describe Email::Receiver do
   it "raises EmailNotAllowed when email address is not on allowlist" do
     SiteSetting.email_domains_allowlist = "example.com|bar.com"
     Fabricate(:group, incoming_email: "some_group@bar.com")
-    expect { process(:blacklist_allowlist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
+    expect { process(:blocklist_allowlist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
   end
 
-  it "raises EmailNotAllowed when email address is on blacklist" do
-    SiteSetting.email_domains_blacklist = "email.com|mail.com"
+  it "raises EmailNotAllowed when email address is on blocklist" do
+    SiteSetting.email_domains_blocklist = "email.com|mail.com"
     Fabricate(:group, incoming_email: "some_group@bar.com")
-    expect { process(:blacklist_allowlist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
+    expect { process(:blocklist_allowlist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
   end
 
   it "raises an UserNotFoundError when staged users are disabled" do
@@ -1217,35 +1217,35 @@ describe Email::Receiver do
         Fabricate(:group, incoming_email: "some_group@bar.com")
       end
 
-      include_examples "does not create staged users", :blacklist_allowlist_email, Email::Receiver::EmailNotAllowed
+      include_examples "does not create staged users", :blocklist_allowlist_email, Email::Receiver::EmailNotAllowed
     end
 
-    context "when From email address is on blacklist" do
+    context "when From email address is on blocklist" do
       before do
-        SiteSetting.email_domains_blacklist = "email.com|mail.com"
+        SiteSetting.email_domains_blocklist = "email.com|mail.com"
         Fabricate(:group, incoming_email: "some_group@bar.com")
       end
 
-      include_examples "does not create staged users", :blacklist_allowlist_email, Email::Receiver::EmailNotAllowed
+      include_examples "does not create staged users", :blocklist_allowlist_email, Email::Receiver::EmailNotAllowed
     end
 
-    context "blacklist and allowlist for To and Cc" do
+    context "blocklist and allowlist for To and Cc" do
       before do
         Fabricate(:group, incoming_email: "some_group@bar.com")
       end
 
       it "does not create staged users for email addresses not on allowlist" do
         SiteSetting.email_domains_allowlist = "mail.com|example.com"
-        process(:blacklist_allowlist_email)
+        process(:blocklist_allowlist_email)
 
         expect(User.find_by_email("alice@foo.com")).to be_nil
         expect(User.find_by_email("bob@foo.com")).to be_nil
         expect(User.find_by_email("carol@example.com")).to be_present
       end
 
-      it "does not create staged users for email addresses on blacklist" do
-        SiteSetting.email_domains_blacklist = "email.com|foo.com"
-        process(:blacklist_allowlist_email)
+      it "does not create staged users for email addresses on blocklist" do
+        SiteSetting.email_domains_blocklist = "email.com|foo.com"
+        process(:blocklist_allowlist_email)
 
         expect(User.find_by_email("alice@foo.com")).to be_nil
         expect(User.find_by_email("bob@foo.com")).to be_nil

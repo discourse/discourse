@@ -3542,7 +3542,7 @@ ar:
         embed_post_limit: "أقصى عدد مشاركات مضمنة"
         embed_truncate: "بتر المشاركات المضمنة"
         embed_allowlist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
-        embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
+        embed_blocklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
         embed_classname_allowlist: "اسماء اصناف المظاهر الجمالية المسموح بها"
         save: "أحفظ الإعدادات المضمنة"
       permalink:

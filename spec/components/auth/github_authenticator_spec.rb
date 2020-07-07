@@ -178,11 +178,11 @@ describe Auth::GithubAuthenticator do
       expect(result.email_valid).to eq(hash[:info][:email].present?)
     end
 
-    it 'will skip blacklisted domains for non existing users' do
+    it 'will skip blocklisted domains for non existing users' do
       hash = {
         extra: {
           all_emails: [{
-            email: "not_allowed@blacklist.com",
+            email: "not_allowed@blocklist.com",
             primary: true,
             verified: true,
           }, {
@@ -192,14 +192,14 @@ describe Auth::GithubAuthenticator do
           }]
         },
         info: {
-          email: "not_allowed@blacklist.com",
+          email: "not_allowed@blocklist.com",
           nickname: "person",
           name: "Person Lastname",
         },
         uid: "100"
       }
 
-      SiteSetting.email_domains_blacklist = "blacklist.com"
+      SiteSetting.email_domains_blocklist = "blocklist.com"
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(nil)
@@ -217,7 +217,7 @@ describe Auth::GithubAuthenticator do
             primary: true,
             verified: true,
           }, {
-            email: "not_allowed@blacklist.com",
+            email: "not_allowed@blocklist.com",
             primary: false,
             verified: true,
           }, {

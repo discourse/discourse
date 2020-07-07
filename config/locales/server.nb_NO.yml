@@ -1022,7 +1022,7 @@ nb_NO:
     show_pinned_excerpt_mobile: "Vis utdrag fra festede emner i mobil visning."
     show_pinned_excerpt_desktop: "Vis utdrag fra festede emner i desktop visning."
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
-    onebox_domains_blacklist: "En liste over domener som aldri vil bli forsøkt oneboxet."
+    onebox_domains_blocklist: "En liste over domener som aldri vil bli forsøkt oneboxet."
     inline_onebox_domains_allowlist: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
     enable_inline_onebox_on_all_domains: "Ignorer inline_onebox_domain_allowlist innstillingen og tillat inline onebox på alle domener."
     max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
