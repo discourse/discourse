@@ -20,11 +20,25 @@ module Onebox
       private
 
       def video_html(og)
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
+
         <<-HTML
-            <video width='#{og.video_width}' height='#{og.video_height}' #{og.title_attr} poster="#{og.get_secure_image}" controls loop>
-              <source src='#{og.video_secure_url}' type='video/mp4'>
-            </video>
-          HTML
+          <aside class="onebox google-photos">
+            <header class="source">
+              <img src="#{raw[:favicon]}" class="site-icon" width="16" height="16">
+              <a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">#{raw[:site_name]}</a>
+            </header>
+            <article class="onebox-body">
+              <h3><a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">#{og.title}</a></h3>
+              <div class="aspect-image-full-size">
+                <a href="#{escaped_url}" target="_blank" rel="nofollow ugc noopener">
+                  <img src="#{og.get_secure_image}" class="scale-image"/>
+                  <span class="instagram-video-icon"></span>
+                </a>
+              </div>
+            </article>
+          </aside>
+        HTML
       end
 
       def album_html(og)
