@@ -28,7 +28,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def self.text_sizes
-    @text_sizes ||= Enum.new(normal: 0, larger: 1, largest: 2, smaller: 3)
+    @text_sizes ||= Enum.new(normal: 0, larger: 1, largest: 2, smaller: 3, smallest: 4)
   end
 
   def self.title_count_modes

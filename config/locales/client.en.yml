@@ -1216,6 +1216,7 @@ en:
 
       text_size:
         title: "Text Size"
+        smallest: "Smallest"
         smaller: "Smaller"
         normal: "Normal"
         larger: "Larger"
