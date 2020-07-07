@@ -320,6 +320,11 @@ test("staff_only option is not present for non-staff", function(assert) {
   );
 });
 
+test("poll result is always by default", function(assert) {
+  const controller = this.subject();
+  assert.equal(controller.pollResult, "always");
+});
+
 test("staff_only option is present for staff", function(assert) {
   const controller = this.subject();
   controller.currentUser = { staff: true };
