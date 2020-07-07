@@ -5,7 +5,7 @@ import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 
 const validTagHashtags = {};
 const checkedTagHashtags = [];
-const testedClass = "tag-hashtag-tested";
+const testedClass = "hashtag-tag-tested";
 
 function updateFound($hashtags, tagValues) {
   schedule("afterRender", () => {
@@ -15,7 +15,9 @@ function updateFound($hashtags, tagValues) {
       const $hashtag = $(hashtag);
 
       if (link) {
-        replaceSpan($hashtag, tagValue, link);
+        if (!$hashtag.data("type") || $hashtag.data("type") === "tag") {
+          replaceSpan($hashtag, tagValue, link, $hashtag.data("type"));
+        }
       } else if (checkedTagHashtags.indexOf(tagValue) !== -1) {
         $hashtag.addClass(testedClass);
       }
@@ -29,10 +31,12 @@ export function linkSeenTagHashtags($elem) {
 
   if ($hashtags.length) {
     const tagValues = $hashtags.map((_, hashtag) => {
-      return $(hashtag)
-        .text()
-        .substr(1)
-        .replace(TAG_HASHTAG_POSTFIX, "");
+      let text = $(hashtag).text();
+      if (text.endsWith(TAG_HASHTAG_POSTFIX)) {
+        text = text.slice(0, -TAG_HASHTAG_POSTFIX.length);
+        $(hashtag).data("type", "tag");
+      }
+      return text.substr(1);
     });
 
     if (tagValues.length) {

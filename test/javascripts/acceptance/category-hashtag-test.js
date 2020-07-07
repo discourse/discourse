@@ -13,6 +13,6 @@ QUnit.test("category hashtag is cooked properly", async assert => {
     find(".d-editor-preview:visible")
       .html()
       .trim(),
-    '<p>this is a category hashtag <a href="/c/bugs" class="hashtag">#<span>bug</span></a></p>'
+    '<p>this is a category hashtag <a href="/c/bugs" class="hashtag" data-type="category">#<span>bug</span></a></p>'
   );
 });

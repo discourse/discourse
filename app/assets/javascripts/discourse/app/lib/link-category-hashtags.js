@@ -4,8 +4,7 @@ import { replaceSpan } from "discourse/lib/category-hashtags";
 
 const validCategoryHashtags = {};
 const checkedCategoryHashtags = [];
-const testedKey = "tested";
-const testedClass = `hashtag-${testedKey}`;
+const testedClass = `hashtag-category-tested`;
 
 function updateFound($hashtags, categorySlugs) {
   schedule("afterRender", () => {
@@ -15,16 +14,20 @@ function updateFound($hashtags, categorySlugs) {
       const $hashtag = $(hashtag);
 
       if (link) {
-        replaceSpan($hashtag, categorySlug, link);
+        if ($hashtag.data("type") !== "tag") {
+          replaceSpan($hashtag, categorySlug, link, "category");
+        }
       } else if (checkedCategoryHashtags.indexOf(categorySlug) !== -1) {
-        $hashtag.addClass(testedClass);
+        if (hashtag.tagName !== "A") {
+          $hashtag.addClass(testedClass);
+        }
       }
     });
   });
 }
 
 export function linkSeenCategoryHashtags($elem) {
-  const $hashtags = $(`span.hashtag:not(.${testedClass})`, $elem);
+  const $hashtags = $(`span.hashtag:not(.${testedClass}), a.hashtag`, $elem);
   const unseen = [];
 
   if ($hashtags.length) {
