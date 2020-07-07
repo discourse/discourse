@@ -52,15 +52,11 @@ section.post-menu-area {
 
 nav.post-controls {
   padding: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 
   .actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-left: auto;
-
+    text-align: right;
+    float: right;
+    display: inline-block;
     .more-actions {
       display: none;
       overflow: hidden;

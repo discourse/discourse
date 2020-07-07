@@ -395,7 +395,7 @@ function replaceButton(buttons, find, replace) {
 }
 
 export default createWidget("post-menu", {
-  tagName: "section.post-menu-area",
+  tagName: "section.post-menu-area.clearfix",
 
   settings: {
     collapseButtons: true,
@@ -573,7 +573,7 @@ export default createWidget("post-menu", {
 
     const contents = [
       h(
-        "nav.post-controls" +
+        "nav.post-controls.clearfix" +
           (this.state.collapsed ? ".collapsed" : ".expanded"),
         postControls
       )

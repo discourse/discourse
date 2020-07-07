@@ -264,11 +264,6 @@
   .d-icon {
     color: $primary-low-mid;
   }
-
-  .d-button-label + .d-icon {
-    margin-left: 0.5em;
-  }
-
   @include hover {
     .d-icon {
       color: $primary;
