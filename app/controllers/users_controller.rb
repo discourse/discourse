@@ -349,15 +349,18 @@ class UsersController < ApplicationController
     @user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     raise Discourse::NotFound unless guardian.can_see_profile?(@user)
 
-    summary = UserSummary.new(@user, guardian)
-    serializer = UserSummarySerializer.new(summary, scope: guardian)
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
         render :show
       end
       format.json do
-        render_json_dump(serializer)
+        summary_json = Discourse.cache.fetch(summary_cache_key(@user), expires_in: 1.hour) do
+          summary = UserSummary.new(@user, guardian)
+          serializer = UserSummarySerializer.new(summary, scope: guardian)
+          MultiJson.dump(serializer)
+        end
+        render json: summary_json
       end
     end
   end
@@ -1650,5 +1653,9 @@ class UsersController < ApplicationController
 
   def secure_session_confirmed?
     secure_session["confirmed-password-#{current_user.id}"] == "true"
+  end
+
+  def summary_cache_key(user)
+    "user_summary:#{user.id}:#{current_user ? current_user.id : 0}"
   end
 end
