@@ -56,6 +56,7 @@ import { addExtraIconRenderer } from "discourse/helpers/category-link";
 import { queryRegistry } from "discourse/widgets/widget";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
+import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 
 // If you add any methods to the API ensure you bump up this number
@@ -1156,6 +1157,22 @@ class PluginApi {
    **/
   addToHeaderIcons(icon) {
     addToHeaderIcons(icon);
+  }
+
+  /**
+   * Adds an item to the quick access profile panel, before "Log Out".
+   *
+   * ```
+   * api.addQuickAccessProfileItem({
+   *   icon: "pencil-alt",
+   *   href: "/somewhere",
+   *   content: I18n.t("user.somewhere")
+   * })
+   * ```
+   *
+   **/
+  addQuickAccessProfileItem(item) {
+    addQuickAccessProfileItem(item);
   }
 }
 
