@@ -90,8 +90,29 @@ export default DropdownSelectBoxComponent.extend({
     let items = [];
 
     if (
+      this.action === REPLY &&
+      this.topic.isPrivateMessage &&
+      (this.topic.details.allowed_users.length > 1 ||
+        this.topic.details.allowed_groups.length > 0) &&
+      !this.isEditing &&
+      _topicSnapshot
+    ) {
+      items.push({
+        name: I18n.t(
+          "composer.composer_actions.reply_as_new_group_message.label"
+        ),
+        description: I18n.t(
+          "composer.composer_actions.reply_as_new_group_message.desc"
+        ),
+        icon: "plus",
+        id: "reply_as_new_group_message"
+      });
+    }
+
+    if (
       this.action !== CREATE_TOPIC &&
       this.action !== CREATE_SHARED_DRAFT &&
+      !(this.action === REPLY && this.topic.isPrivateMessage) &&
       !this.isEditing &&
       _topicSnapshot
     ) {
@@ -237,6 +258,21 @@ export default DropdownSelectBoxComponent.extend({
 
   toggleTopicBumpSelected(options, model) {
     model.toggleProperty("noBump");
+  },
+
+  replyAsNewGroupMessageSelected(options) {
+    const recipients = [];
+
+    const details = this.topic.details;
+    details.allowed_users.forEach(u => recipients.push(u.username));
+    details.allowed_groups.forEach(g => recipients.push(g.name));
+
+    options.action = PRIVATE_MESSAGE;
+    options.recipients = recipients.join(",");
+    options.archetypeId = "private_message";
+    options.skipDraftCheck = true;
+
+    this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
 
   replyToTopicSelected(options) {
