@@ -7,10 +7,11 @@ class FixTopicLikeCount < ActiveRecord::Migration[6.0]
       FROM (
         SELECT topic_id, SUM(like_count) like_count
         FROM posts
-        WHERE deleted_at IS NULL AND post_type != :whisper
+        WHERE deleted_at IS NULL AND post_type <> :whisper
         GROUP BY topic_id
       ) AS tbl
       WHERE topics.id = tbl.topic_id
+        AND topics.like_count <> tbl.like_count
     SQL
   end
 

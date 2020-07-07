@@ -1064,7 +1064,8 @@ class Topic < ActiveRecord::Base
       :like_count,
       Post
         .where.not(post_type: Post.types[:whisper])
-        .where(topic_id: id).sum(:like_count)
+        .where(topic_id: id)
+        .sum(:like_count)
     )
   end
 
