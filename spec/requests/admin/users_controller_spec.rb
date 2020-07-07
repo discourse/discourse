@@ -878,12 +878,14 @@ RSpec.describe Admin::UsersController do
   describe '#disable_second_factor' do
     let(:second_factor) { user.create_totp(enabled: true) }
     let(:second_factor_backup) { user.generate_backup_codes }
+    let(:security_key) { Fabricate(:user_security_key, user: user) }
 
     describe 'as an admin' do
       before do
         sign_in(admin)
         second_factor
         second_factor_backup
+        security_key
         expect(user.reload.user_second_factors.totps.first).to eq(second_factor)
       end
 
@@ -894,6 +896,7 @@ RSpec.describe Admin::UsersController do
 
         expect(response.status).to eq(200)
         expect(user.reload.user_second_factors).to be_empty
+        expect(user.reload.security_keys).to be_empty
 
         job_args = Jobs::CriticalUserEmail.jobs.first["args"].first
 
@@ -907,9 +910,27 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(403)
       end
 
+      describe 'when user has only one second factor type enabled' do
+        it 'should succeed with security keys' do
+          user.user_second_factors.destroy_all
+
+          put "/admin/users/#{user.id}/disable_second_factor.json"
+
+          expect(response.status).to eq(200)
+        end
+        it 'should succeed with totp' do
+          user.security_keys.destroy_all
+
+          put "/admin/users/#{user.id}/disable_second_factor.json"
+
+          expect(response.status).to eq(200)
+        end
+      end
+
       describe 'when user does not have second factor enabled' do
         it 'should raise the right error' do
           user.user_second_factors.destroy_all
+          user.security_keys.destroy_all
 
           put "/admin/users/#{user.id}/disable_second_factor.json"
 
