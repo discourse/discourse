@@ -9,9 +9,20 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 import { getColors } from "../lib/chart-colors";
 
+let optionToSlicePerChart = [];
+
 // TODO: Move inside the component?
-function pieChartConfig(data, displayMode) {
-  const transformedData = data.filter(votes => votes > 0);
+function pieChartConfig(data, displayMode, optionToSlice) {
+  const transformedData = [];
+  let counter = 0;
+
+  data.forEach((votes, index) => {
+    if (votes > 0) {
+      transformedData.push(votes);
+      optionToSlice[index] = counter++;
+    }
+  });
+
   const totalVotes = transformedData.reduce((sum, votes) => sum + votes, 0);
   const colors = getColors(data.length).filter(
     (color, index) => data[index] > 0
@@ -122,6 +133,7 @@ export default Controller.extend(ModalFunctionality, {
 
         this.set("charts", []);
         this.set("dataSets", []);
+        optionToSlicePerChart = [];
 
         for (
           let chartIdx = 0;
@@ -131,7 +143,12 @@ export default Controller.extend(ModalFunctionality, {
           const data = result.grouped_results[chartIdx].options.mapBy("votes");
           this.dataSets[chartIdx] = data;
 
-          const chartConfig = pieChartConfig(data, this.displayMode);
+          optionToSlicePerChart[chartIdx] = {};
+          const chartConfig = pieChartConfig(
+            data,
+            this.displayMode,
+            optionToSlicePerChart[chartIdx]
+          );
           const canvasId = `pie-${model.id}-${chartIdx}`;
           let el = document.querySelector(`#${canvasId}`);
 
@@ -145,6 +162,7 @@ export default Controller.extend(ModalFunctionality, {
               }
             });
           } else {
+            // TODO: make a component instead of creating ad hoc elements
             const container = document.createElement("div");
             container.classList.add("poll-grouped-pie-container");
 
@@ -170,7 +188,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   setGrouping(value) {
-    this.set("groupedBy", value); // TODO: rename to groupBy
+    this.set("groupedBy", value);
     this.refreshCharts();
   },
 
@@ -183,6 +201,27 @@ export default Controller.extend(ModalFunctionality, {
       chart.data.datasets = config.data.datasets;
       chart.options = config.options;
       chart.update();
+    });
+  },
+
+  @action
+  highlightSlices(active, optionIndex) {
+    this.charts.forEach((chart, chartIndex) => {
+      const meta = chart.getDatasetMeta(0);
+      const sliceIndex = optionToSlicePerChart[chartIndex][optionIndex];
+      if (typeof sliceIndex === "undefined") {
+        return;
+      }
+
+      const slice = meta.data[sliceIndex];
+
+      if (active) {
+        meta.controller.setHoverStyle(slice);
+      } else {
+        meta.controller.removeHoverStyle(slice);
+      }
+
+      chart.draw();
     });
   }
 });

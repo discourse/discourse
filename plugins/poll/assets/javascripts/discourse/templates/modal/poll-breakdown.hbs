@@ -15,6 +15,8 @@
           totalVotes=this.totalVotes
           optionsCount=this.model.poll.options.length
           displayMode=this.displayMode
+          onMouseOver=(fn this.highlightSlices true index)
+          onMouseOut=(fn this.highlightSlices false index)
         }}
       {{/each}}
     </ul>
