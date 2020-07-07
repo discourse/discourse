@@ -220,7 +220,7 @@ test("number pollOutput", function(assert) {
 
   assert.equal(
     controller.pollOutput,
-    "[poll type=number min=1 max=20 step=1]\n[/poll]\n",
+    "[poll type=number results=always min=1 max=20 step=1]\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -228,7 +228,7 @@ test("number pollOutput", function(assert) {
 
   assert.equal(
     controller.pollOutput,
-    "[poll type=number min=1 max=20 step=2]\n[/poll]\n",
+    "[poll type=number results=always min=1 max=20 step=2]\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -236,7 +236,7 @@ test("number pollOutput", function(assert) {
 
   assert.equal(
     controller.pollOutput,
-    "[poll type=number min=1 max=20 step=2 public=true]\n[/poll]\n",
+    "[poll type=number results=always min=1 max=20 step=2 public=true]\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -244,7 +244,7 @@ test("number pollOutput", function(assert) {
 
   assert.equal(
     controller.pollOutput,
-    "[poll type=number min=1 max=20 step=1 public=true]\n[/poll]\n",
+    "[poll type=number results=always min=1 max=20 step=1 public=true]\n[/poll]\n",
     "it should return the right output"
   );
 });
@@ -262,7 +262,7 @@ test("regular pollOutput", function(assert) {
 
   assert.equal(
     controller.pollOutput,
-    "[poll type=regular chartType=bar]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=regular results=always chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -270,7 +270,7 @@ test("regular pollOutput", function(assert) {
 
   assert.equal(
     controller.pollOutput,
-    "[poll type=regular public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=regular results=always public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -278,7 +278,7 @@ test("regular pollOutput", function(assert) {
 
   assert.equal(
     controller.get("pollOutput"),
-    "[poll type=regular public=true chartType=bar groups=test]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=regular results=always public=true chartType=bar groups=test]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 });
@@ -297,7 +297,7 @@ test("multiple pollOutput", function(assert) {
 
   assert.equal(
     controller.pollOutput,
-    "[poll type=multiple min=1 max=2 chartType=bar]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=multiple results=always min=1 max=2 chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 
@@ -305,7 +305,7 @@ test("multiple pollOutput", function(assert) {
 
   assert.equal(
     controller.pollOutput,
-    "[poll type=multiple min=1 max=2 public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
+    "[poll type=multiple results=always min=1 max=2 public=true chartType=bar]\n* 1\n* 2\n[/poll]\n",
     "it should return the right output"
   );
 });
@@ -318,6 +318,11 @@ test("staff_only option is not present for non-staff", function(assert) {
     controller.pollResults.filterBy("value", "staff_only").length === 0,
     "staff_only is not present"
   );
+});
+
+test("poll result is always by default", function(assert) {
+  const controller = this.subject();
+  assert.equal(controller.pollResult, "always");
 });
 
 test("staff_only option is present for staff", function(assert) {
