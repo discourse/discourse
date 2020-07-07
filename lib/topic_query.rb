@@ -684,6 +684,9 @@ class TopicQuery
         if sort_order
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? 'true' : 'false'
+        else
+          options[:order] = 'default'
+          options[:ascending] = 'false'
         end
       end
     end
