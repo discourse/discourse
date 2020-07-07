@@ -126,6 +126,7 @@ class UploadCreator
       if is_image
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
         @upload.width, @upload.height = @image_info.size
+        @upload.animated = FastImage.animated?(@file)
       end
 
       add_metadata!

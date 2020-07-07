@@ -461,11 +461,12 @@ end
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
 #  original_sha1          :string
-#  verified               :boolean
+#  animated               :boolean          default(FALSE)
 #  verification_status    :integer          default(1), not null
 #
 # Indexes
 #
+#  idx_uploads_on_verification_status       (verification_status)
 #  index_uploads_on_access_control_post_id  (access_control_post_id)
 #  index_uploads_on_etag                    (etag)
 #  index_uploads_on_extension               (lower((extension)::text))
