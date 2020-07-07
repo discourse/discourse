@@ -10,5 +10,9 @@ export default Route.extend({
   setupController(controller, emailTemplate) {
     controller.setProperties({ emailTemplate, saved: false });
     scrollTop();
+  },
+
+  deactivate() {
+    this.controller.set("emailTemplate", null);
   }
 });
