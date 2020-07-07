@@ -363,14 +363,7 @@ RSpec.describe ListController do
 
       context 'with access to see the category' do
         it "succeeds" do
-          get "/c/#{category.slug}/l/latest"
-          expect(response.status).to eq(200)
-        end
-      end
-
-      context 'with a link that includes an id' do
-        it "succeeds" do
-          get "/c/#{category.id}-category/l/latest"
+          get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
       end
@@ -403,7 +396,7 @@ RSpec.describe ListController do
         }
 
         it 'uses the correct category' do
-          get "/c/#{other_category.slug}/l/latest.json"
+          get "/c/#{other_category.slug}/#{other_category.id}/l/latest.json"
           expect(response.status).to eq(200)
           body = response.parsed_body
           expect(body["topic_list"]["topics"].first["category_id"])
@@ -416,7 +409,7 @@ RSpec.describe ListController do
 
         context 'when parent and child are requested' do
           it "succeeds" do
-            get "/c/#{category.slug}/#{sub_category.slug}/l/latest"
+            get "/c/#{category.slug}/#{sub_category.slug}/#{sub_category.id}/l/latest"
             expect(response.status).to eq(200)
           end
         end
@@ -431,14 +424,14 @@ RSpec.describe ListController do
 
       describe 'feed' do
         it 'renders RSS' do
-          get "/c/#{category.slug}.rss"
+          get "/c/#{category.slug}/#{category.id}.rss"
           expect(response.status).to eq(200)
           expect(response.media_type).to eq('application/rss+xml')
         end
 
         it "renders RSS in subfolder correctly" do
           set_subfolder "/forum"
-          get "/c/#{category.slug}.rss"
+          get "/c/#{category.slug}/#{category.id}.rss"
           expect(response.status).to eq(200)
           expect(response.body).to_not include("/forum/forum")
           expect(response.body).to include("http://test.localhost/forum/c/#{category.slug}")
@@ -448,7 +441,7 @@ RSpec.describe ListController do
       describe "category default views" do
         it "has a top default view" do
           category.update!(default_view: 'top', default_top_period: 'monthly')
-          get "/c/#{category.slug}.json"
+          get "/c/#{category.slug}/#{category.id}.json"
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to eq("monthly")
@@ -456,7 +449,7 @@ RSpec.describe ListController do
 
         it "has a default view of nil" do
           category.update!(default_view: nil)
-          get "/c/#{category.slug}.json"
+          get "/c/#{category.slug}/#{category.id}.json"
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
@@ -464,7 +457,7 @@ RSpec.describe ListController do
 
         it "has a default view of ''" do
           category.update!(default_view: '')
-          get "/c/#{category.slug}.json"
+          get "/c/#{category.slug}/#{category.id}.json"
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
@@ -472,7 +465,7 @@ RSpec.describe ListController do
 
         it "has a default view of latest" do
           category.update!(default_view: 'latest')
-          get "/c/#{category.slug}.json"
+          get "/c/#{category.slug}/#{category.id}.json"
           expect(response.status).to eq(200)
           json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
@@ -481,13 +474,13 @@ RSpec.describe ListController do
 
       describe "renders canonical tag" do
         it 'for category default view' do
-          get "/c/#{category.slug}"
+          get "/c/#{category.slug}/#{category.id}"
           expect(response.status).to eq(200)
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
 
         it 'for category latest view' do
-          get "/c/#{category.slug}/l/latest"
+          get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
@@ -497,14 +490,14 @@ RSpec.describe ListController do
         let!(:amazing_category) { Fabricate(:category_with_definition, name: "Amazing Category") }
 
         it 'for category default view' do
-          get "/c/#{amazing_category.slug}"
+          get "/c/#{amazing_category.slug}/#{amazing_category.id}"
 
           expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
         end
 
         it 'for category latest view' do
           SiteSetting.short_site_description = "Best community"
-          get "/c/#{amazing_category.slug}/l/latest"
+          get "/c/#{amazing_category.slug}/#{amazing_category.id}/l/latest"
 
           expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
         end
@@ -644,6 +637,32 @@ RSpec.describe ListController do
       user.user_option.update_columns(hide_profile_and_presence: true)
       get "/u/#{user.username}/activity/topics.rss"
       expect(response.status).to eq(404)
+    end
+  end
+
+  describe "set_category" do
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
+
+    before do
+      SiteSetting.max_category_nesting = 3
+    end
+
+    it "redirects to URL with the updated slug" do
+      get "/c/hello/world/bye/#{subsubcategory.id}"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
+    end
+
+    context "with subfolder" do
+      it "redirects to URL containing the updated slug" do
+        set_subfolder "/forum"
+        get "/c/hello/world/bye/#{subsubcategory.id}"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
+      end
     end
   end
 end

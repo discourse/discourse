@@ -338,6 +338,21 @@ class ListController < ApplicationController
 
     raise Discourse::NotFound.new("category not found", check_permalinks: true) if @category.nil?
 
+    if !guardian.can_see?(@category)
+      if SiteSetting.detailed_404
+        raise Discourse::InvalidAccess
+      else
+        raise Discourse::NotFound
+      end
+    end
+
+    current_slug = params.require(:category_slug_path_with_id)
+    real_slug = @category.full_slug("/")
+    if current_slug != real_slug
+      url = request.fullpath.gsub(current_slug, real_slug)
+      return redirect_to path(url), status: 301
+    end
+
     params[:category] = @category.id.to_s
 
     @description_meta = if @category.uncategorized?
@@ -346,14 +361,6 @@ class ListController < ApplicationController
       @category.description_text
     end
     @description_meta = SiteSetting.site_description if @description_meta.blank?
-
-    if !guardian.can_see?(@category)
-      if SiteSetting.detailed_404
-        raise Discourse::InvalidAccess
-      else
-        raise Discourse::NotFound
-      end
-    end
 
     if use_crawler_layout?
       @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }
