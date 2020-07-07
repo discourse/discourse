@@ -694,25 +694,3 @@ summary {
 template {
   display: none;
 }
-
-
-/* Discourse custom changes for backward compatiblity
-   ========================================================================== */
-
-button,
-input,
-optgroup,
-select,
-textarea {
-  color: inherit;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-td,
-th {
-  padding: 0;
-}
