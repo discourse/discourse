@@ -258,6 +258,15 @@ describe TopicView do
         expect(TopicView.new(1234, user, post_number: 5, limit: 2)
           .canonical_path).to eql("/1234?page=2")
       end
+
+      it "generates canonical path correctly for mega topics" do
+        2.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+        2.times { |i| Fabricate(:whisper, post_number: i + 3, topic: topic) }
+        Fabricate(:post, post_number: 5, topic: topic)
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2, is_mega_topic: true)
+          .canonical_path).to eql("/1234?page=3")
+      end
     end
 
     describe "#next_page" do
