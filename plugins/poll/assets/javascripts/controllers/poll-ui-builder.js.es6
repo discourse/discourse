@@ -350,7 +350,6 @@ export default Controller.extend({
       pollStep: 1,
       autoClose: false,
       chartType: BAR_CHART_TYPE,
-      pollResult: this.alwaysPollResult,
       pollGroups: null,
       date: moment()
         .add(1, "day")
