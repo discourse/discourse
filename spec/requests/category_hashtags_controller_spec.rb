@@ -66,6 +66,10 @@ describe CategoryHashtagsController do
           quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
           quxbarbaz = Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
 
+          first_bar = foobar.id < quxbar.id ? foobar : quxbar
+          first_baz = foobarbaz.id < quxbarbaz.id ? foobarbaz : quxbarbaz
+          first_barbaz = foobar.id < quxbar.id ? foobarbaz : quxbarbaz
+
           get "/category_hashtags/check.json", params: {
             category_slugs: [
               ":",
@@ -84,10 +88,10 @@ describe CategoryHashtagsController do
           expect(response.status).to eq(200)
           expect(response.parsed_body["valid"]).to contain_exactly(
             { "slug" => "foo",     "url" => foo.url },
-            { "slug" => "bar",     "url" => foobar.url },
+            { "slug" => "bar",     "url" => first_bar.url },
             { "slug" => "foo:bar", "url" => foobar.url },
-            { "slug" => "baz",     "url" => foobarbaz.url },
-            { "slug" => "bar:baz", "url" => foobarbaz.url },
+            { "slug" => "baz",     "url" => first_baz.url },
+            { "slug" => "bar:baz", "url" => first_barbaz.url },
             { "slug" => "qux",     "url" => qux.url },
             { "slug" => "qux:bar", "url" => quxbar.url }
           )
