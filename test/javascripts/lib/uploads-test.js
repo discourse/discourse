@@ -9,8 +9,9 @@ import {
 } from "discourse/lib/uploads";
 import * as Utilities from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("lib:uploads");
+discourseModule("lib:uploads");
 
 const validUpload = validateUploadedFiles;
 
@@ -27,8 +28,8 @@ QUnit.test("uploading one file", assert => {
   assert.ok(bootbox.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
 });
 
-QUnit.test("new user cannot upload images", assert => {
-  Discourse.SiteSettings.newuser_max_images = 0;
+QUnit.test("new user cannot upload images", function(assert) {
+  this.siteSettings.newuser_max_images = 0;
   sandbox.stub(bootbox, "alert");
 
   assert.not(
@@ -43,8 +44,8 @@ QUnit.test("new user cannot upload images", assert => {
   );
 });
 
-QUnit.test("new user cannot upload attachments", assert => {
-  Discourse.SiteSettings.newuser_max_attachments = 0;
+QUnit.test("new user cannot upload attachments", function(assert) {
+  this.siteSettings.newuser_max_attachments = 0;
   sandbox.stub(bootbox, "alert");
 
   assert.not(validUpload([{ name: "roman.txt" }], { user: User.create() }));
@@ -75,9 +76,9 @@ QUnit.test("skipping validation works", assert => {
   assert.ok(validUpload(files, { skipValidation: true }));
 });
 
-QUnit.test("staff can upload anything in PM", assert => {
+QUnit.test("staff can upload anything in PM", function(assert) {
   const files = [{ name: "some.docx" }];
-  Discourse.SiteSettings.authorized_extensions = "jpeg";
+  this.siteSettings.authorized_extensions = "jpeg";
   sandbox.stub(bootbox, "alert");
 
   let user = User.create({ moderator: true });
@@ -137,43 +138,43 @@ QUnit.test("isImage", assert => {
   assert.not(isImage(""));
 });
 
-QUnit.test("allowsImages", assert => {
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
+QUnit.test("allowsImages", function(assert) {
+  this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
   assert.ok(allowsImages(), "works");
 
-  Discourse.SiteSettings.authorized_extensions = ".jpg|.jpeg|.gif";
+  this.siteSettings.authorized_extensions = ".jpg|.jpeg|.gif";
   assert.ok(allowsImages(), "works with old extensions syntax");
 
-  Discourse.SiteSettings.authorized_extensions = "txt|pdf|*";
+  this.siteSettings.authorized_extensions = "txt|pdf|*";
   assert.ok(
     allowsImages(),
     "images are allowed when all extensions are allowed"
   );
 
-  Discourse.SiteSettings.authorized_extensions = "json|jpg|pdf|txt";
+  this.siteSettings.authorized_extensions = "json|jpg|pdf|txt";
   assert.ok(
     allowsImages(),
     "images are allowed when at least one extension is an image extension"
   );
 });
 
-QUnit.test("allowsAttachments", assert => {
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
+QUnit.test("allowsAttachments", function(assert) {
+  this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
   assert.not(allowsAttachments(), "no attachments allowed by default");
 
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|*";
+  this.siteSettings.authorized_extensions = "jpg|jpeg|gif|*";
   assert.ok(
     allowsAttachments(),
     "attachments are allowed when all extensions are allowed"
   );
 
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
+  this.siteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
   assert.ok(
     allowsAttachments(),
     "attachments are allowed when at least one extension is not an image extension"
   );
 
-  Discourse.SiteSettings.authorized_extensions = ".jpg|.jpeg|.gif|.pdf";
+  this.siteSettings.authorized_extensions = ".jpg|.jpeg|.gif|.pdf";
   assert.ok(allowsAttachments(), "works with old extensions syntax");
 });
 

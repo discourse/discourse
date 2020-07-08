@@ -101,6 +101,15 @@ export function applyPretender(name, server, helper) {
   if (cb) cb(server, helper);
 }
 
+export function discourseModule(name) {
+  QUnit.module(name, {
+    beforeEach() {
+      // Give us an API to change site settings without `Discourse.SiteSettings` in tests
+      this.siteSettings = Discourse.SiteSettings;
+    }
+  });
+}
+
 export function acceptance(name, options) {
   options = options || {};
 
