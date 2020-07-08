@@ -62,9 +62,34 @@ function retrieveCachedUrl(
     if (url !== MISSING) {
       callback(url);
     } else if (opts && opts.removeMissing) {
-      const stub = document.createElement("p");
-      stub.innerHTML = I18n.t("image_removed");
-      upload.parentNode.replaceChild(stub, upload);
+      const canvas = document.createElement("canvas");
+      canvas.width = upload.width;
+      canvas.height = upload.height;
+
+      const context = canvas.getContext("2d");
+
+      // Draw rectangle
+      context.lineWidth = 2;
+      context.strokeStyle = "#000000";
+      context.strokeRect(0, 0, canvas.width, canvas.height);
+
+      let fontSize = 25;
+      const text = I18n.t("image_removed");
+
+      // Fill text size to fit the canvas
+      let textSize;
+      do {
+        --fontSize;
+        context.font = fontSize + "px Helvetica, Arial, sans-serif";
+        textSize = context.measureText(text);
+      } while (textSize.width > canvas.width);
+      context.fillText(
+        text,
+        (canvas.width - textSize.width) / 2,
+        (canvas.height + fontSize) / 2
+      );
+
+      upload.parentNode.replaceChild(canvas, upload);
     }
   }
 }
