@@ -4,22 +4,26 @@ acceptance("Email Disabled Banner", {
   loggedIn: true
 });
 
-QUnit.test("shows banner when required", async assert => {
-  Discourse.set("SiteSettings.disable_emails", "no");
+QUnit.test("when disabled", async function(assert) {
+  this.siteSettings.disable_emails = "no";
   await visit("/");
   assert.notOk(
     exists(".alert-emails-disabled"),
     "alert is not displayed when email enabled"
   );
+});
 
-  Discourse.set("SiteSettings.disable_emails", "yes");
+QUnit.test("when enabled", async function(assert) {
+  this.siteSettings.disable_emails = "yes";
   await visit("/latest");
   assert.ok(
     exists(".alert-emails-disabled"),
     "alert is displayed when email disabled"
   );
+});
 
-  Discourse.set("SiteSettings.disable_emails", "non-staff");
+QUnit.test("when non-staff", async function(assert) {
+  this.siteSettings.disable_emails = "non-staff";
   await visit("/");
   assert.ok(
     exists(".alert-emails-disabled"),

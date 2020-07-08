@@ -22,7 +22,7 @@ const response = object => {
   return [200, { "Content-Type": "application/json" }, object];
 };
 
-QUnit.test("Anonymous Viewing Group", async assert => {
+QUnit.test("Anonymous Viewing Group", async function(assert) {
   await visit("/g/discourse");
 
   assert.equal(
@@ -63,7 +63,7 @@ QUnit.test("Anonymous Viewing Group", async assert => {
     I18n.t("groups.index.all").toLowerCase()
   );
 
-  Discourse.SiteSettings.enable_group_directory = false;
+  this.siteSettings.enable_group_directory = false;
 
   await visit("/g");
   await visit("/g/discourse");

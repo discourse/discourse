@@ -1,21 +1,22 @@
 import { emojiSearch } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { emojiUnescape } from "discourse/lib/text";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("lib:emoji");
+discourseModule("lib:emoji");
 
-QUnit.test("emojiUnescape", assert => {
+QUnit.test("emojiUnescape", function(assert) {
   const testUnescape = (input, expected, description, settings = {}) => {
     const originalSettings = {};
     for (const [key, value] of Object.entries(settings)) {
-      originalSettings[key] = Discourse.SiteSettings[key];
-      Discourse.SiteSettings[key] = value;
+      originalSettings[key] = this.siteSettings[key];
+      this.siteSettings[key] = value;
     }
 
     assert.equal(emojiUnescape(input), expected, description);
 
     for (const [key, value] of Object.entries(originalSettings)) {
-      Discourse.SiteSettings[key] = value;
+      this.siteSettings[key] = value;
     }
   };
 
