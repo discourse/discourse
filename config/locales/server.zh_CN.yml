@@ -4203,7 +4203,7 @@ zh_CN:
       post_count: "所有用户的头几个帖子必须由管理员批准。参阅`approve_post_count`。"
       trust_level: "低信任等级用户必须有回复被管理员批准。参阅`approve_unless_trust_level`。"
       new_topics_unless_trust_level: "低信任等级用户必须有主题被管理员批准。参阅`approve_new_topics_unless_trust_level`。"
-      fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾制造者所为。参阅`min_firse_post_typing_time`。"
+      fast_typer: "新用户输入第一个帖子的速度快得可疑，怀疑是机器人或垃圾制造者所为。参阅`min_first_post_typing_time`。"
       auto_silence_regexp: "新用户的首个帖子符合`auto_silence_first_post_regex`设置。"
       watched_word: "此帖子包含一个敏感词。参阅<a href='%{base_url}/admin/logs/watched_words'>敏感词列表</a>"
       staged: "暂存用户的新主题和帖子必须由管理员批准。参阅`approve_unless_staged`。"
