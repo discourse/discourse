@@ -91,12 +91,10 @@ const Discourse = Application.extend({
       // append the favicon_url as query params to the path so that the cache
       // is not used when the favicon changes.
       if (/^http/.test(url)) {
-        url = this.getURL("/favicon/proxied?" + encodeURIComponent(url));
+        url = getURL("/favicon/proxied?" + encodeURIComponent(url));
       }
 
-      var displayCount = this.displayCount;
-
-      new window.Favcount(url).set(displayCount);
+      new window.Favcount(url).set(this.displayCount);
     }
   },
 
