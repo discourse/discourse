@@ -572,6 +572,27 @@ describe Email::Receiver do
       MD
     end
 
+    it "supports attached images in signature" do
+      SiteSetting.incoming_email_prefer_html = true
+      SiteSetting.always_show_trimmed_content = true
+
+      expect { process(:body_with_image) }.to change { topic.posts.count }
+
+      post = topic.posts.last
+      upload = post.uploads.last
+
+      expect(post.raw).to eq(<<~MD.chomp)
+      This is a **GMAIL** reply ;)
+
+      <details class='elided'>
+      <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
+
+      ![logo.png|300x200](upload://qUm0DGR49PAZshIi7HxMd3cAlzn.png)
+
+      </details>
+      MD
+    end
+
     it "supports attachments" do
       SiteSetting.authorized_extensions = "txt|jpg"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }

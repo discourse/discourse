@@ -384,7 +384,8 @@ module Email
 
     def to_markdown(html, elided_html)
       markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
-      [EmailReplyTrimmer.trim(markdown), HtmlToMarkdown.new(elided_html).to_markdown]
+      elided_markdown = HtmlToMarkdown.new(elided_html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
+      [EmailReplyTrimmer.trim(markdown), elided_markdown]
     end
 
     HTML_EXTRACTERS ||= [
@@ -1032,6 +1033,7 @@ module Email
     end
 
     def create_post_with_attachments(options = {})
+      add_elided_to_raw!(options)
       options[:raw] = add_attachments(options[:raw], options[:user], options)
       create_post(options)
     end
@@ -1054,9 +1056,9 @@ module Email
               if raw[attachment.url]
                 raw.sub!(attachment.url, upload.url)
 
-                InlineUploads.match_img(raw) do |match, src, replacement, _|
+                InlineUploads.match_img(raw, uploads: { upload.url => upload }) do |match, src, replacement, _|
                   if src == upload.url
-                    raw = raw.sub(match, UploadMarkdown.new(upload).image_markdown)
+                    raw = raw.sub(match, replacement)
                   end
                 end
               elsif raw[/\[image:.*?\d+[^\]]*\]/i]
@@ -1100,6 +1102,17 @@ module Email
       Email::Sender.new(client_message, :email_reject_attachment).send
     end
 
+    def add_elided_to_raw!(options)
+      is_private_message = options[:archetype] == Archetype.private_message ||
+                           options[:topic].try(:private_message?)
+
+      # only add elided part in messages
+      if options[:elided].present? && (SiteSetting.always_show_trimmed_content || is_private_message)
+        options[:raw] << Email::Receiver.elided_html(options[:elided])
+        options[:elided] = ""
+      end
+    end
+
     def create_post(options = {})
       options[:via_email] = true
       options[:raw_email] = @raw_email
@@ -1107,13 +1120,7 @@ module Email
       options[:created_at] ||= @mail.date
       options[:created_at] = DateTime.now if options[:created_at] > DateTime.now
 
-      is_private_message = options[:archetype] == Archetype.private_message ||
-                           options[:topic].try(:private_message?)
-
-      # only add elided part in messages
-      if options[:elided].present? && (SiteSetting.always_show_trimmed_content || is_private_message)
-        options[:raw] << Email::Receiver.elided_html(options[:elided])
-      end
+      add_elided_to_raw!(options)
 
       if sent_to_mailinglist_mirror?
         options[:skip_validations] = true
