@@ -1103,6 +1103,16 @@ describe Search do
       expect(Search.execute('badge:"test"').posts.length).to eq(0)
     end
 
+    it 'can match exact phrases' do
+      post = Fabricate(:post, raw: %{this is a test post with 'a URL https://some.site.com/search?q=test.test.test some random text I have to add})
+      post2 = Fabricate(:post, raw: 'test URL post with')
+
+      expect(Search.execute("test post with 'a URL).posts").posts).to eq([post2, post])
+      expect(Search.execute(%{"test post with 'a URL"}).posts).to eq([post])
+      expect(Search.execute(%{"https://some.site.com/search?q=test.test.test"}).posts).to eq([post])
+      expect(Search.execute(%{" with 'a URL https://some.site.com/search?q=test.test.test"}).posts).to eq([post])
+    end
+
     it 'can search numbers correctly, and match exact phrases' do
       post = Fabricate(:post, raw: '3.0 eta is in 2 days horrah')
       post2 = Fabricate(:post, raw: '3.0 is eta in 2 days horrah')
@@ -1250,10 +1260,15 @@ describe Search do
       expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
     end
 
-    it 'can tokanize website names correctly' do
+    it 'can search URLS correctly' do
       post = Fabricate(:post, raw: 'i like http://wb.camra.org.uk/latest#test so yay')
       expect(Search.execute('http://wb.camra.org.uk/latest#test').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('camra').posts.map(&:id)).to eq([post.id])
+
+      complex_url = "https://test.some.site.com/path?some.range_input=74235a"
+      post2 = Fabricate(:post, raw: "this is a complex url #{complex_url} so complex")
+
+      expect(Search.execute(complex_url).posts.map(&:id)).to eq([post2.id])
     end
 
     it 'supports category slug and tags' do
