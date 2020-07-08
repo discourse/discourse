@@ -326,6 +326,26 @@ describe Jobs::UserEmail do
             suspended.email
           )
         end
+
+        it "doesn't send PM from system user" do
+          pm_from_system = SystemMessage.create(suspended, :unsilenced)
+
+          system_pm_notification = Fabricate(:notification,
+            user: suspended,
+            topic: pm_from_system.topic,
+            post_number: pm_from_system.post_number,
+            data: { original_post_id: pm_from_system.id }.to_json
+          )
+
+          Jobs::UserEmail.new.execute(
+            type: :user_private_message,
+            user_id: suspended.id,
+            post_id: pm_from_system.id,
+            notification_id: system_pm_notification.id
+          )
+
+          expect(ActionMailer::Base.deliveries).to eq([])
+        end
       end
 
       context 'user is anonymous' do
