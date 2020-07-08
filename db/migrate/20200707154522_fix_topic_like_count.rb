@@ -2,6 +2,8 @@
 
 class FixTopicLikeCount < ActiveRecord::Migration[6.0]
   def up
+    return if DB.query_single("SELECT * FROM site_settings WHERE name = 'enable_whispers' AND value = 't'").empty?
+
     DB.exec(<<~SQL, whisper: Post.types[:whisper])
       UPDATE topics SET like_count = tbl.like_count
       FROM (
