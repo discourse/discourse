@@ -75,6 +75,13 @@ RSpec.describe BookmarkManager do
       end
     end
 
+    context "when the bookmark name is too long" do
+      it "adds an error to the manager" do
+        subject.create(post_id: post.id, name: "test" * 100)
+        expect(subject.errors.full_messages).to include("Name is too long (maximum is 100 characters)")
+      end
+    end
+
     context "when the reminder time is not provided when it needs to be" do
       let(:reminder_at) { nil }
       it "adds an error to the manager" do
