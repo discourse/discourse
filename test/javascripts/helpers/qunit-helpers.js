@@ -101,11 +101,19 @@ export function applyPretender(name, server, helper) {
   if (cb) cb(server, helper);
 }
 
-export function discourseModule(name) {
+export function discourseModule(name, hooks) {
   QUnit.module(name, {
     beforeEach() {
       // Give us an API to change site settings without `Discourse.SiteSettings` in tests
       this.siteSettings = Discourse.SiteSettings;
+      if (hooks && hooks.beforeEach) {
+        hooks.beforeEach.call(this);
+      }
+    },
+    afterEach() {
+      if (hooks && hooks.afterEach) {
+        hooks.afterEach.call(this);
+      }
     }
   });
 }
