@@ -224,7 +224,7 @@ class PostAction < ActiveRecord::Base
     topic_id = Post.with_deleted.where(id: post_id).pluck_first(:topic_id)
 
     # topic_user
-    if [:like, :bookmark].include? post_action_type_key
+    if post_action_type_key == :like
       TopicUser.update_post_action_cache(user_id: user_id,
                                          topic_id: topic_id,
                                          post_action_type: post_action_type_key)
