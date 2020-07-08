@@ -128,7 +128,7 @@ gem 'mini_racer'
 # TODO: determine why highline is being held back and upgrade to latest
 gem 'highline', '~> 1.7.0', require: false
 
-gem 'rack', '2.2.2'
+gem 'rack'
 
 gem 'rack-protection' # security
 gem 'cbor', require: false
