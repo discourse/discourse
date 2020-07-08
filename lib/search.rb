@@ -1005,27 +1005,12 @@ class Search
     self.class.default_ts_config
   end
 
-  def self.ts_query(term: , ts_config:  nil, joiner: "&", weight_filter: nil)
-
-    data = DB.query_single(
-      "SELECT TO_TSVECTOR(:config, :term)",
-      config: 'simple',
-      term: term
-    ).first
-
+  def self.ts_query(term: , ts_config:  nil, joiner: nil, weight_filter: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    all_terms = data.scan(/'([^']+)'\:\d+/).flatten
-    all_terms.map! do |t|
-      t.split(/[\)\(&']/).find(&:present?)
-    end.compact!
-
-    query = ActiveRecord::Base.connection.quote(
-      all_terms
-        .map { |t| "'#{PG::Connection.escape_string(t)}':*#{weight_filter}" }
-        .join(" #{joiner} ")
-    )
-
-    "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
+    term = term.gsub("'", "''")
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '''#{PG::Connection.escape_string(term)}'':*#{weight_filter}')"
+    tsquery = "REPLACE(#{tsquery}::text, '&', '#{PG::Connection.escape_string(joiner)}')::tsquery" if joiner
+    tsquery
   end
 
   def ts_query(ts_config = nil, weight_filter: nil)
