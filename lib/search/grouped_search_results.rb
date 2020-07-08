@@ -30,12 +30,14 @@ class Search
 
     attr_accessor :search_log_id
 
+    BLURB_LENGTH = 200
+
     def initialize(type_filter, term, search_context, include_blurbs, blurb_length)
       @type_filter = type_filter
       @term = term
       @search_context = search_context
       @include_blurbs = include_blurbs
-      @blurb_length = blurb_length || 200
+      @blurb_length = blurb_length || BLURB_LENGTH
       @posts = []
       @categories = []
       @users = []
@@ -72,7 +74,7 @@ class Search
       end
     end
 
-    def self.blurb_for(cooked, term = nil, blurb_length = 200)
+    def self.blurb_for(cooked, term = nil, blurb_length = BLURB_LENGTH)
       blurb = nil
       cooked = SearchIndexer.scrub_html_for_search(cooked)
 
@@ -91,14 +93,11 @@ class Search
       end
 
       if term
-        terms = term.split(/\s+/)
-        phrase = terms.first
-
-        if phrase =~ Regexp.new(Search::PHRASE_MATCH_REGEXP_PATTERN)
-          phrase = Regexp.last_match[1]
+        if term =~ Regexp.new(Search::PHRASE_MATCH_REGEXP_PATTERN)
+          term = Regexp.last_match[1]
         end
 
-        blurb = TextHelper.excerpt(cooked, phrase,
+        blurb = TextHelper.excerpt(cooked, term,
           radius: blurb_length / 2
         )
       end

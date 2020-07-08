@@ -187,7 +187,7 @@ class Search
 
     @results = GroupedSearchResults.new(
       @opts[:type_filter],
-      clean_term,
+      term,
       @search_context,
       @include_blurbs,
       @blurb_length
