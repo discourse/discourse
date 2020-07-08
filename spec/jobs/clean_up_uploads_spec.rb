@@ -243,34 +243,6 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: upload3.id)).to eq(false)
   end
 
-  it "replaces deleted uploads with a placeholder in rejected reviewables" do
-    upload = fabricate_upload
-
-    reviewable = Fabricate(:reviewable_queued_post_topic,
-      payload: {
-        raw: <<~EOF
-        Hello!
-
-        ![deleted image|160x160](#{upload.short_url})
-
-        Bye!
-        EOF
-      },
-      status: Reviewable.statuses[:rejected]
-    )
-
-    Jobs::CleanUpUploads.new.execute(nil)
-
-    expect(Upload.exists?(id: upload.id)).to eq(false)
-    expect(reviewable.reload.payload["raw"]).to eq(<<~EOF)
-      Hello!
-
-      #{I18n.t("image_removed")}
-
-      Bye!
-      EOF
-  end
-
   it "does not delete uploads in a draft" do
     upload = fabricate_upload
     upload2 = fabricate_upload
