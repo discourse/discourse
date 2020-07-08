@@ -9,7 +9,7 @@ export default {
   initialize(container) {
     withPluginApi("0.1", api => {
       const siteSettings = container.lookup("site-settings:main");
-      api.decorateCooked(highlightSyntax, {
+      api.decorateCookedElement(highlightSyntax, {
         id: "discourse-syntax-highlighting"
       });
       api.decorateCookedElement(lightbox, { id: "discourse-lightbox" });

@@ -82,6 +82,7 @@ export default {
     }
 
     app.HighlightJSPath = setupData.highlightJsPath;
+    app.HighlightJSWorkerURL = setupData.highlightJsWorkerUrl;
     app.SvgSpritePath = setupData.svgSpritePath;
 
     if (app.Environment === "development") {

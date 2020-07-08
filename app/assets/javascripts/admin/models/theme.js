@@ -321,7 +321,7 @@ const Theme = RestModel.extend({
             }
           }
         );
-        highlightSyntax();
+        highlightSyntax(document.querySelector(".bootbox.modal"));
       } else {
         return this.save({ remote_update: true }).then(() =>
           this.set("changed", false)
