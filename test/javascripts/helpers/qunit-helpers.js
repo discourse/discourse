@@ -24,6 +24,7 @@ import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import User from "discourse/models/user";
+import { mapRoutes } from "discourse/mapping-router";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -99,6 +100,20 @@ let _pretenderCallbacks = {};
 export function applyPretender(name, server, helper) {
   const cb = _pretenderCallbacks[name];
   if (cb) cb(server, helper);
+}
+
+export function controllerModule(name, args = {}) {
+  moduleFor(name, name, {
+    setup() {
+      this.registry.register("router:main", mapRoutes());
+      let controller = this.subject();
+      controller.siteSettings = Discourse.SiteSettings;
+      if (args.setupController) {
+        args.setupController(controller);
+      }
+    },
+    needs: args.needs
+  });
 }
 
 export function discourseModule(name, hooks) {
