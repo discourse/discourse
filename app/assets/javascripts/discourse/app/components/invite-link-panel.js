@@ -14,6 +14,16 @@ export default Component.extend({
   inviteExpiresAt: moment()
     .add(1, "month")
     .format("YYYY-MM-DD"),
+  groupIds: null,
+  allGroups: null,
+
+  init() {
+    this._super(...arguments);
+
+    Group.findAll().then(groups => {
+      this.set("allGroups", groups.filterBy("automatic", false));
+    });
+  },
 
   willDestroyElement() {
     this._super(...arguments);
@@ -37,10 +47,12 @@ export default Component.extend({
   errorMessage: I18n.t("user.invited.invite_link.error"),
 
   reset() {
-    this.set("maxRedemptionAllowed", 5);
+    this.setProperties({
+      maxRedemptionAllowed: 5,
+      groupIds: null
+    });
 
     this.inviteModel.setProperties({
-      groupNames: null,
       error: false,
       saving: false,
       finished: false,
@@ -54,7 +66,9 @@ export default Component.extend({
       return;
     }
 
-    const groupNames = this.get("inviteModel.groupNames");
+    const groupNames = this.allGroups
+      .filter(g => this.groupIds.includes(g.id))
+      .map(g => g.name);
     const maxRedemptionAllowed = this.maxRedemptionAllowed;
     const inviteExpiresAt = this.inviteExpiresAt;
     const userInvitedController = this.userInvitedShow;
