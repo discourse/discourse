@@ -720,8 +720,6 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
 QUnit.test(
   "Deleting the text content of the first post in a private message",
   async assert => {
-    Discourse.SiteSettings.allow_uncategorized_topics = false;
-
     await visit("/t/34");
 
     await click("#post_1 .d-icon-ellipsis-h");
