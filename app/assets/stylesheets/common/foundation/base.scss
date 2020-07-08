@@ -109,6 +109,9 @@ pre code {
   overflow: auto;
   -moz-tab-size: 4;
   tab-size: 4;
+  &.lang-markdown {
+    white-space: pre-wrap;
+  }
 }
 
 // TODO figure out a clean place to put stuff like this
