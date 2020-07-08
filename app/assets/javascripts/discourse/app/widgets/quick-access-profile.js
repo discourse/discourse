@@ -45,31 +45,36 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
       {
         icon: "user",
         href: `${this.attrs.path}/summary`,
-        content: I18n.t("user.summary.title")
+        content: I18n.t("user.summary.title"),
+        className: "summary"
       },
       {
         icon: "stream",
         href: `${this.attrs.path}/activity`,
-        content: I18n.t("user.activity_stream")
+        content: I18n.t("user.activity_stream"),
+        className: "activity"
       }
     ];
     if (this.siteSettings.enable_personal_messages) {
       defaultItems.push({
         icon: "envelope",
         href: `${this.attrs.path}/messages`,
-        content: I18n.t("user.private_messages")
+        content: I18n.t("user.private_messages"),
+        className: "messages"
       });
     }
     defaultItems.push(
       {
         icon: "pencil-alt",
         href: `${this.attrs.path}/activity/drafts`,
-        content: I18n.t("user_action_groups.15")
+        content: I18n.t("user_action_groups.15"),
+        className: "drafts"
       },
       {
         icon: "cog",
         href: `${this.attrs.path}/preferences`,
-        content: I18n.t("user.preferences")
+        content: I18n.t("user.preferences"),
+        className: "preferences"
       }
     );
     return defaultItems;
