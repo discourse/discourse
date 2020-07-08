@@ -587,6 +587,28 @@ describe Invite do
     end
   end
 
+  describe '.resend_all_invites_from' do
+    it 'resends all non-redeemed invites by a user' do
+      SiteSetting.invite_expiry_days = 30
+      user = Fabricate(:user)
+      new_invite = Fabricate(:invite, invited_by: user)
+      expired_invite = Fabricate(:invite, invited_by: user)
+      expired_invite.update!(expires_at: 2.days.ago)
+      redeemed_invite = Fabricate(:invite, invited_by: user)
+      Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
+      redeemed_invite.update!(expires_at: 5.days.ago)
+
+      Invite.resend_all_invites_from(user.id)
+      new_invite.reload
+      expired_invite.reload
+      redeemed_invite.reload
+
+      expect(new_invite.expires_at.to_date).to eq(30.days.from_now.to_date)
+      expect(expired_invite.expires_at.to_date).to eq(30.days.from_now.to_date)
+      expect(redeemed_invite.expires_at.to_date).to eq(5.days.ago.to_date)
+    end
+  end
+
   describe '.rescind_all_expired_invites_from' do
     it 'removes all expired invites sent by a user' do
       SiteSetting.invite_expiry_days = 1
