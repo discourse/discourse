@@ -600,7 +600,7 @@ groups:
     default: true
   group_in_subject:
     default: false
-  enable_category_group_review:
+  enable_category_group_moderation:
     client: true
     default: false
 

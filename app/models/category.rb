@@ -768,7 +768,7 @@ class Category < ActiveRecord::Base
   end
 
   def update_reviewables
-    if SiteSetting.enable_category_group_review? && saved_change_to_reviewable_by_group_id?
+    if SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
       Reviewable.where(category_id: id).update_all(reviewable_by_group_id: reviewable_by_group_id)
     end
   end

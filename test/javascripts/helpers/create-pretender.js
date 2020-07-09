@@ -255,6 +255,14 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));
   pretender.put("/t/1234/re-pin", success);
 
+  pretender.get("/t/2480.json", () => {
+    const json = fixturesByUrl["/t/34/1.json"];
+    json.details.can_archive_topic = true;
+    json.details.can_close_topic = true;
+
+    return response(json);
+  });
+
   pretender.get("/t/id_for/:slug", () => {
     return response({
       id: 280,

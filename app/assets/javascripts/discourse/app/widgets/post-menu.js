@@ -332,7 +332,8 @@ registerButton(
 );
 
 registerButton("admin", attrs => {
-  if (!attrs.canManage && !attrs.canWiki) {
+  if (!attrs.canManage && !attrs.canWiki && !attrs.canReviewTopic &&
+      !attrs.canCloseTopic && !attrs.canArchiveTopic) {
     return;
   }
   return {

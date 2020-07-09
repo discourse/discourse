@@ -1677,7 +1677,7 @@ ko:
     staff_user_custom_fields: "API를 사용하여 직원을 위해 검색 할 수있는 사용자 정의 필드 목록입니다."
     enable_user_directory: "브라우징을 위한 유저의 디렉토리 제공"
     enable_group_directory: "브라우징을 위한 그룹의 디렉토리 제공"
-    enable_category_group_review: "그룹이 특정 카테고리의 컨텐츠를 검토하도록 허용"
+    enable_category_group_moderation: "그룹이 특정 카테고리의 컨텐츠를 검토하도록 허용"
     allow_anonymous_posting: "익명 모드 허용"
     anonymous_posting_min_trust_level: "익명 게시 할 수 있는 최소 회원등급"
     anonymous_account_duration_minutes: "한 익명이 익명계정을 만들 때 빨리 만드는 걸 막을 분 단위 시간 예: 600으로 정해놓으면 마지막 게시하고 익명 전환 후로 600분이 지나는 즉시 새 계정이 만들어 집니다."

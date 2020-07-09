@@ -1758,7 +1758,7 @@ fi:
     max_daily_gravatar_crawls: "Korkeintaan kuinka monta kertaa Discourse tarkistaa avatarit Gravatarista päivässä"
     enable_user_directory: "Näytä hakemisto käyttäjistä"
     enable_group_directory: "Tarjoa luettelo ryhmistä selailtavaksi"
-    enable_category_group_review: "Salli ryhmien käsitellä sisältöä määrätyillä alueilla"
+    enable_category_group_moderation: "Salli ryhmien käsitellä sisältöä määrätyillä alueilla"
     allow_anonymous_posting: "Salli käyttäjien vaihtaa anonyymiin tilaan"
     anonymous_posting_min_trust_level: "Anonyymin tilan käyttämiseen vaadittava luottamustila"
     anonymous_account_duration_minutes: "Suojellaksesi anonymiteettiä, luo käyttäjälle uusi anonyymi tili N minuutin välein. Esimerkki: jos arvoksi asetetaan 600, kun 600 minuuttia tulee kuluneeksi edellisestä viestistä JA käyttäjä vaihtaa anonyymiin tilaan, luodaan uusi anonyymi tili."

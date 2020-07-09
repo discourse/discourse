@@ -1877,7 +1877,7 @@ he:
     staff_user_custom_fields: "רשימה של שדות מותאמים לבחירת המשתמש שחברי הסגל יכולים לאחזר באמצעות ה־API."
     enable_user_directory: "ספקו ספריייה של משתמשים לגלישה"
     enable_group_directory: "ספקו ספריה של קבוצות לסיור"
-    enable_category_group_review: "לאפשר קבוצות כדי לסקור תוכן בקטגוריות מסוימות"
+    enable_category_group_moderation: "לאפשר קבוצות כדי לסקור תוכן בקטגוריות מסוימות"
     group_in_subject: "ניתן להגדיר %%{optional_pm} בנושא הודעת הדוא״ל לשם הקבוצה הראשונה בהודעה הפרטית (PM), למידע נוסף: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>התאמת תבנית הנושא להודעות דוא״ל תקניות</a>"
     allow_anonymous_posting: "אפשרו למשתמשים לעבור למצב אנונימי"
     anonymous_posting_min_trust_level: "רמת האמון המינמלית הנדרשת כדי לאפשר פרסום אנונימי"

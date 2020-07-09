@@ -147,7 +147,7 @@ module UserGuardian
 
   def can_see_review_queue?
     is_staff? || (
-      SiteSetting.enable_category_group_review &&
+      SiteSetting.enable_category_group_moderation &&
       Reviewable
         .where(reviewable_by_group_id: @user.group_users.pluck(:group_id))
         .where('category_id IS NULL or category_id IN (?)', allowed_category_ids)

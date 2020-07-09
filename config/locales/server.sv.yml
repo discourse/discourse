@@ -1783,7 +1783,7 @@ sv:
     staff_user_custom_fields: "En lista med användaranpassade fält som kan hämtas för personal genom API."
     enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
     enable_group_directory: "Tillhandahåll en bläddringsbar gruppkatalog"
-    enable_category_group_review: " Tillåt grupper att granska innehåll i specifika kategorier"
+    enable_category_group_moderation: " Tillåt grupper att granska innehåll i specifika kategorier"
     group_in_subject: "Sätt ämnet %%{optional_pm} i e-post till namnet på den första gruppen i PM, se: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Anpassa ämnesformat för standardmeddelanden</a>"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
     anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"

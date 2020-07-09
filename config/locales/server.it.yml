@@ -1771,7 +1771,7 @@ it:
     staff_user_custom_fields: "Un elenco di campi utente personalizzati dei membri dello staff che possono essere recuperati tramite API."
     enable_user_directory: "Fornire una directory degli utenti per la navigazione"
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
-    enable_category_group_review: "Consentire ai gruppi di revisionare i contenuti in categorie specifiche"
+    enable_category_group_moderation: "Consentire ai gruppi di revisionare i contenuti in categorie specifiche"
     group_in_subject: "Imposta %%{optional_pm} nell'oggetto dell'email con il nome del primo gruppo in Messaggio Privato, vedi: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalizza il formato oggetto per le e-mail standard</a>"
     allow_anonymous_posting: "Permetti agli utenti di passare alla modalità anonima"
     anonymous_posting_min_trust_level: "Livello di esperienza minimo richiesto per abilitare la pubblicazione in modalità anonima"

@@ -1754,7 +1754,7 @@ zh_CN:
     staff_user_custom_fields: "能被管理员使用API获取的用户自定义字段列表。"
     enable_user_directory: "提供可供浏览的用户目录"
     enable_group_directory: "提供可供浏览的群组目录"
-    enable_category_group_review: "允许群组审核指定分类的内容"
+    enable_category_group_moderation: "允许群组审核指定分类的内容"
     group_in_subject: "在邮件标题中设置%%{optional_pm}，取决于PM中第一个组的名称，请参阅：<a href ='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target ='_blank'>自定义标准邮件的标题格式</a>"
     allow_anonymous_posting: "允许用户切换至匿名模式"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任等级"

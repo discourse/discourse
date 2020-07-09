@@ -1726,12 +1726,56 @@ describe Guardian do
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(false)
     end
 
-    it 'returns false for a regular user' do
-      SiteSetting.enable_category_group_review = true
+    it 'returns true for a group member with reviewable status' do
+      SiteSetting.enable_category_group_moderation = true
       group = Fabricate(:group)
       GroupUser.create!(group_id: group.id, user_id: user.id)
       topic.category.update!(reviewable_by_group_id: group.id)
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
+    end
+  end
+
+  context "can_close_topic?" do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_close_topic?(nil)).to eq(false)
+    end
+
+    it 'returns true for a staff user' do
+      expect(Guardian.new(moderator).can_close_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      expect(Guardian.new(user).can_close_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true for a group member with reviewable status' do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      topic.category.update!(reviewable_by_group_id: group.id)
+      expect(Guardian.new(user).can_close_topic?(topic)).to eq(true)
+    end
+  end
+
+  context "can_archive_topic?" do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_archive_topic?(nil)).to eq(false)
+    end
+
+    it 'returns true for a staff user' do
+      expect(Guardian.new(moderator).can_archive_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      expect(Guardian.new(user).can_archive_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true for a group member with reviewable status' do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      topic.category.update!(reviewable_by_group_id: group.id)
+      expect(Guardian.new(user).can_archive_topic?(topic)).to eq(true)
     end
   end
 

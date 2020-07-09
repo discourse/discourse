@@ -1741,7 +1741,7 @@ tr_TR:
     staff_user_custom_fields: "API kullanan yetkililer için alınabilecek özel kullanıcı alanlarının listesi."
     enable_user_directory: "Göz atılabilmesi için kullanıcıların olduğu bir dizin sağla"
     enable_group_directory: "Tarama için bir grup dizini sağlayın"
-    enable_category_group_review: "Grupların belirli kategorilerdeki içeriği incelemesine izin ver"
+    enable_category_group_moderation: "Grupların belirli kategorilerdeki içeriği incelemesine izin ver"
     group_in_subject: "PM'deki ilk grubun adına tabi e-postada %%{optional_pm} olarak ayarlayın, bkz: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Standart e-postalar için konu biçimini özelleştirme</a>"
     allow_anonymous_posting: "Kullanıcıların anonim moda geçebilmelerine izin ver"
     anonymous_posting_min_trust_level: "Anonim gönderi oluşturabilmeyi etkinleştirebilmek için gereken en az güven seviyesi"

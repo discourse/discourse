@@ -1723,7 +1723,7 @@ ca:
     staff_user_custom_fields: "Una llista de camps personalitzats d'usuari que poden ser recuperats pels membres de l'equip responsable amb l'API."
     enable_user_directory: "Proporciona un directori d'usuaris per a navegar-hi"
     enable_group_directory: "Proporciona un directori de grups per a navegar-hi"
-    enable_category_group_review: "Permet que els grups revisin el contingut en categories específiques"
+    enable_category_group_moderation: "Permet que els grups revisin el contingut en categories específiques"
     group_in_subject: "Estableix %%{optional_pm} en l'assumpte del correu al nom del primer grup en MP. Vegeu: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalitza el format de l'assumpte en correus estàndard</a>."
     allow_anonymous_posting: "Permet que els usuaris canviïn a mode anònim."
     anonymous_posting_min_trust_level: "Nivell de confiança mínim per a activar la publicació anònima"

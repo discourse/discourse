@@ -1583,7 +1583,7 @@ zh_TW:
     staff_user_custom_fields: "可以使用API為工作人員搜尋的使用者自定義字串列表。"
     enable_user_directory: "提供可供瀏覽的使用者目錄"
     enable_group_directory: "提供可供瀏覽的群組目錄"
-    enable_category_group_review: "允許群組查看特定類別中的內容"
+    enable_category_group_moderation: "允許群組查看特定類別中的內容"
     group_in_subject: "在電子郵件中設定%%{optional_pm} ，取決於私訊中第一個群組的名稱，請參閱：<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>客製化標準電子郵件的格式</a>"
     allow_anonymous_posting: "允許使用者切換至匿名模式"
     anonymous_posting_min_trust_level: "啟用匿名發帖所需的最小信任等級"
