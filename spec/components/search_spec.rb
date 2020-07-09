@@ -1255,20 +1255,26 @@ describe Search do
       ])
     end
 
-    it 'can tokenize dots' do
+    it 'can search for terms with dots' do
       post = Fabricate(:post, raw: 'Will.2000 Will.Bob.Bill...')
       expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('bob').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('2000').posts.map(&:id)).to eq([post.id])
     end
 
     it 'can search URLS correctly' do
       post = Fabricate(:post, raw: 'i like http://wb.camra.org.uk/latest#test so yay')
+
       expect(Search.execute('http://wb.camra.org.uk/latest#test').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('camra').posts.map(&:id)).to eq([post.id])
-
-      complex_url = "https://test.some.site.com/path?some.range_input=74235a"
-      post2 = Fabricate(:post, raw: "this is a complex url #{complex_url} so complex")
-
-      expect(Search.execute(complex_url).posts.map(&:id)).to eq([post2.id])
+      expect(Search.execute('http://wb').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('wb.camra').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('wb.camra.org').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('org.uk').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('camra.org.uk').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('wb.camra.org.uk').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('wb.camra.org.uk/latest').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('/latest#test').posts.map(&:id)).to eq([post.id])
     end
 
     it 'supports category slug and tags' do
