@@ -30,8 +30,8 @@ QUnit.test("when skip is disabled (default)", async assert => {
   assert.ok(exists("#new-account-username"), "it shows the fields");
 });
 
-QUnit.test("when skip is enabled", async assert => {
-  Discourse.SiteSettings.external_auth_skip_create_confirm = true;
+QUnit.test("when skip is enabled", async function(assert) {
+  this.siteSettings.external_auth_skip_create_confirm = true;
   await visit("/");
 
   assert.ok(

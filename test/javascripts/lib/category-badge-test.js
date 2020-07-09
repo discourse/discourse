@@ -1,6 +1,7 @@
 import createStore from "helpers/create-store";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("lib:category-link");
+discourseModule("lib:category-link");
 
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
@@ -82,8 +83,8 @@ QUnit.test("allowUncategorized", assert => {
   );
 });
 
-QUnit.test("category names are wrapped in dir-spans", assert => {
-  Discourse.SiteSettings.support_mixed_text_direction = true;
+QUnit.test("category names are wrapped in dir-spans", function(assert) {
+  this.siteSettings.support_mixed_text_direction = true;
   const store = createStore();
   const rtlCategory = store.createRecord("category", {
     name: "תכנות עם Ruby",
@@ -107,7 +108,7 @@ QUnit.test("category names are wrapped in dir-spans", assert => {
   assert.equal(dirSpan.dir, "ltr");
 });
 
-QUnit.test("recursive", assert => {
+QUnit.test("recursive", function(assert) {
   const store = createStore();
 
   const foo = store.createRecord("category", {
@@ -127,20 +128,20 @@ QUnit.test("recursive", assert => {
     parent_category_id: bar.id
   });
 
-  Discourse.set("SiteSettings.max_category_nesting", 0);
+  this.siteSettings.max_category_nesting = 0;
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") === -1);
 
-  Discourse.set("SiteSettings.max_category_nesting", 1);
+  this.siteSettings.max_category_nesting = 1;
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") === -1);
 
-  Discourse.set("SiteSettings.max_category_nesting", 2);
+  this.siteSettings.max_category_nesting = 2;
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") !== -1);
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("foo") === -1);
 
-  Discourse.set("SiteSettings.max_category_nesting", 3);
+  this.siteSettings.max_category_nesting = 3;
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("baz") !== -1);
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("bar") !== -1);
   assert.ok(categoryBadgeHTML(baz, { recursive: true }).indexOf("foo") !== -1);

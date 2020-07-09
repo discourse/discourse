@@ -1,9 +1,8 @@
-import { mapRoutes } from "discourse/mapping-router";
+import { controllerModule } from "helpers/qunit-helpers";
 
-moduleFor("controller:poll-ui-builder", "controller:poll-ui-builder", {
-  setup() {
-    this.registry.register("router:main", mapRoutes());
-    this.subject().set("toolbarEvent", {
+controllerModule("controller:poll-ui-builder", {
+  setupController(controller) {
+    controller.set("toolbarEvent", {
       getText: () => ""
     });
   },
@@ -31,7 +30,6 @@ test("isMultiple", function(assert) {
 
 test("isNumber", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
 
   controller.set("pollType", controller.regularPollType);
 
@@ -44,7 +42,6 @@ test("isNumber", function(assert) {
 
 test("showMinMax", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
 
   controller.set("pollType", controller.numberPollType);
   assert.equal(controller.showMinMax, true, "it should be true");
@@ -58,7 +55,6 @@ test("showMinMax", function(assert) {
 
 test("pollOptionsCount", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
 
   controller.set("pollOptions", "1\n2\n");
 
@@ -71,7 +67,6 @@ test("pollOptionsCount", function(assert) {
 
 test("pollMinOptions", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
 
   controller.setProperties({
     pollType: controller.multiplePollType,
@@ -110,7 +105,6 @@ test("pollMinOptions", function(assert) {
 
 test("pollMaxOptions", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
 
   controller.setProperties({
     pollType: controller.multiplePollType,
@@ -154,7 +148,6 @@ test("pollMaxOptions", function(assert) {
 
 test("pollStepOptions", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
   controller.siteSettings.poll_maximum_options = 3;
 
   assert.equal(controller.pollStepOptions, null, "is should return null");
@@ -174,7 +167,6 @@ test("pollStepOptions", function(assert) {
 
 test("disableInsert", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
 
   assert.equal(controller.disableInsert, true, "it should be true");
 
@@ -210,7 +202,6 @@ test("disableInsert", function(assert) {
 
 test("number pollOutput", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
   controller.siteSettings.poll_maximum_options = 20;
 
   controller.setProperties({
@@ -251,7 +242,6 @@ test("number pollOutput", function(assert) {
 
 test("regular pollOutput", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
   controller.siteSettings.poll_maximum_options = 20;
 
   controller.set("pollOptions", "1\n2");
@@ -285,7 +275,6 @@ test("regular pollOutput", function(assert) {
 
 test("multiple pollOutput", function(assert) {
   const controller = this.subject();
-  controller.siteSettings = Discourse.SiteSettings;
   controller.siteSettings.poll_maximum_options = 20;
 
   controller.setProperties({

@@ -27,8 +27,8 @@ QUnit.test("when login not required", async assert => {
   );
 });
 
-QUnit.test("when login required", async assert => {
-  Discourse.SiteSettings.login_required = true;
+QUnit.test("when login required", async function(assert) {
+  this.siteSettings.login_required = true;
   await visit("/");
 
   assert.equal(currentPath(), "login", "it redirects to the login page");

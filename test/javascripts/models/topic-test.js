@@ -3,8 +3,9 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("model:topic");
+discourseModule("model:topic");
 
 QUnit.test("defaults", assert => {
   const topic = Topic.create({ id: 1234 });
@@ -133,11 +134,11 @@ QUnit.test("fancyTitle", assert => {
   );
 });
 
-QUnit.test("fancyTitle direction", assert => {
+QUnit.test("fancyTitle direction", function(assert) {
   const rtlTopic = Topic.create({ fancy_title: "هذا اختبار" });
   const ltrTopic = Topic.create({ fancy_title: "This is a test" });
 
-  Discourse.SiteSettings.support_mixed_text_direction = true;
+  this.siteSettings.support_mixed_text_direction = true;
   assert.equal(
     rtlTopic.get("fancyTitle"),
     `<span dir="rtl">هذا اختبار</span>`,
