@@ -44,14 +44,6 @@ module Stylesheet
         import_files(DiscoursePluginRegistry.sass_variables)
       end
 
-      register_import "base_font" do
-        if SiteSetting.base_font.present? && SiteSetting.base_font != "Helvetica"
-          Import.new("base_font.scss", source: base_font_css(SiteSetting.base_font))
-        else
-          Import.new("base_font.scss", source: "$base-font-family: Helvetica, Arial, nope, sans-serif !default;")
-        end
-      end
-
       register_import "theme_colors" do
         contents = +""
         colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
@@ -201,24 +193,6 @@ module Stylesheet
 
     def category_css(category)
       "body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
-    end
-
-    def base_font_css(font)
-      <<~SCSS
-        @font-face {
-          font-family: #{font};
-          src: asset-url("/fonts/#{font}-regular.woff2") format('woff2');
-          font-weight: 400;
-        }
-
-        @font-face {
-          font-family: #{font};
-          src: asset-url("/fonts/#{font}-bold.woff2") format('woff2');
-          font-weight: 700;
-        }
-
-        $base-font-family: #{font}, Helvetica, Arial, sans-serif;
-      SCSS
     end
 
     def to_scss_variable(name, value)

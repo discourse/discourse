@@ -213,6 +213,9 @@ class SiteSetting < ActiveRecord::Base
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
   end
 
+  def self.base_font_stack
+    BaseFontSetting.font_stack(SiteSetting.base_font)
+  end
 end
 
 # == Schema Information

@@ -46,15 +46,4 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if SiteSetting::WATCHED_SETTINGS.include?(name)
     SiteSetting.reset_cached_settings!
   end
-
-  if name == :base_font
-    # ?
-    Stylesheet::Manager.clear_theme_cache!
-    Theme.notify_theme_change(
-      Theme.where(component: false).pluck(:id),
-      with_scheme: true,
-      clear_manager_cache: true,
-      all_themes: true
-    )
-  end
 end
