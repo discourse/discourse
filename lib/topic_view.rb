@@ -435,7 +435,7 @@ class TopicView
   end
 
   def user_post_bookmarks
-    @user_post_bookmarks ||= Bookmark.where(user: @user, post_id: unfiltered_post_ids)
+    @user_post_bookmarks ||= @topic.bookmarks.where(user: @user)
   end
 
   def reviewable_counts
