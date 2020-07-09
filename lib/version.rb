@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Discourse
-  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/ unless defined? ::Discourse::VERSION_REGEXP
-
-  VERSION_COMPATIBILITY_FILENAME = ".discourse-compatibility"
+  VERSION_REGEXP ||= /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
+  VERSION_COMPATIBILITY_FILENAME ||= ".discourse-compatibility"
 
   # work around reloader
   unless defined? ::Discourse::VERSION
@@ -29,19 +28,19 @@ module Discourse
   #  2.5.0.beta2: bbffee
   #  2.4.4.beta6: some-other-branch-ref
   #  2.4.2.beta1: v1-tag
-  def self.find_compatible_resource(version_list)
+  def self.find_compatible_resource(version_list, version = ::Discourse::VERSION::STRING)
 
     return unless version_list
 
-    version_list = YAML.load(version_list).sort_by { |version, pin| Gem::Version.new(version) }.reverse
+    version_list = YAML.load(version_list).sort_by { |v, pin| Gem::Version.new(v) }.reverse
 
     # If plugin compat version is listed as less than current Discourse version, take the version/hash listed before.
     checkout_version = nil
     version_list.each do |core_compat, target|
-      if Gem::Version.new(core_compat) == Gem::Version.new(::Discourse::VERSION::STRING) # Exact version match - return it
+      if Gem::Version.new(core_compat) == Gem::Version.new(version) # Exact version match - return it
         checkout_version = target
         break
-      elsif Gem::Version.new(core_compat) < Gem::Version.new(::Discourse::VERSION::STRING) # Core is on a higher version than listed, use a later version
+      elsif Gem::Version.new(core_compat) < Gem::Version.new(version) # Core is on a higher version than listed, use a later version
         break
       end
       checkout_version = target

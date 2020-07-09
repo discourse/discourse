@@ -48,30 +48,21 @@ describe Discourse::VERSION do
   end
 
   context "compatible_resource" do
-    after do
-      # Cleanup versions
-      ::Discourse::VERSION::STRING = [::Discourse::VERSION::MAJOR, ::Discourse::VERSION::MINOR, ::Discourse::VERSION::TINY, ::Discourse::VERSION::PRE].compact.join('.')
-    end
-
     shared_examples "test compatible resource" do
       it "returns nil when the current version is above all pinned versions" do
-        ::Discourse::VERSION::STRING = "2.6.0"
-        expect(Discourse.find_compatible_resource(version_list)).to be_nil
+        expect(Discourse.find_compatible_resource(version_list, "2.6.0")).to be_nil
       end
 
       it "returns the correct version if matches exactly" do
-        ::Discourse::VERSION::STRING = "2.5.0.beta4"
-        expect(Discourse.find_compatible_resource(version_list)).to eq("twofivebetafour")
+        expect(Discourse.find_compatible_resource(version_list, "2.5.0.beta4")).to eq("twofivebetafour")
       end
 
       it "returns the closest matching version" do
-        ::Discourse::VERSION::STRING = "2.4.6.beta12"
-        expect(Discourse.find_compatible_resource(version_list)).to eq("twofivebetatwo")
+        expect(Discourse.find_compatible_resource(version_list, "2.4.6.beta12")).to eq("twofivebetatwo")
       end
 
       it "returns the lowest version possible when using an older version" do
-        ::Discourse::VERSION::STRING = "1.4.6.beta12"
-        expect(Discourse.find_compatible_resource(version_list)).to eq("twofourtwobetaone")
+        expect(Discourse.find_compatible_resource(version_list, "1.4.6.beta12")).to eq("twofourtwobetaone")
       end
     end
 
