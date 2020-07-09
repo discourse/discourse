@@ -12,7 +12,7 @@ import { getNativeContact } from "discourse/lib/pwa-utils";
 
 export default Component.extend({
   tagName: null,
-  groupIds: [],
+  groupIds: null,
   allGroups: null,
 
   inviteModel: alias("panel.model.inviteModel"),
@@ -31,6 +31,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
+    this.set("groupIds", []);
     Group.findAll().then(groups => {
       this.set("allGroups", groups.filterBy("automatic", false));
     });

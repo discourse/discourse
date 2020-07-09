@@ -14,12 +14,13 @@ export default Component.extend({
   inviteExpiresAt: moment()
     .add(1, "month")
     .format("YYYY-MM-DD"),
-  groupIds: [],
+  groupIds: null,
   allGroups: null,
 
   init() {
     this._super(...arguments);
 
+    this.set("groupIds", []);
     Group.findAll().then(groups => {
       this.set("allGroups", groups.filterBy("automatic", false));
     });
