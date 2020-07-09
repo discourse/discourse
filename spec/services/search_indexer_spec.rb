@@ -145,7 +145,7 @@ describe SearchIndexer do
       )
     end
 
-    it 'should tokenize host of a URL' do
+    it 'should tokenize host of a URL and removes query string' do
       category = Fabricate(:category, name: 'awesome category')
       topic = Fabricate(:topic, category: category, title: 'this is a test topic')
 
@@ -158,11 +158,11 @@ describe SearchIndexer do
       topic = post.topic
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{category.name} a https://cnn.com?bob=1 , http://stuff.com.au?bill=1 b http://abc.net/xyz=1 abc.net/xyz=1"
+        "#{topic.title} #{category.name} a https://cnn.com , http://stuff.com.au b http://abc.net/xyz=1 abc.net/xyz=1"
       )
 
       expect(post.post_search_data.search_data).to eq(
-        "'/xyz=1':18,21 '1':11,14 'abc':17,20 'abc.net':17,20 'abc.net/xyz=1':16,19 'au':12 'awesom':6B 'b':15 'bill':13 'bob':10 'categori':7B 'cnn':9 'cnn.com':9 'com':9,12 'com.au':12 'net':17,20 'stuff':12 'stuff.com.au':12 'test':4A 'topic':5A"
+        "'/xyz=1':14,17 'abc':13,16 'abc.net':13,16 'abc.net/xyz=1':12,15 'au':10 'awesom':6B 'b':11 'categori':7B 'cnn':9 'cnn.com':9 'com':9,10 'com.au':10 'net':13,16 'stuff':10 'stuff.com.au':10 'test':4A 'topic':5A"
       )
     end
 

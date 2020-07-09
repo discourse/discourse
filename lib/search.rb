@@ -86,6 +86,15 @@ class Search
         data = strip_diacritics(data)
       end
     end
+
+    data.gsub!(EmailCook.url_regexp) do |url|
+      uri = URI.parse(url)
+      uri.query = nil
+      uri.to_s
+    rescue URI::Error
+      # Don't fail even if URL turns out to be invalid
+    end
+
     data
   end
 
