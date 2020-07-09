@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { cookAsync } from "discourse/lib/text";
 import { ajax } from "discourse/lib/ajax";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
+import { afterRender } from "discourse-common/utils/decorators";
 
 const CookText = Component.extend({
   cooked: null,
@@ -10,11 +11,13 @@ const CookText = Component.extend({
     this._super(...arguments);
     cookAsync(this.rawText).then(cooked => {
       this.set("cooked", cooked);
-
-      if (this.element && !this.isDestroying && !this.isDestroyed) {
-        return resolveAllShortUrls(ajax, this.siteSettings, this.element);
-      }
+      this._resolveUrls();
     });
+  },
+
+  @afterRender
+  _resolveUrls() {
+    resolveAllShortUrls(ajax, this.siteSettings, this.element);
   }
 });
 
