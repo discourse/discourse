@@ -12,7 +12,7 @@ import { getNativeContact } from "discourse/lib/pwa-utils";
 
 export default Component.extend({
   tagName: null,
-  groupIds: null,
+  groupIds: [],
   allGroups: null,
 
   inviteModel: alias("panel.model.inviteModel"),
@@ -292,7 +292,7 @@ export default Component.extend({
       hasCustomMessage: false,
       customMessage: null,
       invitingExistingUserToTopic: false,
-      groupIds: null
+      groupIds: []
     });
 
     this.inviteModel.setProperties({

@@ -14,7 +14,7 @@ export default Component.extend({
   inviteExpiresAt: moment()
     .add(1, "month")
     .format("YYYY-MM-DD"),
-  groupIds: null,
+  groupIds: [],
   allGroups: null,
 
   init() {
@@ -49,7 +49,7 @@ export default Component.extend({
   reset() {
     this.setProperties({
       maxRedemptionAllowed: 5,
-      groupIds: null
+      groupIds: []
     });
 
     this.inviteModel.setProperties({
