@@ -47,8 +47,6 @@ class Category < ActiveRecord::Base
 
   has_and_belongs_to_many :web_hooks
 
-  has_one :category_search_data, dependent: :delete
-
   validates :user_id, presence: true
 
   validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? },

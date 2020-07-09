@@ -233,7 +233,7 @@ class Topic < ActiveRecord::Base
 
   has_one :user_warning
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
-  has_one :topic_search_data, dependent: :delete
+  has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
 
   belongs_to :image_upload, class_name: 'Upload'
