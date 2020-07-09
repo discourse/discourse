@@ -232,6 +232,11 @@ module FileStore
           if upload&.secure
             options[:acl] = "private"
           end
+        elsif !FileHelper.is_inline_image?(name)
+          upload = Upload.find_by(url: "/#{file}")
+          options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+            disposition: "attachment", filename: upload&.original_filename || name
+          )
         end
 
         etag ||= Digest::MD5.file(path).hexdigest
