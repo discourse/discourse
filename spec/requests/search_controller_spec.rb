@@ -181,12 +181,31 @@ describe SearchController do
     end
 
     context 'rate limited' do
-      before do
-        SiteSetting.rate_limit_search_user = 3
+      it 'rate limits anon searches per user' do
         SiteSetting.rate_limit_search_anon_user = 2
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        2.times do
+          get "/search/query.json", params: {
+                term: 'wookie'
+              }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(nil)
+        end
+
+        get "/search/query.json", params: {
+              term: 'wookie'
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
       end
 
-      it 'rate limits searches' do
+      it 'rate limits anon searches globally' do
+        SiteSetting.rate_limit_search_anon_global = 2
         RateLimiter.enable
         RateLimiter.clear_all!
 
@@ -212,6 +231,7 @@ describe SearchController do
         before { sign_in(user) }
 
         it 'rate limits logged in searches' do
+          SiteSetting.rate_limit_search_user = 3
           RateLimiter.enable
           RateLimiter.clear_all!
 
@@ -274,13 +294,32 @@ describe SearchController do
     end
 
     context 'rate limited' do
+      it 'rate limits anon searches per user' do
+        SiteSetting.rate_limit_search_anon_user = 2
+        RateLimiter.enable
+        RateLimiter.clear_all!
 
-      before do
-        SiteSetting.rate_limit_search_user = 3
-        SiteSetting.rate_limit_search_anon = 2
+        2.times do
+          get "/search.json", params: {
+                q: 'bantha'
+              }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(nil)
+        end
+
+        get "/search.json", params: {
+              q: 'bantha'
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+
       end
 
-      it 'rate limits searches' do
+      it 'rate limits anon searches globally' do
+        SiteSetting.rate_limit_search_anon_global = 2
         RateLimiter.enable
         RateLimiter.clear_all!
 
@@ -307,6 +346,7 @@ describe SearchController do
         before { sign_in(user) }
 
         it 'rate limits searches' do
+          SiteSetting.rate_limit_search_user = 3
           RateLimiter.enable
           RateLimiter.clear_all!
 
