@@ -9,6 +9,7 @@ import {
 } from "discourse-common/config/environment";
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
+import { setupHighlightJs } from "discourse/services/syntax-highlighter";
 
 export default {
   name: "discourse-bootstrap",
@@ -81,8 +82,11 @@ export default {
       Session.currentProp("safe_mode", setupData.safeMode);
     }
 
-    app.HighlightJSPath = setupData.highlightJsPath;
-    app.HighlightJSWorkerURL = setupData.highlightJsWorkerUrl;
+    setupHighlightJs({
+      highlightJsUrl: setupData.highlightJsUrl,
+      highlightJsWorkerUrl: setupData.highlightJsWorkerUrl
+    });
+
     app.SvgSpritePath = setupData.svgSpritePath;
 
     if (app.Environment === "development") {

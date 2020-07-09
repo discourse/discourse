@@ -5,13 +5,22 @@ import { next, schedule } from "@ember/runloop";
 import loadScript from "discourse/lib/load-script";
 import { isTesting } from "discourse-common/config/environment";
 
+let highlightJsUrl;
+let highlightJsWorkerUrl;
+
 const _moreLanguages = [];
 let _worker = null;
 let _workerPromise = null;
 const _pendingResolution = {};
 let _counter = 0;
 let _cachedResultsMap = new Map();
+
 const CACHE_SIZE = 100;
+
+export function setupHighlightJs(args) {
+  highlightJsUrl = args.highlightJsUrl;
+  highlightJsWorkerUrl = args.highlightJsWorkerUrl;
+}
 
 export function registerHighlightJSLanguage(name, fn) {
   _moreLanguages.push({ name: name, fn: fn });
@@ -100,7 +109,7 @@ export default Service.extend({
     if (_worker) return Promise.resolve(_worker);
     if (_workerPromise) return _workerPromise;
 
-    const w = new Worker(Discourse.HighlightJSWorkerURL);
+    const w = new Worker(highlightJsWorkerUrl);
     w.onmessage = message => this._onWorkerMessage(message);
     w.postMessage({
       type: "loadHighlightJs",
@@ -117,7 +126,7 @@ export default Service.extend({
     // Plugins/themes can't run code in a worker, so we have to load hljs in the main thread
     // But the actual highlighting will still be done in the worker
 
-    return loadScript(Discourse.HighlightJSPath).then(() => {
+    return loadScript(highlightJsUrl).then(() => {
       _moreLanguages.forEach(({ name, fn }) => {
         const definition = fn(window.hljs);
         worker.postMessage({
@@ -154,7 +163,7 @@ export default Service.extend({
   },
 
   _highlightJSUrl() {
-    let hljsUrl = getURLWithCDN(Discourse.HighlightJSPath);
+    let hljsUrl = getURLWithCDN(highlightJsUrl);
 
     // Need to use full URL including protocol/domain
     // for use in a worker
