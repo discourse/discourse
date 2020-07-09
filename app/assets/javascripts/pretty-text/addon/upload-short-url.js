@@ -62,15 +62,20 @@ function retrieveCachedUrl(
     if (url !== MISSING) {
       callback(url);
     } else if (opts && opts.removeMissing) {
+      const style = getComputedStyle(document.body);
       const canvas = document.createElement("canvas");
       canvas.width = upload.width;
       canvas.height = upload.height;
 
       const context = canvas.getContext("2d");
 
-      // Draw rectangle
+      // Draw background
+      context.fillStyle = getComputedStyle(document.body).backgroundColor;
+      context.strokeRect(0, 0, canvas.width, canvas.height);
+
+      // Draw border
       context.lineWidth = 2;
-      context.strokeStyle = "#000000";
+      context.strokeStyle = getComputedStyle(document.body).color;
       context.strokeRect(0, 0, canvas.width, canvas.height);
 
       let fontSize = 25;
@@ -80,9 +85,11 @@ function retrieveCachedUrl(
       let textSize;
       do {
         --fontSize;
-        context.font = fontSize + "px Helvetica, Arial, sans-serif";
+        context.font = `${fontSize}px ${style.fontFamily}`;
         textSize = context.measureText(text);
       } while (textSize.width > canvas.width);
+
+      context.fillStyle = getComputedStyle(document.body).color;
       context.fillText(
         text,
         (canvas.width - textSize.width) / 2,
