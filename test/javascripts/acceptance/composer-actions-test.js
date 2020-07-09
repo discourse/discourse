@@ -13,12 +13,6 @@ acceptance("Composer Actions", {
   },
   site: {
     can_tag_topics: true
-  },
-  beforeEach() {
-    _clearSnapshots();
-  },
-  afterEach() {
-    _clearSnapshots();
   }
 });
 

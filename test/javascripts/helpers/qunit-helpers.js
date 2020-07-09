@@ -22,6 +22,7 @@ import { resetDecorators as resetPluginOutletDecorators } from "discourse/compon
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
+import { _clearSnapshots } from "select-kit/components/composer-actions";
 import User from "discourse/models/user";
 
 export function currentUser() {
@@ -166,6 +167,7 @@ export function acceptance(name, options) {
       resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+      _clearSnapshots();
       Discourse._runInitializer("instanceInitializers", function(
         initName,
         initializer
