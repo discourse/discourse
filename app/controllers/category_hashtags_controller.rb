@@ -10,7 +10,7 @@ class CategoryHashtagsController < ApplicationController
 
     slugs_and_urls = {}
 
-    Category.secured(guardian).where(id: ids).each do |category|
+    Category.secured(guardian).where(id: ids).order(:id).each do |category|
       slugs_and_urls[category.slug] ||= category.url
       slugs_and_urls[category.slug_path.last(2).join(':')] ||= category.url
     end
