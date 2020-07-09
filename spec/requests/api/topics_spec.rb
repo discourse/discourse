@@ -852,4 +852,36 @@ describe 'posts' do
     end
   end
 
+  path '/t/{id}/notifications.json' do
+    post 'Set notification level' do
+      tags 'Topics'
+      consumes 'application/json'
+      parameter name: 'Api-Key', in: :header, type: :string, required: true
+      parameter name: 'Api-Username', in: :header, type: :string, required: true
+      parameter name: :id, in: :path, schema: { type: :string }
+
+      parameter name: :request_body, in: :body, schema: {
+        type: :object,
+        properties: {
+          notification_level: {
+            type: :string,
+            enum: ['0', '1', '2', '3'],
+          }
+        }, required: [ 'notification_level' ]
+      }
+
+      produces 'application/json'
+      response '200', 'topic updated' do
+        schema type: :object, properties: {
+          success: { type: :string },
+        }
+
+        let(:request_body) { { notification_level: '3' } }
+        let(:id) { Fabricate(:topic).id }
+
+        run_test!
+      end
+    end
+  end
+
 end
