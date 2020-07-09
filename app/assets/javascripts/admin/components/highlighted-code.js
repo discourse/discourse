@@ -1,11 +1,12 @@
 import Component from "@ember/component";
-import { on, observes } from "discourse-common/utils/decorators";
-import highlightSyntax from "discourse/lib/highlight-syntax";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
-  @on("didInsertElement")
-  @observes("code")
-  _refresh: function() {
-    highlightSyntax(this.element);
+  syntaxHighlighter: service(),
+
+  didRender() {
+    if (!this.element.querySelector("code").classList.contains("hljs")) {
+      this.syntaxHighlighter.highlightElements(this.element);
+    }
   }
 });
