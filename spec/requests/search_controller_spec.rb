@@ -101,25 +101,6 @@ describe SearchController do
       expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
     end
 
-    it "can search correctly with advanced search filters" do
-      awesome_post.update!(
-        raw: "#{"a" * Search::GroupedSearchResults::BLURB_LENGTH} elephant"
-      )
-
-      get "/search/query.json", params: {
-        term: 'order:views elephant', include_blurb: true
-      }
-
-      expect(response.status).to eq(200)
-
-      data = response.parsed_body
-
-      expect(data['posts'].length).to eq(1)
-      expect(data['posts'][0]['id']).to eq(awesome_post.id)
-      expect(data['posts'][0]['blurb']).to include('elephant')
-      expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
-    end
-
     it 'performs the query with a type filter' do
 
       get "/search/query.json", params: {
@@ -160,6 +141,7 @@ describe SearchController do
       end
 
       it "should return the right result" do
+
         get "/search/query.json", params: {
           term: user_post.topic_id,
           type_filter: 'topic',
