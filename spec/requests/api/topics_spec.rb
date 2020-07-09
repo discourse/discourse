@@ -17,7 +17,7 @@ describe 'posts' do
       parameter name: :post_body, in: :body, schema: {
         type: :object,
         properties: {
-          'post_ids[]': { type: :integer}
+          'post_ids[]': { type: :integer }
         }, required: [ 'post_ids[]' ]
       }
 
@@ -403,7 +403,7 @@ describe 'posts' do
             type: :object,
             properties: {
               title: { type: :string },
-              category_id: { type: :integer},
+              category_id: { type: :integer },
             }
           }
         }
@@ -545,14 +545,16 @@ describe 'posts' do
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
-      parameter name: :order,
+      parameter(
+        name: :order,
         in: :query,
         type: :string,
-        description: 'Enum: `default`, `created`, `activity`, `views`, `posts`, `category`, `likes`, `op_likes`, `posters`'
-      parameter name: :ascending,
+        description: 'Enum: `default`, `created`, `activity`, `views`, `posts`, `category`, `likes`, `op_likes`, `posters`')
+      parameter(
+        name: :ascending,
         in: :query,
         type: :string,
-        description: 'Defaults to `desc`, add `ascending=true` to sort asc'
+        description: 'Defaults to `desc`, add `ascending=true` to sort asc')
 
       produces 'application/json'
       response '200', 'topic updated' do
@@ -751,10 +753,11 @@ describe 'posts' do
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
-      parameter name: :flag,
+      parameter(
+        name: :flag,
         in: :path,
         type: :string,
-        description: 'Enum: `all`, `yearly`, `quarterly`, `monthly`, `weekly`, `daily`'
+        description: 'Enum: `all`, `yearly`, `quarterly`, `monthly`, `weekly`, `daily`')
 
       produces 'application/json'
       response '200', 'topic updated' do
