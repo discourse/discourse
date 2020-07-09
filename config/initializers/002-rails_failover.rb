@@ -57,8 +57,9 @@ if defined?(RailsFailover::ActiveRecord)
   rescue => e
     unless e.is_a?(Redis::CannotConnectError)
       Rails.logger.warn "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
+      true
+    else
+      false
     end
-
-    false
   end
 end
