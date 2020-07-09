@@ -54,11 +54,12 @@ module FileStore
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
 
-      # add a "content disposition: attachment" header with the original filename
-      # for everything but images. audio and video will still stream correctly in
-      # HTML players, and when a direct link is provided to any file but an image
-      # it will download correctly in the browser.
-      if !FileHelper.is_supported_image?(filename)
+      # add a "content disposition: attachment" header with the original
+      # filename for everything but safe images (not SVG). audio and video will
+      # still stream correctly in HTML players, and when a direct link is
+      # provided to any file but an image it will download correctly in the
+      # browser.
+      if !FileHelper.is_inline_image?(filename)
         options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
           disposition: "attachment", filename: filename
         )
