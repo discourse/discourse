@@ -183,7 +183,7 @@ describe SearchController do
     context 'rate limited' do
       before do
         SiteSetting.rate_limit_search_user = 3
-        SiteSetting.rate_limit_search_anon = 2
+        SiteSetting.rate_limit_search_anon_user = 2
       end
 
       it 'rate limits searches' do
