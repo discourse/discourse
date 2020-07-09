@@ -59,7 +59,7 @@ export default {
     if (source.clickHandler) {
       source.clickHandler(data.url, data.title);
     } else {
-      const url = source.generateUrl(data.url, data.title);
+      const url = source.generateUrl(data.url, data.title, data.quote);
       const options = {
         menubar: "no",
         toolbar: "no",

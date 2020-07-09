@@ -151,9 +151,9 @@ en:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
       close: "close"
-      twitter: "Share this link on Twitter"
-      facebook: "Share this link on Facebook"
-      email: "Send this link in an email"
+      twitter: "Share on Twitter"
+      facebook: "Share on Facebook"
+      email: "Send via email"
 
     action_codes:
       public_topic: "made this topic public %{when}"
@@ -2597,6 +2597,7 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
       ignored: "Ignored content"
