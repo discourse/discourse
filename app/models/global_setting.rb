@@ -204,14 +204,14 @@ class GlobalSetting
   end
 
   # test only
-  def self.reset_allowlisted_theme_ids!
-    @allowlisted_theme_ids = nil
+  def self.reset_allowed_theme_ids!
+    @allowed_theme_ids = nil
   end
 
-  def self.allowlisted_theme_ids
+  def self.allowed_theme_ids
     return nil if allowlisted_theme_repos.blank?
 
-    @allowlisted_theme_ids ||= begin
+    @allowed_theme_ids ||= begin
       urls = allowlisted_theme_repos.split(",").map(&:strip)
       Theme
         .joins(:remote_theme)

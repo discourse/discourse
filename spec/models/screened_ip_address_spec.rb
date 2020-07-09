@@ -212,37 +212,37 @@ describe ScreenedIpAddress do
     end
   end
 
-  describe '#is_allowlisted?' do
+  describe '#is_allowed?' do
     it 'returns false when record does not exist' do
-      expect(described_class.is_allowlisted?(ip_address)).to eq(false)
+      expect(described_class.is_allowed?(ip_address)).to eq(false)
     end
 
     it 'returns false when no record matches' do
       Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
-      expect(described_class.is_allowlisted?('222.12.12.12')).to eq(false)
+      expect(described_class.is_allowed?('222.12.12.12')).to eq(false)
     end
 
     context 'IPv4' do
       it 'returns true when when record matches and action is :do_nothing' do
         Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
-        expect(described_class.is_allowlisted?('111.234.23.11')).to eq(true)
+        expect(described_class.is_allowed?('111.234.23.11')).to eq(true)
       end
 
       it 'returns false when when record matches and action is :block' do
         Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:block])
-        expect(described_class.is_allowlisted?('111.234.23.11')).to eq(false)
+        expect(described_class.is_allowed?('111.234.23.11')).to eq(false)
       end
     end
 
     context 'IPv6' do
       it 'returns true when when record matches and action is :do_nothing' do
         Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:do_nothing])
-        expect(described_class.is_allowlisted?('2001:db8::ff00:42:8329')).to eq(true)
+        expect(described_class.is_allowed?('2001:db8::ff00:42:8329')).to eq(true)
       end
 
       it 'returns false when when record matches and action is :block' do
         Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:block])
-        expect(described_class.is_allowlisted?('2001:db8::ff00:42:8329')).to eq(false)
+        expect(described_class.is_allowed?('2001:db8::ff00:42:8329')).to eq(false)
       end
     end
   end

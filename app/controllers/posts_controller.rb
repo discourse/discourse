@@ -276,7 +276,7 @@ class PostsController < ApplicationController
 
     reply_history = post.reply_history(params[:max_replies].to_i, guardian)
     user_custom_fields = {}
-    if (added_fields = User.allowlisted_user_custom_fields(guardian)).present?
+    if (added_fields = User.allowed_user_custom_fields(guardian)).present?
       user_custom_fields = User.custom_fields_for_ids(reply_history.pluck(:user_id), added_fields)
     end
 
@@ -365,7 +365,7 @@ class PostsController < ApplicationController
     replies = post.replies.secured(guardian)
 
     user_custom_fields = {}
-    if (added_fields = User.allowlisted_user_custom_fields(guardian)).present?
+    if (added_fields = User.allowed_user_custom_fields(guardian)).present?
       user_custom_fields = User.custom_fields_for_ids(replies.pluck(:user_id), added_fields)
     end
 

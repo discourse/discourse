@@ -17,8 +17,8 @@ class SpamHandler
 
     return false if staff_members_with_same_ip > 0
 
-    ip_allowlisted = ScreenedIpAddress.is_allowlisted?(ip_address)
-    return false if ip_allowlisted
+    ip_allowed = ScreenedIpAddress.is_allowed?(ip_address)
+    return false if ip_allowed
 
     tl0_accounts_with_same_ip = User.unscoped
       .where(trust_level: TrustLevel[0])

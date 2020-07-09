@@ -125,7 +125,7 @@ module UserNameSuggester
 
   def self.apply_allowlist(name)
     name.grapheme_clusters
-      .map { |c| UsernameValidator.allowlisted_char?(c) ? c : '_' }
+      .map { |c| UsernameValidator.allowed_char?(c) ? c : '_' }
       .join
   end
 

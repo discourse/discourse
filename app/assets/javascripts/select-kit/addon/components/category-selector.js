@@ -8,7 +8,7 @@ export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["category-selector"],
   classNames: ["category-selector"],
   categories: null,
-  blocklist: null,
+  blockedCategories: null,
 
   selectKitOptions: {
     filterable: true,
@@ -22,14 +22,15 @@ export default MultiSelectComponent.extend({
     this._super(...arguments);
 
     if (!this.categories) this.set("categories", []);
-    if (!this.blocklist) this.set("blocklist", []);
+    if (!this.blockedCategories) this.set("blockedCategories", []);
   },
 
-  content: computed("categories.[]", "blocklist.[]", function() {
-    const blocklist = makeArray(this.blocklist);
+  content: computed("categories.[]", "blockedCategories.[]", function() {
+    const blockedCategories = makeArray(this.blockedCategories);
     return Category.list().filter(category => {
       return (
-        this.categories.includes(category) || !blocklist.includes(category)
+        this.categories.includes(category) ||
+        !blockedCategories.includes(category)
       );
     });
   }),

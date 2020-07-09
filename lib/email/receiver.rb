@@ -62,7 +62,7 @@ module Email
     end
 
     def process!
-      return if is_blocklisted?
+      return if is_blocked?
       id_hash = Digest::SHA1.hexdigest(@message_id)
       DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
@@ -105,7 +105,7 @@ module Email
       end
     end
 
-    def is_blocklisted?
+    def is_blocked?
       return false if SiteSetting.ignore_by_title.blank?
       Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
     end
@@ -1009,18 +1009,18 @@ module Email
       raise InvalidPostAction.new if result.failed? && result.forbidden
     end
 
-    def is_allowlisted_attachment?(attachment)
+    def is_allowed?(attachment)
       attachment.content_type !~ SiteSetting.attachment_content_type_blocklist_regex &&
       attachment.filename !~ SiteSetting.attachment_filename_blocklist_regex
     end
 
     def attachments
       @attachments ||= begin
-        attachments = @mail.attachments.select { |attachment| is_allowlisted_attachment?(attachment) }
-        attachments << @mail if @mail.attachment? && is_allowlisted_attachment?(@mail)
+        attachments = @mail.attachments.select { |attachment| is_allowed?(attachment) }
+        attachments << @mail if @mail.attachment? && is_allowed?(@mail)
 
         @mail.parts.each do |part|
-          attachments << part if part.attachment? && is_allowlisted_attachment?(part)
+          attachments << part if part.attachment? && is_allowed?(part)
         end
 
         attachments.uniq!

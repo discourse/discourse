@@ -311,7 +311,7 @@ describe Post do
     end
 
     it "doesn't count allowlisted images" do
-      Post.stubs(:allow_listed_image_classes).returns(["classy"])
+      Post.stubs(:allowed_image_classes).returns(["classy"])
       # I dislike this, but passing in a custom allowlist is hard
       PrettyText.stubs(:cook).returns(post_with_two_classy_images.raw)
       expect(post_with_two_classy_images.image_count).to eq(0)
@@ -528,7 +528,7 @@ describe Post do
         end
 
         it "will skip the check for allowlisted domains" do
-          SiteSetting.allowlisted_link_domains = 'www.bbc.co.uk'
+          SiteSetting.allowed_link_domains = 'www.bbc.co.uk'
           SiteSetting.min_trust_to_post_links = 2
           post_two_links.user.trust_level = TrustLevel[1]
           expect(post_one_link).to be_valid
@@ -1107,7 +1107,7 @@ describe Post do
 
       expect(post.has_host_spam?).to eq(true)
 
-      SiteSetting.allow_listed_spam_host_domains = "bla.com|boo.com | example.net "
+      SiteSetting.allowed_spam_host_domains = "bla.com|boo.com | example.net "
       expect(post.has_host_spam?).to eq(false)
     end
 

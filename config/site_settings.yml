@@ -798,7 +798,7 @@ posting:
       ko: 50
       zh_CN: 50
       zh_TW: 50
-  allowlisted_link_domains:
+  allowed_link_domains:
     default: ""
     type: list
   newuser_max_links: 2
@@ -1470,11 +1470,11 @@ security:
     default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/"
     type: list
     client: true
-  allowlisted_crawler_user_agents:
+  allowed_crawler_user_agents:
     type: list
     default: ""
     list_type: compact
-  blocklisted_crawler_user_agents:
+  blocked_crawler_user_agents:
     type: list
     default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
@@ -1542,7 +1542,7 @@ spam:
   notify_mods_when_user_silenced: false
   flag_sockpuppets: false
   newuser_spam_host_threshold: 3
-  allow_listed_spam_host_domains:
+  allowed_spam_host_domains:
     default: ""
     type: list
   levenshtein_distance_spammer_emails:

@@ -160,11 +160,11 @@ class Plugin::Instance
     end
   end
 
-  def allowlist_staff_user_custom_field(field)
+  def allow_staff_user_custom_field(field)
     DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
   end
 
-  def allowlist_public_user_custom_field(field)
+  def allow_public_user_custom_field(field)
     DiscoursePluginRegistry.register_public_user_custom_field(field, self)
   end
 

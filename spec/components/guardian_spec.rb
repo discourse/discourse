@@ -52,7 +52,7 @@ describe Guardian do
     end
 
     it "is limited for a user of a low trust level with a allowlist" do
-      SiteSetting.allowlisted_link_domains = 'example.com'
+      SiteSetting.allowed_link_domains = 'example.com'
       user.trust_level = 0
       SiteSetting.min_trust_to_post_links = 1
       expect(Guardian.new(user).link_posting_access).to eq('limited')
@@ -80,7 +80,7 @@ describe Guardian do
 
     describe "allowlisted host" do
       before do
-        SiteSetting.allowlisted_link_domains = host
+        SiteSetting.allowed_link_domains = host
       end
 
       it "allows a new user to post the link to the host" do
@@ -2933,12 +2933,12 @@ describe Guardian do
 
     context "allowlist mode" do
       before do
-        GlobalSetting.reset_allowlisted_theme_ids!
+        GlobalSetting.reset_allowed_theme_ids!
         global_setting :allowlisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
       end
 
       after do
-        GlobalSetting.reset_allowlisted_theme_ids!
+        GlobalSetting.reset_allowed_theme_ids!
       end
 
       it "should respect theme allowlisting" do

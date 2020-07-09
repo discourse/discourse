@@ -75,7 +75,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     exists_for_ip_address_and_action?(ip_address, actions[:block])
   end
 
-  def self.is_allowlisted?(ip_address)
+  def self.is_allowed?(ip_address)
     exists_for_ip_address_and_action?(ip_address, actions[:do_nothing])
   end
 

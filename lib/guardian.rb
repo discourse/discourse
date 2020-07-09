@@ -477,9 +477,9 @@ class Guardian
   def allowed_theme_repo_import?(repo)
     return false if !@user.admin?
 
-    allowlisted_repos = GlobalSetting.allowlisted_theme_repos
-    if !allowlisted_repos.blank?
-      urls = allowlisted_repos.split(",").map(&:strip)
+    allowed_repos = GlobalSetting.allowlisted_theme_repos
+    if !allowed_repos.blank?
+      urls = allowed_repos.split(",").map(&:strip)
       return urls.include?(repo)
     end
 
@@ -489,8 +489,8 @@ class Guardian
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
 
-    if allowlisted_theme_ids = GlobalSetting.allowlisted_theme_ids
-      if (theme_ids - allowlisted_theme_ids).present?
+    if allowed_theme_ids = GlobalSetting.allowed_theme_ids
+      if (theme_ids - allowed_theme_ids).present?
         return false
       end
     end

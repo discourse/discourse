@@ -32,7 +32,7 @@ class UsernameValidator
     username_length_min?
     username_length_max?
     username_char_valid?
-    username_char_allowlisted?
+    username_char_allowed?
     username_first_char_valid?
     username_last_char_valid?
     username_no_double_special?
@@ -85,10 +85,10 @@ class UsernameValidator
     end
   end
 
-  def username_char_allowlisted?
+  def username_char_allowed?
     return unless errors.empty? && self.class.char_allowlist_exists?
 
-    if username.chars.any? { |c| !self.class.allowlisted_char?(c) }
+    if username.chars.any? { |c| !self.class.allowed_char?(c) }
       self.errors << I18n.t(:'user.username.characters')
     end
   end
@@ -137,7 +137,7 @@ class UsernameValidator
     SiteSetting.unicode_usernames && SiteSetting.unicode_username_character_allowlist_regex.present?
   end
 
-  def self.allowlisted_char?(c)
+  def self.allowed_char?(c)
     c.match?(/[\w.-]/) || c.match?(SiteSetting.unicode_username_character_allowlist_regex)
   end
 end

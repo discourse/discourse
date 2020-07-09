@@ -36,7 +36,7 @@ class FlaggedUserSerializer < BasicUserSerializer
   end
 
   def custom_fields
-    fields = User.allowlisted_user_custom_fields(scope)
+    fields = User.allowed_user_custom_fields(scope)
 
     result = {}
     fields.each do |k|

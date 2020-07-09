@@ -298,7 +298,7 @@ class Admin::ThemesController < Admin::AdminController
   private
 
   def ban_in_allowlist_mode!
-    raise Discourse::InvalidAccess if !GlobalSetting.allowlisted_theme_ids.nil?
+    raise Discourse::InvalidAccess if !GlobalSetting.allowed_theme_ids.nil?
   end
 
   def add_relative_themes!(kind, ids)

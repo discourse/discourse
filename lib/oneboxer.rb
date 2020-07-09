@@ -292,7 +292,7 @@ module Oneboxer
     end
   end
 
-  def self.blocklisted_domains
+  def self.blocked_domains
     SiteSetting.onebox_domains_blocklist.split("|")
   end
 
@@ -304,12 +304,12 @@ module Oneboxer
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url,
                               ignore_redirects: ignore_redirects,
-                              ignore_hostnames: blocklisted_domains,
+                              ignore_hostnames: blocked_domains,
                               force_get_hosts: force_get_hosts,
                               force_custom_user_agent_hosts: force_custom_user_agent_hosts,
                               preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
-      return blank_onebox if uri.blank? || blocklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
+      return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
         max_width: 695,

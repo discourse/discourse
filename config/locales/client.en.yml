@@ -4777,7 +4777,7 @@ en:
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"
-        path_allowlist: "Path Allowlist"
+        allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
         add_host: "Add Host"

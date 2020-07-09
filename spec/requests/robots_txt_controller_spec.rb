@@ -94,7 +94,7 @@ RSpec.describe RobotsTxtController do
       end
 
       it "can allowlist user agents" do
-        SiteSetting.allowlisted_crawler_user_agents = "Googlebot|Twitterbot"
+        SiteSetting.allowed_crawler_user_agents = "Googlebot|Twitterbot"
         get '/robots.txt'
         expect(response.body).to include('User-agent: Googlebot')
         expect(response.body).to include('User-agent: Twitterbot')
@@ -106,7 +106,7 @@ RSpec.describe RobotsTxtController do
       end
 
       it "can blocklist user agents" do
-        SiteSetting.blocklisted_crawler_user_agents = "Googlebot|Twitterbot"
+        SiteSetting.blocked_crawler_user_agents = "Googlebot|Twitterbot"
         get '/robots.txt'
         expect(response.body).to include('User-agent: Googlebot')
         expect(response.body).to include('User-agent: Twitterbot')
@@ -118,8 +118,8 @@ RSpec.describe RobotsTxtController do
       end
 
       it "ignores blocklist if allowlist is set" do
-        SiteSetting.allowlisted_crawler_user_agents = "Googlebot|Twitterbot"
-        SiteSetting.blocklisted_crawler_user_agents = "Bananabot"
+        SiteSetting.allowed_crawler_user_agents = "Googlebot|Twitterbot"
+        SiteSetting.blocked_crawler_user_agents = "Bananabot"
         get '/robots.txt'
         expect(response.body).to_not include('Bananabot')
         expect(response.body).to include('User-agent: Googlebot')

@@ -1564,8 +1564,8 @@ en:
     blocklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowlist_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
-    allowlisted_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
-    blocklisted_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
+    allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
+    blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive"
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     content_security_policy: "Enable Content-Security-Policy"
@@ -1819,7 +1819,7 @@ en:
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_images: "The minimum trust level required to include images in a post"
 
-    allowlisted_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
+    allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
     newuser_max_images: "How many images a new user can add to a post."
@@ -1887,7 +1887,7 @@ en:
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
-    allow_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
+    allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
     topic_view_duration_hours: "Count a new topic view once per IP/User every N hours"
     user_profile_view_duration_hours: "Count a new user profile view once per IP/User every N hours"
@@ -3236,7 +3236,7 @@ en:
 
         Please [review the user](%{user_url}).
 
-        This can be modified via the `newuser_spam_host_threshold` and `allow_listed_spam_host_domains` site settings. Consider adding %{domains} to the allowlist if they should be exempt.
+        This can be modified via the `newuser_spam_host_threshold` and `allowed_spam_host_domains` site settings. Consider adding %{domains} to the allowlist if they should be exempt.
 
     unsilenced:
       title: "Unsilenced"

@@ -76,7 +76,7 @@ describe CrawlerDetection do
 
     context 'allowlist is set' do
       before do
-        SiteSetting.allowlisted_crawler_user_agents = 'Googlebot|Twitterbot'
+        SiteSetting.allowed_crawler_user_agents = 'Googlebot|Twitterbot'
       end
 
       it 'returns true for matching user agents' do
@@ -93,7 +93,7 @@ describe CrawlerDetection do
 
       context 'and blocklist is set' do
         before do
-          SiteSetting.blocklisted_crawler_user_agents = 'Googlebot-Image'
+          SiteSetting.blocked_crawler_user_agents = 'Googlebot-Image'
         end
 
         it 'ignores the blocklist' do
@@ -104,7 +104,7 @@ describe CrawlerDetection do
 
     context 'blocklist is set' do
       before do
-        SiteSetting.blocklisted_crawler_user_agents = 'Googlebot|Twitterbot'
+        SiteSetting.blocked_crawler_user_agents = 'Googlebot|Twitterbot'
       end
 
       it 'returns true for crawlers that do not match' do
@@ -131,38 +131,38 @@ describe CrawlerDetection do
     end
 
     it 'is true if user agent is a crawler and is not allowlisted' do
-      SiteSetting.allowlisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.allowed_crawler_user_agents = 'Googlebot'
       expect(CrawlerDetection.is_blocked_crawler?('Twitterbot')).to eq(true)
     end
 
     it 'is false if user agent is not a crawler and there is a allowlist' do
-      SiteSetting.allowlisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.allowed_crawler_user_agents = 'Googlebot'
       expect(CrawlerDetection.is_blocked_crawler?('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')).to eq(false)
     end
 
     it 'is true if user agent is a crawler and is blocklisted' do
-      SiteSetting.blocklisted_crawler_user_agents = 'Twitterbot'
+      SiteSetting.blocked_crawler_user_agents = 'Twitterbot'
       expect(CrawlerDetection.is_blocked_crawler?('Twitterbot')).to eq(true)
     end
 
     it 'is true if user agent is a crawler and is not blocklisted' do
-      SiteSetting.blocklisted_crawler_user_agents = 'Twitterbot'
+      SiteSetting.blocked_crawler_user_agents = 'Twitterbot'
       expect(CrawlerDetection.is_blocked_crawler?('Googlebot')).to eq(false)
     end
 
     it 'is false if user agent is not a crawler and blocklist is defined' do
-      SiteSetting.blocklisted_crawler_user_agents = 'Mozilla'
+      SiteSetting.blocked_crawler_user_agents = 'Mozilla'
       expect(CrawlerDetection.is_blocked_crawler?('Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')).to eq(false)
     end
 
     it 'is true if user agent is missing and allowlist is defined' do
-      SiteSetting.allowlisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.allowed_crawler_user_agents = 'Googlebot'
       expect(CrawlerDetection.is_blocked_crawler?('')).to eq(true)
       expect(CrawlerDetection.is_blocked_crawler?(nil)).to eq(true)
     end
 
     it 'is false if user agent is missing and blocklist is defined' do
-      SiteSetting.blocklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
       expect(CrawlerDetection.is_blocked_crawler?('')).to eq(false)
       expect(CrawlerDetection.is_blocked_crawler?(nil)).to eq(false)
     end
