@@ -381,11 +381,23 @@ RSpec.describe UploadCreator do
   end
 
   describe '#whitelist_svg!' do
+    let(:b64) do
+      Base64.encode64('<svg onmouseover="alert(alert)" />')
+    end
+
     let(:file) do
       file = Tempfile.new
       file.write(<<~XML)
         <?xml version="1.0" encoding="UTF-8"?>
         <svg xmlns="http://www.w3.org/2000/svg" width="200px" height="200px" onload="alert(location)">
+          <defs>
+            <path id="pathdef" d="m0 0h100v100h-77z" stroke="#000" />
+          </defs>
+          <g>
+            <use id="valid-use" x="123" xlink:href="#pathdef" />
+          </g>
+          <use id="invalid-use1" href="https://svg.example.com/evil.svg" />
+          <use id="invalid-use2" xlink:href="data:image/svg+xml;base64,#{b64}" />
         </svg>
       XML
       file.rewind
@@ -395,7 +407,11 @@ RSpec.describe UploadCreator do
     it 'removes event handlers' do
       begin
         UploadCreator.new(file, 'file.svg').whitelist_svg!
-        expect(file.read).not_to include('onload')
+        file_content = file.read
+        expect(file_content).not_to include('onload')
+        expect(file_content).to include('#pathdef')
+        expect(file_content).not_to include('evil.svg')
+        expect(file_content).not_to include(b64)
       ensure
         file.unlink
       end
