@@ -159,7 +159,8 @@ class SearchController < ApplicationController
       if current_user.present?
         RateLimiter.new(current_user, "search-min", SiteSetting.rate_limit_search_user, 1.minute).performed!
       else
-        RateLimiter.new(nil, "search-min-#{request.remote_ip}", SiteSetting.rate_limit_search_anon, 1.minute).performed!
+        RateLimiter.new(nil, "search-min-#{request.remote_ip}", SiteSetting.rate_limit_search_anon_user, 1.minute).performed!
+        RateLimiter.new(nil, "search-min-anon-global", SiteSetting.rate_limit_search_anon_global, 1.minute).performed!
       end
     rescue RateLimiter::LimitExceeded => e
       return e
