@@ -3782,7 +3782,7 @@ de:
           domain: "Domain"
         screened_ips:
           title: "Gefilterte IPs"
-          description: 'IP-Adressen die beobachtet werden. Benutze „Erlauben“, um IP-Adressen auf die Allowlist zu setzen.'
+          description: 'IP-Adressen die beobachtet werden. Benutze „Erlauben“, um IP-Adressen auf die Whitelist zu setzen.'
           delete_confirm: "Möchtest du wirklich die Regel für %{ip_address} entfernen?"
           roll_up_confirm: "Möchtest du wirklich die häufig gefilterten IP-Adressen zu Subnetzen zusammenfassen?"
           rolled_up_some_subnets: "Die geblockten IP-Adressen wurden erfolgreich zu diesen Subnetzen zusammengefasst: %{subnets}"
@@ -4262,7 +4262,7 @@ de:
         title: "Einbettung"
         host: "Erlaubte Hosts"
         class_name: "Klassenname"
-        path_allowlist: "Pfad Allowlist"
+        path_whitelist: "Pfad Whitelist"
         edit: "bearbeiten"
         category: "In Kategorie Beitrag schreiben"
         add_host: "Host hinzufügen"
@@ -4273,9 +4273,9 @@ de:
         embed_post_limit: "Maximale Anzahl der Beiträge, welche eingebettet werden"
         embed_title_scrubber: "Regulärer Ausdruck (Regex) um den Titel eines Beitrags zu bereinigen"
         embed_truncate: "Kürze die eingebetteten Beiträge"
-        embed_allowlist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
-        embed_blocklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
-        embed_classname_allowlist: "Erlaubte CSS-Klassen"
+        embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
+        embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."
+        embed_classname_whitelist: "Erlaubte CSS-Klassen"
         save: "Einbettungseinstellungen speichern"
       permalink:
         title: "Permanentlinks"

@@ -3200,7 +3200,7 @@ hu:
         embed_by_username: "Felhasználónév téma létrehozáshoz"
         embed_post_limit: "A bejegyzések maximális száma a beágyazásban"
         embed_truncate: "Beágyazott bejegyzések rövidítése"
-        embed_classname_allowlist: "Engedélyezett CSS-osztálynevek"
+        embed_classname_whitelist: "Engedélyezett CSS-osztálynevek"
         save: "Beágyazás beállításainak mentése"
       permalink:
         title: "Közvetlen link"

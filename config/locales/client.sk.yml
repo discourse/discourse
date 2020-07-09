@@ -3098,9 +3098,9 @@ sk:
         embed_by_username: "Používateľské meno pre vytváranie tém"
         embed_post_limit: "Maximálny počet vložených príspevkov"
         embed_truncate: "Skrátiť vložené príspevky"
-        embed_allowlist_selector: "CSS selector pre elementy ktoré je možné vkladať"
-        embed_blocklist_selector: "CSS selector pre elementy ktoré nie je možné vkladať"
-        embed_classname_allowlist: "Dovolené názvy CSS tried"
+        embed_whitelist_selector: "CSS selector pre elementy ktoré je možné vkladať"
+        embed_blacklist_selector: "CSS selector pre elementy ktoré nie je možné vkladať"
+        embed_classname_whitelist: "Dovolené názvy CSS tried"
         save: "Uložiť Nastavenia vkladania"
       permalink:
         title: "Trvalé odkazy"

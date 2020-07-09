@@ -3026,8 +3026,8 @@ bg:
         embed_by_username: "Потребител за създаване на темата"
         embed_post_limit: "Максимален брой публикации за вграждане."
         embed_truncate: "Изтрий вградените постове"
-        embed_allowlist_selector: "Избор на CSS елементи които са разрешени за вграждане"
-        embed_blocklist_selector: "Избор на CSS елементи които не са разрешени за вграждане"
+        embed_whitelist_selector: "Избор на CSS елементи които са разрешени за вграждане"
+        embed_blacklist_selector: "Избор на CSS елементи които не са разрешени за вграждане"
         save: "Запамети настройките за вграждане"
       permalink:
         title: "Постоянни адреси"

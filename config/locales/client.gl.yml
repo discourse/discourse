@@ -3403,8 +3403,8 @@ gl:
         embed_by_username: "Nome do usuario para crear o tema"
         embed_post_limit: "Número máximo de publicacións a encaixar"
         embed_truncate: "Truncar as publicacións encaixadas"
-        embed_allowlist_selector: "Selector CSS de elementos permitidos nos encaixados"
-        embed_blocklist_selector: "Selector CSS para elementos retirados nos encaixados"
+        embed_whitelist_selector: "Selector CSS de elementos permitidos nos encaixados"
+        embed_blacklist_selector: "Selector CSS para elementos retirados nos encaixados"
         save: "Gardar axustes de encaixado"
       permalink:
         title: "Ligazóns permanentes"
