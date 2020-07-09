@@ -6,21 +6,30 @@ require "securerandom"
 class HtmlToMarkdown
 
   def initialize(html, opts = {})
+    @html = html
     @opts = opts
 
     # we're only interested in <body>
     @doc = Nokogiri::HTML5(html).at("body")
+  end
 
+  def to_markdown
     remove_not_allowed!(@doc)
     remove_hidden!(@doc)
     hoist_line_breaks!(@doc)
     remove_whitespaces!(@doc)
-  end
 
-  def to_markdown
     traverse(@doc)
       .gsub(/\n{2,}/, "\n\n")
       .strip
+  rescue SystemStackError => e
+    Discourse.warn_exception(
+      e,
+      message: "stack level too deep in HtmlToMarkdown",
+      env: { html: @html },
+    )
+
+    raise
   end
 
   private
