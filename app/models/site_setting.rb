@@ -251,6 +251,10 @@ class SiteSetting < ActiveRecord::Base
       send("#{new_method}=", args)
     end
   end
+
+  def self.base_font_stack
+    BaseFontSetting.font_stack(SiteSetting.base_font)
+  end
 end
 
 # == Schema Information

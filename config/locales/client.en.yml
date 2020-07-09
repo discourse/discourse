@@ -1726,6 +1726,7 @@ en:
     base_font_setting:
       default: "Helvetica/Arial"
       oxanium: "Oxanium"
+      open_sans: "Open Sans"
 
     shortcut_modifier_key:
       shift: "Shift"
