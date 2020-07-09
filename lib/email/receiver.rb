@@ -73,7 +73,7 @@ module Email
           @incoming_email = create_incoming_email
           process_internal
           raise BouncedEmailError if is_bounce?
-        rescue => e
+        rescue Exception => e
           error = e.to_s
           error = e.class.name if error.blank?
           @incoming_email.update_columns(error: error) if @incoming_email
