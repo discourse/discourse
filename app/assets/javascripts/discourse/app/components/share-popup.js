@@ -14,9 +14,12 @@ export default Component.extend({
   link: null,
   visible: null,
 
-  @discourseComputed
+  @discourseComputed("topic")
   sources() {
-    return Sharing.activeSources(this.siteSettings.share_links);
+    const privateContext =
+      this.siteSettings.login_required || this.topic.isPrivateMessage;
+
+    return Sharing.activeSources(this.siteSettings.share_links, privateContext);
   },
 
   @discourseComputed("type", "postNumber")
