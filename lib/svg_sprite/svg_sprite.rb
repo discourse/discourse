@@ -80,7 +80,6 @@ module SvgSprite
     "fab-facebook-square",
     "fab-facebook",
     "fab-github",
-    "fab-google-plus-square",
     "fab-instagram",
     "fab-linux",
     "fab-twitter",
