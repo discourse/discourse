@@ -328,19 +328,6 @@ describe TagsController do
     end
   end
 
-  describe '#check_hashtag' do
-    fab!(:tag) { Fabricate(:tag) }
-
-    it "should return the right response" do
-      get "/tags/check.json", params: { tag_values: [tag.name] }
-
-      expect(response.status).to eq(200)
-
-      response_tag = response.parsed_body["valid"].first
-      expect(response_tag["value"]).to eq(tag.name)
-    end
-  end
-
   describe "#update" do
     fab!(:tag) { Fabricate(:tag) }
 

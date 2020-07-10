@@ -2,11 +2,20 @@
 
 require "rails_helper"
 
-describe CategoryHashtagsController do
+describe HashtagsController do
   fab!(:category) { Fabricate(:category) }
+  fab!(:tag) { Fabricate(:tag) }
 
-  let(:group) { Fabricate(:group) }
-  let(:private_category) { Fabricate(:private_category, group: group) }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+  fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+  let(:tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+
+  before do
+    SiteSetting.tagging_enabled = true
+    tag_group
+  end
 
   describe "#check" do
     context "when logged in" do
@@ -15,20 +24,21 @@ describe CategoryHashtagsController do
           sign_in(Fabricate(:user))
         end
 
-        it "returns only valid categories" do
-          get "/category_hashtags/check.json", params: { category_slugs: [category.slug, private_category.slug, "none"] }
+        it "returns only valid categories and tags" do
+          get "/hashtags.json", params: { slugs: [category.slug, private_category.slug, "none", tag.name, hidden_tag.name] }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "valid" => [{ "slug" => category.slug, "url" => category.url }]
+            "categories" => { category.slug => category.url },
+            "tags" => { tag.name => tag.full_url }
           )
         end
 
-        it "does not return restricted categories" do
-          get "/category_hashtags/check.json", params: { category_slugs: [private_category.slug] }
+        it "does not return restricted categories or hidden tags" do
+          get "/hashtags.json", params: { slugs: [private_category.slug, hidden_tag.name] }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body).to eq("valid" => [])
+          expect(response.parsed_body).to eq("categories" => {}, "tags" => {})
         end
       end
 
@@ -39,14 +49,15 @@ describe CategoryHashtagsController do
           sign_in(admin)
         end
 
-        it "returns restricted categories" do
+        it "returns restricted categories and hidden tagss" do
           group.add(admin)
 
-          get "/category_hashtags/check.json", params: { category_slugs: [private_category.slug] }
+          get "/hashtags.json", params: { slugs: [private_category.slug, hidden_tag.name] }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body).to eq(
-            "valid" => [{ "slug" => private_category.slug, "url" => private_category.url }]
+            "categories" => { private_category.slug => private_category.url },
+            "tags" => { hidden_tag.name => hidden_tag.full_url }
           )
         end
       end
@@ -66,8 +77,8 @@ describe CategoryHashtagsController do
           quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
           quxbarbaz = Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
 
-          get "/category_hashtags/check.json", params: {
-            category_slugs: [
+          get "/hashtags.json", params: {
+            slugs: [
               ":", # should not work
               "foo",
               "bar", # should not work
@@ -82,12 +93,12 @@ describe CategoryHashtagsController do
           }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["valid"]).to contain_exactly(
-            { "slug" => "foo",     "url" => foo.url },
-            { "slug" => "foo:bar", "url" => foobar.url },
-            { "slug" => "bar:baz", "url" => foobarbaz.id < quxbarbaz.id ? foobarbaz.url : quxbarbaz.url },
-            { "slug" => "qux",     "url" => qux.url },
-            { "slug" => "qux:bar", "url" => quxbar.url }
+          expect(response.parsed_body["categories"]).to eq(
+            "foo" => foo.url,
+            "foo:bar" => foobar.url,
+            "bar:baz" => foobarbaz.id < quxbarbaz.id ? foobarbaz.url : quxbarbaz.url,
+            "qux" => qux.url,
+            "qux:bar" => quxbar.url
           )
         end
       end
@@ -95,7 +106,7 @@ describe CategoryHashtagsController do
 
     context "when not logged in" do
       it "returns invalid access" do
-        get "/category_hashtags/check.json", params: { category_slugs: [] }
+        get "/hashtags.json", params: { slugs: [] }
         expect(response.status).to eq(403)
       end
     end
