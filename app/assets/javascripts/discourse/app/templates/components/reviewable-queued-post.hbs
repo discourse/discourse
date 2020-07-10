@@ -18,9 +18,7 @@
   <div class="post-contents">
     {{reviewable-post-header reviewable=reviewable createdBy=reviewable.created_by tagName=""}}
 
-    <div class="post-body">
-      {{cook-text reviewable.payload.raw}}
-    </div>
+    {{cook-text reviewable.payload.raw class="post-body" opts=(hash removeMissing=true)}}
 
     {{yield}}
   </div>

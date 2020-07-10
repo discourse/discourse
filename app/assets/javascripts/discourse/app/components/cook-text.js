@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import { cookAsync } from "discourse/lib/text";
-import { ajax } from "discourse/lib/ajax";
-import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { afterRender } from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
+import { cookAsync } from "discourse/lib/text";
+import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 
 const CookText = Component.extend({
   cooked: null,
@@ -17,7 +17,7 @@ const CookText = Component.extend({
 
   @afterRender
   _resolveUrls() {
-    resolveAllShortUrls(ajax, this.siteSettings, this.element);
+    resolveAllShortUrls(ajax, this.siteSettings, this.element, this.opts);
   }
 });
 
