@@ -319,34 +319,28 @@ class PostSerializer < BasicPostSerializer
     !(SiteSetting.suppress_reply_when_quoting && object.reply_quoted?) && object.reply_to_user
   end
 
-  # this atrtribute is not even included unless include_bookmarked? is true,
-  # which is why it is always true if included
   def bookmarked
-    true
-  end
-
-  def include_bookmarked?
-    post_bookmark.present?
+    @bookmarked ||= post_bookmark.present?
   end
 
   def include_bookmark_reminder_at?
-    include_bookmarked?
+    bookmarked
   end
 
   def include_bookmark_reminder_type?
-    include_bookmarked?
+    bookmarked
   end
 
   def include_bookmark_name?
-    include_bookmarked?
+    bookmarked
   end
 
   def include_bookmark_delete_when_reminder_sent?
-    include_bookmarked?
+    bookmarked
   end
 
   def include_bookmark_id?
-    include_bookmarked?
+    bookmarked
   end
 
   def post_bookmark

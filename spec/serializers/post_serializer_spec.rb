@@ -250,8 +250,8 @@ describe PostSerializer do
         context "if topic_view is blank" do
           let(:topic_view) { nil }
 
-          it "does not return the bookmarked attribute" do
-            expect(serialized.as_json.key?(:bookmarked)).to eq(false)
+          it "the bookmarked attribute will be false" do
+            expect(serialized.as_json[:bookmarked]).to eq(false)
           end
         end
       end
