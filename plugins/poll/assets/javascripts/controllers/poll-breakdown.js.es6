@@ -6,79 +6,11 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
-import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
-import { getColors } from "../lib/chart-colors";
-
-let optionToSlicePerChart = [];
-
-// TODO: Move inside the component?
-function pieChartConfig(data, displayMode, optionToSlice) {
-  const transformedData = [];
-  let counter = 0;
-
-  data.forEach((votes, index) => {
-    if (votes > 0) {
-      transformedData.push(votes);
-      optionToSlice[index] = counter++;
-    }
-  });
-
-  const totalVotes = transformedData.reduce((sum, votes) => sum + votes, 0);
-  const colors = getColors(data.length).filter(
-    (color, index) => data[index] > 0
-  );
-
-  return {
-    type: PIE_CHART_TYPE,
-    plugins: [window.ChartDataLabels],
-    data: {
-      datasets: [
-        {
-          data: transformedData,
-          backgroundColor: colors
-        }
-      ]
-    },
-    options: {
-      plugins: {
-        datalabels: {
-          color: "#333",
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
-          borderRadius: 2,
-          font: {
-            family: getComputedStyle(document.body).fontFamily,
-            size: 16
-          },
-          padding: {
-            top: 2,
-            right: 6,
-            bottom: 2,
-            left: 6
-          },
-          formatter(votes) {
-            if (displayMode !== "percentage") {
-              return votes;
-            }
-
-            const percent = I18n.toNumber((votes / totalVotes) * 100.0, {
-              precision: 1
-            });
-
-            return `${percent}%`;
-          }
-        }
-      },
-      responsive: true,
-      aspectRatio: 1.1,
-      animation: { duration: 0 },
-      tooltips: false
-    }
-  };
-}
 
 export default Controller.extend(ModalFunctionality, {
   model: null,
   groupedBy: null,
+  highlightedOption: null,
   displayMode: "percentage",
 
   @discourseComputed("model.groupableUserFields")
@@ -95,20 +27,13 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   onShow() {
-    console.log(this.model);
+    // console.log(this.model);
     this.set("groupedBy", this.model.groupableUserFields[0]);
     this.refreshCharts();
   },
 
   refreshCharts() {
     const { model } = this;
-
-    const element = document.querySelector(".poll-breakdown-charts");
-    if (element) {
-      Array.from(
-        element.getElementsByClassName("poll-grouped-pie-container")
-      ).forEach(container => element.removeChild(container));
-    }
 
     return ajax("/polls/grouped_poll_results.json", {
       data: {
@@ -125,64 +50,11 @@ export default Controller.extend(ModalFunctionality, {
         }
       })
       .then(result => {
-        const parent = document.querySelector(".poll-breakdown-charts");
-
-        if (!parent) {
+        if (this.isDestroying || this.isDestroyed) {
           return;
         }
 
-        this.set("charts", []);
-        this.set("dataSets", []);
-        optionToSlicePerChart = [];
-
-        for (
-          let chartIdx = 0;
-          chartIdx < result.grouped_results.length;
-          chartIdx++
-        ) {
-          const data = result.grouped_results[chartIdx].options.mapBy("votes");
-          this.dataSets[chartIdx] = data;
-
-          optionToSlicePerChart[chartIdx] = {};
-          const chartConfig = pieChartConfig(
-            data,
-            this.displayMode,
-            optionToSlicePerChart[chartIdx]
-          );
-          const canvasId = `pie-${model.id}-${chartIdx}`;
-          let el = document.querySelector(`#${canvasId}`);
-
-          if (el) {
-            // eslint-disable-next-line
-            Chart.helpers.each(Chart.instances, instance => {
-              if (instance.chart.canvas.id === canvasId && el.$chartjs) {
-                instance.destroy();
-                // eslint-disable-next-line
-                new Chart(el.getContext("2d"), chartConfig);
-              }
-            });
-          } else {
-            // TODO: make a component instead of creating ad hoc elements
-            const container = document.createElement("div");
-            container.classList.add("poll-grouped-pie-container");
-
-            const label = document.createElement("label");
-            label.classList.add("poll-pie-label");
-            label.textContent = result.grouped_results[chartIdx].group;
-
-            const canvas = document.createElement("canvas");
-            canvas.classList.add(`poll-grouped-pie-${model.id}`);
-            canvas.id = canvasId;
-
-            container.appendChild(label);
-            container.appendChild(canvas);
-            parent.appendChild(container);
-
-            // eslint-disable-next-line
-            const chart = new Chart(canvas.getContext("2d"), chartConfig);
-            this.charts.push(chart);
-          }
-        }
+        this.set("charts", result.grouped_results);
       });
   },
 
@@ -195,34 +67,6 @@ export default Controller.extend(ModalFunctionality, {
   @action
   onSelectPanel(panel) {
     this.set("displayMode", panel.id);
-
-    this.charts.forEach((chart, index) => {
-      const config = pieChartConfig(this.dataSets[index], this.displayMode);
-      chart.data.datasets = config.data.datasets;
-      chart.options = config.options;
-      chart.update();
-    });
-  },
-
-  @action
-  highlightSlices(active, optionIndex) {
-    this.charts.forEach((chart, chartIndex) => {
-      const meta = chart.getDatasetMeta(0);
-      const sliceIndex = optionToSlicePerChart[chartIndex][optionIndex];
-      if (typeof sliceIndex === "undefined") {
-        return;
-      }
-
-      const slice = meta.data[sliceIndex];
-
-      if (active) {
-        meta.controller.setHoverStyle(slice);
-      } else {
-        meta.controller.removeHoverStyle(slice);
-      }
-
-      chart.draw();
-    });
   }
 });
 

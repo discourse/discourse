@@ -14,18 +14,6 @@
     min-height: 50vh;
     padding: 0;
   }
-
-  // TODO: move this?
-  .poll-grouped-pie-container {
-    padding-top: 1rem;
-    position: relative;
-    width: 33.3%;
-
-    .poll-pie-label {
-      display: block;
-      text-align: center;
-    }
-  }
 }
 
 .poll-breakdown-sidebar {
@@ -125,4 +113,15 @@
 .poll-breakdown-charts {
   display: flex;
   flex-wrap: wrap;
+}
+
+.poll-breakdown-chart-container {
+  padding-top: 1rem;
+  position: relative;
+  width: 33.3%;
+}
+
+.poll-breakdown-chart-label {
+  display: block;
+  text-align: center;
 }

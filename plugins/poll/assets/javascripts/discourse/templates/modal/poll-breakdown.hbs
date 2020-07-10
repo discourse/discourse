@@ -15,8 +15,8 @@
           totalVotes=this.totalVotes
           optionsCount=this.model.poll.options.length
           displayMode=this.displayMode
-          onMouseOver=(fn this.highlightSlices true index)
-          onMouseOut=(fn this.highlightSlices false index)
+          onMouseOver=(fn (mut this.highlightedOption) index)
+          onMouseOut=(fn (mut this.highlightedOption) null)
         }}
       {{/each}}
     </ul>
@@ -37,6 +37,15 @@
       }}
     </div>
 
-    <div class="poll-breakdown-charts"></div>
+    <div class="poll-breakdown-charts">
+      {{#each this.charts as |chart|}}
+        {{poll-breakdown-chart
+          group=(get chart "group")
+          options=(get chart "options")
+          displayMode=this.displayMode
+          highlightedOption=this.highlightedOption
+        }}
+      {{/each}}
+    </div>
   </div>
 {{/d-modal-body}}
