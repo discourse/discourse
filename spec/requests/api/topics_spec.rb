@@ -884,4 +884,84 @@ describe 'posts' do
     end
   end
 
+  path '/t/{id}/change-timestamp.json' do
+    put 'Update topic timestamp' do
+      tags 'Topics'
+      consumes 'application/json'
+      parameter name: 'Api-Key', in: :header, type: :string, required: true
+      parameter name: 'Api-Username', in: :header, type: :string, required: true
+      parameter name: :id, in: :path, schema: { type: :string }
+
+      parameter name: :request_body, in: :body, schema: {
+        type: :object,
+        properties: {
+          timestamp: {
+            type: :string,
+            example: '1594291380'
+          }
+        }, required: [ 'timestamp' ]
+      }
+
+      produces 'application/json'
+      response '200', 'topic updated' do
+        schema type: :object, properties: {
+          success: { type: :string },
+        }
+
+        let(:request_body) { { timestamp: '1594291380' } }
+        let!(:post) { Fabricate(:post) }
+        let(:id) { post.topic.id }
+
+        run_test!
+      end
+    end
+  end
+
+  path '/t/{id}/timer.json' do
+    post 'Create topic timer' do
+      tags 'Topics'
+      consumes 'application/json'
+      parameter name: 'Api-Key', in: :header, type: :string, required: true
+      parameter name: 'Api-Username', in: :header, type: :string, required: true
+      parameter name: :id, in: :path, schema: { type: :string }
+
+      parameter name: :request_body, in: :body, schema: {
+        type: :object,
+        properties: {
+          time: {
+            type: :string,
+            example: ''
+          },
+          status_type: {
+            type: :string,
+          },
+          based_on_last_post: {
+            type: :boolean,
+          },
+          category_id: {
+            type: :integer
+          }
+        }
+      }
+
+      produces 'application/json'
+      response '200', 'topic updated' do
+        schema type: :object, properties: {
+          success: { type: :string },
+          execute_at: { type: :string },
+          duration: { type: :string, nullable: true },
+          based_on_last_post: { type: :boolean },
+          closed: { type: :boolean },
+          category_id: { type: :string, nullable: true },
+        }
+
+        let(:request_body) { { time: '2020-07-11+18:00-06:00', status_type: 'close' } }
+        let!(:topic_post) { Fabricate(:post) }
+        let(:id) { topic_post.topic.id }
+
+        run_test!
+      end
+    end
+  end
+
 end
