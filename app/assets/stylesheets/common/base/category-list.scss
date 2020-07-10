@@ -120,11 +120,12 @@
   }
 
   .description {
-    padding-bottom: 1em;
+    margin-bottom: 1em;
     text-align: center;
     font-size: $font-0;
     color: dark-light-choose($primary-medium, $secondary-high);
     position: relative;
+    @include line-clamp(4);
 
     //  allow clicks to fall through the description text to the category below...
     pointer-events: none;
@@ -263,9 +264,8 @@
       padding: 4px 0;
       display: flex;
       align-items: baseline;
-      .overflow {
-        max-height: 3em;
-        overflow: hidden;
+      a {
+        @include line-clamp(2);
       }
       .d-icon {
         margin-right: 0.15em;
