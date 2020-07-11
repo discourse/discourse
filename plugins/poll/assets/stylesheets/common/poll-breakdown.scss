@@ -48,7 +48,6 @@
 
 .poll-breakdown-option {
   align-items: center;
-  border-radius: 5px;
   column-gap: 0.66rem;
   cursor: pointer;
   display: grid;
@@ -56,6 +55,11 @@
   row-gap: 0.1rem;
   justify-content: start;
   padding: 0.5rem 1rem;
+
+  &:hover {
+    border-radius: 5px;
+    background: $primary-low-mid;
+  }
 }
 
 .poll-breakdown-option-color {

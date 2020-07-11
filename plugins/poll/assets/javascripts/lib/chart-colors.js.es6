@@ -62,7 +62,7 @@ export function getColors(count, palette) {
         )
       );
     }
-    colors.push(`rgba(${color.toString()},1.0)`);
+    colors.push(`rgb(${color.toString()})`);
     previousGradientIndex = baseGradientKeyIndex;
   }
   return colors;
