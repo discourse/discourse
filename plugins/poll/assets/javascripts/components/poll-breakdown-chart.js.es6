@@ -5,7 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 import { getColors } from "../lib/chart-colors";
 
-// args: options, group, displayMode, highlightedOption
+// args: options, group, displayMode, highlightedOption, setHighlightedOption
 export default Component.extend({
   classNames: "poll-breakdown-chart-container",
   optionToSlice: {},
@@ -112,7 +112,19 @@ export default Component.extend({
         responsive: true,
         aspectRatio: 1.1,
         animation: { duration: 0 },
-        tooltips: false
+        tooltips: false,
+        onHover: (event, activeElements) => {
+          if (!activeElements.length) {
+            return this.setHighlightedOption(null);
+          }
+
+          const sliceIndex = activeElements[0]._index;
+          const optionIndex = Object.keys(this.optionToSlice).find(
+            option => this.optionToSlice[option] === sliceIndex
+          );
+
+          this.setHighlightedOption(optionIndex);
+        }
       }
     };
   },
