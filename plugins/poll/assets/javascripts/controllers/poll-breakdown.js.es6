@@ -15,10 +15,16 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("model.groupableUserFields")
   groupableUserFields(fields) {
-    return fields.map(field => ({
-      id: field,
-      label: transformUserFieldToLabel(field)
-    }));
+    return fields.map(field => {
+      const transformed = field.split("_").filter(Boolean);
+
+      if (transformed.length > 1) {
+        transformed[0] = classify(transformed[0]);
+      }
+      const label = transformed.join(" ");
+
+      return { id: field, label };
+    });
   },
 
   @discourseComputed("model.poll.options")
@@ -69,11 +75,3 @@ export default Controller.extend(ModalFunctionality, {
     this.set("displayMode", panel.id);
   }
 });
-
-function transformUserFieldToLabel(fieldName) {
-  let transformed = fieldName.split("_").filter(Boolean);
-  if (transformed.length > 1) {
-    transformed[0] = classify(transformed[0]);
-  }
-  return transformed.join(" ");
-}
