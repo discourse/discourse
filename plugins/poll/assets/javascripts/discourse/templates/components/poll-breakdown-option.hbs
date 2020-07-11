@@ -1,5 +1,10 @@
-<li class="poll-breakdown-option" {{on "mouseover" @onMouseOver}} {{on "mouseout" @onMouseOut}}>
-  <span class="poll-breakdown-option-color" style={{this.colorStyle}}></span>
+<li
+  class="poll-breakdown-option"
+  style={{this.colorBackgroundStyle}}
+  {{on "mouseover" @onMouseOver}}
+  {{on "mouseout" @onMouseOut}}
+>
+  <span class="poll-breakdown-option-color" style={{this.colorPreviewStyle}}></span>
 
   <span class="poll-breakdown-option-count">
     {{#if showPercentage}}

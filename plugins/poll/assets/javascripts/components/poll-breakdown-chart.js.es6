@@ -123,7 +123,7 @@ export default Component.extend({
             option => this.optionToSlice[option] === sliceIndex
           );
 
-          this.setHighlightedOption(optionIndex);
+          this.setHighlightedOption(Number(optionIndex));
         }
       }
     };
