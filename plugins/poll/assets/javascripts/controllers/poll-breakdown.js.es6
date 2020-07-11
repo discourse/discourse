@@ -33,18 +33,15 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   onShow() {
-    // console.log(this.model);
     this.set("groupedBy", this.model.groupableUserFields[0]);
-    this.refreshCharts();
+    this.fetchGroupedPollData();
   },
 
-  refreshCharts() {
-    const { model } = this;
-
+  fetchGroupedPollData() {
     return ajax("/polls/grouped_poll_results.json", {
       data: {
-        post_id: model.post.id,
-        poll_name: model.poll.name,
+        post_id: this.model.post.id,
+        poll_name: this.model.poll.name,
         user_field_name: this.groupedBy
       }
     })
@@ -67,7 +64,7 @@ export default Controller.extend(ModalFunctionality, {
   @action
   setGrouping(value) {
     this.set("groupedBy", value);
-    this.refreshCharts();
+    this.fetchGroupedPollData();
   },
 
   @action
