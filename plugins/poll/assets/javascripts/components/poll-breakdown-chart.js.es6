@@ -75,7 +75,8 @@ export default Component.extend({
         datasets: [
           {
             data: transformedData,
-            backgroundColor: colors
+            backgroundColor: colors,
+            hoverBorderColor: "#fff"
           }
         ]
       },
