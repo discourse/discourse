@@ -54,6 +54,25 @@ QUnit.skip("modal", async function(assert) {
   );
 });
 
+QUnit.test("rawTitle in modal panels", async function(assert) {
+  Ember.TEMPLATES["modal/test-raw-title-panels"] = Ember.HTMLBars.compile("");
+  const panels = [
+    { id: "test1", rawTitle: "Test 1" },
+    { id: "test2", rawTitle: "Test 2" }
+  ];
+
+  await visit("/");
+  run(() => showModal("test-raw-title-panels", { panels }));
+
+  assert.equal(
+    find(".d-modal .modal-tab:first-child")
+      .text()
+      .trim(),
+    "Test 1",
+    "it should display the raw title"
+  );
+});
+
 acceptance("Modal Keyboard Events", { loggedIn: true });
 
 QUnit.test("modal-keyboard-events", async function(assert) {
