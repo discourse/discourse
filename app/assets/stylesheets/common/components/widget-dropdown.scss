@@ -1,5 +1,4 @@
 .widget-dropdown {
-  margin: 1em;
   display: inline-flex;
   box-sizing: border-box;
 
@@ -14,7 +13,6 @@
     flex-direction: column;
     padding: 0.25em;
     background: $secondary;
-    margin-top: 5px;
     z-index: z("dropdown");
     border: 1px solid $primary-low;
     max-height: 250px;
