@@ -287,7 +287,7 @@ describe TopicView do
       it 'returns the two posters with their appropriate counts' do
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
 
-        expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
+        expect(TopicView.new(topic.id, admin).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
 
         expect(TopicView.new(topic.id, first_poster).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 1]])
       end

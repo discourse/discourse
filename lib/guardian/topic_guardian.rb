@@ -31,6 +31,10 @@ module TopicGuardian
     is_staff? && SiteSetting.enable_whispers?
   end
 
+  def can_see_whispers?(_topic)
+    is_staff?
+  end
+
   def can_publish_topic?(topic, category)
     is_staff? && can_see?(topic) && can_create_topic?(category)
   end
