@@ -14,11 +14,9 @@ export default Component.extend({
 
   topic: alias("panel.model.topic"),
 
-  @discourseComputed
-  sources() {
-    const privateContext =
-      this.siteSettings.login_required || this.topic.isPrivateMessage;
-
+  @discourseComputed("topic.isPrivateMessage")
+  sources(isPM) {
+    const privateContext = this.siteSettings.login_required || isPM;
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
   },
 
