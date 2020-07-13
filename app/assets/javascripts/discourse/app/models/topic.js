@@ -493,17 +493,17 @@ const Topic = RestModel.extend({
     });
   },
 
-  createInvite(user, group_names, custom_message) {
+  createInvite(user, group_ids, custom_message) {
     return ajax(`/t/${this.id}/invite`, {
       type: "POST",
-      data: { user, group_names, custom_message }
+      data: { user, group_ids, custom_message }
     });
   },
 
-  generateInviteLink(email, groupNames, topicId) {
+  generateInviteLink(email, group_ids, topic_id) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { email, group_names: groupNames, topic_id: topicId }
+      data: { email, group_ids, topic_id }
     });
   },
 

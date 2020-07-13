@@ -107,7 +107,7 @@ describe InvitesController do
       it "allows admins to invite to groups" do
         group = Fabricate(:group)
         sign_in(admin)
-        post "/invites.json", params: { email: email, group_names: group.name }
+        post "/invites.json", params: { email: email, group_ids: [group.id] }
         expect(response.status).to eq(200)
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
@@ -118,7 +118,7 @@ describe InvitesController do
         user.update!(trust_level: TrustLevel[2])
         group.add_owner(user)
 
-        post "/invites.json", params: { email: email, group_names: group.name }
+        post "/invites.json", params: { email: email, group_ids: [group.id] }
 
         expect(response.status).to eq(200)
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
@@ -198,7 +198,7 @@ describe InvitesController do
           sign_in(admin)
 
           post "/invites/link.json", params: {
-            email: email, group_names: group.name
+            email: email, group_ids: [group.id]
           }
 
           expect(response.status).to eq(200)
@@ -245,7 +245,7 @@ describe InvitesController do
 
           post "/invites/link.json", params: {
             max_redemptions_allowed: 5,
-            group_names: group.name
+            group_ids: [group.id]
           }
 
           expect(response.status).to eq(200)

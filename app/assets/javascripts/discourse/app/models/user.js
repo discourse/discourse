@@ -668,28 +668,28 @@ const User = RestModel.extend({
     );
   },
 
-  createInvite(email, group_names, custom_message) {
+  createInvite(email, group_ids, custom_message) {
     return ajax("/invites", {
       type: "POST",
-      data: { email, group_names, custom_message }
+      data: { email, group_ids, custom_message }
     });
   },
 
-  generateInviteLink(email, group_names, topic_id) {
+  generateInviteLink(email, group_ids, topic_id) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { email, group_names, topic_id }
+      data: { email, group_ids, topic_id }
     });
   },
 
   generateMultipleUseInviteLink(
-    group_names,
+    group_ids,
     max_redemptions_allowed,
     expires_at
   ) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { group_names, max_redemptions_allowed, expires_at }
+      data: { group_ids, max_redemptions_allowed, expires_at }
     });
   },
 

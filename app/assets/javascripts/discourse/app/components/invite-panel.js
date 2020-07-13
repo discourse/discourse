@@ -310,9 +310,7 @@ export default Component.extend({
         return;
       }
 
-      const groupNames = this.allGroups
-        .filter(g => this.groupIds.includes(g.id))
-        .map(g => g.name);
+      const groupIds = this.groupIds;
       const userInvitedController = this.userInvitedShow;
 
       const model = this.inviteModel;
@@ -347,7 +345,7 @@ export default Component.extend({
         return this.inviteModel
           .createInvite(
             this.emailOrUsername.trim(),
-            groupNames,
+            groupIds,
             this.customMessage
           )
           .then(result => {
@@ -385,7 +383,7 @@ export default Component.extend({
         return;
       }
 
-      const groupNames = this.get("inviteModel.groupNames");
+      const groupIds = this.groupIds;
       const userInvitedController = this.userInvitedShow;
       const model = this.inviteModel;
       model.setProperties({ saving: true, error: false });
@@ -396,7 +394,7 @@ export default Component.extend({
       }
 
       return model
-        .generateInviteLink(this.emailOrUsername.trim(), groupNames, topicId)
+        .generateInviteLink(this.emailOrUsername.trim(), groupIds, topicId)
         .then(result => {
           model.setProperties({
             saving: false,

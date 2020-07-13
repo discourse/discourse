@@ -41,10 +41,6 @@ export default Component.extend({
     return false;
   },
 
-  groupFinder(term) {
-    return Group.findAll({ term, ignore_automatic: true });
-  },
-
   errorMessage: I18n.t("user.invited.invite_link.error"),
 
   reset() {
@@ -67,9 +63,7 @@ export default Component.extend({
       return;
     }
 
-    const groupNames = this.allGroups
-      .filter(g => this.groupIds.includes(g.id))
-      .map(g => g.name);
+    const groupIds = this.groupIds;
     const maxRedemptionAllowed = this.maxRedemptionAllowed;
     const inviteExpiresAt = this.inviteExpiresAt;
     const userInvitedController = this.userInvitedShow;
@@ -78,7 +72,7 @@ export default Component.extend({
 
     return model
       .generateMultipleUseInviteLink(
-        groupNames,
+        groupIds,
         maxRedemptionAllowed,
         inviteExpiresAt
       )
