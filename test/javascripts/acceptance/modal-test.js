@@ -4,9 +4,9 @@ import { acceptance, controllerFor } from "helpers/qunit-helpers";
 import showModal from "discourse/lib/show-modal";
 
 acceptance("Modal", {
-  _translations: I18n.translations,
-
   beforeEach() {
+    this._translations = I18n.translations;
+
     I18n.translations = {
       en: {
         js: {
