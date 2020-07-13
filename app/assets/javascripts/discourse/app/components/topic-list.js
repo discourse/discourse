@@ -85,7 +85,7 @@ export default Component.extend(LoadMore, {
       return;
     }
 
-    if (order !== "default" && order !== "activity") {
+    if (order && order !== "activity") {
       return;
     }
 
