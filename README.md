@@ -174,6 +174,13 @@ The Whitelisted Generic Onebox has some caveats for its use, beyond simply white
   2. The URL you're oneboxing cannot be a root url (e.g. `http://example.com` won't work, but `http://example.com/page` will)
   3. If the oneboxed URL responds with oEmbed and has a `rich` type: the `html` content must contain an `<iframe>`. Responses without an iframe will not be oneboxed.
 
+Ignoring Canonical URLs
+-----------------------
+Onebox prefers to use canonical URL's instead of the raw inputed URL when searching for Open Graph metadata.
+If your URL's canonical URL does not have opengraph metadata, use the `og:ignore_canonical` property to have Onebox ignore the canonical URL:
+```html
+<meta property="og:ignore_canonical" content="true" />
+```
 
 Installing
 ----------
