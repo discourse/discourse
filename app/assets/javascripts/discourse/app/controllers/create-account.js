@@ -2,7 +2,7 @@ import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
-import { notEmpty, and } from "@ember/object/computed";
+import { notEmpty } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -74,8 +74,15 @@ export default Controller.extend(
       return false;
     },
 
-    usernameDisabled: and("authOptions", "!authOptions.can_edit_username"),
-    nameDisabled: and("authOptions", "!authOptions.can_edit_name"),
+    @discourseComputed("authOptions", "authOptions.can_edit_username")
+    usernameDisabled(authOptions, canEditUsername) {
+      return authOptions && !canEditUsername;
+    },
+
+    @discourseComputed("authOptions", "authOptions.can_edit_name")
+    nameDisabled(authOptions, canEditName) {
+      return authOptions && !canEditName;
+    },
 
     @discourseComputed
     fullnameRequired() {

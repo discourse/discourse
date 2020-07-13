@@ -5,21 +5,21 @@ module Email
   class Processor
     attr_reader :receiver
 
-    def initialize(mail, retry_on_rate_limit = true)
+    def initialize(mail, opts = {})
       @mail = mail
-      @retry_on_rate_limit = retry_on_rate_limit
+      @opts = opts
     end
 
-    def self.process!(mail, retry_on_rate_limit = true)
-      Email::Processor.new(mail, retry_on_rate_limit).process!
+    def self.process!(mail, opts = {})
+      Email::Processor.new(mail, opts).process!
     end
 
     def process!
       begin
-        @receiver = Email::Receiver.new(@mail)
+        @receiver = Email::Receiver.new(@mail, @opts)
         @receiver.process!
       rescue RateLimiter::LimitExceeded
-        @retry_on_rate_limit ? Jobs.enqueue(:process_email, mail: @mail) : raise
+        @opts[:retry_on_rate_limit] ? Jobs.enqueue(:process_email, mail: @mail) : raise
       rescue => e
         return handle_bounce(e) if @receiver.is_bounce?
 

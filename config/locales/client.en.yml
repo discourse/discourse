@@ -643,6 +643,23 @@ en:
           title: Interaction
           posting: Posting
           notification: Notification
+        email:
+          title: "Email"
+          status: "Synchronized %{old_emails} / %{total_emails} emails via IMAP."
+          credentials:
+            title: "Credentials"
+            smtp_server: "SMTP Server"
+            smtp_port: "SMTP Port"
+            smtp_ssl: "Use SSL for SMTP"
+            imap_server: "IMAP Server"
+            imap_port: "IMAP Port"
+            imap_ssl: "Use SSL for IMAP"
+            username: "Username"
+            password: "Password"
+          mailboxes:
+            synchronized: "Synchronized Mailbox"
+            none_found: "No mailboxes were found in this email account."
+            disabled: "disabled"
         membership:
           title: Membership
           access: Access
@@ -3383,6 +3400,8 @@ en:
 
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
+
+    image_removed: "(image removed)"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

@@ -127,13 +127,17 @@ module Email
     end
 
     def build_args
-      {
+      args = {
         to: @to,
         subject: subject,
         body: body,
         charset: 'UTF-8',
         from: from_value
       }
+
+      args[:delivery_method_options] = @opts[:delivery_method_options] if @opts[:delivery_method_options]
+
+      args
     end
 
     def header_args

@@ -1056,6 +1056,43 @@ describe UsersController do
         end
 
       end
+
+      context "with no email in the auth payload" do
+        before do
+          OmniAuth.config.test_mode = true
+          OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
+            provider: 'twitter',
+            uid: '123545',
+            info: OmniAuth::AuthHash::InfoHash.new(
+              nickname: "testosama",
+              name: "Osama Test"
+            )
+          )
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+          SiteSetting.enable_twitter_logins = true
+          get "/auth/twitter/callback.json"
+        end
+
+        after do
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter] = nil
+          OmniAuth.config.test_mode = false
+        end
+
+        it "will create the user successfully" do
+          Rails.application.env_config["omniauth.auth"].info.email = nil
+
+          post "/u.json", params: {
+            name: "Test Osama",
+            username: "testosama",
+            password: "strongpassword",
+            email: "osama@mail.com"
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json['success']).to eq(true)
+        end
+      end
     end
 
     it "creates user successfully but doesn't activate the account" do

@@ -1165,4 +1165,76 @@ describe PostAlerter do
       expect(Notification.last.notification_type).to eq(Notification.types[:posted])
     end
   end
+
+  context "SMTP" do
+    before do
+      SiteSetting.enable_smtp = true
+      Jobs.run_immediately!
+    end
+
+    fab!(:group) do
+      Fabricate(
+        :group,
+        smtp_server: "imap.gmail.com",
+        smtp_port: 587,
+        email_username: "discourse@example.com",
+        email_password: "discourse@example.com"
+      )
+    end
+
+    fab!(:topic) do
+      Fabricate(:private_message_topic,
+        topic_allowed_groups: [
+          Fabricate.build(:topic_allowed_group, group: group)
+        ]
+      )
+    end
+
+    it "sends notifications for new posts in topic" do
+      post = Fabricate(
+        :post,
+        topic: topic,
+        incoming_email:
+          Fabricate(
+            :incoming_email,
+            topic: topic,
+            from_address: "foo@discourse.org",
+            to_addresses: group.email_username,
+            cc_addresses: "bar@discourse.org"
+          )
+      )
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to include(group.email_username)
+      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
+      expect(email.subject).to eq("Re: #{topic.title}")
+
+      post = Fabricate(
+        :post,
+        topic: topic,
+        incoming_email:
+          Fabricate(
+            :incoming_email,
+            topic: topic,
+            from_address: "bar@discourse.org",
+            to_addresses: group.email_username,
+            cc_addresses: "baz@discourse.org"
+          )
+      )
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+
+      post = Fabricate(:post, topic: topic.reload)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to eq([group.email_username])
+      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org", "baz@discourse.org")
+      expect(email.subject).to eq("Re: #{topic.title}")
+
+      post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+  end
 end

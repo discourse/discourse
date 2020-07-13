@@ -547,6 +547,15 @@ class GroupsController < ApplicationController
         if current_user.admin
           default_params.push(*[
             :incoming_email,
+            :smtp_server,
+            :smtp_port,
+            :smtp_ssl,
+            :imap_server,
+            :imap_port,
+            :imap_ssl,
+            :imap_mailbox_name,
+            :email_username,
+            :email_password,
             :primary_group,
             :visibility_level,
             :members_visibility_level,
