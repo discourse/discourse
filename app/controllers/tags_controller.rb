@@ -12,7 +12,6 @@ class TagsController < ::ApplicationController
     :show,
     :tag_feed,
     :search,
-    :check_hashtag,
     :info,
     Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   ].flatten
@@ -281,14 +280,6 @@ class TagsController < ::ApplicationController
     level = params[:tag_notification][:notification_level].to_i
     TagUser.change(current_user.id, tag.id, level)
     render json: { notification_level: level, tag_id: tag.id }
-  end
-
-  def check_hashtag
-    valid_tags = Tag.where_name(params[:tag_values]).map do |tag|
-      { value: tag.name, url: tag.full_url }
-    end.compact
-
-    render json: { valid: valid_tags }
   end
 
   def personal_messages
