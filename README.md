@@ -71,7 +71,6 @@ out the project. You can then try out URLs.
 The server doesn't reload code changes automatically (PRs accepted!) so
 make sure to hit CTRL-C and restart the server to try a code change out.
 
-
 Adding Support for a new URL
 ----------------------------
 
@@ -164,7 +163,6 @@ Adding Support for a new URL
      require_relative "engine/name_onebox"
      ```
 
-
 Whitelisted Generic Onebox caveats
 ----------------------------------
 
@@ -176,8 +174,9 @@ The Whitelisted Generic Onebox has some caveats for its use, beyond simply white
 
 Ignoring Canonical URLs
 -----------------------
-Onebox prefers to use canonical URL's instead of the raw inputed URL when searching for Open Graph metadata.
-If your URL's canonical URL does not have opengraph metadata, use the `og:ignore_canonical` property to have Onebox ignore the canonical URL:
+
+Onebox prefers to use canonical URLs instead of the raw inputted URL when searching for Open Graph metadata. If your site's canonical URL does not have opengraph metadata, use the `og:ignore_canonical` property to have Onebox ignore the canonical URL.
+
 ```html
 <meta property="og:ignore_canonical" content="true" />
 ```
