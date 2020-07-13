@@ -1799,7 +1799,7 @@ nl:
     staff_user_custom_fields: "Een lijst van aangepaste gebruikersvelden die voor stafleden met de API kan worden opgehaald."
     enable_user_directory: "Een lijst van gebruikers aanbieden om door te bladeren"
     enable_group_directory: "Een lijst van groepen aanbieden om door te bladeren"
-    enable_category_group_moderation: "Groepen mogen inhoud in specifieke categorieën beoordelen"
+    enable_category_group_review: "Groepen mogen inhoud in specifieke categorieën beoordelen"
     group_in_subject: "%%{optional_pm} in e-mailonderwerp instellen op naam van eerste groep in PM; zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Gebruikers mogen naar anonieme modus overschakelen"
     anonymous_posting_min_trust_level: "Het minimale vertrouwensniveau dat nodig is om anonieme berichtplaatsing in te schakelen"

@@ -1800,7 +1800,7 @@ fr:
     staff_user_custom_fields: "Une liste de champs personnalisables qui peuvent être récupérés pour des responsables avec l'API."
     enable_user_directory: "Activer le répertoire d'utilisateurs"
     enable_group_directory: "Activer le répertoire de groupes"
-    enable_category_group_moderation: "Autoriser les groupes à examiner le contenu de catégories spécifiques"
+    enable_category_group_review: "Autoriser les groupes à examiner le contenu de catégories spécifiques"
     group_in_subject: "Mettre %%{optional_pm} dans le sujet du courriel au nom du premier groupe du message direct. Voir : <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>personnaliser le format du sujet des courriel standards</a>"
     allow_anonymous_posting: "Permettre aux utilisateurs de passer en mode anonyme"
     anonymous_posting_min_trust_level: "Le niveau de confiance minimum pour passer en mode anonyme."

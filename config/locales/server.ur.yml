@@ -1673,7 +1673,7 @@ ur:
     staff_user_custom_fields: "صارف کے اپنی مرضی کے فیلڈز کی ایک فہرست جو بزریعہ API سٹاف ممبران کیلئے حاصل کی جا سکتی ہے۔"
     enable_user_directory: "براؤزِنگ کیلئے صارفین کی ایک ڈائرِکٹری فراہم کریں"
     enable_group_directory: "براؤزِنگ کیلئے گروپوں کی ایک ڈائرِکٹری فراہم کریں"
-    enable_category_group_moderation: "گروپوں کو مخصوص زُمرہ جات میں مواد کا جائزہ لینے کی اجازت دیں"
+    enable_category_group_review: "گروپوں کو مخصوص زُمرہ جات میں مواد کا جائزہ لینے کی اجازت دیں"
     group_in_subject: "ایمیل کے موضوع میں %%{optional_pm} کو ذاتی پیغام میں پہلے گروپ کے نام پر سَیٹ کریں، دیکھیے: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>سٹینڈرڈ ایمیلز کیلئے موضوع فارمَیٹ کو حسب ضرورت تبدیل کریں</a>"
     allow_anonymous_posting: "صارفین کو گمنام مَوڈ میں تبدیل ہونے کی اجازت دیں"
     anonymous_posting_min_trust_level: "گمنام پوسٹنگ کو فعال کرنے کیلئے کم از کم مطلوبہ ٹرسٹ لَیول"
