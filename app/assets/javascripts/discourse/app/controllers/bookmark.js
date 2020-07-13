@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { scheduleOnce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { action } from "@ember/object";
@@ -91,9 +91,9 @@ export default Controller.extend(ModalFunctionality, {
       this._initializeExistingBookmarkData();
     }
 
-    scheduleOnce("afterRender", () => {
+    schedule("afterRender", () => {
       if (this.site.isMobileDevice) {
-        $("#bookmark-name").blur();
+        document.getElementById("bookmark-name").blur();
       }
     });
   },
