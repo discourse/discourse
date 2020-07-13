@@ -172,9 +172,11 @@ export default function transformPost(
     postAtts.createdByName = createdBy.name;
 
     postAtts.lastPostUrl = topic.get("lastPostUrl");
-    postAtts.lastPostUsername = details.last_poster.username;
-    postAtts.lastPostAvatarTemplate = details.last_poster.avatar_template;
-    postAtts.lastPostName = details.last_poster.name;
+    if (details.last_poster) {
+      postAtts.lastPostUsername = details.last_poster.username;
+      postAtts.lastPostAvatarTemplate = details.last_poster.avatar_template;
+      postAtts.lastPostName = details.last_poster.name;
+    }
     postAtts.lastPostAt = topic.last_posted_at;
 
     postAtts.topicReplyCount = topic.get("replyCount");
