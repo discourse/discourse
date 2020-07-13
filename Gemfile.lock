@@ -86,7 +86,7 @@ GEM
     colored2 (3.1.2)
     concurrent-ruby (1.1.6)
     connection_pool (2.2.3)
-    cose (1.1.0)
+    cose (1.2.0)
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
     cppjieba_rb (0.3.3)
