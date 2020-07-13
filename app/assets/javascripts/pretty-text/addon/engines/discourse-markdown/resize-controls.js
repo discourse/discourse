@@ -54,7 +54,7 @@ function rule(state) {
 }
 
 function buildScaleButton(selectedScale, scale) {
-  const activeScaleClass = selectedScale === scale ? "active" : "";
+  const activeScaleClass = selectedScale === scale ? " active" : "";
   return (
     "<span class='scale-btn" +
     activeScaleClass +
@@ -99,7 +99,7 @@ export function setup(helper) {
 
           result += SCALES.map(scale =>
             buildScaleButton(selectedScale, scale)
-          ).join("<span class='separator'>&nbsp;•&nbsp;</span>");
+          ).join("");
 
           result += "</span></span>";
 

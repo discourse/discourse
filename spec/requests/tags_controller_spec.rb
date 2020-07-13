@@ -33,6 +33,55 @@ describe TagsController do
       end
     end
 
+    context "with allow_staff_to_tag_pms" do
+      fab!(:admin) { Fabricate(:admin) }
+      fab!(:topic) { Fabricate(:topic, tags: [topic_tag]) }
+      fab!(:pm) do
+        Fabricate(
+          :private_message_topic,
+          tags: [test_tag],
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: admin)
+          ]
+        )
+      end
+
+      context "enabled" do
+        before do
+          SiteSetting.allow_staff_to_tag_pms = true
+          sign_in(admin)
+        end
+
+        it "shows topic tags and pm tags" do
+          get "/tags.json"
+          tags = response.parsed_body["tags"]
+          expect(tags.length).to eq(2)
+
+          serialized_tag = tags.find { |t| t["id"] == topic_tag.name }
+          expect(serialized_tag["count"]).to eq(2)
+          expect(serialized_tag["pm_count"]).to eq(0)
+
+          serialized_tag = tags.find { |t| t["id"] == test_tag.name }
+          expect(serialized_tag["count"]).to eq(0)
+          expect(serialized_tag["pm_count"]).to eq(1)
+        end
+      end
+
+      context "disabled" do
+        before do
+          SiteSetting.allow_staff_to_tag_pms = false
+          sign_in(admin)
+        end
+
+        it "hides pm tags" do
+          get "/tags.json"
+          tags = response.parsed_body["tags"]
+          expect(tags.length).to eq(1)
+          expect(tags[0]["id"]).to eq(topic_tag.name)
+        end
+      end
+    end
+
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
       include_examples "successfully retrieve tags with topic_count > 0"
@@ -276,19 +325,6 @@ describe TagsController do
           expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(true)
         end
       end
-    end
-  end
-
-  describe '#check_hashtag' do
-    fab!(:tag) { Fabricate(:tag) }
-
-    it "should return the right response" do
-      get "/tags/check.json", params: { tag_values: [tag.name] }
-
-      expect(response.status).to eq(200)
-
-      response_tag = response.parsed_body["valid"].first
-      expect(response_tag["value"]).to eq(tag.name)
     end
   end
 
@@ -657,6 +693,13 @@ describe TagsController do
           response.parsed_body["results"].map { |j| j["id"] },
           ['common1', 'common2', 'group1tag', 'group1tag2']
         )
+      end
+
+      it 'returns error 400 for negative limit' do
+        get "/tags/filter/search.json", params: { q: '', limit: -1 }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body['errors'].first).to eq(I18n.t('invalid_params', message: 'limit'))
       end
     end
   end

@@ -194,9 +194,14 @@
 }
 
 .d-editor-preview .image-wrapper {
+  --resizer-height: 1.75em;
   position: relative;
   display: inline-block;
-  padding-bottom: 1.4em;
+  .desktop-view & {
+    // need the extra space on mobile because controls are always visible
+    padding-bottom: var(--resizer-height);
+    margin-bottom: calc(var(--resizer-height) * -1);
+  }
 
   img {
     padding-bottom: 0;
@@ -204,26 +209,29 @@
 
   &:hover {
     .button-wrapper {
-      opacity: 0.9;
+      opacity: 1;
     }
   }
   .button-wrapper {
-    opacity: 0;
     position: absolute;
-    transition: all 0.25s;
-    display: flex;
-    align-items: center;
+    height: var(--resizer-height);
     bottom: 0;
     left: 0;
-    .separator {
-      color: $primary-low-mid;
-    }
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    transition: all 0.25s;
+    z-index: 1; // needs to be higher than image
+    width: 100%;
+    background: $secondary; // for when images are wider than controls
 
     .scale-btn {
+      background: $secondary; // for when controls are wider than image
       color: $tertiary;
-      padding: 0 0.4em;
-      &:first-of-type {
-        padding-left: 0;
+      padding: 0 1em;
+      &:first-child,
+      &:last-child {
+        padding: 0;
       }
 
       &.active {

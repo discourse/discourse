@@ -53,11 +53,12 @@
         <label class="instructions {{showGroupsClass}}">
           {{i18n "topic.automatically_add_to_groups"}}
         </label>
-        {{group-selector
-          fullWidthWrap=true
-          groupFinder=groupFinder
-          groupNames=inviteModel.groupNames
-          placeholderKey="topic.invite_private.group_name"}}
+        {{group-chooser
+          content=allGroups
+          value=groupIds
+          labelProperty="name"
+          onChange=(action (mut groupIds))
+        }}
       </div>
     {{/if}}
 

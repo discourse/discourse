@@ -44,7 +44,7 @@ module DiscourseNarrativeBot
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.mention.instructions",
-            discobot_username: self.discobot_user.username,
+            discobot_username: self.discobot_username,
             base_uri: Discourse.base_uri)
         },
         reply: {
@@ -462,7 +462,7 @@ module DiscourseNarrativeBot
             "#{I18N_KEY}.mention.not_found",
             i18n_post_args(
               username: @user.username,
-              discobot_username: self.discobot_user.username
+              discobot_username: self.discobot_username
             )
           ))
         end
@@ -526,7 +526,7 @@ module DiscourseNarrativeBot
             username: @user.username,
             base_url: Discourse.base_url,
             certificate: certificate,
-            discobot_username: self.discobot_user.username,
+            discobot_username: self.discobot_username,
             advanced_trigger: AdvancedUserNarrative.reset_trigger
           )
         ),

@@ -572,6 +572,7 @@ Discourse::Application.routes.draw do
             manage/members
             manage/membership
             manage/interaction
+            manage/email
             manage/logs
           }.each do |path|
             get path => 'groups#show'
@@ -691,7 +692,7 @@ Discourse::Application.routes.draw do
       get "/" => "list#category_default", as: "category_default"
     end
 
-    get "category_hashtags/check" => "category_hashtags#check"
+    get "hashtags" => "hashtags#show"
 
     TopTopic.periods.each do |period|
       get "top/#{period}.rss" => "list#top_#{period}_feed", format: :rss
@@ -736,7 +737,7 @@ Discourse::Application.routes.draw do
       get "private-messages-sent/:username" => "list#private_messages_sent", as: "topics_private_messages_sent", defaults: { format: :json }
       get "private-messages-archive/:username" => "list#private_messages_archive", as: "topics_private_messages_archive", defaults: { format: :json }
       get "private-messages-unread/:username" => "list#private_messages_unread", as: "topics_private_messages_unread", defaults: { format: :json }
-      get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", constraints: StaffConstraint.new
+      get "private-messages-tags/:username/:tag_id.json" => "list#private_messages_tag", as: "topics_private_messages_tag", defaults: { format: :json }
       get "groups/:group_name" => "list#group_topics", as: "group_topics", group_name: RouteFormat.username
 
       scope "/private-messages-group/:username", group_name: RouteFormat.username do
@@ -886,7 +887,6 @@ Discourse::Application.routes.draw do
       get '/' => 'tags#index'
       get '/filter/list' => 'tags#index'
       get '/filter/search' => 'tags#search'
-      get '/check' => 'tags#check_hashtag'
       get '/personal_messages/:username' => 'tags#personal_messages'
       post '/upload' => 'tags#upload'
       get '/unused' => 'tags#list_unused'

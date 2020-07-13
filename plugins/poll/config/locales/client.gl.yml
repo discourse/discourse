@@ -33,3 +33,6 @@ gl:
         title: "Pechar a enquisa"
         label: "Pechar"
         confirm: "Confirmas o peche desta enquisa?"
+      ui_builder:
+        poll_type:
+          label: Tipo

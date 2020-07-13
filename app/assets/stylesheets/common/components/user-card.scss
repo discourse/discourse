@@ -57,6 +57,9 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     a.card-huge-avatar {
       outline: none;
     }
+    .bio {
+      @include line-clamp(2);
+    }
   }
   &.no-bg {
     .card-content {

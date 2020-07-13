@@ -727,6 +727,7 @@ et:
         secondary: "Teine e-post"
         primary_label: "primaarne"
         update_email: "Muuda meiliaadressi"
+        no_secondary: "Teist e-posti pole"
         instructions: "Ära näita kunagi avalikkusele."
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
@@ -1689,6 +1690,8 @@ et:
         title: "Ühenda valitud postitused"
         action: "ühenda valitud postitused"
         error: "Valitud postituste ühendamisel tekkis viga."
+      publish_page:
+        public: "Avalik"
       change_owner:
         title: "Muuda omanikku"
         action: "muuda omanikku"
@@ -1835,7 +1838,6 @@ et:
           last: "Viimane redaktsioon"
           hide: "Peida redaktsioon"
           show: "Näita redaktsiooni"
-          revert: "Ennista selleks redaktsiooniks"
           edit_wiki: "Muuda wikit"
           edit_post: "Muuda postitust"
         displays:

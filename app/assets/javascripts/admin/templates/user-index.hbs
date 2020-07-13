@@ -69,6 +69,13 @@
             title="admin.users.check_email.title"}}
         {{/if}}
       </div>
+      <div class="controls">
+        {{#if siteSettings.sso_overrides_email}}
+          {{i18n "user.email.sso_override_instructions"}}
+        {{else if model.email}}
+          {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
+        {{/if}}
+      </div>
     </div>
 
     <div class="display-row secondary-emails">
@@ -92,6 +99,18 @@
               icon="far-envelope"
               label="admin.users.check_email.text"
               title="admin.users.check_email.title"}}
+        {{/if}}
+      </div>
+
+      <div class="controls">
+        {{#if model.email}}
+          {{#if model.secondary_emails}}
+            {{#if siteSettings.sso_overrides_email}}
+              {{i18n "user.email.sso_override_instructions"}}
+            {{else}}
+              {{html-safe (i18n "admin.user.visit_profile" url=preferencesPath)}}
+            {{/if}}
+          {{/if}}
         {{/if}}
       </div>
     </div>

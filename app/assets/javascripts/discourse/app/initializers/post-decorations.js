@@ -12,7 +12,7 @@ export default {
       api.decorateCooked(highlightSyntax, {
         id: "discourse-syntax-highlighting"
       });
-      api.decorateCooked(lightbox, { id: "discourse-lightbox" });
+      api.decorateCookedElement(lightbox, { id: "discourse-lightbox" });
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCooked(setTextDirections, {
           id: "discourse-text-direction"

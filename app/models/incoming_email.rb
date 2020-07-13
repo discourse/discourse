@@ -9,6 +9,7 @@ class IncomingEmail < ActiveRecord::Base
 
   scope :addressed_to, -> (email) do
     where(<<~SQL, email: "%#{email}%")
+      incoming_emails.from_address = :email OR
       incoming_emails.to_addresses ILIKE :email OR
       incoming_emails.cc_addresses ILIKE :email
     SQL
@@ -20,7 +21,8 @@ class IncomingEmail < ActiveRecord::Base
           SELECT 1
           FROM user_emails
           WHERE user_emails.user_id = :user_id AND
-                (incoming_emails.to_addresses ILIKE '%' || user_emails.email || '%' OR
+                (incoming_emails.from_address = user_emails.email OR
+                 incoming_emails.to_addresses ILIKE '%' || user_emails.email || '%' OR
                  incoming_emails.cc_addresses ILIKE '%' || user_emails.email || '%')
       )
     SQL
@@ -47,11 +49,15 @@ end
 #  rejection_message :text
 #  is_auto_generated :boolean          default(FALSE)
 #  is_bounce         :boolean          default(FALSE), not null
+#  imap_uid_validity :integer
+#  imap_uid          :integer
+#  imap_sync         :boolean
 #
 # Indexes
 #
 #  index_incoming_emails_on_created_at  (created_at)
 #  index_incoming_emails_on_error       (error)
+#  index_incoming_emails_on_imap_sync   (imap_sync)
 #  index_incoming_emails_on_message_id  (message_id)
 #  index_incoming_emails_on_post_id     (post_id)
 #  index_incoming_emails_on_user_id     (user_id) WHERE (user_id IS NOT NULL)

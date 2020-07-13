@@ -14,6 +14,10 @@ html {
   overflow-y: scroll;
   direction: ltr;
 
+  &.text-size-smallest {
+    font-size: $base-font-size-smallest;
+  }
+
   &.text-size-smaller {
     font-size: $base-font-size-smaller;
   }
@@ -105,6 +109,9 @@ pre code {
   overflow: auto;
   -moz-tab-size: 4;
   tab-size: 4;
+  &.lang-markdown {
+    white-space: pre-wrap;
+  }
 }
 
 // TODO figure out a clean place to put stuff like this
@@ -124,6 +131,10 @@ pre code {
 // Tables
 // --------------------------------------------------
 
+table {
+  border-collapse: collapse;
+}
+
 tbody {
   border-top: 3px solid $primary-low;
 }
@@ -138,4 +149,14 @@ tr {
 // https://en.wikipedia.org/wiki/Ruby_character
 ruby > rt {
   font-size: 72%; // ~10px with 14px base
+}
+
+// Buttons (was in normalized)
+// --------------------------------------------------
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer;
 }

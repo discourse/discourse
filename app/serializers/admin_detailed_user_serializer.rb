@@ -44,7 +44,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def can_disable_second_factor
-    object&.id != scope.user.id
+    scope.is_admin? && (object&.id != scope.user.id)
   end
 
   def can_revoke_admin

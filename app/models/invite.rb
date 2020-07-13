@@ -319,8 +319,9 @@ class Invite < ActiveRecord::Base
 
   def self.resend_all_invites_from(user_id)
     Invite.single_use_invites
-      .joins(:invited_users)
+      .left_outer_joins(:invited_users)
       .where('invited_users.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id)
+      .group('invites.id')
       .find_each do |invite|
       invite.resend_invite
     end

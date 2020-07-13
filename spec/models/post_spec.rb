@@ -1375,6 +1375,16 @@ describe Post do
 
     let(:post) { Fabricate(:post, raw: raw_multiple) }
 
+    it "removes post uploads on destroy" do
+      post.link_post_uploads
+
+      post.trash!
+      expect(PostUpload.count).to eq(6)
+
+      post.destroy!
+      expect(PostUpload.count).to eq(0)
+    end
+
     context "#link_post_uploads" do
       it "finds all the uploads in the post" do
         post.custom_fields[Post::DOWNLOADED_IMAGES] = {

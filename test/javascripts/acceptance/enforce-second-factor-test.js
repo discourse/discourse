@@ -12,9 +12,9 @@ acceptance("Enforce Second Factor", {
   }
 });
 
-QUnit.test("as an admin", async assert => {
+QUnit.test("as an admin", async function(assert) {
   await visit("/u/eviltrout/preferences/second-factor");
-  Discourse.SiteSettings.enforce_second_factor = "staff";
+  this.siteSettings.enforce_second_factor = "staff";
 
   await visit("/u/eviltrout/summary");
 
@@ -34,11 +34,11 @@ QUnit.test("as an admin", async assert => {
   );
 });
 
-QUnit.test("as a user", async assert => {
+QUnit.test("as a user", async function(assert) {
   updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/u/eviltrout/preferences/second-factor");
-  Discourse.SiteSettings.enforce_second_factor = "all";
+  this.siteSettings.enforce_second_factor = "all";
 
   await visit("/u/eviltrout/summary");
 
@@ -58,12 +58,12 @@ QUnit.test("as a user", async assert => {
   );
 });
 
-QUnit.test("as an anonymous user", async assert => {
+QUnit.test("as an anonymous user", async function(assert) {
   updateCurrentUser({ moderator: false, admin: false, is_anonymous: true });
 
   await visit("/u/eviltrout/preferences/second-factor");
-  Discourse.SiteSettings.enforce_second_factor = "all";
-  Discourse.SiteSettings.allow_anonymous_posting = true;
+  this.siteSettings.enforce_second_factor = "all";
+  this.siteSettings.allow_anonymous_posting = true;
 
   await visit("/u/eviltrout/summary");
 

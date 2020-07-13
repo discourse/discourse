@@ -95,16 +95,25 @@ class Topic < ActiveRecord::Base
     return nil unless SiteSetting.create_thumbnails
     return nil unless original = image_upload
     return nil unless original.width && original.height
+    extra_sizes = [] unless extra_sizes.kind_of?(Array)
 
     (Topic.thumbnail_sizes + extra_sizes).each do |dim|
       TopicThumbnail.find_or_create_for!(original, max_width: dim[0], max_height: dim[1])
     end
   end
 
-  def image_url
+  def image_url(enqueue_if_missing: false)
     thumbnail = topic_thumbnails.detect do |record|
       record.max_width == Topic.share_thumbnail_size[0] &&
         record.max_height == Topic.share_thumbnail_size[1]
+    end
+
+    if thumbnail.nil? &&
+        image_upload &&
+        SiteSetting.create_thumbnails &&
+        enqueue_if_missing &&
+        Discourse.redis.set(thumbnail_job_redis_key([]), 1, nx: true, ex: 1.minute)
+      Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id })
     end
 
     raw_url = thumbnail&.optimized_image&.url || image_upload&.url
@@ -191,6 +200,7 @@ class Topic < ActiveRecord::Base
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
   has_many :topic_allowed_groups
+  has_many :incoming_email
 
   has_many :group_archived_messages, dependent: :destroy
   has_many :user_archived_messages, dependent: :destroy
@@ -857,7 +867,8 @@ class Topic < ActiveRecord::Base
                               no_bump: opts[:bump].blank?,
                               topic_id: self.id,
                               skip_validations: true,
-                              custom_fields: opts[:custom_fields])
+                              custom_fields: opts[:custom_fields],
+                              import_mode: opts[:import_mode])
 
     if (new_post = creator.create) && new_post.present?
       increment!(:moderator_posts_count) if new_post.persisted?
@@ -1060,7 +1071,13 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    update_column(:like_count, Post.where(topic_id: id).sum(:like_count))
+    update_column(
+      :like_count,
+      Post
+        .where.not(post_type: Post.types[:whisper])
+        .where(topic_id: id)
+        .sum(:like_count)
+    )
   end
 
   def posters_summary(options = {}) # avatar lookup in options

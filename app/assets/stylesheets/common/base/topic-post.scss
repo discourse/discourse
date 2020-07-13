@@ -264,6 +264,16 @@ blockquote {
   }
 }
 
+.small-user-list .unknown {
+  display: inline-block;
+  background-color: $primary-low;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 0.25em;
+}
+
 .post-hidden {
   .topic-avatar,
   .cooked,

@@ -92,6 +92,7 @@ export default function() {
       this.route("profile");
       this.route("membership");
       this.route("interaction");
+      this.route("email");
       this.route("members");
       this.route("logs");
     });

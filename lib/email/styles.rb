@@ -242,7 +242,12 @@ module Email
       strip_classes_and_ids
       replace_relative_urls
       replace_secure_media_urls
-      include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
+
+      if SiteSetting.preserve_email_structure_when_styling
+        @fragment.to_html
+      else
+        include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
+      end
     end
 
     def include_body?

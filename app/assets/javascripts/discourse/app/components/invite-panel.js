@@ -12,6 +12,8 @@ import { getNativeContact } from "discourse/lib/pwa-utils";
 
 export default Component.extend({
   tagName: null,
+  groupIds: null,
+  allGroups: null,
 
   inviteModel: alias("panel.model.inviteModel"),
   userInvitedShow: alias("panel.model.userInvitedShow"),
@@ -26,6 +28,15 @@ export default Component.extend({
 
   isAdmin: alias("currentUser.admin"),
 
+  init() {
+    this._super(...arguments);
+
+    this.set("groupIds", []);
+    Group.findAll().then(groups => {
+      this.set("allGroups", groups.filterBy("automatic", false));
+    });
+  },
+
   willDestroyElement() {
     this._super(...arguments);
 
@@ -37,7 +48,7 @@ export default Component.extend({
     "emailOrUsername",
     "invitingToTopic",
     "isPrivateTopic",
-    "inviteModel.groupNames.[]",
+    "groupIds",
     "inviteModel.saving",
     "inviteModel.details.can_invite_to"
   )
@@ -46,7 +57,7 @@ export default Component.extend({
     emailOrUsername,
     invitingToTopic,
     isPrivateTopic,
-    groupNames,
+    groupIds,
     saving,
     can_invite_to
   ) {
@@ -66,7 +77,7 @@ export default Component.extend({
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupNames) && emailValid(emailTrimmed)) {
+    if (isPrivateTopic && isEmpty(groupIds) && emailValid(emailTrimmed)) {
       return true;
     }
 
@@ -80,7 +91,7 @@ export default Component.extend({
     "emailOrUsername",
     "inviteModel.saving",
     "isPrivateTopic",
-    "inviteModel.groupNames.[]",
+    "groupIds",
     "hasCustomMessage"
   )
   disabledCopyLink(
@@ -88,7 +99,7 @@ export default Component.extend({
     emailOrUsername,
     saving,
     isPrivateTopic,
-    groupNames,
+    groupIds,
     hasCustomMessage
   ) {
     if (hasCustomMessage) return true;
@@ -108,7 +119,7 @@ export default Component.extend({
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupNames) && emailValid(email)) {
+    if (isPrivateTopic && isEmpty(groupIds) && emailValid(email)) {
       return true;
     }
 
@@ -242,10 +253,6 @@ export default Component.extend({
     return isPrivateTopic ? "required" : "optional";
   },
 
-  groupFinder(term) {
-    return Group.findAll({ term, ignore_automatic: true });
-  },
-
   @discourseComputed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
   successMessage(isPM, emailOrUsername, invitingExistingUserToTopic) {
     if (this.hasGroups) {
@@ -285,11 +292,11 @@ export default Component.extend({
       emailOrUsername: null,
       hasCustomMessage: false,
       customMessage: null,
-      invitingExistingUserToTopic: false
+      invitingExistingUserToTopic: false,
+      groupIds: []
     });
 
     this.inviteModel.setProperties({
-      groupNames: null,
       error: false,
       saving: false,
       finished: false,
@@ -303,7 +310,7 @@ export default Component.extend({
         return;
       }
 
-      const groupNames = this.get("inviteModel.groupNames");
+      const groupIds = this.groupIds;
       const userInvitedController = this.userInvitedShow;
 
       const model = this.inviteModel;
@@ -338,7 +345,7 @@ export default Component.extend({
         return this.inviteModel
           .createInvite(
             this.emailOrUsername.trim(),
-            groupNames,
+            groupIds,
             this.customMessage
           )
           .then(result => {
@@ -376,7 +383,7 @@ export default Component.extend({
         return;
       }
 
-      const groupNames = this.get("inviteModel.groupNames");
+      const groupIds = this.groupIds;
       const userInvitedController = this.userInvitedShow;
       const model = this.inviteModel;
       model.setProperties({ saving: true, error: false });
@@ -387,7 +394,7 @@ export default Component.extend({
       }
 
       return model
-        .generateInviteLink(this.emailOrUsername.trim(), groupNames, topicId)
+        .generateInviteLink(this.emailOrUsername.trim(), groupIds, topicId)
         .then(result => {
           model.setProperties({
             saving: false,

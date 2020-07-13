@@ -60,12 +60,12 @@ describe Email::Processor do
 
     it "enqueues a background job by default" do
       Jobs.expects(:enqueue).with(:process_email, mail: mail)
-      Email::Processor.process!(mail)
+      Email::Processor.process!(mail, retry_on_rate_limit: true)
     end
 
     it "doesn't enqueue a background job when retry is disabled" do
       Jobs.expects(:enqueue).with(:process_email, mail: mail).never
-      expect { Email::Processor.process!(mail, false) }.to raise_error(limit_exceeded)
+      expect { Email::Processor.process!(mail, retry_on_rate_limit: false) }.to raise_error(limit_exceeded)
     end
 
   end

@@ -91,7 +91,7 @@ describe FileStore::S3Store do
             acl: "private",
             cache_control: "max-age=31556952, public, immutable",
             content_type: "application/pdf",
-            content_disposition: "attachment; filename=\"#{upload.original_filename}\"",
+            content_disposition: "attachment; filename=\"#{upload.original_filename}\"; filename*=UTF-8''#{upload.original_filename}",
             body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
           expect(store.store_upload(uploaded_file, upload)).to eq(

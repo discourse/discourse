@@ -186,10 +186,8 @@ class PostCreator
         @post.link_post_uploads
         update_uploads_secure_status
         ensure_in_allowed_users if guardian.is_staff?
-        unarchive_message
-        if !@opts[:import_mode]
-          DraftSequence.next!(@user, draft_key)
-        end
+        unarchive_message if !@opts[:import_mode]
+        DraftSequence.next!(@user, draft_key) if !@opts[:import_mode]
         @post.save_reply_relationships
       end
     end

@@ -984,7 +984,8 @@ describe UsersController do
             uid: '123545',
             info: OmniAuth::AuthHash::InfoHash.new(
               email: "osama@mail.com",
-              nickname: "testosama"
+              nickname: "testosama",
+              name: "Osama Test"
             )
           )
 
@@ -1025,6 +1026,61 @@ describe UsersController do
         end
 
         it "will create the user successfully if email validation is required" do
+          post "/u.json", params: {
+            name: "Test Osama",
+            username: "testosama",
+            password: "strongpassword",
+            email: "osama@mail.com"
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json['success']).to eq(true)
+        end
+
+        it "doesn't use provided username/name if sso_overrides is enabled" do
+          SiteSetting.sso_overrides_username = true
+          SiteSetting.sso_overrides_name = true
+          post "/u.json", params: {
+            username: "attemptednewname",
+            name: "Attempt At New Name",
+            password: "strongpassword",
+            email: "osama@mail.com"
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json['success']).to eq(true)
+          expect(User.last.username).to eq('testosama')
+          expect(User.last.name).to eq('Osama Test')
+        end
+
+      end
+
+      context "with no email in the auth payload" do
+        before do
+          OmniAuth.config.test_mode = true
+          OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
+            provider: 'twitter',
+            uid: '123545',
+            info: OmniAuth::AuthHash::InfoHash.new(
+              nickname: "testosama",
+              name: "Osama Test"
+            )
+          )
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+          SiteSetting.enable_twitter_logins = true
+          get "/auth/twitter/callback.json"
+        end
+
+        after do
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter] = nil
+          OmniAuth.config.test_mode = false
+        end
+
+        it "will create the user successfully" do
+          Rails.application.env_config["omniauth.auth"].info.email = nil
+
           post "/u.json", params: {
             name: "Test Osama",
             username: "testosama",
@@ -2290,19 +2346,18 @@ describe UsersController do
 
       context 'selectable avatars is enabled' do
 
-        before { SiteSetting.selectable_avatars_enabled = true }
+        before do
+          SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+          SiteSetting.selectable_avatars_enabled = true
+        end
 
         it 'raises an error when selectable avatars is empty' do
+          SiteSetting.selectable_avatars = ""
           put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
           expect(response.status).to eq(422)
         end
 
         context 'selectable avatars is properly setup' do
-
-          before do
-            SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
-          end
-
           it 'raises an error when url is not in selectable avatars list' do
             put "/u/#{user.username}/preferences/avatar/select.json", params: { url: url }
             expect(response.status).to eq(422)

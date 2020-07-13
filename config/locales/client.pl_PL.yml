@@ -829,7 +829,6 @@ pl_PL:
           all: "Wszystkie"
           read: "Przeczytane"
           unread: "Nieprzeczytane"
-        ignore_duration_title: "Ignoruj licznik"
         ignore_duration_username: "Nazwa użytkownika"
         ignore_duration_when: "Oczekiwanie"
         ignore_duration_save: "Ignoruj"
@@ -1077,7 +1076,8 @@ pl_PL:
         secondary: "Drugorzędne adresy email"
         primary_label: "podstawowy"
         update_email: "Zmień adres email"
-        ssDestroy_override_instructions: "E-mail można zaktualizować od dostawcy SSO."
+        sso_override_instructions: "E-mail można zaktualizować od dostawcy SSO."
+        no_secondary: "Brak drugorzędnych adresów email"
         instructions: "Nie będzie publicznie widoczny."
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
@@ -2353,6 +2353,8 @@ pl_PL:
         title: "Scal wybrane posty"
         action: "scal wybrane posty"
         error: "Wystąpił błąd podczas łączenia wybranych postów"
+      publish_page:
+        public: "Publiczna"
       change_owner:
         title: "Zmiana właściciela"
         action: "zmień właściciela"
@@ -2555,7 +2557,6 @@ pl_PL:
           last: "Ostatnia wersja"
           hide: "Ukryj tę wersję"
           show: "Pokaż tę wersję"
-          revert: "Przywróć do tej wersji"
           edit_wiki: "Edytuj Wiki"
           edit_post: "Edytuj wpis"
         displays:

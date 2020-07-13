@@ -9,11 +9,10 @@
         <div class="topic-created-at"><%= short_date(@topic.created_at) %></div>
       </div>
     </div>
-
-    <%- if @topic.first_post.present? %>
-      <div class="published-page-body">
-        <%= @topic.first_post.cooked.html_safe %>
-      </div>
-    <%- end -%>
   </div>
+  <%- if @topic.first_post.present? %>
+    <div class="published-page-body">
+      <%= @topic.first_post.cooked.html_safe %>
+    </div>
+  <%- end -%>
 </div>

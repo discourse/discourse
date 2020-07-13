@@ -142,6 +142,7 @@ componentTest("valueAttribute (deprecated)", {
     this.set("value", "normal");
 
     const content = [
+      { name: "Smallest", value: "smallest" },
       { name: "Smaller", value: "smaller" },
       { name: "Normal", value: "normal" },
       { name: "Larger", value: "larger" },

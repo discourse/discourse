@@ -12,7 +12,7 @@ module BackupRestore
       @user_id = user_id
       @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
-      @with_uploads = opts[:with_uploads].nil? ? true : opts[:with_uploads]
+      @with_uploads = opts[:with_uploads].nil? ? include_uploads? : opts[:with_uploads]
       @filename_override = opts[:filename]
 
       ensure_no_operation_is_running
@@ -251,15 +251,31 @@ module BackupRestore
       )
     end
 
+    def include_uploads?
+      has_local_uploads? || SiteSetting.include_s3_uploads_in_backups
+    end
+
+    def local_uploads_directory
+      @local_uploads_directory ||= File.join(Rails.root, "public", Discourse.store.upload_path)
+    end
+
+    def has_local_uploads?
+      File.directory?(local_uploads_directory) && !Dir.empty?(local_uploads_directory)
+    end
+
     def add_local_uploads_to_archive(tar_filename)
       log "Archiving uploads..."
-      upload_directory = Discourse.store.upload_path
 
-      if File.directory?(File.join(Rails.root, "public", upload_directory))
-        exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
+      if has_local_uploads?
+        if SiteSetting.include_thumbnails_in_backups
+          exclude_optimized = ""
+        else
+          optimized_path = File.join(local_uploads_directory, 'optimized')
+          exclude_optimized = "--exclude=#{optimized_path}"
+        end
 
         Discourse::Utils.execute_command(
-          'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
+          'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, local_uploads_directory,
           failure_message: "Failed to archive uploads.", success_status_codes: [0, 1],
           chdir: File.join(Rails.root, "public")
         )

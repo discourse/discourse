@@ -34,6 +34,7 @@ class Plugin::Metadata
     "discourse-gradle-issue",
     "discourse-graphviz",
     "discourse-invite-tokens",
+    "discourse-knowledge-explorer",
     "discourse-local-dates",
     "discourse-logster-rate-limit-checker",
     "discourse-logster-transporter",

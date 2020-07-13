@@ -79,7 +79,6 @@ class UploadCreator
       # between uploads instead of the sha1, and to get around various
       # access/permission issues for uploads
       if !SiteSetting.secure_media
-
         # do we already have that upload?
         @upload = Upload.find_by(sha1: sha1)
 
@@ -91,6 +90,7 @@ class UploadCreator
 
         # return the previous upload if any
         if @upload
+          add_metadata!
           UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
           return @upload
         end
@@ -127,14 +127,7 @@ class UploadCreator
         @upload.width, @upload.height = @image_info.size
       end
 
-      @upload.for_private_message = true if @opts[:for_private_message]
-      @upload.for_group_message   = true if @opts[:for_group_message]
-      @upload.for_theme           = true if @opts[:for_theme]
-      @upload.for_export          = true if @opts[:for_export]
-      @upload.for_site_setting    = true if @opts[:for_site_setting]
-      @upload.for_gravatar        = true if @opts[:for_gravatar]
-      @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
-
+      add_metadata!
       return @upload unless @upload.save
 
       # store the file and update its url
@@ -313,6 +306,14 @@ class UploadCreator
     doc = Nokogiri::XML(@file)
     doc.xpath(svg_whitelist_xpath).remove
     doc.xpath("//@*[starts-with(name(), 'on')]").remove
+    doc.css('use').each do |use_el|
+      if use_el.attr('href')
+        use_el.remove_attribute('href') unless use_el.attr('href').starts_with?('#')
+      end
+      if use_el.attr('xlink:href')
+        use_el.remove_attribute('xlink:href') unless use_el.attr('xlink:href').starts_with?('#')
+      end
+    end
     File.write(@file.path, doc.to_s)
     @file.rewind
   end
@@ -401,6 +402,16 @@ class UploadCreator
 
   def svg_whitelist_xpath
     @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+  end
+
+  def add_metadata!
+    @upload.for_private_message = true if @opts[:for_private_message]
+    @upload.for_group_message   = true if @opts[:for_group_message]
+    @upload.for_theme           = true if @opts[:for_theme]
+    @upload.for_export          = true if @opts[:for_export]
+    @upload.for_site_setting    = true if @opts[:for_site_setting]
+    @upload.for_gravatar        = true if @opts[:for_gravatar]
+    @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
   end
 
 end

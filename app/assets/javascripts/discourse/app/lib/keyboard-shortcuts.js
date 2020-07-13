@@ -31,7 +31,7 @@ const DEFAULT_BINDINGS = {
   "g u": { path: "/unread" },
   "g c": { path: "/categories", anonymous: true },
   "g t": { path: "/top", anonymous: true },
-  "g b": { path: "/bookmarks" },
+  "g b": { path: "/my/activity/bookmarks" },
   "g p": { path: "/my/activity" },
   "g m": { path: "/my/messages" },
   "g d": { path: "/my/activity/drafts" },
@@ -355,7 +355,8 @@ export default {
     this.container.lookup("controller:topic").togglePinnedState();
   },
 
-  goToPost() {
+  goToPost(event) {
+    preventKeyboardEvent(event);
     this.appEvents.trigger("topic:keyboard-trigger", { type: "jump" });
   },
 

@@ -1,18 +1,48 @@
 # frozen_string_literal: true
 
 class Auth::Result
-  attr_accessor :user, :name, :username, :email,
-                :email_valid, :extra_data, :awaiting_activation,
-                :awaiting_approval, :authenticated, :authenticator_name,
-                :requires_invite, :not_allowed_from_ip_address,
-                :admin_not_allowed_from_ip_address, :omit_username,
-                :skip_email_validation, :destination_url, :omniauth_disallow_totp
-
-  attr_accessor(
+  ATTRIBUTES = [
+    :user,
+    :name,
+    :username,
+    :email,
+    :email_valid,
+    :extra_data,
+    :awaiting_activation,
+    :awaiting_approval,
+    :authenticated,
+    :authenticator_name,
+    :requires_invite,
+    :not_allowed_from_ip_address,
+    :admin_not_allowed_from_ip_address,
+    :omit_username, # Used by plugins to prevent username edits
+    :skip_email_validation,
+    :destination_url,
+    :omniauth_disallow_totp,
     :failed,
     :failed_reason,
     :failed_code
-  )
+  ]
+
+  attr_accessor *ATTRIBUTES
+
+  # These are stored in the session during
+  # account creation. The user cannot read or modify them
+  SESSION_ATTRIBUTES = [
+    :email,
+    :username,
+    :email_valid,
+    :omit_username,
+    :name,
+    :authenticator_name,
+    :extra_data,
+    :skip_email_validation
+  ]
+
+  def [](key)
+    key = key.to_sym
+    public_send(key) if ATTRIBUTES.include?(key)
+  end
 
   def initialize
     @failed = false
@@ -27,60 +57,95 @@ class Auth::Result
   end
 
   def session_data
-    { email: email,
-      username: username,
-      email_valid: email_valid,
-      omit_username: omit_username,
-      name: name,
-      authenticator_name: authenticator_name,
-      extra_data: extra_data,
-      skip_email_validation: !!skip_email_validation }
+    SESSION_ATTRIBUTES.map { |att| [att, public_send(att)] }.to_h
+  end
+
+  def self.from_session_data(data, user:)
+    result = new
+    data = data.symbolize_keys
+    SESSION_ATTRIBUTES.each { |att| result.public_send("#{att}=", data[att]) }
+    result.user = user
+    result
+  end
+
+  def apply_user_attributes!
+    change_made = false
+    if SiteSetting.sso_overrides_username? && username.present? && username != user.username
+      user.username = UserNameSuggester.suggest(username || name || email, user.username)
+      change_made = true
+    end
+
+    if SiteSetting.sso_overrides_email && email_valid && email.present? && user.email != Email.downcase(email)
+      user.email = email
+      change_made = true
+    end
+
+    if SiteSetting.sso_overrides_name && name.present? && user.name != name
+      user.name = name
+      change_made = true
+    end
+
+    change_made
+  end
+
+  def can_edit_name
+    !SiteSetting.sso_overrides_name
+  end
+
+  def can_edit_username
+    !(SiteSetting.sso_overrides_username || omit_username)
   end
 
   def to_client_hash
     if requires_invite
-      { requires_invite: true }
-    elsif user
-      if user.suspended?
-        {
-          suspended: true,
-          suspended_message: I18n.t(user.suspend_reason ? "login.suspended_with_reason" : "login.suspended",
-                                     date: I18n.l(user.suspended_till, format: :date_only), reason: user.suspend_reason)
-        }
-      else
-        result =
-          if omniauth_disallow_totp
-            {
-              omniauth_disallow_totp: !!omniauth_disallow_totp,
-              email: email
-            }
-          else
-            {
-              authenticated: !!authenticated,
-              awaiting_activation: !!awaiting_activation,
-              awaiting_approval: !!awaiting_approval,
-              not_allowed_from_ip_address: !!not_allowed_from_ip_address,
-              admin_not_allowed_from_ip_address: !!admin_not_allowed_from_ip_address
-            }
-          end
-
-        result[:destination_url] = destination_url if authenticated && destination_url.present?
-        result
-      end
-    else
-      result = { email: email,
-                 username: UserNameSuggester.suggest(username || name || email),
-                 auth_provider: authenticator_name,
-                 email_valid: !!email_valid,
-                 omit_username: !!omit_username }
-
-      result[:destination_url] = destination_url if destination_url.present?
-
-      if SiteSetting.enable_names?
-        result[:name] = name.presence || User.suggest_name(username || email)
-      end
-
-      result
+      return { requires_invite: true }
     end
+
+    if user&.suspended?
+      return {
+        suspended: true,
+        suspended_message: I18n.t(user.suspend_reason ? "login.suspended_with_reason" : "login.suspended",
+                                   date: I18n.l(user.suspended_till, format: :date_only), reason: user.suspend_reason)
+      }
+    end
+
+    if omniauth_disallow_totp
+      return {
+        omniauth_disallow_totp: !!omniauth_disallow_totp,
+        email: email
+      }
+    end
+
+    if user
+      result = {
+        authenticated: !!authenticated,
+        awaiting_activation: !!awaiting_activation,
+        awaiting_approval: !!awaiting_approval,
+        not_allowed_from_ip_address: !!not_allowed_from_ip_address,
+        admin_not_allowed_from_ip_address: !!admin_not_allowed_from_ip_address
+      }
+
+      result[:destination_url] = destination_url if authenticated && destination_url.present?
+
+      return result
+    end
+
+    result = {
+      email: email,
+      username: UserNameSuggester.suggest(username || name || email),
+      auth_provider: authenticator_name,
+      email_valid: !!email_valid,
+      can_edit_username: can_edit_username,
+      can_edit_name: can_edit_name
+    }
+
+    result[:destination_url] = destination_url if destination_url.present?
+
+    if SiteSetting.enable_names?
+      result[:name] = name.presence
+      result[:name] ||= User.suggest_name(username || email) if can_edit_name
+    end
+
+    result
   end
 end

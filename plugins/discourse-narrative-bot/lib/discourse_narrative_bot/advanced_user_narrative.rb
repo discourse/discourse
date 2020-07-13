@@ -41,7 +41,7 @@ module DiscourseNarrativeBot
       tutorial_recover: {
         next_state: :tutorial_category_hashtag,
         next_instructions: Proc.new do
-          category = Category.secured.last
+          category = Category.secured(Guardian.new(@user)).last
           slug = category.slug
 
           if parent_category = category.parent_category
@@ -123,13 +123,13 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      post = PostCreator.create!(@user,         raw: I18n.t(
-          "#{I18N_KEY}.edit.bot_created_post_raw",
-          i18n_post_args(discobot_username: self.discobot_user.username)
-        ),
-                                                topic_id: data[:topic_id],
-                                                skip_bot: true,
-                                                skip_validations: true)
+      post = PostCreator.create!(
+        @user,
+        raw: I18n.t("#{I18N_KEY}.edit.bot_created_post_raw", i18n_post_args(discobot_username: self.discobot_username)),
+        topic_id: data[:topic_id],
+        skip_bot: true,
+        skip_validations: true
+      )
 
       set_state_data(:post_id, post.id)
       post
@@ -138,11 +138,9 @@ module DiscourseNarrativeBot
     def init_tutorial_recover
       data = get_data(@user)
 
-      post = PostCreator.create!(@user,
-        raw: I18n.t(
-          "#{I18N_KEY}.recover.deleted_post_raw",
-          i18n_post_args(discobot_username: self.discobot_user.username)
-        ),
+      post = PostCreator.create!(
+        @user,
+        raw: I18n.t("#{I18N_KEY}.recover.deleted_post_raw", i18n_post_args(discobot_username: self.discobot_username)),
         topic_id: data[:topic_id],
         skip_bot: true,
         skip_validations: true

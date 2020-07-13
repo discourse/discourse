@@ -6,17 +6,18 @@ import { h } from "virtual-dom";
 import { userPath } from "discourse/lib/url";
 import hbs from "discourse/widgets/hbs-compiler";
 
-export function avatarAtts(user) {
+export function smallUserAtts(user) {
   return {
     template: user.avatar_template,
     username: user.username,
     post_url: user.post_url,
-    url: userPath(user.username_lower)
+    url: userPath(user.username_lower),
+    unknown: user.unknown
   };
 }
 
 createWidget("small-user-list", {
-  tagName: "div.clearfix",
+  tagName: "div.clearfix.small-user-list",
 
   buildClasses(atts) {
     return atts.listClassName;
@@ -30,7 +31,7 @@ createWidget("small-user-list", {
         atts.addSelf &&
         !users.some(u => u.username === currentUser.username)
       ) {
-        users = users.concat(avatarAtts(currentUser));
+        users = users.concat(smallUserAtts(currentUser));
       }
 
       let description = null;
@@ -43,7 +44,13 @@ createWidget("small-user-list", {
       let postUrl;
       const icons = users.map(u => {
         postUrl = postUrl || u.post_url;
-        return avatarFor.call(this, "small", u);
+        if (u.unknown) {
+          return h("div.unknown", {
+            attributes: { title: I18n.t("post.unknown_user") }
+          });
+        } else {
+          return avatarFor.call(this, "small", u);
+        }
       });
 
       if (postUrl) {

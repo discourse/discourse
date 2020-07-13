@@ -1468,7 +1468,6 @@ pt_BR:
     s3_backup_bucket: "O repositório remoto para realizar backups. AVISO: Certifique-se de que é um repositório privado."
     s3_endpoint: "O endpoint pode ser modificado para fazer backup em um serviço compatível com S3, como DigitalOcean Spaces ou Minio. AVISO: Deixe em branco se estiver usando o AWS S3."
     s3_configure_tombstone_policy: "Habilitar a política de exclusão automática para uploads de tombstone. IMPORTANTE: Se desabilitado, nenhum espaço será recuperado depois que os uploads forem excluídos."
-    s3_disable_cleanup: "Desabilitar a remoção de backups na S3 quando removidos localmente."
     enable_s3_inventory: "Gerar relatórios e verificar os uploads usando o inventário do Amazon S3. IMPORTANTE: requer credenciais S3 válidas (tanto a ID da chave de acesso quanto a chave de acesso secreta)."
     backup_time_of_day: "Hora do dia, em UTC, quando o backup deve ocorrer."
     backup_with_uploads: "Incluir uploads nos backups programados. Desabilite para copiar apenas a base de dados. "
@@ -1830,7 +1829,6 @@ pt_BR:
     city_for_disputes: "Cidade para Disputas"
     shared_drafts_category: "Habilitar o recurso Rascunhos Compartilhados, designando uma categoria para rascunhos de tópicos. Os tópicos nesta categoria serão suprimidos das listas de tópicos para usuários da staff."
     push_notifications_prompt: "Exibir o prompt de consentimento do usuário."
-    push_notifications_icon: "O ícone do emblema que aparece no canto de notificação. O tamanho requerido é 96 × 96."
     short_title: "O título abreviado será usado na tela inicial do usuário, no iniciador ou em outros locais onde o espaço possa ser limitado. Deveria ser limitado a 12 caracteres."
     dashboard_general_tab_activity_metrics: "Escolher relatórios para serem exibidos como métricas de atividade na guia geral."
     errors:

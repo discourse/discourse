@@ -1732,6 +1732,8 @@ ro:
         title: "Comasează postările selectate"
         action: "comasează postările selectate"
         error: "A apărut o eroare la comasarea postărilor selectate."
+      publish_page:
+        public: "Public"
       change_owner:
         action: "Schimbă autorul"
         error: "A apărut o eroare la schimbarea autorului postărilor."
@@ -1905,7 +1907,6 @@ ro:
           last: "Ultima revizie"
           hide: "Ascunde revizia"
           show: "Afișează revizia"
-          revert: "Restaurează această revizie"
           edit_post: "Modifică postarea"
         displays:
           inline:

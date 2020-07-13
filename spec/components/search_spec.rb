@@ -584,11 +584,13 @@ describe Search do
   end
 
   context 'cyrillic topic' do
-    let!(:cyrillic_topic) { Fabricate(:topic) do
-                              user
-                                                title { sequence(:title) { |i| "Тестовая запись #{i}" } }
-                            end
+    let!(:cyrillic_topic) {
+      Fabricate(:topic) do
+        user
+        title { sequence(:title) { |i| "Тестовая запись #{i}" } }
+      end
     }
+
     let!(:post) { Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user) }
     let(:result) { Search.execute('запись') }
 

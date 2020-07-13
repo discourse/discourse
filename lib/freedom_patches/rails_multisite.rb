@@ -6,6 +6,22 @@ module RailsMultisite
       self.each_connection do |db|
         begin
           yield(db) if block_given?
+        rescue PG::ConnectionBad, PG::UnableToSend, PG::ServerError
+          break if !defined?(RailsFailover::ActiveRecord)
+          break if db == RailsMultisite::ConnectionManagement::DEFAULT
+
+          reading_role = :"#{db}_#{ActiveRecord::Base.reading_role}"
+          spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
+
+          ActiveRecord::Base.connection_handlers[reading_role] ||= begin
+            handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
+            RailsFailover::ActiveRecord.establish_reading_connection(handler, spec)
+            handler
+          end
+
+          ActiveRecord::Base.connected_to(role: reading_role) do
+            yield(db) if block_given?
+          end
         rescue => e
           STDERR.puts "URGENT: Failed to initialize site #{db}: "\
             "#{e.class} #{e.message}\n#{e.backtrace.join("\n")}"

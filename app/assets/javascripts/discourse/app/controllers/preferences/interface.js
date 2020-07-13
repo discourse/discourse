@@ -21,7 +21,7 @@ const USER_HOMES = {
   5: "top"
 };
 
-const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
+const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default Controller.extend({

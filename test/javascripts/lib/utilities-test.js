@@ -16,15 +16,12 @@ import {
   inCodeBlock
 } from "discourse/lib/utilities";
 import Handlebars from "handlebars";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("lib:utilities");
+discourseModule("lib:utilities");
 
 QUnit.test("escapeExpression", assert => {
-  assert.equal(
-    escapeExpression(">"),
-    "&gt;",
-    "escapes unsafe characters"
-  );
+  assert.equal(escapeExpression(">"), "&gt;", "escapes unsafe characters");
 
   assert.equal(
     escapeExpression(new Handlebars.SafeString("&gt;")),
@@ -135,8 +132,8 @@ QUnit.test("avatarImg", assert => {
   setDevicePixelRatio(oldRatio);
 });
 
-QUnit.test("defaultHomepage", assert => {
-  Discourse.SiteSettings.top_menu = "latest|top|hot";
+QUnit.test("defaultHomepage", function(assert) {
+  this.siteSettings.top_menu = "latest|top|hot";
   assert.equal(
     defaultHomepage(),
     "latest",

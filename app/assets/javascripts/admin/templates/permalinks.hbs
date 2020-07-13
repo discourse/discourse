@@ -21,7 +21,7 @@
       <tbody>
         {{#each model as |pl|}}
           <tr class="admin-list-item">
-            <td class="col first url">{{pl.url}}</td>
+            <td class="col first url">{{d-button title="admin.permalink.copy_to_clipboard" icon="far-clipboard" action=(action "copyUrl" pl)}} <span id="admin-permalink-{{pl.id}}" title={{pl.url}}>{{pl.url}}</span></td>
             <td class="col destination">
               {{#if pl.topic_id}}
                 <a href={{pl.topic_url}}>{{pl.topic_title}}</a>
@@ -42,7 +42,7 @@
                 <a href={{pl.external_url}}>{{pl.external_url}}</a>
               {{/if}}
             </td>
-            <td class="col action">
+            <td class="col action" style="text-align: right;">
               {{d-button action=(action "destroy") actionParam=pl icon="far-trash-alt" class="btn-danger"}}
             </td>
           </tr>

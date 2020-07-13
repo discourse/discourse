@@ -1134,6 +1134,24 @@ describe Category do
     end
   end
 
+  describe "messageBus" do
+    it "does not publish notification level when publishing to /categories" do
+      category = Fabricate(:category)
+      category.name = "Amazing category"
+      messages = MessageBus.track_publish("/categories") do
+        category.save!
+      end
+
+      expect(messages.length).to eq(1)
+      message = messages.first
+
+      category_hash = message.data[:categories].first
+
+      expect(category_hash[:name]).to eq(category.name)
+      expect(category_hash.key?(:notification_level)).to eq(false)
+    end
+  end
+
   describe "#ensure_consistency!" do
     it "creates category topic" do
 

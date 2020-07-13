@@ -2,7 +2,7 @@ import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
-import { notEmpty, or, not } from "@ember/object/computed";
+import { notEmpty } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -20,6 +20,7 @@ import { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
 import EmberObject from "@ember/object";
 import User from "discourse/models/user";
+import { Promise } from "rsvp";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -41,8 +42,12 @@ export default Controller.extend(
 
     hasAuthOptions: notEmpty("authOptions"),
     canCreateLocal: setting("enable_local_logins"),
-    showCreateForm: or("hasAuthOptions", "canCreateLocal"),
     requireInviteCode: setting("require_invite_code"),
+
+    @discourseComputed("hasAuthOptions", "canCreateLocal", "skipConfirmation")
+    showCreateForm(hasAuthOptions, canCreateLocal, skipConfirmation) {
+      return (hasAuthOptions || canCreateLocal) && !skipConfirmation;
+    },
 
     resetForm() {
       // We wrap the fields in a structure so we can assign a value
@@ -69,7 +74,15 @@ export default Controller.extend(
       return false;
     },
 
-    usernameRequired: not("authOptions.omit_username"),
+    @discourseComputed("authOptions", "authOptions.can_edit_username")
+    usernameDisabled(authOptions, canEditUsername) {
+      return authOptions && !canEditUsername;
+    },
+
+    @discourseComputed("authOptions", "authOptions.can_edit_name")
+    nameDisabled(authOptions, canEditName) {
+      return authOptions && !canEditName;
+    },
 
     @discourseComputed
     fullnameRequired() {
@@ -196,26 +209,44 @@ export default Controller.extend(
 
     @on("init")
     fetchConfirmationValue() {
-      return ajax(userPath("hp.json")).then(json => {
-        this._challengeDate = new Date();
-        // remove 30 seconds for jitter, make sure this works for at least
-        // 30 seconds so we don't have hard loops
-        this._challengeExpiry = parseInt(json.expires_in, 10) - 30;
-        if (this._challengeExpiry < 30) {
-          this._challengeExpiry = 30;
-        }
+      if (this._challengeDate === undefined && this._hpPromise) {
+        // Request already in progress
+        return this._hpPromise;
+      }
 
-        this.setProperties({
-          accountHoneypot: json.value,
-          accountChallenge: json.challenge
-            .split("")
-            .reverse()
-            .join("")
-        });
-      });
+      this._hpPromise = ajax(userPath("hp.json"))
+        .then(json => {
+          this._challengeDate = new Date();
+          // remove 30 seconds for jitter, make sure this works for at least
+          // 30 seconds so we don't have hard loops
+          this._challengeExpiry = parseInt(json.expires_in, 10) - 30;
+          if (this._challengeExpiry < 30) {
+            this._challengeExpiry = 30;
+          }
+
+          this.setProperties({
+            accountHoneypot: json.value,
+            accountChallenge: json.challenge
+              .split("")
+              .reverse()
+              .join("")
+          });
+        })
+        .finally(() => (this._hpPromise = undefined));
+
+      return this._hpPromise;
     },
 
     performAccountCreation() {
+      if (
+        !this._challengeDate ||
+        new Date() - this._challengeDate > 1000 * this._challengeExpiry
+      ) {
+        return this.fetchConfirmationValue().then(() =>
+          this.performAccountCreation()
+        );
+      }
+
       const attrs = this.getProperties(
         "accountName",
         "accountEmail",
@@ -262,6 +293,7 @@ export default Controller.extend(
               .find("input[name=redirect]")
               .val(userPath("account-created"));
             $hidden_login_form.submit();
+            return new Promise(() => {}); // This will never resolve, the page will reload instead
           } else {
             this.flash(
               result.message || I18n.t("create_account.failed"),
@@ -295,6 +327,14 @@ export default Controller.extend(
           return this.flash(I18n.t("create_account.failed"), "error");
         }
       );
+    },
+
+    onShow() {
+      if (this.skipConfirmation) {
+        this.performAccountCreation().finally(() =>
+          this.set("skipConfirmation", false)
+        );
+      }
     },
 
     actions: {
@@ -331,13 +371,7 @@ export default Controller.extend(
           return;
         }
 
-        if (new Date() - this._challengeDate > 1000 * this._challengeExpiry) {
-          this.fetchConfirmationValue().then(() =>
-            this.performAccountCreation()
-          );
-        } else {
-          this.performAccountCreation();
-        }
+        this.performAccountCreation();
       }
     }
   }

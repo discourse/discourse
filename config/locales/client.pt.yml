@@ -800,6 +800,7 @@ pt:
         secondary: "Emails Secundários"
         primary_label: "primária"
         update_email: "Alterar Email"
+        no_secondary: "Não existem emails secundários"
         ok: "Enviar-lhe-emos um email para confirmar"
         invalid: "Por favor introduza um endereço de email válido"
         authenticated: "O seu email foi autenticado por %{provider}"
@@ -1902,6 +1903,8 @@ pt:
         title: "Juntar Publicações Selecionadas"
         action: "juntar publicações selecionadas"
         error: "Ocorreu um erro ao juntar as publicações selecionadas."
+      publish_page:
+        public: "Público"
       change_owner:
         action: "mudar titularidade"
         error: "Ocorreu um erro na mudança de dono das publicações."
@@ -2034,7 +2037,6 @@ pt:
           last: "Última revisão"
           hide: "Esconder revisão"
           show: "Mostrar revisão"
-          revert: "Reverter para esta revisão"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Publicação"
         displays:

@@ -14,6 +14,7 @@ createWidget("post-admin-menu-button", {
     return this.attach("button", {
       className: attrs.className,
       action: attrs.action,
+      url: attrs.url,
       icon: attrs.icon,
       label: attrs.label,
       secondaryAction: attrs.secondaryAction

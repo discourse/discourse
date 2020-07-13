@@ -17,7 +17,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     raise_access_hidden_setting(id)
 
     if SiteSetting.type_supervisor.get_type(id) == :upload
-      value = Upload.find_by(url: value) || ''
+      value = Upload.get_from_url(value) || ""
     end
 
     update_existing_users = params[:updateExistingUsers].present?

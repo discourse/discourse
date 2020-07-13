@@ -766,7 +766,6 @@ vi:
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
-    s3_disable_cleanup: "Vô hiệu hóa việc loại bỏ các bản sao lưu từ S3 khi lấy ra tại địa phương."
     backup_time_of_day: "Thời gian theo ngày UTC khi backup."
     backup_with_uploads: "Kèm theo cả thư mục uploads theo lịch trình backup. Tắt tính năng này sẽ chỉ backup csdl."
     active_user_rate_limit_secs: "Tần số cập nhật trường 'last_seen_at, tính theo giây"

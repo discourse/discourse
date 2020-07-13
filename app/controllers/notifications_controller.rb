@@ -25,11 +25,12 @@ class NotificationsController < ApplicationController
       notifications = Notification.recent_report(current_user, limit)
       changed = false
 
-      if notifications.present?
+      if notifications.present? && !(params.has_key?(:slient) || @readonly_mode)
         # ordering can be off due to PMs
         max_id = notifications.map(&:id).max
-        changed = current_user.saw_notification_id(max_id) unless params.has_key?(:silent)
+        changed = current_user.saw_notification_id(max_id)
       end
+
       user.reload
       user.publish_notifications_state if changed
 
@@ -43,12 +44,16 @@ class NotificationsController < ApplicationController
         .includes(:topic)
         .order(created_at: :desc)
 
+      notifications = notifications.where(read: true) if params[:filter] == "read"
+
+      notifications = notifications.where(read: false) if params[:filter] == "unread"
+
       total_rows = notifications.dup.count
       notifications = notifications.offset(offset).limit(60)
       render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
                        total_rows_notifications: total_rows,
                        seen_notification_id: user.seen_notification_id,
-                       load_more_notifications: notifications_path(username: user.username, offset: offset + 60))
+                       load_more_notifications: notifications_path(username: user.username, offset: offset + 60, filter: params[:filter]))
     end
 
   end

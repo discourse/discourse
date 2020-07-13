@@ -229,6 +229,7 @@ en:
     error_message: "There was an error accepting invite. Please contact the site's administrator."
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
+    cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -1624,6 +1625,8 @@ en:
     password_unique_characters: "Minimum number of unique characters that a password must have."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
+    external_auth_skip_create_confirm: When signing up via external auth, skip the create account popup. Best used alongside sso_overrides_email, sso_overrides_username and sso_overrides_name.
+
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_sso_logging: "Log verbose SSO related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_provider_secrets to be set"
@@ -1632,9 +1635,9 @@ en:
     sso_provider_secrets: "A list of domain-secret pairs that are using Discourse as an SSO provider. Make sure SSO secret is 10 characters or longer. Wildcard symbol * can be used to match any domain or only a part of it (e.g. *.example.com)."
     sso_overrides_bio: "Overrides user bio in user profile and prevents user from changing it"
     sso_overrides_groups: "Synchronize all manual group membership with groups specified in the groups sso attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
-    sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
-    sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
-    sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
+    sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. Applies to all authentication providers. (WARNING: discrepancies can occur due to normalization of local emails)"
+    sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes.  Applies to all authentication providers. (WARNING: discrepancies can occur due to differences in username length/requirements)"
+    sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes.  Applies to all authentication providers."
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, users will not be allowed to upload avatars on Discourse."
     sso_overrides_location: "Overrides user location with external location from SSO payload and prevent local changes."
     sso_overrides_website: "Overrides user website with external location from SSO payload and prevent local changes."
@@ -1965,6 +1968,17 @@ en:
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "The email header to detect spam."
+
+    enable_imap: "Enable IMAP for synchronizing group messages."
+    enable_imap_write: "Enable two-way IMAP synchronization. If disabled, all write-operations on IMAP accounts are disabled."
+    enable_imap_idle: "Use IMAP IDLE mechanism to wait for new emails."
+    enable_smtp: "Enable SMTP for sending notifications for group messages."
+
+    imap_polling_period_mins: "The period in minutes between checking the IMAP accounts for emails."
+    imap_polling_old_emails: "The maximum number of old emails (processed) to be updated every time an IMAP box is polled (0 for all)."
+    imap_polling_new_emails: "The maximum number of new emails (unprocessed) to be updated every time an IMAP box is polled ."
+    imap_batch_import_email: "The minimum number of new emails that trigger import mode (disables post alerts)."
+
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
 
@@ -2245,7 +2259,6 @@ en:
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       invalid_regex: "Regex is invalid or not allowed."
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
-      enable_sso_disabled: "You must first enable 'enable sso' before enabling this setting."
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       sso_url_is_empty: "You must set a 'sso url' before enabling this setting."
@@ -2256,6 +2269,7 @@ en:
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
       max_username_length_range: "You cannot set the maximum below the minimum."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
+      empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
       category_search_priority:
         very_low_weight_invalid: "You cannot set the weight to be greater than 'category_search_priority_low_weight'."
         low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."

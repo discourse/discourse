@@ -7,6 +7,10 @@
         {{login-buttons externalLogin=(action "externalLogin")}}
       {{/unless}}
 
+      {{#if skipConfirmation}}
+        {{loading-spinner size="large"}}
+      {{/if}}
+
       {{#if showCreateForm}}
         <div class="login-form">
           <form>
@@ -15,7 +19,11 @@
                 <tr class="input create-account-email">
                   <td class="label"><label for="new-account-email">{{i18n "user.email.title"}}</label></td>
                   <td>
-                    {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email" autofocus="autofocus"}}
+                    {{#if emailValidated}}
+                      <span class="value">{{accountEmail}}</span>
+                    {{else}}
+                      {{input type="email" value=accountEmail id="new-account-email" name="email" autofocus="autofocus"}}
+                    {{/if}}
                   </td>
                 </tr>
 
@@ -25,19 +33,21 @@
                   <td><label>{{i18n "user.email.instructions"}}</label></td>
                 </tr>
 
-                {{#if usernameRequired}}
-                  <tr class="input">
-                    <td class="label"><label for="new-account-username">{{i18n "user.username.title"}}</label></td>
-                    <td>
+                <tr class="input">
+                  <td class="label"><label for="new-account-username">{{i18n "user.username.title"}}</label></td>
+                  <td>
+                    {{#if usernameDisabled}}
+                      <span class="value">{{accountUsername}}</span>
+                    {{else}}
                       {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
-                    </td>
-                  </tr>
-                  <tr class="instructions">
-                    <td></td>
-                    {{input-tip validation=usernameValidation id="username-validation"}}
-                    <td><label>{{i18n "user.username.instructions"}}</label></td>
-                  </tr>
-                {{/if}}
+                    {{/if}}
+                  </td>
+                </tr>
+                <tr class="instructions">
+                  <td></td>
+                  {{input-tip validation=usernameValidation id="username-validation"}}
+                  <td><label>{{i18n "user.username.instructions"}}</label></td>
+                </tr>
 
                 {{#if fullnameRequired}}
                   <tr class="input">
@@ -45,7 +55,11 @@
                       <label for="new-account-name">{{i18n "user.name.title"}}</label>
                     </td>
                     <td>
-                      {{text-field value=accountName id="new-account-name"}}
+                      {{#if nameDisabled}}
+                        <span class="value">{{accountName}}</span>
+                      {{else}}
+                        {{text-field value=accountName id="new-account-name"}}
+                      {{/if}}
                     </td>
                   </tr>
                   <tr class="instructions">
@@ -136,13 +150,14 @@
           action=(action "createAccount")
           disabled=submitDisabled
           label="create_account.title"
+          isLoading=formSubmitted
         }}
 
-        {{#conditional-loading-spinner condition=formSubmitted size="small"}}
-          {{#d-button class="btn-large" id="login-link" action=(route-action "showLogin")}}
+        {{#unless hasAuthOptions}}
+          {{#d-button class="btn-large" id="login-link" action=(route-action "showLogin") disabled=formSubmitted}}
             {{i18n "log_in"}}
           {{/d-button}}
-        {{/conditional-loading-spinner}}
+        {{/unless}}
 
         <div class="disclaimer">{{html-safe disclaimerHtml}}</div>
       </div>

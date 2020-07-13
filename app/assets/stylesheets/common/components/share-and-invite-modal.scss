@@ -76,6 +76,20 @@
       margin-bottom: 8px;
     }
 
+    .invite-user-control input.email-or-username-input {
+      line-height: 1.75em;
+    }
+
+    .group-access-control {
+      .select-kit.multi-select .choices {
+        padding-left: 8px;
+      }
+
+      .group-chooser {
+        width: 100%;
+      }
+    }
+
     .instructions {
       margin-bottom: 8px;
     }

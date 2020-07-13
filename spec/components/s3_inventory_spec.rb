@@ -76,7 +76,7 @@ describe "S3Inventory" do
       inventory.backfill_etags_and_list_missing
     end
 
-    expect(output).to eq("Listing missing post uploads...\n0 post uploads are missing.\n#{upload.url}\n1 of 5 uploads are missing\n")
+    expect(output).to eq("#{upload.url}\n1 of 5 uploads are missing\n")
     expect(Discourse.stats.get("missing_s3_uploads")).to eq(1)
   end
 
@@ -94,28 +94,5 @@ describe "S3Inventory" do
     end
 
     expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
-  end
-
-  it "should recover missing uploads correctly" do
-    freeze_time
-
-    CSV.foreach(csv_filename, headers: false) do |row|
-      Fabricate(:upload, url: File.join(Discourse.store.absolute_base_url, row[S3Inventory::CSV_KEY_INDEX]), etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
-    end
-
-    upload = Upload.last
-    etag = upload.etag
-    post = Fabricate(:post, raw: "![](#{upload.url})")
-    post.link_post_uploads
-    upload.delete
-
-    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
-
-    output = capture_stdout do
-      inventory.backfill_etags_and_list_missing
-    end
-
-    expect(output).to eq("Listing missing post uploads...\n0 post uploads are missing.\n")
-    expect(post.uploads.first.etag).to eq(etag)
   end
 end

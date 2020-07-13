@@ -59,6 +59,22 @@ describe PostActionUsersController do
     expect(response.status).to eq(200)
   end
 
+  it 'will return an unknown attribute for muted users' do
+    ignored_user = Fabricate(:user)
+    PostActionCreator.like(ignored_user, post)
+    regular_user = Fabricate(:user)
+    PostActionCreator.like(regular_user, post)
+    IgnoredUser.create(user: user, ignored_user: ignored_user)
+
+    get "/post_action_users.json", params: {
+      id: post.id, post_action_type_id: PostActionType.types[:like]
+    }
+    expect(response.status).to eq(200)
+    json_users = response.parsed_body['post_action_users']
+    expect(json_users.find { |u| u['id'] == regular_user.id }['unknown']).to be_blank
+    expect(json_users.find { |u| u['id'] == ignored_user.id }['unknown']).to eq(true)
+  end
+
   it "paginates post actions" do
     user_ids = []
     5.times do

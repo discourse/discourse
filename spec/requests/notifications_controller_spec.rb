@@ -33,7 +33,8 @@ end
 describe NotificationsController do
   context 'when logged in' do
     context 'as normal user' do
-      let!(:user) { sign_in(Fabricate(:user)) }
+      fab!(:user) { sign_in(Fabricate(:user)) }
+      fab!(:notification) { Fabricate(:notification, user: user) }
 
       describe '#index' do
         it 'should succeed for recent' do
@@ -47,7 +48,6 @@ describe NotificationsController do
         end
 
         it 'should mark notifications as viewed' do
-          Fabricate(:notification, user: user)
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
           get "/notifications.json", params: { recent: true }
@@ -56,12 +56,40 @@ describe NotificationsController do
         end
 
         it 'should not mark notifications as viewed if silent param is present' do
-          Fabricate(:notification, user: user)
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
           get "/notifications", params: { recent: true, silent: true }
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
+        end
+
+        it 'should not mark notifications as viewed in readonly mode' do
+          Discourse.received_redis_readonly!
+          expect(user.reload.unread_notifications).to eq(1)
+          expect(user.reload.total_unread_notifications).to eq(1)
+          get "/notifications", params: { recent: true, silent: true }
+          expect(user.reload.unread_notifications).to eq(1)
+          expect(user.reload.total_unread_notifications).to eq(1)
+        ensure
+          Discourse.clear_redis_readonly!
+        end
+
+        it "get notifications with all filters" do
+          notification = Fabricate(:notification, user: user)
+          notification2 = Fabricate(:notification, user: user)
+          put "/notifications/mark-read.json", params: { id: notification.id }
+          expect(response.status).to eq(200)
+
+          get "/notifications.json"
+          expect(JSON.parse(response.body)['notifications'].length).to be >= 2
+
+          get "/notifications.json", params: { filter: "read" }
+          expect(JSON.parse(response.body)['notifications'].length).to be >= 1
+          expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(true)
+
+          get "/notifications.json", params: { filter: "unread" }
+          expect(JSON.parse(response.body)['notifications'].length).to be >= 1
+          expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(false)
         end
 
         context 'when username params is not valid' do
@@ -78,7 +106,6 @@ describe NotificationsController do
       end
 
       it "can update a single notification" do
-        notification = Fabricate(:notification, user: user)
         notification2 = Fabricate(:notification, user: user)
         put "/notifications/mark-read.json", params: { id: notification.id }
         expect(response.status).to eq(200)
@@ -91,7 +118,6 @@ describe NotificationsController do
       end
 
       it "updates the `read` status" do
-        Fabricate(:notification, user: user)
         expect(user.reload.unread_notifications).to eq(1)
         expect(user.reload.total_unread_notifications).to eq(1)
         put "/notifications/mark-read.json"
@@ -120,7 +146,7 @@ describe NotificationsController do
     end
 
     context 'as admin' do
-      let!(:admin) { sign_in(Fabricate(:admin)) }
+      fab!(:admin) { sign_in(Fabricate(:admin)) }
 
       describe '#create' do
         it "can create notification" do

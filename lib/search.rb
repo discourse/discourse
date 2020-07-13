@@ -21,12 +21,6 @@ class Search
     50
   end
 
-  # Sometimes we want more topics than are returned due to exclusion of dupes. This is the
-  # factor of extra results we'll ask for.
-  def self.burst_factor
-    3
-  end
-
   def self.facets
     %w(topic category user private_messages tags all_topics)
   end
@@ -253,8 +247,12 @@ class Search
         single_topic(@term.to_i)
       else
         begin
-          route = Rails.application.routes.recognize_path(@term)
-          single_topic(route[:topic_id]) if route[:topic_id].present?
+          if route = Discourse.route_for(@term)
+            if route[:controller] == "topics" && route[:action] == "show"
+              topic_id = (route[:id] || route[:topic_id]).to_i
+              single_topic(topic_id) if topic_id > 0
+            end
+          end
         rescue ActionController::RoutingError
         end
       end
@@ -710,28 +708,10 @@ class Search
       topic_search
     end
 
-    add_more_topics_if_expected
     @results
   rescue ActiveRecord::StatementInvalid
     # In the event of a PG:Error return nothing, it is likely they used a foreign language whose
     # locale is not supported by postgres
-  end
-
-  # Add more topics if we expected them
-  def add_more_topics_if_expected
-    expected_topics = 0
-    expected_topics = Search.facets.size unless @results.type_filter.present?
-    expected_topics = Search.per_facet * Search.facets.size if @results.type_filter == 'topic'
-    expected_topics -= @results.posts.length
-    if expected_topics > 0
-      extra_posts = posts_query(expected_topics * Search.burst_factor)
-      extra_posts = extra_posts.where("posts.topic_id NOT in (?)", @results.posts.map(&:topic_id)) if @results.posts.present?
-      extra_posts.each do |post|
-        @results.add(post)
-        expected_topics -= 1
-        break if expected_topics == 0
-      end
-    end
   end
 
   # If we're searching for a single topic
@@ -957,14 +937,12 @@ class Search
         posts = posts.order("posts.like_count DESC")
       end
     else
-      # 1|32 divides the rank by 1 + logarithm of the document length and
-      # scales the range from zero to one
       data_ranking = <<~SQL
       (
         TS_RANK_CD(
           post_search_data.search_data,
           #{ts_query(weight_filter: weights)},
-          1|32
+          #{SiteSetting.search_ranking_normalization}|32
         ) *
         (
           CASE categories.search_priority

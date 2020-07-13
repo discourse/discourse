@@ -86,7 +86,7 @@ export default Component.extend(UploadMixin, {
   },
 
   _applyLightbox() {
-    if (this.imageUrl) next(() => lightbox($(this.element)));
+    if (this.imageUrl) next(() => lightbox(this.element));
   },
 
   actions: {

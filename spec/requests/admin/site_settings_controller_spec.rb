@@ -58,15 +58,18 @@ describe Admin::SiteSettingsController do
         let!(:user2) { Fabricate(:user) }
 
         it 'should update all existing user options' do
-          user2.user_option.email_in_reply_to = false
+          SiteSetting.default_email_in_reply_to = true
+
+          user2.user_option.email_in_reply_to = true
           user2.user_option.save!
 
-          expect {
-            put "/admin/site_settings/default_email_in_reply_to.json", params: {
-              default_email_in_reply_to: false,
-              updateExistingUsers: true
-            }
-          }.to change { UserOption.where(email_in_reply_to: false).count }.by(User.count - 1)
+          put "/admin/site_settings/default_email_in_reply_to.json", params: {
+            default_email_in_reply_to: false,
+            updateExistingUsers: true
+          }
+
+          user2.reload
+          expect(user2.user_option.email_in_reply_to).to eq(false)
         end
 
         it 'should not update existing user options' do

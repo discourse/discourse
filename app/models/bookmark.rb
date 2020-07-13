@@ -12,6 +12,7 @@ class Bookmark < ActiveRecord::Base
 
   validate :unique_per_post_for_user
   validate :ensure_sane_reminder_at_time
+  validates :name, length: { maximum: 100 }
 
   # we don't care whether the post or topic is deleted,
   # they hold important information about the bookmark
@@ -83,7 +84,7 @@ end
 #  user_id                   :bigint           not null
 #  topic_id                  :bigint           not null
 #  post_id                   :bigint           not null
-#  name                      :string
+#  name                      :string(100)
 #  reminder_type             :integer
 #  reminder_at               :datetime
 #  created_at                :datetime         not null

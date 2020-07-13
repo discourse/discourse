@@ -16,6 +16,7 @@ To get your Ubuntu 16.04 or 18.04 LTS install up and running to develop Discours
 
     # Ruby
     curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
+    curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
     curl -sSL https://get.rvm.io | bash -s stable
     echo 'gem: --no-document' >> ~/.gemrc
 

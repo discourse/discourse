@@ -59,7 +59,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     # no featured topics (all the previous 2x topics are only visible to admins)
 
     # Add topics, even if they're in secured categories or invisible
-    query = TopicQuery.new(CategoryFeaturedTopic.fake_admin, query_opts)
+    query = TopicQuery.new(Discourse.system_user, query_opts)
     results = query.list_category_topic_ids(c).uniq
 
     # Add some topics that are visible to everyone:
@@ -81,15 +81,6 @@ class CategoryFeaturedTopic < ActiveRecord::Base
       end
     end
   end
-
-  def self.fake_admin
-    # fake an admin
-    admin = User.new
-    admin.admin = true
-    admin.id = -1
-    admin
-  end
-
 end
 
 # == Schema Information

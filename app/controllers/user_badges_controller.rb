@@ -65,10 +65,11 @@ class UserBadgesController < ApplicationController
       end
 
       if route = Discourse.route_for(params[:reason])
-        topic_id = route[:topic_id].to_i
-        post_number = route[:post_number] || 1
-
-        post_id = Post.find_by(topic_id: topic_id, post_number: post_number).try(:id) if topic_id > 0
+        if route[:controller] == "topics" && route[:action] == "show"
+          topic_id = (route[:id] || route[:topic_id]).to_i
+          post_number = route[:post_number] || 1
+          post_id = Post.find_by(topic_id: topic_id, post_number: post_number)&.id if topic_id > 0
+        end
       end
     end
 

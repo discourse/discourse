@@ -946,7 +946,6 @@ pt:
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
-    s3_disable_cleanup: "Desactive a remoção das cópias de segurança do S3 quando removidas localmente."
     backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
     backup_with_uploads: "Incluir carregamentos em cópias de segurança agendadas. Desativar isto irá salvaguardar apenas a base de dados."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."

@@ -10,9 +10,7 @@
   }
   .bookmark-metadata {
     font-size: $font-down-2;
-    white-space: nowrap;
     display: flex;
-    align-items: center;
     margin-bottom: 0.2em;
 
     &-item {
@@ -22,7 +20,10 @@
     }
 
     .d-icon {
+      // not aligning center because of multi-line notes
+      align-self: flex-start;
       margin-right: 0.2em;
+      padding-top: 0.12em;
     }
   }
 }

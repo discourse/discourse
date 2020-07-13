@@ -44,7 +44,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         let(:uploaded_file) { file_from_fixtures("small.pdf", "pdf") }
 
         it "adds an attachment content-disposition with the original filename" do
-          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"", content_type: "application/pdf" }
+          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}", content_type: "application/pdf" }
           s3_helper.expects(:upload).with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts)).returns(["path", "etag"])
           upload = build_upload
           store.store_upload(uploaded_file, upload)
@@ -56,7 +56,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         let(:uploaded_file) { file_from_fixtures("small.mp4", "media") }
 
         it "adds an attachment content-disposition with the original filename" do
-          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"", content_type: "application/mp4" }
+          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}", content_type: "application/mp4" }
           s3_helper.expects(:upload).with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts)).returns(["path", "etag"])
           upload = build_upload
           store.store_upload(uploaded_file, upload)
@@ -68,7 +68,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         let(:uploaded_file) { file_from_fixtures("small.mp3", "media") }
 
         it "adds an attachment content-disposition with the original filename" do
-          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"", content_type: "audio/mpeg" }
+          disp_opts = { content_disposition: "attachment; filename=\"#{original_filename}\"; filename*=UTF-8''#{original_filename}", content_type: "audio/mpeg" }
           s3_helper.expects(:upload).with(uploaded_file, kind_of(String), upload_opts.merge(disp_opts)).returns(["path", "etag"])
           upload = build_upload
           store.store_upload(uploaded_file, upload)
@@ -283,9 +283,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     let(:s3_bucket) { resource.bucket(SiteSetting.s3_upload_bucket) }
     let(:s3_helper) { store.s3_helper }
 
-    it "returns false for blank urls" do
-      url = ""
-      expect(store.has_been_uploaded?(url)).to eq(false)
+    it "returns false for blank urls and bad urls" do
+      expect(store.has_been_uploaded?("")).to eq(false)
+      expect(store.has_been_uploaded?("http://test@test.com:test/test.git")).to eq(false)
+      expect(store.has_been_uploaded?("http:///+test@test.com/test.git")).to eq(false)
     end
 
     it "returns true if the base hostname is the same for both urls" do

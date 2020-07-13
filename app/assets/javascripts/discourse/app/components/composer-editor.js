@@ -12,13 +12,9 @@ import {
   fetchUnseenMentions
 } from "discourse/lib/link-mentions";
 import {
-  linkSeenCategoryHashtags,
-  fetchUnseenCategoryHashtags
-} from "discourse/lib/link-category-hashtags";
-import {
-  linkSeenTagHashtags,
-  fetchUnseenTagHashtags
-} from "discourse/lib/link-tag-hashtag";
+  linkSeenHashtags,
+  fetchUnseenHashtags
+} from "discourse/lib/link-hashtags";
 import Composer from "discourse/models/composer";
 import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
@@ -520,16 +516,13 @@ export default Component.extend({
     });
   },
 
-  _renderUnseenCategoryHashtags($preview, unseen) {
-    fetchUnseenCategoryHashtags(unseen).then(() => {
-      linkSeenCategoryHashtags($preview);
-    });
-  },
-
-  _renderUnseenTagHashtags($preview, unseen) {
-    fetchUnseenTagHashtags(unseen).then(() => {
-      linkSeenTagHashtags($preview);
-    });
+  _renderUnseenHashtags($preview) {
+    const unseen = linkSeenHashtags($preview);
+    if (unseen.length > 0) {
+      fetchUnseenHashtags(unseen).then(() => {
+        linkSeenHashtags($preview);
+      });
+    }
   },
 
   _loadInlineOneboxes(inline) {
@@ -927,30 +920,10 @@ export default Component.extend({
       this._warnMentionedGroups($preview);
       this._warnCannotSeeMention($preview);
 
-      // Paint category hashtags
-      const unseenCategoryHashtags = linkSeenCategoryHashtags($preview);
-      if (unseenCategoryHashtags.length) {
-        debounce(
-          this,
-          this._renderUnseenCategoryHashtags,
-          $preview,
-          unseenCategoryHashtags,
-          450
-        );
-      }
-
-      // Paint tag hashtags
-      if (this.siteSettings.tagging_enabled) {
-        const unseenTagHashtags = linkSeenTagHashtags($preview);
-        if (unseenTagHashtags.length) {
-          debounce(
-            this,
-            this._renderUnseenTagHashtags,
-            $preview,
-            unseenTagHashtags,
-            450
-          );
-        }
+      // Paint category and tag hashtags
+      const unseenHashtags = linkSeenHashtags($preview);
+      if (unseenHashtags.length > 0) {
+        debounce(this, this._renderUnseenHashtags, $preview, 450);
       }
 
       // Paint oneboxes

@@ -62,30 +62,18 @@ branding:
     default: -5
     client: true
     type: upload
-  logo_url:
-    hidden: true
-    default: "/images/d-logo-sketch.png"
   logo_small:
     default: -6
     client: true
     type: upload
-  logo_small_url:
-    hidden: true
-    default: "/images/d-logo-sketch-small.png"
   digest_logo:
     default: ""
     client: true
     type: upload
-  digest_logo_url:
-    hidden: true
-    default: ""
   mobile_logo:
     default: ""
     client: true
     type: upload
-  mobile_logo_url:
-    hidden: true
-    default: ""
   large_icon:
     default: ""
     client: true
@@ -93,35 +81,20 @@ branding:
   manifest_icon:
     default: ""
     type: upload
-  large_icon_url:
-    hidden: true
-    default: ""
   favicon:
     default: ""
     client: true
     type: upload
-  favicon_url:
-    hidden: true
-    default: "/images/default-favicon.ico"
   apple_touch_icon:
     default: ""
     client: true
     type: upload
-  apple_touch_icon_url:
-    hidden: true
-    default: "/images/default-apple-touch-icon.png"
   opengraph_image:
     default: ""
     type: upload
-  default_opengraph_image_url:
-    hidden: true
-    default: ""
   twitter_summary_large_image:
     default: ""
     type: upload
-  twitter_summary_large_image_url:
-    hidden: true
-    default: ""
 
 basic:
   display_local_time_in_user_card:
@@ -300,9 +273,6 @@ basic:
   push_notifications_icon:
     default: ""
     type: upload
-  push_notifications_icon_url:
-    hidden: true
-    default: ""
   short_title:
     default: ""
     max: 12
@@ -409,6 +379,9 @@ login:
   discord_trusted_guilds:
     default: ""
     type: list
+  external_auth_skip_create_confirm: 
+    default: false
+    client: true
   enable_sso:
     client: true
     default: false
@@ -1038,6 +1011,14 @@ email:
       - X-Spam-Flag
       - X-Spam-Status
       - X-SES-Spam-Verdict
+  enable_imap: false
+  enable_imap_write: false
+  enable_imap_idle: false
+  enable_smtp: false
+  imap_polling_period_mins: 5
+  imap_polling_old_emails: 1000
+  imap_polling_new_emails: 250
+  imap_batch_import_email: 100
   email_prefix: ""
   email_site_title: ""
   disable_emails:
@@ -1130,6 +1111,9 @@ email:
   enable_secondary_emails:
     client: true
     default: true
+    hidden: true
+  preserve_email_structure_when_styling:
+    default: false
     hidden: true
 
 files:
@@ -1271,6 +1255,7 @@ files:
   selectable_avatars_enabled:
     default: false
     client: true
+    validator: "SelectableAvatarsEnabledValidator"
   selectable_avatars:
     default: ""
     type: uploaded_image_list
@@ -1573,7 +1558,10 @@ rate_limits:
   rate_limit_create_post: 5
   rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
-  rate_limit_search_anon:
+  rate_limit_search_anon_global:
+    hidden: true
+    default: 150
+  rate_limit_search_anon_user:
     hidden: true
     default: 15
   rate_limit_search_user:
@@ -1761,6 +1749,12 @@ backups:
     hidden: true
 
 search:
+  search_ranking_normalization:
+    default: '1'
+    hidden: true
+  search_inject_extra_terms:
+    default: true
+    hidden: true
   min_search_term_length:
     client: true
     default: 3
@@ -2062,6 +2056,9 @@ uncategorized:
   overridden_robots_txt:
     default: ""
     hidden: true
+  show_category_definitions_in_topic_lists:
+    default: false
+    hidden: true
 
 user_preferences:
   default_email_digest_frequency:
@@ -2085,7 +2082,7 @@ user_preferences:
     enum: "PreviousRepliesSiteSetting"
     default: 2
   default_email_in_reply_to:
-    default: true
+    default: false
 
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"

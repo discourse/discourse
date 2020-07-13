@@ -12,7 +12,7 @@ const BareRouter = EmberRouter.extend({
     url = rewritePath(url);
     const params = url.split("?");
 
-    if (params[0] === "/") {
+    if (params[0] === "/" || params[0] === "") {
       url = defaultHomepage();
       if (params[1] && params[1].length) {
         url = `${url}?${params[1]}`;

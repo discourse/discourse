@@ -2,6 +2,9 @@ import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 
 export default DiscourseRoute.extend(ViewingActionType, {
+  controllerName: "user-notifications",
+  queryParams: { filter: { refreshModel: true } },
+
   renderTemplate() {
     this.render("user/notifications");
   },
@@ -13,14 +16,17 @@ export default DiscourseRoute.extend(ViewingActionType, {
     }
   },
 
-  model() {
+  model(params) {
     const username = this.modelFor("user").get("username");
 
     if (
       this.get("currentUser.username") === username ||
       this.get("currentUser.admin")
     ) {
-      return this.store.find("notification", { username });
+      return this.store.find("notification", {
+        username: username,
+        filter: params.filter
+      });
     }
   },
 

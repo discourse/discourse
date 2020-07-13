@@ -5,20 +5,24 @@ class MetadataController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required
 
   def manifest
+    expires_in 1.minutes
     render json: default_manifest.to_json, content_type: 'application/manifest+json'
   end
 
   def opensearch
+    expires_in 1.minutes
     render template: "metadata/opensearch.xml"
   end
 
   def app_association_android
     raise Discourse::NotFound unless SiteSetting.app_association_android.present?
+    expires_in 1.minutes
     render plain: SiteSetting.app_association_android, content_type: 'application/json'
   end
 
   def app_association_ios
     raise Discourse::NotFound unless SiteSetting.app_association_ios.present?
+    expires_in 1.minutes
     render plain: SiteSetting.app_association_ios, content_type: 'application/json'
   end
 

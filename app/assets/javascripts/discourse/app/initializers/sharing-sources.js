@@ -40,6 +40,7 @@ export default {
       id: "email",
       icon: "envelope-square",
       title: I18n.t("share.email"),
+      showInPrivateContext: true,
       generateUrl: function(link, title) {
         return (
           "mailto:?to=&subject=" +

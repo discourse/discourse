@@ -7,7 +7,7 @@ describe "TopicThumbnail" do
 
   before do
     SiteSetting.create_thumbnails = true
-    topic.generate_thumbnails!
+    topic.generate_thumbnails!(extra_sizes: nil)
 
     TopicThumbnail.ensure_consistency!
     topic.reload

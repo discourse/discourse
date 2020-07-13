@@ -122,7 +122,8 @@ class TopicView
       if @page > 1
         "?page=#{@page}"
       else
-        page = ((@post_number - 1) / @limit) + 1
+        posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
+        page = ((posts_count - 1) / @limit) + 1
         page > 1 ? "?page=#{page}" : ""
       end
 
@@ -434,7 +435,7 @@ class TopicView
   end
 
   def user_post_bookmarks
-    @user_post_bookmarks ||= Bookmark.where(user: @user, post_id: unfiltered_post_ids)
+    @user_post_bookmarks ||= @topic.bookmarks.where(user: @user)
   end
 
   def reviewable_counts

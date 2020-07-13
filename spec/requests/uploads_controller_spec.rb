@@ -17,18 +17,11 @@ describe UploadsController do
       end
 
       let(:logo_file) { file_from_fixtures("logo.png") }
-      let(:logo) do
-        Rack::Test::UploadedFile.new(logo_file)
-      end
       let(:logo_filename) { File.basename(logo_file) }
 
-      let(:fake_jpg) do
-        Rack::Test::UploadedFile.new(file_from_fixtures("fake.jpg"))
-      end
-
-      let(:text_file) do
-        Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt"))
-      end
+      let(:logo) { Rack::Test::UploadedFile.new(logo_file) }
+      let(:fake_jpg) { Rack::Test::UploadedFile.new(file_from_fixtures("fake.jpg")) }
+      let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
 
       it 'expects a type' do
         post "/uploads.json", params: { file: logo }
@@ -40,6 +33,24 @@ describe UploadsController do
         expect(response.status).to eq 200
         expect(response.parsed_body["id"]).to be_present
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
+      end
+
+      it 'returns "raw" url for site settings' do
+        set_cdn_url "https://awesome.com"
+
+        upload = UploadCreator.new(logo_file, "logo.png").create_for(-1)
+        logo = Rack::Test::UploadedFile.new(file_from_fixtures("logo.png"))
+
+        post "/uploads.json", params: { file: logo, type: "site_setting", for_site_setting: "true" }
+        expect(response.status).to eq 200
+        expect(response.parsed_body["url"]).to eq(upload.url)
+      end
+
+      it 'returns cdn url' do
+        set_cdn_url "https://awesome.com"
+        post "/uploads.json", params: { file: logo, type: "composer" }
+        expect(response.status).to eq 200
+        expect(response.parsed_body["url"]).to start_with("https://awesome.com/uploads/default/")
       end
 
       it 'is successful with an attachment' do

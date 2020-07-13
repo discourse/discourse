@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
