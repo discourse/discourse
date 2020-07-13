@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import Component from "@ember/component";
 import Group from "discourse/models/group";
-import { readOnly } from "@ember/object/computed";
+import { alias, readOnly } from "@ember/object/computed";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import Invite from "discourse/models/invite";
@@ -16,6 +16,8 @@ export default Component.extend({
     .format("YYYY-MM-DD"),
   groupIds: null,
   allGroups: null,
+
+  isAdmin: alias("currentUser.admin"),
 
   init() {
     this._super(...arguments);
@@ -42,6 +44,13 @@ export default Component.extend({
   },
 
   errorMessage: I18n.t("user.invited.invite_link.error"),
+
+  @discourseComputed("isAdmin", "inviteModel.group_users")
+  showGroups(isAdmin, groupUsers) {
+    return (
+      isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner))
+    );
+  },
 
   reset() {
     this.setProperties({
