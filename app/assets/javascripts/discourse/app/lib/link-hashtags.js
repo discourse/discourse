@@ -5,7 +5,7 @@ import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 
 const categoryHashtags = {};
 const tagHashtags = {};
-const checkedHashtags = [];
+const checkedHashtags = new Set();
 
 export function linkSeenHashtags($elem) {
   const $hashtags = $elem.find("span.hashtag");
@@ -13,18 +13,7 @@ export function linkSeenHashtags($elem) {
     return [];
   }
 
-  const slugs = $hashtags.map((_, hashtag) =>
-    $(hashtag)
-      .text()
-      .substr(1)
-  );
-
-  const unseen = [];
-  _.uniq(slugs).forEach(slug => {
-    if (!checkedHashtags.includes(slug)) {
-      unseen.push(slug);
-    }
-  });
+  const slugs = [...$hashtags.map((_, hashtag) => hashtag.innerText.substr(1))];
 
   schedule("afterRender", () => {
     $hashtags.each((index, hashtag) => {
@@ -42,7 +31,7 @@ export function linkSeenHashtags($elem) {
     });
   });
 
-  return unseen;
+  return slugs.uniq().filter(slug => !checkedHashtags.has(slug));
 }
 
 export function fetchUnseenHashtags(slugs) {
@@ -57,6 +46,6 @@ export function fetchUnseenHashtags(slugs) {
       tagHashtags[slug] = response.tags[slug];
     });
 
-    checkedHashtags.push.apply(checkedHashtags, slugs);
+    slugs.forEach(checkedHashtags.add, checkedHashtags);
   });
 }

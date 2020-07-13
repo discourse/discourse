@@ -3,13 +3,15 @@
 class HashtagsController < ApplicationController
   requires_login
 
+  HASHTAGS_PER_REQUEST = 20
+
   def show
     raise Discourse::InvalidParameters.new(:slugs) if !params[:slugs].is_a?(Array)
 
     all_slugs = []
     tag_slugs = []
 
-    params[:slugs].each do |slug|
+    params[:slugs][0..HASHTAGS_PER_REQUEST].each do |slug|
       if slug.end_with?(PrettyText::Helpers::TAG_HASHTAG_POSTFIX)
         tag_slugs << slug.chomp(PrettyText::Helpers::TAG_HASHTAG_POSTFIX)
       else
@@ -19,11 +21,16 @@ class HashtagsController < ApplicationController
 
     # Try to resolve hashtags as categories first
     category_slugs_and_ids = all_slugs.map { |slug| [slug, Category.query_from_hashtag_slug(slug)&.id] }.to_h
-    categories_by_id = Category.secured(guardian).where(id: category_slugs_and_ids.values).map { |c| [c.id, c] }.to_h
+    category_ids_and_urls = Category
+      .secured(guardian)
+      .select(:id, :slug, :parent_category_id) # fields required for generating category URL
+      .where(id: category_slugs_and_ids.values)
+      .map { |c| [c.id, c.url] }
+      .to_h
     categories_hashtags = {}
     category_slugs_and_ids.each do |slug, id|
-      if category = categories_by_id[id]
-        categories_hashtags[slug] = category.url
+      if category_url = category_ids_and_urls[id]
+        categories_hashtags[slug] = category_url
       end
     end
 
