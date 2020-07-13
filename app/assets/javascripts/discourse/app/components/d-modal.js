@@ -106,7 +106,7 @@ export default Component.extend({
     } else if (data.rawSubtitle) {
       this.set("subtitle", data.rawSubtitle);
     } else {
-      // If no subtitle is provided, make sure the previous subtitle
+      // if no subtitle provided, makes sure the previous subtitle
       // of another modal is not used
       this.set("subtitle", null);
     }
