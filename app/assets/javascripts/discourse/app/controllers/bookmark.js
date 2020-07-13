@@ -243,6 +243,13 @@ export default Controller.extend(ModalFunctionality, {
     return formattedReminderTime(existingReminderAt, this.userTimezone);
   },
 
+  get startNextBusinessWeekLabel() {
+    if (this.now().day() === MOMENT_MONDAY) {
+      return I18n.t("bookmarks.reminders.start_of_next_business_week_alt");
+    }
+    return I18n.t("bookmarks.reminders.start_of_next_business_week");
+  },
+
   get startNextBusinessWeekFormatted() {
     return this.nextWeek()
       .day(MOMENT_MONDAY)
