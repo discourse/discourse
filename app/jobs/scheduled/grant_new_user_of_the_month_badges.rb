@@ -17,7 +17,7 @@ module Jobs
         badge.id, previous_month_beginning, Time.zone.now
       ).exists?
 
-      scores(previous_month_beginning).each do |user_id, score|
+      scores(previous_month_beginning, previous_month_end).each do |user_id, score|
         # Don't bother awarding to users who haven't received any likes
         if score > 0.0
           user = User.find(user_id)
@@ -33,7 +33,7 @@ module Jobs
       end
     end
 
-    def scores(user_created_after_date)
+    def scores(min_user_created_at, max_user_created_at)
       current_owners = UserBadge.where(badge_id: Badge::NewUserOfTheMonth).pluck(:user_id)
       current_owners = [-1] if current_owners.blank?
 
@@ -71,7 +71,7 @@ module Jobs
           AND NOT u.moderator
           AND u.suspended_at IS NULL
           AND u.suspended_till IS NULL
-          AND u.created_at >= :min_user_created_at
+          AND u.created_at BETWEEN :min_user_created_at AND :max_user_created_at
           AND t.archetype <> '#{Archetype.private_message}'
           AND t.deleted_at IS NULL
           AND p.deleted_at IS NULL
@@ -83,7 +83,13 @@ module Jobs
         LIMIT #{MAX_AWARDED}
       SQL
 
-      Hash[*DB.query_single(sql, min_user_created_at: user_created_after_date)]
+      Hash[
+        *DB.query_single(
+          sql,
+          min_user_created_at: min_user_created_at,
+          max_user_created_at: max_user_created_at
+        )
+      ]
     end
 
   end
