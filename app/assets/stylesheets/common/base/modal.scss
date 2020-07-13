@@ -59,6 +59,8 @@
   align-items: center;
 
   .title {
+    margin-right: 1em;
+
     h3 {
       margin-bottom: 0;
     }
@@ -749,7 +751,6 @@
     .modal-tabs {
       display: inline-flex;
       flex-wrap: wrap;
-      width: calc(100% - 20px);
       flex: 1 0 auto;
       margin: 0;
 

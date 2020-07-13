@@ -39,6 +39,8 @@ export default function(name, opts) {
   route.render(fullName, renderArgs);
   if (opts.title) {
     modalController.set("title", I18n.t(opts.title));
+  } else {
+    modalController.set("title", null);
   }
 
   if (opts.panels) {
