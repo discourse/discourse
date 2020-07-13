@@ -99,10 +99,6 @@ export default Component.extend({
       this.set("title", I18n.t(data.title));
     } else if (data.rawTitle) {
       this.set("title", data.rawTitle);
-    } else {
-      // If no title is provided, make sure the previous title
-      // of another modal is not used
-      this.set("title", null);
     }
 
     if (data.subtitle) {
