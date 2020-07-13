@@ -156,7 +156,7 @@ describe InvitesController do
         it "fails if you can't invite to the forum" do
           sign_in(Fabricate(:user))
           post "/invites/link.json", params: { email: email }
-          expect(response).to be_forbidden
+          expect(response.status).to eq(422)
         end
 
         it "fails for normal user if invite email already exists" do
@@ -177,7 +177,7 @@ describe InvitesController do
             email: email, topic_id: -9999
           }
 
-          expect(response.status).to eq(400)
+          expect(response.status).to eq(422)
         end
 
         it "verifies that inviter is authorized to invite new user to a group-private topic" do
@@ -190,7 +190,7 @@ describe InvitesController do
             email: email, topic_id: group_private_topic.id
           }
 
-          expect(response).to be_forbidden
+          expect(response.status).to eq(422)
         end
 
         it "allows admins to invite to groups" do
@@ -234,7 +234,7 @@ describe InvitesController do
           post "/invites/link.json", params: {
             max_redemptions_allowed: 5
           }
-          expect(response).to be_forbidden
+          expect(response.status).to eq(422)
         end
 
         it "allows staff to invite to groups" do
