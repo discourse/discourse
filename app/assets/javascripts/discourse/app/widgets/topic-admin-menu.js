@@ -160,10 +160,7 @@ export default createWidget("topic-admin-menu", {
       }
     }
 
-    if (
-      this.currentUser &&
-      (this.currentUser.get("canManageTopic") || details.get("can_close_topic"))
-    ) {
+    if (this.currentUser && details.get("can_close_topic")) {
       if (topic.get("closed")) {
         this.addActionButton({
           className: "topic-admin-open",
@@ -221,11 +218,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    if (
-      this.currentUser &&
-      (this.currentUser.get("canManageTopic") ||
-        details.get("can_archive_topic"))
-    ) {
+    if (this.currentUser && details.get("can_archive_topic")) {
       if (!isPrivateMessage) {
         this.addActionButton({
           className: "topic-admin-archive",
