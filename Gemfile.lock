@@ -295,7 +295,7 @@ GEM
     rainbow (3.0.0)
     raindrops (0.19.1)
     rake (13.0.1)
-    rake-compiler (1.1.0)
+    rake-compiler (1.1.1)
       rake
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
