@@ -273,7 +273,7 @@ QUnit.test(
     updateCurrentUser({ moderator: true, canManageTopic: true });
     const futureDateInputSelector = selectKit(".future-date-input-selector");
 
-    await visit("/t/internationalization-localization");
+    await visit("/t/topic-for-group-moderators/2480");
     await click(".toggle-admin-menu");
     await click(".topic-admin-status-update button");
     await futureDateInputSelector.expand();
