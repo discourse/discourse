@@ -1,8 +1,25 @@
+import I18n from "I18n";
 import { run } from "@ember/runloop";
 import { acceptance, controllerFor } from "helpers/qunit-helpers";
 import showModal from "discourse/lib/show-modal";
 
-acceptance("Modal");
+acceptance("Modal", {
+  beforeEach() {
+    this._translations = I18n.translations;
+
+    I18n.translations = {
+      en: {
+        js: {
+          test_title: "Test title"
+        }
+      }
+    };
+  },
+
+  afterEach() {
+    I18n.translations = this._translations;
+  }
+});
 
 QUnit.skip("modal", async function(assert) {
   await visit("/");
@@ -51,6 +68,62 @@ QUnit.skip("modal", async function(assert) {
   assert.ok(
     find(".d-modal:visible").length === 1,
     "ESC should not close the modal"
+  );
+});
+
+QUnit.test("rawTitle in modal panels", async function(assert) {
+  Ember.TEMPLATES["modal/test-raw-title-panels"] = Ember.HTMLBars.compile("");
+  const panels = [
+    { id: "test1", rawTitle: "Test 1" },
+    { id: "test2", rawTitle: "Test 2" }
+  ];
+
+  await visit("/");
+  run(() => showModal("test-raw-title-panels", { panels }));
+
+  assert.equal(
+    find(".d-modal .modal-tab:first-child")
+      .text()
+      .trim(),
+    "Test 1",
+    "it should display the raw title"
+  );
+});
+
+QUnit.test("modal title", async function(assert) {
+  Ember.TEMPLATES["modal/test-title"] = Ember.HTMLBars.compile("");
+  Ember.TEMPLATES["modal/test-title-with-body"] = Ember.HTMLBars.compile(
+    "{{#d-modal-body}}test{{/d-modal-body}}"
+  );
+
+  await visit("/");
+
+  run(() => showModal("test-title", { title: "test_title" }));
+  assert.equal(
+    find(".d-modal .title")
+      .text()
+      .trim(),
+    "Test title",
+    "it should display the title"
+  );
+
+  await click(".d-modal .close");
+
+  run(() => showModal("test-title-with-body", { title: "test_title" }));
+  assert.equal(
+    find(".d-modal .title")
+      .text()
+      .trim(),
+    "Test title",
+    "it should display the title when used with d-modal-body"
+  );
+
+  await click(".d-modal .close");
+
+  run(() => showModal("test-title"));
+  assert.ok(
+    find(".d-modal .title").length === 0,
+    "it should not re-use the previous title"
   );
 });
 

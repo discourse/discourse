@@ -122,7 +122,9 @@ class InvitesController < ApplicationController
       group_ids: params[:group_ids],
       group_names: params[:group_names]
     )
-    guardian.ensure_can_invite_to_forum!(groups)
+    if !guardian.can_invite_to_forum?(groups)
+      raise StandardError.new I18n.t("invite.cant_invite_to_group")
+    end
     group_ids = groups.map(&:id)
 
     if is_single_invite
@@ -142,25 +144,23 @@ class InvitesController < ApplicationController
       end
     end
 
-    begin
-      invite_link = if is_single_invite
-        Invite.generate_single_use_invite_link(params[:email], current_user, topic, group_ids)
-      else
-        Invite.generate_multiple_use_invite_link(
-          invited_by: current_user,
-          max_redemptions_allowed: params[:max_redemptions_allowed],
-          expires_at: params[:expires_at],
-          group_ids: group_ids
-        )
-      end
-      if invite_link.present?
-        render_json_dump(invite_link)
-      else
-        render json: failed_json, status: 422
-      end
-    rescue => e
-      render json: { errors: [e.message] }, status: 422
+    invite_link = if is_single_invite
+      Invite.generate_single_use_invite_link(params[:email], current_user, topic, group_ids)
+    else
+      Invite.generate_multiple_use_invite_link(
+        invited_by: current_user,
+        max_redemptions_allowed: params[:max_redemptions_allowed],
+        expires_at: params[:expires_at],
+        group_ids: group_ids
+      )
     end
+    if invite_link.present?
+      render_json_dump(invite_link)
+    else
+      render json: failed_json, status: 422
+    end
+  rescue => e
+    render json: { errors: [e.message] }, status: 422
   end
 
   def destroy

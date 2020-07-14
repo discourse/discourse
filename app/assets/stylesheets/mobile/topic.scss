@@ -222,7 +222,7 @@ sub sub {
   .topic-admin-popup-menu {
     box-sizing: border-box;
     padding: 0.25em;
-
+    width: unset;
     ul {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;

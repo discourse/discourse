@@ -30,6 +30,24 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
     expect(badges.first.granted_at.to_s).to eq('2019-12-31 23:59:59 UTC')
   end
 
+  it "does not include people created after the previous month" do
+    freeze_time(DateTime.parse('2020-01-15 00:00 UTC'))
+
+    user = Fabricate(:user, created_at: 1.week.ago)
+    p = Fabricate(:post, user: user)
+    Fabricate(:post, user: user)
+
+    old_user = Fabricate(:user, created_at: 6.months.ago)
+    PostActionCreator.like(old_user, p)
+    old_user = Fabricate(:user, created_at: 6.months.ago)
+    PostActionCreator.like(old_user, p)
+
+    granter.execute({})
+
+    badges = user.user_badges.where(badge_id: Badge::NewUserOfTheMonth)
+    expect(badges).to be_blank
+  end
+
   it "does nothing if badges are disabled" do
     SiteSetting.enable_badges = false
 
@@ -93,7 +111,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
 
   describe '.scores' do
     def scores
-      granter.scores(1.month.ago)
+      granter.scores(1.month.ago, Time.now)
     end
 
     it "doesn't award it to accounts over a month old" do

@@ -1102,13 +1102,13 @@ describe CookedPostProcessor do
       SiteSetting.add_rel_nofollow_to_user_content = false
       Oneboxer.expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
-        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener ugc">GANGNAM STYLE</a></aside>')
       cpp.post_process_oneboxes
     end
 
     it "removes nofollow noopener from links" do
       expect(cpp).to be_dirty
-      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener">GANGNAM STYLE</a></aside>'
     end
   end
 
@@ -1123,13 +1123,13 @@ describe CookedPostProcessor do
       SiteSetting.tl3_links_no_follow = false
       Oneboxer.expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
-        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow ugc noopener">GANGNAM STYLE</a></aside>')
       cpp.post_process_oneboxes
     end
 
-    it "removes nofollow noopener from links" do
+    it "removes nofollow ugc from links" do
       expect(cpp).to be_dirty
-      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener">GANGNAM STYLE</a></aside>'
     end
   end
 

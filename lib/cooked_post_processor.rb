@@ -621,7 +621,16 @@ class CookedPostProcessor
     end
 
     if @omit_nofollow || !SiteSetting.add_rel_nofollow_to_user_content
-      @doc.css(".onebox-body a, .onebox a").each { |a| a.remove_attribute("rel") }
+      @doc.css(".onebox-body a[rel], .onebox a[rel]").each do |a|
+        rel_values = a['rel'].split(' ').map(&:downcase)
+        rel_values.delete('nofollow')
+        rel_values.delete('ugc')
+        if rel_values.blank?
+          a.remove_attribute("rel")
+        else
+          a["rel"] = rel_values.join(' ')
+        end
+      end
     end
   end
 

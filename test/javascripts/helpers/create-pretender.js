@@ -300,10 +300,6 @@ export function applyDefaultHandlers(pretender) {
     return response({ post_reply_histories: [{ id: 1234, cooked: "wat" }] });
   });
 
-  pretender.get("/category_hashtags/check", () => {
-    return response({ valid: [{ slug: "bug", url: "/c/bugs" }] });
-  });
-
   pretender.get("/categories_and_latest", () =>
     response(fixturesByUrl["/categories_and_latest.json"])
   );

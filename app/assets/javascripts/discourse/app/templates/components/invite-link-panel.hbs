@@ -9,16 +9,18 @@
     {{generated-invite-link link=inviteModel.inviteLink}}
   {{else}}
 
-    <div class="group-access-control">
-      <label class="instructions">
-        {{i18n "topic.automatically_add_to_groups"}}
-      </label>
-      {{group-chooser
-        content=allGroups
-        value=groupIds
-        labelProperty="name"
-        onChange=(action (mut groupIds))}}
-    </div>
+    {{#if showGroups}}
+      <div class="group-access-control">
+        <label class="instructions">
+          {{i18n "topic.automatically_add_to_groups"}}
+        </label>
+        {{group-chooser
+          content=allGroups
+          value=groupIds
+          labelProperty="name"
+          onChange=(action (mut groupIds))}}
+      </div>
+    {{/if}}
 
     <div class="max-redemptions-allowed">
       <label class="instructions">

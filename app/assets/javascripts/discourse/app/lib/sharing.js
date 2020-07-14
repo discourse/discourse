@@ -11,7 +11,7 @@
 
       // The icon that will be displayed, choose between icon name `icon` and custom HTML `htmlIcon`.
       // When both provided, prefer `icon`
-      icon: 'twitter-square'
+      icon: 'twitter-square',
       htmlIcon: '<img src="example.com/example.jpg">',
 
       // A callback for generating the remote link from the `link` and `title`
@@ -22,11 +22,14 @@
       // If provided, handle by custom javascript rather than default url open
       clickHandler: function(link, title){
         alert("Hello!")
-      }
+      },
 
       // If true, opens in a popup of `popupHeight` size. If false it's opened in a new tab
       shouldOpenInPopup: true,
-      popupHeight: 265
+      popupHeight: 265,
+
+      // If true, will show the sharing service in PMs and login_required sites
+      showInPrivateContext: false
     });
   ```
 **/
@@ -77,12 +80,16 @@ export default {
     }
   },
 
-  activeSources(linksSetting = "") {
-    return linksSetting
+  activeSources(linksSetting = "", privateContext = false) {
+    const sources = linksSetting
       .split("|")
       .concat(_customSharingIds)
       .map(s => _sources[s])
       .compact();
+
+    return privateContext
+      ? sources.filter(s => s.showInPrivateContext)
+      : sources;
   },
 
   _reset() {

@@ -29,4 +29,27 @@ describe UserSummarySerializer do
     SiteSetting.enable_names = false
     expect(serializer.as_json[:most_liked_users][0][:name]).to eq(nil)
   end
+
+  it "returns correct links data ranking" do
+    topic = Fabricate(:topic)
+    post = Fabricate(:post_with_external_links, user: topic.user, topic: topic)
+    TopicLink.extract_from(post)
+    topic.topic_links.each_with_index do |link, index|
+      index.times do |i|
+        TopicLinkClick.create(topic_link: link, ip_address: "192.168.1.#{i + 1}")
+      end
+    end
+
+    guardian = Guardian.new
+    summary = UserSummary.new(topic.user, guardian)
+    serializer = UserSummarySerializer.new(summary, scope: guardian, root: false)
+    json = serializer.as_json
+
+    expect(json[:links][0][:url]).to eq("http://www.codinghorror.com/blog")
+    expect(json[:links][0][:clicks]).to eq(6)
+    expect(json[:links][1][:url]).to eq("http://twitter.com")
+    expect(json[:links][1][:clicks]).to eq(5)
+    expect(json[:links][2][:url]).to eq("https://google.com")
+    expect(json[:links][2][:clicks]).to eq(4)
+  end
 end
