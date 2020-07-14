@@ -84,6 +84,8 @@
                         {{/if}}
                       {{/if}}
                     {{/group-membership-button}}
+
+                    {{plugin-outlet name="group-index-box-after" args=(hash model=group)}}
                   </div>
                 </div>
               {{/link-to}}
