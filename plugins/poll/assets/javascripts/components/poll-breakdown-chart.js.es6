@@ -9,7 +9,7 @@ import { getColors } from "../lib/chart-colors";
 export default Component.extend({
   classNames: "poll-breakdown-chart-container",
   optionToSlice: {},
-  previouslyHighlightedSliceIndex: null,
+  previousHighlightedSliceIndex: null,
 
   didInsertElement() {
     this._super(...arguments);
@@ -141,24 +141,24 @@ export default Component.extend({
   _updateHighlight() {
     const meta = this.chart.getDatasetMeta(0);
 
-    if (this.previouslyHighlightedSliceIndex !== null) {
-      const slice = meta.data[this.previouslyHighlightedSliceIndex];
+    if (this.previousHighlightedSliceIndex !== null) {
+      const slice = meta.data[this.previousHighlightedSliceIndex];
       meta.controller.removeHoverStyle(slice);
     }
 
     if (this.highlightedOption === null) {
-      this.set("previouslyHighlightedSliceIndex", null);
+      this.set("previousHighlightedSliceIndex", null);
       return;
     }
 
     const sliceIndex = this.optionToSlice[this.highlightedOption];
     if (typeof sliceIndex === "undefined") {
-      this.set("previouslyHighlightedSliceIndex", null);
+      this.set("previousHighlightedSliceIndex", null);
       return;
     }
 
     const slice = meta.data[sliceIndex];
-    this.set("previouslyHighlightedSliceIndex", sliceIndex);
+    this.set("previousHighlightedSliceIndex", sliceIndex);
     meta.controller.setHoverStyle(slice);
     this.chart.draw();
   }
