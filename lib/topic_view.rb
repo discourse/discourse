@@ -366,21 +366,24 @@ class TopicView
       if is_mega_topic?
         {}
       else
-        post_ids = unfiltered_post_ids
-
-        return {} if post_ids.blank?
+        post_types = [Post.types[:regular], Post.types[:moderator_action]]
+        if @guardian.can_see_whispers?(@topic)
+          post_types << Post.types[:whisper]
+        end
 
         sql = <<~SQL
             SELECT user_id, count(*) AS count_all
               FROM posts
-             WHERE id in (:post_ids)
+             WHERE topic_id = :topic_id
+               AND post_type IN (:post_types)
                AND user_id IS NOT NULL
+               AND posts.deleted_at IS NULL
           GROUP BY user_id
           ORDER BY count_all DESC
              LIMIT #{MAX_PARTICIPANTS}
         SQL
 
-        Hash[*DB.query_single(sql, post_ids: post_ids)]
+        Hash[*DB.query_single(sql, topic_id: @topic.id, post_types: post_types)]
       end
     end
   end
