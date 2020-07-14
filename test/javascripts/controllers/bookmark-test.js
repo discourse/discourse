@@ -9,7 +9,10 @@ moduleFor("controller:bookmark", {
   beforeEach() {
     logIn();
     KeyboardShortcutInitializer.initialize(Discourse.__container__);
-    BookmarkController = this.subject({ currentUser: User.current() });
+    BookmarkController = this.subject({
+      currentUser: User.current(),
+      site: { isMobileDevice: false }
+    });
     BookmarkController.onShow();
   },
 
