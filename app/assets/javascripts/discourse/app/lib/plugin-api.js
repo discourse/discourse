@@ -7,7 +7,7 @@ import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton, removeButton } from "discourse/widgets/post-menu";
 import { includeAttributes } from "discourse/lib/transform-post";
-import { registerHighlightJSLanguage } from "discourse/services/syntax-highlighter";
+import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addGlobalNotice } from "discourse/components/global-notice";

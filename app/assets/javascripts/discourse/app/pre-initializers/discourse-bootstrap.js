@@ -9,7 +9,7 @@ import {
 } from "discourse-common/config/environment";
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
-import { setupHighlightJs } from "discourse/services/syntax-highlighter";
+import { setupHighlightJs } from "discourse/lib/highlight-syntax";
 
 export default {
   name: "discourse-bootstrap",

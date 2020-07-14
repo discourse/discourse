@@ -1,5 +1,8 @@
 import componentTest from "helpers/component-test";
-import { waitForHighlighting } from "discourse/services/syntax-highlighter";
+import {
+  waitForHighlighting,
+  setupHighlightJs
+} from "discourse/lib/highlight-syntax";
 
 const LONG_CODE_BLOCK = "puts a\n".repeat(15000);
 
@@ -9,14 +12,14 @@ componentTest("highlighting code", {
   template: "{{highlighted-code lang='ruby' code=code}}",
 
   beforeEach() {
-    Discourse.HighlightJSPath =
-      "/assets/highlightjs/highlight-test-bundle.min.js";
-    Discourse.HighlightJSWorkerURL = "/assets/highlightjs-worker.js";
+    setupHighlightJs({
+      highlightJsUrl: "/assets/highlightjs/highlight-test-bundle.min.js",
+      highlightJsWorkerUrl: "/assets/highlightjs-worker.js"
+    });
   },
 
   async test(assert) {
     this.set("code", "def test; end");
-
     await waitForHighlighting();
     assert.equal(
       find("code.ruby.hljs .hljs-function .hljs-keyword")
@@ -31,9 +34,10 @@ componentTest("highlighting code limit", {
   template: "{{highlighted-code lang='ruby' code=code}}",
 
   beforeEach() {
-    Discourse.HighlightJSPath =
-      "/assets/highlightjs/highlight-test-bundle.min.js";
-    Discourse.HighlightJSWorkerURL = "/assets/highlightjs-worker.js";
+    setupHighlightJs({
+      highlightJsUrl: "/assets/highlightjs/highlight-test-bundle.min.js",
+      highlightJsWorkerUrl: "/assets/highlightjs-worker.js"
+    });
   },
 
   async test(assert) {

@@ -2,19 +2,16 @@ import lightbox from "discourse/lib/lightbox";
 import { setupLazyLoading } from "discourse/lib/lazy-load-images";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import highlightSyntax from "discourse/lib/highlight-syntax";
 
 export default {
   name: "post-decorations",
   initialize(container) {
     withPluginApi("0.1", api => {
       const siteSettings = container.lookup("site-settings:main");
-      const syntaxHighligher = container.lookup("service:syntax-highlighter");
-      api.decorateCookedElement(
-        elem => syntaxHighligher.highlightElements(elem),
-        {
-          id: "discourse-syntax-highlighting"
-        }
-      );
+      api.decorateCookedElement(highlightSyntax, {
+        id: "discourse-syntax-highlighting"
+      });
       api.decorateCookedElement(lightbox, { id: "discourse-lightbox" });
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCooked(setTextDirections, {
