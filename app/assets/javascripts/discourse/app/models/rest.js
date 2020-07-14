@@ -2,6 +2,7 @@ import { warn } from "@ember/debug";
 import { equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const RestModel = EmberObject.extend({
   isNew: equal("__state", "new"),
@@ -100,9 +101,16 @@ RestModel.reopenClass({
 
   create(args) {
     args = args || {};
+    let owner = getOwner(this);
+
+    // Some Discourse code calls `model.create()` directly without going through the
+    // store. In that case the injections are not made, so we do them here. Eventually
+    // we should use the store for everything to fix this.
     if (!args.store) {
-      const container = Discourse.__container__;
-      args.store = container.lookup("service:store");
+      args.store = owner.lookup("service:store");
+    }
+    if (!args.siteSettings) {
+      args.siteSettings = owner.lookup("site-settings:main");
     }
 
     args.__munge = this.munge;

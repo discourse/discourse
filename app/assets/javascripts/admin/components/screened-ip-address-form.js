@@ -21,12 +21,7 @@ export default Component.extend({
   formSubmitted: false,
   actionName: "block",
 
-  @discourseComputed
-  adminWhitelistEnabled() {
-    return Discourse.SiteSettings.use_admin_ip_whitelist;
-  },
-
-  @discourseComputed("adminWhitelistEnabled")
+  @discourseComputed("siteSettings.use_admin_ip_whitelist")
   actionNames(adminWhitelistEnabled) {
     if (adminWhitelistEnabled) {
       return [

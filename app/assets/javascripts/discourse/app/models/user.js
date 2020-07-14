@@ -50,7 +50,7 @@ const User = RestModel.extend({
 
   @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
-    const maxPostCount = Discourse.SiteSettings.delete_all_posts_max;
+    const maxPostCount = this.siteSettings.delete_all_posts_max;
     return canBeDeleted && postCount <= maxPostCount;
   },
 
@@ -100,7 +100,7 @@ const User = RestModel.extend({
 
   @discourseComputed("username", "name")
   displayName(username, name) {
-    if (Discourse.SiteSettings.enable_names && !isEmpty(name)) {
+    if (this.siteSettings.enable_names && !isEmpty(name)) {
       return name;
     }
     return username;
@@ -108,7 +108,7 @@ const User = RestModel.extend({
 
   @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
-    if (isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) {
+    if (isEmpty(bgUrl) || !this.siteSettings.allow_profile_backgrounds) {
       return "".htmlSafe();
     }
     return ("background-image: url(" + getURLWithCDN(bgUrl) + ")").htmlSafe();
@@ -664,7 +664,7 @@ const User = RestModel.extend({
     return (
       this.staff ||
       this.trust_level > 0 ||
-      Discourse.SiteSettings[`newuser_max_${type}s`] > 0
+      this.siteSettings[`newuser_max_${type}s`] > 0
     );
   },
 
@@ -724,7 +724,7 @@ const User = RestModel.extend({
 
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
-    return !Discourse.SiteSettings.enable_sso && canDeleteAccount;
+    return !this.siteSettings.enable_sso && canDeleteAccount;
   },
 
   delete: function() {
@@ -881,7 +881,7 @@ const User = RestModel.extend({
 
   @discourseComputed("second_factor_enabled", "staff")
   enforcedSecondFactor(secondFactorEnabled, staff) {
-    const enforce = Discourse.SiteSettings.enforce_second_factor;
+    const enforce = this.siteSettings.enforce_second_factor;
     return (
       !secondFactorEnabled &&
       (enforce === "all" || (enforce === "staff" && staff))
