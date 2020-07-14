@@ -1176,9 +1176,9 @@ class PluginApi {
     addQuickAccessProfileItem(item);
   }
 
- addFeaturedLinkMetaDecorator(decorator) {
-   addFeaturedLinkMetaDecorator(decorator);
- }
+  addFeaturedLinkMetaDecorator(decorator) {
+    addFeaturedLinkMetaDecorator(decorator);
+  }
 }
 
 let _pluginv01;
