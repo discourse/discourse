@@ -41,6 +41,29 @@ describe PrettyText do
     expect(md).to eq(html)
   end
 
+  it 'properly handles multiple spoiler blocks in a post' do
+    md = PrettyText.cook(<<~EOF)
+      [details="First"]
+      body secret stuff very long
+      [/details]
+      [details="Second"]
+      body secret stuff very long
+      [/details]
+
+      Hey there.
+
+      [details="Third"]
+      body secret stuff very long
+      [/details]
+    EOF
+
+    md = PrettyText.format_for_email(md, post)
+    expect(md).not_to include('secret stuff')
+    expect(md.scan(/First/).size).to eq(1)
+    expect(md.scan(/Third/).size).to eq(1)
+    expect(md.scan(I18n.t('details.excerpt_details')).size).to eq(3)
+  end
+
   it 'escapes summary text' do
     md = PrettyText.cook(<<~EOF)
       <script>alert('hello')</script>
