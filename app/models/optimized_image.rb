@@ -360,16 +360,18 @@ end
 #
 # Table name: optimized_images
 #
-#  id        :integer          not null, primary key
-#  sha1      :string(40)       not null
-#  extension :string(10)       not null
-#  width     :integer          not null
-#  height    :integer          not null
-#  upload_id :integer          not null
-#  url       :string           not null
-#  filesize  :integer
-#  etag      :string
-#  version   :integer
+#  id         :integer          not null, primary key
+#  sha1       :string(40)       not null
+#  extension  :string(10)       not null
+#  width      :integer          not null
+#  height     :integer          not null
+#  upload_id  :integer          not null
+#  url        :string           not null
+#  filesize   :integer
+#  etag       :string
+#  version    :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #
