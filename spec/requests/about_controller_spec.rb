@@ -35,6 +35,13 @@ describe AboutController do
         expect(response.status).to eq(200)
         expect(response.body).to include("<title>About - Discourse</title>")
       end
+
+      it "should include correct user URLs" do
+        Fabricate(:admin, username: "anAdminUser")
+        get '/about', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
+        expect(response.status).to eq(200)
+        expect(response.body).to include("/u/anadminuser")
+      end
     end
 
     it "serializes stats when 'Guardian#can_see_about_stats?' is true" do
