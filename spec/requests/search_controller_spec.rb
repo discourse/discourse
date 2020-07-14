@@ -53,7 +53,7 @@ describe SearchController do
         get "/search/query.json", headers: {
           "HTTP_X_REQUEST_START" => "t=#{start_time.to_f}"
         }, params: {
-          term: "hi there", include_blurb: true
+          term: "hi there"
         }
 
         expect(response.status).to eq(409)
@@ -80,7 +80,7 @@ describe SearchController do
       term = "hello\0hello"
 
       get "/search/query.json", params: {
-        term: term, include_blurb: true
+        term: term
       }
 
       expect(response.status).to eq(400)
@@ -88,7 +88,7 @@ describe SearchController do
 
     it "can search correctly" do
       get "/search/query.json", params: {
-        term: 'awesome', include_blurb: true
+        term: 'awesome'
       }
 
       expect(response.status).to eq(200)
@@ -98,6 +98,24 @@ describe SearchController do
       expect(data['posts'].length).to eq(1)
       expect(data['posts'][0]['id']).to eq(awesome_post.id)
       expect(data['posts'][0]['blurb']).to eq(awesome_post.raw)
+      expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
+    end
+
+    it "can search correctly with advanced search filters" do
+      awesome_post.update!(
+        raw: "#{"a" * Search::GroupedSearchResults::BLURB_LENGTH} elephant"
+      )
+
+      get "/search/query.json", params: { term: 'order:views elephant' }
+
+      expect(response.status).to eq(200)
+
+      data = response.parsed_body
+
+      expect(data.dig("grouped_search_result", "term")).to eq('order:views elephant')
+      expect(data['posts'].length).to eq(1)
+      expect(data['posts'][0]['id']).to eq(awesome_post.id)
+      expect(data['posts'][0]['blurb']).to include('elephant')
       expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
     end
 
@@ -141,7 +159,6 @@ describe SearchController do
       end
 
       it "should return the right result" do
-
         get "/search/query.json", params: {
           term: user_post.topic_id,
           type_filter: 'topic',

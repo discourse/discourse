@@ -427,7 +427,7 @@ describe Search do
 
     context 'searching the OP' do
       let!(:post) { Fabricate(:post_with_long_raw_content) }
-      let(:result) { Search.execute('hundred', type_filter: 'topic', include_blurbs: true) }
+      let(:result) { Search.execute('hundred', type_filter: 'topic') }
 
       it 'returns a result correctly' do
         expect(result.posts.length).to eq(1)
@@ -449,8 +449,7 @@ describe Search do
 
       it 'returns the post' do
         result = Search.execute('elephant',
-          type_filter: 'topic',
-          include_blurbs: true
+          type_filter: 'topic'
         )
 
         expect(result.posts).to contain_exactly(reply)
@@ -459,8 +458,7 @@ describe Search do
 
       it 'returns the right post and blurb for searches with phrase' do
         result = Search.execute('"elephant"',
-          type_filter: 'topic',
-          include_blurbs: true
+          type_filter: 'topic'
         )
 
         expect(result.posts).to contain_exactly(reply)
@@ -1492,7 +1490,7 @@ describe Search do
       results = Search.execute('ragis', type_filter: 'topic')
       expect(results.posts.length).to eq(1)
 
-      results = Search.execute('Rágis', type_filter: 'topic', include_blurbs: true)
+      results = Search.execute('Rágis', type_filter: 'topic')
       expect(results.posts.length).to eq(1)
 
       # TODO: this is a test we need to fix!
@@ -1514,7 +1512,7 @@ describe Search do
       results = Search.execute('regis', type_filter: 'topic')
       expect(results.posts.length).to eq(0)
 
-      results = Search.execute('Régis', type_filter: 'topic', include_blurbs: true)
+      results = Search.execute('Régis', type_filter: 'topic')
       expect(results.posts.length).to eq(1)
 
       expect(results.blurb(results.posts.first)).to include('Régis')

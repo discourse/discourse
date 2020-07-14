@@ -154,7 +154,6 @@ class Search
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
     @search_context = @opts[:search_context]
-    @include_blurbs = @opts[:include_blurbs] || false
     @blurb_length = @opts[:blurb_length]
     @valid = true
     @page = @opts[:page]
@@ -186,11 +185,11 @@ class Search
     end
 
     @results = GroupedSearchResults.new(
-      @opts[:type_filter],
-      clean_term,
-      @search_context,
-      @include_blurbs,
-      @blurb_length
+      type_filter: @opts[:type_filter],
+      term: clean_term,
+      blurb_term: term,
+      search_context: @search_context,
+      blurb_length: @blurb_length
     )
   end
 

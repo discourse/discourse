@@ -135,7 +135,7 @@ export function searchForTerm(term, opts) {
   if (!opts) opts = {};
 
   // Only include the data we have
-  const data = { term: term, include_blurbs: "true" };
+  const data = { term: term };
   if (opts.typeFilter) data.type_filter = opts.typeFilter;
   if (opts.searchForId) data.search_for_id = true;
   if (opts.restrictToArchetype)
