@@ -10,6 +10,7 @@ export default Component.extend({
   classNames: "poll-breakdown-chart-container",
   optionToSlice: {},
   previousHighlightedSliceIndex: null,
+  previousDisplayMode: null,
 
   didInsertElement() {
     this._super(...arguments);
@@ -130,12 +131,14 @@ export default Component.extend({
   },
 
   _updateDisplayMode() {
-    // TODO: update only if displayMode has changed
-    const config = this.chartConfig;
-    this.chart.data.datasets = config.data.datasets;
-    this.chart.options = config.options;
+    if (this.displayMode !== this.previousDisplayMode) {
+      const config = this.chartConfig;
+      this.chart.data.datasets = config.data.datasets;
+      this.chart.options = config.options;
 
-    this.chart.update();
+      this.chart.update();
+      this.set("previousDisplayMode", this.displayMode);
+    }
   },
 
   _updateHighlight() {
