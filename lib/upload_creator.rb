@@ -403,7 +403,7 @@ class UploadCreator
   end
 
   def allow_animation
-    @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
+    @allow_animation ||= @opts[:type] != "avatar" && SiteSetting.allow_animated_thumbnails
   end
 
   def svg_allowlist_xpath
