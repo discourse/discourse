@@ -508,7 +508,8 @@ describe Guardian do
       let(:groups) { [group, another_group] }
 
       before do
-        user.update!(trust_level: TrustLevel[2])
+        SiteSetting.min_trust_to_allow_invite = 1
+        user.update!(trust_level: SiteSetting.min_trust_to_allow_invite.to_i)
         group.add_owner(user)
       end
 
@@ -566,7 +567,9 @@ describe Guardian do
 
       it 'returns true for normal user when inviting to topic and PM disabled' do
         SiteSetting.enable_personal_messages = false
-        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
+        SiteSetting.min_trust_to_allow_pm_invite = 1
+        user.trust_level = SiteSetting.min_trust_to_allow_pm_invite.to_i
+        expect(Guardian.new(user).can_invite_to?(topic)).to be_truthy
       end
 
       describe 'for a private category for automatic and non-automatic group' do
@@ -609,7 +612,7 @@ describe Guardian do
     end
 
     describe "private messages" do
-      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+      fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_to_allow_pm_invite.to_i) }
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
 
       context "when private messages are disabled" do
@@ -650,7 +653,9 @@ describe Guardian do
 
   describe 'can_invite_via_email?' do
     it 'returns true for all (tl2 and above) users when sso is disabled, local logins are enabled, user approval is not required' do
-      expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_truthy
+      SiteSetting.min_trust_to_allow_pm_invite = 1
+      user.trust_level = SiteSetting.min_trust_to_allow_pm_invite.to_i
+      expect(Guardian.new(user).can_invite_via_email?(topic)).to be_truthy
       expect(Guardian.new(moderator).can_invite_via_email?(topic)).to be_truthy
       expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_truthy
     end

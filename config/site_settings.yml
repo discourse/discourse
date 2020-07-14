@@ -1306,6 +1306,12 @@ trust:
   min_trust_to_post_images:
     default: 0
     enum: "TrustLevelSetting"
+  min_trust_to_allow_invite:
+    default: 2
+    enum: "TrustLevelSetting"
+  min_trust_to_allow_pm_invite:
+    default: 2
+    enum: "TrustLevelSetting"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   tl1_requires_topics_entered: 5
