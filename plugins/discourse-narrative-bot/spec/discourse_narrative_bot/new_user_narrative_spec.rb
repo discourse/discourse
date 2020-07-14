@@ -266,6 +266,16 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         expect(new_post.raw).to eq(expected_raw.chomp)
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
       end
+
+      it 'should skip tutorials in SiteSetting.discourse_narrative_bot_skip_tutorials' do
+        SiteSetting.discourse_narrative_bot_skip_tutorials = 'tutorial_onebox'
+
+        post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
+
+        DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
+      end
     end
 
     describe 'onebox tutorial' do
