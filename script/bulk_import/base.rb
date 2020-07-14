@@ -76,7 +76,7 @@ class BulkImport::Base
     charset = ENV["DB_CHARSET"] || "utf8"
     db = ActiveRecord::Base.connection_config
     @encoder = PG::TextEncoder::CopyRow.new
-    @raw_connection = PG.connect(dbname: db[:database], host: db[:host_names]&.first, port: db[:port])
+    @raw_connection = PG.connect(dbname: db[:database], port: db[:port])
     @uploader = ImportScripts::Uploader.new
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
@@ -283,7 +283,7 @@ class BulkImport::Base
 
   USER_STAT_COLUMNS ||= %i{
     user_id topics_entered time_read days_visited posts_read_count
-    likes_given likes_received topic_reply_count new_since read_faq
+    likes_given likes_received new_since read_faq
     first_post_created_at post_count topic_count bounce_score
     reset_bounce_score_after
   }
@@ -441,14 +441,12 @@ class BulkImport::Base
 
   def process_user_stat(user_stat)
     user_stat[:user_id] = @users[user_stat[:imported_user_id].to_i]
-    user_stat[:topic_reply_count] = user_stat[:post_count] - user_stat[:topic_count]
     user_stat[:topics_entered] ||= 0
     user_stat[:time_read] ||= 0
     user_stat[:days_visited] ||= 0
     user_stat[:posts_read_count] ||= 0
     user_stat[:likes_given] ||= 0
     user_stat[:likes_received] ||= 0
-    user_stat[:topic_reply_count] ||= 0
     user_stat[:new_since] ||= NOW
     user_stat[:post_count] ||= 0
     user_stat[:topic_count] ||= 0
@@ -546,7 +544,8 @@ class BulkImport::Base
     topic_tag
   end
 
-  def process_raw(raw)
+  def process_raw(original_raw)
+    raw = original_raw.dup
     # fix whitespaces
     raw.gsub!(/(\\r)?\\n/, "\n")
     raw.gsub!("\\t", "\t")
@@ -699,7 +698,7 @@ class BulkImport::Base
         rescue => e
           puts "\n"
           puts "ERROR: #{e.message}"
-          puts backtrace.join("\n")
+          puts e.backtrace.join("\n")
         end
       end
     end
@@ -782,17 +781,25 @@ class BulkImport::Base
       quote.gsub!(/^(<br>\n?)+/, "")
       quote.gsub!(/(<br>\n?)+$/, "")
 
+      user = User.find_by(username: username)
+
       if post_id.present? && topic_id.present?
         <<-HTML
           <aside class="quote" data-post="#{post_id}" data-topic="#{topic_id}">
-            <div class="title">#{username}:</div>
+            <div class="title">
+              <div class="quote-controls"></div>
+              #{user ? user_avatar(user) : username}:
+            </div>
             <blockquote>#{quote}</blockquote>
           </aside>
         HTML
       else
         <<-HTML
-          <aside class="quote">
-            <div class="title">#{username}:</div>
+          <aside class="quote no-group" data-username="#{username}">
+            <div class="title">
+              <div class="quote-controls"></div>
+              #{user ? user_avatar(user) : username}:
+            </div>
             <blockquote>#{quote}</blockquote>
           </aside>
         HTML
@@ -800,6 +807,11 @@ class BulkImport::Base
     end
 
     cooked.scrub.strip
+  end
+
+  def user_avatar(user)
+    url = user.avatar_template.gsub("{size}", "45")
+    "<img alt=\"\" width=\"20\" height=\"20\" src=\"#{url}\" class=\"avatar\"> #{user.username}"
   end
 
   def pre_fancy(title)
