@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-describe Onebox::Engine::WhitelistedGenericOnebox do
+describe Onebox::Engine::AllowlistedGenericOnebox do
 
   describe ".===" do
     before do
-      described_class.whitelist = %w(eviltrout.com discourse.org)
+      described_class.allowed_domains = %w(eviltrout.com discourse.org)
     end
 
     it "matches an entire domain" do
@@ -31,7 +31,7 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
   end
 
   describe 'html_providers' do
-    class HTMLOnebox < Onebox::Engine::WhitelistedGenericOnebox
+    class HTMLOnebox < Onebox::Engine::AllowlistedGenericOnebox
       def data
         {
           html: 'cool html',
@@ -42,30 +42,30 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
     end
 
     it "doesn't return the HTML when not in the `html_providers`" do
-      Onebox::Engine::WhitelistedGenericOnebox.html_providers = []
+      Onebox::Engine::AllowlistedGenericOnebox.html_providers = []
       expect(HTMLOnebox.new("http://coolsite.com").to_html).to be_nil
     end
 
     it "returns the HMTL when in the `html_providers`" do
-      Onebox::Engine::WhitelistedGenericOnebox.html_providers = ['CoolSite']
+      Onebox::Engine::AllowlistedGenericOnebox.html_providers = ['CoolSite']
       expect(HTMLOnebox.new("http://coolsite.com").to_html).to eq "cool html"
     end
   end
 
   describe 'rewrites' do
-    class DummyOnebox < Onebox::Engine::WhitelistedGenericOnebox
+    class DummyOnebox < Onebox::Engine::AllowlistedGenericOnebox
       def generic_html
         "<iframe src='http://youtube.com/asdf'></iframe>"
       end
     end
 
     it "doesn't rewrite URLs that arent in the list" do
-      Onebox::Engine::WhitelistedGenericOnebox.rewrites = []
+      Onebox::Engine::AllowlistedGenericOnebox.rewrites = []
       expect(DummyOnebox.new("http://youtube.com").to_html).to eq "<iframe src='http://youtube.com/asdf'></iframe>"
     end
 
-    it "rewrites URLs when whitelisted" do
-      Onebox::Engine::WhitelistedGenericOnebox.rewrites = %w(youtube.com)
+    it "rewrites URLs when allowlisted" do
+      Onebox::Engine::AllowlistedGenericOnebox.rewrites = %w(youtube.com)
       expect(DummyOnebox.new("http://youtube.com").to_html).to eq "<iframe src='https://youtube.com/asdf'></iframe>"
     end
   end
@@ -154,7 +154,7 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
     let(:redirect_link) { 'http://www.dailymail.co.uk/news/article-479146/Brutality-justice-The-truth-tarred-feathered-drug-dealer.html' }
 
     before do
-      described_class.whitelist = %w(dailymail.co.uk discourse.org)
+      described_class.allowed_domains = %w(dailymail.co.uk discourse.org)
       FakeWeb.register_uri(
         :get,
         original_link,

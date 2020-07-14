@@ -59,7 +59,7 @@ describe Onebox::Layout do
 
     it "rewrites relative image path" do
       record = { image: "/image.png", link: "https://discourse.org" }
-      klass = described_class.new("whitelistedgeneric", record)
+      klass = described_class.new("allowlistedgeneric", record)
       expect(klass.view.record[:image]).to include("https://discourse.org")
     end
   end

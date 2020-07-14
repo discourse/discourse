@@ -32,7 +32,7 @@ module Onebox
       add_oembed_provider(/nytimes\.com\//, 'https://www.nytimes.com/svc/oembed/json/')
 
       def always_https?
-        WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts) || super
+        AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.https_hosts) || super
       end
 
       def raw

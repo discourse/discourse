@@ -4,20 +4,20 @@ require 'htmlentities'
 
 module Onebox
   module Engine
-    class WhitelistedGenericOnebox
+    class AllowlistedGenericOnebox
       include Engine
       include StandardEmbed
       include LayoutSupport
 
-      def self.whitelist=(list)
-        @whitelist = list
+      def self.allowed_domains=(list)
+        @allowed_domains = list
       end
 
-      def self.whitelist
-        @whitelist ||= default_whitelist.dup
+      def self.allowed_domains
+        @allowed_domains ||= default_allowed_domains.dup
       end
 
-      def self.default_whitelist
+      def self.default_allowed_domains
         %w(
           23hq.com
           500px.com
@@ -176,13 +176,13 @@ module Onebox
         !!(uri.path =~ /\d{4}\/\d{2}\//)
       end
 
-      def self.twitter_label_whitelist
+      def self.allowed_twitter_labels
         ['brand', 'price', 'usd', 'cad', 'reading time', 'likes']
       end
 
       def self.===(other)
         other.kind_of?(URI) ?
-          host_matches(other, whitelist) || probable_wordpress(other) || probable_discourse(other) :
+          host_matches(other, allowed_domains) || probable_wordpress(other) || probable_discourse(other) :
           super
       end
 
@@ -233,11 +233,11 @@ module Onebox
           end
 
           # Twitter labels
-          if !Onebox::Helpers.blank?(d[:label1]) && !Onebox::Helpers.blank?(d[:data1]) && !!WhitelistedGenericOnebox.twitter_label_whitelist.find { |l| d[:label1] =~ /#{l}/i }
+          if !Onebox::Helpers.blank?(d[:label1]) && !Onebox::Helpers.blank?(d[:data1]) && !!AllowlistedGenericOnebox.allowed_twitter_labels.find { |l| d[:label1] =~ /#{l}/i }
             d[:label_1] = Onebox::Helpers.truncate(d[:label1])
             d[:data_1]  = Onebox::Helpers.truncate(d[:data1])
           end
-          if !Onebox::Helpers.blank?(d[:label2]) && !Onebox::Helpers.blank?(d[:data2]) && !!WhitelistedGenericOnebox.twitter_label_whitelist.find { |l| d[:label2] =~ /#{l}/i }
+          if !Onebox::Helpers.blank?(d[:label2]) && !Onebox::Helpers.blank?(d[:data2]) && !!AllowlistedGenericOnebox.allowed_twitter_labels.find { |l| d[:label2] =~ /#{l}/i }
             unless Onebox::Helpers.blank?(d[:label_1])
               d[:label_2] = Onebox::Helpers.truncate(d[:label2])
               d[:data_2]  = Onebox::Helpers.truncate(d[:data2])
@@ -261,7 +261,7 @@ module Onebox
       def rewrite_https(html)
         return unless html
         uri = URI(@url)
-        if WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.rewrites)
+        if AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.rewrites)
           html = html.gsub("http://", "https://")
         end
         html
@@ -309,7 +309,7 @@ module Onebox
         data[:height] &&
         (
           data[:html]["iframe"] ||
-          WhitelistedGenericOnebox.html_providers.include?(data[:provider_name])
+          AllowlistedGenericOnebox.html_providers.include?(data[:provider_name])
         )
       end
 

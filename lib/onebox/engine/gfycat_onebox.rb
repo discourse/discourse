@@ -10,7 +10,7 @@ module Onebox
       always_https
 
       def self.priority
-        # This engine should have priority over WhitelistedGenericOnebox.
+        # This engine should have priority over AllowlistedGenericOnebox.
         1
       end
 

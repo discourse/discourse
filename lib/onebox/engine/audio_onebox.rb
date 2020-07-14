@@ -8,7 +8,7 @@ module Onebox
       matches_regexp(/^(https?:)?\/\/.*\.(mp3|ogg|opus|wav|m4a)(\?.*)?$/i)
 
       def always_https?
-        WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts)
+        AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.https_hosts)
       end
 
       def to_html

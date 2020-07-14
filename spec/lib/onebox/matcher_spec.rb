@@ -52,7 +52,7 @@ describe Onebox::Matcher do
       end
     end
 
-    describe "with a whitelisted port/scheme" do
+    describe "with a allowlisted port/scheme" do
       %w{http://example.com https://example.com http://example.com:80 //example.com}.each do |url|
         it "finds an engine for '#{url}'" do
           matcher = Onebox::Matcher.new(url)
@@ -62,7 +62,7 @@ describe Onebox::Matcher do
       end
     end
 
-    describe "without a whitelisted port/scheme" do
+    describe "without a allowlisted port/scheme" do
       %w{http://example.com:21 ftp://example.com}.each do |url|
         it "doesn't find an engine for '#{url}'" do
           matcher = Onebox::Matcher.new(url)

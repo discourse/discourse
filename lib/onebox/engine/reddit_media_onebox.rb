@@ -45,7 +45,7 @@ module Onebox
             </aside>
           HTML
         else
-          html = Onebox::Engine::WhitelistedGenericOnebox.new(@url, @timeout).to_html
+          html = Onebox::Engine::AllowlistedGenericOnebox.new(@url, @timeout).to_html
           return if Onebox::Helpers.blank?(html)
           html
         end

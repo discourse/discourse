@@ -75,7 +75,7 @@ Adding Support for a new URL
 ----------------------------
 
   1. Check if the site supports [oEmbed](http://oembed.com/) or [Open Graph](https://developers.facebook.com/docs/opengraph/).
-     If it does, you can probably get away with just whitelisting the URL in `Onebox::Engine::WhitelistedGenericOnebox` (see: [Whitelisted Generic Onebox caveats](#user-content-whitelisted-generic-onebox-caveats)).
+     If it does, you can probably get away with just allowing the URL in `Onebox::Engine::AllowlistedGenericOnebox` (see: [Allowlisted Generic Onebox caveats](#user-content-allowlisted-generic-onebox-caveats)).
      If the site does not support open standards, you can create a new engine.
 
   2. Create new onebox engine
@@ -163,12 +163,12 @@ Adding Support for a new URL
      require_relative "engine/name_onebox"
      ```
 
-Whitelisted Generic Onebox caveats
+Allowlisted Generic Onebox caveats
 ----------------------------------
 
-The Whitelisted Generic Onebox has some caveats for its use, beyond simply whitelisting the domain.
+The Allowlisted Generic Onebox has some caveats for its use, beyond simply allowlisting the domain.
 
-  1. The domain must be whitelisted
+  1. The domain must be allowlisted
   2. The URL you're oneboxing cannot be a root url (e.g. `http://example.com` won't work, but `http://example.com/page` will)
   3. If the oneboxed URL responds with oEmbed and has a `rich` type: the `html` content must contain an `<iframe>`. Responses without an iframe will not be oneboxed.
 
