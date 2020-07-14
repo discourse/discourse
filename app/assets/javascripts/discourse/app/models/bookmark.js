@@ -120,11 +120,17 @@ const Bookmark = RestModel.extend({
     ).capitalize();
   },
 
-  loadItems() {
-    return ajax(`/u/${this.user.username}/bookmarks.json`, { cache: "false" });
+  loadItems(params) {
+    let url = `/u/${this.user.username}/bookmarks.json`;
+
+    if (params) {
+      url += "?" + $.param(params);
+    }
+
+    return ajax(url, { cache: "false" });
   },
 
-  loadMore() {
+  loadMore(additionalParams) {
     if (!this.more_bookmarks_url) {
       return Promise.resolve();
     }
@@ -136,7 +142,15 @@ const Bookmark = RestModel.extend({
       if (params) {
         moreUrl += "?" + params;
       }
+      if (additionalParams) {
+        if (moreUrl.includes("?")) {
+          moreUrl += "&" + $.param(additionalParams);
+        } else {
+          moreUrl += "?" + $.param(additionalParams);
+        }
+      }
     }
+
     return ajax({ url: moreUrl });
   },
 
