@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import { schedule } from "@ember/runloop";
 import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { action } from "@ember/object";
@@ -89,6 +90,12 @@ export default Controller.extend(ModalFunctionality, {
     if (this._editingExistingBookmark()) {
       this._initializeExistingBookmarkData();
     }
+
+    schedule("afterRender", () => {
+      if (this.site.isMobileDevice) {
+        document.getElementById("bookmark-name").blur();
+      }
+    });
   },
 
   /**
@@ -212,8 +219,7 @@ export default Controller.extend(ModalFunctionality, {
 
   showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
 
-  @discourseComputed()
-  showLaterToday() {
+  get showLaterToday() {
     let later = this.laterToday();
     return (
       !later.isSame(this.tomorrow(), "date") &&
@@ -221,8 +227,7 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
-  @discourseComputed()
-  showLaterThisWeek() {
+  get showLaterThisWeek() {
     return this.now().day() < MOMENT_THURSDAY;
   },
 
@@ -238,35 +243,36 @@ export default Controller.extend(ModalFunctionality, {
     return formattedReminderTime(existingReminderAt, this.userTimezone);
   },
 
-  @discourseComputed()
-  startNextBusinessWeekFormatted() {
+  get startNextBusinessWeekLabel() {
+    if (this.now().day() === MOMENT_MONDAY) {
+      return I18n.t("bookmarks.reminders.start_of_next_business_week_alt");
+    }
+    return I18n.t("bookmarks.reminders.start_of_next_business_week");
+  },
+
+  get startNextBusinessWeekFormatted() {
     return this.nextWeek()
       .day(MOMENT_MONDAY)
       .format(I18n.t("dates.long_no_year"));
   },
 
-  @discourseComputed()
-  laterTodayFormatted() {
+  get laterTodayFormatted() {
     return this.laterToday().format(I18n.t("dates.time"));
   },
 
-  @discourseComputed()
-  tomorrowFormatted() {
+  get tomorrowFormatted() {
     return this.tomorrow().format(I18n.t("dates.time_short_day"));
   },
 
-  @discourseComputed()
-  nextWeekFormatted() {
+  get nextWeekFormatted() {
     return this.nextWeek().format(I18n.t("dates.long_no_year"));
   },
 
-  @discourseComputed()
-  laterThisWeekFormatted() {
+  get laterThisWeekFormatted() {
     return this.laterThisWeek().format(I18n.t("dates.time_short_day"));
   },
 
-  @discourseComputed()
-  nextMonthFormatted() {
+  get nextMonthFormatted() {
     return this.nextMonth().format(I18n.t("dates.long_no_year"));
   },
 

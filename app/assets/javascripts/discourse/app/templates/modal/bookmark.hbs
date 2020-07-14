@@ -51,7 +51,7 @@
             {{/tap-tile}}
           {{/if}}
           {{#tap-tile icon="briefcase" tileId=reminderTypes.START_OF_NEXT_BUSINESS_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-            <div class="tap-tile-title">{{i18n "bookmarks.reminders.start_of_next_business_week"}}</div>
+            <div class="tap-tile-title">{{startNextBusinessWeekLabel}}</div>
             <div class="tap-tile-date">{{startNextBusinessWeekFormatted}}</div>
           {{/tap-tile}}
           {{#tap-tile icon="far-clock" tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
