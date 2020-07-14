@@ -26,7 +26,7 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_reviewable_by_group_name?
-    SiteSetting.enable_category_group_review? && object.reviewable_by_group_id.present?
+    SiteSetting.enable_category_group_moderation? && object.reviewable_by_group_id.present?
   end
 
   def group_permissions

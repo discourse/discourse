@@ -16,7 +16,9 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_convert_topic,
      :can_review_topic,
      :can_edit_tags,
-     :can_publish_page]
+     :can_publish_page,
+     :can_close_topic,
+     :can_archive_topic]
   end
 
   attributes(
@@ -132,6 +134,14 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def include_can_edit_tags?
     !scope.can_edit?(object.topic) && scope.can_edit_tags?(object.topic)
+  end
+
+  def include_can_close_topic?
+    scope.can_close_topic?(object.topic)
+  end
+
+  def include_can_archive_topic?
+    scope.can_archive_topic?(object.topic)
   end
 
   def include_can_publish_page?

@@ -119,7 +119,9 @@ export default function transformPost(
   postAtts.canManage = currentUser && currentUser.get("canManageTopic");
   postAtts.canViewRawEmail =
     currentUser && (currentUser.id === post.user_id || currentUser.staff);
-  postAtts.canReplyAsNewTopic = details.can_reply_as_new_topic;
+  postAtts.canArchiveTopic = !!details.can_archive_topic;
+  postAtts.canCloseTopic = !!details.can_close_topic;
+  postAtts.canReplyAsNewTopic = !!details.can_reply_as_new_topic;
   postAtts.canReviewTopic = !!details.can_review_topic;
   postAtts.canPublishPage =
     !!details.can_publish_page && post.post_number === 1;

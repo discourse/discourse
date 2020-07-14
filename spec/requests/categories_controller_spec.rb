@@ -135,7 +135,7 @@ describe CategoriesController do
 
       describe "success" do
         it "works" do
-          SiteSetting.enable_category_group_review = true
+          SiteSetting.enable_category_group_moderation = true
 
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]

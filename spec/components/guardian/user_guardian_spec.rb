@@ -380,7 +380,7 @@ describe UserGuardian do
       group = Fabricate(:group)
       group.add(user)
       guardian = Guardian.new(user)
-      SiteSetting.enable_category_group_review = true
+      SiteSetting.enable_category_group_moderation = true
 
       Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: nil)
 
@@ -391,7 +391,7 @@ describe UserGuardian do
       group = Fabricate(:group)
       group.add(user)
       guardian = Guardian.new(user)
-      SiteSetting.enable_category_group_review = false
+      SiteSetting.enable_category_group_moderation = false
 
       Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: nil)
 
@@ -402,7 +402,7 @@ describe UserGuardian do
       group = Fabricate(:group)
       group.add(user)
       guardian = Guardian.new(user)
-      SiteSetting.enable_category_group_review = true
+      SiteSetting.enable_category_group_moderation = true
       category = Fabricate(:category, read_restricted: true)
 
       Fabricate(:reviewable_flagged_post, reviewable_by_group: group, category: category)

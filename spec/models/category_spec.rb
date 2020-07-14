@@ -58,13 +58,13 @@ describe Category do
     fab!(:user) { Fabricate(:user) }
 
     it "will add the group to the reviewable" do
-      SiteSetting.enable_category_group_review = true
+      SiteSetting.enable_category_group_moderation = true
       reviewable = PostActionCreator.spam(user, post).reviewable
       expect(reviewable.reviewable_by_group_id).to eq(group.id)
     end
 
     it "will add the group to the reviewable even if created manually" do
-      SiteSetting.enable_category_group_review = true
+      SiteSetting.enable_category_group_moderation = true
       reviewable = ReviewableFlaggedPost.create!(
         created_by: user,
         payload: { raw: 'test raw' },
@@ -74,7 +74,7 @@ describe Category do
     end
 
     it "will not add add the group to the reviewable" do
-      SiteSetting.enable_category_group_review = false
+      SiteSetting.enable_category_group_moderation = false
       reviewable = PostActionCreator.spam(user, post).reviewable
       expect(reviewable.reviewable_by_group_id).to be_nil
     end
@@ -87,7 +87,7 @@ describe Category do
     end
 
     it "will remove the reviewable_by_group if the category is updated" do
-      SiteSetting.enable_category_group_review = true
+      SiteSetting.enable_category_group_moderation = true
       reviewable = PostActionCreator.spam(user, post).reviewable
       category.reviewable_by_group_id = nil
       category.save!

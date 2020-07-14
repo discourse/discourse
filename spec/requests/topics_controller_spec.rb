@@ -655,7 +655,7 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(403)
     end
 
-    describe 'when logged in' do
+    describe 'when logged in as a moderator' do
       let(:topic) { Fabricate(:topic) }
       before do
         sign_in(moderator)
@@ -702,6 +702,48 @@ RSpec.describe TopicsController do
 
         expect(body['topic_status_update']).to eq(nil)
       end
+    end
+
+    describe 'when logged in as a group member with reviewable status' do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+
+      let(:user) { group_user.user }
+      let(:group) { group_user.group }
+
+      before do
+        sign_in(user)
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it 'should allow a group moderator to close a topic' do
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'closed', enabled: 'true'
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.closed).to eq(true)
+      end
+
+      it 'should allow a group moderator to archive a topic' do
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'archived', enabled: 'true'
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.archived).to eq(true)
+      end
+
+      it 'should not allow a group moderator to pin a topic' do
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'pinned', enabled: 'true'
+        }
+
+        expect(response.status).to eq(403)
+        expect(topic.reload.pinned_at).to eq(nil)
+      end
+
     end
   end
 

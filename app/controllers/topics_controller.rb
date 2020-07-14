@@ -412,7 +412,16 @@ class TopicsController < ApplicationController
 
     check_for_status_presence(:status, status)
     @topic = Topic.find_by(id: topic_id)
-    guardian.ensure_can_moderate!(@topic)
+
+    case status
+    when 'closed'
+      guardian.ensure_can_close_topic!(@topic)
+    when 'archived'
+      guardian.ensure_can_archive_topic!(@topic)
+    else
+      guardian.ensure_can_moderate!(@topic)
+    end
+
     @topic.update_status(status, enabled, current_user, until: params[:until])
 
     render json: success_json.merge!(

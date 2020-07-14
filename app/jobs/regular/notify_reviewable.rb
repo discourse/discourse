@@ -10,7 +10,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
 
     notify_admins
     notify_moderators if reviewable.reviewable_by_moderator?
-    if SiteSetting.enable_category_group_review? && reviewable.reviewable_by_group.present?
+    if SiteSetting.enable_category_group_moderation? && reviewable.reviewable_by_group.present?
       notify_group(reviewable.reviewable_by_group)
     end
   end

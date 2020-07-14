@@ -335,7 +335,7 @@ class CategoriesController < ApplicationController
         allowed_tags: [],
         allowed_tag_groups: []
       )
-      if SiteSetting.enable_category_group_review?
+      if SiteSetting.enable_category_group_moderation?
         result[:reviewable_by_group_id] = Group.find_by(name: params[:reviewable_by_group_name])&.id
       end
 
