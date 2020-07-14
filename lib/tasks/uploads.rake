@@ -1194,3 +1194,23 @@ task "uploads:fix_missing_s3" => :environment do
     end
   end
 end
+
+task "uploads:backfill_animated" => :environment do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    puts "Backfilling #{db}..."
+    Upload
+      .where('original_filename LIKE \'%.gif\'')
+      .where(animated: nil)
+      .find_each do |upload|
+      begin
+        path_or_url = Discourse.store.path_for(upload) || upload.url
+        upload.animated = FastImage.animated?(path_or_url)
+        upload.save!
+        putc "."
+      rescue => e
+        puts "Skipping #{upload.original_filename} (#{upload.url}) #{e.message}"
+      end
+    end
+  end
+  puts "", "Done"
+end
