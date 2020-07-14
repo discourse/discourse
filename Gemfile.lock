@@ -532,7 +532,7 @@ DEPENDENCIES
   redis
   redis-namespace
   rinku
-  rotp
+  rotp (= 5.1.0)
   rqrcode
   rspec
   rspec-html-matchers
