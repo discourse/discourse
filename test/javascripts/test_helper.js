@@ -42,6 +42,8 @@
 //
 //= require jquery.magnific-popup.min.js
 
+let resetSettings = require("helpers/site-settings").resetSettings;
+
 const buildResolver = require("discourse-common/resolver").buildResolver;
 window.setResolver(buildResolver("discourse").create({ namespace: Discourse }));
 
@@ -104,6 +106,7 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
+  resetSettings();
   server = createPretender.default;
   createPretender.applyDefaultHandlers(server);
   server.handlers = [];
@@ -149,8 +152,7 @@ QUnit.testStart(function(ctx) {
     );
   }
 
-  // Allow our tests to change site settings and have them reset before the next test
-  Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
+  resetSettings();
 
   let getURL = require("discourse-common/lib/get-url");
   getURL.setupURL(null, "http://localhost:3000", "");
