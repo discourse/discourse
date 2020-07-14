@@ -269,7 +269,7 @@ describe Search do
         pm_4 = create_pm(users: [participant_2, current])
         results = Search.execute("in:personal-direct", guardian: Guardian.new(current))
         expect(results.posts.size).to eq(3)
-        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_3.id, pm_4.id)
+        expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
       end
 
       it 'can filter direct PMs by @username' do
@@ -278,8 +278,8 @@ describe Search do
         _pm_3 = create_pm(users: [participant_2, current])
         results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
         expect(results.posts.size).to eq(2)
-        expect(results.posts.map(&:topic_id)).to contain_exactly(pm.id, pm_2.id)
-        expect(results.posts.map(&:user_id).uniq).to contain_exactly(participant.id)
+        expect(results.posts.map(&:topic_id)).to eq([pm_2.id, pm.id])
+        expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
       end
 
       it "doesn't include PMs that have more than 2 participants" do
@@ -618,15 +618,15 @@ describe Search do
     it "should return the right categories" do
       search = Search.execute("monkey")
 
-      expect(search.categories).to contain_exactly(
-        category, ignored_category
+      expect(search.categories).to eq(
+        [category, ignored_category]
       )
 
-      expect(search.posts).to contain_exactly(category.topic.first_post, post)
+      expect(search.posts).to eq([category.topic.first_post, post])
 
       search = Search.execute("monkey #test")
 
-      expect(search.posts).to contain_exactly(ignored_category.topic.first_post)
+      expect(search.posts).to eq([ignored_category.topic.first_post])
     end
 
     describe "with child categories" do
@@ -651,28 +651,28 @@ describe Search do
           category, ignored_category, child_of_ignored_category
         )
 
-        expect(search.posts).to contain_exactly(
+        expect(search.posts.map(&:id)).to eq([
+          child_of_ignored_category.topic.first_post,
           category.topic.first_post,
           post,
-          child_of_ignored_category.topic.first_post,
           post2
-        )
+        ].map(&:id))
 
         search = Search.execute("snow")
-        expect(search.posts).to contain_exactly(post, post2)
+        expect(search.posts).to eq([post, post2])
 
         category.set_permissions({})
         category.save
         search = Search.execute("monkey")
 
-        expect(search.categories).to contain_exactly(
+        expect(search.categories).to eq([
           ignored_category, child_of_ignored_category
-        )
+        ])
 
-        expect(search.posts).to contain_exactly(
+        expect(search.posts.map(&:id)).to eq([
           child_of_ignored_category.topic.first_post,
           post2
-        )
+        ].map(&:id))
       end
     end
 
@@ -791,8 +791,8 @@ describe Search do
       it 'shows staff tags' do
         create_staff_tags(["#{tag.name}9"])
 
-        expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
-        expect(search.tags.map(&:name)).to contain_exactly(tag.name, "#{tag.name}9")
+        expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
+        expect(search.tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
       end
 
       it 'includes category-restricted tags' do
@@ -802,8 +802,8 @@ describe Search do
         category.allowed_tag_groups = [tag_group.name]
         category.save!
 
-        expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags).to contain_exactly(tag, category_tag)
-        expect(search.tags).to contain_exactly(tag, category_tag)
+        expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags).to eq([tag, category_tag])
+        expect(search.tags).to eq([tag, category_tag])
       end
     end
   end
@@ -1066,8 +1066,8 @@ describe Search do
       post = Fabricate(:post, raw: '3.0 eta is in 2 days horrah')
       post2 = Fabricate(:post, raw: '3.0 is eta in 2 days horrah')
 
-      expect(Search.execute('3.0 eta').posts).to contain_exactly(post, post2)
-      expect(Search.execute("'3.0 eta'").posts).to contain_exactly(post, post2)
+      expect(Search.execute('3.0 eta').posts).to eq([post, post2])
+      expect(Search.execute("'3.0 eta'").posts).to eq([post, post2])
       expect(Search.execute("\"3.0 eta\"").posts).to contain_exactly(post)
       expect(Search.execute('"3.0, eta is"').posts).to eq([])
     end
@@ -1178,18 +1178,18 @@ describe Search do
       )
 
       # Expecting the default results
-      expect(Search.execute('Topic').posts).to contain_exactly(
-        old_relevant_topic_post,
-        latest_irelevant_topic_post,
-        category.topic.first_post
-      )
+      expect(Search.execute('Topic').posts.map(&:id)).to eq([
+        old_relevant_topic_post.id,
+        latest_irelevant_topic_post.id,
+        category.topic.first_post.id
+      ])
 
       # Expecting the ordered by topic creation results
-      expect(Search.execute('Topic order:latest_topic').posts).to contain_exactly(
-        latest_irelevant_topic_post,
-        old_relevant_topic_post,
-        category.topic.first_post
-      )
+      expect(Search.execute('Topic order:latest_topic').posts.map(&:id)).to eq([
+        category.topic.first_post.id,
+        latest_irelevant_topic_post.id,
+        old_relevant_topic_post.id
+      ])
     end
 
     it 'can tokenize dots' do
@@ -1294,9 +1294,9 @@ describe Search do
       fab!(:post5) { indexed_post(topic: topic5) }
 
       it 'can find posts by tag group' do
-        expect(Search.execute('#mid-day').posts.map(&:id)).to (
-          contain_exactly(post3.id, post4.id, post5.id)
-        )
+        expect(Search.execute('#mid-day').posts.map(&:id)).to eq([
+          post5, post4, post3
+        ].map(&:id))
       end
 
       it 'can find posts with tag' do
@@ -1324,14 +1324,14 @@ describe Search do
       end
 
       it 'can find posts which contains provided tags and does not contain selected ones' do
-        expect(Search.execute('tags:eggs -tags:lunch').posts)
-          .to contain_exactly(post1, post2, post5)
+        expect(Search.execute('tags:eggs -tags:lunch').posts.map(&:id))
+          .to eq([post5, post2, post1].map(&:id))
 
-        expect(Search.execute('tags:eggs -tags:lunch+sandwiches').posts)
-          .to contain_exactly(post1, post2, post3, post5)
+        expect(Search.execute('tags:eggs -tags:lunch+sandwiches').posts.map(&:id))
+          .to eq([post5, post3, post2, post1].map(&:id))
 
-        expect(Search.execute('tags:eggs -tags:lunch,sandwiches').posts)
-          .to contain_exactly(post1, post2)
+        expect(Search.execute('tags:eggs -tags:lunch,sandwiches').posts.map(&:id))
+          .to eq([post2, post1].map(&:id))
       end
 
       it 'orders posts correctly when combining tags with categories or terms' do
@@ -1352,12 +1352,14 @@ describe Search do
     end
 
     it "can find posts which contains filetypes" do
-      post1 = Fabricate(:post,
-                        raw: "http://example.com/image.png")
+      post1 = Fabricate(:post, raw: "http://example.com/image.png")
+
       post2 = Fabricate(:post,
-                         raw: "Discourse logo\n"\
-                              "http://example.com/logo.png\n"\
-                              "http://example.com/vector_image.svg")
+        raw: "Discourse logo\n"\
+          "http://example.com/logo.png\n"\
+          "http://example.com/vector_image.svg"
+      )
+
       post_with_upload = Fabricate(:post, uploads: [Fabricate(:upload)])
       Fabricate(:post)
 
@@ -1365,8 +1367,12 @@ describe Search do
       TopicLink.extract_from(post2)
 
       expect(Search.execute('filetype:svg').posts).to eq([post2])
-      expect(Search.execute('filetype:png').posts.map(&:id)).to contain_exactly(post1.id, post2.id, post_with_upload.id)
-      expect(Search.execute('logo filetype:png').posts.map(&:id)).to eq([post2.id])
+
+      expect(Search.execute('filetype:png').posts.map(&:id)).to eq([
+        post_with_upload, post2, post1
+      ].map(&:id))
+
+      expect(Search.execute('logo filetype:png').posts).to eq([post2])
     end
   end
 
