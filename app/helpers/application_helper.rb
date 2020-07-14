@@ -103,6 +103,10 @@ module ApplicationHelper
     HTML
   end
 
+  def user_path(username)
+    "#{Discourse.base_uri}/u/#{username.downcase}"
+  end
+
   def discourse_csrf_tags
     # anon can not have a CSRF token cause these are all pages
     # that may be cached, causing a mismatch between session CSRF
