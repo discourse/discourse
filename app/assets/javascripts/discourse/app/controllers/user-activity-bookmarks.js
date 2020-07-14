@@ -14,6 +14,10 @@ export default Controller.extend({
   content: null,
   loading: false,
   noResultsHelp: null,
+  searchTerm: null,
+  q: null,
+
+  queryParams: ["q"],
 
   loadItems() {
     this.setProperties({
@@ -22,8 +26,12 @@ export default Controller.extend({
       noResultsHelp: null
     });
 
+    if (this.q && !this.searchTerm) {
+      this.set("searchTerm", this.q);
+    }
+
     return this.model
-      .loadItems()
+      .loadItems({ q: this.searchTerm })
       .then(response => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() =>
@@ -41,6 +49,12 @@ export default Controller.extend({
 
   _removeBookmarkFromList(bookmark) {
     this.content.removeObject(bookmark);
+  },
+
+  @action
+  search() {
+    this.set("q", this.searchTerm);
+    this.loadItems();
   },
 
   @action
@@ -86,7 +100,7 @@ export default Controller.extend({
     this.set("loadingMore", true);
 
     return this.model
-      .loadMore()
+      .loadMore({ q: this.searchTerm })
       .then(response => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));

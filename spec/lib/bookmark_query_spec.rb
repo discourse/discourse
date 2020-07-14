@@ -11,8 +11,9 @@ RSpec.describe BookmarkQuery do
   end
 
   describe "#list_all" do
-    fab!(:bookmark1) { Fabricate(:bookmark, user: user) }
-    fab!(:bookmark2) { Fabricate(:bookmark, user: user) }
+    fab!(:post) { Fabricate(:post, raw: "Some post content here") }
+    fab!(:bookmark1) { Fabricate(:bookmark, user: user, name: "Check up later") }
+    fab!(:bookmark2) { Fabricate(:bookmark, user: user, post: post, topic: post.topic) }
 
     it "returns all the bookmarks for a user" do
       expect(bookmark_query.list_all.count).to eq(2)
@@ -35,6 +36,18 @@ RSpec.describe BookmarkQuery do
       end
       bookmark_query.list_all
       expect(preloaded_bookmarks.any?).to eq(true)
+    end
+
+    context "when q param is provided" do
+      it "can search by post content" do
+        bookmarks = bookmark_query(params: { q: 'content' }).list_all
+        expect(bookmarks.map(&:id)).to eq([bookmark2.id])
+      end
+
+      it "can search by bookmark name" do
+        bookmarks = bookmark_query(params: { q: 'check' }).list_all
+        expect(bookmarks.map(&:id)).to eq([bookmark1.id])
+      end
     end
 
     context "for a whispered post" do

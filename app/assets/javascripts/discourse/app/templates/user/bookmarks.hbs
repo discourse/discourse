@@ -1,3 +1,15 @@
+<div class="form-horizontal" style="margin-bottom: 1em">
+  {{input type="text"
+          value=searchTerm
+          placeholder=(i18n "bookmarks.search_placeholder")
+          enter=(action "search")
+          id="bookmark-search" autocomplete="discourse"}}
+  {{d-button
+      class="btn-primary"
+      action=(action "search")
+      type="button"
+      label="bookmarks.search"}}
+</div>
 {{#if noContent}}
   <div class="alert alert-info">{{noResultsHelp}}</div>
 {{else}}

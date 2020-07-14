@@ -35,6 +35,10 @@ class BookmarkQuery
 
     results = results.merge(Post.secured(@guardian))
 
+    if @params[:q].present?
+      results = results.where("bookmarks.name ILIKE :q OR posts.raw ILIKE :q", q: "%#{@params[:q]}%")
+    end
+
     if @page.positive?
       results = results.offset(@page * @params[:per_page])
     end
