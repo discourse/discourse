@@ -185,6 +185,7 @@ class PostCreator
         create_embedded_topic
         @post.link_post_uploads
         update_uploads_secure_status
+        delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message if !@opts[:import_mode]
         DraftSequence.next!(@user, draft_key) if !@opts[:import_mode]
@@ -383,6 +384,11 @@ class PostCreator
   def update_uploads_secure_status
     return if !SiteSetting.secure_media?
     @post.update_uploads_secure_status
+  end
+
+  def delete_owned_bookmarks
+    return if !@post.topic_id
+    @user.bookmarks.where(topic_id: @post.topic_id, delete_on_owner_reply: true).destroy_all
   end
 
   def handle_spam

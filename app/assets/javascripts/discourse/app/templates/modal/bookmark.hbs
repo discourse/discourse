@@ -18,6 +18,10 @@
         {{i18n "bookmarks.delete_when_reminder_sent"}}
         {{input id="delete_when_reminder_sent" type="checkbox" checked=options.deleteWhenReminderSent}}
       </label>
+      <label for="delete_on_owner_reply">
+        {{i18n "bookmarks.delete_on_owner_reply"}}
+        {{input id="delete_on_owner_reply" type="checkbox" checked=options.deleteOnOwnerReply}}
+      </label>
     </div>
 
     {{#if showExistingReminderAt }}

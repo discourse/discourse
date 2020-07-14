@@ -142,16 +142,24 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   _loadBookmarkOptions() {
-    this.set(
-      "options.deleteWhenReminderSent",
-      this.model.deleteWhenReminderSent ||
-        localStorage.bookmarkOptionsDeleteWhenReminderSent === "true"
-    );
+    this.setProperties({
+      "options.deleteWhenReminderSent":
+        this.model.deleteWhenReminderSent ||
+        localStorage.bookmarkOptionsDeleteWhenReminderSent === "true",
+      "options.deleteOnOwnerReply":
+        this.model.deleteOnOwnerReply ||
+        localStorage.bookmarkOptionsDeleteOnOwnerReply === "true"
+    });
 
     // we want to make sure the options panel opens so the user
     // knows they have set these options previously. run next otherwise
     // the modal is not visible when it tries to slide down the options
-    if (this.options.deleteWhenReminderSent) {
+    if (
+      [
+        this.options.deleteWhenReminderSent,
+        this.options.deleteOnOwnerReply
+      ].some(opt => opt)
+    ) {
       next(() => this.toggleOptionsPanel());
     }
   },
@@ -295,6 +303,7 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     localStorage.bookmarkOptionsDeleteWhenReminderSent = this.options.deleteWhenReminderSent;
+    localStorage.bookmarkOptionsDeleteOnOwnerReply = this.options.deleteOnOwnerReply;
 
     let reminderType;
     if (this.selectedReminderType === REMINDER_TYPES.NONE) {
@@ -311,7 +320,8 @@ export default Controller.extend(ModalFunctionality, {
       name: this.model.name,
       post_id: this.model.postId,
       id: this.model.id,
-      delete_when_reminder_sent: this.options.deleteWhenReminderSent
+      delete_when_reminder_sent: this.options.deleteWhenReminderSent,
+      delete_on_owner_reply: this.options.deleteOnOwnerReply
     };
 
     if (this._editingExistingBookmark()) {
@@ -324,6 +334,7 @@ export default Controller.extend(ModalFunctionality, {
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
             deleteWhenReminderSent: this.options.deleteWhenReminderSent,
+            deleteOnOwnerReply: this.options.deleteOnOwnerReply,
             id: this.model.id,
             name: this.model.name
           });
@@ -336,6 +347,7 @@ export default Controller.extend(ModalFunctionality, {
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
             deleteWhenReminderSent: this.options.deleteWhenReminderSent,
+            deleteOnOwnerReply: this.options.deleteOnOwnerReply,
             id: response.id,
             name: this.model.name
           });

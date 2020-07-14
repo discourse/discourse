@@ -654,6 +654,19 @@ describe PostCreator do
       end
     end
 
+    context "when the user has bookmarks with delete_on_owner_reply" do
+      before do
+        Fabricate(:bookmark, topic: topic, user: user, delete_on_owner_reply: true)
+        Fabricate(:bookmark, topic: topic, user: user, delete_on_owner_reply: true)
+        Fabricate(:bookmark, topic: topic, user: user)
+        Fabricate(:bookmark, user: user)
+      end
+      it "deletes the bookmarks" do
+        creator.create
+        expect(Bookmark.where(user: user).count).to eq(2)
+      end
+    end
+
     context "topic stats" do
       before do
         PostCreator.new(

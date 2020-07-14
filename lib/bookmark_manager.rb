@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class BookmarkManager
-  DEFAULT_OPTIONS = { delete_when_reminder_sent: false }
+  DEFAULT_OPTIONS = {
+    delete_when_reminder_sent: false,
+    delete_on_owner_reply: false
+  }
 
   include HasErrors
 
