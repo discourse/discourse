@@ -58,7 +58,7 @@ import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import { addFeaturedLinkMetaDecorator } from 'discourse/lib/render-topic-featured-link';
+import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.10.2";
