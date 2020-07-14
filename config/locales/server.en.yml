@@ -1943,8 +1943,8 @@ en:
     bounce_score_threshold: "Max bounce score before we will stop emailing a user."
     reset_bounce_score_after_days: "Automatically reset bounce score after X days."
 
-    attachment_content_type_blocklist: "List of keywords used to blocklist attachments based on the content type."
-    attachment_filename_blocklist: "List of keywords used to blocklist attachments based on the filename."
+    blocked_attachment_content_types: "List of keywords used to blocklist attachments based on the content type."
+    blocked_attachment_filenames: "List of keywords used to blocklist attachments based on the filename."
 
     forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."

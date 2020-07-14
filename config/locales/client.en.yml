@@ -4792,7 +4792,7 @@ en:
         embed_unlisted: "Imported topics will be unlisted until there is a reply."
         embed_allowlist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blocklist_selector: "CSS selector for elements that are removed from embeds"
-        embed_classname_allowlist: "Allowed CSS class names"
+        allowed_embed_classnames: "Allowed CSS class names"
         save: "Save Embedding Settings"
 
       permalink:

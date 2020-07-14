@@ -1010,8 +1010,8 @@ module Email
     end
 
     def is_allowed?(attachment)
-      attachment.content_type !~ SiteSetting.attachment_content_type_blocklist_regex &&
-      attachment.filename !~ SiteSetting.attachment_filename_blocklist_regex
+      attachment.content_type !~ SiteSetting.blocked_attachment_content_types_regex &&
+      attachment.filename !~ SiteSetting.blocked_attachment_filenames_regex
     end
 
     def attachments

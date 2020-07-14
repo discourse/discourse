@@ -126,7 +126,7 @@ class TopicEmbed < ActiveRecord::Base
 
     opts[:allowlist] = SiteSetting.embed_allowlist_selector if SiteSetting.embed_allowlist_selector.present?
     opts[:blocklist] = SiteSetting.embed_blocklist_selector if SiteSetting.embed_blocklist_selector.present?
-    embed_classname_allowlist = SiteSetting.embed_classname_allowlist if SiteSetting.embed_classname_allowlist.present?
+    allowed_embed_classnames = SiteSetting.allowed_embed_classnames if SiteSetting.allowed_embed_classnames.present?
 
     response = FetchResponse.new
     begin
@@ -170,7 +170,7 @@ class TopicEmbed < ActiveRecord::Base
         end
       end
       # only allow classes in the allowlist
-      allowed_classes = if embed_classname_allowlist.blank? then [] else embed_classname_allowlist.split(/[ ,]+/i) end
+      allowed_classes = if allowed_embed_classnames.blank? then [] else allowed_embed_classnames.split(/[ ,]+/i) end
       doc.search('[class]:not([class=""])').each do |classnode|
         classes = classnode[:class].split(' ').select { |classname| allowed_classes.include?(classname) }
         if classes.length === 0

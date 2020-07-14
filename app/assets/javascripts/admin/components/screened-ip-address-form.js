@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 /**
-  A form to create an IP address that will be blocked or allowlisted.
+  A form to create an IP address that will be blocked or allowed.
   Example usage:
 
     {{screened-ip-address-form action=(action "recordAdded")}}

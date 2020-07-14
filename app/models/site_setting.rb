@@ -100,24 +100,24 @@ class SiteSetting < ActiveRecord::Base
 
   WATCHED_SETTINGS ||= [
     :default_locale,
-    :attachment_content_type_blocklist,
-    :attachment_filename_blocklist,
+    :blocked_attachment_content_types,
+    :blocked_attachment_filenames,
     :unicode_username_character_allowlist,
     :markdown_typographer_quotation_marks
   ]
 
   def self.reset_cached_settings!
-    @attachment_content_type_blocklist_regex = nil
-    @attachment_filename_blocklist_regex = nil
+    @blocked_attachment_content_types_regex = nil
+    @blocked_attachment_filenames_regex = nil
     @unicode_username_allowlist_regex = nil
   end
 
-  def self.attachment_content_type_blocklist_regex
-    @attachment_content_type_blocklist_regex ||= Regexp.union(SiteSetting.attachment_content_type_blocklist.split("|"))
+  def self.blocked_attachment_content_types_regex
+    @blocked_attachment_content_types_regex ||= Regexp.union(SiteSetting.blocked_attachment_content_types.split("|"))
   end
 
-  def self.attachment_filename_blocklist_regex
-    @attachment_filename_blocklist_regex ||= Regexp.union(SiteSetting.attachment_filename_blocklist.split("|"))
+  def self.blocked_attachment_filenames_regex
+    @blocked_attachment_filenames_regex ||= Regexp.union(SiteSetting.blocked_attachment_filenames.split("|"))
   end
 
   def self.unicode_username_character_allowlist_regex

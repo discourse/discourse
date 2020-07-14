@@ -1109,11 +1109,11 @@ email:
   reset_bounce_score_after_days:
     default: 30
     max: 36500
-  attachment_content_type_blocklist:
+  blocked_attachment_content_types:
     type: list
     default: "pkcs7|x-vcard"
     list_type: compact
-  attachment_filename_blocklist:
+  blocked_attachment_filenames:
     type: list
     default: "smime.p7s|signature.asc|winmail.dat"
     list_type: compact
@@ -1731,7 +1731,7 @@ embedding:
   embed_blocklist_selector:
     default: ""
     hidden: true
-  embed_classname_allowlist:
+  allowed_embed_classnames:
     default: "emoji"
     hidden: true
 

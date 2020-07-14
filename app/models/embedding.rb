@@ -13,7 +13,7 @@ class Embedding < OpenStruct
        embed_unlisted
        embed_allowlist_selector
        embed_blocklist_selector
-       embed_classname_allowlist)
+       allowed_embed_classnames)
   end
 
   def base_url

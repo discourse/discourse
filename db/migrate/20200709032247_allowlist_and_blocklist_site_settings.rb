@@ -9,8 +9,8 @@ class AllowlistAndBlocklistSiteSettings < ActiveRecord::Migration[6.0]
     'whitelisted_link_domains': 'allowed_link_domains',
     'embed_whitelist_selector': 'embed_allowlist_selector',
     'auto_generated_whitelist': 'auto_generated_allowlist',
-    'attachment_content_type_blacklist': 'attachment_content_type_blocklist',
-    'attachment_filename_blacklist': 'attachment_filename_blocklist',
+    'attachment_content_type_blacklist': 'blocked_attachment_content_types',
+    'attachment_filename_blacklist': 'blocked_attachment_filenames',
     'use_admin_ip_whitelist': 'use_admin_ip_allowlist',
     'blacklist_ip_blocks': 'blocklist_ip_blocks',
     'whitelist_internal_hosts': 'allowlist_internal_hosts',
@@ -20,7 +20,7 @@ class AllowlistAndBlocklistSiteSettings < ActiveRecord::Migration[6.0]
     'inline_onebox_domains_whitelist': 'inline_onebox_domains_allowlist',
     'white_listed_spam_host_domains': 'allowed_spam_host_domains',
     'embed_blacklist_selector': 'embed_blocklist_selector',
-    'embed_classname_whitelist': 'embed_classname_allowlist',
+    'embed_classname_whitelist': 'allowed_embed_classnames',
   }
 
   def up
