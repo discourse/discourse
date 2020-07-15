@@ -47,7 +47,7 @@ export default {
             if (video && !video.poster) {
               const source = video.querySelector("source");
               if (source) {
-                // start video at 0.1s to trick Safari into loading a preview
+                // set video to start at 0.1s to trick Safari into loading a preview
                 source.src += "#t=0.1";
                 source.parentElement.load();
               }
