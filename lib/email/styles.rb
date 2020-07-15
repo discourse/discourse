@@ -196,7 +196,6 @@ module Email
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
-      style('code ol', 'line-height: 50%;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
       style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
       style('.secure-image-notice', 'font-style: italic; background-color: #f1f1ff; padding: 5px;')
