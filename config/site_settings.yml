@@ -1748,7 +1748,7 @@ backups:
 
 search:
   search_ranking_normalization:
-    default: '1'
+    default: '0'
     hidden: true
   min_search_term_length:
     client: true

@@ -402,29 +402,6 @@ describe Search do
       expect(result.blurb(reply)).to eq(expected_blurb)
     end
 
-    it 'does not allow a post with repeated words to dominate the ranking' do
-      category = Fabricate(:category_with_definition, name: "winter is coming")
-
-      post = Fabricate(:post,
-        raw: "I think winter will end soon",
-        topic: Fabricate(:topic,
-          title: "dragon john snow winter",
-          category: category
-        )
-      )
-
-      post2 = Fabricate(:post,
-        raw: "I think #{'winter' * 20} will end soon",
-        topic: Fabricate(:topic, title: "dragon john snow summer", category: category)
-      )
-
-      result = Search.execute('winter')
-
-      expect(result.posts.pluck(:id)).to eq([
-        post.id, category.topic.first_post.id, post2.id
-      ])
-    end
-
     it 'applies a small penalty to closed topic when ranking' do
       post = Fabricate(:post,
         raw: "My weekly update",
@@ -698,12 +675,12 @@ describe Search do
         expect(search.posts.map(&:id)).to eq([
           child_of_ignored_category.topic.first_post,
           category.topic.first_post,
-          post,
-          post2
+          post2,
+          post
         ].map(&:id))
 
         search = Search.execute("snow")
-        expect(search.posts).to eq([post, post2])
+        expect(search.posts.map(&:id)).to eq([post2.id, post.id])
 
         category.set_permissions({})
         category.save
