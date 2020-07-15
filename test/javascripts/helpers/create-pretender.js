@@ -170,7 +170,7 @@ export function applyDefaultHandlers(pretender) {
         ]
       },
       badges: [{ id: 444, count: 1 }],
-      topics: [{ id: 1234, title: "cool title", url: "/t/1234/cool-title" }]
+      topics: [{ id: 1234, title: "cool title", slug: "cool-title" }]
     });
   });
 
