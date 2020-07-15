@@ -7,8 +7,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
-import highlightSyntax from "discourse/lib/highlight-syntax";
 import { url } from "discourse/lib/computed";
+import highlightSyntax from "discourse/lib/highlight-syntax";
 
 const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5];
@@ -321,7 +321,7 @@ const Theme = RestModel.extend({
             }
           }
         );
-        highlightSyntax();
+        highlightSyntax(document.querySelector(".bootbox.modal"));
       } else {
         return this.save({ remote_update: true }).then(() =>
           this.set("changed", false)

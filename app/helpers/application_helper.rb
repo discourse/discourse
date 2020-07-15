@@ -469,7 +469,8 @@ module ApplicationHelper
       default_locale: SiteSetting.default_locale,
       asset_version: Discourse.assets_digest,
       disable_custom_css: loading_admin?,
-      highlight_js_path: HighlightJs.path,
+      highlight_js_url: HighlightJs.path,
+      highlight_js_worker_url: script_asset_path('highlightjs-worker'),
       svg_sprite_path: SvgSprite.path(theme_ids),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
     }
