@@ -71,7 +71,7 @@ jobs:
       - name: Update imagemagick
         if: env.BUILD_TYPE == 'BACKEND'
         run: |
-          wget https://raw.githubusercontent.com/discourse/discourse_docker/48ea79fb1792fbc84ab10939459d5bf25bc0332c/image/base/install-imagemagick
+          wget https://raw.githubusercontent.com/discourse/discourse_docker/457b54ac2f6c38bda121dfdf1dfbd344652b88d5/image/base/install-imagemagick
           chmod +x install-imagemagick
           sudo ./install-imagemagick
 
