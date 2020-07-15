@@ -13,8 +13,7 @@ class BookmarksController < ApplicationController
       reminder_type: params[:reminder_type],
       reminder_at: params[:reminder_at],
       options: {
-        delete_when_reminder_sent: params[:delete_when_reminder_sent],
-        delete_on_owner_reply: params[:delete_on_owner_reply]
+        delete_option: params[:delete_option]
       }
     )
 
@@ -41,8 +40,7 @@ class BookmarksController < ApplicationController
       reminder_type: params[:reminder_type],
       reminder_at: params[:reminder_at],
       options: {
-        delete_when_reminder_sent: params[:delete_when_reminder_sent],
-        delete_on_owner_reply: params[:delete_on_owner_reply]
+        delete_option: params[:delete_option]
       }
     )
 

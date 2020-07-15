@@ -199,7 +199,7 @@ export default Controller.extend(bufferedProperty("model"), {
   _removeDeleteOnOwnerReplyBookmarks() {
     let posts = this.model.get("postStream").posts;
     posts
-      .filter(p => p.bookmarked && p.bookmark_delete_on_owner_reply)
+      .filter(p => p.bookmarked && p.bookmark_delete_option === 2) // 2 is on_owner_reply
       .forEach(p => {
         p.clearBookmark();
       });

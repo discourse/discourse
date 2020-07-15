@@ -388,7 +388,10 @@ class PostCreator
 
   def delete_owned_bookmarks
     return if !@post.topic_id
-    @user.bookmarks.where(topic_id: @post.topic_id, delete_on_owner_reply: true).destroy_all
+    @user.bookmarks.where(
+      topic_id: @post.topic_id,
+      delete_option: Bookmark.delete_options[:on_owner_reply]
+    ).destroy_all
   end
 
   def handle_spam
