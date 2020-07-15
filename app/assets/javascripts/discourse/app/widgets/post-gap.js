@@ -27,6 +27,8 @@ export default createWidget("post-gap", {
     return this.sendWidgetAction(
       attrs.pos === "before" ? "fillGapBefore" : "fillGapAfter",
       args
-    );
+    ).then(() => {
+      state.loading = false;
+    });
   }
 });
