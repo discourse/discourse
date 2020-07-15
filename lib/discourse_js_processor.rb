@@ -56,7 +56,6 @@ class DiscourseJsProcessor
       activate-account
       auto-redirect
       embed-application
-      highlightjs-worker
       app-boot
     ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
 
