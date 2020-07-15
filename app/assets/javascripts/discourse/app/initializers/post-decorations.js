@@ -40,7 +40,7 @@ export default {
       );
 
       const caps = container.lookup("capabilities:main");
-      if (caps.isSafari) {
+      if (caps.isSafari || caps.isIOS) {
         api.decorateCookedElement(
           elem => {
             const video = elem.querySelector("video");
