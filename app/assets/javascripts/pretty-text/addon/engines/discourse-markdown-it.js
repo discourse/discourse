@@ -339,6 +339,10 @@ export function setup(opts, siteSettings, state) {
   opts.discourse = copy;
   getOptions.f = () => opts.discourse;
 
+  opts.discourse.limitedSiteSettings = {
+    secureMedia: siteSettings.secure_media
+  };
+
   opts.engine = window.markdownit({
     discourse: opts.discourse,
     html: true,
