@@ -81,7 +81,7 @@ describe ApiKey do
 
   describe 'API Key scope mappings' do
     it 'maps api_key permissions' do
-      api_key_mappings = ApiKey.scope_mappings[:topics]
+      api_key_mappings = ApiKeyScope.scope_mappings[:topics]
 
       assert_responds_to(api_key_mappings.dig(:write, :actions))
       assert_responds_to(api_key_mappings.dig(:read, :actions))

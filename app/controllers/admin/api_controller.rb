@@ -23,7 +23,7 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def scopes
-    scopes = ApiKey.scope_mappings.reduce({}) do |memo, (resource, actions)|
+    scopes = ApiKeyScope.scope_mappings.reduce({}) do |memo, (resource, actions)|
       memo.tap do |m|
         m[resource] = actions.map { |k, v| { id: "#{resource}:#{k}", name: k, params: v[:params] } }
       end
@@ -92,7 +92,7 @@ class Admin::ApiController < Admin::AdminController
   def build_scopes
     params.require(:key)[:scopes].to_a.map do |scope_params|
       resource, action = scope_params[:id].split(':')
-      mapping = ApiKey.scope_mappings.dig(resource.to_sym, action.to_sym)
+      mapping = ApiKeyScope.scope_mappings.dig(resource.to_sym, action.to_sym)
       raise Discourse::InvalidParameters if mapping.nil?
 
       allowed_params = mapping[:params].nil? ? nil : scope_params.slice(*mapping[:params])

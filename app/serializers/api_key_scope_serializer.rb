@@ -8,6 +8,6 @@ class ApiKeyScopeSerializer < ApplicationSerializer
              :allowed_parameters
 
   def parameters
-    ApiKey.scope_mappings.dig(object.resource.to_sym, object.action.to_sym, :params).to_a
+    ApiKeyScope.scope_mappings.dig(object.resource.to_sym, object.action.to_sym, :params).to_a
   end
 end

@@ -4,6 +4,40 @@ class ApiKeyScope < ActiveRecord::Base
   validates_presence_of :resource
   validates_presence_of :action
 
+  class << self
+    def list_actions
+      actions = []
+
+      TopTopic.periods.each do |p|
+        actions.concat(["list#category_top_#{p}", "list#top_#{p}", "list#top_#{p}_feed"])
+      end
+
+      %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
+
+      actions
+    end
+
+    def default_mappings
+      {
+        topics: {
+          write: { actions: %w[posts#create topics#feed], params: %i[topic_id] },
+          read: { actions: %w[topics#show], params: %i[topic_id], aliases: { topic_id: :id } },
+          read_lists: { actions: list_actions, params: %i[category_id], aliases: { category_id: :category_slug_path_with_id } }
+        }
+      }
+    end
+
+    def scope_mappings
+      plugin_mappings = DiscoursePluginRegistry.api_key_scope_mappings
+
+      default_mappings.tap do |mappings|
+        plugin_mappings.each do |mapping|
+          mappings.deep_merge!(mapping)
+        end
+      end
+    end
+  end
+
   def permits?(route_param)
     path_params = "#{route_param['controller']}##{route_param['action']}"
 
@@ -29,7 +63,7 @@ class ApiKeyScope < ActiveRecord::Base
   end
 
   def mapping
-    @mapping ||= ApiKey.scope_mappings.dig(resource.to_sym, action.to_sym)
+    @mapping ||= self.class.scope_mappings.dig(resource.to_sym, action.to_sym)
   end
 
   def extract_category_id(category_slug_with_id)

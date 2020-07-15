@@ -17,38 +17,6 @@ class ApiKey < ActiveRecord::Base
 
   after_initialize :generate_key
 
-  def self.list_actions
-    actions = []
-
-    TopTopic.periods.each do |p|
-      actions.concat(["list#category_top_#{p}", "list#top_#{p}", "list#top_#{p}_feed"])
-    end
-
-    %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
-
-    actions
-  end
-
-  def self.default_mappings
-    {
-      topics: {
-        write: { actions: %w[posts#create topics#feed], params: %i[topic_id] },
-        read: { actions: %w[topics#show], params: %i[topic_id], aliases: { topic_id: :id } },
-        read_lists: { actions: list_actions, params: %i[category_id], aliases: { category_id: :category_slug_path_with_id } }
-      }
-    }
-  end
-
-  def self.scope_mappings
-    plugin_mappings = DiscoursePluginRegistry.api_key_scope_mappings
-
-    default_mappings.tap do |mappings|
-      plugin_mappings.each do |mapping|
-        mappings.deep_merge!(mapping)
-      end
-    end
-  end
-
   def generate_key
     if !self.key_hash
       @key ||= SecureRandom.hex(32) # Not saved to DB
