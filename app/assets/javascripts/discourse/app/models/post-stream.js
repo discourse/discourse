@@ -317,10 +317,7 @@ export default RestModel.extend({
           });
 
           if (tailGap.length > 0) {
-            this.set(
-              "gaps.before",
-              Object.assign(this.get("gaps.before"), { [postId]: tailGap })
-            );
+            this.get("gaps.before")[postId] = tailGap;
           } else {
             delete this.get("gaps.before")[postId];
           }
