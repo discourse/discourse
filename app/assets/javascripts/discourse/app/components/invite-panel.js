@@ -30,8 +30,8 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this._setDefaultSelectedGroups();
-    this._setGroupOptions();
+    this.setDefaultSelectedGroups();
+    this.setGroupOptions();
   },
 
   willDestroyElement() {
@@ -300,11 +300,11 @@ export default Component.extend({
     });
   },
 
-  _setDefaultSelectedGroups() {
+  setDefaultSelectedGroups() {
     this.set("groupIds", []);
   },
 
-  _setGroupOptions() {
+  setGroupOptions() {
     Group.findAll().then(groups => {
       this.set("allGroups", groups.filterBy("automatic", false));
     });
