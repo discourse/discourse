@@ -896,10 +896,7 @@ class Search
 
     if aggregate_search
       aggregate_relation = Post.unscoped
-        .select(
-          "subquery.topic_id id",
-          "(ARRAY_AGG(subquery.post_number))[1] post_number",
-        )
+        .select("subquery.topic_id id")
         .group("subquery.topic_id")
 
       posts = posts.select(posts.arel.projections)
@@ -910,7 +907,10 @@ class Search
 
       if aggregate_search
         aggregate_relation = aggregate_relation
-          .select("MAX(subquery.created_at) created_at")
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.created_at DESC))[1] post_number",
+            "MAX(subquery.created_at) created_at"
+          )
           .order("created_at DESC")
       end
     elsif @order == :latest_topic
@@ -920,7 +920,10 @@ class Search
         posts = posts.select("topics.created_at topic_created_at")
 
         aggregate_relation = aggregate_relation
-          .select("MAX(subquery.topic_created_at) topic_created_at")
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_created_at DESC))[1] post_number",
+            "MAX(subquery.topic_created_at) topic_created_at"
+          )
           .order("topic_created_at DESC")
       end
     elsif @order == :views
@@ -930,7 +933,10 @@ class Search
         posts = posts.select("topics.views topic_views")
 
         aggregate_relation = aggregate_relation
-          .select("MAX(subquery.topic_views) topic_views")
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_views DESC))[1] post_number",
+            "MAX(subquery.topic_views) topic_views"
+          )
           .order("topic_views DESC")
       end
     elsif @order == :likes
@@ -976,7 +982,10 @@ class Search
           .order("rank DESC", "topic_bumped_at DESC")
 
         aggregate_relation = aggregate_relation
-          .select("MAX(subquery.rank) rank", "MAX(subquery.topic_bumped_at) topic_bumped_at")
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.rank DESC, subquery.topic_bumped_at DESC))[1] post_number",
+            "MAX(subquery.rank) rank", "MAX(subquery.topic_bumped_at) topic_bumped_at"
+          )
           .order("rank DESC", "topic_bumped_at DESC")
       else
         posts = posts.order("#{data_ranking} DESC", "topics.bumped_at DESC")

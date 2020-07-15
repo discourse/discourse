@@ -447,8 +447,12 @@ describe Search do
 
     it 'aggregates searches in a topic by returning the post with the highest rank' do
       post = Fabricate(:post, topic: topic, raw: "this is a play post")
-      post2 = Fabricate(:post, topic: topic, raw: "play playing played")
+      post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
       post3 = Fabricate(:post, raw: "this is a play post")
+
+      5.times do
+        Fabricate(:post, topic: topic, raw: "play playing played")
+      end
 
       results = Search.execute('play')
 
