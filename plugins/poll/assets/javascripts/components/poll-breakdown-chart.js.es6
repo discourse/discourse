@@ -116,13 +116,17 @@ export default Component.extend({
         tooltips: false,
         onHover: (event, activeElements) => {
           if (!activeElements.length) {
-            return this.setHighlightedOption(null);
+            this.setHighlightedOption(null);
+            return;
           }
 
           const sliceIndex = activeElements[0]._index;
           const optionIndex = Object.keys(this.optionToSlice).find(
             option => this.optionToSlice[option] === sliceIndex
           );
+
+          // Clear the array to avoid issues in Chart.js
+          activeElements.length = 0;
 
           this.setHighlightedOption(Number(optionIndex));
         }
@@ -147,6 +151,7 @@ export default Component.extend({
     if (this.previousHighlightedSliceIndex !== null) {
       const slice = meta.data[this.previousHighlightedSliceIndex];
       meta.controller.removeHoverStyle(slice);
+      this.chart.draw();
     }
 
     if (this.highlightedOption === null) {
