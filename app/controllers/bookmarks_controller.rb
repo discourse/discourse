@@ -13,7 +13,7 @@ class BookmarksController < ApplicationController
       reminder_type: params[:reminder_type],
       reminder_at: params[:reminder_at],
       options: {
-        delete_option: params[:delete_option]
+        delete_option: params[:delete_option] || 0
       }
     )
 
@@ -40,7 +40,7 @@ class BookmarksController < ApplicationController
       reminder_type: params[:reminder_type],
       reminder_at: params[:reminder_at],
       options: {
-        delete_option: params[:delete_option]
+        delete_option: params[:delete_option] || 0
       }
     )
 
