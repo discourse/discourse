@@ -9,7 +9,7 @@
 //= require qunit/qunit/qunit
 //= require ember-qunit
 //= require fake_xml_http_request
-//= require route-recognizer/dist/route-recognizer
+//= require route-recognizer
 //= require pretender/pretender
 //= require locales/i18n
 //= require locales/en_US

@@ -160,7 +160,14 @@ task 'javascript:update' do
     }, {
       source: '@popperjs/core/dist/umd/popper.js.map',
       public_root: true
-    }
+    },
+    {
+      source: 'route-recognizer/dist/route-recognizer.js'
+    }, {
+      source: 'route-recognizer/dist/route-recognizer.js.map',
+      public_root: true
+    },
+
   ]
 
   start = Time.now
