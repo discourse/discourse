@@ -2816,6 +2816,7 @@ describe UsersController do
       create_post(user: user)
 
       get "/u/#{user.username_lower}/summary.json"
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
       expect(response.status).to eq(200)
       json = response.parsed_body
 
