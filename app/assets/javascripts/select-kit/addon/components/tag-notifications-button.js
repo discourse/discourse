@@ -6,8 +6,6 @@ export default NotificationsButtonComponent.extend({
 
   selectKitOptions: {
     showFullTitle: false,
-    i18nPrefix: "i18nPrefix"
-  },
-
-  i18nPrefix: "tagging.notifications"
+    i18nPrefix: "tagging.notifications"
+  }
 });
