@@ -431,7 +431,7 @@ GEM
       hkdf (~> 0.2)
       jwt (~> 2.0)
     yaml-lint (0.0.10)
-    zeitwerk (2.3.1)
+    zeitwerk (2.4.0)
 
 PLATFORMS
   ruby
