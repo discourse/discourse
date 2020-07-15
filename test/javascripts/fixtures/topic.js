@@ -2804,7 +2804,18 @@ export default {
         archetype: "regular",
         like_count: 11,
         views: 55,
-        category_id: 1
+        category_id: 1,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
       },
       {
         id: 27343,
@@ -2837,7 +2848,18 @@ export default {
         archetype: "regular",
         like_count: 3,
         views: 23,
-        category_id: 9
+        category_id: 9,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
       },
       {
         id: 27346,
@@ -2866,7 +2888,18 @@ export default {
         archetype: "regular",
         like_count: 0,
         views: 8,
-        category_id: 2
+        category_id: 2,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
       },
       {
         id: 19670,
@@ -2896,7 +2929,18 @@ export default {
         archetype: "regular",
         like_count: 4,
         views: 253,
-        category_id: 2
+        category_id: 2,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
       },
       {
         id: 7512,
@@ -2929,7 +2973,18 @@ export default {
         archetype: "regular",
         like_count: 62,
         views: 1877,
-        category_id: 2
+        category_id: 2,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
       },
       {
         id: 25480,
@@ -2955,7 +3010,18 @@ export default {
         archetype: "regular",
         like_count: 21,
         views: 185,
-        category_id: 2
+        category_id: 2,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
       },
       {
         id: 26576,
@@ -2986,7 +3052,18 @@ export default {
         archetype: "regular",
         like_count: 9,
         views: 87,
-        category_id: 2
+        category_id: 2,
+        posters: [
+          {
+            extras: "latest single",
+            description: "Original Poster, Most Recent Poster",
+            user: {
+              id: 1,
+              username: "test",
+              avatar_template: "/images/avatar.png"
+            }
+          }
+        ]
       }
     ],
     tags: null
