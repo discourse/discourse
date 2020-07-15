@@ -33,7 +33,7 @@ export default Controller.extend({
     },
 
     save() {
-      if (this.useScopes && !this.useGlobalKey) {
+      if (!this.useGlobalKey) {
         const selectedScopes = Object.values(this.scopes)
           .flat()
           .filter(action => {
