@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { alias, and } from "@ember/object/computed";
+import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
@@ -21,7 +21,7 @@ export default Controller.extend(CanCheckEmails, {
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
   totps: null,
 
-  loaded: and("secondFactorImage", "secondFactorKey"),
+  loaded: false,
 
   init() {
     this._super(...arguments);
