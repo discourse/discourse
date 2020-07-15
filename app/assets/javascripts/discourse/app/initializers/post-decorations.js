@@ -38,6 +38,24 @@ export default {
         },
         { id: "discourse-audio" }
       );
+
+      const caps = container.lookup("capabilities:main");
+      if (caps.isSafari) {
+        api.decorateCookedElement(
+          elem => {
+            const video = elem.querySelector("video");
+            if (video && !video.poster) {
+              const source = video.querySelector("source");
+              if (source) {
+                // start video at 0.1s to trick Safari into loading a preview
+                source.src += "#t=0.1";
+                source.parentElement.load();
+              }
+            }
+          },
+          { id: "safari-video-poster", afterAdopt: true }
+        );
+      }
     });
   }
 };
