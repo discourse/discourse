@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe BookmarkQuery do
-    before do
-      SearchIndexer.enable
-    end
+  before do
+    SearchIndexer.enable
+  end
 
   fab!(:user) { Fabricate(:user) }
   let(:params) { {} }
