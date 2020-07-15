@@ -1,3 +1,5 @@
+// discourse-skip-module
+
 // Standalone worker for highlightjs syntax generation
 
 // The highlightjs path changes based on site settings,
