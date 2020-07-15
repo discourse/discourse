@@ -321,9 +321,10 @@ $mobile-avatar-height: 1.532em;
   display: flex;
   align-items: center;
   font-size: $font-down-1;
-  order: -1;
-  margin: 0 0.6em 0 0;
-
+  @include ellipsis;
+  &:not(:first-child) {
+    margin-left: 5px;
+  }
   .trigger-user-card,
   .trigger-group-card {
     &:not(:last-of-type) {
@@ -349,6 +350,7 @@ $mobile-avatar-height: 1.532em;
     padding: 0 5px;
     border: 1px solid $primary-low;
     border-radius: 0.25em;
+    min-width: 3em;
     @include ellipsis;
 
     .icon {
