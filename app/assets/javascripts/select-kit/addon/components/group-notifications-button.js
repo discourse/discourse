@@ -5,8 +5,6 @@ export default NotificationOptionsComponent.extend({
   classNames: ["group-notifications-button"],
 
   selectKitOptions: {
-    i18nPrefix: "i18nPrefix"
-  },
-
-  i18nPrefix: "groups.notifications"
+    i18nPrefix: "groups.notifications"
+  }
 });

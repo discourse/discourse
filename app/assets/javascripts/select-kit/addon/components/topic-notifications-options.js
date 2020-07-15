@@ -8,7 +8,7 @@ export default NotificationsButtonComponent.extend({
   content: topicLevels,
 
   selectKitOptions: {
-    i18nPrefix: "i18nPrefix",
+    i18nPrefix: "topic.notifications",
     i18nPostfix: "i18nPostfix",
     showCaret: true
   },

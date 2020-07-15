@@ -7,9 +7,7 @@ export default NotificationOptionsComponent.extend({
   isHidden: or("category.deleted"),
 
   selectKitOptions: {
-    i18nPrefix: "i18nPrefix",
+    i18nPrefix: "category.notifications",
     showFullTitle: false
-  },
-
-  i18nPrefix: "category.notifications"
+  }
 });
