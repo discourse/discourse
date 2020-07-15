@@ -144,23 +144,21 @@ export function extractDataAttribute(str) {
 function videoHTML(token, opts) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
-  const preloadType = opts.secureMedia ? "none" : "metadata";
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
   return `<div class="video-container">
     <p class="video-description">${opts.alt}</p>
-    <video width="100%" height="100%" preload="${preloadType}" controls>
+    <video width="100%" height="100%" preload="metadata" controls>
       <source src="${src}" ${dataOrigSrcAttr}>
       <a href="${src}">${src}</a>
     </video>
   </div>`;
 }
 
-function audioHTML(token, opts) {
+function audioHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
-  const preloadType = opts.secureMedia ? "none" : "metadata";
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
-  return `<audio preload="${preloadType}" controls>
+  return `<audio preload="metadata" controls>
     <source src="${src}" ${dataOrigSrcAttr}>
     <a href="${src}">${src}</a>
   </audio>`;
@@ -177,13 +175,12 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   // handles |video and |audio alt transformations for image tags
   const mediaOpts = {
-    secureMedia: options.discourse.limitedSiteSettings.secureMedia,
     alt: split[0]
   };
   if (split[1] === "video") {
     return videoHTML(token, mediaOpts);
   } else if (split[1] === "audio") {
-    return audioHTML(token, mediaOpts);
+    return audioHTML(token);
   }
 
   // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
@@ -341,10 +338,6 @@ export function setup(opts, siteSettings, state) {
 
   opts.discourse = copy;
   getOptions.f = () => opts.discourse;
-
-  opts.discourse.limitedSiteSettings = {
-    secureMedia: siteSettings.secure_media
-  };
 
   opts.engine = window.markdownit({
     discourse: opts.discourse,
