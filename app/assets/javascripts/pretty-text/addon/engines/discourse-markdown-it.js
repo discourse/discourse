@@ -1,4 +1,5 @@
 import WhiteLister from "pretty-text/white-lister";
+import { isDevelopment } from "discourse-common/config/environment";
 import { sanitize } from "pretty-text/sanitizer";
 import guid from "pretty-text/guid";
 
@@ -371,6 +372,15 @@ export function setup(opts, siteSettings, state) {
   setupBlockBBCode(opts.engine);
   setupInlineBBCode(opts.engine);
   setupTextPostProcessRuler(opts.engine);
+
+  if (isDevelopment()) {
+    if (window.console) {
+      // eslint-disable-next-line no-console
+      console.debug(
+        "DEBUG: To debug all markdown plugins, add console.log within pluginCallbacks.forEach."
+      );
+    }
+  }
 
   pluginCallbacks.forEach(([feature, callback]) => {
     if (opts.discourse.features[feature]) {
