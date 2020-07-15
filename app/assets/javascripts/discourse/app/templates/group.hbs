@@ -21,6 +21,7 @@
           {{#if model.full_name}}<span class="group-info-full-name">{{model.name}}</span>{{/if}}
         </div>
       </span>
+      {{plugin-outlet name="group-details-after" args=(hash model=model)}}
     </div>
 
     {{#if model.bio_cooked}}

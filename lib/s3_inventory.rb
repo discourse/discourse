@@ -61,7 +61,7 @@ class S3Inventory
               WHERE #{model.table_name}.etag IS NULL AND
                 #{model.table_name}.url = #{table_name}.url")
 
-            uploads = (model == Upload) ? model.by_users.where("updated_at < ?", inventory_date) : model
+            uploads = model.by_users.where("updated_at < ?", inventory_date)
             missing_uploads = uploads
               .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
               .where("#{table_name}.etag IS NULL AND #{model.table_name}.etag IS NOT NULL")

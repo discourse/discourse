@@ -3,13 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
-  let(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
-  let(:discobot_user) { narrative_bot.discobot_user }
-  let(:discobot_username) { narrative_bot.discobot_username }
-  let(:first_post) { Fabricate(:post, user: discobot_user) }
-  let(:user) { Fabricate(:user) }
+  fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  fab!(:discobot_user) { narrative_bot.discobot_user }
+  fab!(:discobot_username) { narrative_bot.discobot_username }
+  fab!(:first_post) { Fabricate(:post, user: discobot_user) }
+  fab!(:user) { Fabricate(:user) }
 
-  let(:topic) do
+  fab!(:topic) do
     Fabricate(:private_message_topic, first_post: first_post,
                                       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: discobot_user),
@@ -18,12 +18,12 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     )
   end
 
-  let(:post) { Fabricate(:post, topic: topic, user: user) }
-  let(:narrative) { described_class.new }
-  let(:other_topic) { Fabricate(:topic) }
-  let(:other_post) { Fabricate(:post, topic: other_topic) }
-  let(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
-  let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
+  fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+  fab!(:narrative) { described_class.new }
+  fab!(:other_topic) { Fabricate(:topic) }
+  fab!(:other_post) { Fabricate(:post, topic: other_topic) }
+  fab!(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
+  fab!(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
     Jobs.run_immediately!

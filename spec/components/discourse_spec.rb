@@ -235,7 +235,8 @@ describe Discourse do
     describe ".disable_readonly_mode" do
       context 'user disabled readonly mode' do
         it "removes readonly key in redis and publish a message through the message bus" do
-          Discourse.enable_readonly_mode(user_enabled: true)
+          message = MessageBus.track_publish { Discourse.disable_readonly_mode(user_readonly_mode_key) }.first
+          assert_readonly_mode_disabled(message, user_readonly_mode_key)
         end
       end
     end

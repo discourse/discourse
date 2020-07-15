@@ -16,26 +16,9 @@ class SearchIndexer
     HtmlScrubber.scrub(html, strip_diacritics: strip_diacritics)
   end
 
-  def self.inject_extra_terms(raw)
-    return raw if !SiteSetting.search_inject_extra_terms
-
-    # insert some extra words for I.am.a.word so "word" is tokenized
-    # I.am.a.word becomes I.am.a.word am a word
-    raw.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|
-
-      split = with_dot.split(/https?:\/\/|[?:;,.\/]/)
-
-      if split.length > 1
-        with_dot + ((+" ") << split[1..-1].reject { |x| x.blank? }.join(" "))
-      else
-        with_dot
-      end
-    end
-  end
-
   def self.update_index(table: , id: , raw_data:)
     search_data = raw_data.map do |data|
-      inject_extra_terms(Search.prepare_data(data || "", :index))
+      Search.prepare_data(data || "", :index)
     end
 
     table_name = "#{table}_search_data"
@@ -53,15 +36,39 @@ class SearchIndexer
 
     indexed_data = search_data.select { |d| d.length > 0 }.join(' ')
 
-    params = {
+    ranked_params = {
       a: search_data[0],
       b: search_data[1],
       c: search_data[2],
       d: search_data[3],
+    }
+
+    tsvector = DB.query_single("SELECT #{ranked_index}", ranked_params)[0]
+    additional_lexemes = []
+
+    tsvector.scan(/'(([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+)'\:([\w+,]+)/).reduce(additional_lexemes) do |array, (lexeme, _, positions)|
+      count = 0
+
+      loop do
+        count += 1
+        break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
+        term, _, remaining = lexeme.partition(".")
+        break if remaining.blank?
+        array << "'#{term}':#{positions} '#{remaining}':#{positions}"
+        lexeme = remaining
+      end
+
+      array
+    end
+
+    tsvector = "#{tsvector} #{additional_lexemes.join(' ')}"
+
+    params = {
       raw_data: indexed_data,
       id: id,
       locale: SiteSetting.default_locale,
-      version: INDEX_VERSION
+      version: INDEX_VERSION,
+      tsvector: tsvector,
     }
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
@@ -71,7 +78,7 @@ class SearchIndexer
        SET
           raw_data = :raw_data,
           locale = :locale,
-          search_data = #{ranked_index},
+          search_data = (:tsvector)::tsvector,
           version = :version
        WHERE #{foreign_key} = :id
     SQL
@@ -80,7 +87,7 @@ class SearchIndexer
       DB.exec(<<~SQL, params)
         INSERT INTO #{table_name}
         (#{foreign_key}, search_data, locale, raw_data, version)
-        VALUES (:id, #{ranked_index}, :locale, :raw_data, :version)
+        VALUES (:id, (:tsvector)::tsvector, :locale, :raw_data, :version)
       SQL
     end
   rescue

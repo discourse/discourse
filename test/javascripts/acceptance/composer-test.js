@@ -750,7 +750,7 @@ QUnit.test("Image resizing buttons", async assert => {
 
   let uploads = [
     // 0 Default markdown with dimensions- should work
-    "![test|690x313](upload://test.png)",
+    "<a href='https://example.com'>![test|690x313](upload://test.png)</a>",
     // 1 Image with scaling percentage, should work
     "![test|690x313,50%](upload://test.png)",
     // 2 image with scaling percentage and a proceeding whitespace, should work
@@ -784,7 +784,8 @@ QUnit.test("Image resizing buttons", async assert => {
   );
 
   // Default
-  uploads[0] = "![test|690x313, 50%](upload://test.png)";
+  uploads[0] =
+    "<a href='https://example.com'>![test|690x313, 50%](upload://test.png)</a>";
   await click(
     find(".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']")
   );

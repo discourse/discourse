@@ -224,7 +224,9 @@ gem 'logster'
 gem 'sassc', '2.0.1', require: false
 gem "sassc-rails"
 
-gem 'rotp', require: false
+# see: https://github.com/mdp/rotp/issues/98
+gem 'rotp', '5.1.0' , require: false
+
 gem 'rqrcode'
 
 gem 'rubyzip', require: false

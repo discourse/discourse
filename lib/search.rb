@@ -86,6 +86,15 @@ class Search
         data = strip_diacritics(data)
       end
     end
+
+    data.gsub!(EmailCook.url_regexp) do |url|
+      uri = URI.parse(url)
+      uri.query = nil
+      uri.to_s
+    rescue URI::Error
+      # Don't fail even if URL turns out to be invalid
+    end
+
     data
   end
 
@@ -887,10 +896,7 @@ class Search
 
     if aggregate_search
       aggregate_relation = Post.unscoped
-        .select(
-          "subquery.topic_id id",
-          "(ARRAY_AGG(subquery.post_number))[1] post_number",
-        )
+        .select("subquery.topic_id id")
         .group("subquery.topic_id")
 
       posts = posts.select(posts.arel.projections)
@@ -901,7 +907,10 @@ class Search
 
       if aggregate_search
         aggregate_relation = aggregate_relation
-          .select("MAX(subquery.created_at) created_at")
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.created_at DESC))[1] post_number",
+            "MAX(subquery.created_at) created_at"
+          )
           .order("created_at DESC")
       end
     elsif @order == :latest_topic
@@ -911,7 +920,10 @@ class Search
         posts = posts.select("topics.created_at topic_created_at")
 
         aggregate_relation = aggregate_relation
-          .select("MAX(subquery.topic_created_at) topic_created_at")
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_created_at DESC))[1] post_number",
+            "MAX(subquery.topic_created_at) topic_created_at"
+          )
           .order("topic_created_at DESC")
       end
     elsif @order == :views
@@ -921,7 +933,10 @@ class Search
         posts = posts.select("topics.views topic_views")
 
         aggregate_relation = aggregate_relation
-          .select("MAX(subquery.topic_views) topic_views")
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_views DESC))[1] post_number",
+            "MAX(subquery.topic_views) topic_views"
+          )
           .order("topic_views DESC")
       end
     elsif @order == :likes
@@ -967,7 +982,10 @@ class Search
           .order("rank DESC", "topic_bumped_at DESC")
 
         aggregate_relation = aggregate_relation
-          .select("MAX(subquery.rank) rank", "MAX(subquery.topic_bumped_at) topic_bumped_at")
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.rank DESC, subquery.topic_bumped_at DESC))[1] post_number",
+            "MAX(subquery.rank) rank", "MAX(subquery.topic_bumped_at) topic_bumped_at"
+          )
           .order("rank DESC", "topic_bumped_at DESC")
       else
         posts = posts.order("#{data_ranking} DESC", "topics.bumped_at DESC")
@@ -1005,27 +1023,12 @@ class Search
     self.class.default_ts_config
   end
 
-  def self.ts_query(term: , ts_config:  nil, joiner: "&", weight_filter: nil)
-
-    data = DB.query_single(
-      "SELECT TO_TSVECTOR(:config, :term)",
-      config: 'simple',
-      term: term
-    ).first
-
+  def self.ts_query(term: , ts_config:  nil, joiner: nil, weight_filter: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    all_terms = data.scan(/'([^']+)'\:\d+/).flatten
-    all_terms.map! do |t|
-      t.split(/[\)\(&']/).find(&:present?)
-    end.compact!
-
-    query = ActiveRecord::Base.connection.quote(
-      all_terms
-        .map { |t| "'#{PG::Connection.escape_string(t)}':*#{weight_filter}" }
-        .join(" #{joiner} ")
-    )
-
-    "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
+    term = term.gsub("'", "''")
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '''#{PG::Connection.escape_string(term)}'':*#{weight_filter}')"
+    tsquery = "REPLACE(#{tsquery}::text, '&', '#{PG::Connection.escape_string(joiner)}')::tsquery" if joiner
+    tsquery
   end
 
   def ts_query(ts_config = nil, weight_filter: nil)

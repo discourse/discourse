@@ -91,7 +91,9 @@ export default DropdownSelectBoxComponent.extend({
 
     if (
       this.action === REPLY &&
+      this.topic &&
       this.topic.isPrivateMessage &&
+      this.topic.details &&
       (this.topic.details.allowed_users.length > 1 ||
         this.topic.details.allowed_groups.length > 0) &&
       !this.isEditing &&

@@ -105,7 +105,7 @@ RSpec.describe Reviewable, type: :model do
       end
 
       it "works with the reviewable by group" do
-        SiteSetting.enable_category_group_review = true
+        SiteSetting.enable_category_group_moderation = true
         group = Fabricate(:group)
         reviewable.reviewable_by_group_id = group.id
         reviewable.save!
@@ -121,7 +121,7 @@ RSpec.describe Reviewable, type: :model do
       end
 
       it "doesn't allow review by group when disabled" do
-        SiteSetting.enable_category_group_review = false
+        SiteSetting.enable_category_group_moderation = false
         group = Fabricate(:group)
         reviewable.reviewable_by_group_id = group.id
         reviewable.save!

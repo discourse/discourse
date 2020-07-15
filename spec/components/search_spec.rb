@@ -447,8 +447,12 @@ describe Search do
 
     it 'aggregates searches in a topic by returning the post with the highest rank' do
       post = Fabricate(:post, topic: topic, raw: "this is a play post")
-      post2 = Fabricate(:post, topic: topic, raw: "play playing played")
+      post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
       post3 = Fabricate(:post, raw: "this is a play post")
+
+      5.times do
+        Fabricate(:post, topic: topic, raw: "play playing played")
+      end
 
       results = Search.execute('play')
 
@@ -1103,6 +1107,16 @@ describe Search do
       expect(Search.execute('badge:"test"').posts.length).to eq(0)
     end
 
+    it 'can match exact phrases' do
+      post = Fabricate(:post, raw: %{this is a test post with 'a URL https://some.site.com/search?q=test.test.test some random text I have to add})
+      post2 = Fabricate(:post, raw: 'test URL post with')
+
+      expect(Search.execute("test post with 'a URL).posts").posts).to eq([post2, post])
+      expect(Search.execute(%{"test post with 'a URL"}).posts).to eq([post])
+      expect(Search.execute(%{"https://some.site.com/search?q=test.test.test"}).posts).to eq([post])
+      expect(Search.execute(%{" with 'a URL https://some.site.com/search?q=test.test.test"}).posts).to eq([post])
+    end
+
     it 'can search numbers correctly, and match exact phrases' do
       post = Fabricate(:post, raw: '3.0 eta is in 2 days horrah')
       post2 = Fabricate(:post, raw: '3.0 is eta in 2 days horrah')
@@ -1245,15 +1259,26 @@ describe Search do
       ])
     end
 
-    it 'can tokenize dots' do
+    it 'can search for terms with dots' do
       post = Fabricate(:post, raw: 'Will.2000 Will.Bob.Bill...')
       expect(Search.execute('bill').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('bob').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('2000').posts.map(&:id)).to eq([post.id])
     end
 
-    it 'can tokanize website names correctly' do
+    it 'can search URLS correctly' do
       post = Fabricate(:post, raw: 'i like http://wb.camra.org.uk/latest#test so yay')
+
       expect(Search.execute('http://wb.camra.org.uk/latest#test').posts.map(&:id)).to eq([post.id])
       expect(Search.execute('camra').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('http://wb').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('wb.camra').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('wb.camra.org').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('org.uk').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('camra.org.uk').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('wb.camra.org.uk').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('wb.camra.org.uk/latest').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('/latest#test').posts.map(&:id)).to eq([post.id])
     end
 
     it 'supports category slug and tags' do

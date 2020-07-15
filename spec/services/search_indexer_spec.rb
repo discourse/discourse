@@ -17,16 +17,6 @@ describe SearchIndexer do
     SearchIndexer.scrub_html_for_search(html, strip_diacritics: strip_diacritics)
   end
 
-  it 'can correctly inject if http or https links exist' do
-
-    val = "a https://cnn.com?bob=1, http://stuff.com.au?bill=1 b abc.net/xyz=1"
-    result = SearchIndexer.inject_extra_terms(val)
-
-    expected = "a https://cnn.com?bob=1, cnn com bob=1 http://stuff.com.au?bill=1 stuff com au bill=1 b abc.net/xyz=1 net xyz=1"
-
-    expect(result).to eq(expected)
-  end
-
   it 'correctly indexes chinese' do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
@@ -151,7 +141,28 @@ describe SearchIndexer do
       topic = post.topic
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{topic.category.name} https://meta.discourse.org/some.png meta discourse org some png"
+        "#{topic.title} #{topic.category.name} https://meta.discourse.org/some.png"
+      )
+    end
+
+    it 'should tokenize host of a URL and removes query string' do
+      category = Fabricate(:category, name: 'awesome category')
+      topic = Fabricate(:topic, category: category, title: 'this is a test topic')
+
+      post = Fabricate(:post, topic: topic, raw: <<~RAW)
+      a https://cnn.com?bob=1, http://stuff.com.au?bill=1 b abc.net/xyz=1
+      RAW
+
+      post.rebake!
+      post.reload
+      topic = post.topic
+
+      expect(post.post_search_data.raw_data).to eq(
+        "#{topic.title} #{category.name} a https://cnn.com , http://stuff.com.au b http://abc.net/xyz=1 abc.net/xyz=1"
+      )
+
+      expect(post.post_search_data.search_data).to eq(
+        "'/xyz=1':14,17 'abc':13,16 'abc.net':13,16 'abc.net/xyz=1':12,15 'au':10 'awesom':6B 'b':11 'categori':7B 'cnn':9 'cnn.com':9 'com':9,10 'com.au':10 'net':13,16 'stuff':10 'stuff.com.au':10 'test':4A 'topic':5A"
       )
     end
 

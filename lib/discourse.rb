@@ -431,6 +431,7 @@ module Discourse
   READONLY_MODE_KEY_TTL      ||= 60
   READONLY_MODE_KEY          ||= 'readonly_mode'
   PG_READONLY_MODE_KEY       ||= 'readonly_mode:postgres'
+  PG_READONLY_MODE_KEY_TTL   ||= 300
   USER_READONLY_MODE_KEY     ||= 'readonly_mode:user'
   PG_FORCE_READONLY_MODE_KEY ||= 'readonly_mode:postgres_force'
 
@@ -445,16 +446,24 @@ module Discourse
     if key == USER_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
       Discourse.redis.set(key, 1)
     else
-      Discourse.redis.setex(key, READONLY_MODE_KEY_TTL, 1)
-      keep_readonly_mode(key) if !Rails.env.test?
+      ttl =
+        case key
+        when PG_READONLY_MODE_KEY
+          PG_READONLY_MODE_KEY_TTL
+        else
+          READONLY_MODE_KEY_TTL
+        end
+
+      Discourse.redis.setex(key, ttl, 1)
+      keep_readonly_mode(key, ttl: ttl) if !Rails.env.test?
     end
 
     MessageBus.publish(readonly_channel, true)
     true
   end
 
-  def self.keep_readonly_mode(key)
-    # extend the expiry by 1 minute every 30 seconds
+  def self.keep_readonly_mode(key, ttl:)
+    # extend the expiry by ttl minute every ttl/2 seconds
     @mutex ||= Mutex.new
 
     @mutex.synchronize do
@@ -465,12 +474,12 @@ module Discourse
       unless @threads[key]&.alive?
         @threads[key] = Thread.new do
           while @dbs.size > 0 do
-            sleep 30
+            sleep ttl / 2
 
             @mutex.synchronize do
               @dbs.each do |db|
                 RailsMultisite::ConnectionManagement.with_connection(db) do
-                  if !Discourse.redis.expire(key, READONLY_MODE_KEY_TTL)
+                  if !Discourse.redis.expire(key, ttl)
                     @dbs.delete(db)
                   end
                 end

@@ -158,7 +158,9 @@ export default createWidget("topic-admin-menu", {
           label: "actions.recover"
         });
       }
+    }
 
+    if (this.currentUser && details.get("can_close_topic")) {
       if (topic.get("closed")) {
         this.addActionButton({
           className: "topic-admin-open",
@@ -176,7 +178,9 @@ export default createWidget("topic-admin-menu", {
           label: "actions.close"
         });
       }
+    }
 
+    if (this.currentUser && this.currentUser.get("canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-status-update",
         buttonClass: "popup-menu-btn",
@@ -212,7 +216,9 @@ export default createWidget("topic-admin-menu", {
         icon: "anchor",
         label: "actions.reset_bump_date"
       });
+    }
 
+    if (this.currentUser && details.get("can_archive_topic")) {
       if (!isPrivateMessage) {
         this.addActionButton({
           className: "topic-admin-archive",
@@ -222,7 +228,9 @@ export default createWidget("topic-admin-menu", {
           label: topic.get("archived") ? "actions.unarchive" : "actions.archive"
         });
       }
+    }
 
+    if (this.currentUser && this.currentUser.get("canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-visible",
         buttonClass: "popup-menu-btn",

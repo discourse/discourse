@@ -799,22 +799,24 @@ export default Component.extend({
 
       if (matchingPlaceholder) {
         const match = matchingPlaceholder[index];
-        if (!match) {
-          return;
+
+        if (match) {
+          const replacement = match.replace(
+            imageScaleRegex,
+            `![$1|$2, ${scale}%$4]($5)`
+          );
+
+          this.appEvents.trigger(
+            "composer:replace-text",
+            matchingPlaceholder[index],
+            replacement,
+            { regex: imageScaleRegex, index }
+          );
         }
-
-        const replacement = match.replace(
-          imageScaleRegex,
-          `![$1|$2, ${scale}%$4]($5)`
-        );
-
-        this.appEvents.trigger(
-          "composer:replace-text",
-          matchingPlaceholder[index],
-          replacement,
-          { regex: imageScaleRegex, index }
-        );
       }
+
+      e.preventDefault();
+      return;
     });
   },
 
