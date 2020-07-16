@@ -3,6 +3,7 @@
 @import "vendor/normalize-ext";
 @import "vendor/sweetalert";
 @import "common/foundation/colors";
+@import "common/foundation/fonts";
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
 @import "common/select-kit/*";
@@ -172,6 +173,16 @@ body.wizard {
           cursor: pointer;
         }
       }
+    }
+  }
+}
+
+.wizard-step-fonts {
+  .font-preview {
+    margin-bottom: 1em;
+
+    .sample {
+      font-size: 1.5em;
     }
   }
 }

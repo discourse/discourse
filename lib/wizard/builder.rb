@@ -209,6 +209,21 @@ class Wizard
         step.add_field(id: 'popular-themes', type: 'component')
       end
 
+      @wizard.append_step('fonts') do |step|
+        field = step.add_field(id: 'base_font', type: 'component', value: SiteSetting.base_font)
+
+        BaseFontSetting::FONTS.each do |font_name, font|
+          field.add_choice(font_name,
+            label: I18n.t("js.base_font_setting.#{font[:key]}"),
+            extra_label: font[:font_stack]
+          )
+        end
+
+        step.on_update do |updater|
+          updater.update_setting(:base_font, updater.fields[:base_font])
+        end
+      end
+
       @wizard.append_step('logos') do |step|
         step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
         step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)

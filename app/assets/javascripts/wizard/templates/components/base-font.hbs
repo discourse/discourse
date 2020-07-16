@@ -1,0 +1,9 @@
+{{#each choices as |choice|}}
+  <div class="font-preview">
+    {{radio-button radioValue=choice.id
+                   label=choice.label
+                   value=field.value
+                   onChange=(action "changed")}}
+    <span class="sample" style={{choice.style}}>{{i18n "wizard.previews.font"}}</span>
+  </div>
+{{/each}}
