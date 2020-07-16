@@ -89,7 +89,7 @@ widgetTest("reviewable content", {
   },
 
   test(assert) {
-    assert.equal(this.$(".reviewables").text(), "5");
+    assert.equal(find(".reviewables").text(), "5");
   }
 });
 
