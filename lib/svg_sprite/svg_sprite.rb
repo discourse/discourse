@@ -105,6 +105,7 @@ module SvgSprite
     "far-heart",
     "far-image",
     "far-list-alt",
+    "far-meh",
     "far-moon",
     "far-smile",
     "far-square",
