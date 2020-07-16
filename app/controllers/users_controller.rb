@@ -230,6 +230,7 @@ class UsersController < ApplicationController
     User.transaction do
       old_primary.update!(primary: false)
       new_primary.update!(primary: true)
+      DiscourseEvent.trigger(:user_updated, user)
 
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_update_email(user)
@@ -259,6 +260,7 @@ class UsersController < ApplicationController
     ActiveRecord::Base.transaction do
       if user_email
         user_email.destroy
+        DiscourseEvent.trigger(:user_updated, user)
       elsif
         user.email_change_requests.where(new_email: params[:email]).destroy_all
       end

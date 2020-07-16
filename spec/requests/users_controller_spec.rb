@@ -2652,11 +2652,17 @@ describe UsersController do
       expect(user_email.reload.primary).to eq(true)
       expect(other_email.reload.primary).to eq(false)
 
-      expect { put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email } }
-        .to change { UserHistory.where(action: UserHistory.actions[:update_email], acting_user_id: user.id).count }.by(1)
+      event = DiscourseEvent.track_events {
+        expect { put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email } }
+          .to change { UserHistory.where(action: UserHistory.actions[:update_email], acting_user_id: user.id).count }.by(1)
+      }.last
+
       expect(response.status).to eq(200)
       expect(user_email.reload.primary).to eq(false)
       expect(other_email.reload.primary).to eq(true)
+
+      expect(event[:event_name]).to eq(:user_updated)
+      expect(event[:params].first).to eq(user)
     end
   end
 
@@ -2676,10 +2682,16 @@ describe UsersController do
       expect(response.status).to eq(428)
       expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
 
-      expect { delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email } }
-        .to change { UserHistory.where(action: UserHistory.actions[:destroy_email], acting_user_id: user.id).count }.by(1)
+      event = DiscourseEvent.track_events {
+        expect { delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email } }
+          .to change { UserHistory.where(action: UserHistory.actions[:destroy_email], acting_user_id: user.id).count }.by(1)
+      }.last
+
       expect(response.status).to eq(200)
       expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email)
+
+      expect(event[:event_name]).to eq(:user_updated)
+      expect(event[:params].first).to eq(user)
     end
   end
 
