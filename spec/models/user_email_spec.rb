@@ -13,9 +13,17 @@ describe UserEmail do
     end
 
     it "allows multiple secondary emails" do
-      Fabricate(:secondary_email, user: user, primary: false)
-      Fabricate(:secondary_email, user: user, primary: false)
+      events = DiscourseEvent.track_events {
+        Fabricate(:secondary_email, user: user, primary: false)
+        Fabricate(:secondary_email, user: user, primary: false)
+      }
+
       expect(user.user_emails.count).to eq 3
+      expect(events.count).to eq 2
+
+      event = events.first
+      expect(event[:event_name]).to eq(:user_updated)
+      expect(event[:params].first).to eq(user)
     end
 
     it "does not allow an invalid email" do

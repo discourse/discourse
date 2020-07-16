@@ -19,6 +19,10 @@ class UserEmail < ActiveRecord::Base
 
   scope :secondary, -> { where(primary: false) }
 
+  after_commit(on: [:create, :update, :destroy]) do
+    DiscourseEvent.trigger(:user_updated, user)
+  end
+
   private
 
   def strip_downcase_email
