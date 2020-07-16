@@ -130,6 +130,13 @@ describe ApiKey do
       expect(key.request_allowed?(request_mock, route_path)).to eq(false)
     end
 
+    it 'accepts the request if one of the parameters match' do
+      route_path['topic_id'] = '4'
+      scope.allowed_parameters = { topic_id: %w[3 4] }
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(true)
+    end
+
     it 'allow the request when the scope has an alias' do
       route_path = { 'controller' => 'topics', 'action' => 'show', 'id' => '3' }
 

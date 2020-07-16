@@ -49,7 +49,7 @@ class ApiKeyScope < ActiveRecord::Base
   def params_allowed?(route_param)
     mapping[:params].all? do |param|
       param_alias = mapping.dig(:aliases, param)
-      allowed_value = allowed_parameters[param.to_s]
+      allowed_values = [allowed_parameters[param.to_s]].flatten
       value = route_param[param.to_s]
       alias_value = route_param[param_alias.to_s]
 
@@ -58,7 +58,7 @@ class ApiKeyScope < ActiveRecord::Base
       value = value || alias_value
       value = extract_category_id(value) if param_alias == :category_slug_path_with_id
 
-      allowed_value.blank? || allowed_value == value
+      allowed_values.blank? || allowed_values.include?(value)
     end
   end
 

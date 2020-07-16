@@ -147,7 +147,22 @@ describe Admin::ApiController do
 
           expect(scope.resource).to eq('topics')
           expect(scope.action).to eq('write')
-          expect(scope.allowed_parameters['topic_id']).to eq('55')
+          expect(scope.allowed_parameters['topic_id']).to contain_exactly('55')
+        end
+
+        it 'allows multiple parameters separated by a comma' do
+          post "/admin/api/keys.json", params: {
+            key: {
+              description: "master key description",
+              scopes: [{ id: 'topics:write', topic_id: '55,33' }]
+            }
+          }
+          expect(response.status).to eq(200)
+
+          data = response.parsed_body
+          scope = ApiKeyScope.find_by(api_key_id: data.dig('key', 'id'))
+
+          expect(scope.allowed_parameters['topic_id']).to contain_exactly('55', '33')
         end
       end
 

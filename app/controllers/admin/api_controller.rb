@@ -92,15 +92,25 @@ class Admin::ApiController < Admin::AdminController
   def build_scopes
     params.require(:key)[:scopes].to_a.map do |scope_params|
       resource, action = scope_params[:id].split(':')
-      mapping = ApiKeyScope.scope_mappings.dig(resource.to_sym, action.to_sym)
-      raise Discourse::InvalidParameters if mapping.nil?
 
-      allowed_params = mapping[:params].nil? ? nil : scope_params.slice(*mapping[:params])
+      mapping = ApiKeyScope.scope_mappings.dig(resource.to_sym, action.to_sym)
+      raise Discourse::InvalidParameters if mapping.nil? # invalid mapping
+
       ApiKeyScope.new(
         resource: resource,
         action: action,
-        allowed_parameters: allowed_params
+        allowed_parameters: build_params(scope_params, mapping[:params])
       )
+    end
+  end
+
+  def build_params(scope_params, params)
+    return if params.nil?
+
+    scope_params.slice(*params).tap do |allowed_params|
+      allowed_params.each do |k, v|
+        v.blank? ? allowed_params.delete(k) : allowed_params[k] = v.split(',')
+      end
     end
   end
 
