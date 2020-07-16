@@ -215,6 +215,7 @@ export default Component.extend({
   @discourseComputed
   quoteSharingEnabled() {
     if (
+      this.site.mobileView ||
       this.siteSettings.share_quote_visibility === "none" ||
       this.quoteSharingSources.length === 0 ||
       (this.currentUser &&

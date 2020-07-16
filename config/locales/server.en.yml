@@ -2235,7 +2235,7 @@ en:
     gravatar_login_url: "Url relative to gravatar_base_url, which provides the user with the login to the Gravatar service"
 
     share_quote_buttons: "Determine which items appear in the quote sharing widget, and in what order."
-    share_quote_visibility: "Show quote sharing for nobody, anonymous users only or all users."
+    share_quote_visibility: "Determine when to show quote sharing buttons: never, to anonymous users only or all users. "
 
     errors:
       invalid_email: "Invalid email address."
