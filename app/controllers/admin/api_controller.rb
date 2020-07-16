@@ -18,8 +18,18 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def show
-    api_key = ApiKey.find_by!(id: params[:id])
+    api_key = ApiKey.includes(:api_key_scopes).find_by!(id: params[:id])
     render_serialized(api_key, ApiKeySerializer, root: 'key')
+  end
+
+  def scopes
+    scopes = ApiKeyScope.scope_mappings.reduce({}) do |memo, (resource, actions)|
+      memo.tap do |m|
+        m[resource] = actions.map { |k, v| { id: "#{resource}:#{k}", name: k, params: v[:params] } }
+      end
+    end
+
+    render json: { scopes: scopes }
   end
 
   def update
@@ -44,6 +54,7 @@ class Admin::ApiController < Admin::AdminController
     api_key = ApiKey.new(update_params)
     ApiKey.transaction do
       api_key.created_by = current_user
+      api_key.api_key_scopes = build_scopes
       if username = params.require(:key).permit(:username)[:username].presence
         api_key.user = User.find_by_username(username)
         raise Discourse::NotFound unless api_key.user
@@ -77,6 +88,31 @@ class Admin::ApiController < Admin::AdminController
   end
 
   private
+
+  def build_scopes
+    params.require(:key)[:scopes].to_a.map do |scope_params|
+      resource, action = scope_params[:id].split(':')
+
+      mapping = ApiKeyScope.scope_mappings.dig(resource.to_sym, action.to_sym)
+      raise Discourse::InvalidParameters if mapping.nil? # invalid mapping
+
+      ApiKeyScope.new(
+        resource: resource,
+        action: action,
+        allowed_parameters: build_params(scope_params, mapping[:params])
+      )
+    end
+  end
+
+  def build_params(scope_params, params)
+    return if params.nil?
+
+    scope_params.slice(*params).tap do |allowed_params|
+      allowed_params.each do |k, v|
+        v.blank? ? allowed_params.delete(k) : allowed_params[k] = v.split(',')
+      end
+    end
+  end
 
   def update_params
     editable_fields = [:description]

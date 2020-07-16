@@ -738,6 +738,10 @@ class Plugin::Instance
     end
   end
 
+  def add_api_key_scope(resource, action)
+    DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
+  end
+
   protected
 
   def self.js_path

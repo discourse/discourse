@@ -3610,6 +3610,15 @@ en:
         delete: Permenantly Delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
+        use_global_key: Global Key (allows all actions)
+        scopes:
+          title: Scopes
+          resource: Resource
+          action: Action
+          allowed_parameters: Allowed Parameters
+          optional_allowed_parameters: Allowed Parameters (optional)
+          any_parameter: (any parameter)
+
 
       web_hooks:
         title: "Webhooks"
