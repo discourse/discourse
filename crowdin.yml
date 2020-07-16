@@ -1,7 +1,0 @@
-files:
-  - source: /**/config/locales/server.en.yml
-    translation: /%original_path%/server.%locale_with_underscore%.yml
-  - source: /**/config/locales/client.en.yml
-    translation: /%original_path%/client.%locale_with_underscore%.yml
-  - source: '/public/*[0-9].html'
-    translation: /%original_path%/%file_name%.%locale_with_underscore%.%file_extension%
