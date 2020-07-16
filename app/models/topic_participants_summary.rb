@@ -27,7 +27,7 @@ class TopicParticipantsSummary
   end
 
   def top_participants
-    user_ids.map { |id| avatar_lookup[id] }.compact.uniq.take(PARTICIPANT_COUNT)
+    user_ids.map { |id| user_lookup[id] }.compact.uniq.take(PARTICIPANT_COUNT)
   end
 
   def user_ids
@@ -35,7 +35,7 @@ class TopicParticipantsSummary
     [topic.user_id] + topic.allowed_user_ids - [@user.id]
   end
 
-  def avatar_lookup
-    @avatar_lookup ||= options[:avatar_lookup] || AvatarLookup.new(user_ids)
+  def user_lookup
+    @user_lookup ||= options[:user_lookup] || UserLookup.new(user_ids)
   end
 end
