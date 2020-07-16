@@ -5,7 +5,10 @@ describe "TopicThumbnail" do
   let(:upload1) { Fabricate(:image_upload, width: 5000, height: 5000) }
   let(:topic) { Fabricate(:topic, image_upload: upload1) }
 
-  let(:upload2) { Fabricate(:image_upload, width: 5000, height: 5000, filesize: 8000) }
+  let(:upload2) { Fabricate(:image_upload, width: 5000, height: 5000).tap do |u|
+    u.filesize = (SiteSetting.max_image_size_kb + 100).kilobytes
+    u.save!(validate: false)
+  end}
   let(:topic2) { Fabricate(:topic, image_upload: upload2) }
 
   before do
