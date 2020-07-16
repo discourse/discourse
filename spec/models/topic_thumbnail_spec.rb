@@ -7,7 +7,6 @@ describe "TopicThumbnail" do
   let(:upload2) { Fabricate(:image_upload, width: 5000, height: 5000) }
   let(:topic2) { Fabricate(:topic, image_upload: upload2) }
 
-
   before do
     SiteSetting.create_thumbnails = true
     topic.generate_thumbnails!(extra_sizes: nil)
