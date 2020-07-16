@@ -4,9 +4,9 @@ require 'rails_helper'
 describe "TopicThumbnail" do
   let(:upload1) { Fabricate(:image_upload, width: 5000, height: 5000) }
   let(:topic) { Fabricate(:topic, image_upload: upload1) }
-
-  let(:upload2) { Fabricate(:image_upload, width: 5000, height: 5000, filesize: 8000) }
+  let(:upload2) { Fabricate(:image_upload, width: 5000, height: 5000) }
   let(:topic2) { Fabricate(:topic, image_upload: upload2) }
+
 
   before do
     SiteSetting.create_thumbnails = true
@@ -19,6 +19,7 @@ describe "TopicThumbnail" do
   end
 
   it "does not enque job if original image is too large" do
+    upload2.filesize = SiteSetting.max_image_size_kb.kilobytes + 1
     SiteSetting.create_thumbnails = true
     topic2.generate_thumbnails!(extra_sizes: nil)
 
