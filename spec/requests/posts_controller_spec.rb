@@ -1862,7 +1862,7 @@ describe PostsController do
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
 
-        expect(response.status).to eq(404)   
+        expect(response.status).to eq(404)
       end
     end
   end
