@@ -1779,6 +1779,28 @@ describe Guardian do
     end
   end
 
+  context "can_edit_staff_notes?" do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_edit_staff_notes?(nil)).to eq(false)
+    end
+
+    it 'returns true for a staff user' do
+      expect(Guardian.new(moderator).can_edit_staff_notes?(topic)).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      expect(Guardian.new(user).can_edit_staff_notes?(topic)).to eq(false)
+    end
+
+    it 'returns true for a group member with reviewable status' do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      topic.category.update!(reviewable_by_group_id: group.id)
+      expect(Guardian.new(user).can_edit_staff_notes?(topic)).to eq(true)
+    end
+  end
+
   context "can_create_topic?" do
     it 'returns true for staff user' do
       expect(Guardian.new(moderator).can_create_topic?(topic)).to eq(true)

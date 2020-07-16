@@ -6,9 +6,11 @@
   margin-left: 0;
 }
 
-.topic-post:first-child {
-  nav.post-controls .post-admin-menu {
-    bottom: -125px;
+.staff {
+  .topic-post:first-child {
+    nav.post-controls .post-admin-menu {
+      bottom: -125px;
+    }
   }
 }
 

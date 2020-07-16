@@ -52,7 +52,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     contents.push(buttonAtts);
   }
 
-  if (currentUser.staff) {
+  if (currentUser.staff || attrs.canEditStaffNotes) {
     if (attrs.noticeType) {
       contents.push({
         icon: "user-shield",

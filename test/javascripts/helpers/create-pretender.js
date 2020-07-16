@@ -259,6 +259,7 @@ export function applyDefaultHandlers(pretender) {
     const json = fixturesByUrl["/t/34/1.json"];
     json.details.can_archive_topic = true;
     json.details.can_close_topic = true;
+    json.details.can_edit_staff_notes = true;
 
     return response(json);
   });
