@@ -208,12 +208,12 @@ export default Controller.extend(bufferedProperty("model"), {
   _smallActionPostIds() {
     const smallActionsPostIds = new Set();
     const posts = this.get("model.postStream.posts");
-    if (posts) {
-      const small_action = this.site.get("post_types.small_action");
+    if (posts && this.site) {
+      const smallAction = this.site.get("post_types.small_action");
       const whisper = this.site.get("post_types.whisper");
       posts.forEach(post => {
         if (
-          post.post_type === small_action ||
+          post.post_type === smallAction ||
           (!post.cooked && post.post_type === whisper)
         ) {
           smallActionsPostIds.add(post.id);
