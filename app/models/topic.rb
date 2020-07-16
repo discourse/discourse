@@ -52,6 +52,7 @@ class Topic < ActiveRecord::Base
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
+    return nil unless original.filesize < SiteSetting.max_image_size_kb
     return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     infos = []
@@ -94,6 +95,7 @@ class Topic < ActiveRecord::Base
   def generate_thumbnails!(extra_sizes: [])
     return nil unless SiteSetting.create_thumbnails
     return nil unless original = image_upload
+    return nil unless original.filesize < SiteSetting.max_image_size_kb
     return nil unless original.width && original.height
     extra_sizes = [] unless extra_sizes.kind_of?(Array)
 
@@ -111,6 +113,7 @@ class Topic < ActiveRecord::Base
     if thumbnail.nil? &&
         image_upload &&
         SiteSetting.create_thumbnails &&
+        image_upload.filesize < SiteSetting.max_image_size_kb &&
         enqueue_if_missing &&
         Discourse.redis.set(thumbnail_job_redis_key([]), 1, nx: true, ex: 1.minute)
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id })
