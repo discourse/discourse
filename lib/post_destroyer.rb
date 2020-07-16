@@ -104,7 +104,9 @@ class PostDestroyer
   end
 
   def staff_recovered
-    @post.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@post.user_id
+    new_post_attrs = { user_deleted: false }
+    new_post_attrs[:user_id] = Discourse::SYSTEM_USER_ID if !@post.user_id
+    @post.update_columns(new_post_attrs)
     @post.recover!
 
     mark_topic_changed
