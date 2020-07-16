@@ -59,7 +59,7 @@ componentTest("without image", {
 });
 
 componentTest("with placeholder", {
-  template: "{{image-uploader placeholderUrl='/some/image.png'}}",
+  template: "{{image-uploader placeholderUrl='/images/avatar.png'}}",
 
   test(assert) {
     assert.equal(
