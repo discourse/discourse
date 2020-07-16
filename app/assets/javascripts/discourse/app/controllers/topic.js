@@ -965,16 +965,16 @@ export default Controller.extend(bufferedProperty("model"), {
         let users = this.get("model.details.allowed_users");
         let groups = this.get("model.details.allowed_groups");
 
-        let usernames = [];
-        users.forEach(user => usernames.push(user.username));
-        groups.forEach(group => usernames.push(group.name));
-        usernames = usernames.join();
+        let recipients = [];
+        users.forEach(user => recipients.push(user.username));
+        groups.forEach(group => recipients.push(group.name));
+        recipients = recipients.join();
 
         options = {
           action: Composer.PRIVATE_MESSAGE,
           archetypeId: "private_message",
           draftKey: post.topic.draft_key,
-          usernames: usernames
+          recipients
         };
       } else {
         options = {
