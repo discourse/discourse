@@ -639,8 +639,8 @@ describe Search do
     it "should return the right categories" do
       search = Search.execute("monkey")
 
-      expect(search.categories).to eq(
-        [category, ignored_category]
+      expect(search.categories).to contain_exactly(
+        category, ignored_category
       )
 
       expect(search.posts).to eq([category.topic.first_post, post])
@@ -683,12 +683,12 @@ describe Search do
         expect(search.posts.map(&:id)).to eq([post2.id, post.id])
 
         category.set_permissions({})
-        category.save
+        category.save!
         search = Search.execute("monkey")
 
-        expect(search.categories).to eq([
+        expect(search.categories).to contain_exactly(
           ignored_category, child_of_ignored_category
-        ])
+        )
 
         expect(search.posts.map(&:id)).to eq([
           child_of_ignored_category.topic.first_post,
