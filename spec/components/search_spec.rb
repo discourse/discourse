@@ -1513,19 +1513,14 @@ describe Search do
   context 'in:title' do
     it 'allows for search in title' do
       topic = Fabricate(:topic, title: 'I am testing a title search')
-      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
+      post2 = Fabricate(:post, topic: topic, raw: 'this is the second post', post_number: 2)
+      post = Fabricate(:post, topic: topic, raw: 'this is the first post', post_number: 1)
 
       results = Search.execute('title in:title')
-      expect(results.posts.length).to eq(1)
-
-      results = Search.execute('title t')
-      expect(results.posts.length).to eq(1)
+      expect(results.posts.map(&:id)).to eq([post.id])
 
       results = Search.execute('first in:title')
-      expect(results.posts.length).to eq(0)
-
-      results = Search.execute('first t')
-      expect(results.posts.length).to eq(0)
+      expect(results.posts).to eq([])
     end
 
     it 'works irrespective of the order' do
