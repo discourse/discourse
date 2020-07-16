@@ -4,8 +4,7 @@ const ORIGINAL_SETTINGS = {
   site_logo_url: "/assets/logo.png",
   site_logo_small_url: "/assets/logo-single.png",
   site_mobile_logo_url: "",
-  site_favicon_url:
-    "//meta.discourse.org/uploads/default/2499/79d53726406d87af.ico",
+  site_favicon_url: "/images/default-favicon.ico",
   allow_user_locale: false,
   suggested_topics: 7,
   ga_universal_tracking_code: "",
