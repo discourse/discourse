@@ -248,7 +248,7 @@ class Plugin::Instance
       hidden_method_name = :"#{method_name}_without_enable_check"
       klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.public_send(callback, options) do |*args|
+      klass.public_send(callback, **options) do |*args|
         public_send(hidden_method_name, *args) if plugin.enabled?
       end
 
