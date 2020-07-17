@@ -192,7 +192,7 @@ module Stylesheet
     end
 
     def category_css(category)
-      "body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+      "body.category-#{category.slug}, body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
     end
 
     def to_scss_variable(name, value)
