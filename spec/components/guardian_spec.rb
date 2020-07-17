@@ -561,6 +561,16 @@ describe Guardian do
         expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
       end
 
+      it 'returns false when user trust level not matches with SiteSetting' do
+        SiteSetting.min_trust_to_allow_pm_invite = 2
+        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to eq(false)
+      end
+
+      it 'returns true when user trust level matches with SiteSetting' do
+        SiteSetting.min_trust_to_allow_pm_invite = 2
+        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to eq(true)
+      end
+
       it 'returns false for normal user on private topic' do
         expect(Guardian.new(user).can_invite_to?(private_topic)).to be_falsey
       end
@@ -577,16 +587,6 @@ describe Guardian do
         SiteSetting.enable_personal_messages = false
         SiteSetting.min_trust_to_allow_pm_invite = 2
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
-      end
-
-      it 'returns false when user trust level not matches with SiteSetting' do
-        SiteSetting.min_trust_to_allow_pm_invite = 2
-        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to eq(false)
-      end
-
-      it 'returns true when user trust level matches with SiteSetting' do
-        SiteSetting.min_trust_to_allow_pm_invite = 2
-        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to eq(true)
       end
 
       describe 'for a private category for automatic and non-automatic group' do
