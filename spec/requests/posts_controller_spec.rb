@@ -1815,7 +1815,9 @@ describe PostsController do
     end
 
     describe 'group moderators' do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:user) { group_user.user }
+      let(:group) { group_user.group }
 
       before do
         SiteSetting.enable_category_group_moderation = true
@@ -1825,10 +1827,6 @@ describe PostsController do
       end
 
       it 'can create and remove notices as a group moderator' do
-        GroupUser.create!(group_id: group.id, user_id: user.id)
-
-        expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
-
         put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
 
         expect(response.status).to eq(200)
@@ -1846,11 +1844,8 @@ describe PostsController do
       end
 
       it 'prevents a group moderator from altering notes outside of their category' do
-        GroupUser.create!(group_id: group.id, user_id: user.id)
         moderatable_group = Fabricate(:group)
         topic.category.update!(reviewable_by_group_id: moderatable_group.id)
-
-        expect(Guardian.new(user).can_review_topic?(topic)).to eq(false)
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
 
@@ -1858,8 +1853,7 @@ describe PostsController do
       end
 
       it 'prevents a normal user from altering notes' do
-        expect(Guardian.new(user).can_review_topic?(topic)).to eq(false)
-
+        group_user.destroy!
         put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
 
         expect(response.status).to eq(404)

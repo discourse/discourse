@@ -146,7 +146,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   end
 
   def include_can_edit_staff_notes?
-    scope.can_edit_staff_notes?(object.topic)
+    @can_edit_staff_notes = scope.can_edit_staff_notes?(object.topic)
   end
 
   def include_can_publish_page?
