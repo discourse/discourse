@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SearchIndexer
-  POST_INDEX_VERSION = 3
+  POST_INDEX_VERSION = 4
   MIN_POST_REINDEX_VERSION = 3
   TOPIC_INDEX_VERSION = 3
   CATEGORY_INDEX_VERSION = 3
@@ -39,14 +39,19 @@ class SearchIndexer
       setweight(to_tsvector('#{stemmer}', coalesce(:d,'')), 'D')
     SQL
 
-    indexed_data = search_data.select { |d| d.length > 0 }.join(' ')
-
     ranked_params = {
       a: search_data[0],
       b: search_data[1],
       c: search_data[2],
       d: search_data[3],
     }
+
+    indexed_data =
+      if table.to_s == "post"
+        ranked_params[:d]
+      else
+        search_data.select { |d| d.length > 0 }.join(' ')
+      end
 
     tsvector = DB.query_single("SELECT #{ranked_index}", ranked_params)[0]
     additional_lexemes = []
@@ -105,7 +110,7 @@ class SearchIndexer
     scrubbed_cooked = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
 
     # a bit inconsitent that we use title as A and body as B when in
-    # the post index body is C
+    # the post index body is D
     update_index(table: 'topic', id: topic_id, raw_data: [title, scrubbed_cooked])
   end
 
@@ -165,9 +170,11 @@ class SearchIndexer
     end
 
     category_name = topic.category&.name if topic
+
     if topic
-      tags = topic.tags.select(:id, :name)
-      unless tags.empty?
+      tags = topic.tags.select(:id, :name).to_a
+
+      if tags.present?
         tag_names = (tags.map(&:name) + Tag.where(target_tag_id: tags.map(&:id)).pluck(:name)).join(' ')
       end
     end

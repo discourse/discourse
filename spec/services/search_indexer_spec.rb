@@ -20,12 +20,13 @@ describe SearchIndexer do
   it 'correctly indexes chinese' do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
-    expect(data.split(" ").length).to eq(1)
 
-    SearchIndexer.update_posts_index(post_id, "你好世界", "", "", nil)
+    SearchIndexer.update_posts_index(post_id, "", "", "", data)
 
-    raw_data = PostSearchData.where(post_id: post_id).pluck(:raw_data)[0]
-    expect(raw_data.split(' ').length).to eq(2)
+    post_search_data = PostSearchData.find_by(post_id: post_id)
+
+    expect(post_search_data.raw_data).to eq("你好 世界")
+    expect(post_search_data.search_data).to eq("'世界':2 '你好':1")
   end
 
   it 'extract youtube title' do
@@ -104,11 +105,6 @@ describe SearchIndexer do
     expect(raw_data).to eq("This is a test")
     expect(locale).to eq(SiteSetting.default_locale)
     expect(version).to eq(SearchIndexer::POST_INDEX_VERSION)
-
-    SearchIndexer.update_posts_index(post_id, "tester", "", nil, nil)
-
-    raw_data = PostSearchData.where(post_id: post_id).pluck(:raw_data)[0]
-    expect(raw_data).to eq("tester")
   end
 
   describe '.index' do
@@ -118,10 +114,10 @@ describe SearchIndexer do
       expect { post }.to change { PostSearchData.count }.by(1)
 
       expect { post.update!(raw: "this is new content") }
-        .to change { post.reload.post_search_data.raw_data }
+        .to change { post.reload.post_search_data.search_data }
 
       expect { post.update!(topic_id: Fabricate(:topic).id) }
-        .to change { post.reload.post_search_data.raw_data }
+        .to change { post.reload.post_search_data.search_data }
     end
 
     it 'should not index posts with empty raw' do
@@ -141,7 +137,7 @@ describe SearchIndexer do
       topic = post.topic
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{topic.category.name} https://meta.discourse.org/some.png"
+        "https://meta.discourse.org/some.png"
       )
     end
 
@@ -158,7 +154,7 @@ describe SearchIndexer do
       topic = post.topic
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{category.name} a https://cnn.com , http://stuff.com.au b http://abc.net/xyz=1 abc.net/xyz=1"
+        "a https://cnn.com , http://stuff.com.au b http://abc.net/xyz=1 abc.net/xyz=1"
       )
 
       expect(post.post_search_data.search_data).to eq(
@@ -190,7 +186,7 @@ describe SearchIndexer do
       )
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{topic.category.name} Let me see how I can fix this image white walkers GOT"
+        "Let me see how I can fix this image white walkers GOT"
       )
     end
   end

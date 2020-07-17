@@ -1128,7 +1128,7 @@ class Search
   end
 
   def posts_eager_loads(query)
-    query = query.includes(:user)
+    query = query.includes(:user, :post_search_data)
     topic_eager_loads = [:category]
 
     if SiteSetting.tagging_enabled
