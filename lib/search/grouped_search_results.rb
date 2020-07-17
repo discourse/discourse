@@ -58,7 +58,19 @@ class Search
     end
 
     def blurb(post)
-      GroupedSearchResults.blurb_for(post.cooked, @blurb_term, @blurb_length)
+      opts = {
+        term: @blurb_term,
+        blurb_length: @blurb_length
+      }
+
+      if post.post_search_data.version > SearchIndexer::MIN_POST_REINDEX_VERSION
+        opts[:cooked] = post.post_search_data.raw_data
+        opts[:scrub] = false
+      else
+        opts[:cooked] = post.cooked
+      end
+
+      GroupedSearchResults.blurb_for(**opts)
     end
 
     def add(object)
@@ -73,9 +85,9 @@ class Search
       end
     end
 
-    def self.blurb_for(cooked, term = nil, blurb_length = BLURB_LENGTH)
+    def self.blurb_for(cooked: nil, term: nil, blurb_length: BLURB_LENGTH, scrub: true)
       blurb = nil
-      cooked = SearchIndexer.scrub_html_for_search(cooked)
+      cooked = SearchIndexer.scrub_html_for_search(cooked) if scrub
 
       urls = Set.new
       cooked.scan(URI.regexp(%w{http https})) { urls << $& }

@@ -3,10 +3,22 @@
 require 'rails_helper'
 
 describe SearchController do
+  fab!(:awesome_topic) do
+    topic = Fabricate(:topic)
+    tag = Fabricate(:tag)
+    topic.tags << tag
+    Fabricate(:tag, target_tag_id: tag.id)
+    topic
+  end
 
   fab!(:awesome_post) do
     SearchIndexer.enable
-    Fabricate(:post, raw: 'this is my really awesome post')
+    Fabricate(:post, topic: awesome_topic, raw: 'this is my really awesome post')
+  end
+
+  fab!(:awesome_post_2) do
+    SearchIndexer.enable
+    Fabricate(:post, raw: 'this is my really awesome post 2')
   end
 
   fab!(:user) do
@@ -95,10 +107,14 @@ describe SearchController do
 
       data = response.parsed_body
 
-      expect(data['posts'].length).to eq(1)
-      expect(data['posts'][0]['id']).to eq(awesome_post.id)
-      expect(data['posts'][0]['blurb']).to eq(awesome_post.raw)
-      expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
+      expect(data['posts'].length).to eq(2)
+      expect(data['posts'][0]['id']).to eq(awesome_post_2.id)
+      expect(data['posts'][0]['blurb']).to eq(awesome_post_2.raw)
+      expect(data['topics'][0]['id']).to eq(awesome_post_2.topic_id)
+
+      expect(data['posts'][1]['id']).to eq(awesome_post.id)
+      expect(data['posts'][1]['blurb']).to eq(awesome_post.raw)
+      expect(data['topics'][1]['id']).to eq(awesome_post.topic_id)
     end
 
     it "can search correctly with advanced search filters" do
