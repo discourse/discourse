@@ -1519,20 +1519,20 @@ QUnit.test("emoji - emojiSet", assert => {
 });
 
 QUnit.test("emoji - registerEmoji", assert => {
-  registerEmoji("foo", "/foo.png");
+  registerEmoji("foo", "/images/d-logo-sketch.png");
 
   assert.cookedOptions(
     ":foo:",
     {},
-    `<p><img src="/foo.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
+    `<p><img src="/images/d-logo-sketch.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
   );
 
-  registerEmoji("bar", "/bar.png", "baz");
+  registerEmoji("bar", "/images/avatar.png", "baz");
 
   assert.cookedOptions(
     ":bar:",
     {},
-    `<p><img src="/bar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
+    `<p><img src="/images/avatar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
   );
 });
 

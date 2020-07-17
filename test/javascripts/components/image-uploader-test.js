@@ -3,7 +3,7 @@ moduleForComponent("image-uploader", { integration: true });
 
 componentTest("with image", {
   template:
-    "{{image-uploader imageUrl='/some/upload.png' placeholderUrl='/not/used.png'}}",
+    "{{image-uploader imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}",
 
   async test(assert) {
     assert.equal(
