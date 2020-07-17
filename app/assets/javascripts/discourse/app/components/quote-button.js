@@ -2,8 +2,16 @@ import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
 import toMarkdown from "discourse/lib/to-markdown";
-import { selectedText, selectedElement } from "discourse/lib/utilities";
+import {
+  selectedText,
+  selectedElement,
+  postUrl
+} from "discourse/lib/utilities";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import Sharing from "discourse/lib/sharing";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -201,8 +209,59 @@ export default Component.extend({
       .off("selectionchange.quote-button");
   },
 
-  click() {
+  @discourseComputed
+  quoteSharingEnabled() {
+    if (
+      this.site.mobileView ||
+      this.siteSettings.share_quote_visibility === "none" ||
+      this.quoteSharingSources.length === 0 ||
+      (this.currentUser &&
+        this.siteSettings.share_quote_visibility === "anonymous")
+    ) {
+      return false;
+    }
+
+    return true;
+  },
+
+  @discourseComputed("topic.isPrivateMessage")
+  quoteSharingSources(isPM) {
+    return Sharing.activeSources(
+      this.siteSettings.share_quote_buttons,
+      this.siteSettings.login_required || isPM
+    );
+  },
+
+  @discourseComputed
+  quoteSharingShowLabel() {
+    return this.quoteSharingSources.length > 1;
+  },
+
+  @discourseComputed("topic.{id,slug}", "quoteState")
+  shareUrl(topic, quoteState) {
+    return getAbsoluteURL(postUrl(topic.slug, topic.id, quoteState.postId));
+  },
+
+  @discourseComputed("topic.details.can_create_post", "composer.visible")
+  embedQuoteButton(canCreatePost, composerOpened) {
+    return (
+      (canCreatePost || composerOpened) &&
+      this.currentUser &&
+      this.currentUser.get("enable_quoting")
+    );
+  },
+
+  @action
+  insertQuote() {
     this.attrs.selectText().then(() => this._hideButton());
-    return false;
+  },
+
+  @action
+  share(source) {
+    Sharing.shareSource(source, {
+      url: this.shareUrl,
+      title: this.topic.title,
+      quote: window.getSelection().toString()
+    });
   }
 });

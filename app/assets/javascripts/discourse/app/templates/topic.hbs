@@ -397,7 +397,5 @@
 
   {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
-  {{#if embedQuoteButton}}
-    {{quote-button quoteState=quoteState selectText=(action "selectText")}}
-  {{/if}}
+  {{quote-button quoteState=quoteState selectText=(action "selectText") topic=model composerVisible=composer.visible}}
 {{/discourse-topic}}

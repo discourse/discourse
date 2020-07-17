@@ -127,6 +127,10 @@ module SiteSettings::Validations
     validate_error :secure_media_requirements if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end
 
+  def validate_share_quote_buttons(new_val)
+    validate_error :share_quote_facebook_requirements if new_val.include?("facebook") && SiteSetting.facebook_app_id.blank?
+  end
+
   def validate_enable_s3_inventory(new_val)
     validate_error :enable_s3_uploads_is_required if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end

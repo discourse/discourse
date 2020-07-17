@@ -1,1 +1,31 @@
-{{d-icon "quote-left"}} <span class="quote-label">{{i18n "post.quote_reply"}}</span>
+{{#if embedQuoteButton}}
+  {{d-button
+    class="btn-flat insert-quote"
+    action=(action "insertQuote")
+    icon="quote-left"
+    label="post.quote_reply"}}
+{{/if}}
+
+{{#if quoteSharingEnabled}}
+  <span class="quote-sharing">
+    {{#if quoteSharingShowLabel}}
+      {{d-button
+        icon="share"
+        label="post.quote_share"
+        class="btn-flat quote-share-label"}}
+    {{/if}}
+
+    <span class="quote-share-buttons">
+      {{#each quoteSharingSources as |source|}}
+        {{d-button
+          class="btn-flat"
+          action=(action "share" source)
+          translatedTitle=source.title
+          icon=source.icon}}
+      {{/each}}
+      {{plugin-outlet name="quote-share-buttons-after" tagName=""}}
+    </span>
+  </span>
+{{/if}}
+
+{{plugin-outlet name="quote-button-after" tagName=""}}

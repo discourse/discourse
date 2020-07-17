@@ -341,7 +341,7 @@ function selectText(selector) {
 QUnit.test("Quoting a quote keeps the original poster name", async assert => {
   await visit("/t/internationalization-localization/280");
   selectText("#post_5 blockquote");
-  await click(".quote-button");
+  await click(".quote-button .insert-quote");
 
   assert.ok(
     find(".d-editor-input")
@@ -386,7 +386,7 @@ QUnit.test(
   async assert => {
     await visit("/t/internationalization-localization/280");
     selectText("#post_5 .cooked");
-    await click(".quote-button");
+    await click(".quote-button .insert-quote");
 
     assert.ok(
       find(".d-editor-input")
