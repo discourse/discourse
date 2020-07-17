@@ -14,16 +14,16 @@ test("isMultiple", function(assert) {
 
   controller.setProperties({
     pollType: controller.multiplePollType,
-    pollOptionsCount: 1
+    pollOptions: "a"
   });
 
   assert.equal(controller.isMultiple, true, "it should be true");
 
-  controller.set("pollOptionsCount", 0);
+  controller.set("pollOptions", "");
 
   assert.equal(controller.isMultiple, false, "it should be false");
 
-  controller.setProperties({ pollType: "random", pollOptionsCount: 1 });
+  controller.setProperties({ pollType: "random", pollOptions: "b" });
 
   assert.equal(controller.isMultiple, false, "it should be false");
 });
@@ -70,7 +70,7 @@ test("pollMinOptions", function(assert) {
 
   controller.setProperties({
     pollType: controller.multiplePollType,
-    pollOptionsCount: 1
+    pollOptions: "z"
   });
 
   assert.deepEqual(
@@ -79,7 +79,7 @@ test("pollMinOptions", function(assert) {
     "it should return the right options"
   );
 
-  controller.set("pollOptionsCount", 2);
+  controller.set("pollOptions", "z\nx");
 
   assert.deepEqual(
     controller.pollMinOptions,
@@ -108,7 +108,7 @@ test("pollMaxOptions", function(assert) {
 
   controller.setProperties({
     pollType: controller.multiplePollType,
-    pollOptionsCount: 1,
+    pollOptions: "y",
     pollMin: 1
   });
 
@@ -118,7 +118,7 @@ test("pollMaxOptions", function(assert) {
     "it should return the right options"
   );
 
-  controller.set("pollOptionsCount", 2);
+  controller.set("pollOptions", "x\ny");
 
   assert.deepEqual(
     controller.pollMaxOptions,
@@ -170,7 +170,7 @@ test("disableInsert", function(assert) {
 
   assert.equal(controller.disableInsert, true, "it should be true");
 
-  controller.set("pollOptionsCount", 2);
+  controller.set("pollOptions", "a\nb");
 
   assert.equal(controller.disableInsert, false, "it should be false");
 
@@ -180,21 +180,21 @@ test("disableInsert", function(assert) {
 
   controller.setProperties({
     pollType: controller.regularPollType,
-    pollOptionsCount: 3
+    pollOptions: "a\nb\nc"
   });
 
   assert.equal(controller.disableInsert, false, "it should be false");
 
   controller.setProperties({
     pollType: controller.regularPollType,
-    pollOptionsCount: 0
+    pollOptions: ""
   });
 
   assert.equal(controller.disableInsert, true, "it should be true");
 
   controller.setProperties({
     pollType: controller.regularPollType,
-    pollOptionsCount: 1
+    pollOptions: "w"
   });
 
   assert.equal(controller.disableInsert, false, "it should be false");
@@ -278,7 +278,6 @@ test("multiple pollOutput", function(assert) {
   controller.siteSettings.poll_maximum_options = 20;
 
   controller.setProperties({
-    isMultiple: true,
     pollType: controller.multiplePollType,
     pollMin: 1,
     pollOptions: "\n\n1\n\n2"
