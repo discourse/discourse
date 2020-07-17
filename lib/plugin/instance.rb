@@ -192,8 +192,8 @@ class Plugin::Instance
 
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
-      AvatarLookup.lookup_columns << column
-      AvatarLookup.lookup_columns.uniq!
+      UserLookup.lookup_columns << column
+      UserLookup.lookup_columns.uniq!
     end
   end
 
