@@ -302,7 +302,7 @@ QUnit.test("update post time through advanced search ui", async assert => {
   await visit("/search");
 
   await fillIn(".search-query", "none");
-  await fillIn("#search-post-date .date-picker", "October 5, 2016");
+  await fillIn("#search-post-date .date-picker", "2016-10-05");
 
   const postTimeSelector = selectKit(
     ".search-advanced-options .select-kit#postTime"
