@@ -136,21 +136,35 @@ jobs:
           bin/rake parallel:create
           bin/rake parallel:migrate
 
-      - name: Rubocop
-        if: env.BUILD_TYPE == 'LINT'
+      - name: Rubocop (core and core plugins)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
         run: bundle exec rubocop .
 
-      - name: ESLint
-        if: env.BUILD_TYPE == 'LINT'
+      - name: Rubocop (all plugins)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
+        run: bundle exec rubocop plugins
+
+      - name: ESLint (core and core plugins)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
         run: |
           yarn eslint app/assets/javascripts test/javascripts
           yarn eslint --global I18n --ext .es6 plugins
 
-      - name: Prettier
-        if: env.BUILD_TYPE == 'LINT'
+      - name: ESLint (all plugins)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
+        run: yarn eslint --global I18n --ext .es6 plugins
+
+      - name: Prettier (core and core plugins)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
         run: |
           yarn prettier -v
           yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
+
+      - name: Prettier (all plugins)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
+        run: |
+          yarn prettier -v
+          yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"
 
       - name: Core English locale
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
