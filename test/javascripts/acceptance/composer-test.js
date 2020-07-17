@@ -112,7 +112,7 @@ QUnit.test("Composer upload placeholder", async assert => {
       original_filename: "test.png",
       thumbnail_width: 200,
       thumbnail_height: 300,
-      url: "/uploads/test1.ext"
+      url: "/images/avatar.png?1"
     }
   };
 
@@ -124,7 +124,7 @@ QUnit.test("Composer upload placeholder", async assert => {
       original_filename: "test.png",
       thumbnail_width: 100,
       thumbnail_height: 200,
-      url: "/uploads/test2.ext"
+      url: "/images/avatar.png?2"
     }
   };
 
@@ -136,7 +136,7 @@ QUnit.test("Composer upload placeholder", async assert => {
       original_filename: "image.png",
       thumbnail_width: 300,
       thumbnail_height: 400,
-      url: "/uploads/test3.ext"
+      url: "/images/avatar.png?3"
     }
   };
 
@@ -148,7 +148,7 @@ QUnit.test("Composer upload placeholder", async assert => {
       original_filename: "ima++ge.png",
       thumbnail_width: 300,
       thumbnail_height: 400,
-      url: "/uploads/test3.ext"
+      url: "/images/avatar.png?3"
     }
   };
 
@@ -177,19 +177,19 @@ QUnit.test("Composer upload placeholder", async assert => {
   await find(".wmd-controls").trigger("fileuploaddone", data2);
   assert.equal(
     find(".d-editor-input").val(),
-    "[Uploading: test.png...]() ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() [Uploading: image.png...]() "
+    "[Uploading: test.png...]() ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() [Uploading: image.png...]() "
   );
 
   await find(".wmd-controls").trigger("fileuploaddone", data3);
   assert.equal(
     find(".d-editor-input").val(),
-    "[Uploading: test.png...]() ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() ![image|300x400](/uploads/test3.ext) "
+    "[Uploading: test.png...]() ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() ![image|300x400](/images/avatar.png?3) "
   );
 
   await find(".wmd-controls").trigger("fileuploaddone", data1);
   assert.equal(
     find(".d-editor-input").val(),
-    "![test|200x300](/uploads/test1.ext) ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() ![image|300x400](/uploads/test3.ext) "
+    "![test|200x300](/images/avatar.png?1) ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() ![image|300x400](/images/avatar.png?3) "
   );
 });
 
@@ -760,7 +760,7 @@ QUnit.test("Image resizing buttons", async assert => {
     // 4 Wrapped in backquetes should not work
     "`![test|690x313](upload://test.png)`",
     // 5 html image - should not work
-    "<img src='http://someimage.jpg' wight='20' height='20'>",
+    "<img src='/images/avatar.png' wight='20' height='20'>",
     // 6 two images one the same line, but both are syntactically correct - both should work
     "![onTheSameLine1|200x200](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)",
     // 7 & 8 Identical images - both should work
@@ -771,7 +771,7 @@ QUnit.test("Image resizing buttons", async assert => {
     // 10 Image with markdown title - should work
     `![image|690x220](upload://test.png "image title")`,
     // 11 bbcode - should not work
-    "[img]http://example.com/image.jpg[/img]",
+    "[img]/images/avatar.png[/img]",
     // 12 Image with data attributes
     "![test|foo=bar|690x313,50%|bar=baz](upload://test.png)"
   ];
