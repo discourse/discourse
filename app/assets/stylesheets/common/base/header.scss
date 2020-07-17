@@ -238,8 +238,24 @@
   .extra-info {
     overflow: hidden;
     width: 100%;
-    -webkit-animation: fadein 0.5s;
     animation: fadein 0.5s;
+  }
+  .title-wrapper {
+    display: grid;
+    grid-template-areas:
+      "title title"
+      "categories extra";
+    grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
+    align-items: baseline;
+    .header-title {
+      grid-area: title;
+    }
+    .categories-wrapper {
+      grid-area: categories;
+    }
+    .topic-header-extra {
+      grid-area: extra;
+    }
   }
   .topic-link {
     color: $header_primary;
@@ -255,35 +271,22 @@
     }
   }
   .header-title {
-    // bottom margin here is very fragile, causes tag misalignment
-    margin: 0 0 0.15em 0;
-    .archetype-private_message & {
-      // PMs might have participant avatars in the header
-      margin: 0;
-    }
+    padding: 0;
+    margin: 0;
     font-size: $font-up-3;
     width: 100%;
   }
   .categories-wrapper {
     display: inline-flex;
-    align-items: center;
-    // Protection against a very rare edge case in mobile header for topics with
-    // very long category names and lots of tags at the same time
-    max-width: 80%;
     flex: 0 1 auto;
-    min-width: 1px;
+    @include ellipsis;
     .badge-wrapper {
       @include ellipsis;
     }
   }
   .badge-wrapper {
-    margin-right: 8px;
-  }
-  .badge-wrapper.bullet {
-    .badge-category-parent-bg,
-    .badge-category-bg {
-      min-width: 5px;
-    }
+    margin-right: 0.7em;
+    min-width: 2.75em; // min needed for ellipsis
   }
   .badge-wrapper {
     &.bullet,
@@ -303,6 +306,7 @@
       @include ellipsis;
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
+        vertical-align: unset;
       }
     }
   }
@@ -316,8 +320,8 @@ $mobile-avatar-height: 1.532em;
 .topic-header-participants {
   display: flex;
   align-items: center;
-  overflow: hidden;
   font-size: $font-down-1;
+  @include ellipsis;
   &:not(:first-child) {
     margin-left: 5px;
   }
@@ -346,6 +350,7 @@ $mobile-avatar-height: 1.532em;
     padding: 0 5px;
     border: 1px solid $primary-low;
     border-radius: 0.25em;
+    min-width: 3em;
     @include ellipsis;
 
     .icon {

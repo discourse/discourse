@@ -407,9 +407,7 @@ createWidget("post-contents", {
       result.push(
         h("section.embedded-posts.bottom", [
           repliesBelow.map(p => {
-            return this.attach("embedded-post", p, {
-              model: this.store.createRecord("post", p)
-            });
+            return this.attach("embedded-post", p, { model: p.asPost });
           }),
           this.attach("button", {
             title: "post.collapse",
@@ -449,8 +447,10 @@ createWidget("post-contents", {
       .find("post-reply", { postId: this.attrs.id })
       .then(posts => {
         this.state.repliesBelow = posts.map(p => {
-          p.shareUrl = `${topicUrl}/${p.post_number}`;
-          return transformWithCallbacks(p);
+          let result = transformWithCallbacks(p);
+          result.shareUrl = `${topicUrl}/${p.post_number}`;
+          result.asPost = this.store.createRecord("post", p);
+          return result;
         });
       });
   },
@@ -565,7 +565,7 @@ createWidget("post-article", {
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map(p => {
         return this.attach("embedded-post", p, {
-          model: this.store.createRecord("post", p),
+          model: p.asPost,
           state: { above: true }
         });
       });

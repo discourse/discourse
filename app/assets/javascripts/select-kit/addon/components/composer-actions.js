@@ -334,7 +334,7 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     options.action = PRIVATE_MESSAGE;
-    options.usernames = usernames;
+    options.recipients = usernames;
     options.archetypeId = "private_message";
     options.skipDraftCheck = true;
 

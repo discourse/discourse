@@ -9,7 +9,7 @@ export default {
         category: "required",
         preview: null,
         secret: false,
-        type: "string",
+        type: "string"
       },
       {
         setting: "contact_email",
@@ -20,7 +20,7 @@ export default {
         category: "required",
         preview: null,
         secret: false,
-        type: "email",
+        type: "email"
       },
       {
         setting: "site_contact_username",
@@ -31,17 +31,17 @@ export default {
         category: "required",
         preview: null,
         secret: false,
-        type: "username",
+        type: "username"
       },
       {
         setting: "logo",
         description: "Some logo",
         default: "",
-        value: "/some/image",
+        value: "/images/avatar.png",
         category: "required",
         preview: null,
         secret: false,
-        type: "upload",
+        type: "upload"
       },
       {
         setting: "top_menu",
@@ -61,24 +61,24 @@ export default {
           "categories",
           "read",
           "posted",
-          "bookmarks",
+          "bookmarks"
         ],
-        list_type: "compact",
+        list_type: "compact"
       },
       {
         setting: "plugin_logo",
         description: "Some plugin logo",
         default: "",
-        value: "/some/image",
+        value: "/images/avatar.png",
         category: "required",
         preview: null,
         secret: false,
         type: "upload",
-        plugin: "discourse-logo",
-      },
+        plugin: "discourse-logo"
+      }
     ],
     diags: {
-      last_message_processed: null,
-    },
-  },
+      last_message_processed: null
+    }
+  }
 };

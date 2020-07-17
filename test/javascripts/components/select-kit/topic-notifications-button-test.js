@@ -5,7 +5,8 @@ import Topic from "discourse/models/topic";
 
 const buildTopic = function(level, archetype = "regular") {
   return Topic.create({
-    id: 4563,
+    id: 4563
+  }).updateFromJson({
     title: "Qunit Test Topic",
     details: {
       notification_level: level

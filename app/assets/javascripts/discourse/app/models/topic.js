@@ -554,6 +554,7 @@ const Topic = RestModel.extend({
       }
     }
     keys.forEach(key => this.set(key, json[key]));
+    return this;
   },
 
   reload() {

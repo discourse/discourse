@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import EmberObject, { computed, get } from "@ember/object";
+import EmberObject, { get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { equal, and, or, not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
@@ -18,18 +18,6 @@ import User from "discourse/models/user";
 import showModal from "discourse/lib/show-modal";
 
 const Post = RestModel.extend({
-  // TODO: Remove this once one instantiate all `Discourse.Post` models via the store.
-  siteSettings: computed({
-    get() {
-      return Discourse.SiteSettings;
-    },
-
-    // prevents model created from json to overridde this property
-    set() {
-      return Discourse.SiteSettings;
-    }
-  }),
-
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();

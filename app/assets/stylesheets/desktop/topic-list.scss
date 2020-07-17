@@ -205,9 +205,11 @@
   z-index: z("dropdown");
   @supports (position: sticky) {
     @media screen and (min-width: 1250px) {
-      position: absolute;
-      right: -60px;
-      top: 0;
+      body:not(.search-page) & {
+        position: absolute;
+        right: -60px;
+        top: 0;
+      }
     }
   }
 }

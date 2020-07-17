@@ -25,6 +25,7 @@ import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import User from "discourse/models/user";
 import { mapRoutes } from "discourse/mapping-router";
+import { currentSettings, mergeSettings } from "helpers/site-settings";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -107,7 +108,7 @@ export function controllerModule(name, args = {}) {
     setup() {
       this.registry.register("router:main", mapRoutes());
       let controller = this.subject();
-      controller.siteSettings = Discourse.SiteSettings;
+      controller.siteSettings = currentSettings();
       if (args.setupController) {
         args.setupController(controller);
       }
@@ -119,8 +120,7 @@ export function controllerModule(name, args = {}) {
 export function discourseModule(name, hooks) {
   QUnit.module(name, {
     beforeEach() {
-      // Give us an API to change site settings without `Discourse.SiteSettings` in tests
-      this.siteSettings = Discourse.SiteSettings;
+      this.siteSettings = currentSettings();
       if (hooks && hooks.beforeEach) {
         hooks.beforeEach.call(this);
       }
@@ -161,16 +161,12 @@ export function acceptance(name, options) {
       }
 
       if (options.settings) {
-        Discourse.SiteSettings = jQuery.extend(
-          true,
-          Discourse.SiteSettings,
-          options.settings
-        );
+        mergeSettings(options.settings);
       }
-      this.siteSettings = Discourse.SiteSettings;
+      this.siteSettings = currentSettings();
 
       if (options.site) {
-        resetSite(Discourse.SiteSettings, options.site);
+        resetSite(currentSettings(), options.site);
       }
 
       clearOutletCache();
@@ -186,7 +182,7 @@ export function acceptance(name, options) {
       flushMap();
       localStorage.clear();
       User.resetCurrent();
-      resetSite(Discourse.SiteSettings);
+      resetSite(currentSettings());
       resetExtraClasses();
       clearOutletCache();
       clearHTMLCache();

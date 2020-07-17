@@ -1025,33 +1025,6 @@ QUnit.test("attachment - mapped url - secure media enabled", assert => {
   );
 });
 
-QUnit.test("video - secure media enabled", assert => {
-  assert.cookedOptions(
-    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
-    { siteSettings: { secure_media: true } },
-    `<p><div class="video-container">
-    <p class="video-description">baby shark</p>
-    <video width="100%" height="100%" preload="none" controls>
-      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
-      <a href="/404">/404</a>
-    </video>
-  </div></p>`,
-    "It returns the correct video player HTML"
-  );
-});
-
-QUnit.test("audio - secure media enabled", assert => {
-  assert.cookedOptions(
-    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
-    { siteSettings: { secure_media: true } },
-    `<p><audio preload="none" controls>
-    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
-    <a href="/404">/404</a>
-  </audio></p>`,
-    "It returns the correct audio player HTML"
-  );
-});
-
 QUnit.test("video", assert => {
   assert.cooked(
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
@@ -1084,7 +1057,7 @@ QUnit.test("video - mapped url - secure media enabled", assert => {
     },
     `<p><div class="video-container">
     <p class="video-description">baby shark</p>
-    <video width="100%" height="100%" preload="none" controls>
+    <video width="100%" height="100%" preload="metadata" controls>
       <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
       <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
     </video>
@@ -1120,7 +1093,7 @@ QUnit.test("audio - mapped url - secure media enabled", assert => {
       siteSettings: { secure_media: true },
       lookupUploadUrls: lookupUploadUrls
     },
-    `<p><audio preload="none" controls>
+    `<p><audio preload="metadata" controls>
     <source src="/secure-media-uploads/original/3X/c/b/test.mp3">
     <a href="/secure-media-uploads/original/3X/c/b/test.mp3">/secure-media-uploads/original/3X/c/b/test.mp3</a>
   </audio></p>`,

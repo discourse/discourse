@@ -15,6 +15,7 @@ describe UserEmail do
     it "allows multiple secondary emails" do
       Fabricate(:secondary_email, user: user, primary: false)
       Fabricate(:secondary_email, user: user, primary: false)
+
       expect(user.user_emails.count).to eq 3
     end
 

@@ -764,6 +764,10 @@ class Category < ActiveRecord::Base
   end
 
   def index_search
+    if saved_change_to_attribute?(:name)
+      SearchIndexer.queue_category_posts_reindex(self.id)
+    end
+
     SearchIndexer.index(self)
   end
 

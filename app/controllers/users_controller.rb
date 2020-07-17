@@ -230,6 +230,7 @@ class UsersController < ApplicationController
     User.transaction do
       old_primary.update!(primary: false)
       new_primary.update!(primary: true)
+      DiscourseEvent.trigger(:user_updated, user)
 
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_update_email(user)
@@ -259,6 +260,7 @@ class UsersController < ApplicationController
     ActiveRecord::Base.transaction do
       if user_email
         user_email.destroy
+        DiscourseEvent.trigger(:user_updated, user)
       elsif
         user.email_change_requests.where(new_email: params[:email]).destroy_all
       end
@@ -348,6 +350,8 @@ class UsersController < ApplicationController
   def summary
     @user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     raise Discourse::NotFound unless guardian.can_see_profile?(@user)
+
+    response.headers['X-Robots-Tag'] = 'noindex'
 
     respond_to do |format|
       format.html do

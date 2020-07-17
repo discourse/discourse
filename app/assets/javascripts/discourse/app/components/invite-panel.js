@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import EmberObject, { computed } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
@@ -30,16 +30,12 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-
-    this.set("groupIds", []);
-    Group.findAll().then(groups => {
-      this.set("allGroups", groups.filterBy("automatic", false));
-    });
+    this.setDefaultSelectedGroups();
+    this.setGroupOptions();
   },
 
   willDestroyElement() {
     this._super(...arguments);
-
     this.reset();
   },
 
@@ -304,19 +300,124 @@ export default Component.extend({
     });
   },
 
-  actions: {
-    createInvite() {
-      if (this.disabled) {
-        return;
+  setDefaultSelectedGroups() {
+    this.set("groupIds", []);
+  },
+
+  setGroupOptions() {
+    Group.findAll().then(groups => {
+      this.set("allGroups", groups.filterBy("automatic", false));
+    });
+  },
+
+  @action
+  createInvite() {
+    if (this.disabled) {
+      return;
+    }
+
+    const groupIds = this.groupIds;
+    const userInvitedController = this.userInvitedShow;
+
+    const model = this.inviteModel;
+    model.setProperties({ saving: true, error: false });
+
+    const onerror = e => {
+      if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+        this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+      } else {
+        this.set(
+          "errorMessage",
+          this.isPM
+            ? I18n.t("topic.invite_private.error")
+            : I18n.t("topic.invite_reply.error")
+        );
       }
+      model.setProperties({ saving: false, error: true });
+    };
 
-      const groupIds = this.groupIds;
-      const userInvitedController = this.userInvitedShow;
+    if (this.hasGroups) {
+      return this.inviteModel
+        .createGroupInvite(this.emailOrUsername.trim())
+        .then(data => {
+          model.setProperties({ saving: false, finished: true });
+          this.get("inviteModel.details.allowed_groups").pushObject(
+            EmberObject.create(data.group)
+          );
+          this.appEvents.trigger("post-stream:refresh");
+        })
+        .catch(onerror);
+    } else {
+      return this.inviteModel
+        .createInvite(this.emailOrUsername.trim(), groupIds, this.customMessage)
+        .then(result => {
+          model.setProperties({ saving: false, finished: true });
+          if (!this.invitingToTopic && userInvitedController) {
+            Invite.findInvitedBy(
+              this.currentUser,
+              userInvitedController.get("filter")
+            ).then(inviteModel => {
+              userInvitedController.setProperties({
+                model: inviteModel,
+                totalInvites: inviteModel.invites.length
+              });
+            });
+          } else if (this.isPM && result && result.user) {
+            this.get("inviteModel.details.allowed_users").pushObject(
+              EmberObject.create(result.user)
+            );
+            this.appEvents.trigger("post-stream:refresh");
+          } else if (
+            this.invitingToTopic &&
+            emailValid(this.emailOrUsername.trim()) &&
+            result &&
+            result.user
+          ) {
+            this.set("invitingExistingUserToTopic", true);
+          }
+        })
+        .catch(onerror);
+    }
+  },
 
-      const model = this.inviteModel;
-      model.setProperties({ saving: true, error: false });
+  @action
+  generateInvitelink() {
+    if (this.disabled) {
+      return;
+    }
 
-      const onerror = e => {
+    const groupIds = this.groupIds;
+    const userInvitedController = this.userInvitedShow;
+    const model = this.inviteModel;
+    model.setProperties({ saving: true, error: false });
+
+    let topicId;
+    if (this.invitingToTopic) {
+      topicId = this.get("inviteModel.id");
+    }
+
+    return model
+      .generateInviteLink(this.emailOrUsername.trim(), groupIds, topicId)
+      .then(result => {
+        model.setProperties({
+          saving: false,
+          finished: true,
+          inviteLink: result
+        });
+
+        if (userInvitedController) {
+          Invite.findInvitedBy(
+            this.currentUser,
+            userInvitedController.get("filter")
+          ).then(inviteModel => {
+            userInvitedController.setProperties({
+              model: inviteModel,
+              totalInvites: inviteModel.invites.length
+            });
+          });
+        }
+      })
+      .catch(e => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
           this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
         } else {
@@ -328,130 +429,33 @@ export default Component.extend({
           );
         }
         model.setProperties({ saving: false, error: true });
-      };
-
-      if (this.hasGroups) {
-        return this.inviteModel
-          .createGroupInvite(this.emailOrUsername.trim())
-          .then(data => {
-            model.setProperties({ saving: false, finished: true });
-            this.get("inviteModel.details.allowed_groups").pushObject(
-              EmberObject.create(data.group)
-            );
-            this.appEvents.trigger("post-stream:refresh");
-          })
-          .catch(onerror);
-      } else {
-        return this.inviteModel
-          .createInvite(
-            this.emailOrUsername.trim(),
-            groupIds,
-            this.customMessage
-          )
-          .then(result => {
-            model.setProperties({ saving: false, finished: true });
-            if (!this.invitingToTopic && userInvitedController) {
-              Invite.findInvitedBy(
-                this.currentUser,
-                userInvitedController.get("filter")
-              ).then(inviteModel => {
-                userInvitedController.setProperties({
-                  model: inviteModel,
-                  totalInvites: inviteModel.invites.length
-                });
-              });
-            } else if (this.isPM && result && result.user) {
-              this.get("inviteModel.details.allowed_users").pushObject(
-                EmberObject.create(result.user)
-              );
-              this.appEvents.trigger("post-stream:refresh");
-            } else if (
-              this.invitingToTopic &&
-              emailValid(this.emailOrUsername.trim()) &&
-              result &&
-              result.user
-            ) {
-              this.set("invitingExistingUserToTopic", true);
-            }
-          })
-          .catch(onerror);
-      }
-    },
-
-    generateInvitelink() {
-      if (this.disabled) {
-        return;
-      }
-
-      const groupIds = this.groupIds;
-      const userInvitedController = this.userInvitedShow;
-      const model = this.inviteModel;
-      model.setProperties({ saving: true, error: false });
-
-      let topicId;
-      if (this.invitingToTopic) {
-        topicId = this.get("inviteModel.id");
-      }
-
-      return model
-        .generateInviteLink(this.emailOrUsername.trim(), groupIds, topicId)
-        .then(result => {
-          model.setProperties({
-            saving: false,
-            finished: true,
-            inviteLink: result
-          });
-
-          if (userInvitedController) {
-            Invite.findInvitedBy(
-              this.currentUser,
-              userInvitedController.get("filter")
-            ).then(inviteModel => {
-              userInvitedController.setProperties({
-                model: inviteModel,
-                totalInvites: inviteModel.invites.length
-              });
-            });
-          }
-        })
-        .catch(e => {
-          if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-            this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
-          } else {
-            this.set(
-              "errorMessage",
-              this.isPM
-                ? I18n.t("topic.invite_private.error")
-                : I18n.t("topic.invite_reply.error")
-            );
-          }
-          model.setProperties({ saving: false, error: true });
-        });
-    },
-
-    showCustomMessageBox() {
-      this.toggleProperty("hasCustomMessage");
-      if (this.hasCustomMessage) {
-        if (this.inviteModel === this.currentUser) {
-          this.set(
-            "customMessage",
-            I18n.t("invite.custom_message_template_forum")
-          );
-        } else {
-          this.set(
-            "customMessage",
-            I18n.t("invite.custom_message_template_topic")
-          );
-        }
-      } else {
-        this.set("customMessage", null);
-      }
-    },
-
-    searchContact() {
-      getNativeContact(["email"], false).then(result => {
-        this.set("emailOrUsername", result[0].email[0]);
       });
+  },
+
+  @action
+  showCustomMessageBox() {
+    this.toggleProperty("hasCustomMessage");
+    if (this.hasCustomMessage) {
+      if (this.inviteModel === this.currentUser) {
+        this.set(
+          "customMessage",
+          I18n.t("invite.custom_message_template_forum")
+        );
+      } else {
+        this.set(
+          "customMessage",
+          I18n.t("invite.custom_message_template_topic")
+        );
+      }
+    } else {
+      this.set("customMessage", null);
     }
+  },
+
+  @action
+  searchContact() {
+    getNativeContact(["email"], false).then(result => {
+      this.set("emailOrUsername", result[0].email[0]);
+    });
   }
 });

@@ -35,6 +35,12 @@ export default {
       app.inject(t, "messageBus", "message-bus:main")
     );
 
+    const siteSettings = app.SiteSettings;
+    app.register("site-settings:main", siteSettings, { instantiate: false });
+    ALL_TARGETS.concat("service").forEach(t =>
+      app.inject(t, "siteSettings", "site-settings:main")
+    );
+
     const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
     app.currentUser = currentUser;
@@ -48,12 +54,6 @@ export default {
     });
     ALL_TARGETS.forEach(t =>
       app.inject(t, "topicTrackingState", "topic-tracking-state:main")
-    );
-
-    const siteSettings = app.SiteSettings;
-    app.register("site-settings:main", siteSettings, { instantiate: false });
-    ALL_TARGETS.concat("service").forEach(t =>
-      app.inject(t, "siteSettings", "site-settings:main")
     );
 
     const site = Site.current();

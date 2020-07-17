@@ -89,7 +89,7 @@ widgetTest("reviewable content", {
   },
 
   test(assert) {
-    assert.equal(this.$(".reviewables").text(), "5");
+    assert.equal(find(".reviewables").text(), "5");
   }
 });
 
@@ -177,10 +177,22 @@ widgetTest("top categories", {
           c.set("notification_level", NotificationLevels.MUTED);
         } else if (unreadCategoryIds.length === 0) {
           unreadCategoryIds.push(c.id);
-          c.set("unreadTopics", 5);
+          for (let i = 0; i < 5; i++) {
+            c.topicTrackingState.states["t123" + i] = {
+              category_id: c.id,
+              last_read_post_number: 1,
+              highest_post_number: 2,
+              notification_level: NotificationLevels.TRACKING
+            };
+          }
         } else {
           unreadCategoryIds.splice(0, 0, c.id);
-          c.set("newTopics", 10);
+          for (let i = 0; i < 10; i++) {
+            c.topicTrackingState.states["t321" + i] = {
+              category_id: c.id,
+              last_read_post_number: null
+            };
+          }
           return false;
         }
       }

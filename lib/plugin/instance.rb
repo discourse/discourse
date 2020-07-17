@@ -248,7 +248,7 @@ class Plugin::Instance
       hidden_method_name = :"#{method_name}_without_enable_check"
       klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.public_send(callback, options) do |*args|
+      klass.public_send(callback, **options) do |*args|
         public_send(hidden_method_name, *args) if plugin.enabled?
       end
 
@@ -736,6 +736,10 @@ class Plugin::Instance
     reloadable_patch do
       Reviewable.add_custom_filter(filter)
     end
+  end
+
+  def add_api_key_scope(resource, action)
+    DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
 
   protected
