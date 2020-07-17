@@ -74,6 +74,8 @@ export default {
 
       if (source.shouldOpenInPopup) {
         window.open(url, "", stringOptions);
+      } else if (source.id === "email") {
+        window.location.href = url;
       } else {
         window.open(url, "_blank");
       }

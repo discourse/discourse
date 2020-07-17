@@ -240,7 +240,7 @@ export default Component.extend({
     return this.quoteSharingSources.length > 1;
   },
 
-  @discourseComputed("topic", "quoteState")
+  @discourseComputed("topic.{id,slug}", "quoteState")
   shareUrl(topic, quoteState) {
     return getAbsoluteURL(postUrl(topic.slug, topic.id, quoteState.postId));
   },

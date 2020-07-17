@@ -41,14 +41,15 @@ export default {
       id: "email",
       icon: "envelope-square",
       title: I18n.t("share.email"),
-      generateUrl: function(link, title) {
+      generateUrl: function(link, title, quote = "") {
+        const body = quote ? `${quote} \n\n ${link}` : link;
         return (
           "mailto:?to=&subject=" +
           encodeURIComponent(
             "[" + Discourse.SiteSettings.title + "] " + title
           ) +
           "&body=" +
-          encodeURIComponent(link)
+          encodeURIComponent(body)
         );
       },
       showInPrivateContext: true
