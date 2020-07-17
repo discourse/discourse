@@ -97,7 +97,7 @@ export default Component.extend({
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
     const isMobileDevice = this.site.isMobileDevice;
-    const { isIOS, isAndroid, isSafari, isOpera, isIE11 } = this.capabilities;
+    const { isIOS, isAndroid, isSafari, isOpera } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
     // Don't mess with the original range as it results in weird behaviours
@@ -125,10 +125,7 @@ export default Component.extend({
     const parent = markerElement.parentNode;
     parent.removeChild(markerElement);
     // merge back all text nodes so they don't get messed up
-    if (!isIE11) {
-      // Skip this fix in IE11 - .normalize causes the selection to change
-      parent.normalize();
-    }
+    parent.normalize();
 
     // work around Safari that would sometimes lose the selection
     if (isSafari) {

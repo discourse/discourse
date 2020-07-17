@@ -1,4 +1,0 @@
-en:
-  site_settings:
-    discourse_unsupported_browser_enabled: "Enable temporary support for old browsers. This plugin is an effort to maintain compatibility with older browsers and will be completely removed in the near future."
-    browser_deprecation_warning: "Show a warning to deprecated browsers"

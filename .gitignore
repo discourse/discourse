@@ -54,7 +54,6 @@ bootsnap-compile-cache/
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
 !/plugins/discourse-local-dates
-!/plugins/discourse-unsupported-browser
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated

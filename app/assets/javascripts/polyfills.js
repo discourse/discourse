@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-// Any IE only polyfill should be moved in discourse-unsupported-browser plugin
-
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/flags#Polyfill
 // IE and EDGE
 if (RegExp.prototype.flags === undefined) {
