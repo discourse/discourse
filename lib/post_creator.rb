@@ -390,7 +390,7 @@ class PostCreator
     return if !@post.topic_id
     @user.bookmarks.where(
       topic_id: @post.topic_id,
-      delete_option: Bookmark.delete_options[:on_owner_reply]
+      auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply]
     ).destroy_all
   end
 

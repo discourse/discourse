@@ -654,10 +654,10 @@ describe PostCreator do
       end
     end
 
-    context "when the user has bookmarks with delete_option on_owner_reply" do
+    context "when the user has bookmarks with auto_delete_preference on_owner_reply" do
       before do
-        Fabricate(:bookmark, topic: topic, user: user, delete_option: Bookmark.delete_options[:on_owner_reply])
-        Fabricate(:bookmark, topic: topic, user: user, delete_option: Bookmark.delete_options[:on_owner_reply])
+        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
         Fabricate(:bookmark, topic: topic, user: user)
         Fabricate(:bookmark, user: user)
       end

@@ -54,7 +54,7 @@ class PostSerializer < BasicPostSerializer
              :bookmark_id,
              :bookmark_reminder_type,
              :bookmark_name,
-             :bookmark_delete_option,
+             :bookmark_auto_delete_preference,
              :raw,
              :actions_summary,
              :moderator?,
@@ -335,7 +335,7 @@ class PostSerializer < BasicPostSerializer
     bookmarked
   end
 
-  def include_bookmark_delete_option?
+  def include_bookmark_auto_delete_preference?
     bookmarked
   end
 
@@ -365,8 +365,8 @@ class PostSerializer < BasicPostSerializer
     post_bookmark&.name
   end
 
-  def bookmark_delete_option
-    post_bookmark&.delete_option
+  def bookmark_auto_delete_preference
+    post_bookmark&.auto_delete_preference
   end
 
   def bookmark_id

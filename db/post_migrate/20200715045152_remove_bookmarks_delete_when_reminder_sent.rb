@@ -6,6 +6,6 @@ class RemoveBookmarksDeleteWhenReminderSent < ActiveRecord::Migration[6.0]
   end
 
   def down
-    raise ActiveRecord::IrreversibleMigration
+    add_column :bookmarks, :delete_when_reminder_sent, :boolean, default: false
   end
 end

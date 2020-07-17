@@ -45,11 +45,11 @@ class Bookmark < ActiveRecord::Base
   end
 
   def delete_when_reminder_sent?
-    self.delete_option == Bookmark.delete_options[:when_reminder_sent]
+    self.auto_delete_preference == Bookmark.auto_delete_preferences[:when_reminder_sent]
   end
 
   def delete_on_owner_reply?
-    self.delete_option == Bookmark.delete_options[:on_owner_reply]
+    self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
   end
 
   scope :pending_reminders, ->(before_time = Time.now.utc) do
@@ -73,8 +73,8 @@ class Bookmark < ActiveRecord::Base
     )
   end
 
-  def self.delete_options
-    @delete_options ||= Enum.new(
+  def self.auto_delete_preferences
+    @auto_delete_preferences ||= Enum.new(
       never: 0,
       when_reminder_sent: 1,
       on_owner_reply: 2
@@ -107,7 +107,7 @@ end
 #  updated_at                :datetime         not null
 #  reminder_last_sent_at     :datetime
 #  reminder_set_at           :datetime
-#  delete_option             :integer
+#  auto_delete_preference             :integer
 #
 # Indexes
 #

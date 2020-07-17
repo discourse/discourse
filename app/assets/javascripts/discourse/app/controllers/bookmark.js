@@ -27,18 +27,18 @@ const LATER_TODAY_CUTOFF_HOUR = 17;
 const LATER_TODAY_MAX_HOUR = 18;
 const MOMENT_MONDAY = 1;
 const MOMENT_THURSDAY = 4;
-const DELETE_OPTIONS = [
+const AUTO_DELETE_PREFERENCES = [
   {
     id: 0,
-    name: I18n.t("bookmarks.delete_option.never")
+    name: I18n.t("bookmarks.auto_delete_preference.never")
   },
   {
     id: 1,
-    name: I18n.t("bookmarks.delete_option.when_reminder_sent")
+    name: I18n.t("bookmarks.auto_delete_preference.when_reminder_sent")
   },
   {
     id: 2,
-    name: I18n.t("bookmarks.delete_option.on_owner_reply")
+    name: I18n.t("bookmarks.auto_delete_preference.on_owner_reply")
   }
 ];
 
@@ -155,14 +155,14 @@ export default Controller.extend(ModalFunctionality, {
 
   _loadBookmarkOptions() {
     this.set(
-      "deleteOption",
-      this.model.deleteOption || this._preferredDeleteOption() || 0
+      "autoDeletePreference",
+      this.model.autoDeletePreference || this._preferredDeleteOption() || 0
     );
 
     // we want to make sure the options panel opens so the user
     // knows they have set these options previously. run next otherwise
     // the modal is not visible when it tries to slide down the options
-    if (this.deleteOption) {
+    if (this.autoDeletePreference) {
       next(() => this.toggleOptionsPanel());
     }
   },
@@ -237,8 +237,8 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed()
-  deleteOptions: () => {
-    return DELETE_OPTIONS;
+  autoDeletePreferences: () => {
+    return AUTO_DELETE_PREFERENCES;
   },
 
   showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
@@ -318,7 +318,7 @@ export default Controller.extend(ModalFunctionality, {
       localStorage.lastCustomBookmarkReminderDate = this.customReminderDate;
     }
 
-    localStorage.bookmarkDeleteOption = this.deleteOption;
+    localStorage.bookmarkDeleteOption = this.autoDeletePreference;
 
     let reminderType;
     if (this.selectedReminderType === REMINDER_TYPES.NONE) {
@@ -335,7 +335,7 @@ export default Controller.extend(ModalFunctionality, {
       name: this.model.name,
       post_id: this.model.postId,
       id: this.model.id,
-      delete_option: this.deleteOption
+      auto_delete_preference: this.autoDeletePreference
     };
 
     if (this._editingExistingBookmark()) {
@@ -347,7 +347,7 @@ export default Controller.extend(ModalFunctionality, {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
-            deleteOption: this.deleteOption,
+            autoDeletePreference: this.autoDeletePreference,
             id: this.model.id,
             name: this.model.name
           });
@@ -359,7 +359,7 @@ export default Controller.extend(ModalFunctionality, {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
-            deleteOption: this.deleteOption,
+            autoDeletePreference: this.autoDeletePreference,
             id: response.id,
             name: this.model.name
           });

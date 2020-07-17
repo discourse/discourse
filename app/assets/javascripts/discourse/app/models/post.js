@@ -317,7 +317,7 @@ const Post = RestModel.extend({
           postId: this.id,
           id: this.bookmark_id,
           reminderAt: this.bookmark_reminder_at,
-          deleteOption: this.bookmark_delete_option,
+          autoDeletePreference: this.bookmark_auto_delete_preference,
           name: this.bookmark_name
         },
         title: this.bookmark_id
@@ -336,7 +336,7 @@ const Post = RestModel.extend({
             bookmarked: true,
             bookmark_reminder_at: savedData.reminderAt,
             bookmark_reminder_type: savedData.reminderType,
-            bookmark_delete_option: savedData.deleteOption,
+            bookmark_auto_delete_preference: savedData.autoDeletePreference,
             bookmark_name: savedData.name,
             bookmark_id: savedData.id
           });
@@ -359,7 +359,7 @@ const Post = RestModel.extend({
       bookmark_name: null,
       bookmark_id: null,
       bookmarked: false,
-      bookmark_delete_option: null
+      bookmark_auto_delete_preference: null
     });
   },
 

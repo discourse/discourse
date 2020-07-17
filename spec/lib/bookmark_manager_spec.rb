@@ -43,13 +43,13 @@ RSpec.describe BookmarkManager do
     end
 
     context "when options are provided" do
-      let(:options) { { delete_option: Bookmark.delete_options[:when_reminder_sent] } }
+      let(:options) { { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] } }
 
       it "saves any additional options successfully" do
         subject.create(post_id: post.id, name: name, options: options)
         bookmark = Bookmark.find_by(user: user)
 
-        expect(bookmark.delete_option).to eq(1)
+        expect(bookmark.auto_delete_preference).to eq(1)
       end
     end
 
@@ -181,12 +181,12 @@ RSpec.describe BookmarkManager do
     end
 
     context "when options are provided" do
-      let(:options) { { delete_option: Bookmark.delete_options[:when_reminder_sent] } }
+      let(:options) { { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] } }
 
       it "saves any additional options successfully" do
         update_bookmark
         bookmark.reload
-        expect(bookmark.delete_option).to eq(1)
+        expect(bookmark.auto_delete_preference).to eq(1)
       end
     end
 
