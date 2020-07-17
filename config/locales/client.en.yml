@@ -320,7 +320,7 @@ en:
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
       list_permission_denied: "You do not have permission to view this user's bookmarks."
       delete_when_reminder_sent: "Delete this bookmark when the reminder notification is sent."
-      search_placeholder: "Search bookmarks by name or post content"
+      search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
         at_desktop: "Next time I'm at my desktop"

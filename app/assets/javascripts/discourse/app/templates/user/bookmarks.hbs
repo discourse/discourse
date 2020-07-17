@@ -1,4 +1,4 @@
-<div class="form-horizontal" style="margin-bottom: 1em">
+<div class="form-horizontal bookmark-search-form">
   {{input type="text"
           value=searchTerm
           placeholder=(i18n "bookmarks.search_placeholder")
@@ -8,7 +8,7 @@
       class="btn-primary"
       action=(action "search")
       type="button"
-      label="bookmarks.search"}}
+      icon="search"}}
 </div>
 {{#if noContent}}
   <div class="alert alert-info">{{noResultsHelp}}</div>
@@ -17,15 +17,30 @@
     {{#load-more selector=".bookmark-list tr" action=(action "loadMore")}}
       <table class="topic-list bookmark-list">
         <thead>
-          <th>{{i18n "topic.title"}}</th>
-          <th>&nbsp;</th>
-          <th class="post-metadata">{{i18n "post.bookmarks.updated"}}</th>
-          <th class="post-metadata">{{i18n "activity"}}</th>
-          <th>&nbsp;</th>
+          {{#if site.mobileView}}
+            <th>&nbsp;</th>
+            <th>{{i18n "topic.title"}}</th>
+            <th>&nbsp;</th>
+          {{else}}
+            <th>{{i18n "topic.title"}}</th>
+            <th>&nbsp;</th>
+            <th class="post-metadata">{{i18n "post.bookmarks.updated"}}</th>
+            <th class="post-metadata">{{i18n "activity"}}</th>
+            <th>&nbsp;</th>
+          {{/if}}
         </thead>
         <tbody>
           {{#each content as |bookmark|}}
             <tr class="topic-list-item bookmark-list-item">
+              {{#if site.mobileView}}
+                <td>
+                  {{#if bookmark.post_user_avatar_template}}
+                  <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}}>
+                    {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
+                  </a>
+                  {{/if}}
+                </td>
+              {{/if}}
               <td class="main-link">
                 <span class="link-top-line">
                   <div class="bookmark-metadata">
@@ -52,15 +67,17 @@
                   {{discourse-tags bookmark mode="list" tagsForUser=tagsForUser}}
                 </div>
               </td>
-              <td>
-                {{#if bookmark.post_user_avatar_template}}
-                  <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}}>
-                    {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
-                  </a>
-                {{/if}}
-              </td>
-              <td class="post-metadata">{{format-date bookmark.updated_at format="tiny"}}</td>
-              {{raw "list/activity-column" topic=bookmark class="num post-metadata" tagName="td"}}
+              {{#unless site.mobileView}}
+                <td>
+                  {{#if bookmark.post_user_avatar_template}}
+                    <a href={{bookmark.postUser.path}} data-user-card={{bookmark.post_user_username}}>
+                      {{avatar bookmark.postUser avatarTemplatePath="avatar_template" usernamePath="username" namePath="name" imageSize="small"}}
+                    </a>
+                  {{/if}}
+                </td>
+                <td class="post-metadata">{{format-date bookmark.updated_at format="tiny"}}</td>
+                {{raw "list/activity-column" topic=bookmark class="num post-metadata" tagName="td"}}
+              {{/unless}}
               <td>
                 {{bookmark-actions-dropdown
                   bookmark=bookmark

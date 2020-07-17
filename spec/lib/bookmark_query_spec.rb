@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe BookmarkQuery do
+  before do
+    SearchIndexer.enable
+  end
+
   fab!(:user) { Fabricate(:user) }
   let(:params) { {} }
 
@@ -11,9 +15,8 @@ RSpec.describe BookmarkQuery do
   end
 
   describe "#list_all" do
-    fab!(:post) { Fabricate(:post, raw: "Some post content here") }
-    fab!(:bookmark1) { Fabricate(:bookmark, user: user, name: "Check up later") }
-    fab!(:bookmark2) { Fabricate(:bookmark, user: user, post: post, topic: post.topic) }
+    fab!(:bookmark1) { Fabricate(:bookmark, user: user) }
+    fab!(:bookmark2) { Fabricate(:bookmark, user: user) }
 
     it "returns all the bookmarks for a user" do
       expect(bookmark_query.list_all.count).to eq(2)
@@ -39,14 +42,25 @@ RSpec.describe BookmarkQuery do
     end
 
     context "when q param is provided" do
-      it "can search by post content" do
-        bookmarks = bookmark_query(params: { q: 'content' }).list_all
-        expect(bookmarks.map(&:id)).to eq([bookmark2.id])
+      before do
+        @post = Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs"))
+        @bookmark3 = Fabricate(:bookmark, user: user, name: "Check up later")
+        @bookmark4 = Fabricate(:bookmark, user: user, post: @post, topic: @post.topic)
       end
 
       it "can search by bookmark name" do
         bookmarks = bookmark_query(params: { q: 'check' }).list_all
-        expect(bookmarks.map(&:id)).to eq([bookmark1.id])
+        expect(bookmarks.map(&:id)).to eq([@bookmark3.id])
+      end
+
+      it "can search by post content" do
+        bookmarks = bookmark_query(params: { q: 'content' }).list_all
+        expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
+      end
+
+      it "can search by topic title" do
+        bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
+        expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
       end
     end
 
