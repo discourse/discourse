@@ -12,7 +12,11 @@ function selectText(selector) {
 }
 
 acceptance("Topic - Quote button - logged in", {
-  loggedIn: true
+  loggedIn: true,
+  settings: {
+    share_quote_visibility: "anonymous",
+    share_quote_buttons: "twitter|email"
+  }
 });
 
 QUnit.test("Does not show the quote share buttons by default", async assert => {
@@ -30,7 +34,6 @@ QUnit.test(
   "Shows quote share buttons with the right site settings",
   async function(assert) {
     this.siteSettings.share_quote_visibility = "all";
-    this.siteSettings.share_quote_buttons = "twitter|email";
 
     await visit("/t/internationalization-localization/280");
     selectText("#post_5 blockquote");

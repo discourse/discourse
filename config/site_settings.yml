@@ -200,7 +200,7 @@ basic:
   share_quote_visibility:
     client: true
     type: enum
-    default: "none"
+    default: "anonymous"
     choices:
       - none
       - anonymous
