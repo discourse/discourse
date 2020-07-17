@@ -52,7 +52,7 @@ test("basicUsernameValidation", async function(assert) {
 test("passwordValidation", async function(assert) {
   const controller = await this.subject();
 
-  controller.set("passwordRequired", true);
+  controller.set("authProvider", "");
   controller.set("accountEmail", "pork@chops.com");
   controller.set("accountUsername", "porkchops");
   controller.set("prefilledUsername", "porkchops");
