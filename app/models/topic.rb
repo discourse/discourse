@@ -338,8 +338,7 @@ class Topic < ActiveRecord::Base
       ApplicationController.banner_json_cache.clear
     end
 
-    if tags_changed || saved_change_to_attribute?(:category_id)
-
+    if tags_changed || saved_change_to_attribute?(:category_id) || saved_change_to_attribute?(:title)
       SearchIndexer.queue_post_reindex(self.id)
 
       if tags_changed

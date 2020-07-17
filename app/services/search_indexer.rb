@@ -104,8 +104,8 @@ class SearchIndexer
     update_index(table: 'topic', id: topic_id, raw_data: [title, scrubbed_cooked])
   end
 
-  def self.update_posts_index(post_id, title, category, tags, cooked)
-    update_index(table: 'post', id: post_id, raw_data: [title, category, tags, scrub_html_for_search(cooked)])
+  def self.update_posts_index(post_id, topic_title, category_name, topic_tags, cooked)
+    update_index(table: 'post', id: post_id, raw_data: [topic_title, category_name, topic_tags, scrub_html_for_search(cooked)])
   end
 
   def self.update_users_index(user_id, username, name)
@@ -118,6 +118,20 @@ class SearchIndexer
 
   def self.update_tags_index(tag_id, name)
     update_index(table: 'tag', id: tag_id, raw_data: [name.downcase])
+  end
+
+  def self.queue_category_posts_reindex(category_id)
+    return if @disabled
+
+    DB.exec(<<~SQL, category_id: category_id, version: REINDEX_VERSION)
+      UPDATE post_search_data
+      SET version = :version
+      FROM posts
+      INNER JOIN topics ON posts.topic_id = topics.id
+      INNER JOIN categories ON topics.category_id = categories.id
+      WHERE post_search_data.post_id = posts.id
+      AND categories.id = :category_id
+    SQL
   end
 
   def self.queue_post_reindex(topic_id)

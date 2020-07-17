@@ -10,30 +10,48 @@ describe Search do
     SearchIndexer.enable
   end
 
-  context 'post indexing observer' do
-    before do
-      @category = Fabricate(:category_with_definition, name: 'america')
-      @topic = Fabricate(:topic, title: 'sam saffron test topic', category: @category)
-      @post = Fabricate(:post, topic: @topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
-      @indexed = @post.post_search_data.search_data
-    end
+  context 'post indexing' do
+    fab!(:category) { Fabricate(:category_with_definition, name: 'america') }
+    fab!(:topic) { Fabricate(:topic, title: 'sam saffron test topic', category: category) }
+    let!(:post) { Fabricate(:post, topic: topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">') }
+    let!(:post2) { Fabricate(:post, topic: topic) }
 
     it "should index correctly" do
-      expect(@indexed).to match(/fun/)
-      expect(@indexed).to match(/sam/)
-      expect(@indexed).to match(/america/)
+      search_data = post.post_search_data.search_data
 
-      @topic.title = "harpi is the new title"
-      @topic.save!
-      @post.post_search_data.reload
+      expect(search_data).to match(/fun/)
+      expect(search_data).to match(/sam/)
+      expect(search_data).to match(/america/)
 
-      @indexed = @post.post_search_data.search_data
+      expect do
+        topic.update!(title: "harpi is the new title")
+      end.to change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
-      expect(@indexed).to match(/harpi/)
+      expect(post.post_search_data.reload.search_data).to match(/harpi/)
+    end
+
+    it 'should update posts index when topic category changes' do
+      expect do
+        topic.update!(category: Fabricate(:category))
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+    end
+
+    it 'should update posts index when topic tags changes' do
+      SiteSetting.tagging_enabled = true
+      tag = Fabricate(:tag)
+
+      expect do
+        DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name])
+        topic.save!
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+
+      expect(topic.tags).to eq([tag])
     end
   end
 
-  context 'user indexing observer' do
+  context 'user indexing' do
     before do
       @user = Fabricate(:user, username: 'fred', name: 'bob jones')
       @indexed = @user.user_search_data.search_data
@@ -45,16 +63,25 @@ describe Search do
     end
   end
 
-  context 'category indexing observer' do
-    before do
-      @category = Fabricate(:category_with_definition, name: 'america')
-      @indexed = @category.category_search_data.search_data
+  context 'category indexing' do
+    let!(:category) { Fabricate(:category_with_definition, name: 'america') }
+    let!(:topic) { Fabricate(:topic, category: category) }
+    let!(:post) { Fabricate(:post, topic: topic) }
+    let!(:post2) { Fabricate(:post, topic: topic) }
+    let!(:post3) { Fabricate(:post) }
+
+    it "should index correctly" do
+      expect(category.category_search_data.search_data).to match(/america/)
     end
 
-    it "should pick up on name" do
-      expect(@indexed).to match(/america/)
-    end
+    it 'should update posts index when category name changes' do
+      expect do
+        category.update!(name: 'some new name')
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
+      expect(post3.post_search_data.version).to eq(SearchIndexer::INDEX_VERSION)
+    end
   end
 
   it 'strips zero-width characters from search terms' do
