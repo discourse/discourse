@@ -21,16 +21,12 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-
-    this.set("groupIds", []);
-    Group.findAll().then(groups => {
-      this.set("allGroups", groups.filterBy("automatic", false));
-    });
+    this.setDefaultSelectedGroups();
+    this.setGroupOptions();
   },
 
   willDestroyElement() {
     this._super(...arguments);
-
     this.reset();
   },
 
@@ -112,5 +108,15 @@ export default Component.extend({
         }
         model.setProperties({ saving: false, error: true });
       });
+  },
+
+  setDefaultSelectedGroups() {
+    this.set("groupIds", []);
+  },
+
+  setGroupOptions() {
+    Group.findAll().then(groups => {
+      this.set("allGroups", groups.filterBy("automatic", false));
+    });
   }
 });

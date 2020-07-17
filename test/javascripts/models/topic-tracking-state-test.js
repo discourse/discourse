@@ -189,9 +189,18 @@ QUnit.test("countNew", assert => {
     slug: "baz",
     parent_category_id: bar.id
   });
-  sandbox.stub(Category, "list").returns([foo, bar, baz]);
+  const qux = store.createRecord("category", {
+    id: 4,
+    slug: "qux"
+  });
+  sandbox.stub(Category, "list").returns([foo, bar, baz, qux]);
 
-  const state = TopicTrackingState.create();
+  let currentUser = User.create({
+    username: "chuck",
+    muted_category_ids: [4]
+  });
+
+  const state = TopicTrackingState.create({ currentUser });
 
   assert.equal(state.countNew(1), 0);
   assert.equal(state.countNew(2), 0);
@@ -233,6 +242,13 @@ QUnit.test("countNew", assert => {
   assert.equal(state.countNew(1), 3);
   assert.equal(state.countNew(2), 2);
   assert.equal(state.countNew(3), 1);
+
+  state.states["t115"] = {
+    last_read_post_number: null,
+    id: 115,
+    category_id: 4
+  };
+  assert.equal(state.countNew(4), 0);
 });
 
 QUnit.test("mute topic", function(assert) {

@@ -140,9 +140,16 @@ describe EmailUpdater do
       context 'confirming a valid token' do
         it "updates the user's email" do
           Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email, to_address: old_email))
-          updater.confirm(@change_req.new_email_token.token)
+
+          event = DiscourseEvent.track_events {
+            updater.confirm(@change_req.new_email_token.token)
+          }.last
+
           expect(updater.errors).to be_blank
           expect(user.reload.email).to eq(new_email)
+
+          expect(event[:event_name]).to eq(:user_updated)
+          expect(event[:params].first).to eq(user)
 
           @change_req.reload
           expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])
@@ -162,9 +169,16 @@ describe EmailUpdater do
           expect(UserHistory.where(action: UserHistory.actions[:add_email], acting_user_id: user.id).last).to be_present
 
           Jobs.expects(:enqueue).once.with(:critical_user_email, has_entries(type: :notify_old_email_add, to_address: old_email))
-          updater.confirm(@change_req.new_email_token.token)
+
+          event = DiscourseEvent.track_events {
+            updater.confirm(@change_req.new_email_token.token)
+          }.last
+
           expect(updater.errors).to be_blank
           expect(UserEmail.where(user_id: user.id).pluck(:email)).to contain_exactly(user.email, new_email)
+
+          expect(event[:event_name]).to eq(:user_updated)
+          expect(event[:params].first).to eq(user)
 
           @change_req.reload
           expect(@change_req.change_state).to eq(EmailChangeRequest.states[:complete])

@@ -10,30 +10,48 @@ describe Search do
     SearchIndexer.enable
   end
 
-  context 'post indexing observer' do
-    before do
-      @category = Fabricate(:category_with_definition, name: 'america')
-      @topic = Fabricate(:topic, title: 'sam saffron test topic', category: @category)
-      @post = Fabricate(:post, topic: @topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
-      @indexed = @post.post_search_data.search_data
-    end
+  context 'post indexing' do
+    fab!(:category) { Fabricate(:category_with_definition, name: 'america') }
+    fab!(:topic) { Fabricate(:topic, title: 'sam saffron test topic', category: category) }
+    let!(:post) { Fabricate(:post, topic: topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">') }
+    let!(:post2) { Fabricate(:post, topic: topic) }
 
     it "should index correctly" do
-      expect(@indexed).to match(/fun/)
-      expect(@indexed).to match(/sam/)
-      expect(@indexed).to match(/america/)
+      search_data = post.post_search_data.search_data
 
-      @topic.title = "harpi is the new title"
-      @topic.save!
-      @post.post_search_data.reload
+      expect(search_data).to match(/fun/)
+      expect(search_data).to match(/sam/)
+      expect(search_data).to match(/america/)
 
-      @indexed = @post.post_search_data.search_data
+      expect do
+        topic.update!(title: "harpi is the new title")
+      end.to change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
-      expect(@indexed).to match(/harpi/)
+      expect(post.post_search_data.reload.search_data).to match(/harpi/)
+    end
+
+    it 'should update posts index when topic category changes' do
+      expect do
+        topic.update!(category: Fabricate(:category))
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+    end
+
+    it 'should update posts index when topic tags changes' do
+      SiteSetting.tagging_enabled = true
+      tag = Fabricate(:tag)
+
+      expect do
+        DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name])
+        topic.save!
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+
+      expect(topic.tags).to eq([tag])
     end
   end
 
-  context 'user indexing observer' do
+  context 'user indexing' do
     before do
       @user = Fabricate(:user, username: 'fred', name: 'bob jones')
       @indexed = @user.user_search_data.search_data
@@ -45,16 +63,25 @@ describe Search do
     end
   end
 
-  context 'category indexing observer' do
-    before do
-      @category = Fabricate(:category_with_definition, name: 'america')
-      @indexed = @category.category_search_data.search_data
+  context 'category indexing' do
+    let!(:category) { Fabricate(:category_with_definition, name: 'america') }
+    let!(:topic) { Fabricate(:topic, category: category) }
+    let!(:post) { Fabricate(:post, topic: topic) }
+    let!(:post2) { Fabricate(:post, topic: topic) }
+    let!(:post3) { Fabricate(:post) }
+
+    it "should index correctly" do
+      expect(category.category_search_data.search_data).to match(/america/)
     end
 
-    it "should pick up on name" do
-      expect(@indexed).to match(/america/)
-    end
+    it 'should update posts index when category name changes' do
+      expect do
+        category.update!(name: 'some new name')
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
+      expect(post3.post_search_data.version).to eq(SearchIndexer::INDEX_VERSION)
+    end
   end
 
   it 'strips zero-width characters from search terms' do
@@ -402,29 +429,6 @@ describe Search do
       expect(result.blurb(reply)).to eq(expected_blurb)
     end
 
-    it 'does not allow a post with repeated words to dominate the ranking' do
-      category = Fabricate(:category_with_definition, name: "winter is coming")
-
-      post = Fabricate(:post,
-        raw: "I think winter will end soon",
-        topic: Fabricate(:topic,
-          title: "dragon john snow winter",
-          category: category
-        )
-      )
-
-      post2 = Fabricate(:post,
-        raw: "I think #{'winter' * 20} will end soon",
-        topic: Fabricate(:topic, title: "dragon john snow summer", category: category)
-      )
-
-      result = Search.execute('winter')
-
-      expect(result.posts.pluck(:id)).to eq([
-        post.id, category.topic.first_post.id, post2.id
-      ])
-    end
-
     it 'applies a small penalty to closed topic when ranking' do
       post = Fabricate(:post,
         raw: "My weekly update",
@@ -447,8 +451,12 @@ describe Search do
 
     it 'aggregates searches in a topic by returning the post with the highest rank' do
       post = Fabricate(:post, topic: topic, raw: "this is a play post")
-      post2 = Fabricate(:post, topic: topic, raw: "play playing played")
+      post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
       post3 = Fabricate(:post, raw: "this is a play post")
+
+      5.times do
+        Fabricate(:post, topic: topic, raw: "play playing played")
+      end
 
       results = Search.execute('play')
 
@@ -658,8 +666,8 @@ describe Search do
     it "should return the right categories" do
       search = Search.execute("monkey")
 
-      expect(search.categories).to eq(
-        [category, ignored_category]
+      expect(search.categories).to contain_exactly(
+        category, ignored_category
       )
 
       expect(search.posts).to eq([category.topic.first_post, post])
@@ -694,20 +702,20 @@ describe Search do
         expect(search.posts.map(&:id)).to eq([
           child_of_ignored_category.topic.first_post,
           category.topic.first_post,
-          post,
-          post2
+          post2,
+          post
         ].map(&:id))
 
         search = Search.execute("snow")
-        expect(search.posts).to eq([post, post2])
+        expect(search.posts.map(&:id)).to eq([post2.id, post.id])
 
         category.set_permissions({})
-        category.save
+        category.save!
         search = Search.execute("monkey")
 
-        expect(search.categories).to eq([
+        expect(search.categories).to contain_exactly(
           ignored_category, child_of_ignored_category
-        ])
+        )
 
         expect(search.posts.map(&:id)).to eq([
           child_of_ignored_category.topic.first_post,
@@ -1532,19 +1540,14 @@ describe Search do
   context 'in:title' do
     it 'allows for search in title' do
       topic = Fabricate(:topic, title: 'I am testing a title search')
-      _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
+      post2 = Fabricate(:post, topic: topic, raw: 'this is the second post', post_number: 2)
+      post = Fabricate(:post, topic: topic, raw: 'this is the first post', post_number: 1)
 
       results = Search.execute('title in:title')
-      expect(results.posts.length).to eq(1)
-
-      results = Search.execute('title t')
-      expect(results.posts.length).to eq(1)
+      expect(results.posts.map(&:id)).to eq([post.id])
 
       results = Search.execute('first in:title')
-      expect(results.posts.length).to eq(0)
-
-      results = Search.execute('first t')
-      expect(results.posts.length).to eq(0)
+      expect(results.posts).to eq([])
     end
 
     it 'works irrespective of the order' do

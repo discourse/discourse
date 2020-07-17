@@ -4,6 +4,7 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import TopicListAdapter from "discourse/adapters/topic-list";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import { buildResolver } from "discourse-common/resolver";
+import { currentSettings } from "helpers/site-settings";
 
 const CatAdapter = RestAdapter.extend({
   primaryKey: "cat_id"
@@ -40,7 +41,7 @@ export default function(customLookup = () => {}) {
           return this._tracker;
         }
         if (type === "site-settings:main") {
-          this._settings = this._settings || Discourse.SiteSettings;
+          this._settings = this._settings || currentSettings();
           return this._settings;
         }
         return customLookup(type);

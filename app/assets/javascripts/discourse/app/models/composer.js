@@ -1211,7 +1211,6 @@ Composer.reopenClass({
     args = args || {};
     args.user = args.user || User.current();
     args.site = args.site || Site.current();
-    args.siteSettings = args.siteSettings || Discourse.SiteSettings;
     return this._super(args);
   },
 

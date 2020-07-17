@@ -244,6 +244,14 @@ describe PostDestroyer do
       end
 
       context "recovered by admin" do
+        it "should set user_deleted to false" do
+          PostDestroyer.new(@user, @reply).destroy
+          expect(@reply.reload.user_deleted).to eq(true)
+
+          PostDestroyer.new(admin, @reply).recover
+          expect(@reply.reload.user_deleted).to eq(false)
+        end
+
         it "should increment the user's post count" do
           PostDestroyer.new(moderator, @reply).destroy
           expect(@user.reload.user_stat.topic_count).to eq(1)

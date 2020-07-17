@@ -131,6 +131,67 @@ describe Admin::ApiController do
         expect(UserHistory.last.action).to eq(UserHistory.actions[:api_key_create])
         expect(UserHistory.last.subject).to eq(key.truncated_key)
       end
+
+      describe 'Scopes' do
+        it 'creates an scope with allowed parameters' do
+          post "/admin/api/keys.json", params: {
+            key: {
+              description: "master key description",
+              scopes: [{ id: 'topics:write', topic_id: '55' }]
+            }
+          }
+          expect(response.status).to eq(200)
+
+          data = response.parsed_body
+          scope = ApiKeyScope.find_by(api_key_id: data.dig('key', 'id'))
+
+          expect(scope.resource).to eq('topics')
+          expect(scope.action).to eq('write')
+          expect(scope.allowed_parameters['topic_id']).to contain_exactly('55')
+        end
+
+        it 'allows multiple parameters separated by a comma' do
+          post "/admin/api/keys.json", params: {
+            key: {
+              description: "master key description",
+              scopes: [{ id: 'topics:write', topic_id: '55,33' }]
+            }
+          }
+          expect(response.status).to eq(200)
+
+          data = response.parsed_body
+          scope = ApiKeyScope.find_by(api_key_id: data.dig('key', 'id'))
+
+          expect(scope.allowed_parameters['topic_id']).to contain_exactly('55', '33')
+        end
+      end
+
+      it 'ignores invalid parameters' do
+        post "/admin/api/keys.json", params: {
+          key: {
+            description: "master key description",
+            scopes: [{ id: 'topics:write', fake_id: '55' }]
+          }
+        }
+
+        expect(response.status).to eq(200)
+
+        data = response.parsed_body
+        scope = ApiKeyScope.find_by(api_key_id: data.dig('key', 'id'))
+
+        expect(scope.allowed_parameters['fake_id']).to be_nil
+      end
+
+      it 'fails when the scope is invalid' do
+        post "/admin/api/keys.json", params: {
+          key: {
+            description: "master key description",
+            scopes: [{ id: 'something:else' }]
+          }
+        }
+
+        expect(response.status).to eq(400)
+      end
     end
 
     describe "#revoke and #undo_revoke" do
@@ -152,6 +213,16 @@ describe Admin::ApiController do
         expect(UserHistory.last.action).to eq(UserHistory.actions[:api_key_update])
         expect(UserHistory.last.subject).to eq(key1.truncated_key)
         expect(UserHistory.last.details).to eq(I18n.t("staff_action_logs.api_key.restored"))
+      end
+    end
+
+    describe '#scopes' do
+      it 'includes scopes' do
+        get '/admin/api/keys/scopes.json'
+
+        scopes = response.parsed_body['scopes']
+
+        expect(scopes.keys).to contain_exactly('topics')
       end
     end
   end

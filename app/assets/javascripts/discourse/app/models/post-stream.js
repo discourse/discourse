@@ -304,8 +304,11 @@ export default RestModel.extend({
 
       let postIdx = currentPosts.indexOf(post);
       const origIdx = postIdx;
+
+      let headGap = gap.slice(0, this.topic.chunk_size);
+      let tailGap = gap.slice(this.topic.chunk_size);
       if (postIdx !== -1) {
-        return this.findPostsByIds(gap).then(posts => {
+        return this.findPostsByIds(headGap).then(posts => {
           posts.forEach(p => {
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
@@ -313,7 +316,11 @@ export default RestModel.extend({
             }
           });
 
-          delete this.get("gaps.before")[postId];
+          if (tailGap.length > 0) {
+            this.get("gaps.before")[postId] = tailGap;
+          } else {
+            delete this.get("gaps.before")[postId];
+          }
           this.stream.arrayContentDidChange();
           this.postsWithPlaceholders.arrayContentDidChange(
             origIdx,
