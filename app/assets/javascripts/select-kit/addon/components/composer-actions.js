@@ -114,7 +114,7 @@ export default DropdownSelectBoxComponent.extend({
     if (
       this.action !== CREATE_TOPIC &&
       this.action !== CREATE_SHARED_DRAFT &&
-      !(this.action === REPLY && this.topic.isPrivateMessage) &&
+      !(this.action === REPLY && this.topic && this.topic.isPrivateMessage) &&
       !this.isEditing &&
       _topicSnapshot
     ) {
