@@ -158,13 +158,13 @@ jobs:
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
         run: |
           yarn prettier -v
-          yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
+          yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6" "plugins/**/*.js"
 
       - name: Prettier (all plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
         run: |
           yarn prettier -v
-          yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"
+          yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6" "plugins/**/*.js"
 
       - name: Core English locale
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
