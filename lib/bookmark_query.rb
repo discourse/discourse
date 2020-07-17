@@ -36,9 +36,14 @@ class BookmarkQuery
     results = results.merge(Post.secured(@guardian))
 
     if @params[:q].present?
+      term = @params[:q]
+      bookmark_ts_query = Search.ts_query(term: term)
       results = results
         .joins("LEFT JOIN post_search_data ON post_search_data.post_id = bookmarks.post_id")
-        .where("bookmarks.name ILIKE :q OR post_search_data.raw_data ILIKE :q", q: "%#{@params[:q]}%")
+        .where(
+          "bookmarks.name ILIKE :q OR #{bookmark_ts_query} @@ post_search_data.search_data",
+          q: "%#{term}%"
+        )
     end
 
     if @page.positive?
