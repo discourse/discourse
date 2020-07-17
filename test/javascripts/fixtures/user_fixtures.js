@@ -421,7 +421,8 @@ export default {
           slug: "yelling-topic-title",
           post_user_username: "someguy",
           post_user_name: "Some Guy",
-          post_user_avatar_template: "/letter_avatar/someguy/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png"
+          post_user_avatar_template:
+            "/letter_avatar/someguy/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png"
         }
       ]
     }
@@ -521,10 +522,8 @@ export default {
         created_at: "2014-01-15T12:22:12Z",
         excerpt:
           "OK - i see what you mean. From the piwik code I should add: \n\n_paq.push([&quot;setDocumentTitle&quot;, document.domain + &quot;/&quot; + document.title]);\n\n? \n\nUnfortunately I have had to give up on Piwik for now because I have switched the forum to SSL on a free cert and have used up the free subdomain for the forum. &hellip;",
-        avatar_template:
-          "//localhost:3000/uploads/default/avatars/2a8/a3c/8fddcac642/{size}.jpg",
-        acting_avatar_template:
-          "//localhost:3000/uploads/default/avatars/2a8/a3c/8fddcac642/{size}.jpg",
+        avatar_template: "/images/avatar.png",
+        acting_avatar_template: "/images/avatar.png",
         slug:
           "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
@@ -972,10 +971,8 @@ export default {
         created_at: "2014-01-14T16:04:28Z",
         excerpt:
           "Thanks <a class='mention' href='/users/eviltrout'>@eviltrout</a> , the code in the &#39;bottom of pages&#39; now reads: \n\n&lt;script type=&quot;text/javascript&quot;&gt;\nDiscourse.PageTracker.current().on(&#39;change&#39;, function() {\n  console.log(&#39;tracked!&#39;)\n  _paq.push([&#39;trackPageView&#39;]);\n});\n&lt;/script&gt;\n\nThe console is logging &#39;tracked!&#39; and piwik is logging for each page c&hellip;",
-        avatar_template:
-          "//localhost:3000/uploads/default/avatars/2a8/a3c/8fddcac642/{size}.jpg",
-        acting_avatar_template:
-          "//localhost:3000/uploads/default/avatars/2a8/a3c/8fddcac642/{size}.jpg",
+        avatar_template: "/images/avatar.png",
+        acting_avatar_template: "/images/avatar.png",
         slug:
           "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
@@ -1206,8 +1203,7 @@ export default {
           "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  var discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    var d = document.createEleme&hellip;",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        acting_avatar_template:
-          "//localhost:3000/uploads/default/avatars/527/614/d16e1504d9/{size}.jpg",
+        acting_avatar_template: "/images/avatar.png",
         slug:
           "discourse-plugin-for-static-site-generators-like-jekyll-or-octopress",
         topic_id: 7965,
@@ -1470,10 +1466,8 @@ export default {
         created_at: "2014-01-13T16:41:31Z",
         excerpt:
           "I&#39;d love to see API support. <a class='mention' href='/users/sam'>@sam</a> and <a class='mention' href='/users/eviltrout'>@eviltrout</a>, I can facilitate an intro to the piwik guys if you want—I&#39;ve written about them before and they&#39;re typically super-responsive. Because I know you guys are totally hunting for new stuff to do [wink]",
-        avatar_template:
-          "//localhost:3000/uploads/default/avatars/95a/06d/c337428568/{size}.png",
-        acting_avatar_template:
-          "//localhost:3000/uploads/default/avatars/95a/06d/c337428568/{size}.png",
+        avatar_template: "/images/avatar.png",
+        acting_avatar_template: "/images/avatar.png",
         slug:
           "support-for-piwik-analytics-as-an-alternative-to-google-analytics",
         topic_id: 7512,
@@ -1762,10 +1756,8 @@ export default {
         created_at: "2014-01-12T04:14:06Z",
         excerpt:
           "Awesome plugin, but doesn&#39;t seem to work out of the box with images \n\n<a href='https://github.com/discourse/discourse-spoiler-alert/issues/2' class='onebox' target='_blank' rel='nofollow'>https://github.com/discourse/discourse-spoiler-alert/issues/2</a>",
-        avatar_template:
-          "//localhost:3000/uploads/default/avatars/276/f19/3826efe463/{size}.jpg",
-        acting_avatar_template:
-          "//localhost:3000/uploads/default/avatars/276/f19/3826efe463/{size}.jpg",
+        avatar_template: "/images/avatar.png",
+        acting_avatar_template: "/images/avatar.png",
         slug: "brand-new-plugin-interface",
         topic_id: 8793,
         target_user_id: 19,
@@ -2100,10 +2092,8 @@ export default {
         created_at: "2014-01-10T17:02:35Z",
         excerpt:
           "Fixed [smile] \n\ntop - 12:02:00 up 12 days,  2:16,  1 user,  load average: 0.28, 0.92, 0.97\nTasks: 115 total,   1 running, 114 sleeping,   0 stopped,   0 zombie\nCpu0  :  0.7%us,  0.3%sy,  0.0%ni, 99.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st\nCpu1  :  0.7%us,  0.3%sy,  0.0%ni, 99.0%id,  0.0%wa,  0.0%hi,&hellip;",
-        avatar_template:
-          "//localhost:3000/uploads/default/avatars/886/ea8/e533d87fd9/{size}.png",
-        acting_avatar_template:
-          "//localhost:3000/uploads/default/avatars/886/ea8/e533d87fd9/{size}.png",
+        avatar_template: "/images/avatar.png",
+        acting_avatar_template: "/images/avatar.png",
         slug: "sidekiq-cpu-load-since-latest-release",
         topic_id: 9515,
         target_user_id: 19,
@@ -2128,10 +2118,8 @@ export default {
         created_at: "2014-01-10T16:58:12Z",
         excerpt:
           "Thanks for letting us know. It turns out that by using minutely(5) instead of minutely causes ice_cube to peg a core at 100% usage. I&#39;ve pushed out a fix in master.",
-        avatar_template:
-          "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
-        acting_avatar_template:
-          "//localhost:3000/uploads/default/avatars/527/614/d16e1504d9/{size}.jpg",
+        avatar_template: "/images/avatar.png",
+        acting_avatar_template: "/images/avatar.png",
         slug: "sidekiq-cpu-load-since-latest-release",
         topic_id: 9515,
         target_user_id: 19,
@@ -2164,38 +2152,32 @@ export default {
       {
         id: 5460,
         username: "ned",
-        avatar_template:
-          "//localhost:3000/uploads/default/avatars/06b/90d/3b3ea7e56b/{size}.png"
+        avatar_template: "/images/avatar.png"
       },
       {
         id: 402,
         username: "thebrianbarlow",
-        avatar_template:
-          "//www.gravatar.com/avatar/5ddf2459e8edd6cf52dfff6cb41ca70d.png?s={size}&r=pg&d=identicon"
+        avatar_template: "/images/avatar.png"
       },
       {
         id: 5707,
         username: "trident",
-        avatar_template:
-          "//localhost:3000/uploads/default/avatars/527/614/d16e1504d9/{size}.jpg"
+        avatar_template: "/images/avatar.png"
       },
       {
         id: 32,
         username: "codinghorror",
-        avatar_template:
-          "//www.gravatar.com/avatar/51d623f33f8b83095db84ff35e15dbe8.png?s={size}&r=pg&d=identicon"
+        avatar_template: "/images/avatar.png"
       },
       {
         id: 1995,
         username: "zogstrip",
-        avatar_template:
-          "//www.gravatar.com/avatar/b7797beb47cfb7aa0fe60d09604aaa09.png?s={size}&r=pg&d=identicon"
+        avatar_template: "/images/avatar.png"
       },
       {
         id: 2702,
         username: "ryanflorence",
-        avatar_template:
-          "//www.gravatar.com/avatar/749001c9fe6927c4b069a45c2a3d68f7.png?s={size}&r=pg&d=identicon"
+        avatar_template: "/images/avatar.png"
       },
       {
         id: 9,

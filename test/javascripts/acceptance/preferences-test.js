@@ -55,7 +55,7 @@ acceptance("User Preferences", {
     server.post("/user_avatar/eviltrout/refresh_gravatar.json", () => {
       return helper.response({
         gravatar_upload_id: 6543,
-        gravatar_avatar_template: "something"
+        gravatar_avatar_template: "/images/avatar.png"
       });
     });
 
