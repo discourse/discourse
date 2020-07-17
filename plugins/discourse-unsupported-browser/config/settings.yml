@@ -1,7 +1,0 @@
-plugins:
-  discourse_unsupported_browser_enabled:
-    default: false
-    hidden: true
-  browser_deprecation_warning:
-    default: true
-    client: true
