@@ -10,7 +10,6 @@ QUnit.test("Enter as a anon user", async assert => {
   assert.ok(!exists(".show-post-admin-menu"), "The wrench button was not rendered");
 });
 
-
 acceptance("Post - Admin Menu", { loggedIn: true });
 
 QUnit.test("Enter as a user with group moderator permissions", async assert => {
