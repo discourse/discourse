@@ -1816,6 +1816,8 @@ en:
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_images: "The minimum trust level required to include images in a post"
+    min_trust_to_allow_invite: "The minimum trust level required to allow invite"
+    min_trust_to_allow_pm_invite: "The minimum trust level required to allow pm invite"
 
     whitelisted_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
