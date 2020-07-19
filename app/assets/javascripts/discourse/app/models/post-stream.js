@@ -300,13 +300,13 @@ export default RestModel.extend({
 
     if (idx !== -1) {
       // Insert the gap at the appropriate place
-      stream.splice.apply(stream, [idx, 0].concat(gap));
 
       let postIdx = currentPosts.indexOf(post);
       const origIdx = postIdx;
 
       let headGap = gap.slice(0, this.topic.chunk_size);
       let tailGap = gap.slice(this.topic.chunk_size);
+      stream.splice.apply(stream, [idx, 0].concat(headGap));
       if (postIdx !== -1) {
         return this.findPostsByIds(headGap).then(posts => {
           posts.forEach(p => {
