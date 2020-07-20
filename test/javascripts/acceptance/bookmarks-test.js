@@ -230,30 +230,12 @@ test("Editing a bookmark", async assert => {
   assert.verifySteps(["tomorrow"]);
 });
 
-test("Opening bookmark modal on desktop should auto-focus name", async assert => {
-  mockSuccessfulBookmarkPost(assert);
-
-  await visit("/t/internationalization-localization/280");
-  await openBookmarkModal();
-
-  assert.equal($("#bookmark-name").is(":focus"), true);
-});
-
 acceptance("Bookmarking - Mobile", {
   loggedIn: true,
   mobileView: true,
   afterEach() {
     sandbox.restore();
   }
-});
-
-test("Opening bookmark modal on mobile should not auto-focus name", async assert => {
-  mockSuccessfulBookmarkPost(assert);
-
-  await visit("/t/internationalization-localization/280");
-  await openBookmarkModal();
-
-  assert.equal($("#bookmark-name").is(":focus"), false);
 });
 
 QUnit.skip(
