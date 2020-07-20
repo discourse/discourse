@@ -1581,6 +1581,7 @@ class UsersController < ApplicationController
       :date_of_birth,
       :muted_usernames,
       :ignored_usernames,
+      :allowed_pm_usernames,
       :theme_ids,
       :locale,
       :bio_raw,

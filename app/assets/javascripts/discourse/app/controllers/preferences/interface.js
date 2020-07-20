@@ -38,6 +38,7 @@ export default Controller.extend({
       "enable_defer",
       "automatically_unpin_topics",
       "allow_private_messages",
+      "enable_allowed_pm_users",
       "homepage_id",
       "hide_profile_and_presence",
       "text_size",

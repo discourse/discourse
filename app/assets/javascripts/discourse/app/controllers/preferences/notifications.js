@@ -2,6 +2,7 @@ import I18n from "I18n";
 import Controller from "@ember/controller";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   init() {
@@ -14,7 +15,8 @@ export default Controller.extend({
       "auto_track_topics_after_msecs",
       "notification_level_when_replying",
       "like_notification_frequency",
-      "allow_private_messages"
+      "allow_private_messages",
+      "enable_allowed_pm_users"
     ];
 
     this.likeNotificationFrequencies = [
@@ -89,6 +91,11 @@ export default Controller.extend({
 
     const caps = Discourse.__container__.lookup("capabilities:main");
     this.isIOS = caps.isIOS;
+  },
+
+  @discourseComputed("model.user_option.allow_private_messages")
+  disableAllowPmUsersSetting(allowPrivateMessages) {
+    return !allowPrivateMessages;
   },
 
   actions: {

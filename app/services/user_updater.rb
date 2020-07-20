@@ -37,6 +37,7 @@ class UserUpdater
     :include_tl0_in_digests,
     :theme_ids,
     :allow_private_messages,
+    :enable_allowed_pm_users,
     :homepage_id,
     :hide_profile_and_presence,
     :text_size,
@@ -164,6 +165,10 @@ class UserUpdater
         update_ignored_users(attributes[:ignored_usernames])
       end
 
+      if attributes.key?(:allowed_pm_usernames)
+        update_allowed_pm_users(attributes[:allowed_pm_usernames])
+      end
+
       name_changed = user.name_changed?
       if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
@@ -217,6 +222,28 @@ class UserUpdater
       # SQL is easier here than figuring out how to do the same in AR
       DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
         INSERT into ignored_users(user_id, ignored_user_id, created_at, updated_at)
+        SELECT :user_id, id, :now, :now
+        FROM users
+        WHERE id in (:desired_ids)
+        ON CONFLICT DO NOTHING
+      SQL
+    end
+  end
+
+  def update_allowed_pm_users(usernames)
+    #return unless guardian.can_ignore_users?
+
+    usernames ||= ""
+    desired_usernames = usernames.split(",").reject { |username| user.username == username }
+    desired_ids = User.where(username: desired_usernames).where(admin: false, moderator: false).pluck(:id)
+    if desired_ids.empty?
+      AllowedPmUser.where(user_id: user.id).destroy_all
+    else
+      AllowedPmUser.where('user_id = ? AND allowed_pm_user_id not in (?)', user.id, desired_ids).destroy_all
+
+      # SQL is easier here than figuring out how to do the same in AR
+      DB.exec(<<~SQL, now: Time.zone.now, user_id: user.id, desired_ids: desired_ids)
+        INSERT into allowed_pm_users(user_id, allowed_pm_user_id, created_at, updated_at)
         SELECT :user_id, id, :now, :now
         FROM users
         WHERE id in (:desired_ids)
