@@ -3,6 +3,7 @@ import { alias, gte, or, and } from "@ember/object/computed";
 import { action, computed } from "@ember/object";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   ignoredUsernames: alias("model.ignored_usernames"),
@@ -44,7 +45,8 @@ export default Controller.extend({
     this.saveAttrNames = [
       "muted_usernames",
       "ignored_usernames",
-      "allowed_pm_usernames"
+      "allowed_pm_usernames",
+      "enable_allowed_pm_users"
     ];
   },
 
@@ -56,6 +58,11 @@ export default Controller.extend({
   @action
   onChangeAllowedPmUsernames(usernames) {
     this.model.set("allowed_pm_usernames", usernames.uniq().join(","));
+  },
+
+  @discourseComputed("model.user_option.allow_private_messages")
+  disableAllowPmUsersSetting(allowPrivateMessages) {
+    return !allowPrivateMessages;
   },
 
   @action

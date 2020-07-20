@@ -25,22 +25,30 @@
   <div class="instructions">{{i18n "user.muted_users_instructions"}}</div>
 </div>
 
-{{#if allowPmUsersEnabled}}
+{{#if siteSettings.enable_personal_messages}}
   <div class="control-group user-allow-pm">
-    <div class="controls tracking-controls">
-      <label>
-        {{d-icon "far-envelope" class="icon"}}
-        <span>{{i18n "user.allowed_pm_users"}}</span>
-      </label>
-      {{user-chooser
-        value=allowedPmUsernames
-        onChange=(action "onChangeAllowedPmUsernames")
-        options=(hash
-          excludeCurrentUser=true
-        )
-      }}
+    <div class="controls">
+      {{preference-checkbox
+          labelKey="user.allow_private_messages_from_specific_users"
+          checked=model.user_option.enable_allowed_pm_users
+          disabled=disableAllowPmUsersSetting}}
     </div>
-    <div class="instructions">{{i18n "user.allowed_pm_users_instructions"}}</div>
+    {{#if allowPmUsersEnabled}}
+      <div class="controls tracking-controls">
+        <label>
+          {{d-icon "far-envelope" class="icon"}}
+          <span>{{i18n "user.allowed_pm_users"}}</span>
+        </label>
+        {{user-chooser
+          value=allowedPmUsernames
+          onChange=(action "onChangeAllowedPmUsernames")
+          options=(hash
+            excludeCurrentUser=true
+          )
+        }}
+      </div>
+      <div class="instructions">{{i18n "user.allowed_pm_users_instructions"}}</div>
+    {{/if}}
   </div>
 {{/if}}
 

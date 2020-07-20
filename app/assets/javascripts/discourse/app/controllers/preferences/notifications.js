@@ -2,7 +2,6 @@ import I18n from "I18n";
 import Controller from "@ember/controller";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   init() {
@@ -91,11 +90,6 @@ export default Controller.extend({
 
     const caps = Discourse.__container__.lookup("capabilities:main");
     this.isIOS = caps.isIOS;
-  },
-
-  @discourseComputed("model.user_option.allow_private_messages")
-  disableAllowPmUsersSetting(allowPrivateMessages) {
-    return !allowPrivateMessages;
   },
 
   actions: {
