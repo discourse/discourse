@@ -1131,7 +1131,7 @@ email:
     default: true
     hidden: true
   preserve_email_structure_when_styling:
-    default: false
+    default: true
     hidden: true
 
 files:
