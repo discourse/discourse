@@ -54,6 +54,10 @@ module CategoryGuardian
     secure_category_ids.include?(category.id)
   end
 
+  def can_edit_category_description?(category)
+    can_perform_action_available_to_group_moderators?(category.topic)
+  end
+
   def secure_category_ids
     @secure_category_ids ||= @user.secure_category_ids
   end

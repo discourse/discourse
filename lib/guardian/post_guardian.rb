@@ -161,6 +161,10 @@ module PostGuardian
       return !post.edit_time_limit_expired?(@user)
     end
 
+    if post.is_category_description?
+      return can_perform_action_available_to_group_moderators?(post.topic)
+    end
+
     false
   end
 

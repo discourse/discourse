@@ -485,6 +485,10 @@ class Post < ActiveRecord::Base
       post_number == 1
   end
 
+  def is_category_description?
+    topic.present? && topic.is_category_topic? && is_first_post?
+  end
+
   def is_reply_by_email?
     via_email && post_number.present? && post_number > 1
   end
