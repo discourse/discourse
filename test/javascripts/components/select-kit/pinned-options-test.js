@@ -6,7 +6,7 @@ const buildTopic = function(pinned = true) {
   return Topic.create({
     id: 1234,
     title: "Qunit Test Topic",
-    deleted: false,
+    deleted_at: new Date(),
     pinned
   });
 };
