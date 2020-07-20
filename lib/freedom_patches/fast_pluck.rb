@@ -51,7 +51,7 @@ class ActiveRecord::Relation
       relation = apply_join_dependency
       relation.pluck(*column_names)
     else
-      enforce_raw_sql_allowlist(column_names)
+      enforce_raw_sql_whitelist(column_names)
       relation = spawn
 
       relation.select_values = column_names.map { |cn|

@@ -209,10 +209,10 @@ class GlobalSetting
   end
 
   def self.allowed_theme_ids
-    return nil if allowlisted_theme_repos.blank?
+    return nil if allowed_theme_repos.blank?
 
     @allowed_theme_ids ||= begin
-      urls = allowlisted_theme_repos.split(",").map(&:strip)
+      urls = allowed_theme_repos.split(",").map(&:strip)
       Theme
         .joins(:remote_theme)
         .where('remote_themes.remote_url in (?)', urls)

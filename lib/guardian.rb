@@ -477,7 +477,7 @@ class Guardian
   def allowed_theme_repo_import?(repo)
     return false if !@user.admin?
 
-    allowed_repos = GlobalSetting.allowlisted_theme_repos
+    allowed_repos = GlobalSetting.allowed_theme_repos
     if !allowed_repos.blank?
       urls = allowed_repos.split(",").map(&:strip)
       return urls.include?(repo)

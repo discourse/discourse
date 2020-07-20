@@ -289,8 +289,8 @@ class FinalDestination
       hostname_matches?(GlobalSetting.try(:cdn_url)) ||
       hostname_matches?(Discourse.base_url_no_prefix)
 
-    if SiteSetting.allowlist_internal_hosts.present?
-      return true if SiteSetting.allowlist_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
+    if SiteSetting.allowed_internal_hosts.present?
+      return true if SiteSetting.allowed_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
     end
 
     address_s = @opts[:lookup_ip].call(@uri.hostname)
@@ -320,7 +320,7 @@ class FinalDestination
 
   def private_ranges
     FinalDestination.standard_private_ranges +
-      SiteSetting.blocklist_ip_blocks.split('|').map { |r| IPAddr.new(r) rescue nil }.compact
+      SiteSetting.blocked_ip_blocks.split('|').map { |r| IPAddr.new(r) rescue nil }.compact
   end
 
   def log(log_level, message)

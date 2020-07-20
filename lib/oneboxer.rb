@@ -293,7 +293,7 @@ module Oneboxer
   end
 
   def self.blocked_domains
-    SiteSetting.onebox_domains_blocklist.split("|")
+    SiteSetting.blocked_onebox_domains.split("|")
   end
 
   def self.preserve_fragment_url_hosts

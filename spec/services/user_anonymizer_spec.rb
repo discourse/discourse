@@ -40,7 +40,7 @@ describe UserAnonymizer do
     end
 
     it "changes the primary email address when there is an email domain allowlist" do
-      SiteSetting.email_domains_allowlist = 'example.net|wayne.com|discourse.org'
+      SiteSetting.allowed_email_domains = 'example.net|wayne.com|discourse.org'
 
       make_anonymous
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")

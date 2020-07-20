@@ -46,7 +46,7 @@ class TopicView
     post_custom_fields_allowlisters << block
   end
 
-  def self.allowlisted_post_custom_fields(user)
+  def self.allowed_post_custom_fields(user)
     wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user) }
     wpcf.flatten.uniq
   end
@@ -91,7 +91,7 @@ class TopicView
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
 
-      if (allowed_fields = TopicView.allowlisted_post_custom_fields(@user)).present?
+      if (allowed_fields = TopicView.allowed_post_custom_fields(@user)).present?
         @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
       end
     end

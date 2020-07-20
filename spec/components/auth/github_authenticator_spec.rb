@@ -199,7 +199,7 @@ describe Auth::GithubAuthenticator do
         uid: "100"
       }
 
-      SiteSetting.email_domains_blocklist = "blocklist.com"
+      SiteSetting.blocked_email_domains = "blocklist.com"
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(nil)
@@ -234,7 +234,7 @@ describe Auth::GithubAuthenticator do
         uid: "100"
       }
 
-      SiteSetting.email_domains_allowlist = "allowlist.com"
+      SiteSetting.allowed_email_domains = "allowlist.com"
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(nil)

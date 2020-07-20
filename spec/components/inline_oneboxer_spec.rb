@@ -154,7 +154,7 @@ describe InlineOneboxer do
     end
 
     it "will lookup allowlisted domains" do
-      SiteSetting.inline_onebox_domains_allowlist = "eviltrout.com"
+      SiteSetting.allowed_inline_onebox_domains = "eviltrout.com"
       RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")
 
       onebox = InlineOneboxer.lookup(

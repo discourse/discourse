@@ -156,7 +156,7 @@ describe Oneboxer do
   end
 
   it "does not crawl blocklisted URLs" do
-    SiteSetting.onebox_domains_blocklist = "git.*.com|bitbucket.com"
+    SiteSetting.blocked_onebox_domains = "git.*.com|bitbucket.com"
     url = 'https://github.com/discourse/discourse/commit/21b562852885f883be43032e03c709241e8e6d4f'
     stub_request(:head, 'https://discourse.org/').to_return(status: 302, body: "", headers: { location: url })
 

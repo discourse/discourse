@@ -26,13 +26,13 @@ describe Email::Receiver do
   end
 
   it "raises EmailNotAllowed when email address is not on allowlist" do
-    SiteSetting.email_domains_allowlist = "example.com|bar.com"
+    SiteSetting.allowed_email_domains = "example.com|bar.com"
     Fabricate(:group, incoming_email: "some_group@bar.com")
     expect { process(:blocklist_allowlist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
   end
 
   it "raises EmailNotAllowed when email address is on blocklist" do
-    SiteSetting.email_domains_blocklist = "email.com|mail.com"
+    SiteSetting.blocked_email_domains = "email.com|mail.com"
     Fabricate(:group, incoming_email: "some_group@bar.com")
     expect { process(:blocklist_allowlist_email) }.to raise_error(Email::Receiver::EmailNotAllowed)
   end
@@ -1213,7 +1213,7 @@ describe Email::Receiver do
 
     context "when From email address is not on allowlist" do
       before do
-        SiteSetting.email_domains_allowlist = "example.com|bar.com"
+        SiteSetting.allowed_email_domains = "example.com|bar.com"
         Fabricate(:group, incoming_email: "some_group@bar.com")
       end
 
@@ -1222,7 +1222,7 @@ describe Email::Receiver do
 
     context "when From email address is on blocklist" do
       before do
-        SiteSetting.email_domains_blocklist = "email.com|mail.com"
+        SiteSetting.blocked_email_domains = "email.com|mail.com"
         Fabricate(:group, incoming_email: "some_group@bar.com")
       end
 
@@ -1235,7 +1235,7 @@ describe Email::Receiver do
       end
 
       it "does not create staged users for email addresses not on allowlist" do
-        SiteSetting.email_domains_allowlist = "mail.com|example.com"
+        SiteSetting.allowed_email_domains = "mail.com|example.com"
         process(:blocklist_allowlist_email)
 
         expect(User.find_by_email("alice@foo.com")).to be_nil
@@ -1244,7 +1244,7 @@ describe Email::Receiver do
       end
 
       it "does not create staged users for email addresses on blocklist" do
-        SiteSetting.email_domains_blocklist = "email.com|foo.com"
+        SiteSetting.blocked_email_domains = "email.com|foo.com"
         process(:blocklist_allowlist_email)
 
         expect(User.find_by_email("alice@foo.com")).to be_nil

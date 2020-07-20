@@ -149,8 +149,8 @@ class ImportScripts::FMGP < ImportScripts::Base
     @posts_imported = 0
     @topics_skipped = 0
     @posts_skipped = 0
-    @topics_blocklisted = 0
-    @posts_blocklisted = 0
+    @blocked_topics = 0
+    @blocked_posts = 0
     # count uploaded file size
     @totalsize = 0
 
@@ -371,7 +371,7 @@ class ImportScripts::FMGP < ImportScripts::Base
             category["posts"].each do |post|
               # G+ post / Discourse topic
               import_topic(post, category)
-              print("\r#{@topics_imported}/#{@posts_imported} topics/posts (skipped: #{@topics_skipped}/#{@posts_skipped} blocklisted: #{@topics_blocklisted}/#{@posts_blocklisted})       ")
+              print("\r#{@topics_imported}/#{@posts_imported} topics/posts (skipped: #{@topics_skipped}/#{@posts_skipped} blocklisted: #{@blocked_topics}/#{@blocked_posts})       ")
             end
           end
         end
@@ -395,7 +395,7 @@ class ImportScripts::FMGP < ImportScripts::Base
       end
       postmap = make_postmap(post, category, nil)
       if postmap.nil?
-        @topics_blocklisted += 1
+        @blocked_topics += 1
         return
       end
       p = create_post(postmap, postmap[:id]) if !@dryrun
@@ -409,7 +409,7 @@ class ImportScripts::FMGP < ImportScripts::Base
       else
         commentmap = make_postmap(comment, nil, p)
         if commentmap.nil?
-          @posts_blocklisted += 1
+          @blocked_posts += 1
         else
           @posts_imported += 1
           new_comment = create_post(commentmap, commentmap[:id]) if !@dryrun

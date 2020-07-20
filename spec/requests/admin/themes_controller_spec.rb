@@ -103,7 +103,7 @@ describe Admin::ThemesController do
     context 'when theme allowlist mode is enabled' do
       before do
         GlobalSetting.reset_allowed_theme_ids!
-        global_setting :allowlisted_theme_repos, "https://github.com/discourse/discourse-brand-header"
+        global_setting :allowed_theme_repos, "https://github.com/discourse/discourse-brand-header"
       end
 
       after do
@@ -311,7 +311,7 @@ describe Admin::ThemesController do
     context 'when theme allowlist mode is enabled' do
       before do
         GlobalSetting.reset_allowed_theme_ids!
-        global_setting :allowlisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+        global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
       end
 
       after do

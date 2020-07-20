@@ -4790,8 +4790,8 @@ en:
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
         embed_unlisted: "Imported topics will be unlisted until there is a reply."
-        embed_allowlist_selector: "CSS selector for elements that are allowed in embeds"
-        embed_blocklist_selector: "CSS selector for elements that are removed from embeds"
+        allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
+        blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
         allowed_embed_classnames: "Allowed CSS class names"
         save: "Save Embedding Settings"
 

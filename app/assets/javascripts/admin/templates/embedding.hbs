@@ -45,12 +45,12 @@
     <h3>{{i18n "admin.embedding.crawling_settings"}}</h3>
     <p class="description">{{i18n "admin.embedding.crawling_description"}}</p>
 
-    {{embedding-setting field="embed_allowlist_selector"
-                        value=embedding.embed_allowlist_selector
+    {{embedding-setting field="allowed_embed_selectors"
+                        value=embedding.allowed_embed_selectors
                         placeholder="article, #story, .post"}}
 
-    {{embedding-setting field="embed_blocklist_selector"
-                        value=embedding.embed_blocklist_selector
+    {{embedding-setting field="blocked_embed_selectors"
+                        value=embedding.blocked_embed_selectors
                         placeholder=".ad-unit, header"}}
 
     {{embedding-setting field="allowed_embed_classnames"

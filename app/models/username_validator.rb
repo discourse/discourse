@@ -134,10 +134,10 @@ class UsernameValidator
   end
 
   def self.char_allowlist_exists?
-    SiteSetting.unicode_usernames && SiteSetting.unicode_username_character_allowlist_regex.present?
+    SiteSetting.unicode_usernames && SiteSetting.allowed_unicode_username_characters.present?
   end
 
   def self.allowed_char?(c)
-    c.match?(/[\w.-]/) || c.match?(SiteSetting.unicode_username_character_allowlist_regex)
+    c.match?(/[\w.-]/) || c.match?(SiteSetting.allowed_unicode_username_characters)
   end
 end

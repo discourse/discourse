@@ -2984,7 +2984,7 @@ describe UsersController do
 
       it "raises an error when the email is blocklisted" do
         post_user
-        SiteSetting.email_domains_blocklist = 'example.com'
+        SiteSetting.blocked_email_domains = 'example.com'
         put "/u/update-activation-email.json", params: { email: 'test@example.com' }
         expect(response.status).to eq(422)
       end

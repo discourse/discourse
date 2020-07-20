@@ -443,10 +443,10 @@ login:
   sso_overrides_website: false
   sso_overrides_card_background: false
   sso_not_approved_url: ""
-  email_domains_blocklist:
+  blocked_email_domains:
     default: "mailinator.com"
     type: list
-  email_domains_allowlist:
+  allowed_email_domains:
     default: ""
     type: list
   auto_approve_email_domains:
@@ -478,7 +478,7 @@ users:
     default: false
     client: true
     validator: "UnicodeUsernameValidator"
-  unicode_username_character_allowlist:
+  allowed_unicode_username_characters:
     validator: "UnicodeUsernameAllowlistValidator"
     default: ""
     locale_default:
@@ -573,7 +573,7 @@ users:
     client: true
   show_inactive_accounts:
     default: false
-  user_website_domains_allowlist:
+  allowed_user_website_domains:
     default: ""
     type: list
   hide_suspension_reasons:
@@ -908,7 +908,7 @@ posting:
   embed_unlisted: false
   embed_truncate: true
   embed_support_markdown: false
-  embed_allowlist_selector: ""
+  allowed_embed_selectors: ""
   allowed_href_schemes:
     client: true
     default: ""
@@ -1459,11 +1459,11 @@ security:
   use_admin_ip_allowlist:
     default: false
     client: true
-  blocklist_ip_blocks:
+  blocked_ip_blocks:
     default: ""
     type: list
     list_type: compact
-  allowlist_internal_hosts:
+  allowed_internal_hosts:
     default: ""
     type: list
   allowed_iframes:
@@ -1511,14 +1511,14 @@ onebox:
       ja: 200
       zh_CN: 200
       zh_TW: 200
-  onebox_domains_blocklist:
+  blocked_onebox_domains:
     default: ""
     type: list
     list_type: compact
   max_oneboxes_per_post:
     default: 50
     client: true
-  inline_onebox_domains_allowlist:
+  allowed_inline_onebox_domains:
     default: ""
     type: list
     list_type: compact
@@ -1728,7 +1728,7 @@ embedding:
   embed_title_scrubber:
     default: ""
     hidden: true
-  embed_blocklist_selector:
+  blocked_embed_selectors:
     default: ""
     hidden: true
   allowed_embed_classnames:

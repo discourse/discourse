@@ -13,7 +13,7 @@ module ActiveRecord
   module AttributeMethods
     module ClassMethods
       # this is for Rails 5
-      def enforce_raw_sql_allowlist(*args)
+      def enforce_raw_sql_whitelist(*args)
         nil
       end
 

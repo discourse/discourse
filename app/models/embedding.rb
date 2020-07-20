@@ -11,8 +11,8 @@ class Embedding < OpenStruct
        embed_title_scrubber
        embed_truncate
        embed_unlisted
-       embed_allowlist_selector
-       embed_blocklist_selector
+       allowed_embed_selectors
+       blocked_embed_selectors
        allowed_embed_classnames)
   end
 

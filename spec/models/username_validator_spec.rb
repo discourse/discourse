@@ -183,7 +183,7 @@ describe UsernameValidator do
       end
 
       context "with Unicode allowlist" do
-        before { SiteSetting.unicode_username_character_allowlist = "[äöüÄÖÜß]" }
+        before { SiteSetting.allowed_unicode_username_characters = "[äöüÄÖÜß]" }
 
         it 'is invalid when username contains non-allowlisted letters' do
           expect_invalid('鳥', 'francès', error_message: I18n.t(:'user.username.characters'))
@@ -198,7 +198,7 @@ describe UsernameValidator do
         end
 
         it 'is valid after resetting the site setting' do
-          SiteSetting.unicode_username_character_allowlist = ""
+          SiteSetting.allowed_unicode_username_characters = ""
           expect_valid('鳥')
         end
       end
