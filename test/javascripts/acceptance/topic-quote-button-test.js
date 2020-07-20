@@ -81,7 +81,7 @@ QUnit.test(
   }
 );
 
-QUnit.test(
+QUnit.skip(
   "Shows single share button when site setting only has one item",
   async function(assert) {
     this.siteSettings.share_quote_buttons = "twitter";
