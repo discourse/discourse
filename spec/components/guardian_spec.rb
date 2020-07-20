@@ -475,6 +475,16 @@ describe Guardian do
     let(:user) { Fabricate.build(:user) }
     let(:moderator) { Fabricate.build(:moderator) }
 
+    it 'returns true if user trust level matches invite site setting' do
+      SiteSetting.min_trust_to_allow_invite = 2
+      expect(Guardian.new(trust_level_2).can_invite_to_forum?).to be_truthy
+    end
+
+    it "returns false if user trust level doesn't matches invite site setting" do
+      SiteSetting.min_trust_to_allow_invite = 2
+      expect(Guardian.new(trust_level_1).can_invite_to_forum?).to be_falsey
+    end
+
     it "doesn't allow anonymous users to invite" do
       expect(Guardian.new.can_invite_to_forum?).to be_falsey
     end
@@ -509,18 +519,10 @@ describe Guardian do
 
       before do
         SiteSetting.min_trust_to_allow_invite = 2
-        user.update!(trust_level: SiteSetting.min_trust_to_allow_invite.to_i)
+        user.update!(trust_level: SiteSetting.min_trust_to_allow_invite)
         group.add_owner(user)
       end
-      
-      it 'returns false when user trust level not matches with SiteSetting' do
-        expect(Guardian.new(trust_level_1).can_invite_to_forum?).to eq(false)
-      end
 
-      it 'returns true when user trust level matches with SiteSetting' do
-        expect(Guardian.new(trust_level_2).can_invite_to_forum?).to eq(true)
-      end
-      
       it 'returns false when user is not allowed to edit a group' do
         expect(Guardian.new(user).can_invite_to_forum?(groups)).to eq(false)
 
@@ -548,27 +550,28 @@ describe Guardian do
       let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
       fab!(:pm) { Fabricate(:topic) }
 
+      it 'returns true if user trust level matches pm invite site setting' do
+        SiteSetting.min_trust_to_allow_pm_invite = 2
+        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
+      end
+
+      it 'returns false if user trust level does not matches pm invite site setting' do
+        SiteSetting.min_trust_to_allow_pm_invite = 2
+        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_falsey
+      end
+
       it 'handles invitation correctly' do
+        SiteSetting.min_trust_to_allow_pm_invite = 2
         expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
         expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
         expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
-        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_falsey
 
         SiteSetting.max_invites_per_day = 0
 
-        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_falsey
         # staff should be immune to max_invites_per_day setting
         expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
-      end
-
-      it 'returns false when user trust level not matches with SiteSetting' do
-        SiteSetting.min_trust_to_allow_pm_invite = 2
-        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to eq(false)
-      end
-
-      it 'returns true when user trust level matches with SiteSetting' do
-        SiteSetting.min_trust_to_allow_pm_invite = 2
-        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to eq(true)
       end
 
       it 'returns false for normal user on private topic' do
@@ -585,7 +588,6 @@ describe Guardian do
 
       it 'returns true for normal user when inviting to topic and PM disabled' do
         SiteSetting.enable_personal_messages = false
-        SiteSetting.min_trust_to_allow_pm_invite = 2
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
       end
 
@@ -629,7 +631,7 @@ describe Guardian do
     end
 
     describe "private messages" do
-      fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_to_allow_pm_invite.to_i) }
+      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
 
       context "when private messages are disabled" do
@@ -669,9 +671,9 @@ describe Guardian do
   end
 
   describe 'can_invite_via_email?' do
-    it 'returns true for users when sso is disabled, local logins are enabled, user approval is not required, and trust level matches Site Setting' do
-      SiteSetting.min_trust_to_allow_pm_invite = 1
-      expect(Guardian.new(trust_level_1).can_invite_via_email?(topic)).to be_truthy
+    it 'returns true when sso is disabled, local logins are enabled, user approval is not required and trust level matches site setting' do
+      SiteSetting.min_trust_to_allow_pm_invite = 2
+      expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_truthy
       expect(Guardian.new(moderator).can_invite_via_email?(topic)).to be_truthy
       expect(Guardian.new(admin).can_invite_via_email?(topic)).to be_truthy
     end
@@ -1747,12 +1749,56 @@ describe Guardian do
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(false)
     end
 
-    it 'returns false for a regular user' do
-      SiteSetting.enable_category_group_review = true
+    it 'returns true for a group member with reviewable status' do
+      SiteSetting.enable_category_group_moderation = true
       group = Fabricate(:group)
       GroupUser.create!(group_id: group.id, user_id: user.id)
       topic.category.update!(reviewable_by_group_id: group.id)
       expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
+    end
+  end
+
+  context "can_close_topic?" do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_close_topic?(nil)).to eq(false)
+    end
+
+    it 'returns true for a staff user' do
+      expect(Guardian.new(moderator).can_close_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      expect(Guardian.new(user).can_close_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true for a group member with reviewable status' do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      topic.category.update!(reviewable_by_group_id: group.id)
+      expect(Guardian.new(user).can_close_topic?(topic)).to eq(true)
+    end
+  end
+
+  context "can_archive_topic?" do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_archive_topic?(nil)).to eq(false)
+    end
+
+    it 'returns true for a staff user' do
+      expect(Guardian.new(moderator).can_archive_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      expect(Guardian.new(user).can_archive_topic?(topic)).to eq(false)
+    end
+
+    it 'returns true for a group member with reviewable status' do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      topic.category.update!(reviewable_by_group_id: group.id)
+      expect(Guardian.new(user).can_archive_topic?(topic)).to eq(true)
     end
   end
 
