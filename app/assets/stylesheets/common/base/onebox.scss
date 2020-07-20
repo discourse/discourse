@@ -626,7 +626,8 @@ aside.onebox.stackexchange .onebox-body {
 }
 
 // allowlistedgeneric twitter labels
-.onebox.allowlistedgeneric {
+.onebox.allowlistedgeneric,
+.onebox.whitelistedgeneric {
   .label1,
   .label2 {
     color: dark-light-choose($primary-medium, $secondary-medium);
@@ -641,6 +642,7 @@ aside.onebox.stackexchange .onebox-body {
 
 .onebox {
   &.allowlistedgeneric,
+  &.whitelistedgeneric,
   &.gfycat {
     .site-icon {
       width: 16px;
