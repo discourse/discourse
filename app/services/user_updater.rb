@@ -242,7 +242,7 @@ class UserUpdater
       AllowedPmUser.where('user_id = ? AND allowed_pm_user_id not in (?)', user.id, desired_ids).destroy_all
 
       # SQL is easier here than figuring out how to do the same in AR
-      DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
+      DB.exec(<<~SQL, now: Time.zone.now, user_id: user.id, desired_ids: desired_ids)
         INSERT into allowed_pm_users(user_id, allowed_pm_user_id, created_at, updated_at)
         SELECT :user_id, id, :now, :now
         FROM users

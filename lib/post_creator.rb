@@ -135,7 +135,7 @@ class PostCreator
       # is in their list
       if users_with_allowed_pms.any?
         users_sender_can_pm = allowed_pms_enabled(users)
-          .where("allowed_pm_users.allowed_pm_user_id = #{@user.id.to_i}")
+          .where("allowed_pm_users.allowed_pm_user_id" => @user.id.to_i)
           .pluck(:id).uniq
 
         # If not in the list add an error
