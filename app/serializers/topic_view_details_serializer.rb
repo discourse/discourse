@@ -18,7 +18,8 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_edit_tags,
      :can_publish_page,
      :can_close_topic,
-     :can_archive_topic]
+     :can_archive_topic,
+     :can_edit_staff_notes]
   end
 
   attributes(
@@ -136,13 +137,12 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     !scope.can_edit?(object.topic) && scope.can_edit_tags?(object.topic)
   end
 
-  def include_can_close_topic?
-    scope.can_close_topic?(object.topic)
+  def can_perform_action_available_to_group_moderators?
+    @can_perform_action_available_to_group_moderators ||= scope.can_perform_action_available_to_group_moderators?(object.topic)
   end
-
-  def include_can_archive_topic?
-    scope.can_archive_topic?(object.topic)
-  end
+  alias :include_can_close_topic? :can_perform_action_available_to_group_moderators?
+  alias :include_can_archive_topic? :can_perform_action_available_to_group_moderators?
+  alias :include_can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
 
   def include_can_publish_page?
     scope.can_publish_page?(object.topic)

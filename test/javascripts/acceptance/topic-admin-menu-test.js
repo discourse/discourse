@@ -19,10 +19,10 @@ QUnit.test("Enter as a user with group moderator permissions", async assert => {
   assert.ok(exists(".toggle-admin-menu"), "The admin menu button was rendered");
 });
 
-QUnit.test("Enter as a user with group moderator permissions", async assert => {
+QUnit.test("Enter as a user with moderator and admin permissions", async assert => {
   updateCurrentUser({ moderator: true, admin: true, trust_level: 4 });
 
-  await visit("/t/topic-for-group-moderators/2480");
+  await visit("/t/internationalization-localization/280");
   assert.ok(exists("#topic"), "The topic was rendered");
   assert.ok(exists(".toggle-admin-menu"), "The admin menu button was rendered");
 });

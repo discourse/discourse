@@ -1795,11 +1795,9 @@ describe PostsController do
   end
 
   describe "#notice" do
-    before do
+    it 'can create and remove notices as a moderator' do
       sign_in(moderator)
-    end
 
-    it 'can create and remove notices' do
       put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
 
       expect(response.status).to eq(200)
@@ -1814,6 +1812,52 @@ describe PostsController do
       public_post.reload
       expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+    end
+
+    describe 'group moderators' do
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:user) { group_user.user }
+      let(:group) { group_user.group }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        topic.category.update!(reviewable_by_group_id: group.id)
+
+        sign_in(user)
+      end
+
+      it 'can create and remove notices as a group moderator' do
+        put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
+
+        expect(response.status).to eq(200)
+        public_post.reload
+        expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
+        expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
+        expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
+
+        put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
+
+        expect(response.status).to eq(200)
+        public_post.reload
+        expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+        expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+      end
+
+      it 'prevents a group moderator from altering notes outside of their category' do
+        moderatable_group = Fabricate(:group)
+        topic.category.update!(reviewable_by_group_id: moderatable_group.id)
+
+        put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
+
+        expect(response.status).to eq(404)
+      end
+
+      it 'prevents a normal user from altering notes' do
+        group_user.destroy!
+        put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
+
+        expect(response.status).to eq(404)
+      end
     end
   end
 
