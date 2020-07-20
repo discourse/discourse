@@ -35,10 +35,6 @@
     </div>
     {{#if allowPmUsersEnabled}}
       <div class="controls tracking-controls">
-        <label>
-          {{d-icon "far-envelope" class="icon"}}
-          <span>{{i18n "user.allowed_pm_users"}}</span>
-        </label>
         {{user-chooser
           value=allowedPmUsernames
           onChange=(action "onChangeAllowedPmUsernames")
