@@ -1,5 +1,6 @@
 import createStore from "helpers/create-store";
 import { discourseModule } from "helpers/qunit-helpers";
+import Site from "discourse/models/site";
 
 discourseModule("lib:category-link");
 
@@ -68,8 +69,9 @@ QUnit.test("allowUncategorized", assert => {
     name: "uncategorized",
     id: 345
   });
+
   sandbox
-    .stub(Discourse.Site, "currentProp")
+    .stub(Site, "currentProp")
     .withArgs("uncategorized_category_id")
     .returns(345);
 

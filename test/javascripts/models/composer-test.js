@@ -1,7 +1,12 @@
 import EmberObject from "@ember/object";
 import { discourseModule, currentUser } from "helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
-import Composer from "discourse/models/composer";
+import {
+  EDIT,
+  REPLY,
+  CREATE_TOPIC,
+  PRIVATE_MESSAGE
+} from "discourse/models/composer";
 import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
 
@@ -50,11 +55,14 @@ QUnit.test("missingReplyCharacters", function(assert) {
     expected,
     message
   ) {
-    const composer = createComposer({
-      reply: val,
-      creatingPrivateMessage: isPM,
-      creatingTopic: isFirstPost
-    });
+    let action = REPLY;
+    if (isPM) {
+      action = PRIVATE_MESSAGE;
+    }
+    if (isFirstPost) {
+      action = CREATE_TOPIC;
+    }
+    const composer = createComposer({ reply: val, action });
     assert.equal(composer.get("missingReplyCharacters"), expected, message);
   };
 
@@ -81,10 +89,13 @@ QUnit.test("missingReplyCharacters", function(assert) {
   );
 
   const link = "http://imgur.com/gallery/grxX8";
+  this.siteSettings.topic_featured_link_enabled = true;
+  this.siteSettings.topic_featured_link_allowed_category_ids = 12345;
   const composer = createComposer({
-    canEditTopicFeaturedLink: true,
     title: link,
+    categoryId: 12345,
     featuredLink: link,
+    action: CREATE_TOPIC,
     reply: link
   });
 
@@ -99,7 +110,7 @@ QUnit.test("missingTitleCharacters", function(assert) {
   const missingTitleCharacters = function(val, isPM, expected, message) {
     const composer = createComposer({
       title: val,
-      creatingPrivateMessage: isPM
+      action: isPM ? PRIVATE_MESSAGE : REPLY
     });
     assert.equal(composer.get("missingTitleCharacters"), expected, message);
   };
@@ -209,7 +220,7 @@ QUnit.test("Title length for regular topics", function(assert) {
 QUnit.test("Title length for private messages", function(assert) {
   this.siteSettings.min_personal_message_title_length = 5;
   this.siteSettings.max_topic_title_length = 10;
-  const composer = createComposer({ action: Composer.PRIVATE_MESSAGE });
+  const composer = createComposer({ action: PRIVATE_MESSAGE });
 
   composer.set("title", "asdf");
   assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
@@ -234,7 +245,7 @@ QUnit.test("editingFirstPost", assert => {
   assert.ok(!composer.get("editingFirstPost"), "it's false by default");
 
   const post = Post.create({ id: 123, post_number: 2 });
-  composer.setProperties({ post: post, action: Composer.EDIT });
+  composer.setProperties({ post: post, action: EDIT });
   assert.ok(
     !composer.get("editingFirstPost"),
     "it's false when not editing the first post"
@@ -266,7 +277,7 @@ QUnit.test("clearState", assert => {
 QUnit.test("initial category when uncategorized is allowed", function(assert) {
   this.siteSettings.allow_uncategorized_topics = true;
   const composer = openComposer({
-    action: "createTopic",
+    action: CREATE_TOPIC,
     draftKey: "asfd",
     draftSequence: 1
   });
@@ -278,7 +289,7 @@ QUnit.test("initial category when uncategorized is not allowed", function(
 ) {
   this.siteSettings.allow_uncategorized_topics = false;
   const composer = openComposer({
-    action: "createTopic",
+    action: CREATE_TOPIC,
     draftKey: "asfd",
     draftSequence: 1
   });
@@ -293,7 +304,7 @@ QUnit.test("open with a quote", assert => {
     '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
   const newComposer = function() {
     return openComposer({
-      action: Composer.REPLY,
+      action: REPLY,
       draftKey: "asfd",
       draftSequence: 1,
       quote: quote
@@ -322,7 +333,7 @@ QUnit.test("Title length for static page topics as admin", function(assert) {
     post_number: 2,
     static_doc: true
   });
-  composer.setProperties({ post: post, action: Composer.EDIT });
+  composer.setProperties({ post: post, action: EDIT });
 
   composer.set("title", "asdf");
   assert.ok(composer.get("titleLengthValid"), "admins can use short titles");
@@ -341,14 +352,14 @@ QUnit.test("Title length for static page topics as admin", function(assert) {
 });
 
 QUnit.test("title placeholder depends on what you're doing", function(assert) {
-  let composer = createComposer({ action: Composer.CREATE_TOPIC });
+  let composer = createComposer({ action: CREATE_TOPIC });
   assert.equal(
     composer.get("titlePlaceholder"),
     "composer.title_placeholder",
     "placeholder for normal topic"
   );
 
-  composer = createComposer({ action: Composer.PRIVATE_MESSAGE });
+  composer = createComposer({ action: PRIVATE_MESSAGE });
   assert.equal(
     composer.get("titlePlaceholder"),
     "composer.title_placeholder",
@@ -357,14 +368,14 @@ QUnit.test("title placeholder depends on what you're doing", function(assert) {
 
   this.siteSettings.topic_featured_link_enabled = true;
 
-  composer = createComposer({ action: Composer.CREATE_TOPIC });
+  composer = createComposer({ action: CREATE_TOPIC });
   assert.equal(
     composer.get("titlePlaceholder"),
     "composer.title_or_link_placeholder",
     "placeholder invites you to paste a link"
   );
 
-  composer = createComposer({ action: Composer.PRIVATE_MESSAGE });
+  composer = createComposer({ action: PRIVATE_MESSAGE });
   assert.equal(
     composer.get("titlePlaceholder"),
     "composer.title_placeholder",
@@ -375,7 +386,7 @@ QUnit.test("title placeholder depends on what you're doing", function(assert) {
 QUnit.test("allows featured link before choosing a category", function(assert) {
   this.siteSettings.topic_featured_link_enabled = true;
   this.siteSettings.allow_uncategorized_topics = false;
-  let composer = createComposer({ action: Composer.CREATE_TOPIC });
+  let composer = createComposer({ action: CREATE_TOPIC });
   assert.equal(
     composer.get("titlePlaceholder"),
     "composer.title_or_link_placeholder",

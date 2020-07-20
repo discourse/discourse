@@ -141,12 +141,11 @@ export function extractDataAttribute(str) {
 
 // videoHTML and audioHTML follow the same HTML syntax
 // as oneboxer.rb when dealing with these formats
-function videoHTML(token, opts) {
+function videoHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
   return `<div class="video-container">
-    <p class="video-description">${opts.alt}</p>
     <video width="100%" height="100%" preload="metadata" controls>
       <source src="${src}" ${dataOrigSrcAttr}>
       <a href="${src}">${src}</a>
@@ -174,11 +173,8 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   // markdown-it supports returning HTML instead of continuing to render the current token
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   // handles |video and |audio alt transformations for image tags
-  const mediaOpts = {
-    alt: split[0]
-  };
   if (split[1] === "video") {
-    return videoHTML(token, mediaOpts);
+    return videoHTML(token);
   } else if (split[1] === "audio") {
     return audioHTML(token);
   }

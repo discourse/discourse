@@ -433,16 +433,14 @@ class TopicQuery
         user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
       end
 
-      avatar_lookup = AvatarLookup.new(user_ids)
-      primary_group_lookup = PrimaryGroupLookup.new(user_ids)
+      user_lookup = UserLookup.new(user_ids)
 
       # memoize for loop so we don't keep looking these up
       translations = TopicPostersSummary.translations
 
       topics.each do |t|
         t.posters = t.posters_summary(
-          avatar_lookup: avatar_lookup,
-          primary_group_lookup: primary_group_lookup,
+          user_lookup: user_lookup,
           translations: translations
         )
       end
@@ -892,7 +890,7 @@ class TopicQuery
 
     # if viewing the topic list for a muted tag, show all the topics
     if !opts[:no_tags] && opts[:tags].present?
-      return list if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', opts[:tags].first).exists?
+      return list if TagUser.lookup(user, :muted).joins(:tag).where('lower(tags.name) = ?', opts[:tags].first.downcase).exists?
     end
 
     if SiteSetting.remove_muted_tags_from_latest == 'always'

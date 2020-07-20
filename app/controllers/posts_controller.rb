@@ -474,9 +474,8 @@ class PostsController < ApplicationController
   end
 
   def notice
-    raise Discourse::NotFound unless guardian.is_staff?
-
     post = find_post_from_params
+    raise Discourse::NotFound unless guardian.can_edit_staff_notes?(post.topic)
 
     if params[:notice].present?
       post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:custom]

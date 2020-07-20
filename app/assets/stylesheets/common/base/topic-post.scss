@@ -1,3 +1,5 @@
+$quote-share-maxwidth: 150px;
+
 .button-count.has-pending {
   span {
     background-color: $danger;
@@ -299,19 +301,65 @@ blockquote {
 .quote-button {
   display: none;
   position: absolute;
-  background-color: blend-primary-secondary(50%);
-  color: dark-light-choose($secondary, $primary);
-  padding: 10px;
   z-index: z("dropdown");
   opacity: 0.9;
+  background-color: dark-light-choose(
+    blend-primary-secondary(60%),
+    blend-primary-secondary(30%)
+  );
 
-  .d-icon {
-    display: inline-block;
+  &.visible {
+    display: block;
   }
 
-  &:hover {
-    background-color: $primary-medium;
-    cursor: pointer;
+  .btn,
+  .btn:hover,
+  .d-icon,
+  .btn:hover .d-icon {
+    color: dark-light-choose($secondary, $primary);
+  }
+
+  .insert-quote + .quote-sharing {
+    border-left: 1px solid
+      dark-light-choose(rgba($secondary, 0.4), rgba($primary, 0.4));
+  }
+
+  .quote-sharing {
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .quote-share-label {
+      opacity: 1;
+      max-width: $quote-share-maxwidth;
+      transition: opacity 0.3s ease-in-out, max-width 0.3s ease-in-out,
+        padding 0.3s ease-in-out;
+    }
+
+    &:hover .quote-share-label {
+      background: transparent;
+      opacity: 0;
+      max-width: 0px;
+      padding: 6px 0px;
+    }
+
+    .quote-share-label + .quote-share-buttons {
+      opacity: 0;
+      overflow: hidden;
+      max-width: 0;
+      display: inline-flex;
+      transition: opacity 0.3s ease-in-out, max-width 0.3s ease-in-out;
+    }
+
+    &:hover .quote-share-label + .quote-share-buttons {
+      max-width: $quote-share-maxwidth;
+      opacity: 1;
+    }
   }
 }
 

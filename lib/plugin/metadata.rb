@@ -75,7 +75,6 @@ class Plugin::Metadata
     "docker_manager",
     "lazy-yt",
     "poll",
-    "discourse-unsupported-browser",
     "discourse-fontawesome-pro",
     "discourse-staff-alias",
   ])

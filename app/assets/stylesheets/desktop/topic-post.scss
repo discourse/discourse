@@ -6,9 +6,11 @@
   margin-left: 0;
 }
 
-.topic-post:first-child {
-  nav.post-controls .post-admin-menu {
-    bottom: -125px;
+.staff {
+  .topic-post:first-child {
+    nav.post-controls .post-admin-menu {
+      bottom: -125px;
+    }
   }
 }
 
@@ -463,10 +465,6 @@ span.post-count {
 button.expand-post {
   margin-top: 10px;
   margin-left: $topic-body-width-padding;
-}
-
-.quote-button.visible {
-  display: block;
 }
 
 iframe {

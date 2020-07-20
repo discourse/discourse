@@ -103,7 +103,7 @@ export default Component.extend({
       /* do nothing for native */
     };
     picker.setDate = date => {
-      picker.value = moment(date).format("YYYY-MM-DD");
+      picker.value = date ? moment(date).format("YYYY-MM-DD") : null;
     };
     picker.setMinDate = date => {
       picker.min = date;

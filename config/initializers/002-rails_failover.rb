@@ -55,6 +55,9 @@ if defined?(RailsFailover::ActiveRecord)
     Discourse.redis.exists?(
       Discourse::PG_READONLY_MODE_KEY,
       Discourse::PG_FORCE_READONLY_MODE_KEY
+    ) || (
+      GlobalSetting.redis_config[:replica_host] &&
+      Discourse.redis.connection[:host] == GlobalSetting.redis_config[:replica_host]
     )
   rescue => e
     if e.is_a?(Redis::CannotConnectError)

@@ -6,7 +6,7 @@ class ReviewablesController < ApplicationController
   PER_PAGE = 10
 
   before_action :version_required, only: [:update, :perform]
-  before_action :ensure_can_see
+  before_action :ensure_can_see, except: [:destroy]
 
   def index
     offset = params[:offset].to_i

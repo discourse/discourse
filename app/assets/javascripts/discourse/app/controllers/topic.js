@@ -77,15 +77,6 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @discourseComputed("model.details.can_create_post", "composer.visible")
-  embedQuoteButton(canCreatePost, composerOpened) {
-    return (
-      (canCreatePost || composerOpened) &&
-      this.currentUser &&
-      this.currentUser.get("enable_quoting")
-    );
-  },
-
   @discourseComputed("model.postStream.loaded", "model.category_id")
   showSharedDraftControls(loaded, categoryId) {
     let draftCat = this.site.shared_drafts_category_id;

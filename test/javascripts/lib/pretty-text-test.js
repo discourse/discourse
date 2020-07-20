@@ -1029,7 +1029,6 @@ QUnit.test("video", assert => {
   assert.cooked(
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
     `<p><div class="video-container">
-    <p class="video-description">baby shark</p>
     <video width="100%" height="100%" preload="metadata" controls>
       <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
       <a href="/404">/404</a>
@@ -1056,7 +1055,6 @@ QUnit.test("video - mapped url - secure media enabled", assert => {
       lookupUploadUrls: lookupUploadUrls
     },
     `<p><div class="video-container">
-    <p class="video-description">baby shark</p>
     <video width="100%" height="100%" preload="metadata" controls>
       <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
       <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
@@ -1519,20 +1517,20 @@ QUnit.test("emoji - emojiSet", assert => {
 });
 
 QUnit.test("emoji - registerEmoji", assert => {
-  registerEmoji("foo", "/foo.png");
+  registerEmoji("foo", "/images/d-logo-sketch.png");
 
   assert.cookedOptions(
     ":foo:",
     {},
-    `<p><img src="/foo.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
+    `<p><img src="/images/d-logo-sketch.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
   );
 
-  registerEmoji("bar", "/bar.png", "baz");
+  registerEmoji("bar", "/images/avatar.png", "baz");
 
   assert.cookedOptions(
     ":bar:",
     {},
-    `<p><img src="/bar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
+    `<p><img src="/images/avatar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
   );
 });
 

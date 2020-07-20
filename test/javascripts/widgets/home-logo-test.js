@@ -1,6 +1,4 @@
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
-import { setPrefix } from "discourse-common/lib/get-url";
-
 moduleForWidget("home-logo");
 
 const bigLogo = "/images/d-logo-sketch.png?test";
@@ -96,54 +94,5 @@ widgetTest("mobile without logo", {
   test(assert) {
     assert.ok(find("img#site-logo.logo-big").length === 1);
     assert.equal(find("#site-logo").attr("src"), bigLogo);
-  }
-});
-
-widgetTest("basics, subfolder", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    setPrefix("/forum");
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_small_url = smallLogo;
-    this.siteSettings.title = title;
-    this.set("args", { minimized: false });
-  },
-
-  test(assert) {
-    assert.ok(find("img#site-logo.logo-big").length === 1);
-    assert.equal(find("#site-logo").attr("src"), `/forum${bigLogo}`);
-    assert.equal(find("#site-logo").attr("alt"), title);
-  }
-});
-
-widgetTest("basics, subfolder - minimized", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    setPrefix("/forum");
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_small_url = smallLogo;
-    this.siteSettings.title = title;
-    this.set("args", { minimized: true });
-  },
-
-  test(assert) {
-    assert.ok(find("img.logo-small").length === 1);
-    assert.equal(find("img.logo-small").attr("src"), `/forum${smallLogo}`);
-    assert.equal(find("img.logo-small").attr("alt"), title);
-  }
-});
-
-widgetTest("mobile logo, subfolder", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    setPrefix("/forum");
-    this.siteSettings.site_mobile_logo_url = mobileLogo;
-    this.siteSettings.site_logo_small_url = smallLogo;
-    this.site.mobileView = true;
-  },
-
-  test(assert) {
-    assert.ok(find("img#site-logo.logo-big").length === 1);
-    assert.equal(find("#site-logo").attr("src"), `/forum${mobileLogo}`);
   }
 });

@@ -208,6 +208,7 @@ en:
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_media_requirements: "S3 uploads must be enabled before enabling secure media."
+      share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
@@ -1666,7 +1667,7 @@ en:
     instagram_consumer_secret: "Consumer secret Instagram authentication"
 
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret. See <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
-    facebook_app_id: "App id for Facebook authentication, registered at <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    facebook_app_id: "App id for Facebook authentication and sharing, registered at <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App secret for Facebook authentication, registered at <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
 
     enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret. See <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
@@ -2232,6 +2233,9 @@ en:
     gravatar_name: "Name of the Gravatar provider"
     gravatar_base_url: "Url of the Gravatar provider's API base"
     gravatar_login_url: "Url relative to gravatar_base_url, which provides the user with the login to the Gravatar service"
+
+    share_quote_buttons: "Determine which items appear in the quote sharing widget, and in what order."
+    share_quote_visibility: "Determine when to show quote sharing buttons: never, to anonymous users only or all users. "
 
     errors:
       invalid_email: "Invalid email address."

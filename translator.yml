@@ -38,11 +38,6 @@ files:
   - source_path: plugins/discourse-presence/config/locales/server.en.yml
     destination_path: plugins/presence/server.yml
 
-  - source_path: plugins/discourse-unsupported-browser/config/locales/client.en.yml
-    destination_path: plugins/unsupported-browser/client.yml
-  - source_path: plugins/discourse-unsupported-browser/config/locales/server.en.yml
-    destination_path: plugins/unsupported-browser/server.yml
-
   - source_path: plugins/poll/config/locales/client.en.yml
     destination_path: plugins/poll/client.yml
   - source_path: plugins/poll/config/locales/server.en.yml

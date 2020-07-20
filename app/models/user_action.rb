@@ -167,7 +167,7 @@ class UserAction < ActiveRecord::Base
       'u.name AS acting_name'
     ]
 
-    AvatarLookup.lookup_columns.each do |c|
+    UserLookup.lookup_columns.each do |c|
       next if c == :id || c['.']
       acting_cols << "u.#{c} AS acting_#{c}"
     end

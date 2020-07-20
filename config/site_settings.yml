@@ -197,6 +197,23 @@ basic:
       - twitter
       - facebook
       - email
+  share_quote_visibility:
+    client: true
+    type: enum
+    default: "anonymous"
+    choices:
+      - none
+      - anonymous
+      - all
+  share_quote_buttons:
+    client: true
+    type: list
+    default: "twitter|email"
+    allow_any: false
+    choices:
+      - twitter
+      - facebook
+      - email
   desktop_category_page_style:
     client: true
     enum: "CategoryPageStyle"
@@ -354,6 +371,7 @@ login:
   enable_facebook_logins:
     default: false
   facebook_app_id:
+    client: true
     default: ""
     regex: "^\\d+$"
   facebook_app_secret:
@@ -1113,7 +1131,7 @@ email:
     default: true
     hidden: true
   preserve_email_structure_when_styling:
-    default: false
+    default: true
     hidden: true
 
 files:
@@ -1684,6 +1702,9 @@ embedding:
   embed_post_limit:
     default: 100
     hidden: true
+  embed_topic_limit_per_page:
+    default: 200
+    hidden: true
   embed_title_scrubber:
     default: ""
     hidden: true
@@ -1748,7 +1769,7 @@ backups:
 
 search:
   search_ranking_normalization:
-    default: '0'
+    default: "0"
     hidden: true
   min_search_term_length:
     client: true

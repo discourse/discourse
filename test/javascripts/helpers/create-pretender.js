@@ -259,6 +259,7 @@ export function applyDefaultHandlers(pretender) {
     const json = fixturesByUrl["/t/34/1.json"];
     json.details.can_archive_topic = true;
     json.details.can_close_topic = true;
+    json.details.can_edit_staff_notes = true;
 
     return response(json);
   });
@@ -814,7 +815,7 @@ export function applyDefaultHandlers(pretender) {
           <a href="http://test.com/somepage" target="_blank">test.com</a>
       </header>
       <article class="onebox-body">
-      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="https://test.com/image.png" class="thumbnail"></div>
+      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="" class="thumbnail"></div>
       <h3><a href="http://test.com/somepage" target="_blank">Test Page</a></h3>
       <p>Yet another collaboration tool</p>
       </article>

@@ -15,17 +15,17 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
     imageSrcs = [
       {
         short_url: "upload://a.jpeg",
-        url: "/uploads/default/original/3X/c/b/1.jpeg",
+        url: "/images/avatar.png?a",
         short_path: "/uploads/short-url/a.jpeg"
       },
       {
         short_url: "upload://b.jpeg",
-        url: "/uploads/default/original/3X/c/b/2.jpeg",
+        url: "/images/avatar.png?b",
         short_path: "/uploads/short-url/b.jpeg"
       },
       {
         short_url: "upload://z.jpeg",
-        url: "/uploads/default/original/3X/c/b/9.jpeg",
+        url: "/images/avatar.png?z",
         short_path: "/uploads/short-url/z.jpeg"
       }
     ];
@@ -89,14 +89,14 @@ QUnit.test("resolveAllShortUrls", async assert => {
   lookup = lookupCachedUploadUrl("upload://a.jpeg");
 
   assert.deepEqual(lookup, {
-    url: "/uploads/default/original/3X/c/b/1.jpeg",
+    url: "/images/avatar.png?a",
     short_path: "/uploads/short-url/a.jpeg"
   });
 
   lookup = lookupCachedUploadUrl("upload://b.jpeg");
 
   assert.deepEqual(lookup, {
-    url: "/uploads/default/original/3X/c/b/2.jpeg",
+    url: "/images/avatar.png?b",
     short_path: "/uploads/short-url/b.jpeg"
   });
 
@@ -136,8 +136,8 @@ QUnit.test(
       .eq(1);
     let link = fixture().find("a");
 
-    assert.equal(image1.attr("src"), "/uploads/default/original/3X/c/b/1.jpeg");
-    assert.equal(image2.attr("src"), "/uploads/default/original/3X/c/b/2.jpeg");
+    assert.equal(image1.attr("src"), "/images/avatar.png?a");
+    assert.equal(image2.attr("src"), "/images/avatar.png?b");
     assert.equal(link.attr("href"), "/uploads/short-url/c.pdf");
   }
 );
@@ -176,7 +176,7 @@ QUnit.test("resolveAllShortUrls - scoped", async assert => {
   lookup = lookupCachedUploadUrl("upload://z.jpeg");
 
   assert.deepEqual(lookup, {
-    url: "/uploads/default/original/3X/c/b/9.jpeg",
+    url: "/images/avatar.png?z",
     short_path: "/uploads/short-url/z.jpeg"
   });
 

@@ -362,6 +362,22 @@ describe TopicQuery do
       topic_ids = topic_query.list_new.topics.map(&:id)
       expect(topic_ids).to contain_exactly(muted_topic.id, tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
     end
+
+    it 'is not removed from the tag page itself' do
+      muted_tag = Fabricate(:tag)
+      TagUser.create!(user_id: user.id,
+                      tag_id: muted_tag.id,
+                      notification_level: CategoryUser.notification_levels[:muted])
+
+      muted_topic = Fabricate(:topic, tags: [muted_tag])
+
+      topic_ids = topic_query.latest_results(tags: [muted_tag.name]).map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id)
+
+      muted_tag.update(name: "mixedCaseName")
+      topic_ids = topic_query.latest_results(tags: [muted_tag.name.downcase]).map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id)
+    end
   end
 
   context 'a bunch of topics' do

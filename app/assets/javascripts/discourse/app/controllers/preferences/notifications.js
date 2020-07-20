@@ -14,7 +14,8 @@ export default Controller.extend({
       "auto_track_topics_after_msecs",
       "notification_level_when_replying",
       "like_notification_frequency",
-      "allow_private_messages"
+      "allow_private_messages",
+      "enable_allowed_pm_users"
     ];
 
     this.likeNotificationFrequencies = [
