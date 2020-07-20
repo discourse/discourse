@@ -1702,6 +1702,9 @@ embedding:
   embed_post_limit:
     default: 100
     hidden: true
+  embed_topic_limit_per_page:
+    default: 200
+    hidden: true
   embed_title_scrubber:
     default: ""
     hidden: true
