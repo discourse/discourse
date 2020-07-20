@@ -39,8 +39,6 @@ class UploadCreator
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
 
-    DiscourseEvent.trigger(:before_upload_creation, @file, is_image)
-
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
       if is_image
         extract_image_info!
@@ -123,6 +121,8 @@ class UploadCreator
 
       add_metadata!
       return @upload unless @upload.save
+
+      DiscourseEvent.trigger(:before_upload_creation, @file, is_image)
 
       # store the file and update its url
       File.open(@file.path) do |f|
