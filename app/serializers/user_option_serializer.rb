@@ -23,6 +23,7 @@ class UserOptionSerializer < ApplicationSerializer
              :theme_ids,
              :theme_key_seq,
              :allow_private_messages,
+             :enable_allowed_pm_users,
              :homepage_id,
              :hide_profile_and_presence,
              :text_size,

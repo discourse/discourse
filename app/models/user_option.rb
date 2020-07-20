@@ -227,6 +227,7 @@ end
 #  title_count_mode_key             :integer          default(0), not null
 #  enable_defer                     :boolean          default(FALSE), not null
 #  timezone                         :string
+#  enable_allowed_pm_users          :boolean          default(FALSE), not null
 #
 # Indexes
 #
