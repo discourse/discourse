@@ -61,7 +61,8 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return NavItem.buildList(category, {
       tagId,
       filterType,
-      noSubcategories
+      noSubcategories,
+      siteSettings: this.siteSettings
     });
   },
 

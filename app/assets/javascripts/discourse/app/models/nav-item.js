@@ -12,9 +12,7 @@ import User from "discourse/models/user";
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
   title(name) {
-    const extra = {};
-
-    return I18n.t("filters." + name.replace("/", ".") + ".help", extra);
+    return I18n.t("filters." + name.replace("/", ".") + ".help", {});
   },
 
   @discourseComputed("name", "count")
@@ -195,7 +193,14 @@ NavItem.reopenClass({
       args.category = category;
     }
 
-    let items = Discourse.SiteSettings.top_menu.split("|");
+    if (!args.siteSettings) {
+      deprecated("You must supply `buildList` with a `siteSettings` object", {
+        since: "2.6.0",
+        dropFrom: "2.7.0"
+      });
+      args.siteSettings = Discourse.SiteSettings;
+    }
+    let items = args.siteSettings.top_menu.split("|");
 
     const filterType = (args.filterMode || "").split("/").pop();
 
@@ -277,19 +282,4 @@ export function customNavItemHref(cb) {
 
 export function addNavItem(item) {
   NavItem.extraNavItemDescriptors.push(item);
-}
-
-if (typeof Discourse !== "undefined") {
-  Object.defineProperty(Discourse, "NavItem", {
-    get() {
-      deprecated(
-        "Import the NavItem class instead of using Discourse.NavItem",
-        {
-          since: "2.4.0",
-          dropFrom: "2.5.0"
-        }
-      );
-      return NavItem;
-    }
-  });
 }
