@@ -1308,7 +1308,6 @@ files:
   allow_uploaded_avatars:
     client: true
     default: true
-  allow_animated_thumbnails: true
   default_avatars:
     default: ""
     type: url_list
