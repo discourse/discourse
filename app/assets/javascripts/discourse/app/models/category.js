@@ -8,6 +8,7 @@ import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const Category = RestModel.extend({
   permissions: null,
@@ -267,6 +268,11 @@ const Category = RestModel.extend({
 var _uncategorized;
 
 Category.reopenClass({
+  slugEncoded() {
+    let siteSettings = getOwner(this).lookup("site-settings:main");
+    return siteSettings.slug_generation_method === "encoded";
+  },
+
   findUncategorized() {
     _uncategorized =
       _uncategorized ||
@@ -309,7 +315,7 @@ Category.reopenClass({
   },
 
   findSingleBySlug(slug) {
-    if (Discourse.SiteSettings.slug_generation_method !== "encoded") {
+    if (!this.slugEncoded()) {
       return Category.list().find(c => Category.slugFor(c) === slug);
     } else {
       return Category.list().find(c => Category.slugFor(c) === encodeURI(slug));
@@ -335,7 +341,7 @@ Category.reopenClass({
   },
 
   findBySlugAndParent(slug, parentCategory) {
-    if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+    if (this.slugEncoded()) {
       slug = encodeURI(slug);
     }
     return Category.list().find(category => {
@@ -363,7 +369,7 @@ Category.reopenClass({
   findBySlugPathWithID(slugPathWithID) {
     let parts = slugPathWithID.split("/").filter(Boolean);
     // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
-    if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+    if (this.slugEncoded()) {
       parts = parts.map(urlPart => decodeURI(urlPart));
     }
     let category = null;
@@ -404,9 +410,9 @@ Category.reopenClass({
           return (
             item &&
             item.get("parentCategory") === parentCategory &&
-            ((Discourse.SiteSettings.slug_generation_method !== "encoded" &&
+            ((!this.slugEncoded() &&
               Category.slugFor(item) === parentSlug + "/" + slug) ||
-              (Discourse.SiteSettings.slug_generation_method === "encoded" &&
+              (this.slugEncoded() &&
                 Category.slugFor(item) ===
                   encodeURI(parentSlug) + "/" + encodeURI(slug)))
           );
