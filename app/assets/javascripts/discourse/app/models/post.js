@@ -40,9 +40,7 @@ const Post = RestModel.extend({
 
   @discourseComputed("name", "username")
   showName(name, username) {
-    return (
-      name && name !== username && Discourse.SiteSettings.display_name_on_posts
-    );
+    return name && name !== username && this.siteSettings.display_name_on_posts;
   },
 
   @discourseComputed("firstPost", "deleted_by", "topic.deleted_by")
@@ -190,10 +188,7 @@ const Post = RestModel.extend({
     this.set("oldCooked", this.cooked);
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
-    if (
-      deletedBy.staff ||
-      Discourse.SiteSettings.delete_removed_posts_after === 0
-    ) {
+    if (deletedBy.staff || this.siteSettings.delete_removed_posts_after === 0) {
       this.setProperties({
         deleted_at: new Date(),
         deleted_by: deletedBy,
@@ -207,7 +202,7 @@ const Post = RestModel.extend({
           : "post.deleted_by_author";
       promise = cookAsync(
         I18n.t(key, {
-          count: Discourse.SiteSettings.delete_removed_posts_after
+          count: this.siteSettings.delete_removed_posts_after
         })
       ).then(cooked => {
         this.setProperties({
