@@ -27,14 +27,14 @@ function isUnseen(topic) {
   return !topic.is_seen;
 }
 
-function hasMutedTags(topicTagIds, mutedTagIds) {
+function hasMutedTags(topicTagIds, mutedTagIds, siteSettings) {
   if (!mutedTagIds || !topicTagIds) {
     return false;
   }
   return (
-    (Discourse.SiteSettings.remove_muted_tags_from_latest === "always" &&
+    (siteSettings.remove_muted_tags_from_latest === "always" &&
       topicTagIds.any(tagId => mutedTagIds.includes(tagId))) ||
-    (Discourse.SiteSettings.remove_muted_tags_from_latest === "only_muted" &&
+    (siteSettings.remove_muted_tags_from_latest === "only_muted" &&
       topicTagIds.every(tagId => mutedTagIds.includes(tagId)))
   );
 }
@@ -81,7 +81,13 @@ const TopicTrackingState = EmberObject.extend({
 
       if (["new_topic", "latest"].includes(data.message_type)) {
         const mutedTagIds = User.currentProp("muted_tag_ids");
-        if (hasMutedTags(data.payload.topic_tag_ids, mutedTagIds)) {
+        if (
+          hasMutedTags(
+            data.payload.topic_tag_ids,
+            mutedTagIds,
+            this.siteSettings
+          )
+        ) {
           return;
         }
       }
