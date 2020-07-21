@@ -533,8 +533,8 @@ RSpec.describe Admin::SiteTextsController do
           }
           expect(response.status).to eq(200)
 
-          expect(Category.find(SiteSetting.staff_category_id).name).to eq(I18n.t("staff_category_name"))
-          expect(Topic.find(SiteSetting.guidelines_topic_id).title).to eq(I18n.t("guidelines_topic.title"))
+          expect(Category.find(SiteSetting.staff_category_id).name).to eq(I18n.t("staff_category_name", locale: :de))
+          expect(Topic.find(SiteSetting.guidelines_topic_id).title).to eq(I18n.t("guidelines_topic.title", locale: :de))
         end
       end
     end

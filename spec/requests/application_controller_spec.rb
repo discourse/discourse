@@ -628,4 +628,107 @@ RSpec.describe ApplicationController do
     get "/t/#{topic.slug}/#{topic.id}"
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
   end
+
+  describe "set_locale" do
+    # Using /bootstrap.json because it returns a locale-dependent value
+    def headers(locale)
+      { HTTP_ACCEPT_LANGUAGE: locale }
+    end
+
+    context "allow_user_locale disabled" do
+      context "accept-language header differs from default locale" do
+        before do
+          SiteSetting.allow_user_locale = false
+          SiteSetting.default_locale = "en"
+        end
+
+        context "with an anonymous user" do
+          it "uses the default locale" do
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("en.js")
+          end
+        end
+
+        context "with a logged in user" do
+          it "it uses the default locale" do
+            user = Fabricate(:user, locale: :fr)
+            sign_in(user)
+
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("en.js")
+          end
+        end
+      end
+    end
+
+    context "set_locale_from_accept_language_header enabled" do
+      context "accept-language header differs from default locale" do
+        before do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_accept_language_header = true
+          SiteSetting.default_locale = "en"
+        end
+
+        context "with an anonymous user" do
+          it "uses the locale from the headers" do
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("fr.js")
+          end
+
+          it "doesn't leak after requests" do
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("fr.js")
+            expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE)
+          end
+        end
+
+        context "with a logged in user" do
+          before do
+            user = Fabricate(:user, locale: :fr)
+            sign_in(user)
+          end
+
+          it "uses the user's preferred locale" do
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("fr.js")
+          end
+
+          it "serves a 404 page in the preferred locale" do
+            get "/missingroute", headers: headers("fr")
+            expect(response.status).to eq(404)
+            expected_title = I18n.t("page_not_found.title", locale: :fr)
+            expect(response.body).to include(CGI.escapeHTML(expected_title))
+          end
+        end
+      end
+
+      context "the preferred locale includes a region" do
+        it "returns the locale and region separated by an underscore" do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_accept_language_header = true
+          SiteSetting.default_locale = "en"
+
+          get "/bootstrap.json", headers: headers("zh-CN")
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['bootstrap']['locale_script']).to end_with("zh_CN.js")
+        end
+      end
+
+      context 'accept-language header is not set' do
+        it 'uses the site default locale' do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.default_locale = 'en'
+
+          get "/bootstrap.json", headers: headers("")
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['bootstrap']['locale_script']).to end_with("en.js")
+        end
+      end
+    end
+  end
 end
