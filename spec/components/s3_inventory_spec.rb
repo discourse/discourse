@@ -67,7 +67,7 @@ describe "S3Inventory" do
 
     upload = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
     Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
-    Fabricate(:upload, updated_at: 2.days.ago)
+    no_etag = Fabricate(:upload, updated_at: 2.days.ago)
 
     inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
     inventory.expects(:inventory_date).returns(Time.now)
@@ -76,8 +76,8 @@ describe "S3Inventory" do
       inventory.backfill_etags_and_list_missing
     end
 
-    expect(output).to eq("#{upload.url}\n1 of 5 uploads are missing\n")
-    expect(Discourse.stats.get("missing_s3_uploads")).to eq(1)
+    expect(output).to eq("#{upload.url}\n#{no_etag.url}\n2 of 5 uploads are missing\n")
+    expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
   end
 
   it "should backfill etags to uploads table correctly" do
