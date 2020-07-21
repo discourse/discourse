@@ -108,7 +108,7 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed("model.badge_count")
   showBadges(badgeCount) {
-    return Discourse.SiteSettings.enable_badges && badgeCount > 0;
+    return this.siteSettings.enable_badges && badgeCount > 0;
   },
 
   @discourseComputed()
