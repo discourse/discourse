@@ -131,7 +131,9 @@ export default {
       );
 
       if (!isTesting()) {
-        bus.subscribe(alertChannel(user), data => onNotification(data, user));
+        bus.subscribe(alertChannel(user), data =>
+          onNotification(data, siteSettings)
+        );
         initDesktopNotifications(bus, appEvents);
 
         if (isPushNotificationsEnabled(user, site.mobileView)) {

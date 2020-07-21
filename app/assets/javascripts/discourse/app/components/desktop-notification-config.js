@@ -114,7 +114,7 @@ export default Component.extend({
       } else {
         this.set("notificationsDisabled", "");
         Notification.requestPermission(() => {
-          confirmNotification();
+          confirmNotification(this.siteSettings);
           this.notifyPropertyChange("notificationsPermission");
         });
       }
