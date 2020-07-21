@@ -1805,6 +1805,7 @@ describe PostsController do
       expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
+      expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_create]).count).to eq(1)
 
       put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
 
@@ -1812,6 +1813,7 @@ describe PostsController do
       public_post.reload
       expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+      expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_destroy]).count).to eq(1)
     end
 
     describe 'group moderators' do

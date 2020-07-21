@@ -555,13 +555,8 @@ describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_topic_closed(topic, closed: true) }.to change { UserHistory.count }.by(1)
-      user_history = UserHistory.last
-      expect(user_history.action).to eq(UserHistory.actions[:topic_closed])
-
-      expect { logger.log_topic_closed(topic, closed: false) }.to change { UserHistory.count }.by(1)
-      user_history = UserHistory.last
-      expect(user_history.action).to eq(UserHistory.actions[:topic_opened])
+      expect { logger.log_topic_closed(topic, closed: true) }.to change { UserHistory.where(action: UserHistory.actions[:topic_closed]).count }.by(1)
+      expect { logger.log_topic_closed(topic, closed: false) }.to change { UserHistory.where(action: UserHistory.actions[:topic_opened]).count }.by(1)
     end
   end
 
@@ -573,13 +568,8 @@ describe StaffActionLogger do
     end
 
     it "creates a new UserHistory record" do
-      expect { logger.log_topic_archived(topic, archived: true) }.to change { UserHistory.count }.by(1)
-      user_history = UserHistory.last
-      expect(user_history.action).to eq(UserHistory.actions[:topic_archived])
-
-      expect { logger.log_topic_archived(topic, archived: false) }.to change { UserHistory.count }.by(1)
-      user_history = UserHistory.last
-      expect(user_history.action).to eq(UserHistory.actions[:topic_unarchived])
+      expect { logger.log_topic_archived(topic, archived: true) }.to change { UserHistory.where(action: UserHistory.actions[:topic_archived]).count }.by(1)
+      expect { logger.log_topic_archived(topic, archived: false) }.to change { UserHistory.where(action: UserHistory.actions[:topic_unarchived]).count }.by(1)
     end
   end
 
