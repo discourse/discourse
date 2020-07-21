@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # See https://github.com/defunkt/unicorn/commit/5f478f5a9a58f72c0a844258b8ee614bf24ea9f7
 # Unicorn originally logs backtrace line by line with `exc.backtrace.each { |line| logger.error(line) }`.
 # However, that means we get a separate logstash message for each backtrace which isn't what we want. The
