@@ -46,6 +46,28 @@ describe Middleware::AnonymousCache::Helper do
     end
   end
 
+  context "with user-selectable locale" do
+    it "handles different languages" do
+      # Normally does not differentiate
+      I18n.locale = :fr
+      with_french_header = new_helper.cache_key
+      I18n.locale = :en
+      with_english_header = new_helper.cache_key
+
+      expect(with_english_header).to eq(with_french_header)
+
+      # If per-user enabled:
+      SiteSetting.allow_user_locale = true
+
+      I18n.locale = :fr
+      with_french_header = new_helper.cache_key
+      I18n.locale = :en
+      with_english_header = new_helper.cache_key
+
+      expect(with_french_header).not_to eq(with_english_header)
+    end
+  end
+
   context 'force_anonymous!' do
     before do
       RateLimiter.enable

@@ -13,7 +13,8 @@ module Middleware
         c: 'key_is_crawler?',
         b: 'key_has_brotli?',
         t: 'key_cache_theme_ids',
-        ca: 'key_compress_anon'
+        ca: 'key_compress_anon',
+        l: 'key_locale'
       }
     end
 
@@ -87,6 +88,10 @@ module Middleware
             @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
           end
         @has_brotli == :true
+      end
+
+      def key_locale
+        I18n.locale if SiteSetting.allow_user_locale
       end
 
       def is_crawler?
