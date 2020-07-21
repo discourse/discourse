@@ -27,6 +27,20 @@ const LATER_TODAY_CUTOFF_HOUR = 17;
 const LATER_TODAY_MAX_HOUR = 18;
 const MOMENT_MONDAY = 1;
 const MOMENT_THURSDAY = 4;
+const AUTO_DELETE_PREFERENCES = [
+  {
+    id: 0,
+    name: I18n.t("bookmarks.auto_delete_preference.never")
+  },
+  {
+    id: 1,
+    name: I18n.t("bookmarks.auto_delete_preference.when_reminder_sent")
+  },
+  {
+    id: 2,
+    name: I18n.t("bookmarks.auto_delete_preference.on_owner_reply")
+  }
+];
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -65,7 +79,6 @@ export default Controller.extend(ModalFunctionality, {
   mouseTrap: null,
   userTimezone: null,
   showOptions: false,
-  options: null,
 
   onShow() {
     this.setProperties({
@@ -79,7 +92,6 @@ export default Controller.extend(ModalFunctionality, {
       lastCustomReminderTime: null,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
-      options: {},
       model: this.model || {}
     });
 
@@ -143,17 +155,24 @@ export default Controller.extend(ModalFunctionality, {
 
   _loadBookmarkOptions() {
     this.set(
-      "options.deleteWhenReminderSent",
-      this.model.deleteWhenReminderSent ||
-        localStorage.bookmarkOptionsDeleteWhenReminderSent === "true"
+      "autoDeletePreference",
+      this.model.autoDeletePreference || this._preferredDeleteOption() || 0
     );
 
     // we want to make sure the options panel opens so the user
     // knows they have set these options previously. run next otherwise
     // the modal is not visible when it tries to slide down the options
-    if (this.options.deleteWhenReminderSent) {
+    if (this.autoDeletePreference) {
       next(() => this.toggleOptionsPanel());
     }
+  },
+
+  _preferredDeleteOption() {
+    let preferred = localStorage.bookmarkDeleteOption;
+    if (preferred && preferred !== "") {
+      preferred = parseInt(preferred, 10);
+    }
+    return preferred;
   },
 
   _loadLastUsedCustomReminderDatetime() {
@@ -215,6 +234,11 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed()
   reminderTypes: () => {
     return REMINDER_TYPES;
+  },
+
+  @discourseComputed()
+  autoDeletePreferences: () => {
+    return AUTO_DELETE_PREFERENCES;
   },
 
   showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
@@ -294,7 +318,7 @@ export default Controller.extend(ModalFunctionality, {
       localStorage.lastCustomBookmarkReminderDate = this.customReminderDate;
     }
 
-    localStorage.bookmarkOptionsDeleteWhenReminderSent = this.options.deleteWhenReminderSent;
+    localStorage.bookmarkDeleteOption = this.autoDeletePreference;
 
     let reminderType;
     if (this.selectedReminderType === REMINDER_TYPES.NONE) {
@@ -311,7 +335,7 @@ export default Controller.extend(ModalFunctionality, {
       name: this.model.name,
       post_id: this.model.postId,
       id: this.model.id,
-      delete_when_reminder_sent: this.options.deleteWhenReminderSent
+      auto_delete_preference: this.autoDeletePreference
     };
 
     if (this._editingExistingBookmark()) {
@@ -323,7 +347,7 @@ export default Controller.extend(ModalFunctionality, {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
-            deleteWhenReminderSent: this.options.deleteWhenReminderSent,
+            autoDeletePreference: this.autoDeletePreference,
             id: this.model.id,
             name: this.model.name
           });
@@ -335,7 +359,7 @@ export default Controller.extend(ModalFunctionality, {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
-            deleteWhenReminderSent: this.options.deleteWhenReminderSent,
+            autoDeletePreference: this.autoDeletePreference,
             id: response.id,
             name: this.model.name
           });

@@ -654,6 +654,19 @@ describe PostCreator do
       end
     end
 
+    context "when the user has bookmarks with auto_delete_preference on_owner_reply" do
+      before do
+        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, topic: topic, user: user)
+        Fabricate(:bookmark, user: user)
+      end
+      it "deletes the bookmarks" do
+        creator.create
+        expect(Bookmark.where(user: user).count).to eq(2)
+      end
+    end
+
     context "topic stats" do
       before do
         PostCreator.new(

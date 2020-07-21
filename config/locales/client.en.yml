@@ -319,7 +319,11 @@ en:
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
       list_permission_denied: "You do not have permission to view this user's bookmarks."
-      delete_when_reminder_sent: "Delete this bookmark when the reminder notification is sent."
+      auto_delete_preference:
+        label: "Automatically delete"
+        never: "Never"
+        when_reminder_sent: "Once the reminder is sent"
+        on_owner_reply: "After I reply to this topic"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:

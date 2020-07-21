@@ -75,14 +75,24 @@
     margin-left: 0.5em;
     margin-bottom: 0.5em;
     background: transparent;
+    padding-right: 6px;
   }
 
   .bookmark-options-panel {
+    .select-kit {
+      width: 100%;
+    }
+
     margin-bottom: 18px;
     display: none;
 
-    input[type="checkbox"] {
-      margin-right: 0.85em;
+    label {
+      display: flex;
+
+      span {
+        display: block;
+        flex: 1;
+      }
     }
   }
 }

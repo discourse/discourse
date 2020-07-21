@@ -110,6 +110,10 @@ export default Controller.extend(bufferedProperty("model"), {
     this._super(...arguments);
 
     this.appEvents.on("post:show-revision", this, "_showRevision");
+    this.appEvents.on("post:created", this, () => {
+      this._removeDeleteOnOwnerReplyBookmarks();
+      this.appEvents.trigger("post-stream:refresh", { force: true });
+    });
 
     this.setProperties({
       selectedPostIds: [],
@@ -181,6 +185,15 @@ export default Controller.extend(bufferedProperty("model"), {
     return category && category.minimum_required_tags > 0
       ? category.minimum_required_tags
       : null;
+  },
+
+  _removeDeleteOnOwnerReplyBookmarks() {
+    let posts = this.model.get("postStream").posts;
+    posts
+      .filter(p => p.bookmarked && p.bookmark_auto_delete_preference === 2) // 2 is on_owner_reply
+      .forEach(p => {
+        p.clearBookmark();
+      });
   },
 
   _forceRefreshPostStream() {

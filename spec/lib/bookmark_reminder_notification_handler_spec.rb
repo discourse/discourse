@@ -34,9 +34,9 @@ RSpec.describe BookmarkReminderNotificationHandler do
       expect(bookmark.reload.no_reminder?).to eq(true)
     end
 
-    context "when the delete_when_reminder_sent boolean is true " do
+    context "when the auto_delete_preference is when_reminder_sent" do
       it "deletes the bookmark after the reminder gets sent" do
-        bookmark.update(delete_when_reminder_sent: true)
+        bookmark.update(auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent])
         subject.send_notification(bookmark)
         expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
       end

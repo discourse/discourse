@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class BookmarkManager
-  DEFAULT_OPTIONS = { delete_when_reminder_sent: false }
-
   include HasErrors
 
   def initialize(user)
@@ -24,7 +22,7 @@ class BookmarkManager
         reminder_type: reminder_type,
         reminder_at: reminder_at,
         reminder_set_at: Time.zone.now
-      }.merge(default_options(options))
+      }.merge(options)
     )
 
     if bookmark.errors.any?
@@ -84,7 +82,7 @@ class BookmarkManager
         reminder_at: reminder_at,
         reminder_type: reminder_type,
         reminder_set_at: Time.zone.now
-      }.merge(default_options(options))
+      }.merge(options)
     )
 
     if bookmark.errors.any?
@@ -103,9 +101,5 @@ class BookmarkManager
   def parse_reminder_type(reminder_type)
     return if reminder_type.blank?
     reminder_type.is_a?(Integer) ? reminder_type : Bookmark.reminder_types[reminder_type.to_sym]
-  end
-
-  def default_options(options)
-    DEFAULT_OPTIONS.merge(options) { |key, old, new| new.nil? ? old : new }
   end
 end

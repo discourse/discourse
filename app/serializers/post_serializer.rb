@@ -54,7 +54,7 @@ class PostSerializer < BasicPostSerializer
              :bookmark_id,
              :bookmark_reminder_type,
              :bookmark_name,
-             :bookmark_delete_when_reminder_sent,
+             :bookmark_auto_delete_preference,
              :raw,
              :actions_summary,
              :moderator?,
@@ -335,7 +335,11 @@ class PostSerializer < BasicPostSerializer
     bookmarked
   end
 
-  def include_bookmark_delete_when_reminder_sent?
+  def include_bookmark_auto_delete_preference?
+    bookmarked
+  end
+
+  def include_bookmark_delete_on_owner_reply?
     bookmarked
   end
 
@@ -361,8 +365,8 @@ class PostSerializer < BasicPostSerializer
     post_bookmark&.name
   end
 
-  def bookmark_delete_when_reminder_sent
-    post_bookmark&.delete_when_reminder_sent
+  def bookmark_auto_delete_preference
+    post_bookmark&.auto_delete_preference
   end
 
   def bookmark_id

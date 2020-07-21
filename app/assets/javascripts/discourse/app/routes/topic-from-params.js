@@ -73,12 +73,7 @@ export default DiscourseRoute.extend({
         // completely clear out all the bookmark related attributes
         // because they are not in the response if bookmarked == false
         if (closestPost && !closestPost.bookmarked) {
-          closestPost.setProperties({
-            bookmark_reminder_at: null,
-            bookmark_reminder_type: null,
-            bookmark_name: null,
-            bookmark_id: null
-          });
+          closestPost.clearBookmark();
         }
 
         if (!isEmpty(topic.draft)) {

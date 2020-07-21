@@ -305,7 +305,7 @@ const Post = RestModel.extend({
           postId: this.id,
           id: this.bookmark_id,
           reminderAt: this.bookmark_reminder_at,
-          deleteWhenReminderSent: this.bookmark_delete_when_reminder_sent,
+          autoDeletePreference: this.bookmark_auto_delete_preference,
           name: this.bookmark_name
         },
         title: this.bookmark_id
@@ -324,8 +324,7 @@ const Post = RestModel.extend({
             bookmarked: true,
             bookmark_reminder_at: savedData.reminderAt,
             bookmark_reminder_type: savedData.reminderType,
-            bookmark_delete_when_reminder_sent:
-              savedData.deleteWhenReminderSent,
+            bookmark_auto_delete_preference: savedData.autoDeletePreference,
             bookmark_name: savedData.name,
             bookmark_id: savedData.id
           });
@@ -334,16 +333,21 @@ const Post = RestModel.extend({
         },
         afterDelete: topicBookmarked => {
           this.set("topic.bookmarked", topicBookmarked);
-          this.setProperties({
-            bookmark_reminder_at: null,
-            bookmark_reminder_type: null,
-            bookmark_name: null,
-            bookmark_id: null,
-            bookmarked: false
-          });
+          this.clearBookmark();
           this.appEvents.trigger("page:bookmark-post-toggled", this);
         }
       });
+    });
+  },
+
+  clearBookmark() {
+    this.setProperties({
+      bookmark_reminder_at: null,
+      bookmark_reminder_type: null,
+      bookmark_name: null,
+      bookmark_id: null,
+      bookmarked: false,
+      bookmark_auto_delete_preference: null
     });
   },
 

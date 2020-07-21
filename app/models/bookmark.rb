@@ -44,6 +44,14 @@ class Bookmark < ActiveRecord::Base
     self.reminder_at.blank? && self.reminder_type.blank?
   end
 
+  def delete_when_reminder_sent?
+    self.auto_delete_preference == Bookmark.auto_delete_preferences[:when_reminder_sent]
+  end
+
+  def delete_on_owner_reply?
+    self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
+  end
+
   scope :pending_reminders, ->(before_time = Time.now.utc) do
     where("reminder_at IS NOT NULL AND reminder_at <= :before_time", before_time: before_time)
   end
@@ -53,7 +61,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.reminder_types
-    @reminder_type = Enum.new(
+    @reminder_types ||= Enum.new(
       later_today: 1,
       next_business_day: 2,
       tomorrow: 3,
@@ -62,6 +70,14 @@ class Bookmark < ActiveRecord::Base
       custom: 6,
       start_of_next_business_week: 7,
       later_this_week: 8
+    )
+  end
+
+  def self.auto_delete_preferences
+    @auto_delete_preferences ||= Enum.new(
+      never: 0,
+      when_reminder_sent: 1,
+      on_owner_reply: 2
     )
   end
 
@@ -91,7 +107,7 @@ end
 #  updated_at                :datetime         not null
 #  reminder_last_sent_at     :datetime
 #  reminder_set_at           :datetime
-#  delete_when_reminder_sent :boolean          default(FALSE), not null
+#  auto_delete_preference             :integer
 #
 # Indexes
 #
