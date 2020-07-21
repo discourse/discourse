@@ -122,6 +122,12 @@
   }
 
   &.show-preview {
+    .submit-panel .save-or-cancel {
+      z-index: z("fullscreen") + 1;
+      .cancel {
+        display: none;
+      }
+    }
     .d-editor-preview-wrapper {
       position: fixed;
       z-index: z("fullscreen");
@@ -130,6 +136,7 @@
       left: 0;
       right: 0;
       background-color: $secondary;
+      border-bottom: 40px solid $secondary;
       max-width: 100%;
       margin: 0;
       padding: 10px;

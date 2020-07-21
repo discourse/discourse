@@ -616,6 +616,10 @@ export default Controller.extend({
       this.set("model.isWarning", false);
     }
 
+    if (this.site.mobileView && this.showPreview) {
+      this.set("showPreview", false);
+    }
+
     const composer = this.model;
 
     if (composer.cantSubmitPost) {
