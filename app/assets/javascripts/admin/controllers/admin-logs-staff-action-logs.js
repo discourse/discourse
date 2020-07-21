@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import { gt } from "@ember/object/computed";
+import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
-import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default Controller.extend({
+  queryParams: ["filters"],
+
   model: null,
   filters: null,
-  filtersExists: gt("filterCount", 0),
   userHistoryActions: null,
 
   @discourseComputed("filters.action_name")
@@ -18,36 +18,13 @@ export default Controller.extend({
     return name ? I18n.t("admin.logs.staff_actions.actions." + name) : null;
   },
 
-  resetFilters() {
-    this.setProperties({
-      model: EmberObject.create({ loadingMore: true }),
-      filters: EmberObject.create()
-    });
-    this.scheduleRefresh();
-  },
-
-  _changeFilters(props) {
-    this.set("model", EmberObject.create({ loadingMore: true }));
-    this.filters.setProperties(props);
-    this.scheduleRefresh();
+  @discourseComputed("filters")
+  filtersExists(filters) {
+    return filters && Object.keys(filters).length > 0;
   },
 
   _refresh() {
-    let filters = this.filters;
-    let params = {};
-    let count = 0;
-
-    // Don't send null values
-    Object.keys(filters).forEach(k => {
-      let val = filters.get(k);
-      if (val) {
-        params[k] = val;
-        count += 1;
-      }
-    });
-    this.set("filterCount", count);
-
-    this.store.findAll("staff-action-log", params).then(result => {
+    this.store.findAll("staff-action-log", this.filters).then(result => {
       this.set("model", result);
 
       if (!this.userHistoryActions) {
@@ -70,10 +47,38 @@ export default Controller.extend({
     scheduleOnce("afterRender", this, this._refresh);
   },
 
+  resetFilters() {
+    this.setProperties({
+      model: EmberObject.create({ loadingMore: true }),
+      filters: EmberObject.create()
+    });
+    this.scheduleRefresh();
+  },
+
+  changeFilters(props) {
+    this.set("model", EmberObject.create({ loadingMore: true }));
+
+    if (!this.filters) {
+      this.set("filters", EmberObject.create());
+    }
+
+    Object.keys(props).forEach(key => {
+      if (props[key] === undefined || props[key] === null) {
+        this.filters.set(key, undefined);
+        delete this.filters[key];
+      } else {
+        this.filters.set(key, props[key]);
+      }
+    });
+
+    this.send("onFiltersChange", this.filters);
+    this.scheduleRefresh();
+  },
+
   actions: {
     filterActionIdChanged(filterActionId) {
       if (filterActionId) {
-        this._changeFilters({
+        this.changeFilters({
           action_name: filterActionId,
           action_id: this.userHistoryActions.findBy("id", filterActionId)
             .action_id
@@ -82,18 +87,16 @@ export default Controller.extend({
     },
 
     clearFilter(key) {
-      let changed = {};
-
-      // Special case, clear all action related stuff
       if (key === "actionFilter") {
-        changed.action_name = null;
-        changed.action_id = null;
-        changed.custom_type = null;
         this.set("filterActionId", null);
+        this.changeFilters({
+          action_name: null,
+          action_id: null,
+          custom_type: null
+        });
       } else {
-        changed[key] = null;
+        this.changeFilters({ [key]: null });
       }
-      this._changeFilters(changed);
     },
 
     clearAllFilters() {
@@ -102,7 +105,7 @@ export default Controller.extend({
     },
 
     filterByAction(logItem) {
-      this._changeFilters({
+      this.changeFilters({
         action_name: logItem.get("action_name"),
         action_id: logItem.get("action"),
         custom_type: logItem.get("custom_type")
@@ -110,15 +113,15 @@ export default Controller.extend({
     },
 
     filterByStaffUser(acting_user) {
-      this._changeFilters({ acting_user: acting_user.username });
+      this.changeFilters({ acting_user: acting_user.username });
     },
 
     filterByTargetUser(target_user) {
-      this._changeFilters({ target_user: target_user.username });
+      this.changeFilters({ target_user: target_user.username });
     },
 
     filterBySubject(subject) {
-      this._changeFilters({ subject: subject });
+      this.changeFilters({ subject: subject });
     },
 
     exportStaffActionLogs() {
