@@ -41,18 +41,7 @@ export default {
       app[
         `Discovery${filterCapitalized}CategoryNoneController`
       ] = DiscoverySortableController.extend();
-
-      if (filter === "top") {
-        Discourse.DiscoveryTopRoute = buildTopicRoute("top", {
-          actions: {
-            willTransition() {
-              User.currentProp("should_be_redirected_to_top", false);
-              User.currentProp("redirected_to_top.reason", null);
-              return this._super(...arguments);
-            }
-          }
-        });
-      } else {
+      if (filter !== "top") {
         app[`Discovery${filterCapitalized}Route`] = buildTopicRoute(filter);
       }
 
@@ -65,6 +54,16 @@ export default {
       app[
         `Discovery${filterCapitalized}CategoryNoneRoute`
       ] = buildCategoryRoute(filter, { no_subcategories: true });
+    });
+
+    app.DiscoveryTopRoute = buildTopicRoute("top", {
+      actions: {
+        willTransition() {
+          User.currentProp("should_be_redirected_to_top", false);
+          User.currentProp("redirected_to_top.reason", null);
+          return this._super(...arguments);
+        }
+      }
     });
 
     site.get("periods").forEach(period => {

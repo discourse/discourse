@@ -570,8 +570,9 @@ describe TagsController do
   describe '#show_top' do
     fab!(:tag)       { Fabricate(:tag) }
 
-    fab!(:topic) { Fabricate(:topic) }
-    fab!(:tag_topic)  { Fabricate(:topic, tags: [tag]) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:tag_topic)  { Fabricate(:topic, category: category, tags: [tag]) }
 
     before do
       SiteSetting.top_page_default_timeframe = 'all'
@@ -581,6 +582,14 @@ describe TagsController do
 
     it "can filter by tag" do
       get "/tag/#{tag.name}/l/top.json"
+      expect(response.status).to eq(200)
+
+      topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      expect(topic_ids).to eq([tag_topic.id])
+    end
+
+    it "can filter by both category and tag" do
+      get "/tags/c/#{category.slug}/#{category.id}/#{tag.name}/l/top.json"
       expect(response.status).to eq(200)
 
       topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
