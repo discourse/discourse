@@ -567,6 +567,27 @@ describe TagsController do
     end
   end
 
+  describe '#show_top' do
+    fab!(:tag)       { Fabricate(:tag) }
+
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:tag_topic)  { Fabricate(:topic, tags: [tag]) }
+
+    before do
+      SiteSetting.top_page_default_timeframe = 'all'
+      TopTopic.create!(topic: topic, all_score: 1)
+      TopTopic.create!(topic: tag_topic, all_score: 1)
+    end
+
+    it "can filter by tag" do
+      get "/tag/#{tag.name}/l/top.json"
+      expect(response.status).to eq(200)
+
+      topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      expect(topic_ids).to eq([tag_topic.id])
+    end
+  end
+
   describe '#search' do
     context 'tagging disabled' do
       it "returns 404" do

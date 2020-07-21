@@ -78,8 +78,13 @@ class TagsController < ::ApplicationController
       @additional_tags = params[:additional_tag_ids].to_s.split('/').map { |t| t.force_encoding("UTF-8") }
 
       list_opts = build_topic_list_options
+      @list = nil
 
-      @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+      if filter == :top
+        @list = TopicQuery.new(current_user, list_opts).public_send("list_top_for", SiteSetting.top_page_default_timeframe.to_sym)
+      else
+        @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+      end
 
       @list.draft_key = Draft::NEW_TOPIC
       @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
