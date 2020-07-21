@@ -159,7 +159,7 @@ createSearchResult({
         link: false
       })
     ];
-    if (Discourse.SiteSettings.tagging_enabled) {
+    if (this.siteSettings.tagging_enabled) {
       secondLine.push(
         this.attach("discourse-tags", { topic, tagName: "span" })
       );
