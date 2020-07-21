@@ -584,7 +584,6 @@ describe Auth::DefaultCurrentUserProvider do
       }.to raise_error(Discourse::InvalidAccess)
     end
 
-
     describe "when readonly mode is enabled due to postgres" do
       before do
         Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
