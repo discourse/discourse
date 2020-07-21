@@ -5,7 +5,7 @@ require "enum_site_setting"
 class BaseFontSetting < EnumSiteSetting
 
   FONTS = {
-    "Helvetica" => { key: :default, font_stack: "Helvetica, Arial, sans-serif"},
+    "Helvetica" => { key: :default, font_stack: "Helvetica, Arial, sans-serif" },
     "Open Sans" => { key: :open_sans, font_stack: "Open Sans, Helvetica, Arial, sans-serif" },
     "Oxanium" => { key: :oxanium, font_stack: "Oxanium, Helvetica, Arial, sans-serif" }
   }
