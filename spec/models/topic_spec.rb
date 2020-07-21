@@ -694,7 +694,10 @@ describe Topic do
           end
 
           describe 'when user does not have sufficient trust level' do
-            before { user.update!(trust_level: TrustLevel[1]) }
+            before do
+              SiteSetting.min_trust_to_allow_pm_invite = 2 
+              user.update!(trust_level: TrustLevel[1])
+            end
 
             it 'should not create an invite' do
               expect do

@@ -1703,6 +1703,7 @@ describe UsersController do
         context 'without permission to see pending invites' do
           it 'does not return invites' do
             user = sign_in(Fabricate(:user))
+            SiteSetting.min_trust_to_allow_pm_invite = 2
             inviter = Fabricate(:user)
             Fabricate(:invite, invited_by: inviter)
             stub_guardian(user) do |guardian|
