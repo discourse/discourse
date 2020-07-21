@@ -55,6 +55,10 @@ export function createPreviewComponent(width, height, obj) {
 
       images() {},
 
+      loadFonts() {
+        return document.fonts.ready;
+      },
+
       loadImages() {
         const images = this.images();
         if (images) {
@@ -68,7 +72,7 @@ export function createPreviewComponent(width, height, obj) {
       },
 
       reload() {
-        this.loadImages().then(() => {
+        Promise.all([this.loadFonts(), this.loadImages()]).then(() => {
           this.loaded = true;
           this.triggerRepaint();
         });

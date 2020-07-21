@@ -210,7 +210,11 @@ class Wizard
       end
 
       @wizard.append_step('fonts') do |step|
-        field = step.add_field(id: 'base_font', type: 'component', value: SiteSetting.base_font)
+        field = step.add_field(
+          id: 'font_previews',
+          type: 'component',
+          value: SiteSetting.base_font
+        )
 
         BaseFontSetting::FONTS.each do |font_name, font|
           field.add_choice(font_name,
@@ -220,7 +224,7 @@ class Wizard
         end
 
         step.on_update do |updater|
-          updater.update_setting(:base_font, updater.fields[:base_font])
+          updater.update_setting(:base_font, updater.fields[:font_previews])
         end
       end
 

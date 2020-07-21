@@ -1,0 +1,15 @@
+<ul class="grid">
+  {{#each field.choices as |choice|}}
+    <li>
+      {{font-preview font=choice.extra_label
+                     wizard=wizard
+                     fontId=choice.id
+                     selectedId=field.value
+                     onChange=(action "changed")}}
+      {{radio-button radioValue=choice.id
+                     label=choice.label
+                     value=field.value
+                     onChange=(action "changed")}}
+    </li>
+  {{/each}}
+</ul>

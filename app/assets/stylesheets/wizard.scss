@@ -132,7 +132,7 @@ body.wizard {
   }
 }
 
-.wizard-step-colors {
+.wizard-step-colors, .wizard-step-fonts {
   max-height: 465px;
   overflow-y: auto;
   .grid {
@@ -173,16 +173,6 @@ body.wizard {
           cursor: pointer;
         }
       }
-    }
-  }
-}
-
-.wizard-step-fonts {
-  .font-preview {
-    margin-bottom: 1em;
-
-    .sample {
-      font-size: 1.5em;
     }
   }
 }
