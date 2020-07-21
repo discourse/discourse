@@ -124,7 +124,7 @@ const Topic = RestModel.extend({
       Site.currentProp("censored_regexp")
     );
 
-    if (Discourse.SiteSettings.support_mixed_text_direction) {
+    if (this.siteSettings.support_mixed_text_direction) {
       const titleDir = isRTL(title) ? "rtl" : "ltr";
       return `<span dir="${titleDir}">${fancyTitle}</span>`;
     }
@@ -171,7 +171,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("tags")
   visibleListTags(tags) {
-    if (!tags || !Discourse.SiteSettings.suppress_overlapping_tags_in_list) {
+    if (!tags || !this.siteSettings.suppress_overlapping_tags_in_list) {
       return tags;
     }
 
@@ -338,13 +338,13 @@ const Topic = RestModel.extend({
 
   @discourseComputed("views")
   viewsHeat(v) {
-    if (v >= Discourse.SiteSettings.topic_views_heat_high) {
+    if (v >= this.siteSettings.topic_views_heat_high) {
       return "heatmap-high";
     }
-    if (v >= Discourse.SiteSettings.topic_views_heat_medium) {
+    if (v >= this.siteSettings.topic_views_heat_medium) {
       return "heatmap-med";
     }
-    if (v >= Discourse.SiteSettings.topic_views_heat_low) {
+    if (v >= this.siteSettings.topic_views_heat_low) {
       return "heatmap-low";
     }
     return null;
