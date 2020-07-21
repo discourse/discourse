@@ -93,8 +93,12 @@ export default class PostCooked {
   }
 
   _fixImageSizes($html) {
-    const maxImageWidth = Discourse.SiteSettings.max_image_width;
-    const maxImageHeight = Discourse.SiteSettings.max_image_height;
+    if (!this.decoratorHelper || !this.decoratorHelper.widget) {
+      return;
+    }
+    let siteSettings = this.decoratorHelper.widget.siteSettings;
+    const maxImageWidth = siteSettings.max_image_width;
+    const maxImageHeight = siteSettings.max_image_height;
 
     let maxWindowWidth;
     $html.find("img:not(.avatar)").each((idx, img) => {
