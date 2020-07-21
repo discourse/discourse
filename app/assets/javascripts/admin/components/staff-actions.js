@@ -23,5 +23,17 @@ export default Component.extend({
         return false;
       }
     );
+
+    $(this.element).on(
+      "click.discourse-staff-logs",
+      "[data-link-topic-id]",
+      e => {
+        let topicId = $(e.target).attr("data-link-topic-id");
+
+        DiscourseURL.routeTo(`/t/${topicId}`);
+
+        return false;
+      }
+    );
   }
 });
