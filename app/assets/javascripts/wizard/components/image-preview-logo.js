@@ -13,7 +13,7 @@ export default createPreviewComponent(400, 100, {
     return { image: this.get("field.value") };
   },
 
-  paint(ctx, colors, width, height) {
+  paint(ctx, colors, font, width, height) {
     const headerHeight = height / 2;
 
     drawHeader(ctx, colors, width, headerHeight);
@@ -31,6 +31,6 @@ export default createPreviewComponent(400, 100, {
       imageHeight
     );
 
-    this.drawPills(colors, height / 2);
+    this.drawPills(colors, font, height / 2);
   }
 });

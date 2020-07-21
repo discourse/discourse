@@ -5,7 +5,7 @@ export default Component.extend({
   @discourseComputed("field.choices")
   choices(choices) {
     choices.forEach(choice => {
-      choice.style = `font-family: ${choice.extra_label}`.htmlSafe();
+      choice.style = `font-family: ${choice.data.font_stack}`.htmlSafe();
     });
 
     return choices;

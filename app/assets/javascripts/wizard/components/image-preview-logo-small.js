@@ -13,7 +13,7 @@ export default createPreviewComponent(375, 100, {
     return { image: this.get("field.value") };
   },
 
-  paint(ctx, colors, width, height) {
+  paint(ctx, colors, font, width, height) {
     const headerHeight = height / 2;
 
     drawHeader(ctx, colors, width, headerHeight);
@@ -39,7 +39,7 @@ export default createPreviewComponent(375, 100, {
 
     const afterLogo = headerMargin * 1.7 + imageWidth;
     const fontSize = Math.round(headerHeight * 0.4);
-    ctx.font = `Bold ${fontSize}px 'Arial'`;
+    ctx.font = `Bold ${fontSize}px '${font}'`;
     ctx.fillStyle = colors.primary;
     const title = LOREM.substring(0, 27);
     ctx.fillText(
@@ -55,7 +55,7 @@ export default createPreviewComponent(375, 100, {
     ctx.rect(afterLogo, headerHeight * 0.7, badgeSize, badgeSize);
     ctx.fill();
 
-    ctx.font = `Bold ${badgeSize * 1.2}px 'Arial'`;
+    ctx.font = `Bold ${badgeSize * 1.2}px '${font}'`;
     ctx.fillStyle = colors.primary;
     ctx.fillText(
       category.name,
@@ -64,7 +64,7 @@ export default createPreviewComponent(375, 100, {
     );
 
     const LINE_HEIGHT = 12;
-    ctx.font = `${LINE_HEIGHT}px 'Arial'`;
+    ctx.font = `${LINE_HEIGHT}px '${font}'`;
     const lines = LOREM.split("\n");
     for (let i = 0; i < 10; i++) {
       const line = height * 0.55 + i * (LINE_HEIGHT * 1.5);

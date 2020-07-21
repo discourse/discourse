@@ -190,6 +190,10 @@ body.wizard {
   width: 100%;
   border: 1px solid #ccc;
 
+  .preloaded-font-styles {
+    font-size: 1px;
+  }
+
   .wizard-step-contents {
     height: 550px;
     margin-bottom: 2em;

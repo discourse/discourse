@@ -17,7 +17,7 @@ export default createPreviewComponent(325, 125, {
     };
   },
 
-  paint(ctx, colors, width, height) {
+  paint(ctx, colors, font, width, height) {
     this.scaleImage(this.image, 10, 8, 87, 87);
     this.scaleImage(this.ios, 0, 0, width, height);
   }

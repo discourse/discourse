@@ -217,10 +217,7 @@ class Wizard
         )
 
         BaseFontSetting::FONTS.each do |font_name, font|
-          field.add_choice(font_name,
-            label: I18n.t("js.base_font_setting.#{font[:key]}"),
-            extra_label: font[:font_stack]
-          )
+          field.add_choice(font_name, data: { font_stack: font[:font_stack] })
         end
 
         step.on_update do |updater|

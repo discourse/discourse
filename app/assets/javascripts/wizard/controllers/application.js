@@ -7,5 +7,14 @@ export default Controller.extend({
   @discourseComputed("currentStepId")
   showCanvas(currentStepId) {
     return currentStepId === "finished";
+  },
+
+  @discourseComputed("model")
+  fontStyles(model) {
+    const fontsStep = model.steps.findBy("id", "fonts");
+    const fontField = fontsStep.get("fieldsById.font_previews");
+    return fontField.choices.map(field =>
+      `font-family: ${field.data.font_stack}`.htmlSafe()
+    );
   }
 });

@@ -5,6 +5,13 @@
 <div class="wizard-column">
   <div class="wizard-column-contents">
     {{outlet}}
+
+    {{!-- Load all font styles --}}
+    <div class="preloaded-font-styles">
+      {{#each fontStyles as |fontStyle|}}
+        <span style={{fontStyle}}>&nbsp;</span>
+      {{/each}}
+    </div>
   </div>
   <div class="wizard-footer">
     <div class="discourse-logo"></div>
