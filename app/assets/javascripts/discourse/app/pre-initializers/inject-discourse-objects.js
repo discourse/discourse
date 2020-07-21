@@ -47,6 +47,7 @@ export default {
 
     const topicTrackingState = TopicTrackingState.create({
       messageBus: MessageBus,
+      siteSettings,
       currentUser
     });
     app.register("topic-tracking-state:main", topicTrackingState, {
