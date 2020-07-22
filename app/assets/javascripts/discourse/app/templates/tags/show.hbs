@@ -13,6 +13,7 @@
             tagId=tag.id
             noSubcategories=noSubcategories
           }}
+          {{navigation-bar navItems=navItems filterMode=filterMode}}
         {{else}}
           <h2 class="tag-show-heading">
             {{#link-to "tags"}}{{i18n "tagging.tags"}}{{/link-to}}
