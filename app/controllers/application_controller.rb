@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
   before_action :handle_theme
   before_action :set_current_user_for_logs
   before_action :clear_notifications
-  before_action :set_locale
+  around_action :with_resolved_locale
   before_action :set_mobile_view
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
@@ -245,16 +245,19 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    if opts[:custom_message_translated]
-      title = message = opts[:custom_message_translated]
-    elsif opts[:custom_message]
-      title = message = I18n.t(opts[:custom_message])
-    else
-      message = I18n.t(type)
-      if status_code == 403
-        title = I18n.t("page_forbidden.title")
+    message = title = nil
+    with_resolved_locale(check_current_user: false) do
+      if opts[:custom_message_translated]
+        title = message = opts[:custom_message_translated]
+      elsif opts[:custom_message]
+        title = message = I18n.t(opts[:custom_message])
       else
-        title = I18n.t("page_not_found.title")
+        message = I18n.t(type)
+        if status_code == 403
+          title = I18n.t("page_forbidden.title")
+        else
+          title = I18n.t("page_not_found.title")
+        end
       end
     end
 
@@ -263,9 +266,11 @@ class ApplicationController < ActionController::Base
     if show_json_errors
       opts = { type: type, status: status_code }
 
-      # Include error in HTML format for topics#show.
-      if (request.params[:controller] == 'topics' && request.params[:action] == 'show') || (request.params[:controller] == 'categories' && request.params[:action] == 'find_by_slug')
-        opts[:extras] = { html: build_not_found_page(error_page_opts) }
+      with_resolved_locale(check_current_user: false) do
+        # Include error in HTML format for topics#show.
+        if (request.params[:controller] == 'topics' && request.params[:action] == 'show') || (request.params[:controller] == 'categories' && request.params[:action] == 'find_by_slug')
+          opts[:extras] = { html: build_not_found_page(error_page_opts) }
+        end
       end
 
       render_json_error message, opts
@@ -277,9 +282,10 @@ class ApplicationController < ActionController::Base
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
-
-      error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
-      render html: build_not_found_page(error_page_opts)
+      with_resolved_locale do
+        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+        render html: build_not_found_page(error_page_opts)
+      end
     end
   end
 
@@ -325,19 +331,23 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_locale
-    if !current_user
+  def with_resolved_locale(check_current_user: true)
+    if check_current_user && current_user
+      locale = current_user.effective_locale
+    else
       if SiteSetting.set_locale_from_accept_language_header
         locale = locale_from_header
       else
         locale = SiteSetting.default_locale
       end
-    else
-      locale = current_user.effective_locale
     end
 
-    I18n.locale = I18n.locale_available?(locale) ? locale : SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+    if !I18n.locale_available?(locale)
+      locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+    end
+
     I18n.ensure_all_loaded!
+    I18n.with_locale(locale) { yield }
   end
 
   def store_preloaded(key, json)
