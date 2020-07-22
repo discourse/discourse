@@ -40,8 +40,8 @@ export default Component.extend(LoadMore, {
       "details.disabled",
       () => false
     );
-    $(this.element).on("click.discourse-redirect", ".excerpt a", function(e) {
-      return ClickTrack.trackClick(e);
+    $(this.element).on("click.discourse-redirect", ".excerpt a", e => {
+      return ClickTrack.trackClick(e, this.siteSettings);
     });
   }),
 
