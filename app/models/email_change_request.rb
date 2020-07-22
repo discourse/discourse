@@ -19,7 +19,7 @@ end
 #
 #  id                 :integer          not null, primary key
 #  user_id            :integer          not null
-#  old_email          :string           not null
+#  old_email          :string
 #  new_email          :string           not null
 #  old_email_token_id :integer
 #  new_email_token_id :integer
