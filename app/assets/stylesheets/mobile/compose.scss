@@ -122,9 +122,13 @@
   }
 
   &.show-preview {
-    .submit-panel .save-or-cancel {
+    .submit-panel {
+      padding-top: 10px;
       z-index: z("fullscreen") + 1;
-      .cancel {
+      background-color: $secondary;
+      .cancel,
+      .mobile-file-upload,
+      .mobile-preview {
         display: none;
       }
     }
@@ -144,12 +148,6 @@
       .d-editor-preview {
         margin-bottom: 40px;
       }
-    }
-    .btn.hide-preview {
-      position: fixed;
-      right: 5px;
-      bottom: 5px;
-      z-index: z("fullscreen") + 1;
     }
   }
 
