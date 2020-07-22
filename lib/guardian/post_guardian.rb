@@ -162,7 +162,7 @@ module PostGuardian
     end
 
     if post.is_category_description?
-      return can_perform_action_available_to_group_moderators?(post.topic)
+      return can_edit_category_description?(post.topic.category)
     end
 
     false
