@@ -27,8 +27,7 @@ export default function(name, opts) {
     this.registry.injection("component", "site", "site:main");
 
     this.siteSettings = currentSettings();
-
-    autoLoadModules(this.registry, this.registry);
+    autoLoadModules(this.container, this.registry);
 
     const store = createStore();
     if (!opts.anonymous) {

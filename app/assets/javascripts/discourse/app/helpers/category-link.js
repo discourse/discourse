@@ -1,7 +1,7 @@
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { get } from "@ember/object";
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import { isRTL } from "discourse/lib/text-direction";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
@@ -39,18 +39,19 @@ export function addExtraIconRenderer(renderer) {
     @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
 **/
 export function categoryBadgeHTML(category, opts) {
+  let siteSettings = helperContext().siteSettings;
   opts = opts || {};
 
   if (
     !category ||
     (!opts.allowUncategorized &&
       get(category, "id") === Site.currentProp("uncategorized_category_id") &&
-      Discourse.SiteSettings.suppress_uncategorized_badge)
+      siteSettings.suppress_uncategorized_badge)
   )
     return "";
 
   const depth = (opts.depth || 1) + 1;
-  if (opts.recursive && depth <= Discourse.SiteSettings.max_category_nesting) {
+  if (opts.recursive && depth <= siteSettings.max_category_nesting) {
     const parentCategory = Category.findById(category.parent_category_id);
     opts.depth = depth;
     return categoryBadgeHTML(parentCategory, opts) + _renderer(category, opts);
@@ -118,8 +119,9 @@ function defaultCategoryLinkRenderer(category, opts) {
     parentCat = Category.findById(get(category, "parent_category_id"));
   }
 
-  const categoryStyle =
-    opts.categoryStyle || Discourse.SiteSettings.category_style;
+  let siteSettings = helperContext().siteSettings;
+
+  const categoryStyle = opts.categoryStyle || siteSettings.category_style;
   if (categoryStyle !== "none") {
     if (parentCat && parentCat !== category) {
       html += categoryStripe(
@@ -150,7 +152,7 @@ function defaultCategoryLinkRenderer(category, opts) {
 
   let categoryName = escapeExpression(get(category, "name"));
 
-  if (Discourse.SiteSettings.support_mixed_text_direction) {
+  if (siteSettings.support_mixed_text_direction) {
     categoryDir = isRTL(categoryName) ? 'dir="rtl"' : 'dir="ltr"';
   }
 
