@@ -162,6 +162,6 @@ export function endWith() {
 **/
 export function setting(name) {
   return computed(function() {
-    return Discourse.SiteSettings[name];
+    return this.siteSettings[name];
   });
 }
