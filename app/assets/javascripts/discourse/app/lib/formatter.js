@@ -1,4 +1,6 @@
+import { helperContext } from "discourse-common/lib/helpers";
 import I18n from "I18n";
+
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
 }
@@ -170,6 +172,9 @@ function relativeAgeTiny(date, ageOpts) {
     return ageOpts && ageOpts.addAgo ? wrapAgo(result) : result;
   };
 
+  // This file is in lib but it's used as a helper
+  let siteSettings = helperContext().siteSettings;
+
   switch (true) {
     case distanceInMinutes >= 0 && distanceInMinutes <= 44:
       formatted = t("x_minutes", { count: distanceInMinutes });
@@ -182,7 +187,7 @@ function relativeAgeTiny(date, ageOpts) {
         count: Math.round(distanceInMinutes / 60.0)
       });
       break;
-    case Discourse.SiteSettings.relative_date_duration === 0 &&
+    case siteSettings.relative_date_duration === 0 &&
       distanceInMinutes <= 525599:
       formatted = shortDateNoYear(date);
       break;
@@ -190,8 +195,7 @@ function relativeAgeTiny(date, ageOpts) {
       formatted = t("x_days", { count: 1 });
       break;
     case distanceInMinutes >= 2520 &&
-      distanceInMinutes <=
-        (Discourse.SiteSettings.relative_date_duration || 14) * 1440:
+      distanceInMinutes <= (siteSettings.relative_date_duration || 14) * 1440:
       formatted = t("x_days", {
         count: Math.round(distanceInMinutes / 1440.0)
       });
