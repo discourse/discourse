@@ -679,8 +679,6 @@ Discourse::Application.routes.draw do
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", format: :rss
     scope path: 'c/*category_slug_path_with_id' do
       get "/none" => "list#category_none_latest"
-      get "/none/l/top" => "list#category_none_top", as: "category_none_top"
-      get "/l/top" => "list#category_top", as: "category_top"
 
       TopTopic.periods.each do |period|
         get "/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"
@@ -711,7 +709,6 @@ Discourse::Application.routes.draw do
       get "#{filter}" => "list##{filter}"
     end
 
-    get "top" => "list#top"
     get "search/query" => "search#query"
     get "search" => "search#show"
     post "search/click" => "search#click"
@@ -943,8 +940,6 @@ Discourse::Application.routes.draw do
     end
     # special case for categories
     root to: "categories#index", constraints: HomePageConstraint.new("categories"), as: "categories_index"
-    # special case for top
-    root to: "list#top", constraints: HomePageConstraint.new("top"), as: "top_lists"
 
     root to: 'finish_installation#index', constraints: HomePageConstraint.new("finish_installation"), as: 'installation_redirect'
 
