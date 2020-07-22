@@ -162,7 +162,7 @@ module PostGuardian
     end
 
     if post.is_category_description?
-      return can_edit_category_description?(post.topic.category)
+      return true if can_edit_category_description?(post.topic.category)
     end
 
     false
