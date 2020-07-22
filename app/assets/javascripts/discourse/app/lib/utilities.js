@@ -310,7 +310,7 @@ const toArray = items => {
   return items;
 };
 
-export function clipboardData(e, canUpload) {
+export function clipboardHelpers(e, opts) {
   const clipboard =
     e.clipboardData ||
     e.originalEvent.clipboardData ||
@@ -324,7 +324,7 @@ export function clipboardData(e, canUpload) {
     files = toArray(clipboard.items).filter(i => i.kind === "file");
   }
 
-  canUpload = files && canUpload && types.includes("Files");
+  let canUpload = files && opts.canUpload && types.includes("Files");
   const canUploadImage =
     canUpload && files.filter(f => f.type.match("^image/"))[0];
   const canPasteHtml =

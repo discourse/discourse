@@ -25,7 +25,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,
   formatUsername,
-  clipboardData,
+  clipboardHelpers,
   caretPosition,
   inCodeBlock
 } from "discourse/lib/utilities";
@@ -656,7 +656,10 @@ export default Component.extend({
         return;
       }
 
-      const { canUpload, canPasteHtml, types } = clipboardData(e, true);
+      const { canUpload, canPasteHtml, types } = clipboardHelpers(e, {
+        siteSettings: this.siteSettings,
+        canUpload: true
+      });
 
       if (!canUpload || canPasteHtml || types.includes("text/plain")) {
         e.preventDefault();
