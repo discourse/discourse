@@ -321,7 +321,8 @@ const Theme = RestModel.extend({
             }
           }
         );
-        highlightSyntax();
+        // TODO: Models shouldn't be updating the DOM
+        highlightSyntax(undefined, this.siteSettings);
       } else {
         return this.save({ remote_update: true }).then(() =>
           this.set("changed", false)
