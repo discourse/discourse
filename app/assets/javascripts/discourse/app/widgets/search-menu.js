@@ -40,7 +40,7 @@ const SearchHelper = {
     const searchContext = contextEnabled ? widget.searchContext() : null;
     const fullSearchUrl = widget.fullSearchUrl();
 
-    if (!isValidSearchTerm(term)) {
+    if (!isValidSearchTerm(term, widget.siteSettings)) {
       searchData.noResults = true;
       searchData.results = [];
       searchData.loading = false;
@@ -298,7 +298,7 @@ export default createWidget("search-menu", {
   },
 
   fullSearch() {
-    if (!isValidSearchTerm(searchData.term)) {
+    if (!isValidSearchTerm(searchData.term, this.siteSettings)) {
       return;
     }
 

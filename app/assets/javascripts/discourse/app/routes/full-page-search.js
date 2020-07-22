@@ -46,8 +46,8 @@ export default DiscourseRoute.extend({
       return cached.data.model;
     }
 
-    return PreloadStore.getAndRemove("search", function() {
-      if (isValidSearchTerm(params.q)) {
+    return PreloadStore.getAndRemove("search", () => {
+      if (isValidSearchTerm(params.q, this.siteSettings)) {
         return ajax("/search", { data: args });
       } else {
         return null;
