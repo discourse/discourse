@@ -65,7 +65,7 @@ class PostDestroyer
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
-    if @user.staff? || delete_removed_posts_after < 1
+    if @user.staff? || delete_removed_posts_after < 1 || post_is_reviewable?
       perform_delete
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
@@ -85,7 +85,7 @@ class PostDestroyer
   end
 
   def recover
-    if @user.staff? && @post.deleted_at
+    if (@user.staff? || post_is_reviewable?) && @post.deleted_at
       staff_recovered
     elsif @user.staff? || @user.id == @post.user_id
       user_recovered
@@ -212,6 +212,10 @@ class PostDestroyer
   end
 
   private
+
+  def post_is_reviewable?
+    Guardian.new(@user).can_review_topic?(@post.topic) && Reviewable.exists?(target: @post)
+  end
 
   # we need topics to change if ever a post in them is deleted or created
   # this ensures users relying on this information can keep unread tracking
