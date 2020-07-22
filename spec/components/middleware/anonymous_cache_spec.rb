@@ -51,7 +51,7 @@ describe Middleware::AnonymousCache::Helper do
       # Normally does not check the language header
       french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
       french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
-      english = new_helper("HTTP_ACCEPT_LANGUAGE" => "en").cache_key
+      english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
       none = new_helper.cache_key
 
       expect(none).to eq(french1)
@@ -63,7 +63,7 @@ describe Middleware::AnonymousCache::Helper do
 
       french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
       french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
-      english = new_helper("HTTP_ACCEPT_LANGUAGE" => "en").cache_key
+      english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
       none = new_helper.cache_key
 
       expect(none).to eq(english)
