@@ -20,7 +20,7 @@ export default Controller.extend({
       "profile_background_upload_url",
       "card_background_upload_url",
       "date_of_birth",
-      "timezone"
+      "timezone",
     ];
   },
 
@@ -34,7 +34,7 @@ export default Controller.extend({
       if (!this.get("currentUser.staff")) {
         siteUserFields = siteUserFields.filterBy("editable", true);
       }
-      return siteUserFields.sortBy("position").map(function(field) {
+      return siteUserFields.sortBy("position").map(function (field) {
         const value = userFields
           ? userFields[field.get("id").toString()]
           : null;
@@ -60,29 +60,35 @@ export default Controller.extend({
 
   @discourseComputed("model.trust_level", "model.staff", "model.siteSettings")
   canUploadProfileHeader(trust_level, staff, siteSettings) {
-    return staff || (trust_level >= siteSettings.min_trust_level_to_allow_profile_background)
+    return (
+      staff ||
+      trust_level >= siteSettings.min_trust_level_to_allow_profile_background
+    );
   },
 
   @discourseComputed("model.trust_level", "model.staff", "model.siteSettings")
   canUploadUserCardBackground(trust_level, staff, siteSettings) {
-    return staff || (trust_level >= siteSettings.min_trust_level_to_allow_user_card_background)
+    return (
+      staff ||
+      trust_level >= siteSettings.min_trust_level_to_allow_user_card_background
+    );
   },
 
   actions: {
     showFeaturedTopicModal() {
       showModal("feature-topic-on-profile", {
         model: this.model,
-        title: "user.feature_topic_on_profile.title"
+        title: "user.feature_topic_on_profile.title",
       });
     },
 
     clearFeaturedTopicFromProfile() {
       bootbox.confirm(
         I18n.t("user.feature_topic_on_profile.clear.warning"),
-        result => {
+        (result) => {
           if (result) {
             ajax(`/u/${this.model.username}/clear-featured-topic`, {
-              type: "PUT"
+              type: "PUT",
             })
               .then(() => {
                 this.model.set("featured_topic", null);
@@ -107,7 +113,7 @@ export default Controller.extend({
       if (!isEmpty(userFields)) {
         const modelFields = model.get("user_fields");
         if (!isEmpty(modelFields)) {
-          userFields.forEach(function(uf) {
+          userFields.forEach(function (uf) {
             modelFields[uf.get("field.id").toString()] = uf.get("value");
           });
         }
@@ -130,6 +136,6 @@ export default Controller.extend({
             .catch(popupAjaxError);
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });
