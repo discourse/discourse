@@ -185,11 +185,9 @@ export function getSearchKey(args) {
   );
 }
 
-export function isValidSearchTerm(searchTerm) {
+export function isValidSearchTerm(searchTerm, siteSettings) {
   if (searchTerm) {
-    return (
-      searchTerm.trim().length >= Discourse.SiteSettings.min_search_term_length
-    );
+    return searchTerm.trim().length >= siteSettings.min_search_term_length;
   } else {
     return false;
   }
@@ -226,7 +224,7 @@ export function applySearchAutocomplete(
     )
   );
 
-  if (Discourse.SiteSettings.enable_mentions) {
+  if (siteSettings.enable_mentions) {
     $input.autocomplete(
       _.merge(
         {
