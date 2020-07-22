@@ -4684,7 +4684,6 @@ en:
 
       fonts:
         title: "Fonts"
-        description: "The base font used in most places of your site. This can be changed later and themes can override it."
 
       logos:
         title: "Logos"
