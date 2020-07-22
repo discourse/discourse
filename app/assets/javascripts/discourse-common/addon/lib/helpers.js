@@ -52,6 +52,8 @@ export function createHelperContext(siteSettings) {
   };
 }
 
+// This can be used by a helper to get the SiteSettings. Note you should not
+// be using it outside of helpers (or lib code that helpers use!)
 export function helperContext() {
   return _helperContext;
 }
