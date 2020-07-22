@@ -284,14 +284,32 @@ describe PostDestroyer do
             GroupUser.create(user: review_user, group: review_group)
           end
 
-          it "changes deleted_at to nil" do
-            PostDestroyer.new(Discourse.system_user, @reply).destroy
-            expect(@reply.reload.user_deleted).to eq(false)
-            expect(@reply.reload.deleted_at).not_to eq(nil)
+          context "when the post has a Reviewable record" do
+            before do
+              ReviewableFlaggedPost.needs_review!(target: @reply, created_by: Fabricate(:user))
+            end
 
-            PostDestroyer.new(review_user, @reply).recover
-            expect(@reply.reload.user_deleted).to eq(false)
-            expect(@reply.reload.deleted_at).to eq(nil)
+            it "changes deleted_at to nil" do
+              PostDestroyer.new(Discourse.system_user, @reply).destroy
+              expect(@reply.reload.user_deleted).to eq(false)
+              expect(@reply.reload.deleted_at).not_to eq(nil)
+
+              PostDestroyer.new(review_user, @reply).recover
+              expect(@reply.reload.user_deleted).to eq(false)
+              expect(@reply.reload.deleted_at).to eq(nil)
+            end
+          end
+
+          context "when the post does not have a Reviewable record" do
+            it "does not recover the post" do
+              PostDestroyer.new(Discourse.system_user, @reply).destroy
+              expect(@reply.reload.user_deleted).to eq(false)
+              expect(@reply.reload.deleted_at).not_to eq(nil)
+
+              PostDestroyer.new(review_user, @reply).recover
+              expect(@reply.reload.user_deleted).to eq(false)
+              expect(@reply.reload.deleted_at).not_to eq(nil)
+            end
           end
         end
       end
@@ -445,7 +463,7 @@ describe PostDestroyer do
       end
     end
 
-    context "recovered by user with access to moderate topic category" do
+    context "deleted by user with access to moderate topic category" do
       fab!(:review_user) { Fabricate(:user) }
 
       before do
@@ -456,21 +474,39 @@ describe PostDestroyer do
         GroupUser.create(user: review_user, group: review_group)
       end
 
-      it "deletes the post" do
-        author = post.user
-        reply = create_post(topic_id: post.topic_id, user: author)
+      context "when the post has a reviewable" do
+        it "deletes the post" do
+          author = post.user
+          reply = create_post(topic_id: post.topic_id, user: author)
+          ReviewableFlaggedPost.needs_review!(target: reply, created_by: Fabricate(:user))
 
-        post_count = author.post_count
-        history_count = UserHistory.count
+          post_count = author.post_count
+          history_count = UserHistory.count
 
-        PostDestroyer.new(review_user, reply).destroy
+          PostDestroyer.new(review_user, reply).destroy
 
-        expect(reply.deleted_at).to be_present
-        expect(reply.deleted_by).to eq(review_user)
+          expect(reply.deleted_at).to be_present
+          expect(reply.deleted_by).to eq(review_user)
 
-        author.reload
-        expect(author.post_count).to eq(post_count - 1)
-        expect(UserHistory.count).to eq(history_count + 1)
+          author.reload
+          expect(author.post_count).to eq(post_count - 1)
+          expect(UserHistory.count).to eq(history_count + 1)
+        end
+      end
+
+      context "when the post does not have a reviewable" do
+        it "does not delete the post" do
+          author = post.user
+          reply = create_post(topic_id: post.topic_id, user: author)
+
+          post_count = author.post_count
+          history_count = UserHistory.count
+
+          PostDestroyer.new(review_user, reply).destroy
+
+          expect(reply.deleted_at).not_to be_present
+          expect(reply.deleted_by).to eq(nil)
+        end
       end
     end
 

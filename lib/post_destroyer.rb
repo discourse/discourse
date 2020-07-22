@@ -65,7 +65,7 @@ class PostDestroyer
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
-    if @user.staff? || user_can_review_topic? || delete_removed_posts_after < 1
+    if @user.staff? || (user_can_review_topic? && post_is_reviewable?) || delete_removed_posts_after < 1
       perform_delete
     elsif user_deleting_own_post?
       mark_for_deletion(delete_removed_posts_after)
@@ -85,7 +85,7 @@ class PostDestroyer
   end
 
   def recover
-    if (@user.staff? || user_can_review_topic?) && @post.deleted_at
+    if (@user.staff? || (user_can_review_topic? && post_is_reviewable?)) && @post.deleted_at
       staff_recovered
     elsif @user.staff? || user_deleting_own_post?
       user_recovered
@@ -215,6 +215,10 @@ class PostDestroyer
 
   def user_can_review_topic?
     Guardian.new(@user).can_review_topic?(@post.topic)
+  end
+
+  def post_is_reviewable?
+    Reviewable.exists?(target: @post)
   end
 
   def user_deleting_own_post?
