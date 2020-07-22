@@ -530,17 +530,7 @@ class ApplicationController < ActionController::Base
   private
 
   def locale_from_header
-    begin
-      # Rails I18n uses underscores between the locale and the region; the request
-      # headers use hyphens.
-      require 'http_accept_language' unless defined? HttpAcceptLanguage
-      available_locales = I18n.available_locales.map { |locale| locale.to_s.tr('_', '-') }
-      parser = HttpAcceptLanguage::Parser.new(request.env["HTTP_ACCEPT_LANGUAGE"])
-      parser.language_region_compatible_from(available_locales).tr('-', '_')
-    rescue
-      # If Accept-Language headers are not set.
-      I18n.default_locale
-    end
+    HttpLanguageParser.parse(request.env["HTTP_ACCEPT_LANGUAGE"])
   end
 
   def preload_anonymous_data

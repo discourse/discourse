@@ -46,6 +46,32 @@ describe Middleware::AnonymousCache::Helper do
     end
   end
 
+  context "with header-based locale locale" do
+    it "handles different languages" do
+      # Normally does not check the language header
+      french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
+      french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
+      english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
+      none = new_helper.cache_key
+
+      expect(none).to eq(french1)
+      expect(none).to eq(french2)
+      expect(none).to eq(english)
+
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_accept_language_header = true
+
+      french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
+      french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
+      english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
+      none = new_helper.cache_key
+
+      expect(none).to eq(english)
+      expect(french1).to eq(french2)
+      expect(french1).not_to eq(none)
+    end
+  end
+
   context 'force_anonymous!' do
     before do
       RateLimiter.enable
