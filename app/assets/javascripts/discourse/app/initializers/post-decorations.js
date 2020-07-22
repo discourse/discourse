@@ -52,7 +52,7 @@ export default {
               }
             }
           },
-          { id: "safari-video-poster", afterAdopt: true }
+          { id: "safari-video-poster", afterAdopt: true, onlyStream: true }
         );
       }
     });
