@@ -45,6 +45,17 @@ export function registerHelpers(registry) {
   });
 }
 
+let _helperContext;
+export function createHelperContext(siteSettings) {
+  _helperContext = {
+    siteSettings
+  };
+}
+
+export function helperContext() {
+  return _helperContext;
+}
+
 function resolveParams(ctx, options) {
   let params = {};
   const hash = options.hash;

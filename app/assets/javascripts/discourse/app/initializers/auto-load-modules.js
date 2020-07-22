@@ -1,4 +1,7 @@
-import { registerHelpers } from "discourse-common/lib/helpers";
+import {
+  registerHelpers,
+  createHelperContext
+} from "discourse-common/lib/helpers";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
 import Handlebars from "handlebars";
@@ -12,6 +15,8 @@ export function autoLoadModules(container, registry) {
       requirejs(entry, null, null, true);
     }
   });
+  let siteSettings = container.lookup("site-settings:main");
+  createHelperContext(siteSettings);
   registerHelpers(registry);
   registerRawHelpers(RawHandlebars, Handlebars);
 }
