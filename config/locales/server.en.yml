@@ -1816,7 +1816,9 @@ en:
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     min_trust_to_post_images: "The minimum trust level required to include images in a post"
-
+    min_trust_level_to_allow_profile_background: "The minimum trust level required to allow profile background"
+    min_trust_level_to_allow_user_card_background: "The minimum trust level required to allow user card background"
+      
     whitelisted_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."

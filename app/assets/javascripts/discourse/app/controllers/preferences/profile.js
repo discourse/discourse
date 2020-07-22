@@ -11,7 +11,6 @@ import showModal from "discourse/lib/show-modal";
 export default Controller.extend({
   init() {
     this._super(...arguments);
-
     this.saveAttrNames = [
       "bio_raw",
       "website",
@@ -57,6 +56,16 @@ export default Controller.extend({
   @discourseComputed("model.can_change_website")
   canChangeWebsite(canChangeWebsite) {
     return canChangeWebsite;
+  },
+
+  @discourseComputed("model.trust_level", "model.staff", "model.siteSettings")
+  canUploadProfileHeader(trust_level, staff, siteSettings) {
+    return staff || (trust_level >= siteSettings.min_trust_level_to_allow_profile_background)
+  },
+
+  @discourseComputed("model.trust_level", "model.staff", "model.siteSettings")
+  canUploadUserCardBackground(trust_level, staff, siteSettings) {
+    return staff || (trust_level >= siteSettings.min_trust_level_to_allow_user_card_background)
   },
 
   actions: {
