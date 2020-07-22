@@ -280,8 +280,8 @@ describe PostDestroyer do
             SiteSetting.enable_category_group_moderation = true
             review_group = Fabricate(:group)
             review_category = Fabricate(:category, reviewable_by_group_id: review_group.id)
-            @reply.topic.update(category: review_category)
-            GroupUser.create(user: review_user, group: review_group)
+            @reply.topic.update!(category: review_category)
+            review_group.users << review_user
           end
 
           context "when the post has a Reviewable record" do
@@ -291,24 +291,26 @@ describe PostDestroyer do
 
             it "changes deleted_at to nil" do
               PostDestroyer.new(Discourse.system_user, @reply).destroy
-              expect(@reply.reload.user_deleted).to eq(false)
-              expect(@reply.reload.deleted_at).not_to eq(nil)
+              @reply.reload
+              expect(@reply.user_deleted).to eq(false)
+              expect(@reply.deleted_at).not_to eq(nil)
 
               PostDestroyer.new(review_user, @reply).recover
-              expect(@reply.reload.user_deleted).to eq(false)
-              expect(@reply.reload.deleted_at).to eq(nil)
+              @reply.reload
+              expect(@reply.deleted_at).to eq(nil)
             end
           end
 
           context "when the post does not have a Reviewable record" do
             it "does not recover the post" do
               PostDestroyer.new(Discourse.system_user, @reply).destroy
-              expect(@reply.reload.user_deleted).to eq(false)
-              expect(@reply.reload.deleted_at).not_to eq(nil)
+              @reply.reload
+              expect(@reply.user_deleted).to eq(false)
+              expect(@reply.deleted_at).not_to eq(nil)
 
               PostDestroyer.new(review_user, @reply).recover
-              expect(@reply.reload.user_deleted).to eq(false)
-              expect(@reply.reload.deleted_at).not_to eq(nil)
+              @reply.reload
+              expect(@reply.deleted_at).not_to eq(nil)
             end
           end
         end
@@ -470,8 +472,8 @@ describe PostDestroyer do
         SiteSetting.enable_category_group_moderation = true
         review_group = Fabricate(:group)
         review_category = Fabricate(:category, reviewable_by_group_id: review_group.id)
-        post.topic.update(category: review_category)
-        GroupUser.create(user: review_user, group: review_group)
+        post.topic.update!(category: review_category)
+        review_group.users << review_user
       end
 
       context "when the post has a reviewable" do
