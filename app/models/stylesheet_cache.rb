@@ -34,7 +34,7 @@ class StylesheetCache < ActiveRecord::Base
     end
 
     success
-  rescue ActiveRecord::RecordNotUnique
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::ReadOnlyError
     false
   ensure
     if Rails.env.development? && old_logger

@@ -4,6 +4,7 @@
 
 if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
   require_relative '../lib/discourse_logstash_logger'
+  require_relative '../lib/unicorn_logstash_patch'
   logger DiscourseLogstashLogger.logger(uri: ENV['LOGSTASH_UNICORN_URI'], type: :unicorn)
 end
 

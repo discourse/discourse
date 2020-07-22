@@ -41,8 +41,8 @@
 
         {{#if bulkSelectEnabled}}
           <div class="fps-select">
-            <a href {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
-            <a href {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
+            {{d-button icon="check-square" class="btn-default" action=(action "selectAll") label="search.select_all"~}}
+            {{d-button icon="far-square" class="btn-default" action=(action "clearAll") label="search.clear_all"}}
           </div>
         {{/if}}
       </div>
@@ -83,7 +83,7 @@
               <div class="fps-topic">
                 <div class="topic">
                   {{#if bulkSelectEnabled}}
-                    {{track-selected selectedList=selected selectedId=result.topic}}
+                    {{track-selected selectedList=selected selectedId=result.topic class="bulk-select"}}
                   {{/if}}
 
                   <a href={{result.url}} {{action "logClick" result.topic_id}} class="search-link">

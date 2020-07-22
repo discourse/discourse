@@ -309,7 +309,7 @@ blockquote {
   );
 
   &.visible {
-    display: block;
+    display: inline-flex;
   }
 
   .btn,

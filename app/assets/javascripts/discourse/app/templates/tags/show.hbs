@@ -13,7 +13,6 @@
             tagId=tag.id
             noSubcategories=noSubcategories
           }}
-          {{navigation-bar navItems=navItems filterMode=filterMode}}
         {{else}}
           <h2 class="tag-show-heading">
             {{#link-to "tags"}}{{i18n "tagging.tags"}}{{/link-to}}
@@ -34,7 +33,7 @@
             }}
           {{/unless}}
         {{/if}}
-        
+
         {{plugin-outlet name="before-create-topic-button"
           args=(hash
             canCreateTopic=canCreateTopic

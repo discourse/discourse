@@ -132,8 +132,9 @@ $tag-color: $primary-medium;
 }
 
 .discourse-tags,
-.list-tags {
-  .discourse-tag.simple:not(:last-child):after {
+.list-tags,
+.search-category {
+  .discourse-tag.simple:not(:last-of-type):after {
     content: ", ";
     margin-left: 1px;
   }

@@ -4236,6 +4236,12 @@ en:
             add_email: "add email"
             update_email: "update email"
             destroy_email: "destroy email"
+            topic_closed: "topic closed"
+            topic_opened: "topic opened"
+            topic_archived: "topic archived"
+            topic_unarchived: "topic unarchived"
+            post_staff_note_create: "add staff note"
+            post_staff_note_destroy: "destroy staff note"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

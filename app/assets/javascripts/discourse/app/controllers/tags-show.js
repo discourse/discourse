@@ -61,13 +61,14 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return NavItem.buildList(category, {
       tagId,
       filterType,
-      noSubcategories
+      noSubcategories,
+      siteSettings: this.siteSettings
     });
   },
 
   @discourseComputed("category")
   showTagFilter() {
-    return Discourse.SiteSettings.show_filter_by_tag;
+    return this.siteSettings.show_filter_by_tag;
   },
 
   @discourseComputed("additionalTags", "category", "tag.id")
