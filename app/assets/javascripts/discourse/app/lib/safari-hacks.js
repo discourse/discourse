@@ -168,14 +168,6 @@ function positioningWorkaround($fixedElement) {
       originalScrollTop = window.pageYOffset;
     }
 
-    const elementRect = _this.getBoundingClientRect();
-    if (elementRect.top > 100) {
-      // this tricks iOS safari into assuming input/textarea is at top of the viewport
-      // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
-      _this.style.transform = "translateY(-400px)";
-      later(() => (_this.style.transform = "none"), 30);
-    }
-
     let delay = caps.isIpadOS ? 350 : 150;
 
     later(function() {
