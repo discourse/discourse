@@ -49,7 +49,7 @@ export default Controller.extend(ModalFunctionality, {
   allowAvatarUpload() {
     return (
       this.siteSettings.allow_uploaded_avatars &&
-      allowsImages(this.currentUser.staff)
+      allowsImages(this.currentUser.staff, this.siteSettings)
     );
   },
 

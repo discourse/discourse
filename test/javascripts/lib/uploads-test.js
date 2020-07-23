@@ -13,18 +13,27 @@ import { discourseModule } from "helpers/qunit-helpers";
 
 discourseModule("lib:uploads");
 
-const validUpload = validateUploadedFiles;
-
-QUnit.test("validateUploadedFiles", assert => {
-  assert.not(validUpload(null), "no files are invalid");
-  assert.not(validUpload(undefined), "undefined files are invalid");
-  assert.not(validUpload([]), "empty array of files is invalid");
+QUnit.test("validateUploadedFiles", function(assert) {
+  assert.not(
+    validateUploadedFiles(null, { siteSettings: this.siteSettings }),
+    "no files are invalid"
+  );
+  assert.not(
+    validateUploadedFiles(undefined, { siteSettings: this.siteSettings }),
+    "undefined files are invalid"
+  );
+  assert.not(
+    validateUploadedFiles([], { siteSettings: this.siteSettings }),
+    "empty array of files is invalid"
+  );
 });
 
-QUnit.test("uploading one file", assert => {
+QUnit.test("uploading one file", function(assert) {
   sandbox.stub(bootbox, "alert");
 
-  assert.not(validUpload([1, 2]));
+  assert.not(
+    validateUploadedFiles([1, 2], { siteSettings: this.siteSettings })
+  );
   assert.ok(bootbox.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
 });
 
@@ -33,7 +42,10 @@ QUnit.test("new user cannot upload images", function(assert) {
   sandbox.stub(bootbox, "alert");
 
   assert.not(
-    validUpload([{ name: "image.png" }], { user: User.create() }),
+    validateUploadedFiles([{ name: "image.png" }], {
+      user: User.create(),
+      siteSettings: this.siteSettings
+    }),
     "the upload is not valid"
   );
   assert.ok(
@@ -48,7 +60,12 @@ QUnit.test("new user cannot upload attachments", function(assert) {
   this.siteSettings.newuser_max_attachments = 0;
   sandbox.stub(bootbox, "alert");
 
-  assert.not(validUpload([{ name: "roman.txt" }], { user: User.create() }));
+  assert.not(
+    validateUploadedFiles([{ name: "roman.txt" }], {
+      user: User.create(),
+      siteSettings: this.siteSettings
+    })
+  );
   assert.ok(
     bootbox.alert.calledWith(
       I18n.t("post.errors.attachment_upload_not_allowed_for_new_user")
@@ -56,24 +73,38 @@ QUnit.test("new user cannot upload attachments", function(assert) {
   );
 });
 
-QUnit.test("ensures an authorized upload", assert => {
+QUnit.test("ensures an authorized upload", function(assert) {
   sandbox.stub(bootbox, "alert");
-  assert.not(validUpload([{ name: "unauthorized.html" }]));
+  assert.not(
+    validateUploadedFiles([{ name: "unauthorized.html" }], {
+      siteSettings: this.siteSettings
+    })
+  );
   assert.ok(
     bootbox.alert.calledWith(
       I18n.t("post.errors.upload_not_authorized", {
-        authorized_extensions: authorizedExtensions()
+        authorized_extensions: authorizedExtensions(false, this.siteSettings)
       })
     )
   );
 });
 
-QUnit.test("skipping validation works", assert => {
+QUnit.test("skipping validation works", function(assert) {
   const files = [{ name: "backup.tar.gz" }];
   sandbox.stub(bootbox, "alert");
 
-  assert.not(validUpload(files, { skipValidation: false }));
-  assert.ok(validUpload(files, { skipValidation: true }));
+  assert.not(
+    validateUploadedFiles(files, {
+      skipValidation: false,
+      siteSettings: this.siteSettings
+    })
+  );
+  assert.ok(
+    validateUploadedFiles(files, {
+      skipValidation: true,
+      siteSettings: this.siteSettings
+    })
+  );
 });
 
 QUnit.test("staff can upload anything in PM", function(assert) {
@@ -82,11 +113,14 @@ QUnit.test("staff can upload anything in PM", function(assert) {
   sandbox.stub(bootbox, "alert");
 
   let user = User.create({ moderator: true });
-  assert.not(validUpload(files, { user }));
+  assert.not(
+    validateUploadedFiles(files, { user, siteSettings: this.siteSettings })
+  );
   assert.ok(
-    validUpload(files, {
+    validateUploadedFiles(files, {
       isPrivateMessage: true,
       allowStaffToUploadAnyFileInPm: true,
+      siteSettings: this.siteSettings,
       user
     })
   );
@@ -109,17 +143,24 @@ const dummyBlob = function() {
   }
 };
 
-QUnit.test("allows valid uploads to go through", assert => {
+QUnit.test("allows valid uploads to go through", function(assert) {
   sandbox.stub(bootbox, "alert");
 
   let user = User.create({ trust_level: 1 });
 
   // image
   let image = { name: "image.png", size: imageSize };
-  assert.ok(validUpload([image], { user }));
+  assert.ok(
+    validateUploadedFiles([image], { user, siteSettings: this.siteSettings })
+  );
   // pasted image
   let pastedImage = dummyBlob();
-  assert.ok(validUpload([pastedImage], { user }));
+  assert.ok(
+    validateUploadedFiles([pastedImage], {
+      user,
+      siteSettings: this.siteSettings
+    })
+  );
 
   assert.not(bootbox.alert.calledOnce);
 });
@@ -140,42 +181,51 @@ QUnit.test("isImage", assert => {
 
 QUnit.test("allowsImages", function(assert) {
   this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
-  assert.ok(allowsImages(), "works");
+  assert.ok(allowsImages(false, this.siteSettings), "works");
 
   this.siteSettings.authorized_extensions = ".jpg|.jpeg|.gif";
-  assert.ok(allowsImages(), "works with old extensions syntax");
+  assert.ok(
+    allowsImages(false, this.siteSettings),
+    "works with old extensions syntax"
+  );
 
   this.siteSettings.authorized_extensions = "txt|pdf|*";
   assert.ok(
-    allowsImages(),
+    allowsImages(false, this.siteSettings),
     "images are allowed when all extensions are allowed"
   );
 
   this.siteSettings.authorized_extensions = "json|jpg|pdf|txt";
   assert.ok(
-    allowsImages(),
+    allowsImages(false, this.siteSettings),
     "images are allowed when at least one extension is an image extension"
   );
 });
 
 QUnit.test("allowsAttachments", function(assert) {
   this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
-  assert.not(allowsAttachments(), "no attachments allowed by default");
+  assert.not(
+    allowsAttachments(false, this.siteSettings),
+    "no attachments allowed by default"
+  );
 
   this.siteSettings.authorized_extensions = "jpg|jpeg|gif|*";
   assert.ok(
-    allowsAttachments(),
+    allowsAttachments(false, this.siteSettings),
     "attachments are allowed when all extensions are allowed"
   );
 
   this.siteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
   assert.ok(
-    allowsAttachments(),
+    allowsAttachments(false, this.siteSettings),
     "attachments are allowed when at least one extension is not an image extension"
   );
 
   this.siteSettings.authorized_extensions = ".jpg|.jpeg|.gif|.pdf";
-  assert.ok(allowsAttachments(), "works with old extensions syntax");
+  assert.ok(
+    allowsAttachments(false, this.siteSettings),
+    "works with old extensions syntax"
+  );
 });
 
 function testUploadMarkdown(filename, opts = {}) {
