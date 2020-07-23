@@ -5,9 +5,11 @@ acceptance("Topic - Admin Menu Anonymous Users", { loggedIn: false });
 QUnit.test("Enter as a regular user", async assert => {
   await visit("/t/internationalization-localization/280");
   assert.ok(exists("#topic"), "The topic was rendered");
-  assert.ok(!exists(".toggle-admin-menu"), "The admin menu button was not rendered");
+  assert.ok(
+    !exists(".toggle-admin-menu"),
+    "The admin menu button was not rendered"
+  );
 });
-
 
 acceptance("Topic - Admin Menu", { loggedIn: true });
 
