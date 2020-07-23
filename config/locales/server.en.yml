@@ -1028,6 +1028,7 @@ en:
     submit: "Save preferences"
     digest_frequency:
       title: "You are receiving summary emails %{frequency}"
+      never_title: "You are not receiving summary emails"
       select_title: "Set summary emails frequency to:"
 
       never: "never"
