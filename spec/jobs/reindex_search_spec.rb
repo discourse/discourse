@@ -40,7 +40,7 @@ describe Jobs::ReindexSearch do
       end
 
       def self.posts
-        @posts
+        @posts ||= []
       end
 
       def self.reset
