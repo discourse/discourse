@@ -12,6 +12,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { formattedReminderTime, REMINDER_TYPES } from "discourse/lib/bookmark";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
@@ -27,21 +28,6 @@ const LATER_TODAY_CUTOFF_HOUR = 17;
 const LATER_TODAY_MAX_HOUR = 18;
 const MOMENT_MONDAY = 1;
 const MOMENT_THURSDAY = 4;
-const AUTO_DELETE_PREFERENCES = [
-  {
-    id: 0,
-    name: I18n.t("bookmarks.auto_delete_preference.never")
-  },
-  {
-    id: 1,
-    name: I18n.t("bookmarks.auto_delete_preference.when_reminder_sent")
-  },
-  {
-    id: 2,
-    name: I18n.t("bookmarks.auto_delete_preference.on_owner_reply")
-  }
-];
-
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
   "l t": { handler: "selectReminderType", args: [REMINDER_TYPES.LATER_TODAY] },
@@ -238,7 +224,12 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed()
   autoDeletePreferences: () => {
-    return AUTO_DELETE_PREFERENCES;
+    return Object.keys(AUTO_DELETE_PREFERENCES).map(key => {
+      return {
+        id: AUTO_DELETE_PREFERENCES[key],
+        name: I18n.t(`bookmarks.auto_delete_preference.${key.toLowerCase()}`)
+      };
+    });
   },
 
   showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),

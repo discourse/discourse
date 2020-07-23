@@ -23,6 +23,7 @@ import showModal from "discourse/lib/show-modal";
 import TopicTimer from "discourse/models/topic-timer";
 import { Promise } from "rsvp";
 import { escapeExpression } from "discourse/lib/utilities";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 
 let customPostMessageCallbacks = {};
 
@@ -190,7 +191,12 @@ export default Controller.extend(bufferedProperty("model"), {
   _removeDeleteOnOwnerReplyBookmarks() {
     let posts = this.model.get("postStream").posts;
     posts
-      .filter(p => p.bookmarked && p.bookmark_auto_delete_preference === 2) // 2 is on_owner_reply
+      .filter(
+        p =>
+          p.bookmarked &&
+          p.bookmark_auto_delete_preference ===
+            AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
+      )
       .forEach(p => {
         p.clearBookmark();
       });
