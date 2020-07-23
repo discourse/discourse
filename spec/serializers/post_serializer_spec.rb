@@ -258,6 +258,27 @@ describe PostSerializer do
     end
   end
 
+  context "posts when group moderation is enabled" do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:group_user) { Fabricate(:group_user) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.enable_category_group_moderation = true
+      topic.category.update!(reviewable_by_group_id: group_user.group.id)
+    end
+
+    it "does nothing for regular users" do
+      expect(serialized_post_for_user(nil)[:group_moderator]).to eq(nil)
+    end
+
+    it "returns a group_moderator attribute for category group moderators" do
+      post.update!(user: group_user.user)
+      expect(serialized_post_for_user(nil)[:group_moderator]).to eq(true)
+    end
+
+  end
+
   def serialized_post(u)
     s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
     s.add_raw = true
