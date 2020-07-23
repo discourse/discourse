@@ -228,6 +228,13 @@ QUnit.skip("Deleting a topic", async assert => {
   assert.ok(exists(".widget-button.recover"), "it shows the recover button");
 });
 
+QUnit.test("Group category moderator posts", async assert => {
+  await visit("/t/topic-for-group-moderators/2480");
+
+  assert.ok(exists(".category-moderator"), "it has a class applied");
+  assert.ok(exists(".d-icon-shield-alt"), "it shows an icon");
+});
+
 acceptance("Topic featured links", {
   loggedIn: true,
   settings: {

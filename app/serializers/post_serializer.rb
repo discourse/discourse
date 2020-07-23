@@ -60,6 +60,7 @@ class PostSerializer < BasicPostSerializer
              :moderator?,
              :admin?,
              :staff?,
+             :group_moderator,
              :user_id,
              :draft_sequence,
              :hidden,
@@ -138,6 +139,14 @@ class PostSerializer < BasicPostSerializer
 
   def staff?
     !!(object&.user&.staff?)
+  end
+
+  def group_moderator
+    @group_moderator ||= !!(object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category))
+  end
+
+  def include_group_moderator?
+    @group_moderator ||= !!(object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category))
   end
 
   def yours
