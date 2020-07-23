@@ -1,4 +1,5 @@
 import DiscourseURL from "discourse/lib/url";
+import { initializeDefaultHomepage } from "discourse/lib/utilities";
 
 export default {
   name: "url-redirects",
@@ -6,7 +7,6 @@ export default {
 
   initialize(container) {
     const currentUser = container.lookup("current-user:main");
-
     if (currentUser) {
       const username = currentUser.get("username");
       DiscourseURL.rewrite(
@@ -14,6 +14,10 @@ export default {
         `/u/${username}/activity`
       );
     }
+
+    // Initialize default homepage
+    let siteSettings = container.lookup("site-settings:main");
+    initializeDefaultHomepage(siteSettings);
 
     DiscourseURL.rewrite(/^\/u\/([^\/]+)\/?$/, "/u/$1/summary", {
       exceptions: [
