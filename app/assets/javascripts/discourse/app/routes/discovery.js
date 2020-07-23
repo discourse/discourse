@@ -8,6 +8,10 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import User from "discourse/models/user";
 
 export default DiscourseRoute.extend(OpenComposer, {
+  queryParams: {
+    filter: { refreshModel: true }
+  },
+
   redirect() {
     return this.redirectIfLoginRequired();
   },
