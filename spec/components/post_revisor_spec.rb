@@ -600,13 +600,12 @@ describe PostRevisor do
 
     context "logging group moderator edits" do
       fab!(:group_user) { Fabricate(:group_user) }
-      fab!(:category) { Fabricate(:category, reviewable_by_group_id: group_user.group.id) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic) }
 
       before do
         SiteSetting.enable_category_group_moderation = true
-        category.update(topic: topic)
-        topic.update(category: category)
-        post.update(topic: topic)
+        topic.update!(category: category)
+        post.update!(topic: topic)
       end
 
       it "logs an edit when a group moderator revises the category description" do

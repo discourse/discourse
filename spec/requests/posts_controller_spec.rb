@@ -465,7 +465,7 @@ describe PostsController do
 
       it "can not update category descriptions in other categories" do
         second_category = Fabricate(:category)
-        topic.update(category: second_category)
+        topic.update!(category: second_category)
 
         put "/posts/#{post.id}.json", params: update_params
         expect(response.status).to eq(403)
