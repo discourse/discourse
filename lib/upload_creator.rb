@@ -40,6 +40,12 @@ class UploadCreator
     is_image = false if @opts[:for_theme]
 
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
+      # We need to convert HEIFs early because FastImage does not consider them as images
+      if convert_heif_to_jpeg?
+        convert_heif!
+        is_image = FileHelper.is_supported_image?("test.#{@image_info.type}")
+      end
+
       if is_image
         extract_image_info!
         return @upload if @upload.errors.present?
@@ -209,6 +215,28 @@ class UploadCreator
     else
       jpeg_tempfile.close!
     end
+  end
+
+  def convert_heif_to_jpeg?
+    SiteSetting.convert_heif_to_jpeg && File.extname(@filename).downcase.match?(/\.hei(f|c)$/)
+  end
+
+  def convert_heif!
+    jpeg_tempfile = Tempfile.new(["image", ".jpg"])
+    from = @file.path
+    to = jpeg_tempfile.path
+    OptimizedImage.ensure_safe_paths!(from, to)
+
+    begin
+      execute_convert(from, to)
+    rescue
+      # retry with debugging enabled
+      execute_convert(from, to, true)
+    end
+
+    @file.respond_to?(:close!) ? @file.close! : @file.close
+    @file = jpeg_tempfile
+    extract_image_info!
   end
 
   def execute_convert(from, to, debug = false)
