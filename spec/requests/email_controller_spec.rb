@@ -192,7 +192,7 @@ RSpec.describe EmailController do
       end
 
       it 'displays correct label when email_digests is set to false' do
-        user.user_option.update_columns(email_digests: false, digest_after_minutes: 10080)
+        user.user_option.update!(email_digests: false, digest_after_minutes: 10080)
 
         navigate_to_unsubscribe
 
