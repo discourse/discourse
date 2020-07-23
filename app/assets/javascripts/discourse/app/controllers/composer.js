@@ -323,12 +323,15 @@ export default Controller.extend({
 
   @discourseComputed
   allowUpload() {
-    return authorizesOneOrMoreExtensions(this.currentUser.staff);
+    return authorizesOneOrMoreExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
   },
 
   @discourseComputed()
   uploadIcon() {
-    return uploadIcon(this.currentUser.staff);
+    return uploadIcon(this.currentUser.staff, this.siteSettings);
   },
 
   @action

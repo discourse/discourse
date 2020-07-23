@@ -81,7 +81,10 @@ export default Component.extend({
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
     } else {
-      const key = authorizesOneOrMoreImageExtensions(this.currentUser.staff)
+      const key = authorizesOneOrMoreImageExtensions(
+        this.currentUser.staff,
+        this.siteSettings
+      )
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
       return `composer.${key}`;
@@ -700,6 +703,7 @@ export default Component.extend({
 
       const opts = {
         user: this.currentUser,
+        siteSettings: this.siteSettings,
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings
           .allow_staff_to_upload_any_file_in_pm
