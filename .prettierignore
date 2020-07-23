@@ -22,3 +22,6 @@ test/javascripts/fixtures
 test/javascripts/helpers/assertions.js
 node_modules/
 dist/
+
+# TODO: Remove it when plugins are no longer linted in core
+plugins/docker_manager/assets/docker-manager-*
