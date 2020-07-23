@@ -26,6 +26,10 @@
     background: transparent;
   }
 
+  &.in-focus {
+    border-color: $tertiary;
+  }
+
   &.disabled {
     cursor: not-allowed;
     .d-editor-button-bar {
