@@ -426,6 +426,53 @@ describe PostsController do
       end
     end
 
+    describe "when logged in as group moderator" do
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic) }
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:user_gm) { group_user.user }
+      let(:group) { group_user.group }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: topic.id)
+        sign_in(user_gm)
+      end
+
+      it "allows updating the category description" do
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response.status).to eq(200)
+
+        post.reload
+        expect(post.raw).to eq('edited body')
+        expect(UserHistory.where(action: UserHistory.actions[:post_edit]).count).to eq(1)
+      end
+
+      it "can not update other posts within the primary category topic" do
+        second_post = Fabricate(:post, user: user, topic: topic)
+
+        put "/posts/#{second_post.id}.json", params: update_params
+        expect(response.status).to eq(403)
+      end
+
+      it "can not update other first posts of topics in the same category" do
+        second_topic_in_category = Fabricate(:topic, category: category)
+        post_in_second_topic = Fabricate(:post, user: user, topic: second_topic_in_category)
+
+        put "/posts/#{post_in_second_topic.id}.json", params: update_params
+        expect(response.status).to eq(403)
+      end
+
+      it "can not update category descriptions in other categories" do
+        second_category = Fabricate(:category)
+        topic.update!(category: second_category)
+
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response.status).to eq(403)
+      end
+
+    end
+
     it 'can not change category to a disallowed category' do
       post = create_post
       sign_in(post.user)

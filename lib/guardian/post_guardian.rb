@@ -161,6 +161,10 @@ module PostGuardian
       return !post.edit_time_limit_expired?(@user)
     end
 
+    if post.is_category_description?
+      return true if can_edit_category_description?(post.topic.category)
+    end
+
     false
   end
 
