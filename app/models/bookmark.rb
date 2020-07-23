@@ -9,6 +9,27 @@ class Bookmark < ActiveRecord::Base
   belongs_to :post
   belongs_to :topic
 
+  def self.reminder_types
+    @reminder_types ||= Enum.new(
+      later_today: 1,
+      next_business_day: 2,
+      tomorrow: 3,
+      next_week: 4,
+      next_month: 5,
+      custom: 6,
+      start_of_next_business_week: 7,
+      later_this_week: 8
+    )
+  end
+
+  def self.auto_delete_preferences
+    @auto_delete_preferences ||= Enum.new(
+      never: 0,
+      when_reminder_sent: 1,
+      on_owner_reply: 2
+    )
+  end
+
   validates :reminder_at, presence: {
     message: I18n.t("bookmarks.errors.time_must_be_provided"),
     if: -> { reminder_type.present? }
@@ -62,27 +83,6 @@ class Bookmark < ActiveRecord::Base
 
   scope :pending_reminders_for_user, ->(user) do
     pending_reminders.where(user: user)
-  end
-
-  def self.reminder_types
-    @reminder_types ||= Enum.new(
-      later_today: 1,
-      next_business_day: 2,
-      tomorrow: 3,
-      next_week: 4,
-      next_month: 5,
-      custom: 6,
-      start_of_next_business_week: 7,
-      later_this_week: 8
-    )
-  end
-
-  def self.auto_delete_preferences
-    @auto_delete_preferences ||= Enum.new(
-      never: 0,
-      when_reminder_sent: 1,
-      on_owner_reply: 2
-    )
   end
 
   def self.count_per_day(opts = nil)

@@ -15,6 +15,12 @@ import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 
+export const AUTO_DELETE_PREFERENCES = {
+  NEVER: 0,
+  WHEN_REMINDER_SENT: 1,
+  ON_OWNER_REPLY: 2
+};
+
 const Bookmark = RestModel.extend({
   newBookmark: none("id"),
 
