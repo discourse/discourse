@@ -165,7 +165,7 @@ function isAuthorizedImage(fileName, staff, siteSettings) {
   return new RegExp(
     "\\.(" + imagesExtensions(staff, siteSettings).join("|") + ")$",
     "i"
-  );
+  ).test(fileName);
 }
 
 export function authorizedExtensions(staff, siteSettings) {
