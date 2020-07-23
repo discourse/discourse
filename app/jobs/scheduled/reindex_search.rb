@@ -140,7 +140,7 @@ module Jobs
     def load_problem_post_ids(limit)
       params = {
         locale: SiteSetting.default_locale,
-        version: SearchIndexer::POST_INDEX_VERSION,
+        version: SearchIndexer::MIN_POST_REINDEX_VERSION,
         limit: limit
       }
 
@@ -151,7 +151,7 @@ module Jobs
         JOIN topics ON topics.id = posts.topic_id
         LEFT JOIN post_search_data pd
           ON pd.locale = :locale
-          AND pd.version = :version
+          AND pd.version >= :version
           AND pd.post_id = posts.id
         WHERE pd.post_id IS NULL
         AND posts.deleted_at IS NULL

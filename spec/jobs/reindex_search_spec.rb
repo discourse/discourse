@@ -68,6 +68,14 @@ describe Jobs::ReindexSearch do
       expect(FakeIndexer.posts).to contain_exactly(post)
     end
 
+    it 'should not reindex posts with a developmental version' do
+      post = Fabricate(:post, version: SearchIndexer::MIN_POST_REINDEX_VERSION + 1)
+
+      subject.rebuild_problem_posts(indexer: FakeIndexer)
+
+      expect(FakeIndexer.posts).to eq([])
+    end
+
     it 'should not reindex posts with empty raw' do
       post = Fabricate(:post)
       post.post_search_data.destroy!
