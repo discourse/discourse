@@ -144,15 +144,21 @@ jobs:
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
         run: bundle exec rubocop plugins
 
-      - name: ESLint (core and core plugins)
+      - name: ESLint (core)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
+        run: yarn eslint app/assets/javascripts test/javascripts
+
+      - name: ESLint (core plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
         run: |
-          yarn eslint app/assets/javascripts test/javascripts
-          yarn eslint --global I18n --ext .es6 plugins
+          yarn eslint plugins/**
+          yarn eslint --global I18n --ext .es6 plugins/**
 
       - name: ESLint (all plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
-        run: yarn eslint --global I18n --ext .es6 plugins
+        run: |
+          yarn eslint plugins/**
+          yarn eslint --global I18n --ext .es6 plugins/**
 
       - name: Prettier (core and core plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
