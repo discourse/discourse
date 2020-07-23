@@ -58,20 +58,14 @@ export default Controller.extend({
     return canChangeWebsite;
   },
 
-  @discourseComputed("model.trust_level", "model.staff", "model.siteSettings")
-  canUploadProfileHeader(trust_level, staff, siteSettings) {
-    return (
-      staff ||
-      trust_level >= siteSettings.min_trust_level_to_allow_profile_background
-    );
+  @discourseComputed("model.can_upload_profile_header")
+  canUploadProfileHeader(canUploadProfileHeader) {
+    return canUploadProfileHeader;
   },
 
-  @discourseComputed("model.trust_level", "model.staff", "model.siteSettings")
-  canUploadUserCardBackground(trust_level, staff, siteSettings) {
-    return (
-      staff ||
-      trust_level >= siteSettings.min_trust_level_to_allow_user_card_background
-    );
+  @discourseComputed("model.can_upload_user_card_background")
+  canUploadUserCardBackground(canUploadUserCardBackground) {
+    return canUploadUserCardBackground;
   },
 
   actions: {
