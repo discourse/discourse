@@ -201,7 +201,7 @@ RSpec.describe EmailController do
       end
 
       it 'hides unsubscribe from all checkbox when user already unsubscribed' do
-        user.user_option.update_columns(email_digests: false, mailing_list_mode: false, email_level: 2, email_messages_level: 2)
+        user.user_option.update!(email_digests: false, mailing_list_mode: false, email_level: 2, email_messages_level: 2)
 
         navigate_to_unsubscribe
 
