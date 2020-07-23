@@ -25,7 +25,7 @@ describe Search do
 
       expect do
         topic.update!(title: "harpi is the new title")
-      end.to change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
       expect(post.post_search_data.reload.search_data).to match(/harpi/)
     end
@@ -33,8 +33,8 @@ describe Search do
     it 'should update posts index when topic category changes' do
       expect do
         topic.update!(category: Fabricate(:category))
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
     end
 
     it 'should update posts index when topic tags changes' do
@@ -44,8 +44,8 @@ describe Search do
       expect do
         DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name])
         topic.save!
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
       expect(topic.tags).to eq([tag])
     end
@@ -77,10 +77,10 @@ describe Search do
     it 'should update posts index when category name changes' do
       expect do
         category.update!(name: 'some new name')
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
-      expect(post3.post_search_data.version).to eq(SearchIndexer::INDEX_VERSION)
+      expect(post3.post_search_data.version).to eq(SearchIndexer::POST_INDEX_VERSION)
     end
   end
 

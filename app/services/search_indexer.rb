@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class SearchIndexer
-  INDEX_VERSION = 3
+  POST_INDEX_VERSION = 3
+  TOPIC_INDEX_VERSION = 3
+  CATEGORY_INDEX_VERSION = 3
+  USER_INDEX_VERSION = 3
+  TAG_INDEX_VERSION = 3
   REINDEX_VERSION = 0
 
   def self.disable
@@ -67,7 +71,7 @@ class SearchIndexer
       raw_data: indexed_data,
       id: id,
       locale: SiteSetting.default_locale,
-      version: INDEX_VERSION,
+      version: const_get("#{table.upcase}_INDEX_VERSION"),
       tsvector: tsvector,
     }
 

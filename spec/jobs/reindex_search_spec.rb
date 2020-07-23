@@ -28,7 +28,7 @@ describe Jobs::ReindexSearch do
 
       subject.execute({})
       expect(model.public_send("#{m}_search_data").version)
-        .to eq(SearchIndexer::INDEX_VERSION)
+        .to eq("SearchIndexer::#{m.upcase}_INDEX_VERSION".constantize)
     end
   end
 
