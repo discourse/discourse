@@ -118,6 +118,39 @@ describe TopicQuery do
     end
   end
 
+  context 'tracked' do
+    it "filters tracked topics correctly" do
+      SiteSetting.tagging_enabled = true
+
+      tag = Fabricate(:tag)
+      Fabricate(:topic, tags: [tag])
+      topic2 = Fabricate(:topic)
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(0)
+
+      TagUser.create!(
+        tag_id: tag.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:watching]
+      )
+
+      cu = CategoryUser.create!(
+        category_id: topic2.category_id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:regular]
+      )
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(1)
+
+      cu.update!(notification_level: NotificationLevels.all[:tracking])
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(2)
+    end
+  end
+
   context 'deleted filter' do
     it "filters deleted topics correctly" do
       _topic = Fabricate(:topic, deleted_at: 1.year.ago)
