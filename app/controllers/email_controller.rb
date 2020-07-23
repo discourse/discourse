@@ -24,11 +24,7 @@ class EmailController < ApplicationController
 
         watching = TopicUser.notification_levels[:watching]
 
-        @unsubscribed_from_all =
-          !@user.user_option.mailing_list_mode &&
-          !@user.user_option.email_digests &&
-          @user.user_option.email_level == UserOption.email_level_types[:never] &&
-          @user.user_option.email_messages_level == UserOption.email_level_types[:never]
+        @unsubscribed_from_all = @user.user_option.unsubscribed_from_all?
 
         if @topic
           @watching_topic = TopicUser.exists?(user_id: @user.id, notification_level: watching, topic_id: @topic.id)
