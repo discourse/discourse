@@ -417,42 +417,38 @@ describe UserGuardian do
   describe 'can_upload_profile_header' do
     it 'returns true if it is an admin' do
       guardian = Guardian.new(admin)
-      expect(guardian.can_upload_profile_header?(user)).to eq(true)
+      expect(guardian.can_upload_profile_header?(admin)).to eq(true)
     end
 
     it 'returns true if the trust level of user matches site setting' do
-      user.trust_level = 2
-      guardian = Guardian.new(user)
+      guardian = Guardian.new(trust_level_2)
       SiteSetting.min_trust_level_to_allow_profile_background = 2
-      expect(guardian.can_upload_profile_header?(user)).to eq(true)
+      expect(guardian.can_upload_profile_header?(trust_level_2)).to eq(true)
     end
 
     it 'returns false if the trust level of user does not matches site setting' do
-      user.trust_level = 1
-      guardian = Guardian.new(user)
+      guardian = Guardian.new(trust_level_1)
       SiteSetting.min_trust_level_to_allow_profile_background = 2
-      expect(guardian.can_upload_profile_header?(user)).to eq(false)
+      expect(guardian.can_upload_profile_header?(trust_level_1)).to eq(false)
     end
   end
 
   describe 'can_upload_user_card_background' do
     it 'returns true if it is an admin' do
       guardian = Guardian.new(admin)
-      expect(guardian.can_upload_user_card_background?(user)).to eq(true)
+      expect(guardian.can_upload_user_card_background?(admin)).to eq(true)
     end
 
     it 'returns true if the trust level of user matches site setting' do
-      user.trust_level = 2
-      guardian = Guardian.new(user)
+      guardian = Guardian.new(trust_level_2)
       SiteSetting.min_trust_level_to_allow_user_card_background = 2
-      expect(guardian.can_upload_user_card_background?(user)).to eq(true)
+      expect(guardian.can_upload_user_card_background?(trust_level_2)).to eq(true)
     end
 
     it 'returns false if the trust level of user does not matches site setting' do
-      user.trust_level = 1
-      guardian = Guardian.new(user)
+      guardian = Guardian.new(trust_level_1)
       SiteSetting.min_trust_level_to_allow_user_card_background = 2
-      expect(guardian.can_upload_user_card_background?(user)).to eq(false)
+      expect(guardian.can_upload_user_card_background?(trust_level_1)).to eq(false)
     end
   end
 

@@ -160,11 +160,11 @@ module UserGuardian
   end
 
   def can_upload_profile_header?(user)
-    is_staff? || user.trust_level >= TrustLevel[SiteSetting.min_trust_level_to_allow_profile_background.to_i]
+    (is_me?(user) && user.trust_level >= TrustLevel[SiteSetting.min_trust_level_to_allow_profile_background.to_i]) || is_staff?
   end
 
   def can_upload_user_card_background?(user)
-    is_staff? || user.trust_level >= TrustLevel[SiteSetting.min_trust_level_to_allow_user_card_background.to_i]
+    (is_me?(user) && user.trust_level >= TrustLevel[SiteSetting.min_trust_level_to_allow_user_card_background.to_i]) || is_staff?
   end
 
 end
