@@ -7,3 +7,7 @@ Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
 
 Discourse/NoResetColumnInformationInMigrations:
   Enabled: true
+
+# TODO: Still need to fix all the existing tests but we shouldn't block future upgrades
+Discourse/NoMockingJobs:
+  Enabled: false
