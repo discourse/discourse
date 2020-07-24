@@ -18,10 +18,12 @@ export default Controller.extend({
     ];
 
     if (!automatic) {
-      defaultTabs.splice(2, 0, {
-        route: "group.manage.email",
-        title: "groups.manage.email.title"
-      });
+      if (this.siteSettings.enable_imap && this.siteSettings.enable_smtp) {
+        defaultTabs.splice(2, 0, {
+          route: "group.manage.email",
+          title: "groups.manage.email.title"
+        });
+      }
 
       defaultTabs.splice(1, 0, {
         route: "group.manage.membership",
