@@ -1,8 +1,20 @@
 # frozen_string_literal: true
 
 module SidekiqHelpers
-  # expect_enqueued_with(job: feature_topic_users, args: { topic_id: topic.id }) do
-  #   PostCreator.new.create
+  # Assert job is enqueued:
+  #
+  # expect_enqueued_with(job: :post_process, args: { post_id: post.id }) do
+  #   post.update!(raw: 'new raw')
+  # end
+  #
+  # Asserting jobs enqueued with delay:
+  #
+  # expect_enqueued_with(
+  #   job: :post_process,
+  #   args: { post_id: post.id },
+  #   at: Time.zone.now + 1.hour
+  # ) do
+  #   post.update!(raw: 'new raw')
   # end
   def expect_enqueued_with(job:, args: {}, at: nil, expectation: true)
     klass = job.instance_of?(Class) ? job : "::Jobs::#{job.to_s.camelcase}".constantize
@@ -22,8 +34,16 @@ module SidekiqHelpers
     )
   end
 
-  # expect_not_enqueued_with(job: feature_topic_users, args: { topic_id: topic.id }) do
-  #   # Do Nothing...
+  # Assert job is not enqueued:
+  #
+  # expect_not_enqueued_with(job: :post_process) do
+  #   post.update!(raw: 'new raw')
+  # end
+  #
+  # Assert job is not enqueued with specific params
+  #
+  # expect_not_enqueued_with(job: :post_process, args: { post_id: post.id }) do
+  #   post.update!(raw: 'new raw')
   # end
   def expect_not_enqueued_with(job:, args: {}, at: nil)
     expect_enqueued_with(job: job, args: args, at: at, expectation: false) do
@@ -31,6 +51,10 @@ module SidekiqHelpers
     end
   end
 
+  # Checks whether a job has been enqueued with the given arguments
+  #
+  # job_enqueued?(job: :post_process, args: { post_id: post.id }) => true/false
+  # job_enqueued?(job: :post_process, args: { post_id: post.id }, at: Time.zone.now + 1.hour) => true/false
   def job_enqueued?(job:, args: {}, at: nil)
     klass = job.instance_of?(Class) ? job : "::Jobs::#{job.to_s.camelcase}".constantize
     at = at.to_f if at.is_a?(Time)
