@@ -5,7 +5,7 @@ class SiteSettingCommaToPipe < ActiveRecord::Migration[4.2]
     execute <<SQL
       UPDATE site_settings
       SET value = replace(value, ',', '|')
-      WHERE name = 'allowed_spam_host_domains'
+      WHERE name = 'white_listed_spam_host_domains'
       ;
 SQL
     execute <<SQL
@@ -20,7 +20,7 @@ SQL
     execute <<SQL
       UPDATE site_settings
       SET value = replace(value, '|', ',')
-      WHERE name = 'allowed_spam_host_domains'
+      WHERE name = 'white_listed_spam_host_domains'
       ;
 SQL
     execute <<SQL

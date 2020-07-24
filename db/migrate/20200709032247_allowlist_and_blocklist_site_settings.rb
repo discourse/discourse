@@ -25,13 +25,21 @@ class AllowlistAndBlocklistSiteSettings < ActiveRecord::Migration[6.0]
 
   def up
     NAMES_MAP.each_pair do |key, value|
-      SiteSetting.where(name: key).update(name: value)
+      DB.exec <<~SQL
+        UPDATE site_settings
+        SET name = '#{value}'
+        WHERE name = '#{key}'
+      SQL
     end
   end
 
   def down
     NAMES_MAP.each_pair do |key, value|
-      SiteSetting.where(name: value).update(name: key)
+      DB.exec <<~SQL
+        UPDATE site_settings
+        SET name = '#{key}'
+        WHERE name = '#{value}'
+      SQL
     end
   end
 end

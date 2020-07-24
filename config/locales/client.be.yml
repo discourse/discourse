@@ -1870,7 +1870,7 @@ be:
         add_host: "дадаць Хост"
         embed_by_username: "Імя карыстальніка для стварэння тэмы"
         embed_post_limit: "Максімальную колькасць паведамленняў для ўстаўкі"
-        embed_classname_allowlist: "Дазволеныя імёны класаў CSS"
+        embed_classname_whitelist: "Дазволеныя імёны класаў CSS"
       permalink:
         title: "Сталыя спасылкі"
         url: "URL спасылка"
