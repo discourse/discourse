@@ -35,16 +35,21 @@ describe Jobs::ReindexSearch do
   describe 'rebuild_problem_posts' do
     class FakeIndexer
       def self.index(post, force:)
-        @posts ||= []
-        @posts.push(post)
+        get_posts.push(post)
       end
 
       def self.posts
-        @posts ||= []
+        get_posts
       end
 
       def self.reset
-        @posts.clear
+        get_posts.clear
+      end
+
+      private
+
+      def self.get_posts
+        @posts ||= []
       end
     end
 
