@@ -1150,6 +1150,9 @@ describe GroupsController do
         put "/groups/#{group.id}/members.json", params: { emails: emails.join(",") }
 
         expect(response.status).to eq(200)
+        body = response.parsed_body
+
+        expect(body["emails"]).to eq(emails)
 
         emails.each do |email|
           invite = Invite.find_by(email: email)
@@ -1164,6 +1167,17 @@ describe GroupsController do
         put "/groups/#{group.id}/members.json", params: { emails: new_user.email }
 
         expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
+      end
+
+      it "will error if the same user is invite via username and email" do
+        new_user = Fabricate(:user)
+        put "/groups/#{group.id}/members.json", params: { usernames: new_user.username, emails: new_user.email }
+
+        expect(response.status).to eq(400)
+        body = response.parsed_body
+
+        expect(body["errors"].first).to include("user was invited by both username and email")
+
       end
 
       context 'public group' do

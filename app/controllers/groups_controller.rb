@@ -299,7 +299,7 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    users = users_from_params(optional: true)
+    users = users_from_params(optional: true).to_a
 
     if group.public_admission
       if !guardian.can_log_group_changes?(group) && current_user != users.first
@@ -319,15 +319,19 @@ class GroupsController < ApplicationController
       end
     end
 
-    users = users.uniq
-
     if users.empty? && emails.empty?
       raise Discourse::InvalidParameters.new(
         'usernames or emails must be present'
       )
     end
 
-    if (usernames = group.users.where(id: users.pluck(:id)).pluck(:username)).present?
+    if users.uniq.length != users.length
+      raise Discourse::InvalidParameters.new(
+        'user was invited by both username and email'
+      )
+    end
+
+    if (usernames = group.users.where(id: users.map(&:id)).pluck(:username)).present?
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
         username: usernames.sort.join(", "),
@@ -350,7 +354,8 @@ class GroupsController < ApplicationController
       end
 
       render json: success_json.merge!(
-        usernames: users.map(&:username)
+        usernames: users.map(&:username),
+        emails: emails
       )
     end
   end

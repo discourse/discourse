@@ -56,8 +56,14 @@ export default Controller.extend(ModalFunctionality, {
 
     promise
       .then(() => {
+        let queryParams = {};
+
+        if (this.usernames) {
+          queryParams.filter = this.usernames;
+        }
+
         this.transitionToRoute("group.members", this.get("model.name"), {
-          queryParams: { filter: this.usernamesAndEmails }
+          queryParams
         });
 
         this.send("closeModal");
