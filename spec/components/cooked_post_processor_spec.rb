@@ -1491,19 +1491,22 @@ describe CookedPostProcessor do
       end
 
       context "and there is enough disk space" do
-        before { cpp.expects(:disable_if_low_on_disk_space) }
+        before { cpp.expects(:disable_if_low_on_disk_space).at_least_once }
 
         context "and the post has been updated by an actual user" do
 
           before { post.id = 42 }
 
           it "ensures only one job is scheduled right after the editing_grace_period" do
+            freeze_time
+
             Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
 
             delay = SiteSetting.editing_grace_period + 1
-            Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id).once
 
-            cpp.pull_hotlinked_images
+            expect_enqueued_with(job: :pull_hotlinked_images, args: { post_id: post.id }, at: Time.zone.now + delay.seconds) do
+              cpp.pull_hotlinked_images
+            end
           end
 
         end

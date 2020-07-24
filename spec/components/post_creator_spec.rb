@@ -221,23 +221,18 @@ describe PostCreator do
       end
 
       it 'passes the invalidate_oneboxes along to the job if present' do
-        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
+
+        expect(job_enqueued?(job: :process_post, args: { invalidate_oneboxes: true })).to eq(true)
       end
 
       it 'passes the image_sizes along to the job if present' do
-        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
-        creator.opts[:image_sizes] = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
+        image_sizes = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
+        creator.opts[:image_sizes] = image_sizes
         creator.create
+
+        expect(job_enqueued?(job: :process_post, args: { image_sizes: image_sizes })).to eq(true)
       end
 
       it 'assigns a category when supplied' do

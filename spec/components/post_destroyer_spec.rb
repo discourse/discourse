@@ -738,8 +738,9 @@ describe PostDestroyer do
     fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
     it "should feature the users again (in case they've changed)" do
-      Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id))
-      PostDestroyer.new(moderator, post).destroy
+      expect_enqueued_with(job: :feature_topic_users, args: { topic_id: post.topic_id }) do
+        PostDestroyer.new(moderator, post).destroy
+      end
     end
 
     describe 'with a reply' do

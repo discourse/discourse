@@ -153,14 +153,17 @@ describe User do
     let(:user) { Fabricate(:user) }
 
     it 'enqueues the system message' do
-      Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_user')
-      user.enqueue_welcome_message('welcome_user')
+      expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
+        user.enqueue_welcome_message('welcome_user')
+      end
     end
 
     it "doesn't enqueue the system message when the site settings disable it" do
       SiteSetting.send_welcome_message = false
-      Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_user').never
-      user.enqueue_welcome_message('welcome_user')
+
+      expect_not_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
+        user.enqueue_welcome_message('welcome_user')
+      end
     end
   end
 
@@ -1433,9 +1436,9 @@ describe User do
 
       user = Fabricate(:user)
 
-      Jobs.expects(:enqueue).with(:update_gravatar, anything)
-
-      user.refresh_avatar
+      expect_enqueued_with(job: :update_gravatar, args: { user_id: user.id }) do
+        user.refresh_avatar
+      end
     end
   end
 

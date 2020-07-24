@@ -11,8 +11,9 @@ describe UserActivator do
       user = Fabricate(:user)
       activator = EmailActivator.new(user, nil, nil, nil)
 
-      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, email_token: user.email_tokens.first.token))
-      activator.activate
+      expect_enqueued_with(job: :critical_user_email, args: { type: :signup, email_token: user.email_tokens.first.token }) do
+        activator.activate
+      end
     end
 
     it 'creates and send new email token if the existing token expired' do
@@ -24,12 +25,19 @@ describe UserActivator do
       email_token.update_column(:created_at, 48.hours.ago)
       activator = EmailActivator.new(user, nil, nil, nil)
 
-      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
-      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, email_token: email_token.token)).never
-      activator.activate
+      expect_not_enqueued_with(job: :critical_user_email, args: { type: :signup, user_id: user.id, email_token: email_token.token }) do
+        activator.activate
+      end
 
-      user.reload
-      expect(user.email_tokens.last.created_at).to eq_time(now)
+      email_token = user.reload.email_tokens.last
+
+      expect(job_enqueued?(job: :critical_user_email, args: {
+        type: :signup,
+        user_id: user.id,
+        email_token: email_token.token
+      })).to eq(true)
+
+      expect(email_token.created_at).to eq_time(now)
     end
 
   end
