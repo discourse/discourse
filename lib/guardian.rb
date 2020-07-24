@@ -565,5 +565,5 @@ class Guardian
       false
     end
   end
-  
+
 end
