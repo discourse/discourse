@@ -22,8 +22,10 @@
   </div>
 
   <div class="control-group">
-    {{input type="checkbox" name="smtp_ssl" checked=model.smtp_ssl}}
-    <label class="control-group-inline" for="smtp_ssl">{{i18n "groups.manage.email.credentials.smtp_ssl"}}</label>
+    <label class="control-group-inline" for="smtp_ssl">
+      {{input type="checkbox" name="smtp_ssl" id="smtp_ssl" checked=model.smtp_ssl}}
+      {{i18n "groups.manage.email.credentials.smtp_ssl"}}
+    </label>
   </div>
 
   <div class="control-group">
@@ -37,8 +39,10 @@
   </div>
 
   <div class="control-group">
-    {{input type="checkbox" name="imap_ssl" checked=model.imap_ssl}}
-    <label class="control-group-inline" for="imap_ssl">{{i18n "groups.manage.email.credentials.imap_ssl"}}</label>
+    <label class="control-group-inline" for="imap_ssl">
+      {{input type="checkbox" name="imap_ssl" checked=model.imap_ssl id="imap_ssl"}}
+      {{i18n "groups.manage.email.credentials.imap_ssl"}}
+    </label>
   </div>
 
   <div class="control-group">
