@@ -537,7 +537,6 @@ describe Guardian do
       let(:private_category)  { Fabricate(:private_category, group: group) }
       let(:group_private_topic) { Fabricate(:topic, category: private_category) }
       let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
-      fab!(:pm) { Fabricate(:topic) }
 
       it 'handles invitation correctly' do
         expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
