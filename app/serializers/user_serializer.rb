@@ -172,11 +172,11 @@ class UserSerializer < UserCardSerializer
   end
 
   def can_upload_profile_header
-    scope.can_upload_profile_header?
+    scope.can_upload_profile_header?(object)
   end
 
   def can_upload_user_card_background
-    scope.can_upload_user_card_background?
+    scope.can_upload_user_card_background?(object)
   end
 
   ###
