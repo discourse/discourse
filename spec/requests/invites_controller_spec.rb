@@ -91,7 +91,6 @@ describe InvitesController do
 
       it "fails if you can't invite to the forum" do
         sign_in(Fabricate(:user))
-        SiteSetting.min_trust_to_allow_pm_invite = 2
         post "/invites.json", params: { email: email }
         expect(response).to be_forbidden
       end
@@ -156,7 +155,6 @@ describe InvitesController do
 
         it "fails if you can't invite to the forum" do
           sign_in(Fabricate(:user))
-          SiteSetting.min_trust_to_allow_pm_invite = 2
           post "/invites/link.json", params: { email: email }
           expect(response.status).to eq(422)
         end

@@ -165,7 +165,6 @@ class Guardian
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
-  alias :can_close? :can_moderate?
 
   def can_tag?(topic)
     return false if topic.blank?

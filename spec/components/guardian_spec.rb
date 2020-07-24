@@ -550,14 +550,14 @@ describe Guardian do
       let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
       fab!(:pm) { Fabricate(:topic) }
 
-      it 'returns true if user trust level matches pm invite site setting' do
+      it 'returns true if user has sufficient trust level' do
         SiteSetting.min_trust_to_allow_pm_invite = 2
-        expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
+        expect(Guardian.new(trust_level_2).can_invite_to?(pm)).to be_truthy
       end
 
-      it 'returns false if user trust level does not matches pm invite site setting' do
+      it 'returns false if user does not have sufficient trust level' do
         SiteSetting.min_trust_to_allow_pm_invite = 2
-        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(trust_level_1).can_invite_to?(pm)).to be_falsey
       end
 
       it 'handles invitation correctly' do
@@ -671,7 +671,7 @@ describe Guardian do
   end
 
   describe 'can_invite_via_email?' do
-    it 'returns true when sso is disabled, local logins are enabled, user approval is not required and trust level matches site setting' do
+    it 'returns true when sso is disabled, local logins are enabled, user approval is not required and trust level is sufficient' do
       SiteSetting.min_trust_to_allow_pm_invite = 2
       expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_truthy
       expect(Guardian.new(moderator).can_invite_via_email?(topic)).to be_truthy
