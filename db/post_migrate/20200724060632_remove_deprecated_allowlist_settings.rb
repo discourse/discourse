@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AllowlistAndBlocklistSiteSettings < ActiveRecord::Migration[6.0]
+class RemoveDeprecatedAllowlistSettings < ActiveRecord::Migration[6.0]
   NAMES_MAP = {
     'email_domains_blacklist': 'blocked_email_domains',
     'email_domains_whitelist': 'allowed_email_domains',
@@ -24,20 +24,20 @@ class AllowlistAndBlocklistSiteSettings < ActiveRecord::Migration[6.0]
   }
 
   def up
-    NAMES_MAP.each_pair do |old_key, new_key|
+    NAMES_MAP.each_pair do |old_key, _new_key|
       DB.exec <<~SQL
-        INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
-        SELECT '#{new_key}', data_type, value, created_at, updated_At
-        FROM site_settings
+        DELETE FROM site_settings
         WHERE name = '#{old_key}'
       SQL
     end
   end
 
   def down
-    NAMES_MAP.each_pair do |_old_key, new_key|
+    NAMES_MAP.each_pair do |old_key, new_key|
       DB.exec <<~SQL
-        DELETE FROM site_settings
+        INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
+        SELECT '#{old_key}', data_type, value, created_at, updated_At
+        FROM site_settings
         WHERE name = '#{new_key}'
       SQL
     end
