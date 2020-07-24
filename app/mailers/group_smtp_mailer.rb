@@ -86,6 +86,19 @@ class GroupSmtpMailer < ActionMailer::Base
     result
   end
 
+  def strip_secure_urls(raw)
+    urls = Set.new
+    raw.scan(URI.regexp(%w{http https})) { urls << $& }
+
+    urls.each do |url|
+      if (url.start_with?(Discourse.store.s3_upload_host) && FileHelper.is_supported_media?(url))
+        raw = raw.sub(url, "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>")
+      end
+    end
+
+    raw
+  end
+
   def html_override(post, context_posts: nil)
     UserNotificationRenderer.render(
       template: 'email/notification',
