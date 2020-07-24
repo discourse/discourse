@@ -104,11 +104,13 @@ before_fork do |server, worker|
       end
     end
 
-    puts "Starting up email sync"
-    Demon::EmailSync.start
-    Signal.trap("SIGTSTP") do
-      STDERR.puts "#{Time.now}: Issuing stop to email_sync"
-      Demon::EmailSync.stop
+    if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
+      puts "Starting up EmailSync demon"
+      Demon::EmailSync.start
+      Signal.trap("SIGTSTP") do
+        STDERR.puts "#{Time.now}: Issuing stop to EmailSync"
+        Demon::EmailSync.stop
+      end
     end
 
     class ::Unicorn::HttpServer
@@ -223,8 +225,10 @@ before_fork do |server, worker|
           check_sidekiq_heartbeat
         end
 
-        Demon::EmailSync.ensure_running
-        check_email_sync_heartbeat
+        if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
+          Demon::EmailSync.ensure_running
+          check_email_sync_heartbeat
+        end
 
         master_sleep_orig(sec)
       end
