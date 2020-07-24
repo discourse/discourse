@@ -1,0 +1,64 @@
+<form class="groups-form form-vertical groups-notifications-form">
+  <div class="control-group">
+    <label class="control-label">{{i18n "groups.manage.categories.long_title"}}</label>
+    <div>{{i18n "groups.manage.categories.description"}}</div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-watching"}} {{i18n "user.watched_categories"}}</label>
+
+    {{category-selector
+      categories=model.watchingCategories
+      blacklist=selectedCategories
+      onChange=(action (mut model.watchingCategories))
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.categories.watched_categories_instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-tracking"}} {{i18n "user.tracked_categories"}}</label>
+
+    {{category-selector
+      categories=model.trackingCategories
+      blacklist=selectedCategories
+      onChange=(action (mut model.trackingCategories))
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.categories.tracked_categories_instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-watching-first"}} {{i18n "user.watched_first_post_categories"}}</label>
+
+    {{category-selector
+      categories=model.watchingFirstPostCategories
+      blacklist=selectedCategories
+      onChange=(action (mut model.watchingFirstPostCategories))
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.categories.watching_first_post_categories_instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-muted"}} {{i18n "user.muted_categories"}}</label>
+
+    {{category-selector
+      categories=model.mutedCategories
+      blacklist=selectedCategories
+      onChange=(action (mut model.mutedCategories))
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.categories.muted_categories_instructions"}}
+    </div>
+  </div>
+
+  {{group-manage-save-button model=model}}
+</form>

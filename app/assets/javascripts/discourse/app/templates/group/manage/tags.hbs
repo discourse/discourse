@@ -1,0 +1,72 @@
+<form class="groups-form form-vertical groups-notifications-form">
+  <div class="control-group">
+    <label class="control-label">{{i18n "groups.manage.tags.long_title"}}</label>
+    <div>{{i18n "groups.manage.tags.description"}}</div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-watching"}} {{i18n "user.watched_tags"}}</label>
+
+    {{tag-chooser
+      tags=model.watching_tags
+      blacklist=selectedTags
+      allowCreate=false
+      everyTag=true
+      unlimitedTagCount=true
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.tags.watched_tags_instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-tracking"}} {{i18n "user.tracked_tags"}}</label>
+
+    {{tag-chooser
+      tags=model.tracking_tags
+      blacklist=selectedTags
+      allowCreate=false
+      everyTag=true
+      unlimitedTagCount=true
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.tags.tracked_tags_instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-watching-first"}} {{i18n "user.watched_first_post_tags"}}</label>
+
+    {{tag-chooser
+      tags=model.watching_first_post_tags
+      blacklist=selectedTags
+      allowCreate=false
+      everyTag=true
+      unlimitedTagCount=true
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.tags.watching_first_post_tags_instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-muted"}} {{i18n "user.muted_tags"}}</label>
+
+    {{tag-chooser
+      tags=model.muted_tags
+      blacklist=selectedTags
+      allowCreate=false
+      everyTag=true
+      unlimitedTagCount=true
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.tags.muted_tags_instructions"}}
+    </div>
+  </div>
+
+  {{group-manage-save-button model=model}}
+</form>

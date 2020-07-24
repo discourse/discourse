@@ -57,6 +57,24 @@ class BasicGroupSerializer < ApplicationSerializer
                    :imap_old_emails,
                    :imap_new_emails
 
+  def self.admin_or_owner_attributes(*attrs)
+    attributes(*attrs)
+    attrs.each do |attr|
+      define_method "include_#{attr}?" do
+        scope.is_admin? || (include_is_group_owner? && is_group_owner)
+      end
+    end
+  end
+
+  admin_or_owner_attributes :watching_category_ids,
+                            :tracking_category_ids,
+                            :watching_first_post_category_ids,
+                            :muted_category_ids,
+                            :watching_tags,
+                            :watching_first_post_tags,
+                            :tracking_tags,
+                            :muted_tags
+
   def include_display_name?
     object.automatic
   end
@@ -101,6 +119,16 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def can_see_members
     scope.can_see_group_members?(object)
+  end
+
+  [:watching, :tracking, :watching_first_post, :muted].each do |level|
+    define_method("#{level}_category_ids") do
+      GroupCategoryNotificationDefault.lookup(object, level).pluck(:category_id)
+    end
+
+    define_method("#{level}_tags") do
+      GroupTagNotificationDefault.lookup(object, level).joins(:tag).pluck('tags.name')
+    end
   end
 
   private

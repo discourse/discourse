@@ -29,6 +29,8 @@ class Group < ActiveRecord::Base
   has_many :group_histories, dependent: :destroy
   has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
+  has_many :group_category_notification_defaults, dependent: :destroy
+  has_many :group_tag_notification_defaults, dependent: :destroy
 
   belongs_to :flair_upload, class_name: 'Upload'
 
@@ -51,6 +53,7 @@ class Group < ActiveRecord::Base
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
   after_commit :trigger_group_destroyed_event, on: :destroy
+  after_commit :set_default_notifications, on: [:create, :update]
 
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
@@ -379,6 +382,13 @@ class Group < ActiveRecord::Base
         end
 
       topic.notifier.public_send(action, user_id)
+    end
+  end
+
+  def self.set_category_and_tag_default_notification_levels!(user, group_name)
+    if group = lookup_group(group_name)
+      GroupUser.set_category_notifications(group, user)
+      GroupUser.set_tag_notifications(group, user)
     end
   end
 
@@ -753,6 +763,32 @@ class Group < ActiveRecord::Base
 
   def flair_url
     flair_icon.presence || flair_upload&.short_path
+  end
+
+  [:muted, :tracking, :watching, :watching_first_post].each do |level|
+    define_method("#{level}_category_ids=") do |category_ids|
+      @category_notifications ||= {}
+      @category_notifications[level] = category_ids
+    end
+
+    define_method("#{level}_tags=") do |tag_names|
+      @tag_notifications ||= {}
+      @tag_notifications[level] = tag_names
+    end
+  end
+
+  def set_default_notifications
+    if @category_notifications
+      @category_notifications.each do |level, category_ids|
+        GroupCategoryNotificationDefault.batch_set(self, level, category_ids)
+      end
+    end
+
+    if @tag_notifications
+      @tag_notifications.each do |level, tag_names|
+        GroupTagNotificationDefault.batch_set(self, level, tag_names)
+      end
+    end
   end
 
   def imap_mailboxes
