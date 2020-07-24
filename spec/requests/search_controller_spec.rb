@@ -539,13 +539,14 @@ describe SearchController do
         ip_address: '127.0.0.1'
       )
 
-      post "/search/click", params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 12345,
         search_result_type: 'topic'
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to be_present
       expect(SearchLog.find(search_log_id).search_result_id).to be_blank
     end
 
@@ -598,13 +599,14 @@ describe SearchController do
         ip_address: '192.168.0.19'
       )
 
-      post "/search/click", params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 22222,
         search_result_type: 'topic'
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to be_present
       expect(SearchLog.find(search_log_id).search_result_id).to be_blank
     end
 
