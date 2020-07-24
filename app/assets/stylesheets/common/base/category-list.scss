@@ -318,10 +318,13 @@
 }
 
 .categories-list .category.muted {
-  font-size: $font-down-1;
-  h3,
-  .category-name {
+  > h3 a[href],
+  > h4 a[href] {
     color: $primary-medium;
+    font-size: $font-down-1;
+  }
+  > .category-description {
+    display: none;
   }
 }
 
