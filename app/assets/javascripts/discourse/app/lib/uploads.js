@@ -266,7 +266,7 @@ export function getUploadMarkdown(upload) {
   }
 }
 
-export function displayErrorForUpload(data) {
+export function displayErrorForUpload(data, siteSettings) {
   if (data.jqXHR) {
     switch (data.jqXHR.status) {
       // cancelled by the user
@@ -276,7 +276,7 @@ export function displayErrorForUpload(data) {
       // entity too large, usually returned from the web server
       case 413:
         const type = uploadTypeFromFileName(data.files[0].name);
-        const max_size_kb = Discourse.SiteSettings[`max_${type}_size_kb`];
+        const max_size_kb = siteSettings[`max_${type}_size_kb`];
         bootbox.alert(I18n.t("post.errors.file_too_large", { max_size_kb }));
         return;
 

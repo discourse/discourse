@@ -766,7 +766,7 @@ export default Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        displayErrorForUpload(data);
+        displayErrorForUpload(data, this.siteSettings);
       }
     });
 
