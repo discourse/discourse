@@ -113,10 +113,10 @@ const Group = RestModel.extend({
     }).then(() => this.findMembers(params, true));
   },
 
-  addMembers(usernames, filter) {
+  addMembers(usernames, filter, emails = []) {
     return ajax(`/groups/${this.id}/members.json`, {
       type: "PUT",
-      data: { usernames }
+      data: { usernames, emails }
     }).then(response => {
       if (filter) {
         this._filterMembers(response);

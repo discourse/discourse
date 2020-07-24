@@ -4,39 +4,62 @@ import Controller from "@ember/controller";
 import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
+import { emailValid } from "discourse/lib/utilities";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,
   setAsOwner: false,
+  usernamesAndEmails: null,
+  usernames: null,
+  emails: null,
 
-  @discourseComputed("model.usernames", "loading")
-  disableAddButton(usernames, loading) {
-    return loading || !usernames || !(usernames.length > 0);
+  onShow() {
+    this.set("usernamesAndEmails", "");
+    this.set("usernames", []);
+    this.set("emails", []);
+  },
+
+  @discourseComputed("usernamesAndEmails", "loading")
+  disableAddButton(usernamesAndEmails, loading) {
+    return loading || !usernamesAndEmails || !(usernamesAndEmails.length > 0);
+  },
+
+  @discourseComputed("usernamesAndEmails")
+  addingEmails(usernamesAndEmails) {
+    let emails = [];
+    let usernames = [];
+
+    usernamesAndEmails.split(",").forEach(u => {
+      emailValid(u) ? emails.push(u) : usernames.push(u);
+    });
+
+    this.set("emails", emails.join(","));
+    this.set("usernames", usernames.join(","));
+    return emails.length;
   },
 
   @action
   addMembers() {
     this.set("loading", true);
 
-    const usernames = this.model.usernames;
-    if (isEmpty(usernames)) {
+    if (this.addingEmails) {
+      this.set("setAsOwner", false);
+    }
+
+    if (isEmpty(this.usernamesAndEmails)) {
       return;
     }
-    let promise;
 
-    if (this.setAsOwner) {
-      promise = this.model.addOwners(usernames, true);
-    } else {
-      promise = this.model.addMembers(usernames, true);
-    }
+    const promise = this.setAsOwner
+      ? this.model.addOwners(this.usernames, true)
+      : this.model.addMembers(this.usernames, true, this.emails);
 
     promise
       .then(() => {
         this.transitionToRoute("group.members", this.get("model.name"), {
-          queryParams: { filter: usernames }
+          queryParams: { filter: this.usernamesAndEmails }
         });
 
-        this.model.set("usernames", null);
         this.send("closeModal");
       })
       .catch(error => this.flash(extractError(error), "error"))

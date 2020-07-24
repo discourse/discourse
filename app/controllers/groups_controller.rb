@@ -299,7 +299,7 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    users = users_from_params
+    users = users_from_params(optional: true)
 
     if group.public_admission
       if !guardian.can_log_group_changes?(group) && current_user != users.first
@@ -309,6 +309,22 @@ class GroupsController < ApplicationController
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
       end
+    end
+
+    emails = []
+    if params[:emails]
+      params[:emails].split(",").each do |email|
+        existing_user = User.find_by_email(email)
+        existing_user.present? ? users.push(existing_user) : emails.push(email)
+      end
+    end
+
+    users = users.uniq
+
+    if users.empty? && emails.empty?
+      raise Discourse::InvalidParameters.new(
+        'usernames or emails must be present'
+      )
     end
 
     if (usernames = group.users.where(id: users.pluck(:id)).pluck(:username)).present?
@@ -327,6 +343,10 @@ class GroupsController < ApplicationController
           # constraint. In this case we can safely ignore the error and act as if the user
           # was added to the group.
         end
+      end
+
+      emails.each do |email|
+        Invite.invite_by_email(email, current_user, nil, [group.id])
       end
 
       render json: success_json.merge!(
@@ -591,7 +611,7 @@ class GroupsController < ApplicationController
     group
   end
 
-  def users_from_params
+  def users_from_params(optional: false)
     if params[:usernames].present?
       users = User.where(username_lower: params[:usernames].split(",").map(&:downcase))
       raise Discourse::InvalidParameters.new(:usernames) if users.blank?
@@ -605,9 +625,13 @@ class GroupsController < ApplicationController
       users = User.with_email(params[:user_emails].split(","))
       raise Discourse::InvalidParameters.new(:user_emails) if users.blank?
     else
-      raise Discourse::InvalidParameters.new(
-        'user_ids or usernames or user_emails must be present'
-      )
+      if optional
+        return [] # No users found. Early return an empty array.
+      else
+        raise Discourse::InvalidParameters.new(
+          'user_ids or usernames or user_emails must be present'
+        )
+      end
     end
     users
   end

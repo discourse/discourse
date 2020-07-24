@@ -1132,6 +1132,40 @@ describe GroupsController do
         end
       end
 
+      it "return a 400 if no user or emails are present" do
+        [
+          { usernames: "nouserwiththisusername", emails: "" },
+          { usernames: "", emails: "" }
+        ].each do |params|
+          put "/groups/#{group.id}/members.json", params: params
+          expect(response.status).to eq(400)
+          body = response.parsed_body
+
+          expect(body["error_type"]).to eq("invalid_parameters")
+        end
+      end
+
+      it "will send invites to each email with group_id set" do
+        emails = ["something@gmail.com", "anotherone@yahoo.com"]
+        put "/groups/#{group.id}/members.json", params: { emails: emails.join(",") }
+
+        expect(response.status).to eq(200)
+
+        emails.each do |email|
+          invite = Invite.find_by(email: email)
+          expect(invite.groups).to eq([group])
+        end
+      end
+
+      it "will find users by email, and invite the correct user" do
+        new_user = Fabricate(:user)
+        expect(new_user.group_ids.include?(group.id)).to eq(false)
+
+        put "/groups/#{group.id}/members.json", params: { emails: new_user.email }
+
+        expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
+      end
+
       context 'public group' do
         fab!(:other_user) { Fabricate(:user) }
 
