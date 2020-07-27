@@ -65,7 +65,7 @@ class SearchIndexer
           break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
           term, _, remaining = lexeme.partition(".")
           break if remaining.blank?
-          array << "'#{term}':#{positions} '#{remaining}':#{positions}"
+          array << "'#{remaining}':#{positions}"
           lexeme = remaining
         end
       end

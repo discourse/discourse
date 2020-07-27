@@ -108,7 +108,8 @@ describe SearchIndexer do
   end
 
   describe '.index' do
-    let(:post) { Fabricate(:post) }
+    let(:topic) { Fabricate(:topic, title: "this is a title that I am testing") }
+    let(:post) { Fabricate(:post, topic: topic) }
 
     it 'should index posts correctly' do
       expect { post }.to change { PostSearchData.count }.by(1)
@@ -128,7 +129,7 @@ describe SearchIndexer do
     end
 
     it "should not tokenize urls and duplicate title and href in <a>" do
-      post = Fabricate(:post, raw: <<~RAW)
+      post.update!(raw: <<~RAW)
       https://meta.discourse.org/some.png
       RAW
 
@@ -139,10 +140,13 @@ describe SearchIndexer do
       expect(post.post_search_data.raw_data).to eq(
         "https://meta.discourse.org/some.png"
       )
+
+      expect(post.post_search_data.search_data).to eq(
+        "'/some.png':12 'discourse.org':11 'meta.discourse.org':11 'meta.discourse.org/some.png':10 'org':11 'test':8A 'titl':4A 'uncategor':9B"
+      )
     end
 
     it 'should not tokenize versions' do
-      post.topic.update!(title: "this is a title that I am testing")
       post.update!(raw: '123.223')
 
       expect(post.post_search_data.search_data).to eq(
@@ -174,7 +178,7 @@ describe SearchIndexer do
       )
 
       expect(post.post_search_data.search_data).to eq(
-        "'/xyz=1':14,17 'abc':13,16 'abc.net':13,16 'abc.net/xyz=1':12,15 'au':10 'awesom':6B 'b':11 'categori':7B 'cnn':9 'cnn.com':9 'com':9,10 'com.au':10 'net':13,16 'stuff':10 'stuff.com.au':10 'test':4A 'topic':5A"
+        "'/xyz=1':14,17 'abc.net':13,16 'abc.net/xyz=1':12,15 'au':10 'awesom':6B 'b':11 'categori':7B 'cnn.com':9 'com':9 'com.au':10 'net':13,16 'stuff.com.au':10 'test':4A 'topic':5A"
       )
     end
 
