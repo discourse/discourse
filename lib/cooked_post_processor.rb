@@ -592,7 +592,7 @@ class CookedPostProcessor
           found = false
           parent = img
           while parent = parent.parent
-            if parent["class"] && parent["class"].include?("whitelistedgeneric")
+            if parent["class"] && parent["class"].include?("allowlistedgeneric")
               found = true
               break
             end

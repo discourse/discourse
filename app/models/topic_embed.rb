@@ -124,9 +124,9 @@ class TopicEmbed < ActiveRecord::Base
       remove_empty_nodes: false
     }
 
-    opts[:whitelist] = SiteSetting.embed_whitelist_selector if SiteSetting.embed_whitelist_selector.present?
-    opts[:blacklist] = SiteSetting.embed_blacklist_selector if SiteSetting.embed_blacklist_selector.present?
-    embed_classname_whitelist = SiteSetting.embed_classname_whitelist if SiteSetting.embed_classname_whitelist.present?
+    opts[:allowlist] = SiteSetting.allowed_embed_selectors if SiteSetting.allowed_embed_selectors.present?
+    opts[:blocklist] = SiteSetting.blocked_embed_selectors if SiteSetting.blocked_embed_selectors.present?
+    allowed_embed_classnames = SiteSetting.allowed_embed_classnames if SiteSetting.allowed_embed_classnames.present?
 
     response = FetchResponse.new
     begin
@@ -169,8 +169,8 @@ class TopicEmbed < ActiveRecord::Base
           # If there is a mistyped URL, just do nothing
         end
       end
-      # only allow classes in the whitelist
-      allowed_classes = if embed_classname_whitelist.blank? then [] else embed_classname_whitelist.split(/[ ,]+/i) end
+      # only allow classes in the allowlist
+      allowed_classes = if allowed_embed_classnames.blank? then [] else allowed_embed_classnames.split(/[ ,]+/i) end
       doc.search('[class]:not([class=""])').each do |classnode|
         classes = classnode[:class].split(' ').select { |classname| allowed_classes.include?(classname) }
         if classes.length === 0

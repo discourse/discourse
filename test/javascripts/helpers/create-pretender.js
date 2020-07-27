@@ -810,7 +810,7 @@ export function applyDefaultHandlers(pretender) {
         200,
         { "Content-Type": "application/html" },
         `
-    <aside class="onebox whitelistedgeneric">
+    <aside class="onebox allowlistedgeneric">
       <header class="source">
           <a href="http://test.com/somepage" target="_blank">test.com</a>
       </header>

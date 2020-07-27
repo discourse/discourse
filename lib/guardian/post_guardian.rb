@@ -10,7 +10,7 @@ module PostGuardian
   def link_posting_access
     if unrestricted_link_posting?
       'full'
-    elsif SiteSetting.whitelisted_link_domains.present?
+    elsif SiteSetting.allowed_link_domains.present?
       'limited'
     else
       'none'
@@ -21,7 +21,7 @@ module PostGuardian
     return false if host.blank?
 
     unrestricted_link_posting? ||
-      SiteSetting.whitelisted_link_domains.split('|').include?(host)
+      SiteSetting.allowed_link_domains.split('|').include?(host)
   end
 
   # Can the user act on the post in a particular way.

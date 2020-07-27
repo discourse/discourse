@@ -443,10 +443,10 @@ login:
   sso_overrides_website: false
   sso_overrides_card_background: false
   sso_not_approved_url: ""
-  email_domains_blacklist:
+  blocked_email_domains:
     default: "mailinator.com"
     type: list
-  email_domains_whitelist:
+  allowed_email_domains:
     default: ""
     type: list
   auto_approve_email_domains:
@@ -478,8 +478,8 @@ users:
     default: false
     client: true
     validator: "UnicodeUsernameValidator"
-  unicode_username_character_whitelist:
-    validator: "UnicodeUsernameWhitelistValidator"
+  allowed_unicode_username_characters:
+    validator: "UnicodeUsernameAllowlistValidator"
     default: ""
     locale_default:
       cs: "[ěščřžýáíéóůúďťňĚŠČŘŽÝÁÍÉÓŮÚĎŤŇ]"
@@ -573,7 +573,7 @@ users:
     client: true
   show_inactive_accounts:
     default: false
-  user_website_domains_whitelist:
+  allowed_user_website_domains:
     default: ""
     type: list
   hide_suspension_reasons:
@@ -798,7 +798,7 @@ posting:
       ko: 50
       zh_CN: 50
       zh_TW: 50
-  whitelisted_link_domains:
+  allowed_link_domains:
     default: ""
     type: list
   newuser_max_links: 2
@@ -908,7 +908,7 @@ posting:
   embed_unlisted: false
   embed_truncate: true
   embed_support_markdown: false
-  embed_whitelist_selector: ""
+  allowed_embed_selectors: ""
   allowed_href_schemes:
     client: true
     default: ""
@@ -1082,7 +1082,7 @@ email:
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
-  auto_generated_whitelist:
+  auto_generated_allowlist:
     default: ""
     type: list
   block_auto_generated_emails: true
@@ -1109,11 +1109,11 @@ email:
   reset_bounce_score_after_days:
     default: 30
     max: 36500
-  attachment_content_type_blacklist:
+  blocked_attachment_content_types:
     type: list
     default: "pkcs7|x-vcard"
     list_type: compact
-  attachment_filename_blacklist:
+  blocked_attachment_filenames:
     type: list
     default: "smime.p7s|signature.asc|winmail.dat"
     list_type: compact
@@ -1456,25 +1456,25 @@ security:
   cors_origins:
     default: ""
     type: list
-  use_admin_ip_whitelist:
+  use_admin_ip_allowlist:
     default: false
     client: true
-  blacklist_ip_blocks:
+  blocked_ip_blocks:
     default: ""
     type: list
     list_type: compact
-  whitelist_internal_hosts:
+  allowed_internal_hosts:
     default: ""
     type: list
   allowed_iframes:
     default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/"
     type: list
     client: true
-  whitelisted_crawler_user_agents:
+  allowed_crawler_user_agents:
     type: list
     default: ""
     list_type: compact
-  blacklisted_crawler_user_agents:
+  blocked_crawler_user_agents:
     type: list
     default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
@@ -1511,14 +1511,14 @@ onebox:
       ja: 200
       zh_CN: 200
       zh_TW: 200
-  onebox_domains_blacklist:
+  blocked_onebox_domains:
     default: ""
     type: list
     list_type: compact
   max_oneboxes_per_post:
     default: 50
     client: true
-  inline_onebox_domains_whitelist:
+  allowed_inline_onebox_domains:
     default: ""
     type: list
     list_type: compact
@@ -1542,7 +1542,7 @@ spam:
   notify_mods_when_user_silenced: false
   flag_sockpuppets: false
   newuser_spam_host_threshold: 3
-  white_listed_spam_host_domains:
+  allowed_spam_host_domains:
     default: ""
     type: list
   levenshtein_distance_spammer_emails:
@@ -1728,10 +1728,10 @@ embedding:
   embed_title_scrubber:
     default: ""
     hidden: true
-  embed_blacklist_selector:
+  blocked_embed_selectors:
     default: ""
     hidden: true
-  embed_classname_whitelist:
+  allowed_embed_classnames:
     default: "emoji"
     hidden: true
 

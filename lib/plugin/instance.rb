@@ -161,10 +161,20 @@ class Plugin::Instance
   end
 
   def whitelist_staff_user_custom_field(field)
+    Discourse.deprecate("whitelist_staff_user_custom_field is deprecated, use the allow_staff_user_custom_field.", drop_from: "2.6")
+    allow_staff_user_custom_field(field)
+  end
+
+  def allow_staff_user_custom_field(field)
     DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
   end
 
   def whitelist_public_user_custom_field(field)
+    Discourse.deprecate("whitelist_public_user_custom_field is deprecated, use the allow_public_user_custom_field.", drop_from: "2.6")
+    allow_public_user_custom_field(field)
+  end
+
+  def allow_public_user_custom_field(field)
     DiscoursePluginRegistry.register_public_user_custom_field(field, self)
   end
 
@@ -256,10 +266,15 @@ class Plugin::Instance
     end
   end
 
-  # Add a post_custom_fields_whitelister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_whitelister(&block)
+    Discourse.deprecate("topic_view_post_custom_fields_whitelister is deprecated, use the topic_view_post_custom_fields_allowlister.", drop_from: "2.6")
+    topic_view_post_custom_fields_allowlister(&block)
+  end
+
+  # Add a post_custom_fields_allowlister block to the TopicView, respecting if the plugin is enabled
+  def topic_view_post_custom_fields_allowlister(&block)
     reloadable_patch do |plugin|
-      ::TopicView.add_post_custom_fields_whitelister do |user|
+      ::TopicView.add_post_custom_fields_allowlister do |user|
         plugin.enabled? ? block.call(user) : []
       end
     end

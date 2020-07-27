@@ -38,16 +38,16 @@ class TopicView
     @default_post_custom_fields ||= [Post::NOTICE_TYPE, Post::NOTICE_ARGS, "action_code_who"]
   end
 
-  def self.post_custom_fields_whitelisters
-    @post_custom_fields_whitelisters ||= Set.new
+  def self.post_custom_fields_allowlisters
+    @post_custom_fields_allowlisters ||= Set.new
   end
 
-  def self.add_post_custom_fields_whitelister(&block)
-    post_custom_fields_whitelisters << block
+  def self.add_post_custom_fields_allowlister(&block)
+    post_custom_fields_allowlisters << block
   end
 
-  def self.whitelisted_post_custom_fields(user)
-    wpcf = default_post_custom_fields + post_custom_fields_whitelisters.map { |w| w.call(user) }
+  def self.allowed_post_custom_fields(user)
+    wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user) }
     wpcf.flatten.uniq
   end
 
@@ -87,12 +87,12 @@ class TopicView
     filter_posts(options)
 
     if @posts && !@skip_custom_fields
-      if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
+      if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
 
-      if (whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), whitelisted_fields)
+      if (allowed_fields = TopicView.allowed_post_custom_fields(@user)).present?
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
       end
     end
 

@@ -679,7 +679,7 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
-      it 'raises an error with a status not in the whitelist' do
+      it 'raises an error with a status not in the allowlist' do
         put "/t/#{topic.id}/status.json", params: {
           status: 'title', enabled: 'true'
         }

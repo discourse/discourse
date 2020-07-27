@@ -12,7 +12,7 @@
       <ul>
         <%- @hosts.each do |eh| %>
           <li>
-            <%= eh.host %><%- if eh.path_whitelist.present? %><%= eh.path_whitelist %><% end %>
+            <%= eh.host %><%- if eh.allowed_paths.present? %><%= eh.allowed_paths %><% end %>
           </li>
         <%- end %>
       </ul>

@@ -8,7 +8,7 @@
     {{/if}}
     {{category-selector
       categories=model.watchedCategories
-      blacklist=selectedCategories
+      blocklist=selectedCategories
       onChange=(action (mut model.watchedCategories))
     }}
   </div>
@@ -21,7 +21,7 @@
     {{/if}}
     {{category-selector
       categories=model.trackedCategories
-      blacklist=selectedCategories
+      blocklist=selectedCategories
       onChange=(action (mut model.trackedCategories))
     }}
   </div>
@@ -31,7 +31,7 @@
     <label>{{d-icon "d-watching-first"}} {{i18n "user.watched_first_post_categories"}}</label>
     {{category-selector
       categories=model.watchedFirstPostCategories
-      blacklist=selectedCategories
+      blocklist=selectedCategories
       onChange=(action (mut model.watchedFirstPostCategories))
     }}
   </div>
@@ -45,7 +45,7 @@
       {{/if}}
       {{category-selector
         categories=model.mutedCategories
-        blacklist=selectedCategories
+        blocklist=selectedCategories
         onChange=(action (mut model.mutedCategories))
       }}
     </div>

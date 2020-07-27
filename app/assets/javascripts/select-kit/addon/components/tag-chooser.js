@@ -19,7 +19,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     return "tag-chooser-row";
   },
 
-  blacklist: null,
+  blockedTags: null,
   attributeBindings: ["categoryId"],
   excludeSynonyms: false,
   excludeHasSynonyms: false,
@@ -49,7 +49,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     this._super(...arguments);
 
     this.setProperties({
-      blacklist: this.blacklist || [],
+      blockedTags: this.blockedTags || [],
       termMatchesForbidden: false,
       termMatchErrorMessage: null
     });
@@ -84,9 +84,9 @@ export default MultiSelectComponent.extend(TagsMixin, {
       categoryId: this.categoryId
     };
 
-    if (selectedTags.length || this.blacklist.length) {
+    if (selectedTags.length || this.blockedTags.length) {
       data.selected_tags = selectedTags
-        .concat(this.blacklist)
+        .concat(this.blockedTags)
         .uniq()
         .slice(0, 100);
     }
@@ -106,9 +106,9 @@ export default MultiSelectComponent.extend(TagsMixin, {
       termMatchErrorMessage: json.forbidden_message
     });
 
-    if (context.blacklist) {
+    if (context.blockedTags) {
       results = results.filter(result => {
-        return !context.blacklist.includes(result.id);
+        return !context.blockedTags.includes(result.id);
       });
     }
 

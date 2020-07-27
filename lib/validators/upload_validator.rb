@@ -12,9 +12,9 @@ class UploadValidator < ActiveModel::Validator
       return true if upload.user&.staff?
     end
 
-    # check the attachment blacklist
+    # check the attachment blocklist
     if upload.for_group_message && SiteSetting.allow_all_attachments_for_group_messages
-      return upload.original_filename =~ SiteSetting.attachment_filename_blacklist_regex
+      return upload.original_filename =~ SiteSetting.blocked_attachment_filenames_regex
     end
 
     extension = File.extname(upload.original_filename)[1..-1] || ""

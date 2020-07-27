@@ -51,7 +51,7 @@ class UploadCreator
         return @upload if @upload.errors.present?
 
         if @image_info.type.to_s == "svg"
-          whitelist_svg!
+          clean_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if convert_png_to_jpeg?
           downsize!        if should_downsize?
@@ -302,9 +302,9 @@ class UploadCreator
     end
   end
 
-  def whitelist_svg!
+  def clean_svg!
     doc = Nokogiri::XML(@file)
-    doc.xpath(svg_whitelist_xpath).remove
+    doc.xpath(svg_allowlist_xpath).remove
     doc.xpath("//@*[starts-with(name(), 'on')]").remove
     doc.css('use').each do |use_el|
       if use_el.attr('href')
@@ -400,8 +400,8 @@ class UploadCreator
     @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
   end
 
-  def svg_whitelist_xpath
-    @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+  def svg_allowlist_xpath
+    @@svg_allowlist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
   end
 
   def add_metadata!

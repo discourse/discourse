@@ -294,7 +294,7 @@ class User < ActiveRecord::Base
     DiscoursePluginRegistry.register_public_user_custom_field(custom_field_name, plugin)
   end
 
-  def self.whitelisted_user_custom_fields(guardian)
+  def self.allowed_user_custom_fields(guardian)
     fields = []
 
     fields.push *DiscoursePluginRegistry.public_user_custom_fields

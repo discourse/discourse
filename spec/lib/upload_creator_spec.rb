@@ -402,7 +402,7 @@ RSpec.describe UploadCreator do
     end
   end
 
-  describe '#whitelist_svg!' do
+  describe '#clean_svg!' do
     let(:b64) do
       Base64.encode64('<svg onmouseover="alert(alert)" />')
     end
@@ -428,7 +428,7 @@ RSpec.describe UploadCreator do
 
     it 'removes event handlers' do
       begin
-        UploadCreator.new(file, 'file.svg').whitelist_svg!
+        UploadCreator.new(file, 'file.svg').clean_svg!
         file_content = file.read
         expect(file_content).not_to include('onload')
         expect(file_content).to include('#pathdef')

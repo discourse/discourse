@@ -254,8 +254,8 @@ class Post < ActiveRecord::Base
     Digest::SHA1.hexdigest(raw)
   end
 
-  def self.white_listed_image_classes
-    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji', 'ytp-thumbnail-image']
+  def self.allowed_image_classes
+    @allowed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji', 'ytp-thumbnail-image']
   end
 
   def post_analyzer
@@ -335,9 +335,9 @@ class Post < ActiveRecord::Base
     self.last_editor_id ? (User.find_by_id(self.last_editor_id) || user) : user
   end
 
-  def whitelisted_spam_hosts
+  def allowed_spam_hosts
     hosts = SiteSetting
-      .white_listed_spam_host_domains
+      .allowed_spam_host_domains
       .split('|')
       .map { |h| h.strip }
       .reject { |h| !h.include?('.') }
@@ -349,10 +349,10 @@ class Post < ActiveRecord::Base
 
   def total_hosts_usage
     hosts = linked_hosts.clone
-    whitelisted = whitelisted_spam_hosts
+    allowlisted = allowed_spam_hosts
 
     hosts.reject! do |h|
-      whitelisted.any? do |w|
+      allowlisted.any? do |w|
         h.end_with?(w)
       end
     end

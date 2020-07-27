@@ -33,12 +33,12 @@ describe Invite do
       expect(invite.errors.details[:email].first[:error]).to eq(I18n.t("user.email.invalid"))
     end
 
-    it "should not allow an invite with blacklisted email" do
+    it "should not allow an invite with blocklisted email" do
       invite = Invite.create(email: "test@mailinator.com", invited_by: coding_horror)
       expect(invite).not_to be_valid
     end
 
-    it "should allow an invite with non-blacklisted email" do
+    it "should allow an invite with non-blocklisted email" do
       invite = Fabricate(:invite, email: "test@mail.com", invited_by: coding_horror)
       expect(invite).to be_valid
     end

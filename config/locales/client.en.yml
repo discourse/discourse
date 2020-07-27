@@ -4255,7 +4255,7 @@ en:
           domain: "Domain"
         screened_ips:
           title: "Screened IPs"
-          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
+          description: 'IP addresses that are being watched. Use "Allow" to allowlist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
           roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
           rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
@@ -4777,7 +4777,7 @@ en:
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"
-        path_whitelist: "Path Whitelist"
+        allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
         add_host: "Add Host"
@@ -4790,9 +4790,9 @@ en:
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
         embed_unlisted: "Imported topics will be unlisted until there is a reply."
-        embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
-        embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
-        embed_classname_whitelist: "Allowed CSS class names"
+        allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
+        blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
+        allowed_embed_classnames: "Allowed CSS class names"
         save: "Save Embedding Settings"
 
       permalink:

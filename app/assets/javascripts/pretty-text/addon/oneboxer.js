@@ -30,7 +30,7 @@ function resolveSize(img) {
 
 // Detect square images and apply smaller onebox-avatar class
 function applySquareGenericOnebox($elem) {
-  if (!$elem.hasClass("whitelistedgeneric")) {
+  if (!$elem.hasClass("allowlistedgeneric")) {
     return;
   }
 

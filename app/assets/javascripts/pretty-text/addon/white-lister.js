@@ -108,7 +108,7 @@ export default class WhiteLister {
   }
 }
 
-// Only add to `default` when you always want your whitelist to occur. In other words,
+// Only add to `default` when you always want your allowlist to occur. In other words,
 // don't change this for a plugin or a feature that can be disabled
 export const DEFAULT_LIST = [
   "a.attachment",

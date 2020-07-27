@@ -389,7 +389,7 @@ export function setup(opts, siteSettings, state) {
 }
 
 export function cook(raw, opts) {
-  // we still have to hoist html_raw nodes so they bypass the whitelister
+  // we still have to hoist html_raw nodes so they bypass the allowlister
   // this is the case for oneboxes
   let hoisted = {};
 

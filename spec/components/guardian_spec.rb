@@ -51,8 +51,8 @@ describe Guardian do
       expect(Guardian.new(user).link_posting_access).to eq('none')
     end
 
-    it "is limited for a user of a low trust level with a whitelist" do
-      SiteSetting.whitelisted_link_domains = 'example.com'
+    it "is limited for a user of a low trust level with a allowlist" do
+      SiteSetting.allowed_link_domains = 'example.com'
       user.trust_level = 0
       SiteSetting.min_trust_to_post_links = 1
       expect(Guardian.new(user).link_posting_access).to eq('limited')
@@ -78,9 +78,9 @@ describe Guardian do
       expect(Guardian.new(user).can_post_link?(host: host)).to eq(false)
     end
 
-    describe "whitelisted host" do
+    describe "allowlisted host" do
       before do
-        SiteSetting.whitelisted_link_domains = host
+        SiteSetting.allowed_link_domains = host
       end
 
       it "allows a new user to post the link to the host" do
@@ -2931,17 +2931,17 @@ describe Guardian do
     let!(:theme) { Fabricate(:theme) }
     let!(:theme2) { Fabricate(:theme) }
 
-    context "whitelist mode" do
+    context "allowlist mode" do
       before do
-        GlobalSetting.reset_whitelisted_theme_ids!
-        global_setting :whitelisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+        GlobalSetting.reset_allowed_theme_ids!
+        global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
       end
 
       after do
-        GlobalSetting.reset_whitelisted_theme_ids!
+        GlobalSetting.reset_allowed_theme_ids!
       end
 
-      it "should respect theme whitelisting" do
+      it "should respect theme allowlisting" do
         r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
         theme.update!(remote_theme_id: r.id)
 

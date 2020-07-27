@@ -62,7 +62,7 @@ module Email
     end
 
     def process!
-      return if is_blacklisted?
+      return if is_blocked?
       id_hash = Digest::SHA1.hexdigest(@message_id)
       DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
@@ -105,7 +105,7 @@ module Email
       end
     end
 
-    def is_blacklisted?
+    def is_blocked?
       return false if SiteSetting.ignore_by_title.blank?
       Regexp.new(SiteSetting.ignore_by_title, Regexp::IGNORECASE) =~ @mail.subject
     end
@@ -289,7 +289,7 @@ module Email
     end
 
     def is_auto_generated?
-      return false if SiteSetting.auto_generated_whitelist.split('|').include?(@from_email)
+      return false if SiteSetting.auto_generated_allowlist.split('|').include?(@from_email)
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
       @mail[:from].to_s[/(mailer[\-_]?daemon|post[\-_]?master|no[\-_]?reply)@/i] ||
       @mail[:subject].to_s[/^\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i] ||
@@ -1009,18 +1009,18 @@ module Email
       raise InvalidPostAction.new if result.failed? && result.forbidden
     end
 
-    def is_whitelisted_attachment?(attachment)
-      attachment.content_type !~ SiteSetting.attachment_content_type_blacklist_regex &&
-      attachment.filename !~ SiteSetting.attachment_filename_blacklist_regex
+    def is_allowed?(attachment)
+      attachment.content_type !~ SiteSetting.blocked_attachment_content_types_regex &&
+      attachment.filename !~ SiteSetting.blocked_attachment_filenames_regex
     end
 
     def attachments
       @attachments ||= begin
-        attachments = @mail.attachments.select { |attachment| is_whitelisted_attachment?(attachment) }
-        attachments << @mail if @mail.attachment? && is_whitelisted_attachment?(@mail)
+        attachments = @mail.attachments.select { |attachment| is_allowed?(attachment) }
+        attachments << @mail if @mail.attachment? && is_allowed?(@mail)
 
         @mail.parts.each do |part|
-          attachments << part if part.attachment? && is_whitelisted_attachment?(part)
+          attachments << part if part.attachment? && is_allowed?(part)
         end
 
         attachments.uniq!

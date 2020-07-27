@@ -42,7 +42,7 @@ class InlineOneboxer
     end
 
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
-    domains = SiteSetting.inline_onebox_domains_whitelist&.split('|') unless always_allow
+    domains = SiteSetting.allowed_inline_onebox_domains&.split('|') unless always_allow
 
     if always_allow || domains
       uri = begin

@@ -117,7 +117,7 @@ class UsersController < ApplicationController
 
     users = users.filter { |u| guardian.can_see_profile?(u) }
 
-    preload_fields = User.whitelisted_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    preload_fields = User.allowed_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
     User.preload_custom_fields(users, preload_fields)
     User.preload_recent_time_read(users)
 

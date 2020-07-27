@@ -762,7 +762,7 @@ describe PrettyText do
 
     context 'option to preserve onebox source' do
       it "should return the right excerpt" do
-        onebox = "<aside class=\"onebox whitelistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
+        onebox = "<aside class=\"onebox allowlistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
         expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
 
         expect(PrettyText.excerpt(onebox, 100, keep_onebox_source: true))
@@ -1554,7 +1554,7 @@ HTML
 
   end
 
-  it "can properly whitelist iframes" do
+  it "can properly allowlist iframes" do
     SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com?EMBED="
     raw = <<~IFRAMES
       <iframe src='https://www.google.com/maps/Embed?testing'></iframe>
@@ -1619,12 +1619,12 @@ HTML
     expect(cooked).to include("data-theme-a")
   end
 
-  it "whitelists lang attribute" do
+  it "allowlists lang attribute" do
     cooked = PrettyText.cook("<p lang='fr'>tester</p><div lang='fr'>tester</div><span lang='fr'>tester</span>")
     expect(cooked).to eq("<p lang=\"fr\">tester</p><div lang=\"fr\">tester</div><span lang=\"fr\">tester</span>")
   end
 
-  it "whitelists ruby tags" do
+  it "allowlists ruby tags" do
     # read all about ruby chars at: https://en.wikipedia.org/wiki/Ruby_character
     # basically it is super hard to remember every single rare letter when there are
     # so many, so ruby tags provide a hint.
