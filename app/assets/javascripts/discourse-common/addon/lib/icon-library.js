@@ -41,7 +41,8 @@ const REPLACEMENTS = {
   "notification.group_message_summary": "users",
   "notification.post_approved": "check",
   "notification.membership_request_accepted": "user-plus",
-  "notification.membership_request_consolidated": "users"
+  "notification.membership_request_consolidated": "users",
+  "notification.reaction": "bell"
 };
 
 export function replaceIcon(source, destination) {
