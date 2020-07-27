@@ -142,11 +142,17 @@ class PostSerializer < BasicPostSerializer
   end
 
   def group_moderator
-    @group_moderator ||= !!(object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category))
+    !!@group_moderator
   end
 
   def include_group_moderator?
-    @group_moderator ||= !!(object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category))
+    @group_moderator ||= begin
+      if @topic_view
+        @topic_view.category_group_moderator_user_ids.include?(object.user_id)
+      else
+        object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
+      end
+    end
   end
 
   def yours

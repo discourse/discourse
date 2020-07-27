@@ -429,6 +429,18 @@ class TopicView
     @group_allowed_user_ids = Set.new(GroupUser.where(group_id: group_ids).pluck('distinct user_id'))
   end
 
+  def category_group_moderator_user_ids
+    @category_group_moderator_user_ids ||= begin
+      unless SiteSetting.enable_category_group_moderation? && @topic.category.reviewable_by_group.present?
+        return Set.new
+      end
+
+      Set.new(
+        @topic.category.reviewable_by_group.group_users.where(user_id: @posts.map(&:user_id)).pluck('distinct user_id')
+      )
+    end
+  end
+
   def all_post_actions
     @all_post_actions ||= PostAction.counts_for(@posts, @user)
   end
