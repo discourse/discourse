@@ -395,7 +395,11 @@ describe Search do
   end
 
   context 'posts' do
-    let(:post) { Fabricate(:post) }
+    fab!(:post) do
+      SearchIndexer.enable
+      Fabricate(:post)
+    end
+
     let(:topic) { post.topic }
 
     let!(:reply) do
@@ -487,6 +491,18 @@ describe Search do
       ])
     ensure
       Discourse.cache.clear
+    end
+
+    it 'allows staff to search for whispers' do
+      post.update!(post_type: Post.types[:whisper], raw: 'this is a tiger')
+
+      results = Search.execute('tiger')
+
+      expect(results.posts).to eq([])
+
+      results = Search.execute('tiger', guardian: Guardian.new(admin))
+
+      expect(results.posts).to eq([post])
     end
   end
 
