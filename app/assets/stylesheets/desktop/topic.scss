@@ -27,7 +27,7 @@
   h1 {
     font-size: $font-up-4;
     line-height: $line-height-medium;
-    overflow: hidden;
+    overflow-wrap: break-word;
     width: 100%;
     a {
       color: $primary;
