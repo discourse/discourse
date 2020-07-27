@@ -143,10 +143,17 @@ describe SearchIndexer do
 
     it 'should not tokenize versions' do
       post.topic.update!(title: "this is a title that I am testing")
-      post.update!(raw: '1.2.2')
+      post.update!(raw: '123.223')
 
       expect(post.post_search_data.search_data).to eq(
-        "'1.2.2':10 'test':8A 'titl':4A 'uncategor':9B"
+        "'123.223':10 'test':8A 'titl':4A 'uncategor':9B"
+      )
+
+      post.update!(raw: '15.2.231.423')
+      post.reload
+
+      expect(post.post_search_data.search_data).to eq(
+        "'15.2.231.423':10 'test':8A 'titl':4A 'uncategor':9B"
       )
     end
 
