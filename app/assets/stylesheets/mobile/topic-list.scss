@@ -528,3 +528,14 @@ td .main-link {
 .category-list.with-topics .category-list-item .category-description {
   display: none;
 }
+
+.category-list .category.muted{
+  h3 a[href], h4 a[href] {
+    color: $primary-medium;
+    font-size: $font-down-1;
+  }
+}
+
+.muted-categories > a {
+  margin-left: 0;
+}

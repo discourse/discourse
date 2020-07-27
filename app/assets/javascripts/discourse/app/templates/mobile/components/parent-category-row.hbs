@@ -1,0 +1,61 @@
+{{#unless isHidden}}
+  {{plugin-outlet name="category-list-above-each-category" connectorTagName="" tagName="" args=(hash category=category)}}
+  <div data-category-id={{category.id}} data-notification-level={{category.notificationLevelString}} style={{border-color category.color}} class="category-list-item category {{if isMuted "muted"}}">
+    <table class="topic-list">
+      <tbody>
+        <tr>
+          <th class="main-link">
+            {{category-title-link category=category}}
+          </th>
+        </tr>
+        {{#if category.description_excerpt}}
+          <tr class="category-description">
+            <td colspan="3">
+              {{html-safe category.description_excerpt}}
+            </td>
+          </tr>
+        {{/if}}
+        {{#unless isMuted}}
+          {{#if showTopics}}
+            {{#each category.topics as |t|}}
+              {{mobile-category-topic topic=t}}
+            {{/each}}
+          {{/if}}
+        {{/unless}}
+        {{#if category.isGrandParent}}
+          {{#each category.subcategories as |subcategory|}}
+            {{sub-category-row category=subcategory listType=listType}}
+          {{/each}}
+        {{else if category.subcategories}}
+          <tr class="subcategories-list">
+            <td>
+              <div class="subcategories">
+                {{#each category.subcategories as |subcategory|}}
+                  {{sub-category-item category=subcategory listType=listType}}
+                {{/each}}
+              </div>
+            </td>
+          </tr>
+        {{/if}}
+      </tbody>
+    </table>
+    <footer class="clearfix">
+      <figure title={{i18n "all_time_desc"}}>
+        {{number category.topics_all_time}}
+        <figcaption>{{i18n "all_time"}}</figcaption>
+      </figure>
+      {{#if category.pickMonth}}
+        <figure title={{i18n "month_desc"}}>
+          {{number category.topics_month}}
+          <figcaption>/ {{i18n "month"}}</figcaption>
+        </figure>
+      {{/if}}
+      {{#if category.pickWeek}}
+        <figure title={{i18n "week_desc"}}>
+          {{number category.topics_week}}
+          <figcaption>/ {{i18n "week"}}</figcaption>
+        </figure>
+      {{/if}}
+    </footer>
+  </div>
+{{/unless}}

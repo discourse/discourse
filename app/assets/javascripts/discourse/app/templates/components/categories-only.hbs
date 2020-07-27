@@ -19,29 +19,31 @@
   {{/if}}
 
   {{#if mutedCategories}}
-    <a href {{action "toggleShowMuted"}}>
-      <h4>Muted categories</h4>
-      {{#if mutedToggleIcon}}
-        {{d-icon mutedToggleIcon}}
+    <div class="muted-categories">
+      <a href {{action "toggleShowMuted"}}>
+        <h3>{{i18n "categories.muted"}}</h3>
+        {{#if mutedToggleIcon}}
+          {{d-icon mutedToggleIcon}}
+        {{/if}}
+      </a>
+      {{#if showMutedCategories}}
+        <table class="category-list {{if showTopics "with-topics"}}">
+          <thead>
+            <tr>
+              <th class="category"><span aria-role="heading" aria-level="2" id="categories-only-category">{{i18n "categories.category"}}</span></th>
+              <th class="topics">{{i18n "categories.topics"}}</th>
+              {{#if showTopics}}
+                <th class="latest">{{i18n "categories.latest"}}</th>
+              {{/if}}
+            </tr>
+          </thead>
+          <tbody aria-labelledby="categories-only-category">
+            {{#each categories as |c|}}
+              {{parent-category-row category=c showTopics=showTopics listType="muted"}}
+            {{/each}}
+          </tbody>
+        </table>
       {{/if}}
-    </a>
-    {{#if showMutedCategories}}
-      <table class="category-list {{if showTopics "with-topics"}}">
-        <thead>
-          <tr>
-            <th class="category"><span aria-role="heading" aria-level="2" id="categories-only-category">{{i18n "categories.category"}}</span></th>
-            <th class="topics">{{i18n "categories.topics"}}</th>
-            {{#if showTopics}}
-              <th class="latest">{{i18n "categories.latest"}}</th>
-            {{/if}}
-          </tr>
-        </thead>
-        <tbody aria-labelledby="categories-only-category">
-          {{#each categories as |c|}}
-            {{parent-category-row category=c showTopics=showTopics listType="muted"}}
-          {{/each}}
-        </tbody>
-      </table>
-    {{/if}}
+    </div>
   {{/if}}
 {{/if}}
