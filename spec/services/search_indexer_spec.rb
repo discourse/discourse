@@ -141,6 +141,15 @@ describe SearchIndexer do
       )
     end
 
+    it 'should not tokenize versions' do
+      post.topic.update!(title: "this is a title that I am testing")
+      post.update!(raw: '1.2.2')
+
+      expect(post.post_search_data.search_data).to eq(
+        "'1.2.2':10 'test':8A 'titl':4A 'uncategor':9B"
+      )
+    end
+
     it 'should tokenize host of a URL and removes query string' do
       category = Fabricate(:category, name: 'awesome category')
       topic = Fabricate(:topic, category: category, title: 'this is a test topic')

@@ -59,13 +59,15 @@ class SearchIndexer
     tsvector.scan(/'(([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+)'\:([\w+,]+)/).reduce(additional_lexemes) do |array, (lexeme, _, positions)|
       count = 0
 
-      loop do
-        count += 1
-        break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
-        term, _, remaining = lexeme.partition(".")
-        break if remaining.blank?
-        array << "'#{term}':#{positions} '#{remaining}':#{positions}"
-        lexeme = remaining
+      if lexeme !~ /^(\d+\.)?(\d+\.)?(\*|\d+)$/
+        loop do
+          count += 1
+          break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
+          term, _, remaining = lexeme.partition(".")
+          break if remaining.blank?
+          array << "'#{term}':#{positions} '#{remaining}':#{positions}"
+          lexeme = remaining
+        end
       end
 
       array
