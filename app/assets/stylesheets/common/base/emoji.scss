@@ -209,7 +209,7 @@ sup img.emoji {
   display: inline-block;
   vertical-align: top;
   border-radius: 2px;
-  background-color: lighten($tertiary, 40%);
+  background-color: $tertiary-low;
 }
 
 .emoji-picker-modal.fadeIn {
