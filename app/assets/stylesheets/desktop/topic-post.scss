@@ -395,7 +395,7 @@ pre.copy-codeblocks:hover .copy-cmd {
       border: 0;
       padding: 0 23px;
       color: dark-light-choose($primary-medium, $secondary-high);
-      background: blend-primary-secondary(5%);
+      background: $blend-primary-secondary-5;
       border-left: 1px solid $primary-low;
       border-top: 1px solid transparent;
       &:hover {
@@ -414,7 +414,7 @@ pre.copy-codeblocks:hover .copy-cmd {
   }
   .link-summary .btn {
     color: dark-light-choose($primary-medium, $secondary-high);
-    background: blend-primary-secondary(5%);
+    background: $blend-primary-secondary-5;
     width: 100%;
     &:hover {
       color: $primary;

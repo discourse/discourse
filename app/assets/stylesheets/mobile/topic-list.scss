@@ -183,7 +183,7 @@
   .category-topic-link td.num .badge-notification {
     &.new-posts,
     &.unread-posts {
-      color: dark-light-choose($secondary, $secondary);
+      color: $secondary;
     }
   }
 

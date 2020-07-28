@@ -131,12 +131,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: dark-light-choose($tertiary, $tertiary);
+      color: $tertiary;
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: dark-light-choose($tertiary, $tertiary);
+      color: $tertiary;
     }
 
     img {
@@ -304,7 +304,7 @@ aside.onebox {
 
 // Google Calendar Placeholder
 .gdocs-onebox-splash {
-  background-color: blend-primary-secondary(30%);
+  background-color: $primary-low-mid;
   color: $primary;
   border: 1px inset $primary;
   .gdocs-onebox-logo {
@@ -351,7 +351,7 @@ pre.onebox code ol {
   line-height: $line-height-large;
 }
 pre.onebox code {
-  background-color: dark-light-choose(#fff, #000);
+  background-color: $primary-very-low;
 }
 pre.onebox code li {
   padding-left: 5px;

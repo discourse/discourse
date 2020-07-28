@@ -507,7 +507,7 @@ table {
   animation: rotate-forever 1s infinite linear;
   height: 30px;
   width: 30px;
-  border: 4px solid blend-primary-secondary(50%);
+  border: 4px solid $primary-low-mid;
   border-right-color: transparent;
   border-radius: 50%;
 

@@ -81,3 +81,6 @@ $love-low: dark-light-diff($love, $secondary, 85%, -60%) !default;
 
 //wiki
 $wiki: green !default;
+
+//blended variants
+$blend-primary-secondary-5: blend-primary-secondary(5%) !default;

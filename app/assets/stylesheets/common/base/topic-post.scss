@@ -303,10 +303,7 @@ blockquote {
   position: absolute;
   z-index: z("dropdown");
   opacity: 0.9;
-  background-color: dark-light-choose(
-    blend-primary-secondary(60%),
-    blend-primary-secondary(30%)
-  );
+  background-color: $secondary-high;
 
   &.visible {
     display: inline-flex;
@@ -668,7 +665,7 @@ pre {
     display: block;
     padding: 0.5em;
     color: $primary;
-    background: blend-primary-secondary(5%);
+    background: $blend-primary-secondary-5;
     max-height: 500px;
   }
 }

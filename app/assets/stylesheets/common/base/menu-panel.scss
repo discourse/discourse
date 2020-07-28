@@ -252,7 +252,7 @@
       align-items: center;
       min-height: 30px;
       color: dark-light-choose($primary-medium, $secondary-high);
-      background: blend-primary-secondary(5%);
+      background: $blend-primary-secondary-5;
       &:hover {
         color: $primary;
         background: $primary-low;
