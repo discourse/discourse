@@ -110,7 +110,7 @@ class ApplicationController < ActionController::Base
   class PluginDisabled < StandardError; end
 
   rescue_from RenderEmpty do
-    render 'default/empty'
+    with_resolved_locale { render 'default/empty' }
   end
 
   rescue_from ArgumentError do |e|
