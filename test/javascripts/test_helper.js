@@ -91,6 +91,7 @@ var createPretender = require("helpers/create-pretender", null, null, false),
   _DiscourseURL = require("discourse/lib/url", null, null, false).default,
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
+  getOwner = require("discourse-common/lib/get-owner").getOwner,
   server,
   acceptanceModulePrefix = "Acceptance: ";
 
@@ -192,9 +193,7 @@ QUnit.testDone(function() {
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
-  require("discourse/services/app-events").clearAppEventsCache(
-    window.Discourse.__container__
-  );
+  require("discourse/services/app-events").clearAppEventsCache(getOwner(this));
 
   MessageBus.unsubscribe("*");
   delete window.server;

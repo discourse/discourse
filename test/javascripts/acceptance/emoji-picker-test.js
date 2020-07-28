@@ -4,12 +4,11 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 acceptance("EmojiPicker", {
   loggedIn: true,
   beforeEach() {
-    const store = Discourse.__container__.lookup("service:emoji-store");
-    store.reset();
+    this.emojiStore = this.container.lookup("service:emoji-store");
+    this.emojiStore.reset();
   },
   afterEach() {
-    const store = Discourse.__container__.lookup("service:emoji-store");
-    store.reset();
+    this.emojiStore.reset();
   }
 });
 
