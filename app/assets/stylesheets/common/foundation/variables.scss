@@ -18,12 +18,18 @@ $topic-avatar-width: 45px;
 // --------------------------------------------------
 
 $google: #ffffff !default;
+$google-hover: darken($google, 5%) !default;
 $instagram: #e1306c !default;
+$instagram-hover: darken($instagram, 15%) !default;
 $facebook: #4267b2 !default;
+$facebook-hover: darken($facebook, 15%) !default;
 $cas: #70ba61 !default;
 $twitter: #1da1f2 !default;
+$twitter-hover: darken($twitter, 10%) !default;
 $github: #100e0f !default;
+$github-hover: lighten($github, 20%) !default;
 $discord: #7289da !default;
+$discord-hover: darken($discord, 10%) !default;
 
 // Badge color variables
 // --------------------------------------------------

@@ -53,6 +53,7 @@ $secondary-very-high: dark-light-diff($secondary, $primary, 7%, -7%) !default;
 $tertiary-low: dark-light-diff($tertiary, $secondary, 85%, -65%) !default;
 $tertiary-medium: dark-light-diff($tertiary, $secondary, 50%, -45%) !default;
 $tertiary-high: dark-light-diff($tertiary, $secondary, 20%, -25%) !default;
+$tertiary-hover: dark-light-diff($tertiary, $secondary, -25%, -25%) !default;
 
 //quaternary
 $quaternary-low: dark-light-diff($quaternary, $secondary, 70%, -70%) !default;
@@ -71,10 +72,12 @@ $danger-low-mid: dark-light-diff(
   -60%
 ) !default;
 $danger-medium: dark-light-diff($danger, $secondary, 30%, -35%) !default;
+$danger-hover: dark-light-diff($danger, $secondary, -20%, -20%) !default;
 
 //success
 $success-low: dark-light-diff($success, $secondary, 80%, -60%) !default;
 $success-medium: dark-light-diff($success, $secondary, 50%, -40%) !default;
+$success-hover: dark-light-diff($success, $secondary, -20%, -20%) !default;
 
 //love
 $love-low: dark-light-diff($love, $secondary, 85%, -60%) !default;
