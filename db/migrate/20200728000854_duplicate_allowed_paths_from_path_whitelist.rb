@@ -6,6 +6,10 @@ class DuplicateAllowedPathsFromPathWhitelist < ActiveRecord::Migration[6.0]
       add_column :embeddable_hosts, :allowed_paths, :string
     end
 
+    if column_exists?(:embeddable_hosts, :path_whitelist)
+      Migration::ColumnDropper.mark_readonly('embeddable_hosts', 'path_whitelist')
+    end
+
     if column_exists?(:embeddable_hosts, :path_whitelist) && column_exists?(:embeddable_hosts, :allowed_paths)
       DB.exec <<~SQL
         UPDATE embeddable_hosts
