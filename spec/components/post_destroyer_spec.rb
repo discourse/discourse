@@ -289,7 +289,7 @@ describe PostDestroyer do
               ReviewableFlaggedPost.needs_review!(target: @reply, created_by: Fabricate(:user))
             end
 
-            it "changes deleted_at to nil" do
+            def changes_deleted_at_to_nil
               PostDestroyer.new(Discourse.system_user, @reply).destroy
               @reply.reload
               expect(@reply.user_deleted).to eq(false)
@@ -298,6 +298,19 @@ describe PostDestroyer do
               PostDestroyer.new(review_user, @reply).recover
               @reply.reload
               expect(@reply.deleted_at).to eq(nil)
+            end
+
+            it "changes deleted_at to nil" do
+              changes_deleted_at_to_nil
+            end
+
+            context "when the topic is deleted" do
+              before do
+                @reply.topic.trash!
+              end
+              it "changes deleted_at to nil" do
+                changes_deleted_at_to_nil
+              end
             end
           end
 
