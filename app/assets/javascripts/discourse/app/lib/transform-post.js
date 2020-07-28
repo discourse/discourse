@@ -122,6 +122,7 @@ export default function transformPost(
     currentUser && (currentUser.id === post.user_id || currentUser.staff);
   postAtts.canArchiveTopic = !!details.can_archive_topic;
   postAtts.canCloseTopic = !!details.can_close_topic;
+  postAtts.canSplitMergeTopic = !!details.can_split_merge_topic;
   postAtts.canEditStaffNotes = !!details.can_edit_staff_notes;
   postAtts.canReplyAsNewTopic = !!details.can_reply_as_new_topic;
   postAtts.canReviewTopic = !!details.can_review_topic;

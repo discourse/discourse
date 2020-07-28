@@ -130,7 +130,7 @@ export default createWidget("topic-admin-menu", {
     const visible = topic.get("visible");
 
     // Admin actions
-    if (this.currentUser && this.currentUser.get("canManageTopic")) {
+    if (this.currentUser && (this.currentUser.get("canManageTopic") || details.get("can_split_merge_topic"))) {
       this.addActionButton({
         className: "topic-admin-multi-select",
         buttonClass: "popup-menu-btn",
@@ -138,7 +138,9 @@ export default createWidget("topic-admin-menu", {
         icon: "tasks",
         label: "actions.multi_select"
       });
+    }
 
+    if (this.currentUser && this.currentUser.get("canManageTopic")) {
       if (details.get("can_delete")) {
         this.addActionButton({
           className: "topic-admin-delete",
