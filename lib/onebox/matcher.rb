@@ -16,10 +16,7 @@ module Onebox
       uri = URI(@url)
       return unless uri.port.nil? || Onebox.options.allowed_ports.include?(uri.port)
       return unless uri.scheme.nil? || Onebox.options.allowed_schemes.include?(uri.scheme)
-      ordered_engines
-        .select { |engine| engine === uri }
-        .sort_by { |engine| engine.to_s }
-        .last
+      ordered_engines.find { |engine| engine === uri }
     rescue URI::InvalidURIError
       nil
     end

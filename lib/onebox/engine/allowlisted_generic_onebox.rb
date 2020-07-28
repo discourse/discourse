@@ -9,6 +9,10 @@ module Onebox
       include StandardEmbed
       include LayoutSupport
 
+      def self.priority
+        200
+      end
+
       def self.allowed_domains=(list)
         @allowed_domains = list
       end
