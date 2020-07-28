@@ -209,6 +209,7 @@ export const DEFAULT_LIST = [
   "video[height]",
   "video[loop]",
   "video[muted]",
+  "video[playsinline]",
   "video[poster]",
   "video[preload]",
   "video[width]",
