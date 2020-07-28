@@ -16,6 +16,7 @@ class DuplicateAllowedPathsFromPathWhitelist < ActiveRecord::Migration[6.0]
         SQL
       end
     end
+  end
 
   def down
     remove_column :embeddable_hosts, :allowed_paths
