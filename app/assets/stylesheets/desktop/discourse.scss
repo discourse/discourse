@@ -114,84 +114,12 @@ input {
 }
 
 .control-instructions {
-  color: dark-light-choose($primary-medium, $secondary-medium);
+  color: $primary-medium;
   font-size: 0.875rem;
 }
 
 .control-group {
   margin-bottom: 9px;
-
-  &.warning,
-  &.error {
-    > label {
-      color: $danger;
-    }
-
-    .checkbox,
-    .radio,
-    input,
-    select,
-    textarea {
-      color: $danger;
-      border-color: $danger;
-
-      &:focus {
-        border-color: scale-color($danger, $lightness: -30%);
-        box-shadow: shadow("focus-danger");
-      }
-    }
-  }
-
-  &.warning {
-    .input-prepend,
-    .input-append {
-      .add-on {
-        color: $danger;
-        background-color: $danger;
-        border-color: $danger;
-      }
-    }
-  }
-
-  &.error {
-    .input-prepend,
-    .input-append {
-      .add-on {
-        color: $danger;
-        background-color: $danger-medium;
-        border-color: scale-color($danger, $lightness: -20%);
-      }
-    }
-  }
-
-  &.success {
-    > label {
-      color: $success;
-    }
-
-    .checkbox,
-    .radio,
-    input,
-    select,
-    textarea {
-      color: $success;
-      border-color: $success;
-
-      &:focus {
-        border-color: $success;
-        box-shadow: shadow("focus");
-      }
-    }
-
-    .input-prepend,
-    .input-append {
-      .add-on {
-        color: $success;
-        background-color: $success-low;
-        border-color: $success;
-      }
-    }
-  }
 }
 
 .form-horizontal {
