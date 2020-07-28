@@ -50,10 +50,7 @@
   }
   &:active,
   &.btn-active {
-    @include linear-gradient(
-      $hover-bg-color 0%,
-      $bg-color 100%
-    );
+    @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
   }
   &[disabled],
   &.disabled {

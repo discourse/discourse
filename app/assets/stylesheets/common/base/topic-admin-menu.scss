@@ -119,10 +119,7 @@
         background: $tertiary-high;
       }
       &:active {
-        @include linear-gradient(
-          $tertiary-hover,
-          $tertiary
-        );
+        @include linear-gradient($tertiary-hover, $tertiary);
         color: $secondary;
       }
     }

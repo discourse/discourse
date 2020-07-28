@@ -89,7 +89,7 @@ $z-layers: (
     "popover": 1500,
     "dropdown": 1400,
     "content": 1300,
-    "overlay": 1200
+    "overlay": 1200,
   ),
   "fullscreen": 1150,
   "mobile-composer": 1100,
@@ -101,12 +101,12 @@ $z-layers: (
     "dropdown": 700,
     "tooltip": 600,
     "popover": 500,
-    "content": 400
+    "content": 400,
   ),
   "dropdown": 300,
   "usercard": 200,
   "timeline": 100,
-  "base": 1
+  "base": 1,
 );
 
 @function map-has-nested-keys($map, $keys...) {
@@ -146,10 +146,10 @@ $box-shadow: (
   "footer-nav": 0 0 2px 0 rgba(0, 0, 0, 0.25),
   "kbd": (
     0 2px 0 rgba(0, 0, 0, 0.2),
-    0 0 0 1px dark-light-choose(#fff, #000) inset
+    0 0 0 1px dark-light-choose(#fff, #000) inset,
   ),
   "focus": 0 0 6px 0 $tertiary,
-  "focus-danger": 0 0 6px 0 $danger
+  "focus-danger": 0 0 6px 0 $danger,
 );
 
 @function shadow($key) {
