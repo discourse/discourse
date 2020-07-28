@@ -2,7 +2,7 @@
 
 class DropPathWhitelistFromEmbeddableHosts < ActiveRecord::Migration[6.0]
   def up
-    Migration::ColumnDropper.execute_drop(:embeddable_host, :path_whitelist)
+    Migration::ColumnDropper.execute_drop(:embeddable_hosts, %i(path_whitelist))
   end
 
   def down
