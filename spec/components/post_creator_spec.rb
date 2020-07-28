@@ -653,12 +653,22 @@ describe PostCreator do
       before do
         Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
         Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        TopicUser.create!(topic: topic, user: user, bookmarked: true)
+      end
+
+      it "deletes the bookmarks, but not the ones without an auto_delete_preference" do
         Fabricate(:bookmark, topic: topic, user: user)
         Fabricate(:bookmark, user: user)
-      end
-      it "deletes the bookmarks" do
         creator.create
         expect(Bookmark.where(user: user).count).to eq(2)
+        expect(TopicUser.find_by(topic: topic, user: user).bookmarked).to eq(true)
+      end
+
+      context "when there are no bookmarks left in the topic" do
+        it "sets TopicUser.bookmarked to false" do
+          creator.create
+          expect(TopicUser.find_by(topic: topic, user: user).bookmarked).to eq(false)
+        end
       end
     end
 
