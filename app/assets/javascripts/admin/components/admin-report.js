@@ -131,6 +131,18 @@ export default Component.extend({
     return displayedModesLength > 1;
   },
 
+  @discourseComputed("currentMode")
+  isChartMode(currentMode) {
+    return currentMode === "chart";
+  },
+
+  @action
+  changeGrouping(grouping) {
+    this.send("refreshReport", {
+      chartGrouping: grouping
+    });
+  },
+
   @discourseComputed("currentMode", "model.modes", "forcedModes")
   displayedModes(currentMode, reportModes, forcedModes) {
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
@@ -184,6 +196,19 @@ export default Component.extend({
     return reportKey;
   },
 
+  @discourseComputed("reportOptions.chartGrouping")
+  chartGroupings(chartGrouping) {
+    chartGrouping = chartGrouping || "daily";
+
+    return ["daily", "weekly", "monthly"].map(id => {
+      return {
+        id,
+        label: `admin.dashboard.reports.${id}`,
+        class: `chart-grouping ${chartGrouping === id ? "active" : "inactive"}`
+      };
+    });
+  },
+
   @action
   onChangeDateRange(range) {
     this.send("refreshReport", {
@@ -211,6 +236,7 @@ export default Component.extend({
   refreshReport(options = {}) {
     this.attrs.onRefresh({
       type: this.get("model.type"),
+      chartGrouping: options.chartGrouping,
       startDate:
         typeof options.startDate === "undefined"
           ? this.startDate
@@ -243,6 +269,10 @@ export default Component.extend({
   @action
   changeMode(mode) {
     this.set("currentMode", mode);
+
+    this.send("refreshReport", {
+      chartGrouping: null
+    });
   },
 
   _computeReport() {
@@ -364,7 +394,9 @@ export default Component.extend({
     } else {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
       return EmberObject.create(
-        Object.assign(chartOptions, this.get("reportOptions.chart") || {})
+        Object.assign(chartOptions, this.get("reportOptions.chart") || {}, {
+          chartGrouping: this.get("reportOptions.chartGrouping")
+        })
       );
     }
   },

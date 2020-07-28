@@ -140,6 +140,18 @@
       }
     }
 
+    .chart-groupings {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 1fr);
+      grid-gap: 0.5em;
+      margin-bottom: 1em;
+
+      .chart-grouping.active {
+        background: $tertiary;
+        color: $secondary;
+      }
+    }
+
     .control {
       margin-bottom: 1em;
     }

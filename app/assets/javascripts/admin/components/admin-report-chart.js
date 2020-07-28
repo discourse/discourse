@@ -8,6 +8,7 @@ export default Component.extend({
   classNames: ["admin-report-chart"],
   limit: 8,
   total: 0,
+  options: null,
 
   init() {
     this._super(...arguments);
@@ -49,7 +50,11 @@ export default Component.extend({
     if (!chartCanvas) return;
 
     const context = chartCanvas.getContext("2d");
-    const chartData = makeArray(model.get("chartData") || model.get("data"));
+    const chartData = this._applyChartGrouping(
+      model,
+      makeArray(model.get("chartData") || model.get("data"), "weekly"),
+      this.options
+    );
     const prevChartData = makeArray(
       model.get("prevChartData") || model.get("prev_data")
     );
@@ -91,11 +96,14 @@ export default Component.extend({
         return;
       }
 
-      this._chart = new window.Chart(context, this._buildChartConfig(data));
+      this._chart = new window.Chart(
+        context,
+        this._buildChartConfig(data, this.options)
+      );
     });
   },
 
-  _buildChartConfig(data) {
+  _buildChartConfig(data, options) {
     return {
       type: "line",
       data,
@@ -144,7 +152,7 @@ export default Component.extend({
               gridLines: { display: false },
               type: "time",
               time: {
-                parser: "YYYY-MM-DD"
+                unit: this._unitForGrouping(options)
               },
               ticks: {
                 sampleSize: 5,
@@ -162,6 +170,66 @@ export default Component.extend({
     if (this._chart) {
       this._chart.destroy();
       this._chart = null;
+    }
+  },
+
+  _applyChartGrouping(model, data, options) {
+    if (!options.chartGrouping || options.chartGrouping === "daily") {
+      return data;
+    }
+
+    if (
+      options.chartGrouping === "weekly" ||
+      options.chartGrouping === "monthly"
+    ) {
+      const isoKind = options.chartGrouping === "weekly" ? "isoWeek" : "month";
+      const kind = options.chartGrouping === "weekly" ? "week" : "month";
+      const startMoment = moment(model.start_date, "YYYY-MM-DD");
+
+      let currentIndex = 0;
+      let currentStart = startMoment.clone().startOf(isoKind);
+      let currentEnd = startMoment.clone().endOf(isoKind);
+      const transformedData = [
+        {
+          x: currentStart.format("YYYY-MM-DD"),
+          y: 0
+        }
+      ];
+
+      data.forEach(d => {
+        let date = moment(d.x, "YYYY-MM-DD");
+
+        if (!date.isBetween(currentStart, currentEnd)) {
+          currentIndex += 1;
+          currentStart = currentStart.add(1, kind).startOf(isoKind);
+          currentEnd = currentEnd.add(1, kind).endOf(isoKind);
+        }
+
+        if (transformedData[currentIndex]) {
+          transformedData[currentIndex].y += d.y;
+        } else {
+          transformedData[currentIndex] = {
+            x: d.x,
+            y: d.y
+          };
+        }
+      });
+
+      return transformedData;
+    }
+
+    // ensure we return something if grouping is unknown
+    return data;
+  },
+
+  _unitForGrouping(options) {
+    switch (options.chartGrouping) {
+      case "monthly":
+        return "month";
+      case "weekly":
+        return "week";
+      default:
+        return "day";
     }
   }
 });
