@@ -93,6 +93,15 @@ class Guardian
     @user.moderator?
   end
 
+  def is_category_group_moderator?(category)
+    @is_category_group_moderator ||= begin
+      SiteSetting.enable_category_group_moderation? &&
+        category.present? &&
+        category.reviewable_by_group_id.present? &&
+        GroupUser.where(group_id: category.reviewable_by_group_id, user_id: @user.id).exists?
+    end
+  end
+
   def is_silenced?
     @user.silenced?
   end

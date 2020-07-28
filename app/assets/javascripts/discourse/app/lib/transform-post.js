@@ -44,6 +44,7 @@ export function transformBasicPost(post) {
     staff: post.staff,
     admin: post.admin,
     moderator: post.moderator,
+    groupModerator: post.group_moderator,
     new_user: post.trust_level === 0,
     name: post.name,
     user_title: post.user_title,
