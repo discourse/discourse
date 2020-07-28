@@ -18,7 +18,7 @@ article.post {
   }
 
   .quote .title {
-    border-left: 5px solid darken($primary-low, 5%);
+    border-left: 5px solid $primary-very-low;
     padding: 10px 10px 0 12px;
     .avatar {
       margin-right: 7px;
@@ -33,7 +33,7 @@ article.post {
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
-    border-left: 5px solid darken($primary-low, 5%);
+    border-left: 5px solid $primary-very-low;
     p {
       margin: 0 0 10px 0;
     }

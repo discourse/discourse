@@ -51,8 +51,8 @@
   &:active,
   &.btn-active {
     @include linear-gradient(
-      scale-color($bg-color, $lightness: -20%),
-      $bg-color
+      $hover-bg-color 0%,
+      $bg-color 100%
     );
   }
   &[disabled],
@@ -113,7 +113,7 @@
     $text-color: $secondary,
     $bg-color: $tertiary,
     $icon-color: $secondary,
-    $hover-bg-color: darken($tertiary, 10%),
+    $hover-bg-color: $tertiary-hover,
     $hover-icon-color: $secondary
   );
 }
@@ -126,11 +126,7 @@
     $text-color: $secondary,
     $bg-color: $danger,
     $icon-color: $danger-low,
-    $hover-bg-color:
-      dark-light-choose(
-        scale-color($danger, $lightness: -20%),
-        scale-color($danger, $lightness: 20%)
-      ),
+    $hover-bg-color: $danger-hover,
     $hover-icon-color: $danger-low
   );
 }
@@ -143,11 +139,7 @@
     $text-color: $secondary,
     $bg-color: $danger,
     $icon-color: $secondary,
-    $hover-bg-color:
-      dark-light-choose(
-        scale-color($danger, $lightness: -20%),
-        scale-color($danger, $lightness: 20%)
-      ),
+    $hover-bg-color: $danger-hover,
     $hover-icon-color: $secondary
   );
 }
@@ -157,11 +149,7 @@
     $text-color: $secondary,
     $bg-color: $success,
     $icon-color: $secondary,
-    $hover-bg-color:
-      dark-light-choose(
-        scale-color($success, $lightness: -20%),
-        scale-color($success, $lightness: 20%)
-      ),
+    $hover-bg-color: $success-hover,
     $hover-icon-color: $secondary
   );
 }
@@ -195,19 +183,19 @@
     }
     &:hover {
       color: currentColor;
-      background: darken($google, 5%);
+      background: $google-hover;
     }
   }
   &.instagram {
     background: $instagram;
     &:hover {
-      background: darken($instagram, 15%);
+      background: $instagram-hover;
     }
   }
   &.facebook {
     background: $facebook;
     &:hover {
-      background: darken($facebook, 15%);
+      background: $facebook-hover;
     }
   }
   &.cas {
@@ -216,19 +204,19 @@
   &.twitter {
     background: $twitter;
     &:hover {
-      background: darken($twitter, 10%);
+      background: $twitter-hover;
     }
   }
   &.github {
     background: $github;
     &:hover {
-      background: lighten($github, 20%);
+      background: $github-hover;
     }
   }
   &.discord {
     background: $discord;
     &:hover {
-      background: darken($discord, 10%);
+      background: $discord-hover;
     }
   }
 }
