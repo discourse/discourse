@@ -125,16 +125,10 @@ $quote-share-maxwidth: 150px;
   }
 
   ins {
-    background-color: dark-light-choose(
-      $success-low,
-      scale-color($success, $lightness: -60%)
-    );
+    background-color: $success-low;
   }
   del {
-    background-color: dark-light-choose(
-      $danger-low,
-      scale-color($danger, $lightness: -60%)
-    );
+    background-color: $danger-low;
   }
   // Prevents users from breaking posts with tag nesting
   big {

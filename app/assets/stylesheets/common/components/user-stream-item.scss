@@ -76,10 +76,7 @@
   }
 
   .edit-reason {
-    background-color: dark-light-choose(
-      $highlight-medium,
-      scale-color($highlight, $lightness: -50%)
-    );
+    background-color: $highlight-medium;
     padding: 3px 5px 5px 5px;
   }
 

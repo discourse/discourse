@@ -152,10 +152,7 @@ input {
   }
 
   &.invalid {
-    background-color: dark-light-choose(
-      $danger-low,
-      scale-color($danger, $lightness: -60%)
-    );
+    background-color: $danger-low;
   }
 
   .radio &[type="radio"],
