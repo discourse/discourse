@@ -1339,11 +1339,11 @@ trust:
     default: 0
     enum: "TrustLevelSetting"
   min_trust_level_to_allow_profile_background:
-    default: 1
+    default: 2
     client: true
     enum: "TrustLevelSetting"
   min_trust_level_to_allow_user_card_background:
-    default: 1
+    default: 2
     client: true
     enum: "TrustLevelSetting"
   allow_flagging_staff: true

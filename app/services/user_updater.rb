@@ -65,13 +65,13 @@ class UserUpdater
       user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     end
 
-    if attributes[:profile_background_upload_url] == ""
+    if attributes[:profile_background_upload_url] == "" || !user.has_trust_level?(SiteSetting.min_trust_level_to_allow_profile_background.to_i)
       user_profile.profile_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
       user_profile.profile_background_upload_id = upload.id
     end
 
-    if attributes[:card_background_upload_url] == ""
+    if attributes[:card_background_upload_url] == "" || !user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)
       user_profile.card_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
       user_profile.card_background_upload_id = upload.id
