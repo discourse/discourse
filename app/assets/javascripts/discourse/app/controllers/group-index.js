@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { gt, readOnly } from "@ember/object/computed";
+import { gt } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -16,7 +16,6 @@ export default Controller.extend({
   filterInput: null,
 
   loading: false,
-  isOwner: readOnly("model.is_group_owner"),
   showActions: false,
 
   @observes("filterInput")
