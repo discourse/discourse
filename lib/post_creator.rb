@@ -405,10 +405,11 @@ class PostCreator
 
   def delete_owned_bookmarks
     return if !@post.topic_id
-    @user.bookmarks.where(
-      topic_id: @post.topic_id,
-      auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply]
-    ).destroy_all
+    BookmarkManager.new(@user).destroy_for_topic(
+      Topic.with_deleted.find(@post.topic_id),
+      { auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply] },
+      @opts
+    )
   end
 
   def handle_spam

@@ -77,6 +77,15 @@ class Bookmark < ActiveRecord::Base
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
   end
 
+  def clear_reminder!
+    update(
+      reminder_at: nil,
+      reminder_type: nil,
+      reminder_last_sent_at: Time.zone.now,
+      reminder_set_at: nil
+    )
+  end
+
   scope :pending_reminders, ->(before_time = Time.now.utc) do
     where("reminder_at IS NOT NULL AND reminder_at <= :before_time", before_time: before_time)
   end
