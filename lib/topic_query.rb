@@ -462,6 +462,7 @@ class TopicQuery
     result = remove_muted_tags(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
 
+    # result = result.where(resolution: false)
     # plugins can remove topics here:
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:latest, result, @user, options)

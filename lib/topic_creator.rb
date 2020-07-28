@@ -95,7 +95,8 @@ class TopicCreator
       title: @opts[:title],
       user_id: @user.id,
       last_post_user_id: @user.id,
-      visible: @opts[:visible]
+      visible: @opts[:visible],
+      resolution: @opts[:resolution]
     }
 
     [:subtype, :archetype, :meta_data, :import_mode].each do |key|

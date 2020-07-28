@@ -62,6 +62,10 @@ class PostCreator
     @opts = opts || {}
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
+    if opts[:raw] && opts[:raw].scan(/\[poll.*\].*\[\/poll\]/m)
+      opts[:resolution] = opts[:raw].scan(/\[poll.*\].*\[\/poll\]/m)
+      opts[:raw] = opts[:raw].gsub(/(\n\[\/poll\])/m, "\n* Close Resolution\\1")
+    end
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
     opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
     @guardian = opts[:guardian] if opts[:guardian]
