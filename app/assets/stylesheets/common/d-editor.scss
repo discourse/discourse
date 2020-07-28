@@ -51,8 +51,12 @@
   .btn-default {
     background-color: transparent;
     display: inline-block;
+    color: $primary-medium;
     .d-icon {
-      color: $primary-medium;
+      color: currentColor;
+    }
+    &:hover {
+      color: $primary-low;
     }
 
     svg {
