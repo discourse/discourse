@@ -33,7 +33,7 @@ export default DiscourseRoute.extend({
 
     params.forceLoad = true;
 
-    postStream
+    return postStream
       .refresh(params)
       .then(() => {
         // TODO we are seeing errors where closest post is null and this is exploding
