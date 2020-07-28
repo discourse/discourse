@@ -531,6 +531,10 @@ describe Topic do
         expect(Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?")).to eq([topic])
       end
 
+      it 'returns the similar topic even if raw is blank' do
+        expect(Topic.similar_to("has evil trout made any topics?", "")).to eq([topic])
+      end
+
       it 'matches title against title and raw against raw when searching for topics' do
         topic.update!(title: '1 2 3 numbered titles')
         post.update!(raw: 'random toy poodle')

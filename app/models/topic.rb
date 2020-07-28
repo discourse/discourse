@@ -581,17 +581,21 @@ class Topic < ActiveRecord::Base
     return [] if title.blank?
     raw = raw.presence || ""
 
-    title_tsquery = Search.set_tsquery_weight_filter(
+    tsquery = Search.set_tsquery_weight_filter(
       Search.prepare_data(title.strip),
       'A'
     )
 
-    raw_tsquery = Search.set_tsquery_weight_filter(
-      Search.prepare_data(raw[0...MAX_SIMILAR_BODY_LENGTH].strip),
-      'B'
-    )
+    if raw.present?
+      raw_tsquery = Search.set_tsquery_weight_filter(
+        Search.prepare_data(raw[0...MAX_SIMILAR_BODY_LENGTH].strip),
+        'B'
+      )
 
-    tsquery = Search.to_tsquery(term: "#{title_tsquery} & #{raw_tsquery}", joiner: "|")
+      tsquery = "#{tsquery} & #{raw_tsquery}"
+    end
+
+    tsquery = Search.to_tsquery(term: tsquery, joiner: "|")
 
     candidates = Topic
       .visible
