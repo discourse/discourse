@@ -379,4 +379,24 @@ describe TopicViewSerializer do
     end
   end
 
+  context "viewing private messages when enable_category_group_moderation is enabled" do
+    fab!(:pm_topic) do
+      Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: user),
+        Fabricate.build(:topic_allowed_user, user: admin)
+      ])
+    end
+    fab!(:post) { Fabricate(:post, topic: pm_topic) }
+
+    before do
+      SiteSetting.enable_category_group_moderation = true
+    end
+
+    # Ensure having enable_category_group_moderation turned on doesn't break private messages
+    it "should return posts" do
+      json = serialize_topic(pm_topic, user)
+      expect(json[:post_stream][:posts]).to be_present
+    end
+  end
+
 end
