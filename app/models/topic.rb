@@ -586,7 +586,7 @@ class Topic < ActiveRecord::Base
       'A'
     )
 
-    raw_tsquery =  Search.set_tsquery_weight_filter(
+    raw_tsquery = Search.set_tsquery_weight_filter(
       Search.prepare_data(raw[0...MAX_SIMILAR_BODY_LENGTH].strip),
       'B'
     )
