@@ -16,13 +16,7 @@
     }
 
     &.deleted {
-      opacity: 0.8;
-      background-color: dark-light-diff(
-        rgba($danger, 0.7),
-        $secondary,
-        50%,
-        -10%
-      );
+      background-color: $danger-low-mid;
     }
 
     &.hidden {

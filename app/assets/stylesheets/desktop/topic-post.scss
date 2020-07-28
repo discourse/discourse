@@ -418,7 +418,7 @@ pre.copy-codeblocks:hover .copy-cmd {
     width: 100%;
     &:hover {
       color: $primary;
-      background: dark-light-diff($primary, $secondary, 90%, -80%);
+      background: $primary-low;
     }
   }
 }
@@ -512,12 +512,7 @@ video {
 
 .deleted {
   .topic-body {
-    background-color: dark-light-diff(
-      rgba($danger, 0.7),
-      $secondary,
-      50%,
-      -60%
-    );
+    background-color: $danger-low-mid;
   }
 }
 

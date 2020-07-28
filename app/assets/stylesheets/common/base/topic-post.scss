@@ -789,12 +789,7 @@ blockquote > *:last-child {
   }
 
   .small-action.deleted {
-    background-color: dark-light-diff(
-      rgba($danger, 0.7),
-      $secondary,
-      50%,
-      -60%
-    );
+    background-color: $danger-low-mid;
   }
 
   .small-action-desc.timegap {

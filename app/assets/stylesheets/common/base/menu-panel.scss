@@ -255,7 +255,7 @@
       background: blend-primary-secondary(5%);
       &:hover {
         color: $primary;
-        background: dark-light-diff($primary, $secondary, 90%, -80%);
+        background: $primary-low;
       }
     }
     /* as a big ol' click target, don't let text inside be selected */
