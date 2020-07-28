@@ -3500,6 +3500,9 @@ en:
           view_table: "table"
           view_graph: "graph"
           refresh_report: "Refresh Report"
+          daily: Daily
+          monthly: Monthly
+          weekly: Weekly
           dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
@@ -3629,7 +3632,6 @@ en:
           allowed_parameters: Allowed Parameters
           optional_allowed_parameters: Allowed Parameters (optional)
           any_parameter: (any parameter)
-
 
       web_hooks:
         title: "Webhooks"
