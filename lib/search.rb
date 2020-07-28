@@ -1025,11 +1025,23 @@ class Search
   end
 
   def self.ts_query(term: , ts_config:  nil, joiner: nil, weight_filter: nil)
+    to_tsquery(
+      ts_config: ts_config,
+      term: set_tsquery_weight_filter(term, weight_filter),
+      joiner: joiner
+    )
+  end
+
+  def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    term = term.gsub("'", "''")
-    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '''#{PG::Connection.escape_string(term)}'':*#{weight_filter}')"
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{term}')"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{PG::Connection.escape_string(joiner)}')::tsquery" if joiner
     tsquery
+  end
+
+  def self.set_tsquery_weight_filter(term, weight_filter)
+    term = term.gsub("'", "''")
+    "''#{PG::Connection.escape_string(term)}'':*#{weight_filter}"
   end
 
   def ts_query(ts_config = nil, weight_filter: nil)

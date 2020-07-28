@@ -502,37 +502,46 @@ describe Topic do
     end
   end
 
-  context 'similar_to' do
+  context '.similar_to' do
+    fab!(:category) { Fabricate(:category_with_definition) }
 
-    it 'returns blank with nil params' do
-      expect(Topic.similar_to(nil, nil)).to be_blank
+    it 'returns an empty array with nil params' do
+      expect(Topic.similar_to(nil, nil)).to eq([])
     end
 
     context "with a category definition" do
-      let!(:category) { Fabricate(:category_with_definition) }
-
       it "excludes the category definition topic from similar_to" do
-        expect(Topic.similar_to('category definition for', "no body")).to be_blank
+        expect(Topic.similar_to('category definition for', "no body")).to eq([])
       end
     end
 
     context 'with a similar topic' do
-      let!(:topic) {
+      fab!(:post) {
         SearchIndexer.enable
-        post = create_post(title: "Evil trout is the dude who posted this topic")
-        post.topic
+        create_post(title: "Evil trout is the dude who posted this topic")
       }
+
+      let(:topic) { post.topic }
+
+      before do
+        SearchIndexer.enable
+      end
 
       it 'returns the similar topic if the title is similar' do
         expect(Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?")).to eq([topic])
       end
 
-      context "secure categories" do
-        fab!(:category) { Fabricate(:category_with_definition, read_restricted: true) }
+      it 'matches title against title and raw against raw when searching for topics' do
+        topic.update!(title: '1 2 3 numbered titles')
+        post.update!(raw: 'random toy poodle')
 
+        expect(Topic.similar_to("unrelated term", "1 2 3 poddle")).to eq([])
+      end
+
+      context "secure categories" do
         before do
-          topic.category = category
-          topic.save
+          category.update!(read_restricted: true)
+          topic.update!(category: category)
         end
 
         it "doesn't return topics from private categories" do
