@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 class DropPathWhitelistFromEmbeddableHosts < ActiveRecord::Migration[6.0]
+  DROPPED_COLUMNS ||= {
+    embeddable_hosts: %i{path_whitelist}
+  }
+
   def up
-    Migration::ColumnDropper.execute_drop(:embeddable_hosts, %i(path_whitelist))
+    DROPPED_COLUMNS.each do |table, columns|
+      Migration::ColumnDropper.execute_drop(table, columns)
+    end
   end
 
   def down
