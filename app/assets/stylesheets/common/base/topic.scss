@@ -70,6 +70,9 @@
   .topic-statuses {
     line-height: 1.2em;
     margin-right: 0.15em;
+    &:empty {
+      margin-right: 0;
+    }
     .d-icon {
       color: $primary-medium;
     }
