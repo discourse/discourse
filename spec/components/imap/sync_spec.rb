@@ -84,6 +84,7 @@ describe Imap::Sync do
       expect(incoming_email.imap_uid_validity).to eq(1)
       expect(incoming_email.imap_uid).to eq(100)
       expect(incoming_email.imap_sync).to eq(false)
+      expect(incoming_email.imap_group_id).to eq(group.id)
     end
 
     it 'does not duplicate topics' do
@@ -111,6 +112,7 @@ describe Imap::Sync do
       expect(incoming_email.imap_uid_validity).to eq(1)
       expect(incoming_email.imap_uid).to eq(100)
       expect(incoming_email.imap_sync).to eq(false)
+      expect(incoming_email.imap_group_id).to eq(group.id)
     end
   end
 
@@ -285,8 +287,8 @@ describe Imap::Sync do
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(2)
         .and change { IncomingEmail.count }.by(2)
 
-      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid)
-      expect(imap_data).to contain_exactly([1, 100], [1, 200])
+      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid, :imap_group_id)
+      expect(imap_data).to contain_exactly([1, 100, group.id], [1, 200, group.id])
 
       provider.stubs(:open_mailbox).returns(uid_validity: 2)
       provider.stubs(:uids).with.returns([111, 222])
@@ -326,8 +328,8 @@ describe Imap::Sync do
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
         .and change { IncomingEmail.count }.by(0)
 
-      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid)
-      expect(imap_data).to contain_exactly([2, 111], [2, 222])
+      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid, :imap_group_id)
+      expect(imap_data).to contain_exactly([2, 111, group.id], [2, 222, group.id])
     end
   end
 end

@@ -59,12 +59,12 @@ module Imap
         # If UID validity changes, the whole mailbox must be synchronized (all
         # emails are considered new and will be associated to existent topics
         # in Email::Reciever by matching Message-Ids).
-        Rails.logger.warn("[IMAP] UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for group #{@group.name} and mailbox #{@group.imap_mailbox_name}")
+        Rails.logger.warn("[IMAP] (#{@group.name}) UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for group #{@group.name} and mailbox #{@group.imap_mailbox_name}")
         @group.imap_last_uid = 0
       end
 
       if idle && !can_idle?
-        Rails.logger.warn("[IMAP] IMAP server for group #{@group.name} cannot IDLE")
+        Rails.logger.warn("[IMAP] (#{@group.name}) IMAP server for group cannot IDLE")
         idle = false
       end
 
@@ -95,7 +95,7 @@ module Imap
       # Sometimes, new_uids contains elements from old_uids.
       new_uids = new_uids - old_uids
 
-      Rails.logger.debug("[IMAP] Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
+      Rails.logger.debug("[IMAP] (#{@group.name}) Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
 
       all_old_uids_size = old_uids.size
       all_new_uids_size = new_uids.size
@@ -111,7 +111,7 @@ module Imap
       new_uids = new_uids[0..new_emails_limit - 1] if new_emails_limit > 0
 
       if old_uids.present?
-        Rails.logger.debug("[IMAP] Syncing #{old_uids.size} randomly-selected old emails")
+        Rails.logger.debug("[IMAP] (#{@group.name}) Syncing #{old_uids.size} randomly-selected old emails")
         emails = @provider.emails(old_uids, ['UID', 'FLAGS', 'LABELS'], mailbox: @group.imap_mailbox_name)
         emails.each do |email|
           incoming_email = IncomingEmail.find_by(
@@ -122,13 +122,13 @@ module Imap
           if incoming_email.present?
             update_topic(email, incoming_email, mailbox_name: @group.imap_mailbox_name)
           else
-            Rails.logger.warn("[IMAP] Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})")
+            Rails.logger.warn("[IMAP] (#{@group.name}) Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})")
           end
         end
       end
 
       if new_uids.present?
-        Rails.logger.debug("[IMAP] Syncing #{new_uids.size} new emails (oldest first)")
+        Rails.logger.debug("[IMAP] (#{@group.name}) Syncing #{new_uids.size} new emails (oldest first)")
 
         emails = @provider.emails(new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'], mailbox: @group.imap_mailbox_name)
         processed = 0
@@ -142,13 +142,14 @@ module Imap
               allow_auto_generated: true,
               import_mode: import_mode,
               destinations: [@group],
-              uid_validity: @status[:uid_validity],
-              uid: email['UID']
+              imap_uid_validity: @status[:uid_validity],
+              imap_uid: email['UID'],
+              imap_group_id: @group.id
             )
             receiver.process!
             update_topic(email, receiver.incoming_email, mailbox_name: @group.imap_mailbox_name)
           rescue Email::Receiver::ProcessingError => e
-            Rails.logger.warn("[IMAP] Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}")
+            Rails.logger.warn("[IMAP] (#{@group.name}) Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}")
           end
 
           processed += 1
@@ -167,7 +168,7 @@ module Imap
         if to_sync.size > 0
           @provider.open_mailbox(@group.imap_mailbox_name, write: true)
           to_sync.each do |incoming_email|
-            Rails.logger.debug("[IMAP] Updating email for #{@group.name} and incoming email ID = #{incoming_email.id}")
+            Rails.logger.debug("[IMAP] (#{@group.name}) Updating email and incoming email ID = #{incoming_email.id}")
             update_email(@group.imap_mailbox_name, incoming_email)
           end
         end
@@ -234,6 +235,11 @@ module Imap
     def update_email(mailbox_name, incoming_email)
       return if !SiteSetting.tagging_enabled || !SiteSetting.allow_staff_to_tag_pms
       return if incoming_email&.post&.post_number != 1 || !incoming_email.imap_sync
+
+      # if email is nil, the UID does not exist in the provider, meaning....
+      #
+      # A) the email has been deleted/moved to a different mailbox in the provider
+      # B) the UID does not belong to the provider
       return unless email = @provider.emails(incoming_email.imap_uid, ['FLAGS', 'LABELS'], mailbox: mailbox_name).first
       incoming_email.update(imap_sync: false)
 

@@ -23,6 +23,7 @@ class Demon::EmailSync < ::Demon::Base
   def start_thread(db, group)
     Thread.new do
       RailsMultisite::ConnectionManagement.with_connection(db) do
+        puts "[EmailSync] Thread started for group #{group.name} (id = #{group.id}) in db #{db}"
         begin
           obj = Imap::Sync.for_group(group)
         rescue Net::IMAP::NoResponseError => e
@@ -36,6 +37,7 @@ class Demon::EmailSync < ::Demon::Base
         idle = false
 
         while @running && group.reload.imap_mailbox_name.present? do
+          puts "[EmailSync] Processing IMAP mailbox for group #{group.name} (id = #{group.id}) in db #{db}"
           status = obj.process(
             idle: obj.can_idle? && status && status[:remaining] == 0,
             old_emails_limit: status && status[:remaining] > 0 ? 0 : nil,
@@ -74,14 +76,14 @@ class Demon::EmailSync < ::Demon::Base
   end
 
   def after_fork
-    puts "Loading EmailSync in process id #{Process.pid}"
+    puts "[EmailSync] Loading EmailSync in process id #{Process.pid}"
 
     loop do
       break if Discourse.redis.set(HEARTBEAT_KEY, Time.now.to_i, ex: HEARTBEAT_INTERVAL, nx: true)
       sleep HEARTBEAT_INTERVAL
     end
 
-    puts "Starting EmailSync main thread"
+    puts "[EmailSync] Starting EmailSync main thread"
 
     @running = true
     @sync_data = {}
@@ -122,7 +124,7 @@ class Demon::EmailSync < ::Demon::Base
               if !groups[group_id]
                 puts("[EmailSync] Killing thread for group (id = #{group_id}) because mailbox is no longer synced")
               else
-                puts("[EmailSync] Thread for group #{groups[group_id].name} is dead")
+                puts("[EmailSync] Thread for group #{groups[group_id].name} (id = #{group_id}) is dead")
               end
 
               data[:thread].kill
@@ -135,8 +137,10 @@ class Demon::EmailSync < ::Demon::Base
             # Spawn new threads for groups that are now synchronized.
             groups.each do |group_id, group|
               if !@sync_data[db][group_id]
-                puts("[EmailSync] Starting thread for group #{group.name} and mailbox #{group.imap_mailbox_name}")
-                @sync_data[db][group_id] = { thread: start_thread(db, group), obj: nil }
+                puts("[EmailSync] Starting thread for group #{group.name} (id = #{group.id}) and mailbox #{group.imap_mailbox_name}")
+                @sync_data[db][group_id] = {
+                  thread: start_thread(db, group), obj: nil
+                }
               end
             end
           end

@@ -52,13 +52,15 @@ end
 #  imap_uid_validity :integer
 #  imap_uid          :integer
 #  imap_sync         :boolean
+#  imap_group_id     :bigint
 #
 # Indexes
 #
-#  index_incoming_emails_on_created_at  (created_at)
-#  index_incoming_emails_on_error       (error)
-#  index_incoming_emails_on_imap_sync   (imap_sync)
-#  index_incoming_emails_on_message_id  (message_id)
-#  index_incoming_emails_on_post_id     (post_id)
-#  index_incoming_emails_on_user_id     (user_id) WHERE (user_id IS NOT NULL)
+#  index_incoming_emails_on_created_at     (created_at)
+#  index_incoming_emails_on_error          (error)
+#  index_incoming_emails_on_imap_group_id  (imap_group_id)
+#  index_incoming_emails_on_imap_sync      (imap_sync)
+#  index_incoming_emails_on_message_id     (message_id)
+#  index_incoming_emails_on_post_id        (post_id)
+#  index_incoming_emails_on_user_id        (user_id) WHERE (user_id IS NOT NULL)
 #

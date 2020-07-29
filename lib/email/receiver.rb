@@ -66,11 +66,13 @@ module Email
       id_hash = Digest::SHA1.hexdigest(@message_id)
       DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
-          @incoming_email = IncomingEmail.find_by(message_id: @message_id)
-          if @incoming_email
-            @incoming_email.update(imap_uid_validity: @opts[:uid_validity], imap_uid: @opts[:uid], imap_sync: false)
-            return
-          end
+
+          # if we find an existing incoming email record with the
+          # exact same message id, be sure to update it with the correct IMAP
+          # metadata based on sync. this is so we do not double-create emails.
+          @incoming_email = find_existing_and_update_imap
+          return if @incoming_email
+
           ensure_valid_address_lists
           ensure_valid_date
           @from_email, @from_display_name = parse_from_field
@@ -87,6 +89,19 @@ module Email
           raise
         end
       end
+    end
+
+    def find_existing_and_update_imap
+      @incoming_email = IncomingEmail.find_by(message_id: @message_id)
+      return if !@incoming_email
+
+      @incoming_email.update(
+        imap_uid_validity: @opts[:imap_uid_validity],
+        imap_uid: @opts[:imap_uid],
+        imap_group_id: @opts[:imap_group_id],
+        imap_sync: false
+      )
+      @incoming_email
     end
 
     def ensure_valid_address_lists
@@ -118,8 +133,9 @@ module Email
         from_address: @from_email,
         to_addresses: @mail.to&.map(&:downcase)&.join(";"),
         cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
-        imap_uid_validity: @opts[:uid_validity],
-        imap_uid: @opts[:uid],
+        imap_uid_validity: @opts[:imap_uid_validity],
+        imap_uid: @opts[:imap_uid],
+        imap_group_id: @opts[:imap_group_id],
         imap_sync: false
       )
     end
