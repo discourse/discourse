@@ -172,6 +172,9 @@ NavItem.reopenClass({
     if (opts.tagId) {
       args.tagId = opts.tagId;
     }
+    if (opts.currentRouteQueryParams) {
+      args.currentRouteQueryParams = opts.currentRouteQueryParams;
+    }
     if (opts.persistedQueryParams) {
       args.persistedQueryParams = opts.persistedQueryParams;
     }
