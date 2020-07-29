@@ -105,7 +105,7 @@ export default Controller.extend({
     if (this._skipBounce) {
       this.set("_skipBounce", false);
     } else {
-      this.filterContentNow();
+      this.filterContentNow(this.categoryNameKey);
     }
   }, INPUT_DELAY),
 
