@@ -13,6 +13,10 @@ module Jobs
       end
     end
 
+    def s3_helper
+      Discourse.store.s3_helper
+    end
+
     def prepare_for_all_sites
       inventory = S3Inventory.new(s3_helper, :upload)
       @db_inventories = inventory.prepare_for_all_sites
