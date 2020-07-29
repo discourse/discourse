@@ -368,6 +368,19 @@ RSpec.describe ListController do
         end
       end
 
+      context 'with encoded slug in the category' do
+        let(:category) { Fabricate(:category, slug: "தமிழ்") }
+
+        before do
+          SiteSetting.slug_generation_method = "encoded"
+        end
+
+        it "succeeds" do
+          get "/c/#{category.slug}/#{category.id}/l/latest"
+          expect(response.status).to eq(200)
+        end
+      end
+
       context 'with a link that has a parent slug, slug and id in its path' do
         let(:child_category) { Fabricate(:category_with_definition, parent_category: category) }
 
