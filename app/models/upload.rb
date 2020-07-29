@@ -85,7 +85,9 @@ class Upload < ActiveRecord::Base
   end
 
   # this method attempts to correct old incorrect extensions
-  def get_optimized_image(width, height, opts)
+  def get_optimized_image(width, height, opts = nil)
+    opts ||= {}
+
     if (!extension || extension.length == 0)
       fix_image_extension
     end
