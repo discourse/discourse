@@ -28,7 +28,7 @@ span.badge-posts {
 
 .topic-post {
   nav.post-controls {
-    color: dark-light-choose($primary-low-mid, $secondary-high);
+    color: $primary-low-mid-or-secondary-high;
     .actions {
       display: flex;
 
@@ -131,7 +131,7 @@ span.badge-posts {
 
 a.reply-to-tab {
   z-index: z("base") + 1;
-  color: dark-light-choose($primary-medium, $secondary-medium);
+  color: $primary-med-or-secondary-med;
   margin-right: 0.5em;
 }
 
@@ -166,7 +166,7 @@ a.reply-to-tab {
     }
     .number,
     .d-icon {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: $primary-high-or-secondary-low;
       font-size: $font-up-1;
     }
     .avatar + a {
@@ -192,7 +192,7 @@ a.reply-to-tab {
     .btn {
       border: 0;
       padding: 0 15px;
-      color: dark-light-choose($primary-medium, $secondary-high);
+      color: $primary-med-or-secondary-high;
       background: $blend-primary-secondary-5;
       border-left: 1px solid $primary-low;
       .fa {
@@ -203,7 +203,7 @@ a.reply-to-tab {
     }
   }
   .link-summary .btn {
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
     background: $blend-primary-secondary-5;
     width: 100%;
   }

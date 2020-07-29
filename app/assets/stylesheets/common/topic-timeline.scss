@@ -89,7 +89,7 @@
         }
       }
       .username {
-        color: dark-light-choose($primary-high, $secondary-low);
+        color: $primary-high-or-secondary-low;
         word-wrap: break-word;
         font-weight: bold;
       }
@@ -197,7 +197,7 @@
 
     .start-date {
       @include unselectable;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
 
     .timeline-scrollarea {
@@ -231,7 +231,7 @@
     }
 
     .timeline-ago {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
 
     .timeline-scroller {
@@ -269,7 +269,7 @@
     .now-date {
       @include unselectable;
       display: inline-block;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       margin-top: 0.5em;
     }
   }

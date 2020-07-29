@@ -29,7 +29,7 @@
 
     .date {
       font-weight: normal;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
   }
 
@@ -92,7 +92,7 @@
 
       .close-share {
         font-size: $font-up-3;
-        color: dark-light-choose($primary-medium, $secondary-medium);
+        color: $primary-med-or-secondary-med;
       }
 
       .new-topic {

@@ -102,7 +102,7 @@
     // common/base/header.scss
     .fa,
     .icon {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       font-size: $font-up-4;
     }
   }

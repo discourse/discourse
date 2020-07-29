@@ -202,7 +202,7 @@
     .num .fa,
     a,
     a:visited {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
   }
 
@@ -211,7 +211,7 @@
     a {
       // let's make all ages dim on mobile so we're not
       // overwhelming people with info about each topic
-      color: dark-light-choose($primary-low-mid, $secondary-high) !important;
+      color: $primary-low-mid-or-secondary-high !important;
     }
   }
 }
@@ -223,7 +223,7 @@
 
   td {
     padding: 12px 5px;
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
     vertical-align: top;
   }
 

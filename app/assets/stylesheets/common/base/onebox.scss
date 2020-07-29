@@ -103,7 +103,7 @@ aside.onebox {
   header {
     margin-bottom: 8px;
     a[href] {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       text-decoration: none;
     }
   }
@@ -600,7 +600,7 @@ aside.onebox.stackexchange .onebox-body {
 }
 
 .onebox-metadata {
-  color: dark-light-choose($primary-medium, $secondary-medium);
+  color: $primary-med-or-secondary-med;
 }
 
 .onebox.xkcd .onebox-body {
@@ -630,7 +630,7 @@ aside.onebox.stackexchange .onebox-body {
 .onebox.whitelistedgeneric {
   .label1,
   .label2 {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
   .label1 {
     float: left;
@@ -660,7 +660,7 @@ aside.onebox.stackexchange .onebox-body {
 
 .onebox.instagram {
   div.instagram-description {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
     padding-top: 10px;
   }
 }
@@ -670,7 +670,7 @@ aside.onebox.stackexchange .onebox-body {
     position: relative;
   }
   div.description {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
 }
 
@@ -683,7 +683,7 @@ aside.onebox.stackexchange .onebox-body {
 .onebox.twitterstatus {
   .like,
   .retweet {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
     padding-left: 10px;
     svg {
       fill: currentColor;

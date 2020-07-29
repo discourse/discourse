@@ -108,10 +108,10 @@ sup img.emoji {
 .emoji-picker .section-header .clear-recent .fa {
   margin: 0;
   padding: 0;
-  color: dark-light-choose($header_primary-medium, $header_primary);
+  color: $primary-medium;
 
   &:hover {
-    color: $primary;
+    color: $primary-high;
   }
 }
 
@@ -237,7 +237,7 @@ sup img.emoji {
 }
 
 .emoji-picker .filter .d-icon-search {
-  color: dark-light-choose($header_primary-medium, $header_primary);
+  color: $primary-medium;
   font-size: $font-up-1;
   margin-left: 5px;
   margin-right: 5px;
@@ -279,7 +279,7 @@ sup img.emoji {
   top: 12px;
   border: 0;
   background: none;
-  color: dark-light-choose($header_primary-medium, $header_primary);
+  color: $primary-high;
   outline: none;
   display: none;
 

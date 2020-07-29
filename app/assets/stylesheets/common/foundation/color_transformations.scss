@@ -87,3 +87,25 @@ $wiki: green !default;
 
 //blended variants
 $blend-primary-secondary-5: blend-primary-secondary(5%) !default;
+
+$primary-med-or-secondary-med: dark-light-choose(
+  $primary-medium,
+  $secondary-medium
+);
+
+$primary-med-or-secondary-high: dark-light-choose(
+  $primary-medium,
+  $secondary-high
+);
+
+$primary-high-or-secondary-low: dark-light-choose(
+  $primary-high,
+  $secondary-low
+);
+
+$primary-low-mid-or-secondary-high: dark-light-choose(
+  $primary-low-mid,
+  $secondary-high
+);
+
+$highlight-low-or-medium: dark-light-choose($highlight-low, $highlight-medium);

@@ -85,7 +85,7 @@
     .new {
       font-size: $font-down-1;
       margin-left: 0.5em;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
   }
 
@@ -109,7 +109,7 @@
       }
     }
     .badge-notification {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       background-color: transparent;
       display: inline;
       padding: 0;
@@ -136,7 +136,7 @@
 
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
     font-weight: normal;
     font-size: $font-down-1;
   }
@@ -251,7 +251,7 @@
       justify-content: center;
       align-items: center;
       min-height: 30px;
-      color: dark-light-choose($primary-medium, $secondary-high);
+      color: $primary-med-or-secondary-high;
       background: $blend-primary-secondary-5;
       &:hover {
         color: $primary;
@@ -320,7 +320,7 @@ div.menu-links-header {
       }
 
       a.active {
-        border: 1px solid dark-light-choose($primary-low, $secondary-medium);
+        border: 1px solid $primary-low;
         border-bottom: 1px solid $secondary;
         position: relative;
 
@@ -373,7 +373,7 @@ div.menu-links-header {
   }
   .fa,
   a {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
 
   .d-icon-user {

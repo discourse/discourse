@@ -156,7 +156,7 @@
   flex-direction: column;
   tr.instructions {
     label {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
   }
 

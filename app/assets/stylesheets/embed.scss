@@ -90,7 +90,7 @@ article.post {
   }
 
   a.new-user {
-    color: dark-light-choose($primary-low-mid, $secondary-high);
+    color: $primary-low-mid-or-secondary-high;
   }
 
   span.title {

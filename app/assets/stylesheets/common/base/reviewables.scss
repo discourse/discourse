@@ -234,7 +234,7 @@
   }
 
   .reviewable-meta-data {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
     display: flex;
     width: 100%;
     margin-bottom: 0.5em;
@@ -250,7 +250,7 @@
       margin-left: 1em;
       margin-right: auto;
       a {
-        color: dark-light-choose($primary-medium, $secondary-medium);
+        color: $primary-med-or-secondary-med;
       }
     }
     .score {

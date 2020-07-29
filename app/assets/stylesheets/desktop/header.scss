@@ -43,6 +43,6 @@
   font-size: $font-down-2;
   line-height: $line-height-large;
   .search-highlight {
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: $primary-high-or-secondary-low;
   }
 }

@@ -123,7 +123,7 @@
     margin-bottom: 1em;
     text-align: center;
     font-size: $font-0;
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
     position: relative;
     @include line-clamp(4);
 

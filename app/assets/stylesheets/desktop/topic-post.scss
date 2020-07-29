@@ -26,7 +26,7 @@
   }
   .reply-to-tab {
     z-index: z("base") + 1;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
   .actions .fade-out {
     .discourse-no-touch & {
@@ -136,7 +136,7 @@ nav.post-controls {
     }
     a,
     button {
-      color: dark-light-choose($primary-low-mid, $secondary-high);
+      color: $primary-low-mid-or-secondary-high;
       .d-icon {
         opacity: 1;
       }
@@ -154,10 +154,10 @@ nav.post-controls {
 
     button.create {
       margin-right: 0;
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: $primary-high-or-secondary-low;
       margin-left: 10px;
       .d-icon {
-        color: dark-light-choose($primary-high, $secondary-low);
+        color: $primary-high-or-secondary-low;
       }
     }
     .create .d-icon {
@@ -313,7 +313,7 @@ pre.copy-codeblocks:hover .copy-cmd {
     padding: 0;
   }
   .post-date {
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
   }
   .d-icon-arrow-up,
   .d-icon-arrow-down {
@@ -331,11 +331,11 @@ pre.copy-codeblocks:hover .copy-cmd {
     font-size: $font-down-1;
     a {
       font-weight: bold;
-      color: dark-light-choose($primary-low-mid, $secondary-high);
+      color: $primary-low-mid-or-secondary-high;
     }
   }
   .arrow {
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
   }
 }
 
@@ -394,7 +394,7 @@ pre.copy-codeblocks:hover .copy-cmd {
     .btn {
       border: 0;
       padding: 0 23px;
-      color: dark-light-choose($primary-medium, $secondary-high);
+      color: $primary-med-or-secondary-high;
       background: $blend-primary-secondary-5;
       border-left: 1px solid $primary-low;
       border-top: 1px solid transparent;
@@ -413,7 +413,7 @@ pre.copy-codeblocks:hover .copy-cmd {
     }
   }
   .link-summary .btn {
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
     background: $blend-primary-secondary-5;
     width: 100%;
     &:hover {
@@ -701,7 +701,7 @@ a.attachment:before {
 
   .post-info {
     a {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
 
     a.wiki {
