@@ -57,7 +57,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
+    border-top: 1px solid $primary-low;
     box-shadow: shadow("composer");
     padding: 20px 0px;
     z-index: z("fullscreen");
@@ -204,7 +204,7 @@
       margin-top: 0.5em;
       margin-left: 0.5em;
       border-left: 1px solid;
-      border-color: dark-light-choose($tertiary-low, $tertiary-high);
+      border-color: $tertiary-low-or-tertiary-high;
       position: relative;
       -webkit-transform: translate3d(0, 0, 0);
     }
@@ -220,7 +220,7 @@
     .timeline-handle {
       border-radius: 0.8em;
       width: 0.35em;
-      background-color: dark-light-choose($tertiary-low, $tertiary-high);
+      background-color: $tertiary-low-or-tertiary-high;
       height: 100%;
       float: left;
       z-index: z("base") + 1;

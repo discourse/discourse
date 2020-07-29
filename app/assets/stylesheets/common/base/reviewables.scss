@@ -227,7 +227,7 @@
 
 .reviewable-item {
   padding-top: 2em;
-  border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
+  border-top: 1px solid $primary-low;
 
   .topic-statuses {
     font-size: $font-up-2;

@@ -307,7 +307,7 @@ blockquote {
   .btn:hover,
   .d-icon,
   .btn:hover .d-icon {
-    color: dark-light-choose($secondary, $primary);
+    color: $secondary-or-primary;
   }
 
   .insert-quote + .quote-sharing {
@@ -693,8 +693,8 @@ pre {
 
 kbd {
   align-items: center;
-  background: dark-light-choose(#fafafa, #303030);
-  border: 1px solid dark-light-choose(#d0d0d0, #505050);
+  border: 1px solid $primary-low-mid;
+  background: $primary-very-low;
   border-bottom-width: 2px;
   border-radius: 3px;
   box-sizing: border-box;

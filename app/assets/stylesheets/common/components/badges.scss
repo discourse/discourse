@@ -169,7 +169,7 @@
   font-size: $font-down-2;
   line-height: $line-height-small;
   text-align: center;
-  background-color: dark-light-choose($primary-low-mid, $secondary-low);
+  background-color: $primary-low-mid-or-secondary-low;
   &[href] {
     color: $secondary;
   }
@@ -182,7 +182,7 @@
 
   &.new-posts,
   &.unread-posts {
-    background-color: dark-light-choose($tertiary-medium, $tertiary);
+    background-color: $tertiary-med-or-tertiary;
     color: $secondary;
     font-weight: dark-light-choose(normal, bold);
   }

@@ -37,7 +37,7 @@
 }
 
 .search-link .blurb {
-  color: dark-light-choose($primary-high, $secondary-medium);
+  color: $secondary-medium;
   display: block;
   word-wrap: break-word;
   font-size: $font-down-2;

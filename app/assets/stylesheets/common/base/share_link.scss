@@ -49,15 +49,15 @@
     margin-right: 8px;
     font-size: $font-up-4;
     .d-icon {
-      color: dark-light-choose($tertiary, white);
+      color: $tertiary-or-white;
     }
     .d-icon-fab-facebook {
       // Adheres to Facebook brand guidelines
-      color: dark-light-choose($facebook, white);
+      color: $facebook-or-white;
     }
     .d-icon-fab-twitter-square {
       // Adheres to Twitter brand guidelines
-      color: dark-light-choose($twitter, white);
+      color: $twitter-or-white;
     }
   }
 
