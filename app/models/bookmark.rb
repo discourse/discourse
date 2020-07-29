@@ -69,11 +69,11 @@ class Bookmark < ActiveRecord::Base
     self.reminder_at.blank? && self.reminder_type.blank?
   end
 
-  def delete_when_reminder_sent?
+  def auto_delete_when_reminder_sent?
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:when_reminder_sent]
   end
 
-  def delete_on_owner_reply?
+  def auto_delete_on_owner_reply?
     self.auto_delete_preference == Bookmark.auto_delete_preferences[:on_owner_reply]
   end
 
