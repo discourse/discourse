@@ -354,10 +354,6 @@ class PostSerializer < BasicPostSerializer
     bookmarked
   end
 
-  def include_bookmark_delete_on_owner_reply?
-    bookmarked
-  end
-
   def include_bookmark_id?
     bookmarked
   end

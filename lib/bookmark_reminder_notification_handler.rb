@@ -10,7 +10,7 @@ class BookmarkReminderNotificationHandler
 
       create_notification(bookmark)
 
-      if bookmark.delete_when_reminder_sent?
+      if bookmark.auto_delete_when_reminder_sent?
         BookmarkManager.new(bookmark.user).destroy(bookmark.id)
       end
 
