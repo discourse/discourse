@@ -323,7 +323,8 @@
     color: $primary-medium;
     font-size: $font-down-1;
   }
-  > .category-description, tr.category-description {
+  > .category-description,
+  tr.category-description {
     display: none;
   }
 }
