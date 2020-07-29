@@ -263,6 +263,21 @@
   .age {
     margin-left: 5px;
   }
+
+  // numbers get dimmer as they get colder
+  .coldmap {
+    &-high {
+      opacity: 0.4;
+    }
+
+    &-med {
+      opacity: 0.6;
+    }
+
+    &-low {
+      opacity: 0.8;
+    }
+  }
 }
 
 .subcategory-list-item.category {

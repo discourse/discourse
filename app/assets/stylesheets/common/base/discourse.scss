@@ -359,23 +359,6 @@ table {
   margin-left: 12px;
 }
 
-// the default for table cells in topic list
-// is $primary-medium
-// numbers get dimmer as they get colder
-.coldmap {
-  &-high {
-    color: dark-light-choose($primary-low-mid, $secondary-high) !important;
-  }
-
-  &-med {
-    color: dark-light-choose($primary-medium, $secondary-high) !important;
-  }
-
-  &-low {
-    color: dark-light-choose($primary-medium, $secondary-medium) !important;
-  }
-}
-
 .top-space {
   margin-top: 10px;
 }
