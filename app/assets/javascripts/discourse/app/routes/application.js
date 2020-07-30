@@ -13,6 +13,7 @@ import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import { inject as service } from "@ember/service";
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -27,6 +28,7 @@ function unlessReadOnly(method, message) {
 const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
+  documentTitle: service(),
 
   actions: {
     toggleAnonymous() {
@@ -53,7 +55,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       ) {
         tokens.push(this.shortSiteDescription);
       }
-      Discourse.set("_docTitle", tokens.join(" - "));
+      this.documentTitle.setTitle(tokens.join(" - "));
     },
 
     // Ember doesn't provider a router `willTransition` event so let's make one
