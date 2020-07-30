@@ -36,7 +36,8 @@
   }
 
   .docked & {
-    position: fixed;
+    position: sticky;
+    top: 0;
     backface-visibility: hidden; /** do magic for scrolling performance **/
   }
 

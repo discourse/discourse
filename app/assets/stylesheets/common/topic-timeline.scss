@@ -5,21 +5,8 @@
 .timeline-container {
   box-sizing: border-box;
   z-index: z("timeline");
-  margin-left: 757px;
 
-  @include breakpoint(extra-large, min-width) {
-    margin-left: 820px;
-  }
-  @media all and (min-width: 1250px) {
-    margin-left: 900px;
-  }
-
-  position: fixed;
   -webkit-transform: translate3d(0, 0, 0);
-
-  &.timeline-docked {
-    position: absolute;
-  }
 
   &.timeline-docked-bottom {
     .timeline-footer-controls {
@@ -173,7 +160,6 @@
   }
 
   .topic-timeline {
-    margin-left: 3em;
     transition: opacity 0.2s ease-in;
     touch-action: none;
 

@@ -16,6 +16,21 @@
   }
 }
 
+.container.posts {
+  display: grid;
+  grid-template-areas: "posts timeline";
+  grid-template-columns: 1fr minmax(8em, auto);
+  .topic-navigation {
+    grid-area: timeline;
+    align-self: start;
+    position: sticky;
+    top: 5em;
+  }
+  > .row {
+    grid-area: posts;
+  }
+}
+
 .progress-back-container {
   z-index: z("dropdown");
   margin-right: 0;
@@ -184,6 +199,11 @@ a.badge-category {
   background-color: $highlight-medium;
   margin-top: 1em;
   max-width: 757px;
+}
+
+.suggested-topics-wrapper,
+.related-messages-wrapper {
+  max-width: 760px;
 }
 
 .suggested-topics-wrapper.related-messages-wrapper {
