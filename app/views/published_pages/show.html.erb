@@ -11,7 +11,7 @@
     <div class="published-page-author">
       <img width="45" height="45" src="<%= @topic.user.avatar_template.gsub('{size}', '90') %>" style="border: 4px solid <%= @border_color %>90" class="avatar">
       <div class="published-page-author-details">
-        <div class="username"><%= @topic.user.name %></div>
+        <div class="username"><%= @topic.user.username %></div>
         <div class="topic-created-at"><%= short_date(@topic.created_at) %></div>
       </div>
     </div>
