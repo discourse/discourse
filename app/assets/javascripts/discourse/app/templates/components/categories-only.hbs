@@ -38,8 +38,8 @@
             </tr>
           </thead>
           <tbody aria-labelledby="categories-only-category">
-            {{#each categories as |c|}}
-              {{parent-category-row category=c showTopics=showTopics listType="muted"}}
+            {{#each categories as |category|}}
+              {{parent-category-row category=category showTopics=showTopics listType="muted"}}
             {{/each}}
           </tbody>
         </table>
