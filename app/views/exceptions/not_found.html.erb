@@ -1,7 +1,7 @@
 <div class="page-not-found">
   <h1 class="title"><%= @title %></h1>
 
-  <%- if !current_user %>
+  <%- if !@current_user %>
     <a href="<%= path "/login" %>" class='btn btn-primary'><%= SvgSprite.raw_svg('fa-user') %><%= I18n.t('log_in') %></a>
   <%- end %>
 

@@ -785,7 +785,9 @@ class ApplicationController < ActionController::Base
       opts[:layout] = 'application' if opts[:layout] == 'no_ember'
     end
 
-    if !SiteSetting.login_required? || (current_user rescue false)
+    @current_user = current_user rescue nil
+
+    if !SiteSetting.login_required? || @current_user
       key = "page_not_found_topics"
       if @topics_partial = Discourse.redis.get(key)
         @topics_partial = @topics_partial.html_safe
