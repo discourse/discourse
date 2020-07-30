@@ -51,6 +51,9 @@
 
   .avatar {
     margin-right: 1em;
+    height: 45px;
+    width: 45px;
+    border: 4px solid rgba($tertiary,0.75);
   }
   .topic-created-at {
     color: $primary-medium;
