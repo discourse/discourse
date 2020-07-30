@@ -1053,6 +1053,29 @@ describe GroupsController do
         expect(response.status).to eq(403)
       end
 
+      it "does not notify users when the param is not present" do
+        user2 = Fabricate(:user)
+
+        put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
+
+        expect(response.status).to eq(200)
+
+        topic = Topic.find_by(title: "You have been added as a member of the #{group.name} group", archetype: "private_message")
+        expect(topic.nil?).to eq(true)
+      end
+
+      it "notifies users when the param is present" do
+        user2 = Fabricate(:user)
+
+        put "/groups/#{group.id}/members.json", params: { usernames: user2.username, notify_users: true }
+
+        expect(response.status).to eq(200)
+
+        topic = Topic.find_by(title: "You have been added as a member of the #{group.name} group", archetype: "private_message")
+        expect(topic.nil?).to eq(false)
+        expect(topic.topic_users.map(&:user_id)).to include(-1, user2.id)
+      end
+
       context "is able to add several members to a group" do
         fab!(:user1) { Fabricate(:user) }
         fab!(:user2) { Fabricate(:user, username: "UsEr2") }

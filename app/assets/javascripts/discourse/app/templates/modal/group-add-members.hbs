@@ -1,4 +1,4 @@
-{{#d-modal-body rawTitle=(i18n "groups.add_members.title" group_name=model.full_name)}}
+{{#d-modal-body rawTitle=title}}
   <form class="form-vertical group-add-members">
     <div class="control-group">
       <label class="control-label">
@@ -22,11 +22,21 @@
           {{input type="checkbox"
               class="inline"
               checked=setAsOwner
-              disabled=addingEmails}}
+              disabled=emailsPresent}}
           {{i18n "admin.groups.add_members.as_owner"}}
         </label>
       </div>
     {{/if}}
+
+    <div class="control-group group-add-members-notify-users">
+      <label>
+        {{input type="checkbox"
+            class="inline"
+            checked=notifyUsers
+            disabled=notifyUsersDisabled}}
+        {{i18n "groups.add_members.notify_users"}}
+      </label>
+    </div>
   </form>
 {{/d-modal-body}}
 

@@ -5,18 +5,24 @@ import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
 import { emailValid } from "discourse/lib/utilities";
+import I18n from "I18n";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,
   setAsOwner: false,
+  notifyUsers: false,
   usernamesAndEmails: null,
   usernames: null,
   emails: null,
 
   onShow() {
-    this.set("usernamesAndEmails", "");
-    this.set("usernames", []);
-    this.set("emails", []);
+    this.setProperties({
+      usernamesAndEmails: "",
+      usernames: [],
+      emails: [],
+      setAsOwner: false,
+      notifyUsers: false
+    });
   },
 
   @discourseComputed("usernamesAndEmails", "loading")
@@ -25,17 +31,20 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed("usernamesAndEmails")
-  addingEmails(usernamesAndEmails) {
-    let emails = [];
-    let usernames = [];
+  emailsPresent() {
+    this._splitEmailsAndUsernames();
+    return this.emails.length;
+  },
 
-    usernamesAndEmails.split(",").forEach(u => {
-      emailValid(u) ? emails.push(u) : usernames.push(u);
-    });
+  @discourseComputed("usernamesAndEmails")
+  notifyUsersDisabled() {
+    this._splitEmailsAndUsernames();
+    return this.usernames.length === 0 && this.emails.length > 0;
+  },
 
-    this.set("emails", emails.join(","));
-    this.set("usernames", usernames.join(","));
-    return emails.length;
+  @discourseComputed("model.name", "model.full_name")
+  title(name, fullName) {
+    return I18n.t("groups.add_members.title", { group_name: fullName || name });
   },
 
   @action
@@ -51,8 +60,13 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     const promise = this.setAsOwner
-      ? this.model.addOwners(this.usernames, true)
-      : this.model.addMembers(this.usernames, true, this.emails);
+      ? this.model.addOwners(this.usernames, true, this.notifyUsers)
+      : this.model.addMembers(
+          this.usernames,
+          true,
+          this.notifyUsers,
+          this.emails
+        );
 
     promise
       .then(() => {
@@ -70,5 +84,17 @@ export default Controller.extend(ModalFunctionality, {
       })
       .catch(error => this.flash(extractError(error), "error"))
       .finally(() => this.set("loading", false));
+  },
+
+  _splitEmailsAndUsernames() {
+    let emails = [];
+    let usernames = [];
+
+    this.usernamesAndEmails.split(",").forEach(u => {
+      emailValid(u) ? emails.push(u) : usernames.push(u);
+    });
+
+    this.set("emails", emails.join(","));
+    this.set("usernames", usernames.join(","));
   }
 });

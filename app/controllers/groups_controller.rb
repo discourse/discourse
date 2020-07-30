@@ -342,6 +342,10 @@ class GroupsController < ApplicationController
         begin
           group.add(user)
           GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+
+          if params[:notify_users] == "true" || params[:notify_users] == true
+            group.notify_added_to_group(user)
+          end
         rescue ActiveRecord::RecordNotUnique
           # Under concurrency, we might attempt to insert two records quickly and hit a DB
           # constraint. In this case we can safely ignore the error and act as if the user
