@@ -5,7 +5,7 @@
   position: absolute;
   top: 0;
   z-index: z("header");
-  background-color: $header_background;
+  background-color: var(--header_background);
   box-shadow: shadow("header");
 
   > .wrap {

@@ -140,7 +140,7 @@
     }
 
     .details {
-      background: rgba($secondary, 0.8);
+      background: rgba(var(--secondary-rgb), 0.8);
       border-bottom: 1px solid $primary-low;
 
       h1 {
@@ -224,7 +224,7 @@
     &.collapsed-info {
       .details {
         margin-top: 0;
-        background: rgba($secondary, 0.8);
+        background: rgba(var(--secondary-rgb), 0.8);
 
         .bio {
           display: none;

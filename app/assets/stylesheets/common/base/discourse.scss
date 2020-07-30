@@ -431,7 +431,7 @@ table {
   height: 80px;
   top: -18px !important;
   right: -18px !important;
-  box-shadow: 0 0 0 9999px rgba($primary, 0.85);
+  box-shadow: 0 0 0 9999px rgba(var(--primary-rgb), 0.85);
   z-index: z("modal", "overlay");
 }
 

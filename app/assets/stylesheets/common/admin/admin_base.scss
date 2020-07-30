@@ -59,8 +59,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba($secondary, 1) 0%,
-        rgba($secondary, 0) 100%
+        rgba(var(--secondary-rgb), 1) 0%,
+        rgba(var(--secondary-rgb), 0) 100%
       );
     }
     &:after {
@@ -71,8 +71,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba($secondary, 0) 0%,
-        rgba($secondary, 1) 100%
+        rgba(var(--secondary-rgb), 0) 0%,
+        rgba(var(--secondary-rgb), 1) 100%
       );
     }
   }
@@ -472,8 +472,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba($primary-low, 1) 0%,
-        rgba($primary-low, 0) 100%
+        rgba(var(--primary-low-rgb), 1) 0%,
+        rgba(var(--primary-low-rgb), 0) 100%
       );
     }
 
@@ -485,8 +485,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba($primary-low, 0) 0%,
-        rgba($primary-low, 1) 100%
+        rgba(var(--primary-low-rgb), 0) 0%,
+        rgba(var(--primary-low-rgb), 1) 100%
       );
     }
   }

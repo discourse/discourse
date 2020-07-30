@@ -47,7 +47,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   }
   .card-content {
     padding: 10px;
-    background: rgba($secondary, 0.85);
+    background: rgba(var(--secondary-rgb), 0.85);
     margin-top: 80px;
     &:after {
       content: "";
