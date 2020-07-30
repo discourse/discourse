@@ -2,8 +2,7 @@
 import Application from "@ember/application";
 import { computed } from "@ember/object";
 import { buildResolver } from "discourse-common/resolver";
-import { bind } from "@ember/runloop";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
 
@@ -11,10 +10,7 @@ const _pluginCallbacks = [];
 
 const Discourse = Application.extend({
   rootElement: "#main",
-  _docTitle: document.title,
   __widget_helpers: {},
-  hasFocus: null,
-  _boundFocusChange: null,
 
   customEvents: {
     paste: "paste"
@@ -23,24 +19,6 @@ const Discourse = Application.extend({
   reset() {
     this._super(...arguments);
     Mousetrap.reset();
-
-    document.removeEventListener("visibilitychange", this._boundFocusChange);
-    document.removeEventListener("resume", this._boundFocusChange);
-    document.removeEventListener("freeze", this._boundFocusChange);
-
-    this._boundFocusChange = null;
-  },
-
-  ready() {
-    this._super(...arguments);
-    this._boundFocusChange = bind(this, this._focusChanged);
-
-    // Default to true
-    this.set("hasFocus", true);
-
-    document.addEventListener("visibilitychange", this._boundFocusChange);
-    document.addEventListener("resume", this._boundFocusChange);
-    document.addEventListener("freeze", this._boundFocusChange);
   },
 
   getURL(url) {
@@ -60,72 +38,6 @@ const Discourse = Application.extend({
   },
 
   Resolver: buildResolver("discourse"),
-
-  @observes("_docTitle", "hasFocus", "contextCount", "notificationCount")
-  _titleChanged() {
-    let title = this._docTitle || this.SiteSettings.title;
-
-    let displayCount = this.displayCount;
-    let dynamicFavicon = this.currentUser && this.currentUser.dynamic_favicon;
-    if (displayCount > 0 && !dynamicFavicon) {
-      title = `(${displayCount}) ${title}`;
-    }
-
-    document.title = title;
-  },
-
-  @discourseComputed("contextCount", "notificationCount")
-  displayCount() {
-    return this.currentUser &&
-      this.currentUser.get("title_count_mode") === "notifications"
-      ? this.notificationCount
-      : this.contextCount;
-  },
-
-  @observes("contextCount", "notificationCount")
-  faviconChanged() {
-    if (this.currentUser && this.currentUser.get("dynamic_favicon")) {
-      let url = this.SiteSettings.site_favicon_url;
-
-      // Since the favicon is cached on the browser for a really long time, we
-      // append the favicon_url as query params to the path so that the cache
-      // is not used when the favicon changes.
-      if (/^http/.test(url)) {
-        url = getURL("/favicon/proxied?" + encodeURIComponent(url));
-      }
-
-      new window.Favcount(url).set(this.displayCount);
-    }
-  },
-
-  updateContextCount(count) {
-    this.set("contextCount", count);
-  },
-
-  updateNotificationCount(count) {
-    if (!this.hasFocus) {
-      this.set("notificationCount", count);
-    }
-  },
-
-  incrementBackgroundContextCount() {
-    if (!this.hasFocus) {
-      this.set("backgroundNotify", true);
-      this.set("contextCount", (this.contextCount || 0) + 1);
-    }
-  },
-
-  @observes("hasFocus")
-  resetCounts() {
-    if (this.hasFocus && this.backgroundNotify) {
-      this.set("contextCount", 0);
-    }
-    this.set("backgroundNotify", false);
-
-    if (this.hasFocus) {
-      this.set("notificationCount", 0);
-    }
-  },
 
   authenticationComplete(options) {
     // TODO, how to dispatch this to the controller without the container?
@@ -192,19 +104,7 @@ const Discourse = Application.extend({
       }
       return this.currentAssetVersion;
     }
-  }),
-
-  _focusChanged() {
-    if (document.visibilityState === "hidden") {
-      if (this.hasFocus) {
-        this.set("hasFocus", false);
-        this.appEvents.trigger("discourse:focus-changed", false);
-      }
-    } else if (!this.hasFocus) {
-      this.set("hasFocus", true);
-      this.appEvents.trigger("discourse:focus-changed", true);
-    }
-  }
+  })
 });
 
 export default Discourse;

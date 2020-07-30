@@ -240,7 +240,7 @@ export default class {
       this.flush();
     }
 
-    if (Discourse.get("hasFocus")) {
+    if (this.session.hasFocus) {
       this._topicTime += diff;
 
       this._onscreen.forEach(
