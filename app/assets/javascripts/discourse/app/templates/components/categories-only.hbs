@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody aria-labelledby="categories-only-category">
-            {{#each categories as |c|}}
+            {{#each categories as |category|}}
               {{parent-category-row category=c showTopics=showTopics listType="muted"}}
             {{/each}}
           </tbody>
