@@ -819,6 +819,7 @@ en:
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
+      muted: "Muted categories"
       topic_sentence:
         one: "%{count} topic"
         other: "%{count} topics"
