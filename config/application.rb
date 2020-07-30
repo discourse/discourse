@@ -157,6 +157,7 @@ module Discourse
       confirm-new-email/bootstrap.js
       onpopstate-handler.js
       embed-application.js
+      hotjar.js
       matomo.js
     }
 
