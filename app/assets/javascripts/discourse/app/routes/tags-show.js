@@ -11,6 +11,7 @@ import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import { escapeExpression } from "discourse/lib/utilities";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
@@ -99,6 +100,9 @@ export default DiscourseRoute.extend(FilterModeMixin, {
           staff: list.topic_list.tags[0].staff
         });
       }
+
+      setTopicList(list);
+
       controller.setProperties({
         list,
         canCreateTopic: list.get("can_create_topic"),

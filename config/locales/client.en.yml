@@ -3185,6 +3185,8 @@ en:
         profile: "%{shortcut} Profile"
         messages: "%{shortcut} Messages"
         drafts: "%{shortcut} Drafts"
+        next: "%{shortcut} Next Topic"
+        previous: "%{shortcut} Previous Topic"
       navigation:
         title: "Navigation"
         jump: "%{shortcut} Go to post #"
