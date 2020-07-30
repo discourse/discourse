@@ -165,6 +165,32 @@ describe Stylesheet::Manager do
     end
   end
 
+  describe 'color_scheme_stylesheets' do
+    it "returns something by default" do
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
+      expect(link).not_to eq("")
+    end
+
+    it "does not crash on missing color scheme" do
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(125)
+      expect(link).not_to eq("")
+    end
+
+    it "uses the correct color scheme from the default site theme" do
+      cs = Fabricate(:color_scheme, name: 'Funky')
+      theme = Fabricate(:theme, color_scheme_id: cs.id)
+      SiteSetting.default_theme_id = theme.id
+
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
+      expect(link).to include("/stylesheets/color_definitions_funky_")
+    end
+
+    it "uses the correct scheme when colors are passed" do
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(ColorScheme.first.id)
+      expect(link).to include("/stylesheets/color_definitions_#{ColorScheme.first.name.downcase}_")
+    end
+  end
+
   # this test takes too long, we don't run it by default
   describe ".precompile_css", if: ENV["RUN_LONG_TESTS"] == "1" do
     before do
@@ -189,6 +215,7 @@ describe Stylesheet::Manager do
       scheme2 = ColorScheme.create!(name: "scheme2")
       core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin]
       theme_targets = [:desktop_theme, :mobile_theme]
+      color_scheme_targets = ["color_definitions_scheme1", "color_definitions_scheme2"]
 
       Theme.update_all(user_selectable: false)
       user_theme = Fabricate(:theme, user_selectable: true, color_scheme: scheme1)
@@ -200,7 +227,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(14) # 2 themes x 7 targets
+      expect(results.size).to eq(16) # (2 themes x 7 targets) + (2 themes x 1 color scheme)
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
       end
@@ -214,7 +241,8 @@ describe Stylesheet::Manager do
 
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(19) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets)
+
+      expect(results.size).to eq(21) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets) + (2 themes x 1 color scheme)
 
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)
@@ -223,6 +251,9 @@ describe Stylesheet::Manager do
       theme_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
       end
+
+      expect(results).to include(color_scheme_targets[0])
+      expect(results).to include(color_scheme_targets[1])
     end
   end
 end

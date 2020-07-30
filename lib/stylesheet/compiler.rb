@@ -37,6 +37,7 @@ module Stylesheet
                                  theme_id: options[:theme_id],
                                  theme: options[:theme],
                                  theme_field: options[:theme_field],
+                                 color_scheme_id: options[:color_scheme_id],
                                  load_paths: [Stylesheet::Common::ASSET_ROOT])
 
       result = engine.render
