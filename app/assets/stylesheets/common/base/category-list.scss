@@ -354,15 +354,15 @@
   border-right: none 0;
   margin: 0 0 1em -3px;
 
-  h3 {
-    color: $primary-medium;
-    margin: 0;
-  }
-
   .d-icon {
     color: $primary-medium;
     margin-top: 0.25em;
   }
+}
+
+.muted-categories-heading {
+  color: $primary-medium;
+  margin: 0;
 }
 
 .anon .muted-categories-link {
