@@ -1134,11 +1134,11 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars[url]
+    unless upload = Upload.get_from_url(url)
       return render json: failed_json, status: 422
     end
 
-    unless upload = Upload.find_by(url: url)
+    unless SiteSetting.selectable_avatars[upload.url]
       return render json: failed_json, status: 422
     end
 
