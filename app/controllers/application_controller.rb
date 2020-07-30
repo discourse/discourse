@@ -48,16 +48,6 @@ class ApplicationController < ActionController::Base
 
   layout :set_layout
 
-  if Rails.env == "development"
-    after_action :remember_theme_id
-
-    def remember_theme_id
-      if @theme_ids.present? && request.format == "html"
-        Stylesheet::Watcher.theme_id = @theme_ids.first if defined? Stylesheet::Watcher
-      end
-    end
-  end
-
   def has_escaped_fragment?
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
   end
