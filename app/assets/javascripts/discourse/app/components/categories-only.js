@@ -8,9 +8,9 @@ export default Component.extend({
   showMuted: false,
   noCategoryStyle: equal("siteSettings.category_style", "none"),
 
-  @discourseComputed("showMutedCategories", "filteredCategories")
-  mutedToggleIcon(showMutedCategories, filteredCategories) {
-    if (filteredCategories.length === 0) {
+  @discourseComputed("showMutedCategories", "filteredCategories.length")
+  mutedToggleIcon(showMutedCategories, filteredCategoriesLength) {
+    if (filteredCategoriesLength === 0) {
       return;
     }
 
@@ -19,23 +19,23 @@ export default Component.extend({
     return "plus";
   },
 
-  @discourseComputed("showMuted", "filteredCategories")
-  showMutedCategories(showMuted, filteredCategories) {
-    return showMuted || filteredCategories.length === 0;
+  @discourseComputed("showMuted", "filteredCategories.length")
+  showMutedCategories(showMuted, filteredCategoriesLength) {
+    return showMuted || filteredCategoriesLength === 0;
   },
 
-  @discourseComputed("categories")
-  filteredCategories(categories) {
-    if (!categories || categories.length === 0) {
+  @discourseComputed("categories", "categories.length")
+  filteredCategories(categories, categoriesLength) {
+    if (!categories || categoriesLength === 0) {
       return [];
     }
 
     return categories.filter(cat => !cat.isHidden);
   },
 
-  @discourseComputed("categories")
-  mutedCategories(categories) {
-    if (!categories || categories.length === 0) {
+  @discourseComputed("categories", "categories.length")
+  mutedCategories(categories, categoriesLength) {
+    if (!categories || categoriesLength === 0) {
       return [];
     }
 
