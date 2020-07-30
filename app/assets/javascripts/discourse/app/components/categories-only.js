@@ -44,7 +44,7 @@ export default Component.extend({
       return [];
     }
 
-    return categories.filter(cat => cat.hasMuted);
+    return categories.filterBy("hasMuted");
   },
 
   @action
