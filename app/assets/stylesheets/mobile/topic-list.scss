@@ -529,14 +529,11 @@ td .main-link {
   display: none;
 }
 
-.category-list .category.muted {
-  h3 a[href],
-  h4 a[href] {
-    color: $primary-medium;
-    font-size: $font-down-1;
-  }
+.category-list .category.muted a.category-title-link {
+  color: $primary-medium;
+  font-size: $font-down-1;
 }
 
-.muted-categories > a {
+.muted-categories-link {
   margin-left: 0;
 }
