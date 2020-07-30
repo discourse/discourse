@@ -124,8 +124,8 @@ class TopicEmbed < ActiveRecord::Base
       remove_empty_nodes: false
     }
 
-    opts[:allowlist] = SiteSetting.allowed_embed_selectors if SiteSetting.allowed_embed_selectors.present?
-    opts[:blocklist] = SiteSetting.blocked_embed_selectors if SiteSetting.blocked_embed_selectors.present?
+    opts[:whitelist] = SiteSetting.allowed_embed_selectors if SiteSetting.allowed_embed_selectors.present?
+    opts[:blacklist] = SiteSetting.blocked_embed_selectors if SiteSetting.blocked_embed_selectors.present?
     allowed_embed_classnames = SiteSetting.allowed_embed_classnames if SiteSetting.allowed_embed_classnames.present?
 
     response = FetchResponse.new
