@@ -51,8 +51,12 @@ export default Controller.extend(ModalFunctionality, {
   addMembers() {
     this.set("loading", true);
 
-    if (this.addingEmails) {
+    if (this.emailsPresent) {
       this.set("setAsOwner", false);
+    }
+
+    if (this.notifyUsersDisabled) {
+      this.set("notifyUsers", false);
     }
 
     if (isEmpty(this.usernamesAndEmails)) {

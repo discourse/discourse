@@ -298,8 +298,7 @@ class GroupsController < ApplicationController
   def add_members
     group = Group.find(params[:id])
     group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
-
-    users = users_from_params(optional: true).to_a
+    users = users_from_params(no_exception: true).to_a
 
     if group.public_admission
       if !guardian.can_log_group_changes?(group) && current_user != users.first
@@ -620,7 +619,7 @@ class GroupsController < ApplicationController
     group
   end
 
-  def users_from_params(optional: false)
+  def users_from_params(no_exception: false)
     if params[:usernames].present?
       users = User.where(username_lower: params[:usernames].split(",").map(&:downcase))
       raise Discourse::InvalidParameters.new(:usernames) if users.blank?
@@ -634,7 +633,7 @@ class GroupsController < ApplicationController
       users = User.with_email(params[:user_emails].split(","))
       raise Discourse::InvalidParameters.new(:user_emails) if users.blank?
     else
-      if optional
+      if no_exception
         return [] # No users found. Early return an empty array.
       else
         raise Discourse::InvalidParameters.new(
