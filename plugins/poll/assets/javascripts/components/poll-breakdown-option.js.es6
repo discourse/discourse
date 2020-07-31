@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -20,11 +21,7 @@ export default Component.extend({
   tagName: "",
 
   highlighted: propertyEqual("highlightedOption", "index"),
-
-  @discourseComputed("displayMode")
-  showPercentage(displayMode) {
-    return displayMode === "percentage";
-  },
+  showPercentage: equal("displayMode", "percentage"),
 
   @discourseComputed("option.votes", "totalVotes")
   percent(votes, total) {
