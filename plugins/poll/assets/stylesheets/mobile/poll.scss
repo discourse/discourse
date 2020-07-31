@@ -28,6 +28,10 @@ div.poll {
       margin-left: 0.25em;
     }
   }
+
+  .poll-show-breakdown {
+    display: none;
+  }
 }
 
 div.poll.pie {
