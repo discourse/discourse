@@ -18,7 +18,7 @@
 
 .poll-breakdown-sidebar {
   align-items: center;
-  background: hsl(0, 0%, 92%);
+  background: $primary-very-low;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -90,7 +90,7 @@
 
 .poll-breakdown-body-header {
   align-items: center;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid $primary-low;
   display: flex;
   flex: 0 0 auto;
   padding-bottom: 0.5rem;
