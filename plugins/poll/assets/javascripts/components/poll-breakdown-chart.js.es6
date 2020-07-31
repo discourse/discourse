@@ -22,16 +22,13 @@ export default Component.extend({
     this._super(...arguments);
 
     const canvas = this.element.querySelector("canvas");
-    this.set(
-      "chart",
-      new window.Chart(canvas.getContext("2d"), this.chartConfig)
-    );
+    this._chart = new window.Chart(canvas.getContext("2d"), this.chartConfig);
   },
 
   didReceiveAttrs() {
     this._super(...arguments);
 
-    if (this.chart) {
+    if (this._chart) {
       this._updateDisplayMode();
       this._updateHighlight();
     }
@@ -40,8 +37,8 @@ export default Component.extend({
   willDestroy() {
     this._super(...arguments);
 
-    if (this.chart) {
-      this.chart.destroy();
+    if (this._chart) {
+      this._chart.destroy();
     }
   },
 
@@ -145,21 +142,21 @@ export default Component.extend({
   _updateDisplayMode() {
     if (this.displayMode !== this.previousDisplayMode) {
       const config = this.chartConfig;
-      this.chart.data.datasets = config.data.datasets;
-      this.chart.options = config.options;
+      this._chart.data.datasets = config.data.datasets;
+      this._chart.options = config.options;
 
-      this.chart.update();
+      this._chart.update();
       this.set("previousDisplayMode", this.displayMode);
     }
   },
 
   _updateHighlight() {
-    const meta = this.chart.getDatasetMeta(0);
+    const meta = this._chart.getDatasetMeta(0);
 
     if (this.previousHighlightedSliceIndex !== null) {
       const slice = meta.data[this.previousHighlightedSliceIndex];
       meta.controller.removeHoverStyle(slice);
-      this.chart.draw();
+      this._chart.draw();
     }
 
     if (this.highlightedOption === null) {
@@ -176,6 +173,6 @@ export default Component.extend({
     const slice = meta.data[sliceIndex];
     this.set("previousHighlightedSliceIndex", sliceIndex);
     meta.controller.setHoverStyle(slice);
-    this.chart.draw();
+    this._chart.draw();
   }
 });
