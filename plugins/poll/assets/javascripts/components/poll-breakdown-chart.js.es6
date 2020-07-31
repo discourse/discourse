@@ -77,7 +77,9 @@ export default Component.extend({
           {
             data: transformedData,
             backgroundColor: colors,
-            hoverBorderColor: "#fff" // TODO: It's a workaround for Chart.js' terrible hover styling. It will break on non-white backgrounds.
+            // TODO: It's a workaround for Chart.js' terrible hover styling.
+            // It will break on non-white backgrounds.
+            hoverBorderColor: "#fff"
           }
         ]
       },
