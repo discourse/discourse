@@ -514,7 +514,6 @@ createWidget("discourse-poll-pie-chart", {
   }
 });
 
-// TODO: Extract
 function pieChartConfig(data, labels, opts = {}) {
   const aspectRatio = "aspectRatio" in opts ? opts.aspectRatio : 2.2;
   const strippedLabels = labels.map(l => stripHtml(l));

@@ -31,6 +31,7 @@ export default Component.extend({
   @discourseComputed("highlighted")
   colorBackgroundStyle(highlighted) {
     if (highlighted) {
+      // TODO: Use CSS variables (#10341)
       return htmlSafe("background: rgba(0, 0, 0, 0.1);");
     }
   },

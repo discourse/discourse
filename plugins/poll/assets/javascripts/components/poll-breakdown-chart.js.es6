@@ -16,7 +16,6 @@ export default Component.extend({
     this._super(...arguments);
 
     const canvas = this.element.querySelector("canvas");
-    // TODO: Chart.js imports?
     this.set(
       "chart",
       new window.Chart(canvas.getContext("2d"), this.chartConfig)
@@ -79,6 +78,7 @@ export default Component.extend({
             backgroundColor: colors,
             // TODO: It's a workaround for Chart.js' terrible hover styling.
             // It will break on non-white backgrounds.
+            // Should be updated after #10341 lands
             hoverBorderColor: "#fff"
           }
         ]
