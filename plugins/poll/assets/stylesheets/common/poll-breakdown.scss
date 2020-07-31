@@ -1,7 +1,7 @@
 .poll-breakdown-modal {
   .modal-inner-container {
-    max-width: 90vw;
-    min-width: 50vw;
+    max-width: unset;
+    width: 90vw;
   }
 
   .modal-tabs {
@@ -10,8 +10,9 @@
 
   .modal-body {
     display: grid;
+    height: 80vh;
     grid: auto-flow / 1fr 2fr;
-    min-height: 50vh;
+    max-height: unset;
     padding: 0;
   }
 }
@@ -108,7 +109,7 @@
 
 .poll-breakdown-charts {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(33.3%, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(33.3%, 0.33fr));
 }
 
 .poll-breakdown-chart-container {
