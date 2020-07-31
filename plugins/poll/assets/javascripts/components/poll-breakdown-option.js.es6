@@ -2,6 +2,7 @@ import I18n from "I18n";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 
@@ -18,10 +19,7 @@ export default Component.extend({
 
   tagName: "",
 
-  @discourseComputed("highlightedOption", "index")
-  highlighted(highlightedOption, index) {
-    return highlightedOption === index;
-  },
+  highlighted: propertyEqual("highlightedOption", "index"),
 
   @discourseComputed("displayMode")
   showPercentage(displayMode) {
