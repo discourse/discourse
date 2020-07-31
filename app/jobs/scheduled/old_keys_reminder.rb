@@ -10,7 +10,7 @@ module Jobs
       return if SiteSetting.send_old_credential_reminder_days.to_i == 0
       return if message_exists?
       return if old_site_settings_keys.blank? && old_api_keys.blank?
-      
+
       PostCreator.create!(
         Discourse.system_user,
         title: title,
