@@ -76,6 +76,9 @@ module Imap
           imap.examine(mailbox_name)
         end
 
+        @open_mailbox_name = mailbox_name
+        @open_mailbox_write = write
+
         {
           uid_validity: imap.responses['UIDVALIDITY'][-1]
         }

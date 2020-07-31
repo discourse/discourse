@@ -10,7 +10,11 @@ module Imap
       end
 
       def emails(uids, fields, opts = {})
-        fields[fields.index('LABELS')] = X_GM_LABELS
+
+        # gmail has a special header for labels
+        if fields.include?('LABELS')
+          fields[fields.index('LABELS')] = X_GM_LABELS
+        end
 
         emails = super(uids, fields, opts)
 
@@ -22,7 +26,7 @@ module Imap
             email['LABELS'].flatten!
           end
 
-          email['LABELS'] << '\\Inbox' if opts[:mailbox] == 'INBOX'
+          email['LABELS'] << '\\Inbox' if @open_mailbox_name == 'INBOX'
 
           email['LABELS'].uniq!
         end
