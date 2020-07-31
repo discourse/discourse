@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
@@ -9,7 +11,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
   DB_HOST ||= ENV['DB_HOST'] || "localhost"
-  DB_NAME ||= ENV['DB_NAME'] || "builtint"
+  DB_NAME ||= ENV['DB_NAME'] || "qa_db"
   DB_PW ||= ENV['DB_PW'] || ""
   DB_USER ||= ENV['DB_USER'] || "root"
   TIMEZONE ||= ENV['TIMEZONE'] || "America/Los_Angeles"
@@ -42,7 +44,6 @@ class ImportScripts::Question2Answer < ImportScripts::Base
 
     post_process_posts
     create_permalinks
-    #create_permalinks_file
   end
 
   def import_users
@@ -57,7 +58,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
       users = mysql_query(<<-SQL
         SELECT u.userid AS id, u.email, u.handle AS username, u.created AS created_at, u.loggedin AS last_sign_in_at, u.avatarblobid
              FROM #{TABLE_PREFIX}users u
-            WHERE u.userid > #{last_user_id} 
+            WHERE u.userid > #{last_user_id}
               AND (EXISTS (SELECT 1 FROM #{TABLE_PREFIX}posts p WHERE p.userid=u.userid) or EXISTS (SELECT 1 FROM #{TABLE_PREFIX}uservotes uv WHERE u.userid=uv.userid))
          ORDER BY u.userid
             LIMIT #{BATCH_SIZE}
@@ -221,7 +222,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query(<<-SQL
-          SELECT p.postid, p.type, p.parentid, p.categoryid, p.closedbyid, p.userid, p.views, p.created, p.title, p.content, 
+          SELECT p.postid, p.type, p.parentid, p.categoryid, p.closedbyid, p.userid, p.views, p.created, p.title, p.content,
                 parent.type AS parenttype, parent.parentid AS qid
             FROM #{TABLE_PREFIX}posts p
        LEFT JOIN qa_posts parent ON parent.postid = p.parentid
@@ -245,22 +246,21 @@ class ImportScripts::Question2Answer < ImportScripts::Base
           puts e.message
         end
         next if raw.blank?
-    
+
         # this works as long as comments can not have a comment as parent
         # it's always Q-A Q-C or A-C
 
-        byebug if post['postid'] == 28
-        if post['type'] == 'A'           # for answers the question/topic is always the parent
+        if post['type'] == 'A' # for answers the question/topic is always the parent
+          topic = topic_lookup_from_imported_post_id("thread-#{post["parentid"]}")
+          next if topic.nil?
+        else
+          if post['parenttype'] == 'Q' # for comments to questions, the question/topic is the parent as well
             topic = topic_lookup_from_imported_post_id("thread-#{post["parentid"]}")
             next if topic.nil?
-        else
-            if post['parenttype'] == 'Q' # for comments to questions, the question/topic is the parent as well
-                topic = topic_lookup_from_imported_post_id("thread-#{post["parentid"]}")
-                next if topic.nil?
-            else                        # for comments to answers, the question/topic is the parent of the parent
-                topic = topic_lookup_from_imported_post_id("thread-#{post["qid"]}")
-                next if topic.nil?
-            end
+          else # for comments to answers, the question/topic is the parent of the parent
+            topic = topic_lookup_from_imported_post_id("thread-#{post["qid"]}")
+            next if topic.nil?
+          end
         end
         next if topic.nil?
 
@@ -279,7 +279,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
     end
   end
 
-  def import_bestanswer 
+  def import_bestanswer
     puts "", "importing best answers..."
     ans = mysql_query("select postid, selchildid from qa_posts where selchildid is not null").to_a
     ans.each do |answer|
@@ -352,7 +352,6 @@ class ImportScripts::Question2Answer < ImportScripts::Base
     # fix whitespaces
     raw.gsub!(/(\\r)?\\n/, "\n")
     raw.gsub!("\\t", "\t")
-
 
     # [HTML]...[/HTML]
     raw.gsub!(/\[html\]/i, "\n```html\n")
@@ -544,18 +543,14 @@ class ImportScripts::Question2Answer < ImportScripts::Base
     Topic.find_each do |topic|
       tcf = topic.custom_fields
 
-      if ttf && ttf["import_id"]
-	question_id = ttf["import_id"][/thread-(\d)/,0]
+      if tcf && tcf["import_id"]
+        question_id = tcf["import_id"][/thread-(\d)/, 0]
         url = "#{question_id}"
         Permalink.create(url: url, topic_id: topic.id) rescue nil
       end
     end
 
-  end
-
-  def create_permalinks_file
-    puts '', 'Creating Permalink File...', ''
-    #creates permalinks for q2a category links
+    # categories
     Category.find_each do |category|
       ccf = category.custom_fields
 
@@ -564,6 +559,7 @@ class ImportScripts::Question2Answer < ImportScripts::Base
         Permalink.create(url: url, category_id: category.id) rescue nil
       end
     end
+
   end
 
   def parse_timestamp(timestamp)
