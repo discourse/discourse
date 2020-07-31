@@ -68,6 +68,7 @@ export default Component.extend({
 
     loadScript("/javascripts/Chart.min.js").then(() => {
       this._resetChart();
+
       this._chart = new window.Chart(context, this._buildChartConfig(data));
     });
   },

@@ -955,11 +955,12 @@ export default createWidget("discourse-poll", {
   },
 
   showBreakdown() {
-    const panels = [
-      { id: "percentage", title: "poll.breakdown.percentage" },
-      { id: "count", title: "poll.breakdown.count" }
-    ];
-
-    showModal("poll-breakdown", { model: this.attrs, panels });
+    showModal("poll-breakdown", {
+      model: this.attrs,
+      panels: [
+        { id: "percentage", title: "poll.breakdown.percentage" },
+        { id: "count", title: "poll.breakdown.count" }
+      ]
+    });
   }
 });

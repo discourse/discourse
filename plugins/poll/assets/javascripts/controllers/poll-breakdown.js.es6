@@ -23,9 +23,8 @@ export default Controller.extend(ModalFunctionality, {
       if (transformed.length > 1) {
         transformed[0] = classify(transformed[0]);
       }
-      const label = transformed.join(" ");
 
-      return { id: field, label };
+      return { id: field, label: transformed.join(" ") };
     });
   },
 
