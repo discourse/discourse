@@ -955,10 +955,9 @@ export default createWidget("discourse-poll", {
   },
 
   toggleGroupedPieCharts() {
-    // TODO: I18n, icons?
     const panels = [
-      { id: "percentage", rawTitle: "Percentage" },
-      { id: "count", rawTitle: "Count" }
+      { id: "percentage", title: "poll.breakdown.percentage" },
+      { id: "count", title: "poll.breakdown.count" }
     ];
 
     showModal("poll-breakdown", { model: this.attrs, panels });
