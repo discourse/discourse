@@ -36,9 +36,13 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("optionColors", "index")
-  colorPreviewStyle(optionColors, index) {
-    return htmlSafe(`background: ${optionColors[index]};`);
+  @discourseComputed("highlighted", "optionColors", "index")
+  colorPreviewStyle(highlighted, optionColors, index) {
+    const color = highlighted
+      ? window.Chart.helpers.getHoverColor(optionColors[index])
+      : optionColors[index];
+
+    return htmlSafe(`background: ${color};`);
   },
 
   @action
