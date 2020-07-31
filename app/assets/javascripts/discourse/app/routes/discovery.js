@@ -9,10 +9,6 @@ import User from "discourse/models/user";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export default DiscourseRoute.extend(OpenComposer, {
-  queryParams: {
-    filter: { refreshModel: true }
-  },
-
   redirect() {
     return this.redirectIfLoginRequired();
   },
