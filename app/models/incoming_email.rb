@@ -4,6 +4,7 @@ class IncomingEmail < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
   belongs_to :post
+  belongs_to :group, foreign_key: :imap_group_id, class_name: 'Group'
 
   scope :errored,  -> { where("NOT is_bounce AND error IS NOT NULL") }
 

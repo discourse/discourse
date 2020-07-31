@@ -126,6 +126,10 @@ module Imap
       def list_mailboxes
         imap.list('', '*').map(&:name)
       end
+
+      def archive(uid)
+        # do nothing by default, just removing the Inbox label should be enough
+      end
     end
   end
 end
