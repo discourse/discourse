@@ -44,6 +44,8 @@ class Demon::EmailSync < ::Demon::Base
           )
 
           if !obj.can_idle? && status[:remaining] == 0
+            puts "[EmailSync] Going to sleep for group #{group.name} (id = #{group.id}) in db #{db} to wait for new emails."
+
             # Thread goes into sleep for a bit so it is better to return any
             # connection back to the pool.
             ActiveRecord::Base.connection_handler.clear_active_connections!
