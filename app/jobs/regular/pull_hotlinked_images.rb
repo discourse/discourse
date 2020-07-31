@@ -11,10 +11,10 @@ module Jobs
 
     def execute(args)
       @post_id = args[:post_id]
-      raise Discourse::InvalidParameters.new(:post_id) unless @post_id.present?
+      raise Discourse::InvalidParameters.new(:post_id) if @post_id.blank?
 
       post = Post.find_by(id: @post_id)
-      return if !post.present?
+      return if post.blank?
 
       raw = post.raw.dup
       start_raw = raw.dup
@@ -78,8 +78,8 @@ module Jobs
 
       # If post changed while we were downloading images, never apply edits
       post.reload
-      post_changed_elsewhere = start_raw != post.raw
-      raw_changed_here = raw != post.raw
+      post_changed_elsewhere = (start_raw != post.raw)
+      raw_changed_here = (raw != post.raw)
 
       if !post_changed_elsewhere && raw_changed_here
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
