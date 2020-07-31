@@ -16,11 +16,16 @@ export default Component.extend({
 
   classNames: "poll-breakdown-chart-container",
 
-  _optionToSlice: {},
+  _optionToSlice: null,
   _previousHighlightedSliceIndex: null,
   _previousDisplayMode: null,
 
   data: mapBy("options", "votes"),
+
+  init() {
+    this._super(...arguments);
+    this._optionToSlice = {};
+  },
 
   didInsertElement() {
     this._super(...arguments);
