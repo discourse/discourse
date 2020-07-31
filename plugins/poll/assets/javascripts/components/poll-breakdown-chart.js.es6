@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import Component from "@ember/component";
+import { mapBy } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
@@ -18,6 +19,8 @@ export default Component.extend({
   _optionToSlice: {},
   _previousHighlightedSliceIndex: null,
   _previousDisplayMode: null,
+
+  data: mapBy("options", "votes"),
 
   didInsertElement() {
     this._super(...arguments);
@@ -41,11 +44,6 @@ export default Component.extend({
     if (this._chart) {
       this._chart.destroy();
     }
-  },
-
-  @discourseComputed("options")
-  data(options) {
-    return options.mapBy("votes");
   },
 
   @discourseComputed("optionColors", "index")
