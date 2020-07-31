@@ -87,6 +87,36 @@ const Category = RestModel.extend({
     return notificationLevel === NotificationLevels.MUTED;
   },
 
+  @discourseComputed("isMuted", "subcategories")
+  isHidden(isMuted, subcategories) {
+    if (!isMuted) {
+      return false;
+    } else if (!subcategories) {
+      return true;
+    }
+
+    if (subcategories.some(cat => !cat.isHidden)) {
+      return false;
+    }
+
+    return true;
+  },
+
+  @discourseComputed("isMuted", "subcategories")
+  hasMuted(isMuted, subcategories) {
+    if (isMuted) {
+      return true;
+    } else if (!subcategories) {
+      return false;
+    }
+
+    if (subcategories.some(cat => cat.hasMuted)) {
+      return true;
+    }
+
+    return false;
+  },
+
   @discourseComputed("notification_level")
   notificationLevelString(notificationLevel) {
     // Get the key from the value

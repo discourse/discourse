@@ -231,11 +231,10 @@ class UserUpdater
   end
 
   def update_allowed_pm_users(usernames)
-    #return unless guardian.can_ignore_users?
-
     usernames ||= ""
     desired_usernames = usernames.split(",").reject { |username| user.username == username }
-    desired_ids = User.where(username: desired_usernames).where(admin: false, moderator: false).pluck(:id)
+    desired_ids = User.where(username: desired_usernames).pluck(:id)
+
     if desired_ids.empty?
       AllowedPmUser.where(user_id: user.id).destroy_all
     else

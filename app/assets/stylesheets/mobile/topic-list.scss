@@ -542,3 +542,12 @@ td .main-link {
 .category-list.with-topics .category-list-item .category-description {
   display: none;
 }
+
+.category-list .category.muted a.category-title-link {
+  color: $primary-medium;
+  font-size: $font-down-1;
+}
+
+.muted-categories-link {
+  margin-left: 0;
+}

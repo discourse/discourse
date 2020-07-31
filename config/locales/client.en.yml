@@ -819,6 +819,7 @@ en:
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
+      muted: "Muted categories"
       topic_sentence:
         one: "%{count} topic"
         other: "%{count} topics"
@@ -2465,6 +2466,7 @@ en:
         success: "We've invited that user to participate in this message."
         success_group: "We've invited that group to participate in this message."
         error: "Sorry, there was an error inviting that user."
+        not_allowed: "Sorry, that user can't be invited."
         group_name: "group name"
 
       controls: "Topic Controls"
@@ -3185,6 +3187,8 @@ en:
         profile: "%{shortcut} Profile"
         messages: "%{shortcut} Messages"
         drafts: "%{shortcut} Drafts"
+        next: "%{shortcut} Next Topic"
+        previous: "%{shortcut} Previous Topic"
       navigation:
         title: "Navigation"
         jump: "%{shortcut} Go to post #"

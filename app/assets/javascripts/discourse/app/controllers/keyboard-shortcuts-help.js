@@ -69,7 +69,9 @@ export default Controller.extend(ModalFunctionality, {
         bookmarks: buildShortcut("jump_to.bookmarks", { keys1: ["g", "b"] }),
         profile: buildShortcut("jump_to.profile", { keys1: ["g", "p"] }),
         messages: buildShortcut("jump_to.messages", { keys1: ["g", "m"] }),
-        drafts: buildShortcut("jump_to.drafts", { keys1: ["g", "d"] })
+        drafts: buildShortcut("jump_to.drafts", { keys1: ["g", "d"] }),
+        next: buildShortcut("jump_to.next", { keys1: ["g", "j"] }),
+        previous: buildShortcut("jump_to.previous", { keys1: ["g", "k"] })
       },
       navigation: {
         back: buildShortcut("navigation.back", { keys1: ["u"] }),
