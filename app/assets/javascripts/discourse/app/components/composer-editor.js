@@ -25,7 +25,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,
   formatUsername,
-  clipboardData,
+  clipboardHelpers,
   caretPosition,
   inCodeBlock
 } from "discourse/lib/utilities";
@@ -81,7 +81,10 @@ export default Component.extend({
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
     } else {
-      const key = authorizesOneOrMoreImageExtensions(this.currentUser.staff)
+      const key = authorizesOneOrMoreImageExtensions(
+        this.currentUser.staff,
+        this.siteSettings
+      )
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
       return `composer.${key}`;
@@ -656,7 +659,10 @@ export default Component.extend({
         return;
       }
 
-      const { canUpload, canPasteHtml, types } = clipboardData(e, true);
+      const { canUpload, canPasteHtml, types } = clipboardHelpers(e, {
+        siteSettings: this.siteSettings,
+        canUpload: true
+      });
 
       if (!canUpload || canPasteHtml || types.includes("text/plain")) {
         e.preventDefault();
@@ -697,6 +703,7 @@ export default Component.extend({
 
       const opts = {
         user: this.currentUser,
+        siteSettings: this.siteSettings,
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings
           .allow_staff_to_upload_any_file_in_pm
@@ -759,7 +766,7 @@ export default Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        displayErrorForUpload(data);
+        displayErrorForUpload(data, this.siteSettings);
       }
     });
 

@@ -214,7 +214,8 @@ class PostDestroyer
   private
 
   def post_is_reviewable?
-    Guardian.new(@user).can_review_topic?(@post.topic) && Reviewable.exists?(target: @post)
+    topic = @post.topic || Topic.with_deleted.find(@post.topic_id)
+    Guardian.new(@user).can_review_topic?(topic) && Reviewable.exists?(target: @post)
   end
 
   # we need topics to change if ever a post in them is deleted or created

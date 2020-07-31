@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class SearchIndexer
-  INDEX_VERSION = 3
+  POST_INDEX_VERSION = 4
+  MIN_POST_REINDEX_VERSION = 3
+  TOPIC_INDEX_VERSION = 3
+  CATEGORY_INDEX_VERSION = 3
+  USER_INDEX_VERSION = 3
+  TAG_INDEX_VERSION = 3
   REINDEX_VERSION = 0
 
   def self.disable
@@ -34,8 +39,6 @@ class SearchIndexer
       setweight(to_tsvector('#{stemmer}', coalesce(:d,'')), 'D')
     SQL
 
-    indexed_data = search_data.select { |d| d.length > 0 }.join(' ')
-
     ranked_params = {
       a: search_data[0],
       b: search_data[1],
@@ -43,19 +46,28 @@ class SearchIndexer
       d: search_data[3],
     }
 
+    indexed_data =
+      if table.to_s == "post"
+        ranked_params[:d]
+      else
+        search_data.select { |d| d.length > 0 }.join(' ')
+      end
+
     tsvector = DB.query_single("SELECT #{ranked_index}", ranked_params)[0]
     additional_lexemes = []
 
     tsvector.scan(/'(([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+)'\:([\w+,]+)/).reduce(additional_lexemes) do |array, (lexeme, _, positions)|
       count = 0
 
-      loop do
-        count += 1
-        break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
-        term, _, remaining = lexeme.partition(".")
-        break if remaining.blank?
-        array << "'#{term}':#{positions} '#{remaining}':#{positions}"
-        lexeme = remaining
+      if lexeme !~ /^(\d+\.)?(\d+\.)*(\*|\d+)$/
+        loop do
+          count += 1
+          break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
+          term, _, remaining = lexeme.partition(".")
+          break if remaining.blank?
+          array << "'#{remaining}':#{positions}"
+          lexeme = remaining
+        end
       end
 
       array
@@ -67,7 +79,7 @@ class SearchIndexer
       raw_data: indexed_data,
       id: id,
       locale: SiteSetting.default_locale,
-      version: INDEX_VERSION,
+      version: const_get("#{table.upcase}_INDEX_VERSION"),
       tsvector: tsvector,
     }
 
@@ -100,7 +112,7 @@ class SearchIndexer
     scrubbed_cooked = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
 
     # a bit inconsitent that we use title as A and body as B when in
-    # the post index body is C
+    # the post index body is D
     update_index(table: 'topic', id: topic_id, raw_data: [title, scrubbed_cooked])
   end
 
@@ -160,9 +172,11 @@ class SearchIndexer
     end
 
     category_name = topic.category&.name if topic
+
     if topic
-      tags = topic.tags.select(:id, :name)
-      unless tags.empty?
+      tags = topic.tags.select(:id, :name).to_a
+
+      if tags.present?
         tag_names = (tags.map(&:name) + Tag.where(target_tag_id: tags.map(&:id)).pluck(:name)).join(' ')
       end
     end

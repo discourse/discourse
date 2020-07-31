@@ -9,9 +9,14 @@ export default {
   initialize(container) {
     withPluginApi("0.1", api => {
       const siteSettings = container.lookup("site-settings:main");
-      api.decorateCooked(highlightSyntax, {
-        id: "discourse-syntax-highlighting"
-      });
+      api.decorateCooked(
+        elem => {
+          return highlightSyntax(elem, siteSettings);
+        },
+        {
+          id: "discourse-syntax-highlighting"
+        }
+      );
 
       api.decorateCookedElement(
         elem => {

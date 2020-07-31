@@ -73,8 +73,8 @@ describe AnonymousShadowCreator do
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end
 
-    it "works when there is an email whitelist" do
-      SiteSetting.email_domains_whitelist = "wayne.com"
+    it "works when there is an email allowlist" do
+      SiteSetting.allowed_email_domains = "wayne.com"
 
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end

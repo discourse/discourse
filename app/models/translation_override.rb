@@ -3,7 +3,7 @@
 require "i18n/i18n_interpolation_keys_finder"
 
 class TranslationOverride < ActiveRecord::Base
-  # Whitelist i18n interpolation keys that can be included when customizing translations
+  # Allowlist i18n interpolation keys that can be included when customizing translations
   CUSTOM_INTERPOLATION_KEYS_WHITELIST = {
     "user_notifications.user_" => %w{
       topic_title_url_encoded

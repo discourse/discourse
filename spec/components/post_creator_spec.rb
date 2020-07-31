@@ -221,23 +221,18 @@ describe PostCreator do
       end
 
       it 'passes the invalidate_oneboxes along to the job if present' do
-        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
+
+        expect(job_enqueued?(job: :process_post, args: { invalidate_oneboxes: true })).to eq(true)
       end
 
       it 'passes the image_sizes along to the job if present' do
-        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
-        creator.opts[:image_sizes] = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
+        image_sizes = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
+        creator.opts[:image_sizes] = image_sizes
         creator.create
+
+        expect(job_enqueued?(job: :process_post, args: { image_sizes: image_sizes })).to eq(true)
       end
 
       it 'assigns a category when supplied' do
@@ -658,12 +653,22 @@ describe PostCreator do
       before do
         Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
         Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        TopicUser.create!(topic: topic, user: user, bookmarked: true)
+      end
+
+      it "deletes the bookmarks, but not the ones without an auto_delete_preference" do
         Fabricate(:bookmark, topic: topic, user: user)
         Fabricate(:bookmark, user: user)
-      end
-      it "deletes the bookmarks" do
         creator.create
         expect(Bookmark.where(user: user).count).to eq(2)
+        expect(TopicUser.find_by(topic: topic, user: user).bookmarked).to eq(true)
+      end
+
+      context "when there are no bookmarks left in the topic" do
+        it "sets TopicUser.bookmarked to false" do
+          creator.create
+          expect(TopicUser.find_by(topic: topic, user: user).bookmarked).to eq(false)
+        end
       end
     end
 

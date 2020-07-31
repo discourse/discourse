@@ -562,7 +562,7 @@ after_initialize do
 
   register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)
 
-  topic_view_post_custom_fields_whitelister { [DiscoursePoll::HAS_POLLS] }
+  topic_view_post_custom_fields_allowlister { [DiscoursePoll::HAS_POLLS] }
 
   add_to_class(:topic_view, :polls) do
     @polls ||= begin

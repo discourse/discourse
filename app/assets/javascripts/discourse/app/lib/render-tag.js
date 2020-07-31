@@ -1,6 +1,7 @@
 import getURL from "discourse-common/lib/get-url";
 import User from "discourse/models/user";
 import { escapeExpression } from "discourse/lib/utilities";
+import { helperContext } from "discourse-common/lib/helpers";
 
 let _renderer = defaultRenderTag;
 
@@ -9,6 +10,9 @@ export function replaceTagRenderer(fn) {
 }
 
 export function defaultRenderTag(tag, params) {
+  // This file is in lib but it's used as a helper
+  let siteSettings = helperContext().siteSettings;
+
   params = params || {};
   const visibleName = escapeExpression(tag);
   tag = visibleName.toLowerCase();
@@ -27,8 +31,8 @@ export function defaultRenderTag(tag, params) {
   }
   const href = path ? ` href='${getURL(path)}' ` : "";
 
-  if (Discourse.SiteSettings.tag_style || params.style) {
-    classes.push(params.style || Discourse.SiteSettings.tag_style);
+  if (siteSettings.tag_style || params.style) {
+    classes.push(params.style || siteSettings.tag_style);
   }
   if (params.size) {
     classes.push(params.size);

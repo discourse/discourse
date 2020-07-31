@@ -91,11 +91,6 @@ export default Controller.extend({
     return isGroupUser || (this.currentUser && this.currentUser.admin);
   },
 
-  @discourseComputed("model.is_group_owner", "model.automatic")
-  canEditGroup(isGroupOwner, automatic) {
-    return !automatic && isGroupOwner;
-  },
-
   @discourseComputed("model.displayName", "model.full_name")
   groupName(displayName, fullName) {
     return (fullName || displayName).capitalize();

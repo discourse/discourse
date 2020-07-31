@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class TopicList
-  include ActiveModel::Serialization
-
+class TopicList < DraftableList
   cattr_accessor :preloaded_custom_fields
   self.preloaded_custom_fields = Set.new
 
@@ -28,9 +26,6 @@ class TopicList
   attr_accessor(
     :more_topics_url,
     :prev_topics_url,
-    :draft,
-    :draft_key,
-    :draft_sequence,
     :filter,
     :for_period,
     :per_page,
@@ -57,6 +52,8 @@ class TopicList
     end
 
     @publish_read_state = !!@opts[:publish_read_state]
+
+    super(current_user)
   end
 
   def top_tags

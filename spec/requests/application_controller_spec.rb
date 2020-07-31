@@ -687,8 +687,9 @@ RSpec.describe ApplicationController do
         end
 
         context "with a logged in user" do
+          let(:user) { Fabricate(:user, locale: :fr) }
+
           before do
-            user = Fabricate(:user, locale: :fr)
             sign_in(user)
           end
 
@@ -703,6 +704,12 @@ RSpec.describe ApplicationController do
             expect(response.status).to eq(404)
             expected_title = I18n.t("page_not_found.title", locale: :fr)
             expect(response.body).to include(CGI.escapeHTML(expected_title))
+          end
+
+          it "serves a RenderEmpty page in the preferred locale" do
+            get "/u/#{user.username}/preferences/interface"
+            expect(response.status).to eq(200)
+            expect(response.body).to have_tag('script', with: { src: "/assets/locales/fr.js" })
           end
         end
       end

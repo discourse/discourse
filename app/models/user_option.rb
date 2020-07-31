@@ -182,6 +182,13 @@ class UserOption < ActiveRecord::Base
     self.title_count_mode_key = UserOption.title_count_modes[value.to_sym]
   end
 
+  def unsubscribed_from_all?
+    !mailing_list_mode &&
+      !email_digests &&
+      email_level == UserOption.email_level_types[:never] &&
+      email_messages_level == UserOption.email_level_types[:never]
+  end
+
   private
 
   def update_tracked_topics

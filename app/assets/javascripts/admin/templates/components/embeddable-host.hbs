@@ -8,8 +8,8 @@
     {{input value=buffered.class_name placeholder="class" enter=(action "save") class="class-name"}}
   </td>
   <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.path_whitelist"}}</div>
-    {{input value=buffered.path_whitelist placeholder="/blog/.*" enter=(action "save") class="path-whitelist"}}
+    <div class="label">{{i18n "admin.embedding.allowed_paths"}}</div>
+    {{input value=buffered.allowed_paths placeholder="/blog/.*" enter=(action "save") class="path-allowlist"}}
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
@@ -26,7 +26,7 @@
 {{else}}
   <td><div class="label">{{i18n "admin.embedding.host"}}</div>{{host.host}}</td>
   <td><div class="label">{{i18n "admin.embedding.class_name"}}</div>{{host.class_name}}</td>
-  <td><div class="label">{{i18n "admin.embedding.path_whitelist"}}</div>{{host.path_whitelist}}</td>
+  <td><div class="label">{{i18n "admin.embedding.allowed_paths"}}</div>{{host.allowed_paths}}</td>
   <td><div class="label">{{i18n "admin.embedding.category"}}</div>{{category-badge host.category}}</td>
   <td class="controls">
     {{d-button icon="pencil-alt" action=(action "edit")}}

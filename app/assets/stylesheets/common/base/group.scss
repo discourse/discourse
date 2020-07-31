@@ -39,7 +39,7 @@
 
   .group-info-full-name {
     font-size: $font-up-2;
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: $primary-high-or-secondary-low;
   }
 
   span {

@@ -192,7 +192,7 @@ describe TopicEmbed do
       response = nil
 
       before do
-        SiteSetting.embed_classname_whitelist = 'emoji, foo'
+        SiteSetting.allowed_embed_classnames = 'emoji, foo'
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
         stub_request(:head, url)
@@ -252,7 +252,7 @@ describe TopicEmbed do
       response = nil
 
       before(:each) do
-        SiteSetting.embed_classname_whitelist = ''
+        SiteSetting.allowed_embed_classnames = ''
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
         stub_request(:head, url)

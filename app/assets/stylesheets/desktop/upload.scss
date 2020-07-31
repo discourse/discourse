@@ -24,7 +24,7 @@
       }
       .description,
       .hint {
-        color: dark-light-choose($primary-medium, $secondary-medium);
+        color: $primary-med-or-secondary-med;
         display: block;
       }
       .hint {

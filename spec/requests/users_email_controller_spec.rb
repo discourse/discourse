@@ -371,8 +371,8 @@ describe UsersEmailController do
         end
       end
 
-      it 'raises an error when new email domain is present in email_domains_blacklist site setting' do
-        SiteSetting.email_domains_blacklist = "mailinator.com"
+      it 'raises an error when new email domain is present in blocked_email_domains site setting' do
+        SiteSetting.blocked_email_domains = "mailinator.com"
 
         put "/u/#{user.username}/preferences/email.json", params: {
           email: "not_good@mailinator.com"
@@ -381,8 +381,8 @@ describe UsersEmailController do
         expect(response).to_not be_successful
       end
 
-      it 'raises an error when new email domain is not present in email_domains_whitelist site setting' do
-        SiteSetting.email_domains_whitelist = "discourse.org"
+      it 'raises an error when new email domain is not present in allowed_email_domains site setting' do
+        SiteSetting.allowed_email_domains = "discourse.org"
 
         put "/u/#{user.username}/preferences/email.json", params: {
           email: new_email

@@ -20,12 +20,13 @@ describe SearchIndexer do
   it 'correctly indexes chinese' do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
-    expect(data.split(" ").length).to eq(1)
 
-    SearchIndexer.update_posts_index(post_id, "你好世界", "", "", nil)
+    SearchIndexer.update_posts_index(post_id, "", "", "", data)
 
-    raw_data = PostSearchData.where(post_id: post_id).pluck(:raw_data)[0]
-    expect(raw_data.split(' ').length).to eq(2)
+    post_search_data = PostSearchData.find_by(post_id: post_id)
+
+    expect(post_search_data.raw_data).to eq("你好 世界")
+    expect(post_search_data.search_data).to eq("'世界':2 '你好':1")
   end
 
   it 'extract youtube title' do
@@ -103,25 +104,21 @@ describe SearchIndexer do
     raw_data, locale, version = PostSearchData.where(post_id: post_id).pluck(:raw_data, :locale, :version)[0]
     expect(raw_data).to eq("This is a test")
     expect(locale).to eq(SiteSetting.default_locale)
-    expect(version).to eq(SearchIndexer::INDEX_VERSION)
-
-    SearchIndexer.update_posts_index(post_id, "tester", "", nil, nil)
-
-    raw_data = PostSearchData.where(post_id: post_id).pluck(:raw_data)[0]
-    expect(raw_data).to eq("tester")
+    expect(version).to eq(SearchIndexer::POST_INDEX_VERSION)
   end
 
   describe '.index' do
-    let(:post) { Fabricate(:post) }
+    let(:topic) { Fabricate(:topic, title: "this is a title that I am testing") }
+    let(:post) { Fabricate(:post, topic: topic) }
 
     it 'should index posts correctly' do
       expect { post }.to change { PostSearchData.count }.by(1)
 
       expect { post.update!(raw: "this is new content") }
-        .to change { post.reload.post_search_data.raw_data }
+        .to change { post.reload.post_search_data.search_data }
 
       expect { post.update!(topic_id: Fabricate(:topic).id) }
-        .to change { post.reload.post_search_data.raw_data }
+        .to change { post.reload.post_search_data.search_data }
     end
 
     it 'should not index posts with empty raw' do
@@ -132,7 +129,7 @@ describe SearchIndexer do
     end
 
     it "should not tokenize urls and duplicate title and href in <a>" do
-      post = Fabricate(:post, raw: <<~RAW)
+      post.update!(raw: <<~RAW)
       https://meta.discourse.org/some.png
       RAW
 
@@ -141,7 +138,26 @@ describe SearchIndexer do
       topic = post.topic
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{topic.category.name} https://meta.discourse.org/some.png"
+        "https://meta.discourse.org/some.png"
+      )
+
+      expect(post.post_search_data.search_data).to eq(
+        "'/some.png':12 'discourse.org':11 'meta.discourse.org':11 'meta.discourse.org/some.png':10 'org':11 'test':8A 'titl':4A 'uncategor':9B"
+      )
+    end
+
+    it 'should not tokenize versions' do
+      post.update!(raw: '123.223')
+
+      expect(post.post_search_data.search_data).to eq(
+        "'123.223':10 'test':8A 'titl':4A 'uncategor':9B"
+      )
+
+      post.update!(raw: '15.2.231.423')
+      post.reload
+
+      expect(post.post_search_data.search_data).to eq(
+        "'15.2.231.423':10 'test':8A 'titl':4A 'uncategor':9B"
       )
     end
 
@@ -158,11 +174,11 @@ describe SearchIndexer do
       topic = post.topic
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{category.name} a https://cnn.com , http://stuff.com.au b http://abc.net/xyz=1 abc.net/xyz=1"
+        "a https://cnn.com , http://stuff.com.au b http://abc.net/xyz=1 abc.net/xyz=1"
       )
 
       expect(post.post_search_data.search_data).to eq(
-        "'/xyz=1':14,17 'abc':13,16 'abc.net':13,16 'abc.net/xyz=1':12,15 'au':10 'awesom':6B 'b':11 'categori':7B 'cnn':9 'cnn.com':9 'com':9,10 'com.au':10 'net':13,16 'stuff':10 'stuff.com.au':10 'test':4A 'topic':5A"
+        "'/xyz=1':14,17 'abc.net':13,16 'abc.net/xyz=1':12,15 'au':10 'awesom':6B 'b':11 'categori':7B 'cnn.com':9 'com':9 'com.au':10 'net':13,16 'stuff.com.au':10 'test':4A 'topic':5A"
       )
     end
 
@@ -190,7 +206,7 @@ describe SearchIndexer do
       )
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{topic.category.name} Let me see how I can fix this image white walkers GOT"
+        "Let me see how I can fix this image white walkers GOT"
       )
     end
   end
@@ -209,7 +225,7 @@ describe SearchIndexer do
       )
 
       expect(post2.reload.post_search_data.version).to eq(
-        SearchIndexer::INDEX_VERSION
+        SearchIndexer::POST_INDEX_VERSION
       )
     end
   end

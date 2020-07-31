@@ -79,6 +79,7 @@ export default Component.extend(FilterModeMixin, {
     return NavItem.buildList(category, {
       filterType,
       noSubcategories,
+      currentRouteQueryParams,
       persistedQueryParams: params,
       siteSettings: this.siteSettings
     });

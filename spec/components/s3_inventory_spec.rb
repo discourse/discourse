@@ -62,6 +62,7 @@ describe "S3Inventory" do
     freeze_time
 
     CSV.foreach(csv_filename, headers: false) do |row|
+      next unless row[S3Inventory::CSV_KEY_INDEX].include?("default")
       Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
     end
 
@@ -82,8 +83,8 @@ describe "S3Inventory" do
 
   it "should backfill etags to uploads table correctly" do
     files = [
-      ["#{Discourse.store.absolute_base_url}/original/1X/0184537a4f419224404d013414e913a4f56018f2.jpg", "defcaac0b4aca535c284e95f30d608d0"],
-      ["#{Discourse.store.absolute_base_url}/original/1X/0789fbf5490babc68326b9cec90eeb0d6590db05.png", "25c02eaceef4cb779fc17030d33f7f06"]
+      ["#{Discourse.store.absolute_base_url}/uploads/default/original/1X/0184537a4f419224404d013414e913a4f56018f2.jpg", "defcaac0b4aca535c284e95f30d608d0"],
+      ["#{Discourse.store.absolute_base_url}/uploads/default/original/1X/0789fbf5490babc68326b9cec90eeb0d6590db05.png", "25c02eaceef4cb779fc17030d33f7f06"]
     ]
     files.each { |file| Fabricate(:upload, url: file[0]) }
 
@@ -94,5 +95,46 @@ describe "S3Inventory" do
     end
 
     expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
+  end
+
+  it "should work when passed preloaded data" do
+    freeze_time
+
+    CSV.foreach(csv_filename, headers: false) do |row|
+      next unless row[S3Inventory::CSV_KEY_INDEX].include?("default")
+      Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
+    end
+
+    upload = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
+    Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
+    no_etag = Fabricate(:upload, updated_at: 2.days.ago)
+
+    output = capture_stdout do
+      File.open(csv_filename) do |f|
+        preloaded_inventory = S3Inventory.new(
+          helper,
+          :upload,
+          preloaded_inventory_file: f,
+          preloaded_inventory_date: Time.now
+        )
+        preloaded_inventory.backfill_etags_and_list_missing
+      end
+    end
+
+    expect(output).to eq("#{upload.url}\n#{no_etag.url}\n2 of 5 uploads are missing\n")
+    expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
+  end
+
+  it "can create per-site files", type: :multisite do
+    freeze_time
+
+    inventory.stubs(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }])
+
+    files = inventory.prepare_for_all_sites
+    db1 = files["default"].read
+    db2 = files["second"].read
+    expect(db1.lines.count).to eq(3)
+    expect(db2.lines.count).to eq(1)
+    files.values.each { |f| f.close; f.unlink }
   end
 end

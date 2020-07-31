@@ -5,20 +5,11 @@ class SearchTopicListItemSerializer < ListableTopicSerializer
 
   attributes :category_id
 
-  %i{
-    image_url
-    thumbnails
-    title
-    created_at
-    last_posted_at
-    bumped_at
-    bumped
-    highest_post_number
-    reply_count
-    unseen
-  }.each do |attr|
-    define_method("include_#{attr}?") do
-      false
-    end
+  def include_image_url?
+    false
+  end
+
+  def include_thumbnails?
+    false
   end
 end

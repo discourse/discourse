@@ -357,7 +357,7 @@ module Jobs
   end
 
   def self.enqueue_at(datetime, job_name, opts = {})
-    secs = [(datetime - Time.zone.now).to_i, 0].max
+    secs = [datetime.to_f - Time.zone.now.to_f, 0].max
     enqueue_in(secs, job_name, opts)
   end
 

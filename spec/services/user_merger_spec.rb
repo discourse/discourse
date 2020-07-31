@@ -991,7 +991,7 @@ describe UserMerger do
   end
 
   it "works even when email domains are restricted" do
-    SiteSetting.email_domains_whitelist = "example.com|work.com"
+    SiteSetting.allowed_email_domains = "example.com|work.com"
     source_user.update_attribute(:admin, true)
 
     expect(User.find_by_username(source_user.username)).to be_present

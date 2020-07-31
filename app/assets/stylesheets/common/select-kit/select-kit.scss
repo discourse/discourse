@@ -215,7 +215,7 @@
     &::-webkit-scrollbar-thumb {
       cursor: pointer;
       border-radius: 5px;
-      background: dark-light-choose($primary-medium, $secondary-medium);
+      background: $primary-med-or-secondary-med;
     }
 
     &::-webkit-scrollbar-track {

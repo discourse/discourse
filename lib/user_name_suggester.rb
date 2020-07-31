@@ -115,7 +115,7 @@ module UserNameSuggester
     end
 
     name.gsub!(UsernameValidator.invalid_char_pattern, '_')
-    name = apply_whitelist(name) if UsernameValidator.char_whitelist_exists?
+    name = apply_allowlist(name) if UsernameValidator.char_allowlist_exists?
     name.gsub!(UsernameValidator::INVALID_LEADING_CHAR_PATTERN, '')
     name.gsub!(UsernameValidator::CONFUSING_EXTENSIONS, "_")
     name.gsub!(UsernameValidator::INVALID_TRAILING_CHAR_PATTERN, '')
@@ -123,9 +123,9 @@ module UserNameSuggester
     name
   end
 
-  def self.apply_whitelist(name)
+  def self.apply_allowlist(name)
     name.grapheme_clusters
-      .map { |c| UsernameValidator.whitelisted_char?(c) ? c : '_' }
+      .map { |c| UsernameValidator.allowed_char?(c) ? c : '_' }
       .join
   end
 

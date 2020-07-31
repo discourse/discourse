@@ -205,7 +205,7 @@ module Jobs
       hostname = uri.hostname
       return false unless hostname
 
-      # check the domains blacklist
+      # check the domains blocklist
       SiteSetting.should_download_images?(src)
     end
 

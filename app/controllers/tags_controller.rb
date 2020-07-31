@@ -86,10 +86,6 @@ class TagsController < ::ApplicationController
         @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
       end
 
-      @list.draft_key = Draft::NEW_TOPIC
-      @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-      @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
-
       @list.more_topics_url = construct_url_with(:next, list_opts)
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"

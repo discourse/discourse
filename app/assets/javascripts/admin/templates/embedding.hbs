@@ -4,7 +4,7 @@
       <thead>
         <th style="width: 25%">{{i18n "admin.embedding.host"}}</th>
         <th style="width: 15%">{{i18n "admin.embedding.class_name"}}</th>
-        <th style="width: 25%">{{i18n "admin.embedding.path_whitelist"}}</th>
+        <th style="width: 25%">{{i18n "admin.embedding.allowed_paths"}}</th>
         <th style="width: 25%">{{i18n "admin.embedding.category"}}</th>
         <th style="width: 10%">&nbsp;</th>
       </thead>
@@ -45,16 +45,16 @@
     <h3>{{i18n "admin.embedding.crawling_settings"}}</h3>
     <p class="description">{{i18n "admin.embedding.crawling_description"}}</p>
 
-    {{embedding-setting field="embed_whitelist_selector"
-                        value=embedding.embed_whitelist_selector
+    {{embedding-setting field="allowed_embed_selectors"
+                        value=embedding.allowed_embed_selectors
                         placeholder="article, #story, .post"}}
 
-    {{embedding-setting field="embed_blacklist_selector"
-                        value=embedding.embed_blacklist_selector
+    {{embedding-setting field="blocked_embed_selectors"
+                        value=embedding.blocked_embed_selectors
                         placeholder=".ad-unit, header"}}
 
-    {{embedding-setting field="embed_classname_whitelist"
-                        value=embedding.embed_classname_whitelist
+    {{embedding-setting field="allowed_embed_classnames"
+                        value=embedding.allowed_embed_classnames
                         placeholder="emoji, classname"}}
   </div>
 

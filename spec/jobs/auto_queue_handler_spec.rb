@@ -7,8 +7,6 @@ describe Jobs::AutoQueueHandler do
   subject { Jobs::AutoQueueHandler.new.execute({}) }
 
   context "old flagged post" do
-    # fab!(:old) { Fabricate(:reviewable_flagged_post, created_at: 61.days.ago) }
-
     fab!(:spam_result) do
       PostActionCreator.new(
         Fabricate(:user),

@@ -763,13 +763,10 @@ describe PostAction do
         expect(timer.execute_at).to eq_time(1.hour.from_now)
 
         freeze_time timer.execute_at
-        Jobs.expects(:enqueue_in).with(
-          1.hour.to_i,
-          :toggle_topic_closed,
-          topic_timer_id: timer.id,
-          state: false
-        ).returns(true)
-        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
+
+        expect_enqueued_with(job: :toggle_topic_closed, args: { topic_timer_id: timer.id, state: false }, at: Time.zone.now + 1.hour) do
+          Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
+        end
 
         expect(topic.reload.closed).to eq(true)
         expect(timer.reload.execute_at).to eq_time(1.hour.from_now)

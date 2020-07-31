@@ -116,7 +116,7 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
     end
 
-    it "will not crawl domains that aren't whitelisted" do
+    it "will not crawl domains that aren't allowlisted" do
       onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
       expect(onebox).to be_blank
     end
@@ -153,8 +153,8 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq(nil)
     end
 
-    it "will lookup whitelisted domains" do
-      SiteSetting.inline_onebox_domains_whitelist = "eviltrout.com"
+    it "will lookup allowlisted domains" do
+      SiteSetting.allowed_inline_onebox_domains = "eviltrout.com"
       RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")
 
       onebox = InlineOneboxer.lookup(

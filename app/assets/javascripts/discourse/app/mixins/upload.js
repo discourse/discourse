@@ -82,7 +82,11 @@ export default Mixin.create({
 
     $upload.on("fileuploadsubmit", (e, data) => {
       const opts = _.merge(
-        { bypassNewUserRestriction: true, user: this.currentUser },
+        {
+          bypassNewUserRestriction: true,
+          user: this.currentUser,
+          siteSettings: this.siteSettings
+        },
         this.validateUploadedFilesOptions()
       );
       const isValid = validateUploadedFiles(data.files, opts);
@@ -103,7 +107,7 @@ export default Mixin.create({
 
     $upload.on("fileuploadfail", (e, data) => {
       if (!data || data.errorThrown !== "abort") {
-        displayErrorForUpload(data);
+        displayErrorForUpload(data, this.siteSettings);
       }
       reset();
     });

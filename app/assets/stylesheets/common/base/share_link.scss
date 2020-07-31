@@ -29,7 +29,7 @@
 
     .date {
       font-weight: normal;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
   }
 
@@ -49,15 +49,15 @@
     margin-right: 8px;
     font-size: $font-up-4;
     .d-icon {
-      color: dark-light-choose($tertiary, white);
+      color: $tertiary-or-white;
     }
     .d-icon-fab-facebook {
       // Adheres to Facebook brand guidelines
-      color: dark-light-choose($facebook, white);
+      color: $facebook-or-white;
     }
     .d-icon-fab-twitter-square {
       // Adheres to Twitter brand guidelines
-      color: dark-light-choose($twitter, white);
+      color: $twitter-or-white;
     }
   }
 
@@ -92,7 +92,7 @@
 
       .close-share {
         font-size: $font-up-3;
-        color: dark-light-choose($primary-medium, $secondary-medium);
+        color: $primary-med-or-secondary-med;
       }
 
       .new-topic {

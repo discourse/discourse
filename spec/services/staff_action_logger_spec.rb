@@ -595,4 +595,26 @@ describe StaffActionLogger do
     end
   end
 
+  describe 'log_post_staff_note' do
+    fab!(:post) { Fabricate(:post) }
+
+    it "raises an error when argument is missing" do
+      expect { logger.log_topic_archived(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      expect { logger.log_post_staff_note(post, { new_raw_value: 'my note', old_value: nil }) }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:post_staff_note_create])
+      expect(user_history.new_value).to eq('my note')
+      expect(user_history.previous_value).to eq(nil)
+
+      expect { logger.log_post_staff_note(post, { new_raw_value: nil, old_value: 'my note' }) }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:post_staff_note_destroy])
+      expect(user_history.new_value).to eq(nil)
+      expect(user_history.previous_value).to eq('my note')
+    end
+  end
+
 end

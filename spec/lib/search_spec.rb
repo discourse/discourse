@@ -38,7 +38,7 @@ describe Search do
 
         link to a video file: https://somesite.com/content/somethingelse.MOV
       RAW
-      result = Search::GroupedSearchResults.blurb_for(cooked)
+      result = Search::GroupedSearchResults.blurb_for(cooked: cooked)
       expect(result).to eq("link to an external page: https://google.com/?u=bar link to an audio file: #{I18n.t("search.audio")} link to a video file: #{I18n.t("search.video")}")
     end
 
@@ -51,7 +51,7 @@ describe Search do
         http://localhost/uploads/default/original/1X/90adc0092b30c04b761541bc0322d0dce3d896e7.m4a
       RAW
 
-      result = Search::GroupedSearchResults.blurb_for(cooked)
+      result = Search::GroupedSearchResults.blurb_for(cooked: cooked)
       expect(result).to eq("Here goes a test cooked with enough characters to hit the blurb limit. Something is very interesting about this audio file. #{I18n.t("search.audio")}")
     end
 
@@ -59,7 +59,7 @@ describe Search do
       cooked = <<~RAW
         invalid URL: http:error] should not trip up blurb generation.
       RAW
-      result = Search::GroupedSearchResults.blurb_for(cooked)
+      result = Search::GroupedSearchResults.blurb_for(cooked: cooked)
       expect(result).to eq("invalid URL: http:error] should not trip up blurb generation.")
     end
   end

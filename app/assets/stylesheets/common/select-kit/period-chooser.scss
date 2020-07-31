@@ -28,7 +28,7 @@
 
           .top-date-string {
             font-size: $font-down-1;
-            color: dark-light-choose($primary-medium, $secondary-high);
+            color: $primary-med-or-secondary-high;
             font-weight: normal;
             text-transform: uppercase;
           }
@@ -67,7 +67,7 @@
         .top-date-string {
           font-weight: normal;
           font-size: $font-down-1;
-          color: dark-light-choose($primary-medium, $secondary-high);
+          color: $primary-med-or-secondary-high;
           text-transform: uppercase;
           margin-left: 5px;
         }

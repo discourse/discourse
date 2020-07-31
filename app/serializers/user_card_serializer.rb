@@ -216,6 +216,6 @@ class UserCardSerializer < BasicUserSerializer
 
   def custom_field_keys
     # Can be extended by other serializers
-    User.whitelisted_user_custom_fields(scope)
+    User.allowed_user_custom_fields(scope)
   end
 end

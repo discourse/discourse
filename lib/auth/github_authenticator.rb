@@ -113,8 +113,8 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       end
 
       # If we *still* don't have a user, check to see if there's an email that
-      # passes validation (this includes whitelist/blacklist filtering if any is
-      # configured).  When no whitelist/blacklist is in play, this will simply
+      # passes validation (this includes allowlist/blocklist filtering if any is
+      # configured).  When no allowlist/blocklist is in play, this will simply
       # choose the primary email since it's at the front of the list.
       if !user
         validator = EmailValidator.new(attributes: :email)

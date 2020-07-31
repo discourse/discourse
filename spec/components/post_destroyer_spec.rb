@@ -289,7 +289,7 @@ describe PostDestroyer do
               ReviewableFlaggedPost.needs_review!(target: @reply, created_by: Fabricate(:user))
             end
 
-            it "changes deleted_at to nil" do
+            def changes_deleted_at_to_nil
               PostDestroyer.new(Discourse.system_user, @reply).destroy
               @reply.reload
               expect(@reply.user_deleted).to eq(false)
@@ -298,6 +298,19 @@ describe PostDestroyer do
               PostDestroyer.new(review_user, @reply).recover
               @reply.reload
               expect(@reply.deleted_at).to eq(nil)
+            end
+
+            it "changes deleted_at to nil" do
+              changes_deleted_at_to_nil
+            end
+
+            context "when the topic is deleted" do
+              before do
+                @reply.topic.trash!
+              end
+              it "changes deleted_at to nil" do
+                changes_deleted_at_to_nil
+              end
             end
           end
 
@@ -738,8 +751,9 @@ describe PostDestroyer do
     fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
     it "should feature the users again (in case they've changed)" do
-      Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id))
-      PostDestroyer.new(moderator, post).destroy
+      expect_enqueued_with(job: :feature_topic_users, args: { topic_id: post.topic_id }) do
+        PostDestroyer.new(moderator, post).destroy
+      end
     end
 
     describe 'with a reply' do

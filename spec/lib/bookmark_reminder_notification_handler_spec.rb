@@ -35,10 +35,30 @@ RSpec.describe BookmarkReminderNotificationHandler do
     end
 
     context "when the auto_delete_preference is when_reminder_sent" do
-      it "deletes the bookmark after the reminder gets sent" do
+      before do
+        TopicUser.create!(topic: bookmark.topic, user: user, bookmarked: true)
         bookmark.update(auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent])
+      end
+
+      it "deletes the bookmark after the reminder gets sent" do
         subject.send_notification(bookmark)
         expect(Bookmark.find_by(id: bookmark.id)).to eq(nil)
+      end
+
+      it "changes the TopicUser bookmarked column to false" do
+        subject.send_notification(bookmark)
+        expect(TopicUser.find_by(topic: bookmark.topic, user: user).bookmarked).to eq(false)
+      end
+
+      context "if there are still other bookmarks in the topic" do
+        before do
+          Fabricate(:bookmark, topic: bookmark.topic, post: Fabricate(:post, topic: bookmark.topic), user: user)
+        end
+
+        it "does not change the TopicUser bookmarked column to false" do
+          subject.send_notification(bookmark)
+          expect(TopicUser.find_by(topic: bookmark.topic, user: user).bookmarked).to eq(true)
+        end
       end
     end
 

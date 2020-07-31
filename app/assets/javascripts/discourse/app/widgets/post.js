@@ -479,7 +479,8 @@ createWidget("post-notice", {
 
   html(attrs) {
     const user =
-      this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name)
+      this.siteSettings.display_name_on_posts &&
+      prioritizeNameInUx(attrs.name, this.siteSettings)
         ? attrs.name
         : attrs.username;
     let text, icon;
@@ -673,6 +674,9 @@ export default createWidget("post", {
     }
     if (attrs.topicOwner) {
       classNames.push("topic-owner");
+    }
+    if (attrs.groupModerator) {
+      classNames.push("category-moderator");
     }
     if (attrs.hidden) {
       classNames.push("post-hidden");

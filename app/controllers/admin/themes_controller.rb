@@ -15,7 +15,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def upload_asset
 
-    ban_in_whitelist_mode!
+    ban_in_allowlist_mode!
 
     path = params[:file].path
 
@@ -53,7 +53,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme = nil
     if params[:theme] && params[:theme].content_type == "application/json"
 
-      ban_in_whitelist_mode!
+      ban_in_allowlist_mode!
 
       # .dcstyle.json import. Deprecated, but still available to allow conversion
       json = JSON::parse(params[:theme].read)
@@ -104,7 +104,7 @@ class Admin::ThemesController < Admin::AdminController
       end
     elsif params[:bundle] || (params[:theme] && THEME_CONTENT_TYPES.include?(params[:theme].content_type))
 
-      ban_in_whitelist_mode!
+      ban_in_allowlist_mode!
 
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
@@ -152,7 +152,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def create
 
-    ban_in_whitelist_mode!
+    ban_in_allowlist_mode!
 
     @theme = Theme.new(name: theme_params[:name],
                        user_id: theme_user.id,
@@ -297,8 +297,8 @@ class Admin::ThemesController < Admin::AdminController
 
   private
 
-  def ban_in_whitelist_mode!
-    raise Discourse::InvalidAccess if !GlobalSetting.whitelisted_theme_ids.nil?
+  def ban_in_allowlist_mode!
+    raise Discourse::InvalidAccess if !GlobalSetting.allowed_theme_ids.nil?
   end
 
   def add_relative_themes!(kind, ids)
@@ -358,7 +358,7 @@ class Admin::ThemesController < Admin::AdminController
   def set_fields
     return unless fields = theme_params[:theme_fields]
 
-    ban_in_whitelist_mode!
+    ban_in_allowlist_mode!
 
     fields.each do |field|
       @theme.set_field(

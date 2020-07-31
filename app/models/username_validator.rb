@@ -32,7 +32,7 @@ class UsernameValidator
     username_length_min?
     username_length_max?
     username_char_valid?
-    username_char_whitelisted?
+    username_char_allowed?
     username_first_char_valid?
     username_last_char_valid?
     username_no_double_special?
@@ -85,10 +85,10 @@ class UsernameValidator
     end
   end
 
-  def username_char_whitelisted?
-    return unless errors.empty? && self.class.char_whitelist_exists?
+  def username_char_allowed?
+    return unless errors.empty? && self.class.char_allowlist_exists?
 
-    if username.chars.any? { |c| !self.class.whitelisted_char?(c) }
+    if username.chars.any? { |c| !self.class.allowed_char?(c) }
       self.errors << I18n.t(:'user.username.characters')
     end
   end
@@ -133,11 +133,11 @@ class UsernameValidator
     SiteSetting.unicode_usernames ? UNICODE_INVALID_CHAR_PATTERN : ASCII_INVALID_CHAR_PATTERN
   end
 
-  def self.char_whitelist_exists?
-    SiteSetting.unicode_usernames && SiteSetting.unicode_username_character_whitelist_regex.present?
+  def self.char_allowlist_exists?
+    SiteSetting.unicode_usernames && SiteSetting.allowed_unicode_username_characters.present?
   end
 
-  def self.whitelisted_char?(c)
-    c.match?(/[\w.-]/) || c.match?(SiteSetting.unicode_username_character_whitelist_regex)
+  def self.allowed_char?(c)
+    c.match?(/[\w.-]/) || c.match?(SiteSetting.allowed_unicode_username_characters)
   end
 end

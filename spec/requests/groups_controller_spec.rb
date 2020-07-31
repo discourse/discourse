@@ -1191,12 +1191,18 @@ describe GroupsController do
 
       it "raises an error if user to be removed is not found" do
         delete "/groups/#{group.id}/members.json", params: { user_id: -10 }
+
+        response_body = response.parsed_body
         expect(response.status).to eq(400)
       end
 
-      it "raises an error when removing a valid user but is not a member of that group" do
+      it "returns skipped_usernames response body when removing a valid user but is not a member of that group" do
         delete "/groups/#{group.id}/members.json", params: { user_id: -1 }
-        expect(response.status).to eq(400)
+
+        response_body = response.parsed_body
+        expect(response.status).to eq(200)
+        expect(response_body["usernames"]).to eq([])
+        expect(response_body["skipped_usernames"].first).to eq("system")
       end
 
       context "is able to remove a member" do
@@ -1324,7 +1330,10 @@ describe GroupsController do
             delete "/groups/#{group1.id}/members.json",
               params: { usernames: [user.username, user2.username].join(",") }
 
-            expect(response.status).to eq(400)
+            response_body = response.parsed_body
+            expect(response.status).to eq(200)
+            expect(response_body["usernames"].first).to eq(user2.username)
+            expect(response_body["skipped_usernames"].first).to eq(user.username)
           end
         end
       end
@@ -1630,7 +1639,7 @@ describe GroupsController do
     describe 'for an admin user' do
       before { sign_in(Fabricate(:admin)) }
 
-      it 'should return 404' do
+      it 'should return 200' do
         get '/groups/custom/new'
 
         expect(response.status).to eq(200)

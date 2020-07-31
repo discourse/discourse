@@ -7,6 +7,7 @@ import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
+import { helperContext } from "discourse-common/lib/helpers";
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
@@ -73,15 +74,16 @@ function createPrettyText(options) {
 }
 
 function emojiOptions() {
-  if (!Discourse.SiteSettings.enable_emoji) {
+  let siteSettings = helperContext().siteSettings;
+  if (!siteSettings.enable_emoji) {
     return;
   }
 
   return {
     getURL: url => getURLWithCDN(url),
-    emojiSet: Discourse.SiteSettings.emoji_set,
-    enableEmojiShortcuts: Discourse.SiteSettings.enable_emoji_shortcuts,
-    inlineEmoji: Discourse.SiteSettings.enable_inline_emoji_translation
+    emojiSet: siteSettings.emoji_set,
+    enableEmojiShortcuts: siteSettings.enable_emoji_shortcuts,
+    inlineEmoji: siteSettings.enable_inline_emoji_translation
   };
 }
 

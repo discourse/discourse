@@ -310,9 +310,9 @@ describe Post do
       expect(post_with_thumbnail.image_count).to eq(0)
     end
 
-    it "doesn't count whitelisted images" do
-      Post.stubs(:white_listed_image_classes).returns(["classy"])
-      # I dislike this, but passing in a custom whitelist is hard
+    it "doesn't count allowlisted images" do
+      Post.stubs(:allowed_image_classes).returns(["classy"])
+      # I dislike this, but passing in a custom allowlist is hard
       PrettyText.stubs(:cook).returns(post_with_two_classy_images.raw)
       expect(post_with_two_classy_images.image_count).to eq(0)
     end
@@ -527,8 +527,8 @@ describe Post do
           expect(post_one_link).not_to be_valid
         end
 
-        it "will skip the check for whitelisted domains" do
-          SiteSetting.whitelisted_link_domains = 'www.bbc.co.uk'
+        it "will skip the check for allowlisted domains" do
+          SiteSetting.allowed_link_domains = 'www.bbc.co.uk'
           SiteSetting.min_trust_to_post_links = 2
           post_two_links.user.trust_level = TrustLevel[1]
           expect(post_one_link).to be_valid
@@ -1107,7 +1107,7 @@ describe Post do
 
       expect(post.has_host_spam?).to eq(true)
 
-      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | example.net "
+      SiteSetting.allowed_spam_host_domains = "bla.com|boo.com | example.net "
       expect(post.has_host_spam?).to eq(false)
     end
 

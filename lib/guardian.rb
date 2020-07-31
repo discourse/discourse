@@ -93,6 +93,15 @@ class Guardian
     @user.moderator?
   end
 
+  def is_category_group_moderator?(category)
+    @is_category_group_moderator ||= begin
+      SiteSetting.enable_category_group_moderation? &&
+        category.present? &&
+        category.reviewable_by_group_id.present? &&
+        GroupUser.where(group_id: category.reviewable_by_group_id, user_id: @user.id).exists?
+    end
+  end
+
   def is_silenced?
     @user.silenced?
   end
@@ -477,9 +486,9 @@ class Guardian
   def allowed_theme_repo_import?(repo)
     return false if !@user.admin?
 
-    whitelisted_repos = GlobalSetting.whitelisted_theme_repos
-    if !whitelisted_repos.blank?
-      urls = whitelisted_repos.split(",").map(&:strip)
+    allowed_repos = GlobalSetting.allowed_theme_repos
+    if !allowed_repos.blank?
+      urls = allowed_repos.split(",").map(&:strip)
       return urls.include?(repo)
     end
 
@@ -489,8 +498,8 @@ class Guardian
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
 
-    if whitelisted_theme_ids = GlobalSetting.whitelisted_theme_ids
-      if (theme_ids - whitelisted_theme_ids).present?
+    if allowed_theme_ids = GlobalSetting.allowed_theme_ids
+      if (theme_ids - allowed_theme_ids).present?
         return false
       end
     end

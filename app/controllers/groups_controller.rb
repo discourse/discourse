@@ -412,16 +412,25 @@ class GroupsController < ApplicationController
       end
     end
 
+    removed_users = []
+    skipped_users = []
+
     users.each do |user|
       if group.remove(user)
+        removed_users << user.username
         GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
       else
-        raise Discourse::InvalidParameters
+        if group.users.exclude? user
+          skipped_users << user.username
+        else
+          raise Discourse::InvalidParameters
+        end
       end
     end
 
     render json: success_json.merge!(
-      usernames: users.map(&:username)
+      usernames: removed_users,
+      skipped_usernames: skipped_users
     )
   end
 

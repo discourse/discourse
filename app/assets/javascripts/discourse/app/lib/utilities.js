@@ -4,7 +4,7 @@ import toMarkdown from "discourse/lib/to-markdown";
 import Handlebars from "handlebars";
 import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
 
-const homepageSelector = "meta[name=discourse_current_homepage]";
+let _defaultHomepage;
 
 export function translateSize(size) {
   switch (size) {
@@ -213,23 +213,24 @@ export function setCaretPosition(ctrl, pos) {
   }
 }
 
-export function defaultHomepage() {
-  let homepage = null;
-  let elem = _.first($(homepageSelector));
-  if (elem) {
-    homepage = elem.content;
+export function initializeDefaultHomepage(siteSettings) {
+  let homepage;
+  let sel = document.querySelector("meta[name='discourse_current_homepage']");
+  if (sel) {
+    homepage = sel.getAttribute("content");
   }
   if (!homepage) {
-    homepage = Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+    homepage = siteSettings.top_menu.split("|")[0].split(",")[0];
   }
-  return homepage;
+  setDefaultHomepage(homepage);
+}
+
+export function defaultHomepage() {
+  return _defaultHomepage;
 }
 
 export function setDefaultHomepage(homepage) {
-  let elem = _.first($(homepageSelector));
-  if (elem) {
-    elem.content = homepage;
-  }
+  _defaultHomepage = homepage;
 }
 
 export function determinePostReplaceSelection({
@@ -310,7 +311,7 @@ const toArray = items => {
   return items;
 };
 
-export function clipboardData(e, canUpload) {
+export function clipboardHelpers(e, opts) {
   const clipboard =
     e.clipboardData ||
     e.originalEvent.clipboardData ||
@@ -324,11 +325,11 @@ export function clipboardData(e, canUpload) {
     files = toArray(clipboard.items).filter(i => i.kind === "file");
   }
 
-  canUpload = files && canUpload && types.includes("Files");
+  let canUpload = files && opts.canUpload && types.includes("Files");
   const canUploadImage =
     canUpload && files.filter(f => f.type.match("^image/"))[0];
   const canPasteHtml =
-    Discourse.SiteSettings.enable_rich_text_paste &&
+    opts.siteSettings.enable_rich_text_paste &&
     types.includes("text/html") &&
     !canUploadImage;
 

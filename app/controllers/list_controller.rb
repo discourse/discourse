@@ -348,6 +348,11 @@ class ListController < ApplicationController
 
     current_slug = params.require(:category_slug_path_with_id)
     real_slug = @category.full_slug("/")
+
+    if SiteSetting.slug_generation_method == "encoded"
+      current_slug = current_slug.split("/").map { |slug| CGI.escape(slug) }.join("/")
+    end
+
     if current_slug != real_slug
       url = request.fullpath.gsub(current_slug, real_slug)
       return redirect_to path(url), status: 301

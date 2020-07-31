@@ -456,7 +456,7 @@ const TopicTrackingState = EmberObject.extend({
       ) {
         let newTopic = isNew(topic);
         let unreadTopic = isUnread(topic);
-        if (isUnread || isNew) {
+        if (newTopic || unreadTopic) {
           tags.forEach(tag => {
             if (topic.tags.indexOf(tag) > -1) {
               if (unreadTopic) {

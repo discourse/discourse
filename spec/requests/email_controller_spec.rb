@@ -191,6 +191,24 @@ RSpec.describe EmailController do
         expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
       end
 
+      it 'displays correct label when email_digests is set to false' do
+        user.user_option.update!(email_digests: false, digest_after_minutes: 10080)
+
+        navigate_to_unsubscribe
+
+        expect(body).to include("You are not receiving summary emails")
+        expect(body).to include("Don&#39;t send me any mail from Discourse")
+      end
+
+      it 'hides unsubscribe from all checkbox when user already unsubscribed' do
+        user.user_option.update!(email_digests: false, mailing_list_mode: false, email_level: 2, email_messages_level: 2)
+
+        navigate_to_unsubscribe
+
+        expect(body).to include("You are not receiving summary emails")
+        expect(body).not_to include("Don&#39;t send me any mail from Discourse")
+      end
+
       it 'correctly handles mailing list mode' do
         user.user_option.update_columns(mailing_list_mode: true)
 
