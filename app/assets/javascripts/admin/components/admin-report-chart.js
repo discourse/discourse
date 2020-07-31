@@ -90,7 +90,6 @@ export default Component.extend({
     }
 
     loadScript("/javascripts/Chart.min.js").then(() => {
-      window.Chart.plugins.unregister(window.ChartDataLabels);
       this._resetChart();
 
       if (!this.element) {

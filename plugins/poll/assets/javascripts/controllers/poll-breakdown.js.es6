@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
+import loadScript from "discourse/lib/load-script";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,
@@ -34,7 +35,13 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.set("groupedBy", this.model.groupableUserFields[0]);
-    this.fetchGroupedPollData();
+
+    loadScript("/javascripts/Chart.min.js")
+      .then(() => loadScript("/javascripts/chartjs-plugin-datalabels.min.js"))
+      .then(() => {
+        window.Chart.plugins.unregister(window.ChartDataLabels);
+        this.fetchGroupedPollData();
+      });
   },
 
   fetchGroupedPollData() {
