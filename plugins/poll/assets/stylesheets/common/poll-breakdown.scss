@@ -107,8 +107,8 @@
 }
 
 .poll-breakdown-charts {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(33.3%, 1fr));
 }
 
 .poll-breakdown-chart-container {
@@ -117,7 +117,6 @@
   justify-content: flex-end;
   padding-top: 1rem;
   position: relative;
-  width: 33.3%;
 }
 
 .poll-breakdown-chart-label {
