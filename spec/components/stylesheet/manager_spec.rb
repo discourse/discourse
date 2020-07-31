@@ -187,8 +187,18 @@ describe Stylesheet::Manager do
 
     it "uses the correct scheme when colors are passed" do
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(ColorScheme.first.id)
-      expect(link).to include("/stylesheets/color_definitions_#{ColorScheme.first.name.downcase}_")
+      expect(link).to include("/stylesheets/color_definitions_#{Slug.for(ColorScheme.first.name)}_")
     end
+
+    it "does not fail with a color scheme name containing spaces and special charactrs" do
+      cs = Fabricate(:color_scheme, name: 'Funky Bunch -_ @#$*(')
+      theme = Fabricate(:theme, color_scheme_id: cs.id)
+      SiteSetting.default_theme_id = theme.id
+
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
+      expect(link).to include("/stylesheets/color_definitions_funky-bunch_")
+    end
+
   end
 
   # this test takes too long, we don't run it by default

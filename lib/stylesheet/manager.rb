@@ -102,7 +102,7 @@ class Stylesheet::Manager
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
-    color_scheme_name = color_scheme.name.downcase
+    color_scheme_name = Slug.for(color_scheme.name)
     array_cache_key = "color_scheme_stylesheet_#{color_scheme_name}_#{current_hostname}"
     stylesheets = cache[array_cache_key]
     return stylesheets if stylesheets.present?
@@ -294,7 +294,7 @@ class Stylesheet::Manager
     if is_theme?
       "#{@target}_#{theme.id}"
     elsif @color_scheme
-      "#{@target}_#{@color_scheme.name.downcase}"
+      "#{@target}_#{Slug.for(@color_scheme.name)}"
     else
       scheme_string = theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"
