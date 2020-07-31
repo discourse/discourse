@@ -149,7 +149,11 @@ export default function(filter, extras) {
 
       resetController(controller, isExiting) {
         if (isExiting) {
-          controller.setProperties({ order: "default", ascending: false });
+          controller.setProperties({
+            order: "default",
+            ascending: false,
+            filter: null
+          });
         }
       },
 

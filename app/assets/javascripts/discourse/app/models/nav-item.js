@@ -49,7 +49,12 @@ const NavItem = EmberObject.extend({
       return customHref;
     }
 
-    const context = { category, noSubcategories, tagId };
+    const context = {
+      category,
+      noSubcategories,
+      tagId,
+      filterTracked: this.filterTracked
+    };
     return NavItem.pathFor(filterType, context);
   },
 
@@ -69,6 +74,11 @@ const NavItem = EmberObject.extend({
     return mode + name.replace(" ", "-");
   },
 
+  @discourseComputed("currentRouteQueryParams.filter")
+  filterTracked(filter) {
+    return filter === "tracked";
+  },
+
   @discourseComputed(
     "name",
     "category",
@@ -78,7 +88,12 @@ const NavItem = EmberObject.extend({
   count(name, category, tagId) {
     const state = this.topicTrackingState;
     if (state) {
-      return state.lookupCount(name, category, tagId);
+      return state.lookupCount(
+        name,
+        category,
+        tagId,
+        this.currentRouteQueryParams
+      );
     }
   }
 });
@@ -144,6 +159,10 @@ NavItem.reopenClass({
 
     // In the case of top, the nav item doesn't include a period because the
     // period has its own selector just below
+
+    if (context.filterTracked) {
+      path += "?filter=tracked";
+    }
 
     return path;
   },

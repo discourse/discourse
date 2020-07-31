@@ -414,10 +414,12 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countCategoryByState(type, categoryId, tagId) {
+  countCategoryByState(type, categoryId, tagId, filterTracked) {
     const subcategoryIds = this.getSubCategoryIds(categoryId);
     const mutedCategoryIds =
       this.currentUser && this.currentUser.muted_category_ids;
+    // filter by tracked tags/categories is filterTracked is true
+    filterTracked;
     return _.chain(this.states)
       .filter(type === "new" ? isNew : isUnread)
       .filter(
@@ -433,12 +435,17 @@ const TopicTrackingState = EmberObject.extend({
       .value().length;
   },
 
-  countNew(categoryId, tagId) {
-    return this.countCategoryByState("new", categoryId, tagId);
+  countNew(categoryId, tagId, filterTracked) {
+    return this.countCategoryByState("new", categoryId, tagId, filterTracked);
   },
 
-  countUnread(categoryId, tagId) {
-    return this.countCategoryByState("unread", categoryId, tagId);
+  countUnread(categoryId, tagId, filterTracked) {
+    return this.countCategoryByState(
+      "unread",
+      categoryId,
+      tagId,
+      filterTracked
+    );
   },
 
   countTags(tags) {
@@ -492,20 +499,20 @@ const TopicTrackingState = EmberObject.extend({
     return sum;
   },
 
-  lookupCount(name, category, tagId) {
+  lookupCount(name, category, tagId, filterTracked = false) {
     if (name === "latest") {
       return (
-        this.lookupCount("new", category, tagId) +
-        this.lookupCount("unread", category, tagId)
+        this.lookupCount("new", category, tagId, filterTracked) +
+        this.lookupCount("unread", category, tagId, filterTracked)
       );
     }
 
     let categoryId = category ? get(category, "id") : null;
 
     if (name === "new") {
-      return this.countNew(categoryId, tagId);
+      return this.countNew(categoryId, tagId, filterTracked);
     } else if (name === "unread") {
-      return this.countUnread(categoryId, tagId);
+      return this.countUnread(categoryId, tagId, filterTracked);
     } else {
       const categoryName = name.split("/")[1];
       if (categoryName) {

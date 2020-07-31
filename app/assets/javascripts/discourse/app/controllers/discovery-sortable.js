@@ -15,7 +15,7 @@ export const queryParams = {
   tags: { replace: true },
   before: { replace: true, refreshModel: true },
   bumped_before: { replace: true, refreshModel: true },
-  filter: { replace: true, refreshModel: true }
+  filter: { replace: false, refreshModel: true }
 };
 
 // Basic controller options
