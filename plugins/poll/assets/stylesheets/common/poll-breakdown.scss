@@ -18,13 +18,8 @@
 }
 
 .poll-breakdown-sidebar {
-  align-items: center;
   background: $primary-very-low;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  height: 100%;
   padding: 1rem;
 }
 
@@ -38,13 +33,13 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 0.5rem;
+  text-align: center;
 }
 
 .poll-breakdown-options {
   display: grid;
   list-style: none;
   margin: 1.5rem 0 0 0;
-  width: 100%;
 }
 
 .poll-breakdown-option {
@@ -82,10 +77,6 @@
 
 .poll-breakdown-body {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  height: 100%;
   padding: 1rem 2rem;
 }
 
@@ -116,7 +107,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding-top: 1rem;
+  margin-top: 1rem;
   position: relative;
 }
 
