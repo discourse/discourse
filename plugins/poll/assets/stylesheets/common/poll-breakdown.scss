@@ -112,6 +112,9 @@
 }
 
 .poll-breakdown-chart-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   padding-top: 1rem;
   position: relative;
   width: 33.3%;
