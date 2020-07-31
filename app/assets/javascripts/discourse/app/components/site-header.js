@@ -15,7 +15,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
   docAt: null,
   dockedHeader: null,
-  tagName: "foo",
   _animate: false,
   _isPanning: false,
   _panMenuOrigin: "right",
@@ -393,7 +392,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   }
 });
 
-export default SiteHeaderComponent;
+export default SiteHeaderComponent.extend({
+  classNames: ["d-header-wrap"]
+});
 
 export function headerHeight() {
   const $header = $("header.d-header");

@@ -1,12 +1,16 @@
+.d-header-wrap {
+  position: sticky;
+  top: 0;
+  z-index: z("header");
+}
+
 .d-header {
   display: flex;
   align-items: center;
   width: 100%;
-  position: absolute;
-  top: 0;
-  z-index: z("header");
   background-color: $header_background;
   box-shadow: shadow("header");
+  backface-visibility: hidden; /** do magic for scrolling performance **/
 
   > .wrap {
     width: calc(100% - 16px); // accommodates for 8px vertical padding
@@ -34,10 +38,6 @@
       }
     }
   }
-
-  position: sticky;
-  top: 0;
-  backface-visibility: hidden; /** do magic for scrolling performance **/
 
   .title {
     display: flex;
