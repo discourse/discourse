@@ -5,8 +5,7 @@ export function scrollTopFor(y) {
 export function minimumOffset() {
   const $header = $("header.d-header");
   const headerHeight = $header.outerHeight(true) || 0;
-  const headerPositionTop = $header.position().top;
-  return headerHeight + headerPositionTop;
+  return headerHeight;
 }
 
 export default function offsetCalculator() {

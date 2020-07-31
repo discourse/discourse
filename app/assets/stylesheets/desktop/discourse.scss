@@ -168,9 +168,6 @@ input {
 }
 
 /* bootstrap columns */
-.row {
-  @include clearfix;
-}
 
 .offset {
   &2 {

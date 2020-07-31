@@ -19,15 +19,26 @@
 .container.posts {
   display: grid;
   grid-template-areas: "posts timeline";
-  grid-template-columns: 1fr minmax(8em, auto);
+  grid-template-columns: auto minmax(10%, 16%);
   .topic-navigation {
     grid-area: timeline;
     align-self: start;
     position: sticky;
-    top: 5em;
+    top: 6em;
+    margin-left: 1em;
+
+    z-index: 9; // need this for topic progress bar
   }
   > .row {
     grid-area: posts;
+    width: 100%;
+  }
+  @media screen and (max-width: 923px) {
+    // max timeline width is 924
+    grid-template-areas: "posts posts";
+    .timeline-container {
+      display: none;
+    }
   }
 }
 
