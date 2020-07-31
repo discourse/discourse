@@ -4,9 +4,9 @@ import { action } from "@ember/object";
 import { classify } from "@ember/string";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import loadScript from "discourse/lib/load-script";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
-import loadScript from "discourse/lib/load-script";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,

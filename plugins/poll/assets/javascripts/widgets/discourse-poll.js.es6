@@ -1,18 +1,18 @@
 import I18n from "I18n";
-import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
-import RawHtml from "discourse/widgets/raw-html";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import evenRound from "discourse/plugins/poll/lib/even-round";
-import { avatarFor } from "discourse/widgets/post";
-import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
-import { getColors } from "../lib/chart-colors";
-import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
+import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
+import { avatarFor } from "discourse/widgets/post";
+import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import evenRound from "discourse/plugins/poll/lib/even-round";
 
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);

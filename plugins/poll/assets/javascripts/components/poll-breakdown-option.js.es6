@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse-common/utils/decorators";
-import { getColors } from "../lib/chart-colors";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 
 export default Component.extend({
   // Arguments:
