@@ -499,7 +499,7 @@ createWidget("discourse-poll-pie-chart", {
         label: "poll.group-results.label",
         title: "poll.group-results.title",
         icon: "far-eye",
-        action: "toggleGroupedPieCharts" // TODO: rename to "show breakdown"?
+        action: "showBreakdown"
       });
 
       contents.push(button);
@@ -954,7 +954,7 @@ export default createWidget("discourse-poll", {
       });
   },
 
-  toggleGroupedPieCharts() {
+  showBreakdown() {
     const panels = [
       { id: "percentage", title: "poll.breakdown.percentage" },
       { id: "count", title: "poll.breakdown.count" }
