@@ -59,12 +59,12 @@ module Imap
         # If UID validity changes, the whole mailbox must be synchronized (all
         # emails are considered new and will be associated to existent topics
         # in Email::Reciever by matching Message-Ids).
-        logmsg("[IMAP] (#{@group.name}) UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for group #{@group.name} and mailbox #{@group.imap_mailbox_name}")
+        log("[IMAP] (#{@group.name}) UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for group #{@group.name} and mailbox #{@group.imap_mailbox_name}", :warn)
         @group.imap_last_uid = 0
       end
 
       if idle && !can_idle?
-        logmsg("[IMAP] (#{@group.name}) IMAP server for group cannot IDLE")
+        log("[IMAP] (#{@group.name}) IMAP server for group cannot IDLE", :warn)
         idle = false
       end
 
@@ -76,7 +76,7 @@ module Imap
         ActiveRecord::Base.connection_handler.clear_active_connections!
 
         idle_polling_mins = SiteSetting.imap_polling_period_mins.minutes.to_i
-        logmsg("[IMAP] (#{@group.name}) Going IDLE for #{idle_polling_mins} seconds to wait for more work")
+        log("[IMAP] (#{@group.name}) Going IDLE for #{idle_polling_mins} seconds to wait for more work")
 
         @provider.imap.idle(idle_polling_mins) do |resp|
           if resp.kind_of?(Net::IMAP::UntaggedResponse) && resp.name == 'EXISTS'
@@ -98,7 +98,7 @@ module Imap
       # Sometimes, new_uids contains elements from old_uids.
       new_uids = new_uids - old_uids
 
-      logmsg("[IMAP] (#{@group.name}) Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
+      log("[IMAP] (#{@group.name}) Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
 
       all_old_uids_size = old_uids.size
       all_new_uids_size = new_uids.size
@@ -140,7 +140,7 @@ module Imap
     private
 
     def process_old_uids(old_uids)
-      logmsg("[IMAP] (#{@group.name}) Syncing #{old_uids.size} randomly-selected old emails")
+      log("[IMAP] (#{@group.name}) Syncing #{old_uids.size} randomly-selected old emails")
       emails = @provider.emails(old_uids, ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'])
       emails.each do |email|
         incoming_email = IncomingEmail.find_by(
@@ -167,14 +167,14 @@ module Imap
             )
             update_topic(email, incoming_email, mailbox_name: @group.imap_mailbox_name)
           else
-            logmsg("[IMAP] (#{@group.name}) Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})")
+            log("[IMAP] (#{@group.name}) Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})", :warn)
           end
         end
       end
     end
 
     def process_new_uids(new_uids, import_mode, all_old_uids_size, all_new_uids_size)
-      logmsg("[IMAP] (#{@group.name}) Syncing #{new_uids.size} new emails (oldest first)")
+      log("[IMAP] (#{@group.name}) Syncing #{new_uids.size} new emails (oldest first)")
 
       emails = @provider.emails(new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'])
       processed = 0
@@ -197,7 +197,7 @@ module Imap
 
           update_topic(email, receiver.incoming_email, mailbox_name: @group.imap_mailbox_name)
         rescue Email::Receiver::ProcessingError => e
-          logmsg("[IMAP] (#{@group.name}) Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}")
+          log("[IMAP] (#{@group.name}) Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}", :warn)
         end
 
         processed += 1
@@ -217,7 +217,7 @@ module Imap
       if to_sync.size > 0
         @provider.open_mailbox(@group.imap_mailbox_name, write: true)
         to_sync.each do |incoming_email|
-          logmsg("[IMAP] (#{@group.name}) Updating email and incoming email ID = #{incoming_email.id}")
+          log("[IMAP] (#{@group.name}) Updating email and incoming email ID = #{incoming_email.id}")
           update_email(incoming_email)
         end
       end
@@ -297,8 +297,12 @@ module Imap
       @provider.store(incoming_email.imap_uid, 'LABELS', labels, new_labels)
     end
 
-    def logmsg(msg)
-      Rails.logger.warn(msg)
+    def log(msg, level = :info)
+      if ENV['DISCOURSE_EMAIL_SYNC_LOG_OVERRIDE'] == 'warn'
+        Rails.logger.warn(msg)
+      else
+        Rails.logger.send(level, msg)
+      end
     end
   end
 end
