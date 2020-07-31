@@ -14,9 +14,10 @@ export default Component.extend({
   setHighlightedOption: null,
 
   classNames: "poll-breakdown-chart-container",
-  optionToSlice: {},
-  previousHighlightedSliceIndex: null,
-  previousDisplayMode: null,
+
+  _optionToSlice: {},
+  _previousHighlightedSliceIndex: null,
+  _previousDisplayMode: null,
 
   didInsertElement() {
     this._super(...arguments);
@@ -57,12 +58,12 @@ export default Component.extend({
     const transformedData = [];
     let counter = 0;
 
-    this.set("optionToSlice", {});
+    this.set("_optionToSlice", {});
 
     data.forEach((votes, index) => {
       if (votes > 0) {
         transformedData.push(votes);
-        this.optionToSlice[index] = counter++;
+        this._optionToSlice[index] = counter++;
       }
     });
 
@@ -126,8 +127,8 @@ export default Component.extend({
           }
 
           const sliceIndex = activeElements[0]._index;
-          const optionIndex = Object.keys(this.optionToSlice).find(
-            option => this.optionToSlice[option] === sliceIndex
+          const optionIndex = Object.keys(this._optionToSlice).find(
+            option => this._optionToSlice[option] === sliceIndex
           );
 
           // Clear the array to avoid issues in Chart.js
@@ -140,38 +141,38 @@ export default Component.extend({
   },
 
   _updateDisplayMode() {
-    if (this.displayMode !== this.previousDisplayMode) {
+    if (this.displayMode !== this._previousDisplayMode) {
       const config = this.chartConfig;
       this._chart.data.datasets = config.data.datasets;
       this._chart.options = config.options;
 
       this._chart.update();
-      this.set("previousDisplayMode", this.displayMode);
+      this.set("_previousDisplayMode", this.displayMode);
     }
   },
 
   _updateHighlight() {
     const meta = this._chart.getDatasetMeta(0);
 
-    if (this.previousHighlightedSliceIndex !== null) {
-      const slice = meta.data[this.previousHighlightedSliceIndex];
+    if (this._previousHighlightedSliceIndex !== null) {
+      const slice = meta.data[this._previousHighlightedSliceIndex];
       meta.controller.removeHoverStyle(slice);
       this._chart.draw();
     }
 
     if (this.highlightedOption === null) {
-      this.set("previousHighlightedSliceIndex", null);
+      this.set("_previousHighlightedSliceIndex", null);
       return;
     }
 
-    const sliceIndex = this.optionToSlice[this.highlightedOption];
+    const sliceIndex = this._optionToSlice[this.highlightedOption];
     if (typeof sliceIndex === "undefined") {
-      this.set("previousHighlightedSliceIndex", null);
+      this.set("_previousHighlightedSliceIndex", null);
       return;
     }
 
     const slice = meta.data[sliceIndex];
-    this.set("previousHighlightedSliceIndex", sliceIndex);
+    this.set("_previousHighlightedSliceIndex", sliceIndex);
     meta.controller.setHoverStyle(slice);
     this._chart.draw();
   }
