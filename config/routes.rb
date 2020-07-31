@@ -921,23 +921,6 @@ Discourse::Application.routes.draw do
 
         get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
       end
-
-      # legacy routes
-      constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
-        get '/:tag_id.rss' => 'tags#tag_feed'
-        get '/:tag_id' => 'tags#show'
-        get '/:tag_id/info' => 'tags#info'
-        get '/:tag_id/notifications' => 'tags#notifications'
-        put '/:tag_id/notifications' => 'tags#update_notifications'
-        put '/:tag_id' => 'tags#update'
-        delete '/:tag_id' => 'tags#destroy'
-        post '/:tag_id/synonyms' => 'tags#create_synonyms'
-        delete '/:tag_id/synonyms/:synonym_id' => 'tags#destroy_synonym'
-
-        Discourse.filters.each do |filter|
-          get "/:tag_id/l/#{filter}" => "tags#show_#{filter}"
-        end
-      end
     end
 
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit] do
