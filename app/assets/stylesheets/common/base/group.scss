@@ -3,7 +3,7 @@
 // For example: .group .user-secondary-navigation
 
 .group-details-container {
-  background: $primary-very-low;
+  background: var(--primary-very-low);
   padding: 20px;
   margin-bottom: 15px;
   position: relative;
@@ -34,12 +34,12 @@
   .group-info-name {
     font-size: $font-up-3;
     font-weight: bold;
-    color: $primary;
+    color: var(--primary);
   }
 
   .group-info-full-name {
     font-size: $font-up-2;
-    color: $primary-high-or-secondary-low;
+    color: var(--primary-high-or-secondary-low);
   }
 
   span {
@@ -75,7 +75,7 @@
   margin-right: 10px;
 
   &:hover {
-    background-color: $danger;
+    background-color: var(--danger);
   }
 }
 
@@ -90,7 +90,7 @@ table.group-manage-logs {
     cursor: pointer;
 
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 }
@@ -120,7 +120,7 @@ table.group-members {
     .user-info {
       display: block;
       .avatar-flair {
-        color: $primary;
+        color: var(--primary);
       }
     }
 
@@ -130,14 +130,14 @@ table.group-members {
 
     td {
       text-align: center;
-      color: $primary-medium;
+      color: var(--primary-medium);
       padding: 0.8em 0;
     }
   }
 }
 
 .group-owner-label {
-  color: $primary;
+  color: var(--primary);
 }
 
 .group-flair-inputs {
@@ -148,7 +148,7 @@ table.group-members {
     width: 45px;
 
     .avatar-wrapper {
-      background-color: $primary-very-low;
+      background-color: var(--primary-very-low);
     }
   }
 

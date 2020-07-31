@@ -70,7 +70,7 @@
       }
 
       a.widget-link {
-        color: $tertiary;
+        color: var(--tertiary);
       }
     }
 
@@ -78,12 +78,12 @@
       display: flex;
       flex: 1 1 auto;
       .topic-statuses {
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
     }
 
     .main-results + .secondary-results {
-      border-left: 1px solid $primary-low;
+      border-left: 1px solid var(--primary-low);
       margin-left: 1em;
       padding-left: 1em;
       max-width: 33%;
@@ -98,7 +98,7 @@
         margin-bottom: 1em;
         margin-top: 1em;
         height: 1px;
-        background: $primary-low;
+        background: var(--primary-low);
       }
 
       .search-result-tag {
@@ -115,10 +115,10 @@
 
       .search-result-group {
         .search-link {
-          color: $primary-high;
+          color: var(--primary-high);
 
           &:hover {
-            color: $primary;
+            color: var(--primary);
           }
         }
 
@@ -151,7 +151,7 @@
             &:hover {
               .name,
               .slug {
-                color: $primary-high;
+                color: var(--primary-high);
               }
             }
 
@@ -166,7 +166,7 @@
 
             .slug {
               font-size: $font-down-1;
-              color: $primary-high;
+              color: var(--primary-high);
             }
           }
         }
@@ -213,12 +213,12 @@
             }
 
             .username {
-              color: $primary-high-or-secondary-low;
+              color: var(--primary-high-or-secondary-low);
               font-size: $font-down-1;
             }
 
             .name {
-              color: $primary-high-or-secondary-low;
+              color: var(--primary-high-or-secondary-low);
               font-size: $font-0;
               font-weight: 700;
             }

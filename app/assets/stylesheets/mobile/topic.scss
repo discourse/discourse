@@ -1,5 +1,5 @@
 .post-info a {
-  color: $primary-medium;
+  color: var(--primary-medium);
 }
 
 .topic-meta-data-inside {
@@ -18,7 +18,7 @@
     font-size: $font-up-3;
     line-height: $line-height-medium;
     a {
-      color: $primary;
+      color: var(--primary);
       vertical-align: middle;
       word-wrap: break-word;
     }
@@ -30,7 +30,7 @@
 
 .topic-status-info {
   padding-left: 10px;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding-top: 10px;
   h3 {
     margin: 0;
@@ -52,9 +52,9 @@
 }
 
 #topic-progress-expanded {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   padding: 5px;
-  background: $secondary;
+  background: var(--secondary);
 
   position: absolute;
   bottom: 34px;
@@ -97,9 +97,9 @@
   &.hidden {
     display: none;
   }
-  background-color: $secondary;
-  color: $tertiary;
-  border: 1px solid $tertiary-low;
+  background-color: var(--secondary);
+  color: var(--tertiary);
+  border: 1px solid var(--tertiary-low);
   width: 145px;
   height: 42px;
 
@@ -129,8 +129,8 @@
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid $tertiary-low;
-    background-color: $tertiary-low;
+    border-right: 1px solid var(--tertiary-low);
+    background-color: var(--tertiary-low);
     transition: width 0.75s;
   }
 }

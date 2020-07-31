@@ -10,10 +10,10 @@
   #revision-controls {
     .btn[disabled] {
       cursor: not-allowed;
-      background-color: $primary-low;
+      background-color: var(--primary-low);
     }
     .btn-danger[disabled] {
-      background-color: $danger-medium;
+      background-color: var(--danger-medium);
     }
   }
 

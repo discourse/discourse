@@ -22,14 +22,14 @@
         }
 
         .d-icon {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
 
         &.is-highlighted,
         &.is-selected,
         &:hover {
-          background: $tertiary-low;
-          color: $primary;
+          background: var(--tertiary-low);
+          color: var(--primary);
         }
       }
     }

@@ -62,13 +62,13 @@
   .grippie {
     cursor: row-resize;
     padding: 4px 0;
-    background: $tertiary;
+    background: var(--tertiary);
     &:before {
       content: "";
       display: block;
       width: 27px;
       margin: auto;
-      border-top: 3px double $secondary;
+      border-top: 3px double var(--secondary);
     }
   }
 }
@@ -98,17 +98,17 @@
   z-index: z("composer", "popover");
   padding: 10px 10px 35px 10px;
   box-shadow: shadow("card");
-  background: $highlight-medium;
+  background: var(--highlight-medium);
   .hide-preview & {
     z-index: z("composer", "dropdown") + 1;
   }
 
   &.urgent {
-    background: $danger-low;
+    background: var(--danger-low);
   }
 
   &.education-message {
-    background-color: $tertiary-low;
+    background-color: var(--tertiary-low);
   }
 
   h3 {
@@ -125,7 +125,7 @@
     position: absolute;
     right: 10px;
     top: 10px;
-    color: $primary;
+    color: var(--primary);
     opacity: 0.5;
     font-size: $font-up-1;
     &:before {
@@ -158,21 +158,21 @@
 }
 
 .custom-body {
-  background-color: $tertiary-low;
+  background-color: var(--tertiary-low);
   p {
     max-width: 98%;
   }
 }
 
 .similar-topics {
-  background-color: $tertiary-low;
+  background-color: var(--tertiary-low);
 
   a[href] {
-    color: $primary;
+    color: var(--primary);
   }
 
   .posts-count {
-    background-color: $tertiary;
+    background-color: var(--tertiary);
   }
 
   .search-link {
@@ -187,12 +187,12 @@
       margin-left: 0;
     }
     .blurb {
-      color: $primary-high;
+      color: var(--primary-high);
     }
     .topic-title,
     .blurb {
       .d-icon {
-        color: $primary-high;
+        color: var(--primary-high);
       }
     }
     span.topic {
@@ -224,9 +224,9 @@
 }
 
 a.toggle-preview {
-  color: $primary-high;
+  color: var(--primary-high);
   &:hover {
-    color: $tertiary;
+    color: var(--tertiary);
   }
 }
 
@@ -256,7 +256,7 @@ a.toggle-preview {
         margin-top: 1%;
       }
       .reply-to {
-        border-bottom: 1px solid $primary-low;
+        border-bottom: 1px solid var(--primary-low);
         padding-bottom: 3px;
         margin: 0;
         .composer-controls {
@@ -267,7 +267,7 @@ a.toggle-preview {
         border: none;
       }
       &.show-preview .d-editor-textarea-wrapper {
-        border-right: 1px solid $primary-low;
+        border-right: 1px solid var(--primary-low);
       }
       #draft-status,
       #file-uploading {
@@ -279,7 +279,7 @@ a.toggle-preview {
       }
       &:before {
         content: "";
-        background: $secondary;
+        background: var(--secondary);
         width: 100%;
         height: 100%;
         position: fixed;

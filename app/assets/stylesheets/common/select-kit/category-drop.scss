@@ -45,13 +45,13 @@
 
         &[data-value="all-categories"],
         &[data-value="no-categories"] {
-          color: $tertiary;
+          color: var(--tertiary);
           font-weight: 700;
         }
 
         .category-desc {
           font-weight: normal;
-          color: $primary-medium;
+          color: var(--primary-medium);
           margin-top: 2px;
         }
 
@@ -62,7 +62,7 @@
         .topic-count {
           margin-left: 0.5em;
           font-weight: normal;
-          color: $primary-medium;
+          color: var(--primary-medium);
           font-size: $font-down-1;
         }
 

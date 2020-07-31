@@ -3,9 +3,9 @@
   justify-content: space-between;
 
   .warning {
-    background-color: $danger-medium;
+    background-color: var(--danger-medium);
     padding: 5px 8px;
-    color: $secondary;
+    color: var(--secondary);
   }
 
   .search-bar {
@@ -43,7 +43,7 @@
     .search-info {
       display: flex;
       flex-wrap: wrap;
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
       padding-bottom: 1em;
       margin-bottom: 1.5em;
       flex-direction: row;
@@ -90,9 +90,9 @@
     .search-notice {
       .fps-invalid {
         padding: 0.5em;
-        background-color: $danger-low;
-        border: 1px solid $danger-medium;
-        color: $danger;
+        background-color: var(--danger-low);
+        border: 1px solid var(--danger-medium);
+        color: var(--danger);
       }
     }
   }
@@ -126,7 +126,7 @@
     }
 
     .search-advanced-title {
-      background: $primary-low;
+      background: var(--primary-low);
       padding: 0.358em 1em;
       @include breakpoint(medium) {
         padding: 0.358em 0.5em;
@@ -136,7 +136,7 @@
       font-weight: bold;
 
       &.btn {
-        background: $primary-low;
+        background: var(--primary-low);
       }
 
       .d-icon {
@@ -145,7 +145,7 @@
     }
 
     .search-advanced-filters {
-      background: $primary-very-low;
+      background: var(--primary-very-low);
       padding: 1em;
       .control-group {
         margin-bottom: 15px;
@@ -231,28 +231,28 @@
     line-height: $line-height-large;
     word-wrap: break-word;
     max-width: 640px;
-    color: $primary-medium;
+    color: var(--primary-medium);
     .date {
-      color: $primary-high;
+      color: var(--primary-high);
     }
 
     .search-highlight {
-      color: $primary-high;
+      color: var(--primary-high);
     }
   }
 
   .like-count {
     display: block;
-    color: $primary-high;
+    color: var(--primary-high);
     margin-top: 0.25em;
     .d-icon {
-      color: $love;
+      color: var(--love);
       font-size: $font-down-1;
     }
   }
 
   a.search-link:visited .topic-title {
-    color: $tertiary-high;
+    color: var(--tertiary-high);
   }
   .search-link {
     .topic-title {
@@ -263,7 +263,7 @@
       display: inline-block;
       font-size: 1.3em;
       line-height: $line-height-medium;
-      color: $primary-medium;
+      color: var(--primary-medium);
       span {
         line-height: 1;
       }

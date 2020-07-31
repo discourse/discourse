@@ -15,12 +15,12 @@
   .navigation {
     display: flex;
     margin: 0 0 2.5em 0;
-    border-bottom: 1px solid $primary-low-mid;
+    border-bottom: 1px solid var(--primary-low-mid);
 
     .navigation-item {
       display: inline;
       &:hover {
-        background: $primary-very-low;
+        background: var(--primary-very-low);
       }
     }
 
@@ -33,7 +33,7 @@
 
   @mixin active-navigation-item {
     .navigation-link {
-      border-bottom: 0.4em solid $tertiary;
+      border-bottom: 0.4em solid var(--tertiary);
     }
   }
 
@@ -105,7 +105,7 @@
         margin: 0 0.5em 0 0;
 
         a {
-          color: $primary;
+          color: var(--primary);
         }
       }
 
@@ -115,7 +115,7 @@
       }
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
       margin-bottom: 0.5em;
       padding-bottom: 0.5em;
     }
@@ -167,7 +167,7 @@
 
   .misc {
     display: flex;
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
 
     .storage-stats,
     .last-dashboard-update {
@@ -181,7 +181,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      border-right: 1px solid $primary-low;
+      border-right: 1px solid var(--primary-low);
 
       .backups,
       .uploads {
@@ -204,7 +204,7 @@
         display: block;
         margin: 0 20px 20px 20px;
         padding: 20px 0 0 0;
-        border-top: 1px solid $primary-low;
+        border-top: 1px solid var(--primary-low);
         border-left: none;
       }
     }
@@ -250,14 +250,14 @@
     margin-bottom: 2.5em;
 
     .d-icon-exclamation-triangle {
-      color: $danger;
+      color: var(--danger);
     }
 
     .actions {
       margin: 1em 0 0 0;
       display: flex;
       align-items: center;
-      color: $primary-medium;
+      color: var(--primary-medium);
       .btn {
         margin-right: 1em;
       }
@@ -274,7 +274,7 @@
     display: grid;
     flex: 1 0 auto;
     grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
     border-bottom: 0;
     font-weight: 700;
     text-align: right;
@@ -283,10 +283,10 @@
   }
 
   .admin-report .main {
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
 
     &:hover {
-      background-color: $primary-very-low;
+      background-color: var(--primary-very-low);
     }
   }
 
@@ -306,7 +306,7 @@
     padding: 0.5em 0.25em;
     align-items: flex-start;
     justify-content: flex-start;
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
 
     .title {
       font-size: $font-0;
@@ -329,13 +329,13 @@
     border: 0;
 
     &:hover {
-      background-color: $primary-very-low;
+      background-color: var(--primary-very-low);
     }
 
     .d-icon {
       font-size: $font-up-1;
       margin: 0 0.25em 0 0;
-      color: $primary-low-mid;
+      color: var(--primary-low-mid);
     }
   }
 }
@@ -365,7 +365,7 @@
     .label {
       display: flex;
       align-items: center;
-      color: $primary;
+      color: var(--primary);
       justify-content: center;
       border-radius: 9px 0 0 9px;
       padding: 0 5px 0 8px;
@@ -377,33 +377,33 @@
     }
 
     .value {
-      background: $secondary;
+      background: var(--secondary);
       border-radius: 0 9px 9px 0;
       padding: 0 8px 0 5px;
     }
 
     &.user-newuser {
       .label {
-        color: $primary-high;
+        color: var(--primary-high);
       }
     }
     &.user-basic,
     &.user-member {
-      background: $bronze;
+      background: var(--bronze);
       .label {
-        color: $secondary;
+        color: var(--secondary);
       }
     }
     &.user-regular {
-      background: $silver;
+      background: var(--silver);
       .label {
-        color: $secondary;
+        color: var(--secondary);
       }
     }
     &.user-leader {
-      background: $gold;
+      background: var(--gold);
       .label {
-        color: $secondary;
+        color: var(--secondary);
       }
     }
   }
@@ -495,7 +495,7 @@
   }
   .report {
     margin: 1.5%;
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
     flex: 1 1 28%;
     transition: box-shadow 0.25s;
     min-width: 225px;
@@ -507,7 +507,7 @@
       box-sizing: border-box;
       padding: 1em;
       .report-description {
-        color: $primary-high;
+        color: var(--primary-high);
       }
     }
     &:hover {
@@ -521,7 +521,7 @@
   flex-wrap: wrap;
   .section-title {
     flex: 1 1 100%;
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
     margin-bottom: 0.5em;
   }
 }
@@ -597,13 +597,13 @@
     font-size: $font-up-4;
   }
   .up-to-date {
-    color: $success;
+    color: var(--success);
   }
   .updates-available {
-    color: $danger;
+    color: var(--danger);
   }
   .critical-updates-available {
-    color: $danger;
+    color: var(--danger);
   }
 }
 

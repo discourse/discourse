@@ -4,7 +4,7 @@
 
   .table-heading {
     padding: 12px 5px;
-    color: $primary-med-or-secondary-high;
+    color: var(--primary-med-or-secondary-high);
   }
 
   .no-topics,
@@ -15,7 +15,7 @@
 
 .latest-topic-list-item {
   padding: 1em;
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
   display: flex;
 
   align-items: center;
@@ -49,10 +49,10 @@
   .topic-stats {
     flex: 1 0 0px;
     text-align: right;
-    color: $primary-med-or-secondary-high;
+    color: var(--primary-med-or-secondary-high);
   }
 
   .topic-last-activity a {
-    color: $primary-med-or-secondary-high;
+    color: var(--primary-med-or-secondary-high);
   }
 }

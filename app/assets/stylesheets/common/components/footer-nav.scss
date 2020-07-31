@@ -32,7 +32,7 @@ body.footer-nav-visible {
   transition: all linear 0.1s;
 
   .d-icon {
-    color: $header_primary-medium;
+    color: var(--header_primary-medium);
   }
 
   &.visible {
@@ -73,7 +73,7 @@ body.footer-nav-ipad {
   .footer-nav {
     bottom: auto;
     top: 0px;
-    background-color: $header_background;
+    background-color: var(--header_background);
     z-index: z("ipad-header-nav");
     padding-bottom: 0; // resets safe-area-inset-bottom
   }

@@ -5,7 +5,7 @@
   left: 20px;
   z-index: z("dropdown");
   box-shadow: shadow("card");
-  background-color: $secondary;
+  background-color: var(--secondary);
   padding: 8px 8px 4px 8px;
   width: 300px;
   display: none;
@@ -29,7 +29,7 @@
 
     .date {
       font-weight: normal;
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
     }
   }
 
@@ -37,7 +37,7 @@
     display: inline-block;
     position: absolute;
     margin: 5px 5px 5px 15px;
-    color: $success;
+    color: var(--success);
     opacity: 1;
     transition: opacity 0.25s;
     font-size: $font-0;
@@ -49,15 +49,15 @@
     margin-right: 8px;
     font-size: $font-up-4;
     .d-icon {
-      color: $tertiary-or-white;
+      color: var(--tertiary-or-white);
     }
     .d-icon-fab-facebook {
       // Adheres to Facebook brand guidelines
-      color: $facebook-or-white;
+      color: var(--facebook-or-white);
     }
     .d-icon-fab-twitter-square {
       // Adheres to Twitter brand guidelines
-      color: $twitter-or-white;
+      color: var(--twitter-or-white);
     }
   }
 
@@ -92,7 +92,7 @@
 
       .close-share {
         font-size: $font-up-3;
-        color: $primary-med-or-secondary-med;
+        color: var(--primary-med-or-secondary-med);
       }
 
       .new-topic {

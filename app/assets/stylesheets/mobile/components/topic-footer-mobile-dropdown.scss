@@ -14,20 +14,20 @@
         }
 
         .d-icon {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
 
         &.is-highlighted {
-          background: $tertiary-low;
+          background: var(--tertiary-low);
 
           .name {
-            color: $primary;
+            color: var(--primary);
           }
         }
 
         &.bookmarked {
           .d-icon {
-            color: $tertiary;
+            color: var(--tertiary);
           }
         }
       }

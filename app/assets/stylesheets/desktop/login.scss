@@ -61,7 +61,7 @@
       justify-content: flex-start;
       padding-top: 2.7em;
       + .login-form {
-        border-right: 1px solid $primary-low; // Only show border when login-form is present
+        border-right: 1px solid var(--primary-low); // Only show border when login-form is present
       }
     }
   }
@@ -71,7 +71,7 @@
     flex: 1 0 auto;
     padding: 0 24px;
     + #login-buttons {
-      border-left: 1px solid $primary-low; // Only show border when login-form is present
+      border-left: 1px solid var(--primary-low); // Only show border when login-form is present
     }
   }
 
