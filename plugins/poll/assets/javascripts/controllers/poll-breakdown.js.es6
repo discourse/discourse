@@ -10,6 +10,7 @@ import loadScript from "discourse/lib/load-script";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,
+  charts: null,
   groupedBy: null,
   highlightedOption: null,
   displayMode: "percentage",
@@ -34,6 +35,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   onShow() {
+    this.set("charts", null);
     this.set("groupedBy", this.model.groupableUserFields[0]);
 
     loadScript("/javascripts/Chart.min.js")
