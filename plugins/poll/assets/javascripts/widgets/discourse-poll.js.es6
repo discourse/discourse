@@ -495,7 +495,7 @@ createWidget("discourse-poll-pie-chart", {
 
     if (attrs.groupableUserFields.length) {
       const button = this.attach("button", {
-        className: "btn-default poll-group-by-toggle", // TODO: rename class too? see below
+        className: "btn-default poll-show-breakdown",
         label: "poll.group-results.label",
         title: "poll.group-results.title",
         icon: "far-eye",

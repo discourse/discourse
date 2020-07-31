@@ -92,15 +92,15 @@ test("Polls", async assert => {
   );
 
   assert.equal(
-    find(".poll-group-by-toggle").text(),
+    find(".poll-show-breakdown").text(),
     "Show breakdown",
     "Shows the breakdown button when poll_groupable_user_fields is non-empty"
   );
 
-  await click(".poll-group-by-toggle:first");
+  await click(".poll-show-breakdown:first");
 
   assert.equal(
-    find(".poll-group-by-toggle").text(),
+    find(".poll-show-breakdown").text(),
     "Hide breakdown",
     "Shows the combine breakdown button after toggle is clicked"
   );
@@ -110,7 +110,7 @@ test("Polls", async assert => {
   await click(".toggle-results:first");
 
   assert.equal(
-    find(".poll-group-by-toggle").text(),
+    find(".poll-show-breakdown").text(),
     "Hide breakdown",
     "Returns to the grouped view, after toggling results shown"
   );
