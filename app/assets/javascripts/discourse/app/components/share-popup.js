@@ -7,16 +7,23 @@ import { longDateNoYear } from "discourse/lib/formatter";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
 import { nativeShare } from "discourse/lib/pwa-utils";
+import { alias } from "@ember/object/computed";
 
 export default Component.extend({
   elementId: "share-link",
   classNameBindings: ["visible"],
   link: null,
   visible: null,
+  privateCategory: alias("topic.category.read_restricted"),
 
-  @discourseComputed("topic.isPrivateMessage")
-  sources(isPM) {
-    const privateContext = this.siteSettings.login_required || isPM;
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
+  sources(topic) {
+    const privateContext =
+      this.siteSettings.login_required ||
+      topic.isPrivateMessage ||
+      topic.invisible ||
+      this.privateCategory;
+
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
   },
 

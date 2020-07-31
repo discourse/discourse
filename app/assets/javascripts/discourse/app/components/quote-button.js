@@ -12,6 +12,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
+import { alias } from "@ember/object/computed";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -23,6 +24,7 @@ export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
   visible: false,
+  privateCategory: alias("topic.category.read_restricted"),
 
   _isMouseDown: false,
   _reselected: false,
@@ -224,15 +226,18 @@ export default Component.extend({
     return true;
   },
 
-  @discourseComputed("topic.isPrivateMessage")
-  quoteSharingSources(isPM) {
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
+  quoteSharingSources(topic) {
     return Sharing.activeSources(
       this.siteSettings.share_quote_buttons,
-      this.siteSettings.login_required || isPM
+      this.siteSettings.login_required ||
+        topic.isPrivateMessage ||
+        this.privateCategory ||
+        (this.currentUser && topic.invisible)
     );
   },
 
-  @discourseComputed
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
   quoteSharingShowLabel() {
     return this.quoteSharingSources.length > 1;
   },
