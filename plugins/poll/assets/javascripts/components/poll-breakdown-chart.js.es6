@@ -56,7 +56,7 @@ export default Component.extend({
     const transformedData = [];
     let counter = 0;
 
-    this.set("_optionToSlice", {});
+    this._optionToSlice = {};
 
     data.forEach((votes, index) => {
       if (votes > 0) {
@@ -145,7 +145,7 @@ export default Component.extend({
       this._chart.options = config.options;
 
       this._chart.update();
-      this.set("_previousDisplayMode", this.displayMode);
+      this._previousDisplayMode = this.displayMode;
     }
   },
 
@@ -159,18 +159,18 @@ export default Component.extend({
     }
 
     if (this.highlightedOption === null) {
-      this.set("_previousHighlightedSliceIndex", null);
+      this._previousHighlightedSliceIndex = null;
       return;
     }
 
     const sliceIndex = this._optionToSlice[this.highlightedOption];
     if (typeof sliceIndex === "undefined") {
-      this.set("_previousHighlightedSliceIndex", null);
+      this._previousHighlightedSliceIndex = null;
       return;
     }
 
     const slice = meta.data[sliceIndex];
-    this.set("_previousHighlightedSliceIndex", sliceIndex);
+    this._previousHighlightedSliceIndex = sliceIndex;
     meta.controller.setHoverStyle(slice);
     this._chart.draw();
   }
