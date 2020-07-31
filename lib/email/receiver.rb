@@ -92,7 +92,16 @@ module Email
     end
 
     def find_existing_and_update_imap
-      @incoming_email = IncomingEmail.find_by(message_id: @message_id)
+      return if @opts[:imap_uid].blank?
+
+      # if the message_id matches the post id regexp then we
+      # generated the message_id not the imap server, e.g. in GroupSmtpEmail,
+      # so we want to just update the incoming email. Otherwise the
+      # incoming email is a completely new one from the IMAP server.
+      if @message_id =~ message_id_post_id_regexp
+        @incoming_email = IncomingEmail.find_by(message_id: @message_id)
+      end
+
       return if !@incoming_email
 
       @incoming_email.update(
@@ -929,12 +938,8 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
 
-      host = Email::Sender.host_for(Discourse.base_url)
-      post_id_regexp = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
-      topic_id_regexp = Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
-
-      post_ids =  message_ids.map { |message_id| message_id[post_id_regexp, 1] }.compact.map(&:to_i)
-      post_ids << Post.where(topic_id: message_ids.map { |message_id| message_id[topic_id_regexp, 1] }.compact, post_number: 1).pluck(:id)
+      post_ids =  message_ids.map { |message_id| message_id[message_id_post_id_regexp, 1] }.compact.map(&:to_i)
+      post_ids << Post.where(topic_id: message_ids.map { |message_id| message_id[message_id_topic_id_regexp, 1] }.compact, post_number: 1).pluck(:id)
       post_ids << EmailLog.where(message_id: message_ids).pluck(:post_id)
       post_ids << IncomingEmail.where(message_id: message_ids).pluck(:post_id)
 
@@ -945,6 +950,18 @@ module Email
       return if post_ids.empty?
 
       Post.where(id: post_ids).order(:created_at).last
+    end
+
+    def host
+      @host ||= Email::Sender.host_for(Discourse.base_url)
+    end
+
+    def message_id_post_id_regexp
+      @message_id_post_id_regexp ||= Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
+    end
+
+    def message_id_topic_id_regexp
+      @message_id_topic_id_regexp ||= Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)
