@@ -689,7 +689,7 @@ class TopicsController < ApplicationController
 
         render json: json, status: 422
       end
-    rescue Topic::UserExists => e
+    rescue Topic::UserExists, Topic::NotAllowed => e
       render json: { errors: [e.message] }, status: 422
     end
   end
