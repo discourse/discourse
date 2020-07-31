@@ -5,8 +5,14 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 import { getColors } from "../lib/chart-colors";
 
-// args: options, group, displayMode, highlightedOption, setHighlightedOption
 export default Component.extend({
+  // Arguments:
+  group: null,
+  options: null,
+  displayMode: null,
+  highlightedOption: null,
+  setHighlightedOption: null,
+
   classNames: "poll-breakdown-chart-container",
   optionToSlice: {},
   previousHighlightedSliceIndex: null,

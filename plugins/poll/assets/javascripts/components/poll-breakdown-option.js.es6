@@ -6,6 +6,16 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { getColors } from "../lib/chart-colors";
 
 export default Component.extend({
+  // Arguments:
+  option: null,
+  index: null,
+  totalVotes: null,
+  optionsCount: null,
+  displayMode: null,
+  highlightedOption: null,
+  onMouseOver: null,
+  onMouseOut: null,
+
   tagName: "",
 
   @discourseComputed("highlightedOption", "index")
