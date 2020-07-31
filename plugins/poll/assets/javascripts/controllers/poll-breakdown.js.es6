@@ -35,6 +35,7 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.set("charts", null);
+    this.set("displayMode", "percentage");
     this.set("groupedBy", this.model.groupableUserFields[0]);
 
     loadScript("/javascripts/Chart.min.js")
