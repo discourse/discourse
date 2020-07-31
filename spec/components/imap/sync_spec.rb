@@ -167,7 +167,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 100).returns([100])
       provider.stubs(:uids).with(from: 101).returns([200])
-      provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS'], anything).returns(
+      provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
         [
           {
             'UID' => 100,
@@ -207,7 +207,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 200).returns([100, 200])
       provider.stubs(:uids).with(from: 201).returns([])
-      provider.stubs(:emails).with([100, 200], ['UID', 'FLAGS', 'LABELS'], anything).returns(
+      provider.stubs(:emails).with([100, 200], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
         [
           {
             'UID' => 100,
