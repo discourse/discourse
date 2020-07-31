@@ -211,14 +211,16 @@ export default Component.extend({
       .off("selectionchange.quote-button");
   },
 
-  @discourseComputed
-  quoteSharingEnabled() {
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
+  quoteSharingEnabled(topic) {
     if (
       this.site.mobileView ||
       this.siteSettings.share_quote_visibility === "none" ||
-      this.quoteSharingSources.length === 0 ||
       (this.currentUser &&
-        this.siteSettings.share_quote_visibility === "anonymous")
+        this.siteSettings.share_quote_visibility === "anonymous") ||
+      this.quoteSharingSources.length === 0 ||
+      this.privateCategory ||
+      (this.currentUser && topic.invisible)
     ) {
       return false;
     }
@@ -226,14 +228,11 @@ export default Component.extend({
     return true;
   },
 
-  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
-  quoteSharingSources(topic) {
+  @discourseComputed("topic.isPrivateMessage")
+  quoteSharingSources(isPM) {
     return Sharing.activeSources(
       this.siteSettings.share_quote_buttons,
-      this.siteSettings.login_required ||
-        topic.isPrivateMessage ||
-        this.privateCategory ||
-        (this.currentUser && topic.invisible)
+      this.siteSettings.login_required || isPM
     );
   },
 
