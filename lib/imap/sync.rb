@@ -5,7 +5,7 @@ require 'net/imap'
 module Imap
   class Sync
     class Logger
-      def self.log(msg, level = :info)
+      def self.log(msg, level = :debug)
         if ENV['DISCOURSE_EMAIL_SYNC_LOG_OVERRIDE'] == 'warn'
           Rails.logger.warn(msg)
         else
