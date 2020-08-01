@@ -357,15 +357,6 @@
                 </div>
               {{/if}}
 
-              {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
-              <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
-                {{#if model.relatedMessages.length}}
-                  {{related-messages topic=model}}
-                {{/if}}
-                {{#if model.suggestedTopics.length}}
-                  {{suggested-topics topic=model}}
-                {{/if}}
-              </div>
             {{/if}}
           {{/conditional-loading-spinner}}
 
@@ -373,6 +364,17 @@
       </div>
 
     </div>
+    {{#if loadedAllPosts}}
+      {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
+      <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
+        {{#if model.relatedMessages.length}}
+          {{related-messages topic=model}}
+        {{/if}}
+        {{#if model.suggestedTopics.length}}
+          {{suggested-topics topic=model}}
+        {{/if}}
+      </div>
+    {{/if}}
   {{else}}
     <div class="container">
       {{#conditional-loading-spinner condition=noErrorYet}}

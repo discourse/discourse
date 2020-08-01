@@ -216,11 +216,6 @@ a.badge-category {
   max-width: 757px;
 }
 
-.suggested-topics-wrapper,
-.related-messages-wrapper {
-  max-width: 760px;
-}
-
 .suggested-topics-wrapper.related-messages-wrapper {
   .suggested-topics:nth-of-type(n + 2) {
     thead {
