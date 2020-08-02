@@ -19,7 +19,8 @@ RSpec.describe EmailController do
     it 'can fully unsubscribe' do
       user.user_option.update_columns(email_digests: true,
                                       email_level: UserOption.email_level_types[:never],
-                                      email_messages_level: UserOption.email_level_types[:never])
+                                      email_messages_level: UserOption.email_level_types[:never],
+                                      mailing_list_mode: true)
 
       post "/email/unsubscribe/#{key}.json",
         params: { unsubscribe_all: "1" }
@@ -36,6 +37,7 @@ RSpec.describe EmailController do
       expect(user.user_option.email_digests).to eq(false)
       expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
       expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
+      expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
     it 'can disable mailing list' do
