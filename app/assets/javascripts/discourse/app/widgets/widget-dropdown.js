@@ -114,7 +114,10 @@ export const WidgetDropdownItemClass = {
   },
 
   buildAttributes(attrs) {
-    return { "data-id": attrs.item.id };
+    return {
+      "data-id": attrs.item.id,
+      tabindex: attrs.item === "separator" ? -1 : 0
+    };
   },
 
   buildClasses(attrs) {
@@ -122,6 +125,13 @@ export const WidgetDropdownItemClass = {
       "widget-dropdown-item",
       attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`
     ].join(" ");
+  },
+
+  keyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.sendWidgetAction("_onChange", this.attrs.item);
+    }
   },
 
   click(event) {
