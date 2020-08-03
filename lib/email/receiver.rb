@@ -66,11 +66,13 @@ module Email
       id_hash = Digest::SHA1.hexdigest(@message_id)
       DistributedMutex.synchronize("process_email_#{id_hash}") do
         begin
-          @incoming_email = IncomingEmail.find_by(message_id: @message_id)
-          if @incoming_email
-            @incoming_email.update(imap_uid_validity: @opts[:uid_validity], imap_uid: @opts[:uid], imap_sync: false)
-            return
-          end
+
+          # if we find an existing incoming email record with the
+          # exact same message id, be sure to update it with the correct IMAP
+          # metadata based on sync. this is so we do not double-create emails.
+          @incoming_email = find_existing_and_update_imap
+          return if @incoming_email
+
           ensure_valid_address_lists
           ensure_valid_date
           @from_email, @from_display_name = parse_from_field
@@ -87,6 +89,32 @@ module Email
           raise
         end
       end
+    end
+
+    def find_existing_and_update_imap
+      incoming_email = IncomingEmail.find_by(message_id: @message_id)
+
+      # if we are not doing this for IMAP purposes, then we do not want
+      # to double-process the same Message-ID
+      if @opts[:imap_uid].blank?
+        return incoming_email
+      end
+
+      return if !incoming_email
+
+      # if the message_id matches the post id regexp then we
+      # generated the message_id not the imap server, e.g. in GroupSmtpEmail,
+      # so we want to just update the incoming email. Otherwise the
+      # incoming email is a completely new one from the IMAP server.
+      return if (@message_id =~ message_id_post_id_regexp).nil?
+
+      incoming_email.update(
+        imap_uid_validity: @opts[:imap_uid_validity],
+        imap_uid: @opts[:imap_uid],
+        imap_group_id: @opts[:imap_group_id],
+        imap_sync: false
+      )
+      incoming_email
     end
 
     def ensure_valid_address_lists
@@ -118,8 +146,9 @@ module Email
         from_address: @from_email,
         to_addresses: @mail.to&.map(&:downcase)&.join(";"),
         cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
-        imap_uid_validity: @opts[:uid_validity],
-        imap_uid: @opts[:uid],
+        imap_uid_validity: @opts[:imap_uid_validity],
+        imap_uid: @opts[:imap_uid],
+        imap_group_id: @opts[:imap_group_id],
         imap_sync: false
       )
     end
@@ -913,12 +942,8 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       return if message_ids.empty?
 
-      host = Email::Sender.host_for(Discourse.base_url)
-      post_id_regexp = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
-      topic_id_regexp = Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
-
-      post_ids =  message_ids.map { |message_id| message_id[post_id_regexp, 1] }.compact.map(&:to_i)
-      post_ids << Post.where(topic_id: message_ids.map { |message_id| message_id[topic_id_regexp, 1] }.compact, post_number: 1).pluck(:id)
+      post_ids =  message_ids.map { |message_id| message_id[message_id_post_id_regexp, 1] }.compact.map(&:to_i)
+      post_ids << Post.where(topic_id: message_ids.map { |message_id| message_id[message_id_topic_id_regexp, 1] }.compact, post_number: 1).pluck(:id)
       post_ids << EmailLog.where(message_id: message_ids).pluck(:post_id)
       post_ids << IncomingEmail.where(message_id: message_ids).pluck(:post_id)
 
@@ -929,6 +954,18 @@ module Email
       return if post_ids.empty?
 
       Post.where(id: post_ids).order(:created_at).last
+    end
+
+    def host
+      @host ||= Email::Sender.host_for(Discourse.base_url)
+    end
+
+    def message_id_post_id_regexp
+      @message_id_post_id_regexp ||= Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
+    end
+
+    def message_id_topic_id_regexp
+      @message_id_topic_id_regexp ||= Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
     end
 
     def self.extract_reply_message_ids(mail, max_message_id_count:)

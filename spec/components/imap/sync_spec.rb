@@ -84,6 +84,7 @@ describe Imap::Sync do
       expect(incoming_email.imap_uid_validity).to eq(1)
       expect(incoming_email.imap_uid).to eq(100)
       expect(incoming_email.imap_sync).to eq(false)
+      expect(incoming_email.imap_group_id).to eq(group.id)
     end
 
     it 'does not duplicate topics' do
@@ -98,19 +99,39 @@ describe Imap::Sync do
         .and change { IncomingEmail.count }.by(0)
     end
 
-    it 'does not duplicate incoming emails' do
+    it 'creates a new incoming email if the message ID does not match the receiver post id regex' do
       incoming_email = Fabricate(:incoming_email, message_id: message_id)
 
       expect { sync_handler.process }
-        .to change { Topic.count }.by(0)
-        .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
-        .and change { IncomingEmail.count }.by(0)
+        .to change { Topic.count }.by(1)
+        .and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+        .and change { IncomingEmail.count }.by(1)
 
-      incoming_email.reload
-      expect(incoming_email.message_id).to eq(message_id)
-      expect(incoming_email.imap_uid_validity).to eq(1)
-      expect(incoming_email.imap_uid).to eq(100)
-      expect(incoming_email.imap_sync).to eq(false)
+      last_incoming = IncomingEmail.where(message_id: message_id).last
+      expect(last_incoming.message_id).to eq(message_id)
+      expect(last_incoming.imap_uid_validity).to eq(1)
+      expect(last_incoming.imap_uid).to eq(100)
+      expect(last_incoming.imap_sync).to eq(false)
+      expect(last_incoming.imap_group_id).to eq(group.id)
+    end
+
+    context "when the message id matches the receiver post id regex" do
+      let(:message_id) { "topic/999/324@test.localhost" }
+      it 'does not duplicate incoming email' do
+        incoming_email = Fabricate(:incoming_email, message_id: message_id)
+
+        expect { sync_handler.process }
+          .to change { Topic.count }.by(0)
+          .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
+          .and change { IncomingEmail.count }.by(0)
+
+        incoming_email.reload
+        expect(incoming_email.message_id).to eq(message_id)
+        expect(incoming_email.imap_uid_validity).to eq(1)
+        expect(incoming_email.imap_uid).to eq(100)
+        expect(incoming_email.imap_sync).to eq(false)
+        expect(incoming_email.imap_group_id).to eq(group.id)
+      end
     end
   end
 
@@ -165,7 +186,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 100).returns([100])
       provider.stubs(:uids).with(from: 101).returns([200])
-      provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS'], anything).returns(
+      provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
         [
           {
             'UID' => 100,
@@ -205,7 +226,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 200).returns([100, 200])
       provider.stubs(:uids).with(from: 201).returns([])
-      provider.stubs(:emails).with([100, 200], ['UID', 'FLAGS', 'LABELS'], anything).returns(
+      provider.stubs(:emails).with([100, 200], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
         [
           {
             'UID' => 100,
@@ -244,7 +265,9 @@ describe Imap::Sync do
     let(:second_message_id) { SecureRandom.hex }
     let(:second_body) { '<p>This is an <b>answer</b> to this message.</p>' }
 
-    it 'is updated' do
+    # TODO: Improve the invalidating flow for mailbox change. This is a destructive
+    # action so it should not be done often.
+    xit 'is updated' do
       provider = MockedImapProvider.any_instance
 
       provider.stubs(:open_mailbox).returns(uid_validity: 1)
@@ -285,8 +308,8 @@ describe Imap::Sync do
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(2)
         .and change { IncomingEmail.count }.by(2)
 
-      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid)
-      expect(imap_data).to contain_exactly([1, 100], [1, 200])
+      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid, :imap_group_id)
+      expect(imap_data).to contain_exactly([1, 100, group.id], [1, 200, group.id])
 
       provider.stubs(:open_mailbox).returns(uid_validity: 2)
       provider.stubs(:uids).with.returns([111, 222])
@@ -326,8 +349,8 @@ describe Imap::Sync do
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
         .and change { IncomingEmail.count }.by(0)
 
-      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid)
-      expect(imap_data).to contain_exactly([2, 111], [2, 222])
+      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid, :imap_group_id)
+      expect(imap_data).to contain_exactly([2, 111, group.id], [2, 222, group.id])
     end
   end
 end
