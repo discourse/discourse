@@ -92,25 +92,29 @@ module Email
     end
 
     def find_existing_and_update_imap
-      return if @opts[:imap_uid].blank?
+      incoming_email = IncomingEmail.find_by(message_id: @message_id)
+
+      # if we are not doing this for IMAP purposes, then we do not want
+      # to double-process the same Message-ID
+      if @opts[:imap_uid].blank?
+        return incoming_email
+      end
+
+      return if !incoming_email
 
       # if the message_id matches the post id regexp then we
       # generated the message_id not the imap server, e.g. in GroupSmtpEmail,
       # so we want to just update the incoming email. Otherwise the
       # incoming email is a completely new one from the IMAP server.
-      if @message_id =~ message_id_post_id_regexp
-        @incoming_email = IncomingEmail.find_by(message_id: @message_id)
-      end
+      return if (@message_id =~ message_id_post_id_regexp).nil?
 
-      return if !@incoming_email
-
-      @incoming_email.update(
+      incoming_email.update(
         imap_uid_validity: @opts[:imap_uid_validity],
         imap_uid: @opts[:imap_uid],
         imap_group_id: @opts[:imap_group_id],
         imap_sync: false
       )
-      @incoming_email
+      incoming_email
     end
 
     def ensure_valid_address_lists
