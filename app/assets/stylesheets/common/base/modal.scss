@@ -670,6 +670,9 @@
   .category-chooser {
     margin-bottom: 9px;
     width: 100% !important;
+    .category-row {
+      max-width: 485px;
+    }
   }
 
   .controls.existing-topic {
