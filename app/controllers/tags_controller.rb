@@ -92,8 +92,9 @@ class TagsController < ::ApplicationController
       @description_meta = I18n.t("rss_by_tag", tag: tag_params.join(' & '))
       @title = @description_meta
 
-      path_name = url_method(params.slice(:category, :parent_category))
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(path_name, *(params.slice(:parent_category, :category, :tag_id).values.map { |t| t.force_encoding("UTF-8") }))}"
+      canonical_params = params.slice(:category_slug_path_with_id, :tag_id)
+      canonical_method = url_method(canonical_params)
+      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *(canonical_params.values.map { |t| t.force_encoding("UTF-8") }))}"
 
       if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where_name(@tag_id).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
@@ -400,9 +401,7 @@ class TagsController < ::ApplicationController
   end
 
   def url_method(opts = {})
-    if opts[:parent_category] && opts[:category]
-      "tag_parent_category_category_#{action_name}_path"
-    elsif opts[:category]
+    if opts[:category_slug_path_with_id]
       "tag_category_#{action_name}_path"
     else
       "tag_#{action_name}_path"
