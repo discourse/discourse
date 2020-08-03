@@ -964,7 +964,8 @@ module Email
     end
 
     def discourse_generated_message_id?
-      !(@message_id =~ message_id_post_id_regexp).nil?
+      !!(@message_id =~ message_id_post_id_regexp) ||
+        !!(@message_id =~ message_id_topic_id_regexp)
     end
 
     def message_id_post_id_regexp
