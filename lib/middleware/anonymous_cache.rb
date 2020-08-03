@@ -307,7 +307,15 @@ module Middleware
       @app = app
     end
 
+    PAYLOAD_INVALID_REQUEST_METHODS = ["GET", "DELETE", "HEAD"]
+
     def call(env)
+      if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
+        env[Rack::RACK_INPUT].size > 0
+
+        return [413, {}, []]
+      end
+
       helper = Helper.new(env)
       force_anon = false
 

@@ -195,6 +195,16 @@ describe Middleware::AnonymousCache do
     end
   end
 
+  context 'invalid request payload' do
+    it 'returns 413 for GET request with payload' do
+      status, _, _ = middleware.call(env.tap do |environment|
+        environment[Rack::RACK_INPUT].write("test")
+      end)
+
+      expect(status).to eq(413)
+    end
+  end
+
   context "crawler blocking" do
     let :non_crawler do
       {
