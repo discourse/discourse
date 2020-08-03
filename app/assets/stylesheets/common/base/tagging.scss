@@ -61,11 +61,9 @@
   }
 }
 
-$tag-color: $primary-medium;
-
 .discourse-tag-count {
   font-size: $font-down-1;
-  color: $tag-color;
+  color: $primary-medium;
   line-height: $line-height-small;
   vertical-align: middle;
 }
@@ -79,11 +77,11 @@ $tag-color: $primary-medium;
 
 .discourse-tag {
   margin: 0;
-  color: $tag-color;
+  color: $primary-medium;
 
   &:visited,
   &:hover {
-    color: $tag-color;
+    color: $primary-medium;
   }
 
   .extra-info-wrapper & {
@@ -181,7 +179,7 @@ $tag-color: $primary-medium;
 }
 
 header .discourse-tag {
-  color: $tag-color;
+  color: $primary-medium;
 }
 
 .list-tags {
@@ -210,13 +208,14 @@ header .discourse-tag {
 }
 
 .autocomplete {
-  .d-icon-tag {
-    color: dark-light-choose($primary, $primary-low-mid);
-    padding-right: 5px;
+  a {
+    color: $primary-medium;
   }
 
-  a {
-    color: $tag-color;
+  .d-icon-tag {
+    padding-right: 5px;
+    vertical-align: middle;
+    height: 0.9em;
   }
 }
 

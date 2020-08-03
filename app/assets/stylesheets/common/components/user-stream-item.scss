@@ -16,13 +16,7 @@
     }
 
     &.deleted {
-      opacity: 0.8;
-      background-color: dark-light-diff(
-        rgba($danger, 0.7),
-        $secondary,
-        50%,
-        -10%
-      );
+      background-color: $danger-low-mid;
     }
 
     &.hidden {
@@ -82,10 +76,7 @@
   }
 
   .edit-reason {
-    background-color: dark-light-choose(
-      $highlight-medium,
-      scale-color($highlight, $lightness: -50%)
-    );
+    background-color: $highlight-medium;
     padding: 3px 5px 5px 5px;
   }
 
@@ -111,7 +102,7 @@
     // common/base/header.scss
     .fa,
     .icon {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       font-size: $font-up-4;
     }
   }

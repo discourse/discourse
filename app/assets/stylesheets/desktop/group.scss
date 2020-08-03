@@ -15,7 +15,7 @@
     border: none;
 
     a {
-      color: dark-light-choose($primary-medium, $secondary-high);
+      color: $primary-med-or-secondary-high;
       padding: 8px 0;
 
       &.active {

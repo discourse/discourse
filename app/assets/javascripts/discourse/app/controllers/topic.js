@@ -189,17 +189,19 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _removeDeleteOnOwnerReplyBookmarks() {
-    let posts = this.model.get("postStream").posts;
-    posts
-      .filter(
-        p =>
-          p.bookmarked &&
-          p.bookmark_auto_delete_preference ===
-            AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
-      )
-      .forEach(p => {
-        p.clearBookmark();
-      });
+    const posts = this.get("model.postStream.posts");
+    if (posts) {
+      posts
+        .filter(
+          p =>
+            p.bookmarked &&
+            p.bookmark_auto_delete_preference ===
+              AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
+        )
+        .forEach(p => {
+          p.clearBookmark();
+        });
+    }
   },
 
   _forceRefreshPostStream() {

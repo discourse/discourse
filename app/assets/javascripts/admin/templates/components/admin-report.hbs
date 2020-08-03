@@ -130,6 +130,18 @@
               </div>
             {{/if}}
 
+            {{#if isChartMode}}
+              <div class="chart-groupings">
+                {{#each chartGroupings as |chartGrouping|}}
+                  {{d-button
+                    label=chartGrouping.label
+                    action=(action "changeGrouping" chartGrouping.id)
+                    class=chartGrouping.class
+                  }}
+                {{/each}}
+              </div>
+            {{/if}}
+
             {{#if showDatesOptions}}
               <div class="control">
                 <span class="label">

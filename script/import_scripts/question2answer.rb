@@ -3,17 +3,7 @@
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
-begin
-  require 'php_serialize' # https://github.com/jqr/php-serialize
-rescue LoadError
-  puts
-  puts 'php_serialize not found.'
-  puts 'Add to Gemfile, like this: '
-  puts
-  puts "echo gem \\'php-serialize\\' >> Gemfile"
-  puts "bundle install"
-  exit
-end
+require 'php_serialize' # https://github.com/jqr/php-serialize
 
 class ImportScripts::Question2Answer < ImportScripts::Base
   BATCH_SIZE = 1000
@@ -21,14 +11,11 @@ class ImportScripts::Question2Answer < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
   DB_HOST ||= ENV['DB_HOST'] || "localhost"
-  DB_NAME ||= ENV['DB_NAME']
-  DB_PW ||= ENV['DB_PW']
-  DB_USER ||= ENV['DB_USER']
+  DB_NAME ||= ENV['DB_NAME'] || "qa_db"
+  DB_PW ||= ENV['DB_PW'] || ""
+  DB_USER ||= ENV['DB_USER'] || "root"
   TIMEZONE ||= ENV['TIMEZONE'] || "America/Los_Angeles"
   TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "qa_"
-  MAIN_APP_DB_NAME = "primary_db"
-
-  puts "#{DB_USER}:#{DB_PW}@#{DB_HOST} wants #{DB_NAME}"
 
   def initialize
     super
@@ -45,28 +32,6 @@ class ImportScripts::Question2Answer < ImportScripts::Base
       password: DB_PW,
       database: DB_NAME
     )
-    rescue Exception => e
-      puts '=' * 50
-      puts e.message
-      puts <<EOM
-Cannot connect in to database.
-
-Hostname: #{DB_HOST}
-Username: #{DB_USER}
-Password: #{DB_PW}
-database: #{DB_NAME}
-
-Edit the script or set these environment variables:
-
-export DB_HOST="localhost"
-export DB_NAME=""
-export DB_PW='password'
-export DB_USER="root"
-export TABLE_PREFIX="qa_"
-
-Exiting.
-EOM
-      exit
   end
 
   def execute
@@ -75,6 +40,7 @@ EOM
     import_topics
     import_posts
     import_likes
+    import_bestanswer
 
     post_process_posts
     create_permalinks
@@ -83,23 +49,21 @@ EOM
   def import_users
     puts "", "importing users"
 
-    #only import users that have posted or voted on Q2A
-    user_count = mysql_query("SELECT COUNT(id) count FROM #{MAIN_APP_DB_NAME}.users u WHERE EXISTS (SELECT 1 FROM #{TABLE_PREFIX}posts p WHERE p.userid=u.id) or EXISTS (SELECT 1 FROM #{TABLE_PREFIX}uservotes u WHERE u.userid=u.id)").first["count"]
+    # only import users that have posted or voted on Q2A
+    # if you want to import all users, just leave out the WHERE and everything after it (and remove line 95 as well)
+    user_count = mysql_query("SELECT COUNT(userid) count FROM #{TABLE_PREFIX}users u WHERE EXISTS (SELECT 1 FROM #{TABLE_PREFIX}posts p WHERE p.userid=u.userid) or EXISTS (SELECT 1 FROM #{TABLE_PREFIX}uservotes uv WHERE u.userid=uv.userid)").first["count"]
     last_user_id = -1
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query(<<-SQL
-          SELECT u.id, u.email, first_name, last_name, u.created_at, last_sign_in_at, u.custom_field_1, u.website website, u.city city, u.state state, i.cdn_slug cdn_slug
-            FROM #{MAIN_APP_DB_NAME}.users u
-            LEFT JOIN #{MAIN_APP_DB_NAME}.images i
-            ON i.id=u.image_id
-           WHERE u.id > #{last_user_id} AND
-           (EXISTS (SELECT 1 FROM #{TABLE_PREFIX}posts p WHERE p.userid=u.id) or EXISTS (SELECT 1 FROM #{TABLE_PREFIX}uservotes u WHERE u.userid=u.id))
-        ORDER BY u.id
-           LIMIT #{BATCH_SIZE}
+        SELECT u.userid AS id, u.email, u.handle AS username, u.created AS created_at, u.loggedin AS last_sign_in_at, u.avatarblobid
+             FROM #{TABLE_PREFIX}users u
+            WHERE u.userid > #{last_user_id}
+              AND (EXISTS (SELECT 1 FROM #{TABLE_PREFIX}posts p WHERE p.userid=u.userid) or EXISTS (SELECT 1 FROM #{TABLE_PREFIX}uservotes uv WHERE u.userid=uv.userid))
+         ORDER BY u.userid
+            LIMIT #{BATCH_SIZE}
       SQL
       ).to_a
-
       break if users.empty?
 
       last_user_id = users[-1]["id"]
@@ -112,13 +76,10 @@ EOM
         avatar_url = "https://your_image_bucket/#{user['cdn_slug']}" if user['cdn_slug']
         {
           id: user["id"],
-          name: "#{user['first_name']} #{user['last_name']}",
-          username: username,
-          website: user['website'],
+          name: "#{user['username']}",
+          username: "#{user['username']}",
+          password: user['password'],
           email: email,
-          avatar_url: avatar_url,
-          custom_fields: user["custom_field_1"] ? { user_field_1: user["custom_field_1"] } : {},
-          location: user["city"] && user["state"] ? "#{user['city']}, #{user['state']}" : nil,
           created_at: user["created_at"],
           last_seen_at: user["last_sign_in_at"],
           post_create_action: proc do |u|
@@ -169,7 +130,7 @@ EOM
   def import_topics
     puts "", "importing topics..."
 
-    topic_count = mysql_query("SELECT COUNT(postid) count FROM #{TABLE_PREFIX}posts WHERE type in ('Q', 'Q_HIDDEN')").first["count"]
+    topic_count = mysql_query("SELECT COUNT(postid) count FROM #{TABLE_PREFIX}posts WHERE type = 'Q'").first["count"]
 
     last_topic_id = -1
 
@@ -177,9 +138,8 @@ EOM
       topics = mysql_query(<<-SQL
           SELECT p.postid, p.type, p.categoryid, p.closedbyid, p.userid postuserid, p.views, p.created, p.title, p.content raw
             FROM #{TABLE_PREFIX}posts p
-           WHERE p.postid > #{last_topic_id}
-           and p.parentid IS NULL
-           and type IN ('Q', 'Q_HIDDEN')
+           WHERE type = 'Q'
+             AND p.postid > #{last_topic_id}
         ORDER BY p.postid
            LIMIT #{BATCH_SIZE}
       SQL
@@ -189,6 +149,7 @@ EOM
 
       last_topic_id = topics[-1]["postid"]
       topics.reject! { |t| @lookup.post_already_imported?("thread-#{t["postid"]}") }
+      topics.reject! { |t| t["type"] == "Q_HIDDEN" }
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
         begin
@@ -205,7 +166,7 @@ EOM
           category: category_id_from_imported_category_id(topic["categoryid"]),
           raw: raw,
           created_at: topic["created"],
-          visible: topic["closedbyid"].to_i == 0 && topic["type"] != 'Q_HIDDEN',
+          visible: topic["closedbyid"].to_i == 0,
           views: topic["views"],
         }
         t
@@ -217,7 +178,7 @@ EOM
         topic = topic_lookup_from_imported_post_id(topic_id)
         if topic.present?
           title_slugified = slugify(thread["title"], false, 50) if thread["title"].present?
-          url_slug = "#{thread["postid"]}/#{title_slugified}" if thread["title"].present?
+          url_slug = "qa/#{thread["postid"]}/#{title_slugified}" if thread["title"].present?
           Permalink.create(url: url_slug, topic_id: topic[:topic_id].to_i) if url_slug.present? && topic[:topic_id].present?
         end
       end
@@ -261,12 +222,14 @@ EOM
 
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query(<<-SQL
-          SELECT p.postid, p.type, p.parentid, p.categoryid, p.closedbyid, p.userid, p.views, p.created, p.title, p.content
+          SELECT p.postid, p.type, p.parentid, p.categoryid, p.closedbyid, p.userid, p.views, p.created, p.title, p.content,
+                parent.type AS parenttype, parent.parentid AS qid
             FROM #{TABLE_PREFIX}posts p
+       LEFT JOIN qa_posts parent ON parent.postid = p.parentid
            WHERE p.parentid IS NOT NULL
              AND p.postid > #{last_post_id}
-             AND type in ('A')
-             AND closedbyid IS NULL
+             AND p.type in ('A','C')
+             AND p.closedbyid IS NULL
         ORDER BY p.postid
            LIMIT #{BATCH_SIZE}
       SQL
@@ -283,7 +246,23 @@ EOM
           puts e.message
         end
         next if raw.blank?
-        next unless topic = topic_lookup_from_imported_post_id("thread-#{post["parentid"]}")
+
+        # this works as long as comments can not have a comment as parent
+        # it's always Q-A Q-C or A-C
+
+        if post['type'] == 'A' # for answers the question/topic is always the parent
+          topic = topic_lookup_from_imported_post_id("thread-#{post["parentid"]}")
+          next if topic.nil?
+        else
+          if post['parenttype'] == 'Q' # for comments to questions, the question/topic is the parent as well
+            topic = topic_lookup_from_imported_post_id("thread-#{post["parentid"]}")
+            next if topic.nil?
+          else # for comments to answers, the question/topic is the parent of the parent
+            topic = topic_lookup_from_imported_post_id("thread-#{post["qid"]}")
+            next if topic.nil?
+          end
+        end
+        next if topic.nil?
 
         p = {
           id: post["postid"],
@@ -297,6 +276,24 @@ EOM
         end
         p
       end
+    end
+  end
+
+  def import_bestanswer
+    puts "", "importing best answers..."
+    ans = mysql_query("select postid, selchildid from qa_posts where selchildid is not null").to_a
+    ans.each do |answer|
+      begin
+        post = Post.find_by(id: post_id_from_imported_post_id("#{answer['selchildid']}"))
+        post.custom_fields["is_accepted_answer"] = "true"
+        post.save
+        topic = Topic.find(post.topic_id)
+        topic.custom_fields["accepted_answer_post_id"] = post.id
+        topic.save
+      rescue => e
+        puts "error acting on post #{e}"
+      end
+
     end
   end
 
@@ -343,6 +340,11 @@ EOM
   def preprocess_post_raw(raw)
     return "" if raw.blank?
 
+    raw.gsub!(/<a(?:.+)href="(\S+)"(?:.*)>(.+)<\/a>/i, '[\2](\1)')
+    raw.gsub!(/<p>(.+?)<\/p>/im) { "#{$1}\n\n" }
+    raw.gsub!('<br />', "\n")
+    raw.gsub!(/<strong>(.*?)<\/strong>/im, '[b]\1[/b]')
+
     # decode HTML entities
     raw = @htmlentities.decode(raw)
     raw = ActionView::Base.full_sanitizer.sanitize raw
@@ -350,8 +352,6 @@ EOM
     # fix whitespaces
     raw.gsub!(/(\\r)?\\n/, "\n")
     raw.gsub!("\\t", "\t")
-
-    raw.gsub!('<br />', "\n")
 
     # [HTML]...[/HTML]
     raw.gsub!(/\[html\]/i, "\n```html\n")
@@ -537,8 +537,20 @@ EOM
   end
 
   def create_permalinks
-    puts '', 'Creating Permalink File...', ''
-    #creates permalinks for q2a category links
+    puts '', 'Creating permalinks...'
+
+    # topics
+    Topic.find_each do |topic|
+      tcf = topic.custom_fields
+
+      if tcf && tcf["import_id"]
+        question_id = tcf["import_id"][/thread-(\d)/, 0]
+        url = "#{question_id}"
+        Permalink.create(url: url, topic_id: topic.id) rescue nil
+      end
+    end
+
+    # categories
     Category.find_each do |category|
       ccf = category.custom_fields
 
@@ -547,6 +559,7 @@ EOM
         Permalink.create(url: url, category_id: category.id) rescue nil
       end
     end
+
   end
 
   def parse_timestamp(timestamp)

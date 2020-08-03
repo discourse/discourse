@@ -7,12 +7,12 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs {
   display: block;
   padding: 0.5em;
-  color: dark-light-choose(#333, #f8f8f8);
+  color: $primary-very-high;
 }
 
 .hljs-comment,
 .hljs-doctag {
-  color: dark-light-choose(#998, #bba);
+  color: $hljs-comment;
   font-style: italic;
 }
 
@@ -22,26 +22,26 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-subst,
 .hljs-request,
 .hljs-status {
-  color: dark-light-choose(#333, #f8f8f8);
+  color: $primary-very-high;
   font-weight: bold;
 }
 
 .hljs-number,
 .ruby .hljs-constant {
-  color: dark-light-choose(#099, #aff);
+  color: $hljs-number;
 }
 
 .hljs-string,
 .hljs-tag .hljs-string,
 .tex .hljs-formula {
-  color: dark-light-choose(#d14, #f99);
+  color: $hljs-string;
 }
 
 .hljs-title,
 .hljs-name,
 .coffeescript .hljs-params,
 .scss .hljs-meta {
-  color: dark-light-choose(#d14, #f99);
+  color: $hljs-string;
   font-weight: bold;
 }
 
@@ -56,14 +56,14 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .haskell .hljs-type,
 .vhdl .hljs-literal,
 .tex .hljs-command {
-  color: dark-light-choose(#458, #9ae);
+  color: $hljs-literal;
   font-weight: bold;
 }
 
 .hljs-tag,
 .hljs-tag .hljs-title,
 .django .hljs-tag .hljs-keyword {
-  color: dark-light-choose(#000080, #99f);
+  color: $hljs-tag;
   font-weight: normal;
 }
 
@@ -71,7 +71,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .css .hljs-keyword,
 .hljs-variable,
 .lisp .hljs-body {
-  color: dark-light-choose(#008080, #0ee);
+  color: $hljs-attribute;
 }
 
 .hljs-regexp {
@@ -83,7 +83,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .lisp .hljs-keyword,
 .tex .hljs-special,
 .hljs-prompt {
-  color: dark-light-choose(#990073, #fbe);
+  color: $hljs-symbol;
 }
 
 .hljs-built_in,
@@ -119,8 +119,8 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 p > code,
 li > code,
 pre > code {
-  color: dark-light-choose(#333, #f8f8f8);
-  background: dark-light-choose(#f8f8f8, #333);
+  color: $primary-very-high;
+  background: $hljs-bg;
 }
 
 // removed some unnecessary styles here

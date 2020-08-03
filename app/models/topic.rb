@@ -2,6 +2,7 @@
 
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end
+  class NotAllowed < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
   include HasCustomFields
@@ -581,17 +582,25 @@ class Topic < ActiveRecord::Base
     return [] if title.blank?
     raw = raw.presence || ""
 
-    title_tsquery = Search.set_tsquery_weight_filter(
+    tsquery = Search.set_tsquery_weight_filter(
       Search.prepare_data(title.strip),
       'A'
     )
 
-    raw_tsquery = Search.set_tsquery_weight_filter(
-      Search.prepare_data(raw[0...MAX_SIMILAR_BODY_LENGTH].strip),
-      'B'
-    )
+    if raw.present?
+      cooked = SearchIndexer::HtmlScrubber.scrub(
+        PrettyText.cook(raw[0...MAX_SIMILAR_BODY_LENGTH].strip)
+      )
 
-    tsquery = Search.to_tsquery(term: "#{title_tsquery} & #{raw_tsquery}", joiner: "|")
+      raw_tsquery = Search.set_tsquery_weight_filter(
+        Search.prepare_data(cooked),
+        'B'
+      )
+
+      tsquery = "#{tsquery} & #{raw_tsquery}"
+    end
+
+    tsquery = Search.to_tsquery(term: tsquery, joiner: "|")
 
     candidates = Topic
       .visible
@@ -1012,7 +1021,11 @@ class Topic < ActiveRecord::Base
       end
 
       if invite_existing_muted?(target_user, invited_by)
-        return true
+        raise NotAllowed.new(I18n.t("topic_invite.not_allowed"))
+      end
+
+      if !allowed_pm_user?(target_user, invited_by)
+        raise NotAllowed.new(I18n.t("topic_invite.not_allowed"))
       end
 
       if private_message?
@@ -1045,6 +1058,43 @@ class Topic < ActiveRecord::Base
     end
 
     false
+  end
+
+  def allowed_pm_user?(target_user, invited_by)
+    return true if target_user.staff?
+    users = TopicAllowedUser.where(topic: self).pluck(:user_id)
+    users << target_user.id << invited_by.id
+    users.uniq
+
+    users_with_allowed_pms = allowed_pms_enabled(users).pluck(:id).uniq
+
+    if users_with_allowed_pms.any?
+      users_sender_can_pm = allowed_pms_enabled(users)
+        .where("allowed_pm_users.allowed_pm_user_id" => invited_by.id)
+        .pluck(:id).uniq
+
+      return false unless users_sender_can_pm.include? target_user.id
+
+      can_users_receive_from_sender = allowed_pms_enabled([invited_by.id])
+        .where("allowed_pm_users.allowed_pm_user_id IN (:user_ids)", user_ids: users.delete(invited_by.id))
+        .pluck(:id).uniq
+
+      users_not_allowed = users_with_allowed_pms - users_sender_can_pm - can_users_receive_from_sender
+      return false if users_not_allowed.any?
+    end
+
+    true
+  end
+
+  def allowed_pms_enabled(user_ids)
+    User
+      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
+      .joins("LEFT JOIN allowed_pm_users ON allowed_pm_users.user_id = users.id")
+      .where("
+        user_options.user_id IS NOT NULL AND
+        user_options.user_id IN (:user_ids) AND
+        user_options.enable_allowed_pm_users
+      ", user_ids: user_ids)
   end
 
   def email_already_exists_for?(invite)

@@ -44,7 +44,7 @@ export default createWidget("poster-name", {
 
   // TODO: Allow extensibility
   posterGlyph(attrs) {
-    if (attrs.moderator) {
+    if (attrs.moderator || attrs.groupModerator) {
       return iconNode("shield-alt", {
         title: I18n.t("user.moderator_tooltip")
       });
@@ -82,6 +82,9 @@ export default createWidget("poster-name", {
     }
     if (attrs.moderator) {
       classNames.push("moderator");
+    }
+    if (attrs.groupModerator) {
+      classNames.push("category-moderator");
     }
     if (attrs.new_user) {
       classNames.push("new-user");

@@ -69,7 +69,7 @@
     }
   }
   .me {
-    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    background-color: $highlight-low-or-medium;
     .username a,
     .name,
     .title,

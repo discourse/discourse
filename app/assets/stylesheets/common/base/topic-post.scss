@@ -58,12 +58,12 @@ $quote-share-maxwidth: 150px;
     @include ellipsis;
     vertical-align: middle;
     a {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: $primary-high-or-secondary-low;
     }
   }
   .fa {
     font-size: $font-down-1;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
   .svg-icon-title {
     margin-left: 3px;
@@ -72,7 +72,7 @@ $quote-share-maxwidth: 150px;
   .new_user a,
   .user-title,
   .user-title a {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
 }
 
@@ -125,16 +125,10 @@ $quote-share-maxwidth: 150px;
   }
 
   ins {
-    background-color: dark-light-choose(
-      $success-low,
-      scale-color($success, $lightness: -60%)
-    );
+    background-color: $success-low;
   }
   del {
-    background-color: dark-light-choose(
-      $danger-low,
-      scale-color($danger, $lightness: -60%)
-    );
+    background-color: $danger-low;
   }
   // Prevents users from breaking posts with tag nesting
   big {
@@ -170,7 +164,7 @@ $quote-share-maxwidth: 150px;
 // add staff color
 .moderator {
   .regular > .cooked {
-    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    background-color: $highlight-low-or-medium;
     padding: 10px;
     img:not(.thumbnail) {
       max-width: 100%;
@@ -179,9 +173,9 @@ $quote-share-maxwidth: 150px;
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: $primary-high-or-secondary-low;
       a {
-        background-color: dark-light-choose($highlight-low, $highlight-medium);
+        background-color: $highlight-low-or-medium;
         padding-left: 4px;
         padding-right: 4px;
       }
@@ -216,7 +210,7 @@ aside.quote {
   .title {
     @include post-aside;
 
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: $primary-high-or-secondary-low;
     padding: 12px 12px 0px 12px;
     // blockquote is underneath this and has top margin
     .avatar {
@@ -245,7 +239,7 @@ blockquote {
 
 .quote-controls,
 .quote-controls .d-icon {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+  color: $primary-low-mid-or-secondary-high;
 }
 
 .cooked .highlight {
@@ -303,10 +297,7 @@ blockquote {
   position: absolute;
   z-index: z("dropdown");
   opacity: 0.9;
-  background-color: dark-light-choose(
-    blend-primary-secondary(60%),
-    blend-primary-secondary(30%)
-  );
+  background-color: $secondary-high;
 
   &.visible {
     display: inline-flex;
@@ -316,12 +307,11 @@ blockquote {
   .btn:hover,
   .d-icon,
   .btn:hover .d-icon {
-    color: dark-light-choose($secondary, $primary);
+    color: $secondary-or-primary;
   }
 
   .insert-quote + .quote-sharing {
-    border-left: 1px solid
-      dark-light-choose(rgba($secondary, 0.4), rgba($primary, 0.4));
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   .quote-sharing {
@@ -415,7 +405,7 @@ blockquote {
 
   h4 {
     margin: 1px 0 2px 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
     font-weight: normal;
     font-size: $font-down-1;
     line-height: $line-height-small;
@@ -423,7 +413,7 @@ blockquote {
 
   span.domain {
     font-size: $font-down-2;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
 
   td {
@@ -655,7 +645,7 @@ blockquote {
   }
 
   &.via-email {
-    color: dark-light-choose($primary-low-mid, $secondary-high);
+    color: $primary-low-mid-or-secondary-high;
   }
   &.raw-email {
     cursor: pointer;
@@ -668,7 +658,7 @@ pre {
     display: block;
     padding: 0.5em;
     color: $primary;
-    background: blend-primary-secondary(5%);
+    background: $blend-primary-secondary-5;
     max-height: 500px;
   }
 }
@@ -703,8 +693,8 @@ pre {
 
 kbd {
   align-items: center;
-  background: dark-light-choose(#fafafa, #303030);
-  border: 1px solid dark-light-choose(#d0d0d0, #505050);
+  border: 1px solid $primary-low-mid;
+  background: $primary-very-low;
   border-bottom-width: 2px;
   border-radius: 3px;
   box-sizing: border-box;
@@ -737,7 +727,7 @@ blockquote > *:last-child {
 
 .gap {
   padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
-  color: dark-light-choose($primary-medium, $secondary-high);
+  color: $primary-med-or-secondary-high;
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
@@ -789,12 +779,7 @@ blockquote > *:last-child {
   }
 
   .small-action.deleted {
-    background-color: dark-light-diff(
-      rgba($danger, 0.7),
-      $secondary,
-      50%,
-      -60%
-    );
+    background-color: $danger-low-mid;
   }
 
   .small-action-desc.timegap {
@@ -864,12 +849,11 @@ blockquote > *:last-child {
 }
 
 a.mention {
-  align-items: baseline;
-  display: inline-flex;
+  display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
   font-weight: bold;
   font-size: 0.93em;
-  color: dark-light-choose($primary-high, $secondary-low);
-  padding: 1px 4px;
+  color: $primary-high-or-secondary-low;
+  padding: 0 4px 1px;
   background: $primary-low;
   border-radius: 8px;
 }
@@ -887,7 +871,7 @@ a.mention-group {
 
   &.notify,
   .small-action-desc & {
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: $primary-high-or-secondary-low;
     padding: 2px 4px;
     background: $primary-low;
     border-radius: 8px;
@@ -917,7 +901,7 @@ a.mention-group {
     }
 
     > .d-icon {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       margin-right: 6px;
       font-size: $font-0;
       line-height: $line-height-large;
@@ -933,7 +917,7 @@ a.mention-group {
 
     > span.help {
       display: inline-block;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       font-size: $font-down-1;
       font-style: italic;
       line-height: $line-height-large;
@@ -948,7 +932,7 @@ a.mention-group {
 
 .broken-image {
   display: inline-flex;
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+  color: $primary-low-mid-or-secondary-high;
   border: 1px solid $primary-low;
   font-size: $font-up-5;
 

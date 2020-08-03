@@ -200,7 +200,7 @@
   .unread-notifications {
     left: auto;
     right: -3px;
-    background-color: dark-light-choose($tertiary-medium, $tertiary);
+    background-color: $tertiary-med-or-tertiary;
   }
   .unread-high-priority-notifications,
   .ring {

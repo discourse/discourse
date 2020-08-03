@@ -282,15 +282,6 @@ const Theme = RestModel.extend({
     parentThemes.addObject(theme);
   },
 
-  @discourseComputed("name", "default")
-  description: function(name, isDefault) {
-    if (isDefault) {
-      return I18n.t("admin.customize.theme.default_name", { name: name });
-    } else {
-      return name;
-    }
-  },
-
   checkForUpdates() {
     return this.save({ remote_check: true }).then(() =>
       this.set("changed", false)

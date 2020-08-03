@@ -16,7 +16,7 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def is_group_owner
-    scope.is_admin? || fetch_group_user&.owner
+    fetch_group_user&.owner
   end
 
   def include_is_group_owner_display?

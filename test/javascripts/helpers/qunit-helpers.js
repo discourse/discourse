@@ -26,6 +26,8 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import User from "discourse/models/user";
 import { mapRoutes } from "discourse/mapping-router";
 import { currentSettings, mergeSettings } from "helpers/site-settings";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -120,6 +122,7 @@ export function controllerModule(name, args = {}) {
 export function discourseModule(name, hooks) {
   QUnit.module(name, {
     beforeEach() {
+      this.container = getOwner(this);
       this.siteSettings = currentSettings();
       if (hooks && hooks.beforeEach) {
         hooks.beforeEach.call(this);
@@ -148,10 +151,6 @@ export function acceptance(name, options) {
       HeaderComponent.reopen({ examineDockHeader: function() {} });
 
       resetExtraClasses();
-      if (options.beforeEach) {
-        options.beforeEach.call(this);
-      }
-
       if (options.mobileView) {
         forceMobile();
       }
@@ -173,6 +172,10 @@ export function acceptance(name, options) {
       clearHTMLCache();
       resetPluginApi();
       Discourse.reset();
+      this.container = getOwner(this);
+      if (options.beforeEach) {
+        options.beforeEach.call(this);
+      }
     },
 
     afterEach() {
@@ -196,15 +199,16 @@ export function acceptance(name, options) {
       resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+      setTopicList(null);
       _clearSnapshots();
-      Discourse._runInitializer("instanceInitializers", function(
-        initName,
-        initializer
-      ) {
-        if (initializer && initializer.teardown) {
-          initializer.teardown(Discourse.__container__);
+      Discourse._runInitializer(
+        "instanceInitializers",
+        (initName, initializer) => {
+          if (initializer && initializer.teardown) {
+            initializer.teardown(this.container);
+          }
         }
-      });
+      );
       Discourse.reset();
 
       // We do this after reset so that the willClearRender will have already fired
@@ -214,7 +218,7 @@ export function acceptance(name, options) {
 }
 
 export function controllerFor(controller, model) {
-  controller = Discourse.__container__.lookup("controller:" + controller);
+  controller = getOwner(this).lookup("controller:" + controller);
   if (model) {
     controller.set("model", model);
   }

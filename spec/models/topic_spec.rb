@@ -531,11 +531,31 @@ describe Topic do
         expect(Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?")).to eq([topic])
       end
 
+      it 'returns the similar topic even if raw is blank' do
+        expect(Topic.similar_to("has evil trout made any topics?", "")).to eq([topic])
+      end
+
       it 'matches title against title and raw against raw when searching for topics' do
         topic.update!(title: '1 2 3 numbered titles')
         post.update!(raw: 'random toy poodle')
 
         expect(Topic.similar_to("unrelated term", "1 2 3 poddle")).to eq([])
+      end
+
+      it 'doesnt match numbered lists against numbers in Post#raw' do
+        post.update!(raw: <<~RAW)
+        Internet Explorer 11+ Oct 2013 Google Chrome 32+ Jan 2014 Firefox 27+ Feb 2014 Safari 6.1+ Jul 2012 Safari, iOS 8+ Oct 2014
+        RAW
+
+        post.topic.update!(title: 'Where are we with browser support in 2019?')
+
+        topics = Topic.similar_to("Videos broken in composer", <<~RAW)
+        1. Do something
+        2. Do something else
+        3. Do more things
+        RAW
+
+        expect(topics).to eq([])
       end
 
       context "secure categories" do
@@ -663,8 +683,9 @@ describe Topic do
         context "from a muted user" do
           before { MutedUser.create!(user: another_user, muted_user: user) }
 
-          it 'silently fails' do
-            expect(topic.invite(user, another_user.username)).to eq(true)
+          it 'fails with an error message' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
@@ -679,6 +700,49 @@ describe Topic do
           it 'should raise error' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::UserExists)
+          end
+        end
+
+        context "when invited_user has enabled allow_list" do
+          fab!(:user2) { Fabricate(:user) }
+          fab!(:admin) { Fabricate(:admin) }
+          fab!(:pm) { Fabricate(:private_message_topic, user: user, topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: user),
+            Fabricate.build(:topic_allowed_user, user: user2)
+          ]) }
+
+          it 'succeeds when inviter is in allowed list' do
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
+            expect(topic.invite(user, another_user.username)).to eq(true)
+          end
+
+          it 'should raise error when inviter not in allowed list' do
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
+          end
+
+          it 'should succeed for staff even when not allowed' do
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
+            expect(topic.invite(another_user, admin.username)).to eq(true)
+          end
+
+          it 'should raise error when target_user is not in inviters allowed list' do
+            user.user_option.update!(enable_allowed_pm_users: true)
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
+          end
+
+          it 'should raise error if target_user has not allowed any of the other participants' do
+            user2.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: user2, allowed_pm_user: user)
+
+            expect { pm.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
           end
         end
       end
@@ -800,8 +864,9 @@ describe Topic do
         context "for a muted topic" do
           before { TopicUser.change(another_user.id, topic.id, notification_level: TopicUser.notification_levels[:muted]) }
 
-          it 'silently fails' do
-            expect(topic.invite(user, another_user.username)).to eq(true)
+          it 'fails with an error message' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
