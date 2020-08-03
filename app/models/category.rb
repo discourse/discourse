@@ -810,6 +810,17 @@ class Category < ActiveRecord::Base
     Category.find_by_id(query)
   end
 
+  def self.find_by_slug_path_with_id(slug_path_with_id)
+    slug_path = slug_path_with_id.split("/")
+
+    if slug_path.last =~ /\A\d+\Z/
+      id = slug_path.pop.to_i
+      Category.find_by_id(id)
+    else
+      Category.find_by_slug_path(slug_path)
+    end
+  end
+
   def self.find_by_slug(category_slug, parent_category_slug = nil)
     return nil if category_slug.nil?
 

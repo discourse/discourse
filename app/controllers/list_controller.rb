@@ -337,17 +337,8 @@ class ListController < ApplicationController
 
   def set_category
     category_slug_path_with_id = params.require(:category_slug_path_with_id)
-    slug_path = category_slug_path_with_id.split("/")
 
-    if slug_path.present?
-      if slug_path.last =~ /\A\d+\Z/
-        id = slug_path.pop.to_i
-        @category = Category.find_by_id(id)
-      else
-        @category = Category.find_by_slug_path(slug_path)
-      end
-    end
-
+    @category = Category.find_by_slug_path_with_id(category_slug_path_with_id)
     if @category.nil?
       raise Discourse::NotFound.new("category not found", check_permalinks: true)
     end
