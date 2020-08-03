@@ -33,17 +33,9 @@ export default DiscourseRoute.extend({
         }
       }
 
-      if (Boolean(category)) {
-        let route = "discovery.parentCategory";
-        let params = { category, slug: category.slug };
-        if (category.parentCategory) {
-          route = "discovery.category";
-          params = {
-            category,
-            parentSlug: category.parentCategory.slug,
-            slug: category.slug,
-          };
-        }
+      if (category) {
+        let route = "discovery.category";
+        let params = { category, id: category.id };
 
         this.replaceWith(route, params).then((e) => {
           if (this.controllerFor("navigation/category").canCreateTopic) {
