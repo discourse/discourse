@@ -88,12 +88,7 @@ const NavItem = EmberObject.extend({
   count(name, category, tagId) {
     const state = this.topicTrackingState;
     if (state) {
-      return state.lookupCount(
-        name,
-        category,
-        tagId,
-        this.currentRouteQueryParams
-      );
+      return state.lookupCount(name, category, tagId);
     }
   }
 });

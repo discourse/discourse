@@ -6,6 +6,12 @@ import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
 
+const topicTrackingFilterFns = [];
+
+export function addTopicTrackingFilterFn(modifier) {
+  topicTrackingFilterFns.push(modifier);
+}
+
 function isNew(topic) {
   return (
     topic.last_read_post_number === null &&
@@ -414,13 +420,11 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countCategoryByState(type, categoryId, tagId, filterTracked) {
+  countCategoryByState(type, categoryId, tagId) {
     const subcategoryIds = this.getSubCategoryIds(categoryId);
     const mutedCategoryIds =
       this.currentUser && this.currentUser.muted_category_ids;
-    // filter by tracked tags/categories is filterTracked is true
-    filterTracked;
-    return _.chain(this.states)
+    let topics = _.chain(this.states)
       .filter(type === "new" ? isNew : isUnread)
       .filter(
         topic =>
@@ -432,20 +436,20 @@ const TopicTrackingState = EmberObject.extend({
             !mutedCategoryIds ||
             mutedCategoryIds.indexOf(topic.category_id) === -1)
       )
-      .value().length;
+      .value();
+
+    topicTrackingFilterFns.forEach(filterFn => {
+      topics = filterFn(topics, this.currentUser, type, categoryId, tagId);
+    });
+    return topics.length;
   },
 
-  countNew(categoryId, tagId, filterTracked) {
-    return this.countCategoryByState("new", categoryId, tagId, filterTracked);
+  countNew(categoryId, tagId) {
+    return this.countCategoryByState("new", categoryId, tagId);
   },
 
-  countUnread(categoryId, tagId, filterTracked) {
-    return this.countCategoryByState(
-      "unread",
-      categoryId,
-      tagId,
-      filterTracked
-    );
+  countUnread(categoryId, tagId) {
+    return this.countCategoryByState("unread", categoryId, tagId);
   },
 
   countTags(tags) {
@@ -499,20 +503,40 @@ const TopicTrackingState = EmberObject.extend({
     return sum;
   },
 
-  lookupCount(name, category, tagId, filterTracked = false) {
+  lookupCount(name, category, tagId) {
+    let count;
+    let categoryId = category ? get(category, "id") : null;
+
+    if (name === "latest") {
+      count =
+        this.lookupCount("new", category, tagId) +
+        this.lookupCount("unread", category, tagId);
+    } else if (name === "new") {
+      count = this.countNew(categoryId, tagId);
+    } else if (name === "unread") {
+      count = this.countUnread(categoryId, tagId);
+    } else {
+      const categoryName = name.split("/")[1];
+      if (categoryName) {
+        count = this.countCategory(categoryId, tagId);
+      }
+    }
+    return count;
+  },
+  lookupCount(name, category, tagId) {
     if (name === "latest") {
       return (
-        this.lookupCount("new", category, tagId, filterTracked) +
-        this.lookupCount("unread", category, tagId, filterTracked)
+        this.lookupCount("new", category, tagId) +
+        this.lookupCount("unread", category, tagId)
       );
     }
 
     let categoryId = category ? get(category, "id") : null;
 
     if (name === "new") {
-      return this.countNew(categoryId, tagId, filterTracked);
+      return this.countNew(categoryId, tagId);
     } else if (name === "unread") {
-      return this.countUnread(categoryId, tagId, filterTracked);
+      return this.countUnread(categoryId, tagId);
     } else {
       const categoryName = name.split("/")[1];
       if (categoryName) {
