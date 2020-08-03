@@ -2,73 +2,128 @@
 
 require "rails_helper"
 
-describe Middleware::AnonymousCache::Helper do
+describe Middleware::AnonymousCache do
+  let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
   def env(opts = {})
-    {
-      "HTTP_HOST" => "http://test.com",
-      "REQUEST_URI" => "/path?bla=1",
-      "REQUEST_METHOD" => "GET",
-      "rack.input" => ""
-    }.merge(opts)
+    Rack::MockRequest.env_for("http://test.com/path?bla=1").merge(opts)
   end
 
-  def new_helper(opts = {})
-    Middleware::AnonymousCache::Helper.new(env(opts))
-  end
-
-  context "cachable?" do
-    it "true by default" do
-      expect(new_helper.cacheable?).to eq(true)
+  describe Middleware::AnonymousCache::Helper do
+    def new_helper(opts = {})
+      Middleware::AnonymousCache::Helper.new(env(opts))
     end
 
-    it "is false for non GET" do
-      expect(new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?).to eq(false)
+    context "cachable?" do
+      it "true by default" do
+        expect(new_helper.cacheable?).to eq(true)
+      end
+
+      it "is false for non GET" do
+        expect(new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?).to eq(false)
+      end
+
+      it "is false if it has an auth cookie" do
+        expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1" * 32}; jill=2").cacheable?).to eq(false)
+      end
     end
 
-    it "is false if it has an auth cookie" do
-      expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1" * 32}; jill=2").cacheable?).to eq(false)
+    context "per theme cache" do
+      it "handles theme keys" do
+        theme = Fabricate(:theme, user_selectable: true)
+
+        with_bad_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=abc").cache_key
+        with_no_theme_key = new_helper().cache_key
+
+        expect(with_bad_theme_key).to eq(with_no_theme_key)
+
+        with_good_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=#{theme.id}").cache_key
+
+        expect(with_good_theme_key).not_to eq(with_no_theme_key)
+      end
     end
-  end
 
-  context "per theme cache" do
-    it "handles theme keys" do
-      theme = Fabricate(:theme, user_selectable: true)
+    context "with header-based locale locale" do
+      it "handles different languages" do
+        # Normally does not check the language header
+        french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
+        french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
+        english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
+        none = new_helper.cache_key
 
-      with_bad_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=abc").cache_key
-      with_no_theme_key = new_helper().cache_key
+        expect(none).to eq(french1)
+        expect(none).to eq(french2)
+        expect(none).to eq(english)
 
-      expect(with_bad_theme_key).to eq(with_no_theme_key)
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_accept_language_header = true
 
-      with_good_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=#{theme.id}").cache_key
+        french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
+        french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
+        english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
+        none = new_helper.cache_key
 
-      expect(with_good_theme_key).not_to eq(with_no_theme_key)
+        expect(none).to eq(english)
+        expect(french1).to eq(french2)
+        expect(french1).not_to eq(none)
+      end
     end
-  end
 
-  context "with header-based locale locale" do
-    it "handles different languages" do
-      # Normally does not check the language header
-      french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
-      french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
-      english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
-      none = new_helper.cache_key
+    context "cached" do
+      let!(:helper) do
+        new_helper("ANON_CACHE_DURATION" => 10)
+      end
 
-      expect(none).to eq(french1)
-      expect(none).to eq(french2)
-      expect(none).to eq(english)
+      let!(:crawler) do
+        new_helper("ANON_CACHE_DURATION" => 10, "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)")
+      end
 
-      SiteSetting.allow_user_locale = true
-      SiteSetting.set_locale_from_accept_language_header = true
+      after do
+        helper.clear_cache
+        crawler.clear_cache
+      end
 
-      french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
-      french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
-      english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
-      none = new_helper.cache_key
+      before do
+        global_setting :anon_cache_store_threshold, 1
+      end
 
-      expect(none).to eq(english)
-      expect(french1).to eq(french2)
-      expect(french1).not_to eq(none)
+      it "compresses body on demand" do
+        global_setting :compress_anon_cache, true
+
+        payload = "x" * 1000
+        helper.cache([200, { "HELLO" => "WORLD" }, [payload]])
+
+        helper = new_helper("ANON_CACHE_DURATION" => 10)
+        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, [payload]])
+
+        # depends on i7z implementation, but lets assume it is stable unless we discover
+        # otherwise
+        expect(Discourse.redis.get(helper.cache_key_body).length).to eq(16)
+      end
+
+      it "handles brotli switching" do
+        helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
+
+        helper = new_helper("ANON_CACHE_DURATION" => 10)
+        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
+
+        helper = new_helper("ANON_CACHE_DURATION" => 10, "HTTP_ACCEPT_ENCODING" => "gz, br")
+        expect(helper.cached).to eq(nil)
+      end
+
+      it "returns cached data for cached requests" do
+        helper.is_mobile = true
+        expect(helper.cached).to eq(nil)
+        helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
+
+        helper = new_helper("ANON_CACHE_DURATION" => 10)
+        helper.is_mobile = true
+        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
+
+        expect(crawler.cached).to eq(nil)
+        crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
+        expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
+      end
     end
   end
 
@@ -140,63 +195,6 @@ describe Middleware::AnonymousCache::Helper do
     end
   end
 
-  context "cached" do
-    let!(:helper) do
-      new_helper("ANON_CACHE_DURATION" => 10)
-    end
-
-    let!(:crawler) do
-      new_helper("ANON_CACHE_DURATION" => 10, "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)")
-    end
-
-    after do
-      helper.clear_cache
-      crawler.clear_cache
-    end
-
-    before do
-      global_setting :anon_cache_store_threshold, 1
-    end
-
-    it "compresses body on demand" do
-      global_setting :compress_anon_cache, true
-
-      payload = "x" * 1000
-      helper.cache([200, { "HELLO" => "WORLD" }, [payload]])
-
-      helper = new_helper("ANON_CACHE_DURATION" => 10)
-      expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, [payload]])
-
-      # depends on i7z implementation, but lets assume it is stable unless we discover
-      # otherwise
-      expect(Discourse.redis.get(helper.cache_key_body).length).to eq(16)
-    end
-
-    it "handles brotli switching" do
-      helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
-
-      helper = new_helper("ANON_CACHE_DURATION" => 10)
-      expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
-
-      helper = new_helper("ANON_CACHE_DURATION" => 10, "HTTP_ACCEPT_ENCODING" => "gz, br")
-      expect(helper.cached).to eq(nil)
-    end
-
-    it "returns cached data for cached requests" do
-      helper.is_mobile = true
-      expect(helper.cached).to eq(nil)
-      helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
-
-      helper = new_helper("ANON_CACHE_DURATION" => 10)
-      helper.is_mobile = true
-      expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
-
-      expect(crawler.cached).to eq(nil)
-      crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
-      expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
-    end
-  end
-
   context "crawler blocking" do
     let :non_crawler do
       {
@@ -206,7 +204,6 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     def get(path, options)
-      middleware = Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] })
       @env = env({
         "REQUEST_URI" => path,
         "PATH_INFO" => path,
