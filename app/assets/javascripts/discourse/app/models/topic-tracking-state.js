@@ -8,8 +8,8 @@ import User from "discourse/models/user";
 
 const topicTrackingFilterFns = [];
 
-export function addTopicTrackingFilterFn(modifier) {
-  topicTrackingFilterFns.push(modifier);
+export function addTopicTrackingFilterFn(fn) {
+  topicTrackingFilterFns.push(fn);
 }
 
 function isNew(topic) {
