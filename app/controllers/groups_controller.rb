@@ -331,7 +331,8 @@ class GroupsController < ApplicationController
         count: usernames.size
       ))
     else
-      users.uniq.each do |user|
+      uniq_users = users.uniq
+      uniq_users.each do |user|
         begin
           group.add(user)
           GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
@@ -348,7 +349,7 @@ class GroupsController < ApplicationController
       end
 
       render json: success_json.merge!(
-        usernames: users.uniq.map(&:username),
+        usernames: uniq_users.map(&:username),
         emails: emails
       )
     end
