@@ -4,13 +4,18 @@ module Imap
   module Providers
     class Gmail < Generic
       X_GM_LABELS = 'X-GM-LABELS'
+      X_GM_THRID = 'X-GM-THRID'
 
       def imap
         @imap ||= super.tap { |imap| apply_gmail_patch(imap) }
       end
 
       def emails(uids, fields, opts = {})
-        fields[fields.index('LABELS')] = X_GM_LABELS
+
+        # gmail has a special header for labels
+        if fields.include?('LABELS')
+          fields[fields.index('LABELS')] = X_GM_LABELS
+        end
 
         emails = super(uids, fields, opts)
 
@@ -22,7 +27,7 @@ module Imap
             email['LABELS'].flatten!
           end
 
-          email['LABELS'] << '\\Inbox' if opts[:mailbox] == 'INBOX'
+          email['LABELS'] << '\\Inbox' if @open_mailbox_name == 'INBOX'
 
           email['LABELS'].uniq!
         end
@@ -55,6 +60,33 @@ module Imap
         return '\\Starred' if tag == 'starred'
 
         super(tag)
+      end
+
+      def archive(uid)
+        # all emails in the thread must be archived in Gmail for the thread
+        # to get removed from the inbox
+        thread_id = thread_id_from_uid(uid)
+        emails_to_archive = emails_in_thread(thread_id)
+        emails_to_archive.each do |email|
+          labels = email['LABELS']
+          new_labels = labels.reject { |l| l == "\\Inbox" }
+          store(email["UID"], "LABELS", labels, new_labels)
+        end
+        Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) archived in Gmail mailbox for #{@username}")
+      end
+
+      def thread_id_from_uid(uid)
+        fetched = imap.uid_fetch(uid, [X_GM_THRID])
+        if !fetched
+          raise "Thread not found for UID #{uid}!"
+        end
+
+        fetched.last.attr[X_GM_THRID]
+      end
+
+      def emails_in_thread(thread_id)
+        uids_to_fetch = imap.uid_search("#{X_GM_THRID} #{thread_id}")
+        emails(uids_to_fetch, ["UID", "LABELS"])
       end
 
       private

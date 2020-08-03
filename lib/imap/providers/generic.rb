@@ -4,6 +4,9 @@ require 'net/imap'
 
 module Imap
   module Providers
+
+    class WriteDisabledError < StandardError; end
+
     class Generic
 
       def initialize(server, options = {})
@@ -65,11 +68,16 @@ module Imap
 
       def open_mailbox(mailbox_name, write: false)
         if write
-          raise 'two-way IMAP sync is disabled' if !SiteSetting.enable_imap_write
+          if !SiteSetting.enable_imap_write
+            raise WriteDisabledError.new("Two-way IMAP sync is disabled! Cannot write to inbox.")
+          end
           imap.select(mailbox_name)
         else
           imap.examine(mailbox_name)
         end
+
+        @open_mailbox_name = mailbox_name
+        @open_mailbox_write = write
 
         {
           uid_validity: imap.responses['UIDVALIDITY'][-1]
@@ -77,7 +85,14 @@ module Imap
       end
 
       def emails(uids, fields, opts = {})
-        imap.uid_fetch(uids, fields).map do |email|
+        fetched = imap.uid_fetch(uids, fields)
+
+        # This will happen if the email does not exist in the provided mailbox.
+        # It may have been deleted or otherwise moved, e.g. if deleted in Gmail
+        # it will end up in "[Gmail]/Bin"
+        return [] if fetched.nil?
+
+        fetched.map do |email|
           attributes = {}
 
           fields.each do |field|
@@ -105,11 +120,15 @@ module Imap
       end
 
       def tag_to_label(tag)
-        labels[tag]
+        tag
       end
 
       def list_mailboxes
         imap.list('', '*').map(&:name)
+      end
+
+      def archive(uid)
+        # do nothing by default, just removing the Inbox label should be enough
       end
     end
   end

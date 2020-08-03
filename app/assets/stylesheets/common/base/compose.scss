@@ -256,6 +256,9 @@
   #reply-title {
     margin: 0 0 5px 0;
     flex-basis: 50%;
+    &:focus {
+      box-shadow: none;
+    }
   }
 
   .mini-tag-chooser {

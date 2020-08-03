@@ -231,6 +231,7 @@ export default Component.extend({
   showLink: true,
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
+  isEditorFocused: false,
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
@@ -456,7 +457,6 @@ export default Component.extend({
         } else {
           $editorInput.autocomplete({ cancel: true });
           this.setProperties({
-            isEditorFocused: $("textarea.d-editor-input").is(":focus"),
             emojiPickerIsActive: true
           });
 
@@ -944,7 +944,6 @@ export default Component.extend({
         return;
       }
 
-      this.set("isEditorFocused", $("textarea.d-editor-input").is(":focus"));
       this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
     },
 
@@ -1055,6 +1054,14 @@ export default Component.extend({
           );
         }
       }
+    },
+
+    focusIn() {
+      this.set("isEditorFocused", true);
+    },
+
+    focusOut() {
+      this.set("isEditorFocused", false);
     }
   }
 });

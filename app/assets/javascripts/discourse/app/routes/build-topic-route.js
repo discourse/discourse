@@ -6,6 +6,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
+import { action } from "@ember/object";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
@@ -147,13 +148,27 @@ export default function(filter, extras) {
         );
       },
 
+      resetParams(controller) {
+        controller.setProperties({
+          order: "default",
+          ascending: false,
+          max_posts: null,
+          filter: null
+        });
+      },
+
+      @action
+      willTransition() {
+        this._super(...arguments);
+
+        if (this.controller) {
+          this.resetParams(this.controller);
+        }
+      },
+
       resetController(controller, isExiting) {
         if (isExiting) {
-          controller.setProperties({
-            order: "default",
-            ascending: false,
-            filter: null
-          });
+          this.resetParams(controller);
         }
       },
 

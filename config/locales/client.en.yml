@@ -2466,6 +2466,7 @@ en:
         success: "We've invited that user to participate in this message."
         success_group: "We've invited that group to participate in this message."
         error: "Sorry, there was an error inviting that user."
+        not_allowed: "Sorry, that user can't be invited."
         group_name: "group name"
 
       controls: "Topic Controls"

@@ -5,7 +5,7 @@
   max-width: 800px;
 }
 
-.pp-header {
+.published-page-header {
   width: 100%;
   top: 0;
   z-index: z("header");
@@ -13,18 +13,18 @@
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.25);
   position: sticky;
   top: 0;
-  .pp-header-wrapper {
+  .published-page-header-wrapper {
     width: 925px;
     display: flex;
     margin: 0em auto;
     padding: 0.5em 0;
     align-items: center;
-    .pp-logo {
+    .published-page-logo {
       height: 45px;
       margin-right: 1em;
       line-height: 1em;
     }
-    .pp-title {
+    .published-page-title {
       color: $header_primary;
       font-size: 3em;
       margin: 0;

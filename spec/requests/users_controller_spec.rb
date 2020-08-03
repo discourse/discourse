@@ -2377,6 +2377,17 @@ describe UsersController do
             expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
             expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
           end
+
+          it 'can succesfully select an avatar using a cooked URL' do
+            events = DiscourseEvent.track_events do
+              put "/u/#{user.username}/preferences/avatar/select.json", params: { url: UrlHelper.cook_url(avatar1.url) }
+            end
+
+            expect(events.map { |event| event[:event_name] }).to include(:user_updated)
+            expect(response.status).to eq(200)
+            expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
+            expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
+          end
         end
       end
     end

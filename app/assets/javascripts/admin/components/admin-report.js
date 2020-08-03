@@ -234,6 +234,10 @@ export default Component.extend({
 
   @action
   refreshReport(options = {}) {
+    if (!this.attrs.onRefresh) {
+      return;
+    }
+
     this.attrs.onRefresh({
       type: this.get("model.type"),
       chartGrouping: options.chartGrouping,

@@ -176,11 +176,13 @@ class ListController < ApplicationController
   def latest_feed
     discourse_expires_in 1.minute
 
+    options = { order: 'created' }.merge(build_topic_list_options)
+
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.latest")}"
     @link = "#{Discourse.base_url}/latest"
     @atom_link = "#{Discourse.base_url}/latest.rss"
     @description = I18n.t("rss_description.latest")
-    @topic_list = TopicQuery.new(nil, order: 'created').list_latest
+    @topic_list = TopicQuery.new(nil, options).list_latest
 
     render 'list', formats: [:rss]
   end

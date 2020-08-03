@@ -27,6 +27,7 @@ import User from "discourse/models/user";
 import { mapRoutes } from "discourse/mapping-router";
 import { currentSettings, mergeSettings } from "helpers/site-settings";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -198,6 +199,7 @@ export function acceptance(name, options) {
       resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
+      setTopicList(null);
       _clearSnapshots();
       Discourse._runInitializer(
         "instanceInitializers",
