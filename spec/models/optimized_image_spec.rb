@@ -332,10 +332,7 @@ describe OptimizedImage do
             expect(oi.height).to eq(200)
             expect(oi.url).to eq("//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com#{optimized_path}")
             expect(oi.filesize).to be > 0
-          end
 
-          it "allows to recalculate the filesize" do
-            oi = OptimizedImage.create_for(s3_upload, 100, 200)
             oi.filesize = nil
 
             stub_request(
