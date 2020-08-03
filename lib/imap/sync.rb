@@ -310,15 +310,17 @@ module Imap
         new_labels << '\\Inbox'
       else
         Logger.log("[IMAP] (#{@group.name}) Archiving UID #{incoming_email.imap_uid}")
+
+        # some providers need special handling for archiving. this way we preserve
+        # any new tag-labels, and archive, even though it may cause extra requests
+        # to the IMAP server
+        @provider.archive(incoming_email.imap_uid)
       end
 
+      # regardless of whether the topic needs to be archived we still update
+      # the flags and the labels
       @provider.store(incoming_email.imap_uid, 'FLAGS', flags, new_flags)
       @provider.store(incoming_email.imap_uid, 'LABELS', labels, new_labels)
-
-      # some providers need special handling for archiving. this way we preserve
-      # any new tag-labels, and archive, even though it may cause extra requests
-      # to the IMAP server
-      @provider.archive(incoming_email.imap_uid)
     end
   end
 end

@@ -775,6 +775,7 @@ class Group < ActiveRecord::Base
 
         update_columns(imap_last_error: nil)
       rescue => ex
+        Rails.logger.warn("[IMAP] Mailbox refresh failed for group #{self.name} with error: #{ex}")
         update_columns(imap_last_error: ex.message)
       end
 
