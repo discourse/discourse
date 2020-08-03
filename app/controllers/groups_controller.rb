@@ -298,7 +298,7 @@ class GroupsController < ApplicationController
   def add_members
     group = Group.find(params[:id])
     group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
-    users = users_from_params(no_exception: true).to_a
+    users = users_from_params.to_a
 
     if group.public_admission
       if !guardian.can_log_group_changes?(group) && current_user != users.first
@@ -324,12 +324,6 @@ class GroupsController < ApplicationController
       )
     end
 
-    if users.uniq.length != users.length
-      raise Discourse::InvalidParameters.new(
-        'user was invited by both username and email'
-      )
-    end
-
     if (usernames = group.users.where(id: users.map(&:id)).pluck(:username)).present?
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
@@ -337,14 +331,11 @@ class GroupsController < ApplicationController
         count: usernames.size
       ))
     else
-      users.each do |user|
+      users.uniq.each do |user|
         begin
           group.add(user)
           GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
-
-          if params[:notify_users] == "true" || params[:notify_users] == true
-            group.notify_added_to_group(user)
-          end
+          group.notify_added_to_group(user) if params[:notify_users]&.to_s == "true"
         rescue ActiveRecord::RecordNotUnique
           # Under concurrency, we might attempt to insert two records quickly and hit a DB
           # constraint. In this case we can safely ignore the error and act as if the user
@@ -357,7 +348,7 @@ class GroupsController < ApplicationController
       end
 
       render json: success_json.merge!(
-        usernames: users.map(&:username),
+        usernames: users.uniq.map(&:username),
         emails: emails
       )
     end
@@ -429,6 +420,9 @@ class GroupsController < ApplicationController
     params[:user_emails] = params[:user_email] if params[:user_email].present?
 
     users = users_from_params
+    raise Discourse::InvalidParameters.new(
+      'user_ids or usernames or user_emails must be present'
+    ) if users.empty?
 
     if group.public_exit
       if !guardian.can_log_group_changes?(group) && current_user != users.first
@@ -619,7 +613,7 @@ class GroupsController < ApplicationController
     group
   end
 
-  def users_from_params(no_exception: false)
+  def users_from_params
     if params[:usernames].present?
       users = User.where(username_lower: params[:usernames].split(",").map(&:downcase))
       raise Discourse::InvalidParameters.new(:usernames) if users.blank?
@@ -633,13 +627,7 @@ class GroupsController < ApplicationController
       users = User.with_email(params[:user_emails].split(","))
       raise Discourse::InvalidParameters.new(:user_emails) if users.blank?
     else
-      if no_exception
-        return [] # No users found. Early return an empty array.
-      else
-        raise Discourse::InvalidParameters.new(
-          'user_ids or usernames or user_emails must be present'
-        )
-      end
+      users = []
     end
     users
   end

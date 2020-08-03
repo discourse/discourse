@@ -1056,24 +1056,23 @@ describe GroupsController do
       it "does not notify users when the param is not present" do
         user2 = Fabricate(:user)
 
-        put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
+        expect {
+          put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
+        }.to change { Topic.where(archetype: "private_message").count }.by(0)
 
         expect(response.status).to eq(200)
-
-        topic = Topic.find_by(title: "You have been added as a member of the #{group.name} group", archetype: "private_message")
-        expect(topic.nil?).to eq(true)
       end
 
       it "notifies users when the param is present" do
         user2 = Fabricate(:user)
 
-        put "/groups/#{group.id}/members.json", params: { usernames: user2.username, notify_users: true }
+        expect {
+          put "/groups/#{group.id}/members.json", params: { usernames: user2.username, notify_users: true }
+        }.to change { Topic.where(archetype: "private_message").count }.by(1)
 
         expect(response.status).to eq(200)
 
-        topic = Topic.find_by(title: "You have been added as a member of the #{group.name} group", archetype: "private_message")
-        expect(topic.nil?).to eq(false)
-        expect(topic.topic_users.map(&:user_id)).to include(-1, user2.id)
+        expect(Topic.last.topic_users.map(&:user_id)).to include(Discourse::SYSTEM_USER_ID, user2.id)
       end
 
       context "is able to add several members to a group" do
@@ -1192,15 +1191,14 @@ describe GroupsController do
         expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
       end
 
-      it "will error if the same user is invite via username and email" do
+      it "will invite the user if their username and email are both invited" do
         new_user = Fabricate(:user)
         put "/groups/#{group.id}/members.json", params: { usernames: new_user.username, emails: new_user.email }
 
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(200)
         body = response.parsed_body
 
-        expect(body["errors"].first).to include("user was invited by both username and email")
-
+        expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
       end
 
       context 'public group' do
