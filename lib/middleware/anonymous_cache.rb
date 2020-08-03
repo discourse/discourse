@@ -307,7 +307,7 @@ module Middleware
       @app = app
     end
 
-    PAYLOAD_INVALID_REQUEST_METHODS = ["GET", "DELETE", "HEAD"]
+    PAYLOAD_INVALID_REQUEST_METHODS = ["GET", "HEAD"]
 
     def call(env)
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
