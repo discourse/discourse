@@ -13,6 +13,7 @@ body {
   textarea {
     background-color: $secondary;
     font-size: $font-size-ios-input;
+    -webkit-tap-highlight-color: transparent;
   }
 
   input {
@@ -32,6 +33,10 @@ body {
     &[type="color"] {
       font-size: $font-size-ios-input;
     }
+  }
+
+  input#reply-title {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
