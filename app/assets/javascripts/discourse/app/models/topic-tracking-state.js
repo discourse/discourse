@@ -504,26 +504,6 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   lookupCount(name, category, tagId) {
-    let count;
-    let categoryId = category ? get(category, "id") : null;
-
-    if (name === "latest") {
-      count =
-        this.lookupCount("new", category, tagId) +
-        this.lookupCount("unread", category, tagId);
-    } else if (name === "new") {
-      count = this.countNew(categoryId, tagId);
-    } else if (name === "unread") {
-      count = this.countUnread(categoryId, tagId);
-    } else {
-      const categoryName = name.split("/")[1];
-      if (categoryName) {
-        count = this.countCategory(categoryId, tagId);
-      }
-    }
-    return count;
-  },
-  lookupCount(name, category, tagId) {
     if (name === "latest") {
       return (
         this.lookupCount("new", category, tagId) +
