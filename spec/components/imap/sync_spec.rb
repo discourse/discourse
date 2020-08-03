@@ -26,7 +26,20 @@ describe Imap::Sync do
     )
   end
 
-  let(:sync_handler) { Imap::Sync.new(group, provider: MockedImapProvider) }
+  let(:sync_handler) { Imap::Sync.new(group) }
+
+  before do
+    mocked_imap_provider = MockedImapProvider.new(
+      group.imap_server,
+      port: group.imap_port,
+      ssl: group.imap_ssl,
+      username: group.email_username,
+      password: group.email_password
+    )
+    Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(
+      mocked_imap_provider
+    )
+  end
 
   context 'no previous sync' do
     let(:from) { 'john@free.fr' }

@@ -14,26 +14,9 @@ module Imap
       end
     end
 
-    def self.for_group(group, opts = {})
-      if group.imap_server == 'imap.gmail.com'
-        opts[:provider] ||= Imap::Providers::Gmail
-      end
-
-      Imap::Sync.new(group, opts)
-    end
-
     def initialize(group, opts = {})
       @group = group
-
-      provider_klass ||= opts[:provider] || Imap::Providers::Generic
-      @provider = provider_klass.new(
-        @group.imap_server,
-        port: @group.imap_port,
-        ssl: @group.imap_ssl,
-        username: @group.email_username,
-        password: @group.email_password
-      )
-
+      @provider = Imap::Providers::Detector.init_with_detected_provider(@group.imap_config)
       connect!
     end
 
