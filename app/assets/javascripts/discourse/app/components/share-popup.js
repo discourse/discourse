@@ -20,8 +20,8 @@ export default Component.extend({
   sources(topic) {
     const privateContext =
       this.siteSettings.login_required ||
-      topic.isPrivateMessage ||
-      topic.invisible ||
+      (topic && topic.isPrivateMessage) ||
+      (topic && topic.invisible) ||
       this.privateCategory;
 
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
