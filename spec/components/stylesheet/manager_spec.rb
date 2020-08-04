@@ -171,6 +171,12 @@ describe Stylesheet::Manager do
       expect(link).not_to eq("")
     end
 
+    it "does not crash when no default theme is set" do
+      SiteSetting.default_theme_id = -1
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
+      expect(link).not_to eq("")
+    end
+
     it "does not crash on missing color scheme" do
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(125)
       expect(link).not_to eq("")

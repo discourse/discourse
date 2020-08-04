@@ -97,7 +97,7 @@ class Stylesheet::Manager
     color_scheme = begin
       ColorScheme.find(color_scheme_id)
     rescue
-      Theme.find(SiteSetting.default_theme_id).color_scheme || ColorScheme.base
+      Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme || ColorScheme.base
     end
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
