@@ -1138,7 +1138,7 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars[upload.url]
+    unless SiteSetting.selectable_avatars[upload.sha1]
       return render json: failed_json, status: 422
     end
 
