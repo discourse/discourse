@@ -4,17 +4,7 @@ require 'net/imap'
 
 module Imap
   module Providers
-
     class WriteDisabledError < StandardError; end
-
-    class Detector
-      def self.init_with_detected_provider(config)
-        if server == 'imap.gmail.com'
-          return Imap::Providers::Gmail.new(config[:server], config)
-        end
-        Imap::Providers::Generic.new(config[:server], config)
-      end
-    end
 
     class Generic
       def initialize(server, options = {})

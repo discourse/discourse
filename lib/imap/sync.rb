@@ -173,6 +173,10 @@ module Imap
       emails = @provider.emails(new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'])
       processed = 0
 
+      # TODO (maybe): We might need something here to exclusively handle
+      # the UID of the incoming email, so we don't end up with a race condition
+      # where the same UID is handled multiple times before the group imap_X
+      # columns are updated.
       emails.each do |email|
         # Synchronously process emails because the order of emails matter
         # (for example replies must be processed after the original email
