@@ -338,8 +338,8 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
         p.post_number <> o.new_post_number
     SQL
 
-    builder.where("topic_id = :topic_id") if args[:topic_id]
-    builder.exec(topic_id: args[:topic_id])
+    builder.where("topic_id = ?", args[:topic_id]) if args[:topic_id]
+    builder.exec
 
     [
       ["notifications", "post_number"],
@@ -349,18 +349,21 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
       ["topic_users", "highest_seen_post_number"],
       ["topic_users", "last_emailed_post_number"],
     ].each do |table, column|
-      DB.exec <<~SQL
+      builder = DB.build <<~SQL
         UPDATE
           #{table} AS x
         SET
           #{column} = p.sort_order * -1
         FROM
           posts AS p
-        WHERE
-          p.post_number < 0 AND
-          x.topic_id = p.topic_id AND
-          x.#{column} = ABS(p.post_number)
+        /*where*/
       SQL
+
+      builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
+      builder.where("p.post_number < 0")
+      builder.where("x.topic_id = p.topic_id")
+      builder.where("x.#{column} = ABS(p.post_number)")
+      builder.exec
 
       DB.exec <<~SQL
         UPDATE
@@ -372,14 +375,17 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
       SQL
     end
 
-    DB.exec <<~SQL
+    builder = DB.build <<~SQL
       UPDATE
         posts
       SET
         post_number = sort_order
-      WHERE
-        post_number < 0
+      /*where*/
     SQL
+
+    builder.where("topic_id = ?", args[:topic_id]) if args[:topic_id]
+    builder.where("post_number < 0")
+    builder.exec
 
   end
 
