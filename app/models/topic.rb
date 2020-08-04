@@ -514,8 +514,8 @@ class Topic < ActiveRecord::Base
     if SiteSetting.digest_suppress_categories.present?
       remove_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
     end
-    if SiteSetting.shared_drafts_category.present?
-      remove_category_ids << SiteSetting.shared_drafts_enabled?
+    if SiteSetting.shared_drafts_enabled?
+      remove_category_ids << SiteSetting.shared_drafts_category
     end
     if remove_category_ids.present?
       remove_category_ids.uniq!
