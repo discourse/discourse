@@ -26,6 +26,7 @@
   --success: #{$success};
   --love: #{$love};
 
+  --always-black-rgb: 0, 0, 0;
   --primary-rgb: #{hexToRGB($primary)};
   --primary-low-rgb: #{hexToRGB($primary-low)};
   --secondary-rgb: #{hexToRGB($secondary)};
