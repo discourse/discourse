@@ -190,7 +190,7 @@ describe Stylesheet::Manager do
       expect(link).to include("/stylesheets/color_definitions_#{Slug.for(ColorScheme.first.name)}_")
     end
 
-    it "does not fail with a color scheme name containing spaces and special charactrs" do
+    it "does not fail with a color scheme name containing spaces and special characters" do
       cs = Fabricate(:color_scheme, name: 'Funky Bunch -_ @#$*(')
       theme = Fabricate(:theme, color_scheme_id: cs.id)
       SiteSetting.default_theme_id = theme.id
