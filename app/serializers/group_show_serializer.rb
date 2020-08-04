@@ -44,11 +44,11 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def include_flair_icon?
-    is_group_owner && flair_icon.present?
+    flair_icon.present? && (is_group_owner || scope.is_admin?)
   end
 
   def include_flair_type?
-    is_group_owner && flair_type.present?
+    flair_type.present? && (is_group_owner || scope.is_admin?)
   end
 
   private
