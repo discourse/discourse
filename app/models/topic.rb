@@ -509,14 +509,17 @@ class Topic < ActiveRecord::Base
       topics = topics.where("topics.id NOT IN (?)", category_topic_ids)
     end
 
-    # Remove muted categories
-    muted_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
+    # Remove muted and shared draft categories
+    remove_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
     if SiteSetting.digest_suppress_categories.present?
-      muted_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
-      muted_category_ids = muted_category_ids.uniq
+      remove_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
     end
-    if muted_category_ids.present?
-      topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
+    if SiteSetting.shared_drafts_category.present?
+      remove_category_ids << SiteSetting.shared_drafts_enabled?
+    end
+    if remove_category_ids.present?
+      remove_category_ids.uniq!
+      topics = topics.where("topics.category_id NOT IN (?)", remove_category_ids)
     end
 
     # Remove muted tags
