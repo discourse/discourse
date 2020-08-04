@@ -116,7 +116,6 @@ describe PostActionNotifier do
         expect {
           post.revise(evil_trout, raw: "world is the new body of the message")
         }.to change {
-          lurker.reload
           lurker.notifications.count
         }.by(1)
       end
