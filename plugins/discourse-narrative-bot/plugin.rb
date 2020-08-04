@@ -223,8 +223,8 @@ after_initialize do
     if self.post && self.user.enqueue_narrative_bot_job?
       input =
         case self.post_action_type_id
-        when *PostActionType.flag_types_without_custom.values
-          :flag
+        when *PostActionType.flag_types.values
+          self.post_action_type_id == PostActionType.types[:inappropriate] ? :flag : :reply
         when PostActionType.types[:like]
           :like
         when PostActionType.types[:bookmark]
