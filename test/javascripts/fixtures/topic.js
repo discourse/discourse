@@ -1980,7 +1980,6 @@ export default {
     details: {
       can_publish_page: true,
       can_invite_via_email: true,
-      can_split_merge_topic: true,
       auto_close_at: null,
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
