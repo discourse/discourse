@@ -22,6 +22,12 @@
     max-width: 200px;
     @include ellipsis;
   }
+  .sent-email-address a {
+    // prevent long email addresses from breaking the layout
+    display: inline-block;
+    max-width: 300px;
+    overflow-wrap: break-word;
+  }
 }
 
 .incoming-emails {
