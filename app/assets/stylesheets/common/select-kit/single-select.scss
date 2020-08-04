@@ -4,14 +4,14 @@
 
     &.is-expanded {
       padding: 0.25em 0.5em;
-      border-top: 1px solid $primary-low;
-      border-bottom: 1px solid $primary-low;
+      border-top: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--primary-low);
     }
   }
 
   &.is-expanded {
     .select-kit-header {
-      border: 1px solid $tertiary;
+      border-color: var(--tertiary);
     }
   }
 }

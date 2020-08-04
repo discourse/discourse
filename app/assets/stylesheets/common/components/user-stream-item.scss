@@ -7,16 +7,16 @@
   // selectors below are its children
   .item,
   .user-stream-item {
-    background-color: $secondary;
-    border-bottom: 1px solid $primary-low;
+    background-color: var(--secondary);
+    border-bottom: 1px solid var(--primary-low);
     padding: 1em 0.53em;
 
     &.moderator-action {
-      background-color: $highlight-medium;
+      background-color: var(--highlight-medium);
     }
 
     &.deleted {
-      background-color: $danger-low-mid;
+      background-color: var(--danger-low-mid);
     }
 
     &.hidden {
@@ -27,14 +27,14 @@
 
   .type,
   span.name {
-    color: $primary;
+    color: var(--primary);
   }
 
   .time,
   .delete-info,
   .draft-type {
     float: right;
-    color: $primary-medium;
+    color: var(--primary-medium);
     font-size: $font-down-2;
   }
 
@@ -56,7 +56,7 @@
     float: right;
     margin-right: 0.5em;
     line-height: $line-height-small;
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 
   .avatar-link {
@@ -76,7 +76,7 @@
   }
 
   .edit-reason {
-    background-color: $highlight-medium;
+    background-color: var(--highlight-medium);
     padding: 3px 5px 5px 5px;
   }
 
@@ -95,14 +95,14 @@
       display: inline-block;
 
       span:first-child {
-        color: $primary;
+        color: var(--primary);
       }
     }
 
     // common/base/header.scss
     .fa,
     .icon {
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
       font-size: $font-up-4;
     }
   }
@@ -111,12 +111,12 @@
     margin: 1em 0 0 0;
     font-size: $font-0;
     word-wrap: break-word;
-    color: $primary;
+    color: var(--primary);
     &:empty {
       display: none;
     }
     details.disabled {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 
@@ -138,9 +138,9 @@
   .fa {
     width: 15px;
     display: inline-block;
-    color: $primary;
+    color: var(--primary);
     &.d-icon-heart {
-      color: $love;
+      color: var(--love);
     }
   }
 }

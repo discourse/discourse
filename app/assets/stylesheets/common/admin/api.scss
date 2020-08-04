@@ -53,7 +53,7 @@ table.api-keys {
   }
 
   tr.revoked {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 
   @include breakpoint(tablet) {
@@ -160,12 +160,12 @@ table.api-keys {
 
   > p {
     padding-bottom: 10px;
-    border-bottom: $primary-low 1px solid;
+    border-bottom: var(--primary-low) 1px solid;
   }
   .filters {
     margin: 5px 0;
     padding-bottom: 5px;
-    border-bottom: $primary-low 1px solid;
+    border-bottom: var(--primary-low) 1px solid;
     .filter {
       margin-bottom: 1em;
     }

@@ -10,24 +10,24 @@
 // Variables are namespaced with the pd (pikaday) prefix
 
 // Colours
-$pd-text-color: $primary !default;
-$pd-title-color: $primary !default;
-$pd-title-bg: $secondary !default;
-$pd-picker-bg: $secondary !default;
-$pd-picker-border: $primary-low !default;
-$pd-picker-border-bottom: $primary-low !default;
+$pd-text-color: var(--primary) !default;
+$pd-title-color: var(--primary) !default;
+$pd-title-bg: var(--secondary) !default;
+$pd-picker-bg: var(--secondary) !default;
+$pd-picker-border: var(--primary-low) !default;
+$pd-picker-border-bottom: var(--primary-low) !default;
 $pd-picker-shadow: rgba(0,0,0,.5) !default;
-$pd-th-color: $primary !default;
-$pd-day-color: $primary !default;
-$pd-day-bg: $secondary !default;
-$pd-day-hover-color: $primary !default;
-$pd-day-hover-bg: $tertiary-low !default;
-$pd-day-today-color: $tertiary !default;
-$pd-day-selected-color: $secondary !default;
-$pd-day-selected-bg: $tertiary !default;
-$pd-day-selected-shadow: $tertiary-low !default;
-$pd-day-disabled-color: $primary !default;
-$pd-week-color: $primary !default;
+$pd-th-color: var(--primary) !default;
+$pd-day-color: var(--primary) !default;
+$pd-day-bg: var(--secondary) !default;
+$pd-day-hover-color: var(--primary) !default;
+$pd-day-hover-bg: var(--tertiary-low) !default;
+$pd-day-today-color: var(--tertiary) !default;
+$pd-day-selected-color: var(--secondary) !default;
+$pd-day-selected-bg: var(--tertiary) !default;
+$pd-day-selected-shadow: var(--tertiary-low) !default;
+$pd-day-disabled-color: var(--primary) !default;
+$pd-week-color: var(--primary) !default;
 
 // Font
 $pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
@@ -120,8 +120,8 @@ $pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
     background-size: 75% 75%;
     opacity: .5;
     @if (lightness($secondary) < 50) { // invert the black png if the background is dark
-        filter: invert(1); 
-    } 
+        filter: invert(1);
+    }
 
     &:hover {
         opacity: 1;
@@ -230,15 +230,15 @@ $pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 }
 
 .is-startrange .pika-button {
-    color: $secondary;
+    color: var(--secondary);
     background: #6CB31D;
     box-shadow: none;
     border-radius: 3px;
 }
 
 .is-endrange .pika-button {
-    color: $secondary;
-    background: $tertiary;
+    color: var(--secondary);
+    background: var(--tertiary);
     box-shadow: none;
     border-radius: 3px;
 }

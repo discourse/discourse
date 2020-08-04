@@ -11,6 +11,7 @@ class Stylesheet::Manager
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
   MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
   THEME_REGEX ||= /_theme$/
+  COLOR_SCHEME_STYLESHEET ||= "color_definitions"
 
   @lock = Mutex.new
 
@@ -92,6 +93,37 @@ class Stylesheet::Manager
     end
   end
 
+  def self.color_scheme_stylesheet_details(color_scheme_id = nil)
+    color_scheme = begin
+      ColorScheme.find(color_scheme_id)
+    rescue
+      Theme.find(SiteSetting.default_theme_id).color_scheme || ColorScheme.base
+    end
+
+    target = COLOR_SCHEME_STYLESHEET.to_sym
+    current_hostname = Discourse.current_hostname
+    color_scheme_name = Slug.for(color_scheme.name)
+    array_cache_key = "color_scheme_stylesheet_#{color_scheme_name}_#{current_hostname}"
+    stylesheets = cache[array_cache_key]
+    return stylesheets if stylesheets.present?
+
+    stylesheet = { color_scheme_name: color_scheme_name }
+
+    builder = self.new(target, nil, color_scheme)
+
+    builder.compile unless File.exists?(builder.stylesheet_fullpath)
+    href = builder.stylesheet_path(current_hostname)
+    stylesheet[:new_href] = href
+    cache[array_cache_key] = stylesheet.freeze
+    stylesheet
+  end
+
+  def self.color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all')
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id)
+    href = stylesheet[:new_href]
+    %[<link href="#{href}" media="#{media}" rel="stylesheet"/>].html_safe
+  end
+
   def self.precompile_css
     themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name)
     themes << nil
@@ -107,6 +139,18 @@ class Stylesheet::Manager
         cache[cache_key] = nil
       end
     end
+
+    cs_ids = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:color_scheme_id)
+    ColorScheme.where(id: cs_ids).each do |cs|
+      target = COLOR_SCHEME_STYLESHEET
+      cache_key = "#{target}_#{cs.id}"
+      STDERR.puts "precompile target: #{target} #{cs.name}"
+
+      builder = self.new(target, nil, cs)
+      builder.compile(force: true)
+      cache[cache_key] = nil
+    end
+
     nil
   end
 
@@ -143,9 +187,10 @@ class Stylesheet::Manager
     "#{Rails.root}/#{CACHE_PATH}"
   end
 
-  def initialize(target = :desktop, theme_id)
+  def initialize(target = :desktop, theme_id = nil, color_scheme = nil)
     @target = target
     @theme_id = theme_id
+    @color_scheme = color_scheme
   end
 
   def compile(opts = {})
@@ -173,7 +218,8 @@ class Stylesheet::Manager
         @target,
          rtl: rtl,
          theme_id: theme&.id,
-         source_map_file: source_map_filename
+         source_map_file: source_map_filename,
+         color_scheme_id: @color_scheme&.id
       )
     rescue SassC::SyntaxError => e
       if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
@@ -247,6 +293,8 @@ class Stylesheet::Manager
   def qualified_target
     if is_theme?
       "#{@target}_#{theme.id}"
+    elsif @color_scheme
+      "#{@target}_#{Slug.for(@color_scheme.name)}"
     else
       scheme_string = theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"

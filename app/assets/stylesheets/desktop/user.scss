@@ -34,10 +34,10 @@
     }
 
     a {
-      color: $primary-medium;
+      color: var(--primary-medium);
 
       &.active {
-        color: $primary;
+        color: var(--primary);
         font-weight: bold;
         background-color: transparent;
 
@@ -52,7 +52,7 @@
 .user-content {
   padding-bottom: 12px;
   margin-bottom: 12px;
-  background-color: $secondary;
+  background-color: var(--secondary);
   box-sizing: border-box;
 
   &.user-badges-list {
@@ -111,7 +111,7 @@
       .details {
         padding: 15px 0;
         margin: 0;
-        color: $secondary;
+        color: var(--secondary);
       }
     }
 
@@ -204,7 +204,7 @@
         position: relative;
         padding: 0;
         margin-top: 0;
-        border-bottom: 1px solid $primary-low;
+        border-bottom: 1px solid var(--primary-low);
       }
     }
   }
@@ -236,7 +236,7 @@
   }
 
   h3 {
-    color: $primary;
+    color: var(--primary);
     margin: 20px 0 10px 0;
   }
 

@@ -5,7 +5,7 @@
   position: absolute;
   top: 0;
   z-index: z("header");
-  background-color: $header_background;
+  background-color: var(--header_background);
   box-shadow: shadow("header");
 
   > .wrap {
@@ -46,7 +46,7 @@
     height: 100%;
     a,
     a:visited {
-      color: $header_primary;
+      color: var(--header_primary);
     }
   }
 
@@ -96,7 +96,7 @@
 .panel-body {
   .flagged-posts,
   .reviewables {
-    background: $danger;
+    background: var(--danger);
     min-width: 6px;
   }
 }
@@ -130,29 +130,29 @@
     }
     &:hover,
     &:focus {
-      background-color: $primary-low;
+      background-color: var(--primary-low);
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
       .d-icon {
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
     }
     &:active {
-      color: $primary;
-      background-color: $primary-low;
+      color: var(--primary);
+      background-color: var(--primary-low);
     }
   }
   .drop-down-mode & {
     .active .icon {
       position: relative;
-      background-color: $secondary;
+      background-color: var(--secondary);
       cursor: default;
-      border-top: 1px solid $primary-low;
-      border-left: 1px solid $primary-low;
-      border-right: 1px solid $primary-low;
+      border-top: 1px solid var(--primary-low);
+      border-left: 1px solid var(--primary-low);
+      border-right: 1px solid var(--primary-low);
       .d-icon {
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
       &:after {
         display: block;
@@ -163,7 +163,7 @@
         width: 100%;
         height: 0;
         content: "";
-        border-top: 1px solid $secondary;
+        border-top: 1px solid var(--secondary);
       }
       &:hover {
         border-bottom: none;
@@ -176,7 +176,7 @@
     font-size: $font-up-4;
     line-height: $line-height-large;
     display: inline-block;
-    color: $header_primary-low-mid;
+    color: var(--header_primary-low-mid);
   }
   .notifications {
     position: relative;
@@ -200,7 +200,7 @@
   .unread-notifications {
     left: auto;
     right: -3px;
-    background-color: $tertiary-med-or-tertiary;
+    background-color: var(--tertiary-med-or-tertiary);
   }
   .unread-high-priority-notifications,
   .ring {
@@ -210,7 +210,7 @@
 }
 
 .highlight-strong {
-  background-color: $highlight-medium;
+  background-color: var(--highlight-medium);
 }
 
 .search-highlight {
@@ -259,7 +259,7 @@
     }
   }
   .topic-link {
-    color: $header_primary;
+    color: var(--header_primary);
     display: block;
     @include ellipsis;
     // Some characters like '/' and 'j' can be wider than the font's em-box
@@ -271,10 +271,10 @@
   }
   .topic-statuses {
     .d-icon {
-      color: $header_primary-medium;
+      color: var(--header_primary-medium);
     }
     .d-icon-envelope {
-      color: $danger;
+      color: var(--danger);
     }
   }
   .header-title {
@@ -300,7 +300,7 @@
     &.bar,
     &.none {
       span.badge-category {
-        color: $header_primary-high;
+        color: var(--header_primary-high);
       }
     }
   }
@@ -309,7 +309,7 @@
     align-items: center;
     max-width: 100%;
     .discourse-tags {
-      color: $header_primary-high;
+      color: var(--header_primary-high);
       @include ellipsis;
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
@@ -355,7 +355,7 @@ $mobile-avatar-height: 1.532em;
 
   .trigger-group-card {
     padding: 0 5px;
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
     border-radius: 0.25em;
     min-width: 3em;
     @include ellipsis;
@@ -367,7 +367,7 @@ $mobile-avatar-height: 1.532em;
       .mobile-view & {
         height: $mobile-avatar-height;
       }
-      color: $primary-high;
+      color: var(--primary-high);
 
       .d-icon {
         margin-right: 5px;
@@ -380,7 +380,7 @@ $mobile-avatar-height: 1.532em;
   }
 
   .more-participants {
-    color: $header_primary-high;
+    color: var(--header_primary-high);
     margin-left: 5px;
   }
 }

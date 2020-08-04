@@ -26,7 +26,7 @@
 
 @keyframes background-fade-highlight {
   0% {
-    background-color: $tertiary-low;
+    background-color: var(--tertiary-low);
   }
   100% {
     background-color: transparent;
@@ -49,12 +49,12 @@
   animation-iteration-count: infinite;
   animation-name: placeHolderShimmer;
   animation-timing-function: linear;
-  background: $primary-very-low;
+  background: var(--primary-very-low);
   background: linear-gradient(
     to right,
-    $primary-very-low 10%,
-    $primary-low 18%,
-    $primary-very-low 33%
+    var(--primary-very-low) 10%,
+    var(--primary-low) 18%,
+    var(--primary-very-low) 33%
   );
 }
 
@@ -97,10 +97,10 @@ h6 {
 a.cancel {
   margin-left: 1.25em;
   line-height: normal;
-  color: $primary-high;
+  color: var(--primary-high);
   transition: color 250ms;
   &:hover {
-    color: $danger;
+    color: var(--danger);
   }
 }
 
@@ -152,7 +152,7 @@ input {
   }
 
   &.invalid {
-    background-color: $danger-low;
+    background-color: var(--danger-low);
   }
 
   .radio &[type="radio"],
@@ -165,7 +165,7 @@ input {
 input,
 select,
 textarea {
-  color: $primary;
+  color: var(--primary);
   caret-color: currentColor;
 
   &[class*="span"] {
@@ -176,17 +176,17 @@ textarea {
   &[disabled],
   &[readonly] {
     cursor: not-allowed;
-    background-color: $primary-low;
-    border-color: $primary-low;
+    background-color: var(--primary-low);
+    border-color: var(--primary-low);
   }
 
   &:focus:required:invalid {
-    color: $danger;
-    border-color: $danger;
+    color: var(--danger);
+    border-color: var(--danger);
   }
 
   &:focus:required:invalid:focus {
-    border-color: $danger;
+    border-color: var(--danger);
     box-shadow: shadow("focus-danger");
   }
 }
@@ -212,14 +212,14 @@ input {
     margin-bottom: 9px;
     font-size: $font-0;
     line-height: $line-height-small;
-    color: $primary;
-    background-color: $secondary;
-    border: 1px solid $primary-medium;
+    color: var(--primary);
+    background-color: var(--secondary);
+    border: 1px solid var(--primary-medium);
     border-radius: 0;
     box-sizing: border-box;
     min-height: 30px;
     &:focus {
-      border-color: $tertiary;
+      border-color: var(--tertiary);
       box-shadow: shadow("focus");
       outline: 0;
     }
@@ -249,8 +249,8 @@ input {
       width: auto;
       padding: 0 0.5em;
       height: 28px;
-      background-color: $primary-low;
-      border: 1px solid $primary-medium;
+      background-color: var(--primary-low);
+      border: 1px solid var(--primary-medium);
     }
     .add-on,
     .btn {
@@ -274,23 +274,23 @@ input {
 
 textarea {
   height: auto;
-  background-color: $secondary;
-  border: 1px solid $primary-medium;
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-medium);
   &:focus {
-    border-color: $tertiary;
+    border-color: var(--tertiary);
     box-shadow: shadow("focus");
     outline: 0;
   }
 }
 
 select {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
 }
 
 table {
   th {
     font-weight: normal;
-    color: $primary-medium;
+    color: var(--primary-medium);
     text-align: left;
     padding: 0.5em;
   }
@@ -303,7 +303,7 @@ table {
   cursor: pointer;
   .discourse-no-touch & {
     &:hover {
-      background-color: $primary-low;
+      background-color: var(--primary-low);
     }
   }
   .d-icon {
@@ -351,7 +351,7 @@ table {
 
 .boxed {
   &.white {
-    background-color: $secondary;
+    background-color: var(--secondary);
   }
 }
 
@@ -365,7 +365,7 @@ table {
 
 .message {
   border-radius: 8px;
-  background-color: $secondary;
+  background-color: var(--secondary);
   padding: 14px;
 
   h2 {
@@ -380,15 +380,15 @@ table {
 .tip {
   display: inline-block;
   &.good {
-    color: $success;
+    color: var(--success);
   }
   &.bad {
-    color: $danger;
+    color: var(--danger);
   }
 }
 
 .avatar-wrapper {
-  background-color: $secondary;
+  background-color: var(--secondary);
   display: inline-block;
   border-radius: 50%;
 }
@@ -403,11 +403,11 @@ table {
 }
 
 .unread-high-priority-notifications {
-  color: $secondary;
-  background: $success;
+  color: var(--secondary);
+  background: var(--success);
 
   &.badge-notification[href] {
-    color: $secondary;
+    color: var(--secondary);
   }
 }
 
@@ -420,7 +420,7 @@ table {
   background-image: radial-gradient(
     40px at 50% 50%,
     transparent 95%,
-    $primary 100%
+    var(--primary) 100%
   );
   opacity: 0.85;
 }
@@ -431,13 +431,13 @@ table {
   height: 80px;
   top: -18px !important;
   right: -18px !important;
-  box-shadow: 0 0 0 9999px rgba($primary, 0.85);
+  box-shadow: 0 0 0 9999px rgba(var(--primary-rgb), 0.85);
   z-index: z("modal", "overlay");
 }
 
 .ring-first-notification {
   position: absolute;
-  color: $secondary;
+  color: var(--secondary);
   text-align: left;
   right: 70px;
   top: 60px;
@@ -487,7 +487,7 @@ table {
   animation: rotate-forever 1s infinite linear;
   height: 30px;
   width: 30px;
-  border: 4px solid $primary-low-mid;
+  border: 4px solid var(--primary-low-mid);
   border-right-color: transparent;
   border-radius: 50%;
 
@@ -501,7 +501,7 @@ table {
 
 .content-list {
   h3 {
-    color: $primary-medium;
+    color: var(--primary-medium);
     font-size: $font-up-1;
     padding-left: 5px;
     margin-bottom: 10px;
@@ -512,25 +512,25 @@ table {
     margin: 0;
 
     li {
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
 
       &:first-of-type {
-        border-top: 1px solid $primary-low;
+        border-top: 1px solid var(--primary-low);
       }
 
       a {
         display: block;
         padding: 10px;
-        color: $primary;
+        color: var(--primary);
 
         &:hover {
-          background-color: $primary-low;
-          color: $primary;
+          background-color: var(--primary-low);
+          color: var(--primary);
         }
 
         &.active {
           font-weight: bold;
-          color: $primary;
+          color: var(--primary);
         }
       }
     }
@@ -601,7 +601,7 @@ table {
   text-align: center;
   top: 120px;
   left: 500px;
-  color: $primary;
+  color: var(--primary);
 }
 
 #footer {
@@ -610,7 +610,7 @@ table {
     .contents {
       padding-top: 10px;
       a[href] {
-        color: $secondary;
+        color: var(--secondary);
       }
     }
   }
@@ -636,10 +636,10 @@ table {
   }
 
   .email-second {
-    color: $primary-medium;
+    color: var(--primary-medium);
 
     .primary {
-      color: $success;
+      color: var(--success);
       font-weight: bold;
     }
 
@@ -656,7 +656,7 @@ table {
       background: transparent;
 
       .d-icon {
-        color: $primary-high;
+        color: var(--primary-high);
       }
     }
   }
@@ -682,7 +682,7 @@ table {
   }
 
   .auth-token-icon {
-    color: $primary-medium;
+    color: var(--primary-medium);
     font-size: 2.25em;
     float: left;
     margin-right: 10px;
@@ -697,10 +697,10 @@ table {
   }
 
   .auth-token-second {
-    color: $primary-medium;
+    color: var(--primary-medium);
 
     .active {
-      color: $success;
+      color: var(--success);
       font-weight: bold;
     }
   }
@@ -713,7 +713,7 @@ table {
       background: transparent;
 
       .d-icon {
-        color: $primary-high;
+        color: var(--primary-high);
       }
     }
   }
@@ -726,7 +726,7 @@ table {
   .topic-status {
     margin: 0;
     display: inline-flex;
-    color: $primary-medium;
+    color: var(--primary-medium);
     .d-icon {
       height: 0.76em;
       width: 0.75em;
@@ -737,7 +737,7 @@ table {
   }
 
   .topic-status-warning .d-icon-envelope {
-    color: $danger;
+    color: var(--danger);
   }
 }
 
@@ -745,8 +745,8 @@ table {
   font-size: $base-font-size;
   font-weight: bold;
   padding: 5px 0;
-  background: $danger-medium;
+  background: var(--danger-medium);
   text-align: center;
   z-index: z("max");
-  color: $secondary;
+  color: var(--secondary);
 }

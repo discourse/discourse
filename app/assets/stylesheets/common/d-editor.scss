@@ -18,9 +18,9 @@
 .d-editor-textarea-wrapper {
   display: flex;
   flex-direction: column;
-  background-color: $secondary;
+  background-color: var(--secondary);
   position: relative;
-  border: 1px solid $primary-medium;
+  border: 1px solid var(--primary-medium);
 
   textarea {
     background: transparent;
@@ -49,18 +49,18 @@
   display: flex;
   align-items: center;
   min-height: 30px;
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
 
   .btn,
   .btn-default {
     background-color: transparent;
     display: inline-block;
-    color: $primary-medium;
+    color: var(--primary-medium);
     .d-icon {
       color: currentColor;
     }
     &:hover {
-      color: $primary-low;
+      color: var(--primary-low);
     }
 
     svg {
@@ -75,7 +75,7 @@
   .d-editor-spacer {
     height: 1em;
     display: inline-block;
-    border-left: 1px solid $primary-low-mid;
+    border-left: 1px solid var(--primary-low-mid);
   }
 
   .btn:not(.no-text) {
@@ -134,7 +134,7 @@
 
 .composing-whisper .d-editor-preview {
   font-style: italic;
-  color: $primary-medium !important;
+  color: var(--primary-medium) !important;
 }
 
 .d-editor-preview > *:first-child {
@@ -167,14 +167,14 @@
     display: block;
   }
   .d-editor-textarea-wrapper {
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
   }
   .d-editor-preview-wrapper {
     max-width: 100%;
     margin: 10px 0 0 0;
   }
   .d-editor-preview {
-    background-color: $primary-very-low;
+    background-color: var(--primary-very-low);
     padding: 5px;
     &:empty {
       padding: 0;
@@ -185,7 +185,7 @@
 .user-preferences .bio-composer,
 .group-form-bio {
   padding: 10px;
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
 }
 
 .d-editor-preview img {
@@ -231,11 +231,11 @@
     transition: all 0.25s;
     z-index: 1; // needs to be higher than image
     width: 100%;
-    background: $secondary; // for when images are wider than controls
+    background: var(--secondary); // for when images are wider than controls
 
     .scale-btn {
-      background: $secondary; // for when controls are wider than image
-      color: $tertiary;
+      background: var(--secondary); // for when controls are wider than image
+      color: var(--tertiary);
       padding: 0 1em;
       &:first-child,
       &:last-child {
@@ -244,7 +244,7 @@
 
       &.active {
         font-weight: bold;
-        color: $primary;
+        color: var(--primary);
       }
 
       &:not(.active):hover {

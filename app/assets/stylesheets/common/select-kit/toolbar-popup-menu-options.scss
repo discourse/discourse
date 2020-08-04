@@ -9,7 +9,7 @@
 
       .select-kit-row {
         padding: 0.75em 0.5em;
-        border-bottom: 1px solid rgba($primary-low, 0.5);
+        border-bottom: 1px solid rgba(var(--primary-low-rgb), 0.5);
 
         &:last-child {
           border: none;
@@ -22,14 +22,14 @@
         }
 
         .d-icon {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
 
         &.is-highlighted,
         &.is-selected,
         &:hover {
-          background: $tertiary-low;
-          color: $primary;
+          background: var(--tertiary-low);
+          color: var(--primary);
         }
       }
     }

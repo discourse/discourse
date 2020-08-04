@@ -34,7 +34,7 @@
     display: block;
     padding: 1.25em 0;
     &:not(:last-of-type) {
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
     }
     .badge-wrapper {
       margin-right: 0;
@@ -80,7 +80,7 @@
     overflow: visible;
   }
   .modal-footer {
-    background: $secondary;
+    background: var(--secondary);
   }
 }
 
@@ -101,31 +101,31 @@
 // Select posts
 
 .selected-posts {
-  border: 1px solid $tertiary-medium;
-  background-color: $tertiary-low;
+  border: 1px solid var(--tertiary-medium);
+  background-color: var(--tertiary-low);
   .btn {
     border: none;
-    color: $secondary;
+    color: var(--secondary);
     font-weight: normal;
     margin-bottom: 10px;
     &:not(.btn-danger) {
-      background: $tertiary;
-      border-color: $tertiary;
+      background: var(--tertiary);
+      border-color: var(--tertiary);
       &[href] {
-        color: $secondary;
+        color: var(--secondary);
       }
       &:hover {
-        color: $secondary;
-        background: $tertiary-high;
+        color: var(--secondary);
+        background: var(--tertiary-high);
       }
       &:active {
-        @include linear-gradient($tertiary-hover, $tertiary);
-        color: $secondary;
+        @include linear-gradient(var(--tertiary-hover), var(--tertiary));
+        color: var(--secondary);
       }
     }
     &[disabled] {
-      text-shadow: 0 1px 0 rgba($primary, 0.2);
-      @include linear-gradient($tertiary, $tertiary-hover);
+      text-shadow: 0 1px 0 rgba(var(--primary-rgb), 0.2);
+      @include linear-gradient(var(--tertiary), var(--tertiary-hover));
       box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.33);
     }
   }

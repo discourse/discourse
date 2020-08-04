@@ -17,7 +17,7 @@
 
   .table {
     margin: 0;
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
     table-layout: fixed;
 
     tbody {
@@ -35,12 +35,12 @@
 
     &.is-current-sort {
       .d-icon {
-        color: $tertiary;
+        color: var(--tertiary);
       }
 
       .sort-btn:hover {
-        color: $primary-medium;
-        background: $primary-low;
+        color: var(--primary-medium);
+        background: var(--primary-low);
       }
     }
 
@@ -48,10 +48,10 @@
       background: none;
 
       &:hover {
-        color: $primary-medium;
-        background: $primary-low;
+        color: var(--primary-medium);
+        background: var(--primary-low);
         .d-icon {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
     }
@@ -64,7 +64,7 @@
   }
 
   .total-row {
-    background: $primary-very-low;
+    background: var(--primary-very-low);
 
     td {
       font-weight: 700;
@@ -81,7 +81,7 @@
       margin-left: 0.5em;
 
       &.is-current {
-        color: $tertiary;
+        color: var(--tertiary);
       }
     }
   }

@@ -28,11 +28,11 @@
   font-size: $font-up-3;
   text-decoration: none;
   &:visited {
-    color: $primary-high;
+    color: var(--primary-high);
   }
   cursor: pointer;
   &:hover {
-    color: $primary;
+    color: var(--primary);
   }
 }
 

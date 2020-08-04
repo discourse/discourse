@@ -1,0 +1,117 @@
+// This file maps all SCSS color variables to CSS custom properties.
+// It is compiled to CSS separately from the rest of the app.
+// The source variables come from color_transformations.scss and variables.scss
+
+@import "common/foundation/variables";
+
+// this converts HEX colors to RGBs so they can be used in vanilla CSS
+// i.e.: rgba(var(--primary-low-rgb), 0.5)
+//
+// Note that "rgba(var(--primary-low), 0.5)" will not work,
+// because --primary-low has a HEX color value
+
+@function hexToRGB($hex) {
+  @return red($hex), green($hex), blue($hex);
+}
+
+:root {
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+  --tertiary: #{$tertiary};
+  --quaternary: #{$quaternary};
+  --header_background: #{$header_background};
+  --header_primary: #{$header_primary};
+  --highlight: #{$highlight};
+  --danger: #{$danger};
+  --success: #{$success};
+  --love: #{$love};
+
+  --primary-rgb: #{hexToRGB($primary)};
+  --primary-low-rgb: #{hexToRGB($primary-low)};
+  --secondary-rgb: #{hexToRGB($secondary)};
+  --header_background-rgb: #{hexToRGB($header_background)};
+
+  --primary-very-low: #{$primary-very-low};
+  --primary-low: #{$primary-low};
+  --primary-low-mid: #{$primary-low-mid};
+  --primary-medium: #{$primary-medium};
+  --primary-high: #{$primary-high};
+  --primary-very-high: #{$primary-very-high};
+
+  --header_primary-low: #{$header_primary-low};
+  --header_primary-low-mid: #{$header_primary-low-mid};
+
+  --header_primary-medium: #{$header_primary-medium};
+  --header_primary-high: #{$header_primary-high};
+  --header_primary-very-high: #{$header_primary-very-high};
+
+  --secondary-low: #{$secondary-low};
+  --secondary-medium: #{$secondary-medium};
+  --secondary-high: #{$secondary-high};
+  --secondary-very-high: #{$secondary-very-high};
+
+  --tertiary-low: #{$tertiary-low};
+  --tertiary-medium: #{$tertiary-medium};
+  --tertiary-high: #{$tertiary-high};
+  --tertiary-hover: #{$tertiary-hover};
+
+  --quaternary-low: #{$quaternary-low};
+
+  --highlight-low: #{$highlight-low};
+  --highlight-medium: #{$highlight-medium};
+  --highlight-high: #{$highlight-high};
+
+  --danger-low: #{$danger-low};
+  --danger-low-mid: #{$danger-low-mid};
+  --danger-medium: #{$danger-medium};
+  --danger-hover: #{$danger-hover};
+
+  --success-low: #{$success-low};
+  --success-medium: #{$success-medium};
+  --success-hover: #{$success-hover};
+
+  --love-low: #{$love-low};
+  --wiki: #{$wiki};
+
+  --blend-primary-secondary-5: #{$blend-primary-secondary-5};
+  --primary-med-or-secondary-med: #{$primary-med-or-secondary-med};
+  --primary-med-or-secondary-high: #{$primary-med-or-secondary-high};
+  --primary-high-or-secondary-low: #{$primary-high-or-secondary-low};
+  --primary-low-mid-or-secondary-high: #{$primary-low-mid-or-secondary-high};
+  --primary-low-mid-or-secondary-low: #{$primary-low-mid-or-secondary-low};
+  --primary-or-primary-low-mid: #{$primary-or-primary-low-mid};
+  --highlight-low-or-medium: #{$highlight-low-or-medium};
+  --tertiary-low-or-tertiary-high: #{$tertiary-low-or-tertiary-high};
+  --tertiary-med-or-tertiary: #{$tertiary-med-or-tertiary};
+  --secondary-or-primary: #{$secondary-or-primary};
+  --tertiary-or-white: #{$tertiary-or-white};
+  --facebook-or-white: #{$facebook-or-white};
+  --twitter-or-white: #{$twitter-or-white};
+
+  --hljs-comment: #{$hljs-comment};
+  --hljs-number: #{$hljs-number};
+  --hljs-string: #{$hljs-string};
+  --hljs-literal: #{$hljs-literal};
+  --hljs-tag: #{$hljs-tag};
+  --hljs-attribute: #{$hljs-attribute};
+  --hljs-symbol: #{$hljs-symbol};
+  --hljs-bg: #{$hljs-bg};
+
+  --google: #{$google};
+  --google-hover: #{$google-hover};
+  --instagram: #{$instagram};
+  --instagram-hover: #{$instagram-hover};
+  --facebook: #{$facebook};
+  --facebook-hover: #{$facebook-hover};
+  --cas: #{$cas};
+  --twitter: #{$twitter};
+  --twitter-hover: #{$twitter-hover};
+  --github: #{$github};
+  --github-hover: #{$github-hover};
+  --discord: #{$discord};
+  --discord-hover: #{$discord-hover};
+
+  --gold: #{$gold};
+  --silver: #{$silver};
+  --bronze: #{$bronze};
+}

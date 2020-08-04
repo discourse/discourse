@@ -7,7 +7,7 @@ a.loading-onebox {
     position: relative;
     height: 10px;
     width: 10px;
-    border: 2px solid $primary-low-mid;
+    border: 2px solid var(--primary-low-mid);
     border-right-color: transparent;
     border-radius: 50%;
     -webkit-animation: rotate-forever 1s infinite linear;
@@ -25,7 +25,7 @@ a.loading-onebox {
     margin-bottom: 12px;
     margin-right: 10px;
     display: block;
-    color: $primary;
+    color: var(--primary);
     position: relative;
     height: 20px;
     .info {
@@ -94,16 +94,16 @@ a.loading-onebox {
 }
 
 aside.onebox {
-  border: 5px solid $primary-low;
+  border: 5px solid var(--primary-low);
   margin-bottom: 1em;
   padding: 12px 25px 12px 12px;
   font-size: $font-0;
-  background: $secondary;
+  background: var(--secondary);
 
   header {
     margin-bottom: 8px;
     a[href] {
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
       text-decoration: none;
     }
   }
@@ -131,12 +131,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: $tertiary;
+      color: var(--tertiary);
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: $tertiary;
+      color: var(--tertiary);
     }
 
     img {
@@ -304,9 +304,9 @@ aside.onebox {
 
 // Google Calendar Placeholder
 .gdocs-onebox-splash {
-  background-color: $primary-low-mid;
-  color: $primary;
-  border: 1px inset $primary;
+  background-color: var(--primary-low-mid);
+  color: var(--primary);
+  border: 1px inset var(--primary);
   .gdocs-onebox-logo {
     display: inline-block;
     width: 128px;
@@ -351,7 +351,7 @@ pre.onebox code ol {
   line-height: $line-height-large;
 }
 pre.onebox code {
-  background-color: $primary-very-low;
+  background-color: var(--primary-very-low);
 }
 pre.onebox code li {
   padding-left: 5px;
@@ -372,7 +372,7 @@ pre.onebox code ol.lines li {
 }
 
 pre.onebox code li.selected {
-  background-color: $highlight-low-or-medium;
+  background-color: var(--highlight-low-or-medium);
 }
 
 pre.onebox code {
@@ -406,7 +406,7 @@ pre.onebox code {
   }
 
   .github-icon {
-    fill: $primary-high;
+    fill: var(--primary-high);
     width: 40px;
     height: 40px;
   }
@@ -440,10 +440,10 @@ pre.onebox code {
       font-weight: bold;
 
       .added {
-        color: $success;
+        color: var(--success);
       }
       .removed {
-        color: $danger;
+        color: var(--danger);
       }
     }
   }
@@ -465,8 +465,8 @@ pre.onebox code {
 
   .labels span {
     // !important required to override inline style attribute
-    background-color: $primary-medium !important;
-    color: $secondary !important;
+    background-color: var(--primary-medium) !important;
+    color: var(--secondary) !important;
     padding: 2px 4px !important;
   }
 }
@@ -528,7 +528,7 @@ aside.onebox.twitterstatus .onebox-body {
     margin-left: 70px;
 
     .quoted {
-      border: 1px solid $primary-low;
+      border: 1px solid var(--primary-low);
       padding: 0px 14px 0px 12px;
       white-space: normal;
       margin-top: 15px;
@@ -543,7 +543,7 @@ aside.onebox.twitterstatus .onebox-body {
 
         span {
           font-weight: lighter;
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
 
@@ -600,7 +600,7 @@ aside.onebox.stackexchange .onebox-body {
 }
 
 .onebox-metadata {
-  color: $primary-med-or-secondary-med;
+  color: var(--primary-med-or-secondary-med);
 }
 
 .onebox.xkcd .onebox-body {
@@ -630,7 +630,7 @@ aside.onebox.stackexchange .onebox-body {
 .onebox.whitelistedgeneric {
   .label1,
   .label2 {
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
   }
   .label1 {
     float: left;
@@ -660,7 +660,7 @@ aside.onebox.stackexchange .onebox-body {
 
 .onebox.instagram {
   div.instagram-description {
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
     padding-top: 10px;
   }
 }
@@ -670,7 +670,7 @@ aside.onebox.stackexchange .onebox-body {
     position: relative;
   }
   div.description {
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
   }
 }
 
@@ -683,7 +683,7 @@ aside.onebox.stackexchange .onebox-body {
 .onebox.twitterstatus {
   .like,
   .retweet {
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
     padding-left: 10px;
     svg {
       fill: currentColor;
@@ -720,7 +720,7 @@ aside.onebox.stackexchange .onebox-body {
   position: relative;
   width: 100%;
   padding: 0 0 48.25% 0;
-  background-color: $primary-low;
+  background-color: var(--primary-low);
 
   .placeholder-icon {
     position: absolute;

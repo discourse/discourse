@@ -4,10 +4,10 @@ $rollback: #3d9970;
 $rollback-dark: darken($rollback, 10%) !default;
 $rollback-darker: darken($rollback, 20%) !default;
 .btn-rollback {
-  color: $secondary;
+  color: var(--secondary);
   background: $rollback;
   .d-icon {
-    color: $secondary;
+    color: var(--secondary);
   }
   &:hover {
     background: $rollback-dark;
