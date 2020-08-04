@@ -25,11 +25,11 @@ div.poll {
   .poll-container {
     display: table-cell;
     width: 100%;
-    border-right: 1px solid $primary-low;
+    border-right: 1px solid var(--primary-low);
   }
 
   .poll-buttons {
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
     padding: 1em;
 
     .info-text {
@@ -71,7 +71,7 @@ div.poll.pie {
     li[data-poll-option-id]:before {
       position: relative;
       vertical-align: baseline;
-      border: 2px solid $primary;
+      border: 2px solid var(--primary);
       border-radius: 50%;
       display: inline-block;
       margin-right: 0.5em;

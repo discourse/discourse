@@ -33,7 +33,7 @@ div.poll {
 div.poll.pie {
   .poll-container {
     width: calc(100% - 30px);
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
 
     .poll-grouped-pie-container {
       width: 100%;
