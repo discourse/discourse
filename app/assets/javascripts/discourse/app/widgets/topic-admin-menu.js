@@ -130,7 +130,10 @@ export default createWidget("topic-admin-menu", {
     const visible = topic.get("visible");
 
     // Admin actions
-    if (this.get("currentUser.canManageTopic") || details.can_split_merge_topic) {
+    if (
+      this.get("currentUser.canManageTopic") ||
+      details.can_split_merge_topic
+    ) {
       this.addActionButton({
         className: "topic-admin-multi-select",
         buttonClass: "popup-menu-btn",
