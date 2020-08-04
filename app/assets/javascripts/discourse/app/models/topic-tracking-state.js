@@ -441,6 +441,18 @@ const TopicTrackingState = EmberObject.extend({
     return this.countCategoryByState("unread", categoryId, tagId);
   },
 
+  forEachTracked(fn) {
+    Object.values(this.states).forEach(topic => {
+      if (topic.archetype !== "private_message" && !topic.deleted) {
+        let newTopic = isNew(topic);
+        let unreadTopic = isUnread(topic);
+        if (newTopic || unreadTopic) {
+          fn(topic, newTopic, unreadTopic);
+        }
+      }
+    });
+  },
+
   countTags(tags) {
     let counts = {};
 
@@ -448,26 +460,18 @@ const TopicTrackingState = EmberObject.extend({
       counts[tag] = { unreadCount: 0, newCount: 0 };
     });
 
-    Object.values(this.states).forEach(topic => {
-      if (
-        topic.archetype !== "private_message" &&
-        !topic.deleted &&
-        topic.tags
-      ) {
-        let newTopic = isNew(topic);
-        let unreadTopic = isUnread(topic);
-        if (newTopic || unreadTopic) {
-          tags.forEach(tag => {
-            if (topic.tags.indexOf(tag) > -1) {
-              if (unreadTopic) {
-                counts[tag].unreadCount++;
-              }
-              if (newTopic) {
-                counts[tag].newCount++;
-              }
+    this.forEachTracked((topic, newTopic, unreadTopic) => {
+      if (topic.tags) {
+        tags.forEach(tag => {
+          if (topic.tags.indexOf(tag) > -1) {
+            if (unreadTopic) {
+              counts[tag].unreadCount++;
             }
-          });
-        }
+            if (newTopic) {
+              counts[tag].newCount++;
+            }
+          }
+        });
       }
     });
 
