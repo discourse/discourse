@@ -51,7 +51,7 @@
     }
 
     input[disabled] {
-      background: $primary-low;
+      background: var(--primary-low);
     }
   }
   .pika-single {

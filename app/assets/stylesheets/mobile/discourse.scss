@@ -6,12 +6,12 @@
 // Base Elements
 
 body {
-  background-color: $secondary;
+  background-color: var(--secondary);
 }
 
 .ios-device {
   textarea {
-    background-color: $secondary;
+    background-color: var(--secondary);
     font-size: $font-size-ios-input;
     -webkit-tap-highlight-color: transparent;
   }
@@ -74,15 +74,15 @@ blockquote {
   list-style: none;
   overflow: visible;
   position: relative;
-  border: 1px solid $primary-medium;
+  border: 1px solid var(--primary-medium);
   // Prevents the dropdowns from collapsing while content loads, so they look more like placeholders and less like dark 2px lines
   min-height: 37px;
 
   a {
-    color: $primary;
+    color: var(--primary);
     .d-icon {
       margin-right: 0.25em;
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 
@@ -109,12 +109,12 @@ blockquote {
       display: block;
       position: absolute;
       z-index: z("dropdown");
-      background-color: $secondary;
+      background-color: var(--secondary);
       width: 100%;
       list-style: none;
       margin: 0;
       padding: 5px;
-      border: 1px solid $primary-low;
+      border: 1px solid var(--primary-low);
       box-sizing: border-box;
 
       li {

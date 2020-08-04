@@ -11,7 +11,7 @@
   .reply-key {
     display: block;
     font-size: $font-down-1;
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
   .username div {
     max-width: 180px;
@@ -35,7 +35,7 @@
     margin: 5px 10px;
   }
   .error-description {
-    color: $primary-medium;
+    color: var(--primary-medium);
     font-size: $font-down-1;
   }
   hr {
@@ -62,7 +62,7 @@
 
 .admin-list-item {
   width: 100%;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding: 0.25em 0;
 }
 

@@ -1,10 +1,10 @@
 a.hashtag {
-  color: $primary-or-primary-low-mid;
+  color: var(--primary-or-primary-low-mid);
   font-weight: bold;
 
   &:visited,
   &:hover {
-    color: $primary-or-primary-low-mid;
+    color: var(--primary-or-primary-low-mid);
   }
 
   &:hover {

@@ -15,7 +15,7 @@ $meta-element-margin: 6px;
 }
 
 .onebox img.d-lazyload-hidden:not(.ytp-thumbnail-image) {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
 }
 
 .cooked img.d-lazyload {
@@ -38,8 +38,8 @@ $meta-element-margin: 6px;
   position: absolute;
   bottom: 0;
   width: 100%;
-  color: $secondary;
-  background: $primary;
+  color: var(--secondary);
+  background: var(--primary);
   opacity: 0;
   transition: opacity 0.2s;
   display: flex;
@@ -53,7 +53,7 @@ $meta-element-margin: 6px;
   .d-icon {
     margin: $meta-element-margin;
     opacity: 0.8;
-    color: $secondary;
+    color: var(--secondary);
     + .filename {
       margin-left: 0px;
     }
@@ -62,7 +62,7 @@ $meta-element-margin: 6px;
   .informations {
     margin: $meta-element-margin;
     padding-right: 20px;
-    color: $secondary-high;
+    color: var(--secondary-high);
     font-size: $font-0;
     flex-shrink: 0;
     flex-grow: 3;
@@ -82,8 +82,8 @@ $meta-element-margin: 6px;
 
     a.lightbox:hover {
       border-radius: 5px;
-      box-shadow: 0 2px 5px 0 rgba($primary, 0.2),
-        0 2px 10px 0 rgba($primary, 0.2);
+      box-shadow: 0 2px 5px 0 rgba(var(--primary-rgb), 0.2),
+        0 2px 10px 0 rgba(var(--primary-rgb), 0.2);
     }
   }
 }

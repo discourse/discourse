@@ -15,9 +15,9 @@
   clear: both;
   margin-bottom: 5px;
   .combo-box .combo-box-header {
-    background: $secondary;
-    color: $primary;
-    border: 1px solid $primary-medium;
+    background: var(--secondary);
+    color: var(--primary);
+    border: 1px solid var(--primary-medium);
     font-size: $font-0;
     transition: none;
   }
@@ -50,13 +50,13 @@
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
   a.title:not(.badge-notification) {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
   span.badge-category {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
   a.discourse-tag {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 }
 
@@ -73,17 +73,17 @@
   a.title {
     padding: 15px 0;
     word-break: break-word;
-    color: $primary;
+    color: var(--primary);
   }
 
   .anon & {
     a.title:visited:not(.badge-notification) {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 
   a.title.visited:not(.badge-notification) {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 }
 
@@ -110,15 +110,15 @@
     border: none;
 
     td {
-      border-bottom: 1px solid $danger-medium;
+      border-bottom: 1px solid var(--danger-medium);
       line-height: 0.1em;
       padding: 0;
       text-align: center;
     }
 
     td span {
-      background-color: $secondary;
-      color: $danger-medium;
+      background-color: var(--secondary);
+      color: var(--danger-medium);
       padding: 0 8px;
       font-size: $font-down-1;
     }
@@ -132,11 +132,11 @@
   }
   th {
     button .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
   td {
-    color: $primary-medium;
+    color: var(--primary-medium);
     font-size: $font-0;
   }
 
@@ -184,7 +184,7 @@
   .topic-excerpt {
     font-size: $font-down-1;
     margin-top: 5px;
-    color: $primary-high;
+    color: var(--primary-high);
     word-wrap: break-word;
     line-height: $line-height-large;
     padding-right: 20px;
@@ -250,7 +250,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
-    color: $danger-medium;
+    color: var(--danger-medium);
     font-size: $font-0;
     cursor: default;
   }
@@ -302,7 +302,7 @@ ol.category-breadcrumb {
 }
 
 div.education {
-  color: $primary-med-or-secondary-med;
+  color: var(--primary-med-or-secondary-med);
   .badge-notification.new-posts {
     vertical-align: text-bottom;
   }
@@ -310,12 +310,12 @@ div.education {
 
 .list-cell {
   padding: 12px 5px;
-  color: $primary-med-or-secondary-high;
+  color: var(--primary-med-or-secondary-high);
 }
 
 .table-heading {
   @extend .list-cell;
-  border-bottom: 3px solid $primary-low;
+  border-bottom: 3px solid var(--primary-low);
 }
 
 // This is not what we want:

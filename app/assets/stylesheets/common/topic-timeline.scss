@@ -53,11 +53,11 @@
     transition: max-height 0.3s ease-in;
     position: fixed;
     margin-left: 0;
-    background-color: $secondary;
+    background-color: var(--secondary);
     bottom: 0;
     left: 0;
     right: 0;
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
     box-shadow: shadow("composer");
     padding: 20px 0px;
     z-index: z("fullscreen");
@@ -89,7 +89,7 @@
         }
       }
       .username {
-        color: $primary-high-or-secondary-low;
+        color: var(--primary-high-or-secondary-low);
         word-wrap: break-word;
         font-weight: bold;
       }
@@ -107,7 +107,7 @@
           @include line-clamp(4);
         }
         a {
-          color: $primary;
+          color: var(--primary);
         }
       }
       .timeline-last-read {
@@ -197,14 +197,14 @@
 
     .start-date {
       @include unselectable;
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
     }
 
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
       border-left: 1px solid;
-      border-color: $tertiary-low-or-tertiary-high;
+      border-color: var(--tertiary-low-or-tertiary-high);
       position: relative;
       -webkit-transform: translate3d(0, 0, 0);
     }
@@ -220,7 +220,7 @@
     .timeline-handle {
       border-radius: 0.8em;
       width: 0.35em;
-      background-color: $tertiary-low-or-tertiary-high;
+      background-color: var(--tertiary-low-or-tertiary-high);
       height: 100%;
       float: left;
       z-index: z("base") + 1;
@@ -231,7 +231,7 @@
     }
 
     .timeline-ago {
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
     }
 
     .timeline-scroller {
@@ -255,7 +255,7 @@
       margin-left: -0.35em;
       .progress {
         font-size: 0.8em;
-        color: $tertiary;
+        color: var(--tertiary);
         margin-right: 1em;
       }
       z-index: z("base") + 2; // above timeline-handle
@@ -269,7 +269,7 @@
     .now-date {
       @include unselectable;
       display: inline-block;
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
       margin-top: 0.5em;
     }
   }

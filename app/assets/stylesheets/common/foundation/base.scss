@@ -6,11 +6,11 @@
 // --------------------------------------------------
 
 html {
-  color: $primary;
+  color: var(--primary);
   font-family: $base-font-family;
   font-size: $base-font-size;
   line-height: $line-height-large;
-  background-color: $secondary;
+  background-color: var(--secondary);
   overflow-y: scroll;
   direction: ltr;
 
@@ -35,17 +35,17 @@ html {
 // --------------------------------------------------
 
 a {
-  color: $tertiary;
+  color: var(--tertiary);
   text-decoration: none;
   cursor: pointer;
   &:visited {
-    color: $tertiary;
+    color: var(--tertiary);
   }
   &:hover {
-    color: $tertiary;
+    color: var(--tertiary);
   }
   &:active {
-    color: $tertiary;
+    color: var(--tertiary);
   }
 }
 
@@ -57,7 +57,7 @@ hr {
   height: 1px;
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding: 0;
 }
 
@@ -136,11 +136,11 @@ table {
 }
 
 tbody {
-  border-top: 3px solid $primary-low;
+  border-top: 3px solid var(--primary-low);
 }
 
 tr {
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }

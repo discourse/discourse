@@ -64,7 +64,7 @@ textarea {
   margin-bottom: 9px;
   font-size: $font-0;
   line-height: $line-height-large;
-  color: $primary;
+  color: var(--primary);
 }
 
 input,
@@ -79,7 +79,7 @@ input[type="file"] {
 
 select {
   width: 220px;
-  background: $secondary;
+  background: var(--secondary);
 
   &[multiple],
   &[size] {
@@ -114,7 +114,7 @@ input {
 }
 
 .control-instructions {
-  color: $primary-medium;
+  color: var(--primary-medium);
   font-size: 0.875rem;
 }
 
@@ -162,7 +162,7 @@ input {
 .bootbox.modal {
   .modal-footer {
     a.btn-primary {
-      color: $secondary;
+      color: var(--secondary);
     }
   }
 }

@@ -10,7 +10,7 @@
 }
 
 .topic-post article {
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding: 15px 0 8px 0;
 }
 
@@ -28,7 +28,7 @@ span.badge-posts {
 
 .topic-post {
   nav.post-controls {
-    color: $primary-low-mid-or-secondary-high;
+    color: var(--primary-low-mid-or-secondary-high);
     .actions {
       display: flex;
 
@@ -82,18 +82,18 @@ span.badge-posts {
         }
         &.reply {
           .d-icon {
-            color: $primary-high;
+            color: var(--primary-high);
           }
           margin-left: auto;
         }
         &.has-like {
           .d-icon {
-            color: $love;
+            color: var(--love);
           }
         }
         &.bookmarked {
           .d-icon {
-            color: $tertiary;
+            color: var(--tertiary);
           }
         }
       }
@@ -131,7 +131,7 @@ span.badge-posts {
 
 a.reply-to-tab {
   z-index: z("base") + 1;
-  color: $primary-med-or-secondary-med;
+  color: var(--primary-med-or-secondary-med);
   margin-right: 0.5em;
 }
 
@@ -166,7 +166,7 @@ a.reply-to-tab {
     }
     .number,
     .d-icon {
-      color: $primary-high-or-secondary-low;
+      color: var(--primary-high-or-secondary-low);
       font-size: $font-up-1;
     }
     .avatar + a {
@@ -180,7 +180,7 @@ a.reply-to-tab {
   .information,
   .avatars {
     padding: 10px;
-    color: $primary;
+    color: var(--primary);
     overflow: auto;
   }
   .information {
@@ -192,9 +192,9 @@ a.reply-to-tab {
     .btn {
       border: 0;
       padding: 0 15px;
-      color: $primary-med-or-secondary-high;
-      background: $blend-primary-secondary-5;
-      border-left: 1px solid $primary-low;
+      color: var(--primary-med-or-secondary-high);
+      background: var(--blend-primary-secondary-5);
+      border-left: 1px solid var(--primary-low);
       .fa {
         margin: 0;
         font-size: $font-up-2;
@@ -203,8 +203,8 @@ a.reply-to-tab {
     }
   }
   .link-summary .btn {
-    color: $primary-med-or-secondary-high;
-    background: $blend-primary-secondary-5;
+    color: var(--primary-med-or-secondary-high);
+    background: var(--blend-primary-secondary-5);
     width: 100%;
   }
 }
@@ -212,7 +212,7 @@ a.reply-to-tab {
 #topic-footer-buttons {
   .d-icon-bookmark.bookmarked,
   .d-icon-discourse-bookmark-clock.bookmarked {
-    color: $tertiary;
+    color: var(--tertiary);
   }
 
   .topic-footer-mobile-dropdown {
@@ -253,8 +253,8 @@ a.reply-to-tab {
 }
 
 span.post-count {
-  background: $primary;
-  color: $secondary;
+  background: var(--primary);
+  color: var(--secondary);
   opacity: 0.8;
 }
 
@@ -312,7 +312,7 @@ button.select-post {
 
 .deleted {
   .topic-body {
-    background-color: $danger-low-mid;
+    background-color: var(--danger-low-mid);
   }
 }
 
@@ -344,7 +344,7 @@ pre.copy-codeblocks code {
 }
 
 span.highlighted {
-  background-color: $highlight-low;
+  background-color: var(--highlight-low);
 }
 
 .topic-avatar {
@@ -390,11 +390,11 @@ span.highlighted {
 }
 
 .username.new-user a {
-  color: $primary-low-mid;
+  color: var(--primary-low-mid);
 }
 
 .user-title {
-  color: $primary-medium;
+  color: var(--primary-medium);
   overflow: hidden;
   margin-right: 50px;
 }

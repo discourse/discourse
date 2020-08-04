@@ -8,7 +8,7 @@
   width: 54.054%;
   margin-left: 1.8018%;
   p.description {
-    color: $primary;
+    color: var(--primary);
   }
   .controls {
     margin-top: 10px;
@@ -54,7 +54,7 @@
   }
 
   .error {
-    color: $danger;
+    color: var(--danger);
   }
 }
 
@@ -66,11 +66,11 @@
     margin-top: 5px;
     margin-bottom: 5px;
     .fa {
-      color: $danger;
+      color: var(--danger);
     }
   }
   .raw-error {
-    background-color: $primary-very-low;
+    background-color: var(--primary-very-low);
     padding: 5px;
   }
 }
@@ -87,7 +87,7 @@
   .field-error {
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: $quaternary-low;
+    background-color: var(--quaternary-low);
     padding: 5px;
   }
 
@@ -101,7 +101,7 @@
   .color-schemes li {
     .d-icon {
       margin-right: 0.25em;
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
   .show-current-style {
@@ -183,9 +183,9 @@
 
   .themes-list-header {
     width: 100%;
-    border-bottom: 1px solid $primary-low;
-    border-top: 1px solid $primary-low;
-    border-right: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
+    border-top: 1px solid var(--primary-low);
+    border-right: 1px solid var(--primary-low);
     display: flex;
 
     .tab {
@@ -199,7 +199,7 @@
       }
 
       &:last-child {
-        border-left: 1px solid $primary-low;
+        border-left: 1px solid var(--primary-low);
       }
     }
   }
@@ -214,24 +214,24 @@
     @media screen and (max-height: 800px) {
       max-height: 40vh;
     }
-    border-right: 1px solid $primary-low;
-    border-bottom: 1px solid $primary-low;
+    border-right: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--primary-low);
     width: 100%;
 
     .themes-list-item:last-child {
       border-bottom: none;
     }
     .themes-list-item {
-      color: $primary;
-      border-bottom: 1px solid $primary-low;
+      color: var(--primary);
+      border-bottom: 1px solid var(--primary-low);
       display: flex;
-      border-left: 1px solid $primary-low;
+      border-left: 1px solid var(--primary-low);
 
       &.inactive-indicator {
         border-right: 0;
         border-left: 0;
         font-weight: bold;
-        color: $primary-medium;
+        color: var(--primary-medium);
 
         span.empty {
           padding-left: 5px;
@@ -239,17 +239,17 @@
         }
       }
       &:not(.inactive-indicator):not(.selected):hover {
-        background-color: $primary-very-low;
+        background-color: var(--primary-very-low);
         .component {
-          border-color: $primary-low-mid;
+          border-color: var(--primary-low-mid);
         }
       }
 
       &.selected {
-        color: $secondary;
-        background-color: $tertiary;
+        color: var(--secondary);
+        background-color: var(--tertiary);
         .components-list {
-          color: $secondary;
+          color: var(--secondary);
         }
         .fa {
           color: inherit;
@@ -257,18 +257,18 @@
       }
       &:not(.selected) {
         .broken-indicator {
-          color: $danger;
+          color: var(--danger);
         }
         .fa {
           opacity: 0.7;
         }
         .default-indicator {
-          color: $success;
+          color: var(--success);
         }
       }
 
       .light-grey-icon {
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
 
       .info {
@@ -287,11 +287,11 @@
         display: inline-block;
         font-size: $font-down-1;
         align-items: baseline;
-        color: $primary-high;
+        color: var(--primary-high);
 
         .others-count,
         .others-count:hover {
-          color: $primary-high;
+          color: var(--primary-high);
           text-decoration: underline;
         }
       }
@@ -367,8 +367,8 @@
     }
 
     .edit-main-nav .nav-pills > li a.active {
-      background-color: $quaternary;
-      color: $secondary;
+      background-color: var(--quaternary);
+      color: var(--secondary);
     }
 
     .edit-main-nav ul {
@@ -398,12 +398,12 @@
         }
 
         a.active {
-          background: $primary-medium;
-          color: $secondary;
+          background: var(--primary-medium);
+          color: var(--secondary);
         }
 
         a.blank:not(.active) {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
 
         input {
@@ -462,7 +462,7 @@
         padding: 5px 0 0 0;
         margin-left: 10px;
         width: 80px;
-        color: $primary;
+        color: var(--primary);
       }
     }
   }
@@ -500,7 +500,7 @@
     }
     .description {
       margin: 0.15em 0 0;
-      color: $primary-high;
+      color: var(--primary-high);
       font-size: $font-down-1;
       line-height: $line-height-medium;
     }
@@ -508,7 +508,7 @@
     .invalid .hex input {
       background-color: white;
       color: black;
-      border-color: $danger;
+      border-color: var(--danger);
     }
   }
 
@@ -524,7 +524,7 @@
     li {
       &.disabled-child {
         .child-link {
-          color: $primary-medium;
+          color: var(--primary-medium);
           &:hover {
             text-decoration: underline;
           }
@@ -551,7 +551,7 @@
     display: block;
     margin-bottom: 0.25em;
     + label {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
   label {
@@ -638,7 +638,7 @@
 }
 
 .permalink-description {
-  color: $primary-medium;
+  color: var(--primary-medium);
 }
 
 // embedding
@@ -666,7 +666,7 @@
       div.label {
         display: block;
         font-size: $font-down-1;
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
       td.controls,
       td.editing-controls {
@@ -718,7 +718,7 @@
     margin: 0.75em 0;
   }
   p.description {
-    color: $primary-medium;
+    color: var(--primary-medium);
     margin-bottom: 1em;
     max-width: 700px;
   }
@@ -735,7 +735,7 @@
   .user-field {
     padding: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
     .form-display {
       width: 25%;
       display: inline-block;
@@ -793,7 +793,7 @@
 
 .robots-txt-edit {
   div.overridden {
-    background: $highlight-medium;
+    background: var(--highlight-medium);
     padding: 7px;
     margin-bottom: 7px;
   }

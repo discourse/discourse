@@ -33,13 +33,13 @@
 
   .custom-date-time-wrap {
     padding: 1em 1em 0.5em;
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
     border-top: none;
     margin-top: -0.667em;
-    background: $primary-very-low;
+    background: var(--primary-very-low);
     .d-icon {
       padding: 0 0.75em 0 0;
-      color: $primary-high;
+      color: var(--primary-high);
       margin-top: -0.5em;
     }
 

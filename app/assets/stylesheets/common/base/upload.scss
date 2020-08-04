@@ -1,5 +1,5 @@
 .uploaded-image-preview {
-  background: $primary-medium center;
+  background: var(--primary-medium) center;
   background-size: cover;
   position: relative;
 
@@ -31,14 +31,14 @@
       margin-left: auto;
 
       .d-icon {
-        color: $primary-low;
+        color: var(--primary-low);
       }
 
       &:hover {
         background: none;
 
         .d-icon {
-          color: $primary;
+          color: var(--primary);
         }
       }
     }

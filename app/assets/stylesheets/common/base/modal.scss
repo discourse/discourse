@@ -16,7 +16,7 @@
   flex: 0 1 auto;
   margin: 0 auto;
   max-width: 700px;
-  background-color: $secondary;
+  background-color: var(--secondary);
   box-shadow: shadow("modal");
 
   .select-kit {
@@ -42,20 +42,20 @@
   z-index: z("modal", "content");
   overflow: auto;
   height: auto;
-  background-color: $secondary;
+  background-color: var(--secondary);
   box-shadow: shadow("card");
   background-clip: padding-box;
 }
 
 .input-hint-text {
   margin-left: 0.5em;
-  color: $secondary-high;
+  color: var(--secondary-high);
 }
 
 .modal-header {
   display: flex;
   padding: 10px 15px;
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
   align-items: center;
 
   .title {
@@ -75,7 +75,7 @@
     margin-left: auto;
     padding-left: 2em;
     .close {
-      color: $primary-high;
+      color: var(--primary-high);
     }
   }
 }
@@ -127,7 +127,7 @@
 
 .inline-modal {
   .modal-inner-container {
-    border: 1px solid $secondary-medium;
+    border: 1px solid var(--secondary-medium);
   }
 }
 
@@ -163,7 +163,7 @@
 
 .modal-footer {
   padding: 14px 15px 10px;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   .btn {
     margin: 0 5px 5px 0;
     &[href] {
@@ -188,11 +188,11 @@
 .modal {
   .nav {
     padding: 10px 30px 10px 15px;
-    background-color: $secondary;
+    background-color: var(--secondary);
     li > a {
       font-size: $font-0;
     }
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
   }
 
   &.hidden {
@@ -229,18 +229,18 @@
           padding: 5px 10px;
           box-shadow: shadow("card");
           z-index: 5;
-          background-color: $secondary;
+          background-color: var(--secondary);
           max-height: 150px;
           width: 90%;
           overflow-y: auto;
           > .search-link {
             padding: 6px;
-            border-bottom: 1px solid $primary-low;
+            border-bottom: 1px solid var(--primary-low);
             cursor: pointer;
             display: block;
             &:hover,
             &:focus {
-              background-color: $highlight-medium;
+              background-color: var(--highlight-medium);
             }
             .search-category {
               display: flex;
@@ -266,7 +266,7 @@
       margin-bottom: 20px;
     }
     .warning {
-      color: $danger !important;
+      color: var(--danger) !important;
     }
   }
 
@@ -321,9 +321,9 @@
 
 .d-modal-cancel {
   margin-left: 1em;
-  color: $primary-medium;
+  color: var(--primary-medium);
   &:hover {
-    color: $danger;
+    color: var(--danger);
   }
 }
 
@@ -339,7 +339,7 @@
   .progress-bar {
     height: 15px;
     position: relative;
-    background: $primary-low-mid;
+    background: var(--primary-low-mid);
     border-radius: 25px;
     overflow: hidden;
     margin: 30px 0 20px;
@@ -347,7 +347,7 @@
       display: block;
       width: 0%;
       height: 100%;
-      background-color: $tertiary;
+      background-color: var(--tertiary);
       position: relative;
       transition: width 0.6s linear;
     }
@@ -369,7 +369,7 @@
   }
   .d-icon-times-circle {
     margin-left: 5px;
-    color: $danger;
+    color: var(--danger);
   }
   li {
     margin-bottom: 10px;
@@ -390,8 +390,8 @@
 
     .cannot_delete_reason {
       position: absolute;
-      background: $primary;
-      color: $secondary;
+      background: var(--primary);
+      color: var(--secondary);
       text-align: center;
       border-radius: 2px;
       padding: 12px 8px;
@@ -402,7 +402,7 @@
         border: solid transparent;
         content: " ";
         position: absolute;
-        border-top-color: $primary;
+        border-top-color: var(--primary);
         border-width: 8px;
       }
     }
@@ -415,8 +415,8 @@
   .pending-permission-change-alert {
     margin-left: auto;
     max-width: 250px;
-    background: $primary-very-high;
-    color: $secondary;
+    background: var(--primary-very-high);
+    color: var(--secondary);
     margin-top: 10px;
     padding: 5px 10px;
     position: relative;
@@ -424,7 +424,7 @@
       border: solid transparent;
       content: " ";
       position: absolute;
-      border-bottom-color: $primary-very-high;
+      border-bottom-color: var(--primary-very-high);
       border-width: 7px;
       top: -13px;
       left: 200px;
@@ -496,13 +496,13 @@
     margin-right: 5px;
     &:hover,
     &.active {
-      color: $primary;
+      color: var(--primary);
     }
     &.active {
       font-weight: bold;
     }
     &:focus {
-      outline: 2px solid $primary-low;
+      outline: 2px solid var(--primary-low);
     }
   }
   .incoming-email-tabs {
@@ -516,7 +516,7 @@
     .incoming-email-html-part {
       height: 95%;
       border: none;
-      border-top: 1px solid $primary-low;
+      border-top: 1px solid var(--primary-low);
       padding-top: 10px;
     }
     textarea {
@@ -614,7 +614,7 @@
 }
 
 .custom-message-length {
-  color: $primary-medium;
+  color: var(--primary-medium);
   font-size: $font-down-1;
 }
 
@@ -631,11 +631,11 @@
     }
 
     .input-hint-text {
-      color: $primary;
+      color: var(--primary);
     }
 
     .jump-to-post-control .index {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
 
     .jump-to-date-control .input-hint-text {
@@ -653,7 +653,7 @@
 
       .text {
         margin: 0 0.5em 0 0;
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
     }
   }
@@ -763,12 +763,12 @@
         cursor: pointer;
 
         &.is-active {
-          color: $secondary;
-          background: $danger;
+          color: var(--secondary);
+          background: var(--danger);
 
           &.single-tab {
             background: none;
-            color: $primary;
+            color: var(--primary);
             padding: 4px 0;
           }
         }
