@@ -343,26 +343,6 @@ describe OptimizedImage do
             expect(oi.filesize).to be > 0
           end
         end
-
-        context "secure uploads enabled" do
-          it "allows to recalculate the filesize" do
-            SiteSetting.secure_media = true
-            s3_upload = Fabricate(:secure_upload_s3)
-
-            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-            stub_request(:get, Discourse.store.signed_url_for_path(s3_upload.url)).to_return(status: 200, body: file_from_fixtures("logo.png"))
-            stub_request(:put, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/optimized/1X/#{s3_upload.sha1}_2_100x200.png")
-              .to_return(status: 200, headers: { "ETag" => "someetag" })
-
-            oi = OptimizedImage.create_for(s3_upload, 100, 200)
-            oi.filesize = nil
-
-            stub_request(:get, Discourse.store.signed_url_for_path(oi.url))
-              .to_return(status: 200, body: file_from_fixtures("resized.png"))
-
-            expect(oi.filesize).to be > 0
-          end
-        end
       end
     end
   end
