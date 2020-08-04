@@ -43,6 +43,11 @@ GEM
     annotate (3.1.1)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
+    app_profiler (0.0.6)
+      activesupport (>= 5.2)
+      rack
+      railties (>= 5.2)
+      stackprof (~> 0.2)
     ast (2.4.1)
     aws-eventstream (1.1.0)
     aws-partitions (1.329.0)
@@ -447,6 +452,7 @@ DEPENDENCIES
   activesupport (= 6.0.3.2)
   addressable
   annotate
+  app_profiler
   aws-sdk-s3
   aws-sdk-sns
   barber
