@@ -113,10 +113,10 @@ const Group = RestModel.extend({
     }).then(() => this.findMembers(params, true));
   },
 
-  addMembers(usernames, filter) {
+  addMembers(usernames, filter, notifyUsers, emails = []) {
     return ajax(`/groups/${this.id}/members.json`, {
       type: "PUT",
-      data: { usernames }
+      data: { usernames, emails, notify_users: notifyUsers }
     }).then(response => {
       if (filter) {
         this._filterMembers(response);
@@ -126,10 +126,10 @@ const Group = RestModel.extend({
     });
   },
 
-  addOwners(usernames, filter) {
+  addOwners(usernames, filter, notifyUsers) {
     return ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "PUT",
-      data: { group: { usernames } }
+      data: { group: { usernames, notify_users: notifyUsers } }
     }).then(response => {
       if (filter) {
         this._filterMembers(response);

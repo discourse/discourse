@@ -626,9 +626,11 @@ en:
       member_added: "Added"
       member_requested: "Requested at"
       add_members:
-        title: "Add Members"
-        description: "Manage the membership of this group"
-        usernames: "Usernames"
+        title: "Add members to %{group_name}"
+        description: "You can also paste in a comma separated list."
+        usernames: "Enter usernames or email addresses"
+        input_placeholder: "Usernames or emails"
+        notify_users: "Notify users"
       requests:
         title: "Requests"
         reason: "Reason"

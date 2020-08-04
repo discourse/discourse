@@ -800,6 +800,16 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def notify_added_to_group(user, owner: false)
+    SystemMessage.create_from_system_user(
+      user,
+      :user_added_to_group,
+      group_name: self.full_name.presence || self.name,
+      group_path: "/g/#{self.name}",
+      membership_level: owner ? "an owner" : "a member"
+    )
+  end
+
   protected
 
   def name_format_validator
