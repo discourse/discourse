@@ -145,23 +145,6 @@ createWidget("user-menu-links", {
   }
 });
 
-createWidget("user-menu-dismiss-link", {
-  tagName: "div.dismiss-link",
-
-  template: hbs`
-    <ul class='menu-links'>
-      <li>
-        {{link action="dismissNotifications"
-          className="dismiss"
-          tabindex="0"
-          icon="check"
-          label="user.dismiss"
-          title="user.dismiss_notifications_tooltip"}}
-      </li>
-    </ul>
-  `
-});
-
 export default createWidget("user-menu", {
   tagName: "div.user-menu",
   buildKey: () => "user-menu",
@@ -175,7 +158,8 @@ export default createWidget("user-menu", {
     return {
       currentQuickAccess: QuickAccess.NOTIFICATIONS,
       hasUnread: false,
-      markUnread: null
+      markUnread: null,
+      hasMore: true
     };
   },
 
@@ -190,11 +174,6 @@ export default createWidget("user-menu", {
       }),
       this.quickAccessPanel(path)
     ];
-
-    if (this.state.hasUnread) {
-      result.push(h("hr.bottom-area"));
-      result.push(this.attach("user-menu-dismiss-link"));
-    }
 
     return result;
   },

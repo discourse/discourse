@@ -61,6 +61,28 @@
     flex-direction: column;
   }
 
+  .panel-body-bottom {
+    display: flex;
+    margin-top: 0.5em;
+    .show-all {
+      flex: 1 1 auto;
+      button {
+        width: 100%;
+      }
+    }
+    .dismiss {
+      margin-left: 0.5em;
+    }
+
+    button {
+      background-color: $primary-very-low;
+      &:hover {
+        background: $primary-low;
+        color: $primary;
+      }
+    }
+  }
+
   .badge-notification {
     vertical-align: text-bottom;
   }
