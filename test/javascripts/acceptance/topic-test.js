@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
@@ -189,8 +190,8 @@ QUnit.test("Updating the topic title with unicode emojis", async assert => {
 
 QUnit.test(
   "Updating the topic title with unicode emojis without whitespaces",
-  async assert => {
-    Discourse.SiteSettings.enable_inline_emoji_translation = true;
+  async function(assert) {
+    this.siteSettings.enable_inline_emoji_translation = true;
     await visit("/t/internationalization-localization/280");
     await click("#topic-title .d-icon-pencil-alt");
 
@@ -227,6 +228,13 @@ QUnit.skip("Deleting a topic", async assert => {
   assert.ok(exists(".widget-button.recover"), "it shows the recover button");
 });
 
+QUnit.test("Group category moderator posts", async assert => {
+  await visit("/t/topic-for-group-moderators/2480");
+
+  assert.ok(exists(".category-moderator"), "it has a class applied");
+  assert.ok(exists(".d-icon-shield-alt"), "it shows an icon");
+});
+
 acceptance("Topic featured links", {
   loggedIn: true,
   settings: {
@@ -235,7 +243,7 @@ acceptance("Topic featured links", {
   }
 });
 
-QUnit.test("remove featured link", async assert => {
+QUnit.skip("remove featured link", async assert => {
   await visit("/t/-/299/1");
   assert.ok(
     exists(".title-wrapper .topic-featured-link"),
@@ -248,10 +256,9 @@ QUnit.test("remove featured link", async assert => {
     "link to remove featured link"
   );
 
-  // this test only works in a browser:
-  // await click('.title-wrapper .remove-featured-link');
-  // await click('.title-wrapper .submit-edit');
-  // assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
+  await click(".title-wrapper .remove-featured-link");
+  await click(".title-wrapper .submit-edit");
+  assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
 });
 
 QUnit.test("Converting to a public topic", async assert => {
@@ -341,7 +348,7 @@ function selectText(selector) {
 QUnit.test("Quoting a quote keeps the original poster name", async assert => {
   await visit("/t/internationalization-localization/280");
   selectText("#post_5 blockquote");
-  await click(".quote-button");
+  await click(".quote-button .insert-quote");
 
   assert.ok(
     find(".d-editor-input")
@@ -386,7 +393,7 @@ QUnit.test(
   async assert => {
     await visit("/t/internationalization-localization/280");
     selectText("#post_5 .cooked");
-    await click(".quote-button");
+    await click(".quote-button .insert-quote");
 
     assert.ok(
       find(".d-editor-input")
@@ -395,20 +402,6 @@ QUnit.test(
     );
   }
 );
-
-acceptance("Topic + Post Bookmarks with Reminders", {
-  loggedIn: true,
-  settings: {
-    enable_bookmarks_with_reminders: true
-  }
-});
-
-QUnit.test("Bookmarks Modal", async assert => {
-  await visit("/t/internationalization-localization/280");
-  await click(".topic-post:first-child button.show-more-actions");
-  await click(".topic-post:first-child button.bookmark");
-  assert.ok(exists("#bookmark-reminder-modal"), "it shows the bookmark modal");
-});
 
 acceptance("Topic with title decorated", {
   loggedIn: true,

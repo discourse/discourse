@@ -33,7 +33,7 @@ describe Topic do
 
       describe 'censored words' do
         after do
-          Discourse.redis.flushall
+          Discourse.redis.flushdb
         end
 
         describe 'when title contains censored words' do
@@ -255,17 +255,25 @@ describe Topic do
   end
 
   context 'topic title uniqueness' do
+    let!(:category1) { Fabricate(:category) }
+    let!(:category2) { Fabricate(:category) }
 
-    let!(:topic) { Fabricate(:topic) }
-    let(:new_topic) { Fabricate.build(:topic, title: topic.title) }
+    let!(:topic) { Fabricate(:topic, category: category1) }
+    let(:new_topic) { Fabricate.build(:topic, title: topic.title, category: category1) }
+    let(:new_topic_different_cat) { Fabricate.build(:topic, title: topic.title, category: category2) }
 
     context "when duplicates aren't allowed" do
       before do
-        SiteSetting.expects(:allow_duplicate_topic_titles?).returns(false)
+        SiteSetting.allow_duplicate_topic_titles = false
+        SiteSetting.allow_duplicate_topic_titles_category = false
       end
 
       it "won't allow another topic to be created with the same name" do
         expect(new_topic).not_to be_valid
+      end
+
+      it "won't even allow another topic to be created with the same name but different category" do
+        expect(new_topic_different_cat).not_to be_valid
       end
 
       it "won't allow another topic with an upper case title to be created" do
@@ -286,11 +294,27 @@ describe Topic do
 
     context "when duplicates are allowed" do
       before do
-        SiteSetting.expects(:allow_duplicate_topic_titles?).returns(true)
+        SiteSetting.allow_duplicate_topic_titles = true
+        SiteSetting.allow_duplicate_topic_titles_category = false
       end
 
       it "will allow another topic to be created with the same name" do
         expect(new_topic).to be_valid
+      end
+    end
+
+    context "when duplicates are allowed if the category is different" do
+      before do
+        SiteSetting.allow_duplicate_topic_titles = false
+        SiteSetting.allow_duplicate_topic_titles_category = true
+      end
+
+      it "will allow another topic to be created with the same name but different category" do
+        expect(new_topic_different_cat).to be_valid
+      end
+
+      it "won't allow another topic to be created with the same name in same category" do
+        expect(new_topic).not_to be_valid
       end
     end
 
@@ -478,37 +502,66 @@ describe Topic do
     end
   end
 
-  context 'similar_to' do
+  context '.similar_to' do
+    fab!(:category) { Fabricate(:category_with_definition) }
 
-    it 'returns blank with nil params' do
-      expect(Topic.similar_to(nil, nil)).to be_blank
+    it 'returns an empty array with nil params' do
+      expect(Topic.similar_to(nil, nil)).to eq([])
     end
 
     context "with a category definition" do
-      let!(:category) { Fabricate(:category_with_definition) }
-
       it "excludes the category definition topic from similar_to" do
-        expect(Topic.similar_to('category definition for', "no body")).to be_blank
+        expect(Topic.similar_to('category definition for', "no body")).to eq([])
       end
     end
 
     context 'with a similar topic' do
-      let!(:topic) {
+      fab!(:post) {
         SearchIndexer.enable
-        post = create_post(title: "Evil trout is the dude who posted this topic")
-        post.topic
+        create_post(title: "Evil trout is the dude who posted this topic")
       }
+
+      let(:topic) { post.topic }
+
+      before do
+        SearchIndexer.enable
+      end
 
       it 'returns the similar topic if the title is similar' do
         expect(Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?")).to eq([topic])
       end
 
-      context "secure categories" do
-        fab!(:category) { Fabricate(:category_with_definition, read_restricted: true) }
+      it 'returns the similar topic even if raw is blank' do
+        expect(Topic.similar_to("has evil trout made any topics?", "")).to eq([topic])
+      end
 
+      it 'matches title against title and raw against raw when searching for topics' do
+        topic.update!(title: '1 2 3 numbered titles')
+        post.update!(raw: 'random toy poodle')
+
+        expect(Topic.similar_to("unrelated term", "1 2 3 poddle")).to eq([])
+      end
+
+      it 'doesnt match numbered lists against numbers in Post#raw' do
+        post.update!(raw: <<~RAW)
+        Internet Explorer 11+ Oct 2013 Google Chrome 32+ Jan 2014 Firefox 27+ Feb 2014 Safari 6.1+ Jul 2012 Safari, iOS 8+ Oct 2014
+        RAW
+
+        post.topic.update!(title: 'Where are we with browser support in 2019?')
+
+        topics = Topic.similar_to("Videos broken in composer", <<~RAW)
+        1. Do something
+        2. Do something else
+        3. Do more things
+        RAW
+
+        expect(topics).to eq([])
+      end
+
+      context "secure categories" do
         before do
-          topic.category = category
-          topic.save
+          category.update!(read_restricted: true)
+          topic.update!(category: category)
         end
 
         it "doesn't return topics from private categories" do
@@ -630,8 +683,9 @@ describe Topic do
         context "from a muted user" do
           before { MutedUser.create!(user: another_user, muted_user: user) }
 
-          it 'silently fails' do
-            expect(topic.invite(user, another_user.username)).to eq(true)
+          it 'fails with an error message' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
@@ -646,6 +700,49 @@ describe Topic do
           it 'should raise error' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::UserExists)
+          end
+        end
+
+        context "when invited_user has enabled allow_list" do
+          fab!(:user2) { Fabricate(:user) }
+          fab!(:admin) { Fabricate(:admin) }
+          fab!(:pm) { Fabricate(:private_message_topic, user: user, topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: user),
+            Fabricate.build(:topic_allowed_user, user: user2)
+          ]) }
+
+          it 'succeeds when inviter is in allowed list' do
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
+            expect(topic.invite(user, another_user.username)).to eq(true)
+          end
+
+          it 'should raise error when inviter not in allowed list' do
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
+          end
+
+          it 'should succeed for staff even when not allowed' do
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
+            expect(topic.invite(another_user, admin.username)).to eq(true)
+          end
+
+          it 'should raise error when target_user is not in inviters allowed list' do
+            user.user_option.update!(enable_allowed_pm_users: true)
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
+          end
+
+          it 'should raise error if target_user has not allowed any of the other participants' do
+            user2.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: user2, allowed_pm_user: user)
+
+            expect { pm.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
           end
         end
       end
@@ -767,8 +864,9 @@ describe Topic do
         context "for a muted topic" do
           before { TopicUser.change(another_user.id, topic.id, notification_level: TopicUser.notification_levels[:muted]) }
 
-          it 'silently fails' do
-            expect(topic.invite(user, another_user.username)).to eq(true)
+          it 'fails with an error message' do
+            expect { topic.invite(user, another_user.username) }
+              .to raise_error(Topic::NotAllowed)
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
@@ -1058,6 +1156,10 @@ describe Topic do
     end
 
     context 'archived' do
+      it 'should create a staff action log entry' do
+        expect { topic.update_status('archived', true, @user) }.to change { UserHistory.where(action: UserHistory.actions[:topic_archived]).count }.by(1)
+      end
+
       context 'disable' do
         before do
           @archived_topic = Fabricate(:topic, archived: true, bumped_at: 1.hour.ago)
@@ -1130,6 +1232,10 @@ describe Topic do
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
 
         expect { topic.update_status(status, true, @user) }.to change(topic.group_archived_messages, :count).by(1)
+      end
+
+      it 'should create a staff action log entry' do
+        expect { topic.update_status(status, true, @user) }.to change { UserHistory.where(action: UserHistory.actions[:topic_closed]).count }.by(1)
       end
     end
 
@@ -2359,7 +2465,7 @@ describe Topic do
       Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 3.hours.ago)
       Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
 
-      expect(Topic.time_to_first_response_total(category_id: category.id)).to eq(1)
+      expect(Topic.time_to_first_response_total(category_id: category.id, include_subcategories: true)).to eq(1)
     end
 
     it "should only count regular posts as the first response" do
@@ -2608,6 +2714,28 @@ describe Topic do
       end
 
       expect(@topic.auto_close_threshold_reached?).to eq(true)
+    end
+  end
+
+  describe '#update_action_counts' do
+    let(:topic) { Fabricate(:topic) }
+
+    it 'updates like count without including whisper posts' do
+      post = Fabricate(:post, topic: topic)
+      whisper_post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+
+      topic.update_action_counts
+      expect(topic.like_count).to eq(0)
+
+      PostAction.create!(post: post, user: user, post_action_type_id: PostActionType.types[:like])
+
+      topic.update_action_counts
+      expect(topic.like_count).to eq(1)
+
+      PostAction.create!(post: whisper_post, user: user, post_action_type_id: PostActionType.types[:like])
+
+      topic.update_action_counts
+      expect(topic.like_count).to eq(1)
     end
   end
 end

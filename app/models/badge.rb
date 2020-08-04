@@ -166,6 +166,44 @@ class Badge < ActiveRecord::Base
     SQL
   end
 
+  def clear_user_titles!
+    DB.exec(<<~SQL, badge_id: self.id, updated_at: Time.zone.now)
+      UPDATE users AS u
+      SET title = '', updated_at = :updated_at
+      FROM user_profiles AS up
+      WHERE up.user_id = u.id AND up.granted_title_badge_id = :badge_id
+    SQL
+    DB.exec(<<~SQL, badge_id: self.id)
+      UPDATE user_profiles AS up
+      SET badge_granted_title = false, granted_title_badge_id = NULL
+      WHERE up.granted_title_badge_id = :badge_id
+    SQL
+  end
+
+  ##
+  # Update all user titles based on a badge to the new name
+  def update_user_titles!(new_title)
+    DB.exec(<<~SQL, granted_title_badge_id: self.id, title: new_title, updated_at: Time.zone.now)
+      UPDATE users AS u
+      SET title = :title, updated_at = :updated_at
+      FROM user_profiles AS up
+      WHERE up.user_id = u.id AND up.granted_title_badge_id = :granted_title_badge_id
+    SQL
+  end
+
+  ##
+  # When a badge has its TranslationOverride cleared, reset
+  # all user titles granted to the standard name.
+  def reset_user_titles!
+    DB.exec(<<~SQL, granted_title_badge_id: self.id, updated_at: Time.zone.now)
+      UPDATE users AS u
+      SET title = badges.name, updated_at = :updated_at
+      FROM user_profiles AS up
+      INNER JOIN badges ON badges.id = up.granted_title_badge_id
+      WHERE up.user_id = u.id AND up.granted_title_badge_id = :granted_title_badge_id
+    SQL
+  end
+
   def self.i18n_name(name)
     name.downcase.tr(' ', '_')
   end
@@ -181,7 +219,7 @@ class Badge < ActiveRecord::Base
   def self.find_system_badge_id_from_translation_key(translation_key)
     return unless translation_key.starts_with?('badges.')
     badge_name_klass = translation_key.split('.').second.camelize
-    "Badge::#{badge_name_klass}".constantize
+    Badge.const_defined?(badge_name_klass) ? "Badge::#{badge_name_klass}".constantize : nil
   end
 
   def awarded_for_trust_level?

@@ -45,7 +45,6 @@ da:
       unrecognized_extension: "Ikke anerkendt filtypenavn: %{extension}"
     import_error:
       generic: Der opstod en fejl under importen af dette tema
-      about_json: "Importfejl: about.json findes ikke eller er ugyldig"
       about_json_values: "about.json indeholder ugyldige værdier: %{errors}"
       git: "Fejl ved kloning af git repo, adgang nægtes, eller depot findes ikke"
       unpack_failed: "Kunne ikke pakke filen ud"
@@ -264,9 +263,6 @@ da:
   topics_in_category: "Emner i kategorien '%{category}'"
   rss_posts_in_topic: "RSS-feed for emnet '%{topic}'"
   rss_topics_in_category: "RSS-feed for emner i kategorien '%{category}'"
-  author_wrote: "%{author} skrev:"
-  num_posts: "Indlæg:"
-  num_participants: "Deltagere:"
   read_full_topic: "Læs hele emnet"
   private_message_abbrev: "Besked"
   rss_description:
@@ -610,7 +606,7 @@ da:
       title: "Upassende"
       long_form: "markerede dette som stødende"
     notify_user:
-      title: "Send @{{username}} en besked"
+      title: "Send @%{username} en besked"
       long_form: "sendt besked til brugeren"
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -948,7 +944,6 @@ da:
     crawl_images: "Hent billeder fra eksterne URLs for at indsætte de korrekte bredde og højde dimensioner."
     download_remote_images_to_local: "Konverter eksterne billeder til lokale billeder ved at downloade dem; dette forebygger at billeder ikke forsvinder."
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
-    download_remote_images_max_days_old: "Undlade at downloade billeder til indlæg der er mere end n dage gamle."
     disabled_image_download_domains: "Eksterne billeder vil ikke blive hentet fra disse domæner. Afgrænset liste."
     editing_grace_period: "For (n) sekunder efter postering, vil redigering ikke skabe et nyt indlæg."
     edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."
@@ -1104,6 +1099,7 @@ da:
       category: "Kategorier"
       topic: "Resultater"
       user: "Brugere"
+    results_page: "Søgeresultater for '%{term}'"
   original_poster: "Oprindelig forfatter"
   most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
@@ -1168,7 +1164,7 @@ da:
     activated_by_staff: "Aktiveret af hjælperteamet"
     new_user_typed_too_fast: "Ny bruger tastede for hurtigt"
     username:
-      short: "skal være på mindst %{{min}} tegn."
+      short: "skal være på mindst %%{min} tegn."
       long: "skal være kortere end %{max} tegn"
       unique: "skal være unik"
       blank: "skal udfyldes"
@@ -1518,6 +1514,8 @@ da:
       subject_template: "[%{email_prefix}] Bekræft din nye e-mail-adresse"
     confirm_old_email:
       subject_template: "[%{email_prefix}] Bekræft din nuværende e-mail-adresse"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Bekræft din nuværende e-mail-adresse"
     notify_old_email:
       subject_template: "[%{email_prefix}] Din e-mail-adresse er ændret"
     signup_after_approval:
@@ -1793,8 +1791,16 @@ da:
   joined: "Tilmeldt"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
+      quoted: '%{username} citerede dig i "%{topic}" - %{site_title}'
+      replied: '%{username} svarede dig i "%{topic}" - %{site_title}'
+      posted: '%{username} skrev i "%{topic}" - %{site_title}'
+      linked: '%{username} linkede til dit indlæg fra "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} oprettet et nyt emne"%{topic}" - %{site_title}'
       confirm_title: "Notifikationer aktiveret - %{site_title}"
       confirm_body: "Succes! notifikationer er aktiveret."
+      custom: "Notifikation fra %{username}på %{site_title}"
   reviewables:
     priorities:
       low: "Lav"

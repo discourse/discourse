@@ -1,5 +1,8 @@
 import componentTest from "helpers/component-test";
-import { testSelectKitModule, setDefaultState } from "./select-kit-test-helper";
+import {
+  testSelectKitModule,
+  setDefaultState
+} from "helpers/select-kit-helper";
 
 testSelectKitModule("notifications-button");
 

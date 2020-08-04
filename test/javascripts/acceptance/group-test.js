@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import pretender from "helpers/create-pretender";
@@ -21,13 +22,13 @@ const response = object => {
   return [200, { "Content-Type": "application/json" }, object];
 };
 
-QUnit.test("Anonymous Viewing Group", async assert => {
+QUnit.test("Anonymous Viewing Group", async function(assert) {
   await visit("/g/discourse");
 
   assert.equal(
     count(".nav-pills li a[title='Messages']"),
     0,
-    "it deos not show group messages navigation link"
+    "it does not show group messages navigation link"
   );
 
   await click(".nav-pills li a[title='Activity']");
@@ -62,7 +63,7 @@ QUnit.test("Anonymous Viewing Group", async assert => {
     I18n.t("groups.index.all").toLowerCase()
   );
 
-  Discourse.SiteSettings.enable_group_directory = false;
+  this.siteSettings.enable_group_directory = false;
 
   await visit("/g");
   await visit("/g/discourse");
@@ -82,7 +83,7 @@ QUnit.test("Anonymous Viewing Automatic Group", async assert => {
   assert.equal(
     count(".nav-pills li a[title='Manage']"),
     0,
-    "it deos not show group messages navigation link"
+    "it does not show group messages navigation link"
   );
 });
 

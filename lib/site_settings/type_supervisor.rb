@@ -34,7 +34,8 @@ class SiteSettings::TypeSupervisor
       group: 19,
       group_list: 20,
       tag_list: 21,
-      color: 22
+      color: 22,
+      simple_list: 23
     )
   end
 

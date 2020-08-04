@@ -91,6 +91,22 @@ class StdOutDemux
       @data.delete Thread.current
     end
   end
+
+  def flush
+    # Do nothing
+  end
+end
+
+class SeedHelper
+  def self.paths
+    DiscoursePluginRegistry.seed_paths
+  end
+
+  def self.filter
+    # Allows a plugin to exclude any specified seed data files from running
+    DiscoursePluginRegistry.seedfu_filter.any? ?
+      /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/ : nil
+  end
 end
 
 task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |_, args|
@@ -103,48 +119,63 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   puts "Multisite migrator is running using #{concurrency} threads"
   puts
 
-  queue = Queue.new
   exceptions = Queue.new
 
   old_stdout = $stdout
   $stdout = StdOutDemux.new($stdout)
 
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    queue << db
-  end
-
-  concurrency.times { queue << :done }
-
   SeedFu.quiet = true
 
-  (1..concurrency).map do
-    Thread.new {
-      while true
-        db = queue.pop
-        break if db == :done
+  def execute_concurently(concurrency, exceptions)
+    queue = Queue.new
 
-        RailsMultisite::ConnectionManagement.with_connection(db) do
-          begin
-            puts "Migrating #{db}"
-            ActiveRecord::Tasks::DatabaseTasks.migrate
-            SeedFu.seed(DiscoursePluginRegistry.seed_paths)
-            if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
-              SiteIconManager.ensure_optimized!
-            end
-          rescue => e
-            exceptions << [db, e]
-          ensure
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      queue << db
+    end
+
+    concurrency.times { queue << :done }
+
+    (1..concurrency).map do
+      Thread.new {
+        while true
+          db = queue.pop
+          break if db == :done
+
+          RailsMultisite::ConnectionManagement.with_connection(db) do
             begin
-              $stdout.finish_chunk
-            rescue => ex
-              STDERR.puts ex.inspect
-              STDERR.puts ex.backtrace
+              yield(db) if block_given?
+            rescue => e
+              exceptions << [db, e]
+            ensure
+              begin
+                $stdout.finish_chunk
+              rescue => ex
+                STDERR.puts ex.inspect
+                STDERR.puts ex.backtrace
+              end
             end
           end
         end
-      end
-    }
-  end.each(&:join)
+      }
+    end.each(&:join)
+  end
+
+  execute_concurently(concurrency, exceptions) do |db|
+    puts "Migrating #{db}"
+    ActiveRecord::Tasks::DatabaseTasks.migrate
+  end
+
+  SeedFu.seed(SeedHelper.paths, /001_refresh/)
+
+  execute_concurently(concurrency, exceptions) do |db|
+
+    puts "Seeding #{db}"
+    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+
+    if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
+      SiteIconManager.ensure_optimized!
+    end
+  end
 
   $stdout = old_stdout
 
@@ -168,6 +199,12 @@ end
 
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
+  migrations = ActiveRecord::Base.connection.migration_context.migrations
+  now_timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S').to_i
+  epoch_timestamp = Time.at(0).utc.strftime('%Y%m%d%H%M%S').to_i
+
+  raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
+  raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
 
   ActiveRecord::Tasks::DatabaseTasks.migrate
 
@@ -176,7 +213,7 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
   end
 
   SeedFu.quiet = true
-  SeedFu.seed(DiscoursePluginRegistry.seed_paths)
+  SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
   if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
     SiteIconManager.ensure_optimized!

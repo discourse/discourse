@@ -1,4 +1,5 @@
 import Report from "admin/models/report";
+import { setPrefix } from "discourse-common/lib/get-url";
 
 QUnit.module("Report");
 
@@ -32,7 +33,7 @@ QUnit.test("counts", assert => {
     "sums 7 days excluding today"
   );
 
-  report.set("method", "average");
+  report.set("type", "time_to_first_response");
   assert.equal(
     report.valueFor(2, 4),
     2,
@@ -528,7 +529,7 @@ QUnit.test("computed labels", assert => {
   assert.equal(computedFilesizeLabel.value, 582641);
 
   // subfolder support
-  Discourse.BaseUri = "/forum";
+  setPrefix("/forum");
 
   const postLink = computedLabels[5].compute(row).formatedValue;
   assert.equal(

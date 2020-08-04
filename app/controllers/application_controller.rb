@@ -32,31 +32,21 @@ class ApplicationController < ActionController::Base
   before_action :handle_theme
   before_action :set_current_user_for_logs
   before_action :clear_notifications
-  before_action :set_locale
+  around_action :with_resolved_locale
   before_action :set_mobile_view
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
   before_action :preload_json
+  before_action :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   before_action :check_xhr
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
-  after_action  :add_noindex_header, if: -> { is_feed_request? }
 
   layout :set_layout
-
-  if Rails.env == "development"
-    after_action :remember_theme_id
-
-    def remember_theme_id
-      if @theme_ids.present? && request.format == "html"
-        Stylesheet::Watcher.theme_id = @theme_ids.first if defined? Stylesheet::Watcher
-      end
-    end
-  end
 
   def has_escaped_fragment?
     SiteSetting.enable_escaped_fragments? && params.key?("_escaped_fragment_")
@@ -110,7 +100,7 @@ class ApplicationController < ActionController::Base
   class PluginDisabled < StandardError; end
 
   rescue_from RenderEmpty do
-    render 'default/empty'
+    with_resolved_locale { render 'default/empty' }
   end
 
   rescue_from ArgumentError do |e|
@@ -124,7 +114,7 @@ class ApplicationController < ActionController::Base
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
-    raise Discourse::ReadOnly
+    rescue_with_handler(Discourse::ReadOnly.new) || raise
   end
 
   rescue_from ActionController::ParameterMissing do |e|
@@ -212,7 +202,9 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::ReadOnly do
-    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+    unless response_body
+      render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
+    end
   end
 
   def redirect_with_client_support(url, options)
@@ -243,19 +235,32 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    message = opts[:custom_message_translated] || I18n.t(opts[:custom_message] || type)
-    error_page_opts = {
-      title: opts[:custom_message_translated] || I18n.t(opts[:custom_message] || "page_not_found.title"),
-      status: status_code,
-      group: opts[:group]
-    }
+    message = title = nil
+    with_resolved_locale(check_current_user: false) do
+      if opts[:custom_message_translated]
+        title = message = opts[:custom_message_translated]
+      elsif opts[:custom_message]
+        title = message = I18n.t(opts[:custom_message])
+      else
+        message = I18n.t(type)
+        if status_code == 403
+          title = I18n.t("page_forbidden.title")
+        else
+          title = I18n.t("page_not_found.title")
+        end
+      end
+    end
+
+    error_page_opts = { title: title, status: status_code, group: opts[:group] }
 
     if show_json_errors
       opts = { type: type, status: status_code }
 
-      # Include error in HTML format for topics#show.
-      if (request.params[:controller] == 'topics' && request.params[:action] == 'show') || (request.params[:controller] == 'categories' && request.params[:action] == 'find_by_slug')
-        opts[:extras] = { html: build_not_found_page(error_page_opts) }
+      with_resolved_locale(check_current_user: false) do
+        # Include error in HTML format for topics#show.
+        if (request.params[:controller] == 'topics' && request.params[:action] == 'show') || (request.params[:controller] == 'categories' && request.params[:action] == 'find_by_slug')
+          opts[:extras] = { html: build_not_found_page(error_page_opts) }
+        end
       end
 
       render_json_error message, opts
@@ -267,9 +272,10 @@ class ApplicationController < ActionController::Base
       rescue Discourse::InvalidAccess
         return render plain: message, status: status_code
       end
-
-      error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
-      render html: build_not_found_page(error_page_opts)
+      with_resolved_locale do
+        error_page_opts[:layout] = opts[:include_ember] ? 'application' : 'no_ember'
+        render html: build_not_found_page(error_page_opts)
+      end
     end
   end
 
@@ -315,19 +321,23 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_locale
-    if !current_user
+  def with_resolved_locale(check_current_user: true)
+    if check_current_user && current_user
+      locale = current_user.effective_locale
+    else
       if SiteSetting.set_locale_from_accept_language_header
         locale = locale_from_header
       else
         locale = SiteSetting.default_locale
       end
-    else
-      locale = current_user.effective_locale
     end
 
-    I18n.locale = I18n.locale_available?(locale) ? locale : SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+    if !I18n.locale_available?(locale)
+      locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
+    end
+
     I18n.ensure_all_loaded!
+    I18n.with_locale(locale) { yield }
   end
 
   def store_preloaded(key, json)
@@ -404,7 +414,9 @@ class ApplicationController < ActionController::Base
     end
 
     if theme_ids.blank? && SiteSetting.default_theme_id != -1
-      theme_ids << SiteSetting.default_theme_id
+      if guardian.allow_themes?([SiteSetting.default_theme_id])
+        theme_ids << SiteSetting.default_theme_id
+      end
     end
 
     @theme_ids = request.env[:resolved_theme_ids] = theme_ids
@@ -508,17 +520,7 @@ class ApplicationController < ActionController::Base
   private
 
   def locale_from_header
-    begin
-      # Rails I18n uses underscores between the locale and the region; the request
-      # headers use hyphens.
-      require 'http_accept_language' unless defined? HttpAcceptLanguage
-      available_locales = I18n.available_locales.map { |locale| locale.to_s.tr('_', '-') }
-      parser = HttpAcceptLanguage::Parser.new(request.env["HTTP_ACCEPT_LANGUAGE"])
-      parser.language_region_compatible_from(available_locales).tr('-', '_')
-    rescue
-      # If Accept-Language headers are not set.
-      I18n.default_locale
-    end
+    HttpLanguageParser.parse(request.env["HTTP_ACCEPT_LANGUAGE"])
   end
 
   def preload_anonymous_data
@@ -527,6 +529,7 @@ class ApplicationController < ActionController::Base
     store_preloaded("customHTML", custom_html_json)
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
+    store_preloaded("isReadOnly", @readonly_mode.to_s)
   end
 
   def preload_current_user_data
@@ -748,7 +751,7 @@ class ApplicationController < ActionController::Base
     return if !current_user
     return if !should_enforce_2fa?
 
-    redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
+    redirect_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     if !request.fullpath.start_with?(redirect_path)
       redirect_to path(redirect_path)
       nil
@@ -772,7 +775,9 @@ class ApplicationController < ActionController::Base
       opts[:layout] = 'application' if opts[:layout] == 'no_ember'
     end
 
-    if !SiteSetting.login_required? || (current_user rescue false)
+    @current_user = current_user rescue nil
+
+    if !SiteSetting.login_required? || @current_user
       key = "page_not_found_topics"
       if @topics_partial = Discourse.redis.get(key)
         @topics_partial = @topics_partial.html_safe
@@ -806,7 +811,13 @@ class ApplicationController < ActionController::Base
   end
 
   def add_noindex_header
-    response.headers['X-Robots-Tag'] = 'noindex' if request.get?
+    if request.get?
+      if SiteSetting.allow_index_in_robots_txt
+        response.headers['X-Robots-Tag'] = 'noindex'
+      else
+        response.headers['X-Robots-Tag'] = 'noindex, nofollow'
+      end
+    end
   end
 
   protected

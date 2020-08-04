@@ -4,6 +4,7 @@ class NotificationSerializer < ApplicationSerializer
 
   attributes :id,
              :user_id,
+             :external_id,
              :notification_type,
              :read,
              :created_at,
@@ -36,6 +37,14 @@ class NotificationSerializer < ApplicationSerializer
 
   def data
     object.data_hash
+  end
+
+  def external_id
+    object.user&.single_sign_on_record&.external_id
+  end
+
+  def include_external_id?
+    SiteSetting.enable_sso
   end
 
 end

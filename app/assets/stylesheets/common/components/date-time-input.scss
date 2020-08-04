@@ -1,10 +1,8 @@
 .d-date-time-input {
   display: flex;
-  align-items: center;
   border: 1px solid $primary-low;
   box-sizing: border-box;
   position: relative;
-  flex: 1;
 
   .date-picker,
   .fields {
@@ -13,5 +11,22 @@
 
   .d-date-time-input {
     margin-left: auto;
+    flex: 1 1 auto;
+  }
+
+  .d-time-input {
+    .select-kit.combo-box {
+      .select-kit-header {
+        border: none;
+      }
+    }
+  }
+
+  .d-date-input + .d-time-input {
+    margin-left: 1px;
+  }
+
+  .d-time-input + .d-date-input {
+    margin-right: 1px;
   }
 }

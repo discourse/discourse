@@ -126,7 +126,7 @@ class Emoji
   end
 
   def self.load_translations
-    db["translations"].merge(Plugin::CustomEmoji.translations)
+    db["translations"]
   end
 
   def self.base_directory
@@ -140,9 +140,9 @@ class Emoji
 
   def self.replacement_code(code)
     code
-      .split('-'.freeze)
+      .split('-')
       .map!(&:hex)
-      .pack("U*".freeze)
+      .pack("U*")
   end
 
   def self.unicode_replacements
@@ -166,7 +166,7 @@ class Emoji
         replacements[code] = name
         if is_tonable_emojis.include?(name)
           fitzpatrick_scales.each_with_index do |scale, index|
-            toned_code = code.codepoints.insert(1, scale).pack("U*".freeze)
+            toned_code = code.codepoints.insert(1, scale).pack("U*")
             replacements[toned_code] = "#{name}:t#{index + 2}"
           end
         end

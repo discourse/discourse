@@ -1,6 +1,7 @@
 export default {
   "about.json": {
     about: {
+      can_see_about_stats: true,
       stats: {
         topic_count: 27480,
         post_count: 490358,

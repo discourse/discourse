@@ -68,7 +68,7 @@ RSpec.describe ListController do
 
       get "/latest.json", params: { topic_ids: "#{p.topic_id}" }
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
@@ -90,11 +90,11 @@ RSpec.describe ListController do
       TopTopic.refresh!
 
       get "/categories_and_top.json"
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(data["topic_list"]["topics"].length).to eq(1)
 
       get "/categories_and_latest.json"
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(data["topic_list"]["topics"].length).to eq(2)
     end
   end
@@ -128,7 +128,7 @@ RSpec.describe ListController do
     let(:moderator) { Fabricate(:moderator) }
     let(:admin) { Fabricate(:admin) }
     let(:tag) { Fabricate(:tag) }
-    let(:private_message) { Fabricate(:private_message_topic) }
+    let(:private_message) { Fabricate(:private_message_topic, user: admin) }
 
     before do
       SiteSetting.tagging_enabled = true
@@ -142,12 +142,33 @@ RSpec.describe ListController do
       expect(response.status).to eq(404)
     end
 
+    it 'should fail for staff users if disabled' do
+      SiteSetting.allow_staff_to_tag_pms = false
+
+      [moderator, admin].each do |user|
+        sign_in(user)
+        get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
     it 'should be success for staff users' do
       [moderator, admin].each do |user|
         sign_in(user)
         get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
         expect(response.status).to eq(200)
       end
+    end
+
+    it 'should work for tag with unicode name' do
+      unicode_tag = Fabricate(:tag, name: 'hello-🇺🇸')
+      Fabricate(:topic_tag, tag: unicode_tag, topic: private_message)
+
+      sign_in(admin)
+      get "/topics/private-messages-tags/#{admin.username}/#{UrlHelper.encode_component(unicode_tag.name)}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].first["id"])
+        .to eq(private_message.id)
     end
   end
 
@@ -169,7 +190,7 @@ RSpec.describe ListController do
 
         expect(response.status).to eq(200)
 
-        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+        expect(response.parsed_body["topic_list"]["topics"].first["id"])
           .to eq(topic.id)
       end
     end
@@ -184,7 +205,7 @@ RSpec.describe ListController do
         get "/topics/private-messages-group/#{user.username}/#{UrlHelper.encode_component(unicode_group.name)}.json"
         expect(response.status).to eq(200)
 
-        expect(JSON.parse(response.body)["topic_list"]["topics"].first["id"])
+        expect(response.parsed_body["topic_list"]["topics"].first["id"])
           .to eq(topic.id)
       end
     end
@@ -217,7 +238,7 @@ RSpec.describe ListController do
           get "/topics/groups/#{group.name}.json"
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)["topic_list"]).to be_present
+          expect(response.parsed_body["topic_list"]).to be_present
         end
       end
 
@@ -286,7 +307,7 @@ RSpec.describe ListController do
 
         expect(response.status).to eq(200)
 
-        topics = JSON.parse(response.body)["topic_list"]["topics"]
+        topics = response.parsed_body["topic_list"]["topics"]
 
         expect(topics.map { |topic| topic["id"] }).to contain_exactly(
           topic.id, topic2.id
@@ -301,6 +322,13 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       expect(response.media_type).to eq('application/rss+xml')
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
+    end
+
+    it 'renders latest RSS with query params' do
+      get "/latest.rss?status=closed"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq('application/rss+xml')
+      expect(response.body).to_not include("<item>")
     end
 
     it 'renders links correctly with subfolder' do
@@ -342,14 +370,20 @@ RSpec.describe ListController do
 
       context 'with access to see the category' do
         it "succeeds" do
-          get "/c/#{category.slug}/l/latest"
+          get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
       end
 
-      context 'with a link that includes an id' do
+      context 'with encoded slug in the category' do
+        let(:category) { Fabricate(:category, slug: "தமிழ்") }
+
+        before do
+          SiteSetting.slug_generation_method = "encoded"
+        end
+
         it "succeeds" do
-          get "/c/#{category.id}-category/l/latest"
+          get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
       end
@@ -382,9 +416,9 @@ RSpec.describe ListController do
         }
 
         it 'uses the correct category' do
-          get "/c/#{other_category.slug}/l/latest.json"
+          get "/c/#{other_category.slug}/#{other_category.id}/l/latest.json"
           expect(response.status).to eq(200)
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["topic_list"]["topics"].first["category_id"])
             .to eq(other_category.id)
         end
@@ -395,7 +429,7 @@ RSpec.describe ListController do
 
         context 'when parent and child are requested' do
           it "succeeds" do
-            get "/c/#{category.slug}/#{sub_category.slug}/l/latest"
+            get "/c/#{category.slug}/#{sub_category.slug}/#{sub_category.id}/l/latest"
             expect(response.status).to eq(200)
           end
         end
@@ -410,14 +444,14 @@ RSpec.describe ListController do
 
       describe 'feed' do
         it 'renders RSS' do
-          get "/c/#{category.slug}.rss"
+          get "/c/#{category.slug}/#{category.id}.rss"
           expect(response.status).to eq(200)
           expect(response.media_type).to eq('application/rss+xml')
         end
 
         it "renders RSS in subfolder correctly" do
           set_subfolder "/forum"
-          get "/c/#{category.slug}.rss"
+          get "/c/#{category.slug}/#{category.id}.rss"
           expect(response.status).to eq(200)
           expect(response.body).to_not include("/forum/forum")
           expect(response.body).to include("http://test.localhost/forum/c/#{category.slug}")
@@ -427,46 +461,46 @@ RSpec.describe ListController do
       describe "category default views" do
         it "has a top default view" do
           category.update!(default_view: 'top', default_top_period: 'monthly')
-          get "/c/#{category.slug}.json"
+          get "/c/#{category.slug}/#{category.id}.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to eq("monthly")
         end
 
         it "has a default view of nil" do
           category.update!(default_view: nil)
-          get "/c/#{category.slug}.json"
+          get "/c/#{category.slug}/#{category.id}.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
         end
 
         it "has a default view of ''" do
           category.update!(default_view: '')
-          get "/c/#{category.slug}.json"
+          get "/c/#{category.slug}/#{category.id}.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
         end
 
         it "has a default view of latest" do
           category.update!(default_view: 'latest')
-          get "/c/#{category.slug}.json"
+          get "/c/#{category.slug}/#{category.id}.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["topic_list"]["for_period"]).to be_blank
         end
       end
 
       describe "renders canonical tag" do
         it 'for category default view' do
-          get "/c/#{category.slug}"
+          get "/c/#{category.slug}/#{category.id}"
           expect(response.status).to eq(200)
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
 
         it 'for category latest view' do
-          get "/c/#{category.slug}/l/latest"
+          get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
           expect(css_select("link[rel=canonical]").length).to eq(1)
         end
@@ -476,14 +510,14 @@ RSpec.describe ListController do
         let!(:amazing_category) { Fabricate(:category_with_definition, name: "Amazing Category") }
 
         it 'for category default view' do
-          get "/c/#{amazing_category.slug}"
+          get "/c/#{amazing_category.slug}/#{amazing_category.id}"
 
           expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
         end
 
         it 'for category latest view' do
           SiteSetting.short_site_description = "Best community"
-          get "/c/#{amazing_category.slug}/l/latest"
+          get "/c/#{amazing_category.slug}/#{amazing_category.id}/l/latest"
 
           expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
         end
@@ -502,7 +536,7 @@ RSpec.describe ListController do
     it "should respond with a list" do
       get "/topics/created-by/#{user.username}.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
 
@@ -510,8 +544,14 @@ RSpec.describe ListController do
       user.update!(username: "myname.test")
       get "/topics/created-by/#{user.username}", xhr: true
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(2)
+    end
+
+    it "returns 404 if `hide_profile_and_presence` user option is checked" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+      get "/topics/created-by/#{user.username}.json"
+      expect(response.status).to eq(404)
     end
   end
 
@@ -528,7 +568,7 @@ RSpec.describe ListController do
       sign_in(user)
       get "/topics/private-messages/#{user.username}.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
   end
@@ -549,7 +589,7 @@ RSpec.describe ListController do
       sign_in(user)
       get "/topics/private-messages-sent/#{user.username}.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
   end
@@ -572,7 +612,7 @@ RSpec.describe ListController do
       sign_in(user)
       get "/topics/private-messages-unread/#{user.username}.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
     end
   end
@@ -609,6 +649,40 @@ RSpec.describe ListController do
       expect(ListController.best_periods_for(nil, :monthly)).to eq([:monthly, :all])
       expect(ListController.best_periods_for(nil, :weekly)).to eq([:weekly, :all])
       expect(ListController.best_periods_for(nil, :daily)).to eq([:daily, :all])
+    end
+  end
+
+  describe "user_topics_feed" do
+    it "returns 404 if `hide_profile_and_presence` user option is checked" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+      get "/u/#{user.username}/activity/topics.rss"
+      expect(response.status).to eq(404)
+    end
+  end
+
+  describe "set_category" do
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
+
+    before do
+      SiteSetting.max_category_nesting = 3
+    end
+
+    it "redirects to URL with the updated slug" do
+      get "/c/hello/world/bye/#{subsubcategory.id}"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
+    end
+
+    context "with subfolder" do
+      it "redirects to URL containing the updated slug" do
+        set_subfolder "/forum"
+        get "/c/hello/world/bye/#{subsubcategory.id}"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
+      end
     end
   end
 end

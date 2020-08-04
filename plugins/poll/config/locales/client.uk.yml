@@ -28,24 +28,6 @@ uk:
           title: "Результати будуть показані після <strong>закриття</strong> ."
         staff:
           title: "Результати показуються лише <strong>співробітникам</strong> ."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Виберіть хоча б <strong>%{count}</strong> варіант"
-            few: "Виберіть хоча б <strong>%{count}</strong> варіантів"
-            many: "Виберіть хоча б <strong>%{count}</strong> варіанти"
-            other: "Виберіть хоча б <strong>%{count}</strong> варіанти"
-          up_to_max_options:
-            one: "Виберіть варіант <strong>%{count}</strong>"
-            few: "Виберіть до <strong>%{count}</strong> варіантів"
-            many: "Виберіть до <strong>%{count}</strong> варіантів"
-            other: "Виберіть до <strong>%{count}</strong> варіантів"
-          x_options:
-            one: "Виберіть варіант <strong>%{count}</strong>"
-            few: "Виберіть параметри <strong>%{count}</strong>"
-            many: "Виберіть параметри <strong>%{count}</strong>"
-            other: "Виберіть параметри <strong>%{count}</strong>"
-          between_min_and_max_options: "Виберіть параметри від<strong>%{min}</strong> до %{max}</strong>"
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосувати!"

@@ -23,14 +23,14 @@
   {{#if model}}
     <table class="table users-list grid">
       <thead>
-        {{admin-directory-toggle field="username" i18nKey="username" order=order ascending=ascending}}
-        {{admin-directory-toggle field="email" i18nKey="email" order=order ascending=ascending}}
-        {{admin-directory-toggle field="last_emailed" i18nKey="admin.users.last_emailed" order=order ascending=ascending}}
-        {{admin-directory-toggle field="seen" i18nKey="last_seen" order=order ascending=ascending}}
-        {{admin-directory-toggle field="topics_viewed" i18nKey="admin.user.topics_entered" order=order ascending=ascending}}
-        {{admin-directory-toggle field="posts_read" i18nKey="admin.user.posts_read_count" order=order ascending=ascending}}
-        {{admin-directory-toggle field="read_time" i18nKey="admin.user.time_read" order=order ascending=ascending}}
-        {{admin-directory-toggle field="created" i18nKey="created" order=order ascending=ascending}}
+        {{table-header-toggle field="username" labelKey="username" order=order asc=asc}}
+        {{table-header-toggle field="email" labelKey="email" order=order asc=asc}}
+        {{table-header-toggle field="last_emailed" labelKey="admin.users.last_emailed" order=order asc=asc}}
+        {{table-header-toggle field="seen" labelKey="last_seen" order=order asc=asc}}
+        {{table-header-toggle field="topics_viewed" labelKey="admin.user.topics_entered" order=order asc=asc}}
+        {{table-header-toggle field="posts_read" labelKey="admin.user.posts_read_count" order=order asc=asc}}
+        {{table-header-toggle field="read_time" labelKey="admin.user.time_read" order=order asc=asc}}
+        {{table-header-toggle field="created" labelKey="created" order=order asc=asc}}
         {{#if siteSettings.must_approve_users}}
           <th>{{i18n "admin.users.approved"}}</th>
         {{/if}}

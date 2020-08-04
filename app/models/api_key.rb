@@ -3,6 +3,7 @@
 class ApiKey < ActiveRecord::Base
   class KeyAccessError < StandardError; end
 
+  has_many :api_key_scopes
   belongs_to :user
   belongs_to :created_by, class_name: 'User'
 
@@ -59,6 +60,12 @@ class ApiKey < ActiveRecord::Base
 
   def self.hash_key(key)
     Digest::SHA256.hexdigest key
+  end
+
+  def request_allowed?(request, route_param)
+    return false if allowed_ips.present? && allowed_ips.none? { |ip| ip.include?(request.ip) }
+
+    api_key_scopes.blank? || api_key_scopes.any? { |s| s.permits?(route_param) }
   end
 end
 

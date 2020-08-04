@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import UserDraft from "discourse/models/user-draft";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import User from "discourse/models/user";

@@ -34,16 +34,16 @@
 
 .topic-list-icons {
   .d-icon-thumbtack {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
   .d-icon-thumbtack.unpinned {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
   a.title {
     color: $primary;
   }
   .d-icon-bookmark {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
 }
 
@@ -63,7 +63,7 @@
   }
   th {
     button .d-icon {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
   }
 
@@ -104,7 +104,7 @@
 
       &.posters-more-count {
         cursor: default;
-        color: dark-light-choose($primary-medium, $secondary-medium);
+        color: $primary-med-or-secondary-med;
         line-height: $td-posters-more-lh;
         font-size: $font-down-1;
       }
@@ -134,7 +134,7 @@
   .post-actions {
     clear: both;
     width: auto;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
     text-align: left;
     font-size: $font-down-1;
     margin-top: 5px;
@@ -142,7 +142,7 @@
       margin-right: 2px;
     }
     a {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       margin-right: 3px;
       line-height: $line-height-large;
     }
@@ -205,9 +205,11 @@
   z-index: z("dropdown");
   @supports (position: sticky) {
     @media screen and (min-width: 1250px) {
-      position: absolute;
-      right: -60px;
-      top: 0;
+      body:not(.search-page) & {
+        position: absolute;
+        right: -60px;
+        top: 0;
+      }
     }
   }
 }
@@ -216,15 +218,6 @@ button.dismiss-read {
   float: right;
   margin-bottom: 5px;
   margin-left: 10px;
-}
-
-.tags-admin-menu {
-  .dropdown-menu {
-    right: 0;
-    top: 30px;
-    bottom: auto;
-    left: auto;
-  }
 }
 
 .category-heading {

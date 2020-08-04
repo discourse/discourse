@@ -8,17 +8,27 @@ const { get } = Ember;
 export default Controller.extend({
   filter: null,
 
-  @discourseComputed("model.[]", "filter")
+  @discourseComputed(
+    "model.[]",
+    "filter",
+    "siteSettings.dashboard_hidden_reports"
+  )
   filterReports(reports, filter) {
     if (filter) {
       filter = filter.toLowerCase();
-      return reports.filter(report => {
+      reports = reports.filter(report => {
         return (
           (get(report, "title") || "").toLowerCase().indexOf(filter) > -1 ||
           (get(report, "description") || "").toLowerCase().indexOf(filter) > -1
         );
       });
     }
+
+    const hiddenReports = (this.siteSettings.dashboard_hidden_reports || "")
+      .split("|")
+      .filter(Boolean);
+    reports = reports.filter(report => !hiddenReports.includes(report.type));
+
     return reports;
   },
 

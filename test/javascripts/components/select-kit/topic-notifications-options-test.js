@@ -1,10 +1,12 @@
+import I18n from "I18n";
 import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import Topic from "discourse/models/topic";
 
 const buildTopic = function(archetype) {
   return Topic.create({
-    id: 4563,
+    id: 4563
+  }).updateFromJson({
     title: "Qunit Test Topic",
     details: {
       notification_level: 1

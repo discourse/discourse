@@ -57,7 +57,10 @@ class PostJobsEnqueuer
   end
 
   def after_post_create
-    TopicTrackingState.publish_unread(@post) if @post.post_number > 1
+    if @post.post_number > 1
+      TopicTrackingState.publish_muted(@post.topic)
+      TopicTrackingState.publish_unread(@post)
+    end
     TopicTrackingState.publish_latest(@topic, @post.whisper?)
 
     Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,

@@ -184,7 +184,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -206,7 +206,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -227,7 +227,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -254,7 +254,7 @@ describe PrettyText do
           <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
           </div>
           <blockquote>
           <p>ddd</p>
@@ -508,7 +508,7 @@ describe PrettyText do
         ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
         expect(PrettyText.cook("# banana")).not_to include('banana')
       ensure
-        Discourse.redis.flushall
+        Discourse.redis.flushdb
       end
     end
   end
@@ -762,7 +762,7 @@ describe PrettyText do
 
     context 'option to preserve onebox source' do
       it "should return the right excerpt" do
-        onebox = "<aside class=\"onebox whitelistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
+        onebox = "<aside class=\"onebox allowlistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
         expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
 
         expect(PrettyText.excerpt(onebox, 100, keep_onebox_source: true))
@@ -828,7 +828,7 @@ describe PrettyText do
 
   describe "strip_image_wrapping" do
     def strip_image_wrapping(html)
-      doc = Nokogiri::HTML.fragment(html)
+      doc = Nokogiri::HTML5.fragment(html)
       described_class.strip_image_wrapping(doc)
       doc.to_html
     end
@@ -1040,6 +1040,27 @@ describe PrettyText do
     end
   end
 
+  describe "custom emoji translation" do
+    before do
+      PrettyText.reset_translations
+
+      SiteSetting.enable_emoji = true
+      SiteSetting.enable_emoji_shortcuts = true
+
+      plugin = Plugin::Instance.new
+      plugin.translate_emoji "0:)", "otter"
+    end
+
+    after do
+      Plugin::CustomEmoji.clear_cache
+      PrettyText.reset_translations
+    end
+
+    it "sets the custom translation" do
+      expect(PrettyText.cook("hello 0:)")).to match(/otter/)
+    end
+  end
+
   it "replaces skin toned emoji" do
     expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
     expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
@@ -1085,9 +1106,9 @@ describe PrettyText do
 
     [
       "<span class=\"hashtag\">#unknown::tag</span>",
-      "<a class=\"hashtag\" href=\"#{category2.url_with_id}\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"#{category2.url}\">#<span>known</span></a>",
       "<a class=\"hashtag\" href=\"http://test.localhost/tag/known\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"#{category.url_with_id}\">#<span>testing</span></a>"
+      "<a class=\"hashtag\" href=\"#{category.url}\">#<span>testing</span></a>"
     ].each do |element|
 
       expect(cooked).to include(element)
@@ -1122,7 +1143,7 @@ describe PrettyText do
   it "can handle mixed lists" do
     # known bug in old md engine
     cooked = PrettyText.cook("* a\n\n1. b")
-    expect(cooked).to match_html("<ul>\n<li>a</li>\n</ul><ol>\n<li>b</li>\n</ol>")
+    expect(cooked).to match_html("<ul>\n<li>a</li>\n</ul>\n<ol>\n<li>b</li>\n</ol>")
   end
 
   it "can handle traditional vs non traditional newlines" do
@@ -1166,7 +1187,7 @@ HTML
   end
 
   describe "censoring" do
-    after(:all) { Discourse.redis.flushall }
+    after(:all) { Discourse.redis.flushdb }
 
     def expect_cooked_match(raw, expected_cooked)
       expect(PrettyText.cook(raw)).to eq(expected_cooked)
@@ -1342,13 +1363,13 @@ HTML
 
   it "supports img bbcode" do
     cooked = PrettyText.cook "[img]http://www.image/test.png[/img]"
-    html = "<p><img src=\"http://www.image/test.png\" alt></p>"
+    html = "<p><img src=\"http://www.image/test.png\" alt=\"\"></p>"
     expect(cooked).to eq(html)
   end
 
   it "provides safety for img bbcode" do
     cooked = PrettyText.cook "[img]http://aaa.com<script>alert(1);</script>[/img]"
-    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt></p>'
+    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt=""></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1433,10 +1454,10 @@ HTML
 
       html = <<~HTML
         <p><img src="http://png.com/my.png" alt="title with | title" width="220" height="100"><br>
-        <img src="http://png.com/my.png" alt><br>
-        <img src="http://png.com/my.png" alt width="220" height="100"><br>
+        <img src="http://png.com/my.png" alt=""><br>
+        <img src="http://png.com/my.png" alt="" width="220" height="100"><br>
         <img src="http://png.com/my.png" alt="stuff"><br>
-        <img src="http://png.com/my.png" alt title="some title" width="110" height="50"></p>
+        <img src="http://png.com/my.png" alt="" title="some title" width="110" height="50"></p>
       HTML
 
       expect(cooked).to eq(html.strip)
@@ -1452,11 +1473,11 @@ HTML
       MD
 
       html = <<~HTML
-        <p><img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="150" height="68"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+        <p><img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="150" height="68"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"></p>
       HTML
 
       expect(cooked).to eq(html.strip)
@@ -1533,7 +1554,7 @@ HTML
 
   end
 
-  it "can properly whitelist iframes" do
+  it "can properly allowlist iframes" do
     SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com?EMBED="
     raw = <<~IFRAMES
       <iframe src='https://www.google.com/maps/Embed?testing'></iframe>
@@ -1598,12 +1619,12 @@ HTML
     expect(cooked).to include("data-theme-a")
   end
 
-  it "whitelists lang attribute" do
+  it "allowlists lang attribute" do
     cooked = PrettyText.cook("<p lang='fr'>tester</p><div lang='fr'>tester</div><span lang='fr'>tester</span>")
     expect(cooked).to eq("<p lang=\"fr\">tester</p><div lang=\"fr\">tester</div><span lang=\"fr\">tester</span>")
   end
 
-  it "whitelists ruby tags" do
+  it "allowlists ruby tags" do
     # read all about ruby chars at: https://en.wikipedia.org/wiki/Ruby_character
     # basically it is super hard to remember every single rare letter when there are
     # so many, so ruby tags provide a hint.

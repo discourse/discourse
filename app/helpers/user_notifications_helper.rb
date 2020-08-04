@@ -13,7 +13,7 @@ module UserNotificationsHelper
   end
 
   def correct_top_margin(html, desired)
-    fragment = Nokogiri::HTML.fragment(html)
+    fragment = Nokogiri::HTML5.fragment(html)
     if para = fragment.css("p:first").first
       para["style"] = "margin-top: #{desired};"
     end
@@ -32,7 +32,7 @@ module UserNotificationsHelper
   end
 
   def first_paragraphs_from(html)
-    doc = Nokogiri::HTML(html)
+    doc = Nokogiri::HTML5(html)
 
     result = +""
     length = 0

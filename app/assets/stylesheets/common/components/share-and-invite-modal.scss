@@ -25,7 +25,7 @@
     .title {
       font-size: $font-0;
       font-weight: normal;
-      margin-bottom: s(2);
+      margin-bottom: 8px;
 
       .post-date {
         color: $primary-medium;
@@ -45,7 +45,7 @@
     }
 
     .topic-share-url {
-      margin-bottom: s(2);
+      margin-bottom: 8px;
     }
 
     .sources {
@@ -56,31 +56,60 @@
 
       .social-link {
         font-size: $font-up-6;
-        margin-right: s(2);
+        margin-right: 8px;
       }
     }
   }
 }
 
-.share-and-invite.modal .invite.modal-panel {
+.share-and-invite.modal .invite.modal-panel,
+.invite-link.modal-panel {
   .error-message,
   .success-message {
-    margin-bottom: s(2);
+    margin-bottom: 8px;
   }
 
   .body {
     .invite-user-control,
     .group-access-control,
     .show-custom-message-control {
-      margin-bottom: s(4);
+      margin-bottom: 8px;
+    }
+
+    .invite-user-control input.email-or-username-input {
+      line-height: 1.75em;
+    }
+
+    .group-access-control {
+      .select-kit.multi-select input.filter-input {
+        padding-left: 8px;
+      }
+
+      .group-chooser {
+        width: 100%;
+      }
     }
 
     .instructions {
-      margin-bottom: s(2);
+      margin-bottom: 8px;
     }
 
     .email-or-username-input {
       width: 100%;
+    }
+
+    .max-redemptions-allowed {
+      margin-bottom: 8px;
+
+      .max-redemptions-allowed-input {
+        width: 20%;
+        min-width: 100px;
+      }
+    }
+
+    .invite-link-expires-at .date-picker,
+    .time-input {
+      width: 150px;
     }
 
     .invite-user-input-wrapper {
@@ -89,6 +118,10 @@
         flex: 1;
       }
     }
+
+    .invite-link-input {
+      width: 100%;
+    }
   }
 
   .footer {
@@ -96,7 +129,7 @@
     align-items: center;
 
     .btn-primary {
-      margin-right: s(2);
+      margin-right: 8px;
 
       &:last-child {
         margin-right: 0;

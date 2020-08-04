@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";

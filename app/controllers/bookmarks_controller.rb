@@ -11,7 +11,10 @@ class BookmarksController < ApplicationController
       post_id: params[:post_id],
       name: params[:name],
       reminder_type: params[:reminder_type],
-      reminder_at: params[:reminder_at]
+      reminder_at: params[:reminder_at],
+      options: {
+        auto_delete_preference: params[:auto_delete_preference] || 0
+      }
     )
 
     if bookmark_manager.errors.empty?
@@ -35,7 +38,10 @@ class BookmarksController < ApplicationController
       bookmark_id: params[:id],
       name: params[:name],
       reminder_type: params[:reminder_type],
-      reminder_at: params[:reminder_at]
+      reminder_at: params[:reminder_at],
+      options: {
+        auto_delete_preference: params[:auto_delete_preference] || 0
+      }
     )
 
     if bookmark_manager.errors.empty?

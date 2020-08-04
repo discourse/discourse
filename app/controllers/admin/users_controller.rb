@@ -20,6 +20,7 @@ class Admin::UsersController < Admin::AdminController
                                     :remove_group,
                                     :primary_group,
                                     :anonymize,
+                                    :merge,
                                     :reset_bounce_score,
                                     :disable_second_factor,
                                     :delete_posts_batch]
@@ -360,9 +361,11 @@ class Admin::UsersController < Admin::AdminController
   def disable_second_factor
     guardian.ensure_can_disable_second_factor!(@user)
     user_second_factor = @user.user_second_factors
-    raise Discourse::InvalidParameters unless !user_second_factor.empty?
+    user_security_key = @user.security_keys
+    raise Discourse::InvalidParameters if user_second_factor.empty? && user_security_key.empty?
 
     user_second_factor.destroy_all
+    user_security_key.destroy_all
     StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
 
     Jobs.enqueue(
@@ -468,6 +471,22 @@ class Admin::UsersController < Admin::AdminController
       render json: success_json.merge(username: user.username)
     else
       render json: failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
+    end
+  end
+
+  def merge
+    target_username = params.require(:target_username)
+    target_user = User.find_by_username(target_username)
+    raise Discourse::NotFound if target_user.blank?
+
+    guardian.ensure_can_merge_users!(@user, target_user)
+    serializer_opts = { root: false, scope: guardian }
+
+    if user = UserMerger.new(@user, target_user, current_user).merge!
+      user_json = AdminDetailedUserSerializer.new(user, serializer_opts).as_json
+      render json: success_json.merge(merged: true, user: user_json)
+    else
+      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, serializer_opts).as_json)
     end
   end
 

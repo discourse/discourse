@@ -23,7 +23,7 @@ module UserGuardian
   end
 
   def can_edit_username?(user)
-    return false if SiteSetting.sso_overrides_username? && SiteSetting.enable_sso?
+    return false if SiteSetting.sso_overrides_username?
     return true if is_staff?
     return false if SiteSetting.username_change_period <= 0
     return false if is_anonymous?
@@ -31,7 +31,7 @@ module UserGuardian
   end
 
   def can_edit_email?(user)
-    return false if SiteSetting.sso_overrides_email? && SiteSetting.enable_sso?
+    return false if SiteSetting.sso_overrides_email?
     return false unless SiteSetting.email_editable?
     return true if is_staff?
     return false if is_anonymous?
@@ -40,7 +40,7 @@ module UserGuardian
 
   def can_edit_name?(user)
     return false unless SiteSetting.enable_names?
-    return false if SiteSetting.sso_overrides_name? && SiteSetting.enable_sso?
+    return false if SiteSetting.sso_overrides_name?
     return true if is_staff?
     return false if is_anonymous?
     can_edit?(user)
@@ -74,6 +74,14 @@ module UserGuardian
 
   def can_anonymize_user?(user)
     is_staff? && !user.nil? && !user.staff?
+  end
+
+  def can_merge_user?(user)
+    is_admin? && !user.nil? && !user.staff?
+  end
+
+  def can_merge_users?(source_user, target_user)
+    can_merge_user?(source_user) && !target_user.nil?
   end
 
   def can_reset_bounce_score?(user)
@@ -134,6 +142,20 @@ module UserGuardian
     return false if !is_me?(user) && !is_staff?
     return false if !topic.visible
     return false if topic.read_restricted_category? || topic.private_message?
+    true
+  end
+
+  def can_see_review_queue?
+    is_staff? || (
+      SiteSetting.enable_category_group_moderation &&
+      Reviewable
+        .where(reviewable_by_group_id: @user.group_users.pluck(:group_id))
+        .where('category_id IS NULL or category_id IN (?)', allowed_category_ids)
+        .exists?
+    )
+  end
+
+  def can_see_summary_stats?(target_user)
     true
   end
 end

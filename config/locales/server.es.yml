@@ -45,7 +45,6 @@ es:
       unrecognized_extension: "Extensión de archivo no reconocida: %{extension}"
     import_error:
       generic: Se produjo un error al importar ese tema
-      about_json: "Error de importación: about.json no existe, o es inválido"
       about_json_values: "about.json contiene valores inválidos: %{errors}"
       modifier_values: "los modificadores about.json contienen valores inválidos: %{errors}"
       git: "Error al clonar el repositorio git, se deniega el acceso o no se encuentra el repositorio"
@@ -60,6 +59,7 @@ es:
       optimized_link: Los enlaces de imagen optimizados son efímeros y no deben incluirse en el código fuente del tema.
     settings_errors:
       invalid_yaml: "El YAML provisto es inválido."
+      data_type_not_a_number: "Tipo de ajuste `%{name}` no soportado. Los tipos soportados son `integer`, `bool`, `list`, `enum` y `upload`"
       name_too_long: "Hay un ajuste con un nombre muy largo. La cantidad máxima de caracteres es 255"
       default_value_missing: "El ajuste «%{name}» no tiene valor por defecto"
       default_not_match_type: "El tipo de valor por defecto para el ajuste «%{name}» no coincide con el tipo de ajuste."
@@ -300,9 +300,12 @@ es:
   topics_in_category: "Temas en la categoría «%{category}»"
   rss_posts_in_topic: "Feed RSS de «%{topic}»"
   rss_topics_in_category: "Feed RSS de los temas en la categoría «%{category}»"
-  author_wrote: "%{author} escribió:"
-  num_posts: "Publicaciones:"
-  num_participants: "Participantes:"
+  rss_num_posts:
+    one: "%{count} publicación"
+    other: "%{count} publicaciones"
+  rss_num_participants:
+    one: "%{count} participante"
+    other: "%{count} participantes"
   read_full_topic: "Leer todo el tema"
   private_message_abbrev: "Msj"
   rss_description:
@@ -331,10 +334,10 @@ es:
       already_bookmarked_post: "No puedes guardar la misma publicación en marcadores dos veces."
       cannot_set_past_reminder: "No puedes establecer un recordatorio de marcador en el pasado."
       cannot_set_reminder_in_distant_future: "No puedes establecer un recordatorio de marcador más de 10 años en el futuro."
-      time_must_be_provided: "se debe especificar la hora para todos los recordatorios excepto '%{reminder_type}'"
     reminders:
       at_desktop: "La próxima vez que esté en mi ordenador"
-      later_today: "Más tarde durante el día de hoy"
+      later_today: "Más tarde, hoy"
+      next_business_day: "Siguiente día hábil"
       tomorrow: "Mañana"
       next_week: "Próxima semana"
       next_month: "Próximo mes"
@@ -368,6 +371,10 @@ es:
       trust_level_4: "nivel_de_confianza_4"
     request_membership_pm:
       title: "Solicitud de membresía para @%{group_name}"
+    request_accepted_pm:
+      title: "Te han aceptado para el grupo @%{group_name}"
+      body: |
+        Tu solicitud para entrar al grupo @%{group_name} ha sido aceptada y ahora eres parte de él.
     view_hidden_topic_request_reason: "Me gustaría unirme al grupo «%{group_name}» para poder acceder a [este tema](%{topic_url})"
   education:
     until_posts:
@@ -409,12 +416,6 @@ es:
       Puedes editar tu respuesta previa para añadir una cita seleccionando el texto y pulsando en el botón <b>citar respuesta</b> que aparecerá.
 
       Es más fácil para todos leer temas con menos respuestas pero más profundas que muchas respuestas pequeñas individuales.
-    dominating_topic: |
-      ### Deja a los demás unirse a la conversación
-
-      Este tema claramente es muy importante para ti &ndash; has publicado más del %{percent}% de las respuestas aquí.
-
-      Podría ser incluso mejor si también le das espacio a otras personas para que compartan sus puntos de vista. ¿Puedes invitarlos?
     get_a_room: |
       ### Anima a todos a participar en la conversación
 
@@ -459,6 +460,7 @@ es:
               no_user_selected: "Debes seleccionar un usuario válido."
               reply_by_email_disabled: "Las respuestas por correo electrónico han sido desactivadas."
               target_user_not_found: "No se pudo encontrar a uno de los usuarios a los que envías este mensaje."
+              unable_to_update: "Hubo un error actualizando ese tema."
             featured_link:
               invalid: "es inválido. El URL debería incluir http:// o https://."
               invalid_category: "no se puede editar en esta categoría."
@@ -539,7 +541,7 @@ es:
     title: "Te damos la bienvenida a la Sala VIP"
     body: |2
 
-      ¡Felicitaciones! :confetti_ball:
+      ¡Enhorabuena! :confetti_ball:
 
       Si puedes ver este tema, es que has sido promovido a usuario **habitual** (nivel de confianza 3).
 
@@ -749,7 +751,6 @@ es:
     confirm: "Confirmar"
     authorizing_new:
       title: "Confirmar tu nuevo correo electrónico"
-      description: "Por favor, confirma que quisieras cambiar tu correo electrónico por el nuevo: "
     authorizing_old:
       title: "Cambiar tu dirección de correo electrónico"
       description: "Por favor, confirma el cambio de tu dirección de correo electrónico"
@@ -797,7 +798,7 @@ es:
       short_description: 'Infringe <a href="%{base_path}/guidelines">nuestras directrices de la comunidad</a>'
       long_form: "reportado como inapropiado"
     notify_user:
-      title: "Enviar un mensaje a @{{username}}"
+      title: "Enviar un mensaje a @%{username}"
       description: "Quiero hablar con esta persona directamente y personalmente sobre su publicación."
       short_description: "Quiero hablar con esta persona directamente y personalmente sobre su publicación."
       long_form: "usuario notificado por mensaje"
@@ -1336,7 +1337,6 @@ es:
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
     download_remote_images_threshold: "Espacio mínimo en el disco necesario para descargar imágenes remotas de forma local (porcentaje)"
-    download_remote_images_max_days_old: "No descargar imágenes remotas de publicaciones que tengan más de n días de antigüedad."
     disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
     editing_grace_period: "Durante (n) segundos después de que se publique algún mensaje, se puede editar la publicación sin crear una nueva versión en el historial."
     editing_grace_period_max_diff: "Número máximo de cambios de caracteres permitidos en el período de gracia de edición, si hay más cambios, almacenar otra revisión de publicación (nivel de confianza 0 y 1)"
@@ -1380,6 +1380,8 @@ es:
     force_https: "Forzar al sitio a utilizar solo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión a través de redes sociales y cualquier logo externo / dependencia son compatibles con HTTPS?"
     same_site_cookies: "Usar las mismas cookies del sitio, ellos eliminan todos los vectores CSRF (falsificación de petición en sitios cruzados) de los navegadores soportados (Lax o Strict). Advertencia: Strict solo funcionará en sitios que forcen el inicio de sesión y usen SSO. "
     summary_score_threshold: "La puntuación mínima requerida para que una publicación se incluya en el «resumen de este tema»"
+    summary_posts_required: "Cantidad mínima de publicaciones antes de que 'Resumen de este tema' esté habilitado. Los cambios a esta configuración se aplicarán retroactivamente dentro de una semana."
+    summary_likes_required: "Cantidad mínina de me gusta en un tema para habilitar «resumen de este tema». Los cambios a esta configuración se aplicarán retroactivamente dentro de una semana."
     summary_percent_filter: "Cuando un usuario hace clic en «resumen de este tema», mostrar el % de las publicaciones destacadas"
     summary_max_results: "Cantidad máxima de publicaciones devueltas en «resumen de este tema»"
     enable_personal_messages: "Permitir a los usuarios con nivel de confianza 1 (configurable a través del mínimo nivel de confianza para enviar mensajes) crear mensajes y responder a ellos. Ten en cuenta que el staff siempre puede enviar mensajes pase lo que pase."
@@ -1461,6 +1463,7 @@ es:
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     email_domains_blacklist: "Una lista de dominios de correo electrónico que los usuarios no pueden utilizar para registrarse. Ejemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Una lista de dominios de correo electrónico con los que los usuarios DEBEN registrar sus cuentas. AVISO: ¡no se permitirá el registro de usuarios cuyo correo electrónico sea de un dominio diferente a los aquí listados!"
+    auto_approve_email_domains: "Los usuarios con direcciones de email de esta lista de dominios serán aprobados automáticamente."
     hide_email_address_taken: "No informar a los usuarios de la existencia de una cuenta con un correo electrónico dado durante el registro y desde el formulario de contraseña olvidada."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el Discourse Hub para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard <a href='/admin' target='_blank'>/admin</a>."
@@ -1526,7 +1529,6 @@ es:
     s3_backup_bucket: "El bucket remoto para mantener copias de respaldo. AVISO: Asegúrate de que es un bucket privado."
     s3_endpoint: "El endpoint se puede modificar para realizar una copia de respaldo en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
     s3_configure_tombstone_policy: "Habilitar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está deshabilitado, no se reclamará ningún espacio después de eliminar las cargas."
-    s3_disable_cleanup: "Desactivar el eliminado de respaldos de S3 cuando se eliminen de forma local."
     enable_s3_inventory: "Generar informes y verificar las cargas utilizando el inventario de Amazon S3. IMPORTANTE: requiere credenciales S3 válidas (tanto la clave de acceso como la clave de acceso secreta)."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
     backup_with_uploads: "Incluir archivos subidos en los respaldos programados. Si esta opción está deshabilitada, tan solo se ejecutará una copia de respaldo de la base de datos."
@@ -1752,6 +1754,7 @@ es:
     relative_date_duration: "Número de días desde la última publicación durante los que las fechas se mostrarán en formato relativo (7d) en vez de absoluto (20 Feb)."
     delete_user_max_post_age: "No permitir eliminar usuarios cuya primera publicación tenga una antigüedad mayor a (x) días."
     delete_all_posts_max: "El máximo número de publicaciones que pueden ser eliminadas a la vez con el botón «eliminar todas las publicaciones». Si un usuario tiene un número de publicaciones mayor que este valor, estas no podrán ser eliminadas de una vez y el usuario no podrá ser eliminado."
+    delete_user_self_max_post_count: "El número máximo de publicaciones que puede tener un usuario al tiempo que permite la auto-eliminación de la cuenta. Establezca en -1 para deshabilitar la auto-eliminación de la cuenta."
     username_change_period: "El número máximo de días después de registrarse durante los que una cuenta puede cambiar su nombre de usuario (0 para no permitir el cambio de nombre)"
     email_editable: "Permitir a los usuarios cambiar su dirección de correo electrónico después de registrarse."
     logout_redirect: "Ubicación para redirigir el navegador después del cierre de sesión (por ejemplo: https://example.com/logout)"
@@ -1827,10 +1830,12 @@ es:
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para deshabilitar."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) Ver: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
+    show_copy_button_on_codeblocks: "Agrega un botón a los bloques de código para copiar el contenido del bloque al portapapeles del usuario. Esta característica no es compatible con Internet Explorer."
     embed_any_origin: "Permitir la inserción de contenido sin importar su origen. Esto se requiere para aplicaciones móviles con HTML estático."
     embed_topics_list: "Soportar la inserción HTML de listas de temas"
     embed_set_canonical_url: "Establece la URL canónica para los temas insertados en la URL de los contenidos insertados."
     embed_truncate: "Truncar las publicaciones insertadas."
+    embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
     embed_support_markdown: "Soporte de formato Markdown para publicaciones incrustadas."
     embed_whitelist_selector: "Lista separada por comas de elementos CSS que están permitidos en las inserciones."
     allowed_href_schemes: "Esquemas permitidos en enlaces además de http y https."
@@ -1862,6 +1867,7 @@ es:
     new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios nuevos."
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
+    enable_page_publishing: "Permitir que los miembros del personal publiquen temas en nuevas URL con su propio estilo."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios correos electrónicos de resumen por defecto."
     default_include_tl0_in_digests: "Incluir publicaciones de usuarios nuevos en los correos electrónicos de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
     default_email_level: "Establecer nivel por defecto de las notificaciones por correo electrónico para los temas regulares."
@@ -1921,7 +1927,6 @@ es:
     city_for_disputes: "Ciudad de disputas"
     shared_drafts_category: "Habilite la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del staff."
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
-    push_notifications_icon: "El icono de la medalla que aparece en la esquina de notificación. El tamaño requerido es de 96 × 96."
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_general_tab_activity_metrics: "Selecciona los reportes que se muestran como medidas de actividad en la pestaña general."
     gravatar_name: "Nombre del proveedor de Gravatar"
@@ -2029,6 +2034,7 @@ es:
   publish_page:
     slug_errors:
       blank: "no puede dejarse en blanco"
+      unavailable: "no está disponible"
       invalid: "contiene caracteres inválidos"
   topic_statuses:
     autoclosed_message_max_posts:
@@ -2687,10 +2693,6 @@ es:
     email_reject_bad_destination_address:
       title: "Correo electrónico de rechazo. Dirección del destinatario incorrecta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Dirección desconocida"
-      text_body_template: |
-        Lo sentimos, tu correo electrónico para %{destination} (con el título %{former_title}) no funcionó.
-
-        Ninguna de las direcciones de correo electrónico fue reconocida o el encabezado de ID del mensaje en el correo ha sido modificado. Por favor, asegúrate de que estás enviando los correos a las direcciones correctas provistas por el staff.
     email_reject_old_destination:
       title: "Correo electrónico de rechazo. Destino antiguo"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Estás intentando responder a una notificación antigua"
@@ -2868,7 +2870,7 @@ es:
       title: "¡Eres el usuario nuevo del mes!"
       subject_template: "¡Eres el usuario nuevo del mes!"
       text_body_template: |
-        ¡Felicitaciones! Ganaste el **premio de usuario nuevo del mes de%{month_year}**. :trophy:
+        ¡Enhorabuena! Has ganado el **premio de usuario nuevo del mes de%{month_year}**. :trophy:
 
         Este premio solo lo ganan dos de los nuevos miembros de cada mes y será visible permanentemente en [la página de medallas](%{url}).
 
@@ -3147,6 +3149,7 @@ es:
       since_last_visit: "Desde tu última visita"
       new_topics: "Temas nuevos"
       unread_notifications: "Notificaciones no leídas"
+      unread_high_priority: "Notificaciones de alta prioridad sin leer"
       liked_received: "Me gusta recibidos"
       new_users: "Usuarios nuevos"
       popular_topics: "Temas destacados"
@@ -3225,6 +3228,8 @@ es:
         Confirma tu dirección de correo electrónico actual para %{site_name} haciendo clic en el siguiente enlace:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"
     notify_old_email:
       title: "Antiguo correo electrónico de notificaciones"
       subject_template: "[%{email_prefix}] Tu dirección de correo electrónico ha sido cambiada"
@@ -3290,6 +3295,8 @@ es:
         Si has sido tú, ¡genial! No tienes que hacer más nada.
 
         Si no has sido tú, por favor, [revisa tus sesiones activas](%{base_url}/my/preferences/account) y considera cambiar tu contraseña.
+  page_forbidden:
+    title: "¡Ups! Esa página es privada."
   page_not_found:
     title: "¡Ups! Esa página no existe o es privada."
     popular_topics: "Destacados"
@@ -3776,7 +3783,7 @@ es:
       name: ¡Bienvenido/a!
       description: Recibió un me gusta
       long_description: |
-        Esta medalla se concede al recibir tu primer me gusta en una publicación. ¡Felicitaciones! Publicaste algo que los demás miembros de la comunidad han considerado útil, interesante o entretenido.
+        Esta medalla se concede al recibir tu primer me gusta en una publicación. ¡Enhorabuena! Publicaste algo que los demás miembros de la comunidad han considerado útil, interesante o entretenido.
     autobiographer:
       name: Autobiógrafo
       description: "Detalló información en su <a href=\"%{base_uri}/my/preferences/profile\">perfil</a> de usuario"
@@ -3923,7 +3930,6 @@ es:
         Esta medalla se concede cuando usas todos los %{max_likes_per_day} me gusta diarios por 5 días. ¡Gracias por tomarte tiempo en incentivar y premiar las mejores conversaciones cada día!
     crazy_in_love:
       name: Magnánimo
-      description: Utilizó 50 me gusta en un día 20 veces
       long_description: |
         Esta medalla se concede cuando usas todos los %{max_likes_per_day}de tus me gusta diarios por 20 días. ¡Wowl! ¡Eres un modelo a seguir por animar a los demás miembros de la comunidad!
     thank_you:
@@ -4017,7 +4023,7 @@ es:
     synonyms_exist: "no está permitido mientras existan sinónimos"
   rss_by_tag: "Temas con la etiqueta %{tag}"
   finish_installation:
-    congratulations: "¡Felicitaciones, has instalado Discourse!"
+    congratulations: "¡Enhorabuena, has instalado Discourse!"
     register:
       button: "Registrarse"
       title: "Registrar cuenta de administrador"

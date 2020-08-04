@@ -45,7 +45,6 @@ pl_PL:
       unrecognized_extension: "Nie rozpoznano rozszerzenia pliku: %{extension}"
     import_error:
       generic: Podczas importowania motywu wystąpił błąd.
-      about_json: "Błąd importu: plik about.js nie istnieje albo jest niepoprawny"
       about_json_values: "Plik about.json zawiera niepoprawne wartości: %{errors}"
       modifier_values: "modyfikatory about.json zawierają nieprawidłowe wartości: %{errors}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
@@ -324,9 +323,6 @@ pl_PL:
   topics_in_category: "Tematy w kategorii '%{category}'"
   rss_posts_in_topic: "Kanał RSS tematu '%{topic}'"
   rss_topics_in_category: "Kanał RSS tematów z kategorii '%{category}'"
-  author_wrote: "%{author} pisze:"
-  num_posts: "Wpisy:"
-  num_participants: "Uczestnicy:"
   read_full_topic: "Przeczytaj cały temat"
   private_message_abbrev: "Wiad."
   rss_description:
@@ -355,7 +351,6 @@ pl_PL:
       already_bookmarked_post: "Nie możesz dodać zakładki do tego samego postu dwa razy."
       cannot_set_past_reminder: "W przeszłości nie można ustawić przypomnienia o zakładce."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
-      time_must_be_provided: "dla wszystkich przypomnień należy przewidzieć czas z wyjątkiem „%{reminder_type}”"
     reminders:
       at_desktop: "Następnym razem będę na swoim pulpicie"
       later_today: "Później dzisiaj"
@@ -441,12 +436,6 @@ pl_PL:
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
-    dominating_topic: |
-      ### Pozwól innym dołączyć do rozmowy
-
-      Ten temat jest dla Ciebie istotny  &ndash; napisałeś tu ponad %{percent}% wszystkich odpowiedzi.
-
-      Byłoby nawet lepiej, gdybyś dał innym możliwość podzielenia się ich punktem widzenia. Czy możesz ich tu zaprosić?
     get_a_room: "### Zachęć każdego do zaangażowania się w rozmowę\n\nW tym wątku odpowiedziałaś/łeś %{reply_username} już %{count} razy!\n\nDobra dyskusja uwzględnia wiele głosów i perspektyw. Czy możesz tu zaangażować kogoś jeszcze?\n\nNie zapominaj, że jeśli chciał(a)byś kontynuować rozmowę z tym użytkownikiem bez publiczności, to możesz [wysłać im prywatną wiadomość](%{base_path}/u/{%reply_username}).\n \n"
     too_many_replies: |
       ### Osiągnąłeś limit odpowiedzi w tym temacie
@@ -805,7 +794,6 @@ pl_PL:
     confirm: "Potwierdź"
     authorizing_new:
       title: "Potwierdź swój nowy adres e-mail"
-      description: "Potwierdź zmianę adresu e-mail na:"
     authorizing_old:
       title: "Zmień swój adres e-mail"
       description: "Potwierdź zmianę adresu e-mail"
@@ -853,7 +841,7 @@ pl_PL:
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
       long_form: "oflagowano jako niewłaściwe"
     notify_user:
-      title: "Wyślij @{{username}} wiadomość"
+      title: "Wyślij @%{username} wiadomość"
       description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
       short_description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
       long_form: "użytkownik został powiadomiony"
@@ -1394,7 +1382,6 @@ pl_PL:
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
-    download_remote_images_max_days_old: "Nie pobieraj zdalnych obrazów dla postów które mają więcej niż n dni."
     disabled_image_download_domains: "Zdalne grafiki z tych domen nie będą pobierane."
     editing_grace_period: "Przez (n) sekund po utworzeniu nowego wpisu jego kolejne edycje nie będą tworzyć nowych wersji w historii wpisu."
     editing_grace_period_max_diff: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji, jeśli więcej zmieniono, zapisz kolejną wersję postu (poziom zaufania 0 i 1)"
@@ -1587,7 +1574,6 @@ pl_PL:
     s3_backup_bucket: "Zdalne wiadro do przechowywania kopii zapasowych. UWAGA: Upewnij się, że jest to wiadro prywatne."
     s3_endpoint: "Punkt końcowy można zmodyfikować, aby utworzyć kopię zapasową w usłudze zgodnej z S3, takiej jak DigitalOcean Spaces lub Minio. OSTRZEŻENIE: Pozostaw puste, jeśli używasz AWS S3."
     s3_configure_tombstone_policy: "Włącz zasady automatycznego usuwania przy przesyłaniu nagrobków. WAŻNE: Jeśli ta opcja jest wyłączona, nie zostanie odzyskane żadne miejsce po usunięciu przesłanych plików."
-    s3_disable_cleanup: "Dezaktywuj usuwanie kopii zapasowych z S3 kiedy usunięte lokalnie."
     enable_s3_inventory: "Generuj raporty i weryfikuj przesyłane materiały za pomocą zasobów Amazon S3. WAŻNE: wymaga prawidłowych poświadczeń S3 (zarówno identyfikator klucza dostępu, jak i tajny klucz dostępu)."
     backup_time_of_day: "Godzina (UTC) wykonania kopii zapasowej."
     backup_with_uploads: "Uwzględniaj przesyły w zaplanowanych backupach. Wyłączenie tej opcji spowoduje backup jedynie bazy danych."
@@ -1950,6 +1936,7 @@ pl_PL:
       category: "Kategorie"
       topic: "Wyniki"
       user: "Użytkownicy"
+    results_page: "Wyniki wyszukiwania dla '%{term}'"
   sso:
     login_error: "Błąd logowania"
     not_found: "Nie znaleziono takiego konta. Skontaktuj się z administratorem."
@@ -2648,6 +2635,8 @@ pl_PL:
     confirm_old_email:
       title: "Potwierdź stary email"
       subject_template: "[%{site_name}] Potwierdź aktualny adres email"
+    confirm_old_email_add:
+      subject_template: "[%{site_name}] Potwierdź aktualny adres email"
     notify_old_email:
       title: "Powiadom Stary Email"
       subject_template: "[%{site_name}] Twój adres email został zmieniony"
@@ -3070,7 +3059,6 @@ pl_PL:
       name: Wyższa miłość
     crazy_in_love:
       name: Szaleńczo zakochany
-      description: Użyto 50 polubień w dzień 20 razy
     thank_you:
       name: Dziękuje
       description: Ma 20 polubionych postów i dał 10 polubień
@@ -3252,8 +3240,16 @@ pl_PL:
   joined: "Dołączył"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} wspomina o tobie w "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} wspomina o tobie w "%{topic}" - %{site_title}'
+      quoted: '%{username} cytuje cie w "%{topic}" - %{site_title}'
+      replied: '%{username} odpowiada na twój wpis w "%{topic}" - %{site_title}'
+      posted: '%{username} pisze w "%{topic}" - %{site_title}'
+      linked: '%{username} linkuje do twojego wpisu z "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} utworzył nowy temat „%{topic}” - %{site_title}'
       confirm_title: "Powiadomienia włączone - %{site_title}"
       confirm_body: "Powodzenie! Powiadomienia zostały włączone."
+      custom: "Powiadomienie od %{username} na %{site_title}"
   staff_action_logs:
     api_key:
       revoked: Unieważniono

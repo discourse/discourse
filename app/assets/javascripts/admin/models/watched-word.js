@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
 

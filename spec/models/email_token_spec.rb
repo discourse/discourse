@@ -122,7 +122,7 @@ describe EmailToken do
         Jobs.run_immediately!
       end
 
-      fab!(:invite) { Fabricate(:invite, email: 'test@example.com', user_id: nil) }
+      fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
       fab!(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
       let(:user_email_token) { invited_user.email_tokens.first }
       let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token) }

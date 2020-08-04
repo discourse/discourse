@@ -93,7 +93,7 @@ class TwitterApi
     end
 
     unless defined? BASE_URL
-      BASE_URL = 'https://api.twitter.com'.freeze
+      BASE_URL = 'https://api.twitter.com'
     end
 
     def twitter_get(uri)

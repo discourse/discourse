@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { notEmpty, and } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
@@ -9,6 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { htmlSafe } from "@ember/template";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
   adminTools: service(),
@@ -205,6 +207,27 @@ export default Controller.extend(CanCheckEmails, {
       } else {
         return this.model.destroy();
       }
+    },
+
+    promptTargetUser() {
+      showModal("admin-merge-users-prompt", {
+        admin: true,
+        model: this.model
+      });
+    },
+
+    showMergeConfirmation(targetUsername) {
+      showModal("admin-merge-users-confirmation", {
+        admin: true,
+        model: {
+          username: this.model.username,
+          targetUsername
+        }
+      });
+    },
+
+    merge(targetUsername) {
+      return this.model.merge({ targetUsername });
     },
 
     viewActionLogs() {

@@ -197,12 +197,10 @@ I18n.toNumber = function(number, options) {
       .toFixed(options.precision)
       .toString(),
     parts = string.split(this.SEPARATOR),
-    precision,
     buffer = [],
     formattedNumber;
 
   number = parts[0];
-  precision = parts[1];
 
   while (number.length > 0) {
     buffer.unshift(number.substr(Math.max(0, number.length - 3), 3));

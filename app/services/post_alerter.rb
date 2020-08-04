@@ -8,6 +8,11 @@ class PostAlerter
     post
   end
 
+  def self.post_edited(post, opts = {})
+    PostAlerter.new(opts).after_save_post(post, false)
+    post
+  end
+
   def initialize(default_opts = {})
     @default_opts = default_opts
   end
@@ -96,7 +101,7 @@ class PostAlerter
       if post.topic.private_message?
         notify_pm_users(post, reply_to_user, notified)
       elsif notify_about_reply?(post)
-        notify_post_users(post, notified)
+        notify_post_users(post, notified, new_record: new_record)
       end
     end
 
@@ -251,6 +256,7 @@ class PostAlerter
   end
 
   def should_notify_edit?(notification, post, opts)
+    notification.created_at < 1.day.ago ||
     notification.data_hash["display_username"] != (opts[:display_username].presence || post.user.username)
   end
 
@@ -261,7 +267,6 @@ class PostAlerter
   end
 
   def should_notify_previous?(user, post, notification, opts)
-    return false unless notification
     case notification.notification_type
     when Notification.types[:edited] then should_notify_edit?(notification, post, opts)
     when Notification.types[:liked]  then should_notify_like?(user, notification)
@@ -331,7 +336,14 @@ class PostAlerter
     # Don't notify the same user about the same type of notification on the same post
     existing_notification_of_same_type = existing_notifications.find { |n| n.notification_type == type }
 
-    return if existing_notifications.present? && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
+    if existing_notification_of_same_type && !should_notify_previous?(user, post, existing_notification_of_same_type, opts)
+      return
+    end
+
+    # linked, quoted, mentioned may be suppressed if you already have a reply notification
+    if type == Notification.types[:quoted] || type == Notification.types[:linked] || type == Notification.types[:mentioned]
+      return if existing_notifications.find { |n| n.notification_type == Notification.types[:replied] }
+    end
 
     notification_data = {}
 
@@ -392,7 +404,9 @@ class PostAlerter
       notification_data[:group_name] = group.name
     end
 
-    if original_post.via_email && (incoming_email = original_post.incoming_email)
+    if opts[:skip_send_email_to]&.include?(user.email)
+      skip_send_email = true
+    elsif original_post.via_email && (incoming_email = original_post.incoming_email)
       skip_send_email = contains_email_address?(incoming_email.to_addresses, user) ||
         contains_email_address?(incoming_email.cc_addresses, user)
     else
@@ -451,6 +465,7 @@ class PostAlerter
         .where("push_url IS NOT NULL AND push_url <> ''")
         .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
         .where("revoked_at IS NULL")
+        .order(client_id: :asc)
         .pluck(:client_id, :push_url)
 
       if clients.length > 0
@@ -495,13 +510,17 @@ class PostAlerter
   end
 
   def extract_linked_users(post)
-    post.topic_links.where(reflection: false).map do |link|
+    users = post.topic_links.where(reflection: false).map do |link|
       linked_post = link.link_post
       if !linked_post && topic = link.link_topic
         linked_post = topic.posts.find_by(post_number: 1)
       end
       (linked_post && post.user_id != linked_post.user_id && linked_post.user) || nil
     end.compact
+
+    DiscourseEvent.trigger(:after_extract_linked_users, users, post)
+
+    users
   end
 
   # Notify a bunch of users
@@ -525,10 +544,50 @@ class PostAlerter
     users
   end
 
+  def group_notifying_via_smtp(post)
+    return nil if !SiteSetting.enable_smtp ||
+                  post.post_type != Post.types[:regular] ||
+                  post.incoming_email
+
+    post.topic.allowed_groups
+      .where.not(smtp_server: nil)
+      .where.not(smtp_port: nil)
+      .where.not(email_username: nil)
+      .where.not(email_password: nil)
+      .first
+  end
+
   def notify_pm_users(post, reply_to_user, notified)
     return unless post.topic
 
     warn_if_not_sidekiq
+
+    # users who interacted with the post by _directly_ emailing the group
+    if group = group_notifying_via_smtp(post)
+      group_email_regex = group.email_username_regex
+      email_addresses = Set[group.email_username]
+
+      post.topic.incoming_email.each do |incoming_email|
+        to_addresses = incoming_email.to_addresses&.split(';')
+        cc_addresses = incoming_email.cc_addresses&.split(';')
+
+        next if to_addresses&.none? { |address| address =~ group_email_regex } &&
+                cc_addresses&.none? { |address| address =~ group_email_regex }
+
+        email_addresses.add(incoming_email.from_address)
+        email_addresses.merge(to_addresses) if to_addresses.present?
+        email_addresses.merge(cc_addresses) if cc_addresses.present?
+      end
+
+      email_addresses.subtract([nil, ''])
+
+      if email_addresses.size > 1
+        Jobs.enqueue(:group_smtp_email,
+          group_id: group.id,
+          post_id: post.id,
+          email: email_addresses.to_a - [group.email_username])
+      end
+    end
 
     # users that aren't part of any mentioned groups
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
@@ -536,25 +595,25 @@ class PostAlerter
     users.each do |user|
       notification_level = TopicUser.get(post.topic, user)&.notification_level
       if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
-        create_notification(user, Notification.types[:private_message], post)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
       end
     end
 
-    # users that are part of all mentionned groups
+    # users that are part of all mentioned groups
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
       case TopicUser.get(post.topic, user)&.notification_level
       when TopicUser.notification_levels[:watching]
         # only create a notification when watching the group
-        create_notification(user, Notification.types[:private_message], post)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
       when TopicUser.notification_levels[:tracking]
         notify_group_summary(user, post)
       end
     end
   end
 
-  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true)
+  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true, new_record: false)
     return unless post.topic
 
     warn_if_not_sidekiq
@@ -615,8 +674,10 @@ class PostAlerter
     already_seen_user_ids = Set.new TopicUser.where(topic_id: post.topic.id).where("highest_seen_post_number >= ?", post.post_number).pluck(:user_id)
 
     each_user_in_batches(notify) do |user|
-      notification_type = already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
-      create_notification(user, notification_type, post)
+      notification_type = !new_record && already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
+      opts = {}
+      opts[:display_username] = post.last_editor.username if notification_type == Notification.types[:edited]
+      create_notification(user, notification_type, post, opts)
     end
   end
 

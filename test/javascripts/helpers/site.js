@@ -1,4 +1,4 @@
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 
 /*jshint maxlen:10000000 */
 PreloadStore.store("site", {
@@ -320,7 +320,7 @@ PreloadStore.store("site", {
     },
     {
       name_key: "notify_user",
-      name: "Notify {{username}}",
+      name: "Notify %{username}",
       description:
         "This post contains something I want to talk to this person directly and privately about.",
       long_form: "notified user",

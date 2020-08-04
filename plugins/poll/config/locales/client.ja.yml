@@ -20,15 +20,6 @@ ja:
           title: "結果は<strong>投票</strong>したとき表示されます。"
         closed:
           title: "結果は<strong>クローズ</strong>したとき表示されます。"
-      multiple:
-        help:
-          at_least_min_options:
-            other: "少なくとも<strong>%{count}</strong>の選択肢を選んでください"
-          up_to_max_options:
-            other: "<strong>%{count}</strong>個まで選ぶことができます"
-          x_options:
-            other: "<strong>%{count}</strong>の選択肢を選んでください"
-          between_min_and_max_options: "<strong>%{min}</strong>から<strong>%{max}</strong>の選択肢を選んでください"
       cast-votes:
         title: "投票する"
         label: "投票する"

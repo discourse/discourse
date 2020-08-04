@@ -6,7 +6,7 @@ require 'post_revisor'
 describe PostRevisor do
 
   fab!(:topic) { Fabricate(:topic) }
-  fab!(:newuser) { Fabricate(:newuser) }
+  fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
@@ -195,6 +195,19 @@ describe PostRevisor do
         expect {
           subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
         }.to change { post.topic.bumped_at }
+      end
+
+      it "should send muted and latest message" do
+        TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
+        messages = MessageBus.track_publish("/latest") do
+          subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
+        end
+
+        muted_message = messages.find { |message| message.data["message_type"] == "muted" }
+        latest_message = messages.find { |message| message.data["message_type"] == "latest" }
+
+        expect(muted_message.data["topic_id"]).to eq(topic.id)
+        expect(latest_message.data["topic_id"]).to eq(topic.id)
       end
     end
 
@@ -582,6 +595,28 @@ describe PostRevisor do
           action: UserHistory.actions[:post_edit]
         )
         expect(log).to be_blank
+      end
+    end
+
+    context "logging group moderator edits" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        topic.update!(category: category)
+        post.update!(topic: topic)
+      end
+
+      it "logs an edit when a group moderator revises the category description" do
+        PostRevisor.new(post).revise!(group_user.user, raw: "a group moderator can update the description")
+
+        log = UserHistory.where(
+          acting_user_id: group_user.user.id,
+          action: UserHistory.actions[:post_edit]
+        ).first
+        expect(log).to be_present
+        expect(log.details).to eq("Hello world\n\n---\n\na group moderator can update the description")
       end
     end
 

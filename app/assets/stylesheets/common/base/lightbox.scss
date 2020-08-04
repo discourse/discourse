@@ -14,7 +14,7 @@ $meta-element-margin: 6px;
   box-sizing: border-box;
 }
 
-.onebox img.d-lazyload-hidden {
+.onebox img.d-lazyload-hidden:not(.ytp-thumbnail-image) {
   border: 1px solid $primary-low;
 }
 

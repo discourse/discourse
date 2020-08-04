@@ -15,18 +15,6 @@ el:
         one: "συνολική ψήφος"
         other: "συνολικές ψήφοι"
       average_rating: "Μέση βαθμολογία: <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογή"
-            other: "Επέλεξε τουλάχιστον <strong>%{count}</strong> επιλογές"
-          up_to_max_options:
-            one: "Επιλέξτε μέχρι <strong>%{count}</strong> επιλογή"
-            other: "Επέλεξε μέχρι <strong>%{count}</strong> επιλογές"
-          x_options:
-            one: "Επιλέξτε <strong>%{count}</strong> επιλογή"
-            other: "Επέλεξε <strong>%{count}</strong> επιλογές"
-          between_min_and_max_options: "Επιλέξτε ανάμεσα σε <strong>%{min}</strong> και <strong>%{max}</strong> επιλογές"
       cast-votes:
         title: "Δώσε τις ψήφους σου"
         label: "Ψήφισε τώρα!"

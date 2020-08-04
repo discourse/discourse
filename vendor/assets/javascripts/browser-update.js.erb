@@ -18,6 +18,7 @@ var $buo = function() {
     return;
   }
 
+  document.getElementsByTagName('body')[0].classList.add("crawler");
   var mainElement = document.getElementById("main");
   var noscriptElements = document.getElementsByTagName("noscript");
   // noscriptElements[0].innerHTML contains encoded HTML
@@ -34,7 +35,7 @@ var $buo = function() {
 
   // create the notification div stylesheet
   var sheet = document.createElement("style");
-  var style = ".buorg {position:absolute; z-index:111111; width:100%; top:0px; left:0px; background:#FDF2AB; text-align:left; font-family: sans-serif; color:#000; font-size: 14px;} .buorg div {padding: 8px;} .buorg a, .buorg a:visited {color:#E25600; text-decoration: underline;}";
+  var style = ".buorg {position:absolute; z-index:111111; width:100%; top:0px; left:0px; background:#FDF2AB; text-align:left; font-family: sans-serif; color:#000; font-size: 14px;} .buorg div {padding: 8px;} .buorg a, .buorg a:visited {color:#E25600; text-decoration: underline;} @media print { .buorg { display: none !important; } }";
 
   // insert the div and stylesheet into the DOM
   document.body.appendChild(div); // put it last in the DOM so Googlebot doesn't include it in search excerpts

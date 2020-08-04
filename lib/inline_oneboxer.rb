@@ -13,7 +13,7 @@ class InlineOneboxer
     @urls.map { |url| InlineOneboxer.lookup(url, @opts) }.compact
   end
 
-  def self.purge(url)
+  def self.invalidate(url)
     Discourse.cache.delete(cache_key(url))
   end
 
@@ -42,7 +42,7 @@ class InlineOneboxer
     end
 
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
-    domains = SiteSetting.inline_onebox_domains_whitelist&.split('|') unless always_allow
+    domains = SiteSetting.allowed_inline_onebox_domains&.split('|') unless always_allow
 
     if always_allow || domains
       uri = begin
@@ -65,14 +65,8 @@ class InlineOneboxer
   private
 
   def self.onebox_for(url, title, opts)
-    onebox = {
-      url: url,
-      title: title && Emoji.gsub_emoji_to_unicode(title)
-    }
-    unless opts[:skip_cache]
-      Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day)
-    end
-
+    onebox = { url: url, title: title && Emoji.gsub_emoji_to_unicode(title) }
+    Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day) if !opts[:skip_cache]
     onebox
   end
 

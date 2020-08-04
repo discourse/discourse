@@ -152,10 +152,7 @@ input {
   }
 
   &.invalid {
-    background-color: dark-light-choose(
-      $danger-low,
-      scale-color($danger, $lightness: -60%)
-    );
+    background-color: $danger-low;
   }
 
   .radio &[type="radio"],
@@ -362,23 +359,6 @@ table {
   margin-left: 12px;
 }
 
-// the default for table cells in topic list
-// is $primary-medium
-// numbers get dimmer as they get colder
-.coldmap {
-  &-high {
-    color: dark-light-choose($primary-low-mid, $secondary-high) !important;
-  }
-
-  &-med {
-    color: dark-light-choose($primary-medium, $secondary-high) !important;
-  }
-
-  &-low {
-    color: dark-light-choose($primary-medium, $secondary-medium) !important;
-  }
-}
-
 .top-space {
   margin-top: 10px;
 }
@@ -507,7 +487,7 @@ table {
   animation: rotate-forever 1s infinite linear;
   height: 30px;
   width: 30px;
-  border: 4px solid blend-primary-secondary(50%);
+  border: 4px solid $primary-low-mid;
   border-right-color: transparent;
   border-radius: 50%;
 
@@ -640,6 +620,56 @@ table {
   display: inline;
 }
 
+.pref-email {
+  .row {
+    border-bottom: 1px solid #ddd;
+    margin: 5px 0px;
+    padding-bottom: 5px;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .email-first {
+    font-size: 1.1em;
+  }
+
+  .email-second {
+    color: $primary-medium;
+
+    .primary {
+      color: $success;
+      font-weight: bold;
+    }
+
+    .unconfirmed {
+      font-style: italic;
+    }
+  }
+
+  .email-dropdown {
+    float: right;
+
+    .btn,
+    .btn:hover {
+      background: transparent;
+
+      .d-icon {
+        color: $primary-high;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    width: 120px;
+
+    & .icon {
+      margin-top: auto;
+    }
+  }
+}
+
 .pref-auth-tokens {
   .row {
     border-bottom: 1px solid #ddd;
@@ -685,14 +715,6 @@ table {
       .d-icon {
         color: $primary-high;
       }
-    }
-  }
-
-  .dropdown-menu {
-    width: 120px;
-
-    & .icon {
-      margin-top: auto;
     }
   }
 }

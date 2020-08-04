@@ -4,7 +4,7 @@ class Poll < ActiveRecord::Base
   # because we want to use the 'type' column and don't want to use STI
   self.inheritance_column = nil
 
-  belongs_to :post
+  belongs_to :post, -> { unscope(:where) }
 
   has_many :poll_options, -> { order(:id) }, dependent: :destroy
   has_many :poll_votes
@@ -51,7 +51,7 @@ class Poll < ActiveRecord::Base
   end
 
   def is_me?(user)
-    user && post.user&.id == user&.id
+    user && post && post.user&.id == user&.id
   end
 
   def has_voted?(user)

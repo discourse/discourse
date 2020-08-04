@@ -87,6 +87,24 @@ describe Notification do
 
   end
 
+  describe 'high priority creation' do
+    fab!(:user) { Fabricate(:user) }
+
+    it "automatically marks the notification as high priority if it is a high priority type" do
+      notif = Notification.create(user: user, notification_type: Notification.types[:bookmark_reminder], data: {})
+      expect(notif.high_priority).to eq(true)
+      notif = Notification.create(user: user, notification_type: Notification.types[:private_message], data: {})
+      expect(notif.high_priority).to eq(true)
+      notif = Notification.create(user: user, notification_type: Notification.types[:liked], data: {})
+      expect(notif.high_priority).to eq(false)
+    end
+
+    it "allows manually specifying a notification is high priority" do
+      notif = Notification.create(user: user, notification_type: Notification.types[:liked], data: {}, high_priority: true)
+      expect(notif.high_priority).to eq(true)
+    end
+  end
+
   describe 'unread counts' do
 
     fab!(:user) { Fabricate(:user) }

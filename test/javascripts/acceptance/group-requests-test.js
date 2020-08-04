@@ -17,7 +17,6 @@ acceptance("Group Requests", {
           messageable_level: 0,
           visibility_level: 0,
           automatic_membership_email_domains: "",
-          automatic_membership_retroactive: false,
           primary_group: false,
           title: "Macdonald",
           grant_trust_level: null,
@@ -82,7 +81,7 @@ acceptance("Group Requests", {
 });
 
 QUnit.test("Group Requests", async assert => {
-  await visit("/groups/Macdonald/requests");
+  await visit("/g/Macdonald/requests");
 
   assert.equal(find(".group-members tr").length, 2);
   assert.equal(

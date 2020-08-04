@@ -9,33 +9,68 @@ hu:
   site_settings:
     discourse_narrative_bot_enabled: "A Discourse alámondó bot (discobot) bekapcsolása"
     disable_discourse_narrative_bot_welcome_post: "A Discourse alámondó bot üdvözlő üzenetének kikapcsolása"
-    discourse_narrative_bot_ignored_usernames: "Felhasználónevek, amelyeket a Discourse alámondó bot figyelmen kívül hagyjon"
+    discourse_narrative_bot_ignored_usernames: "Felhasználónevek, amelyeket a Discourse alámondó bot hagyjon figyelmen kívül"
     discourse_narrative_bot_disable_public_replies: "A Discourse alámondó bot nyilvános válaszainak kikapcsolása"
-    discourse_narrative_bot_welcome_post_type: "A Discourse mesélő bot üdvözlő üzeneteinek kiküldendő típusai"
-    discourse_narrative_bot_welcome_post_delay: "Várj (n) másodpercet a Discourse mesélő bot üdvözlő üzenetének kiküldése előtt."
+    discourse_narrative_bot_welcome_post_type: "A Discourse alámondó bot üdvözlő üzeneteinek kiküldendő típusai"
+    discourse_narrative_bot_welcome_post_delay: "Várjon (n) másodpercet a Discourse alámondó bot üdvözlő üzenetének kiküldése előtt."
   badges:
     certified:
       name: Hitelesített
       description: "Teljesítette az új felhasználók eligazítását"
       long_description: |
-        Ezt a jelvényt az új felhasználók interaktív eligazításának sikeres teljesítéséért adjuk. Kezdeményező voltál és megtanultad a beszélgetés alapvető eszközeit, és ezzel hitelesített lettél!
+        Ez a jelvényt az interaktív új felhasználói eligazítás sikeres teljesítéséért jár. Kezdeményező volt és megtanulta a beszélgetés alapvető eszközeit, és ezzel hitelesített lett!
     licensed:
-      name: Licenszelt
+      name: Licencelt
+      description: "Teljesítette az haladó felhasználói eligazítást"
+      long_description: |
+        Ez a jelvényt az interaktív haladó felhasználói eligazítás sikeres teljesítéséért jár. Elsajátította a beszélgetés speciális eszközeit, és ezzel teljesen licencelt lett!
   discourse_narrative_bot:
+    bio: "Üdv, nem igazi személy vagyok. Egy bot vagyok, és megtanítom az oldal használatát. A velem történő interakcióhoz küldjön nekem egy üzenetet, vagy említsen meg így bárhol: **`@%{discobot_username}`**."
+    tl2_promotion_message:
+      subject_template: "Gratulálunk az első bizalmi szint előléptetéséért!"
+      text_body_template: |
+        Most hogy előléptették, ideje megtanulnia néhány speciális funkciót!
+
+        Válaszoljon erre az üzenetre ezzel: `@%{discobot_username} %{reset_trigger}`, hogy többet tudjon meg arról, hogy mit tehet.
+
+        Arra kérjük, hogy továbbra is vegyen részt – örülünk, hogy itt van.
+    timeout:
+      message: |-
+        Üdv @%{username}, csak beköszönök, mert nem hallottam Önről egy ideje.
+
+        - A folytatáshoz válaszoljon bármikor.
+
+        - Ha kihagyná ezt a lépést, mondja ezt: `%{skip_trigger}`.
+
+        - Az újrakezdéshez mondja ezt: `%{reset_trigger}`.
+
+        Ha inkább nem tenné, az is rendben van. Én egy robot vagyok. Nem fogja megbántani az érzéseimet. :sob:
+    dice:
+      trigger: "kockadobás"
+      invalid: |-
+        Sajnálom, matematikailag lehetetlen ezt a kockakombinációt dobni. :confounded:
+      not_enough_dice: |-
+        Csak %{num_of_dice} kockám van. [Szégyenletes](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), tudom!
+      out_of_range: |-
+        Tudta, hogy a [legtöbb oldallal rendelkező](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matematikailag fair kocka 120 oldalas?
+      results: |-
+        > :game_die: %{results}
     quote:
       trigger: "idézet"
       '1':
-        quote: "Minden nehézség közepében lehetőség rejtőzik"
+        quote: "A nehézségek közt mindig ott van a lehetőség"
         author: "Albert Einstein"
       '2':
         author: "Mahatma Gandhi"
       '3':
-        quote: "Ne azért sírj, mert vége van, mosolyogj azért, mert megtörtént."
+        quote: "Ne sírj, hogy vége, mosolyogj, hogy megtörtént."
+        author: "Dr. Seuss"
       '4':
         author: "Charles-Guillaume Étienne"
       '5':
         author: "Theodore Roosevelt"
       '6':
+        quote: " Az élet olyan, mint egy doboz bonbon. Soha nem tudhatod, hogy mi jut neked belőle."
         author: "Forrest Gump édesanyja"
       '7':
         quote: "Kis lépés egy embernek, de hatalmas ugrás az emberiségnek."
@@ -46,16 +81,70 @@ hu:
         author: "Bruce Lee"
       '10':
         author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: "jövendőmondás"
       answers:
+        '1': "Biztos"
+        '2': "Határozottan így van"
         '3': "Kétségtelenül"
-        '7': "Leginkább"
+        '4': "Igen, határozottan"
+        '5': "Számíthatsz rá"
+        '6': "Ahogy látom, igen"
+        '7': "Egészen valószínű"
+        '8': "Jók a kilátások"
         '9': "Igen"
-        '12': "Kérdezd meg később"
-        '17': "A válaszom nem."
+        '10': "A jelek szerint igen"
+        '11': "A válasz ködös, próbálja újra"
+        '12': "Kérdezze meg később"
+        '13': "Jobb, ha most nem mondom el"
+        '14': "Most nem tudom megjósolni"
+        '15': "Koncentráljon és kérdezzen újra"
+        '16': "Ne számítson rá"
+        '17': "A válaszom nem"
+        '18': "A forrásaim szerint nem"
+        '19': "Nem túl jók a kilátások"
+        '20': "Nagyon kétséges"
+      result: |-
+        > :crystal_ball: %{result}
     track_selector:
-      reset_trigger: "start"
+      reset_trigger: "kezdés"
       skip_trigger: "átugrás"
+      help_trigger: "súgó megjelenítése"
+      random_mention:
+        reply: |-
+          Üdv! Hogy megtudja mit tudok, mondja ezt: `@%{discobot_username} %{help_trigger}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Számíthat rá
+      do_not_understand:
+        first_response: |-
+          Hé, köszönöm a választ!
+
+          Sajnos mivel egy rosszul programozott bot vagyok, ezt nem egészen értettem. :frowning:
+        track_response: 'Megpróbálhatja újra, vagy kihagyhatja a lépést, csak mondja ezt: `%{skip_trigger}`.
+
+          Egyébként az újrakezdéshez mondja ezt: `%{reset_trigger}`.'
+        second_response: |-
+          Sajnálom. Még mindig nem értem. :anguished:
+
+          Csak egy bot vagyok, de ha egy valódi emberrel akar beszélni, keresse fel a [kapcsolat oldalunkat](%{base_path}/about).
+
+          Addig is, elállok az útból.
     new_user_narrative:
+      reset_trigger: "oktatás"
+      title: "Új felhasználói eligazítás elvégzési tanúsítványa"
+      cert_title: "Az új felhasználói eligazítás teljesítése elismeréseképp"
       hello:
         title: "Üdvözlet!"
+      certificate:
+        alt: "Igazoló oklevél"
+    advanced_user_narrative:
+      reset_trigger: "haladó oktatás"

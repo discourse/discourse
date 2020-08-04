@@ -47,18 +47,20 @@ class PostSerializer < BasicPostSerializer
              :link_counts,
              :read,
              :user_title,
+             :title_is_group,
              :reply_to_user,
              :bookmarked,
-             :bookmarked_with_reminder,
              :bookmark_reminder_at,
              :bookmark_id,
              :bookmark_reminder_type,
              :bookmark_name,
+             :bookmark_auto_delete_preference,
              :raw,
              :actions_summary,
              :moderator?,
              :admin?,
              :staff?,
+             :group_moderator,
              :user_id,
              :draft_sequence,
              :hidden,
@@ -139,6 +141,20 @@ class PostSerializer < BasicPostSerializer
     !!(object&.user&.staff?)
   end
 
+  def group_moderator
+    !!@group_moderator
+  end
+
+  def include_group_moderator?
+    @group_moderator ||= begin
+      if @topic_view
+        @topic_view.category_group_moderator_user_ids.include?(object.user_id)
+      else
+        object&.user&.guardian&.is_category_group_moderator?(object&.topic&.category)
+      end
+    end
+  end
+
   def yours
     scope.user == object.user
   end
@@ -210,6 +226,14 @@ class PostSerializer < BasicPostSerializer
 
   def user_title
     object&.user&.title
+  end
+
+  def title_is_group
+    object&.user&.title == object.user&.primary_group&.title
+  end
+
+  def include_title_is_group?
+    object&.user&.title.present?
   end
 
   def trust_level
@@ -310,42 +334,32 @@ class PostSerializer < BasicPostSerializer
     !(SiteSetting.suppress_reply_when_quoting && object.reply_quoted?) && object.reply_to_user
   end
 
-  # this atrtribute is not even included unless include_bookmarked? is true,
-  # which is why it is always true if included
   def bookmarked
-    true
-  end
-
-  def bookmarked_with_reminder
-    true
-  end
-
-  def include_bookmarked?
-    (actions.present? && actions.keys.include?(PostActionType.types[:bookmark]))
-  end
-
-  def include_bookmarked_with_reminder?
-    post_bookmark.present?
+    @bookmarked ||= post_bookmark.present?
   end
 
   def include_bookmark_reminder_at?
-    include_bookmarked_with_reminder?
+    bookmarked
   end
 
   def include_bookmark_reminder_type?
-    include_bookmarked_with_reminder?
+    bookmarked
   end
 
   def include_bookmark_name?
-    include_bookmarked_with_reminder?
+    bookmarked
+  end
+
+  def include_bookmark_auto_delete_preference?
+    bookmarked
   end
 
   def include_bookmark_id?
-    include_bookmarked_with_reminder?
+    bookmarked
   end
 
   def post_bookmark
-    return nil if !SiteSetting.enable_bookmarks_with_reminders? || @topic_view.blank?
+    return nil if @topic_view.blank?
     @post_bookmark ||= @topic_view.user_post_bookmarks.find { |bookmark| bookmark.post_id == object.id }
   end
 
@@ -360,6 +374,10 @@ class PostSerializer < BasicPostSerializer
 
   def bookmark_name
     post_bookmark&.name
+  end
+
+  def bookmark_auto_delete_preference
+    post_bookmark&.auto_delete_preference
   end
 
   def bookmark_id

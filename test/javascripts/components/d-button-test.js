@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import componentTest from "helpers/component-test";
 moduleForComponent("d-button", { integration: true });
 
@@ -98,5 +99,77 @@ componentTest("disabled button", {
     this.set("disabled", false);
 
     assert.ok(find("button:not([disabled])").length, "the button is enabled");
+  }
+});
+
+componentTest("aria-label", {
+  template:
+    "{{d-button ariaLabel=ariaLabel translatedAriaLabel=translatedAriaLabel}}",
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
+  },
+
+  test(assert) {
+    this.set("ariaLabel", "test.fooAriaLabel");
+
+    assert.equal(
+      find("button")[0].getAttribute("aria-label"),
+      I18n.t("test.fooAriaLabel")
+    );
+
+    this.setProperties({
+      ariaLabel: null,
+      translatedAriaLabel: "bar"
+    });
+
+    assert.equal(find("button")[0].getAttribute("aria-label"), "bar");
+  }
+});
+
+componentTest("title", {
+  template: "{{d-button title=title translatedTitle=translatedTitle}}",
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
+  },
+
+  test(assert) {
+    this.set("title", "test.fooTitle");
+    assert.equal(
+      find("button")[0].getAttribute("title"),
+      I18n.t("test.fooTitle")
+    );
+
+    this.setProperties({
+      title: null,
+      translatedTitle: "bar"
+    });
+
+    assert.equal(find("button")[0].getAttribute("title"), "bar");
+  }
+});
+
+componentTest("label", {
+  template: "{{d-button label=label translatedLabel=translatedLabel}}",
+
+  beforeEach() {
+    I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
+  },
+
+  test(assert) {
+    this.set("label", "test.fooLabel");
+
+    assert.equal(
+      find("button .d-button-label").text(),
+      I18n.t("test.fooLabel")
+    );
+
+    this.setProperties({
+      label: null,
+      translatedLabel: "bar"
+    });
+
+    assert.equal(find("button .d-button-label").text(), "bar");
   }
 });

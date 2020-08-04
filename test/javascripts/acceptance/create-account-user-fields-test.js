@@ -31,10 +31,10 @@ QUnit.test("create account with user fields", async assert => {
 
   assert.ok(exists(".create-account"), "it shows the create account modal");
   assert.ok(exists(".user-field"), "it has at least one user field");
-  assert.ok(
-    exists(".modal-footer .btn-primary:disabled"),
-    "create account is disabled at first"
-  );
+
+  await click(".modal-footer .btn-primary");
+  assert.ok(exists("#modal-alert"), "it shows the required field alert");
+  assert.equal(find("#modal-alert").text(), "Please enter an email address");
 
   await fillIn("#new-account-name", "Dr. Good Tuna");
   await fillIn("#new-account-password", "cool password bro");
@@ -52,28 +52,13 @@ QUnit.test("create account with user fields", async assert => {
     exists("#account-email-validation.good"),
     "the email validation is good"
   );
-  assert.ok(
-    exists(".modal-footer .btn-primary:disabled"),
-    "create account is still disabled due to lack of user fields"
-  );
+
+  await click(".modal-footer .btn-primary");
+  assert.equal(find("#modal-alert")[0].style.display, "");
 
   await fillIn(".user-field input[type=text]:first", "Barky");
-
-  assert.ok(
-    exists(".modal-footer .btn-primary:disabled"),
-    "create account is disabled because field is not checked"
-  );
-
   await click(".user-field input[type=checkbox]");
 
-  assert.ok(
-    !exists(".modal-footer .btn-primary:disabled"),
-    "create account is enabled because field is checked"
-  );
-
-  await click(".user-field input[type=checkbox]");
-  assert.ok(
-    exists(".modal-footer .btn-primary:disabled"),
-    "unchecking the checkbox disables the create account button"
-  );
+  await click(".modal-footer .btn-primary");
+  assert.equal(find("#modal-alert")[0].style.display, "none");
 });

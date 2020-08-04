@@ -113,11 +113,6 @@ sl:
       random_mention:
         reply: |-
           Pozdravljeni! Da izveste, kaj znam, recite `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Trenutno znam narediti naslednje stvari:
-
-          `@%{discobot_username} %{reset_trigger} {naziv-pripovedi}`
-          > Začni interaktivno pripoved.  `{naziv-pripovedi}` je lahko ena od sledečih: %{tracks}.
       do_not_understand:
         first_response: |-
           Hvala za odgovor!

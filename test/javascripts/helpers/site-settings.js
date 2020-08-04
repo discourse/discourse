@@ -1,22 +1,17 @@
-// discourse-skip-module
-
-Discourse.SiteSettingsOriginal = {
+const ORIGINAL_SETTINGS = {
   title: "QUnit Discourse Tests",
   site_logo_url: "/assets/logo.png",
   site_logo_url: "/assets/logo.png",
   site_logo_small_url: "/assets/logo-single.png",
   site_mobile_logo_url: "",
-  site_favicon_url:
-    "//meta.discourse.org/uploads/default/2499/79d53726406d87af.ico",
+  site_favicon_url: "/images/discourse-logo-sketch-small.png",
   allow_user_locale: false,
   suggested_topics: 7,
   ga_universal_tracking_code: "",
   ga_universal_domain_name: "auto",
   top_menu: "latest|new|unread|categories|top",
-  post_menu:
-    "like|share|flag|edit|bookmark|bookmarkWithReminder|delete|admin|reply",
-  post_menu_hidden_items:
-    "flag|bookmark|bookmarkWithReminder|edit|delete|admin",
+  post_menu: "like|share|flag|edit|bookmark|delete|admin|reply",
+  post_menu_hidden_items: "flag|bookmark|edit|delete|admin",
   share_links: "twitter|facebook|email",
   category_colors:
     "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|27AA5B|B3B5B4|E45735",
@@ -31,7 +26,6 @@ Discourse.SiteSettingsOriginal = {
   allow_new_registrations: true,
   enable_google_logins: true,
   enable_google_oauth2_logins: false,
-  enable_bookmarks_with_reminders: false,
   enable_twitter_logins: true,
   enable_facebook_logins: true,
   enable_github_logins: true,
@@ -106,8 +100,40 @@ Discourse.SiteSettingsOriginal = {
   secure_media: false
 };
 
-Discourse.SiteSettings = jQuery.extend(
-  true,
-  {},
-  Discourse.SiteSettingsOriginal
-);
+let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);
+Discourse.SiteSettings = siteSettings;
+
+export function currentSettings() {
+  return siteSettings;
+}
+
+// In debug mode, Ember will decorate objects with setters that remind you to use
+// this.set() because they are bound (even if you use `unbound` or `readonly` in templates!).
+// Site settings are only ever changed in tests and these warnings are not wanted, so we'll
+// strip them when resetting our settings between tests.
+function setValue(k, v) {
+  let desc = Object.getOwnPropertyDescriptor(siteSettings, k);
+  if (desc && !desc.writable) {
+    Object.defineProperty(siteSettings, k, { writable: true });
+  }
+  siteSettings[k] = v;
+}
+
+export function mergeSettings(other) {
+  for (let p in other) {
+    if (other.hasOwnProperty(p)) {
+      setValue(p, other[p]);
+    }
+  }
+  return siteSettings;
+}
+
+export function resetSettings() {
+  for (let p in siteSettings) {
+    if (siteSettings.hasOwnProperty(p)) {
+      let v = ORIGINAL_SETTINGS[p];
+      typeof v !== "undefined" ? setValue(p, v) : delete siteSettings[p];
+    }
+  }
+  return siteSettings;
+}

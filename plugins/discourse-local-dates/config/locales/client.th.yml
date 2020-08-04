@@ -20,3 +20,4 @@ th:
           date_title: วันที่
           time_title: เวลา
           format_title: รูปแบบวันที่
+          timezone: เขตเวลา

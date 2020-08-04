@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { sort } from "@ember/object/computed";
 import EmberObject, { action, computed } from "@ember/object";
 import Controller from "@ember/controller";

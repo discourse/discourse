@@ -8,6 +8,7 @@ class UserBookmarkSerializer < ApplicationSerializer
 
   attributes :id,
              :created_at,
+             :updated_at,
              :topic_id,
              :linked_post_number,
              :post_id,
@@ -23,7 +24,9 @@ class UserBookmarkSerializer < ApplicationSerializer
              :highest_post_number,
              :bumped_at,
              :slug,
-             :username
+             :post_user_username,
+             :post_user_avatar_template,
+             :post_user_name
 
   def topic
     @topic ||= object.topic || Topic.unscoped.find(object.topic_id)
@@ -93,7 +96,19 @@ class UserBookmarkSerializer < ApplicationSerializer
     topic.slug
   end
 
-  def username
-    post.user.username
+  def post_user
+    @post_user ||= post.user
+  end
+
+  def post_user_username
+    post_user.username
+  end
+
+  def post_user_avatar_template
+    post_user.avatar_template
+  end
+
+  def post_user_name
+    post_user.name
   end
 end

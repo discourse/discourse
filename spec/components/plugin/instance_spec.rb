@@ -502,21 +502,6 @@ describe Plugin::Instance do
     end
   end
 
-  describe '#enabled_site_setting_filter' do
-    describe 'when filter is blank' do
-      it 'should return the right value' do
-        expect(Plugin::Instance.new.enabled_site_setting_filter).to eq(nil)
-      end
-    end
-
-    it 'should set the right value' do
-      instance = Plugin::Instance.new
-      instance.enabled_site_setting_filter('test')
-
-      expect(instance.enabled_site_setting_filter).to eq('test')
-    end
-  end
-
   describe '#register_reviewable_types' do
     it 'Overrides the existing Reviewable types adding new ones' do
       current_types = Reviewable.types
@@ -566,6 +551,46 @@ describe Plugin::Instance do
       expect(custom_emoji.name).to eq("bar")
       expect(custom_emoji.url).to eq("/baz/bar.png")
       expect(custom_emoji.group).to eq("baz")
+    end
+  end
+
+  describe '#replace_flags' do
+    after do
+      PostActionType.replace_flag_settings(nil)
+      ReviewableScore.reload_types
+    end
+
+    let(:original_flags) { PostActionType.flag_settings }
+
+    it 'adds a new flag' do
+      highest_flag_id = ReviewableScore.types.values.max
+      flag_name = :new_flag
+
+      subject.replace_flags(settings: original_flags) do |settings, next_flag_id|
+        settings.add(
+          next_flag_id,
+          flag_name
+        )
+      end
+
+      expect(PostActionType.flag_settings.flag_types.keys).to include(flag_name)
+      expect(PostActionType.flag_settings.flag_types.values.max).to eq(highest_flag_id + 1)
+    end
+
+    it 'adds a new score type after adding a new flag' do
+      highest_flag_id = ReviewableScore.types.values.max
+      new_score_type = :new_score_type
+
+      subject.replace_flags(settings: original_flags, score_type_names: [new_score_type]) do |settings, next_flag_id|
+        settings.add(
+          next_flag_id,
+          :new_flag
+        )
+      end
+
+      expect(PostActionType.flag_settings.flag_types.values.max).to eq(highest_flag_id + 1)
+      expect(ReviewableScore.types.keys).to include(new_score_type)
+      expect(ReviewableScore.types.values.max).to eq(highest_flag_id + 2)
     end
   end
 end

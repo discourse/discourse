@@ -1,27 +1,18 @@
-#topic-footer-buttons {
-  .topic-notifications-button {
-    min-width: auto;
-    margin: 1em 0;
+.topic-notifications-button {
+  &.is-loading {
+    pointer-events: none;
+    user-select: none;
 
-    .btn {
+    .d-icon-spinner {
       margin: 0;
     }
 
-    .reason {
-      display: inline;
-      line-height: $line-height-medium;
+    .selected-name .d-icon {
+      display: none;
     }
-  }
-}
 
-.topic-notifications-button .topic-notifications-options {
-  min-width: auto;
-}
-
-.topic-notifications-button {
-  margin: 0;
-
-  .topic-notifications-options {
-    display: inline-flex;
+    .topic-notifications-options {
+      opacity: 0.5;
+    }
   }
 }

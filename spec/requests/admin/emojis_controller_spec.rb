@@ -18,7 +18,7 @@ RSpec.describe Admin::EmojisController do
       get "/admin/customize/emojis.json"
       expect(response.status).to eq(200)
 
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json[0]["name"]).to eq("osama-test-emoji")
       expect(json[0]["url"]).to eq(upload.url)
     end
@@ -34,7 +34,7 @@ RSpec.describe Admin::EmojisController do
         }
 
         expect(response.status).to eq(422)
-        parsed = JSON.parse(response.body)
+        parsed = response.parsed_body
         expect(parsed["errors"]).to eq([I18n.t('upload.images.size_not_found')])
       end
     end
@@ -49,7 +49,7 @@ RSpec.describe Admin::EmojisController do
         }
 
         expect(response.status).to eq(422)
-        parsed = JSON.parse(response.body)
+        parsed = response.parsed_body
         expect(parsed["errors"]).to eq([
           "Name #{I18n.t('activerecord.errors.models.custom_emoji.attributes.name.taken')}"
         ])
@@ -69,7 +69,7 @@ RSpec.describe Admin::EmojisController do
 
       expect(upload.original_filename).to eq('logo.png')
 
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(response.status).to eq(200)
       expect(data["errors"]).to eq(nil)
       expect(data["name"]).to eq(custom_emoji.name)
@@ -88,7 +88,7 @@ RSpec.describe Admin::EmojisController do
 
       custom_emoji = CustomEmoji.last
 
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(response.status).to eq(200)
       expect(custom_emoji.group).to eq("foo")
     end

@@ -82,6 +82,10 @@ module BackupRestore
     ActiveRecord::Migrator.current_version
   end
 
+  def self.postgresql_major_version
+    DB.query_single("SHOW server_version").first[/\d+/].to_i
+  end
+
   def self.move_tables_between_schemas(source, destination)
     owner = database_configuration.username
 

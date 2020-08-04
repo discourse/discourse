@@ -4,6 +4,9 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
+  # TODO(2021-05-13): Remove
+  self.ignored_columns = ["topic_reply_count"]
+
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
     update_distinct_badge_count
@@ -151,12 +154,30 @@ class UserStat < ActiveRecord::Base
   end
 
   # topic_reply_count is a count of posts in other users' topics
-  def update_topic_reply_count
-    self.topic_reply_count = Topic
-      .joins("INNER JOIN posts ON topics.id = posts.topic_id AND topics.user_id <> posts.user_id")
-      .where("posts.deleted_at IS NULL AND posts.user_id = ?", self.user_id)
-      .distinct
-      .count
+  def calc_topic_reply_count!(max, start_time = nil)
+    sql = <<~SQL
+    SELECT COUNT(*) count
+    FROM (
+      SELECT DISTINCT posts.topic_id
+      FROM posts
+      INNER JOIN topics ON topics.id = posts.topic_id
+      WHERE posts.user_id = ?
+      AND topics.user_id <> posts.user_id
+      AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
+      AND topics.archetype <> 'private_message'
+      #{start_time.nil? ? '' : 'AND posts.created_at > ?'}
+      LIMIT ?
+    ) as user_topic_replies
+    SQL
+    if start_time.nil?
+      DB.query_single(sql, self.user_id, max).first
+    else
+      DB.query_single(sql, self.user_id, start_time, max).first
+    end
+  end
+
+  def any_posts
+    user.posts.exists?
   end
 
   MAX_TIME_READ_DIFF = 100
@@ -212,7 +233,6 @@ end
 #  posts_read_count         :integer          default(0), not null
 #  likes_given              :integer          default(0), not null
 #  likes_received           :integer          default(0), not null
-#  topic_reply_count        :integer          default(0), not null
 #  new_since                :datetime         not null
 #  read_faq                 :datetime
 #  first_post_created_at    :datetime

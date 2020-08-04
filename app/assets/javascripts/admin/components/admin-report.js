@@ -1,15 +1,16 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
-import { alias, or, and, reads, equal, notEmpty } from "@ember/object/computed";
-import EmberObject from "@ember/object";
+import { alias, or, and, equal, notEmpty, not } from "@ember/object/computed";
+import EmberObject, { computed, action } from "@ember/object";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import ReportLoader from "discourse/lib/reports-loader";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import { isNumeric } from "discourse/lib/utilities";
 import Report, { SCHEMA_VERSION } from "admin/models/report";
-import ENV from "discourse-common/config/environment";
+import { isPresent } from "@ember/utils";
+import { isTesting } from "discourse-common/config/environment";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -41,7 +42,12 @@ function collapseWeekly(data, average) {
 }
 
 export default Component.extend({
-  classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
+  classNameBindings: [
+    "isVisible",
+    "isEnabled",
+    "isLoading",
+    "dasherizedDataSourceName"
+  ],
   classNames: ["admin-report"],
   isEnabled: true,
   disabledLabel: I18n.t("admin.dashboard.disabled"),
@@ -54,8 +60,6 @@ export default Component.extend({
   forcedModes: null,
   showAllReportsLink: false,
   filters: null,
-  startDate: null,
-  endDate: null,
   showTrend: false,
   showHeader: true,
   showTitle: true,
@@ -63,6 +67,7 @@ export default Component.extend({
   showDatesOptions: alias("model.dates_filtering"),
   showRefresh: or("showDatesOptions", "model.available_filters.length"),
   shouldDisplayTrend: and("showTrend", "model.prev_period"),
+  isVisible: not("isHidden"),
 
   init() {
     this._super(...arguments);
@@ -70,8 +75,28 @@ export default Component.extend({
     this._reports = [];
   },
 
-  startDate: reads("filters.startDate"),
-  endDate: reads("filters.endDate"),
+  isHidden: computed("siteSettings.dashboard_hidden_reports", function() {
+    return (this.siteSettings.dashboard_hidden_reports || "")
+      .split("|")
+      .filter(Boolean)
+      .includes(this.dataSourceName);
+  }),
+
+  startDate: computed("filters.startDate", function() {
+    if (this.filters && isPresent(this.filters.startDate)) {
+      return moment(this.filters.startDate, "YYYY-MM-DD");
+    } else {
+      return moment();
+    }
+  }),
+
+  endDate: computed("filters.endDate", function() {
+    if (this.filters && isPresent(this.filters.endDate)) {
+      return moment(this.filters.endDate, "YYYY-MM-DD");
+    } else {
+      return moment();
+    }
+  }),
 
   didReceiveAttrs() {
     this._super(...arguments);
@@ -106,6 +131,18 @@ export default Component.extend({
     return displayedModesLength > 1;
   },
 
+  @discourseComputed("currentMode")
+  isChartMode(currentMode) {
+    return currentMode === "chart";
+  },
+
+  @action
+  changeGrouping(grouping) {
+    this.send("refreshReport", {
+      chartGrouping: grouping
+    });
+  },
+
   @discourseComputed("currentMode", "model.modes", "forcedModes")
   displayedModes(currentMode, reportModes, forcedModes) {
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
@@ -127,50 +164,28 @@ export default Component.extend({
     return `admin-report-${currentMode.replace(/_/g, "-")}`;
   },
 
-  @discourseComputed("startDate")
-  normalizedStartDate(startDate) {
-    return startDate && typeof startDate.isValid === "function"
-      ? moment
-          .utc(startDate.toISOString())
-          .locale("en")
-          .format("YYYYMMDD")
-      : moment(startDate)
-          .locale("en")
-          .format("YYYYMMDD");
-  },
-
-  @discourseComputed("endDate")
-  normalizedEndDate(endDate) {
-    return endDate && typeof endDate.isValid === "function"
-      ? moment
-          .utc(endDate.toISOString())
-          .locale("en")
-          .format("YYYYMMDD")
-      : moment(endDate)
-          .locale("en")
-          .format("YYYYMMDD");
-  },
-
   @discourseComputed(
     "dataSourceName",
-    "normalizedStartDate",
-    "normalizedEndDate",
+    "startDate",
+    "endDate",
     "filters.customFilters"
   )
   reportKey(dataSourceName, startDate, endDate, customFilters) {
     if (!dataSourceName || !startDate || !endDate) return null;
 
+    startDate = startDate.toISOString(true).split("T")[0];
+    endDate = endDate.toISOString(true).split("T")[0];
+
     let reportKey = "reports:";
     reportKey += [
       dataSourceName,
-      ENV.environment === "test" ? "start" : startDate.replace(/-/g, ""),
-      ENV.environment === "test" ? "end" : endDate.replace(/-/g, ""),
+      isTesting() ? "start" : startDate.replace(/-/g, ""),
+      isTesting() ? "end" : endDate.replace(/-/g, ""),
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
+      // Convert all filter values to strings to ensure unique serialization
       customFilters
-        ? JSON.stringify(customFilters, (key, value) =>
-            isNumeric(value) ? value.toString() : value
-          )
+        ? JSON.stringify(customFilters, (k, v) => (k ? `${v}` : v))
         : null,
       SCHEMA_VERSION
     ]
@@ -181,74 +196,87 @@ export default Component.extend({
     return reportKey;
   },
 
-  actions: {
-    onChangeEndDate(date) {
-      const startDate = moment(this.startDate);
-      const newEndDate = moment(date).endOf("day");
+  @discourseComputed("reportOptions.chartGrouping")
+  chartGroupings(chartGrouping) {
+    chartGrouping = chartGrouping || "daily";
 
-      if (newEndDate.isSameOrAfter(startDate)) {
-        this.set("endDate", newEndDate.format("YYYY-MM-DD"));
-      } else {
-        this.set("endDate", startDate.endOf("day").format("YYYY-MM-DD"));
-      }
+    return ["daily", "weekly", "monthly"].map(id => {
+      return {
+        id,
+        label: `admin.dashboard.reports.${id}`,
+        class: `chart-grouping ${chartGrouping === id ? "active" : "inactive"}`
+      };
+    });
+  },
 
-      this.send("refreshReport");
-    },
+  @action
+  onChangeDateRange(range) {
+    this.send("refreshReport", {
+      startDate: range.from,
+      endDate: range.to
+    });
+  },
 
-    onChangeStartDate(date) {
-      const endDate = moment(this.endDate);
-      const newStartDate = moment(date).startOf("day");
+  @action
+  applyFilter(id, value) {
+    let customFilters = this.get("filters.customFilters") || {};
 
-      if (newStartDate.isSameOrBefore(endDate)) {
-        this.set("startDate", newStartDate.format("YYYY-MM-DD"));
-      } else {
-        this.set("startDate", endDate.startOf("day").format("YYYY-MM-DD"));
-      }
-
-      this.send("refreshReport");
-    },
-
-    applyFilter(id, value) {
-      let customFilters = this.get("filters.customFilters") || {};
-
-      if (typeof value === "undefined") {
-        delete customFilters[id];
-      } else {
-        customFilters[id] = value;
-      }
-
-      this.attrs.onRefresh({
-        type: this.get("model.type"),
-        startDate: this.startDate,
-        endDate: this.endDate,
-        filters: customFilters
-      });
-    },
-
-    refreshReport() {
-      this.attrs.onRefresh({
-        type: this.get("model.type"),
-        startDate: this.startDate,
-        endDate: this.endDate,
-        filters: this.get("filters.customFilters")
-      });
-    },
-
-    exportCsv() {
-      const customFilters = this.get("filters.customFilters") || {};
-
-      exportEntity("report", {
-        name: this.get("model.type"),
-        start_date: this.startDate,
-        end_date: this.endDate,
-        category_id: customFilters.category,
-        group_id: customFilters.group
-      }).then(outputExportResult);
-    },
-
-    changeMode(mode) {
-      this.set("currentMode", mode);
+    if (typeof value === "undefined") {
+      delete customFilters[id];
+    } else {
+      customFilters[id] = value;
     }
+
+    this.send("refreshReport", {
+      filters: customFilters
+    });
+  },
+
+  @action
+  refreshReport(options = {}) {
+    if (!this.attrs.onRefresh) {
+      return;
+    }
+
+    this.attrs.onRefresh({
+      type: this.get("model.type"),
+      chartGrouping: options.chartGrouping,
+      startDate:
+        typeof options.startDate === "undefined"
+          ? this.startDate
+          : options.startDate,
+      endDate:
+        typeof options.endDate === "undefined" ? this.endDate : options.endDate,
+      filters:
+        typeof options.filters === "undefined"
+          ? this.get("filters.customFilters")
+          : options.filters
+    });
+  },
+
+  @action
+  exportCsv() {
+    const args = {
+      name: this.get("model.type"),
+      start_date: this.startDate.toISOString(true).split("T")[0],
+      end_date: this.endDate.toISOString(true).split("T")[0]
+    };
+
+    const customFilters = this.get("filters.customFilters");
+    if (customFilters) {
+      Object.assign(args, customFilters);
+    }
+
+    exportEntity("report", args).then(outputExportResult);
+  },
+
+  @action
+  changeMode(mode) {
+    this.set("currentMode", mode);
+
+    this.send("refreshReport", {
+      chartGrouping: null
+    });
   },
 
   _computeReport() {
@@ -278,10 +306,8 @@ export default Component.extend({
     if (!this.startDate || !this.endDate) {
       report = sort(filteredReports)[0];
     } else {
-      const reportKey = this.reportKey;
-
       report = sort(
-        filteredReports.filter(r => r.report_key.includes(reportKey))
+        filteredReports.filter(r => r.report_key.includes(this.reportKey))
       )[0];
 
       if (!report) return;
@@ -341,15 +367,15 @@ export default Component.extend({
     let payload = { data: { cache: true, facets } };
 
     if (this.startDate) {
-      payload.data.start_date = moment
-        .utc(this.startDate, "YYYY-MM-DD")
-        .toISOString();
+      payload.data.start_date = moment(this.startDate)
+        .toISOString(true)
+        .split("T")[0];
     }
 
     if (this.endDate) {
-      payload.data.end_date = moment
-        .utc(this.endDate, "YYYY-MM-DD")
-        .toISOString();
+      payload.data.end_date = moment(this.endDate)
+        .toISOString(true)
+        .split("T")[0];
     }
 
     if (this.get("reportOptions.table.limit")) {
@@ -372,7 +398,9 @@ export default Component.extend({
     } else {
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
       return EmberObject.create(
-        Object.assign(chartOptions, this.get("reportOptions.chart") || {})
+        Object.assign(chartOptions, this.get("reportOptions.chart") || {}, {
+          chartGrouping: this.get("reportOptions.chartGrouping")
+        })
       );
     }
   },

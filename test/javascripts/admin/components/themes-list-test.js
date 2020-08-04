@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import componentTest from "helpers/component-test";
 import Theme, { THEMES, COMPONENTS } from "admin/models/theme";
 

@@ -69,6 +69,9 @@ describe Oneboxer do
       expect(onebox).to include(%{data-post="2"})
       expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
 
+      short_url = "#{Discourse.base_uri}/t/#{public_topic.id}"
+      expect(preview(short_url, user, public_category)).to include(public_topic.title)
+
       onebox = preview(public_moderator_action.url, user, public_category)
       expect(onebox).to include(public_moderator_action.excerpt)
       expect(onebox).to include(%{data-post="4"})
@@ -152,8 +155,8 @@ describe Oneboxer do
     end
   end
 
-  it "does not crawl blacklisted URLs" do
-    SiteSetting.onebox_domains_blacklist = "git.*.com|bitbucket.com"
+  it "does not crawl blocklisted URLs" do
+    SiteSetting.blocked_onebox_domains = "git.*.com|bitbucket.com"
     url = 'https://github.com/discourse/discourse/commit/21b562852885f883be43032e03c709241e8e6d4f'
     stub_request(:head, 'https://discourse.org/').to_return(status: 302, body: "", headers: { location: url })
 
@@ -161,7 +164,7 @@ describe Oneboxer do
     expect(Oneboxer.external_onebox('https://discourse.org/')[:onebox]).to be_empty
   end
 
-  it "does not consider ignore_redirects domains as blacklisted" do
+  it "does not consider ignore_redirects domains as blocklisted" do
     url = 'https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/'
     stub_request(:head, url).to_return(status: 200, body: "", headers: {})
     stub_request(:get, url).to_return(status: 200, body: "", headers: {})

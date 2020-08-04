@@ -44,7 +44,7 @@ module DiscourseNarrativeBot
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.mention.instructions",
-            discobot_username: self.discobot_user.username,
+            discobot_username: self.discobot_username,
             base_uri: Discourse.base_uri)
         },
         reply: {
@@ -238,11 +238,7 @@ module DiscourseNarrativeBot
       return unless @post.user_id == self.discobot_user.id
 
       profile_page_url = url_helpers(:user_url, username: @user.username)
-      bookmark_url = if SiteSetting.enable_bookmarks_with_reminders?
-        "#{profile_page_url}/activity/bookmarks-with-reminders"
-      else
-        "#{profile_page_url}/activity/bookmarks"
-      end
+      bookmark_url = "#{profile_page_url}/activity/bookmarks"
       raw = <<~RAW
         #{I18n.t("#{I18N_KEY}.bookmark.reply", i18n_post_args(bookmark_url: bookmark_url))}
 
@@ -330,7 +326,7 @@ module DiscourseNarrativeBot
 
       cooked = @post.post_analyzer.cook(@post.raw, {})
 
-      if Nokogiri::HTML.fragment(cooked).css("img").size > 0
+      if Nokogiri::HTML5.fragment(cooked).css("img").size > 0
         set_state_data(:post_id, @post.id)
 
         if get_state_data(:liked)
@@ -370,7 +366,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css("b", "strong", "em", "i", ".bbcode-i", ".bbcode-b").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css("b", "strong", "em", "i", ".bbcode-i", ".bbcode-b").size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.formatting.reply", i18n_post_args)}
 
@@ -394,7 +390,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      doc = Nokogiri::HTML.fragment(@post.cooked)
+      doc = Nokogiri::HTML5.fragment(@post.cooked)
 
       if doc.css(".quote").size > 0
         raw = <<~RAW
@@ -420,7 +416,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      doc = Nokogiri::HTML.fragment(@post.cooked)
+      doc = Nokogiri::HTML5.fragment(@post.cooked)
 
       if doc.css(".emoji").size > 0
         raw = <<~RAW
@@ -466,7 +462,7 @@ module DiscourseNarrativeBot
             "#{I18N_KEY}.mention.not_found",
             i18n_post_args(
               username: @user.username,
-              discobot_username: self.discobot_user.username
+              discobot_username: self.discobot_username
             )
           ))
         end
@@ -478,7 +474,14 @@ module DiscourseNarrativeBot
 
     def missing_flag
       return unless valid_topic?(@post.topic_id)
-      return if @post.user_id == -2
+
+      # Remove any incorrect flags so that they can try again
+      if @post.user_id == -2
+        @post.post_actions
+          .where(user_id: @user.id)
+          .where("post_action_type_id IN (?)", (PostActionType.flag_types.values - [PostActionType.types[:inappropriate]]))
+          .destroy_all
+      end
 
       fake_delay
       reply_to(@post, I18n.t("#{I18N_KEY}.flag.not_found", i18n_post_args)) unless @data[:attempted]
@@ -530,7 +533,7 @@ module DiscourseNarrativeBot
             username: @user.username,
             base_url: Discourse.base_url,
             certificate: certificate,
-            discobot_username: self.discobot_user.username,
+            discobot_username: self.discobot_username,
             advanced_trigger: AdvancedUserNarrative.reset_trigger
           )
         ),

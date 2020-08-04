@@ -145,7 +145,11 @@ class Middleware::RequestTracker
   def self.populate_request_queue_seconds!(env)
     if !env['REQUEST_QUEUE_SECONDS']
       if queue_start = env['HTTP_X_REQUEST_START']
-        queue_start = queue_start.split("t=")[1].to_f
+        queue_start = if queue_start.start_with?("t=")
+          queue_start.split("t=")[1].to_f
+        else
+          queue_start.to_f / 1000.0
+        end
         queue_time = (Time.now.to_f - queue_start)
         env['REQUEST_QUEUE_SECONDS'] = queue_time
       end

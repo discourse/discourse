@@ -4,6 +4,20 @@ require 'rails_helper'
 
 describe Search do
 
+  context "#prepare_data" do
+    it "does not remove English stop words in mixed mode" do
+      SiteSetting.search_tokenize_chinese_japanese_korean = true
+
+      tokenized = Search.prepare_data("monkey 吃香蕉 in a loud volume")
+      expect(tokenized).to eq("monkey 吃 香蕉 in a loud volume")
+
+      SiteSetting.default_locale = 'zh_CN'
+
+      tokenized = Search.prepare_data("monkey 吃香蕉 in a loud volume")
+      expect(tokenized).to eq("monkey 吃 香蕉 loud")
+    end
+  end
+
   context "#ts_config" do
     it "maps locales to correct Postgres dictionaries" do
       expect(Search.ts_config).to eq("english")
@@ -24,7 +38,7 @@ describe Search do
 
         link to a video file: https://somesite.com/content/somethingelse.MOV
       RAW
-      result = Search::GroupedSearchResults.blurb_for(cooked)
+      result = Search::GroupedSearchResults.blurb_for(cooked: cooked)
       expect(result).to eq("link to an external page: https://google.com/?u=bar link to an audio file: #{I18n.t("search.audio")} link to a video file: #{I18n.t("search.video")}")
     end
 
@@ -37,7 +51,7 @@ describe Search do
         http://localhost/uploads/default/original/1X/90adc0092b30c04b761541bc0322d0dce3d896e7.m4a
       RAW
 
-      result = Search::GroupedSearchResults.blurb_for(cooked)
+      result = Search::GroupedSearchResults.blurb_for(cooked: cooked)
       expect(result).to eq("Here goes a test cooked with enough characters to hit the blurb limit. Something is very interesting about this audio file. #{I18n.t("search.audio")}")
     end
 
@@ -45,7 +59,7 @@ describe Search do
       cooked = <<~RAW
         invalid URL: http:error] should not trip up blurb generation.
       RAW
-      result = Search::GroupedSearchResults.blurb_for(cooked)
+      result = Search::GroupedSearchResults.blurb_for(cooked: cooked)
       expect(result).to eq("invalid URL: http:error] should not trip up blurb generation.")
     end
   end

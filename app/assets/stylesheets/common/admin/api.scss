@@ -95,7 +95,6 @@ table.api-keys {
   .api-key {
     padding: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid $primary-low;
     .form-element,
     .form-element-desc {
       float: left;
@@ -126,6 +125,9 @@ table.api-keys {
       text-align: left;
       width: 50%;
     }
+  }
+  .scopes-table {
+    margin: 20px 0 20px 0;
   }
 }
 

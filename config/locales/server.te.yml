@@ -106,9 +106,6 @@ te:
   page_num: "పుట %[num]"
   topics_in_category: "'%{category}' వర్గంలోని విషయాలు"
   rss_posts_in_topic: "'%{topic}' యొక్క ఆర్ యస్ యస్ వడ్డన"
-  author_wrote: "%{author} రాసారు:"
-  num_posts: "టపాలు:"
-  num_participants: "భాగస్వాములు:"
   read_full_topic: "పూర్తి విషయం చదువు"
   rss_description:
     latest: "తాజా విషయాలు"
@@ -586,6 +583,7 @@ te:
       invalid_string_min: "కనీసం %{min} అక్షరాలు ఉండాలి."
       invalid_string_max: "%{max} కంటే ఎక్కువ అక్షరాలు ఉండకూడదు."
   search:
+    within_post: "%{username} నుండి #%{post_number}"
     types:
       category: "వర్గాలు"
       topic: "ఫలితాలు"
@@ -745,6 +743,8 @@ te:
         title: "సంస్థ"
       colors:
         title: "అలంకారం"
+      themes_further_reading:
+        title: "అలంకారాలు"
       homepage:
         fields:
           homepage_style:

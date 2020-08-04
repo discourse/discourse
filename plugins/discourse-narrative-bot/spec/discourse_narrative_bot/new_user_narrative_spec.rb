@@ -3,12 +3,14 @@
 require 'rails_helper'
 
 describe DiscourseNarrativeBot::NewUserNarrative do
-  let!(:welcome_topic) { Fabricate(:topic, title: 'Welcome to Discourse') }
-  let(:discobot_user) { ::DiscourseNarrativeBot::Base.new.discobot_user }
-  let(:first_post) { Fabricate(:post, user: discobot_user) }
-  let(:user) { Fabricate(:user) }
+  fab!(:welcome_topic) { Fabricate(:topic, title: 'Welcome to Discourse') }
+  fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  fab!(:discobot_user) { narrative_bot.discobot_user }
+  fab!(:discobot_username) { narrative_bot.discobot_username }
+  fab!(:first_post) { Fabricate(:post, user: discobot_user) }
+  fab!(:user) { Fabricate(:user) }
 
-  let(:topic) do
+  fab!(:topic) do
     Fabricate(:private_message_topic,
       first_post: first_post,
       topic_allowed_users: [
@@ -18,13 +20,13 @@ describe DiscourseNarrativeBot::NewUserNarrative do
     )
   end
 
-  let(:post) { Fabricate(:post, topic: topic, user: user) }
-  let(:narrative) { described_class.new }
-  let(:other_topic) { Fabricate(:topic) }
-  let(:other_post) { Fabricate(:post, topic: other_topic) }
-  let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
-  let(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
-  let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
+  fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+  fab!(:narrative) { described_class.new }
+  fab!(:other_topic) { Fabricate(:topic) }
+  fab!(:other_post) { Fabricate(:post, topic: other_topic) }
+  fab!(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
+  fab!(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
+  fab!(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
     Jobs.run_immediately!
@@ -233,7 +235,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: "@#{discobot_user.username} #{skip_trigger.upcase}")
+            post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
@@ -247,7 +249,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         end
       end
 
-      it 'should create the right reply' do
+      it 'should create the right reply when bookmarks with reminders are enabled' do
         post.update!(user: discobot_user)
         narrative.expects(:enqueue_timeout_job).with(user)
 
@@ -265,23 +267,14 @@ describe DiscourseNarrativeBot::NewUserNarrative do
         expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
       end
 
-      it 'should create the right reply when bookmarks with reminders are enabled' do
-        SiteSetting.enable_bookmarks_with_reminders = true
-        post.update!(user: discobot_user)
-        narrative.expects(:enqueue_timeout_job).with(user)
+      it 'should skip tutorials in SiteSetting.discourse_narrative_bot_skip_tutorials' do
+        SiteSetting.discourse_narrative_bot_skip_tutorials = 'tutorial_onebox'
 
-        narrative.input(:bookmark, user, post: post)
-        new_post = Post.last
-        profile_page_url = "#{Discourse.base_url}/u/#{user.username}"
+        post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
 
-        expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.bookmark.reply', bookmark_url: "#{profile_page_url}/activity/bookmarks-with-reminders", base_uri: '')}
+        DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
 
-          #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.instructions', base_uri: '')}
-        RAW
-
-        expect(new_post.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_onebox)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_emoji)
       end
     end
 
@@ -354,7 +347,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
               #{I18n.t('discourse_narrative_bot.new_user_narrative.onebox.reply', base_uri: '')}
 
               #{I18n.t('discourse_narrative_bot.new_user_narrative.mention.instructions',
-                discobot_username: discobot_user.username, base_uri: ''
+                discobot_username: discobot_username, base_uri: ''
               )}
             RAW
 
@@ -727,7 +720,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.new_user_narrative.mention.instructions',
-              discobot_username: discobot_user.username, base_uri: ''
+              discobot_username: discobot_username, base_uri: ''
             ))
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_mention)
@@ -765,7 +758,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           #{I18n.t('discourse_narrative_bot.new_user_narrative.emoji.reply', base_uri: '')}
 
           #{I18n.t('discourse_narrative_bot.new_user_narrative.mention.instructions',
-            discobot_username: discobot_user.username, base_uri: ''
+            discobot_username: discobot_username, base_uri: ''
           )}
         RAW
 
@@ -797,7 +790,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           expect(Post.last.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.mention.not_found',
             username: user.username,
-            discobot_username: discobot_user.username,
+            discobot_username: discobot_username,
             base_uri: ''
           ))
 
@@ -816,7 +809,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           expect(new_post.raw).to eq(I18n.t(
             'discourse_narrative_bot.new_user_narrative.formatting.instructions',
-            discobot_username: discobot_user.username, base_uri: ''
+            discobot_username: discobot_username, base_uri: ''
           ))
 
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_formatting)
@@ -847,7 +840,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
     describe 'flag tutorial' do
       let(:post) { Fabricate(:post, user: discobot_user, topic: topic) }
-      let(:flag) { Fabricate(:flag, post: post, user: user) }
+      let(:another_post) { Fabricate(:post, user: discobot_user, topic: topic) }
+      let(:flag) { Fabricate(:flag, post: post, user: user, post_action_type_id: PostActionType.types[:inappropriate]) }
+      let(:other_flag) { Fabricate(:flag, post: another_post, user: user, post_action_type_id: PostActionType.types[:spam]) }
       let(:other_post) { Fabricate(:post, user: user, topic: topic) }
 
       before do
@@ -861,6 +856,17 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           flag.update!(post: other_post)
 
           expect { narrative.input(:flag, user, post: flag.post) }.to_not change { Post.count }
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+        end
+      end
+
+      describe 'when post is flagged incorrectly' do
+        it 'should create the right reply and stay on the same step' do
+          narrative.expects(:enqueue_timeout_job).with(user).never
+          other_flag.update!(post: another_post)
+          new_post = Post.last
+
+          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.flag.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
         end
       end

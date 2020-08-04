@@ -8,7 +8,7 @@
     .select-kit-row {
       margin: 0;
       min-height: 1px;
-      padding: 6px 10px;
+
       &.no-content {
         font-weight: normal;
       }
@@ -44,7 +44,6 @@
       flex-direction: column;
       padding: 0;
       min-width: 100px;
-      max-height: 200px;
 
       .collection-header {
         a {
@@ -53,7 +52,7 @@
           line-height: $line-height-medium;
           font-weight: bold;
           display: block;
-          padding: 6px 10px;
+          padding: 0.75em;
           color: $tertiary;
 
           &:hover {

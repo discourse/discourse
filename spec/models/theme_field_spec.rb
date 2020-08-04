@@ -8,6 +8,10 @@ describe ThemeField do
     ThemeField.destroy_all
   end
 
+  before do
+    I18n.locale = :en
+  end
+
   describe "scope: find_by_theme_ids" do
     it "returns result in the specified order" do
       theme = Fabricate(:theme)
@@ -60,22 +64,22 @@ describe ThemeField do
 
   it 'only extracts inline javascript to an external file' do
     html = <<~HTML
-    <script type="text/discourse-plugin" version="0.8">
-      var a = "inline discourse plugin";
-    </script>
-    <script type="text/template" data-template="custom-template">
-      <div>custom script type</div>
-    </script>
-    <script>
-      var b = "inline raw script";
-    </script>
-    <script type="texT/jAvasCripT">
-      var c = "text/javascript";
-    </script>
-    <script type="application/javascript">
-      var d = "application/javascript";
-    </script>
-    <script src="/external-script.js"></script>
+      <script type="text/discourse-plugin" version="0.8">
+        var a = "inline discourse plugin";
+      </script>
+      <script type="text/template" data-template="custom-template">
+        <div>custom script type</div>
+      </script>
+      <script>
+        var b = "inline raw script";
+      </script>
+      <script type="texT/jAvasCripT">
+        var c = "text/javascript";
+      </script>
+      <script type="application/javascript">
+        var d = "application/javascript";
+      </script>
+      <script src="/external-script.js"></script>
     HTML
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
@@ -91,13 +95,13 @@ describe ThemeField do
 
   it 'adds newlines between the extracted javascripts' do
     html = <<~HTML
-    <script>var a = 10</script>
-    <script>var b = 10</script>
+      <script>var a = 10</script>
+      <script>var b = 10</script>
     HTML
 
     extracted = <<~JavaScript
-    var a = 10
-    var b = 10
+      var a = 10
+      var b = 10
     JavaScript
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
@@ -196,14 +200,14 @@ HTML
     expect(js_field.reload.value_baked).to eq(expected_js.strip)
 
     expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["discovery"]')
-    expect(raw_hbs_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["discovery"]')
-    expect(hbr_field.reload.value_baked).to include('Discourse.RAW_TEMPLATES["other_discovery"]')
+    expect(raw_hbs_field.reload.value_baked).to include('addRawTemplate("discovery"')
+    expect(hbr_field.reload.value_baked).to include('addRawTemplate("other_discovery"')
     expect(unknown_field.reload.value_baked).to eq("")
     expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
 
     # All together
     expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["discovery"]')
-    expect(theme.javascript_cache.content).to include('Discourse.RAW_TEMPLATES["discovery"]')
+    expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery"')
     expect(theme.javascript_cache.content).to include('define("discourse/controllers/discovery-2"')
     expect(theme.javascript_cache.content).to include("var settings =")
@@ -301,8 +305,8 @@ HTML
     let!(:theme3) { Fabricate(:theme) }
 
     let!(:en1) {
-      ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en_US",
-                         value: { en_US: { somestring1: "helloworld", group: { key1: "enval1" } } }
+      ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en",
+                         value: { en: { somestring1: "helloworld", group: { key1: "enval1" } } }
                                   .deep_stringify_keys.to_yaml
       )
     }
@@ -313,21 +317,21 @@ HTML
       )
     }
     let!(:fr2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "fr", value: "") }
-    let!(:en2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "en_US", value: "") }
+    let!(:en2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "en", value: "") }
     let!(:ca3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "ca", value: "") }
-    let!(:en3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "en_US", value: "") }
+    let!(:en3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "en", value: "") }
 
     describe "scopes" do
       it "filter_locale_fields returns results in the correct order" do
         expect(ThemeField.find_by_theme_ids([theme3.id, theme.id, theme2.id])
           .filter_locale_fields(
-           ["en_US", "fr"]
+           ["en", "fr"]
         )).to eq([en3, en1, fr1, en2, fr2])
       end
 
       it "find_first_locale_fields returns only the first locale for each theme" do
         expect(ThemeField.find_first_locale_fields(
-          [theme3.id, theme.id, theme2.id], ["ca", "en_US", "fr"]
+          [theme3.id, theme.id, theme2.id], ["ca", "en", "fr"]
         )).to eq([ca3, en1, en2])
       end
     end
@@ -358,7 +362,7 @@ HTML
       it "loads correctly" do
         expect(fr1.translation_data).to eq(
           fr: { somestring1: "bonjourworld", group: { key2: "frval2" } },
-          en_US: { somestring1: "helloworld", group: { key1: "enval1" } }
+          en: { somestring1: "helloworld", group: { key1: "enval1" } }
         )
       end
 
@@ -380,7 +384,7 @@ HTML
         theme.reload
         expect(fr1.translation_data).to eq(
           fr: { somestring1: "bonjourworld", group: { key2: "frval2" } },
-          en_US: { somestring1: "helloworld", group: { key1: "overriddentest1" } }
+          en: { somestring1: "helloworld", group: { key1: "overriddentest1" } }
         )
       end
     end
@@ -398,9 +402,9 @@ HTML
     describe "prefix injection" do
       it "injects into JS" do
         html = <<~HTML
-        <script type="text/discourse-plugin" version="0.8">
-          var a = "inline discourse plugin";
-        </script>
+          <script type="text/discourse-plugin" version="0.8">
+            var a = "inline discourse plugin";
+          </script>
         HTML
 
         theme_field = ThemeField.create!(theme_id: theme.id, target_id: 0, name: "head_tag", value: html)

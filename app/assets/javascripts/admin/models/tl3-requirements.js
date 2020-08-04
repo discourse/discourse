@@ -12,6 +12,11 @@ export default EmberObject.extend({
     return Math.round((minDaysVisited * 100) / timePeriod);
   },
 
+  @discourseComputed("num_topics_replied_to", "min_topics_replied_to")
+  capped_topics_replied_to(numReplied, minReplied) {
+    return numReplied > minReplied;
+  },
+
   @discourseComputed(
     "days_visited",
     "min_days_visited",

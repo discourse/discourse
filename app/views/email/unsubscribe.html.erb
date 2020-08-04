@@ -57,10 +57,14 @@
 
           <% if @digest_frequencies[:current] %>
             <h3>
-            <%= t(
-              'unsubscribe.digest_frequency.title',
-              frequency: t("unsubscribe.digest_frequency.#{@digest_frequencies[:current]}")
-            ) %>
+              <% if @digest_frequencies[:current] == 'never' %>
+                <%= t('unsubscribe.digest_frequency.never_title') %> 
+              <% else %>
+                <%= t(
+                  'unsubscribe.digest_frequency.title',
+                  frequency: t("unsubscribe.digest_frequency.#{@digest_frequencies[:current]}")
+                ) %>
+            <% end %>
             </h3>
             <br/>
           <% end %>
@@ -74,12 +78,14 @@
           </p>
       <% end %>
 
-      <p>
-      <label>
-      <%= check_box_tag 'unsubscribe_all', 1, @type=="all" %>
-      <%= t 'unsubscribe.all', sitename: SiteSetting.title %>
-      </label>
-      </p>
+      <% unless @unsubscribed_from_all %>
+        <p>
+        <label>
+          <%= check_box_tag 'unsubscribe_all', 1, @type=="all" %>
+          <%= t 'unsubscribe.all', sitename: SiteSetting.title %>
+        </label>
+        </p>
+      <% end %>
 
       <br/>
       <% text = @type=='digest' ? t('unsubscribe.submit') : t('unsubscribe.title') %>

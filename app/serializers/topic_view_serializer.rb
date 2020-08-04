@@ -73,6 +73,7 @@ class TopicViewSerializer < ApplicationSerializer
     :queued_posts_count,
     :show_read_indicator,
     :requested_group_name,
+    :thumbnails
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -186,15 +187,11 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def bookmarked
-    if SiteSetting.enable_bookmarks_with_reminders?
-      object.has_bookmarks?
-    else
-      object.topic_user&.bookmarked
-    end
+    object.has_bookmarks?
   end
 
   def include_bookmark_reminder_at?
-    SiteSetting.enable_bookmarks_with_reminders? && bookmarked
+    bookmarked
   end
 
   def bookmark_reminder_at
@@ -287,5 +284,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_published_page?
     SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
+  end
+
+  def thumbnails
+    extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
+    object.topic.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
   end
 end

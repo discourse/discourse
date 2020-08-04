@@ -22,8 +22,9 @@ class UserMerger
     update_user_stats
 
     delete_source_user
-    delete_source_user_references
     log_merge
+
+    @target_user.reload
   end
 
   protected
@@ -255,7 +256,7 @@ class UserMerger
     IncomingLink.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
     IncomingLink.where(current_user_id: @source_user.id).update_all(current_user_id: @target_user.id)
 
-    Invite.with_deleted.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    InvitedUser.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
     Invite.with_deleted.where(invited_by_id: @source_user.id).update_all(invited_by_id: @target_user.id)
     Invite.with_deleted.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
 
@@ -356,23 +357,14 @@ class UserMerger
 
   def delete_source_user
     @source_user.reload
+
+    @source_user.skip_email_validation = true
     @source_user.update(
       admin: false,
       email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid"
     )
 
     UserDestroyer.new(Discourse.system_user).destroy(@source_user, quiet: true)
-  end
-
-  def delete_source_user_references
-    Developer.where(user_id: @source_user.id).delete_all
-    DraftSequence.where(user_id: @source_user.id).delete_all
-    GivenDailyLike.where(user_id: @source_user.id).delete_all
-    MutedUser.where(user_id: @source_user.id).or(MutedUser.where(muted_user_id: @source_user.id)).delete_all
-    IgnoredUser.where(user_id: @source_user.id).or(IgnoredUser.where(ignored_user_id: @source_user.id)).delete_all
-    UserAuthTokenLog.where(user_id: @source_user.id).delete_all
-    UserAvatar.where(user_id: @source_user.id).delete_all
-    UserAction.where(acting_user_id: @source_user.id).delete_all
   end
 
   def log_merge

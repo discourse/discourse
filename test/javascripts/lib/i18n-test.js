@@ -1,3 +1,4 @@
+import I18n from "I18n";
 QUnit.module("lib:i18n", {
   _locale: I18n.locale,
   _fallbackLocale: I18n.fallbackLocale,

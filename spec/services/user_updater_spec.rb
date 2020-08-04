@@ -249,6 +249,38 @@ describe UserUpdater do
       end
     end
 
+    context 'when sso overrides location' do
+      it 'does not change location' do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+        SiteSetting.sso_overrides_location = true
+
+        user = Fabricate(:user)
+        updater = UserUpdater.new(acting_user, user)
+
+        expect(updater.update(location: "new location")).to be_truthy
+
+        user.reload
+        expect(user.user_profile.location).not_to eq 'new location'
+      end
+    end
+
+    context 'when sso overrides website' do
+      it 'does not change website' do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+        SiteSetting.sso_overrides_website = true
+
+        user = Fabricate(:user)
+        updater = UserUpdater.new(acting_user, user)
+
+        expect(updater.update(website: "https://google.com")).to be_truthy
+
+        user.reload
+        expect(user.user_profile.website).not_to eq 'https://google.com'
+      end
+    end
+
     context 'when updating primary group' do
       let(:new_group) { Group.create(name: 'new_group') }
       let(:user) { Fabricate(:user) }
@@ -413,6 +445,15 @@ describe UserUpdater do
         updater.update(website: 'example.com')
 
         expect(user.reload.user_profile.website).to eq 'http://example.com'
+      end
+    end
+
+    context 'when website is invalid' do
+      it 'returns an error' do
+        user = Fabricate(:user)
+        updater = UserUpdater.new(acting_user, user)
+
+        expect(updater.update(website: 'ʔ<')).to eq nil
       end
     end
 

@@ -6,7 +6,7 @@ module IntegrationHelpers
 
     expect(response.status).to eq(200)
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     honeypot = body["value"]
     challenge = body["challenge"]
     user = Fabricate.build(:user)
@@ -21,12 +21,12 @@ module IntegrationHelpers
 
     expect(response.status).to eq(200)
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     User.find(body["user_id"])
   end
 
   def sign_in(user)
-    get "/session/#{user.username}/become"
+    get "/session/#{user.encoded_username}/become"
     user
   end
 

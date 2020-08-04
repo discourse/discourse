@@ -27,15 +27,6 @@ module Jobs
 
       # Any URLs in site settings are fair game
       ignore_urls = [
-        SiteSetting.logo_url(warn: false),
-        SiteSetting.logo_small_url(warn: false),
-        SiteSetting.digest_logo_url(warn: false),
-        SiteSetting.mobile_logo_url(warn: false),
-        SiteSetting.large_icon_url(warn: false),
-        SiteSetting.favicon_url(warn: false),
-        SiteSetting.default_opengraph_image_url(warn: false),
-        SiteSetting.twitter_summary_large_image_url(warn: false),
-        SiteSetting.apple_touch_icon_url(warn: false),
         *SiteSetting.selectable_avatars.split("\n"),
       ].flatten.map do |url|
         if url.present?
@@ -68,6 +59,7 @@ module Jobs
         .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
         .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
         .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")
+        .joins("LEFT JOIN groups g ON g.flair_upload_id = uploads.id")
         .where("pu.upload_id IS NULL")
         .where("u.uploaded_avatar_id IS NULL")
         .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
@@ -76,6 +68,7 @@ module Jobs
         .where("ce.upload_id IS NULL")
         .where("tf.upload_id IS NULL")
         .where("ue.upload_id IS NULL")
+        .where("g.flair_upload_id IS NULL")
         .where("ss.value IS NULL")
 
       result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?

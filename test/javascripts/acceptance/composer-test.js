@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { run } from "@ember/runloop";
 import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
@@ -17,7 +18,7 @@ acceptance("Composer", {
   }
 });
 
-QUnit.test("Tests the Composer controls", async assert => {
+QUnit.skip("Tests the Composer controls", async assert => {
   await visit("/");
   assert.ok(exists("#create-topic"), "the create button is visible");
 
@@ -111,7 +112,7 @@ QUnit.test("Composer upload placeholder", async assert => {
       original_filename: "test.png",
       thumbnail_width: 200,
       thumbnail_height: 300,
-      url: "/uploads/test1.ext"
+      url: "/images/avatar.png?1"
     }
   };
 
@@ -123,7 +124,7 @@ QUnit.test("Composer upload placeholder", async assert => {
       original_filename: "test.png",
       thumbnail_width: 100,
       thumbnail_height: 200,
-      url: "/uploads/test2.ext"
+      url: "/images/avatar.png?2"
     }
   };
 
@@ -135,7 +136,7 @@ QUnit.test("Composer upload placeholder", async assert => {
       original_filename: "image.png",
       thumbnail_width: 300,
       thumbnail_height: 400,
-      url: "/uploads/test3.ext"
+      url: "/images/avatar.png?3"
     }
   };
 
@@ -147,7 +148,7 @@ QUnit.test("Composer upload placeholder", async assert => {
       original_filename: "ima++ge.png",
       thumbnail_width: 300,
       thumbnail_height: 400,
-      url: "/uploads/test3.ext"
+      url: "/images/avatar.png?3"
     }
   };
 
@@ -176,19 +177,19 @@ QUnit.test("Composer upload placeholder", async assert => {
   await find(".wmd-controls").trigger("fileuploaddone", data2);
   assert.equal(
     find(".d-editor-input").val(),
-    "[Uploading: test.png...]() ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() [Uploading: image.png...]() "
+    "[Uploading: test.png...]() ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() [Uploading: image.png...]() "
   );
 
   await find(".wmd-controls").trigger("fileuploaddone", data3);
   assert.equal(
     find(".d-editor-input").val(),
-    "[Uploading: test.png...]() ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() ![image|300x400](/uploads/test3.ext) "
+    "[Uploading: test.png...]() ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() ![image|300x400](/images/avatar.png?3) "
   );
 
   await find(".wmd-controls").trigger("fileuploaddone", data1);
   assert.equal(
     find(".d-editor-input").val(),
-    "![test|200x300](/uploads/test1.ext) ![test|100x200](/uploads/test2.ext) [Uploading: ima++ge.png...]() ![image|300x400](/uploads/test3.ext) "
+    "![test|200x300](/images/avatar.png?1) ![test|100x200](/images/avatar.png?2) [Uploading: ima++ge.png...]() ![image|300x400](/images/avatar.png?3) "
   );
 });
 
@@ -267,6 +268,24 @@ QUnit.test("Create a Reply", async assert => {
   assert.equal(
     find(".cooked:last p").text(),
     "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
+  );
+});
+
+QUnit.test("Can edit a post after starting a reply", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  await click("#topic-footer-buttons .create");
+  await fillIn(".d-editor-input", "this is the content of my reply");
+
+  await click(".topic-post:eq(0) button.show-more-actions");
+  await click(".topic-post:eq(0) button.edit");
+
+  await click("a[data-handler='0']");
+
+  assert.ok(!visible(".bootbox.modal"));
+  assert.equal(
+    find(".d-editor-input").val(),
+    "this is the content of my reply"
   );
 });
 
@@ -524,7 +543,7 @@ QUnit.test(
     );
 
     assert.ok(
-      find(".composer-fields .whisper")
+      find(".composer-fields .unlist")
         .text()
         .indexOf(I18n.t("composer.unlist")) > 0,
       "it sets the topic to unlisted"
@@ -701,8 +720,6 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
 QUnit.test(
   "Deleting the text content of the first post in a private message",
   async assert => {
-    Discourse.SiteSettings.allow_uncategorized_topics = false;
-
     await visit("/t/34");
 
     await click("#post_1 .d-icon-ellipsis-h");
@@ -733,7 +750,7 @@ QUnit.test("Image resizing buttons", async assert => {
 
   let uploads = [
     // 0 Default markdown with dimensions- should work
-    "![test|690x313](upload://test.png)",
+    "<a href='https://example.com'>![test|690x313](upload://test.png)</a>",
     // 1 Image with scaling percentage, should work
     "![test|690x313,50%](upload://test.png)",
     // 2 image with scaling percentage and a proceeding whitespace, should work
@@ -743,7 +760,7 @@ QUnit.test("Image resizing buttons", async assert => {
     // 4 Wrapped in backquetes should not work
     "`![test|690x313](upload://test.png)`",
     // 5 html image - should not work
-    "<img src='http://someimage.jpg' wight='20' height='20'>",
+    "<img src='/images/avatar.png' wight='20' height='20'>",
     // 6 two images one the same line, but both are syntactically correct - both should work
     "![onTheSameLine1|200x200](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)",
     // 7 & 8 Identical images - both should work
@@ -754,7 +771,7 @@ QUnit.test("Image resizing buttons", async assert => {
     // 10 Image with markdown title - should work
     `![image|690x220](upload://test.png "image title")`,
     // 11 bbcode - should not work
-    "[img]http://example.com/image.jpg[/img]",
+    "[img]/images/avatar.png[/img]",
     // 12 Image with data attributes
     "![test|foo=bar|690x313,50%|bar=baz](upload://test.png)"
   ];
@@ -767,7 +784,8 @@ QUnit.test("Image resizing buttons", async assert => {
   );
 
   // Default
-  uploads[0] = "![test|690x313, 50%](upload://test.png)";
+  uploads[0] =
+    "<a href='https://example.com'>![test|690x313, 50%](upload://test.png)</a>";
   await click(
     find(".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']")
   );

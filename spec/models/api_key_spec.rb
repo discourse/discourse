@@ -79,4 +79,74 @@ describe ApiKey do
     expect(used_recently.revoked_at).to eq(nil)
   end
 
+  describe 'API Key scope mappings' do
+    it 'maps api_key permissions' do
+      api_key_mappings = ApiKeyScope.scope_mappings[:topics]
+
+      assert_responds_to(api_key_mappings.dig(:write, :actions))
+      assert_responds_to(api_key_mappings.dig(:read, :actions))
+      assert_responds_to(api_key_mappings.dig(:read_lists, :actions))
+    end
+
+    def assert_responds_to(mappings)
+      mappings.each do |m|
+        controller, method = m.split('#')
+        controller_name = "#{controller.capitalize}Controller"
+        expect(controller_name.constantize.method_defined?(method)).to eq(true)
+      end
+    end
+  end
+
+  describe "#request_allowed?" do
+    let(:request_mock) { OpenStruct.new(ip: '133.45.67.99') }
+    let(:route_path) { { 'controller' => 'topics', 'action' => 'show', 'topic_id' => '3' } }
+    let(:scope) do
+      ApiKeyScope.new(resource: 'topics', action: 'read', allowed_parameters: { topic_id: '3' })
+    end
+    let(:key) { ApiKey.new(api_key_scopes: [scope]) }
+
+    it 'allows the request if there are no allowed IPs' do
+      key.allowed_ips = nil
+      key.api_key_scopes = []
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(true)
+    end
+
+    it 'rejects the request if the IP is not allowed' do
+      key.allowed_ips = %w[115.65.76.87]
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(false)
+    end
+
+    it 'allow the request if there are not allowed params' do
+      scope.allowed_parameters = nil
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(true)
+    end
+
+    it 'rejects the request when params are different' do
+      route_path['topic_id'] = '4'
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(false)
+    end
+
+    it 'accepts the request if one of the parameters match' do
+      route_path['topic_id'] = '4'
+      scope.allowed_parameters = { topic_id: %w[3 4] }
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(true)
+    end
+
+    it 'allow the request when the scope has an alias' do
+      route_path = { 'controller' => 'topics', 'action' => 'show', 'id' => '3' }
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(true)
+    end
+
+    it 'rejects the request when the main parameter and the alias are both used' do
+      route_path = { 'controller' => 'topics', 'action' => 'show', 'topic_id' => '3', 'id' => '4' }
+
+      expect(key.request_allowed?(request_mock, route_path)).to eq(false)
+    end
+  end
 end

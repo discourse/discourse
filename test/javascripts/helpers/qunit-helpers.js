@@ -19,9 +19,15 @@ import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
+import { _clearSnapshots } from "select-kit/components/composer-actions";
 import User from "discourse/models/user";
+import { mapRoutes } from "discourse/mapping-router";
+import { currentSettings, mergeSettings } from "helpers/site-settings";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -34,6 +40,37 @@ export function updateCurrentUser(properties) {
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead
 export function logIn() {
   User.resetCurrent(currentUser());
+}
+
+// Note: Only use if `loggedIn: true` has been used in an acceptance test
+export function loggedInUser() {
+  return User.current();
+}
+
+export function fakeTime(timeString, timezone = null, advanceTime = false) {
+  let now = moment.tz(timeString, timezone);
+  return sandbox.useFakeTimers({
+    now: now.valueOf(),
+    shouldAdvanceTime: advanceTime
+  });
+}
+
+export async function acceptanceUseFakeClock(
+  timeString,
+  callback,
+  timezone = null
+) {
+  if (!timezone) {
+    let user = loggedInUser();
+    if (user) {
+      timezone = user.resolvedTimezone(user);
+    } else {
+      timezone = "America/Denver";
+    }
+  }
+  let clock = fakeTime(timeString, timezone, true);
+  await callback();
+  clock.reset();
 }
 
 const Plugin = $.fn.modal;
@@ -68,6 +105,37 @@ export function applyPretender(name, server, helper) {
   if (cb) cb(server, helper);
 }
 
+export function controllerModule(name, args = {}) {
+  moduleFor(name, name, {
+    setup() {
+      this.registry.register("router:main", mapRoutes());
+      let controller = this.subject();
+      controller.siteSettings = currentSettings();
+      if (args.setupController) {
+        args.setupController(controller);
+      }
+    },
+    needs: args.needs
+  });
+}
+
+export function discourseModule(name, hooks) {
+  QUnit.module(name, {
+    beforeEach() {
+      this.container = getOwner(this);
+      this.siteSettings = currentSettings();
+      if (hooks && hooks.beforeEach) {
+        hooks.beforeEach.call(this);
+      }
+    },
+    afterEach() {
+      if (hooks && hooks.afterEach) {
+        hooks.afterEach.call(this);
+      }
+    }
+  });
+}
+
 export function acceptance(name, options) {
   options = options || {};
 
@@ -83,10 +151,6 @@ export function acceptance(name, options) {
       HeaderComponent.reopen({ examineDockHeader: function() {} });
 
       resetExtraClasses();
-      if (options.beforeEach) {
-        options.beforeEach.call(this);
-      }
-
       if (options.mobileView) {
         forceMobile();
       }
@@ -96,21 +160,22 @@ export function acceptance(name, options) {
       }
 
       if (options.settings) {
-        Discourse.SiteSettings = jQuery.extend(
-          true,
-          Discourse.SiteSettings,
-          options.settings
-        );
+        mergeSettings(options.settings);
       }
+      this.siteSettings = currentSettings();
 
       if (options.site) {
-        resetSite(Discourse.SiteSettings, options.site);
+        resetSite(currentSettings(), options.site);
       }
 
       clearOutletCache();
       clearHTMLCache();
       resetPluginApi();
       Discourse.reset();
+      this.container = getOwner(this);
+      if (options.beforeEach) {
+        options.beforeEach.call(this);
+      }
     },
 
     afterEach() {
@@ -120,7 +185,7 @@ export function acceptance(name, options) {
       flushMap();
       localStorage.clear();
       User.resetCurrent();
-      resetSite(Discourse.SiteSettings);
+      resetSite(currentSettings());
       resetExtraClasses();
       clearOutletCache();
       clearHTMLCache();
@@ -131,16 +196,19 @@ export function acceptance(name, options) {
       resetPostCookedDecorators();
       resetPluginOutletDecorators();
       resetTopicTitleDecorators();
+      resetUsernameDecorators();
       resetOneboxCache();
       resetCustomPostMessageCallbacks();
-      Discourse._runInitializer("instanceInitializers", function(
-        initName,
-        initializer
-      ) {
-        if (initializer && initializer.teardown) {
-          initializer.teardown(Discourse.__container__);
+      setTopicList(null);
+      _clearSnapshots();
+      Discourse._runInitializer(
+        "instanceInitializers",
+        (initName, initializer) => {
+          if (initializer && initializer.teardown) {
+            initializer.teardown(this.container);
+          }
         }
-      });
+      );
       Discourse.reset();
 
       // We do this after reset so that the willClearRender will have already fired
@@ -150,7 +218,7 @@ export function acceptance(name, options) {
 }
 
 export function controllerFor(controller, model) {
-  controller = Discourse.__container__.lookup("controller:" + controller);
+  controller = getOwner(this).lookup("controller:" + controller);
   if (model) {
     controller.set("model", model);
   }

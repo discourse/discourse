@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
@@ -41,7 +42,7 @@ export default Component.extend(bufferedProperty("host"), {
 
       const props = this.buffered.getProperties(
         "host",
-        "path_whitelist",
+        "allowed_paths",
         "class_name"
       );
       props.category_id = this.categoryId;

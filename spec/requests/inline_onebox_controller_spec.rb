@@ -15,7 +15,7 @@ describe InlineOneboxController do
     it "returns empty JSON for empty input" do
       get "/inline-onebox.json", params: { urls: [] }
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['inline-oneboxes']).to eq([])
     end
 
@@ -25,7 +25,7 @@ describe InlineOneboxController do
       it "returns information for a valid link" do
         get "/inline-onebox.json", params: { urls: [ topic.url ] }
         expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         onebox = json['inline-oneboxes'][0]
 
         expect(onebox).to be_present

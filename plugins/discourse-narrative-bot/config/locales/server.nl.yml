@@ -95,11 +95,6 @@ nl:
       random_mention:
         reply: |-
           Hallo! Zeg `@%{discobot_username} %{help_trigger}` om te ontdekken wat ik kan.
-        tracks: |-
-          Momenteel kan ik de volgende dingen doen:
-
-          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Start een interactieve handleiding. `{name-of-tutorial}` kan één zijn van: `%{tracks}`.
       do_not_understand:
         first_response: |-
           Hallo, bedankt voor het antwoord!

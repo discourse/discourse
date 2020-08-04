@@ -90,6 +90,8 @@ class DestroyTask
         raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
       rescue NoMethodError
         @io.puts "#{user.username} could not be deleted"
+      rescue Discourse::InvalidAccess => e
+        @io.puts "#{user.username} #{e.message}"
       end
     end
   end

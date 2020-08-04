@@ -43,7 +43,6 @@ zh_TW:
     other_error: "更新佈景主題時發生了錯誤"
     import_error:
       generic: 匯入佈景主題時發生了錯誤
-      about_json: "匯入錯誤：about.json 不存在或無效"
       about_json_values: "about.json 含有無效的數值：%{errors}"
       git: "複製 git 版本庫時發生錯誤，存取被拒或找不到該版本庫"
       unpack_failed: "解壓縮檔案失敗"
@@ -254,9 +253,6 @@ zh_TW:
   topics_in_category: "分類 '%{category}' 中的討論話題"
   rss_posts_in_topic: "'%{topic}' 的 RSS feed"
   rss_topics_in_category: "分類 '%{category}' 中討論話題的 RSS feed"
-  author_wrote: "%{author}說:"
-  num_posts: "貼文："
-  num_participants: "參與者："
   read_full_topic: "閱讀整個話題"
   private_message_abbrev: "消息"
   rss_description:
@@ -350,12 +346,6 @@ zh_TW:
       你可以編輯你先前的回應訊息，選擇字句後點選 <b>引用</b> 來回應。
 
       對於大家而言，閱讀包含較多回覆的少量貼文，會比閱讀多篇瑣碎貼文更為輕鬆。
-    dominating_topic: |
-      ### 讓其他人能一起加入討論
-
-      這篇主題真的對你很重要 &ndash; 你在這個討論中已回覆多於 %{percent}% 的回應。
-
-      如果你可以邀請更多人來分享他們的觀點，那可能會更好。 你可以邀請他們過來參與討論嗎？
     get_a_room: |
       ### 考慮回應更多參與者
 
@@ -691,7 +681,7 @@ zh_TW:
       short_description: '違反<a href="%{base_path}/guidelines">我們的社群規範</a>'
       long_form: "投訴為不當內容"
     notify_user:
-      title: "給 @{{username}} 送出一則訊息"
+      title: "給 @%{username} 送出一則訊息"
       description: "我想要針對這位使用者的貼文直接和他們溝通。"
       short_description: "我想要針對這位使用者的貼文直接和他們溝通。"
       long_form: "傳訊給使用者"
@@ -1188,7 +1178,6 @@ zh_TW:
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
     download_remote_images_to_local: "下載外部鏈接的圖片到本機；以防圖片損壞。"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
-    download_remote_images_max_days_old: "不下載超過 n 天的貼文中的遠程圖片。"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
     editing_grace_period: "在 (n) 秒之內，對貼文的編輯不生成貼文歷史。"
     editing_grace_period_max_diff: "編輯寬限期允許的字元更改的最大數量，如果有更多的更改，將另儲存為另一個版本的修訂（信任等級0和1）"
@@ -1359,7 +1348,6 @@ zh_TW:
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_endpoint: "Discourse 備份空間有支援其他第三方服務，可修改備份空間存向 DigitalOcean Spaces、Minio或是Amazon S3。警告：如果使用Amazon S3，請留白。"
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
-    s3_disable_cleanup: "當在本地刪除備份時不刪除 S3 上的備份。"
     enable_s3_inventory: "使用Amazon S3 清單生成報告並驗證上傳。注意：需要設定Amazon S3 驗證資料（包括Access Key ID、Secret Access Key）。"
     backup_time_of_day: "備份的 UTC 時間"
     backup_with_uploads: "在備份日程中包括上傳。關閉此項僅備份資料庫。"
@@ -1716,7 +1704,6 @@ zh_TW:
     city_for_disputes: "爭議"
     shared_drafts_category: "通過為討論話題的草稿以指定一個類別，來啟用「共用草稿」功能。此類別中的話題將從工作人員使用者的主題清單中取消。"
     push_notifications_prompt: "顯示使用者同意提示"
-    push_notifications_icon: "通知角中顯示的徽章 icon，所需圖片尺寸為96×96"
     short_title: "短標題將用於使用者的主螢幕、啟動器或其他可能空白鍵有限的地方，它應限制為12個字。"
     dashboard_general_tab_activity_metrics: "選擇在一般頁面中要顯示為活躍指標的報告"
     errors:
@@ -1768,7 +1755,7 @@ zh_TW:
         key: "www.範例.com"
         value: "單一登入服務訊息密鑰"
   search:
-    within_post: "#{{post_number}} 由 {{username}}"
+    within_post: "#%{post_number} 由 %{username}"
     types:
       category: "分類"
       topic: "結果"
@@ -2290,11 +2277,6 @@ zh_TW:
     email_reject_bad_destination_address:
       title: "電子郵件拒絕 不良目的地位址"
       subject_template: "[%{email_prefix}] 電子郵件錯誤 -- 未知的電子郵件地址"
-      text_body_template: |
-        我們非常抱歉，但是你發送至%{destination}（名為%{former_title}） 郵件出問題了。
-
-        寄送的郵件地址無法識別
-        請重新確認電子郵件地址或向管理人員提供的郵件地址發信。
     email_reject_old_destination:
       title: "電子郵件拒絕：舊的目的地（Old Destination）"
       subject_template: "[%{email_prefix}] 電子郵件錯誤 -- 你正在嘗試回覆老舊通知"
@@ -2742,6 +2724,8 @@ zh_TW:
       subject_template: "[%{email_prefix}] 確認你的新郵件地址"
     confirm_old_email:
       title: "確認原郵件地址"
+      subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
+    confirm_old_email_add:
       subject_template: "[%{email_prefix}] 確認你的現行郵件地址"
     notify_old_email:
       title: "通知原郵件地址"
@@ -3230,7 +3214,6 @@ zh_TW:
       name: 激情
     crazy_in_love:
       name: 狂熱
-      description: 20 天都讚過 50 次
     thank_you:
       name: 感謝你
       description: 有 20 個被讚的貼文，給出過 10 個贊
@@ -3302,7 +3285,7 @@ zh_TW:
     staff_tag_disallowed: '“%{tag}”只可由管理人員使用。'
     staff_tag_remove_disallowed: '“%{tag}”只可由管理人員刪除。'
     minimum_required_tags:
-      other: "您必須至少選擇{{count}}個標籤"
+      other: "您必須至少選擇%{count}個標籤"
     upload_row_too_long: "CSV檔案每一行應該有一個標籤，可選，標籤後面可以是逗號，然後是標籤群組名稱。"
     forbidden:
       in_this_category: '「%{tag_name}」不能被使用在這個分類'
@@ -3476,7 +3459,7 @@ zh_TW:
       watching_first_post: '%{username}建立了新的討論話題「%{topic}- %{site_title}」'
       confirm_title: "通知已啟用 - %{site_title}"
       confirm_body: "成功! 通知已啟用"
-      custom: "新的通知來自{{username}}在%{site_title}"
+      custom: "新的通知來自%{username}在%{site_title}"
   staff_action_logs:
     not_found: "未找到"
     unknown: "未知的"

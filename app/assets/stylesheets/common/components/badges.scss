@@ -17,7 +17,6 @@
 
 .badge-wrapper {
   font-size: $font-down-1;
-  font-weight: bold;
   white-space: nowrap;
   position: relative;
   display: inline-flex;
@@ -170,7 +169,7 @@
   font-size: $font-down-2;
   line-height: $line-height-small;
   text-align: center;
-  background-color: dark-light-choose($primary-low-mid, $secondary-low);
+  background-color: $primary-low-mid-or-secondary-low;
   &[href] {
     color: $secondary;
   }
@@ -183,8 +182,8 @@
 
   &.new-posts,
   &.unread-posts {
-    background-color: dark-light-choose($tertiary-medium, $tertiary);
-    color: dark-light-choose($secondary, $secondary);
+    background-color: $tertiary-med-or-tertiary;
+    color: $secondary;
     font-weight: dark-light-choose(normal, bold);
   }
 
@@ -220,7 +219,7 @@
   font-size: $font-0;
   line-height: $line-height-small;
   &[href] {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-med-or-secondary-med;
   }
 }
 

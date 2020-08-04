@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed, {
   observes,
   on

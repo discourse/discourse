@@ -14,6 +14,7 @@
 # on the current secure? status, otherwise there would be a lot of additional
 # complex queries and joins to perform.
 class UploadSecurity
+  PUBLIC_TYPES = %w[avatar custom_emoji profile_background card_background]
   def initialize(upload, opts = {})
     @upload = upload
     @opts = opts
@@ -53,7 +54,7 @@ class UploadSecurity
   end
 
   def public_type?
-    %w[avatar custom_emoji profile_background card_background].include?(@upload_type)
+    PUBLIC_TYPES.include?(@upload_type)
   end
 
   def uploading_in_composer?

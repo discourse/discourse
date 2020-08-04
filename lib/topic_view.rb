@@ -38,16 +38,16 @@ class TopicView
     @default_post_custom_fields ||= [Post::NOTICE_TYPE, Post::NOTICE_ARGS, "action_code_who"]
   end
 
-  def self.post_custom_fields_whitelisters
-    @post_custom_fields_whitelisters ||= Set.new
+  def self.post_custom_fields_allowlisters
+    @post_custom_fields_allowlisters ||= Set.new
   end
 
-  def self.add_post_custom_fields_whitelister(&block)
-    post_custom_fields_whitelisters << block
+  def self.add_post_custom_fields_allowlister(&block)
+    post_custom_fields_allowlisters << block
   end
 
-  def self.whitelisted_post_custom_fields(user)
-    wpcf = default_post_custom_fields + post_custom_fields_whitelisters.map { |w| w.call(user) }
+  def self.allowed_post_custom_fields(user)
+    wpcf = default_post_custom_fields + post_custom_fields_allowlisters.map { |w| w.call(user) }
     wpcf.flatten.uniq
   end
 
@@ -87,12 +87,12 @@ class TopicView
     filter_posts(options)
 
     if @posts && !@skip_custom_fields
-      if (added_fields = User.whitelisted_user_custom_fields(@guardian)).present?
+      if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.pluck(:user_id), added_fields)
       end
 
-      if (whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), whitelisted_fields)
+      if (allowed_fields = TopicView.allowed_post_custom_fields(@user)).present?
+        @post_custom_fields = Post.custom_fields_for_ids(@posts.pluck(:id), allowed_fields)
       end
     end
 
@@ -122,7 +122,8 @@ class TopicView
       if @page > 1
         "?page=#{@page}"
       else
-        page = ((@post_number - 1) / @limit) + 1
+        posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
+        page = ((posts_count - 1) / @limit) + 1
         page > 1 ? "?page=#{page}" : ""
       end
 
@@ -365,21 +366,24 @@ class TopicView
       if is_mega_topic?
         {}
       else
-        post_ids = unfiltered_post_ids
-
-        return {} if post_ids.blank?
+        post_types = [Post.types[:regular], Post.types[:moderator_action]]
+        if @guardian.can_see_whispers?(@topic)
+          post_types << Post.types[:whisper]
+        end
 
         sql = <<~SQL
             SELECT user_id, count(*) AS count_all
               FROM posts
-             WHERE id in (:post_ids)
+             WHERE topic_id = :topic_id
+               AND post_type IN (:post_types)
                AND user_id IS NOT NULL
+               AND posts.deleted_at IS NULL
           GROUP BY user_id
           ORDER BY count_all DESC
              LIMIT #{MAX_PARTICIPANTS}
         SQL
 
-        Hash[*DB.query_single(sql, post_ids: post_ids)]
+        Hash[*DB.query_single(sql, topic_id: @topic.id, post_types: post_types)]
       end
     end
   end
@@ -425,6 +429,19 @@ class TopicView
     @group_allowed_user_ids = Set.new(GroupUser.where(group_id: group_ids).pluck('distinct user_id'))
   end
 
+  def category_group_moderator_user_ids
+    @category_group_moderator_user_ids ||= begin
+      if SiteSetting.enable_category_group_moderation? && @topic.category&.reviewable_by_group.present?
+        posts_user_ids = Set.new(@posts.map(&:user_id))
+        Set.new(
+          @topic.category.reviewable_by_group.group_users.where(user_id: posts_user_ids).pluck('distinct user_id')
+        )
+      else
+        Set.new
+      end
+    end
+  end
+
   def all_post_actions
     @all_post_actions ||= PostAction.counts_for(@posts, @user)
   end
@@ -434,7 +451,7 @@ class TopicView
   end
 
   def user_post_bookmarks
-    @user_post_bookmarks ||= Bookmark.where(user: @user, post_id: unfiltered_post_ids)
+    @user_post_bookmarks ||= @topic.bookmarks.where(user: @user)
   end
 
   def reviewable_counts
@@ -546,7 +563,7 @@ class TopicView
       columns = [:id]
 
       if !is_mega_topic?
-        columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago'
+        columns << 'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - posts.created_at)::INT AS days_ago'
       end
 
       posts.pluck(*columns)

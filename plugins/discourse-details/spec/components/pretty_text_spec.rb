@@ -8,7 +8,7 @@ describe PrettyText do
   let(:post) { Fabricate(:post) }
 
   it "supports details tag" do
-    cooked_html = <<~HTML
+    cooked_html = <<~HTML.gsub("\n", "")
       <details>
       <summary>
       foo</summary>
@@ -17,7 +17,7 @@ describe PrettyText do
     HTML
 
     expect(cooked_html).to match_html(cooked_html)
-    expect(PrettyText.cook("[details=foo]\nbar\n[/details]")).to match_html(cooked_html)
+    expect(PrettyText.cook("[details=foo]\nbar\n[/details]").gsub("\n", "")).to match_html(cooked_html)
   end
 
   it "deletes elided content" do
@@ -39,6 +39,29 @@ describe PrettyText do
     html = "<p>hello</p>\n\nSummary <a href=\"#{post.full_url}\">(click for more details)</a>"
 
     expect(md).to eq(html)
+  end
+
+  it 'properly handles multiple spoiler blocks in a post' do
+    md = PrettyText.cook(<<~EOF)
+      [details="First"]
+      body secret stuff very long
+      [/details]
+      [details="Second"]
+      body secret stuff very long
+      [/details]
+
+      Hey there.
+
+      [details="Third"]
+      body secret stuff very long
+      [/details]
+    EOF
+
+    md = PrettyText.format_for_email(md, post)
+    expect(md).not_to include('secret stuff')
+    expect(md.scan(/First/).size).to eq(1)
+    expect(md.scan(/Third/).size).to eq(1)
+    expect(md.scan(I18n.t('details.excerpt_details')).size).to eq(3)
   end
 
   it 'escapes summary text' do

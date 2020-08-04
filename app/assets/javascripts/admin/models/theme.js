@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { isBlank, isEmpty } from "@ember/utils";
 import { or, gt } from "@ember/object/computed";
@@ -281,15 +282,6 @@ const Theme = RestModel.extend({
     parentThemes.addObject(theme);
   },
 
-  @discourseComputed("name", "default")
-  description: function(name, isDefault) {
-    if (isDefault) {
-      return I18n.t("admin.customize.theme.default_name", { name: name });
-    } else {
-      return name;
-    }
-  },
-
   checkForUpdates() {
     return this.save({ remote_check: true }).then(() =>
       this.set("changed", false)
@@ -320,7 +312,8 @@ const Theme = RestModel.extend({
             }
           }
         );
-        highlightSyntax();
+        // TODO: Models shouldn't be updating the DOM
+        highlightSyntax(undefined, this.siteSettings);
       } else {
         return this.save({ remote_update: true }).then(() =>
           this.set("changed", false)

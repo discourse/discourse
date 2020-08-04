@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { makeArray } from "discourse-common/lib/helpers";
 import {
   empty,
@@ -31,6 +32,7 @@ export default Controller.extend({
   availableComponentsNames: mapBy("availableChildThemes", "name"),
   availableActiveComponentsNames: mapBy("availableActiveChildThemes", "name"),
   childThemesNames: mapBy("model.childThemes", "name"),
+  extraFiles: filterBy("model.theme_fields", "target", "extra_js"),
 
   @discourseComputed("model.editedFields")
   editedFieldsFormatted() {

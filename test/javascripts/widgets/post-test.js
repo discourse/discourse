@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
@@ -542,9 +543,6 @@ widgetTest("bookmark", {
   async test(assert) {
     assert.equal(find(".post-menu-area .bookmark").length, 1);
     assert.equal(find("button.bookmarked").length, 0);
-
-    await click("button.bookmark");
-    assert.equal(find("button.bookmarked").length, 1);
   }
 });
 

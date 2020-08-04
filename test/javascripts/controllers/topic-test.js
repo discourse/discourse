@@ -1,7 +1,6 @@
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import Topic from "discourse/models/topic";
-import PostStream from "discourse/models/post-stream";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
@@ -17,6 +16,12 @@ moduleFor("controller:topic", "controller:topic", {
     this.registry.injection("controller", "appEvents", "service:app-events");
   }
 });
+
+function topicWithStream(streamDetails) {
+  let topic = Topic.create();
+  topic.get("postStream").setProperties(streamDetails);
+  return topic;
+}
 
 QUnit.test("editTopic", function(assert) {
   const model = Topic.create();
@@ -94,8 +99,7 @@ QUnit.test("toggleMultiSelect", function(assert) {
 });
 
 QUnit.test("selectedPosts", function(assert) {
-  const postStream = { posts: [{ id: 1 }, { id: 2 }, { id: 3 }] };
-  const model = Topic.create({ postStream });
+  let model = topicWithStream({ posts: [{ id: 1 }, { id: 2 }, { id: 3 }] });
   const controller = this.subject({ model });
 
   controller.set("selectedPostIds", [1, 2, 42]);
@@ -112,8 +116,7 @@ QUnit.test("selectedPosts", function(assert) {
 });
 
 QUnit.test("selectedAllPosts", function(assert) {
-  const postStream = { stream: [1, 2, 3] };
-  const model = Topic.create({ postStream });
+  let model = topicWithStream({ stream: [1, 2, 3] });
   const controller = this.subject({ model });
 
   controller.set("selectedPostIds", [1, 2]);
@@ -143,16 +146,14 @@ QUnit.test("selectedAllPosts", function(assert) {
 });
 
 QUnit.test("selectedPostsUsername", function(assert) {
-  const postStream = {
+  let model = topicWithStream({
     posts: [
       { id: 1, username: "gary" },
       { id: 2, username: "gary" },
       { id: 3, username: "lili" }
     ],
     stream: [1, 2, 3]
-  };
-
-  const model = Topic.create({ postStream });
+  });
   const controller = this.subject({ model });
   const selectedPostIds = controller.get("selectedPostIds");
 
@@ -218,20 +219,19 @@ QUnit.test("showSelectedPostsAtBottom", function(assert) {
 });
 
 QUnit.test("canDeleteSelected", function(assert) {
-  const postStream = {
+  const currentUser = User.create({ admin: false });
+  this.registry.register("current-user:main", currentUser, {
+    instantiate: false
+  });
+  this.registry.injection("controller", "currentUser", "current-user:main");
+  let model = topicWithStream({
     posts: [
       { id: 1, can_delete: false },
       { id: 2, can_delete: true },
       { id: 3, can_delete: true }
     ],
     stream: [1, 2, 3]
-  };
-  const currentUser = User.create({ admin: false });
-  this.registry.register("current-user:main", currentUser, {
-    instantiate: false
   });
-  this.registry.injection("controller", "currentUser", "current-user:main");
-  const model = Topic.create({ postStream });
   const controller = this.subject({ model });
   const selectedPostIds = controller.get("selectedPostIds");
 
@@ -270,19 +270,15 @@ QUnit.test("canDeleteSelected", function(assert) {
 });
 
 QUnit.test("Can split/merge topic", function(assert) {
-  const postStream = {
+  let model = topicWithStream({
     posts: [
       { id: 1, post_number: 1, post_type: 1 },
       { id: 2, post_number: 2, post_type: 4 },
       { id: 3, post_number: 3, post_type: 1 }
     ],
     stream: [1, 2, 3]
-  };
-
-  const model = Topic.create({
-    postStream,
-    details: { can_move_posts: false }
   });
+  model.set("details.can_move_posts", false);
   const controller = this.subject({ model });
   const selectedPostIds = controller.get("selectedPostIds");
 
@@ -325,15 +321,14 @@ QUnit.test("canChangeOwner", function(assert) {
   });
   this.registry.injection("controller", "currentUser", "current-user:main");
 
-  const postStream = {
+  let model = topicWithStream({
     posts: [
       { id: 1, username: "gary" },
       { id: 2, username: "lili" }
     ],
     stream: [1, 2]
-  };
-
-  const model = Topic.create({ postStream, currentUser: { admin: false } });
+  });
+  model.set("currentUser", { admin: false });
   const controller = this.subject({ model });
   const selectedPostIds = controller.get("selectedPostIds");
 
@@ -362,7 +357,7 @@ QUnit.test("canChangeOwner", function(assert) {
 });
 
 QUnit.test("canMergePosts", function(assert) {
-  const postStream = {
+  let model = topicWithStream({
     posts: [
       { id: 1, username: "gary", can_delete: true },
       { id: 2, username: "lili", can_delete: true },
@@ -370,9 +365,7 @@ QUnit.test("canMergePosts", function(assert) {
       { id: 4, username: "gary", can_delete: true }
     ],
     stream: [1, 2, 3]
-  };
-
-  const model = Topic.create({ postStream });
+  });
   const controller = this.subject({ model });
   const selectedPostIds = controller.get("selectedPostIds");
 
@@ -411,8 +404,7 @@ QUnit.test("canMergePosts", function(assert) {
 });
 
 QUnit.test("Select/deselect all", function(assert) {
-  const postStream = { stream: [1, 2, 3] };
-  const model = Topic.create({ postStream });
+  let model = topicWithStream({ stream: [1, 2, 3] });
   const controller = this.subject({ model });
 
   assert.equal(
@@ -425,7 +417,7 @@ QUnit.test("Select/deselect all", function(assert) {
 
   assert.equal(
     controller.get("selectedPostsCount"),
-    postStream.stream.length,
+    3,
     "calling 'selectAll' selects all posts"
   );
 
@@ -478,17 +470,14 @@ QUnit.test("selectBelow", function(assert) {
   const site = EmberObject.create({
     post_types: { small_action: 3, whisper: 4 }
   });
-
-  const postStream = {
+  let model = topicWithStream({
     stream: [1, 2, 3, 4, 5, 6, 7, 8],
     posts: [
       { id: 5, cooked: "whisper post", post_type: 4 },
       { id: 6, cooked: "a small action", post_type: 3 },
       { id: 7, cooked: "", post_type: 4 }
     ]
-  };
-
-  const model = Topic.create({ postStream });
+  });
   const controller = this.subject({ site, model });
   let selectedPostIds = controller.get("selectedPostIds");
 
@@ -503,11 +492,9 @@ QUnit.test("selectBelow", function(assert) {
 });
 
 QUnit.test("topVisibleChanged", function(assert) {
-  const postStream = PostStream.create({
+  let model = topicWithStream({
     posts: [{ id: 1 }]
   });
-
-  const model = Topic.create({ postStream });
   const controller = this.subject({ model });
   const placeholder = new Placeholder("post-placeholder");
 
@@ -539,13 +526,11 @@ QUnit.test(
       }
     });
 
-    const postStream = EmberObject.create({
+    const currentUser = EmberObject.create({ moderator: true });
+    let model = topicWithStream({
       stream: [2, 3, 4],
       posts: [post, { id: 3 }, { id: 4 }]
     });
-
-    const currentUser = EmberObject.create({ moderator: true });
-    const model = Topic.create({ postStream });
     const controller = this.subject({ model, currentUser });
 
     const done = assert.async();

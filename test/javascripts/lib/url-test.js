@@ -1,4 +1,5 @@
 import DiscourseURL, { userPath } from "discourse/lib/url";
+import { setPrefix } from "discourse-common/lib/get-url";
 
 QUnit.module("lib:url");
 
@@ -59,8 +60,8 @@ QUnit.test("userPath", assert => {
   assert.equal(userPath("hp.json"), "/u/hp.json");
 });
 
-QUnit.test("userPath with BaseUri", assert => {
-  Discourse.BaseUri = "/forum";
+QUnit.test("userPath with prefix", assert => {
+  setPrefix("/forum");
   assert.equal(userPath(), "/forum/u");
   assert.equal(userPath("eviltrout"), "/forum/u/eviltrout");
   assert.equal(userPath("hp.json"), "/forum/u/hp.json");

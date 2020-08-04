@@ -1,0 +1,238 @@
+{{#composer-body composer=model
+                 showPreview=showPreview
+                 openIfDraft=(action "openIfDraft")
+                 typed=(action "typed")
+                 cancelled=(action "cancelled")
+                 save=(action "save")}}
+  <div class="grippie"></div>
+  {{#if visible}}
+    {{composer-messages composer=model
+                        messageCount=messageCount
+                        addLinkLookup=(action "addLinkLookup")}}
+    {{#if model.viewOpenOrFullscreen}}
+      <div role="form" aria-label={{I18n saveLabel}} class="reply-area {{if canEditTags "with-tags"}}">
+        <div class="composer-fields">
+          {{plugin-outlet name="composer-open" args=(hash model=model)}}
+          <div class="reply-to">
+            {{#unless model.viewFullscreen}}
+              <div class="reply-details">
+                {{composer-action-title
+                  model=model
+                  openComposer=(action "openComposer")
+                  closeComposer=(action "closeComposer")
+                  canWhisper=canWhisper
+                  tabindex=8}}
+                {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
+
+                {{#unless site.mobileView}}
+                  {{#if isWhispering}}
+                    <span class="whisper">{{d-icon "far-eye-slash"}}</span>
+                  {{/if}}
+                  {{#if model.unlistTopic}}
+                    <span class="unlist">({{i18n "composer.unlist"}})</span>
+                  {{/if}}
+                  {{#if model.noBump}}
+                    <span class="no-bump">{{d-icon "anchor"}}</span>
+                  {{/if}}
+                {{/unless}}
+
+                {{#if canEdit}}
+                  {{#link-to-input onClick=(action "displayEditReason") showInput=showEditReason icon="info-circle" class="display-edit-reason"}}
+                    {{text-field value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                  {{/link-to-input}}
+                {{/if}}
+              </div>
+            {{/unless}}
+            {{composer-toggles composeState=model.composeState
+                      toggleComposer=(action "toggle")
+                      toggleToolbar=(action "toggleToolbar")
+                      toggleFullscreen=(action "fullscreenComposer")}}
+          </div>
+          {{#unless model.viewFullscreen}}
+            {{#if model.canEditTitle}}
+              {{#if model.creatingPrivateMessage}}
+                <div class="user-selector">
+                  {{composer-user-selector topicId=topicModel.id
+                                           usernames=model.targetRecipients
+                                           hasGroups=model.hasTargetGroups
+                                           focusTarget=focusTarget
+                                           class="users-input"}}
+                  {{#if showWarning}}
+                    <label class="add-warning">
+                      {{input type="checkbox" checked=model.isWarning tabindex="3"}}
+                      {{i18n "composer.add_warning"}}
+                    </label>
+                  {{/if}}
+                </div>
+              {{/if}}
+
+              <div class="title-and-category {{if showPreview "with-preview"}}">
+
+                {{composer-title composer=model lastValidatedAt=lastValidatedAt focusTarget=focusTarget}}
+
+                {{#if model.showCategoryChooser}}
+                  <div class="category-input">
+                    {{category-chooser
+                      value=model.categoryId
+                      tabindex="3"
+                      onChange=(action (mut model.categoryId))
+                      isDisabled=disableCategoryChooser
+                      options=(hash
+                        scopedCategoryId=scopedCategoryId
+                      )
+                    }}
+                    {{popup-input-tip validation=categoryValidation}}
+                  </div>
+                {{/if}}
+                {{#if canEditTags}}
+                  {{mini-tag-chooser
+                    value=model.tags
+                    tabindex=4
+                    isDisabled=disableTagsChooser
+                    onChange=(action (mut model.tags))
+                    options=(hash
+                      categoryId=model.categoryId
+                      minimum=model.minimumRequiredTags
+                    )
+                  }}
+                  {{popup-input-tip validation=tagValidation}}
+                {{/if}}
+              </div>
+            {{/if}}
+
+            {{plugin-outlet name="composer-fields" args=(hash model=model showPreview=showPreview)}}
+          {{/unless}}
+
+        </div>
+
+        {{composer-editor topic=topic
+                          composer=model
+                          lastValidatedAt=lastValidatedAt
+                          canWhisper=canWhisper
+                          storeToolbarState=(action "storeToolbarState")
+                          onPopupMenuAction=(action "onPopupMenuAction")
+                          showUploadModal=(route-action "showUploadSelector")
+                          popupMenuOptions=popupMenuOptions
+                          draftStatus=model.draftStatus
+                          isUploading=isUploading
+                          allowUpload=allowUpload
+                          uploadIcon=uploadIcon
+                          isCancellable=isCancellable
+                          uploadProgress=uploadProgress
+                          groupsMentioned=(action "groupsMentioned")
+                          cannotSeeMention=(action "cannotSeeMention")
+                          importQuote=(action "importQuote")
+                          togglePreview=(action "togglePreview")
+                          showToolbar=showToolbar
+                          afterRefresh=(action "afterRefresh")
+                          focusTarget=focusTarget}}
+
+        <div class="submit-panel">
+          {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
+
+          <div class="save-or-cancel">
+            {{#unless model.viewFullscreen}}
+              {{composer-save-button action=(action "save")
+                                     icon=saveIcon
+                                     label=saveLabel
+                                     disableSubmit=disableSubmit}}
+
+              {{#if site.mobileView}}
+                <a href {{action "cancel"}} tabindex="6" title={{i18n "cancel"}} class="cancel">
+                  {{#if canEdit}}
+                    {{d-icon "times"}}
+                  {{else}}
+                    {{d-icon "far-trash-alt"}}
+                  {{/if}}
+                </a>
+              {{else}}
+                <a href {{action "cancel"}} tabindex="6" class="cancel" >{{i18n "cancel"}}</a>
+              {{/if}}
+            {{/unless}}
+
+            {{#if site.mobileView}}
+              {{#if whisperOrUnlistTopic}}
+                <span class="whisper">
+                  {{d-icon "far-eye-slash"}}
+                </span>
+              {{/if}}
+              {{#if model.noBump}}
+                <span class="no-bump">{{d-icon "anchor"}}</span>
+              {{/if}}
+            {{/if}}
+
+            {{#if isUploading}}
+              <div id="file-uploading">
+                {{loading-spinner size="small"}}<span>{{i18n "upload_selector.uploading"}} {{uploadProgress}}%</span>
+                {{#if isCancellable}}
+                  <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{d-icon "times"}}</a>
+                {{/if}}
+              </div>
+            {{/if}}
+            <div class={{if isUploading "hidden"}} id="draft-status">
+              {{#if model.draftSaving}}<div class="spinner small"></div>{{/if}}
+              {{#if model.draftSaved}}{{d-icon "check" class="save-animation"}}{{/if}}
+              {{#if model.draftStatus}}
+                <span title={{model.draftStatus}}>
+                  {{#if model.draftConflictUser}}
+                    {{avatar model.draftConflictUser imageSize="small"}} {{d-icon "user-edit"}}
+                  {{else}}
+                    {{d-icon "sync-alt"}}
+                  {{/if}}
+                  {{#unless site.mobileView}}
+                    {{model.draftStatus}}
+                  {{/unless}}
+                </span>
+              {{/if}}
+            </div>
+            {{plugin-outlet name="composer-after-save-or-cancel" connectorTagName="" args=(hash model=model)}}
+          </div>
+
+          {{#if site.mobileView}}
+            {{#if allowUpload}}
+              <a class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}">
+                {{d-icon uploadIcon}}
+              </a>
+            {{/if}}
+
+            <a href class="btn btn-default no-text mobile-preview" title={{i18n "composer.show_preview"}} {{action "togglePreview"}}>
+              {{d-icon "desktop"}}
+            </a>
+
+            {{#if showPreview}}
+              {{d-button action=(action "togglePreview") class="hide-preview" label="composer.hide_preview"}}
+            {{/if}}
+          {{else}}
+            <a href {{action "togglePreview"}} class="toggle-preview">{{html-safe toggleText}}</a>
+          {{/if}}
+
+        </div>
+      </div>
+
+    {{else}}
+      <div class="saving-text">
+        {{#if model.createdPost}}
+          {{i18n "composer.saved"}} <a href={{createdPost.url}} {{action "viewNewReply"}} class="permalink">{{i18n "composer.view_new_post"}}</a>
+        {{else}}
+          {{i18n "composer.saving"}} {{loading-spinner size="small"}}
+        {{/if}}
+      </div>
+
+      <div class="draft-text">
+        {{#if model.topic}}
+          {{d-icon "share"}} {{html-safe draftTitle}}
+        {{else}}
+          {{i18n "composer.saved_draft"}}
+        {{/if}}
+      </div>
+
+      {{composer-toggles composeState=model.composeState
+        toggleFullscreen=(action "openIfDraft")
+        toggleComposer=(action "toggle")
+        toggleToolbar=(action "toggleToolbar")}}
+
+    {{/if}}
+
+  {{/if}}
+
+{{/composer-body}}

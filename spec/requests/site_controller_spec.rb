@@ -17,7 +17,7 @@ describe SiteController do
       Theme.clear_default!
 
       get "/site/basic-info.json"
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expected_url = UrlHelper.absolute(upload.url)
 
@@ -38,7 +38,7 @@ describe SiteController do
       SiteSetting.share_anonymized_statistics = true
 
       get "/site/statistics.json"
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(response.status).to eq(200)
       expect(json["topic_count"]).to be_present
@@ -74,7 +74,7 @@ describe SiteController do
       SiteSetting.selectable_avatars_enabled = false
 
       get "/site/selectable-avatars.json"
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(response.status).to eq(200)
       expect(json).to eq([])
@@ -84,7 +84,7 @@ describe SiteController do
       SiteSetting.selectable_avatars_enabled = true
 
       get "/site/selectable-avatars.json"
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(response.status).to eq(200)
       expect(json).to contain_exactly("https://www.discourse.org", "https://meta.discourse.org")

@@ -20,7 +20,7 @@ acceptance("Topic - Edit timer", {
 });
 
 QUnit.test("default", async assert => {
-  updateCurrentUser({ moderator: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true });
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -41,7 +41,7 @@ QUnit.test("default", async assert => {
 });
 
 QUnit.test("autoclose - specific time", async assert => {
-  updateCurrentUser({ moderator: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
   await visit("/t/internationalization-localization");
@@ -67,7 +67,7 @@ QUnit.test("autoclose - specific time", async assert => {
 });
 
 QUnit.skip("autoclose", async assert => {
-  updateCurrentUser({ moderator: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
   await visit("/t/internationalization-localization");
@@ -134,7 +134,7 @@ QUnit.skip("autoclose", async assert => {
 });
 
 QUnit.test("close temporarily", async assert => {
-  updateCurrentUser({ moderator: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true });
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -181,7 +181,7 @@ QUnit.test("close temporarily", async assert => {
 });
 
 QUnit.test("schedule", async assert => {
-  updateCurrentUser({ moderator: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true });
   const timerType = selectKit(".select-kit.timer-type");
   const categoryChooser = selectKit(".modal-body .category-chooser");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
@@ -235,7 +235,7 @@ QUnit.test("TL4 can't auto-delete", async assert => {
 });
 
 QUnit.test("auto delete", async assert => {
-  updateCurrentUser({ moderator: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true });
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -267,37 +267,8 @@ QUnit.test("auto delete", async assert => {
   assert.ok(regex.test(html));
 });
 
-QUnit.test(
-  "Manually closing before the timer will clear the status text",
-  async assert => {
-    updateCurrentUser({ moderator: true, canManageTopic: true });
-    const futureDateInputSelector = selectKit(".future-date-input-selector");
-
-    await visit("/t/internationalization-localization");
-    await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("next_week");
-    await click(".modal-footer button.btn-primary");
-
-    const regex = /will automatically close in/g;
-    const topicStatusInfo = find(".topic-status-info")
-      .html()
-      .trim();
-    assert.ok(regex.test(topicStatusInfo));
-
-    await click(".toggle-admin-menu");
-    await click(".topic-admin-close button");
-
-    const newTopicStatusInfo = find(".topic-status-info")
-      .html()
-      .trim();
-    assert.notOk(regex.test(newTopicStatusInfo));
-  }
-);
-
 QUnit.test("Inline delete timer", async assert => {
-  updateCurrentUser({ moderator: true, canManageTopic: true });
+  updateCurrentUser({ moderator: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
   await visit("/t/internationalization-localization");

@@ -4,8 +4,6 @@
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
 class CookedPostProcessor
-  INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
-  INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   LOADING_SIZE = 10
   LOADING_COLORS = 32
@@ -24,7 +22,7 @@ class CookedPostProcessor
     @cooking_options = @cooking_options.symbolize_keys
 
     cooked = post.cook(post.raw, @cooking_options)
-    @doc = Nokogiri::HTML::fragment(cooked)
+    @doc = Nokogiri::HTML5::fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
@@ -95,7 +93,7 @@ class CookedPostProcessor
 
     return if previous.blank?
 
-    previous_text = Nokogiri::HTML::fragment(previous).text.strip
+    previous_text = Nokogiri::HTML5::fragment(previous).text.strip
     quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip || ""
 
     return if previous_text.gsub(/(\s){2,}/, '\1') != quoted_text.gsub(/(\s){2,}/, '\1')
@@ -218,7 +216,11 @@ class CookedPostProcessor
     # minus images inside quotes
     @doc.css(".quote img") -
     # minus onebox site icons
-    @doc.css("img.site-icon")
+    @doc.css("img.site-icon") -
+    # minus onebox avatars
+    @doc.css("img.onebox-avatar") -
+    # minus small onebox images (large images are .aspect-image-full-size)
+    @doc.css(".onebox .aspect-image img")
   end
 
   def oneboxed_images
@@ -339,12 +341,7 @@ class CookedPostProcessor
       width, height = ImageSizer.resize(width, height)
     end
 
-    # if the upload already exists and is attached to a different post,
-    # or the original_sha1 is missing meaning it was created before secure
-    # media was enabled. we want to re-thumbnail and re-optimize in this case
-    # to avoid using uploads linked to many other posts
-    upload = Upload.consider_for_reuse(Upload.get_from_url(src), @post)
-
+    upload = Upload.get_from_url(src)
     if upload.present?
       upload.create_thumbnail!(width, height, crop: crop)
 
@@ -495,16 +492,26 @@ class CookedPostProcessor
   end
 
   def update_post_image
-    img = extract_images_for_post.first
-    if img.blank?
-      @post.update_column(:image_url, nil) if @post.image_url
-      @post.topic.update_column(:image_url, nil) if @post.topic.image_url && @post.is_first_post?
-      return
+    upload = nil
+    eligible_image_fragments = extract_images_for_post
+
+    # Loop through those fragments until we find one with an upload record
+    @post.each_upload_url(fragments: eligible_image_fragments) do |src, path, sha1|
+      upload = Upload.find_by(sha1: sha1)
+      break if upload
     end
 
-    if img["src"].present?
-      @post.update_column(:image_url, img["src"][0...255]) # post
-      @post.topic.update_column(:image_url, img["src"][0...255]) if @post.is_first_post? # topic
+    if upload.present?
+      @post.update_column(:image_upload_id, upload.id) # post
+      if @post.is_first_post? # topic
+        @post.topic.update_column(:image_upload_id, upload.id)
+        extra_sizes = ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
+        @post.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+      end
+    else
+      @post.update_column(:image_upload_id, nil) if @post.image_upload_id
+      @post.topic.update_column(:image_upload_id, nil) if @post.topic.image_upload_id && @post.is_first_post?
+      nil
     end
   end
 
@@ -513,7 +520,7 @@ class CookedPostProcessor
     oneboxes = {}
     inlineOneboxes = {}
 
-    Oneboxer.apply(@doc, extra_paths: [".#{INLINE_ONEBOX_LOADING_CSS_CLASS}"]) do |url, element|
+    Oneboxer.apply(@doc, extra_paths: [".inline-onebox-loading"]) do |url, element|
       is_onebox = element["class"] == Oneboxer::ONEBOX_CSS_CLASS
       map = is_onebox ? oneboxes : inlineOneboxes
       skip_onebox = limit <= 0 && !map[url]
@@ -585,7 +592,7 @@ class CookedPostProcessor
           found = false
           parent = img
           while parent = parent.parent
-            if parent["class"] && parent["class"].include?("whitelistedgeneric")
+            if parent["class"] && parent["class"].include?("allowlistedgeneric")
               found = true
               break
             end
@@ -614,7 +621,16 @@ class CookedPostProcessor
     end
 
     if @omit_nofollow || !SiteSetting.add_rel_nofollow_to_user_content
-      @doc.css(".onebox-body a, .onebox a").each { |a| a.remove_attribute("rel") }
+      @doc.css(".onebox-body a[rel], .onebox a[rel]").each do |a|
+        rel_values = a['rel'].split(' ').map(&:downcase)
+        rel_values.delete('nofollow')
+        rel_values.delete('ugc')
+        if rel_values.blank?
+          a.remove_attribute("rel")
+        else
+          a["rel"] = rel_values.join(' ')
+        end
+      end
     end
   end
 
@@ -656,12 +672,9 @@ class CookedPostProcessor
   end
 
   def pull_hotlinked_images
+    return if @opts[:skip_pull_hotlinked_images]
     # have we enough disk space?
     disable_if_low_on_disk_space # But still enqueue the job
-    # don't download remote images for posts that are more than n days old
-    return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
-    # we only want to run the job whenever it's changed by a user
-    return if @post.last_editor_id && @post.last_editor_id <= 0
     # make sure no other job is scheduled
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
     # schedule the job
@@ -719,14 +732,14 @@ class CookedPostProcessor
 
     if title = inline_onebox&.dig(:title)
       element.children = CGI.escapeHTML(title)
-      element.add_class(INLINE_ONEBOX_CSS_CLASS)
+      element.add_class("inline-onebox")
     end
 
     remove_inline_onebox_loading_class(element)
   end
 
   def remove_inline_onebox_loading_class(element)
-    element.remove_class(INLINE_ONEBOX_LOADING_CSS_CLASS)
+    element.remove_class("inline-onebox-loading")
   end
 
   def is_svg?(img)

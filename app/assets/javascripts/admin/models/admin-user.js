@@ -1,3 +1,5 @@
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { filter, or, gt, lt, not } from "@ember/object/computed";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -5,7 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
-import { userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 
@@ -33,7 +35,7 @@ const AdminUser = User.extend({
   bounceScoreExplanation(bounce_score) {
     if (bounce_score === 0) {
       return I18n.t("admin.user.bounce_score_explanation.none");
-    } else if (bounce_score < Discourse.SiteSettings.bounce_score_threshold) {
+    } else if (bounce_score < this.siteSettings.bounce_score_threshold) {
       return I18n.t("admin.user.bounce_score_explanation.some");
     } else {
       return I18n.t("admin.user.bounce_score_explanation.threshold_reached");
@@ -42,7 +44,7 @@ const AdminUser = User.extend({
 
   @discourseComputed
   bounceLink() {
-    return Discourse.getURL("/admin/email/bounced");
+    return getURL("/admin/email/bounced");
   },
 
   canResetBounceScore: gt("bounce_score", 0),
@@ -74,12 +76,6 @@ const AdminUser = User.extend({
         this.set("primary_group_id", null);
       }
     });
-  },
-
-  revokeApiKey() {
-    return ajax(`/admin/users/${this.id}/revoke_api_key`, {
-      type: "DELETE"
-    }).then(() => this.set("api_key", null));
   },
 
   deleteAllPosts() {
@@ -311,7 +307,7 @@ const AdminUser = User.extend({
       type: "POST",
       data: { username_or_email: this.username }
     })
-      .then(() => (document.location = Discourse.getURL("/")))
+      .then(() => (document.location = getURL("/")))
       .catch(e => {
         if (e.status === 404) {
           bootbox.alert(I18n.t("admin.impersonate.not_found"));
@@ -400,11 +396,11 @@ const AdminUser = User.extend({
         .then(function(data) {
           if (data.success) {
             if (data.username) {
-              document.location = Discourse.getURL(
+              document.location = getURL(
                 `/admin/users/${user.get("id")}/${data.username}`
               );
             } else {
-              document.location = Discourse.getURL("/admin/users/list/active");
+              document.location = getURL("/admin/users/list/active");
             }
           } else {
             bootbox.alert(I18n.t("admin.user.anonymize_failed"));
@@ -461,7 +457,7 @@ const AdminUser = User.extend({
             if (/^\/admin\/users\/list\//.test(location)) {
               document.location = location;
             } else {
-              document.location = Discourse.getURL("/admin/users/list/active");
+              document.location = getURL("/admin/users/list/active");
             }
           } else {
             bootbox.alert(I18n.t("admin.user.delete_failed"));
@@ -501,6 +497,43 @@ const AdminUser = User.extend({
     ];
 
     bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
+  },
+
+  merge(opts) {
+    const user = this;
+    const location = document.location.pathname;
+
+    bootbox.dialog(I18n.t("admin.user.merging_user"));
+    let formData = { context: location };
+
+    if (opts && opts.targetUsername) {
+      formData["target_username"] = opts.targetUsername;
+    }
+
+    return ajax(`/admin/users/${user.id}/merge.json`, {
+      type: "POST",
+      data: formData
+    })
+      .then(data => {
+        if (data.merged) {
+          if (/^\/admin\/users\/list\//.test(location)) {
+            DiscourseURL.redirectTo(location);
+          } else {
+            DiscourseURL.redirectTo(
+              `/admin/users/${data.user.id}/${data.user.username}`
+            );
+          }
+        } else {
+          bootbox.alert(I18n.t("admin.user.merge_failed"));
+          if (data.user) {
+            user.setProperties(data.user);
+          }
+        }
+      })
+      .catch(() => {
+        AdminUser.find(user.id).then(u => user.setProperties(u));
+        bootbox.alert(I18n.t("admin.user.merge_failed"));
+      });
   },
 
   loadDetails() {

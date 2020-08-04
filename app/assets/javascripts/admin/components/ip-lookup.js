@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { later } from "@ember/runloop";
 import Component from "@ember/component";

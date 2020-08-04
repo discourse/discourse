@@ -351,21 +351,21 @@
   flex-direction: column;
 
   .dashboard-inline-table {
-    //  and "hides" margin when the item spans 100% width
     flex: 1 0 auto;
     max-width: 95%;
   }
+
   .table-cell {
     display: flex;
     flex: 0 1 auto;
     margin: 0 10px 5px 0;
-    border: 1px solid $primary-low;
+    padding: 1px;
     border-radius: 10px;
+
     .label {
       display: flex;
       align-items: center;
       color: $primary;
-      background: $primary-very-low;
       justify-content: center;
       border-radius: 9px 0 0 9px;
       padding: 0 5px 0 8px;
@@ -377,8 +377,11 @@
     }
 
     .value {
+      background: $secondary;
+      border-radius: 0 9px 9px 0;
       padding: 0 8px 0 5px;
     }
+
     &.user-newuser {
       .label {
         color: $primary-high;
@@ -386,26 +389,20 @@
     }
     &.user-basic,
     &.user-member {
-      border-color: $bronze;
+      background: $bronze;
       .label {
-        border-color: $bronze;
-        background: $bronze;
         color: $secondary;
       }
     }
     &.user-regular {
-      border-color: $silver;
+      background: $silver;
       .label {
-        border-color: $silver;
-        background: $silver;
         color: $secondary;
       }
     }
     &.user-leader {
-      border-color: $gold;
+      background: $gold;
       .label {
-        background: $gold;
-        border-color: $gold;
         color: $secondary;
       }
     }

@@ -2,7 +2,7 @@
 
 Report.add_report('profile_views') do |report|
   group_filter = report.filters.dig(:group)
-  report.add_filter('group', default: group_filter)
+  report.add_filter('group', type: 'group', default: group_filter)
 
   start_date = report.start_date
   end_date = report.end_date

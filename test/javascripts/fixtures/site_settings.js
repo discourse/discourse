@@ -37,7 +37,7 @@ export default {
         setting: "logo",
         description: "Some logo",
         default: "",
-        value: "/some/image",
+        value: "/images/avatar.png",
         category: "required",
         preview: null,
         secret: false,
@@ -64,6 +64,17 @@ export default {
           "bookmarks"
         ],
         list_type: "compact"
+      },
+      {
+        setting: "plugin_logo",
+        description: "Some plugin logo",
+        default: "",
+        value: "/images/avatar.png",
+        category: "required",
+        preview: null,
+        secret: false,
+        type: "upload",
+        plugin: "discourse-logo"
       }
     ],
     diags: {

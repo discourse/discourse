@@ -1,46 +1,52 @@
 <% if @topic_view %>
-  <h1 class="crawler-topic-title">
-    <%= render_topic_title(@topic_view.topic) %>
-  </h1>
+  <div id="topic-title">
+    <h1>
+      <%= render_topic_title(@topic_view.topic) %>
+    </h1>
 
-  <% @breadcrumbs = categories_breadcrumb(@topic_view.topic) %>
-  <% if @breadcrumbs.present? %>
-  <div id="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
-    <% @breadcrumbs.each_with_index do |c, i| %>
-      <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-        <a href="<%= Discourse.base_url %><%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
-          <span class="badge-category-bg"></span>
-          <span class="category-title" itemprop="name"><%= c[:name] %></span>
-        </a>
-        <meta itemprop="position" content="<%= i + 1 %>" />
-      </div>
-    <% end %>
-  </div>
-  <% end %>
-
-  <% if SiteSetting.tagging_enabled %>
-    <% @tags = @topic_view.topic.tags %>
-    <% if @tags.present? %>
-      <div class='crawler-tags-list' itemscope itemtype='http://schema.org/DiscussionForumPosting'>
-        <% @tags.each_with_index do |tag, i| %>
-          <div itemprop='keywords'>
-            <a href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' rel="tag">
-              <span itemprop='headline'><%= tag.name -%></span>
+    <% if @breadcrumbs.present? %>
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+        <% @breadcrumbs.each_with_index do |c, i| %>
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="<%= Discourse.base_url %><%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #<%= c[:color] %>'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'><%= c[:name] %></span>
+              </span>
             </a>
-          </div>
+            <meta itemprop="position" content="<%= i + 1 %>" />
+          </span>
         <% end %>
       </div>
     <% end %>
-  <% end %>
+
+    <% if @tags.present? %>
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+          <% @tags.each_with_index do |tag, i| %>
+            <a href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' class='discourse-tag' rel="tag"><%= tag.name -%></a><% if i < @tags.size - 1 %>, <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 
   <%= server_plugin_outlet "topic_header" %>
 
   <%- if include_crawler_content? %>
 
-  <% @topic_view.posts.each do |post| %>
-    <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
-      <% if (u = post.user) %>
+  <% @topic_view.posts.each_with_index do |post, idx| %>
+    <% if (u = post.user) %>
+      <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
         <div class='crawler-post-meta'>
+          <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+            <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>
+            <% if application_logo_url.present? %>
+              <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+                <meta itemprop='url' content='<%= application_logo_url %>'>
+              </div>
+            <% end %>
+          </div>
           <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
             <a itemprop="url" href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
             <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
@@ -53,6 +59,12 @@
             <% end %>
           </span>
 
+          <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+
+          <% if post.image_url %>
+            <link itemprop="image" href="<%= Discourse.base_url %><%= post.image_url %>">
+          <% end %>
+
           <span class="crawler-post-infos">
             <% if post.updated_at > post.created_at %>
               <meta itemprop='datePublished' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
@@ -63,6 +75,7 @@
               <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
                 <%= l post.created_at, format: :long %>
               </time>
+              <meta itemprop='dateModified' content='<%= post.updated_at.to_formatted_s(:iso8601) %>'>
             <% end %>
           <span itemprop='position'>#<%= post.post_number %></span>
           </span>
@@ -72,6 +85,9 @@
         </div>
 
         <meta itemprop='headline' content='<%= @topic_view.title %>'>
+        <% if idx == 0 %>
+          <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
+        <% end %>
 
         <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
            <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
@@ -84,7 +100,7 @@
             <meta itemprop="userInteractionCount" content="<%= post.reply_count %>" />
           </div>
 
-          <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
+          <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].filter { |l| l[:reflection] }.length > 0 %>
             <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
               <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
                 <% if link[:reflection] && link[:title].present? %>
@@ -99,9 +115,8 @@
               <% end %>
             </div>
          <% end %>
-
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   <% end %>
 
   <% if @topic_view.prev_page || @topic_view.next_page %>

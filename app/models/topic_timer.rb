@@ -178,6 +178,7 @@ end
 #  updated_at         :datetime         not null
 #  category_id        :integer
 #  public_type        :boolean          default(TRUE)
+#  duration           :integer
 #
 # Indexes
 #

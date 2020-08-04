@@ -113,11 +113,6 @@ ur:
       random_mention:
         reply: |-
           ہیلو! جاننے کیلئے کہ میں کیا کر سکتا ہوں، `@%{discobot_username} %{help_trigger}` کہیں۔
-        tracks: |-
-          میں فی الحال مندرجہ ذیل چیزوں کو کرنا جانتا ہوں:
-
-          `@%{discobot_username} %{reset_trigger} {ٹیوٹوریل-کا-نام}`
-          > ایک انٹرایکٹو ٹیوٹوریل شروع کر دیتا ہے۔ {ٹیوٹوریل-کا-نام} اِن میں سے ایک ہوسکتا ہے: `%{tracks}`۔
       do_not_understand:
         first_response: |-
           ارے، جواب کیلئے شکریہ!

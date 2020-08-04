@@ -931,6 +931,20 @@ table#user-badges {
   }
 }
 
+.simple-list-input {
+  display: flex;
+
+  .add-value-input {
+    margin: 0;
+    box-sizing: border-box;
+    flex: 1 0 0px;
+  }
+
+  .add-value-btn {
+    margin-left: 0.25em;
+  }
+}
+
 // Mobile view text-inputs need some padding
 .mobile-view .admin-contents {
   input[type="text"] {

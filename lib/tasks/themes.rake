@@ -50,3 +50,27 @@ task "themes:install" => :environment do |task, args|
     exit 1
   end
 end
+
+desc "List all the installed themes on the site"
+task "themes:audit" => :environment do
+  components = Set.new
+  puts "Selectable themes"
+  puts "-----------------"
+
+  Theme.where("(enabled OR user_selectable) AND NOT component").each do |theme|
+    puts theme.remote_theme&.remote_url || theme.name
+    theme.child_themes.each do |child|
+      if child.enabled
+        repo = child.remote_theme&.remote_url || child.name
+        components << repo
+      end
+    end
+  end
+
+  puts
+  puts "Selectable components"
+  puts "---------------------"
+  components.each do |repo|
+    puts repo
+  end
+end

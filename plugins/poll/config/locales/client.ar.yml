@@ -23,30 +23,6 @@ ar:
         many: "العديد من الأصوات"
         other: "مجموع الأصوات"
       average_rating: "متوسط التقييمات: <strong>%{average}</strong> "
-      multiple:
-        help:
-          at_least_min_options:
-            zero: "لا تختر شيئا"
-            one: "اختر خيارًا واحدًا على الأقل"
-            two: "اختر خيارين إثنين على الأقل"
-            few: "اختر <strong>%{count}</strong> خيارات على الأقل"
-            many: "اختر <strong>%{count}</strong> خيارا على الأقل"
-            other: "اختر <strong>%{count}</strong> خيار على الأقل"
-          up_to_max_options:
-            zero: "لا تختر شيئا"
-            one: "اختر خيارا <strong>واحدا</strong>"
-            two: "اختر ما حدّه <strong>خيارين</strong>"
-            few: "اختر ما حدّه <strong>%{count}</strong> خيارات"
-            many: "اختر ما حدّه <strong>%{count}</strong> خيارا"
-            other: "اختر حتي <strong>%{count}</strong> خيار"
-          x_options:
-            zero: "لا تختر شيئا"
-            one: "اختر خيار <strong>واحد</strong>"
-            two: "اختر <strong>خيارين</strong>"
-            few: "اختر <strong>%{count}</strong> خيارات"
-            many: "اختر <strong>%{count}</strong> خيارا"
-            other: "اختر <strong>%{count}</strong> خيار"
-          between_min_and_max_options: "اختر بين <strong>%{min}</strong> و <strong>%{max}</strong> خيار"
       cast-votes:
         title: "أدلِ بصوتك"
         label: "صوّت اﻵن!"

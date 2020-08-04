@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
 
 const TIME_FORMAT = "LLL";
@@ -23,7 +24,7 @@ export default class LocalDateBuilder {
 
   build() {
     const [year, month, day] = this.date.split("-").map(x => parseInt(x, 10));
-    const [hour, minute] = (this.time || "")
+    const [hour, minute, second] = (this.time || "")
       .split(":")
       .map(x => (x ? parseInt(x, 10) : undefined));
 
@@ -41,6 +42,7 @@ export default class LocalDateBuilder {
       day,
       hour,
       minute,
+      second,
       timezone: this.timezone,
       localTimezone: this.localTimezone
     });
@@ -89,7 +91,14 @@ export default class LocalDateBuilder {
     previewedTimezones.push({
       timezone: this._zoneWithoutPrefix(this.localTimezone),
       current: true,
-      formated: this._createDateTimeRange(localDate, this.time)
+      formated: this._createDateTimeRange(
+        DateWithZoneHelper.fromDatetime(
+          localDate.datetime,
+          localDate.timezone,
+          this.localTimezone
+        ),
+        this.time
+      )
     });
 
     if (
@@ -113,21 +122,15 @@ export default class LocalDateBuilder {
       previewedTimezones.push({
         timezone: this._zoneWithoutPrefix(timezone),
         formated: this._createDateTimeRange(
-          localDate.datetimeWithZone(timezone),
+          DateWithZoneHelper.fromDatetime(
+            localDate.datetime,
+            localDate.timezone,
+            timezone
+          ),
           this.time
         )
       });
     });
-
-    if (!previewedTimezones.length) {
-      previewedTimezones.push({
-        timezone: "UTC",
-        formated: this._createDateTimeRange(
-          localDate.datetimeWithZone("Etc/UTC"),
-          this.time
-        )
-      });
-    }
 
     return previewedTimezones.uniqBy("timezone");
   }
@@ -186,10 +189,12 @@ export default class LocalDateBuilder {
         );
 
       if (inCalendarRange && sameTimezone) {
-        return localDate.datetime.calendar(
-          moment.tz(this.localTimezone),
-          this._calendarFormats(this.time ? this.time : null)
-        );
+        return localDate
+          .datetimeWithZone(this.localTimezone)
+          .calendar(
+            moment.tz(localDate.timezone),
+            this._calendarFormats(this.time ? this.time : null)
+          );
       }
     }
 

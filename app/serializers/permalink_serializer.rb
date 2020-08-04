@@ -3,7 +3,8 @@
 class PermalinkSerializer < ApplicationSerializer
   attributes :id, :url, :topic_id, :topic_title, :topic_url,
              :post_id, :post_url, :post_number, :post_topic_title,
-             :category_id, :category_name, :category_url, :external_url
+             :category_id, :category_name, :category_url, :external_url,
+             :tag_id, :tag_name, :tag_url
 
   def topic_title
     object&.topic&.title
@@ -32,5 +33,13 @@ class PermalinkSerializer < ApplicationSerializer
 
   def category_url
     object&.category&.url
+  end
+
+  def tag_name
+    object&.tag&.name
+  end
+
+  def tag_url
+    object&.tag&.full_url
   end
 end

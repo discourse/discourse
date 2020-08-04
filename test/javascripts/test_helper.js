@@ -9,17 +9,15 @@
 //= require qunit/qunit/qunit
 //= require ember-qunit
 //= require fake_xml_http_request
-//= require route-recognizer/dist/route-recognizer
+//= require route-recognizer
 //= require pretender/pretender
-//= require discourse-loader
-//= require preload-store
-
 //= require locales/i18n
 //= require locales/en_US
+//= require discourse-loader
 
 // Stuff we need to load first
 //= require vendor
-//= require ember-shim
+//= require discourse-shims
 //= require pretty-text-bundle
 //= require markdown-it-bundle
 //= require application
@@ -44,6 +42,10 @@
 //
 //= require jquery.magnific-popup.min.js
 
+let resetSettings = require("helpers/site-settings").resetSettings;
+let createHelperContext = require("discourse-common/lib/helpers")
+  .createHelperContext;
+
 const buildResolver = require("discourse-common/resolver").buildResolver;
 window.setResolver(buildResolver("discourse").create({ namespace: Discourse }));
 
@@ -55,10 +57,10 @@ sinon.config = {
   useFakeServer: false
 };
 
-window.inTestEnv = true;
+let MessageBus = require("message-bus-client").default;
 
 // Stop the message bus so we don't get ajax calls
-window.MessageBus.stop();
+MessageBus.stop();
 
 // Trick JSHint into allow document.write
 var d = document;
@@ -89,6 +91,7 @@ var createPretender = require("helpers/create-pretender", null, null, false),
   _DiscourseURL = require("discourse/lib/url", null, null, false).default,
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
+  getOwner = require("discourse-common/lib/get-owner").getOwner,
   server,
   acceptanceModulePrefix = "Acceptance: ";
 
@@ -106,6 +109,7 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
+  let settings = resetSettings();
   server = createPretender.default;
   createPretender.applyDefaultHandlers(server);
   server.handlers = [];
@@ -151,23 +155,23 @@ QUnit.testStart(function(ctx) {
     );
   }
 
-  // Allow our tests to change site settings and have them reset before the next test
-  Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
-  Discourse.BaseUri = "";
-  Discourse.BaseUrl = "http://localhost:3000";
+  let getURL = require("discourse-common/lib/get-url");
+  getURL.setupURL(null, "http://localhost:3000", "");
+  getURL.setupS3CDN(null, null);
 
   let User = require("discourse/models/user").default;
   let Session = require("discourse/models/session").default;
   Session.resetCurrent();
   User.resetCurrent();
-  resetSite(Discourse.SiteSettings);
+  resetSite(settings);
+  createHelperContext(settings);
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {
     _DiscourseURL.redirectedTo = url;
   };
 
-  var ps = require("preload-store").default;
+  var ps = require("discourse/lib/preload-store").default;
   ps.reset();
 
   window.sandbox = sinon;
@@ -189,11 +193,9 @@ QUnit.testDone(function() {
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
-  require("discourse/services/app-events").clearAppEventsCache(
-    window.Discourse.__container__
-  );
+  require("discourse/services/app-events").clearAppEventsCache(getOwner(this));
 
-  window.MessageBus.unsubscribe("*");
+  MessageBus.unsubscribe("*");
   delete window.server;
   window.Mousetrap.reset();
 });

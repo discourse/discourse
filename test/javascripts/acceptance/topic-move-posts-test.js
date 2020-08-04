@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Topic move posts", { loggedIn: true });
 

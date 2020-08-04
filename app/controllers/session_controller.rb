@@ -401,13 +401,21 @@ class SessionController < ApplicationController
   def forgot_password
     params.require(:login)
 
+    if ScreenedIpAddress.should_block?(request.remote_ip)
+      return render_json_error(I18n.t("login.reset_not_allowed_from_ip_address"))
+    end
+
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    RateLimiter.new(nil, "forgot-password-login-hour-#{params[:login].to_s[0..100]}", 12, 1.hour).performed!
-    RateLimiter.new(nil, "forgot-password-login-min-#{params[:login].to_s[0..100]}", 3, 1.minute).performed!
-
     user = User.find_by_username_or_email(params[:login])
+
+    if user
+      RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
+    else
+      RateLimiter.new(nil, "forgot-password-login-hour-#{params[:login].to_s[0..100]}", 5, 1.hour).performed!
+    end
+
     user_presence = user.present? && user.human? && !user.staged
     if user_presence
       email_token = user.email_tokens.create(email: user.email)

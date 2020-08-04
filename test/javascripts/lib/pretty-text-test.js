@@ -2,7 +2,6 @@ import { buildQuote } from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/context/inline-onebox-css-classes";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox
@@ -205,7 +204,7 @@ QUnit.test("Links", assert => {
 
   assert.cooked(
     `Youtube: ${link}`,
-    `<p>Youtube: <a href="${link}" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">${link}</a></p>`,
+    `<p>Youtube: <a href="${link}" class="inline-onebox-loading">${link}</a></p>`,
     "allows links to contain query params"
   );
 
@@ -222,7 +221,7 @@ QUnit.test("Links", assert => {
 
   assert.cooked(
     "Derpy: http://derp.com?__test=1",
-    `<p>Derpy: <a href="http://derp.com?__test=1" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://derp.com?__test=1</a></p>`,
+    `<p>Derpy: <a href="http://derp.com?__test=1" class="inline-onebox-loading">http://derp.com?__test=1</a></p>`,
     "works with double underscores in urls"
   );
 
@@ -252,7 +251,7 @@ QUnit.test("Links", assert => {
 
   assert.cooked(
     "Batman: http://en.wikipedia.org/wiki/The_Dark_Knight_(film)",
-    `<p>Batman: <a href="http://en.wikipedia.org/wiki/The_Dark_Knight_(film)" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://en.wikipedia.org/wiki/The_Dark_Knight_(film)</a></p>`,
+    `<p>Batman: <a href="http://en.wikipedia.org/wiki/The_Dark_Knight_(film)" class="inline-onebox-loading">http://en.wikipedia.org/wiki/The_Dark_Knight_(film)</a></p>`,
     "autolinks a URL with parentheses (like Wikipedia)"
   );
 
@@ -264,7 +263,7 @@ QUnit.test("Links", assert => {
 
   assert.cooked(
     "1. View @eviltrout's profile here: http://meta.discourse.org/u/eviltrout/activity<br/>next line.",
-    `<ol>\n<li>View <span class="mention">@eviltrout</span>\'s profile here: <a href="http://meta.discourse.org/u/eviltrout/activity" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://meta.discourse.org/u/eviltrout/activity</a><br>next line.</li>\n</ol>`,
+    `<ol>\n<li>View <span class="mention">@eviltrout</span>\'s profile here: <a href="http://meta.discourse.org/u/eviltrout/activity" class="inline-onebox-loading">http://meta.discourse.org/u/eviltrout/activity</a><br>next line.</li>\n</ol>`,
     "allows autolinking within a list without inserting a paragraph."
   );
 
@@ -289,8 +288,8 @@ QUnit.test("Links", assert => {
   assert.cooked(
     "http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369",
     '<p><a href="http://discourse.org">http://discourse.org</a> and ' +
-      `<a href="http://discourse.org/another_url" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://discourse.org/another_url</a> and ` +
-      `<a href="http://www.imdb.com/name/nm2225369" class="${INLINE_ONEBOX_LOADING_CSS_CLASS}">http://www.imdb.com/name/nm2225369</a></p>`,
+      `<a href="http://discourse.org/another_url" class="inline-onebox-loading">http://discourse.org/another_url</a> and ` +
+      `<a href="http://www.imdb.com/name/nm2225369" class="inline-onebox-loading">http://www.imdb.com/name/nm2225369</a></p>`,
     "allows multiple links on one line"
   );
 
@@ -894,7 +893,7 @@ QUnit.test("Code Blocks", assert => {
   assert.cooked(
     "```eviltrout\nhello\n```",
     '<pre><code class="lang-auto">hello\n</code></pre>',
-    "it doesn't not whitelist all classes"
+    "it doesn't not allowlist all classes"
   );
 
   assert.cooked(
@@ -1026,32 +1025,6 @@ QUnit.test("attachment - mapped url - secure media enabled", assert => {
   );
 });
 
-QUnit.test("video - secure media enabled", assert => {
-  assert.cookedOptions(
-    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
-    { siteSettings: { secure_media: true } },
-    `<p><div class="video-container">
-    <video width="100%" height="100%" preload="none" controls>
-      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
-      <a href="/404">/404</a>
-    </video>
-  </div></p>`,
-    "It returns the correct video player HTML"
-  );
-});
-
-QUnit.test("audio - secure media enabled", assert => {
-  assert.cookedOptions(
-    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
-    { siteSettings: { secure_media: true } },
-    `<p><audio preload="none" controls>
-    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
-    <a href="/404">/404</a>
-  </audio></p>`,
-    "It returns the correct audio player HTML"
-  );
-});
-
 QUnit.test("video", assert => {
   assert.cooked(
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
@@ -1082,7 +1055,7 @@ QUnit.test("video - mapped url - secure media enabled", assert => {
       lookupUploadUrls: lookupUploadUrls
     },
     `<p><div class="video-container">
-    <video width="100%" height="100%" preload="none" controls>
+    <video width="100%" height="100%" preload="metadata" controls>
       <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
       <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
     </video>
@@ -1118,7 +1091,7 @@ QUnit.test("audio - mapped url - secure media enabled", assert => {
       siteSettings: { secure_media: true },
       lookupUploadUrls: lookupUploadUrls
     },
-    `<p><audio preload="none" controls>
+    `<p><audio preload="metadata" controls>
     <source src="/secure-media-uploads/original/3X/c/b/test.mp3">
     <a href="/secure-media-uploads/original/3X/c/b/test.mp3">/secure-media-uploads/original/3X/c/b/test.mp3</a>
   </audio></p>`,
@@ -1544,20 +1517,20 @@ QUnit.test("emoji - emojiSet", assert => {
 });
 
 QUnit.test("emoji - registerEmoji", assert => {
-  registerEmoji("foo", "/foo.png");
+  registerEmoji("foo", "/images/d-logo-sketch.png");
 
   assert.cookedOptions(
     ":foo:",
     {},
-    `<p><img src="/foo.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
+    `<p><img src="/images/d-logo-sketch.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
   );
 
-  registerEmoji("bar", "/bar.png", "baz");
+  registerEmoji("bar", "/images/avatar.png", "baz");
 
   assert.cookedOptions(
     ":bar:",
     {},
-    `<p><img src="/bar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
+    `<p><img src="/images/avatar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
   );
 });
 

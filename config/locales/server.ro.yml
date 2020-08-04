@@ -185,9 +185,6 @@ ro:
   topics_in_category: "Subiecte în categoria '%{category}'"
   rss_posts_in_topic: "RSS din '%{topic}'"
   rss_topics_in_category: "RSS de subiecte din categoria '%{category}'"
-  author_wrote: "%{author} a scris:"
-  num_posts: "Mesaje:"
-  num_participants: "Participanți:"
   read_full_topic: "Citește întregul subiect"
   private_message_abbrev: "Msg"
   rss_description:
@@ -493,7 +490,7 @@ ro:
       title: "Necorespunzător"
       long_form: "marcat ca necorespunzător"
     notify_user:
-      title: "Trimite-i un mesaj lui @{{username}}"
+      title: "Trimite-i un mesaj lui @%{username}"
       long_form: "utilizator căruia i-a fost trimis mesaj"
       email_title: 'Postarea ta din "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -821,7 +818,6 @@ ro:
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_to_local: "Transformă imaginile la distanță în imagini locale descărcându-le; asta previne imaginile stricate."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
-    download_remote_images_max_days_old: "Nu descărca imaginile de la distanță pentru postări care sunt mai vechi de n zile."
     disabled_image_download_domains: "Imaginile la distanță nu vor mai fi descărcate de pe aceste domenii. Listă delimitată de simbolul | (pipe)."
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
     edit_history_visible_to_public: "Permite tuturor să vadă versiunile precedente ale unei postări editate. Când e dezactivat, ele pot fi văzute doar de membrii echipei."
@@ -910,7 +906,6 @@ ro:
     maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
-    s3_disable_cleanup: "Dezactivează eliminarea backup-urilor de pe S3 când sunt șterse local."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
     backup_with_uploads: "Include încărcări în backup-urile programate. Dezactivarea acestei opțiuni va face backup doar la baza de date."
     active_user_rate_limit_secs: "Cât de des se actualizează câmpul 'last_seen_at', în secunde"
@@ -1193,6 +1188,7 @@ ro:
       category: "Categorii"
       topic: "Rezultate"
       user: "Utilizatori"
+    results_page: "Caută rezultate pentru '%{term}'"
   sso:
     not_found: "Contul tău nu a putut fi găsit. Te rugăm contactează administratorul site-ului."
     account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."
@@ -1880,7 +1876,6 @@ ro:
       name: Înaltă stimă
     crazy_in_love:
       name: Maximă stimă
-      description: Ai folosit de 20 de ori 50 de aprecieri pe zi
     thank_you:
       name: Mulțumesc
       description: Ai 20 de postări apreciate și ai dat 10 apreiceri

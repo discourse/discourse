@@ -21,8 +21,7 @@ def upload(path, remote_path, content_type, content_encoding = nil)
   options = {
     cache_control: 'max-age=31556952, public, immutable',
     content_type: content_type,
-    acl: 'public-read',
-    tagging: ''
+    acl: 'public-read'
   }
 
   if content_encoding
@@ -72,22 +71,26 @@ def assets
   manifest.assets.each do |_, path|
     fullpath = (Rails.root + "public/assets/#{path}").to_s
 
-    content_type = MiniMime.lookup_by_filename(fullpath).content_type
+    # Ignore files we can't find the mime type of, like yarn.lock
+    if mime = MiniMime.lookup_by_filename(fullpath)
+      content_type = mime.content_type
 
-    asset_path = "assets/#{path}"
-    results << [fullpath, asset_path, content_type]
+      asset_path = "assets/#{path}"
+      results << [fullpath, asset_path, content_type]
 
-    if File.exist?(fullpath + '.br')
-      results << [fullpath + '.br', brotli_s3_path(asset_path), content_type, 'br']
+      if File.exist?(fullpath + '.br')
+        results << [fullpath + '.br', brotli_s3_path(asset_path), content_type, 'br']
+      end
+
+      if File.exist?(fullpath + '.gz')
+        results << [fullpath + '.gz', gzip_s3_path(asset_path), content_type, 'gzip']
+      end
+
+      if File.exist?(fullpath + '.map')
+        results << [fullpath + '.map', asset_path + '.map', 'application/json']
+      end
     end
 
-    if File.exist?(fullpath + '.gz')
-      results << [fullpath + '.gz', gzip_s3_path(asset_path), content_type, 'gzip']
-    end
-
-    if File.exist?(fullpath + '.map')
-      results << [fullpath + '.map', asset_path + '.map', 'application/json']
-    end
   end
 
   results

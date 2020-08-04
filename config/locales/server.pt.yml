@@ -45,7 +45,6 @@ pt:
       unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro durante a importação do tema
-      about_json: "Erro de Importação: about.json não existe ou é inválido"
       about_json_values: "about.json possui valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório de git, acesso foi negado ou o repositório não existe"
       unpack_failed: "Falha ao desempacotar o ficheiro"
@@ -239,9 +238,6 @@ pt:
   topics_in_category: "Tópicos na categoria '%{category}'"
   rss_posts_in_topic: "Feed RSS de '%{topic}'"
   rss_topics_in_category: "Feed RSS dos tópicos da categoria '%{category}'"
-  author_wrote: "%{author} escreveu:"
-  num_posts: "Mensagens:"
-  num_participants: "Participantes:"
   read_full_topic: "Ler tópico completo"
   private_message_abbrev: "Msg"
   rss_description:
@@ -534,7 +530,7 @@ pt:
       title: "Inapropriado"
       long_form: "sinalizou isto como inapropriado"
     notify_user:
-      title: "Enviar uma mensagem a @{{username}}"
+      title: "Enviar uma mensagem a @%{username}"
       long_form: "utilizador com mensagens"
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -863,7 +859,6 @@ pt:
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
     download_remote_images_to_local: "Converta as imagens remotas em imagens locais transferindo-as; isto previne imagens corrompidas."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir imagens remotas localmente (em percentagem)"
-    download_remote_images_max_days_old: "Não transferir imagens remotas para publicações que têm mais de n dias."
     disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. "
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
@@ -951,7 +946,6 @@ pt:
     maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
-    s3_disable_cleanup: "Desactive a remoção das cópias de segurança do S3 quando removidas localmente."
     backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
     backup_with_uploads: "Incluir carregamentos em cópias de segurança agendadas. Desativar isto irá salvaguardar apenas a base de dados."
     active_user_rate_limit_secs: "Qual a frequência de atualização do campo 'última vez visto em', em segundos."
@@ -1233,6 +1227,7 @@ pt:
       category: "Categorias"
       topic: "Resultados"
       user: "Utilizadores"
+    results_page: "Resultados da pesquisa por '%{term}'"
   sso:
     login_error: "Erro de Início de Sessão"
     not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
@@ -1969,7 +1964,6 @@ pt:
       name: Amor superior
     crazy_in_love:
       name: Amando Loucamente
-      description: Utilizou 50 gostos num dia 20 vezes
     thank_you:
       name: Obrigado
       description: Tem 20 publicações gostadas e deu 10 gostos
@@ -2110,6 +2104,13 @@ pt:
   joined: "Juntou-se"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
+      quoted: '%{username} citou-o em "%{topic}" - %{site_title}'
+      replied: '%{username} respondeu-lhe em "%{topic}" - %{site_title}'
+      posted: '%{username} publicou em "%{topic}" - %{site_title}'
+      linked: '%{username} ligou à sua publicação de "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} criou um novo tópico "%{topic}" - %{site_title}'
       confirm_title: "Notificações ativas - %{site_title}"
       confirm_body: "Sucesso! As notificações foram ativadas."
   reviewables:

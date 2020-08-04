@@ -19,6 +19,7 @@ module Roleable
   end
 
   def grant_moderation!
+    return if moderator
     set_permission('moderator', true)
     auto_approve_user
     enqueue_staff_welcome_message(:moderator)
@@ -29,6 +30,7 @@ module Roleable
   end
 
   def grant_admin!
+    return if admin
     set_permission('admin', true)
     auto_approve_user
     enqueue_staff_welcome_message(:admin)

@@ -25,7 +25,7 @@ class RandomTopicSelector
       end
 
       # don't leak private categories into the "everything" group
-      options[:guardian] = Guardian.new(CategoryFeaturedTopic.fake_admin)
+      options[:guardian] = Guardian.new(Discourse.system_user)
     end
 
     query = TopicQuery.new(nil, options)

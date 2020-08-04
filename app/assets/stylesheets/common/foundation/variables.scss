@@ -18,12 +18,18 @@ $topic-avatar-width: 45px;
 // --------------------------------------------------
 
 $google: #ffffff !default;
+$google-hover: darken($google, 5%) !default;
 $instagram: #e1306c !default;
+$instagram-hover: darken($instagram, 15%) !default;
 $facebook: #4267b2 !default;
+$facebook-hover: darken($facebook, 15%) !default;
 $cas: #70ba61 !default;
 $twitter: #1da1f2 !default;
+$twitter-hover: darken($twitter, 10%) !default;
 $github: #100e0f !default;
+$github-hover: lighten($github, 20%) !default;
 $discord: #7289da !default;
+$discord-hover: darken($discord, 10%) !default;
 
 // Badge color variables
 // --------------------------------------------------
@@ -35,10 +41,11 @@ $bronze: #cd7f32 !default;
 // Fonts
 // --------------------------------------------------
 
-$base-font-size-smaller: 14px !default;
-$base-font-size: 15px !default;
-$base-font-size-larger: 17px !default;
-$base-font-size-largest: 19px !default;
+$base-font-size-smallest: 0.815em !default; // eq. to 13px
+$base-font-size-smaller: 0.875em !default; // eq. to 14px
+$base-font-size: 0.938em !default; // eq. to 15px
+$base-font-size-larger: 1.063em !default; // eq. to 17px
+$base-font-size-largest: 1.118em !default; // eq. to 19px
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
 // Font-size defintions, multiplier ^ (step / interval)

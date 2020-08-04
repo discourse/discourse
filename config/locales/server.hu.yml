@@ -45,10 +45,11 @@ hu:
       unrecognized_extension: "Ismeretlen fájlkiterjesztés: %{extension}"
     import_error:
       generic: Hiba történt a téma importálásákor
-      about_json: "Importálási hiba: az about.json nem létezik vagy érvénytelen"
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
+      modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
       unpack_failed: "A fájl kibontása sikertelen"
+      file_too_big: "A kibontott fájl túl nagy."
       unknown_file_type: "A feltöltött fájl nem tűnik érvényes Discourse témának."
     errors:
       component_no_user_selectable: "A téma összetevőit nem választhatja ki a felhasználó"
@@ -221,9 +222,6 @@ hu:
   topics_in_category: "Témák a(z) „%{category}” kategóriában"
   rss_posts_in_topic: "A(z) „%{topic}” RSS hírcsatornája"
   rss_topics_in_category: "A(z) „%{category}” témáinak RSS hírcsatornája"
-  author_wrote: "%{author} írta:"
-  num_posts: "Bejegyzések:"
-  num_participants: "Résztvevők:"
   read_full_topic: "Teljes téma elolvasása"
   private_message_abbrev: "Üzenet"
   rss_description:
@@ -789,6 +787,7 @@ hu:
       category: "Kategóriák"
       topic: "Eredmények"
       user: "Felhasználók"
+    results_page: "Keresési eredmény: '%{term}'"
   original_poster: "Eredeti szerző"
   most_posts: "Legtöbb bejegyzés"
   most_recent_poster: "Legutóbbi szerzők"
@@ -812,6 +811,7 @@ hu:
     suspended: "Nem jelentkezhet be eddig: %{date}."
     suspended_with_reason: "A fiók felfüggesztve eddig: %{date}: %{reason}"
     errors: "%{errors}"
+    not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
     omniauth_error_unknown: "A bejelentkezési valamiért nem sikerült, próbálja meg újra."
     omniauth_confirm_button: "Folytatás"
@@ -1278,6 +1278,11 @@ hu:
   joined: "Csatlakozott"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
+      group_mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
+      quoted: '%{username} idézett itt: "%{topic}" - %{site_title}'
+      replied: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
+      posted: '%{username} hozzászólt itt: "%{topic}" - %{site_title}'
       confirm_title: "Értesítések bekapcsolva – %{site_title}"
       confirm_body: "Siker! Értesítések engedélyezve."
       custom: "Értesítés %{username} felhasználótól itt: %{site_title}"

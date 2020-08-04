@@ -6,6 +6,6 @@ class UserBookmarkListSerializer < ApplicationSerializer
   has_many :bookmarks, serializer: UserBookmarkSerializer, embed: :objects
 
   def include_more_bookmarks_url?
-    object.bookmarks.size == object.per_page
+    @include_more_bookmarks_url ||= object.bookmarks.size == object.per_page
   end
 end

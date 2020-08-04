@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import LocalDateBuilder from "./local-date-builder";
 
 const UTC = "Etc/UTC";
@@ -68,13 +69,21 @@ QUnit.test("date", assert => {
       { formated: "March 22, 2020" },
       "it displays the date without time"
     );
-
-    assert.buildsCorrectDate(
-      { date: "2020-04-11", time: "11:00" },
-      { formated: "April 11, 2020 1:00 PM" },
-      "it displays the date with time"
-    );
   });
+});
+
+QUnit.test("date and time", assert => {
+  assert.buildsCorrectDate(
+    { date: "2020-04-11", time: "11:00" },
+    { formated: "April 11, 2020 1:00 PM" },
+    "it displays the date with time"
+  );
+
+  assert.buildsCorrectDate(
+    { date: "2020-04-11", time: "11:05:12", format: "LTS" },
+    { formated: "1:05:12 PM" },
+    "it displays full time (hours, minutes, seconds)"
+  );
 });
 
 QUnit.test("option[format]", assert => {
@@ -298,6 +307,18 @@ QUnit.test("option[calendar]", assert => {
       "it stops formating out of calendar range"
     )
   );
+
+  freezeTime({ date: "2020-05-12", timezone: LOS_ANGELES }, () => {
+    assert.buildsCorrectDate(
+      {
+        date: "2020-05-13",
+        time: "18:00",
+        localTimezone: LOS_ANGELES
+      },
+      { formated: "Tomorrow 11:00 AM" },
+      "it correctly displays a different local timezone"
+    );
+  });
 });
 
 QUnit.test("previews", assert => {
@@ -330,7 +351,7 @@ QUnit.test("previews", assert => {
           },
           {
             formated:
-              "Monday, March 23, 2020 10:00 AM → Monday, March 23, 2020 10:00 AM",
+              "Sunday, March 22, 2020 10:00 AM → Monday, March 23, 2020 10:00 AM",
             timezone: "Sydney"
           }
         ]
@@ -403,7 +424,11 @@ QUnit.test("previews", assert => {
 
   freezeTime({ date: "2020-04-06", timezone: PARIS }, () => {
     assert.buildsCorrectDate(
-      { timezone: PARIS, date: "2020-04-07", timezones: [LONDON, LAGOS] },
+      {
+        timezone: PARIS,
+        date: "2020-04-07",
+        timezones: [LONDON, LAGOS, SYDNEY]
+      },
       {
         previews: [
           {
@@ -414,13 +439,73 @@ QUnit.test("previews", assert => {
           },
           {
             formated:
-              "Tuesday, April 7, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
+              "Monday, April 6, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
             timezone: "London"
           },
           {
             formated:
-              "Tuesday, April 7, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
+              "Monday, April 6, 2020 11:00 PM → Tuesday, April 7, 2020 11:00 PM",
             timezone: "Lagos"
+          },
+          {
+            formated:
+              "Tuesday, April 7, 2020 8:00 AM → Wednesday, April 8, 2020 8:00 AM",
+            timezone: "Sydney"
+          }
+        ]
+      }
+    );
+  });
+
+  freezeTime({ date: "2020-04-06", timezone: PARIS }, () => {
+    assert.buildsCorrectDate(
+      {
+        timezone: PARIS,
+        date: "2020-04-07",
+        time: "14:54",
+        timezones: [LONDON, LAGOS, SYDNEY]
+      },
+      {
+        previews: [
+          {
+            current: true,
+            formated: "April 7, 2020 2:54 PM",
+            timezone: "Paris"
+          },
+          {
+            formated: "April 7, 2020 1:54 PM",
+            timezone: "London"
+          },
+          {
+            formated: "April 7, 2020 1:54 PM",
+            timezone: "Lagos"
+          },
+          {
+            formated: "April 7, 2020 10:54 PM",
+            timezone: "Sydney"
+          }
+        ]
+      }
+    );
+  });
+
+  freezeTime({ date: "2020-05-12", timezone: LOS_ANGELES }, () => {
+    assert.buildsCorrectDate(
+      {
+        date: "2020-05-13",
+        time: "18:00",
+        localTimezone: LOS_ANGELES
+      },
+      {
+        previews: [
+          {
+            current: true,
+            formated: "May 13, 2020 11:00 AM",
+            timezone: "Los Angeles"
+          },
+          {
+            formated: "May 13, 2020 6:00 PM",
+            timezone: "UTC"
           }
         ]
       }

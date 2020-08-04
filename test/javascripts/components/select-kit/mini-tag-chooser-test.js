@@ -1,5 +1,6 @@
+import I18n from "I18n";
 import componentTest from "helpers/component-test";
-import { testSelectKitModule } from "./select-kit-test-helper";
+import { testSelectKitModule } from "helpers/select-kit-helper";
 
 testSelectKitModule("mini-tag-chooser");
 
@@ -30,7 +31,20 @@ componentTest("create a tag", {
     assert.equal(this.subject.header().value(), "foo,bar");
 
     await this.subject.expand();
-    await this.subject.fillInFilter("monkey");
+    await this.subject.fillInFilter("mon");
+    assert.equal(
+      find(".select-kit-row")
+        .text()
+        .trim(),
+      "monkey x1"
+    );
+    await this.subject.fillInFilter("key");
+    assert.equal(
+      find(".select-kit-row")
+        .text()
+        .trim(),
+      "monkey x1"
+    );
     await this.subject.keyboard("enter");
 
     assert.equal(this.subject.header().value(), "foo,bar,monkey");

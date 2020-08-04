@@ -310,9 +310,9 @@ describe Post do
       expect(post_with_thumbnail.image_count).to eq(0)
     end
 
-    it "doesn't count whitelisted images" do
-      Post.stubs(:white_listed_image_classes).returns(["classy"])
-      # I dislike this, but passing in a custom whitelist is hard
+    it "doesn't count allowlisted images" do
+      Post.stubs(:allowed_image_classes).returns(["classy"])
+      # I dislike this, but passing in a custom allowlist is hard
       PrettyText.stubs(:cook).returns(post_with_two_classy_images.raw)
       expect(post_with_two_classy_images.image_count).to eq(0)
     end
@@ -527,8 +527,8 @@ describe Post do
           expect(post_one_link).not_to be_valid
         end
 
-        it "will skip the check for whitelisted domains" do
-          SiteSetting.whitelisted_link_domains = 'www.bbc.co.uk'
+        it "will skip the check for allowlisted domains" do
+          SiteSetting.allowed_link_domains = 'www.bbc.co.uk'
           SiteSetting.min_trust_to_post_links = 2
           post_two_links.user.trust_level = TrustLevel[1]
           expect(post_one_link).to be_valid
@@ -1107,7 +1107,7 @@ describe Post do
 
       expect(post.has_host_spam?).to eq(true)
 
-      SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | example.net "
+      SiteSetting.allowed_spam_host_domains = "bla.com|boo.com | example.net "
       expect(post.has_host_spam?).to eq(false)
     end
 
@@ -1158,6 +1158,25 @@ describe Post do
     expect(post.custom_fields).to eq("Tommy" => "Hanks", "Vincent" => "Vega")
   end
 
+  describe "#excerpt_for_topic" do
+    it "returns a topic excerpt, defaulting to 220 chars" do
+      expected_excerpt = "This is a sample post with semi-long raw content. The raw content is also more than \ntwo hundred characters to satisfy any test conditions that require content longer \nthan the typical test post raw content. It really is&hellip;"
+      post = Fabricate(:post_with_long_raw_content)
+      post.rebake!
+      excerpt = post.excerpt_for_topic
+      expect(excerpt).to eq(expected_excerpt)
+    end
+
+    it "respects the site setting for topic excerpt" do
+      SiteSetting.topic_excerpt_maxlength = 10
+      expected_excerpt = "This is a &hellip;"
+      post = Fabricate(:post_with_long_raw_content)
+      post.rebake!
+      excerpt = post.excerpt_for_topic
+      expect(excerpt).to eq(expected_excerpt)
+    end
+  end
+
   describe "#rebake!" do
     it "will rebake a post correctly" do
       post = create_post
@@ -1175,6 +1194,32 @@ describe Post do
       expect(post.baked_at).not_to eq_time(first_baked)
       expect(post.cooked).to eq(first_cooked)
       expect(result).to eq(true)
+    end
+
+    it "updates the topic excerpt at the same time if it is the OP" do
+      post = create_post
+      post.topic.update(excerpt: "test")
+      DB.exec("UPDATE posts SET cooked = 'frogs' WHERE id = ?", [ post.id ])
+      post.reload
+      result = post.rebake!
+      post.topic.reload
+      expect(post.topic.excerpt).not_to eq("test")
+    end
+
+    it "does not update the topic excerpt if the post is not the OP" do
+      post = create_post
+      post2 = create_post
+      post.topic.update(excerpt: "test")
+      result = post2.rebake!
+      post.topic.reload
+      expect(post.topic.excerpt).to eq("test")
+    end
+
+    it "works with posts in deleted topics" do
+      post = create_post
+      post.topic.trash!
+      post.reload
+      post.rebake!
     end
   end
 
@@ -1329,6 +1374,16 @@ describe Post do
     end
 
     let(:post) { Fabricate(:post, raw: raw_multiple) }
+
+    it "removes post uploads on destroy" do
+      post.link_post_uploads
+
+      post.trash!
+      expect(PostUpload.count).to eq(6)
+
+      post.destroy!
+      expect(PostUpload.count).to eq(0)
+    end
 
     context "#link_post_uploads" do
       it "finds all the uploads in the post" do

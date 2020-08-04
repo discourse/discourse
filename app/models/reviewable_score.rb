@@ -21,6 +21,14 @@ class ReviewableScore < ActiveRecord::Base
     types
   end
 
+  def self.add_new_types(type_names)
+    next_id = types.values.max + 1
+
+    type_names.each_with_index do |name, idx|
+      @types[name] = next_id + idx
+    end
+  end
+
   def self.statuses
     @statuses ||= Enum.new(
       pending: 0,

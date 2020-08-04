@@ -1,5 +1,6 @@
+import I18n from "I18n";
 import { acceptance } from "helpers/qunit-helpers";
-import PreloadStore from "preload-store";
+import PreloadStore from "discourse/lib/preload-store";
 import { parsePostData } from "helpers/create-pretender";
 
 acceptance("Password Reset", {

@@ -26,6 +26,7 @@ describe ScreenedEmail do
 
   describe '#block' do
     context 'email is not being blocked' do
+
       it 'creates a new record with default action of :block' do
         record = ScreenedEmail.block(email)
         expect(record).not_to be_new_record
@@ -56,6 +57,14 @@ describe ScreenedEmail do
 
   describe '#should_block?' do
     subject { ScreenedEmail.should_block?(email) }
+
+    it "automatically blocks via email canonicalization" do
+      SiteSetting.levenshtein_distance_spammer_emails = 0
+      ScreenedEmail.block('bad.acTor+1@gmail.com')
+      ScreenedEmail.block('bad.actOr+2@gmail.com')
+
+      expect(ScreenedEmail.should_block?('b.a.dactor@gmail.com')).to eq(true)
+    end
 
     it "returns false if a record with the email doesn't exist" do
       expect(subject).to eq(false)

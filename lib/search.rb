@@ -21,12 +21,6 @@ class Search
     50
   end
 
-  # Sometimes we want more topics than are returned due to exclusion of dupes. This is the
-  # factor of extra results we'll ask for.
-  def self.burst_factor
-    3
-  end
-
   def self.facets
     %w(topic category user private_messages tags all_topics)
   end
@@ -72,7 +66,18 @@ class Search
         require 'cppjieba_rb' unless defined? CppjiebaRb
         mode = (purpose == :query ? :query : :mix)
         data = CppjiebaRb.segment(search_data, mode: mode)
-        data = CppjiebaRb.filter_stop_word(data).join(' ')
+
+        # TODO: we still want to tokenize here but the current stopword list is too wide
+        # in cppjieba leading to words such as volume to be skipped. PG already has an English
+        # stopword list so use that vs relying on cppjieba
+        if ts_config != 'english'
+          data = CppjiebaRb.filter_stop_word(data)
+        else
+          data = data.filter { |s| s.present? }
+        end
+
+        data = data.join(' ')
+
       else
         data.squish!
       end
@@ -81,6 +86,15 @@ class Search
         data = strip_diacritics(data)
       end
     end
+
+    data.gsub!(EmailCook.url_regexp) do |url|
+      uri = URI.parse(url)
+      uri.query = nil
+      uri.to_s
+    rescue URI::Error
+      # Don't fail even if URL turns out to be invalid
+    end
+
     data
   end
 
@@ -149,7 +163,6 @@ class Search
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
     @search_context = @opts[:search_context]
-    @include_blurbs = @opts[:include_blurbs] || false
     @blurb_length = @opts[:blurb_length]
     @valid = true
     @page = @opts[:page]
@@ -181,11 +194,11 @@ class Search
     end
 
     @results = GroupedSearchResults.new(
-      @opts[:type_filter],
-      clean_term,
-      @search_context,
-      @include_blurbs,
-      @blurb_length
+      type_filter: @opts[:type_filter],
+      term: clean_term,
+      blurb_term: term,
+      search_context: @search_context,
+      blurb_length: @blurb_length
     )
   end
 
@@ -242,8 +255,12 @@ class Search
         single_topic(@term.to_i)
       else
         begin
-          route = Rails.application.routes.recognize_path(@term)
-          single_topic(route[:topic_id]) if route[:topic_id].present?
+          if route = Discourse.route_for(@term)
+            if route[:controller] == "topics" && route[:action] == "show"
+              topic_id = (route[:id] || route[:topic_id]).to_i
+              single_topic(topic_id) if topic_id > 0
+            end
+          end
         rescue ActionController::RoutingError
         end
       end
@@ -343,14 +360,6 @@ class Search
     posts.where("topics.pinned_at IS NOT NULL")
   end
 
-  advanced_filter(/^in:unpinned$/) do |posts|
-    if @guardian.user
-      posts.where("topics.pinned_at IS NOT NULL AND topics.id IN (
-                  SELECT topic_id FROM topic_users WHERE user_id = ? AND cleared_pinned_at IS NOT NULL
-                 )", @guardian.user.id)
-    end
-  end
-
   advanced_filter(/^in:wiki$/) do |posts, match|
     posts.where(wiki: true)
   end
@@ -381,11 +390,7 @@ class Search
 
   advanced_filter(/^in:(bookmarks)$/) do |posts, match|
     if @guardian.user
-      if SiteSetting.enable_bookmarks_with_reminders
-        posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
-      else
-        post_action_type_filter(posts, PostActionType.types[:bookmark])
-      end
+      posts.where("posts.id IN (SELECT post_id FROM bookmarks WHERE bookmarks.user_id = #{@guardian.user.id})")
     end
   end
 
@@ -438,7 +443,7 @@ class Search
   end
 
   advanced_filter(/^with:images$/) do |posts|
-    posts.where("posts.image_url IS NOT NULL")
+    posts.where("posts.image_upload_id IS NOT NULL")
   end
 
   advanced_filter(/^category:(.+)$/) do |posts, match|
@@ -711,28 +716,10 @@ class Search
       topic_search
     end
 
-    add_more_topics_if_expected
     @results
   rescue ActiveRecord::StatementInvalid
     # In the event of a PG:Error return nothing, it is likely they used a foreign language whose
     # locale is not supported by postgres
-  end
-
-  # Add more topics if we expected them
-  def add_more_topics_if_expected
-    expected_topics = 0
-    expected_topics = Search.facets.size unless @results.type_filter.present?
-    expected_topics = Search.per_facet * Search.facets.size if @results.type_filter == 'topic'
-    expected_topics -= @results.posts.length
-    if expected_topics > 0
-      extra_posts = posts_query(expected_topics * Search.burst_factor)
-      extra_posts = extra_posts.where("posts.topic_id NOT in (?)", @results.posts.map(&:topic_id)) if @results.posts.present?
-      extra_posts.each do |post|
-        @results.add(post)
-        expected_topics -= 1
-        break if expected_topics == 0
-      end
-    end
   end
 
   # If we're searching for a single topic
@@ -816,9 +803,7 @@ class Search
 
   PHRASE_MATCH_REGEXP_PATTERN = '"([^"]+)"'
 
-  def posts_query(limit, opts = nil)
-    opts ||= {}
-
+  def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
       .joins(:post_search_data, :topic)
       .joins("LEFT JOIN categories ON categories.id = topics.category_id")
@@ -827,13 +812,13 @@ class Search
 
     posts = posts.where("topics.visible") unless is_topic_search
 
-    if opts[:type_filter] === "private_messages" || (is_topic_search && @search_context.private_message?)
+    if type_filter === "private_messages" || (is_topic_search && @search_context.private_message?)
       posts = posts.where("topics.archetype =  ?", Archetype.private_message)
 
        unless @guardian.is_admin?
          posts = posts.private_posts_for_user(@guardian.user)
        end
-    elsif opts[:type_filter] === "all_topics"
+    elsif type_filter === "all_topics"
       private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
       private_posts = private_posts.private_posts_for_user(@guardian.user)
 
@@ -862,6 +847,7 @@ class Search
         # C is for tags
         # D is for cooked
         weights = @in_title ? 'A' : (SiteSetting.tagging_enabled ? 'ABCD' : 'ABD')
+        posts = posts.where(post_number: 1) if @in_title
         posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
@@ -883,7 +869,7 @@ class Search
     posts =
       if @search_context.present?
         if @search_context.is_a?(User)
-          if opts[:type_filter] === "private_messages"
+          if type_filter === "private_messages"
             @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
@@ -909,73 +895,113 @@ class Search
         posts
       end
 
-    if @order == :latest || (@term.blank? && !@order)
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(posts.created_at) DESC")
-      else
-        posts = posts.reorder("posts.created_at DESC")
+    if aggregate_search
+      aggregate_relation = Post.unscoped
+        .select("subquery.topic_id id")
+        .group("subquery.topic_id")
+
+      posts = posts.select(posts.arel.projections)
+    end
+
+    if @order == :latest
+      posts = posts.reorder("posts.created_at DESC")
+
+      if aggregate_search
+        aggregate_relation = aggregate_relation
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.created_at DESC))[1] post_number",
+            "MAX(subquery.created_at) created_at"
+          )
+          .order("created_at DESC")
       end
     elsif @order == :latest_topic
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(topics.created_at) DESC")
-      else
-        posts = posts.order("topics.created_at DESC")
+      posts = posts.order("topic_created_at DESC")
+
+      if aggregate_search
+        posts = posts.select("topics.created_at topic_created_at")
+
+        aggregate_relation = aggregate_relation
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_created_at DESC))[1] post_number",
+            "MAX(subquery.topic_created_at) topic_created_at"
+          )
+          .order("topic_created_at DESC")
       end
     elsif @order == :views
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(topics.views) DESC")
-      else
-        posts = posts.order("topics.views DESC")
+      posts = posts.order("topic_views DESC")
+
+      if aggregate_search
+        posts = posts.select("topics.views topic_views")
+
+        aggregate_relation = aggregate_relation
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_views DESC))[1] post_number",
+            "MAX(subquery.topic_views) topic_views"
+          )
+          .order("topic_views DESC")
       end
     elsif @order == :likes
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(posts.like_count) DESC")
-      else
-        posts = posts.order("posts.like_count DESC")
-      end
+      posts = posts.order("posts.like_count DESC")
     else
-      # 1|32 divides the rank by 1 + logarithm of the document length and
-      # scales the range from zero to one
-      data_ranking = <<~SQL
-      (
-        TS_RANK_CD(
-          post_search_data.search_data,
-          #{ts_query(weight_filter: weights)},
-          1|32
-        ) *
-        (
-          CASE categories.search_priority
-          WHEN #{Searchable::PRIORITIES[:very_low]}
-          THEN #{SiteSetting.category_search_priority_very_low_weight}
-          WHEN #{Searchable::PRIORITIES[:low]}
-          THEN #{SiteSetting.category_search_priority_low_weight}
-          WHEN #{Searchable::PRIORITIES[:high]}
-          THEN #{SiteSetting.category_search_priority_high_weight}
-          WHEN #{Searchable::PRIORITIES[:very_high]}
-          THEN #{SiteSetting.category_search_priority_very_high_weight}
-          ELSE
-            CASE WHEN topics.closed
-            THEN 0.9
-            ELSE 1
-            END
-          END
-        )
+      rank = <<~SQL
+      TS_RANK_CD(
+        post_search_data.search_data,
+        #{@term.blank? ? '' : ts_query(weight_filter: weights)},
+        #{SiteSetting.search_ranking_normalization}|32
       )
       SQL
 
-      if opts[:aggregate_search]
-        posts = posts.order("MAX(#{data_ranking}) DESC")
-      else
-        posts = posts.order("#{data_ranking} DESC")
-      end
+      category_priority_weights = <<~SQL
+      (
+        CASE categories.search_priority
+        WHEN #{Searchable::PRIORITIES[:very_low]}
+        THEN #{SiteSetting.category_search_priority_very_low_weight}
+        WHEN #{Searchable::PRIORITIES[:low]}
+        THEN #{SiteSetting.category_search_priority_low_weight}
+        WHEN #{Searchable::PRIORITIES[:high]}
+        THEN #{SiteSetting.category_search_priority_high_weight}
+        WHEN #{Searchable::PRIORITIES[:very_high]}
+        THEN #{SiteSetting.category_search_priority_very_high_weight}
+        ELSE
+          CASE WHEN topics.closed
+          THEN 0.9
+          ELSE 1
+          END
+        END
+      )
+      SQL
 
-      posts = posts.order("topics.bumped_at DESC")
+      data_ranking =
+        if @term.blank?
+          "(#{category_priority_weights})"
+        else
+          "(#{rank} * #{category_priority_weights})"
+        end
+
+      if aggregate_search
+        posts = posts.select("#{data_ranking} rank", "topics.bumped_at topic_bumped_at")
+          .order("rank DESC", "topic_bumped_at DESC")
+
+        aggregate_relation = aggregate_relation
+          .select(
+            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.rank DESC, subquery.topic_bumped_at DESC))[1] post_number",
+            "MAX(subquery.rank) rank", "MAX(subquery.topic_bumped_at) topic_bumped_at"
+          )
+          .order("rank DESC", "topic_bumped_at DESC")
+      else
+        posts = posts.order("#{data_ranking} DESC", "topics.bumped_at DESC")
+      end
     end
 
     if secure_category_ids.present?
       posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids).references(:categories)
     else
       posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)").references(:categories)
+    end
+
+    if aggregate_search
+      posts = yield(posts) if block_given?
+      posts = aggregate_relation.from(posts)
     end
 
     posts = posts.offset(offset)
@@ -998,27 +1024,24 @@ class Search
     self.class.default_ts_config
   end
 
-  def self.ts_query(term: , ts_config:  nil, joiner: "&", weight_filter: nil)
-
-    data = DB.query_single(
-      "SELECT TO_TSVECTOR(:config, :term)",
-      config: 'simple',
-      term: term
-    ).first
-
-    ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    all_terms = data.scan(/'([^']+)'\:\d+/).flatten
-    all_terms.map! do |t|
-      t.split(/[\)\(&']/).find(&:present?)
-    end.compact!
-
-    query = ActiveRecord::Base.connection.quote(
-      all_terms
-        .map { |t| "'#{PG::Connection.escape_string(t)}':*#{weight_filter}" }
-        .join(" #{joiner} ")
+  def self.ts_query(term: , ts_config:  nil, joiner: nil, weight_filter: nil)
+    to_tsquery(
+      ts_config: ts_config,
+      term: set_tsquery_weight_filter(term, weight_filter),
+      joiner: joiner
     )
+  end
 
-    "TO_TSQUERY(#{ts_config || default_ts_config}, #{query})"
+  def self.to_tsquery(ts_config: nil, term:, joiner: nil)
+    ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{term}')"
+    tsquery = "REPLACE(#{tsquery}::text, '&', '#{PG::Connection.escape_string(joiner)}')::tsquery" if joiner
+    tsquery
+  end
+
+  def self.set_tsquery_weight_filter(term, weight_filter)
+    term = term.gsub("'", "''")
+    "''#{PG::Connection.escape_string(term)}'':*#{weight_filter}"
   end
 
   def ts_query(ts_config = nil, weight_filter: nil)
@@ -1032,29 +1055,42 @@ class Search
   end
 
   def aggregate_post_sql(opts)
-    min_or_max = @order == :latest ? "max" : "min"
-
-    query =
-      if @order == :likes
-        # likes are a pain to aggregate so skip
-        posts_query(limit, type_filter: opts[:type_filter])
-          .select('topics.id', "posts.post_number")
-      else
-        posts_query(limit, aggregate_search: true, type_filter: opts[:type_filter])
-          .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
-          .group('topics.id')
-      end
+    default_opts = {
+      type_filter: opts[:type_filter]
+    }
 
     min_id = Search.min_post_id
-    if min_id > 0
-      low_set = query.dup.where("post_search_data.post_id < #{min_id}")
-      high_set = query.where("post_search_data.post_id >= #{min_id}")
 
-      return { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
+    if @order == :likes
+      # likes are a pain to aggregate so skip
+      query = posts_query(limit, **default_opts).select('topics.id', 'posts.post_number')
+
+      if min_id > 0
+        low_set = query.dup.where("post_search_data.post_id < #{min_id}")
+        high_set = query.where("post_search_data.post_id >= #{min_id}")
+
+        { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
+      else
+        { default: wrap_rows(query) }
+      end
+    else
+      query = posts_query(limit, **default_opts, aggregate_search: true) do |posts|
+        if min_id > 0
+          posts.select("post_search_data.post_id post_search_data_post_id")
+        else
+          posts
+        end
+      end
+
+      if min_id > 0
+        low_set = query.dup.where("subquery.post_search_data_post_id < #{min_id}")
+        high_set = query.where("subquery.post_search_data_post_id >= #{min_id}")
+
+        { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
+      else
+        { default: wrap_rows(query) }
+      end
     end
-
-    # double wrapping so we get correct row numbers
-    { default: wrap_rows(query) }
   end
 
   def aggregate_posts(post_sql)
@@ -1104,7 +1140,7 @@ class Search
   end
 
   def posts_eager_loads(query)
-    query = query.includes(:user)
+    query = query.includes(:user, :post_search_data)
     topic_eager_loads = [:category]
 
     if SiteSetting.tagging_enabled

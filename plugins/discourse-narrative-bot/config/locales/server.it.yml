@@ -122,10 +122,10 @@ it:
         reply: |-
           Ciao! Per sapere cosa posso fare, dimmi `@%{discobot_username} %{help_trigger}`.
         tracks: |-
-          Al momento so fare le seguenti cose:
+          Attualmente so come fare le seguenti cose:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Inizia un tutorial interattivo. `{name-of-tutorial}` può essere uno di: `%{tracks}`.
+          > Avvia un tutorial interattivo solo per te, in un messaggio personale. `{name-of-tutorial}` può essere uno di: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -231,7 +231,7 @@ it:
           Selezionare un qualsiasi testo del mio messaggio farà apparire il pulsante <kbd>**Cita**</kbd>. E anche premere **Rispondi** con qualsiasi testo selezionato funzionerà! Puoi provare di nuovo?
       bookmark:
         instructions: |-
-          Se vuoi saperne di più, seleziona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> qui sotto e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **inserisci questo messaggio personale nei segnalibri**. Se lo farai, ci potrebbe essere un :gift: per te!
+          Se vuoi saperne di più, seleziona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> qui sotto e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **inserisci questo messaggio personale nei segnalibri**. Se lo farai, ci potrebbe essere un :gift: per te in futuro!
         reply: |
           Eccellente! Ora puoi facilmente tornare alla nostra conversazione privata in qualsiasi momento, direttamente dalla [scheda dei segnalibri sul tuo profilo](%{bookmark_url}). Basta selezionare la tua foto del profilo in alto a destra &#8599;
         not_found: |-

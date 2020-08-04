@@ -29,15 +29,15 @@ it:
       multiple:
         help:
           at_least_min_options:
-            one: "Scegli almeno <strong>%{count}</strong> opzione"
-            other: "Scegli almeno <strong>%{count}</strong> opzioni"
+            one: "Scegli almeno un&#39;opzione <strong>%{count}</strong> ."
+            other: "Scegli almeno <strong>%{count}</strong> opzioni."
           up_to_max_options:
-            one: "Scegli fino a <strong>%{count}</strong> opzione"
-            other: "Scegli fino a <strong>%{count}</strong> opzioni"
+            one: "Scegli fino a <strong>%{count}</strong> opzione."
+            other: "Scegli fino a <strong>%{count}</strong> opzioni."
           x_options:
-            one: "Scegli <strong>%{count}</strong> opzione"
-            other: "Scegli <strong>%{count}</strong> opzioni"
-          between_min_and_max_options: "Scegli tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni"
+            one: "Scegli <strong>%{count}</strong> opzione."
+            other: "Scegli <strong>%{count}</strong> opzioni."
+          between_min_and_max_options: "Scegli tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni."
       cast-votes:
         title: "Vota"
         label: "Vota!"
@@ -93,6 +93,8 @@ it:
           label: Gruppi ammessi
         poll_chart_type:
           label: Tipo di grafico
+          bar: Barra
+          pie: Torta
         poll_config:
           max: Massimo
           min: Minimo

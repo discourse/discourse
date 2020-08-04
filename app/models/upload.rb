@@ -8,8 +8,8 @@ class Upload < ActiveRecord::Base
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
-  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
-  SECURE_MEDIA_ROUTE = "secure-media-uploads".freeze
+  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
+  SECURE_MEDIA_ROUTE = "secure-media-uploads"
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -25,6 +25,7 @@ class Upload < ActiveRecord::Base
 
   has_many :optimized_images, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
+  has_many :topic_thumbnails
 
   attr_accessor :for_group_message
   attr_accessor :for_theme
@@ -123,13 +124,26 @@ class Upload < ActiveRecord::Base
     "upload://#{short_url_basename}"
   end
 
+  def uploaded_before_secure_media_enabled?
+    original_sha1.blank?
+  end
+
+  def matching_access_control_post?(post)
+    access_control_post_id == post.id
+  end
+
+  def copied_from_other_post?(post)
+    return false if access_control_post_id.blank?
+    !matching_access_control_post?(post)
+  end
+
   def short_path
     self.class.short_path(sha1: self.sha1, extension: self.extension)
   end
 
   def self.consider_for_reuse(upload, post)
     return upload if !SiteSetting.secure_media? || upload.blank? || post.blank?
-    return nil if upload.access_control_post_id != post.id || upload.original_sha1.blank?
+    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_media_enabled?
     upload
   end
 
@@ -315,7 +329,7 @@ class Upload < ActiveRecord::Base
                   follow_redirect: true
                 )
               rescue OpenURI::HTTPError
-                retry if (retires += 1) < 1
+                retry if (retries += 1) < 1
                 next
               end
 
@@ -387,10 +401,6 @@ class Upload < ActiveRecord::Base
     problems
   end
 
-  def self.reset_unknown_extensions!
-    Upload.where(extension: "unknown").update_all(extension: nil)
-  end
-
   private
 
   def short_url_basename
@@ -433,8 +443,4 @@ end
 #  index_uploads_on_sha1                    (sha1) UNIQUE
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (access_control_post_id => posts.id)
 #

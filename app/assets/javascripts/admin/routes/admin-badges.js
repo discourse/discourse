@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";

@@ -5,7 +5,7 @@ module ImportExport
     attr_reader :export_data, :categories
 
     CATEGORY_ATTRS = [:id, :name, :color, :created_at, :user_id, :slug, :description, :text_color,
-                      :auto_close_hours, :parent_category_id, :auto_close_based_on_last_post,
+                      :auto_close_hours, :position, :parent_category_id, :auto_close_based_on_last_post,
                       :topic_template, :all_topics_wiki, :permissions_params]
 
     GROUP_ATTRS = [:id, :name, :created_at, :automatic_membership_email_domains, :primary_group,

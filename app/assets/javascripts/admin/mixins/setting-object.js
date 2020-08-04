@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";

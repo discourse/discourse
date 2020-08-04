@@ -110,6 +110,10 @@ module SiteSettingExtension
     @secret_settings ||= []
   end
 
+  def plugins
+    @plugins ||= {}
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
 
@@ -135,7 +139,7 @@ module SiteSettingExtension
       if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
-        unless val.nil? || (val == ''.freeze)
+        unless val.nil? || (val == '')
           shadowed_val = val
           hidden_settings << name
           shadowed_settings << name
@@ -156,6 +160,10 @@ module SiteSettingExtension
 
       if opts[:secret]
         secret_settings << name
+      end
+
+      if opts[:plugin]
+        plugins[name] = opts[:plugin]
       end
 
       type_supervisor.load_setting(
@@ -245,6 +253,8 @@ module SiteSettingExtension
         secret: secret_settings.include?(s),
         placeholder: placeholder(s)
       }.merge!(type_hash)
+
+      opts[:plugin] = plugins[s] if plugins[s]
 
       opts
     end.unshift(locale_setting_hash)
@@ -368,8 +378,8 @@ module SiteSettingExtension
   end
 
   HOSTNAME_SETTINGS ||= %w{
-    disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains
-    email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains
+    disabled_image_download_domains blocked_onebox_domains exclude_rel_nofollow_domains
+    blocked_email_domains allowed_email_domains allowed_spam_host_domains
   }
 
   def filter_value(name, value)

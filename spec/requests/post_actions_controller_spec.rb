@@ -108,7 +108,7 @@ RSpec.describe PostActionsController do
 
       expect(response.status).to eq(422)
 
-      expect(JSON.parse(response.body)["errors"].first).to eq(I18n.t(
+      expect(response.parsed_body["errors"].first).to eq(I18n.t(
         :not_accepting_pms, username: user2.username
       ))
     end

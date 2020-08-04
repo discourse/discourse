@@ -86,7 +86,7 @@ describe GlobalSetting do
         GlobalSetting.expects(:redis_slave_port).returns(6379).at_least_once
         GlobalSetting.expects(:redis_slave_host).returns('0.0.0.0').at_least_once
 
-        expect(GlobalSetting.redis_config[:connector]).to eq(DiscourseRedis::Connector)
+        expect(GlobalSetting.redis_config[:connector]).to eq(RailsFailover::Redis::Connector)
       end
     end
   end

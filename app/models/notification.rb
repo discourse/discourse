@@ -45,7 +45,9 @@ class Notification < ActiveRecord::Base
   end
 
   before_create do
-    self.high_priority = Notification.high_priority_types.include?(self.notification_type)
+    # if we have manually set the notification to high_priority on create then
+    # make sure that is respected
+    self.high_priority = self.high_priority || Notification.high_priority_types.include?(self.notification_type)
   end
 
   def self.purge_old!
@@ -108,7 +110,8 @@ class Notification < ActiveRecord::Base
                         code_review_commit_approved: 21,
                         membership_request_accepted: 22,
                         membership_request_consolidated: 23,
-                        bookmark_reminder: 24
+                        bookmark_reminder: 24,
+                        reaction: 25,
                        )
   end
 

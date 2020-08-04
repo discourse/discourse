@@ -1,0 +1,104 @@
+{{#if canChangeBio}}
+  <div class="control-group pref-bio">
+    <label class="control-label">{{i18n "user.bio"}}</label>
+    <div class="controls bio-composer input-xxlarge">
+      {{d-editor value=model.bio_raw}}
+    </div>
+  </div>
+{{/if}}
+
+<div class="control-group pref-timezone">
+  <label class="control-label">{{i18n "user.timezone"}}</label>
+  {{timezone-input
+    value=model.user_option.timezone
+    onChange=(action (mut model.user_option.timezone))
+    class="input-xxlarge"
+  }}
+  {{d-button icon="globe" label="user.use_current_timezone" action=(action "useCurrentTimezone") }}
+</div>
+
+{{#if model.can_change_location}}
+  <div class="control-group pref-location">
+    <label class="control-label">{{i18n "user.location"}}</label>
+    <div class="controls">
+      {{input type="text" value=model.location class="input-xxlarge" id="edit-location"}}
+    </div>
+  </div>
+{{/if}}
+
+{{#if model.can_change_website}}
+  <div class="control-group pref-website">
+    <label class="control-label">{{i18n "user.website"}}</label>
+    <div class="controls">
+      {{input type="text" value=model.website class="input-xxlarge"}}
+    </div>
+  </div>
+{{/if}}
+
+{{#each userFields as |uf|}}
+  <div class="control-group">
+    {{user-field field=uf.field value=uf.value}}
+  </div>
+{{/each}}
+<div class="clearfix"></div>
+
+{{#if siteSettings.allow_profile_backgrounds}}
+  <div class="control-group pref-profile-bg">
+    <label class="control-label">{{i18n "user.change_profile_background.title"}}</label>
+    <div class="controls">
+      {{image-uploader imageUrl=model.profile_background_upload_url
+                       type="profile_background"}}
+    </div>
+    <div class="instructions">
+      {{i18n "user.change_profile_background.instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group pref-profile-bg">
+    <label class="control-label">{{i18n "user.change_card_background.title"}}</label>
+    <div class="controls">
+      {{image-uploader imageUrl=model.card_background_upload_url
+                       type="card_background"}}
+    </div>
+    <div class="instructions">
+      {{i18n "user.change_card_background.instructions"}}
+    </div>
+  </div>
+{{/if}}
+
+{{#if siteSettings.allow_featured_topic_on_user_profiles}}
+  <div class="control-group">
+    <label class="control-label">{{i18n "user.featured_topic"}}</label>
+    {{#if model.featured_topic}}
+      <label class="featured-topic-link">
+        {{#link-to "topic" model.featured_topic.slug model.featured_topic.id}}
+          {{html-safe (replace-emoji model.featured_topic.fancy_title)}}
+        {{/link-to}}
+      </label>
+    {{/if}}
+
+    <div>
+      {{d-button action=(action "showFeaturedTopicModal")
+        class="btn-default feature-topic-on-profile-btn"
+        label="user.feature_topic_on_profile.open_search"}}
+      {{#if model.featured_topic}}
+        {{d-button action=(action "clearFeaturedTopicFromProfile")
+          class="btn-danger clear-feature-topic-on-profile-btn"
+          label="user.feature_topic_on_profile.clear.title"}}
+      {{/if}}
+    </div>
+    <div class="instructions">
+      {{i18n "user.change_featured_topic.instructions"}}
+    </div>
+  </div>
+{{/if}}
+
+{{plugin-outlet name="user-preferences-profile" args=(hash model=model save=(action "save"))}}
+
+{{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}
+
+<br>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+{{save-controls model=model action=(action "save") saved=saved}}

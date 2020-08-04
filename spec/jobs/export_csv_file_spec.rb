@@ -36,6 +36,13 @@ describe Jobs::ExportCsvFile do
 
         expect(system_message.id).to eq(UserExport.last.topic_id)
         expect(system_message.closed).to eq(true)
+
+        files = []
+        Zip::File.open(Discourse.store.path_for(upload)) do |zip_file|
+          zip_file.each { |entry| files << entry.name }
+        end
+
+        expect(files.size).to eq(2)
       ensure
         user.uploads.each(&:destroy!)
       end
@@ -114,7 +121,7 @@ describe Jobs::ExportCsvFile do
       user1.user_visits.create!(visited_at: '2010-01-03', posts_read: 420)
 
       exporter.extra['name'] = 'visits'
-      exporter.extra['group_id'] = group.id
+      exporter.extra['group'] = group.id
       report = exporter.report_export.to_a
 
       expect(report.length).to eq(2)
@@ -145,6 +152,20 @@ describe Jobs::ExportCsvFile do
       expect(report.second).to contain_exactly(user.username, "Earth", "2010-01-01 00:00:00 UTC")
     end
 
+    it 'works with topic reports' do
+      freeze_time DateTime.parse('2010-01-01 6:00')
+
+      exporter.extra['name'] = 'top_referred_topics'
+      post1 = Fabricate(:post)
+      post2 = Fabricate(:post)
+      IncomingLink.add(host: "a.com", referer: "http://twitter.com", post_id: post1.id, ip_address: '1.1.1.1')
+
+      report = exporter.report_export.to_a
+
+      expect(report.first).to contain_exactly("Topic", "Clicks")
+      expect(report.second).to contain_exactly(post1.topic.id.to_s, "1")
+    end
+
     it 'works with stacked_chart reports' do
       ApplicationRequest.create!(date: '2010-01-01', req_type: 'page_view_logged_in', count: 1)
       ApplicationRequest.create!(date: '2010-01-02', req_type: 'page_view_logged_in', count: 2)
@@ -167,6 +188,25 @@ describe Jobs::ExportCsvFile do
       expect(report[3]).to contain_exactly("2010-01-03", "3", "6", "9")
     end
 
+    it 'works with posts reports and filters' do
+      category = Fabricate(:category)
+      subcategory = Fabricate(:category, parent_category: category)
+
+      Fabricate(:post, topic: Fabricate(:topic, category: category), created_at: '2010-01-01 12:00:00 UTC')
+      Fabricate(:post, topic: Fabricate(:topic, category: subcategory), created_at: '2010-01-01 12:00:00 UTC')
+
+      exporter.extra['name'] = 'posts'
+
+      exporter.extra['category'] = category.id
+      report = exporter.report_export.to_a
+      expect(report[0]).to contain_exactly("Count", "Day")
+      expect(report[1]).to contain_exactly("1", "2010-01-01")
+
+      exporter.extra['include_subcategories'] = true
+      report = exporter.report_export.to_a
+      expect(report[0]).to contain_exactly("Count", "Day")
+      expect(report[1]).to contain_exactly("2", "2010-01-01")
+    end
   end
 
   let(:user_list_header) {

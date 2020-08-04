@@ -1,0 +1,30 @@
+{{#if selectKit.options.showFullTitle}}
+  <div {{action "onSelectedNameClick"}} tabindex="0" title={{title}} data-value={{value}} data-name={{name}} class="select-kit-selected-name selected-name choice">
+    {{#if item.icon}}
+      {{d-icon item.icon}}
+    {{/if}}
+
+    <span class="name">
+      {{label}}
+    </span>
+
+    {{#if selectKit.options.clearOnClick}}
+      {{d-icon "times"}}
+    {{else}}
+      {{#if shouldDisplayClearableButton}}
+        {{d-button
+          class="btn-clear"
+          icon="times"
+          action=selectKit.deselect
+          actionParam=item
+        }}
+      {{/if}}
+    {{/if}}
+  </div>
+{{else}}
+  {{#if item.icon}}
+    <div tabindex="0" class="select-kit-selected-name selected-name choice">
+      {{d-icon item.icon}}
+    </div>
+  {{/if}}
+{{/if}}

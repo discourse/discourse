@@ -103,3 +103,19 @@ QUnit.test(
     assert.equal(count(".row.setting"), 1);
   }
 );
+
+QUnit.test("filter settings by plugin name", async assert => {
+  await visit("/admin/site_settings");
+
+  await fillIn("#setting-filter", "plugin:discourse-logo");
+  assert.equal(count(".row.setting"), 1);
+
+  // inexistent plugin
+  await fillIn("#setting-filter", "plugin:discourse-plugin");
+  assert.equal(count(".row.setting"), 0);
+});
+
+QUnit.test("category name is preserved", async assert => {
+  await visit("admin/site_settings/category/login?filter=test");
+  assert.equal(currentURL(), "admin/site_settings/category/login?filter=test");
+});

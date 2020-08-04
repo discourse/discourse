@@ -1,39 +1,43 @@
+.modal-inner-container .d-time-input,
 .d-time-input {
-  box-sizing: border-box;
+  display: inline-flex;
 
-  .fields {
-    display: flex;
-    align-items: center;
-    border: 1px solid $primary-low;
+  .combo-box {
+    width: 65px;
+    min-width: auto;
 
-    .field {
-      text-align: center;
+    &:not(.has-selection) {
+      .select-kit-selected-name .name {
+        color: $primary-medium;
+      }
+    }
+
+    .select-kit-header {
+      .d-icon {
+        padding-left: 0;
+      }
+
+      &:focus {
+        outline: 1px solid $tertiary;
+      }
+    }
+
+    .select-kit-collection {
+      min-width: auto;
+    }
+
+    .select-kit-filter {
       width: auto;
-      margin: 0;
-      border: none;
-      outline: none;
-      box-shadow: none;
-      width: 32px;
-
-      &.time {
-        width: 100%;
-        text-align: left;
+      overflow: hidden;
+      .filter-input {
+        min-width: 0;
       }
+    }
 
-      &.hours,
-      &.minutes {
-        text-align: center;
-        width: 45px;
-      }
-
-      &.hours {
-        padding-right: 0;
-      }
-
-      &.minutes {
-        padding-left: 10px;
-        width: 55px;
-      }
+    .selected-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }

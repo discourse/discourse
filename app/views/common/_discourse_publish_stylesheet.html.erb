@@ -1,0 +1,9 @@
+<%= discourse_stylesheet_link_tag 'publish', theme_ids: nil %>
+
+<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request).each do |file| %>
+  <%= discourse_stylesheet_link_tag(file) %>
+<%- end %>
+
+<%- if theme_ids.present? %>
+  <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
+<%- end %>

@@ -170,6 +170,28 @@ RSpec.describe UploadCreator do
       end
     end
 
+    describe 'converting HEIF to jpeg' do
+      let(:filename) { "should_be_jpeg.heic" }
+      let(:file) { file_from_fixtures(filename, "images") }
+
+      before do
+        SiteSetting.convert_heif_to_jpeg = true
+        SiteSetting.authorized_extensions = 'jpg|heic'
+      end
+
+      it 'should store the upload with the right extension' do
+        expect do
+          UploadCreator.new(file, filename).create_for(user.id)
+        end.to change { Upload.count }.by(1)
+
+        upload = Upload.last
+
+        expect(upload.extension).to eq('jpeg')
+        expect(File.extname(upload.url)).to eq('.jpeg')
+        expect(upload.original_filename).to eq('should_be_jpeg.jpg')
+      end
+    end
+
     describe 'secure attachments' do
       let(:filename) { "small.pdf" }
       let(:file) { file_from_fixtures(filename, "pdf") }
@@ -380,12 +402,24 @@ RSpec.describe UploadCreator do
     end
   end
 
-  describe '#whitelist_svg!' do
+  describe '#clean_svg!' do
+    let(:b64) do
+      Base64.encode64('<svg onmouseover="alert(alert)" />')
+    end
+
     let(:file) do
       file = Tempfile.new
       file.write(<<~XML)
         <?xml version="1.0" encoding="UTF-8"?>
         <svg xmlns="http://www.w3.org/2000/svg" width="200px" height="200px" onload="alert(location)">
+          <defs>
+            <path id="pathdef" d="m0 0h100v100h-77z" stroke="#000" />
+          </defs>
+          <g>
+            <use id="valid-use" x="123" xlink:href="#pathdef" />
+          </g>
+          <use id="invalid-use1" href="https://svg.example.com/evil.svg" />
+          <use id="invalid-use2" xlink:href="data:image/svg+xml;base64,#{b64}" />
         </svg>
       XML
       file.rewind
@@ -394,8 +428,12 @@ RSpec.describe UploadCreator do
 
     it 'removes event handlers' do
       begin
-        UploadCreator.new(file, 'file.svg').whitelist_svg!
-        expect(file.read).not_to include('onload')
+        UploadCreator.new(file, 'file.svg').clean_svg!
+        file_content = file.read
+        expect(file_content).not_to include('onload')
+        expect(file_content).to include('#pathdef')
+        expect(file_content).not_to include('evil.svg')
+        expect(file_content).not_to include(b64)
       ensure
         file.unlink
       end

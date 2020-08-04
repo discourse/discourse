@@ -45,7 +45,7 @@ zh_CN:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
       generic: 导入该主题时发生错误
-      about_json: "导入错误：about.json 不存在或无效"
+      about_json: "导入错误：about.json不存在或无效。你确定这是一个Discourse主题码？"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 的修改包含无效值：%{errors}"
       git: "克隆 git 储存库时出错，访问被拒绝或找不到存储库"
@@ -189,6 +189,9 @@ zh_CN:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     max_rows: "前%{max_bulk_invites}个邀请已经被发出。尝试将文件分割成更小的部分。"
     error: "上传文件的时候出错了。请稍后重试。"
+  invite_link:
+    email_taken: "这个电子邮件地址已被注册。如果你已经有一个账户，请登录或重置密码。"
+    max_redemptions_limit: "应该在 2 和 %{max_limit} 之间。"
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入到此主题：%{group_names}。"
     user_exists: "抱歉，用户已经被邀请过了。你只可以邀请一个用户到一个主题中一次。"
@@ -286,9 +289,10 @@ zh_CN:
   topics_in_category: "“%{category}”分类中的主题"
   rss_posts_in_topic: " '%{topic}'的RSS源"
   rss_topics_in_category: "'%{category}'分类中主题的RSS源"
-  author_wrote: "%{author}写道："
-  num_posts: "帖子："
-  num_participants: "参与者："
+  rss_num_posts:
+    other: "%{count} 个帖"
+  rss_num_participants:
+    other: "%{count} 位参与者"
   read_full_topic: "阅读整个主题"
   private_message_abbrev: "私信"
   rss_description:
@@ -317,7 +321,7 @@ zh_CN:
       already_bookmarked_post: "你不能将同一帖子收藏两次。"
       cannot_set_past_reminder: "你不能在此主题设置收藏提醒。"
       cannot_set_reminder_in_distant_future: "你不能够设置一个大于十年的收藏提醒。"
-      time_must_be_provided: "必须为除“ %{reminder_type}”以外的所有提醒提供时间"
+      time_must_be_provided: "必须为所有提醒设置时间"
     reminders:
       at_desktop: "下次我使用桌面设备时"
       later_today: "今天的某个时候"
@@ -353,6 +357,10 @@ zh_CN:
       trust_level_4: "信任等级4"
     request_membership_pm:
       title: "%{group_name}的成员请求"
+    request_accepted_pm:
+      title: "你已接受加入@%{group_name}"
+      body: |
+        你要加入@%{group_name}的请求已被允许，现在你是其中一员了。
     view_hidden_topic_request_reason: "我希望加入群组 “%{group_name}” 以访问[此主题](%{topic_url})"
   education:
     until_posts:
@@ -394,11 +402,11 @@ zh_CN:
 
       这样其它人会更容易地看一个长的回复，而不是多个分开的回复。
     dominating_topic: |
-      ### 让其他人加入讨论
+      ### 让其他人也加入到讨论中
 
-      很明显这个主题对你很重要 &ndash; 你已经发表的帖子占该主题 %{percent}% 的回复。
+      显然这个主题对你很重要 &ndash；但所有回复中你的发言占比超过%{percent}%
 
-      如果你能留出空间让其他人来分享他们的观点，那可能会更好。你可以邀请他们过来吗？
+      留一点空间给其他人分享他们自己的见解会更好。你能邀请他们吗？
     get_a_room: |
       ### 鼓励大家参与讨论
 
@@ -443,6 +451,7 @@ zh_CN:
               no_user_selected: "你必须选择一个有效的用户。"
               reply_by_email_disabled: "用邮件回复已被禁止"
               target_user_not_found: "未找到你要向其发送此消息的其中一个用户"
+              unable_to_update: "更新该主题时发生错误。"
             featured_link:
               invalid: "不合法。URL 应包括 http:// 或 https://。"
               invalid_category: "无法编辑该分类。"
@@ -702,15 +711,18 @@ zh_CN:
     confirmed: "你的电子邮箱已被更新。"
     please_continue: "转入到%{site_name}"
     error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
+    doesnt_exist: "这个电子邮件地址与你的账户没有关联。"
     error_staged: "在修改你的电子邮箱地址时出现了错误。这个邮箱已经被一个暂存用户占用了。"
     already_done: "抱歉，此激活链接已经失效。可能你已经修改了邮箱？"
     confirm: "确认"
     authorizing_new:
       title: "确认您的新邮箱"
-      description: "请你确认要将新的电子邮件地址更改为："
+      description: "请确认你想要修改的电子邮件地址："
+      description_add: "请确认你要添加的次要电子邮件地址："
     authorizing_old:
       title: "修改你的电子邮件地址"
       description: "请确认你的电子邮件地址更改"
+      description_add: "请确认你要添加的次要电子邮件地址："
       old_email: "旧邮件：%{email}"
       new_email: "新邮件：%{email}"
       almost_done_title: "确认新的电子邮件地址"
@@ -738,26 +750,26 @@ zh_CN:
       title: "需要审核"
   post_action_types:
     off_topic:
-      title: "题外话"
-      description: "此帖与该主题标题和第一帖而言所讨论的主题无关，可能需要被移动。"
+      title: "偏离主题"
+      description: "该帖子与当前主题的标题和首帖内容所无关，可能需要被移动到其它地方。"
       short_description: "和讨论不相关"
-      long_form: "标记为题外话"
+      long_form: "标记为偏离主题"
     spam:
-      title: "垃圾"
+      title: "垃圾内容"
       description: "该帖子是广告或破坏。帖子没有价值或者与当前主题无关。"
-      short_description: "这是个广告或者破坏"
-      long_form: "标记为垃圾"
+      short_description: "这是广告或者破坏行为"
+      long_form: "标记为垃圾内容"
       email_title: '“%{title}”被标记为垃圾'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不当内容"
-      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
+      description: '该帖子的内容包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区指引</a>。'
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
       long_form: "标记为不当内容"
     notify_user:
-      title: "给 @{{username}}发送一条私信"
-      description: "我想与此人私下交流他们的帖子。"
-      short_description: "我想与此人私下交流他们的帖子。"
+      title: "给 @%{username}发送一条私信"
+      description: "我想亲自与此人私下交流关于该帖子的事情。"
+      short_description: "我想亲自与此人私下交流关于该帖子的事情。"
       long_form: "以发送私信给用户"
       email_title: '你在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
@@ -775,9 +787,9 @@ zh_CN:
       long_form: "已收藏本帖"
     like:
       title: "赞"
-      description: "赞本帖"
-      short_description: "赞该贴"
-      long_form: "赞本帖内容"
+      description: "点赞该帖子"
+      short_description: "赞该帖"
+      long_form: "赞了本帖"
   draft:
     sequence_conflict_error:
       title: "草稿错误"
@@ -818,20 +830,20 @@ zh_CN:
   topic_flag_types:
     spam:
       title: "垃圾"
-      description: "这个主题是广告。它对本站点没有联系和帮助，仅仅是推销信息。"
+      description: "该主题是一个广告。它对本网站没有用处或相关性，仅仅是推销内容。"
       long_form: "标记为垃圾"
-      short_description: "这是个广告"
+      short_description: "这是广告"
     inappropriate:
       title: "不当内容"
-      description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
+      description: '该帖子的内容包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区准则</a>。'
       long_form: "标记为不当内容"
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
     notify_moderators:
       title: "其他内容"
-      description: '此帖需要版主依据<a href="%{base_path}/guidelines">社区准则</a>、<a href="%{tos_url}">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
-      long_form: "标记为需版主注意"
-      short_description: "需要管理人员注意的其他原因"
-      email_title: '“{title}”主题需要你的关注'
+      description: '该主题需要版主依据<a href="%{base_path}/guidelines">社区准则</a>、<a href="%{tos_url}">服务条款（TOS）</a>或其它未列出的原因给予关注。'
+      long_form: "标记以让版主注意"
+      short_description: "因其他原因需要管理人员注意"
+      email_title: '主题“%{title}”需要版主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>你的帖子被社区标记了。请<a href="%{path}">查看你的消息</a>。</p>'
@@ -1253,6 +1265,7 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "捕获敏感词 %{action} 的正则表达式无效。请检查你的<a href='%{base_path}/admin/logs/watched_words'>敏感词设置</a>，或禁用“敏感词正则表达式”网站设置。"
   site_settings:
+    display_local_time_in_user_card: "打开用户卡片时，根据用户的时区显示本地时间。"
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
     default_locale: "此Discourse实例的默认语言。你可以在<a href='%{base_path}/admin/customize/site_texts' target='_blank'>自定义/文本内容</a>替换系统生成的分类或主题的文本。"
@@ -1293,7 +1306,6 @@ zh_CN:
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "通过下载将远程图像转换为本地图像；此选项可避免图像损坏。"
     download_remote_images_threshold: "下载远程图像到本地所需的最小硬盘空间（百分比）"
-    download_remote_images_max_days_old: "不下载超过 n 天的帖子中的远程图片。"
     disabled_image_download_domains: "域名列表，链接到这些站点的图片不会被下载。用 | 分割。"
     editing_grace_period: "在 (n) 秒之内，对帖子的编辑不生成帖子历史。"
     editing_grace_period_max_diff: "编辑宽限期允许的最大字符更改数，如果更改存储后的另一个修订版（信任级别0和1）"
@@ -1311,6 +1323,7 @@ zh_CN:
     add_rel_nofollow_to_user_content: '添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须使用“rake posts:rebake"重制所有帖子。'
     exclude_rel_nofollow_domains: "不应添加nofollow的域名列表。example.com 会自动包含 sub.example.com。至少你应该填写本站域名来帮助爬虫获得所有内容。如果你网站的其余部分在另外的域名，也请添加那些域名。"
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
+    topic_excerpt_maxlength: "根据主题的第一帖所生成，主题的节选或摘要的最大长度。"
     show_pinned_excerpt_mobile: "移动版显示置顶主题剪辑。"
     show_pinned_excerpt_desktop: "桌面版显示置顶主题剪辑。"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
@@ -1414,6 +1427,7 @@ zh_CN:
     moderators_view_emails: "允许版主查看用户电子邮件"
     prioritize_username_in_ux: "在用户页、用户卡片和帖子上优先显示用户名（未选时，昵称将先显示）"
     enable_rich_text_paste: "将文本粘贴到编辑器中时自动启用HTML到Markdown转换。（实验性）"
+    send_old_credential_reminder_days: "几天后提醒有关旧凭证"
     email_token_valid_hours: "“忘记密码”/“激活账户”令牌有效的小时数。"
     enable_badges: "启用徽章系统"
     enable_whispers: "允许管理人员在主题中私密交流。"
@@ -1439,20 +1453,22 @@ zh_CN:
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
     verbose_sso_logging: "将详细的SSO相关诊断记录到<a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "在/session/sso_provider端点实现Discourse SSO提供程序协议，需要设置sso_provider_secrets"
-    sso_url: "单点登录 URL 入口点（必须包含 http:// 或 https://）"
-    sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
-    sso_provider_secrets: "使用Discourse作为SSO提供程序的域密码对列表。确保SSO密码为10个字符或更长。通配符*可用于匹配任何域或仅匹配其中的一部分（例如* .example.com）。"
-    sso_overrides_bio: "在用户页面中覆盖用户的个人信息并禁止用户修改"
-    sso_overrides_groups: "将所有手动组成员资格与组sso属性中指定的组同步（警告：如果未指定组，则将为用户清除所有手动组成员资格）"
-    sso_overrides_email: "每一次登录时，用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且阻止本地的邮件地址修改。（警告：因格本地邮件的正规化，邮件地址可能会有所差异）"
-    sso_overrides_username: "每一次登录时，用 SSO 信息中的外部站点的用户名覆盖本地用户名，并且阻止本地的用户名修改。（警告：因格本地用户名的长度和其他要求，用户名可能会有所差异）"
-    sso_overrides_name: "每一次登录时，用 SSO 信息中的外部站点的全名覆盖本地全名，并且阻止本地的全名修改。"
-    sso_overrides_avatar: "从SSO有效负载覆盖具有外部站点头像的用户头像。如果启用，则不允许用户在Discourse上传头像。"
-    sso_overrides_profile_background: "从SSO有效负载覆盖用户配置文件背景和外部站点头像。"
-    sso_overrides_card_background: "从SSO有效负载覆盖用户卡背景与外部站点头像。"
-    sso_not_approved_url: "重定向未受许可的单点登录账户至这个 URL"
-    sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（默认情况下返回地址必须位于当前站点）"
+    enable_sso_provider: "在端点/session/sso_provider实现Discourse SSO provider协议，需要设置sso_provider_secrets"
+    sso_url: "单点登录 URL 入口（必须包含 http:// 或 https://）"
+    sso_secret: "用于加密验证SSO信息的密钥字符串，请确保是 10 个字符或者更长"
+    sso_provider_secrets: "使用Discourse作为SSO provider的域名与密钥对列表。确保SSO密钥为10个字符或更长。通配符 * 可用于匹配任何域名或仅匹配其中的一部分（例如* .example.com）。"
+    sso_overrides_bio: "覆盖用户个人信息中的用户简介并禁止用户修改"
+    sso_overrides_groups: "将所有手动创建的群组与SSO属性中指定的群组同步（警告：如果你没有指定群组，那么将为用户清除所有手动创建的群组的成员资格）"
+    sso_overrides_email: "每次登录都使用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且禁止本地修改邮件地址。（警告：由于本地邮件的规范化，邮件地址可能会有所差异）"
+    sso_overrides_username: "每次登录都使用 SSO 信息中的的用户名覆盖本地用户名，并且禁止本地修改用户名。（警告：因本地用户名的长度或其它要求，用户名可能会有所差异）"
+    sso_overrides_name: "每次登录都使用 SSO 信息中的外部站点的全名覆盖本地全名，并且禁止本地的全名修改。"
+    sso_overrides_avatar: "使用SSO信息中的外部站点头像覆盖用户头像。如果启用，则不允许用户在Discourse上传头像。"
+    sso_overrides_location: "使用SSO信息中的位置覆盖用户位置，并且禁止本地修改。"
+    sso_overrides_website: "使用SSO信息中的外部位置覆盖用户网站，并且禁止本地修改。"
+    sso_overrides_profile_background: "使用SSO信息中的外部站点的头像覆盖用户资料背景"
+    sso_overrides_card_background: "使用SSO信息中的外部站点的头像覆盖用户卡片背景。"
+    sso_not_approved_url: "将未经授权的SSO账户重定向至这个 URL"
+    sso_allows_all_return_paths: "不限制 SSO 所提供的 return_paths 中的域名（默认情况下返回的地址必须位于当前站点）"
     enable_local_logins: "启用基于本地用户名和密码登录的账户。必须启用此选项才能使邀请生效。警告：如果禁用，且之前未配置至少一种备用登录方法，则可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件将一键登录链接发送给他们。"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
@@ -1486,7 +1502,6 @@ zh_CN:
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
     s3_endpoint: "可以修改端点以备份到S3兼容服务，如DigitalOcean Spaces或Minio。警告：留空以使用AWS S3。"
     s3_configure_tombstone_policy: "为逻辑删除上载启用自动删除策略。注意：如果禁用，在删除上载后不会回收空间。"
-    s3_disable_cleanup: "当在本地删除备份时不删除 S3 上的备份。"
     enable_s3_inventory: "使用Amazon S3存储验证上传并生成报告。重要：需要有效的S3证书（包括 access key id & secret access key)。"
     backup_time_of_day: "备份的 UTC 时间"
     backup_with_uploads: "在备份日程中包括上传。关闭此项仅备份数据库。"
@@ -1517,6 +1532,7 @@ zh_CN:
     max_logins_per_ip_per_minute: "一分钟内同一个IP（网络）地址能允许最大的登录次数。"
     max_post_deletions_per_minute: "用户每分钟可以删除的最大帖子数。"
     max_post_deletions_per_day: "用户每天可以删除的最大帖子数。"
+    invite_link_max_redemptions_limit: "邀请链接所允许的最大兑换量不能超过这个数值。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"
     categories_topics: "要在 /categories 页面中显示的主题数量。如果设置为0，它将自动尝试寻找一个值来保持两列对称（分类和主题）。"
@@ -1788,6 +1804,7 @@ zh_CN:
     warn_reviving_old_topic_age: "当有人开始回复一个最后回复于设定天数之前的主题时，将显示一个警告。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式声明语言，仍为所有预格式化代码块应用语法高亮。"
     highlighted_languages: "包含语法突出显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>用于演示"
+    show_copy_button_on_codeblocks: "为代码块添加复制到用户剪切板的按钮。该功能不支持IE浏览器。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用程序是必需的。"
     embed_topics_list: "主题列表支持HTML嵌入"
     embed_set_canonical_url: "为嵌入到主题的嵌入内容设置规范URL。"
@@ -1846,7 +1863,7 @@ zh_CN:
     default_categories_watching: "默认监看的分类列表。"
     default_categories_tracking: "默认跟踪的分类列表。"
     default_categories_muted: "默认静音的分类列表"
-    default_categories_watching_first_post: "默认关注该分类中每个新主题的第一条贴子"
+    default_categories_watching_first_post: "默认关注该分类中每个新主题的第一个帖子"
     mute_all_categories_by_default: "将所有分类的默认通知级别设置为静音。要求用户选择在“最新”和“分类”页面中出现的分类。如果您希望修改匿名用户的默认设置，请设置 'default_categories_'。"
     default_tags_watching: "默认监看的标签列表。"
     default_tags_tracking: "默认追踪的标签列表。"
@@ -1882,10 +1899,11 @@ zh_CN:
     company_name: "公司名"
     governing_law: "适用法律"
     city_for_disputes: "争议之城"
-    shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此类别中的主题将从管理人员的主题列表中删除。"
+    shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
     push_notifications_prompt: "显示用户同意提示。"
-    push_notifications_icon: "通知角中显示的徽章图标。尺寸必须为96px × 96px。"
     short_title: "短标题将用于用户主页、启动器或其他可能空间有限的地方。应该控制在12个字符内。"
+    dashboard_hidden_reports: "允许从仪表盘中隐藏指定的报告。"
+    dashboard_visible_tabs: "选择可见的仪表盘标签页"
     dashboard_general_tab_activity_metrics: "选择在常规选项卡中显示为活动指标的报告。"
     gravatar_name: "Gravatar提供商的名称"
     gravatar_base_url: "Gravatar提供商API的基础链接"
@@ -1942,7 +1960,7 @@ zh_CN:
         value: "SSO密钥"
   search:
     extreme_load_error: "站点处于高负荷状态，搜索已关闭，稍后再试。"
-    within_post: "#{{post_number}} 由 {{username}}"
+    within_post: "#%{post_number} 由 %{username}"
     types:
       category: "分类"
       topic: "结果"
@@ -2040,6 +2058,7 @@ zh_CN:
     not_activated: "你还不能登录。我们发送了一封激活邮件给你，请按照邮件中的步骤来激活你的账户。"
     not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登录。"
     admin_not_allowed_from_ip_address: "你不能从该 IP 地址以管理员身份登录。"
+    reset_not_allowed_from_ip_address: "你不能够从当前的IP地址请求重置密码。"
     suspended: "你要等到 %{date} 之后才能登录。"
     suspended_with_reason: "账户已封禁至 %{date}：%{reason}"
     errors: "%{errors}"
@@ -2097,6 +2116,7 @@ zh_CN:
       must_not_contain_two_special_chars_in_seq: "必须不包括连续的 2 个或更多的特殊字符（.-_）"
       must_not_end_with_confusing_suffix: "不能以难以分辨的后缀结尾，比如 .json 或者 .png 等"
     email:
+      invalid: "无效。"
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
       blocked: "不被允许。"
       revoked: "在%{date}之前不发送邮件至“%{email}”"
@@ -2628,9 +2648,9 @@ zh_CN:
       title: "Email被拒绝：收件人地址不正确"
       subject_template: "[%{email_prefix}] 邮件问题 -- 未知的发至：地址"
       text_body_template: |
-        我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件消息无法发送。
+        很抱歉，你通过邮件发往%{destination}（标题%{former_title}）的私信/消息没有成功。
 
-        无法识别目标邮件地址，或是邮件的 Message-ID 头已被修改。请确认在你正在将邮件发送至工作人员提供的正确的地址中。
+        你是否使用一个以上的电子邮件地址？你是否使用了不同的电子邮件地址回复？电子邮件回复要求你在回复时使用相同的电子邮件地址。或者，邮件中的私信/消息-ID 头可能被修改。
     email_reject_old_destination:
       title: "邮件拒绝老地址"
       subject_template: "[%{email_prefix}] 邮件问题 - 你正尝试回复旧通知"
@@ -2683,6 +2703,15 @@ zh_CN:
         我们很抱歉，但是你发送至%{destination}（标题 %{former_title}）的邮件出问题了。
 
         你的账户没有权限回复这个主题。如果你认为这是一个错误，[联系管理人员](%{base_url}/about)。
+    email_reject_reply_to_digest:
+      title: "回复摘要邮件被拒"
+      subject_template: "[%{email_prefix}] 邮件问题 -- 回复摘要邮件"
+      text_body_template: |
+        抱歉，你发送到%{destination}（标题为%{former_title}）的邮件出现了问题。
+
+        我们不接受直接回复摘要邮件。
+
+        如果你认为这是一个错误，[联系我们的管理人员](%{base_url}/about).
     email_error_notification:
       title: "邮件错误提醒"
       subject_template: "[%{email_prefix}] 电子邮件错误 -- POP 验证错误"
@@ -3164,6 +3193,17 @@ zh_CN:
         点击下面链接以确认你当前在%{site_name}的邮件地址：
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      title: "确认旧邮箱（添加）"
+      subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
+      text_body_template: |
+        在我们添加新的电子邮件地址之前，我们需要确认你控制了
+        当前的电子邮件账户。在你完成这一步后，我们会让你确认
+        新的电子邮件地址。
+
+        点击以下链接，确认你当前的%{site_name}电子邮件地址：
+
+        %{base_url}/u/confirm old-email/%{email_token}
     notify_old_email:
       title: "通知旧邮箱"
       subject_template: "[%{email_prefix}] 你的邮箱已经修改成功"
@@ -3171,6 +3211,17 @@ zh_CN:
         这是%{site_name}自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
 
         你的邮箱地址被修改为：
+
+        %{new_email}
+    notify_old_email_add:
+      title: "通知旧邮件（添加）"
+      subject_template: "[%{email_prefix}]一个新的电子邮件已被添加。"
+      text_body_template: |
+        请了解，这是一条自动的私信/消息，这个电子邮件地址
+        已添加至%{site_name}。如果有误，请联系
+        网站管理员。
+
+        你添加的电子邮件地址是：
 
         %{new_email}
     signup_after_approval:
@@ -3228,6 +3279,8 @@ zh_CN:
         如果这是你，太棒了！你不需要做任何其他事情。
 
         如果不是你，请[查看你现有的会话](%{base_url}/my/preferences/account)并考虑更改密码。
+  page_forbidden:
+    title: "啊噢！该页面是私密的。"
   page_not_found:
     title: "抱歉！这个页面不存在或者是私密的。"
     popular_topics: "热门"
@@ -3285,6 +3338,7 @@ zh_CN:
     user_email_user_suspended: "用户被封禁"
     user_email_already_read: "用户已阅读此帖"
     user_email_access_denied: "用户不被允许查看此帖子"
+    user_email_no_email: "没有与用户id%{user_id}相关联的邮件"
     sender_message_blank: "消息空"
     sender_message_to_blank: "message.to为空"
     sender_text_part_body_blank: "text_part.body为空"
@@ -3305,7 +3359,7 @@ zh_CN:
     default_theme_name: "亮"
     light_theme_name: "亮"
     dark_theme_name: "暗"
-    neutral_theme_name: "中型"
+    neutral_theme_name: "平淡"
     grey_amber_theme_name: "灰琥珀色"
     shades_of_blue_theme_name: "蓝黑"
     latte_theme_name: "棕色"
@@ -3861,7 +3915,7 @@ zh_CN:
         此徽章授予给连续5天用完所有每日 %{max_likes_per_day} “赞”的你。感谢您每天花时间积极鼓励最好的交流！
     crazy_in_love:
       name: 狂热
-      description: 20 天都赞过 50 次
+      description: "一天内送出 %{max_likes_per_day} 个赞达 20 次"
       long_description: |
         此徽章授予给每天都送完所有的每日 %{max_likes_per_day} 赞的你。哇！你是鼓励社区成员的榜样！
     thank_you:
@@ -4236,3 +4290,13 @@ zh_CN:
     html_missing_placeholder: "HTML模板必须包含%{placeholder}"
   discord:
     not_in_allowed_guild: "验证失败。您不是允许的Discord公会的成员。"
+  old_keys_reminder:
+    title: "关于旧凭证的提醒"
+    body: |
+      Hello！这是你的 Discourse 实例每年例行安全提醒。
+
+      出于礼貌，我们想让你知道，你的 Discourse 实例上使用的以下凭证已经两年多没有更新了。
+
+      %{keys}
+
+      目前不需要采取任何行动，但是，每隔几年对所有重要凭证进行周期性更新是一种良好的安全做法。

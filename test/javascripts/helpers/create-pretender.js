@@ -170,7 +170,7 @@ export function applyDefaultHandlers(pretender) {
         ]
       },
       badges: [{ id: 444, count: 1 }],
-      topics: [{ id: 1234, title: "cool title", url: "/t/1234/cool-title" }]
+      topics: [{ id: 1234, title: "cool title", slug: "cool-title" }]
     });
   });
 
@@ -255,6 +255,8 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));
   pretender.put("/t/1234/re-pin", success);
 
+  pretender.get("/t/2480.json", () => response(fixturesByUrl["/t/2480/1.json"]));
+
   pretender.get("/t/id_for/:slug", () => {
     return response({
       id: 280,
@@ -298,10 +300,6 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/post_reply_histories", () => {
     return response({ post_reply_histories: [{ id: 1234, cooked: "wat" }] });
-  });
-
-  pretender.get("/category_hashtags/check", () => {
-    return response({ valid: [{ slug: "bug", url: "/c/bugs" }] });
   });
 
   pretender.get("/categories_and_latest", () =>
@@ -620,7 +618,7 @@ export function applyDefaultHandlers(pretender) {
       });
     }
 
-    const ascending = request.queryParams.ascending;
+    const asc = request.queryParams.asc;
     const order = request.queryParams.order;
 
     if (order) {
@@ -629,7 +627,7 @@ export function applyDefaultHandlers(pretender) {
       });
     }
 
-    if (ascending) {
+    if (asc) {
       store = store.reverse();
     }
 
@@ -805,12 +803,12 @@ export function applyDefaultHandlers(pretender) {
         200,
         { "Content-Type": "application/html" },
         `
-    <aside class="onebox whitelistedgeneric">
+    <aside class="onebox allowlistedgeneric">
       <header class="source">
           <a href="http://test.com/somepage" target="_blank">test.com</a>
       </header>
       <article class="onebox-body">
-      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="https://test.com/image.png" class="thumbnail"></div>
+      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="" class="thumbnail"></div>
       <h3><a href="http://test.com/somepage" target="_blank">Test Page</a></h3>
       <p>Yet another collaboration tool</p>
       </article>

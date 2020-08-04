@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class SearchIndexer
-  INDEX_VERSION = 3
+  POST_INDEX_VERSION = 4
+  MIN_POST_REINDEX_VERSION = 3
+  TOPIC_INDEX_VERSION = 3
+  CATEGORY_INDEX_VERSION = 3
+  USER_INDEX_VERSION = 3
+  TAG_INDEX_VERSION = 3
   REINDEX_VERSION = 0
 
   def self.disable
@@ -16,24 +21,9 @@ class SearchIndexer
     HtmlScrubber.scrub(html, strip_diacritics: strip_diacritics)
   end
 
-  def self.inject_extra_terms(raw)
-    # insert some extra words for I.am.a.word so "word" is tokenized
-    # I.am.a.word becomes I.am.a.word am a word
-    raw.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|
-
-      split = with_dot.split(/https?:\/\/|[?:;,.\/]/)
-
-      if split.length > 1
-        with_dot + ((+" ") << split[1..-1].reject { |x| x.blank? }.join(" "))
-      else
-        with_dot
-      end
-    end
-  end
-
   def self.update_index(table: , id: , raw_data:)
     search_data = raw_data.map do |data|
-      inject_extra_terms(Search.prepare_data(data || "", :index))
+      Search.prepare_data(data || "", :index)
     end
 
     table_name = "#{table}_search_data"
@@ -49,17 +39,48 @@ class SearchIndexer
       setweight(to_tsvector('#{stemmer}', coalesce(:d,'')), 'D')
     SQL
 
-    indexed_data = search_data.select { |d| d.length > 0 }.join(' ')
-
-    params = {
+    ranked_params = {
       a: search_data[0],
       b: search_data[1],
       c: search_data[2],
       d: search_data[3],
+    }
+
+    indexed_data =
+      if table.to_s == "post"
+        ranked_params[:d]
+      else
+        search_data.select { |d| d.length > 0 }.join(' ')
+      end
+
+    tsvector = DB.query_single("SELECT #{ranked_index}", ranked_params)[0]
+    additional_lexemes = []
+
+    tsvector.scan(/'(([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+)'\:([\w+,]+)/).reduce(additional_lexemes) do |array, (lexeme, _, positions)|
+      count = 0
+
+      if lexeme !~ /^(\d+\.)?(\d+\.)*(\*|\d+)$/
+        loop do
+          count += 1
+          break if count >= 10 # Safeguard here to prevent infinite loop when a term has many dots
+          term, _, remaining = lexeme.partition(".")
+          break if remaining.blank?
+          array << "'#{remaining}':#{positions}"
+          lexeme = remaining
+        end
+      end
+
+      array
+    end
+
+    tsvector = "#{tsvector} #{additional_lexemes.join(' ')}"
+
+    params = {
       raw_data: indexed_data,
       id: id,
       locale: SiteSetting.default_locale,
-      version: INDEX_VERSION
+      version: const_get("#{table.upcase}_INDEX_VERSION"),
+      tsvector: tsvector,
     }
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
@@ -69,7 +90,7 @@ class SearchIndexer
        SET
           raw_data = :raw_data,
           locale = :locale,
-          search_data = #{ranked_index},
+          search_data = (:tsvector)::tsvector,
           version = :version
        WHERE #{foreign_key} = :id
     SQL
@@ -78,7 +99,7 @@ class SearchIndexer
       DB.exec(<<~SQL, params)
         INSERT INTO #{table_name}
         (#{foreign_key}, search_data, locale, raw_data, version)
-        VALUES (:id, #{ranked_index}, :locale, :raw_data, :version)
+        VALUES (:id, (:tsvector)::tsvector, :locale, :raw_data, :version)
       SQL
     end
   rescue
@@ -91,12 +112,12 @@ class SearchIndexer
     scrubbed_cooked = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
 
     # a bit inconsitent that we use title as A and body as B when in
-    # the post index body is C
+    # the post index body is D
     update_index(table: 'topic', id: topic_id, raw_data: [title, scrubbed_cooked])
   end
 
-  def self.update_posts_index(post_id, title, category, tags, cooked)
-    update_index(table: 'post', id: post_id, raw_data: [title, category, tags, scrub_html_for_search(cooked)])
+  def self.update_posts_index(post_id, topic_title, category_name, topic_tags, cooked)
+    update_index(table: 'post', id: post_id, raw_data: [topic_title, category_name, topic_tags, scrub_html_for_search(cooked)])
   end
 
   def self.update_users_index(user_id, username, name)
@@ -109,6 +130,20 @@ class SearchIndexer
 
   def self.update_tags_index(tag_id, name)
     update_index(table: 'tag', id: tag_id, raw_data: [name.downcase])
+  end
+
+  def self.queue_category_posts_reindex(category_id)
+    return if @disabled
+
+    DB.exec(<<~SQL, category_id: category_id, version: REINDEX_VERSION)
+      UPDATE post_search_data
+      SET version = :version
+      FROM posts
+      INNER JOIN topics ON posts.topic_id = topics.id
+      INNER JOIN categories ON topics.category_id = categories.id
+      WHERE post_search_data.post_id = posts.id
+      AND categories.id = :category_id
+    SQL
   end
 
   def self.queue_post_reindex(topic_id)
@@ -137,9 +172,11 @@ class SearchIndexer
     end
 
     category_name = topic.category&.name if topic
+
     if topic
-      tags = topic.tags.select(:id, :name)
-      unless tags.empty?
+      tags = topic.tags.select(:id, :name).to_a
+
+      if tags.present?
         tag_names = (tags.map(&:name) + Tag.where(target_tag_id: tags.map(&:id)).pluck(:name)).join(' ')
       end
     end
@@ -191,7 +228,7 @@ class SearchIndexer
     def self.scrub(html, strip_diacritics: false)
       return +"" if html.blank?
 
-      document = Nokogiri::HTML("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
+      document = Nokogiri::HTML5("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
 
       nodes = document.css(
         "div.#{CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS}"

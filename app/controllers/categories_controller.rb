@@ -24,18 +24,12 @@ class CategoriesController < ApplicationController
     parent_category = Category.find_by_slug(params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
 
     category_options = {
-      is_homepage: current_homepage == "categories".freeze,
+      is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: include_topics(parent_category)
     }
 
     @category_list = CategoryList.new(guardian, category_options)
-    @category_list.draft_key = Draft::NEW_TOPIC
-    @category_list.draft_sequence = DraftSequence.current(
-      current_user,
-      Draft::NEW_TOPIC
-    )
-    @category_list.draft = Draft.get(current_user, Draft::NEW_TOPIC, @category_list.draft_sequence) if current_user
 
     if category_options[:is_homepage] && SiteSetting.short_site_description.present?
       @title = "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
@@ -53,11 +47,11 @@ class CategoriesController < ApplicationController
           no_definitions: true
         }
 
-        if style == "categories_and_latest_topics".freeze
+        if style == "categories_and_latest_topics"
           @topic_list = TopicQuery.new(current_user, topic_options).list_latest
           @topic_list.more_topics_url = url_for(public_send("latest_path"))
-        elsif style == "categories_and_top_topics".freeze
-          @topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
+        elsif style == "categories_and_top_topics"
+          @topic_list = TopicQuery.new(current_user, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
           @topic_list.more_topics_url = url_for(public_send("top_path"))
         end
 
@@ -245,7 +239,7 @@ class CategoriesController < ApplicationController
     discourse_expires_in 1.minute
 
     category_options = {
-      is_homepage: current_homepage == "categories".freeze,
+      is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: false
     }
@@ -264,15 +258,9 @@ class CategoriesController < ApplicationController
       result.topic_list = TopicQuery.new(nil, topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
     end
 
-    draft_key = Draft::NEW_TOPIC
-    draft_sequence = DraftSequence.current(current_user, draft_key)
-    draft = Draft.get(current_user, draft_key, draft_sequence) if current_user
-
-    %w{category topic}.each do |type|
-      result.public_send(:"#{type}_list").draft = draft
-      result.public_send(:"#{type}_list").draft_key = draft_key
-      result.public_send(:"#{type}_list").draft_sequence = draft_sequence
-    end
+    result.topic_list.draft = result.category_list.draft
+    result.topic_list.draft_key = result.category_list.draft_key
+    result.topic_list.draft_sequence = result.category_list.draft_sequence
 
     render_serialized(result, CategoryAndTopicListsSerializer, root: false)
   end
@@ -328,12 +316,14 @@ class CategoriesController < ApplicationController
         :allow_global_tags,
         :required_tag_group_name,
         :min_tags_from_required_group,
+        :read_only_banner,
+        :default_list_filter,
         custom_fields: [params[:custom_fields].try(:keys)],
         permissions: [*p.try(:keys)],
         allowed_tags: [],
         allowed_tag_groups: []
       )
-      if SiteSetting.enable_category_group_review?
+      if SiteSetting.enable_category_group_moderation?
         result[:reviewable_by_group_id] = Group.find_by(name: params[:reviewable_by_group_name])&.id
       end
 
@@ -354,8 +344,8 @@ class CategoriesController < ApplicationController
     view_context.mobile_view? ||
       params[:include_topics] ||
       (parent_category && parent_category.subcategory_list_includes_topics?) ||
-      style == "categories_with_featured_topics".freeze ||
-      style == "categories_boxes_with_topics".freeze ||
-      style == "categories_with_top_topics".freeze
+      style == "categories_with_featured_topics" ||
+      style == "categories_boxes_with_topics" ||
+      style == "categories_with_top_topics"
   end
 end

@@ -45,7 +45,6 @@ de:
       unrecognized_extension: "Unbekannte Dateiendung: %{extension}"
     import_error:
       generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
-      about_json: "Importfehler: about.json existiert nicht, oder ist ungültig"
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
       git: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
       unpack_failed: "Fehler beim Entpacken der Datei"
@@ -299,9 +298,6 @@ de:
   topics_in_category: "Themen in der Kategorie '%{category}'"
   rss_posts_in_topic: "RSS-Feed von '%{topic}'"
   rss_topics_in_category: "RSS-Feed von Themen in der Kategorie '%{category}'"
-  author_wrote: "%{author} schrieb:"
-  num_posts: "Beiträge:"
-  num_participants: "Teilnehmer:"
   read_full_topic: "Lese das vollständige Thema"
   private_message_abbrev: "Nachricht"
   rss_description:
@@ -328,10 +324,10 @@ de:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
-      time_must_be_provided: "Zeit muss eingestellt werden für alle Erinnerungen ausser '%{reminder_type}'"
     reminders:
       at_desktop: "Nächstes mal wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
+      next_business_day: "Nächster Werktag"
       tomorrow: "Morgen"
       next_week: "Nächste Woche"
       next_month: "Nächster Monat"
@@ -406,12 +402,6 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</a> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige tiefgehende Antworten haben statt vielen kleinen und einzelnen Antworten.
-    dominating_topic: |
-      ### Lass auch andere die Konversation mitgestalten
-
-      Dieses Thema ist dir eindeutig wichtig &ndash; du hast mehr als %{percent}% aller Antworten verfasst.
-
-      Es könnte noch besser sein, wenn du anderen Leuten ebenfalls Raum lässt, ihre Sichtweisen darzulegen. Bitte lade sie dazu ein.
     get_a_room: |
       ### Ermutige jeden, bei dieser Konversation mitzumachen.
 
@@ -722,7 +712,6 @@ de:
     confirm: "Bestätigen"
     authorizing_new:
       title: "Bestätige deine neue E-Mail"
-      description: "Bitte bestätige, dass deine E-Mail Adresse geändert wird auf:"
     authorizing_old:
       title: "Ändere deine E-Mail Adresse"
       description: "Bitte bestätige die Änderung deiner E-Mail Adresse"
@@ -770,7 +759,7 @@ de:
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
       long_form: "dies als unangemessen gemeldet"
     notify_user:
-      title: "Schreibe @{{username}} eine Nachricht"
+      title: "Schreibe @%{username} eine Nachricht"
       description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
       short_description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
       long_form: "angeschriebener Benutzer"
@@ -1309,7 +1298,6 @@ de:
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher um externe Bilder lokal herunterzuladen (in Prozent)"
-    download_remote_images_max_days_old: "Externe Bilder nicht herunterladen für Beiträge, die älter als (n) Tage alt sind."
     disabled_image_download_domains: "Liste von Domänen, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
     editing_grace_period: "Für (n) Sekunden wird nach dem Bearbeiten keine neue Revision im Beitragsverlauf angelegt."
     editing_grace_period_max_diff: "Maximale Anzahl von Zeichenänderungen, die während der Bearbeitungsfrist erlaubt sind. Bei größeren Änderungen wird eine neue Beitragsversion gespeichert (Vertrauensstufe 0 und 1)"
@@ -1497,7 +1485,6 @@ de:
     s3_backup_bucket: "Der entfernte Speicherort für Ihre Sicherungen. WARNUNG: Stellen Sie sicher, dass es sich um einen privaten Speicherort handelt."
     s3_endpoint: "Dieser Endpunkt kann so angepasst werden, dass er die Sicherung an einen S3-kompatiblen Service wie DigitalOcean Spaces oder Minio übertragt. WARNUNG: Verwende den Standard bei Verwendung von AWS S3."
     s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Grabstein-Uploads. WICHTIG: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
-    s3_disable_cleanup: "Deaktiviere das Löschen von Backups aus S3 wenn sie lokal entfernt werden"
     enable_s3_inventory: "Erstelle Berichte und überprüfe Uploads mit Amazon S3-Bestand. WICHTIG: Benötigt gültige S3-Anmeldeinformationen (sowohl access_key_id als auch secret_access_key)."
     backup_time_of_day: "Uhrzeit in UTC, wenn Backups ausgeführt werden sollen."
     backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups mit einbeziehen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
@@ -1885,7 +1872,6 @@ de:
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Vorlagen“, indem du eine Kategorie für Themen-Vorlagen bestimmst. Themen in dieser Kategorie werden unterdrückt in der Themen Liste für Team Mitarbeiter."
     push_notifications_prompt: "Zeige eine Aufforderung zur Benutzerzustimmung an."
-    push_notifications_icon: "Das Abzeichen-Icon, das in der Benachrichtigungsecke erscheint. Erforderliche Größe ist 96 × 96."
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_general_tab_activity_metrics: "Wähle Berichte, die als Aktivitätsmetrik auf dem Allgemein-Tab angezeigt werden."
     errors:
@@ -2557,10 +2543,6 @@ de:
     email_reject_bad_destination_address:
       title: "E-Mail abgelehnt weil unbekannte Empfänger-Adresse"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Empfängeradresse unbekannt"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Betreff %{former_title}) hat nicht funktioniert.
-
-        Keine der Empfängeradressen wurden erkannt oder der Message-ID-Header in der E-Mail ist verändert worden. Bitte stelle sicher, dass du an die richtige E-Mail-Adresse schickst, die vom Team bekanntgegeben wurde.
     email_reject_old_destination:
       title: "E-Mail abgelehnt weil alter Empfänger"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- Du versuchst, auf eine alte Benachrichtigung zu antworten"
@@ -3045,6 +3027,8 @@ de:
         Bestätige deine aktuelle E-Mail Adresse für %{site_name}, indem du auf den folgenden Link klickst:
 
         %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
     notify_old_email:
       title: "Benachrichtigung an alte E-Mail-Adresse"
       subject_template: "[%{email_prefix}] Deine E-Mail-Adresse wurde geändert"
@@ -3731,7 +3715,6 @@ de:
       name: Higher Love
     crazy_in_love:
       name: Crazy in Love
-      description: Hat 20-mal je 50 Likes an einem Tag vergeben
     thank_you:
       name: Dankeschön
       description: Hat 20 Likes für Beiträge erhalten und 10 Likes vergeben

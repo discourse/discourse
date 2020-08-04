@@ -35,6 +35,29 @@ describe AboutController do
         expect(response.status).to eq(200)
         expect(response.body).to include("<title>About - Discourse</title>")
       end
+
+      it "should include correct user URLs" do
+        Fabricate(:admin, username: "anAdminUser")
+        get '/about', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
+        expect(response.status).to eq(200)
+        expect(response.body).to include("/u/anadminuser")
+      end
+    end
+
+    it "serializes stats when 'Guardian#can_see_about_stats?' is true" do
+      Guardian.any_instance.stubs(:can_see_about_stats?).returns(true)
+      get "/about.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["about"].keys).to include("stats")
+    end
+
+    it "does not serialize stats when 'Guardian#can_see_about_stats?' is false" do
+      Guardian.any_instance.stubs(:can_see_about_stats?).returns(false)
+      get "/about.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["about"].keys).not_to include("stats")
     end
   end
 end

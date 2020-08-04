@@ -60,13 +60,19 @@ componentTest("options.showFullTitle=false", {
       value=value
       content=content
       options=(hash
+        icon="times"
         showFullTitle=showFullTitle
+        none=none
       )
     }}
   `,
 
   beforeEach() {
-    setDefaultState(this, { showFullTitle: false });
+    setDefaultState(this, {
+      value: null,
+      showFullTitle: false,
+      none: "test_none"
+    });
   },
 
   async test(assert) {
@@ -75,9 +81,18 @@ componentTest("options.showFullTitle=false", {
         this.subject
           .header()
           .el()
-          .find(".selected-name .body")
+          .find(".selected-name")
       ),
       "it hides the text of the selected item"
+    );
+
+    assert.equal(
+      this.subject
+        .header()
+        .el()
+        .attr("title"),
+      "[en_US.test_none]",
+      "it adds a title attribute to the button"
     );
   }
 });

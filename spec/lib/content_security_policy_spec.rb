@@ -66,7 +66,7 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include("'report-sample'")
     end
 
-    it 'whitelists Google Analytics and Tag Manager when integrated' do
+    it 'allowlists Google Analytics and Tag Manager when integrated' do
       SiteSetting.ga_universal_tracking_code = 'UA-12345678-9'
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
@@ -75,7 +75,7 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
     end
 
-    it 'whitelists CDN assets when integrated' do
+    it 'allowlists CDN assets when integrated' do
       set_cdn_url('https://cdn.com')
 
       script_srcs = parse(policy)['script-src']
@@ -211,6 +211,29 @@ describe ContentSecurityPolicy do
 
       expect(parse(theme_policy)['script-src']).to_not include('https://from-theme-flag.script')
       expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
+    end
+
+    it 'is extended automatically when themes reference external scripts' do
+      policy # call this first to make sure further actions clear the cache
+
+      theme.set_field(target: :common, name: "header", value: <<~SCRIPT)
+        <script src='https://example.com/myscript.js'></script>
+        <script src='//example2.com/protocol-less-script.js'></script>
+        <script src='domain-only.com'></script>
+        <script>console.log('inline script')</script>
+      SCRIPT
+
+      theme.set_field(target: :desktop, name: "header", value: "")
+      theme.save!
+
+      expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript.js')
+      expect(parse(theme_policy)['script-src']).to include('example2.com/protocol-less-script.js')
+      expect(parse(theme_policy)['script-src']).not_to include('domain-only.com')
+      expect(parse(theme_policy)['script-src']).not_to include(a_string_matching /^\/theme-javascripts/)
+
+      theme.destroy!
+
+      expect(parse(theme_policy)['script-src']).to_not include('https://example.com/myscript.js')
     end
   end
 

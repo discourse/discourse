@@ -112,13 +112,13 @@
     border-top: 1px solid $primary-low;
   }
   .buttons {
-    float: left;
-    width: 200px;
+    display: flex;
+    align-items: center;
+    button {
+      margin-right: 0.5em;
+    }
     .saving {
-      padding: 5px 0 0 0;
-      margin-left: 10px;
-      width: 80px;
-      color: $primary;
+      order: 3;
     }
   }
 }

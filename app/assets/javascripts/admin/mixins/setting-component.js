@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { warn } from "@ember/debug";
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias, oneWay } from "@ember/object/computed";
@@ -7,6 +8,7 @@ import Mixin from "@ember/object/mixin";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { htmlSafe } from "@ember/template";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -23,7 +25,8 @@ const CUSTOM_TYPES = [
   "upload",
   "group_list",
   "tag_list",
-  "color"
+  "color",
+  "simple_list"
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
@@ -63,7 +66,7 @@ export default Mixin.create({
     }
     let preview = setting.get("preview");
     if (preview) {
-      return new Handlebars.SafeString(
+      return htmlSafe(
         "<div class='preview'>" +
           preview.replace(/\{\{value\}\}/g, value) +
           "</div>"

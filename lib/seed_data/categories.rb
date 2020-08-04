@@ -12,7 +12,7 @@ module SeedData
 
     def create(site_setting_names: nil)
       I18n.with_locale(@locale) do
-        categories(site_setting_names).each { |params| create_category(params) }
+        categories(site_setting_names).each { |params| create_category(**params) }
       end
     end
 

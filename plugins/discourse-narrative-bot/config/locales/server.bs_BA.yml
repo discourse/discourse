@@ -121,11 +121,6 @@ bs_BA:
       random_mention:
         reply: |-
           Pozdrav! Kako bi saznali šta sve mogu raditi, recite `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Trenutno znam kako uraditi sljedeće stvari:
-
-          `@%{discobot_username} %{reset_trigger} {ime-tutorijala}`
-          > Starta interaktivni tutorijal. `{ime-tutorijala}` može biti jedan od `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

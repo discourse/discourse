@@ -1,0 +1,24 @@
+<div class="composer-controls">
+  {{plugin-outlet name="before-composer-toggles"}}
+
+  {{#if site.mobileView}}
+    {{flat-button
+      class="toggle-toolbar"
+      icon="bars"
+      action=toggleToolbar}}
+  {{/if}}
+
+  {{flat-button
+    class="toggler"
+    icon=toggleIcon
+    action=toggleComposer
+    title=toggleTitle}}
+
+  {{#unless site.mobileView}}
+    {{flat-button
+      class="toggle-fullscreen"
+      icon=fullscreenIcon
+      action=toggleFullscreen
+      title=fullscreenTitle}}
+  {{/unless}}
+</div>

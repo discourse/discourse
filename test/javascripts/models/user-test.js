@@ -71,7 +71,7 @@ QUnit.test("canMangeGroup", assert => {
 
 QUnit.test("resolvedTimezone", assert => {
   const tz = "Australia/Brisbane";
-  let user = User.create({ timezone: tz, username: "chuck" });
+  let user = User.create({ timezone: tz, username: "chuck", id: 111 });
   let stub = sandbox.stub(moment.tz, "guess").returns("America/Chicago");
 
   pretender.put("/u/chuck.json", () => {
@@ -80,7 +80,7 @@ QUnit.test("resolvedTimezone", assert => {
 
   let spy = sandbox.spy(ajaxlib, "ajax");
   assert.equal(
-    user.resolvedTimezone(),
+    user.resolvedTimezone(user),
     tz,
     "if the user already has a timezone return it"
   );
@@ -88,9 +88,9 @@ QUnit.test("resolvedTimezone", assert => {
     spy.notCalled,
     "if the user already has a timezone do not call AJAX update"
   );
-  user = User.create({ username: "chuck" });
+  user = User.create({ username: "chuck", id: 111 });
   assert.equal(
-    user.resolvedTimezone(),
+    user.resolvedTimezone(user),
     "America/Chicago",
     "if the user has no timezone guess it with moment"
   );
@@ -102,6 +102,22 @@ QUnit.test("resolvedTimezone", assert => {
     }),
     "if the user has no timezone save it with an AJAX update"
   );
+
+  let otherUser = User.create({ username: "howardhamlin", id: 999 });
+  assert.equal(
+    otherUser.resolvedTimezone(user),
+    null,
+    "if the user has no timezone and the user is not the current user, do NOT guess with moment"
+  );
+  assert.not(
+    spy.calledWith("/u/howardhamlin.json", {
+      type: "PUT",
+      dataType: "json",
+      data: { timezone: "America/Chicago" }
+    }),
+    "if the user has no timezone, and the user is not the current user, do NOT save it with an AJAX update"
+  );
+
   stub.restore();
 });
 

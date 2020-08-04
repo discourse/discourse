@@ -297,7 +297,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
   end
 
   def process_raw(raw)
-    doc = Nokogiri::HTML.fragment(raw)
+    doc = Nokogiri::HTML5.fragment(raw)
 
     # convert emoticon
     doc.css("span.emoticon-inline").each do |span|

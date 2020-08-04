@@ -47,8 +47,6 @@ RSpec.describe FileStore::BaseStore do
 
   describe '#download' do
     before do
-      `rm -rf #{FileStore::BaseStore::CACHE_DIR}`
-
       SiteSetting.enable_s3_uploads = true
       SiteSetting.s3_upload_bucket = "s3-upload-bucket"
       SiteSetting.s3_access_key_id = "some key"

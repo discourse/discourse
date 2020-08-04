@@ -236,6 +236,14 @@ describe UserNotifications do
         expect(html).to include(topic_url)
         expect(text).to include(topic_url)
       end
+
+      it "applies lang/xml:lang html attributes" do
+        SiteSetting.default_locale = "pl_PL"
+        html = subject.html_part.to_s
+
+        expect(html).to match(' lang="pl-PL"')
+        expect(html).to match(' xml:lang="pl-PL"')
+      end
     end
 
   end
@@ -252,6 +260,8 @@ describe UserNotifications do
     let(:notification) { Fabricate(:replied_notification, user: user, post: response) }
 
     it 'generates a correct email' do
+
+      SiteSetting.default_email_in_reply_to = true
 
       # Fabricator is not fabricating this ...
       SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"

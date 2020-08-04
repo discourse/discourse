@@ -32,6 +32,11 @@ async function selectKitFillInFilter(filter, selector) {
   );
 }
 
+async function selectKitEmptyFilter(selector) {
+  checkSelectKitIsNotCollapsed(selector);
+  await fillIn(`${selector} .filter-input`, "");
+}
+
 async function selectKitSelectRowByValue(value, selector) {
   checkSelectKitIsNotCollapsed(selector);
   await click(`${selector} .select-kit-row[data-value='${value}']`);
@@ -90,6 +95,12 @@ function rowHelper(row) {
     title() {
       return row.attr("title");
     },
+    label() {
+      return row
+        .find(".name")
+        .text()
+        .trim();
+    },
     value() {
       const value = row.attr("data-value");
       return isEmpty(value) ? null : value;
@@ -119,7 +130,7 @@ function headerHelper(header) {
       return header.find(".d-icon");
     },
     title() {
-      return header.attr("title");
+      return header.find(".selected-name").attr("title");
     },
     el() {
       return header;
@@ -178,6 +189,10 @@ export default function selectKit(selector) {
 
     async fillInFilter(filter) {
       await selectKitFillInFilter(filter, selector);
+    },
+
+    async emptyFilter() {
+      await selectKitEmptyFilter(selector);
     },
 
     async keyboard(value, target) {
@@ -275,4 +290,39 @@ export default function selectKit(selector) {
       return exists(selector);
     }
   };
+}
+
+export function testSelectKitModule(moduleName, options = {}) {
+  moduleForComponent(`select-kit/${moduleName}`, {
+    integration: true,
+
+    beforeEach() {
+      this.set("subject", selectKit());
+      options.beforeEach && options.beforeEach.call(this);
+    },
+
+    afterEach() {
+      options.afterEach && options.afterEach.call(this);
+    }
+  });
+}
+
+export const DEFAULT_CONTENT = [
+  { id: 1, name: "foo" },
+  { id: 2, name: "bar" },
+  { id: 3, name: "baz" }
+];
+
+export function setDefaultState(ctx, value, options = {}) {
+  const properties = Object.assign(
+    {
+      value,
+      onChange: v => {
+        ctx.set("value", v);
+      }
+    },
+    options || {}
+  );
+
+  ctx.setProperties(properties);
 }

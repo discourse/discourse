@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Controller from "@ember/controller";
 export const DEFAULT_PERIOD = "yearly";
 

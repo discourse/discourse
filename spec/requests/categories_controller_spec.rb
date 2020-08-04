@@ -5,15 +5,16 @@ require 'rails_helper'
 describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
+  fab!(:user) { Fabricate(:user) }
 
   context 'index' do
 
     it 'web crawler view has correct urls for subfolder install' do
       set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
-      html = Nokogiri::HTML(response.body)
+      html = Nokogiri::HTML5(response.body)
       expect(html.css('body.crawler')).to be_present
-      expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
+      expect(html.css("a[href=\"/forum/c/#{category.slug}/#{category.id}\"]")).to be_present
     end
 
     it "properly preloads topic list" do
@@ -51,6 +52,26 @@ describe CategoriesController do
       get "/category/something"
       expect(response.status).to eq(301)
       expect(response.body).to include(category.slug)
+    end
+
+    it 'returns the right response for a normal user' do
+      sign_in(user)
+
+      Draft.set(user, Draft::NEW_TOPIC, 0, 'hello')
+
+      get "/categories.json"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      expect(category_list["categories"].map { |c| c["id"] }).to contain_exactly(
+        SiteSetting.get(:uncategorized_category_id), category.id
+      )
+
+      expect(category_list["draft_sequence"]).to eq(0)
+      expect(category_list["draft_key"]).to eq(Draft::NEW_TOPIC)
+      expect(category_list["draft"]).to eq('hello')
     end
   end
 
@@ -129,13 +150,13 @@ describe CategoriesController do
           }
 
           expect(response.status).to eq(422)
-          expect(JSON.parse(response.body)['errors']).to be_present
+          expect(response.parsed_body['errors']).to be_present
         end
       end
 
       describe "success" do
         it "works" do
-          SiteSetting.enable_category_group_review = true
+          SiteSetting.enable_category_group_moderation = true
 
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
@@ -156,7 +177,7 @@ describe CategoriesController do
           }
 
           expect(response.status).to eq(200)
-          cat_json = ::JSON.parse(response.body)['category']
+          cat_json = response.parsed_body['category']
           expect(cat_json).to be_present
           expect(cat_json['reviewable_by_group_name']).to eq(group.name)
           expect(cat_json['name']).to eq('hello')
@@ -497,21 +518,32 @@ describe CategoriesController do
       SiteSetting.categories_topics = 5
 
       get '/categories_and_latest.json'
-      expect(JSON.parse(response.body)['topic_list']['topics'].size).to eq(5)
+      expect(response.parsed_body['topic_list']['topics'].size).to eq(5)
     end
 
     it 'works when SiteSetting.categories_topics is null' do
       SiteSetting.categories_topics = 0
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
-      expect(json['category_list']['categories'].size).to eq(2) # 'Uncategorized' and category
-      expect(json['topic_list']['topics'].size).to eq(5)
+      json = response.parsed_body
+
+      category_list = json['category_list']
+      topic_list = json['topic_list']
+
+      expect(category_list['categories'].size).to eq(2) # 'Uncategorized' and category
+      expect(category_list['draft_key']).to eq(Draft::NEW_TOPIC)
+      expect(category_list['draft_sequence']).to eq(nil)
+      expect(category_list['draft']).to eq(nil)
+
+      expect(topic_list['topics'].size).to eq(5)
+      expect(topic_list['draft_key']).to eq(Draft::NEW_TOPIC)
+      expect(topic_list['draft_sequence']).to eq(nil)
+      expect(topic_list['draft']).to eq(nil)
 
       Fabricate(:category, parent_category: category)
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(2)
       expect(json['topic_list']['topics'].size).to eq(5)
 
@@ -519,7 +551,7 @@ describe CategoriesController do
       Fabricate(:category)
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(4)
       expect(json['topic_list']['topics'].size).to eq(6)
     end

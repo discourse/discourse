@@ -48,16 +48,15 @@ class DiscourseJsProcessor
     return false if relative_path.start_with?("#{js_root}/plugins/")
 
     return true if %w(
-      preload-store
-      preload-application-data
+      start-discourse
       wizard-start
       onpopstate-handler
-      discourse
       google-tag-manager
       google-universal-analytics
       activate-account
       auto-redirect
       embed-application
+      app-boot
     ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
 
     return true if plugin_transpile_paths.any? { |prefix| relative_path.start_with?(prefix) }
@@ -80,7 +79,7 @@ class DiscourseJsProcessor
 
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
-      ctx = MiniRacer::Context.new(timeout: 15000)
+      ctx = MiniRacer::Context.new(timeout: 15000, ensure_gc_after_idle: 2000)
       ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
       ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
       ctx.eval("module = {}; exports = {};")
@@ -161,7 +160,8 @@ JS
         path = "discourse/plugins/#{plugin.name}/#{logical_path.sub(/javascripts\//, '')}" if plugin
       end
 
-      path || logical_path
+      # We need to strip the app subdirectory to replicate how ember-cli works.
+      path || logical_path&.gsub('app/', '')&.gsub('addon/', '')
     end
 
   end

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
@@ -46,10 +47,14 @@ const StaffActionLog = RestModel.extend({
       ? `<a href data-link-post-id="${postId}">${postId}</a>`
       : null;
 
+    const topicLink = topicId
+      ? `<a href data-link-topic-id="${topicId}">${topicId}</a>`
+      : null;
+
     let lines = [
       format("email", email),
       format("admin.logs.ip_address", ipAddress),
-      format("admin.logs.topic_id", topicId),
+      format("admin.logs.topic_id", topicLink, false),
       format("admin.logs.post_id", postLink, false),
       format("admin.logs.category_id", categoryId)
     ];

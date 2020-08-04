@@ -55,6 +55,7 @@ after_initialize do
 
   module ::DiscourseNarrativeBot
     PLUGIN_NAME = "discourse-narrative-bot".freeze
+    BOT_USER_ID = -2
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -92,10 +93,10 @@ after_initialize do
 
         user = User.find_by(id: params[:user_id])
         raise Discourse::NotFound if user.blank?
-        cdn_avatar_url = fetch_avatar_url(user)
 
         hijack do
-          generator = CertificateGenerator.new(user, params[:date], cdn_avatar_url)
+          avatar_data = fetch_avatar(user)
+          generator = CertificateGenerator.new(user, params[:date], avatar_data)
 
           svg = params[:type] == 'advanced' ? generator.advanced_user_track : generator.new_user_track
 
@@ -107,7 +108,7 @@ after_initialize do
 
       private
 
-      def fetch_avatar_url(user)
+      def fetch_avatar(user)
         avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
         FileHelper.download(
           avatar_url.to_s,
@@ -222,8 +223,8 @@ after_initialize do
     if self.post && self.user.enqueue_narrative_bot_job?
       input =
         case self.post_action_type_id
-        when *PostActionType.flag_types_without_custom.values
-          :flag
+        when *PostActionType.flag_types.values
+          self.post_action_type_id == PostActionType.types[:inappropriate] ? :flag : :reply
         when PostActionType.types[:like]
           :like
         when PostActionType.types[:bookmark]
@@ -241,10 +242,8 @@ after_initialize do
   end
 
   self.add_model_callback(Bookmark, :after_commit, on: :create) do
-    if SiteSetting.enable_bookmarks_with_reminders?
-      if self.post && self.user.enqueue_narrative_bot_job?
-        Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: :bookmark)
-      end
+    if self.post && self.user.enqueue_narrative_bot_job?
+      Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: :bookmark)
     end
   end
 
@@ -273,4 +272,9 @@ after_initialize do
       end
     end
   end
+
+  UserAvatar.register_custom_user_gravatar_email_hash(
+    DiscourseNarrativeBot::BOT_USER_ID,
+    "discobot@discourse.org"
+  )
 end

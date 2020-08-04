@@ -74,7 +74,7 @@ sv:
         author: "Theodore Roosevelt"
       '6':
         quote: "Livet är som en låda med choklad. Du vet aldrig vad du kommer att få."
-        author: "Forrest Gump’s Mom ( Författaren: Winston Groom )"
+        author: "Forrest Gumps mamma \n( Författaren: Winston Groom )"
       '7':
         quote: "Det är ett litet steg för en man, ett jättesprång för mänskligheten."
         author: "Neil Armstrong"
@@ -90,7 +90,7 @@ sv:
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
-      trigger: "förmögenhet"
+      trigger: "framgång"
       answers:
         '1': "Det är säkert"
         '2': "Det är bestämt så"
@@ -120,12 +120,12 @@ sv:
       help_trigger: "visa hjälp"
       random_mention:
         reply: |-
-          Hej! För att ta reda på vad jag kan göra, säg `%{discobot_username}%{help_trigger}`.
+          Hej! För att ta reda på vad jag kan göra, säg `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           I nuläget klarar jag av följande saker:
 
-          `@%{discobot_username}%{reset_trigger} {namn-på-handledning}`
-          > Startar en interaktiv handledning. `{namn-på-handledning}` kan vara en av dessa: `%{tracks}` .
+          `@%{discobot_username} %{reset_trigger} {namn-på-handledning}`
+          > Startar en interaktiv handledning enbart för dig, i ett privat meddelande. `{namn-på-handledning}` kan vara en av dessa: `%{tracks}` .
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

@@ -13,15 +13,6 @@ th:
       total_votes:
         other: "คะแนนโหวตทั้งหมด"
       average_rating: "คะแนนเฉลี่ย: <strong>%{average}</strong>"
-      multiple:
-        help:
-          at_least_min_options:
-            other: "เลือกอย่างน้อย<strong>%{count}</strong>ตัวเลือก"
-          up_to_max_options:
-            other: "เลือกได้ถึง<strong>%{count}</strong>ตัวเลือก"
-          x_options:
-            other: "เลือก<strong>%{count}</strong>ตัวเลือก"
-          between_min_and_max_options: "เลือกระหว่าง<strong>%{min}</strong>และ<strong>%{max}</strong>ตัวเลือก"
       cast-votes:
         title: "โหวต"
         label: "โหวตเดี๋ยวนี้"

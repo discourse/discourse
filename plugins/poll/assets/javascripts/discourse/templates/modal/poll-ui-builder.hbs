@@ -2,7 +2,7 @@
   <form class="poll-ui-builder-form form-horizontal">
     <div class="options">
       <div class="input-group poll-select">
-        <label class="input-group-label">{{i18n 'poll.ui_builder.poll_type.label'}}</label>
+        <label class="input-group-label">{{i18n "poll.ui_builder.poll_type.label"}}</label>
         {{combo-box
           content=pollTypes
           value=pollType
@@ -13,39 +13,43 @@
       </div>
 
       <div class="input-group poll-select">
-        <label class="input-group-label">{{i18n 'poll.ui_builder.poll_result.label'}}</label>
+        <label class="input-group-label">{{i18n "poll.ui_builder.poll_result.label"}}</label>
         {{combo-box
           content=pollResults
           value=pollResult
           class="poll-result"
           valueProperty="value"
+          onChange=(action (mut pollResult))
         }}
       </div>
 
       <div class="input-group poll-select">
-        <label class="input-group-label">{{i18n 'poll.ui_builder.poll_groups.label'}}</label>
-        {{combo-box content=siteGroups
-                    value=pollGroups
-                    options=(hash clearable=true)
-                    valueAttribute="value"}}
+        <label class="input-group-label">{{i18n "poll.ui_builder.poll_groups.label"}}</label>
+        {{group-chooser
+          content=siteGroups
+          value=pollGroups
+          onChange=(action (mut pollGroups))
+          labelProperty="name"
+          valueProperty="name"}}
       </div>
 
       {{#unless isNumber}}
         <div class="input-group poll-select">
-          <label class="input-group-label">{{i18n 'poll.ui_builder.poll_chart_type.label'}}</label>
+          <label class="input-group-label">{{i18n "poll.ui_builder.poll_chart_type.label"}}</label>
           {{combo-box
             class="poll-chart-type"
             content=pollChartTypes
             value=chartType
-            valueAttribute="value"
+            valueProperty="value"
+            onChange=(action (mut chartType))
           }}
         </div>
       {{/unless}}
 
       {{#if showMinMax}}
         <div class="input-group poll-number">
-          <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.min'}}</label>
-          {{input type='number'
+          <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.min"}}</label>
+          {{input type="number"
                   value=pollMin
                   valueProperty="value"
                   class="poll-options-min"}}
@@ -53,8 +57,8 @@
         {{input-tip validation=minMaxValueValidation}}
 
         <div class="input-group poll-number">
-          <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.max'}}</label>
-          {{input type='number'
+          <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.max"}}</label>
+          {{input type="number"
                   value=pollMax
                   valueProperty="value"
                   class="poll-options-max"}}
@@ -62,8 +66,8 @@
 
         {{#if isNumber}}
           <div class="input-group poll-number">
-            <label class="input-group-label">{{i18n 'poll.ui_builder.poll_config.step'}}</label>
-            {{input type='number'
+            <label class="input-group-label">{{i18n "poll.ui_builder.poll_config.step"}}</label>
+            {{input type="number"
                     value=pollStep
                     valueProperty="value"
                     min="1"
@@ -75,7 +79,7 @@
 
       {{#unless isNumber}}
         <div class="input-group poll-textarea">
-          <label>{{i18n 'poll.ui_builder.poll_options.label'}}</label>
+          <label>{{i18n "poll.ui_builder.poll_options.label"}}</label>
           {{textarea value=pollOptions autocomplete="discourse"}}
         </div>
         {{input-tip validation=minNumOfOptionsValidation}}
@@ -84,7 +88,7 @@
       {{#unless isPie}}
         <div class="input-group poll-checkbox">
           <label>
-            {{input type='checkbox' checked=publicPoll}}
+            {{input type="checkbox" checked=publicPoll}}
             {{i18n "poll.ui_builder.poll_public.label"}}
           </label>
         </div>
@@ -116,5 +120,5 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action=(action "insertPoll") icon="chart-bar" class='btn-primary' label='poll.ui_builder.insert' disabled=disableInsert}}
+  {{d-button action=(action "insertPoll") icon="chart-bar" class="btn-primary" label="poll.ui_builder.insert" disabled=disableInsert}}
 </div>

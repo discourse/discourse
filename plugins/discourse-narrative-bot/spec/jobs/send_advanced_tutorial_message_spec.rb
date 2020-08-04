@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe Jobs::SendAdvancedTutorialMessage do
   before do
     Jobs.run_immediately!
@@ -21,7 +23,7 @@ RSpec.describe Jobs::SendAdvancedTutorialMessage do
     )
     expect(topic.first_post.raw).to eq(I18n.t(
       'discourse_narrative_bot.tl2_promotion_message.text_body_template',
-      discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_user.username,
+      discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
       reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}"
     ).chomp)
   end

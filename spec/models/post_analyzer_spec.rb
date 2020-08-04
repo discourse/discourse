@@ -31,6 +31,7 @@ describe PostAnalyzer do
 
       it 'invalidates the oneboxes for urls in the post' do
         Oneboxer.expects(:invalidate).with url
+        InlineOneboxer.expects(:invalidate).with url
         post_analyzer.cook(raw, options)
       end
     end
@@ -155,8 +156,8 @@ describe PostAnalyzer do
       expect(post_analyzer.image_count).to eq(0)
     end
 
-    it "doesn't count whitelisted images" do
-      Post.stubs(:white_listed_image_classes).returns(["classy"])
+    it "doesn't count allowlisted images" do
+      Post.stubs(:allowed_image_classes).returns(["classy"])
       PrettyText.stubs(:cook).returns(raw_post_with_two_classy_images)
       post_analyzer = PostAnalyzer.new(raw_post_with_two_classy_images, default_topic_id)
       expect(post_analyzer.image_count).to eq(0)

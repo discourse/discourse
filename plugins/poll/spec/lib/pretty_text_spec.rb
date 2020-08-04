@@ -131,7 +131,7 @@ describe PrettyText do
     MD
 
     onebox = Oneboxer.onebox_raw(post.full_url, user_id: Fabricate(:user).id)
-    doc = Nokogiri::HTML(onebox[:preview])
+    doc = Nokogiri::HTML5(onebox[:preview])
 
     expect(onebox[:preview]).to include("A post with a poll")
     expect(onebox[:preview]).to include("<a href=\"#{post.url}\">poll</a>")

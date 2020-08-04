@@ -1,0 +1,89 @@
+<section class="user-content">
+  <div class="group-members-actions">
+    {{#if model.can_see_members}}
+      {{text-field
+        value=filterInput
+        placeholderKey=filterPlaceholder
+        autocomplete="discourse"
+        class="group-username-filter no-blur"
+      }}
+    {{/if}}
+
+    <div class="group-members-manage">
+      {{#if canManageGroup}}
+        {{d-button icon="plus"
+        action=(route-action "showAddMembersModal")
+        label="groups.add_members.title"
+        class="group-members-add"}}
+        {{#if currentUser.admin}}
+          {{d-button icon="plus"
+          action=(route-action "showBulkAddModal")
+          label="admin.groups.bulk_add.title"
+          class="group-bulk-add"}}
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+
+  {{#if hasMembers}}
+    {{#load-more selector=".group-members tr" action=(action "loadMore")}}
+      <table class="group-members">
+        <thead>
+          {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username"}}
+          <th class="group-owner">{{i18n "groups.members.owner"}}</th>
+          {{table-header-toggle order=order asc=asc field="added_at" labelKey="groups.member_added"}}
+          {{table-header-toggle order=order asc=asc field="last_posted_at" labelKey="last_post"}}
+          {{table-header-toggle order=order asc=asc field="last_seen_at" labelKey="last_seen"}}
+          <th></th>
+        </thead>
+
+        <tbody>
+          {{#each model.members as |m|}}
+            <tr>
+              <td class="avatar">
+                {{user-info user=m skipName=skipName}}
+              </td>
+
+              <td class="group-owner">
+                {{#if m.owner}}
+                  <strong class="group-owner-label">
+                    {{d-icon "shield-alt"}}
+                  </strong>
+                {{/if}}
+              </td>
+              <td>
+                <span class="text">{{bound-date m.added_at}}</span>
+              </td>
+              <td>
+                <span class="text">{{bound-date m.last_posted_at}}</span>
+              </td>
+              <td>
+                <span class="text">{{bound-date m.last_seen_at}}</span>
+              </td>
+
+              <td>
+                {{#if canManageGroup}}
+                  {{group-member-dropdown
+                    member=m
+                    onChange=(action "actOnGroup" m)
+                  }}
+                {{/if}}
+                {{!-- group parameter is used by plugins --}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/load-more}}
+
+    {{conditional-loading-spinner condition=loading}}
+  {{else if model.can_see_members}}
+    <br>
+
+    <div>{{i18n "groups.empty.members"}}</div>
+  {{else}}
+    <br>
+
+    <div>{{i18n "groups.members.forbidden"}}</div>
+  {{/if}}
+</section>

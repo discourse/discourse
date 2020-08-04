@@ -12,8 +12,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :moderator?,
              :staff?,
              :title,
-             :reply_count,
-             :topic_count,
+             :any_posts,
              :enable_quoting,
              :enable_defer,
              :external_links_in_new_tab,
@@ -66,12 +65,8 @@ class CurrentUserSerializer < BasicUserSerializer
     object.user_stat.read_faq?
   end
 
-  def topic_count
-    object.user_stat.topic_count
-  end
-
-  def reply_count
-    object.user_stat.topic_reply_count
+  def any_posts
+    object.user_stat.any_posts
   end
 
   def hide_profile_and_presence
@@ -123,7 +118,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_invite_to_forum
-    true
+    scope.can_invite_to_forum?
   end
 
   def include_can_invite_to_forum?

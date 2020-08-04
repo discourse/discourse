@@ -28,7 +28,9 @@ RSpec.describe UserBookmarkSerializer do
     expect(s.highest_post_number).to eq(1)
     expect(s.bumped_at).to eq_time(bookmark.topic.bumped_at)
     expect(s.slug).to eq(bookmark.topic.slug)
-    expect(s.username).to eq(bookmark.post.user.username)
+    expect(s.post_user_username).to eq(bookmark.post.user.username)
+    expect(s.post_user_name).to eq(bookmark.post.user.name)
+    expect(s.post_user_avatar_template).not_to eq(nil)
   end
 
   context "when the topic is deleted" do

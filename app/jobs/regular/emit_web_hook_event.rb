@@ -4,8 +4,8 @@ require 'excon'
 
 module Jobs
   class EmitWebHookEvent < ::Jobs::Base
-    PING_EVENT = 'ping'.freeze
-    MAX_RETRY_COUNT = 4.freeze
+    PING_EVENT = 'ping'
+    MAX_RETRY_COUNT = 4
     RETRY_BACKOFF = 5
 
     def execute(args)
@@ -103,7 +103,7 @@ module Jobs
       MessageBus.publish("/web_hook_events/#{@web_hook.id}", {
         web_hook_event_id: web_hook_event.id,
         event_type: @arguments[:event_type]
-      }, user_ids: User.human_users.staff.pluck(:id))
+      }, group_ids: [Group::AUTO_GROUPS[:staff]])
     end
 
     def ping_event?(event_type)

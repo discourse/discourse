@@ -43,7 +43,7 @@ class PostRevisor
 
   POST_TRACKED_FIELDS = %w{raw cooked edit_reason user_id wiki post_type}
 
-  attr_reader :category_changed
+  attr_reader :category_changed, :post_revision
 
   def initialize(post, topic = post.topic)
     @post = post
@@ -158,6 +158,10 @@ class PostRevisor
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
 
+    if @post.incoming_email&.imap_uid
+      @post.incoming_email&.update(imap_sync: true)
+    end
+
     old_raw = @post.raw
 
     Post.transaction do
@@ -188,8 +192,13 @@ class PostRevisor
       PostLocker.new(@post, @editor).lock
     end
 
-    # We log staff edits to posts
-    if @editor.staff? && @editor.id != @post.user_id && @fields.has_key?('raw') && !@opts[:skip_staff_log]
+    # We log staff/group moderator edits to posts
+    if (
+      (@editor.staff? || (@post.is_category_description? && Guardian.new(@editor).can_edit_category_description?(@post.topic.category))) &&
+      @editor.id != @post.user_id &&
+      @fields.has_key?('raw') &&
+      !@opts[:skip_staff_log]
+    )
       StaffActionLogger.new(@editor).log_post_edit(
         @post,
         old_raw: old_raw
@@ -394,7 +403,6 @@ class PostRevisor
         prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
         prev_owner_user_stat.likes_received -= likes
       end
-      prev_owner_user_stat.update_topic_reply_count
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
         prev_owner_user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
@@ -408,7 +416,6 @@ class PostRevisor
         new_owner_user_stat.topic_count += 1 if @post.is_first_post?
         new_owner_user_stat.likes_received += likes
       end
-      new_owner_user_stat.update_topic_reply_count
       new_owner_user_stat.save!
     end
   end
@@ -469,7 +476,7 @@ class PostRevisor
       modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
     end
 
-    PostRevision.create!(
+    @post_revision = PostRevision.create!(
       user_id: @post.last_editor_id,
       post_id: @post.id,
       number: @post.version,
@@ -523,6 +530,7 @@ class PostRevisor
   def bump_topic
     return if bypass_bump? || !is_last_post?
     @topic.update_column(:bumped_at, Time.now)
+    TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
@@ -568,17 +576,13 @@ class PostRevisor
   end
 
   def update_topic_excerpt
-    excerpt = @post.excerpt_for_topic
-    @topic.update_column(:excerpt, excerpt)
-    if @topic.archetype == "banner"
-      ApplicationController.banner_json_cache.clear
-    end
+    @topic.update_excerpt(@post.excerpt_for_topic)
   end
 
   def update_category_description
     return unless category = Category.find_by(topic_id: @topic.id)
 
-    doc = Nokogiri::HTML.fragment(@post.cooked)
+    doc = Nokogiri::HTML5.fragment(@post.cooked)
     doc.css("img").remove
 
     if html = doc.css("p").first&.inner_html&.strip
@@ -597,7 +601,7 @@ class PostRevisor
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
-    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?)
+    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self)
   end
 
   def update_topic_word_counts

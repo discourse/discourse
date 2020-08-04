@@ -9,7 +9,6 @@ export default {
       messageable_level: 99,
       visibility_level: 0,
       automatic_membership_email_domains: null,
-      automatic_membership_retroactive: false,
       primary_group: false,
       title: null,
       grant_trust_level: null,

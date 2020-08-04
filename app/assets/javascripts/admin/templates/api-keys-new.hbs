@@ -31,8 +31,40 @@
           }}
       {{/admin-form-row}}
     {{/if}}
-    {{#admin-form-row}}
-      {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}
+
+    {{#admin-form-row label="admin.api.use_global_key"}}
+      {{input type="checkbox" checked=useGlobalKey}}
     {{/admin-form-row}}
+
+    {{#unless useGlobalKey}}
+      {{#each-in scopes as |resource actions|}}
+        <table class="scopes-table">
+          <thead>
+            <tr>
+              <td><b>{{resource}}</b></td>
+              <td></td>
+              <td>{{i18n "admin.api.scopes.optional_allowed_parameters"}}</td>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each actions as |act|}}
+              <tr>
+                <td>{{input type="checkbox" checked=act.selected}}</td>
+                <td><b>{{act.name}}</b></td>
+                <td>
+                  {{#each act.params as |p|}}
+                    <div>
+                      {{input maxlength="255" value=(get act p) placeholder=p}}
+                    </div>
+                  {{/each}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{/each-in}}
+    {{/unless}}
+
+    {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}
   {{/if}}
 </div>

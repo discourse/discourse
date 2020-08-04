@@ -183,7 +183,7 @@
   .category-topic-link td.num .badge-notification {
     &.new-posts,
     &.unread-posts {
-      color: dark-light-choose($secondary, $secondary);
+      color: $secondary;
     }
   }
 
@@ -202,7 +202,7 @@
     .num .fa,
     a,
     a:visited {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
     }
   }
 
@@ -211,7 +211,7 @@
     a {
       // let's make all ages dim on mobile so we're not
       // overwhelming people with info about each topic
-      color: dark-light-choose($primary-low-mid, $secondary-high) !important;
+      color: $primary-low-mid-or-secondary-high !important;
     }
   }
 }
@@ -223,7 +223,7 @@
 
   td {
     padding: 12px 5px;
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
     vertical-align: top;
   }
 
@@ -262,6 +262,21 @@
 
   .age {
     margin-left: 5px;
+  }
+
+  // numbers get dimmer as they get colder
+  .coldmap {
+    &-high {
+      opacity: 0.4;
+    }
+
+    &-med {
+      opacity: 0.6;
+    }
+
+    &-low {
+      opacity: 0.8;
+    }
   }
 }
 
@@ -367,7 +382,6 @@ tr.category-topic-link {
     figure {
       float: left;
       margin: 3px 7px 0 0;
-      color: dark-light-choose($primary, $secondary-low);
       font-weight: bold;
       font-size: $font-down-1;
     }
@@ -424,50 +438,7 @@ tr.category-topic-link {
   content: "";
   margin-left: 5px;
 }
-.dropdown-menu {
-  position: relative;
-  top: 100%;
-  left: 0;
-  z-index: z("dropdown");
-  display: none;
-  float: left;
-  width: 280px;
-  padding: 4px 0;
-  list-style: none;
-  background-color: $secondary;
-  border: 1px solid dark-light-choose(rgba(0, 0, 0, 0.2), $primary);
-  border-radius: 5px;
-  box-shadow: shadow("dropdown");
-  background-clip: padding-box;
-  margin: 1px 0 20px;
-  .title {
-    font-weight: bold;
-    display: block;
-  }
-}
-.dropdown-menu a {
-  display: block;
-  padding: 3px 15px;
-  clear: both;
-  font-weight: normal;
-  line-height: $line-height-medium;
-  color: $primary;
-}
-.dropdown-menu li > a:hover,
-.dropdown-menu .active > a,
-.dropdown-menu .active > a:hover {
-  color: $tertiary;
-  text-decoration: none;
-  background-color: $tertiary-low;
-}
-.open > .dropdown-menu {
-  display: block;
-  clear: both;
-}
-.fade {
-  opacity: 0;
-  transition: opacity linear 0.15s;
-}
+
 .fade.in {
   opacity: 1;
 }
@@ -570,4 +541,13 @@ td .main-link {
 
 .category-list.with-topics .category-list-item .category-description {
   display: none;
+}
+
+.category-list .category.muted a.category-title-link {
+  color: $primary-medium;
+  font-size: $font-down-1;
+}
+
+.muted-categories-link {
+  margin-left: 0;
 }

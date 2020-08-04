@@ -265,6 +265,7 @@ class TopicQuery
   def list_top_for(period)
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
+      topics = remove_muted_categories(topics, @user)
       topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
       if period == :yearly && @user.try(:trust_level) == TrustLevel[0]
         topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
@@ -432,16 +433,14 @@ class TopicQuery
         user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
       end
 
-      avatar_lookup = AvatarLookup.new(user_ids)
-      primary_group_lookup = PrimaryGroupLookup.new(user_ids)
+      user_lookup = UserLookup.new(user_ids)
 
       # memoize for loop so we don't keep looking these up
       translations = TopicPostersSummary.translations
 
       topics.each do |t|
         t.posters = t.posters_summary(
-          avatar_lookup: avatar_lookup,
-          primary_group_lookup: primary_group_lookup,
+          user_lookup: user_lookup,
           translations: translations
         )
       end
@@ -458,7 +457,7 @@ class TopicQuery
 
   def latest_results(options = {})
     result = default_results(options)
-    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted".freeze
+    result = remove_muted_topics(result, @user) unless options && options[:state] == "muted"
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
     result = apply_shared_drafts(result, get_category_id(options[:category]), options)
@@ -683,6 +682,9 @@ class TopicQuery
         if sort_order
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? 'true' : 'false'
+        else
+          options[:order] = 'default'
+          options[:ascending] = 'false'
         end
       end
     end
@@ -822,11 +824,40 @@ class TopicQuery
                                action: action
                            )
       end
+
+      if filter == "tracked"
+        sql = +<<~SQL
+          topics.category_id IN (
+            SELECT cu.category_id FROM category_users cu
+            WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
+          )
+        SQL
+
+        if SiteSetting.tagging_enabled
+          sql << <<~SQL
+            OR topics.id IN (
+              SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (
+                SELECT tu.tag_id
+                FROM tag_users tu
+                WHERE tu.user_id = :user_id AND tu.notification_level >= :tracking
+              )
+            )
+          SQL
+        end
+
+        result = result.where(
+          sql,
+          user_id: @user.id,
+          tracking: NotificationLevels.all[:tracking]
+        )
+      end
     end
 
     result = result.where('topics.deleted_at IS NULL') if require_deleted_clause
     result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
     result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
+
+    result = preload_thumbnails(result)
 
     result = TopicQuery.apply_custom_filters(result, self)
 
@@ -886,7 +917,7 @@ class TopicQuery
 
     # if viewing the topic list for a muted tag, show all the topics
     if !opts[:no_tags] && opts[:tags].present?
-      return list if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', opts[:tags].first).exists?
+      return list if TagUser.lookup(user, :muted).joins(:tag).where('lower(tags.name) = ?', opts[:tags].first.downcase).exists?
     end
 
     if SiteSetting.remove_muted_tags_from_latest == 'always'
@@ -1048,6 +1079,10 @@ class TopicQuery
     end
 
     result.order('topics.bumped_at DESC')
+  end
+
+  def preload_thumbnails(result)
+    result.preload(:image_upload, topic_thumbnails: :optimized_image)
   end
 
   private

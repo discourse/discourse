@@ -121,11 +121,6 @@ ru:
       random_mention:
         reply: |-
           Привет! Чтобы узнать, что я могу сделать, наберите: `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Я знаю следующие команды:
-
-          `@%{discobot_username} %{reset_trigger} {название-руководства}`
-          > Запустить руководство. Доступные руководства: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

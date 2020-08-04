@@ -57,7 +57,7 @@ task 'assets:precompile:css' => 'environment' do
         STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
         begin
           Stylesheet::Manager.precompile_css
-        rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError => e
+        rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e
           STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
           STDERR.puts "Skipping precompilation of CSS cause schema is old, you are precompiling prior to running migrations."
         end
@@ -65,6 +65,14 @@ task 'assets:precompile:css' => 'environment' do
     end
 
     STDERR.puts "Done compiling CSS: #{Time.zone.now}"
+  end
+end
+
+task 'assets:flush_sw' => 'environment' do
+  begin
+    # Pending due to test failures.
+  rescue
+    STDERR.puts "Warning: unable to flush service worker script"
   end
 end
 

@@ -45,7 +45,6 @@ bs_BA:
       unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
       generic: Došlo je do pogreške prilikom uvoza te teme
-      about_json: "Greška uvoza: about.json ne postoji ili je nevažeća"
       about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
       unpack_failed: "Otpakivanje datoteke nije uspelo"
@@ -141,9 +140,6 @@ bs_BA:
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "RSS feed of '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
-  author_wrote: "%{author} wrote:"
-  num_posts: "Posts:"
-  num_participants: "Participants:"
   read_full_topic: "Read full topic"
   private_message_abbrev: "PM"
   rss_description:
@@ -733,6 +729,7 @@ bs_BA:
       category: "Kategorije"
       topic: "Rezultati"
       user: "Korisnici"
+    results_page: "Pretraži za termin '%{term}'"
   original_poster: "Originalni Autor"
   most_posts: "Najviše postova"
   most_recent_poster: "Posljednji Autor"
@@ -999,8 +996,16 @@ bs_BA:
   joined: "Registrovan"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} vas je spomenuo/la u "%{topic}" - %{site_title}'
+      quoted: '%{username} vas je citirao/la u "%{topic}" - %{site_title}'
+      replied: '%{username} vam je odgovorio/la u "%{topic}" - %{site_title}'
+      posted: '%{username} je objavio/la "%{topic}" - %{site_title}'
+      linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti uključene - %{site_title}"
       confirm_body: "Uspješno! Obavijesti su sada uključene."
+      custom: "Obavijest od %{username} na %{site_title}"
   reviewables:
     priorities:
       low: "Nisko"

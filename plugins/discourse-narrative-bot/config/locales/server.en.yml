@@ -6,6 +6,7 @@ en:
     discourse_narrative_bot_disable_public_replies: "Disable public replies by Discourse Narrative Bot"
     discourse_narrative_bot_welcome_post_type: "Type of welcome post that the Discourse Narrative Bot should send out"
     discourse_narrative_bot_welcome_post_delay: "Wait (n) seconds before sending the Discourse Narrative Bot welcome post."
+    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot tutorials to skip"
 
   badges:
     certified:
@@ -127,7 +128,7 @@ en:
           I currently know how to do the following things:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Starts an interactive tutorial. `{name-of-tutorial}` can be one of: `%{tracks}`.
+          > Starts an interactive tutorial just for you, in a personal message. `{name-of-tutorial}` can be one of: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -242,7 +243,7 @@ en:
 
       bookmark:
         instructions: |-
-          If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this personal message** selecting "no reminder needed". If you do, there may be a :gift: in your future!
+          If you’d like to learn more, select <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> below and <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bookmark this personal message**. If you do, there may be a :gift: in your future!
         reply: |-
           Excellent! Now you can easily find your way back to our private conversation any time, right from [the bookmarks tab on your profile](%{bookmark_url}). Just select your profile picture at the upper right &#8599;
         not_found: |-
@@ -290,7 +291,7 @@ en:
         reply: |-
           [Our staff](%{base_uri}/groups/staff) will be privately notified about your flag. If enough community members flag a post, it will also be automatically hidden as a precaution. (Since I didn’t actually write a nasty post :angel:, I’ve gone ahead and removed the flag for now.)
         not_found: |-
-          Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
+          Oh no, my nasty post hasn’t been flagged as inappropriate yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
 
       search:
         instructions: |-

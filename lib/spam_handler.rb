@@ -11,15 +11,14 @@ class SpamHandler
 
     return false if tl2_plus_accounts_with_same_ip > 0
 
-    staff_user_ids = Group[:staff].user_ids - [-1]
-    staff_members_with_same_ip = User.where(id: staff_user_ids)
+    staff_members_with_same_ip = Group[:staff].users.human_users
       .where(ip_address: ip_address.to_s)
       .count
 
     return false if staff_members_with_same_ip > 0
 
-    ip_whitelisted = ScreenedIpAddress.is_whitelisted?(ip_address)
-    return false if ip_whitelisted
+    allowed_ip = ScreenedIpAddress.is_allowed?(ip_address)
+    return false if allowed_ip
 
     tl0_accounts_with_same_ip = User.unscoped
       .where(trust_level: TrustLevel[0])

@@ -8,7 +8,7 @@
 fr:
   js:
     details:
-      title: Cacher le texte
+      title: Masquer le texte
     composer:
       details_title: Résumé
-      details_text: "Ce texte sera caché"
+      details_text: "Ce texte sera masqué"

@@ -247,6 +247,7 @@ a.toggle-preview {
     &.fullscreen {
       // important needed because of inline styles when height is changed manually with grippie
       height: 100vh !important;
+      max-height: 100%; // prevents devices from miscalculating using vh
       @supports (--custom: property) {
         height: calc(var(--composer-vh, 1vh) * 100) !important;
       }

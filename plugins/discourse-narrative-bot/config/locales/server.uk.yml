@@ -97,9 +97,6 @@ uk:
       random_mention:
         reply: |-
           Привіт! Щоб дізнатися, що я можу зробити, скажіть `@ %{discobot_username} %{help_trigger}`.
-        tracks: |-
-          На даний момент я знаю, як робити наступні речі: `@ %{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          &gt; Запускає інтерактивний підручник. `{name-of-tutorial}` може бути одним із: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

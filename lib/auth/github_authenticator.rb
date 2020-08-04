@@ -78,6 +78,12 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       user = user_info.user
       result.email = data[:email]
       result.email_valid = data[:email].present?
+
+      # update GitHub screen_name
+      if user_info.screen_name != screen_name
+        user_info.screen_name = screen_name
+        user_info.save!
+      end
     else
       # Potentially use *any* of the emails from GitHub to find a match or
       # register a new user, with preference given to the primary email.
@@ -107,8 +113,8 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       end
 
       # If we *still* don't have a user, check to see if there's an email that
-      # passes validation (this includes whitelist/blacklist filtering if any is
-      # configured).  When no whitelist/blacklist is in play, this will simply
+      # passes validation (this includes allowlist/blocklist filtering if any is
+      # configured).  When no allowlist/blocklist is in play, this will simply
       # choose the primary email since it's at the front of the list.
       if !user
         validator = EmailValidator.new(attributes: :email)

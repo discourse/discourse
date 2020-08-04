@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CrawlerDetection
-  WAYBACK_MACHINE_URL = "web.archive.org"
+  WAYBACK_MACHINE_URL = "archive.org"
 
   def self.to_matcher(string, type: nil)
     escaped = string.split('|').map { |agent| Regexp.escape(agent) }.join('|')
@@ -15,7 +15,7 @@ module CrawlerDetection
   end
 
   def self.crawler?(user_agent, via_header = nil)
-    return true if user_agent.nil? || via_header&.include?(WAYBACK_MACHINE_URL)
+    return true if user_agent.nil? || user_agent&.include?(WAYBACK_MACHINE_URL) || via_header&.include?(WAYBACK_MACHINE_URL)
 
     # this is done to avoid regenerating regexes
     @non_crawler_matchers ||= {}
@@ -39,18 +39,18 @@ module CrawlerDetection
 
   # Given a user_agent that returns true from crawler?, should its request be allowed?
   def self.allow_crawler?(user_agent)
-    return true if SiteSetting.whitelisted_crawler_user_agents.blank? &&
-      SiteSetting.blacklisted_crawler_user_agents.blank?
+    return true if SiteSetting.allowed_crawler_user_agents.blank? &&
+      SiteSetting.blocked_crawler_user_agents.blank?
 
-    @whitelisted_matchers ||= {}
-    @blacklisted_matchers ||= {}
+    @allowlisted_matchers ||= {}
+    @blocklisted_matchers ||= {}
 
-    if SiteSetting.whitelisted_crawler_user_agents.present?
-      whitelisted = @whitelisted_matchers[SiteSetting.whitelisted_crawler_user_agents] ||= to_matcher(SiteSetting.whitelisted_crawler_user_agents)
-      !user_agent.nil? && user_agent.match?(whitelisted)
+    if SiteSetting.allowed_crawler_user_agents.present?
+      allowlisted = @allowlisted_matchers[SiteSetting.allowed_crawler_user_agents] ||= to_matcher(SiteSetting.allowed_crawler_user_agents)
+      !user_agent.nil? && user_agent.match?(allowlisted)
     else
-      blacklisted = @blacklisted_matchers[SiteSetting.blacklisted_crawler_user_agents] ||= to_matcher(SiteSetting.blacklisted_crawler_user_agents)
-      user_agent.nil? || !user_agent.match?(blacklisted)
+      blocklisted = @blocklisted_matchers[SiteSetting.blocked_crawler_user_agents] ||= to_matcher(SiteSetting.blocked_crawler_user_agents)
+      user_agent.nil? || !user_agent.match?(blocklisted)
     end
   end
 

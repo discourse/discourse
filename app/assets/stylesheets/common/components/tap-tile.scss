@@ -4,13 +4,16 @@
 
   .tap-tile {
     color: $primary-high;
-    padding: 0.75em;
+    padding: 0.75em 0.25em;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    border: 1px solid $primary-low;
-    margin: 0 0 0.5em;
+    border-bottom: 1px solid $primary-low;
     cursor: pointer;
+
+    &:first-child {
+      border-top: 1px solid $primary-low;
+    }
 
     &:hover {
       background-color: $tertiary-low;
@@ -21,12 +24,12 @@
     }
 
     .d-icon {
-      color: $primary-medium;
+      color: $primary-high;
       margin: 0 0.5em 0 0;
     }
 
     .tap-tile-title {
-      font-weight: bold;
+      color: $primary;
       margin-right: auto;
     }
 

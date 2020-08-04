@@ -76,10 +76,3 @@
 .clickable {
   cursor: pointer;
 }
-
-// Buttons
-// ---------------------------------------------------
-.disable-no-hover:hover {
-  background: dark-light-choose($primary-low, $secondary-medium);
-  color: $primary;
-}

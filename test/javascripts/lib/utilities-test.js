@@ -1,19 +1,41 @@
 /* global Int8Array:true */
 import {
+  escapeExpression,
   emailValid,
   extractDomainFromUrl,
   avatarUrl,
   getRawSize,
   avatarImg,
+  initializeDefaultHomepage,
   defaultHomepage,
   setDefaultHomepage,
   caretRowCol,
   setCaretPosition,
+  toAsciiPrintable,
+  slugify,
   fillMissingDates,
   inCodeBlock
 } from "discourse/lib/utilities";
+import Handlebars from "handlebars";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("lib:utilities");
+discourseModule("lib:utilities");
+
+QUnit.test("escapeExpression", assert => {
+  assert.equal(escapeExpression(">"), "&gt;", "escapes unsafe characters");
+
+  assert.equal(
+    escapeExpression(new Handlebars.SafeString("&gt;")),
+    "&gt;",
+    "does not double-escape safe strings"
+  );
+
+  assert.equal(
+    escapeExpression(undefined),
+    "",
+    "returns a falsy string when given a falsy value"
+  );
+});
 
 QUnit.test("emailValid", assert => {
   assert.ok(
@@ -111,17 +133,12 @@ QUnit.test("avatarImg", assert => {
   setDevicePixelRatio(oldRatio);
 });
 
-QUnit.test("defaultHomepage", assert => {
-  Discourse.SiteSettings.top_menu = "latest|top|hot";
-  assert.equal(
-    defaultHomepage(),
-    "latest",
-    "default homepage is the first item in the top_menu site setting"
-  );
-  var meta = document.createElement("meta");
+QUnit.test("defaultHomepage via meta tag", function(assert) {
+  let meta = document.createElement("meta");
   meta.name = "discourse_current_homepage";
   meta.content = "hot";
   document.body.appendChild(meta);
+  initializeDefaultHomepage(this.siteSettings);
   assert.equal(
     defaultHomepage(),
     "hot",
@@ -130,18 +147,21 @@ QUnit.test("defaultHomepage", assert => {
   document.body.removeChild(meta);
 });
 
-QUnit.test("setDefaultHomepage", assert => {
-  var meta = document.createElement("meta");
-  meta.name = "discourse_current_homepage";
-  meta.content = "hot";
-  document.body.appendChild(meta);
-  setDefaultHomepage("top");
+QUnit.test("defaultHomepage via site settings", function(assert) {
+  this.siteSettings.top_menu = "top|latest|hot";
+  initializeDefaultHomepage(this.siteSettings);
   assert.equal(
-    meta.content,
+    defaultHomepage(),
     "top",
-    "default homepage set by setDefaultHomepage"
+    "default homepage is the first item in the top_menu site setting"
   );
-  document.body.removeChild(meta);
+});
+
+QUnit.test("setDefaultHomepage", function(assert) {
+  initializeDefaultHomepage(this.siteSettings);
+  assert.equal(defaultHomepage(), "latest");
+  setDefaultHomepage("top");
+  assert.equal(defaultHomepage(), "top");
 });
 
 QUnit.test("caretRowCol", assert => {
@@ -173,6 +193,49 @@ QUnit.test("caretRowCol", assert => {
   assertResult(14, 3, 2);
 
   document.body.removeChild(textarea);
+});
+
+QUnit.test("toAsciiPrintable", assert => {
+  const accentedString = "Créme_Brûlée!";
+  const unicodeString = "談話";
+
+  assert.equal(
+    toAsciiPrintable(accentedString, "discourse"),
+    "Creme_Brulee!",
+    "it replaces accented characters with the appropriate ASCII equivalent"
+  );
+
+  assert.equal(
+    toAsciiPrintable(unicodeString, "discourse"),
+    "discourse",
+    "it uses the fallback string when unable to convert"
+  );
+
+  assert.strictEqual(
+    typeof toAsciiPrintable(unicodeString),
+    "undefined",
+    "it returns undefined when unable to convert and no fallback is provided"
+  );
+});
+
+QUnit.test("slugify", assert => {
+  const asciiString = "--- 0__( Some-cool Discourse Site! )__0 --- ";
+  const accentedString = "Créme_Brûlée!";
+  const unicodeString = "談話";
+
+  assert.equal(
+    slugify(asciiString),
+    "0-some-cool-discourse-site-0",
+    "it properly slugifies an ASCII string"
+  );
+
+  assert.equal(
+    slugify(accentedString),
+    "crme-brle",
+    "it removes accented characters"
+  );
+
+  assert.equal(slugify(unicodeString), "", "it removes unicode characters");
 });
 
 QUnit.test("fillMissingDates", assert => {

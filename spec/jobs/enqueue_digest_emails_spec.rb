@@ -107,6 +107,14 @@ describe Jobs::EnqueueDigestEmails do
       end
     end
 
+    context "no primary email" do
+      let!(:user) { Fabricate(:active_user, last_seen_at: 2.months.ago) }
+
+      it "doesn't return users with no primary emails" do
+        UserEmail.where(user: user).delete_all
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(false)
+      end
+    end
   end
 
   describe '#execute' do
@@ -120,8 +128,10 @@ describe Jobs::EnqueueDigestEmails do
 
       it "enqueues the digest email job" do
         SiteSetting.disable_digest_emails = false
-        Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id)
-        Jobs::EnqueueDigestEmails.new.execute({})
+
+        expect_enqueued_with(job: :user_email, args: { type: :digest, user_id: user.id }) do
+          Jobs::EnqueueDigestEmails.new.execute({})
+        end
       end
     end
 
@@ -129,10 +139,12 @@ describe Jobs::EnqueueDigestEmails do
       before do
         Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
         SiteSetting.private_email = true
-        Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id).never
       end
+
       it "doesn't return users with email disabled" do
-        Jobs::EnqueueDigestEmails.new.execute({})
+        expect_not_enqueued_with(job: :user_email, args: { type: :digest, user_id: user.id }) do
+          Jobs::EnqueueDigestEmails.new.execute({})
+        end
       end
     end
 
@@ -143,8 +155,9 @@ describe Jobs::EnqueueDigestEmails do
       end
 
       it "does not enqueue the digest email job" do
-        Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id).never
-        Jobs::EnqueueDigestEmails.new.execute({})
+        expect_not_enqueued_with(job: :user_email, args: { type: :digest, user_id: user.id }) do
+          Jobs::EnqueueDigestEmails.new.execute({})
+        end
       end
     end
 

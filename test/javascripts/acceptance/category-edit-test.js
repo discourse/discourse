@@ -21,6 +21,11 @@ QUnit.test("Editing the category", async assert => {
   await visit("/c/bug");
 
   await click(".edit-category");
+
+  assert.equal(find(".d-modal .badge-category").text(), "bug");
+  await fillIn("input.category-name", "testing");
+  assert.equal(find(".d-modal .badge-category").text(), "testing");
+
   await fillIn("#edit-text-color", "#ff0000");
 
   await click(".edit-category-topic-template");

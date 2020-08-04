@@ -8,7 +8,8 @@ $poll-margin: 10px;
     flex-shrink: 0;
     width: 280px;
   }
-  .combo-box {
+  .combo-box,
+  .multi-select {
     min-width: 180px;
     width: 180px;
   }

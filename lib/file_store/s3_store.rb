@@ -53,8 +53,17 @@ module FileStore
         cache_control: 'max-age=31556952, public, immutable',
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
-      # add a "content disposition" header for "attachments"
-      options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_media?(filename)
+
+      # add a "content disposition: attachment" header with the original
+      # filename for everything but safe images (not SVG). audio and video will
+      # still stream correctly in HTML players, and when a direct link is
+      # provided to any file but an image it will download correctly in the
+      # browser.
+      if !FileHelper.is_inline_image?(filename)
+        options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+          disposition: "attachment", filename: filename
+        )
+      end
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
 
@@ -79,12 +88,38 @@ module FileStore
     def has_been_uploaded?(url)
       return false if url.blank?
 
+      begin
+        parsed_url = URI.parse(UrlHelper.encode(url))
+      rescue
+        # There are many exceptions possible here including Addressable::URI:: excpetions
+        # and URI:: exceptions, catch all may seem wide, but it makes no sense to raise ever
+        # on an invalid url here
+        return false
+      end
+
       base_hostname = URI.parse(absolute_base_url).hostname
-      return true if url[base_hostname]
+      if url[base_hostname]
+        # if the hostnames match it means the upload is in the same
+        # bucket on s3. however, the bucket folder path may differ in
+        # some cases, and we do not want to assume the url is uploaded
+        # here. e.g. the path of the current site could be /prod and the
+        # other site could be /staging
+        if s3_bucket_folder_path.present?
+          return parsed_url.path.starts_with?("/#{s3_bucket_folder_path}")
+        else
+          return true
+        end
+        return false
+      end
 
       return false if SiteSetting.Upload.s3_cdn_url.blank?
       cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
-      cdn_hostname.presence && url[cdn_hostname]
+      return true if cdn_hostname.presence && url[cdn_hostname]
+      false
+    end
+
+    def s3_bucket_folder_path
+      @s3_helper.s3_bucket_folder_path
     end
 
     def s3_bucket_name
@@ -134,9 +169,9 @@ module FileStore
       url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, "/"))
     end
 
-    def signed_url_for_path(path)
+    def signed_url_for_path(path, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
       key = path.sub(absolute_base_url + "/", "")
-      presigned_url(key)
+      presigned_url(key, expires_in: expires_in)
     end
 
     def cache_avatar(avatar, user_id)
@@ -209,8 +244,14 @@ module FileStore
 
     private
 
-    def presigned_url(url, force_download: false, filename: false)
-      opts = { expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS }
+    def presigned_url(
+      url,
+      force_download: false,
+      filename: false,
+      expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+    )
+      opts = { expires_in: expires_in }
+
       if force_download && filename
         opts[:response_content_disposition] = ActionDispatch::Http::ContentDisposition.format(
           disposition: "attachment", filename: filename

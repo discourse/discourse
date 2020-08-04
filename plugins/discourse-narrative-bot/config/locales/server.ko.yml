@@ -26,6 +26,8 @@ ko:
         이 배지는 고급 유저 튜토리얼을 성공적으로 완료한 사용자에게 부여됩니다. 당신은 고급 토론 도구를 숙지하여 면허를 취득하였습니다!
   discourse_narrative_bot:
     bio: "안녕, 사실 나는 사람이 아니야. 이 사이트에 대해서 알려주는 로봇이지. 나한테 물어보고 싶은 게 있다면 메세지를 보내거나 **`@%{discobot_username}`** 를 멘션하면 돼."
+    tl2_promotion_message:
+      subject_template: "신뢰 수준 프로모션을 축하합니다!"
     timeout:
       message: |-
         안녕 @%{username}, 너한테서 소식이 없어서 한 번 말 걸어봤어.
@@ -94,6 +96,7 @@ ko:
         '8': "좋을 전망."
         '9': "응."
         '10': "괜찮아 보이는군."
+        '11': "흐릿한 답글, 다시 시도"
         '12': "다음에 다시 물어봐."
         '13': "지금은 말하지 않는 편이 낫겠어."
         '14': "지금은 예측할 수 없어."
@@ -125,8 +128,16 @@ ko:
 
           그럼, 난 잠시 자리를 비워줄게.
     new_user_narrative:
+      reset_trigger: "지도 시간"
+      title: "새로운 사용자 튜토리얼 수료증"
       cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
+      hello:
+        title: "인사말!"
+        message: |-
+          %{title}에 참여해 주셔서 감사합니다. -나는 로봇 일 뿐이지 만 [친근한 직원] (%{base_uri} / about)도 사람과 연락해야 할 경우 도움을주기 위해 여기에 있습니다. -안전상의 이유로 신규 사용자가 할 수있는 일을 일시적으로 제한합니다. 우리가 당신을 알게되면 [새로운 능력] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (그리고 [badges] (%{base_uri} / badges))을 얻게됩니다. -우리는 항상 [civilized community behavior] (%{base_uri} / guidelines)를 믿습니다.
       onebox:
+        instructions: |-
+          다음으로이 링크 중 하나를 나와 공유 할 수 있습니까? ** 한 줄에 링크 **로 답장하면 자동으로 확장되어 멋진 요약을 포함합니다. 링크를 복사하려면 모바일을 길게 누르거나 포인팅 장치를 마우스 오른쪽 버튼으로 클릭하십시오. <https://en.wikipedia.org/wiki/Inherently_funny_word><https://en.wikipedia.org/wiki/Death_by_coconut><https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해. 딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
         not_found: |-
@@ -187,6 +198,10 @@ ko:
 
           내 포스트에서 아무 글이나 선택해도 <kbd>**인용하기**</kbd> 버튼이 뜰거야. 글을 선택하고 **답글쓰기** 를 눌러도 돼! 다시 한 번 해 볼래?
       bookmark:
+        instructions: |-
+          자세한 내용을 알아 보려면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 아래와 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인 메시지를 북마크하십시오 **. 당신이하는 경우 : 선물 : 미래에있을 수 있습니다!
+        reply: |-
+          우수한! 이제 [프로필의 북마크 탭] (%{bookmark_url})에서 언제든지 개인 대화로 쉽게 돌아갈 수 있습니다. 오른쪽 상단에서 프로필 사진을 선택하십시오. ↗
         not_found: |-
           어라, 이 토픽에는 북마크가 없는데? 포스트 별로 있는 북마크 버튼을 찾았니? 더 보기 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 를 눌러서 필요한 추가 기능이 있는지 살펴 봐.
       emoji:
@@ -226,6 +241,8 @@ ko:
           > :imp: 어쩌고 저쩌고 나쁜 글
 
           뭘 할지 잘 알고 있지? **이 포스트 신고하기** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 를 눌러서 부적절하다고 알려줘!
+        reply: |-
+          [우리의 직원] (%{base_uri} / groups / staff)는 귀하의 깃발에 대해 개인적으로 통지를받습니다. 커뮤니티 회원이 충분하면 게시물을 신고하면 예방 조치로 자동 숨겨집니다. (나는 실제로 불쾌한 게시물을 작성하지 않았기 때문에 : angel :, 나는 지금 나아가서 깃발을 제거했습니다.)
         not_found: |-
           이런 내가 쓴 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
       search:
@@ -233,6 +250,8 @@ ko:
           이봐, 내가 이 토픽에 놀라운 걸 숨겼다구. 찾아보고 싶다면, 우측 상단에 있는 **검색 아이콘을** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 선택해서 &#8599; 찾아봐.
 
           이 토픽에서 "capy&#8203;bara"를 찾으면 돼.
+        hidden_message: |-
+          이 capybara를 어떻게 그리워 했습니까? :눈짓: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/> 당신이 지금 처음에 돌아 왔음을 알았습니까? `%{search_answer}` 그림 이모티콘 **을 사용하여이 가난한 배고픈 카피 바라에게 먹이를 주면 자동으로 끝납니다.
         reply: |-
           예이, 찾았네! :tada:
 
@@ -243,11 +262,17 @@ ko:
           - 진짜 실물 :keyboard:가 있다면, <kbd>?</kbd>를 눌러서 간편한 단축키가 뭐가 있는지 알아봐.
         not_found: |-
           흠.... 아무래도 문제가 있어 보이네. 미안해. 검색<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">을 눌러서 **capy&#8203;bara**를 찾아봤어?
+      end:
+        message: |-
+          @ %{username}와 함께 해 주셔서 감사합니다! 나는 당신을 위해 이것을 만들었다, 나는 당신이 그것을 얻은 것 같아 : %{certificate} 그게 다야! [** 최신 토론 주제 **] (%{base_uri} / latest) 또는 [** 토론 범주 **] (%{base_uri} / categories)를 확인하십시오. : 선글라스 : (더 많은 것을 배우기 위해 다시 나와 이야기하고 싶다면 언제든지 메시지를 보내거나`@ %{discobot_username} &#39;를 언급하십시오!)
       certificate:
         alt: "목표달성 인증"
     advanced_user_narrative:
+      reset_trigger: "고급 튜토리얼"
       cert_title: "고급 사용자 튜토리얼을 훌륭하게 완료한 것에 대한 보상으로"
       title: ":arrow_up: 고급 사용자 기능"
+      start_message: |-
+        _advanced_ 사용자로서 [기본 설정 페이지] (%{base_uri} / my / preferences)를 방문했지만 아직 @ %{username}? 어둡거나 밝은 테마를 선택하는 등 다양한 방법으로 경험을 사용자 지정할 수 있습니다. 그러나 나는 출발한다, 시작하자!
       edit:
         bot_created_post_raw: "@%{discobot_username}는 내가 아는 한, 현존하는 가장 쿨한 봇이지:wink:"
         instructions: |-
@@ -281,10 +306,40 @@ ko:
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **삭제 취소하기**를 부탁해도 될까?
         not_found: |-
           잘 안되니? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 더 보기를 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> 삭제 취소하기가 보일거야.
+        reply: |-
+          휴, 그것은 가까운 사람이었다! : wink : 게시물을 삭제 취소 할 수있는 시간은 %{deletion_after}입니다.
       category_hashtag:
         instructions: |-
           포스트에 카테고리나 태그를 언급할 수 있다는 거 알고 있어? 예를 들어, %{category} 카테고리가 보이니?
 
           문장 중간에 `#`을 넣고 어떤 카테고리나 태그든 선택해봐.
+        not_found: |-
+          흠, 나는 어디에도 카테고리가 보이지 않습니다. `#`는 첫 번째 문자가 될 수 없습니다. 다음 답장에서이 내용을 복사 할 수 있습니까? ```텍스트 # #``을 통해 카테고리 링크를 만들 수 있습니다
+        reply: |-
+          우수한! 태그가 활성화 된 경우 두 카테고리 _and_ 태그 모두에서 작동합니다.
+      change_topic_notification_level:
+        instructions: |-
+          모든 주제에는 알림 수준이 있습니다. &#39;정상&#39;으로 시작합니다. 즉, 누군가가 나와 직접 대화 할 때만 알림을받습니다. 기본적으로 비공개 메시지의 알림 수준은 &#39;감시&#39;의 최상위 수준으로 설정되므로 모든 새 회신에 대해 알림을받습니다. 그러나 _any_ 주제의 알림 수준을 &#39;감시&#39;, &#39;추적&#39;또는 &#39;음소거 됨&#39;으로 무시할 수 있습니다. 이 주제에 대한 알림 수준을 변경해 봅시다. 주제 하단에이 주제를보고 있음을 나타내는 버튼이 있습니다. 알림 수준을 ** 추적 **으로 변경할 수 있습니까?
+        not_found: |-
+          아직도보고있는 것 같습니다 : 눈 :이 주제! 찾는 데 문제가 있으면 알림 수준 버튼이 주제 하단에 있습니다.
+        reply: |-
+          멋진 일! 나는 때때로 약간 대화가 가능하기 때문에이 주제를 무시하지 않기를 바랍니다. : grin :. 주제에 응답하거나 몇 분 이상 주제를 읽으면 자동으로 &#39;추적&#39;알림 레벨로 설정됩니다. [사용자 환경 설정] (%{base_uri} / my / preferences)에서이를 변경할 수 있습니다.
+      poll:
+        instructions: |-
+          모든 게시물에 설문 조사를 추가 할 수 있다는 것을 알고 있습니까? 를 사용해보십시오 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 설문 조사를 작성하여 설문 조사를 작성합니다 **.
+        not_found: |-
+          으악! 답장에 설문 조사가 없습니다. 사용 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 편집기에서 톱니 바퀴 아이콘을 클릭하거나 다음 응답에이 설문 조사를 복사하여 붙여 넣으십시오.```text [poll] * : cat : * : dog : [/ poll]```
+        reply: |-
+          여보세요, 여론 조사! 내가 당신을 가르치는 데 어떻게 했습니까? [폴] * : +1 : * : -1 : [/ 폴]
+      details:
+        instructions: |-
+          때로는 답글에서 ** 세부 사항 숨기기 **를 원할 수도 있습니다.-스포일러로 간주되는 영화 또는 TV 프로그램의 플롯 포인트를 논의 할 때. -게시물에 한 번에 읽을 때 압도적 일 수있는 많은 옵션 세부 정보가 필요한 경우. [details = 작동 방식을 보려면 이것을 선택하십시오!] 1. <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 에디터에서 기어. 2. &quot;세부 정보 숨기기&quot;를 선택하십시오. 3. 세부 사항 요약을 편집하고 컨텐츠를 추가하십시오. [/ 세부 사항] <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 다음 답변에 세부 정보 섹션을 추가하려면 편집기를 사용하십시오.
+        not_found: |-
+          세부 사항 위젯을 작성하는 데 문제가 있습니까? 다음 답장에 다음 내용을 포함시켜보십시오.
+        reply: |-
+          훌륭합니다. _detail_에 대한 관심은 훌륭합니다!
+      end:
+        message: |-
+          당신은 이것을 _advanced user_ 실제로 : bow : %{certificate}처럼 비난했습니다. 안녕! 나와 다시 대화하고 싶다면 언제든지 메시지를 보내주세요.
       certificate:
         alt: "고급 사용자 추적 인증"

@@ -18,13 +18,13 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.0.2.2'
-  gem 'actionpack', '6.0.2.2'
-  gem 'actionview', '6.0.2.2'
-  gem 'activemodel', '6.0.2.2'
-  gem 'activerecord', '6.0.2.2'
-  gem 'activesupport', '6.0.2.2'
-  gem 'railties', '6.0.2.2'
+  gem 'actionmailer', '6.0.3.2'
+  gem 'actionpack', '6.0.3.2'
+  gem 'actionview', '6.0.3.2'
+  gem 'activemodel', '6.0.3.2'
+  gem 'activerecord', '6.0.3.2'
+  gem 'activesupport', '6.0.3.2'
+  gem 'railties', '6.0.3.2'
   gem 'sprockets-rails'
 end
 
@@ -76,10 +76,10 @@ gem 'message_bus'
 
 gem 'rails_multisite'
 
-gem 'fast_xs', platform: :mri
+gem 'fast_xs', platform: :ruby
 
 # may move to xorcist post: https://github.com/fny/xorcist/issues/4
-gem 'fast_xor', platform: :mri
+gem 'fast_xor', platform: :ruby
 
 gem 'fastimage'
 
@@ -112,13 +112,13 @@ gem 'oj'
 gem 'pg'
 gem 'mini_sql'
 gem 'pry-rails', require: false
+gem 'pry-byebug', require: false
 gem 'r2', require: false
 gem 'rake'
 
 gem 'thor', require: false
 gem 'diffy', require: false
 gem 'rinku'
-gem 'sanitize'
 gem 'sidekiq'
 gem 'mini_scheduler'
 
@@ -128,11 +128,7 @@ gem 'mini_racer'
 # TODO: determine why highline is being held back and upgrade to latest
 gem 'highline', '~> 1.7.0', require: false
 
-# TODO: Upgrading breaks Sidekiq Web
-# This is a bit of a hornets nest cause in an ideal world we much prefer
-# if Sidekiq reused session and CSRF mitigation with Discourse on the
-# _forum_session cookie instead of a rack.session cookie
-gem 'rack', '2.0.8'
+gem 'rack'
 
 gem 'rack-protection' # security
 gem 'cbor', require: false
@@ -168,23 +164,21 @@ group :test, :development do
   # we would like to upgrade it if possible
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
 
-  # TODO once 4.0.0 is released upgrade to it, at time of writing 3.9.0 is latest
-  gem 'rspec-rails', '4.0.0.beta2', require: false
+  gem 'rspec-rails'
 
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
-  gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
-  gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
-  gem "rubocop-rspec", require: false
   gem 'parallel_tests'
+
+  gem 'rswag-specs'
 end
 
 group :development do
   gem 'ruby-prof', require: false, platform: :mri
   gem 'bullet', require: !!ENV['BULLET']
-  gem 'better_errors', platform: :mri
+  gem 'better_errors', platform: :mri, require: !!ENV['BETTER_ERRORS']
   gem 'binding_of_caller'
   gem 'yaml-lint'
   gem 'annotate'
@@ -193,7 +187,7 @@ end
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
-gem 'fast_blank', platform: :mri
+gem 'fast_blank', platform: :ruby
 
 # this provides a very efficient lru cache
 gem 'lru_redux'
@@ -207,7 +201,7 @@ gem 'htmlentities', require: false
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: ['enable_rails_patches']
 
-gem 'unicorn', require: false, platform: :mri
+gem 'unicorn', require: false, platform: :ruby
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
@@ -230,7 +224,9 @@ gem 'logster'
 gem 'sassc', '2.0.1', require: false
 gem "sassc-rails"
 
-gem 'rotp', require: false
+# see: https://github.com/mdp/rotp/issues/98
+gem 'rotp', '5.1.0' , require: false
+
 gem 'rqrcode'
 
 gem 'rubyzip', require: false
@@ -238,7 +234,7 @@ gem 'rubyzip', require: false
 gem 'sshkey', require: false
 
 gem 'rchardet', require: false
-gem 'lz4-ruby', require: false, platform: :mri
+gem 'lz4-ruby', require: false, platform: :ruby
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
@@ -256,9 +252,4 @@ gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
 
-# These are not direct dependencies, but we need to restrict
-# versions for compatibility with https://github.com/discourse/discourse-zendesk-plugin
-# These restrictions can be removed once the zendesk_api gem is updated
-# for newer versions of hashie and faraday
-gem 'hashie', '< 4.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/422
-gem 'faraday', '< 1.0.0', require: false # https://github.com/zendesk/zendesk_api_client_rb/pull/421
+gem 'rails_failover', require: false

@@ -1,3 +1,5 @@
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 import { later, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -30,7 +32,7 @@ export default Component.extend({
   @on("init")
   _initialize() {
     this.resumable = new Resumable({
-      target: Discourse.getURL(this.target),
+      target: getURL(this.target),
       maxFiles: 1, // only 1 file at a time
       headers: {
         "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")

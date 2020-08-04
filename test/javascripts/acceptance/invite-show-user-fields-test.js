@@ -1,4 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
+import PreloadStore from "discourse/lib/preload-store";
 
 acceptance("Accept Invite - User Fields", {
   site: {
@@ -26,6 +27,19 @@ acceptance("Accept Invite - User Fields", {
 });
 
 QUnit.test("accept invite with user fields", async assert => {
+  PreloadStore.store("invite_info", {
+    invited_by: {
+      id: 123,
+      username: "neil",
+      avatar_template: "/user_avatar/localhost/neil/{size}/25_1.png",
+      name: "Neil Lalonde",
+      title: "team"
+    },
+    email: "invited@asdf.com",
+    username: "invited",
+    is_invite_link: false
+  });
+
   await visit("/invites/myvalidinvitetoken");
   assert.ok(exists(".invites-show"), "shows the accept invite page");
   assert.ok(exists(".user-field"), "it has at least one user field");

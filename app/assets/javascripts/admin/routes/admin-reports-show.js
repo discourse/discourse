@@ -4,7 +4,8 @@ export default DiscourseRoute.extend({
   queryParams: {
     start_date: { refreshModel: true },
     end_date: { refreshModel: true },
-    filters: { refreshModel: true }
+    filters: { refreshModel: true },
+    chart_grouping: { refreshModel: true }
   },
 
   model(params) {
@@ -13,8 +14,7 @@ export default DiscourseRoute.extend({
 
     params.startDate =
       params.start_date ||
-      moment
-        .utc()
+      moment()
         .subtract(1, "day")
         .subtract(1, "month")
         .startOf("day")
@@ -23,11 +23,13 @@ export default DiscourseRoute.extend({
 
     params.endDate =
       params.end_date ||
-      moment
-        .utc()
+      moment()
         .endOf("day")
         .format("YYYY-MM-DD");
     delete params.end_date;
+
+    params.chartGrouping = params.chart_grouping || "daily";
+    delete params.chart_grouping;
 
     return params;
   },
@@ -56,9 +58,14 @@ export default DiscourseRoute.extend({
     onParamsChange(params) {
       const queryParams = {
         type: params.type,
-        start_date: params.startDate,
+        start_date: params.startDate
+          ? params.startDate.toISOString(true).split("T")[0]
+          : null,
+        chart_grouping: params.chartGrouping,
         filters: params.filters,
         end_date: params.endDate
+          ? params.endDate.toISOString(true).split("T")[0]
+          : null
       };
 
       this.transitionTo("adminReports.show", { queryParams });

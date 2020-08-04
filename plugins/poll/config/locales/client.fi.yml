@@ -26,18 +26,6 @@ fi:
           title: "Tulokset näytetään äänestyksen <strong>sulkeuduttua</strong>."
         staff:
           title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille. "
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Valitse vähintään <strong>%{count}</strong> vaihtoehto"
-            other: "Valotse vähintään <strong>%{count}</strong> vaihtoehtoa"
-          up_to_max_options:
-            one: "Valitse enintään <strong>%{count}</strong> vaihtoehto"
-            other: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa"
-          x_options:
-            one: "Valitse <strong>%{count}</strong> vaihtoehto"
-            other: "Valitse <strong>%{count}</strong> vaihtoehtoa"
-          between_min_and_max_options: "Valitse <strong>%{min}</strong>-<strong>%{max}</strong> vaihtoehtoa"
       cast-votes:
         title: "Antakaa äänenne"
         label: "Äänestä nyt!"

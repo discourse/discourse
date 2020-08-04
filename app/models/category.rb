@@ -5,6 +5,7 @@ class Category < ActiveRecord::Base
     'none'
   ]
 
+  # TODO(2020-11-18): remove
   self.ignored_columns = %w{
     suppress_from_latest
   }
@@ -306,7 +307,7 @@ class Category < ActiveRecord::Base
 
     @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache_text.getset(self.description) do
-      text = Nokogiri::HTML.fragment(self.description).text.strip
+      text = Nokogiri::HTML5.fragment(self.description).text.strip
       Rack::Utils.escape_html(text).html_safe
     end
   end
@@ -708,37 +709,31 @@ class Category < ActiveRecord::Base
     ].include? id
   end
 
-  @@url_cache = DistributedCache.new('category_url')
+  def full_slug(separator = "-")
+    start_idx = "#{Discourse.base_uri}/c/".size
+    url[start_idx..-1].gsub("/", separator)
+  end
+
+  @@url_cache = DistributedCache.new("category_url")
 
   def clear_url_cache
     @@url_cache.clear
   end
 
-  def full_slug(separator = "-")
-    start_idx = "#{Discourse.base_uri}/c/".length
-    url[start_idx..-1].gsub("/", separator)
+  def url
+    @@url_cache[self.id] ||= "#{Discourse.base_uri}/c/#{slug_path.join('/')}/#{self.id}"
   end
 
-  def url
-    url = @@url_cache[self.id]
-    unless url
-      url = "#{Discourse.base_uri}/c/#{slug_path.join('/')}"
-
-      @@url_cache[self.id] = url
-    end
+  def url_with_id
+    Discourse.deprecate("Category#url_with_id is deprecated. Use `Category#url` instead.", output_in_test: true)
 
     url
   end
 
-  def url_with_id
-    self.parent_category ? "#{url}/#{self.id}" : "#{Discourse.base_uri}/c/#{self.slug}/#{self.id}"
-  end
-
-  # If the name changes, try and update the category definition topic too if it's
-  # an exact match
+  # If the name changes, try and update the category definition topic too if it's an exact match
   def rename_category_definition
-    old_name = saved_changes.transform_values(&:first)["name"]
     return unless topic.present?
+    old_name = saved_changes.transform_values(&:first)["name"]
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
       topic.update_attribute(:title, I18n.t("category.topic_prefix", category: name))
     end
@@ -746,9 +741,10 @@ class Category < ActiveRecord::Base
 
   def create_category_permalink
     old_slug = saved_changes.transform_values(&:first)["slug"]
+
     url = +"#{Discourse.base_uri}/c"
     url << "/#{parent_category.slug_path.join('/')}" if parent_category_id
-    url << "/#{old_slug}"
+    url << "/#{old_slug}/#{id}"
     url = Permalink.normalize_url(url)
 
     if Permalink.where(url: url).exists?
@@ -768,31 +764,42 @@ class Category < ActiveRecord::Base
   end
 
   def index_search
+    if saved_change_to_attribute?(:name)
+      SearchIndexer.queue_category_posts_reindex(self.id)
+    end
+
     SearchIndexer.index(self)
   end
 
   def update_reviewables
-    if SiteSetting.enable_category_group_review? && saved_change_to_reviewable_by_group_id?
+    if SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
       Reviewable.where(category_id: id).update_all(reviewable_by_group_id: reviewable_by_group_id)
     end
   end
 
-  def self.find_by_slug(category_slug, parent_category_slug = nil)
-
-    return nil if category_slug.nil?
+  def self.find_by_slug_path(slug_path)
+    return nil if slug_path.empty?
+    return nil if slug_path.size > SiteSetting.max_category_nesting
 
     if SiteSetting.slug_generation_method == "encoded"
-      parent_category_slug = CGI.escape(parent_category_slug) unless parent_category_slug.nil?
-      category_slug = CGI.escape(category_slug)
+      slug_path.map! { |slug| CGI.escape(slug) }
     end
 
-    if parent_category_slug
-      parent_category_id = self.where(slug: parent_category_slug, parent_category_id: nil).select(:id)
+    query =
+      slug_path.inject(nil) do |parent_id, slug|
+        Category.where(
+          slug: slug,
+          parent_category_id: parent_id,
+        ).select(:id)
+      end
 
-      self.where(slug: category_slug, parent_category_id: parent_category_id).first
-    else
-      self.where(slug: category_slug, parent_category_id: nil).first
-    end
+    Category.find_by_id(query)
+  end
+
+  def self.find_by_slug(category_slug, parent_category_slug = nil)
+    return nil if category_slug.nil?
+
+    find_by_slug_path([parent_category_slug, category_slug].compact)
   end
 
   def subcategory_list_includes_topics?
@@ -971,6 +978,8 @@ end
 #  reviewable_by_group_id            :integer
 #  required_tag_group_id             :integer
 #  min_tags_from_required_group      :integer          default(1), not null
+#  read_only_banner                  :string
+#  default_list_filter               :string(20)       default("all")
 #
 # Indexes
 #

@@ -44,7 +44,6 @@ ja:
       unrecognized_extension: "ファイルの拡張子が認識できません。: %{extension}"
     import_error:
       generic: テーマをインポートするときにエラーが起こりました
-      about_json: "重要なエラー: about.json が存在しないか無効です"
       about_json_values: "about.jsonは無効な値があります: %{errors}"
       git: "gitレポジトリのクローニングに失敗しました。アクセスが許可されていないか、レポジトリが見つかりません。"
       unpack_failed: "ファイルの解凍に失敗しました"
@@ -193,9 +192,6 @@ ja:
   topics_in_category: "'%{category}' カテゴリ内のトピック"
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
-  author_wrote: "%{author} の投稿:"
-  num_posts: "投稿:"
-  num_participants: "参加者:"
   read_full_topic: "完全なトピックを読む"
   private_message_abbrev: "メッセージ"
   rss_description:
@@ -452,7 +448,7 @@ ja:
       title: "不適切"
       long_form: "不適切として通報する"
     notify_user:
-      title: "@{{username}}へメッセージを送る"
+      title: "@%{username}へメッセージを送る"
       description: "この投稿について直接話がしたいです。"
       short_description: "彼らの投稿に対して直接話したいです。"
       long_form: "メッセージが送られたユーザー"
@@ -1303,6 +1299,8 @@ ja:
     confirm_old_email:
       title: "古いメールの確認"
       subject_template: "[%{email_prefix}]現在のメールアドレスの確認"
+    confirm_old_email_add:
+      subject_template: "[%{email_prefix}]現在のメールアドレスの確認"
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
     signup:
@@ -1575,7 +1573,6 @@ ja:
       name: より多くの愛
     crazy_in_love:
       name: 愛
-      description: 50いいね！を20日間
     thank_you:
       name: ありがとう
       description: 20ものいいね！を受け取り10ものいいね！を与えました。
@@ -1674,6 +1671,12 @@ ja:
   joined: "参加日"
   discourse_push_notifications:
     popup:
+      mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
+      group_mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
+      quoted: '"%{topic}"で%{username}が引用しました - %{site_title}'
+      replied: '%{username}が"%{topic}"へ返信しました - %{site_title}'
+      posted: '%{username} が投稿しました "%{topic}" - %{site_title}'
+      linked: '"%{topic}"にあるあなたの投稿に%{username}がリンクしました - %{site_title}'
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
     priorities:

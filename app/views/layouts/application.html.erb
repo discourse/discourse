@@ -26,7 +26,6 @@
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>
     <%= preload_script "ember_jquery" %>
-    <%= preload_script "preload-store" %>
     <%= preload_script "vendor" %>
     <%= preload_script "pretty-text-bundle" %>
     <%= preload_script "application" %>
@@ -110,7 +109,7 @@
     <% end %>
 
     <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
-    <%= preload_script "preload-application-data" %>
+    <%= preload_script "start-discourse" %>
 
     <%= yield :data %>
 

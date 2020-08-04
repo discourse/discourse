@@ -1,0 +1,68 @@
+<div class="future-date-input">
+  {{#unless isBasedOnDuration}}
+    <div class="control-group">
+      <label>{{displayLabel}}</label>
+      {{future-date-input-selector
+        minimumResultsForSearch=-1
+        statusType=statusType
+        value=(readonly selection)
+        input=(readonly input)
+        includeDateTime=includeDateTime
+        includeWeekend=includeWeekend
+        includeFarFuture=includeFarFuture
+        includeMidFuture=includeMidFuture
+        includeNow=includeNow
+        clearable=clearable
+        onChangeInput=onChangeInput
+        onChange=(action (mut selection))
+        options=(hash
+          none="topic.auto_update_input.none"
+        )
+      }}
+    </div>
+  {{/unless}}
+
+  {{#if displayDateAndTimePicker}}
+    <div class="control-group">
+      {{d-icon "calendar-alt"}}
+      {{date-picker-future
+        value=date
+        defaultDate=date
+        onSelect=(action (mut date))
+      }}
+    </div>
+
+    <div class="control-group">
+      {{d-icon "far-clock"}}
+      {{input placeholder="--:--" type="time" class="time-input" value=time disabled=timeInputDisabled}}
+    </div>
+  {{/if}}
+
+  {{#if displayNumberInput}}
+    <div class="control-group">
+      <label>
+        {{durationLabel}}
+        {{text-field value=duration type="number"}}
+      </label>
+    </div>
+
+    {{#if willCloseImmediately}}
+      <div class="warning">
+        {{d-icon "exclamation-triangle"}}
+        {{willCloseI18n}}
+      </div>
+    {{/if}}
+  {{/if}}
+
+  {{#if showTopicStatusInfo}}
+    <div class="alert alert-info">
+      {{topic-timer-info
+        statusType=statusType
+        executeAt=executeAt
+        basedOnLastPost=basedOnLastPost
+        duration=duration
+        categoryId=categoryId
+      }}
+    </div>
+  {{/if}}
+</div>

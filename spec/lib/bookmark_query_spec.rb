@@ -3,21 +3,21 @@
 require 'rails_helper'
 
 RSpec.describe BookmarkQuery do
+  before do
+    SearchIndexer.enable
+  end
+
   fab!(:user) { Fabricate(:user) }
-  fab!(:bookmark1) { Fabricate(:bookmark, user: user) }
-  fab!(:bookmark2) { Fabricate(:bookmark, user: user) }
   let(:params) { {} }
 
   def bookmark_query(user: nil, params: nil)
     BookmarkQuery.new(user: user || self.user, params: params || self.params)
   end
 
-  before do
-    TopicUser.change(user.id, bookmark1.topic_id, total_msecs_viewed: 1)
-    TopicUser.change(user.id, bookmark2.topic_id, total_msecs_viewed: 1)
-  end
-
   describe "#list_all" do
+    fab!(:bookmark1) { Fabricate(:bookmark, user: user) }
+    fab!(:bookmark2) { Fabricate(:bookmark, user: user) }
+
     it "returns all the bookmarks for a user" do
       expect(bookmark_query.list_all.count).to eq(2)
     end
@@ -39,6 +39,29 @@ RSpec.describe BookmarkQuery do
       end
       bookmark_query.list_all
       expect(preloaded_bookmarks.any?).to eq(true)
+    end
+
+    context "when q param is provided" do
+      before do
+        @post = Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs"))
+        @bookmark3 = Fabricate(:bookmark, user: user, name: "Check up later")
+        @bookmark4 = Fabricate(:bookmark, user: user, post: @post, topic: @post.topic)
+      end
+
+      it "can search by bookmark name" do
+        bookmarks = bookmark_query(params: { q: 'check' }).list_all
+        expect(bookmarks.map(&:id)).to eq([@bookmark3.id])
+      end
+
+      it "can search by post content" do
+        bookmarks = bookmark_query(params: { q: 'content' }).list_all
+        expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
+      end
+
+      it "can search by topic title" do
+        bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
+        expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
+      end
     end
 
     context "for a whispered post" do
@@ -141,6 +164,23 @@ RSpec.describe BookmarkQuery do
           end.topic.custom_fields['test_field']
         ).not_to eq(nil)
       end
+    end
+  end
+
+  describe "#list_all ordering" do
+    let!(:bookmark1) { Fabricate(:bookmark, user: user, updated_at: 1.day.ago) }
+    let!(:bookmark2) { Fabricate(:bookmark, user: user, updated_at: 2.days.ago) }
+    let!(:bookmark3) { Fabricate(:bookmark, user: user, updated_at: 6.days.ago) }
+    let!(:bookmark4) { Fabricate(:bookmark, user: user, updated_at: 4.days.ago) }
+    let!(:bookmark5) { Fabricate(:bookmark, user: user, updated_at: 3.days.ago) }
+    it "orders by updated_at" do
+      expect(bookmark_query.list_all.map(&:id)).to eq([
+        bookmark1.id,
+        bookmark2.id,
+        bookmark5.id,
+        bookmark4.id,
+        bookmark3.id
+      ])
     end
   end
 end

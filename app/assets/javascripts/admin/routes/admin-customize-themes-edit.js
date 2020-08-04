@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Route from "@ember/routing/route";
 export default Route.extend({
   model(params) {

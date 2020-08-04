@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Route from "@ember/routing/route";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { THEMES, COMPONENTS } from "admin/models/theme";

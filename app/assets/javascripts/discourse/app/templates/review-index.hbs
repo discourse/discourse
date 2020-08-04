@@ -1,0 +1,115 @@
+<div class="reviewable-container">
+  <div class="reviewable-list">
+    {{#if reviewables}}
+      {{#load-more selector=".reviewable-item" action=(action "loadMore")}}
+        <div class="reviewables">
+          {{#each reviewables as |r|}}
+            {{reviewable-item reviewable=r remove=(action "remove")}}
+          {{/each}}
+        </div>
+      {{/load-more}}
+      {{conditional-loading-spinner condition=reviewables.loadingMore}}
+    {{else}}
+      <div class="no-review">
+        {{i18n "review.none"}}
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="reviewable-filters">
+    <div class="reviewable-filter">
+      <label class="filter-label">{{i18n "review.filters.status"}}</label>
+      {{combo-box
+        value=filterStatus
+        content=statuses
+        onChange=(action (mut filterStatus))
+      }}
+    </div>
+
+    {{#if filtersExpanded}}
+
+      {{plugin-outlet name="above-review-filters" args=(hash model=model additionalFilters=additionalFilters)}}
+
+      <div class="reviewable-filter">
+        <label class="filter-label">{{i18n "review.filters.type.title"}}</label>
+        {{combo-box
+          value=filterType
+          content=allTypes
+          none="review.filters.type.all"
+          onChange=(action (mut filterType))
+        }}
+      </div>
+
+      <div class="reviewable-filter">
+        <label class="filter-label">{{i18n "review.filters.priority.title"}}</label>
+        {{combo-box
+          value=filterPriority
+          content=priorities
+          onChange=(action (mut filterPriority))
+        }}
+      </div>
+
+      <div class="reviewable-filter">
+        <label class="filter-label">{{i18n "review.filters.category"}}</label>
+        {{category-chooser
+          none="review.filters.all_categories"
+          value=filterCategoryId
+          onChange=(action (mut filterCategoryId))
+        }}
+      </div>
+
+      <div class="reviewable-filter topic-filter">
+        {{i18n "review.filtered_user"}}
+        {{user-selector
+          excludeCurrentUser=false
+          usernames=filterUsername
+          fullWidthWrap=true
+          single=true
+          class="user-selector"
+          canReceiveUpdates=true}}
+      </div>
+
+      {{#if filterTopic}}
+        <div class="reviewable-filter topic-filter">
+          {{i18n "review.filtered_topic"}}
+          {{d-button label="review.show_all_topics" icon="times" action=(action "resetTopic")}}
+        </div>
+      {{/if}}
+
+      <div class="reviewable-filter date-range">
+        {{date-time-input-range
+          from=filterFromDate
+          to=filterToDate
+          onChange=setRange
+          showFromTime=false
+          showToTime=false
+        }}
+      </div>
+
+      <div class="reviewable-filter sort-order">
+        {{i18n "review.order_by"}}
+        {{combo-box
+          value=filterSortOrder
+          content=sortOrders
+          onChange=(action (mut filterSortOrder))
+        }}
+      </div>
+    {{/if}}
+
+    <div class="reviewable-filters-actions">
+      {{d-button
+        icon="sync"
+        label="review.filters.refresh"
+        class="btn-primary refresh"
+        action=(action "refresh")}}
+
+      {{#if site.mobileView}}
+        {{d-button
+          label="show_help"
+          icon=toggleFiltersIcon
+          class="btn-default expand-secondary-filters"
+          action=(action "toggleFilters")}}
+      {{/if}}
+    </div>
+  </div>
+</div>

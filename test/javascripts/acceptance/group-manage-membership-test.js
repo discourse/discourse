@@ -14,11 +14,6 @@ QUnit.test("As an admin", async assert => {
   );
 
   assert.ok(
-    find(".groups-form-automatic-membership-retroactive").length === 1,
-    "it should display automatic membership retroactive checkbox"
-  );
-
-  assert.ok(
     find(".groups-form-primary-group").length === 1,
     "it should display set as primary group checkbox"
   );

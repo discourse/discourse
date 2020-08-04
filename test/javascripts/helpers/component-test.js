@@ -4,6 +4,7 @@ import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import Site from "discourse/models/site";
+import { currentSettings } from "helpers/site-settings";
 
 export default function(name, opts) {
   opts = opts || {};
@@ -15,7 +16,7 @@ export default function(name, opts) {
   test(name, function(assert) {
     this.site = Site.current();
 
-    this.registry.register("site-settings:main", Discourse.SiteSettings, {
+    this.registry.register("site-settings:main", currentSettings(), {
       instantiate: false
     });
     this.registry.register("capabilities:main", EmberObject);
@@ -25,9 +26,8 @@ export default function(name, opts) {
     this.registry.injection("component", "capabilities", "capabilities:main");
     this.registry.injection("component", "site", "site:main");
 
-    this.siteSettings = Discourse.SiteSettings;
-
-    autoLoadModules(this.registry, this.registry);
+    this.siteSettings = currentSettings();
+    autoLoadModules(this.container, this.registry);
 
     const store = createStore();
     if (!opts.anonymous) {
@@ -55,12 +55,12 @@ export default function(name, opts) {
     });
 
     andThen(() => {
-      try {
-        opts.test.call(this, assert);
-      } finally {
-        if (opts.afterEach) {
-          opts.afterEach.call(opts);
-        }
+      return opts.test.call(this, assert);
+    }).finally(() => {
+      if (opts.afterEach) {
+        andThen(() => {
+          return opts.afterEach.call(opts);
+        });
       }
     });
   });

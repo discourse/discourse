@@ -9,19 +9,14 @@
   .user-stream-item {
     background-color: $secondary;
     border-bottom: 1px solid $primary-low;
+    padding: 1em 0.53em;
 
     &.moderator-action {
       background-color: $highlight-medium;
     }
 
     &.deleted {
-      opacity: 0.8;
-      background-color: dark-light-diff(
-        rgba($danger, 0.7),
-        $secondary,
-        50%,
-        -10%
-      );
+      background-color: $danger-low-mid;
     }
 
     &.hidden {
@@ -38,10 +33,14 @@
   .time,
   .delete-info,
   .draft-type {
-    display: block;
     float: right;
     color: $primary-medium;
     font-size: $font-down-2;
+  }
+
+  .notification .time {
+    margin-left: auto;
+    float: none;
   }
 
   .draft-type {
@@ -77,10 +76,7 @@
   }
 
   .edit-reason {
-    background-color: dark-light-choose(
-      $highlight-medium,
-      scale-color($highlight, $lightness: -50%)
-    );
+    background-color: $highlight-medium;
     padding: 3px 5px 5px 5px;
   }
 
@@ -103,16 +99,10 @@
       }
     }
 
-    .time {
-      display: inline-block;
-      margin-left: 10px;
-      float: none;
-    }
-
     // common/base/header.scss
     .fa,
     .icon {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-med-or-secondary-med;
       font-size: $font-up-4;
     }
   }

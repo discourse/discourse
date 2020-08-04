@@ -31,7 +31,7 @@ class TopicPostersSummary
     topic_poster = TopicPoster.new
     topic_poster.user = user
     topic_poster.description = descriptions_for(user)
-    topic_poster.primary_group = primary_group_lookup[user.id]
+    topic_poster.primary_group = user_lookup.primary_groups[user.id]
     if topic.last_post_user_id == user.id
       topic_poster.extras = +'latest'
       topic_poster.extras << ' single' if user_ids.uniq.size == 1
@@ -70,7 +70,7 @@ class TopicPostersSummary
   def shuffle_last_poster_to_back_in(summary)
     unless last_poster_is_topic_creator?
       summary.reject! { |u| u.id == topic.last_post_user_id }
-      summary << avatar_lookup[topic.last_post_user_id]
+      summary << user_lookup[topic.last_post_user_id]
     end
     summary
   end
@@ -84,18 +84,14 @@ class TopicPostersSummary
   end
 
   def top_posters
-    user_ids.map { |id| avatar_lookup[id] }.compact.uniq.take(5)
+    user_ids.map { |id| user_lookup[id] }.compact.uniq.take(5)
   end
 
   def user_ids
     [ topic.user_id, topic.last_post_user_id, *topic.featured_user_ids ]
   end
 
-  def avatar_lookup
-    @avatar_lookup ||= options[:avatar_lookup] || AvatarLookup.new(user_ids)
-  end
-
-  def primary_group_lookup
-    @primary_group_lookup ||= options[:primary_group_lookup] || PrimaryGroupLookup.new(user_ids)
+  def user_lookup
+    @user_lookup ||= options[:user_lookup] || UserLookup.new(user_ids)
   end
 end

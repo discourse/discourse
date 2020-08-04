@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -745,7 +746,7 @@ createWidget("discourse-poll-buttons", {
     }
 
     if (poll.get("close")) {
-      const closeDate = moment.utc(poll.get("close"));
+      const closeDate = moment(poll.get("close"));
       if (closeDate.isValid()) {
         const title = closeDate.format("LLL");
         let label;
@@ -754,7 +755,7 @@ createWidget("discourse-poll-buttons", {
           const age = relativeAge(closeDate.toDate(), { addAgo: true });
           label = I18n.t("poll.automatic_close.age", { age });
         } else {
-          const timeLeft = moment().to(closeDate.local(), true);
+          const timeLeft = moment().to(closeDate, true);
           label = I18n.t("poll.automatic_close.closes_in", { timeLeft });
         }
 

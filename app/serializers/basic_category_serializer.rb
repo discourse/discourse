@@ -28,6 +28,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :default_view,
              :subcategory_list_style,
              :default_top_period,
+             :default_list_filter,
              :minimum_required_tags,
              :navigate_to_first_post_after_read,
              :custom_fields

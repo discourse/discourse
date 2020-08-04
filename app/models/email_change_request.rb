@@ -5,7 +5,6 @@ class EmailChangeRequest < ActiveRecord::Base
   belongs_to :new_email_token, class_name: 'EmailToken'
   belongs_to :user
 
-  validates :old_email, presence: true
   validates :new_email, presence: true, format: { with: EmailValidator.email_regex }
 
   def self.states
@@ -20,7 +19,7 @@ end
 #
 #  id                 :integer          not null, primary key
 #  user_id            :integer          not null
-#  old_email          :string           not null
+#  old_email          :string
 #  new_email          :string           not null
 #  old_email_token_id :integer
 #  new_email_token_id :integer

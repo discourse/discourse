@@ -34,20 +34,24 @@ class UploadCreator
       return @upload
     end
 
-    DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
-      # test for image regardless of input
-      @image_info = FastImage.new(@file) rescue nil
+    @image_info = FastImage.new(@file) rescue nil
+    is_image = FileHelper.is_supported_image?(@filename)
+    is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
+    is_image = false if @opts[:for_theme]
 
-      is_image = FileHelper.is_supported_image?(@filename)
-      is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
-      is_image = false if @opts[:for_theme]
+    DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
+      # We need to convert HEIFs early because FastImage does not consider them as images
+      if convert_heif_to_jpeg?
+        convert_heif!
+        is_image = FileHelper.is_supported_image?("test.#{@image_info.type}")
+      end
 
       if is_image
         extract_image_info!
         return @upload if @upload.errors.present?
 
         if @image_info.type.to_s == "svg"
-          whitelist_svg!
+          clean_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if convert_png_to_jpeg?
           downsize!        if should_downsize?
@@ -73,7 +77,6 @@ class UploadCreator
       # between uploads instead of the sha1, and to get around various
       # access/permission issues for uploads
       if !SiteSetting.secure_media
-
         # do we already have that upload?
         @upload = Upload.find_by(sha1: sha1)
 
@@ -85,6 +88,7 @@ class UploadCreator
 
         # return the previous upload if any
         if @upload
+          add_metadata!
           UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
           return @upload
         end
@@ -121,15 +125,10 @@ class UploadCreator
         @upload.width, @upload.height = @image_info.size
       end
 
-      @upload.for_private_message = true if @opts[:for_private_message]
-      @upload.for_group_message   = true if @opts[:for_group_message]
-      @upload.for_theme           = true if @opts[:for_theme]
-      @upload.for_export          = true if @opts[:for_export]
-      @upload.for_site_setting    = true if @opts[:for_site_setting]
-      @upload.for_gravatar        = true if @opts[:for_gravatar]
-      @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
-
+      add_metadata!
       return @upload unless @upload.save
+
+      DiscourseEvent.trigger(:before_upload_creation, @file, is_image)
 
       # store the file and update its url
       File.open(@file.path) do |f|
@@ -218,6 +217,28 @@ class UploadCreator
     end
   end
 
+  def convert_heif_to_jpeg?
+    SiteSetting.convert_heif_to_jpeg && File.extname(@filename).downcase.match?(/\.hei(f|c)$/)
+  end
+
+  def convert_heif!
+    jpeg_tempfile = Tempfile.new(["image", ".jpg"])
+    from = @file.path
+    to = jpeg_tempfile.path
+    OptimizedImage.ensure_safe_paths!(from, to)
+
+    begin
+      execute_convert(from, to)
+    rescue
+      # retry with debugging enabled
+      execute_convert(from, to, true)
+    end
+
+    @file.respond_to?(:close!) ? @file.close! : @file.close
+    @file = jpeg_tempfile
+    extract_image_info!
+  end
+
   def execute_convert(from, to, debug = false)
     command = [
       "convert",
@@ -281,10 +302,18 @@ class UploadCreator
     end
   end
 
-  def whitelist_svg!
+  def clean_svg!
     doc = Nokogiri::XML(@file)
-    doc.xpath(svg_whitelist_xpath).remove
+    doc.xpath(svg_allowlist_xpath).remove
     doc.xpath("//@*[starts-with(name(), 'on')]").remove
+    doc.css('use').each do |use_el|
+      if use_el.attr('href')
+        use_el.remove_attribute('href') unless use_el.attr('href').starts_with?('#')
+      end
+      if use_el.attr('xlink:href')
+        use_el.remove_attribute('xlink:href') unless use_el.attr('xlink:href').starts_with?('#')
+      end
+    end
     File.write(@file.path, doc.to_s)
     @file.rewind
   end
@@ -371,8 +400,18 @@ class UploadCreator
     @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
   end
 
-  def svg_whitelist_xpath
-    @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+  def svg_allowlist_xpath
+    @@svg_allowlist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+  end
+
+  def add_metadata!
+    @upload.for_private_message = true if @opts[:for_private_message]
+    @upload.for_group_message   = true if @opts[:for_group_message]
+    @upload.for_theme           = true if @opts[:for_theme]
+    @upload.for_export          = true if @opts[:for_export]
+    @upload.for_site_setting    = true if @opts[:for_site_setting]
+    @upload.for_gravatar        = true if @opts[:for_gravatar]
+    @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
   end
 
 end

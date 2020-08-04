@@ -10,7 +10,7 @@ module PostGuardian
   def link_posting_access
     if unrestricted_link_posting?
       'full'
-    elsif SiteSetting.whitelisted_link_domains.present?
+    elsif SiteSetting.allowed_link_domains.present?
       'limited'
     else
       'none'
@@ -21,7 +21,7 @@ module PostGuardian
     return false if host.blank?
 
     unrestricted_link_posting? ||
-      SiteSetting.whitelisted_link_domains.split('|').include?(host)
+      SiteSetting.allowed_link_domains.split('|').include?(host)
   end
 
   # Can the user act on the post in a particular way.
@@ -161,6 +161,10 @@ module PostGuardian
       return !post.edit_time_limit_expired?(@user)
     end
 
+    if post.is_category_description?
+      return true if can_edit_category_description?(post.topic.category)
+    end
+
     false
   end
 
@@ -220,7 +224,7 @@ module PostGuardian
     end
 
     authenticated? &&
-    (is_staff? || @user.has_trust_level?(TrustLevel[4]) || @user.id == post.user_id) &&
+    (is_staff? || @user.id == post.user_id) &&
     can_see_post?(post)
   end
 

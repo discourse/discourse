@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
@@ -24,7 +25,6 @@ export default Component.extend({
   formats: null,
   recurring: null,
   advancedMode: false,
-  isValid: true,
   timezone: null,
   fromSelected: null,
   fromFilled: notEmpty("date"),

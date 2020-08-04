@@ -5,7 +5,8 @@
     }
   }
   input {
-    width: 4em;
+    width: 2.333em;
+    padding: 4px;
     @include breakpoint(mobile-extra-large) {
       width: 2em;
     }
@@ -18,6 +19,7 @@
     margin: 0 0.667em;
     td {
       padding: 0.5em 0.5em 0.5em 0;
+      min-width: 10em;
       @include breakpoint(mobile, min-width) {
         min-width: 15em;
       }

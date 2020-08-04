@@ -43,7 +43,7 @@ describe WizardController do
       sign_in(Fabricate(:admin))
       get "/wizard.json"
       expect(response.status).to eq(200)
-      expect(::JSON.parse(response.body).has_key?('wizard')).to eq(true)
+      expect(response.parsed_body.has_key?('wizard')).to eq(true)
     end
   end
 end

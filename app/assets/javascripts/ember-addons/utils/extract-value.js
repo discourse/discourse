@@ -1,5 +1,1 @@
-export default function extractValue(desc) {
-  return (
-    desc.value || (typeof desc.initializer === "function" && desc.initializer())
-  );
-}
+// left for backwards compatibility. remove in the future.

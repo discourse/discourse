@@ -1,10 +1,10 @@
 @import "vendor/normalize";
+@import "vendor/normalize-ext";
 @import "vendor/pikaday";
 @import "common/foundation/helpers";
 @import "common/foundation/base";
 @import "common/foundation/mixins";
 @import "common/foundation/variables";
-@import "common/foundation/spacing";
 @import "common/select-kit/*";
 @import "common/components/*";
 @import "common/input_tip";

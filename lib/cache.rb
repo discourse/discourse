@@ -56,7 +56,7 @@ class Cache
 
   def exist?(name)
     key = normalize_key(name)
-    redis.exists(key)
+    redis.exists?(key)
   end
 
   # this removes a bunch of stuff we do not need like instrumentation and versioning

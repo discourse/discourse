@@ -15,6 +15,15 @@ describe Middleware::RequestTracker do
     }.merge(opts)
   end
 
+  before do
+    ApplicationRequest.enable
+  end
+
+  after do
+    ApplicationRequest.disable
+    ApplicationRequest.clear_cache!
+  end
+
   context "full request" do
     before do
       @orig = WebCrawlerRequest.autoflush
@@ -334,7 +343,7 @@ describe Middleware::RequestTracker do
       tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60))
       expect(@data[:cache]).to eq("true")
 
-      # not whitelisted
+      # not allowlisted
       request_params.delete("a")
 
       expect(@env["action_dispatch.request.parameters"]).to eq(request_params)

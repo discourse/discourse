@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UserEmail < ActiveRecord::Base
+  # TODO(2020-04-24): remove
+  self.ignored_columns = ['canonical_email']
+
   belongs_to :user
 
   attr_accessor :skip_validate_email
@@ -8,33 +11,15 @@ class UserEmail < ActiveRecord::Base
   before_validation :strip_downcase_email
 
   validates :email, presence: true
-  validates :email, email: true, format: { with: EmailValidator.email_regex },
-                    if: :validate_email?
+  validates :email, email: true, if: :validate_email?
 
   validates :primary, uniqueness: { scope: [:user_id] }, if: [:user_id, :primary]
   validate :user_id_not_changed, if: :primary
   validate :unique_email
 
-  before_save :save_canonical
-
   scope :secondary, -> { where(primary: false) }
 
-  def self.canonical(email)
-    name, domain = email.split('@', 2)
-    name = name.gsub(/\+.*/, '')
-    if ['gmail.com', 'googlemail.com'].include?(domain.downcase)
-      name = name.gsub('.', '')
-    end
-    "#{name}@#{domain}".downcase
-  end
-
   private
-
-  def save_canonical
-    if SiteSetting.enforce_canonical_emails && self.will_save_change_to_email?
-      self.canonical_email = UserEmail.canonical(self.email)
-    end
-  end
 
   def strip_downcase_email
     if self.email
@@ -49,14 +34,8 @@ class UserEmail < ActiveRecord::Base
   end
 
   def unique_email
-    if self.will_save_change_to_email?
-      exists = self.class.where("lower(email) = ?", email).exists?
-      exists ||= SiteSetting.enforce_canonical_emails &&
-        self.class.where("canonical_email = ?", UserEmail.canonical(email)).exists?
-
-      if exists
-        self.errors.add(:email, :taken)
-      end
+    if self.will_save_change_to_email? && self.class.where("lower(email) = ?", email).exists?
+      self.errors.add(:email, :taken)
     end
   end
 
@@ -73,17 +52,15 @@ end
 #
 # Table name: user_emails
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer          not null
-#  email           :string(513)      not null
-#  primary         :boolean          default(FALSE), not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  canonical_email :string
+#  id         :integer          not null, primary key
+#  user_id    :integer          not null
+#  email      :string(513)      not null
+#  primary    :boolean          default(FALSE), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #
-#  index_user_emails_on_canonical_email      (canonical_email) WHERE (canonical_email IS NOT NULL)
 #  index_user_emails_on_email                (lower((email)::text)) UNIQUE
 #  index_user_emails_on_user_id              (user_id)
 #  index_user_emails_on_user_id_and_primary  (user_id,primary) UNIQUE WHERE "primary"

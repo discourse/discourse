@@ -18,7 +18,7 @@ async function pika(year, month, day) {
 
 function noop() {}
 
-const DEFAULT_DATE = new Date(2019, 0, 29);
+const DEFAULT_DATE = moment("2019-01-29");
 
 componentTest("default", {
   template: `{{date-input date=date}}`,
@@ -44,7 +44,7 @@ componentTest("prevents mutations", {
     await click(dateInput());
     await pika(2019, 0, 2);
 
-    assert.ok(this.date.getTime() === DEFAULT_DATE.getTime());
+    assert.ok(this.date.isSame(DEFAULT_DATE));
   }
 });
 
@@ -60,6 +60,6 @@ componentTest("allows mutations through actions", {
     await click(dateInput());
     await pika(2019, 0, 2);
 
-    assert.ok(this.date.getTime() === new Date(2019, 0, 2).getTime());
+    assert.ok(this.date.isSame(moment("2019-01-02")));
   }
 });

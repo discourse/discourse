@@ -15,7 +15,9 @@
     }
 
     .ember-text-field.bookmark-name {
+      min-width: 220px;
       width: 100%;
+      margin-bottom: 0.5em;
     }
   }
 
@@ -60,6 +62,37 @@
     .time-input,
     .date-picker-wrapper {
       flex: 1 1 auto;
+    }
+  }
+
+  .bookmark-name-wrap {
+    display: inline-flex;
+    width: 100%;
+    align-items: end;
+  }
+
+  .bookmark-options-button {
+    margin-left: 0.5em;
+    margin-bottom: 0.5em;
+    background: transparent;
+    padding-right: 6px;
+  }
+
+  .bookmark-options-panel {
+    .select-kit {
+      width: 100%;
+    }
+
+    margin-bottom: 18px;
+    display: none;
+
+    label {
+      display: flex;
+
+      span {
+        display: block;
+        flex: 1;
+      }
     }
   }
 }

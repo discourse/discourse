@@ -49,8 +49,11 @@ class UserSerializer < UserCardSerializer
                      :has_title_badges,
                      :muted_usernames,
                      :ignored_usernames,
+                     :allowed_pm_usernames,
                      :mailing_list_posts_per_day,
                      :can_change_bio,
+                     :can_change_location,
+                     :can_change_website,
                      :user_api_keys,
                      :user_auth_tokens
 
@@ -74,6 +77,10 @@ class UserSerializer < UserCardSerializer
 
   def group_users
     object.group_users.order(:group_id)
+  end
+
+  def include_group_users?
+    (object.id && object.id == scope.user.try(:id)) || scope.is_staff?
   end
 
   def include_associated_accounts?
@@ -106,6 +113,14 @@ class UserSerializer < UserCardSerializer
 
   def can_change_bio
     !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
+  end
+
+  def can_change_location
+    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_location)
+  end
+
+  def can_change_website
+    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_website)
   end
 
   def user_api_keys
@@ -212,6 +227,10 @@ class UserSerializer < UserCardSerializer
 
   def ignored_usernames
     IgnoredUser.where(user_id: object.id).joins(:ignored_user).pluck(:username)
+  end
+
+  def allowed_pm_usernames
+    AllowedPmUser.where(user_id: object.id).joins(:allowed_pm_user).pluck(:username)
   end
 
   def system_avatar_upload_id

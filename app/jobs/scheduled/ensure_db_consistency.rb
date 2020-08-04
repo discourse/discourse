@@ -22,7 +22,8 @@ module Jobs
         CategoryTagStat,
         User,
         UserAvatar,
-        Category
+        Category,
+        TopicThumbnail
       ].each do |klass|
         klass.ensure_consistency!
         measure(klass)

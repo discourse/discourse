@@ -3,15 +3,11 @@ import componentTest from "helpers/component-test";
 moduleForComponent("date-time-input", { integration: true });
 
 function dateInput() {
-  return find(".date-picker");
+  return find(".date-picker")[0];
 }
 
-function hoursInput() {
-  return find(".field.hours");
-}
-
-function minutesInput() {
-  return find(".field.minutes");
+function timeInput() {
+  return find(".d-time-input .combo-box-header")[0];
 }
 
 function setDate(date) {
@@ -24,7 +20,7 @@ async function pika(year, month, day) {
   );
 }
 
-const DEFAULT_DATE_TIME = new Date(2019, 0, 29, 14, 45);
+const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
 
 componentTest("default", {
   template: `{{date-time-input date=date}}`,
@@ -34,9 +30,8 @@ componentTest("default", {
   },
 
   test(assert) {
-    assert.equal(dateInput().val(), "January 29, 2019");
-    assert.equal(hoursInput().val(), "14");
-    assert.equal(minutesInput().val(), "45");
+    assert.equal(dateInput().value, "January 29, 2019");
+    assert.equal(timeInput().dataset.name, "14:45");
   }
 });
 
@@ -51,7 +46,7 @@ componentTest("prevents mutations", {
     await click(dateInput());
     await pika(2019, 0, 2);
 
-    assert.ok(this.date.getTime() === DEFAULT_DATE_TIME.getTime());
+    assert.ok(this.date.isSame(DEFAULT_DATE_TIME));
   }
 });
 
@@ -67,7 +62,7 @@ componentTest("allows mutations through actions", {
     await click(dateInput());
     await pika(2019, 0, 2);
 
-    assert.ok(this.date.getTime() === new Date(2019, 0, 2, 14, 45).getTime());
+    assert.ok(this.date.isSame(moment("2019-01-02 14:45")));
   }
 });
 
@@ -79,6 +74,6 @@ componentTest("can hide time", {
   },
 
   async test(assert) {
-    assert.notOk(exists(hoursInput()));
+    assert.notOk(exists(timeInput()));
   }
 });

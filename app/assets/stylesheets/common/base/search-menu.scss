@@ -72,6 +72,10 @@
           display: contents;
         }
       }
+
+      a.widget-link {
+        color: $tertiary;
+      }
     }
 
     .main-results {
@@ -213,12 +217,12 @@
             }
 
             .username {
-              color: dark-light-choose($primary-high, $secondary-low);
+              color: $primary-high-or-secondary-low;
               font-size: $font-down-1;
             }
 
             .name {
-              color: dark-light-choose($primary-high, $secondary-low);
+              color: $primary-high-or-secondary-low;
               font-size: $font-0;
               font-weight: 700;
             }

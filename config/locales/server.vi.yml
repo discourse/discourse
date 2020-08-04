@@ -149,9 +149,6 @@ vi:
   topics_in_category: "Các chủ đề ở chuyên '%{category}'"
   rss_posts_in_topic: "Nguồn cấp dữ liệu RSS của '%{topic}'"
   rss_topics_in_category: "Nguồn cấp dữ liệu RSS của các chủ đề trong chuyên mục '%{category}'"
-  author_wrote: "%{author} đã viết:"
-  num_posts: "Bài đã đăng:"
-  num_participants: "Người tham gia:"
   read_full_topic: "Đọc toàn bộ chủ đề"
   private_message_abbrev: "Tin nhắn"
   rss_description:
@@ -374,7 +371,7 @@ vi:
       title: "Không thích hợp"
       long_form: "đánh dấu cái này không thích hợp"
     notify_user:
-      title: "Gửi tin nhắn cho @{{username}}."
+      title: "Gửi tin nhắn cho @%{username}."
       long_form: "đã nhắn tin cho thành viên"
       email_title: 'Bài đăng của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -385,7 +382,7 @@ vi:
       email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
     bookmark:
-      title: "Đánh dấu chỉ mục \x1C"
+      title: "Đánh dấu chỉ mục"
       description: "Đánh dấu chỉ mục bài viết này"
       short_description: "Đánh dấu chỉ mục bài viết này"
       long_form: "đã đánh dấu chỉ mục bài viết này"
@@ -769,7 +766,6 @@ vi:
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
-    s3_disable_cleanup: "Vô hiệu hóa việc loại bỏ các bản sao lưu từ S3 khi lấy ra tại địa phương."
     backup_time_of_day: "Thời gian theo ngày UTC khi backup."
     backup_with_uploads: "Kèm theo cả thư mục uploads theo lịch trình backup. Tắt tính năng này sẽ chỉ backup csdl."
     active_user_rate_limit_secs: "Tần số cập nhật trường 'last_seen_at, tính theo giây"
@@ -1378,7 +1374,6 @@ vi:
       name: Thích nhiều hơn
     crazy_in_love:
       name: Thích nhiệt tình
-      description: Sử dụng 50 like một ngày trong 20 ngày
     thank_you:
       name: Cám ơn bạn
       description: Nhận được 20 like và đã like 10 lần
@@ -1444,6 +1439,14 @@ vi:
       emoji:
         title: "Emoji"
   joined: "Đã tham gia"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
+      quoted: '%{username} trích lời bạn trong "%{topic}" - %{site_title}'
+      replied: '%{username} trả lời cho bạn trong "%{topic}" - %{site_title}'
+      posted: '%{username} gửi bài trong "%{topic}" - %{site_title}'
+      linked: '%{username} liên quan đến bài viết của bạn từ "%{topic}" - %{site_title}'
   reviewables:
     priorities:
       medium: "Trung bình"

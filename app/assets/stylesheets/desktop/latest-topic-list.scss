@@ -4,7 +4,7 @@
 
   .table-heading {
     padding: 12px 5px;
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
   }
 
   .no-topics,
@@ -49,10 +49,10 @@
   .topic-stats {
     flex: 1 0 0px;
     text-align: right;
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
   }
 
   .topic-last-activity a {
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-med-or-secondary-high;
   }
 }

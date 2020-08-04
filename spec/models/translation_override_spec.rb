@@ -92,43 +92,89 @@ describe TranslationOverride do
   end
 
   context "site cache" do
-    def cached_value(guardian, types_name, name_key, attribute)
-      json = Site.json_for(guardian)
+    def cached_value(guardian, translation_key, locale:)
+      types_name, name_key, attribute = translation_key.split('.')
 
-      JSON.parse(json)[types_name]
-        .find { |x| x['name_key'] == name_key }[attribute]
+      I18n.with_locale(locale) do
+        json = Site.json_for(guardian)
+
+        JSON.parse(json)[types_name]
+          .find { |x| x['name_key'] == name_key }[attribute]
+      end
     end
+
+    let!(:anon_guardian) { Guardian.new }
+    let!(:user_guardian) { Guardian.new(Fabricate(:user)) }
 
     shared_examples "resets site text" do
       it "resets the site cache when translations of post_action_types are changed" do
-        anon_guardian = Guardian.new
-        user_guardian = Guardian.new(Fabricate(:user))
-        original_value = I18n.t(translation_key)
-        types_name, name_key, attribute = translation_key.split('.')
+        I18n.locale = :de
 
-        expect(cached_value(user_guardian, types_name, name_key, attribute)).to eq(original_value)
-        expect(cached_value(anon_guardian, types_name, name_key, attribute)).to eq(original_value)
+        translation_keys.each do |translation_key|
+          original_value = I18n.t(translation_key, locale: 'en')
+          expect(cached_value(user_guardian, translation_key, locale: 'en')).to eq(original_value)
+          expect(cached_value(anon_guardian, translation_key, locale: 'en')).to eq(original_value)
 
-        TranslationOverride.upsert!('en', translation_key, 'bar')
-        expect(cached_value(user_guardian, types_name, name_key, attribute)).to eq('bar')
-        expect(cached_value(anon_guardian, types_name, name_key, attribute)).to eq('bar')
+          TranslationOverride.upsert!('en', translation_key, 'bar')
+          expect(cached_value(user_guardian, translation_key, locale: 'en')).to eq('bar')
+          expect(cached_value(anon_guardian, translation_key, locale: 'en')).to eq('bar')
+        end
 
-        TranslationOverride.revert!('en', translation_key)
-        expect(cached_value(user_guardian, types_name, name_key, attribute)).to eq(original_value)
-        expect(cached_value(anon_guardian, types_name, name_key, attribute)).to eq(original_value)
+        TranslationOverride.revert!('en', translation_keys)
+
+        translation_keys.each do |translation_key|
+          original_value = I18n.t(translation_key, locale: 'en')
+          expect(cached_value(user_guardian, translation_key, locale: 'en')).to eq(original_value)
+          expect(cached_value(anon_guardian, translation_key, locale: 'en')).to eq(original_value)
+        end
       end
     end
 
     context "post_action_types" do
-      let(:translation_key) { 'post_action_types.off_topic.description' }
+      let(:translation_keys) { ['post_action_types.off_topic.description'] }
 
       include_examples "resets site text"
     end
 
     context "topic_flag_types" do
-      let(:translation_key) { 'topic_flag_types.spam.description' }
+      let(:translation_keys) { ['topic_flag_types.spam.description'] }
 
       include_examples "resets site text"
+    end
+
+    context "multiple keys" do
+      let(:translation_keys) { ['post_action_types.off_topic.description', 'topic_flag_types.spam.description'] }
+
+      include_examples "resets site text"
+    end
+
+    describe "#reload_all_overrides!" do
+      it "correctly reloads all translation overrides" do
+        original_en_topics = I18n.t("topics", locale: :en)
+        original_en_emoji = I18n.t("js.composer.emoji", locale: :en)
+        original_en_offtopic_description = I18n.t("post_action_types.off_topic.description", locale: :en)
+        original_de_likes = I18n.t("likes", locale: :de)
+
+        TranslationOverride.create!(locale: "en", translation_key: "topics", value: "Threads")
+        TranslationOverride.create!(locale: "en", translation_key: "js.composer.emoji", value: "Smilies")
+        TranslationOverride.create!(locale: "en", translation_key: "post_action_types.off_topic.description", value: "Overridden description")
+        TranslationOverride.create!(locale: "de", translation_key: "likes", value: "„Gefällt mir“-Angaben")
+
+        expect(I18n.t("topics", locale: :en)).to eq(original_en_topics)
+        expect(I18n.t("js.composer.emoji", locale: :en)).to eq(original_en_emoji)
+        expect(cached_value(anon_guardian, "post_action_types.off_topic.description", locale: :en)).to eq(original_en_offtopic_description)
+        expect(I18n.t("likes", locale: :de)).to eq(original_de_likes)
+
+        TranslationOverride.reload_all_overrides!
+
+        expect(I18n.t("topics", locale: :en)).to eq("Threads")
+        expect(I18n.t("js.composer.emoji", locale: :en)).to eq("Smilies")
+        expect(cached_value(anon_guardian, "post_action_types.off_topic.description", locale: :en)).to eq("Overridden description")
+        expect(I18n.t("likes", locale: :de)).to eq("„Gefällt mir“-Angaben")
+
+        TranslationOverride.revert!(:en, ["topics", "js.composer.emoji", "post_action_types.off_topic.description"])
+        TranslationOverride.revert!(:de, ["likes"])
+      end
     end
   end
 end

@@ -98,7 +98,7 @@
     display: flex;
     align-items: center;
     .d-icon {
-      color: $primary-medium;
+      color: $primary-high;
     }
     .reply-details {
       max-width: calc(100% - 175px);
@@ -166,7 +166,11 @@
   }
 
   .whisper {
-    margin-right: 0.25em;
+    margin: 0 0.25em;
+  }
+
+  .unlist {
+    margin-left: 0.25em;
   }
 
   .display-edit-reason {
@@ -252,6 +256,9 @@
   #reply-title {
     margin: 0 0 5px 0;
     flex-basis: 50%;
+    &:focus {
+      box-shadow: none;
+    }
   }
 
   .mini-tag-chooser {
@@ -345,7 +352,7 @@
 
     li {
       .d-icon-users {
-        color: lighten($primary, 40%);
+        color: $primary-medium;
         padding: 0 2px;
       }
 

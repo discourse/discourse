@@ -8,4 +8,10 @@
       border-bottom: 1px solid $primary-low;
     }
   }
+
+  &.is-expanded {
+    .select-kit-header {
+      border: 1px solid $tertiary;
+    }
+  }
 }

@@ -13,7 +13,6 @@ acceptance("Group logs", {
           alias_level: 0,
           visible: true,
           automatic_membership_email_domains: "",
-          automatic_membership_retroactive: false,
           primary_group: true,
           title: "Team Snorlax",
           grant_trust_level: null,
