@@ -97,10 +97,10 @@ module ApplicationHelper
   end
 
   def preload_script_url(url)
-    <<~HTML.html_safe
+    link = <<~HTML.html_safe
       <link rel="preload" href="#{url}" as="script">
-      <script src="#{url}"></script>
     HTML
+    safe_join([link, javascript_include_tag(url, nonce: SiteSetting.content_security_policy_script_src_nonce)])
   end
 
   def discourse_csrf_tags

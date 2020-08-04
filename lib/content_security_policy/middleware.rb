@@ -18,9 +18,9 @@ class ContentSecurityPolicy
       base_url = protocol + request.host_with_port + Discourse.base_uri
 
       theme_ids = env[:resolved_theme_ids]
-
-      headers['Content-Security-Policy'] = policy(theme_ids, base_url: base_url, path_info: env["PATH_INFO"]) if SiteSetting.content_security_policy
-      headers['Content-Security-Policy-Report-Only'] = policy(theme_ids, base_url: base_url, path_info: env["PATH_INFO"]) if SiteSetting.content_security_policy_report_only
+      nonce = request.env['action_dispatch.content_security_policy_nonce_generator'].call(request) if SiteSetting.content_security_policy_script_src_nonce
+      headers['Content-Security-Policy'] = policy(theme_ids, base_url: base_url, path_info: env["PATH_INFO"], nonce: nonce) if SiteSetting.content_security_policy
+      headers['Content-Security-Policy-Report-Only'] = policy(theme_ids, base_url: base_url, path_info: env["PATH_INFO"], nonce: nonce) if SiteSetting.content_security_policy_report_only
 
       response
     end

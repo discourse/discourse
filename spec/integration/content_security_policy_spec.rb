@@ -38,6 +38,17 @@ describe 'content security policy integration' do
       get "/"
       expect(response.headers["Content-Security-Policy"]).to include("http://primary.example.com")
     end
+
+    it "inserts the nonce attribute into scripts" do
+      SiteSetting.content_security_policy_script_src_nonce = true
+      get "/"
+
+      csp_header = response.headers["Content-Security-Policy"]
+      expect(csp_header).to include("'nonce-")
+
+      nonce = csp_header.match(/'nonce-(?<nonce>[^']+)'/)[:nonce]
+      expect(response.body).to include(nonce)
+    end
   end
 
   context "with different protocols" do

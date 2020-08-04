@@ -591,6 +591,21 @@ RSpec.describe ApplicationController do
       expect(script_src).to include('example.com')
     end
 
+    it 'can include nonces for strict-dynamic support' do
+      SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_script_src_nonce = false
+      get '/'
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+
+      expect(script_src).to_not include(be_match('nonce'))
+      SiteSetting.content_security_policy_script_src_nonce = true
+      SiteSetting.content_security_policy_script_src = 'example.com'
+
+      get '/'
+      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+      expect(script_src).to include(be_match('nonce'))
+    end
+
     it 'does not set CSP when responding to non-HTML' do
       SiteSetting.content_security_policy = true
       SiteSetting.content_security_policy_report_only = true

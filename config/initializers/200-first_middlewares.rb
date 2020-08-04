@@ -31,3 +31,6 @@ if Rails.configuration.multisite
 elsif defined?(RailsFailover::ActiveRecord) && Rails.configuration.active_record_rails_failover
   Rails.configuration.middleware.insert_before(MessageBus::Rack::Middleware, RailsFailover::ActiveRecord::Middleware)
 end
+
+Rails.application.config.content_security_policy_nonce_generator = -> (request) { request.env['csp_nonce'] ||= SecureRandom.base64(16) }
+Rails.application.config.content_security_policy_nonce_directives = [:script_src]

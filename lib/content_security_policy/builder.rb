@@ -25,8 +25,9 @@ class ContentSecurityPolicy
       style_src
     ].freeze
 
-    def initialize(base_url:)
+    def initialize(base_url:, nonce: nil)
       @directives = Default.new(base_url: base_url).directives
+      @nonce = nonce
     end
 
     def <<(extension)
@@ -46,7 +47,7 @@ class ContentSecurityPolicy
         end
       end
 
-      policy.build
+      policy.build({}, @nonce)
     end
 
     private

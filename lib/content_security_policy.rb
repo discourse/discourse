@@ -4,13 +4,13 @@ require 'content_security_policy/extension'
 
 class ContentSecurityPolicy
   class << self
-    def policy(theme_ids = [], base_url: Discourse.base_url, path_info: "/")
-      new.build(theme_ids, base_url: base_url, path_info: path_info)
+    def policy(theme_ids = [], base_url: Discourse.base_url, path_info: "/", nonce: nil)
+      new.build(theme_ids, base_url: base_url, path_info: path_info, nonce: nonce)
     end
   end
 
-  def build(theme_ids, base_url:, path_info: "/")
-    builder = Builder.new(base_url: base_url)
+  def build(theme_ids, base_url:, path_info: "/", nonce: nil)
+    builder = Builder.new(base_url: base_url, nonce: nonce)
 
     Extension.theme_extensions(theme_ids).each { |extension| builder << extension }
     Extension.plugin_extensions.each { |extension| builder << extension }
