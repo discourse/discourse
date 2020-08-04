@@ -228,9 +228,9 @@ class S3Helper
   end
 
   def download_file(filename, destination_path, failure_message = nil)
-    unless object(filename).download_file(destination_path)
-      raise failure_message&.to_s || "Failed to download file"
-    end
+    object(filename).download_file(destination_path)
+  rescue => err
+    raise failure_message&.to_s || "Failed to download #{filename} because #{err.message}"
   end
 
   def s3_client
