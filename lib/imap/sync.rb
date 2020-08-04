@@ -14,26 +14,9 @@ module Imap
       end
     end
 
-    def self.for_group(group, opts = {})
-      if group.imap_server == 'imap.gmail.com'
-        opts[:provider] ||= Imap::Providers::Gmail
-      end
-
-      Imap::Sync.new(group, opts)
-    end
-
     def initialize(group, opts = {})
       @group = group
-
-      provider_klass ||= opts[:provider] || Imap::Providers::Generic
-      @provider = provider_klass.new(
-        @group.imap_server,
-        port: @group.imap_port,
-        ssl: @group.imap_ssl,
-        username: @group.email_username,
-        password: @group.email_password
-      )
-
+      @provider = Imap::Providers::Detector.init_with_detected_provider(@group.imap_config)
       connect!
     end
 
@@ -190,6 +173,10 @@ module Imap
       emails = @provider.emails(new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'])
       processed = 0
 
+      # TODO (maybe): We might need something here to exclusively handle
+      # the UID of the incoming email, so we don't end up with a race condition
+      # where the same UID is handled multiple times before the group imap_X
+      # columns are updated.
       emails.each do |email|
         # Synchronously process emails because the order of emails matter
         # (for example replies must be processed after the original email
@@ -310,15 +297,17 @@ module Imap
         new_labels << '\\Inbox'
       else
         Logger.log("[IMAP] (#{@group.name}) Archiving UID #{incoming_email.imap_uid}")
+
+        # some providers need special handling for archiving. this way we preserve
+        # any new tag-labels, and archive, even though it may cause extra requests
+        # to the IMAP server
+        @provider.archive(incoming_email.imap_uid)
       end
 
+      # regardless of whether the topic needs to be archived we still update
+      # the flags and the labels
       @provider.store(incoming_email.imap_uid, 'FLAGS', flags, new_flags)
       @provider.store(incoming_email.imap_uid, 'LABELS', labels, new_labels)
-
-      # some providers need special handling for archiving. this way we preserve
-      # any new tag-labels, and archive, even though it may cause extra requests
-      # to the IMAP server
-      @provider.archive(incoming_email.imap_uid)
     end
   end
 end

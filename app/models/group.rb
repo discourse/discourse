@@ -758,28 +758,39 @@ class Group < ActiveRecord::Base
   def imap_mailboxes
     return [] if self.imap_server.blank? ||
                  self.email_username.blank? ||
-                 self.email_password.blank?
+                 self.email_password.blank? ||
+                 !SiteSetting.enable_imap
 
     Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
       Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
       mailboxes = []
 
       begin
-        @imap = Net::IMAP.new(self.imap_server, self.imap_port, self.imap_ssl)
-        @imap.login(self.email_username, self.email_password)
-
-        @imap.list('', '*').each do |m|
-          next if m.attr.include?(:Noselect)
-          mailboxes << m.name
-        end
+        imap_provider = Imap::Providers::Detector.init_with_detected_provider(
+          self.imap_config
+        )
+        imap_provider.connect!
+        mailboxes = imap_provider.list_mailboxes
+        imap_provider.disconnect!
 
         update_columns(imap_last_error: nil)
       rescue => ex
+        Rails.logger.warn("[IMAP] Mailbox refresh failed for group #{self.name} with error: #{ex}")
         update_columns(imap_last_error: ex.message)
       end
 
       mailboxes
     end
+  end
+
+  def imap_config
+    {
+      server: self.imap_server,
+      port: self.imap_port,
+      ssl: self.imap_ssl,
+      username: self.email_username,
+      password: self.email_password
+    }
   end
 
   def email_username_regex

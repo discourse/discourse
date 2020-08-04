@@ -25,7 +25,7 @@ class Demon::EmailSync < ::Demon::Base
       RailsMultisite::ConnectionManagement.with_connection(db) do
         puts "[EmailSync] Thread started for group #{group.name} (id = #{group.id}) in db #{db}"
         begin
-          obj = Imap::Sync.for_group(group)
+          obj = Imap::Sync.new(group)
         rescue Net::IMAP::NoResponseError => e
           group.update(imap_last_error: e.message)
           Thread.exit

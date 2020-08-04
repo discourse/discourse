@@ -26,7 +26,20 @@ describe Imap::Sync do
     )
   end
 
-  let(:sync_handler) { Imap::Sync.new(group, provider: MockedImapProvider) }
+  let(:sync_handler) { Imap::Sync.new(group) }
+
+  before do
+    mocked_imap_provider = MockedImapProvider.new(
+      group.imap_server,
+      port: group.imap_port,
+      ssl: group.imap_ssl,
+      username: group.email_username,
+      password: group.email_password
+    )
+    Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(
+      mocked_imap_provider
+    )
+  end
 
   context 'no previous sync' do
     let(:from) { 'john@free.fr' }
@@ -252,6 +265,81 @@ describe Imap::Sync do
 
       expect(Topic.last.posts.where(post_type: Post.types[:regular]).count).to eq(2)
     end
+
+    describe "archiving emails" do
+      let(:provider) { MockedImapProvider.any_instance }
+      before do
+        SiteSetting.enable_imap_write = true
+        provider.stubs(:open_mailbox).returns(uid_validity: 1)
+
+        provider.stubs(:uids).with.returns([100])
+        provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
+          [
+            {
+              'UID' => 100,
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen],
+              'RFC822' => EmailFabricator(
+                message_id: first_message_id,
+                from: first_from,
+                to: group.email_username,
+                cc: second_from,
+                subject: subject,
+                body: first_body
+              )
+            }
+          ]
+        )
+
+        sync_handler.process
+        @incoming_email = IncomingEmail.find_by(message_id: first_message_id)
+        @topic = @incoming_email.topic
+
+        provider.stubs(:uids).with(to: 100).returns([100])
+        provider.stubs(:uids).with(from: 101).returns([101])
+        provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
+          [
+            {
+              'UID' => 100,
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen]
+            }
+          ]
+        )
+        provider.stubs(:emails).with([101], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
+          []
+        )
+        provider.stubs(:emails).with(100, ['FLAGS', 'LABELS']).returns(
+          [
+            {
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen]
+            }
+          ]
+        )
+      end
+
+      it "archives an email on the IMAP server when archived in discourse" do
+        GroupArchivedMessage.archive!(group.id, @topic, skip_imap_sync: false)
+        @incoming_email.update(imap_sync: true)
+
+        provider.stubs(:store).with(100, 'FLAGS', anything, anything)
+        provider.stubs(:store).with(100, 'LABELS', ["\\Inbox"], ["seen"])
+
+        provider.expects(:archive).with(100)
+        sync_handler.process
+      end
+
+      it "does not archive email if not archived in discourse" do
+        @incoming_email.update(imap_sync: true)
+        provider.stubs(:store).with(100, 'FLAGS', anything, anything)
+        provider.stubs(:store).with(100, 'LABELS', ["\\Inbox"], ["seen", "\\Inbox"])
+
+        provider.expects(:archive).with(100).never
+        sync_handler.process
+      end
+    end
+
   end
 
   context 'invaidated previous sync' do
