@@ -69,7 +69,7 @@ class SearchController < ApplicationController
       result.error = I18n.t("search.extreme_load_error")
     else
       search = Search.new(@search_term, search_args)
-      result = search.execute
+      result = search.execute(readonly_mode: @readonly_mode)
       result.find_user_data(guardian) if result
     end
 
@@ -129,7 +129,7 @@ class SearchController < ApplicationController
       )
     else
       search = Search.new(params[:term], search_args)
-      result = search.execute
+      result = search.execute(readonly_mode: @readonly_mode)
     end
     render_serialized(result, GroupedSearchResultSerializer, result: result)
   end
