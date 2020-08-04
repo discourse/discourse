@@ -63,6 +63,7 @@
 
   .panel-body-bottom {
     display: flex;
+    flex: 1 0 0%; // safari height fix
     margin-top: 0.5em;
     .show-all {
       flex: 1 1 auto;
