@@ -55,9 +55,13 @@
     {{/load-more}}
 
     {{conditional-loading-spinner condition=loading}}
-  {{else}}
+  {{else if model.can_see_members}}
     <br>
 
     <div>{{i18n "groups.empty.members"}}</div>
+  {{else}}
+    <br>
+
+    <div>{{i18n "groups.members.forbidden"}}</div>
   {{/if}}
 </section>
