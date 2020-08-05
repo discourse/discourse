@@ -546,6 +546,17 @@ class GroupsController < ApplicationController
     render_serialized(groups, BasicGroupSerializer)
   end
 
+  def permissions
+    respond_to do |format|
+      format.html { render 'groups/show' }
+      format.json do
+        group = find_group(:id)
+        category_groups = group.category_groups.select { |category_group| guardian.can_see_category?(category_group.category) }
+        render_serialized(category_groups, CategoryGroupSerializer)
+      end
+    end
+  end
+
   private
 
   def group_params(automatic: false)

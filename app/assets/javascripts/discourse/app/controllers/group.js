@@ -30,14 +30,16 @@ export default Controller.extend({
     "model.user_count",
     "model.request_count",
     "canManageGroup",
-    "model.allow_membership_requests"
+    "model.allow_membership_requests",
+    "showPermissions"
   )
   tabs(
     showMessages,
     userCount,
     requestCount,
     canManageGroup,
-    allowMembershipRequests
+    allowMembershipRequests,
+    showPermissions
   ) {
     const membersTab = Tab.create({
       name: "members",
@@ -75,6 +77,15 @@ export default Controller.extend({
           name: "manage",
           i18nKey: "manage.title",
           icon: "wrench"
+        })
+      );
+    }
+
+    if (showPermissions) {
+      defaultTabs.push(
+        Tab.create({
+          name: "permissions",
+          i18nKey: "permissions.title"
         })
       );
     }
@@ -123,6 +134,11 @@ export default Controller.extend({
       (this.currentUser.canManageGroup(model) ||
         (this.currentUser.admin && automatic))
     );
+  },
+
+  @discourseComputed("model", "model.automatic")
+  showPermissions(model, automatic) {
+    return this.currentUser && !automatic;
   },
 
   @action

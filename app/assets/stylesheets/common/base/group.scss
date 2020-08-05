@@ -189,3 +189,21 @@ table.group-members {
     }
   }
 }
+
+label.group-category-permissions-desc {
+  font-size: 1.15em;
+  margin-bottom: 1em;
+}
+
+table.group-category-permissions {
+  width: 100%;
+
+  tr {
+    line-height: 3em;
+    width: 100%;
+
+    .category-name {
+      font-size: 1.25em;
+    }
+  }
+}
