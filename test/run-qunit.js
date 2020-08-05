@@ -164,6 +164,7 @@ function logQUnit() {
   var moduleErrors = [];
   var testErrors = [];
   var assertionErrors = [];
+  var testsBeforeFailure = [];
 
   console.log("\nRunning: " + JSON.stringify(QUnit.urlParams) + "\n");
 
@@ -194,7 +195,11 @@ function logQUnit() {
       testErrors.push(msg);
       assertionErrors = [];
       console.log("F");
+
+      // stop tests on first failure
+      QUnit.config.queue.length = 0;
     } else {
+      testsBeforeFailure.push(context.module + ": " + context.name);
       console.log(".");
     }
   });
@@ -244,6 +249,13 @@ function logQUnit() {
       "Failed: " + context.failed
     ];
     console.log(stats.join(", "));
+
+    if (testsBeforeFailure.length) {
+      console.log("Use this filter to run the tests before first failure:");
+      console.log(
+        "`FILTER=/(" + testsBeforeFailure.join("|") + ")/i rake qunit:test"
+      );
+    }
 
     window.qunitDone = context;
   });
