@@ -6,12 +6,6 @@ import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
 
-const topicTrackingFilterFns = [];
-
-export function addTopicTrackingFilterFn(fn) {
-  topicTrackingFilterFns.push(fn);
-}
-
 function isNew(topic) {
   return (
     topic.last_read_post_number === null &&
