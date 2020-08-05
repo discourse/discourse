@@ -347,4 +347,19 @@ describe ApplicationHelper do
       end
     end
   end
+
+  describe 'discourse_color_scheme_stylesheets' do
+    it 'returns a stylesheet link tag by default' do
+      cs_stylesheets = helper.discourse_color_scheme_stylesheets
+      expect(cs_stylesheets).to include("stylesheets/color_definitions")
+    end
+
+    it 'returns two color scheme link tags when dark mode is enabled' do
+      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
+      cs_stylesheets = helper.discourse_color_scheme_stylesheets
+
+      expect(cs_stylesheets).to include("(prefers-color-scheme: dark)")
+      expect(cs_stylesheets.scan("stylesheets/color_definitions").size).to eq(2)
+    end
+  end
 end

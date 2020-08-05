@@ -1053,6 +1053,28 @@ describe GroupsController do
         expect(response.status).to eq(403)
       end
 
+      it "does not notify users when the param is not present" do
+        user2 = Fabricate(:user)
+
+        expect {
+          put "/groups/#{group.id}/members.json", params: { usernames: user2.username }
+        }.to change { Topic.where(archetype: "private_message").count }.by(0)
+
+        expect(response.status).to eq(200)
+      end
+
+      it "notifies users when the param is present" do
+        user2 = Fabricate(:user)
+
+        expect {
+          put "/groups/#{group.id}/members.json", params: { usernames: user2.username, notify_users: true }
+        }.to change { Topic.where(archetype: "private_message").count }.by(1)
+
+        expect(response.status).to eq(200)
+
+        expect(Topic.last.topic_users.map(&:user_id)).to include(Discourse::SYSTEM_USER_ID, user2.id)
+      end
+
       context "is able to add several members to a group" do
         fab!(:user1) { Fabricate(:user) }
         fab!(:user2) { Fabricate(:user, username: "UsEr2") }
@@ -1130,6 +1152,53 @@ describe GroupsController do
 
           expect(body["error_type"]).to eq("invalid_parameters")
         end
+      end
+
+      it "return a 400 if no user or emails are present" do
+        [
+          { usernames: "nouserwiththisusername", emails: "" },
+          { usernames: "", emails: "" }
+        ].each do |params|
+          put "/groups/#{group.id}/members.json", params: params
+          expect(response.status).to eq(400)
+          body = response.parsed_body
+
+          expect(body["error_type"]).to eq("invalid_parameters")
+        end
+      end
+
+      it "will send invites to each email with group_id set" do
+        emails = ["something@gmail.com", "anotherone@yahoo.com"]
+        put "/groups/#{group.id}/members.json", params: { emails: emails.join(",") }
+
+        expect(response.status).to eq(200)
+        body = response.parsed_body
+
+        expect(body["emails"]).to eq(emails)
+
+        emails.each do |email|
+          invite = Invite.find_by(email: email)
+          expect(invite.groups).to eq([group])
+        end
+      end
+
+      it "will find users by email, and invite the correct user" do
+        new_user = Fabricate(:user)
+        expect(new_user.group_ids.include?(group.id)).to eq(false)
+
+        put "/groups/#{group.id}/members.json", params: { emails: new_user.email }
+
+        expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
+      end
+
+      it "will invite the user if their username and email are both invited" do
+        new_user = Fabricate(:user)
+        put "/groups/#{group.id}/members.json", params: { usernames: new_user.username, emails: new_user.email }
+
+        expect(response.status).to eq(200)
+        body = response.parsed_body
+
+        expect(new_user.reload.group_ids.include?(group.id)).to eq(true)
       end
 
       context 'public group' do

@@ -1,7 +1,7 @@
 .select-kit {
   &.multi-select {
     width: 300px;
-    background: $secondary;
+    background: var(--secondary);
     border-radius: 0;
 
     .select-kit-row {
@@ -18,8 +18,8 @@
     }
 
     .multi-select-header {
-      background: $secondary;
-      border: 1px solid $primary-medium;
+      background: var(--secondary);
+      border: 1px solid var(--primary-medium);
 
       &.is-focused {
         box-shadow: shadow("focus");
@@ -29,11 +29,11 @@
 
     &.is-disabled {
       .multi-select-header {
-        background: $primary-low;
-        border-color: $primary-low-mid;
-        color: $primary-medium;
+        background: var(--primary-low);
+        border-color: var(--primary-low-mid);
+        color: var(--primary-medium);
         .d-icon {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
     }
@@ -41,7 +41,7 @@
     &.is-expanded {
       .select-kit-wrapper {
         display: block;
-        border: 1px solid $tertiary;
+        border: 1px solid var(--tertiary);
         box-shadow: shadow("focus");
         border-radius: 0;
       }
@@ -139,7 +139,7 @@
       }
 
       .selected-name {
-        background: $primary-low;
+        background: var(--primary-low);
         padding: 0.25em;
         flex: 1;
         align-items: center;
@@ -147,7 +147,7 @@
         justify-content: space-between;
 
         .d-icon {
-          color: $primary-low-mid;
+          color: var(--primary-low-mid);
           vertical-align: middle;
 
           &:last-child {
@@ -155,11 +155,11 @@
           }
         }
         &:hover .d-icon:last-child {
-          color: $danger;
+          color: var(--danger);
         }
 
         &.is-highlighted {
-          box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0, 0, 0, 0.05);
+          box-shadow: 0 0 2px var(--danger), 0 1px 0 rgba(0, 0, 0, 0.05);
         }
       }
     }

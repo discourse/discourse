@@ -27,14 +27,14 @@
     }
 
     .select-kit-header {
-      background: $secondary;
-      border: 1px solid $primary-medium;
+      background: var(--secondary);
+      border: 1px solid var(--primary-medium);
       padding: 0 0.25em 0 0.5em;
       font-weight: 500;
       font-size: $font-0;
 
       &.is-focused {
-        border: 1px solid $tertiary;
+        border: 1px solid var(--tertiary);
         box-shadow: shadow("focus");
       }
     }
@@ -48,12 +48,12 @@
       .collection-header {
         a {
           white-space: nowrap;
-          color: $primary;
+          color: var(--primary);
           line-height: $line-height-medium;
           font-weight: bold;
           display: block;
           padding: 0.75em;
-          color: $tertiary;
+          color: var(--tertiary);
 
           &:hover {
             text-decoration: underline;
@@ -64,18 +64,18 @@
 
     &.is-disabled {
       .select-kit-header {
-        background: $primary-low;
-        border-color: $primary-low-mid;
-        color: $primary-medium;
+        background: var(--primary-low);
+        border-color: var(--primary-low-mid);
+        color: var(--primary-medium);
         .d-icon {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
     }
 
     &.is-highlighted {
       .select-kit-header {
-        border: 1px solid $tertiary;
+        border: 1px solid var(--tertiary);
         box-shadow: shadow("focus");
       }
     }
@@ -83,7 +83,7 @@
     &.is-expanded {
       .select-kit-wrapper {
         display: block;
-        border: 1px solid $tertiary;
+        border: 1px solid var(--tertiary);
         box-shadow: shadow("focus");
       }
     }
@@ -104,7 +104,7 @@
     }
 
     &.tag-drop {
-      color: $primary-high;
+      color: var(--primary-high);
     }
 
     &.group-dropdown {

@@ -64,4 +64,25 @@ describe Stylesheet::Compiler do
     expect(css).to include("url('/favicons/github.png')")
     expect(css).not_to include('image-url')
   end
+
+  context "with a color scheme" do
+    it "returns the default color definitions when no color scheme is specified" do
+      css, _map = Stylesheet::Compiler.compile_asset("color_definitions")
+      expect(css).to include("--header_background:")
+      expect(css).to include("--primary:")
+    end
+
+    it "returns color definitions for a custom color scheme" do
+      cs = Fabricate(:color_scheme, name: 'Stylish', color_scheme_colors: [
+        Fabricate(:color_scheme_color, name: 'header_primary', hex: '88af8e'),
+        Fabricate(:color_scheme_color, name: 'header_background', hex: 'f8745c')
+      ])
+
+      css, _map = Stylesheet::Compiler.compile_asset("color_definitions", color_scheme_id: cs.id)
+
+      expect(css).to include("--header_background: #f8745c")
+      expect(css).to include("--header_primary: #88af8e")
+      expect(css).to include("--header_background-rgb: 248,116,92")
+    end
+  end
 end

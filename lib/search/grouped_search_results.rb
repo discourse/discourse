@@ -85,12 +85,14 @@ class Search
       end
     end
 
+    URI_REGEXP = URI.regexp(%w{http https})
+
     def self.blurb_for(cooked: nil, term: nil, blurb_length: BLURB_LENGTH, scrub: true)
       blurb = nil
       cooked = SearchIndexer.scrub_html_for_search(cooked) if scrub
 
       urls = Set.new
-      cooked.scan(URI.regexp(%w{http https})) { urls << $& }
+      cooked.scan(URI_REGEXP) { urls << $& }
       urls.each do |url|
         begin
           case File.extname(URI(url).path || "")

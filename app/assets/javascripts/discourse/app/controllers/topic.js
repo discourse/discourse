@@ -24,6 +24,7 @@ import TopicTimer from "discourse/models/topic-timer";
 import { Promise } from "rsvp";
 import { escapeExpression } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import { inject as service } from "@ember/service";
 
 let customPostMessageCallbacks = {};
 
@@ -59,6 +60,7 @@ export default Controller.extend(bufferedProperty("model"), {
   username_filters: null,
   filter: null,
   quoteState: null,
+  documentTitle: service(),
 
   canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
@@ -1350,7 +1352,7 @@ export default Controller.extend(bufferedProperty("model"), {
           case "created": {
             postStream.triggerNewPostInStream(data.id).then(() => refresh());
             if (this.get("currentUser.id") !== data.user_id) {
-              Discourse.incrementBackgroundContextCount();
+              this.documentTitle.incrementBackgroundContextCount();
             }
             break;
           }

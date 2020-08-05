@@ -43,7 +43,7 @@
       .uploaded-image-preview {
         background-size: contain;
         background-repeat: no-repeat;
-        background-color: $primary-medium;
+        background-color: var(--primary-medium);
       }
     }
     .setting-controls {
@@ -64,8 +64,8 @@
         width: 100%;
       }
       padding: 1px;
-      background-color: $secondary;
-      border: 1px solid $primary-low;
+      background-color: var(--secondary);
+      border: 1px solid var(--primary-low);
       border-radius: 3px;
       transition: border linear 0.2s, box-shadow linear 0.2s;
       li.sortable-placeholder {
@@ -74,7 +74,7 @@
         position: relative;
         line-height: $line-height-small;
         cursor: default;
-        border: 1px dashed $primary-low-mid;
+        border: 1px dashed var(--primary-low-mid);
         border-radius: 3px;
         background-clip: padding-box;
         -moz-user-select: none;
@@ -90,10 +90,10 @@
       line-height: $line-height-large;
     }
     .validation-error {
-      color: $danger;
+      color: var(--danger);
     }
     .desc {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
     h3 {
       font-size: $font-0;
@@ -111,17 +111,17 @@
   }
   .setting.overridden {
     h3 {
-      color: $highlight-high;
+      color: var(--highlight-high);
     }
   }
   .setting.overridden.string {
     input[type="text"],
     input[type="password"],
     textarea {
-      background-color: $highlight-medium;
+      background-color: var(--highlight-medium);
     }
   }
   .warning {
-    color: $danger;
+    color: var(--danger);
   }
 }

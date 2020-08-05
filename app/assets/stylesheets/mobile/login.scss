@@ -33,7 +33,7 @@
     }
 
     + #login-form {
-      border-top: 1px solid $primary-low;
+      border-top: 1px solid var(--primary-low);
     }
   }
 
@@ -156,12 +156,12 @@
   flex-direction: column;
   tr.instructions {
     label {
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
     }
   }
 
   #login-buttons {
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
   }
 
   .login-form {

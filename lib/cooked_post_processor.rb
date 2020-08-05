@@ -178,21 +178,11 @@ class CookedPostProcessor
   end
 
   def large_images
-    @large_images ||=
-      begin
-        JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]")
-      rescue JSON::ParserError
-        []
-      end
+    @large_images ||= @post.custom_fields[Post::LARGE_IMAGES].presence || []
   end
 
   def broken_images
-    @broken_images ||=
-      begin
-        JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]")
-      rescue JSON::ParserError
-        []
-      end
+    @broken_images ||= @post.custom_fields[Post::BROKEN_IMAGES].presence || []
   end
 
   def downloaded_images

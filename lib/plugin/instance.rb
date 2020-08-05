@@ -280,6 +280,15 @@ class Plugin::Instance
     end
   end
 
+  # Allows to add additional user_ids to the list of people notified when doing a post revision
+  def add_post_revision_notifier_recipients(&block)
+    reloadable_patch do |plugin|
+      ::PostActionNotifier.add_post_revision_notifier_recipients do |post_revision|
+        plugin.enabled? ? block.call(post_revision) : []
+      end
+    end
+  end
+
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_preloaded_group_custom_field(field)
     reloadable_patch do |plugin|

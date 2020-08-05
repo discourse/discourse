@@ -2912,6 +2912,11 @@ en:
         ``` text
         %{logs}
         ```
+    user_added_to_group:
+      title: "Added to Group"
+      subject_template: "You have been added as %{membership_level} of the %{group_name} group"
+      text_body_template: |
+        You have been added as a %{membership_level} of the [%{group_name}](%{base_url}%{group_path}) group.
 
     csv_export_succeeded:
       title: "CSV Export Succeeded"

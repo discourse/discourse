@@ -57,16 +57,16 @@ summary::-webkit-details-marker {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    color: $primary-medium;
-    background: $primary-low;
-    border: 1px solid $primary-low-mid;
+    color: var(--primary-medium);
+    background: var(--primary-low);
+    border: 1px solid var(--primary-low-mid);
     width: 1.5em;
     line-height: 1;
   }
 
   summary:hover {
-    color: $primary;
-    background: $primary-low-mid;
+    color: var(--primary);
+    background: var(--primary-low-mid);
     border-color: currentColor;
   }
 }

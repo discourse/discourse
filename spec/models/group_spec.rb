@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative '../components/imap/imap_helper'
 
 describe Group do
   let(:admin) { Fabricate(:admin) }
@@ -969,6 +970,79 @@ describe Group do
       job = Jobs::AutomaticGroupMembership.jobs.last
 
       expect(job["args"].first["group_id"]).to eq(group.id)
+    end
+  end
+
+  describe "#imap_mailboxes" do
+    let(:group) { Fabricate(:group) }
+
+    def mock_imap
+      @mocked_imap_provider = MockedImapProvider.new(
+        group.imap_server,
+        port: group.imap_port,
+        ssl: group.imap_ssl,
+        username: group.email_username,
+        password: group.email_password
+      )
+      Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(
+        @mocked_imap_provider
+      )
+    end
+
+    def configure_imap
+      group.update(
+        imap_server: "imap.gmail.com",
+        imap_port: 993,
+        imap_ssl: true,
+        email_username: "test@gmail.com",
+        email_password: "testPassword1!"
+      )
+    end
+
+    def enable_imap
+      SiteSetting.enable_imap = true
+      @mocked_imap_provider.stubs(:connect!)
+      @mocked_imap_provider.stubs(:list_mailboxes).returns(["Inbox"])
+      @mocked_imap_provider.stubs(:disconnect!)
+    end
+
+    before do
+      Discourse.redis.del("group_imap_mailboxes_#{group.id}")
+    end
+
+    it "returns an empty array if group imap is not configured" do
+      expect(group.imap_mailboxes).to eq([])
+    end
+
+    it "returns an empty array and does not contact IMAP server if group imap is configured but the setting is disabled" do
+      configure_imap
+      Imap::Providers::Detector.expects(:init_with_detected_provider).never
+      expect(group.imap_mailboxes).to eq([])
+    end
+
+    it "logs the imap error if one occurs" do
+      configure_imap
+      mock_imap
+      SiteSetting.enable_imap = true
+      @mocked_imap_provider.stubs(:connect!).raises(Net::IMAP::NoResponseError)
+      group.imap_mailboxes
+      expect(group.reload.imap_last_error).not_to eq(nil)
+    end
+
+    it "returns a list of mailboxes from the IMAP provider" do
+      configure_imap
+      mock_imap
+      enable_imap
+      expect(group.imap_mailboxes).to eq(["Inbox"])
+    end
+
+    it "caches the login and mailbox fetch" do
+      configure_imap
+      mock_imap
+      enable_imap
+      group.imap_mailboxes
+      Imap::Providers::Detector.expects(:init_with_detected_provider).never
+      group.imap_mailboxes
     end
   end
 

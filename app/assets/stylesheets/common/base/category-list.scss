@@ -38,7 +38,7 @@
     border-width: 0;
     border-left-width: 6px;
     border-style: solid;
-    border-color: $primary-low;
+    border-color: var(--primary-low);
 
     .mobile-view & {
       width: 100%;
@@ -85,7 +85,7 @@
     border-left-width: 0;
 
     border-style: solid;
-    border-color: $primary-low;
+    border-color: var(--primary-low);
   }
 
   &.no-logos {
@@ -123,7 +123,7 @@
     margin-bottom: 1em;
     text-align: center;
     font-size: $font-0;
-    color: $primary-med-or-secondary-high;
+    color: var(--primary-med-or-secondary-high);
     position: relative;
     @include line-clamp(4);
 
@@ -144,12 +144,12 @@
     margin-top: 0.25em;
     line-height: $line-height-medium;
     text-align: center;
-    color: $primary;
+    color: var(--primary);
     overflow: hidden;
   }
 
   h4 a {
-    color: $primary;
+    color: var(--primary);
   }
 
   .subcategory.with-subcategories {
@@ -186,7 +186,7 @@
     }
 
     .subcategory-box-inner {
-      border: 1px solid $primary-low;
+      border: 1px solid var(--primary-low);
       border-left: none;
       padding: 0.5em 0.5em 0.4em 0.5em;
     }
@@ -248,14 +248,14 @@
     padding: 1em 1em 0.5em 1em;
     a[href] {
       width: 100%;
-      color: $primary;
+      color: var(--primary);
     }
   }
 
   .featured-topics {
     padding: 0.5em 1em 1em 1em;
     ul {
-      color: $primary-medium;
+      color: var(--primary-medium);
       list-style: none;
       padding: 0;
       margin: 0;
@@ -281,7 +281,7 @@
   h4 {
     margin-bottom: 0;
     .d-icon {
-      color: $primary-high;
+      color: var(--primary-high);
       height: 0.76em;
       width: 0.76em;
       vertical-align: baseline;
@@ -291,7 +291,7 @@
   .category-description {
     margin-top: 0.5em;
     overflow: hidden;
-    color: $primary-high;
+    color: var(--primary-high);
   }
   .category-logo.aspect-image {
     margin-top: 0.5em;
@@ -308,7 +308,7 @@
 .category-list.subcategories-with-subcategories {
   margin-top: 1em;
   margin-bottom: 0;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   .category-description {
     font-size: $font-down-1;
   }
@@ -320,7 +320,7 @@
 .category-list .category.muted {
   > h3 a.category-title-link,
   > h4 a.category-title-link {
-    color: $primary-medium;
+    color: var(--primary-medium);
     font-size: $font-down-1;
   }
   > .category-description,
@@ -346,7 +346,7 @@
 }
 
 .muted-categories-link {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   display: flex;
   justify-content: space-between;
   padding: 0.75em;
@@ -355,13 +355,13 @@
   margin: 0 0 1em -3px;
 
   .d-icon {
-    color: $primary-medium;
+    color: var(--primary-medium);
     margin-top: 0.25em;
   }
 }
 
 .muted-categories-heading {
-  color: $primary-medium;
+  color: var(--primary-medium);
   margin: 0;
 }
 

@@ -243,7 +243,8 @@ const DiscourseURL = EmberObject.extend({
 
     // Rewrite /my/* urls
     let myPath = getURL("/my");
-    if (path.indexOf(myPath) === 0) {
+    const fullPath = getURL(path);
+    if (fullPath.indexOf(myPath) === 0) {
       const currentUser = User.current();
       if (currentUser) {
         path = path.replace(

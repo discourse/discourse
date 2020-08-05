@@ -64,6 +64,81 @@ QUnit.test("tag counts", function(assert) {
   assert.equal(states["unread"].newCount, 0, "unread counts");
 });
 
+QUnit.test("forEachTracked", function(assert) {
+  const state = TopicTrackingState.create();
+
+  state.loadStates([
+    {
+      topic_id: 1,
+      last_read_post_number: null,
+      tags: ["foo", "new"]
+    },
+    {
+      topic_id: 2,
+      last_read_post_number: null,
+      tags: ["new"]
+    },
+    {
+      topic_id: 3,
+      last_read_post_number: null,
+      tags: ["random"]
+    },
+    {
+      topic_id: 4,
+      last_read_post_number: 1,
+      highest_post_number: 7,
+      category_id: 7,
+      tags: ["unread"],
+      notification_level: NotificationLevels.TRACKING
+    },
+    {
+      topic_id: 5,
+      last_read_post_number: 1,
+      highest_post_number: 7,
+      tags: ["bar", "unread"],
+      category_id: 7,
+      notification_level: NotificationLevels.TRACKING
+    },
+    {
+      topic_id: 6,
+      last_read_post_number: 1,
+      highest_post_number: 7,
+      tags: null,
+      notification_level: NotificationLevels.TRACKING
+    }
+  ]);
+
+  let randomUnread = 0,
+    randomNew = 0,
+    sevenUnread = 0,
+    sevenNew = 0;
+
+  state.forEachTracked((topic, isNew, isUnread) => {
+    if (topic.category_id === 7) {
+      if (isNew) {
+        sevenNew += 1;
+      }
+      if (isUnread) {
+        sevenUnread += 1;
+      }
+    }
+
+    if (topic.tags && topic.tags.indexOf("random") > -1) {
+      if (isNew) {
+        randomNew += 1;
+      }
+      if (isUnread) {
+        randomUnread += 1;
+      }
+    }
+  });
+
+  assert.equal(randomNew, 1, "random new");
+  assert.equal(randomUnread, 0, "random unread");
+  assert.equal(sevenNew, 0, "seven unread");
+  assert.equal(sevenUnread, 2, "seven unread");
+});
+
 QUnit.test("sync", function(assert) {
   const state = TopicTrackingState.create();
   state.states["t111"] = { last_read_post_number: null };

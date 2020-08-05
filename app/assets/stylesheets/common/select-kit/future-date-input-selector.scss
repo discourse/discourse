@@ -10,7 +10,7 @@
       }
 
       .future-date-input-selector-datetime {
-        color: $primary-medium;
+        color: var(--primary-medium);
         margin-left: auto;
         white-space: nowrap;
 
@@ -30,7 +30,7 @@
 
       .future-date-input-selector-row {
         .future-date-input-selector-icons {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
     }

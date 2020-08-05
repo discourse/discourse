@@ -22,9 +22,9 @@
 }
 
 .menu-panel {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   box-shadow: shadow("menu-panel");
-  background-color: $secondary;
+  background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
   width: 300px;
@@ -70,22 +70,22 @@
     a.categories-link {
       padding: 0.25em 0.5em;
       display: block;
-      color: $primary;
+      color: var(--primary);
       &:hover,
       &:focus {
-        background-color: $highlight-medium;
+        background-color: var(--highlight-medium);
         outline: none;
       }
 
       .d-icon {
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
     }
 
     .new {
       font-size: $font-down-1;
       margin-left: 0.5em;
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
     }
   }
 
@@ -104,12 +104,12 @@
         background: transparent;
 
         .category-name {
-          color: $primary;
+          color: var(--primary);
         }
       }
     }
     .badge-notification {
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
       background-color: transparent;
       display: inline;
       padding: 0;
@@ -119,11 +119,11 @@
     .badge-wrapper {
       &.bar,
       &.bullet {
-        color: $primary;
+        color: var(--primary);
         padding: 0 0 0 0.15em;
       }
       &.box {
-        color: $secondary;
+        color: var(--secondary);
         + a.badge.badge-notification {
           padding-top: 2px;
         }
@@ -136,7 +136,7 @@
 
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
     font-weight: normal;
     font-size: $font-down-1;
   }
@@ -155,7 +155,7 @@
     width: 100%;
     display: table;
     margin-top: -1px;
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
 
     h3 {
@@ -166,14 +166,14 @@
 
     .d-icon,
     &:hover .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
     .icon {
-      color: $primary-high;
+      color: var(--primary-high);
     }
 
     li {
-      background-color: $tertiary-low;
+      background-color: var(--tertiary-low);
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
@@ -182,12 +182,12 @@
       }
 
       span:first-child {
-        color: $primary;
+        color: var(--primary);
       }
 
       &:hover,
       &:focus {
-        background-color: $highlight-medium;
+        background-color: var(--highlight-medium);
         outline: none;
       }
 
@@ -227,11 +227,11 @@
     }
     .is-warning {
       .d-icon-far-envelope {
-        color: $danger;
+        color: var(--danger);
       }
     }
     .read {
-      background-color: $secondary;
+      background-color: var(--secondary);
     }
     .none {
       padding-top: 5px;
@@ -251,11 +251,11 @@
       justify-content: center;
       align-items: center;
       min-height: 30px;
-      color: $primary-med-or-secondary-high;
-      background: $blend-primary-secondary-5;
+      color: var(--primary-med-or-secondary-high);
+      background: var(--blend-primary-secondary-5);
       &:hover {
-        color: $primary;
-        background: $primary-low;
+        color: var(--primary);
+        background: var(--primary-low);
       }
     }
     /* as a big ol' click target, don't let text inside be selected */
@@ -263,9 +263,9 @@
 
     &.quick-access-profile {
       li:not(.show-all) a {
-        color: $primary;
+        color: var(--primary);
         .d-icon {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
 
         // accounts for menu "ears" 4px + border 1px
@@ -320,8 +320,8 @@ div.menu-links-header {
       }
 
       a.active {
-        border: 1px solid $primary-low;
-        border-bottom: 1px solid $secondary;
+        border: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--secondary);
         position: relative;
 
         &:focus,
@@ -333,7 +333,7 @@ div.menu-links-header {
   }
   a:hover,
   a:focus {
-    background-color: $highlight-medium;
+    background-color: var(--highlight-medium);
     outline: none;
   }
   a {
@@ -373,7 +373,7 @@ div.menu-links-header {
   }
   .fa,
   a {
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
   }
 
   .d-icon-user {

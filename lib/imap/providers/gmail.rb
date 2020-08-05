@@ -96,6 +96,10 @@ module Imap
 
           # Modified version of the original `msg_att` from here:
           # https://github.com/ruby/ruby/blob/1cc8ff001da217d0e98d13fe61fbc9f5547ef722/lib/net/imap.rb#L2346
+          #
+          # This is done so we can extract X-GM-LABELS, X-GM-MSGID, and
+          # X-GM-THRID, all Gmail extended attributes.
+          #
           # rubocop:disable Style/RedundantReturn
           def msg_att(n)
             match(T_LPAR)
@@ -127,6 +131,7 @@ module Imap
                 name, val = uid_data
               when /\A(?:MODSEQ)\z/ni
                 name, val = modseq_data
+
               # Adding support for GMail extended attributes.
               when /\A(?:X-GM-LABELS)\z/ni
                 name, val = label_data
@@ -134,6 +139,8 @@ module Imap
                 name, val = uid_data
               when /\A(?:X-GM-THRID)\z/ni
                 name, val = uid_data
+              # End custom support for Gmail.
+
               else
                 parse_error("unknown attribute `%s' for {%d}", token.value, n)
               end
