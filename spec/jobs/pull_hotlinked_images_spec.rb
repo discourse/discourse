@@ -190,11 +190,13 @@ describe Jobs::PullHotlinkedImages do
           post = Fabricate(:post, raw: "<img src='#{url}'>")
           upload.update(access_control_post: Fabricate(:post))
           FileStore::S3Store.any_instance.stubs(:store_upload).returns(upload.url)
+          FastImage.expects(:size).returns([100, 100]).at_least_once
 
-          # without this we get an infinite hang...
-          Post.any_instance.stubs(:trigger_post_process)
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
             .to change { Upload.count }.by(1)
+
+          expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+            .to change { Upload.count }.by(0)
         end
       end
     end
