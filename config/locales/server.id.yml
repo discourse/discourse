@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 id:
   dates:
@@ -17,9 +16,20 @@ id:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, Januari, Februari, Maret, April, Mei, Juni, Juli, Agustus, September, Oktober, November, Desember]
-    <<: *datetime_formats
-  time:
+    month_names:
+    - null
+    - Januari
+    - Februari
+    - Maret
+    - April
+    - Mei
+    - Juni
+    - Juli
+    - Agustus
+    - September
+    - Oktober
+    - November
+    - Desember
     <<: *datetime_formats
   title: "Discourse"
   topics: "Topik"
@@ -66,23 +76,23 @@ id:
       accepted: harus diterima
       blank: tidak boleh kosong
       present: harus kosong
-      confirmation: "tidak cocok dengan %{attribute}"
+      confirmation: ! "tidak cocok dengan %{attribute}"
       empty: tidak boleh kosong
-      equal_to: "harus sebanyak %{count}"
+      equal_to: harus sebanyak %{count}
       even: harus genap
       exclusion: telah dipratentukan oleh sistem
-      greater_than: "harus lebih besar dari %{count}"
-      greater_than_or_equal_to: "harus sama dengan atau lebih besar dari %{count}"
+      greater_than: harus lebih besar dari %{count}
+      greater_than_or_equal_to: harus sama dengan atau lebih besar dari %{count}
       has_already_been_used: "telah digunakan"
       inclusion: tidak dimasukkan kedalam daftar
       invalid: tidak benar
       is_invalid: "tampak tidak jelas, apakah itu sebuah kalimat yang lengkap?"
-      less_than: "harus kurang dari %{count}"
-      less_than_or_equal_to: "harus sama dengan atau kurang dari %{count}"
+      less_than: harus kurang dari %{count}
+      less_than_or_equal_to: harus sama dengan atau kurang dari %{count}
       not_a_number: bukan numerik
       not_an_integer: harus integer
       odd: harus ganjil
-      record_invalid: "Validasi gagal: %{errors}"
+      record_invalid: ! "Validasi gagal: %{errors}"
       restrict_dependent_destroy:
         one: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
         many: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
@@ -94,16 +104,13 @@ id:
         other: jumlah karakter salah (seharusnya %{count} karakter)
       other_than: "harus lain dari %{count}"
     template:
-      body: "Ada masalah dengan objek-objek berikut:"
+      body: ! "Ada masalah dengan objek-objek berikut:"
       header:
-        other: "%{count} kesalahan menyebabkan %{model} ini tidak bisa disimpan"
+        other: ! "%{count} kesalahan menyebabkan %{model} ini tidak bisa disimpan"
     embed:
       load_from_remote: "Ada kesalahan dalam memuat posting itu."
     site_settings:
       default_categories_already_selected: "Anda tidak boleh memilih kategori yang digunakan di daftar lainnya."
-  activemodel:
-    errors:
-      <<: *errors
   backup:
     operation_already_running: "Proses lain sedang berjalan. Tidak dapat menjalankan proses baru saat ini."
     backup_file_should_be_tar_gz: "File backup harus berupa arsip .tar.gz."
@@ -201,7 +208,6 @@ id:
       user_profile:
         bio_raw: "Tentang Saya"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -220,6 +226,7 @@ id:
           attributes:
             hex:
               invalid: "bukan warna yang valid."
+      <<: *errors
   vip_category_name: "Lounge / Santai"
   staff_category_name: "Staf"
   lounge_welcome:
@@ -348,7 +355,7 @@ id:
     read: "baca"
     read_write: "baca/tulis"
     otp_confirmation:
-      confirm_title: "Lanjut ke %{site_name}"
+      confirm_title: Lanjut ke %{site_name}
   reports:
     default:
       labels:
@@ -659,3 +666,8 @@ id:
         title: "Tolak"
       delete_user:
         title: "Hapus Pengguna"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 bs_BA:
   site_settings:
@@ -57,34 +56,34 @@ bs_BA:
         &gt;: game_die: %{results}
     quote:
       trigger: "citat"
-      '1':
+      "1":
         quote: "U sredini svake poteškoće leži mogućnost"
         author: "Albert Ajnštajn"
-      '2':
+      "2":
         quote: "Slobodu nije vrijedno imati ako to ne znači imati slobodu pogreške."
         author: "Mahatma Gandi"
-      '3':
+      "3":
         quote: "Ne plači zbog toga što je kraj, smij se zbog toga što je se desilo."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Ako želiš urađeno kako treba, uradi to sam."
         author: "Čarls Giljem Etijen"
-      '5':
+      "5":
         quote: "Vjeruj da možeš i tad si već pola puta tamo."
         author: "Teodor Ruzvelt"
-      '6':
+      "6":
         quote: "Život je kao kutija čokolade. Nikad ne znaš šta ćeš dobiti."
         author: "Majka Forrest-a Gump-a"
-      '7':
+      "7":
         quote: "To je jedan mali korak za čovjeka, gigantski skok za čovječanstvo."
         author: "Nil Armstrong"
-      '8':
+      "8":
         quote: "Uradi jednu stvar svaki dan koja vas plaši."
         author: "Elenor Ruzvelt"
-      '9':
+      "9":
         quote: "Greške su uvijek oprostive, ukoliko imaš hrabrosti priznati ih."
         author: "Brus Li"
-      '10':
+      "10":
         quote: "Što god um čovjeka može pojmiti i vjerovati, može ostvariti."
         author: "Napoleon Hill"
       results: |-
@@ -92,26 +91,26 @@ bs_BA:
     magic_8_ball:
       trigger: "bogatstvo"
       answers:
-        '1': "To je sigurno"
-        '2': "To je izričito tako"
-        '3': "Bez sumnje"
-        '4': "Da definitivno"
-        '5': "Možeš se uzdati u to"
-        '6': "Kako vidim, da"
-        '7': "Vrlo vjerojatno"
-        '8': "Izgled dobar"
-        '9': "Da"
-        '10': "Signali ukazuju na da"
-        '11': "Odgovorite mutno, pokušajte ponovo"
-        '12': "Upitaj ponovo kasnije"
-        '13': "Bolje da vam ne kažem odmah"
-        '14': "Ne mogu predvodjeti sada"
-        '15': "Koncentrirajte se i upitajte ponovo"
-        '16': "Ne računajte na to"
-        '17': "Moj odgovor je ne"
-        '18': "Moji izvori kažu ne"
-        '19': "Izgled ne tako dobar"
-        '20': "Veoma upitno"
+        "1": "To je sigurno"
+        "2": "To je izričito tako"
+        "3": "Bez sumnje"
+        "4": "Da definitivno"
+        "5": "Možeš se uzdati u to"
+        "6": "Kako vidim, da"
+        "7": "Vrlo vjerojatno"
+        "8": "Izgled dobar"
+        "9": "Da"
+        "10": "Signali ukazuju na da"
+        "11": "Odgovorite mutno, pokušajte ponovo"
+        "12": "Upitaj ponovo kasnije"
+        "13": "Bolje da vam ne kažem odmah"
+        "14": "Ne mogu predvodjeti sada"
+        "15": "Koncentrirajte se i upitajte ponovo"
+        "16": "Ne računajte na to"
+        "17": "Moj odgovor je ne"
+        "18": "Moji izvori kažu ne"
+        "19": "Izgled ne tako dobar"
+        "20": "Veoma upitno"
       result: |-
         &gt;: crystal_ball: %{result}
     track_selector:
@@ -200,8 +199,6 @@ bs_BA:
           Mi volimo naše diskusije prijateljske, i potrebna nam je vaša pomoć da [održimo civilizovane stvari] (%{guidelines_url}). Ako vidite problem, označite da privatno pustite autora, ili [naše korisno osoblje] (%{about_url}), da znate za njega. Napisao sam nešto ružno ovdje, pretpostavljam da znaš šta da radiš. Naprijed i ** označite ovaj post ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kao neprikladno!
         reply: |-
           [Naše osoblje] (%{base_uri} / grupe / osoblje) će biti privatno obaviješteno o vašoj zastavi. Ako dovoljan broj članova zajednice označi post, on će se automatski sakriti kao mjera opreza. (Budući da nisam napisao gadan post: angel:, otišao sam naprijed i uklonio zastavu za sada.)
-        not_found: |-
-          Oh ne, moj gadan post još nije označen. : worried: Možete li označiti kao neprikladan pomoću ** zastavice ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? Ne zaboravite da koristite dugme show more <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da otkrije više akcija za svaki post.
       search:
         instructions: |-
           _psst_… Sakrio sam iznenađenje u ovoj temi. Ako ste spremni za izazov, ** odaberite ikonu za pretraživanje ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> gore desno ↗ da ga potražite. Pokušajte tražiti pojam "capy&#8203;bara" u ovoj temi

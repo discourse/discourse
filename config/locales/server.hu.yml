@@ -1,32 +1,44 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 hu:
   dates:
     short_date_no_year: "MMM D."
     short_date: "YYYY. MMM D."
-    long_date: "YYYY. MMMM D. h:mma"
+    long_date: "YYYY. MMMM D. H:mm"
   datetime_formats: &datetime_formats
     formats:
-      short: "%Y-%m-%d"
+      short: "%Y.%m.%d."
       short_no_year: "%B %-d."
       date_only: "%Y. %B %-d."
       long: "%Y. %B %-d. %H:%M"
       no_day: "%Y. %B"
   date:
-    month_names: [~, január, február, március, április, május, június, július, augusztus, szeptember, október, november, december]
+    month_names:
+    - null
+    - január
+    - február
+    - március
+    - április
+    - május
+    - június
+    - július
+    - augusztus
+    - szeptember
+    - október
+    - november
+    - december
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "de."
     pm: "du."
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Témák"
-  posts: "Bejegyzések"
+  posts: "bejegyzések"
   loading: "Betöltés"
   powered_by_html: 'A motorháztető alatt: <a href="https://www.discourse.org">Discourse</a>, a megtekintése JavaScript engedélyezésével ajánlott'
   sign_up: "Regisztráció"
@@ -88,7 +100,7 @@ hu:
         strangers_not_allowed_error: "Akkor fordul elő, ha a felhasználó új témát akar létrehozni egy olyan kategóriában, amelynek nem tagja."
       unrecognized_error: "Ismeretlen hiba"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "%{max} karakterre korlátozva; megadott karakterek száma: %{length}."
@@ -97,23 +109,23 @@ hu:
       accepted: elfogadottnak kell lennie
       blank: nem lehet üres
       present: üresnek kell lennie
-      confirmation: "nem egyezik: %{attribute}"
+      confirmation: ! "nem egyezik: %{attribute}"
       empty: nem lehet üres
-      equal_to: "meg kell egyeznie ezzel: %{count}"
+      equal_to: 'meg kell egyeznie ezzel: %{count}'
       even: páros számnak kell lennie
       exclusion: foglalt
-      greater_than: "nagyobbnak kell lennie, mint %{count} "
-      greater_than_or_equal_to: "nagyobb vagy egyenlőnek kell lennie, mint %{count}"
+      greater_than: nagyobbnak kell lennie, mint %{count}
+      greater_than_or_equal_to: nagyobb vagy egyenlőnek kell lennie, mint %{count}
       has_already_been_used: "már használatban van"
       inclusion: nincs benne a listában
       invalid: érvénytelen
       contains_censored_words: "tartalmazza a következő nem engedélyezett szavakat: %{censored_words}"
-      less_than: "kevesebbnek kell lenni, mint %{count}"
-      less_than_or_equal_to: "kisebb vagy egyenlőnek kell lennie, mint %{count}"
+      less_than: kevesebbnek kell lenni, mint %{count}
+      less_than_or_equal_to: kisebb vagy egyenlőnek kell lennie, mint %{count}
       not_a_number: ez nem szám
       not_an_integer: egész számnak kell lennie
       odd: páratlan számnak kell lennie
-      record_invalid: "Érvényesítés sikertelen: %{errors}"
+      record_invalid: ! "Érvényesítés sikertelen: %{errors}"
       max_emojis: "nem lehet több mint %{max_emojis_count} emodzsi"
       emojis_disabled: "nem tartalmazhat emodzsit"
       restrict_dependent_destroy:
@@ -130,15 +142,12 @@ hu:
         other: nem megfelelő hosszúságú. (%{count} karakter szükséges)
       other_than: "nem lehet %{count}"
     template:
-      body: "Problémák vannak az alábbi mezőkkel:"
+      body: ! "Problémák vannak az alábbi mezőkkel:"
     embed:
       load_from_remote: "Hiba történt a bejegyzés betöltésekor."
     site_settings:
       default_categories_already_selected: "Nem választhat olyan kategóriát, amely már szerepel egy másik listában."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     not_found: "A meghívási token érvénytelen. Lépjen kapcsolatba a <a href='%{base_url}/about'>stábbal</a>."
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
@@ -290,7 +299,6 @@ hu:
       user_profile:
         bio_raw: "Bemutatkozás"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -317,6 +325,7 @@ hu:
           attributes:
             name:
               taken: már egy másik emodzsi is használja
+      <<: *errors
   vip_category_name: "Társalgó"
   vip_category_description: "A kategória csak 3-as, vagy magasabb bizalmi szinttel rendelkező tagok számára érhető el."
   meta_category_name: "Visszajelzés"
@@ -324,7 +333,7 @@ hu:
   staff_category_name: "Stáb"
   staff_category_description: "Privát kategória a stáb számára. Ezeket a témákat csak az adminisztrátorok és moderátorok látják."
   lounge_welcome:
-    title: "Üdv a társalgóban"
+    title: "Üdvözöljük a társalgóban"
   category:
     topic_prefix: "A(z) %{category} kategóriáról"
     errors:
@@ -542,7 +551,7 @@ hu:
     read_write: "olvasható/írható"
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
-      confirm_title: "Tovább a(z) %{site_name} oldalra"
+      confirm_title: Tovább a(z) %{site_name} oldalra
   reports:
     default:
       labels:
@@ -709,18 +718,18 @@ hu:
     http_2xx_reqs:
       title: "Állapot 2xx (OK)"
       xaxis: "Nap"
-      yaxis: "Sikeres kérések (Állapot 2xx)"
+      yaxis: "Sikeres kérések (Állapot: 2xx)"
     http_3xx_reqs:
       title: "HTTP 3xx (Átirányítás)"
       xaxis: "Nap"
     http_4xx_reqs:
       title: "HTTP 4xx (Kliensoldali hiba)"
       xaxis: "Nap"
-      yaxis: "Kliensoldali hibák (Állapot 4xx)"
+      yaxis: "Kliensoldali hibák (Állapot: 4xx)"
     http_5xx_reqs:
       title: "HTTP 5xx (Kiszolgálóhiba)"
       xaxis: "Nap"
-      yaxis: "Kiszolgálóhibák (Állapot 5xx)"
+      yaxis: "Kiszolgálóhibák (Állapot: 5xx)"
     http_total_reqs:
       title: "Összes"
       xaxis: "Nap"
@@ -761,7 +770,7 @@ hu:
     moderators_create_categories: "Új kategóriák létrehozásának engedélyezése a moderátorok számára"
     enable_badges: "A jelvény rendszer engedélyezése"
     min_password_length: "Minimum jelszóhossz."
-    block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
+    block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
@@ -787,7 +796,7 @@ hu:
       category: "Kategóriák"
       topic: "Eredmények"
       user: "Felhasználók"
-    results_page: "Keresési eredmény: '%{term}'"
+    results_page: "Találatok erre: „%{term}”"
   original_poster: "Eredeti szerző"
   most_posts: "Legtöbb bejegyzés"
   most_recent_poster: "Legutóbbi szerzők"
@@ -1095,7 +1104,7 @@ hu:
       name: Szerkesztő
       description: Első bejegyzés szerkesztése
     wiki_editor:
-      name: "Wikiszerkesztő "
+      name: Wikiszerkesztő
       description: Első wikiszerkesztés
     basic_user:
       name: Alapvető
@@ -1110,10 +1119,10 @@ hu:
       description: Kedvelést kapott
     autobiographer:
       name: Életrajzíró
-      description: "Kitöltötte a <a href=\"%{base_uri}/my/preferences/profile\">profilinformációit</a>"
+      description: Kitöltötte a <a href="%{base_uri}/my/preferences/profile">profilinformációit</a>
     anniversary:
       name: Évforduló
-      description: "Egy éve aktív tag, legalább egyszer bejegyzést tett közzé"
+      description: Egy éve aktív tag, legalább egyszer bejegyzést tett közzé
     nice_post:
       name: Szép válasz
       description: 10 kedvelést kapott egy válaszra
@@ -1268,7 +1277,7 @@ hu:
               categories_and_latest_topics:
                 label: "Kategóriák és legutóbbi témák"
               categories_and_top_topics:
-                label: "Kategóriák és top témák"
+                label: "Kategóriák és legnépszerűbb témák"
       emoji:
         title: "Emodzsi"
       invites:
@@ -1348,3 +1357,6 @@ hu:
         title: "Elutasítás"
       delete_user:
         title: "Felhasználó törlése"
+  activemodel:
+    errors:
+      <<: *errors

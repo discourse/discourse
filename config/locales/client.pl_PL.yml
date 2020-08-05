@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pl_PL:
   js:
@@ -29,6 +28,7 @@ pl_PL:
         millions: "%{number}M"
     dates:
       time: "H:mm"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, GG: mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, GG: mm"
@@ -163,9 +163,6 @@ pl_PL:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "wpis #%{postNumber}"
       close: "zamknij"
-      twitter: "Udostępnij lnik na Twitter"
-      facebook: "Udostępnij lnik na Facebook"
-      email: "Wyślij link poprzez email"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
       private_topic: "przekształcił ten temat w wiadomość prywatną %{when}"
@@ -249,7 +246,7 @@ pl_PL:
       one: "link"
       few: "linki"
       many: "linków"
-      other: "linków"
+      other: "odnośników"
     faq: "FAQ"
     guidelines: "Przewodnik"
     privacy_policy: "Polityka prywatności"
@@ -296,7 +293,7 @@ pl_PL:
         all_time: "Ogółem"
         last_7_days: "Ostatnie 7"
         last_30_days: "Ostatnie 30"
-      like_count: "Lajki"
+      like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Wpisy"
       user_count: "Użytkownicy"
@@ -310,13 +307,17 @@ pl_PL:
         bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
     bookmarks:
+      created: "post już dodano do zakładek%{name}"
       not_bookmarked: "dodaj do zakładek"
+      created_with_reminder: "dodałeś ten post do zakładek z przypomnieniem %{date}%{name}"
       remove: "Usuń zakładkę"
+      delete: "Usuń zakładkę"
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
       save: "Zapisz"
       no_timezone: 'Nie ustawiłeś jeszcze strefy czasowej. Nie będziesz mógł ustawić przypomnień. Skonfiguruj jeden <a href="%{basePath}/my/preferences/profile">w swoim profilu</a> .'
       invalid_custom_datetime: "Podana data i godzina są nieprawidłowe, spróbuj ponownie."
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
+      search: "Wyszukaj"
       reminders:
         at_desktop: "Następnym razem będę na swoim pulpicie"
         later_today: "Później dzisiaj"
@@ -324,11 +325,17 @@ pl_PL:
         tomorrow: "Jutro"
         next_week: "Następny tydzień"
         later_this_week: "Później w tym tygodniu"
-        start_of_next_business_week: "Następny poniedziałek"
+        start_of_next_business_week: "Poniedziałek"
+        start_of_next_business_week_alt: "Następny poniedziałek"
         next_month: "Następny miesiąc"
         custom: "Niestandardowa data i godzina"
         last_custom: "Ostatni, ubiegły, zeszły"
         none: "Przypomnienie nie jest potrzebne"
+        today_with_time: "dzisiaj o %{time}"
+        tomorrow_with_time: "jutro o %{time}"
+        at_time: "o %{date_time}"
+    copy_codeblock:
+      copied: "skopiowane!"
     drafts:
       resume: "Kontynuuj"
       remove: "Usuń"
@@ -434,10 +441,10 @@ pl_PL:
       none: "Brak elementów do przejrzenia."
       view_pending: "pokaż oczekujące"
       topic_has_pending:
-        one: "W tym temacie jest <b>%{count}</b> po zatwierdzeniu"
-        few: "W tym temacie jest <b>%{count}</b> postów oczekujących na zatwierdzenie"
-        many: "W tym temacie jest <b>%{count}</b> postów oczekujących na zatwierdzenie"
-        other: "W tym temacie jest <b>%{count}</b> postów oczekujących na zatwierdzenie"
+        one: "W tym temacie jest <b>%{count}</b> wpis oczekujący na zatwierdzenie"
+        few: "W tym temacie są <b>%{count}</b> wpisy oczekujące na zatwierdzenie"
+        many: "W tym temacie jest <b>%{count}</b> wpisów oczekujących na zatwierdzenie"
+        other: "W tym temacie jest <b>%{count}</b> wpisów oczekujących na zatwierdzenie"
       title: "Sprawdź"
       topic: "Temat:"
       filtered_topic: "Przefiltrowałeś do przeglądalnej zawartości w jednym temacie."
@@ -551,10 +558,10 @@ pl_PL:
         title: "Wpis wymaga zatwierdzenia"
         description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
         pending_posts:
-          one: "Masz <strong>%{count}</strong> post w toku."
-          few: "Masz oczekujących <strong>%{count}</strong> postów."
-          many: "Masz oczekujących <strong>%{count}</strong> postów."
-          other: "Masz oczekujących <strong>%{count}</strong> postów."
+          one: "Masz <strong>%{count}</strong> oczekujący wpis."
+          few: "Masz <strong>%{count}</strong> oczekujące wpisy."
+          many: "Masz <strong>%{count}</strong> oczekujących wpisów."
+          other: "Masz <strong>%{count}</strong> oczekujących wpisów."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
@@ -603,10 +610,6 @@ pl_PL:
     groups:
       member_added: "Dodano"
       member_requested: "Poproszono o"
-      add_members:
-        title: "Dodaj członków"
-        description: "Zarządzaj członkami tej grupy"
-        usernames: "Nazwy użytkowników"
       requests:
         title: "Prośby"
         reason: "Powód"
@@ -628,6 +631,17 @@ pl_PL:
           title: Interakcja
           posting: Wysyłanie
           notification: Powiadomienie
+        email:
+          title: "Email"
+          credentials:
+            smtp_server: "Serwer SMTP"
+            smtp_port: "Port SMTP"
+            smtp_ssl: "Użyj SSL dla SMTP"
+            imap_server: "Serwer IMAP"
+            imap_port: "Port IMAP"
+            imap_ssl: "Użyj SSL dla IMAP"
+            username: "Nazwa użytkownika"
+            password: "Hasło"
         membership:
           title: Członkostwo
           access: Dostęp
@@ -744,9 +758,11 @@ pl_PL:
       flair_color_placeholder: "(Opcjonalne) Kolor w formacie Hex"
       flair_preview_icon: "Podgląd ikony"
       flair_preview_image: "Podgląd obrazka"
+      flair_type:
+        icon: "Wybierz ikonę"
     user_action_groups:
-      "1": "Przyznane lajki"
-      "2": "Otrzymane lajki"
+      "1": "Polobienia"
+      "2": "Otrzymane polubienia"
       "3": "Zakładki"
       "4": "Tematy"
       "5": "Odpowiedzi"
@@ -829,6 +845,7 @@ pl_PL:
           all: "Wszystkie"
           read: "Przeczytane"
           unread: "Nieprzeczytane"
+        ignore_duration_title: "Ignoruj użytkownika"
         ignore_duration_username: "Nazwa użytkownika"
         ignore_duration_when: "Oczekiwanie"
         ignore_duration_save: "Ignoruj"
@@ -872,7 +889,7 @@ pl_PL:
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
         each_browser_note: "Uwaga: to ustawienie musisz zmienić w każdej przeglądarce której używasz."
-        consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowie na twój post?"
+        consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowie na twój wpis?"
       dismiss: "Odrzuć"
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
@@ -934,6 +951,7 @@ pl_PL:
       users: "Użytkownicy"
       muted_users: "Uciszeni"
       ignored_users: "Zignorowany"
+      ignored_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       tracked_topics_link: "Pokaż"
       automatically_unpin_topics: "Automatycznie odpinaj tematy kiedy dotrę do końca strony."
       apps: "Aplikacje"
@@ -950,7 +968,7 @@ pl_PL:
         deleted_posts: "usunięte wpisy"
         suspensions: "zawieszone"
         warnings_received: "otrzymanych ostrzeżeń"
-        rejected_posts: "odrzucone posty"
+        rejected_posts: "odrzucone wpisy"
       messages:
         all: "Wszystkie"
         inbox: "Skrzynka odbiorcza"
@@ -1075,7 +1093,11 @@ pl_PL:
         primary: "Podstawowy adres email"
         secondary: "Drugorzędne adresy email"
         primary_label: "podstawowy"
+        unconfirmed_label: "niepotwierdzony"
+        resending_label: "wysyłanie..."
+        resent_label: "email wysłany"
         update_email: "Zmień adres email"
+        destroy: "Usuń e-mail"
         sso_override_instructions: "E-mail można zaktualizować od dostawcy SSO."
         no_secondary: "Brak drugorzędnych adresów email"
         instructions: "Nie będzie publicznie widoczny."
@@ -1102,6 +1124,7 @@ pl_PL:
         title: "Pełna nazwa"
         instructions: "twoja pełna nazwa (opcjonalnie)"
         instructions_required: "Twoja pełna nazwa"
+        required: "Wprowadź imię"
         too_short: "Twoja nazwa jest zbyt krótka"
         ok: "Twoja nazwa jest ok"
       username:
@@ -1160,10 +1183,10 @@ pl_PL:
         notifications: "Nowe powiadomienia"
         contextual: "Nowa zawartość strony"
       like_notification_frequency:
-        title: "Powiadom o lajkach"
+        title: "Powiadom o polubieniach"
         always: "Zawsze"
-        first_time_and_daily: "Pierwszy lajk i raz dziennie"
-        first_time: "Pierwszy lajk"
+        first_time_and_daily: "Pierwsze polubienie i raz dziennie"
+        first_time: "Pierwsze polubienie"
         never: "Nigdy"
       email_previous_replies:
         title: "Dołącz poprzednie odpowiedzi na końcu e-maili."
@@ -1231,6 +1254,7 @@ pl_PL:
         expired: "To zaproszenie wygasło."
         rescind: "Usuń"
         rescinded: "Zaproszenie usunięte"
+        rescind_all: "Usuń wygasłe zaproszenia"
         rescinded_all: "Wszystkie zaproszenia, które wygasły, zostały usunięte!"
         rescind_all_confirm: "Czy na pewno chcesz usunąć wszystkie wygasłe zaproszenia?"
         reinvite: "Ponów zaproszenie"
@@ -1241,15 +1265,21 @@ pl_PL:
         time_read: "Czas odczytu"
         days_visited: "Dni odwiedzin"
         account_age_days: "Wiek konta w dniach"
+        source: "Zaproszone przez"
         links_tab: "Odnośniki"
+        links_tab_with_count: "Odnośników (%{count})"
+        link_url: "Odnośnik"
         link_created_at: "Utworzono"
         link_groups: Grupy
+        link_expires_at: Wygasa
         create: "Wyślij zaproszenie"
-        generate_link: "Skopiuj link z zaproszeniem"
+        copy_link: "Skopiuj odnośnik"
+        generate_link: "Skopiuj odnośnik z zaproszeniem"
         link_generated: "Link z zaproszenie został poprawnie wygenerowany!"
         valid_for: "Link do zaproszenia jest ważny tylko dla tego adresu: %{email}"
         single_user: "Pojedynczy użytkownik"
         invite_link:
+          title: "Odnośnik z zaproszeniem"
           success: "Link z zaproszenie został poprawnie wygenerowany!"
         bulk_invite:
           none: "Jeszcze nikogo nie zaprosiłeś. Możesz wysłać pojedyncze zaproszenia lub zaprosić wiele osób na raz poprzez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> wysłanie pliku CSV</a>."
@@ -1264,6 +1294,7 @@ pl_PL:
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło jest poprawne."
         instructions: "przynajmniej %{count} znaków"
+        required: "Wprowadź hasło"
       summary:
         title: "Podsumowanie"
         stats: "Statystyki"
@@ -1275,10 +1306,10 @@ pl_PL:
           many: "utworzono tematy"
           other: "utworzono tematy"
         post_count:
-          one: "utworzono post"
-          few: "utworzonych postów"
-          many: "utworzono posty"
-          other: "utworzono posty"
+          one: "utworzono wpis"
+          few: "utworzono wpisy"
+          many: "utworzono wpisy"
+          other: "utworzono wpisy"
         likes_given:
           one: "dano"
           few: "dano"
@@ -1303,7 +1334,7 @@ pl_PL:
           one: "przeczytany post"
           few: "przeczytanych postów"
           many: "przeczytane posty"
-          other: "przeczytane posty"
+          other: "przeczytane wpisy"
         bookmark_count:
           one: "zakładka"
           few: "zakładki"
@@ -1320,10 +1351,10 @@ pl_PL:
         more_badges: "Więcej odznak"
         top_links: "Najlepsze linki"
         no_links: "Póki co brak linków."
-        most_liked_by: "Najbardziej lajkowane przez"
-        most_liked_users: "Najbardziej lajkowane"
+        most_liked_by: "Najczęściej polubione przez"
+        most_liked_users: "Najczęściej polubione"
         most_replied_to_users: "Najwięcej odpowiedzi do"
-        no_likes: "Brak lajków."
+        no_likes: "Brak polubień."
         top_categories: "Popularne kategorie"
         topics: "Tematy"
         replies: "Odpowiedzi"
@@ -1376,9 +1407,15 @@ pl_PL:
     refresh: "Odśwież"
     home: "Strona główna"
     read_only_mode:
-      enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, lajkowanie i inne są wyłączone."
+      enabled: "Strona jest w trybie tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje takie jak postowanie, polubianie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
+    too_few_topics_and_posts_notice_MF: >-
+      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">dyskutować!</a> Mamy {currentTopics, plural, one {<strong>#</strong> temat} other {kilka <strong>#</strong> tematów}} i {currentPosts, plural, one {<strong>#</strong> post} kilka {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredTopics, plural, one {<strong>#</strong> temat} other {<strong>#</strong> tematów}} i {requiredPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> wpisów}}. Tylko członkowie zespołu widzą tę wiadomość.
+    too_few_topics_notice_MF: >-
+      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">dyskutować!</a> Mamy {currentTopics, plural, one {<strong>#</strong> temat} other {<strong>#</strong> tematów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredTopics, plural, one {<strong>#</strong> temat} other {<strong>#</strong> tematów}}. Tylko członkowie zespołu widzą tę wiadomość.
+    too_few_posts_notice_MF: >-
+      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">dyskutować!</a> Mamy {currentPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej  {requiredPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> wpisów}}. Tylko członkowie zespołu widzą tę wiadomość.
     learn_more: "dowiedz się więcej…"
     all_time: "łącznie"
     all_time_desc: "łącznie utworzonych tematów"
@@ -1393,6 +1430,7 @@ pl_PL:
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
+    local_time: "Czas lokalny"
     time_read: Przeczytane
     time_read_recently: "%{time_read} częstości"
     time_read_tooltip: "%{time_read} całkowity czas czytania"
@@ -1462,8 +1500,8 @@ pl_PL:
       complete_email_found: "Znaleźliśmy konto pasujące do <b>%{email}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
       complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
-      confirm_title: "Przejdź do %{site_name}"
-      logging_in_as: "Logowanie jako %{email}"
+      confirm_title: Przejdź do %{site_name}
+      logging_in_as: Logowanie jako %{email}
       confirm_button: Dokończ logowanie
     login:
       title: "Logowanie"
@@ -1721,26 +1759,26 @@ pl_PL:
         draft: Wersja robocza
         edit: Edycja
         reply_to_post:
-          label: "Odpowiedz na post %{postNumber} przez %{postUsername}"
+          label: Odpowiedz na post %{postNumber} przez %{postUsername}
           desc: Odpowiedz na określony post
         reply_as_new_topic:
           label: Odpowiedz jako powiązany temat
           desc: Utwórz nowy temat powiązany z tym tematem
-          confirm: "Zapisano nową wersję roboczą tematu, która zostanie zastąpiona, jeśli utworzysz połączony temat."
+          confirm: Zapisano nową wersję roboczą tematu, która zostanie zastąpiona, jeśli utworzysz połączony temat.
         reply_as_private_message:
           label: Nowa wiadomość
           desc: Utwórz nową osobistą wiadomość
         reply_to_topic:
           label: Odpowiedz na temat
-          desc: "Odpowiedz na temat, a nie żaden konkretny post"
+          desc: Odpowiedz na temat, a nie żaden konkretny post
         toggle_whisper:
           label: Przełącz szept
-          desc: Szepty są widoczne tylko dla pracowników
+          desc: Szepty są widoczne tylko dla zespołu zarządzającego
         create_topic:
           label: "Nowy temat"
         shared_draft:
           label: "Udostępniony projekt"
-          desc: "Opracuj temat, który będzie widoczny tylko dla personelu"
+          desc: "Opracuj temat, który będzie widoczny tylko dla zespołu zarządzającego"
         toggle_topic_bump:
           label: "Przełącz wypukłość tematu"
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
@@ -1779,7 +1817,7 @@ pl_PL:
         one: "polubiłem %{count} twoich postów"
         few: "polubiłem %{count} twoich postów"
         many: "polubiłem %{count} twoich postów"
-        other: "polubiono %{count} twoich postów"
+        other: "polubiono %{count} twoich wpisów"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1852,7 +1890,7 @@ pl_PL:
       latest_post: "Aktualne wpisy"
       latest_topic: "Najnowszy wątek"
       most_viewed: "Popularne"
-      most_liked: "Najbardziej lajkowane"
+      most_liked: "Najczęściej polubione"
       select_all: "Zaznacz wszystkie"
       clear_all: "Wyczyść wszystkie"
       too_short: "Wyszukiwana fraza jest zbyt krótka."
@@ -1862,7 +1900,7 @@ pl_PL:
         many: "<span>%{count}%{plus} wyniki dla</span> <span class='term'>%{term}</span>"
         other: "<span>%{count}%{plus} wyniki dla</span> <span class='term'>%{term}</span>"
       title: "szukaj tematów, wpisów, użytkowników lub kategorii"
-      full_page_title: "szukaj tematów lub postów"
+      full_page_title: "szukaj tematów lub wpisów"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
       searching: "Szukam…"
@@ -1894,7 +1932,7 @@ pl_PL:
         with_tags:
           label: Otagowane
         filters:
-          label: Zwracaj tylko tematy / posty ...
+          label: Zwracaj tylko tematy / wpisy...
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w
@@ -1902,8 +1940,8 @@ pl_PL:
           watching: Obserwuję
           tracking: Śledzę
           private: W moich wiadomościach
-          bookmarks: Dodałeś do zakładek
-          first: "tylko najnowsze posty "
+          bookmarks: Dodano do zakładek
+          first: tylko najnowsze posty
           pinned: są przypięte
           seen: Przeczytałem
           unseen: Nie przeczytałem
@@ -1989,7 +2027,7 @@ pl_PL:
         one: "%{count} post w temacie"
         few: "%{count} posty w temacie"
         many: "%{count} postów w temacie"
-        other: "%{count} postów w temacie"
+        other: "%{count} wpisów w temacie"
       create: "Nowy temat"
       create_long: "Utwórz nowy temat"
       open_draft: "Otwórz szkic"
@@ -2056,7 +2094,7 @@ pl_PL:
         one: "temat zawiera %{count} lajk"
         few: "temat zawiera %{count} lajki"
         many: "temat zawiera %{count} lajków"
-        other: "temat zawiera %{count} lajków"
+        other: "temat zawiera %{count} polubień"
       back_to_list: "Wróć do Listy Tematów"
       options: "Opcje tematu"
       show_links: "pokaż odnośniki z tego tematu"
@@ -2071,7 +2109,7 @@ pl_PL:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT} {LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Przeglądaj wszystkie kategorie
       view_latest_topics: pokaż aktualne tematy
-      suggest_create_topic: "Może rozpoczniesz temat?"
+      suggest_create_topic: Może rozpoczniesz temat?
       jump_reply_up: przeskocz do wcześniejszej odpowiedzi
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
@@ -2144,7 +2182,7 @@ pl_PL:
         go: "idź"
         jump_bottom: "Przejdź na koniec"
         jump_prompt: "skocz do..."
-        jump_prompt_of: "%{count} postów"
+        jump_prompt_of: "%{count} wpisów"
         jump_prompt_long: "Skocz do..."
         jump_bottom_with_number: "przeskocz do wpisu %{post_number}"
         jump_prompt_to_date: "do daty"
@@ -2164,6 +2202,7 @@ pl_PL:
           "2_8": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz kategorię wątku."
           "2_4": "Widzisz ilość nowych odpowiedzi, ponieważ wypowiedziałeś się w tym wątku."
           "2_2": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz ten wątek."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Otrzymasz powiadomienie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
           "1": "Otrzymasz powiadomienie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
           "0_7": "Ignorujesz wszystkie powiadomienia z tej kategorii."
@@ -2306,7 +2345,7 @@ pl_PL:
       move_to:
         title: "Przenieś do"
         action: "przenieś do"
-        error: "Podczas przenoszenia postów wystąpił błąd."
+        error: "Podczas przenoszenia wpisów wystąpił błąd."
       split_topic:
         title: "Przenieś do nowego tematu"
         action: "przenieś do nowego tematu"
@@ -2338,7 +2377,7 @@ pl_PL:
           one: "Za chwilę utworzysz nową wiadomość i zapełnisz ją wybranym postem."
           few: "Za chwilę utworzysz nową wiadomość i <b>zapełnisz</b> ją <b>wybranymi</b> postami <b>%{count}</b> ."
           many: "Za chwilę utworzysz nową wiadomość i <b>zapełnisz</b> ją <b>wybranymi</b> postami <b>%{count}</b> ."
-          other: "Za chwilę utworzysz nową wiadomość i <b>zapełnisz</b> ją <b>wybranymi</b> postami <b>%{count}</b> ."
+          other: "Za chwilę utworzysz nową wiadomość i <b>zapełnisz</b> ją <b>wybranymi</b> wpisami <b>%{count}</b> ."
       move_to_existing_message:
         title: "Przejdź do istniejącej wiadomości"
         action: "przejdź do istniejącej wiadomości"
@@ -2348,11 +2387,11 @@ pl_PL:
           one: "Wybierz wiadomość, do której chcesz przenieść ten post."
           few: "Wybierz wiadomość, do której chcesz przenieść te posty <b>%{count}</b> ."
           many: "Wybierz wiadomość, do której chcesz przenieść te posty <b>%{count}</b> ."
-          other: "Wybierz wiadomość, do której chcesz przenieść te posty <b>%{count}</b> ."
+          other: "Wybierz wiadomość, do której chcesz przenieść te wpisy <b>%{count}</b> ."
       merge_posts:
-        title: "Scal wybrane posty"
-        action: "scal wybrane posty"
-        error: "Wystąpił błąd podczas łączenia wybranych postów"
+        title: "Scal wybrane wpisy"
+        action: "scal wybrane wpisy"
+        error: "Wystąpił błąd podczas łączenia wybranych wpisów"
       publish_page:
         public: "Publiczna"
       change_owner:
@@ -2415,7 +2454,7 @@ pl_PL:
         other: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzin, chyba że zostanie oflagowany) "
       collapse: "zawalić się"
       expand_collapse: "rozwiń/zwiń"
-      locked: "członek personelu zablokował edytowanie tego postu"
+      locked: "członek zespołu zablokował edytowanie tego postu"
       gap:
         one: "pokaż %{count} ukrytą odpowiedź"
         few: "pokaż %{count} ukryte odpowiedzi"
@@ -2434,13 +2473,13 @@ pl_PL:
         one: "%{count} osoba lajkuje ten wpis"
         few: "%{count} osoby lajkują ten wpis"
         many: "%{count} osób lajkuje ten wpis"
-        other: "%{count} osób lajkuje ten wpis"
-      has_likes_title_only_you: "lajkowany wpis"
+        other: "%{count} osób polubiło ten wpis"
+      has_likes_title_only_you: "polubiony wpis"
       has_likes_title_you:
-        one: "ty i %{count} inna osoba lajkuje ten wpis"
-        few: "ty i %{count} inne osoby lajkują ten wpis"
-        many: "ty i %{count} innych osób lajkuje ten wpis"
-        other: "ty i %{count} innych osób lajkuje ten wpis"
+        one: "ty i %{count} inna osoba polubiła ten wpis"
+        few: "ty i %{count} inne osoby polubiły ten wpis"
+        many: "ty i %{count} innych osób polubiło ten wpis"
+        other: "ty i %{count} innych osób polubiło ten wpis"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -2451,8 +2490,10 @@ pl_PL:
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
       abandon_edit:
+        confirm: "Na pewno chcesz odrzucić zmiany?"
         no_value: "Nie, zatrzymaj"
         no_save_draft: "Nie, zapisz szkic"
+        yes_value: "Tak, odrzuć zmiany"
       abandon:
         confirm: "Czy na pewno chcesz porzucić ten wpis?"
         no_value: "Nie, pozostaw"
@@ -2468,10 +2509,10 @@ pl_PL:
       few_likes_left: "Dziękuję za polubienie! Pozostało Ci tylko parę polubień do wykorzystania dzisiaj"
       controls:
         reply: "zacznij tworzyć odpowiedź na ten wpis"
-        like: "lajkuj ten wpis"
-        has_liked: "lajkujesz ten wpis"
+        like: "polub ten wpis"
+        has_liked: "polubiłeś/aś ten wpis"
         read_indicator: "członkowie, którzy czytają ten post"
-        undo_like: "wycofaj lajka"
+        undo_like: "wycofaj polubienie"
         edit: "edytuj ten wpis"
         edit_action: "Edytuj"
         edit_anonymous: "Przykro nam, ale musisz być zalogowany aby edytować ten wpis."
@@ -2509,6 +2550,7 @@ pl_PL:
         delete_topic_disallowed: "nie masz uprawnień do usunięcia tego tematu"
         delete_topic: "usuń temat"
         add_post_notice: "Dodaj notatkę personelu"
+        remove_post_notice: "Usuń wiadomość dla zespołu zarządzającego"
       actions:
         flag: "Oflaguj"
         defer_flags:
@@ -2536,19 +2578,19 @@ pl_PL:
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
           bookmark: "Dodano zakładkę w tym wpisie"
-          like: "Lajkujesz ten wpis"
+          like: "Polubiłeś/aś ten wpis"
       delete:
         confirm:
           one: "Czy na pewno chcesz usunąć ten post?"
           few: "Czy na pewno chcesz usunąć te %{count} posty?"
           many: "Czy na pewno chcesz usunąć te %{count} postów? "
-          other: "Czy na pewno chcesz usunąć te %{count} postów?"
+          other: "Czy na pewno chcesz usunąć te %{count} wpisów?"
       merge:
         confirm:
           one: "Czy na pewno chcesz połączyć te posty?"
           few: "Czy na pewno chcesz połączyć te %{count} postów?"
           many: "Czy na pewno chcesz połączyć te %{count} postów?"
-          other: "Czy na pewno chcesz połączyć te %{count} postów?"
+          other: "Czy na pewno chcesz połączyć te %{count} wpisów?"
       revisions:
         controls:
           first: "Pierwsza wersja"
@@ -2581,9 +2623,16 @@ pl_PL:
             title: "Pokaż część html emaila"
             button: "HTML"
       bookmarks:
+        create: "Utwórz zakładkę"
+        edit: "Edytuj zakładkę"
         created: "Utworzono"
         updated: "Zaktualizowane"
         name: "Imię"
+        actions:
+          delete_bookmark:
+            name: "Usuń zakładkę"
+          edit_bookmark:
+            name: "Edytuj zakładkę"
     category:
       can: "może&hellip; "
       none: "(brak kategorii)"
@@ -2677,7 +2726,7 @@ pl_PL:
         likes: "Polubienia"
         op_likes: "Polubienia pierwszego wpisu"
         views: "Odsłony"
-        posts: "Posty"
+        posts: "Wpisy"
         activity: "Aktywność"
         posters: "Napisali"
         category: "Kategoria"
@@ -2789,13 +2838,13 @@ pl_PL:
       many: "ten temat był przeglądany %{number} razy"
       other: "ten temat był przeglądany %{number} razy"
     activity: "Aktywność"
-    likes: "Lajki"
+    likes: "Polubienia"
     likes_lowercase:
-      one: "lajk"
-      few: "lajki"
-      many: "lajków"
-      other: "lajków"
-    likes_long: "jest %{number} lajków w tym temacie"
+      one: "polubienie"
+      few: "polubienia"
+      many: "polubień"
+      other: "polubień"
+    likes_long: "jest %{number} polubień w tym temacie"
     users: "Użytkownicy"
     users_lowercase:
       one: "użytkownik"
@@ -2949,7 +2998,7 @@ pl_PL:
         reply_topic: "%{shortcut} Odpowiedz w temacie"
         reply_post: "%{shortcut} Odpowiedz na post"
         quote_post: "%{shortcut} cytuj post"
-        like: "%{shortcut} Lajkuj post"
+        like: "%{shortcut} Polub post"
         flag: "%{shortcut} Oznacz post"
         bookmark: "%{shortcut} Dodaj post do zakładek"
         edit: "%{shortcut} Edytuj post"
@@ -3062,9 +3111,7 @@ pl_PL:
         about: "Dodaj etykiety do grup aby zarządzać nimi łatwiej."
         new: "Nowa Grupa"
         tags_label: "Tagi w tej grupie:"
-        tags_placeholder: "tagi"
         parent_tag_label: "Nadrzędny tag:"
-        parent_tag_placeholder: "Opcjonalnie"
         parent_tag_description: "Tagi z tej grupy nie mogą być wykorzystane, chyba że główny tag jest obecny."
         one_per_topic_label: "Ogranicz jeden tag na temat z tej grupy"
         new_name: "Nowa grupa tagów"
@@ -3156,7 +3203,7 @@ pl_PL:
         show_traffic_report: "Pokaż szczegółowy raport ruchu"
         community_health: Zdrowie społeczności
         moderators_activity: Aktywność moderatorów
-        whats_new_in_discourse: "Co nowego w Discourse?"
+        whats_new_in_discourse: Co nowego w Discourse?
         activity_metrics: Metryka aktywności
         all_reports: "Wszystkie zgłoszenia"
         general_tab: "Ogólne"
@@ -3165,10 +3212,10 @@ pl_PL:
         reports_tab: "Zgłoszenia"
         report_filter_any: "każdy"
         disabled: Wyłączony
-        timeout_error: "Przepraszamy, to wykonanie tego zapytania trwa za długo, wybierz proszę krótszy interwał"
-        exception_error: "Przepraszamy, podczas wykonywania zapytania pojawił się błąd"
-        too_many_requests: "Wykonałeś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie."
-        not_found_error: "Przepraszamy, ten raport nie istnieje."
+        timeout_error: Przepraszamy, to wykonanie tego zapytania trwa za długo, wybierz proszę krótszy interwał
+        exception_error: Przepraszamy, podczas wykonywania zapytania pojawił się błąd
+        too_many_requests: Wykonałeś tę akcję zbyt wiele razy. Poczekaj, zanim spróbujesz ponownie.
+        not_found_error: Przepraszamy, ten raport nie istnieje.
         filter_reports: Filtruj zgłoszenia
         reports:
           today: "Dzisiaj"
@@ -3284,10 +3331,10 @@ pl_PL:
         no_description: (brak opisu)
         all_api_keys: Wszystkie klucze API
         user_mode: Poziom użytkownika
-        impersonate_all_users: "Podszyj się pod dowolnego użytkownika "
+        impersonate_all_users: Podszyj się pod dowolnego użytkownika
         single_user: "Pojedynczy użytkownik"
         user_placeholder: Wprowadź nazwę użytkownika
-        description_placeholder: "Do czego będzie używany ten klucz?"
+        description_placeholder: Do czego będzie używany ten klucz?
         save: Zapisz
         new_key: Nowy klucz API
         revoked: Unieważniono
@@ -3462,7 +3509,7 @@ pl_PL:
         button_text: "Eksportuj"
         button_title:
           user: "Eksportuj listę wszystkich użytkowników do formatu CSV."
-          staff_action: "Eksportuj log zmian wykonanych przez zespół do formatu CSV."
+          staff_action: "Eksportuj log zmian wykonanych przez zespół zarządzający do formatu CSV."
           screened_email: "Eksportuj listę monitorowanych adresów email do formatu CSV."
           screened_ip: "Eksportuj listę monitorowanych IP do formatu CSV."
           screened_url: "Eksportuj listę monitorowanych URLi do formatu CSV."
@@ -3494,7 +3541,6 @@ pl_PL:
           subject: "Temat"
           multiple_subjects: "Ten szablon e-mail zawiera wiele tematów."
           body: "Treść"
-          none_selected: "Aby rozpocząć edycję, wybierz szablon wiadomości e-mail. "
           revert: "Cofnij zmiany"
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
         theme:
@@ -3676,7 +3722,7 @@ pl_PL:
             description: "Używany do oznaczania operacji zakończonych sukcesem."
           love:
             name: "polubienie"
-            description: "Kolor przycisku lajkuj"
+            description: "Kolor przycisku polubień"
         robots:
           title: "Nadpisz plik robots.txt swojej witryny:"
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."
@@ -3785,7 +3831,7 @@ pl_PL:
         staff_actions:
           all: "wszystkie"
           filter: "Filtruj:"
-          title: "Działania obsługi"
+          title: "Działania zespołu zarządzającego"
           clear_filters: "Pokaż wszystko"
           staff_user: "Użytkownik"
           target_user: "Użytkownik będący Obiektem"
@@ -3887,7 +3933,6 @@ pl_PL:
           domain: "Domena"
         screened_ips:
           title: "Ekranowane adresy IP"
-          description: 'Adres IP który teraz oglądasz. Użyj "Zezwól" aby dodać do białej listy adresów IP.'
           delete_confirm: "Czy na pewno chcesz usunąć regułę dla %{ip_address}?"
           roll_up_confirm: "Czy na pewno chcesz zgrupować monitorowane IP w podsieci?"
           rolled_up_some_subnets: "Pomyślnie zwinięto ban IP dla podsieci: %{subnets}."
@@ -3938,10 +3983,10 @@ pl_PL:
           require_approval: "Wymaga zatwierdzenia"
           flag: "Oflaguj"
         action_descriptions:
-          block: "Zapobiegaj publikacji postów zawierających te słowa. Użytkownicy zobaczą błąd próbując wysłać taki post."
-          censor: "Zezwalaj na wysyłanie postów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."
-          require_approval: "Posty zawierające te słowa będą wymagały zatwierdzenia przez moderatora zanim zostaną opublikowane."
-          flag: "Zezwalaj na publikację takich postów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
+          block: "Zapobiegaj publikacji postów zawierających te słowa. Użytkownicy zobaczą błąd próbując wysłać taki wpis."
+          censor: "Zezwalaj na wysyłanie wpisów zawierających te słowa, ale zamień na znaki ukrywające ocenzurowane słowa."
+          require_approval: "Wpisy zawierające te słowa będą wymagały zatwierdzenia przez członka zespołu zarządzającego zanim zostaną opublikowane."
+          flag: "Zezwalaj na publikację takich wpisów, ale oflaguj je jako nieodpowiednie, aby moderatorzy mogli przejrzeć ich zawartość."
         form:
           label: "Nowe słowo:"
           placeholder: "pełne słowo lub jako dzika karta"
@@ -4029,7 +4074,7 @@ pl_PL:
         penalty_count: "Liczba Przewinień"
         clear_penalty_history:
           title: "Wyczyść Historię Przewinień"
-        delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {1 post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {1 temat} few {# tematy} many {# tematów} other {# tematów}}. Czy jesteś pewien?"
+        delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {1 post} few {# wpisy} many {# postów} other {# wpisów}} i {TOPICS, plural, one {1 temat} few {# tematy} many {# tematów} other {# tematów}}. Czy jesteś pewien?"
         silence: "Wycisz"
         unsilence: "Cofnij wyciszenie"
         silenced: "Wyciszony?"
@@ -4057,7 +4102,7 @@ pl_PL:
         reputation: Reputacja
         permissions: Uprawnienia
         activity: Aktywność
-        like_count: Lajki dane / otrzymane
+        like_count: Polubienia dane / otrzymane
         last_100_days: "w ostatnich 100 dniach"
         private_topics_count: Prywatne tematy
         posts_read_count: Przeczytane wpisy
@@ -4131,6 +4176,7 @@ pl_PL:
           threshold_reached: "Otrzymano zbyt wiele wiadomości zwrotnych z tego adresu email."
         trust_level_change_failed: "Wystąpił problem przy zmianie poziomu zaufania użytkowanika."
         suspend_modal_title: "Zawieś użytkownika"
+        confirm_cancel_penalty: "Na pewno chcesz odrzucić listę przewinień?"
         trust_level_2_users: "Użytkownicy o 2. poziomie zaufania"
         trust_level_3_requirements: "Wymagania 3. poziomu zaufania"
         trust_level_locked_tip: "poziom zaufania jest zablokowany, system nie będzie awansować lub degradować tego użytkownika"
@@ -4155,10 +4201,10 @@ pl_PL:
           posts_read_all_time: "Przeczytane Wpisy (cały czas)"
           flagged_posts: "Zgłoszonych wpisów"
           flagged_by_users: "Flagujący Użytkownicy "
-          likes_given: "Lajki dane"
-          likes_received: "Lajki otrzymane"
-          likes_received_days: "Lajki otrzymane: unikalne dni"
-          likes_received_users: "Lajki otrzymane: unikalni użytkownicy"
+          likes_given: "Polubienia"
+          likes_received: "Polubienia otrzymane"
+          likes_received_days: "Polubienia otrzymane: unikalne dni"
+          likes_received_users: "Polubienia otrzymane: unikalni użytkownicy"
           suspended: "Zawieszony (ostatnie 6 miesięcy)"
           silenced: "Uciszony (ostatnie 6 miesięcy)"
           qualifies: "Kwalifikuje się do 3 poziomu zaufania."
@@ -4291,17 +4337,17 @@ pl_PL:
         reason_help: (Link do wpisu lub tematu)
         save: Zapisz
         delete: Usuń
-        delete_confirm: "Czy na pewno chcesz usunąć tę odznakę?"
+        delete_confirm: Czy na pewno chcesz usunąć tę odznakę?
         revoke: Odbierz
         reason: Powód
         expand: Rozwiń &hellip;
-        revoke_confirm: "Czy na pewno chcesz odebrać tę odznakę?"
+        revoke_confirm: Czy na pewno chcesz odebrać tę odznakę?
         edit_badges: Edytuj odznaki
         grant_badge: Przyznaj odznakę
         granted_badges: Przyznane odznaki
         grant: Przyznaj
         no_user_badges: "%{name} nie otrzymał żadnych odznak."
-        no_badges: "Nie ma odznak, które można by było przyznać."
+        no_badges: Nie ma odznak, które można by było przyznać.
         none_selected: "Wybierz odznakę, aby rozpocząć"
         allow_title: Pozwól wykorzystywać odznakę jako tytuł
         multiple_grant: Może być przyznana wielokrotnie
@@ -4311,10 +4357,10 @@ pl_PL:
         image: Grafika
         icon_help: "Wprowadź nazwę ikony Font Awesome (użyj prefiksu \"far-\" dla zwykłych ikon i \"fab-\" dla ikon marek)"
         image_help: "Wprowadź adres URL obrazu (zastępuje pole ikony, jeśli oba są ustawione)"
-        query: "Zapytanie odznaki (SQL) "
+        query: Zapytanie odznaki (SQL)
         target_posts: Wpisy powiązane z odznaką
         auto_revoke: Codziennie uruchamiaj zapytanie odbierające odznakę
-        show_posts: "Wyświetlaj wpisy odpowiedzialne za przyznanie odznaki na jej stronie "
+        show_posts: Wyświetlaj wpisy odpowiedzialne za przyznanie odznaki na jej stronie
         trigger: Aktywacja
         trigger_type:
           none: "Automatycznie, raz dziennie"
@@ -4340,10 +4386,10 @@ pl_PL:
             other: "<b>%{count}</b> odznak do przyznania."
           sample: "Podgląd:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> za wpis w %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> za wpis w %{link} o <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> o <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> za wpis w %{link}
+            with_post_time: <span class="username">%{username}</span> za wpis w %{link} o <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
         badge_intro:
           title: "Wybierz istniejącą odznakę lub utwórz nową, aby rozpocząć"
           what_are_badges_title: "Czym są odznaki?"
@@ -4364,7 +4410,6 @@ pl_PL:
         title: "Osadzanie"
         host: "Dozwolone hosty"
         class_name: "Nazwa klasy"
-        path_whitelist: "Ścieżka białej listy"
         edit: "edytuj"
         category: "Publikuj w kategorii"
         add_host: "Dodaj host"
@@ -4373,11 +4418,8 @@ pl_PL:
         crawling_description: "Gdy Discourse tworzy tematy reprezentujące twoje wpisy, a kanał RSS/ATOM nie został podany, treść będzie pobierana poprzez parsowanie HTML. Proces ten może okazać się trudny dlatego umożliwiamy podanie dodatkowych reguł CSS, które usprawniają proces parsowania."
         embed_by_username: "Użytkownik tworzący tematy"
         embed_post_limit: "Maksymalna ilość osadzanych wpisów "
-        embed_title_scrubber: "Wyrażenie regularne używane do czyszczenia tytuł postów"
+        embed_title_scrubber: "Wyrażenie regularne używane do czyszczenia tytułu postów"
         embed_truncate: "Skracaj treść osadzanych wpisów"
-        embed_whitelist_selector: "Selektor CSS elementów jakie mogą być osadzane"
-        embed_blacklist_selector: "Selektor CSS elementów jakie są usuwane podczas osadzania"
-        embed_classname_whitelist: "Dozwolone nazwy klas CSS"
         save: "Zapisz"
       permalink:
         title: "Permalinki"
@@ -4388,8 +4430,7 @@ pl_PL:
         post_title: "Wpis"
         category_id: "ID kategorii"
         category_title: "Kategoria"
-        external_url: "Zewnętrzny URL"
-        delete_confirm: "Czy na pewno chcesz usunąć ten permalink?"
+        delete_confirm: Czy na pewno chcesz usunąć ten permalink?
         form:
           label: "Nowy:"
           add: "Dodaj"

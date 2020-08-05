@@ -1,8 +1,12 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
-sl: {}
+sl:
+  site_settings:
+    discourse_local_dates_enabled: "Omogočite lokalizacijo datumov. To bo dodalo podporo datumom, ki prikazujejo lokalni časovni pas, v objavah z elementom [date]."
+    discourse_local_dates_default_formats: "Za pogosto uporabljene oblike datuma in časa glejte: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>oblikovanje zapisa momentjs</a>"
+    discourse_local_dates_default_timezones: "Privzeti seznam časovnih pasov, biti mora veljaven <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_email_format: "Oblika zapisa, ki se uporablja za prikaz datuma v e-poštnih sporočilih."

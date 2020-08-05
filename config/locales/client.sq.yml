@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sq:
   js:
@@ -216,6 +215,7 @@ sq:
     bookmarks:
       remove: "Hiqeni nga të prefereruarat"
       save: "Ruaj"
+      search: "Kërko"
     drafts:
       remove: "Hiq"
       abandon:
@@ -321,8 +321,6 @@ sq:
         make_user_group_owner: "Bëje autor"
         remove_user_as_group_owner: "Hiq autorin"
     groups:
-      add_members:
-        title: "Shto anëtarë"
       requests:
         reason: "Arsye"
       manage:
@@ -334,6 +332,11 @@ sq:
           title: Profili
         interaction:
           posting: Postimet
+        email:
+          title: "Email"
+          credentials:
+            username: "Emri i përdoruesit"
+            password: "Fjalëkalimi"
         logs:
           title: "Logs"
           when: "Kur"
@@ -406,6 +409,7 @@ sq:
       "12": "Të dërguar"
       "13": "Inbox"
       "14": "Në pritje"
+      "15": "Drafts"
     categories:
       all: "kategoritë"
       all_subcategories: "të gjitha"
@@ -891,7 +895,7 @@ sq:
     email_login:
       complete_username_not_found: "Nuk ka llogari me emër përdoruesi <b>%{username}</b>"
       complete_email_not_found: "Nuk ka llogari për <b>%{email}</b>"
-      confirm_title: "Vazhdo tek %{site_name}"
+      confirm_title: Vazhdo tek %{site_name}
     login:
       title: "Identifikohu"
       username: "Anëtari"
@@ -1209,7 +1213,7 @@ sq:
       read_more_MF: "Keni { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 shkrim të palexuar</a> } other { <a href='{basePath}/unread'># shkrime të palexuara</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{dhe } false {është } other{}} <a href='{basePath}/new'>1 shkrim të ri</a>} other { {BOTH, select, true{dhe } false {} other{}} <a href='{basePath}/new'># shkrime të reja</a>} } akoma, ose {CATEGORY, select, true {shiko temat e tjera në kategorinë {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Shfleto kategoritë
       view_latest_topics: shiko temat më të fundit
-      suggest_create_topic: "Pse nuk hapni një temë të re?"
+      suggest_create_topic: Pse nuk hapni një temë të re?
       jump_reply_up: hidhe tek përgjigja paraardhëse
       jump_reply_down: hidhu tek përgjigja pasardhëse
       deleted: "Tema është fshirë"
@@ -1246,6 +1250,7 @@ sq:
           "2_8": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë kategori. "
           "2_4": "Ju do të shikoni numrin e përgjigjeve të reja sepse ju postuat një përgjigje në këtë temë. "
           "2_2": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë temë. "
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "1": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "0_7": "Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. "
@@ -1903,7 +1908,6 @@ sq:
         new: "Grup i ri"
         tags_label: "Etiketat në këtë grup:"
         parent_tag_label: "Etiketa prind:"
-        parent_tag_placeholder: "Fakultative"
         parent_tag_description: "Etiketat nga ky grup mund të përdoren vetëm në etiketa prind është prezente."
         one_per_topic_label: "Vetëm 1 etiketë për temë nga ky grup"
         new_name: "Grup i ri etiketash"
@@ -2144,7 +2148,6 @@ sq:
           subject: "Subjekti"
           multiple_subjects: "Ky shabllon ka disa tituj për mesazhin."
           body: "Përmbajtja"
-          none_selected: "Zgjidhni një shabllon emaili për të filluar redaktimin. "
           revert: "Rikthe ndryshimet"
           revert_confirm: "A jeni i sigurtë që doni të riktheni ndryshimet?"
         theme:
@@ -2347,7 +2350,6 @@ sq:
           domain: "Domain"
         screened_ips:
           title: "Kontroll IP-sh"
-          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
           roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
           rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
@@ -2634,14 +2636,14 @@ sq:
           modal_title: Grupime Steme
         granted_by: Atribuar nga
         granted_at: Atribuar më
-        reason_help: "{një lidhje për një postim ose temë)"
+        reason_help: '{një lidhje për një postim ose temë)'
         save: Ruaj
         delete: Fshij
-        delete_confirm: "Jeni i sigurtë që doni ta fshini këtë stemë?"
+        delete_confirm: Jeni i sigurtë që doni ta fshini këtë stemë?
         revoke: Revoko
         reason: Arsye
         expand: Zgjero &hellip;
-        revoke_confirm: "Jeni i sigurtë që doni ta tërhiqni këtë stemë?"
+        revoke_confirm: Jeni i sigurtë që doni ta tërhiqni këtë stemë?
         edit_badges: Ndryshoni stemat
         grant_badge: Dhuroni Stemë
         granted_badges: Stema të atribuara
@@ -2681,10 +2683,10 @@ sq:
             other: "<b>%{count}</b> stema për t'u dhënë."
           sample: "Shëmbull:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> for post in %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> for post in %{link} at <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> at <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
         help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
@@ -2706,8 +2708,7 @@ sq:
         post_title: "Postim"
         category_id: "ID e kategorisë"
         category_title: "Kategoria"
-        external_url: "URL e jashtme"
-        delete_confirm: "Are you sure you want to delete this permalink?"
+        delete_confirm: Are you sure you want to delete this permalink?
         form:
           label: "E Re:"
           add: "Shto"

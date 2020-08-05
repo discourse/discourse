@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 es:
   site_settings:
@@ -13,6 +12,7 @@ es:
     discourse_narrative_bot_disable_public_replies: "Deshabilitar las respuestas públicas del bot de narrativa de Discourse"
     discourse_narrative_bot_welcome_post_type: "Tipo de publicación de bienvenida que debe enviar el bot de narrativa de Discourse"
     discourse_narrative_bot_welcome_post_delay: "Esperer (n) segundos antes de enviar la publicación de bienvenida del bot de narrativa de Discourse."
+    discourse_narrative_bot_skip_tutorials: "Tutoriales de Discourse Narrative Bot que saltar"
   badges:
     certified:
       name: Certificado
@@ -57,34 +57,34 @@ es:
         > :game_die: %{results}
     quote:
       trigger: "citar"
-      '1':
+      "1":
         quote: "En medio de cada dificultad se encuentra una oportunidad."
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "No vale la pena tener libertad si no connota libertad para errar."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "No llores porque se acabó, sonríe porque sucedió."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Si quieres que algo salga bien, hazlo tú mismo."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Cree que puedes y estás a mitad de camino."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "La vida es como una caja de chocolates. Nunca sabes lo que vas a conseguir."
         author: "Forrest Gump’s Mom"
-      '7':
+      "7":
         quote: "Ese es un pequeño paso para un hombre, un gran salto para la humanidad."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Haz una cosa que te asuste todos los días."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Los errores siempre son perdonables si uno tiene el coraje de admitirlos."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Lo que sea que la mente del hombre pueda concebir y creer, lo puede lograr."
         author: "Napoleon Hill"
       results: |-
@@ -92,26 +92,26 @@ es:
     magic_8_ball:
       trigger: "suerte"
       answers:
-        '1': "Es cierto"
-        '2': "Es decididamente así"
-        '3': "Sin duda"
-        '4': "Definitivamente sí"
-        '5': "Puedes contar con ello"
-        '6': "Como yo lo veo, sí"
-        '7': "Probablemente"
-        '8': "La perspectiva es buena"
-        '9': "Sí"
-        '10': "Las señales apuntan a que sí"
-        '11': "Respuesta confusa, intenta otra vez"
-        '12': "Pregunta de nuevo más tarde"
-        '13': "Mejor no te digo ahora"
-        '14': "No se puede predecir ahora"
-        '15': "Concéntrate y pregunta otra vez"
-        '16': "No cuentes con ello"
-        '17': "Mi respuesta es no"
-        '18': "Mis fuentes dicen que no"
-        '19': "La perspectiva no es tan buena"
-        '20': "Muy dudoso"
+        "1": "Es cierto"
+        "2": "Es decididamente así"
+        "3": "Sin duda"
+        "4": "Definitivamente sí"
+        "5": "Puedes contar con ello"
+        "6": "Como yo lo veo, sí"
+        "7": "Probablemente"
+        "8": "La perspectiva es buena"
+        "9": "Sí"
+        "10": "Las señales apuntan a que sí"
+        "11": "Respuesta confusa, intenta otra vez"
+        "12": "Pregunta de nuevo más tarde"
+        "13": "Mejor no te digo ahora"
+        "14": "No se puede predecir ahora"
+        "15": "Concéntrate y pregunta otra vez"
+        "16": "No cuentes con ello"
+        "17": "Mi respuesta es no"
+        "18": "Mis fuentes dicen que no"
+        "19": "La perspectiva no es tan buena"
+        "20": "Muy dudoso"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -121,6 +121,11 @@ es:
       random_mention:
         reply: |-
           ¡Hola! Para saber qué puedo hacer, escribe `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Actualmente Sé cómo hacer las siguientes cosas:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Inicia un tutorial interactivo sólo para ti, en un mensaje personal. `{name-of-tutorial}` puede ser uno de: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -267,8 +272,6 @@ es:
           Me imagino que sabes qué hacer. ¡Anímate y **reporta este mensaje** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
         reply: |-
           [Nuestro staff](%{base_uri}/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, este se ocultará automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado el reporte por ahora)
-        not_found: |-
-          Oh no, mi mensaje asqueroso no ha sido reportado aún. :worried: ¿Puedes reportar como inapropiado usando el botón de **reportar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que debes primero presionar el botón ver más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que se muestren otras opciones para cada mensaje.
       search:
         instructions: |-
           _psst_ … He ocultado una sorpresa en este tema. Si estás listo para el desafío, **selecciona el botón para buscar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> que está arriba a la derecha &#8599; y ahí puedes buscar palabras.

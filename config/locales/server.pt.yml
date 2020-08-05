@@ -1,29 +1,41 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pt:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
-    long_date: "DD MMMM de YYYY, hh:mm"
+    long_date: "D MMMM YYYY h:mm"
   datetime_formats: &datetime_formats
     formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
+      short: "%d %m--%Y"
+      short_no_year: "%-d %B "
+      date_only: "%-d %B , %Y"
+      long: "%-d %B , %Y %H:%M"
       no_day: "%B %Y"
   date:
-    month_names: [~, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
+    month_names:
+    - null
+    - Janeiro
+    - Fevereiro
+    - Março
+    - Abril
+    - Maio
+    - Junho
+    - Julho
+    - Agosto
+    - Setembro
+    - Outubro
+    - Novembro
+    - Dezembro
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tópicos"
   posts: "mensagens"
@@ -36,10 +48,10 @@ pt:
   disable_remote_images_download_reason: "A transferência remota de imagens foi desativada porque não existe espaço disponível no disco."
   anonymous: "Anónimo"
   remove_posts_deleted_by_author: "Eliminado pelo autor"
-  redirect_warning: "Não fomos capazes de verificar se a hiperligação que selecionou foi publicada no fórum. Se desejar continuar de qualquer maneira, selecione a hiperligação abaixo."
+  redirect_warning: "Nós não conseguimos verificar se a hiperligação que selecionou foi publicada no fórum. Se desejar continuar de qualquer maneira, selecione a hiperligação abaixo."
   on_another_topic: "Noutro tópico"
   themes:
-    bad_color_scheme: "Não é possível actualizar o tema, a paleta de cores é inválida"
+    bad_color_scheme: "Não é possível atualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
     compile_error:
       unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
@@ -48,6 +60,7 @@ pt:
       about_json_values: "about.json possui valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório de git, acesso foi negado ou o repositório não existe"
       unpack_failed: "Falha ao desempacotar o ficheiro"
+      file_too_big: "O ficheiro descomprimido é demasiado grande."
       unknown_file_type: "O ficheiro que enviou não parece ser um tema de Discourse válido."
     errors:
       component_no_user_selectable: "Components de um tema não podem ser seleccionados por um utilizador"
@@ -97,10 +110,9 @@ pt:
         bounced_email_error: "A mensagem é um relatório de mensagem redirecionado."
         screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi confirmado."
         unsubscribe_not_allowed: "Acontece quando desubescrever via e-mail não é permitido para este utilizador."
-        email_not_allowed: "Acontece quando um endereço de e-mail não está na lista branca ou está na lista negra."
       unrecognized_error: "Erro Desconhecido"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "está limitado a %{max} caracteres; inseriu %{length}."
@@ -109,24 +121,24 @@ pt:
       accepted: tem que ser aceite
       blank: não pode estar em branco
       present: tem que estar em branco
-      confirmation: "não corresponde %{attribute}"
+      confirmation: ! "não corresponde %{attribute}"
       empty: não pode estar vazio
-      equal_to: "tem que ser igual a %{count}"
+      equal_to: tem que ser igual a %{count}
       even: tem que ser par
       exclusion: está reservado
-      greater_than: "tem que ser maior que %{count}"
-      greater_than_or_equal_to: "tem que ser maior ou igual a %{count}"
+      greater_than: tem que ser maior que %{count}
+      greater_than_or_equal_to: tem que ser maior ou igual a %{count}
       has_already_been_used: "já foi usado"
       inclusion: não está incluído na lista
       invalid: é inválido
       is_invalid: "parece pouco claro, é uma frase completa?"
       contains_censored_words: "contém as seguintes paravras censuradas: %{censored_words}"
-      less_than: "tem que ser menos que %{count}"
-      less_than_or_equal_to: "tem que ser menos ou igual a %{count}"
+      less_than: tem que ser menos que %{count}
+      less_than_or_equal_to: tem que ser menos ou igual a %{count}
       not_a_number: não é um número
       not_an_integer: tem que ser um inteiro
       odd: tem que ser ímpar
-      record_invalid: "A validação falhou: %{errors}"
+      record_invalid: ! "A validação falhou: %{errors}"
       max_emojis: "Não pode ter mais que %{max_emojis_count} emoji."
       emojis_disabled: "não pode ter emoji"
       ip_address_already_screened: "já está incluído numa regra existente"
@@ -145,10 +157,10 @@ pt:
       other_than: "tem que ser diferente de %{count}"
       sso_overrides_username: "Nome de utilizador precisa de ser atualizado do lado do fornecedor de SSO, visto a configuração `sso_overrides_username` estar ativada."
     template:
-      body: "Ocorreram problemas com os seguintes campos:"
+      body: ! "Ocorreram problemas com os seguintes campos:"
       header:
         one: "%{count} erro impediu este %{model} de ser gravado"
-        other: "%{count} erros impediram este %{model} de ser gravado"
+        other: ! "%{count} erros impediram este %{model} de ser gravado"
     embed:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
     site_settings:
@@ -157,13 +169,15 @@ pt:
         one: "Especificou a escolha inválida %{name}"
         other: "Especificou escolhas inválidas %{name}"
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
+      default_tags_already_selected: "Não pode selecionar uma etiqueta usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Não pode ativar envio de inventório para S3 a não ser que tenha ativado carregamentos para S3."
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
-  activemodel:
-    errors:
-      <<: *errors
+      secure_media_requirements: "Envios para S3 deve estar ativado antes de ativar média segura."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
+  invite:
+    not_found_json: "O seu token de convite é inválido. Por favor contacte a equipa de apoio."
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
     error: "Ocorreu um erro ao carregar esse ficheiro. Por favor tente mais tarde."
@@ -323,7 +337,6 @@ pt:
       user_profile:
         bio_raw: "Sobre Mim"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -366,6 +379,7 @@ pt:
           attributes:
             word:
               too_many: "Demasiadas palavras para essa ação"
+      <<: *errors
   uncategorized_category_name: "Sem categoria"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros de Nível de Confiança 3 ou superior."
@@ -608,7 +622,7 @@ pt:
     read_write: "ler/escrever"
     description: '"%{application_name}" está a requerer o seguinte acesso à sua conta:'
     otp_confirmation:
-      confirm_title: "Continuar para %{site_name}"
+      confirm_title: Continuar para %{site_name}
     no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
     generic_error: "Desculpe, não somos capazes de gerar chaves API de uitlizador, esta funcionalidade poderá estar desactivada pela administração do site"
     scopes:
@@ -836,7 +850,6 @@ pt:
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Eliminar automaticamente quaisquer mensagens ocultas que permaneçam escondidas por mais de 30 dias."
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
-    set_locale_from_accept_language_header: "defina a língua de interface para utilizadores anónimos com base nos cabeçalhos de língua dos seus navegadores. (EXPERIMENTAL, não funciona com cache anónima)"
     min_post_length: "Tamanho mínimo permitido por mensagem, em caracteres"
     min_first_post_length: "Tamanho mínimo permitido para a primeira mensagem (corpo do tópico), em caracteres"
     min_personal_message_post_length: "Tamanho mínimo permitido para mensagens, em caracteres"
@@ -850,6 +863,8 @@ pt:
     search_tokenize_chinese_japanese_korean: "Forçar pesquisa para atomizar Chinês/Japonês/Coreano mesmo em sites que não sejam CJC"
     search_prefer_recent_posts: "Se pesquisar no seu fórum vasto é lento, esta opção tenta usar um índex de publicações recentes primeiro"
     search_recent_posts_size: "Quantas publicações recentes a manter no índex"
+    search_query_log_max_size: "O número máximo de consultas de pesquisa a serem mantidas"
+    search_query_log_max_retention_days: "O tempo máximo para manter as consultas de pesquisa, em dias."
     allow_uncategorized_topics: "Permitir a criação de tópicos sem categoria. AVISO: Se houver quaisquer tópicos não categorizados, tem que re-categorizá-los antes de desligar isto."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes que um utilizador possa criar uma mensagem com o mesmo conteúdo outra vez?"
@@ -857,9 +872,9 @@ pt:
     title: "O nome deste sítio, tal como usado na etiqueta do título."
     site_description: "Descrever este sítio em uma frase, tal como usado na etiqueta de descrição meta."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
-    download_remote_images_to_local: "Converta as imagens remotas em imagens locais transferindo-as; isto previne imagens corrompidas."
-    download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir imagens remotas localmente (em percentagem)"
-    disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. "
+    download_remote_images_to_local: "Converta as imagens remotas em imagens locais transferindo-as; isto evita imagens corrompidas."
+    download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir as imagens remotas localmente (em percentagem)"
+    disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. Lista delimitada por canal."
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
@@ -872,7 +887,6 @@ pt:
     show_pinned_excerpt_mobile: "Mostrar excerto em publicações afixadas na vista móvel."
     show_pinned_excerpt_desktop: "Mostar excerto em publicações afixadas na vista de desktop."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
-    onebox_domains_blacklist: "Uma lista de domínios para a qual nunca serão geradas pré-visualizações."
     max_oneboxes_per_post: "Número máximo de pré-visualizações numa publicação."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -882,7 +896,7 @@ pt:
     enable_personal_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens. Note que a equipa de apoio pode mandar mensagens de qualquer maneira."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base utilizado para sondar o servidor (quando um CDN serve conteúdo dinâmico, certifique-se de definir isto para a \"pull\" original) por exemplo: http://origem.site.com"
-    long_polling_interval: "Quantidade de tempo que um servidor deve esperar antes de notificar os clientes quando não há dados para serem enviados (apenas utilizadores ligados)"
+    long_polling_interval: "O tempo que um servidor deverá aguardar antes de responder aos clientes quando não existirem dados para serem enviados (apenas utilizadores autenticados)"
     polling_interval: "Quando não está a ocorrer uma solicitação ao servidor, com que frequência devem os clientes ligados requerer uma atualização, em milissegundos"
     anon_polling_interval: "Com que frequência os clientes anónimos podem sondar o servidor em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
@@ -899,7 +913,6 @@ pt:
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     moderators_create_categories: "Permitir que os moderadores criem novas categorias"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
-    use_admin_ip_whitelist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     top_menu: "Determinar que elementos aparecem na navegação da página principal, e em que ordem. Exemplo últimos|novos|não lidos|categorias|topo|lidos|publicados|marcadores"
     post_menu: "Determine que itens irão aparecer no menu de mensagens, e em que ordem. Exemplo\ngostar|editar|sinalizar|eliminar|partilhar|marcar|responder"
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
@@ -918,8 +931,6 @@ pt:
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"
     enable_whispers: "Permitir à equipa de apio comunicar de forma privada dentro de tópicos."
-    email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
-    email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
@@ -931,9 +942,6 @@ pt:
     sso_url: "URL da terminação de single-sign-on (tem de incluir http:// ou https://)"
     sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou mais caracteres"
     sso_overrides_bio: "Sobrepõe-se à biografia do utilizador e previne o utilizador de a mudar"
-    sso_overrides_email: "Substitui o email local por um email de um sítio externo a partir de um SSO em cada início de sessão, e previne mudanças locais. (AVISO: podem ocorrer discrepâncias devido à normalização de emails locais) "
-    sso_overrides_username: "Substitui nomes de utilizadores locais por nomes de utilizadores de sítios externos a partir de um SSO em cada início de sessão, e previne mudanças locais. (AVISO: podem ocorrer discrepâncias devido a diferenças no comprimento/requisitos do nome de utilizador)"
-    sso_overrides_name: "Substitui o nome completo local por um nome completo de um sítio externo a partir de um SSO em cada início de sessão, e previne mudanças locais."
     sso_not_approved_url: "Redirecionar contas SSO não aprovadas para este URL"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
@@ -943,7 +951,7 @@ pt:
     instagram_consumer_key: "Chave de consumidor para a autenticação via Instagram"
     instagram_consumer_secret: "Segredo de consumidor para a autenticação via Instagram"
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
-    maximum_backups: "Valor máximo de cópias de segurança a serem guardadas em disco. Cópias de Segurança antigas são automaticamente eliminadas."
+    maximum_backups: "O número máximo de cópias de segurança a manter no disco. As cópias de segurança antigas são eliminadas automaticamente."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
     s3_backup_bucket: "Balde remoto para guardar cópias de segurança. AVISO: Certifique-se que este é um balde privado."
     backup_time_of_day: "Altura do dia UTC em que a cópia de segurança deve ocorrer."
@@ -1052,7 +1060,6 @@ pt:
     tos_url: "Se tem um documento de Termos de Serviço alojado noutro local e que queira usar, forneça a URL completa aqui."
     privacy_policy_url: "Se tem um documento de Política de Privacidade alojado noutro local e que queira usar, forneça a URL completa aqui."
     newuser_spam_host_threshold: "Quantas vezes um novo utilizador pode colocar um link para o mesmo endereço dentro do número de publicações `newuser_spam_host_threshold` , antes de ser considerado spam."
-    white_listed_spam_host_domains: "Lista de domínios excluídos dos testes de spam. Novos utilizadores nunca irão ser restritos da criação de mensagens com hiperligações a esses domínios."
     staff_like_weight: "Quanto é o fator de ponderação extra a dar aos gostos provenientes do pessoal."
     topic_view_duration_hours: "Contar uma nova visualização do tópico uma vez por IP/Utilizador a cada N horas"
     user_profile_view_duration_hours: "Contar visualização de novo perfil de utilizador uma vez por IP/utilizador a cada N horas"
@@ -1064,7 +1071,7 @@ pt:
     num_flaggers_to_close_topic: "Número mínimo de sinalizações únicas que são necessárias para automaticamente pausar um tópico para intervenção."
     num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ativar respostas automáticas ao eliminar uma bandeira."
-    min_first_post_typing_time: "Quantidade mínima de tempo em milissegundos que um utilizador deve digitar durante a sua primeira mensagem, se o limite não for atingido a mensagem será automaticamente inserida na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
+    min_first_post_typing_time: "O tempo mínimo em milissegundos que um utilizador deve digitar durante a sua primeira publicação, se o limite não for atingido a mensagem será inserida automaticamente na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
     reply_by_email_enabled: "Ativar respostas aos tópicos por email."
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %%{reply_key}@resposta.exemplo.com ou resposta+%%{reply_key}@exemplo.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %%{reply_key}@resposta.exemplo.com ou resposta+%%{reply_key}@exemplo.com"
@@ -1077,7 +1084,6 @@ pt:
     max_emails_per_day_per_user: "Número máximo de emails para enviar aos utilizadores por dia. 0 para desativar o limite"
     enable_staged_users: "Automaticamente criar utilizadores temporários ao processar emails recebidos."
     maximum_staged_users_per_email: "Número máximo de utilizadores temporários criados ao processar um email recebido."
-    auto_generated_whitelist: "Lista de endereços de email que não serão verificados para conteúdo gerado automaticamente. Exemplo: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquear as mensagens a receber que sejam identificadas como tendo sido geradas automaticamente."
     ignore_by_title: "Ignorar emails recebidos com base no seu título."
     mailgun_api_key: "Chave de API secreta de Mailgun usada para verificar mensagens."
@@ -1085,8 +1091,6 @@ pt:
     hard_bounce_score: "Pontuação de redirecionamento adicionada ao utilizador quando um redirecionamento permanente acontece."
     bounce_score_threshold: "Pontuação de redirecionamento máxima a partir da qual paramos de mandar email um utilizador."
     reset_bounce_score_after_days: "Automaticamente repor pontuação de redirecionamento após X dias."
-    attachment_content_type_blacklist: "Lista de termos-chave usados para bloquear anexos com base no tipo de conteúdo."
-    attachment_filename_blacklist: "Lista de termos-chave usados para bloquear anexos com base no nome do ficheiro."
     always_show_trimmed_content: "Mostrar sempre a parte aparada dos emails recebidos. AVISO: poderá revelar endereços de email."
     manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
     pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
@@ -1109,7 +1113,7 @@ pt:
     allow_animated_avatars: "Permitir que os utilizadores utilizem fotografias de perfil com gifs animados. AVISO: executar avatars:atualizar após mudança desta configuração."
     allow_animated_thumbnails: "Gera miniaturas de imagens ou gifs animados."
     default_avatars: "URLs para avatars que serão usados por defeito para novos utilizadores até que estes o mudem."
-    automatically_download_gravatars: "Transferir Gravatars para os utilizadores após a criação da conta ou alteração de e-mail."
+    automatically_download_gravatars: "Transferir Gravatars para os utilizadores após a criação da conta ou alteração de ''e-mail''."
     digest_topics: "Número máximo de publicações populares a mostrar no email de resumo."
     digest_posts: "Número máximo de publicações populares a mostrar no resumo do email."
     digest_other_topics: "O número máximo de tópicos a mostrar na secção de \"Novos em tópicos e categorias que segue\" do email de resumo."
@@ -1124,6 +1128,7 @@ pt:
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar publicações anónimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato crie uma nova conta anónima a cada N minutos para cada utilizador. Exemplo: se configurado para 600, assim que passarem 600 minutos desde a última mensagem E o utilizador altere para anónimo, uma nova conta anónima é criada."
     hide_user_profiles_from_public: "Desativar cartões de utilizador, perfis de utilizador e diretoria de utilizadores para utilizadores anónimos."
+    max_notifications_per_user: "O número máximo de notificações por utilizador, se este número for excedido as notificações antigas serão eliminadas. Reforçado semanalmente. Defina como 0 para desativar"
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
     sequential_replies_threshold: "Número de mensagens que um utilizador tem que fazer em linha num tópico antes de ser lembrado acerca de demasiadas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
@@ -1155,7 +1160,7 @@ pt:
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
-    approve_post_count: "A quantidade de publicações de um novo utilizador ou utilizador básico que devem ser aprovadas"
+    approve_post_count: "O número de publicações de um utilizador novo ou básico que devem ser aprovadas"
     approve_unless_trust_level: "Mensagens para utilizadores abaixo deste nível de confiança devem ser aprovados"
     approve_new_topics_unless_trust_level: "Novos tópicos para utilizadores abaixo deste nível de confiança devem ser aprovados"
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
@@ -1188,7 +1193,7 @@ pt:
     tagging_enabled: "Permitir etiquetas em tópicos?"
     min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma etiqueta."
     max_tags_per_topic: "O número máximo de etiquetas que podem ser aplicadas a um tópico."
-    max_tag_length: "O número máximo de caracteres que pode ser usado numa etiqueta."
+    max_tag_length: "O número máximo de carateres que pode ser utilizado numa etiqueta."
     max_tag_search_results: "Ao pesquisar por etiquetas, o número máximo de resultados a mostrar."
     show_filter_by_tag: "Mostrar filtro de etiquetas para a lista de tópicos."
     max_tags_in_filter_list: "Número máximo de etiquetas a mostrar no filtro de etiquetas. Serão mostradas as etiquetas mais utilizadas."
@@ -1330,8 +1335,13 @@ pt:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
   download_backup_mailer:
     subject_template: "[%{email_prefix}] Transferir Cópia de Segurança do Site"
-    no_token: |2
+    text_body_template: |
+      Aqui tem a [tarnsferência da cópia de segurança do ''site'' ](%{backup_file_path}) que solicitou.
 
+      Nós enviamos esta hiperligação de transferência para o endereço de ''e-mail'' validado por motivos de segurança.
+
+      (se não solicitou esta transferência, deveria ficar preocupado -- alguém tem acesso de administrator ao seu ''site''.)
+    no_token: |
       Desculpe, esta hiperligação de transferência da cópia de segurança já foi utilizada ou expirou.
   admin_confirmation_mailer:
     subject_template: "[%{email_prefix}] Confirmar nova Conta de Administrador"
@@ -1489,7 +1499,7 @@ pt:
     download_remote_images_disabled:
       title: "Transferência de Imagens Remotas Desativada"
       subject_template: "Transferência de imagens remotas desativada"
-      text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
+      text_body_template: "A definição `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi atingido."
   unsubscribe_link: |2
 
     Para cancelar as subscrições a estes emails, [clique aqui](%{unsubscribe_url}).
@@ -1691,7 +1701,7 @@ pt:
   deleted: "eliminado"
   image: "imagem"
   upload:
-    edit_reason: "cópias locais de imagens transferidas"
+    edit_reason: "cópias das imagens locais transferidas"
     unauthorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
     store_failure: "Falha ao armazenar o carregamento #%{upload_id} para o utilizador #%{user_id}."
@@ -1730,7 +1740,7 @@ pt:
   csv_export:
     boolean_yes: "Sim"
     boolean_no: "Não"
-    rate_limit_error: "As publicações podem ser transferidas uma vez por dia, por favor, tente novamente amanhã."
+    rate_limit_error: "As mensagens podem ser transferidas uma vez por dia, por favor, tente novamente amanhã."
   static_topic_first_reply: |2
 
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
@@ -1846,7 +1856,7 @@ pt:
       name: Autobiógrafo
     anniversary:
       name: Aniversário
-      description: "Membro ativo há um ano, publicou pelo menos uma vez"
+      description: Membro ativo há um ano, publicou pelo menos uma vez
     nice_post:
       name: Boa Resposta
       description: Recebeu 10 gostos numa resposta
@@ -2134,3 +2144,6 @@ pt:
         title: "Rejeitar"
       delete_user:
         title: "Eliminar Utilizador"
+  activemodel:
+    errors:
+      <<: *errors

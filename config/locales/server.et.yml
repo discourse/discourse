@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 et:
   dates:
@@ -17,12 +16,25 @@ et:
       date_only: "%-d. %B %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, jaanuar, veebruar, märts, aprill, mai, juuni, juuli, august, september, oktoober, november, detsember]
+    month_names:
+    - null
+    - jaanuar
+    - veebruar
+    - märts
+    - aprill
+    - mai
+    - juuni
+    - juuli
+    - august
+    - september
+    - oktoober
+    - november
+    - detsember
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Teemad"
   posts: "postitused"
@@ -53,7 +65,7 @@ et:
         bounced_email_error: "Meil on tagasipõrgatatud meili vearaport."
         screened_email_error: "Juhtub, kui saatja on varjestatud."
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     messages:
       too_long_validation: "piirang on %{max} tähemärki; sina sisestasid %{length}."
       invalid_boolean: "Vigane tõeväärtus."
@@ -61,24 +73,24 @@ et:
       accepted: vajab aktsepteerimist
       blank: ei saa olla tühi
       present: peab olema tühi
-      confirmation: "%{attribute} ei ühti"
+      confirmation: ! "%{attribute} ei ühti"
       empty: ei tohi olla tühi
-      equal_to: "peab olema %{count}"
+      equal_to: peab olema %{count}
       even: peab olema paaris
       exclusion: on reserveeritud
-      greater_than: "peab olema suurem kui %{count}"
-      greater_than_or_equal_to: "peab olema suurem või võrdne kui %{count}"
+      greater_than: peab olema suurem kui %{count}
+      greater_than_or_equal_to: peab olema suurem või võrdne kui %{count}
       has_already_been_used: "on juba kasutusel"
       inclusion: puudub nimekirjas
       invalid: pole korrektne
       is_invalid: "tundub segane. kas see on terve lause?"
       contains_censored_words: "sisaldab järgmisi tsenseeritud sõnu: %{censored_words}"
-      less_than: "peab olema väiksem kui %{count}"
-      less_than_or_equal_to: "peab olema väiksem või võrdne kui %{count}"
+      less_than: peab olema väiksem kui %{count}
+      less_than_or_equal_to: peab olema väiksem või võrdne kui %{count}
       not_a_number: ei ole number
       not_an_integer: peab olema täisarv
       odd: peab olema paaritu
-      record_invalid: "Valideerimine ebaõnnestus: %{errors}"
+      record_invalid: ! "Valideerimine ebaõnnestus: %{errors}"
       restrict_dependent_destroy:
         one: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
         many: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
@@ -93,18 +105,15 @@ et:
         other: on vale pikkus (peaks olema %{count} tähemärki)
       other_than: "peab olema midagi muud, kui %{count}"
     template:
-      body: "Järgmiste väljadega oli probleeme:"
+      body: ! "Järgmiste väljadega oli probleeme:"
       header:
         one: "%{count} viga takistas mudeli %{model} salvestamist"
-        other: "%{count} viga takistasid mudeli %{model} salvestamist"
+        other: ! "%{count} viga takistasid mudeli %{model} salvestamist"
     embed:
       load_from_remote: "Selle postituse laadimisel ilmnes üks viga"
     site_settings:
       default_categories_already_selected: "Sa ei saa valida teises nimekirjas valitud liiki."
       s3_upload_bucket_is_required: "Ei saa aktiveerida S3 üleslaadimist, kui 's3_upload_bucket' ei ole määratud."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Üles laetav fail peab olema CSV vormingus."
     error: "Selle faili üleslaadimisel tekkis viga. Palun proovi hiljem uuesti."
@@ -250,7 +259,6 @@ et:
       user_profile:
         bio_raw: "Minust"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -281,6 +289,7 @@ et:
           attributes:
             payload_url:
               invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
+      <<: *errors
   vip_category_name: "Lounge"
   vip_category_description: "Liik, mis on eksklusiivne kasutajatele, kellel on usaldustase 3 või kõrgem."
   meta_category_name: "Saidi tagasiside."
@@ -545,7 +554,7 @@ et:
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
     otp_confirmation:
-      confirm_title: "Edasi saidile %{site_name}"
+      confirm_title: Edasi saidile %{site_name}
     scopes:
       read: "Loe kõiki"
       write: "Kirjuta kõikidesse"
@@ -918,7 +927,7 @@ et:
       name: Autobiograaf
     anniversary:
       name: Tähtpäev
-      description: "Olnud aktiivne kasutaja vähemalt aasta, postitanud vähemalt ühe korra"
+      description: Olnud aktiivne kasutaja vähemalt aasta, postitanud vähemalt ühe korra
     nice_post:
       name: Mõnus vastus
     good_post:
@@ -975,13 +984,13 @@ et:
       name: Lugeja
     popular_link:
       name: Populaarne viide
-      description: "Postitas välise lingi, millel 50 klikki"
+      description: Postitas välise lingi, millel 50 klikki
     hot_link:
       name: Kuum viide
-      description: "Postitas välise lingi, millel 300 klikki"
+      description: Postitas välise lingi, millel 300 klikki
     famous_link:
       name: Kuulus viide
-      description: "Postitas välise lingi, millel 1000 klikki"
+      description: Postitas välise lingi, millel 1000 klikki
     appreciated:
       name: Hinnatud
     respected:
@@ -1150,3 +1159,6 @@ et:
         title: "Lükka tagasi"
       delete_user:
         title: "Kustuta kasutaja"
+  activemodel:
+    errors:
+      <<: *errors

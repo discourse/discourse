@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pt:
   site_settings:
@@ -30,61 +29,90 @@ pt:
       results: |-
         > :game_die: %{results}
     quote:
-      '1':
+      "1":
         quote: "Entre cada dificuldade há espaço para oportunidade."
         author: "Albert Einstein"
-      '2':
+      "2":
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Não chore porque acabou, sorria porque aconteceu."
         author: "Dr. Seuss"
-      '4':
+      "4":
         quote: "Se quer algo bem feito, faça--o você mesmo."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Acredite que pode e já está a meio caminho."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         author: "A mãe de Forrest Gump"
-      '7':
+      "7":
         quote: "Isto é um pequeno passo para o homem, um salto gigantesco para a humanidade."
         author: "Neil Armstrong"
-      '8':
+      "8":
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Os erros são sempre perdoáveis, se a pessoa tiver a coragem de os admitir."
         author: "Bruce Lee"
-      '10':
+      "10":
         author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       trigger: "fortuna"
       answers:
-        '3': "Sem dúvida"
-        '4': "Sim, definitivamente"
-        '7': "Mais provavelmente"
-        '9': "Sim"
-        '12': "Perguntar novamente mais tarde"
-        '13': "É melhor não lhe dizer agora"
-        '14': "Não pode prever agora"
-        '15': "Concentre-se e pergunte novamente"
-        '17': "A minha resposta é não"
-        '18': "As minhas fontes dizem não"
-        '20': "Muito duvidoso"
+        "1": "It is certain"
+        "2": "It is decidedly so"
+        "3": "Sem dúvida"
+        "4": "Sim, definitivamente"
+        "5": "You may rely on it"
+        "6": "A meu ver, sim"
+        "7": "Mais provavelmente"
+        "8": "Outlook good"
+        "9": "Sim"
+        "10": "Signs point to yes"
+        "11": "Reply hazy, try again"
+        "12": "Perguntar novamente mais tarde"
+        "13": "É melhor não lhe dizer agora"
+        "14": "Não pode prever agora"
+        "15": "Concentre-se e pergunte novamente"
+        "16": "Não conte com isso"
+        "17": "A minha resposta é não"
+        "18": "As minhas fontes dizem não"
+        "19": "Outlook not so good"
+        "20": "Muito duvidoso"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
       reset_trigger: "iniciar"
       skip_trigger: "ignorar"
       help_trigger: "exibir ajuda"
+      random_mention:
+        reply: |-
+          Olá! Para saber o que eu posso fazer, diga `@%{discobot_username} %{help_trigger}`.
+      do_not_understand:
+        first_response: |-
+          Olá, obrigado(a) pela resposta!
+
+          Infelizmente, como um robô fraco programado, eu não consigo entender isso. :sombrio:
     new_user_narrative:
+      reset_trigger: "tutorial"
+      hello:
+        title: "Saudações!"
       certificate:
         alt: "Certificado de Realização"
     advanced_user_narrative:
+      reset_trigger: "tutorial avançado"
+      cert_title: "Como reconhecimento da conclusão bem-sucedida do tutorial do utilizador avançado"
       title: ":arrow_up: Funcionalidades de utilizador avançadas"
+      delete:
+        not_found: |-
+          Eu ainda não vejo quaisquer mensagens eliminadas? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais irá revelar <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> eliminar.
       recover:
         deleted_post_raw: "Por que é que @ %{discobot_username} eliminou a minha publicação? :angustiado:"
+        not_found: |-
+          Com problemas? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais irá revelar <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> recuperar.
       details:
         reply: |-
           Ótimo trabalho — a sua atenção para o _detalhe_ é admirável!
+      certificate:
+        alt: "Certificado de Realização da Faixa de Utilizador Avançado"

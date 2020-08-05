@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fr:
   site_settings:
@@ -57,34 +56,34 @@ fr:
         > :game_die: %{results}
     quote:
       trigger: "citation"
-      '1':
+      "1":
         quote: "La difficulté est porteuse d'occasions"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "La liberté ne signifie rien s'il n'y a pas la liberté de se tromper."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Ne pleurez pas parce que c'est fini, souriez parce que c'est arrivé !"
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "On n'est jamais si bien servi que par soi-même."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Croyez en vous et vous avez fait la moitié du chemin."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "La vie est comme une boîte de chocolats. On ne sait jamais sur quoi on va tomber."
         author: "La maman de Forrest Gump"
-      '7':
+      "7":
         quote: "C'est un petit pas pour un homme, un saut géant pour l'humanité."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Fais une chose qui t'effraie chaque jour."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Les erreurs sont toujours pardonnables, si l'on a le courage de les admettre."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteind."
         author: "Napoleon Hill"
       results: |-
@@ -92,26 +91,26 @@ fr:
     magic_8_ball:
       trigger: "fortune"
       answers:
-        '1': "C'est certain"
-        '2': "C'est décidé"
-        '3': "Sans aucun doute"
-        '4': "Définitivement oui"
-        '5': "Vous pouvez compter dessus"
-        '6': "Comme je le vois, oui"
-        '7': "Probablement"
-        '8': "De bonnes perspectives"
-        '9': "Oui"
-        '10': "Les signent tendent vers le oui"
-        '11': "Réponse incertaine, essayez de nouveau"
-        '12': "Demander à nouveau plus tard"
-        '13': "Il vaut mieux ne pas vous le dire maintenant"
-        '14': "Impossible à prédire pour le moment"
-        '15': "Concentrez-vous et demandez à nouveau"
-        '16': "Ne comptez pas dessus"
-        '17': "Ma réponse est non"
-        '18': "Mes sources disent non"
-        '19': "Les perspectives ne sont pas si bonnes"
-        '20': "Très douteux"
+        "1": "C'est certain"
+        "2": "C'est décidé"
+        "3": "Sans aucun doute"
+        "4": "Définitivement oui"
+        "5": "Vous pouvez compter dessus"
+        "6": "Comme je le vois, oui"
+        "7": "Probablement"
+        "8": "De bonnes perspectives"
+        "9": "Oui"
+        "10": "Les signent tendent vers le oui"
+        "11": "Réponse incertaine, essayez de nouveau"
+        "12": "Demander à nouveau plus tard"
+        "13": "Il vaut mieux ne pas vous le dire maintenant"
+        "14": "Impossible à prédire pour le moment"
+        "15": "Concentrez-vous et demandez à nouveau"
+        "16": "Ne comptez pas dessus"
+        "17": "Ma réponse est non"
+        "18": "Mes sources disent non"
+        "19": "Les perspectives ne sont pas si bonnes"
+        "20": "Très douteux"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -276,8 +275,6 @@ fr:
         reply: |-
           [Notre équipe](%{base_uri}/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
           (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
-        not_found: |-
-          Oh non, mon méchant message n'a pas encore été signalé. :worried: Pouvez-vous le signaler comme inapproprié en utilisant le **drapeau** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? N'oubliez pas d'utiliser le bouton <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour afficher plus d'actions pour chaque message.
       search:
         instructions: |-
           _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les challenges, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> en haut à droite &#8599; pour la trouver.

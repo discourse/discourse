@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 it:
   site_settings:
@@ -57,34 +56,34 @@ it:
         > :game_die: %{results}
     quote:
       trigger: "cita"
-      '1':
+      "1":
         quote: "E' nel mezzo delle difficoltà che nascono le opportunità"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Non vale la pena avere la libertà se non si ha la libertà di sbagliare."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Non piangere perché è finita, sorridi perché è successo."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Se vuoi che qualcosa sia ben fatta, falla tu stesso."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Se credi che sia possibile sei già a metà strada."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "La vita è come una scatola di cioccolatini. Non sai mai quello che ti capita."
         author: "Madre di Forrest Gump"
-      '7':
+      "7":
         quote: "E' un piccolo passo per l'uomo ma un grande passo per l'umanità."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Almeno una volta al giorno fai qualcosa che ti spaventa."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Gli errori sono sempre perdonabili, se si ha il coraggio di ammetterli."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Tutto ciò che la mente umana può concepire e credere, può essere realizzato."
         author: "Napoleon Hill"
       results: |-
@@ -92,26 +91,26 @@ it:
     magic_8_ball:
       trigger: "fortuna"
       answers:
-        '1': "E' certo"
-        '2': "E' decisamente così"
-        '3': "Senza alcun dubbio"
-        '4': "Sì, senza dubbio"
-        '5': "Ci puoi contare"
-        '6': "Per quanto posso vedere, sì"
-        '7': "Molto probabilmente"
-        '8': "Le prospettive sono buone"
-        '9': "Sì"
-        '10': "I segni indicano di sì"
-        '11': "E' difficile rispondere, prova di nuovo"
-        '12': "Rifai la domanda più tardi"
-        '13': "Meglio non risponderti adesso"
-        '14': "Ora non lo posso prevedere"
-        '15': "Concentrati e rifai la domanda"
-        '16': "Non ci contare"
-        '17': "La mia risposta è no"
-        '18': "Le mie fonti dicono di no"
-        '19': "Le prospettive non sono buone"
-        '20': "Molto incerto"
+        "1": "E' certo"
+        "2": "E' decisamente così"
+        "3": "Senza alcun dubbio"
+        "4": "Sì, senza dubbio"
+        "5": "Ci puoi contare"
+        "6": "Per quanto posso vedere, sì"
+        "7": "Molto probabilmente"
+        "8": "Le prospettive sono buone"
+        "9": "Sì"
+        "10": "I segni indicano di sì"
+        "11": "E' difficile rispondere, prova di nuovo"
+        "12": "Rifai la domanda più tardi"
+        "13": "Meglio non risponderti adesso"
+        "14": "Ora non lo posso prevedere"
+        "15": "Concentrati e rifai la domanda"
+        "16": "Non ci contare"
+        "17": "La mia risposta è no"
+        "18": "Le mie fonti dicono di no"
+        "19": "Le prospettive non sono buone"
+        "20": "Molto incerto"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -232,7 +231,7 @@ it:
       bookmark:
         instructions: |-
           Se vuoi saperne di più, seleziona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> qui sotto e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **inserisci questo messaggio personale nei segnalibri**. Se lo farai, ci potrebbe essere un :gift: per te in futuro!
-        reply: |
+        reply: |-
           Eccellente! Ora puoi facilmente tornare alla nostra conversazione privata in qualsiasi momento, direttamente dalla [scheda dei segnalibri sul tuo profilo](%{bookmark_url}). Basta selezionare la tua foto del profilo in alto a destra &#8599;
         not_found: |-
           Oh oh, non vedo nessun segnalibro in questo argomento. Hai trovato il pulsante "segnalibro" presente sotto i messaggi? Usa il pulsante "mostra altro" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare altri pulsanti, se necessario.
@@ -275,8 +274,6 @@ it:
           Penso che tu sappia cosa fare. Va avanti e **segnala questo messaggio** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> come inappropriato!
         reply: |-
           [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
-        not_found: |-
-          Oh no, il mio brutto messaggio non è ancora stato segnalato. :worried: Puoi segnalarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante "mostra altro" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
         instructions: |-
           _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per trovarla.

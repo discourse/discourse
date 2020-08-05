@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ar:
   js:
@@ -206,9 +205,6 @@ ar:
       topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور رقم %{postNumber}"
       close: "أغلق"
-      twitter: "شارك هذا رابط على تويتر"
-      facebook: "شارك هذا رابط على الفيسبوك"
-      email: "ارسل هذا رابط الى البريد الإليكتروني"
     action_codes:
       public_topic: "أجعل هذا الموضوع عامًّا %{when}"
       private_topic: "تحويل هذا الموضوع إلى رسالة شخصية %{when}"
@@ -361,6 +357,7 @@ ar:
       confirm_clear: "هل أنت متأكد من مسح جميع الاشعارات المرجعية من هذا الموضوع؟"
       save: "احفظ"
       no_timezone: 'لم تحدد منظقتك الزمنية بعد. لن تتمكن من تفعيل التذكيرات. حددها <a href="%{basePath}/my/preferences/profile">في ملفك الشخصي</a>.'
+      search: "البحث"
       reminders:
         at_desktop: "في المرة القادمة سأكون عند مكتبي"
         later_today: "في وقت لاحق اليوم"
@@ -494,9 +491,6 @@ ar:
         remove_user_as_group_owner: "سحب صلاحية المالك"
     groups:
       member_added: "تم الإضافة"
-      add_members:
-        title: "أضف أعضاء"
-        usernames: "أسماء المستخدمين"
       requests:
         reason: "سبب"
         accepted: "مقبول"
@@ -512,6 +506,11 @@ ar:
           title: تفاعل
           posting: نشر
           notification: اشعار
+        email:
+          title: "البريد الإلكتروني"
+          credentials:
+            username: "اسم المستخدم"
+            password: "كلمة المرور"
         membership:
           title: العضوية
           access: صلاحية
@@ -623,6 +622,7 @@ ar:
       "12": "العناصر المرسلة"
       "13": "البريد الوارد"
       "14": "قيد الانتظار"
+      "15": "Drafts"
     categories:
       all: "كل الأقسام"
       all_subcategories: "الكل"
@@ -1183,7 +1183,7 @@ ar:
       button_label: "مع البريد الإلكتروني"
       complete_username_not_found: "لا يوجد حساب يطابق اسم المستخدم <b>%{username}</b>"
       complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
-      confirm_title: "تابع إلى %{site_name}"
+      confirm_title: تابع إلى %{site_name}
     login:
       title: "تسجيل دخول"
       username: "اسم المستخدم"
@@ -1711,6 +1711,7 @@ ar:
           "2_8": "سوف تشاهد عداد للردود الجديدة لانك تتابع هذا القسم."
           "2_4": "سوف تشاهد عداد للردود الجديدة لانك قمت بالمشاركة برد في هذا الموضوع."
           "2_2": "سوف تشاهد عداد للردود الجديدة لانك تتابع هذا الموضوع."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك."
           "1": "سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك."
           "0_7": "لن يصلك أي إشعار يخص هذا القسم."
@@ -2554,7 +2555,6 @@ ar:
         new: "مجموعة جديدة"
         tags_label: "الأوسمة في هذه المجموعة:"
         parent_tag_label: "التصنيف الأب"
-        parent_tag_placeholder: "اختياري"
         parent_tag_description: "لا يمكن استخدام الأوسمة في هذه المجموعة ما لم يوجد الوسم الأب."
         one_per_topic_label: "السماح بوسم واحد فقط من هذة المجموعة لكل موضوع"
         new_name: "مجموعة أوسمة جديدة"
@@ -2871,7 +2871,6 @@ ar:
           subject: "الموضوع"
           multiple_subjects: "قالب البريد الإلكتروني هذا لديه موضوعات متعددة."
           body: "المحتوى"
-          none_selected: "اختر أحد قوالب البريد لتعدله."
           revert: "اعاده التغيرات "
           revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "
         theme:
@@ -3121,7 +3120,6 @@ ar:
           domain: "عنوان"
         screened_ips:
           title: "عناوين IP محجوبة"
-          description: 'عناوين IP التي شوهدت. أستخدم "اسمح" لإضافة عناوين IP للقائمة البيضاء.'
           delete_confirm: "هل أنت متأكد أنك تريد إزالة القاعدة لـ %{ip_address} ؟"
           roll_up_confirm: "هل أنت متأكد أنك تريد تغيير مصفي عناوين IP الشائعة إلى الشبكات الفرعية ؟"
           rolled_up_some_subnets: "تم بنجاح حظر IP متغير يدخل إلى هذه الشبكات الفرعية : %{subnets}."
@@ -3449,7 +3447,7 @@ ar:
       badges:
         title: الشارات
         new_badge: شارة جديدة
-        new: "جديد "
+        new: جديد
         name: الإسم
         badge: الشارة
         display_name: إسم العرض
@@ -3459,7 +3457,7 @@ ar:
         badge_grouping: المجموعة
         badge_groupings:
           modal_title: تجميع الشارات
-        granted_by: "ممنوح بواسطة "
+        granted_by: ممنوح بواسطة
         granted_at: ممنوح في
         reason_help: ( رابط إلى منشور أو موضوع )
         save: حفظ
@@ -3477,7 +3475,7 @@ ar:
         no_badges: لا يوجد أي شارة يمكن منحها.
         none_selected: "حدد شارة للبدء"
         allow_title: اسمح للشارة أن تستخدم كلقب.
-        multiple_grant: "يمكن منحها عدة مرات. "
+        multiple_grant: يمكن منحها عدة مرات.
         listable: اظهار الشارة في صفحة الشارات العامة
         enabled: تفعيل الشارة
         icon: أيقونة
@@ -3513,10 +3511,10 @@ ar:
             other: "<b>%{count}</b> وساما لتمنح ."
           sample: "أمثلة:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{أسم المستخدم}</span> لهذه المشاركة %{link}"
-            with_post_time: "<span class=\"username\">%{أسم المستخدم}</span> لهذه المشاركة %{link} at <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{أسم المستخدم}</span> في <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{أسم المستخدم}</span> لهذه المشاركة %{link}
+            with_post_time: <span class="username">%{أسم المستخدم}</span> لهذه المشاركة %{link} at <span class="time">%{time}</span>
+            with_time: <span class="username">%{أسم المستخدم}</span> في <span class="time">%{time}</span>
       emoji:
         title: "الوجه التعبيري"
         help: "أضف رموز تعبيرية جديدة التي سوف تكون متاحة للكل . (PROTIP: drag & drop multiple files at once)"
@@ -3541,9 +3539,6 @@ ar:
         embed_by_username: "اسم العضو للموضوع المنشأ"
         embed_post_limit: "أقصى عدد مشاركات مضمنة"
         embed_truncate: "بتر المشاركات المضمنة"
-        embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
-        embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
-        embed_classname_whitelist: "اسماء اصناف المظاهر الجمالية المسموح بها"
         save: "أحفظ الإعدادات المضمنة"
       permalink:
         title: "الرابط الثابت"
@@ -3554,7 +3549,6 @@ ar:
         post_title: "مشاركة"
         category_id: "رقم التصنيف"
         category_title: "قسم"
-        external_url: "رابط خارجي"
         destination: "المكان المقصود"
         delete_confirm: هل أنت متأكد من حذف هذا الرابط الثابت ؟
         form:

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 el:
   js:
@@ -26,7 +25,7 @@ el:
         thousands: "%{number}χιλ."
         millions: "%{number}εκατ."
     dates:
-      time: "ΗΗ:mm"
+      time: "HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM"
@@ -229,6 +228,7 @@ el:
     bookmarks:
       remove: "Αφαίρεση Σελιδοδείκτη"
       save: "Αποθήκευση"
+      search: "Αναζήτηση"
       reminders:
         later_today: "Αργότερα σήμερα"
         tomorrow: "Αύριο"
@@ -348,8 +348,6 @@ el:
         make_user_group_owner: "Κάνε ιδιοκτήτη"
         remove_user_as_group_owner: "Απέσυρε ιδιοκτήτη"
     groups:
-      add_members:
-        title: "Προσθήκη Μελών"
       requests:
         reason: "Αιτία"
       manage:
@@ -361,6 +359,11 @@ el:
           title: Προφίλ
         interaction:
           posting: Αναρτήσεις
+        email:
+          title: "Διεύθυνση Email"
+          credentials:
+            username: "Όνομα Χρήστη"
+            password: "Κωδικός Πρόσβασης"
         membership:
           title: Συνδρομή
           access: Πρόσβαση
@@ -460,6 +463,7 @@ el:
       "12": "Απεσταλμένα"
       "13": "Εισερχόμενα"
       "14": "Εκκρεμή"
+      "15": "Drafts"
     categories:
       all: "όλες οι κατηγορίες"
       all_subcategories: "όλα"
@@ -989,7 +993,7 @@ el:
     email_login:
       complete_username_not_found: "Δεν υπάρχει λογαριασμός με το όνομα χρήστη <b>%{username}</b>"
       complete_email_not_found: "Δεν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>"
-      confirm_title: "Συνεχίστε στην %{site_name}"
+      confirm_title: Συνεχίστε στην %{site_name}
     login:
       title: "Σύνδεση"
       username: "Όνομα Χρήστη"
@@ -1060,7 +1064,7 @@ el:
       ctrl: "Ctrl"
       alt: "Alt"
     conditional_loading_section:
-      loading: "Φόρτωση... "
+      loading: Φόρτωση...
     select_kit:
       default_header_text: Επιλογή...
       no_content: Δεν βρέθηκαν αποτελέσματα
@@ -1258,7 +1262,7 @@ el:
           first: είναι η πρώτη ανάρτηση
           pinned: είναι καρφιτσωμένα
           unseen: δεν διάβασα
-          wiki: " είναι βίκι"
+          wiki: ' είναι βίκι'
         statuses:
           label: Τα οποία νήματα
           open: είναι ανοιχτά
@@ -1472,6 +1476,7 @@ el:
           "2_8": "Θα βλέπεις έναν μετρητή νέων απαντήσεων επειδή παρακολουθείς αυτήν την κατηγορία."
           "2_4": "Θα βλέπεις έναν μετρητή νέων απαντήσεων επειδή απάντησες σε αυτό το νήμα."
           "2_2": "Θα βλέπεις έναν μετρητή νέων απαντήσεων επειδή παρακολουθείς αυτό το νήμα."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Θα λαμβάνεις ειδοποιήσεις εάν κάποιος αναφέρει το @όνομά σου ή απαντήσει σε εσένα."
           "1": "Θα λαμβάνεις ειδοποιήσεις εάν κάποιος αναφέρει το @όνομά σου ή απαντήσει σε εσένα."
           "0_7": "Αγνοείς όλες τις ειδοποιήσεις αυτής της κατηγορίας."
@@ -2196,7 +2201,6 @@ el:
         new: "Νέα Ομάδα"
         tags_label: "Ετικέτες σε αυτή την ομάδα:"
         parent_tag_label: "Μητρική ετικέτα:"
-        parent_tag_placeholder: "Προαιρετικό"
         parent_tag_description: "Οι ετικέτες από αυτή την ομάδα δεν μπορούν να χρησιμοποιηθούν αν δεν είναι παρούσα η μητρική ετικέτα."
         one_per_topic_label: "Περιορισμός μιας ετικέτας για κάθε νήμα από αυτή την ομάδα"
         new_name: "Νέα Ομάδα Ετικετών"
@@ -2512,7 +2516,6 @@ el:
           subject: "Θέμα"
           multiple_subjects: "Αυτό το πρότυπο email έχει πολλά θέματα."
           body: "Σώμα"
-          none_selected: "Επίλεξε ένα πρότυπο email για να ξεκινήσεις την επεξεργασία."
           revert: "Επαναφορά Αλλαγών"
           revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"
         theme:
@@ -2768,7 +2771,6 @@ el:
           domain: "Domain"
         screened_ips:
           title: "Ελεγχόμενες IP"
-          description: 'Διευθύνσεις IP που επιτηρούνται. Χρησιμοποίησε το «επίτρεψε» για να τις βάλεις στη λίστα επιτρεπόμενων.'
           delete_confirm: "Σίγουρα θέλεις να αφαιρέσεις τον κανόνα για τη διεύθυνση %{ip_address};"
           roll_up_confirm: "Σίγουρα θες να συνοψίσεις σε υποδίκτυα τις συχνά αποκλεισμένες διευθύνσεις IP;"
           rolled_up_some_subnets: "Οι αποκλεισμένες διευθύνσεις IP συνοψίστηκαν επιτυχώς στα παρακάτω υποδίκτυα: %{subnets}."
@@ -3162,10 +3164,10 @@ el:
             other: "<b>%{count}</b> παράσημα για να αποδοθούν"
           sample: "Δείγμα:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> για την ανάρτηση στο %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> για την ανάρτηση στο %{link} στις <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> στις <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> για την ανάρτηση στο %{link}
+            with_post_time: <span class="username">%{username}</span> για την ανάρτηση στο %{link} στις <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> στις <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
         help: "Πρόσθεσε ένα νέο emoji που θα είναι διαθέσιμο σε όλους. (Συμβουλή: μπορείς να σύρεις πολλά αρχεία ταυτόχρονα)"
@@ -3182,7 +3184,6 @@ el:
         title: "Ενσωμάτωση"
         host: "Επιτρεπόμενα hosts"
         class_name: "Class Name"
-        path_whitelist: "Path Whitelist"
         edit: "επεξεργασία"
         category: "Ανάρτηση στην Κατηγορία"
         add_host: "Προσθήκη host"
@@ -3193,9 +3194,6 @@ el:
         embed_post_limit: "Μέγιστος αριθμός αναρτήσεων για συγχώνευση"
         embed_title_scrubber: "Regular expression που χρησιμοποιείται για την λήψη των τίτλων των αναρτήσεων"
         embed_truncate: "Truncate the embedded posts"
-        embed_whitelist_selector: "CSS selector για στοιχεία που επιτρέπονται στα συγχωνευμένα"
-        embed_blacklist_selector: "CSS selector για στοιχεία που έχουν απομακρυνθεί από τα συγχωνευμένα"
-        embed_classname_whitelist: "Επιτρεπόμενα CSS class names"
         save: "Αποθήκευση των ρυθμίσεων Embedding "
       permalink:
         title: "Permalinks"
@@ -3206,7 +3204,6 @@ el:
         post_title: "Ανάρτηση"
         category_id: "ID Κατηγορίας"
         category_title: "Κατηγορία"
-        external_url: "Εξωτερική διεύθυνση URL"
         delete_confirm: Είσαι βέβαιος πως θέλεις να διαγράψεις αυτόν τον μόνιμο σύνδεσμο;
         form:
           label: "Νέο:"

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fa_IR:
   js:
@@ -120,9 +119,6 @@ fa_IR:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "ارسال #%{postNumber}"
       close: "بسته"
-      twitter: "این پیوند را در توییتر به اشتراک بگذارید"
-      facebook: "این پیوند را در فیسبوک به اشتراک بگذارید"
-      email: "این پیوند را با ایمیل بفرستید"
     action_codes:
       public_topic: "این موضوع در %{when} عمومی شده"
       private_topic: "این موضوع در %{when} یک پیغام خصوصی شده"
@@ -268,6 +264,7 @@ fa_IR:
       confirm_clear: "آیا مطمئنید می‌خواهید همه‌ی نشانک‌های خود را از این موضوع پاک کنید؟"
       save: "ذخیره"
       no_timezone: 'شما هنوز منطقه زمانی مشخص نکرده اید. شما قادر به تنظیم کردن یادآوری نیستید. یکی را در <a href="%{basePath}/my/preferences/profile"> پروفایل تان </a> تنظیم کنید.'
+      search: "جستجو"
       reminders:
         at_desktop: "بار آینده من پشت میزم هستم"
         later_today: "امروز"
@@ -275,7 +272,7 @@ fa_IR:
         tomorrow: "فردا"
         next_week: "هفته بعد"
         later_this_week: "این هفته"
-        start_of_next_business_week: "دوشنبه بعدی"
+        start_of_next_business_week_alt: "دوشنبه بعدی"
         next_month: "ماه بعد"
         custom: "درج تاریخ و ساعت"
         last_custom: "آخرین"
@@ -536,10 +533,6 @@ fa_IR:
     groups:
       member_added: "اضافه شده"
       member_requested: "درخواست شده در"
-      add_members:
-        title: "افزودن اعضا"
-        description: "مدیریت عضویت کاربران در این گروه"
-        usernames: "نام های کاربری"
       requests:
         title: "درخواست ها"
         reason: "دلیل"
@@ -561,6 +554,11 @@ fa_IR:
           title: تراکنش
           posting: در حال نوشتن
           notification: اعلان‌ها
+        email:
+          title: "ایمیل"
+          credentials:
+            username: "نام‌کاربری"
+            password: "رمزعبور"
         membership:
           title: عضویت
           access: دسترسی
@@ -1309,7 +1307,7 @@ fa_IR:
     last_reply_lowercase: آخرین پاسخ
     replies_lowercase:
       one: پاسخ
-      other: 'پاسخ‌ها '
+      other: پاسخ‌ها
     signup_cta:
       sign_up: "ثبت نام"
       hide_session: "فردا به من یادآوری کن"
@@ -1367,8 +1365,8 @@ fa_IR:
       complete_email_found: "یک حساب کاربری با <b>%{email}</b> پیدا کردیم، شما الان یک ایمیل با لینک ورود دریافت می‌کنید."
       complete_username_not_found: "هیچ حساب کاربری که با <b>%{username}</b> همخوانی داشته باشد پیدا نشد"
       complete_email_not_found: "هیچ حساب کاربری که <b>%{email}</b> همخوانی داشته باشد پیدا نشد"
-      confirm_title: "ورود به %{site_name}"
-      logging_in_as: "ورود با %{email}"
+      confirm_title: ورود به %{site_name}
+      logging_in_as: ورود با %{email}
       confirm_button: اتمام ورود
     login:
       title: "ورود"
@@ -1470,7 +1468,7 @@ fa_IR:
       default_header_text: انتخاب...
       no_content: چیزی یافت نشد.
       filter_placeholder: جستجو...
-      filter_placeholder_with_any: "جستجو کنید یا بسازید ... "
+      filter_placeholder_with_any: جستجو کنید یا بسازید ...
       create: "بسازید `%{content}`"
       max_content_reached:
         one: "شما فقط %{count}مورد میتوانید انتخاب کنید"
@@ -1605,7 +1603,7 @@ fa_IR:
         draft: درفت
         edit: ویرایش
         reply_to_post:
-          label: "پاسخ به پست %{postNumber} توسط %{postUsername}"
+          label: پاسخ به پست %{postNumber} توسط %{postUsername}
           desc: پاسخ به یک پست خاص
         reply_as_new_topic:
           label: پاسخ به تاپیک لینک شده
@@ -2000,6 +1998,7 @@ fa_IR:
           "2_8": "به دلیل ارسال پیگیری این دسته‌بندی، پاسخ‌های جدید موضوع را خواهید دید."
           "2_4": "به دلیل ارسال نوشته در این موضوع، پاسخ‌های جدید آن را خواهید دید."
           "2_2": "به دلیل پیگیری این موضوع، تعداد پاسخ‌های جدید را خواهید دید."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "در صورتی که فردی با @نام به شما اشاره کند یا پاسخی دهد به شما اطلاع داده خواهد شد."
           "1": "در صورتی که فردی با @نام به شما اشاره کند یا پاسخی دهد، به شما اطلاع داده خواهد شد."
           "0_7": "شما تمام اعلان‌های این دسته‌بندی را نادیده گرفته اید"
@@ -2252,8 +2251,10 @@ fa_IR:
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
       abandon_edit:
+        confirm: "مطمئنید که می‌خواهید تغییرات‌تان را دور بریزید؟"
         no_value: "خیر، نگه دار"
         no_save_draft: "خیر، ذخیره پیش‌نویس"
+        yes_value: "بلهَ، ویرایش را نادیده بیگیر"
       abandon:
         confirm: "آیا مطمئن هستید که میخواهید نوشته خود را رها کنید؟"
         no_value: "خیر، نگه دار"
@@ -2837,9 +2838,7 @@ fa_IR:
         about: "برای مدیریت راحت‌تر گروه‌ها به آن‌ها برچسب اضافه کنید."
         new: "گروه جدید"
         tags_label: "برچسب‌های گروه:"
-        tags_placeholder: "برچسب‌ها"
         parent_tag_label: "برچسب مادر:"
-        parent_tag_placeholder: "اختیاری"
         parent_tag_description: "برچسب‌های این گروه تا زمانی که برچسب مادر وجود نداشته باشد، قابل استفاده نیستند."
         one_per_topic_label: "محدودیت یک برچسب به ازای هر موضوع در این گروه"
         new_name: "گروه برچسب جدید"
@@ -2936,7 +2935,7 @@ fa_IR:
         reports_tab: "گزارشات"
         report_filter_any: "هر"
         disabled: غیرفعال
-        not_found_error: "متأسفم، چنین گزارشی وجود ندارد "
+        not_found_error: متأسفم، چنین گزارشی وجود ندارد
         filter_reports: صافی گزارشات
         reports:
           today: "امروز"
@@ -3221,7 +3220,6 @@ fa_IR:
           subject: "عنوان"
           multiple_subjects: "این قالب ایمیل دارای چندین موضوع است."
           body: "متن"
-          none_selected: "یک قالب ایمیل برای شروع ویرایش انتخاب کنید."
           revert: "بازگرداندن تغییرات"
           revert_confirm: "آیا مطمئن هستید که میخواهید تنظیمات را بازگردانی کنید؟"
         theme:
@@ -3276,6 +3274,7 @@ fa_IR:
           variable_name: "نام متغیر SCSS:"
           upload: "بارگذاری"
           select_component: "یک کامپوننت انتخاب کنید"
+          unsaved_changes_alert: "تغییرات‌تان را هنوز ذخیره نکرده‌اید، می‌خواهید آن‌ها را نادیده گرفته و ادامه دهید؟"
           discard: "دور انداختن"
           stay: "ماندن"
           css_html: "CSS/HTML سفارشی"
@@ -3525,7 +3524,6 @@ fa_IR:
           domain: "دامنه"
         screened_ips:
           title: "نمایش IP ها"
-          description: 'آدرس IP که مشاهده شده. از "Allow" برای لیست سفید IP استفاده کنید.'
           delete_confirm: "آیا از حذف قانون وضع شده برای {ip_address}% اطمینان دارید؟"
           roll_up_confirm: "آیا مطمئن هستید که می خواهید IP مشاهده شده به زیر شبکه بازگشت داده شوند ؟"
           rolled_up_some_subnets: "با موفقیت IP مسدود شده بازگشت داده شد به ورودی های این زیر شبکه: %{subnets}."
@@ -3645,7 +3643,7 @@ fa_IR:
         grant_moderation: "اعطای مدیریت"
         unsuspend: "خارج کردن از تعلیق"
         suspend: "تعلیق"
-        reputation: " اعتبار"
+        reputation: ' اعتبار'
         permissions: دسترسی‌ها
         activity: فعالیت
         like_count: پسند‌های اعطایی / دریافتی
@@ -3654,7 +3652,7 @@ fa_IR:
         posts_read_count: نوشته‌های خوانده شده
         post_count: نوشته‌های ایجاد شده
         second_factor_enabled: احراز هویت دو مرحله‌ای فعال شد
-        topics_entered: " موضوعات بازدید شده"
+        topics_entered: ' موضوعات بازدید شده'
         flags_given_count: پرچم‌های داده شده
         flags_received_count: پرچم‌های دریافت شده
         warnings_received_count: اخطار‌های دریافت شده
@@ -3858,7 +3856,7 @@ fa_IR:
         save: ذخیره
         delete: حذف
         delete_confirm: آیا مطمئنید که می‌خواهید این نشان را حذف کنید؟
-        revoke: "ابطال "
+        revoke: ابطال
         reason: دلیل
         expand: گستردن hellip&;
         revoke_confirm: آیا مطمئنید که می‌خواهید این نشان را حذف کنید؟
@@ -3902,10 +3900,10 @@ fa_IR:
             other: "<b>%{count}</b> نشان‌هایی که قرار است اختصاص داده شود."
           sample: "نمونه:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> برای نوشته در %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> برای نوشته %{link} در <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> در <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> برای نوشته در %{link}
+            with_post_time: <span class="username">%{username}</span> برای نوشته %{link} در <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> در <span class="time">%{time}</span>
       emoji:
         title: "شکلک"
         help: "اضافه کردن شکلک های جدید که در دسترس همگان خواهد بود.(PROTIP: کشیدن و رها کردن چند فایل در یک بار)"
@@ -3922,7 +3920,6 @@ fa_IR:
         title: "جاسازی"
         host: "میزبان های مجاز"
         class_name: "نام کلاس"
-        path_whitelist: "مسیر لیست سفید"
         edit: "ویرایش"
         category: "ارسال به دسته بندی"
         add_host: "اضافه کردن میزبان"
@@ -3933,9 +3930,6 @@ fa_IR:
         embed_post_limit: "حداکثر تعداد نوشته‌هایی که میتوان جاساز کرد"
         embed_title_scrubber: "regular expression‌ی که برای بهینه‌سازی عنوان نوشته استفاده می‌شود"
         embed_truncate: "کوتاه کردن نوشته های جاسازی شده"
-        embed_whitelist_selector: "انتخاب کننده CSS برای المان هایی که اجازه دارند جاسازی شوند"
-        embed_blacklist_selector: "انتخاب کننده CSS برای المان هایی که از جاسازی پاک شده اند"
-        embed_classname_whitelist: " دسترسی به کلاس های CSS"
         save: "ذخیره تنظیمات کدهای جاساز"
       permalink:
         title: " پیوند دائمی"
@@ -3946,7 +3940,6 @@ fa_IR:
         post_title: "نوشته"
         category_id: "شناسه دسته‌بندی"
         category_title: "دسته‌بندی"
-        external_url: " آدرس خارجی"
         delete_confirm: آیا مطمئنید که می‌خواهید این پیوند یکتا را حذف کنید؟
         form:
           label: "جدید:"

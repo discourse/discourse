@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 vi:
   js:
@@ -98,9 +97,6 @@ vi:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
       post: "đăng #%{postNumber}"
       close: "đóng"
-      twitter: "chia sẻ liên kết này lên Twitter"
-      facebook: "chia sẻ liên kết này lên Facebook"
-      email: "Gửi liên kết này trong một email"
     action_codes:
       public_topic: "hiển thị chủ đề này công khai lúc %{when}"
       private_topic: "tạo một tin nhắn từ chủ đề này %{when}"
@@ -246,6 +242,7 @@ vi:
       save: "Lưu"
       no_timezone: 'Bạn chưa đặt múi giờ. Bạn sẽ không thể đặt lời nhắc. Thiết lập một <a href="%{basePath}/my/preferences/profile">trong hồ sơ của bạn</a> .'
       list_permission_denied: "Bạn không có quyền xem chỉ mục của người dùng này"
+      search: "Tìm kiếm"
       reminders:
         at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
         tomorrow: "Ngày mai"
@@ -489,10 +486,6 @@ vi:
     groups:
       member_added: "Đã thêm"
       member_requested: "Yêu cầu tại"
-      add_members:
-        title: "Thêm thành viên"
-        description: "Quản lý hội viên của nhóm"
-        usernames: "Tên người dùng"
       requests:
         title: "Những yêu cầu"
         reason: "Lý do"
@@ -513,6 +506,11 @@ vi:
           title: Tương tác
           posting: Gửi bài
           notification: Thông báo
+        email:
+          title: "Email"
+          credentials:
+            username: "Tên đăng nhập"
+            password: "Mật khẩu"
         membership:
           title: Thành viên
           access: Truy cập
@@ -1201,7 +1199,7 @@ vi:
       complete_email_found: "Chúng tôi đã tìm thấy một tài khoản phù hợp với <b>%{email}</b>, bạn sẽ sớm nhận được email có liên kết đăng nhập."
       complete_username_not_found: "Không có tài khoản phù hợp với tên thành viên <b>%{username} </b>"
       complete_email_not_found: "Không tìm thấy tài khoản nào tương ứng với <b>%{email}</b>"
-      confirm_title: "Tiếp tục tới %{site_name}"
+      confirm_title: Tiếp tục tới %{site_name}
       confirm_button: Kết thúc đăng nhập
     login:
       title: "Đăng nhập"
@@ -1367,7 +1365,7 @@ vi:
         title: "Bạn có quên chưa thêm người nhận?"
       admin_options_title: "Tùy chọn quản trị viên cho chủ đề này"
       composer_actions:
-        reply: "Trả lời "
+        reply: Trả lời
         edit: Sửa
         create_topic:
           label: "Chủ đề Mới"
@@ -1555,7 +1553,7 @@ vi:
       read_more_MF: "Có { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Duyệt tất cả các hạng mục
       view_latest_topics: xem các chủ đề mới nhất
-      suggest_create_topic: "Tại sao không tạo một chủ đề mới?"
+      suggest_create_topic: Tại sao không tạo một chủ đề mới?
       jump_reply_up: nhảy đến những trả lời trước đó
       jump_reply_down: nhảy tới những trả lời sau đó
       deleted: "Chủ đề này đã bị xóa"
@@ -1604,6 +1602,7 @@ vi:
           "3_1": "Bạn sẽ được nhận các tin báo bởi bạn đã tạo chủ để này."
           "3": "Bạn sẽ nhận được các tin báo bởi vì bạn đang theo dõi chủ đề này."
           "2_8": "Bạn sẽ thấy được 1 số lượng bài viết mới bởi vì bạn đang theo dấu chuyên mục này."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
           "1": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
           "0_7": "Bạn đang bỏ qua tất cả các tin báo trong chuyên mục này."
@@ -2237,7 +2236,6 @@ vi:
         new: "Nhóm mới"
         tags_label: "Thẻ trong nhóm này:"
         parent_tag_label: "Thẻ cha:"
-        parent_tag_placeholder: "Tuỳ chọn"
         save: "Lưu"
         delete: "Xoá"
       topics:
@@ -2480,7 +2478,6 @@ vi:
           subject: "Chủ đề"
           multiple_subjects: "Email template này có nhiều chủ đề."
           body: "Nội dung"
-          none_selected: "Chọn email template để bắt đầu chỉnh sửa."
           revert: "Hoàn nguyên thay đổi"
           revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
         theme:
@@ -2686,7 +2683,6 @@ vi:
           domain: "Tên miền"
         screened_ips:
           title: "Screened IPs"
-          description: 'Các địa chỉ IP đã được xem, sử dụng "Cho phép" để tạo danh sách trắng các địa chỉ.'
           delete_confirm: "Bạn có chắc chắn muốn xóa quy tắc cho %{ip_address}?"
           roll_up_confirm: "Bạn có chắc chắn muốn cuộn các địa chỉ IP thông thường vào các mạng con?"
           rolled_up_some_subnets: "Cuộn thành công các IP cấm vào các mạng con: %{subnets}."
@@ -2975,11 +2971,11 @@ vi:
         reason_help: (Liên kết đến bài viết hoặc chủ đề)
         save: Lưu
         delete: Xóa
-        delete_confirm: "Bạn có chắc chắn muốn xóa huy hiệu này?"
+        delete_confirm: Bạn có chắc chắn muốn xóa huy hiệu này?
         revoke: Thu hồi
         reason: Lý do
         expand: Mở rộng &hellip;
-        revoke_confirm: "Bạn có chắc chắn muốn thu hồi huy hiệu này?"
+        revoke_confirm: Bạn có chắc chắn muốn thu hồi huy hiệu này?
         edit_badges: Sửa huy hiệu
         grant_badge: Cấp huy hiệu
         granted_badges: Cấp huy hiệu
@@ -3019,10 +3015,10 @@ vi:
             other: "<b>%{count}</b> huy hiệu đã được gán."
           sample: "Ví dụ:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> for post in %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> viết bài trong %{link} lúc <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> lúc <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> viết bài trong %{link} lúc <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> lúc <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
         help: "Thêm emoji mới có sẵn cho tất cả mọi người. (MẸO: kéo & thả nhiều file cùng lúc)"
@@ -3047,8 +3043,6 @@ vi:
         embed_by_username: "Tên thành viên để tạo chủ đề"
         embed_post_limit: "Số lượng tối đa bài viết được nhúng"
         embed_truncate: "Cắt ngắn các bài viết được nhúng"
-        embed_whitelist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng"
-        embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
         save: "Lưu thiết lập nhúng"
       permalink:
         title: "Liên kết cố định"
@@ -3059,8 +3053,7 @@ vi:
         post_title: "Bài viết"
         category_id: "ID Danh mục"
         category_title: "Danh mục"
-        external_url: "URL Bên ngoài"
-        delete_confirm: "Bạn có chắc chắn muốn xóa liên kết tĩnh này?"
+        delete_confirm: Bạn có chắc chắn muốn xóa liên kết tĩnh này?
         form:
           label: "Mới:"
           add: "Thêm"

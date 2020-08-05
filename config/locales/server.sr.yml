@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sr:
   dates:
@@ -16,9 +15,20 @@ sr:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
   date:
-    month_names: [~, januar, februar, mart, april, maj, jun, jul, avgust, septembar, oktobar, novembar, decembar]
-    <<: *datetime_formats
-  time:
+    month_names:
+    - null
+    - januar
+    - februar
+    - mart
+    - april
+    - maj
+    - jun
+    - jul
+    - avgust
+    - septembar
+    - oktobar
+    - novembar
+    - decembar
     <<: *datetime_formats
   title: "Discourse"
   topics: "Teme"
@@ -38,20 +48,17 @@ sr:
       invalid_boolean: "Nepravilan boolean."
       even: mora biti parno
       exclusion: je rezervisano
-      greater_than: "mora biti veće od %{count}"
+      greater_than: mora biti veće od %{count}
       is_invalid: "deluje nejasno, da li je rečenica kompletna?"
       contains_censored_words: "sadrži sledeće cenzurisane reči: 1%{censored_words}"
-      less_than: "mora biti manje od 1%{count}"
+      less_than: mora biti manje od 1%{count}
       not_a_number: nije broj
       not_an_integer: mora biti ceo broj
-      record_invalid: "Verifikacija neuspešna: 1%{errors}"
+      record_invalid: ! "Verifikacija neuspešna: 1%{errors}"
     embed:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:
@@ -105,13 +112,13 @@ sr:
       user_profile:
         bio_raw: "O meni"
     errors:
-      <<: *errors
       models:
         user:
           attributes:
             password:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
+      <<: *errors
   staff_category_name: "Osoblje"
   datetime:
     distance_in_words:
@@ -400,3 +407,8 @@ sr:
         title: "Odbij"
       delete_user:
         title: "Obriši Korisnika"
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors
