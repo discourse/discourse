@@ -114,7 +114,9 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
     raise "Multisite migrate is only supported in production"
   end
 
-  concurrency = (ENV['MIGRATE_CONCURRENCY'].presence || "20").to_i
+  # TODO: Switch to processes for concurrent migrations because Rails migration
+  # is not thread safe by default.
+  concurrency = 1
 
   puts "Multisite migrator is running using #{concurrency} threads"
   puts
