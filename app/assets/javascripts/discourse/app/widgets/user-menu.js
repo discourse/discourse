@@ -157,8 +157,7 @@ export default createWidget("user-menu", {
     return {
       currentQuickAccess: QuickAccess.NOTIFICATIONS,
       hasUnread: false,
-      markUnread: null,
-      hasMore: true
+      markUnread: null
     };
   },
 

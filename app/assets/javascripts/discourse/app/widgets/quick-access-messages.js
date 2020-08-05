@@ -24,12 +24,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
   buildKey: () => "quick-access-messages",
   emptyStatePlaceholderItemKey: "choose_topic.none_found",
 
-  hasMore() {
-    // Always show the button to the messages page for composing, archiving,
-    // etc.
-    return true;
-  },
-
   showAllHref() {
     return `${this.attrs.path}/messages`;
   },
@@ -40,7 +34,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
         filter: `topics/private-messages/${this.currentUser.username_lower}`
       })
       .then(({ topic_list }) => {
-        return topic_list.topics.map(toItem).slice(0, this.estimateItemLimit());
+        return topic_list.topics.map(toItem);
       });
   },
 

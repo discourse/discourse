@@ -343,9 +343,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           contentHeight =
             fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
         }
-        if ($panelBody.height() !== contentHeight) {
-          $panelBody.height(contentHeight);
-        }
         $("body").addClass("drop-down-mode");
       } else {
         if (this.site.mobileView) {
@@ -360,7 +357,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           : $(window).height();
         const winHeight = initialWinHeight - winHeightOffset;
 
-        let height = winHeight - menuTop;
+        let height;
+        if (this.site.mobileView) {
+          height = winHeight - menuTop;
+        }
 
         if ($panelBody.prop("style").height !== "100%") {
           $panelBody.height("100%");

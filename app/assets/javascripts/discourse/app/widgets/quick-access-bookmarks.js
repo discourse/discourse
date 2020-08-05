@@ -10,11 +10,6 @@ const ICON = "bookmark";
 createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   buildKey: () => "quick-access-bookmarks",
 
-  hasMore() {
-    // Always show the button to the bookmarks page.
-    return true;
-  },
-
   showAllHref() {
     return `${this.attrs.path}/activity/bookmarks`;
   },
@@ -49,10 +44,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
 
   loadBookmarksWithReminders() {
     return ajax(`/u/${this.currentUser.username}/bookmarks.json`, {
-      cache: "false",
-      data: {
-        limit: this.estimateItemLimit()
-      }
+      cache: "false"
     }).then(result => {
       result = result.user_bookmark_list;
 
@@ -71,7 +63,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       data: {
         username: this.currentUser.username,
         filter: UserAction.TYPES.bookmarks,
-        limit: this.estimateItemLimit(),
         no_results_help_key: "user_activity.no_bookmarks"
       }
     }).then(({ user_actions, no_results_help }) => {

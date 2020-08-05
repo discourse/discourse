@@ -24,16 +24,16 @@ export default createWidget("quick-access-panel", {
     return Promise.resolve();
   },
 
+  hideBottomItems() {
+    return false;
+  },
+
   hasUnread() {
     return false;
   },
 
   showAllHref() {
     return "";
-  },
-
-  hasMore() {
-    return true;
   },
 
   findNewItems() {
@@ -60,10 +60,6 @@ export default createWidget("quick-access-panel", {
     return this.markReadRequest().then(() => {
       this.refreshNotifications(this.state);
     });
-  },
-
-  estimateItemLimit() {
-    return 40;
   },
 
   refreshNotifications(state) {
@@ -104,7 +100,7 @@ export default createWidget("quick-access-panel", {
       ? this.getItems().map(item => this.itemHtml(item))
       : [this.emptyStatePlaceholderItem()];
 
-    if (this.hasMore()) {
+    if (!this.hideBottomItems()) {
       bottomItems.push(
         h(
           "span.show-all",
