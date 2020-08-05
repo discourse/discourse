@@ -59,7 +59,6 @@ import { on } from "@ember/object/evented";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
-import { addTopicTrackingFilterFn } from "discourse/models/topic-tracking-state";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.10.2";
@@ -1179,20 +1178,6 @@ class PluginApi {
 
   addFeaturedLinkMetaDecorator(decorator) {
     addFeaturedLinkMetaDecorator(decorator);
-  }
-
-  /**
-   * Adds a function that will modify topic tracking state counts
-   *
-   * ```
-   * api.addTopicTrackingFilterFn((topics, currentUser, type, categoryId, tagId) => {
-   *   return topics.filter(topic => topic.categoryId === 2)
-   * })
-   * ```
-   *
-   **/
-  addTopicTrackingFilterFn(modifier) {
-    addTopicTrackingFilterFn(modifier);
   }
 }
 

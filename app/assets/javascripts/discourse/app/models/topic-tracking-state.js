@@ -437,10 +437,6 @@ const TopicTrackingState = EmberObject.extend({
             mutedCategoryIds.indexOf(topic.category_id) === -1)
       )
       .value();
-
-    topicTrackingFilterFns.forEach(filterFn => {
-      topics = filterFn(topics, this.currentUser, type, categoryId, tagId);
-    });
     return topics.length;
   },
 
