@@ -160,15 +160,33 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
     end.each(&:join)
   end
 
+  def check_exceptions(exceptions)
+    if exceptions.length > 0
+      STDERR.puts
+      STDERR.puts "-" * 80
+      STDERR.puts "#{exceptions.length} migrations failed!"
+      while !exceptions.empty?
+        db, e = exceptions.pop
+        STDERR.puts
+        STDERR.puts "Failed to migrate #{db}"
+        STDERR.puts e.inspect
+        STDERR.puts e.backtrace
+        STDERR.puts
+      end
+      exit 1
+    end
+  end
+
   execute_concurently(concurrency, exceptions) do |db|
     puts "Migrating #{db}"
     ActiveRecord::Tasks::DatabaseTasks.migrate
   end
 
+  check_exceptions(exceptions)
+
   SeedFu.seed(SeedHelper.paths, /001_refresh/)
 
   execute_concurently(concurrency, exceptions) do |db|
-
     puts "Seeding #{db}"
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
@@ -178,21 +196,7 @@ task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |
   end
 
   $stdout = old_stdout
-
-  if exceptions.length > 0
-    STDERR.puts
-    STDERR.puts "-" * 80
-    STDERR.puts "#{exceptions.length} migrations failed!"
-    while !exceptions.empty?
-      db, e = exceptions.pop
-      STDERR.puts
-      STDERR.puts "Failed to migrate #{db}"
-      STDERR.puts e.inspect
-      STDERR.puts e.backtrace
-      STDERR.puts
-    end
-    exit 1
-  end
+  check_exceptions(exceptions)
 
   Rake::Task['db:_dump'].invoke
 end
