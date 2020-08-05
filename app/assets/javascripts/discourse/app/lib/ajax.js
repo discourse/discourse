@@ -6,6 +6,7 @@ import logout from "discourse/lib/logout";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
+import { isTesting } from "discourse-common/config/environment";
 
 let _trackView = false;
 let _transientHeader = null;
@@ -118,7 +119,9 @@ export function ajax() {
 
     args.error = (xhr, textStatus, errorThrown) => {
       // 0 represents the `UNSENT` state
-      if (xhr.readyState === 0) return;
+      if (xhr.readyState === 0 && !isTesting()) {
+        return;
+      }
       handleLogoff(xhr);
 
       // note: for bad CSRF we don't loop an extra request right away.
