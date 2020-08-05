@@ -491,7 +491,4 @@ QUnit.test("shows option to disable dark mode", async assert => {
     $(".control-group.dark-mode").length,
     "it has the option to disable dark mode"
   );
-  await click(".control-group.dark-mode .checkbox-label");
-
-  pauseTest();
 });
