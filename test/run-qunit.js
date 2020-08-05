@@ -109,10 +109,11 @@ async function runAllTests() {
   Page.navigate({ url: args[0] });
 
   Page.loadEventFired(async () => {
+    let qff = process.env.QUNIT_FAIL_FAST;
     await Runtime.evaluate({
       expression:
         `const QUNIT_FAIL_FAST = ` +
-        (process.env.QUNIT_FAIL_FAST === "true").toString() +
+        (qff === "1" || qff === "true").toString() +
         ";"
     });
     await Runtime.evaluate({
@@ -262,7 +263,7 @@ function logQUnit() {
     if (context.failed) {
       console.log("\nUse this filter to run in the same order:");
       console.log(
-        "QUNIT_FAIL_FAST=true QUNIT_SEED=" +
+        "QUNIT_FAIL_FAST=1 QUNIT_SEED=" +
           QUnit.config.seed +
           " rake qunit:test\n"
       );

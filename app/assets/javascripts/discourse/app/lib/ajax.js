@@ -121,7 +121,7 @@ export function ajax() {
       // 0 represents the `UNSENT` state
       if (xhr.readyState === 0) {
         // Make sure we log pretender errors in test mode
-        if (isTesting()) {
+        if (textStatus === "error" && isTesting()) {
           throw errorThrown;
         }
         return;
