@@ -2,14 +2,7 @@ import I18n from "I18n";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { headerHeight } from "discourse/components/site-header";
 import { Promise } from "rsvp";
-
-// even a 2 liner notification should be under 50px in default view
-const AVERAGE_ITEM_HEIGHT = 50;
-
-// our UX usually carries about 100px of padding around the notification excluding header
-const PADDING = 100;
 
 /**
  * This tries to enforce a consistent flow of fetching, caching, refreshing,

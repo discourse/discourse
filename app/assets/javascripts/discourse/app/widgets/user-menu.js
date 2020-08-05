@@ -2,7 +2,6 @@ import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { formatUsername } from "discourse/lib/utilities";
-import hbs from "discourse/widgets/hbs-compiler";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess"
