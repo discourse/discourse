@@ -194,6 +194,7 @@ function logQUnit() {
       testErrors.push(msg);
       assertionErrors = [];
       console.log("F");
+      QUnit.config.queue.length = 0;
     } else {
       console.log(".");
     }
@@ -244,6 +245,17 @@ function logQUnit() {
       "Failed: " + context.failed
     ];
     console.log(stats.join(", "));
+
+    if (context.failed) {
+      console.log("\nUse this filter to run in the same order:");
+      console.log("QUNIT_SEED=" + QUnit.config.seed + " rake qunit:test\n");
+      console.log("If you have a web environment running, you can visit:");
+      console.log(
+        "http://localhost:3000/qunit?hidepassed&seed=" +
+          QUnit.config.seed +
+          "\n\n"
+      );
+    }
 
     window.qunitDone = context;
   });
