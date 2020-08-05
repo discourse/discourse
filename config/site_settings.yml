@@ -2308,7 +2308,7 @@ dashboard:
     client: true
     type: list
     list_type: compact
-    default: "page_view_total_reqs|visits|time_to_first_response|likes|flags|user_to_user_private_messages_with_replies"
+    default: "page_view_total_reqs|visits|time_to_first_response|likes|flags|user_to_user_private_messages_with_replies|signups"
     allow_any: false
     choices:
       - page_view_total_reqs
