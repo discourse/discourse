@@ -711,6 +711,9 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
 
+    destination_topic = Topic.find_by(id: destination_topic_id)
+    guardian.ensure_can_create_post_on_topic!(destination_topic)
+
     args = {}
     args[:destination_topic_id] = destination_topic_id.to_i
 
@@ -736,9 +739,15 @@ class TopicsController < ApplicationController
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
 
-    # when creating a new topic, ensure the 1st post is a regular post
-    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) != Post.types[:regular]
-      return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
+    if params[:title].present?
+      # when creating a new topic, ensure the 1st post is a regular post
+      if Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) != Post.types[:regular]
+        return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
+      end
+
+      if params[:category_id].present?
+        guardian.ensure_can_create_topic_on_category!(params[:category_id])
+      end
     end
 
     destination_topic = move_posts_to_destination(topic)
