@@ -253,7 +253,7 @@ function logQUnit() {
     if (testsBeforeFailure.length) {
       console.log("Use this filter to run the tests before first failure:");
       console.log(
-        "`FILTER=/(" + testsBeforeFailure.join("|") + ")/i rake qunit:test"
+        "FILTER=/(" + testsBeforeFailure.join("|") + ")/i rake qunit:test"
       );
     }
 
