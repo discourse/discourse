@@ -247,7 +247,7 @@ const DiscourseURL = EmberObject.extend({
     if (fullPath.indexOf(myPath) === 0) {
       const currentUser = User.current();
       if (currentUser) {
-        path = path.replace(
+        path = fullPath.replace(
           myPath,
           userPath(currentUser.get("username_lower"))
         );
