@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
 
 export function buildPermissionDescription(id) {
-  var key = "";
+  let key = "";
 
   switch (id) {
     case 1:
