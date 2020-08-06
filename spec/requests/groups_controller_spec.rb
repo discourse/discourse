@@ -615,6 +615,8 @@ describe GroupsController do
         public_exit: false
       )
     end
+    let(:category) { Fabricate(:category) }
+    let(:tag) { Fabricate(:tag) }
 
     context "custom_fields" do
       before do
@@ -688,7 +690,9 @@ describe GroupsController do
               allow_membership_requests: true,
               membership_request_template: 'testing',
               default_notification_level: 1,
-              name: 'testing'
+              name: 'testing',
+              tracking_category_ids: [category.id],
+              tracking_tags: [tag.name]
             }
           }
         end.to change { GroupHistory.count }.by(13)
@@ -716,6 +720,8 @@ describe GroupsController do
         expect(group.primary_group).to eq(false)
         expect(group.incoming_email).to eq(nil)
         expect(group.grant_trust_level).to eq(0)
+        expect(group.group_category_notification_defaults.first&.category).to eq(category)
+        expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
       end
 
       it 'should not be allowed to update automatic groups' do
@@ -753,7 +759,9 @@ describe GroupsController do
             automatic_membership_email_domains: 'test.org',
             grant_trust_level: 2,
             visibility_level: 1,
-            members_visibility_level: 3
+            members_visibility_level: 3,
+            tracking_category_ids: [category.id],
+            tracking_tags: [tag.name]
           }
         }
 
@@ -768,6 +776,8 @@ describe GroupsController do
         expect(group.members_visibility_level).to eq(3)
         expect(group.automatic_membership_email_domains).to eq('test.org')
         expect(group.grant_trust_level).to eq(2)
+        expect(group.group_category_notification_defaults.first&.category).to eq(category)
+        expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
 
         expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"])
           .to eq(group.id)
@@ -790,7 +800,9 @@ describe GroupsController do
             visibility_level: 1,
             mentionable_level: 1,
             messageable_level: 1,
-            default_notification_level: 1
+            default_notification_level: 1,
+            tracking_category_ids: [category.id],
+            tracking_tags: [tag.name]
           }
         }
 
@@ -803,6 +815,8 @@ describe GroupsController do
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
+        expect(group.group_category_notification_defaults.first&.category).to eq(category)
+        expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
       end
 
       it 'triggers a extensibility event' do

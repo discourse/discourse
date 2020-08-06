@@ -146,4 +146,17 @@
   .control-group-inline {
     display: inline;
   }
+  &.groups-notifications-form {
+    .control-instructions {
+      color: $primary-medium;
+      margin-bottom: 10px;
+      font-size: $font-down-1;
+      line-height: $line-height-large;
+    }
+
+    .category-selector,
+    .tag-chooser {
+      width: 100%;
+    }
+  }
 }

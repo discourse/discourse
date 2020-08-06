@@ -656,6 +656,22 @@ en:
         membership:
           title: Membership
           access: Access
+        categories:
+          title: Categories
+          long_title: "Category default notifications"
+          description: "When users are added to this group, their category notification settings will be set to these defaults. Afterwards, they can change them."
+          watched_categories_instructions: "Automatically watch all topics in these categories. Group members will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+          tracked_categories_instructions: "Automatically track all topics in these categories. A count of new posts will appear next to the topic."
+          watching_first_post_categories_instructions: "Users will be notified of the first post in each new topic in these categories."
+          muted_categories_instructions: "Users will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest topics pages."
+        tags:
+          title: Tags
+          long_title: "Tags default notifications"
+          description: "When users are added to this group, their tag notification settings will be set to these defaults. Afterwards, they can change them."
+          watched_tags_instructions: "Automatically watch all topics with these tags. Group members will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+          tracked_tags_instructions: "Automatically track all topics with these tags. A count of new posts will appear next to the topic."
+          watching_first_post_tags_instructions: "Users will be notified of the first post in each new topic with these tags."
+          muted_tags_instructions: "Users will not be notified of anything about new topics with these tags, and they will not appear in latest."
         logs:
           title: "Logs"
           when: "When"
