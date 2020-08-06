@@ -756,6 +756,28 @@ describe PostDestroyer do
       end
     end
 
+    describe "incoming email and imap sync" do
+      fab!(:incoming) { Fabricate(:incoming_email, post: post, topic: post.topic) }
+
+      it "does nothing if imap not enabled" do
+        IncomingEmail.expects(:find_by).never
+        PostDestroyer.new(moderator, post).destroy
+      end
+
+      it "does nothing if the incoming email has no imap_uid" do
+        SiteSetting.enable_imap = true
+        PostDestroyer.new(moderator, post).destroy
+        expect(incoming.reload.imap_sync).to eq(false)
+      end
+
+      it "sets imap_sync to true for the matching incoming" do
+        SiteSetting.enable_imap = true
+        incoming.update(imap_uid: 999)
+        PostDestroyer.new(moderator, post).destroy
+        expect(incoming.reload.imap_sync).to eq(true)
+      end
+    end
+
     describe 'with a reply' do
 
       fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
