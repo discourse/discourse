@@ -366,7 +366,7 @@ export default Component.extend({
             this.get("inviteModel.details.allowed_users").pushObject(
               EmberObject.create(result.user)
             );
-            this.appEvents.trigger("post-stream:refresh");
+            this.appEvents.trigger("post-stream:refresh", { force: true });
           } else if (
             this.invitingToTopic &&
             emailValid(this.emailOrUsername.trim()) &&
