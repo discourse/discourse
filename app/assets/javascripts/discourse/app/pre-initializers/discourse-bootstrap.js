@@ -64,12 +64,12 @@ export default {
     app.ThemeSettings = PreloadStore.get("themeSettings");
     app.LetterAvatarVersion = setupData.letterAvatarVersion;
     app.MarkdownItURL = setupData.markdownItUrl;
-    app.ServiceWorkerURL = setupData.serviceWorkerUrl;
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};
     window.Logster.enabled = setupData.enableJsErrorReporting === "true";
 
+    Session.currentProp("serviceWorkerURL", setupData.serviceWorkerUrl);
     Session.currentProp("assetVersion", setupData.assetVersion);
 
     Session.currentProp(
