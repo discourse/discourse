@@ -1751,7 +1751,7 @@ describe GroupsController do
       fab!(:category) { Fabricate(:category) }
 
       before do
-        category.set_permissions(:"#{group.name}" => :full)
+        category.set_permissions("#{group.name}": :full)
         category.save!
       end
 
@@ -1775,12 +1775,12 @@ describe GroupsController do
 
       ["Three", "New Cat", "Abc", "Hello"].each do |name|
         category = Fabricate(:category, name: name)
-        category.set_permissions(:"#{group.name}" => :full)
+        category.set_permissions("#{group.name}": :full)
         category.save!
       end
 
       get "/groups/#{group.name}/permissions.json"
-      expect(response.parsed_body.map{ |permission| permission["category"]["name"] }).to eq(
+      expect(response.parsed_body.map { |permission| permission["category"]["name"] }).to eq(
         ["Abc", "Hello", "New Cat", "Three"]
       )
     end
