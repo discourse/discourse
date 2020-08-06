@@ -10,5 +10,5 @@ export default Controller.extend({
   )
   selectedTags(watching, watchingFirst, tracking, muted) {
     return [].concat(watching, watchingFirst, tracking, muted).filter(t => t);
-  },
+  }
 });
