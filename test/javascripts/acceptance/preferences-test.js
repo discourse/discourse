@@ -3,66 +3,67 @@ import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
 import User from "discourse/models/user";
 
+function preferencesPretender(server, helper) {
+  server.post("/u/second_factors.json", () => {
+    return helper.response({
+      success: "OK",
+      password_required: "true"
+    });
+  });
+
+  server.post("/u/create_second_factor_totp.json", () => {
+    return helper.response({
+      key: "rcyryaqage3jexfj",
+      qr: '<div id="test-qr">qr-code</div>'
+    });
+  });
+
+  server.post("/u/create_second_factor_security_key.json", () => {
+    return helper.response({
+      challenge: "a6d393d12654c130b2273e68ca25ca232d1d7f4c2464c2610fb8710a89d4",
+      rp_id: "localhost",
+      rp_name: "Discourse",
+      supported_algorithms: [-7, -257]
+    });
+  });
+
+  server.post("/u/enable_second_factor_totp.json", () => {
+    return helper.response({ error: "invalid token" });
+  });
+
+  server.put("/u/second_factors_backup.json", () => {
+    return helper.response({
+      backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"]
+    });
+  });
+
+  server.post("/u/eviltrout/preferences/revoke-account", () => {
+    return helper.response({
+      success: true
+    });
+  });
+
+  server.put("/u/eviltrout/preferences/email", () => {
+    return helper.response({
+      success: true
+    });
+  });
+
+  server.post("/user_avatar/eviltrout/refresh_gravatar.json", () => {
+    return helper.response({
+      gravatar_upload_id: 6543,
+      gravatar_avatar_template: "/images/avatar.png"
+    });
+  });
+
+  server.get("/u/eviltrout/activity.json", () => {
+    return helper.response({});
+  });
+}
+
 acceptance("User Preferences", {
   loggedIn: true,
-  pretend(server, helper) {
-    server.post("/u/second_factors.json", () => {
-      return helper.response({
-        success: "OK",
-        password_required: "true"
-      });
-    });
-
-    server.post("/u/create_second_factor_totp.json", () => {
-      return helper.response({
-        key: "rcyryaqage3jexfj",
-        qr: '<div id="test-qr">qr-code</div>'
-      });
-    });
-
-    server.post("/u/create_second_factor_security_key.json", () => {
-      return helper.response({
-        challenge:
-          "a6d393d12654c130b2273e68ca25ca232d1d7f4c2464c2610fb8710a89d4",
-        rp_id: "localhost",
-        rp_name: "Discourse",
-        supported_algorithms: [-7, -257]
-      });
-    });
-
-    server.post("/u/enable_second_factor_totp.json", () => {
-      return helper.response({ error: "invalid token" });
-    });
-
-    server.put("/u/second_factors_backup.json", () => {
-      return helper.response({
-        backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"]
-      });
-    });
-
-    server.post("/u/eviltrout/preferences/revoke-account", () => {
-      return helper.response({
-        success: true
-      });
-    });
-
-    server.put("/u/eviltrout/preferences/email", () => {
-      return helper.response({
-        success: true
-      });
-    });
-
-    server.post("/user_avatar/eviltrout/refresh_gravatar.json", () => {
-      return helper.response({
-        gravatar_upload_id: 6543,
-        gravatar_avatar_template: "/images/avatar.png"
-      });
-    });
-
-    server.get("/u/eviltrout/activity.json", () => {
-      return helper.response({});
-    });
-  }
+  pretend: preferencesPretender
 });
 
 QUnit.test("update some fields", async assert => {
@@ -344,7 +345,8 @@ QUnit.test("selectable avatars", async assert => {
 
 acceptance("User Preferences when badges are disabled", {
   loggedIn: true,
-  settings: { enable_badges: false }
+  settings: { enable_badges: false },
+  pretend: preferencesPretender
 });
 
 QUnit.test("visit my preferences", async assert => {
@@ -464,7 +466,8 @@ acceptance("Custom User Fields", {
         required: true
       }
     ]
-  }
+  },
+  pretend: preferencesPretender
 });
 
 QUnit.test("can select an option from a dropdown", async assert => {
