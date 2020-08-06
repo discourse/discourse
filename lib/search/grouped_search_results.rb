@@ -106,23 +106,24 @@ class Search
       end
     end
 
-    URI_REGEXP = URI.regexp(%w{http https})
-
     def self.blurb_for(cooked: nil, term: nil, blurb_length: BLURB_LENGTH, scrub: true)
       blurb = nil
-      cooked = SearchIndexer.scrub_html_for_search(cooked) if scrub
 
-      urls = Set.new
-      cooked.scan(URI_REGEXP) { urls << $& }
-      urls.each do |url|
-        begin
-          case File.extname(URI(url).path || "")
-          when Oneboxer::VIDEO_REGEX
-            cooked.gsub!(url, I18n.t("search.video"))
-          when Oneboxer::AUDIO_REGEX
-            cooked.gsub!(url, I18n.t("search.audio"))
+      if scrub
+        cooked = SearchIndexer.scrub_html_for_search(cooked)
+
+        urls = Set.new
+        cooked.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
+        urls.each do |url|
+          begin
+            case File.extname(URI(url).path || "")
+            when Oneboxer::VIDEO_REGEX
+              cooked.gsub!(url, I18n.t("search.video"))
+            when Oneboxer::AUDIO_REGEX
+              cooked.gsub!(url, I18n.t("search.audio"))
+            end
+          rescue URI::InvalidURIError
           end
-        rescue URI::InvalidURIError
         end
       end
 

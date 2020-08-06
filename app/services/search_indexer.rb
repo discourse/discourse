@@ -46,13 +46,6 @@ class SearchIndexer
       d: search_data[3],
     }
 
-    indexed_data =
-      if table.to_s == "post"
-        ranked_params[:d]
-      else
-        search_data.select { |d| d.length > 0 }.join(' ')
-      end
-
     tsvector = DB.query_single("SELECT #{ranked_index}", ranked_params)[0]
     additional_lexemes = []
 
@@ -74,6 +67,13 @@ class SearchIndexer
     end
 
     tsvector = "#{tsvector} #{additional_lexemes.join(' ')}"
+
+    indexed_data =
+      if table.to_s == "post"
+        clean_post_raw_data!(ranked_params[:d])
+      else
+        search_data.select { |d| d.length > 0 }.join(' ')
+      end
 
     params = {
       raw_data: indexed_data,
@@ -215,6 +215,26 @@ class SearchIndexer
       SearchIndexer.update_tags_index(obj.id, obj.name)
     end
   end
+
+  def self.clean_post_raw_data!(raw_data)
+    urls = Set.new
+    raw_data.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
+
+    urls.each do |url|
+      begin
+        case File.extname(URI(url).path || "")
+        when Oneboxer::VIDEO_REGEX
+          raw_data.gsub!(url, I18n.t("search.video"))
+        when Oneboxer::AUDIO_REGEX
+          raw_data.gsub!(url, I18n.t("search.audio"))
+        end
+      rescue URI::InvalidURIError
+      end
+    end
+
+    raw_data
+  end
+  private_class_method :clean_post_raw_data!
 
   class HtmlScrubber < Nokogiri::XML::SAX::Document
 
