@@ -52,10 +52,6 @@ en:
         title: "Group votes by user field"
         label: "Show breakdown"
 
-      ungroup-results:
-        title: "Combine all votes"
-        label: "Hide breakdown"
-
       export-results:
         title: "Export the poll results"
         label: "Export"
@@ -73,6 +69,13 @@ en:
       automatic_close:
         closes_in: "Closes in <strong>%{timeLeft}</strong>."
         age: "Closed <strong>%{age}</strong>"
+
+      breakdown:
+        title: "Poll results"
+        votes: "%{count} votes"
+        breakdown: "Breakdown"
+        percentage: "Percentage"
+        count: "Count"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."

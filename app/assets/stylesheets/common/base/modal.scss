@@ -148,7 +148,7 @@
   }
 
   &:not(.history-modal) {
-    .modal-body:not(.reorder-categories):not(.poll-ui-builder) {
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
       max-height: 80vh !important;
       @media screen and (max-height: 500px) {
         max-height: 65vh !important;
