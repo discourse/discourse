@@ -1957,6 +1957,7 @@ en:
       membership_request_consolidated: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - completed"
 
       group_message_summary:
         one: "%{count} message in your %{group_name} inbox"
@@ -1999,6 +2000,7 @@ en:
         post_approved: "post approved"
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
+        votes_released: "Vote was released"
 
     upload_selector:
       title: "Add an image"

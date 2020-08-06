@@ -42,7 +42,8 @@ const REPLACEMENTS = {
   "notification.post_approved": "check",
   "notification.membership_request_accepted": "user-plus",
   "notification.membership_request_consolidated": "users",
-  "notification.reaction": "bell"
+  "notification.reaction": "bell",
+  "notification.votes_released": "plus"
 };
 
 export function replaceIcon(source, destination) {

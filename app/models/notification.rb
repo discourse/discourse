@@ -112,6 +112,7 @@ class Notification < ActiveRecord::Base
                         membership_request_consolidated: 23,
                         bookmark_reminder: 24,
                         reaction: 25,
+                        votes_released: 26,
                        )
   end
 
