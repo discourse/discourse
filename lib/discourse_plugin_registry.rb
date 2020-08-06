@@ -54,6 +54,7 @@ class DiscoursePluginRegistry
   define_register :stylesheets, Hash
   define_register :mobile_stylesheets, Hash
   define_register :desktop_stylesheets, Hash
+  define_register :color_definition_stylesheets, Hash
   define_register :sass_variables, Set
   define_register :handlebars, Set
   define_register :serialized_current_user_fields, Set
@@ -153,6 +154,8 @@ class DiscoursePluginRegistry
       elsif opts == :desktop
         self.desktop_stylesheets[plugin_directory_name] ||= Set.new
         self.desktop_stylesheets[plugin_directory_name] << asset
+      elsif opts == :color_definitions
+        self.color_definition_stylesheets[plugin_directory_name] = asset
       elsif opts == :variables
         self.sass_variables << asset
       else

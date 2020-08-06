@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ar:
   dates:
@@ -17,12 +16,25 @@ ar:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y، %l:%M%P"
   date:
-    month_names: [~, يناير, فبراير, مارس, أبريل, مايو, يونيو, يوليو, أغسطس, سبتمبر, أكتوبر, نوفمبر, ديسمبر]
+    month_names:
+    - null
+    - يناير
+    - فبراير
+    - مارس
+    - أبريل
+    - مايو
+    - يونيو
+    - يوليو
+    - أغسطس
+    - سبتمبر
+    - أكتوبر
+    - نوفمبر
+    - ديسمبر
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "ص"
     pm: "م"
+    <<: *datetime_formats
   title: "دسكورس"
   topics: "الموضوعات "
   posts: "المنشورات"
@@ -56,7 +68,7 @@ ar:
         screened_email_error: "وحدث هذا عندما تم حجب عنوان البريد الالكتروني للمرسل"
       unrecognized_error: "خطا غير محدد السبب"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     messages:
       too_long_validation: "إنها محددة بعدد حروف %{max} حرف; لقد أدخلت %{length}."
       invalid_boolean: "قيمة منطقية غير صالحة."
@@ -64,24 +76,24 @@ ar:
       accepted: يجب أن تُقبل.
       blank: لا يمكن جعله فارغا.
       present: يجب أن يكون فارغ.
-      confirmation: "ليست مطابقة ل %{attribute}."
+      confirmation: ! "ليست مطابقة ل %{attribute}."
       empty: لا يمكن جعله فارغا.
-      equal_to: "يجب أن تكون مساوي لـ %{count}"
+      equal_to: يجب أن تكون مساوي لـ %{count}
       even: يجب أن يكون العدد زوجي.
       exclusion: محجوز.
-      greater_than: "يجب أن تكون أكبر من %{count}"
-      greater_than_or_equal_to: "يجب أن تكون أكبر من أو تساوي %{count}"
+      greater_than: يجب أن تكون أكبر من %{count}
+      greater_than_or_equal_to: يجب أن تكون أكبر من أو تساوي %{count}
       has_already_been_used: "مستخدم بالفعل "
       inclusion: غير متضمن في القائمة
       invalid: غير صالح
       is_invalid: "تبدو غير واضحة، هل هذه الجملة كاملة؟"
       contains_censored_words: "تحتوي الكلمات الآتية الخاضعة للرّقابة: %{censored_words}"
-      less_than: "يجب أن يكون أقل من %{count}"
-      less_than_or_equal_to: "يجب أن تكون أقل من أو تساوي %{count}"
+      less_than: يجب أن يكون أقل من %{count}
+      less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
       not_a_number: ليس عدد
       not_an_integer: يجب أن يكون عدد صحيح
       odd: يجب أن يكون مفرد
-      record_invalid: "التأكد من الصلاحية غير ممكن : %{errors}"
+      record_invalid: ! "التأكد من الصلاحية غير ممكن : %{errors}"
       restrict_dependent_destroy:
         one: "لا يمكن حذف السجل لإعتماد سجل آخر عليه %{record} "
         many: "لا يمكن حذف السجل لاعتماده %{record} موجود"
@@ -108,22 +120,19 @@ ar:
         other: طول خاطئ (يجب أن يكون %{count} حروف)
       other_than: "يجب أن تكون غير %{count}"
     template:
-      body: "حدثت مشاكل بالحقول الآتية:"
+      body: ! "حدثت مشاكل بالحقول الآتية:"
       header:
-        zero: "لا أخطاء تمنع هذا %{model} من الحفظ"
+        zero: ! "لا أخطاء تمنع هذا %{model} من الحفظ"
         one: "خطأ واحد منع هذا %{model} من الحفظ"
-        two: "خطأن منعا هذا %{model} من الحفظ"
-        few: "أخطاء قليل تمنع هذا %{model} من الحفظ"
-        many: "أخطاء كثيرة تمنع هذا %{model} من الحفظ"
-        other: "%{count} أخطاء منعت هذا %{model} من الحفظ"
+        two: ! "خطأن منعا هذا %{model} من الحفظ"
+        few: ! "أخطاء قليل تمنع هذا %{model} من الحفظ"
+        many: ! "أخطاء كثيرة تمنع هذا %{model} من الحفظ"
+        other: ! "%{count} أخطاء منعت هذا %{model} من الحفظ"
     embed:
       load_from_remote: "حدث عطل أثناء تحميل هذا المنشور."
     site_settings:
       default_categories_already_selected: "لا يمكنك اختيار قسم يستخدم في قائمة أخرى."
       s3_upload_bucket_is_required: "لا يمكنك تفعيل الرفع إلى S3 حتّى توفّر 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "الملف المرفوع يجب أن يكون بنسق csv . "
     error: "حدث عطل أثناء رفع الملفّ. رجاء أعد المحاولة لاحقًا."
@@ -322,7 +331,6 @@ ar:
       user_profile:
         bio_raw: "معلومات عنّي"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -351,6 +359,7 @@ ar:
           attributes:
             payload_url:
               invalid: "رابط غير صالح. يجب أن يحتوي الرابط على http:// او https://. المساحة الفارغة غير مسموح بها."
+      <<: *errors
   vip_category_name: "استراحة"
   vip_category_description: "قسم خاص للمستخدمين ذوي مستوى الثقة 3 فأعلى."
   meta_category_name: "موقع التغذية الإرتجاعية"
@@ -688,7 +697,7 @@ ar:
     read_write: "قراءة/كتابة"
     description: '"%{application_name}": يطلب الصلاحيات التالية لحسابك'
     otp_confirmation:
-      confirm_title: "تابع إلى %{site_name}"
+      confirm_title: تابع إلى %{site_name}
     no_trust_level: "نأسف، لست بمستوى الثّقة الكافي للوصول إلى واجهة برمجة التّطبيقات (API) للمستخدمين"
     generic_error: "نأسف، لا نستطيع إصدار مفاتيح API للمستخدمين؛ عطّل مدير الموقع هذه الميزة"
     scopes:
@@ -907,7 +916,6 @@ ar:
     censored_words: "الكلمات التي ستُستبدل آليًّا ب‍ &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "سيتم حذف المنشورات المخفية تلقائيًا إذا زادت مدة الإخفاء أكثر من 30 يومًا"
     allow_user_locale: "اسمح للمستخدمين باختيار لغة الواجهة التي تناسبهم"
-    set_locale_from_accept_language_header: "اختيار لغة الواجة للمستخدمين المتخفون طبقا للغة المختارة بمتصفح الشبكة. ( إعداد تجريبى، لا يعمل مع ذاكرة المتصفح )"
     min_post_length: "الحد الأدنى المسموح به لطول المنشور بالأحرف"
     min_first_post_length: "الحد الأدنى المسموح به لطول أول منشور (المنشور الاول بالموضوع) بالأحرف"
     min_personal_message_post_length: "الحد الأدنى المسموح به لطول المنشور بالأحرف في الرسائل"
@@ -943,7 +951,6 @@ ar:
     show_pinned_excerpt_mobile: "اظهر مقتطفات من المواضيع المثبتة فى منظر المحمول."
     show_pinned_excerpt_desktop: "اظهر مقتطفات من المواضيع المثبتة فى منظر سطح المكتب."
     post_onebox_maxlength: "الحد الأقصى بالاحرف لطول منشور هذا الموقع عندما يتم وضعة بلوحة مُعاينة."
-    onebox_domains_blacklist: "قائمة بعناوين المواقع التي يمنع وضع روابطها بلوحة مُعاينة."
     notification_email: "عنوان البريد الالكتروني المُرسِل للرسائل الصادرة من الموقع, العنوان المحدد يجب ان يكون له SPF و DKIM و reverse PTR في سجلات الDNS"
     email_custom_headers: "قائمة قناة محددة لرؤوس بريد إلكتروني مخصص."
     force_https: "ارغام الموقع على استخدام HTTPS فقط. تحذير: لا تفعل هذا الاختيار الا بعد التأكد أن HTTPS مفعلة وتعمل بالكامل فى جميع أنحاء الموقع! هل اختبرت جميع الخوادم CDN، جميع تسجيلات الدخول من شبكات التواصل الاجتماعى، أية صور أو تبعيات خارجية للتأكد من أنها كلها متوافقه مع HTTPS؟"
@@ -967,7 +974,6 @@ ar:
     maximum_session_age: "سيظل المستخدم مسجل دخول لهذا العدد من الساعات منذ زيارته اﻷخيرة."
     moderators_create_categories: "السماح للمشرفين بإنشاء اقسام جديدة"
     cors_origins: "اسمح بالأصول للطلبات عبر المنشأ (CORS). كل أصل يجب أن يتضمن http:// أو https://. متغير env لـ DISCOURSE_ENABLE_CORS يجب أن يعين إلى true ليعمل CORS."
-    use_admin_ip_whitelist: "المدير فقط يمكنه تسجيل الدخول إذا كانت عناوين IP لهم معرفة في قائمة IP المحجوبة. (المدير > السجلات > IP المحجوبة)"
     top_menu: "حدد العناصر التي تظهر في قائمة ملاحة الصفحة الرئيسية، و ترتيبها."
     post_menu: "تحديد العناصر التي تظهر في القائمة المختصرة للمنشور، و ترتيبها. مثل ( اعجاب | تحرير | تبليغ | حذف | مشاركة | علّم | رد )"
     post_menu_hidden_items: "العناصر المخفية بشكل افتراضي في القائمة المختصره للمنشور مالم يتم الضغط علي زر الاظهار"
@@ -985,8 +991,6 @@ ar:
     email_token_valid_hours: "أمارات نسيان كلمة السّرّ/تنشيط الحساب صالحة لمدّة (n) ساعة."
     enable_badges: "تفعيل نظام الأوسمة."
     enable_whispers: "السماح للطاقم بعمل نقاشات سرية داخل الموضوعات."
-    email_domains_blacklist: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"
-    email_domains_whitelist: "قائمة pipe-delimited من مجالات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات مع. تحذير: لن يسمح للمستخدمين مع مجالات البريد الإلكتروني الأخرى غير المذكورة هنا!"
     log_out_strict: "عند الخروج، اخرج من كلّ جلسات المستخدم في كلّ الأجهزة"
     new_version_emails: "إرسال بريد إلكتروني إلى عنوان contact_email عندما نسخة جديدة من ديسكورس هو متاح."
     invite_expiry_days: "مدة صلاحية مفاتيح دعوة عضو، بالأيام."
@@ -998,9 +1002,6 @@ ar:
     enable_sso: " اسمح تسجيل دخول واحد عبر موقع خارجي(تحذير :عنوان بريد المستخدم *يجب* ان يتم التحقق من صحته عبر الموقع الخارجي)"
     sso_secret: "السلسلة السرية استخدمت لتشفير مصادقة معلومات SSO, كن متأكداً أنها 10 حروف أو أكثر"
     sso_overrides_bio: "تخطى التعريف المبسط بالعضو، ولا تسمح له بتغييره."
-    sso_overrides_email: "يتجاوز البريد الاكتوني المحلي مع بريد موقع خارجي من حمولة SSO عند كل تسجيل دخول, ويمنع التتغيرات المحلية. (تحذير: ممكن يحدث تعارض بسبب الاختلاف طول اسم المستخدم/المتطلبات)"
-    sso_overrides_username: "يتجاوز \"اسم المستخدم المحلي\" مع \"اسم مستخدم موقع خارجي\" من حمولة SSO عند كل تسجيل دخول, ويمنع التغيرات المحلية. (تحذير: ممكن يحدث تعارض بسبب الاختلاف طول اسم المستخدم/المتطلبات)"
-    sso_overrides_name: "يتجاوز الاسم المحلي مع اسم موقع خارجي من حمولة SSO عند كل تسجيل دخول, ويمنع التغيرات المحلية. "
     sso_not_approved_url: "إعادة التوجيه لم توافق على حسابات SSO لهذا URL"
     allow_new_registrations: "السماح بتسجيل حسابات جديدة. عطل هذه الخاصية إذا كنت تريد منع الكل من عمل حساب جديد علي الموقع."
     enable_signup_cta: "اعرض تنبية للزوار المجهولين المترددين يحثهم علي تسجيل حساب جديد."
@@ -1101,7 +1102,6 @@ ar:
     faq_url: "إذا كانت لديك معلومات حول إضافة أخرى تريد استخدامها, فضلًا قم بتوفير العنوان كاملاً هنا."
     tos_url: "اذا كان لديك وثيقه شروط خدمه مستضيفها في مكان اخر و تريد استخدمها, وفر url الكامل هنا"
     privacy_policy_url: "اذا كان لديك وثيقه سياسه خصوصيه مستضيفها في مكان ما و نريد استخدمها. وفر url الكامل هنا"
-    white_listed_spam_host_domains: "قائمة النطاقات المستثناة من اختبار مضيف البريد المزعج. لن يتم تقييد المستخدمين الجدد من إنشاء المشاركات مع الروابط إلى هذه النطاقات."
     staff_like_weight: "كم عدد مرات الترجيح الاضافيه لمنح اعجابات الطاقم "
     topic_view_duration_hours: "احسب عدد المواضيع التي تمت مشاهدتها مره واحده عبر ip/مستخدم كل N ساعات"
     user_profile_view_duration_hours: "احسب عدد ملفات التعريف للعضو التي تمت مشاهدتها مرة لكل IP/عضو في N ساعات."
@@ -1768,7 +1768,7 @@ ar:
     email_input: "مدير البريد الإيكتروني"
     submit_button: "أرسل البريد الإلكتروني"
   performance_report:
-    initial_post_raw: "هذا الموضوع يحتوي على معلومات الاداء اليومي للموقع "
+    initial_post_raw: هذا الموضوع يحتوي على معلومات الاداء اليومي للموقع
     initial_topic_title: التبليغ عن اداء الموقع
   tags:
     title: "الأوسمة"
@@ -1844,3 +1844,6 @@ ar:
         title: "ارفض"
       delete_user:
         title: "احذف المستخدم"
+  activemodel:
+    errors:
+      <<: *errors

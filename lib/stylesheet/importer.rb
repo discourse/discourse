@@ -46,7 +46,16 @@ module Stylesheet
 
       register_import "theme_colors" do
         contents = +""
-        colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+        if @color_scheme_id
+          colors = begin
+            ColorScheme.find(@color_scheme_id).resolved_colors
+          rescue
+            ColorScheme.base_colors
+          end
+        else
+          colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+        end
+
         colors.each do |n, hex|
           contents << "$#{n}: ##{hex} !default;\n"
         end
@@ -106,10 +115,23 @@ module Stylesheet
 
     register_imports!
 
+    def self.import_color_definitions
+      return "" unless DiscoursePluginRegistry.color_definition_stylesheets.length
+      contents = +""
+      DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
+        contents << "// Color definitions from #{name}\n\n"
+        contents << File.read(path.to_s)
+        contents << "\n\n"
+      end
+      contents
+    end
+
     def initialize(options)
       @theme = options[:theme]
       @theme_id = options[:theme_id]
       @theme_field = options[:theme_field]
+      @color_scheme_id = options[:color_scheme_id]
+
       if @theme && !@theme_id
         # make up an id so other stuff does not bail out
         @theme_id = @theme.id || -1

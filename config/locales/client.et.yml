@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 et:
   js:
@@ -232,6 +231,7 @@ et:
       not_bookmarked: "lisa sellele postitusele järjehoidja"
       remove: "Eemalda järjehoidja"
       save: "Salvesta"
+      search: "Otsi"
       reminders:
         later_today: "Täna hiljem"
         tomorrow: "Homme"
@@ -364,10 +364,6 @@ et:
         remove_user_as_group_owner: "Eemalda omanik"
     groups:
       member_added: "Lisatud"
-      add_members:
-        title: "Lisa liikmeid"
-        description: "Halda selle grupi liikmeid"
-        usernames: "Kasutajanimed"
       requests:
         reason: "Põhjus"
         accepted: "aktsepteeritud"
@@ -382,6 +378,11 @@ et:
         interaction:
           posting: Postitamine
           notification: Teavitus
+        email:
+          title: "E-post"
+          credentials:
+            username: "Kasutajanimi"
+            password: "Parool"
         membership:
           title: Liikmelisus
           access: Juurdepääs
@@ -1045,7 +1046,7 @@ et:
       button_label: "e-postiga"
       complete_username_not_found: "Kasutajanimele <b>%{username}</b> ei vasta ükski konto"
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
-      confirm_title: "Edasi saidile %{site_name}"
+      confirm_title: Edasi saidile %{site_name}
     login:
       title: "Logi sisse"
       username: "Kasutaja"
@@ -1465,7 +1466,7 @@ et:
       read_more_MF: "Sul on { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 lugemata</a> } other { are <a href='{basePath}/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># uut</a> teemat} } jäänud või {CATEGORY, select, true {loe teisi teemasid {catLink} alafoorumis} false {{latestLink}} other {}}"
       browse_all_categories: Vaata kõiki foorumeid
       view_latest_topics: vaata värskeid teemasid
-      suggest_create_topic: "Teeks äkki teema?"
+      suggest_create_topic: Teeks äkki teema?
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
@@ -1541,6 +1542,7 @@ et:
           "3_2": "Sulle saabuvad teavitused kuna jälgid seda teemat."
           "3_1": "Sulle saabuvad teavitused kuna lõid selle teema."
           "3": "Sulle saabuvad teavitused kuna jälgid seda teemat."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab."
           "1": "Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
           "0_7": "Eirad kõiki teavitusi selles foorumis."
@@ -2194,7 +2196,7 @@ et:
       granted:
         one: "%{count} lubatud"
         other: "%{count} lubatud"
-      select_badge_for_title: "Vali märgis, mida kasutada oma pealkirjana"
+      select_badge_for_title: Vali märgis, mida kasutada oma pealkirjana
       none: "(pole)"
       badge_grouping:
         getting_started:
@@ -2248,7 +2250,6 @@ et:
         new: "Uus grupp"
         tags_label: "Sildid selles grupis:"
         parent_tag_label: "Ülemsilt:"
-        parent_tag_placeholder: "Valikuline"
         parent_tag_description: "Sellesse gruppi kuuluvaid silte ei saa kasutada, kui ülemsilt on puudu."
         one_per_topic_label: "Vaid üks selle grupi silt teema kohta"
         new_name: "Uus siltide grupp"
@@ -2575,7 +2576,6 @@ et:
           subject: "Teema"
           multiple_subjects: "Sellel meilimallil on mitu pealkirja."
           body: "Sisu"
-          none_selected: "Redigeerimise alustamiseks vali meili mall."
           revert: "Loobu muudatustest"
           revert_confirm: "Oled kindel, et soovid oma muudatustest loobuda?"
         theme:
@@ -2828,7 +2828,6 @@ et:
           domain: "Domeen"
         screened_ips:
           title: "Varjestatud IP-aadressid"
-          description: 'IP-aadressid, mis on vaatlemise all. IP-aadressi lubamiseks kasuta "Luban".'
           delete_confirm: "Oled kindel, et soovid aadressi %{ip_address} jaoks kehtestatud reegli eemaldada?"
           roll_up_confirm: "Oled kindel, et soovid tavaliselt varjestatud IP-aadressid alamvõrkudesse kokku koondada?"
           rolled_up_some_subnets: "Bännitud IP-aadrissid edukalt järgmistesse alamvõrkudesse kokku koondatud: %{subnets}."
@@ -3159,17 +3158,17 @@ et:
         reason_help: (Viide postitusele või teemale)
         save: Salvesta
         delete: Kustuta
-        delete_confirm: "Oled kindel, et soovid selle märgist kustutada?"
-        revoke: "Tühista "
+        delete_confirm: Oled kindel, et soovid selle märgist kustutada?
+        revoke: Tühista
         reason: Põhjus
         expand: Näita &hellip;
-        revoke_confirm: "Oled kindel, et soovid seda märgist eemaldada?"
+        revoke_confirm: Oled kindel, et soovid seda märgist eemaldada?
         edit_badges: Muuda märgiseid
         grant_badge: Anna märgis
         granted_badges: Antud märgised
         grant: Määra
         no_user_badges: "%{name} ei ole saanud veel ühtegi märgist."
-        no_badges: "Ei ole ühtegi märgist, mida saaks anda."
+        no_badges: Ei ole ühtegi märgist, mida saaks anda.
         none_selected: "Vali märgis, et alustada"
         allow_title: Luba märgise kasutamist tiitlina
         multiple_grant: Võib olla määratud mitmeid kordi
@@ -3180,7 +3179,7 @@ et:
         query: Märgise päring (SQL)
         target_posts: Päri sihtmärkide postitusi
         auto_revoke: Jooksuta tühistamispäringut igapäevaselt
-        show_posts: "Näita märgistuste lehel postitust, millega anti märgistus"
+        show_posts: Näita märgistuste lehel postitust, millega anti märgistus
         trigger: Päästik
         trigger_type:
           none: "Uuenda igapäevaselt"
@@ -3204,10 +3203,10 @@ et:
             other: "<b>%{count}</b> märgist, mida määrata."
           sample: "Näidis:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> postitusele %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> postitusele %{link} ajal <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> ajal <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> postitusele %{link}
+            with_post_time: <span class="username">%{username}</span> postitusele %{link} ajal <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> ajal <span class="time">%{time}</span>
       emoji:
         title: "Emotikon"
         help: "Lisa uued emotikonid kõigile kasutamiseks. (PRO-vihje: pukseeri korraga mitu faili)"
@@ -3224,7 +3223,6 @@ et:
         title: "Sängitamine"
         host: "Lubatud hostid"
         class_name: "Klassi nimi"
-        path_whitelist: "Lubatud aadressiosad"
         edit: "muuda"
         category: "Postita foorumisse"
         add_host: "Lisa host"
@@ -3235,9 +3233,6 @@ et:
         embed_post_limit: "Maksimaalne postituste arv, mida sängitada"
         embed_title_scrubber: "Regex postituste päiste puhastamiseks"
         embed_truncate: "Lühenda sängitatud postitused"
-        embed_whitelist_selector: "CSS valik elementidele, mida lubada sängitamistes"
-        embed_blacklist_selector: "CSS valik elementidele, mida eemaldada sängitamistes"
-        embed_classname_whitelist: "CSS klasside lubatud nimed"
         save: "Salvesta sängitamise sätted"
       permalink:
         title: "Püsiviited"
@@ -3248,8 +3243,7 @@ et:
         post_title: "Postitus"
         category_id: "Foorumi ID"
         category_title: "Foorum"
-        external_url: "Väline URL"
-        delete_confirm: "Oled Sa kindel, et soovid seda püsiviidet kustutada?"
+        delete_confirm: Oled Sa kindel, et soovid seda püsiviidet kustutada?
         form:
           label: "Uus"
           add: "Lisa"

@@ -324,6 +324,13 @@ RSpec.describe ListController do
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
+    it 'renders latest RSS with query params' do
+      get "/latest.rss?status=closed"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq('application/rss+xml')
+      expect(response.body).to_not include("<item>")
+    end
+
     it 'renders links correctly with subfolder' do
       set_subfolder "/forum"
       _post = Fabricate(:post, topic: topic, user: user)

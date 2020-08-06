@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 it:
   dates:
@@ -18,12 +17,25 @@ it:
       long: "%-d %B %Y, %l:%M%P"
       no_day: "%B %Y"
   date:
-    month_names: [~, Gennaio, Febbraio, Marzo, Aprile, Maggio, Giugno, Luglio, Agosto, Settembre, Ottobre, Novembre, Dicembre]
+    month_names:
+    - null
+    - Gennaio
+    - Febbraio
+    - Marzo
+    - Aprile
+    - Maggio
+    - Giugno
+    - Luglio
+    - Agosto
+    - Settembre
+    - Ottobre
+    - Novembre
+    - Dicembre
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Argomenti"
   posts: "messaggi"
@@ -103,11 +115,10 @@ it:
         bounced_email_error: "L'email rappresenta un rapporto di email tornata indietro."
         screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
         unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
-        email_not_allowed: "Succede quando l'indirizzo email non è in lista bianca oppure è nella lista nera."
       unrecognized_error: "Errore Non Riconosciuto"
     secure_media_placeholder: "Redatto: questo sito ha abilitato i supporti sicuri, visita l'argomento per vedere immagine/audio/video allegati."
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "ha un massimo di%{max} caratteri; tu ne hai inseriti %{length}."
@@ -116,25 +127,25 @@ it:
       accepted: deve essere accettato
       blank: non può essere vuoto
       present: deve essere vuoto
-      confirmation: "non corrisponde a %{attribute}"
+      confirmation: ! "non corrisponde a %{attribute}"
       empty: non può essere vuoto
-      equal_to: "deve essere uguale a %{count}"
+      equal_to: deve essere uguale a %{count}
       even: deve essere pari
       exclusion: è riservato
-      greater_than: "deve essere maggiore di %{count}"
-      greater_than_or_equal_to: "deve essere maggiore o uguale a %{count}"
+      greater_than: deve essere maggiore di %{count}
+      greater_than_or_equal_to: deve essere maggiore o uguale a %{count}
       has_already_been_used: "è già stato usato"
       inclusion: non è incluso nella lista
       invalid: non è valido
       is_invalid: "sembra poco chiaro, è una frase completa?"
       invalid_timezone: "'%{tz}' non è un fuso orario valido"
       contains_censored_words: "contiene le seguenti parole censurate: %{censored_words}"
-      less_than: "deve essere minore di %{count}"
-      less_than_or_equal_to: "deve essere minore o uguale a %{count}"
+      less_than: deve essere minore di %{count}
+      less_than_or_equal_to: deve essere minore o uguale a %{count}
       not_a_number: non è un numero
       not_an_integer: deve essere un intero
       odd: deve essere dispari
-      record_invalid: "Validazione fallita: %{errors}"
+      record_invalid: ! "Validazione fallita: %{errors}"
       max_emojis: "non può avere più di %{max_emojis_count} emoji"
       emojis_disabled: "non può avere emoji"
       ip_address_already_screened: "è già incluso in una regola esistente"
@@ -153,10 +164,10 @@ it:
       other_than: "deve essere diverso da %{count}"
       sso_overrides_username: "Il nome utente deve essere aggiornato nel provider SSO, poichè l'impostazione del sito `sso_overrides_username` è abilitata."
     template:
-      body: "Sono stati riscontrati problemi con i seguenti campi:"
+      body: ! "Sono stati riscontrati problemi con i seguenti campi:"
       header:
         one: "%{count} errore ha impedito il salvataggio di questo %{model}"
-        other: "%{count} errori hanno impedito il salvataggio di %{model}"
+        other: ! "%{count} errori hanno impedito il salvataggio di %{model}"
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
     site_settings:
@@ -175,9 +186,6 @@ it:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non puoi abilitare i caricamenti S3 perché sono già abilitati a livello globale e l'abilitazione dei caricamenti S3 a livello di sito potrebbe causare problemi critici con i caricamenti"
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     not_found: "Il token del tuo invito non è valido. Per favore <a href='%{base_url}/about'>contatta lo staff</a>."
     not_found_json: "Il token del tuo invito non è valido. Per favore contatta lo staff."
@@ -338,6 +346,7 @@ it:
       already_bookmarked_post: "Non puoi aggiungere due volte lo stesso messaggio nei segnalibri."
       cannot_set_past_reminder: "Non è possibile impostare un promemoria per un segnalibro nel passato."
       cannot_set_reminder_in_distant_future: "Non è possibile impostare un promemoria per un segnalibro per più di 10 anni nel futuro."
+      time_must_be_provided: "l'ora deve essere fornita per tutti i promemoria"
     reminders:
       at_desktop: "La prossima volta che sarò al mio desktop"
       later_today: "Più tardi oggi"
@@ -420,6 +429,8 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Cita<b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte individuali.
+    dominating_topic: |
+      ### Consenti ad altri di partecipare alla conversazione Questo argomento è chiaramente importante per te: hai pubblicato più di %{percent}% delle risposte. Potrebbe essere ancora meglio se dessi ad altre persone lo spazio per condividere anche i loro punti di vista. Puoi invitarli?
     get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione privatamente con questo particolare utente, [invia un messaggio personale](%{base_path}/u/%{reply_username}).\n"
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
@@ -446,7 +457,6 @@ it:
       user_profile:
         bio_raw: "Su di me"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -511,6 +521,7 @@ it:
           attributes:
             word:
               too_many: "Troppe parole per quest'azione"
+      <<: *errors
   uncategorized_category_name: "Non categorizzato"
   vip_category_name: "Salotto"
   vip_category_description: "Una categoria esclusiva per i membri con livello di esperienza 3 o superiore."
@@ -927,8 +938,8 @@ it:
     instructions: 'Abbiamo appena generato una nuova chiave API utente da usare con "%{application_name}", incolla la seguente chiave nella tua applicazione:'
     otp_description: 'Vuoi consentire a "%{application_name}" l''accesso al sito?'
     otp_confirmation:
-      confirm_title: "Procedi su %{site_name}."
-      logging_in_as: "Accedi come %{username}"
+      confirm_title: Procedi su %{site_name}.
+      logging_in_as: Accedi come %{username}
       confirm_button: Completa l'accesso
     no_trust_level: "Spiacenti, non hai il livello di esperienza richiesto per accedere alle user API"
     generic_error: "Spiacenti, non siamo in grado di produrre user API keys, questa caratteristica potrebbe essere stata disabilitata dall'amministratore di sistema"
@@ -980,7 +991,7 @@ it:
         post_count: Messaggi creati
         pm_count: MP creati
         revision_count: Revisioni
-      description: "Elenco delle attività del moderatore, incluse segnalazioni revisionate, tempo di lettura, argomenti creati, messaggi creati, messaggi personali creati."
+      description: Elenco delle attività del moderatore, incluse segnalazioni revisionate, tempo di lettura, argomenti creati, messaggi creati, messaggi personali creati.
     flags_status:
       title: "Stato Segnalazioni"
       values:
@@ -1302,7 +1313,6 @@ it:
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
     default_locale: "La lingua di default di questa istanza di Discourse. Puoi rimpiazzare il testo delle categorie e argomenti generati dal sistema in <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizza / Testo </a>."
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
-    set_locale_from_accept_language_header: "imposta la lingua di interfaccia per gli utenti anonimi in base ai language header del loro browser.\n(SPERIMENTALE, non funziona con cache anonima)"
     support_mixed_text_direction: "Supporto misto di direzioni del testo da sinistra a destra e da destra a sinistra."
     min_post_length: "Lunghezza minima dei messaggi in caratteri"
     min_first_post_length: "Lunghezza minima del primo messaggio (corpo del testo), in caratteri"
@@ -1359,9 +1369,6 @@ it:
     show_pinned_excerpt_mobile: "Mostra estratti sugli argomenti appuntati nella vista mobile."
     show_pinned_excerpt_desktop: "Mostra estratti sugli argomenti appuntati nella vista desktop."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
-    onebox_domains_blacklist: "Una lista di domini che non verranno mai oneboxed."
-    inline_onebox_domains_whitelist: "Una lista di domini che saranno oneboxed in forma di miniatura se collegati senza un titolo"
-    enable_inline_onebox_on_all_domains: "Ignira l'impostazione del sito inline_onebox_domain_whitelist e consenti onebox in linea in tutti i domini."
     max_oneboxes_per_post: "Numero massimo di oneboxe in un messaggio."
     logo: "L'immagine del logo in alto a sinistra del tuo sito. Utilizzare un'immagine rettangolare ampia con un'altezza di 120 e un rapporto di forma superiore a 3: 1. Se lasciato vuoto, verrà mostrato il testo del titolo del sito."
     logo_small: "La piccola immagine del logo in alto a sinistra del tuo sito, vista quando scorri verso il basso. Usa un'immagine quadrata di 120 × 120. Se lasciato vuoto, verrà mostrato un simbolo Home."
@@ -1420,16 +1427,10 @@ it:
     ga_universal_tracking_code: "ID del codice di tracciamento di Google Universal Analytics (analytics.js), ad esempio: UA-12345678-9; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nome di dominio di Google Universal Analytics (analytics.js), ad esempio: mysite.com; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Abilita il monitoraggio interdominio di Google Universal Analytics (analytics.js). I collegamenti in uscita a questi domini avranno aggiunto l'ID client. Consulta <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>la guida al monitoraggio del dominio incrociato di Google.</a>"
-    gtm_container_id: "ID contenitore di Google Tag Manager. ad es .: GTM-ABCDEF. <br/> Nota: gli script di terze parti caricati da GTM potrebbero dover essere inseriti nella whitelist 'content security policy script src'."
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_create_categories: "Permetti ai moderatori di creare nuove categorie"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
-    use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
-    blacklist_ip_blocks: "Un elenco di blocchi di IP privati che non dovrebbero mai essere scansionati da Discourse"
-    whitelist_internal_hosts: "Un elenco di host interni di cui Discourse può eseguire la scansione in modo sicuro per la funzione di onebox e altri scopi"
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
-    whitelisted_crawler_user_agents: "User Agent dei crawler Web che dovrebbero poter accedere al sito. AVVERTIMENTO! IMPOSTANDO QUESTO VERRÀ DISALLOW TUTTI CRAWLERS NON QUI ELENCATI!"
-    blacklisted_crawler_user_agents: "Parola univoca, indipendente dalle maiuscole, nella stringa user agent che identifica i web crawler cui non si vuole consentire l'accesso al sito. Non si applica se è stata definita una lista bianca."
     slow_down_crawler_user_agents: "Agenti utente di crawler Web che devono essere limitati in frequenza in robots.txt utilizzando la direttiva di ritardo della scansione"
     slow_down_crawler_rate: "Se viene specificato slow_down_crawler_user_agents, tale frequenza verrà applicata a tutti i crawler (numero di secondi di ritardo tra le richieste)"
     content_security_policy: "Abilita Content-Security-Policy"
@@ -1460,8 +1461,6 @@ it:
     enable_badges: "Attiva il sistema a distintivi"
     enable_whispers: "Consenti allo staff comunicazioni private all'interno degli argomenti."
     allow_index_in_robots_txt: "Specifica in robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca. In casi eccezionali puoi permanentemente <a href='%{base_path}/admin/customize/robots'>ignorare robots.txt</a>."
-    email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
-    email_domains_whitelist: "Una lista di domini email delimitati da carattere pipe (|) che gli utenti DEVONO usare per poter registrare i propri account. ATTENZIONE: gli utenti con domini email differenti da questi non saranno accettati!"
     hide_email_address_taken: "Durante l'iscrizione e nel modulo per la password dimenticata, non informare gli utenti che già esiste un account con un dato indirizzo email."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Controlla in Pinga Discourse la presenza di aggiornamenti della versione e mostra i nuovi messaggi nel Cruscotto <a href='%{base_path}/admin' target='_blank'>/ admin</a>"
@@ -1472,7 +1471,6 @@ it:
     min_username_length: "Lunghezza minima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più brevi di questo, il tuo sito si romperà!"
     max_username_length: "Lunghezza massima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più lunghi di questo, il tuo sito si romperà!"
     unicode_usernames: "Consenti ai nomi utente e nomi di gruppo di contenere lettere e numeri Unicode."
-    unicode_username_character_whitelist: "Espressione regolare per consentire solo alcuni caratteri Unicode all'interno dei nomi utente. Le lettere e i numeri ASCII saranno sempre consentiti e non devono essere inclusi nella whitelist."
     reserved_usernames: "Nomi utenti per i quali l'iscrizione non è consentita. Il simbolo del carattere jolly * può essere utilizzato per abbinare qualsiasi carattere zero o più volte."
     min_password_length: "Minima lunghezza della password."
     min_admin_password_length: "Lunghezza minima password Amministratore."
@@ -1486,9 +1484,6 @@ it:
     sso_provider_secrets: "Un elenco di coppie dominio-secret che utilizzano Discourse come provider SSO. Assicurati che l'SSO secret sia di almeno 10 caratteri. Il simbolo jolly * può essere utilizzato per abbinare qualsiasi dominio o solo una parte di esso (ad esempio *. Esempio.com)."
     sso_overrides_bio: "Sovrascrive la biografia utente nel profilo utente ed impedisce agli utenti di cambiarla"
     sso_overrides_groups: "Sincronizza tutte le appartenenze ai gruppi manuali con i gruppi specificati nell'attributo SSO dei gruppi (ATTENZIONE: se non si specificano i gruppi, l'appartenenza al gruppo manuale verrà cancellata per l'utente)"
-    sso_overrides_email: "Sovrascrive le email locali con quelle del sito esterno con cui ci si connette tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle normalizzazioni delle email locali)"
-    sso_overrides_username: "Sovrascrive il nome utente locale con quello del sito esterno con cui ci si connette tramite SSO e impedisce cambiamenti locali (ATTENZIONE: potrebbero verificarsi discrepanze a causa delle differenze tra lunghezza effettiva e richiesta del nome utente)"
-    sso_overrides_name: "Sovrascrive il nome locale completo con quello del sito esterno con cui ci si connettei tramite SSO, e impedisce modifiche locali."
     sso_overrides_avatar: "Sostituisce l'avatar dell'utente con l'avatar del sito esterno dal payload SSO. Se abilitato, gli utenti non potranno caricare avatar su Discourse."
     sso_overrides_profile_background: "Sostituisce lo sfondo del profilo utente con l'avatar del sito esterno dal payload SSO."
     sso_overrides_card_background: "Sostituisce lo sfondo della scheda utente con l'avatar del sito esterno dal payload SSO."
@@ -1510,7 +1505,6 @@ it:
     instagram_consumer_key: "La consumer key per autenticazione Instagram"
     instagram_consumer_secret: "La consumer secret per l'autenticazione Instagram"
     enable_facebook_logins: "Abilita l'autenticazione di Facebook, richiede facebook_app_id e facebook_app_secret. Vedi <a href='https://meta.discourse.org/t/13394' target='_blank'>Configurazione dell'accesso a Facebook per Discourse</a> ."
-    facebook_app_id: "App id per l'autenticazione Facebook, registrata su <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App secret per l'autenticazione di Facebook, registrato su <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_github_logins: "Abilita l'autenticazione Github, richiede github_client_id e github_client_secret. Vedi <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurare l'accesso a GitHub per Discourse</a> ."
     github_client_id: "Client id per l'autenticazione Github, registrato su <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
@@ -1623,7 +1617,6 @@ it:
     min_trust_to_flag_posts: "Il Livello Esperienza minimo richiesto per segnalare messaggi"
     min_trust_to_post_links: "Il Livello Esperienza minimo richiesto per includere collegamenti nei messaggi"
     min_trust_to_post_images: "Il Livello Esperienza minimo richiesto per includere le immagini in un messaggio"
-    whitelisted_link_domains: "Domini che gli utenti possono collegare nei messaggi anche se non hanno il Livello Esperienza appropriato per pubblicare collegamenti"
     newuser_max_links: "Quanti collegamenti può aggiungere a un messaggio un nuovo utente ."
     newuser_max_images: "Quante immagini può aggiungere ad un messaggio un nuovo utente."
     newuser_max_attachments: "Quanti allegati può aggiungere ad un messaggio un nuovo utente."
@@ -1674,7 +1667,6 @@ it:
     privacy_policy_url: "Se vuoi usare un documento sulle Politiche di Privacy ospitato da qualche altra parte, fornisci qui la sua URL completa."
     log_anonymizer_details: "Mantenere o meno i dettagli di un utente nel registro dopo essere stato reso anonimo. Per obbedire al GDPR, è necessario disattivarle questa opzione."
     newuser_spam_host_threshold: "Quante volte un nuovo utente può pubblicare un collegamento allo stesso host all'interno dei messaggi `newuser_spam_host_threshold` prima di essere considerato spam."
-    white_listed_spam_host_domains: "Una lista di domini esclusi dal controllo antispam. Ai nuovi utenti non verrà mai impedito di creare messaggi con collegamenti a tali domini."
     staff_like_weight: "Peso extra attribuito ai \"mi piace\" dati dallo staff."
     topic_view_duration_hours: "Conteggia una nuova visita dell'argomento una volta per IP/Utente ogni N ore"
     user_profile_view_duration_hours: "Conteggia una nuova visita del profilo utente una volta per IP/Utente ogni N ore"
@@ -1710,7 +1702,6 @@ it:
     max_emails_per_day_per_user: "Numero massimo di email da inviare agli utenti per giorno. 0 per disabilitare il limite"
     enable_staged_users: "Crea automaticamente utenti temporanei quando si elaborano le email in arrivo."
     maximum_staged_users_per_email: "Numero massimo di utenti temporanei creati quando si elaborano le email in arrivo."
-    auto_generated_whitelist: "Lista degli indirizzi email che non verranno verificati per i contenuti generati automaticamente. Esempio: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloccare le email in arrivo identificate come generate automaticamente."
     ignore_by_title: "Ignora le email in arrivo in base al loro titolo."
     mailgun_api_key: "Chiave API Segreta di Mailgun usata per verificare i messaggi webhook. "
@@ -1718,8 +1709,6 @@ it:
     hard_bounce_score: "Punteggio di rimbalzo aggiunto all'utente quando si verifica un rimbalzo permanente."
     bounce_score_threshold: "Punto di rimbalzo massimo prima di interrompere l'invio di email ad un utente."
     reset_bounce_score_after_days: "Ripristina automaticamente il punteggio di rimbalzo dopo X giorni."
-    attachment_content_type_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al tipo di contenuto."
-    attachment_filename_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al nome del file."
     forwarded_emails_behaviour: "Come gestire una mail inoltrata a Discourse"
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
     private_email: "Non includere contenuti da messaggi o argomenti nel titolo o nel corpo dell'email. NOTA: disabilita anche le email riassuntive."
@@ -1771,7 +1760,6 @@ it:
     staff_user_custom_fields: "Un elenco di campi utente personalizzati dei membri dello staff che possono essere recuperati tramite API."
     enable_user_directory: "Fornire una directory degli utenti per la navigazione"
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
-    enable_category_group_review: "Consentire ai gruppi di revisionare i contenuti in categorie specifiche"
     group_in_subject: "Imposta %%{optional_pm} nell'oggetto dell'email con il nome del primo gruppo in Messaggio Privato, vedi: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalizza il formato oggetto per le e-mail standard</a>"
     allow_anonymous_posting: "Permetti agli utenti di passare alla modalità anonima"
     anonymous_posting_min_trust_level: "Livello di esperienza minimo richiesto per abilitare la pubblicazione in modalità anonima"
@@ -1783,7 +1771,6 @@ it:
     ignored_users_count_message_threshold: "Informare i moderatori se un determinato utente viene ignorato da molti altri utenti."
     ignored_users_message_gap_days: "Quanto a lungo attendere prima di informare nuovamente i moderatori di un utente che è stato ignorato da molti altri."
     clean_up_inactive_users_after_days: "Numero di giorni prima che un utente inattivo (Livello Esperienza 0 e senza messaggi= venga rimosso. Per disabilitare la pulizia, imposta a 0."
-    user_website_domains_whitelist: "Verrà verificato il sito web dell'utente per questi domini. Lista delimitata dal carattere pipe."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     sequential_replies_threshold: "Numero di messaggi che un utente deve pubblicare di fila in un argomento prima che gli venga ricordato delle troppe risposte sequenziali."
     get_a_room_threshold: "Numero di messaggi che un utente deve inviare alla stessa persona nello stesso argomento prima di essere avvertito."
@@ -1816,7 +1803,6 @@ it:
     embed_topics_list: "Supporta l'inclusione delle liste di argomenti nell'HTML"
     embed_truncate: "Tronca i messaggi incorporati."
     embed_support_markdown: "Supporta la formattazione Markdown per i messaggi incorporati."
-    embed_whitelist_selector: "Un elenco separato da virgole di elementi CSS consentiti negli incorporamenti."
     allowed_href_schemes: "Schemi consentiti nei collegamenti in aggiunta a http e https."
     embed_post_limit: "Numero massimo di messaggi da incorporare."
     embed_username_required: "E' richiesto il nome utente per la creazione di argomenti."
@@ -1924,7 +1910,6 @@ it:
       user_locale_not_enabled: "Prima di attivare questa impostazione, devi abilitare 'allow user locale'."
       invalid_regex: "Regex non è valido o non è consentito."
       email_editable_enabled: "Prima di attivare questa impostazione, devi disabilitare 'email editable'."
-      enable_sso_disabled: "Prima di attivare questa impostazione, devi abilitare 'enable sso'."
       staged_users_disabled: "Devi abilitare 'staged users' prima di attivare questa impostazione ."
       reply_by_email_disabled: "Devi abilitare 'reply by email' prima di attivare questa impostazione ."
       sso_url_is_empty: "È necessario impostare un 'SSO url' prima di abilitare questa impostazione."
@@ -1939,9 +1924,6 @@ it:
         very_low_weight_invalid: "Non puoi impostare un peso maggiore di 'category_search_priority_low_weight'."
         low_weight_invalid: "Non puoi impostare un peso maggiore o uguale a 1 o inferiore a 'category_search_priority_very_low_weight'"
         very_high_weight_invalid: "Non puoi impostare il peso in modo che sia inferiore a 'category_search_priority_high_weight'."
-      unicode_username_whitelist:
-        regex_invalid: "L'espressione regolare non è valida: %{error}"
-        leading_trailing_slash: "L'espressione regolare non può iniziare o terminare con una barra."
       unicode_usernames_avatars: "Gli avatar di sistema interni non supportano i nomi utente Unicode."
       list_value_count: "La lista contiene esattamente %{count} valori."
     placeholder:
@@ -2276,6 +2258,9 @@ it:
         La comunità ha segnalato questo messaggio ed è ora nascosto. **Siccome questo messaggio è stato nascosto più di una volta, il tuo messaggio rimarrà ora nascosto fino ad intervento dello staff.**
 
         Per ulteriori informazioni, per favore fai riferimento alle nostre [community guidelines](%{base_url}/guidelines).
+    flags_disagreed:
+      title: "Messaggio segnalato ripristinato dallo saff"
+      subject_template: "Messaggio segnalato ripristinato dallo saff"
     flags_agreed_and_post_deleted:
       title: "Post segnalato rimosso dallo staff"
       subject_template: "Post segnalato rimosso dallo staff"
@@ -2616,7 +2601,6 @@ it:
     spam_post_blocked:
       title: "Messaggio di Spam bloccato"
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
-      text_body_template: "Questo è un messaggio automatico.\n\nIl nuovo utente [%{username}] (%{user_url}) ha provato a creare più post con collegamenti a %{domains}, ma quei post sono stati bloccati per evitare lo spam. L'utente è ancora in grado di creare nuovi messaggi purché non abbiano collegamenti a %{domains}. \n\nPer favore [controlla l'utente] (%{user_url}). \n\nQuesto comportamento può essere modificato tramite le impostazioni del sito `newuser_spam_host_threshold` e` white_listed_spam_host_domains`. Considera l'aggiunta di %{domains} alla whitelist se vuoi esentarli.\n"
     unsilenced:
       title: "Non silenziato"
       subject_template: "Account non più sospeso"
@@ -3323,22 +3307,22 @@ it:
         Questo Distintivo è assegnato la prima volta che modifichi un post wiki.
     basic_user:
       name: Base
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> a tutte le funzioni essenziali della comunità"
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> a tutte le funzioni essenziali della comunità
       long_description: |
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi sospetti, la possibilità di modificare gli argomenti Wiki e l'abilità di inviare immagini e collegamenti multipli.
     member:
       name: Membro
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> inviti, messaggi di gruppo e più \"mi piace\""
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> inviti, messaggi di gruppo e più "mi piace"
       long_description: |
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 2. Grazie per esserti unito e per aver partecipato per qualche settimana alla nostra comunità. Ora puoi mandare inviti dalla tua pagina utente o dai singoli argomenti, creare messaggi personali di gruppo, e mettere un numero maggiore di "Mi piace" al giorno.
     regular:
       name: Assiduo
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> ricategorizza, rinomina, collegamenti seguiti, wiki e ulteriori \"mi piace\""
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> ricategorizza, rinomina, collegamenti seguiti, wiki e ulteriori "mi piace"
       long_description: |
         Questo distintivo viene assegnato quando raggiungi il livello di esperienza 3. Grazie per essere stato parte attiva della nostra comunità per qualche mese. Ora sei uno dei lettori più attivi e un collaboratore affidabile che rende grande la nostra comunità. Ora puoi ricategorizzare e rinominare gli argomenti, usare le segnalazioni spam più potenti, accedere a un'area Lounge privata, e puoi mettere un numero maggiore di "Mi piace" al giorno.
     leader:
       name: Veterano
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> modifica globale, appuntare, chiudere, archiviare, dividere e unire argomenti, e ulteriori \"mi piace\""
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Può utilizzare</a> modifica globale, appuntare, chiudere, archiviare, dividere e unire argomenti, e ulteriori "mi piace"
       long_description: |
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 4. Sei un veterano in questa comunità selezionato dallo staff, e qui sei un esempio positivo per il resto della comunità con le tue azioni e parole. Hai la possibilità di modificare tutti i messaggi, agire come un moderatore con azioni comuni quali puntare, chiudere, rendere invisibile, archiviare, dividere e unire, e hai tonnellate di mi piace al giorno.
     welcome:
@@ -3348,12 +3332,12 @@ it:
         Questo distintivo è assegnato quando ricevi il tuo primo "Mi piace". Congratulazioni, hai pubblicato qualcosa che gli altri membri della comunità hanno trovato interessante, utile o eccezionale!
     autobiographer:
       name: Autobiografo
-      description: "Ha compilato le informazioni del <a href=\"%{base_uri}/my/preferences/profile\">profilo</a>"
+      description: Ha compilato le informazioni del <a href="%{base_uri}/my/preferences/profile">profilo</a>
       long_description: |
         Questo Distintivo viene assegnato per aver compilato il <a href="%{base_uri}/my/preferences/profile">tuo Profilo utente</a> e aver impostato un'immagine di profilo. Far sì che la comunità sappia qualcosa di te e dei tuoi interessi aiuta a creare un gruppo migliore e più coeso. Unisciti a noi!
     anniversary:
       name: Compleanno
-      description: "Membro attivo per un anno, ha scritto almeno una volta"
+      description: Membro attivo per un anno, ha scritto almeno una volta
       long_description: |
         Questo distintivo è assegnato a chi è membro della comunità da almeno un anno e ha scritto, in quel periodo, almeno un messaggio. Grazie per essere rimasto nei paraggi e per aver contribuito alla comunità. Non potremmo farcela senza di te.
     nice_post:
@@ -3443,7 +3427,7 @@ it:
         Questo distintivo è assegnato la prima volta che citi un messaggio in una tua risposta. Citare le parti rilevanti di un messaggio precedente nelle tue risposte aiuta a mantenere coese e in tema le discussioni. Il modo più semplice di citare è selezionare una sezione di un messaggio e cliccare sul pulsante Rispondi. Cita a volontà!
     read_guidelines:
       name: Linee Guida
-      description: "Ha letto le <a href=\"%{base_uri}/guidelines\">linee guida della comunità</a>"
+      description: Ha letto le <a href="%{base_uri}/guidelines">linee guida della comunità</a>
       long_description: |
         Questo distintivo è assegnato per <a href="%{base_uri}/guidelines">aver letto le linee guida della comunità</a>. Seguire e condividere queste semplici regole aiuta a costruire una comunità sicura, divertente e sostenibile per tutti. Ricorda sempre che dall'altra parte dello schermo ci sono esseri umani proprio come te. Sii sempre gentile!
     reader:
@@ -3483,9 +3467,11 @@ it:
         Questo distintivo è assegnato quando ricevi almeno 5 "Mi piace" su 300 messaggi differenti. Wow! La comunità ammira i tuoi contributi frequenti e di alta qualità nelle conversazioni.
     out_of_love:
       name: Amato
+      long_description: |
+        Questo distintivo è concesso quando usi tutti i tuoi %{max_likes_per_day} "Mi piace" quotidiani. Ricordarsi di dedicare un momento e di apprezzare i messaggi che ti piacciono e apprezzi incoraggia gli altri membri della community a creare discussioni ancora più interessanti in futuro.
     higher_love:
       name: Pieno d'Amore
-      description: "Ha messo %{max_likes_per_day} Mi piace al giorno per 5 volte"
+      description: Ha messo %{max_likes_per_day} Mi piace al giorno per 5 volte
       long_description: |
         Questo distintivo è assegnato quando usi tutti i %{max_likes_per_day} mi piace giornalieri per 5 giorni. Grazie per aver dedicato del tempo ad incoraggiare le migliori conversazioni ogni giorno!
     crazy_in_love:
@@ -3574,6 +3560,10 @@ it:
       restricted_to:
         one: '"%{tag_name}" è limitato alla categoria "%{category_names}"'
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
+      synonym: 'I sinonimi non sono ammessi. Utilizza invece &quot;%{tag_name}&quot;.'
+      has_synonyms: '&quot;%{tag_name}&quot; non può essere utilizzato perché ha dei sinonimi.'
+    invalid_target_tag: "non può essere sinonimo di un sinonimo"
+    synonyms_exist: "non è consentito finché esistono sinonimi"
   rss_by_tag: "Argomenti etichettati %{tag}"
   finish_installation:
     congratulations: "Congratulazioni, hai installato Discourse!"
@@ -3677,7 +3667,6 @@ it:
         title: "Tema"
       themes_further_reading:
         title: "Temi"
-        description: "Stai cercando di personalizzare il tuo Discourse? Approfitta del nostro potente sistema di Temi: <ul><li> <a href='https://meta.discourse.org/t/63682' target='_blank'>Come installo un tema o un componente del tema?</a> </li><li> <a href='https://meta.discourse.org/t/110448' target='_blank'>Guida rapida per gli sviluppatori di temi</a> </li></ul> Componenti del tema popolari (per ulteriori informazioni, consultare <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a> )"
       logos:
         title: "Loghi"
         fields:
@@ -3753,6 +3742,7 @@ it:
     api_key:
       revoked: Revocata
   reviewables:
+    already_handled: "Grazie, ma abbiamo già esaminato il messaggio e stabilito che non è necessario segnalarlo di nuovo."
     priorities:
       low: "Bassa"
       medium: "Media"
@@ -3852,3 +3842,9 @@ it:
         reason: "Eliminato tramite la coda di revisione"
   email_style:
     html_missing_placeholder: "Il template html deve includere %{placeholder}"
+  old_keys_reminder:
+    body: |
+      Ciao! Questo è un promemoria di sicurezza annuale di routine dall&#39;istanza di Discourse. A titolo di cortesia, desideriamo informarti che le seguenti credenziali utilizzate nell&#39;istanza di Discourse non sono state aggiornate da più di due anni: %{keys} Al momento non è richiesta alcuna azione, tuttavia è considerata una buona pratica di sicurezza eseguire un aggiornamento di tutte le credenziali importanti ogni pochi anni.
+  activemodel:
+    errors:
+      <<: *errors

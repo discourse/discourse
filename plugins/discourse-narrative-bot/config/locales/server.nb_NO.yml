@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nb_NO:
   site_settings:
@@ -48,34 +47,34 @@ nb_NO:
         > :game_die: %{results}
     quote:
       trigger: "sitat"
-      '1':
+      "1":
         quote: "I midten av hver utfordring finnes muligheter"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Frihet er ikke verdt å ha hvis det ikke inkluderer friheten til å gjøre feil."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Ikke gråt fordi det er over, smil fordi det skjedde."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Hvis du vil ha noe velgjort, gjør det selv."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Tro at du kan, og du finner deg selv på halvveien."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Livet er som en eske konfekt. Du vet aldri hva du kommer til å få."
         author: "Forrest Gumps Mor"
-      '7':
+      "7":
         quote: "Et lite steg for et menneske, et gigantisk sprang for menneskeheten."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Gjør én ting om dagen som skremmer deg."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Feil kan alltid tilgis, hvis man har mot nok til å innrømme dem."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Alt hva menneskesinnet kan unnfange og ha tro på, kan det også oppnå."
         author: "Napoleon Hill"
       results: |-
@@ -83,25 +82,26 @@ nb_NO:
     magic_8_ball:
       trigger: "spådom"
       answers:
-        '1': "Det er sikkert"
-        '2': "Det er virkelig slik"
-        '3': "Uten tvil"
-        '4': "Ja, definitivt"
-        '5': "Du kan stole på det"
-        '6': "Slik jeg ser det, ja"
-        '7': "Antageligvis"
-        '8': "Utsiktene er gode"
-        '9': "Ja"
-        '10': "Ting taler i favør av ja"
-        '12': "Spør igjen senere"
-        '13': "Best å ikke fortelle deg det nå"
-        '14': "Kan ikke spå nå"
-        '15': "Konsentrer deg og spør igjen"
-        '16': "Ikke regn med det"
-        '17': "Mitt svar er nei"
-        '18': "Mine kilder sier nei"
-        '19': "Forespeilingen er ikke så god"
-        '20': "Veldig tvilsomt"
+        "1": "Det er sikkert"
+        "2": "Det er virkelig slik"
+        "3": "Uten tvil"
+        "4": "Ja, definitivt"
+        "5": "Du kan stole på det"
+        "6": "Slik jeg ser det, ja"
+        "7": "Antageligvis"
+        "8": "Utsiktene er gode"
+        "9": "Ja"
+        "10": "Ting taler i favør av ja"
+        "11": "Reply hazy, try again"
+        "12": "Spør igjen senere"
+        "13": "Best å ikke fortelle deg det nå"
+        "14": "Kan ikke spå nå"
+        "15": "Konsentrer deg og spør igjen"
+        "16": "Ikke regn med det"
+        "17": "Mitt svar er nei"
+        "18": "Mine kilder sier nei"
+        "19": "Forespeilingen er ikke så god"
+        "20": "Veldig tvilsomt"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -226,8 +226,6 @@ nb_NO:
           > :imp: jeg skrev noe utrivelig her!
 
           Jeg tror du vet hva du bør gjøre. Prøv å **flagge dette innlegget**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende
-        not_found: |-
-          Å nei, det ekle inlegget mitt har ikke blitt flagget enda. :worried: Klarer du å flagge det som upassende med **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ikke glem at du kan trykke "vis mer" knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for å vise flere handlinger for hvert inlegg.
       search:
         instructions: |-
           _psst_ ... jeg har gjemt en overraskelse et sted i dette emnet. Hvis du tar utfordringen, **trykk på søkeikonet** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> øverst til høyre &#8599; for å lete etter den.

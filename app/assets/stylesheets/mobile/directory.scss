@@ -19,12 +19,12 @@
   }
 
   .total-rows {
-    color: $primary-medium;
+    color: var(--primary-medium);
     padding: 5px;
   }
 
   .user {
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
     padding: 1em;
     display: flex;
     flex-wrap: wrap;
@@ -41,10 +41,10 @@
       }
       .label {
         margin-left: 0.2em;
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
       .d-icon-heart {
-        color: $love;
+        color: var(--love);
       }
     }
   }

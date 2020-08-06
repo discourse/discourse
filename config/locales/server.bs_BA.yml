@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 bs_BA:
   dates:
@@ -18,12 +17,25 @@ bs_BA:
       long: "%B %-d, %Y, %l:%M%P"
       no_day: "% B% Y"
   date:
-    month_names: [~, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
+    month_names:
+    - null
+    - Januar
+    - Februar
+    - Mart
+    - April
+    - Maj
+    - Juni
+    - Juli
+    - August
+    - Septembar
+    - Oktobar
+    - Novembar
+    - Decembar
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Teme"
   posts: "objave"
@@ -105,9 +117,6 @@ bs_BA:
       has_already_been_used: "već se koristi"
     embed:
       load_from_remote: "There was an error loading that post."
-  activemodel:
-    errors:
-      <<: *errors
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -125,6 +134,7 @@ bs_BA:
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
     created: "Kreiran"
+    new_topic: "Započnite temu"
   no_mentions_allowed: "Žao nam je, ne možete spominjati druge korisnike."
   no_mentions_allowed_newuser: "Žao nam je, novi korisnici ne mogu spominjati druge korisnike."
   no_images_allowed: "Sorry, new users can't put images in posts."
@@ -198,7 +208,6 @@ bs_BA:
       user_profile:
         bio_raw: "O Meni"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -214,6 +223,7 @@ bs_BA:
           attributes:
             hex:
               invalid: "is not a valid color"
+      <<: *errors
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
@@ -343,7 +353,7 @@ bs_BA:
       every_six_months: "svakih šest mjeseci"
   user_api_key:
     otp_confirmation:
-      confirm_title: "Nastavi ka %{site_name}"
+      confirm_title: Nastavi ka %{site_name}
       confirm_button: Završi prijavu
   reports:
     default:
@@ -392,6 +402,7 @@ bs_BA:
       title: "Topics"
       xaxis: "Day"
       yaxis: "Number of new topics"
+      description: "Nove teme nastale u ovom periodu."
     posts:
       title: "Posts"
       xaxis: "Day"
@@ -588,8 +599,6 @@ bs_BA:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Enable the badge system"
-    email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
-    email_domains_whitelist: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
@@ -671,7 +680,6 @@ bs_BA:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     reply_by_email_enabled: "Enable replying to topics via email."
@@ -915,7 +923,7 @@ bs_BA:
       name: Autobiografičar
     anniversary:
       name: Godišnjica
-      description: "Aktivan član godinu dana, pisao najmanje jednom"
+      description: Aktivan član godinu dana, pisao najmanje jednom
     nice_topic:
       name: Dobra Tema
     good_topic:
@@ -1042,3 +1050,6 @@ bs_BA:
         title: "Odbij"
       delete_user:
         title: "Delete User"
+  activemodel:
+    errors:
+      <<: *errors

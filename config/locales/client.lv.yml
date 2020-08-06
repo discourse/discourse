@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 lv:
   js:
@@ -123,9 +122,6 @@ lv:
       topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       post: "ieraksts #%{postNumber}"
       close: "aizvērt"
-      twitter: "Dalīties ar šo saiti Twitter"
-      facebook: "Dalīties ar šo saiti Facebook"
-      email: "Nosūtīt šo saiti e-pastā"
     action_codes:
       public_topic: "padarīja tēmu publisku %{when}"
       split_topic: "sadalīja šo tēmu %{when}"
@@ -250,6 +246,7 @@ lv:
     bookmarks:
       remove: "Noņemt grāmatzīmi"
       save: "Saglabāt"
+      search: "Meklēt"
       reminders:
         later_today: "Vēlāk šodien"
         tomorrow: "Rītdien"
@@ -373,8 +370,6 @@ lv:
         make_user_group_owner: "Padarīt par īpašnieku"
         remove_user_as_group_owner: "Noņemt īpašnieka tiesības"
     groups:
-      add_members:
-        title: "Pievienot dalībniekus"
       requests:
         reason: "Iemesls"
       manage:
@@ -386,6 +381,11 @@ lv:
           title: Profils
         interaction:
           posting: Ieraksti
+        email:
+          title: "E-pasts"
+          credentials:
+            username: "Lietotājvārds"
+            password: "Parole"
         membership:
           title: Piederība
         logs:
@@ -480,6 +480,7 @@ lv:
       "12": "Nosūtne"
       "13": "Iesūtne"
       "14": "Gaida apstiprinājumu"
+      "15": "Drafts"
     categories:
       all: "visas sadaļas"
       all_subcategories: "Viss"
@@ -1004,7 +1005,7 @@ lv:
     email_login:
       complete_username_not_found: "Neviens konts neatbilst lietotājvārdam <b>%{username}</b>"
       complete_email_not_found: "Neviens konts neatbilst <b>%{email}</b>"
-      confirm_title: "Turpināt %{site_name}"
+      confirm_title: Turpināt %{site_name}
     login:
       title: "Ieiet sistēmā"
       username: "Lietotājs"
@@ -1083,7 +1084,6 @@ lv:
     conditional_loading_section:
       loading: Ielādē...
     date_time_picker:
-      from: No
       to: Kam
     emoji_picker:
       filter_placeholder: Meklēt emoji
@@ -1382,9 +1382,9 @@ lv:
       read_more_MF: "{ UNREAD, plural, =0 {} one { Palikusi <a href='{basePath}/unread'>1 nelasīta</a> } other { Palikušas <a href='{basePath}/unread'># nelasītas</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 jauna</a> tēma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># jaunas</a> tēmas} } remaining, or {CATEGORY, select, true {pārlūkot citas tēmas iekš {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pārlūkot visas sadaļas
       view_latest_topics: Skatīt jaunākās tēmas
-      suggest_create_topic: "Kādēļ gan neizveidot jaunu tēmu? "
+      suggest_create_topic: Kādēļ gan neizveidot jaunu tēmu?
       jump_reply_up: pāriet uz agrāku atbildi
-      jump_reply_down: "pāriet uz vēlāku atbildi "
+      jump_reply_down: pāriet uz vēlāku atbildi
       deleted: "Tēma ir dzēsta "
       topic_status_update:
         save: "Uzstādīt taimeri "
@@ -1447,7 +1447,7 @@ lv:
         total: kopējais ierakstu skaits
         current: šis ieraksts
       notifications:
-        title: "izmainīt to, cik bieži jūs saņemsiet paziņojumus par šo temu"
+        title: izmainīt to, cik bieži jūs saņemsiet paziņojumus par šo temu
         reasons:
           mailing_list_mode: "Jums ir ieslēgts vēstkopas ieraksts, tāpēc par atbildēm šai tēmā ziņosim e-pastā."
           "3_10": "Jūs saņemsiet paziņojumus, jo novērojat tagu, kas ir šai tēmai."
@@ -1459,6 +1459,7 @@ lv:
           "2_8": "Jūs redzēsiet jauno atbilžu skaitu, jo sekojat šai sadaļai."
           "2_4": "Jūs redzēsiet jauno atbilžu skaitu, jo atbildējāt šajā tēmā."
           "2_2": "Jūs redzēsiet jauno atbilžu skaitu, jo jūs sekojat šai tēmai."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums."
           "1": "Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums."
           "0_7": "Nesaņemt nekādus paziņojumus par šo sadaļu."
@@ -1795,8 +1796,8 @@ lv:
       create: "Jauna sadaļa"
       create_long: "Izveidot jaunu sadaļu"
       save: "Saglabāt sadaļu"
-      creation_error: "Izveidojot šo sadaļu, notika kļūda."
-      save_error: "Saglabājot šo sadaļu, notika kļūda."
+      creation_error: Izveidojot šo sadaļu, notika kļūda.
+      save_error: Saglabājot šo sadaļu, notika kļūda.
       name: "Sadaļas nosaukums"
       description: "Apraksts"
       topic: "sadaļas tema"
@@ -2130,7 +2131,7 @@ lv:
         zero: "%{count} piešķirti"
         one: "%{count} piešķirts"
         other: "%{count} piešķirti"
-      select_badge_for_title: "Izvēlieties žetonu, ko lietot kā jūsu titulu"
+      select_badge_for_title: Izvēlieties žetonu, ko lietot kā jūsu titulu
       none: "(neviens)"
       badge_grouping:
         getting_started:
@@ -2182,7 +2183,6 @@ lv:
         new: "Jauna grupa"
         tags_label: "Tagi šai grupā:"
         parent_tag_label: "Vecāktags:"
-        parent_tag_placeholder: "Pēc izvēles"
         parent_tag_description: "Tagus no šīs grupas nevar izmantot, ja vien neizmanto arī vecāktagu"
         one_per_topic_label: "No šīs grupas atļaut tikai vienu tagu vienā tēmā"
         new_name: "Jauna tagu grupa"
@@ -2472,7 +2472,6 @@ lv:
           subject: "Virsraksts"
           multiple_subjects: "Šim e-pasta šablonam ir vairāki virsraksti"
           body: "Saturs"
-          none_selected: "Izvēlieties e-pasta šablonu, lai uzsāktu rediģēšanu."
           revert: "Atcelt izmaiņas"
           revert_confirm: "Vai jūs esat drošs, ka vēlaties atcelt jūsu veiktās izmaiņas"
         theme:
@@ -2668,7 +2667,6 @@ lv:
           domain: "Domains"
         screened_ips:
           title: "Pārbaudītās IP"
-          description: 'IP kuras novēro. Izmanto "Atļaut" lai "whitelistotu" IP adresi.'
           delete_confirm: "Vai esi drošs, ka vēlies noņemt šo noteikumu priekš %{ip_address}?"
           roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?\nVai esi drošs ka vēlies (roll up) nesen paŗbaudīt IP adresi iekš \"subneta\"?"
           rolled_up_some_subnets: "Sveiksmīgi augšuplādēja IP \"banotās\" adreses šajos \"subnetos\"%{subnets}"
@@ -2779,7 +2777,7 @@ lv:
         reputation: Reputācija
         permissions: Atļaujas / Pieejas
         activity: Aktivitāte
-        like_count: "\"Patīk\" doti / saņemti"
+        like_count: '"Patīk" doti / saņemti'
         last_100_days: "Pēdējās 100 dienās"
         private_topics_count: Privātas tēmas
         posts_read_count: Ieraksti izlasīti
@@ -2989,17 +2987,17 @@ lv:
         reason_help: (Saite uz ierakstu vai tēmu)
         save: Saglabāt
         delete: Dzēst
-        delete_confirm: "Vai tiešām vēlies dzēst šo žetonu?"
+        delete_confirm: Vai tiešām vēlies dzēst šo žetonu?
         revoke: Atsaukt
         reason: Pamatojums
         expand: Paplašināt &hellip;
-        revoke_confirm: "Vai tiešām vēlies atsaukt šo žetonu?"
+        revoke_confirm: Vai tiešām vēlies atsaukt šo žetonu?
         edit_badges: Labot Žetonus
         grant_badge: Piešķirt Žetonu
         granted_badges: Piešķirtie Žetoni
         grant: Piešķirt
         no_user_badges: "%{name} nav piešķirts neviens žetons."
-        no_badges: "Nav žetonu, kas var tikt piešķirti."
+        no_badges: Nav žetonu, kas var tikt piešķirti.
         none_selected: "Izvēlieties žetonu, lai sāktu"
         allow_title: Atļaut žetonam parādīties titulā
         multiple_grant: Var tikt piešķirts vairākas reizes
@@ -3035,10 +3033,10 @@ lv:
             other: "<b>%{count}</b> Žetoni nav piešķirti."
           sample: "Paraugs:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> ieraksti %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> ieraksti %{link} pulksten <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> ieraksti %{link}
+            with_post_time: <span class="username">%{username}</span> ieraksti %{link} pulksten <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
       emoji:
         title: "Smaidiņi"
         help: "Pievienot jaunu smaidiņu, kas būs pieejams visiem."
@@ -3055,7 +3053,6 @@ lv:
         title: "Ieguldīšana"
         host: "Atļautie lietotāji"
         class_name: "Klases Nosaukums"
-        path_whitelist: "(Path Whitelist)"
         edit: "labot"
         category: "Ieraksti kategorijā"
         add_host: "Pievienot lietotāju"
@@ -3066,9 +3063,6 @@ lv:
         embed_post_limit: "Maksimālais iegulto ierakstu skaits"
         embed_title_scrubber: "(Regular expression used to scrub the title of posts)"
         embed_truncate: "Saīsināt iegultos ierakstus"
-        embed_whitelist_selector: "(CSS selector for elements that are allowed in embeds)"
-        embed_blacklist_selector: "(CSS selector for elements that are removed from embeds)"
-        embed_classname_whitelist: "Atļautie CSS nosaukumi (Allowed CSS class names)"
         save: "Saglabāt iegulšanas iestatījumus"
       permalink:
         title: "Patstāvīgā saite"
@@ -3079,8 +3073,7 @@ lv:
         post_title: "Ieraksts"
         category_id: "Kategorijas ID"
         category_title: "Kategorija"
-        external_url: "Ārējs URL"
-        delete_confirm: "Vai tiešām vēlies dzēst šo ierakstu?"
+        delete_confirm: Vai tiešām vēlies dzēst šo ierakstu?
         form:
           label: "Jauns:"
           add: "Pievienot"

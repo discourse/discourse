@@ -47,8 +47,8 @@
     display: flex;
     box-sizing: border-box;
     cursor: pointer;
-    border: 1px solid $primary-low;
-    color: $primary;
+    border: 1px solid var(--primary-low);
+    color: var(--primary);
     .discourse-no-touch & {
       transition: all 0.25s;
       &:hover {
@@ -56,12 +56,12 @@
       }
     }
     .group-membership {
-      color: $primary-medium;
+      color: var(--primary-medium);
       margin-top: auto;
       padding-top: 1em;
       .is-group-owner,
       .is-group-member {
-        color: $success;
+        color: var(--success);
       }
     }
     .group-box-inner {
@@ -94,15 +94,15 @@
       .group-user-count {
         display: flex;
         align-items: center;
-        color: $primary-high;
+        color: var(--primary-high);
         .d-icon {
           margin-right: 0.25em;
           font-size: 0.8em;
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
       .group-description {
-        color: $primary-high;
+        color: var(--primary-high);
         word-wrap: break-word;
       }
     }
@@ -110,7 +110,7 @@
     .groups-info-name {
       font-size: $font-up-1;
       font-weight: bold;
-      color: $primary;
+      color: var(--primary);
     }
 
     $size: 40px;
@@ -118,7 +118,7 @@
 
     .group-avatar-flair {
       display: inline-block;
-      color: $primary;
+      color: var(--primary);
 
       .avatar-flair {
         background-size: $size;

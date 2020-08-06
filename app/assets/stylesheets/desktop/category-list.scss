@@ -29,7 +29,7 @@
   .topics .badge-notification,
   .category .badge-notification {
     background-color: transparent;
-    color: $primary-med-or-secondary-high;
+    color: var(--primary-med-or-secondary-high);
   }
 
   .topics {
@@ -77,7 +77,7 @@
     a.last-posted-at,
     a.last-posted-at:visited {
       font-size: $font-down-1;
-      color: $primary-med-or-secondary-high;
+      color: var(--primary-med-or-secondary-high);
     }
     .title {
       @include ellipsis;
@@ -99,7 +99,7 @@
       h4 {
         line-height: $line-height-medium;
         a[href] {
-          color: $primary;
+          color: var(--primary);
         }
       }
 

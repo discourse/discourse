@@ -120,3 +120,27 @@ QUnit.test("moving posts from personal message", async assert => {
     "it shows an option to move to existing message"
   );
 });
+
+QUnit.test("group moderator moving posts", async assert => {
+  await visit("/t/topic-for-group-moderators/2480");
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-multi-select .btn");
+  await click("#post_2 .select-below");
+
+  assert.equal(
+    find(".selected-posts .move-to-topic")
+      .text()
+      .trim(),
+    I18n.t("topic.move_to.action"),
+    "it should show the move to button"
+  );
+
+  await click(".selected-posts .move-to-topic");
+
+  assert.ok(
+    find(".choose-topic-modal .title")
+      .html()
+      .includes(I18n.t("topic.move_to.title")),
+    "it opens move to modal"
+  );
+});

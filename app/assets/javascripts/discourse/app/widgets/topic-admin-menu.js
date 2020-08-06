@@ -130,7 +130,10 @@ export default createWidget("topic-admin-menu", {
     const visible = topic.get("visible");
 
     // Admin actions
-    if (this.currentUser && this.currentUser.get("canManageTopic")) {
+    if (
+      this.get("currentUser.canManageTopic") ||
+      details.can_split_merge_topic
+    ) {
       this.addActionButton({
         className: "topic-admin-multi-select",
         buttonClass: "popup-menu-btn",
@@ -138,7 +141,9 @@ export default createWidget("topic-admin-menu", {
         icon: "tasks",
         label: "actions.multi_select"
       });
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       if (details.get("can_delete")) {
         this.addActionButton({
           className: "topic-admin-delete",
@@ -180,7 +185,7 @@ export default createWidget("topic-admin-menu", {
       }
     }
 
-    if (this.currentUser && this.currentUser.get("canManageTopic")) {
+    if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-status-update",
         buttonClass: "popup-menu-btn",
@@ -230,7 +235,7 @@ export default createWidget("topic-admin-menu", {
       }
     }
 
-    if (this.currentUser && this.currentUser.get("canManageTopic")) {
+    if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-visible",
         buttonClass: "popup-menu-btn",

@@ -9,6 +9,27 @@ class Search
 
     class TextHelper
       extend ActionView::Helpers::TextHelper
+
+      private
+
+      # TODO: Remove when https://github.com/rails/rails/pull/39979 is merged
+      # For a 10_000 words string, speeds up excerpts by 85X.
+      def self.cut_excerpt_part(part_position, part, separator, options)
+        return "", "" unless part
+
+        radius   = options.fetch(:radius, 100)
+        omission = options.fetch(:omission, "...")
+
+        if separator != ""
+          part = part.split(separator)
+          part.delete("")
+        end
+
+        affix = part.length > radius ? omission : ""
+        part = part.public_send(part_position == :first ? :last : :first, radius)
+        part = part.join(separator) if separator != ""
+        [affix, part]
+      end
     end
 
     attr_reader(
@@ -64,8 +85,12 @@ class Search
       }
 
       if post.post_search_data.version > SearchIndexer::MIN_POST_REINDEX_VERSION
-        opts[:cooked] = post.post_search_data.raw_data
-        opts[:scrub] = false
+        if SiteSetting.use_pg_headlines_for_excerpt
+          return post.headline
+        else
+          opts[:cooked] = post.post_search_data.raw_data
+          opts[:scrub] = false
+        end
       else
         opts[:cooked] = post.cooked
       end
@@ -87,19 +112,22 @@ class Search
 
     def self.blurb_for(cooked: nil, term: nil, blurb_length: BLURB_LENGTH, scrub: true)
       blurb = nil
-      cooked = SearchIndexer.scrub_html_for_search(cooked) if scrub
 
-      urls = Set.new
-      cooked.scan(URI.regexp(%w{http https})) { urls << $& }
-      urls.each do |url|
-        begin
-          case File.extname(URI(url).path || "")
-          when Oneboxer::VIDEO_REGEX
-            cooked.gsub!(url, I18n.t("search.video"))
-          when Oneboxer::AUDIO_REGEX
-            cooked.gsub!(url, I18n.t("search.audio"))
+      if scrub
+        cooked = SearchIndexer.scrub_html_for_search(cooked)
+
+        urls = Set.new
+        cooked.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
+        urls.each do |url|
+          begin
+            case File.extname(URI(url).path || "")
+            when Oneboxer::VIDEO_REGEX
+              cooked.gsub!(url, I18n.t("search.video"))
+            when Oneboxer::AUDIO_REGEX
+              cooked.gsub!(url, I18n.t("search.audio"))
+            end
+          rescue URI::InvalidURIError
           end
-        rescue URI::InvalidURIError
         end
       end
 

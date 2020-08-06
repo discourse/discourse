@@ -10,6 +10,7 @@ import PermissionType from "discourse/models/permission-type";
 import CategoryList from "discourse/models/category-list";
 import Category from "discourse/models/category";
 import { Promise, all } from "rsvp";
+import { action } from "@ember/object";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -229,9 +230,26 @@ export default (filterArg, params) => {
       });
     },
 
+    resetParams(controller) {
+      controller.setProperties({
+        order: "default",
+        ascending: false,
+        max_posts: null
+      });
+    },
+
+    @action
+    willTransition() {
+      this._super(...arguments);
+
+      if (this.controller) {
+        this.resetParams(this.controller);
+      }
+    },
+
     resetController(controller, isExiting) {
       if (isExiting) {
-        controller.setProperties({ order: "default", ascending: false });
+        this.resetParams(controller);
       }
     },
 

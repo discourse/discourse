@@ -7,12 +7,12 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs {
   display: block;
   padding: 0.5em;
-  color: $primary-very-high;
+  color: var(--primary-very-high);
 }
 
 .hljs-comment,
 .hljs-doctag {
-  color: $hljs-comment;
+  color: var(--hljs-comment);
   font-style: italic;
 }
 
@@ -22,26 +22,26 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-subst,
 .hljs-request,
 .hljs-status {
-  color: $primary-very-high;
+  color: var(--primary-very-high);
   font-weight: bold;
 }
 
 .hljs-number,
 .ruby .hljs-constant {
-  color: $hljs-number;
+  color: var(--hljs-number);
 }
 
 .hljs-string,
 .hljs-tag .hljs-string,
 .tex .hljs-formula {
-  color: $hljs-string;
+  color: var(--hljs-string);
 }
 
 .hljs-title,
 .hljs-name,
 .coffeescript .hljs-params,
 .scss .hljs-meta {
-  color: $hljs-string;
+  color: var(--hljs-string);
   font-weight: bold;
 }
 
@@ -56,14 +56,14 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .haskell .hljs-type,
 .vhdl .hljs-literal,
 .tex .hljs-command {
-  color: $hljs-literal;
+  color: var(--hljs-literal);
   font-weight: bold;
 }
 
 .hljs-tag,
 .hljs-tag .hljs-title,
 .django .hljs-tag .hljs-keyword {
-  color: $hljs-tag;
+  color: var(--hljs-tag);
   font-weight: normal;
 }
 
@@ -71,11 +71,11 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .css .hljs-keyword,
 .hljs-variable,
 .lisp .hljs-body {
-  color: $hljs-attribute;
+  color: var(--hljs-attribute);
 }
 
 .hljs-regexp {
-  color: $success;
+  color: var(--success);
 }
 
 .hljs-symbol,
@@ -83,31 +83,31 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .lisp .hljs-keyword,
 .tex .hljs-special,
 .hljs-prompt {
-  color: $hljs-symbol;
+  color: var(--hljs-symbol);
 }
 
 .hljs-built_in,
 .lisp .hljs-title,
 .clojure .hljs-built_in,
 .hljs-builtin-name {
-  color: $tertiary-high;
+  color: var(--tertiary-high);
 }
 
 .meta {
-  color: $primary-medium;
+  color: var(--primary-medium);
   font-weight: bold;
 }
 
 .hljs-deletion {
-  background: $danger-low;
+  background: var(--danger-low);
 }
 
 .hljs-addition {
-  background: $success-low;
+  background: var(--success-low);
 }
 
 .diff .hljs-meta {
-  color: $primary-low;
+  color: var(--primary-low);
 }
 
 /*
@@ -119,8 +119,8 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 p > code,
 li > code,
 pre > code {
-  color: $primary-very-high;
-  background: $hljs-bg;
+  color: var(--primary-very-high);
+  background: var(--hljs-bg);
 }
 
 // removed some unnecessary styles here

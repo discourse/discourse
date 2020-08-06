@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sv:
   site_settings:
@@ -13,6 +12,7 @@ sv:
     discourse_narrative_bot_disable_public_replies: "Inaktivera publika svar från Discourse digitala hjälpreda "
     discourse_narrative_bot_welcome_post_type: "Vilken typ av välkomstmeddelande Discourse digitala hjälpreda bör skicka"
     discourse_narrative_bot_welcome_post_delay: "Avvakta (n) sekunder innan Discourse digitala hjälpreda skickar välkomstmeddelande "
+    discourse_narrative_bot_skip_tutorials: "Discourse digitala hjälpredas handledningar som ska hoppas över"
   badges:
     certified:
       name: Certifierad
@@ -57,34 +57,34 @@ sv:
         > :game_die: %{results}
     quote:
       trigger: "citat"
-      '1':
+      "1":
         quote: "Inom varje svårighet finns det möjligheter"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Frihet är inte värt att ha om det inte betyder frihet att göra fel."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Gråt inte för att det är över, le eftersom det hände."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Om du vill ha något gjort rätt, gör det själv."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Tro att du kan och du är halvvägs där."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Livet är som en låda med choklad. Du vet aldrig vad du kommer att få."
         author: "Forrest Gumps mamma \n( Författaren: Winston Groom )"
-      '7':
+      "7":
         quote: "Det är ett litet steg för en man, ett jättesprång för mänskligheten."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Gör en sak varje dag som skrämmer dig."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Misstag är alltid förlåtliga, om en har modet att erkänna dem."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Oavsett vad människans sinne kan tänka och tro, kan det uppnås."
         author: "Napoleon Hill"
       results: |-
@@ -92,26 +92,26 @@ sv:
     magic_8_ball:
       trigger: "framgång"
       answers:
-        '1': "Det är säkert"
-        '2': "Det är bestämt så"
-        '3': "Utan tvivel"
-        '4': "Ja definitivt"
-        '5': "Du kan lita på det"
-        '6': "Som jag ser det, ja"
-        '7': "Mest sannolikt"
-        '8': "Utsikterna är goda"
-        '9': "Ja"
-        '10': "Tecken tyder på ja"
-        '11': "Svaret var vagt, försök igen"
-        '12': "Fråga igen senare"
-        '13': "Bäst jag inte talar om det just nu"
-        '14': "Kan inte förutspå just nu"
-        '15': "Koncentrera dig och fråga igen"
-        '16': "Räkna inte med det"
-        '17': "Mitt svar är nej"
-        '18': "Mina källor säger nej"
-        '19': "Utsikterna är inte så goda"
-        '20': "Mycket tveksamt"
+        "1": "Det är säkert"
+        "2": "Det är bestämt så"
+        "3": "Utan tvivel"
+        "4": "Ja definitivt"
+        "5": "Du kan lita på det"
+        "6": "Som jag ser det, ja"
+        "7": "Mest sannolikt"
+        "8": "Utsikterna är goda"
+        "9": "Ja"
+        "10": "Tecken tyder på ja"
+        "11": "Svaret var vagt, försök igen"
+        "12": "Fråga igen senare"
+        "13": "Bäst jag inte talar om det just nu"
+        "14": "Kan inte förutspå just nu"
+        "15": "Koncentrera dig och fråga igen"
+        "16": "Räkna inte med det"
+        "17": "Mitt svar är nej"
+        "18": "Mina källor säger nej"
+        "19": "Utsikterna är inte så goda"
+        "20": "Mycket tveksamt"
       result: |-
         > :crystal_ball: %{result}
     track_selector:

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 bg:
   js:
@@ -15,6 +14,11 @@ bg:
         one: "общ брой гласове"
         other: "общо гласове"
       average_rating: "Средна отценка: <strong>%{average}</strong>."
+      public:
+        title: "Гласовете са публични,"
+      results:
+        groups:
+          title: "Трябва да сте член на %{groups} за да гласувате."
       cast-votes:
         title: "Изчислете вашите гласове"
         label: "Гласувай сега!"

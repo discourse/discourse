@@ -1084,7 +1084,7 @@ describe CookedPostProcessor do
 
       post = Fabricate(:post, raw: url)
 
-      post.custom_fields[Post::LARGE_IMAGES] = "[\"//image.com/avatar.png\"]"
+      post.custom_fields[Post::LARGE_IMAGES] = ["//image.com/avatar.png"]
       post.save_custom_fields
 
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)

@@ -95,7 +95,7 @@
       }
       .cancel {
         font-size: 1.4em;
-        color: $primary-low-mid;
+        color: var(--primary-low-mid);
         margin-left: 0.6em;
         padding: 3px 6px;
       }
@@ -125,7 +125,7 @@
     .submit-panel {
       padding-top: 10px;
       z-index: z("fullscreen") + 1;
-      background-color: $secondary;
+      background-color: var(--secondary);
       .cancel,
       .mobile-file-upload,
       .mobile-preview {
@@ -139,8 +139,8 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background-color: $secondary;
-      border-bottom: 40px solid $secondary;
+      background-color: var(--secondary);
+      border-bottom: 40px solid var(--secondary);
       max-width: 100%;
       margin: 0;
       padding: 10px;

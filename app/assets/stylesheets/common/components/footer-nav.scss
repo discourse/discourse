@@ -21,7 +21,7 @@ body.footer-nav-visible {
 }
 
 .footer-nav {
-  background-color: rgba($header_background, 0.9);
+  background-color: rgba(var(--header_background-rgb), 0.9);
   box-shadow: shadow("footer-nav");
   height: $footer-nav-height;
   position: fixed;
@@ -32,7 +32,7 @@ body.footer-nav-visible {
   transition: all linear 0.1s;
 
   .d-icon {
-    color: $header_primary-medium;
+    color: var(--header_primary-medium);
   }
 
   &.visible {
@@ -63,7 +63,7 @@ body.footer-nav-visible {
 
 @supports (-webkit-backdrop-filter: blur(10px)) {
   body:not(.footer-nav-ipad) .footer-nav {
-    background-color: rgba($header_background, 0.7);
+    background-color: rgba(var(--header_background-rgb), 0.7);
     -webkit-backdrop-filter: blur(20px);
   }
 }
@@ -73,7 +73,7 @@ body.footer-nav-ipad {
   .footer-nav {
     bottom: auto;
     top: 0px;
-    background-color: $header_background;
+    background-color: var(--header_background);
     z-index: z("ipad-header-nav");
     padding-bottom: 0; // resets safe-area-inset-bottom
   }

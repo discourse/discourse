@@ -17,25 +17,25 @@
         padding: 0;
 
         h2.selected-name {
-          color: $secondary;
+          color: var(--secondary);
           display: inline-block;
           box-sizing: border-box;
 
           .date-section {
-            color: $primary;
+            color: var(--primary);
             margin-right: 5px;
           }
 
           .top-date-string {
             font-size: $font-down-1;
-            color: $primary-med-or-secondary-high;
+            color: var(--primary-med-or-secondary-high);
             font-weight: normal;
             text-transform: uppercase;
           }
         }
 
         .d-icon {
-          color: $primary;
+          color: var(--primary);
           opacity: 1;
           margin: 5px 0 10px 5px;
           font-size: $font-up-3;
@@ -61,13 +61,13 @@
         }
 
         .date-section {
-          color: $primary;
+          color: var(--primary);
         }
 
         .top-date-string {
           font-weight: normal;
           font-size: $font-down-1;
-          color: $primary-med-or-secondary-high;
+          color: var(--primary-med-or-secondary-high);
           text-transform: uppercase;
           margin-left: 5px;
         }

@@ -72,6 +72,10 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS ||= 1200
 
+  register_custom_field_type(LARGE_IMAGES, :json)
+  register_custom_field_type(BROKEN_IMAGES, :json)
+  register_custom_field_type(DOWNLOADED_IMAGES, :json)
+
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
 
@@ -911,7 +915,6 @@ class Post < ActiveRecord::Base
       upload_ids << upload.id if upload.present?
     end
 
-    upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
     post_uploads = upload_ids.map do |upload_id|
       { post_id: self.id, upload_id: upload_id }
     end
@@ -942,9 +945,7 @@ class Post < ActiveRecord::Base
   end
 
   def downloaded_images
-    JSON.parse(self.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}")
-  rescue JSON::ParserError
-    {}
+    self.custom_fields[Post::DOWNLOADED_IMAGES] || {}
   end
 
   def each_upload_url(fragments: nil, include_local_upload: true)

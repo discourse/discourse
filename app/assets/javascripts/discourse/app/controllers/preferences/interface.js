@@ -33,6 +33,7 @@ export default Controller.extend({
     let attrs = [
       "locale",
       "external_links_in_new_tab",
+      "dark_scheme_id",
       "dynamic_favicon",
       "enable_quoting",
       "enable_defer",
@@ -149,6 +150,20 @@ export default Controller.extend({
     return result;
   },
 
+  @discourseComputed
+  showDarkModeToggle() {
+    return this.siteSettings.default_dark_mode_color_scheme_id > 0;
+  },
+
+  enableDarkMode: computed({
+    set(key, value) {
+      return value;
+    },
+    get() {
+      return this.get("model.user_option.dark_scheme_id") === -1 ? false : true;
+    }
+  }),
+
   actions: {
     save() {
       this.set("saved", false);
@@ -161,6 +176,11 @@ export default Controller.extend({
       if (makeTextSizeDefault) {
         this.set("model.user_option.text_size", this.textSize);
       }
+
+      this.set(
+        "model.user_option.dark_scheme_id",
+        this.enableDarkMode ? null : -1
+      );
 
       return this.model
         .save(this.saveAttrNames)

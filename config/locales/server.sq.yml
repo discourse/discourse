@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sq:
   dates:
@@ -17,12 +16,25 @@ sq:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, Janar, Shkurt, Mars, Prill, Maj, Qershor, Korrik, Gusht, Shtator, Tetor, Nëntor, Dhjetor]
+    month_names:
+    - null
+    - Janar
+    - Shkurt
+    - Mars
+    - Prill
+    - Maj
+    - Qershor
+    - Korrik
+    - Gusht
+    - Shtator
+    - Tetor
+    - Nëntor
+    - Dhjetor
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "pd"
     pm: "md"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tema"
   posts: "postime"
@@ -45,7 +57,7 @@ sq:
         no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
         inactive_user_error: "Happens when the sender is not active."
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     messages:
       too_long_validation: "ka limit maksimumi %{max} shkronja; ju vendosët %{length}."
       invalid_boolean: "Boolean jo i vlefshëm."
@@ -53,35 +65,32 @@ sq:
       accepted: duhet të pranohet
       blank: nuk mund të lihet bosh
       present: mund të lihet bosh
-      confirmation: "nuk përputhet %{attribute}"
+      confirmation: ! "nuk përputhet %{attribute}"
       empty: nuk mund të lihet bosh
-      equal_to: "duhet të jetë baraz me %{count}"
+      equal_to: duhet të jetë baraz me %{count}
       even: must be even
       exclusion: është i rezervuar
-      greater_than: "must be greater than %{count}"
-      greater_than_or_equal_to: "must be greater than or equal to %{count}"
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
       has_already_been_used: "është përdorur më parë"
       inclusion: is not included in the list
       invalid: është i pavlefshëm
-      less_than: "must be less than %{count}"
-      less_than_or_equal_to: "must be less than or equal to %{count}"
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: nuk është një numër
       not_an_integer: must be an integer
       odd: must be odd
-      record_invalid: "Verifikimi dështoj: %{errors}"
+      record_invalid: ! "Verifikimi dështoj: %{errors}"
       restrict_dependent_destroy:
         one: "Cannot delete record because a dependent %{record} exists"
         many: "Cannot delete record because dependent %{record} exist"
       other_than: "must be other than %{count}"
     template:
-      body: "There were problems with the following fields:"
+      body: ! "There were problems with the following fields:"
     embed:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='%{base_path}/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
   backup:
@@ -183,7 +192,6 @@ sq:
       user_profile:
         bio_raw: "Rreth Meje"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -202,6 +210,7 @@ sq:
           attributes:
             hex:
               invalid: "nuk është një ngjyrë e vlefshme"
+      <<: *errors
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
   meta_category_name: "Reagimet e Faqes"
@@ -410,7 +419,7 @@ sq:
     read: "lexuar"
     description: '"%{application_name}" po kërkon këto të drejta në lidhje me llogarinë tuaj:'
     otp_confirmation:
-      confirm_title: "Vazhdo tek %{site_name}"
+      confirm_title: Vazhdo tek %{site_name}
     scopes:
       notifications: "Leximin dhe pastrimin e njoftimeve"
       push: "Njoftime \"push\" drejt shërbimeve të jashtme"
@@ -671,8 +680,6 @@ sq:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     enable_badges: "Aktivizo sistemin e targetave"
-    email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
-    email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
@@ -681,9 +688,6 @@ sq:
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
-    sso_overrides_email: "Overrides local email with external site email from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to normalization of local emails)"
-    sso_overrides_username: "Overrides local username with external site username from SSO payload on every login, and prevent local changes. (WARNING: discrepancies can occur due to differences in username length/requirements)"
-    sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_id: "Client ID of your Google application."
@@ -769,7 +773,6 @@ sq:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
@@ -1247,7 +1250,7 @@ sq:
       name: Autobiograf
     anniversary:
       name: Përvjetor
-      description: "Anëtar aktiv për një vit, postoi të paktën një herë"
+      description: Anëtar aktiv për një vit, postoi të paktën një herë
     nice_post:
       name: Përgjigje e mirë
       description: Mori 10 pëlqime në një përgjigje
@@ -1441,3 +1444,6 @@ sq:
         title: "Refuzo"
       delete_user:
         title: "Fshij Anëtarin"
+  activemodel:
+    errors:
+      <<: *errors

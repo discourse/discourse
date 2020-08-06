@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 da:
   js:
@@ -117,9 +116,6 @@ da:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber}"
       close: "luk"
-      twitter: "Del dette link  via Twitter"
-      facebook: "Del dette link via Facebook"
-      email: "Send dette link via email"
     action_codes:
       public_topic: "offentliggjorde dette emne %{when}"
       private_topic: "gjorde dette emne til en privat besked %{when}"
@@ -262,6 +258,7 @@ da:
       remove: "Fjern bogmærke"
       confirm_clear: "Er du sikker på, at du vil rydde alle dine bogmærker fra dette emne?"
       save: "Gem"
+      search: "Søg"
       reminders:
         later_today: "Senere i dag"
         tomorrow: "I morgen"
@@ -514,10 +511,6 @@ da:
     groups:
       member_added: "Tilføjet"
       member_requested: "Anmodet kl"
-      add_members:
-        title: "Tilføj Medlemmer"
-        description: "Administrer medlemskab af denne gruppe"
-        usernames: "Brugernavne"
       requests:
         title: "Anmodninger"
         reason: "Grund"
@@ -538,6 +531,11 @@ da:
           title: Interaktion
           posting: Sender
           notification: Notifikation
+        email:
+          title: "Email"
+          credentials:
+            username: "Brugernavn"
+            password: "Adgangskode"
         membership:
           title: Medlemskab
           access: Adgang
@@ -1315,8 +1313,8 @@ da:
       complete_email_found: "Vi fandt en konto, der matcher <b>%{email}</b> , du vil snart modtage en email med et login link."
       complete_username_not_found: "Ingen kontoer passer til brugernavnet <b>%{username}</b>"
       complete_email_not_found: "Ingen kontoer svarer til <b>%{email}</b>"
-      confirm_title: "Fortsæt til %{site_name}"
-      logging_in_as: "Logger ind som %{email}"
+      confirm_title: Fortsæt til %{site_name}
+      logging_in_as: Logger ind som %{email}
       confirm_button: Afslut login
     login:
       title: "Log ind"
@@ -1552,17 +1550,17 @@ da:
         draft: Kladde
         edit: Rediger
         reply_to_post:
-          label: "Besvar et indlæg %{postNumber} af %{postUsername}"
+          label: Besvar et indlæg %{postNumber} af %{postUsername}
           desc: Besvar et specifikt indlæg
         reply_as_new_topic:
           label: Besvar som linket emne
-          desc: "Opret et nyt emne, der er knyttet til dette emne"
+          desc: Opret et nyt emne, der er knyttet til dette emne
         reply_as_private_message:
           label: Ny besked
           desc: Opret en ny privat besked
         reply_to_topic:
           label: Besvar emne
-          desc: "Besvar emnet, ikke noget specifikt indlæg"
+          desc: Besvar emnet, ikke noget specifikt indlæg
         toggle_whisper:
           label: Slå hvisken til/fra
           desc: Hvisken er kun synlige for hjælperteam medlemmer
@@ -1856,7 +1854,7 @@ da:
       read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulæst</a> } other { er <a href='{basePath}/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
-      suggest_create_topic: "Hvorfor ikke oprette et emne?"
+      suggest_create_topic: Hvorfor ikke oprette et emne?
       jump_reply_up: hop til tidligere svar
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
@@ -1949,6 +1947,7 @@ da:
           "2_8": "Du vil se antallet af nye svar, fordi du følger denne kategori."
           "2_4": "Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne."
           "2_2": "Du vil se antallet af nye svar, fordi du følger dette emne."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "1": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "0_7": "Du ignorerer alle notifikationer i denne kategori."
@@ -2405,7 +2404,6 @@ da:
       default_top_period: "Standardperiode for top:"
       allow_badges_label: "Tillad af badges bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
-      reviewable_by_group: "Foruden hjælperteam, kan indlæg og markeringer i denne kategori også gennemgås af:"
       review_group_name: "gruppe navn"
       require_topic_approval: "Kræv moderator godkendelse af alle nye emner"
       require_reply_approval: "Kræv moderator godkendelse af alle nye svar"
@@ -2734,7 +2732,7 @@ da:
       granted:
         one: "%{count} tildelt"
         other: "%{count} tildelt"
-      select_badge_for_title: "Vælg en badge, du vil bruge som din titel"
+      select_badge_for_title: Vælg en badge, du vil bruge som din titel
       none: "(ingen)"
       successfully_granted: "Vellykket tildelt %{badge} til %{username}"
       badge_grouping:
@@ -2808,9 +2806,7 @@ da:
         about: "Tilføj tags til grupper for nemmere håndtering."
         new: "Ny gruppe"
         tags_label: "Tags i denne gruppe:"
-        tags_placeholder: "tags"
         parent_tag_label: "Overordnede tag:"
-        parent_tag_placeholder: "Valgfrit"
         parent_tag_description: "Tags fra denne gruppe kan ikke bruges medmindre det overordnede tag er tilstede."
         one_per_topic_label: "Begræns ét tag per emne fra denne gruppe"
         new_name: "Ny tag gruppe"
@@ -2901,7 +2897,7 @@ da:
         show_traffic_report: "Vist detaljeret trafik rapport"
         community_health: Fællesskabets sundhed
         moderators_activity: Moderator aktivitet
-        whats_new_in_discourse: "Hvad er nyt i Discourse?"
+        whats_new_in_discourse: Hvad er nyt i Discourse?
         activity_metrics: Aktivitetsmåling
         all_reports: "Alle rapporter"
         general_tab: "Overordnet"
@@ -2910,10 +2906,10 @@ da:
         reports_tab: "Rapporter"
         report_filter_any: "alle"
         disabled: Deaktiveret
-        timeout_error: "Beklager, forespørgslen tager for lang tid. Vælg et kortere interval"
-        exception_error: "Beklager, der opstod en fejl under udførelsen af forespørgslen"
-        too_many_requests: "Du har udført denne handling for mange gange. Vent venligst, før du prøver igen."
-        not_found_error: "Beklager, denne rapport findes ikke"
+        timeout_error: Beklager, forespørgslen tager for lang tid. Vælg et kortere interval
+        exception_error: Beklager, der opstod en fejl under udførelsen af forespørgslen
+        too_many_requests: Du har udført denne handling for mange gange. Vent venligst, før du prøver igen.
+        not_found_error: Beklager, denne rapport findes ikke
         filter_reports: Filtrer rapporter
         reports:
           trend_title: "%{percent} ændring. I øjeblikket %{current}, var %{prev} i forrige periode."
@@ -3215,7 +3211,6 @@ da:
           subject: "Emne"
           multiple_subjects: "Email-skabelonen har flere emner."
           body: "Indhold"
-          none_selected: "Vælg en email-skabelon for at begynde at redigere."
           revert: "Rul ændringer tilbage"
           revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
         theme:
@@ -3600,7 +3595,6 @@ da:
           domain: "Domain"
         screened_ips:
           title: "Blokerede IPer"
-          description: 'IP-adresser som bliver overvåget. Brug "Tillad" for at whiteliste IP-addresser.'
           delete_confirm: "Er du sikker på, at du ønsker at fjerne reglen for %{ip_address}?"
           roll_up_confirm: "Er du sikker på du vil samle alle screenede IP adresser i subnets ?"
           rolled_up_some_subnets: "Har med succes samlet alle IP forbud til disse subnets: %{subnets}"
@@ -3995,17 +3989,17 @@ da:
         reason_help: (Et link til et indlæg eller et emne)
         save: Gem
         delete: Slet
-        delete_confirm: "Er du sikker på du vil slette denne badge ?"
+        delete_confirm: Er du sikker på du vil slette denne badge ?
         revoke: Fratag
         reason: Grund
         expand: Fold ud &hellip;
-        revoke_confirm: "Er du sikker på du vil fratage brugeren denne badge ?"
+        revoke_confirm: Er du sikker på du vil fratage brugeren denne badge ?
         edit_badges: Rediger Badges
         grant_badge: Tildel Badge
         granted_badges: Tildelte Badges
         grant: Givet
         no_user_badges: "%{name} had ikke feet nogen badges."
-        no_badges: "Der er ikke nogen badges, der kan tildeles."
+        no_badges: Der er ikke nogen badges, der kan tildeles.
         none_selected: "Vælg et badge for at komme igang"
         allow_title: Tillad at bruge denne badge som titel
         multiple_grant: Kan gives flere gange
@@ -4042,10 +4036,10 @@ da:
             other: "<b>%{count}</b> badges til tildeling."
           sample: "Eksempel:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> for indlæg i %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> for indlæg i %{link} klokken <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> klokken <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for indlæg i %{link}
+            with_post_time: <span class="username">%{username}</span> for indlæg i %{link} klokken <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> klokken <span class="time">%{time}</span>
         badge_intro:
           title: "Vælg en eksisterende badge, eller opret en ny for at komme i gang"
           what_are_badges_title: "Hvad er badges?"
@@ -4066,7 +4060,6 @@ da:
         title: "Indlejring"
         host: "Tilladte servere"
         class_name: "Klasse Navn"
-        path_whitelist: "Sti for hvidliste"
         edit: "redigér"
         category: "Opret i kategorien"
         add_host: "Tilføj server"
@@ -4077,9 +4070,6 @@ da:
         embed_post_limit: "Maksimalt antal indlæg der kan indlejres."
         embed_title_scrubber: "Regular expression er brugt til at gøre titler pæne på indlæg"
         embed_truncate: "Beskær de indlejrede indlæg"
-        embed_whitelist_selector: "CSS-selektorer for elementer der er tilladte i indlejringer"
-        embed_blacklist_selector: "CSS-selektorer for elementer der fjernes fra indlejringer"
-        embed_classname_whitelist: "Tillad CSS class names"
         save: "Gem indlejrings-indstillinger"
       permalink:
         title: "Permalinks"
@@ -4090,8 +4080,7 @@ da:
         post_title: "Indlæg"
         category_id: "Kategori ID"
         category_title: "Kategori"
-        external_url: "Ekstern URL"
-        delete_confirm: "Er du sikker på at du vil slette dette permalink?"
+        delete_confirm: Er du sikker på at du vil slette dette permalink?
         form:
           label: "Ny:"
           add: "Tilføj"

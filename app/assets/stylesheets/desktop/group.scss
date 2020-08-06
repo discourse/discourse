@@ -15,13 +15,13 @@
     border: none;
 
     a {
-      color: $primary-med-or-secondary-high;
+      color: var(--primary-med-or-secondary-high);
       padding: 8px 0;
 
       &.active {
         background-color: transparent;
         font-weight: bold;
-        color: $primary;
+        color: var(--primary);
 
         &:after {
           display: none;

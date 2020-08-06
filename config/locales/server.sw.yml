@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sw:
   dates:
@@ -17,12 +16,25 @@ sw:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, Mwezi wa kwanza, Mwezi wa pili, Mwezi wa tatu, Mwezi wa nne, Mwezi wa tano, Mwezi wa sita, Mwezi wa saba, Mwezi wa nane, Mwezi wa tisa, Mwezi wa kumi, Mwezi wa kumi na moja, Mwezi wa kumi na mbili]
+    month_names:
+    - null
+    - Mwezi wa kwanza
+    - Mwezi wa pili
+    - Mwezi wa tatu
+    - Mwezi wa nne
+    - Mwezi wa tano
+    - Mwezi wa sita
+    - Mwezi wa saba
+    - Mwezi wa nane
+    - Mwezi wa tisa
+    - Mwezi wa kumi
+    - Mwezi wa kumi na moja
+    - Mwezi wa kumi na mbili
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "Asubuhi"
     pm: "jioni "
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Mada"
   posts: "machapisho"
@@ -73,10 +85,9 @@ sw:
         bounced_email_error: "Barua pepe ni ripoti ya barua pepe iliyoshindwa kufika."
         screened_email_error: "Inatokea kama barua pepe ya mtumaji imezuiwa."
         unsubscribe_not_allowed: "Inatokea kama kujiengua kupitia barua pepe hakuruhusiwi kwa mtumiaji huyu."
-        email_not_allowed: "Inatokea kama barua pepe imewekwa kwenye orodha ya kukubaliwa au kukataliwa."
       unrecognized_error: "Tatizo lilisoeleweka"
   errors: &errors
-    format: "%{attribute}%{message}"
+    format: ! "%{attribute}%{message}"
     format_with_full_message: "<b>%{attribute} </b>: %{message}"
     messages:
       too_long_validation: "Unaruhusiwa kuandika herufi%{max}; umeandika %{length}"
@@ -84,24 +95,24 @@ sw:
       accepted: lazima ikubaliwe
       blank: haiwezi kubaki wazi
       present: lazima iwe wazi
-      confirmation: "haiendani na %{attribute}"
+      confirmation: ! "haiendani na %{attribute}"
       empty: haiwezi kuachwa wazi
-      equal_to: "lazima iwe sawa na %{count}"
+      equal_to: lazima iwe sawa na %{count}
       even: lazima ziwe sawa
       exclusion: imehifadhiwa
-      greater_than: "izidi %{count}"
-      greater_than_or_equal_to: "izidi au iwe sawa na %{count}"
+      greater_than: izidi %{count}
+      greater_than_or_equal_to: izidi au iwe sawa na %{count}
       has_already_been_used: "imeshatumika"
       inclusion: haijaorodheshwa
       invalid: ni batili
       is_invalid: "haieleweki vizuri, je hii sentensi iko kamili?"
       contains_censored_words: "ina maneno yafuatayo ambayo hayaruhusiwi: %{censored_words}"
-      less_than: "lazima iwe chini ya %{count}"
-      less_than_or_equal_to: "lazima iwe chini ya au sawa na %{count}"
+      less_than: lazima iwe chini ya %{count}
+      less_than_or_equal_to: lazima iwe chini ya au sawa na %{count}
       not_a_number: sio namba
       not_an_integer: lazima iwe namba
       odd: lazima igawanyike kwa mbili
-      record_invalid: "Uthibitisho umeshindikana: %{errors}"
+      record_invalid: ! "Uthibitisho umeshindikana: %{errors}"
       max_emojis: "hauwezi ukawa na emoji, vikatuni vya kuonyesha hisia zaidi ya %{max_emojis_count}"
       ip_address_already_screened: "tayari ipo ndani ya kanuni iliyopo"
       restrict_dependent_destroy:
@@ -109,15 +120,12 @@ sw:
         many: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
       other_than: "lazima iwe nyingine zaidi ya %{count}"
     template:
-      body: "Matatizo yametokea kwenye sehemu zifuatazo:"
+      body: ! "Matatizo yametokea kwenye sehemu zifuatazo:"
     embed:
       load_from_remote: "Hitilafu imetokea wakati wa kupakua taarifa."
     site_settings:
       default_categories_already_selected: "Hauwezi kuchagua kikundi kinachotumika kwenye orodha nyingine."
     conflicting_google_user_id: 'Utambulisho wa Akaunti ya Google imebadilishwa; msaidizi ataipitia kwa ajili ya sababu za ulinzi. Tafadhali wasiliana na msaidizi na waonyeshe <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     user_exists: "Hakuna haja ya kumualika <b>%{email}</b>, tayaru wana <a href='%{base_path}/u/%{username}/summary'>miliki akaunti!</a>"
   bulk_invite:
@@ -278,7 +286,6 @@ sw:
       user_profile:
         bio_raw: "Kuhusu Mimi"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -329,6 +336,7 @@ sw:
           attributes:
             word:
               too_many: "Maneno mengi sana kwa ajili ya shughuli hiyo"
+      <<: *errors
   vip_category_name: "Majilisi"
   vip_category_description: "Kategoria ya wanachama wa kiwango cha 3 cha uaminifu au zaidi."
   meta_category_name: "Majibu ya Mtandao"
@@ -530,7 +538,7 @@ sw:
     read_write: "soma/andika"
     description: '"%{application_name}" anaomba ufikivu ufuatao kwenye akaunti yako:'
     otp_confirmation:
-      confirm_title: "Endelea kwenye %{site_name}"
+      confirm_title: Endelea kwenye %{site_name}
     no_trust_level: "Samahani, hauna kiwango cha uaminifu kinachohitajika kufikia API ya mtumiaji"
     scopes:
       message_bus: "Masashisho yaliyo hai"
@@ -781,8 +789,6 @@ sw:
     max_image_width: "Kiwango cha juu cha upana wa kijipicha za picha kwenye chapisho"
     max_image_height: "Kiwango cha juu cha urefu wa kijipicha za picha kwenye chapisho"
     add_rel_nofollow_to_user_content: 'Ongeza rel nofollow kwenye maandishi yote mtumiaji aliyotoa, isipokuwa viungo vya ndani (pamoja na kikoa baba). Ukibadilisha hii, lazima urebake machapisho yote na: "rake machapishi:rebake"'
-    onebox_domains_blacklist: "Orodha ya anwani za mitandao ambazo hazijawekwa kwenye boxi."
-    inline_onebox_domains_whitelist: "Orodha za anwani za mtandao ambazo zitawekwa kwenye boxi kama zikiunganishwa bila kichwa cha habari"
     summary_score_threshold: "Alama ya chini ambayo mada inahitaji kabla ya kuwekwa ndani ya 'Fupisha Hii Mada' "
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
     enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
@@ -891,7 +897,6 @@ sw:
     cold_age_days_medium: "Baada ya siku nyingi za majadiliano, tarehe ya mwisho ya shughuli itaangaza kiasi."
     cold_age_days_high: "Baada ya siku hizi nyingi za majadiliano, tarehe ya mwisho ya shughuli itaangaza kiasi."
     newuser_spam_host_threshold: "Mara ngapi mtumiaji mpya anaweza kuchapisha kiungo kwenye komputa mwenyeji ndani ya machapisho ya `newuser_spam_host_threshold` kabla ya taarifa kuitwa barua taka."
-    white_listed_spam_host_domains: "Orodha ya vikoa vilivyotengwa kutoka kwenye majaribio ya komputa mwenyeji ya barua taka. Watumiaji wapya hawatazuiliwa kutengeneza machapisho yenye viungo kwenda kwenye vikoa hivi."
     topic_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
     user_profile_view_duration_hours: "Hesabu utembezi wa mada mpya mara moja kuendana na anwani ya mtandao/Mtumiaji kila baada ya masaa N"
     max_new_accounts_per_registration_ip: "Kama kuna akaunti 0 zenye kiwango (n) cha uaminifu kutoka kwenye anwani hii ya mtandao (na hakuna hata mmoja ambaye ni msaidizi or kwenye kiwango cha 2 cha uaminifu au zaidi), kataa usajili kutoka kwenye anwani hiyo."
@@ -961,7 +966,6 @@ sw:
       invalid_string_min: "Lazima iwe na herufi%{min}au zaidi."
       invalid_string_max: "Lazima iwe chini ya herufi %{max}. "
       reply_by_email_address_is_empty: "Lazima uweke 'jibu kupitia barua pepe' kabla ya kuruhusu jibu kupitia barua pepe."
-      enable_sso_disabled: "Kwanza ruhusu 'ruhusu sso' kabla ya kuruhusu mpangilio huu."
       staged_users_disabled: "Kwanza ruhusu 'watumiaji walio staged' kabla ya kuruhusu mpangilio huu."
       reply_by_email_disabled: "Kwanza ruhusu 'jibu kupitia barua pepe' kabla ya kuruhusu mpangilio huu."
       sso_url_is_empty: "Kwanza ruhusu 'sso url' kabla ya kuruhusu mpangilio huu."
@@ -1938,10 +1942,10 @@ sw:
       description: Pokea upendo
     autobiographer:
       name: Muandishi wa maisha ya mtu
-      description: "Amejaza <a href=\"%{base_uri}/my/preferences/profile\">maandishi mafupi</a>ya mtu"
+      description: Amejaza <a href="%{base_uri}/my/preferences/profile">maandishi mafupi</a>ya mtu
     anniversary:
       name: Siku ya kumbukumbu
-      description: "Mwanachama kwa mwaka mmoja, amechapisha mara moja"
+      description: Mwanachama kwa mwaka mmoja, amechapisha mara moja
     nice_post:
       name: Jibu Zuri
       description: Umepokea upendo 10 kwenye jibu
@@ -2005,7 +2009,7 @@ sw:
       description: Chapisho lina nukulu
     read_guidelines:
       name: Soma Muongozo
-      description: "Soma <a href=\"%{base_uri}/guidelines\">muongozo wa jumuiya</a>"
+      description: Soma <a href="%{base_uri}/guidelines">muongozo wa jumuiya</a>
     reader:
       name: Msomaji
       description: Soma kila jibu kwenye mada lenye majibu zaidi ya 100
@@ -2246,3 +2250,6 @@ sw:
         title: "Kataa"
       delete_user:
         title: "Futa Mtumiaji"
+  activemodel:
+    errors:
+      <<: *errors

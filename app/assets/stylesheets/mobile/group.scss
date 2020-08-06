@@ -17,7 +17,7 @@
 
 .group-members {
   .group-member {
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
 
     .user-info {
       margin: 0;
@@ -30,7 +30,7 @@
     }
 
     .group-member-info {
-      color: $primary-medium;
+      color: var(--primary-medium);
 
       label {
         margin-bottom: 0;

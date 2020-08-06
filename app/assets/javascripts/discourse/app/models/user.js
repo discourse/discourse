@@ -300,6 +300,7 @@ const User = RestModel.extend({
       "email_messages_level",
       "email_level",
       "email_previous_replies",
+      "dark_scheme_id",
       "dynamic_favicon",
       "enable_quoting",
       "enable_defer",

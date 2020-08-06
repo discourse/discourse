@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 es:
   js:
@@ -26,6 +25,18 @@ es:
           title: "Los resultados se mostrarán una vez que la encuesta esté <strong>cerrada</strong>."
         staff:
           title: "Los resultados solo se muestran a miembros del <strong>staff</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Selecciona al menos <strong>%{count}</strong> opción."
+            other: "Selecciona al menos <strong>%{count}</strong> opciones."
+          up_to_max_options:
+            one: "Selecciona como máximo <strong>%{count}</strong> opción."
+            other: "Selecciona como máximo <strong>%{count}</strong> opciones."
+          x_options:
+            one: "Selecciona <strong>%{count}</strong> opción."
+            other: "Selecciona <strong>%{count}</strong> opciones."
+          between_min_and_max_options: "Selecciona de <strong>%{min}</strong> a <strong>%{max}</strong> opciones."
       cast-votes:
         title: "Emite tus votos"
         label: "¡Vota ahora!"

@@ -2,20 +2,22 @@ import User from "discourse/models/user";
 
 export function parsePostData(query) {
   const result = {};
-  query.split("&").forEach(function(part) {
-    const item = part.split("=");
-    const firstSeg = decodeURIComponent(item[0]);
-    const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
+  if (query) {
+    query.split("&").forEach(function(part) {
+      const item = part.split("=");
+      const firstSeg = decodeURIComponent(item[0]);
+      const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
 
-    const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
-    if (m) {
-      let key = m[1];
-      result[key] = result[key] || {};
-      result[key][m[2].replace("][", ".")] = val;
-    } else {
-      result[firstSeg] = val;
-    }
-  });
+      const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
+      if (m) {
+        let key = m[1];
+        result[key] = result[key] || {};
+        result[key][m[2].replace("][", ".")] = val;
+      } else {
+        result[firstSeg] = val;
+      }
+    });
+  }
   return result;
 }
 
@@ -245,6 +247,7 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
   pretender.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
+  pretender.get("/t/34/4.json", () => response(fixturesByUrl["/t/34/1.json"]));
   pretender.get("/t/280/:post_number.json", () =>
     response(fixturesByUrl["/t/280/1.json"])
   );
@@ -255,7 +258,9 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));
   pretender.put("/t/1234/re-pin", success);
 
-  pretender.get("/t/2480.json", () => response(fixturesByUrl["/t/2480/1.json"]));
+  pretender.get("/t/2480.json", () =>
+    response(fixturesByUrl["/t/2480/1.json"])
+  );
 
   pretender.get("/t/id_for/:slug", () => {
     return response({

@@ -91,8 +91,8 @@ async function runAllTests() {
   Runtime.consoleAPICalled(response => {
     const message = response["args"][0].value;
 
-    // If it's a simple test result, write without newline
-    if (message === "." || message === "F") {
+    // Not finished yet, don't add a newline
+    if (message && message.startsWith && message.startsWith("↪")) {
       process.stdout.write(message);
     } else if (
       message &&
@@ -109,8 +109,15 @@ async function runAllTests() {
   Page.navigate({ url: args[0] });
 
   Page.loadEventFired(async () => {
+    let qff = process.env.QUNIT_FAIL_FAST;
     await Runtime.evaluate({
-      expression: `(${qunit_script})()`
+      expression:
+        `const QUNIT_FAIL_FAST = ` +
+        (qff === "1" || qff === "true").toString() +
+        ";"
+    });
+    await Runtime.evaluate({
+      expression: `(${qunit_script})();`
     });
 
     if (args[0].indexOf("report_requests=1") > -1) {
@@ -161,42 +168,47 @@ runAllTests().catch(e => {
 // The following functions are converted to strings
 // And then sent to chrome to be evalaluated
 function logQUnit() {
-  var moduleErrors = [];
-  var testErrors = [];
-  var assertionErrors = [];
+  let testErrors = [];
+  let assertionErrors = [];
 
   console.log("\nRunning: " + JSON.stringify(QUnit.urlParams) + "\n");
 
   QUnit.config.testTimeout = 10000;
 
-  QUnit.moduleDone(function(context) {
-    if (context.failed) {
-      var msg = "Module Failed: " + context.name + "\n" + testErrors.join("\n");
-      moduleErrors.push(msg);
-      testErrors = [];
-    }
-  });
-
   let durations = {};
 
+  let inTest = false;
   QUnit.testStart(function(context) {
-    console.log("\n" + context.module + "::" + context.name);
+    console.log("↪ " + context.module + "::" + context.name);
+    inTest = true;
   });
 
   QUnit.testDone(function(context) {
     durations[context.module + "::" + context.name] = context.runtime;
 
     if (context.failed) {
-      var msg = "  Test Failed: " + context.name + assertionErrors.join("    ");
-
-      /* QUNIT_RESULT */
-
+      const msg =
+        "  Test Failed: " +
+        context.name +
+        assertionErrors.join("    ") +
+        "\n" +
+        context.source;
       testErrors.push(msg);
       assertionErrors = [];
-      console.log("F");
+
+      // Pass QUNIT_FAIL_FAST on the command line to quit after the first failure
+      if (QUNIT_FAIL_FAST) {
+        QUnit.config.queue.length = 0;
+      }
+      if (inTest) {
+        console.log(" [✘]");
+      }
     } else {
-      console.log(".");
+      if (inTest) {
+        console.log(" [✔]");
+      }
     }
+    inTest = false;
   });
 
   QUnit.log(function(context) {
@@ -220,10 +232,13 @@ function logQUnit() {
   QUnit.done(function(context) {
     console.log("\n");
 
-    if (moduleErrors.length > 0) {
-      for (var idx = 0; idx < moduleErrors.length; idx++) {
-        console.error(moduleErrors[idx] + "\n");
-      }
+    if (testErrors.length) {
+      console.log("Test Errors");
+      console.log("----------------------------------------------");
+      testErrors.forEach(e => {
+        console.error(e);
+      });
+      console.log("\n");
     }
 
     console.log("Slowest tests");
@@ -244,6 +259,21 @@ function logQUnit() {
       "Failed: " + context.failed
     ];
     console.log(stats.join(", "));
+
+    if (context.failed) {
+      console.log("\nUse this filter to run in the same order:");
+      console.log(
+        "QUNIT_FAIL_FAST=1 QUNIT_SEED=" +
+          QUnit.config.seed +
+          " rake qunit:test\n"
+      );
+      console.log("If you have a web environment running, you can visit:");
+      console.log(
+        "http://localhost:3000/qunit?hidepassed&seed=" +
+          QUnit.config.seed +
+          "\n\n"
+      );
+    }
 
     window.qunitDone = context;
   });

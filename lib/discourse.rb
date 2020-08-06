@@ -24,6 +24,8 @@ module Discourse
   end
 
   class Utils
+    URI_REGEXP = URI.regexp(%w{http https})
+
     # Usage:
     #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
     # or with a block

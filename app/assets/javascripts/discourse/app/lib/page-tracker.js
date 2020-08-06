@@ -18,7 +18,7 @@ export function resetPageTracking() {
   cache = {};
 }
 
-export function startPageTracking(router, appEvents) {
+export function startPageTracking(router, appEvents, documentTitle) {
   if (_started) {
     return;
   }
@@ -34,11 +34,9 @@ export function startPageTracking(router, appEvents) {
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
     next(() => {
-      let title = Discourse.get("_docTitle");
-
       appEvents.trigger("page:changed", {
         url,
-        title,
+        title: documentTitle.getTitle(),
         currentRouteName: router.currentRouteName,
         replacedOnlyQueryParams
       });

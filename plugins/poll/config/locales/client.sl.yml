@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sl:
   js:
@@ -22,10 +21,32 @@ sl:
       public:
         title: "Glasovi so <strong>javni</strong>."
       results:
+        groups:
+          title: "Če želite glasovati v tej anketi, morate biti član %{groups}."
         vote:
           title: "Rezultati bodo vidni na <strong>glasovnici</strong>."
         closed:
           title: "Rezultati bodo prikazani, ko se glasovanje <strong>zapre</strong>."
+        staff:
+          title: "Rezultati so prikazani samo <strong>osebju</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Izberite vsaj <strong>%{count}</strong> možnost."
+            two: "Izberite vsaj <strong>%{count}</strong> možnosti."
+            few: "Izberite vsaj <strong>%{count}</strong> možnosti."
+            other: "Izberite vsaj <strong>%{count}</strong> možnosti."
+          up_to_max_options:
+            one: "Izberite največ <strong>%{count}</strong> možnost."
+            two: "Izberite največ <strong>%{count}</strong> možnosti."
+            few: "Izberite največ <strong>%{count}</strong> možnosti."
+            other: "Izberite največ <strong>%{count}</strong> možnosti."
+          x_options:
+            one: "Izberite <strong>%{count}</strong> možnost."
+            two: "Izberite <strong>%{count}</strong> možnosti."
+            few: "Izberite <strong>%{count}</strong> možnosti."
+            other: "Izberite <strong>%{count}</strong> možnosti."
+          between_min_and_max_options: "Izbirate lahko med <strong>%{min}</strong> in <strong>%{max}</strong> možnostmi."
       cast-votes:
         title: "Oddajte svoj glas"
         label: "Glasuj!"
@@ -34,7 +55,15 @@ sl:
         label: "Prikaži rezultate"
       hide-results:
         title: "Nazaj na vašo glasovnico"
+        label: "Prikaži oddane glasove"
+      group-results:
+        title: "Zbiranje glasov po uporabniškem polju"
+        label: "Pokaži razčlenitev"
+      ungroup-results:
+        title: "Združite vse glasove"
+        label: "Skrij razčlenitev"
       export-results:
+        title: "Izvozi rezultate ankete"
         label: "Izvozi"
       open:
         title: "Odpri anketo"
@@ -50,10 +79,12 @@ sl:
       error_while_toggling_status: "Prišlo je do napake med spreminjanjem statusa te ankete."
       error_while_casting_votes: "Prišlo je do napake med oddajo vašega glasu."
       error_while_fetching_voters: "Prišlo je do napake med prikazom glasovalcev."
+      error_while_exporting_results: "Prišlo je do napake pri izvozu rezultatov ankete."
       ui_builder:
         title: Ustvari anketo
         insert: Vstavi anketo
         help:
+          options_count: Vnesite vsaj eno možnost
           invalid_values: Najmanjša vrednost mora biti manjša od največje vrednosti.
           min_step_value: Najmanjša vrednost koraka je 1.
         poll_type:
@@ -66,6 +97,13 @@ sl:
           always: Vedno vidni
           vote: Po glasovanju
           closed: Ko se zapre
+          staff: Samo osebje
+        poll_groups:
+          label: Dovoljene skupine
+        poll_chart_type:
+          label: Vrsta grafikona
+          bar: Stolpični
+          pie: Tortni
         poll_config:
           max: Največ
           min: Najmanj

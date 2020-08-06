@@ -1152,7 +1152,7 @@ class User < ActiveRecord::Base
     if SiteSetting.selectable_avatars_enabled? && SiteSetting.selectable_avatars.present?
       urls = SiteSetting.selectable_avatars.split("\n")
       if urls.present?
-        if upload = Upload.find_by(url: urls.sample)
+        if upload = Upload.get_from_url(urls.sample)
           update_column(:uploaded_avatar_id, upload.id)
           UserAvatar.create!(user_id: id, custom_upload_id: upload.id)
         end

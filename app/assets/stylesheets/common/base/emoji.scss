@@ -34,9 +34,9 @@ sup img.emoji {
   display: none;
   flex-direction: row;
   height: 320px;
-  color: $primary;
-  background-color: $secondary;
-  border: 1px solid $primary-low;
+  color: var(--primary);
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low);
 
   img.emoji {
     // custom emojis might import images of various sizes
@@ -52,7 +52,7 @@ sup img.emoji {
   flex: 1 0 0px;
   align-items: center;
   justify-content: space-between;
-  border-right: 1px solid $primary-low;
+  border-right: 1px solid var(--primary-low);
   min-width: 36px;
   overflow-y: auto;
   padding: 0.5em;
@@ -102,16 +102,16 @@ sup img.emoji {
 }
 
 .emoji-picker .section-header .title {
-  color: $primary;
+  color: var(--primary);
 }
 
 .emoji-picker .section-header .clear-recent .fa {
   margin: 0;
   padding: 0;
-  color: $primary-medium;
+  color: var(--primary-medium);
 
   &:hover {
-    color: $primary-high;
+    color: var(--primary-high);
   }
 }
 
@@ -127,7 +127,7 @@ sup img.emoji {
   align-items: center;
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
 }
 
 .emoji-picker .info {
@@ -209,7 +209,7 @@ sup img.emoji {
   display: inline-block;
   vertical-align: top;
   border-radius: 2px;
-  background-color: $tertiary-low;
+  background-color: var(--tertiary-low);
 }
 
 .emoji-picker-modal.fadeIn {
@@ -225,7 +225,7 @@ sup img.emoji {
 
 .emoji-picker .filter {
   background-color: none;
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
   padding: 5px;
   display: flex;
   position: relative;
@@ -237,7 +237,7 @@ sup img.emoji {
 }
 
 .emoji-picker .filter .d-icon-search {
-  color: $primary-medium;
+  color: var(--primary-medium);
   font-size: $font-up-1;
   margin-left: 5px;
   margin-right: 5px;
@@ -251,8 +251,8 @@ sup img.emoji {
   box-shadow: none;
   padding-right: 24px;
   outline: none;
-  color: $primary;
-  background: $secondary;
+  color: var(--primary);
+  background: var(--secondary);
 
   &:focus {
     border: none;
@@ -279,11 +279,11 @@ sup img.emoji {
   top: 12px;
   border: 0;
   background: none;
-  color: $primary-high;
+  color: var(--primary-high);
   outline: none;
   display: none;
 
   &:hover {
-    color: $primary;
+    color: var(--primary);
   }
 }

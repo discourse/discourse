@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 id:
   site_settings:
@@ -57,34 +56,34 @@ id:
         > :game_die: %{results}
     quote:
       trigger: "kutipan"
-      '1':
+      "1":
         quote: "Setiap kesulitan ada kemudahan"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Kebebasan tidak layak dimiliki jika tidak berkonotasi kebebasan untuk berbuat salah."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Jangan menangis karena sudah selesai, tersenyumlah karena itu telah terjadi."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Jika kamu ingin sesuatu berjalan dengan benar, lakukan sendiri."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Percayalah kamu bisa dan kamu sudah menyelesaikannya separuh."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Hidup ini seperti sekotak cokelat. Kamu tidak pernah tahu apa yang akan kamu dapati."
         author: "Forrest Gump’s Mom"
-      '7':
+      "7":
         quote: "Satu langkah kecil untuk satu orang, lompatan besar untuk umat manusia."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Lakukan satu hal yang kamu takuti untuk satu hari."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Kesalahan selalu dimaafkan, jika seseorang mau berani mengakuinya."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Jika pikiran seseorang mau membayangi dan mempercayai sesuatu, hal itu akan tercapai."
         author: "Napoleon Hill"
       results: |-
@@ -92,25 +91,26 @@ id:
     magic_8_ball:
       trigger: "nasib baik"
       answers:
-        '1': "Yakin begini"
-        '2': "Sudah diputuskan demikian"
-        '3': "Tidak pakai ragu-ragu"
-        '4': "Betul sekali"
-        '5': "Anda dapat percaya dengan itu"
-        '6': "Sesuai pandangan saya, ya"
-        '7': "Hampir yakin"
-        '8': "Tampaknya baik"
-        '9': "Ya"
-        '10': "Tandanya iya"
-        '12': "Nanti tanya lagi"
-        '13': "Sebaiknya nanti saja diberitahu"
-        '14': "Tidak bisa memprediksinya sekarang"
-        '15': "Konsentrasi dan tanya lagi"
-        '16': "Jangan memikirkan itu"
-        '17': "Balasan saya adalah tidak"
-        '18': "Sumber saya bilang tida"
-        '19': "Sepertinya tidak begitu bagus"
-        '20': "Ragu-ragu sekali"
+        "1": "Yakin begini"
+        "2": "Sudah diputuskan demikian"
+        "3": "Tidak pakai ragu-ragu"
+        "4": "Betul sekali"
+        "5": "Anda dapat percaya dengan itu"
+        "6": "Sesuai pandangan saya, ya"
+        "7": "Hampir yakin"
+        "8": "Tampaknya baik"
+        "9": "Ya"
+        "10": "Tandanya iya"
+        "11": "Reply hazy, try again"
+        "12": "Nanti tanya lagi"
+        "13": "Sebaiknya nanti saja diberitahu"
+        "14": "Tidak bisa memprediksinya sekarang"
+        "15": "Konsentrasi dan tanya lagi"
+        "16": "Jangan memikirkan itu"
+        "17": "Balasan saya adalah tidak"
+        "18": "Sumber saya bilang tida"
+        "19": "Sepertinya tidak begitu bagus"
+        "20": "Ragu-ragu sekali"
       result: |-
         > :crystal_ball: %{result}
     track_selector:

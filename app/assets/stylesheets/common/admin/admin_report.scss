@@ -8,7 +8,7 @@
   .header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
     margin-bottom: 0.5em;
     padding-bottom: 0.5em;
   }
@@ -30,16 +30,16 @@
       font-weight: 700;
 
       .report-url {
-        color: $primary;
+        color: var(--primary);
       }
 
       .info {
         cursor: pointer;
         margin-left: 0.25em;
-        color: $primary-low-mid;
+        color: var(--primary-low-mid);
 
         &:hover {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
     }
@@ -51,16 +51,16 @@
 
     &.trending-down,
     &.high-trending-down {
-      color: $danger;
+      color: var(--danger);
     }
 
     &.trending-up,
     &.high-trending-up {
-      color: $success;
+      color: var(--success);
     }
 
     &.no-change {
-      color: $primary-medium;
+      color: var(--primary-medium);
       .d-icon {
         display: none;
       }
@@ -91,7 +91,7 @@
     border: 1px solid transparent;
 
     a {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
 
     .d-icon {
@@ -103,19 +103,19 @@
 
     &.no-data,
     &.rate-limited {
-      background: $secondary;
-      border-color: $primary-low;
-      color: $primary-low-mid;
+      background: var(--secondary);
+      border-color: var(--primary-low);
+      color: var(--primary-low-mid);
     }
 
     &.rate-limited .d-icon {
-      color: $danger;
+      color: var(--danger);
     }
 
     &.timeout,
     &.exception {
-      border-color: $danger-low;
-      color: $danger;
+      border-color: var(--danger-low);
+      color: var(--danger);
     }
   }
 
@@ -135,7 +135,7 @@
         flex: 1 0 0px;
 
         .mode-btn.is-current {
-          color: $tertiary;
+          color: var(--tertiary);
         }
       }
     }
@@ -147,8 +147,8 @@
       margin-bottom: 1em;
 
       .chart-grouping.active {
-        background: $tertiary;
-        color: $secondary;
+        background: var(--tertiary);
+        color: var(--secondary);
       }
     }
 

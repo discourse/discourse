@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nl:
   js:
@@ -120,9 +119,9 @@ nl:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "bericht #%{postNumber}"
       close: "sluiten"
-      twitter: "Deze koppeling delen op Twitter"
-      facebook: "Deze koppeling delen op Facebook"
-      email: "Deze koppeling delen in een e-mailbericht"
+      twitter: "Delen op Twitter"
+      facebook: "Delen op Facebook"
+      email: "Verzenden via e-mail"
     action_codes:
       public_topic: "heeft dit topic openbaar gemaakt op %{when}"
       private_topic: "heeft dit topic een privébericht gemaakt op %{when}"
@@ -276,7 +275,13 @@ nl:
       no_timezone: 'U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href="%{basePath}/my/preferences/profile">in uw profiel</a>.'
       invalid_custom_datetime: "De datum en tijd die u hebt opgegeven is ongeldig, probeer het opnieuw."
       list_permission_denied: "U hebt geen toestemming om de bladwijzers van deze gebruiker te bekijken."
-      delete_when_reminder_sent: "Deze bladwijzer verwijderen zodra de herinneringsmelding is verstuurd."
+      auto_delete_preference:
+        label: "Automatisch verwijderen"
+        never: "Nooit"
+        when_reminder_sent: "Zodra de herinnering is verzonden"
+        on_owner_reply: "Nadat ik op dit onderwerp antwoord"
+      search_placeholder: "Bladwijzers doorzoeken op naam, topictitel of berichtinhoud"
+      search: "Zoeken"
       reminders:
         at_desktop: "De volgende keer vanaf mijn computer"
         later_today: "Later vandaag"
@@ -284,7 +289,8 @@ nl:
         tomorrow: "Morgen"
         next_week: "Volgende week"
         later_this_week: "Later deze week"
-        start_of_next_business_week: "Volgende maandag"
+        start_of_next_business_week: "Maandag"
+        start_of_next_business_week_alt: "Volgende maandag"
         next_month: "Volgende maand"
         custom: "Aangepaste datum en tijd"
         last_custom: "Afgelopen"
@@ -547,9 +553,11 @@ nl:
       member_added: "Toegevoegd"
       member_requested: "Aangevraagd:"
       add_members:
-        title: "Leden toevoegen"
-        description: "Het lidmaatschap van deze groep beheren"
-        usernames: "Gebruikersnamen"
+        title: "Leden toevoegen aan %{group_name}"
+        description: "U kunt ook in een door komma's gescheiden lijst plakken."
+        usernames: "Voer gebruikersnamen of e-mailadressen in"
+        input_placeholder: "Gebruikersnamen of e-mailadressen"
+        notify_users: "Gebruikers inlichten"
       requests:
         title: "Aanvragen"
         reason: "Reden"
@@ -571,6 +579,23 @@ nl:
           title: Interactie
           posting: Plaatsen
           notification: Melding
+        email:
+          title: "E-mailadres"
+          status: "%{old_emails} / %{total_emails} e-mails via IMAP gesynchroniseerd."
+          credentials:
+            title: "Referenties"
+            smtp_server: "SMTP-server"
+            smtp_port: "SMTP-poort"
+            smtp_ssl: "SSL gebruiken voor SMTP"
+            imap_server: "IMAP-server"
+            imap_port: "IMAP-poort"
+            imap_ssl: "SSL gebruiken voor IMAP"
+            username: "Gebruikersnaam"
+            password: "Wachtwoord"
+          mailboxes:
+            synchronized: "Gesynchroniseerd postvak"
+            none_found: "Geen postvakken gevonden in deze e-mailaccount."
+            disabled: "uitgeschakeld"
         membership:
           title: Lidmaatschap
           access: Toegang
@@ -721,6 +746,7 @@ nl:
       latest_by: "nieuwste door"
       toggle_ordering: "sorteermethode omschakelen"
       subcategories: "Subcategorieën"
+      muted: "Genegeerde categorieën"
       topic_sentence:
         one: "%{count} topic"
         other: "%{count} topics"
@@ -877,6 +903,9 @@ nl:
       users: "Gebruikers"
       muted_users: "Genegeerd"
       muted_users_instructions: "Alle meldingen en PB's van deze gebruikers onderdrukken."
+      allowed_pm_users: "Toegestaan"
+      allowed_pm_users_instructions: "Alleen PB's van deze gebruikers toestaan."
+      allow_private_messages_from_specific_users: "Alleen bepaalde gebruikers mogen mij persoonlijke berichten sturen"
       ignored_users: "Genegeerd"
       ignored_users_instructions: "Alle berichten, meldingen en PB's van deze gebruikers onderdrukken."
       tracked_topics_link: "Tonen"
@@ -1114,6 +1143,7 @@ nl:
       enable_physical_keyboard: "Ondersteuning voor fysiek toetsenbord op iPad inschakelen"
       text_size:
         title: "Tekstgrootte"
+        smallest: "Kleinst"
         smaller: "Kleiner"
         normal: "Normaal"
         larger: "Groter"
@@ -1432,8 +1462,8 @@ nl:
       complete_email_found: "We hebben een account gevonden die overeenkomt met <b>%{email}</b>. U zou spoedig een e-mail met een koppeling voor aanmelding moeten ontvangen."
       complete_username_not_found: "Er komt geen account overeen met de gebruikersnaam <b>%{username}</b>"
       complete_email_not_found: "Er komt geen account overeen met <b>%{email}</b>"
-      confirm_title: "Doorgaan naar %{site_name}"
-      logging_in_as: "Aanmelden als %{email}"
+      confirm_title: Doorgaan naar %{site_name}
+      logging_in_as: Aanmelden als %{email}
       confirm_button: Aanmelding voltooien
     login:
       title: "Aanmelden"
@@ -1686,18 +1716,21 @@ nl:
         draft: Concept
         edit: Bewerken
         reply_to_post:
-          label: "Antwoorden op bericht %{postNumber} van %{postUsername}"
+          label: Antwoorden op bericht %{postNumber} van %{postUsername}
           desc: Antwoorden op een bepaald bericht
         reply_as_new_topic:
           label: Antwoorden als gekoppeld topic
           desc: Een nieuw topic maken dat aan dit topic is gekoppeld
-          confirm: "U hebt een nieuw-topicconcept opgeslagen, dat wordt overschreven als u een gekoppeld topic maakt."
+          confirm: U hebt een nieuw-topicconcept opgeslagen, dat wordt overschreven als u een gekoppeld topic maakt.
+        reply_as_new_group_message:
+          label: Antwoorden als nieuw groepsbericht
+          desc: Een nieuw privébericht maken met dezelfde ontvangers
         reply_as_private_message:
           label: Nieuw bericht
           desc: Een nieuw persoonlijk bericht maken
         reply_to_topic:
           label: Antwoorden op topic
-          desc: "Antwoorden op het topic, niet een bepaald bericht"
+          desc: Antwoorden op het topic, niet een bepaald bericht
         toggle_whisper:
           label: Fluistermodus in-/uitschakelen
           desc: Fluisterberichten zijn alleen zichtbaar voor stafleden
@@ -1752,6 +1785,8 @@ nl:
       watching_first_post: "<span>Nieuw Topic</span> %{description}"
       membership_request_accepted: "Lidmaatschap geaccepteerd in '%{group_name}'"
       membership_request_consolidated: "%{count} open lidmaatschapsaanvragen voor '%{group_name}'"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
         one: "%{count} bericht in uw Postvak IN voor %{group_name}"
         other: "%{count} berichten in uw Postvak IN voor %{group_name}"
@@ -1790,6 +1825,7 @@ nl:
         liked_consolidated: "nieuwe likes"
         post_approved: "bericht goedgekeurd"
         membership_request_consolidated: "nieuwe lidmaatschapsaanvragen"
+        reaction: "nieuwe reactie"
     upload_selector:
       title: "Een afbeelding toevoegen"
       title_with_attachments: "Een afbeelding of bestand toevoegen"
@@ -2011,7 +2047,7 @@ nl:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle categorieën bekijken
       view_latest_topics: nieuwste topics bekijken
-      suggest_create_topic: "Waarom maakt u geen topic aan?"
+      suggest_create_topic: Waarom maakt u geen topic aan?
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"
@@ -2109,7 +2145,7 @@ nl:
           "2_8": "U ziet het aantal nieuwe antwoorden, omdat u deze categorie volgt."
           "2_4": "U ziet het aantal nieuwe antwoorden, omdat u een antwoord in dit topic hebt geplaatst."
           "2_2": "U ziet het aantal nieuwe antwoorden, omdat u dit topic volgt."
-          "2": 'U ziet het aantal nieuwe antwoorden, omdat u <a href="%{basePath}/u/%{username}/preferences/notifications">dit topic hebt gelezen</a>.'
+          "2": 'U ziet een aantal nieuwe antwoorden, omdat u <a href="%{basePath}u/%{username}/preferences/notifications">dit topic hebt gelezen</a>.'
           "1_2": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "1": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "0_7": "U negeert alle meldingen in deze categorie."
@@ -2219,6 +2255,7 @@ nl:
         success: "Die gebruiker is uitgenodigd om aan deze conversatie deel te nemen."
         success_group: "Die groep is uitgenodigd om aan deze conversatie deel te nemen."
         error: "Sorry, er is een fout opgetreden bij het uitnodigen van die gebruiker."
+        not_allowed: "Sorry, die gebruiker kan niet worden uitgenodigd."
         group_name: "groepsnaam"
       controls: "Topic-instellingen"
       invite_reply:
@@ -2344,6 +2381,7 @@ nl:
         other: "(topic ingetrokken door schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
     post:
       quote_reply: "Citeren"
+      quote_share: "Delen"
       edit_reason: "Reden: "
       post_number: "bericht %{number}"
       ignored: "Genegeerde inhoud"
@@ -2616,7 +2654,7 @@ nl:
       default_list_filter: "Standaard lijstfilter:"
       allow_badges_label: "Badges laten toekennen in deze categorie"
       edit_permissions: "Toestemmingen wijzigen"
-      reviewable_by_group: "Naast stafleden kunnen berichten en markeringen in deze categorie ook worden beoordeeld door:"
+      reviewable_by_group: "Naast stafleden kan inhoud in deze categorie ook worden beoordeeld door:"
       review_group_name: "groepsnaam"
       require_topic_approval: "Goedkeuring van moderator voor alle nieuwe topics vereisen"
       require_reply_approval: "Goedkeuring van moderator voor alle nieuwe antwoorden vereisen"
@@ -2887,6 +2925,8 @@ nl:
         profile: "%{shortcut} Profiel"
         messages: "%{shortcut} Berichten"
         drafts: "%{shortcut} Concepten"
+        next: "%{shortcut} Volgende topic"
+        previous: "%{shortcut} Vorige topic"
       navigation:
         title: "Navigatie"
         jump: "%{shortcut} Naar bericht #"
@@ -3064,9 +3104,7 @@ nl:
         about: "Tags aan groepen toevoegen om deze makkelijker te beheren."
         new: "Nieuwe groep"
         tags_label: "Tags in deze groep:"
-        tags_placeholder: "tags"
         parent_tag_label: "Bovenliggende tag:"
-        parent_tag_placeholder: "Optioneel"
         parent_tag_description: "Tags uit deze groep kunnen niet worden gebruikt, tenzij de bovenliggende tag actief is."
         one_per_topic_label: "Beperken tot 1 tag per topic uit deze groep"
         new_name: "Nieuwe tag-groep"
@@ -3107,6 +3145,7 @@ nl:
       dismiss: "Verwijderen"
     safe_mode:
       enabled: "Veilige modus is ingeschakeld; sluit dit browservenster om de veilige modus te verlaten"
+    image_removed: "(afbeelding verwijderd)"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:
@@ -3159,7 +3198,7 @@ nl:
         show_traffic_report: "Gedetailleerd verkeersrapport tonen"
         community_health: Status van gemeenschap
         moderators_activity: Moderator-activiteit
-        whats_new_in_discourse: "Wat is er nieuw in Discourse?"
+        whats_new_in_discourse: Wat is er nieuw in Discourse?
         activity_metrics: Activiteitsgegevens
         all_reports: "Alle rapporten"
         general_tab: "Algemeen"
@@ -3168,8 +3207,8 @@ nl:
         reports_tab: "Rapporten"
         report_filter_any: "alles"
         disabled: Uitgeschakeld
-        timeout_error: "Sorry, de query duurt te lang. Kies een korter interval."
-        exception_error: "Sorry, er is een fout opgetreden bij het uitvoeren van de query."
+        timeout_error: Sorry, de query duurt te lang. Kies een korter interval.
+        exception_error: Sorry, er is een fout opgetreden bij het uitvoeren van de query.
         too_many_requests: U hebt deze actie te vaak uitgevoerd. Wacht even voordat u het opnieuw probeert.
         not_found_error: Dit rapport bestaat niet
         filter_reports: Rapporten filteren
@@ -3186,6 +3225,9 @@ nl:
           view_table: "tabel"
           view_graph: "grafiek"
           refresh_report: "Rapport vernieuwen"
+          daily: Dagelijks
+          monthly: Maandelijks
+          weekly: Wekelijks
           dates: "Datums (UTC)"
           groups: "Alle groepen"
           disabled: "Dit rapport is uitgeschakeld"
@@ -3296,13 +3338,21 @@ nl:
         impersonate_all_users: Een gebruiker imiteren
         single_user: "Enkele gebruiker"
         user_placeholder: Voer gebruikersnaam in
-        description_placeholder: "Waar wordt deze sleutel voor gebruikt?"
+        description_placeholder: Waar wordt deze sleutel voor gebruikt?
         save: Opslaan
         new_key: Nieuwe API-sleutel
         revoked: Ingetrokken
         delete: Definitief verwijderen
         not_shown_again: Deze sleutel wordt niet meer weergegeven. Zorg ervoor dat u een kopie maakt voordat u doorgaat.
         continue: Doorgaan
+        use_global_key: Algemene sleutel (staat alle acties toe)
+        scopes:
+          title: Scopes
+          resource: Bron
+          action: Actie
+          allowed_parameters: Toegestane parameters
+          optional_allowed_parameters: Toegestane parameters (optioneel)
+          any_parameter: (alle parameters)
       web_hooks:
         title: "Webhooks"
         none: "Er zijn op dit moment geen webhooks."
@@ -3503,7 +3553,6 @@ nl:
           subject: "Onderwerp"
           multiple_subjects: "Deze e-mailsjabloon heeft meerdere onderwerpen."
           body: "Body"
-          none_selected: "Selecteer een e-mailsjabloon om met bewerken te beginnen."
           revert: "Wijzigingen ongedaan maken"
           revert_confirm: "Weet u zeker dat u uw wijzigingen ongedaan wilt maken?"
         theme:
@@ -3904,6 +3953,12 @@ nl:
             add_email: "e-mailadres toevoegen"
             update_email: "e-mailadres bijwerken"
             destroy_email: "e-mailadres verwijderen"
+            topic_closed: "topic gesloten"
+            topic_opened: "topic geopend"
+            topic_archived: "topic gearchiveerd"
+            topic_unarchived: "topic gedearchiveerd"
+            post_staff_note_create: "stafopmerking toevoegen"
+            post_staff_note_destroy: "stafopmerking verwijderen"
         screened_emails:
           title: "Gecontroleerde e-mails"
           description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd."
@@ -3917,7 +3972,7 @@ nl:
           domain: "Domein"
         screened_ips:
           title: "Gecontroleerde IP-adressen"
-          description: 'IP-adressen die in de gaten worden gehouden. Gebruik ''Toestaan'' om IP-adressen op een witte lijst te zetten.'
+          description: 'IP-adressen die in de gaten worden gehouden. Gebruik ''Toestaan'' om IP-adressen op de acceptatielijst te zetten.'
           delete_confirm: "Weet u zeker dat u de regel voor %{ip_address} wilt verwijderen?"
           roll_up_confirm: "Weet u zeker dat u regelmatig gecontroleerde IP-adressen in subnetten wilt samenvoegen?"
           rolled_up_some_subnets: "Verbannen IP-adressen zijn zojuist tot deze subnetten samengevoegd: %{subnets}."
@@ -4340,11 +4395,11 @@ nl:
         reason_help: (Een koppeling naar een bericht of topic)
         save: Opslaan
         delete: Verwijderen
-        delete_confirm: "Weet u zeker dat u deze badge wilt verwijderen?"
+        delete_confirm: Weet u zeker dat u deze badge wilt verwijderen?
         revoke: Intrekken
         reason: Reden
         expand: Uitvouwen &hellip;
-        revoke_confirm: "Weet u zeker dat u deze badge wilt intrekken?"
+        revoke_confirm: Weet u zeker dat u deze badge wilt intrekken?
         edit_badges: Badges bewerken
         grant_badge: Badge toekennen
         granted_badges: Toegekende badges
@@ -4387,10 +4442,10 @@ nl:
             other: "Er zijn <b>%{count}</b> badges om toe te wijzen."
           sample: "Voorbeeld:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> voor bericht in %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> voor bericht in %{link} om <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> om <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> voor bericht in %{link}
+            with_post_time: <span class="username">%{username}</span> voor bericht in %{link} om <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> om <span class="time">%{time}</span>
         badge_intro:
           title: "Selecteer een bestaande badge of maak een nieuwe om te beginnen"
           emoji: "studente-emoji"
@@ -4422,7 +4477,7 @@ nl:
         title: "Inbedding"
         host: "Toegestane hosts"
         class_name: "Klassenaam"
-        path_whitelist: "Toegestane paden"
+        allowed_paths: "Pad-acceptatielijst"
         edit: "bewerken"
         category: "Bericht naar categorie"
         add_host: "Host toevoegen"
@@ -4434,9 +4489,9 @@ nl:
         embed_title_scrubber: "Reguliere expressie voor het afleiden van de titels van berichten"
         embed_truncate: "Ingebedde berichten inkorten"
         embed_unlisted: "Geïmporteerde topics worden onzichtbaar totdat er antwoord is."
-        embed_whitelist_selector: "CSS-selector voor elementen die bij inbedding worden toegestaan"
-        embed_blacklist_selector: "CSS-selector voor elementen die bij inbedding worden verwijderd"
-        embed_classname_whitelist: "Toegestane CSS-klassenamen"
+        allowed_embed_selectors: "CSS-selector voor elementen die bij inbedding worden toegestaan"
+        blocked_embed_selectors: "CSS-selector voor elementen die bij inbedding worden verwijderd"
+        allowed_embed_classnames: "Toegestane CSS-klassenamen"
         save: "Inbeddingsinstellingen opslaan"
       permalink:
         title: "Permalinks"
@@ -4452,7 +4507,7 @@ nl:
         external_url: "Externe of relatieve URL"
         destination: "Bestemming"
         copy_to_clipboard: "Permalink naar klembord kopiëren"
-        delete_confirm: "Weet u zeker dat u deze permalink wilt verwijderen?"
+        delete_confirm: Weet u zeker dat u deze permalink wilt verwijderen?
         form:
           label: "Nieuw:"
           add: "Toevoegen"

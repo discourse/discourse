@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fr:
   js:
@@ -20,7 +19,7 @@ fr:
           insert: Insérer
           advanced_mode: Mode avancé
           simple_mode: Mode simple
-          format_description: "Format utilisé pour afficher la date pour l'utilisateur. Utiliser \"\\T\\Z\" pour afficher le fuseaux horaire de l'utilisateur en toutes lettres (Europe/Paris)"
+          format_description: "Format utilisé pour afficher la date pour l'utilisateur. Utiliser « \\T\\Z » pour afficher le fuseau horaire de l'utilisateur en toutes lettres (Europe/Paris)"
           timezones_title: Fuseaux horaires à afficher
           timezones_description: Les fuseaux horaires seront utilisés pour afficher les dates en aperçu et en mode recours.
           recurring_title: Périodicité
@@ -28,10 +27,10 @@ fr:
           recurring_none: Pas de périodicité
           invalid_date: Date invalide, vérifiez que la date et l'heure sont correctes
           date_title: Date
-          time_title: Time
+          time_title: Heure
           format_title: Format de date
           timezone: Fuseau horaire
-          until: Jusqu'à...
+          until: Jusqu'à…
           recurring:
             every_day: "Tous les jours"
             every_week: "Toutes les semaines"

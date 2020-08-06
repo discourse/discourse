@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ca:
   site_settings:
@@ -53,34 +52,34 @@ ca:
         > :game_die: %{results}
     quote:
       trigger: "cita"
-      '1':
+      "1":
         quote: "Enmig de cada dificultat, hi ha una oportunitat."
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "La llibertat no val la pena si no implica el dret d'errar. "
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "No ploris perquè s'ha acabat, somriu perquè ha succeït."
         author: "Dr. Seuss"
-      '4':
+      "4":
         quote: "Si vols que una cosa estigui ben feta, fes-la tu mateix. "
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Confia que pots fer-ho i ja hauràs fet mig camí. "
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "La vida és com una caixa de bombons. No saps mai què hi trobaràs a dins."
         author: "La mare de Forrest Gump"
-      '7':
+      "7":
         quote: "Això és un petit pas per a l'home, i un gran salt per a la humanitat."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Fes cada dia alguna cosa que et faci por. "
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Els errors són sempre perdonables, si tenim el valor d'admetre'ls."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Qualsevol cosa que la ment humana pot concebre i creure, pot aconseguir-la. "
         author: "Napoleon Hill"
       results: |-
@@ -88,26 +87,26 @@ ca:
     magic_8_ball:
       trigger: "sort"
       answers:
-        '1': "És inqüestionable"
-        '2': "És així sens dubte."
-        '3': "Sens dubte"
-        '4': "És clar que sí"
-        '5': "Podeu confiar-hi"
-        '6': "Tal com ho veig, sí"
-        '7': "El més probable"
-        '8': "Bon pronòstic"
-        '9': "Sí"
-        '10': "Sembla que sí"
-        '11': "Resposta boirosa, proveu-ho una altra vegada."
-        '12': "Pregunta-ho més tard"
-        '13': "Val més que no us ho expliqui ara"
-        '14': "No es pot predir ara"
-        '15': "Concentreu-vos i torneu a preguntar."
-        '16': "No hi compteu"
-        '17': "La meva resposta és no"
-        '18': "Les meves fonts indiquen que no"
-        '19': "Les perspectives no són bones"
-        '20': "Molt dubtós"
+        "1": "És inqüestionable"
+        "2": "És així sens dubte."
+        "3": "Sens dubte"
+        "4": "És clar que sí"
+        "5": "Podeu confiar-hi"
+        "6": "Tal com ho veig, sí"
+        "7": "El més probable"
+        "8": "Bon pronòstic"
+        "9": "Sí"
+        "10": "Sembla que sí"
+        "11": "Resposta boirosa, proveu-ho una altra vegada."
+        "12": "Pregunta-ho més tard"
+        "13": "Val més que no us ho expliqui ara"
+        "14": "No es pot predir ara"
+        "15": "Concentreu-vos i torneu a preguntar."
+        "16": "No hi compteu"
+        "17": "La meva resposta és no"
+        "18": "Les meves fonts indiquen que no"
+        "19": "Les perspectives no són bones"
+        "20": "Molt dubtós"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -270,8 +269,6 @@ ca:
           Crec que ja sabeu què s'ha de fer. Tireu avant i **marqueu amb bandera la publicació** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> com a inapropiada!
         reply: |-
           [El nostre equip responsable](%{base_uri}/groups/staff) serà notificat de manera privada sobre la vostra bandera. Si hi ha prou membres de la comunitat que marquen amb bandera una publicació, també serà amagada automàticament per precaució. (Com que no he escrit un missatge desagradable :angel:, he tirat avant i de moment he eliminat la bandera.)
-        not_found: |-
-          Oh no, la meva publicació desagradable encara no ha estat marcada amb bandera! :worried: ¿Podeu marcar-la com a inapropiada utilitzant la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No oblideu utilitzar el botó "mostra'n més" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per a desplegar més accions per a cada publicació.
       search:
         instructions: |-
           _psst_ ... He amagat una sorpresa en aquest tema. Si us ve de gust el repte, **seleccioneu la icona de cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">a la part superior dreta &#8599; per a cercar-la.

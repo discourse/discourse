@@ -30,7 +30,7 @@
 
   .directory-last-updated {
     margin-bottom: 0.5em;
-    color: $primary-medium;
+    color: var(--primary-medium);
     font-size: $font-down-1;
   }
 
@@ -42,7 +42,7 @@
     th {
       padding: 0.5em;
       text-align: left;
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
       @media screen and (max-width: $small-width) {
         padding: 0.5em 0.25em;
       }
@@ -50,7 +50,7 @@
       .number,
       .time-read {
         font-size: $font-up-3;
-        color: $primary-medium;
+        color: var(--primary-medium);
         @media screen and (max-width: $small-width) {
           font-size: $font-up-1;
         }
@@ -63,19 +63,19 @@
     th.sortable {
       width: 13%;
       .d-icon-heart {
-        color: $love;
+        color: var(--love);
         margin: 0 0.25em 0 0;
       }
     }
   }
   .me {
-    background-color: $highlight-low-or-medium;
+    background-color: var(--highlight-low-or-medium);
     .username a,
     .name,
     .title,
     .number,
     .time-read {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 }

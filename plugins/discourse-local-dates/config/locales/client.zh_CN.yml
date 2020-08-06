@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 zh_CN:
   js:
@@ -20,13 +19,13 @@ zh_CN:
           insert: 插入
           advanced_mode: 高级模式
           simple_mode: 简单模式
-          format_description: "向用户显示日期的格式。 使用“\\T\\Z”以单词显示用户时区（欧洲/巴黎）"
+          format_description: "向用户显示日期的格式。 使用“\\T\\Z”以文字的形式显示用户时区（欧洲/巴黎）"
           timezones_title: 要显示的时区
           timezones_description: 时区将用于在预览和撤回中显示日期。
           recurring_title: 循环
-          recurring_description: "定义重复事件。你还可以手动编辑表单生成的周期性选项，并使用以下键之一：年，季，月，周，日，小时，分钟，秒，毫秒。"
+          recurring_description: "定义重复事件。你还可以使用以下关键字之一手动编辑表单生成的周期性选项：年，季，月，周，日，时，分，秒，毫秒。"
           recurring_none: 没有循环
-          invalid_date: 日期无效，请确保日期和时间正确
+          invalid_date: 日期无效，请确保日期和时间是正确的
           date_title: 日期
           time_title: 时间
           format_title: 日期格式
