@@ -1756,7 +1756,6 @@ describe GroupsController do
       end
 
       it "does not return categories the user cannot see" do
-
         get "/groups/#{group.name}/permissions.json"
         expect(response.parsed_body).to eq([])
       end

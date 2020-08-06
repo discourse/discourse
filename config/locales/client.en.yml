@@ -684,8 +684,8 @@ en:
           to: "To"
       permissions:
         title: "Permissions"
-        none: "No categories specifically permit members of this group to access them."
-        description: "Members of this group have access to these categories"
+        none: "There are no categories associated with this group."
+        description: "Members of this group can access these categories"
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
       empty:
