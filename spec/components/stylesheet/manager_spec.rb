@@ -177,9 +177,14 @@ describe Stylesheet::Manager do
       expect(link).not_to eq("")
     end
 
-    it "does not crash on missing color scheme" do
+    it "loads base scheme when defined scheme id is missing" do
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(125)
-      expect(link).not_to eq("")
+      expect(link).to include("color_definitions_base")
+    end
+
+    it "loads nothing when defined dark scheme id is missing" do
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(125, "(prefers-color-scheme: dark)")
+      expect(link).to eq("")
     end
 
     it "uses the correct color scheme from the default site theme" do

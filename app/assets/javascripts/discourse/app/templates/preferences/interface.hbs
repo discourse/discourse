@@ -20,6 +20,15 @@
   </div>
 {{/if}}
 
+{{#if showDarkModeToggle}}
+  <div class="control-group dark-mode">
+    <label class="control-label">{{i18n "user.dark_mode"}}</label>
+    <div class="controls">
+      {{preference-checkbox labelKey="user.dark_mode_enable" checked=enableDarkMode}}
+    </div>
+  </div>
+{{/if}}
+
 <div class="control-group text-size">
   <label class="control-label">{{i18n "user.text_size.title"}}</label>
   <div class="controls">

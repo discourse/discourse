@@ -482,3 +482,16 @@ QUnit.test("can select an option from a dropdown", async assert => {
   await field.selectRowByValue("Cat");
   assert.equal(field.header().value(), "Cat", "it sets the value of the field");
 });
+
+acceptance("User Preferences disabling dark mode", {
+  loggedIn: true,
+  settings: { default_dark_mode_color_scheme_id: 1 }
+});
+
+QUnit.test("shows option to disable dark mode", async assert => {
+  await visit("/u/eviltrout/preferences/interface");
+  assert.ok(
+    $(".control-group.dark-mode").length,
+    "it has the option to disable dark mode"
+  );
+});

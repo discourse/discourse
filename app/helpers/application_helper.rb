@@ -454,7 +454,9 @@ module ApplicationHelper
     result = +""
     result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(scheme_id)
 
-    dark_scheme_id = SiteSetting.default_dark_mode_color_scheme_id
+    user_dark_scheme_id = current_user&.user_option&.dark_scheme_id
+    dark_scheme_id =  user_dark_scheme_id || SiteSetting.default_dark_mode_color_scheme_id
+
     if dark_scheme_id != -1
       result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)')
     end

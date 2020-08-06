@@ -349,6 +349,8 @@ describe ApplicationHelper do
   end
 
   describe 'discourse_color_scheme_stylesheets' do
+    fab!(:user) { Fabricate(:user) }
+
     it 'returns a stylesheet link tag by default' do
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
       expect(cs_stylesheets).to include("stylesheets/color_definitions")
@@ -360,6 +362,41 @@ describe ApplicationHelper do
 
       expect(cs_stylesheets).to include("(prefers-color-scheme: dark)")
       expect(cs_stylesheets.scan("stylesheets/color_definitions").size).to eq(2)
+    end
+
+    it 'fails gracefully when the dark color scheme ID is set but missing' do
+      SiteSetting.default_dark_mode_color_scheme_id = -5
+      cs_stylesheets = helper.discourse_color_scheme_stylesheets
+
+      expect(cs_stylesheets).to include("stylesheets/color_definitions")
+      expect(cs_stylesheets).not_to include("(prefers-color-scheme: dark)")
+    end
+
+    context "with a user option" do
+      before do
+        user.user_option.dark_scheme_id = -1
+        user.user_option.save!
+        helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+
+        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
+      end
+
+      it "returns no dark scheme stylesheet when user has disabled that option" do
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+
+        expect(color_stylesheets).to include("stylesheets/color_definitions")
+        expect(color_stylesheets).not_to include("(prefers-color-scheme: dark)")
+      end
+
+      it "returns user-selected dark color scheme stylesheet" do
+        new_cs = Fabricate(:color_scheme, name: 'Custom Color Scheme')
+        user.user_option.update!(dark_scheme_id: new_cs.id)
+
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).to include("(prefers-color-scheme: dark)")
+        expect(color_stylesheets).to include("custom-color-scheme")
+      end
+
     end
   end
 end

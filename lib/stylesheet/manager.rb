@@ -93,12 +93,16 @@ class Stylesheet::Manager
     end
   end
 
-  def self.color_scheme_stylesheet_details(color_scheme_id = nil)
+  def self.color_scheme_stylesheet_details(color_scheme_id = nil, media)
     color_scheme = begin
       ColorScheme.find(color_scheme_id)
     rescue
+      # don't load fallback when requesting dark color scheme
+      return false if media != "all"
       Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme || ColorScheme.base
     end
+
+    return false if !color_scheme
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
@@ -119,7 +123,9 @@ class Stylesheet::Manager
   end
 
   def self.color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all')
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id)
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media)
+    return '' if !stylesheet
+
     href = stylesheet[:new_href]
     %[<link href="#{href}" media="#{media}" rel="stylesheet"/>].html_safe
   end
