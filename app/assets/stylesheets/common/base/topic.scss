@@ -19,7 +19,7 @@
 .container.posts {
   display: grid;
   grid-template-areas: "posts timeline";
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(10%, 16%);
   > .row {
     grid-area: posts;
     max-width: 100%;
@@ -34,15 +34,8 @@
       align-self: start;
       position: sticky;
       top: 6em;
-      z-index: z("timeline");
-    }
-    .timeline-container {
-      display: flex;
-      justify-content: center;
       margin-left: 1em;
-    }
-    .timeline-scroller-content {
-      position: absolute;
+      z-index: z("timeline");
     }
   }
 
