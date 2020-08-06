@@ -137,7 +137,7 @@ describe PostValidator do
     end
   end
 
-  context "too_many_media_embeds" do
+  context "too_many_embedded_media" do
     before do
       SiteSetting.min_trust_to_post_embedded_media = 0
       SiteSetting.newuser_max_embedded_media = 2
@@ -146,14 +146,14 @@ describe PostValidator do
     it "should be invalid when new user exceeds max mentions limit" do
       post.acting_user = build(:newuser)
       post.expects(:embedded_media_count).returns(3)
-      validator.max_media_embeds_validator(post)
+      validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be > 0
     end
 
     it "should be valid when new user does not exceed max mentions limit" do
       post.acting_user = build(:newuser)
       post.expects(:embedded_media_count).returns(2)
-      validator.max_media_embeds_validator(post)
+      validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be(0)
     end
 
@@ -161,21 +161,21 @@ describe PostValidator do
       SiteSetting.min_trust_to_post_embedded_media = 4
       post.acting_user = build(:leader)
       post.expects(:embedded_media_count).returns(2)
-      validator.max_media_embeds_validator(post)
+      validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be > 0
     end
 
     it "should be valid for moderator in all cases" do
       post.acting_user = build(:moderator)
       post.expects(:embedded_media_count).never
-      validator.max_media_embeds_validator(post)
+      validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be(0)
     end
 
     it "should be valid for admin in all cases" do
       post.acting_user = build(:admin)
       post.expects(:embedded_media_count).never
-      validator.max_media_embeds_validator(post)
+      validator.max_embedded_media_validator(post)
       expect(post.errors.count).to be(0)
     end
   end
@@ -290,7 +290,7 @@ describe PostValidator do
       validator.expects(:raw_quality).never
       validator.expects(:max_posts_validator).never
       validator.expects(:max_mention_validator).never
-      validator.expects(:max_media_embeds_validator).never
+      validator.expects(:max_embedded_media_validator).never
       validator.expects(:max_attachments_validator).never
       validator.expects(:newuser_links_validator).never
       validator.expects(:unique_post_validator).never

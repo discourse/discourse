@@ -306,9 +306,9 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_media_embeds_allowed_trust: "Sorry, you can't embed media in a post."
-  no_media_embeds_allowed: "Sorry, new users can't embed media in posts."
-  too_many_media_embeds:
+  no_embedded_media_allowed_trust: "Sorry, you can't embed media items in a post."
+  no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
+  too_many_embedded_media:
     one: "Sorry, new users can only put one embedded media item in a post."
     other: "Sorry, new users can only put %{count} embedded media items in a post."
   no_attachments_allowed: "Sorry, new users can't put attachments in posts."
