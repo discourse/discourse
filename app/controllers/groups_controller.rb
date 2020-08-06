@@ -604,6 +604,13 @@ class GroupsController < ApplicationController
         default_params
       end
 
+    if !automatic || current_user.admin
+      [:muted, :tracking, :watching, :watching_first_post].each do |level|
+        permitted_params << { "#{level}_category_ids" => [] }
+        permitted_params << { "#{level}_tags" => [] }
+      end
+    end
+
     params.require(:group).permit(*permitted_params)
   end
 

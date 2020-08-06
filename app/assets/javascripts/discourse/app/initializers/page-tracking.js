@@ -15,7 +15,9 @@ export default {
     const router = container.lookup("router:main");
 
     router.on("routeWillChange", viewTrackingRequired);
-    router.on("routeDidChange", cleanDOM);
+    router.on("routeDidChange", () => {
+      cleanDOM(container);
+    });
 
     let appEvents = container.lookup("service:app-events");
     let documentTitle = container.lookup("service:document-title");

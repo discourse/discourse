@@ -1,4 +1,5 @@
 import { scheduleOnce } from "@ember/runloop";
+
 function _clean() {
   if (window.MiniProfiler) {
     window.MiniProfiler.pageTransition();
@@ -23,18 +24,16 @@ function _clean() {
     .not(".no-blur")
     .blur();
 
-  Discourse.set("contextCount", 0);
-  Discourse.__container__.lookup("route:application").send("closeModal");
+  this.lookup("route:application").send("closeModal");
   const hideDropDownFunction = $("html").data("hide-dropdown");
   if (hideDropDownFunction) {
     hideDropDownFunction();
   }
 
-  // TODO: Avoid container lookup here
-  const appEvents = Discourse.__container__.lookup("service:app-events");
-  appEvents.trigger("dom:clean");
+  this.lookup("service:app-events").trigger("dom:clean");
+  this.lookup("service:document-title").updateContextCount(0);
 }
 
-export function cleanDOM() {
-  scheduleOnce("afterRender", _clean);
+export function cleanDOM(container) {
+  scheduleOnce("afterRender", container, _clean);
 }

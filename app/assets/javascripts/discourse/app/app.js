@@ -1,16 +1,11 @@
 /*global Mousetrap:true*/
 import Application from "@ember/application";
-import { computed } from "@ember/object";
 import { buildResolver } from "discourse-common/resolver";
-import discourseComputed from "discourse-common/utils/decorators";
-import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
-import deprecated from "discourse-common/lib/deprecated";
 
 const _pluginCallbacks = [];
 
 const Discourse = Application.extend({
   rootElement: "#main",
-  __widget_helpers: {},
 
   customEvents: {
     paste: "paste"
@@ -19,22 +14,6 @@ const Discourse = Application.extend({
   reset() {
     this._super(...arguments);
     Mousetrap.reset();
-  },
-
-  getURL(url) {
-    deprecated(
-      "Import `getURL` from `discourse-common/lib/get-url` instead of `Discourse.getURL`",
-      { since: "2.5", dropFrom: "2.6" }
-    );
-    return getURL(url);
-  },
-
-  getURLWithCDN(url) {
-    deprecated(
-      "Import `getURLWithCDN` from `discourse-common/lib/get-url` instead of `Discourse.getURLWithCDN`",
-      { since: "2.5", dropFrom: "2.6" }
-    );
-    return getURLWithCDN(url);
   },
 
   Resolver: buildResolver("discourse"),
@@ -81,30 +60,9 @@ const Discourse = Application.extend({
     });
   },
 
-  @discourseComputed("currentAssetVersion", "desiredAssetVersion")
-  requiresRefresh(currentAssetVersion, desiredAssetVersion) {
-    return desiredAssetVersion && currentAssetVersion !== desiredAssetVersion;
-  },
-
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
-  },
-
-  assetVersion: computed({
-    get() {
-      return this.currentAssetVersion;
-    },
-    set(key, val) {
-      if (val) {
-        if (this.currentAssetVersion) {
-          this.set("desiredAssetVersion", val);
-        } else {
-          this.set("currentAssetVersion", val);
-        }
-      }
-      return this.currentAssetVersion;
-    }
-  })
+  }
 });
 
 export default Discourse;

@@ -915,7 +915,6 @@ class Post < ActiveRecord::Base
       upload_ids << upload.id if upload.present?
     end
 
-    upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
     post_uploads = upload_ids.map do |upload_id|
       { post_id: self.id, upload_id: upload_id }
     end

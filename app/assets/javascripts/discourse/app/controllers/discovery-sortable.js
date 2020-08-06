@@ -14,7 +14,8 @@ export const queryParams = {
   q: { replace: true, refreshModel: true },
   tags: { replace: true },
   before: { replace: true, refreshModel: true },
-  bumped_before: { replace: true, refreshModel: true }
+  bumped_before: { replace: true, refreshModel: true },
+  f: { replace: true, refreshModel: true }
 };
 
 // Basic controller options

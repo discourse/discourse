@@ -227,6 +227,12 @@ describe DiscoursePluginRegistry do
       expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
     end
 
+    it "registers color definitions properly" do
+      registry.register_asset("test.css", :color_definitions, plugin_directory_name)
+      expect(registry.color_definition_stylesheets[plugin_directory_name]).to eq('test.css')
+      expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
+    end
+
     it "registers sass variable properly" do
       registry.register_asset("test.css", :variables)
 

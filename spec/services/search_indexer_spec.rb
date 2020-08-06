@@ -209,6 +209,29 @@ describe SearchIndexer do
         "Let me see how I can fix this image white walkers GOT"
       )
     end
+
+    it 'should strips audio and videos URLs from raw data' do
+      SiteSetting.authorized_extensions = 'mp4'
+      upload = Fabricate(:video_upload)
+
+      post.update!(raw: <<~RAW)
+      link to an external page: https://google.com/?u=bar
+
+      link to an audio file: https://somesite.com/audio.m4a
+
+      link to a video file: https://somesite.com/content/somethingelse.MOV
+
+      link to an invalid URL: http:error]
+      RAW
+
+      expect(post.post_search_data.raw_data).to eq(
+        "link to an external page: https://google.com/ link to an audio file: #{I18n.t("search.audio")} link to a video file: #{I18n.t("search.video")} link to an invalid URL: http:error]"
+      )
+
+      expect(post.post_search_data.search_data).to eq(
+        "'/audio.m4a':23 '/content/somethingelse.mov':31 'audio':19 'com':15,22,30 'error':38 'extern':13 'file':20,28 'google.com':15 'http':37 'invalid':35 'link':10,16,24,32 'page':14 'somesite.com':22,30 'somesite.com/audio.m4a':21 'somesite.com/content/somethingelse.mov':29 'test':8A 'titl':4A 'uncategor':9B 'url':36 'video':27"
+      )
+    end
   end
 
   describe '.queue_post_reindex' do

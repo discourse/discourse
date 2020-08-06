@@ -2,6 +2,7 @@
 
 class Search
   DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
+  HIGHLIGHT_CSS_CLASS = 'search-highlight'
 
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
@@ -726,12 +727,18 @@ class Search
   def single_topic(id)
     if @opts[:restrict_to_archetype].present?
       archetype = @opts[:restrict_to_archetype] == Archetype.default ? Archetype.default : Archetype.private_message
-      post = Post.joins(:topic)
-        .where("topics.id = :id AND topics.archetype = :archetype AND posts.post_number = 1", id: id, archetype: archetype)
-        .first
+
+      post = posts_scope
+        .joins(:topic)
+        .find_by(
+          "topics.id = :id AND topics.archetype = :archetype AND posts.post_number = 1",
+          id: id,
+          archetype: archetype
+        )
     else
-      post = Post.find_by(topic_id: id, post_number: 1)
+      post = posts_scope.find_by(topic_id: id, post_number: 1)
     end
+
     return nil unless @guardian.can_see?(post)
 
     @results.add(post)
@@ -1096,7 +1103,7 @@ class Search
   def aggregate_posts(post_sql)
     return [] unless post_sql
 
-    posts_eager_loads(Post)
+    posts_scope(posts_eager_loads(Post))
       .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
       .order('row_number')
   end
@@ -1128,7 +1135,7 @@ class Search
 
   def topic_search
     if @search_context.is_a?(Topic)
-      posts = posts_eager_loads(posts_query(limit))
+      posts = posts_scope(posts_eager_loads(posts_query(limit)))
         .where('posts.topic_id = ?', @search_context.id)
 
       posts.each do |post|
@@ -1148,6 +1155,19 @@ class Search
     end
 
     query.includes(topic: topic_eager_loads)
+  end
+
+  def posts_scope(default_scope = Post.all)
+    if SiteSetting.use_pg_headlines_for_excerpt
+      default_scope
+        .joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id")
+        .select(
+          "TS_HEADLINE(#{default_ts_config}, pd.raw_data, PLAINTO_TSQUERY('#{@term.present? ? PG::Connection.escape_string(@term) : nil}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
+          default_scope.arel.projections
+        )
+    else
+      default_scope
+    end
   end
 
 end

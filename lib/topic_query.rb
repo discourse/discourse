@@ -52,6 +52,7 @@ class TopicQuery
          state
          search
          q
+         f
          group_name
          tags
          match_all_tags
@@ -806,7 +807,7 @@ class TopicQuery
       end
     end
 
-    if (filter = options[:filter]) && @user
+    if (filter = (options[:filter] || options[:f])) && @user
       action =
         if filter == "bookmarked"
           PostActionType.types[:bookmark]

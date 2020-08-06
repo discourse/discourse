@@ -89,11 +89,6 @@ export function convertIconClass(icon) {
     .trim();
 }
 
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.iconNode = iconNode;
-}
-
 export function registerIconRenderer(renderer) {
   _renderers.unshift(renderer);
 }

@@ -6,6 +6,7 @@ import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import { default as getURL, withoutPrefix } from "discourse-common/lib/get-url";
+import Session from "discourse/models/session";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -211,7 +212,7 @@ const DiscourseURL = EmberObject.extend({
       return;
     }
 
-    if (Discourse.get("requiresRefresh")) {
+    if (Session.currentProp("requiresRefresh")) {
       return redirectTo(getURL(path));
     }
 

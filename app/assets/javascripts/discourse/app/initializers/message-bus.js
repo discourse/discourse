@@ -2,7 +2,7 @@ import getURL from "discourse-common/lib/get-url";
 // Initialize the message bus to receive messages.
 import userPresent from "discourse/lib/user-presence";
 import { handleLogoff } from "discourse/lib/ajax";
-import { isProduction } from "discourse-common/config/environment";
+import { isProduction, isTesting } from "discourse-common/config/environment";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
@@ -26,7 +26,7 @@ export default {
 
   initialize(container) {
     // We don't use the message bus in testing
-    if (Discourse.testing) {
+    if (isTesting()) {
       return;
     }
 

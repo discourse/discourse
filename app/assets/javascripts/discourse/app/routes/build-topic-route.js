@@ -65,7 +65,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
   }).then(function(list) {
     list.set("listParams", filterParams);
     if (tracking) {
-      tracking.sync(list, list.filter);
+      tracking.sync(list, list.filter, filterParams);
       tracking.trackIncoming(list.filter);
     }
     Session.currentProp("topicList", list);

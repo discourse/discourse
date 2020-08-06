@@ -61,7 +61,7 @@ module Stylesheet
               paths.map! do |long|
                 plugin_name = nil
                 plugins_paths.each do |plugin_path|
-                  if long.include?(plugin_path)
+                  if long.include?("#{plugin_path}/")
                     plugin_name = File.basename(plugin_path)
                     break
                   end

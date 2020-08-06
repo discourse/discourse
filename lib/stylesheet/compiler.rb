@@ -19,6 +19,10 @@ module Stylesheet
         filename = "#{asset}.scss"
         path = "#{Stylesheet::Common::ASSET_ROOT}/#{filename}"
         file = File.read path
+
+        if asset.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
+          file += Stylesheet::Importer.import_color_definitions
+        end
       end
 
       compile(file, filename, options)

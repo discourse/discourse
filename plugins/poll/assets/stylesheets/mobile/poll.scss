@@ -28,15 +28,15 @@ div.poll {
       margin-left: 0.25em;
     }
   }
+
+  .poll-show-breakdown {
+    display: none;
+  }
 }
 
 div.poll.pie {
   .poll-container {
     width: calc(100% - 30px);
     border-bottom: 1px solid var(--primary-low);
-
-    .poll-grouped-pie-container {
-      width: 100%;
-    }
   }
 }

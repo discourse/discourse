@@ -315,7 +315,7 @@ const TopicTrackingState = EmberObject.extend({
     });
   },
 
-  sync(list, filter) {
+  sync(list, filter, queryParams) {
     const tracker = this,
       states = tracker.states;
 
@@ -368,7 +368,18 @@ const TopicTrackingState = EmberObject.extend({
     });
 
     // Correct missing states, safeguard in case message bus is corrupt
-    if ((filter === "new" || filter === "unread") && !list.more_topics_url) {
+    let shouldCompensate =
+      (filter === "new" || filter === "unread") && !list.more_topics_url;
+
+    if (shouldCompensate && queryParams) {
+      Object.keys(queryParams).forEach(k => {
+        if (k !== "ascending" && k !== "order") {
+          shouldCompensate = false;
+        }
+      });
+    }
+
+    if (shouldCompensate) {
       const ids = {};
       list.topics.forEach(r => (ids["t" + r.id] = true));
 
