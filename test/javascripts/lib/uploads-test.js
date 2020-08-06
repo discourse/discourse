@@ -38,7 +38,7 @@ QUnit.test("uploading one file", function(assert) {
 });
 
 QUnit.test("new user cannot upload images", function(assert) {
-  this.siteSettings.newuser_max_images = 0;
+  this.siteSettings.newuser_max_embedded_media = 0;
   sandbox.stub(bootbox, "alert");
 
   assert.not(

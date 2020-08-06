@@ -425,7 +425,7 @@ describe PostRevisor do
       fab!(:changed_by) { Fabricate(:admin) }
 
       before do
-        SiteSetting.newuser_max_images = 0
+        SiteSetting.newuser_max_embedded_media = 0
         url = "http://i.imgur.com/wfn7rgU.jpg"
         Oneboxer.stubs(:onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(changed_by, raw: "So, post them here!\n#{url}")
@@ -443,7 +443,7 @@ describe PostRevisor do
 
     describe "new user editing their own post" do
       before do
-        SiteSetting.newuser_max_images = 0
+        SiteSetting.newuser_max_embedded_media = 0
         url = "http://i.imgur.com/FGg7Vzu.gif"
         Oneboxer.stubs(:cached_onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(post.user, raw: "So, post them here!\n#{url}")

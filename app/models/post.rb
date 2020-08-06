@@ -269,7 +269,7 @@ class Post < ActiveRecord::Base
 
   %w{raw_mentions
     linked_hosts
-    image_count
+    embedded_media_count
     attachment_count
     link_count
     raw_links
