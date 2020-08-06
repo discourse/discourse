@@ -28,7 +28,7 @@ class Search
         affix = part.length > radius ? omission : ""
         part = part.public_send(part_position == :first ? :last : :first, radius)
         part = part.join(separator) if separator != ""
-        return affix, part
+        [affix, part]
       end
     end
 
