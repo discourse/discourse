@@ -98,7 +98,7 @@ describe Stylesheet::Compiler do
         DiscoursePluginRegistry.reset!
       end
 
-      it "does not include theme variables in plugins" do
+      it "includes color definitions from plugins" do
         css, _map = Stylesheet::Compiler.compile_asset("color_definitions")
 
         expect(css).to include("--plugin-color")
