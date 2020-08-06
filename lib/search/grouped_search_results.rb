@@ -85,8 +85,12 @@ class Search
       }
 
       if post.post_search_data.version > SearchIndexer::MIN_POST_REINDEX_VERSION
-        opts[:cooked] = post.post_search_data.raw_data
-        opts[:scrub] = false
+        if SiteSetting.use_pg_headlines_for_excerpt
+          return post.headline
+        else
+          opts[:cooked] = post.post_search_data.raw_data
+          opts[:scrub] = false
+        end
       else
         opts[:cooked] = post.cooked
       end

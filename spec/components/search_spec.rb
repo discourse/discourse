@@ -410,27 +410,31 @@ describe Search do
     end
 
     let(:expected_blurb) do
-      "...quire content longer than the typical test post raw content. It really is some long content, folks. elephant"
+      "hundred characters to satisfy any test conditions that require content longer than the typical test post raw content. It really is some long content, folks. <span class=\"search-highlight\">elephant</span>"
     end
 
     it 'returns the post' do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
       result = Search.execute('elephant',
         type_filter: 'topic',
         include_blurbs: true
       )
 
-      expect(result.posts).to contain_exactly(reply)
-      expect(result.blurb(reply)).to eq(expected_blurb)
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+      expect(result.blurb(result.posts.first)).to eq(expected_blurb)
     end
 
     it 'returns the right post and blurb for searches with phrase' do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
       result = Search.execute('"elephant"',
         type_filter: 'topic',
         include_blurbs: true
       )
 
-      expect(result.posts).to contain_exactly(reply)
-      expect(result.blurb(reply)).to eq(expected_blurb)
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+      expect(result.blurb(result.posts.first)).to eq(expected_blurb)
     end
 
     it 'applies a small penalty to closed topic when ranking' do
