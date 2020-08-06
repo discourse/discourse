@@ -126,9 +126,6 @@ export default {
       bus.subscribe("/client_settings", data =>
         set(siteSettings, data.name, data.value)
       );
-      bus.subscribe("/refresh_client", data =>
-        Discourse.set("assetVersion", data)
-      );
 
       if (!isTesting()) {
         bus.subscribe(alertChannel(user), data =>

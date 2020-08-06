@@ -205,7 +205,7 @@ export default Controller.extend({
 
           if (this.isiPad) {
             if (safariHacksDisabled() !== this.disableSafariHacks) {
-              Discourse.set("assetVersion", "forceRefresh");
+              this.session.requiresRefresh = true;
             }
             localStorage.setItem(
               "safari-hacks-disabled",
@@ -233,8 +233,7 @@ export default Controller.extend({
       });
 
       // Force refresh when leaving this screen
-      Discourse.set("assetVersion", "forceRefresh");
-
+      this.session.requiresRefresh = true;
       this.set("textSize", newSize);
     }
   }

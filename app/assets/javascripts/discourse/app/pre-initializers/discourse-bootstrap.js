@@ -70,7 +70,7 @@ export default {
     window.Logster = window.Logster || {};
     window.Logster.enabled = setupData.enableJsErrorReporting === "true";
 
-    app.set("assetVersion", setupData.assetVersion);
+    Session.currentProp("assetVersion", setupData.assetVersion);
 
     Session.currentProp(
       "disableCustomCSS",
