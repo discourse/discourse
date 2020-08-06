@@ -167,6 +167,11 @@
       margin-bottom: 1em;
     }
 
+    .timeline-date-wrapper {
+      max-width: 9em;
+      overflow-wrap: anywhere;
+    }
+
     .timeline-footer-controls {
       margin-top: 1.5em;
       transition: opacity 0.2s ease-in;
@@ -214,6 +219,7 @@
 
     .timeline-scroller-content {
       padding-left: 1em;
+      position: absolute; // prevents text length from impacting width
     }
 
     .timeline-ago {

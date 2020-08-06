@@ -19,7 +19,7 @@
 .container.posts {
   display: grid;
   grid-template-areas: "posts timeline";
-  grid-template-columns: auto minmax(10%, 16%);
+  grid-template-columns: auto auto;
   > .row {
     grid-area: posts;
     max-width: 100%;
@@ -27,7 +27,7 @@
   }
 
   // timeline
-  @media screen and (min-width: 924px) {
+  @media screen and (min-width: 925px) {
     // max timeline width is 924
     .topic-navigation {
       grid-area: timeline;
@@ -40,9 +40,17 @@
   }
 
   //progress bar
-  @media screen and (max-width: 923px) {
+  @media screen and (max-width: 924px) {
     // max timeline width is 924
     grid-template-areas: "posts posts";
+    .timeline-container:not(.timeline-fullscreen) {
+      display: none;
+    }
+    .timeline-container {
+      .timeline-scroller-content {
+        position: relative;
+      }
+    }
   }
 }
 
