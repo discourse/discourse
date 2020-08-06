@@ -115,6 +115,17 @@ module Stylesheet
 
     register_imports!
 
+    def self.import_color_definitions
+      return "" unless DiscoursePluginRegistry.color_definition_stylesheets.length
+      contents = +""
+      DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
+        contents << "// Color definitions from #{name}\n\n"
+        contents << File.read(path.to_s)
+        contents << "\n\n"
+      end
+      contents
+    end
+
     def initialize(options)
       @theme = options[:theme]
       @theme_id = options[:theme_id]
