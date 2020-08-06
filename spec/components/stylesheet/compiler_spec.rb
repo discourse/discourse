@@ -84,5 +84,26 @@ describe Stylesheet::Compiler do
       expect(css).to include("--header_primary: #88af8e")
       expect(css).to include("--header_background-rgb: 248,116,92")
     end
+
+    context "with a plugin" do
+      before do
+        plugin = Plugin::Instance.new
+        plugin.path = "#{Rails.root}/spec/fixtures/plugins/color_definition/plugin.rb"
+        Discourse.plugins << plugin
+        plugin.activate!
+      end
+
+      after do
+        Discourse.plugins.pop
+        DiscoursePluginRegistry.reset!
+      end
+
+      it "includes color definitions from plugins" do
+        css, _map = Stylesheet::Compiler.compile_asset("color_definitions")
+
+        expect(css).to include("--plugin-color")
+      end
+    end
+
   end
 end
