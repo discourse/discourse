@@ -87,9 +87,6 @@ export default Controller.extend({
       },
       { name: I18n.t("user.new_topic_duration.last_here"), value: -2 }
     ];
-
-    const caps = Discourse.__container__.lookup("capabilities:main");
-    this.isIOS = caps.isIOS;
   },
 
   actions: {
