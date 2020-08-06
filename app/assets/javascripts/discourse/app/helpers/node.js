@@ -17,11 +17,6 @@ export function dateNode(dt) {
   }
 }
 
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.dateNode = dateNode;
-}
-
 export function numberNode(num, opts) {
   opts = opts || {};
   num = parseInt(num, 10);

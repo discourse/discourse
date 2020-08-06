@@ -8,7 +8,6 @@ const _pluginCallbacks = [];
 
 const Discourse = Application.extend({
   rootElement: "#main",
-  __widget_helpers: {},
 
   customEvents: {
     paste: "paste"
