@@ -151,16 +151,16 @@ export default Controller.extend({
   },
 
   @discourseComputed
-  showDisableDarkMode() {
+  showDarkModeToggle() {
     return this.siteSettings.default_dark_mode_color_scheme_id > 0;
   },
 
-  disableDarkMode: computed({
+  enableDarkMode: computed({
     set(key, value) {
       return value;
     },
     get() {
-      return this.get("model.user_option.dark_scheme_id") === -1 ? true : false;
+      return this.get("model.user_option.dark_scheme_id") === -1 ? false : true;
     }
   }),
 
@@ -179,7 +179,7 @@ export default Controller.extend({
 
       this.set(
         "model.user_option.dark_scheme_id",
-        this.disableDarkMode ? -1 : null
+        this.enableDarkMode ? null : -1
       );
 
       return this.model
