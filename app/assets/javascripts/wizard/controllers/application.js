@@ -10,15 +10,13 @@ export default Controller.extend({
   },
 
   @discourseComputed("model")
-  fontStyles(model) {
+  fontClasses(model) {
     const fontsStep = model.steps.findBy("id", "fonts");
     if (!fontsStep) {
       return [];
     }
 
     const fontField = fontsStep.get("fieldsById.font_previews");
-    return fontField.choices.map(field =>
-      `font-family: ${field.data.font_stack}`.htmlSafe()
-    );
+    return fontField.choices.map(choice => `font-${choice.id.dasherize()}`);
   }
 });
