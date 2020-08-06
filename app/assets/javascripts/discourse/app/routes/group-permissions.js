@@ -13,10 +13,6 @@ export default DiscourseRoute.extend({
   model() {
     let group = this.modelFor("group");
 
-    if (!this.currentUser) {
-      this.transitionToIndex(group);
-    }
-
     return ajax(`/g/${group.name}/permissions`)
       .then(permissions => {
         permissions.forEach(permission => {
@@ -27,16 +23,12 @@ export default DiscourseRoute.extend({
         return { permissions };
       })
       .catch(() => {
-        this.transitionToIndex(group);
+        this.transitionTo("group.members", group);
       });
   },
 
   setupController(controller, model) {
     this.controllerFor("group-permissions").setProperties({ model });
     this.controllerFor("group").set("showing", "permissions");
-  },
-
-  transitionToIndex(group) {
-    this.transitionTo("group.members", group);
   }
 });
