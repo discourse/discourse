@@ -247,7 +247,8 @@ basic:
     hidden: true
   default_dark_mode_color_scheme_id:
     default: -1
-    hidden: true
+    type: enum
+    enum: "ColorSchemeSetting"
     client: true
   relative_date_duration:
     client: true
