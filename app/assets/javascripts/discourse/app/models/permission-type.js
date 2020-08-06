@@ -16,6 +16,10 @@ const PermissionType = EmberObject.extend({
 PermissionType.FULL = 1;
 PermissionType.CREATE_POST = 2;
 PermissionType.READONLY = 3;
-PermissionType.DESCRIPTION_KEYS = { 1: "full", 2: "create_post", 3: "readonly" }
+PermissionType.DESCRIPTION_KEYS = {
+  1: "full",
+  2: "create_post",
+  3: "readonly"
+};
 
 export default PermissionType;
