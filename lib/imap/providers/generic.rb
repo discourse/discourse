@@ -12,6 +12,7 @@ module Imap
         @port = options[:port] || 993
         @ssl = options[:ssl] || true
         @username = options[:username]
+        @account_digest = Digest::MD5.hexdigest("#{@username}:#{@server}")
         @password = options[:password]
         @timeout = options[:timeout] || 10
       end
@@ -52,16 +53,16 @@ module Imap
 
       def labels
         @labels ||= begin
-          labels = {}
+                      labels = {}
 
-          list_mailboxes.each do |name|
-            if tag = to_tag(name)
-              labels[tag] = name
-            end
-          end
+                      list_mailboxes.each do |name|
+                        if tag = to_tag(name)
+                          labels[tag] = name
+                        end
+                      end
 
-          labels
-        end
+                      labels
+                    end
       end
 
       def open_mailbox(mailbox_name, write: false)
@@ -121,9 +122,27 @@ module Imap
         tag
       end
 
-      def list_mailboxes
-        imap.list('', '*').map do |m|
-          next if m.attr.include?(:Noselect)
+      def list_mailboxes(attr_filter = nil)
+        # Basically, list all mailboxes in the root of the server.
+        # ref: https://tools.ietf.org/html/rfc3501#section-6.3.8
+        imap.list('', '*').reject do |m|
+
+          # Noselect cannot be selected with the SELECT command.
+          # technically we could use this for readonly mode when
+          # SiteSetting.imap_write is disabled...maybe a later TODO
+          # ref: https://tools.ietf.org/html/rfc3501#section-7.2.2
+          m.attr.include?(:Noselect)
+        end.select do |m|
+
+          # There are Special-Use mailboxes denoted by an attribute. For
+          # example, some common ones are \Trash or \Sent.
+          # ref: https://tools.ietf.org/html/rfc6154
+          if attr_filter
+            m.attr.include? attr_filter
+          else
+            true
+          end
+        end.map do |m|
           m.name
         end
       end

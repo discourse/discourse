@@ -29,6 +29,32 @@ RSpec.describe Imap::Providers::Generic do
     end
   end
 
+  describe "#list_mailboxes" do
+    let(:dummy_mailboxes) do
+      [
+        Net::IMAP::MailboxList.new([], "/", "All Mail"),
+        Net::IMAP::MailboxList.new([:Noselect], "/", "Other"),
+        Net::IMAP::MailboxList.new([:Trash], "/", "Bin")
+      ]
+    end
+
+    before do
+      imap_stub.expects(:list).with('', '*').returns(dummy_mailboxes)
+    end
+
+    it "does not return any mailboxes with the Noselect attribute" do
+      expect(provider.list_mailboxes).not_to include("Other")
+    end
+
+    it "filters by the provided attribute" do
+      expect(provider.list_mailboxes(:Trash)).to eq(["Bin"])
+    end
+
+    it "lists all mailboxes names" do
+      expect(provider.list_mailboxes).to eq(["All Mail", "Bin"])
+    end
+  end
+
   describe "#uids" do
     it "can search with from and to" do
       imap_stub.expects(:uid_search).once.with("UID 5:9")
