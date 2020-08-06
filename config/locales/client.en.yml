@@ -1724,9 +1724,9 @@ en:
       categories_boxes_with_topics: "Boxes with Featured Topics"
 
     base_font_setting:
-      default: "Helvetica/Arial"
-      oxanium: "Oxanium"
+      helvetica: "Helvetica/Arial"
       open_sans: "Open Sans"
+      oxanium: "Oxanium"
       roboto: "Roboto"
       lato: "Lato"
       noto_sans_jp: "NotoSansJP"
@@ -1742,7 +1742,7 @@ en:
       merriweather: "Merriweather"
       ubuntu: "Ubuntu"
       pt_sans: "PTSans"
-      play_fair_display: "PlayfairDisplay"
+      playfair_display: "PlayfairDisplay"
       nunito: "Nunito"
       lora: "Lora"
       mukta: "Mukta"
