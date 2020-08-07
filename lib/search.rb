@@ -1013,8 +1013,10 @@ class Search
       posts = aggregate_relation.from(posts)
     end
 
-    advanced_order = Search.advanced_orders&.fetch(@order, nil)
-    posts = advanced_order.call(posts) if advanced_order
+    if @order
+      advanced_order = Search.advanced_orders&.fetch(@order, nil)
+      posts = advanced_order.call(posts) if advanced_order
+    end
 
     posts = posts.offset(offset)
     posts.limit(limit)
