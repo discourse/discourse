@@ -277,6 +277,14 @@ class Search
     @results
   end
 
+  def self.advanced_order(trigger, &block)
+    (@advanced_orders ||= {})[trigger] = block
+  end
+
+  def self.advanced_orders
+    @advanced_orders
+  end
+
   def self.advanced_filter(trigger, &block)
     (@advanced_filters ||= {})[trigger] = block
   end
@@ -659,11 +667,11 @@ class Search
         end
       end
 
-      if word == 'order:latest' || word == 'l'
+      if word == 'l'
         @order = :latest
         nil
-      elsif word == 'order:latest_topic'
-        @order = :latest_topic
+      elsif word =~ /order:\w+/
+        @order = word.gsub('order:', '').to_sym
         nil
       elsif word == 'in:title' || word == 't'
         @in_title = true
@@ -676,12 +684,6 @@ class Search
             @search_context = topic
           end
         end
-        nil
-      elsif word == 'order:views'
-        @order = :views
-        nil
-      elsif word == 'order:likes'
-        @order = :likes
         nil
       elsif word == 'in:all'
         @search_all_topics = true
@@ -1009,6 +1011,11 @@ class Search
     if aggregate_search
       posts = yield(posts) if block_given?
       posts = aggregate_relation.from(posts)
+    end
+
+    if @order
+      advanced_order = Search.advanced_orders&.fetch(@order, nil)
+      posts = advanced_order.call(posts) if advanced_order
     end
 
     posts = posts.offset(offset)

@@ -190,6 +190,22 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom search order. Example usage:
+  #   Search.advanced_order(:chars) do |posts|
+  #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+  #   end
+  def register_search_advanced_order(trigger, &block)
+    Search.advanced_order(trigger, &block)
+  end
+
+  # Allows to define custom search filters. Example usage:
+  #   Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
+  #     posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+  #   end
+  def register_search_advanced_filter(trigger, &block)
+    Search.advanced_filter(trigger, &block)
+  end
+
   # Request a new size for topic thumbnails
   # Will respect plugin enabled setting is enabled
   # Size should be an array with two elements [max_width, max_height]

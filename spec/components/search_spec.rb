@@ -1690,4 +1690,24 @@ describe Search do
     end
   end
 
+  context 'plugin extensions' do
+    let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced filter with length more than 50 chars') }
+    let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced filter') }
+
+    it 'allows to define custom filter' do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+      Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
+        posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+      end
+      expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
+    end
+
+    it 'allows to define custom order' do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+      Search.advanced_order(:chars) do |posts|
+        posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+      end
+      expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    end
+  end
 end
