@@ -422,7 +422,11 @@ describe Search do
       )
 
       expect(result.posts.map(&:id)).to contain_exactly(reply.id)
-      expect(result.blurb(result.posts.first)).to eq(expected_blurb)
+
+      post = result.posts.first
+
+      expect(result.blurb(post)).to eq(expected_blurb)
+      expect(post.topic_title_headline).to eq(topic.fancy_title)
     end
 
     it 'returns the right post and blurb for searches with phrase' do

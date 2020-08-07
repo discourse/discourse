@@ -1166,10 +1166,15 @@ class Search
 
   def posts_scope(default_scope = Post.all)
     if SiteSetting.use_pg_headlines_for_excerpt
+      search_term = @term.present? ? PG::Connection.escape_string(@term) : nil
+      ts_config = default_ts_config
+
       default_scope
         .joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id")
+        .joins("INNER JOIN topics t1 ON t1.id = posts.topic_id")
         .select(
-          "TS_HEADLINE(#{default_ts_config}, pd.raw_data, PLAINTO_TSQUERY(#{default_ts_config}, '#{@term.present? ? PG::Connection.escape_string(@term) : nil}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
+          "TS_HEADLINE(#{ts_config}, t1.fancy_title, PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS topic_title_headline",
+          "TS_HEADLINE(#{ts_config}, pd.raw_data, PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
           default_scope.arel.projections
         )
     else

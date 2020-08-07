@@ -1796,6 +1796,7 @@ search:
   use_pg_headlines_for_excerpt:
     default: false
     hidden: true
+    client: true
   search_ranking_normalization:
     default: "0"
     hidden: true

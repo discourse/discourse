@@ -101,6 +101,10 @@ describe SearchController do
     it "can search correctly" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
+      awesome_post_3 = Fabricate(:post,
+        topic: Fabricate(:topic, title: 'this is an awesome title')
+      )
+
       get "/search/query.json", params: {
         term: 'awesome'
       }
@@ -109,14 +113,26 @@ describe SearchController do
 
       data = response.parsed_body
 
-      expect(data['posts'].length).to eq(2)
-      expect(data['posts'][0]['id']).to eq(awesome_post_2.id)
-      expect(data['posts'][0]['blurb']).to eq("this is my really <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> post")
-      expect(data['topics'][0]['id']).to eq(awesome_post_2.topic_id)
+      expect(data['posts'].length).to eq(3)
 
-      expect(data['posts'][1]['id']).to eq(awesome_post.id)
-      expect(data['posts'][1]['blurb']).to eq("this is my really <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> post")
-      expect(data['topics'][1]['id']).to eq(awesome_post.topic_id)
+      expect(data['posts'][0]['id']).to eq(awesome_post_3.id)
+      expect(data['posts'][0]['blurb']).to eq(awesome_post_3.raw)
+      expect(data['posts'][0]['topic_title_headline']).to eq(
+        "This is an <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> title"
+      )
+      expect(data['topics'][0]['id']).to eq(awesome_post_3.topic_id)
+
+      expect(data['posts'][1]['id']).to eq(awesome_post_2.id)
+      expect(data['posts'][1]['blurb']).to eq(
+        "this is my really <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> post"
+      )
+      expect(data['topics'][1]['id']).to eq(awesome_post_2.topic_id)
+
+      expect(data['posts'][2]['id']).to eq(awesome_post.id)
+      expect(data['posts'][2]['blurb']).to eq(
+        "this is my really <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> post"
+      )
+      expect(data['topics'][2]['id']).to eq(awesome_post.topic_id)
     end
 
     it "can search correctly with advanced search filters" do
