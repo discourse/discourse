@@ -3,6 +3,8 @@
 require 'mail'
 
 module Email
+  # cute little guy ain't he?
+  MESSAGE_ID_REGEX = /<(.*@.*)+>/
 
   def self.is_valid?(email)
     return false unless String === email
@@ -39,4 +41,14 @@ module Email
     SiteSetting.email_site_title.presence || SiteSetting.title
   end
 
+  # https://tools.ietf.org/html/rfc850#section-2.1.7
+  def self.message_id_rfc_format(message_id)
+    return message_id if message_id =~ MESSAGE_ID_REGEX
+    "<#{message_id}>"
+  end
+
+  def self.message_id_clean(message_id)
+    return message_id if !(message_id =~ MESSAGE_ID_REGEX)
+    message_id.tr("<>", "")
+  end
 end
