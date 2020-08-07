@@ -32,7 +32,7 @@
     .topic-navigation {
       grid-area: timeline;
       align-self: start;
-      position: sticky;
+      @include sticky;
       top: 6em;
       margin-left: 1em;
       z-index: z("timeline");
