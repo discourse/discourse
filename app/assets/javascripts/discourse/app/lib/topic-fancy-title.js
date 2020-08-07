@@ -4,15 +4,15 @@ import { emojiUnescape } from "discourse/lib/text";
 import { isRTL } from "discourse/lib/text-direction";
 
 export function fancyTitle(title, supportMixedTextDirection) {
-  let fancyTitle = censor(
+  let title = censor(
     emojiUnescape(title) || "",
     Site.currentProp("censored_regexp")
   );
 
   if (supportMixedTextDirection) {
     const titleDir = isRTL(title) ? "rtl" : "ltr";
-    return `<span dir="${titleDir}">${fancyTitle}</span>`;
+    return `<span dir="${titleDir}">${title}</span>`;
   }
 
-  return fancyTitle;
+  return title;
 }
