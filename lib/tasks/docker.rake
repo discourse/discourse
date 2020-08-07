@@ -196,7 +196,7 @@ task 'docker:test' do
           end
 
           if ENV['USE_TURBO']
-            @good &&= run_or_fail("bundle exec ./bin/turbo_rspec #{params.join(' ')}".strip)
+            @good &&= run_or_fail("bundle exec ./bin/turbo_rspec --verbose #{params.join(' ')}".strip)
           else
             @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
           end
