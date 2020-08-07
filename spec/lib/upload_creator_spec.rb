@@ -174,11 +174,6 @@ RSpec.describe UploadCreator do
       let(:filename) { "should_be_jpeg.heic" }
       let(:file) { file_from_fixtures(filename, "images") }
 
-      before do
-        SiteSetting.convert_heif_to_jpeg = true
-        SiteSetting.authorized_extensions = 'jpg|heic'
-      end
-
       it 'should store the upload with the right extension' do
         expect do
           UploadCreator.new(file, filename).create_for(user.id)

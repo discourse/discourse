@@ -218,7 +218,7 @@ class UploadCreator
   end
 
   def convert_heif_to_jpeg?
-    SiteSetting.convert_heif_to_jpeg && File.extname(@filename).downcase.match?(/\.hei(f|c)$/)
+    File.extname(@filename).downcase.match?(/\.hei(f|c)$/)
   end
 
   def convert_heif!
