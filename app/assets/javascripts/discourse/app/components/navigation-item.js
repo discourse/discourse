@@ -51,14 +51,6 @@ export default Component.extend(FilterModeMixin, {
       }
     }
 
-    // ensures we keep discovery query params added through plugin api
-    if (content.persistedQueryParams) {
-      Object.keys(content.persistedQueryParams).forEach(key => {
-        const value = content.persistedQueryParams[key];
-        queryParams.push(`${key}=${value}`);
-      });
-    }
-
     // To reset the "filter" sticky param, at least one query param is needed.
     // If no query param is present, add an empty one to ensure a ? is
     // appended to the URL.
