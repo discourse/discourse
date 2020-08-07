@@ -237,7 +237,7 @@ describe Post do
     end
   end
 
-  describe "maximum images" do
+  describe "maximum media embeds" do
     fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
@@ -249,78 +249,83 @@ describe Post do
     let(:post_image_within_pre) { post_with_body('<pre><img src="coolimage.png"></pre>', newuser) }
     let(:post_with_thumbnail) { post_with_body('<img src="/assets/emoji/smiley.png" class="thumbnail">', newuser) }
     let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
+    let(:post_with_two_embedded_media) { post_with_body('<video width="950" height="700" controls><source src="https://bbc.co.uk/news.mp4" type="video/mp4"></video><audio controls><source type="audio/mpeg" src="https://example.com/audio.mp3"></audio>', newuser) }
 
     it "returns 0 images for an empty post" do
-      expect(Fabricate.build(:post).image_count).to eq(0)
+      expect(Fabricate.build(:post).embedded_media_count).to eq(0)
     end
 
     it "finds images from markdown" do
-      expect(post_one_image.image_count).to eq(1)
+      expect(post_one_image.embedded_media_count).to eq(1)
     end
 
     it "finds images from HTML" do
-      expect(post_two_images.image_count).to eq(2)
+      expect(post_two_images.embedded_media_count).to eq(2)
     end
 
     it "doesn't count avatars as images" do
-      expect(post_with_avatars.image_count).to eq(0)
+      expect(post_with_avatars.embedded_media_count).to eq(0)
     end
 
     it "allows images by default" do
       expect(post_one_image).to be_valid
     end
 
-    it "doesn't allow more than `min_trust_to_post_images`" do
-      SiteSetting.min_trust_to_post_images = 4
+    it "doesn't allow more than `min_trust_to_post_embedded_media`" do
+      SiteSetting.min_trust_to_post_embedded_media = 4
       post_one_image.user.trust_level = 3
       expect(post_one_image).not_to be_valid
     end
 
-    it "doesn't allow more than `min_trust_to_post_images` in a quote" do
-      SiteSetting.min_trust_to_post_images = 4
+    it "doesn't allow more than `min_trust_to_post_embedded_media` in a quote" do
+      SiteSetting.min_trust_to_post_embedded_media = 4
       post_one_image.user.trust_level = 3
       expect(post_image_within_quote).not_to be_valid
     end
 
-    it "doesn't allow more than `min_trust_to_post_images` in code" do
-      SiteSetting.min_trust_to_post_images = 4
+    it "doesn't allow more than `min_trust_to_post_embedded_media` in code" do
+      SiteSetting.min_trust_to_post_embedded_media = 4
       post_one_image.user.trust_level = 3
       expect(post_image_within_code).not_to be_valid
     end
 
-    it "doesn't allow more than `min_trust_to_post_images` in pre" do
-      SiteSetting.min_trust_to_post_images = 4
+    it "doesn't allow more than `min_trust_to_post_embedded_media` in pre" do
+      SiteSetting.min_trust_to_post_embedded_media = 4
       post_one_image.user.trust_level = 3
       expect(post_image_within_pre).not_to be_valid
     end
 
-    it "doesn't allow more than `min_trust_to_post_images`" do
-      SiteSetting.min_trust_to_post_images = 4
+    it "doesn't allow more than `min_trust_to_post_embedded_media`" do
+      SiteSetting.min_trust_to_post_embedded_media = 4
       post_one_image.user.trust_level = 4
       expect(post_one_image).to be_valid
     end
 
     it "doesn't count favicons as images" do
       PrettyText.stubs(:cook).returns(post_with_favicon.raw)
-      expect(post_with_favicon.image_count).to eq(0)
+      expect(post_with_favicon.embedded_media_count).to eq(0)
     end
 
     it "doesn't count thumbnails as images" do
       PrettyText.stubs(:cook).returns(post_with_thumbnail.raw)
-      expect(post_with_thumbnail.image_count).to eq(0)
+      expect(post_with_thumbnail.embedded_media_count).to eq(0)
     end
 
     it "doesn't count allowlisted images" do
       Post.stubs(:allowed_image_classes).returns(["classy"])
       # I dislike this, but passing in a custom allowlist is hard
       PrettyText.stubs(:cook).returns(post_with_two_classy_images.raw)
-      expect(post_with_two_classy_images.image_count).to eq(0)
+      expect(post_with_two_classy_images.embedded_media_count).to eq(0)
+    end
+
+    it "counts video and audio as embedded media" do
+      expect(post_with_two_embedded_media.embedded_media_count).to eq(2)
     end
 
     context "validation" do
 
       before do
-        SiteSetting.newuser_max_images = 1
+        SiteSetting.newuser_max_embedded_media = 1
       end
 
       context 'newuser' do
@@ -328,8 +333,12 @@ describe Post do
           expect(post_one_image).to be_valid
         end
 
-        it "doesn't allow more than the maximum" do
+        it "doesn't allow more than the maximum number of images" do
           expect(post_two_images).not_to be_valid
+        end
+
+        it "doesn't allow more than the maximum number of embedded media items" do
+          expect(post_with_two_embedded_media).not_to be_valid
         end
 
         it "doesn't allow a new user to edit their post to insert an image" do

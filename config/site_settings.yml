@@ -807,7 +807,7 @@ posting:
     default: ""
     type: list
   newuser_max_links: 2
-  newuser_max_images:
+  newuser_max_embedded_media:
     client: true
     default: 1
   newuser_max_attachments:
@@ -1359,7 +1359,7 @@ trust:
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
-  min_trust_to_post_images:
+  min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
   allow_flagging_staff: true

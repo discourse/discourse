@@ -50,7 +50,7 @@ const ORIGINAL_SETTINGS = {
   traditional_markdown_linebreaks: false,
   suppress_reply_directly_below: true,
   suppress_reply_directly_above: true,
-  newuser_max_images: 0,
+  newuser_max_embedded_media: 0,
   newuser_max_attachments: 0,
   display_name_on_posts: true,
   short_progress_text_threshold: 10000,
