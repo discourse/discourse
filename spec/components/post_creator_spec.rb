@@ -406,7 +406,7 @@ describe PostCreator do
 
           it "doesn't create tags" do
             expect { @post = creator_with_tags.create }.to change { Tag.count }.by(0)
-            expect(@post.topic.tags.size).to eq(0)
+            expect(@post.topic&.tags&.size).to eq(nil)
           end
         end
 

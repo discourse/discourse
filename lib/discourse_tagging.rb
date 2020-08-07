@@ -78,7 +78,7 @@ module DiscourseTagging
         parent_tags_map = DB.query("
           SELECT tgm.tag_id, tg.parent_tag_id
             FROM tag_groups tg
-      INNER JOIN tag_group_memberships tgm
+          INNER JOIN tag_group_memberships tgm
               ON tgm.tag_group_id = tg.id
            WHERE tg.parent_tag_id IS NOT NULL
              AND tgm.tag_id IN (?)
@@ -112,8 +112,9 @@ module DiscourseTagging
         topic.tags = []
       end
       topic.tags_changed = true
+      return true
     end
-    true
+    false
   end
 
   def self.validate_min_required_tags_for_category(guardian, topic, category, tags = [])

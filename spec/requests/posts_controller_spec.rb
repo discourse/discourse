@@ -939,7 +939,7 @@ describe PostsController do
         expect(response.status).to eq(422)
       end
 
-      it 'can not create a post in a disallowed category' do
+      it 'cannot create a post in a disallowed category' do
         category.set_permissions(staff: :full)
         category.save!
 
@@ -953,7 +953,7 @@ describe PostsController do
         expect(response.status).to eq(403)
       end
 
-      it 'can not create a post with a tag that is restricted' do
+      it 'cannot create a post with a tag that is restricted' do
         SiteSetting.tagging_enabled = true
         tag = Fabricate(:tag)
         category.allowed_tags = [tag.name]
@@ -968,6 +968,51 @@ describe PostsController do
         expect(response.status).to eq(422)
         json = response.parsed_body
         expect(json['errors']).to be_present
+      end
+
+      it 'cannot create a post with a tag when tagging is disabled' do
+        SiteSetting.tagging_enabled = false
+        tag = Fabricate(:tag)
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(422)
+        json = response.parsed_body
+        expect(json['errors']).to be_present
+      end
+
+      it 'cannot create a post with a tag without tagging permission' do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.min_trust_level_to_tag_topics = 4
+        tag = Fabricate(:tag)
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(422)
+        json = response.parsed_body
+        expect(json['errors']).to be_present
+      end
+
+      it 'can create a post with a tag when tagging is enabled' do
+        SiteSetting.tagging_enabled = true
+        tag = Fabricate(:tag)
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(200)
+        expect(Post.last.topic.tags.count).to eq(1)
       end
 
       it 'creates the post' do
