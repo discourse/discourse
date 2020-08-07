@@ -97,7 +97,7 @@ GEM
       addressable
     debug_inspector (0.0.3)
     diff-lcs (1.4.4)
-    diffy (3.3.0)
+    diffy (3.4.0)
     discourse-ember-source (3.12.2.2)
     discourse_image_optim (0.26.2)
       exifr (~> 1.2, >= 1.2.2)
