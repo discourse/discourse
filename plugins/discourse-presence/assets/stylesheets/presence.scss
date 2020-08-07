@@ -1,6 +1,6 @@
 .presence-users {
-  background-color: $secondary;
-  color: $primary-medium;
+  background-color: var(--secondary, $secondary);
+  color: var(--primary-medium, $primary-medium);
   display: flex;
 
   span.presence-text {
