@@ -193,12 +193,13 @@ describe Stylesheet::Manager do
       SiteSetting.default_theme_id = theme.id
 
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
-      expect(link).to include("/stylesheets/color_definitions_funky_")
+      expect(link).to include("/stylesheets/color_definitions_funky#{cs.id}_")
     end
 
     it "uses the correct scheme when colors are passed" do
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(ColorScheme.first.id)
-      expect(link).to include("/stylesheets/color_definitions_#{Slug.for(ColorScheme.first.name)}_")
+      slug = Slug.for(ColorScheme.first.name) + ColorScheme.first.id.to_s
+      expect(link).to include("/stylesheets/color_definitions_#{slug}_")
     end
 
     it "does not fail with a color scheme name containing spaces and special characters" do
@@ -207,7 +208,7 @@ describe Stylesheet::Manager do
       SiteSetting.default_theme_id = theme.id
 
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
-      expect(link).to include("/stylesheets/color_definitions_funky-bunch_")
+      expect(link).to include("/stylesheets/color_definitions_funky-bunch#{cs.id}_")
     end
 
   end
