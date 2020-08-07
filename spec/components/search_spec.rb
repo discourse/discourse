@@ -1690,7 +1690,7 @@ describe Search do
     end
   end
 
-  context "advanced filter" do
+  context 'plugin extensions' do
     let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced filter with length more than 50 chars') }
     let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced filter') }
 
@@ -1701,11 +1701,6 @@ describe Search do
       end
       expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
     end
-  end
-
-  context "advanced order" do
-    let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced order with length more than 50 chars') }
-    let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced order') }
 
     it 'allows to define custom order' do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
