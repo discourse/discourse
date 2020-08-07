@@ -1164,6 +1164,10 @@ class Search
     query.includes(topic: topic_eager_loads)
   end
 
+  # Limited for performance reasons since `TS_HEADLINE` is slow when the text
+  # document is too long.
+  MAX_LENGTH_FOR_HEADLINE = 2500
+
   def posts_scope(default_scope = Post.all)
     if SiteSetting.use_pg_headlines_for_excerpt
       search_term = @term.present? ? PG::Connection.escape_string(@term) : nil
@@ -1174,7 +1178,7 @@ class Search
         .joins("INNER JOIN topics t1 ON t1.id = posts.topic_id")
         .select(
           "TS_HEADLINE(#{ts_config}, t1.fancy_title, PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS topic_title_headline",
-          "TS_HEADLINE(#{ts_config}, pd.raw_data, PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
+          "TS_HEADLINE(#{ts_config}, LEFT(pd.raw_data, #{MAX_LENGTH_FOR_HEADLINE}), PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
           default_scope.arel.projections
         )
     else

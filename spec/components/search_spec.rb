@@ -429,6 +429,20 @@ describe Search do
       expect(post.topic_title_headline).to eq(topic.fancy_title)
     end
 
+    it "it limits the headline to #{Search::MAX_LENGTH_FOR_HEADLINE} characters" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      reply.update!(raw: "#{'a' * Search::MAX_LENGTH_FOR_HEADLINE} #{reply.raw}")
+
+      result = Search.execute('elephant')
+
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+
+      post = result.posts.first
+
+      expect(post.headline.include?('elephant')).to eq(false)
+    end
+
     it 'returns the right post and blurb for searches with phrase' do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
