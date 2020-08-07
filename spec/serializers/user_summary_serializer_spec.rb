@@ -34,7 +34,7 @@ describe UserSummarySerializer do
     topic = Fabricate(:topic)
     post = Fabricate(:post_with_external_links, user: topic.user, topic: topic)
     TopicLink.extract_from(post)
-    topic.topic_links.each_with_index do |link, index|
+    TopicLink.where(topic_id: topic.id).order(url: :asc).each_with_index do |link, index|
       index.times do |i|
         TopicLinkClick.create(topic_link: link, ip_address: "192.168.1.#{i + 1}")
       end
