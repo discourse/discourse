@@ -243,7 +243,10 @@ export default (filterArg, params) => {
       this._super(...arguments);
 
       if (this.controller) {
-        this.resetParams(this.controller);
+        this.controller.setProperties({
+          ascending: false,
+          max_posts: null
+        });
       }
     },
 
