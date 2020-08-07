@@ -1691,9 +1691,7 @@ describe Search do
   end
 
   context "advanced filter" do
-    let!(:topic0) { Fabricate(:topic, title: 'I am first topic about advanced filter') }
     let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced filter with length more than 50 chars') }
-    let!(:topic1) { Fabricate(:topic, title: 'I am second topic about advanced filter') }
     let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced filter') }
 
     it 'allows to define custom filter' do
@@ -1706,9 +1704,7 @@ describe Search do
   end
 
   context "advanced order" do
-    let!(:topic0) { Fabricate(:topic, title: 'I am first topic about advanced order') }
     let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced order with length more than 50 chars') }
-    let!(:topic1) { Fabricate(:topic, title: 'I am second topic about advanced order') }
     let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced order') }
 
     it 'allows to define custom order' do
