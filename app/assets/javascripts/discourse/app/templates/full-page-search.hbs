@@ -112,9 +112,13 @@
                   </span>
 
                   {{#if result.blurb}}
-                    {{#highlight-search highlight=highlightQuery}}
+                    {{#if siteSettings.use_pg_headlines_for_excerpt}}
                       {{html-safe result.blurb}}
-                    {{/highlight-search}}
+                    {{else}}
+                      {{#highlight-search highlight=highlightQuery}}
+                        {{html-safe result.blurb}}
+                      {{/highlight-search}}
+                    {{/if}}
                   {{/if}}
                 </div>
 
