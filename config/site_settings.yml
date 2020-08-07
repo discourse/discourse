@@ -1181,7 +1181,7 @@ files:
     list_type: compact
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif"
+    default: "jpg|jpeg|png|gif|heic|heif"
     refresh: true
     type: list
     list_type: compact
@@ -1326,8 +1326,6 @@ files:
   decompressed_backup_max_file_size_mb:
     default: 100000
     hidden: true
-  convert_heif_to_jpeg:
-    default: false
 
 trust:
   default_trust_level:
