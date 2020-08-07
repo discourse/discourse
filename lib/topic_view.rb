@@ -451,38 +451,40 @@ class TopicView
   end
 
   def reviewable_counts
-    if @reviewable_counts.nil?
-
-      post_ids = @posts.map(&:id)
-
+    @reviewable_counts ||= begin
       sql = <<~SQL
-        SELECT target_id,
+        SELECT
+          target_id,
           MAX(r.id) reviewable_id,
           COUNT(*) total,
           SUM(CASE WHEN s.status = :pending THEN 1 ELSE 0 END) pending
-        FROM reviewables r
-        JOIN reviewable_scores s ON reviewable_id = r.id
-        WHERE r.target_id IN (:post_ids) AND
+        FROM
+          reviewables r
+        JOIN
+          reviewable_scores s ON reviewable_id = r.id
+        WHERE
+          r.target_id IN (:post_ids) AND
           r.target_type = 'Post'
-        GROUP BY target_id
+        GROUP BY
+          target_id
       SQL
 
-      @reviewable_counts = {}
+      counts = {}
 
       DB.query(
         sql,
         pending: ReviewableScore.statuses[:pending],
-        post_ids: post_ids
+        post_ids: @posts.map(&:id)
       ).each do |row|
-        @reviewable_counts[row.target_id] = {
+        counts[row.target_id] = {
           total: row.total,
           pending: row.pending,
           reviewable_id: row.reviewable_id
         }
       end
-    end
 
-    @reviewable_counts
+      counts
+    end
   end
 
   def pending_posts
