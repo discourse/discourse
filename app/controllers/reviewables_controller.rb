@@ -68,6 +68,10 @@ class ReviewablesController < ApplicationController
     render_json_dump(json, rest_serializer: true)
   end
 
+  def count
+    render_json_dump(count: Reviewable.pending_count(current_user))
+  end
+
   def topics
     topic_ids = Set.new
 
