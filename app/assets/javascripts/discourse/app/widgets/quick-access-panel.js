@@ -102,28 +102,24 @@ export default createWidget("quick-access-panel", {
 
     if (!this.hideBottomItems()) {
       bottomItems.push(
-        h(
-          "span.show-all",
-          this.attach("button", {
-            title: "view_all",
-            icon: "chevron-down",
-            url: this.showAllHref()
-          })
-        )
+        this.attach("button", {
+          title: "view_all",
+          icon: "chevron-down",
+          className: "show-all",
+          url: this.showAllHref()
+        })
       );
     }
 
     if (this.hasUnread()) {
       bottomItems.push(
-        h(
-          "span.dismiss",
-          this.attach("button", {
-            title: "user.dismiss_notifications_tooltip",
-            icon: "check",
-            label: "user.dismiss",
-            action: "dismissNotifications"
-          })
-        )
+        this.attach("button", {
+          title: "user.dismiss_notifications_tooltip",
+          icon: "check",
+          label: "user.dismiss",
+          className: "notifications-dismiss",
+          action: "dismissNotifications"
+        })
       );
     }
 
