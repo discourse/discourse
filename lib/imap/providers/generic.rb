@@ -12,9 +12,12 @@ module Imap
         @port = options[:port] || 993
         @ssl = options[:ssl] || true
         @username = options[:username]
-        @account_digest = Digest::MD5.hexdigest("#{@username}:#{@server}")
         @password = options[:password]
         @timeout = options[:timeout] || 10
+      end
+
+      def account_digest
+        @account_digest ||= Digest::MD5.hexdigest("#{@username}:#{@server}")
       end
 
       def imap
@@ -149,6 +152,76 @@ module Imap
 
       def archive(uid)
         # do nothing by default, just removing the Inbox label should be enough
+      end
+
+      # Look for the special Trash XLIST attribute.
+      # TODO: It might be more efficient to just store this against the group.
+      # Another table is looking more and more attractive....
+      def trash_mailbox
+        Discourse.cache.fetch("imap_trash_mailbox_#{account_digest}", expires_in: 30.minutes) do
+          list_mailboxes(:Trash).first
+        end
+      end
+
+      # open the trash mailbox for inspection or writing. after the yield we
+      # close the trash and reopen the original mailbox to continue operations.
+      # the normal open_mailbox call can be made if more extensive trash ops
+      # need to be done.
+      def open_trash_mailbox(write: false)
+        open_mailbox_before_trash = @open_mailbox_name
+        open_mailbox_before_trash_write = @open_mailbox_write
+
+        trash_uid_validity = open_mailbox(trash_mailbox, write: write)[:uid_validity]
+
+        yield(trash_uid_validity) if block_given?
+
+        open_mailbox(open_mailbox_before_trash, write: open_mailbox_before_trash_write)
+        trash_uid_validity
+      end
+
+      def find_trashed_message_ids(message_ids)
+        trashed_emails = []
+        trash_uid_validity = open_trash_mailbox do
+          header_message_id_terms = message_ids.map do |msgid|
+            "HEADER Message-ID '#{Email.message_id_rfc_format(msgid)}'"
+          end
+
+          # OR clauses are written in Polish notation...so the query looks like this:
+          # OR OR HEADER Message-ID XXXX HEADER Message-ID XXXX HEADER Message-ID XXXX
+          or_clauses = 'OR ' * (header_message_id_terms.length - 1)
+          query = "#{or_clauses}#{header_message_id_terms.join(" ")}"
+
+          trashed_email_uids = imap.uid_search(query)
+          if trashed_email_uids.any?
+            trashed_emails = emails(trashed_email_uids, ["UID", "ENVELOPE"]).map do |e|
+              { message_id: Email.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'] }
+            end
+          end
+        end
+
+        { trashed_emails: trashed_emails, mailbox_uid_validity: trash_uid_validity }
+      end
+
+      def trash(uid)
+        # MOVE is way easier than doing the COPY \Deleted EXPUNGE dance ourselves.
+        # It is supported by Gmail and Outlook.
+        if can?('MOVE')
+          trash_move(uid)
+        else
+
+          # default behaviour for IMAP servers is to add the \Deleted flag
+          # then EXPUNGE the mailbox which permanently deletes these messages
+          # https://tools.ietf.org/html/rfc3501#section-6.4.3
+          #
+          # TODO: We may want to add the option at some point to copy to some
+          # other mailbox first before doing this (e.g. Trash)
+          store(uid, 'FLAGS', [], ['\Deleted'])
+          imap.expunge
+        end
+      end
+
+      def trash_move(uid)
+        # up to the provider
       end
     end
   end
