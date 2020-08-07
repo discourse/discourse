@@ -364,8 +364,10 @@ describe ApplicationHelper do
       expect(cs_stylesheets.scan("stylesheets/color_definitions").size).to eq(2)
     end
 
-    it 'fails gracefully when the dark color scheme ID is set but missing' do
-      SiteSetting.default_dark_mode_color_scheme_id = -5
+    it 'handles a missing dark color scheme gracefully' do
+      scheme = ColorScheme.create!(name: "pyramid")
+      SiteSetting.default_dark_mode_color_scheme_id = scheme.id
+      scheme.destroy!
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
 
       expect(cs_stylesheets).to include("stylesheets/color_definitions")
