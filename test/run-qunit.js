@@ -133,7 +133,7 @@ async function runAllTests() {
 
     let runTests = async function() {
       if (Date.now() > start + timeout) {
-        console.error("Tests timed out");
+        console.error("\n\nTests timed out\n");
         protocol.close();
         chrome.kill();
         process.exit(124);
