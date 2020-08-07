@@ -1162,7 +1162,7 @@ class Search
       default_scope
         .joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id")
         .select(
-          "TS_HEADLINE(#{default_ts_config}, pd.raw_data, PLAINTO_TSQUERY('#{@term.present? ? PG::Connection.escape_string(@term) : nil}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
+          "TS_HEADLINE(#{default_ts_config}, pd.raw_data, PLAINTO_TSQUERY(#{default_ts_config}, '#{@term.present? ? PG::Connection.escape_string(@term) : nil}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
           default_scope.arel.projections
         )
     else
