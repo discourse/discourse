@@ -667,7 +667,7 @@ class Search
         end
       end
 
-      if word == 'order:latest' || word == 'l'
+      if word == 'l'
         @order = :latest
         nil
       elsif word =~ /order:\w+/
