@@ -3,9 +3,9 @@ import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import { isRTL } from "discourse/lib/text-direction";
 
-export function fancyTitle(title, supportMixedTextDirection) {
+export function fancyTitle(topicTitle, supportMixedTextDirection) {
   let title = censor(
-    emojiUnescape(title) || "",
+    emojiUnescape(topicTitle) || "",
     Site.currentProp("censored_regexp")
   );
 
