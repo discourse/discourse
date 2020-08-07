@@ -7,6 +7,7 @@ module SiteSettings::DeprecatedSettings
     ['show_email_on_profile', 'moderators_view_emails', true, '2.4'],
     ['allow_moderators_to_create_categories', 'moderators_create_categories', true, '2.4'],
     ['disable_edit_notifications', 'disable_system_edit_notifications', true, '2.4'],
+    ['enable_category_group_review', 'enable_category_group_moderation', true, '2.7'],
     ['newuser_max_images', 'newuser_max_embedded_media', true, '2.7'],
     ['min_trust_to_post_images', 'min_trust_to_post_embedded_media', true, '2.7']
   ]
