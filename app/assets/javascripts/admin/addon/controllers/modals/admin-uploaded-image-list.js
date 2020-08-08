@@ -7,7 +7,7 @@ export default Controller.extend(ModalFunctionality, {
   @observes("model.value")
   _setup() {
     const value = this.get("model.value");
-    this.set("images", value && value.length ? value.split("\n") : []);
+    this.set("images", value && value.length ? value.split("|") : []);
   },
 
   actions: {
@@ -20,7 +20,7 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     close() {
-      this.save(this.images.join("\n"));
+      this.save(this.images.join("|"));
       this.send("closeModal");
     },
   },

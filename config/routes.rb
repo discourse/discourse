@@ -66,7 +66,6 @@ Discourse::Application.routes.draw do
 
     get "site/basic-info" => 'site#basic_info'
     get "site/statistics" => 'site#statistics'
-    get "site/selectable-avatars" => "site#selectable_avatars"
 
     get "srv/status" => "forums#status"
 
