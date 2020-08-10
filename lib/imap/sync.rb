@@ -166,6 +166,10 @@ module Imap
         end
       end
 
+      handle_missing_uids(old_uids)
+    end
+
+    def handle_missing_uids(old_uids)
       # If there are any UIDs for the mailbox missing from old_uids, this means they have been moved
       # to some other mailbox in the mail server. They could be possibly deleted. first we can check
       # if they have been deleted and if so delete the associated post/topic. then the remaining we
@@ -174,9 +178,12 @@ module Imap
       existing_incoming = IncomingEmail.includes(:post).where(
         imap_group_id: @group.id, imap_uid_validity: @status[:uid_validity]
       ).where.not(imap_uid: nil)
+
       existing_uids = existing_incoming.map(&:imap_uid)
       missing_uids = existing_uids - old_uids
-      missing_message_ids = existing_incoming.select { |incoming| missing_uids.include?(incoming.imap_uid) }.map(&:message_id)
+      missing_message_ids = existing_incoming.select do |incoming|
+        missing_uids.include?(incoming.imap_uid)
+      end.map(&:message_id)
 
       return if missing_message_ids.empty?
 
@@ -186,19 +193,24 @@ module Imap
       response = @provider.find_trashed_by_message_ids(missing_message_ids)
       existing_incoming.each do |incoming|
         matching_trashed = response.trashed_emails.find { |email| email.message_id == incoming.message_id }
-        if matching_trashed
-          # if we deleted the topic/post ourselves in discourse then this sync is
-          # just updating the old UIDs to the new ones in the trash, and we don't
-          # need to re-destroy the post
-          if incoming.post
-            Logger.log("[IMAP] (#{@group.name}) Deleting post ID #{incoming.post_id}; it has been deleted on the IMAP server.")
-            PostDestroyer.new(Discourse.system_user, incoming.post).destroy
-          end
 
-          # the email has moved mailboxes, we don't want to try trashing again next time
-          Logger.log("[IMAP] (#{@group.name}) Updating incoming ID #{incoming.id} uid data FROM [UID #{incoming.imap_uid} | UIDVALIDITY #{incoming.imap_uid_validity}] TO [UID #{matching_trashed.uid} | UIDVALIDITY #{response.trash_uid_validity}] (TRASHED)")
-          incoming.update(imap_uid_validity: response.trash_uid_validity, imap_uid: matching_trashed.uid)
+        # if the email is not in the trash then we don't know where it is... could
+        # be in any mailbox on the server or could be permanently deleted. TODO
+        # here would be some sort of more complex detection of "where in the world
+        # has this UID gone?"
+        next if !matching_trashed
+
+        # if we deleted the topic/post ourselves in discourse then the post will
+        # not exist, and this sync is just updating the old UIDs to the new ones
+        # in the trash, and we don't need to re-destroy the post
+        if incoming.post
+          Logger.log("[IMAP] (#{@group.name}) Deleting post ID #{incoming.post_id}; it has been deleted on the IMAP server.")
+          PostDestroyer.new(Discourse.system_user, incoming.post).destroy
         end
+
+        # the email has moved mailboxes, we don't want to try trashing again next time
+        Logger.log("[IMAP] (#{@group.name}) Updating incoming ID #{incoming.id} uid data FROM [UID #{incoming.imap_uid} | UIDVALIDITY #{incoming.imap_uid_validity}] TO [UID #{matching_trashed.uid} | UIDVALIDITY #{response.trash_uid_validity}] (TRASHED)")
+        incoming.update(imap_uid_validity: response.trash_uid_validity, imap_uid: matching_trashed.uid)
       end
     end
 
