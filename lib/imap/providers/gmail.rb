@@ -115,7 +115,6 @@ module Imap
         thread_id = thread_id_from_uid(uid)
         email_uids_to_trash = emails_in_thread(thread_id).map { |e| e['UID'] }
 
-        email_uids_to_trash = emails_to_trash
         imap.uid_move(email_uids_to_trash, trash_mailbox)
         Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) trashed in Gmail mailbox for #{@username}")
         { trash_uid_validity: open_trash_mailbox, email_uids_to_trash: email_uids_to_trash }

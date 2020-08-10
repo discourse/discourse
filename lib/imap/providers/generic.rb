@@ -235,7 +235,7 @@ module Imap
           #
           # TODO: We may want to add the option at some point to copy to some
           # other mailbox first before doing this (e.g. Trash)
-          store(uid, 'FLAGS', [], ['\Deleted'])
+          store(uid, 'FLAGS', [], ["\\Deleted"])
           imap.expunge
         end
       end
