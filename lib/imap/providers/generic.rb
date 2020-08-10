@@ -6,6 +6,19 @@ module Imap
   module Providers
     class WriteDisabledError < StandardError; end
 
+    class TrashedMailResponse
+      attr_accessor :trashed_emails, :trash_uid_validity
+    end
+
+    class BasicMail
+      attr_accessor :uid, :message_id
+
+      def initialize(uid: nil, message_id: nil)
+        @uid = uid
+        @message_id = message_id
+      end
+    end
+
     class Generic
       def initialize(server, options = {})
         @server = server
@@ -56,16 +69,16 @@ module Imap
 
       def labels
         @labels ||= begin
-                      labels = {}
+          labels = {}
 
-                      list_mailboxes.each do |name|
-                        if tag = to_tag(name)
-                          labels[tag] = name
-                        end
-                      end
+          list_mailboxes.each do |name|
+            if tag = to_tag(name)
+              labels[tag] = name
+            end
+          end
 
-                      labels
-                    end
+          labels
+        end
       end
 
       def open_mailbox(mailbox_name, write: false)
@@ -179,7 +192,7 @@ module Imap
         trash_uid_validity
       end
 
-      def find_trashed_message_ids(message_ids)
+      def find_trashed_by_message_ids(message_ids)
         trashed_emails = []
         trash_uid_validity = open_trash_mailbox do
           header_message_id_terms = message_ids.map do |msgid|
@@ -194,12 +207,15 @@ module Imap
           trashed_email_uids = imap.uid_search(query)
           if trashed_email_uids.any?
             trashed_emails = emails(trashed_email_uids, ["UID", "ENVELOPE"]).map do |e|
-              { message_id: Email.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'] }
+              BasicMail.new(message_id: Email.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
             end
           end
         end
 
-        { trashed_emails: trashed_emails, mailbox_uid_validity: trash_uid_validity }
+        TrashedMailResponse.new do |resp|
+          resp.trashed_emails = trashed_emails
+          resp.trash_uid_validity = trash_uid_validity
+        end
       end
 
       def trash(uid)

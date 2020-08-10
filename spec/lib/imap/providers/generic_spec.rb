@@ -72,7 +72,7 @@ RSpec.describe Imap::Providers::Generic do
     end
   end
 
-  describe "#find_trashed_message_ids" do
+  describe "#find_trashed_by_message_ids" do
     before do
       provider.stubs(:trash_mailbox).returns("Bin")
       imap_stub.stubs(:examine).with("Inbox").twice
@@ -107,7 +107,7 @@ RSpec.describe Imap::Providers::Generic do
         "OR OR HEADER Message-ID '<h4786x34@test.com>' HEADER Message-ID '<dvsfuf39@test.com>' HEADER Message-ID '<f349xj84@test.com>'"
 
       ).returns([4, 6])
-      resp = provider.find_trashed_message_ids(message_ids)
+      resp = provider.find_trashed_by_message_ids(message_ids)
 
       expect(resp[:trashed_emails]).to match_array(
         [
