@@ -55,7 +55,7 @@ const TopicList = RestModel.extend({
     });
   },
 
-  refreshSort(order, ascending) {
+  updateSortParams(order, ascending) {
     let params = this.params || {};
 
     if (params.q) {
