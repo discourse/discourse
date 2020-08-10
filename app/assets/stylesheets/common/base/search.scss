@@ -178,6 +178,7 @@
   padding: 0 0.5em;
   margin-bottom: 28px;
   max-width: 780px;
+  word-break: break-word;
 
   .author {
     display: inline-block;
@@ -229,7 +230,6 @@
   .blurb {
     font-size: $font-0;
     line-height: $line-height-large;
-    word-wrap: break-word;
     max-width: 640px;
     color: var(--primary-medium);
     .date {
