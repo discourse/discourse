@@ -1657,8 +1657,6 @@ describe Post do
        <img src="#{upload2_path}"/>
       RAW
 
-      urls = []
-      paths = []
       sha1s = []
 
       post.each_upload_url do |src, path, sha|
