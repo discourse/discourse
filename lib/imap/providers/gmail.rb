@@ -80,6 +80,23 @@ module Imap
         Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) archived in Gmail mailbox for #{@username}")
       end
 
+      # Though Gmail considers the email thread unarchived if the first email
+      # has the \\Inbox label applied, we want to do this to all emails in the
+      # thread to be consistent with archive behaviour.
+      def unarchive(uid)
+        thread_id = thread_id_from_uid(uid)
+        emails_to_unarchive = emails_in_thread(thread_id)
+        emails_to_unarchive.each do |email|
+          labels = email['LABELS']
+          new_labels = labels.dup
+          if !new_labels.include?("\\Inbox")
+            new_labels << "\\Inbox"
+          end
+          store(email["UID"], "LABELS", labels, new_labels)
+        end
+        Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) unarchived in Gmail mailbox for #{@username}")
+      end
+
       def thread_id_from_uid(uid)
         fetched = imap.uid_fetch(uid, [X_GM_THRID])
         if !fetched

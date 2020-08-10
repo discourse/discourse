@@ -109,13 +109,8 @@ RSpec.describe Imap::Providers::Generic do
       ).returns([4, 6])
       resp = provider.find_trashed_by_message_ids(message_ids)
 
-      expect(resp[:trashed_emails]).to match_array(
-        [
-          { message_id: 'h4786x34@test.com', uid: 4 },
-          { message_id: 'f349xj84@test.com', uid: 6 }
-        ]
-      )
-      expect(resp[:mailbox_uid_validity]).to eq(9)
+      expect(resp.trashed_emails.map(&:message_id)).to match_array(['h4786x34@test.com', 'f349xj84@test.com'])
+      expect(resp.trash_uid_validity).to eq(9)
     end
   end
 

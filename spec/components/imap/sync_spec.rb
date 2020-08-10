@@ -448,12 +448,13 @@ describe Imap::Sync do
         sync_handler.process
       end
 
-      it "does not archive email if not archived in discourse" do
+      it "does not archive email if not archived in discourse, it unarchives it instead" do
         @incoming_email.update(imap_sync: true)
         provider.stubs(:store).with(100, 'FLAGS', anything, anything)
         provider.stubs(:store).with(100, 'LABELS', ["\\Inbox"], ["seen", "\\Inbox"])
 
         provider.expects(:archive).with(100).never
+        provider.expects(:unarchive).with(100)
         sync_handler.process
       end
     end

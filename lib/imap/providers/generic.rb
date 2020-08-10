@@ -167,6 +167,10 @@ module Imap
         # do nothing by default, just removing the Inbox label should be enough
       end
 
+      def unarchive(uid)
+        # same as above
+      end
+
       # Look for the special Trash XLIST attribute.
       # TODO: It might be more efficient to just store this against the group.
       # Another table is looking more and more attractive....
@@ -212,7 +216,7 @@ module Imap
           end
         end
 
-        TrashedMailResponse.new do |resp|
+        TrashedMailResponse.new.tap do |resp|
           resp.trashed_emails = trashed_emails
           resp.trash_uid_validity = trash_uid_validity
         end

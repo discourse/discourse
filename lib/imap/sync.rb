@@ -344,7 +344,15 @@ module Imap
       # server
       topic_archived = topic.group_archived_messages.any?
       if !topic_archived
-        new_labels << '\\Inbox'
+        # TODO: This is needed right now so the store below does not take it
+        # away again...ideally we should unarchive and store the tag-labels
+        # at the same time.
+        new_labels << "\\Inbox"
+
+        Logger.log("[IMAP] (#{@group.name}) Unarchiving UID #{incoming_email.imap_uid}")
+
+        # some providers need special handling for unarchiving too
+        @provider.unarchive(incoming_email.imap_uid)
       else
         Logger.log("[IMAP] (#{@group.name}) Archiving UID #{incoming_email.imap_uid}")
 
