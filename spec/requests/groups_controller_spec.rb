@@ -1747,4 +1747,55 @@ describe GroupsController do
       expect(response.parsed_body["available"]).to eq(true)
     end
   end
+
+  describe "#permissions" do
+    before do
+      sign_in(other_user)
+    end
+
+    it "ensures the group can be seen" do
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/permissions.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    describe "with varying category permissions" do
+      fab!(:category) { Fabricate(:category) }
+
+      before do
+        category.set_permissions("#{group.name}": :full)
+        category.save!
+      end
+
+      it "does not return categories the user cannot see" do
+        get "/groups/#{group.name}/permissions.json"
+        expect(response.parsed_body).to eq([])
+      end
+
+      it "returns categories the user can see" do
+        group.add(other_user)
+
+        get "/groups/#{group.name}/permissions.json"
+        expect(response.parsed_body.count).to eq(1)
+        expect(response.parsed_body.first["category"]["id"]).to eq(category.id)
+      end
+    end
+
+    it "returns categories alphabetically" do
+      sign_in(user)
+
+      ["Three", "New Cat", "Abc", "Hello"].each do |name|
+        category = Fabricate(:category, name: name)
+        category.set_permissions("#{group.name}": :full)
+        category.save!
+      end
+
+      get "/groups/#{group.name}/permissions.json"
+      expect(response.parsed_body.map { |permission| permission["category"]["name"] }).to eq(
+        ["Abc", "Hello", "New Cat", "Three"]
+      )
+    end
+  end
 end

@@ -103,6 +103,8 @@ export default function() {
       this.route("inbox");
       this.route("archive");
     });
+
+    this.route("permissions");
   });
 
   // User routes
