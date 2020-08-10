@@ -6,7 +6,7 @@ import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import User from "discourse/models/user";
 
-export default function(elem) {
+export default function(elem, siteSettings) {
   if (!elem) {
     return;
   }
@@ -76,7 +76,7 @@ export default function(elem) {
             $("span.informations", item.el).text()
           ];
           if (
-            !Discourse.SiteSettings.prevent_anons_from_downloading_files ||
+            !siteSettings.prevent_anons_from_downloading_files ||
             User.current()
           ) {
             src.push(

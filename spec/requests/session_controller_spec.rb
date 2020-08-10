@@ -212,7 +212,7 @@ RSpec.describe SessionController do
             action_type: ScreenedIpAddress.actions[:allow_admin]
           )
 
-          SiteSetting.use_admin_ip_whitelist = true
+          SiteSetting.use_admin_ip_allowlist = true
           user.update!(admin: true)
         end
 
@@ -1614,7 +1614,7 @@ RSpec.describe SessionController do
 
       context 'when admins are restricted by ip address' do
         before do
-          SiteSetting.use_admin_ip_whitelist = true
+          SiteSetting.use_admin_ip_allowlist = true
           ScreenedIpAddress.all.destroy_all
         end
 

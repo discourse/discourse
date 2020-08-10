@@ -1,3 +1,4 @@
+@import "color_definitions";
 @import "vendor/normalize";
 @import "vendor/normalize-ext";
 @import "vendor/sweetalert";
@@ -15,6 +16,8 @@ body.wizard {
   color: #444;
   line-height: $line-height-large;
   font-size: 15px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 .finish-installation {

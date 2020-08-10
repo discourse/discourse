@@ -229,12 +229,6 @@ export default (filterArg, params) => {
       });
     },
 
-    resetController(controller, isExiting) {
-      if (isExiting) {
-        controller.setProperties({ order: "default", ascending: false });
-      }
-    },
-
     deactivate() {
       this._super(...arguments);
       this.searchService.set("searchContext", null);

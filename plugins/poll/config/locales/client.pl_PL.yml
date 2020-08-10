@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pl_PL:
   js:
@@ -22,12 +21,22 @@ pl_PL:
       public:
         title: "Głosy są <strong>jawne</strong>."
       results:
+        groups:
+          title: "Aby głosować w tej ankiecie, musisz być członkiem %{groups}."
         vote:
           title: "Wyniki pojawią się po <strong>zagłosowaniu</strong>."
         closed:
           title: "Wyniki pojawią się po <strong>zamknięciu</strong> ankiety."
         staff:
           title: "Wyniki pokazywane są wyłącznie członkom <strong>zespołu</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Wybierz przynajmniej <strong>%{count}</strong> opcję."
+            few: "Wybierz przynajmniej <strong>%{count}</strong> opcje."
+            many: "Wybierz przynajmniej <strong>%{count}</strong> opcji."
+            other: "Wybierz co najmniej <strong>%{count}</strong> opcji."
+          between_min_and_max_options: "Wybierz między <strong>%{min}</strong> a <strong>%{max}</strong> opcji."
       cast-votes:
         title: "Oddaj głos"
         label: "Oddaj głos!"
@@ -65,6 +74,7 @@ pl_PL:
         title: Utwórz ankietę
         insert: Wstaw ankietę
         help:
+          options_count: Wpisz co najmniej 1 opcję
           invalid_values: Wartość minimalna musi być mniejsza niż maksymalna.
           min_step_value: Minimalna wartość kroku to 1
         poll_type:
@@ -78,6 +88,8 @@ pl_PL:
           vote: Po zagłosowaniu
           closed: Po zamknięciu
           staff: Wyłącznie dla zespołu
+        poll_groups:
+          label: Dozwolone grupy
         poll_chart_type:
           label: Typ wykresu
         poll_config:

@@ -174,6 +174,23 @@ describe UserNotifications do
         expect(html).to_not include post.raw
       end
 
+      it "excludes shared drafts" do
+        cat = Fabricate(:category)
+        SiteSetting.shared_drafts_category = cat.id
+        topic = Fabricate(:topic, title: "This is a draft", category_id: cat.id, created_at: 1.hour.ago)
+        post = Fabricate(
+          :post,
+          topic: topic,
+          score: 100.0,
+          post_number: 2,
+          raw: "secret draft content",
+          created_at: 1.hour.ago
+        )
+        html = subject.html_part.body.to_s
+        expect(html).to_not include topic.title
+        expect(html).to_not include post.raw
+      end
+
       it "excludes whispers and other post types that don't belong" do
         t = Fabricate(:topic, user: Fabricate(:user), title: "Who likes the same stuff I like?", created_at: 1.hour.ago)
         whisper = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "You like weird stuff", post_type: Post.types[:whisper], created_at: 1.hour.ago)

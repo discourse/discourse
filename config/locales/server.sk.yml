@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sk:
   dates:
@@ -16,12 +15,25 @@ sk:
       short_no_year: "%B %-d"
       date_only: "%Y, %B %-d"
   date:
-    month_names: [~, Január, Február, Marec, Apríl, Máj, Jún, Júl, August, September, Október, November, December]
+    month_names:
+    - null
+    - Január
+    - Február
+    - Marec
+    - Apríl
+    - Máj
+    - Jún
+    - Júl
+    - August
+    - September
+    - Október
+    - November
+    - December
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "DIscourse"
   topics: "Témy"
   posts: "príspevky"
@@ -58,7 +70,7 @@ sk:
         bounced_email_error: "Email report bol odoslaný emailom"
       unrecognized_error: "Chyba nebola rozpoznaná."
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     messages:
       too_long_validation: "je obmedzený na %{max} znakov, zadali ste %{length}."
       invalid_boolean: "Neplatná logická hodnota."
@@ -66,24 +78,24 @@ sk:
       accepted: sa musí akceptovať
       blank: nesmie byť prázdne
       present: musí byť prázdne
-      confirmation: "sa nerovná %{attribute}"
+      confirmation: ! "sa nerovná %{attribute}"
       empty: nesmie byť prázdne
-      equal_to: "sa musí rovnať %{count}"
+      equal_to: sa musí rovnať %{count}
       even: musí byť párne
       exclusion: je rezervované
-      greater_than: "musí byť viac ako %{count}"
-      greater_than_or_equal_to: "musí byť väčšie alebo rovné %{count}"
+      greater_than: musí byť viac ako %{count}
+      greater_than_or_equal_to: musí byť väčšie alebo rovné %{count}
       has_already_been_used: "je už použité"
       inclusion: nie je v zozname
       invalid: je nesprávne
       is_invalid: "je to nejasné, je to kompletná veta?"
       contains_censored_words: "obsahuje nasledujúce cenzúrované slová %{censored_words}"
-      less_than: "musí byť menej ako %{count}"
-      less_than_or_equal_to: "musí byť menej alebo rovné %{count}"
+      less_than: musí byť menej ako %{count}
+      less_than_or_equal_to: musí byť menej alebo rovné %{count}
       not_a_number: nie je číslo
       not_an_integer: musí byť číslo
       odd: musí byť nepárne
-      record_invalid: "Validácia zlyhala s chybami: %{errors}"
+      record_invalid: ! "Validácia zlyhala s chybami: %{errors}"
       restrict_dependent_destroy:
         one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
         many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
@@ -104,20 +116,17 @@ sk:
         other: nesprávna dĺžka (musí byť %{count} znakov)
       other_than: "musí byť iný než %{count}"
     template:
-      body: "Nastal problém s nasledujúcimi položkami:"
+      body: ! "Nastal problém s nasledujúcimi položkami:"
       header:
         one: "Uloženie %{model} zlyhalo kôli chybe"
-        few: "Uloženie %{model} zlyhalo kôli %{count} chybám"
-        many: "Uloženie %{model} zlyhalo kôli %{count} chybám "
-        other: "Uloženie %{model} zlyhalo kôli %{count} chybám "
+        few: ! "Uloženie %{model} zlyhalo kôli %{count} chybám"
+        many: ! "Uloženie %{model} zlyhalo kôli %{count} chybám "
+        other: ! "Uloženie %{model} zlyhalo kôli %{count} chybám "
     embed:
       load_from_remote: "Nastala chyba pri načítaní príspevku"
     site_settings:
       default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
       s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Nahrávaný súbor by mal byť typu CSV."
     error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
@@ -283,7 +292,6 @@ sk:
       user_profile:
         bio_raw: "O mne"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -310,6 +318,7 @@ sk:
           attributes:
             word:
               too_many: "Príliš veľa slov k tej akcii"
+      <<: *errors
   vip_category_name: "Salón"
   vip_category_description: "Kategória výhradne pre členov so stupňom dôvery 3 a vyšším"
   meta_category_name: "Podnety pre tvorcov stránky"
@@ -578,13 +587,14 @@ sk:
       every_hour: "každú hodinu"
       daily: "denne"
       weekly: "týždenne"
+      every_month: "každý mesiac"
   user_api_key:
     title: "Autorizovať prístup aplikácie"
     authorize: "Autorizovať"
     read: "čítať"
     read_write: "čítať/zapisovať"
     otp_confirmation:
-      confirm_title: "Pokračujte na %{site_name}"
+      confirm_title: Pokračujte na %{site_name}
     no_trust_level: "Ľutujeme, nemáte dostatočný stupeň dôvery na prístup k používateľskému API"
     generic_error: "Ľutujeme, nie je možné vystaviť používateľský API kľúč, táto možnosť môže byť vypnutá administrátorom."
   reports:
@@ -833,7 +843,6 @@ sk:
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
     moderators_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
-    use_admin_ip_whitelist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     top_menu: "Určuje, ktoré položky sa zobrazia na navigácií na domovskej stránke a v akom poradí. Napríklad posledné|neprečítané|kategórie|naj|prečítané|záložky"
     post_menu: "Určuje, ktoré položky sa objavia v menu príspevku a v akom poradí. Napríklad páči sa mi|upraviť|označiť|vymazať|zdieľať|záložka|odpovedať"
     post_menu_hidden_items: "Položky vo východzích nastaveniach menu schované pri príspevkovom menu, dokiaľ neni kliknuté na rozbaľovaciu elipsu."
@@ -850,8 +859,6 @@ sk:
     top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoliť systém odznakov"
-    email_domains_blacklist: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
-    email_domains_whitelist: "Zoznam emailových domén oddelených zvislým oddelovačom \"|\", s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
     log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
     new_version_emails: "Poslať email na kontaktnú emailovú adresu ak je zistená nová verzia Discourse."
     invite_expiry_days: "Ako dlho je platná pozvánka pre používateľa, v dňoch"
@@ -861,9 +868,6 @@ sk:
     block_common_passwords: "Nepovoliť heslá, ktoré sú v zozname 10 000 najbežnejších hesiel."
     enable_sso: "Povolit prihlasovanie pomocou externej stránky (VAROVANIE: POUŽÍVATEĽSKÉ EAMILOVÉ ADRESY *MUSIA* BYŤ OVERENÉ EXTERNOU STRÁNKOU)"
     sso_secret: "Tajný text, použitý na kryptografické overenie SSO informácie, uistite sa, že má 10 alebo viac znakov"
-    sso_overrides_email: "Nahrádzať lokálne emaily pomocou emailov z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám. (VAROVANIE: z dôvodu normálizácie lokálnych emailov sa môžu objaviť nezrovnalosti)"
-    sso_overrides_username: "Nahrádzať lokálne použivateľské mená pomocou použivateľských mien z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám. (VAROVANIE: z dôvodu rozdielov v požiadavkách na používateľské meno a jeho dĺžku sa môžu objaviť nezrovnalosti)"
-    sso_overrides_name: "Nahrádzať lokálne plné mená pomocou plných mien z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám."
     sso_not_approved_url: "Presmeruj nepovolené SSO účty na URL"
     allow_new_registrations: "Povoliť registráciu nových používateľov. Odznačte to ak chcete zabrániť vytváraniu nových účtov. "
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
@@ -960,7 +964,6 @@ sk:
     faq_url: "Ak máte FAQ stránku uloženú na iných stránkach, napište sem plný odkaz na ňu."
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
-    white_listed_spam_host_domains: "Zoznam domén vylúčených z testovania spamových zdrojov. Novým používateľom nebude nikdy zabránené vytvárať príspevky s odkazmi na tieto domény."
     staff_like_weight: "Koľkonásobne viac sa má dať zamestnaneckým páči sa mi."
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
@@ -1457,7 +1460,7 @@ sk:
       name: Autobiograf
     anniversary:
       name: Výročie
-      description: "Aktívny člen, napísal aspoň jeden príspevok za rok"
+      description: Aktívny člen, napísal aspoň jeden príspevok za rok
     nice_topic:
       name: Pekná téma
     good_topic:
@@ -1475,7 +1478,7 @@ sk:
       description: Zdieľaný príspevok s 1000 jedinečnými návštevami
     first_like:
       name: Prvé "Páči sa mi"
-      description: "Príspevok, ktorý sa páčil"
+      description: Príspevok, ktorý sa páčil
       long_description: |
         Tento odznak je udelený za prvé udelené "Páči sa" použitím :heart: talčidla. Označenie príspevku "Páči sa" je najlepšia cesta ako ukázať členom komunity, že ich príspevky sú zaujímavé, užitočné, výnimočné, alebo zábavné. Podeľte sa o to!
     first_flag:
@@ -1497,7 +1500,7 @@ sk:
     first_quote:
       name: Prvý citát
     read_guidelines:
-      name: "Prečítať pravidlá "
+      name: Prečítať pravidlá
     reader:
       name: Čitateľ
     popular_link:
@@ -1587,3 +1590,6 @@ sk:
         title: "Zamietnuť"
       delete_user:
         title: "Odstrániť používateľa"
+  activemodel:
+    errors:
+      <<: *errors

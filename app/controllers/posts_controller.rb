@@ -276,7 +276,7 @@ class PostsController < ApplicationController
 
     reply_history = post.reply_history(params[:max_replies].to_i, guardian)
     user_custom_fields = {}
-    if (added_fields = User.whitelisted_user_custom_fields(guardian)).present?
+    if (added_fields = User.allowed_user_custom_fields(guardian)).present?
       user_custom_fields = User.custom_fields_for_ids(reply_history.pluck(:user_id), added_fields)
     end
 
@@ -365,7 +365,7 @@ class PostsController < ApplicationController
     replies = post.replies.secured(guardian)
 
     user_custom_fields = {}
-    if (added_fields = User.whitelisted_user_custom_fields(guardian)).present?
+    if (added_fields = User.allowed_user_custom_fields(guardian)).present?
       user_custom_fields = User.custom_fields_for_ids(replies.pluck(:user_id), added_fields)
     end
 
@@ -474,9 +474,10 @@ class PostsController < ApplicationController
   end
 
   def notice
-    raise Discourse::NotFound unless guardian.is_staff?
-
     post = find_post_from_params
+    raise Discourse::NotFound unless guardian.can_edit_staff_notes?(post.topic)
+
+    previous_notice = post.custom_fields[Post::NOTICE_ARGS]
 
     if params[:notice].present?
       post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:custom]
@@ -485,6 +486,9 @@ class PostsController < ApplicationController
     else
       post.delete_post_notices
     end
+
+    details = { new_raw_value: params[:notice], old_value: previous_notice }
+    StaffActionLogger.new(current_user).log_post_staff_note(post, details)
 
     render body: nil
   end
@@ -700,10 +704,10 @@ class PostsController < ApplicationController
 
     end
 
-    result = params.permit(*permitted).tap do |whitelisted|
-      whitelisted[:image_sizes] = params[:image_sizes]
+    result = params.permit(*permitted).tap do |allowed|
+      allowed[:image_sizes] = params[:image_sizes]
       # TODO this does not feel right, we should name what meta_data is allowed
-      whitelisted[:meta_data] = params[:meta_data]
+      allowed[:meta_data] = params[:meta_data]
     end
 
     # Staff are allowed to pass `is_warning`

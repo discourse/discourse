@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 de:
   js:
@@ -26,6 +25,18 @@ de:
           title: "Ergebnisse werden angezeigt <strong>nach Ende der Abstimmung</strong>."
         staff:
           title: "Ergebnisse werden nur <strong>Team</strong> Mitgliedern angezeigt."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Wähle mindestens <strong>%{count}</strong> Option."
+            other: "Wähle mindestens <strong>%{count}</strong> Optionen."
+          up_to_max_options:
+            one: "Wähle bis zu <strong>%{count}</strong> Option."
+            other: "Wähle bis zu <strong>%{count}</strong> Optionen."
+          x_options:
+            one: "Wähle <strong>%{count}</strong> Option."
+            other: "Wähle <strong>%{count}</strong> Optionen."
+          between_min_and_max_options: "Wähle zwischen <strong>%{min}</strong> und <strong>%{max}</strong> Optionen."
       cast-votes:
         title: "Gib deine Stimmen ab"
         label: "Jetzt abstimmen!"

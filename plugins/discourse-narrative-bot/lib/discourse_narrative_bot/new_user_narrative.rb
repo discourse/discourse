@@ -474,7 +474,14 @@ module DiscourseNarrativeBot
 
     def missing_flag
       return unless valid_topic?(@post.topic_id)
-      return if @post.user_id == -2
+
+      # Remove any incorrect flags so that they can try again
+      if @post.user_id == -2
+        @post.post_actions
+          .where(user_id: @user.id)
+          .where("post_action_type_id IN (?)", (PostActionType.flag_types.values - [PostActionType.types[:inappropriate]]))
+          .destroy_all
+      end
 
       fake_delay
       reply_to(@post, I18n.t("#{I18N_KEY}.flag.not_found", i18n_post_args)) unless @data[:attempted]

@@ -64,7 +64,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
   }).then(function(list) {
     list.set("listParams", filterParams);
     if (tracking) {
-      tracking.sync(list, list.filter);
+      tracking.sync(list, list.filter, filterParams);
       tracking.trackIncoming(list.filter);
     }
     Session.currentProp("topicList", list);
@@ -145,12 +145,6 @@ export default function(filter, extras) {
           "canCreateTopic",
           model.get("can_create_topic")
         );
-      },
-
-      resetController(controller, isExiting) {
-        if (isExiting) {
-          controller.setProperties({ order: "default", ascending: false });
-        }
       },
 
       renderTemplate() {

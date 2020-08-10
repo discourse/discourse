@@ -99,3 +99,4 @@
 //= require_tree ./discourse/app/services
 
 //= require_tree ./discourse/app/widgets
+//= require ./widget-runtime

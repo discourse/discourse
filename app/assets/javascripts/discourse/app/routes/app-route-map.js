@@ -94,6 +94,8 @@ export default function() {
       this.route("interaction");
       this.route("email");
       this.route("members");
+      this.route("categories");
+      this.route("tags");
       this.route("logs");
     });
 

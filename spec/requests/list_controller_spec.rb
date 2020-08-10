@@ -324,6 +324,13 @@ RSpec.describe ListController do
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
+    it 'renders latest RSS with query params' do
+      get "/latest.rss?status=closed"
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq('application/rss+xml')
+      expect(response.body).to_not include("<item>")
+    end
+
     it 'renders links correctly with subfolder' do
       set_subfolder "/forum"
       _post = Fabricate(:post, topic: topic, user: user)
@@ -362,6 +369,19 @@ RSpec.describe ListController do
       end
 
       context 'with access to see the category' do
+        it "succeeds" do
+          get "/c/#{category.slug}/#{category.id}/l/latest"
+          expect(response.status).to eq(200)
+        end
+      end
+
+      context 'with encoded slug in the category' do
+        let(:category) { Fabricate(:category, slug: "தமிழ்") }
+
+        before do
+          SiteSetting.slug_generation_method = "encoded"
+        end
+
         it "succeeds" do
           get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)

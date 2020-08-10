@@ -4,7 +4,9 @@ import badgeFixtures from "fixtures/user-badges";
 QUnit.module("model:user-badge");
 
 QUnit.test("createFromJson single", assert => {
-  const userBadge = UserBadge.createFromJson(badgeFixtures["/user_badges"]);
+  const userBadge = UserBadge.createFromJson(
+    JSON.parse(JSON.stringify(badgeFixtures["/user_badges"]))
+  );
   assert.ok(!Array.isArray(userBadge), "does not return an array");
   assert.equal(
     userBadge.get("badge.name"),
@@ -25,7 +27,7 @@ QUnit.test("createFromJson single", assert => {
 
 QUnit.test("createFromJson array", assert => {
   const userBadges = UserBadge.createFromJson(
-    badgeFixtures["/user-badges/:username"]
+    JSON.parse(JSON.stringify(badgeFixtures["/user-badges/:username"]))
   );
   assert.ok(Array.isArray(userBadges), "returns an array");
   assert.equal(

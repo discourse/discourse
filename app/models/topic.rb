@@ -2,6 +2,7 @@
 
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end
+  class NotAllowed < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
   include HasCustomFields
@@ -508,14 +509,17 @@ class Topic < ActiveRecord::Base
       topics = topics.where("topics.id NOT IN (?)", category_topic_ids)
     end
 
-    # Remove muted categories
-    muted_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
+    # Remove muted and shared draft categories
+    remove_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
     if SiteSetting.digest_suppress_categories.present?
-      muted_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
-      muted_category_ids = muted_category_ids.uniq
+      remove_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
     end
-    if muted_category_ids.present?
-      topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
+    if SiteSetting.shared_drafts_enabled?
+      remove_category_ids << SiteSetting.shared_drafts_category
+    end
+    if remove_category_ids.present?
+      remove_category_ids.uniq!
+      topics = topics.where("topics.category_id NOT IN (?)", remove_category_ids)
     end
 
     # Remove muted tags
@@ -581,9 +585,25 @@ class Topic < ActiveRecord::Base
     return [] if title.blank?
     raw = raw.presence || ""
 
-    search_data = "#{title} #{raw[0...MAX_SIMILAR_BODY_LENGTH]}".strip
-    filter_words = Search.prepare_data(search_data)
-    ts_query = Search.ts_query(term: filter_words, joiner: "|")
+    tsquery = Search.set_tsquery_weight_filter(
+      Search.prepare_data(title.strip),
+      'A'
+    )
+
+    if raw.present?
+      cooked = SearchIndexer::HtmlScrubber.scrub(
+        PrettyText.cook(raw[0...MAX_SIMILAR_BODY_LENGTH].strip)
+      )
+
+      raw_tsquery = Search.set_tsquery_weight_filter(
+        Search.prepare_data(cooked),
+        'B'
+      )
+
+      tsquery = "#{tsquery} & #{raw_tsquery}"
+    end
+
+    tsquery = Search.to_tsquery(term: tsquery, joiner: "|")
 
     candidates = Topic
       .visible
@@ -591,9 +611,9 @@ class Topic < ActiveRecord::Base
       .secured(Guardian.new(user))
       .joins("JOIN topic_search_data s ON topics.id = s.topic_id")
       .joins("LEFT JOIN categories c ON topics.id = c.topic_id")
-      .where("search_data @@ #{ts_query}")
+      .where("search_data @@ #{tsquery}")
       .where("c.topic_id IS NULL")
-      .order("ts_rank(search_data, #{ts_query}) DESC")
+      .order("ts_rank(search_data, #{tsquery}) DESC")
       .limit(SiteSetting.max_similar_results * 3)
 
     candidate_ids = candidates.pluck(:id)
@@ -620,6 +640,12 @@ class Topic < ActiveRecord::Base
   def update_status(status, enabled, user, opts = {})
     TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
     DiscourseEvent.trigger(:topic_status_updated, self, status, enabled)
+
+    if status == 'closed'
+      StaffActionLogger.new(user).log_topic_closed(self, closed: enabled)
+    elsif status == 'archived'
+      StaffActionLogger.new(user).log_topic_archived(self, archived: enabled)
+    end
 
     if enabled && private_message? && status.to_s["closed"]
       group_ids = user.groups.pluck(:id)
@@ -998,7 +1024,11 @@ class Topic < ActiveRecord::Base
       end
 
       if invite_existing_muted?(target_user, invited_by)
-        return true
+        raise NotAllowed.new(I18n.t("topic_invite.not_allowed"))
+      end
+
+      if !allowed_pm_user?(target_user, invited_by)
+        raise NotAllowed.new(I18n.t("topic_invite.not_allowed"))
       end
 
       if private_message?
@@ -1031,6 +1061,43 @@ class Topic < ActiveRecord::Base
     end
 
     false
+  end
+
+  def allowed_pm_user?(target_user, invited_by)
+    return true if target_user.staff?
+    users = TopicAllowedUser.where(topic: self).pluck(:user_id)
+    users << target_user.id << invited_by.id
+    users.uniq
+
+    users_with_allowed_pms = allowed_pms_enabled(users).pluck(:id).uniq
+
+    if users_with_allowed_pms.any?
+      users_sender_can_pm = allowed_pms_enabled(users)
+        .where("allowed_pm_users.allowed_pm_user_id" => invited_by.id)
+        .pluck(:id).uniq
+
+      return false unless users_sender_can_pm.include? target_user.id
+
+      can_users_receive_from_sender = allowed_pms_enabled([invited_by.id])
+        .where("allowed_pm_users.allowed_pm_user_id IN (:user_ids)", user_ids: users.delete(invited_by.id))
+        .pluck(:id).uniq
+
+      users_not_allowed = users_with_allowed_pms - users_sender_can_pm - can_users_receive_from_sender
+      return false if users_not_allowed.any?
+    end
+
+    true
+  end
+
+  def allowed_pms_enabled(user_ids)
+    User
+      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
+      .joins("LEFT JOIN allowed_pm_users ON allowed_pm_users.user_id = users.id")
+      .where("
+        user_options.user_id IS NOT NULL AND
+        user_options.user_id IN (:user_ids) AND
+        user_options.enable_allowed_pm_users
+      ", user_ids: user_ids)
   end
 
   def email_already_exists_for?(invite)

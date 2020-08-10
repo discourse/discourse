@@ -17,10 +17,7 @@ module TopicGuardian
     return false if anonymous? || topic.nil?
     return true if is_staff?
 
-    SiteSetting.enable_category_group_moderation? &&
-      topic.category.present? &&
-      topic.category.reviewable_by_group_id.present? &&
-      GroupUser.where(group_id: topic.category.reviewable_by_group_id, user_id: user.id).exists?
+    is_category_group_moderator?(topic.category)
   end
 
   def can_create_shared_draft?
@@ -209,12 +206,16 @@ module TopicGuardian
     return true if is_staff?
     return true if @user.has_trust_level?(TrustLevel[4])
 
-    SiteSetting.enable_category_group_moderation? &&
-      topic.category.present? &&
-      topic.category.reviewable_by_group_id.present? &&
-      GroupUser.where(group_id: topic.category.reviewable_by_group_id, user_id: @user.id).exists?
+    is_category_group_moderator?(topic.category)
   end
   alias :can_archive_topic? :can_perform_action_available_to_group_moderators?
   alias :can_close_topic? :can_perform_action_available_to_group_moderators?
+  alias :can_split_merge_topic? :can_perform_action_available_to_group_moderators?
+  alias :can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
+
+  def can_move_posts?(topic)
+    return false if is_silenced?
+    can_perform_action_available_to_group_moderators?(topic)
+  end
 
 end

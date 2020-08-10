@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 he:
   site_settings:
@@ -13,6 +12,7 @@ he:
     discourse_narrative_bot_disable_public_replies: "byruk תגובות ציבוריות מאת בוט העלילות של Discourse"
     discourse_narrative_bot_welcome_post_type: "סוג פוסט קבלת הפנים שבוט העלילות של Discourse אמור לשלוח"
     discourse_narrative_bot_welcome_post_delay: "להמתין (n) שניות בטרם שליחת פוסט קבלת פנים של בוט העלילות של Discourse."
+    discourse_narrative_bot_skip_tutorials: "מדריכים של בוט העלילות של Discourse לדילוג"
   badges:
     certified:
       name: הסמכה
@@ -57,34 +57,34 @@ he:
         > :game_die: %{results}
     quote:
       trigger: "ציטוט"
-      '1':
+      "1":
         quote: "בלב ליבו של הקושי מונחת ההזדמנות"
         author: "אלברט איינשטיין"
-      '2':
+      "2":
         quote: "חופש לא שווה כלום אם הוא לא כולל את החופש לטעות."
         author: "מהטמה גנדי"
-      '3':
+      "3":
         quote: "אל תבכה כי זה נגמר, חייך כי זה קרה."
         author: "ד״ר סוס"
-      '4':
+      "4":
         quote: "אם אתם רוצים שמשהו יתבצע כמו שצריך, עשו זאת בעצמכם."
         author: "צ׳ארלס-גילאום אטין"
-      '5':
+      "5":
         quote: "האמינו שאתם יכולים ואתם מחצית הדרך לשם."
         author: "תאודור רוזוולט"
-      '6':
+      "6":
         quote: "החיים הם כמו קופסת שוקולד. אתם אף פעם לא יודעים מה תקבלו."
         author: "אימא של פורסט גאמפ"
-      '7':
+      "7":
         quote: "זהו צעד אחד קטן לאדם, צעד גדול לאנושות."
         author: "ניל ארמסטרונג"
-      '8':
+      "8":
         quote: "עשו דבר אחד בכל יום שמפחיד אתכם"
         author: "אלינור רוזוולט"
-      '9':
+      "9":
         quote: "טעויות תמיד נסלחות, אם יש את האומץ להודות בהן."
         author: "ברוס לי"
-      '10':
+      "10":
         quote: "מה ששכל האדם מסוגל להגות ולהאמין, ניתן להשגה."
         author: "נפוליאון היל"
       results: |-
@@ -92,26 +92,26 @@ he:
     magic_8_ball:
       trigger: "מזלות"
       answers:
-        '1': "בוודאות מוחלטת"
-        '2': "כך הוחלט"
-        '3': "ללא ספק"
-        '4': "כן כמובן"
-        '5': "אפשר לסמוך על זה"
-        '6': "בעיני, כן"
-        '7': "קרוב לוודאי"
-        '8': "תחזית טובה"
-        '9': "כן"
-        '10': "הסימנים מראים שכן"
-        '11': "תגובה מעורפלת, נא לנסות שוב"
-        '12': "כדאי לשאול שוב מאוחר יותר"
-        '13': "עדיף לא לענות עכשיו"
-        '14': "קשה לחזות עכשיו"
-        '15': "נא להתרכז ולשאול שוב"
-        '16': "לא כדאי לסמוך על זה"
-        '17': "התשובה שלי היא לא"
-        '18': "המקורות שלי אומרים לא"
-        '19': "תחזית לא כל כך טובה"
-        '20': "מאוד בספק"
+        "1": "בוודאות מוחלטת"
+        "2": "כך הוחלט"
+        "3": "ללא ספק"
+        "4": "כן כמובן"
+        "5": "אפשר לסמוך על זה"
+        "6": "בעיני, כן"
+        "7": "קרוב לוודאי"
+        "8": "תחזית טובה"
+        "9": "כן"
+        "10": "הסימנים מראים שכן"
+        "11": "תגובה מעורפלת, נא לנסות שוב"
+        "12": "כדאי לשאול שוב מאוחר יותר"
+        "13": "עדיף לא לענות עכשיו"
+        "14": "קשה לחזות עכשיו"
+        "15": "נא להתרכז ולשאול שוב"
+        "16": "לא כדאי לסמוך על זה"
+        "17": "התשובה שלי היא לא"
+        "18": "המקורות שלי אומרים לא"
+        "19": "תחזית לא כל כך טובה"
+        "20": "מאוד בספק"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -275,8 +275,6 @@ he:
           נראה לי שהבנת מה עליך לעשות. קדימה **לסמן את הפוסט הזה בדגל** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> על היותו בלתי הולם!
         reply: |-
           [הסגל שלנו](%{base_uri}/groups/staff) יקבל התראה פרטית על הדגל שלך. אם מספיק חברים בקהילה מסמנים פוסט בדגל, הוא יוסתר ליתר ביטחון. (מאחר שלא באמת כתבתי כאן משהו נבזי :angel:, הרשיתי לעצמי להסיר את הדגל בינתיים.)
-        not_found: |-
-          אללי, טרם סימנת בדגל פוסט נבזי. :worried: אפשר לבקש ממך לסמן דגל כתוכן בלתי הולם באמצעות ה**דגל** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
       search:
         instructions: |-
           _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599; כדי לחפש אותה.

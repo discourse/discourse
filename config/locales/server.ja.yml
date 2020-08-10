@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ja:
   dates:
@@ -17,12 +16,25 @@ ja:
       date_only: "%B%-d、%Y"
       long: "%B%-d、%Y、%I:%M%P"
   date:
-    month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    month_names:
+    - null
+    - 1月
+    - 2月
+    - 3月
+    - 4月
+    - 5月
+    - 6月
+    - 7月
+    - 8月
+    - 9月
+    - 10月
+    - 11月
+    - 12月
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "午前"
     pm: "午後"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -76,7 +88,7 @@ ja:
         bounced_email_error: "Eメールは返送されたEメールレポートです。"
       unrecognized_error: "認識されていないエラー"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>%{message}"
     messages:
       too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
@@ -85,23 +97,23 @@ ja:
       accepted: に同意する必要があります
       blank: を入力してください
       present: は入力しないでください
-      confirmation: "と%{attribute}の入力が一致しません"
+      confirmation: ! "と%{attribute}の入力が一致しません"
       empty: 本文が入力されていません
-      equal_to: "は%{count}にしてください"
+      equal_to: は%{count}にしてください
       even: は偶数にしてください
       exclusion: はすでに使われています
-      greater_than: "は%{count}より大きい値にしてください"
-      greater_than_or_equal_to: "は%{count}以上の値にしてください"
+      greater_than: は%{count}より大きい値にしてください
+      greater_than_or_equal_to: は%{count}以上の値にしてください
       has_already_been_used: "は既に使用されています"
       inclusion: は一覧にありません
       invalid: は正しくありません
       is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
-      less_than: "は%{count}より小さい値にしてください"
-      less_than_or_equal_to: "は%{count}以下の値にしてください"
+      less_than: は%{count}より小さい値にしてください
+      less_than_or_equal_to: は%{count}以下の値にしてください
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
-      record_invalid: "検証に失敗しました： %{errors}"
+      record_invalid: ! "検証に失敗しました： %{errors}"
       emojis_disabled: "絵文字を持っていません"
       ip_address_already_screened: "すでに存在するルールを含んでいます"
       restrict_dependent_destroy:
@@ -115,17 +127,14 @@ ja:
         other: は%{count}文字で入力してください
       other_than: "は%{count}以外の値にしてください"
     template:
-      body: "次のフィールドに問題があります:"
+      body: ! "次のフィールドに問題があります:"
       header:
-        other: "%{model} の保存中に%{count} 個のエラーが発生しました"
+        other: ! "%{model} の保存中に%{count} 個のエラーが発生しました"
     embed:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       default_categories_already_selected: "他のリストで使われているカテゴリーは選択できません。"
       s3_upload_bucket_is_required: "'s3_upload_bucket'がない場合、S3にアップロードを有効にすることはできません。"
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
     error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
@@ -266,7 +275,6 @@ ja:
       user_profile:
         bio_raw: "自己紹介"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -287,6 +295,7 @@ ja:
           attributes:
             hex:
               invalid: "は有効なカラーではありません"
+      <<: *errors
   uncategorized_category_name: "その他"
   vip_category_name: "ラウンジ"
   vip_category_description: "トラストレベル3以上のメンバーのみが参加できるカテゴリ"
@@ -541,7 +550,7 @@ ja:
     read_write: "既読/書く"
     description: '"%{application_name}" があなたのアカウントへのアクセスを要求しています: '
     otp_confirmation:
-      confirm_title: "%{site_name}へ"
+      confirm_title: '%{site_name}へ'
     no_trust_level: "申し訳ありませんが、ユーザーAPIへのアクセスはできません。"
     generic_error: "申し訳ありませんが、この機能は管理者が使用できなくしています。"
     scopes:
@@ -828,8 +837,6 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
     email_token_valid_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを何時間有効にするか"
     enable_badges: "バッジ機能を有効にする"
-    email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
-    email_domains_whitelist: "ユーザー登録に必要なパイプ区切りのメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
     invite_expiry_days: "招待キーの有効期間 (日)"
@@ -838,9 +845,6 @@ ja:
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
     enable_sso: "外部サイトを経由したシングルサインオンを有効にします(警告：ユーザーのメールアドレスは必ず外部サイトで認証されなければなりません)"
     sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
-    sso_overrides_email: "ログインする度にSSOペイロードから取得した外部サイトのメールアドレスでローカルのメールアドレスを上書きし、ローカルでの変更を防ぐ(警告: 不一致が原因でローカルのメールアドレスの正規化が発生する可能性があります)"
-    sso_overrides_username: "ログインする度に、SSOペイロードから取得した外部サイトのユーザ名でローカルのユーザ名を上書きすし、ローカルでの変更を防ぐ(警告: 不一致が原因でユーザ名の長さ/要件に違いがでる可能性があります)"
-    sso_overrides_name: "ログインする度に、SSOペイロードから取得した外部サイトの名前でローカルの名前を上書きし、ローカルでの変更を防ぐ"
     sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
     allow_new_registrations: "新しいユーザの登録を許可。ユーザを誰でも作れないようにするためには、チェックを外してください。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
@@ -932,7 +936,6 @@ ja:
     faq_url: "FAQが他のサイトにある場合、URLをここに指定します。"
     tos_url: "他のサイトに利用規約を掲載している場合は、URLをここに指定してください。"
     privacy_policy_url: "他のサイトにプライバシーポリシーを掲載している場合は、URLをここに指定してください。"
-    white_listed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザはこれらのドメインでポスト内にリンクを作成することを制限されません"
     staff_like_weight: "スタッフにより「いいね!」された場合、どのくらい重み付けをするか"
     levenshtein_distance_spammer_emails: "スパマーのメールアドレスとマッチさせるとき、数文字違いの曖昧な一致でも許可する"
     max_new_accounts_per_registration_ip: "もし既にトラストレベル0のユーザーがそのIPから(N)個作成されていたら、そのIPから登録できないようにする(スタッフメンバー、トラストレベル2以上は除く)"
@@ -1464,7 +1467,7 @@ ja:
       name: リーダー
     welcome:
       name: ようこそ
-      description: 「いいね！」を受けました
+      description: '「いいね！」を受けました'
     autobiographer:
       name: あなたはだれ？
     anniversary:
@@ -1531,7 +1534,7 @@ ja:
         このバッジは、あなたが初めて返信で投稿を引用したときに付与されます。あなたの返信に、前の投稿の関連部分を引用すると、その話題について一緒に話し合うことができます。 引用する最も簡単な方法は、投稿の1つのセクションをハイライト表示し、任意の返信ボタンを押すことです。 たくさん引用してください！
     read_guidelines:
       name: ガイドラインを読む
-      description: "<a href=\"%{base_uri}/guidelines\">コミュニティーガイドライン</a>を読む"
+      description: <a href="%{base_uri}/guidelines">コミュニティーガイドライン</a>を読む
     reader:
       name: 読者
       description: トピックの100以上の全ての返信を読む
@@ -1607,8 +1610,9 @@ ja:
         このバッジは初めてメール :e-mail: 経由で返信した人に付与されます
     new_user_of_the_month:
       name: "一ヶ月の新規ユーザー"
-      description: ! "最初の一ヶ月間の功績\U0001F44C"
-      long_description: "このバッジは毎月二人のユーザーに付与されるバッジで、素晴らしい貢献をコミュニティーにもたらしたことを讃えるものです！おめでとうございます！\U0001F381\n"
+      description: 最初の一ヶ月間の功績\U0001F44C
+      long_description: |
+        このバッジは毎月二人のユーザーに付与されるバッジで、素晴らしい貢献をコミュニティーにもたらしたことを讃えるものです！おめでとうございます！\U0001F381
     enthusiast:
       name: 熱狂者
     aficionado:
@@ -1706,3 +1710,6 @@ ja:
         title: "リジェクト"
       delete_user:
         title: "削除されたユーザー"
+  activemodel:
+    errors:
+      <<: *errors

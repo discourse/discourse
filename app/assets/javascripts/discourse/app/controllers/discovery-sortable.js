@@ -1,7 +1,6 @@
 import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import DiscourseNavigation from "discourse/components/d-navigation";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -14,7 +13,8 @@ export const queryParams = {
   q: { replace: true, refreshModel: true },
   tags: { replace: true },
   before: { replace: true, refreshModel: true },
-  bumped_before: { replace: true, refreshModel: true }
+  bumped_before: { replace: true, refreshModel: true },
+  f: { replace: true, refreshModel: true }
 };
 
 // Basic controller options
@@ -36,12 +36,6 @@ export const addDiscoveryQueryParam = function(p, opts) {
   cOpts[p] = alias(`discoveryTopics.${p}`);
   cOpts["queryParams"] = Object.keys(queryParams);
   SortableController.reopen(cOpts);
-
-  if (opts && opts.persisted) {
-    DiscourseNavigation.reopen({
-      persistedQueryParams: queryParams
-    });
-  }
 };
 
 export default SortableController;

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nb_NO:
   dates:
@@ -17,12 +16,25 @@ nb_NO:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, januar, februar, mars, april, mai, juni, juli, august, september, oktober, november, desember]
+    month_names:
+    - null
+    - januar
+    - februar
+    - mars
+    - april
+    - mai
+    - juni
+    - juli
+    - august
+    - september
+    - oktober
+    - november
+    - desember
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "innlegg"
@@ -82,10 +94,9 @@ nb_NO:
         bounced_email_error: "E-posten er en returnert e-postrapport."
         screened_email_error: "Skjer når avsenderens e-postadresse allerede var filtrert."
         unsubscribe_not_allowed: "Skjer når avmelding via e-post ikke er tillatt for denne brukeren."
-        email_not_allowed: "Skjer når e-postadressen ikke er på hvitlisten eller er svartelistet."
       unrecognized_error: "Ukjent feil"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "er begrenset til %{max} tegn; du brukte %{length}."
@@ -94,24 +105,24 @@ nb_NO:
       accepted: må bli godkjent
       blank: kan ikke være tom
       present: må være tom
-      confirmation: "er ikke like %{attribute}"
+      confirmation: ! "er ikke like %{attribute}"
       empty: kan ikke være tom
-      equal_to: "må være lik %{count}"
+      equal_to: må være lik %{count}
       even: må være jevnt antall
       exclusion: er reservert
-      greater_than: "må være større enn %{count}"
-      greater_than_or_equal_to: "må være lik eller større enn %{count}"
+      greater_than: må være større enn %{count}
+      greater_than_or_equal_to: må være lik eller større enn %{count}
       has_already_been_used: "har allerede blitt brukt"
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
       is_invalid: "virker uklart, er det en komplett setning?"
       contains_censored_words: "inneholder følgende sensurerte ord: %{censored_words}"
-      less_than: "må være mindre enn %{count}"
-      less_than_or_equal_to: "må være lik eller mindre enn %{count}"
+      less_than: må være mindre enn %{count}
+      less_than_or_equal_to: må være lik eller mindre enn %{count}
       not_a_number: er ikke et nummer
       not_an_integer: må være ett heltall
       odd: må være oddetall
-      record_invalid: "Validering feilet: %{errors}"
+      record_invalid: ! "Validering feilet: %{errors}"
       max_emojis: "kan ikke ha over %{max_emojis_count} emoji"
       ip_address_already_screened: "er allerede inkludert i en eksisterende regel"
       restrict_dependent_destroy:
@@ -128,10 +139,10 @@ nb_NO:
         other: feil lengde på tekst (skal være %{count} tegn)
       other_than: "må være annet enn %{count}"
     template:
-      body: "Dette er problemene med de følgene feltene:"
+      body: ! "Dette er problemene med de følgene feltene:"
       header:
         one: "%{count} feil forhindret lagring av %{model}"
-        other: "%{count} feil forhindret lagring av %{model}"
+        other: ! "%{count} feil forhindret lagring av %{model}"
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
     site_settings:
@@ -141,9 +152,6 @@ nb_NO:
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     not_found_template: |
       <p>Invitasjonen din til <a href="%{base_url}">%{site_name}</a> er allerede brukt.</p>
@@ -350,7 +358,6 @@ nb_NO:
       user_profile:
         bio_raw: "Om meg"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -405,6 +412,7 @@ nb_NO:
           attributes:
             word:
               too_many: "For mange ord for den handlingen"
+      <<: *errors
   uncategorized_category_name: "Ukategorisert"
   vip_category_name: "Salong"
   vip_category_description: "En kategori tilgjengelig for brukere på tillitsnivå 3 og høyere."
@@ -707,7 +715,7 @@ nb_NO:
     read_write: "les/skriv"
     description: '"%{application_name}" ber om følgende tilgang til kontoen din:'
     otp_confirmation:
-      confirm_title: "Fortsett til %{site_name}"
+      confirm_title: Fortsett til %{site_name}
     no_trust_level: "Beklager, du har ikke det nødvendige tillitsnivået for tilgang til API for brukere"
     generic_error: "Beklager, vi kan ikke utstede API nøkler for brukere, denne funksjonen kan være deaktivert av administratoren"
     scopes:
@@ -977,7 +985,6 @@ nb_NO:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
     allow_user_locale: "Tillat brukere å velge eget språk"
-    set_locale_from_accept_language_header: "sett språket i grensesnittet for anonyme brukere basert på hva nettleseren deres rapporterer. (EKSPERIMENTELL, fungerer ikke med anonym cache) "
     support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
     min_post_length: "Minimum tillatt lengde for innlegg i tegn"
     min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
@@ -1022,9 +1029,6 @@ nb_NO:
     show_pinned_excerpt_mobile: "Vis utdrag fra festede emner i mobil visning."
     show_pinned_excerpt_desktop: "Vis utdrag fra festede emner i desktop visning."
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
-    onebox_domains_blacklist: "En liste over domener som aldri vil bli forsøkt oneboxet."
-    inline_onebox_domains_whitelist: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
-    enable_inline_onebox_on_all_domains: "Ignorer inline_onebox_domain_whitelist innstillingen og tillat inline onebox på alle domener."
     max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
@@ -1381,7 +1385,7 @@ nb_NO:
       name: Selvbiograf
     anniversary:
       name: Jubileum
-      description: "Aktivt medlem i over ett år, postet minst en gang"
+      description: Aktivt medlem i over ett år, postet minst en gang
     nice_topic:
       name: Fint emne
     good_topic:
@@ -1560,3 +1564,6 @@ nb_NO:
         title: "Avvis"
       delete_user:
         title: "Slett bruker"
+  activemodel:
+    errors:
+      <<: *errors

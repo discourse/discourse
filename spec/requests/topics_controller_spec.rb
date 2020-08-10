@@ -99,6 +99,8 @@ RSpec.describe TopicsController do
       end
 
       context 'success' do
+        fab!(:category) { Fabricate(:category) }
+
         before { sign_in(admin) }
 
         it "returns success" do
@@ -106,7 +108,7 @@ RSpec.describe TopicsController do
             post "/t/#{topic.id}/move-posts.json", params: {
               title: 'Logan is a good movie',
               post_ids: [p2.id],
-              category_id: 123,
+              category_id: category.id,
               tags: ["tag1", "tag2"]
             }
           end.to change { Topic.count }.by(1)
@@ -130,7 +132,7 @@ RSpec.describe TopicsController do
               post "/t/#{topic.id}/move-posts.json", params: {
                 title: 'Logan is a good movie',
                 post_ids: [p2.id],
-                category_id: 123
+                category_id: category.id
               }
             end.to change { Topic.count }.by(1)
 
@@ -182,6 +184,59 @@ RSpec.describe TopicsController do
             expect(p2.reply_to_post_number).to eq(p1.post_number)
           end
         end
+      end
+    end
+
+    describe "moving to a new topic as a group moderator" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
+      let(:user) { group_user.user }
+
+      before do
+        sign_in(user)
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it "moves the posts" do
+        expect do
+          post "/t/#{topic.id}/move-posts.json", params: {
+            title: 'Logan is a good movie',
+            post_ids: [p2.id],
+            category_id: category.id
+          }
+        end.to change { Topic.count }.by(1)
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result['success']).to eq(true)
+        expect(result['url']).to eq(Topic.last.relative_url)
+      end
+
+      it "does not allow posts to be moved to a private category" do
+        staff_category = Fabricate(:category)
+        staff_category.set_permissions(staff: :full)
+        staff_category.save!
+
+        post "/t/#{topic.id}/move-posts.json", params: {
+          title: 'Logan is a good movie',
+          post_ids: [p2.id],
+          category_id: staff_category.id
+        }
+
+        expect(response).to be_forbidden
+      end
+
+      it "does not allow posts outside of the category to be moved" do
+        topic.update!(category: nil)
+
+        post "/t/#{topic.id}/move-posts.json", params: {
+          title: 'blah', post_ids: [p1.post_number, p2.post_number]
+        }
+
+        expect(response).to be_forbidden
       end
     end
 
@@ -243,6 +298,59 @@ RSpec.describe TopicsController do
           expect(result['success']).to eq(false)
           expect(result['url']).to be_blank
         end
+      end
+    end
+
+    describe "moving to an existing topic as a group moderator" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
+      fab!(:dest_topic) { Fabricate(:topic) }
+
+      let(:user) { group_user.user }
+
+      before do
+        sign_in(user)
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it "moves the posts" do
+        post "/t/#{topic.id}/move-posts.json", params: {
+          post_ids: [p2.id],
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result['success']).to eq(true)
+        expect(result['url']).to be_present
+      end
+
+      it "does not allow posts to be moved to a private category" do
+        staff_category = Fabricate(:category)
+        staff_category.set_permissions(staff: :full)
+        staff_category.save!
+        dest_topic.update!(category: staff_category)
+
+        post "/t/#{topic.id}/move-posts.json", params: {
+          post_ids: [p2.id],
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response).to be_forbidden
+      end
+
+      it "does not allow posts outside of the category to be moved" do
+        topic.update!(category: nil)
+
+        post "/t/#{topic.id}/move-posts.json", params: {
+          post_ids: [p1.post_number, p2.post_number],
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response).to be_forbidden
       end
     end
 
@@ -414,6 +522,55 @@ RSpec.describe TopicsController do
           expect(result['success']).to eq(true)
           expect(result['url']).to be_present
         end
+      end
+    end
+
+    describe "merging into another topic as a group moderator" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:p1) { Fabricate(:post, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, post_number: 2, topic: topic) }
+      fab!(:dest_topic) { Fabricate(:topic) }
+      let(:user) { group_user.user }
+
+      before do
+        sign_in(user)
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it "moves the posts" do
+        post "/t/#{topic.id}/merge-topic.json", params: {
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result['success']).to eq(true)
+        expect(result['url']).to be_present
+      end
+
+      it "does not allow posts to be moved to a private category" do
+        staff_category = Fabricate(:category)
+        staff_category.set_permissions(staff: :full)
+        staff_category.save!
+        dest_topic.update!(category: staff_category)
+
+        post "/t/#{topic.id}/merge-topic.json", params: {
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response).to be_forbidden
+      end
+
+      it "does not allow posts outside of the category to be moved" do
+        topic.update!(category: nil)
+
+        post "/t/#{topic.id}/merge-topic.json", params: {
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response).to be_forbidden
       end
     end
 
@@ -679,7 +836,7 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
-      it 'raises an error with a status not in the whitelist' do
+      it 'raises an error with a status not in the allowlist' do
         put "/t/#{topic.id}/status.json", params: {
           status: 'title', enabled: 'true'
         }
@@ -708,9 +865,7 @@ RSpec.describe TopicsController do
       fab!(:group_user) { Fabricate(:group_user) }
       fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
       fab!(:topic) { Fabricate(:topic, category: category) }
-
       let(:user) { group_user.user }
-      let(:group) { group_user.group }
 
       before do
         sign_in(user)
@@ -743,7 +898,6 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
         expect(topic.reload.pinned_at).to eq(nil)
       end
-
     end
   end
 
@@ -1990,94 +2144,6 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
         notification.reload
         expect(notification.read).to eq(true)
-      end
-    end
-
-    describe "set_locale" do
-      def headers(locale)
-        { HTTP_ACCEPT_LANGUAGE: locale }
-      end
-
-      context "allow_user_locale disabled" do
-        context "accept-language header differs from default locale" do
-          before do
-            SiteSetting.allow_user_locale = false
-            SiteSetting.default_locale = "en"
-          end
-
-          context "with an anonymous user" do
-            it "uses the default locale" do
-              get "/t/#{topic.id}.json", headers: headers("fr")
-
-              expect(response.status).to eq(200)
-              expect(I18n.locale).to eq(:en)
-            end
-          end
-
-          context "with a logged in user" do
-            it "it uses the default locale" do
-              user = Fabricate(:user, locale: :fr)
-              sign_in(user)
-
-              get "/t/#{topic.id}.json", headers: headers("fr")
-
-              expect(response.status).to eq(200)
-              expect(I18n.locale).to eq(:en)
-            end
-          end
-        end
-      end
-
-      context "set_locale_from_accept_language_header enabled" do
-        context "accept-language header differs from default locale" do
-          before do
-            SiteSetting.allow_user_locale = true
-            SiteSetting.set_locale_from_accept_language_header = true
-            SiteSetting.default_locale = "en"
-          end
-
-          context "with an anonymous user" do
-            it "uses the locale from the headers" do
-              get "/t/#{topic.id}.json", headers: headers("fr")
-              expect(response.status).to eq(200)
-              expect(I18n.locale).to eq(:fr)
-            end
-          end
-
-          context "with a logged in user" do
-            it "uses the user's preferred locale" do
-              user = Fabricate(:user, locale: :fr)
-              sign_in(user)
-
-              get "/t/#{topic.id}.json", headers: headers("fr")
-              expect(response.status).to eq(200)
-              expect(I18n.locale).to eq(:fr)
-            end
-          end
-        end
-
-        context "the preferred locale includes a region" do
-          it "returns the locale and region separated by an underscore" do
-            SiteSetting.allow_user_locale = true
-            SiteSetting.set_locale_from_accept_language_header = true
-            SiteSetting.default_locale = "en"
-
-            get "/t/#{topic.id}.json", headers: headers("zh-CN")
-            expect(response.status).to eq(200)
-            expect(I18n.locale).to eq(:zh_CN)
-          end
-        end
-
-        context 'accept-language header is not set' do
-          it 'uses the site default locale' do
-            SiteSetting.allow_user_locale = true
-            SiteSetting.default_locale = 'en'
-
-            get "/t/#{topic.id}.json", headers: headers("")
-            expect(response.status).to eq(200)
-            expect(I18n.locale).to eq(:en)
-          end
-        end
       end
     end
 

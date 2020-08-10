@@ -71,16 +71,14 @@ function init(messageBus, appEvents) {
   }
 }
 
-function confirmNotification() {
+function confirmNotification(siteSettings) {
   const notification = new Notification(
     I18n.t("notifications.popup.confirm_title", {
-      site_title: Discourse.SiteSettings.title
+      site_title: siteSettings.title
     }),
     {
       body: I18n.t("notifications.popup.confirm_body"),
-      icon:
-        Discourse.SiteSettings.site_logo_small_url ||
-        Discourse.SiteSettings.site_logo_url,
+      icon: siteSettings.site_logo_small_url || siteSettings.site_logo_url,
       tag: "confirm-subscription"
     }
   );
@@ -138,7 +136,7 @@ function isIdle() {
 }
 
 // Call-in point from message bus
-function onNotification(data) {
+function onNotification(data, siteSettings) {
   if (!liveEnabled) {
     return;
   }
@@ -153,7 +151,7 @@ function onNotification(data) {
   }
 
   const notificationTitle = I18n.t(i18nKey(data.notification_type), {
-    site_title: Discourse.SiteSettings.title,
+    site_title: siteSettings.title,
     topic: data.topic_title,
     username: formatUsername(data.username)
   });
@@ -161,14 +159,10 @@ function onNotification(data) {
   const notificationBody = data.excerpt;
 
   const notificationIcon =
-    Discourse.SiteSettings.site_logo_small_url ||
-    Discourse.SiteSettings.site_logo_url;
+    siteSettings.site_logo_small_url || siteSettings.site_logo_url;
 
   const notificationTag =
-    "discourse-notification-" +
-    Discourse.SiteSettings.title +
-    "-" +
-    data.topic_id;
+    "discourse-notification-" + siteSettings.title + "-" + data.topic_id;
 
   requestPermission().then(function() {
     // This shows the notification!

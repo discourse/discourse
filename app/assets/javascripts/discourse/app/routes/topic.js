@@ -4,6 +4,7 @@ import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
+import { setTopicId } from "discourse/lib/topic-list-tracker";
 
 const SCROLL_DELAY = 500;
 
@@ -200,7 +201,10 @@ const TopicRoute = DiscourseRoute.extend({
     },
 
     didTransition() {
-      this.controllerFor("topic")._showFooter();
+      const controller = this.controllerFor("topic");
+      controller._showFooter();
+      const topicId = controller.get("model.id");
+      setTopicId(topicId);
       return true;
     },
 

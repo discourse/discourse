@@ -76,8 +76,9 @@ describe DiscourseUpdates do
       end
 
       it 'queues a version check' do
-        Jobs.expects(:enqueue).with(:version_check, anything)
-        subject
+        expect_enqueued_with(job: :version_check) do
+          subject
+        end
       end
     end
 
@@ -86,8 +87,9 @@ describe DiscourseUpdates do
     context 'old version check data' do
       shared_examples "queue version check and report that version is ok" do
         it 'queues a version check' do
-          Jobs.expects(:enqueue).with(:version_check, anything)
-          subject
+          expect_enqueued_with(job: :version_check) do
+            subject
+          end
         end
 
         it 'reports 0 missing versions' do
@@ -118,8 +120,9 @@ describe DiscourseUpdates do
 
     shared_examples "when last_installed_version is old" do
       it 'queues a version check' do
-        Jobs.expects(:enqueue).with(:version_check, anything)
-        subject
+        expect_enqueued_with(job: :version_check) do
+          subject
+        end
       end
 
       it 'reports 0 missing versions' do

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 vi:
   dates:
@@ -16,12 +15,25 @@ vi:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
   date:
-    month_names: [~, Tháng Một, Tháng Hai, Tháng Ba, Tháng Tư, Tháng Năm, Tháng Sáu, Tháng Bảy, Tháng Tám, Tháng Chín, Tháng Mười, Tháng Mười Một, Tháng Mười Hai]
+    month_names:
+    - null
+    - Tháng Một
+    - Tháng Hai
+    - Tháng Ba
+    - Tháng Tư
+    - Tháng Năm
+    - Tháng Sáu
+    - Tháng Bảy
+    - Tháng Tám
+    - Tháng Chín
+    - Tháng Mười
+    - Tháng Mười Một
+    - Tháng Mười Hai
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "sa"
     pm: "ch"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Chủ đề"
   posts: "bài viết"
@@ -50,7 +62,7 @@ vi:
         topic_not_found_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã bị xóa."
         topic_closed_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã được đóng lại."
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     messages:
       too_long_validation: "cho phép tối đa %{max} ký tự; bạn đã nhập %{length}."
       invalid_boolean: "Giá trị logic không hợp lệ"
@@ -58,22 +70,22 @@ vi:
       accepted: phải được chấp nhận
       blank: không được để trống
       present: phải để trống
-      confirmation: "%{attribute} không khớp"
+      confirmation: ! "%{attribute} không khớp"
       empty: không thể để trống
-      equal_to: "phải bằng %{count}"
+      equal_to: phải bằng %{count}
       even: phải là số chẵn
       exclusion: được dành riêng
-      greater_than: "phải lớn hơn %{count}"
-      greater_than_or_equal_to: "phải lớn hơn hoặc bằng %{count}"
+      greater_than: phải lớn hơn %{count}
+      greater_than_or_equal_to: phải lớn hơn hoặc bằng %{count}
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
-      less_than: "phải nhỏ hơn %{count}"
-      less_than_or_equal_to: "phải nhỏ hơn hoặc bằng %{count}"
+      less_than: phải nhỏ hơn %{count}
+      less_than_or_equal_to: phải nhỏ hơn hoặc bằng %{count}
       not_a_number: không phải là số
       not_an_integer: phải là một số nguyên
       odd: phải là số lẻ
-      record_invalid: "Xác nhận thất bại: %{errors}"
+      record_invalid: ! "Xác nhận thất bại: %{errors}"
       restrict_dependent_destroy:
         one: "Không thể xóa bản ghi bởi vì một bản ghi %{record} phụ thuộc đang tồn tại"
         many: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
@@ -85,17 +97,14 @@ vi:
         other: độ dài không hợp lệ (nên đặt %{count} ký tự)
       other_than: "phải khác %{count}"
     template:
-      body: "Đã có vấn đề với những trường sau:"
+      body: ! "Đã có vấn đề với những trường sau:"
       header:
-        other: "%{count} lỗi đã ngăn cản không thể lưu %{model} này"
+        other: ! "%{count} lỗi đã ngăn cản không thể lưu %{model} này"
     embed:
       load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
     site_settings:
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   topic_invite:
     user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
   backup:
@@ -224,7 +233,6 @@ vi:
       user_profile:
         bio_raw: "GIới thiệu bản thân"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -243,6 +251,7 @@ vi:
           attributes:
             hex:
               invalid: "không phải là một màu không hợp lệ"
+      <<: *errors
   vip_category_name: "Phòng khách"
   vip_category_description: "Một chuyên mục chỉ dành cho thành viên có mức tin tưởng 3 hoặc cao hơn"
   meta_category_name: "Phản hồi"
@@ -427,7 +436,7 @@ vi:
       every_six_months: "mỗi sáu tháng"
   user_api_key:
     otp_confirmation:
-      confirm_title: "Tiếp tục tới %{site_name}"
+      confirm_title: Tiếp tục tới %{site_name}
       confirm_button: Kết thúc đăng nhập
     scopes:
       one_time_password: "Tạo mã token đăng nhập một lần"
@@ -453,7 +462,7 @@ vi:
       title: "Hoạt động của người điều hành"
       labels:
         moderator: Điều hành
-      description: "Danh sách hoạt động của người điều hành bao gồm các cờ được xem xét, thời gian đọc, chủ đề được tạo, bài đăng được tạo, tin nhắn cá nhân được tạo và sửa đổi."
+      description: Danh sách hoạt động của người điều hành bao gồm các cờ được xem xét, thời gian đọc, chủ đề được tạo, bài đăng được tạo, tin nhắn cá nhân được tạo và sửa đổi.
     flags_status:
       title: "Tình trạng cờ"
       labels:
@@ -672,7 +681,6 @@ vi:
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
-    set_locale_from_accept_language_header: "đặt ngôn ngữ giao diện cho người dùng ẩn danh từ tiêu đề ngôn ngữ trình duyệt web của họ. (KINH NGHIỆM, không hoạt động với bộ nhớ cache ẩn danh)"
     min_post_length: "Số kí tự tối thiểu trong bài đăng."
     min_first_post_length: "Chiều dài tối thiểu cho bài viết đầu tiên (nội dung chủ đề) tính theo ký tự."
     min_personal_message_post_length: "Số kí tự tối thiểu trong tin nhắn."
@@ -722,7 +730,6 @@ vi:
     pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
     moderators_create_categories: "Cho phép điều hành viên tạo danh mục mới"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
-    use_admin_ip_whitelist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     top_menu: "Xác định các mục nào hiển thị trong thanh điều hướng trang chủ, và theo thứ tự nào. Ví dụ latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Xác định các mục nào hiển thị trên menu bài viết, và theo thứ tự nào. Ví dụ like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Các mục được để ẩn theo mặc định trong menu bài viết trừ khi click vào dấu '...' để mở rộng."
@@ -739,8 +746,6 @@ vi:
     top_page_default_timeframe: "Khung thời gian mặc định cho trang xem trên cùng."
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     enable_badges: "Kích hoạt hệ thống huy hiệu"
-    email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
-    email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với tên miền email khác trong danh sách sẽ không được phép đăng ký!"
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
@@ -751,9 +756,6 @@ vi:
     enable_sso: "Cho phép dùng single sign on bằng trang ngoài (CẢNH BÁO: ĐỊA CHỈ EMAIL CỦA NGƯỜI DÙNG PHẢI ĐƯỢC CHỨNG THỰC BỞI TRANG NGOÀI!)"
     sso_url: "URL đầu cuối của Single Sign On (phải kèm theo http:// hoặc https://)"
     sso_secret: "Chuỗi bảo mật đã được sử dụng để chứng thực thông tin SSO, chắc chắn nó có ít nhất 10 ký tự."
-    sso_overrides_email: "Ghi đè email cục bộ với email trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ. (LƯU Ý: sự khác biệt có thể xảy ra do sự bình thường hóa các email cục bộ)"
-    sso_overrides_username: "Ghi đè tên tài khoản cục bộ với tài khoản trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ. (LƯU Ý: sự khác biệt có thể xảy ra do yêu cầu độ dài tên tài khoản khác nhau)"
-    sso_overrides_name: "Ghi đè tên thành viên cục bộ với tên thành viên trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ."
     sso_not_approved_url: "Chuyển những tài khoản SSO chưa duyệt tới URL này"
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
@@ -864,7 +866,6 @@ vi:
     faq_url: "Nếu bạn có một địa chỉ FAQ muốn sử dụng, điền URL đầy đủ ở đây."
     tos_url: "Nếu bạn có một địa chỉ Quy Định Sử Dụng muốn sử dụng, điền URL đầy đủ ở đây."
     privacy_policy_url: "Nếu bạn có một địa chỉ Quyền Riêng Tư muốn sử dụng, điền URL đầy đủ ở đây."
-    white_listed_spam_host_domains: "Danh sách tên miền sẽ được miễn trừ khỏi kiểm tra spam. Thành viên mới sẽ không bị giới hạn khi tạo bài viết có chứa liên kết từ các tên miền này."
     staff_like_weight: "Trọng số cộng thêm khi BQT like là bao nhiêu."
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
@@ -1263,7 +1264,7 @@ vi:
       name: Tự truyện
     anniversary:
       name: Ngày kỷ niệm
-      description: "Thành viên hoạt động trong một năm, gửi bài ít nhất một lần"
+      description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
     nice_post:
       name: Trả Lời Hay
       description: Nhận được 10 like cho một trả lời
@@ -1474,3 +1475,6 @@ vi:
         title: "Từ chối"
       delete_user:
         title: "Xóa tài khoản"
+  activemodel:
+    errors:
+      <<: *errors

@@ -11,7 +11,7 @@ class PostValidator < ActiveModel::Validator
     post_body_validator(record)
     max_posts_validator(record)
     max_mention_validator(record)
-    max_images_validator(record)
+    max_embedded_media_validator(record)
     max_attachments_validator(record)
     can_post_links_validator(record)
     unique_post_validator(record)
@@ -72,25 +72,25 @@ class PostValidator < ActiveModel::Validator
     end
   end
 
-  # Ensure new users can not put too many images in a post
-  def max_images_validator(post)
+  # Ensure new users can not put too many media embeds (images, video, audio) in a post
+  def max_embedded_media_validator(post)
     return if post.acting_user.blank? || post.acting_user&.staff?
 
-    if post.acting_user.trust_level < TrustLevel[SiteSetting.min_trust_to_post_images]
+    if post.acting_user.trust_level < TrustLevel[SiteSetting.min_trust_to_post_embedded_media]
       add_error_if_count_exceeded(
         post,
-        :no_images_allowed_trust,
-        :no_images_allowed_trust,
-        post.image_count,
+        :no_embedded_media_allowed_trust,
+        :no_embedded_media_allowed_trust,
+        post.embedded_media_count,
         0
       )
     elsif post.acting_user.trust_level == TrustLevel[0]
       add_error_if_count_exceeded(
         post,
-        :no_images_allowed,
-        :too_many_images,
-        post.image_count,
-        SiteSetting.newuser_max_images
+        :no_embedded_media_allowed,
+        :too_many_embedded_media,
+        post.embedded_media_count,
+        SiteSetting.newuser_max_embedded_media
       )
     end
   end

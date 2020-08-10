@@ -24,6 +24,8 @@ module Discourse
   end
 
   class Utils
+    URI_REGEXP ||= URI.regexp(%w{http https})
+
     # Usage:
     #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
     # or with a block
@@ -186,7 +188,7 @@ module Discourse
   class ScssError < StandardError; end
 
   def self.filters
-    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
+    @filters ||= [:latest, :unread, :new, :top, :read, :posted, :bookmarks]
   end
 
   def self.anonymous_filters
@@ -194,7 +196,7 @@ module Discourse
   end
 
   def self.top_menu_items
-    @top_menu_items ||= Discourse.filters + [:categories, :top]
+    @top_menu_items ||= Discourse.filters + [:categories]
   end
 
   def self.anonymous_top_menu_items

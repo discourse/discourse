@@ -3,6 +3,9 @@ import Sharing from "discourse/lib/sharing";
 QUnit.module("lib:sharing", {
   beforeEach() {
     Sharing._reset();
+  },
+  afterEach() {
+    Sharing._reset();
   }
 });
 

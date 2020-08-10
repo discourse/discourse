@@ -33,11 +33,13 @@ export default Controller.extend({
     let attrs = [
       "locale",
       "external_links_in_new_tab",
+      "dark_scheme_id",
       "dynamic_favicon",
       "enable_quoting",
       "enable_defer",
       "automatically_unpin_topics",
       "allow_private_messages",
+      "enable_allowed_pm_users",
       "homepage_id",
       "hide_profile_and_presence",
       "text_size",
@@ -148,6 +150,20 @@ export default Controller.extend({
     return result;
   },
 
+  @discourseComputed
+  showDarkModeToggle() {
+    return this.siteSettings.default_dark_mode_color_scheme_id > 0;
+  },
+
+  enableDarkMode: computed({
+    set(key, value) {
+      return value;
+    },
+    get() {
+      return this.get("model.user_option.dark_scheme_id") === -1 ? false : true;
+    }
+  }),
+
   actions: {
     save() {
       this.set("saved", false);
@@ -160,6 +176,11 @@ export default Controller.extend({
       if (makeTextSizeDefault) {
         this.set("model.user_option.text_size", this.textSize);
       }
+
+      this.set(
+        "model.user_option.dark_scheme_id",
+        this.enableDarkMode ? null : -1
+      );
 
       return this.model
         .save(this.saveAttrNames)
@@ -184,7 +205,7 @@ export default Controller.extend({
 
           if (this.isiPad) {
             if (safariHacksDisabled() !== this.disableSafariHacks) {
-              Discourse.set("assetVersion", "forceRefresh");
+              this.session.requiresRefresh = true;
             }
             localStorage.setItem(
               "safari-hacks-disabled",
@@ -212,8 +233,7 @@ export default Controller.extend({
       });
 
       // Force refresh when leaving this screen
-      Discourse.set("assetVersion", "forceRefresh");
-
+      this.session.requiresRefresh = true;
       this.set("textSize", newSize);
     }
   }

@@ -178,38 +178,38 @@ describe Auth::GithubAuthenticator do
       expect(result.email_valid).to eq(hash[:info][:email].present?)
     end
 
-    it 'will skip blacklisted domains for non existing users' do
+    it 'will skip blocklisted domains for non existing users' do
       hash = {
         extra: {
           all_emails: [{
-            email: "not_allowed@blacklist.com",
+            email: "not_allowed@blocklist.com",
             primary: true,
             verified: true,
           }, {
-            email: "allowed@whitelist.com",
+            email: "allowed@allowlist.com",
             primary: false,
             verified: true,
           }]
         },
         info: {
-          email: "not_allowed@blacklist.com",
+          email: "not_allowed@blocklist.com",
           nickname: "person",
           name: "Person Lastname",
         },
         uid: "100"
       }
 
-      SiteSetting.email_domains_blacklist = "blacklist.com"
+      SiteSetting.blocked_email_domains = "blocklist.com"
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(nil)
       expect(result.username).to eq(hash[:info][:nickname])
       expect(result.name).to eq(hash[:info][:name])
-      expect(result.email).to eq("allowed@whitelist.com")
+      expect(result.email).to eq("allowed@allowlist.com")
       expect(result.email_valid).to eq(true)
     end
 
-    it 'will find whitelisted domains for non existing users' do
+    it 'will find allowlisted domains for non existing users' do
       hash = {
         extra: {
           all_emails: [{
@@ -217,11 +217,11 @@ describe Auth::GithubAuthenticator do
             primary: true,
             verified: true,
           }, {
-            email: "not_allowed@blacklist.com",
+            email: "not_allowed@blocklist.com",
             primary: false,
             verified: true,
           }, {
-            email: "allowed@whitelist.com",
+            email: "allowed@allowlist.com",
             primary: false,
             verified: true,
           }]
@@ -234,13 +234,13 @@ describe Auth::GithubAuthenticator do
         uid: "100"
       }
 
-      SiteSetting.email_domains_whitelist = "whitelist.com"
+      SiteSetting.allowed_email_domains = "allowlist.com"
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(nil)
       expect(result.username).to eq(hash[:info][:nickname])
       expect(result.name).to eq(hash[:info][:name])
-      expect(result.email).to eq("allowed@whitelist.com")
+      expect(result.email).to eq("allowed@allowlist.com")
       expect(result.email_valid).to eq(true)
     end
 

@@ -117,7 +117,7 @@ class UsersController < ApplicationController
 
     users = users.filter { |u| guardian.can_see_profile?(u) }
 
-    preload_fields = User.whitelisted_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    preload_fields = User.allowed_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
     User.preload_custom_fields(users, preload_fields)
     User.preload_recent_time_read(users)
 
@@ -1134,11 +1134,11 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars[url]
+    unless upload = Upload.get_from_url(url)
       return render json: failed_json, status: 422
     end
 
-    unless upload = Upload.find_by(url: url)
+    unless SiteSetting.selectable_avatars[upload.sha1]
       return render json: failed_json, status: 422
     end
 
@@ -1581,6 +1581,7 @@ class UsersController < ApplicationController
       :date_of_birth,
       :muted_usernames,
       :ignored_usernames,
+      :allowed_pm_usernames,
       :theme_ids,
       :locale,
       :bio_raw,

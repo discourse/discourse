@@ -245,6 +245,11 @@ basic:
   default_theme_id:
     default: -1
     hidden: true
+  default_dark_mode_color_scheme_id:
+    default: -1
+    type: enum
+    enum: "ColorSchemeSetting"
+    client: true
   relative_date_duration:
     client: true
     default: 30
@@ -443,10 +448,10 @@ login:
   sso_overrides_website: false
   sso_overrides_card_background: false
   sso_not_approved_url: ""
-  email_domains_blacklist:
+  blocked_email_domains:
     default: "mailinator.com"
     type: list
-  email_domains_whitelist:
+  allowed_email_domains:
     default: ""
     type: list
   auto_approve_email_domains:
@@ -478,8 +483,8 @@ users:
     default: false
     client: true
     validator: "UnicodeUsernameValidator"
-  unicode_username_character_whitelist:
-    validator: "UnicodeUsernameWhitelistValidator"
+  allowed_unicode_username_characters:
+    validator: "UnicodeUsernameAllowlistValidator"
     default: ""
     locale_default:
       cs: "[ěščřžýáíéóůúďťňĚŠČŘŽÝÁÍÉÓŮÚĎŤŇ]"
@@ -573,7 +578,7 @@ users:
     client: true
   show_inactive_accounts:
     default: false
-  user_website_domains_whitelist:
+  allowed_user_website_domains:
     default: ""
     type: list
   hide_suspension_reasons:
@@ -798,11 +803,11 @@ posting:
       ko: 50
       zh_CN: 50
       zh_TW: 50
-  whitelisted_link_domains:
+  allowed_link_domains:
     default: ""
     type: list
   newuser_max_links: 2
-  newuser_max_images:
+  newuser_max_embedded_media:
     client: true
     default: 1
   newuser_max_attachments:
@@ -816,6 +821,7 @@ posting:
       zh_TW: 120
   topic_excerpt_maxlength:
     default: 220
+    max: 999
     locale_default:
       ja: 120
       zh_CN: 120
@@ -908,7 +914,7 @@ posting:
   embed_unlisted: false
   embed_truncate: true
   embed_support_markdown: false
-  embed_whitelist_selector: ""
+  allowed_embed_selectors: ""
   allowed_href_schemes:
     client: true
     default: ""
@@ -1029,14 +1035,32 @@ email:
       - X-Spam-Flag
       - X-Spam-Status
       - X-SES-Spam-Verdict
-  enable_imap: false
-  enable_imap_write: false
-  enable_imap_idle: false
-  enable_smtp: false
-  imap_polling_period_mins: 5
-  imap_polling_old_emails: 1000
-  imap_polling_new_emails: 250
-  imap_batch_import_email: 100
+  enable_imap:
+    default: false
+    client: true
+    hidden: true
+  enable_imap_write:
+    default: false
+    hidden: true
+  enable_imap_idle:
+    default: false
+    hidden: true
+  enable_smtp:
+    default: false
+    client: true
+    hidden: true
+  imap_polling_period_mins:
+    default: 5
+    hidden: true
+  imap_polling_old_emails:
+    default: 1000
+    hidden: true
+  imap_polling_new_emails:
+    default: 250
+    hidden: true
+  imap_batch_import_email:
+    default: 100
+    hidden: true
   email_prefix: ""
   email_site_title: ""
   disable_emails:
@@ -1064,7 +1088,7 @@ email:
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
-  auto_generated_whitelist:
+  auto_generated_allowlist:
     default: ""
     type: list
   block_auto_generated_emails: true
@@ -1091,11 +1115,11 @@ email:
   reset_bounce_score_after_days:
     default: 30
     max: 36500
-  attachment_content_type_blacklist:
+  blocked_attachment_content_types:
     type: list
     default: "pkcs7|x-vcard"
     list_type: compact
-  attachment_filename_blacklist:
+  blocked_attachment_filenames:
     type: list
     default: "smime.p7s|signature.asc|winmail.dat"
     list_type: compact
@@ -1131,7 +1155,7 @@ email:
     default: true
     hidden: true
   preserve_email_structure_when_styling:
-    default: false
+    default: true
     hidden: true
 
 files:
@@ -1157,7 +1181,7 @@ files:
     list_type: compact
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif"
+    default: "jpg|jpeg|png|gif|heic|heif"
     refresh: true
     type: list
     list_type: compact
@@ -1335,7 +1359,7 @@ trust:
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
-  min_trust_to_post_images:
+  min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
   min_trust_level_to_allow_profile_background:
@@ -1444,25 +1468,25 @@ security:
   cors_origins:
     default: ""
     type: list
-  use_admin_ip_whitelist:
+  use_admin_ip_allowlist:
     default: false
     client: true
-  blacklist_ip_blocks:
+  blocked_ip_blocks:
     default: ""
     type: list
     list_type: compact
-  whitelist_internal_hosts:
+  allowed_internal_hosts:
     default: ""
     type: list
   allowed_iframes:
     default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/"
     type: list
     client: true
-  whitelisted_crawler_user_agents:
+  allowed_crawler_user_agents:
     type: list
     default: ""
     list_type: compact
-  blacklisted_crawler_user_agents:
+  blocked_crawler_user_agents:
     type: list
     default: "mauibot|semrushbot|ahrefsbot|blexbot|seo spider"
     list_type: compact
@@ -1499,14 +1523,14 @@ onebox:
       ja: 200
       zh_CN: 200
       zh_TW: 200
-  onebox_domains_blacklist:
+  blocked_onebox_domains:
     default: ""
     type: list
     list_type: compact
   max_oneboxes_per_post:
     default: 50
     client: true
-  inline_onebox_domains_whitelist:
+  allowed_inline_onebox_domains:
     default: ""
     type: list
     list_type: compact
@@ -1530,7 +1554,7 @@ spam:
   notify_mods_when_user_silenced: false
   flag_sockpuppets: false
   newuser_spam_host_threshold: 3
-  white_listed_spam_host_domains:
+  allowed_spam_host_domains:
     default: ""
     type: list
   levenshtein_distance_spammer_emails:
@@ -1710,13 +1734,16 @@ embedding:
   embed_post_limit:
     default: 100
     hidden: true
+  embed_topic_limit_per_page:
+    default: 200
+    hidden: true
   embed_title_scrubber:
     default: ""
     hidden: true
-  embed_blacklist_selector:
+  blocked_embed_selectors:
     default: ""
     hidden: true
-  embed_classname_whitelist:
+  allowed_embed_classnames:
     default: "emoji"
     hidden: true
 
@@ -1773,6 +1800,10 @@ backups:
     hidden: true
 
 search:
+  use_pg_headlines_for_excerpt:
+    default: false
+    hidden: true
+    client: true
   search_ranking_normalization:
     default: "0"
     hidden: true

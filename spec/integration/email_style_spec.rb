@@ -8,8 +8,8 @@ describe EmailStyle do
     it "does not evaluate ERB outside of the email itself" do
       SiteSetting.email_custom_template = "<hello>%{email_content}</hello><%= (111 * 333) %>"
       html = Email::Renderer.new(UserNotifications.signup(Fabricate(:user))).html
-      expect(html).not_to match("36963")
-      expect(html.starts_with?('<hello>')).to eq(true)
+      expect(html).not_to include("36963")
+      expect(html).to include('<hello>')
     end
   end
 

@@ -19,13 +19,6 @@ describe Email::Styles do
   end
 
   context "basic formatter" do
-
-    it "works with an empty string" do
-      style = Email::Styles.new("")
-      style.format_basic
-      expect(style.to_html).to be_blank
-    end
-
     it "adds a max-width to large images" do
       frag = basic_fragment("<img height='auto' width='auto' src='gigantic.jpg'>")
       expect(frag.at("img")["style"]).to match("max-width")
@@ -56,12 +49,6 @@ describe Email::Styles do
   end
 
   context "html template formatter" do
-    it "works with an empty string" do
-      style = Email::Styles.new("")
-      style.format_html
-      expect(style.to_html).to be_blank
-    end
-
     it "attaches a style to h3 tags" do
       frag = html_fragment("<h3>hello</h3>")
       expect(frag.at('h3')['style']).to be_present
@@ -188,7 +175,7 @@ describe Email::Styles do
       cooked = "Create a method for click on image and use ng-click in <img> in your slide box...it is simple"
       style = Email::Styles.new(cooked)
       style.strip_avatars_and_emojis
-      expect(style.to_html).to eq(cooked)
+      expect(style.to_html).to include(cooked)
     end
   end
 

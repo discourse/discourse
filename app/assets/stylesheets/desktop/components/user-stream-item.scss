@@ -8,7 +8,7 @@
 
   .notification {
     &.unread {
-      background-color: $tertiary-low;
+      background-color: var(--tertiary-low);
     }
   }
 }

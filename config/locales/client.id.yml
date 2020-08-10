@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 id:
   js:
@@ -96,9 +95,6 @@ id:
       topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
       close: "tutup"
-      twitter: "Bagikan tautan ke Twitter"
-      facebook: "Bagikan tautan ke Facebook"
-      email: "Bagikan tautan ke email"
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
       private_topic: "Jadikan topik ini sebagai pesan pribadi"
@@ -465,10 +461,6 @@ id:
     groups:
       member_added: "Ditambahkan"
       member_requested: "Diminta pada"
-      add_members:
-        title: "Tambahkan Anggota"
-        description: "Kelola keanggotaan grup ini"
-        usernames: "Nama Pengguna"
       requests:
         title: "Permintaan"
         reason: "Alasan"
@@ -487,6 +479,11 @@ id:
         interaction:
           posting: Posting
           notification: Pemberitahuan
+        email:
+          title: "Email"
+          credentials:
+            username: "Nama Pengguna"
+            password: "Kata Sandi"
         membership:
           title: Keanggotaan
           access: Mengakses
@@ -1110,8 +1107,8 @@ id:
     email_login:
       link_label: "Kirimi saya tautan masuk melalui email"
       button_label: "dengan surel"
-      confirm_title: "Lanjut ke %{site_name}"
-      logging_in_as: "Masuk sebagai %{email}"
+      confirm_title: Lanjut ke %{site_name}
+      logging_in_as: Masuk sebagai %{email}
     login:
       title: "Log In"
       username: "Pengguna"
@@ -1257,7 +1254,7 @@ id:
         draft: Konsep
         edit: Ubah
         reply_to_post:
-          label: "Membalas tulisan %{postNumber} oleh %{postUsername}"
+          label: Membalas tulisan %{postNumber} oleh %{postUsername}
           desc: Membalas tulisan tertentu
         reply_as_new_topic:
           desc: Buat topik baru yang ditautkan dengan topik ini
@@ -1266,7 +1263,7 @@ id:
           desc: Buat pesan pribadi baru
         reply_to_topic:
           label: Balas ke topik
-          desc: "Membalas topik, bukan tulisan tertentu"
+          desc: Membalas topik, bukan tulisan tertentu
         create_topic:
           label: "Topik Baru"
         shared_draft:
@@ -1349,14 +1346,17 @@ id:
       show_links: "tampilkan pranala dalam topik ini"
       browse_all_categories: Lihat semua kategori
       view_latest_topics: lihat topik terbaru
-      suggest_create_topic: "Buat topik baru?"
+      suggest_create_topic: Buat topik baru?
       jump_reply_up: lompat ke balasan sebelumnya
       progress:
         jump_prompt_or: "atau"
       notifications:
         reasons:
+          "3": "You will receive notifications because you are watching this topic."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
           "1": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
+          "0": "You are ignoring all notifications on this topic."
         watching_pm:
           title: "Melihat"
         watching:
@@ -1701,7 +1701,6 @@ id:
         screened_urls:
           domain: "Domain"
         screened_ips:
-          description: 'Alamat IP sedang dalam pengawasan. Gunakan "Allow" atau "Ijinkan" untuk memasukkan alamat IP dalam daftar putih.'
           form:
             label: "Baru:"
             ip_address: "Alamat IP"

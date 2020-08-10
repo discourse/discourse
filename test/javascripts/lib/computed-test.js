@@ -25,7 +25,8 @@ discourseModule("lib:computed", {
 });
 
 QUnit.test("setting", function(assert) {
-  var t = EmberObject.extend({
+  let t = EmberObject.extend({
+    siteSettings: this.siteSettings,
     vehicle: setting("vehicle"),
     missingProp: setting("madeUpThing")
   }).create();

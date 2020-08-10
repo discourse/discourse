@@ -20,9 +20,9 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     content: "";
     background: linear-gradient(
       to right,
-      $primary-very-low 10%,
-      $primary-low 18%,
-      $primary-very-low 33%
+      var(--primary-very-low) 10%,
+      var(--primary-low) 18%,
+      var(--primary-very-low) 33%
     );
     height: $avatar_width;
     width: $card_width;
@@ -34,8 +34,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
 .group-card {
   width: $card_width;
   box-shadow: shadow("card");
-  color: $primary;
-  background: $secondary center center;
+  color: var(--primary);
+  background: var(--secondary) center center;
   background-size: cover;
   transition: opacity 0.2s, transform 0.2s;
   -webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
@@ -47,7 +47,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   }
   .card-content {
     padding: 10px;
-    background: rgba($secondary, 0.85);
+    background: rgba(var(--secondary-rgb), 0.85);
     margin-top: 80px;
     &:after {
       content: "";
@@ -105,17 +105,17 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   h1 {
     line-height: $line-height-medium;
     .d-icon {
-      color: $primary;
+      color: var(--primary);
     }
   }
   h3 {
     display: inline;
     margin-right: 0.5em;
-    color: $primary;
+    color: var(--primary);
     &.email,
     .desc,
     a {
-      color: $primary-high;
+      color: var(--primary-high);
     }
   }
   h1,
@@ -127,7 +127,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   h1,
   h2 {
     a {
-      color: $primary;
+      color: var(--primary);
     }
   }
   h2,
@@ -152,7 +152,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       margin-top: $avatar_margin;
     }
     .new-user a {
-      color: $primary-low-mid;
+      color: var(--primary-low-mid);
     }
   }
   // user bio - suspension reason
@@ -161,7 +161,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     overflow: auto;
     .bio {
       a {
-        color: $primary;
+        color: var(--primary);
         text-decoration: underline;
       }
       a.mention {
@@ -173,7 +173,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       }
     }
     .suspended {
-      color: $danger;
+      color: var(--danger);
       .suspension-reason-title,
       .suspension-date {
         font-weight: bold;
@@ -187,10 +187,10 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   // featured topic
   .featured-topic {
     .desc {
-      color: $primary-high;
+      color: var(--primary-high);
     }
     a {
-      color: $primary;
+      color: var(--primary);
       text-decoration: underline;
     }
   }
@@ -213,7 +213,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     .website-name a,
     .location span {
       @include ellipsis;
-      color: $primary;
+      color: var(--primary);
     }
     .location,
     .local-time,
@@ -235,9 +235,9 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     align-items: flex-start;
     .user-badge {
       @include ellipsis;
-      background: $primary-very-low;
-      border: 1px solid $primary-low;
-      color: $primary;
+      background: var(--primary-very-low);
+      border: 1px solid var(--primary-low);
+      color: var(--primary);
     }
     .more-user-badges {
       a {
@@ -261,7 +261,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       background-repeat: no-repeat;
       width: $avatar_width;
       height: $avatar_width;
-      color: $primary;
+      color: var(--primary);
       .d-icon {
         margin: auto;
         font-size: $avatar_width / 1.5;
@@ -277,7 +277,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     overflow: auto;
     .bio {
       a {
-        color: $primary;
+        color: var(--primary);
         text-decoration: underline;
       }
       img {

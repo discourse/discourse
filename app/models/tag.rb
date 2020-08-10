@@ -5,7 +5,6 @@ class Tag < ActiveRecord::Base
   include HasDestroyedWebHook
 
   RESERVED_TAGS = [
-    'c',
     'none'
   ]
 

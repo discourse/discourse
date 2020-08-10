@@ -1,14 +1,18 @@
-{{#d-modal-body title="groups.add_members.title"}}
+{{#d-modal-body rawTitle=title}}
   <form class="form-vertical group-add-members">
     <div class="control-group">
       <label class="control-label">
         {{i18n "groups.add_members.usernames"}}
       </label>
+      <p class="description">
+        {{i18n "groups.add_members.description"}}
+      </p>
 
       {{user-selector
           class="input-xxlarge"
-          usernames=model.usernames
-          placeholderKey="groups.selector_placeholder"
+          usernames=usernamesAndEmails
+          allowEmails=true
+          placeholderKey="groups.add_members.input_placeholder"
           id="group-add-members-user-selector"}}
     </div>
 
@@ -18,11 +22,21 @@
           {{input type="checkbox"
               class="inline"
               checked=setAsOwner
-              disabled=bulkAdd}}
+              disabled=emailsPresent}}
           {{i18n "admin.groups.add_members.as_owner"}}
         </label>
       </div>
     {{/if}}
+
+    <div class="control-group group-add-members-notify-users">
+      <label>
+        {{input type="checkbox"
+            class="inline"
+            checked=notifyUsers
+            disabled=notifyUsersDisabled}}
+        {{i18n "groups.add_members.notify_users"}}
+      </label>
+    </div>
   </form>
 {{/d-modal-body}}
 

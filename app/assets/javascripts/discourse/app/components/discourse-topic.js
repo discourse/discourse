@@ -108,9 +108,7 @@ export default Component.extend(
       $(this.element).on(
         "click.discourse-redirect",
         ".cooked a, a.track-link",
-        function(e) {
-          return ClickTrack.trackClick(e);
-        }
+        e => ClickTrack.trackClick(e, this.siteSettings)
       );
 
       this.appEvents.on("discourse:focus-changed", this, "gotFocus");

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 da:
   dates:
@@ -18,12 +17,25 @@ da:
       long: "%-d. %B %Y, %H:%M"
       no_day: "%B %Y"
   date:
-    month_names: [~, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
+    month_names:
+    - null
+    - Januar
+    - Februar
+    - Marts
+    - April
+    - Maj
+    - Juni
+    - Juli
+    - August
+    - September
+    - Oktober
+    - November
+    - December
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "indlæg"
@@ -95,10 +107,9 @@ da:
         bounced_email_error: "Emailen er en \"bounced email\" rapport"
         screened_email_error: "Dette sker når afsenderens email adresse allerede er screenet."
         unsubscribe_not_allowed: "Det sker, når afmelding via e-mail ikke er tilladt for denne bruger."
-        email_not_allowed: "Det sker, når emailadressen ikke er på hvid-listen eller er på sort-listen."
       unrecognized_error: "Ukendt fejl"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
@@ -107,24 +118,24 @@ da:
       accepted: skal accepteres
       blank: kan ikke være tom
       present: skal være tomt
-      confirmation: "matcher ikke %{attribute}"
+      confirmation: ! "matcher ikke %{attribute}"
       empty: kan ikke være tom
-      equal_to: "skal være %{count}"
+      equal_to: skal være %{count}
       even: skal være et lige tal
       exclusion: er reserveret
-      greater_than: "skal være større end %{count}"
-      greater_than_or_equal_to: "skal være større eller lig med %{count}"
+      greater_than: skal være større end %{count}
+      greater_than_or_equal_to: skal være større eller lig med %{count}
       has_already_been_used: "er allerede blevet brugt"
       inclusion: er ikke inkluderet i listen
       invalid: er ikke gyldig
       is_invalid: "virker upræcis, er det en hel sætning?"
       contains_censored_words: "indeholder følgende censurerede ord: %{censurerede ord}"
-      less_than: "skal være mindre end %{count}"
-      less_than_or_equal_to: "skal være mindre end eller lig med %{count}"
+      less_than: skal være mindre end %{count}
+      less_than_or_equal_to: skal være mindre end eller lig med %{count}
       not_a_number: er ikke et nummer
       not_an_integer: skal være et heltal
       odd: skal være et ulige tal
-      record_invalid: "Kunne ikke valideres: %{errors}"
+      record_invalid: ! "Kunne ikke valideres: %{errors}"
       max_emojis: "kan ikke have mere end %{max_emojis_count}humørikoner"
       emojis_disabled: "kan ikke have humørikon"
       ip_address_already_screened: "er allerede inkluderet i en eksisterende regel"
@@ -142,10 +153,10 @@ da:
         other: har forkert længde (burde være %{count} tegn)
       other_than: "skal være andet end %{count}"
     template:
-      body: "Der var problemer med følgende felter:"
+      body: ! "Der var problemer med følgende felter:"
       header:
         one: "Een fejl forhindrede denne %{model} for at gemme."
-        other: "%{count} fejl forhindrede denne %{model} i at gemme."
+        other: ! "%{count} fejl forhindrede denne %{model} i at gemme."
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
     site_settings:
@@ -157,9 +168,6 @@ da:
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Du kan ikke aktivere beholdning til S3, medmindre du har aktiveret S3-uploads."
       s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     not_found: "Dit invitationstoken er ugyldigt. Kontakt venligst <a href='%{base_url}/about'>personale</a> ."
     not_found_json: "Dit invitationstoken er ugyldigt. Kontakt venligst personale."
@@ -378,7 +386,6 @@ da:
       user_profile:
         bio_raw: "Om mig"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -427,6 +434,7 @@ da:
           attributes:
             word:
               too_many: "For mange ord til den handling"
+      <<: *errors
   uncategorized_category_name: "Andet"
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
@@ -685,7 +693,7 @@ da:
     read_write: "læs/skriv"
     description: '"%{application_name}" anmoder om følgende adgang til din konto:'
     otp_confirmation:
-      confirm_title: "Fortsæt til %{site_name}"
+      confirm_title: Fortsæt til %{site_name}
       confirm_button: Afslut login
     no_trust_level: "Beklager, du har ikke adgang til brugerens API"
     generic_error: "Beklager, vi er ikke i stand til at give dig API nøgler, denne funktionalitet er muligvis bestemt af sitets administrator"
@@ -921,7 +929,6 @@ da:
     censored_words: "Ord der automatisk vil blive erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
-    set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
     min_first_post_length: "Minimum tilladte antal tegn (i emne felt) i første indlæg"
     min_personal_message_post_length: "Minimumlængde tilladt for indlæg i tegn"
@@ -956,7 +963,6 @@ da:
     show_pinned_excerpt_mobile: "Vis uddrag af fastgjorte emner på mobilen."
     show_pinned_excerpt_desktop: "Vis uddrag af fastgjorte emner i desktop visning"
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
-    onebox_domains_blacklist: "En liste af domæner som aldrig vil blive onebox'et."
     max_oneboxes_per_post: "Maksimalt antal onebox-forekomster i et opslag."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
@@ -981,7 +987,6 @@ da:
     pending_users_reminder_delay: "Underret moderatorer hvis nye brugere har ventet på godkendelse i længere end så mange timer. Skriv -1 for at deaktivere notifikationer."
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
     moderators_create_categories: "Tillad moderatorer at skabe nye kategorier"
-    use_admin_ip_whitelist: "Admins kan kun logge ind hvis de logger på fra en prædefineret IP liste: (Admin > Logs > Screened Ips)."
     top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
     post_menu_hidden_items: "Menuen vil automatisk gemme disse elementer i indlægs menuen, med mindre en udvidelse er tilvalgt."
@@ -1040,7 +1045,6 @@ da:
     unsubscribe_via_email: "Tillad brugere at afmelde sig fra emails ved at sende en email med \"unsubscribe\" i emne eller indholdsfeltet"
     ignore_by_title: "Ignorér indgående emails baseret på deres titel."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
-    attachment_content_type_blacklist: "Liste over nøgleord, der bruges til sortliste vedhæftede filer baseret på indholdstypen."
     always_show_trimmed_content: "Vis altid beskåret del af indgående e-mails. ADVARSEL: afslører muligvis e-mail-adresser."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
@@ -1061,7 +1065,6 @@ da:
     default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
-    embed_whitelist_selector: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
     embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
     delete_drafts_older_than_n_days: "Slet kladder, der er ældre end (n) dage."
@@ -1599,7 +1602,7 @@ da:
       name: Selvbiograf
     anniversary:
       name: Jubilæum
-      description: "Aktivt medlem i et år, som har skrevet mindst et indlæg"
+      description: Aktivt medlem i et år, som har skrevet mindst et indlæg
     nice_post:
       name: Fint svar
       description: Modtog 10 likes på et svar
@@ -1835,3 +1838,6 @@ da:
         title: "Afvis"
       delete_user:
         title: "Slet bruger"
+  activemodel:
+    errors:
+      <<: *errors

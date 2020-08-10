@@ -70,6 +70,9 @@ task 'javascript:update' do
       source: 'chart.js/dist/Chart.min.js',
       public: true
     }, {
+      source: 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js',
+      public: true
+    }, {
       source: 'magnific-popup/dist/jquery.magnific-popup.min.js',
       public: true
     }, {
@@ -193,7 +196,9 @@ task 'javascript:update' do
       system("rm -rf node_modules/highlight.js/build/styles")
 
       langs_dir = 'vendor/assets/javascripts/highlightjs/languages/*.min.js'
-      langs = Dir.glob(langs_dir).map { |lang| File.basename(lang).split('.')[0] }
+
+      # We don't need every language for tests
+      langs = ['javascript', 'sql', 'ruby']
       test_bundle_dest = 'vendor/assets/javascripts/highlightjs/highlight-test-bundle.min.js'
       File.write(test_bundle_dest, HighlightJs.bundle(langs))
     end

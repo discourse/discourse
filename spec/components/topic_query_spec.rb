@@ -118,6 +118,39 @@ describe TopicQuery do
     end
   end
 
+  context 'tracked' do
+    it "filters tracked topics correctly" do
+      SiteSetting.tagging_enabled = true
+
+      tag = Fabricate(:tag)
+      Fabricate(:topic, tags: [tag])
+      topic2 = Fabricate(:topic)
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(0)
+
+      TagUser.create!(
+        tag_id: tag.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:watching]
+      )
+
+      cu = CategoryUser.create!(
+        category_id: topic2.category_id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:regular]
+      )
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(1)
+
+      cu.update!(notification_level: NotificationLevels.all[:tracking])
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(2)
+    end
+  end
+
   context 'deleted filter' do
     it "filters deleted topics correctly" do
       _topic = Fabricate(:topic, deleted_at: 1.year.ago)
@@ -361,6 +394,22 @@ describe TopicQuery do
 
       topic_ids = topic_query.list_new.topics.map(&:id)
       expect(topic_ids).to contain_exactly(muted_topic.id, tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
+    end
+
+    it 'is not removed from the tag page itself' do
+      muted_tag = Fabricate(:tag)
+      TagUser.create!(user_id: user.id,
+                      tag_id: muted_tag.id,
+                      notification_level: CategoryUser.notification_levels[:muted])
+
+      muted_topic = Fabricate(:topic, tags: [muted_tag])
+
+      topic_ids = topic_query.latest_results(tags: [muted_tag.name]).map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id)
+
+      muted_tag.update(name: "mixedCaseName")
+      topic_ids = topic_query.latest_results(tags: [muted_tag.name.downcase]).map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id)
     end
   end
 

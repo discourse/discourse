@@ -53,7 +53,7 @@ function validateUploadedFile(file, opts) {
   let user = opts.user;
   let staff = user && user.staff;
 
-  if (!authorizesOneOrMoreExtensions(staff)) return false;
+  if (!authorizesOneOrMoreExtensions(staff, opts.siteSettings)) return false;
 
   const name = file && file.name;
 
@@ -69,10 +69,13 @@ function validateUploadedFile(file, opts) {
   }
 
   if (opts.imagesOnly) {
-    if (!isImage(name) && !isAuthorizedImage(name, staff)) {
+    if (!isImage(name) && !isAuthorizedImage(name, staff, opts.siteSettings)) {
       bootbox.alert(
         I18n.t("post.errors.upload_not_authorized", {
-          authorized_extensions: authorizedImagesExtensions(staff)
+          authorized_extensions: authorizedImagesExtensions(
+            staff,
+            opts.siteSettings
+          )
         })
       );
       return false;
@@ -83,10 +86,13 @@ function validateUploadedFile(file, opts) {
       return false;
     }
   } else {
-    if (!authorizesAllExtensions(staff) && !isAuthorizedFile(name, staff)) {
+    if (
+      !authorizesAllExtensions(staff, opts.siteSettings) &&
+      !isAuthorizedFile(name, staff, opts.siteSettings)
+    ) {
       bootbox.alert(
         I18n.t("post.errors.upload_not_authorized", {
-          authorized_extensions: authorizedExtensions(staff)
+          authorized_extensions: authorizedExtensions(staff, opts.siteSettings)
         })
       );
       return false;
@@ -117,20 +123,20 @@ function extensionsToArray(exts) {
     .filter(ext => ext.indexOf("*") === -1);
 }
 
-function extensions() {
-  return extensionsToArray(Discourse.SiteSettings.authorized_extensions);
+function extensions(siteSettings) {
+  return extensionsToArray(siteSettings.authorized_extensions);
 }
 
-function staffExtensions() {
-  return extensionsToArray(
-    Discourse.SiteSettings.authorized_extensions_for_staff
+function staffExtensions(siteSettings) {
+  return extensionsToArray(siteSettings.authorized_extensions_for_staff);
+}
+
+function imagesExtensions(staff, siteSettings) {
+  let exts = extensions(siteSettings).filter(ext =>
+    IMAGES_EXTENSIONS_REGEX.test(ext)
   );
-}
-
-function imagesExtensions(staff) {
-  let exts = extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
   if (staff) {
-    const staffExts = staffExtensions().filter(ext =>
+    const staffExts = staffExtensions(siteSettings).filter(ext =>
       IMAGES_EXTENSIONS_REGEX.test(ext)
     );
     exts = _.union(exts, staffExts);
@@ -138,60 +144,61 @@ function imagesExtensions(staff) {
   return exts;
 }
 
-function extensionsRegex() {
-  return new RegExp("\\.(" + extensions().join("|") + ")$", "i");
-}
-
-function imagesExtensionsRegex(staff) {
-  return new RegExp("\\.(" + imagesExtensions(staff).join("|") + ")$", "i");
-}
-
-function staffExtensionsRegex() {
-  return new RegExp("\\.(" + staffExtensions().join("|") + ")$", "i");
-}
-
-function isAuthorizedFile(fileName, staff) {
-  if (staff && staffExtensionsRegex().test(fileName)) {
+function isAuthorizedFile(fileName, staff, siteSettings) {
+  if (
+    staff &&
+    new RegExp(
+      "\\.(" + staffExtensions(siteSettings).join("|") + ")$",
+      "i"
+    ).test(fileName)
+  ) {
     return true;
   }
-  return extensionsRegex().test(fileName);
+
+  return new RegExp(
+    "\\.(" + extensions(siteSettings).join("|") + ")$",
+    "i"
+  ).test(fileName);
 }
 
-function isAuthorizedImage(fileName, staff) {
-  return imagesExtensionsRegex(staff).test(fileName);
+function isAuthorizedImage(fileName, staff, siteSettings) {
+  return new RegExp(
+    "\\.(" + imagesExtensions(staff, siteSettings).join("|") + ")$",
+    "i"
+  ).test(fileName);
 }
 
-export function authorizedExtensions(staff) {
-  const exts = staff ? [...extensions(), ...staffExtensions()] : extensions();
+export function authorizedExtensions(staff, siteSettings) {
+  const exts = staff
+    ? [...extensions(siteSettings), ...staffExtensions(siteSettings)]
+    : extensions(siteSettings);
   return exts.filter(ext => ext.length > 0).join(", ");
 }
 
-function authorizedImagesExtensions(staff) {
-  return authorizesAllExtensions(staff)
+function authorizedImagesExtensions(staff, siteSettings) {
+  return authorizesAllExtensions(staff, siteSettings)
     ? "png, jpg, jpeg, gif, svg, ico"
-    : imagesExtensions(staff).join(", ");
+    : imagesExtensions(staff, siteSettings).join(", ");
 }
 
-export function authorizesAllExtensions(staff) {
+export function authorizesAllExtensions(staff, siteSettings) {
   return (
-    Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0 ||
-    (Discourse.SiteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 &&
-      staff)
+    siteSettings.authorized_extensions.indexOf("*") >= 0 ||
+    (siteSettings.authorized_extensions_for_staff.indexOf("*") >= 0 && staff)
   );
 }
 
-export function authorizesOneOrMoreExtensions(staff) {
-  if (authorizesAllExtensions(staff)) return true;
+export function authorizesOneOrMoreExtensions(staff, siteSettings) {
+  if (authorizesAllExtensions(staff, siteSettings)) return true;
 
   return (
-    Discourse.SiteSettings.authorized_extensions.split("|").filter(ext => ext)
-      .length > 0
+    siteSettings.authorized_extensions.split("|").filter(ext => ext).length > 0
   );
 }
 
-export function authorizesOneOrMoreImageExtensions(staff) {
-  if (authorizesAllExtensions(staff)) return true;
-  return imagesExtensions(staff).length > 0;
+export function authorizesOneOrMoreImageExtensions(staff, siteSettings) {
+  if (authorizesAllExtensions(staff, siteSettings)) return true;
+  return imagesExtensions(staff, siteSettings).length > 0;
 }
 
 export function isImage(path) {
@@ -210,23 +217,23 @@ function uploadTypeFromFileName(fileName) {
   return isImage(fileName) ? "image" : "attachment";
 }
 
-export function allowsImages(staff) {
+export function allowsImages(staff, siteSettings) {
   return (
-    authorizesAllExtensions(staff) ||
-    IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions(staff))
+    authorizesAllExtensions(staff, siteSettings) ||
+    IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions(staff, siteSettings))
   );
 }
 
-export function allowsAttachments(staff) {
+export function allowsAttachments(staff, siteSettings) {
   return (
-    authorizesAllExtensions(staff) ||
-    authorizedExtensions(staff).split(", ").length >
-      imagesExtensions(staff).length
+    authorizesAllExtensions(staff, siteSettings) ||
+    authorizedExtensions(staff, siteSettings).split(", ").length >
+      imagesExtensions(staff, siteSettings).length
   );
 }
 
-export function uploadIcon(staff) {
-  return allowsAttachments(staff) ? "upload" : "far-image";
+export function uploadIcon(staff, siteSettings) {
+  return allowsAttachments(staff, siteSettings) ? "upload" : "far-image";
 }
 
 function imageMarkdown(upload) {
@@ -259,7 +266,7 @@ export function getUploadMarkdown(upload) {
   }
 }
 
-export function displayErrorForUpload(data) {
+export function displayErrorForUpload(data, siteSettings) {
   if (data.jqXHR) {
     switch (data.jqXHR.status) {
       // cancelled by the user
@@ -269,7 +276,7 @@ export function displayErrorForUpload(data) {
       // entity too large, usually returned from the web server
       case 413:
         const type = uploadTypeFromFileName(data.files[0].name);
-        const max_size_kb = Discourse.SiteSettings[`max_${type}_size_kb`];
+        const max_size_kb = siteSettings[`max_${type}_size_kb`];
         bootbox.alert(I18n.t("post.errors.file_too_large", { max_size_kb }));
         return;
 

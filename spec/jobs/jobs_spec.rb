@@ -143,14 +143,18 @@ describe Jobs do
   describe 'enqueue_at' do
     it 'calls enqueue_in for you' do
       freeze_time
-      Jobs.expects(:enqueue_in).with(3 * 60 * 60, :eat_lunch, {}).returns(true)
-      Jobs.enqueue_at(3.hours.from_now, :eat_lunch, {})
+
+      expect_enqueued_with(job: :process_post, at: 3.hours.from_now) do
+        Jobs.enqueue_at(3.hours.from_now, :process_post, {})
+      end
     end
 
     it 'handles datetimes that are in the past' do
       freeze_time
-      Jobs.expects(:enqueue_in).with(0, :eat_lunch, {}).returns(true)
-      Jobs.enqueue_at(3.hours.ago, :eat_lunch, {})
+
+      expect_enqueued_with(job: :process_post, at: Time.zone.now) do
+        Jobs.enqueue_at(3.hours.ago, :process_post, {})
+      end
     end
   end
 

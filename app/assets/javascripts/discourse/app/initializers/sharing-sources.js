@@ -45,9 +45,7 @@ export default {
         const body = quote ? `${quote} \n\n ${link}` : link;
         return (
           "mailto:?to=&subject=" +
-          encodeURIComponent(
-            "[" + Discourse.SiteSettings.title + "] " + title
-          ) +
+          encodeURIComponent("[" + siteSettings.title + "] " + title) +
           "&body=" +
           encodeURIComponent(body)
         );

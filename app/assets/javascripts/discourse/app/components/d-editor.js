@@ -15,7 +15,7 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { siteDir } from "discourse/lib/text-direction";
 import {
   determinePostReplaceSelection,
-  clipboardData,
+  clipboardHelpers,
   safariHacksDisabled,
   caretPosition,
   inCodeBlock
@@ -231,6 +231,7 @@ export default Component.extend({
   showLink: true,
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
+  isEditorFocused: false,
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
@@ -456,7 +457,6 @@ export default Component.extend({
         } else {
           $editorInput.autocomplete({ cancel: true });
           this.setProperties({
-            isEditorFocused: $("textarea.d-editor-input").is(":focus"),
             emojiPickerIsActive: true
           });
 
@@ -863,7 +863,10 @@ export default Component.extend({
     }
 
     const isComposer = $("#reply-control .d-editor-input").is(":focus");
-    let { clipboard, canPasteHtml, canUpload } = clipboardData(e, isComposer);
+    let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
+      siteSettings: this.siteSettings,
+      canUpload: isComposer
+    });
 
     let plainText = clipboard.getData("text/plain");
     let html = clipboard.getData("text/html");
@@ -941,7 +944,6 @@ export default Component.extend({
         return;
       }
 
-      this.set("isEditorFocused", $("textarea.d-editor-input").is(":focus"));
       this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
     },
 
@@ -1052,6 +1054,14 @@ export default Component.extend({
           );
         }
       }
+    },
+
+    focusIn() {
+      this.set("isEditorFocused", true);
+    },
+
+    focusOut() {
+      this.set("isEditorFocused", false);
     }
   }
 });

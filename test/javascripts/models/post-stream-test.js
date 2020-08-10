@@ -247,6 +247,23 @@ QUnit.test("findPostIdForPostNumber", assert => {
   assert.equal(postStream.findPostIdForPostNumber(8), 60, "it respects gaps");
 });
 
+QUnit.test("fillGapBefore", assert => {
+  const postStream = buildStream(1234, [60]);
+  sandbox.stub(postStream, "findPostsByIds").returns(Promise.resolve([]));
+  let post = postStream.store.createRecord("post", { id: 60, post_number: 60 });
+  postStream.set("gaps", {
+    before: { 60: [51, 52, 53, 54, 55, 56, 57, 58, 59] }
+  });
+
+  postStream.fillGapBefore(post, [51, 52, 53, 54, 55, 56, 57, 58, 59]);
+
+  assert.deepEqual(
+    postStream.stream,
+    [51, 52, 53, 54, 55, 60],
+    "partial results are included in the stream"
+  );
+});
+
 QUnit.test("toggleParticipant", assert => {
   const postStream = buildStream(1236);
   sandbox.stub(postStream, "refresh").returns(Promise.resolve());

@@ -290,7 +290,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def should_update_last_seen?
-    return false if Discourse.pg_readonly_mode?
+    return false unless can_write?
 
     api = !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
 
@@ -309,17 +309,19 @@ class Auth::DefaultCurrentUserProvider
         raise Discourse::InvalidAccess
       end
 
-      api_key.update_columns(last_used_at: Time.zone.now)
+      if can_write?
+        api_key.update_columns(last_used_at: Time.zone.now)
 
-      if client_id.present? && client_id != api_key.client_id
+        if client_id.present? && client_id != api_key.client_id
 
-        # invalidate old dupe api key for client if needed
-        UserApiKey
-          .where(client_id: client_id, user_id: api_key.user_id)
-          .where('id <> ?', api_key.id)
-          .destroy_all
+          # invalidate old dupe api key for client if needed
+          UserApiKey
+            .where(client_id: client_id, user_id: api_key.user_id)
+            .where('id <> ?', api_key.id)
+            .destroy_all
 
-        api_key.update_columns(client_id: client_id)
+          api_key.update_columns(client_id: client_id)
+        end
       end
 
       api_key.user
@@ -347,7 +349,7 @@ class Auth::DefaultCurrentUserProvider
           SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
         end
 
-      if user
+      if user && can_write?
         api_key.update_columns(last_used_at: Time.zone.now)
       end
 
@@ -387,6 +389,10 @@ class Auth::DefaultCurrentUserProvider
       GlobalSetting.max_admin_api_reqs_per_key_per_minute,
       60
     ).performed!
+  end
+
+  def can_write?
+    @can_write ||= !Discourse.pg_readonly_mode?
   end
 
 end

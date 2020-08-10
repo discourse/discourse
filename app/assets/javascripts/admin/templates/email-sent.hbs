@@ -19,9 +19,9 @@
       </tr>
 
       {{#each model as |l|}}
-        <tr>
-          <td>{{format-date l.created_at}}</td>
-          <td>
+        <tr class="sent-email-item">
+          <td class="sent-email-date">{{format-date l.created_at}}</td>
+          <td class="sent-email-username">
             {{#if l.user}}
               {{#link-to "adminUser" l.user}}{{avatar l.user imageSize="tiny"}}{{/link-to}}
               {{#link-to "adminUser" l.user}}{{l.user.username}}{{/link-to}}
@@ -29,12 +29,12 @@
               &mdash;
             {{/if}}
           </td>
-          <td>
+          <td class="sent-email-address">
             {{#if l.bounced}}{{d-icon "redo" title="admin.email.bounced"}}{{/if}}
             <a href="mailto:{{l.to_address}}">{{l.to_address}}</a>
           </td>
-          <td>{{l.email_type}}</td>
-          <td class="post-link">
+          <td class="sent-email-type">{{l.email_type}}</td>
+          <td class="sent-email-post-link">
             {{#if l.post_url}}
               <a href={{l.post_url}}>{{l.post_description}}</a>
               <span class="reply-key">{{l.reply_key}}</span>

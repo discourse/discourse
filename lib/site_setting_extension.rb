@@ -378,8 +378,8 @@ module SiteSettingExtension
   end
 
   HOSTNAME_SETTINGS ||= %w{
-    disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains
-    email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains
+    disabled_image_download_domains blocked_onebox_domains exclude_rel_nofollow_domains
+    blocked_email_domains allowed_email_domains allowed_spam_host_domains
   }
 
   def filter_value(name, value)

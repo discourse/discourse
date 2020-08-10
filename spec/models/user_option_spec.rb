@@ -122,12 +122,17 @@ describe UserOption do
               user.stubs(:last_seen_at).returns(5.minutes.ago)
             end
 
+            after do
+              $redis.flushdb
+            end
+
             it "should have a reason for the first visit" do
               freeze_time do
                 delay = SiteSetting.active_user_rate_limit_secs / 2
-                Jobs.expects(:enqueue_in).with(delay, :update_top_redirection, user_id: user.id, redirected_at: Time.zone.now)
 
-                expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.new_user'), period: :monthly)
+                expect_enqueued_with(job: :update_top_redirection, args: { user_id: user.id, redirected_at: Time.zone.now.to_s }, at: Time.zone.now + delay) do
+                  expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.new_user'), period: :monthly)
+                end
               end
             end
 

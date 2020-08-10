@@ -13,7 +13,7 @@ class Typepad < Thor
     require './config/environment'
 
     backup_settings = {}
-    %w(email_domains_blacklist).each do |s|
+    %w(blocked_email_domains).each do |s|
       backup_settings[s] = SiteSetting.get(s)
     end
 
@@ -53,7 +53,7 @@ class Typepad < Thor
     end
 
     RateLimiter.disable
-    SiteSetting.email_domains_blacklist = ""
+    SiteSetting.blocked_email_domains = ""
 
     puts "Importing #{entries.size} entries"
 

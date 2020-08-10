@@ -52,6 +52,7 @@ class TopicQuery
          state
          search
          q
+         f
          group_name
          tags
          match_all_tags
@@ -806,7 +807,7 @@ class TopicQuery
       end
     end
 
-    if (filter = options[:filter]) && @user
+    if (filter = (options[:filter] || options[:f])) && @user
       action =
         if filter == "bookmarked"
           PostActionType.types[:bookmark]
@@ -823,6 +824,33 @@ class TopicQuery
                            )', user_id: @user.id,
                                action: action
                            )
+      end
+
+      if filter == "tracked"
+        sql = +<<~SQL
+          topics.category_id IN (
+            SELECT cu.category_id FROM category_users cu
+            WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
+          )
+        SQL
+
+        if SiteSetting.tagging_enabled
+          sql << <<~SQL
+            OR topics.id IN (
+              SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (
+                SELECT tu.tag_id
+                FROM tag_users tu
+                WHERE tu.user_id = :user_id AND tu.notification_level >= :tracking
+              )
+            )
+          SQL
+        end
+
+        result = result.where(
+          sql,
+          user_id: @user.id,
+          tracking: NotificationLevels.all[:tracking]
+        )
       end
     end
 
@@ -890,7 +918,7 @@ class TopicQuery
 
     # if viewing the topic list for a muted tag, show all the topics
     if !opts[:no_tags] && opts[:tags].present?
-      return list if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', opts[:tags].first).exists?
+      return list if TagUser.lookup(user, :muted).joins(:tag).where('lower(tags.name) = ?', opts[:tags].first.downcase).exists?
     end
 
     if SiteSetting.remove_muted_tags_from_latest == 'always'

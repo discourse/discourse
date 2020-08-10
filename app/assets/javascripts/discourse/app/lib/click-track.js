@@ -35,7 +35,7 @@ export function isValidLink($link) {
 }
 
 export default {
-  trackClick(e) {
+  trackClick(e, siteSettings) {
     // right clicks are not tracked
     if (e.which === 3) {
       return true;
@@ -65,7 +65,8 @@ export default {
     if ($link.hasClass("attachment")) {
       // Warn the user if they cannot download the file.
       if (
-        Discourse.SiteSettings.prevent_anons_from_downloading_files &&
+        siteSettings &&
+        siteSettings.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
         bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));

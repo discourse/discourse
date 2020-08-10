@@ -109,27 +109,19 @@ RSpec.describe TopicTimer, type: :model do
           :toggle_topic_closed, topic_timer_id: topic_timer.id
         )
 
-        Jobs.expects(:enqueue_at).with(
-          3.days.from_now, :toggle_topic_closed,
-          topic_timer_id: topic_timer.id,
-          state: true
-        )
-
-        topic_timer.update!(execute_at: 3.days.from_now, created_at: Time.zone.now)
+        expect_enqueued_with(job: :toggle_topic_closed, args: { topic_timer_id: topic_timer.id, state: true }, at: 3.days.from_now) do
+          topic_timer.update!(execute_at: 3.days.from_now, created_at: Time.zone.now)
+        end
       end
 
       describe 'when execute_at is smaller than the current time' do
         it 'should enqueue the job immediately' do
-          Jobs.expects(:enqueue_at).with(
-            Time.zone.now, :toggle_topic_closed,
-            topic_timer_id: topic_timer.id,
-            state: true
-          )
-
-          topic_timer.update!(
-            execute_at: Time.zone.now - 1.hour,
-            created_at: Time.zone.now - 2.hour
-          )
+          expect_enqueued_with(job: :toggle_topic_closed, args: { topic_timer_id: topic_timer.id, state: true }, at: Time.zone.now) do
+            topic_timer.update!(
+              execute_at: Time.zone.now - 1.hour,
+              created_at: Time.zone.now - 2.hour
+            )
+          end
         end
       end
     end
@@ -140,14 +132,9 @@ RSpec.describe TopicTimer, type: :model do
           :toggle_topic_closed, topic_timer_id: topic_timer.id
         )
 
-        Jobs.expects(:enqueue_at).with(
-          topic_timer.execute_at,
-          :toggle_topic_closed,
-          topic_timer_id: topic_timer.id,
-          state: true
-        )
-
-        topic_timer.update!(user: admin)
+        expect_enqueued_with(job: :toggle_topic_closed, args: { topic_timer_id: topic_timer.id, state: true }, at: topic_timer.execute_at) do
+          topic_timer.update!(user: admin)
+        end
       end
     end
 

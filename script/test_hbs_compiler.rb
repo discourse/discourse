@@ -6,6 +6,7 @@ template = <<~HBS
   {{actions-summary-item attrs=as}}
   {{attach widget="actions-summary-item" attrs=as}}
   {{testing value="hello"}}
+  {{date "today"}}
 HBS
 
 ctx = MiniRacer::Context.new(timeout: 15000)

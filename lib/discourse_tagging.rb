@@ -423,7 +423,9 @@ module DiscourseTagging
       target_tag.synonyms << Tag.create(name: name)
     end
     successful = existing.select { |t| !t.errors.present? }
-    TopicTag.where(tag_id: successful.map(&:id)).update_all(tag_id: target_tag.id)
+    synonyms_ids = successful.map(&:id)
+    TopicTag.where(topic_id: target_tag.topics.with_deleted, tag_id: synonyms_ids).delete_all
+    TopicTag.where(tag_id: synonyms_ids).update_all(tag_id: target_tag.id)
     Scheduler::Defer.later "Update tag topic counts" do
       Tag.ensure_consistency!
     end

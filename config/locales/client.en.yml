@@ -1,19 +1,3 @@
-# encoding: utf-8
-#
-# This file contains content for the client portion of Discourse, sent out
-# to the Javascript app.
-#
-# To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-#
-# To validate this YAML file after you change it, please paste it into http://yamllint.com/
-
 en:
   js:
     number:
@@ -319,7 +303,11 @@ en:
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
       list_permission_denied: "You do not have permission to view this user's bookmarks."
-      delete_when_reminder_sent: "Delete this bookmark when the reminder notification is sent."
+      auto_delete_preference:
+        label: "Automatically delete"
+        never: "Never"
+        when_reminder_sent: "Once the reminder is sent"
+        on_owner_reply: "After I reply to this topic"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
@@ -622,9 +610,11 @@ en:
       member_added: "Added"
       member_requested: "Requested at"
       add_members:
-        title: "Add Members"
-        description: "Manage the membership of this group"
-        usernames: "Usernames"
+        title: "Add members to %{group_name}"
+        description: "You can also paste in a comma separated list."
+        usernames: "Enter usernames or email addresses"
+        input_placeholder: "Usernames or emails"
+        notify_users: "Notify users"
       requests:
         title: "Requests"
         reason: "Reason"
@@ -666,6 +656,22 @@ en:
         membership:
           title: Membership
           access: Access
+        categories:
+          title: Categories
+          long_title: "Category default notifications"
+          description: "When users are added to this group, their category notification settings will be set to these defaults. Afterwards, they can change them."
+          watched_categories_instructions: "Automatically watch all topics in these categories. Group members will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+          tracked_categories_instructions: "Automatically track all topics in these categories. A count of new posts will appear next to the topic."
+          watching_first_post_categories_instructions: "Users will be notified of the first post in each new topic in these categories."
+          muted_categories_instructions: "Users will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest topics pages."
+        tags:
+          title: Tags
+          long_title: "Tags default notifications"
+          description: "When users are added to this group, their tag notification settings will be set to these defaults. Afterwards, they can change them."
+          watched_tags_instructions: "Automatically watch all topics with these tags. Group members will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+          tracked_tags_instructions: "Automatically track all topics with these tags. A count of new posts will appear next to the topic."
+          watching_first_post_tags_instructions: "Users will be notified of the first post in each new topic with these tags."
+          muted_tags_instructions: "Users will not be notified of anything about new topics with these tags, and they will not appear in latest."
         logs:
           title: "Logs"
           when: "When"
@@ -815,6 +821,7 @@ en:
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
+      muted: "Muted categories"
       topic_sentence:
         one: "%{count} topic"
         other: "%{count} topics"
@@ -918,6 +925,8 @@ en:
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
+      dark_mode: "Dark Mode"
+      dark_mode_enable: "Enable automatic dark mode color scheme"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
@@ -975,6 +984,9 @@ en:
       users: "Users"
       muted_users: "Muted"
       muted_users_instructions: "Suppress all notifications and PMs from these users."
+      allowed_pm_users: "Allowed"
+      allowed_pm_users_instructions: "Only allow PMs from these users."
+      allow_private_messages_from_specific_users: "Only allow specific users to send me personal messages"
       ignored_users: "Ignored"
       ignored_users_instructions: "Suppress all posts, notifications, and PMs from these users."
       tracked_topics_link: "Show"
@@ -1943,6 +1955,9 @@ en:
       watching_first_post: "<span>New Topic</span> %{description}"
       membership_request_accepted: "Membership accepted in '%{group_name}'"
       membership_request_consolidated: "%{count} open membership requests for '%{group_name}'"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - completed"
 
       group_message_summary:
         one: "%{count} message in your %{group_name} inbox"
@@ -1984,6 +1999,8 @@ en:
         liked_consolidated: "new likes"
         post_approved: "post approved"
         membership_request_consolidated: "new membership requests"
+        reaction: "new reaction"
+        votes_released: "Vote was released"
 
     upload_selector:
       title: "Add an image"
@@ -2455,6 +2472,7 @@ en:
         success: "We've invited that user to participate in this message."
         success_group: "We've invited that group to participate in this message."
         error: "Sorry, there was an error inviting that user."
+        not_allowed: "Sorry, that user can't be invited."
         group_name: "group name"
 
       controls: "Topic Controls"
@@ -3175,6 +3193,8 @@ en:
         profile: "%{shortcut} Profile"
         messages: "%{shortcut} Messages"
         drafts: "%{shortcut} Drafts"
+        next: "%{shortcut} Next Topic"
+        previous: "%{shortcut} Previous Topic"
       navigation:
         title: "Navigation"
         jump: "%{shortcut} Go to post #"
@@ -3490,6 +3510,9 @@ en:
           view_table: "table"
           view_graph: "graph"
           refresh_report: "Refresh Report"
+          daily: Daily
+          monthly: Monthly
+          weekly: Weekly
           dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
@@ -3619,7 +3642,6 @@ en:
           allowed_parameters: Allowed Parameters
           optional_allowed_parameters: Allowed Parameters (optional)
           any_parameter: (any parameter)
-
 
       web_hooks:
         title: "Webhooks"
@@ -4229,6 +4251,12 @@ en:
             add_email: "add email"
             update_email: "update email"
             destroy_email: "destroy email"
+            topic_closed: "topic closed"
+            topic_opened: "topic opened"
+            topic_archived: "topic archived"
+            topic_unarchived: "topic unarchived"
+            post_staff_note_create: "add staff note"
+            post_staff_note_destroy: "destroy staff note"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -4242,7 +4270,7 @@ en:
           domain: "Domain"
         screened_ips:
           title: "Screened IPs"
-          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
+          description: 'IP addresses that are being watched. Use "Allow" to allowlist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
           roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
           rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
@@ -4764,7 +4792,7 @@ en:
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"
-        path_whitelist: "Path Whitelist"
+        allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
         add_host: "Add Host"
@@ -4777,9 +4805,9 @@ en:
         embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
         embed_unlisted: "Imported topics will be unlisted until there is a reply."
-        embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
-        embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
-        embed_classname_whitelist: "Allowed CSS class names"
+        allowed_embed_selectors: "CSS selector for elements that are allowed in embeds"
+        blocked_embed_selectors: "CSS selector for elements that are removed from embeds"
+        allowed_embed_classnames: "Allowed CSS class names"
         save: "Save Embedding Settings"
 
       permalink:

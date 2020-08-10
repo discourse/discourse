@@ -1,10 +1,10 @@
 // Styles for /admin/logs
 
 .web-hook-events {
-  border-bottom: dotted 1px $primary-low-mid;
+  border-bottom: dotted 1px var(--primary-low-mid);
   .heading-container {
     width: 100%;
-    background-color: $primary-low;
+    background-color: var(--primary-low);
   }
   .col.heading {
     font-weight: bold;
@@ -19,7 +19,7 @@
   }
   .ember-list-item-view {
     width: 100%;
-    border-top: solid 1px $primary-low;
+    border-top: solid 1px var(--primary-low);
   }
 }
 
@@ -155,12 +155,12 @@
     display: inline-flex;
     align-items: center;
     margin-bottom: 0.25em;
-    background-color: $primary-low;
+    background-color: var(--primary-low);
     padding: 3px 10px;
-    color: $primary;
+    color: var(--primary);
     &:hover {
-      color: $primary;
-      background-color: $primary-low;
+      color: var(--primary);
+      background-color: var(--primary-low);
     }
     .label {
       font-weight: bold;
@@ -239,10 +239,10 @@ table.screened-ip-addresses {
     display: flex;
     align-items: baseline;
     .d-icon-check {
-      color: $success;
+      color: var(--success);
     }
     .d-icon-ban {
-      color: $danger;
+      color: var(--danger);
     }
     .d-icon {
       margin-right: 0.25em;
@@ -363,10 +363,10 @@ table.screened-ip-addresses {
   cursor: pointer;
   .d-icon {
     margin-right: 0.25em;
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
   &:hover .d-icon {
-    color: $danger;
+    color: var(--danger);
   }
 }
 

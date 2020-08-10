@@ -272,6 +272,61 @@ describe PostDestroyer do
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::NEW_TOPIC).count).to eq(1)
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count).to eq(1)
         end
+
+        context "recovered by user with access to moderate topic category" do
+          fab!(:review_user) { Fabricate(:user) }
+
+          before do
+            SiteSetting.enable_category_group_moderation = true
+            review_group = Fabricate(:group)
+            review_category = Fabricate(:category, reviewable_by_group_id: review_group.id)
+            @reply.topic.update!(category: review_category)
+            review_group.users << review_user
+          end
+
+          context "when the post has a Reviewable record" do
+            before do
+              ReviewableFlaggedPost.needs_review!(target: @reply, created_by: Fabricate(:user))
+            end
+
+            def changes_deleted_at_to_nil
+              PostDestroyer.new(Discourse.system_user, @reply).destroy
+              @reply.reload
+              expect(@reply.user_deleted).to eq(false)
+              expect(@reply.deleted_at).not_to eq(nil)
+
+              PostDestroyer.new(review_user, @reply).recover
+              @reply.reload
+              expect(@reply.deleted_at).to eq(nil)
+            end
+
+            it "changes deleted_at to nil" do
+              changes_deleted_at_to_nil
+            end
+
+            context "when the topic is deleted" do
+              before do
+                @reply.topic.trash!
+              end
+              it "changes deleted_at to nil" do
+                changes_deleted_at_to_nil
+              end
+            end
+          end
+
+          context "when the post does not have a Reviewable record" do
+            it "does not recover the post" do
+              PostDestroyer.new(Discourse.system_user, @reply).destroy
+              @reply.reload
+              expect(@reply.user_deleted).to eq(false)
+              expect(@reply.deleted_at).not_to eq(nil)
+
+              PostDestroyer.new(review_user, @reply).recover
+              @reply.reload
+              expect(@reply.deleted_at).not_to eq(nil)
+            end
+          end
+        end
       end
     end
   end
@@ -420,6 +475,53 @@ describe PostDestroyer do
         author.reload
         expect(author.post_count).to eq(post_count - 1)
         expect(UserHistory.count).to eq(history_count + 1)
+      end
+    end
+
+    context "deleted by user with access to moderate topic category" do
+      fab!(:review_user) { Fabricate(:user) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        review_group = Fabricate(:group)
+        review_category = Fabricate(:category, reviewable_by_group_id: review_group.id)
+        post.topic.update!(category: review_category)
+        review_group.users << review_user
+      end
+
+      context "when the post has a reviewable" do
+        it "deletes the post" do
+          author = post.user
+          reply = create_post(topic_id: post.topic_id, user: author)
+          ReviewableFlaggedPost.needs_review!(target: reply, created_by: Fabricate(:user))
+
+          post_count = author.post_count
+          history_count = UserHistory.count
+
+          PostDestroyer.new(review_user, reply).destroy
+
+          expect(reply.deleted_at).to be_present
+          expect(reply.deleted_by).to eq(review_user)
+
+          author.reload
+          expect(author.post_count).to eq(post_count - 1)
+          expect(UserHistory.count).to eq(history_count + 1)
+        end
+      end
+
+      context "when the post does not have a reviewable" do
+        it "does not delete the post" do
+          author = post.user
+          reply = create_post(topic_id: post.topic_id, user: author)
+
+          post_count = author.post_count
+          history_count = UserHistory.count
+
+          PostDestroyer.new(review_user, reply).destroy
+
+          expect(reply.deleted_at).not_to be_present
+          expect(reply.deleted_by).to eq(nil)
+        end
       end
     end
 
@@ -649,8 +751,9 @@ describe PostDestroyer do
     fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
     it "should feature the users again (in case they've changed)" do
-      Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id))
-      PostDestroyer.new(moderator, post).destroy
+      expect_enqueued_with(job: :feature_topic_users, args: { topic_id: post.topic_id }) do
+        PostDestroyer.new(moderator, post).destroy
+      end
     end
 
     describe 'with a reply' do

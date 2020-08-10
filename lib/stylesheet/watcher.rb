@@ -4,15 +4,6 @@ require 'listen'
 
 module Stylesheet
   class Watcher
-    REDIS_KEY = "dev_last_used_theme_id"
-
-    def self.theme_id=(v)
-      Discourse.redis.set(REDIS_KEY, v)
-    end
-
-    def self.theme_id
-      (Discourse.redis.get(REDIS_KEY) || SiteSetting.default_theme_id).to_i
-    end
 
     def self.watch(paths = nil)
       watcher = new(paths)
@@ -70,7 +61,7 @@ module Stylesheet
               paths.map! do |long|
                 plugin_name = nil
                 plugins_paths.each do |plugin_path|
-                  if long.include?(plugin_path)
+                  if long.include?("#{plugin_path}/")
                     plugin_name = File.basename(plugin_path)
                     break
                   end
@@ -106,7 +97,11 @@ module Stylesheet
       targets = target ? [target] : ["desktop", "mobile", "admin"]
       Stylesheet::Manager.clear_core_cache!(targets)
       message = targets.map! do |name|
-        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
+        msgs = []
+        active_themes.each do |theme_id|
+          msgs << Stylesheet::Manager.stylesheet_data(name.to_sym, theme_id)
+        end
+        msgs
       end.flatten!
       MessageBus.publish '/file-change', message
     end
@@ -116,9 +111,12 @@ module Stylesheet
       targets = [plugin_name]
       targets.push("#{plugin_name}_mobile") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :mobile)
       targets.push("#{plugin_name}_desktop") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :desktop)
-
       message = targets.map! do |name|
-        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
+        msgs = []
+        active_themes.each do |theme_id|
+          msgs << Stylesheet::Manager.stylesheet_data(name.to_sym, theme_id)
+        end
+        msgs
       end.flatten!
       MessageBus.publish '/file-change', message
     end
@@ -144,5 +142,10 @@ module Stylesheet
         end
       end
     end
+
+    def active_themes
+      @active_themes ||= Theme.user_selectable.pluck(:id)
+    end
+
   end
 end

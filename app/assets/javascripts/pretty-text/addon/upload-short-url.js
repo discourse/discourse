@@ -144,8 +144,8 @@ function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
             let hostRegex = new RegExp("//" + window.location.host, "g");
             url = url.replace(hostRegex, "");
           }
-          let fullUrl = window.location.origin + url;
-          upload.src = fullUrl;
+
+          upload.src = url;
 
           // this is necessary, otherwise because of the src change the
           // video/audio just doesn't bother loading!
@@ -154,8 +154,8 @@ function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
           // set the url and text for the <a> tag within the <video/audio> tag
           const link = upload.parentElement.querySelector("a");
           if (link) {
-            link.href = fullUrl;
-            link.textContent = fullUrl;
+            link.href = url;
+            link.textContent = url;
           }
         });
 

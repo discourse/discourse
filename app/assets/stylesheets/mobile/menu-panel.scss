@@ -18,7 +18,7 @@
 }
 
 .user-menu .quick-access-panel.quick-access-profile li:not(.show-all) {
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
 
   a {
     // accounts for menu "ears" 4px + border 1px

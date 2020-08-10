@@ -25,7 +25,7 @@ describe Search do
 
       expect do
         topic.update!(title: "harpi is the new title")
-      end.to change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
       expect(post.post_search_data.reload.search_data).to match(/harpi/)
     end
@@ -33,8 +33,8 @@ describe Search do
     it 'should update posts index when topic category changes' do
       expect do
         topic.update!(category: Fabricate(:category))
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
     end
 
     it 'should update posts index when topic tags changes' do
@@ -44,8 +44,8 @@ describe Search do
       expect do
         DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name])
         topic.save!
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
       expect(topic.tags).to eq([tag])
     end
@@ -77,10 +77,10 @@ describe Search do
     it 'should update posts index when category name changes' do
       expect do
         category.update!(name: 'some new name')
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
-      expect(post3.post_search_data.version).to eq(SearchIndexer::INDEX_VERSION)
+      expect(post3.post_search_data.version).to eq(SearchIndexer::POST_INDEX_VERSION)
     end
   end
 
@@ -395,7 +395,11 @@ describe Search do
   end
 
   context 'posts' do
-    let(:post) { Fabricate(:post) }
+    fab!(:post) do
+      SearchIndexer.enable
+      Fabricate(:post)
+    end
+
     let(:topic) { post.topic }
 
     let!(:reply) do
@@ -406,27 +410,49 @@ describe Search do
     end
 
     let(:expected_blurb) do
-      "...quire content longer than the typical test post raw content. It really is some long content, folks. elephant"
+      "hundred characters to satisfy any test conditions that require content longer than the typical test post raw content. It really is some long content, folks. <span class=\"search-highlight\">elephant</span>"
     end
 
     it 'returns the post' do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
       result = Search.execute('elephant',
         type_filter: 'topic',
         include_blurbs: true
       )
 
-      expect(result.posts).to contain_exactly(reply)
-      expect(result.blurb(reply)).to eq(expected_blurb)
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+
+      post = result.posts.first
+
+      expect(result.blurb(post)).to eq(expected_blurb)
+      expect(post.topic_title_headline).to eq(topic.fancy_title)
+    end
+
+    it "it limits the headline to #{Search::MAX_LENGTH_FOR_HEADLINE} characters" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      reply.update!(raw: "#{'a' * Search::MAX_LENGTH_FOR_HEADLINE} #{reply.raw}")
+
+      result = Search.execute('elephant')
+
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+
+      post = result.posts.first
+
+      expect(post.headline.include?('elephant')).to eq(false)
     end
 
     it 'returns the right post and blurb for searches with phrase' do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
       result = Search.execute('"elephant"',
         type_filter: 'topic',
         include_blurbs: true
       )
 
-      expect(result.posts).to contain_exactly(reply)
-      expect(result.blurb(reply)).to eq(expected_blurb)
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+      expect(result.blurb(result.posts.first)).to eq(expected_blurb)
     end
 
     it 'applies a small penalty to closed topic when ranking' do
@@ -487,6 +513,18 @@ describe Search do
       ])
     ensure
       Discourse.cache.clear
+    end
+
+    it 'allows staff to search for whispers' do
+      post.update!(post_type: Post.types[:whisper], raw: 'this is a tiger')
+
+      results = Search.execute('tiger')
+
+      expect(results.posts).to eq([])
+
+      results = Search.execute('tiger', guardian: Guardian.new(admin))
+
+      expect(results.posts).to eq([post])
     end
   end
 
@@ -1670,4 +1708,24 @@ describe Search do
     end
   end
 
+  context 'plugin extensions' do
+    let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced filter with length more than 50 chars') }
+    let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced filter') }
+
+    it 'allows to define custom filter' do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+      Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
+        posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+      end
+      expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
+    end
+
+    it 'allows to define custom order' do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+      Search.advanced_order(:chars) do |posts|
+        posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+      end
+      expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    end
+  end
 end

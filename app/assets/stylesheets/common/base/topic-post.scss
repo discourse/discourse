@@ -2,8 +2,8 @@ $quote-share-maxwidth: 150px;
 
 .button-count.has-pending {
   span {
-    background-color: $danger;
-    color: $secondary;
+    background-color: var(--danger);
+    color: var(--secondary);
     border-radius: 10px;
     padding: 0.25em 0.5em;
     display: inline-block;
@@ -25,9 +25,9 @@ $quote-share-maxwidth: 150px;
     content: "";
     background: linear-gradient(
       to right,
-      $primary-very-low 10%,
-      $primary-low 28%,
-      $primary-very-low 43%
+      var(--primary-very-low) 10%,
+      var(--primary-low) 28%,
+      var(--primary-very-low) 43%
     );
     height: 45px;
     width: 700px;
@@ -58,12 +58,12 @@ $quote-share-maxwidth: 150px;
     @include ellipsis;
     vertical-align: middle;
     a {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: var(--primary-high-or-secondary-low);
     }
   }
   .fa {
     font-size: $font-down-1;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
   }
   .svg-icon-title {
     margin-left: 3px;
@@ -72,7 +72,7 @@ $quote-share-maxwidth: 150px;
   .new_user a,
   .user-title,
   .user-title a {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
   }
 }
 
@@ -125,16 +125,10 @@ $quote-share-maxwidth: 150px;
   }
 
   ins {
-    background-color: dark-light-choose(
-      $success-low,
-      scale-color($success, $lightness: -60%)
-    );
+    background-color: var(--success-low);
   }
   del {
-    background-color: dark-light-choose(
-      $danger-low,
-      scale-color($danger, $lightness: -60%)
-    );
+    background-color: var(--danger-low);
   }
   // Prevents users from breaking posts with tag nesting
   big {
@@ -170,7 +164,7 @@ $quote-share-maxwidth: 150px;
 // add staff color
 .moderator {
   .regular > .cooked {
-    background-color: dark-light-choose($highlight-low, $highlight-medium);
+    background-color: var(--highlight-low-or-medium);
     padding: 10px;
     img:not(.thumbnail) {
       max-width: 100%;
@@ -179,9 +173,9 @@ $quote-share-maxwidth: 150px;
   }
   .clearfix > .topic-meta-data > .names {
     span.user-title {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: var(--primary-high-or-secondary-low);
       a {
-        background-color: dark-light-choose($highlight-low, $highlight-medium);
+        background-color: var(--highlight-low-or-medium);
         padding-left: 4px;
         padding-right: 4px;
       }
@@ -216,7 +210,7 @@ aside.quote {
   .title {
     @include post-aside;
 
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: var(--primary-high-or-secondary-low);
     padding: 12px 12px 0px 12px;
     // blockquote is underneath this and has top margin
     .avatar {
@@ -245,11 +239,11 @@ blockquote {
 
 .quote-controls,
 .quote-controls .d-icon {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+  color: var(--primary-low-mid-or-secondary-high);
 }
 
 .cooked .highlight {
-  background-color: $tertiary-low;
+  background-color: var(--tertiary-low);
   padding: 2px;
   margin: -2px;
 }
@@ -259,7 +253,7 @@ blockquote {
 }
 
 .post-action {
-  color: $primary-medium;
+  color: var(--primary-medium);
   .undo-action,
   .act-action {
     margin-left: 5px;
@@ -268,7 +262,7 @@ blockquote {
 
 .small-user-list .unknown {
   display: inline-block;
-  background-color: $primary-low;
+  background-color: var(--primary-low);
   width: 25px;
   height: 25px;
   border-radius: 50%;
@@ -303,25 +297,21 @@ blockquote {
   position: absolute;
   z-index: z("dropdown");
   opacity: 0.9;
-  background-color: dark-light-choose(
-    blend-primary-secondary(60%),
-    blend-primary-secondary(30%)
-  );
+  background-color: var(--secondary-high);
 
   &.visible {
-    display: block;
+    display: inline-flex;
   }
 
   .btn,
   .btn:hover,
   .d-icon,
   .btn:hover .d-icon {
-    color: dark-light-choose($secondary, $primary);
+    color: var(--secondary-or-primary);
   }
 
   .insert-quote + .quote-sharing {
-    border-left: 1px solid
-      dark-light-choose(rgba($secondary, 0.4), rgba($primary, 0.4));
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   .quote-sharing {
@@ -369,8 +359,8 @@ blockquote {
 }
 
 .topic-map {
-  background: $primary-very-low;
-  border: 1px solid $primary-low;
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
   border-top: none; // would cause double top border
 
   .avatars {
@@ -397,7 +387,7 @@ blockquote {
   }
 
   section {
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
   }
 
   ul {
@@ -407,7 +397,7 @@ blockquote {
 
   h3 {
     margin-bottom: 4px;
-    color: $primary;
+    color: var(--primary);
     line-height: $line-height-large;
     font-weight: normal;
     font-size: $font-0;
@@ -415,7 +405,7 @@ blockquote {
 
   h4 {
     margin: 1px 0 2px 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
     font-weight: normal;
     font-size: $font-down-1;
     line-height: $line-height-small;
@@ -423,7 +413,7 @@ blockquote {
 
   span.domain {
     font-size: $font-down-2;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
   }
 
   td {
@@ -471,7 +461,7 @@ blockquote {
     }
 
     .user {
-      border: 1px solid $primary-low;
+      border: 1px solid var(--primary-low);
       border-radius: 0.25em;
       padding: 0;
       margin: 0.125em 0.25em 0.125em 0;
@@ -481,10 +471,10 @@ blockquote {
 
       .user-link,
       .group-link {
-        color: $primary-high;
+        color: var(--primary-high);
 
         &:hover {
-          color: $primary;
+          color: var(--primary);
         }
       }
 
@@ -582,7 +572,7 @@ blockquote {
   width: 16px;
   height: 16px;
   bottom: -3px;
-  color: $primary;
+  color: var(--primary);
   &.rounded {
     background-size: 12px 12px;
     border-radius: 8px;
@@ -620,7 +610,7 @@ blockquote {
     overflow: hidden;
   }
   .group-request {
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
   }
   &.highlighted {
@@ -651,11 +641,11 @@ blockquote {
 
   .wiki,
   .last-wiki-edit {
-    color: $wiki;
+    color: var(--wiki);
   }
 
   &.via-email {
-    color: dark-light-choose($primary-low-mid, $secondary-high);
+    color: var(--primary-low-mid-or-secondary-high);
   }
   &.raw-email {
     cursor: pointer;
@@ -667,8 +657,8 @@ pre {
     word-wrap: normal;
     display: block;
     padding: 0.5em;
-    color: $primary;
-    background: blend-primary-secondary(5%);
+    color: var(--primary);
+    background: var(--blend-primary-secondary-5);
     max-height: 500px;
   }
 }
@@ -690,7 +680,7 @@ pre {
 
     &.copied {
       .d-icon {
-        color: $tertiary;
+        color: var(--tertiary);
       }
     }
 
@@ -703,12 +693,12 @@ pre {
 
 kbd {
   align-items: center;
-  background: dark-light-choose(#fafafa, #303030);
-  border: 1px solid dark-light-choose(#d0d0d0, #505050);
+  border: 1px solid var(--primary-low-mid);
+  background: var(--primary-very-low);
   border-bottom-width: 2px;
   border-radius: 3px;
   box-sizing: border-box;
-  color: $primary;
+  color: var(--primary);
   display: inline-flex;
   font-size: $font-down-1;
   justify-content: center;
@@ -737,7 +727,7 @@ blockquote > *:last-child {
 
 .gap {
   padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
-  color: dark-light-choose($primary-medium, $secondary-high);
+  color: var(--primary-med-or-secondary-high);
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
@@ -760,7 +750,7 @@ blockquote > *:last-child {
       text-align: left;
       padding-bottom: 2px;
       font-weight: bold;
-      color: $primary;
+      color: var(--primary);
     }
   }
 
@@ -773,7 +763,7 @@ blockquote > *:last-child {
   display: flex;
   align-items: center;
   max-width: 758px;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   .topic-avatar {
     align-self: flex-start;
     padding: 0.7em 0;
@@ -784,21 +774,16 @@ blockquote > *:last-child {
       font-size: 2em;
       width: 45px;
       text-align: center;
-      color: $primary-low-mid;
+      color: var(--primary-low-mid);
     }
   }
 
   .small-action.deleted {
-    background-color: dark-light-diff(
-      rgba($danger, 0.7),
-      $secondary,
-      50%,
-      -60%
-    );
+    background-color: var(--danger-low-mid);
   }
 
   .small-action-desc.timegap {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 
   .small-action-desc {
@@ -810,7 +795,7 @@ blockquote > *:last-child {
     text-transform: uppercase;
     font-weight: bold;
     font-size: $font-down-1;
-    color: $primary-medium;
+    color: var(--primary-medium);
     min-width: 0; // Allows flex container to shrink
 
     .custom-message {
@@ -858,38 +843,37 @@ blockquote > *:last-child {
   .topic-body {
     .cooked {
       font-style: italic;
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 }
 
 a.mention {
-  align-items: baseline;
-  display: inline-flex;
+  display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
   font-weight: bold;
   font-size: 0.93em;
-  color: dark-light-choose($primary-high, $secondary-low);
-  padding: 1px 4px;
-  background: $primary-low;
+  color: var(--primary-high-or-secondary-low);
+  padding: 0 4px 1px;
+  background: var(--primary-low);
   border-radius: 8px;
 }
 
 span.mention {
   font-weight: bold;
   font-size: 0.93em;
-  color: $primary;
+  color: var(--primary);
 }
 
 a.mention-group {
   font-weight: bold;
   font-size: 0.93em;
-  color: $primary;
+  color: var(--primary);
 
   &.notify,
   .small-action-desc & {
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: var(--primary-high-or-secondary-low);
     padding: 2px 4px;
-    background: $primary-low;
+    background: var(--primary-low);
     border-radius: 8px;
   }
 }
@@ -917,7 +901,7 @@ a.mention-group {
     }
 
     > .d-icon {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: var(--primary-med-or-secondary-med);
       margin-right: 6px;
       font-size: $font-0;
       line-height: $line-height-large;
@@ -933,7 +917,7 @@ a.mention-group {
 
     > span.help {
       display: inline-block;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: var(--primary-med-or-secondary-med);
       font-size: $font-down-1;
       font-style: italic;
       line-height: $line-height-large;
@@ -948,8 +932,8 @@ a.mention-group {
 
 .broken-image {
   display: inline-flex;
-  color: dark-light-choose($primary-low-mid, $secondary-high);
-  border: 1px solid $primary-low;
+  color: var(--primary-low-mid-or-secondary-high);
+  border: 1px solid var(--primary-low);
   font-size: $font-up-5;
 
   .d-icon {
@@ -976,9 +960,9 @@ a.mention-group {
     article.boxed {
       .select-posts {
         button.select-post {
-          background-color: $tertiary;
-          color: $secondary;
-          border-color: $tertiary;
+          background-color: var(--tertiary);
+          color: var(--secondary);
+          border-color: var(--tertiary);
         }
       }
       .topic-body {
@@ -998,8 +982,8 @@ a.mention-group {
       height: 100px;
       button {
         margin-left: 8px;
-        background-color: $primary-low;
-        color: $primary;
+        background-color: var(--primary-low);
+        color: var(--primary);
         box-shadow: shadow("dropdown");
       }
     }
@@ -1030,8 +1014,8 @@ a.mention-group {
 
 .post-notice {
   align-items: center;
-  background-color: $tertiary-low;
-  border-top: 1px solid $primary-low;
+  background-color: var(--tertiary-low);
+  border-top: 1px solid var(--primary-low);
   display: flex;
   max-width: calc(
     #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
@@ -1041,10 +1025,10 @@ a.mention-group {
 
   &.old {
     background-color: unset;
-    color: $primary-medium;
+    color: var(--primary-medium);
 
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 
@@ -1054,7 +1038,7 @@ a.mention-group {
 
   .d-icon {
     font-size: 2em;
-    color: $primary-high;
+    color: var(--primary-high);
     margin-right: 0.65em;
   }
 }
@@ -1097,7 +1081,7 @@ a.mention-group {
     margin: 1em 0;
 
     .reason {
-      color: $primary-high;
+      color: var(--primary-high);
       display: inline-flex;
       margin: 0;
       align-items: center;

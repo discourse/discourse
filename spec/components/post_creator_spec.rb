@@ -221,23 +221,18 @@ describe PostCreator do
       end
 
       it 'passes the invalidate_oneboxes along to the job if present' do
-        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
         creator.opts[:invalidate_oneboxes] = true
         creator.create
+
+        expect(job_enqueued?(job: :process_post, args: { invalidate_oneboxes: true })).to eq(true)
       end
 
       it 'passes the image_sizes along to the job if present' do
-        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:notify_mailing_list_subscribers, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:post_alert, has_key(:post_id))
-        Jobs.expects(:enqueue).with(:update_topic_upload_security, has_key(:topic_id))
-        Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
-        creator.opts[:image_sizes] = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
+        image_sizes = { 'http://an.image.host/image.jpg' => { 'width' => 17, 'height' => 31 } }
+        creator.opts[:image_sizes] = image_sizes
         creator.create
+
+        expect(job_enqueued?(job: :process_post, args: { image_sizes: image_sizes })).to eq(true)
       end
 
       it 'assigns a category when supplied' do
@@ -651,6 +646,29 @@ describe PostCreator do
         expect(Post.count).to eq(1)
         expect(Topic.count).to eq(1)
         expect(post.reply_to_post_number).to eq(4)
+      end
+    end
+
+    context "when the user has bookmarks with auto_delete_preference on_owner_reply" do
+      before do
+        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        Fabricate(:bookmark, topic: topic, user: user, auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+        TopicUser.create!(topic: topic, user: user, bookmarked: true)
+      end
+
+      it "deletes the bookmarks, but not the ones without an auto_delete_preference" do
+        Fabricate(:bookmark, topic: topic, user: user)
+        Fabricate(:bookmark, user: user)
+        creator.create
+        expect(Bookmark.where(user: user).count).to eq(2)
+        expect(TopicUser.find_by(topic: topic, user: user).bookmarked).to eq(true)
+      end
+
+      context "when there are no bookmarks left in the topic" do
+        it "sets TopicUser.bookmarked to false" do
+          creator.create
+          expect(TopicUser.find_by(topic: topic, user: user).bookmarked).to eq(false)
+        end
       end
     end
 
@@ -1319,6 +1337,141 @@ describe PostCreator do
       end
     end
 
+  end
+
+  context "private message to user in allow list" do
+    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:allowed_user) { Fabricate(:user) }
+
+    context "when post author is allowed" do
+      let!(:allowed_pm_user) { Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender) }
+
+      it 'should succeed' do
+        allowed_user.user_option.update!(enable_allowed_pm_users: true)
+
+        pc = PostCreator.new(
+          sender,
+          title: 'this message is to someone who is in my allow list!',
+          raw: "you will have to see this because I'm in your allow list!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{allowed_user.username}"
+        )
+
+        expect(pc).to be_valid
+        expect(pc.errors).to be_blank
+      end
+    end
+
+    context "when personal messages are disabled" do
+      let!(:allowed_pm_user) { Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender) }
+
+      it 'should fail' do
+        allowed_user.user_option.update!(allow_private_messages: false)
+        allowed_user.user_option.update!(enable_allowed_pm_users: true)
+
+        pc = PostCreator.new(
+          sender,
+          title: 'this message is to someone who is in my allow list!',
+          raw: "you will have to see this because I'm in your allow list!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{allowed_user.username}"
+        )
+
+        expect(pc).not_to be_valid
+        expect(pc.errors.full_messages).to contain_exactly(
+                                             I18n.t(:not_accepting_pms, username: allowed_user.username)
+                                           )
+      end
+    end
+  end
+
+  context "private message to user not in allow list" do
+    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:allowed_user) { Fabricate(:user) }
+    fab!(:not_allowed_user) { Fabricate(:user) }
+
+    context "when post author is not allowed" do
+      let!(:allowed_pm_user) { Fabricate(:allowed_pm_user, user: not_allowed_user, allowed_pm_user: allowed_user) }
+
+      it 'should fail' do
+        not_allowed_user.user_option.update!(enable_allowed_pm_users: true)
+
+        pc = PostCreator.new(
+          sender,
+          title: 'this message is to someone who is not in my allowed list!',
+          raw: "you will have to see this even if you don't want message from me!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{not_allowed_user.username}"
+        )
+
+        expect(pc).not_to be_valid
+        expect(pc.errors.full_messages).to contain_exactly(
+                                             I18n.t(:not_accepting_pms, username: not_allowed_user.username)
+                                           )
+      end
+
+      it 'should succeed when not enabled' do
+        not_allowed_user.user_option.update!(enable_allowed_pm_users: false)
+
+        pc = PostCreator.new(
+          sender,
+          title: 'this message is to someone who is not in my allowed list!',
+          raw: "you will have to see this even if you don't want message from me!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{not_allowed_user.username}"
+        )
+
+        expect(pc).to be_valid
+        expect(pc.errors).to be_blank
+      end
+    end
+  end
+
+  context "private message when post author is admin who is not in allow list" do
+    fab!(:staff_user) { Fabricate(:admin) }
+    fab!(:allowed_user) { Fabricate(:user) }
+    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:allowed_pm_user) { Fabricate(:allowed_pm_user, user: staff_user, allowed_pm_user: allowed_user) }
+
+    it 'succeeds if the user is staff' do
+      pc = PostCreator.new(
+        staff_user,
+        title: 'this message is to someone who did not allow me!',
+        raw: "you will have to see this even if you did not allow me!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{not_allowed_user.username}"
+      )
+      expect(pc).to be_valid
+      expect(pc.errors).to be_blank
+    end
+  end
+
+  context "private message to multiple users and one is not allowed" do
+    fab!(:sender) { Fabricate(:evil_trout) }
+    fab!(:allowed_user) { Fabricate(:user) }
+    fab!(:not_allowed_user) { Fabricate(:user) }
+
+    context "when post author is not allowed" do
+      let!(:allowed_pm_user) { Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender) }
+
+      it 'should fail' do
+        allowed_user.user_option.update!(enable_allowed_pm_users: true)
+        not_allowed_user.user_option.update!(enable_allowed_pm_users: true)
+
+        pc = PostCreator.new(
+          sender,
+          title: 'this message is to someone who is not in my allowed list!',
+          raw: "you will have to see this even if you don't want message from me!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{allowed_user.username},#{not_allowed_user.username}"
+        )
+
+        expect(pc).not_to be_valid
+        expect(pc.errors.full_messages).to contain_exactly(
+                                             I18n.t(:not_accepting_pms, username: not_allowed_user.username)
+                                           )
+      end
+    end
   end
 
   context "private message recipients limit (max_allowed_message_recipients) reached" do

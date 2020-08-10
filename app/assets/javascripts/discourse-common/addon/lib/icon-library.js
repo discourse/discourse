@@ -41,7 +41,9 @@ const REPLACEMENTS = {
   "notification.group_message_summary": "users",
   "notification.post_approved": "check",
   "notification.membership_request_accepted": "user-plus",
-  "notification.membership_request_consolidated": "users"
+  "notification.membership_request_consolidated": "users",
+  "notification.reaction": "bell",
+  "notification.votes_released": "plus"
 };
 
 export function replaceIcon(source, destination) {
@@ -86,11 +88,6 @@ export function convertIconClass(icon) {
     .replace("fas fa-", "")
     .replace("fa-", "")
     .trim();
-}
-
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.iconNode = iconNode;
 }
 
 export function registerIconRenderer(renderer) {

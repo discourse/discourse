@@ -21,7 +21,10 @@ export default Component.extend({
         name,
         username,
         userPath: userPath(username),
-        avatar: renderAvatar(user, { imageSize: "large" }),
+        avatar: renderAvatar(user, {
+          imageSize: "large",
+          siteSettings: this.siteSettings
+        }),
         title: user.title || "",
         formatedUsername: formatUsername(username),
         prioritizeName,

@@ -172,6 +172,7 @@ RSpec.configure do |config|
   config.include IntegrationHelpers, type: :request
   config.include WebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
+  config.include SidekiqHelpers
   config.mock_framework = :mocha
   config.order = 'random'
   config.infer_spec_type_from_file_location!

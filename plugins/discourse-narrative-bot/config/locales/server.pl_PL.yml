@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pl_PL:
   site_settings:
@@ -53,34 +52,34 @@ pl_PL:
         > :game_die: %{results}
     quote:
       trigger: "cytuj"
-      '1':
+      "1":
         quote: "Każda przeszkoda to nowa szansa"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Wolności nie warto mieć, jeśli nie oznacza ona wolności do popełniania błędów."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Nie płacz, ponieważ się to skończyło - uśmiechnij się, bo miało to miejsce."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Jeśli chcesz, aby coś zostało zrobione dobrze - zrób to sam."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Uwierz w to że możesz, jesteś już w połowie drogi."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Życie jest jak pudełko czekoladek. Nigdy nie wiesz na co trafisz."
         author: "Mama Forresta Gumpa"
-      '7':
+      "7":
         quote: "To mały krok dla człowieka, ale wielki krok dla ludzkości."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Rób codziennie jedną rzecz, której się boisz."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Błędy są zawsze wybaczalne, jeśli osoba może się do nich przyznać."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Każda rzecz, którą umysł ludzki może pojąć i w nią uwierzyć, może on osiągnąć."
         author: "Napoleon Hill"
       results: |-
@@ -88,26 +87,26 @@ pl_PL:
     magic_8_ball:
       trigger: "fortuna"
       answers:
-        '1': "Jest to pewne"
-        '2': "Jest to zdecydowane, więc"
-        '3': "Bez zająknięcia"
-        '4': "Tak zdecydowanie"
-        '5': "Możesz na tym polegać"
-        '6': "Tak jak ja to widzę, tak"
-        '7': "Najpewniej"
-        '8': "Perspektywy są dobre"
-        '9': "Tak"
-        '10': "Wszystkie znaki wskazują na to, że tak"
-        '11': "Odpowiedź niejasna, spróbuj ponownie"
-        '12': "Spytaj ponownie później"
-        '13': "Lepiej, abym Ci teraz nie mówił"
-        '14': "Nie mogę teraz tego przewidzieć"
-        '15': "Skoncentruj się i spytaj ponownie"
-        '16': "Nie licz na to"
-        '17': "Moja odpowiedź to nie"
-        '18': "Moje źródła donoszą, że nie"
-        '19': "Perspektywy są złe"
-        '20': "Bardzo trudne do przewidzenia"
+        "1": "Jest to pewne"
+        "2": "Jest to zdecydowane, więc"
+        "3": "Bez zająknięcia"
+        "4": "Tak zdecydowanie"
+        "5": "Możesz na tym polegać"
+        "6": "Tak jak ja to widzę, tak"
+        "7": "Najpewniej"
+        "8": "Perspektywy są dobre"
+        "9": "Tak"
+        "10": "Wszystkie znaki wskazują na to, że tak"
+        "11": "Odpowiedź niejasna, spróbuj ponownie"
+        "12": "Spytaj ponownie później"
+        "13": "Lepiej, abym Ci teraz nie mówił"
+        "14": "Nie mogę teraz tego przewidzieć"
+        "15": "Skoncentruj się i spytaj ponownie"
+        "16": "Nie licz na to"
+        "17": "Moja odpowiedź to nie"
+        "18": "Moje źródła donoszą, że nie"
+        "19": "Perspektywy są złe"
+        "20": "Bardzo trudne do przewidzenia"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -117,6 +116,11 @@ pl_PL:
       random_mention:
         reply: |-
           Hej! Aby dowiedzieć się, co mogę zrobić, powiedz `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Obecnie wiem, jak zrobić następujące rzeczy:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Uruchamia interaktywny samouczek tylko dla Ciebie, w osobistej wiadomości. `{name-of-tutorial}` może być jednym z: `%{tracks}`.
         bot_actions: |-
           `@ %{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -267,8 +271,6 @@ pl_PL:
           Wiesz co robić. Śmiało, **oflaguj ten post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> jako nieodpowiedni!
         reply: |-
           [Nasz zespół](%{base_uri}/groups/staff) zostanie prywatnie poinformowany o Twojej fladze. W przypadku, gdy wystarczająca liczba członków społeczności oflaguje ten sam wpis, zostanie on automatycznie ukryty ze względów ostrożności (Jako żę tak naprawdę nie napisałem niczego nieodpowiedniego :angel:, po prostu usunąłem flagę ze swojego wpisu),
-        not_found: |-
-          O nie, mój nieodpowiedni wpis nie został jeszcze oflagowany. :worried: Czy możesz oznaczyć post jako nieodpowiedni, używając flagi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nie zapomnij użyć przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, by wyświetlić więcej opcji przy dla danego wpisu.
       search:
         instructions: |-
           _psst_ …Ukryłem niespodziankę w tym wątku. Jeśli chcesz podjąć wyzwanie, **wybierz ikonę szukania** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> w prawym górnym rogu &#8599;, by jej poszukać.

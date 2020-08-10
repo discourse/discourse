@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sl:
   dates:
@@ -18,12 +17,25 @@ sl:
       long: "%B %-d, %Y, %l:%M%P"
       no_day: "%B %Y"
   date:
-    month_names: [~, Januar, Februar, Marec, April, Maj, Junij, Julij, Avgust, September, Oktober, November, December]
+    month_names:
+    - null
+    - Januar
+    - Februar
+    - Marec
+    - April
+    - Maj
+    - Junij
+    - Julij
+    - Avgust
+    - September
+    - Oktober
+    - November
+    - December
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Teme"
   posts: "prispevkov"
@@ -43,7 +55,7 @@ sl:
       no_body: "(ni vsebine)"
       missing_attachment: "(priponka %{filename} manjka)"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "je omejeno na %{max} znakov; vnesli ste %{length}."
@@ -52,8 +64,8 @@ sl:
       has_already_been_used: "je že v uporabi"
       inclusion: ni vključeno na seznam
       invalid: je neveljavno
-      less_than: "mora biti manj kot %{count}"
-      less_than_or_equal_to: "mora biti manj ali enako kot %{count}"
+      less_than: mora biti manj kot %{count}
+      less_than_or_equal_to: mora biti manj ali enako kot %{count}
       not_a_number: ni številka
       not_an_integer: mora biti celo število
       odd: mora biti liho število
@@ -76,12 +88,9 @@ sl:
     template:
       header:
         one: "%{count} napaka preprečuje tej %{model} da se shrani"
-        two: "%{count} napaki preprečujeta tej %{model} da se shrani"
-        few: "%{count} napake preprečujejo tej %{model} da se shrani"
-        other: "%{count} napak preprečuje tej %{model} da se shrani"
-  activemodel:
-    errors:
-      <<: *errors
+        two: ! "%{count} napaki preprečujeta tej %{model} da se shrani"
+        few: ! "%{count} napake preprečujejo tej %{model} da se shrani"
+        other: ! "%{count} napak preprečuje tej %{model} da se shrani"
   invite:
     not_found_template: |
       <p>Vaše povabilo na <a href="%{base_url}">%{site_name}</a> je bilo že sprejeto.</p>
@@ -251,7 +260,6 @@ sl:
         featured_link: "Izpostavljena povezava"
         category_id: "Kategorija"
     errors:
-      <<: *errors
       models:
         user:
           attributes:
@@ -266,6 +274,7 @@ sl:
               same_as_password: "je enako kot vaše geslo."
             name:
               same_as_password: "je enako kot vaše geslo."
+      <<: *errors
   uncategorized_category_name: "Neuvrščeno"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
@@ -616,8 +625,8 @@ sl:
   user_api_key:
     otp_description: 'Hočete dovoliti "%{application_name}" da dostopa do te strani?'
     otp_confirmation:
-      confirm_title: "Nadaljujte na %{site_name}"
-      logging_in_as: "Prijava kot %{username}"
+      confirm_title: Nadaljujte na %{site_name}
+      logging_in_as: Prijava kot %{username}
       confirm_button: Zaključi prijavo
   flags:
     errors:
@@ -1324,14 +1333,6 @@ sl:
     spam_post_blocked:
       title: "Neželen prispevek blokiran"
       subject_template: "Prispevek novega uporabnika %{username} je blokiran zaradi ponovljenih povezav"
-      text_body_template: |
-        To je samodejno sporočilo.
-
-        Nov uporabnik [%{username}](%{user_url}) je večkrat poskusil ustvariti več prispevkov z povezavami na %{domains}, ampak ti prispevki so bili blokirani, zato da preprečimo neželeno vsebino. Uporabnik še vedno lahko ustvari nove prispevke, ki ne vsebujejo povezave na %{domains}.
-
-        [Preverite uporabnika](%{user_url}).
-
-        To se lahko spremeni preko `newuser_spam_host_threshold` in `white_listed_spam_host_domains` nastavitev sistema. Razmislite, da bi dodali %{domains} na belo listo, če naj bi bile izvzete.
     unsilenced:
       title: "Od-utišan"
       subject_template: "Uporabniški račun ni več na čakanju"
@@ -1760,22 +1761,22 @@ sl:
         Ta značka vam je podeljena, ko prvič uredite en wiki prispevek.
     basic_user:
       name: Osnovni uporabnik
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljene</a> vse osnovne funkcije skupnosti"
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Dodeljene</a> vse osnovne funkcije skupnosti
       long_description: |
         Ta značka vam je podeljena, ko dosežete nivo zaupanja 1. Hvala, ker ste vztrajali in prebrali nekaj tem in tako spoznali kaj sploh je naša skupnost. Omejitve za nove uporabnike so umaknjene: omogočeni so vam vsi pomembni mehanizmi, kot so zasebna sporočila, prijave, urejanje wiki in možnost objave več slik in povezav.
     member:
       name: Polnopraven član
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> povabila, skupinska zasebna sporočila, več všečkov"
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Dodeljena</a> povabila, skupinska zasebna sporočila, več všečkov
       long_description: |
         Ta značka vam je podeljena, ko dosežete nivo zaupanja 2. Hvala, ker ste sodelovali nekaj tednov in tako resnično postali član skupnosti. Sedaj lahko pošiljate povabila novim uporabnikom na svoji uporabniški strani, ustvarite skupinska zasebna sporočila in lahko podelite več všečkov vsak dan.
     regular:
       name: Redni član
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> možnost menjave kategorije, preimenovanja, sledenja povezav, wiki, več všečkov"
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Dodeljena</a> možnost menjave kategorije, preimenovanja, sledenja povezav, wiki, več všečkov
       long_description: |
         Ta značka vam je podeljena, ko dosežete nivo zaupanja 3. Hvala, ker ste reden udeleženec naše skupnosti že nekaj mesecev. Ste eden bolj aktivnih bralcev in zanesljiv sodelavec, ki naredi našo skupnost enkratno. Sedaj lahko menjate kategorije temam, preimenujete teme, lahko uporabljate bolj zmogljive načine prijave, dostopate do zasebne lože in podelite več všečkov vsak dan.
     leader:
       name: Vodja
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> možnost globalnega urejanja, pripenjanja, zapiranja, arhiviranja, razdruževanja in združevanja ter več všečkov"
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Dodeljena</a> možnost globalnega urejanja, pripenjanja, zapiranja, arhiviranja, razdruževanja in združevanja ter več všečkov
       long_description: |
         Ta značka vam je podeljena, ko dosežete nivo zaupanja 4. Ste eden od vodilnih v skupnosti, izbran s strani osebja, ker z svojimi dejanji in besedami dajete pozitiven zgled ostalim v skupnosti. Sedaj lahko urejate vse prispevke in uporabljate osnovne mooderatorska dejanja kot so globalno pripenjanje, zapiranje, skrivanje, izločevanje, arhiviranje, razdruževanje in združevanje tem.
     welcome:
@@ -1785,12 +1786,12 @@ sl:
         Ta značka vam je podeljena, ko vaš prispevek prejme prvi všeček. Čestitamo, prispevali ste nekaj, kar ostali člani skupnosti ocenjujejo kot zanimivo, uporabno ali zabavno!
     autobiographer:
       name: Avtobiograf
-      description: "Izpolnili ste podatke v svojem <a href=\"%{base_uri}/my/preferences/profile\">uporabniškem profilu</a>"
+      description: Izpolnili ste podatke v svojem <a href="%{base_uri}/my/preferences/profile">uporabniškem profilu</a>
       long_description: |
         Ta značka vam je podeljena, ker ste izpolnili podatke v <a href="%{base_uri}/my/preferences/profile">svojem uporabniškem profilu</a> in ste izbrali profilno sliko. Tako ste omogočili skupnosti, da bolje spozna kdo ste in kaj so vas zanima, kar omogoča bolj povezano skupnost. Pridruži se!
     anniversary:
       name: Obletnica
-      description: "Aktiven uporabnik že eno leto, objavil vsaj en prispevek"
+      description: Aktiven uporabnik že eno leto, objavil vsaj en prispevek
       long_description: |
         Ta značka vam je podeljena, ker ste uporabnik že eno leto in ste objavili vsaj en prispevek v tem letu. Hvala, ker ostajate z nami in prispevate skupnosti. Ne bi mogli brez vas.
     nice_post:
@@ -1879,7 +1880,7 @@ sl:
         Ta značka vam je podeljena, ker ste prvič citirali prispevek v svojem odgovoru. Citiranje bistvenih delov prejšnih prispevkov v svojem odgovoru pomaga ohranjati pogovor povezan in znotraj teme. Najlažji način za citiranje je da označite del besedila in potem pritisnete gumb Odgovori. Citirajte velikodušno!
     read_guidelines:
       name: Prebrali pravila skupnosti
-      description: "Prebrali <a href=\"%{base_uri}/guidelines\">pravila skupnosti</a>"
+      description: Prebrali <a href="%{base_uri}/guidelines">pravila skupnosti</a>
       long_description: |
         Ta značka je podeljena, ker ste <a href="%{base_uri}/guidelines">prebrali pravila skupnosti</a>. Sledenje in deljenje teh enostavnih pravil omogoča, da zgradimo varno, zabavno in obstojno skupnost za vse. Vedno imejte v mislih, da je na drugi strani zaslona človek, podoben kot ste sami. Bodite prijazni!
     reader:
@@ -2166,3 +2167,6 @@ sl:
         title: "Izbriši uporabnika"
         confirm: "Ali ste prepričani, da hočete izbrisati uporabnika? To bo izbrisalo vse njihove prispevke in blokiralo njihov e-naslov in IP naslov."
         reason: "Izbriši preko vrste za pregled"
+  activemodel:
+    errors:
+      <<: *errors

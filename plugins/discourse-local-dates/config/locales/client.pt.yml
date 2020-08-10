@@ -1,14 +1,42 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pt:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: Hoje %{time}
+        tomorrow: Amanha %{time}
+        yesterday: Ontem %{time}
+        countdown:
+          passed: a data já passou
+      title: Inserir data / hora
       create:
         form:
+          insert: Inserir
+          advanced_mode: Modo Avançado
+          simple_mode: Modo Simples
+          format_description: "Formato utilizado para exibir a data para o utilizador. Utilize  \"\\T\\Z\" para exibir o fuso horário do utilizador em palavras (Europa / Paris)"
+          timezones_title: Fuso horário a exibir
+          timezones_description: O fuso horário será utilizado para exibir as datas na pré-visualização e "fallback".
+          recurring_title: Recorrência
+          recurring_description: "Defina a recorrência de um evento. Também pode editar manualmente a opção recorrente gerada pelo formulário e utilizar uma das seguintes chaves: anos, trimestres, meses, semanas, dias, horas, minutos, segundos, milissegundos."
+          recurring_none: Nenhuma recorrência
+          invalid_date: Data inválida. Certifique-se que a data e a hora estão corretos.
           date_title: Data
-          time_title: Tempo
+          time_title: Hora
+          format_title: Formato da data
+          timezone: Zona Horária
+          until: Até...
+          recurring:
+            every_day: "Diariamente"
+            every_week: "Semanalmente"
+            every_two_weeks: "Quinzenalmente"
+            every_month: "Mensalmente"
+            every_two_months: "Bimestral"
+            every_three_months: "Trimestral"
+            every_six_months: "Semestral"
+            every_year: "Anualmente"

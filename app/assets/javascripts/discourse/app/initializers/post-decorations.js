@@ -9,9 +9,21 @@ export default {
   initialize(container) {
     withPluginApi("0.1", api => {
       const siteSettings = container.lookup("site-settings:main");
-      api.decorateCooked(highlightSyntax, {
-        id: "discourse-syntax-highlighting"
-      });
+      api.decorateCooked(
+        elem => {
+          return highlightSyntax(elem, siteSettings);
+        },
+        {
+          id: "discourse-syntax-highlighting"
+        }
+      );
+
+      api.decorateCookedElement(
+        elem => {
+          return lightbox(elem, siteSettings);
+        },
+        { id: "discourse-lightbox" }
+      );
       api.decorateCookedElement(lightbox, { id: "discourse-lightbox" });
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCooked(setTextDirections, {
@@ -52,7 +64,7 @@ export default {
               }
             }
           },
-          { id: "safari-video-poster", afterAdopt: true }
+          { id: "safari-video-poster", afterAdopt: true, onlyStream: true }
         );
       }
     });

@@ -47,6 +47,7 @@ export default {
 
     const topicTrackingState = TopicTrackingState.create({
       messageBus: MessageBus,
+      siteSettings,
       currentUser
     });
     app.register("topic-tracking-state:main", topicTrackingState, {
@@ -68,6 +69,7 @@ export default {
     const session = Session.current();
     app.register("session:main", session, { instantiate: false });
     ALL_TARGETS.forEach(t => app.inject(t, "session", "session:main"));
+    app.inject("service", "session", "session:main");
 
     const screenTrack = new ScreenTrack(
       topicTrackingState,

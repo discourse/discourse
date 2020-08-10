@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 cs:
   dates:
@@ -17,12 +16,25 @@ cs:
       date_only: "%-d %B %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, ledna, února, března, dubna, května, června, července, srpna, září, října, listopadu, prosince]
+    month_names:
+    - null
+    - ledna
+    - února
+    - března
+    - dubna
+    - května
+    - června
+    - července
+    - srpna
+    - září
+    - října
+    - listopadu
+    - prosince
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Témata"
   posts: "příspěvky"
@@ -53,7 +65,7 @@ cs:
         topic_closed_error: "Toto se stává, když přijde odpověď k uzavřenému tématu."
       unrecognized_error: "Neznámá chyba"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
@@ -62,24 +74,24 @@ cs:
       accepted: musí být odsouhlasen
       blank: nemůže zůstat prázdné
       present: musí zůstat prázdné
-      confirmation: "neodpovídá %{attribute}"
+      confirmation: ! "neodpovídá %{attribute}"
       empty: nemůže být prázdný
-      equal_to: "musí být roven %{count}"
+      equal_to: musí být roven %{count}
       even: musí být sudý
       exclusion: je rezervováno
-      greater_than: "musí být větší než %{count}"
-      greater_than_or_equal_to: "musí být větší nebo rovno %{count}"
+      greater_than: musí být větší než %{count}
+      greater_than_or_equal_to: musí být větší nebo rovno %{count}
       has_already_been_used: "již byl použit"
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
       is_invalid: "zdá se to být nejasné, je to kompletní věta?"
       contains_censored_words: "obsahuje tato cenzurovaná slova: %{censored_words}"
-      less_than: "musí být menší než %{count}"
-      less_than_or_equal_to: "musí být menší nebo roven %{count}"
+      less_than: musí být menší než %{count}
+      less_than_or_equal_to: musí být menší nebo roven %{count}
       not_a_number: není číslo
       not_an_integer: musí být celé číslo
       odd: musí být lichý
-      record_invalid: "Ověření selhalo: %{errors}"
+      record_invalid: ! "Ověření selhalo: %{errors}"
       restrict_dependent_destroy:
         one: "Nelze odstranit záznam, protože závisející %{record} existuje"
         many: "Nelze smazat záznam protože na něm závisí %{record}."
@@ -100,20 +112,17 @@ cs:
         other: špatná délka (má být %{count} znaků)
       other_than: "musí být jiný než %{count}"
     template:
-      body: "Nastaly problémy s následujícími poli: "
+      body: ! "Nastaly problémy s následujícími poli: "
       header:
         one: "%{count} chyba zamezila uložení modelu %{model}"
-        few: "%{count} chyb zamezilo uložení modelu %{model}"
-        many: "%{count} chyb zamezilo uložení modelu %{model}"
-        other: "%{count} chyb zamezilo uložení modelu %{model}"
+        few: ! "%{count} chyb zamezilo uložení modelu %{model}"
+        many: ! "%{count} chyb zamezilo uložení modelu %{model}"
+        other: ! "%{count} chyb zamezilo uložení modelu %{model}"
     embed:
       load_from_remote: "Při načítání příspěvku nastala chyba."
     site_settings:
       default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
       s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     user_exists: "Netřeba posílat pozvánku na <b>%{email}</b>. Tento email <a href='%{base_path}/u/%{username}/summary'>je veden u tohoto účtu!</a>"
   bulk_invite:
@@ -294,7 +303,6 @@ cs:
       user_profile:
         bio_raw: "O mně"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -345,6 +353,7 @@ cs:
           attributes:
             word:
               too_many: "Příliš mnoho slov pro tuto akci"
+      <<: *errors
   uncategorized_category_name: "Nezařazené"
   vip_category_name: "VIP"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
@@ -567,10 +576,10 @@ cs:
       title: "Poslat @%{username} zprávu"
       long_form: "obeslaný uživatel"
       email_title: 'Váš příspěvek v „%{title}“'
-      email_body: "%{link}\\\n\\\n%{message}\n"
+      email_body: "%{link}\\n\\n%{message}\n"
     notify_moderators:
       title: "Něco jiného"
-      email_body: "%{link}\\\n\\\n%{message}\n"
+      email_body: "%{link}\\n\\n%{message}\n"
     bookmark:
       title: "Založit"
       description: "Přidat záložku k tomuto příspěvku"
@@ -600,7 +609,7 @@ cs:
       title: "Něco jiného"
       long_form: "nahlášeno moderátorům"
       email_title: 'The topic "%{title}" requires moderator attention'
-      email_body: "%{link}\\\n\\\n%{message}\n"
+      email_body: "%{link}\\n\\n%{message}\n"
   archetypes:
     regular:
       title: "Běžné téma"
@@ -623,7 +632,7 @@ cs:
       every_six_months: "každých šest měsíců"
   user_api_key:
     otp_confirmation:
-      confirm_title: "Pokračovat na %{site_name}"
+      confirm_title: Pokračovat na %{site_name}
     scopes:
       session_info: "Číst user session info"
       read: "Číst vše"
@@ -1048,7 +1057,7 @@ cs:
       name: Autor vlastního životopisu
     anniversary:
       name: Výročí
-      description: "Aktivním členem přes rok, přispěl alespoň jednou"
+      description: Aktivním členem přes rok, přispěl alespoň jednou
     nice_topic:
       name: Zdařilé téma
     good_topic:
@@ -1209,3 +1218,6 @@ cs:
         title: "Odmítnout"
       delete_user:
         title: "Smazat uživatele"
+  activemodel:
+    errors:
+      <<: *errors

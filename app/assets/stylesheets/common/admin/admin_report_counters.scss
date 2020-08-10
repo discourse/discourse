@@ -16,7 +16,7 @@
         @include ellipsis;
 
         .d-icon {
-          color: $primary-low-mid;
+          color: var(--primary-low-mid);
           min-width: 14px;
           text-align: center;
         }
@@ -33,20 +33,20 @@
       }
 
       .d-icon-minus {
-        color: $primary-medium;
+        color: var(--primary-medium);
         font-size: $font-down-3;
       }
 
       &.high-trending-up,
       &.trending-up {
         .d-icon {
-          color: $success;
+          color: var(--success);
         }
       }
       &.high-trending-down,
       &.trending-down {
         .d-icon {
-          color: $danger;
+          color: var(--danger);
         }
       }
     }
