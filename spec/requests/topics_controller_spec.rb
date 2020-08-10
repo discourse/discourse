@@ -885,9 +885,11 @@ RSpec.describe TopicsController do
       it 'should allow a group moderator to open a closed topic' do
         topic.update!(closed: true)
 
-        put "/t/#{topic.id}/status.json", params: {
-          status: 'closed', enabled: 'false'
-        }
+        expect do
+          put "/t/#{topic.id}/status.json", params: {
+            status: 'closed', enabled: 'false'
+          }
+        end.to change { topic.reload.posts.count }.by(1)
 
         expect(response.status).to eq(200)
         expect(topic.reload.closed).to eq(false)
@@ -895,9 +897,11 @@ RSpec.describe TopicsController do
       end
 
       it 'should allow a group moderator to archive a topic' do
-        put "/t/#{topic.id}/status.json", params: {
-          status: 'archived', enabled: 'true'
-        }
+        expect do
+          put "/t/#{topic.id}/status.json", params: {
+            status: 'archived', enabled: 'true'
+          }
+        end.to change { topic.reload.posts.count }.by(1)
 
         expect(response.status).to eq(200)
         expect(topic.reload.archived).to eq(true)

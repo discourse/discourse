@@ -159,7 +159,7 @@ class PostCreator
         return false
       end
 
-      unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic) || guardian.can_perform_action_available_to_group_moderators?(@topic))
+      unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
         errors.add(:base, I18n.t(:topic_not_found))
         return false
       end
