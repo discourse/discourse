@@ -289,6 +289,9 @@ describe NewPostManager do
     it "calls custom enqueuing handlers" do
       Reviewable.set_priorities(high: 20.5)
       SiteSetting.reviewable_default_visibility = 'high'
+      SiteSetting.tagging_enabled = true
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
 
       manager = NewPostManager.new(
         topic.user,
