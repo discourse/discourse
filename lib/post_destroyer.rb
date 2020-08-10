@@ -100,6 +100,7 @@ class PostDestroyer
       UserActionManager.topic_created(topic)
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
       StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
+      update_imap_sync(@post, false)
     end
   end
 
@@ -170,7 +171,7 @@ class PostDestroyer
       end
     end
 
-    mark_for_imap_sync(@post) if @post.topic&.deleted_at
+    update_imap_sync(@post, true) if @post.topic&.deleted_at
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients! :deleted if @post.topic
     TopicTrackingState.publish_delete(@post.topic) if @post.topic && @post.post_number == 1
@@ -376,11 +377,11 @@ class PostDestroyer
     end
   end
 
-  def mark_for_imap_sync(post)
+  def update_imap_sync(post, sync)
     return if !SiteSetting.enable_imap
     incoming = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id)
     return if !incoming || !incoming.imap_uid
-    incoming.update(imap_sync: true)
+    incoming.update(imap_sync: sync)
   end
 
 end

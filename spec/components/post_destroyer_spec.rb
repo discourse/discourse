@@ -361,6 +361,14 @@ describe PostDestroyer do
       expect(post.like_count).to eq(2)
       expect(post.custom_fields["deleted_public_actions"]).to be_nil
     end
+
+    it "unmarks the matching incoming email for imap sync" do
+      SiteSetting.enable_imap = true
+      incoming = Fabricate(:incoming_email, imap_sync: true, post: post, topic: post.topic, imap_uid: 99)
+      PostDestroyer.new(moderator, post).recover
+      incoming.reload
+      expect(incoming.imap_sync).to eq(false)
+    end
   end
 
   describe 'basic destroying' do
