@@ -37,7 +37,7 @@ createWidget("menu-panel", {
   tagName: "div.menu-panel",
   template: hbs`
     <div class='panel-body'>
-      <div class='panel-body-contents clearfix'>
+      <div class='panel-body-contents'>
         {{yield}}
       </div>
     </div>

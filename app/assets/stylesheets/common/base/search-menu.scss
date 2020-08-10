@@ -1,4 +1,8 @@
 .search-menu {
+  .menu-panel .panel-body-contents {
+    overflow-y: auto;
+  }
+
   .search-input {
     position: relative;
     padding: 0.5em 3px;
