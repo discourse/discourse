@@ -1642,6 +1642,30 @@ describe Post do
       )
     end
 
+    it "correctly identifies secure uploads" do
+      enable_secure_media_and_s3
+      upload1 = Fabricate(:upload_s3, secure: true)
+      upload2 = Fabricate(:upload_s3, secure: true)
+
+      # Test including domain:
+      upload1_url = UrlHelper.cook_url(upload1.url, secure: true)
+      # Test without domain:
+      upload2_path = URI.parse(UrlHelper.cook_url(upload2.url, secure: true)).path
+
+      post = Fabricate(:post, raw: <<~RAW)
+       <img src="#{upload1_url}"/>
+       <img src="#{upload2_path}"/>
+      RAW
+
+      sha1s = []
+
+      post.each_upload_url do |src, path, sha|
+        sha1s << sha
+      end
+
+      expect(sha1s).to contain_exactly(upload1.sha1, upload2.sha1)
+    end
+
     it "correctly identifies missing uploads with short url" do
       upload = Fabricate(:upload)
       url = upload.short_url
