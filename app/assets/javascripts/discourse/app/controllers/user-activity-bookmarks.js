@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import { scheduleOnce } from "@ember/runloop";
 import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
@@ -6,6 +7,10 @@ import { inject } from "@ember/controller";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import Bookmark from "discourse/models/bookmark";
+import {
+  shouldOpenInNewTab,
+  openLinkInNewTab
+} from "discourse/lib/click-track";
 
 export default Controller.extend({
   application: inject(),
@@ -18,6 +23,19 @@ export default Controller.extend({
   q: null,
 
   queryParams: ["q"],
+
+  init() {
+    this._super(...arguments);
+
+    scheduleOnce("afterRender", function() {
+      $(document).on("click", ".bookmark-list a", function(e) {
+        let link = e.currentTarget;
+        if (shouldOpenInNewTab(link.href)) {
+          openLinkInNewTab(link);
+        }
+      });
+    });
+  },
 
   loadItems() {
     this.setProperties({

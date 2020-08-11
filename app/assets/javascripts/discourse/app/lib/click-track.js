@@ -34,6 +34,36 @@ export function isValidLink($link) {
   );
 }
 
+export function shouldOpenInNewTab(href) {
+  const isInternal = DiscourseURL.isInternal(href);
+  const openExternalInNewTab = User.currentProp("external_links_in_new_tab");
+  return !isInternal && openExternalInNewTab;
+}
+
+export function openLinkInNewTab(link) {
+  let $link = $(link);
+  let href = ($link.attr("href") || $link.data("href") || "").trim();
+  const newWindow = window.open(href, "_blank");
+  newWindow.opener = null;
+  newWindow.focus();
+
+  // Hack to prevent changing current window.location.
+  // e.preventDefault() does not work.
+  if (!$link.data("href")) {
+    $link.addClass("no-href");
+    $link.data("href", $link.attr("href"));
+    $link.attr("href", null);
+    $link.data("auto-route", true);
+
+    later(() => {
+      $link.removeClass("no-href");
+      $link.attr("href", $link.data("href"));
+      $link.data("href", null);
+      $link.data("auto-route", null);
+    }, 50);
+  }
+}
+
 export default {
   trackClick(e, siteSettings) {
     // right clicks are not tracked
@@ -121,33 +151,12 @@ export default {
       }
     }
 
-    const isInternal = DiscourseURL.isInternal(href);
-    const openExternalInNewTab = User.currentProp("external_links_in_new_tab");
-
     if (!wantsNewWindow(e)) {
-      if (!isInternal && openExternalInNewTab) {
-        const newWindow = window.open(href, "_blank");
-        newWindow.opener = null;
-        newWindow.focus();
-
-        // Hack to prevent changing current window.location.
-        // e.preventDefault() does not work.
-        if (!$link.data("href")) {
-          $link.addClass("no-href");
-          $link.data("href", $link.attr("href"));
-          $link.attr("href", null);
-          $link.data("auto-route", true);
-
-          later(() => {
-            $link.removeClass("no-href");
-            $link.attr("href", $link.data("href"));
-            $link.data("href", null);
-            $link.data("auto-route", null);
-          }, 50);
-        }
+      if (shouldOpenInNewTab(href)) {
+        openLinkInNewTab($link);
       } else {
         trackPromise.finally(() => {
-          if (isInternal) {
+          if (DiscourseURL.isInternal(href)) {
             DiscourseURL.routeTo(href);
           } else {
             DiscourseURL.redirectTo(href);
