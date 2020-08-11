@@ -68,23 +68,19 @@ class S3Inventory
               .where("#{table_name}.etag IS NULL")
 
             # marking as verified/not verified
-            id_threshold_clause = model == Upload ? " AND #{model.table_name}.id > #{model::SEEDED_ID_THRESHOLD}" : ""
+            id_threshold_clause = model == Upload ? " AND model_table.id > #{model::SEEDED_ID_THRESHOLD}" : ""
             DB.exec(<<~SQL, inventory_date
               UPDATE #{model.table_name}
-              SET verified = TRUE
-              FROM #{table_name}
-              WHERE #{model.table_name}.etag = #{table_name}.etag
-              AND verified IS NULL
-              AND #{model.table_name}.updated_at < ?
-              #{id_threshold_clause} 
-              SQL
-            )
-            DB.exec(<<~SQL, inventory_date
-              UPDATE #{model.table_name}
-              SET verified = FALSE
-              WHERE verified IS NULL
-              AND #{model.table_name}.updated_at < ?
-              #{id_threshold_clause}
+              SET verified = CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+              FROM #{model.table_name} AS model_table
+              LEFT JOIN #{table_name} AS table_name_alias ON model_table.etag = table_name_alias.etag
+              WHERE model_table.id = #{model.table_name}.id
+              AND model_table.updated_at < ?
+              AND (
+                model_table.verified IS NULL OR
+                model_table.verified <> CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+              )
+               #{id_threshold_clause}
               SQL
             )
 

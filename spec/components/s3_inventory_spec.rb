@@ -72,7 +72,7 @@ describe "S3Inventory" do
       @no_etag = Fabricate(:upload, updated_at: 2.days.ago)
 
       inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
-      inventory.expects(:inventory_date).times(3).returns(Time.now)
+      inventory.expects(:inventory_date).times(2).returns(Time.now)
     end
 
     it "should display missing uploads correctly" do
