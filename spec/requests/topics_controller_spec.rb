@@ -879,15 +879,45 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(topic.reload.closed).to eq(true)
+        expect(topic.posts.last.action_code).to eq('closed.enabled')
+      end
+
+      it 'should allow a group moderator to open a closed topic' do
+        topic.update!(closed: true)
+
+        expect do
+          put "/t/#{topic.id}/status.json", params: {
+            status: 'closed', enabled: 'false'
+          }
+        end.to change { topic.reload.posts.count }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.closed).to eq(false)
+        expect(topic.posts.last.action_code).to eq('closed.disabled')
       end
 
       it 'should allow a group moderator to archive a topic' do
-        put "/t/#{topic.id}/status.json", params: {
-          status: 'archived', enabled: 'true'
-        }
+        expect do
+          put "/t/#{topic.id}/status.json", params: {
+            status: 'archived', enabled: 'true'
+          }
+        end.to change { topic.reload.posts.count }.by(1)
 
         expect(response.status).to eq(200)
         expect(topic.reload.archived).to eq(true)
+        expect(topic.posts.last.action_code).to eq('archived.enabled')
+      end
+
+      it 'should allow a group moderator to unarchive an archived topic' do
+        topic.update!(archived: true)
+
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'archived', enabled: 'false'
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.archived).to eq(false)
+        expect(topic.posts.last.action_code).to eq('archived.disabled')
       end
 
       it 'should not allow a group moderator to pin a topic' do

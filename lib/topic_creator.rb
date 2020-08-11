@@ -165,7 +165,10 @@ class TopicCreator
       end
     else
       valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
-      rollback_from_errors!(topic) unless valid_tags
+      unless valid_tags
+        topic.errors.add(:base, :unable_to_tag)
+        rollback_from_errors!(topic)
+      end
     end
   end
 

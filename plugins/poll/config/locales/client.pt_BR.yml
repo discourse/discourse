@@ -37,9 +37,6 @@ pt_BR:
       group-results:
         title: "Agrupar votos por campo de usuário"
         label: "Mostrar detalhamento"
-      ungroup-results:
-        title: "Combinar todos os votos"
-        label: "Ocultar detalhamento"
       export-results:
         title: "Exportar os resultados da pesquisa"
         label: "Exportar"

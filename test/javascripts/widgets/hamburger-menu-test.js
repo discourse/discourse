@@ -48,20 +48,16 @@ widgetTest("staff menu - not staff", {
   }
 });
 
-widgetTest("staff menu", {
+widgetTest("staff menu - moderator", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
-    this.currentUser.setProperties({
-      moderator: true,
-      reviewable_count: 3
-    });
+    this.currentUser.set("moderator", true);
   },
 
   test(assert) {
     assert.ok(find(".admin-link").length);
     assert.ok(find(".review").length);
-    assert.equal(find(".reviewables").text(), "3");
     assert.ok(!find(".settings-link").length);
   }
 });
@@ -75,21 +71,6 @@ widgetTest("staff menu - admin", {
 
   test(assert) {
     assert.ok(find(".settings-link").length);
-  }
-});
-
-widgetTest("reviewable content", {
-  template: '{{mount-widget widget="hamburger-menu"}}',
-
-  beforeEach() {
-    this.currentUser.setProperties({
-      moderator: true,
-      reviewable_count: 5
-    });
-  },
-
-  test(assert) {
-    assert.equal(find(".reviewables").text(), "5");
   }
 });
 

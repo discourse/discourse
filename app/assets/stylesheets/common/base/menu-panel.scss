@@ -19,6 +19,7 @@
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
+  max-height: 80vh;
 }
 
 .menu-panel {
@@ -28,7 +29,9 @@
   z-index: z("header");
   padding: 0.5em;
   width: 300px;
-
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   hr {
     margin: 3px 0;
   }
@@ -45,10 +48,41 @@
   }
 
   .panel-body {
+    display: flex;
     touch-action: pan-y pinch-zoom;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100vh;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .panel-body-contents {
+    max-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-body-bottom {
+    display: flex;
+    flex: 1 0 0%; // safari height fix
+    margin-top: 0.5em;
+    .show-all {
+      flex: 1 1 auto;
+      button {
+        width: 100%;
+      }
+    }
+    .notifications-dismiss {
+      margin-left: 0.5em;
+    }
+
+    button {
+      background-color: var(--primary-very-low);
+      color: var(--primary-high);
+      &:hover {
+        background: var(--primary-low);
+        color: var(--primary);
+      }
+    }
   }
 
   .badge-notification {
@@ -153,11 +187,13 @@
 .user-menu {
   .quick-access-panel {
     width: 100%;
-    display: table;
-    margin-top: -1px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100%;
     border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
-
+    margin-top: -1px;
     h3 {
       padding: 0 0.4em;
       font-weight: bold;
@@ -172,8 +208,17 @@
       color: var(--primary-high);
     }
 
+    ul {
+      display: flex;
+      flex-flow: column wrap;
+      overflow: hidden;
+      max-height: 100%;
+    }
+
     li {
       background-color: var(--tertiary-low);
+      box-sizing: border-box;
+      list-style-type: none;
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
@@ -192,7 +237,8 @@
       }
 
       a {
-        padding: 0;
+        display: flex;
+        padding: 0.25em 0.5em;
 
         > div {
           overflow: hidden; // clears the text from wrapping below icons
@@ -215,11 +261,8 @@
     }
     li:not(.show-all) {
       padding: 0;
-
-      a {
-        display: flex;
-        padding: 0.25em 0.5em;
-      }
+      align-self: flex-start;
+      width: 100%;
       .d-icon {
         padding-top: 0.2em;
         margin-right: 0.5em;
@@ -264,6 +307,8 @@
     &.quick-access-profile {
       li:not(.show-all) a {
         color: var(--primary);
+        display: flex;
+        padding: 0.25em 0.5em;
         .d-icon {
           color: var(--primary-medium);
         }

@@ -39,9 +39,6 @@ bs_BA:
       group-results:
         title: "Grupiraj glasove po polju korisnika"
         label: "Prikaži raspodjelu"
-      ungroup-results:
-        title: "Kombiniraj sve glasove"
-        label: "Sakrij raspodjelu"
       export-results:
         title: "Izvezi rezultate ankete (Export)"
         label: "Izvoz"

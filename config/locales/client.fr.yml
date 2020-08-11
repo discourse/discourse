@@ -589,6 +589,10 @@ fr:
           details: "Détails"
           from: "De"
           to: "À"
+      permissions:
+        title: "Permissions"
+        none: "Aucune catégorie n'est associée à ce groupe."
+        description: "Les membres de ce groupe peuvent accéder à ces catégories"
       public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
       public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:

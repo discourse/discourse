@@ -149,12 +149,6 @@ sl:
     two: "Novi uporabniki lahko v prispevku omenijo samo %{count} uporabnika."
     few: "Novi uporabniki lahko v prispevku omenijo samo %{count} uporabnike."
     other: "Novi uporabniki lahko v prispevku omenijo samo %{count} uporabnikov."
-  no_images_allowed: "Novi uporabniki ne morejo dodajati slik v prispevke."
-  too_many_images:
-    one: "Novi uporabniki lahko v prispevek dodajo samo %{count} sliko."
-    two: "Novi uporabniki lahko v prispevek dodajo samo %{count} sliki."
-    few: "Novi uporabniki lahko v prispevek dodajo samo %{count} slike."
-    other: "Novi uporabniki lahko v prispevek dodajo samo %{count} sliko."
   no_attachments_allowed: "Novi uporabniki ne morejo dodajati priponk v prispevke."
   too_many_attachments:
     one: "Novi uporabniki lahko v prispevek dodajo samo %{count} priponko."

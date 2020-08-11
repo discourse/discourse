@@ -65,7 +65,7 @@ module TopicGuardian
     return false if topic.trashed?
     return true if is_admin?
 
-    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator?
+    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator? || can_perform_action_available_to_group_moderators?(topic)
 
     (!(topic.closed? || topic.archived?) || trusted) && can_create_post?(topic)
   end

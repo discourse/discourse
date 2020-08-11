@@ -39,8 +39,6 @@ pt:
         label: "Mostrar voto"
       group-results:
         title: "Agrupar votos por campo de utilizador"
-      ungroup-results:
-        title: "Combinar todos os votos"
       export-results:
         label: "Exportar"
       open:

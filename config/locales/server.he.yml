@@ -305,13 +305,8 @@ he:
     two: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
     many: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
     other: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
-  no_images_allowed_trust: "אין לך אפשרות להוסיף תמונות לפוסט, עמך הסליחה."
-  no_images_allowed: " משתמשים חדשים לא יכולים להוסיף תמונות לפוסטים, עמך הסליחה."
-  too_many_images:
-    one: "משתמשים חדשים יכולים להוסיף רק תמונה אחת לפוסט, עמך הסליחה."
-    two: "משתמשים חדשים יכולים להוסיף רק %{count} תמונות לפוסט, עמך הסליחה."
-    many: "משתמשים חדשים יכולים להוסיף רק %{count} תמונות לפוסט, עמך הסליחה."
-    other: "משתמשים חדשים יכולים להוסיף רק %{count} תמונות לפוסט, עמך הסליחה."
+  no_embedded_media_allowed_trust: "אין לך אפשרות להטמיע פריטי מדיה בפוסט הזה, עמך הסליחה."
+  no_embedded_media_allowed: "משתמשים חדשים לא יכולים להטמיע פריטי מדיה בפוסטים, עמך הסליחה."
   no_attachments_allowed: "משתמשים חדשים לא יכולים להוסיף קבצים לפוסטים, עמך הסליחה."
   too_many_attachments:
     one: "משתמשים חדשים יכולים לצרף רק קובץ אחד לפוסט, עמך הסליחה."
@@ -523,6 +518,7 @@ he:
               reply_by_email_disabled: "האפשרות להגיב בדוא״ל נוטרלה."
               target_user_not_found: "אחד הנמענים לא נמצא."
               unable_to_update: "אירעה שגיאה בעדכון הנושא הזה."
+              unable_to_tag: "אירעה שגיאה בתיוג הנושא."
             featured_link:
               invalid: "שגוי. כתובת אמורה לכלול http://‎ או https://‎."
               invalid_category: "לא ניתן לעריכה בקטגוריה זו."
@@ -1737,10 +1733,10 @@ he:
     min_trust_to_send_messages: "דרגת האמון המזערית שנדרשת ליצירת הודעות פרטיות."
     min_trust_to_flag_posts: "דרגת האמון המזערית הנדרשת לסימון פוסטים בדגל"
     min_trust_to_post_links: "דרגת האמון המזערית להוספת קישורים לפוסטים"
-    min_trust_to_post_images: "דרגת האמון המזערית הנדרשת להוספת תמונות לפוסט"
+    min_trust_to_post_embedded_media: "דרגת האמון המזערית הנדרשת להטמעת מדיה בפוסט"
     allowed_link_domains: "שמות תחום אליהם משתמשים יכולים לקשר גם אם אינם בדרגת האמון הנדרשת לפרסום קישורים"
     newuser_max_links: "כמה קישורים יכול משתמש חדש להוסיף לפוסט."
-    newuser_max_images: "כמה תמונות יכול משתמש חדש להוסיף לפוסט."
+    newuser_max_embedded_media: "כמה פריטי מדיה מוטמעים יכול משתמש חדש להוסיף לפוסט."
     newuser_max_attachments: "כמה קבצים מצורפים יכול משתמש חדש להוסיף לפוסט."
     newuser_max_mentions_per_post: "מספר התראות מרבי של @שם בפוסט שיכול להוסיף משתמש חדש."
     newuser_max_replies_per_topic: "מספר התגובות המרבי שיכול לפרסם משתמש חדש בנושא בודד בטרם קבלת תגובה ממשתמש אחר כלשהו."
@@ -1762,6 +1758,8 @@ he:
     desktop_category_page_style: "סגנון ויזואלי לדף /categories."
     category_colors: "רשימה של ערכי צבעים הקסדצימליים מותרים לסימון קטגוריות."
     category_style: "סגנון ויזואלי עבור עיטורי קטגוריות."
+    default_dark_mode_color_scheme_id: "ערכת הצבעים לשימוש במצב כהה."
+    dark_mode_none: "בלי"
     max_image_size_kb: "גודל ההעלאה המרבי בקילובתים. יש להגדיר זאת ב־nginx‏ (client_max_body_size) / apache או גם למתווך. תמונות שחורגות מהגודל הזה וקטנות מההגדרה client_max_body_size יערכו כך שגודלן יתאים להעלאה."
     max_attachment_size_kb: "הגודל המקסימלי בקילו-בתים (kBs) של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב-nginx (client_max_body_size) / apache או בפרוקסי."
     authorized_extensions: "רשימה של סיומות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
@@ -2726,6 +2724,11 @@ he:
 
         %{logs}
         ```
+    user_added_to_group:
+      title: "נוסף לקבוצה"
+      subject_template: "נוספת לקבוצה %{group_name} בתור %{membership_level}"
+      text_body_template: |
+        נוספת לקבוצה [%{group_name}](%{base_url}%{group_path}) בתור %{membership_level}.
     csv_export_succeeded:
       title: "יצוא CSV הצליח"
       subject_template: "[%{export_title}] ייצוא הנתונים הושלם"

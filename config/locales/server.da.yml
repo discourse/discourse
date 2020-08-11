@@ -238,11 +238,6 @@ da:
   too_many_mentions_newuser:
     one: "Beklager, nye brugere kan kun nævne en bruger i et indlæg."
     other: "Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg."
-  no_images_allowed_trust: "Beklager, du kan ikke placere billeder i et indlæg"
-  no_images_allowed: "Beklager, nye brugere kan ikke postere billeder i indlæg."
-  too_many_images:
-    one: "Beklager, nye brugere kan kun anvende et billede i et indlæg."
-    other: "Beklager, nye brugere kan kun anvende %{count} billeder i et indlæg."
   no_attachments_allowed: "Beklager, nye brugere kan ikke vedhæfte filer i et indlæg."
   too_many_attachments:
     one: "Beklager, nye brugere kan kun vedhæfte en fil i et indlæg."

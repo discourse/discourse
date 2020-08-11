@@ -306,11 +306,11 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_images_allowed_trust: "Sorry, you can't put images in a post"
-  no_images_allowed: "Sorry, new users can't put images in posts."
-  too_many_images:
-    one: "Sorry, new users can only put one image in a post."
-    other: "Sorry, new users can only put %{count} images in a post."
+  no_embedded_media_allowed_trust: "Sorry, you can't embed media items in a post."
+  no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
+  too_many_embedded_media:
+    one: "Sorry, new users can only put one embedded media item in a post."
+    other: "Sorry, new users can only put %{count} embedded media items in a post."
   no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   too_many_attachments:
     one: "Sorry, new users can only put one attachment in a post."
@@ -530,6 +530,7 @@ en:
               reply_by_email_disabled: "Reply by email has been disabled."
               target_user_not_found: "One of the users you are sending this message to could not be found."
               unable_to_update: "There was an error updating that topic."
+              unable_to_tag: "There was an error tagging the topic."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
               invalid_category: "can't be edited in this category."
@@ -1802,12 +1803,12 @@ en:
     min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
-    min_trust_to_post_images: "The minimum trust level required to include images in a post"
+    min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
 
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
-    newuser_max_images: "How many images a new user can add to a post."
+    newuser_max_embedded_media: "How many embedded media items a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
@@ -1834,6 +1835,8 @@ en:
     desktop_category_page_style: "Visual style for the /categories page."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
+    default_dark_mode_color_scheme_id: "The color scheme used when in dark mode."
+    dark_mode_none: "None"
 
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."

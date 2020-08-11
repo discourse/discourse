@@ -79,6 +79,13 @@ export default Controller.extend({
       );
     }
 
+    defaultTabs.push(
+      Tab.create({
+        name: "permissions",
+        i18nKey: "permissions.title"
+      })
+    );
+
     return defaultTabs;
   },
 

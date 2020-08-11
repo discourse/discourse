@@ -6,7 +6,6 @@ import FilterModeMixin from "discourse/mixins/filter-mode";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
-  persistedQueryParams: null,
 
   tagName: "",
 
@@ -62,25 +61,12 @@ export default Component.extend(FilterModeMixin, {
 
   @discourseComputed("filterType", "category", "noSubcategories")
   navItems(filterType, category, noSubcategories) {
-    let params;
     const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
-    if (this.persistedQueryParams && currentRouteQueryParams) {
-      const currentKeys = Object.keys(currentRouteQueryParams);
-      const discoveryKeys = Object.keys(this.persistedQueryParams);
-      const supportedKeys = currentKeys.filter(
-        i => discoveryKeys.indexOf(i) > 0
-      );
-      params = supportedKeys.reduce((object, key) => {
-        object[key] = currentRouteQueryParams[key];
-        return object;
-      }, {});
-    }
 
     return NavItem.buildList(category, {
       filterType,
       noSubcategories,
       currentRouteQueryParams,
-      persistedQueryParams: params,
       siteSettings: this.siteSettings
     });
   },

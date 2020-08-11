@@ -422,7 +422,25 @@ describe Search do
       )
 
       expect(result.posts.map(&:id)).to contain_exactly(reply.id)
-      expect(result.blurb(result.posts.first)).to eq(expected_blurb)
+
+      post = result.posts.first
+
+      expect(result.blurb(post)).to eq(expected_blurb)
+      expect(post.topic_title_headline).to eq(topic.fancy_title)
+    end
+
+    it "it limits the headline to #{Search::MAX_LENGTH_FOR_HEADLINE} characters" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      reply.update!(raw: "#{'a' * Search::MAX_LENGTH_FOR_HEADLINE} #{reply.raw}")
+
+      result = Search.execute('elephant')
+
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+
+      post = result.posts.first
+
+      expect(post.headline.include?('elephant')).to eq(false)
     end
 
     it 'returns the right post and blurb for searches with phrase' do
@@ -1690,4 +1708,24 @@ describe Search do
     end
   end
 
+  context 'plugin extensions' do
+    let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced filter with length more than 50 chars') }
+    let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced filter') }
+
+    it 'allows to define custom filter' do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+      Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
+        posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+      end
+      expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
+    end
+
+    it 'allows to define custom order' do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+      Search.advanced_order(:chars) do |posts|
+        posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+      end
+      expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    end
+  end
 end

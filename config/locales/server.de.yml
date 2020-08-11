@@ -271,11 +271,6 @@ de:
   too_many_mentions_newuser:
     one: "Entschuldige, neue Benutzer können nur einen anderen Benutzer in einem Beitrag erwähnen."
     other: "Entschuldige, neue Benutzer können nur %{count} Benutzer in einem Beitrag erwähnen."
-  no_images_allowed_trust: "Entschuldige, du kannst keine Bilder in einen Beitrag einfügen."
-  no_images_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Bilder hinzufügen."
-  too_many_images:
-    one: "Entschuldige, neue Benutzer können Beiträgen höchstens ein Bild hinzufügen."
-    other: "Entschuldige, neue Benutzer können Beiträgen höchstens %{count} Bilder hinzufügen."
   no_attachments_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Dateien hinzufügen."
   too_many_attachments:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens eine Datei hinzufügen."
@@ -1571,9 +1566,7 @@ de:
     min_trust_to_send_messages: "Die minimale Vertrauensstufe zur Erstellung neuer Nachrichten."
     min_trust_to_flag_posts: "Die minimale Vertrauensstufe zur Meldung von Beiträgen."
     min_trust_to_post_links: "Die minimale Vertrauensstufe zum Einfügen von Links in Beiträgen."
-    min_trust_to_post_images: "Die minimale Vertrauensstufe zum Einfügen von Bildern in Beiträgen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
-    newuser_max_images: "Maximale Anzahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_attachments: "Maximale Anzahl der Dateien, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_mentions_per_post: "Maximale Anzahl der @Namens-Erwähnungen, die neue Benutzer in Beiträgen nutzen dürfen."
     newuser_max_replies_per_topic: "Maximale Anzahl an Antworten, die ein neuer Benutzer in einem einzigen Thema geben darf, bevor jemand auf diese antwortet."

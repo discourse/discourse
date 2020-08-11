@@ -281,11 +281,6 @@ es:
   too_many_mentions_newuser:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en un post."
     other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en una publicación."
-  no_images_allowed_trust: "Lo sentimos, no puedes poner imágenes en una publicación"
-  no_images_allowed: "Lo sentimos, los usuarios nuevos no pueden poner imágenes en las publicaciones."
-  too_many_images:
-    one: "Lo sentimos, pero los usuarios nuevos solo pueden poner una imagen por post."
-    other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} imágenes en una publicación."
   no_attachments_allowed: "Lo sentimos, los usuarios nuevos no pueden adjuntar archivos en publicaciones."
   too_many_attachments:
     one: "Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por post"
@@ -1653,9 +1648,7 @@ es:
     min_trust_to_send_messages: "El nivel mínimo de confianza requerido para crear nuevos mensajes personales."
     min_trust_to_flag_posts: "El nivel mínimo de confianza requerido para reportar publicaciones"
     min_trust_to_post_links: "El nivel mínimo de confianza requerido para incluir enlaces en una publicación"
-    min_trust_to_post_images: "El nivel mínimo de confianza requerido para incluir imágenes en una publicación"
     newuser_max_links: "Cantidad de enlaces un usuario nuevo puede añadir a una publicación."
-    newuser_max_images: "Cantidad de imágenes que un usuario nuevo puede añadir a una publicación."
     newuser_max_attachments: "Cantidad de archivos adjuntos que un usuario nuevo puede añadir a una publicación."
     newuser_max_mentions_per_post: "Número máximo de menciones a @usuarios que un usuario nuevo puede realizar en una publicación."
     newuser_max_replies_per_topic: "Número máximo de respuestas que un usuario nuevo puede realizar en el mismo tema antes de que alguien le responda."

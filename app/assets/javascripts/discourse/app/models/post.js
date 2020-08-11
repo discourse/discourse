@@ -16,6 +16,7 @@ import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import showModal from "discourse/lib/show-modal";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
 
 const Post = RestModel.extend({
   @discourseComputed("url")
@@ -100,6 +101,19 @@ const Post = RestModel.extend({
     return this.site.flagTypes.filter(item =>
       this.get(`actionByName.${item.name_key}.can_act`)
     );
+  },
+
+  @discourseComputed(
+    "siteSettings.use_pg_headlines_for_excerpt",
+    "topic_title_headline"
+  )
+  useTopicTitleHeadline(enabled, title) {
+    return enabled && title;
+  },
+
+  @discourseComputed("topic_title_headline")
+  topicTitleHead(title) {
+    return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
   },
 
   afterUpdate(res) {

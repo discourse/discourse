@@ -273,11 +273,6 @@ fi:
   too_many_mentions_newuser:
     one: "Pahoittelut, uusi käyttäjä voi mainita viestissä vain yhden käyttäjän."
     other: "Pahoittelut, uusi käyttäjä voi mainita viestissä vain %{count} käyttäjää."
-  no_images_allowed_trust: "Pahoittelut, et voi laittaa kuvia viesteihin"
-  no_images_allowed: "Pahoittelut, uusi käyttäjä ei voi liittää kuvia viestiin."
-  too_many_images:
-    one: "Pahoittelut, uusi käyttäjä voi liittää vain yhden kuvan viestiin."
-    other: "Pahoittelut, uusi käyttäjä voi liittää vain %{count} kuvaa viestiin."
   no_attachments_allowed: "Pahoittelut, uusi käyttäjä ei voi liittää liitteitä viesteihin."
   too_many_attachments:
     one: "Pahoittelut, uusi käyttäjä voi liittää vain yhden liitteen viestiin."
@@ -1602,9 +1597,7 @@ fi:
     min_trust_to_send_messages: "Vähimmäisluottamustaso, jolla voi aloittaa yksityisviestiketjuja."
     min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi liputtaa viestejä"
     min_trust_to_post_links: "Vähimmäisluottamustaso, jolla voi lisätä linkkejä viesteihin"
-    min_trust_to_post_images: "Vähimmäisluottamustaso, jolla voi lisätä kuvia viesteihin"
     newuser_max_links: "Kuinka monta linkkiä uusi käyttäjä voi lisätä viestiin."
-    newuser_max_images: "Kuinka monta kuvaa uusi käyttäjä voi lisätä viestiin."
     newuser_max_attachments: "Kuinka monta liitettä uusi käyttäjä voi lisätä viestiin."
     newuser_max_mentions_per_post: "Kuinka monta @nimi mainintaa uusi käyttäjä voi lisätä viestiin."
     newuser_max_replies_per_topic: "Uuden käyttäjän viestien maksimimäärä samassa ketjussa, kunnes joku vastaa heille."

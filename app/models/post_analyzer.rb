@@ -47,10 +47,11 @@ class PostAnalyzer
   end
 
   # How many images are present in the post
-  def image_count
+  def embedded_media_count
     return 0 unless @raw.present?
 
-    cooked_stripped.css("img").reject do |t|
+    # TODO - do we need to look for tags other than img, video and audio?
+    cooked_stripped.css("img", "video", "audio").reject do |t|
       if dom_class = t["class"]
         (Post.allowed_image_classes & dom_class.split).count > 0
       end

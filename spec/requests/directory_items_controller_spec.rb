@@ -50,6 +50,7 @@ describe DirectoryItemsController do
 
       expect(json['directory_items'].length).to eq(4)
       expect(json['meta']['total_rows_directory_items']).to eq(4)
+      expect(json['meta']['load_more_directory_items']).to include('.json')
     end
 
     it "fails when the directory is disabled" do

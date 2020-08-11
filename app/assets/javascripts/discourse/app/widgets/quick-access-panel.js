@@ -2,14 +2,7 @@ import I18n from "I18n";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { headerHeight } from "discourse/components/site-header";
 import { Promise } from "rsvp";
-
-// even a 2 liner notification should be under 50px in default view
-const AVERAGE_ITEM_HEIGHT = 50;
-
-// our UX usually carries about 100px of padding around the notification excluding header
-const PADDING = 100;
 
 /**
  * This tries to enforce a consistent flow of fetching, caching, refreshing,
@@ -31,16 +24,16 @@ export default createWidget("quick-access-panel", {
     return Promise.resolve();
   },
 
+  hideBottomItems() {
+    return false;
+  },
+
   hasUnread() {
     return false;
   },
 
   showAllHref() {
     return "";
-  },
-
-  hasMore() {
-    return this.getItems().length >= this.estimateItemLimit();
   },
 
   findNewItems() {
@@ -67,23 +60,6 @@ export default createWidget("quick-access-panel", {
     return this.markReadRequest().then(() => {
       this.refreshNotifications(this.state);
     });
-  },
-
-  estimateItemLimit() {
-    // Estimate (poorly) the amount of notifications to return.
-    let limit = Math.round(
-      ($(window).height() - headerHeight() - PADDING) / AVERAGE_ITEM_HEIGHT
-    );
-
-    // We REALLY don't want to be asking for negative counts of notifications
-    // less than 5 is also not that useful.
-    if (limit < 5) {
-      limit = 5;
-    } else if (limit > 40) {
-      limit = 40;
-    }
-
-    return limit;
   },
 
   refreshNotifications(state) {
@@ -119,24 +95,35 @@ export default createWidget("quick-access-panel", {
       return [h("div.spinner-container", h("div.spinner"))];
     }
 
+    let bottomItems = [];
     const items = this.getItems().length
       ? this.getItems().map(item => this.itemHtml(item))
       : [this.emptyStatePlaceholderItem()];
 
-    if (this.hasMore()) {
-      items.push(
-        h(
-          "li.read.last.show-all",
-          this.attach("link", {
-            title: "view_all",
-            icon: "chevron-down",
-            href: this.showAllHref()
-          })
-        )
+    if (!this.hideBottomItems()) {
+      bottomItems.push(
+        this.attach("button", {
+          title: "view_all",
+          icon: "chevron-down",
+          className: "show-all",
+          url: this.showAllHref()
+        })
       );
     }
 
-    return [h("ul", items)];
+    if (this.hasUnread()) {
+      bottomItems.push(
+        this.attach("button", {
+          title: "user.dismiss_notifications_tooltip",
+          icon: "check",
+          label: "user.dismiss",
+          className: "notifications-dismiss",
+          action: "dismissNotifications"
+        })
+      );
+    }
+
+    return [h("ul", items), h("div.panel-body-bottom", bottomItems)];
   },
 
   getItems() {

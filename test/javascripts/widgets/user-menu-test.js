@@ -13,7 +13,7 @@ widgetTest("basics", {
     assert.ok(find(".user-notifications-link").length);
     assert.ok(find(".user-bookmarks-link").length);
     assert.ok(find(".quick-access-panel").length);
-    assert.ok(find(".dismiss-link").length);
+    assert.ok(find(".notifications-dismiss").length);
   }
 });
 

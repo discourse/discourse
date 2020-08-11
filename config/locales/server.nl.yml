@@ -278,11 +278,6 @@ nl:
   too_many_mentions_newuser:
     one: "Sorry, nieuwe gebruikers kunnen maar één andere gebruiker in een bericht noemen."
     other: "Sorry, nieuwe gebruikers kunnen maar %{count} gebruikers in een bericht noemen."
-  no_images_allowed_trust: "Sorry, u kunt geen afbeeldingen in een bericht plaatsen."
-  no_images_allowed: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen in berichten plaatsen."
-  too_many_images:
-    one: "Sorry, nieuwe gebruikers kunnen maar één afbeelding in een bericht plaatsen."
-    other: "Sorry, nieuwe gebruikers kunnen maar %{count} afbeeldingen in een bericht plaatsen."
   no_attachments_allowed: "Sorry, nieuwe gebruikers kunnen geen bijlagen in berichten plaatsen."
   too_many_attachments:
     one: "Sorry, nieuwe gebruikers kunnen maar één bijlage in een bericht plaatsen."
@@ -1639,9 +1634,7 @@ nl:
     min_trust_to_send_messages: "Het minimale vertrouwensniveau dat nodig is om nieuwe persoonlijke berichten te maken."
     min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om koppelingen in berichten op te nemen"
-    min_trust_to_post_images: "Het minimale vertrouwensniveau dat nodig is om afbeeldingen in een bericht op te nemen"
     newuser_max_links: "Hoeveel koppelingen een nieuwe gebruiker aan een bericht kan toevoegen."
-    newuser_max_images: "Hoeveel afbeeldingen een nieuwe gebruiker aan een bericht kan toevoegen."
     newuser_max_attachments: "Hoeveel bijlagen een nieuwe gebruiker aan een bericht kan toevoegen."
     newuser_max_mentions_per_post: "Maximale aantal @naam-vermeldingen dat een nieuwe gebruiker in een bericht kan gebruiken."
     newuser_max_replies_per_topic: "Maximale aantal antwoorden dat een nieuwe gebruiker in één topic kan plaatsen totdat iemand ze beantwoordt."

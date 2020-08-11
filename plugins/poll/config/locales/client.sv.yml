@@ -49,9 +49,6 @@ sv:
       group-results:
         title: "Gruppera röster baserat på användarfält"
         label: " Visa uppdelning"
-      ungroup-results:
-        title: "Kombinera alla röster"
-        label: "Göm uppdelning"
       export-results:
         title: "Exportera omröstningsresultatet"
         label: "Exportera"
@@ -66,6 +63,12 @@ sv:
       automatic_close:
         closes_in: "Stänger om <strong>%{timeLeft}</strong>."
         age: "Stängd <strong>%{age}</strong>"
+      breakdown:
+        title: "Resultat av omröstning"
+        votes: "%{count} röster"
+        breakdown: "Fördelning"
+        percentage: "Procent"
+        count: "Räkna"
       error_while_toggling_status: "Tyvärr, ett fel uppstod vid ändring av status för den här omröstningen."
       error_while_casting_votes: "Tyvärr, ett fel uppstod vid röstningen."
       error_while_fetching_voters: "Tyvärr, ett fel uppstod vid visningen av röster."

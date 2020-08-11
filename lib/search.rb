@@ -277,6 +277,14 @@ class Search
     @results
   end
 
+  def self.advanced_order(trigger, &block)
+    (@advanced_orders ||= {})[trigger] = block
+  end
+
+  def self.advanced_orders
+    @advanced_orders
+  end
+
   def self.advanced_filter(trigger, &block)
     (@advanced_filters ||= {})[trigger] = block
   end
@@ -659,11 +667,11 @@ class Search
         end
       end
 
-      if word == 'order:latest' || word == 'l'
+      if word == 'l'
         @order = :latest
         nil
-      elsif word == 'order:latest_topic'
-        @order = :latest_topic
+      elsif word =~ /order:\w+/
+        @order = word.gsub('order:', '').to_sym
         nil
       elsif word == 'in:title' || word == 't'
         @in_title = true
@@ -676,12 +684,6 @@ class Search
             @search_context = topic
           end
         end
-        nil
-      elsif word == 'order:views'
-        @order = :views
-        nil
-      elsif word == 'order:likes'
-        @order = :likes
         nil
       elsif word == 'in:all'
         @search_all_topics = true
@@ -1011,6 +1013,11 @@ class Search
       posts = aggregate_relation.from(posts)
     end
 
+    if @order
+      advanced_order = Search.advanced_orders&.fetch(@order, nil)
+      posts = advanced_order.call(posts) if advanced_order
+    end
+
     posts = posts.offset(offset)
     posts.limit(limit)
   end
@@ -1157,12 +1164,21 @@ class Search
     query.includes(topic: topic_eager_loads)
   end
 
+  # Limited for performance reasons since `TS_HEADLINE` is slow when the text
+  # document is too long.
+  MAX_LENGTH_FOR_HEADLINE = 2500
+
   def posts_scope(default_scope = Post.all)
     if SiteSetting.use_pg_headlines_for_excerpt
+      search_term = @term.present? ? PG::Connection.escape_string(@term) : nil
+      ts_config = default_ts_config
+
       default_scope
         .joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id")
+        .joins("INNER JOIN topics t1 ON t1.id = posts.topic_id")
         .select(
-          "TS_HEADLINE(#{default_ts_config}, pd.raw_data, PLAINTO_TSQUERY('#{@term.present? ? PG::Connection.escape_string(@term) : nil}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
+          "TS_HEADLINE(#{ts_config}, t1.fancy_title, PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS topic_title_headline",
+          "TS_HEADLINE(#{ts_config}, LEFT(pd.raw_data, #{MAX_LENGTH_FOR_HEADLINE}), PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
           default_scope.arel.projections
         )
     else

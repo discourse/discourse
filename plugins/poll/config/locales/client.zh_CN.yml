@@ -44,9 +44,6 @@ zh_CN:
       group-results:
         title: "按用户字段分组投票"
         label: "显示错误"
-      ungroup-results:
-        title: "合并所有投票"
-        label: "隐藏错误"
       export-results:
         title: "到处投票结果"
         label: "导出"
@@ -61,6 +58,12 @@ zh_CN:
       automatic_close:
         closes_in: "于<strong>%{timeLeft}</strong>关闭。"
         age: "<strong>%{age}</strong>关闭"
+      breakdown:
+        title: "投票结果"
+        votes: "%{count} 票"
+        breakdown: "故障"
+        percentage: "百分比"
+        count: "计数"
       error_while_toggling_status: "对不起，改变投票状态时出错了。"
       error_while_casting_votes: "对不起，投票时出错了。"
       error_while_fetching_voters: "对不起，显示投票者时出错了。"

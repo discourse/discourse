@@ -109,11 +109,16 @@ el:
     share:
       post: "ανάρτηση #%{postNumber}"
       close: "κλείσιμο"
+      twitter: "Μοιραστείτε στο Twitter"
+      facebook: "Μοιραστείτε στο Facebook"
+      email: "Αποστολή μέσω email"
     action_codes:
       public_topic: "έκανε το νήμα δημόσιο στις %{when}"
+      private_topic: "έκανε αυτό το θέμα ένα προσωπικό μήνυμα %{when}"
       split_topic: "διαχώρισε αυτό το νήμα %{when}"
       invited_user: "προσκάλεσε τον χρήστη %{who} στις %{when}"
       invited_group: "προσκάλεσε την ομάδα %{who} στις %{when}"
+      user_left: "%{who} αφαιρέθηκαν από αυτό το μήνυμα %{when}"
       removed_user: "αφαίρεσε τον χρήστη %{who} στις %{when}"
       removed_group: "αφαίρεσε την ομάδα %{who} στις %{when}"
       autoclosed:
@@ -137,10 +142,14 @@ el:
       banner:
         enabled: "το έκανε ανακοίνωση στις %{when}. Θα εμφανίζεται στην κορυφή κάθε σελίδας μέχρι να απορριφθεί από τον χρήστη."
         disabled: "το αφαίρεσε από ανακοίνωση %{when}. Δεν θα εμφανίζεται πλέον στην κορυφή κάθε σελίδας."
+    topic_admin_menu: "ρυθμίσεις νήματος"
     wizard_required: "Καλώς ήλθατε στο νέο σας Discourse! Ας αρχίσουμε με τον <a href='%{url}' data-auto-route='true'>οδηγό εγκατάστασης</a> ✨"
     emails_are_disabled: "Τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί κανένα email."
+    bootstrap_mode_enabled: "Για να διευκολύνετε την εκκίνηση του νέου ιστότοπού σας, βρίσκεστε σε λειτουργία bootstrap. Όλοι οι νέοι χρήστες θα λάβουν το επίπεδο εμπιστοσύνης 1 και θα έχουν ενεργοποιημένα τα καθημερινά συνοπτικά email. Αυτό θα απενεργοποιηθεί αυτόματα όταν συμμετέχουν %{min_users} χρήστες."
+    bootstrap_mode_disabled: "Η λειτουργία Bootstrap θα απενεργοποιηθεί εντός 24 ωρών."
     themes:
       default_description: "Προεπιλογή"
+      broken_theme_alert: "Ο ιστότοπός σας ενδέχεται να μην λειτουργεί επειδή το θέμα / στοιχείο %{theme} έχει σφάλματα. Απενεργοποιήστε το στο %{path}."
     s3:
       regions:
         ap_northeast_1: "Ασία-Ειρηνικός (Τόκιο)"
@@ -148,10 +157,15 @@ el:
         ap_south_1: "Ασία - Ειρηνικός (Μομβάη)"
         ap_southeast_1: "Ασία-Ειρηνικός (Σιγκαπούρη)"
         ap_southeast_2: "Ασία-Ειρηνικός (Σίδνεϊ)"
+        ca_central_1: "Καναδάς (Κεντρική)"
         cn_north_1: "Κίνα (Πεκίνο)"
+        cn_northwest_1: "Κίνα (Ningxia)"
         eu_central_1: "ΕΕ (Φρανκφούρτη)"
+        eu_north_1: "ΕΕ (Στοκχόλμη)"
         eu_west_1: "ΕΕ (Ιρλανδία)"
         eu_west_2: "EU (Λονδίνο)"
+        eu_west_3: "ΕΕ (Παρίσι)"
+        sa_east_1: "Νότια Αμερική (Σάο Πάολο)"
         us_east_1: "Ανατολικές ΗΠΑ (Β. Βιρτζίνια)"
         us_east_2: "Ανατολικές ΗΠΑ (Οχάιο)"
         us_west_1: "Δυτικές ΗΠΑ (Β. Καλιφόρνια)"
@@ -161,6 +175,7 @@ el:
     not_implemented: "Λυπούμαστε! Αυτή η λειτουργία δεν έχει υλοποιηθεί ακόμα."
     no_value: "Όχι"
     yes_value: "Ναι"
+    submit: "Υποβολή"
     generic_error: "Λυπούμαστε, προέκυψε κάποιο σφάλμα."
     generic_error_with_reason: "Προέκυψε ένα σφάλμα: %{error}"
     sign_up: "Εγγραφείτε"
@@ -179,6 +194,8 @@ el:
     privacy_policy: "Πολιτική Ιδιωτικότητας"
     privacy: "Ιδιωτικότητα"
     tos: "Όροι Χρήσης"
+    rules: "Κανόνες"
+    conduct: "Κώδικας Δεοντολογίας"
     mobile_view: "Προβολή Κινητού"
     desktop_view: "Προβολή Υπολογιστή"
     you: "Εσύ"
@@ -212,6 +229,8 @@ el:
       moderators: "Συντονιστές"
       stat:
         all_time: "Συνολικά"
+        last_7_days: "Τελευταία 7"
+        last_30_days: "Τελευταία 30"
       like_count: "Αρέσει"
       topic_count: "Νήματα"
       post_count: "Αναρτήσεις"
@@ -225,12 +244,31 @@ el:
       help:
         bookmark: "Πάτα εδώ για να μπεί σελιδοδείκτης στην πρώτη ανάρτηση του νήματος."
         unbookmark: "Πάτα εδώ για να αφαιρεθούν όλοι οι σελιδοδείκτες από αυτό το νήμα."
+        unbookmark_with_reminder: "Κάντε κλικ για να καταργήσετε όλους τους σελιδοδείκτες και τις υπενθυμίσεις σε αυτό το θέμα. Έχετε ένα σύνολο υπενθύμισης %{reminder_at} για αυτό το θέμα."
     bookmarks:
+      created: "έχετε σελιδοδείκτη σε αυτήν την ανάρτηση%{name}"
+      not_bookmarked: "προσθέστε σελιδοδείκτη σε αυτήν την ανάρτηση"
+      created_with_reminder: "έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση με υπενθύμιση %{date}%{name}"
+      created_with_at_desktop_reminder: "έχετε προσθέσει σελιδοδείκτη σε αυτήν την ανάρτηση και θα λάβετε υπενθύμιση την επόμενη φορά που θα βρίσκεστε στην επιφάνεια εργασίας%{name}"
       remove: "Αφαίρεση Σελιδοδείκτη"
+      delete: "Αφαίρεση Σελιδοδείκτη"
+      confirm_delete: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτόν τον σελιδοδείκτη; Η υπενθύμιση θα διαγραφεί επίσης."
+      confirm_clear: "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλους τους σελιδοδείκτες σας από αυτό το θέμα;"
       save: "Αποθήκευση"
+      no_timezone: 'Δεν έχετε ορίσει ζώνη ώρας ακόμη. Δεν θα μπορείτε να ορίσετε υπενθυμίσεις. Ρυθμίστε ένα <a href="%{basePath}/my/preferences/profile">στο προφίλ σας</a>.'
+      invalid_custom_datetime: "Η ημερομηνία και η ώρα που δώσατε δεν είναι έγκυρη, δοκιμάστε ξανά."
+      list_permission_denied: "Δεν έχετε άδεια για την προβολή των σελιδοδεικτών αυτού του χρήστη."
+      auto_delete_preference:
+        label: "Αυτόματη διαγραφή"
+        never: "Ποτέ"
+        when_reminder_sent: "Μόλις αποσταλεί η υπενθύμιση"
+        on_owner_reply: "Αφού απαντήσω σε αυτό το θέμα"
+      search_placeholder: "Αναζήτηση σελιδοδεικτών με βάση το όνομα, τον τίτλο θέματος ή το περιεχόμενο δημοσίευσης"
       search: "Αναζήτηση"
       reminders:
+        at_desktop: "Την επόμενη φορά που θα είμαι στην επιφάνεια εργασίας μου"
         later_today: "Αργότερα σήμερα"
+        next_business_day: "Επόμενη εργάσιμη ημέρα"
         tomorrow: "Αύριο"
         next_week: "Την άλλη εβδομάδα"
         later_this_week: "Αργότερα αυτή την εβδομάδα"
@@ -263,14 +301,20 @@ el:
     review:
       explain:
         total: "Σύνολο"
+        trust_level_bonus:
+          name: "επίπεδο εμπιστοσύνης"
       delete: "Σβήσιμο"
       settings:
         saved: "Αποθηκεύτηκε! "
         save_changes: "Αποθήκευση Αλλαγών"
         title: "Ρυθμίσεις"
+      view_all: "Προβολή Όλων"
       topic: "Νήμα:"
       filtered_user: "Χρήστης"
+      deleted_post: "(η ανάρτηση διαγράφηκε)"
+      deleted_user: "(ο χρήστης διαγράφηκε)"
       user:
+        bio: "Βιογραφικό"
         username: "Όνομα Χρήστη"
         email: "Διεύθυνση Email"
         name: "Όνομα"
@@ -284,8 +328,16 @@ el:
       filters:
         type:
           title: "Τύπος"
+        minimum_score: "Ελάχιστη βαθμολογία:"
         refresh: "Ανανέωση "
         category: "Κατηγορία"
+        orders:
+          score: "Βαθμολογία"
+          score_asc: "Βαθμολογία (αντίστροφα)"
+          created_at: "Δημιουργήθηκε στις"
+          created_at_asc: "Δημιουργήθηκε στις (αντίστροφα)"
+        priority:
+          title: "Ελάχιστη προτεραιότητα"
       scores:
         type: "Τύπος"
       statuses:
@@ -300,6 +352,8 @@ el:
         deleted:
           title: "Διαγράφηκε"
       types:
+        reviewable_flagged_post:
+          flagged_by: "Επισήμανση από"
         reviewable_user:
           title: "Χρήστης"
       approval:
@@ -415,6 +469,7 @@ el:
       activity: "Δραστηριότητα"
       members:
         title: "Μέλη"
+        filter_placeholder_admin: "όνομα χρήστη ή διεύθυνση ηλεκτρονικού ταχυδρομίου"
         filter_placeholder: "όνομα χρήστη"
       topics: "Νήματα"
       posts: "Αναρτήσεις"
@@ -450,6 +505,8 @@ el:
       flair_color_placeholder: "(Προαιρετικό) Τιμή χρώματος Hex"
       flair_preview_icon: "Εικονίδιο Προεπισκόπησης"
       flair_preview_image: "Εικόνα Προεπισκόπησης"
+      flair_type:
+        icon: "Επιλέξτε ένα εικονίδιο"
     user_action_groups:
       "1": "Αρέσει που Έδωσα"
       "2": "Αρέσει που Έλαβα"
@@ -520,6 +577,7 @@ el:
           all: "Όλα"
           read: "Διαβασμένο"
           unread: "Αδιάβαστα"
+        ignore_duration_title: "Αγνόησε χρήστη"
         ignore_duration_username: "Όνομα Χρήστη"
         ignore_duration_save: "Αγνόηση"
         ignore_option: "Αγνοήθηκε "
@@ -534,6 +592,7 @@ el:
       expand_profile: "Επέκτεινε"
       bookmarks: "Σελιδοδείκτες"
       bio: "Σχετικά με εμένα"
+      timezone: "Ζώνη ώρας"
       invited_by: "Προσκλήθηκε Από"
       trust_level: "Επίπεδο Εμπιστοσύνης"
       notifications: "Ειδοποιήσεις"
@@ -652,12 +711,15 @@ el:
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
         copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
       second_factor:
+        forgot_password: "Ξεχάσατε τον κωδικό?"
+        confirm_password_description: "Επιβεβαιώστε τον κωδικό πρόσβασης σας για να συνεχίσετε"
         name: "Όνομα"
         disable: "Απενεργοποίηση"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         security_key:
           register: "Εγγραφή"
+          title: "Κλειδιά ασφαλείας"
           save: "Αποθήκευση"
       change_about:
         title: "Άλλαξε τα «σχετικά με εμένα»"
@@ -689,6 +751,7 @@ el:
         primary_label: "κύριο"
         update_email: "Αλλαγή διεύθυνσης Email"
         ok: "Για επιβεβαίωση θα σου στείλουμε ένα email"
+        required: "Παρακαλώ εισάγετε μια διεύθυνση ηλεκτρονικού ταχυδρομείου"
         invalid: "Παρακαλώ δώσε μία έγκυρη διεύθυνση email"
         authenticated: "Η διεύθυνση email σου ταυτοποιήθηκε από τον πάροχο %{provider}"
         frequency_immediately: "Θα σου στείλουμε αμέσως email, εάν δεν έχεις διαβάσει αυτό για το οποίο σου στέλνουμε το μήνυμα."
@@ -696,6 +759,7 @@ el:
           one: "Θα σου στείλουμε ηλεκτρονικό μήνυμα μόνο εάν δε σε έχουμε δει το τελευταίο λεπτό."
           other: "Θα σου στείλουμε ηλεκτρονικό μήνυμα μόνο εάν δεν σε έχουμε δει τα τελευταία %{count} λεπτά."
       associated_accounts:
+        title: "Συνδεδεμένοι λογαριασμοί"
         revoke: "Ανάκληση"
         cancel: "Άκυρο"
       name:
@@ -752,6 +816,7 @@ el:
         daily: "καθημερινά"
         weekly: "εβδομαδιαία"
         every_month: "κάθε μήνα"
+        every_six_months: "κάθε έξι μήνες"
       email_level:
         title: "Στείλε μου ένα email όταν κάποιος παραθέσει ανάρτησή μου, απαντήσει σε ανάρτησή μου, αναφέρει το @username μου ή με προσκαλεί σε ένα νήμα."
         always: "πάντα"
@@ -812,6 +877,7 @@ el:
         link_created_at: "Δημιουργήθηκε"
         link_groups: Ομάδες
         create: "Αποστολή Πρόσκλησης"
+        copy_link: "Αντιγραφή συνδέσμου"
         generate_link: "Αντιγραφή Συνδέσμου Πρόσκλησης"
         link_generated: "Η δημιουργία του συνδέσμου πρόσκλησης έγινε επιτυχώς!"
         valid_for: "Ο σύνδεσμος πρόσκλησης είναι έγκυρος μόνο για αυτή τη διεύθυνση email: %{email}"
@@ -873,6 +939,7 @@ el:
         most_liked_users: "Περισσότερα \"Μου αρέσει\""
         most_replied_to_users: "Περισσότερες απαντήσεις προς"
         no_likes: "Κανένα μου αρέσει ακόμα."
+        top_categories: "Κορυφαίες Κατηγορίες"
         topics: "Θέματα"
         replies: "Απαντήσεις"
       ip_address:

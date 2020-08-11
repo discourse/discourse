@@ -38,7 +38,7 @@ QUnit.test("uploading one file", function(assert) {
 });
 
 QUnit.test("new user cannot upload images", function(assert) {
-  this.siteSettings.newuser_max_images = 0;
+  this.siteSettings.newuser_max_embedded_media = 0;
   sandbox.stub(bootbox, "alert");
 
   assert.not(
@@ -53,6 +53,31 @@ QUnit.test("new user cannot upload images", function(assert) {
       I18n.t("post.errors.image_upload_not_allowed_for_new_user")
     ),
     "the alert is called"
+  );
+});
+
+QUnit.test("new user can upload images if allowed", function(assert) {
+  this.siteSettings.newuser_max_embedded_media = 1;
+  this.siteSettings.default_trust_level = 0;
+  sandbox.stub(bootbox, "alert");
+
+  assert.ok(
+    validateUploadedFiles([{ name: "image.png" }], {
+      user: User.create(),
+      siteSettings: this.siteSettings
+    })
+  );
+});
+
+QUnit.test("TL1 can upload images", function(assert) {
+  this.siteSettings.newuser_max_embedded_media = 0;
+  sandbox.stub(bootbox, "alert");
+
+  assert.ok(
+    validateUploadedFiles([{ name: "image.png" }], {
+      user: User.create({ trust_level: 1 }),
+      siteSettings: this.siteSettings
+    })
   );
 });
 

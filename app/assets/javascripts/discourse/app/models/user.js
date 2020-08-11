@@ -664,10 +664,12 @@ const User = RestModel.extend({
   },
 
   isAllowedToUploadAFile(type) {
+    const settingName = type === "image" ? "embedded_media" : "attachments";
+
     return (
       this.staff ||
       this.trust_level > 0 ||
-      this.siteSettings[`newuser_max_${type}s`] > 0
+      this.siteSettings[`newuser_max_${settingName}`] > 0
     );
   },
 
