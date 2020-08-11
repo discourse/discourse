@@ -106,19 +106,18 @@ class Stylesheet::Manager
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
-    color_scheme_name = Slug.for(color_scheme.name) + color_scheme&.id.to_s
-    array_cache_key = "color_scheme_stylesheet_#{color_scheme_name}_#{current_hostname}"
-    stylesheets = cache[array_cache_key]
+    cache_key = color_scheme_cache_key(color_scheme)
+    stylesheets = cache[cache_key]
     return stylesheets if stylesheets.present?
 
-    stylesheet = { color_scheme_name: color_scheme_name }
+    stylesheet = { color_scheme_id: color_scheme&.id }
 
     builder = self.new(target, nil, color_scheme)
-
     builder.compile unless File.exists?(builder.stylesheet_fullpath)
+
     href = builder.stylesheet_path(current_hostname)
     stylesheet[:new_href] = href
-    cache[array_cache_key] = stylesheet.freeze
+    cache[cache_key] = stylesheet.freeze
     stylesheet
   end
 
@@ -128,6 +127,16 @@ class Stylesheet::Manager
 
     href = stylesheet[:new_href]
     %[<link href="#{href}" media="#{media}" rel="stylesheet"/>].html_safe
+  end
+
+  def self.color_scheme_cache_key(color_scheme)
+    color_scheme_name = Slug.for(color_scheme.name) + color_scheme&.id.to_s
+    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{Discourse.current_hostname}"
+  end
+
+  def self.color_scheme_cache_clear(color_scheme)
+    cache_key = color_scheme_cache_key(color_scheme)
+    cache[cache_key] = nil
   end
 
   def self.precompile_css
@@ -149,11 +158,11 @@ class Stylesheet::Manager
     cs_ids = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:color_scheme_id)
     ColorScheme.where(id: cs_ids).each do |cs|
       target = COLOR_SCHEME_STYLESHEET
-      cache_key = "#{target}_#{cs.id}"
       STDERR.puts "precompile target: #{target} #{cs.name}"
 
       builder = self.new(target, nil, cs)
       builder.compile(force: true)
+      cache_key = color_scheme_cache_key(cs)
       cache[cache_key] = nil
     end
 
@@ -300,7 +309,7 @@ class Stylesheet::Manager
     if is_theme?
       "#{@target}_#{theme.id}"
     elsif @color_scheme
-      "#{@target}_#{Slug.for(@color_scheme.name) + @color_scheme&.id.to_s}"
+      "#{@target}_#{Slug.for(@color_scheme.name)}_#{@color_scheme&.id.to_s}"
     else
       scheme_string = theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"
@@ -384,7 +393,8 @@ class Stylesheet::Manager
 
   def color_scheme_digest
 
-    cs = theme&.color_scheme
+    cs = @color_scheme || theme&.color_scheme
+
     category_updated = Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
 
     if cs || category_updated > 0
