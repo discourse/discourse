@@ -234,6 +234,7 @@ describe Stylesheet::Manager do
       stylesheet2 = manager2.compile
 
       expect(stylesheet).not_to eq(stylesheet2)
+      expect(stylesheet2).to include("--primary: #c00;")
     end
 
   end
