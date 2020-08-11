@@ -67,6 +67,23 @@ class S3Inventory
               .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
               .where("#{table_name}.etag IS NULL")
 
+            # marking as verified/not verified
+            id_threshold_clause = model == Upload ? " AND model_table.id > #{model::SEEDED_ID_THRESHOLD}" : ""
+            DB.exec(<<~SQL, inventory_date
+              UPDATE #{model.table_name}
+              SET verified = CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+              FROM #{model.table_name} AS model_table
+              LEFT JOIN #{table_name} AS table_name_alias ON model_table.etag = table_name_alias.etag
+              WHERE model_table.id = #{model.table_name}.id
+              AND model_table.updated_at < ?
+              AND (
+                model_table.verified IS NULL OR
+                model_table.verified <> CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+              )
+               #{id_threshold_clause}
+              SQL
+            )
+
             if (missing_count = missing_uploads.count) > 0
               missing_uploads.select(:id, :url).find_each do |upload|
                 log upload.url
