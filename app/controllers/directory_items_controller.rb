@@ -65,6 +65,8 @@ class DirectoryItemsController < ApplicationController
 
     more_params = params.slice(:period, :order, :asc).permit!
     more_params[:page] = page + 1
+    load_more_uri = URI.parse(directory_items_path(more_params))
+    load_more_directory_items_json = "#{load_more_uri.path}.json?#{load_more_uri.query}"
 
     # Put yourself at the top of the first page
     if result.present? && current_user.present? && page == 0
@@ -84,7 +86,7 @@ class DirectoryItemsController < ApplicationController
                      meta: {
                         last_updated_at: last_updated_at,
                         total_rows_directory_items: result_count,
-                        load_more_directory_items: directory_items_path(more_params)
+                        load_more_directory_items: load_more_directory_items_json
                       }
                     )
   end
