@@ -1771,6 +1771,8 @@ describe GroupsController do
 
       it "does not return categories the user cannot see" do
         get "/groups/#{group.name}/permissions.json"
+
+        expect(response.status).to eq(200)
         expect(response.parsed_body).to eq([])
       end
 
@@ -1778,6 +1780,8 @@ describe GroupsController do
         group.add(other_user)
 
         get "/groups/#{group.name}/permissions.json"
+
+        expect(response.status).to eq(200)
         expect(response.parsed_body.count).to eq(1)
         expect(response.parsed_body.first["category"]["id"]).to eq(category.id)
       end
@@ -1793,6 +1797,9 @@ describe GroupsController do
       end
 
       get "/groups/#{group.name}/permissions.json"
+
+      expect(response.status).to eq(200)
+
       expect(response.parsed_body.map { |permission| permission["category"]["name"] }).to eq(
         ["Abc", "Hello", "New Cat", "Three"]
       )
