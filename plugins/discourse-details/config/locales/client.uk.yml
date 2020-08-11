@@ -7,7 +7,7 @@
 uk:
   js:
     details:
-      title: Сховати деталі
+      title: Приховати подробиці
     composer:
       details_title: Підсумок
       details_text: "Цей текст буде приховано"

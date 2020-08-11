@@ -121,7 +121,6 @@ sq:
   too_many_mentions_newuser:
     one: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm %{count} anëtar në një postim."
     other: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm %{count} anëtarë në një postim."
-  no_images_allowed: "Na vjen keq, anëtarët e rinj nuk kanë të drejtë të vendosin imazhe në një postim."
   no_attachments_allowed: "Na vjen keq, new users can't put attachments in posts."
   no_links_allowed: "Na vjen keq, new users can't put links in posts."
   spamming_host: "Na vjen keq, you cannot post a link to that host."
@@ -739,7 +738,6 @@ sq:
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
     newuser_max_links: "How many links a new user can add to a post."
-    newuser_max_images: "How many images a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."

@@ -57,12 +57,12 @@ zh_CN:
         x_months:
           other: "%{count} 个月"
         about_x_years:
-          other: "约 %{count} 年"
+          other: "%{count}y"
         over_x_years:
-          other: "> %{count} 年"
+          other: "> %{count}y"
         almost_x_years:
-          other: "近 %{count} 年"
-        date_month: "M[月]D[日]"
+          other: "%{count}y"
+        date_month: "D MMM"
         date_year: "YY[年]M[月]"
       medium:
         x_minutes:
@@ -71,7 +71,7 @@ zh_CN:
           other: "%{count} 小时"
         x_days:
           other: "%{count} 天"
-        date_year: "YY[年]M[月]D[日]"
+        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -563,6 +563,22 @@ zh_CN:
         membership:
           title: 成员资格
           access: 访问
+        categories:
+          title: 类别管理
+          long_title: "类别默认通知"
+          description: "将用户添加到此组时，其类别通知将设置为这样的默认值。在这之后，还可以改变类别通知。"
+          watched_categories_instructions: "自动监控这些类别中的所有主题。组成员将收到所有新帖子和主题的通知，主题旁边还会显示新帖子的计数。"
+          tracked_categories_instructions: "自动跟踪这些类别中的所有主题。新帖子的计数将显示在主题旁边。"
+          watching_first_post_categories_instructions: "用户将收到这些类别中每个新主题的第一篇文章的通知。"
+          muted_categories_instructions: "用户不会收到有关这些类别中新主题的任何通知，也不会出现在类别或最新主题页面上。"
+        tags:
+          title: 标签
+          long_title: "标签默认通知"
+          description: "将用户添加到此组时，其标签的通知将默认为这些设置。在这之后，还可以修改。"
+          watched_tags_instructions: "自动监控带有这些标签的所有主题。组成员将收到所有新帖子和主题的通知，主题旁边还会显示新帖子的计数。"
+          tracked_tags_instructions: "使用这些标签自动跟踪所有主题。新帖子的计数将显示在主题旁边。"
+          watching_first_post_tags_instructions: "用户将收到每个新主题中带有这些标签的第一篇文章的通知。"
+          muted_tags_instructions: "用户不会收到任何有关这些标签的新主题的通知，也不会显示在最新通知中。"
         logs:
           title: "日志"
           when: "时间"
@@ -807,6 +823,8 @@ zh_CN:
       first_notification: "你的头一个通知！选中它开始。"
       dynamic_favicon: "在浏览器图标上显示计数"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
+      dark_mode: "深色模式"
+      dark_mode_enable: "自动启用深色模式配色方案"
       text_size_default_on_all_devices: "将其设为我所有设备上的默认字体大小"
       allow_private_messages: "允许其他用户发送私信给我"
       external_links_in_new_tab: "在新标签页打开外部链接"
@@ -1550,10 +1568,10 @@ zh_CN:
       flags: 标记
       recent: 近期使用
       default_tone: 无肤色
-      light_tone: 浅肤色
-      medium_light_tone: 中浅肤色
+      light_tone: 浅色肤色
+      medium_light_tone: 中度浅色皮肤
       medium_tone: 中间肤色
-      medium_dark_tone: 中深肤色
+      medium_dark_tone: 中度深色皮肤
       dark_tone: 深肤色
       default: 自定义表情符号
     shared_drafts:
@@ -1731,6 +1749,7 @@ zh_CN:
       membership_request_consolidated: "%{count}个加入“%{group_name}”群组的请求"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}， %{username2}</span> %{description}"
+      votes_released: "%{description} -已完成"
       group_message_summary:
         other: "%{count} 条私信在%{group_name}组的收件箱中"
       popup:
@@ -1769,6 +1788,7 @@ zh_CN:
         post_approved: "帖子已审批"
         membership_request_consolidated: "新的成员申请"
         reaction: "新的反应"
+        votes_released: "投票已发布"
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -3610,11 +3630,11 @@ zh_CN:
             name: "顶栏主要"
             description: "顶栏的文字和图标"
           highlight:
-            name: "高亮"
+            name: "高亮显示"
             description: "页面中高亮元素的背景色，如帖子和主题。"
           danger:
             name: "危险"
-            description: "危险操作如删除帖子和主题的高亮颜色"
+            description: "突出显示删除帖子和主题等操作的颜色。"
           success:
             name: "成功"
             description: "用于指示操作成功。"

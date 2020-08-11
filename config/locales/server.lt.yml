@@ -122,8 +122,6 @@ lt:
     many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
   no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
-  no_images_allowed_trust: "Atsiprašome, jūs negalite lkelti nuotraukų į šį įrašą"
-  no_images_allowed: "Apgailestaujame, tačiau nauji nariai negali skelbti paveikslėlių pranešimuose."
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
   user_is_suspended: "Sustabdyti vartotojai negali rašyti pranešimų."

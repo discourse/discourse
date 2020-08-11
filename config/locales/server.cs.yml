@@ -175,12 +175,6 @@ cs:
     few: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatele v příspěvku."
     many: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku."
     other: "Bohužel, noví uživatelé mohou zmínit jen %{count} uživatelů v příspěvku."
-  no_images_allowed: "Bohužel, noví uživatelé nemohou vkládat obrázky do příspěvků."
-  too_many_images:
-    one: "Bohužel, noví uživatelé mohou do příspěvku vložit jen jeden obrázek."
-    few: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázky."
-    many: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázků."
-    other: "Bohužel, noví uživatelé mohou do příspěvku vložit jen %{count} obrázků."
   no_attachments_allowed: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
   too_many_attachments:
     one: "Bohužel, noví uživatelé mohou do příspěvku vložit jen jednu přílohu."

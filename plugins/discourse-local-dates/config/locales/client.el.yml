@@ -7,6 +7,26 @@
 el:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: Σήμερα %{time}
+        tomorrow: Αύριο %{time}
+        yesterday: Χθες %{time}
+        countdown:
+          passed: ημερομηνία έχει παρέλθει
+      title: Εισαγωγή ημερομηνίας / ώρας
       create:
         form:
+          date_title: Ημερομηνία
           time_title: Ώρα
+          format_title: Μορφή ημερομηνίας
+          timezone: Ζώνη ώρας
+          until: Μέχρι...
+          recurring:
+            every_day: "Κάθε μέρα"
+            every_week: "Κάθε εβδομάδα"
+            every_two_weeks: "Κάθε δυο εβδομάδες"
+            every_month: "Κάθε μήνα"
+            every_two_months: "Κάθε δύο μήνες"
+            every_three_months: "Κάθε τρεις μήνες"
+            every_six_months: "Κάθε έξι μήνες"
+            every_year: "Κάθε χρόνο"

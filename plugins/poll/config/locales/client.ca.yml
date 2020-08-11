@@ -46,8 +46,6 @@ ca:
         label: "Mostra el vot"
       group-results:
         title: "Agrupa els vots per camp d'usuari"
-      ungroup-results:
-        title: "Combina tots els vots"
       export-results:
         title: "Exporta els resultats de la votació"
         label: "Exporta"

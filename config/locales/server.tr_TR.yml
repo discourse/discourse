@@ -271,11 +271,6 @@ tr_TR:
   too_many_mentions_newuser:
     one: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
     other: "Üzgünüz, yeni kullanıcılar bir gönderide sadece %{count} kullanıcıdan bahsedebilirler."
-  no_images_allowed_trust: "Maalesef, görüntüleri bir gönderiye koyamazsınız"
-  no_images_allowed: "Üzgünüz, yeni kullanıcılar gönderilere resim koyamazlar."
-  too_many_images:
-    one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
-    other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} resim koyabilirler. "
   no_attachments_allowed: "Üzgünüz, yeni kullanıcılar gönderilere bir şey ekleyemezler."
   too_many_attachments:
     one: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} eklenti koyabilirler."
@@ -1581,9 +1576,7 @@ tr_TR:
     min_trust_to_send_messages: "Yeni kişisel iletiler oluşturmak için gereken minimum güven seviyesi."
     min_trust_to_flag_posts: "Gönderileri raporlamak için gereken minimum güven seviyesi"
     min_trust_to_post_links: "Gönderilere bağlantı eklemek için gereken minimum güven seviyesi"
-    min_trust_to_post_images: "Bir gönderiye resim eklemek için gereken minimum güven seviyesi"
     newuser_max_links: "Yeni bir kullanıcının bir gönderiye ekleyebileceği bağlantı sayısı."
-    newuser_max_images: "Yeni bir kullanıcının bir gönderiye ekleyebileceği resim sayısı."
     newuser_max_attachments: "Yeni bir kullanıcının bir gönderiye ekleyebileceği dosya sayısı."
     newuser_max_mentions_per_post: "Yeni bir kullanıcının bir gönderi içinde kullanabileceği en fazla @isim bildiri sayısı."
     newuser_max_replies_per_topic: "Yeni bir kullanıcının tek bir konu içerisinde, başka bir kullanıcı ona cevap yazana kadar, girebileceği en fazla cevap sayısı. "

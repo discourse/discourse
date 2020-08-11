@@ -209,11 +209,6 @@ nb_NO:
   too_many_mentions_newuser:
     one: "Beklager, nye brukere kan bare nevne én annen bruker i et innlegg."
     other: "Beklager, nye brukere kan bare nevne %{count} brukere i et innlegg."
-  no_images_allowed_trust: "Beklager, du kan ikke legge til bilder i et innlegg."
-  no_images_allowed: "Beklager, nye brukere kan ikke legge til bilder i et innlegg."
-  too_many_images:
-    one: "Beklager, nye brukere kan bare legge til ett bilde i et innlegg."
-    other: "Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg."
   no_attachments_allowed: "Beklager, nye brukere kan ikke laste opp vedlegg til et innlegg."
   too_many_attachments:
     one: "Beklager, nye brukere kan bare laste opp ett vedlegg til et innlegg."
@@ -1058,7 +1053,6 @@ nb_NO:
     max_logins_per_ip_per_hour: "Maksimalt antall innlogginger som tillates for hver IP-adresse per time."
     allow_staff_to_upload_any_file_in_pm: "Tillat medlemmer av staben å laste opp hvilken som helst fil i private samtaler"
     newuser_max_links: "Hvor mange linker en ny bruker kan legge til i et innlegg."
-    newuser_max_images: "Hvor mange bilder en ny bruker kan legge til i et innlegg."
     title_prettify: "Unngå vanlige skrivefeil i titler, sånn som store bokstaver, liten bokstav først, mange !, ? og punktum på slutten, osv."
     faq_url: "Hvis du har O-S-S på et annet nettsted du gjerne vil bruke, skriv inn nettadressen her."
     tos_url: "Dersom du har et bruksvilkår-dokument et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."

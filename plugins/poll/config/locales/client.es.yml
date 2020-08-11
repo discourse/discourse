@@ -49,9 +49,6 @@ es:
       group-results:
         title: "Agrupar votos por campo de usuario"
         label: "Mostrar desglose"
-      ungroup-results:
-        title: "Combinar todos los votos"
-        label: "Ocultar desglose"
       export-results:
         title: "Exportar los resultados de la encuesta"
         label: "Exportar"

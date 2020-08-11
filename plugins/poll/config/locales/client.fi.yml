@@ -37,9 +37,6 @@ fi:
       group-results:
         title: "Lajittele äänet käyttäjäkentän perusteella"
         label: "Näytä erittely"
-      ungroup-results:
-        title: "Yhdistä kaikki äänet"
-        label: "Piilota erittely"
       export-results:
         title: "Vie äänestystulos"
         label: "Vie"

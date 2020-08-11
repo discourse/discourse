@@ -599,6 +599,22 @@ nl:
         membership:
           title: Lidmaatschap
           access: Toegang
+        categories:
+          title: Categorieën
+          long_title: "Standaardmeldingen voor categorieën"
+          description: "Wanneer gebruikers aan deze groep worden toegevoegd, worden hun instellingen voor categoriemeldingen op deze standaardwaarden ingesteld. Daarna kunnen ze deze wijzigen."
+          watched_categories_instructions: "Automatisch alle topics in deze categorieën in de gaten houden. Groepsleden ontvangen meldingen bij alle nieuwe berichten en topics, en het aantal nieuwe berichten verschijnt ook naast het topic."
+          tracked_categories_instructions: "Automatisch alle topics in deze categorieën volgen. Het aantal nieuwe berichten verschijnt naast het topic."
+          watching_first_post_categories_instructions: "Gebruikers ontvangen een melding bij het eerste bericht in elk nieuw topic in deze categorieën."
+          muted_categories_instructions: "Gebruikers ontvangen geen enkele melding over nieuwe topics in deze categorieën, en ze verschijnen niet op de pagina's Categorieën of Nieuwste."
+        tags:
+          title: Tags
+          long_title: "Standaardmeldingen voor tags"
+          description: "Wanneer gebruikers aan deze groep worden toegevoegd, worden hun instellingen voor tagmeldingen op deze standaardwaarden ingesteld. Daarna kunnen ze deze wijzigen."
+          watched_tags_instructions: "Automatisch alle topics met deze tags in de gaten houden. Groepsleden ontvangen meldingen bij alle nieuwe berichten en topics, en het aantal nieuwe berichten verschijnt ook naast het topic."
+          tracked_tags_instructions: "Automatisch alle topics met deze tags volgen. Het aantal nieuwe berichten verschijnt naast het topic."
+          watching_first_post_tags_instructions: "Gebruikers ontvangen een melding bij het eerste bericht in elk nieuw topic met deze tags."
+          muted_tags_instructions: "Gebruikers ontvangen geen enkele melding over nieuwe topics met deze tags, en ze verschijnen niet in Nieuwste."
         logs:
           title: "Logboeken"
           when: "Wanneer"
@@ -847,6 +863,8 @@ nl:
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
       dynamic_favicon: "Aantal op browserpictogram tonen"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
+      dark_mode: "Donkere modus"
+      dark_mode_enable: "Automatisch kleurenschema voor donkere modus inschakelen"
       text_size_default_on_all_devices: "Dit de standaard tekstgrootte maken op al mijn apparaten"
       allow_private_messages: "Andere gebruikers mogen mij persoonlijke berichten sturen"
       external_links_in_new_tab: "Alle externe koppelingen openen in een nieuw tabblad"
@@ -1787,6 +1805,7 @@ nl:
       membership_request_consolidated: "%{count} open lidmaatschapsaanvragen voor '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - voltooid"
       group_message_summary:
         one: "%{count} bericht in uw Postvak IN voor %{group_name}"
         other: "%{count} berichten in uw Postvak IN voor %{group_name}"
@@ -1826,6 +1845,7 @@ nl:
         post_approved: "bericht goedgekeurd"
         membership_request_consolidated: "nieuwe lidmaatschapsaanvragen"
         reaction: "nieuwe reactie"
+        votes_released: "Stem is uitgebracht"
     upload_selector:
       title: "Een afbeelding toevoegen"
       title_with_attachments: "Een afbeelding of bestand toevoegen"

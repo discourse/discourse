@@ -624,6 +624,12 @@ he:
     groups:
       member_added: "הוסיף"
       member_requested: "בקשה התקבלה ב־"
+      add_members:
+        title: "הוספת חברים אל %{group_name}"
+        description: "ניתן גם להדביק ברשימה מופרדת בפסיקים"
+        usernames: "נא למלא שמות משתמשים או כתובות דוא״ל"
+        input_placeholder: "שמות משתמשים או כתובות דוא״ל"
+        notify_users: "להודיע למשתמשים"
       requests:
         title: "בקשות"
         reason: "סיבה"
@@ -665,6 +671,22 @@ he:
         membership:
           title: חברות
           access: גישה
+        categories:
+          title: קטגוריות
+          long_title: "הודעות בררת המחדל של הקטגוריה"
+          description: "כאשר משתמשים מתווספים לקבוצה זו, הגדרות ההתראה של הקטגוריות שלהם לבררות מחדל אלו. יש להם אפשרות לשנות זאת בהמשך."
+          watched_categories_instructions: "לעקוב אוטומטית אחר כל הנושאים בקטגוריות הללו. חברי הקבוצה יקבלו התראה על כל הפוסטים והנושאים החדשים. מספר הפוסטים יופיע לצד כותרת הנושא."
+          tracked_categories_instructions: "לעוקב אוטומטית אחר כל הנושאים עם קטגוריות אלו. ספירה של פוסטים חדשים תופיע ליד הנושא."
+          watching_first_post_categories_instructions: "המשתמשים יקבלו הודעה לגבי הפוסט הראשון בכל נושא חדש בקטגוריות אלו."
+          muted_categories_instructions: "משתמשים לא יקבלו הודעה על נושאים חדשים בקטגוריות אלה והם לא יופיעו בקטגוריות או בדפים האחרונים."
+        tags:
+          title: תגיות
+          long_title: "התראות בררת המחדל של התגיות"
+          description: "כאשר משתמשים מתווספים לקבוצה זו, הגדרות ההתראה של התגיות שלהם יוגדרו לבררות מחדל אלו. יש להם אפשרות לשנות זאת בהמשך."
+          watched_tags_instructions: "לעקוב אוטומטית אחר כל הנושאים עם התגיות הללו. חברי הקבוצה יקבלו התראה על כל הפוסטים והנושאים החדשים. מספר הפוסטים יופיע לצד כותרת הנושא."
+          tracked_tags_instructions: "לעקוב אוטומטית אחר כל הנושאים עם תגיות אלו. ספירה של פוסטים חדשים תופיע ליד הנושא."
+          watching_first_post_tags_instructions: "המשתמשים יקבלו הודעות על פוסט ראשון בכל נושא חדש עם התגיות האלו."
+          muted_tags_instructions: "המשתמשים לא יקבלו הודעות על נושאים חדשים עם תגיות אלו והם לא יופיעו ברשימת האחרונים."
         logs:
           title: "יומנים"
           when: "מתי"
@@ -675,6 +697,10 @@ he:
           details: "פרטים"
           from: "מאת"
           to: "אל"
+      permissions:
+        title: "הרשאות"
+        none: "אין קטגוריות המשויכות לקבוצה זו."
+        description: "החברים בקבוצה זו יכולים לגשת לקטגוריות האלו"
       public_admission: "אפשרו למשתמשים להצטרף לקבוצה בחופשיות (דורש קבוצה פומבית)"
       public_exit: "אפשרו למשתמשים לעזוב את הקבוצה בחופשיות"
       empty:
@@ -921,6 +947,8 @@ he:
       first_notification: "התראה ראשונה! בחרו אותה כדי להתחיל."
       dynamic_favicon: "הצגת ספירה בסמל הדפדפן"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
+      dark_mode: "מצב כהה"
+      dark_mode_enable: "הפעלת ערכת צבעים כהה אוטומטית"
       text_size_default_on_all_devices: "הפוך את גודל הטקסט הזה לברירת המחדל בכל המכשירים שלי"
       allow_private_messages: "אפשר למשתמשים אחרים לשלוח לי הודעות פרטיות"
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
@@ -1902,6 +1930,7 @@ he:
       membership_request_consolidated: "%{count} בקשות חברות פתוחות מול ‚%{group_name}’"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - הסתיים"
       group_message_summary:
         one: "הודעה %{count} בתיבת ה%{group_name} שלך"
         two: "%{count} הודעות בתיבת ה%{group_name} שלך"

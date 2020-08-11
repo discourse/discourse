@@ -263,11 +263,6 @@ ca:
   too_many_mentions_newuser:
     one: "Els usuaris nous només poden mencionar un usuari en una publicació."
     other: "Els usuaris nous només poden mencionar %{count} usuaris en una publicació."
-  no_images_allowed_trust: "No podeu posar imatges en una publicació."
-  no_images_allowed: "Els usuaris nous no poden adjuntar imatges a una publicació."
-  too_many_images:
-    one: "Els usuaris nous només poden adjuntar una imatge a una publicació."
-    other: "Els usuaris nous només poden adjuntar %{count} imatges a una publicació."
   no_attachments_allowed: "Els usuaris nous no poden adjuntar fitxers a una publicació."
   too_many_attachments:
     one: "Els usuaris nous només poden adjuntar un fitxer a una publicació."
@@ -1563,9 +1558,7 @@ ca:
     min_trust_to_send_messages: "Nivell de confiança mínim necessari per a crear nous missatges personals."
     min_trust_to_flag_posts: "Nivell de confiança mínim necessari per a marcar amb bandera les publicacions"
     min_trust_to_post_links: "Nivell de confiança mínim necessari per a incloure enllaços en els missatges"
-    min_trust_to_post_images: "Nivell de confiança mínim necessari per a incloure imatges en una publicació"
     newuser_max_links: "Quants enllaços pot afegir un usuari nou a una publicació."
-    newuser_max_images: "Quantes imatges pot afegir un usuari nou a una publicació."
     newuser_max_attachments: "Quants adjunts pot afegir un usuari nou a una publicació"
     newuser_max_mentions_per_post: "Nombre màxim de mencions a @usuaris que un usuari nou pot usar en una publicació."
     newuser_max_replies_per_topic: "Nombre màxim de respostes que un usuari nou pot fer en un únic tema fins que algú hi respongui."

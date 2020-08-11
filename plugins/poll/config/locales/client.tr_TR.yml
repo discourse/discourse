@@ -37,9 +37,6 @@ tr_TR:
       group-results:
         title: "Kullanıcı alanına göre oyları gruplandır"
         label: "Dökümü göster"
-      ungroup-results:
-        title: "Tüm oyları birleştir"
-        label: "Sorunu gizle"
       export-results:
         title: "Anket sonuçlarını dışa aktarma"
         label: "Dışa Aktar"

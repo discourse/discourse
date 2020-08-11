@@ -49,9 +49,6 @@ fr:
       group-results:
         title: "Grouper les votes par champ utilisateur"
         label: "Afficher les détails"
-      ungroup-results:
-        title: "Combiner tous les votes"
-        label: "Masquer les détails"
       export-results:
         title: "Exporter les résultats du sondage"
         label: "Exporter"

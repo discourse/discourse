@@ -172,13 +172,6 @@ sk:
     few: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     many: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     other: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
-  no_images_allowed_trust: "Ľutujeme, do príspevku nemôžete vložiť obrázok"
-  no_images_allowed: "Ľutujeme, noví používatelia nemôžu vkladať obrázky do príspevkov."
-  too_many_images:
-    one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden obrázok do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázky do príspevku."
-    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázkov do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázkov do príspevku."
   no_attachments_allowed: "Ľutujeme, noví používatelia nemôžu vkladať prílohy do príspevkov."
   too_many_attachments:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku."
@@ -928,7 +921,6 @@ sk:
     min_trust_to_edit_wiki_post: "MInimálna úroveň dôvery na úpravu wiki príspevku."
     min_trust_to_allow_self_wiki: "MInimálna úroveň dôvery k tomu aby mohol používateľ svoje témy meniť na wiki."
     newuser_max_links: "Koľko odkazov môže nový používateľ pridať do príspevku."
-    newuser_max_images: "Koľko obrázkov môže nový používateľ pridať do príspevku."
     newuser_max_attachments: "Koľko príloh môže nový používateľ pridať do príspevku."
     newuser_max_mentions_per_post: "Maximálny počet notifikácií typu @meno môže nový užívateľ použiť v príspevku."
     newuser_max_replies_per_topic: "Maximálny počet odpovedí ktoré môže nový používateľ pridať do jednej témy pokiaľ na ne niekto neodpovie."

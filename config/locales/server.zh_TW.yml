@@ -232,10 +232,6 @@ zh_TW:
   no_mentions_allowed_newuser: "抱歉，新使用者不能提及其他使用者。"
   too_many_mentions_newuser:
     other: "抱歉，新使用者在貼文中只能提及 %{count} 位使用者。"
-  no_images_allowed_trust: "抱歉，您不能在貼文中插入圖片"
-  no_images_allowed: "抱歉，新使用者不能在貼文中放置圖片。"
-  too_many_images:
-    other: "抱歉，新使用者只能在貼文中放置 %{count} 張圖片。"
   no_attachments_allowed: "抱歉，新使用者不能在貼文中放置附件。"
   too_many_attachments:
     other: "抱歉，新使用者只能在貼文中放置 %{count} 個附件。"
@@ -1435,9 +1431,7 @@ zh_TW:
     min_trust_to_send_messages: "建立新個人訊息所需的最低信任等級"
     min_trust_to_flag_posts: "投訴話題所需的最低信任等級"
     min_trust_to_post_links: "在貼文中加入連結的最低信任等級需求"
-    min_trust_to_post_images: "在貼文中加入影像的最低信任等級需求"
     newuser_max_links: "新使用者可添加多少連結於一篇貼文中"
-    newuser_max_images: "新使用者可添加多少張圖片於一篇貼文中"
     newuser_max_attachments: "新使用者可添加多少附件於一篇貼文中"
     newuser_max_mentions_per_post: "新使用者可以在一個貼文裡使用@name提及的最大數量。"
     newuser_max_replies_per_topic: "直至有人回覆他們前，新使用者在一個貼文裡的最大回覆數量。"
