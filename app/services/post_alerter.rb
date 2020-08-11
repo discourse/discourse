@@ -613,21 +613,28 @@ class PostAlerter
     end
   end
 
-  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true, new_record: false)
+  def notify_post_users(post, notified, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)
     return unless post.topic
 
     warn_if_not_sidekiq
 
     condition = +<<~SQL
       id IN (
+        SELECT id FROM users WHERE false
+        /*topic*/
+        /*category*/
+        /*tags*/
+      )
+    SQL
+    if include_topic_watchers
+      condition.sub! "/*topic*/", <<~SQL
+        UNION
         SELECT user_id
           FROM topic_users
          WHERE notification_level = :watching
            AND topic_id = :topic_id
-         /*category*/
-         /*tags*/
-      )
-    SQL
+      SQL
+    end
 
     if include_category_watchers
       condition.sub! "/*category*/", <<~SQL
@@ -639,7 +646,7 @@ class PostAlerter
                              AND tu.topic_id = :topic_id
          WHERE cu.notification_level = :watching
            AND cu.category_id = :category_id
-           AND tu.user_id IS NULL
+           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
       SQL
     end
 
@@ -655,7 +662,7 @@ class PostAlerter
                              AND tu.topic_id = :topic_id
          WHERE tag_users.notification_level = :watching
            AND tag_users.tag_id IN (:tag_ids)
-           AND tu.user_id IS NULL
+           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
       SQL
     end
 
@@ -665,6 +672,10 @@ class PostAlerter
       category_id: post.topic.category_id,
       tag_ids: tag_ids
     )
+
+    if post.topic.private_message?
+      notify = notify.where(staged: false).staff
+    end
 
     exclude_user_ids = notified.map(&:id)
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
