@@ -92,7 +92,10 @@ Discourse::Application.routes.draw do
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
 
-      resources :groups, constraints: AdminConstraint.new do
+      resources :groups, only: [:create]
+      resources :groups, except: [:create], constraints: AdminConstraint.new do
+        # resources :groups, constraints: AdminConstraint.new do
+
         collection do
           get 'bulk'
           get 'bulk-complete' => 'groups#bulk'

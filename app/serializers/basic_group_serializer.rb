@@ -31,6 +31,7 @@ class BasicGroupSerializer < ApplicationSerializer
              :is_group_owner,
              :members_visibility_level,
              :can_see_members,
+             :can_admin_group,
              :publish_read_state
 
   def self.admin_attributes(*attrs)
@@ -119,6 +120,14 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def can_see_members
     scope.can_see_group_members?(object)
+  end
+
+  def can_admin_group
+    scope.can_admin_group?(object)
+  end
+
+  def include_can_admin_group?
+    scope.can_admin_group?(object)
   end
 
   [:watching, :tracking, :watching_first_post, :muted].each do |level|

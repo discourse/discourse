@@ -69,6 +69,7 @@ export default Controller.extend({
       );
     }
 
+    // TODO - confirm canManageGroup is working for moderators
     if (canManageGroup) {
       defaultTabs.push(
         Tab.create({

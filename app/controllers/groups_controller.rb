@@ -140,7 +140,9 @@ class GroupsController < ApplicationController
 
   def update
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group) unless current_user.admin
+    # TODO: - admins can always edit
+    #       - mods can edit if sitesetting is on, and they can_see
+    guardian.ensure_can_edit!(group) unless current_user.admin?
 
     if group.update(group_params(automatic: group.automatic))
       GroupActionLogger.new(current_user, group).log_change_group_settings
@@ -582,7 +584,9 @@ class GroupsController < ApplicationController
           membership_request_template
         }
 
-        if current_user.admin
+        # TODO allow if: - is staff
+        #              : - is moderator, and correct sitesetting is enabled
+        if current_user.staff?
           default_params.push(*[
             :incoming_email,
             :smtp_server,

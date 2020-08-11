@@ -1,5 +1,5 @@
 {{#if canEdit}}
-  {{#if this.currentUser.admin}}
+  {{#if this.currentUser.can_create_group}}
     <div class="control-group">
       <label class="control-label" for="name">{{i18n "groups.name"}}</label>
 
@@ -20,7 +20,7 @@
         value=model.full_name}}
   </div>
 
-  {{#if this.currentUser.admin}}
+  {{#if this.currentUser.can_create_group}}
     <div class="control-group">
       <label class="control-label" for="title">
         {{i18n "admin.groups.default_title"}}
