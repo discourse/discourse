@@ -33,13 +33,6 @@ export const POPULAR_THEMES = [
       "https://meta.discourse.org/t/sams-personal-minimal-topic-list-design/23552"
   },
   {
-    name: "Vincent",
-    value: "https://github.com/discourse/discourse-vincent-theme",
-    preview: "https://theme-creator.discourse.org/theme/awesomerobot/vincent",
-    description: "An elegant dark theme with a few color palettes.",
-    meta_url: "https://meta.discourse.org/t/discourse-vincent-theme/76662"
-  },
-  {
     name: "Brand Header",
     value: "https://github.com/discourse/discourse-brand-header",
     description:
