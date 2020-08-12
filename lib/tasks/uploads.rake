@@ -995,7 +995,7 @@ task "uploads:fix_relative_upload_links" => :environment do
   end
 end
 
-def analyze_missing
+def analyze_missing_s3
   puts "List of posts with missing images:"
   sql = <<~SQL
     SELECT post_id, url, sha1, extension, uploads.id
@@ -1053,17 +1053,17 @@ def analyze_missing
 
 end
 
-task "uploads:analyze_missing" => :environment do
+task "uploads:analyze_missing_s3" => :environment do
   if RailsMultisite::ConnectionManagement.current_db != "default"
-    analyze_missing
+    analyze_missing_s3
   else
     RailsMultisite::ConnectionManagement.each_connection do
-      analyze_missing
+      analyze_missing_s3
     end
   end
 end
 
-def fix_missing
+def fix_missing_s3
   Jobs.run_immediately!
   puts "Attempting to automatically fix problem uploads"
   puts
@@ -1085,12 +1085,12 @@ def fix_missing
   puts
 end
 
-task "uploads:fix_missing" => :environment do
+task "uploads:fix_missing_s3" => :environment do
   if RailsMultisite::ConnectionManagement.current_db != "default"
-    fix_missing
+    fix_missing_s3
   else
     RailsMultisite::ConnectionManagement.each_connection do
-      fix_missing
+      fix_missing_s3
     end
   end
 end
