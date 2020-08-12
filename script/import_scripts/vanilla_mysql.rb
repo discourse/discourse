@@ -42,6 +42,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     import_categories
     import_topics
     import_posts
+    import_messages
 
     update_tl0
 
@@ -282,6 +283,64 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           raw: clean_up(comment['Body']),
           created_at: Time.zone.at(comment['DateInserted'])
         }
+      end
+    end
+  end
+
+  def import_messages
+    puts "", "importing messages..."
+
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}ConversationMessage;").first['count']
+
+    @last_message_id = -1
+
+    batches(BATCH_SIZE) do |offset|
+      messages = mysql_query(
+        "SELECT m.MessageID, m.Body, m.Format,
+                m.InsertUserID, m.DateInserted,
+                m.ConversationID, c.Contributors
+         FROM #{TABLE_PREFIX}ConversationMessage m
+         INNER JOIN #{TABLE_PREFIX}Conversation c on c.ConversationID = m.ConversationID
+         WHERE m.MessageID > #{@last_message_id}
+         ORDER BY m.MessageID ASC
+         LIMIT #{BATCH_SIZE};")
+
+      break if messages.size < 1
+      @last_message_id = messages.to_a.last['MessageID']
+      next if all_records_exist? :posts, messages.map { |t| "message#" + t['MessageID'].to_s }
+
+      create_posts(messages, total: total_count, offset: offset) do |message|
+        common = {
+          user_id: user_id_from_imported_user_id(message['InsertUserID']) || Discourse::SYSTEM_USER_ID,
+          raw: clean_up(message['Body']),
+          created_at: Time.zone.at(message['DateInserted']),
+          custom_fields: {
+            conversation_id: message['ConversationID'],
+            participants: message['Contributors'],
+            message_id: message['MessageID']
+          }
+        }
+
+        conversation_id = "conversation#" + message['ConversationID'].to_s
+        message_id = "message#" + message['MessageID'].to_s
+
+        imported_conversation = topic_lookup_from_imported_post_id(conversation_id)
+
+        if imported_conversation.present?
+          common.merge(id: message_id, topic_id: imported_conversation[:topic_id])
+        else
+          user_ids = (message['Contributors'] || '').scan(/\"(\d+)\"/).flatten.map(&:to_i)
+          usernames = user_ids.map { |id| @lookup.find_user_by_import_id(id).try(:username) }.compact
+          usernames = [@lookup.find_user_by_import_id(message['InsertUserID']).try(:username)].compact if usernames.empty?
+          title = body.truncate(40)
+
+          {
+            id: conversation_id,
+            title: title,
+            archetype: Archetype.private_message,
+            target_usernames: usernames.uniq,
+          }.merge(common)
+        end
       end
     end
   end
