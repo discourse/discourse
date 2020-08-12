@@ -41,25 +41,24 @@ export function shouldOpenInNewTab(href) {
 }
 
 export function openLinkInNewTab(link) {
-  let $link = $(link);
-  let href = ($link.attr("href") || $link.data("href") || "").trim();
+  let href = (link.href || link.dataset.href || "").trim();
   const newWindow = window.open(href, "_blank");
   newWindow.opener = null;
   newWindow.focus();
 
   // Hack to prevent changing current window.location.
   // e.preventDefault() does not work.
-  if (!$link.data("href")) {
-    $link.addClass("no-href");
-    $link.data("href", $link.attr("href"));
-    $link.attr("href", null);
-    $link.data("auto-route", true);
+  if (!link.dataset.href) {
+    link.classList.add("no-href");
+    link.setAttribute("data-href", link.href);
+    link.removeAttribute("href");
+    link.setAttribute("data-auto-route", true);
 
     later(() => {
-      $link.removeClass("no-href");
-      $link.attr("href", $link.data("href"));
-      $link.data("href", null);
-      $link.data("auto-route", null);
+      link.classList.remove("no-href");
+      link.setAttribute("href", link.dataset.href);
+      link.removeAttribute("data-href");
+      link.removeAttribute("data-auto-route");
     }, 50);
   }
 }
@@ -153,7 +152,7 @@ export default {
 
     if (!wantsNewWindow(e)) {
       if (shouldOpenInNewTab(href)) {
-        openLinkInNewTab($link);
+        openLinkInNewTab($link[0]);
       } else {
         trackPromise.finally(() => {
           if (DiscourseURL.isInternal(href)) {
