@@ -1,5 +1,6 @@
 import { bind } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import { isTesting } from "discourse-common/config/environment";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -140,7 +141,7 @@ export default class {
     this.topicTrackingState.updateSeen(topicId, highestSeen);
 
     if (!$.isEmptyObject(newTimings)) {
-      if (this.currentUser) {
+      if (this.currentUser && !isTesting()) {
         this._inProgress = true;
 
         ajax("/topics/timings", {
