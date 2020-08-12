@@ -62,7 +62,7 @@ export default class LockOn {
       $(window).scrollTop(this.previousTop);
     }
 
-    this.interval = setInterval(() => this.performLocking(), 50);
+    this.interval = setInterval(() => this._performLocking(), 50);
 
     $("body, html")
       .off(SCROLL_EVENTS)
@@ -73,7 +73,7 @@ export default class LockOn {
       });
   }
 
-  performLocking() {
+  _performLocking() {
     const elementTop = this.elementTop();
 
     // If we can't find the element yet, wait a little bit more
