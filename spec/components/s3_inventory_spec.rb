@@ -64,7 +64,10 @@ describe "S3Inventory" do
 
       CSV.foreach(csv_filename, headers: false) do |row|
         next unless row[S3Inventory::CSV_KEY_INDEX].include?("default")
-        Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
+        Fabricate(:upload,
+          etag: row[S3Inventory::CSV_ETAG_INDEX],
+          url: File.join(Discourse.store.absolute_base_url, row[S3Inventory::CSV_KEY_INDEX]),
+          updated_at: 2.days.ago)
       end
 
       @upload1 = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
@@ -82,6 +85,25 @@ describe "S3Inventory" do
 
       expect(output).to eq("#{@upload1.url}\n#{@no_etag.url}\n2 of 5 uploads are missing\n")
       expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
+    end
+
+    it "should detect when a url match exists with a different etag" do
+      differing_etag = Upload.find_by(etag: "defcaac0b4aca535c284e95f30d608d0")
+      differing_etag.update_columns(etag: "somethingelse")
+
+      output = capture_stdout do
+        inventory.backfill_etags_and_list_missing
+      end
+
+      expect(output).to eq(<<~TEXT)
+        #{differing_etag.url} has different etag
+        #{@upload1.url}
+        #{@no_etag.url}
+        3 of 5 uploads are missing
+        1 of these are caused by differing etags
+        Null the etag column and re-run for automatic backfill
+      TEXT
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(3)
     end
 
     it "marks missing uploads as not verified and found uploads as verified. uploads not checked will be verified nil" do
