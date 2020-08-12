@@ -994,3 +994,75 @@ task "uploads:fix_relative_upload_links" => :environment do
     end
   end
 end
+
+def analyze_missing
+  puts "List of posts with missing images:"
+  sql = <<~SQL
+    SELECT post_id, url, sha1, extension
+    FROM post_uploads pu
+    JOIN uploads on uploads.id = pu.upload_id
+    WHERE NOT verified
+    ORDER BY created_at
+  SQL
+
+  lookup = {}
+  DB.query(sql).each do |r|
+    lookup[r.post_id] ||= []
+    lookup[r.post_id] << [r.url, r.sha1, r.extension]
+  end
+
+  posts = Post.where(id: lookup.keys)
+  posts.order(:created_at).each do |post|
+    puts "#{Discourse.base_url}/p/#{post.id} #{lookup[post.id].length} missing, #{post.created_at}"
+    lookup[post.id].each do |url, sha1, extension|
+      puts url
+      puts "#{Upload.base62_sha1(sha1)}.#{extension}"
+    end
+    puts
+  end
+
+  puts "Total missing uploads: #{Upload.where(verified: false).count}"
+  puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
+end
+
+task "uploads:analyze_missing" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    analyze_missing
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      analyze_missing
+    end
+  end
+end
+
+def fix_missing
+  Jobs.run_immediately!
+  puts "Attempting to automatically fix problem uploads"
+  puts
+  puts "Rebaking posts with missing uploads, this can take a while as all rebaking runs inline"
+
+  sql = <<~SQL
+    SELECT post_id
+    FROM post_uploads pu
+    JOIN uploads on uploads.id = pu.upload_id
+    WHERE NOT verified
+    ORDER BY post_id DESC
+  SQL
+
+  DB.query_single(sql).each do |post_id|
+    post = Post.find(post_id)
+    post.rebake!
+    print "."
+  end
+  puts
+end
+
+task "uploads:fix_missing" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    fix_missing
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      fix_missing
+    end
+  end
+end
