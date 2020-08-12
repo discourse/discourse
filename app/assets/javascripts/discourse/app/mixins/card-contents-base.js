@@ -208,7 +208,27 @@ export default Mixin.create({
               }
             }
 
-            position.top -= $("#main-outlet").offset().top;
+            let outlets = [
+              ".above-site-header-outlet",
+              ".below-site-header-outlet"
+            ];
+
+            // If these outlets have height they impact user-card positioning
+
+            let outletHeights = 0;
+
+            outlets.forEach(function(outletClass) {
+              if (document.querySelector(outletClass)) {
+                let outlet = document.querySelectorAll(outletClass);
+                for (var i = 0; i < outlet.length; i++) {
+                  if (outlet[i].offsetHeight) {
+                    outletHeights += Number(outlet[i].offsetHeight);
+                  }
+                }
+              }
+            });
+
+            position.top -= $("#main-outlet").offset().top - outletHeights;
             if (isFixed) {
               position.top -= $("html").scrollTop();
               //if content is fixed and will be cut off on the bottom, display it above...
