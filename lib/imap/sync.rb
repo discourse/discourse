@@ -6,11 +6,24 @@ module Imap
   class Sync
     class Logger
       def self.log(msg, level = :debug)
-        if ENV['DISCOURSE_EMAIL_SYNC_LOG_OVERRIDE'] == 'warn'
-          Rails.logger.warn(msg)
-        else
-          Rails.logger.send(level, msg)
+        timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S.%L")
+        @@logger ||= begin
+          f = File.open "#{Rails.root}/log/imap_sync.log", "a"
+          f.sync = true
+          ::Logger.new f
         end
+        @@log_queue ||= Queue.new
+        @@log_thread ||= Thread.new do
+          begin
+            loop { @@logger << @@log_queue.pop }
+          rescue Exception => e
+            Discourse.warn_exception(e, message: "IMAP sync logging thread terminated unexpectedly")
+          end
+        end
+        @@log_queue.push("#{level[0].upcase}, [#{timestamp}] #{msg}\n")
+
+        # bubble this up to the regular rails logger for collection
+        Rails.logger.warn(msg) if level == :warn
       end
     end
 
