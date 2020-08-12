@@ -230,7 +230,7 @@ class S3Helper
   def download_file(filename, destination_path, failure_message = nil)
     object(filename).download_file(destination_path)
   rescue => err
-    raise failure_message&.to_s || "Failed to download #{filename} because #{err.message}"
+    raise failure_message&.to_s || "Failed to download #{filename} because #{err.message.length > 0 ? err.message : err.class.to_s}"
   end
 
   def s3_client
