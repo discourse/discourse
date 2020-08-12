@@ -410,7 +410,7 @@ describe Search do
     end
 
     let(:expected_blurb) do
-      "hundred characters to satisfy any test conditions that require content longer than the typical test post raw content. It really is some long content, folks. <span class=\"search-highlight\">elephant</span>"
+      "#{Search::GroupedSearchResults::OMISSION}hundred characters to satisfy any test conditions that require content longer than the typical test post raw content. It really is some long content, folks. <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">elephant</span>"
     end
 
     it 'returns the post' do
@@ -429,7 +429,7 @@ describe Search do
       expect(post.topic_title_headline).to eq(topic.fancy_title)
     end
 
-    it "it limits the headline to #{Search::MAX_LENGTH_FOR_HEADLINE} characters" do
+    it "only applies highlighting to the first #{Search::MAX_LENGTH_FOR_HEADLINE} characters" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
       reply.update!(raw: "#{'a' * Search::MAX_LENGTH_FOR_HEADLINE} #{reply.raw}")
@@ -441,6 +441,20 @@ describe Search do
       post = result.posts.first
 
       expect(post.headline.include?('elephant')).to eq(false)
+    end
+
+    it "limits the search headline to #{Search::GroupedSearchResults::BLURB_LENGTH} characters" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      reply.update!(raw: "#{'a' * Search::GroupedSearchResults::BLURB_LENGTH} elephant")
+
+      result = Search.execute('elephant')
+
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+
+      post = result.posts.first
+
+      expect(result.blurb(post)).to eq("#{'a' * Search::GroupedSearchResults::BLURB_LENGTH}#{Search::GroupedSearchResults::OMISSION}")
     end
 
     it 'returns the right post and blurb for searches with phrase' do

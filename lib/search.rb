@@ -1177,8 +1177,28 @@ class Search
         .joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id")
         .joins("INNER JOIN topics t1 ON t1.id = posts.topic_id")
         .select(
-          "TS_HEADLINE(#{ts_config}, t1.fancy_title, PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS topic_title_headline",
-          "TS_HEADLINE(#{ts_config}, LEFT(pd.raw_data, #{MAX_LENGTH_FOR_HEADLINE}), PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'), 'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>''') AS headline",
+          "TS_HEADLINE(
+            #{ts_config},
+            t1.fancy_title,
+            PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
+            'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'''
+          ) AS topic_title_headline",
+          "TS_HEADLINE(
+            #{ts_config},
+            LEFT(
+              TS_HEADLINE(
+                #{ts_config},
+                LEFT(pd.raw_data, #{MAX_LENGTH_FOR_HEADLINE}),
+                PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
+                'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel='''', StopSel='''''
+              ),
+              #{Search::GroupedSearchResults::BLURB_LENGTH}
+            ),
+            PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
+            'HighlightAll=true, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'''
+          ) AS headline",
+          "LEFT(pd.raw_data, 50) AS leading_raw_data",
+          "RIGHT(pd.raw_data, 50) AS trailing_raw_data",
           default_scope.arel.projections
         )
     else
