@@ -40,9 +40,10 @@ export default class LockOn {
     }
   }
 
-  clearLock(interval) {
+  clearLock() {
     $("body, html").off(SCROLL_EVENTS);
-    clearInterval(interval);
+    clearInterval(this.interval);
+
     if (this.options.finished) {
       this.options.finished();
     }
@@ -53,7 +54,7 @@ export default class LockOn {
     let previousTop = this.elementTop();
     previousTop && $(window).scrollTop(previousTop);
 
-    const interval = setInterval(() => {
+    this.interval = setInterval(() => {
       const elementTop = this.elementTop();
       if (!previousTop && !elementTop) {
         // we can't find the element yet, wait a little bit more
@@ -64,7 +65,7 @@ export default class LockOn {
       const scrollTop = $(window).scrollTop();
 
       if (typeof top === "undefined" || isNaN(top)) {
-        return this.clearLock(interval);
+        return this.clearLock();
       }
 
       if (!within(4, top, previousTop) || !within(4, scrollTop, top)) {
@@ -74,7 +75,7 @@ export default class LockOn {
 
       // Stop after a little while
       if (Date.now() - startedAt > LOCK_DURATION_MS) {
-        return this.clearLock(interval);
+        return this.clearLock();
       }
     }, 50);
 
@@ -82,7 +83,7 @@ export default class LockOn {
       .off(SCROLL_EVENTS)
       .on(SCROLL_EVENTS, e => {
         if (e.which > 0 || SCROLL_TYPES.includes(e.type)) {
-          this.clearLock(interval);
+          this.clearLock();
         }
       });
   }
