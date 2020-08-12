@@ -35,6 +35,7 @@ export default class LockOn {
 
   elementTop() {
     const $selected = $(this.selector);
+
     if ($selected.length && $selected.offset && $selected.offset()) {
       return $selected.offset().top - minimumOffset();
     }
@@ -50,34 +51,14 @@ export default class LockOn {
   }
 
   lock() {
-    const startedAt = Date.now();
-    let previousTop = this.elementTop();
-    previousTop && $(window).scrollTop(previousTop);
+    this.startedAt = Date.now();
+    this.previousTop = this.elementTop();
 
-    this.interval = setInterval(() => {
-      const elementTop = this.elementTop();
-      if (!previousTop && !elementTop) {
-        // we can't find the element yet, wait a little bit more
-        return;
-      }
+    if (this.previousTop) {
+      $(window).scrollTop(this.previousTop);
+    }
 
-      const top = Math.max(0, elementTop);
-      const scrollTop = $(window).scrollTop();
-
-      if (typeof top === "undefined" || isNaN(top)) {
-        return this.clearLock();
-      }
-
-      if (!within(4, top, previousTop) || !within(4, scrollTop, top)) {
-        $(window).scrollTop(top);
-        previousTop = top;
-      }
-
-      // Stop after a little while
-      if (Date.now() - startedAt > LOCK_DURATION_MS) {
-        return this.clearLock();
-      }
-    }, 50);
+    this.interval = setInterval(() => this.performLocking(), 50);
 
     $("body, html")
       .off(SCROLL_EVENTS)
@@ -86,5 +67,32 @@ export default class LockOn {
           this.clearLock();
         }
       });
+  }
+
+  performLocking() {
+    const elementTop = this.elementTop();
+
+    // If we can't find the element yet, wait a little bit more
+    if (!this.previousTop && !elementTop) {
+      return;
+    }
+
+    const top = Math.max(0, elementTop);
+
+    if (typeof top === "undefined" || isNaN(top)) {
+      return this.clearLock();
+    }
+
+    const scrollTop = $(window).scrollTop();
+
+    if (!within(4, top, this.previousTop) || !within(4, scrollTop, top)) {
+      $(window).scrollTop(top);
+      this.previousTop = top;
+    }
+
+    // Stop after a little while
+    if (Date.now() - this.startedAt > LOCK_DURATION_MS) {
+      return this.clearLock();
+    }
   }
 }
