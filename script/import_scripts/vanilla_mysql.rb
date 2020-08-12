@@ -59,7 +59,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
-        "SELECT UserID, Name, Title, Location, About, Email, Admin, Banned,
+        "SELECT UserID, Name, Title, Location, About, Email, Admin, Banned, CountComments,
                 DateInserted, DateLastActive, InsertIPAddress
          FROM #{TABLE_PREFIX}User
          WHERE UserID > #{@last_user_id}
@@ -87,6 +87,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         end
 
         banned = user['Banned'] != 0
+        commented = (user['CountComments'] || 0) > 0
 
         { id: user['UserID'],
           email: email,
@@ -98,6 +99,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           last_seen_at: user['DateLastActive'] == nil ? 0 : Time.zone.at(user['DateLastActive']),
           location: user['Location'],
           admin: user['Admin'] == 1,
+          trust_level: !banned && commented ? 2 : 0,
           post_create_action: proc do |newuser|
             if @user_is_deleted
               @last_deleted_username = newuser.username
