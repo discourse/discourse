@@ -264,6 +264,7 @@ module Imap
         to_sync.each do |incoming_email|
           Logger.log("[IMAP] (#{@group.name}) Updating email and incoming email ID = #{incoming_email.id}")
           update_email(incoming_email)
+          incoming_email.update(imap_sync: false)
         end
       end
     end
@@ -305,6 +306,8 @@ module Imap
 
       tags.subtract([nil, ''])
 
+      return if !tagging_enabled?
+
       # TODO: Optimize tagging.
       # `DiscourseTagging.tag_topic_by_names` does a lot of lookups in the
       # database and some of them could be cached in this context.
@@ -312,7 +315,6 @@ module Imap
     end
 
     def update_email(incoming_email)
-      return if !SiteSetting.tagging_enabled || !SiteSetting.allow_staff_to_tag_pms
       return if !incoming_email || !incoming_email.imap_sync
 
       post = incoming_email.post
@@ -334,10 +336,10 @@ module Imap
       email = @provider.emails(incoming_email.imap_uid, ['FLAGS', 'LABELS']).first
       return if !email.present?
 
-      incoming_email.update(imap_sync: false)
-
       labels = email['LABELS']
       flags = email['FLAGS']
+      new_labels = []
+      new_flags = []
 
       # Topic has been deleted if it is not present from the post, so we need
       # to trash the IMAP server email
@@ -346,11 +348,6 @@ module Imap
         # mail server email thread have been trashed on next sync
         return @provider.trash(incoming_email.imap_uid)
       end
-
-      # Sync topic status and labels with email flags and labels.
-      tags = topic.tags.pluck(:name)
-      new_flags = tags.map { |tag| @provider.tag_to_flag(tag) }.reject(&:blank?)
-      new_labels = tags.map { |tag| @provider.tag_to_label(tag) }.reject(&:blank?)
 
       # the topic is archived, and the archive should be reflected in the IMAP
       # server
@@ -374,10 +371,21 @@ module Imap
         @provider.archive(incoming_email.imap_uid)
       end
 
+      # Sync topic status and labels with email flags and labels.
+      if tagging_enabled?
+        tags = topic.tags.pluck(:name)
+        new_flags = tags.map { |tag| @provider.tag_to_flag(tag) }.reject(&:blank?)
+        new_labels = new_labels.concat(tags.map { |tag| @provider.tag_to_label(tag) }.reject(&:blank?))
+      end
+
       # regardless of whether the topic needs to be archived we still update
       # the flags and the labels
       @provider.store(incoming_email.imap_uid, 'FLAGS', flags, new_flags)
       @provider.store(incoming_email.imap_uid, 'LABELS', labels, new_labels)
+    end
+
+    def tagging_enabled?
+      SiteSetting.tagging_enabled && SiteSetting.allow_staff_to_tag_pms
     end
   end
 end
