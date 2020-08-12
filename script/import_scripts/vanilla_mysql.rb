@@ -220,8 +220,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       discussions = mysql_query(
-        "SELECT DiscussionID, CategoryID, Name, Body,
-                DateInserted, InsertUserID
+        "SELECT DiscussionID, CategoryID, Name, Body, CountViews, Closed, Announce,
+                DateInserted, InsertUserID, DateLastComment
          FROM #{TABLE_PREFIX}Discussion
          WHERE DiscussionID > #{@last_topic_id}
          ORDER BY DiscussionID ASC
@@ -238,6 +238,10 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           title: discussion['Name'],
           category: category_id_from_imported_category_id(discussion['CategoryID']),
           raw: clean_up(discussion['Body']),
+          views: discussion['CountViews'] || 0,
+          closed: discussion['Closed'] == 1,
+          pinned_at: discussion['Announce'] == 0 ? nil : Time.zone.at(discussion['DateLastComment'] || discussion['DateInserted']),
+          pinned_globally: discussion['Announce'] == 1,
           created_at: Time.zone.at(discussion['DateInserted']),
           post_create_action: proc do |post|
             if @import_tags
