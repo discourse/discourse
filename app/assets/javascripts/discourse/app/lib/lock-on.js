@@ -34,11 +34,15 @@ export default class LockOn {
   }
 
   elementTop() {
-    const $selected = $(this.selector);
-
-    if ($selected.length && $selected.offset && $selected.offset()) {
-      return $selected.offset().top - minimumOffset();
+    const element = document.querySelector(this.selector);
+    if (!element) {
+      return;
     }
+
+    const { top } = element.getBoundingClientRect();
+    const offset = top + window.scrollY;
+
+    return offset - minimumOffset();
   }
 
   clearLock() {
