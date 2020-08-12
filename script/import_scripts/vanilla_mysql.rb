@@ -59,8 +59,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
-        "SELECT UserID, Name, Title, Location, About, Email,
-                DateInserted, DateLastActive, InsertIPAddress, Admin
+        "SELECT UserID, Name, Title, Location, About, Email, Admin, Banned,
+                DateInserted, DateLastActive, InsertIPAddress
          FROM #{TABLE_PREFIX}User
          WHERE UserID > #{@last_user_id}
          ORDER BY UserID ASC
@@ -86,6 +86,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           username = user['Name']
         end
 
+        banned = user['Banned'] != 0
+
         { id: user['UserID'],
           email: email,
           username: username,
@@ -99,6 +101,16 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           post_create_action: proc do |newuser|
             if @user_is_deleted
               @last_deleted_username = newuser.username
+            end
+            if banned
+              newuser.suspended_at = Time.now
+              # banning on Vanilla doesn't have an end, so a thousand years seems equivalent
+              newuser.suspended_till = 1000.years.from_now
+              if newuser.save
+                StaffActionLogger.new(Discourse.system_user).log_user_suspend(newuser, 'Imported from Vanilla Forum')
+              else
+                puts "Failed to suspend user #{newuser.username}. #{newuser.errors.full_messages.join(', ')}"
+              end
             end
           end }
       end
