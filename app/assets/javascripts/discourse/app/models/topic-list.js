@@ -56,7 +56,7 @@ const TopicList = RestModel.extend({
   },
 
   updateSortParams(order, ascending) {
-    let params = this.params || {};
+    let params = Object.assign({}, this.params || {});
 
     if (params.q) {
       // search is unique, nothing else allowed with it

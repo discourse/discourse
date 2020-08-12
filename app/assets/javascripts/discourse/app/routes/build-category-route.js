@@ -4,7 +4,10 @@ import {
   filterQueryParams,
   findTopicList
 } from "discourse/routes/build-topic-route";
-import { queryParams } from "discourse/controllers/discovery-sortable";
+import {
+  changeSort,
+  queryParams
+} from "discourse/controllers/discovery-sortable";
 import TopicList from "discourse/models/topic-list";
 import PermissionType from "discourse/models/permission-type";
 import CategoryList from "discourse/models/category-list";
@@ -253,7 +256,9 @@ export default (filterArg, params) => {
 
       triggerRefresh() {
         this.refresh();
-      }
+      },
+
+      changeSort
     }
   });
 };

@@ -1,9 +1,16 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { alias, not, gt, empty, notEmpty, equal } from "@ember/object/computed";
+import {
+  alias,
+  not,
+  gt,
+  empty,
+  notEmpty,
+  equal,
+  readOnly
+} from "@ember/object/computed";
 import { inject as controller } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
-import { queryParams } from "discourse/controllers/discovery-sortable";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import { endWith } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
@@ -21,10 +28,11 @@ const controllerOpts = {
   showTopicPostBadges: not("discoveryTopics.new"),
   redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
-  order: null,
-  ascending: false,
   expandGloballyPinned: false,
   expandAllPinned: false,
+
+  order: readOnly("model.params.order"),
+  ascending: readOnly("model.params.ascending"),
 
   resetParams() {
     Object.keys(this.get("model.params") || {}).forEach(key => {
@@ -34,16 +42,6 @@ const controllerOpts = {
   },
 
   actions: {
-    changeSort(sortBy) {
-      if (sortBy === this.order) {
-        this.toggleProperty("ascending");
-        this.model.updateSortParams(sortBy, this.ascending);
-      } else {
-        this.setProperties({ order: sortBy, ascending: false });
-        this.model.updateSortParams(sortBy, false);
-      }
-    },
-
     // Show newly inserted topics
     showInserted() {
       const tracker = this.topicTrackingState;
@@ -174,12 +172,5 @@ const controllerOpts = {
     });
   }
 };
-
-Object.keys(queryParams).forEach(function(p) {
-  // If we don't have a default value, initialize it to null
-  if (typeof controllerOpts[p] === "undefined") {
-    controllerOpts[p] = null;
-  }
-});
 
 export default DiscoveryController.extend(controllerOpts, BulkTopicSelection);
