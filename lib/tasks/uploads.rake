@@ -1037,6 +1037,18 @@ def analyze_missing
     if count > 0
       puts "Found #{count} uploaded avatars"
     end
+    count = DB.query_single(<<~SQL, ids: ids).first
+      SELECT COUNT(*) FROM user_avatars WHERE gravatar_upload_id IN (:ids)
+    SQL
+    if count > 0
+      puts "Found #{count} gravatars"
+    end
+    count = DB.query_single(<<~SQL, ids: ids).first
+      SELECT COUNT(*) FROM user_avatars WHERE custom_upload_id IN (:ids)
+    SQL
+    if count > 0
+      puts "Found #{count} custom uploaded avatars"
+    end
   end
 
 end
