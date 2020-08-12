@@ -38,10 +38,7 @@
   --always-black-rgb: 0, 0, 0;
   --primary-rgb: #{hexToRGB($primary)};
   --primary-low-rgb: #{hexToRGB($primary-low)};
-  --danger-rgb: #{hexToRGB($danger)};
-  --secondary-rgb: #{hexToRGB($secondary)};
   --header_background-rgb: #{hexToRGB($header_background)};
-  --header_primary-rgb: #{hexToRGB($header_primary)};
   --tertiary-rgb: #{hexToRGB($tertiary)};
 
   --primary-very-low: #{$primary-very-low};
