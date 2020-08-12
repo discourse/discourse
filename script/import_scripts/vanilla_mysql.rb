@@ -447,7 +447,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
-        Permalink.create(url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}") rescue nil
+        encoded_username = CGI.escape(ucf['import_username']).gsub('+', '%20')
+        Permalink.create(url: "profile/#{ucf['import_id']}/#{encoded_username}", external_url: "/users/#{u.username}") rescue nil
         print '.'
       end
     end
