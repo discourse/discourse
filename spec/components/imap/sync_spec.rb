@@ -84,7 +84,7 @@ describe Imap::Sync do
       topic = Topic.last
       expect(topic.title).to eq(subject)
       expect(topic.user.email).to eq(from)
-      expect(topic.tags.pluck(:name)).to eq(%w[seen important test-label])
+      expect(topic.tags.pluck(:name)).to contain_exactly("seen", "important", "test-label")
 
       post = topic.first_post
       expect(post.raw).to eq('This is an email *body*. :smile:')
