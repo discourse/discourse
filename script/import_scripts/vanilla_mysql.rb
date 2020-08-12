@@ -71,7 +71,9 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       next if all_records_exist? :users, results.map { |u| u['UserID'].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
-        next if user['Email'].blank?
+        email = user['Email'].squish
+
+        next if email.blank?
         next if user['Name'].blank?
         next if @lookup.user_id_from_imported_user_id(user['UserID'])
         if user['Name'] == '[Deleted User]'
@@ -85,7 +87,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         end
 
         { id: user['UserID'],
-          email: user['Email'],
+          email: email,
           username: username,
           name: user['Name'],
           created_at: user['DateInserted'] == nil ? 0 : Time.zone.at(user['DateInserted']),
