@@ -266,6 +266,124 @@ describe Imap::Sync do
       expect(Topic.last.posts.where(post_type: Post.types[:regular]).count).to eq(2)
     end
 
+    describe "detecting deleted emails and deleting the topic in discourse" do
+      let(:provider) { MockedImapProvider.any_instance }
+      before do
+        provider.stubs(:open_mailbox).returns(uid_validity: 1)
+
+        provider.stubs(:uids).with.returns([100])
+        provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
+          [
+            {
+              'UID' => 100,
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen],
+              'RFC822' => EmailFabricator(
+                message_id: first_message_id,
+                from: first_from,
+                to: group.email_username,
+                cc: second_from,
+                subject: subject,
+                body: first_body
+              )
+            }
+          ]
+        )
+
+      end
+
+      it "detects previously synced UIDs are missing and deletes the posts if they are in the trash mailbox" do
+        sync_handler.process
+        incoming_100 = IncomingEmail.find_by(imap_uid: 100)
+        provider.stubs(:uids).with.returns([])
+
+        provider.stubs(:uids).with(to: 100).returns([])
+        provider.stubs(:uids).with(from: 101).returns([])
+        provider.stubs(:find_trashed_by_message_ids).returns(
+          stub(
+            trashed_emails: [
+              stub(
+                uid: 10,
+                message_id: incoming_100.message_id
+              )
+            ],
+            trash_uid_validity: 99
+          )
+        )
+        sync_handler.process
+
+        incoming_100.reload
+        expect(incoming_100.imap_uid_validity).to eq(99)
+        expect(incoming_100.imap_uid).to eq(10)
+        expect(Post.with_deleted.find(incoming_100.post_id).deleted_at).not_to eq(nil)
+        expect(Topic.with_deleted.find(incoming_100.topic_id).deleted_at).not_to eq(nil)
+      end
+
+      it "detects the topic being deleted on the discourse site and deletes on the IMAP server and
+      does not attempt to delete again on discourse site when deleted already by us on the IMAP server" do
+        SiteSetting.enable_imap_write = true
+        sync_handler.process
+        incoming_100 = IncomingEmail.find_by(imap_uid: 100)
+        provider.stubs(:uids).with.returns([100])
+
+        provider.stubs(:uids).with(to: 100).returns([100])
+        provider.stubs(:uids).with(from: 101).returns([])
+
+        PostDestroyer.new(Discourse.system_user, incoming_100.post).destroy
+        provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
+          [
+            {
+              'UID' => 100,
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen],
+              'RFC822' => EmailFabricator(
+                message_id: first_message_id,
+                from: first_from,
+                to: group.email_username,
+                cc: second_from,
+                subject: subject,
+                body: first_body
+              )
+            }
+          ]
+        )
+        provider.stubs(:emails).with(100, ['FLAGS', 'LABELS']).returns(
+          [
+            {
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen]
+            }
+          ]
+        )
+
+        provider.expects(:trash).with(100)
+        sync_handler.process
+
+        provider.stubs(:uids).with.returns([])
+
+        provider.stubs(:uids).with(to: 100).returns([])
+        provider.stubs(:uids).with(from: 101).returns([])
+        provider.stubs(:find_trashed_by_message_ids).returns(
+          stub(
+            trashed_emails: [
+              stub(
+                uid: 10,
+                message_id: incoming_100.message_id
+              )
+            ],
+            trash_uid_validity: 99
+          )
+        )
+        PostDestroyer.expects(:new).never
+
+        sync_handler.process
+
+        incoming_100.reload
+        expect(incoming_100.imap_uid_validity).to eq(99)
+        expect(incoming_100.imap_uid).to eq(10)
+      end
+    end
+
     describe "archiving emails" do
       let(:provider) { MockedImapProvider.any_instance }
       before do
@@ -330,12 +448,13 @@ describe Imap::Sync do
         sync_handler.process
       end
 
-      it "does not archive email if not archived in discourse" do
+      it "does not archive email if not archived in discourse, it unarchives it instead" do
         @incoming_email.update(imap_sync: true)
         provider.stubs(:store).with(100, 'FLAGS', anything, anything)
         provider.stubs(:store).with(100, 'LABELS', ["\\Inbox"], ["seen", "\\Inbox"])
 
         provider.expects(:archive).with(100).never
+        provider.expects(:unarchive).with(100)
         sync_handler.process
       end
     end

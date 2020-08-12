@@ -2,6 +2,11 @@
 
 module Imap
   module Providers
+    # Gmail has a special header for both labels (X-GM-LABELS) and their
+    # threading system (X-GM-THRID). We need to monkey-patch Net::IMAP to
+    # get access to these. Also the archiving functionality is custom,
+    # all UIDs in a thread must have the \\Inbox label removed.
+    #
     class Gmail < Generic
       X_GM_LABELS = 'X-GM-LABELS'
       X_GM_THRID = 'X-GM-THRID'
@@ -62,9 +67,9 @@ module Imap
         super(tag)
       end
 
+      # All emails in the thread must be archived in Gmail for the thread
+      # to get removed from the inbox
       def archive(uid)
-        # all emails in the thread must be archived in Gmail for the thread
-        # to get removed from the inbox
         thread_id = thread_id_from_uid(uid)
         emails_to_archive = emails_in_thread(thread_id)
         emails_to_archive.each do |email|
@@ -73,6 +78,23 @@ module Imap
           store(email["UID"], "LABELS", labels, new_labels)
         end
         Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) archived in Gmail mailbox for #{@username}")
+      end
+
+      # Though Gmail considers the email thread unarchived if the first email
+      # has the \\Inbox label applied, we want to do this to all emails in the
+      # thread to be consistent with archive behaviour.
+      def unarchive(uid)
+        thread_id = thread_id_from_uid(uid)
+        emails_to_unarchive = emails_in_thread(thread_id)
+        emails_to_unarchive.each do |email|
+          labels = email['LABELS']
+          new_labels = labels.dup
+          if !new_labels.include?("\\Inbox")
+            new_labels << "\\Inbox"
+          end
+          store(email["UID"], "LABELS", labels, new_labels)
+        end
+        Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) unarchived in Gmail mailbox for #{@username}")
       end
 
       def thread_id_from_uid(uid)
@@ -87,6 +109,15 @@ module Imap
       def emails_in_thread(thread_id)
         uids_to_fetch = imap.uid_search("#{X_GM_THRID} #{thread_id}")
         emails(uids_to_fetch, ["UID", "LABELS"])
+      end
+
+      def trash_move(uid)
+        thread_id = thread_id_from_uid(uid)
+        email_uids_to_trash = emails_in_thread(thread_id).map { |e| e['UID'] }
+
+        imap.uid_move(email_uids_to_trash, trash_mailbox)
+        Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) trashed in Gmail mailbox for #{@username}")
+        { trash_uid_validity: open_trash_mailbox, email_uids_to_trash: email_uids_to_trash }
       end
 
       private

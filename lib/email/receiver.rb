@@ -988,7 +988,9 @@ module Email
       if Array === references
         references
       elsif references.present?
-        references.split(/[\s,]/).map { |r| r.tr("<>", "") }
+        references.split(/[\s,]/).map do |r|
+          Email.message_id_clean(r)
+        end
       end
     end
 
