@@ -79,7 +79,7 @@ export default class LockOn {
 
     const top = Math.max(0, elementTop);
 
-    if (typeof top === "undefined" || isNaN(top)) {
+    if (isNaN(top)) {
       return this.clearLock();
     }
 
