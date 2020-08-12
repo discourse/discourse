@@ -54,10 +54,6 @@
     height: 100%;
   }
 
-  .hamburger-panel .panel-body {
-    overflow-y: auto;
-  }
-
   .panel-body-contents {
     max-height: 100%;
     width: 100%;
@@ -92,6 +88,10 @@
   .badge-notification {
     vertical-align: text-bottom;
   }
+}
+
+.hamburger-panel .panel-body {
+  overflow-y: auto;
 }
 
 .menu-links.columned {
