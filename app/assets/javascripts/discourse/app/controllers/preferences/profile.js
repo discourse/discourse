@@ -7,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
-import { alias } from "@ember/object/computed";
+import { readOnly } from "@ember/object/computed";
 
 export default Controller.extend({
   init() {
@@ -44,15 +44,17 @@ export default Controller.extend({
     }
   },
 
-  canChangeBio: alias("model.can_change_bio"),
+  canChangeBio: readOnly("model.can_change_bio"),
 
-  canChangeLocation: alias("model.can_change_location"),
+  canChangeLocation: readOnly("model.can_change_location"),
 
-  canChangeWebsite: alias("model.can_change_website"),
+  canChangeWebsite: readOnly("model.can_change_website"),
 
-  canUploadProfileHeader: alias("model.can_upload_profile_header"),
+  canUploadProfileHeader: readOnly("model.can_upload_profile_header"),
 
-  canUploadUserCardBackground: alias("model.can_upload_user_card_background"),
+  canUploadUserCardBackground: readOnly(
+    "model.can_upload_user_card_background"
+  ),
 
   actions: {
     showFeaturedTopicModal() {

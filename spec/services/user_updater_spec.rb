@@ -182,7 +182,7 @@ describe UserUpdater do
 
     it "allows user to update profile header when the user has required trust level" do
       user = Fabricate(:user, trust_level: 2)
-      updater = UserUpdater.new(acting_user, user)
+      updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
       SiteSetting.min_trust_level_to_allow_profile_background = 2
       val = updater.update(profile_background_upload_url: upload.url)
@@ -197,7 +197,7 @@ describe UserUpdater do
 
     it "allows user to update user card background when the user has required trust level" do
       user = Fabricate(:user, trust_level: 2)
-      updater = UserUpdater.new(acting_user, user)
+      updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
       SiteSetting.min_trust_level_to_allow_user_card_background = 2
       val = updater.update(card_background_upload_url: upload.url)
