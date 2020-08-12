@@ -90,7 +90,7 @@
                     {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
                     <span class="topic-title">
                       {{#if result.useTopicTitleHeadline}}
-                        {{html-safe result.topicTitleHead}}
+                        {{html-safe result.topicTitleHeadline}}
                       {{else}}
                         {{#highlight-search highlight=q}}
                           {{html-safe result.topic.fancyTitle}}
