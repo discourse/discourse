@@ -66,6 +66,9 @@ export function groupPath(subPath) {
 }
 
 let _jumpScheduled = false;
+let _transitioning = false;
+let lockon = null;
+
 export function jumpToElement(elementId) {
   if (_jumpScheduled || isEmpty(elementId)) {
     return;
@@ -74,16 +77,19 @@ export function jumpToElement(elementId) {
   const selector = `#${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
   schedule("afterRender", function() {
-    const lockon = new LockOn(selector, {
+    if (lockon) {
+      return;
+    }
+
+    lockon = new LockOn(selector, {
       finished() {
         _jumpScheduled = false;
+        lockon = null;
       }
     });
     lockon.lock();
   });
 }
-
-let _transitioning = false;
 
 const DiscourseURL = EmberObject.extend({
   isJumpScheduled() {
@@ -135,9 +141,14 @@ const DiscourseURL = EmberObject.extend({
         holder = $(elementId);
       }
 
-      const lockon = new LockOn(elementId, {
+      if (lockon) {
+        return;
+      }
+
+      lockon = new LockOn(elementId, {
         finished() {
           _transitioning = false;
+          lockon = null;
         }
       });
 
