@@ -998,17 +998,22 @@ end
 def analyze_missing
   puts "List of posts with missing images:"
   sql = <<~SQL
-    SELECT post_id, url, sha1, extension
+    SELECT post_id, url, sha1, extension, uploads.id
     FROM post_uploads pu
-    JOIN uploads on uploads.id = pu.upload_id
+    RIGHT JOIN uploads on uploads.id = pu.upload_id
     WHERE NOT verified
     ORDER BY created_at
   SQL
 
   lookup = {}
+  other = []
   DB.query(sql).each do |r|
-    lookup[r.post_id] ||= []
-    lookup[r.post_id] << [r.url, r.sha1, r.extension]
+    if r.post_id
+      lookup[r.post_id] ||= []
+      lookup[r.post_id] << [r.url, r.sha1, r.extension]
+    else
+      other << r
+    end
   end
 
   posts = Post.where(id: lookup.keys)
@@ -1023,6 +1028,17 @@ def analyze_missing
 
   puts "Total missing uploads: #{Upload.where(verified: false).count}"
   puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
+  puts "Other missing uploads count: #{other.count}"
+  if other.count > 0
+    ids = other.map { |r| r.id }
+    count = DB.query_single(<<~SQL, ids: ids).first
+      SELECT COUNT(*) FROM users WHERE uploaded_avatar_id IN (:ids)
+    SQL
+    if count > 0
+      puts "Found #{count} uploaded avatars"
+    end
+  end
+
 end
 
 task "uploads:analyze_missing" => :environment do
