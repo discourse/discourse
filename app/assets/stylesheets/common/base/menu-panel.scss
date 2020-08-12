@@ -54,6 +54,10 @@
     height: 100%;
   }
 
+  .hamburger-panel .panel-body {
+    overflow-y: auto;
+  }
+
   .panel-body-contents {
     max-height: 100%;
     width: 100%;
