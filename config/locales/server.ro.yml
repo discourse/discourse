@@ -165,11 +165,6 @@ ro:
     one: "Ne pare rău, noii utilizatori pot menționa doar un utilizator într-o postare."
     few: "Ne pare rău, noii utilizatori pot menționa doar %{count} utilizatori într-o postare."
     other: "Ne pare rău, noii utilizatori pot menționa doar %{count} de utilizatori într-o postare."
-  no_images_allowed: "Ne pare rău, nu poți pune imagini în postări."
-  too_many_images:
-    one: "Ne pare rău, noii utilizatori pot pune numai o imagine într-o postare."
-    few: "Ne pare rău, noii utilizatori pot pune numai %{count} imagini într-o postare."
-    other: "Ne pare rău, noii utilizatori pot pune numai %{count} de imagini într-o postare."
   no_attachments_allowed: "Ne pare rău, noii utilizatori nu pot pune atașamente la postări."
   too_many_attachments:
     one: "Ne pare rău, noii utilizatori pot pune doar un atașament la o postare."
@@ -975,7 +970,6 @@ ro:
     min_trust_to_edit_post: "Nivelul de încredere minim necesar pentru a edita postări."
     min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
     newuser_max_links: "Câte linkuri poate adăuga un nou utilizator într-o postare."
-    newuser_max_images: "Câte imagini poate adăuga un nou utilizator într-o postare."
     newuser_max_attachments: "Câte atașamente poate adăuga un nou utilizator într-o postare."
     newuser_max_mentions_per_post: "Numărul maxim de notificări @nume pe care le poate folosi un nou utilizator într-o postare."
     newuser_max_replies_per_topic: "Numărul maxim de răspunsuri pe care un utilizator nou le poate adăuga într-un singur subiect înainte ca cineva să răspundă."

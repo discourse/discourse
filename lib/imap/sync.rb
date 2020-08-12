@@ -107,9 +107,9 @@ module Imap
       old_uids = old_uids.sample(old_emails_limit).sort! if old_emails_limit > -1
       new_uids = new_uids[0..new_emails_limit - 1] if new_emails_limit > 0
 
-      if old_uids.present?
-        process_old_uids(old_uids)
-      end
+      # if there are no old_uids that is OK, this could indicate that some
+      # UIDs have been sent to the trash
+      process_old_uids(old_uids)
 
       if new_uids.present?
         process_new_uids(new_uids, import_mode, all_old_uids_size, all_new_uids_size)
@@ -135,7 +135,7 @@ module Imap
 
     def process_old_uids(old_uids)
       Logger.log("[IMAP] (#{@group.name}) Syncing #{old_uids.size} randomly-selected old emails")
-      emails = @provider.emails(old_uids, ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'])
+      emails = old_uids.empty? ? [] : @provider.emails(old_uids, ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'])
       emails.each do |email|
         incoming_email = IncomingEmail.find_by(
           imap_uid_validity: @status[:uid_validity],
@@ -148,7 +148,7 @@ module Imap
         else
           # try finding email by message-id instead, we may be able to set the uid etc.
           incoming_email = IncomingEmail.where(
-            message_id: email['ENVELOPE'].message_id.tr("<>", ""),
+            message_id: Email.message_id_clean(email['ENVELOPE'].message_id),
             imap_uid: nil,
             imap_uid_validity: nil
           ).where("to_addresses LIKE '%#{@group.email_username}%'").first
@@ -164,6 +164,53 @@ module Imap
             Logger.log("[IMAP] (#{@group.name}) Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})", :warn)
           end
         end
+      end
+
+      handle_missing_uids(old_uids)
+    end
+
+    def handle_missing_uids(old_uids)
+      # If there are any UIDs for the mailbox missing from old_uids, this means they have been moved
+      # to some other mailbox in the mail server. They could be possibly deleted. first we can check
+      # if they have been deleted and if so delete the associated post/topic. then the remaining we
+      # can just remove the imap details from the IncomingEmail table and if they end up back in the
+      # original mailbox then they will be picked up in a future resync.
+      existing_incoming = IncomingEmail.includes(:post).where(
+        imap_group_id: @group.id, imap_uid_validity: @status[:uid_validity]
+      ).where.not(imap_uid: nil)
+
+      existing_uids = existing_incoming.map(&:imap_uid)
+      missing_uids = existing_uids - old_uids
+      missing_message_ids = existing_incoming.select do |incoming|
+        missing_uids.include?(incoming.imap_uid)
+      end.map(&:message_id)
+
+      return if missing_message_ids.empty?
+
+      # This can be done because Message-ID is unique on a mail server between mailboxes,
+      # where the UID will have changed when moving into the Trash mailbox. We need to get
+      # the new UID from the trash.
+      response = @provider.find_trashed_by_message_ids(missing_message_ids)
+      existing_incoming.each do |incoming|
+        matching_trashed = response.trashed_emails.find { |email| email.message_id == incoming.message_id }
+
+        # if the email is not in the trash then we don't know where it is... could
+        # be in any mailbox on the server or could be permanently deleted. TODO
+        # here would be some sort of more complex detection of "where in the world
+        # has this UID gone?"
+        next if !matching_trashed
+
+        # if we deleted the topic/post ourselves in discourse then the post will
+        # not exist, and this sync is just updating the old UIDs to the new ones
+        # in the trash, and we don't need to re-destroy the post
+        if incoming.post
+          Logger.log("[IMAP] (#{@group.name}) Deleting post ID #{incoming.post_id}; it has been deleted on the IMAP server.")
+          PostDestroyer.new(Discourse.system_user, incoming.post).destroy
+        end
+
+        # the email has moved mailboxes, we don't want to try trashing again next time
+        Logger.log("[IMAP] (#{@group.name}) Updating incoming ID #{incoming.id} uid data FROM [UID #{incoming.imap_uid} | UIDVALIDITY #{incoming.imap_uid_validity}] TO [UID #{matching_trashed.uid} | UIDVALIDITY #{response.trash_uid_validity}] (TRASHED)")
+        incoming.update(imap_uid_validity: response.trash_uid_validity, imap_uid: matching_trashed.uid)
       end
     end
 
@@ -266,7 +313,19 @@ module Imap
 
     def update_email(incoming_email)
       return if !SiteSetting.tagging_enabled || !SiteSetting.allow_staff_to_tag_pms
-      return if incoming_email&.post&.post_number != 1 || !incoming_email.imap_sync
+      return if !incoming_email || !incoming_email.imap_sync
+
+      post = incoming_email.post
+      if !post && incoming_email.post_id
+        # post was likely deleted because topic was deleted, let's try get it
+        post = Post.with_deleted.find(incoming_email.post_id)
+      end
+
+      # don't do any of these type of updates on anything but the OP in the
+      # email thread -- archiving and deleting will be handled for the whole
+      # thread depending on provider
+      return if post&.post_number != 1
+      topic = incoming_email.topic
 
       # if email is nil, the UID does not exist in the provider, meaning....
       #
@@ -279,11 +338,14 @@ module Imap
 
       labels = email['LABELS']
       flags = email['FLAGS']
-      topic = incoming_email.topic
 
-      # TODO: Delete remote email if topic no longer exists
-      # new_flags << Net::IMAP::DELETED if !incoming_email.topic
-      return if !topic
+      # Topic has been deleted if it is not present from the post, so we need
+      # to trash the IMAP server email
+      if !topic
+        # no need to do anything further here, we will recognize the UIDs in the
+        # mail server email thread have been trashed on next sync
+        return @provider.trash(incoming_email.imap_uid)
+      end
 
       # Sync topic status and labels with email flags and labels.
       tags = topic.tags.pluck(:name)
@@ -294,7 +356,15 @@ module Imap
       # server
       topic_archived = topic.group_archived_messages.any?
       if !topic_archived
-        new_labels << '\\Inbox'
+        # TODO: This is needed right now so the store below does not take it
+        # away again...ideally we should unarchive and store the tag-labels
+        # at the same time.
+        new_labels << "\\Inbox"
+
+        Logger.log("[IMAP] (#{@group.name}) Unarchiving UID #{incoming_email.imap_uid}")
+
+        # some providers need special handling for unarchiving too
+        @provider.unarchive(incoming_email.imap_uid)
       else
         Logger.log("[IMAP] (#{@group.name}) Archiving UID #{incoming_email.imap_uid}")
 

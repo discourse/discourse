@@ -301,13 +301,6 @@ pl_PL:
     few: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach w poście."
     many: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach w poście."
     other: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach we wpisie.."
-  no_images_allowed_trust: "Przepraszamy, nie możesz dodawać zdjęć do wpisów"
-  no_images_allowed: "Przepraszamy, nowi użytkownicy nie mogą dodawać zdjęć do wpisów."
-  too_many_images:
-    one: "Przepraszamy, nowi użytkownicy mogą dodawać tylko jedno zdjęcie do wpisu."
-    few: "Przepraszamy, nowi użytkownicy mogą dodawać tylko %{count} zdjęcia do wpisu."
-    many: "Przepraszamy, nowi użytkownicy mogą dodawać tylko %{count} zdjęć do wpisu."
-    other: "Przepraszamy, nowi użytkownicy mogą dodawać tylko %{count} zdjęć do wpisu."
   no_attachments_allowed: "Przepraszamy, nowi użytkownicy nie mogą dodawać załączników do wpisów."
   too_many_attachments:
     one: "Przepraszamy, nowi użytkownicy mogą dodawać tylko jeden załącznik do wpisu."
@@ -1691,9 +1684,7 @@ pl_PL:
     min_trust_to_send_messages: "Minimalny poziom zaufania wymagany do tworzenia wiadomości prywatnych."
     min_trust_to_flag_posts: "Minimalny poziom zaufania potrzebny do flagowania wpisów"
     min_trust_to_post_links: "Minimalny poziom zaufania potrzebny do umieszczania linków we wpisach"
-    min_trust_to_post_images: "Minimalny poziom zaufania wymagany do umieszczenia zdjęć we wpisie"
     newuser_max_links: "Ile linków może dodać nowy użytkownik do wpisu."
-    newuser_max_images: "Ile obrazów może dodać nowy użytkownik do wpisu."
     newuser_max_attachments: "Ile załączników może dodać nowy użytkownik do wpisu."
     newuser_max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla nowych użytkowników)."
     newuser_max_replies_per_topic: "Maksymalna liczba odpowiedzi, jakie nowy użytkownik może dodać w pojedynczym temacie zanim ktoś odpowie."

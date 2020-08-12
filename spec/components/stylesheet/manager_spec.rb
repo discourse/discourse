@@ -163,6 +163,18 @@ describe Stylesheet::Manager do
       expect(digest3).to_not eq(digest2)
       expect(digest3).to_not eq(digest1)
     end
+
+    it "updates digest when updating a color scheme" do
+      scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+      manager = Stylesheet::Manager.new(:color_definitions, nil, scheme)
+      digest1 = manager.color_scheme_digest
+
+      ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "CC0000" }])
+
+      digest2 = manager.color_scheme_digest
+
+      expect(digest1).to_not eq(digest2)
+    end
   end
 
   describe 'color_scheme_stylesheets' do
@@ -193,12 +205,12 @@ describe Stylesheet::Manager do
       SiteSetting.default_theme_id = theme.id
 
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
-      expect(link).to include("/stylesheets/color_definitions_funky#{cs.id}_")
+      expect(link).to include("/stylesheets/color_definitions_funky_#{cs.id}_")
     end
 
     it "uses the correct scheme when colors are passed" do
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(ColorScheme.first.id)
-      slug = Slug.for(ColorScheme.first.name) + ColorScheme.first.id.to_s
+      slug = Slug.for(ColorScheme.first.name) + "_" + ColorScheme.first.id.to_s
       expect(link).to include("/stylesheets/color_definitions_#{slug}_")
     end
 
@@ -208,7 +220,21 @@ describe Stylesheet::Manager do
       SiteSetting.default_theme_id = theme.id
 
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
-      expect(link).to include("/stylesheets/color_definitions_funky-bunch#{cs.id}_")
+      expect(link).to include("/stylesheets/color_definitions_funky-bunch_#{cs.id}_")
+    end
+
+    it "updates outputted colors when updating a color scheme" do
+      scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+      manager = Stylesheet::Manager.new(:color_definitions, nil, scheme)
+      stylesheet = manager.compile
+
+      ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "CC0000" }])
+
+      manager2 = Stylesheet::Manager.new(:color_definitions, nil, scheme)
+      stylesheet2 = manager2.compile
+
+      expect(stylesheet).not_to eq(stylesheet2)
+      expect(stylesheet2).to include("--primary: #c00;")
     end
 
   end
@@ -237,7 +263,7 @@ describe Stylesheet::Manager do
       scheme2 = ColorScheme.create!(name: "scheme2")
       core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin]
       theme_targets = [:desktop_theme, :mobile_theme]
-      color_scheme_targets = ["color_definitions_scheme1", "color_definitions_scheme2"]
+      color_scheme_targets = ["color_definitions_scheme1_#{scheme1.id}", "color_definitions_scheme2_#{scheme2.id}"]
 
       Theme.update_all(user_selectable: false)
       user_theme = Fabricate(:theme, user_selectable: true, color_scheme: scheme1)

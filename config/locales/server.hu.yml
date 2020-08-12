@@ -207,11 +207,6 @@ hu:
   too_many_mentions_newuser:
     one: "Sajnáljuk, de az új felhasználók csak egy felhasználót említhetnek meg."
     other: "Sajnáljuk, de az új felhasználók csak %{count} felhasználót említhetnek meg."
-  no_images_allowed_trust: "Sajnáljuk, de nem tud képeket rakni egy bejegyzésbe"
-  no_images_allowed: "Sajnáljuk, de az új felhasználók nem tehetnek képeket egy bejegyzésbe."
-  too_many_images:
-    one: "Sajnáljuk, de az új felhasználók csak %{count} képet rakhatnak a bejegyzéseikbe."
-    other: "Sajnáljuk, de az új felhasználók csak %{count} képet rakhatnak a bejegyzéseikbe."
   no_attachments_allowed: "Sajnáljuk, de az új felhasználók nem adhatnak mellékleteket egy bejegyzéshez."
   too_many_attachments:
     one: "Sajnáljuk, de az új felhasználók csak egy mellékletet adhatnak egy bejegyzéshez."

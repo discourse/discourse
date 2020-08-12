@@ -277,11 +277,6 @@ it:
   too_many_mentions_newuser:
     one: "Spiacenti, i nuovi utenti possono menzionare al massimo un utente in un messaggio."
     other: "Spiacenti, i nuovi utenti possono menzionare al massimo %{count} utenti in un messaggio."
-  no_images_allowed_trust: "Spiacenti, non puoi inserire immagini in un messaggio"
-  no_images_allowed: "Spiacenti, i nuovi utenti non possono inserire immagini nei messaggi."
-  too_many_images:
-    one: "Spiacenti, i nuovi utenti possono inserire al massimo un'immagine in un messaggio."
-    other: "Spiacenti, i nuovi utenti possono inserire al massimo %{count} immagini in un messaggio."
   no_attachments_allowed: "Spiacenti, i nuovi utenti non possono inserire allegati nei messaggi."
   too_many_attachments:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un allegato in un messaggio."
@@ -1616,9 +1611,7 @@ it:
     min_trust_to_send_messages: "Il livello di esperienza minimo richiesto per creare nuovi messaggi personali."
     min_trust_to_flag_posts: "Il Livello Esperienza minimo richiesto per segnalare messaggi"
     min_trust_to_post_links: "Il Livello Esperienza minimo richiesto per includere collegamenti nei messaggi"
-    min_trust_to_post_images: "Il Livello Esperienza minimo richiesto per includere le immagini in un messaggio"
     newuser_max_links: "Quanti collegamenti può aggiungere a un messaggio un nuovo utente ."
-    newuser_max_images: "Quante immagini può aggiungere ad un messaggio un nuovo utente."
     newuser_max_attachments: "Quanti allegati può aggiungere ad un messaggio un nuovo utente."
     newuser_max_mentions_per_post: "Massimo numero di menzioni ad un @nome che un utente può fare in un messaggio."
     newuser_max_replies_per_topic: "Numero massimo di risposte che un nuovo utente può inviare in un singolo argomento, prima che qualcuno risponda."

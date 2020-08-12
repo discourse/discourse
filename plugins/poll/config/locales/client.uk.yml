@@ -39,9 +39,6 @@ uk:
       group-results:
         title: "Групувати голоси за полем користувача"
         label: "Показати відбивку"
-      ungroup-results:
-        title: "Об’єднайте всі голоси"
-        label: "Сховати відбивку"
       export-results:
         title: "Експорт результатів опитування"
         label: "Експорт"

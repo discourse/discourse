@@ -361,6 +361,14 @@ describe PostDestroyer do
       expect(post.like_count).to eq(2)
       expect(post.custom_fields["deleted_public_actions"]).to be_nil
     end
+
+    it "unmarks the matching incoming email for imap sync" do
+      SiteSetting.enable_imap = true
+      incoming = Fabricate(:incoming_email, imap_sync: true, post: post, topic: post.topic, imap_uid: 99)
+      PostDestroyer.new(moderator, post).recover
+      incoming.reload
+      expect(incoming.imap_sync).to eq(false)
+    end
   end
 
   describe 'basic destroying' do
@@ -753,6 +761,28 @@ describe PostDestroyer do
     it "should feature the users again (in case they've changed)" do
       expect_enqueued_with(job: :feature_topic_users, args: { topic_id: post.topic_id }) do
         PostDestroyer.new(moderator, post).destroy
+      end
+    end
+
+    describe "incoming email and imap sync" do
+      fab!(:incoming) { Fabricate(:incoming_email, post: post, topic: post.topic) }
+
+      it "does nothing if imap not enabled" do
+        IncomingEmail.expects(:find_by).never
+        PostDestroyer.new(moderator, post).destroy
+      end
+
+      it "does nothing if the incoming email has no imap_uid" do
+        SiteSetting.enable_imap = true
+        PostDestroyer.new(moderator, post).destroy
+        expect(incoming.reload.imap_sync).to eq(false)
+      end
+
+      it "sets imap_sync to true for the matching incoming" do
+        SiteSetting.enable_imap = true
+        incoming.update(imap_uid: 999)
+        PostDestroyer.new(moderator, post).destroy
+        expect(incoming.reload.imap_sync).to eq(true)
       end
     end
 

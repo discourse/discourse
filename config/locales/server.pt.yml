@@ -225,10 +225,6 @@ pt:
   too_many_mentions_newuser:
     one: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
-  no_images_allowed: "Pedimos desculpa, novos utilizadores não podem colocar imagens nas mensagens."
-  too_many_images:
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} imagem numa mensagem."
-    other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} imagens numa mensagem."
   no_attachments_allowed: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
   too_many_attachments:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexo numa mensagem."
@@ -1022,7 +1018,6 @@ pt:
     min_trust_to_edit_post: "O nível mínimo de confiança necessário para editar publicações."
     min_trust_to_allow_self_wiki: "O nível mínimo de confiança necessário para o utilizador criar as suas publicações wiki."
     newuser_max_links: "Quantas hiperligações um novo utilizador pode adicionar a uma mensagem."
-    newuser_max_images: "Quantas imagens um novo utilizador pode adicionar a uma mensagem."
     newuser_max_attachments: "Quantos anexos um novo utilizador pode adicionar a uma mensagem."
     newuser_max_mentions_per_post: "Número máximo de notificações @nome que um novo utilizador pode usar numa mensagem."
     newuser_max_replies_per_topic: "Número máximo de respostas que um novo utilizador pode fazer num único tópico até alguém lhe responder."

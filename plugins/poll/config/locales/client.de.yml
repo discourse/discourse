@@ -49,9 +49,6 @@ de:
       group-results:
         title: "Gruppen-Stimmen nach Benutzer-Feld"
         label: "Zeige Aufgliederung"
-      ungroup-results:
-        title: "Kombiniere alle Stimmen"
-        label: "Aufgliederung ausblenden"
       export-results:
         title: "Abstimmungsergebnisse exportieren"
         label: "Exportieren"

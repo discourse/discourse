@@ -59,9 +59,6 @@ he:
       group-results:
         title: "קיבוץ הצבעות לפי משתמש"
         label: "הצגת פילוח"
-      ungroup-results:
-        title: "שקלול כל ההצבעות"
-        label: "הסתרת הפילוח"
       export-results:
         title: "ייצוא תוצאות הסקר"
         label: "ייצוא"
@@ -76,6 +73,12 @@ he:
       automatic_close:
         closes_in: "נסגר בעוד <strong>%{timeLeft}</strong>."
         age: "נסגר ב־<strong>%{age}</strong>"
+      breakdown:
+        title: "תוצאות הסקר"
+        votes: "%{count} הצבעות"
+        breakdown: "פילוח"
+        percentage: "אחוזים"
+        count: "ספירה"
       error_while_toggling_status: " חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
       error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."
       error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."

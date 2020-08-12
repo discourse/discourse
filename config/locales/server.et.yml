@@ -159,10 +159,6 @@ et:
   too_many_mentions_newuser:
     one: "Vabandust, uued kasutajad tohivad postituses vaid ühte kasutajat mainida."
     other: "Vabanda, uued kasutajad tohivad postituses vaid %{count} kasutajat mainida."
-  no_images_allowed: "Vabanda, uued kasutajad ei saa postitustesse pilte panna."
-  too_many_images:
-    one: "Vabandust, uued kasutajad tohivad postitusse panna vaid ühe pildi."
-    other: "Vabandust, uued kasutajad tohivad postitusse panna vaid %{count} pilti."
   no_attachments_allowed: "Vabanda, uued kasutajad ei tohi postitusse manuseid lisada."
   too_many_attachments:
     one: "Vabandust, uued kasutajad tohivad postitusele ainult ühe manuse lisada."

@@ -14,6 +14,20 @@ el:
         one: "συνολική ψήφος"
         other: "συνολικές ψήφοι"
       average_rating: "Μέση βαθμολογία: <strong>%{average}</strong>."
+      public:
+        title: "Οι ψήφοι είναι <strong>δημόσιες</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Ορίστε τουλάχιστον <strong>%{count}</strong> επιλογή."
+            other: "Ορίστε τουλάχιστον <strong>%{count}</strong> επιλογές."
+          up_to_max_options:
+            one: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογή."
+            other: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογές."
+          x_options:
+            one: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογή."
+            other: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογές."
+          between_min_and_max_options: "Επιλέξτε μεταξύ <strong>%{min}</strong> και <strong>%{max}</strong> επιλογές."
       cast-votes:
         title: "Δώσε τις ψήφους σου"
         label: "Ψήφισε τώρα!"
@@ -22,6 +36,7 @@ el:
         label: "Εμφάνισε τα αποτελέσματα"
       hide-results:
         title: "Πίσω στην ψηφοφορία"
+        label: "Εμφάνιση ψήφων"
       export-results:
         label: "Εξαγωγή"
       open:
@@ -32,6 +47,8 @@ el:
         title: "Να κλείσει η ψηφοφορία"
         label: "Κλείσιμο"
         confirm: "Σίγουρα θες να κλείσεις αυτή την ψηφοφορία;"
+      breakdown:
+        title: "Αποτελέσματα ψηφοφορίας"
       error_while_toggling_status: "Λυπούμαστε, παρουσιάστηκε ένα σφάλμα σχετικά με την εναλλαγή της κατάστασης αυτής της δημοσκόπησης."
       error_while_casting_votes: "Λυπούμαστε, παρουσιάστηκε ένα σφάλμα με τις ψήφους σας."
       error_while_fetching_voters: "Συγνώμη, παρουσιάστηκε ένα σφάλμα κατά την διαδικασία εμφάνισης των ψηφοφόρων."
@@ -39,6 +56,7 @@ el:
         title: Δημιουργία Ψηφοφορίας
         insert: Εισαγωγή Ψηφοφορίας
         help:
+          options_count: Επιλέξτε τουλάχιστον 1 επιλογή
           invalid_values: Η ελάχιστη τιμή θα πρέπει να είναι μικρότερη από την μέγιστη τιμή.
           min_step_value: Η ελάχιστη τιμή για το βήμα είναι 1
         poll_type:
@@ -48,6 +66,15 @@ el:
           number: Αξιολόγηση αριθμoύ
         poll_result:
           label: Αποτελέσματα
+          always: Πάντα ορατό
+          vote: Μετά την ψηφοφορία
+          staff: Μόνο το προσωπικό
+        poll_groups:
+          label: Επιτρεπόμενες ομάδες
+        poll_chart_type:
+          label: Τύπος γραφήματος
+          bar: Μπάρες
+          pie: Πίτα
         poll_config:
           max: Μέγιστο
           min: Ελάχιστο
@@ -56,3 +83,5 @@ el:
           label: Δείξε ποιοι ψηφίσαν.
         poll_options:
           label: Εισάγετε μία επιλογή ψηφοφορίας ανα γραμμή
+        automatic_close:
+          label: Αυτόματο κλείσιμο ψηφοφορίας

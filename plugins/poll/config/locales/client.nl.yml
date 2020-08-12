@@ -49,9 +49,6 @@ nl:
       group-results:
         title: "Stemmen groeperen op gebruikersveld"
         label: "Verdeling tonen"
-      ungroup-results:
-        title: "Alle stemmen combineren"
-        label: "Verdeling verbergen"
       export-results:
         title: "De pollresultaten exporteren"
         label: "Exporteren"

@@ -6,5 +6,8 @@
 
 el:
   js:
+    details:
+      title: Απόκρυψη λεπτομερειών
     composer:
       details_title: Περίληψη
+      details_text: "Αυτό το κείμενο θα είναι κρυφό"

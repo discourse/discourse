@@ -137,9 +137,6 @@ vi:
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết."
-  no_images_allowed: "Xin lỗi, thành viên mới chưa được chèn hình ảnh vào bài viết."
-  too_many_images:
-    other: "Xin lỗi, thành viên mới chỉ có thể chèn %{count} hình ảnh trong một bài viết."
   no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong bài viết."
   too_many_attachments:
     other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một bài viết."
@@ -830,7 +827,6 @@ vi:
     min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
     min_trust_to_allow_self_wiki: "Bậc tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
-    newuser_max_images: "Bao nhiêu hình tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
     newuser_max_mentions_per_post: "Số tối đa thông báo @name mà thành viên mới có thể sử dụng trong bài viết."
     newuser_max_replies_per_topic: "Số lượng tối đa trả lời mà thành viên có thể thực hiện trong một chủ đề cho đến khi có ai đó gửi trả lời."

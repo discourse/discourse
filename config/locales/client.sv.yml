@@ -599,6 +599,22 @@ sv:
         membership:
           title: Medlemskap
           access: Tillgång
+        categories:
+          title: Kategorier
+          long_title: "Standardaviseringar för kategori"
+          description: "När användare läggs till i denna grupp kommer inställningarna för kategoriavisering att ställas in på dessa standardvärden. Efteråt kan de ändra dem."
+          watched_categories_instructions: "Bevaka automatiskt alla ämnen i dessa kategorier. Gruppmedlemmar kommer att meddelas om alla nya inlägg och ämnen, och antalet nya inlägg kommer också att visas bredvid ämnet."
+          tracked_categories_instructions: "Följ automatiskt alla ämnen i dessa kategorier. En räknare över nya inlägg kommer att visas bredvid ämnet."
+          watching_first_post_categories_instructions: "Användarna kommer att meddelas om det första inlägget i varje nytt ämne för dessa kategorier."
+          muted_categories_instructions: "Användare kommer inte att meddelas något om nya ämnen i dessa kategorier, och de kommer inte att visas under kategorier eller de senaste ämnessidorna."
+        tags:
+          title: Taggar
+          long_title: "Standardaviseringar för taggar"
+          description: "När användare läggs till i denna grupp kommer inställningarna för taggavisering att ställas in på dessa standardvärden. Efteråt kan de ändra dem."
+          watched_tags_instructions: "Bevaka automatiskt alla ämnen med dessa taggar. Gruppmedlemmar kommer att meddelas om alla nya inlägg och ämnen, och antalet nya inlägg kommer också att visas bredvid ämnet."
+          tracked_tags_instructions: "Följ automatiskt alla ämnen med dessa taggar. En räknare över nya inlägg kommer att visas bredvid ämnet."
+          watching_first_post_tags_instructions: "Användarna kommer att meddelas om det första inlägget i varje nytt ämne med dessa taggar."
+          muted_tags_instructions: "Användare kommer inte att meddelas något om nya ämnen med dessa taggar, och de kommer inte att visas i senaste."
         logs:
           title: "Loggar"
           when: "När"
@@ -609,6 +625,10 @@ sv:
           details: "Detaljer"
           from: "Från"
           to: "Till"
+      permissions:
+        title: "Behörigheter"
+        none: "Det finns inga kategorier associerade med denna grupp."
+        description: "Medlemmar i denna grupp kan komma åt dessa kategorier"
       public_admission: "Tillåt användare att gå med i grupp fritt (Kräver offentligt synliga grupper)"
       public_exit: "Tillåt användare att fritt lämna grupp"
       empty:
@@ -847,6 +867,8 @@ sv:
       first_notification: "Du har fått din första notifikation! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       theme_default_on_all_devices: "Gör detta till standard-tema för alla mina enheter"
+      dark_mode: "Mörkt läge"
+      dark_mode_enable: "Aktivera automatiskt färgschema för mörkt läge"
       text_size_default_on_all_devices: "Gör detta till standard-storlek för text på alla mina enheter"
       allow_private_messages: "Tillåt andra användare att skicka mig personliga meddelanden"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
@@ -1790,6 +1812,7 @@ sv:
       membership_request_consolidated: "%{count} öppna medlemsansökningar för '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username},%{username2}</span>%{description}"
+      votes_released: "%{description} - slutförd"
       group_message_summary:
         one: "%{count} meddelande i din %{group_name} inkorg"
         other: "%{count} meddelanden i din %{group_name}-inkorg"
@@ -1829,6 +1852,7 @@ sv:
         post_approved: "inlägg godkänt"
         membership_request_consolidated: "ny begäran om medlemskap"
         reaction: "ny reaktion"
+        votes_released: "Röstningen släpptes"
     upload_selector:
       title: "Lägg till en bild"
       title_with_attachments: "Lägg till en bild eller en fil"

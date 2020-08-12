@@ -176,10 +176,6 @@ ja:
     created: "作成者"
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
   no_mentions_allowed_newuser: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
-  no_images_allowed_trust: "ごめんなさい、ポストに画像を添付することができません"
-  no_images_allowed: "新規ユーザーは投稿に画像を付ける事はできません。"
-  too_many_images:
-    other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個の画像しか貼り付けられません。"
   no_attachments_allowed: "申し訳ありませんが、新規ユーザはこのポストにファイルを添付できません。"
   too_many_attachments:
     other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個のファイルしか貼り付けられません。"
@@ -901,7 +897,6 @@ ja:
     min_trust_to_create_topic: "新規にトピックを作成するために必要な最低トラストレベル。"
     min_trust_to_edit_wiki_post: "ポストをwikiにするために必要な最低トラストレベル"
     newuser_max_links: "新しいユーザが投稿内に貼れるリンクの数"
-    newuser_max_images: "新しいユーザが投稿内にアップロードできる画像の数"
     newuser_max_attachments: "新しいユーザが投稿内に添付できるファイルの数"
     newuser_max_mentions_per_post: "新しいユーザが投稿内で @name で通知できる最大の数"
     newuser_max_replies_per_topic: "新しいユーザが１つのトピックで誰かがそれに回答するまでに回答できる最大の数"

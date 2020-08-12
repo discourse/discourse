@@ -278,11 +278,6 @@ fr:
   too_many_mentions_newuser:
     one: "Désolé, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un message."
     other: "Désolé, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un message."
-  no_images_allowed_trust: "Désolé, il ne vous est pas possible d'inclure des images dans un message"
-  no_images_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter d'images dans les messages."
-  too_many_images:
-    one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'une image dans un message."
-    other: "Désolé, les nouveaux utilisateurs ne peuvent ajouter que %{count} images dans un message."
   no_attachments_allowed: "Désolé, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
   too_many_attachments:
     one: "Désolé, les nouveaux utilisateurs ne peuvent ajouter qu'un fichier dans leurs messages."
@@ -1638,9 +1633,7 @@ fr:
     min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages directs."
     min_trust_to_flag_posts: "Le niveau de confiance minimum requis pour signaler des messages"
     min_trust_to_post_links: "Le niveau de confiance minimum requis pour inclure des liens dans les messages"
-    min_trust_to_post_images: "Le niveau de confiance minimum requis pour inclure des images dans les messages"
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
-    newuser_max_images: "Combien d'images un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_attachments: "Combien de fichiers un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_mentions_per_post: "Nombre maximum de noms d'utilisateurs qu'un nouvel utilisateur peut mentionner dans un message."
     newuser_max_replies_per_topic: "Nombre maximum de réponses qu'un nouvel utilisateur peut faire dans une même discussion avant que quelqu'un lui réponde."

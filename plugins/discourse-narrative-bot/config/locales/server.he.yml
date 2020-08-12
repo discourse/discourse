@@ -275,6 +275,8 @@ he:
           נראה לי שהבנת מה עליך לעשות. קדימה **לסמן את הפוסט הזה בדגל** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> על היותו בלתי הולם!
         reply: |-
           [הסגל שלנו](%{base_uri}/groups/staff) יקבל התראה פרטית על הדגל שלך. אם מספיק חברים בקהילה מסמנים פוסט בדגל, הוא יוסתר ליתר ביטחון. (מאחר שלא באמת כתבתי כאן משהו נבזי :angel:, הרשיתי לעצמי להסיר את הדגל בינתיים.)
+        not_found: |-
+          אללי, הפוסט הנבזי שלי עדיין לא סומן בגדל כבלתי הולם. :worried: אפשר לבקש ממך לסמן אותו ב**דגל** כתוכן בלתי הולם <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
       search:
         instructions: |-
           _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599; כדי לחפש אותה.

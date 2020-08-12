@@ -140,9 +140,6 @@ id:
   no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
   too_many_mentions_newuser:
     other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
-  no_images_allowed: "Maaf, pengguna baru tidak diperbolehkan untuk memasang gambar/foto dalam posting."
-  too_many_images:
-    other: "Maaf, pengguna baru hanya diperbolehkan untuk memasang %{count} gambar/foto dalam satu posting."
   no_attachments_allowed: "Maaf, pengguna baru tidak diijinkan untuk mengunggah file/attachment dalam posting."
   too_many_attachments:
     other: "Maaf, pengguna baru hanya diijinkan untuk mengunggah %{count} file/attachment dalam satu posting."

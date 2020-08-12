@@ -59,9 +59,6 @@ sl:
       group-results:
         title: "Zbiranje glasov po uporabniškem polju"
         label: "Pokaži razčlenitev"
-      ungroup-results:
-        title: "Združite vse glasove"
-        label: "Skrij razčlenitev"
       export-results:
         title: "Izvozi rezultate ankete"
         label: "Izvozi"

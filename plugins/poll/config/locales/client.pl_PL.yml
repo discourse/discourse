@@ -49,9 +49,6 @@ pl_PL:
       group-results:
         title: "Grupuj głosy polami użytkownika"
         label: "Pokaż podsumowanie"
-      ungroup-results:
-        title: "Połącz wszystkie głosy"
-        label: "Ukryj podsumowanie"
       export-results:
         title: "Eksportuj wyniki ankiety"
         label: "Eksport"

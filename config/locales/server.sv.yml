@@ -281,11 +281,11 @@ sv:
   too_many_mentions_newuser:
     one: "Tyvärr, besökare kan bara omnämna en annan användare i ett inlägg."
     other: "Tyvärr, besökare kan bara omnämna %{count} användare i ett inlägg."
-  no_images_allowed_trust: "Tyvärr kan du inte placera bilder i ett inlägg"
-  no_images_allowed: "Tyvärr, nya användare kan inte infoga bilder i inlägg."
-  too_many_images:
-    one: "Tyvärr, nya användare kan bara infoga en bild i ett inlägg."
-    other: "Tyvärr, nya användare kan bara infoga %{count} bilder i ett inlägg."
+  no_embedded_media_allowed_trust: "Tyvärr, du kan inte bädda in media i ett inlägg."
+  no_embedded_media_allowed: "Tyvärr, nya användare kan inte bädda in media i inlägg."
+  too_many_embedded_media:
+    one: "Tyvärr, nya användare kan bara lägga in ett enda inbäddat medieobjekt i ett inlägg."
+    other: "Tyvärr, nya användare kan bara lägga in %{count} inbäddade medieobjekt i ett inlägg."
   no_attachments_allowed: "Tyvärr, nya användare kan inte bifoga filer i inlägg."
   too_many_attachments:
     one: "Tyvärr, nya användare kan bara bifoga en filer i ett inlägg."
@@ -483,6 +483,7 @@ sv:
               reply_by_email_disabled: "Svar via e-post har inaktiverats."
               target_user_not_found: "En av användarna som du skickar detta meddelande till kunde inte hittas."
               unable_to_update: "Det uppstod ett fel vid uppdatering av detta ämnet."
+              unable_to_tag: "Det uppstod ett fel vid taggning av ämnet."
             featured_link:
               invalid: "är ogiltig. URL måste innehålla http:// eller http://."
               invalid_category: "kan inte redigeras i denna kategori"
@@ -1643,10 +1644,10 @@ sv:
     min_trust_to_send_messages: "Lägsta förtroendenivå som krävs för att skapa nya privata meddelanden."
     min_trust_to_flag_posts: "Lägsta förtroendenivå som krävs för att flagga ett inlägg."
     min_trust_to_post_links: "Lägsta förtroendenivå som krävs för att inkludera länkar i ett inlägg."
-    min_trust_to_post_images: "Lägsta förtroendenivå som krävs för att inkludera en bild i ett inlägg."
+    min_trust_to_post_embedded_media: "Lägsta förtroendenivå som krävs för att bädda in medieobjekt i ett inlägg"
     allowed_link_domains: "Domäner som användare kan länka till även om de inte har tillräcklig förtroendenivå för att kunna publicera länkar"
     newuser_max_links: "Antalet länkar en ny användare kan lägga till i ett inlägg."
-    newuser_max_images: "Antalet bilder en ny användare kan lägga till i ett inlägg."
+    newuser_max_embedded_media: "Hur många inbäddade media objekt en ny användare kan lägga till i ett inlägg."
     newuser_max_attachments: "Antalet bilagor en ny användare kan lägga till i ett inlägg."
     newuser_max_mentions_per_post: "Max antal @namn-omnämningar en ny användare kan göra i ett inlägg."
     newuser_max_replies_per_topic: "Max antal svar en ny användare kan göra i ett enda ämne innan någon svarar dem."
@@ -1668,6 +1669,8 @@ sv:
     desktop_category_page_style: "Visuell stil för den/kategori sidan."
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
     category_style: "Visuell stil för kategori-utmärkelser."
+    default_dark_mode_color_scheme_id: "Färgschemat som används i mörkt läge."
+    dark_mode_none: "Inga"
     max_image_size_kb: "Högsta bilduppladdningsstorlek i kB. Konfiguration krävs också i nginx (client_max_body_size) / apache eller proxy. Bilder större än detta eller mindre än client_max_body_size kommer  vid uppladdning att ändras i storlek för att passa."
     max_attachment_size_kb: "Högsta storlek på uppladdad bilaga i kB. Konfiguration krävs i nginx (client_max_body_size) / apace eller proxy också."
     authorized_extensions: "En lista av alla filändelser som är tillåtna för uppladdning (använd '*' för att aktivera alla filtyper)"

@@ -269,10 +269,6 @@ zh_CN:
   no_mentions_allowed_newuser: "抱歉，新用户不能@其它用户。"
   too_many_mentions_newuser:
     other: "抱歉，新用户在一个帖子中最多能@ %{count} 位用户。"
-  no_images_allowed_trust: "抱歉，你无法在这个帖子里贴图"
-  no_images_allowed: "抱歉，新用户不能在帖子中贴图。"
-  too_many_images:
-    other: "抱歉，新用户在一个帖子中仅能贴 %{count} 张图。"
   no_attachments_allowed: "抱歉，新用户不能在帖子中上传附件。"
   too_many_attachments:
     other: "抱歉，新用户在一个帖子中仅能上传 %{count} 个附件。"
@@ -1616,10 +1612,8 @@ zh_CN:
     min_trust_to_send_messages: "创建新个人消息所需的最低信任级别。"
     min_trust_to_flag_posts: "标记帖子所需的最低信任级别"
     min_trust_to_post_links: "在帖子中包含链接所需的最低信任级别"
-    min_trust_to_post_images: "在帖子中包含图片所需的最低信任级别"
     allowed_link_domains: "即使用户没有发布链接的信任等级也被视为链接的域名。"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
-    newuser_max_images: "一个访问者可以加入到一个帖子里的图片数量。"
     newuser_max_attachments: "一个新用户可以添加到一个帖子里的附件数量。"
     newuser_max_mentions_per_post: "一个访问者可以在一个帖子里使用 @name 提及的最大数量。"
     newuser_max_replies_per_topic: "直至有人回复他们前，新用户在一个帖子里的最大回复数量。"

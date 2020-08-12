@@ -56,6 +56,31 @@ QUnit.test("new user cannot upload images", function(assert) {
   );
 });
 
+QUnit.test("new user can upload images if allowed", function(assert) {
+  this.siteSettings.newuser_max_embedded_media = 1;
+  this.siteSettings.default_trust_level = 0;
+  sandbox.stub(bootbox, "alert");
+
+  assert.ok(
+    validateUploadedFiles([{ name: "image.png" }], {
+      user: User.create(),
+      siteSettings: this.siteSettings
+    })
+  );
+});
+
+QUnit.test("TL1 can upload images", function(assert) {
+  this.siteSettings.newuser_max_embedded_media = 0;
+  sandbox.stub(bootbox, "alert");
+
+  assert.ok(
+    validateUploadedFiles([{ name: "image.png" }], {
+      user: User.create({ trust_level: 1 }),
+      siteSettings: this.siteSettings
+    })
+  );
+});
+
 QUnit.test("new user cannot upload attachments", function(assert) {
   this.siteSettings.newuser_max_attachments = 0;
   sandbox.stub(bootbox, "alert");
