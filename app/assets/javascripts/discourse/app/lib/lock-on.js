@@ -59,7 +59,7 @@ export default class LockOn {
     this.previousTop = this.elementTop();
 
     if (this.previousTop) {
-      $(window).scrollTop(this.previousTop);
+      window.scrollTo(window.pageXOffset, this.previousTop);
     }
 
     this.interval = setInterval(() => this._performLocking(), 50);
@@ -87,10 +87,11 @@ export default class LockOn {
       return this.clearLock();
     }
 
-    const scrollTop = $(window).scrollTop();
-
-    if (!within(4, top, this.previousTop) || !within(4, scrollTop, top)) {
-      $(window).scrollTop(top);
+    if (
+      !within(4, top, this.previousTop) ||
+      !within(4, window.scrollTop, top)
+    ) {
+      window.scrollTo(window.pageXOffset, top);
       this.previousTop = top;
     }
 
