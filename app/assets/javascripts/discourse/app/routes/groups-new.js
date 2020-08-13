@@ -18,7 +18,6 @@ export default DiscourseRoute.extend({
   },
 
   afterModel() {
-    // TODO - confirm can_create_group works for admins and moderators (as appropraite, based on siteSettings)
     if (!this.get("currentUser.can_create_group")) {
       this.transitionTo("groups");
     }

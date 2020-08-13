@@ -582,8 +582,6 @@ class GroupsController < ApplicationController
           membership_request_template
         }
 
-        # TODO allow if: - is staff
-        #              : - is moderator, and correct sitesetting is enabled
         if current_user.staff?
           default_params.push(*[
             :incoming_email,
