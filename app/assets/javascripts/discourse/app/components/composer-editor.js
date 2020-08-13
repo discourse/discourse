@@ -181,6 +181,7 @@ export default Component.extend({
   _composerEditorInit() {
     const $input = $(this.element.querySelector(".d-editor-input"));
     const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
+    const self = this;
 
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
@@ -189,6 +190,8 @@ export default Component.extend({
         key: "@",
         transformComplete: v => v.username || v.name,
         afterComplete() {
+          self.composer.set("reply", $input.val());
+
           // ensures textarea scroll position is correct
           schedule("afterRender", () => $input.blur().focus());
         },
