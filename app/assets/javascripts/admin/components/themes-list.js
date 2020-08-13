@@ -2,11 +2,12 @@ import { gt, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import discourseComputed from "discourse-common/utils/decorators";
-import { getOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
-  THEMES: THEMES,
-  COMPONENTS: COMPONENTS,
+  router: service(),
+  THEMES,
+  COMPONENTS,
 
   classNames: ["themes-list"],
 
@@ -71,9 +72,7 @@ export default Component.extend({
       }
     },
     navigateToTheme(theme) {
-      getOwner(this)
-        .lookup("router:main")
-        .transitionTo("adminCustomizeThemes.show", theme);
+      this.router.transitionTo("adminCustomizeThemes.show", theme);
     }
   }
 });
