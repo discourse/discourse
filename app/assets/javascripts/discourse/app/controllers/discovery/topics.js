@@ -18,13 +18,13 @@ import { userPath } from "discourse/lib/url";
 import TopicList from "discourse/models/topic-list";
 import Topic from "discourse/models/topic";
 import { routeAction } from "discourse/helpers/route-action";
-import { inject as injectService } from "@ember/service";
+import { inject as service } from "@ember/service";
 import deprecated from "discourse-common/lib/deprecated";
 
 const controllerOpts = {
   discovery: controller(),
   discoveryTopics: controller("discovery/topics"),
-  router: injectService(),
+  router: service(),
 
   period: null,
 
