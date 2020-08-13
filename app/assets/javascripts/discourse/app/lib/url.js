@@ -74,8 +74,9 @@ export function jumpToElement(elementId) {
     return;
   }
 
-  const selector = `#${elementId}, a[name=${elementId}]`;
+  const selector = `#main #${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
+
   schedule("afterRender", function() {
     if (lockon) {
       lockon.clearLock();
@@ -132,7 +133,7 @@ const DiscourseURL = EmberObject.extend({
       let holder;
 
       if (opts.anchor) {
-        selector = `#${opts.anchor}, a[name=${opts.anchor}]`;
+        selector = `#main #${opts.anchor}, a[name=${opts.anchor}]`;
         holder = document.querySelector(selector);
       }
 
