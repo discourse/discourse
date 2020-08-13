@@ -7,7 +7,7 @@ module GroupGuardian
   def can_create_group?(parent = nil)
     is_admin? ||
     (
-      SiteSetting.moderators_create_categories_and_groups &&
+      SiteSetting.moderators_manage_categories_and_groups &&
       is_moderator?
     )
   end
@@ -26,7 +26,7 @@ module GroupGuardian
   def can_admin_group?(group)
     is_admin? ||
     (
-      SiteSetting.moderators_create_categories_and_groups &&
+      SiteSetting.moderators_manage_categories_and_groups &&
       is_moderator? &&
       can_see?(group)
     )
