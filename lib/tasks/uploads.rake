@@ -1082,7 +1082,9 @@ def fix_missing_s3
         raise ActiveRecord::Rollback
       end
 
-      upload.update!(etag: fixed_upload.etag, sha1: fixed_upload.sha1, url: fixed_upload.url, verified: nil)
+      # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
+      # we may end up breaking posts
+      upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verified: nil)
     end
   end
 
