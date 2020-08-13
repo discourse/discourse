@@ -1104,7 +1104,6 @@ describe PostAlerter do
       fab!(:other_tag) { Fabricate(:tag) }
       fab!(:other_tag2) { Fabricate(:tag) }
       fab!(:other_tag3) { Fabricate(:tag) }
-      fab!(:other_category) { Fabricate(:category) }
       fab!(:user) { Fabricate(:user) }
       fab!(:staged) { Fabricate(:staged) }
       fab!(:admin) { Fabricate(:admin) }
