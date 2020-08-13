@@ -362,9 +362,7 @@ describe UserUpdater do
     context 'with permission to update title' do
       it 'allows user to change title' do
         user = Fabricate(:user, title: 'Emperor')
-        guardian = stub
-        guardian.stubs(:can_grant_title?).with(user, 'Minion').returns(true)
-        Guardian.stubs(:new).with(acting_user).returns(guardian)
+        Guardian.any_instance.stubs(:can_grant_title?).with(user, 'Minion').returns(true)
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(title: 'Minion')
@@ -403,9 +401,7 @@ describe UserUpdater do
           user.update(title: badge.name)
           user.user_profile.update(badge_granted_title: true)
 
-          guardian = stub
-          guardian.stubs(:can_grant_title?).with(user, 'Dancer').returns(true)
-          Guardian.stubs(:new).with(user).returns(guardian)
+          Guardian.any_instance.stubs(:can_grant_title?).with(user, 'Dancer').returns(true)
 
           updater = UserUpdater.new(user, user)
           updater.update(title: 'Dancer')
@@ -428,9 +424,7 @@ describe UserUpdater do
     context 'without permission to update title' do
       it 'does not allow user to change title' do
         user = Fabricate(:user, title: 'Emperor')
-        guardian = stub
-        guardian.stubs(:can_grant_title?).with(user, 'Minion').returns(false)
-        Guardian.stubs(:new).with(acting_user).returns(guardian)
+        Guardian.any_instance.stubs(:can_grant_title?).with(user, 'Minion').returns(false)
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(title: 'Minion')
