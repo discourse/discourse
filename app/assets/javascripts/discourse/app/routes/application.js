@@ -1,6 +1,5 @@
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
-import { once } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
@@ -58,11 +57,9 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       this.documentTitle.setTitle(tokens.join(" - "));
     },
 
-    // Ember doesn't provider a router `willTransition` event so let's make one
+    // We need an empty method here for Ember to fire the action properly on all routes.
     willTransition() {
-      var router = getOwner(this).lookup("router:main");
-      once(router, router.trigger, "willTransition");
-      return this._super(...arguments);
+      this._super(...arguments);
     },
 
     postWasEnqueued(details) {
