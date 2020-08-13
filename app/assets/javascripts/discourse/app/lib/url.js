@@ -78,7 +78,7 @@ export function jumpToElement(elementId) {
   _jumpScheduled = true;
   schedule("afterRender", function() {
     if (lockon) {
-      return;
+      lockon.clearLock();
     }
 
     lockon = new LockOn(selector, {
@@ -142,7 +142,7 @@ const DiscourseURL = EmberObject.extend({
       }
 
       if (lockon) {
-        return;
+        lockon.clearLock();
       }
 
       lockon = new LockOn(elementId, {
