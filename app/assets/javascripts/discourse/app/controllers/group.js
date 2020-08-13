@@ -69,7 +69,6 @@ export default Controller.extend({
       );
     }
 
-    // TODO - confirm canManageGroup is working for moderators
     if (canManageGroup) {
       defaultTabs.push(
         Tab.create({
@@ -129,7 +128,7 @@ export default Controller.extend({
     return (
       this.currentUser &&
       (this.currentUser.canManageGroup(model) ||
-        (this.currentUser.admin && automatic))
+        (model.can_admin_group && automatic))
     );
   },
 
