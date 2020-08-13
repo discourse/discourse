@@ -5,6 +5,7 @@ import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import { escapeExpression } from "discourse/lib/utilities";
+import outletHeights from "discourse/lib/header-outlet-height";
 
 export default Mixin.create({
   elementId: null, //click detection added for data-{elementId}
@@ -208,27 +209,7 @@ export default Mixin.create({
               }
             }
 
-            let outlets = [
-              ".above-site-header-outlet",
-              ".below-site-header-outlet"
-            ];
-
-            // If these outlets have height they impact user-card positioning
-
-            let outletHeights = 0;
-
-            outlets.forEach(function(outletClass) {
-              if (document.querySelector(outletClass)) {
-                let outlet = document.querySelectorAll(outletClass);
-                for (var i = 0; i < outlet.length; i++) {
-                  if (outlet[i].offsetHeight) {
-                    outletHeights += Number(outlet[i].offsetHeight);
-                  }
-                }
-              }
-            });
-
-            position.top -= $("#main-outlet").offset().top - outletHeights;
+            position.top -= $("#main-outlet").offset().top - outletHeights();
             if (isFixed) {
               position.top -= $("html").scrollTop();
               //if content is fixed and will be cut off on the bottom, display it above...
