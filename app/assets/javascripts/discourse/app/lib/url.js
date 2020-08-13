@@ -104,9 +104,6 @@ const DiscourseURL = EmberObject.extend({
     _transitioning = postNumber > 1;
 
     schedule("afterRender", () => {
-      let elementId;
-      let holder;
-
       if (opts.jumpEnd) {
         let $holder = $(holderId);
         let holderHeight = $holder.height();
@@ -131,32 +128,35 @@ const DiscourseURL = EmberObject.extend({
         return;
       }
 
+      let selector;
+      let holder;
+
       if (opts.anchor) {
-        elementId = opts.anchor;
-        holder = $(elementId);
+        selector = `#${opts.anchor}`;
+        holder = document.querySelector(selector);
       }
 
-      if (!holder || holder.length === 0) {
-        elementId = holderId;
-        holder = $(elementId);
+      if (!holder) {
+        selector = holderId;
+        holder = document.querySelector(selector);
       }
 
       if (lockon) {
         lockon.clearLock();
       }
 
-      lockon = new LockOn(elementId, {
+      lockon = new LockOn(selector, {
         finished() {
           _transitioning = false;
           lockon = null;
         }
       });
 
-      if (holder.length > 0 && opts && opts.skipIfOnScreen) {
+      if (holder && opts.skipIfOnScreen) {
         const elementTop = lockon.elementTop();
         const scrollTop = $(window).scrollTop();
         const windowHeight = $(window).height() - offsetCalculator();
-        const height = holder.height();
+        const height = $(holder).height();
 
         if (
           elementTop > scrollTop &&
@@ -388,9 +388,9 @@ const DiscourseURL = EmberObject.extend({
             jumpEnd: routeOpts.jumpEnd
           };
 
-          const m = /#.+$/.exec(path);
-          if (m) {
-            jumpOpts.anchor = m[0];
+          const anchorMatch = /#(.+)$/.exec(path);
+          if (anchorMatch) {
+            jumpOpts.anchor = anchorMatch[1];
           }
 
           this.jumpToPost(closest, jumpOpts);
