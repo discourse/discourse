@@ -44,7 +44,11 @@
     </div>
 
     {{#if this.group.bio_excerpt}}
-      <div class="bio">{{html-safe this.group.bio_excerpt}}</div>
+      <div class="card-row second-row">
+        <div class="bio">
+          {{html-safe this.group.bio_excerpt}}
+        </div>
+      </div>
     {{/if}}
 
     {{#if group.members}}
