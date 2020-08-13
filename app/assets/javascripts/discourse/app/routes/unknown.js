@@ -13,7 +13,12 @@ export default DiscourseRoute.extend({
         transition.abort();
 
         let url = results.target_url;
+
         if (transition._discourse_anchor) {
+          // Remove the anchor from the permalink if present
+          url = url.split("#")[0];
+
+          // Add the anchor from the transition
           url += `#${transition._discourse_anchor}`;
         }
 
