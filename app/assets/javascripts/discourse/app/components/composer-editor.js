@@ -188,8 +188,8 @@ export default Component.extend({
         dataSource: term => this.userSearchTerm.call(this, term),
         key: "@",
         transformComplete: v => v.username || v.name,
-        afterComplete: () => {
-          this.composer.set("reply", $input.val());
+        afterComplete: value => {
+          this.composer.set("reply", value);
 
           // ensures textarea scroll position is correct
           schedule("afterRender", () => $input.blur().focus());
