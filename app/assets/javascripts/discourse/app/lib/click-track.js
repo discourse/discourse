@@ -42,6 +42,10 @@ export function shouldOpenInNewTab(href) {
 
 export function openLinkInNewTab(link) {
   let href = (link.href || link.dataset.href || "").trim();
+  if (href === "") {
+    return;
+  }
+
   const newWindow = window.open(href, "_blank");
   newWindow.opener = null;
   newWindow.focus();
@@ -50,15 +54,17 @@ export function openLinkInNewTab(link) {
   // e.preventDefault() does not work.
   if (!link.dataset.href) {
     link.classList.add("no-href");
-    link.setAttribute("data-href", link.href);
+    link.dataset.href = link.href;
+    link.dataset.autoRoute = true;
     link.removeAttribute("href");
-    link.setAttribute("data-auto-route", true);
 
     later(() => {
-      link.classList.remove("no-href");
-      link.setAttribute("href", link.dataset.href);
-      link.removeAttribute("data-href");
-      link.removeAttribute("data-auto-route");
+      if (link) {
+        link.classList.remove("no-href");
+        link.setAttribute("href", link.dataset.href);
+        delete link.dataset.href;
+        delete link.dataset.autoRoute;
+      }
     }, 50);
   }
 }
