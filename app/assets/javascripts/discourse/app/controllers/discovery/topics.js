@@ -17,10 +17,14 @@ import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 import TopicList from "discourse/models/topic-list";
 import Topic from "discourse/models/topic";
+import { routeAction } from "discourse/helpers/route-action";
+import { inject as injectService } from "@ember/service";
+import deprecated from "discourse-common/lib/deprecated";
 
 const controllerOpts = {
   discovery: controller(),
   discoveryTopics: controller("discovery/topics"),
+  router: injectService(),
 
   period: null,
 
@@ -42,6 +46,14 @@ const controllerOpts = {
   },
 
   actions: {
+    changeSort() {
+      deprecated(
+        "changeSort has been changed from an (action) to a (route-action)",
+        { since: "2.6.0", dropFrom: "2.7.0" }
+      );
+      return routeAction("changeSort", this.router._router, ...arguments)();
+    },
+
     // Show newly inserted topics
     showInserted() {
       const tracker = this.topicTrackingState;
