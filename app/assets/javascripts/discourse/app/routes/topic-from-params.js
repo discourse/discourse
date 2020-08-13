@@ -17,7 +17,7 @@ export default DiscourseRoute.extend({
     this.controllerFor("topic").unsubscribe();
   },
 
-  setupController(controller, params) {
+  setupController(controller, params, { _discourse_anchor }) {
     params = params || {};
     params.track_visit = true;
 
@@ -65,8 +65,10 @@ export default DiscourseRoute.extend({
         );
 
         const opts = {};
-        if (document.location.hash && document.location.hash.length) {
-          opts.anchor = document.location.hash;
+        if (document.location.hash) {
+          opts.anchor = document.location.hash.substr(1);
+        } else if (_discourse_anchor) {
+          opts.anchor = _discourse_anchor;
         }
         DiscourseURL.jumpToPost(closest, opts);
 
