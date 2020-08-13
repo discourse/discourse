@@ -132,7 +132,7 @@ const DiscourseURL = EmberObject.extend({
       let holder;
 
       if (opts.anchor) {
-        selector = `#${opts.anchor}`;
+        selector = `#${opts.anchor}, a[name=${opts.anchor}]`;
         holder = document.querySelector(selector);
       }
 
