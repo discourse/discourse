@@ -1065,6 +1065,27 @@ end
 
 def fix_missing_s3
   Jobs.run_immediately!
+
+  puts "Attempting to download missing uploads and recreate"
+  ids = Upload.where(verified: false).pluck(:id)
+  ids.each do |id|
+    upload = Upload.find(id)
+
+    tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+    if tempfile
+      puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
+
+      fixed_upload = nil
+      Upload.transaction do
+        upload.update!(sha1: SecureRandom.hex)
+        fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+        raise ActiveRecord::Rollback
+      end
+
+      upload.update!(etag: fixed_upload.etag, sha1: fixed_upload.sha1, url: fixed_upload.url, verified: nil)
+    end
+  end
+
   puts "Attempting to automatically fix problem uploads"
   puts
   puts "Rebaking posts with missing uploads, this can take a while as all rebaking runs inline"
