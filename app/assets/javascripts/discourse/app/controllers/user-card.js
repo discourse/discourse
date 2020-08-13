@@ -1,10 +1,9 @@
-import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL, { userPath, groupPath } from "discourse/lib/url";
 
 export default Controller.extend({
+  application: controller(),
   topic: controller(),
-  router: service(),
 
   actions: {
     togglePosts(user) {
