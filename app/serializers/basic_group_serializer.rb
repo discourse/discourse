@@ -69,10 +69,12 @@ class BasicGroupSerializer < ApplicationSerializer
   admin_or_owner_attributes :watching_category_ids,
                             :tracking_category_ids,
                             :watching_first_post_category_ids,
+                            :regular_category_ids,
                             :muted_category_ids,
                             :watching_tags,
                             :watching_first_post_tags,
                             :tracking_tags,
+                            :regular_tags,
                             :muted_tags
 
   def include_display_name?
@@ -121,7 +123,7 @@ class BasicGroupSerializer < ApplicationSerializer
     scope.can_see_group_members?(object)
   end
 
-  [:watching, :tracking, :watching_first_post, :muted].each do |level|
+  [:watching, :regular, :tracking, :watching_first_post, :muted].each do |level|
     define_method("#{level}_category_ids") do
       GroupCategoryNotificationDefault.lookup(object, level).pluck(:category_id)
     end

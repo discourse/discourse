@@ -6,9 +6,12 @@ export default Controller.extend({
     "model.watchingCategories.[]",
     "model.watchingFirstPostCategories.[]",
     "model.trackingCategories.[]",
+    "model.regularCategories.[]",
     "model.mutedCategories.[]"
   )
-  selectedCategories(watching, watchingFirst, tracking, muted) {
-    return [].concat(watching, watchingFirst, tracking, muted).filter(t => t);
+  selectedCategories(watching, watchingFirst, tracking, regular, muted) {
+    return []
+      .concat(watching, watchingFirst, tracking, regular, muted)
+      .filter(t => t);
   }
 });

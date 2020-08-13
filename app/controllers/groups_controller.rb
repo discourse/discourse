@@ -611,7 +611,7 @@ class GroupsController < ApplicationController
       end
 
     if !automatic || current_user.admin
-      [:muted, :tracking, :watching, :watching_first_post].each do |level|
+      [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
         permitted_params << { "#{level}_category_ids" => [] }
         permitted_params << { "#{level}_tags" => [] }
       end

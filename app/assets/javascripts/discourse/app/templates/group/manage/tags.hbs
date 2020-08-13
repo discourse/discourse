@@ -5,7 +5,7 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-watching"}} {{i18n "user.watched_tags"}}</label>
+    <label>{{d-icon "d-watching"}} {{i18n "groups.notifications.watching.title"}}</label>
 
     {{tag-chooser
       tags=model.watching_tags
@@ -21,7 +21,7 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-tracking"}} {{i18n "user.tracked_tags"}}</label>
+    <label>{{d-icon "d-tracking"}} {{i18n "groups.notifications.tracking.title"}}</label>
 
     {{tag-chooser
       tags=model.tracking_tags
@@ -37,7 +37,7 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-watching-first"}} {{i18n "user.watched_first_post_tags"}}</label>
+    <label>{{d-icon "d-watching-first"}} {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
     {{tag-chooser
       tags=model.watching_first_post_tags
@@ -53,7 +53,23 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-muted"}} {{i18n "user.muted_tags"}}</label>
+    <label>{{d-icon "d-regular"}} {{i18n "groups.notifications.regular.title"}}</label>
+
+    {{tag-chooser
+      tags=model.regular_tags
+      blacklist=selectedTags
+      allowCreate=false
+      everyTag=true
+      unlimitedTagCount=true
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.tags.regular_tags_instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-muted"}} {{i18n "groups.notifications.muted.title"}}</label>
 
     {{tag-chooser
       tags=model.muted_tags

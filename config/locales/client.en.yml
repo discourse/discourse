@@ -663,6 +663,7 @@ en:
           watched_categories_instructions: "Automatically watch all topics in these categories. Group members will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
           tracked_categories_instructions: "Automatically track all topics in these categories. A count of new posts will appear next to the topic."
           watching_first_post_categories_instructions: "Users will be notified of the first post in each new topic in these categories."
+          regular_categories_instructions: "If these categories are muted, they will be unmuted for group members. Users will be notified if they are mentioned or someone replies to them."
           muted_categories_instructions: "Users will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest topics pages."
         tags:
           title: Tags
@@ -671,6 +672,7 @@ en:
           watched_tags_instructions: "Automatically watch all topics with these tags. Group members will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
           tracked_tags_instructions: "Automatically track all topics with these tags. A count of new posts will appear next to the topic."
           watching_first_post_tags_instructions: "Users will be notified of the first post in each new topic with these tags."
+          regular_tags_instructions: "If these tags are muted, they will be unmuted for group members. Users will be notified if they are mentioned or someone replies to them."
           muted_tags_instructions: "Users will not be notified of anything about new topics with these tags, and they will not appear in latest."
         logs:
           title: "Logs"
