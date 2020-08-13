@@ -3,6 +3,7 @@
 require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
+require_relative 'vanilla_body_parser'
 
 class ImportScripts::VanillaSQL < ImportScripts::Base
 
@@ -20,6 +21,13 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       username: "root",
       password: "pa$$word",
       database: VANILLA_DB
+    )
+
+    VanillaBodyParser.configure(
+      lookup: @lookup,
+      uploader: @uploader,
+      host: 'vanilla.yourforum.com', # your Vanilla forum domain
+      uploads_path: 'uploads' # relative path to your vanilla uploads folder
     )
 
     @import_tags = false
@@ -221,7 +229,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       discussions = mysql_query(
-        "SELECT DiscussionID, CategoryID, Name, Body, CountViews, Closed, Announce,
+        "SELECT DiscussionID, CategoryID, Name, Body, Format, CountViews, Closed, Announce,
                 DateInserted, InsertUserID, DateLastComment
          FROM #{TABLE_PREFIX}Discussion
          WHERE DiscussionID > #{@last_topic_id}
@@ -233,12 +241,13 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       next if all_records_exist? :posts, discussions.map { |t| "discussion#" + t['DiscussionID'].to_s }
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
+        user_id = user_id_from_imported_user_id(discussion['InsertUserID']) || Discourse::SYSTEM_USER_ID
         {
           id: "discussion#" + discussion['DiscussionID'].to_s,
-          user_id: user_id_from_imported_user_id(discussion['InsertUserID']) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id,
           title: discussion['Name'],
           category: category_id_from_imported_category_id(discussion['CategoryID']),
-          raw: clean_up(discussion['Body']),
+          raw: VanillaBodyParser.new(discussion, user_id).parse,
           views: discussion['CountViews'] || 0,
           closed: discussion['Closed'] == 1,
           pinned_at: discussion['Announce'] == 0 ? nil : Time.zone.at(discussion['DateLastComment'] || discussion['DateInserted']),
@@ -262,7 +271,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     @last_post_id = -1
     batches(BATCH_SIZE) do |offset|
       comments = mysql_query(
-        "SELECT CommentID, DiscussionID, Body,
+        "SELECT CommentID, DiscussionID, Body, Format,
                 DateInserted, InsertUserID
          FROM #{TABLE_PREFIX}Comment
          WHERE CommentID > #{@last_post_id}
@@ -276,11 +285,12 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
+        user_id = user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID
         {
           id: "comment#" + comment['CommentID'].to_s,
-          user_id: user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id,
           topic_id: t[:topic_id],
-          raw: clean_up(comment['Body']),
+          raw: VanillaBodyParser.new(comment, user_id).parse,
           created_at: Time.zone.at(comment['DateInserted'])
         }
       end
@@ -310,9 +320,12 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       next if all_records_exist? :posts, messages.map { |t| "message#" + t['MessageID'].to_s }
 
       create_posts(messages, total: total_count, offset: offset) do |message|
+        user_id = user_id_from_imported_user_id(message['InsertUserID']) || Discourse::SYSTEM_USER_ID
+        body = VanillaBodyParser.new(message, user_id).parse
+
         common = {
-          user_id: user_id_from_imported_user_id(message['InsertUserID']) || Discourse::SYSTEM_USER_ID,
-          raw: clean_up(message['Body']),
+          user_id: user_id,
+          raw: body,
           created_at: Time.zone.at(message['DateInserted']),
           custom_fields: {
             conversation_id: message['ConversationID'],
@@ -343,93 +356,6 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         end
       end
     end
-  end
-
-  def clean_up(raw)
-    return "" if raw.blank?
-
-    # decode HTML entities
-    raw = @htmlentities.decode(raw)
-
-    # fix whitespaces
-    raw = raw.gsub(/(\\r)?\\n/, "\n")
-      .gsub("\\t", "\t")
-
-    # [HTML]...[/HTML]
-    raw = raw.gsub(/\[html\]/i, "\n```html\n")
-      .gsub(/\[\/html\]/i, "\n```\n")
-
-    # [PHP]...[/PHP]
-    raw = raw.gsub(/\[php\]/i, "\n```php\n")
-      .gsub(/\[\/php\]/i, "\n```\n")
-
-    # [HIGHLIGHT="..."]
-    raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
-
-    # [CODE]...[/CODE]
-    # [HIGHLIGHT]...[/HIGHLIGHT]
-    raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-      .gsub(/\[\/?highlight\]/i, "\n```\n")
-
-    # [SAMP]...[/SAMP]
-    raw.gsub!(/\[\/?samp\]/i, "`")
-
-    unless CONVERT_HTML
-      # replace all chevrons with HTML entities
-      # NOTE: must be done
-      #  - AFTER all the "code" processing
-      #  - BEFORE the "quote" processing
-      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-        .gsub("<", "&lt;")
-        .gsub("\u2603", "<")
-
-      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-        .gsub(">", "&gt;")
-        .gsub("\u2603", ">")
-    end
-
-    # [URL=...]...[/URL]
-    raw.gsub!(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
-
-    # [IMG]...[/IMG]
-    raw.gsub!(/\[\/?img\]/i, "")
-
-    # [URL]...[/URL]
-    # [MP3]...[/MP3]
-    raw = raw.gsub(/\[\/?url\]/i, "")
-      .gsub(/\[\/?mp3\]/i, "")
-
-    # [QUOTE]...[/QUOTE]
-    raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { "\n> #{$1}\n" }
-
-    # [YOUTUBE]<id>[/YOUTUBE]
-    raw.gsub!(/\[youtube\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # [youtube=425,350]id[/youtube]
-    raw.gsub!(/\[youtube="?(.+?)"?\](.+)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$2}\n" }
-
-    # [MEDIA=youtube]id[/MEDIA]
-    raw.gsub!(/\[MEDIA=youtube\](.+?)\[\/MEDIA\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # [VIDEO=youtube;<id>]...[/VIDEO]
-    raw.gsub!(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # Convert image bbcode
-    raw.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
-
-    # Remove the color tag
-    raw.gsub!(/\[color=[#a-z0-9]+\]/i, "")
-    raw.gsub!(/\[\/color\]/i, "")
-
-    # remove attachments
-    raw.gsub!(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
-
-    # sanitize img tags
-    # This regexp removes everything between the first and last img tag. The .* is too much.
-    # If it's needed, it needs to be fixed.
-    # raw.gsub!(/\<img.*src\="([^\"]+)\".*\>/i) {"\n<img src='#{$1}'>\n"}
-
-    raw
   end
 
   def staff_guardian
