@@ -19,8 +19,15 @@ import { minimumOffset } from "discourse/lib/offset-calculator";
 // 2. give up on the scrollbar and implement it ourselves (something that will happen)
 
 const LOCK_DURATION_MS = 1000;
-const SCROLL_EVENTS =
-  "scroll.lock-on touchmove.lock-on mousedown.lock-on wheel.lock-on DOMMouseScroll.lock-on mousewheel.lock-on keyup.lock-on";
+const SCROLL_EVENTS = [
+  "scroll",
+  "touchmove",
+  "mousedown",
+  "wheel",
+  "DOMMouseScroll",
+  "mousewheel",
+  "keyup"
+];
 const SCROLL_TYPES = ["mousedown", "mousewheel", "touchmove", "wheel"];
 
 function within(threshold, x, y) {
@@ -31,59 +38,95 @@ export default class LockOn {
   constructor(selector, options) {
     this.selector = selector;
     this.options = options || {};
+    this._boundScrollListener = this._scrollListener.bind(this);
   }
 
   elementTop() {
-    const $selected = $(this.selector);
-    if ($selected.length && $selected.offset && $selected.offset()) {
-      return $selected.offset().top - minimumOffset();
+    const element = document.querySelector(this.selector);
+    if (!element) {
+      return;
     }
+
+    const { top } = element.getBoundingClientRect();
+    const offset = top + window.scrollY;
+
+    return offset - minimumOffset();
   }
 
-  clearLock(interval) {
-    $("body, html").off(SCROLL_EVENTS);
-    clearInterval(interval);
+  clearLock() {
+    this._removeListener();
+    clearInterval(this.interval);
+
     if (this.options.finished) {
       this.options.finished();
     }
   }
 
   lock() {
-    const startedAt = Date.now();
-    let previousTop = this.elementTop();
-    previousTop && $(window).scrollTop(previousTop);
+    this.startedAt = Date.now();
+    this.previousTop = this.elementTop();
 
-    const interval = setInterval(() => {
-      const elementTop = this.elementTop();
-      if (!previousTop && !elementTop) {
-        // we can't find the element yet, wait a little bit more
-        return;
-      }
+    if (this.previousTop) {
+      window.scrollTo(window.pageXOffset, this.previousTop);
+    }
 
-      const top = Math.max(0, elementTop);
-      const scrollTop = $(window).scrollTop();
+    this.interval = setInterval(() => this._performLocking(), 50);
 
-      if (typeof top === "undefined" || isNaN(top)) {
-        return this.clearLock(interval);
-      }
+    this._removeListener();
+    this._addListener();
+  }
 
-      if (!within(4, top, previousTop) || !within(4, scrollTop, top)) {
-        $(window).scrollTop(top);
-        previousTop = top;
-      }
+  _scrollListener(event) {
+    if (event.which > 0 || SCROLL_TYPES.includes(event.type)) {
+      this.clearLock();
+    }
+  }
 
-      // Stop after a little while
-      if (Date.now() - startedAt > LOCK_DURATION_MS) {
-        return this.clearLock(interval);
-      }
-    }, 50);
+  _addListener() {
+    const body = document.querySelector("body");
+    const html = document.querySelector("html");
 
-    $("body, html")
-      .off(SCROLL_EVENTS)
-      .on(SCROLL_EVENTS, e => {
-        if (e.which > 0 || SCROLL_TYPES.includes(e.type)) {
-          this.clearLock(interval);
-        }
-      });
+    SCROLL_EVENTS.forEach(event => {
+      body.addEventListener(event, this._boundScrollListener);
+      html.addEventListener(event, this._boundScrollListener);
+    });
+  }
+
+  _removeListener() {
+    const body = document.querySelector("body");
+    const html = document.querySelector("html");
+
+    SCROLL_EVENTS.forEach(event => {
+      body.removeEventListener(event, this._boundScrollListener);
+      html.removeEventListener(event, this._boundScrollListener);
+    });
+  }
+
+  _performLocking() {
+    const elementTop = this.elementTop();
+
+    // If we can't find the element yet, wait a little bit more
+    if (!this.previousTop && !elementTop) {
+      return;
+    }
+
+    const top = Math.max(0, elementTop);
+
+    if (isNaN(top)) {
+      return this.clearLock();
+    }
+
+    if (
+      !within(4, top, this.previousTop) ||
+      !within(4, window.scrollTop, top)
+    ) {
+      window.scrollTo(window.pageXOffset, top);
+      this.previousTop = top;
+    }
+
+    // Stop after a little while
+    if (Date.now() - this.startedAt > LOCK_DURATION_MS) {
+      return this.clearLock();
+    }
   }
 }
