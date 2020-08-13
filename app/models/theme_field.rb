@@ -265,7 +265,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def self.scss_fields
-    @scss_fields ||= %w(scss embedded_scss)
+    @scss_fields ||= %w(scss embedded_scss color_definitions)
   end
 
   def self.basic_targets
@@ -424,6 +424,9 @@ class ThemeField < ActiveRecord::Base
     ThemeFileMatcher.new(regex: /^common\/embedded\.scss$/,
                          targets: :common, names: "embedded_scss", types: :scss,
                          canonical: -> (h) { "common/embedded.scss" }),
+    ThemeFileMatcher.new(regex: /^common\/color_definitions\.scss$/,
+                         targets: :common, names: "color_definitions", types: :scss,
+                         canonical: -> (h) { "common/color_definitions.scss" }),
     ThemeFileMatcher.new(regex: /^(?:scss|stylesheets)\/(?<name>.+)\.scss$/,
                          targets: :extra_scss, names: nil, types: :scss,
                          canonical: -> (h) { "stylesheets/#{h[:name]}.scss" }),

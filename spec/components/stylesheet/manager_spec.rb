@@ -175,6 +175,21 @@ describe Stylesheet::Manager do
 
       expect(digest1).to_not eq(digest2)
     end
+
+    it "updates digest when updating a theme's color definitions" do
+      scheme = ColorScheme.base
+      theme = Fabricate(:theme)
+      manager = Stylesheet::Manager.new(:color_definitions, theme.id, scheme)
+      digest1 = manager.color_scheme_digest
+
+      theme.set_field(target: :common, name: :color_definitions, value: 'body {color: brown}')
+      theme.save!
+
+      digest2 = manager.color_scheme_digest
+
+      expect(digest1).to_not eq(digest2)
+    end
+
   end
 
   describe 'color_scheme_stylesheets' do
@@ -248,6 +263,16 @@ describe Stylesheet::Manager do
       expect(stylesheet2).to include("--primary: #c00;")
     end
 
+    it "includes theme color definitions in color scheme" do
+      theme = Fabricate(:theme)
+      theme.set_field(target: :common, name: :color_definitions, value: ':root {--special: rebeccapurple;}')
+      theme.save!
+
+      scheme = ColorScheme.base
+      stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile
+
+      expect(stylesheet).to include("--special: rebeccapurple")
+    end
   end
 
   # this test takes too long, we don't run it by default

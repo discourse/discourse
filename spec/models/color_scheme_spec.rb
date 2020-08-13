@@ -21,12 +21,15 @@ describe ColorScheme do
     theme.save!
 
     href = Stylesheet::Manager.stylesheet_data(:desktop_theme, theme.id)[0][:new_href]
+    colors_href = Stylesheet::Manager.color_scheme_stylesheet_details(scheme.id, "all", nil)
 
     ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: 'bbb' }])
 
     href2 = Stylesheet::Manager.stylesheet_data(:desktop_theme, theme.id)[0][:new_href]
+    colors_href2 = Stylesheet::Manager.color_scheme_stylesheet_details(scheme.id, "all", nil)
 
     expect(href).not_to eq(href2)
+    expect(colors_href).not_to eq(colors_href2)
   end
 
   describe "new" do

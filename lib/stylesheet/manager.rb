@@ -23,6 +23,10 @@ class Stylesheet::Manager
     cache.hash.keys.select { |k| k =~ /theme/ }.each { |k| cache.delete(k) }
   end
 
+  def self.clear_color_scheme_cache!
+    cache.hash.keys.select { |k| k =~ /color_definitions/ }.each { |k| cache.delete(k) }
+  end
+
   def self.clear_core_cache!(targets)
     cache.hash.keys.select { |k| k =~ /#{targets.join('|')}/ }.each { |k| cache.delete(k) }
   end
@@ -94,13 +98,14 @@ class Stylesheet::Manager
   end
 
   def self.color_scheme_stylesheet_details(color_scheme_id = nil, media, theme_id)
+    theme_id = theme_id || SiteSetting.default_theme_id
+
     color_scheme = begin
       ColorScheme.find(color_scheme_id)
     rescue
       # don't load fallback when requesting dark color scheme
       return false if media != "all"
 
-      theme_id = theme_id || SiteSetting.default_theme_id
       Theme.find_by_id(theme_id)&.color_scheme || ColorScheme.base
     end
 
@@ -108,13 +113,14 @@ class Stylesheet::Manager
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
-    cache_key = color_scheme_cache_key(color_scheme)
+    cache_key = color_scheme_cache_key(color_scheme, theme_id)
     stylesheets = cache[cache_key]
     return stylesheets if stylesheets.present?
 
     stylesheet = { color_scheme_id: color_scheme&.id }
 
-    builder = self.new(target, nil, color_scheme)
+    builder = self.new(target, theme_id, color_scheme)
+
     builder.compile unless File.exists?(builder.stylesheet_fullpath)
 
     href = builder.stylesheet_path(current_hostname)
@@ -132,14 +138,10 @@ class Stylesheet::Manager
     %[<link href="#{href}" media="#{media}" rel="stylesheet"/>].html_safe
   end
 
-  def self.color_scheme_cache_key(color_scheme)
+  def self.color_scheme_cache_key(color_scheme, theme_id = nil)
     color_scheme_name = Slug.for(color_scheme.name) + color_scheme&.id.to_s
-    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{Discourse.current_hostname}"
-  end
-
-  def self.color_scheme_cache_clear(color_scheme)
-    cache_key = color_scheme_cache_key(color_scheme)
-    cache[cache_key] = nil
+    theme_string = theme_id ? "_theme#{theme_id}" : ""
+    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}#{theme_string}_#{Discourse.current_hostname}"
   end
 
   def self.precompile_css
@@ -165,8 +167,7 @@ class Stylesheet::Manager
 
       builder = self.new(target, nil, cs)
       builder.compile(force: true)
-      cache_key = color_scheme_cache_key(cs)
-      cache[cache_key] = nil
+      clear_color_scheme_cache!
     end
 
     nil
@@ -349,8 +350,6 @@ class Stylesheet::Manager
   end
 
   def theme_digest
-    scss = ""
-
     if [:mobile_theme, :desktop_theme].include?(@target)
       scss_digest = theme.resolve_baked_field(:common, :scss)
       scss_digest += theme.resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
@@ -401,7 +400,8 @@ class Stylesheet::Manager
     category_updated = Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
 
     if cs || category_updated > 0
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}"
+      theme_color_defs = theme&.resolve_baked_field(:common, :color_definitions)
+      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}"
     else
       digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}"
 

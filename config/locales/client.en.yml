@@ -3988,6 +3988,9 @@ en:
           embedded_scss:
             text: "Embedded CSS"
             title: "Enter custom CSS to deliver with embedded version of comments"
+          color_definitions:
+            text: "Color Definitions"
+            title: "Enter custom color definitions (advanced users only)"
           head_tag:
             text: "</head>"
             title: "HTML that will be inserted before the </head> tag"

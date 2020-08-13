@@ -30,6 +30,7 @@ export default Component.extend({
   activeSectionMode(targetName, fieldName) {
     if (["settings", "translations"].includes(targetName)) return "yaml";
     if (["extra_scss"].includes(targetName)) return "scss";
+    if (["color_definitions"].includes(fieldName)) return "scss";
     return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
   },
 
