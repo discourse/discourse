@@ -1122,9 +1122,12 @@ describe PostAlerter do
       end
 
       it "only notifes staff watching added tag" do
-        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name]) }.not_to change { Notification.where(user_id: staged.id).count }
-        expect { PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag2.name]) }.not_to change { Notification.where(user_id: admin.id).count }
-        expect { PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag3.name]) }.to change { Notification.where(user_id: admin.id).count }.by(1)
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag.name])).to be true
+        expect(Notification.where(user_id: staged.id).count).to eq(0)
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag2.name])).to be true
+        expect(Notification.where(user_id: admin.id).count).to eq(0)
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag3.name])).to be true
+        expect(Notification.where(user_id: admin.id).count).to eq(1)
       end
     end
   end
