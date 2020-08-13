@@ -1071,7 +1071,14 @@ def fix_missing_s3
   ids.each do |id|
     upload = Upload.find(id)
 
-    tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+    tempfile = nil
+
+    begin
+      tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+    rescue => e
+      puts "Failed to download #{upload.url} #{e}"
+    end
+
     if tempfile
       puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
 
