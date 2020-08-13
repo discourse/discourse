@@ -6,6 +6,7 @@ import {
 } from "discourse/routes/build-topic-route";
 import {
   changeSort,
+  resetParams,
   queryParams
 } from "discourse/controllers/discovery-sortable";
 import TopicList from "discourse/models/topic-list";
@@ -258,7 +259,8 @@ export default (filterArg, params) => {
         this.refresh();
       },
 
-      changeSort
+      changeSort,
+      resetParams
     }
   });
 };

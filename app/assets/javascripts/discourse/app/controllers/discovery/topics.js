@@ -38,13 +38,6 @@ const controllerOpts = {
   order: readOnly("model.params.order"),
   ascending: readOnly("model.params.ascending"),
 
-  resetParams() {
-    Object.keys(this.get("model.params") || {}).forEach(key => {
-      // controllerOpts contains the default values for parameters, so use them. They might be null.
-      this.set(key, controllerOpts[key]);
-    });
-  },
-
   actions: {
     changeSort() {
       deprecated(
@@ -66,7 +59,7 @@ const controllerOpts = {
 
     refresh() {
       const filter = this.get("model.filter");
-      this.resetParams();
+      this.send("resetParams");
 
       // Don't refresh if we're still loading
       if (this.get("discovery.loading")) {

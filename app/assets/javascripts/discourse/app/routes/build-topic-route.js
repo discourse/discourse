@@ -3,6 +3,7 @@ import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import {
   changeSort,
+  resetParams,
   queryParams
 } from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -150,7 +151,8 @@ export default function(filter, extras) {
       },
 
       actions: {
-        changeSort
+        changeSort,
+        resetParams
       }
     },
     extras

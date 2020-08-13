@@ -39,6 +39,13 @@ export function changeSort(sortBy) {
   }
 }
 
+export function resetParams() {
+  let { controller } = this;
+  controllerOpts.queryParams.forEach(p => {
+    controller.set(p, queryParams[p].default);
+  });
+}
+
 const SortableController = Controller.extend(controllerOpts);
 
 export const addDiscoveryQueryParam = function(p, opts) {
