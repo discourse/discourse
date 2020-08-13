@@ -140,7 +140,7 @@ QUnit.test("does not track right clicks inside quotes", async assert => {
 QUnit.test("does not track clicks links in quotes", async assert => {
   User.currentProp("external_links_in_new_tab", true);
   assert.notOk(track(generateClickEventOn(".quote a:last-child")));
-  assert.ok(window.open.calledWith("https://google.com", "_blank"));
+  assert.ok(window.open.calledWith("https://google.com/", "_blank"));
 });
 
 QUnit.test("does not track clicks on category badges", async assert => {
@@ -158,10 +158,10 @@ QUnit.test("removes the href and put it as a data attribute", async assert => {
 
   var $link = fixture("a").first();
   assert.ok($link.hasClass("no-href"));
-  assert.equal($link.data("href"), "http://www.google.com");
+  assert.equal($link.data("href"), "http://www.google.com/");
   assert.blank($link.attr("href"));
   assert.ok($link.data("auto-route"));
-  assert.ok(window.open.calledWith("http://www.google.com", "_blank"));
+  assert.ok(window.open.calledWith("http://www.google.com/", "_blank"));
 });
 
 QUnit.test("restores the href after a while", async assert => {

@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import { schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
@@ -6,6 +7,10 @@ import { inject } from "@ember/controller";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import Bookmark from "discourse/models/bookmark";
+import {
+  shouldOpenInNewTab,
+  openLinkInNewTab
+} from "discourse/lib/click-track";
 
 export default Controller.extend({
   application: inject(),
@@ -19,6 +24,11 @@ export default Controller.extend({
 
   queryParams: ["q"],
 
+  init() {
+    this._super(...arguments);
+    this._boundClick = false;
+  },
+
   loadItems() {
     this.setProperties({
       content: [],
@@ -30,16 +40,36 @@ export default Controller.extend({
       this.set("searchTerm", this.q);
     }
 
+    if (!this._boundClick) {
+      schedule("afterRender", () => {
+        // TODO(martin): This should be pulled out into a bookmark-list component,
+        // the controller is not the best place for this.
+        let wrapper = document.querySelector(".bookmark-list-wrapper");
+        if (!wrapper) {
+          return;
+        }
+        wrapper.addEventListener("click", function(e) {
+          if (e.target && e.target.tagName === "A") {
+            let link = e.target;
+            if (shouldOpenInNewTab(link.href)) {
+              openLinkInNewTab(link);
+            }
+          }
+        });
+        this._boundClick = true;
+      });
+    }
+
     return this.model
       .loadItems({ q: this.searchTerm })
       .then(response => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
-      .finally(() =>
+      .finally(() => {
         this.setProperties({
           loaded: true,
           loading: false
-        })
-      );
+        });
+      });
   },
 
   @discourseComputed("loaded", "content.length", "noResultsHelp")
