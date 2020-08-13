@@ -93,13 +93,15 @@ class Stylesheet::Manager
     end
   end
 
-  def self.color_scheme_stylesheet_details(color_scheme_id = nil, media)
+  def self.color_scheme_stylesheet_details(color_scheme_id = nil, media, theme_id)
     color_scheme = begin
       ColorScheme.find(color_scheme_id)
     rescue
       # don't load fallback when requesting dark color scheme
       return false if media != "all"
-      Theme.find_by_id(SiteSetting.default_theme_id)&.color_scheme || ColorScheme.base
+
+      theme_id = theme_id || SiteSetting.default_theme_id
+      Theme.find_by_id(theme_id)&.color_scheme || ColorScheme.base
     end
 
     return false if !color_scheme
@@ -121,8 +123,9 @@ class Stylesheet::Manager
     stylesheet
   end
 
-  def self.color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all')
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media)
+  def self.color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all', theme_ids = nil)
+    theme_id = theme_ids&.first
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, media, theme_id)
     return '' if !stylesheet
 
     href = stylesheet[:new_href]

@@ -124,7 +124,7 @@ describe SearchController do
 
       expect(data['posts'][1]['id']).to eq(awesome_post_2.id)
       expect(data['posts'][1]['blurb']).to eq(
-        "this is my really <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> post"
+        "#{Search::GroupedSearchResults::OMISSION}this is my really <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> post#{Search::GroupedSearchResults::OMISSION}"
       )
       expect(data['topics'][1]['id']).to eq(awesome_post_2.topic_id)
 

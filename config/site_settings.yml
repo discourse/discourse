@@ -1038,29 +1038,21 @@ email:
   enable_imap:
     default: false
     client: true
-    hidden: true
   enable_imap_write:
     default: false
-    hidden: true
   enable_imap_idle:
     default: false
-    hidden: true
   enable_smtp:
     default: false
     client: true
-    hidden: true
   imap_polling_period_mins:
     default: 5
-    hidden: true
   imap_polling_old_emails:
     default: 1000
-    hidden: true
   imap_polling_new_emails:
     default: 250
-    hidden: true
   imap_batch_import_email:
     default: 100
-    hidden: true
   email_prefix: ""
   email_site_title: ""
   disable_emails:

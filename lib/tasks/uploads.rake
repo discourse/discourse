@@ -994,3 +994,133 @@ task "uploads:fix_relative_upload_links" => :environment do
     end
   end
 end
+
+def analyze_missing_s3
+  puts "List of posts with missing images:"
+  sql = <<~SQL
+    SELECT post_id, url, sha1, extension, uploads.id
+    FROM post_uploads pu
+    RIGHT JOIN uploads on uploads.id = pu.upload_id
+    WHERE NOT verified
+    ORDER BY created_at
+  SQL
+
+  lookup = {}
+  other = []
+  DB.query(sql).each do |r|
+    if r.post_id
+      lookup[r.post_id] ||= []
+      lookup[r.post_id] << [r.url, r.sha1, r.extension]
+    else
+      other << r
+    end
+  end
+
+  posts = Post.where(id: lookup.keys)
+  posts.order(:created_at).each do |post|
+    puts "#{Discourse.base_url}/p/#{post.id} #{lookup[post.id].length} missing, #{post.created_at}"
+    lookup[post.id].each do |url, sha1, extension|
+      puts url
+      puts "#{Upload.base62_sha1(sha1)}.#{extension}"
+    end
+    puts
+  end
+
+  puts "Total missing uploads: #{Upload.where(verified: false).count}"
+  puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
+  puts "Other missing uploads count: #{other.count}"
+  if other.count > 0
+    ids = other.map { |r| r.id }
+    count = DB.query_single(<<~SQL, ids: ids).first
+      SELECT COUNT(*) FROM users WHERE uploaded_avatar_id IN (:ids)
+    SQL
+    if count > 0
+      puts "Found #{count} uploaded avatars"
+    end
+    count = DB.query_single(<<~SQL, ids: ids).first
+      SELECT COUNT(*) FROM user_avatars WHERE gravatar_upload_id IN (:ids)
+    SQL
+    if count > 0
+      puts "Found #{count} gravatars"
+    end
+    count = DB.query_single(<<~SQL, ids: ids).first
+      SELECT COUNT(*) FROM user_avatars WHERE custom_upload_id IN (:ids)
+    SQL
+    if count > 0
+      puts "Found #{count} custom uploaded avatars"
+    end
+  end
+
+end
+
+task "uploads:analyze_missing_s3" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    analyze_missing_s3
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      analyze_missing_s3
+    end
+  end
+end
+
+def fix_missing_s3
+  Jobs.run_immediately!
+
+  puts "Attempting to download missing uploads and recreate"
+  ids = Upload.where(verified: false).pluck(:id)
+  ids.each do |id|
+    upload = Upload.find(id)
+
+    tempfile = nil
+
+    begin
+      tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+    rescue => e
+      puts "Failed to download #{upload.url} #{e}"
+    end
+
+    if tempfile
+      puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
+
+      fixed_upload = nil
+      Upload.transaction do
+        upload.update!(sha1: SecureRandom.hex)
+        fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+        raise ActiveRecord::Rollback
+      end
+
+      # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
+      # we may end up breaking posts
+      upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verified: nil)
+    end
+  end
+
+  puts "Attempting to automatically fix problem uploads"
+  puts
+  puts "Rebaking posts with missing uploads, this can take a while as all rebaking runs inline"
+
+  sql = <<~SQL
+    SELECT post_id
+    FROM post_uploads pu
+    JOIN uploads on uploads.id = pu.upload_id
+    WHERE NOT verified
+    ORDER BY post_id DESC
+  SQL
+
+  DB.query_single(sql).each do |post_id|
+    post = Post.find(post_id)
+    post.rebake!
+    print "."
+  end
+  puts
+end
+
+task "uploads:fix_missing_s3" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    fix_missing_s3
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      fix_missing_s3
+    end
+  end
+end

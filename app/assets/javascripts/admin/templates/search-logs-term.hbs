@@ -31,7 +31,16 @@
         <div class="fps-topic">
           <div class="topic">
             <a href={{result.url}} class="search-link">
-              {{topic-status topic=result.topic disableActions=true}}<span class="topic-title">{{#highlight-search highlight=term}}{{html-safe result.topic.fancyTitle}}{{/highlight-search}}</span>
+              {{topic-status topic=result.topic disableActions=true}}
+              <span class="topic-title">
+                {{#if result.useTopicTitleHeadline}}
+                  {{html-safe result.topicTitleHeadline}}
+                {{else}}
+                  {{#highlight-search highlight=q}}
+                    {{html-safe result.topic.fancyTitle}}
+                  {{/highlight-search}}
+                {{/if}}
+              </span>
             </a>
 
             <div class="search-category">

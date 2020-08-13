@@ -154,11 +154,9 @@ class UserStat < ActiveRecord::Base
   end
 
   # topic_reply_count is a count of posts in other users' topics
-  def calc_topic_reply_count!(max, start_time = nil)
+  def calc_topic_reply_count!(start_time = nil)
     sql = <<~SQL
-    SELECT COUNT(*) count
-    FROM (
-      SELECT DISTINCT posts.topic_id
+      SELECT COUNT(DISTINCT posts.topic_id) AS count
       FROM posts
       INNER JOIN topics ON topics.id = posts.topic_id
       WHERE posts.user_id = ?
@@ -166,13 +164,11 @@ class UserStat < ActiveRecord::Base
       AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
       AND topics.archetype <> 'private_message'
       #{start_time.nil? ? '' : 'AND posts.created_at > ?'}
-      LIMIT ?
-    ) as user_topic_replies
     SQL
     if start_time.nil?
-      DB.query_single(sql, self.user_id, max).first
+      DB.query_single(sql, self.user_id).first
     else
-      DB.query_single(sql, self.user_id, start_time, max).first
+      DB.query_single(sql, self.user_id, start_time).first
     end
   end
 

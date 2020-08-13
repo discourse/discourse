@@ -208,7 +208,18 @@ describe Stylesheet::Manager do
       expect(link).to include("/stylesheets/color_definitions_funky_#{cs.id}_")
     end
 
-    it "uses the correct scheme when colors are passed" do
+    it "uses the correct color scheme when a non-default theme is selected and it uses the base 'Light' scheme" do
+      cs = Fabricate(:color_scheme, name: 'Not This')
+      default_theme = Fabricate(:theme, color_scheme_id: cs.id)
+      SiteSetting.default_theme_id = default_theme.id
+
+      user_theme = Fabricate(:theme, color_scheme_id: nil)
+
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(nil, "all", [user_theme.id])
+      expect(link).to include("/stylesheets/color_definitions_base_")
+    end
+
+    it "uses the correct scheme when a valid scheme id is used" do
       link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(ColorScheme.first.id)
       slug = Slug.for(ColorScheme.first.name) + "_" + ColorScheme.first.id.to_s
       expect(link).to include("/stylesheets/color_definitions_#{slug}_")

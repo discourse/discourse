@@ -78,6 +78,9 @@ class Search
       end
     end
 
+    OMISSION = '...'
+    SCRUB_HEADLINE_REGEXP = /<span(?: \w+="[^"]+")* class="#{Search::HIGHLIGHT_CSS_CLASS}"(?: \w+="[^"]+")*>([^<]*)<\/span>/
+
     def blurb(post)
       opts = {
         term: @blurb_term,
@@ -86,7 +89,10 @@ class Search
 
       if post.post_search_data.version > SearchIndexer::MIN_POST_REINDEX_VERSION
         if SiteSetting.use_pg_headlines_for_excerpt
-          return post.headline
+          scrubbed_headline = post.headline.gsub(SCRUB_HEADLINE_REGEXP, '\1')
+          prefix_omission = scrubbed_headline.start_with?(post.leading_raw_data) ? '' : OMISSION
+          postfix_omission = scrubbed_headline.end_with?(post.trailing_raw_data) ? '' : OMISSION
+          return "#{prefix_omission}#{post.headline}#{postfix_omission}"
         else
           opts[:cooked] = post.post_search_data.raw_data
           opts[:scrub] = false

@@ -452,7 +452,7 @@ module ApplicationHelper
 
   def discourse_color_scheme_stylesheets
     result = +""
-    result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(scheme_id)
+    result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(scheme_id, 'all', theme_ids)
 
     user_dark_scheme_id = current_user&.user_option&.dark_scheme_id
     dark_scheme_id =  user_dark_scheme_id || SiteSetting.default_dark_mode_color_scheme_id

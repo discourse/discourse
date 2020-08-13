@@ -112,7 +112,7 @@ const Post = RestModel.extend({
   },
 
   @discourseComputed("topic_title_headline")
-  topicTitleHead(title) {
+  topicTitleHeadline(title) {
     return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
   },
 

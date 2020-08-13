@@ -102,11 +102,12 @@ export default createWidget("quick-access-panel", {
 
     if (!this.hideBottomItems()) {
       bottomItems.push(
-        this.attach("button", {
+        // intentionally a link so it can be ctrl clicked
+        this.attach("link", {
           title: "view_all",
           icon: "chevron-down",
-          className: "show-all",
-          url: this.showAllHref()
+          className: "btn btn-default btn-icon no-text show-all",
+          href: this.showAllHref()
         })
       );
     }
