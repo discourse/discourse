@@ -43,10 +43,8 @@
       </ul>
     </div>
 
-    {{#if group.bio_cooked}}
-      <div class="card-row second-row">
-        <div class="bio">{{html-safe group.bio_cooked}}</div>
-      </div>
+    {{#if this.group.bio_excerpt}}
+      <div class="bio">{{html-safe this.group.bio_excerpt}}</div>
     {{/if}}
 
     {{#if group.members}}
