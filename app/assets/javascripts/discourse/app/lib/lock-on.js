@@ -19,8 +19,15 @@ import { minimumOffset } from "discourse/lib/offset-calculator";
 // 2. give up on the scrollbar and implement it ourselves (something that will happen)
 
 const LOCK_DURATION_MS = 1000;
-const SCROLL_EVENTS =
-  "scroll.lock-on touchmove.lock-on mousedown.lock-on wheel.lock-on DOMMouseScroll.lock-on mousewheel.lock-on keyup.lock-on";
+const SCROLL_EVENTS = [
+  "scroll",
+  "touchmove",
+  "mousedown",
+  "wheel",
+  "DOMMouseScroll",
+  "mousewheel",
+  "keyup"
+];
 const SCROLL_TYPES = ["mousedown", "mousewheel", "touchmove", "wheel"];
 
 function within(threshold, x, y) {
@@ -31,6 +38,7 @@ export default class LockOn {
   constructor(selector, options) {
     this.selector = selector;
     this.options = options || {};
+    this._boundScrollListener = this._scrollListener.bind(this);
   }
 
   elementTop() {
@@ -46,7 +54,7 @@ export default class LockOn {
   }
 
   clearLock() {
-    $("body, html").off(SCROLL_EVENTS);
+    this._removeListener();
     clearInterval(this.interval);
 
     if (this.options.finished) {
@@ -64,13 +72,34 @@ export default class LockOn {
 
     this.interval = setInterval(() => this._performLocking(), 50);
 
-    $("body, html")
-      .off(SCROLL_EVENTS)
-      .on(SCROLL_EVENTS, e => {
-        if (e.which > 0 || SCROLL_TYPES.includes(e.type)) {
-          this.clearLock();
-        }
-      });
+    this._removeListener();
+    this._addListener();
+  }
+
+  _scrollListener(event) {
+    if (event.which > 0 || SCROLL_TYPES.includes(event.type)) {
+      this.clearLock();
+    }
+  }
+
+  _addListener() {
+    const body = document.querySelector("body");
+    const html = document.querySelector("html");
+
+    SCROLL_EVENTS.forEach(event => {
+      body.addEventListener(event, this._boundScrollListener);
+      html.addEventListener(event, this._boundScrollListener);
+    });
+  }
+
+  _removeListener() {
+    const body = document.querySelector("body");
+    const html = document.querySelector("html");
+
+    SCROLL_EVENTS.forEach(event => {
+      body.removeEventListener(event, this._boundScrollListener);
+      html.removeEventListener(event, this._boundScrollListener);
+    });
   }
 
   _performLocking() {
