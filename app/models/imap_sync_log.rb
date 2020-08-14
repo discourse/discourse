@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ImapSyncLog < ActiveRecord::Base
+  RETAIN_LOGS_DAYS = 5
+
   belongs_to :group
 
   def self.levels
@@ -14,8 +16,9 @@ class ImapSyncLog < ActiveRecord::Base
 
   def self.log(message, level, group_id = nil)
     now = Time.now.strftime("%Y-%m-%d %H:%M:%S.%L")
-    create(message: message, level: ImapSyncLog.levels[level], group_id: group_id)
+    new_log = create(message: message, level: ImapSyncLog.levels[level], group_id: group_id)
     Rails.logger.send(level, "#{level[0].upcase}, [#{now}] [IMAP] (group_id #{group_id}) #{message}")
+    new_log
   end
 
   def self.debug(message, group_or_id)
