@@ -1,6 +1,5 @@
-let cdn, baseUrl;
+let cdn, baseUrl, baseUri;
 let S3BaseUrl, S3CDN;
-export let baseUri;
 
 export default function getURL(url) {
   if (!url) return url;
@@ -57,4 +56,8 @@ export function setupURL(configCdn, configBaseUrl, configBaseUri) {
 export function setupS3CDN(configS3BaseUrl, configS3CDN) {
   S3BaseUrl = configS3BaseUrl;
   S3CDN = configS3CDN;
+}
+
+export function getBaseUri() {
+  return baseUri;
 }
