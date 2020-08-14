@@ -20,15 +20,7 @@ import { bind } from "discourse-common/utils/decorators";
 // 2. give up on the scrollbar and implement it ourselves (something that will happen)
 
 const LOCK_DURATION_MS = 1000;
-const SCROLL_EVENTS = [
-  "scroll",
-  "touchmove",
-  "mousedown",
-  "wheel",
-  "DOMMouseScroll",
-  "mousewheel",
-  "keyup"
-];
+const SCROLL_EVENTS = ["scroll", "touchmove", "mousedown", "wheel", "keyup"];
 const SCROLL_TYPES = ["mousedown", "mousewheel", "touchmove", "wheel"];
 
 function within(threshold, x, y) {
