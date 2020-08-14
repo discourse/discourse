@@ -125,6 +125,20 @@ table.api-keys {
       text-align: left;
       width: 50%;
     }
+    .scopes-title {
+      font-size: $font-up-2;
+      font-weight: bold;
+      text-decoration: underline;
+      margin-top: 20px;
+    }
+    .scope-name {
+      font-weight: bold;
+      font-size: $font-0;
+      display: inline;
+    }
+    .scope-tooltip {
+      font-size: $font-down-1;
+    }
   }
   .scopes-table {
     margin: 20px 0 20px 0;
