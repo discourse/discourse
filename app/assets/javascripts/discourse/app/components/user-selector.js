@@ -1,5 +1,5 @@
 import { isEmpty } from "@ember/utils";
-import { on, observes } from "discourse-common/utils/decorators";
+import { bind, on, observes } from "discourse-common/utils/decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -12,24 +12,22 @@ export default TextField.extend({
   single: false,
   fullWidthWrap: false,
 
-  init() {
-    this._super(...arguments);
+  @bind
+  _paste(event) {
+    let pastedText = "";
 
-    this._paste = e => {
-      let pastedText = "";
-      if (window.clipboardData && window.clipboardData.getData) {
-        // IE
-        pastedText = window.clipboardData.getData("Text");
-      } else if (e.clipboardData && e.clipboardData.getData) {
-        pastedText = e.clipboardData.getData("text/plain");
-      }
+    if (window.clipboardData && window.clipboardData.getData) {
+      // IE
+      pastedText = window.clipboardData.getData("Text");
+    } else if (event.clipboardData && event.clipboardData.getData) {
+      pastedText = event.clipboardData.getData("text/plain");
+    }
 
-      if (pastedText.length > 0) {
-        this.importText(pastedText);
-        e.preventDefault();
-        return false;
-      }
-    };
+    if (pastedText.length > 0) {
+      this.importText(pastedText);
+      event.preventDefault();
+      return false;
+    }
   },
 
   didUpdateAttrs() {

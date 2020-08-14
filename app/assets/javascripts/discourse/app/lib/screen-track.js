@@ -1,6 +1,6 @@
-import { bind } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -28,8 +28,7 @@ export default class {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
       this._interval = setInterval(() => this.tick(), 1000);
-      this._boundScrolled = bind(this, this.scrolled);
-      $(window).on("scroll.screentrack", this._boundScrolled);
+      $(window).on("scroll.screentrack", this.scrolled);
     }
 
     this._topicId = topicId;
@@ -42,9 +41,7 @@ export default class {
       return;
     }
 
-    if (this._boundScrolled) {
-      $(window).off("scroll.screentrack", this._boundScrolled);
-    }
+    $(window).off("scroll.screentrack", this.scrolled);
 
     this.tick();
     this.flush();
@@ -79,6 +76,7 @@ export default class {
     this._inProgress = false;
   }
 
+  @bind
   scrolled() {
     this._lastScrolled = Date.now();
   }
