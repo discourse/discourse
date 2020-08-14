@@ -1,4 +1,5 @@
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
+import Session from "discourse/models/session";
 moduleForWidget("home-logo");
 
 const bigLogo = "/images/d-logo-sketch.png?test";
@@ -7,19 +8,6 @@ const mobileLogo = "/images/d-logo-sketch.png?mobile";
 const darkLogo = "/images/d-logo-sketch.png?dark";
 const title = "Cool Forum";
 const prefersDark = "(prefers-color-scheme: dark)";
-
-function enableDarkMode() {
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.media = prefersDark;
-  document.head.appendChild(link);
-}
-
-function disableDarkMode() {
-  document.head
-    .querySelectorAll(`link[media="${prefersDark}"]`)
-    .forEach(e => e.parentNode.removeChild(e));
-}
 
 widgetTest("basics", {
   template: '{{mount-widget widget="home-logo" args=args}}',
@@ -118,10 +106,10 @@ widgetTest("logo with dark mode alternative", {
   beforeEach() {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = darkLogo;
-    enableDarkMode();
+    Session.currentProp("darkModeAvailable", true);
   },
   afterEach() {
-    disableDarkMode();
+    Session.currentProp("darkModeAvailable", null);
   },
 
   test(assert) {
@@ -147,11 +135,12 @@ widgetTest("mobile logo with dark mode alternative", {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_mobile_logo_url = mobileLogo;
     this.siteSettings.site_mobile_logo_dark_url = darkLogo;
-    enableDarkMode();
+    Session.currentProp("darkModeAvailable", true);
+
     this.site.mobileView = true;
   },
   afterEach() {
-    disableDarkMode();
+    Session.currentProp("darkModeAvailable", null);
   },
 
   test(assert) {
@@ -175,10 +164,10 @@ widgetTest("dark mode enabled but no dark logo set", {
   beforeEach() {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = "";
-    enableDarkMode();
+    Session.currentProp("darkModeAvailable", true);
   },
   afterEach() {
-    disableDarkMode();
+    Session.currentProp("darkModeAvailable", null);
   },
 
   test(assert) {
@@ -213,10 +202,10 @@ widgetTest("dark color scheme and dark logo set", {
   beforeEach() {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = darkLogo;
-    document.documentElement.style.setProperty("--scheme-type", "dark");
+    Session.currentProp("darkColorScheme", true);
   },
   afterEach() {
-    document.documentElement.style.removeProperty("--scheme-type");
+    Session.currentProp("darkColorScheme", null);
   },
   test(assert) {
     assert.ok(find("img#site-logo.logo-big").length === 1);
@@ -233,10 +222,10 @@ widgetTest("dark color scheme and dark logo not set", {
   beforeEach() {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = "";
-    document.documentElement.style.setProperty("--scheme-type", "dark");
+    Session.currentProp("darkColorScheme", true);
   },
   afterEach() {
-    document.documentElement.style.removeProperty("--scheme-type");
+    Session.currentProp("darkColorScheme", null);
   },
   test(assert) {
     assert.ok(find("img#site-logo.logo-big").length === 1);

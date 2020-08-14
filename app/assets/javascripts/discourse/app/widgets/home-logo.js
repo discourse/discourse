@@ -4,6 +4,7 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
+import Session from "discourse/models/session";
 
 export default createWidget("home-logo", {
   tagName: "div.title",
@@ -31,12 +32,11 @@ export default createWidget("home-logo", {
 
   logo() {
     const { siteSettings } = this,
-      mobileView = this.site.mobileView,
-      darkModeOn = document.head.querySelectorAll(
-        'link[media="(prefers-color-scheme: dark)"]'
-      ).length;
+      mobileView = this.site.mobileView;
 
-    const darkModeOptions = darkModeOn ? { dark: true } : {};
+    const darkModeOptions = Session.currentProp("darkModeAvailable")
+      ? { dark: true }
+      : {};
 
     const mobileLogoUrl = this.mobileLogoUrl(),
       mobileLogoUrlDark = this.mobileLogoUrl(darkModeOptions);
@@ -74,14 +74,6 @@ export default createWidget("home-logo", {
     }
   },
 
-  isDarkScheme() {
-    const type = getComputedStyle(document.documentElement)
-      .getPropertyValue("--scheme-type")
-      .trim();
-
-    return type === "dark";
-  },
-
   logoResolver(name, opts = {}) {
     const { siteSettings } = this;
 
@@ -93,7 +85,7 @@ export default createWidget("home-logo", {
     // try dark logos first when color scheme is dark
     // this is independent of browser dark mode
     // hence the fallback to normal logos
-    if (this.isDarkScheme()) {
+    if (Session.currentProp("darkColorScheme")) {
       return (
         siteSettings[`site_${name}_dark_url`] ||
         siteSettings[`site_${name}_url`] ||

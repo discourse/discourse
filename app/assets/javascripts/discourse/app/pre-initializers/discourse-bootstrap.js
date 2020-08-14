@@ -81,6 +81,20 @@ export default {
       Session.currentProp("safe_mode", setupData.safeMode);
     }
 
+    Session.currentProp(
+      "darkModeAvailable",
+      document.head.querySelectorAll(
+        'link[media="(prefers-color-scheme: dark)"]'
+      ).length > 0
+    );
+
+    Session.currentProp(
+      "darkColorScheme",
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--scheme-type")
+        .trim() === "dark"
+    );
+
     app.HighlightJSPath = setupData.highlightJsPath;
     app.SvgSpritePath = setupData.svgSpritePath;
 
