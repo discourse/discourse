@@ -930,6 +930,7 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
+      skip_new_user_tips: "Skip new user onboarding tips and badges"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       dark_mode: "Dark Mode"
       dark_mode_enable: "Enable automatic dark mode color scheme"

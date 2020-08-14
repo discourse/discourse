@@ -56,6 +56,7 @@ describe UserOption do
       SiteSetting.default_other_enable_defer = true
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_dynamic_favicon = true
+      SiteSetting.default_other_skip_new_user_tips = true
 
       user = Fabricate(:user)
 
@@ -63,6 +64,7 @@ describe UserOption do
       expect(user.user_option.enable_defer).to eq(true)
       expect(user.user_option.external_links_in_new_tab).to eq(true)
       expect(user.user_option.dynamic_favicon).to eq(true)
+      expect(user.user_option.skip_new_user_tips).to eq(true)
     end
   end
 

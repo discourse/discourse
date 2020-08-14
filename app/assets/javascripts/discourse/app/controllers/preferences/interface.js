@@ -43,7 +43,8 @@ export default Controller.extend({
       "homepage_id",
       "hide_profile_and_presence",
       "text_size",
-      "title_count_mode"
+      "title_count_mode",
+      "skip_new_user_tips"
     ];
 
     if (makeDefault) {

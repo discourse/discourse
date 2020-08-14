@@ -30,7 +30,8 @@ class UserOptionSerializer < ApplicationSerializer
              :text_size,
              :text_size_seq,
              :title_count_mode,
-             :timezone
+             :timezone,
+             :skip_new_user_tips
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
