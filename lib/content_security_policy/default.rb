@@ -23,19 +23,20 @@ class ContentSecurityPolicy
     end
 
     SCRIPT_ASSET_DIRECTORIES = [
-      # [dir, can_use_s3_cdn, can_use_cdn]
-      ['/assets/',             true, true],
-      ['/brotli_asset/',       true, true],
-      ['/extra-locales/',      false, false],
-      ['/highlight-js/',       false, true],
-      ['/javascripts/',        false, true],
-      ['/plugins/',            false, true],
-      ['/theme-javascripts/',  false, true],
-      ['/svg-sprite/',         false, true],
+      # [dir, can_use_s3_cdn, can_use_cdn, for_worker]
+      ['/assets/',             true, true, true],
+      ['/brotli_asset/',       true, true, true],
+      ['/extra-locales/',      false, false, false],
+      ['/highlight-js/',       false, true, false],
+      ['/javascripts/',        false, true, true],
+      ['/plugins/',            false, true, true],
+      ['/theme-javascripts/',  false, true, false],
+      ['/svg-sprite/',         false, true, false],
     ]
 
-    def script_assets(base = base_url, s3_cdn = GlobalSetting.s3_cdn_url, cdn = GlobalSetting.cdn_url)
-      SCRIPT_ASSET_DIRECTORIES.map do |dir, can_use_s3_cdn, can_use_cdn|
+    def script_assets(base = base_url, s3_cdn = GlobalSetting.s3_cdn_url, cdn = GlobalSetting.cdn_url, worker: false)
+      SCRIPT_ASSET_DIRECTORIES.map do |dir, can_use_s3_cdn, can_use_cdn, for_worker|
+        next if worker && !for_worker
         if can_use_s3_cdn && s3_cdn
           s3_cdn + dir
         elsif can_use_cdn && cdn
@@ -43,7 +44,7 @@ class ContentSecurityPolicy
         else
           base + dir
         end
-      end
+      end.compact
     end
 
     def script_src
@@ -62,8 +63,7 @@ class ContentSecurityPolicy
 
     def worker_src
       [
-        :self,
-        :blob, # ACE editor registers a service worker with a blob for syntax checking
+        *script_assets(worker: true)
       ]
     end
 
