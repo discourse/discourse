@@ -2,7 +2,6 @@ import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL, { userPath, groupPath } from "discourse/lib/url";
 
 export default Controller.extend({
-  application: controller(),
   topic: controller(),
 
   actions: {
