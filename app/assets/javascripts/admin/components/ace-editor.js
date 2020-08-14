@@ -74,6 +74,8 @@ export default Component.extend({
 
     loadScript("/javascripts/ace/ace.js").then(() => {
       window.ace.require(["ace/ace"], loadedAce => {
+        loadedAce.config.set("loadWorkerFromBlob", false);
+
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
