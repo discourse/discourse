@@ -1,6 +1,7 @@
 import { scheduleOnce } from "@ember/runloop";
 import discourseDebounce from "discourse/lib/debounce";
 import Mixin from "@ember/object/mixin";
+import { inject as service } from "@ember/service";
 
 /**
   This object provides the DOM methods we need for our Mixin to bind to scrolling
@@ -26,17 +27,18 @@ const ScrollingDOMMethods = {
 };
 
 const Scrolling = Mixin.create({
+  router: service(),
+
   // Begin watching for scroll events. By default they will be called at max every 100ms.
   // call with {debounce: N} for a diff time
   bindScrolling(opts) {
     opts = opts || { debounce: 100 };
 
-    // So we can not call the scrolled event while transitioning
-    const router = Discourse.__container__.lookup("router:main")
-      ._routerMicrolib;
+    // So we can not call the scrolled event while transitioning. There is no public API for this :'(
+    const microLib = this.router._router._routerMicrolib;
 
     let onScrollMethod = () => {
-      if (router.activeTransition) {
+      if (microLib.activeTransition) {
         return;
       }
       return scheduleOnce("afterRender", this, "scrolled");
