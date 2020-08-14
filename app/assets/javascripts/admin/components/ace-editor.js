@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
+import getURL from "discourse-common/lib/get-url";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 
@@ -75,6 +76,7 @@ export default Component.extend({
     loadScript("/javascripts/ace/ace.js").then(() => {
       window.ace.require(["ace/ace"], loadedAce => {
         loadedAce.config.set("loadWorkerFromBlob", false);
+        loadedAce.config.set("workerPath", getURL("/javascripts/ace")); // Do not use CDN for workers
 
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
