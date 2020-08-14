@@ -43,7 +43,7 @@ export default TextField.extend({
   @on("willDestroyElement")
   _destroyAutocompleteInstance() {
     $(this.element).autocomplete("destroy");
-    this.element.addEventListener("paste", this._paste);
+    this.element.removeEventListener("paste", this._paste);
   },
 
   @on("didInsertElement")
