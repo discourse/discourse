@@ -46,10 +46,8 @@ export function registerHelpers(registry) {
 }
 
 let _helperContext;
-export function createHelperContext(siteSettings) {
-  _helperContext = {
-    siteSettings
-  };
+export function createHelperContext(ctx) {
+  _helperContext = ctx;
 }
 
 // This can be used by a helper to get the SiteSettings. Note you should not
