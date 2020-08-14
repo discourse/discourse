@@ -76,36 +76,22 @@ class SearchIndexer
       end
 
     params = {
-      raw_data: indexed_data,
-      id: id,
-      locale: SiteSetting.default_locale,
-      version: const_get("#{table.upcase}_INDEX_VERSION"),
-      tsvector: tsvector,
+      "raw_data" => indexed_data,
+      "#{foreign_key}" => id,
+      "locale" => SiteSetting.default_locale,
+      "version" => const_get("#{table.upcase}_INDEX_VERSION"),
+      "search_data" => tsvector,
     }
 
-    # Would be nice to use AR here but not sure how to execut Postgres functions
-    # when inserting data like this.
-    rows = DB.exec(<<~SQL, params)
-       UPDATE #{table_name}
-       SET
-          raw_data = :raw_data,
-          locale = :locale,
-          search_data = (:tsvector)::tsvector,
-          version = :version
-       WHERE #{foreign_key} = :id
-    SQL
-
-    if rows == 0
-      DB.exec(<<~SQL, params)
-        INSERT INTO #{table_name}
-        (#{foreign_key}, search_data, locale, raw_data, version)
-        VALUES (:id, (:tsvector)::tsvector, :locale, :raw_data, :version)
-      SQL
-    end
-  rescue
+    table_name.camelize.constantize.upsert(params)
+  rescue => e
     # TODO is there any way we can safely avoid this?
     # best way is probably pushing search indexer into a dedicated process so it no longer happens on save
     # instead in the post processor
+    Discourse.warn_exception(
+      e,
+      message: "Unexpected error while indexing #{table} for search"
+    )
   end
 
   def self.update_topics_index(topic_id, title, cooked)
