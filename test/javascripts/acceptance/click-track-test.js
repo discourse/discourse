@@ -7,9 +7,9 @@ QUnit.test("Do not track mentions", async assert => {
   pretender.post("/clicks/track", () => assert.ok(false));
 
   await visit("/t/internationalization-localization/280");
-  assert.ok(invisible(".user-card"), "card should not appear");
+  assert.ok(find(".user-card.show").length === 0, "card should not appear");
 
   await click("article[data-post-id=3651] a.mention");
-  assert.ok(visible(".user-card"), "card should appear");
+  assert.ok(find(".user-card.show").length === 1, "card appear");
   assert.equal(currentURL(), "/t/internationalization-localization/280");
 });
