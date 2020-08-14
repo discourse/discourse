@@ -63,6 +63,8 @@ class ContentSecurityPolicy
 
     def worker_src
       [
+        "'self'",
+        "blob:",
         *script_assets(worker: true)
       ]
     end
