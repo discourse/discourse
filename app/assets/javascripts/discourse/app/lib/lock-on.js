@@ -20,6 +20,7 @@ import { bind } from "discourse-common/utils/decorators";
 // 2. give up on the scrollbar and implement it ourselves (something that will happen)
 
 const LOCK_DURATION_MS = 1000;
+const LOCK_TIMEOUT_MS = 5000;
 const SCROLL_EVENTS = ["scroll", "touchmove", "mousedown", "wheel", "keyup"];
 const SCROLL_TYPES = ["mousedown", "mousewheel", "touchmove", "wheel"];
 
@@ -96,6 +97,11 @@ export default class LockOn {
 
     // If we can't find the element yet, wait a little bit more
     if (!this.previousTop && !elementTop) {
+      // …but not too long
+      if (Date.now() - this.startedAt > LOCK_TIMEOUT_MS) {
+        this.clearLock();
+      }
+
       return;
     }
 
