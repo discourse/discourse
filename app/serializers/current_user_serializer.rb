@@ -47,7 +47,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :ignored_users,
              :title_count_mode,
              :timezone,
-             :featured_topic
+             :featured_topic,
+             :skip_new_user_tips
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -202,6 +203,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def mailing_list_mode
     object.user_option.mailing_list_mode
+  end
+
+  def skip_new_user_tips
+    object.user_option.skip_new_user_tips
   end
 
   def include_primary_group_id?

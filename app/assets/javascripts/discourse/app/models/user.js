@@ -318,7 +318,8 @@ const User = RestModel.extend({
       "hide_profile_and_presence",
       "text_size",
       "title_count_mode",
-      "timezone"
+      "timezone",
+      "skip_new_user_tips"
     ];
 
     if (fields) {
