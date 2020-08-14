@@ -74,6 +74,18 @@ branding:
     default: ""
     client: true
     type: upload
+  logo_dark:
+    default: ""
+    client: true
+    type: upload
+  logo_small_dark:
+    default: ""
+    client: true
+    type: upload
+  mobile_logo_dark:
+    default: ""
+    client: true
+    type: upload
   large_icon:
     default: ""
     client: true
