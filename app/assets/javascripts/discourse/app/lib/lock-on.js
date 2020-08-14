@@ -1,4 +1,5 @@
 import { minimumOffset } from "discourse/lib/offset-calculator";
+import { bind } from "discourse-common/utils/decorators";
 
 // Dear traveller, you are entering a zone where we are at war with the browser.
 // The browser is insisting on positioning scrollTop per the location it was in
@@ -38,7 +39,6 @@ export default class LockOn {
   constructor(selector, options) {
     this.selector = selector;
     this.options = options || {};
-    this._boundScrollListener = this._scrollListener.bind(this);
   }
 
   elementTop() {
@@ -76,6 +76,7 @@ export default class LockOn {
     this._addListener();
   }
 
+  @bind
   _scrollListener(event) {
     if (event.which > 0 || SCROLL_TYPES.includes(event.type)) {
       this.clearLock();
@@ -87,8 +88,8 @@ export default class LockOn {
     const html = document.querySelector("html");
 
     SCROLL_EVENTS.forEach(event => {
-      body.addEventListener(event, this._boundScrollListener);
-      html.addEventListener(event, this._boundScrollListener);
+      body.addEventListener(event, this._scrollListener);
+      html.addEventListener(event, this._scrollListener);
     });
   }
 
@@ -97,8 +98,8 @@ export default class LockOn {
     const html = document.querySelector("html");
 
     SCROLL_EVENTS.forEach(event => {
-      body.removeEventListener(event, this._boundScrollListener);
-      html.removeEventListener(event, this._boundScrollListener);
+      body.removeEventListener(event, this._scrollListener);
+      html.removeEventListener(event, this._scrollListener);
     });
   }
 
