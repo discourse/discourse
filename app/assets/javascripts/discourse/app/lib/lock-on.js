@@ -77,21 +77,17 @@ export default class LockOn {
 
   _addListener() {
     const body = document.querySelector("body");
-    const html = document.querySelector("html");
 
     SCROLL_EVENTS.forEach(event => {
       body.addEventListener(event, this._scrollListener);
-      html.addEventListener(event, this._scrollListener);
     });
   }
 
   _removeListener() {
     const body = document.querySelector("body");
-    const html = document.querySelector("html");
 
     SCROLL_EVENTS.forEach(event => {
       body.removeEventListener(event, this._scrollListener);
-      html.removeEventListener(event, this._scrollListener);
     });
   }
 
