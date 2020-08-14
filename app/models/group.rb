@@ -111,6 +111,8 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
+  scope :with_imap_configured, -> { where.not(imap_mailbox_name: '') }
+
   scope :visible_groups, Proc.new { |user, order, opts|
     groups = self.order(order || "name ASC")
 
