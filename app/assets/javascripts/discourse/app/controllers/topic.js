@@ -456,7 +456,8 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     deferTopic() {
-      const { screenTrack, currentUser, topic } = this;
+      const { screenTrack, currentUser } = this;
+      const topic = this.model;
 
       screenTrack.reset();
       screenTrack.stop();
