@@ -4,16 +4,6 @@ require 'net/imap'
 
 module Imap
   class Sync
-    class Logger
-      def self.log(msg, level = :debug)
-        if ENV['DISCOURSE_EMAIL_SYNC_LOG_OVERRIDE'] == 'warn'
-          Rails.logger.warn(msg)
-        else
-          Rails.logger.send(level, msg)
-        end
-      end
-    end
-
     def initialize(group, opts = {})
       @group = group
       @provider = Imap::Providers::Detector.init_with_detected_provider(@group.imap_config)
@@ -53,12 +43,12 @@ module Imap
         # If UID validity changes, the whole mailbox must be synchronized (all
         # emails are considered new and will be associated to existent topics
         # in Email::Reciever by matching Message-Ids).
-        Logger.log("[IMAP] (#{@group.name}) UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for group #{@group.name} and mailbox #{@group.imap_mailbox_name}", :warn)
+        ImapSyncLog.warn("UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for mailbox #{@group.imap_mailbox_name}", @group)
         @group.imap_last_uid = 0
       end
 
       if idle && !can_idle?
-        Logger.log("[IMAP] (#{@group.name}) IMAP server for group cannot IDLE", :warn)
+        ImapSyncLog.warn("IMAP server for group cannot IDLE or imap idle site setting is disabled", @group)
         idle = false
       end
 
@@ -70,7 +60,7 @@ module Imap
         ActiveRecord::Base.connection_handler.clear_active_connections!
 
         idle_polling_mins = SiteSetting.imap_polling_period_mins.minutes.to_i
-        Logger.log("[IMAP] (#{@group.name}) Going IDLE for #{idle_polling_mins} seconds to wait for more work")
+        ImapSyncLog.debug("Going IDLE for #{idle_polling_mins} seconds to wait for more work", @group)
 
         @provider.imap.idle(idle_polling_mins) do |resp|
           if resp.kind_of?(Net::IMAP::UntaggedResponse) && resp.name == 'EXISTS'
@@ -92,7 +82,7 @@ module Imap
       # Sometimes, new_uids contains elements from old_uids.
       new_uids = new_uids - old_uids
 
-      Logger.log("[IMAP] (#{@group.name}) Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails")
+      ImapSyncLog.debug("Remote email server has #{old_uids.size} old emails and #{new_uids.size} new emails", @group)
 
       all_old_uids_size = old_uids.size
       all_new_uids_size = new_uids.size
@@ -134,7 +124,7 @@ module Imap
     private
 
     def process_old_uids(old_uids)
-      Logger.log("[IMAP] (#{@group.name}) Syncing #{old_uids.size} randomly-selected old emails")
+      ImapSyncLog.debug("Syncing #{old_uids.size} randomly-selected old emails", @group)
       emails = old_uids.empty? ? [] : @provider.emails(old_uids, ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'])
       emails.each do |email|
         incoming_email = IncomingEmail.find_by(
@@ -161,7 +151,7 @@ module Imap
             )
             update_topic(email, incoming_email, mailbox_name: @group.imap_mailbox_name)
           else
-            Logger.log("[IMAP] (#{@group.name}) Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})", :warn)
+            ImapSyncLog.warn("Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})", @group)
           end
         end
       end
@@ -204,18 +194,18 @@ module Imap
         # not exist, and this sync is just updating the old UIDs to the new ones
         # in the trash, and we don't need to re-destroy the post
         if incoming.post
-          Logger.log("[IMAP] (#{@group.name}) Deleting post ID #{incoming.post_id}; it has been deleted on the IMAP server.")
+          ImapSyncLog.debug("Deleting post ID #{incoming.post_id}, topic id #{incoming.topic_id}; email has been deleted on the IMAP server.", @group)
           PostDestroyer.new(Discourse.system_user, incoming.post).destroy
         end
 
         # the email has moved mailboxes, we don't want to try trashing again next time
-        Logger.log("[IMAP] (#{@group.name}) Updating incoming ID #{incoming.id} uid data FROM [UID #{incoming.imap_uid} | UIDVALIDITY #{incoming.imap_uid_validity}] TO [UID #{matching_trashed.uid} | UIDVALIDITY #{response.trash_uid_validity}] (TRASHED)")
+        ImapSyncLog.debug("Updating incoming ID #{incoming.id} uid data FROM [UID #{incoming.imap_uid} | UIDVALIDITY #{incoming.imap_uid_validity}] TO [UID #{matching_trashed.uid} | UIDVALIDITY #{response.trash_uid_validity}] (TRASHED)", @group)
         incoming.update(imap_uid_validity: response.trash_uid_validity, imap_uid: matching_trashed.uid)
       end
     end
 
     def process_new_uids(new_uids, import_mode, all_old_uids_size, all_new_uids_size)
-      Logger.log("[IMAP] (#{@group.name}) Syncing #{new_uids.size} new emails (oldest first)")
+      ImapSyncLog.debug("Syncing #{new_uids.size} new emails (oldest first)", @group)
 
       emails = @provider.emails(new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'])
       processed = 0
@@ -242,7 +232,7 @@ module Imap
 
           update_topic(email, receiver.incoming_email, mailbox_name: @group.imap_mailbox_name)
         rescue Email::Receiver::ProcessingError => e
-          Logger.log("[IMAP] (#{@group.name}) Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}", :warn)
+          ImapSyncLog.warn("Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}", @group)
         end
 
         processed += 1
@@ -262,7 +252,7 @@ module Imap
       if to_sync.size > 0
         @provider.open_mailbox(@group.imap_mailbox_name, write: true)
         to_sync.each do |incoming_email|
-          Logger.log("[IMAP] (#{@group.name}) Updating email and incoming email ID = #{incoming_email.id}")
+          ImapSyncLog.debug("Updating email on IMAP server for incoming email ID = #{incoming_email.id}, UID = #{incoming_email.imap_uid}", @group)
           update_email(incoming_email)
           incoming_email.update(imap_sync: false)
         end
@@ -276,8 +266,10 @@ module Imap
       email_is_archived = !email['LABELS'].include?('\\Inbox') && !email['LABELS'].include?('INBOX')
 
       if topic_is_archived && !email_is_archived
+        ImapSyncLog.debug("Unarchiving topic ID #{topic.id}, email was unarchived", @group)
         GroupArchivedMessage.move_to_inbox!(@group.id, topic, skip_imap_sync: true)
       elsif !topic_is_archived && email_is_archived
+        ImapSyncLog.debug("Archiving topic ID #{topic.id}, email was archived", @group)
         GroupArchivedMessage.archive!(@group.id, topic, skip_imap_sync: true)
       end
     end
@@ -346,6 +338,7 @@ module Imap
       if !topic
         # no need to do anything further here, we will recognize the UIDs in the
         # mail server email thread have been trashed on next sync
+        ImapSyncLog.debug("Trashing UID #{incoming_email.imap_uid} (incoming ID #{incoming_email.id})", @group)
         return @provider.trash(incoming_email.imap_uid)
       end
 
@@ -358,12 +351,12 @@ module Imap
         # at the same time.
         new_labels << "\\Inbox"
 
-        Logger.log("[IMAP] (#{@group.name}) Unarchiving UID #{incoming_email.imap_uid}")
+        ImapSyncLog.debug("Unarchiving UID #{incoming_email.imap_uid} (incoming ID #{incoming_email.id})", @group)
 
         # some providers need special handling for unarchiving too
         @provider.unarchive(incoming_email.imap_uid)
       else
-        Logger.log("[IMAP] (#{@group.name}) Archiving UID #{incoming_email.imap_uid}")
+        ImapSyncLog.debug("Archiving UID #{incoming_email.imap_uid} (incoming ID #{incoming_email.id})", @group)
 
         # some providers need special handling for archiving. this way we preserve
         # any new tag-labels, and archive, even though it may cause extra requests
