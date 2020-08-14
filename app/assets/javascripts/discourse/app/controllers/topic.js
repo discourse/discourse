@@ -43,6 +43,9 @@ export function registerCustomPostMessageCallback(type, callback) {
 export default Controller.extend(bufferedProperty("model"), {
   composer: controller(),
   application: controller(),
+  documentTitle: service(),
+  screenTrack: service(),
+
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
@@ -60,7 +63,6 @@ export default Controller.extend(bufferedProperty("model"), {
   username_filters: null,
   filter: null,
   quoteState: null,
-  documentTitle: service(),
 
   canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
@@ -454,9 +456,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     deferTopic() {
-      const screenTrack = Discourse.__container__.lookup("screen-track:main");
-      const currentUser = this.currentUser;
-      const topic = this.model;
+      const { screenTrack, currentUser, topic } = this;
 
       screenTrack.reset();
       screenTrack.stop();

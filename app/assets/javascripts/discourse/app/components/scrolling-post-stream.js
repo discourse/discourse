@@ -4,6 +4,7 @@ import MountWidget from "discourse/components/mount-widget";
 import { cloak, uncloak } from "discourse/widgets/post-stream";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
+import { inject as service } from "@ember/service";
 
 function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
   if (max < min) {
@@ -26,6 +27,7 @@ function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
 }
 
 export default MountWidget.extend({
+  screenTrack: service(),
   widget: "post-stream",
   _topVisible: null,
   _bottomVisible: null,
