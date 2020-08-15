@@ -219,9 +219,7 @@ gem 'logstash-event', require: false
 gem 'logstash-logger', require: false
 gem 'logster'
 
-# NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
-# and until resolved should be locked at 2.0.1
-gem 'sassc', '2.0.1', require: false
+gem 'sassc', '2.4.0', require: false
 gem "sassc-rails"
 
 # see: https://github.com/mdp/rotp/issues/98
