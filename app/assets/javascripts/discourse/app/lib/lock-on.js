@@ -48,7 +48,7 @@ export default class LockOn {
 
   clearLock() {
     this._removeListener();
-    clearInterval(this.interval);
+    window.cancelAnimationFrame(this._requestId);
 
     if (this.options.finished) {
       this.options.finished();
@@ -63,7 +63,7 @@ export default class LockOn {
       window.scrollTo(window.pageXOffset, this.previousTop);
     }
 
-    this.interval = setInterval(this._performLocking, 50);
+    this._requestId = window.requestAnimationFrame(this._performLocking);
 
     this._removeListener();
     this._addListener();
@@ -103,6 +103,7 @@ export default class LockOn {
         this.clearLock();
       }
 
+      this._requestId = window.requestAnimationFrame(this._performLocking);
       return;
     }
 
@@ -124,5 +125,7 @@ export default class LockOn {
     if (Date.now() - this.startedAt > LOCK_DURATION_MS) {
       return this.clearLock();
     }
+
+    this._requestId = window.requestAnimationFrame(this._performLocking);
   }
 }
