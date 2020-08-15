@@ -63,7 +63,7 @@ export default class LockOn {
       window.scrollTo(window.pageXOffset, this.previousTop);
     }
 
-    this.interval = setInterval(() => this._performLocking(), 50);
+    this.interval = setInterval(this._performLocking, 50);
 
     this._removeListener();
     this._addListener();
@@ -92,6 +92,7 @@ export default class LockOn {
     });
   }
 
+  @bind
   _performLocking() {
     const elementTop = this.elementTop();
 
