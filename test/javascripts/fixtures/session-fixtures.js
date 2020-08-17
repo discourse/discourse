@@ -29,7 +29,8 @@ export default {
       dismissed_banner_key: null,
       akismet_review_count: 0,
       title_count_mode: "notifications",
-      timezone: "Australia/Brisbane"
+      timezone: "Australia/Brisbane",
+      can_create_group: true
     }
   }
 };

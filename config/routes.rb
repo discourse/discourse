@@ -561,7 +561,7 @@ Discourse::Application.routes.draw do
 
         collection do
           get "check-name" => 'groups#check_name'
-          get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
+          get 'custom/new' => 'groups#new', constraints: StaffConstraint.new
           get "search" => "groups#search"
         end
 

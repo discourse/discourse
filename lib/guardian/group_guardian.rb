@@ -28,7 +28,8 @@ module GroupGuardian
     (
       SiteSetting.moderators_manage_categories_and_groups &&
       is_moderator? &&
-      can_see?(group)
+      can_see?(group) &&
+      group.id != Group::AUTO_GROUPS[:admins]
     )
   end
 

@@ -1,4 +1,6 @@
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
+import pretender from "helpers/create-pretender";
+import groupFixtures from "fixtures/group-fixtures";
 
 acceptance("Managing Group Interaction Settings", {
   loggedIn: true,
@@ -8,6 +10,14 @@ acceptance("Managing Group Interaction Settings", {
 });
 
 QUnit.test("As an admin", async assert => {
+  let groupResponse = _.clone(groupFixtures["/groups/discourse.json"]);
+  groupResponse.group.can_admin_group = true;
+  pretender.get("/groups/discourse.json", () => [
+    200,
+    { "Content-Type": "application/json" },
+    groupResponse
+  ]);
+
   await visit("/g/discourse/manage/interaction");
 
   assert.equal(
@@ -42,7 +52,11 @@ QUnit.test("As an admin", async assert => {
 });
 
 QUnit.test("As a group owner", async assert => {
-  updateCurrentUser({ moderator: false, admin: false });
+  updateCurrentUser({
+    moderator: false,
+    admin: false,
+    can_create_group: false
+  });
   await visit("/g/discourse/manage/interaction");
 
   assert.equal(
