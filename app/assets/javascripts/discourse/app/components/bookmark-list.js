@@ -22,16 +22,7 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this.element.removeEventListener("click", this.wrapperClickHandler);
-  },
-
-  _wrapperClickHandler(e) {
-    if (e.target && e.target.tagName === "A") {
-      let link = e.target;
-      if (shouldOpenInNewTab(link.href)) {
-        openLinkInNewTab(link);
-      }
-    }
+    this.element.removeEventListener("click", this._wrapperClickHandler);
   },
 
   @action
@@ -75,5 +66,14 @@ export default Component.extend({
 
   _removeBookmarkFromList(bookmark) {
     this.content.removeObject(bookmark);
+  },
+
+  _wrapperClickHandler(e) {
+    if (e.target && e.target.tagName === "A") {
+      let link = e.target;
+      if (shouldOpenInNewTab(link.href)) {
+        openLinkInNewTab(link);
+      }
+    }
   }
 });
