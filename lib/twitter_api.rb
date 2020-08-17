@@ -33,14 +33,29 @@ class TwitterApi
               width = m['sizes']['large']['w']
               height = m['sizes']['large']['h']
 
+              attributes =
+                if m['type'] == 'animated_gif'
+                  %w{
+                    loop
+                    muted
+                    autoplay
+                    disableRemotePlayback
+                    disablePictureInPicture
+                  }
+                else
+                  %w{
+                    controls
+                    playsinline
+                  }
+                end.join(' ')
+
               result << <<~HTML
                 <div class='tweet-images'>
                   <div class='aspect-image-full-size' style='--aspect-ratio:#{width}/#{height};'>
-                    <video class='tweet-video' controls playsinline 
+                    <video class='tweet-video' #{attributes}
                       width='#{width}' 
                       height='#{height}'
-                      poster='#{m['media_url_https']}'
-                      #{'loop' if m['type'] == 'animated_gif'}>
+                      poster='#{m['media_url_https']}'>
                       <source src='#{url}' type="video/mp4">
                     </video>
                   </div>
