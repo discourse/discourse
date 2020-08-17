@@ -3,11 +3,11 @@ let _moreLanguages = [];
 
 import loadScript from "discourse/lib/load-script";
 
-export default function highlightSyntax($elem, siteSettings) {
+export default function highlightSyntax($elem, siteSettings, session) {
   const selector = siteSettings.autohighlight_all_code
       ? "pre code"
       : "pre code[class]",
-    path = Discourse.HighlightJSPath;
+    path = session.highlightJsPath;
 
   if (!path) {
     return;

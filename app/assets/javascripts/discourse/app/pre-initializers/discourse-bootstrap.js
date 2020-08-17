@@ -96,7 +96,7 @@ export default {
         .trim() === "dark"
     );
 
-    app.HighlightJSPath = setupData.highlightJsPath;
+    Session.currentProp("highlightJsPath", setupData.highlightJsPath);
     Session.currentProp("svgSpritePath", setupData.svgSpritePath);
 
     if (isDevelopment()) {

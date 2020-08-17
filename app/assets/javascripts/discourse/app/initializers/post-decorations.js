@@ -9,9 +9,10 @@ export default {
   initialize(container) {
     withPluginApi("0.1", api => {
       const siteSettings = container.lookup("site-settings:main");
+      const session = container.lookup("session:main");
       api.decorateCooked(
         elem => {
-          return highlightSyntax(elem, siteSettings);
+          return highlightSyntax(elem, siteSettings, session);
         },
         {
           id: "discourse-syntax-highlighting"
