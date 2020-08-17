@@ -106,6 +106,13 @@ const TopicRoute = DiscourseRoute.extend({
       });
     },
 
+    showDeleteTopicConfirmModal() {
+      showModal("delete-topic-confirm", {
+        model: this.modelFor("topic"),
+        title: "topic.actions.delete"
+      });
+    },
+
     showTopicStatusUpdate() {
       const model = this.modelFor("topic");
 
