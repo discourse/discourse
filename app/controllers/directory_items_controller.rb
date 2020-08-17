@@ -75,7 +75,6 @@ class DirectoryItemsController < ApplicationController
     if result.present? && current_user.present? && page == 0
 
       position = result.index { |r| r.user_id == current_user.id }
-      print "\nDhondu\n", position, "\nJust chill\n"
 
       # Don't show the record unless you're not in the top positions already
       if (position || 10) >= 10
