@@ -143,7 +143,7 @@ class GroupsController < ApplicationController
     guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
     if group.update(group_params(automatic: group.automatic))
-      GroupActionLogger.new(current_user, group).log_change_group_settings
+      GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
       render json: success_json
     else
       render_json_error(group)
