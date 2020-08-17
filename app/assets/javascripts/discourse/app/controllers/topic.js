@@ -1285,7 +1285,11 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   deleteTopic() {
-    this.model.destroy(this.currentUser);
+    showModal("delete-topic-confirm", {
+      model: this.model,
+      title: "topic.actions.delete"
+    });
+    // this.model.destroy(this.currentUser);
   },
 
   subscribe() {
