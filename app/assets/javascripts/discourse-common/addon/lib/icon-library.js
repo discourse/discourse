@@ -1,12 +1,12 @@
 import I18n from "I18n";
 import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
-import Session from "discourse/models/session";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
 let warnMissingIcons = true;
+let _iconList;
 
 const REPLACEMENTS = {
   "d-tracking": "bell",
@@ -110,12 +110,13 @@ function iconClasses(icon, params) {
   return classNames;
 }
 
+export function setIconList(iconList) {
+  _iconList = iconList;
+}
+
 function warnIfMissing(id) {
-  if (warnMissingIcons) {
-    let iconList = Session.currentProp("svgIconList");
-    if (iconList && iconList.indexOf(id) === -1) {
-      console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
-    }
+  if (warnMissingIcons && _iconList && _iconList.indexOf(id) === -1) {
+    console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }
 

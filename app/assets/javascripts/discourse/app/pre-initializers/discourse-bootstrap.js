@@ -10,6 +10,7 @@ import {
 } from "discourse-common/config/environment";
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
+import { setIconList } from "discourse-common/lib/icon-library";
 
 export default {
   name: "discourse-bootstrap",
@@ -100,7 +101,7 @@ export default {
     Session.currentProp("svgSpritePath", setupData.svgSpritePath);
 
     if (isDevelopment()) {
-      Session.currentProp("svgIconList", setupData.svgIconList);
+      setIconList(setupData.svgIconList);
     }
 
     if (setupData.s3BaseUrl) {
