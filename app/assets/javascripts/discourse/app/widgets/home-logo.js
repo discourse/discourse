@@ -4,6 +4,7 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
+import Session from "discourse/models/session";
 
 export default createWidget("home-logo", {
   tagName: "div.title",
@@ -17,55 +18,108 @@ export default createWidget("home-logo", {
     return typeof href === "function" ? href() : href;
   },
 
-  logoUrl() {
-    return this.siteSettings.site_logo_url || "";
+  logoUrl(opts = {}) {
+    return this.logoResolver("logo", opts);
   },
 
-  mobileLogoUrl() {
-    return this.siteSettings.site_mobile_logo_url || "";
+  mobileLogoUrl(opts = {}) {
+    return this.logoResolver("mobile_logo", opts);
   },
 
-  smallLogoUrl() {
-    return this.siteSettings.site_logo_small_url || "";
+  smallLogoUrl(opts = {}) {
+    return this.logoResolver("logo_small", opts);
   },
 
   logo() {
-    const { siteSettings } = this;
-    const mobileView = this.site.mobileView;
+    const { siteSettings } = this,
+      mobileView = this.site.mobileView;
 
-    const mobileLogoUrl = this.mobileLogoUrl();
+    const darkModeOptions = Session.currentProp("darkModeAvailable")
+      ? { dark: true }
+      : {};
+
+    const mobileLogoUrl = this.mobileLogoUrl(),
+      mobileLogoUrlDark = this.mobileLogoUrl(darkModeOptions);
+
     const showMobileLogo = mobileView && mobileLogoUrl.length > 0;
 
-    const logoUrl = this.logoUrl();
+    const logoUrl = this.logoUrl(),
+      logoUrlDark = this.logoUrl(darkModeOptions);
     const title = siteSettings.title;
 
     if (this.attrs.minimized) {
-      const logoSmallUrl = this.smallLogoUrl();
+      const logoSmallUrl = this.smallLogoUrl(),
+        logoSmallUrlDark = this.smallLogoUrl(darkModeOptions);
       if (logoSmallUrl.length) {
-        return h("img#site-logo.logo-small", {
-          key: "logo-small",
-          attributes: {
-            src: getURL(logoSmallUrl),
-            width: 36,
-            alt: title
-          }
-        });
+        return this.logoElement(
+          "logo-small",
+          logoSmallUrl,
+          title,
+          logoSmallUrlDark
+        );
       } else {
         return iconNode("home");
       }
     } else if (showMobileLogo) {
-      return h("img#site-logo.logo-big", {
-        key: "logo-mobile",
-        attributes: { src: getURL(mobileLogoUrl), alt: title }
-      });
+      return this.logoElement(
+        "logo-mobile",
+        mobileLogoUrl,
+        title,
+        mobileLogoUrlDark
+      );
     } else if (logoUrl.length) {
-      return h("img#site-logo.logo-big", {
-        key: "logo-big",
-        attributes: { src: getURL(logoUrl), alt: title }
-      });
+      return this.logoElement("logo-big", logoUrl, title, logoUrlDark);
     } else {
       return h("h1#site-text-logo.text-logo", { key: "logo-text" }, title);
     }
+  },
+
+  logoResolver(name, opts = {}) {
+    const { siteSettings } = this;
+
+    // get alternative logos for browser dark dark mode switching
+    if (opts.dark) {
+      return siteSettings[`site_${name}_dark_url`];
+    }
+
+    // try dark logos first when color scheme is dark
+    // this is independent of browser dark mode
+    // hence the fallback to normal logos
+    if (Session.currentProp("darkColorScheme")) {
+      return (
+        siteSettings[`site_${name}_dark_url`] ||
+        siteSettings[`site_${name}_url`] ||
+        ""
+      );
+    }
+
+    return siteSettings[`site_${name}_url`] || "";
+  },
+
+  logoElement(key, url, title, darkUrl = null) {
+    const attributes =
+      key === "logo-small"
+        ? { src: getURL(url), width: 36, alt: title }
+        : { src: getURL(url), alt: title };
+
+    const imgElement = h(`img#site-logo.${key}`, {
+      key: key,
+      attributes
+    });
+
+    if (darkUrl && url !== darkUrl) {
+      return h("picture", [
+        h("source", {
+          attributes: {
+            srcset: getURL(darkUrl),
+            media: "(prefers-color-scheme: dark)"
+          }
+        }),
+        imgElement
+      ]);
+    }
+
+    return imgElement;
   },
 
   html() {
