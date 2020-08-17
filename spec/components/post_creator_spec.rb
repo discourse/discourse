@@ -391,6 +391,26 @@ describe PostCreator do
               expect(topic.closed).to eq(true)
               expect(topic_timer.reload.deleted_at).to eq_time(Time.zone.now)
             end
+
+            it "uses the system locale for the message" do
+              post
+
+              I18n.with_locale(:fr) do
+                PostCreator.new(
+                  topic.user,
+                  topic_id: topic.id,
+                  raw: "this is a second post"
+                ).create
+              end
+
+              topic.reload
+
+              expect(topic.posts.last.raw).to eq(I18n.t(
+                'topic_statuses.autoclosed_topic_max_posts',
+                count: SiteSetting.auto_close_topics_post_count,
+                locale: :en
+              ))
+            end
           end
         end
       end
