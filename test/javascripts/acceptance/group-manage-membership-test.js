@@ -85,6 +85,14 @@ QUnit.test("As an admin", async assert => {
 QUnit.test("As a group owner", async assert => {
   updateCurrentUser({ moderator: false, admin: false });
 
+  let groupResponse = _.clone(groupFixtures["/groups/discourse.json"]);
+  groupResponse.group.can_admin_group = false;
+  pretender.get("/groups/discourse.json", () => [
+    200,
+    { "Content-Type": "application/json" },
+    groupResponse
+  ]);
+
   await visit("/g/discourse/manage/membership");
 
   assert.ok(
