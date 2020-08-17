@@ -114,20 +114,20 @@ class BasicGroupSerializer < ApplicationSerializer
     owner_group_ids.present?
   end
 
-  def is_group_owner
-    owner_group_ids.include?(object.id)
-  end
-
-  def can_see_members
-    scope.can_see_group_members?(object)
-  end
-
   def can_admin_group
     scope.can_admin_group?(object)
   end
 
   def include_can_admin_group?
     scope.can_admin_group?(object)
+  end
+
+  def is_group_owner
+    owner_group_ids.include?(object.id)
+  end
+
+  def can_see_members
+    scope.can_see_group_members?(object)
   end
 
   [:watching, :tracking, :watching_first_post, :muted].each do |level|
