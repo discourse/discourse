@@ -1024,9 +1024,7 @@ class Search
 
   def categories_ignored(posts)
     posts.where(<<~SQL, Searchable::PRIORITIES[:ignore])
-    categories.id NOT IN (
-      SELECT categories.id WHERE categories.search_priority = ?
-    )
+    (categories.search_priority IS NULL OR categories.search_priority IS NOT NULL AND categories.search_priority <> ?)
     SQL
   end
 

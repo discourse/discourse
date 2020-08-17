@@ -190,16 +190,22 @@ describe Search do
   end
 
   context 'private messages' do
+    let!(:topic) do
+      Fabricate(:topic, category_id: nil, archetype: 'private_message')
+    end
 
-    let(:topic) {
-      Fabricate(:topic,
-                  category_id: nil,
-                  archetype: 'private_message')
-    }
+    let!(:post) { Fabricate(:post, topic: topic) }
 
-    let(:post) { Fabricate(:post, topic: topic) }
-    let(:reply) { Fabricate(:post, topic: topic,
-                                   raw: 'hello from mars, we just landed') }
+    let!(:reply) do
+      Fabricate(:post, topic: topic, raw: 'hello from mars, we just landed')
+    end
+
+    let!(:post2) do
+      Fabricate(:post,
+        topic: Fabricate(:topic, category_id: nil, archetype: 'private_message'),
+        raw: 'another secret pm from mars, testing'
+      )
+    end
 
     it 'searches correctly' do
       expect do
@@ -209,41 +215,56 @@ describe Search do
       TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
       TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
 
-      results = Search.execute('mars',
-                              type_filter: 'private_messages',
-                              guardian: Guardian.new(reply.user))
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(reply.user)
+      )
 
-      expect(results.posts.length).to eq(1)
+      expect(results.posts).to contain_exactly(reply)
 
-      results = Search.execute('mars',
-                              search_context: topic,
-                              guardian: Guardian.new(reply.user))
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(admin)
+      )
 
-      expect(results.posts.length).to eq(1)
+      expect(results.posts).to contain_exactly(reply, post2)
+
+      results = Search.execute(
+        'mars',
+        search_context: topic,
+        guardian: Guardian.new(reply.user)
+      )
+
+      expect(results.posts).to contain_exactly(reply)
 
       # does not leak out
-      results = Search.execute('mars',
-                              type_filter: 'private_messages',
-                              guardian: Guardian.new(Fabricate(:user)))
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(Fabricate(:user))
+      )
 
-      expect(results.posts.length).to eq(0)
-
-      Fabricate(:topic, category_id: nil, archetype: 'private_message')
-      Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
+      expect(results.posts.empty?).to eq(true)
 
       # admin can search everything with correct context
-      results = Search.execute('mars',
-                              type_filter: 'private_messages',
-                              search_context: post.user,
-                              guardian: Guardian.new(admin))
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        search_context: post.user,
+        guardian: Guardian.new(admin)
+      )
 
-      expect(results.posts.length).to eq(1)
+      expect(results.posts).to contain_exactly(reply)
 
-      results = Search.execute('mars in:private',
-                              search_context: post.user,
-                              guardian: Guardian.new(post.user))
+      results = Search.execute(
+        'mars in:private',
+        search_context: post.user,
+        guardian: Guardian.new(post.user)
+      )
 
-      expect(results.posts.length).to eq(1)
+      expect(results.posts).to contain_exactly(reply)
 
       # can search group PMs as well as non admin
       #
@@ -254,11 +275,12 @@ describe Search do
 
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 
-      results = Search.execute('mars in:private',
-                              guardian: Guardian.new(user))
+      results = Search.execute(
+        'mars in:private',
+        guardian: Guardian.new(user)
+      )
 
-      expect(results.posts.length).to eq(1)
-
+      expect(results.posts).to contain_exactly(reply)
     end
 
     context 'personal-direct flag' do
@@ -341,55 +363,44 @@ describe Search do
         TopicAllowedUser.create!(user_id: u2.id, topic_id: private_topic.id)
 
         # private only
-        results = Search.execute('in:all cheese',
-                                guardian: Guardian.new(u1))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all cheese', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(private_post1)
 
         # public only
-        results = Search.execute('in:all eggs',
-                                guardian: Guardian.new(u1))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all eggs', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(public_post1)
 
         # both
-        results = Search.execute('in:all spam',
-                                guardian: Guardian.new(u1))
-        expect(results.posts.length).to eq(2)
+        results = Search.execute('in:all spam', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(public_post2, private_post2)
 
         # for anon
-        results = Search.execute('in:all spam',
-                                guardian: Guardian.new)
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all spam', guardian: Guardian.new)
+        expect(results.posts).to contain_exactly(public_post2)
 
         # nonparticipatory user
-        results = Search.execute('in:all cheese',
-                                guardian: Guardian.new(u3))
-        expect(results.posts.length).to eq(0)
+        results = Search.execute('in:all cheese', guardian: Guardian.new(u3))
+        expect(results.posts.empty?).to eq(true)
 
-        results = Search.execute('in:all eggs',
-                                guardian: Guardian.new(u3))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all eggs', guardian: Guardian.new(u3))
+        expect(results.posts).to contain_exactly(public_post1)
 
-        results = Search.execute('in:all spam',
-                                guardian: Guardian.new(u3))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all spam', guardian: Guardian.new(u3))
+        expect(results.posts).to contain_exactly(public_post2)
 
         # Admin doesn't see private topic
-        results = Search.execute('in:all spam',
-                  guardian: Guardian.new(u4))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all spam', guardian: Guardian.new(u4))
+        expect(results.posts).to contain_exactly(public_post2)
 
         # same keyword for different users
-        results = Search.execute('in:all ham',
-                                guardian: Guardian.new(u1))
-        expect(results.posts.length).to eq(2)
+        results = Search.execute('in:all ham', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(public_post1, private_post1)
 
-        results = Search.execute('in:all ham',
-                                guardian: Guardian.new(u2))
-        expect(results.posts.length).to eq(2)
+        results = Search.execute('in:all ham', guardian: Guardian.new(u2))
+        expect(results.posts).to contain_exactly(public_post1, private_post1)
 
-        results = Search.execute('in:all ham',
-                                guardian: Guardian.new(u3))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all ham', guardian: Guardian.new(u3))
+        expect(results.posts).to contain_exactly(public_post1)
       end
     end
   end

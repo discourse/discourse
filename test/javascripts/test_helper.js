@@ -164,7 +164,7 @@ QUnit.testStart(function(ctx) {
   Session.resetCurrent();
   User.resetCurrent();
   resetSite(settings);
-  createHelperContext(settings);
+  createHelperContext({ siteSettings: settings });
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {

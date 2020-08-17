@@ -118,7 +118,10 @@ RSpec.describe TopicsController do
           result = response.parsed_body
 
           expect(result['success']).to eq(true)
-          expect(result['url']).to eq(Topic.last.relative_url)
+
+          new_topic = Topic.last
+          expect(result['url']).to eq(new_topic.relative_url)
+          expect(new_topic.excerpt).to eq(p2.excerpt_for_topic)
           expect(Tag.all.pluck(:name)).to contain_exactly("tag1", "tag2")
         end
 

@@ -120,7 +120,7 @@ task 'plugin:pull_compatible', :plugin do |t, args|
   # Checkout value of the version compat
   if checkout_version
     puts "checking out compatible #{plugin} version: #{checkout_version}"
-    update_status = system("git -C '#{plugin_path}' reset --hard #{checkout_version}")
+    update_status = system("git -C '#{plugin_path}' cat-file -e #{checkout_version} || git -C '#{plugin_path}' fetch --depth 1 $(git -C '#{plugin_path}' rev-parse --symbolic-full-name @{upstream} | awk -F '/' '{print $3}') #{checkout_version}; git -C '#{plugin_path}' reset --hard #{checkout_version}")
     abort('Unable to checkout a compatible plugin version') unless update_status
   else
     puts "#{plugin} is already at latest compatible version"

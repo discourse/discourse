@@ -1,7 +1,7 @@
 {{#create-account email=accountEmail disabled=submitDisabled action=(action "createAccount")}}
   {{#unless complete}}
     {{plugin-outlet name="create-account-before-modal-body"}}
-    {{#d-modal-body title="create_account.title" class=(concat (if hasAtLeastOneLoginButton "has-alt-auth") " " (if userFields "has-user-fields"))}}
+    {{#d-modal-body title="create_account.title" class=modalBodyClasses}}
 
       {{#unless hasAuthOptions}}
         {{login-buttons externalLogin=(action "externalLogin")}}

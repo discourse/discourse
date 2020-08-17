@@ -10,8 +10,8 @@
     {{#if canManageGroup}}
       {{#if currentUser.admin}}
         {{group-members-dropdown
+          groupName=model.full_name
           showAddMembersModal=(route-action "showAddMembersModal")
-          showBulkAddModal=(route-action "showBulkAddModal")
         }}
       {{else}}
         {{d-button

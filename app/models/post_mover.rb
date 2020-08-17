@@ -49,6 +49,7 @@ class PostMover
       DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
       move_posts_to new_topic
       watch_new_topic
+      update_topic_excerpt new_topic
       new_topic
     end
     enqueue_jobs(topic)
@@ -56,6 +57,10 @@ class PostMover
   end
 
   private
+
+  def update_topic_excerpt(topic)
+    topic.update_excerpt(topic.first_post.excerpt_for_topic)
+  end
 
   def move_posts_to(topic)
     Guardian.new(user).ensure_can_see! topic

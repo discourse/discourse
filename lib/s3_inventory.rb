@@ -67,6 +67,10 @@ class S3Inventory
               .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
               .where("#{table_name}.etag IS NULL")
 
+            exists_with_different_etag = missing_uploads
+              .joins("LEFT JOIN #{table_name} inventory2 ON inventory2.url = #{model.table_name}.url")
+              .where("inventory2.etag IS NOT NULL").pluck(:id)
+
             # marking as verified/not verified
             id_threshold_clause = model == Upload ? " AND model_table.id > #{model::SEEDED_ID_THRESHOLD}" : ""
             DB.exec(<<~SQL, inventory_date
@@ -86,10 +90,18 @@ class S3Inventory
 
             if (missing_count = missing_uploads.count) > 0
               missing_uploads.select(:id, :url).find_each do |upload|
-                log upload.url
+                if exists_with_different_etag.include?(upload.id)
+                  log "#{upload.url} has different etag"
+                else
+                  log upload.url
+                end
               end
 
               log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
+              if exists_with_different_etag.present?
+                log "#{exists_with_different_etag.count} of these are caused by differing etags"
+                log "Null the etag column and re-run for automatic backfill"
+              end
             end
 
             Discourse.stats.set("missing_s3_#{model.table_name}", missing_count)

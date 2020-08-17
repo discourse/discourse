@@ -1,4 +1,4 @@
-import { alias, match, gt } from "@ember/object/computed";
+import { alias, gt } from "@ember/object/computed";
 import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -24,8 +24,6 @@ export default Component.extend(CardContentsBase, CleansUp, {
   showBadges: setting("enable_badges"),
 
   postStream: alias("topic.postStream"),
-  viewingTopic: match("currentPath", /^topic\./),
-
   showMoreMembers: gt("moreMembersCount", 0),
 
   group: null,

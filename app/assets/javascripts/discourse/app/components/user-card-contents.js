@@ -12,7 +12,6 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { getOwner } from "@ember/application";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -201,10 +200,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
     composePM(user, post) {
       this._close();
-
-      getOwner(this)
-        .lookup("router:main")
-        .send("composePrivateMessage", user, post);
+      this.composePrivateMessage(user, post);
     },
 
     cancelFilter() {

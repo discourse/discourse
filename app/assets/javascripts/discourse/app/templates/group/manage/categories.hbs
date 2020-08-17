@@ -5,11 +5,11 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-watching"}} {{i18n "user.watched_categories"}}</label>
+    <label>{{d-icon "d-watching"}} {{i18n "groups.notifications.watching.title"}}</label>
 
     {{category-selector
       categories=model.watchingCategories
-      blacklist=selectedCategories
+      blocklist=selectedCategories
       onChange=(action (mut model.watchingCategories))
     }}
 
@@ -19,11 +19,11 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-tracking"}} {{i18n "user.tracked_categories"}}</label>
+    <label>{{d-icon "d-tracking"}} {{i18n "groups.notifications.tracking.title"}}</label>
 
     {{category-selector
       categories=model.trackingCategories
-      blacklist=selectedCategories
+      blocklist=selectedCategories
       onChange=(action (mut model.trackingCategories))
     }}
 
@@ -33,11 +33,11 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-watching-first"}} {{i18n "user.watched_first_post_categories"}}</label>
+    <label>{{d-icon "d-watching-first"}} {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
     {{category-selector
       categories=model.watchingFirstPostCategories
-      blacklist=selectedCategories
+      blocklist=selectedCategories
       onChange=(action (mut model.watchingFirstPostCategories))
     }}
 
@@ -47,11 +47,25 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-muted"}} {{i18n "user.muted_categories"}}</label>
+    <label>{{d-icon "d-regular"}} {{i18n "groups.notifications.regular.title"}}</label>
+
+    {{category-selector
+      categories=model.regularCategories
+      blocklist=selectedCategories
+      onChange=(action (mut model.regularCategories))
+    }}
+
+    <div class="control-instructions">
+      {{i18n "groups.manage.categories.regular_categories_instructions"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label>{{d-icon "d-muted"}} {{i18n "groups.notifications.muted.title"}}</label>
 
     {{category-selector
       categories=model.mutedCategories
-      blacklist=selectedCategories
+      blocklist=selectedCategories
       onChange=(action (mut model.mutedCategories))
     }}
 

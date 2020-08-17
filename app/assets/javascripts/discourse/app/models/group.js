@@ -200,6 +200,14 @@ const Group = RestModel.extend({
     );
   },
 
+  @observes("regular_category_ids")
+  _updateRegularCategories() {
+    this.set(
+      "regularCategories",
+      Category.findByIds(this.regular_category_ids)
+    );
+  },
+
   @observes("muted_category_ids")
   _updateMutedCategories() {
     this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
@@ -240,25 +248,27 @@ const Group = RestModel.extend({
       publish_read_state: this.publish_read_state
     };
 
-    ["muted", "watching", "tracking", "watching_first_post"].forEach(s => {
-      let prop =
-        s === "watching_first_post"
-          ? "watchingFirstPostCategories"
-          : s + "Categories";
+    ["muted", "regular", "watching", "tracking", "watching_first_post"].forEach(
+      s => {
+        let prop =
+          s === "watching_first_post"
+            ? "watchingFirstPostCategories"
+            : s + "Categories";
 
-      let categories = this.get(prop);
+        let categories = this.get(prop);
 
-      if (categories) {
-        attrs[s + "_category_ids"] =
-          categories.length > 0 ? categories.map(c => c.get("id")) : [-1];
+        if (categories) {
+          attrs[s + "_category_ids"] =
+            categories.length > 0 ? categories.map(c => c.get("id")) : [-1];
+        }
+
+        let tags = this.get(s + "_tags");
+
+        if (tags) {
+          attrs[s + "_tags"] = tags.length > 0 ? tags : [""];
+        }
       }
-
-      let tags = this.get(s + "_tags");
-
-      if (tags) {
-        attrs[s + "_tags"] = tags.length > 0 ? tags : [""];
-      }
-    });
+    );
 
     if (this.flair_type === "icon") {
       attrs["flair_icon"] = this.flair_icon;

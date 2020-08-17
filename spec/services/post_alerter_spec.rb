@@ -1098,6 +1098,38 @@ describe PostAlerter do
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
       end
     end
+
+    context "private message" do
+      fab!(:post) { Fabricate(:private_message_post) }
+      fab!(:other_tag) { Fabricate(:tag) }
+      fab!(:other_tag2) { Fabricate(:tag) }
+      fab!(:other_tag3) { Fabricate(:tag) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:staged) { Fabricate(:staged) }
+      fab!(:admin) { Fabricate(:admin) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.allow_staff_to_tag_pms = true
+        Jobs.run_immediately!
+        TopicUser.change(user.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
+        TopicUser.change(staged.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
+        TopicUser.change(admin.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
+        TagUser.change(staged.id, other_tag.id, TagUser.notification_levels[:watching])
+        TagUser.change(admin.id, other_tag3.id, TagUser.notification_levels[:watching])
+        post.topic.allowed_users << user
+        post.topic.allowed_users << staged
+      end
+
+      it "only notifes staff watching added tag" do
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag.name])).to be true
+        expect(Notification.where(user_id: staged.id).count).to eq(0)
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag2.name])).to be true
+        expect(Notification.where(user_id: admin.id).count).to eq(0)
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag3.name])).to be true
+        expect(Notification.where(user_id: admin.id).count).to eq(1)
+      end
+    end
   end
 
   describe '#extract_linked_users' do

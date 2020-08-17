@@ -1,10 +1,10 @@
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
-import { bind, scheduleOnce, later } from "@ember/runloop";
+import { scheduleOnce, later } from "@ember/runloop";
 import Component from "@ember/component";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { alias } from "@ember/object/computed";
@@ -94,6 +94,7 @@ export default Component.extend({
     scheduleOnce("afterRender", this, this._focusUrl);
   },
 
+  @bind
   _mouseDownHandler(event) {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -110,6 +111,7 @@ export default Component.extend({
     return true;
   },
 
+  @bind
   _clickHandler(event) {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -140,6 +142,7 @@ export default Component.extend({
     return false;
   },
 
+  @bind
   _keydownHandler(event) {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -154,24 +157,17 @@ export default Component.extend({
     this._showUrl($target, url);
   },
 
-  @on("init")
-  _setupHandlers() {
-    this._boundMouseDownHandler = bind(this, this._mouseDownHandler);
-    this._boundClickHandler = bind(this, this._clickHandler);
-    this._boundKeydownHandler = bind(this, this._keydownHandler);
-  },
-
   didInsertElement() {
     this._super(...arguments);
 
     $("html")
-      .on("mousedown.outside-share-link", this._boundMouseDownHandler)
+      .on("mousedown.outside-share-link", this._mouseDownHandler)
       .on(
         "click.discourse-share-link",
         "button[data-share-url], .post-info .post-date[data-share-url]",
-        this._boundClickHandler
+        this._clickHandler
       )
-      .on("keydown.share-view", this._boundKeydownHandler);
+      .on("keydown.share-view", this._keydownHandler);
 
     this.appEvents.on("share:url", this, "_shareUrlHandler");
   },
@@ -180,9 +176,9 @@ export default Component.extend({
     this._super(...arguments);
 
     $("html")
-      .off("click.discourse-share-link", this._boundClickHandler)
-      .off("mousedown.outside-share-link", this._boundMouseDownHandler)
-      .off("keydown.share-view", this._boundKeydownHandler);
+      .off("click.discourse-share-link", this._clickHandler)
+      .off("mousedown.outside-share-link", this._mouseDownHandler)
+      .off("keydown.share-view", this._keydownHandler);
 
     this.appEvents.off("share:url", this, "_shareUrlHandler");
   },

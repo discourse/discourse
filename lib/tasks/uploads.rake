@@ -995,7 +995,7 @@ task "uploads:fix_relative_upload_links" => :environment do
   end
 end
 
-def analyze_missing
+def analyze_missing_s3
   puts "List of posts with missing images:"
   sql = <<~SQL
     SELECT post_id, url, sha1, extension, uploads.id
@@ -1053,18 +1053,48 @@ def analyze_missing
 
 end
 
-task "uploads:analyze_missing" => :environment do
+task "uploads:analyze_missing_s3" => :environment do
   if RailsMultisite::ConnectionManagement.current_db != "default"
-    analyze_missing
+    analyze_missing_s3
   else
     RailsMultisite::ConnectionManagement.each_connection do
-      analyze_missing
+      analyze_missing_s3
     end
   end
 end
 
-def fix_missing
+def fix_missing_s3
   Jobs.run_immediately!
+
+  puts "Attempting to download missing uploads and recreate"
+  ids = Upload.where(verified: false).pluck(:id)
+  ids.each do |id|
+    upload = Upload.find(id)
+
+    tempfile = nil
+
+    begin
+      tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+    rescue => e
+      puts "Failed to download #{upload.url} #{e}"
+    end
+
+    if tempfile
+      puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
+
+      fixed_upload = nil
+      Upload.transaction do
+        upload.update!(sha1: SecureRandom.hex)
+        fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+        raise ActiveRecord::Rollback
+      end
+
+      # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
+      # we may end up breaking posts
+      upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verified: nil)
+    end
+  end
+
   puts "Attempting to automatically fix problem uploads"
   puts
   puts "Rebaking posts with missing uploads, this can take a while as all rebaking runs inline"
@@ -1085,12 +1115,12 @@ def fix_missing
   puts
 end
 
-task "uploads:fix_missing" => :environment do
+task "uploads:fix_missing_s3" => :environment do
   if RailsMultisite::ConnectionManagement.current_db != "default"
-    fix_missing
+    fix_missing_s3
   else
     RailsMultisite::ConnectionManagement.each_connection do
-      fix_missing
+      fix_missing_s3
     end
   end
 end

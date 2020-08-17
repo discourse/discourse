@@ -16,7 +16,7 @@ QUnit.test("As an admin", async assert => {
   await visit("/g/discourse/manage/categories");
 
   assert.ok(
-    find(".groups-notifications-form .category-selector").length === 4,
+    find(".groups-notifications-form .category-selector").length === 5,
     "it should display category inputs"
   );
 });
@@ -27,7 +27,7 @@ QUnit.test("As a group owner", async assert => {
   await visit("/g/discourse/manage/categories");
 
   assert.ok(
-    find(".groups-notifications-form .category-selector").length === 4,
+    find(".groups-notifications-form .category-selector").length === 5,
     "it should display category inputs"
   );
 });

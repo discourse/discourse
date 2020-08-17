@@ -21,7 +21,9 @@ class SearchIndexer
     HtmlScrubber.scrub(html, strip_diacritics: strip_diacritics)
   end
 
-  def self.update_index(table: , id: , raw_data:)
+  def self.update_index(table: , id: , a_weight: nil, b_weight: nil, c_weight: nil, d_weight: nil)
+    raw_data = [a_weight, b_weight, c_weight, d_weight]
+
     search_data = raw_data.map do |data|
       Search.prepare_data(data || "", :index)
     end
@@ -76,60 +78,73 @@ class SearchIndexer
       end
 
     params = {
-      raw_data: indexed_data,
-      id: id,
-      locale: SiteSetting.default_locale,
-      version: const_get("#{table.upcase}_INDEX_VERSION"),
-      tsvector: tsvector,
+      "raw_data" => indexed_data,
+      "#{foreign_key}" => id,
+      "locale" => SiteSetting.default_locale,
+      "version" => const_get("#{table.upcase}_INDEX_VERSION"),
+      "search_data" => tsvector,
     }
 
-    # Would be nice to use AR here but not sure how to execut Postgres functions
-    # when inserting data like this.
-    rows = DB.exec(<<~SQL, params)
-       UPDATE #{table_name}
-       SET
-          raw_data = :raw_data,
-          locale = :locale,
-          search_data = (:tsvector)::tsvector,
-          version = :version
-       WHERE #{foreign_key} = :id
-    SQL
-
-    if rows == 0
-      DB.exec(<<~SQL, params)
-        INSERT INTO #{table_name}
-        (#{foreign_key}, search_data, locale, raw_data, version)
-        VALUES (:id, (:tsvector)::tsvector, :locale, :raw_data, :version)
-      SQL
+    table_name.camelize.constantize.upsert(params)
+  rescue => e
+    if Rails.env.test?
+      raise
+    else
+      # TODO is there any way we can safely avoid this?
+      # best way is probably pushing search indexer into a dedicated process so it no longer happens on save
+      # instead in the post processor
+      Discourse.warn_exception(
+        e,
+        message: "Unexpected error while indexing #{table} for search"
+      )
     end
-  rescue
-    # TODO is there any way we can safely avoid this?
-    # best way is probably pushing search indexer into a dedicated process so it no longer happens on save
-    # instead in the post processor
   end
 
   def self.update_topics_index(topic_id, title, cooked)
-    scrubbed_cooked = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
-
     # a bit inconsitent that we use title as A and body as B when in
     # the post index body is D
-    update_index(table: 'topic', id: topic_id, raw_data: [title, scrubbed_cooked])
+    update_index(
+      table: 'topic',
+      id: topic_id,
+      a_weight: title,
+      b_weight: scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
+    )
   end
 
   def self.update_posts_index(post_id, topic_title, category_name, topic_tags, cooked)
-    update_index(table: 'post', id: post_id, raw_data: [topic_title, category_name, topic_tags, scrub_html_for_search(cooked)])
+    update_index(
+      table: 'post',
+      id: post_id,
+      a_weight: topic_title,
+      b_weight: category_name,
+      c_weight: topic_tags,
+      d_weight: scrub_html_for_search(cooked)
+    )
   end
 
   def self.update_users_index(user_id, username, name)
-    update_index(table: 'user', id: user_id, raw_data: [username, name])
+    update_index(
+      table: 'user',
+      id: user_id,
+      a_weight: username,
+      b_weight: name
+    )
   end
 
   def self.update_categories_index(category_id, name)
-    update_index(table: 'category', id: category_id, raw_data: [name])
+    update_index(
+      table: 'category',
+      id: category_id,
+      a_weight: name
+    )
   end
 
   def self.update_tags_index(tag_id, name)
-    update_index(table: 'tag', id: tag_id, raw_data: [name.downcase])
+    update_index(
+      table: 'tag',
+      id: tag_id,
+      a_weight: name.downcase
+    )
   end
 
   def self.queue_category_posts_reindex(category_id)

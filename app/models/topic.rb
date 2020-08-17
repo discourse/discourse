@@ -115,6 +115,8 @@ class Topic < ActiveRecord::Base
         image_upload &&
         SiteSetting.create_thumbnails &&
         image_upload.filesize < SiteSetting.max_image_size_kb.kilobytes &&
+        image_upload.read_attribute(:width) &&
+        image_upload.read_attribute(:height) &&
         enqueue_if_missing &&
         Discourse.redis.set(thumbnail_job_redis_key([]), 1, nx: true, ex: 1.minute)
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id })

@@ -1,11 +1,16 @@
 import { isEmpty } from "@ember/utils";
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
-import { queryParams } from "discourse/controllers/discovery-sortable";
+import {
+  changeSort,
+  resetParams,
+  queryParams
+} from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
+import { inject as service } from "@ember/service";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
@@ -83,6 +88,7 @@ export default function(filter, extras) {
   extras = extras || {};
   return DiscourseRoute.extend(
     {
+      screenTrack: service(),
       queryParams,
 
       beforeModel() {
@@ -131,15 +137,6 @@ export default function(filter, extras) {
           expandGloballyPinned: true
         };
 
-        const params = model.get("params");
-        if (params && Object.keys(params).length) {
-          if (params.order !== undefined) {
-            topicOpts.order = params.order;
-          }
-          if (params.ascending !== undefined) {
-            topicOpts.ascending = params.ascending;
-          }
-        }
         this.controllerFor("discovery/topics").setProperties(topicOpts);
         this.controllerFor("navigation/default").set(
           "canCreateTopic",
@@ -153,6 +150,11 @@ export default function(filter, extras) {
           controller: "discovery/topics",
           outlet: "list-container"
         });
+      },
+
+      actions: {
+        changeSort,
+        resetParams
       }
     },
     extras

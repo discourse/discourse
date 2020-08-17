@@ -14,19 +14,12 @@ export default DropdownSelectBoxComponent.extend({
     const items = [
       {
         id: "showAddMembersModal",
-        name: I18n.t("groups.add_members.title"),
+        name: I18n.t("groups.add_members.title", {
+          group_name: this.groupName
+        }),
         icon: "user-plus"
       }
     ];
-
-    if (this.currentUser.admin) {
-      items.push({
-        id: "showBulkAddModal",
-        name: I18n.t("admin.groups.bulk_add.title"),
-        icon: "users"
-      });
-    }
-
     return items;
   }),
 

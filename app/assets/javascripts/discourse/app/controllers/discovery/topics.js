@@ -1,19 +1,30 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { alias, not, gt, empty, notEmpty, equal } from "@ember/object/computed";
+import {
+  alias,
+  not,
+  gt,
+  empty,
+  notEmpty,
+  equal,
+  readOnly
+} from "@ember/object/computed";
 import { inject as controller } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
-import { queryParams } from "discourse/controllers/discovery-sortable";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import { endWith } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 import TopicList from "discourse/models/topic-list";
 import Topic from "discourse/models/topic";
+import { routeAction } from "discourse/helpers/route-action";
+import { inject as service } from "@ember/service";
+import deprecated from "discourse-common/lib/deprecated";
 
 const controllerOpts = {
   discovery: controller(),
   discoveryTopics: controller("discovery/topics"),
+  router: service(),
 
   period: null,
 
@@ -21,27 +32,19 @@ const controllerOpts = {
   showTopicPostBadges: not("discoveryTopics.new"),
   redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
-  order: null,
-  ascending: false,
   expandGloballyPinned: false,
   expandAllPinned: false,
 
-  resetParams() {
-    Object.keys(this.get("model.params") || {}).forEach(key => {
-      // controllerOpts contains the default values for parameters, so use them. They might be null.
-      this.set(key, controllerOpts[key]);
-    });
-  },
+  order: readOnly("model.params.order"),
+  ascending: readOnly("model.params.ascending"),
 
   actions: {
-    changeSort(sortBy) {
-      if (sortBy === this.order) {
-        this.toggleProperty("ascending");
-        this.model.refreshSort(sortBy, this.ascending);
-      } else {
-        this.setProperties({ order: sortBy, ascending: false });
-        this.model.refreshSort(sortBy, false);
-      }
+    changeSort() {
+      deprecated(
+        "changeSort has been changed from an (action) to a (route-action)",
+        { since: "2.6.0", dropFrom: "2.7.0" }
+      );
+      return routeAction("changeSort", this.router._router, ...arguments)();
     },
 
     // Show newly inserted topics
@@ -56,7 +59,7 @@ const controllerOpts = {
 
     refresh() {
       const filter = this.get("model.filter");
-      this.resetParams();
+      this.send("resetParams");
 
       // Don't refresh if we're still loading
       if (this.get("discovery.loading")) {
@@ -174,12 +177,5 @@ const controllerOpts = {
     });
   }
 };
-
-Object.keys(queryParams).forEach(function(p) {
-  // If we don't have a default value, initialize it to null
-  if (typeof controllerOpts[p] === "undefined") {
-    controllerOpts[p] = null;
-  }
-});
 
 export default DiscoveryController.extend(controllerOpts, BulkTopicSelection);

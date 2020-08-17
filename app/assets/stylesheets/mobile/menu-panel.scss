@@ -1,5 +1,11 @@
 .hamburger-panel .menu-panel.slide-in {
   left: 0;
+  .panel-body {
+    display: block;
+  }
+  .panel-body-contents {
+    max-height: unset;
+  }
 }
 .header-cloak {
   height: 100vh;

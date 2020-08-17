@@ -11,7 +11,18 @@ export default DiscourseRoute.extend({
       if (results.found) {
         // Avoid polluting the history stack for external links
         transition.abort();
-        DiscourseURL.routeTo(results.target_url);
+
+        let url = results.target_url;
+
+        if (transition._discourse_anchor) {
+          // Remove the anchor from the permalink if present
+          url = url.split("#")[0];
+
+          // Add the anchor from the transition
+          url += `#${transition._discourse_anchor}`;
+        }
+
+        DiscourseURL.routeTo(url);
         return "";
       } else {
         // 404 body HTML

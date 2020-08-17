@@ -1059,18 +1059,22 @@ describe Group do
     let(:category1) { Fabricate(:category) }
     let(:category2) { Fabricate(:category) }
     let(:category3) { Fabricate(:category) }
+    let(:category4) { Fabricate(:category) }
     let(:tag1) { Fabricate(:tag) }
     let(:tag2) { Fabricate(:tag) }
     let(:tag3) { Fabricate(:tag) }
+    let(:tag4) { Fabricate(:tag) }
     let(:synonym1) { Fabricate(:tag, target_tag: tag1) }
     let(:synonym2) { Fabricate(:tag, target_tag: tag2) }
 
     it "can set category notifications" do
       group.watching_category_ids = [category1.id, category2.id]
       group.tracking_category_ids = [category3.id]
+      group.regular_category_ids = [category4.id]
       group.save!
       expect(GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id)).to contain_exactly(category1.id, category2.id)
       expect(GroupCategoryNotificationDefault.lookup(group, :tracking).pluck(:category_id)).to eq([category3.id])
+      expect(GroupCategoryNotificationDefault.lookup(group, :regular).pluck(:category_id)).to eq([category4.id])
 
       new_group = Fabricate.build(:group)
       new_group.watching_category_ids = [category1.id, category2.id]
@@ -1097,9 +1101,11 @@ describe Group do
     end
 
     it "can set tag notifications" do
+      group.regular_tags = [tag4.name]
       group.watching_tags = [tag1.name, tag2.name]
       group.tracking_tags = [tag3.name]
       group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :regular).pluck(:tag_id)).to eq([tag4.id])
       expect(GroupTagNotificationDefault.lookup(group, :watching).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id)
       expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to eq([tag3.id])
 
