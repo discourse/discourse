@@ -27,9 +27,12 @@ class DirectoryItemsController < ApplicationController
     end
 
     order = params[:order] || DirectoryItem.headings.first
+    dir = params[:asc] ? 'ASC' : 'DESC'
+
     if DirectoryItem.headings.include?(order.to_sym)
-      dir = params[:asc] ? 'ASC' : 'DESC'
       result = result.order("directory_items.#{order} #{dir}")
+    elsif params[:order] === 'username'
+      result = result.order("users.#{order} #{dir}")
     end
 
     if period_type == DirectoryItem.period_types[:all]
@@ -72,6 +75,7 @@ class DirectoryItemsController < ApplicationController
     if result.present? && current_user.present? && page == 0
 
       position = result.index { |r| r.user_id == current_user.id }
+      print "\nDhondu\n", position, "\nJust chill\n"
 
       # Don't show the record unless you're not in the top positions already
       if (position || 10) >= 10
