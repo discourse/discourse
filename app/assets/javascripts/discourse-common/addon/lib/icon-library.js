@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
-import { isDevelopment } from "discourse-common/config/environment";
+import Session from "discourse/models/session";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -111,14 +111,11 @@ function iconClasses(icon, params) {
 }
 
 function warnIfMissing(id) {
-  if (
-    typeof Discourse !== "undefined" &&
-    isDevelopment() &&
-    warnMissingIcons &&
-    Discourse.SvgIconList &&
-    Discourse.SvgIconList.indexOf(id) === -1
-  ) {
-    console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
+  if (warnMissingIcons) {
+    let iconList = Session.currentProp("svgIconList");
+    if (iconList.indexOf(id) === -1) {
+      console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
+    }
   }
 }
 

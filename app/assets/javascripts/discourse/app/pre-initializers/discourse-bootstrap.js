@@ -5,7 +5,8 @@ import RSVP from "rsvp";
 import {
   setEnvironment,
   isTesting,
-  isProduction
+  isProduction,
+  isDevelopment
 } from "discourse-common/config/environment";
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
@@ -82,10 +83,10 @@ export default {
     }
 
     app.HighlightJSPath = setupData.highlightJsPath;
-    app.SvgSpritePath = setupData.svgSpritePath;
+    Session.currentProp("svgSpritePath", setupData.svgSpritePath);
 
-    if (app.Environment === "development") {
-      app.SvgIconList = setupData.svgIconList;
+    if (isDevelopment()) {
+      Session.currentProp("svgIconList", setupData.svgIconList);
     }
 
     if (setupData.s3BaseUrl) {
