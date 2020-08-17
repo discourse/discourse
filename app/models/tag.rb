@@ -5,7 +5,8 @@ class Tag < ActiveRecord::Base
   include HasDestroyedWebHook
 
   RESERVED_TAGS = [
-    'none'
+    'none',
+    'constructor' # prevents issues with javascript's constructor of objects
   ]
 
   validates :name,
