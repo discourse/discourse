@@ -29,7 +29,7 @@ class TwitterApi
               .select { |v| v['content_type'] == 'video/mp4' }
               .sort { |v| v['bitrate'] }.last # choose highest bitrate
 
-            if url = video_to_display['url']
+            if video_to_display && url = video_to_display['url']
               width = m['sizes']['large']['w']
               height = m['sizes']['large']['h']
 
