@@ -3,7 +3,9 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button label="post.controls.delete_topic_confirm_modal_yes"
+  {{d-button action=(action "deleteTopic")
+             disabled=buttonDisabled
+             label="post.controls.delete_topic_confirm_modal_yes"
              class="btn-danger"}}
   {{d-button action=(route-action "closeModal")
              label="post.controls.delete_topic_confirm_modal_no"
