@@ -113,7 +113,7 @@ function iconClasses(icon, params) {
 function warnIfMissing(id) {
   if (warnMissingIcons) {
     let iconList = Session.currentProp("svgIconList");
-    if (iconList.indexOf(id) === -1) {
+    if (iconList && iconList.indexOf(id) === -1) {
       console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
     }
   }
