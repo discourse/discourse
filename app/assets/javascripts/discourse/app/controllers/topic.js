@@ -1285,11 +1285,15 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   deleteTopic() {
-    showModal("delete-topic-confirm", {
-      model: this.model,
-      title: "topic.actions.delete"
-    });
-    // this.model.destroy(this.currentUser);
+    if (
+      this.model.views >
+      this.siteSettings.min_topic_view_amount_for_delete_confirmation
+    ) {
+      showModal("delete-topic-confirm", {
+        model: this.model,
+        title: "topic.actions.delete"
+      });
+    } else this.model.destroy(this.currentUser);
   },
 
   subscribe() {

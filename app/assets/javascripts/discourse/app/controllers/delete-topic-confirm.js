@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -8,6 +9,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 // The modal will display only if the topic exceeds a certain amount of views
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
+  minViews: alias("siteSettings.min_topic_view_amount_for_delete_confirmation"),
   deleting: false,
 
   @discourseComputed("deleting")

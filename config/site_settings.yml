@@ -681,6 +681,9 @@ posting:
       ja: 3
       zh_CN: 3
       zh_TW: 3
+  min_topic_view_amount_for_delete_confirmation:
+    client: true
+    default: 5000
   min_topic_title_length:
     client: true
     default: 15
