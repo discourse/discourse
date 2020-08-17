@@ -36,6 +36,7 @@ class TwitterApi
               attributes =
                 if m['type'] == 'animated_gif'
                   %w{
+                    playsinline
                     loop
                     muted
                     autoplay
