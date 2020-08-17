@@ -80,10 +80,7 @@ class Post < ActiveRecord::Base
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
 
   scope :private_posts_for_user, ->(user) {
-    joins("LEFT JOIN topic_allowed_users ON topic_allowed_users.topic_id = posts.topic_id AND topic_allowed_users.user_id = #{user.id.to_i}")
-      .joins("LEFT JOIN group_users ON group_users.user_id = #{user.id.to_i}")
-      .joins("LEFT JOIN topic_allowed_groups ON topic_allowed_groups.topic_id = posts.topic_id AND topic_allowed_groups.group_id = group_users.group_id")
-      .where("topic_allowed_users.topic_id IS NOT NULL OR topic_allowed_groups.topic_id IS NOT NULL")
+    where("posts.topic_id IN (#{Topic::PRIVATE_MESSAGES_SQL})", user_id: user.id)
   }
 
   scope :by_newest, -> { order('created_at DESC, id DESC') }
