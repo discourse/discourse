@@ -24,9 +24,28 @@ class TwitterApi
             if large = m['sizes']['large']
               result << "<div class='tweet-images'><img class='tweet-image' src='#{m['media_url_https']}' width='#{large['w']}' height='#{large['h']}'></div>"
             end
-          elsif m['type'] == 'video'
-            if large = m['sizes']['large']
-              result << "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0' allowfullscreen></iframe></div>"
+          elsif m['type'] == 'video' || m['type'] == 'animated_gif'
+            video_to_display = m['video_info']['variants']
+              .select { |v| v['content_type'] == 'video/mp4' }
+              .sort { |v| v['bitrate'] }.last # choose highest bitrate
+
+            if url = video_to_display['url']
+              width = m['sizes']['large']['w']
+              height = m['sizes']['large']['h']
+
+              result << <<~HTML
+                <div class='tweet-images'>
+                  <div class='aspect-image-full-size' style='--aspect-ratio:#{width}/#{height};'>
+                    <video class='tweet-video' controls playsinline 
+                      width='#{width}' 
+                      height='#{height}'
+                      poster='#{m['media_url_https']}'
+                      #{'loop' if m['type'] == 'animated_gif'}>
+                      <source src='#{url}' type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              HTML
             end
           end
         end
