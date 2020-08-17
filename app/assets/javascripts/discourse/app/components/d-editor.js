@@ -407,7 +407,10 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-input")).autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
-      afterComplete: () => this._focusTextArea(),
+      afterComplete: value => {
+        this.set("value", value);
+        return this._focusTextArea();
+      },
       transformComplete: obj => {
         return obj.text;
       },
