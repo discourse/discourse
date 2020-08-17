@@ -14,7 +14,7 @@ class Sanitize
         'embed' => %w[height src type width],
         'iframe' => %w[allowfullscreen frameborder height scrolling src width data-original-href],
         'source' => %w[src type],
-        'video' => %w[controls height loop width autoplay muted poster],
+        'video' => %w[controls height loop width autoplay muted poster controlslist playsinline],
         'path' => %w[d],
         'svg' => ['aria-hidden', 'width', 'height', 'viewbox'],
         'div' => [:data], # any data-* attributes,
