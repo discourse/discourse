@@ -825,13 +825,10 @@ class Search
       posts = posts.where("topics.archetype =  ?", Archetype.private_message)
 
        unless @guardian.is_admin?
-         posts = posts.private_posts_for_user(@guardian.user)
+         posts = private_posts_for_user(posts, @guardian.user)
        end
     elsif type_filter === "all_topics"
-      private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
-      private_posts = private_posts.private_posts_for_user(@guardian.user)
-
-      posts = posts.where("topics.archetype <> ?", Archetype.private_message).or(private_posts)
+      posts = public_private_posts_for_user(posts, @guardian.user)
     else
       posts = posts.where("topics.archetype <> ?", Archetype.private_message)
     end
@@ -879,7 +876,7 @@ class Search
       if @search_context.present?
         if @search_context.is_a?(User)
           if type_filter === "private_messages"
-            @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
+            @direct_pms_only ? posts : private_posts_for_user(posts, @search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end
@@ -989,7 +986,7 @@ class Search
 
       if aggregate_search
         posts = posts.select("#{data_ranking} rank", "topics.bumped_at topic_bumped_at")
-          .order("rank DESC", "topic_bumped_at DESC")
+          .order("rank DESC", "topic_bumped_at DESC", "posts.id DESC")
 
         aggregate_relation = aggregate_relation
           .select(
@@ -998,7 +995,7 @@ class Search
           )
           .order("rank DESC", "topic_bumped_at DESC")
       else
-        posts = posts.order("#{data_ranking} DESC", "topics.bumped_at DESC")
+        posts = posts.order("#{data_ranking} DESC", "topics.bumped_at DESC", "posts.id DESC")
       end
     end
 
@@ -1162,6 +1159,8 @@ class Search
     query.includes(topic: topic_eager_loads)
   end
 
+  private
+
   # Limited for performance reasons since `TS_HEADLINE` is slow when the text
   # document is too long.
   MAX_LENGTH_FOR_HEADLINE = 2500
@@ -1204,4 +1203,22 @@ class Search
     end
   end
 
+  def joins_topic_allowed_users_or_groups(posts, user)
+    posts.joins("LEFT JOIN topic_allowed_users ON topic_allowed_users.topic_id = posts.topic_id AND topic_allowed_users.user_id = #{user.id.to_i}")
+      .joins("LEFT JOIN group_users ON group_users.user_id = #{user.id.to_i}")
+      .joins("LEFT JOIN topic_allowed_groups ON topic_allowed_groups.topic_id = posts.topic_id AND topic_allowed_groups.group_id = group_users.group_id")
+  end
+
+  def private_posts_for_user(posts, user)
+    joins_topic_allowed_users_or_groups(posts, user)
+      .where("topic_allowed_users.topic_id IS NOT NULL OR topic_allowed_groups.topic_id IS NOT NULL")
+  end
+
+  def public_private_posts_for_user(posts, user)
+    joins_topic_allowed_users_or_groups(posts, user)
+      .where(
+        "(topics.archetype <> :archetype) OR (topics.archetype = :archetype AND (topic_allowed_users.topic_id IS NOT NULL OR topic_allowed_groups.topic_id IS NOT NULL))",
+        archetype: Archetype.private_message
+      )
+  end
 end

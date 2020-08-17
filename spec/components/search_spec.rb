@@ -364,7 +364,7 @@ describe Search do
 
         # private only
         results = Search.execute('in:all cheese', guardian: Guardian.new(u1))
-        expect(results.posts).to contain_exactly(private_post1)
+        expect(results.posts).to contain_exactly(private_post2)
 
         # public only
         results = Search.execute('in:all eggs', guardian: Guardian.new(u1))
@@ -394,13 +394,13 @@ describe Search do
 
         # same keyword for different users
         results = Search.execute('in:all ham', guardian: Guardian.new(u1))
-        expect(results.posts).to contain_exactly(public_post1, private_post1)
+        expect(results.posts).to contain_exactly(public_post2, private_post1)
 
         results = Search.execute('in:all ham', guardian: Guardian.new(u2))
-        expect(results.posts).to contain_exactly(public_post1, private_post1)
+        expect(results.posts).to contain_exactly(public_post2, private_post1)
 
         results = Search.execute('in:all ham', guardian: Guardian.new(u3))
-        expect(results.posts).to contain_exactly(public_post1)
+        expect(results.posts).to contain_exactly(public_post2)
       end
     end
   end
