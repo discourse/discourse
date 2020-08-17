@@ -1354,6 +1354,14 @@ trust:
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
+  min_trust_level_to_allow_profile_background:
+    default: 0
+    client: true
+    enum: "TrustLevelSetting"
+  min_trust_level_to_allow_user_card_background:
+    default: 0
+    client: true
+    enum: "TrustLevelSetting"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   tl1_requires_topics_entered: 5

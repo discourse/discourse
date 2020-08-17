@@ -68,13 +68,13 @@ class UserUpdater
       user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     end
 
-    if attributes[:profile_background_upload_url] == ""
+    if attributes[:profile_background_upload_url] == "" || !guardian.can_upload_profile_header?(user)
       user_profile.profile_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
       user_profile.profile_background_upload_id = upload.id
     end
 
-    if attributes[:card_background_upload_url] == ""
+    if attributes[:card_background_upload_url] == "" || !guardian.can_upload_user_card_background?(user)
       user_profile.card_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
       user_profile.card_background_upload_id = upload.id
