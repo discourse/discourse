@@ -144,7 +144,13 @@ class GroupsController < ApplicationController
 
     if group.update(group_params(automatic: group.automatic))
       GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
-      render json: success_json
+
+      if guardian.can_see?(group)
+        render json: success_json
+      else
+        # They can no longer see the group after changing permissions
+        render json: { route_to: '/g' }
+      end
     else
       render_json_error(group)
     end
