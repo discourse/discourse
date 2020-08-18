@@ -606,6 +606,7 @@ sv:
           watched_categories_instructions: "Bevaka automatiskt alla ämnen i dessa kategorier. Gruppmedlemmar kommer att meddelas om alla nya inlägg och ämnen, och antalet nya inlägg kommer också att visas bredvid ämnet."
           tracked_categories_instructions: "Följ automatiskt alla ämnen i dessa kategorier. En räknare över nya inlägg kommer att visas bredvid ämnet."
           watching_first_post_categories_instructions: "Användarna kommer att meddelas om det första inlägget i varje nytt ämne för dessa kategorier."
+          regular_categories_instructions: "Om dessa kategorier är tystade kommer de inte att tystas för gruppmedlemmar. Användare kommer att meddelas om de nämns eller någon svarar till dem."
           muted_categories_instructions: "Användare kommer inte att meddelas något om nya ämnen i dessa kategorier, och de kommer inte att visas under kategorier eller de senaste ämnessidorna."
         tags:
           title: Taggar
@@ -614,6 +615,7 @@ sv:
           watched_tags_instructions: "Bevaka automatiskt alla ämnen med dessa taggar. Gruppmedlemmar kommer att meddelas om alla nya inlägg och ämnen, och antalet nya inlägg kommer också att visas bredvid ämnet."
           tracked_tags_instructions: "Följ automatiskt alla ämnen med dessa taggar. En räknare över nya inlägg kommer att visas bredvid ämnet."
           watching_first_post_tags_instructions: "Användarna kommer att meddelas om det första inlägget i varje nytt ämne med dessa taggar."
+          regular_tags_instructions: "Om dessa taggar är tystade kommer de inte att tystas för gruppmedlemmar. Användare kommer att meddelas om de nämns eller någon svarar till dem."
           muted_tags_instructions: "Användare kommer inte att meddelas något om nya ämnen med dessa taggar, och de kommer inte att visas i senaste."
         logs:
           title: "Loggar"
@@ -866,6 +868,10 @@ sv:
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       first_notification: "Du har fått din första notifikation! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
+      skip_new_user_tips:
+        description: "Hoppa över nybörjartips och utmärkelser för ny användare"
+        not_first_time: "Är det inte din första gång?"
+        skip_link: "Hoppa över dessa tips"
       theme_default_on_all_devices: "Gör detta till standard-tema för alla mina enheter"
       dark_mode: "Mörkt läge"
       dark_mode_enable: "Aktivera automatiskt färgschema för mörkt läge"

@@ -536,6 +536,8 @@ da:
           credentials:
             username: "Brugernavn"
             password: "Adgangskode"
+          mailboxes:
+            disabled: "deaktiveret"
         membership:
           title: Medlemskab
           access: Adgang
@@ -549,6 +551,8 @@ da:
           details: "Detaljer"
           from: "Fra"
           to: "Til"
+      permissions:
+        title: "Tilladelser"
       public_admission: "Tillad brugere frit at tilmelde sig gruppen (Kræver at det er en offentlig synlig gruppe)"
       public_exit: "Tillad brugere frit at forlade gruppen"
       empty:
@@ -2125,6 +2129,7 @@ da:
         error: "Der opstod en fejl med at flette de valgte indlæg."
       publish_page:
         public: "Offentlig"
+        update: "Opdater"
       change_owner:
         title: "Skift ejer"
         action: "skift ejerskab"
@@ -2463,6 +2468,9 @@ da:
         moderation: "Moderation"
         appearance: "Udseende"
         email: "Email"
+      list_filters:
+        all: "alle emner"
+        none: "ingen underkategorier"
     flagging:
       title: "Tak fordi du hjælper med at holde vores forum civiliseret!"
       action: "Flag indlæg"
@@ -3971,6 +3979,8 @@ da:
           invalid_input: "Inputfelter kan ikke være tomme eller indeholde lodret bjælketegn."
         default_categories:
           modal_yes: "Ja"
+        simple_list:
+          add_item: "Tilføj element..."
       badges:
         title: Badges
         new_badge: Nyt Badge

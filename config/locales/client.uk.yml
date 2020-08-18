@@ -28,8 +28,10 @@ uk:
         millions: "%{number} млн."
     dates:
       time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "Do MMMM"
       long_with_year: "D MMM YYYY, HH:mm"
@@ -312,6 +314,7 @@ uk:
       created: "ви додали закладку для цього допису%{name}"
       not_bookmarked: "додати цей допис до закладок"
       created_with_reminder: "ви додали це повідомлення в закладку із нагадуванням %{date}%{name}"
+      created_with_at_desktop_reminder: "ви додали до закладок цей допис із назвою %{name}, з нагадуванням наступного разу, коли ви відкриєте це повідомлення на настільному комп’ютері"
       remove: "Вилучити закладку"
       delete: "Видалити закладку"
       confirm_delete: "Ви впевнені, що хочете видалити цю закладку? Нагадування також буде видалено."
@@ -621,6 +624,12 @@ uk:
     groups:
       member_added: "Додано"
       member_requested: "Запит подано"
+      add_members:
+        title: "Додати учасників до %{group_name}"
+        description: "Ви також можете додати список учасників – значення, розділені комами."
+        usernames: "Введіть імена користувачів або адреси електронної пошти"
+        input_placeholder: "Ім'я користувачів або адреси електронної пошти"
+        notify_users: "Сповістити користувачів"
       requests:
         title: "Запити"
         reason: "Причина"
@@ -662,6 +671,24 @@ uk:
         membership:
           title: Членство
           access: Доступ
+        categories:
+          title: Категорії
+          long_title: "Типові сповіщення категорій"
+          description: "Коли користувачі додаються в цю групу, в налаштування сповіщень категорії будуть встановлені ці стандартні налаштування. Після цього вони зможуть змінити їх."
+          watched_categories_instructions: "Автоматично відстежувати всі теми в цих категоріях. Учасники групи будуть повідомлені про всі нові повідомлення і теми, а також кількість нових повідомлень з'явиться поруч з темою."
+          tracked_categories_instructions: "Автоматично відстежувати всі теми в цих категоріях. Поруч із темою з’явиться кількість нових повідомлень."
+          watching_first_post_categories_instructions: "Користувачі будуть повідомлені про перше повідомлення в кожній новій темі цієї категорії."
+          regular_categories_instructions: "Якщо ці категорії відключені, вони будуть ігноровані для членів групи. Користувачі будуть повідомлені, тільки якщо вони згадуються або хтось відповість їм."
+          muted_categories_instructions: "Користувачі не будуть повідомлені про нові теми в цих категоріях, і вони не будуть відображатися на сторінках категорій або останніх тем."
+        tags:
+          title: Теги
+          long_title: "Стандартні сповіщення тегів"
+          description: "Коли користувачі додаються до цієї групи, їх налаштування сповіщень тегів буде встановлено на ці налаштування за замовчуванням. Після цього вони зможуть їх змінити."
+          watched_tags_instructions: "Автоматично відстежувати всі теми з цими тегами. Учасники групи будуть повідомлені про всі нові повідомлення і теми, а також кількість нових повідомлень з'явиться поруч з темою."
+          tracked_tags_instructions: "Автоматично відстежувати всі теми з цими тегами. Поруч із темою з'явиться кількість нових повідомлень."
+          watching_first_post_tags_instructions: "Користувачі будуть повідомлені про перше повідомлення в кожній новій темі з цими тегами."
+          regular_tags_instructions: "Якщо ці теги вимкнено, то будуть ігноровані для членів групи. Користувачі будуть повідомлені, якщо вони згадуються або хтось відповість їм."
+          muted_tags_instructions: "Користувачі не будуть повідомлені про нові теми з цими тегами, і вони не з’являться в списку останніх тем."
         logs:
           title: "Журнали"
           when: "Коли"
@@ -672,6 +699,10 @@ uk:
           details: "Деталі"
           from: "Від"
           to: "До"
+      permissions:
+        title: "Дозволи"
+        none: "Немає категорій, пов'язаних з цією групою."
+        description: "Учасники цієї групи мають доступ до цих категорій"
       public_admission: "Дозволити користувачам вільно приєднуватися до групи (потрібна публічна видимість групи)"
       public_exit: "Дозволити користувачам вільно покидати групу"
       empty:
@@ -811,6 +842,7 @@ uk:
       latest_by: "Останні від"
       toggle_ordering: "показати/сховати елемент керування для впорядкування"
       subcategories: "Підкатегорії"
+      muted: "Приглушені категорії"
       topic_sentence:
         one: "%{count} тема"
         few: "%{count} теми"
@@ -917,6 +949,8 @@ uk:
       first_notification: "Ваше перше сповіщення! Оберіть його, щоб почати."
       dynamic_favicon: "Показувати кількість на іконці браузера"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
+      dark_mode: "Темний режим"
+      dark_mode_enable: "Увімкнути автоматично темний режим"
       text_size_default_on_all_devices: "Зробити цей розмір тексту базовим для всіх моїх пристроїв"
       allow_private_messages: "Дозволити іншим користувачам надсилати мені особисті повідомлення"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
@@ -975,7 +1009,9 @@ uk:
       muted_users_instructions: "Не показувати всі сповіщення та особисті повідомлення від цих користувачів."
       allowed_pm_users: "Дозволено"
       allowed_pm_users_instructions: "Дозволити лише ОП цих користувачів."
+      allow_private_messages_from_specific_users: "Дозволити лише конкретним користувачам надсилати мені особисті повідомлення"
       ignored_users: "Ігноровано"
+      ignored_users_instructions: "Заборонити всі повідомлення, сповіщення та ПП від цих користувачів."
       tracked_topics_link: "Показати"
       automatically_unpin_topics: "Автоматично відкріпляти теми, коли я доходжу до кінця."
       apps: "Програми"
@@ -984,6 +1020,7 @@ uk:
       api_approved: "Схвалено:"
       api_last_used_at: "Минуле використання:"
       theme: "Стиль"
+      save_to_change_theme: 'Тему буде оновлено після натискання "%{save_text}"'
       home: "Базова домашня сторінка"
       staged: "Поетапний"
       staff_counters:
@@ -1019,6 +1056,7 @@ uk:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
         error: "(помилка)"
+        emoji: "lock emoji"
         action: "Надіслати лист для відновлення паролю"
         set_password: "Встановити пароль"
         choose_new: "Вибрати новий пароль"
@@ -1065,6 +1103,8 @@ uk:
         edit: "Редагувати"
         edit_title: "Редагувати другий фактор"
         edit_description: "Назва другого фактора"
+        enable_security_key_description: |
+          Якщо у вас підготовлено <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">фізичний ключ безпеки</a> , натисніть кнопку "Зареєструвати" нижче.
         totp:
           title: "Автентифікатори на токенах"
           add: "Додати автентифікатор"
@@ -1100,6 +1140,7 @@ uk:
         success_staff: "Ми надіслали листа на вашу поточну скриньку. Будь ласка, виконайте інструкції щодо підтвердження."
       change_avatar:
         title: "Змінити своє зображення профілю"
+        gravatar: "На основі <a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>"
         gravatar_title: "Змінити ваш аватар на сайті на %{gravatarName}"
         gravatar_failed: "Ми не змогли знайти %{gravatarName} з цією адресою електронної пошти."
         refresh_gravatar_title: "Оновити свій %{gravatarName}"
@@ -1305,6 +1346,7 @@ uk:
         links_tab_with_count: "Посилання (%{count})"
         link_url: "Посилання"
         link_created_at: "Створено"
+        link_redemption_stats: "Прийняті запрошення"
         link_groups: Групи
         link_expires_at: Закінчується
         create: "Надіслати запрошення"
@@ -1606,6 +1648,7 @@ uk:
         backup_code: "Замість цього використовуйте резервний код"
     invites:
       accept_title: "Запрошення"
+      emoji: "envelope emoji"
       welcome_to: "Ласкаво просимо до сайта %{site_name}!"
       invited_by: "Ви були запрошені:"
       social_login_available: "Ви також зможете входити через соціальні мережі, використовуючи цю адресу електронної пошти."
@@ -1658,6 +1701,9 @@ uk:
         many: "Введіть хоча б %{count} елементів."
         other: "Введіть хоча б %{count} елемент."
       invalid_selection_length: "Вибір повинен містити не менше %{count} символів."
+      components:
+        categories_admin_dropdown:
+          title: "Випадаючий список категорій"
     date_time_picker:
       from: Від
       to: До
@@ -1800,6 +1846,9 @@ uk:
           label: Відповісти в новій пов’язаної темі
           desc: Створити нову тему, пов’язану з цією темою
           confirm: У вас збережений нова чернетка теми, яка буде перезаписана, якщо ви створите пов’язану тему.
+        reply_as_new_group_message:
+          label: Відповісти як нове повідомлення групи
+          desc: Створіть нове приватне повідомлення з тими ж одержувачами
         reply_as_private_message:
           label: Сворити нове
           desc: Створити нове приватне повідомлення
@@ -1829,6 +1878,11 @@ uk:
           few: "%{count} непрочитаних повідомлень"
           many: "%{count} непрочитаних повідомлень"
           other: "%{count} непрочитаних повідомлень"
+        high_priority:
+          one: "%{count} непрочитане сповіщення з високим пріоритетом"
+          few: "%{count} непрочитаних сповіщень з високим пріоритетом"
+          many: "%{count} непрочитаних сповіщень з високим пріоритетом"
+          other: "%{count} непрочитані сповіщення з високим пріоритетом"
       title: "повідомлення при згадці @псевдоніма, відповідях на ваші пости та теми, повідомлення та т.д."
       none: "Повідомлення не можуть бути завантажені."
       empty: "Повідомлення не знайдені."
@@ -1894,6 +1948,8 @@ uk:
         posted: "новий пост"
         moved_post: "повідомлення переміщено"
         linked: "пов’язаний"
+        bookmark_reminder: "Нагадування про закладку"
+        bookmark_reminder_with_name: "Нагадування закладки - %{name}"
         granted_badge: "нагорода отримана"
         invited_to_topic: "запрошений в тему"
         group_mentioned: "згадана група"
@@ -1903,6 +1959,8 @@ uk:
         liked_consolidated: "нові симпатії"
         post_approved: "повідомлення затверджено"
         membership_request_consolidated: "нові запити на членство"
+        reaction: "нова реакція"
+        votes_released: "Опитування було опубліковано"
     upload_selector:
       title: "Додати зображення"
       title_with_attachments: "Додати зображення або файл"
@@ -2139,6 +2197,7 @@ uk:
       group_request_sent: "Ваш запит на членство в групі був відправлений. Вам повідомлять, коли буде схвалено."
       unread_indicator: "Жоден учасник ще не прочитав останній пост цієї теми."
       read_more_MF: "У вас залишилося { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитана</a> } other { <a href='{basePath}/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 нова</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># нових</a> тем} }, або {CATEGORY, select, true {подивіться інші теми в розділі {catLink}} false {{latestLink}} other {}}"
+      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Переглянути всі категорії
       view_latest_topics: перегляньте останні теми
       suggest_create_topic: Чому б не створити тему?
@@ -2355,6 +2414,7 @@ uk:
         success: "Ми запросили цього користувача взяти участь в бесіді."
         success_group: "Ми запросили цю групу взяти участь в бесіді."
         error: "Даруйте, під час запрошення цього користувача сталася помилка."
+        not_allowed: "Вибачте, цього користувача не можна запросити."
         group_name: "назва групи"
       controls: "Управління темою"
       invite_reply:
@@ -3067,6 +3127,8 @@ uk:
         this_month: "Місяць"
         this_week: "Тиждень"
         today: "Today"
+        other_periods: "дивитися TOP:"
+    browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер занадто старий для цього сайту</a>. Будь ласка, <a href="https://browsehappy.com">оновіть браузер</a> для повноцінної роботи з сайтом.'
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповідати / Бачити"
@@ -3122,6 +3184,8 @@ uk:
         title: "Редагування"
         return: "%{shortcut} Повернутися в редактор"
         fullscreen: "%{shortcut} Повноекранний редактор"
+      bookmarks:
+        title: "Закладка"
       actions:
         title: "Дії"
         bookmark_topic: "%{shortcut} Додати/видалити з заклодок"
@@ -3144,6 +3208,8 @@ uk:
         print: "%{shortcut} Друкувати тему"
         defer: "%{shortcut} Відкласти тему"
         topic_admin_actions: "%{shortcut} Відкрити дії адміністратора теми"
+      search_menu:
+        title: "Меню «Пошук»"
     badges:
       earned_n_times:
         one: "Заробив цю нагороду %{count} раз"
@@ -3316,10 +3382,12 @@ uk:
     forced_anonymous: "Через надмірне навантаження, це тимчасово показується всім, як якщо б користувач вийшов з системи."
     footer_nav:
       back: "Назад"
+      forward: "Вперед"
       share: "Поширити"
       dismiss: "Відкинути"
     safe_mode:
       enabled: "Включено безпечний режим, щоб вийти з безпечного режиму, закрийте поточне вікно браузера"
+    image_removed: "(зображення видалено)"
   admin_js:
     type_to_filter: "введіть, щоб фільтрувати..."
     admin:
@@ -3401,6 +3469,7 @@ uk:
           view_table: "Таблиця"
           view_graph: "Графік"
           refresh_report: "Оновити звіт"
+          daily: За день
           monthly: Щомісяця
           weekly: Щотижня
           dates: "Дати (UTC)"
@@ -3741,6 +3810,7 @@ uk:
           theme_name: "Назва теми"
           component_name: "Назва компонента"
           themes_intro: "Виберіть існуючу тему, або встановіть нову, щоб почати роботу"
+          themes_intro_emoji: "woman artist emoji"
           beginners_guide_title: "Керівництво для початківців по використанню Discourse Тем"
           developers_guide_title: "Керівництво розробника по темам Discourse"
           browse_themes: "Перегляд Тем спільноти "

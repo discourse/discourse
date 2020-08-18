@@ -150,6 +150,7 @@ fr:
       reset_trigger: "tutoriel"
       title: "Certificat d'achèvement du tutoriel pour les nouveaux utilisateurs"
       cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel nouvel utilisateur"
+      delete_reason: "L'utilisateur a ignoré les conseils du nouvel utilisateur"
       hello:
         title: "Bienvenue !"
         message: |-

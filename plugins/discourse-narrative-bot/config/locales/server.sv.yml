@@ -151,6 +151,7 @@ sv:
       reset_trigger: "handledning"
       title: "Ny användares certifikat för genomförd handledning "
       cert_title: "Som erkännande för att den nya användarhandledningen har slutförts"
+      delete_reason: "Användaren hoppade över användartipsen för nya"
       hello:
         title: "Hej!"
         message: |-
