@@ -65,40 +65,33 @@ export default {
     app.SiteSettings = PreloadStore.get("siteSettings");
     app.ThemeSettings = PreloadStore.get("themeSettings");
     app.LetterAvatarVersion = setupData.letterAvatarVersion;
-    app.MarkdownItURL = setupData.markdownItUrl;
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};
     window.Logster.enabled = setupData.enableJsErrorReporting === "true";
 
-    Session.currentProp("serviceWorkerURL", setupData.serviceWorkerUrl);
-    Session.currentProp("assetVersion", setupData.assetVersion);
-
-    Session.currentProp(
-      "disableCustomCSS",
-      setupData.disableCustomCss === "true"
-    );
+    let session = Session.current();
+    session.serviceWorkerURL = setupData.serviceWorkerUrl;
+    session.assetVersion = setupData.assetVersion;
+    session.disableCustomCSS = setupData.disableCustomCss === "true";
+    session.markdownItURL = setupData.markdownItUrl;
 
     if (setupData.safeMode) {
-      Session.currentProp("safe_mode", setupData.safeMode);
+      session.safe_mode = setupData.safeMode;
     }
 
-    Session.currentProp(
-      "darkModeAvailable",
+    session.darkModeAvailable =
       document.head.querySelectorAll(
         'link[media="(prefers-color-scheme: dark)"]'
-      ).length > 0
-    );
+      ).length > 0;
 
-    Session.currentProp(
-      "darkColorScheme",
+    session.darkColorScheme =
       getComputedStyle(document.documentElement)
         .getPropertyValue("--scheme-type")
-        .trim() === "dark"
-    );
+        .trim() === "dark";
 
-    Session.currentProp("highlightJsPath", setupData.highlightJsPath);
-    Session.currentProp("svgSpritePath", setupData.svgSpritePath);
+    session.highlightJsPath = setupData.highlightJsPath;
+    session.svgSpritePath = setupData.svgSpritePath;
 
     if (isDevelopment()) {
       setIconList(setupData.svgIconList);
