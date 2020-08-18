@@ -1,7 +1,5 @@
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
-import pretender from "helpers/create-pretender";
-import groupFixtures from "fixtures/group-fixtures";
 
 acceptance("Managing Group Membership", {
   loggedIn: true
@@ -10,15 +8,7 @@ acceptance("Managing Group Membership", {
 QUnit.test("As an admin", async assert => {
   updateCurrentUser({ can_create_group: true });
 
-  let groupResponse = _.clone(groupFixtures["/groups/discourse.json"]);
-  groupResponse.group.can_admin_group = true;
-  pretender.get("/groups/discourse.json", () => [
-    200,
-    { "Content-Type": "application/json" },
-    groupResponse
-  ]);
-
-  await visit("/g/discourse/manage/membership");
+  await visit("/g/alternative-group/manage/membership");
 
   assert.ok(
     find('label[for="automatic_membership"]').length === 1,
@@ -84,14 +74,6 @@ QUnit.test("As an admin", async assert => {
 
 QUnit.test("As a group owner", async assert => {
   updateCurrentUser({ moderator: false, admin: false });
-
-  let groupResponse = _.clone(groupFixtures["/groups/discourse.json"]);
-  groupResponse.group.can_admin_group = false;
-  pretender.get("/groups/discourse.json", () => [
-    200,
-    { "Content-Type": "application/json" },
-    groupResponse
-  ]);
 
   await visit("/g/discourse/manage/membership");
 

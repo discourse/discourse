@@ -831,10 +831,8 @@ describe GroupsController do
 
     context "when user is a site moderator" do
       before do
-        user.update!(moderator: true)
-        group.remove(user)
         SiteSetting.moderators_manage_categories_and_groups = true
-        sign_in(user)
+        sign_in(moderator)
       end
 
       it 'should not be able to update the group if the SiteSetting is false' do
