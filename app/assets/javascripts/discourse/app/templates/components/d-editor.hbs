@@ -54,4 +54,9 @@
   </div>
 </div>
 
-{{emoji-picker active=emojiPickerIsActive isEditorFocused=isEditorFocused emojiSelected=(action "emojiSelected")}}
+{{emoji-picker
+  isActive=emojiPickerIsActive
+  isEditorFocused=isEditorFocused
+  emojiSelected=(action "emojiSelected")
+  onEmojiPickerClose=(action (mut emojiPickerIsActive) false)
+}}
