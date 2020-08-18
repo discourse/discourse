@@ -7,7 +7,7 @@ import { inject as service } from "@ember/service";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { emojiUrlFor } from "discourse/lib/text";
-import createPopper from "discourse/lib/popper";
+import { createPopper } from "@popperjs/core";
 import {
   extendedEmojiList,
   isSkinTonableEmoji,
