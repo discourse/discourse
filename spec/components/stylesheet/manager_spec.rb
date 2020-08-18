@@ -311,7 +311,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(16) # (2 themes x 7 targets) + (2 themes x 1 color scheme)
+      expect(results.size).to eq(17) # (2 themes x 7 targets) + 3 color schemes (2 themes, 1 base)
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
       end
@@ -326,7 +326,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(21) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets) + (2 themes x 1 color scheme)
+      expect(results.size).to eq(22) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets) + 3 color schemes (2 themes, 1 base)
 
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)

@@ -145,9 +145,9 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name)
+    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name, :color_scheme_id)
     themes << nil
-    themes.each do |id, name|
+    themes.each do |id, name, color_scheme_id|
       [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin].each do |target|
         theme_id = id || SiteSetting.default_theme_id
         next if target =~ THEME_REGEX && theme_id == -1
@@ -158,14 +158,11 @@ class Stylesheet::Manager
         builder.compile(force: true)
         cache[cache_key] = nil
       end
-    end
 
-    cs_ids = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:color_scheme_id)
-    ColorScheme.where(id: cs_ids).each do |cs|
-      target = COLOR_SCHEME_STYLESHEET
-      STDERR.puts "precompile target: #{target} #{cs.name}"
+      scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
+      STDERR.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
 
-      builder = self.new(target, nil, cs)
+      builder = self.new(COLOR_SCHEME_STYLESHEET, id, scheme)
       builder.compile(force: true)
       clear_color_scheme_cache!
     end
