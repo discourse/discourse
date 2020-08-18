@@ -1083,23 +1083,32 @@ def fix_missing_s3
       puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
 
       fixed_upload = nil
+      fix_error = nil
       Upload.transaction do
-        upload.update!(sha1: SecureRandom.hex)
-        fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+        begin
+          upload.update!(sha1: SecureRandom.hex)
+          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+        rescue => fix_error
+          # invalid extension is the most common issue
+        end
         raise ActiveRecord::Rollback
       end
 
-      # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
-      # we may end up breaking posts
-      upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verified: nil)
+      if fix_error
+        puts "Failed to fix upload #{e}"
+      else
+        # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
+        # we may end up breaking posts
+        upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verified: nil)
 
-      OptimizedImage.where(upload_id: upload.id).destroy_all
-      rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
+        OptimizedImage.where(upload_id: upload.id).destroy_all
+        rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
 
-      if rebake_ids.present?
-        Post.where(id: rebake_ids).each do |post|
-          puts "rebake post #{post.id}"
-          post.rebake!
+        if rebake_ids.present?
+          Post.where(id: rebake_ids).each do |post|
+            puts "rebake post #{post.id}"
+            post.rebake!
+          end
         end
       end
     end
