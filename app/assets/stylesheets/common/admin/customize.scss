@@ -447,6 +447,12 @@
       bottom: 0;
     }
 
+    .ace_placeholder {
+      font-family: inherit;
+      font-size: $font-up-1;
+      color: $primary-high;
+    }
+
     .status-actions {
       float: right;
       margin-top: 7px;

@@ -33,6 +33,15 @@ export default Component.extend({
     }
   },
 
+  @observes("placeholder")
+  placeholderChanged() {
+    if (this._editor) {
+      this._editor.setOptions({
+        placeholder: this.placeholder
+      });
+    }
+  },
+
   @observes("disabled")
   disabledStateChanged() {
     this.changeDisabledState();
@@ -72,7 +81,6 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-
     loadScript("/javascripts/ace/ace.js").then(() => {
       window.ace.require(["ace/ace"], loadedAce => {
         loadedAce.config.set("loadWorkerFromBlob", false);
@@ -85,7 +93,7 @@ export default Component.extend({
 
         editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
-        editor.setOptions({ fontSize: "14px" });
+        editor.setOptions({ fontSize: "14px", placeholder: this.placeholder });
         editor.getSession().setMode("ace/mode/" + this.mode);
         editor.on("change", () => {
           this._skipContentChangeEvent = true;

@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -30,7 +31,15 @@ export default Component.extend({
   activeSectionMode(targetName, fieldName) {
     if (["settings", "translations"].includes(targetName)) return "yaml";
     if (["extra_scss"].includes(targetName)) return "scss";
+    if (["color_definitions"].includes(fieldName)) return "scss";
     return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
+  },
+
+  @discourseComputed("currentTargetName", "fieldName")
+  placeholder(targetName, fieldName) {
+    return fieldName && fieldName === "color_definitions"
+      ? I18n.t("admin.customize.theme.color_definitions.placeholder")
+      : "";
   },
 
   @discourseComputed("fieldName", "currentTargetName", "theme")

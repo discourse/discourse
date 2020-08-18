@@ -3994,6 +3994,10 @@ en:
           embedded_scss:
             text: "Embedded CSS"
             title: "Enter custom CSS to deliver with embedded version of comments"
+          color_definitions:
+            text: "Color Definitions"
+            title: "Enter custom color definitions (advanced users only)"
+            placeholder: "\r\nUse this stylesheet to add custom colors to the list of CSS custom properties.\r\n\r\nExample: \r\n\r\n:root {\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\r\n}\r\n\r\nPrefixing the property names is highly recommended to avoid conflicts with plugins and/or core."
           head_tag:
             text: "</head>"
             title: "HTML that will be inserted before the </head> tag"
