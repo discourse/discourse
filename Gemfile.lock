@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/nbianca/discourse-fonts.git
+  revision: dba37b04fbf358a5fd727f27d3e35bc0237254b6
+  specs:
+    discourse-fonts (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -461,6 +467,7 @@ DEPENDENCIES
   css_parser
   diffy
   discourse-ember-source (~> 3.12.2)
+  discourse-fonts!
   discourse_image_optim
   email_reply_trimmer
   ember-handlebars-template (= 0.8.0)
