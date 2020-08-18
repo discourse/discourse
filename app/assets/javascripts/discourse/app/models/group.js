@@ -294,12 +294,11 @@ const Group = RestModel.extend({
     return ajax(`/groups/${this.id}`, {
       type: "PUT",
       data: { group: this.asJSON() }
-    })
-      .then(data => {
-        if (data.route_to) {
-          DiscourseURL.routeTo(data.route_to);
-        }
-      });
+    }).then(data => {
+      if (data.route_to) {
+        DiscourseURL.routeTo(data.route_to);
+      }
+    });
   },
 
   destroy() {
