@@ -201,11 +201,23 @@ en:
         like_not_found: |-
           Did you forget to like :heart: my [post?](%{url}) :crying_cat_face:
         not_found: |-
-          Looks like you didn’t upload an image so I’ve choosen a picture that I’m _sure_ you will enjoy.
+          Looks like you didn’t upload an image so I’ve chosen a picture that I’m _sure_ you will enjoy.
 
           `%{image_url}`
 
           Try uploading that one next, or pasting the link in on a line by itself!
+
+      likes:
+        instructions: |-
+          Here’s a picture of a unicorn:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          If you like it (and who wouldn’t!) go ahead and press the like :heart: button below this post to let me know.
+        reply: |-
+          Thanks for liking my post!
+        not_found: |-
+          Did you forget to like :heart: my [post?](%{url}) :crying_cat_face:
 
       formatting:
         instructions: |-

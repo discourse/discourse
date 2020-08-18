@@ -542,6 +542,105 @@ describe DiscourseNarrativeBot::NewUserNarrative do
       end
     end
 
+    # TODO - ensure there are tests for the images and likes prerequisites
+
+    describe 'likes tutorial' do
+      let(:post_2) { Fabricate(:post, topic: topic) }
+
+      before do
+        narrative.set_data(user,
+          state: :tutorial_likes,
+          topic_id: topic.id,
+          last_post_id: post_2.id,
+          track: described_class.to_s
+        )
+      end
+
+      describe 'when post is not in the right topic' do
+        it 'should not do anything' do
+          other_post
+          narrative.expects(:enqueue_timeout_job).with(user).never
+
+          expect { narrative.input(:reply, user, post: other_post) }.to_not change { Post.count }
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_likes)
+        end
+      end
+
+      describe 'when user replies to the topic' do
+        describe 'when reply contains the skip trigger' do
+          it 'should create the right reply' do
+            post.update!(raw: skip_trigger)
+            described_class.any_instance.expects(:enqueue_timeout_job).with(user)
+
+            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+
+            new_post = Post.last
+
+            expect(new_post.raw).to eq(I18n.t(
+              'discourse_narrative_bot.new_user_narrative.flag.instructions',
+              guidelines_url: Discourse.base_url + '/guidelines',
+              about_url: Discourse.base_url + '/about',
+              base_uri: ''
+            ))
+
+            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+          end
+
+          # TODO - copy this for prerequisites
+
+          describe 'when allow_flagging_staff is false' do
+            it 'should go to the right state' do
+              SiteSetting.allow_flagging_staff = false
+              post.update!(raw: skip_trigger)
+
+              DiscourseNarrativeBot::TrackSelector.new(
+                :reply,
+                user,
+                post_id: post.id
+              ).select
+
+              expect(narrative.get_data(user)[:state].to_sym)
+                .to eq(:tutorial_search)
+            end
+          end
+        end
+
+        it 'should create the right reply' do
+          narrative.expects(:enqueue_timeout_job).with(user).once
+
+          narrative.input(:reply, user, post: post)
+          new_post = Post.last
+
+          expect(new_post.raw).to eq(I18n.t(
+            'discourse_narrative_bot.new_user_narrative.likes.not_found',
+             url: post_2.url, base_uri: ''
+          ))
+
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_likes)
+        end
+      end
+
+      describe 'when the post is liked' do
+        it 'should create the right reply' do
+          PostActionCreator.like(user, post_2)
+
+          expected_raw = <<~RAW
+            #{I18n.t("discourse_narrative_bot.new_user_narrative.likes.reply")}
+
+            #{I18n.t(
+              'discourse_narrative_bot.new_user_narrative.flag.instructions',
+              guidelines_url: "#{Discourse.base_url}/guidelines",
+              about_url: "#{Discourse.base_url}/about",
+              base_uri: ''
+            )}
+          RAW
+
+          expect(Post.last.raw).to eq(expected_raw.chomp)
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+        end
+      end
+    end
+
     describe 'fomatting tutorial' do
       before do
         narrative.set_data(user, state: :tutorial_formatting, topic_id: topic.id)
@@ -661,6 +760,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
             expect(new_post.raw).to include("/forum/plugins/discourse-narrative-bot/images")
           end
         end
+
+        # TODO - the right reply depends on whether images are enabled or not
+        #      - see 'when user mentions is disabled' <-- copy that
 
         it 'should create the right reply' do
           post.update!(
