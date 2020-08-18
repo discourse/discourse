@@ -146,7 +146,7 @@ export default Component.extend({
   @action
   onEmojiHover(event) {
     const img = event.target;
-    if (!img.classList.contains("emoji") || !img.tagName === "IMG") {
+    if (!img.classList.contains("emoji") || img.tagName !== "IMG") {
       return false;
     }
 
@@ -159,7 +159,7 @@ export default Component.extend({
   @action
   onEmojiSelection(event) {
     const img = event.target;
-    if (!img.classList.contains("emoji") || !img.tagName === "IMG") {
+    if (!img.classList.contains("emoji") || img.tagName !== "IMG") {
       return false;
     }
 
