@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
   def up
     # Delete post_search_data of orphaned posts
