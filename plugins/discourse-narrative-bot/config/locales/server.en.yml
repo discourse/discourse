@@ -156,6 +156,7 @@ en:
       reset_trigger: "tutorial"
       title: "New user tutorial completion certificate"
       cert_title: "In recognition of successful completion of the new user tutorial"
+      delete_reason: "User skipped the new user tips"
 
       hello:
         title: "Greetings!"

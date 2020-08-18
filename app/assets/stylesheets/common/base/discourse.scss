@@ -443,6 +443,12 @@ table {
   top: 60px;
   width: 230px;
   line-height: $line-height-medium;
+
+  .skip-new-user-tips {
+    font-size: $font-down-1;
+    color: var(--secondary);
+    text-decoration: underline;
+  }
 }
 
 .ring {

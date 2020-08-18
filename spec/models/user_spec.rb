@@ -1763,6 +1763,14 @@ describe User do
         expect(user.read_first_notification?).to eq(true)
       end
     end
+
+    describe 'when user skipped new user tips' do
+      it 'should return the right value' do
+        user.user_option.update!(skip_new_user_tips: true)
+
+        expect(user.read_first_notification?).to eq(true)
+      end
+    end
   end
 
   describe "#featured_user_badges" do
