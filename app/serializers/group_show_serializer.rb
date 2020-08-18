@@ -12,11 +12,11 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def include_is_group_owner?
-    authenticated?
+    authenticated? && fetch_group_user&.owner
   end
 
   def is_group_owner
-    fetch_group_user&.owner
+    true
   end
 
   def include_is_group_owner_display?
