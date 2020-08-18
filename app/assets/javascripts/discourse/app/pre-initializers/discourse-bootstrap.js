@@ -64,7 +64,6 @@ export default {
     setEnvironment(setupData.environment);
     app.SiteSettings = PreloadStore.get("siteSettings");
     app.ThemeSettings = PreloadStore.get("themeSettings");
-    app.LetterAvatarVersion = setupData.letterAvatarVersion;
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};
