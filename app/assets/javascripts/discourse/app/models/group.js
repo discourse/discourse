@@ -9,7 +9,6 @@ import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
-import DiscourseURL from "discourse/lib/url";
 
 const Group = RestModel.extend({
   user_count: 0,
@@ -294,10 +293,6 @@ const Group = RestModel.extend({
     return ajax(`/groups/${this.id}`, {
       type: "PUT",
       data: { group: this.asJSON() }
-    }).then(data => {
-      if (data.route_to) {
-        DiscourseURL.routeTo(data.route_to);
-      }
     });
   },
 

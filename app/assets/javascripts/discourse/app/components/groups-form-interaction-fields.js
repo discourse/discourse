@@ -77,7 +77,7 @@ export default Component.extend({
     "model.can_admin_group",
     "currentUser.can_create_group"
   )
-  canAdminGroup(is_created, can_admin, can_create) {
-    return (!is_created && can_create) || (is_created && can_admin);
+  canAdminGroup(isCreated, canAdmin, canCreate) {
+    return (!isCreated && canCreate) || (isCreated && canAdmin);
   }
 });

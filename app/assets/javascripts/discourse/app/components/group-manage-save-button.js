@@ -3,6 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
+import DiscourseURL from "discourse/lib/url";
 
 export default Component.extend({
   saving: null,
@@ -24,7 +25,11 @@ export default Component.extend({
 
       return group
         .save()
-        .then(() => {
+        .then(data => {
+          if (data.route_to) {
+            DiscourseURL.routeTo(data.route_to);
+          }
+
           this.set("saved", true);
         })
         .catch(popupAjaxError)
