@@ -1,23 +1,23 @@
 {{#if isActive}}
   <div class="emoji-picker">
     <div class="emoji-picker-category-buttons">
-        {{#if recentEmojis.length}}
-          <button data-section="recent" {{action "onCategorySelection" "recent"}} class="btn btn-default category-button emoji">
-            {{replace-emoji ":star:"}}
-          </button>
-        {{/if}}
+      {{#if recentEmojis.length}}
+        <button data-section="recent" {{action "onCategorySelection" "recent"}} class="btn btn-default category-button emoji">
+          {{replace-emoji ":star:"}}
+        </button>
+      {{/if}}
 
-        <% JSON.parse(File.read("lib/emoji/groups.json")).each.with_index do |group, group_index| %>
-          <button data-section="<%= group["name"] %>" {{action "onCategorySelection" "<%= group["name"] %>"}} class="btn btn-default category-button emoji">
-            {{replace-emoji ":<%= group["tabicon"] %>:"}}
-          </button>
-        <% end %>
+      <% JSON.parse(File.read("lib/emoji/groups.json")).each.with_index do |group, group_index| %>
+        <button data-section="<%= group["name"] %>" {{action "onCategorySelection" "<%= group["name"] %>"}} class="btn btn-default category-button emoji">
+          {{replace-emoji ":<%= group["tabicon"] %>:"}}
+        </button>
+      <% end %>
 
-        {{#each-in customEmojis as |group emojis|}}
-          <button data-section={{concat "custom-" group}} {{action "onCategorySelection" (concat "custom-" group)}} class="btn btn-default category-button emoji">
-            {{replace-emoji (concat ":" emojis.firstObject.code ":")}}
-          </button>
-        {{/each-in}}
+      {{#each-in customEmojis as |group emojis|}}
+        <button data-section={{concat "custom-" group}} {{action "onCategorySelection" (concat "custom-" group)}} class="btn btn-default category-button emoji">
+          {{replace-emoji (concat ":" emojis.firstObject.code ":")}}
+        </button>
+      {{/each-in}}
     </div>
 
     <div class="emoji-picker-content">
