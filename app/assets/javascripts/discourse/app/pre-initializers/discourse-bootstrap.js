@@ -38,8 +38,6 @@ export default {
       });
     }
 
-    app.CDN = setupData.cdn;
-
     let baseUrl = setupData.baseUrl;
     Object.defineProperty(app, "BaseUrl", {
       get() {
@@ -96,8 +94,6 @@ export default {
     }
 
     if (setupData.s3BaseUrl) {
-      app.S3CDN = setupData.s3Cdn;
-      app.S3BaseUrl = setupData.s3BaseUrl;
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
     }
 
