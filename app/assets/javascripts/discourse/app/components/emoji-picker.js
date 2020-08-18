@@ -1,3 +1,4 @@
+import { bind } from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -66,6 +67,8 @@ export default Component.extend({
   @action
   onShow() {
     schedule("afterRender", () => {
+      document.addEventListener("click", this.handleOutsideClick);
+
       const emojiPicker = document.querySelector(".emoji-picker");
       if (!emojiPicker) return;
 
@@ -110,6 +113,7 @@ export default Component.extend({
 
   @action
   onClose() {
+    document.removeEventListener("click", this.handleOutsideClick);
     this.onEmojiPickerClose && this.onEmojiPickerClose();
   },
 
@@ -251,5 +255,12 @@ export default Component.extend({
       },
       { threshold: 1 }
     );
+  },
+
+  @bind
+  handleOutsideClick(event) {
+    if (!document.querySelector(".emoji-picker").contains(event.target)) {
+      this.onClose();
+    }
   }
 });
