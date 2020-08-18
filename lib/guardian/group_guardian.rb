@@ -4,7 +4,7 @@
 module GroupGuardian
 
   # Creating Method
-  def can_create_group?(parent = nil)
+  def can_create_group?
     is_admin? ||
     (
       SiteSetting.moderators_manage_categories_and_groups &&

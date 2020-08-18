@@ -37,7 +37,7 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def create
-    guardian.ensure_can_create!(Group)
+    guardian.ensure_can_create_group!
 
     attributes = group_params.to_h.except(:owner_usernames, :usernames)
     group = Group.new(attributes)
