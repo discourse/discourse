@@ -3646,12 +3646,24 @@ en:
         continue: Continue
         use_global_key: Global Key (allows all actions)
         scopes:
+          description: |
+            When using scopes, you can restrict an API key to a specific set of endpoints. 
+            You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
           resource: Resource
           action: Action
           allowed_parameters: Allowed Parameters
           optional_allowed_parameters: Allowed Parameters (optional)
           any_parameter: (any parameter)
+          allowed_urls: Allowed URLs
+          descriptions:
+            topics:
+              read: |
+                Read a topic or a specific post in it. RSS is also supported.
+              write: |
+                Create a new topic or post to an existing one.
+              read_lists: |
+                Read topic lists like top, new, latest, etc. RSS is also supported.
 
       web_hooks:
         title: "Webhooks"

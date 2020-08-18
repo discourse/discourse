@@ -6,7 +6,7 @@ class ApiKeyScope < ActiveRecord::Base
 
   class << self
     def list_actions
-      actions = []
+      actions = %w[list#category_feed]
 
       TopTopic.periods.each do |p|
         actions.concat(["list#category_top_#{p}", "list#top_#{p}", "list#top_#{p}_feed"])
@@ -18,11 +18,20 @@ class ApiKeyScope < ActiveRecord::Base
     end
 
     def default_mappings
-      {
+      write_actions = %w[posts#create]
+      read_actions = %w[topics#show topics#feed]
+
+      @default_mappings ||= {
         topics: {
-          write: { actions: %w[posts#create topics#feed], params: %i[topic_id] },
-          read: { actions: %w[topics#show], params: %i[topic_id], aliases: { topic_id: :id } },
-          read_lists: { actions: list_actions, params: %i[category_id], aliases: { category_id: :category_slug_path_with_id } }
+          write: { actions: write_actions, params: %i[topic_id], urls: find_urls(write_actions) },
+          read: {
+            actions: read_actions, params: %i[topic_id],
+            aliases: { topic_id: :id }, urls: find_urls(read_actions)
+          },
+          read_lists: {
+            actions: list_actions, params: %i[category_id],
+            aliases: { category_id: :category_slug_path_with_id }, urls: find_urls(list_actions)
+          }
         }
       }
     end
@@ -32,7 +41,23 @@ class ApiKeyScope < ActiveRecord::Base
 
       default_mappings.tap do |mappings|
         plugin_mappings.each do |mapping|
+          mapping[:urls] = find_urls(mapping[:actions])
+
           mappings.deep_merge!(mapping)
+        end
+      end
+    end
+
+    def find_urls(actions)
+      Rails.application.routes.routes.reduce([]) do |memo, route|
+        defaults = route.defaults
+        action = "#{defaults[:controller].to_s}##{defaults[:action]}"
+        path = route.path.spec.to_s.gsub(/\(\.:format\)/, '')
+        api_supported_path = path.end_with?('.rss') || route.path.requirements[:format]&.match?('json')
+        excluded_paths = %w[/new-topic /new-message /exception]
+
+        memo.tap do |m|
+          m << path if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
         end
       end
     end
