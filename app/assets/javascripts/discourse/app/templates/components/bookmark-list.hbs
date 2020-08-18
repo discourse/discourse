@@ -1,5 +1,5 @@
 {{#conditional-loading-spinner condition=loading}}
-  {{#load-more selector=".bookmark-list .bookmark-list-item" action=(action "loadMoreBookmarks")}}
+  {{#load-more selector=".bookmark-list .bookmark-list-item" action=loadMore}}
     <table class="topic-list bookmark-list">
       <thead>
         {{#if site.mobileView}}
@@ -45,7 +45,8 @@
                 {{topic-link bookmark}}
               </span>
               {{#if bookmark.excerpt}}
-                <p class="post-excerpt">{{html-safe bookmark.excerpt}}</p>
+                {{!-- template-lint-disable  --}}
+                <p class="post-excerpt" {{on "click" this.screenExcerptForExternalLink}}>{{html-safe bookmark.excerpt}}</p>
               {{/if}}
               <div class="link-bottom-line">
                 {{category-link bookmark.category}}

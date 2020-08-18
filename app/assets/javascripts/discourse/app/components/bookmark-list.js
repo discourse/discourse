@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import {
@@ -10,25 +9,6 @@ import {
 
 export default Component.extend({
   classNames: ["bookmark-list-wrapper"],
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    schedule("afterRender", () => {
-      this.element.addEventListener("click", this._wrapperClickHandler);
-    });
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    this.element.removeEventListener("click", this._wrapperClickHandler);
-  },
-
-  @action
-  loadMoreBookmarks() {
-    this.loadMore();
-  },
 
   @action
   removeBookmark(bookmark) {
@@ -45,6 +25,16 @@ export default Component.extend({
         return deleteBookmark();
       }
     });
+  },
+
+  @action
+  screenExcerptForExternalLink(event) {
+    if (event.target && event.target.tagName === "A") {
+      let link = event.target;
+      if (shouldOpenInNewTab(link.href)) {
+        openLinkInNewTab(link);
+      }
+    }
   },
 
   @action
@@ -66,14 +56,5 @@ export default Component.extend({
 
   _removeBookmarkFromList(bookmark) {
     this.content.removeObject(bookmark);
-  },
-
-  _wrapperClickHandler(e) {
-    if (e.target && e.target.tagName === "A") {
-      let link = e.target;
-      if (shouldOpenInNewTab(link.href)) {
-        openLinkInNewTab(link);
-      }
-    }
   }
 });
