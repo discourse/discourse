@@ -17,7 +17,8 @@ export function autoLoadModules(container, registry) {
   });
   let siteSettings = container.lookup("site-settings:main");
   let themeSettings = container.lookup("service:theme-settings");
-  createHelperContext({ siteSettings, themeSettings });
+  let keyValueStore = container.lookup("key-value-store:main");
+  createHelperContext({ siteSettings, themeSettings, keyValueStore });
   registerHelpers(registry);
   registerRawHelpers(RawHandlebars, Handlebars);
 }
