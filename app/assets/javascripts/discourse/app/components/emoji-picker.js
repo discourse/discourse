@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { emojiUrlFor } from "discourse/lib/text";
+import createPopper from "discourse/lib/popper";
 import {
   extendedEmojiList,
   isSkinTonableEmoji,
@@ -81,8 +82,7 @@ export default Component.extend({
       }
 
       if (!this.site.isMobileDevice) {
-        /* global Popper:true */
-        this._popper = Popper.createPopper(
+        this._popper = createPopper(
           document.querySelector(".d-editor-textarea-wrapper"),
           emojiPicker,
           {
