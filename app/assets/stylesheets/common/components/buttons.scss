@@ -51,10 +51,6 @@
   &:active,
   &.btn-active {
     @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
-    // swaps the gradient on active to let dark theme match the light theme
-    @media (prefers-color-scheme: dark) {
-      @include linear-gradient($bg-color 0%, $hover-bg-color 100%);
-    }
   }
   &[disabled],
   &.disabled {
