@@ -818,22 +818,37 @@ class Search
       .joins("LEFT JOIN categories ON categories.id = topics.category_id")
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
-
     posts = posts.where("topics.visible") unless is_topic_search
 
     if type_filter === "private_messages" || (is_topic_search && @search_context.private_message?)
-      posts = posts.where("topics.archetype =  ?", Archetype.private_message)
+      posts = posts
+        .where(
+          "topics.archetype = ? AND post_search_data.private_message",
+          Archetype.private_message
+        )
 
-       unless @guardian.is_admin?
-         posts = posts.private_posts_for_user(@guardian.user)
-       end
+      unless @guardian.is_admin?
+        posts = posts.private_posts_for_user(@guardian.user)
+      end
     elsif type_filter === "all_topics"
-      private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
-      private_posts = private_posts.private_posts_for_user(@guardian.user)
+      private_posts = posts
+        .where(
+          "topics.archetype = ? AND post_search_data.private_message",
+          Archetype.private_message
+          )
+        .private_posts_for_user(@guardian.user)
 
-      posts = posts.where("topics.archetype <> ?", Archetype.private_message).or(private_posts)
+      posts = posts
+        .where(
+          "topics.archetype <> ? AND NOT post_search_data.private_message",
+          Archetype.private_message
+        )
+        .or(private_posts)
     else
-      posts = posts.where("topics.archetype <> ?", Archetype.private_message)
+      posts = posts.where(
+        "topics.archetype <> ? AND NOT post_search_data.private_message",
+        Archetype.private_message
+      )
     end
 
     if @term.present?
@@ -1161,6 +1176,8 @@ class Search
 
     query.includes(topic: topic_eager_loads)
   end
+
+  private
 
   # Limited for performance reasons since `TS_HEADLINE` is slow when the text
   # document is too long.
