@@ -117,9 +117,13 @@ export function performEmojiUnescape(string, opts) {
     }
     const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
     const url = buildEmojiUrl(emojiVal, opts);
-    const classes = isCustomEmoji(emojiVal, opts)
+    let classes = isCustomEmoji(emojiVal, opts)
       ? "emoji emoji-custom"
       : "emoji";
+
+    if (opts.class) {
+      classes = `${classes} ${opts.class}`;
+    }
 
     const isReplacable =
       (isEmoticon || hasEndingColon || isUnicodeEmoticon) &&
@@ -127,8 +131,8 @@ export function performEmojiUnescape(string, opts) {
 
     return url && isReplacable
       ? `<img src='${url}' ${opts.skipTitle ? "" : `title='${emojiVal}'`} ${
-          opts.lazy ? "loading='lazy'" : ""
-        } alt='${emojiVal}' class='${classes} ${opts.class}'>`
+          opts.lazy ? "loading='lazy' " : ""
+        }alt='${emojiVal}' class='${classes}'>`
       : m;
   });
 }
