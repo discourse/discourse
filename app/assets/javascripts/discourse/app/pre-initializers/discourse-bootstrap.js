@@ -63,7 +63,6 @@ export default {
     setupURL(setupData.cdn, baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
     app.SiteSettings = PreloadStore.get("siteSettings");
-    app.ThemeSettings = PreloadStore.get("themeSettings");
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};
