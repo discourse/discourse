@@ -22,7 +22,7 @@ export default Controller.extend(ModalFunctionality, {
         .destroy(this.currentUser)
         .then(() => {
           this.send("closeModal");
-          this.setProperties({ deleting: false });
+          this.set('deleting', false);
         })
         .catch(() =>
           this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error")
