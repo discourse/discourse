@@ -214,9 +214,18 @@ RSpec.configure do |config|
       SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
     end
 
-    SiteSetting.provider = SiteSettings::LocalProcessProvider.new
+    SiteSetting.provider = TestLocalProcessProvider.new
 
     WebMock.disable_net_connect!
+  end
+
+  class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
+    attr_accessor :current_site
+
+    def initialize
+      super
+      self.current_site = "test"
+    end
   end
 
   class DiscourseMockRedis < MockRedis
