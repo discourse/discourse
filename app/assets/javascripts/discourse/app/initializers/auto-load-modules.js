@@ -5,6 +5,7 @@ import {
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
 import Handlebars from "handlebars";
+import { setOwner } from "@ember/application";
 
 export function autoLoadModules(container, registry) {
   Object.keys(requirejs.entries).forEach(entry => {
@@ -15,10 +16,19 @@ export function autoLoadModules(container, registry) {
       requirejs(entry, null, null, true);
     }
   });
-  let siteSettings = container.lookup("site-settings:main");
-  let themeSettings = container.lookup("service:theme-settings");
-  let keyValueStore = container.lookup("key-value-store:main");
-  createHelperContext({ siteSettings, themeSettings, keyValueStore });
+
+  let context = {
+    siteSettings: container.lookup("site-settings:main"),
+    themeSettings: container.lookup("service:theme-settings"),
+    keyValueStore: container.lookup("key-value-store:main"),
+    currentUser: container.lookup("current-user:main"),
+    site: container.lookup("site:main"),
+    session: container.lookup("session:main"),
+    topicTrackingState: container.lookup("topic-tracking-state:main")
+  };
+  setOwner(context, container);
+
+  createHelperContext(context);
   registerHelpers(registry);
   registerRawHelpers(RawHandlebars, Handlebars);
 }
