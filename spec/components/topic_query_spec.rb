@@ -338,6 +338,11 @@ describe TopicQuery do
       expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
     end
 
+    it 'should include default regular category topics in latest list for anonymous users' do
+      SiteSetting.default_categories_regular = category.id.to_s
+      expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+
     it 'should include topics when filtered by category' do
       topic_query = TopicQuery.new(user, category: topic.category_id)
       expect(topic_query.list_latest.topics.map(&:id)).to include(topic.id)
