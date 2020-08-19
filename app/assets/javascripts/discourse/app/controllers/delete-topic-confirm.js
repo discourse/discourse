@@ -8,27 +8,27 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
 
-  @discourseComputed("isTopicDeleting")
-  buttonTitle(isTopicDeleting) {
-    return isTopicDeleting
+  @discourseComputed("deletingTopic")
+  buttonTitle(deletingTopic) {
+    return deletingTopic
       ? I18n.t("deleting")
       : I18n.t("post.controls.delete_topic_confirm_modal_yes");
   },
 
   onShow() {
-    this.set("isTopicDeleting", false);
+    this.set("deletingTopic", false);
   },
 
   actions: {
     deleteTopic() {
-      this.set("isTopicDeleting", true);
+      this.set("deletingTopic", true);
 
       this.topicController.model
         .destroy(this.currentUser)
         .then(() => this.send("closeModal"))
         .catch(() => {
           this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error");
-          this.set("isTopicDeleting", false);
+          this.set("deletingTopic", false);
         });
 
       return false;
