@@ -30,6 +30,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { escapeExpression } from "discourse/lib/utilities";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -794,8 +795,7 @@ const User = RestModel.extend({
   },
 
   summary() {
-    // let { store } = this; would fail in tests
-    const store = Discourse.__container__.lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
 
     return ajax(userPath(`${this.username_lower}/summary.json`)).then(json => {
       const summary = json.user_summary;
@@ -977,7 +977,7 @@ User.reopenClass(Singleton, {
 
     if (userJson) {
       userJson = User.munge(userJson);
-      const store = Discourse.__container__.lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       return store.createRecord("user", userJson);
     }
     return null;
