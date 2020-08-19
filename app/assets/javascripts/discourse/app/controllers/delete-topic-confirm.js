@@ -26,7 +26,7 @@ export default Controller.extend(ModalFunctionality, {
         })
         .catch(() =>
           this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error")
-        )
+        );
 
       return false;
     }
