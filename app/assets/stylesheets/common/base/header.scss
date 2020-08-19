@@ -8,8 +8,6 @@
   display: flex;
   align-items: center;
   width: 100%;
-  position: absolute;
-  top: 0;
   z-index: z("header");
   background-color: var(--header_background);
   box-shadow: shadow("header");
