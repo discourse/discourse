@@ -144,7 +144,7 @@ GEM
     guess_html_encoding (0.0.11)
     hashdiff (1.0.1)
     hashie (4.1.0)
-    highline (1.7.10)
+    highline (2.0.3)
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
@@ -479,7 +479,7 @@ DEPENDENCIES
   fastimage
   flamegraph
   gc_tracer
-  highline (~> 1.7.0)
+  highline
   htmlentities
   http_accept_language
   json
