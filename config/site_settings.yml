@@ -74,6 +74,18 @@ branding:
     default: ""
     client: true
     type: upload
+  logo_dark:
+    default: ""
+    client: true
+    type: upload
+  logo_small_dark:
+    default: ""
+    client: true
+    type: upload
+  mobile_logo_dark:
+    default: ""
+    client: true
+    type: upload
   large_icon:
     default: ""
     client: true
@@ -245,6 +257,11 @@ basic:
   default_theme_id:
     default: -1
     hidden: true
+  default_dark_mode_color_scheme_id:
+    default: -1
+    type: enum
+    enum: "ColorSchemeSetting"
+    client: true
   relative_date_duration:
     client: true
     default: 30
@@ -802,7 +819,7 @@ posting:
     default: ""
     type: list
   newuser_max_links: 2
-  newuser_max_images:
+  newuser_max_embedded_media:
     client: true
     default: 1
   newuser_max_attachments:
@@ -816,6 +833,7 @@ posting:
       zh_TW: 120
   topic_excerpt_maxlength:
     default: 220
+    max: 999
     locale_default:
       ja: 120
       zh_CN: 120
@@ -1032,29 +1050,21 @@ email:
   enable_imap:
     default: false
     client: true
-    hidden: true
   enable_imap_write:
     default: false
-    hidden: true
   enable_imap_idle:
     default: false
-    hidden: true
   enable_smtp:
     default: false
     client: true
-    hidden: true
   imap_polling_period_mins:
     default: 5
-    hidden: true
   imap_polling_old_emails:
     default: 1000
-    hidden: true
   imap_polling_new_emails:
     default: 250
-    hidden: true
   imap_batch_import_email:
     default: 100
-    hidden: true
   email_prefix: ""
   email_site_title: ""
   disable_emails:
@@ -1175,7 +1185,7 @@ files:
     list_type: compact
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif"
+    default: "jpg|jpeg|png|gif|heic|heif"
     refresh: true
     type: list
     list_type: compact
@@ -1320,8 +1330,6 @@ files:
   decompressed_backup_max_file_size_mb:
     default: 100000
     hidden: true
-  convert_heif_to_jpeg:
-    default: false
 
 trust:
   default_trust_level:
@@ -1355,8 +1363,16 @@ trust:
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
-  min_trust_to_post_images:
+  min_trust_to_post_embedded_media:
     default: 0
+    enum: "TrustLevelSetting"
+  min_trust_level_to_allow_profile_background:
+    default: 0
+    client: true
+    enum: "TrustLevelSetting"
+  min_trust_level_to_allow_user_card_background:
+    default: 0
+    client: true
     enum: "TrustLevelSetting"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
@@ -1436,7 +1452,7 @@ security:
     regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
-  moderators_create_categories: false
+  moderators_manage_categories_and_groups: false
   moderators_view_emails:
     client: true
     default: false
@@ -1788,6 +1804,10 @@ backups:
     hidden: true
 
 search:
+  use_pg_headlines_for_excerpt:
+    default: false
+    hidden: true
+    client: true
   search_ranking_normalization:
     default: "0"
     hidden: true
@@ -2133,6 +2153,7 @@ user_preferences:
   default_other_enable_quoting: true
   default_other_enable_defer: false
   default_other_dynamic_favicon: false
+  default_other_skip_new_user_tips: false
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
     default: 1
@@ -2151,6 +2172,9 @@ user_preferences:
     type: category_list
     default: ""
   default_categories_watching_first_post:
+    type: category_list
+    default: ""
+  default_categories_regular:
     type: category_list
     default: ""
   mute_all_categories_by_default:

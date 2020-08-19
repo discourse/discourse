@@ -366,11 +366,6 @@ class TopicView
       if is_mega_topic?
         {}
       else
-        post_types = [Post.types[:regular], Post.types[:moderator_action]]
-        if @guardian.can_see_whispers?(@topic)
-          post_types << Post.types[:whisper]
-        end
-
         sql = <<~SQL
             SELECT user_id, count(*) AS count_all
               FROM posts
@@ -378,12 +373,13 @@ class TopicView
                AND post_type IN (:post_types)
                AND user_id IS NOT NULL
                AND posts.deleted_at IS NULL
+               AND action_code IS NULL
           GROUP BY user_id
           ORDER BY count_all DESC
              LIMIT #{MAX_PARTICIPANTS}
         SQL
 
-        Hash[*DB.query_single(sql, topic_id: @topic.id, post_types: post_types)]
+        Hash[*DB.query_single(sql, topic_id: @topic.id, post_types: Topic.visible_post_types(@guardian&.user))]
       end
     end
   end
@@ -455,38 +451,40 @@ class TopicView
   end
 
   def reviewable_counts
-    if @reviewable_counts.nil?
-
-      post_ids = @posts.map(&:id)
-
+    @reviewable_counts ||= begin
       sql = <<~SQL
-        SELECT target_id,
+        SELECT
+          target_id,
           MAX(r.id) reviewable_id,
           COUNT(*) total,
           SUM(CASE WHEN s.status = :pending THEN 1 ELSE 0 END) pending
-        FROM reviewables r
-        JOIN reviewable_scores s ON reviewable_id = r.id
-        WHERE r.target_id IN (:post_ids) AND
+        FROM
+          reviewables r
+        JOIN
+          reviewable_scores s ON reviewable_id = r.id
+        WHERE
+          r.target_id IN (:post_ids) AND
           r.target_type = 'Post'
-        GROUP BY target_id
+        GROUP BY
+          target_id
       SQL
 
-      @reviewable_counts = {}
+      counts = {}
 
       DB.query(
         sql,
         pending: ReviewableScore.statuses[:pending],
-        post_ids: post_ids
+        post_ids: @posts.map(&:id)
       ).each do |row|
-        @reviewable_counts[row.target_id] = {
+        counts[row.target_id] = {
           total: row.total,
           pending: row.pending,
           reviewable_id: row.reviewable_id
         }
       end
-    end
 
-    @reviewable_counts
+      counts
+    end
   end
 
   def pending_posts

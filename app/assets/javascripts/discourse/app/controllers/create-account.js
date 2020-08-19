@@ -74,6 +74,14 @@ export default Controller.extend(
       return false;
     },
 
+    @discourseComputed("userFields", "hasAtLeastOneLoginButton")
+    modalBodyClasses(userFields, hasAtLeastOneLoginButton) {
+      const classes = [];
+      if (userFields) classes.push("has-user-fields");
+      if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
+      return classes.join(" ");
+    },
+
     @discourseComputed("authOptions", "authOptions.can_edit_username")
     usernameDisabled(authOptions, canEditUsername) {
       return authOptions && !canEditUsername;

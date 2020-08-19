@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ja:
   js:
@@ -95,9 +94,6 @@ ja:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "投稿 #%{postNumber}"
       close: "閉じる"
-      twitter: "このリンクをTwitterで共有する"
-      facebook: "このリンクをFacebookで共有する"
-      email: "このリンクをメールで送る"
     action_codes:
       public_topic: "トピックを公開しました: %{when} "
       private_topic: "このトピックを %{when} にダイレクトメッセージとして送る"
@@ -238,6 +234,7 @@ ja:
       remove: "ブックマークを削除"
       confirm_clear: "このトピックのすべてのブックマークをクリアしますか?"
       save: "保存"
+      search: "検索"
       reminders:
         later_today: "今日中"
         tomorrow: "明日"
@@ -435,10 +432,6 @@ ja:
         remove_user_as_group_owner: "オーナーから削除する"
     groups:
       member_added: "追加済み"
-      add_members:
-        title: "メンバーを追加する"
-        description: "このグループのメンバーシップを管理する"
-        usernames: "ユーザー名"
       requests:
         title: "リクエスト"
         reason: "理由"
@@ -457,6 +450,11 @@ ja:
           title: 交流
           posting: 投稿
           notification: 通知
+        email:
+          title: "Eメール"
+          credentials:
+            username: "ユーザー名"
+            password: "パスワード"
         membership:
           title: メンバーシップ
           access: アクセス
@@ -611,7 +609,7 @@ ja:
       title: IPアドレスを検索
       hostname: ホスト名
       location: 現在地
-      location_not_found: （不明）
+      location_not_found: '（不明）'
       organisation: 組織
       phone: 電話
       other_accounts: "同じIPアドレスを持つアカウント:"
@@ -1158,7 +1156,7 @@ ja:
       link_label: "ログインリンクをメールする"
       complete_username_not_found: " <b>%{username}</b>は見つかりませんでした"
       complete_email_not_found: "<b>%{email}</b> にアカウントはありません"
-      confirm_title: "%{site_name}へ"
+      confirm_title: '%{site_name}へ'
     login:
       title: "ログイン"
       username: "ユーザ名"
@@ -1354,7 +1352,7 @@ ja:
         reply: 返信
         edit: 編集
         reply_to_post:
-          label: "%{postUsername}による投稿%{postNumber}に返信する"
+          label: '%{postUsername}による投稿%{postNumber}に返信する'
           desc: 特定の投稿に返信する
         reply_as_new_topic:
           label: トピックのリンクを付けて返信
@@ -1459,7 +1457,7 @@ ja:
           label: タグ
         filters:
           title: タイトルが一致するもの
-          likes: 「いいね！」したもの
+          likes: '「いいね！」したもの'
           posted: 投稿済
           watching: ウォッチ中
           tracking: 追跡中
@@ -1594,7 +1592,7 @@ ja:
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1つの未読 </a>} other { are <a href='{basePath}/unread'># つの未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'>1 つの新着</a> トピック} other { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'># つの新着</a> トピック} } が残っています、あるいは {CATEGORY, select, true { {catLink}の他のトピックを見てみてください。} false {{latestLink}} other {}}"
       browse_all_categories: 全てのカテゴリを閲覧する
       view_latest_topics: 最新のトピックを見る
-      suggest_create_topic: "新しいトピックを作成しませんか?"
+      suggest_create_topic: 新しいトピックを作成しませんか?
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
@@ -1669,6 +1667,7 @@ ja:
           "2_8": "このカテゴリを追跡しているので、新たな返信のカウント数が表示されます。"
           "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
           "2_2": "このトピックを追跡しているので、新たな返信のカウント数が表示されます。"
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "1": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "0_7": "このカテゴリに関して一切通知を受け取りません。"
@@ -2328,7 +2327,6 @@ ja:
         title: "タグのグループ"
         new: "新しいグループ"
         parent_tag_label: "親タグ:"
-        parent_tag_placeholder: "任意"
         new_name: "新しいタグのグループ"
         save: "保存する"
         delete: "削除する"
@@ -2593,7 +2591,6 @@ ja:
           subject: "件名"
           multiple_subjects: "このメールのテンプレートは複数の件名があります。"
           body: "本文"
-          none_selected: "編集するメールテンプレートを選択してください。"
           revert: "変更を元に戻す"
           revert_confirm: "本当に変更を元に戻しますか?"
         theme:
@@ -2804,7 +2801,6 @@ ja:
           domain: "ドメイン"
         screened_ips:
           title: "スクリーン対象IP"
-          description: '参加中のIPアドレス。IPアドレスをホワイトリストに追加するには "許可" を利用してください。'
           delete_confirm: "%{ip_address} のルールを削除してもよろしいですか？"
           roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
           rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
@@ -2921,7 +2917,7 @@ ja:
         reputation: レピュテーション
         permissions: パーミッション
         activity: アクティビティ
-        like_count: 「いいね！」付けた/もらった数
+        like_count: '「いいね！」付けた/もらった数'
         last_100_days: "過去100日に"
         private_topics_count: プライベートトピックの数
         posts_read_count: 読んだ投稿数
@@ -3125,7 +3121,7 @@ ja:
         delete_confirm: このバッジを削除してもよろしいですか？
         revoke: 取り消す
         reason: 理由
-        expand: "&hellipを展開"
+        expand: '&hellipを展開'
         revoke_confirm: このバッジを取り消しますか？
         edit_badges: バッジを編集する
         grant_badge: バッジを付与
@@ -3166,10 +3162,10 @@ ja:
             other: "<b>%{count}</b>個のバッジが付与されています"
           sample: "サンプル："
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> for post in %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> for post in %{link} at <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> at <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "絵文字"
         help: "各ユーザが利用できる絵文字を追加します。 (ちょっとしたコツ: ドラッグアンドドロップで複数のファイルを一度にアップロードできます)"
@@ -3189,9 +3185,6 @@ ja:
         add_host: "ホストの追加"
         settings: "埋め込みの設定"
         embed_truncate: "埋め込まれた投稿を削除する"
-        embed_whitelist_selector: "埋め込みで許可される要素のCSSセレクタ"
-        embed_blacklist_selector: "埋め込みから削除された要素のCSSセレクタ"
-        embed_classname_whitelist: "許可されたCSSクラス名"
         save: "埋め込みの設定を保存"
       permalink:
         title: "パーマリンク"
@@ -3202,7 +3195,6 @@ ja:
         post_title: "投稿"
         category_id: "カテゴリID"
         category_title: "カテゴリ"
-        external_url: "外部URL"
         delete_confirm: このパーマリンクを削除してもよろしいですか？
         form:
           label: "新規:"

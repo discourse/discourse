@@ -172,7 +172,6 @@ class Guardian
   def can_moderate?(obj)
     obj && authenticated? && !is_silenced? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
   end
-  alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
 
   def can_tag?(topic)

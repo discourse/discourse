@@ -21,7 +21,14 @@ describe SearchIndexer do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
 
-    SearchIndexer.update_posts_index(post_id, "", "", "", data)
+    SearchIndexer.update_posts_index(
+      post_id: post_id,
+      topic_title: "",
+      category_name: "",
+      topic_tags: "",
+      cooked: data,
+      private_message: false
+    )
 
     post_search_data = PostSearchData.find_by(post_id: post_id)
 
@@ -95,11 +102,27 @@ describe SearchIndexer do
 
   it 'correctly indexes a post according to version' do
     # Preparing so that they can be indexed to right version
-    SearchIndexer.update_posts_index(post_id, "dummy", "", nil, nil)
+    SearchIndexer.update_posts_index(
+      post_id: post_id,
+      topic_title: "dummy",
+      category_name: "",
+      topic_tags: nil,
+      cooked: nil,
+      private_message: false
+    )
+
     PostSearchData.find_by(post_id: post_id).update!(version: -1)
 
     data = "<a>This</a> is a test"
-    SearchIndexer.update_posts_index(post_id, "", "", nil, data)
+
+    SearchIndexer.update_posts_index(
+      post_id: post_id,
+      topic_title: "",
+      category_name: "",
+      topic_tags: nil,
+      cooked: data,
+      private_message: false
+    )
 
     raw_data, locale, version = PostSearchData.where(post_id: post_id).pluck(:raw_data, :locale, :version)[0]
     expect(raw_data).to eq("This is a test")
@@ -207,6 +230,29 @@ describe SearchIndexer do
 
       expect(post.post_search_data.raw_data).to eq(
         "Let me see how I can fix this image white walkers GOT"
+      )
+    end
+
+    it 'should strips audio and videos URLs from raw data' do
+      SiteSetting.authorized_extensions = 'mp4'
+      upload = Fabricate(:video_upload)
+
+      post.update!(raw: <<~RAW)
+      link to an external page: https://google.com/?u=bar
+
+      link to an audio file: https://somesite.com/audio.m4a
+
+      link to a video file: https://somesite.com/content/somethingelse.MOV
+
+      link to an invalid URL: http:error]
+      RAW
+
+      expect(post.post_search_data.raw_data).to eq(
+        "link to an external page: https://google.com/ link to an audio file: #{I18n.t("search.audio")} link to a video file: #{I18n.t("search.video")} link to an invalid URL: http:error]"
+      )
+
+      expect(post.post_search_data.search_data).to eq(
+        "'/audio.m4a':23 '/content/somethingelse.mov':31 'audio':19 'com':15,22,30 'error':38 'extern':13 'file':20,28 'google.com':15 'http':37 'invalid':35 'link':10,16,24,32 'page':14 'somesite.com':22,30 'somesite.com/audio.m4a':21 'somesite.com/content/somethingelse.mov':29 'test':8A 'titl':4A 'uncategor':9B 'url':36 'video':27"
       )
     end
   end

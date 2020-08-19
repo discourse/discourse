@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sl:
   js:
@@ -161,9 +160,6 @@ sl:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "prispevek #%{postNumber}"
       close: "zapri"
-      twitter: "Deli to povezavo na Twitter"
-      facebook: "Deli to povezavo na Facebook"
-      email: "Deli to povezavo preko e-pošte"
     action_codes:
       public_topic: "je naredil temo javno %{when}"
       private_topic: "je spremenil temo v zasebno sporočilo %{when}"
@@ -308,6 +304,7 @@ sl:
       remove: "Odstrani zaznamek"
       confirm_clear: "Ste prepričani, da želite odstraniti vse svoje zaznamke iz te teme?"
       save: "Shrani"
+      search: "Išči"
       reminders:
         later_today: "Kasneje v dnevu"
         tomorrow: "Jutri"
@@ -521,10 +518,6 @@ sl:
     groups:
       member_added: "Dodano"
       member_requested: "Zahtevano ob"
-      add_members:
-        title: "Dodaj člane"
-        description: "Upravljaj članstvo te skupine"
-        usernames: "Uporabniška imena"
       requests:
         title: "Zahtevki"
         reason: "Razlog"
@@ -545,6 +538,11 @@ sl:
           title: Interakcija
           posting: Objave
           notification: Obvestila
+        email:
+          title: "E-sporočila"
+          credentials:
+            username: "Uporabniško ime"
+            password: "Geslo"
         membership:
           title: Članstvo
           access: Dostopnost
@@ -1332,8 +1330,8 @@ sl:
       complete_email_found: "Račun z e-naslovom <b>%{email}</b> obstaja. V kratkem bi morali prejeti e-sporočilo s povezavo za samodejno prijavo."
       complete_username_not_found: "Račun z uporabniškim imenom <b>%{username}</b> ne obstaja."
       complete_email_not_found: "Noben račun se ne ujema z <b>%{email}</b>"
-      confirm_title: "Nadaljujte na %{site_name}"
-      logging_in_as: "Prijava kot %{email}"
+      confirm_title: Nadaljujte na %{site_name}
+      logging_in_as: Prijava kot %{email}
       confirm_button: Zaključi prijavo
     login:
       title: "Prijava"
@@ -1576,7 +1574,7 @@ sl:
         draft: Osnutek
         edit: Uredi
         reply_to_post:
-          label: "Odgovor na prispevek %{postNumber} od %{postUsername}"
+          label: Odgovor na prispevek %{postNumber} od %{postUsername}
           desc: Odgovori na posamezen prispevek
         reply_as_new_topic:
           label: Odgovori v novi povezani temi
@@ -1586,7 +1584,7 @@ sl:
           desc: Odgovori v zasebno sporočilo
         reply_to_topic:
           label: Odgovori v temi
-          desc: "Odgovori v temi, ne na posamezen prispevek"
+          desc: Odgovori v temi, ne na posamezen prispevek
         toggle_whisper:
           label: Preklopi šepet
           desc: Šepeti so vidni samo članom osebja
@@ -1909,7 +1907,7 @@ sl:
       read_more_MF: "{ UNREAD, plural, =0 {} one { Je še <a href='{basePath}/unread'>1 neprebrana</a> } two { Sta še <a href='{basePath}/unread'>2 neprebrani</a> } other { Je še<a href='{basePath}/unread'># neprebranih } } { NEW, plural, =0 {} one { {BOTH, select, true{in} false {je } other{}} <a href='{basePath}/new'>1 nova</a> tema ostala} two { {BOTH, select, true{in } false {sta } other{}} <a href='{basePath}/new'>2 novi</a> temi ostali} other { {BOTH, select, true{in } false {so } other{}} <a href='{basePath}/new'># nove</a> teme ostale} }, ali {CATEGORY, select, true {brskaj druge teme v {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Brskajte po vseh kategorijah
       view_latest_topics: poglej najnovejše teme
-      suggest_create_topic: "Ustvari novo temo?"
+      suggest_create_topic: Ustvari novo temo?
       jump_reply_up: pojdi na prejšni odgovor
       jump_reply_down: pojdi na naslednji odgovor
       deleted: "Tema je bila izbrisana"
@@ -2004,6 +2002,7 @@ sl:
           "2_8": "Videli boste število novih odgovorov, ker sledite tej kategoriji."
           "2_4": "Videli boste število novih odgovorov, ker ste objavili odgovor na to temo."
           "2_2": "Videli boste število novih odgovorov, ker sledite tej temi."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
           "1": "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
           "0_7": "Ignorirate vsa obvestila za to kategorijo."
@@ -2503,7 +2502,6 @@ sl:
       default_top_period: "Privzeto obdobje za najboljše:"
       allow_badges_label: "Omogoči nagrajevanje z značkami v tej kategoriji"
       edit_permissions: "Uredi dovoljenja"
-      reviewable_by_group: "Poleg osebja bo prispevke in prijave v tej kategoriji lahko pregledoval tudi:"
       review_group_name: "ime skupine"
       require_topic_approval: "Zahtevaj moderatorjevo potrditev vseh novih tem"
       require_reply_approval: "Zahteva odobritev moderatorja za vse nove odgovore"
@@ -2950,9 +2948,7 @@ sl:
         about: "Dodajte oznake v skupine da jih lažje upravljate"
         new: "Nova skupina"
         tags_label: "Oznake v tej skupini:"
-        tags_placeholder: "oznake"
         parent_tag_label: "Nadrejena oznaka:"
-        parent_tag_placeholder: "Neobvezno"
         parent_tag_description: "Oznake iz te skupine se ne morejo uporabiti, če ni prisotna tudi nadrejena oznaka."
         one_per_topic_label: "Omeji na eno oznako na temo iz te skupine"
         new_name: "Nova skupina oznak"
@@ -3044,7 +3040,7 @@ sl:
         show_traffic_report: "Pokaži podrobno poročilo prometa"
         community_health: Stanje skupnosti
         moderators_activity: Aktivnosti moderatorjev
-        whats_new_in_discourse: "Kaj je novega v Discourse?"
+        whats_new_in_discourse: Kaj je novega v Discourse?
         activity_metrics: Metrike aktivnosti
         all_reports: "Vsa poročila"
         general_tab: "Splošno"
@@ -3419,7 +3415,6 @@ sl:
           domain: "Domena"
         screened_ips:
           title: "Nadzorovani IPji"
-          description: 'Nadzorovani IP naslovi. Uporabite "Dovoli", da dodate med zanesljive IP naslove.'
           actions:
             block: "Blokiraj"
             do_nothing: "Dovoli"
@@ -3749,17 +3744,17 @@ sl:
         reason_help: (povezava na prispevek ali temo)
         save: Shrani
         delete: Izbriši
-        delete_confirm: "Si prepričan, da želiš odstraniti to značko?"
+        delete_confirm: Si prepričan, da želiš odstraniti to značko?
         revoke: Odstrani
         reason: Razlog
         expand: Razširi &hellip;
-        revoke_confirm: "Ali ste prepričani da hočete odvzeti to značko?"
+        revoke_confirm: Ali ste prepričani da hočete odvzeti to značko?
         edit_badges: Uredi značke
         grant_badge: Podeli značko
         granted_badges: Podeljene značke
         grant: Podeli
         no_user_badges: "%{name} ni bila podeljena nobena značka."
-        no_badges: "Ni značk, ki bi lahko bile podeljene."
+        no_badges: Ni značk, ki bi lahko bile podeljene.
         none_selected: "Izberi značko za začetek"
         allow_title: Dovoli da se značka uporablja kot naziv
         multiple_grant: Se lahko podeli večkrat
@@ -3790,9 +3785,9 @@ sl:
             other: "<b>%{count}</b> značk za podelitev."
           sample: "Primer:"
           grant:
-            with_post: "<span class=\"username\">%{username}</span> za prispevek v %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> za prispevek v %{link} ob <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> ob <span class=\"time\">%{time}</span>"
+            with_post: <span class="username">%{username}</span> za prispevek v %{link}
+            with_post_time: <span class="username">%{username}</span> za prispevek v %{link} ob <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> ob <span class="time">%{time}</span>
         badge_intro:
           title: "Izberite obstoječo značko ali ustvari novo značko"
           what_are_badges_title: "Kaj so značke?"
@@ -3820,8 +3815,7 @@ sl:
         post_title: "Prispevek"
         category_id: "ID kategorije"
         category_title: "Kategorija"
-        external_url: "Zunanji URL"
-        delete_confirm: "Ali ste prepričani, da želite odstraniti trajno povezavo?"
+        delete_confirm: Ali ste prepričani, da želite odstraniti trajno povezavo?
         form:
           label: "Novo:"
           add: "Dodaj"

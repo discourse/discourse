@@ -18,9 +18,9 @@
     border-top: 0;
   }
   &.highlight-danger {
-    background-color: $danger-low;
+    background-color: var(--danger-low);
   }
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   &:before,
   &:after {
     display: table;
@@ -92,7 +92,7 @@
   }
   .users-list {
     .username .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 }

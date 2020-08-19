@@ -7,13 +7,12 @@ import { flushMap } from "discourse/models/store";
 import RestModel from "discourse/models/rest";
 import { propertyEqual, fmt } from "discourse/lib/computed";
 import { longDate } from "discourse/lib/formatter";
-import { isRTL } from "discourse/lib/text-direction";
 import ActionSummary from "discourse/models/action-summary";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "discourse/lib/preload-store";
 import { userPath } from "discourse/lib/url";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import discourseComputed, {
   observes,
   on
@@ -119,16 +118,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("fancy_title")
   fancyTitle(title) {
-    let fancyTitle = censor(
-      emojiUnescape(title) || "",
-      Site.currentProp("censored_regexp")
-    );
-
-    if (this.siteSettings.support_mixed_text_direction) {
-      const titleDir = isRTL(title) ? "rtl" : "ltr";
-      return `<span dir="${titleDir}">${fancyTitle}</span>`;
-    }
-    return fancyTitle;
+    return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
   },
 
   // returns createdAt if there's no bumped date

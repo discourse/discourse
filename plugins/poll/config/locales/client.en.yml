@@ -1,20 +1,3 @@
-# encoding: utf-8
-# This file contains content for the client portion of the poll plugin, sent out
-# to the Javascript app.
-#
-# To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
-
 en:
   js:
     poll:
@@ -69,10 +52,6 @@ en:
         title: "Group votes by user field"
         label: "Show breakdown"
 
-      ungroup-results:
-        title: "Combine all votes"
-        label: "Hide breakdown"
-
       export-results:
         title: "Export the poll results"
         label: "Export"
@@ -90,6 +69,13 @@ en:
       automatic_close:
         closes_in: "Closes in <strong>%{timeLeft}</strong>."
         age: "Closed <strong>%{age}</strong>"
+
+      breakdown:
+        title: "Poll results"
+        votes: "%{count} votes"
+        breakdown: "Breakdown"
+        percentage: "Percentage"
+        count: "Count"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."

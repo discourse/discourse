@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 tr_TR:
   site_settings:
@@ -57,34 +56,34 @@ tr_TR:
         &gt;: game_die: %{results}
     quote:
       trigger: "alıntıla"
-      '1':
+      "1":
         quote: "Her zorluğun ortasında fırsat yatar."
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Eğer özgürlüğünü yaşayamazsan, özgür olmanın bir anlamı olmaz."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Ağlama çünkü bitti, gülümse çünkü gerçekleşti."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Doğru yapılan bir şey istiyorsanız, kendiniz yapın."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Yapabileceğine inan ve yolu yarıla."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Hayat bir kutu çikolata gibidir. Ne bulacağını asla bilemezsin."
         author: "Forrest Gump’ın Annesi"
-      '7':
+      "7":
         quote: "Bir insan için küçük, insanlık için dev bir adım."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Her gün seni korkutan bir şey yap."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Onları kabul etme cesareti varsa, hatalar daima affedilebilirdir."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "İnsan zihni ne olursa olsun düşünebilir ve inanabilir, başarabilir."
         author: "Napoleon Hill"
       results: |-
@@ -92,26 +91,26 @@ tr_TR:
     magic_8_ball:
       trigger: "kısmet"
       answers:
-        '1': "Bu kesin"
-        '2': "Kesinlikle öyle"
-        '3': "Şüphesiz"
-        '4': "Evet kesinlikle"
-        '5': "Güvenebilirsin"
-        '6': "Gördüğüm gibi, evet"
-        '7': "Büyük ihtimalle"
-        '8': "İyi görünüm"
-        '9': "Evet"
-        '10': "İşaretler evet'i gösteriyor"
-        '11': "Cevabınızı anlayamadım. Lütfen tekrar deneyin."
-        '12': "Sonra tekrar sor"
-        '13': "En iyisi şimdi söylememek"
-        '14': "Şimdi tahmin edemiyorum"
-        '15': "Konsantre ol ve tekrar sor"
-        '16': "Güvenmeyin"
-        '17': "Cevabım hayır"
-        '18': "Kaynaklarım hayır diyor"
-        '19': "Görünüm o kadar iyi değil"
-        '20': "Çok şüpheli"
+        "1": "Bu kesin"
+        "2": "Kesinlikle öyle"
+        "3": "Şüphesiz"
+        "4": "Evet kesinlikle"
+        "5": "Güvenebilirsin"
+        "6": "Gördüğüm gibi, evet"
+        "7": "Büyük ihtimalle"
+        "8": "İyi görünüm"
+        "9": "Evet"
+        "10": "İşaretler evet'i gösteriyor"
+        "11": "Cevabınızı anlayamadım. Lütfen tekrar deneyin."
+        "12": "Sonra tekrar sor"
+        "13": "En iyisi şimdi söylememek"
+        "14": "Şimdi tahmin edemiyorum"
+        "15": "Konsantre ol ve tekrar sor"
+        "16": "Güvenmeyin"
+        "17": "Cevabım hayır"
+        "18": "Kaynaklarım hayır diyor"
+        "19": "Görünüm o kadar iyi değil"
+        "20": "Çok şüpheli"
       result: |-
         &gt;: crystal_ball: %{result}
     track_selector:
@@ -249,8 +248,6 @@ tr_TR:
           Sanırım ne yapacağını biliyorsun. Devam edin ve bu yayını *uygunsuz olarak* <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> işaretleyin!
         reply: |-
           [Moderatörümüz] (%{base_uri}/grup/moderatör) raporunuz hakkında özel olarak bilgilendirilecektir. Yeterli topluluk üyesi bir gönderiyi işaretlerse, önlem olarak otomatik olarak gizlenir. (Aslında kötü bir yazı yazmadığım için :melek:, devam ettim ve şu an için bu raporu kaldırdım.)
-        not_found: |-
-          Oh hayır, kötü gönderim henüz işaretlenmedi. :worried: **raporlayarak** uygunsuz olarak işaretleyebilir misiniz<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Her bir gönderi için daha fazla işlem göstermek için daha fazla göster butonunu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> kullanmayı unutmayın.
       search:
         instructions: |-
           _psst_ … Bu konuda bir sürprizim var. Eğer meydan okumaya hazırsanız, **arama simgesini seçin** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> sağ üstte ↗ arayın.

@@ -58,27 +58,79 @@ describe "S3Inventory" do
     expect(output).to eq("Failed to list inventory from S3\n")
   end
 
-  it "should display missing uploads correctly" do
-    freeze_time
+  describe "verifying uploads" do
+    before do
+      freeze_time
 
-    CSV.foreach(csv_filename, headers: false) do |row|
-      next unless row[S3Inventory::CSV_KEY_INDEX].include?("default")
-      Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
+      CSV.foreach(csv_filename, headers: false) do |row|
+        next unless row[S3Inventory::CSV_KEY_INDEX].include?("default")
+        Fabricate(:upload,
+          etag: row[S3Inventory::CSV_ETAG_INDEX],
+          url: File.join(Discourse.store.absolute_base_url, row[S3Inventory::CSV_KEY_INDEX]),
+          updated_at: 2.days.ago)
+      end
+
+      @upload1 = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
+      @upload2 = Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
+      @no_etag = Fabricate(:upload, updated_at: 2.days.ago)
+
+      inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
+      inventory.expects(:inventory_date).times(2).returns(Time.now)
     end
 
-    upload = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
-    Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
-    no_etag = Fabricate(:upload, updated_at: 2.days.ago)
+    it "should display missing uploads correctly" do
+      output = capture_stdout do
+        inventory.backfill_etags_and_list_missing
+      end
 
-    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
-    inventory.expects(:inventory_date).returns(Time.now)
-
-    output = capture_stdout do
-      inventory.backfill_etags_and_list_missing
+      expect(output).to eq("#{@upload1.url}\n#{@no_etag.url}\n2 of 5 uploads are missing\n")
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
     end
 
-    expect(output).to eq("#{upload.url}\n#{no_etag.url}\n2 of 5 uploads are missing\n")
-    expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
+    it "should detect when a url match exists with a different etag" do
+      differing_etag = Upload.find_by(etag: "defcaac0b4aca535c284e95f30d608d0")
+      differing_etag.update_columns(etag: "somethingelse")
+
+      output = capture_stdout do
+        inventory.backfill_etags_and_list_missing
+      end
+
+      expect(output).to eq(<<~TEXT)
+        #{differing_etag.url} has different etag
+        #{@upload1.url}
+        #{@no_etag.url}
+        3 of 5 uploads are missing
+        1 of these are caused by differing etags
+        Null the etag column and re-run for automatic backfill
+      TEXT
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(3)
+    end
+
+    it "marks missing uploads as not verified and found uploads as verified. uploads not checked will be verified nil" do
+      expect(Upload.where(verified: nil).count).to eq(12)
+      output = capture_stdout do
+        inventory.backfill_etags_and_list_missing
+      end
+
+      verified = Upload.pluck(:verified)
+      expect(Upload.where(verified: true).count).to eq(3)
+      expect(Upload.where(verified: false).count).to eq(2)
+      expect(Upload.where(verified: nil).count).to eq(7)
+    end
+
+    it "does not affect the updated_at date of uploads" do
+      upload_1_updated = @upload1.updated_at
+      upload_2_updated = @upload2.updated_at
+      no_etag_updated = @no_etag.updated_at
+
+      output = capture_stdout do
+        inventory.backfill_etags_and_list_missing
+      end
+
+      expect(@upload1.reload.updated_at).to eq_time(upload_1_updated)
+      expect(@upload2.reload.updated_at).to eq_time(upload_2_updated)
+      expect(@no_etag.reload.updated_at).to eq_time(no_etag_updated)
+    end
   end
 
   it "should backfill etags to uploads table correctly" do

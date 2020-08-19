@@ -9,7 +9,7 @@ export default {
   name: "signup-cta",
 
   initialize(container) {
-    const screenTrack = container.lookup("screen-track:main");
+    const screenTrack = container.lookup("service:screen-track");
     const session = Session.current();
     const siteSettings = container.lookup("site-settings:main");
     const keyValueStore = container.lookup("key-value-store:main");

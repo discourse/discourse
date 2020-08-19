@@ -1,19 +1,3 @@
-# encoding: utf-8
-# This file contains content for the server portion of Discourse used by Ruby
-#
-# To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
-
 en:
   dates:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
@@ -209,6 +193,7 @@ en:
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_media_requirements: "S3 uploads must be enabled before enabling secure media."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
+      second_factor_cannot_enforce_with_socials: "You cannot enforce 2FA with social logins enabled. You must first disable login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
@@ -322,11 +307,11 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_images_allowed_trust: "Sorry, you can't put images in a post"
-  no_images_allowed: "Sorry, new users can't put images in posts."
-  too_many_images:
-    one: "Sorry, new users can only put one image in a post."
-    other: "Sorry, new users can only put %{count} images in a post."
+  no_embedded_media_allowed_trust: "Sorry, you can't embed media items in a post."
+  no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
+  too_many_embedded_media:
+    one: "Sorry, new users can only put one embedded media item in a post."
+    other: "Sorry, new users can only put %{count} embedded media items in a post."
   no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   too_many_attachments:
     one: "Sorry, new users can only put one attachment in a post."
@@ -546,6 +531,7 @@ en:
               reply_by_email_disabled: "Reply by email has been disabled."
               target_user_not_found: "One of the users you are sending this message to could not be found."
               unable_to_update: "There was an error updating that topic."
+              unable_to_tag: "There was an error tagging the topic."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
               invalid_category: "can't be edited in this category."
@@ -1496,6 +1482,9 @@ en:
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
     mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
+    logo_dark: "Dark scheme alternative for the 'logo' site setting."
+    logo_small_dark: "Dark scheme alternative for the 'logo small' site setting."
+    mobile_logo_dark: "Dark scheme alternative for the 'mobile logo' site setting."
     large_icon: "Image used as the base for other metadata icons. Should ideally be larger than 512 x 512. If left blank, logo_small will be used."
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
@@ -1559,7 +1548,7 @@ en:
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Allow moderators to create new categories"
+    moderators_manage_categories_and_groups: "Allow moderators to manage categories and groups"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
@@ -1818,12 +1807,13 @@ en:
     min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
-    min_trust_to_post_images: "The minimum trust level required to include images in a post"
-
+    min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
+    min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
+    min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
-    newuser_max_images: "How many images a new user can add to a post."
+    newuser_max_embedded_media: "How many embedded media items a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
@@ -1850,6 +1840,8 @@ en:
     desktop_category_page_style: "Visual style for the /categories page."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
+    default_dark_mode_color_scheme_id: "The color scheme used when in dark mode."
+    dark_mode_none: "None"
 
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
@@ -2170,6 +2162,7 @@ en:
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_enable_defer: "Enable defer topic functionality by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
+    default_other_skip_new_user_tips: "Skip new user onboarding tips and badges."
 
     default_other_like_notification_frequency: "Notify users on likes by default"
 
@@ -2179,6 +2172,7 @@ en:
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
+    default_categories_regular: "List of categories that are normal by default. Useful when `mute_all_categories_by_default` site setting is enabled."
     mute_all_categories_by_default: "Set the default notification level of all the categories to muted. Require users opt-in to categories for them to appear in 'latest' and 'categories' pages. If you wish to amend the defaults for anonymous users set 'default_categories_' settings."
 
     default_tags_watching: "List of tags that are watched by default."
@@ -2912,6 +2906,11 @@ en:
         ``` text
         %{logs}
         ```
+    user_added_to_group:
+      title: "Added to Group"
+      subject_template: "You have been added as %{membership_level} of the %{group_name} group"
+      text_body_template: |
+        You have been added as a %{membership_level} of the [%{group_name}](%{base_url}%{group_path}) group.
 
     csv_export_succeeded:
       title: "CSV Export Succeeded"
@@ -3875,6 +3874,7 @@ en:
   color_schemes:
     base_theme_name: "Base"
     light: "Light"
+    light_default: "Light (default)"
     dark: "Dark"
     neutral: "Neutral"
     grey_amber: "Grey Amber"

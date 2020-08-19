@@ -52,6 +52,7 @@ QUnit.test("canMangeGroup", assert => {
   );
 
   group.set("automatic", false);
+  group.setProperties({ can_admin_group: true });
 
   assert.equal(
     user.canManageGroup(group),

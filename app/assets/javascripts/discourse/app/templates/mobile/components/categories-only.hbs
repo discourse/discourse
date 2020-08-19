@@ -15,13 +15,11 @@
           {{d-icon mutedToggleIcon}}
         {{/if}}
       </a>
-      {{#if showMutedCategories}}
-        <div class="category-list {{if showTopics "with-topics"}}">
-          {{#each mutedCategories as |c|}}
-            {{parent-category-row category=c showTopics=showTopics listType="muted"}}
-          {{/each}}
-        </div>
-      {{/if}}
+      <div class="category-list {{if showTopics "with-topics"}} {{unless showMutedCategories "hidden"}}">
+        {{#each mutedCategories as |c|}}
+          {{parent-category-row category=c showTopics=showTopics listType="muted"}}
+        {{/each}}
+      </div>
     </div>
   {{/if}}
 {{/if}}

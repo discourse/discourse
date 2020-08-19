@@ -33,11 +33,14 @@ describe ContentSecurityPolicy do
   end
 
   describe 'worker-src' do
-    it 'always has self and blob' do
+    it 'has expected values' do
       worker_srcs = parse(policy)['worker-src']
       expect(worker_srcs).to eq(%w[
         'self'
-        blob:
+        http://test.localhost/assets/
+        http://test.localhost/brotli_asset/
+        http://test.localhost/javascripts/
+        http://test.localhost/plugins/
       ])
     end
   end

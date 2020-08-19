@@ -286,6 +286,8 @@ describe TopicView do
     context '.post_counts_by_user' do
       it 'returns the two posters with their appropriate counts' do
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
+        # Should not be counted
+        Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper], action_code: 'assign')
 
         expect(TopicView.new(topic.id, admin).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
 

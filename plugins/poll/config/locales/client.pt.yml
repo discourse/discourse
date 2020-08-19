@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pt:
   js:
@@ -40,8 +39,6 @@ pt:
         label: "Mostrar voto"
       group-results:
         title: "Agrupar votos por campo de utilizador"
-      ungroup-results:
-        title: "Combinar todos os votos"
       export-results:
         label: "Exportar"
       open:

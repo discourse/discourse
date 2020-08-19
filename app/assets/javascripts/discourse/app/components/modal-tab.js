@@ -20,6 +20,10 @@ export default Component.extend({
   },
 
   click() {
-    this.onSelectPanel(this.panel);
+    this.set("selectedPanel", this.panel);
+
+    if (this.onSelectPanel) {
+      this.onSelectPanel(this.panel);
+    }
   }
 });

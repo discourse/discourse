@@ -8,6 +8,7 @@ import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
 import { helperContext } from "discourse-common/lib/helpers";
+import Session from "discourse/models/session";
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
@@ -59,14 +60,19 @@ export function sanitizeAsync(text, options) {
 }
 
 function loadMarkdownIt() {
-  if (Discourse.MarkdownItURL) {
-    return loadScript(Discourse.MarkdownItURL).catch(e => {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    });
-  } else {
-    return Promise.resolve();
-  }
+  return new Promise(resolve => {
+    let markdownItURL = Session.currentProp("markdownItURL");
+    if (markdownItURL) {
+      loadScript(markdownItURL)
+        .then(() => resolve())
+        .catch(e => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
+    } else {
+      resolve();
+    }
+  });
 }
 
 function createPrettyText(options) {

@@ -6,6 +6,7 @@ import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import { default as getURL, withoutPrefix } from "discourse-common/lib/get-url";
+import Session from "discourse/models/session";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -65,24 +66,31 @@ export function groupPath(subPath) {
 }
 
 let _jumpScheduled = false;
+let _transitioning = false;
+let lockon = null;
+
 export function jumpToElement(elementId) {
   if (_jumpScheduled || isEmpty(elementId)) {
     return;
   }
 
-  const selector = `#${elementId}, a[name=${elementId}]`;
+  const selector = `#main #${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
+
   schedule("afterRender", function() {
-    const lockon = new LockOn(selector, {
+    if (lockon) {
+      lockon.clearLock();
+    }
+
+    lockon = new LockOn(selector, {
       finished() {
         _jumpScheduled = false;
+        lockon = null;
       }
     });
     lockon.lock();
   });
 }
-
-let _transitioning = false;
 
 const DiscourseURL = EmberObject.extend({
   isJumpScheduled() {
@@ -97,9 +105,6 @@ const DiscourseURL = EmberObject.extend({
     _transitioning = postNumber > 1;
 
     schedule("afterRender", () => {
-      let elementId;
-      let holder;
-
       if (opts.jumpEnd) {
         let $holder = $(holderId);
         let holderHeight = $holder.height();
@@ -124,27 +129,35 @@ const DiscourseURL = EmberObject.extend({
         return;
       }
 
+      let selector;
+      let holder;
+
       if (opts.anchor) {
-        elementId = opts.anchor;
-        holder = $(elementId);
+        selector = `#main #${opts.anchor}, a[name=${opts.anchor}]`;
+        holder = document.querySelector(selector);
       }
 
-      if (!holder || holder.length === 0) {
-        elementId = holderId;
-        holder = $(elementId);
+      if (!holder) {
+        selector = holderId;
+        holder = document.querySelector(selector);
       }
 
-      const lockon = new LockOn(elementId, {
+      if (lockon) {
+        lockon.clearLock();
+      }
+
+      lockon = new LockOn(selector, {
         finished() {
           _transitioning = false;
+          lockon = null;
         }
       });
 
-      if (holder.length > 0 && opts && opts.skipIfOnScreen) {
+      if (holder && opts.skipIfOnScreen) {
         const elementTop = lockon.elementTop();
         const scrollTop = $(window).scrollTop();
         const windowHeight = $(window).height() - offsetCalculator();
-        const height = holder.height();
+        const height = $(holder).height();
 
         if (
           elementTop > scrollTop &&
@@ -211,7 +224,7 @@ const DiscourseURL = EmberObject.extend({
       return;
     }
 
-    if (Discourse.get("requiresRefresh")) {
+    if (Session.currentProp("requiresRefresh")) {
       return redirectTo(getURL(path));
     }
 
@@ -243,10 +256,11 @@ const DiscourseURL = EmberObject.extend({
 
     // Rewrite /my/* urls
     let myPath = getURL("/my");
-    if (path.indexOf(myPath) === 0) {
+    const fullPath = getURL(path);
+    if (fullPath.indexOf(myPath) === 0) {
       const currentUser = User.current();
       if (currentUser) {
-        path = path.replace(
+        path = fullPath.replace(
           myPath,
           userPath(currentUser.get("username_lower"))
         );
@@ -375,9 +389,9 @@ const DiscourseURL = EmberObject.extend({
             jumpEnd: routeOpts.jumpEnd
           };
 
-          const m = /#.+$/.exec(path);
-          if (m) {
-            jumpOpts.anchor = m[0];
+          const anchorMatch = /#(.+)$/.exec(path);
+          if (anchorMatch) {
+            jumpOpts.anchor = anchorMatch[1];
           }
 
           this.jumpToPost(closest, jumpOpts);
@@ -478,6 +492,8 @@ const DiscourseURL = EmberObject.extend({
     }
 
     transition._discourse_intercepted = true;
+    transition._discourse_anchor = elementId;
+
     const promise = transition.promise || transition;
     promise.then(() => jumpToElement(elementId));
   }

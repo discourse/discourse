@@ -6,15 +6,15 @@
   }
 
   .status {
-    color: $primary-medium;
+    color: var(--primary-medium);
     span.approved {
-      color: $success;
+      color: var(--success);
       .d-icon {
         color: currentColor;
       }
     }
     span.rejected {
-      color: $danger;
+      color: var(--danger);
       .d-icon {
         color: currentColor;
       }
@@ -82,7 +82,7 @@
   }
 
   .reviewable-user-details {
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
     padding-bottom: 0.25em;
 
     display: flex;
@@ -100,7 +100,7 @@
 }
 
 .reviewable-filters {
-  background-color: $primary-very-low;
+  background-color: var(--primary-very-low);
   padding: 1em;
   margin-bottom: 1em;
 
@@ -130,7 +130,7 @@
 
       .d-date-input {
         flex: 1 1 auto;
-        border: 1px solid $primary-medium;
+        border: 1px solid var(--primary-medium);
       }
     }
   }
@@ -205,19 +205,19 @@
   .percentage-label {
     margin-right: 0.25em;
     &.agreed {
-      color: $success;
+      color: var(--success);
       + .d-icon {
-        color: $success;
+        color: var(--success);
       }
     }
     &.disagreed {
-      color: $danger;
+      color: var(--danger);
       + .d-icon {
-        color: $danger;
+        color: var(--danger);
       }
     }
     &.ignored {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
   .d-icon {
@@ -227,14 +227,14 @@
 
 .reviewable-item {
   padding-top: 2em;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
 
   .topic-statuses {
     font-size: $font-up-2;
   }
 
   .reviewable-meta-data {
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
     display: flex;
     width: 100%;
     margin-bottom: 0.5em;
@@ -250,7 +250,7 @@
       margin-left: 1em;
       margin-right: auto;
       a {
-        color: $primary-med-or-secondary-med;
+        color: var(--primary-med-or-secondary-med);
       }
     }
     .score {
@@ -287,7 +287,7 @@
 
 .reviewable-scores {
   min-width: 50%;
-  color: $primary-high;
+  color: var(--primary-high);
 
   .reviewed-by {
     .date {
@@ -306,7 +306,7 @@
 
   .d-icon {
     font-size: $font-down-1;
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 
   .badge-notification {
@@ -375,7 +375,7 @@
 
 .reviewable-item {
   .show-raw-email {
-    color: $primary-medium;
+    color: var(--primary-medium);
     font-size: $font-down-2;
   }
   .post-title {
@@ -413,7 +413,7 @@
     .reviewable-reply-to {
       display: flex;
       align-items: center;
-      color: $primary-medium;
+      color: var(--primary-medium);
       font-size: 0.9em;
       .d-icon {
         margin-right: 0.5em;
@@ -445,11 +445,11 @@
 
   .post-topic {
     width: 100%;
-    color: $primary-medium;
+    color: var(--primary-medium);
     margin-bottom: 0.75em;
     .title-text {
       font-weight: bold;
-      color: $primary;
+      color: var(--primary);
       display: block;
       font-size: $font-up-2;
       margin-right: 0.75em;

@@ -5,14 +5,17 @@ import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import { escapeExpression } from "discourse/lib/utilities";
+import { inject as service } from "@ember/service";
 
 export default Mixin.create({
+  router: service(),
+
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
   _showCallback: null, //username, $target - load up data for when show is called, should call this._positionCard($target) when it's done.
 
   postStream: alias("topic.postStream"),
-  viewingTopic: match("currentPath", /^topic\./),
+  viewingTopic: match("router.currentRouteName", /^topic\./),
 
   visible: false,
   username: null,

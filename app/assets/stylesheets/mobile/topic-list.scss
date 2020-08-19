@@ -91,7 +91,7 @@
     > li {
       margin-right: 0;
       font-size: $font-down-1;
-      border: 1px solid $primary-medium;
+      border: 1px solid var(--primary-medium);
     }
     > li > a {
       line-height: $line-height-large;
@@ -103,10 +103,10 @@
       }
     }
     .drop {
-      border: 1px solid $primary-low;
+      border: 1px solid var(--primary-low);
       position: absolute;
       z-index: z("dropdown") - 1;
-      background-color: $secondary;
+      background-color: var(--secondary);
       padding: 0 10px 10px 10px;
       width: 150px;
       top: 100%;
@@ -149,13 +149,13 @@
     position: relative;
     z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
     a.title {
-      color: $primary;
+      color: var(--primary);
       padding: 0.5em 0 1.2em 0;
     }
     .topic-statuses {
       a {
         line-height: 0.8;
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
     }
   }
@@ -169,7 +169,7 @@
     line-height: $line-height-small;
     padding: 0.15em 0.4em 0.2em 0.4em;
     .d-icon {
-      color: $secondary;
+      color: var(--secondary);
     }
 
     &.new-topic::before {
@@ -183,7 +183,7 @@
   .category-topic-link td.num .badge-notification {
     &.new-posts,
     &.unread-posts {
-      color: $secondary;
+      color: var(--secondary);
     }
   }
 
@@ -202,7 +202,7 @@
     .num .fa,
     a,
     a:visited {
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
     }
   }
 
@@ -211,7 +211,7 @@
     a {
       // let's make all ages dim on mobile so we're not
       // overwhelming people with info about each topic
-      color: $primary-low-mid-or-secondary-high !important;
+      color: var(--primary-low-mid-or-secondary-high) !important;
     }
   }
 }
@@ -223,7 +223,7 @@
 
   td {
     padding: 12px 5px;
-    color: $primary-med-or-secondary-high;
+    color: var(--primary-med-or-secondary-high);
     vertical-align: top;
   }
 
@@ -285,11 +285,11 @@
   width: calc(100% + 20px);
   margin: 1.25em 10px 0;
   border-bottom: none !important;
-  border-top: 1px solid $primary-low !important;
+  border-top: 1px solid var(--primary-low) !important;
   &:last-of-type {
     margin-top: 0;
     margin-bottom: 1.25em;
-    border-bottom: 1px solid $primary-low !important;
+    border-bottom: 1px solid var(--primary-low) !important;
   }
   td:first-of-type {
     padding: 12px 0px;
@@ -303,7 +303,7 @@
 }
 
 tr.category-topic-link {
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
   &:last-of-type {
     border-bottom: none;
   }
@@ -322,7 +322,7 @@ tr.category-topic-link {
       margin-right: 5px;
     }
     a[href] {
-      color: $primary;
+      color: var(--primary);
     }
   }
 
@@ -377,7 +377,7 @@ tr.category-topic-link {
     float: left;
   }
   > footer {
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
     padding: 7px 10px;
     figure {
       float: left;
@@ -398,8 +398,8 @@ tr.category-topic-link {
 
 .category-list-item {
   padding: 0.5em 0 0.25em;
-  border-top: 1px solid $primary-low !important;
-  border-bottom: 1px solid $primary-low !important;
+  border-top: 1px solid var(--primary-low) !important;
+  border-bottom: 1px solid var(--primary-low) !important;
   margin-bottom: 2em;
 }
 
@@ -432,7 +432,7 @@ tr.category-topic-link {
   width: 0;
   height: 0;
   vertical-align: middle;
-  border-top: 4px solid $primary;
+  border-top: 4px solid var(--primary);
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
@@ -544,7 +544,7 @@ td .main-link {
 }
 
 .category-list .category.muted a.category-title-link {
-  color: $primary-medium;
+  color: var(--primary-medium);
   font-size: $font-down-1;
 }
 

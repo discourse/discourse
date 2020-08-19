@@ -120,7 +120,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     },
 
     refresh() {
-      // TODO: this probably doesn't work anymore
       return this.store
         .findFiltered("topicList", { filter: "tags/" + this.get("tag.id") })
         .then(list => {

@@ -24,6 +24,7 @@ import TopicTimer from "discourse/models/topic-timer";
 import { Promise } from "rsvp";
 import { escapeExpression } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import { inject as service } from "@ember/service";
 
 let customPostMessageCallbacks = {};
 
@@ -42,6 +43,9 @@ export function registerCustomPostMessageCallback(type, callback) {
 export default Controller.extend(bufferedProperty("model"), {
   composer: controller(),
   application: controller(),
+  documentTitle: service(),
+  screenTrack: service(),
+
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
@@ -452,8 +456,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     deferTopic() {
-      const screenTrack = Discourse.__container__.lookup("screen-track:main");
-      const currentUser = this.currentUser;
+      const { screenTrack, currentUser } = this;
       const topic = this.model;
 
       screenTrack.reset();
@@ -1350,7 +1353,7 @@ export default Controller.extend(bufferedProperty("model"), {
           case "created": {
             postStream.triggerNewPostInStream(data.id).then(() => refresh());
             if (this.get("currentUser.id") !== data.user_id) {
-              Discourse.incrementBackgroundContextCount();
+              this.documentTitle.incrementBackgroundContextCount();
             }
             break;
           }

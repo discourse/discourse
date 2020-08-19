@@ -37,12 +37,15 @@
     {{/admin-form-row}}
 
     {{#unless useGlobalKey}}
+      <div class="scopes-title">{{i18n "admin.api.scopes.title"}}</div>
+      <p>{{i18n "admin.api.scopes.description"}}</p>
       {{#each-in scopes as |resource actions|}}
         <table class="scopes-table">
           <thead>
             <tr>
               <td><b>{{resource}}</b></td>
               <td></td>
+              <td>{{i18n "admin.api.scopes.allowed_urls"}}</td>
               <td>{{i18n "admin.api.scopes.optional_allowed_parameters"}}</td>
             </tr>
           </thead>
@@ -50,7 +53,15 @@
             {{#each actions as |act|}}
               <tr>
                 <td>{{input type="checkbox" checked=act.selected}}</td>
-                <td><b>{{act.name}}</b></td>
+                <td>
+                  <div class="scope-name">{{act.name}}</div>
+                  <span class="scope-tooltip" data-tooltip={{i18n (concat "admin.api.scopes.descriptions." resource "." act.key)}}>
+                    {{d-icon "question-circle"}}
+                  </span>
+                </td>
+                <td>
+                  {{d-button icon="link" action=(action "showURLs" act.urls) class="btn-info"}}
+                </td>
                 <td>
                   {{#each act.params as |p|}}
                     <div>

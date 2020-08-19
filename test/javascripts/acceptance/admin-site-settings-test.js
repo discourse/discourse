@@ -116,6 +116,22 @@ QUnit.test("filter settings by plugin name", async assert => {
 });
 
 QUnit.test("category name is preserved", async assert => {
-  await visit("admin/site_settings/category/login?filter=test");
-  assert.equal(currentURL(), "admin/site_settings/category/login?filter=test");
+  await visit("admin/site_settings/category/basic?filter=menu");
+  assert.equal(currentURL(), "admin/site_settings/category/basic?filter=menu");
+});
+
+QUnit.test("shows all_results if current category has none", async assert => {
+  await visit("admin/site_settings");
+
+  await click(".admin-nav .basic a");
+  assert.equal(currentURL(), "/admin/site_settings/category/basic");
+
+  await fillIn("#setting-filter", "menu");
+  assert.equal(currentURL(), "/admin/site_settings/category/basic?filter=menu");
+
+  await fillIn("#setting-filter", "contact");
+  assert.equal(
+    currentURL(),
+    "/admin/site_settings/category/all_results?filter=contact"
+  );
 });

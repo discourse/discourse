@@ -120,16 +120,6 @@ describe CategoriesController do
         expect(response.status).to eq(400)
       end
 
-      it "raises an exception when the color is missing" do
-        post "/categories.json", params: { name: "hello", text_color: "fff" }
-        expect(response.status).to eq(400)
-      end
-
-      it "raises an exception when the text color is missing" do
-        post "/categories.json", params: { name: "hello", color: "ff0" }
-        expect(response.status).to eq(400)
-      end
-
       describe "failure" do
         it "returns errors on a duplicate category name" do
           category = Fabricate(:category, user: admin)
@@ -312,27 +302,6 @@ describe CategoriesController do
           text_color: 'fff'
         }
         expect(response).to be_forbidden
-      end
-
-      it "requires a name" do
-        put "/categories/#{category.slug}.json", params: {
-          color: 'fff',
-          text_color: '0ff',
-        }
-        expect(response.status).to eq(400)
-      end
-
-      it "requires a color" do
-        put "/categories/#{category.slug}.json", params: {
-          name: 'asdf',
-          text_color: '0ff',
-        }
-        expect(response.status).to eq(400)
-      end
-
-      it "requires a text color" do
-        put "/categories/#{category.slug}.json", params: { name: 'asdf', color: 'fff' }
-        expect(response.status).to eq(400)
       end
 
       it "returns errors on a duplicate category name" do

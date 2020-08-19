@@ -4,8 +4,8 @@
 
 #banner {
   padding: 0.5em 1em;
-  background: $tertiary-low;
-  color: $primary;
+  background: var(--tertiary-low);
+  color: var(--primary);
   z-index: z("base") + 1;
   overflow: auto;
 
@@ -14,11 +14,11 @@
   }
 
   .close {
-    color: $primary-low-mid;
+    color: var(--primary-low-mid);
     padding-left: 5px;
     float: right;
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 
@@ -29,6 +29,6 @@
 
 #banner-content {
   hr {
-    border-color: $primary-medium;
+    border-color: var(--primary-medium);
   }
 }

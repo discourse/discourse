@@ -4,6 +4,7 @@ import { autoLoadModules } from "discourse/initializers/auto-load-modules";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import Site from "discourse/models/site";
+import Session from "discourse/models/session";
 import { currentSettings } from "helpers/site-settings";
 
 export default function(name, opts) {
@@ -15,16 +16,21 @@ export default function(name, opts) {
 
   test(name, function(assert) {
     this.site = Site.current();
+    this.session = Session.current();
 
     this.registry.register("site-settings:main", currentSettings(), {
       instantiate: false
     });
     this.registry.register("capabilities:main", EmberObject);
     this.registry.register("site:main", this.site, { instantiate: false });
+    this.registry.register("session:main", this.session, {
+      instantiate: false
+    });
     this.registry.injection("component", "siteSettings", "site-settings:main");
     this.registry.injection("component", "appEvents", "service:app-events");
     this.registry.injection("component", "capabilities", "capabilities:main");
     this.registry.injection("component", "site", "site:main");
+    this.registry.injection("component", "session", "session:main");
 
     this.siteSettings = currentSettings();
     autoLoadModules(this.container, this.registry);

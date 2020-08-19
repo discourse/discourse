@@ -59,7 +59,9 @@ function postResult(result, link, term) {
       h("span.blurb", [
         dateNode(result.created_at),
         h("span", " - "),
-        new Highlighted(result.blurb, term)
+        this.siteSettings.use_pg_headlines_for_excerpt
+          ? new RawHtml({ html: `<span>${result.blurb}</span>` })
+          : new Highlighted(result.blurb, term)
       ])
     );
   }

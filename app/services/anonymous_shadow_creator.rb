@@ -31,6 +31,7 @@ class AnonymousShadowCreator
     shadow = user.shadow_user
 
     if shadow && (shadow.post_count + shadow.topic_count) > 0 &&
+      shadow.last_posted_at &&
       shadow.last_posted_at < SiteSetting.anonymous_account_duration_minutes.minutes.ago
       shadow = nil
     end

@@ -12,9 +12,9 @@
     display: flex;
     flex-direction: column;
     padding: 0.25em;
-    background: $secondary;
+    background: var(--secondary);
     z-index: z("dropdown");
-    border: 1px solid $primary-low;
+    border: 1px solid var(--primary-low);
     max-height: 250px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -28,22 +28,22 @@
     align-items: center;
 
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
       margin-right: 0.25em;
     }
 
     &.separator {
       padding: 0;
-      background: $primary-low;
+      background: var(--primary-low);
       margin: 0.25em 0;
 
       &:hover {
-        background: $primary-low;
+        background: var(--primary-low);
       }
     }
 
     &:hover {
-      background: $tertiary-low;
+      background: var(--tertiary-low);
     }
   }
 

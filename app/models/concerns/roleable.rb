@@ -23,6 +23,7 @@ module Roleable
     set_permission('moderator', true)
     auto_approve_user
     enqueue_staff_welcome_message(:moderator)
+    set_default_notification_levels(:moderators)
   end
 
   def revoke_moderation!
@@ -34,6 +35,7 @@ module Roleable
     set_permission('admin', true)
     auto_approve_user
     enqueue_staff_welcome_message(:admin)
+    set_default_notification_levels(:admins)
   end
 
   def revoke_admin!
@@ -50,6 +52,13 @@ module Roleable
   def set_permission(permission_name, value)
     self.public_send("#{permission_name}=", value)
     save_and_refresh_staff_groups!
+  end
+
+  def set_default_notification_levels(group_name)
+    Group.set_category_and_tag_default_notification_levels!(self, group_name)
+    if group_name == :admins || group_name == :moderators
+      Group.set_category_and_tag_default_notification_levels!(self, :staff)
+    end
   end
 
   private

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ar:
   js:
@@ -56,7 +55,7 @@ ar:
           multiple: عدّة خيارات
           number: تقييم عددي
         poll_result:
-          label: 'نتائج '
+          label: نتائج
         poll_config:
           max: الحد الأقصى
           min: الحد الأدنى

@@ -157,6 +157,7 @@ module TurboTests
         command = [
           "bundle", "exec", "rspec",
           *extra_args,
+          "--seed", rand(2**16).to_s,
           "--format", "TurboTests::JsonRowsFormatter",
           "--out", tmp_filename,
           *record_runtime_options,

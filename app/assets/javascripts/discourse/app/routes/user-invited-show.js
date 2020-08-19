@@ -1,6 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
 import showModal from "discourse/lib/show-modal";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
 
 export default DiscourseRoute.extend({
   model(params) {
@@ -59,7 +60,7 @@ export default DiscourseRoute.extend({
     },
 
     editInvite(inviteKey) {
-      const inviteLink = `${Discourse.BaseUrl}/invites/${inviteKey}`;
+      const inviteLink = getAbsoluteURL(`/invites/${inviteKey}`);
       this.currentUser.setProperties({ finished: true, inviteLink });
       const panels = [
         {

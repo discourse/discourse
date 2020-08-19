@@ -62,13 +62,13 @@
   }
 
   .d-icon-heart {
-    color: $love;
+    color: var(--love);
   }
 
   .user-notifications-filter-select-kit {
     display: block;
     width: 100%;
-    border-bottom: 0.5px solid $primary-low;
+    border-bottom: 0.5px solid var(--primary-low);
   }
 }
 
@@ -91,7 +91,7 @@
     .secondary {
       display: inline-block;
       width: 100%;
-      border-top: 1px solid $primary-low;
+      border-top: 1px solid var(--primary-low);
 
       .btn {
         padding: 4px 12px;
@@ -117,7 +117,7 @@
       dd {
         padding: 0;
         margin: 0 15px 0 0;
-        color: $primary;
+        color: var(--primary);
 
         &.groups {
           span:not(:last-of-type) {
@@ -133,15 +133,15 @@
       }
 
       dt {
-        color: $secondary-medium;
+        color: var(--secondary-medium);
         margin-right: 5px;
         display: inline-block;
       }
     }
 
     .details {
-      background: rgba($secondary, 0.8);
-      border-bottom: 1px solid $primary-low;
+      background: rgba(var(--secondary-rgb), 0.8);
+      border-bottom: 1px solid var(--primary-low);
 
       h1 {
         font-size: $font-up-5;
@@ -175,7 +175,7 @@
       }
 
       .suspended {
-        color: $danger;
+        color: var(--danger);
       }
 
       .primary {
@@ -224,7 +224,7 @@
     &.collapsed-info {
       .details {
         margin-top: 0;
-        background: rgba($secondary, 0.8);
+        background: rgba(var(--secondary-rgb), 0.8);
 
         .bio {
           display: none;
@@ -266,8 +266,8 @@
   }
 
   .staff-counters {
-    background: $primary;
-    color: $secondary;
+    background: var(--primary);
+    color: var(--secondary);
     display: flex;
     padding: 10px;
     margin-bottom: 16px;
@@ -277,7 +277,7 @@
       align-items: baseline;
       flex: 0 1 auto;
       margin: 0 10px 0 0;
-      color: $secondary;
+      color: var(--secondary);
 
       span {
         padding: 0 7px 1px;
@@ -292,7 +292,7 @@
   }
 
   .helpful-flags {
-    background-color: $success;
+    background-color: var(--success);
   }
 
   .flagged-posts {
@@ -300,15 +300,15 @@
   }
 
   .warnings-received {
-    background-color: $danger-medium;
+    background-color: var(--danger-medium);
   }
 
   .deleted-posts {
-    background-color: $danger-medium;
+    background-color: var(--danger-medium);
   }
 
   .suspensions {
-    background-color: $danger;
+    background-color: var(--danger);
   }
 
   .user-field {
@@ -322,7 +322,7 @@
       }
 
       .instructions {
-        color: $primary-medium;
+        color: var(--primary-medium);
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: $font-down-1;
@@ -342,7 +342,7 @@
 .user-field {
   .required {
     vertical-align: top;
-    color: $danger;
+    color: var(--danger);
     font-weight: bold;
     margin-left: 0.25em;
   }
@@ -393,7 +393,7 @@
     }
   }
   .error {
-    color: $danger;
+    color: var(--danger);
     margin: 0;
     max-width: calc(#{$label-max-width} - 20px);
     grid-column-start: 2;
@@ -442,7 +442,7 @@
         width: 100%;
         height: 100%;
         display: block;
-        color: $primary;
+        color: var(--primary);
       }
     }
   }
@@ -453,7 +453,7 @@
   }
 
   .label {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 }
 
@@ -465,13 +465,13 @@
   }
 
   li {
-    border-left: $primary-low solid 2px;
+    border-left: var(--primary-low) solid 2px;
     padding: 5px 8px;
     margin: 10px 0;
   }
 
   .topic-info {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 
   @media all and (max-width: 600px) {
@@ -491,7 +491,7 @@
 .links-section {
   .domain {
     font-size: $font-down-1;
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 }
 
@@ -520,7 +520,7 @@
 
 .groups {
   .group-link {
-    color: $tertiary;
+    color: var(--tertiary);
   }
 }
 
@@ -548,18 +548,18 @@
   }
 
   .static {
-    color: $primary;
+    color: var(--primary);
     display: inline-block;
   }
 
   .instructions {
-    color: $primary-medium;
+    color: var(--primary-medium);
     margin-bottom: 10px;
     font-size: $font-down-1;
     line-height: $line-height-large;
 
     a[href] {
-      color: $tertiary;
+      color: var(--tertiary);
     }
   }
 
@@ -568,9 +568,9 @@
   }
 
   .warning {
-    background-color: $danger-medium;
+    background-color: var(--danger-medium);
     padding: 5px 8px;
-    color: $secondary;
+    color: var(--secondary);
     width: 520px;
   }
 
@@ -606,7 +606,7 @@
         display: inline-block;
         position: relative;
         border-radius: 3px;
-        border: 1px solid $primary-low;
+        border: 1px solid var(--primary-low);
         width: 100%;
       }
 
@@ -624,7 +624,7 @@
 
         &:focus {
           box-shadow: none;
-          border-color: $primary-low;
+          border-color: var(--primary-low);
         }
       }
 
@@ -678,7 +678,7 @@
     }
 
     span:first-child {
-      color: $primary;
+      color: var(--primary);
     }
 
     // Can remove this once other languages have removed html from i18n values
@@ -703,7 +703,7 @@
 
 .second-factor {
   &.instructions {
-    color: $primary-medium;
+    color: var(--primary-medium);
     margin-top: 5px;
     margin-bottom: 10px;
     font-size: $font-down-1;
@@ -733,7 +733,7 @@
       width: 60px;
       height: 60px;
       &:hover {
-        box-shadow: 0 0 10px $primary;
+        box-shadow: 0 0 10px var(--primary);
       }
     }
   }

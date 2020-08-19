@@ -58,6 +58,20 @@ widgetTest("hbs template - with tagName", {
   }
 });
 
+widgetTest("hbs template - with data attributes", {
+  template: `{{mount-widget widget="hbs-test" args=args}}`,
+
+  beforeEach() {
+    createWidget("hbs-test", {
+      template: hbs`<div class='mydiv' data-my-test='hello world'></div>`
+    });
+  },
+
+  test(assert) {
+    assert.equal(find("div.mydiv").data("my-test"), "hello world");
+  }
+});
+
 widgetTest("buildClasses", {
   template: `{{mount-widget widget="classname-test" args=args}}`,
 

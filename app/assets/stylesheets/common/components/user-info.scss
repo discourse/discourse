@@ -29,17 +29,17 @@
 
     .username a {
       font-weight: bold;
-      color: $primary-high-or-secondary-low;
+      color: var(--primary-high-or-secondary-low);
     }
 
     .name {
       margin-left: 5px;
-      color: $primary-high-or-secondary-low;
+      color: var(--primary-high-or-secondary-low);
     }
 
     .title {
       margin-top: 3px;
-      color: $primary-med-or-secondary-med;
+      color: var(--primary-med-or-secondary-med);
     }
   }
 
@@ -71,7 +71,7 @@
       min-width: 250px;
 
       .granted-on {
-        color: $primary-med-or-secondary-med;
+        color: var(--primary-med-or-secondary-med);
       }
 
       .post-link {

@@ -119,7 +119,7 @@
       margin-right: 0;
     }
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 }
@@ -180,7 +180,7 @@ a.badge-category {
 }
 
 .private-message-glyph {
-  color: $primary-low-mid-or-secondary-high;
+  color: var(--primary-low-mid-or-secondary-high);
 }
 
 .private-message-glyph-wrapper {
@@ -226,7 +226,7 @@ a.badge-category {
   justify-content: space-between;
 
   padding: 0.5em;
-  background-color: $highlight-medium;
+  background-color: var(--highlight-medium);
   margin-top: 1em;
   max-width: 757px;
 }
@@ -275,13 +275,13 @@ a.badge-category {
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
     li:last-of-type {
       margin-bottom: 1em;
     }
   }
   .expand-links {
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
   }
   .track-link {
     display: flex;
@@ -296,7 +296,7 @@ a.badge-category {
     li {
       margin-bottom: 0.5em;
       a[href] {
-        color: $primary-med-or-secondary-med;
+        color: var(--primary-med-or-secondary-med);
       }
       .clicks {
         margin-left: 0.5em;
@@ -310,14 +310,14 @@ a.badge-category {
   }
   a.reply-new {
     .d-icon {
-      background: $secondary;
+      background: var(--secondary);
       border-radius: 20px;
       transition: all linear 0.15s;
     }
     &:hover {
-      color: $tertiary;
+      color: var(--tertiary);
       .d-icon {
-        background: $tertiary-low;
+        background: var(--tertiary-low);
       }
     }
   }
@@ -326,7 +326,7 @@ a.badge-category {
 a.topic-featured-link {
   display: inline-block;
   text-transform: lowercase;
-  color: $primary-med-or-secondary-med;
+  color: var(--primary-med-or-secondary-med);
   font-size: 0.875rem;
   .d-icon {
     margin-right: 3px;
@@ -360,8 +360,8 @@ a.topic-featured-link {
   .is-public {
     padding: 0.25em 0.5em;
     font-size: $font-down-2;
-    background: $tertiary;
-    color: $secondary;
+    background: var(--tertiary);
+    color: var(--secondary);
     border-radius: 3px;
     text-transform: lowercase;
   }

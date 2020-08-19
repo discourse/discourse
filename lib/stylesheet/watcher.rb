@@ -61,7 +61,7 @@ module Stylesheet
               paths.map! do |long|
                 plugin_name = nil
                 plugins_paths.each do |plugin_path|
-                  if long.include?(plugin_path)
+                  if long.include?("#{plugin_path}/")
                     plugin_name = File.basename(plugin_path)
                     break
                   end
@@ -111,12 +111,12 @@ module Stylesheet
       targets = [plugin_name]
       targets.push("#{plugin_name}_mobile") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :mobile)
       targets.push("#{plugin_name}_desktop") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :desktop)
-
       message = targets.map! do |name|
         msgs = []
         active_themes.each do |theme_id|
           msgs << Stylesheet::Manager.stylesheet_data(name.to_sym, theme_id)
         end
+        msgs
       end.flatten!
       MessageBus.publish '/file-change', message
     end

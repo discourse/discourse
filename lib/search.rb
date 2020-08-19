@@ -2,6 +2,7 @@
 
 class Search
   DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
+  HIGHLIGHT_CSS_CLASS = 'search-highlight'
 
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
@@ -227,8 +228,8 @@ class Search
   end
 
   # Query a term
-  def execute
-    if SiteSetting.log_search_queries? && @opts[:search_type].present? && !Discourse.readonly_mode?
+  def execute(readonly_mode: Discourse.readonly_mode?)
+    if SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode
       status, search_log_id = SearchLog.log(
         term: @term,
         search_type: @opts[:search_type],
@@ -274,6 +275,14 @@ class Search
     end
 
     @results
+  end
+
+  def self.advanced_order(trigger, &block)
+    (@advanced_orders ||= {})[trigger] = block
+  end
+
+  def self.advanced_orders
+    @advanced_orders
   end
 
   def self.advanced_filter(trigger, &block)
@@ -658,11 +667,11 @@ class Search
         end
       end
 
-      if word == 'order:latest' || word == 'l'
+      if word == 'l'
         @order = :latest
         nil
-      elsif word == 'order:latest_topic'
-        @order = :latest_topic
+      elsif word =~ /order:\w+/
+        @order = word.gsub('order:', '').to_sym
         nil
       elsif word == 'in:title' || word == 't'
         @in_title = true
@@ -675,12 +684,6 @@ class Search
             @search_context = topic
           end
         end
-        nil
-      elsif word == 'order:views'
-        @order = :views
-        nil
-      elsif word == 'order:likes'
-        @order = :likes
         nil
       elsif word == 'in:all'
         @search_all_topics = true
@@ -726,12 +729,18 @@ class Search
   def single_topic(id)
     if @opts[:restrict_to_archetype].present?
       archetype = @opts[:restrict_to_archetype] == Archetype.default ? Archetype.default : Archetype.private_message
-      post = Post.joins(:topic)
-        .where("topics.id = :id AND topics.archetype = :archetype AND posts.post_number = 1", id: id, archetype: archetype)
-        .first
+
+      post = posts_scope
+        .joins(:topic)
+        .find_by(
+          "topics.id = :id AND topics.archetype = :archetype AND posts.post_number = 1",
+          id: id,
+          archetype: archetype
+        )
     else
-      post = Post.find_by(topic_id: id, post_number: 1)
+      post = posts_scope.find_by(topic_id: id, post_number: 1)
     end
+
     return nil unless @guardian.can_see?(post)
 
     @results.add(post)
@@ -809,22 +818,37 @@ class Search
       .joins("LEFT JOIN categories ON categories.id = topics.category_id")
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
-
     posts = posts.where("topics.visible") unless is_topic_search
 
     if type_filter === "private_messages" || (is_topic_search && @search_context.private_message?)
-      posts = posts.where("topics.archetype =  ?", Archetype.private_message)
+      posts = posts
+        .where(
+          "topics.archetype = ? AND post_search_data.private_message",
+          Archetype.private_message
+        )
 
-       unless @guardian.is_admin?
-         posts = posts.private_posts_for_user(@guardian.user)
-       end
+      unless @guardian.is_admin?
+        posts = posts.private_posts_for_user(@guardian.user)
+      end
     elsif type_filter === "all_topics"
-      private_posts = posts.where("topics.archetype = ?", Archetype.private_message)
-      private_posts = private_posts.private_posts_for_user(@guardian.user)
+      private_posts = posts
+        .where(
+          "topics.archetype = ? AND post_search_data.private_message",
+          Archetype.private_message
+          )
+        .private_posts_for_user(@guardian.user)
 
-      posts = posts.where("topics.archetype <> ?", Archetype.private_message).or(private_posts)
+      posts = posts
+        .where(
+          "topics.archetype <> ? AND NOT post_search_data.private_message",
+          Archetype.private_message
+        )
+        .or(private_posts)
     else
-      posts = posts.where("topics.archetype <> ?", Archetype.private_message)
+      posts = posts.where(
+        "topics.archetype <> ? AND NOT post_search_data.private_message",
+        Archetype.private_message
+      )
     end
 
     if @term.present?
@@ -1004,15 +1028,18 @@ class Search
       posts = aggregate_relation.from(posts)
     end
 
+    if @order
+      advanced_order = Search.advanced_orders&.fetch(@order, nil)
+      posts = advanced_order.call(posts) if advanced_order
+    end
+
     posts = posts.offset(offset)
     posts.limit(limit)
   end
 
   def categories_ignored(posts)
     posts.where(<<~SQL, Searchable::PRIORITIES[:ignore])
-    categories.id NOT IN (
-      SELECT categories.id WHERE categories.search_priority = ?
-    )
+    (categories.search_priority IS NULL OR categories.search_priority IS NOT NULL AND categories.search_priority <> ?)
     SQL
   end
 
@@ -1096,7 +1123,7 @@ class Search
   def aggregate_posts(post_sql)
     return [] unless post_sql
 
-    posts_eager_loads(Post)
+    posts_scope(posts_eager_loads(Post))
       .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
       .order('row_number')
   end
@@ -1128,7 +1155,7 @@ class Search
 
   def topic_search
     if @search_context.is_a?(Topic)
-      posts = posts_eager_loads(posts_query(limit))
+      posts = posts_scope(posts_eager_loads(posts_query(limit)))
         .where('posts.topic_id = ?', @search_context.id)
 
       posts.each do |post|
@@ -1148,6 +1175,50 @@ class Search
     end
 
     query.includes(topic: topic_eager_loads)
+  end
+
+  private
+
+  # Limited for performance reasons since `TS_HEADLINE` is slow when the text
+  # document is too long.
+  MAX_LENGTH_FOR_HEADLINE = 2500
+
+  def posts_scope(default_scope = Post.all)
+    if SiteSetting.use_pg_headlines_for_excerpt
+      search_term = @term.present? ? PG::Connection.escape_string(@term) : nil
+      ts_config = default_ts_config
+
+      default_scope
+        .joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id")
+        .joins("INNER JOIN topics t1 ON t1.id = posts.topic_id")
+        .select(
+          "TS_HEADLINE(
+            #{ts_config},
+            t1.fancy_title,
+            PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
+            'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'''
+          ) AS topic_title_headline",
+          "TS_HEADLINE(
+            #{ts_config},
+            LEFT(
+              TS_HEADLINE(
+                #{ts_config},
+                LEFT(pd.raw_data, #{MAX_LENGTH_FOR_HEADLINE}),
+                PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
+                'ShortWord=0, MaxFragments=1, MinWords=50, MaxWords=51, StartSel='''', StopSel='''''
+              ),
+              #{Search::GroupedSearchResults::BLURB_LENGTH}
+            ),
+            PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
+            'HighlightAll=true, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'''
+          ) AS headline",
+          "LEFT(pd.raw_data, 50) AS leading_raw_data",
+          "RIGHT(pd.raw_data, 50) AS trailing_raw_data",
+          default_scope.arel.projections
+        )
+    else
+      default_scope
+    end
   end
 
 end

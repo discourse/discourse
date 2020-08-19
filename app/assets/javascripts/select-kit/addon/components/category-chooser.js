@@ -138,7 +138,7 @@ export default ComboBoxComponent.extend({
       }
 
       const permissionType = this.selectKit.options.permissionType;
-      if (permissionType) {
+      if (permissionType && !this.allowRestrictedCategories) {
         return permissionType === category.permission;
       }
 

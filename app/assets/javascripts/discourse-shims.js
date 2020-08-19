@@ -16,3 +16,7 @@ define("ember", ["exports"], function(__exports__) {
 define("message-bus-client", ["exports"], function(__exports__) {
   __exports__.default = window.MessageBus;
 });
+
+define("ember-buffered-proxy/proxy", ["exports"], function(__exports__) {
+  __exports__.default = window.BufferedProxy;
+});

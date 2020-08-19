@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 de:
   site_settings:
@@ -57,34 +56,34 @@ de:
         > :game_die: %{results}
     quote:
       trigger: "Zitat"
-      '1':
+      "1":
         quote: "In der Mitte von Schwierigkeiten liegen die Möglichkeiten."
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Freiheit ist es nicht wert zu haben, wenn sie nicht einhergeht mit der Freiheit sich irren zu dürfen."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Weine nicht, weil es vorbei ist. Lächle, weil es passiert ist."
         author: "Dr. Seuss"
-      '4':
+      "4":
         quote: "Gut ist man nur bedient, wenn man sich selbst bedient."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Glaube daran, dass du etwas kannst und du hast es schon halb geschafft."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Das Leben ist wie eine Schachtel Pralinen. Man weiß nie, was man kriegt."
         author: "Forrest Gump"
-      '7':
+      "7":
         quote: "Das ist ein kleiner Schritt für einen Menschen, ein riesiger Sprung für die Menschheit."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Tue jeden Tag etwas, wovor du Angst hast."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Fehler sind immer zu verzeihen, wenn man den Mut hat, diese auch zuzugeben."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Was der Verstand eines Menschen begreifen und glauben kann, kann er erreichen."
         author: "Napoleon Hill"
       results: |-
@@ -92,26 +91,26 @@ de:
     magic_8_ball:
       trigger: "Vorhersage"
       answers:
-        '1': "Es ist sicher"
-        '2': "Es ist entschieden so"
-        '3': "Ohne einen Zweifel"
-        '4': "Definitiv ja"
-        '5': "Darauf kannst du dich verlassen"
-        '6': "Wie ich es sehe, ja"
-        '7': "Höchstwahrscheinlich"
-        '8': "Gute Aussichten"
-        '9': "Ja"
-        '10': "Zeichen deuten auf ja"
-        '11': "Antwort unklar, versuch's nochmal"
-        '12': "Frag später nochmal"
-        '13': "Ich sags dir jetzt lieber nicht"
-        '14': "Kann es jetzt nicht vorhersagen"
-        '15': "Konzentriere dich und frag nochmal"
-        '16': "Warts erst mal ab."
-        '17': "Meine Antwort ist nein"
-        '18': "Meine Quellen sagen nein"
-        '19': "Nicht so gute Aussichten"
-        '20': "Sehr zweifelhaft"
+        "1": "Es ist sicher"
+        "2": "Es ist entschieden so"
+        "3": "Ohne einen Zweifel"
+        "4": "Definitiv ja"
+        "5": "Darauf kannst du dich verlassen"
+        "6": "Wie ich es sehe, ja"
+        "7": "Höchstwahrscheinlich"
+        "8": "Gute Aussichten"
+        "9": "Ja"
+        "10": "Zeichen deuten auf ja"
+        "11": "Antwort unklar, versuch's nochmal"
+        "12": "Frag später nochmal"
+        "13": "Ich sags dir jetzt lieber nicht"
+        "14": "Kann es jetzt nicht vorhersagen"
+        "15": "Konzentriere dich und frag nochmal"
+        "16": "Warts erst mal ab."
+        "17": "Meine Antwort ist nein"
+        "18": "Meine Quellen sagen nein"
+        "19": "Nicht so gute Aussichten"
+        "20": "Sehr zweifelhaft"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -268,8 +267,6 @@ de:
           Ich denke, du weißt was zu tun ist. Leg los und **melde diesen Beitrag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> als unangemessen!
         reply: |-
           [Unser Team](%{base_uri}/groups/staff) wird diskret über deine Meldung informiert. Wenn genügend Community-Mitglieder einen Beitrag melden, wird er als Vorsichtsmaßnahme automatisch versteckt. (Weil ich nicht wirklich einen bösen Beitrag geschrieben habe :angel:, habe ich mir erlaubt, die Meldung fürs Erste wieder zu löschen.)
-        not_found: |-
-          Oh nein, mein anstößiger Beitrag wurde noch nicht gemeldet. :worried: Kannst du ihn als unangemessen **melden** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergiss nicht, die „Mehr anzeigen“-Schaltfläche <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zu verwenden, um weitere Aktionen für den jeweiligen Beitrag einzublenden.
       search:
         instructions: |-
           _Psst_… ich habe in diesem Thema eine Überraschung versteckt. Wenn du für eine Herausforderung zu haben bist, dann **wähle das Such-Symbol** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> oben rechts &#8599; aus und suche danach.

@@ -64,6 +64,12 @@ export default Controller.extend({
         .then(result => {
           const displayN = 20;
           const tags = result["tags"];
+
+          if (tags.length === 0) {
+            bootbox.alert(I18n.t("tagging.delete_no_unused_tags"));
+            return;
+          }
+
           const joinedTags = tags.slice(0, displayN).join(", ");
           var more = Math.max(0, tags.length - displayN);
 

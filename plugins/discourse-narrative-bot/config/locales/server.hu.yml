@@ -1,18 +1,17 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 hu:
   site_settings:
-    discourse_narrative_bot_enabled: "A Discourse alámondó bot (discobot) bekapcsolása"
-    disable_discourse_narrative_bot_welcome_post: "A Discourse alámondó bot üdvözlő üzenetének kikapcsolása"
-    discourse_narrative_bot_ignored_usernames: "Felhasználónevek, amelyeket a Discourse alámondó bot hagyjon figyelmen kívül"
-    discourse_narrative_bot_disable_public_replies: "A Discourse alámondó bot nyilvános válaszainak kikapcsolása"
-    discourse_narrative_bot_welcome_post_type: "A Discourse alámondó bot üdvözlő üzeneteinek kiküldendő típusai"
-    discourse_narrative_bot_welcome_post_delay: "Várjon (n) másodpercet a Discourse alámondó bot üdvözlő üzenetének kiküldése előtt."
+    discourse_narrative_bot_enabled: "A Discourse eligazító bot (discobot) bekapcsolása"
+    disable_discourse_narrative_bot_welcome_post: "A Discourse eligazító bot üdvözlő üzenetének kikapcsolása"
+    discourse_narrative_bot_ignored_usernames: "Felhasználónevek, amelyeket a Discourse eligazító bot hagyjon figyelmen kívül"
+    discourse_narrative_bot_disable_public_replies: "A Discourse eligazító bot nyilvános válaszainak kikapcsolása"
+    discourse_narrative_bot_welcome_post_type: "A Discourse eligazító bot üdvözlő üzeneteinek kiküldendő típusai"
+    discourse_narrative_bot_welcome_post_delay: "Várjon (n) másodpercet a Discourse eligazító bot üdvözlő üzenetének kiküldése előtt."
   badges:
     certified:
       name: Hitelesített
@@ -20,10 +19,10 @@ hu:
       long_description: |
         Ez a jelvényt az interaktív új felhasználói eligazítás sikeres teljesítéséért jár. Kezdeményező volt és megtanulta a beszélgetés alapvető eszközeit, és ezzel hitelesített lett!
     licensed:
-      name: Licencelt
+      name: Hivatalos
       description: "Teljesítette az haladó felhasználói eligazítást"
       long_description: |
-        Ez a jelvényt az interaktív haladó felhasználói eligazítás sikeres teljesítéséért jár. Elsajátította a beszélgetés speciális eszközeit, és ezzel teljesen licencelt lett!
+        Ez a jelvényt az interaktív haladó felhasználói eligazítás sikeres teljesítéséért jár. Elsajátította a beszélgetés speciális eszközeit, és ezzel teljesen hivatalos lett!
   discourse_narrative_bot:
     bio: "Üdv, nem igazi személy vagyok. Egy bot vagyok, és megtanítom az oldal használatát. A velem történő interakcióhoz küldjön nekem egy üzenetet, vagy említsen meg így bárhol: **`@%{discobot_username}`**."
     tl2_promotion_message:
@@ -57,55 +56,60 @@ hu:
         > :game_die: %{results}
     quote:
       trigger: "idézet"
-      '1':
+      "1":
         quote: "A nehézségek közt mindig ott van a lehetőség"
         author: "Albert Einstein"
-      '2':
+      "2":
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Ne sírj, hogy vége, mosolyogj, hogy megtörtént."
         author: "Dr. Seuss"
-      '4':
+      "4":
+        quote: "Ha valamit el akarsz végezni, tedd meg magad."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
+        quote: "Hidd el, hogy képes vagy rá, és már félúton is vagy."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: " Az élet olyan, mint egy doboz bonbon. Soha nem tudhatod, hogy mi jut neked belőle."
         author: "Forrest Gump édesanyja"
-      '7':
+      "7":
         quote: "Kis lépés egy embernek, de hatalmas ugrás az emberiségnek."
         author: "Neil Armstrong"
-      '8':
+      "8":
+        quote: "Minden nap csinálj valamit, ami megijeszt."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
+        quote: "A hibák mindig megbocsáthatók, ha elég erős vagy bevallani azokat."
         author: "Bruce Lee"
-      '10':
+      "10":
+        quote: "Amit az emberi elme el tud képzelni és hinni, elérheti."
         author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       trigger: "jövendőmondás"
       answers:
-        '1': "Biztos"
-        '2': "Határozottan így van"
-        '3': "Kétségtelenül"
-        '4': "Igen, határozottan"
-        '5': "Számíthatsz rá"
-        '6': "Ahogy látom, igen"
-        '7': "Egészen valószínű"
-        '8': "Jók a kilátások"
-        '9': "Igen"
-        '10': "A jelek szerint igen"
-        '11': "A válasz ködös, próbálja újra"
-        '12': "Kérdezze meg később"
-        '13': "Jobb, ha most nem mondom el"
-        '14': "Most nem tudom megjósolni"
-        '15': "Koncentráljon és kérdezzen újra"
-        '16': "Ne számítson rá"
-        '17': "A válaszom nem"
-        '18': "A forrásaim szerint nem"
-        '19': "Nem túl jók a kilátások"
-        '20': "Nagyon kétséges"
+        "1": "Biztos"
+        "2": "Határozottan így van"
+        "3": "Kétségtelenül"
+        "4": "Igen, határozottan"
+        "5": "Számíthatsz rá"
+        "6": "Ahogy látom, igen"
+        "7": "Egészen valószínű"
+        "8": "Jók a kilátások"
+        "9": "Igen"
+        "10": "A jelek szerint igen"
+        "11": "A válasz ködös, próbálja újra"
+        "12": "Kérdezze meg később"
+        "13": "Jobb, ha most nem mondom el"
+        "14": "Most nem tudom megjósolni"
+        "15": "Koncentráljon és kérdezzen újra"
+        "16": "Ne számítson rá"
+        "17": "A válaszom nem"
+        "18": "A forrásaim szerint nem"
+        "19": "Nem túl jók a kilátások"
+        "20": "Nagyon kétséges"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -115,6 +119,11 @@ hu:
       random_mention:
         reply: |-
           Üdv! Hogy megtudja mit tudok, mondja ezt: `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Jelenleg a következőket tudom:
+
+          `@%{discobot_username} %{reset_trigger} {eligazítás-neve}`
+          > Elindítja az interaktív eligazítást, egy személyes üzenetben. Az `{eligazítás-neve}` ezek egyike lehet: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -129,9 +138,7 @@ hu:
           Hé, köszönöm a választ!
 
           Sajnos mivel egy rosszul programozott bot vagyok, ezt nem egészen értettem. :frowning:
-        track_response: 'Megpróbálhatja újra, vagy kihagyhatja a lépést, csak mondja ezt: `%{skip_trigger}`.
-
-          Egyébként az újrakezdéshez mondja ezt: `%{reset_trigger}`.'
+        track_response: 'Megpróbálhatja újra, vagy kihagyhatja a lépést, csak mondja ezt: `%{skip_trigger}`. Egyébként az újrakezdéshez mondja ezt: `%{reset_trigger}`.'
         second_response: |-
           Sajnálom. Még mindig nem értem. :anguished:
 
@@ -139,11 +146,19 @@ hu:
 
           Addig is, elállok az útból.
     new_user_narrative:
-      reset_trigger: "oktatás"
+      reset_trigger: "eligazítás"
       title: "Új felhasználói eligazítás elvégzési tanúsítványa"
       cert_title: "Az új felhasználói eligazítás teljesítése elismeréseképp"
       hello:
         title: "Üdvözlet!"
+        message: |-
+          Köszönjük, hogy csatlakozott a(z) %{title} oldalhoz, és üdvözöljük!
+
+          – Csak egy robot vagyok, de [a barátságos stábunk](%{base_uri}/about) is itt van, hogy segítsen, ha egy emberrel kell beszélnie.
+
+          – Biztonsági okokból ideiglenesen korlátozzuk, hogy mit tehetnek az új felhasználók. A jövőben [új képességeket](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (és [jelvényeket](%{base_uri}/badges)) fog kapni, ahogy megismerjük.
+
+          – Mindig hiszünk a [civilizált közösségi viselkedében](%{base_uri}/guidelines).
       certificate:
         alt: "Igazoló oklevél"
     advanced_user_narrative:

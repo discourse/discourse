@@ -13,6 +13,14 @@ export default Controller.extend({
         route: "group.manage.interaction",
         title: "groups.manage.interaction.title"
       },
+      {
+        route: "group.manage.categories",
+        title: "groups.manage.categories.title"
+      },
+      {
+        route: "group.manage.tags",
+        title: "groups.manage.tags.title"
+      },
 
       { route: "group.manage.logs", title: "groups.manage.logs.title" }
     ];

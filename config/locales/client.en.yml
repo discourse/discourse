@@ -1,19 +1,3 @@
-# encoding: utf-8
-#
-# This file contains content for the client portion of Discourse, sent out
-# to the Javascript app.
-#
-# To work with us on translations, see: https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-#
-# To validate this YAML file after you change it, please paste it into http://yamllint.com/
-
 en:
   js:
     number:
@@ -626,9 +610,11 @@ en:
       member_added: "Added"
       member_requested: "Requested at"
       add_members:
-        title: "Add Members"
-        description: "Manage the membership of this group"
-        usernames: "Usernames"
+        title: "Add members to %{group_name}"
+        description: "You can also paste in a comma separated list."
+        usernames: "Enter usernames or email addresses"
+        input_placeholder: "Usernames or emails"
+        notify_users: "Notify users"
       requests:
         title: "Requests"
         reason: "Reason"
@@ -670,6 +656,24 @@ en:
         membership:
           title: Membership
           access: Access
+        categories:
+          title: Categories
+          long_title: "Category default notifications"
+          description: "When users are added to this group, their category notification settings will be set to these defaults. Afterwards, they can change them."
+          watched_categories_instructions: "Automatically watch all topics in these categories. Group members will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+          tracked_categories_instructions: "Automatically track all topics in these categories. A count of new posts will appear next to the topic."
+          watching_first_post_categories_instructions: "Users will be notified of the first post in each new topic in these categories."
+          regular_categories_instructions: "If these categories are muted, they will be unmuted for group members. Users will be notified if they are mentioned or someone replies to them."
+          muted_categories_instructions: "Users will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest topics pages."
+        tags:
+          title: Tags
+          long_title: "Tags default notifications"
+          description: "When users are added to this group, their tag notification settings will be set to these defaults. Afterwards, they can change them."
+          watched_tags_instructions: "Automatically watch all topics with these tags. Group members will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+          tracked_tags_instructions: "Automatically track all topics with these tags. A count of new posts will appear next to the topic."
+          watching_first_post_tags_instructions: "Users will be notified of the first post in each new topic with these tags."
+          regular_tags_instructions: "If these tags are muted, they will be unmuted for group members. Users will be notified if they are mentioned or someone replies to them."
+          muted_tags_instructions: "Users will not be notified of anything about new topics with these tags, and they will not appear in latest."
         logs:
           title: "Logs"
           when: "When"
@@ -680,6 +684,10 @@ en:
           details: "Details"
           from: "From"
           to: "To"
+      permissions:
+        title: "Permissions"
+        none: "There are no categories associated with this group."
+        description: "Members of this group can access these categories"
       public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
       empty:
@@ -922,7 +930,13 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
+      skip_new_user_tips:
+        description: "Skip new user onboarding tips and badges"
+        not_first_time: "Not your first time?"
+        skip_link: "Skip these tips"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
+      dark_mode: "Dark Mode"
+      dark_mode_enable: "Enable automatic dark mode color scheme"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
@@ -970,6 +984,8 @@ en:
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
+      regular_categories: "Regular"
+      regular_categories_instructions: "These category topics will be displayed in the `latest` and `top` topics list."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -1953,6 +1969,7 @@ en:
       membership_request_consolidated: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - completed"
 
       group_message_summary:
         one: "%{count} message in your %{group_name} inbox"
@@ -1995,6 +2012,7 @@ en:
         post_approved: "post approved"
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
+        votes_released: "Vote was released"
 
     upload_selector:
       title: "Add an image"
@@ -3339,6 +3357,7 @@ en:
       delete_unused_confirmation_more_tags:
         one: "%{tags} and %{count} more"
         other: "%{tags} and %{count} more"
+      delete_no_unused_tags: "There are no unused tags."
       delete_unused: "Delete Unused Tags"
       delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
       cancel_delete_unused: "Cancel"
@@ -3630,12 +3649,24 @@ en:
         continue: Continue
         use_global_key: Global Key (allows all actions)
         scopes:
+          description: |
+            When using scopes, you can restrict an API key to a specific set of endpoints.
+            You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
           resource: Resource
           action: Action
           allowed_parameters: Allowed Parameters
           optional_allowed_parameters: Allowed Parameters (optional)
           any_parameter: (any parameter)
+          allowed_urls: Allowed URLs
+          descriptions:
+            topics:
+              read: |
+                Read a topic or a specific post in it. RSS is also supported.
+              write: |
+                Create a new topic or post to an existing one.
+              read_lists: |
+                Read topic lists like top, new, latest, etc. RSS is also supported.
 
       web_hooks:
         title: "Webhooks"
@@ -3881,6 +3912,7 @@ en:
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme: "Color Palette"
+          default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
@@ -3978,6 +4010,10 @@ en:
           embedded_scss:
             text: "Embedded CSS"
             title: "Enter custom CSS to deliver with embedded version of comments"
+          color_definitions:
+            text: "Color Definitions"
+            title: "Enter custom color definitions (advanced users only)"
+            placeholder: "\r\nUse this stylesheet to add custom colors to the list of CSS custom properties.\r\n\r\nExample: \r\n\r\n:root {\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\r\n}\r\n\r\nPrefixing the property names is highly recommended to avoid conflicts with plugins and/or core."
           head_tag:
             text: "</head>"
             title: "HTML that will be inserted before the </head> tag"

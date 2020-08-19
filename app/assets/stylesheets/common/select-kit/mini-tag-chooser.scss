@@ -6,7 +6,7 @@
 
       &.no-tags {
         .select-kit-header .selected-name {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
 
@@ -43,12 +43,12 @@
         }
 
         &.is-highlighted.is-selected {
-          background: $tertiary-low;
+          background: var(--tertiary-low);
         }
 
         .discourse-tag {
           &:hover {
-            color: $primary;
+            color: var(--primary);
           }
         }
 
@@ -61,14 +61,14 @@
         max-height: 125px;
         overflow-y: auto;
         display: flex;
-        border-bottom: 1px solid $primary-low;
+        border-bottom: 1px solid var(--primary-low);
         padding: 0.25em 0 0 0.25em;
         box-sizing: border-box;
         flex-wrap: wrap;
         width: 100%;
 
         .selected-tag {
-          background: $primary-low;
+          background: var(--primary-low);
           box-sizing: border-box;
           margin: 0;
           padding: 0.5em;
@@ -82,16 +82,16 @@
           }
 
           &.is-highlighted {
-            box-shadow: 0 0 2px $danger, 0 1px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 2px var(--danger), 0 1px 0 rgba(0, 0, 0, 0.05);
           }
 
           .d-icon {
-            color: $primary-low-mid;
+            color: var(--primary-low-mid);
             vertical-align: middle;
           }
 
           &:hover .d-icon.d-icon-times {
-            color: $danger;
+            color: var(--danger);
           }
         }
       }

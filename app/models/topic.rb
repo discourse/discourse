@@ -115,6 +115,8 @@ class Topic < ActiveRecord::Base
         image_upload &&
         SiteSetting.create_thumbnails &&
         image_upload.filesize < SiteSetting.max_image_size_kb.kilobytes &&
+        image_upload.read_attribute(:width) &&
+        image_upload.read_attribute(:height) &&
         enqueue_if_missing &&
         Discourse.redis.set(thumbnail_job_redis_key([]), 1, nx: true, ex: 1.minute)
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id })
@@ -509,14 +511,17 @@ class Topic < ActiveRecord::Base
       topics = topics.where("topics.id NOT IN (?)", category_topic_ids)
     end
 
-    # Remove muted categories
-    muted_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
+    # Remove muted and shared draft categories
+    remove_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
     if SiteSetting.digest_suppress_categories.present?
-      muted_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
-      muted_category_ids = muted_category_ids.uniq
+      remove_category_ids += SiteSetting.digest_suppress_categories.split("|").map(&:to_i)
     end
-    if muted_category_ids.present?
-      topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
+    if SiteSetting.shared_drafts_enabled?
+      remove_category_ids << SiteSetting.shared_drafts_category
+    end
+    if remove_category_ids.present?
+      remove_category_ids.uniq!
+      topics = topics.where("topics.category_id NOT IN (?)", remove_category_ids)
     end
 
     # Remove muted tags

@@ -65,7 +65,7 @@ module TopicGuardian
     return false if topic.trashed?
     return true if is_admin?
 
-    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator?
+    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator? || can_perform_action_available_to_group_moderators?(topic)
 
     (!(topic.closed? || topic.archived?) || trusted) && can_create_post?(topic)
   end
@@ -210,6 +210,12 @@ module TopicGuardian
   end
   alias :can_archive_topic? :can_perform_action_available_to_group_moderators?
   alias :can_close_topic? :can_perform_action_available_to_group_moderators?
+  alias :can_split_merge_topic? :can_perform_action_available_to_group_moderators?
   alias :can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
+
+  def can_move_posts?(topic)
+    return false if is_silenced?
+    can_perform_action_available_to_group_moderators?(topic)
+  end
 
 end

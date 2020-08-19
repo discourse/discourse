@@ -34,7 +34,11 @@ QUnit.test("As an admin", async assert => {
 });
 
 QUnit.test("As a group owner", async assert => {
-  updateCurrentUser({ moderator: false, admin: false });
+  updateCurrentUser({
+    moderator: false,
+    admin: false,
+    can_create_group: false
+  });
 
   await visit("/g/discourse/manage/profile");
 

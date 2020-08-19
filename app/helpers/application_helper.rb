@@ -450,6 +450,19 @@ module ApplicationHelper
     Stylesheet::Manager.stylesheet_link_tag(name, 'all', ids)
   end
 
+  def discourse_color_scheme_stylesheets
+    result = +""
+    result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(scheme_id, 'all', theme_ids)
+
+    user_dark_scheme_id = current_user&.user_option&.dark_scheme_id
+    dark_scheme_id =  user_dark_scheme_id || SiteSetting.default_dark_mode_color_scheme_id
+
+    if dark_scheme_id != -1
+      result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)', theme_ids)
+    end
+    result.html_safe
+  end
+
   def preloaded_json
     return '{}' if @preloaded.blank?
     @preloaded.transform_values { |value| escape_unicode(value) }.to_json

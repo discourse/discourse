@@ -52,6 +52,7 @@ class TopicQuery
          state
          search
          q
+         f
          group_name
          tags
          match_all_tags
@@ -806,7 +807,7 @@ class TopicQuery
       end
     end
 
-    if (filter = options[:filter]) && @user
+    if (filter = (options[:filter] || options[:f])) && @user
       action =
         if filter == "bookmarked"
           PostActionType.types[:bookmark]
@@ -890,7 +891,8 @@ class TopicQuery
       category_ids = [
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
-        SiteSetting.default_categories_watching_first_post.split("|")
+        SiteSetting.default_categories_watching_first_post.split("|"),
+        SiteSetting.default_categories_regular.split("|")
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 

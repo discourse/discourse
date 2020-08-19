@@ -72,6 +72,10 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS ||= 1200
 
+  register_custom_field_type(LARGE_IMAGES, :json)
+  register_custom_field_type(BROKEN_IMAGES, :json)
+  register_custom_field_type(DOWNLOADED_IMAGES, :json)
+
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
 
@@ -265,7 +269,7 @@ class Post < ActiveRecord::Base
 
   %w{raw_mentions
     linked_hosts
-    image_count
+    embedded_media_count
     attachment_count
     link_count
     raw_links
@@ -911,7 +915,6 @@ class Post < ActiveRecord::Base
       upload_ids << upload.id if upload.present?
     end
 
-    upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
     post_uploads = upload_ids.map do |upload_id|
       { post_id: self.id, upload_id: upload_id }
     end
@@ -942,9 +945,7 @@ class Post < ActiveRecord::Base
   end
 
   def downloaded_images
-    JSON.parse(self.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}")
-  rescue JSON::ParserError
-    {}
+    self.custom_fields[Post::DOWNLOADED_IMAGES] || {}
   end
 
   def each_upload_url(fragments: nil, include_local_upload: true)
@@ -987,7 +988,7 @@ class Post < ActiveRecord::Base
       next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-      next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
+      next unless Discourse.store.has_been_uploaded?(src) || Upload.secure_media_url?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
 
       path = begin
         URI(UrlHelper.unencode(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src))&.path

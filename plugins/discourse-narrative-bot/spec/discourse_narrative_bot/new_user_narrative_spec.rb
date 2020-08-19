@@ -840,7 +840,9 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
     describe 'flag tutorial' do
       let(:post) { Fabricate(:post, user: discobot_user, topic: topic) }
-      let(:flag) { Fabricate(:flag, post: post, user: user) }
+      let(:another_post) { Fabricate(:post, user: discobot_user, topic: topic) }
+      let(:flag) { Fabricate(:flag, post: post, user: user, post_action_type_id: PostActionType.types[:inappropriate]) }
+      let(:other_flag) { Fabricate(:flag, post: another_post, user: user, post_action_type_id: PostActionType.types[:spam]) }
       let(:other_post) { Fabricate(:post, user: user, topic: topic) }
 
       before do
@@ -854,6 +856,17 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           flag.update!(post: other_post)
 
           expect { narrative.input(:flag, user, post: flag.post) }.to_not change { Post.count }
+          expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
+        end
+      end
+
+      describe 'when post is flagged incorrectly' do
+        it 'should create the right reply and stay on the same step' do
+          narrative.expects(:enqueue_timeout_job).with(user).never
+          other_flag.update!(post: another_post)
+          new_post = Post.last
+
+          expect(new_post.raw).to eq(I18n.t('discourse_narrative_bot.new_user_narrative.flag.not_found', base_uri: ''))
           expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
         end
       end

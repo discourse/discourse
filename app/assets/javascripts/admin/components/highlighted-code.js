@@ -5,7 +5,7 @@ import highlightSyntax from "discourse/lib/highlight-syntax";
 export default Component.extend({
   @on("didInsertElement")
   @observes("code")
-  _refresh: function() {
-    highlightSyntax($(this.element), this.siteSettings);
+  _refresh() {
+    highlightSyntax($(this.element), this.siteSettings, this.session);
   }
 });

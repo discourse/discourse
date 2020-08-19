@@ -271,6 +271,8 @@ class ColorScheme < ActiveRecord::Base
 
   def publish_discourse_stylesheet
     if self.id
+      Stylesheet::Manager.clear_color_scheme_cache!
+
       theme_ids = Theme.where(color_scheme_id: self.id).pluck(:id)
       if theme_ids.present?
         Stylesheet::Manager.cache.clear

@@ -88,7 +88,7 @@ class GroupSmtpMailer < ActionMailer::Base
 
   def strip_secure_urls(raw)
     urls = Set.new
-    raw.scan(URI.regexp(%w{http https})) { urls << $& }
+    raw.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
 
     urls.each do |url|
       if (url.start_with?(Discourse.store.s3_upload_host) && FileHelper.is_supported_media?(url))

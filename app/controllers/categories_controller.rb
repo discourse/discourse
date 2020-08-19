@@ -125,7 +125,7 @@ class CategoriesController < ApplicationController
 
     @category =
       begin
-        Category.new(category_params.merge(user: current_user))
+        Category.new(required_create_params.merge(user: current_user))
       rescue ArgumentError => e
         return render json: { errors: [e.message] }, status: 422
       end
@@ -266,15 +266,18 @@ class CategoriesController < ApplicationController
   end
 
   def required_param_keys
-    [:name, :color, :text_color]
+    [:name]
+  end
+
+  def required_create_params
+    required_param_keys.each do |key|
+      params.require(key)
+    end
+    category_params
   end
 
   def category_params
     @category_params ||= begin
-      required_param_keys.each do |key|
-        params.require(key)
-      end
-
       if p = params[:permissions]
         p.each do |k, v|
           p[k] = v.to_i
@@ -290,6 +293,9 @@ class CategoriesController < ApplicationController
       result = params.permit(
         *required_param_keys,
         :position,
+        :name,
+        :color,
+        :text_color,
         :email_in,
         :email_in_allow_strangers,
         :mailinglist_mirror,

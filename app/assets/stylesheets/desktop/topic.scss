@@ -30,14 +30,14 @@
     overflow-wrap: break-word;
     width: 100%;
     a {
-      color: $primary;
+      color: var(--primary);
     }
   }
 
   .remove-featured-link {
     float: right;
     text-transform: lowercase;
-    color: $primary-med-or-secondary-med;
+    color: var(--primary-med-or-secondary-med);
     font-size: 0.857rem;
   }
 }
@@ -62,7 +62,7 @@
 }
 
 .topic-status-info {
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding: 10px 0;
   max-width: 758px;
   .topic-timer-heading {
@@ -89,9 +89,9 @@
 }
 
 #topic-progress-expanded {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   padding: 5px;
-  background: $secondary;
+  background: var(--secondary);
 
   position: relative;
   left: 340px;
@@ -136,9 +136,9 @@
   &.hidden {
     display: none;
   }
-  background-color: $secondary;
-  color: $tertiary;
-  border: 1px solid $tertiary-low;
+  background-color: var(--secondary);
+  color: var(--tertiary);
+  border: 1px solid var(--tertiary-low);
   border-bottom: none;
   width: 145px;
   height: 34px;
@@ -173,14 +173,14 @@
     bottom: 0;
     width: 0;
     max-width: 145px;
-    border-right: 1px solid $tertiary-low;
-    background-color: $tertiary-low;
+    border-right: 1px solid var(--tertiary-low);
+    background-color: var(--tertiary-low);
     transition: width 0.75s;
   }
 }
 
 #topic-filter {
-  background-color: $highlight-medium;
+  background-color: var(--highlight-medium);
   padding: 8px;
   bottom: 0;
   position: fixed;

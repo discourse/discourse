@@ -5,6 +5,7 @@ Fabricator(:incoming_email) do
   subject "Hello world"
   from_address "foo@example.com"
   to_addresses "someone@else.com"
+  imap_sync false
 
   raw <<~RAW
     Return-Path: <foo@example.com>

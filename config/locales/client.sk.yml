@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sk:
   js:
@@ -245,6 +244,7 @@ sk:
     every_hour: "každú hodinu"
     daily: "denne"
     weekly: "týždenne"
+    every_month: "každý mesiac"
     max_of_count: "najviac %{count}"
     alternation: "alebo"
     character_count:
@@ -286,6 +286,7 @@ sk:
       remove: "Odstrániť záložku"
       confirm_clear: "Ste si istý, že chcete odstrániť všetky záložky z tejto témy?"
       save: "Uložiť"
+      search: "Hľadať"
       reminders:
         tomorrow: "Zajtra"
         next_week: "Budúci týždeň"
@@ -423,10 +424,6 @@ sk:
         remove_user_as_group_owner: "Odobrať vlastníka"
     groups:
       member_added: "Pridané"
-      add_members:
-        title: "Pridať používateľov"
-        description: "Spravovať členstvo v tejto skupine"
-        usernames: "Používateľské mená"
       requests:
         reason: "Dôvod"
       manage:
@@ -441,6 +438,11 @@ sk:
           title: Interakcia
           posting: Prispievanie
           notification: Notifikácia
+        email:
+          title: "Email"
+          credentials:
+            username: "Používateľské meno"
+            password: "Heslo"
         membership:
           title: Členstvo
           access: Prístup
@@ -887,6 +889,7 @@ sk:
         every_hour: "každú hodinu"
         daily: "denne"
         weekly: "týždenne"
+        every_month: "každý mesiac"
       email_level:
         title: "Pošlite mi email ak ma niekto cituje, odpovie na môj príspevok, zmieni moje @meno alebo ma pozve do témy."
         always: "vždy"
@@ -1133,7 +1136,7 @@ sk:
       button_label: "s emailom"
       complete_username_not_found: "Žiadny účet nemá priradené používateľské meno <b>%{username}</b>"
       complete_email_not_found: "Žiadny účet nie je s e-mailom <b>%{email}</b>"
-      confirm_title: "Pokračujte na %{site_name}"
+      confirm_title: Pokračujte na %{site_name}
     login:
       title: "Prihlásenie"
       username: "Používateľ"
@@ -1491,7 +1494,7 @@ sk:
       read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 neprečítanú</a> } other { <a href='{basePath}/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='{basePath}/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='{basePath}/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Prezrieť všetky kategórie
       view_latest_topics: zobraziť najnošie témy
-      suggest_create_topic: "Čo tak vytvoriť novú tému?"
+      suggest_create_topic: Čo tak vytvoriť novú tému?
       jump_reply_up: prejsť na predchádzajúcu odpoveď
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
@@ -1547,6 +1550,7 @@ sk:
           "3_2": "Budete dostávať upozornenia, pretože sledujete túto tému."
           "3_1": "Budete dostávať upozornenia, pretože ste vytvorili túto tému."
           "3": "Budete dostávať upozornenia, pretože sledujete túto tému."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
           "1": "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
           "0_7": "Ignorujete všetky upozornenia v tejto kategórii."
@@ -2199,7 +2203,7 @@ sk:
         few: "%{count} udelené"
         many: "%{count} udelených"
         other: "%{count} udelených"
-      select_badge_for_title: "Vyberte odznak, ktorý chcete použiť ako Váš titul"
+      select_badge_for_title: Vyberte odznak, ktorý chcete použiť ako Váš titul
       none: "(žiadne)"
       badge_grouping:
         getting_started:
@@ -2248,7 +2252,6 @@ sk:
         new: "Nová skupina"
         tags_label: "Štítky v tejto skupine:"
         parent_tag_label: "Nadradený štítok"
-        parent_tag_placeholder: "Voliteľné"
         parent_tag_description: "Štítky z tejto skupiny nemôžu byť použité pokiaľ nie je použitý nadradený štítok."
         one_per_topic_label: "Obmedziť na jeden štítok na tému z tejto skupiny"
         new_name: "Nová skupina štítkov"
@@ -2312,13 +2315,13 @@ sk:
         traffic_short: "Vyťaženie"
         traffic: "Požiadavky webových aplikácií"
         show_traffic_report: "Zobraziť detaily vyťaženia"
-        whats_new_in_discourse: "Čo je nové v Discourse?"
+        whats_new_in_discourse: Čo je nové v Discourse?
         all_reports: "Všetky hlásenia"
         general_tab: "Všeobecné"
         security_tab: "Bezpečnosť"
         report_filter_any: "hocijaký"
         disabled: Vypnuté
-        not_found_error: "Prepáčte, toto hlásenie neexistuje"
+        not_found_error: Prepáčte, toto hlásenie neexistuje
         reports:
           today: "Dnes"
           yesterday: "Včera"
@@ -2510,7 +2513,6 @@ sk:
           subject: "Predmet"
           multiple_subjects: "Táto emailova šablóna obsahuje viac predmetov"
           body: "Telo"
-          none_selected: "Vyberte šablénu emailu pre začatie úpravy."
           revert: "Vrátiť zmeny"
           revert_confirm: "Ste si istý, že chcete vrátiť vykonané zmeny späť?"
         theme:
@@ -2730,7 +2732,6 @@ sk:
           domain: "Doména"
         screened_ips:
           title: "Kontrolované IP adresy"
-          description: 'IP adresy pod dohľadom. Použi "Povoľ" pre povolenie IP adries.'
           delete_confirm: "Ste si istý, že chcete zrušiť pravidlo pre %{ip_address}?"
           roll_up_confirm: "Ste si istý, že chcete zosumarizovať bežne kontrolované IP do podsietí?"
           rolled_up_some_subnets: "Zakázané IP adresy boli úspešne zosumarizované do podsietí: %{subnets}."
@@ -2830,7 +2831,7 @@ sk:
         reputation: Reputácia
         permissions: Práva
         activity: Aktivita
-        like_count: "\"Páči sa\" Rozdané / Prijaté"
+        like_count: '"Páči sa" Rozdané / Prijaté'
         last_100_days: "za posledných 100 dní"
         private_topics_count: Súkromné témy
         posts_read_count: Prečítané príspevky
@@ -3021,20 +3022,20 @@ sk:
           modal_title: Zoskupovanie odznakov
         granted_by: Udelené používateľom
         granted_at: Udelené dňa
-        reason_help: "(Odkaze na príspevok, alebo tému)"
+        reason_help: (Odkaze na príspevok, alebo tému)
         save: Uložiť
         delete: Odstrániť
-        delete_confirm: "Ste si istý, že chcete zmazať tento odznak?"
+        delete_confirm: Ste si istý, že chcete zmazať tento odznak?
         revoke: Zrušiť
         reason: Dôvod
         expand: Rozbaliť &hellip;
-        revoke_confirm: "Ste si istý, že chcete obnoviť tento odznak?"
+        revoke_confirm: Ste si istý, že chcete obnoviť tento odznak?
         edit_badges: Upraviť odznaky
         grant_badge: Udeliť odznak
         granted_badges: Udelené odznaky
         grant: Udeliť
         no_user_badges: "Používateľovi %{name} nebol udelený žiaden odznak."
-        no_badges: "Nie sú žiadne odznaky, ktoré môžu byť udelené."
+        no_badges: Nie sú žiadne odznaky, ktoré môžu byť udelené.
         none_selected: "Vyberte odznak, aby ste mohli začať"
         allow_title: Povoliť použitie odznaku namiesto názvu
         multiple_grant: Môže byť udelené viacnásobne
@@ -3070,10 +3071,10 @@ sk:
             other: "<b>%{count}</b> odznakov na pridelenie"
           sample: "Vzor:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> za príspevok v %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> za príspevok v %{link} v čase <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> v čase <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> za príspevok v %{link}
+            with_post_time: <span class="username">%{username}</span> za príspevok v %{link} v čase <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> v čase <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
         help: "Pridaj nové emoji, ktoré bude dostupné pre všetkých (TIP: môžete pretiahnuť viac súborov naraz)"
@@ -3098,9 +3099,6 @@ sk:
         embed_by_username: "Používateľské meno pre vytváranie tém"
         embed_post_limit: "Maximálny počet vložených príspevkov"
         embed_truncate: "Skrátiť vložené príspevky"
-        embed_whitelist_selector: "CSS selector pre elementy ktoré je možné vkladať"
-        embed_blacklist_selector: "CSS selector pre elementy ktoré nie je možné vkladať"
-        embed_classname_whitelist: "Dovolené názvy CSS tried"
         save: "Uložiť Nastavenia vkladania"
       permalink:
         title: "Trvalé odkazy"
@@ -3111,8 +3109,7 @@ sk:
         post_title: "Príspevok"
         category_id: "ID kategórie"
         category_title: "Kategória"
-        external_url: "Externá URL"
-        delete_confirm: "Ste si istý, že chcete zmazať tento trvalý odkaz?"
+        delete_confirm: Ste si istý, že chcete zmazať tento trvalý odkaz?
         form:
           label: "Nový:"
           add: "Pridať"

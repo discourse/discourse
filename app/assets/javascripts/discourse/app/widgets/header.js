@@ -5,7 +5,7 @@ import { schedule } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { avatarImg } from "discourse/widgets/post";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applySearchAutocomplete } from "discourse/lib/search";
 import { ajax } from "discourse/lib/ajax";
@@ -85,18 +85,29 @@ createWidget("header-notifications", {
         !user.get("read_first_notification") &&
         !user.get("enforcedSecondFactor")
       ) {
-        contents.push(h("span.ring"));
         if (!attrs.active && attrs.ringBackdrop) {
+          contents.push(h("span.ring"));
           contents.push(h("span.ring-backdrop-spotlight"));
           contents.push(
             h(
               "span.ring-backdrop",
               {},
-              h(
-                "h1.ring-first-notification",
-                {},
-                I18n.t("user.first_notification")
-              )
+              h("h1.ring-first-notification", {}, [
+                h("span", {}, I18n.t("user.first_notification")),
+                h("br"),
+                h("br"),
+                h("span", {}, [
+                  I18n.t("user.skip_new_user_tips.not_first_time"),
+                  " ",
+                  this.attach("link", {
+                    action: "skipNewUserTips",
+                    className: "skip-new-user-tips",
+                    label: "user.skip_new_user_tips.skip_link",
+                    title: "user.skip_new_user_tips.description",
+                    omitSpan: true
+                  })
+                ])
+              ])
             )
           );
         }
@@ -577,6 +588,18 @@ export default createWidget("header", {
     // Update UI
     this.state.ringBackdrop = false;
     this.scheduleRerender();
+  },
+
+  skipNewUserTips() {
+    this.headerDismissFirstNotificationMask();
+    ajax(userPath(this.currentUser.username_lower), {
+      type: "PUT",
+      data: {
+        skip_new_user_tips: true
+      }
+    }).then(() => {
+      this.currentUser.set("skip_new_user_tips", true);
+    });
   },
 
   headerKeyboardTrigger(msg) {

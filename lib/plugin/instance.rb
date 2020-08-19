@@ -190,6 +190,22 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom search order. Example usage:
+  #   Search.advanced_order(:chars) do |posts|
+  #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+  #   end
+  def register_search_advanced_order(trigger, &block)
+    Search.advanced_order(trigger, &block)
+  end
+
+  # Allows to define custom search filters. Example usage:
+  #   Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
+  #     posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+  #   end
+  def register_search_advanced_filter(trigger, &block)
+    Search.advanced_filter(trigger, &block)
+  end
+
   # Request a new size for topic thumbnails
   # Will respect plugin enabled setting is enabled
   # Size should be an array with two elements [max_width, max_height]
@@ -276,6 +292,15 @@ class Plugin::Instance
     reloadable_patch do |plugin|
       ::TopicView.add_post_custom_fields_allowlister do |user|
         plugin.enabled? ? block.call(user) : []
+      end
+    end
+  end
+
+  # Allows to add additional user_ids to the list of people notified when doing a post revision
+  def add_post_revision_notifier_recipients(&block)
+    reloadable_patch do |plugin|
+      ::PostActionNotifier.add_post_revision_notifier_recipients do |post_revision|
+        plugin.enabled? ? block.call(post_revision) : []
       end
     end
   end

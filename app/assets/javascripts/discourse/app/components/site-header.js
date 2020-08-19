@@ -9,8 +9,6 @@ import PanEvents, {
 } from "discourse/mixins/pan-events";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
-const PANEL_BODY_MARGIN = 30;
-
 const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
   docAt: null,
@@ -311,8 +309,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       }
 
       const $panelBody = $(".panel-body", $panel);
-      // 2 pixel fudge allows for firefox subpixel sizing stuff causing scrollbar
-      let contentHeight = $(".panel-body-contents", $panel).height() + 2;
 
       // We use a mutationObserver to check for style changes, so it's important
       // we don't set it if it doesn't change. Same goes for the $panelBody!
@@ -330,22 +326,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           $panel.css({ top: "100%", height: "auto" });
         }
 
-        // adjust panel height
-        const fullHeight = $window.height();
-        const offsetTop = $panel.offset().top;
-        const scrollTop = $window.scrollTop();
-
-        if (
-          contentHeight + (offsetTop - scrollTop) + PANEL_BODY_MARGIN >
-            fullHeight ||
-          this.site.mobileView
-        ) {
-          contentHeight =
-            fullHeight - (offsetTop - scrollTop) - PANEL_BODY_MARGIN;
-        }
-        if ($panelBody.height() !== contentHeight) {
-          $panelBody.height(contentHeight);
-        }
         $("body").addClass("drop-down-mode");
       } else {
         if (this.site.mobileView) {
@@ -354,15 +334,14 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
         const menuTop = this.site.mobileView ? headerTop() : headerHeight();
 
-        let height;
         const winHeightOffset = 16;
         let initialWinHeight = window.innerHeight
           ? window.innerHeight
           : $(window).height();
         const winHeight = initialWinHeight - winHeightOffset;
-        if (menuTop + contentHeight < winHeight && !this.site.mobileView) {
-          height = contentHeight + "px";
-        } else {
+
+        let height;
+        if (this.site.mobileView) {
           height = winHeight - menuTop;
         }
 

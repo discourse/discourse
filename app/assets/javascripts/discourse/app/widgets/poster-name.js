@@ -68,8 +68,7 @@ export default createWidget("poster-name", {
     const username = attrs.username;
     const name = attrs.name;
     const nameFirst =
-      this.siteSettings.display_name_on_posts &&
-      prioritizeNameInUx(name, this.siteSettings);
+      this.siteSettings.display_name_on_posts && prioritizeNameInUx(name);
     const classNames = nameFirst
       ? ["first", "full-name"]
       : ["first", "username"];

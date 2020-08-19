@@ -1,4 +1,4 @@
-{{#if currentUser.admin}}
+{{#if canAdminGroup}}
   <div class="control-group">
     <label class="control-label">{{i18n "admin.groups.manage.interaction.visibility"}}</label>
     <label for="visiblity">{{i18n "admin.groups.manage.interaction.visibility_levels.title"}}</label>
@@ -62,7 +62,7 @@
   }}
 </div>
 
-{{#if currentUser.admin}}
+{{#if canAdminGroup}}
   <div class="control-group">
     <label>
       {{input type="checkbox"
