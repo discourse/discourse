@@ -14,7 +14,11 @@
             {{/if}}
           </div>
           <div>
-            <span class="user-count">{{i18n "directory.total_rows" count=model.totalRows}}</span>
+            <span class="total-rows">
+              {{#if model.totalRows}}
+                {{i18n "directory.total_rows" count=model.totalRows}}
+              {{/if}}
+            </span>
             {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
           </div>
         </div>
