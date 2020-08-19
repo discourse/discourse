@@ -3872,6 +3872,7 @@ en:
   color_schemes:
     base_theme_name: "Base"
     light: "Light"
+    light_default: "Light (default)"
     dark: "Dark"
     neutral: "Neutral"
     grey_amber: "Grey Amber"

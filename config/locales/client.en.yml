@@ -3647,7 +3647,7 @@ en:
         use_global_key: Global Key (allows all actions)
         scopes:
           description: |
-            When using scopes, you can restrict an API key to a specific set of endpoints. 
+            When using scopes, you can restrict an API key to a specific set of endpoints.
             You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
           resource: Resource
@@ -3909,6 +3909,7 @@ en:
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme: "Color Palette"
+          default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
