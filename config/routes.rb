@@ -92,7 +92,8 @@ Discourse::Application.routes.draw do
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
 
-      resources :groups, constraints: AdminConstraint.new do
+      resources :groups, only: [:create]
+      resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
           get 'bulk'
           get 'bulk-complete' => 'groups#bulk'
@@ -560,7 +561,7 @@ Discourse::Application.routes.draw do
 
         collection do
           get "check-name" => 'groups#check_name'
-          get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
+          get 'custom/new' => 'groups#new', constraints: StaffConstraint.new
           get "search" => "groups#search"
         end
 

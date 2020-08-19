@@ -833,7 +833,7 @@ const User = RestModel.extend({
   canManageGroup(group) {
     return group.get("automatic")
       ? false
-      : this.admin || group.get("is_group_owner");
+      : group.get("can_admin_group") || group.get("is_group_owner");
   },
 
   @discourseComputed("groups.@each.title", "badges.[]")

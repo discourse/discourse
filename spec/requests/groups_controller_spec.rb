@@ -829,6 +829,99 @@ describe GroupsController do
       end
     end
 
+    context "when user is a site moderator" do
+      before do
+        SiteSetting.moderators_manage_categories_and_groups = true
+        sign_in(moderator)
+      end
+
+      it 'should not be able to update the group if the SiteSetting is false' do
+        SiteSetting.moderators_manage_categories_and_groups = false
+
+        put "/groups/#{group.id}.json", params: { group: { name: 'testing' } }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'should not be able to update a group it cannot see' do
+        group.update!(visibility_level: 2)
+
+        put "/groups/#{group.id}.json", params: { group: { name: 'testing' } }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'should be able to update the group' do
+        put "/groups/#{group.id}.json", params: {
+          group: {
+            flair_color: 'BBB',
+            name: 'testing',
+            incoming_email: 'test@mail.org',
+            primary_group: true,
+            automatic_membership_email_domains: 'test.org',
+            grant_trust_level: 2,
+            visibility_level: 1,
+            members_visibility_level: 3,
+            tracking_category_ids: [category.id],
+            tracking_tags: [tag.name]
+          }
+        }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.flair_color).to eq('BBB')
+        expect(group.name).to eq('testing')
+        expect(group.incoming_email).to eq("test@mail.org")
+        expect(group.primary_group).to eq(true)
+        expect(group.visibility_level).to eq(1)
+        expect(group.members_visibility_level).to eq(3)
+        expect(group.automatic_membership_email_domains).to eq('test.org')
+        expect(group.grant_trust_level).to eq(2)
+        expect(group.group_category_notification_defaults.first&.category).to eq(category)
+        expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
+
+        expect(Jobs::AutomaticGroupMembership.jobs.first["args"].first["group_id"])
+          .to eq(group.id)
+      end
+
+      it "should be able to update an automatic group" do
+        group = Group.find(Group::AUTO_GROUPS[:trust_level_4])
+
+        group.update!(
+          mentionable_level: 2,
+          messageable_level: 2,
+          default_notification_level: 2
+        )
+
+        put "/groups/#{group.id}.json", params: {
+          group: {
+            mentionable_level: 1,
+            messageable_level: 1,
+            default_notification_level: 1
+          }
+        }
+
+        expect(response.status).to eq(200)
+
+        group.reload
+        expect(group.flair_color).to eq(nil)
+        expect(group.name).to eq('trust_level_4')
+        expect(group.mentionable_level).to eq(1)
+        expect(group.messageable_level).to eq(1)
+        expect(group.default_notification_level).to eq(1)
+      end
+
+      it 'triggers a extensibility event' do
+        event = DiscourseEvent.track_events {
+          put "/groups/#{group.id}.json", params: { group: { flair_color: 'BBB' } }
+        }.last
+
+        expect(event[:event_name]).to eq(:group_updated)
+        expect(event[:params].first).to eq(group)
+      end
+    end
+
     context "when user is not a group owner or admin" do
       it 'should not be able to update the group' do
         sign_in(user)

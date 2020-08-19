@@ -1273,5 +1273,27 @@ export default {
           "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png"
       }
     }
-  ]
+  ],
+  "/groups/alternative-group.json": {
+    group: {
+      id: 57,
+      automatic: false,
+      name: "alternative-group",
+      full_name: "Moderatable Table",
+      user_count: 8,
+      alias_level: 99,
+      visible: true,
+      public_admission: true,
+      public_exit: false,
+      flair_url: "fa-adjust",
+      is_group_owner: true,
+      mentionable: true,
+      messageable: true,
+      can_see_members: true,
+      can_admin_group: true,
+    },
+    extras: {
+      visible_group_names: ["alternative-group"]
+    }
+  }
 };
