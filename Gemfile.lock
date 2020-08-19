@@ -315,8 +315,7 @@ GEM
       rack (>= 1.4)
     rexml (3.2.4)
     rinku (2.0.6)
-    rotp (5.1.0)
-      addressable (~> 2.5)
+    rotp (6.1.0)
     rqrcode (1.1.2)
       chunky_png (~> 1.0)
       rqrcode_core (~> 0.1)
@@ -534,7 +533,7 @@ DEPENDENCIES
   redis
   redis-namespace
   rinku
-  rotp (= 5.1.0)
+  rotp
   rqrcode
   rspec
   rspec-html-matchers
