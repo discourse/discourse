@@ -1,9 +1,18 @@
 this.workbox = this.workbox || {};
-this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames_mjs, cacheWrapper_mjs, fetchWrapper_mjs, getFriendlyURL_mjs, WorkboxError_mjs) {
-  'use strict';
+this.workbox.strategies = (function(
+  exports,
+  logger_mjs,
+  assert_mjs,
+  cacheNames_mjs,
+  cacheWrapper_mjs,
+  fetchWrapper_mjs,
+  getFriendlyURL_mjs,
+  WorkboxError_mjs
+) {
+  "use strict";
 
   try {
-    self['workbox:strategies:4.3.1'] && _();
+    self["workbox:strategies:4.3.1"] && _();
   } catch (e) {} // eslint-disable-line
 
   /*
@@ -25,7 +34,9 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
   };
 
   const messages = {
-    strategyStart: (strategyName, request) => `Using ${strategyName} to ` + `respond to '${getFriendlyURL(request.url)}'`,
+    strategyStart: (strategyName, request) =>
+      `Using ${strategyName} to ` +
+      `respond to '${getFriendlyURL(request.url)}'`,
     printFinalResponse: response => {
       if (response) {
         logger_mjs.logger.groupCollapsed(`View the final response here.`);
@@ -70,7 +81,9 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @param {Object} options.matchOptions [`CacheQueryOptions`](https://w3c.github.io/ServiceWorker/#dictdef-cachequeryoptions)
      */
     constructor(options = {}) {
-      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(options.cacheName);
+      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(
+        options.cacheName
+      );
       this._plugins = options.plugins || [];
       this._fetchOptions = options.fetchOptions || null;
       this._matchOptions = options.matchOptions || null;
@@ -86,11 +99,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async handle({
-      event,
-      request
-    }) {
+    async handle({ event, request }) {
       return this.makeRequest({
         event,
         request: request || event.request
@@ -112,23 +121,19 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async makeRequest({
-      event,
-      request
-    }) {
+    async makeRequest({ event, request }) {
       const logs = [];
 
-      if (typeof request === 'string') {
+      if (typeof request === "string") {
         request = new Request(request);
       }
 
       {
         assert_mjs.assert.isInstance(request, Request, {
-          moduleName: 'workbox-strategies',
-          className: 'CacheFirst',
-          funcName: 'makeRequest',
-          paramName: 'request'
+          moduleName: "workbox-strategies",
+          className: "CacheFirst",
+          funcName: "makeRequest",
+          paramName: "request"
         });
       }
 
@@ -143,7 +148,10 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
 
       if (!response) {
         {
-          logs.push(`No response found in the '${this._cacheName}' cache. ` + `Will respond with a network request.`);
+          logs.push(
+            `No response found in the '${this._cacheName}' cache. ` +
+              `Will respond with a network request.`
+          );
         }
 
         try {
@@ -161,12 +169,16 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
         }
       } else {
         {
-          logs.push(`Found a cached response in the '${this._cacheName}' cache.`);
+          logs.push(
+            `Found a cached response in the '${this._cacheName}' cache.`
+          );
         }
       }
 
       {
-        logger_mjs.logger.groupCollapsed(messages.strategyStart('CacheFirst', request));
+        logger_mjs.logger.groupCollapsed(
+          messages.strategyStart("CacheFirst", request)
+        );
 
         for (let log of logs) {
           logger_mjs.logger.log(log);
@@ -177,7 +189,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       }
 
       if (!response) {
-        throw new WorkboxError_mjs.WorkboxError('no-response', {
+        throw new WorkboxError_mjs.WorkboxError("no-response", {
           url: request.url,
           error
         });
@@ -194,7 +206,6 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      *
      * @private
      */
-
 
     async _getFromNetwork(request, event) {
       const response = await fetchWrapper_mjs.fetchWrapper.fetch({
@@ -218,14 +229,18 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
           event.waitUntil(cachePutPromise);
         } catch (error) {
           {
-            logger_mjs.logger.warn(`Unable to ensure service worker stays alive when ` + `updating cache for '${getFriendlyURL_mjs.getFriendlyURL(request.url)}'.`);
+            logger_mjs.logger.warn(
+              `Unable to ensure service worker stays alive when ` +
+                `updating cache for '${getFriendlyURL_mjs.getFriendlyURL(
+                  request.url
+                )}'.`
+            );
           }
         }
       }
 
       return response;
     }
-
   }
 
   /*
@@ -259,7 +274,9 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @param {Object} options.matchOptions [`CacheQueryOptions`](https://w3c.github.io/ServiceWorker/#dictdef-cachequeryoptions)
      */
     constructor(options = {}) {
-      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(options.cacheName);
+      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(
+        options.cacheName
+      );
       this._plugins = options.plugins || [];
       this._matchOptions = options.matchOptions || null;
     }
@@ -274,11 +291,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async handle({
-      event,
-      request
-    }) {
+    async handle({ event, request }) {
       return this.makeRequest({
         event,
         request: request || event.request
@@ -300,21 +313,17 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async makeRequest({
-      event,
-      request
-    }) {
-      if (typeof request === 'string') {
+    async makeRequest({ event, request }) {
+      if (typeof request === "string") {
         request = new Request(request);
       }
 
       {
         assert_mjs.assert.isInstance(request, Request, {
-          moduleName: 'workbox-strategies',
-          className: 'CacheOnly',
-          funcName: 'makeRequest',
-          paramName: 'request'
+          moduleName: "workbox-strategies",
+          className: "CacheOnly",
+          funcName: "makeRequest",
+          paramName: "request"
         });
       }
 
@@ -327,27 +336,32 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       });
 
       {
-        logger_mjs.logger.groupCollapsed(messages.strategyStart('CacheOnly', request));
+        logger_mjs.logger.groupCollapsed(
+          messages.strategyStart("CacheOnly", request)
+        );
 
         if (response) {
-          logger_mjs.logger.log(`Found a cached response in the '${this._cacheName}'` + ` cache.`);
+          logger_mjs.logger.log(
+            `Found a cached response in the '${this._cacheName}'` + ` cache.`
+          );
           messages.printFinalResponse(response);
         } else {
-          logger_mjs.logger.log(`No response found in the '${this._cacheName}' cache.`);
+          logger_mjs.logger.log(
+            `No response found in the '${this._cacheName}' cache.`
+          );
         }
 
         logger_mjs.logger.groupEnd();
       }
 
       if (!response) {
-        throw new WorkboxError_mjs.WorkboxError('no-response', {
+        throw new WorkboxError_mjs.WorkboxError("no-response", {
           url: request.url
         });
       }
 
       return response;
     }
-
   }
 
   /*
@@ -368,9 +382,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      *
      * @private
      */
-    cacheWillUpdate: ({
-      response
-    }) => {
+    cacheWillUpdate: ({ response }) => {
       if (response.status === 200 || response.status === 0) {
         return response;
       }
@@ -422,11 +434,17 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * scenarios.
      */
     constructor(options = {}) {
-      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(options.cacheName);
+      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(
+        options.cacheName
+      );
 
       if (options.plugins) {
-        let isUsingCacheWillUpdate = options.plugins.some(plugin => !!plugin.cacheWillUpdate);
-        this._plugins = isUsingCacheWillUpdate ? options.plugins : [cacheOkAndOpaquePlugin, ...options.plugins];
+        let isUsingCacheWillUpdate = options.plugins.some(
+          plugin => !!plugin.cacheWillUpdate
+        );
+        this._plugins = isUsingCacheWillUpdate
+          ? options.plugins
+          : [cacheOkAndOpaquePlugin, ...options.plugins];
       } else {
         // No plugins passed in, use the default plugin.
         this._plugins = [cacheOkAndOpaquePlugin];
@@ -436,11 +454,11 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
 
       {
         if (this._networkTimeoutSeconds) {
-          assert_mjs.assert.isType(this._networkTimeoutSeconds, 'number', {
-            moduleName: 'workbox-strategies',
-            className: 'NetworkFirst',
-            funcName: 'constructor',
-            paramName: 'networkTimeoutSeconds'
+          assert_mjs.assert.isType(this._networkTimeoutSeconds, "number", {
+            moduleName: "workbox-strategies",
+            className: "NetworkFirst",
+            funcName: "constructor",
+            paramName: "networkTimeoutSeconds"
           });
         }
       }
@@ -459,11 +477,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async handle({
-      event,
-      request
-    }) {
+    async handle({ event, request }) {
       return this.makeRequest({
         event,
         request: request || event.request
@@ -485,23 +499,19 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async makeRequest({
-      event,
-      request
-    }) {
+    async makeRequest({ event, request }) {
       const logs = [];
 
-      if (typeof request === 'string') {
+      if (typeof request === "string") {
         request = new Request(request);
       }
 
       {
         assert_mjs.assert.isInstance(request, Request, {
-          moduleName: 'workbox-strategies',
-          className: 'NetworkFirst',
-          funcName: 'handle',
-          paramName: 'makeRequest'
+          moduleName: "workbox-strategies",
+          className: "NetworkFirst",
+          funcName: "handle",
+          paramName: "makeRequest"
         });
       }
 
@@ -509,10 +519,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       let timeoutId;
 
       if (this._networkTimeoutSeconds) {
-        const {
-          id,
-          promise
-        } = this._getTimeoutPromise({
+        const { id, promise } = this._getTimeoutPromise({
           request,
           event,
           logs
@@ -542,7 +549,9 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       }
 
       {
-        logger_mjs.logger.groupCollapsed(messages.strategyStart('NetworkFirst', request));
+        logger_mjs.logger.groupCollapsed(
+          messages.strategyStart("NetworkFirst", request)
+        );
 
         for (let log of logs) {
           logger_mjs.logger.log(log);
@@ -553,7 +562,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       }
 
       if (!response) {
-        throw new WorkboxError_mjs.WorkboxError('no-response', {
+        throw new WorkboxError_mjs.WorkboxError("no-response", {
           url: request.url
         });
       }
@@ -570,26 +579,29 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @private
      */
 
-
-    _getTimeoutPromise({
-      request,
-      logs,
-      event
-    }) {
+    _getTimeoutPromise({ request, logs, event }) {
       let timeoutId;
       const timeoutPromise = new Promise(resolve => {
         const onNetworkTimeout = async () => {
           {
-            logs.push(`Timing out the network response at ` + `${this._networkTimeoutSeconds} seconds.`);
+            logs.push(
+              `Timing out the network response at ` +
+                `${this._networkTimeoutSeconds} seconds.`
+            );
           }
 
-          resolve((await this._respondFromCache({
-            request,
-            event
-          })));
+          resolve(
+            await this._respondFromCache({
+              request,
+              event
+            })
+          );
         };
 
-        timeoutId = setTimeout(onNetworkTimeout, this._networkTimeoutSeconds * 1000);
+        timeoutId = setTimeout(
+          onNetworkTimeout,
+          this._networkTimeoutSeconds * 1000
+        );
       });
       return {
         promise: timeoutPromise,
@@ -607,13 +619,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @private
      */
 
-
-    async _getNetworkPromise({
-      timeoutId,
-      request,
-      logs,
-      event
-    }) {
+    async _getNetworkPromise({ timeoutId, request, logs, event }) {
       let error;
       let response;
 
@@ -636,7 +642,10 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
         if (response) {
           logs.push(`Got response from network.`);
         } else {
-          logs.push(`Unable to get a response from the network. Will respond ` + `with a cached response.`);
+          logs.push(
+            `Unable to get a response from the network. Will respond ` +
+              `with a cached response.`
+          );
         }
       }
 
@@ -648,7 +657,9 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
 
         {
           if (response) {
-            logs.push(`Found a cached response in the '${this._cacheName}'` + ` cache.`);
+            logs.push(
+              `Found a cached response in the '${this._cacheName}'` + ` cache.`
+            );
           } else {
             logs.push(`No response found in the '${this._cacheName}' cache.`);
           }
@@ -671,7 +682,12 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
             event.waitUntil(cachePut);
           } catch (err) {
             {
-              logger_mjs.logger.warn(`Unable to ensure service worker stays alive when ` + `updating cache for '${getFriendlyURL_mjs.getFriendlyURL(request.url)}'.`);
+              logger_mjs.logger.warn(
+                `Unable to ensure service worker stays alive when ` +
+                  `updating cache for '${getFriendlyURL_mjs.getFriendlyURL(
+                    request.url
+                  )}'.`
+              );
             }
           }
         }
@@ -690,11 +706,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @private
      */
 
-
-    _respondFromCache({
-      event,
-      request
-    }) {
+    _respondFromCache({ event, request }) {
       return cacheWrapper_mjs.cacheWrapper.match({
         cacheName: this._cacheName,
         request,
@@ -703,7 +715,6 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
         plugins: this._plugins
       });
     }
-
   }
 
   /*
@@ -739,7 +750,9 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * of all fetch() requests made by this strategy.
      */
     constructor(options = {}) {
-      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(options.cacheName);
+      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(
+        options.cacheName
+      );
       this._plugins = options.plugins || [];
       this._fetchOptions = options.fetchOptions || null;
     }
@@ -754,11 +767,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async handle({
-      event,
-      request
-    }) {
+    async handle({ event, request }) {
       return this.makeRequest({
         event,
         request: request || event.request
@@ -780,21 +789,17 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async makeRequest({
-      event,
-      request
-    }) {
-      if (typeof request === 'string') {
+    async makeRequest({ event, request }) {
+      if (typeof request === "string") {
         request = new Request(request);
       }
 
       {
         assert_mjs.assert.isInstance(request, Request, {
-          moduleName: 'workbox-strategies',
-          className: 'NetworkOnly',
-          funcName: 'handle',
-          paramName: 'request'
+          moduleName: "workbox-strategies",
+          className: "NetworkOnly",
+          funcName: "handle",
+          paramName: "request"
         });
       }
 
@@ -813,7 +818,9 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       }
 
       {
-        logger_mjs.logger.groupCollapsed(messages.strategyStart('NetworkOnly', request));
+        logger_mjs.logger.groupCollapsed(
+          messages.strategyStart("NetworkOnly", request)
+        );
 
         if (response) {
           logger_mjs.logger.log(`Got response from network.`);
@@ -826,7 +833,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       }
 
       if (!response) {
-        throw new WorkboxError_mjs.WorkboxError('no-response', {
+        throw new WorkboxError_mjs.WorkboxError("no-response", {
           url: request.url,
           error
         });
@@ -834,7 +841,6 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
 
       return response;
     }
-
   }
 
   /*
@@ -879,12 +885,18 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @param {Object} options.matchOptions [`CacheQueryOptions`](https://w3c.github.io/ServiceWorker/#dictdef-cachequeryoptions)
      */
     constructor(options = {}) {
-      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(options.cacheName);
+      this._cacheName = cacheNames_mjs.cacheNames.getRuntimeName(
+        options.cacheName
+      );
       this._plugins = options.plugins || [];
 
       if (options.plugins) {
-        let isUsingCacheWillUpdate = options.plugins.some(plugin => !!plugin.cacheWillUpdate);
-        this._plugins = isUsingCacheWillUpdate ? options.plugins : [cacheOkAndOpaquePlugin, ...options.plugins];
+        let isUsingCacheWillUpdate = options.plugins.some(
+          plugin => !!plugin.cacheWillUpdate
+        );
+        this._plugins = isUsingCacheWillUpdate
+          ? options.plugins
+          : [cacheOkAndOpaquePlugin, ...options.plugins];
       } else {
         // No plugins passed in, use the default plugin.
         this._plugins = [cacheOkAndOpaquePlugin];
@@ -904,11 +916,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async handle({
-      event,
-      request
-    }) {
+    async handle({ event, request }) {
       return this.makeRequest({
         event,
         request: request || event.request
@@ -930,23 +938,19 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @return {Promise<Response>}
      */
 
-
-    async makeRequest({
-      event,
-      request
-    }) {
+    async makeRequest({ event, request }) {
       const logs = [];
 
-      if (typeof request === 'string') {
+      if (typeof request === "string") {
         request = new Request(request);
       }
 
       {
         assert_mjs.assert.isInstance(request, Request, {
-          moduleName: 'workbox-strategies',
-          className: 'StaleWhileRevalidate',
-          funcName: 'handle',
-          paramName: 'request'
+          moduleName: "workbox-strategies",
+          className: "StaleWhileRevalidate",
+          funcName: "handle",
+          paramName: "request"
         });
       }
 
@@ -966,7 +970,10 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
 
       if (response) {
         {
-          logs.push(`Found a cached response in the '${this._cacheName}'` + ` cache. Will update with the network response in the background.`);
+          logs.push(
+            `Found a cached response in the '${this._cacheName}'` +
+              ` cache. Will update with the network response in the background.`
+          );
         }
 
         if (event) {
@@ -974,13 +981,21 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
             event.waitUntil(fetchAndCachePromise);
           } catch (error) {
             {
-              logger_mjs.logger.warn(`Unable to ensure service worker stays alive when ` + `updating cache for '${getFriendlyURL_mjs.getFriendlyURL(request.url)}'.`);
+              logger_mjs.logger.warn(
+                `Unable to ensure service worker stays alive when ` +
+                  `updating cache for '${getFriendlyURL_mjs.getFriendlyURL(
+                    request.url
+                  )}'.`
+              );
             }
           }
         }
       } else {
         {
-          logs.push(`No response found in the '${this._cacheName}' cache. ` + `Will wait for the network response.`);
+          logs.push(
+            `No response found in the '${this._cacheName}' cache. ` +
+              `Will wait for the network response.`
+          );
         }
 
         try {
@@ -991,7 +1006,9 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       }
 
       {
-        logger_mjs.logger.groupCollapsed(messages.strategyStart('StaleWhileRevalidate', request));
+        logger_mjs.logger.groupCollapsed(
+          messages.strategyStart("StaleWhileRevalidate", request)
+        );
 
         for (let log of logs) {
           logger_mjs.logger.log(log);
@@ -1002,7 +1019,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
       }
 
       if (!response) {
-        throw new WorkboxError_mjs.WorkboxError('no-response', {
+        throw new WorkboxError_mjs.WorkboxError("no-response", {
           url: request.url,
           error
         });
@@ -1019,11 +1036,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
      * @private
      */
 
-
-    async _getFromNetwork({
-      request,
-      event
-    }) {
+    async _getFromNetwork({ request, event }) {
       const response = await fetchWrapper_mjs.fetchWrapper.fetch({
         request,
         event,
@@ -1043,14 +1056,18 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
           event.waitUntil(cachePutPromise);
         } catch (error) {
           {
-            logger_mjs.logger.warn(`Unable to ensure service worker stays alive when ` + `updating cache for '${getFriendlyURL_mjs.getFriendlyURL(request.url)}'.`);
+            logger_mjs.logger.warn(
+              `Unable to ensure service worker stays alive when ` +
+                `updating cache for '${getFriendlyURL_mjs.getFriendlyURL(
+                  request.url
+                )}'.`
+            );
           }
         }
       }
 
       return response;
     }
-
   }
 
   /*
@@ -1073,7 +1090,11 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
     return options => {
       {
         const strategyCtrName = strategy[0].toUpperCase() + strategy.slice(1);
-        logger_mjs.logger.warn(`The 'workbox.strategies.${strategy}()' function has been ` + `deprecated and will be removed in a future version of Workbox.\n` + `Please use 'new workbox.strategies.${strategyCtrName}()' instead.`);
+        logger_mjs.logger.warn(
+          `The 'workbox.strategies.${strategy}()' function has been ` +
+            `deprecated and will be removed in a future version of Workbox.\n` +
+            `Please use 'new workbox.strategies.${strategyCtrName}()' instead.`
+        );
       }
 
       return new StrategyCtr(options);
@@ -1086,8 +1107,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
    * @deprecated since v4.0.0
    */
 
-
-  const cacheFirst = deprecate('cacheFirst');
+  const cacheFirst = deprecate("cacheFirst");
   /**
    * @function workbox.strategies.cacheOnly
    * @param {Object} options See the {@link workbox.strategies.CacheOnly}
@@ -1095,7 +1115,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
    * @deprecated since v4.0.0
    */
 
-  const cacheOnly = deprecate('cacheOnly');
+  const cacheOnly = deprecate("cacheOnly");
   /**
    * @function workbox.strategies.networkFirst
    * @param {Object} options See the {@link workbox.strategies.NetworkFirst}
@@ -1103,7 +1123,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
    * @deprecated since v4.0.0
    */
 
-  const networkFirst = deprecate('networkFirst');
+  const networkFirst = deprecate("networkFirst");
   /**
    * @function workbox.strategies.networkOnly
    * @param {Object} options See the {@link workbox.strategies.NetworkOnly}
@@ -1111,7 +1131,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
    * @deprecated since v4.0.0
    */
 
-  const networkOnly = deprecate('networkOnly');
+  const networkOnly = deprecate("networkOnly");
   /**
    * @function workbox.strategies.staleWhileRevalidate
    * @param {Object} options See the
@@ -1119,7 +1139,7 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
    * @deprecated since v4.0.0
    */
 
-  const staleWhileRevalidate = deprecate('staleWhileRevalidate');
+  const staleWhileRevalidate = deprecate("staleWhileRevalidate");
 
   exports.CacheFirst = CacheFirst;
   exports.CacheOnly = CacheOnly;
@@ -1133,6 +1153,14 @@ this.workbox.strategies = (function (exports, logger_mjs, assert_mjs, cacheNames
   exports.staleWhileRevalidate = staleWhileRevalidate;
 
   return exports;
-
-}({}, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core._private));
+})(
+  {},
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private
+);
 //# sourceMappingURL=workbox-strategies.dev.js.map

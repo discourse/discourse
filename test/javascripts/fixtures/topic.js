@@ -5085,7 +5085,8 @@ export default {
           username: "group_moderator",
           avatar_template: "/images/avatar.png",
           created_at: "2020-07-24T17:48:55.419Z",
-          cooked: "<p>Here is my new topic. I am a group category moderator!</p>",
+          cooked:
+            "<p>Here is my new topic. I am a group category moderator!</p>",
           post_number: 1,
           post_type: 1,
           updated_at: "2020-07-24T17:48:55.419Z",
@@ -5290,18 +5291,9 @@ export default {
           reviewable_score_pending_count: 0
         }
       ],
-      stream: [
-        41,
-        42,
-        43
-      ]
+      stream: [41, 42, 43]
     },
-    timeline_lookup: [
-      [
-        1,
-        0
-      ]
-    ],
+    timeline_lookup: [[1, 0]],
     id: 2480,
     title: "A Topic with Group Category Moderators",
     fancy_title: "A Topic with Group Category Moderators",

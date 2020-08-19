@@ -8,39 +8,39 @@
  */
 /* global Mousetrap:true */
 (function(Mousetrap) {
-    if (! Mousetrap) {
-        return;
+  if (!Mousetrap) {
+    return;
+  }
+  var _globalCallbacks = {};
+  var _originalStopCallback = Mousetrap.prototype.stopCallback;
+
+  Mousetrap.prototype.stopCallback = function(e, element, combo, sequence) {
+    var self = this;
+
+    if (self.paused) {
+      return true;
     }
-    var _globalCallbacks = {};
-    var _originalStopCallback = Mousetrap.prototype.stopCallback;
 
-    Mousetrap.prototype.stopCallback = function(e, element, combo, sequence) {
-        var self = this;
+    if (_globalCallbacks[combo] || _globalCallbacks[sequence]) {
+      return false;
+    }
 
-        if (self.paused) {
-            return true;
-        }
+    return _originalStopCallback.call(self, e, element, combo);
+  };
 
-        if (_globalCallbacks[combo] || _globalCallbacks[sequence]) {
-            return false;
-        }
+  Mousetrap.prototype.bindGlobal = function(keys, callback, action) {
+    var self = this;
+    self.bind(keys, callback, action);
 
-        return _originalStopCallback.call(self, e, element, combo);
-    };
+    if (keys instanceof Array) {
+      for (var i = 0; i < keys.length; i++) {
+        _globalCallbacks[keys[i]] = true;
+      }
+      return;
+    }
 
-    Mousetrap.prototype.bindGlobal = function(keys, callback, action) {
-        var self = this;
-        self.bind(keys, callback, action);
+    _globalCallbacks[keys] = true;
+  };
 
-        if (keys instanceof Array) {
-            for (var i = 0; i < keys.length; i++) {
-                _globalCallbacks[keys[i]] = true;
-            }
-            return;
-        }
-
-        _globalCallbacks[keys] = true;
-    };
-
-    Mousetrap.init();
-}) (typeof Mousetrap !== "undefined" ? Mousetrap : undefined);
+  Mousetrap.init();
+})(typeof Mousetrap !== "undefined" ? Mousetrap : undefined);

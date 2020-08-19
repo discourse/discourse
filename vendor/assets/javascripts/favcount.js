@@ -7,17 +7,17 @@
  * Released under the MIT license
  */
 
-(function(){
+(function() {
   function Favcount(icon) {
     this.icon = icon;
     this.opacity = 0.4;
-    this.canvas = document.createElement('canvas');
+    this.canvas = document.createElement("canvas");
     this.font = "Helvetica, Arial, sans-serif";
   }
 
   Favcount.prototype.set = function(count) {
     var self = this,
-        img  = document.createElement('img');
+      img = document.createElement("img");
 
     if (self.canvas.getContext) {
       img.crossOrigin = "anonymous";
@@ -34,69 +34,76 @@
     count = Math.round(count);
 
     if (isNaN(count) || count < 1) {
-      return '';
+      return "";
     } else if (count < 10) {
-      return ' ' + count;
+      return " " + count;
     } else if (count > 99) {
-      return '99';
+      return "99";
     } else {
       return count;
     }
   }
 
   function drawCanvas(canvas, opacity, font, img, count) {
-    var head = document.getElementsByTagName('head')[0],
-        favicon = document.querySelector('link[rel=icon]'),
-        newFavicon = document.createElement('link'),
-        multiplier, fontSize, context, xOffset, yOffset, border, shadow;
+    var head = document.getElementsByTagName("head")[0],
+      favicon = document.querySelector("link[rel=icon]"),
+      newFavicon = document.createElement("link"),
+      multiplier,
+      fontSize,
+      context,
+      xOffset,
+      yOffset,
+      border,
+      shadow;
 
     // Scale canvas elements based on favicon size
     multiplier = img.width / 16;
-    fontSize   = multiplier * 11;
-    xOffset    = multiplier;
-    yOffset    = multiplier * 11;
-    border     = multiplier;
-    shadow     = multiplier * 2;
+    fontSize = multiplier * 11;
+    xOffset = multiplier;
+    yOffset = multiplier * 11;
+    border = multiplier;
+    shadow = multiplier * 2;
 
     canvas.height = canvas.width = img.width;
-    context = canvas.getContext('2d');
-    context.font = 'bold ' + fontSize + 'px ' + font;
+    context = canvas.getContext("2d");
+    context.font = "bold " + fontSize + "px " + font;
 
     // Draw faded favicon background
-    if (count) { context.globalAlpha = opacity; }
+    if (count) {
+      context.globalAlpha = opacity;
+    }
     context.drawImage(img, 0, 0);
     context.globalAlpha = 1.0;
 
     // Draw white drop shadow
-    context.shadowColor = '#FFF';
+    context.shadowColor = "#FFF";
     context.shadowBlur = shadow;
     context.shadowOffsetX = 0;
     context.shadowOffsetY = 0;
 
     // Draw white border
-    context.fillStyle = '#FFF';
+    context.fillStyle = "#FFF";
     context.fillText(count, xOffset, yOffset);
     context.fillText(count, xOffset + border, yOffset);
     context.fillText(count, xOffset, yOffset + border);
     context.fillText(count, xOffset + border, yOffset + border);
 
     // Draw black count
-    context.fillStyle = '#000';
-    context.fillText(count,
-      xOffset + (border / 2.0),
-      yOffset + (border / 2.0)
-    );
+    context.fillStyle = "#000";
+    context.fillText(count, xOffset + border / 2.0, yOffset + border / 2.0);
 
     // Replace favicon with new favicon
-    newFavicon.rel = 'icon';
-    newFavicon.href = canvas.toDataURL('image/png');
-    if (favicon) { head.removeChild(favicon); }
+    newFavicon.rel = "icon";
+    newFavicon.href = canvas.toDataURL("image/png");
+    if (favicon) {
+      head.removeChild(favicon);
+    }
     head.appendChild(newFavicon);
   }
 
   this.Favcount = Favcount;
-}).call(this);
+}.call(this));
 
-(function(){
-  Favcount.VERSION = '1.5.1';
-}).call(this);
+(function() {
+  Favcount.VERSION = "1.5.1";
+}.call(this));

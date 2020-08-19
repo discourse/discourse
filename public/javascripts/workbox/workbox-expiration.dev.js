@@ -1,9 +1,19 @@
 this.workbox = this.workbox || {};
-this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs, WorkboxError_mjs, assert_mjs, logger_mjs, cacheNames_mjs, getFriendlyURL_mjs, registerQuotaErrorCallback_mjs) {
-  'use strict';
+this.workbox.expiration = (function(
+  exports,
+  DBWrapper_mjs,
+  deleteDatabase_mjs,
+  WorkboxError_mjs,
+  assert_mjs,
+  logger_mjs,
+  cacheNames_mjs,
+  getFriendlyURL_mjs,
+  registerQuotaErrorCallback_mjs
+) {
+  "use strict";
 
   try {
-    self['workbox:expiration:4.3.1'] && _();
+    self["workbox:expiration:4.3.1"] && _();
   } catch (e) {} // eslint-disable-line
 
   /*
@@ -13,12 +23,12 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
     license that can be found in the LICENSE file or at
     https://opensource.org/licenses/MIT.
   */
-  const DB_NAME = 'workbox-expiration';
-  const OBJECT_STORE_NAME = 'cache-entries';
+  const DB_NAME = "workbox-expiration";
+  const OBJECT_STORE_NAME = "cache-entries";
 
   const normalizeURL = unNormalizedUrl => {
     const url = new URL(unNormalizedUrl, location);
-    url.hash = '';
+    url.hash = "";
     return url.href;
   };
   /**
@@ -26,7 +36,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
    *
    * @private
    */
-
 
   class CacheTimestampsModel {
     /**
@@ -49,7 +58,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
     _handleUpgrade(event) {
       const db = event.target.result; // TODO(philipwalton): EdgeHTML doesn't support arrays as a keyPath, so we
       // have to use the `id` keyPath here and create our own values (a
@@ -57,15 +65,15 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
       // `keyPath: ['url', 'cacheName']`, which is supported in other browsers.
 
       const objStore = db.createObjectStore(OBJECT_STORE_NAME, {
-        keyPath: 'id'
+        keyPath: "id"
       }); // TODO(philipwalton): once we don't have to support EdgeHTML, we can
       // create a single index with the keyPath `['cacheName', 'timestamp']`
       // instead of doing both these indexes.
 
-      objStore.createIndex('cacheName', 'cacheName', {
+      objStore.createIndex("cacheName", "cacheName", {
         unique: false
       });
-      objStore.createIndex('timestamp', 'timestamp', {
+      objStore.createIndex("timestamp", "timestamp", {
         unique: false
       }); // Previous versions of `workbox-expiration` used `this._cacheName`
       // as the IDBDatabase name.
@@ -78,7 +86,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      *
      * @private
      */
-
 
     async setTimestamp(url, timestamp) {
       url = normalizeURL(url);
@@ -101,7 +108,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
     async getTimestamp(url) {
       const entry = await this._db.get(OBJECT_STORE_NAME, this._getId(url));
       return entry.timestamp;
@@ -117,46 +123,52 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
     async expireEntries(minTimestamp, maxCount) {
-      const entriesToDelete = await this._db.transaction(OBJECT_STORE_NAME, 'readwrite', (txn, done) => {
-        const store = txn.objectStore(OBJECT_STORE_NAME);
-        const entriesToDelete = [];
-        let entriesNotDeletedCount = 0;
+      const entriesToDelete = await this._db.transaction(
+        OBJECT_STORE_NAME,
+        "readwrite",
+        (txn, done) => {
+          const store = txn.objectStore(OBJECT_STORE_NAME);
+          const entriesToDelete = [];
+          let entriesNotDeletedCount = 0;
 
-        store.index('timestamp').openCursor(null, 'prev').onsuccess = ({
-          target
-        }) => {
-          const cursor = target.result;
+          store.index("timestamp").openCursor(null, "prev").onsuccess = ({
+            target
+          }) => {
+            const cursor = target.result;
 
-          if (cursor) {
-            const result = cursor.value; // TODO(philipwalton): once we can use a multi-key index, we
-            // won't have to check `cacheName` here.
+            if (cursor) {
+              const result = cursor.value; // TODO(philipwalton): once we can use a multi-key index, we
+              // won't have to check `cacheName` here.
 
-            if (result.cacheName === this._cacheName) {
-              // Delete an entry if it's older than the max age or
-              // if we already have the max number allowed.
-              if (minTimestamp && result.timestamp < minTimestamp || maxCount && entriesNotDeletedCount >= maxCount) {
-                // TODO(philipwalton): we should be able to delete the
-                // entry right here, but doing so causes an iteration
-                // bug in Safari stable (fixed in TP). Instead we can
-                // store the keys of the entries to delete, and then
-                // delete the separate transactions.
-                // https://github.com/GoogleChrome/workbox/issues/1978
-                // cursor.delete();
-                // We only need to return the URL, not the whole entry.
-                entriesToDelete.push(cursor.value);
-              } else {
-                entriesNotDeletedCount++;
+              if (result.cacheName === this._cacheName) {
+                // Delete an entry if it's older than the max age or
+                // if we already have the max number allowed.
+                if (
+                  (minTimestamp && result.timestamp < minTimestamp) ||
+                  (maxCount && entriesNotDeletedCount >= maxCount)
+                ) {
+                  // TODO(philipwalton): we should be able to delete the
+                  // entry right here, but doing so causes an iteration
+                  // bug in Safari stable (fixed in TP). Instead we can
+                  // store the keys of the entries to delete, and then
+                  // delete the separate transactions.
+                  // https://github.com/GoogleChrome/workbox/issues/1978
+                  // cursor.delete();
+                  // We only need to return the URL, not the whole entry.
+                  entriesToDelete.push(cursor.value);
+                } else {
+                  entriesNotDeletedCount++;
+                }
               }
-            }
 
-            cursor.continue();
-          } else {
-            done(entriesToDelete);
-          }
-        };
-      }); // TODO(philipwalton): once the Safari bug in the following issue is fixed,
+              cursor.continue();
+            } else {
+              done(entriesToDelete);
+            }
+          };
+        }
+      ); // TODO(philipwalton): once the Safari bug in the following issue is fixed,
       // we should be able to remove this loop and do the entry deletion in the
       // cursor loop above:
       // https://github.com/GoogleChrome/workbox/issues/1978
@@ -179,14 +191,12 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
     _getId(url) {
       // Creating an ID from the URL and cache name won't be necessary once
       // Edge switches to Chromium and all browsers we support work with
       // array keyPaths.
-      return this._cacheName + '|' + normalizeURL(url);
+      return this._cacheName + "|" + normalizeURL(url);
     }
-
   }
 
   /*
@@ -218,36 +228,39 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      */
     constructor(cacheName, config = {}) {
       {
-        assert_mjs.assert.isType(cacheName, 'string', {
-          moduleName: 'workbox-expiration',
-          className: 'CacheExpiration',
-          funcName: 'constructor',
-          paramName: 'cacheName'
+        assert_mjs.assert.isType(cacheName, "string", {
+          moduleName: "workbox-expiration",
+          className: "CacheExpiration",
+          funcName: "constructor",
+          paramName: "cacheName"
         });
 
         if (!(config.maxEntries || config.maxAgeSeconds)) {
-          throw new WorkboxError_mjs.WorkboxError('max-entries-or-age-required', {
-            moduleName: 'workbox-expiration',
-            className: 'CacheExpiration',
-            funcName: 'constructor'
-          });
+          throw new WorkboxError_mjs.WorkboxError(
+            "max-entries-or-age-required",
+            {
+              moduleName: "workbox-expiration",
+              className: "CacheExpiration",
+              funcName: "constructor"
+            }
+          );
         }
 
         if (config.maxEntries) {
-          assert_mjs.assert.isType(config.maxEntries, 'number', {
-            moduleName: 'workbox-expiration',
-            className: 'CacheExpiration',
-            funcName: 'constructor',
-            paramName: 'config.maxEntries'
+          assert_mjs.assert.isType(config.maxEntries, "number", {
+            moduleName: "workbox-expiration",
+            className: "CacheExpiration",
+            funcName: "constructor",
+            paramName: "config.maxEntries"
           }); // TODO: Assert is positive
         }
 
         if (config.maxAgeSeconds) {
-          assert_mjs.assert.isType(config.maxAgeSeconds, 'number', {
-            moduleName: 'workbox-expiration',
-            className: 'CacheExpiration',
-            funcName: 'constructor',
-            paramName: 'config.maxAgeSeconds'
+          assert_mjs.assert.isType(config.maxAgeSeconds, "number", {
+            moduleName: "workbox-expiration",
+            className: "CacheExpiration",
+            funcName: "constructor",
+            paramName: "config.maxAgeSeconds"
           }); // TODO: Assert is positive
         }
       }
@@ -263,7 +276,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * Expires entries for the given cache and given criteria.
      */
 
-
     async expireEntries() {
       if (this._isRunning) {
         this._rerunRequested = true;
@@ -271,8 +283,13 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
       }
 
       this._isRunning = true;
-      const minTimestamp = this._maxAgeSeconds ? Date.now() - this._maxAgeSeconds * 1000 : undefined;
-      const urlsExpired = await this._timestampModel.expireEntries(minTimestamp, this._maxEntries); // Delete URLs from the cache
+      const minTimestamp = this._maxAgeSeconds
+        ? Date.now() - this._maxAgeSeconds * 1000
+        : undefined;
+      const urlsExpired = await this._timestampModel.expireEntries(
+        minTimestamp,
+        this._maxEntries
+      ); // Delete URLs from the cache
 
       const cache = await caches.open(this._cacheName);
 
@@ -282,12 +299,23 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
 
       {
         if (urlsExpired.length > 0) {
-          logger_mjs.logger.groupCollapsed(`Expired ${urlsExpired.length} ` + `${urlsExpired.length === 1 ? 'entry' : 'entries'} and removed ` + `${urlsExpired.length === 1 ? 'it' : 'them'} from the ` + `'${this._cacheName}' cache.`);
-          logger_mjs.logger.log(`Expired the following ${urlsExpired.length === 1 ? 'URL' : 'URLs'}:`);
+          logger_mjs.logger.groupCollapsed(
+            `Expired ${urlsExpired.length} ` +
+              `${urlsExpired.length === 1 ? "entry" : "entries"} and removed ` +
+              `${urlsExpired.length === 1 ? "it" : "them"} from the ` +
+              `'${this._cacheName}' cache.`
+          );
+          logger_mjs.logger.log(
+            `Expired the following ${
+              urlsExpired.length === 1 ? "URL" : "URLs"
+            }:`
+          );
           urlsExpired.forEach(url => logger_mjs.logger.log(`    ${url}`));
           logger_mjs.logger.groupEnd();
         } else {
-          logger_mjs.logger.debug(`Cache expiration ran and found no entries to remove.`);
+          logger_mjs.logger.debug(
+            `Cache expiration ran and found no entries to remove.`
+          );
         }
       }
 
@@ -306,14 +334,13 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @param {string} url
      */
 
-
     async updateTimestamp(url) {
       {
-        assert_mjs.assert.isType(url, 'string', {
-          moduleName: 'workbox-expiration',
-          className: 'CacheExpiration',
-          funcName: 'updateTimestamp',
-          paramName: 'url'
+        assert_mjs.assert.isType(url, "string", {
+          moduleName: "workbox-expiration",
+          className: "CacheExpiration",
+          funcName: "updateTimestamp",
+          paramName: "url"
         });
       }
 
@@ -331,14 +358,16 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @return {boolean}
      */
 
-
     async isURLExpired(url) {
       {
         if (!this._maxAgeSeconds) {
-          throw new WorkboxError_mjs.WorkboxError(`expired-test-without-max-age`, {
-            methodName: 'isURLExpired',
-            paramName: 'maxAgeSeconds'
-          });
+          throw new WorkboxError_mjs.WorkboxError(
+            `expired-test-without-max-age`,
+            {
+              methodName: "isURLExpired",
+              paramName: "maxAgeSeconds"
+            }
+          );
         }
       }
 
@@ -351,14 +380,12 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * metadata.
      */
 
-
     async delete() {
       // Make sure we don't attempt another rerun if we're called in the middle of
       // a cache expiration.
       this._rerunRequested = false;
       await this._timestampModel.expireEntries(Infinity); // Expires all.
     }
-
   }
 
   /*
@@ -399,28 +426,31 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
     constructor(config = {}) {
       {
         if (!(config.maxEntries || config.maxAgeSeconds)) {
-          throw new WorkboxError_mjs.WorkboxError('max-entries-or-age-required', {
-            moduleName: 'workbox-expiration',
-            className: 'Plugin',
-            funcName: 'constructor'
-          });
+          throw new WorkboxError_mjs.WorkboxError(
+            "max-entries-or-age-required",
+            {
+              moduleName: "workbox-expiration",
+              className: "Plugin",
+              funcName: "constructor"
+            }
+          );
         }
 
         if (config.maxEntries) {
-          assert_mjs.assert.isType(config.maxEntries, 'number', {
-            moduleName: 'workbox-expiration',
-            className: 'Plugin',
-            funcName: 'constructor',
-            paramName: 'config.maxEntries'
+          assert_mjs.assert.isType(config.maxEntries, "number", {
+            moduleName: "workbox-expiration",
+            className: "Plugin",
+            funcName: "constructor",
+            paramName: "config.maxEntries"
           });
         }
 
         if (config.maxAgeSeconds) {
-          assert_mjs.assert.isType(config.maxAgeSeconds, 'number', {
-            moduleName: 'workbox-expiration',
-            className: 'Plugin',
-            funcName: 'constructor',
-            paramName: 'config.maxAgeSeconds'
+          assert_mjs.assert.isType(config.maxAgeSeconds, "number", {
+            moduleName: "workbox-expiration",
+            className: "Plugin",
+            funcName: "constructor",
+            paramName: "config.maxAgeSeconds"
           });
         }
       }
@@ -430,7 +460,9 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
       this._cacheExpirations = new Map();
 
       if (config.purgeOnQuotaError) {
-        registerQuotaErrorCallback_mjs.registerQuotaErrorCallback(() => this.deleteCacheAndMetadata());
+        registerQuotaErrorCallback_mjs.registerQuotaErrorCallback(() =>
+          this.deleteCacheAndMetadata()
+        );
       }
     }
     /**
@@ -443,10 +475,9 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
     _getCacheExpiration(cacheName) {
       if (cacheName === cacheNames_mjs.cacheNames.getRuntimeName()) {
-        throw new WorkboxError_mjs.WorkboxError('expire-custom-caches-only');
+        throw new WorkboxError_mjs.WorkboxError("expire-custom-caches-only");
       }
 
       let cacheExpiration = this._cacheExpirations.get(cacheName);
@@ -477,20 +508,13 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
-    cachedResponseWillBeUsed({
-      event,
-      request,
-      cacheName,
-      cachedResponse
-    }) {
+    cachedResponseWillBeUsed({ event, request, cacheName, cachedResponse }) {
       if (!cachedResponse) {
         return null;
       }
 
       let isFresh = this._isResponseDateFresh(cachedResponse); // Expire entries to ensure that even if the expiration date has
       // expired, it'll only be used once.
-
 
       const cacheExpiration = this._getCacheExpiration(cacheName);
 
@@ -504,7 +528,12 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
           event.waitUntil(updateTimestampDone);
         } catch (error) {
           {
-            logger_mjs.logger.warn(`Unable to ensure service worker stays alive when ` + `updating cache entry for '${getFriendlyURL_mjs.getFriendlyURL(event.request.url)}'.`);
+            logger_mjs.logger.warn(
+              `Unable to ensure service worker stays alive when ` +
+                `updating cache entry for '${getFriendlyURL_mjs.getFriendlyURL(
+                  event.request.url
+                )}'.`
+            );
           }
         }
       }
@@ -518,7 +547,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
     _isResponseDateFresh(cachedResponse) {
       if (!this._maxAgeSeconds) {
         // We aren't expiring by age, so return true, it's fresh
@@ -527,7 +555,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
       // See https://github.com/GoogleChromeLabs/sw-toolbox/issues/164 for
       // discussion.
 
-
       const dateHeaderTimestamp = this._getDateHeaderTimestamp(cachedResponse);
 
       if (dateHeaderTimestamp === null) {
@@ -535,7 +562,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
         return true;
       } // If we have a valid headerTime, then our response is fresh iff the
       // headerTime plus maxAgeSeconds is greater than the current time.
-
 
       const now = Date.now();
       return dateHeaderTimestamp >= now - this._maxAgeSeconds * 1000;
@@ -550,13 +576,12 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
     _getDateHeaderTimestamp(cachedResponse) {
-      if (!cachedResponse.headers.has('date')) {
+      if (!cachedResponse.headers.has("date")) {
         return null;
       }
 
-      const dateHeader = cachedResponse.headers.get('date');
+      const dateHeader = cachedResponse.headers.get("date");
       const parsedDate = new Date(dateHeader);
       const headerTime = parsedDate.getTime(); // If the Date header was invalid for some reason, parsedDate.getTime()
       // will return NaN.
@@ -578,23 +603,19 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * @private
      */
 
-
-    async cacheDidUpdate({
-      cacheName,
-      request
-    }) {
+    async cacheDidUpdate({ cacheName, request }) {
       {
-        assert_mjs.assert.isType(cacheName, 'string', {
-          moduleName: 'workbox-expiration',
-          className: 'Plugin',
-          funcName: 'cacheDidUpdate',
-          paramName: 'cacheName'
+        assert_mjs.assert.isType(cacheName, "string", {
+          moduleName: "workbox-expiration",
+          className: "Plugin",
+          funcName: "cacheDidUpdate",
+          paramName: "cacheName"
         });
         assert_mjs.assert.isInstance(request, Request, {
-          moduleName: 'workbox-expiration',
-          className: 'Plugin',
-          funcName: 'cacheDidUpdate',
-          paramName: 'request'
+          moduleName: "workbox-expiration",
+          className: "Plugin",
+          funcName: "cacheDidUpdate",
+          paramName: "request"
         });
       }
 
@@ -620,7 +641,6 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
      * There is no Workbox-specific method needed for cleanup in that case.
      */
 
-
     async deleteCacheAndMetadata() {
       // Do this one at a time instead of all at once via `Promise.all()` to
       // reduce the chance of inconsistency if a promise rejects.
@@ -629,10 +649,8 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
         await cacheExpiration.delete();
       } // Reset this._cacheExpirations to its initial state.
 
-
       this._cacheExpirations = new Map();
     }
-
   }
 
   /*
@@ -647,6 +665,15 @@ this.workbox.expiration = (function (exports, DBWrapper_mjs, deleteDatabase_mjs,
   exports.Plugin = Plugin;
 
   return exports;
-
-}({}, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core._private, workbox.core));
+})(
+  {},
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core._private,
+  workbox.core
+);
 //# sourceMappingURL=workbox-expiration.dev.js.map
