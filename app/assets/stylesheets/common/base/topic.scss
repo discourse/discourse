@@ -26,6 +26,13 @@
     overflow: hidden;
   }
 
+  .timeline-container {
+    margin-left: unset !important;
+    /* This is a temporary override to ease the transition
+    to the sticky position timeline for themes with custom timeline positioning.
+    Without this those themes would render topics unreadable. */
+  }
+
   // timeline
   @media screen and (min-width: 925px) {
     // max timeline width is 924
