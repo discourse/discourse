@@ -85,9 +85,10 @@ export default {
       ).length > 0;
 
     session.darkColorScheme =
-      getComputedStyle(document.documentElement)
-        .getPropertyValue("--scheme-type")
-        .trim() === "dark";
+      !window.matchMedia("(prefers-color-scheme: dark)").matches &&
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--scheme-type")
+          .trim() === "dark";
 
     session.highlightJsPath = setupData.highlightJsPath;
     session.svgSpritePath = setupData.svgSpritePath;
