@@ -54,6 +54,8 @@ class Admin::SiteSettingsController < Admin::AdminController
           notification_level = NotificationLevels.all[:muted]
         when "default_categories_watching_first_post"
           notification_level = NotificationLevels.all[:watching_first_post]
+        when "default_categories_regular"
+          notification_level = NotificationLevels.all[:regular]
         end
 
         CategoryUser.where(category_id: (previous_category_ids - new_category_ids), notification_level: notification_level).delete_all
@@ -131,6 +133,8 @@ class Admin::SiteSettingsController < Admin::AdminController
         notification_level = NotificationLevels.all[:muted]
       when "default_categories_watching_first_post"
         notification_level = NotificationLevels.all[:watching_first_post]
+      when "default_categories_regular"
+        notification_level = NotificationLevels.all[:regular]
       end
 
       user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)

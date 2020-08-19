@@ -1448,7 +1448,7 @@ class User < ActiveRecord::Base
 
     values = []
 
-    %w{watching watching_first_post tracking muted}.each do |s|
+    %w{watching watching_first_post tracking regular muted}.each do |s|
       category_ids = SiteSetting.get("default_categories_#{s}").split("|").map(&:to_i)
       category_ids.each do |category_id|
         next if category_id == 0
