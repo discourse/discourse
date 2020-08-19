@@ -5,7 +5,7 @@ import { later } from "@ember/runloop";
 import sessionFixtures from "fixtures/session-fixtures";
 import HeaderComponent from "discourse/components/site-header";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { resetPluginApi, setPluginContainer } from "discourse/lib/plugin-api";
+import { resetPluginApi } from "discourse/lib/plugin-api";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses
@@ -29,7 +29,6 @@ import { currentSettings, mergeSettings } from "helpers/site-settings";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { setURLContainer } from "discourse/lib/url";
-import { setModalContainer } from "discourse/lib/show-modal";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 export function currentUser() {
@@ -173,9 +172,7 @@ export function acceptance(name, options) {
 
       Discourse.reset();
       this.container = getOwner(this);
-      setPluginContainer(this.container);
       setURLContainer(this.container);
-      setModalContainer(this.container);
       setDefaultOwner(this.container);
 
       if (options.site) {
@@ -211,7 +208,6 @@ export function acceptance(name, options) {
       setTopicList(null);
       _clearSnapshots();
       setURLContainer(null);
-      setModalContainer(null);
       setDefaultOwner(null);
       Discourse._runInitializer(
         "instanceInitializers",
