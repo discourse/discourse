@@ -4080,6 +4080,43 @@ describe UsersController do
     end
   end
 
+  describe '#disable_second_factor' do
+    context 'when logged in with secure session' do
+      before do
+        sign_in(user)
+        stub_secure_session_confirmed
+      end
+      context 'when user has a registered totp and security key' do
+        before do
+          expect(user.reload.user_second_factors).to be_empty
+          expect(user.reload.security_keys).to be_empty
+
+          totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
+          security_key_second_factor = Fabricate(:user_security_key, user: user, factor_type: UserSecurityKey.factor_types[:second_factor])
+
+          expect(user.reload.user_second_factors.totps.first).to eq(totp_second_factor)
+          expect(user.reload.security_keys.first).to eq(security_key_second_factor)
+        end
+
+        it 'should disable all totp and security keys' do
+          expect do
+            put "/u/disable_second_factor.json"
+          end.to change { Jobs::CriticalUserEmail.jobs.length }.by(1)
+
+          expect(response.status).to eq(200)
+
+          expect(user.reload.user_second_factors).to be_empty
+          expect(user.reload.security_keys).to be_empty
+
+          job_args = Jobs::CriticalUserEmail.jobs.first["args"].first
+
+          expect(job_args["user_id"]).to eq(user.id)
+          expect(job_args["type"]).to eq('account_second_factor_disabled')
+        end
+      end
+    end
+  end
+
   describe '#revoke_account' do
     fab!(:other_user) { Fabricate(:user) }
     it 'errors for unauthorised users' do
