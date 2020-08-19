@@ -28,18 +28,18 @@ sup img.emoji {
 }
 
 .emoji-picker {
-  background-clip: padding-box;
-  z-index: z("modal", "content");
-  flex-direction: row;
-  height: 320px;
-  max-height: 50vh;
-  max-width: 320px;
   width: 100%;
   color: var(--primary);
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
   display: flex;
   box-sizing: border-box;
+  background-clip: padding-box;
+  z-index: z("modal", "content");
+  flex-direction: row;
+  height: 320px;
+  max-height: 50vh;
+  max-width: 320px;
 
   img.emoji {
     // custom emojis might import images of various sizes
@@ -61,6 +61,7 @@ sup img.emoji {
     box-sizing: border-box;
     padding: 0.25em;
     height: 100%;
+    background: $secondary;
 
     .section {
       margin-bottom: 1em;

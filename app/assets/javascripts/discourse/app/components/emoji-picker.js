@@ -48,6 +48,12 @@ export default Component.extend({
     this._sectionObserver = this._setupSectionObserver();
   },
 
+  didInsertElement() {
+    this._super(...arguments);
+
+    this.appEvents.on("emoji-picker:close", this, "onClose");
+  },
+
   didReceiveAttrs() {
     this._super(...arguments);
 
@@ -62,6 +68,8 @@ export default Component.extend({
     this._super(...arguments);
 
     this._sectionObserver && this._sectionObserver.disconnect();
+
+    this.appEvents.off("emoji-picker:close", this, "onClose");
   },
 
   @action
@@ -127,7 +135,7 @@ export default Component.extend({
       "dark"
     ].map((name, index) => {
       return {
-        name: name.replace(/-/g, "_"),
+        name,
         icon: index === this.selectedDiversity ? "check" : ""
       };
     });
@@ -174,8 +182,6 @@ export default Component.extend({
     if (!img.parentNode.parentNode.classList.contains("recent")) {
       this._trackEmojiUsage(code);
     }
-
-    this.onClose();
   },
 
   @action
@@ -243,9 +249,13 @@ export default Component.extend({
             const categoryButtons = document.querySelector(
               ".emoji-picker .emoji-picker-category-buttons"
             );
+
+            if (!categoryButtons) return;
+
             const button = categoryButtons.querySelector(
               `.category-button[data-section="${sectionName}"]`
             );
+
             categoryButtons
               .querySelectorAll(".category-button")
               .forEach(b => b.classList.remove("current"));
@@ -259,7 +269,8 @@ export default Component.extend({
 
   @bind
   handleOutsideClick(event) {
-    if (!document.querySelector(".emoji-picker").contains(event.target)) {
+    const emojiPicker = document.querySelector(".emoji-picker");
+    if (emojiPicker && !emojiPicker.contains(event.target)) {
       this.onClose();
     }
   }
