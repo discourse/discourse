@@ -19,12 +19,35 @@ describe Notification do
         @types = Notification.types
       end
 
-      it "'mentioned' should be at 1st position" do
+      it "has a correct position for each type" do
         expect(@types[:mentioned]).to eq(1)
-      end
-
-      it "'group_mentioned' should be at 15th position" do
+        expect(@types[:replied]).to eq(2)
+        expect(@types[:quoted]).to eq(3)
+        expect(@types[:edited]).to eq(4)
+        expect(@types[:liked]).to eq(5)
+        expect(@types[:private_message]).to eq(6)
+        expect(@types[:invited_to_private_message]).to eq(7)
+        expect(@types[:invitee_accepted]).to eq(8)
+        expect(@types[:posted]).to eq(9)
+        expect(@types[:moved_post]).to eq(10)
+        expect(@types[:linked]).to eq(11)
+        expect(@types[:granted_badge]).to eq(12)
+        expect(@types[:invited_to_topic]).to eq(13)
+        expect(@types[:custom]).to eq(14)
         expect(@types[:group_mentioned]).to eq(15)
+        expect(@types[:group_message_summary]).to eq(16)
+        expect(@types[:watching_first_post]).to eq(17)
+        expect(@types[:topic_reminder]).to eq(18)
+        expect(@types[:liked_consolidated]).to eq(19)
+        expect(@types[:post_approved]).to eq(20)
+        expect(@types[:code_review_commit_approved]).to eq(21)
+        expect(@types[:membership_request_accepted]).to eq(22)
+        expect(@types[:membership_request_consolidated]).to eq(23)
+        expect(@types[:bookmark_reminder]).to eq(24)
+        expect(@types[:reaction]).to eq(25)
+        expect(@types[:votes_released]).to eq(26)
+        expect(@types[:event_reminder]).to eq(27)
+        expect(@types[:event_invitation]).to eq(28)
       end
     end
   end
