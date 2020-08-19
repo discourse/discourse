@@ -103,7 +103,7 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed("model.name")
   nameFirst(name) {
-    return prioritizeNameInUx(name, this.siteSettings);
+    return prioritizeNameInUx(name);
   },
 
   @discourseComputed("model.badge_count")

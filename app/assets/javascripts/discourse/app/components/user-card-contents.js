@@ -68,7 +68,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
   @discourseComputed("user.name")
   nameFirst(name) {
-    return prioritizeNameInUx(name, this.siteSettings);
+    return prioritizeNameInUx(name);
   },
 
   @discourseComputed("user")

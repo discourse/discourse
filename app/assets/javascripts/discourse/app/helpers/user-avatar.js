@@ -1,5 +1,5 @@
 import { get } from "@ember/object";
-import { registerUnbound, helperContext } from "discourse-common/lib/helpers";
+import { registerUnbound } from "discourse-common/lib/helpers";
 import { avatarImg, formatUsername } from "discourse/lib/utilities";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { htmlSafe } from "@ember/template";
@@ -32,7 +32,6 @@ export function classesForUser(u) {
 function renderAvatar(user, options) {
   options = options || {};
 
-  let siteSettings = helperContext().siteSettings;
   if (user) {
     const name = get(user, options.namePath || "name");
     const username = get(user, options.usernamePath || "username");
@@ -45,7 +44,7 @@ function renderAvatar(user, options) {
       return "";
     }
 
-    let displayName = prioritizeNameInUx(name, siteSettings)
+    let displayName = prioritizeNameInUx(name)
       ? name
       : formatUsername(username);
 
