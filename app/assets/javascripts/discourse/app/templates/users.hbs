@@ -13,8 +13,10 @@
               </div>
             {{/if}}
           </div>
-          <div class="user-count">{{i18n "directory.total_rows" count=model.totalRows}}</div>
-          {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+          <div>
+            <span class="user-count">{{i18n "directory.total_rows" count=model.totalRows}}</span>
+            {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+          </div>
         </div>
         {{#conditional-loading-spinner condition=isLoading}}
           {{#if model.length}}
