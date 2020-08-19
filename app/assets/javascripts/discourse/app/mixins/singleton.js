@@ -82,6 +82,7 @@ const Singleton = Mixin.create({
 
   resetCurrent(val) {
     this._current = val;
+    return val;
   }
 });
 

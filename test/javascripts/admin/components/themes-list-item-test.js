@@ -53,17 +53,21 @@ componentTest("broken theme", {
   }
 });
 
-const childrenList = [1, 2, 3, 4, 5].map(num =>
-  Theme.create({ name: `Child ${num}`, component: true })
-);
-
 componentTest("with children", {
   template: "{{themes-list-item theme=theme}}",
 
   beforeEach() {
+    this.childrenList = [1, 2, 3, 4, 5].map(num =>
+      Theme.create({ name: `Child ${num}`, component: true })
+    );
+
     this.set(
       "theme",
-      Theme.create({ name: "Test", childThemes: childrenList, default: true })
+      Theme.create({
+        name: "Test",
+        childThemes: this.childrenList,
+        default: true
+      })
     );
   },
 
@@ -76,7 +80,7 @@ componentTest("with children", {
         .split(",")
         .map(n => n.trim())
         .join(","),
-      childrenList
+      this.childrenList
         .splice(0, 4)
         .map(theme => theme.get("name"))
         .join(","),

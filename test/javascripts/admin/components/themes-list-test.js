@@ -4,25 +4,24 @@ import Theme, { THEMES, COMPONENTS } from "admin/models/theme";
 
 moduleForComponent("themes-list", { integration: true });
 
-const themes = [1, 2, 3, 4, 5].map(num =>
-  Theme.create({ name: `Theme ${num}` })
-);
-const components = [1, 2, 3, 4, 5].map(num =>
-  Theme.create({
-    name: `Child ${num}`,
-    component: true,
-    parentThemes: [themes[num - 1]],
-    parent_themes: [1, 2, 3, 4, 5]
-  })
-);
-
 componentTest("current tab is themes", {
   template:
     "{{themes-list themes=themes components=components currentTab=currentTab}}",
   beforeEach() {
+    this.themes = [1, 2, 3, 4, 5].map(num =>
+      Theme.create({ name: `Theme ${num}` })
+    );
+    this.components = [1, 2, 3, 4, 5].map(num =>
+      Theme.create({
+        name: `Child ${num}`,
+        component: true,
+        parentThemes: [this.themes[num - 1]],
+        parent_themes: [1, 2, 3, 4, 5]
+      })
+    );
     this.setProperties({
-      themes,
-      components,
+      themes: this.themes,
+      components: this.components,
       currentTab: THEMES
     });
   },
@@ -46,10 +45,10 @@ componentTest("current tab is themes", {
     );
     assert.equal(find(".themes-list-item").length, 5, "displays all themes");
 
-    [2, 3].forEach(num => themes[num].set("user_selectable", true));
-    themes[4].set("default", true);
-    this.set("themes", themes);
-    const names = [4, 2, 3, 0, 1].map(num => themes[num].get("name")); // default theme always on top, followed by user-selectable ones and then the rest
+    [2, 3].forEach(num => this.themes[num].set("user_selectable", true));
+    this.themes[4].set("default", true);
+    this.set("themes", this.themes);
+    const names = [4, 2, 3, 0, 1].map(num => this.themes[num].get("name")); // default theme always on top, followed by user-selectable ones and then the rest
     assert.deepEqual(
       Array.from(find(".themes-list-item").find(".name")).map(node =>
         node.innerText.trim()
@@ -63,8 +62,8 @@ componentTest("current tab is themes", {
       "the separator is in the right location"
     );
 
-    themes.forEach(theme => theme.set("user_selectable", true));
-    this.set("themes", themes);
+    this.themes.forEach(theme => theme.set("user_selectable", true));
+    this.set("themes", this.themes);
     assert.equal(
       find(".inactive-indicator").index(),
       -1,
@@ -91,9 +90,20 @@ componentTest("current tab is components", {
   template:
     "{{themes-list themes=themes components=components currentTab=currentTab}}",
   beforeEach() {
+    this.themes = [1, 2, 3, 4, 5].map(num =>
+      Theme.create({ name: `Theme ${num}` })
+    );
+    this.components = [1, 2, 3, 4, 5].map(num =>
+      Theme.create({
+        name: `Child ${num}`,
+        component: true,
+        parentThemes: [this.themes[num - 1]],
+        parent_themes: [1, 2, 3, 4, 5]
+      })
+    );
     this.setProperties({
-      themes,
-      components,
+      themes: this.themes,
+      components: this.components,
       currentTab: COMPONENTS
     });
   },
