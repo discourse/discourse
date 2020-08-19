@@ -360,6 +360,8 @@ en:
     preview: "preview"
     cancel: "cancel"
 
+    deleting: "Deleting..."
+
     save: "Save Changes"
     saving: "Saving..."
     saved: "Saved!"

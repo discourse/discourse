@@ -10,6 +10,13 @@ export default Controller.extend(ModalFunctionality, {
   deleting: false,
 
   @discourseComputed("deleting")
+  buttonTitle(deleting) {
+    return deleting
+      ? I18n.t("deleting")
+      : I18n.t("post.controls.delete_topic_confirm_modal_yes");
+  },
+
+  @discourseComputed("deleting")
   buttonDisabled(deleting) {
     return !!deleting;
   },
