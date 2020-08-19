@@ -24,9 +24,10 @@ export default Controller.extend(ModalFunctionality, {
           this.send("closeModal");
           this.set("deleting", false);
         })
-        .catch(() =>
-          this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error")
-        );
+        .catch(() => {
+          this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error");
+          this.set("deleting", false);
+        });
 
       return false;
     }
