@@ -30,6 +30,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { setURLContainer } from "discourse/lib/url";
 import { setModalContainer } from "discourse/lib/show-modal";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -166,18 +167,21 @@ export function acceptance(name, options) {
       }
       this.siteSettings = currentSettings();
 
-      if (options.site) {
-        resetSite(currentSettings(), options.site);
-      }
-
       clearOutletCache();
       clearHTMLCache();
       resetPluginApi();
+
       Discourse.reset();
       this.container = getOwner(this);
       setPluginContainer(this.container);
       setURLContainer(this.container);
       setModalContainer(this.container);
+      setDefaultOwner(this.container);
+
+      if (options.site) {
+        resetSite(currentSettings(), options.site);
+      }
+
       if (options.beforeEach) {
         options.beforeEach.call(this);
       }
@@ -208,6 +212,7 @@ export function acceptance(name, options) {
       _clearSnapshots();
       setURLContainer(null);
       setModalContainer(null);
+      setDefaultOwner(null);
       Discourse._runInitializer(
         "instanceInitializers",
         (initName, initializer) => {
