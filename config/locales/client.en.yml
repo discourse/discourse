@@ -3355,6 +3355,7 @@ en:
       delete_unused_confirmation_more_tags:
         one: "%{tags} and %{count} more"
         other: "%{tags} and %{count} more"
+      delete_no_unused_tags: "There are no unused tags."
       delete_unused: "Delete Unused Tags"
       delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
       cancel_delete_unused: "Cancel"
