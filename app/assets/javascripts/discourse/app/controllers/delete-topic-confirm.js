@@ -7,34 +7,28 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 // The modal will display only if the topic exceeds a certain amount of views
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
-  deleting: false,
 
-  @discourseComputed("deleting")
-  buttonTitle(deleting) {
-    return deleting
+  @discourseComputed("isTopicDeleting")
+  buttonTitle(isTopicDeleting) {
+    return isTopicDeleting
       ? I18n.t("deleting")
       : I18n.t("post.controls.delete_topic_confirm_modal_yes");
   },
 
-  @discourseComputed("deleting")
-  buttonDisabled(deleting) {
-    return deleting;
-  },
-
   onShow() {
-    this.set("deleting", false);
+    this.set("isTopicDeleting", false);
   },
 
   actions: {
     deleteTopic() {
-      this.set("deleting", true);
+      this.set("isTopicDeleting", true);
 
       this.topicController.model
         .destroy(this.currentUser)
         .then(() => this.send("closeModal"))
         .catch(() => {
           this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error");
-          this.set("deleting", false);
+          this.set("isTopicDeleting", false);
         });
 
       return false;
