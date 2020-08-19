@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import EmberObject, { action, computed } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { alias, and, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
@@ -188,10 +188,6 @@ export default Component.extend({
       (emailValid(emailOrUsername) || isPrivateTopic || !invitingToTopic)
     );
   },
-
-  showContactPicker: computed(function() {
-    return this.capabilities.hasContactPicker;
-  }),
 
   @discourseComputed("emailOrUsername")
   showCustomMessage(emailOrUsername) {
@@ -454,7 +450,7 @@ export default Component.extend({
 
   @action
   searchContact() {
-    getNativeContact(["email"], false).then(result => {
+    getNativeContact(this.capabilities, ["email"], false).then(result => {
       this.set("emailOrUsername", result[0].email[0]);
     });
   }
