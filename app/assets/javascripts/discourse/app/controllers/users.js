@@ -8,7 +8,7 @@ export default Controller.extend({
   application: controller(),
   queryParams: ["period", "order", "asc", "name", "group", "exclude_usernames"],
   period: "weekly",
-  order: "username",
+  order: "likes_received",
   asc: null,
   name: "",
   group: null,
