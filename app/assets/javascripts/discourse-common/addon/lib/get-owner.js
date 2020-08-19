@@ -5,7 +5,7 @@ let _default = {};
 
 export function getOwner(obj) {
   if (emberGetOwner) {
-    return emberGetOwner(obj) || emberGetOwner(_default);
+    return emberGetOwner(obj || _default) || emberGetOwner(_default);
   }
 
   return obj.container;
