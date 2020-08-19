@@ -12,6 +12,7 @@ import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
 import { setIconList } from "discourse-common/lib/icon-library";
 import { setPluginContainer } from "discourse/lib/plugin-api";
+import { setURLContainer } from "discourse/lib/url";
 
 export default {
   name: "discourse-bootstrap",
@@ -19,6 +20,7 @@ export default {
   // The very first initializer to run
   initialize(container, app) {
     setPluginContainer(container);
+    setURLContainer(container);
 
     // Our test environment has its own bootstrap code
     if (isTesting()) {

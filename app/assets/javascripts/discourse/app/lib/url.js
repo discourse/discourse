@@ -7,6 +7,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import { default as getURL, withoutPrefix } from "discourse-common/lib/get-url";
 import Session from "discourse/models/session";
+import { setOwner } from "@ember/application";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -189,7 +190,7 @@ const DiscourseURL = EmberObject.extend({
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
       // which triggers a replaceState even though the topic hasn't fully loaded yet!
       next(() => {
-        const location = DiscourseURL.get("router.location");
+        const location = this.get("router.location");
         if (location && location.replaceURL) {
           location.replaceURL(path);
         }
@@ -231,7 +232,7 @@ const DiscourseURL = EmberObject.extend({
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
-    if (!DiscourseURL.isInternal(path)) {
+    if (!this.isInternal(path)) {
       return redirectTo(path);
     }
 
@@ -361,7 +362,7 @@ const DiscourseURL = EmberObject.extend({
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
-        DiscourseURL.replaceState(path);
+        this.replaceState(path);
 
         const container = Discourse.__container__;
         const topicController = container.lookup("controller:topic");
@@ -436,17 +437,6 @@ const DiscourseURL = EmberObject.extend({
     return window.location.origin + (prefix === "/" ? "" : prefix);
   },
 
-  // TODO: These container calls can be replaced eventually if we migrate this to a service
-  // object.
-
-  /**
-    @private
-
-    Get a handle on the application's router. Note that currently it uses `__container__` which is not
-    advised but there is no other way to access the router.
-
-    @property router
-  **/
   get router() {
     return Discourse.__container__.lookup("router:main");
   },
@@ -455,8 +445,6 @@ const DiscourseURL = EmberObject.extend({
     return Discourse.__container__.lookup("service:app-events");
   },
 
-  // Get a controller. Note that currently it uses `__container__` which is not
-  // advised but there is no other way to access the router.
   controllerFor(name) {
     return Discourse.__container__.lookup("controller:" + name);
   },
@@ -498,6 +486,12 @@ const DiscourseURL = EmberObject.extend({
     const promise = transition.promise || transition;
     promise.then(() => jumpToElement(elementId));
   }
-}).create();
+});
+let _urlInstance = DiscourseURL.create();
 
-export default DiscourseURL;
+export function setURLContainer(container) {
+  _urlInstance.container = container;
+  setOwner(_urlInstance, container);
+}
+
+export default _urlInstance;
