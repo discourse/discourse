@@ -364,8 +364,7 @@ const DiscourseURL = EmberObject.extend({
       if (oldTopicId === newTopicId) {
         this.replaceState(path);
 
-        const container = Discourse.__container__;
-        const topicController = container.lookup("controller:topic");
+        const topicController = this.container.lookup("controller:topic");
         const opts = {};
         const postStream = topicController.get("model.postStream");
 
@@ -438,15 +437,15 @@ const DiscourseURL = EmberObject.extend({
   },
 
   get router() {
-    return Discourse.__container__.lookup("router:main");
+    return this.container.lookup("router:main");
   },
 
   get appEvents() {
-    return Discourse.__container__.lookup("service:app-events");
+    return this.container.lookup("service:app-events");
   },
 
   controllerFor(name) {
-    return Discourse.__container__.lookup("controller:" + name);
+    return this.container.lookup("controller:" + name);
   },
 
   /**
