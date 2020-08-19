@@ -11,16 +11,15 @@ import { helperContext } from "discourse-common/lib/helpers";
 import Session from "discourse/models/session";
 
 function getOpts(opts) {
-  const siteSettings = Discourse.__container__.lookup("site-settings:main"),
-    site = Discourse.__container__.lookup("site:main");
+  let context = helperContext();
 
-  opts = _.merge(
+  opts = Object.assign(
     {
       getURL: getURLWithCDN,
-      currentUser: Discourse.__container__.lookup("current-user:main"),
-      censoredRegexp: site.censored_regexp,
-      customEmojiTranslation: site.custom_emoji_translation,
-      siteSettings,
+      currentUser: context.currentUser,
+      censoredRegexp: context.site.censored_regexp,
+      customEmojiTranslation: context.site.custom_emoji_translation,
+      siteSettings: context.siteSettings,
       formatUsername
     },
     opts
