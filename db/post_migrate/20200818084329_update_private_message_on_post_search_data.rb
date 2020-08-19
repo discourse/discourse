@@ -5,23 +5,32 @@ class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def update_private_message_flag
-    execute <<~SQL
-    UPDATE post_search_data
-    SET private_message = true
-    FROM posts
-    INNER JOIN topics ON topics.id = posts.topic_id AND topics.archetype = 'private_message'
-    WHERE posts.id = post_search_data.post_id AND
-      (private_message IS NULL or private_message = false)
+
+    sql = <<~SQL
+      UPDATE post_search_data
+      SET private_message = X.private_message
+      FROM
+      (
+        SELECT post_id,
+          CASE WHEN t.archetype = 'private_message' THEN TRUE ELSE FALSE END private_message
+        FROM posts p
+        JOIN post_search_data pd ON pd.post_id = p.id
+        JOIN topics t ON t.id = p.topic_id
+        WHERE pd.private_message IS NULL OR
+          pd.private_message <> CASE WHEN t.archetype = 'private_message' THEN TRUE ELSE FALSE END
+        LIMIT 200000
+      ) X
+      WHERE X.post_id = post_search_data.post_id
     SQL
 
-    execute <<~SQL
-    UPDATE post_search_data
-    SET private_message = false
-    FROM posts
-    INNER JOIN topics ON topics.id = posts.topic_id AND topics.archetype <> 'private_message'
-    WHERE posts.id = post_search_data.post_id AND
-      (private_message IS NULL or private_message = true)
-    SQL
+    while true
+      count = execute(sql).cmd_tuples
+      if count == 0
+        break
+      else
+        puts "Migrated batch of #{count} on post_search_date to new schema"
+      end
+    end
   end
 
   def up
