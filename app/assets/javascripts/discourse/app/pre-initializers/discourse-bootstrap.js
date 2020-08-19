@@ -91,10 +91,11 @@ export default {
     );
 
     Session.currentProp(
-      "darkColorScheme",
-      getComputedStyle(document.documentElement)
-        .getPropertyValue("--scheme-type")
-        .trim() === "dark"
+      "defaultColorSchemeIsDark",
+      !window.matchMedia("(prefers-color-scheme: dark)").matches &&
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--scheme-type")
+          .trim() === "dark"
     );
 
     Session.currentProp("highlightJsPath", setupData.highlightJsPath);

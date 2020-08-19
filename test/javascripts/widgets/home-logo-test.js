@@ -202,10 +202,10 @@ widgetTest("dark color scheme and dark logo set", {
   beforeEach() {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = darkLogo;
-    Session.currentProp("darkColorScheme", true);
+    Session.currentProp("defaultColorSchemeIsDark", true);
   },
   afterEach() {
-    Session.currentProp("darkColorScheme", null);
+    Session.currentProp("defaultColorSchemeIsDark", null);
   },
   test(assert) {
     assert.ok(find("img#site-logo.logo-big").length === 1);
@@ -222,10 +222,10 @@ widgetTest("dark color scheme and dark logo not set", {
   beforeEach() {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = "";
-    Session.currentProp("darkColorScheme", true);
+    Session.currentProp("defaultColorSchemeIsDark", true);
   },
   afterEach() {
-    Session.currentProp("darkColorScheme", null);
+    Session.currentProp("defaultColorSchemeIsDark", null);
   },
   test(assert) {
     assert.ok(find("img#site-logo.logo-big").length === 1);

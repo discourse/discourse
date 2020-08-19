@@ -85,7 +85,7 @@ export default createWidget("home-logo", {
     // try dark logos first when color scheme is dark
     // this is independent of browser dark mode
     // hence the fallback to normal logos
-    if (Session.currentProp("darkColorScheme")) {
+    if (Session.currentProp("defaultColorSchemeIsDark")) {
       return (
         siteSettings[`site_${name}_dark_url`] ||
         siteSettings[`site_${name}_url`] ||
