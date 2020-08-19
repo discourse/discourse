@@ -5,6 +5,7 @@ import {
   iOSWithVisualViewport
 } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import { helperContext } from "discourse-common/lib/helpers";
 
 // TODO: remove calcHeight once iOS 13 adoption > 90%
 // In iOS 13 and up we use visualViewport API to calculate height
@@ -78,8 +79,7 @@ export function isWorkaroundActive() {
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
 function positioningWorkaround($fixedElement) {
-  const caps = Discourse.__container__.lookup("capabilities:main");
-
+  let caps = helperContext().capabilities;
   if (!caps.isIOS || safariHacksDisabled()) {
     return;
   }
