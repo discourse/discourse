@@ -9,6 +9,7 @@ import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
 import PreloadStore from "discourse/lib/preload-store";
 import deprecated from "discourse-common/lib/deprecated";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const Site = RestModel.extend({
   isReadOnly: alias("is_readonly"),
@@ -131,7 +132,7 @@ const Site = RestModel.extend({
 Site.reopenClass(Singleton, {
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    const store = Discourse.__container__.lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
     return store.createRecord("site", siteAttributes);
