@@ -193,6 +193,7 @@ en:
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_media_requirements: "S3 uploads must be enabled before enabling secure media."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
+      second_factor_cannot_enforce_with_socials: "You cannot enforce 2FA with social logins enabled. You must first disable login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
