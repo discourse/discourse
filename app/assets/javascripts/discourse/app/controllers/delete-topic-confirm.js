@@ -18,7 +18,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("deleting")
   buttonDisabled(deleting) {
-    return !!deleting;
+    return deleting;
   },
 
   onShow() {
