@@ -14,16 +14,17 @@ export default Controller.extend(ModalFunctionality, {
     return !!deleting;
   },
 
+  onShow() {
+    this.set("deleting", false);
+  },
+
   actions: {
     deleteTopic() {
       this.set("deleting", true);
 
       this.topicController.model
         .destroy(this.currentUser)
-        .then(() => {
-          this.send("closeModal");
-          this.set("deleting", false);
-        })
+        .then(() => this.send("closeModal"))
         .catch(() => {
           this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error");
           this.set("deleting", false);
