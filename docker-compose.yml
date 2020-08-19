@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+  discourse-db:
+    image: postgres
+    environment:
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+    restart: unless-stopped
+    command: -p "${POSTGRES_PORT}"
+
+  discourse-web:
+    image: psychomantys/discourse:2.5.0-buster-slim
+    build:
+      context: .
+    restart: unless-stopped
+    configs:
+      - env.sh
+    ports:
+     - "${DISCOURSE_PORT}:${DISCOURSE_PORT}"
+#    environment:
+#      - POSTGRES_HOST=${POSTGRES_HOST}
+#      - POSTGRES_PORT=${POSTGRES_PORT}
+#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#      - POSTGRES_USER=${POSTGRES_USER}
+#      - POSTGRES_DB_NAME=${POSTGRES_DB_NAME}
+#      - PLONE_PORT=${PLONE_PORT}
+#      - PLONE_USER=${PLONE_USER}
+#      - PLONE_PASSWORD=${PLONE_PASSWORD}
+#    deploy:
+#      replicas: 2
+
+  discourse-redis:
+    image: redis
+    command: redis-server --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT}
+    restart: always
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+configs:
+  env.sh:
+    file: .env
+
