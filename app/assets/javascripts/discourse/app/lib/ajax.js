@@ -1,8 +1,6 @@
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
 import { run } from "@ember/runloop";
 import userPresent from "discourse/lib/user-presence";
-import logout from "discourse/lib/logout";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
@@ -11,7 +9,7 @@ import User from "discourse/models/user";
 
 let _trackView = false;
 let _transientHeader = null;
-let _showingLogout = false;
+let _logoffCallback;
 
 export function setTransientHeader(key, value) {
   _transientHeader = { key, value };
@@ -21,19 +19,13 @@ export function viewTrackingRequired() {
   _trackView = true;
 }
 
+export function setLogoffCallback(cb) {
+  _logoffCallback = cb;
+}
+
 export function handleLogoff(xhr) {
-  if (xhr && xhr.getResponseHeader("Discourse-Logged-Out") && !_showingLogout) {
-    _showingLogout = true;
-    const messageBus = Discourse.__container__.lookup("message-bus:main");
-    messageBus.stop();
-    bootbox.dialog(
-      I18n.t("logout"),
-      { label: I18n.t("refresh"), callback: logout },
-      {
-        onEscape: () => logout(),
-        backdrop: "static"
-      }
-    );
+  if (xhr && xhr.getResponseHeader("Discourse-Logged-Out") && _logoffCallback) {
+    _logoffCallback();
   }
 }
 
