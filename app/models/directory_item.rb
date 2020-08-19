@@ -4,8 +4,7 @@ class DirectoryItem < ActiveRecord::Base
   belongs_to :user
   has_one :user_stat, foreign_key: :user_id, primary_key: :user_id
   def self.headings
-    @headings ||= [
-                   :likes_received,
+    @headings ||= [:likes_received,
                    :likes_given,
                    :topics_entered,
                    :topic_count,
