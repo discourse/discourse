@@ -1,13 +1,17 @@
 import I18n from "I18n";
 import { dasherize } from "@ember/string";
 
+let _container;
+export function setModalContainer(container) {
+  _container = container;
+}
+
 export default function(name, opts) {
   opts = opts || {};
-  const container = Discourse.__container__;
 
   // We use the container here because modals are like singletons
   // in Discourse. Only one can be shown with a particular state.
-  const route = container.lookup("route:application");
+  const route = _container.lookup("route:application");
   const modalController = route.controllerFor("modal");
 
   modalController.set(
@@ -18,7 +22,7 @@ export default function(name, opts) {
   const controllerName = opts.admin ? `modals/${name}` : name;
   modalController.set("name", controllerName);
 
-  let controller = container.lookup("controller:" + controllerName);
+  let controller = _container.lookup("controller:" + controllerName);
   const templateName = opts.templateName || dasherize(name);
 
   const renderArgs = { into: "modal", outlet: "modalBody" };
@@ -27,7 +31,7 @@ export default function(name, opts) {
   } else {
     // use a basic controller
     renderArgs.controller = "basic-modal-body";
-    controller = container.lookup(`controller:${renderArgs.controller}`);
+    controller = _container.lookup(`controller:${renderArgs.controller}`);
   }
 
   if (opts.addModalBodyView) {

@@ -13,6 +13,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { setIconList } from "discourse-common/lib/icon-library";
 import { setPluginContainer } from "discourse/lib/plugin-api";
 import { setURLContainer } from "discourse/lib/url";
+import { setModalContainer } from "discourse/lib/show-modal";
 
 export default {
   name: "discourse-bootstrap",
@@ -21,6 +22,7 @@ export default {
   initialize(container, app) {
     setPluginContainer(container);
     setURLContainer(container);
+    setModalContainer(container);
 
     // Our test environment has its own bootstrap code
     if (isTesting()) {
