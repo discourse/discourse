@@ -323,8 +323,8 @@ class GroupsController < ApplicationController
         'usernames or emails must be present'
       )
     end
-
-    if (usernames = group.users.where(id: users.map(&:id)).pluck(:username)).present?
+    usernames = group.users.where(id: users.map(&:id)).pluck(:username)
+    if usernames.present? && usernames.length == users.length
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
         username: usernames.sort.join(", "),
