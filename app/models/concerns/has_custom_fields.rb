@@ -203,7 +203,7 @@ module HasCustomFields
 
   def save_custom_fields(force = false)
     if force || !custom_fields_clean?
-      dup = @custom_fields.dup
+      dup = @custom_fields.dup.with_indifferent_access
       array_fields = {}
 
       ActiveRecord::Base.transaction do
