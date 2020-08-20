@@ -1,6 +1,6 @@
 import { cancel, scheduleOnce } from "@ember/runloop";
 import { diff, patch } from "virtual-dom";
-import { queryRegistry } from "discourse/widgets/widget";
+import { queryRegistry, listCustomWidgets } from "discourse/widgets/widget";
 import DirtyKeys from "discourse/lib/dirty-keys";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -47,23 +47,25 @@ export default class WidgetGlue {
     });
     const patches = diff(this._tree || this._rootNode, newTree);
 
+    if (this._tree) {
+      listCustomWidgets(this._tree)
+        .reverse()
+        .forEach(widget => widget.willRerenderWidget());
+    }
+
     newTree._rerenderable = this;
     this._rootNode = patch(this._rootNode, patches);
     this._tree = newTree;
+
+    listCustomWidgets(newTree)
+      .reverse()
+      .forEach(widget => widget.didRenderWidget());
   }
 
   cleanUp() {
-    const widgets = [];
-    const findWidgets = widget => {
-      widget.vnode.children.forEach(child => {
-        if (child.constructor.name === "CustomWidget") {
-          widgets.push(child);
-          findWidgets(child);
-        }
-      });
-    };
-    findWidgets(this._tree);
-    widgets.reverse().forEach(widget => widget.destroy());
+    listCustomWidgets(this._tree)
+      .reverse()
+      .forEach(widget => widget.destroy());
 
     cancel(this._timeout);
   }
