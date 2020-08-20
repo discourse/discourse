@@ -570,7 +570,11 @@ table {
 }
 
 // Special elements
-// Special elements
+
+#main-outlet {
+  padding-top: 1em;
+}
+
 #main {
   img.avatar {
     &.header {
