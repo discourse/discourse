@@ -4,7 +4,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { schedule } from "@ember/runloop";
+import { schedule, later } from "@ember/runloop";
 import Component from "@ember/component";
 import { emojiUrlFor } from "discourse/lib/text";
 import { createPopper } from "@popperjs/core";
@@ -37,6 +37,7 @@ export default Component.extend({
   recentEmojis: null,
   hoveredEmoji: null,
   isActive: false,
+  isLoading: true,
 
   init() {
     this._super(...arguments);
@@ -74,6 +75,8 @@ export default Component.extend({
 
   @action
   onShow() {
+    this.set("isLoading", true);
+
     schedule("afterRender", () => {
       document.addEventListener("click", this.handleOutsideClick);
 
@@ -116,6 +119,10 @@ export default Component.extend({
       emojiPicker
         .querySelectorAll(".emojis-container .section .section-header")
         .forEach(p => this._sectionObserver.observe(p));
+
+      // this is a low-tech trick to prevent appending hundreds of emojis
+      // of blocking the rendering of the picker
+      later(() => this.set("isLoading", false), 50);
     });
   },
 
