@@ -297,8 +297,8 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def is_dark?
-    primary_b = brightness(self.colors_by_name["primary"].hex)
-    secondary_b = brightness(self.colors_by_name["secondary"].hex)
+    primary_b = brightness(colors_by_name["primary"].hex)
+    secondary_b = brightness(colors_by_name["secondary"].hex)
 
     primary_b > secondary_b
   end
