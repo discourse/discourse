@@ -463,6 +463,10 @@ module ApplicationHelper
     result.html_safe
   end
 
+  def dark_color_scheme?
+    ColorScheme.find_by_id(scheme_id)&.is_dark?
+  end
+
   def preloaded_json
     return '{}' if @preloaded.blank?
     @preloaded.transform_values { |value| escape_unicode(value) }.to_json
@@ -485,6 +489,7 @@ module ApplicationHelper
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_ids),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
+      color_scheme_is_dark: dark_color_scheme?
     }
 
     if Rails.env.development?
