@@ -542,8 +542,6 @@ describe DiscourseNarrativeBot::NewUserNarrative do
       end
     end
 
-    # TODO - ensure there are tests for the images and likes prerequisites
-
     describe 'likes tutorial' do
       let(:post_2) { Fabricate(:post, topic: topic) }
 
@@ -585,8 +583,6 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
             expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_flag)
           end
-
-          # TODO - copy this for prerequisites
 
           describe 'when allow_flagging_staff is false' do
             it 'should go to the right state' do
@@ -761,8 +757,22 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           end
         end
 
-        # TODO - the right reply depends on whether images are enabled or not
-        #      - see 'when user mentions is disabled' <-- copy that
+        describe 'when min_trust_to_post_embedded_media is too high' do
+          before do
+            SiteSetting.min_trust_to_post_embedded_media = 4
+          end
+
+          it 'should skip the images tutorial step' do
+            post.update!(
+              raw: "[quote=\"#{post.user}, post:#{post.post_number}, topic:#{topic.id}\"]\n:monkey: :fries:\n[/quote]"
+            )
+
+            narrative.expects(:enqueue_timeout_job).with(user)
+            narrative.input(:reply, user, post: post)
+
+            expect(narrative.get_data(user)[:state].to_sym).to eq(:tutorial_likes)
+          end
+        end
 
         it 'should create the right reply' do
           post.update!(
