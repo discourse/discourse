@@ -401,4 +401,17 @@ describe ApplicationHelper do
 
     end
   end
+
+  describe "dark_color_scheme?" do
+    it 'returns nil for the base color scheme' do
+      expect(helper.dark_color_scheme?).to eq(nil)
+    end
+
+    it 'works correctly for a dark scheme' do
+      dark_theme = Theme.where(name: "Dark").first
+      helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+
+      expect(helper.dark_color_scheme?).to eq(true)
+    end
+  end
 end
