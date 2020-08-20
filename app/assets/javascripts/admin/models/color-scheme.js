@@ -20,7 +20,10 @@ const ColorScheme = EmberObject.extend({
   },
 
   startTrackingChanges() {
-    this.set("originals", { name: this.name });
+    this.set("originals", {
+      name: this.name,
+      userSelectable: this.user_selectable
+    });
   },
 
   schemeJson() {
@@ -46,10 +49,16 @@ const ColorScheme = EmberObject.extend({
     return newScheme;
   },
 
-  @discourseComputed("name", "colors.@each.changed", "saving")
-  changed(name) {
+  @discourseComputed(
+    "name",
+    "user_selectable",
+    "colors.@each.changed",
+    "saving"
+  )
+  changed(name, userSelectable) {
     if (!this.originals) return false;
     if (this.originals.name !== name) return true;
+    if (this.originals.userSelectable !== userSelectable) return true;
     if (this.colors.any(c => c.get("changed"))) return true;
 
     return false;
@@ -75,6 +84,7 @@ const ColorScheme = EmberObject.extend({
 
     if (!opts || !opts.enabledOnly) {
       data.name = this.name;
+      data.user_selectable = this.user_selectable;
       data.base_scheme_id = this.base_scheme_id;
       data.colors = [];
       this.colors.forEach(c => {
@@ -129,6 +139,7 @@ ColorScheme.reopenClass({
             theme_id: colorScheme.theme_id,
             theme_name: colorScheme.theme_name,
             base_scheme_id: colorScheme.base_scheme_id,
+            user_selectable: colorScheme.user_selectable,
             colors: colorScheme.colors.map(c => {
               return ColorSchemeColor.create({
                 name: c.name,

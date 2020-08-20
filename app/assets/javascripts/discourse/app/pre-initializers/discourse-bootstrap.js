@@ -90,6 +90,8 @@ export default {
 
     session.highlightJsPath = setupData.highlightJsPath;
     session.svgSpritePath = setupData.svgSpritePath;
+    session.userColorSchemeId = setupData.userColorSchemeId;
+    session.userDarkSchemeId = setupData.userDarkSchemeId;
 
     if (isDevelopment()) {
       setIconList(setupData.svgIconList);

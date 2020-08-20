@@ -1,0 +1,70 @@
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+
+export function listColorSchemes(site, options = {}) {
+  let schemes = site.get("user_color_schemes");
+
+  if (!schemes || !Array.isArray(schemes)) {
+    return null;
+  }
+
+  let results = [];
+
+  schemes.forEach(s => {
+    if ((options.darkOnly && s.is_dark) || !options.darkOnly) {
+      results.push({
+        name: s.name,
+        id: s.id
+      });
+    }
+  });
+
+  if (options.darkOnly) {
+    results.unshift({
+      id: -1,
+      name: I18n.t("user.color_schemes.disable_dark_scheme")
+    });
+  }
+
+  return results.length === 0 ? null : results;
+}
+
+export function loadColorSchemeStylesheet(
+  color_scheme_id,
+  theme_id,
+  dark = false
+) {
+  ajax(`/color-scheme-stylesheet/${color_scheme_id}/${theme_id}`).then(
+    result => {
+      if (result && result.new_href) {
+        const elementId = dark ? "cs-preview-dark" : "cs-preview-light";
+        const existingElement = document.querySelector(`link#${elementId}`);
+        if (existingElement) {
+          existingElement.href = result.new_href;
+        } else {
+          let link = document.createElement("link");
+          link.href = result.new_href;
+          link.media = dark
+            ? "(prefers-color-scheme: dark)"
+            : "(prefers-color-scheme: light)";
+          link.rel = "stylesheet";
+          link.id = elementId;
+
+          document.body.appendChild(link);
+        }
+      }
+    }
+  );
+}
+
+export function updateColorSchemeCookie(id, options = {}) {
+  const cookieName = options.dark ? "dark_scheme_id" : "color_scheme_id";
+  if (id) {
+    $.cookie(cookieName, id, {
+      path: "/",
+      expires: 9999
+    });
+  } else {
+    $.removeCookie(cookieName, { path: "/", expires: 1 });
+  }
+}

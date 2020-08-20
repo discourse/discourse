@@ -486,9 +486,15 @@
   }
   .color-scheme {
     .controls {
+      display: flex;
+      align-items: center;
       button,
       a {
         margin-right: 10px;
+      }
+
+      button.btn-danger {
+        margin-left: auto;
       }
     }
   }
@@ -507,8 +513,8 @@
       margin-bottom: 0;
       margin-right: 6px;
     }
-    .hex {
-      text-align: center;
+    th.overriden {
+      text-align: right;
     }
     .color-input {
       display: flex;
