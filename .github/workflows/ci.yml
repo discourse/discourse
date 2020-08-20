@@ -146,11 +146,17 @@ jobs:
           yarn eslint app/assets/javascripts test/javascripts
           yarn eslint --global I18n --ext .es6 plugins
 
-      - name: Prettier
-        if: env.BUILD_TYPE == 'LINT'
+      - name: Core Prettier
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
         run: |
           yarn prettier -v
-          yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6" "plugins/**/*.scss" "plugins/**/*.es6"
+          yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.{js,es6}" "test/javascripts/**/*.{js,es6}"
+
+      - name: Plugin Prettier
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
+        run: |
+          yarn prettier -v
+          yarn prettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"
 
       - name: Core English locale
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'

@@ -6,15 +6,15 @@ pre-commit:
       run: bundle exec rubocop --parallel {staged_files}
     prettier:
       glob: "*.{js,es6}"
-      exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
+      include: "app/assets/javascripts|test/javascripts"
       run: yarn prettier --list-different {staged_files}
     eslint-es6:
       glob: "*.es6"
-      exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
+      include: "app/assets/javascripts|test/javascripts"
       run: yarn eslint --ext .es6 -f compact {staged_files}
     eslint-js:
       glob: "*.js"
-      exclude: "vendor/*|fixtures|public/javascripts|shims.js|ember-addons|template-lintrc|locale/*|test_helper|run-qunit"
+      include: "app/assets/javascripts|test/javascripts"
       run: yarn eslint -f compact {staged_files}
     ember-template-lint:
       run: yarn run ember-template-lint {staged_files}
@@ -52,14 +52,17 @@ lints:
     rubocop:
       run: bundle exec rubocop --parallel
     prettier:
-      glob: "{app/assets/stylesheets/**/*.scss,app/assets/javascripts/**/*.es6,test/javascripts/**/*.es6}"
+      glob: "*.{js,es6}"
+      include: "app/assets/javascripts|test/javascripts"
       run: yarn prettier --list-different {all_files}
     eslint-assets-es6:
       run: yarn eslint --ext .es6 app/assets/javascripts
     eslint-assets-js:
       run: yarn eslint app/assets/javascripts
-    eslint-test:
+    eslint-test-es6:
       run: yarn eslint --ext .es6 test/javascripts
+    eslint-test-js:
+      run: yarn eslint test/javascripts
     eslint-plugins-assets:
       run: yarn eslint --global I18n --ext .es6 plugins/**/assets/javascripts
     eslint-plugins-test:
