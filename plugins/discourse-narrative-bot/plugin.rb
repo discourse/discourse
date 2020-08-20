@@ -179,7 +179,7 @@ after_initialize do
       self.human? &&
       !self.anonymous? &&
       !self.staged &&
-      !user_option.skip_new_user_tips &&
+      !user_option&.skip_new_user_tips &&
       !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)
   end
 
