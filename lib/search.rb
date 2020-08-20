@@ -478,7 +478,7 @@ class Search
     end
   end
 
-  advanced_filter(/^\#([\p{L}0-9\-:=]+)$/) do |posts, match|
+  advanced_filter(/^\#([\p{L}\p{M}0-9\-:=]+)$/) do |posts, match|
 
     exact = true
 
@@ -600,11 +600,11 @@ class Search
     end
   end
 
-  advanced_filter(/^tags?:([\p{L}0-9,\-_+]+)$/) do |posts, match|
+  advanced_filter(/^tags?:([\p{L}\p{M}0-9,\-_+]+)$/) do |posts, match|
     search_tags(posts, match, positive: true)
   end
 
-  advanced_filter(/^\-tags?:([\p{L}0-9,\-_+]+)$/) do |posts, match|
+  advanced_filter(/^\-tags?:([\p{L}\p{M}0-9,\-_+]+)$/) do |posts, match|
     search_tags(posts, match, positive: false)
   end
 
