@@ -38,7 +38,7 @@ class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
     # must drop index cause we do not want an enormous amount of work done
     # as we are changing data
     execute <<~SQL
-     DROP INDEX IF EXISTS idx_regular_post_search_data
+     DROP INDEX CONCURRENTLY IF EXISTS idx_regular_post_search_data
     SQL
 
     # Delete post_search_data of orphaned posts
