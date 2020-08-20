@@ -18,7 +18,7 @@ class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
         JOIN topics t ON t.id = p.topic_id
         WHERE pd.private_message IS NULL OR
           pd.private_message <> CASE WHEN t.archetype = 'private_message' THEN TRUE ELSE FALSE END
-        LIMIT 200000
+        LIMIT 3000000
       ) X
       WHERE X.post_id = post_search_data.post_id
     SQL
@@ -34,6 +34,13 @@ class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
   end
 
   def up
+
+    # must drop index cause we do not want an enormous amount of work done
+    # as we are changing data
+    execute <<~SQL
+     DROP INDEX IF EXISTS idx_regular_post_search_data
+    SQL
+
     # Delete post_search_data of orphaned posts
     execute <<~SQL
     DELETE FROM post_search_data
@@ -62,6 +69,11 @@ class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
       update_private_message_flag
       change_column_null(:post_search_data, :private_message, false)
     end
+
+    execute <<~SQL
+      CREATE INDEX CONCURRENTLY idx_regular_post_search_data
+       ON post_search_data USING GIN(search_data) WHERE NOT private_message
+    SQL
   end
 
   def down
