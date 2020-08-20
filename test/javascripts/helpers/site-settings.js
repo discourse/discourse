@@ -1,13 +1,10 @@
-// discourse-skip-module
-
-Discourse.SiteSettingsOriginal = {
+const ORIGINAL_SETTINGS = {
   title: "QUnit Discourse Tests",
   site_logo_url: "/assets/logo.png",
   site_logo_url: "/assets/logo.png",
   site_logo_small_url: "/assets/logo-single.png",
   site_mobile_logo_url: "",
-  site_favicon_url:
-    "//meta.discourse.org/uploads/default/2499/79d53726406d87af.ico",
+  site_favicon_url: "/images/discourse-logo-sketch-small.png",
   allow_user_locale: false,
   suggested_topics: 7,
   ga_universal_tracking_code: "",
@@ -53,7 +50,7 @@ Discourse.SiteSettingsOriginal = {
   traditional_markdown_linebreaks: false,
   suppress_reply_directly_below: true,
   suppress_reply_directly_above: true,
-  newuser_max_images: 0,
+  newuser_max_embedded_media: 0,
   newuser_max_attachments: 0,
   display_name_on_posts: true,
   short_progress_text_threshold: 10000,
@@ -103,8 +100,40 @@ Discourse.SiteSettingsOriginal = {
   secure_media: false
 };
 
-Discourse.SiteSettings = jQuery.extend(
-  true,
-  {},
-  Discourse.SiteSettingsOriginal
-);
+let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);
+Discourse.SiteSettings = siteSettings;
+
+export function currentSettings() {
+  return siteSettings;
+}
+
+// In debug mode, Ember will decorate objects with setters that remind you to use
+// this.set() because they are bound (even if you use `unbound` or `readonly` in templates!).
+// Site settings are only ever changed in tests and these warnings are not wanted, so we'll
+// strip them when resetting our settings between tests.
+function setValue(k, v) {
+  let desc = Object.getOwnPropertyDescriptor(siteSettings, k);
+  if (desc && !desc.writable) {
+    Object.defineProperty(siteSettings, k, { writable: true });
+  }
+  siteSettings[k] = v;
+}
+
+export function mergeSettings(other) {
+  for (let p in other) {
+    if (other.hasOwnProperty(p)) {
+      setValue(p, other[p]);
+    }
+  }
+  return siteSettings;
+}
+
+export function resetSettings() {
+  for (let p in siteSettings) {
+    if (siteSettings.hasOwnProperty(p)) {
+      let v = ORIGINAL_SETTINGS[p];
+      typeof v !== "undefined" ? setValue(p, v) : delete siteSettings[p];
+    }
+  }
+  return siteSettings;
+}

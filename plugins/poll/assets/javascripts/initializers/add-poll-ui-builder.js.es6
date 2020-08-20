@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import discourseComputed from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
+import discourseComputed from "discourse-common/utils/decorators";
 
 function initializePollUIBuilder(api) {
   api.modifyClass("controller:composer", {

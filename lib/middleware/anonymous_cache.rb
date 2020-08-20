@@ -3,6 +3,7 @@
 require_dependency "mobile_detection"
 require_dependency "crawler_detection"
 require_dependency "guardian"
+require_dependency "http_language_parser"
 
 module Middleware
   class AnonymousCache
@@ -13,7 +14,8 @@ module Middleware
         c: 'key_is_crawler?',
         b: 'key_has_brotli?',
         t: 'key_cache_theme_ids',
-        ca: 'key_compress_anon'
+        ca: 'key_compress_anon',
+        l: 'key_locale'
       }
     end
 
@@ -87,6 +89,14 @@ module Middleware
             @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
           end
         @has_brotli == :true
+      end
+
+      def key_locale
+        if SiteSetting.set_locale_from_accept_language_header
+          HttpLanguageParser.parse(@env["HTTP_ACCEPT_LANGUAGE"])
+        else
+          "" # No need to key, it is the same for all anon users
+        end
       end
 
       def is_crawler?

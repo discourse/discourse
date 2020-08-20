@@ -130,7 +130,10 @@ export default createWidget("topic-admin-menu", {
     const visible = topic.get("visible");
 
     // Admin actions
-    if (this.currentUser && this.currentUser.get("canManageTopic")) {
+    if (
+      this.get("currentUser.canManageTopic") ||
+      details.can_split_merge_topic
+    ) {
       this.addActionButton({
         className: "topic-admin-multi-select",
         buttonClass: "popup-menu-btn",
@@ -138,7 +141,9 @@ export default createWidget("topic-admin-menu", {
         icon: "tasks",
         label: "actions.multi_select"
       });
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       if (details.get("can_delete")) {
         this.addActionButton({
           className: "topic-admin-delete",
@@ -158,7 +163,9 @@ export default createWidget("topic-admin-menu", {
           label: "actions.recover"
         });
       }
+    }
 
+    if (this.currentUser && details.get("can_close_topic")) {
       if (topic.get("closed")) {
         this.addActionButton({
           className: "topic-admin-open",
@@ -176,7 +183,9 @@ export default createWidget("topic-admin-menu", {
           label: "actions.close"
         });
       }
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-status-update",
         buttonClass: "popup-menu-btn",
@@ -212,7 +221,9 @@ export default createWidget("topic-admin-menu", {
         icon: "anchor",
         label: "actions.reset_bump_date"
       });
+    }
 
+    if (this.currentUser && details.get("can_archive_topic")) {
       if (!isPrivateMessage) {
         this.addActionButton({
           className: "topic-admin-archive",
@@ -222,7 +233,9 @@ export default createWidget("topic-admin-menu", {
           label: topic.get("archived") ? "actions.unarchive" : "actions.archive"
         });
       }
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-visible",
         buttonClass: "popup-menu-btn",

@@ -7,6 +7,8 @@ import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
+import { helperContext } from "discourse-common/lib/helpers";
+import Session from "discourse/models/session";
 
 function getOpts(opts) {
   const siteSettings = Discourse.__container__.lookup("site-settings:main"),
@@ -58,14 +60,19 @@ export function sanitizeAsync(text, options) {
 }
 
 function loadMarkdownIt() {
-  if (Discourse.MarkdownItURL) {
-    return loadScript(Discourse.MarkdownItURL).catch(e => {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    });
-  } else {
-    return Promise.resolve();
-  }
+  return new Promise(resolve => {
+    let markdownItURL = Session.currentProp("markdownItURL");
+    if (markdownItURL) {
+      loadScript(markdownItURL)
+        .then(() => resolve())
+        .catch(e => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
+    } else {
+      resolve();
+    }
+  });
 }
 
 function createPrettyText(options) {
@@ -73,15 +80,16 @@ function createPrettyText(options) {
 }
 
 function emojiOptions() {
-  if (!Discourse.SiteSettings.enable_emoji) {
+  let siteSettings = helperContext().siteSettings;
+  if (!siteSettings.enable_emoji) {
     return;
   }
 
   return {
     getURL: url => getURLWithCDN(url),
-    emojiSet: Discourse.SiteSettings.emoji_set,
-    enableEmojiShortcuts: Discourse.SiteSettings.enable_emoji_shortcuts,
-    inlineEmoji: Discourse.SiteSettings.enable_inline_emoji_translation
+    emojiSet: siteSettings.emoji_set,
+    enableEmojiShortcuts: siteSettings.enable_emoji_shortcuts,
+    inlineEmoji: siteSettings.enable_inline_emoji_translation
   };
 }
 

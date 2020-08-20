@@ -343,7 +343,7 @@ describe Middleware::RequestTracker do
       tracker.call(env("REQUEST_URI" => uri, "ANON_CACHE_DURATION" => 60))
       expect(@data[:cache]).to eq("true")
 
-      # not whitelisted
+      # not allowlisted
       request_params.delete("a")
 
       expect(@env["action_dispatch.request.parameters"]).to eq(request_params)

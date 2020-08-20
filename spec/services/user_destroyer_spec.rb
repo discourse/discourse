@@ -378,7 +378,7 @@ describe UserDestroyer do
     end
 
     context 'user belongs to groups that grant trust level' do
-      let(:group) { Fabricate(:group, grant_trust_level: 2) }
+      let(:group) { Fabricate(:group, grant_trust_level: 4) }
 
       before do
         group.add(user)
@@ -388,6 +388,16 @@ describe UserDestroyer do
         d = UserDestroyer.new(admin)
         expect {
           d.destroy(user)
+        }.to change { User.count }.by(-1)
+      end
+
+      it 'can delete the user if they have a manual locked trust level and have no email' do
+        user.update(manual_locked_trust_level: 3)
+
+        UserEmail.where(user: user).delete_all
+        user.reload
+        expect {
+          UserDestroyer.new(admin).destroy(user)
         }.to change { User.count }.by(-1)
       end
 

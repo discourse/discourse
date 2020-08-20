@@ -292,7 +292,7 @@ protected
 
     user_ids = User.staff.pluck(:id)
 
-    if SiteSetting.enable_category_group_review? && group_id = topic.category&.reviewable_by_group_id.presence
+    if SiteSetting.enable_category_group_moderation? && group_id = topic.category&.reviewable_by_group_id.presence
       user_ids.concat(GroupUser.where(group_id: group_id).pluck(:user_id))
       user_ids.uniq!
     end

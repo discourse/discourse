@@ -271,6 +271,8 @@ class ColorScheme < ActiveRecord::Base
 
   def publish_discourse_stylesheet
     if self.id
+      Stylesheet::Manager.clear_color_scheme_cache!
+
       theme_ids = Theme.where(color_scheme_id: self.id).pluck(:id)
       if theme_ids.present?
         Stylesheet::Manager.cache.clear
@@ -294,6 +296,18 @@ class ColorScheme < ActiveRecord::Base
     end
   end
 
+  def is_dark?
+    primary_b = brightness(colors_by_name["primary"].hex)
+    secondary_b = brightness(colors_by_name["secondary"].hex)
+
+    primary_b > secondary_b
+  end
+
+  # Equivalent to dc-color-brightness() in variables.scss
+  def brightness(color)
+    rgb = color.scan(/../).map { |c| c.to_i(16) }
+    (rgb[0].to_i * 299 + rgb[1].to_i * 587 + rgb[2].to_i * 114) / 1000.0
+  end
 end
 
 # == Schema Information

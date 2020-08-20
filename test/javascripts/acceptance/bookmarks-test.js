@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import selectKit from "helpers/select-kit-helper";
 import {
   acceptance,
   loggedInUser,
@@ -115,7 +116,8 @@ test("Opening the options panel and remembering the option", async assert => {
     exists(".bookmark-options-panel"),
     "it should open the options panel"
   );
-  await click("#delete_when_reminder_sent");
+  await selectKit(".bookmark-option-selector").expand();
+  await selectKit(".bookmark-option-selector").selectRowByValue(1);
   await click("#save-bookmark");
   await openEditBookmarkModal();
 
@@ -123,9 +125,11 @@ test("Opening the options panel and remembering the option", async assert => {
     exists(".bookmark-options-panel"),
     "it should reopen the options panel"
   );
-  assert.ok(
-    exists(".bookmark-options-panel #delete_when_reminder_sent:checked"),
-    "it should pre-check delete when reminder sent option"
+  assert.equal(
+    selectKit(".bookmark-option-selector")
+      .header()
+      .value(),
+    1
   );
   assert.verifySteps(["none"]);
 });
@@ -228,6 +232,14 @@ test("Editing a bookmark", async assert => {
     "it should prefill the bookmark time"
   );
   assert.verifySteps(["tomorrow"]);
+});
+
+acceptance("Bookmarking - Mobile", {
+  loggedIn: true,
+  mobileView: true,
+  afterEach() {
+    sandbox.restore();
+  }
 });
 
 QUnit.skip(

@@ -156,9 +156,7 @@ class OptimizedImage < ActiveRecord::Base
     if size = read_attribute(:filesize)
       size
     else
-      # we may have a bad optimized image so just skip for now
-      # and do not break here
-      size = calculate_filesize rescue nil
+      size = calculate_filesize
 
       write_attribute(:filesize, size)
       if !new_record?
@@ -362,16 +360,18 @@ end
 #
 # Table name: optimized_images
 #
-#  id        :integer          not null, primary key
-#  sha1      :string(40)       not null
-#  extension :string(10)       not null
-#  width     :integer          not null
-#  height    :integer          not null
-#  upload_id :integer          not null
-#  url       :string           not null
-#  filesize  :integer
-#  etag      :string
-#  version   :integer
+#  id         :integer          not null, primary key
+#  sha1       :string(40)       not null
+#  extension  :string(10)       not null
+#  width      :integer          not null
+#  height     :integer          not null
+#  upload_id  :integer          not null
+#  url        :string           not null
+#  filesize   :integer
+#  etag       :string
+#  version    :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #

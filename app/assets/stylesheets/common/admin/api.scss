@@ -53,7 +53,7 @@ table.api-keys {
   }
 
   tr.revoked {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 
   @include breakpoint(tablet) {
@@ -95,7 +95,6 @@ table.api-keys {
   .api-key {
     padding: 10px;
     margin-bottom: 10px;
-    border-bottom: 1px solid $primary-low;
     .form-element,
     .form-element-desc {
       float: left;
@@ -126,6 +125,23 @@ table.api-keys {
       text-align: left;
       width: 50%;
     }
+    .scopes-title {
+      font-size: $font-up-2;
+      font-weight: bold;
+      text-decoration: underline;
+      margin-top: 20px;
+    }
+    .scope-name {
+      font-weight: bold;
+      font-size: $font-0;
+      display: inline;
+    }
+    .scope-tooltip {
+      font-size: $font-down-1;
+    }
+  }
+  .scopes-table {
+    margin: 20px 0 20px 0;
   }
 }
 
@@ -158,12 +174,12 @@ table.api-keys {
 
   > p {
     padding-bottom: 10px;
-    border-bottom: $primary-low 1px solid;
+    border-bottom: var(--primary-low) 1px solid;
   }
   .filters {
     margin: 5px 0;
     padding-bottom: 5px;
-    border-bottom: $primary-low 1px solid;
+    border-bottom: var(--primary-low) 1px solid;
     .filter {
       margin-bottom: 1em;
     }

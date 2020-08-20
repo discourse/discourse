@@ -347,4 +347,71 @@ describe ApplicationHelper do
       end
     end
   end
+
+  describe 'discourse_color_scheme_stylesheets' do
+    fab!(:user) { Fabricate(:user) }
+
+    it 'returns a stylesheet link tag by default' do
+      cs_stylesheets = helper.discourse_color_scheme_stylesheets
+      expect(cs_stylesheets).to include("stylesheets/color_definitions")
+    end
+
+    it 'returns two color scheme link tags when dark mode is enabled' do
+      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
+      cs_stylesheets = helper.discourse_color_scheme_stylesheets
+
+      expect(cs_stylesheets).to include("(prefers-color-scheme: dark)")
+      expect(cs_stylesheets.scan("stylesheets/color_definitions").size).to eq(2)
+    end
+
+    it 'handles a missing dark color scheme gracefully' do
+      scheme = ColorScheme.create!(name: "pyramid")
+      SiteSetting.default_dark_mode_color_scheme_id = scheme.id
+      scheme.destroy!
+      cs_stylesheets = helper.discourse_color_scheme_stylesheets
+
+      expect(cs_stylesheets).to include("stylesheets/color_definitions")
+      expect(cs_stylesheets).not_to include("(prefers-color-scheme: dark)")
+    end
+
+    context "with a user option" do
+      before do
+        user.user_option.dark_scheme_id = -1
+        user.user_option.save!
+        helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+
+        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
+      end
+
+      it "returns no dark scheme stylesheet when user has disabled that option" do
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+
+        expect(color_stylesheets).to include("stylesheets/color_definitions")
+        expect(color_stylesheets).not_to include("(prefers-color-scheme: dark)")
+      end
+
+      it "returns user-selected dark color scheme stylesheet" do
+        new_cs = Fabricate(:color_scheme, name: 'Custom Color Scheme')
+        user.user_option.update!(dark_scheme_id: new_cs.id)
+
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).to include("(prefers-color-scheme: dark)")
+        expect(color_stylesheets).to include("custom-color-scheme")
+      end
+
+    end
+  end
+
+  describe "dark_color_scheme?" do
+    it 'returns nil for the base color scheme' do
+      expect(helper.dark_color_scheme?).to eq(nil)
+    end
+
+    it 'works correctly for a dark scheme' do
+      dark_theme = Theme.where(name: "Dark").first
+      helper.request.env[:resolved_theme_ids] = [dark_theme.id]
+
+      expect(helper.dark_color_scheme?).to eq(true)
+    end
+  end
 end

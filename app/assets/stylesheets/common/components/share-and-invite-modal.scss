@@ -28,7 +28,7 @@
       margin-bottom: 8px;
 
       .post-date {
-        color: $primary-medium;
+        color: var(--primary-medium);
         font-size: $font-down-1;
       }
     }
@@ -74,6 +74,20 @@
     .group-access-control,
     .show-custom-message-control {
       margin-bottom: 8px;
+    }
+
+    .invite-user-control input.email-or-username-input {
+      line-height: 1.75em;
+    }
+
+    .group-access-control {
+      .select-kit.multi-select input.filter-input {
+        padding-left: 8px;
+      }
+
+      .group-chooser {
+        width: 100%;
+      }
     }
 
     .instructions {

@@ -59,8 +59,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba($secondary, 1) 0%,
-        rgba($secondary, 0) 100%
+        rgba(var(--secondary-rgb), 1) 0%,
+        rgba(var(--secondary-rgb), 0) 100%
       );
     }
     &:after {
@@ -71,8 +71,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba($secondary, 0) 0%,
-        rgba($secondary, 1) 100%
+        rgba(var(--secondary-rgb), 0) 0%,
+        rgba(var(--secondary-rgb), 1) 100%
       );
     }
   }
@@ -100,10 +100,10 @@ $mobile-breakpoint: 700px;
     padding: 8px;
   }
   tr:hover {
-    background-color: $primary-very-low;
+    background-color: var(--primary-very-low);
   }
   tr.selected {
-    background-color: $primary-low;
+    background-color: var(--primary-low);
   }
   .filters input {
     margin-bottom: 0;
@@ -134,7 +134,7 @@ $mobile-breakpoint: 700px;
     }
     .label {
       display: block;
-      color: $primary-medium;
+      color: var(--primary-medium);
       font-size: $font-down-1;
       margin: 0.5em 0 0.15em 0;
     }
@@ -213,10 +213,10 @@ $mobile-breakpoint: 700px;
   }
   .site-text {
     cursor: pointer;
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
     margin-bottom: 0.5em;
     &.overridden {
-      background-color: $highlight-medium;
+      background-color: var(--highlight-medium);
     }
     h3 {
       font-weight: normal;
@@ -236,7 +236,7 @@ $mobile-breakpoint: 700px;
       @include breakpoint(mobile-extra-large) {
         word-wrap: break-word;
       }
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
   .edit-site-text {
@@ -258,7 +258,7 @@ $mobile-breakpoint: 700px;
     }
   }
   p.warning {
-    color: $danger;
+    color: var(--danger);
   }
 }
 
@@ -269,10 +269,10 @@ $mobile-breakpoint: 700px;
     font-size: $font-down-1;
     float: right;
     margin-right: 10px;
-    background-color: $primary-low;
+    background-color: var(--primary-low);
     padding: 2px 5px;
     border-radius: 5px;
-    color: $primary;
+    color: var(--primary);
   }
 }
 
@@ -324,11 +324,11 @@ $mobile-breakpoint: 700px;
       display: inline-block;
       .bar {
         margin-top: 5px;
-        background-color: $tertiary;
+        background-color: var(--tertiary);
         display: inline-block;
         text-align: right;
         padding-right: 8px;
-        color: $secondary;
+        color: var(--secondary);
       }
     }
   }
@@ -340,7 +340,7 @@ $mobile-breakpoint: 700px;
 
 .admin-users .users-list {
   .username .d-icon {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 }
 
@@ -354,7 +354,7 @@ $mobile-breakpoint: 700px;
     z-index: z("dropdown");
     box-shadow: shadow("card");
     margin-top: -2px;
-    background-color: $secondary;
+    background-color: var(--secondary);
     padding: 12px 12px 5px;
     .powered-by {
       font-size: $font-down-1;
@@ -438,14 +438,14 @@ $mobile-breakpoint: 700px;
 
 .admin-controls {
   display: flex;
-  background-color: $primary-low;
+  background-color: var(--primary-low);
   align-items: center;
 
   .admin-actions {
     margin-left: auto;
   }
   nav {
-    background-color: $primary-low;
+    background-color: var(--primary-low);
     width: 100%;
   }
   nav {
@@ -472,8 +472,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba($primary-low, 1) 0%,
-        rgba($primary-low, 0) 100%
+        rgba(var(--primary-low-rgb), 1) 0%,
+        rgba(var(--primary-low-rgb), 0) 100%
       );
     }
 
@@ -485,8 +485,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba($primary-low, 0) 0%,
-        rgba($primary-low, 1) 100%
+        rgba(var(--primary-low-rgb), 0) 0%,
+        rgba(var(--primary-low-rgb), 1) 100%
       );
     }
   }
@@ -510,7 +510,7 @@ $mobile-breakpoint: 700px;
     > li {
       margin: 0;
       a.active {
-        background: $primary-medium;
+        background: var(--primary-medium);
       }
       &:last-of-type {
         > a {
@@ -522,10 +522,10 @@ $mobile-breakpoint: 700px;
   h1 {
     font-size: $font-up-3;
     line-height: $line-height-medium;
-    color: $primary;
+    color: var(--primary);
   }
   .controls {
-    background: $primary-low;
+    background: var(--primary-low);
     width: 100%;
     padding: 10px;
     display: flex;
@@ -561,12 +561,12 @@ $mobile-breakpoint: 700px;
     float: left;
     padding: 5px 10px;
     margin-right: 15px;
-    border: 1px solid $primary-medium;
+    border: 1px solid var(--primary-medium);
     border-radius: 3px;
     background: transparent;
-    color: $primary;
+    color: var(--primary);
     &:hover {
-      background-color: $primary-low-mid;
+      background-color: var(--primary-low-mid);
     }
     @media (max-width: $mobile-breakpoint) {
       display: inline-block;
@@ -646,15 +646,15 @@ $mobile-breakpoint: 700px;
 }
 
 .text-successful {
-  color: $success;
+  color: var(--success);
 }
 
 .text-danger {
-  color: $danger;
+  color: var(--danger);
 }
 
 .text-muted {
-  color: $primary-medium;
+  color: var(--primary-medium);
 }
 
 .admin-nav {
@@ -677,10 +677,12 @@ $mobile-breakpoint: 700px;
     width: 100%;
   }
 
-  background-color: $secondary; // Todo: set this properly - it needs to be >= the menu height
+  background-color: var(
+    --secondary
+  ); // Todo: set this properly - it needs to be >= the menu height
   min-height: 875px;
   margin-left: 0;
-  border-left: solid 1px $primary-low;
+  border-left: solid 1px var(--primary-low);
   padding: 30px 0 30px 30px;
   @media (max-width: $mobile-breakpoint) {
     padding: 30px 0;
@@ -711,10 +713,10 @@ $mobile-breakpoint: 700px;
 section.details {
   h1 {
     font-size: $font-up-3;
-    color: $primary;
+    color: var(--primary);
     padding: 5px 10px;
     margin: 30px 0 5px 0;
-    border-bottom: 5px solid $primary-low;
+    border-bottom: 5px solid var(--primary-low);
   }
 }
 
@@ -754,10 +756,10 @@ section.details {
 
 .tl3-requirements {
   .d-icon-check {
-    color: $success;
+    color: var(--success);
   }
   .d-icon-times {
-    color: $danger;
+    color: var(--danger);
   }
 }
 
@@ -844,12 +846,12 @@ table#user-badges {
 
 @mixin value-btn {
   width: 29px;
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   outline: none;
   padding: 0;
 
   &:focus {
-    border-color: $tertiary;
+    border-color: var(--tertiary);
   }
 }
 
@@ -866,12 +868,12 @@ table#user-badges {
     .value-input {
       box-sizing: border-box;
       flex: 1 0 0px;
-      border-color: $primary-low;
+      border-color: var(--primary-low);
       cursor: pointer;
       margin: 0;
 
       &:focus {
-        border-color: $tertiary;
+        border-color: var(--tertiary);
         box-shadow: none;
       }
     }
@@ -968,7 +970,7 @@ table#user-badges {
 }
 
 a.inline-editable-field {
-  color: $primary;
+  color: var(--primary);
   cursor: pointer;
 }
 

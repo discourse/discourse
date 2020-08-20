@@ -984,7 +984,8 @@ describe UsersController do
             uid: '123545',
             info: OmniAuth::AuthHash::InfoHash.new(
               email: "osama@mail.com",
-              nickname: "testosama"
+              nickname: "testosama",
+              name: "Osama Test"
             )
           )
 
@@ -1025,6 +1026,61 @@ describe UsersController do
         end
 
         it "will create the user successfully if email validation is required" do
+          post "/u.json", params: {
+            name: "Test Osama",
+            username: "testosama",
+            password: "strongpassword",
+            email: "osama@mail.com"
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json['success']).to eq(true)
+        end
+
+        it "doesn't use provided username/name if sso_overrides is enabled" do
+          SiteSetting.sso_overrides_username = true
+          SiteSetting.sso_overrides_name = true
+          post "/u.json", params: {
+            username: "attemptednewname",
+            name: "Attempt At New Name",
+            password: "strongpassword",
+            email: "osama@mail.com"
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json['success']).to eq(true)
+          expect(User.last.username).to eq('testosama')
+          expect(User.last.name).to eq('Osama Test')
+        end
+
+      end
+
+      context "with no email in the auth payload" do
+        before do
+          OmniAuth.config.test_mode = true
+          OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
+            provider: 'twitter',
+            uid: '123545',
+            info: OmniAuth::AuthHash::InfoHash.new(
+              nickname: "testosama",
+              name: "Osama Test"
+            )
+          )
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+          SiteSetting.enable_twitter_logins = true
+          get "/auth/twitter/callback.json"
+        end
+
+        after do
+          Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter] = nil
+          OmniAuth.config.test_mode = false
+        end
+
+        it "will create the user successfully" do
+          Rails.application.env_config["omniauth.auth"].info.email = nil
+
           post "/u.json", params: {
             name: "Test Osama",
             username: "testosama",
@@ -2081,14 +2137,14 @@ describe UsersController do
       context 'for an activated account with unconfirmed email' do
         it 'should send an email' do
           user = post_user
-          user.update(active: true)
-          user.save!
-          user.email_tokens.create(email: user.email)
-          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, to_address: user.email))
+          user.update!(active: true)
+          user.email_tokens.create!(email: user.email)
 
-          post "/u/action/send_activation_email.json", params: {
-            username: user.username
-          }
+          expect_enqueued_with(job: :critical_user_email, args: { type: :signup, to_address: user.email }) do
+            post "/u/action/send_activation_email.json", params: {
+              username: user.username
+            }
+          end
 
           expect(response.status).to eq(200)
 
@@ -2136,10 +2192,14 @@ describe UsersController do
       context 'with a valid email_token' do
         it 'should send the activation email' do
           user = post_user
-          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
-          post "/u/action/send_activation_email.json", params: {
-            username: user.username
-          }
+
+          expect_enqueued_with(job: :critical_user_email, args: { type: :signup }) do
+            post "/u/action/send_activation_email.json", params: {
+              username: user.username
+            }
+          end
+
+          expect(response.status).to eq(200)
           expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(nil)
         end
       end
@@ -2310,6 +2370,17 @@ describe UsersController do
           it 'can successfully select an avatar' do
             events = DiscourseEvent.track_events do
               put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+            end
+
+            expect(events.map { |event| event[:event_name] }).to include(:user_updated)
+            expect(response.status).to eq(200)
+            expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
+            expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
+          end
+
+          it 'can succesfully select an avatar using a cooked URL' do
+            events = DiscourseEvent.track_events do
+              put "/u/#{user.username}/preferences/avatar/select.json", params: { url: UrlHelper.cook_url(avatar1.url) }
             end
 
             expect(events.map { |event| event[:event_name] }).to include(:user_updated)
@@ -2596,11 +2667,17 @@ describe UsersController do
       expect(user_email.reload.primary).to eq(true)
       expect(other_email.reload.primary).to eq(false)
 
-      expect { put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email } }
-        .to change { UserHistory.where(action: UserHistory.actions[:update_email], acting_user_id: user.id).count }.by(1)
+      event = DiscourseEvent.track_events {
+        expect { put "/u/#{user.username}/preferences/primary-email.json", params: { email: other_email.email } }
+          .to change { UserHistory.where(action: UserHistory.actions[:update_email], acting_user_id: user.id).count }.by(1)
+      }.last
+
       expect(response.status).to eq(200)
       expect(user_email.reload.primary).to eq(false)
       expect(other_email.reload.primary).to eq(true)
+
+      expect(event[:event_name]).to eq(:user_updated)
+      expect(event[:params].first).to eq(user)
     end
   end
 
@@ -2620,10 +2697,16 @@ describe UsersController do
       expect(response.status).to eq(428)
       expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email, other_email.email)
 
-      expect { delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email } }
-        .to change { UserHistory.where(action: UserHistory.actions[:destroy_email], acting_user_id: user.id).count }.by(1)
+      event = DiscourseEvent.track_events {
+        expect { delete "/u/#{user.username}/preferences/email.json", params: { email: other_email.email } }
+          .to change { UserHistory.where(action: UserHistory.actions[:destroy_email], acting_user_id: user.id).count }.by(1)
+      }.last
+
       expect(response.status).to eq(200)
       expect(user.reload.user_emails.pluck(:email)).to contain_exactly(user_email.email)
+
+      expect(event[:event_name]).to eq(:user_updated)
+      expect(event[:params].first).to eq(user)
     end
   end
 
@@ -2760,6 +2843,7 @@ describe UsersController do
       create_post(user: user)
 
       get "/u/#{user.username_lower}/summary.json"
+      expect(response.headers['X-Robots-Tag']).to eq('noindex')
       expect(response.status).to eq(200)
       json = response.parsed_body
 
@@ -2909,9 +2993,9 @@ describe UsersController do
         expect(response.status).to eq(422)
       end
 
-      it "raises an error when the email is blacklisted" do
+      it "raises an error when the email is blocklisted" do
         post_user
-        SiteSetting.email_domains_blacklist = 'example.com'
+        SiteSetting.blocked_email_domains = 'example.com'
         put "/u/update-activation-email.json", params: { email: 'test@example.com' }
         expect(response.status).to eq(422)
       end

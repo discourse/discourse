@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 bs_BA:
   js:
@@ -139,9 +138,6 @@ bs_BA:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "podijeli link ka ovom postu #%{postNumber}"
       close: "zatvori"
-      twitter: " Dijeli ovaj link na Twitteru "
-      facebook: "Dijeli ovaj link na Facebuku"
-      email: "Pošalji ovaj link u email-u"
     action_codes:
       public_topic: "postavio ovu temu kao javno %{when}"
       private_topic: "postavio ovu temu kao privatno %{when}"
@@ -283,12 +279,15 @@ bs_BA:
       help:
         bookmark: "Klikni kako bi dodao zabilješku na prvu objavu u temi"
         unbookmark: "Klikni da ukloniš sve zabilješke iz ove teme"
+        unbookmark_with_reminder: "Kliknite da biste uklonili sve oznake i podsjetnike iz ove teme. Imate postavku podsjećanja %{reminder_at} za ovu temu."
     bookmarks:
+      created: "Označili ste ovaj post%{name}"
       not_bookmarked: "sačuvaj ovaj post"
       remove: "Ukloni zabilješku"
       confirm_clear: "Dali ste sigurni dali želite izbrisati sve sačuvane stvari iz ove teme?"
       save: "Sačuvaj"
       no_timezone: 'Još uvijek niste postavili vremensku zonu, tako da nećete biti u mogućnosti koristiti podsjetnike. Postavite vremensku zonu <a href="%{basePath}/my/preferences/profile">na vašem profilu</a>.'
+      search: "Pretraži"
       reminders:
         at_desktop: "Sljedeći put sam za svojim desktop kompjuterom"
         later_today: "Kasnije danas"
@@ -558,10 +557,6 @@ bs_BA:
     groups:
       member_added: "Doodano"
       member_requested: "zatraženo na"
-      add_members:
-        title: "Dodaj članove"
-        description: "Uredi članove ove grupe"
-        usernames: "Korisnička imena"
       requests:
         title: "Zahtjevi"
         reason: "Reason"
@@ -582,6 +577,11 @@ bs_BA:
           title: Interakcija
           posting: Objavljivanje
           notification: Obavijest
+        email:
+          title: "Email"
+          credentials:
+            username: "Ime"
+            password: "Šifra"
         membership:
           title: Članstvo
           access: Pristup
@@ -1390,8 +1390,8 @@ bs_BA:
       complete_email_found: "Pronašli smo korisnički račun koji se podudara sa <b>%{email}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
       complete_username_not_found: "Ne postoji korisnički račun koji se podudara sa <b>%{username}</b>"
       complete_email_not_found: "Ne postoji korisnički račun koji se podudara sa <b>%{email}</b>"
-      confirm_title: "Nastavi ka %{site_name}"
-      logging_in_as: "Prijavite se kao %{email}"
+      confirm_title: Nastavi ka %{site_name}
+      logging_in_as: Prijavite se kao %{email}
       confirm_button: Završi prijavu
     login:
       title: "Uloguj se"
@@ -1637,7 +1637,7 @@ bs_BA:
         draft: Nacrt
         edit: Izmijeni
         reply_to_post:
-          label: "Odgovori na objavu %{postNumber} od %{postUsername}"
+          label: Odgovori na objavu %{postNumber} od %{postUsername}
           desc: Odgovori na ciljani post
         reply_as_new_topic:
           label: Odgovori kao linkana tema
@@ -1647,7 +1647,7 @@ bs_BA:
           desc: Kreiraj novu personalnu poruku
         reply_to_topic:
           label: Odgovori na temu
-          desc: "Odgovori na temu, ne ciljajući na neku posebnu objavu"
+          desc: Odgovori na temu, ne ciljajući na neku posebnu objavu
         toggle_whisper:
           label: Uključi Šapat
           desc: Šapati su vidljivi samo administratorima
@@ -1954,7 +1954,7 @@ bs_BA:
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pogledajte sve Kategorije
       view_latest_topics: pogledaj posljednje teme
-      suggest_create_topic: "Zašto ne kreirati novu temu?"
+      suggest_create_topic: Zašto ne kreirati novu temu?
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "Ova tema je obrisana"
@@ -2048,6 +2048,7 @@ bs_BA:
           "2_8": "Vidjeti će te broj novih odgovora jer pratite ovu kategoriju."
           "2_4": "Vidjeti će te broj novih odgovora jer ste objavili odgovor na ovu temu."
           "2_2": "Vidjeti će te broj novih odgovora jer pratite ovu temu."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post."
           "1": "Dobiti ćete notifikaciju kada neko spomene tvoje @name ili odgovori na tvoj post."
           "0_7": "Ignorišete sve notifikacije u ovoj kategoriji."
@@ -2521,7 +2522,6 @@ bs_BA:
       default_top_period: "Obićni Top Period:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
-      reviewable_by_group: "Pored osoblja, postovi i zastave u ovoj kategoriji mogu se pregledati i putem:"
       review_group_name: "group name"
       require_topic_approval: "Potrebno je odobrenje moderatora za sve nove teme"
       require_reply_approval: "Potrebno je odobrenje moderatora za sve nove odgovore"
@@ -2969,9 +2969,7 @@ bs_BA:
         about: "Dodajte oznake grupama da biste ih lakše upravljali."
         new: "Nova grupa "
         tags_label: "Oznake u ovoj grupi:"
-        tags_placeholder: "Oznake"
         parent_tag_label: "Roditeljska oznaka:"
-        parent_tag_placeholder: "Opcionalno"
         parent_tag_description: "Oznake iz ove grupe ne mogu se koristiti ako roditeljska oznaka nije prisutna."
         one_per_topic_label: "Ograničite jednu oznaku po temi iz ove grupe"
         new_name: "Nova Grupa Oznaka"
@@ -3064,7 +3062,7 @@ bs_BA:
         show_traffic_report: "Pokaži detaljan izvještaj prometa"
         community_health: Zdravlje zajednice
         moderators_activity: Aktivnost moderatora
-        whats_new_in_discourse: "Šta je novo u diskursu?"
+        whats_new_in_discourse: Šta je novo u diskursu?
         activity_metrics: Metrike aktivnosti
         all_reports: "Svi izvještaji"
         general_tab: "General"
@@ -3073,10 +3071,10 @@ bs_BA:
         reports_tab: "Izvještaji"
         report_filter_any: "bilo koji"
         disabled: Neomogućen
-        timeout_error: "Nažalost, upit traje predugo, odaberite kraći interval"
-        exception_error: "Žao nam je, došlo je do pogreške prilikom izvršavanja upita"
+        timeout_error: Nažalost, upit traje predugo, odaberite kraći interval
+        exception_error: Žao nam je, došlo je do pogreške prilikom izvršavanja upita
         too_many_requests: Izveli ste ovu akciju previše puta. Pričekajte prije ponovnog pokušaja.
-        not_found_error: "Izvinite, ovaj izveštaj ne postoji"
+        not_found_error: Izvinite, ovaj izveštaj ne postoji
         filter_reports: Filtriraj izvještaje
         reports:
           trend_title: "%{percent} change. Trenutno je %{current}, u prethodnom periodu bio %{prev}."
@@ -3366,7 +3364,6 @@ bs_BA:
           subject: "Naslov"
           multiple_subjects: "Ovaj predložak e-maila ima više tema."
           body: "Tijelo"
-          none_selected: "Izaberite šablon e-pošte za početak uređivanja."
           revert: "Poništi Promjene"
           revert_confirm: "Jeste li sigurni da želite vratiti svoje promjene?"
         theme:
@@ -3748,7 +3745,6 @@ bs_BA:
           domain: "Domain"
         screened_ips:
           title: "Screened IPs"
-          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
           roll_up_confirm: "Jeste li sigurni da želite preusmjeriti obično prikazane IP adrese u podmreže?"
           rolled_up_some_subnets: "Uspješno unesene IP zabrane unosa u ove podmreže: %{subnets}."
@@ -4127,7 +4123,7 @@ bs_BA:
         badge: Bedž
         display_name: Prikazano Ime
         description: Opis
-        long_description: "Dugi "
+        long_description: Dugi
         badge_type: Bedž Tip
         badge_grouping: Grupa
         badge_groupings:
@@ -4137,11 +4133,11 @@ bs_BA:
         reason_help: (Veza do posta ili teme)
         save: Sačuvaj
         delete: Obriši
-        delete_confirm: "Are you sure you want to delete this badge?"
+        delete_confirm: Are you sure you want to delete this badge?
         revoke: Revoke
         reason: Reason
         expand: Proširiti …
-        revoke_confirm: "Are you sure you want to revoke this badge?"
+        revoke_confirm: Are you sure you want to revoke this badge?
         edit_badges: Edit Badges
         grant_badge: Grant Badge
         granted_badges: Granted Badges
@@ -4185,10 +4181,10 @@ bs_BA:
             other: "<b>%{count}</b> značke koje treba dodijeliti."
           sample: "Sample:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> for post in %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> for post in %{link} at <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> at <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
           title: "Izaberite postojeću značku ili kreirajte novu za početak"
           what_are_badges_title: "Šta su bedževi?"
@@ -4208,7 +4204,6 @@ bs_BA:
         title: "Embedding"
         host: "Dozvoljeni domaćini"
         class_name: "Naziv klase"
-        path_whitelist: "Bela lista puta"
         edit: "uredi"
         category: "Post u kategoriju"
         add_host: "Dodaj host"
@@ -4216,9 +4211,6 @@ bs_BA:
         crawling_settings: "Postavke Crawlera"
         embed_title_scrubber: "Regular expression korišten za čistku naslova objava"
         embed_truncate: "Skrati embedovane objave"
-        embed_whitelist_selector: "CSS selector za elemente koji su dozvoljeni u embeds"
-        embed_blacklist_selector: "CSS selector za elemente koji su odstranjeni sa embeds"
-        embed_classname_whitelist: "Dopuštena CSS class imena"
         save: "Sačuvaj Embedding postavke"
       permalink:
         title: "Permalink-ovi"
@@ -4229,8 +4221,7 @@ bs_BA:
         post_title: "Objava"
         category_id: "ID kategorije"
         category_title: "Kategorija"
-        external_url: "Vanjski URL"
-        delete_confirm: "Jeste li sigurni da želite izbrisati ovaj permalink?"
+        delete_confirm: Jeste li sigurni da želite izbrisati ovaj permalink?
         form:
           label: "Novo:"
           add: "Dodaj"

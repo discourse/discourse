@@ -3,7 +3,7 @@
     &.topic-footer-mobile-dropdown {
       .select-kit-row {
         padding: 0.75em 0.5em;
-        border-bottom: 1px solid rgba($primary-low, 0.5);
+        border-bottom: 1px solid rgba(var(--primary-low-rgb), 0.5);
 
         .name {
           line-height: $line-height-medium;
@@ -14,20 +14,20 @@
         }
 
         .d-icon {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
 
         &.is-highlighted {
-          background: $tertiary-low;
+          background: var(--tertiary-low);
 
           .name {
-            color: $primary;
+            color: var(--primary);
           }
         }
 
         &.bookmarked {
           .d-icon {
-            color: $tertiary;
+            color: var(--tertiary);
           }
         }
       }

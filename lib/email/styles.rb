@@ -152,7 +152,7 @@ module Email
       # iframes can't go in emails, so replace them with clickable links
       @fragment.css('iframe').each do |i|
         begin
-          # sometimes, iframes are blacklisted...
+          # sometimes, iframes are blocklisted...
           if i["src"].blank?
             i.remove
             next
@@ -196,7 +196,6 @@ module Email
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
-      style('code ol', 'line-height: 50%;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
       style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
       style('.secure-image-notice', 'font-style: italic; background-color: #f1f1ff; padding: 5px;')
@@ -242,7 +241,12 @@ module Email
       strip_classes_and_ids
       replace_relative_urls
       replace_secure_media_urls
-      include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
+
+      if SiteSetting.preserve_email_structure_when_styling
+        @fragment.to_html
+      else
+        include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
+      end
     end
 
     def include_body?

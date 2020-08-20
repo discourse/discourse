@@ -116,7 +116,7 @@ export function fmt(...args) {
 }
 
 /**
-  Creates a URL using Discourse.getURL. It takes a fmt string just like
+  Creates a URL using getURL. It takes a fmt string just like
   fmt does.
 
   @method url
@@ -162,6 +162,6 @@ export function endWith() {
 **/
 export function setting(name) {
   return computed(function() {
-    return Discourse.SiteSettings[name];
+    return this.siteSettings[name];
   });
 }

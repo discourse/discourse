@@ -96,37 +96,37 @@ describe EmbeddableHost do
     end
   end
 
-  describe "path_whitelist" do
+  describe "allowed_paths" do
     it "matches the path" do
-      Fabricate(:embeddable_host, path_whitelist: '^/fp/\d{4}/\d{2}/\d{2}/.*$')
+      Fabricate(:embeddable_host, allowed_paths: '^/fp/\d{4}/\d{2}/\d{2}/.*$')
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com')).to eq(false)
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/fp/2016/08/25/test-page')).to eq(true)
     end
 
     it "respects query parameters" do
-      Fabricate(:embeddable_host, path_whitelist: '^/fp$')
+      Fabricate(:embeddable_host, allowed_paths: '^/fp$')
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/fp?test=1')).to eq(false)
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/fp')).to eq(true)
     end
 
     it "allows multiple records with different paths" do
-      Fabricate(:embeddable_host, path_whitelist: '/rick/.*')
-      Fabricate(:embeddable_host, path_whitelist: '/morty/.*')
+      Fabricate(:embeddable_host, allowed_paths: '/rick/.*')
+      Fabricate(:embeddable_host, allowed_paths: '/morty/.*')
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/rick/smith')).to eq(true)
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/morty/sanchez')).to eq(true)
     end
 
     it "works with non-english paths" do
-      Fabricate(:embeddable_host, path_whitelist: '/انگلیسی/.*')
-      Fabricate(:embeddable_host, path_whitelist: '/definição/.*')
+      Fabricate(:embeddable_host, allowed_paths: '/انگلیسی/.*')
+      Fabricate(:embeddable_host, allowed_paths: '/definição/.*')
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/انگلیسی/foo')).to eq(true)
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/definição/foo')).to eq(true)
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/bar/foo')).to eq(false)
     end
 
     it "works with URL encoded paths" do
-      Fabricate(:embeddable_host, path_whitelist: '/definição/.*')
-      Fabricate(:embeddable_host, path_whitelist: '/ingl%C3%A9s/.*')
+      Fabricate(:embeddable_host, allowed_paths: '/definição/.*')
+      Fabricate(:embeddable_host, allowed_paths: '/ingl%C3%A9s/.*')
 
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/defini%C3%A7%C3%A3o/foo')).to eq(true)
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/inglés/foo')).to eq(true)

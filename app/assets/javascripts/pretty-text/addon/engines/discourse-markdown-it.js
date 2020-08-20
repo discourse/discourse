@@ -141,26 +141,23 @@ export function extractDataAttribute(str) {
 
 // videoHTML and audioHTML follow the same HTML syntax
 // as oneboxer.rb when dealing with these formats
-function videoHTML(token, opts) {
+function videoHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
-  const preloadType = opts.secureMedia ? "none" : "metadata";
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
   return `<div class="video-container">
-    <p class="video-description">${opts.alt}</p>
-    <video width="100%" height="100%" preload="${preloadType}" controls>
+    <video width="100%" height="100%" preload="metadata" controls>
       <source src="${src}" ${dataOrigSrcAttr}>
       <a href="${src}">${src}</a>
     </video>
   </div>`;
 }
 
-function audioHTML(token, opts) {
+function audioHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
-  const preloadType = opts.secureMedia ? "none" : "metadata";
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
-  return `<audio preload="${preloadType}" controls>
+  return `<audio preload="metadata" controls>
     <source src="${src}" ${dataOrigSrcAttr}>
     <a href="${src}">${src}</a>
   </audio>`;
@@ -176,14 +173,10 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   // markdown-it supports returning HTML instead of continuing to render the current token
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   // handles |video and |audio alt transformations for image tags
-  const mediaOpts = {
-    secureMedia: options.discourse.limitedSiteSettings.secureMedia,
-    alt: split[0]
-  };
   if (split[1] === "video") {
-    return videoHTML(token, mediaOpts);
+    return videoHTML(token);
   } else if (split[1] === "audio") {
-    return audioHTML(token, mediaOpts);
+    return audioHTML(token);
   }
 
   // parsing ![myimage|500x300]() or ![myimage|75%]() or ![myimage|500x300, 75%]
@@ -396,7 +389,7 @@ export function setup(opts, siteSettings, state) {
 }
 
 export function cook(raw, opts) {
-  // we still have to hoist html_raw nodes so they bypass the whitelister
+  // we still have to hoist html_raw nodes so they bypass the allowlister
   // this is the case for oneboxes
   let hoisted = {};
 

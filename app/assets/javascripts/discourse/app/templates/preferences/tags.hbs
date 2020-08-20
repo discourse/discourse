@@ -6,8 +6,7 @@
       <label>{{d-icon "d-watching" class="icon watching"}} {{i18n "user.watched_tags"}}</label>
       {{tag-chooser
         tags=model.watched_tags
-        blacklist=selectedTags
-        filterPlaceholder="select_kit.filter_placeholder"
+        blocklist=selectedTags
         allowCreate=false
         everyTag=true
         unlimitedTagCount=true
@@ -20,8 +19,7 @@
       <label>{{d-icon "d-tracking" class="icon tracking"}} {{i18n "user.tracked_tags"}}</label>
       {{tag-chooser
         tags=model.tracked_tags
-        blacklist=selectedTags
-        filterPlaceholder="select_kit.filter_placeholder"
+        blocklist=selectedTags
         allowCreate=false
         everyTag=true
         unlimitedTagCount=true}}
@@ -33,8 +31,7 @@
       <label>{{d-icon "d-watching-first" class="icon watching-first-post"}} {{i18n "user.watched_first_post_tags"}}</label>
       {{tag-chooser
         tags=model.watching_first_post_tags
-        blacklist=selectedTags
-        filterPlaceholder="select_kit.filter_placeholder"
+        blocklist=selectedTags
         allowCreate=false
         everyTag=true
         unlimitedTagCount=true}}
@@ -48,8 +45,7 @@
       <label>{{d-icon "d-muted" class="icon muted"}} {{i18n "user.muted_tags"}}</label>
       {{tag-chooser
         tags=model.muted_tags
-        blacklist=selectedTags
-        filterPlaceholder="select_kit.filter_placeholder"
+        blocklist=selectedTags
         allowCreate=false
         everyTag=true
         unlimitedTagCount=true}}

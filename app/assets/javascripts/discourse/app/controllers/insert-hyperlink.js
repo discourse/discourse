@@ -3,6 +3,7 @@ import { cancel, debounce, schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { searchForTerm } from "discourse/lib/search";
+import { bind } from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   _debounced: null,
@@ -20,23 +21,24 @@ export default Controller.extend(ModalFunctionality, {
     schedule("afterRender", () => {
       const element = document.querySelector(".insert-link");
 
-      element.addEventListener("keydown", e => this.keyDown(e));
+      element.addEventListener("keydown", this.keyDown);
 
       element
         .closest(".modal-inner-container")
-        .addEventListener("mousedown", e => this.mouseDown(e));
+        .addEventListener("mousedown", this.mouseDown);
 
       document.querySelector("input.link-url").focus();
     });
   },
 
-  keyDown(e) {
-    switch (e.which) {
+  @bind
+  keyDown(event) {
+    switch (event.which) {
       case 40:
-        this.highlightRow(e, "down");
+        this.highlightRow(event, "down");
         break;
       case 38:
-        this.highlightRow(e, "up");
+        this.highlightRow(event, "up");
         break;
       case 13:
         // override Enter behaviour when a row is selected
@@ -45,23 +47,24 @@ export default Controller.extend(ModalFunctionality, {
             ".internal-link-results .search-link"
           )[this.selectedRow];
           this.selectLink(selected);
-          e.preventDefault();
-          e.stopPropagation();
+          event.preventDefault();
+          event.stopPropagation();
         }
         break;
       case 27:
         // Esc should cancel dropdown first
         if (this.searchResults.length) {
           this.set("searchResults", []);
-          e.preventDefault();
-          e.stopPropagation();
+          event.preventDefault();
+          event.stopPropagation();
         }
         break;
     }
   },
 
-  mouseDown(e) {
-    if (!e.target.closest(".inputs")) {
+  @bind
+  mouseDown(event) {
+    if (!event.target.closest(".inputs")) {
       this.set("searchResults", []);
     }
   },

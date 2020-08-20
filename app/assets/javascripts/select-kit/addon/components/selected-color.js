@@ -5,12 +5,14 @@ import { schedule } from "@ember/runloop";
 export default SelectedNameComponent.extend({
   classNames: ["select-kit-selected-color"],
 
-  didReceiveAttrs() {
+  didInsertElement() {
     this._super(...arguments);
 
     schedule("afterRender", () => {
-      const color = escapeExpression(this.name);
-      this.element.style.borderBottomColor = `#${color}`;
+      const color = escapeExpression(this.name),
+        el = document.querySelector(`[data-value="${color}"]`);
+
+      if (el) el.style.borderBottomColor = `#${color}`;
     });
   }
 });

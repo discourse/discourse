@@ -323,12 +323,15 @@ export default Controller.extend({
 
   @discourseComputed
   allowUpload() {
-    return authorizesOneOrMoreExtensions(this.currentUser.staff);
+    return authorizesOneOrMoreExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
   },
 
   @discourseComputed()
   uploadIcon() {
-    return uploadIcon(this.currentUser.staff);
+    return uploadIcon(this.currentUser.staff, this.siteSettings);
   },
 
   @action
@@ -616,6 +619,10 @@ export default Controller.extend({
       this.set("model.isWarning", false);
     }
 
+    if (this.site.mobileView && this.showPreview) {
+      this.set("showPreview", false);
+    }
+
     const composer = this.model;
 
     if (composer.cantSubmitPost) {
@@ -690,6 +697,8 @@ export default Controller.extend({
     const promise = composer
       .save({ imageSizes, editReason: this.editReason })
       .then(result => {
+        this.appEvents.trigger("composer:saved");
+
         if (result.responseJson.action === "enqueued") {
           this.send("postWasEnqueued", result.responseJson);
           if (result.responseJson.pending_post) {
@@ -707,6 +716,7 @@ export default Controller.extend({
         }
 
         if (this.get("model.editingPost")) {
+          this.appEvents.trigger("composer:edited-post");
           this.appEvents.trigger("post-stream:refresh", {
             id: parseInt(result.responseJson.id, 10)
           });
@@ -718,6 +728,7 @@ export default Controller.extend({
         }
 
         if (result.responseJson.action === "create_post") {
+          this.appEvents.trigger("composer:created-post");
           this.appEvents.trigger("post:highlight", result.payload.post_number);
         }
 

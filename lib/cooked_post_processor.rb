@@ -178,21 +178,11 @@ class CookedPostProcessor
   end
 
   def large_images
-    @large_images ||=
-      begin
-        JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]")
-      rescue JSON::ParserError
-        []
-      end
+    @large_images ||= @post.custom_fields[Post::LARGE_IMAGES].presence || []
   end
 
   def broken_images
-    @broken_images ||=
-      begin
-        JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]")
-      rescue JSON::ParserError
-        []
-      end
+    @broken_images ||= @post.custom_fields[Post::BROKEN_IMAGES].presence || []
   end
 
   def downloaded_images
@@ -592,7 +582,7 @@ class CookedPostProcessor
           found = false
           parent = img
           while parent = parent.parent
-            if parent["class"] && parent["class"].include?("whitelistedgeneric")
+            if parent["class"] && parent["class"].include?("allowlistedgeneric")
               found = true
               break
             end
@@ -621,7 +611,16 @@ class CookedPostProcessor
     end
 
     if @omit_nofollow || !SiteSetting.add_rel_nofollow_to_user_content
-      @doc.css(".onebox-body a, .onebox a").each { |a| a.remove_attribute("rel") }
+      @doc.css(".onebox-body a[rel], .onebox a[rel]").each do |a|
+        rel_values = a['rel'].split(' ').map(&:downcase)
+        rel_values.delete('nofollow')
+        rel_values.delete('ugc')
+        if rel_values.blank?
+          a.remove_attribute("rel")
+        else
+          a["rel"] = rel_values.join(' ')
+        end
+      end
     end
   end
 

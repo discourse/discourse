@@ -52,7 +52,9 @@ class ListController < ApplicationController
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
       user = list_target_user
-      list_opts[:no_definitions] = true if params[:category].blank? && filter == :latest
+      if params[:category].blank? && filter == :latest && !SiteSetting.show_category_definitions_in_topic_lists
+        list_opts[:no_definitions] = true
+      end
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
@@ -174,11 +176,13 @@ class ListController < ApplicationController
   def latest_feed
     discourse_expires_in 1.minute
 
+    options = { order: 'created' }.merge(build_topic_list_options)
+
     @title = "#{SiteSetting.title} - #{I18n.t("rss_description.latest")}"
     @link = "#{Discourse.base_url}/latest"
     @atom_link = "#{Discourse.base_url}/latest.rss"
     @description = I18n.t("rss_description.latest")
-    @topic_list = TopicQuery.new(nil, order: 'created').list_latest
+    @topic_list = TopicQuery.new(nil, options).list_latest
 
     render 'list', formats: [:rss]
   end
@@ -336,6 +340,26 @@ class ListController < ApplicationController
 
     raise Discourse::NotFound.new("category not found", check_permalinks: true) if @category.nil?
 
+    if !guardian.can_see?(@category)
+      if SiteSetting.detailed_404
+        raise Discourse::InvalidAccess
+      else
+        raise Discourse::NotFound
+      end
+    end
+
+    current_slug = params.require(:category_slug_path_with_id)
+    real_slug = @category.full_slug("/")
+
+    if SiteSetting.slug_generation_method == "encoded"
+      current_slug = current_slug.split("/").map { |slug| CGI.escape(slug) }.join("/")
+    end
+
+    if current_slug != real_slug
+      url = request.fullpath.gsub(current_slug, real_slug)
+      return redirect_to path(url), status: 301
+    end
+
     params[:category] = @category.id.to_s
 
     @description_meta = if @category.uncategorized?
@@ -344,14 +368,6 @@ class ListController < ApplicationController
       @category.description_text
     end
     @description_meta = SiteSetting.site_description if @description_meta.blank?
-
-    if !guardian.can_see?(@category)
-      if SiteSetting.detailed_404
-        raise Discourse::InvalidAccess
-      else
-        raise Discourse::NotFound
-      end
-    end
 
     if use_crawler_layout?
       @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }

@@ -1,7 +1,7 @@
 .alert {
   padding: 0.5em 2.5em 0.5em 1em;
-  background-color: $danger-low;
-  color: $primary;
+  background-color: var(--danger-low);
+  color: var(--primary);
   position: relative;
   margin-bottom: 1em;
 
@@ -11,23 +11,23 @@
     top: 0.265em;
     right: 0.66em;
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 
   &.alert-success {
-    background-color: $success-low;
-    color: $primary;
+    background-color: var(--success-low);
+    color: var(--primary);
   }
   &.alert-error {
-    background-color: $danger-low;
-    color: $primary;
+    background-color: var(--danger-low);
+    color: var(--primary);
   }
   &.alert-info {
-    background-color: $tertiary-low;
-    color: $primary;
+    background-color: var(--tertiary-low);
+    color: var(--primary);
     &.clickable {
-      color: $tertiary;
+      color: var(--tertiary);
     }
   }
 }

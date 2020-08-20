@@ -72,7 +72,7 @@ const Theme = RestModel.extend({
     }
 
     return {
-      common: [...common, "embedded_scss"],
+      common: [...common, "embedded_scss", "color_definitions"],
       desktop: common,
       mobile: common,
       settings: ["yaml"],
@@ -282,15 +282,6 @@ const Theme = RestModel.extend({
     parentThemes.addObject(theme);
   },
 
-  @discourseComputed("name", "default")
-  description: function(name, isDefault) {
-    if (isDefault) {
-      return I18n.t("admin.customize.theme.default_name", { name: name });
-    } else {
-      return name;
-    }
-  },
-
   checkForUpdates() {
     return this.save({ remote_check: true }).then(() =>
       this.set("changed", false)
@@ -321,7 +312,8 @@ const Theme = RestModel.extend({
             }
           }
         );
-        highlightSyntax();
+        // TODO: Models shouldn't be updating the DOM
+        highlightSyntax(undefined, this.siteSettings, this.session);
       } else {
         return this.save({ remote_update: true }).then(() =>
           this.set("changed", false)

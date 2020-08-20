@@ -3,17 +3,22 @@ let _moreLanguages = [];
 
 import loadScript from "discourse/lib/load-script";
 
-export default function highlightSyntax($elem) {
-  const selector = Discourse.SiteSettings.autohighlight_all_code
+export default function highlightSyntax($elem, siteSettings, session) {
+  const selector = siteSettings.autohighlight_all_code
       ? "pre code"
       : "pre code[class]",
-    path = Discourse.HighlightJSPath;
+    path = session.highlightJsPath;
 
   if (!path) {
     return;
   }
 
   $(selector, $elem).each(function(i, e) {
+    // Large code blocks can cause crashes or slowdowns
+    if (e.innerHTML.length > 30000) {
+      return;
+    }
+
     $(e).removeClass("lang-auto");
     loadScript(path).then(() => {
       customHighlightJSLanguages();

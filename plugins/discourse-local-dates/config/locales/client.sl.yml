@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sl:
   js:
@@ -12,6 +11,8 @@ sl:
         today: danes %{time}
         tomorrow: jutri %{time}
         yesterday: včeraj %{time}
+        countdown:
+          passed: datum je minil
       title: Vstavi datum / uro
       create:
         form:
@@ -27,7 +28,7 @@ sl:
           invalid_date: Napačen datum - poskrbite, da sta datum in čas pravilna
           date_title: Datum
           time_title: Čas
-          format_title: Format datuma
+          format_title: Oblika datuma
           timezone: Časovni pas
           until: Do...
           recurring:

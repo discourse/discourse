@@ -2,8 +2,17 @@ import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
 import toMarkdown from "discourse/lib/to-markdown";
-import { selectedText, selectedElement } from "discourse/lib/utilities";
+import {
+  selectedText,
+  selectedElement,
+  postUrl
+} from "discourse/lib/utilities";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import Sharing from "discourse/lib/sharing";
+import { alias } from "@ember/object/computed";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -15,6 +24,7 @@ export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
   visible: false,
+  privateCategory: alias("topic.category.read_restricted"),
 
   _isMouseDown: false,
   _reselected: false,
@@ -97,7 +107,7 @@ export default Component.extend({
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
     const isMobileDevice = this.site.isMobileDevice;
-    const { isIOS, isAndroid, isSafari, isOpera, isIE11 } = this.capabilities;
+    const { isIOS, isAndroid, isSafari, isOpera } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid || isOpera;
 
     // Don't mess with the original range as it results in weird behaviours
@@ -125,10 +135,7 @@ export default Component.extend({
     const parent = markerElement.parentNode;
     parent.removeChild(markerElement);
     // merge back all text nodes so they don't get messed up
-    if (!isIE11) {
-      // Skip this fix in IE11 - .normalize causes the selection to change
-      parent.normalize();
-    }
+    parent.normalize();
 
     // work around Safari that would sometimes lose the selection
     if (isSafari) {
@@ -204,8 +211,61 @@ export default Component.extend({
       .off("selectionchange.quote-button");
   },
 
-  click() {
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
+  quoteSharingEnabled(topic) {
+    if (
+      this.site.mobileView ||
+      this.siteSettings.share_quote_visibility === "none" ||
+      (this.currentUser &&
+        this.siteSettings.share_quote_visibility === "anonymous") ||
+      this.quoteSharingSources.length === 0 ||
+      this.privateCategory ||
+      (this.currentUser && topic.invisible)
+    ) {
+      return false;
+    }
+
+    return true;
+  },
+
+  @discourseComputed("topic.isPrivateMessage")
+  quoteSharingSources(isPM) {
+    return Sharing.activeSources(
+      this.siteSettings.share_quote_buttons,
+      this.siteSettings.login_required || isPM
+    );
+  },
+
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
+  quoteSharingShowLabel() {
+    return this.quoteSharingSources.length > 1;
+  },
+
+  @discourseComputed("topic.{id,slug}", "quoteState")
+  shareUrl(topic, quoteState) {
+    return getAbsoluteURL(postUrl(topic.slug, topic.id, quoteState.postId));
+  },
+
+  @discourseComputed("topic.details.can_create_post", "composer.visible")
+  embedQuoteButton(canCreatePost, composerOpened) {
+    return (
+      (canCreatePost || composerOpened) &&
+      this.currentUser &&
+      this.currentUser.get("enable_quoting")
+    );
+  },
+
+  @action
+  insertQuote() {
     this.attrs.selectText().then(() => this._hideButton());
-    return false;
+  },
+
+  @action
+  share(source) {
+    Sharing.shareSource(source, {
+      url: this.shareUrl,
+      title: this.topic.title,
+      quote: window.getSelection().toString()
+    });
   }
 });

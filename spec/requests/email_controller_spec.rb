@@ -19,7 +19,8 @@ RSpec.describe EmailController do
     it 'can fully unsubscribe' do
       user.user_option.update_columns(email_digests: true,
                                       email_level: UserOption.email_level_types[:never],
-                                      email_messages_level: UserOption.email_level_types[:never])
+                                      email_messages_level: UserOption.email_level_types[:never],
+                                      mailing_list_mode: true)
 
       post "/email/unsubscribe/#{key}.json",
         params: { unsubscribe_all: "1" }
@@ -36,6 +37,7 @@ RSpec.describe EmailController do
       expect(user.user_option.email_digests).to eq(false)
       expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
       expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
+      expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
     it 'can disable mailing list' do
@@ -189,6 +191,24 @@ RSpec.describe EmailController do
 
         expect(response.body).to include(I18n.t("unsubscribe.log_out"))
         expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
+      end
+
+      it 'displays correct label when email_digests is set to false' do
+        user.user_option.update!(email_digests: false, digest_after_minutes: 10080)
+
+        navigate_to_unsubscribe
+
+        expect(body).to include("You are not receiving summary emails")
+        expect(body).to include("Don&#39;t send me any mail from Discourse")
+      end
+
+      it 'hides unsubscribe from all checkbox when user already unsubscribed' do
+        user.user_option.update!(email_digests: false, mailing_list_mode: false, email_level: 2, email_messages_level: 2)
+
+        navigate_to_unsubscribe
+
+        expect(body).to include("You are not receiving summary emails")
+        expect(body).not_to include("Don&#39;t send me any mail from Discourse")
       end
 
       it 'correctly handles mailing list mode' do

@@ -1,6 +1,5 @@
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
-import { once } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
@@ -13,6 +12,7 @@ import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
+import { inject as service } from "@ember/service";
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -27,6 +27,7 @@ function unlessReadOnly(method, message) {
 const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
+  documentTitle: service(),
 
   actions: {
     toggleAnonymous() {
@@ -53,14 +54,12 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       ) {
         tokens.push(this.shortSiteDescription);
       }
-      Discourse.set("_docTitle", tokens.join(" - "));
+      this.documentTitle.setTitle(tokens.join(" - "));
     },
 
-    // Ember doesn't provider a router `willTransition` event so let's make one
+    // We need an empty method here for Ember to fire the action properly on all routes.
     willTransition() {
-      var router = getOwner(this).lookup("router:main");
-      once(router, router.trigger, "willTransition");
-      return this._super(...arguments);
+      this._super(...arguments);
     },
 
     postWasEnqueued(details) {
@@ -284,9 +283,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   _handleLogout() {
     if (this.currentUser) {
-      this.currentUser
-        .destroySession()
-        .then(() => logout(this.siteSettings, this.keyValueStore));
+      this.currentUser.destroySession().then(() => logout());
     }
   }
 });

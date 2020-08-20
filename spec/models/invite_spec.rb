@@ -33,12 +33,12 @@ describe Invite do
       expect(invite.errors.details[:email].first[:error]).to eq(I18n.t("user.email.invalid"))
     end
 
-    it "should not allow an invite with blacklisted email" do
+    it "should not allow an invite with blocklisted email" do
       invite = Invite.create(email: "test@mailinator.com", invited_by: coding_horror)
       expect(invite).not_to be_valid
     end
 
-    it "should allow an invite with non-blacklisted email" do
+    it "should allow an invite with non-blocklisted email" do
       invite = Fabricate(:invite, email: "test@mail.com", invited_by: coding_horror)
       expect(invite).to be_valid
     end
@@ -584,6 +584,28 @@ describe Invite do
       Invite.redeem_from_email('test24@example.com')
       invite.reload
       expect(invite).not_to be_redeemed
+    end
+  end
+
+  describe '.resend_all_invites_from' do
+    it 'resends all non-redeemed invites by a user' do
+      SiteSetting.invite_expiry_days = 30
+      user = Fabricate(:user)
+      new_invite = Fabricate(:invite, invited_by: user)
+      expired_invite = Fabricate(:invite, invited_by: user)
+      expired_invite.update!(expires_at: 2.days.ago)
+      redeemed_invite = Fabricate(:invite, invited_by: user)
+      Fabricate(:invited_user, invite: redeemed_invite, user: Fabricate(:user))
+      redeemed_invite.update!(expires_at: 5.days.ago)
+
+      Invite.resend_all_invites_from(user.id)
+      new_invite.reload
+      expired_invite.reload
+      redeemed_invite.reload
+
+      expect(new_invite.expires_at.to_date).to eq(30.days.from_now.to_date)
+      expect(expired_invite.expires_at.to_date).to eq(30.days.from_now.to_date)
+      expect(redeemed_invite.expires_at.to_date).to eq(5.days.ago.to_date)
     end
   end
 

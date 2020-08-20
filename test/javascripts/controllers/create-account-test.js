@@ -1,10 +1,7 @@
 import I18n from "I18n";
-import { mapRoutes } from "discourse/mapping-router";
+import { controllerModule } from "helpers/qunit-helpers";
 
-moduleFor("controller:create-account", "controller:create-account", {
-  beforeEach() {
-    this.registry.register("router:main", mapRoutes());
-  },
+controllerModule("controller:create-account", {
   needs: ["controller:modal", "controller:login"]
 });
 
@@ -12,7 +9,7 @@ test("basicUsernameValidation", async function(assert) {
   const subject = this.subject;
 
   const testInvalidUsername = async (username, expectedReason) => {
-    const controller = await subject({ siteSettings: Discourse.SiteSettings });
+    const controller = await subject();
     controller.set("accountUsername", username);
 
     assert.equal(
@@ -34,7 +31,7 @@ test("basicUsernameValidation", async function(assert) {
     I18n.t("user.username.too_long")
   );
 
-  const controller = await subject({ siteSettings: Discourse.SiteSettings });
+  const controller = await subject();
   controller.setProperties({
     accountUsername: "porkchops",
     prefilledUsername: "porkchops"
@@ -53,11 +50,9 @@ test("basicUsernameValidation", async function(assert) {
 });
 
 test("passwordValidation", async function(assert) {
-  const controller = await this.subject({
-    siteSettings: Discourse.SiteSettings
-  });
+  const controller = await this.subject();
 
-  controller.set("passwordRequired", true);
+  controller.set("authProvider", "");
   controller.set("accountEmail", "pork@chops.com");
   controller.set("accountUsername", "porkchops");
   controller.set("prefilledUsername", "porkchops");
@@ -92,7 +87,7 @@ test("passwordValidation", async function(assert) {
 });
 
 test("authProviderDisplayName", async function(assert) {
-  const controller = this.subject({ siteSettings: Discourse.SiteSettings });
+  const controller = this.subject();
 
   assert.equal(
     controller.authProviderDisplayName("facebook"),

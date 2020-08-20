@@ -1,5 +1,7 @@
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { setPrefix } from "discourse-common/lib/get-url";
+import { logIn } from "helpers/qunit-helpers";
+import User from "discourse/models/user";
 
 QUnit.module("lib:url");
 
@@ -65,4 +67,17 @@ QUnit.test("userPath with prefix", assert => {
   assert.equal(userPath(), "/forum/u");
   assert.equal(userPath("eviltrout"), "/forum/u/eviltrout");
   assert.equal(userPath("hp.json"), "/forum/u/hp.json");
+});
+
+QUnit.test("routeTo with prefix", async assert => {
+  setPrefix("/forum");
+  logIn();
+  const user = User.current();
+
+  sandbox.stub(DiscourseURL, "handleURL");
+  DiscourseURL.routeTo("/my/messages");
+  assert.ok(
+    DiscourseURL.handleURL.calledWith(`/u/${user.username}/messages`),
+    "it should navigate to the messages page"
+  );
 });

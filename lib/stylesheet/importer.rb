@@ -46,7 +46,16 @@ module Stylesheet
 
       register_import "theme_colors" do
         contents = +""
-        colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+        if @color_scheme_id
+          colors = begin
+            ColorScheme.find(@color_scheme_id).resolved_colors
+          rescue
+            ColorScheme.base_colors
+          end
+        else
+          colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+        end
+
         colors.each do |n, hex|
           contents << "$#{n}: ##{hex} !default;\n"
         end
@@ -106,10 +115,29 @@ module Stylesheet
 
     register_imports!
 
+    def self.import_color_definitions(theme_id)
+      contents = +""
+      DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
+        contents << "// Color definitions from #{name}\n\n"
+        contents << File.read(path.to_s)
+        contents << "\n\n"
+      end
+
+      if theme_id
+        Theme.list_baked_fields([theme_id], :common, :color_definitions).each do |row|
+          contents << "// Color definitions from #{Theme.find_by_id(theme_id)&.name}\n\n"
+          contents << row.value
+        end
+      end
+      contents
+    end
+
     def initialize(options)
       @theme = options[:theme]
       @theme_id = options[:theme_id]
       @theme_field = options[:theme_field]
+      @color_scheme_id = options[:color_scheme_id]
+
       if @theme && !@theme_id
         # make up an id so other stuff does not bail out
         @theme_id = @theme.id || -1
@@ -192,7 +220,7 @@ module Stylesheet
     end
 
     def category_css(category)
-      "body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+      "body.category-#{category.slug}, body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
     end
 
     def to_scss_variable(name, value)

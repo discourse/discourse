@@ -14,7 +14,8 @@ export default Controller.extend({
       "auto_track_topics_after_msecs",
       "notification_level_when_replying",
       "like_notification_frequency",
-      "allow_private_messages"
+      "allow_private_messages",
+      "enable_allowed_pm_users"
     ];
 
     this.likeNotificationFrequencies = [
@@ -86,9 +87,6 @@ export default Controller.extend({
       },
       { name: I18n.t("user.new_topic_duration.last_here"), value: -2 }
     ];
-
-    const caps = Discourse.__container__.lookup("capabilities:main");
-    this.isIOS = caps.isIOS;
   },
 
   actions: {

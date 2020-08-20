@@ -41,7 +41,11 @@ class EmbedController < ApplicationController
     end
 
     list_options = build_topic_list_options
-    list_options[:per_page] = params[:per_page].to_i if params.has_key?(:per_page)
+
+    if params.has_key?(:per_page)
+      list_options[:per_page] =
+        [params[:per_page].to_i, SiteSetting.embed_topic_limit_per_page].min
+    end
 
     if params[:allow_create]
       @allow_create = true

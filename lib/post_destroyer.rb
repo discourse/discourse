@@ -65,7 +65,7 @@ class PostDestroyer
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
-    if @user.staff? || delete_removed_posts_after < 1
+    if @user.staff? || delete_removed_posts_after < 1 || post_is_reviewable?
       perform_delete
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
@@ -85,7 +85,7 @@ class PostDestroyer
   end
 
   def recover
-    if @user.staff? && @post.deleted_at
+    if (@user.staff? || post_is_reviewable?) && @post.deleted_at
       staff_recovered
     elsif @user.staff? || @user.id == @post.user_id
       user_recovered
@@ -100,11 +100,14 @@ class PostDestroyer
       UserActionManager.topic_created(topic)
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
       StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
+      update_imap_sync(@post, false)
     end
   end
 
   def staff_recovered
-    @post.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@post.user_id
+    new_post_attrs = { user_deleted: false }
+    new_post_attrs[:user_id] = Discourse::SYSTEM_USER_ID if !@post.user_id
+    @post.update_columns(new_post_attrs)
     @post.recover!
 
     mark_topic_changed
@@ -168,6 +171,7 @@ class PostDestroyer
       end
     end
 
+    update_imap_sync(@post, true) if @post.topic&.deleted_at
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients! :deleted if @post.topic
     TopicTrackingState.publish_delete(@post.topic) if @post.topic && @post.post_number == 1
@@ -210,6 +214,11 @@ class PostDestroyer
   end
 
   private
+
+  def post_is_reviewable?
+    topic = @post.topic || Topic.with_deleted.find(@post.topic_id)
+    Guardian.new(@user).can_review_topic?(topic) && Reviewable.exists?(target: @post)
+  end
 
   # we need topics to change if ever a post in them is deleted or created
   # this ensures users relying on this information can keep unread tracking
@@ -366,6 +375,13 @@ class PostDestroyer
         end
       end
     end
+  end
+
+  def update_imap_sync(post, sync)
+    return if !SiteSetting.enable_imap
+    incoming = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id)
+    return if !incoming || !incoming.imap_uid
+    incoming.update(imap_sync: sync)
   end
 
 end

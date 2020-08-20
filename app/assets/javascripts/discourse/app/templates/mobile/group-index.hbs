@@ -10,13 +10,13 @@
     {{#if canManageGroup}}
       {{#if currentUser.admin}}
         {{group-members-dropdown
+          groupName=model.full_name
           showAddMembersModal=(route-action "showAddMembersModal")
-          showBulkAddModal=(route-action "showBulkAddModal")
         }}
       {{else}}
         {{d-button
           icon="plus"
-          label="groups.add_members.title"
+          label="groups.manage.add_members"
           class="group-members-add"
           action=(route-action "showAddMembersModal")
         }}
@@ -55,9 +55,13 @@
     {{/load-more}}
 
     {{conditional-loading-spinner condition=loading}}
-  {{else}}
+  {{else if model.can_see_members}}
     <br>
 
     <div>{{i18n "groups.empty.members"}}</div>
+  {{else}}
+    <br>
+
+    <div>{{i18n "groups.members.forbidden"}}</div>
   {{/if}}
 </section>

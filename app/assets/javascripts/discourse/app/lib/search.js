@@ -135,7 +135,7 @@ export function searchForTerm(term, opts) {
   if (!opts) opts = {};
 
   // Only include the data we have
-  const data = { term: term, include_blurbs: "true" };
+  const data = { term: term };
   if (opts.typeFilter) data.type_filter = opts.typeFilter;
   if (opts.searchForId) data.search_for_id = true;
   if (opts.restrictToArchetype)
@@ -185,11 +185,9 @@ export function getSearchKey(args) {
   );
 }
 
-export function isValidSearchTerm(searchTerm) {
+export function isValidSearchTerm(searchTerm, siteSettings) {
   if (searchTerm) {
-    return (
-      searchTerm.trim().length >= Discourse.SiteSettings.min_search_term_length
-    );
+    return searchTerm.trim().length >= siteSettings.min_search_term_length;
   } else {
     return false;
   }
@@ -226,7 +224,7 @@ export function applySearchAutocomplete(
     )
   );
 
-  if (Discourse.SiteSettings.enable_mentions) {
+  if (siteSettings.enable_mentions) {
     $input.autocomplete(
       _.merge(
         {

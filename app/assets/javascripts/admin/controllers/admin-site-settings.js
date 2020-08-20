@@ -93,6 +93,14 @@ export default Controller.extend({
     all.hasMore = matches.length > 30;
     all.count = all.hasMore ? "30+" : matches.length;
 
+    const categoryMatches = matchesGroupedByCategory.findBy(
+      "nameKey",
+      category
+    );
+    if (!categoryMatches || categoryMatches.count === 0) {
+      category = "all_results";
+    }
+
     this.set("visibleSiteSettings", matchesGroupedByCategory);
     this.transitionToRoute(
       "adminSiteSettingsCategory",
@@ -105,7 +113,7 @@ export default Controller.extend({
     if (this._skipBounce) {
       this.set("_skipBounce", false);
     } else {
-      this.filterContentNow();
+      this.filterContentNow(this.categoryNameKey);
     }
   }, INPUT_DELAY),
 

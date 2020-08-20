@@ -35,6 +35,13 @@
           {{/unless}}
         {{/if}}
 
+        {{plugin-outlet name="before-create-topic-button"
+          args=(hash
+            canCreateTopic=canCreateTopic
+            createTopicDisabled=createTopicDisabled
+            createTopicLabel=createTopicLabel)
+        }}
+
         {{create-topic-button
           canCreateTopic=canCreateTopic
           disabled=createTopicDisabled

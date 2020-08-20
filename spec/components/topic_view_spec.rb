@@ -244,8 +244,28 @@ describe TopicView do
       end
 
       it "generates a canonical correctly for paged results" do
-        expect(TopicView.new(1234, user, post_number: 10 * TopicView.chunk_size)
-          .canonical_path).to eql("/1234?page=10")
+        5.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2)
+          .canonical_path).to eql("/1234?page=3")
+      end
+
+      it "generates canonical path correctly by skipping whisper posts" do
+        2.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+        2.times { |i| Fabricate(:whisper, post_number: i + 3, topic: topic) }
+        Fabricate(:post, post_number: 5, topic: topic)
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2)
+          .canonical_path).to eql("/1234?page=2")
+      end
+
+      it "generates canonical path correctly for mega topics" do
+        2.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+        2.times { |i| Fabricate(:whisper, post_number: i + 3, topic: topic) }
+        Fabricate(:post, post_number: 5, topic: topic)
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2, is_mega_topic: true)
+          .canonical_path).to eql("/1234?page=3")
       end
     end
 
@@ -266,8 +286,10 @@ describe TopicView do
     context '.post_counts_by_user' do
       it 'returns the two posters with their appropriate counts' do
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
+        # Should not be counted
+        Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper], action_code: 'assign')
 
-        expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
+        expect(TopicView.new(topic.id, admin).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
 
         expect(TopicView.new(topic.id, first_poster).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 1]])
       end
@@ -311,6 +333,19 @@ describe TopicView do
         PostTiming.process_timings(evil_trout, topic.id, 1, [[1, 1000]])
         expect(TopicView.new(topic.id, evil_trout).read?(1)).to eq(true)
         expect(TopicView.new(topic.id, evil_trout).topic_user).to be_present
+      end
+    end
+
+    context "#user_post_bookmarks" do
+      let!(:user) { Fabricate(:user) }
+      let!(:bookmark1) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark3) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic)) }
+
+      it "returns all the bookmarks in the topic for a user" do
+        expect(TopicView.new(topic.id, user).user_post_bookmarks.pluck(:id)).to match_array(
+          [bookmark1.id, bookmark2.id]
+        )
       end
     end
 

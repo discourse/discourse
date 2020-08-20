@@ -3,10 +3,10 @@ import componentTest from "helpers/component-test";
 moduleForComponent("d-icon", { integration: true });
 
 componentTest("default", {
-  template: '{{d-icon "bars"}}',
+  template: '<div class="test">{{d-icon "bars"}}</div>',
 
   test(assert) {
-    const html = this.$()
+    const html = find(".test")
       .html()
       .trim();
     assert.equal(
@@ -17,10 +17,10 @@ componentTest("default", {
 });
 
 componentTest("with replacement", {
-  template: '{{d-icon "d-watching"}}',
+  template: '<div class="test">{{d-icon "d-watching"}}</div>',
 
   test(assert) {
-    const html = this.$()
+    const html = find(".test")
       .html()
       .trim();
     assert.equal(

@@ -99,7 +99,6 @@ function positioningWorkaround($fixedElement) {
   positioningWorkaround.blur = function(evt) {
     if (workaroundActive) {
       $("body").removeClass("ios-safari-composer-hacks");
-
       window.scrollTo(0, originalScrollTop);
 
       if (evt && evt.target) {
@@ -126,7 +125,8 @@ function positioningWorkaround($fixedElement) {
     // - invoking a select-kit dropdown
     // - invoking mentions
     // - invoking emoji dropdown via : and hitting return
-    // - invoking a toolbar button
+    // - invoking a button in the editor toolbar
+    // - tapping on emoji in the emoji modal
 
     if (
       lastTouchedElement &&
@@ -136,9 +136,8 @@ function positioningWorkaround($fixedElement) {
         $(lastTouchedElement).closest(".autocomplete").length ||
         (lastTouchedElement.nodeName.toLowerCase() === "textarea" &&
           document.activeElement === lastTouchedElement) ||
-        ["span", "svg", "button"].includes(
-          lastTouchedElement.nodeName.toLowerCase()
-        ))
+        $(lastTouchedElement).closest(".d-editor-button-bar").length ||
+        $(lastTouchedElement).hasClass("emoji"))
     ) {
       return;
     }
@@ -167,14 +166,6 @@ function positioningWorkaround($fixedElement) {
 
     if (window.pageYOffset > 0) {
       originalScrollTop = window.pageYOffset;
-    }
-
-    const elementRect = _this.getBoundingClientRect();
-    if (elementRect.top > 100) {
-      // this tricks iOS safari into assuming input/textarea is at top of the viewport
-      // via https://stackoverflow.com/questions/38017771/mobile-safari-prevent-scroll-page-when-focus-on-input
-      _this.style.transform = "translateY(-400px)";
-      later(() => (_this.style.transform = "none"), 30);
     }
 
     let delay = caps.isIpadOS ? 350 : 150;

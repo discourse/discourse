@@ -33,6 +33,7 @@ export default Component.extend(KeyEnterEscape, {
     "composer.creatingPrivateMessage:private-message",
     "composeState",
     "composer.loading",
+    "prefixedComposerAction",
     "composer.canEditTitle:edit-title",
     "composer.createdPost:created-post",
     "composer.creatingTopic:topic",
@@ -41,6 +42,11 @@ export default Component.extend(KeyEnterEscape, {
     "showPreview:show-preview:hide-preview",
     "currentUserPrimaryGroupClass"
   ],
+
+  @discourseComputed("composer.action")
+  prefixedComposerAction(action) {
+    return `composer-action-${action}`;
+  },
 
   @discourseComputed("currentUser.primary_group_name")
   currentUserPrimaryGroupClass(primaryGroupName) {

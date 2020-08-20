@@ -36,6 +36,7 @@ module Jobs
       update_post_custom_fields
 
       DiscourseEvent.trigger(:username_changed, @old_username, @new_username)
+      DiscourseEvent.trigger(:user_updated, User.find_by(id: @user_id))
     end
 
     def update_posts

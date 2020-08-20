@@ -163,6 +163,116 @@ describe Stylesheet::Manager do
       expect(digest3).to_not eq(digest2)
       expect(digest3).to_not eq(digest1)
     end
+
+    it "updates digest when updating a color scheme" do
+      scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+      manager = Stylesheet::Manager.new(:color_definitions, nil, scheme)
+      digest1 = manager.color_scheme_digest
+
+      ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "CC0000" }])
+
+      digest2 = manager.color_scheme_digest
+
+      expect(digest1).to_not eq(digest2)
+    end
+
+    it "updates digest when updating a theme's color definitions" do
+      scheme = ColorScheme.base
+      theme = Fabricate(:theme)
+      manager = Stylesheet::Manager.new(:color_definitions, theme.id, scheme)
+      digest1 = manager.color_scheme_digest
+
+      theme.set_field(target: :common, name: :color_definitions, value: 'body {color: brown}')
+      theme.save!
+
+      digest2 = manager.color_scheme_digest
+
+      expect(digest1).to_not eq(digest2)
+    end
+
+  end
+
+  describe 'color_scheme_stylesheets' do
+    it "returns something by default" do
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
+      expect(link).not_to eq("")
+    end
+
+    it "does not crash when no default theme is set" do
+      SiteSetting.default_theme_id = -1
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
+      expect(link).not_to eq("")
+    end
+
+    it "loads base scheme when defined scheme id is missing" do
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(125)
+      expect(link).to include("color_definitions_base")
+    end
+
+    it "loads nothing when defined dark scheme id is missing" do
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(125, "(prefers-color-scheme: dark)")
+      expect(link).to eq("")
+    end
+
+    it "uses the correct color scheme from the default site theme" do
+      cs = Fabricate(:color_scheme, name: 'Funky')
+      theme = Fabricate(:theme, color_scheme_id: cs.id)
+      SiteSetting.default_theme_id = theme.id
+
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
+      expect(link).to include("/stylesheets/color_definitions_funky_#{cs.id}_")
+    end
+
+    it "uses the correct color scheme when a non-default theme is selected and it uses the base 'Light' scheme" do
+      cs = Fabricate(:color_scheme, name: 'Not This')
+      default_theme = Fabricate(:theme, color_scheme_id: cs.id)
+      SiteSetting.default_theme_id = default_theme.id
+
+      user_theme = Fabricate(:theme, color_scheme_id: nil)
+
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(nil, "all", [user_theme.id])
+      expect(link).to include("/stylesheets/color_definitions_base_")
+    end
+
+    it "uses the correct scheme when a valid scheme id is used" do
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(ColorScheme.first.id)
+      slug = Slug.for(ColorScheme.first.name) + "_" + ColorScheme.first.id.to_s
+      expect(link).to include("/stylesheets/color_definitions_#{slug}_")
+    end
+
+    it "does not fail with a color scheme name containing spaces and special characters" do
+      cs = Fabricate(:color_scheme, name: 'Funky Bunch -_ @#$*(')
+      theme = Fabricate(:theme, color_scheme_id: cs.id)
+      SiteSetting.default_theme_id = theme.id
+
+      link = Stylesheet::Manager.color_scheme_stylesheet_link_tag()
+      expect(link).to include("/stylesheets/color_definitions_funky-bunch_#{cs.id}_")
+    end
+
+    it "updates outputted colors when updating a color scheme" do
+      scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
+      manager = Stylesheet::Manager.new(:color_definitions, nil, scheme)
+      stylesheet = manager.compile
+
+      ColorSchemeRevisor.revise(scheme, colors: [{ name: "primary", hex: "CC0000" }])
+
+      manager2 = Stylesheet::Manager.new(:color_definitions, nil, scheme)
+      stylesheet2 = manager2.compile
+
+      expect(stylesheet).not_to eq(stylesheet2)
+      expect(stylesheet2).to include("--primary: #c00;")
+    end
+
+    it "includes theme color definitions in color scheme" do
+      theme = Fabricate(:theme)
+      theme.set_field(target: :common, name: :color_definitions, value: ':root {--special: rebeccapurple;}')
+      theme.save!
+
+      scheme = ColorScheme.base
+      stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile
+
+      expect(stylesheet).to include("--special: rebeccapurple")
+    end
   end
 
   # this test takes too long, we don't run it by default
@@ -189,6 +299,7 @@ describe Stylesheet::Manager do
       scheme2 = ColorScheme.create!(name: "scheme2")
       core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin]
       theme_targets = [:desktop_theme, :mobile_theme]
+      color_scheme_targets = ["color_definitions_scheme1_#{scheme1.id}", "color_definitions_scheme2_#{scheme2.id}"]
 
       Theme.update_all(user_selectable: false)
       user_theme = Fabricate(:theme, user_selectable: true, color_scheme: scheme1)
@@ -200,7 +311,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(14) # 2 themes x 7 targets
+      expect(results.size).to eq(17) # (2 themes x 7 targets) + 3 color schemes (2 themes, 1 base)
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
       end
@@ -214,7 +325,8 @@ describe Stylesheet::Manager do
 
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(19) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets)
+
+      expect(results.size).to eq(22) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets) + 3 color schemes (2 themes, 1 base)
 
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)
@@ -223,6 +335,9 @@ describe Stylesheet::Manager do
       theme_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ }).to eq(2)
       end
+
+      expect(results).to include(color_scheme_targets[0])
+      expect(results).to include(color_scheme_targets[1])
     end
   end
 end

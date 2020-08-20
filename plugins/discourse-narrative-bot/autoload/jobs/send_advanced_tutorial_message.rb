@@ -7,7 +7,7 @@ module Jobs
       return if user.nil?
 
       raw = I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template",
-                    discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_user.username,
+                    discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
                     reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
 
       PostCreator.create!(

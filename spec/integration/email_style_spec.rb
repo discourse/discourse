@@ -8,8 +8,8 @@ describe EmailStyle do
     it "does not evaluate ERB outside of the email itself" do
       SiteSetting.email_custom_template = "<hello>%{email_content}</hello><%= (111 * 333) %>"
       html = Email::Renderer.new(UserNotifications.signup(Fabricate(:user))).html
-      expect(html).not_to match("36963")
-      expect(html.starts_with?('<hello>')).to eq(true)
+      expect(html).not_to include("36963")
+      expect(html).to include('<hello>')
     end
   end
 
@@ -71,6 +71,8 @@ describe EmailStyle do
       subject(:mail_html) { Email::Renderer.new(mail).html }
 
       it "customizations are applied to html part of emails" do
+        SiteSetting.default_email_in_reply_to = true
+
         expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
         matches = mail_html.match(/<div style="([^"]+)">#{post.raw}/)
         expect(matches[1]).to include('color: #FAB;') # custom

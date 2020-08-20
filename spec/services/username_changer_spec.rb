@@ -15,15 +15,20 @@ describe UsernameChanger do
       let(:new_username) { "#{user.username}1234" }
 
       it 'should change the username' do
-        event = DiscourseEvent.track_events {
+        events = DiscourseEvent.track_events {
           @result = UsernameChanger.change(user, new_username)
-        }.last
+        }.last(2)
 
         expect(@result).to eq(true)
 
+        event = events.first
         expect(event[:event_name]).to eq(:username_changed)
         expect(event[:params].first).to eq(old_username)
         expect(event[:params].second).to eq(new_username)
+
+        event = events.last
+        expect(event[:event_name]).to eq(:user_updated)
+        expect(event[:params].first).to eq(user)
 
         user.reload
         expect(user.username).to eq(new_username)

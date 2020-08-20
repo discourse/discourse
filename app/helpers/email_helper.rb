@@ -26,7 +26,10 @@ module EmailHelper
   end
 
   def email_html_template
-    EmailStyle.new.html.sub('%{email_content}', capture { yield }).html_safe
+    EmailStyle.new.html
+      .sub('%{email_content}', capture { yield })
+      .gsub('%{html_lang}', html_lang)
+      .html_safe
   end
 
   protected

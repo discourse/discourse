@@ -1,14 +1,12 @@
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { findAll } from "discourse/models/login-method";
+import { helperContext } from "discourse-common/lib/helpers";
 
-export default function logout(siteSettings, keyValueStore) {
-  if (!siteSettings || !keyValueStore) {
-    const container = Discourse.__container__;
-    siteSettings = siteSettings || container.lookup("site-settings:main");
-    keyValueStore = keyValueStore || container.lookup("key-value-store:main");
-  }
-
+export default function logout() {
+  const ctx = helperContext();
+  let siteSettings = ctx.siteSettings;
+  let keyValueStore = ctx.keyValueStore;
   keyValueStore.abandonLocal();
 
   const redirect = siteSettings.logout_redirect;

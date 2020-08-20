@@ -20,7 +20,8 @@ function postStreamTest(name, attrs) {
 postStreamTest("basics", {
   posts() {
     const site = this.container.lookup("site:main");
-    const topic = Topic.create({ details: { created_by: { id: 123 } } });
+    const topic = Topic.create();
+    topic.set("details.created_by", { id: 123 });
     return [
       Post.create({
         topic,
@@ -118,7 +119,8 @@ postStreamTest("basics", {
 
 postStreamTest("deleted posts", {
   posts() {
-    const topic = Topic.create({ details: { created_by: { id: 123 } } });
+    const topic = Topic.create();
+    topic.set("details.created_by", { id: 123 });
     return [
       Post.create({
         topic,

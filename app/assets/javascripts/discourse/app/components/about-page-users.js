@@ -11,7 +11,7 @@ export default Component.extend({
     return (this.users || []).map(user => {
       let name = user.name;
       let username = user.username;
-      let prioritizeName = prioritizeNameInUx(name, this.siteSettings);
+      let prioritizeName = prioritizeNameInUx(name);
       let hideName = false;
       if (name && normalize(username) === normalize(name)) {
         hideName = true;
@@ -21,7 +21,10 @@ export default Component.extend({
         name,
         username,
         userPath: userPath(username),
-        avatar: renderAvatar(user, { imageSize: "large" }),
+        avatar: renderAvatar(user, {
+          imageSize: "large",
+          siteSettings: this.siteSettings
+        }),
         title: user.title || "",
         formatedUsername: formatUsername(username),
         prioritizeName,

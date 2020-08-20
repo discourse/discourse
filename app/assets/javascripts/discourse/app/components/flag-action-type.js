@@ -42,8 +42,7 @@ export default Component.extend({
 
   @discourseComputed("message.length")
   customMessageLengthClasses(messageLength) {
-    return messageLength <
-      Discourse.SiteSettings.min_personal_message_post_length
+    return messageLength < this.siteSettings.min_personal_message_post_length
       ? "too-short"
       : "ok";
   },
@@ -51,7 +50,7 @@ export default Component.extend({
   @discourseComputed("message.length")
   customMessageLength(messageLength) {
     const len = messageLength || 0;
-    const minLen = Discourse.SiteSettings.min_personal_message_post_length;
+    const minLen = this.siteSettings.min_personal_message_post_length;
     if (len === 0) {
       return I18n.t("flagging.custom_message.at_least", { count: minLen });
     } else if (len < minLen) {

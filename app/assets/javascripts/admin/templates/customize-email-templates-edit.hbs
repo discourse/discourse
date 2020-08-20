@@ -1,3 +1,10 @@
+{{combo-box
+  value=emailTemplate.id
+  content=adminCustomizeEmailTemplates.sortedTemplates
+  onChange=adminCustomizeEmailTemplates.onSelectTemplate
+  nameProperty="title"
+}}
+
 <div class="email-template">
   <label>{{i18n "admin.customize.email_templates.subject"}}</label>
   {{#if hasMultipleSubjects}}

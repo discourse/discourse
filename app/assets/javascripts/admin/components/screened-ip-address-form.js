@@ -3,7 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 /**
-  A form to create an IP address that will be blocked or whitelisted.
+  A form to create an IP address that will be blocked or allowed.
   Example usage:
 
     {{screened-ip-address-form action=(action "recordAdded")}}
@@ -21,14 +21,9 @@ export default Component.extend({
   formSubmitted: false,
   actionName: "block",
 
-  @discourseComputed
-  adminWhitelistEnabled() {
-    return Discourse.SiteSettings.use_admin_ip_whitelist;
-  },
-
-  @discourseComputed("adminWhitelistEnabled")
-  actionNames(adminWhitelistEnabled) {
-    if (adminWhitelistEnabled) {
+  @discourseComputed("siteSettings.use_admin_ip_allowlist")
+  actionNames(adminAllowlistEnabled) {
+    if (adminAllowlistEnabled) {
       return [
         { id: "block", name: I18n.t("admin.logs.screened_ips.actions.block") },
         {

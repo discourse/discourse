@@ -1,22 +1,29 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ja:
   js:
     discourse_local_dates:
       relative_dates:
         today: 今日
+        tomorrow: 明日 %{time}
+        yesterday: 昨日 %{time}
+        countdown:
+          passed: 日付が過ぎた
+      title: 日付/時刻を挿入
       create:
         form:
           insert: 挿入
           advanced_mode: アドバンスドモード
           simple_mode: シンプルモード
+          format_description: "ユーザーに日付を表示するために使用されるフォーマット。 \"\\T\\Z\" を使用してユーザーのタイムゾーン設定します（Europe/Paris）"
           timezones_title: 表示するタイムゾーン
+          timezones_description: タイムゾーンは、プレビューとフォールバックで日付を表示するために使用されます。
           recurring_title: レジューム
+          recurring_description: "イベントの繰り返しを設定します。 フォームによって生成された繰り返しオプションを手動で編集して、年、四半期、月、週、日、時間、分、秒、ミリ秒のいずれかのキーを使用することもできます。"
           recurring_none: レジュームしない
           invalid_date: 日付が無効です。日付と時刻が正しいことを確認してください。
           date_title: 日付

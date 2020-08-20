@@ -1,6 +1,5 @@
 import I18n from "I18n";
 import Controller from "@ember/controller";
-import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { inject } from "@ember/controller";
 import { action } from "@ember/object";
@@ -14,6 +13,10 @@ export default Controller.extend({
   content: null,
   loading: false,
   noResultsHelp: null,
+  searchTerm: null,
+  q: null,
+
+  queryParams: ["q"],
 
   loadItems() {
     this.setProperties({
@@ -22,16 +25,20 @@ export default Controller.extend({
       noResultsHelp: null
     });
 
+    if (this.q && !this.searchTerm) {
+      this.set("searchTerm", this.q);
+    }
+
     return this.model
-      .loadItems()
+      .loadItems({ q: this.searchTerm })
       .then(response => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
-      .finally(() =>
+      .finally(() => {
         this.setProperties({
           loaded: true,
           loading: false
-        })
-      );
+        });
+      });
   },
 
   @discourseComputed("loaded", "content.length", "noResultsHelp")
@@ -39,42 +46,15 @@ export default Controller.extend({
     return loaded && contentLength === 0 && noResultsHelp;
   },
 
-  _removeBookmarkFromList(bookmark) {
-    this.content.removeObject(bookmark);
+  @action
+  search() {
+    this.set("q", this.searchTerm);
+    this.loadItems();
   },
 
   @action
-  removeBookmark(bookmark) {
-    const deleteBookmark = () => {
-      return bookmark
-        .destroy()
-        .then(() => this._removeBookmarkFromList(bookmark));
-    };
-    if (!bookmark.reminder_at) {
-      return deleteBookmark();
-    }
-    bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
-      if (result) {
-        return deleteBookmark();
-      }
-    });
-  },
-
-  @action
-  editBookmark(bookmark) {
-    let controller = showModal("bookmark", {
-      model: {
-        postId: bookmark.post_id,
-        id: bookmark.id,
-        reminderAt: bookmark.reminder_at,
-        name: bookmark.name
-      },
-      title: "post.bookmarks.edit",
-      modalClass: "bookmark-with-reminder"
-    });
-    controller.setProperties({
-      afterSave: () => this.loadItems()
-    });
+  reload() {
+    this.loadItems();
   },
 
   @action
@@ -86,7 +66,7 @@ export default Controller.extend({
     this.set("loadingMore", true);
 
     return this.model
-      .loadMore()
+      .loadMore({ q: this.searchTerm })
       .then(response => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));

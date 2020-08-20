@@ -9,15 +9,18 @@
     {{/if}}
 
     <div class="control-group bookmark-name-wrap">
-      {{input id="bookmark-name" value=model.name name="bookmark-name" class="bookmark-name" enter=(action "saveAndClose") placeholder=(i18n "post.bookmarks.name_placeholder")}}
+      {{input id="bookmark-name" value=model.name name="bookmark-name" class="bookmark-name" enter=(action "saveAndClose") placeholder=(i18n "post.bookmarks.name_placeholder") maxlength="100"}}
       {{d-button icon="cog" action=(action "toggleOptionsPanel") class="bookmark-options-button"}}
     </div>
 
     <div class="bookmark-options-panel">
-      <label for="delete_when_reminder_sent">
-        {{i18n "bookmarks.delete_when_reminder_sent"}}
-        {{input id="delete_when_reminder_sent" type="checkbox" checked=options.deleteWhenReminderSent}}
-      </label>
+      <label class="control-label" for="bookmark_auto_delete_preference">{{i18n "bookmarks.auto_delete_preference.label"}}</label>
+      {{combo-box
+        content=autoDeletePreferences
+        value=autoDeletePreference
+        class="bookmark-option-selector"
+        onChange=(action (mut autoDeletePreference))
+      }}
     </div>
 
     {{#if showExistingReminderAt }}
@@ -51,7 +54,7 @@
             {{/tap-tile}}
           {{/if}}
           {{#tap-tile icon="briefcase" tileId=reminderTypes.START_OF_NEXT_BUSINESS_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}
-            <div class="tap-tile-title">{{i18n "bookmarks.reminders.start_of_next_business_week"}}</div>
+            <div class="tap-tile-title">{{startNextBusinessWeekLabel}}</div>
             <div class="tap-tile-date">{{startNextBusinessWeekFormatted}}</div>
           {{/tap-tile}}
           {{#tap-tile icon="far-clock" tileId=reminderTypes.NEXT_WEEK activeTile=grid.activeTile onChange=(action "selectReminderType")}}

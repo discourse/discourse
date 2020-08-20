@@ -17,9 +17,9 @@ export default function(page) {
 
     beforeModel(transition) {
       const configKey = configs[page];
-      if (configKey && Discourse.SiteSettings[configKey].length > 0) {
+      if (configKey && this.siteSettings[configKey].length > 0) {
         transition.abort();
-        DiscourseURL.redirectTo(Discourse.SiteSettings[configKey]);
+        DiscourseURL.redirectTo(this.siteSettings[configKey]);
       }
     },
 

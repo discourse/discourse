@@ -22,6 +22,8 @@ RSpec.describe MetadataController do
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       expect(response.media_type).to eq('application/manifest+json')
+      expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
+
       manifest = JSON.parse(response.body)
 
       expect(manifest["name"]).to eq(title)
@@ -105,6 +107,8 @@ RSpec.describe MetadataController do
       SiteSetting.favicon = upload
       get "/opensearch.xml"
 
+      expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
+
       expect(response.status).to eq(200)
       expect(response.body).to include(title)
       expect(response.body).to include("/search?q={searchTerms}")
@@ -129,6 +133,8 @@ RSpec.describe MetadataController do
         }]
       EOF
       get "/.well-known/assetlinks.json"
+
+      expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
 
       expect(response.status).to eq(200)
       expect(response.body).to include("hash_of_app_certificate")
@@ -156,6 +162,7 @@ RSpec.describe MetadataController do
       expect(response.status).to eq(200)
       expect(response.body).to include("applinks")
       expect(response.media_type).to eq('application/json')
+      expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
 
       get "/apple-app-site-association.json"
       expect(response.status).to eq(404)

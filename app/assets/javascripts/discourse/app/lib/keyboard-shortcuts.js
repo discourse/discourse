@@ -5,6 +5,10 @@ import { minimumOffset } from "discourse/lib/offset-calculator";
 import { ajax } from "discourse/lib/ajax";
 import { throttle, schedule } from "@ember/runloop";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import {
+  nextTopicUrl,
+  previousTopicUrl
+} from "discourse/lib/topic-list-tracker";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -31,11 +35,13 @@ const DEFAULT_BINDINGS = {
   "g u": { path: "/unread" },
   "g c": { path: "/categories", anonymous: true },
   "g t": { path: "/top", anonymous: true },
-  "g b": { path: "/bookmarks" },
+  "g b": { path: "/my/activity/bookmarks" },
   "g p": { path: "/my/activity" },
   "g m": { path: "/my/messages" },
   "g d": { path: "/my/activity/drafts" },
   "g s": { handler: "goToFirstSuggestedTopic", anonymous: true },
+  "g j": { handler: "goToNextTopic", anonymous: true },
+  "g k": { handler: "goToPreviousTopic", anonymous: true },
   home: { handler: "goToFirstPost", anonymous: true },
   "command+up": { handler: "goToFirstPost", anonymous: true },
   j: { handler: "selectDown", anonymous: true },
@@ -226,6 +232,22 @@ export default {
     later(() => $(".d-editor .quote").click(), 500);
 
     return false;
+  },
+
+  goToNextTopic() {
+    nextTopicUrl().then(url => {
+      if (url) {
+        DiscourseURL.routeTo(url);
+      }
+    });
+  },
+
+  goToPreviousTopic() {
+    previousTopicUrl().then(url => {
+      if (url) {
+        DiscourseURL.routeTo(url);
+      }
+    });
   },
 
   goToFirstSuggestedTopic() {

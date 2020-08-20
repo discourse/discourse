@@ -281,7 +281,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def apply_review_group
-    return unless SiteSetting.enable_category_group_review? &&
+    return unless SiteSetting.enable_category_group_moderation? &&
       category.present? &&
       category.reviewable_by_group_id
 
@@ -419,7 +419,7 @@ class Reviewable < ActiveRecord::Base
     end
     return result if user.admin?
 
-    group_ids = SiteSetting.enable_category_group_review? ? user.group_users.pluck(:group_id) : []
+    group_ids = SiteSetting.enable_category_group_moderation? ? user.group_users.pluck(:group_id) : []
 
     result.where(
       '(reviewables.reviewable_by_moderator AND :staff) OR (reviewables.reviewable_by_group_id IN (:group_ids))',

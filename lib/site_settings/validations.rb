@@ -23,7 +23,8 @@ module SiteSettings::Validations
     default_categories_selected = [
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_watching_first_post.split("|")
+      SiteSetting.default_categories_watching_first_post.split("|"),
+      SiteSetting.default_categories_regular.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -35,7 +36,8 @@ module SiteSettings::Validations
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_watching_first_post.split("|")
+      SiteSetting.default_categories_watching_first_post.split("|"),
+      SiteSetting.default_categories_regular.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -47,7 +49,8 @@ module SiteSettings::Validations
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
-      SiteSetting.default_categories_watching_first_post.split("|")
+      SiteSetting.default_categories_watching_first_post.split("|"),
+      SiteSetting.default_categories_regular.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -59,7 +62,21 @@ module SiteSettings::Validations
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
-      SiteSetting.default_categories_muted.split("|")
+      SiteSetting.default_categories_muted.split("|"),
+      SiteSetting.default_categories_regular.split("|")
+    ].flatten.map(&:to_i).to_set
+
+    validate_default_categories(category_ids, default_categories_selected)
+  end
+
+  def validate_default_categories_regular(new_val)
+    category_ids = validate_category_ids(new_val)
+
+    default_categories_selected = [
+      SiteSetting.default_categories_watching.split("|"),
+      SiteSetting.default_categories_tracking.split("|"),
+      SiteSetting.default_categories_muted.split("|"),
+      SiteSetting.default_categories_watching_first_post.split("|")
     ].flatten.map(&:to_i).to_set
 
     validate_default_categories(category_ids, default_categories_selected)
@@ -127,6 +144,10 @@ module SiteSettings::Validations
     validate_error :secure_media_requirements if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end
 
+  def validate_share_quote_buttons(new_val)
+    validate_error :share_quote_facebook_requirements if new_val.include?("facebook") && SiteSetting.facebook_app_id.blank?
+  end
+
   def validate_enable_s3_inventory(new_val)
     validate_error :enable_s3_uploads_is_required if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end
@@ -152,6 +173,10 @@ module SiteSettings::Validations
   end
 
   def validate_enforce_second_factor(new_val)
+    if new_val == "all" && Discourse.enabled_auth_providers.count > 0
+      auth_provider_names = Discourse.enabled_auth_providers.map(&:name).join(", ")
+      return validate_error(:second_factor_cannot_enforce_with_socials, auth_provider_names: auth_provider_names)
+    end
     return if SiteSetting.enable_local_logins
     return if new_val == "no"
     validate_error :second_factor_cannot_be_enforced_with_disabled_local_login

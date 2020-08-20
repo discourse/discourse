@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe BookmarkQuery do
+  before do
+    SearchIndexer.enable
+  end
+
   fab!(:user) { Fabricate(:user) }
   let(:params) { {} }
 
@@ -35,6 +39,29 @@ RSpec.describe BookmarkQuery do
       end
       bookmark_query.list_all
       expect(preloaded_bookmarks.any?).to eq(true)
+    end
+
+    context "when q param is provided" do
+      before do
+        @post = Fabricate(:post, raw: "Some post content here", topic: Fabricate(:topic, title: "Bugfix game for devs"))
+        @bookmark3 = Fabricate(:bookmark, user: user, name: "Check up later")
+        @bookmark4 = Fabricate(:bookmark, user: user, post: @post, topic: @post.topic)
+      end
+
+      it "can search by bookmark name" do
+        bookmarks = bookmark_query(params: { q: 'check' }).list_all
+        expect(bookmarks.map(&:id)).to eq([@bookmark3.id])
+      end
+
+      it "can search by post content" do
+        bookmarks = bookmark_query(params: { q: 'content' }).list_all
+        expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
+      end
+
+      it "can search by topic title" do
+        bookmarks = bookmark_query(params: { q: 'bugfix' }).list_all
+        expect(bookmarks.map(&:id)).to eq([@bookmark4.id])
+      end
     end
 
     context "for a whispered post" do

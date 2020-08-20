@@ -7,7 +7,7 @@ module CategoryGuardian
   def can_create_category?(parent = nil)
     is_admin? ||
     (
-      SiteSetting.moderators_create_categories &&
+      SiteSetting.moderators_manage_categories_and_groups &&
       is_moderator?
     )
   end
@@ -16,7 +16,7 @@ module CategoryGuardian
   def can_edit_category?(category)
     is_admin? ||
     (
-      SiteSetting.moderators_create_categories &&
+      SiteSetting.moderators_manage_categories_and_groups &&
       is_moderator? &&
       can_see_category?(category)
     )
@@ -52,6 +52,10 @@ module CategoryGuardian
     return true if !category.read_restricted
     return true if is_staged? && category.email_in.present? && category.email_in_allow_strangers
     secure_category_ids.include?(category.id)
+  end
+
+  def can_edit_category_description?(category)
+    can_perform_action_available_to_group_moderators?(category.topic)
   end
 
   def secure_category_ids

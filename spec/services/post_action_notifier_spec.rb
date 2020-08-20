@@ -98,6 +98,28 @@ describe PostActionNotifier do
 
     end
 
+    context 'when using plugin API to add custom recipients' do
+      let(:lurker) { Fabricate(:user) }
+
+      before do
+        plugin = Plugin::Instance.new
+        plugin.add_post_revision_notifier_recipients do |post_revision|
+          [lurker.id]
+        end
+      end
+
+      after do
+        DiscoursePluginRegistry.reset!
+      end
+
+      it 'notifies the specified user of the revision' do
+        expect {
+          post.revise(evil_trout, raw: "world is the new body of the message")
+        }.to change {
+          lurker.notifications.count
+        }.by(1)
+      end
+    end
   end
 
   context 'private message' do

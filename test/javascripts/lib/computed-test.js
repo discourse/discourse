@@ -10,8 +10,9 @@ import {
   htmlSafe
 } from "discourse/lib/computed";
 import { setPrefix } from "discourse-common/lib/get-url";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("lib:computed", {
+discourseModule("lib:computed", {
   beforeEach() {
     sandbox.stub(I18n, "t").callsFake(function(scope) {
       return "%@ translated: " + scope;
@@ -23,13 +24,14 @@ QUnit.module("lib:computed", {
   }
 });
 
-QUnit.test("setting", assert => {
-  var t = EmberObject.extend({
+QUnit.test("setting", function(assert) {
+  let t = EmberObject.extend({
+    siteSettings: this.siteSettings,
     vehicle: setting("vehicle"),
     missingProp: setting("madeUpThing")
   }).create();
 
-  Discourse.SiteSettings.vehicle = "airplane";
+  this.siteSettings.vehicle = "airplane";
   assert.equal(
     t.get("vehicle"),
     "airplane",

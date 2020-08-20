@@ -174,6 +174,23 @@ describe UserNotifications do
         expect(html).to_not include post.raw
       end
 
+      it "excludes shared drafts" do
+        cat = Fabricate(:category)
+        SiteSetting.shared_drafts_category = cat.id
+        topic = Fabricate(:topic, title: "This is a draft", category_id: cat.id, created_at: 1.hour.ago)
+        post = Fabricate(
+          :post,
+          topic: topic,
+          score: 100.0,
+          post_number: 2,
+          raw: "secret draft content",
+          created_at: 1.hour.ago
+        )
+        html = subject.html_part.body.to_s
+        expect(html).to_not include topic.title
+        expect(html).to_not include post.raw
+      end
+
       it "excludes whispers and other post types that don't belong" do
         t = Fabricate(:topic, user: Fabricate(:user), title: "Who likes the same stuff I like?", created_at: 1.hour.ago)
         whisper = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "You like weird stuff", post_type: Post.types[:whisper], created_at: 1.hour.ago)
@@ -236,6 +253,14 @@ describe UserNotifications do
         expect(html).to include(topic_url)
         expect(text).to include(topic_url)
       end
+
+      it "applies lang/xml:lang html attributes" do
+        SiteSetting.default_locale = "pl_PL"
+        html = subject.html_part.to_s
+
+        expect(html).to match(' lang="pl-PL"')
+        expect(html).to match(' xml:lang="pl-PL"')
+      end
     end
 
   end
@@ -252,6 +277,8 @@ describe UserNotifications do
     let(:notification) { Fabricate(:replied_notification, user: user, post: response) }
 
     it 'generates a correct email' do
+
+      SiteSetting.default_email_in_reply_to = true
 
       # Fabricator is not fabricating this ...
       SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"

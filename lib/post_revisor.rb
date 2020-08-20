@@ -158,6 +158,10 @@ class PostRevisor
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
 
+    if @post.incoming_email&.imap_uid
+      @post.incoming_email&.update(imap_sync: true)
+    end
+
     old_raw = @post.raw
 
     Post.transaction do
@@ -188,8 +192,13 @@ class PostRevisor
       PostLocker.new(@post, @editor).lock
     end
 
-    # We log staff edits to posts
-    if @editor.staff? && @editor.id != @post.user_id && @fields.has_key?('raw') && !@opts[:skip_staff_log]
+    # We log staff/group moderator edits to posts
+    if (
+      (@editor.staff? || (@post.is_category_description? && Guardian.new(@editor).can_edit_category_description?(@post.topic.category))) &&
+      @editor.id != @post.user_id &&
+      @fields.has_key?('raw') &&
+      !@opts[:skip_staff_log]
+    )
       StaffActionLogger.new(@editor).log_post_edit(
         @post,
         old_raw: old_raw

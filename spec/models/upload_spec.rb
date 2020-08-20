@@ -399,18 +399,6 @@ describe Upload do
     end
   end
 
-  describe '.reset_unknown_extensions!' do
-    it 'should reset the extension of uploads when it is "unknown"' do
-      upload1 = Fabricate(:upload, extension: "unknown")
-      upload2 = Fabricate(:upload, extension: "png")
-
-      Upload.reset_unknown_extensions!
-
-      expect(upload1.reload.extension).to eq(nil)
-      expect(upload2.reload.extension).to eq("png")
-    end
-  end
-
   def enable_secure_media
     SiteSetting.enable_s3_uploads = true
     SiteSetting.s3_upload_bucket = "s3-upload-bucket"
@@ -424,5 +412,26 @@ describe Upload do
       :put,
       "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
     )
+  end
+
+  context '.destroy' do
+
+    it "can correctly clear information when destroying an upload" do
+      upload = Fabricate(:upload)
+      user = Fabricate(:user)
+
+      user.user_profile.update!(
+        card_background_upload_id: upload.id,
+        profile_background_upload_id: upload.id
+      )
+
+      upload.destroy
+
+      user.user_profile.reload
+
+      expect(user.user_profile.card_background_upload_id).to eq(nil)
+      expect(user.user_profile.profile_background_upload_id).to eq(nil)
+    end
+
   end
 end

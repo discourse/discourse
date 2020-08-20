@@ -109,6 +109,12 @@ class UserHistory < ActiveRecord::Base
       add_email: 88,
       update_email: 89,
       destroy_email: 90,
+      topic_closed: 91,
+      topic_opened: 92,
+      topic_archived: 93,
+      topic_unarchived: 94,
+      post_staff_note_create: 95,
+      post_staff_note_destroy: 96
     )
   end
 
@@ -193,7 +199,13 @@ class UserHistory < ActiveRecord::Base
       :page_unpublished,
       :add_email,
       :update_email,
-      :destroy_email
+      :destroy_email,
+      :topic_closed,
+      :topic_opened,
+      :topic_archived,
+      :topic_unarchived,
+      :post_staff_note_create,
+      :post_staff_note_destroy
     ]
   end
 

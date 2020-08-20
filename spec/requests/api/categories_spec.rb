@@ -243,12 +243,13 @@ describe 'categories' do
     end
   end
 
-  path '/c/{category_id}.json' do
+  path '/c/{category_slug}/{category_id}.json' do
 
     get 'List topics' do
       tags 'Categories'
       produces 'application/json'
-      parameter name: :category_id, in: :path, schema: { type: :string }
+      parameter name: :category_slug, in: :path, schema: { type: :string }
+      parameter name: :category_id, in: :path, schema: { type: :integer }
 
       response '200', 'response' do
         schema type: :object, properties: {
@@ -329,6 +330,7 @@ describe 'categories' do
           }
         }
         let(:category_id) { category.id }
+        let(:category_slug) { category.slug_path.join("/") }
         run_test!
       end
     end

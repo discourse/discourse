@@ -125,8 +125,18 @@ describe TagsController do
     fab!(:tag) { Fabricate(:tag, name: 'test') }
 
     it "should return the right response" do
-      get "/tag/test"
+      get "/tag/test.json"
+
       expect(response.status).to eq(200)
+
+      json = response.parsed_body
+
+      topic_list = json["topic_list"]
+
+      expect(topic_list["tags"].map { |t| t["id"] }).to contain_exactly(tag.id)
+      expect(topic_list["draft"]).to eq(nil)
+      expect(topic_list["draft_sequence"]).to eq(nil)
+      expect(topic_list["draft_key"]).to eq(Draft::NEW_TOPIC)
     end
 
     it "should handle invalid tags" do
@@ -325,19 +335,6 @@ describe TagsController do
           expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(true)
         end
       end
-    end
-  end
-
-  describe '#check_hashtag' do
-    fab!(:tag) { Fabricate(:tag) }
-
-    it "should return the right response" do
-      get "/tags/check.json", params: { tag_values: [tag.name] }
-
-      expect(response.status).to eq(200)
-
-      response_tag = response.parsed_body["valid"].first
-      expect(response_tag["value"]).to eq(tag.name)
     end
   end
 
@@ -580,6 +577,36 @@ describe TagsController do
     end
   end
 
+  describe '#show_top' do
+    fab!(:tag)       { Fabricate(:tag) }
+
+    fab!(:category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:tag_topic)  { Fabricate(:topic, category: category, tags: [tag]) }
+
+    before do
+      SiteSetting.top_page_default_timeframe = 'all'
+      TopTopic.create!(topic: topic, all_score: 1)
+      TopTopic.create!(topic: tag_topic, all_score: 1)
+    end
+
+    it "can filter by tag" do
+      get "/tag/#{tag.name}/l/top.json"
+      expect(response.status).to eq(200)
+
+      topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      expect(topic_ids).to eq([tag_topic.id])
+    end
+
+    it "can filter by both category and tag" do
+      get "/tags/c/#{category.slug}/#{category.id}/#{tag.name}/l/top.json"
+      expect(response.status).to eq(200)
+
+      topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      expect(topic_ids).to eq([tag_topic.id])
+    end
+  end
+
   describe '#search' do
     context 'tagging disabled' do
       it "returns 404" do
@@ -706,6 +733,13 @@ describe TagsController do
           response.parsed_body["results"].map { |j| j["id"] },
           ['common1', 'common2', 'group1tag', 'group1tag2']
         )
+      end
+
+      it 'returns error 400 for negative limit' do
+        get "/tags/filter/search.json", params: { q: '', limit: -1 }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body['errors'].first).to eq(I18n.t('invalid_params', message: 'limit'))
       end
     end
   end

@@ -44,7 +44,7 @@ module DiscourseNarrativeBot
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.mention.instructions",
-            discobot_username: self.discobot_user.username,
+            discobot_username: self.discobot_username,
             base_uri: Discourse.base_uri)
         },
         reply: {
@@ -462,7 +462,7 @@ module DiscourseNarrativeBot
             "#{I18N_KEY}.mention.not_found",
             i18n_post_args(
               username: @user.username,
-              discobot_username: self.discobot_user.username
+              discobot_username: self.discobot_username
             )
           ))
         end
@@ -474,7 +474,14 @@ module DiscourseNarrativeBot
 
     def missing_flag
       return unless valid_topic?(@post.topic_id)
-      return if @post.user_id == -2
+
+      # Remove any incorrect flags so that they can try again
+      if @post.user_id == -2
+        @post.post_actions
+          .where(user_id: @user.id)
+          .where("post_action_type_id IN (?)", (PostActionType.flag_types.values - [PostActionType.types[:inappropriate]]))
+          .destroy_all
+      end
 
       fake_delay
       reply_to(@post, I18n.t("#{I18N_KEY}.flag.not_found", i18n_post_args)) unless @data[:attempted]
@@ -526,7 +533,7 @@ module DiscourseNarrativeBot
             username: @user.username,
             base_url: Discourse.base_url,
             certificate: certificate,
-            discobot_username: self.discobot_user.username,
+            discobot_username: self.discobot_username,
             advanced_trigger: AdvancedUserNarrative.reset_trigger
           )
         ),

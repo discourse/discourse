@@ -74,6 +74,10 @@ $avatar_width: 120px;
       display: flex;
       margin: 0;
       width: 100%;
+      .badge-display-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 

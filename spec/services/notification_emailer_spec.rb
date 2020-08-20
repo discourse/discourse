@@ -5,6 +5,7 @@ require 'rails_helper'
 describe NotificationEmailer do
 
   before do
+    freeze_time
     NotificationEmailer.enable
   end
 
@@ -24,37 +25,65 @@ describe NotificationEmailer do
   shared_examples "enqueue" do
 
     it "enqueues a job for the email" do
-      Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
-      NotificationEmailer.process_notification(notification)
+      expect_enqueued_with(
+        job: :user_email,
+        args: NotificationEmailer::EmailUser.notification_params(notification, type),
+        at: Time.zone.now + delay
+      ) do
+        NotificationEmailer.process_notification(notification)
+      end
     end
 
     context "inactive user" do
       before { notification.user.active = false }
 
       it "doesn't enqueue a job" do
-        Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-        NotificationEmailer.process_notification(notification)
+        expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+          NotificationEmailer.process_notification(notification)
+        end
       end
 
       it "enqueues a job if the user is staged for non-linked and non-quoted types" do
         notification.user.staged = true
+
         if type == :user_linked || type == :user_quoted
-          Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
+          expect_not_enqueued_with(
+            job: :user_email,
+            args: { type: type }
+          ) do
+            NotificationEmailer.process_notification(notification)
+          end
         else
-          Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
+          expect_enqueued_with(
+            job: :user_email,
+            args: NotificationEmailer::EmailUser.notification_params(notification, type),
+            at: Time.zone.now + delay
+          ) do
+            NotificationEmailer.process_notification(notification)
+          end
         end
-        NotificationEmailer.process_notification(notification)
       end
 
       it "enqueues a job if the user is staged even if site requires user approval for non-linked and non-quoted typed" do
         notification.user.staged = true
         SiteSetting.must_approve_users = true
+
         if type == :user_linked || type == :user_quoted
-          Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
+          expect_not_enqueued_with(
+            job: :user_email,
+            args: { type: type }
+          ) do
+            NotificationEmailer.process_notification(notification)
+          end
         else
-          Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
+          expect_enqueued_with(
+            job: :user_email,
+            args: NotificationEmailer::EmailUser.notification_params(notification, type),
+            at: Time.zone.now + delay
+          ) do
+            NotificationEmailer.process_notification(notification)
+          end
         end
-        NotificationEmailer.process_notification(notification)
       end
     end
 
@@ -66,8 +95,9 @@ describe NotificationEmailer do
       end
 
       it "doesn't enqueue a job" do
-        Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-        NotificationEmailer.process_notification(notification)
+        expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+          NotificationEmailer.process_notification(notification)
+        end
       end
     end
 
@@ -75,8 +105,10 @@ describe NotificationEmailer do
 
       it "doesn't enqueue a job" do
         Post.any_instance.expects(:post_type).returns(Post.types[:small_action])
-        Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-        NotificationEmailer.process_notification(notification)
+
+        expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+          NotificationEmailer.process_notification(notification)
+        end
       end
 
     end
@@ -88,8 +120,10 @@ describe NotificationEmailer do
 
     it "doesn't enqueue a job if the user has mention emails disabled" do
       notification.user.user_option.update_columns(email_level: UserOption.email_level_types[:never])
-      Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-      NotificationEmailer.process_notification(notification)
+
+      expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+        NotificationEmailer.process_notification(notification)
+      end
     end
   end
 
@@ -98,8 +132,10 @@ describe NotificationEmailer do
 
     it "doesn't enqueue a job if the user has private message emails disabled" do
       notification.user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
-      Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-      NotificationEmailer.process_notification(notification)
+
+      expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+        NotificationEmailer.process_notification(notification)
+      end
     end
 
   end
@@ -113,8 +149,14 @@ describe NotificationEmailer do
 
     it "enqueue a delayed job for users that are online" do
       notification.user.last_seen_at = 1.minute.ago
-      Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification, type))
-      NotificationEmailer.process_notification(notification)
+
+      expect_enqueued_with(
+        job: :user_email,
+        args: NotificationEmailer::EmailUser.notification_params(notification, type),
+        at: Time.zone.now + delay
+      ) do
+        NotificationEmailer.process_notification(notification)
+      end
     end
 
   end
@@ -160,8 +202,10 @@ describe NotificationEmailer do
 
     it "doesn't enqueue a job for a small action" do
       notification.data_hash["original_post_type"] = Post.types[:small_action]
-      Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-      NotificationEmailer.process_notification(notification)
+
+      expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+        NotificationEmailer.process_notification(notification)
+      end
     end
 
   end

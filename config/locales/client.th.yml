@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 th:
   js:
@@ -98,9 +97,6 @@ th:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber}"
       close: "ปิด"
-      twitter: "แชร์ลิ้งก์นี้ไปทวิตเตอร์"
-      facebook: "แชร์ลิ้งก์นี้ไปเฟซบุ๊ก"
-      email: "ส่งลิ้งก์นี้ทางอีเมล"
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
       private_topic: "ทำให้กระทู้นี้เป็นข้อความส่วนตัว"
@@ -182,6 +178,7 @@ th:
     privacy: "ความเป็นส่วนตัว"
     tos: "เงื่อนไขการบริการ"
     rules: "กฎ"
+    conduct: "กฎเกณฑ์และเงื่อนไข"
     mobile_view: "ดูแบบอุปกรณ์เคลื่อนที่"
     desktop_view: "ดูแบบเดสก์ท็อป"
     you: "คุณ"
@@ -240,14 +237,21 @@ th:
       save: "บันทึก"
       invalid_custom_datetime: "วันและเวลาที่คุณกรอกไม่ถูกต้อง กรุณาลองอีกครั้ง"
       list_permission_denied: "คุณไม่ได้รับอนุญาตให้ดูบุ๊กมาร์กของผู้ใช้งานนี้"
+      auto_delete_preference:
+        label: "ลบโดยอัตโนมัติ"
+        never: "ไม่เคย"
+        on_owner_reply: "หลังจากฉันตอบกลับกระทู้นี้"
+      search: "ค้นหา"
       reminders:
         later_today: "ภายหลังในวันนี้"
         next_business_day: "ในวันทำการถัดไป"
         tomorrow: "พรุ่งนี้"
         next_week: "สัปดาห์หน้า"
         later_this_week: "ภายหลังในสัปดาห์นี้"
-        start_of_next_business_week: "วันจันทร์หน้า"
+        start_of_next_business_week: "วันจันทร์"
+        start_of_next_business_week_alt: "วันจันทร์หน้า"
         next_month: "เดือนหน้า"
+        custom: "วันและเวลาที่กำหนดเอง"
         last_custom: "ล่าสุด"
         today_with_time: "วันนี้ตอน%{time}"
         tomorrow_with_time: "พรุ่งนี้ตอน%{time}"
@@ -255,9 +259,11 @@ th:
     copy_codeblock:
       copied: "คัดลอกแล้ว!"
     drafts:
+      resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
       new_private_message: "แบบร่างข้อความส่วนตัวใหม่"
+      topic_reply: "ตอบแบบร่าง"
       abandon:
         confirm: "คุณได้เปิดแบบร่างอื่นในกระทู้นี้แล้ว แน่ใจหรือว่าต้องการละทิ้งมัน"
         yes_value: "ใช่ ละทิ้ง"
@@ -276,7 +282,9 @@ th:
     upload: "อัปโหลด"
     uploading: "กำลังอัปโหลด..."
     uploading_filename: "กำลังอัปโหลด: %{filename} ..."
+    clipboard: "คลิปบอร์ด"
     uploaded: "อัปโหลดแล้ว!"
+    pasting: "วาง..."
     enable: "เปิดใช้งาน"
     disable: "ปิดใช้งาน"
     continue: "ดำเนินการต่อ"
@@ -380,6 +388,8 @@ th:
           title: "อนุมัติ"
         rejected:
           title: "ปฏิเสธ"
+        ignored:
+          title: "ละเว้น"
         deleted:
           title: "ลบ"
         reviewed:
@@ -441,10 +451,6 @@ th:
     groups:
       member_added: "เพิ่ม"
       member_requested: "ร้องขอเมื่อ"
-      add_members:
-        title: "เพิ่มสมาชิก"
-        description: "จัดการความเป็นสมาชิกของกลุ่มนี้"
-        usernames: "ชื่อผู้ใช้"
       requests:
         title: "คำร้องขอ"
         reason: "เหตุผล"
@@ -463,6 +469,11 @@ th:
         interaction:
           posting: กำลังโพสต์
           notification: การแจ้งเตือน
+        email:
+          title: "อีเมล"
+          credentials:
+            username: "ชื่อผู้ใช้"
+            password: "รหัสผ่าน"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -632,18 +643,25 @@ th:
       download_archive:
         button_text: "ดาวน์โหลดทั้งหมด"
         confirm: "คุณแน่ใจหรือว่าต้องการดาวน์โหลดโพสต์ของคุณ"
+        success: "เริ่มดาวน์โหลด คุณจะได้รับการแจ้งเตือนทางข้อความเมื่อขั้นตอนเสร็จสิ้น"
         rate_limit_error: "สามารถดาวน์โหลดโพสต์ได้วันละหนึ่งครั้งเท่านั้น กรุณาลองใหม่พรุ่งนี้"
       new_private_message: "สร้างข้อความส่วนตัวใหม่"
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
       user_notifications:
         filters:
+          filter_by: "กรองโดย"
           all: "ทั้งหมด"
           read: "อ่าน"
           unread: "ยังไม่อ่าน"
+        ignore_duration_title: "ละเว้นผู้ใช้"
         ignore_duration_username: "ชื่อผู้ใช้"
         ignore_duration_when: "ช่วงเวลา:"
         ignore_duration_save: "ไม่สนใจ"
+        ignore_duration_time_frame_required: "กรุณาเลือกระยะเวลา"
+        ignore_no_users: "คุณไม่มีผู้ใช้ที่ถูกละเว้น"
+        ignore_option: "ละเว้นแล้ว"
+        ignore_option_title: "คุณจะไม่ได้รับการแจ้งเตือนที่เกี่ยวข้องกับผู้ใช้รายนี้ และกระทู้และคำตอบทั้งหมดจะถูกซ่อนไว้"
         add_ignored_user: "เพิ่ม..."
         mute_option: "ปิด"
         mute_option_title: "คุณจะไม่ได้รับการแจ้งเตือนใดๆที่เกี่ยวกับผู้ใช้นี้"
@@ -658,9 +676,11 @@ th:
         save: "บันทึก"
         clear:
           title: "ล้าง"
+          warning: "คุณแน่ใจหรือว่าต้องการล้างกระทู้เด่นของคุณ"
       use_current_timezone: "ใช้เขตเวลาปัจจุบัน"
       profile_hidden: "โปรไฟล์สาธารณะของผู้ใช้นี้ถูกซ่อนอยู่"
       expand_profile: "ขยาย"
+      collapse_profile: "ย่อ"
       bookmarks: "บุ๊กมาร์ก"
       bio: "เกี่ยวกับฉัน"
       timezone: "เขตเวลา"
@@ -669,6 +689,7 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
+        label: "การแจ้งเตือนทันที"
         not_supported: "ขออภัย บราวเซอร์นี้ไม่สนับสนุนการแจ้งเตือน"
         perm_default: "เปิดการแจ้งเตือน"
         perm_denied_btn: "ไม่มีสิทธิ์เข้าถึง"
@@ -676,14 +697,19 @@ th:
         disable: "ปิดการแจ้งเตือน"
         enable: "เปิดการแจ้งเตือน"
         each_browser_note: "โปรดทราบ: คุณต้องเปลี่ยนการตั้งค่านี้บนทุกบราวเซอร์ที่คุณใช้"
+        consent_prompt: "เมื่อมีคนตอบกลับโพสต์ของคุณ คุณต้องการการแจ้งเตือนโดยทันทีหรือไม่"
       dismiss: "ซ่อน"
       dismiss_notifications: "ซ่อนทั้งหมด"
       dismiss_notifications_tooltip: "ทำเครื่องหมายอ่านบนการแจ้งเตือนที่ยังไม่ได้อ่านทั้งหมด"
       first_notification: "การแจ้งเตือนแรกของคุณ! กดเลือกเพื่อเริ่มต้น"
+      dynamic_favicon: "แสดงจำนวนบนไอคอนเบราว์เซอร์"
+      theme_default_on_all_devices: "ทำให้ธีมนี้เป็นธีมเริ่มต้นบนทุกอุปกรณ์ของฉัน"
+      text_size_default_on_all_devices: "ทำให้ขนาดฟอนต์นี้เป็นค่าเริ่มต้นบนทุกอุปกรณ์ของฉัน"
       allow_private_messages: "อนุญาตให้ผู้ใช้อื่นส่งข้อความส่วนตัวหาฉัน"
       external_links_in_new_tab: "เปิดลิงก์ภายนอกทั้งหมดในแท็บใหม่"
       enable_quoting: "เปิดการตอบกลับการอ้างอิงโดยไฮไลท์ข้อความ"
       change: "เปลี่ยนแปลง"
+      featured_topic: "กระทู้เด่น"
       moderator: "%{user} เป็นผู้ดูแลระบบ"
       admin: "%{user} เป็นแอดมิน"
       moderator_tooltip: "ผู้ใช้นี้เป็นผู้ดูแลระบบ"
@@ -719,6 +745,8 @@ th:
       admin_delete: "ลบ"
       users: "ผู้ใช้"
       muted_users: "ปิดการแจ้งเตือน"
+      ignored_users: "ละเว้นแล้ว"
+      ignored_users_instructions: "ระงับโพสต์ การแจ้งเตือน และข้อความส่วนตัวทั้งหมดจากผู้ใช้เหล่านี้"
       tracked_topics_link: "แสดง"
       automatically_unpin_topics: "ยกเลิกปักหมุดกระทู้อัตโนมัติเมื่อถึงท้ายหน้า"
       apps: "แอป"
@@ -726,6 +754,7 @@ th:
       api_last_used_at: "ใช้ครั้งสุดท้ายเมื่อ:"
       theme: "ธีม"
       save_to_change_theme: 'ธีมจะถูกอัปเดตเมื่อคุณคลิก "%{save_text}"'
+      home: "หน้าเริ่มต้น"
       staff_counters:
         flags_given: "ธงที่เป็นประโยชน์"
         flagged_posts: "โพสต์ที่ปักธง"
@@ -804,6 +833,9 @@ th:
       change_card_background:
         title: "พื้นหลังผู้ใช้"
         instructions: "รูปพื้นหลังจะถูกจัดให้อยู่ตรงกลางและมีความกว้างมาตรฐานที่ 590px"
+      change_featured_topic:
+        title: "กระทู้เด่น"
+        instructions: "ลิงก์ไปยังกระทู้นี้จะอยู่บนการ์ดผู้ใช้และโปรไฟล์ของคุณ"
       email:
         title: "อีเมล"
         primary: "อีเมลหลัก"
@@ -816,6 +848,8 @@ th:
         update_email: "เปลี่ยนอีเมล"
         set_primary: "ตั้งอีเมลหลัก"
         destroy: "ลบอีเมล"
+        add_email: "เพิ่มอีเมลสำรอง"
+        no_secondary: "ไม่มีอีเมลสำรอง"
         instructions: "ไม่แสดงเป็นสาธารณะ"
         ok: "เราจะส่งอีเมลไปหาคุณเพื่อยืนยัน"
         required: "กรุณากรอกที่อยู่อีเมล"
@@ -856,6 +890,8 @@ th:
         any: "ใดๆ"
       password_confirmation:
         title: "ยืนยันรหัสผ่าน"
+      invite_code:
+        title: "รหัสเชิญ"
       auth_tokens:
         title: "อุปกรณ์ที่ถูกใช้เร็วๆนี้"
         ip: "ไอพี"
@@ -880,6 +916,7 @@ th:
       email_settings: "อีเมล"
       text_size:
         title: "ขนาดข้อความ"
+        smallest: "เล็กที่สุด"
         smaller: "เล็กลง"
         normal: "ปกติ"
         larger: "ใหญ่ขึ้น"
@@ -979,6 +1016,7 @@ th:
         invite_link:
           title: "ลิงก์คำเชิญ"
           success: "สร้างลิงก์คำเชิญสำเร็จแล้ว!"
+          error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
           max_redemptions_allowed_label: "มีกี่คนที่ได้รับอนุญาตให้ลงทะเบียนใช้ลิงก์นี้"
           expires_at: "ลิงก์คำเชิญนี้จะหมดอายุเมื่อไร"
         bulk_invite:
@@ -1007,6 +1045,8 @@ th:
           other: "ได้รับแล้ว"
         days_visited:
           other: "วันที่เข้าชม"
+        topics_entered:
+          other: "กระทู้ที่ดู"
         posts_read:
           other: "โพสต์ถูกอ่าน"
         bookmark_count:
@@ -1071,6 +1111,7 @@ th:
         fixed: "โหลดหน้า"
     modal:
       close: "ปิด"
+      dismiss_error: "ละทิ้งข้อผิดพลาด"
     close: "ปิด"
     assets_changed_confirm: "เว็บไซต์นี้พึ่งอัปเดต รีเฟรชตอนนี้เพื่อใช้เวอร์ชันล่าสุด"
     logout: "คุณได้ออกจากระบบ"
@@ -1097,6 +1138,8 @@ th:
     local_time: "เวลาท้องถิ่น"
     time_read: อ่าน
     time_read_recently: "%{time_read}ไม่นานมานี้"
+    time_read_tooltip: "อ่านทั้งหมด %{time_read} ครั้ง"
+    time_read_recently_tooltip: "อ่านทั้งหมด %{time_read} ครั้ง (เมื่อ %{recent_time_read} ใน 60 วันที่ผ่านมา)"
     last_reply_lowercase: การตอบล่าสุด
     replies_lowercase:
       other: ตอบ
@@ -1149,8 +1192,8 @@ th:
       button_label: "ด้วยอีเมล"
       complete_username_not_found: "ไม่มีบัญชีที่ตรงกับชื่อผู้ใช้ <b>%{username}</b>"
       complete_email_not_found: "ไม่มีบัญชีที่ตรงกับ <b>%{email}</b>"
-      confirm_title: "ดำเนินการต่อไปยัง %{site_name}"
-      logging_in_as: "กำลังเข้าสู่ระบบด้วย %{email}"
+      confirm_title: ดำเนินการต่อไปยัง %{site_name}
+      logging_in_as: กำลังเข้าสู่ระบบด้วย %{email}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
     login:
       title: "เข้าสู่ระบบ"
@@ -1160,6 +1203,7 @@ th:
       email_placeholder: "อีเมลหรือชื่อผู้ใช้"
       caps_lock_warning: "เปิดแคปล็อคอยู่"
       error: "ข้อผิดพลาดไม่ทราบสาเหตุ"
+      cookies_error: "ดูเหมือนว่าเบราว์เซอร์ของคุณจะปิดการใช้งานคุกกี้ คุณอาจไม่สามารถเข้าสู่ระบบได้หากไม่เปิดใช้งานก่อน"
       rate_limit: "กรุณารอสักครู่ก่อนเข้าสู่ระบบอีกครั้ง"
       blank_username: "กรุณากรอกอีเมลหรือชื่อผู้ใช้"
       blank_username_or_password: "กรุณากรอกอีเมลหรือชื่อผู้ใช้ และรหัสผ่าน"
@@ -1199,6 +1243,8 @@ th:
       github:
         name: "กิตฮับ"
         title: "ด้วยกิตฮับ"
+      discord:
+        title: "โดยดิสคอร์ด"
     invites:
       accept_title: "คำเชิญ"
       welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
@@ -1220,21 +1266,28 @@ th:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "หมวดหมู่เท่านั้น"
+      categories_with_featured_topics: "หมวดหมู่พร้อมด้วยกระทู้เด่น"
       categories_and_latest_topics: "หมวดหมู่และกระทู้ล่าสุด"
       categories_and_top_topics: "หมวดหมู่และกระทู้ยอดนิยม"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "เอ็นเทอร์"
     conditional_loading_section:
       loading: กำลังโหลด...
     category_row:
       topic_count: "%{count}กระทู้ในหมวดหมู่นี้"
     select_kit:
       default_header_text: เลือก...
+      no_content: ไม่พบผลลัพธ์ที่ตรงกัน
       filter_placeholder: ค้นหา...
       filter_placeholder_with_any: ค้นหาหรือสร้าง...
       create: "สร้าง: '%{content}'"
+      max_content_reached:
+        other: "คุณสามารถเลือกได้ %{count} รายการเท่านั้น"
+      min_content_not_reached:
+        other: "เลือกอย่างน้อย %{count} รายการ"
       invalid_selection_length: "การเลือกต้องมีอย่างน้อย %{count} ตัวอักษร"
     date_time_picker:
       from: จาก
@@ -1257,6 +1310,7 @@ th:
       medium_tone: โทนผิวปานกลาง
       medium_dark_tone: โทนผิวเข้มปานกลาง
       dark_tone: โทนผิวเข้ม
+      default: อีโมจิที่กำหนดเอง
     shared_drafts:
       title: "แบบร่างที่ถูกแบ่งปัน"
       notice: "กระทู้นี้แสดงให้ผู้ที่สามารถเห็นหมวดหมู่ <b>%{category}</b> เท่านั้น"
@@ -1275,6 +1329,7 @@ th:
       saved_local_draft_tip: "บันทึกบนอุปกรณ์"
       similar_topics: "กระทู้ของคุณใกล้เคียงกับ..."
       drafts_offline: "แบบร่างออฟไลน์"
+      duplicate_link: "ดูเหมือนว่าลิงก์ของคุณ <b>%{domain}</b> ถูกโพสต์ในกระทู้แล้วโดย <b>@%{username}</b> ใน <a href='%{post_url}'> ตอบกลับเมื่อ %{ago}</a> - คุณแน่ใจหรือว่าต้องการโพสต์มันอีกครั้ง"
       reference_topic_title: "ตอบกลับ: %{title}"
       error:
         title_missing: "ต้องมีชื่อเรื่อง"
@@ -1300,10 +1355,12 @@ th:
       topic_featured_link_placeholder: "กรอกลิงก์ที่แสดงหัวข้อ"
       remove_featured_link: "ลบลิงก์ออกจากกระทู้"
       reply_placeholder: "พิมพ์ที่นี่. ใช้ Markdown, BBCode หรือ HTML เพื่อจัดรูปแบบ สามารถลากหรือวางรูปภาพได้"
+      reply_placeholder_no_images: "พิมพ์ที่นี่ ใช้ Markdown, BBCode หรือ HTML เพื่อจัดรูปแบบ"
       reply_placeholder_choose_category: "เลือกหมวดหมู่ก่อนพิมพ์ที่นี่"
       view_new_post: "ดูโพสต์ใหม่ของคุณ"
       saving: "กำลังบันทึก"
       saved: "บันทึกแล้ว!"
+      saved_draft: "โพสต์ร่างกำลังดำเนินการ กดเพื่อดำเนินการต่อ"
       uploading: "กำลังอัปโหลด..."
       show_preview: "แสดงตัวอย่าง &raquo;"
       hide_preview: "&raquo; ซ่อนตัวอย่าง"
@@ -1330,6 +1387,11 @@ th:
       ulist_title: "รายการดอกจันทร์"
       list_item: "รายการ"
       help: "ช่วยเหลือการจัดรูปแบบ"
+      collapse: "ย่อหน้าเขียนกระทู้"
+      open: "เปิดหน้าเขียนกระทู้"
+      abandon: "ปิดหน้าเขียนกระทู้และละทิ้งแบบร่าง"
+      enter_fullscreen: "ขยายหน้าเขียนกระทู้เต็มจอ"
+      exit_fullscreen: "ออกจากหน้าเขียนกระทู้เต็มจอ"
       modal_ok: "ตกลง"
       modal_cancel: "ยกเลิก"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
@@ -1342,7 +1404,8 @@ th:
         draft: แบบร่าง
         edit: แก้ไข
         reply_to_post:
-          label: "ตอบกลับไปยังโพสต์ %{postNumber}โดย %{postUsername}"
+          label: ตอบกลับไปยังโพสต์ %{postNumber}โดย %{postUsername}
+          desc: ตอบกลับโพสต์ที่เจาะจง
         reply_as_private_message:
           label: ข้อความใหม่
           desc: สร้างข้อความส่วนตัวใหม่
@@ -1361,6 +1424,8 @@ th:
           other: "%{count} การแจ้งเตือนที่ยังไม่เห็น"
         message:
           other: "%{count} ข้อความที่ยังไม่ได้อ่าน"
+        high_priority:
+          other: "มี %{count} การแจ้งเตือนสำคัญที่ยังไม่ได้อ่าน"
       title: "การแจ้งเตือนการพูดถึง,การตอบกลับไปยังโพส กระทู้ หรือข้อความส่วนตัว และอื่นๆของ @name "
       none: "ไม่สามารถโหลดการแจ้งเตือนได้ในขณะนี้"
       empty: "ไม่พบการแจ้งเตือน"
@@ -1484,11 +1549,13 @@ th:
           images: พร้อมรูปภาพ
           all_tags: แท็กด้านบนทั้งหมด
         statuses:
+          label: ประเภทกระทู้
           open: เปิด
           closed: ปิด
           public: เป็นสาธารณะ
           archived: ถูกเก็บเข้าคลัง
           noreplies: ไม่มีการตอบกลับ
+          single_user: มีผู้ใช้คนเดียว
         post:
           time:
             label: โพสต์แล้ว
@@ -1680,7 +1747,7 @@ th:
           "2_8": "คุณจะเห็นจำนวนคำตอบใหม่เพราะคุณกำลังติดตามหมวดหมู่นี้"
           "2_4": "คุณจะเห็นจำนวนคำตอบใหม่เพราะคุณได้โพสต์คำตอบไปยังกระทู้นี้"
           "2_2": "คุณจะเห็นจำนวนคำตอบใหม่เพราะคุณกำลังติดตามกระทู้นี้"
-          "2": 'คุณจะเห็นจำนวนคำตอบใหม่เพราะคุณ<a href="%{basePath}/u/%{username}/preferences/notifications">อ่านกระทู้นี้</a>'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "คุณจะได้รับการแจ้งเตือนเมื่อมีคนกล่าวถึงชื่อของคุณ @name หรือตอบคุณ"
           "1": "คุณจะได้รับการแจ้งเตือนเมื่อมีคนกล่าวถึงชื่อของคุณ @name หรือตอบคุณ"
           "0_2": "คุณไม่ต้องการรับการแจ้งเตือนทั้งหมดจากกระทู้นี้"
@@ -1761,6 +1828,11 @@ th:
         confirm_pin_globally: "คุณมีกระทู้ที่ปักหมุดทั้งหมด %{count}  กระทู้ การมีกระทู้ที่ปักหมุดมากๆอาจสร้างปัญหาให้แก่ผู้ใช้ใหม่และผู้ใช้ที่ไม่ระบุชื่อได้ คุณแน่ใจหรือว่าจะปักหมุดกระทู้เพิ่มอีกในหมวดหมู่นี้"
         unpin_globally: "ลบกระทู้นี้ออกจากด้านบนสุดของรายการกระทู้ทั้งหมด"
         unpin_globally_until: "ลบกระทู้นี้ออกจากด้านบนสุดของรายการกระทู้ทั้งหมดหรือรอจนกระทั่ง <strong>%{until}</strong>"
+        make_banner: "ทำให้กระทู้นี้เป็นแบนเนอร์ที่จะแสดงอยู่ด้านบนสุดของทุกหน้า"
+        remove_banner: "เอาแบนเนอร์ที่แสดงบนทุกหน้าออก"
+        banner_note: "ผู้ใช้งานสามารถที่จะยกเลิกแบนเนอร์ได้ด้วยการกดปิดทางขวาบนของแบนเนอร์ แบนเนอร์จะมีได้เพียงหนึ่งเดียวเท่านั้นในทุกเวลา"
+        no_banner_exists: "ไม่มีกระทู้ไหนที่ถูกตั้งเป็นแบนเนอร์"
+        banner_exists: "ในตอนนี้<strong class='badge badge-notification unread'>มี</strong>กระทู้ที่เป็นแบนเนอร์อยู่แล้ว"
       inviting: "กำลังเชิญ..."
       invite_private:
         title: "เชิญไปยังข้อความ"
@@ -2041,7 +2113,6 @@ th:
       images: "รูปภาพ"
       email_in_allow_strangers: "ยอมรับอีเมลจากผู้ใช้ที่ไม่ระบุชื่อและไม่มีบัญชี"
       edit_permissions: "แก้ไขการอนุญาต"
-      reviewable_by_group: "นอกจากทีมงานแล้ว โพสต์และธงในหมวดหมู่ยังสามารถถูกรีวิวโดย:"
       review_group_name: "ชื่อกลุ่ม"
       require_topic_approval: "กระทู้ใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
       require_reply_approval: "คำตอบใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
@@ -2364,8 +2435,6 @@ th:
       groups:
         new: "กลุ่มใหม่"
         tags_label: "แท็กในกลุ่มนี้:"
-        tags_placeholder: "แท็ก"
-        parent_tag_placeholder: "ทางเลือก"
         one_per_topic_label: "จำกัดหนึ่งแท็กต่อหนึ่งกระทู้จากกลุ่มนี้"
         save: "บันทึก"
         delete: "ลบ"
@@ -3034,10 +3103,10 @@ th:
             header: "ระวัง!"
           sample: "ตัวอย่าง:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> สำหรับโพสต์ใน %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> เมื่อ <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link}
+            with_post_time: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> เมื่อ <span class="time">%{time}</span>
         badge_intro:
           emoji: "อีโมจินักเรียนหญิง"
           what_are_badges_title: "เหรียญคืออะไร"
@@ -3069,8 +3138,8 @@ th:
         post_title: "โพสต์"
         category_id: "หมายเลขหมวดหมู่"
         category_title: "หมวดหมู่"
-        external_url: "ลิงก์ภายนอก"
-        delete_confirm: "คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?"
+        tag_name: "ชื่อแท็ก"
+        delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
         form:
           label: "ใหม่:"
           add: "เพิ่ม"

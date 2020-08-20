@@ -1045,7 +1045,6 @@ const Composer = RestModel.extend({
             x => x.id === (parseInt(createdPost.category, 10) || 1)
           );
           if (category) category.incrementProperty("topic_count");
-          Discourse.notifyPropertyChange("globalNotice");
         }
 
         composer.clearState();
@@ -1211,7 +1210,6 @@ Composer.reopenClass({
     args = args || {};
     args.user = args.user || User.current();
     args.site = args.site || Site.current();
-    args.siteSettings = args.siteSettings || Discourse.SiteSettings;
     return this._super(args);
   },
 

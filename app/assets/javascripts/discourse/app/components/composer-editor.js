@@ -12,13 +12,9 @@ import {
   fetchUnseenMentions
 } from "discourse/lib/link-mentions";
 import {
-  linkSeenCategoryHashtags,
-  fetchUnseenCategoryHashtags
-} from "discourse/lib/link-category-hashtags";
-import {
-  linkSeenTagHashtags,
-  fetchUnseenTagHashtags
-} from "discourse/lib/link-tag-hashtag";
+  linkSeenHashtags,
+  fetchUnseenHashtags
+} from "discourse/lib/link-hashtags";
 import Composer from "discourse/models/composer";
 import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
@@ -29,7 +25,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,
   formatUsername,
-  clipboardData,
+  clipboardHelpers,
   caretPosition,
   inCodeBlock
 } from "discourse/lib/utilities";
@@ -85,7 +81,10 @@ export default Component.extend({
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
     } else {
-      const key = authorizesOneOrMoreImageExtensions(this.currentUser.staff)
+      const key = authorizesOneOrMoreImageExtensions(
+        this.currentUser.staff,
+        this.siteSettings
+      )
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
       return `composer.${key}`;
@@ -189,7 +188,9 @@ export default Component.extend({
         dataSource: term => this.userSearchTerm.call(this, term),
         key: "@",
         transformComplete: v => v.username || v.name,
-        afterComplete() {
+        afterComplete: value => {
+          this.composer.set("reply", value);
+
           // ensures textarea scroll position is correct
           schedule("afterRender", () => $input.blur().focus());
         },
@@ -520,16 +521,13 @@ export default Component.extend({
     });
   },
 
-  _renderUnseenCategoryHashtags($preview, unseen) {
-    fetchUnseenCategoryHashtags(unseen).then(() => {
-      linkSeenCategoryHashtags($preview);
-    });
-  },
-
-  _renderUnseenTagHashtags($preview, unseen) {
-    fetchUnseenTagHashtags(unseen).then(() => {
-      linkSeenTagHashtags($preview);
-    });
+  _renderUnseenHashtags($preview) {
+    const unseen = linkSeenHashtags($preview);
+    if (unseen.length > 0) {
+      fetchUnseenHashtags(unseen).then(() => {
+        linkSeenHashtags($preview);
+      });
+    }
   },
 
   _loadInlineOneboxes(inline) {
@@ -663,7 +661,10 @@ export default Component.extend({
         return;
       }
 
-      const { canUpload, canPasteHtml, types } = clipboardData(e, true);
+      const { canUpload, canPasteHtml, types } = clipboardHelpers(e, {
+        siteSettings: this.siteSettings,
+        canUpload: true
+      });
 
       if (!canUpload || canPasteHtml || types.includes("text/plain")) {
         e.preventDefault();
@@ -704,6 +705,7 @@ export default Component.extend({
 
       const opts = {
         user: this.currentUser,
+        siteSettings: this.siteSettings,
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings
           .allow_staff_to_upload_any_file_in_pm
@@ -766,7 +768,7 @@ export default Component.extend({
       this._xhr = null;
 
       if (!userCancelled) {
-        displayErrorForUpload(data);
+        displayErrorForUpload(data, this.siteSettings);
       }
     });
 
@@ -806,22 +808,24 @@ export default Component.extend({
 
       if (matchingPlaceholder) {
         const match = matchingPlaceholder[index];
-        if (!match) {
-          return;
+
+        if (match) {
+          const replacement = match.replace(
+            imageScaleRegex,
+            `![$1|$2, ${scale}%$4]($5)`
+          );
+
+          this.appEvents.trigger(
+            "composer:replace-text",
+            matchingPlaceholder[index],
+            replacement,
+            { regex: imageScaleRegex, index }
+          );
         }
-
-        const replacement = match.replace(
-          imageScaleRegex,
-          `![$1|$2, ${scale}%$4]($5)`
-        );
-
-        this.appEvents.trigger(
-          "composer:replace-text",
-          matchingPlaceholder[index],
-          replacement,
-          { regex: imageScaleRegex, index }
-        );
       }
+
+      e.preventDefault();
+      return;
     });
   },
 
@@ -927,30 +931,10 @@ export default Component.extend({
       this._warnMentionedGroups($preview);
       this._warnCannotSeeMention($preview);
 
-      // Paint category hashtags
-      const unseenCategoryHashtags = linkSeenCategoryHashtags($preview);
-      if (unseenCategoryHashtags.length) {
-        debounce(
-          this,
-          this._renderUnseenCategoryHashtags,
-          $preview,
-          unseenCategoryHashtags,
-          450
-        );
-      }
-
-      // Paint tag hashtags
-      if (this.siteSettings.tagging_enabled) {
-        const unseenTagHashtags = linkSeenTagHashtags($preview);
-        if (unseenTagHashtags.length) {
-          debounce(
-            this,
-            this._renderUnseenTagHashtags,
-            $preview,
-            unseenTagHashtags,
-            450
-          );
-        }
+      // Paint category and tag hashtags
+      const unseenHashtags = linkSeenHashtags($preview);
+      if (unseenHashtags.length > 0) {
+        debounce(this, this._renderUnseenHashtags, $preview, 450);
       }
 
       // Paint oneboxes

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 uk:
   js:
@@ -40,9 +39,6 @@ uk:
       group-results:
         title: "Групувати голоси за полем користувача"
         label: "Показати відбивку"
-      ungroup-results:
-        title: "Об’єднайте всі голоси"
-        label: "Сховати відбивку"
       export-results:
         title: "Експорт результатів опитування"
         label: "Експорт"

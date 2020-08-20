@@ -220,7 +220,7 @@ module Jobs
           return SkippedEmailLog.reason_types[:user_email_post_deleted]
         end
 
-        if user.suspended? && !post.user&.staff?
+        if user.suspended? && (!post.user&.staff? || !post.user&.human?)
           return SkippedEmailLog.reason_types[:user_email_user_suspended]
         end
 

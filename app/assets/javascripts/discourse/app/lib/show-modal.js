@@ -39,6 +39,8 @@ export default function(name, opts) {
   route.render(fullName, renderArgs);
   if (opts.title) {
     modalController.set("title", I18n.t(opts.title));
+  } else {
+    modalController.set("title", null);
   }
 
   if (opts.panels) {
@@ -48,7 +50,10 @@ export default function(name, opts) {
     });
 
     if (controller.actions.onSelectPanel) {
-      modalController.set("onSelectPanel", controller.actions.onSelectPanel);
+      modalController.set(
+        "onSelectPanel",
+        controller.actions.onSelectPanel.bind(controller)
+      );
     }
 
     modalController.set(

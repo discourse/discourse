@@ -39,6 +39,7 @@ class UserSummary
   def links
     TopicLink
       .joins(:topic, :post)
+      .where(posts: { user_id: @user.id })
       .includes(:topic, :post)
       .where('posts.post_type IN (?)', Topic.visible_post_types(@guardian && @guardian.user))
       .merge(Topic.listable_topics.visible.secured(@guardian))
@@ -193,7 +194,7 @@ protected
   def user_counts(user_hash)
     user_ids = user_hash.keys
 
-    lookup = AvatarLookup.new(user_ids)
+    lookup = UserLookup.new(user_ids)
     user_ids.map do |user_id|
       lookup_hash = lookup[user_id]
 

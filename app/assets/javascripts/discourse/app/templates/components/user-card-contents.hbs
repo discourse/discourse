@@ -130,9 +130,9 @@
               <div class="suspension-date">
                 {{d-icon "ban"}}
                 {{#if this.user.suspendedForever}}
-                  {{i18n 'user.suspended_permanently'}}
+                  {{i18n "user.suspended_permanently"}}
                 {{else}}
-                  {{i18n 'user.suspended_notice' date=this.user.suspendedTillDate}}
+                  {{i18n "user.suspended_notice" date=this.user.suspendedTillDate}}
                 {{/if}}
               </div>
               <div class="suspension-reason">
@@ -142,7 +142,7 @@
             </div>
           {{else}}
             {{#if this.user.bio_excerpt}}
-              <div class="bio">{{text-overflow class="overflow" text=this.user.bio_excerpt}}</div>
+              <div class="bio">{{html-safe this.user.bio_excerpt}}</div>
             {{/if}}
           {{/if}}
         </div>
@@ -165,7 +165,7 @@
                 {{d-icon "globe"}}
                 {{#if this.linkWebsite}}
                   {{!-- template-lint-disable  --}}
-                  <a href="{{this.user.website}}" rel="noopener {{unless this.removeNoFollow 'nofollow ugc'}}"
+                  <a href="{{this.user.website}}" rel="noopener {{unless this.removeNoFollow "nofollow ugc"}}"
                    target="_blank">{{this.user.website_name}}</a>
                 {{else}}
                   <span title={{this.user.website}}>{{this.user.website_name}}</span>
@@ -193,17 +193,17 @@
         {{#unless this.user.profile_hidden}}
           <div class="metadata">
             {{#if this.user.last_posted_at}}
-              <h3><span class='desc'>{{i18n 'last_post'}}</span>
+              <h3><span class="desc">{{i18n "last_post"}}</span>
                 {{format-date this.user.last_posted_at leaveAgo="true"}}</h3>
             {{/if}}
-            <h3><span class='desc'>{{i18n 'joined'}}</span>
+            <h3><span class="desc">{{i18n "joined"}}</span>
               {{format-date this.user.created_at leaveAgo="true"}}</h3>
             {{#if this.user.time_read}}
               <h3 title="{{this.timeReadTooltip}}">
-                <span class='desc'>{{i18n 'time_read'}}</span>
+                <span class="desc">{{i18n "time_read"}}</span>
                 {{format-duration this.user.time_read}}
                 {{#if this.showRecentTimeRead}}
-                  <span>({{i18n 'time_read_recently' time_read=this.recentTimeRead}})</span>
+                  <span>({{i18n "time_read_recently" time_read=this.recentTimeRead}})</span>
                 {{/if}}
               </h3>
             {{/if}}
@@ -253,9 +253,9 @@
                 {{user-badge badge=ub.badge user=this.user}}
               {{/each}}
               {{#if this.showMoreBadges}}
-                <span class='more-user-badges'>
-                  {{#link-to 'user.badges' this.user}}
-                    {{i18n 'badges.more_badges' count=this.moreBadgesCount}}
+                <span class="more-user-badges">
+                  {{#link-to "user.badges" this.user}}
+                    {{i18n "badges.more_badges" count=this.moreBadgesCount}}
                   {{/link-to}}
                 </span>
               {{/if}}

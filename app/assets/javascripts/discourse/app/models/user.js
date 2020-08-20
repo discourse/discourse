@@ -50,7 +50,7 @@ const User = RestModel.extend({
 
   @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
-    const maxPostCount = Discourse.SiteSettings.delete_all_posts_max;
+    const maxPostCount = this.siteSettings.delete_all_posts_max;
     return canBeDeleted && postCount <= maxPostCount;
   },
 
@@ -100,7 +100,7 @@ const User = RestModel.extend({
 
   @discourseComputed("username", "name")
   displayName(username, name) {
-    if (Discourse.SiteSettings.enable_names && !isEmpty(name)) {
+    if (this.siteSettings.enable_names && !isEmpty(name)) {
       return name;
     }
     return username;
@@ -108,7 +108,7 @@ const User = RestModel.extend({
 
   @discourseComputed("profile_background_upload_url")
   profileBackgroundUrl(bgUrl) {
-    if (isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) {
+    if (isEmpty(bgUrl) || !this.siteSettings.allow_profile_backgrounds) {
       return "".htmlSafe();
     }
     return ("background-image: url(" + getURLWithCDN(bgUrl) + ")").htmlSafe();
@@ -276,6 +276,7 @@ const User = RestModel.extend({
       "user_fields",
       "muted_usernames",
       "ignored_usernames",
+      "allowed_pm_usernames",
       "profile_background_upload_url",
       "card_background_upload_url",
       "muted_tags",
@@ -299,6 +300,7 @@ const User = RestModel.extend({
       "email_messages_level",
       "email_level",
       "email_previous_replies",
+      "dark_scheme_id",
       "dynamic_favicon",
       "enable_quoting",
       "enable_defer",
@@ -311,11 +313,13 @@ const User = RestModel.extend({
       "include_tl0_in_digests",
       "theme_ids",
       "allow_private_messages",
+      "enable_allowed_pm_users",
       "homepage_id",
       "hide_profile_and_presence",
       "text_size",
       "title_count_mode",
-      "timezone"
+      "timezone",
+      "skip_new_user_tips"
     ];
 
     if (fields) {
@@ -328,25 +332,27 @@ const User = RestModel.extend({
 
     var updatedState = {};
 
-    ["muted", "watched", "tracked", "watched_first_post"].forEach(s => {
-      if (fields === undefined || fields.includes(s + "_category_ids")) {
-        let prop =
-          s === "watched_first_post"
-            ? "watchedFirstPostCategories"
-            : s + "Categories";
-        let cats = this.get(prop);
-        if (cats) {
-          let cat_ids = cats.map(c => c.get("id"));
-          updatedState[s + "_category_ids"] = cat_ids;
+    ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
+      s => {
+        if (fields === undefined || fields.includes(s + "_category_ids")) {
+          let prop =
+            s === "watched_first_post"
+              ? "watchedFirstPostCategories"
+              : s + "Categories";
+          let cats = this.get(prop);
+          if (cats) {
+            let cat_ids = cats.map(c => c.get("id"));
+            updatedState[s + "_category_ids"] = cat_ids;
 
-          // HACK: denote lack of categories
-          if (cats.length === 0) {
-            cat_ids = [-1];
+            // HACK: denote lack of categories
+            if (cats.length === 0) {
+              cat_ids = [-1];
+            }
+            data[s + "_category_ids"] = cat_ids;
           }
-          data[s + "_category_ids"] = cat_ids;
         }
       }
-    });
+    );
 
     [
       "muted_tags",
@@ -661,41 +667,51 @@ const User = RestModel.extend({
   },
 
   isAllowedToUploadAFile(type) {
+    const settingName = type === "image" ? "embedded_media" : "attachments";
+
     return (
       this.staff ||
       this.trust_level > 0 ||
-      Discourse.SiteSettings[`newuser_max_${type}s`] > 0
+      this.siteSettings[`newuser_max_${settingName}`] > 0
     );
   },
 
-  createInvite(email, group_names, custom_message) {
+  createInvite(email, group_ids, custom_message) {
     return ajax("/invites", {
       type: "POST",
-      data: { email, group_names, custom_message }
+      data: { email, group_ids, custom_message }
     });
   },
 
-  generateInviteLink(email, group_names, topic_id) {
+  generateInviteLink(email, group_ids, topic_id) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { email, group_names, topic_id }
+      data: { email, group_ids, topic_id }
     });
   },
 
   generateMultipleUseInviteLink(
-    group_names,
+    group_ids,
     max_redemptions_allowed,
     expires_at
   ) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { group_names, max_redemptions_allowed, expires_at }
+      data: { group_ids, max_redemptions_allowed, expires_at }
     });
   },
 
   @observes("muted_category_ids")
   updateMutedCategories() {
     this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
+  },
+
+  @observes("regular_category_ids")
+  updateRegularCategories() {
+    this.set(
+      "regularCategories",
+      Category.findByIds(this.regular_category_ids)
+    );
   },
 
   @observes("tracked_category_ids")
@@ -724,7 +740,7 @@ const User = RestModel.extend({
 
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
-    return !Discourse.SiteSettings.enable_sso && canDeleteAccount;
+    return !this.siteSettings.enable_sso && canDeleteAccount;
   },
 
   delete: function() {
@@ -827,7 +843,7 @@ const User = RestModel.extend({
   canManageGroup(group) {
     return group.get("automatic")
       ? false
-      : this.admin || group.get("is_group_owner");
+      : group.get("can_admin_group") || group.get("is_group_owner");
   },
 
   @discourseComputed("groups.@each.title", "badges.[]")
@@ -881,7 +897,7 @@ const User = RestModel.extend({
 
   @discourseComputed("second_factor_enabled", "staff")
   enforcedSecondFactor(secondFactorEnabled, staff) {
-    const enforce = Discourse.SiteSettings.enforce_second_factor;
+    const enforce = this.siteSettings.enforce_second_factor;
     return (
       !secondFactorEnabled &&
       (enforce === "all" || (enforce === "staff" && staff))
@@ -965,11 +981,6 @@ User.reopenClass(Singleton, {
       return store.createRecord("user", userJson);
     }
     return null;
-  },
-
-  resetCurrent(user) {
-    this._super(user);
-    Discourse.currentUser = user;
   },
 
   checkUsername(username, email, for_user_id) {

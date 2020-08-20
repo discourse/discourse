@@ -23,14 +23,14 @@
 
         .topic-count {
           font-size: $font-down-1;
-          color: $primary-medium;
+          color: var(--primary-medium);
           white-space: nowrap;
           margin-left: 0.5em;
           font-weight: normal;
         }
 
         .category-status {
-          color: $primary;
+          color: var(--primary);
           line-height: $line-height-large;
           -webkit-box-flex: 0;
           -ms-flex: 1 1 auto;

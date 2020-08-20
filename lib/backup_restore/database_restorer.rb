@@ -70,7 +70,7 @@ module BackupRestore
 
       log_thread = Thread.new do
         RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
-        while psql_running
+        while psql_running || !logs.empty?
           message = logs.pop.strip
           log(message) if message.present?
         end

@@ -3,7 +3,7 @@
 
 #simple-container {
   border-radius: 10px;
-  background-color: $secondary;
+  background-color: var(--secondary);
   padding: 20px;
   width: 550px;
   margin: 0 auto;

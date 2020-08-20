@@ -3,19 +3,14 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 
-function initKeyboardShortcuts() {
-  // this is here because initializers/keyboard-shortcuts is not
-  // firing for this acceptance test, and it needs to be fired before
-  // more keyboard shortcuts can be added
-  KeyboardShortcutInitializer.initialize(Discourse.__container__);
-}
-
 acceptance("Plugin Keyboard Shortcuts - Logged In", {
-  loggedIn: true
+  loggedIn: true,
+  beforeEach() {
+    KeyboardShortcutInitializer.initialize(this.container);
+  }
 });
 
 test("a plugin can add a keyboard shortcut", async assert => {
-  initKeyboardShortcuts();
   withPluginApi("0.8.38", api => {
     api.addKeyboardShortcut("]", () => {
       $("#qunit-fixture").html(
@@ -34,12 +29,14 @@ test("a plugin can add a keyboard shortcut", async assert => {
 });
 
 acceptance("Plugin Keyboard Shortcuts - Anonymous", {
-  loggedIn: false
+  loggedIn: false,
+  beforeEach() {
+    KeyboardShortcutInitializer.initialize(this.container);
+  }
 });
 
 test("a plugin can add a keyboard shortcut with an option", async assert => {
-  var spy = sandbox.spy(KeyboardShortcuts, "_bindToPath");
-  initKeyboardShortcuts();
+  let spy = sandbox.spy(KeyboardShortcuts, "_bindToPath");
   withPluginApi("0.8.38", api => {
     api.addKeyboardShortcut("]", () => {}, {
       anonymous: true,

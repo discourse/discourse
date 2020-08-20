@@ -31,12 +31,16 @@ class ListableTopicSerializer < BasicTopicSerializer
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
 
   def image_url
-    object.image_url
+    object.image_url(enqueue_if_missing: true)
   end
 
   def thumbnails
     extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
     object.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
+  end
+
+  def include_thumbnails?
+    ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes.present? || DiscoursePluginRegistry.topic_thumbnail_sizes.present?
   end
 
   def include_unicode_title?

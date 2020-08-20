@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fi:
   js:
@@ -38,9 +37,6 @@ fi:
       group-results:
         title: "Lajittele äänet käyttäjäkentän perusteella"
         label: "Näytä erittely"
-      ungroup-results:
-        title: "Yhdistä kaikki äänet"
-        label: "Piilota erittely"
       export-results:
         title: "Vie äänestystulos"
         label: "Vie"

@@ -121,6 +121,7 @@ class EmailUpdater
       @user.user_emails.create!(email: new_email)
     end
 
+    DiscourseEvent.trigger(:user_updated, @user)
     @user.set_automatic_groups
   end
 

@@ -10,7 +10,7 @@ class SimilarTopicsController < ApplicationController
     attr_reader :topic
 
     def blurb
-      Search::GroupedSearchResults.blurb_for(@topic.try(:blurb))
+      Search::GroupedSearchResults.blurb_for(cooked: @topic.try(:blurb))
     end
   end
 

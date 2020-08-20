@@ -117,7 +117,7 @@ class UsersController < ApplicationController
 
     users = users.filter { |u| guardian.can_see_profile?(u) }
 
-    preload_fields = User.whitelisted_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
+    preload_fields = User.allowed_user_custom_fields(guardian) + UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
     User.preload_custom_fields(users, preload_fields)
     User.preload_recent_time_read(users)
 
@@ -230,6 +230,7 @@ class UsersController < ApplicationController
     User.transaction do
       old_primary.update!(primary: false)
       new_primary.update!(primary: true)
+      DiscourseEvent.trigger(:user_updated, user)
 
       if current_user.staff? && current_user != user
         StaffActionLogger.new(current_user).log_update_email(user)
@@ -259,6 +260,7 @@ class UsersController < ApplicationController
     ActiveRecord::Base.transaction do
       if user_email
         user_email.destroy
+        DiscourseEvent.trigger(:user_updated, user)
       elsif
         user.email_change_requests.where(new_email: params[:email]).destroy_all
       end
@@ -349,15 +351,20 @@ class UsersController < ApplicationController
     @user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
     raise Discourse::NotFound unless guardian.can_see_profile?(@user)
 
-    summary = UserSummary.new(@user, guardian)
-    serializer = UserSummarySerializer.new(summary, scope: guardian)
+    response.headers['X-Robots-Tag'] = 'noindex'
+
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
         render :show
       end
       format.json do
-        render_json_dump(serializer)
+        summary_json = Discourse.cache.fetch(summary_cache_key(@user), expires_in: 1.hour) do
+          summary = UserSummary.new(@user, guardian)
+          serializer = UserSummarySerializer.new(summary, scope: guardian)
+          MultiJson.dump(serializer)
+        end
+        render json: summary_json
       end
     end
   end
@@ -1127,11 +1134,11 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars[url]
+    unless upload = Upload.get_from_url(url)
       return render json: failed_json, status: 422
     end
 
-    unless upload = Upload.find_by(url: url)
+    unless SiteSetting.selectable_avatars[upload.sha1]
       return render json: failed_json, status: 422
     end
 
@@ -1574,6 +1581,7 @@ class UsersController < ApplicationController
       :date_of_birth,
       :muted_usernames,
       :ignored_usernames,
+      :allowed_pm_usernames,
       :theme_ids,
       :locale,
       :bio_raw,
@@ -1650,5 +1658,9 @@ class UsersController < ApplicationController
 
   def secure_session_confirmed?
     secure_session["confirmed-password-#{current_user.id}"] == "true"
+  end
+
+  def summary_cache_key(user)
+    "user_summary:#{user.id}:#{current_user ? current_user.id : 0}"
   end
 end

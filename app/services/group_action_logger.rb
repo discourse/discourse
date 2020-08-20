@@ -2,9 +2,10 @@
 
 class GroupActionLogger
 
-  def initialize(acting_user, group)
+  def initialize(acting_user, group, opts = {})
     @acting_user = acting_user
     @group = group
+    @opts = opts
   end
 
   def log_make_user_group_owner(target_user)
@@ -44,7 +45,7 @@ class GroupActionLogger
   end
 
   def log_change_group_settings
-    can_edit?
+    @opts[:skip_guardian] || can_edit?
 
     @group.previous_changes.except(*excluded_attributes).each do |attribute_name, value|
       next if value[0].blank? && value[1].blank?

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sl:
   site_settings:
@@ -49,34 +48,34 @@ sl:
         > :game_die: %{results}
     quote:
       trigger: "citati"
-      '1':
+      "1":
         quote: "V centru vsake težave leži priložnost"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Svobodo se ne splača imeti, če ne vključuje tudi pravico do napake."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Ne jokaj zato ker je konec, ampak se nasmej ker se je zgodilo."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Če hočeš da je nekaj narejeno pravilno, potem naredi sam."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Verjemi da zmoreš in si že na pol poti."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Življenje je kot škatla s čokoladicami. Nikoli ne veš, katero boš dobil."
         author: "Forrest Gumpova mama"
-      '7':
+      "7":
         quote: "To je majhen korak za človeka, velik za človeštvo."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Vsak dan naredi eno stvar ki te straši."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Napake so vedno odpustljive, če le imaš pogum da jih priznaš."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Karkoli si človek lahko zamisli ali verjame, lahko tudi doseže."
         author: "Napoleon Hill"
       results: |-
@@ -84,26 +83,26 @@ sl:
     magic_8_ball:
       trigger: "prihodnost"
       answers:
-        '1': "Zagotovo"
-        '2': "Zatrdno je tako"
-        '3': "Brez dvoma"
-        '4': "Ja, zagotovo"
-        '5': "Lahko računaš na to"
-        '6': "Kakor jaz vidim, da"
-        '7': "Najbrž"
-        '8': "Dober obet"
-        '9': "Ja"
-        '10': "Znaki kažejo na da"
-        '11': "Odgovor meglen, poskusi znova"
-        '12': "Vprašaj ponovno kasneje"
-        '13': "Trenutno bolje da ti ne povem"
-        '14': "Trenutno ne morem predvideti"
-        '15': "Osredotoči se in vprašaj ponovno"
-        '16': "Ne računaj na to"
-        '17': "Moj odgovor je ne"
-        '18': "Moji viri trdijo da ne"
-        '19': "Obeti niso najboljši"
-        '20': "Zelo dvomljivo"
+        "1": "Zagotovo"
+        "2": "Zatrdno je tako"
+        "3": "Brez dvoma"
+        "4": "Ja, zagotovo"
+        "5": "Lahko računaš na to"
+        "6": "Kakor jaz vidim, da"
+        "7": "Najbrž"
+        "8": "Dober obet"
+        "9": "Ja"
+        "10": "Znaki kažejo na da"
+        "11": "Odgovor meglen, poskusi znova"
+        "12": "Vprašaj ponovno kasneje"
+        "13": "Trenutno bolje da ti ne povem"
+        "14": "Trenutno ne morem predvideti"
+        "15": "Osredotoči se in vprašaj ponovno"
+        "16": "Ne računaj na to"
+        "17": "Moj odgovor je ne"
+        "18": "Moji viri trdijo da ne"
+        "19": "Obeti niso najboljši"
+        "20": "Zelo dvomljivo"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -251,8 +250,6 @@ sl:
           Mislim, da veste kaj morate storiti. Pojdite in **prijavite ta prispevek** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kot neprimeren!
         reply: |-
           [Naše osebje](%{base_uri}/groups/staff) bo zasebno obveščeno o vaši prijavi. Če bo dovolj članov skupnosti prijavilo ta prispevek, se bo samodejno skril zaradi previdnosti. (Ker pa jaz dejansko nisem napisal nič neprimernega :angel:, sem odstranil prijavo za zdaj.)
-        not_found: |-
-          Oh ne, moj neprimeren prispevek še vedno ni bil prijavljen. :worried: Ali ga lahko prijavite kot neprimernega tako da uporabite **Prijavi** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne pozabite uporabiti prikaži več gumb <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, da vam prikaže vse akcije na prispevku.
       search:
         instructions: |-
           _psst_ … V to temo sem skril presenečenje. Če ste pripravljeni sprejeti ta izziv, **izberite išči ikono** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> zgoraj desno &#8599; za iskanje.

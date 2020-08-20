@@ -3,10 +3,12 @@ import Component from "@ember/component";
 import { on, observes } from "discourse-common/utils/decorators";
 import LoadMore from "discourse/mixins/load-more";
 import UrlRefresh from "discourse/mixins/url-refresh";
+import { inject as service } from "@ember/service";
 
 const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
   classNames: ["contents"],
   eyelineSelector: ".topic-list-item",
+  documentTitle: service(),
 
   @on("didInsertElement")
   @observes("model")
@@ -26,7 +28,7 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
 
   @observes("incomingCount")
   _updateTitle() {
-    Discourse.updateContextCount(this.incomingCount);
+    this.documentTitle.updateContextCount(this.incomingCount);
   },
 
   saveScrollPosition() {
@@ -35,7 +37,7 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
 
   actions: {
     loadMore() {
-      Discourse.updateContextCount(0);
+      this.documentTitle.updateContextCount(0);
       this.model.loadMore().then(hasMoreResults => {
         schedule("afterRender", () => this.saveScrollPosition());
         if (hasMoreResults && $(window).height() >= $(document).height()) {

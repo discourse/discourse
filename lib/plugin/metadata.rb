@@ -34,6 +34,7 @@ class Plugin::Metadata
     "discourse-gradle-issue",
     "discourse-graphviz",
     "discourse-invite-tokens",
+    "discourse-knowledge-explorer",
     "discourse-local-dates",
     "discourse-logster-rate-limit-checker",
     "discourse-logster-transporter",
@@ -74,7 +75,6 @@ class Plugin::Metadata
     "docker_manager",
     "lazy-yt",
     "poll",
-    "discourse-unsupported-browser",
     "discourse-fontawesome-pro",
     "discourse-staff-alias",
   ])

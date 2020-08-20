@@ -2,20 +2,22 @@ import User from "discourse/models/user";
 
 export function parsePostData(query) {
   const result = {};
-  query.split("&").forEach(function(part) {
-    const item = part.split("=");
-    const firstSeg = decodeURIComponent(item[0]);
-    const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
+  if (query) {
+    query.split("&").forEach(function(part) {
+      const item = part.split("=");
+      const firstSeg = decodeURIComponent(item[0]);
+      const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
 
-    const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
-    if (m) {
-      let key = m[1];
-      result[key] = result[key] || {};
-      result[key][m[2].replace("][", ".")] = val;
-    } else {
-      result[firstSeg] = val;
-    }
-  });
+      const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
+      if (m) {
+        let key = m[1];
+        result[key] = result[key] || {};
+        result[key][m[2].replace("][", ".")] = val;
+      } else {
+        result[firstSeg] = val;
+      }
+    });
+  }
   return result;
 }
 
@@ -170,7 +172,7 @@ export function applyDefaultHandlers(pretender) {
         ]
       },
       badges: [{ id: 444, count: 1 }],
-      topics: [{ id: 1234, title: "cool title", url: "/t/1234/cool-title" }]
+      topics: [{ id: 1234, title: "cool title", slug: "cool-title" }]
     });
   });
 
@@ -245,6 +247,7 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
   pretender.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
+  pretender.get("/t/34/4.json", () => response(fixturesByUrl["/t/34/1.json"]));
   pretender.get("/t/280/:post_number.json", () =>
     response(fixturesByUrl["/t/280/1.json"])
   );
@@ -254,6 +257,10 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/t/9.json", () => response(fixturesByUrl["/t/9/1.json"]));
   pretender.get("/t/12.json", () => response(fixturesByUrl["/t/12/1.json"]));
   pretender.put("/t/1234/re-pin", success);
+
+  pretender.get("/t/2480.json", () =>
+    response(fixturesByUrl["/t/2480/1.json"])
+  );
 
   pretender.get("/t/id_for/:slug", () => {
     return response({
@@ -298,10 +305,6 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/post_reply_histories", () => {
     return response({ post_reply_histories: [{ id: 1234, cooked: "wat" }] });
-  });
-
-  pretender.get("/category_hashtags/check", () => {
-    return response({ valid: [{ slug: "bug", url: "/c/bugs" }] });
   });
 
   pretender.get("/categories_and_latest", () =>
@@ -805,12 +808,12 @@ export function applyDefaultHandlers(pretender) {
         200,
         { "Content-Type": "application/html" },
         `
-    <aside class="onebox whitelistedgeneric">
+    <aside class="onebox allowlistedgeneric">
       <header class="source">
           <a href="http://test.com/somepage" target="_blank">test.com</a>
       </header>
       <article class="onebox-body">
-      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="https://test.com/image.png" class="thumbnail"></div>
+      <div class="aspect-image" style="--aspect-ratio:690/362;"><img src="" class="thumbnail"></div>
       <h3><a href="http://test.com/somepage" target="_blank">Test Page</a></h3>
       <p>Yet another collaboration tool</p>
       </article>

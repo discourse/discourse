@@ -17,7 +17,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     raise_access_hidden_setting(id)
 
     if SiteSetting.type_supervisor.get_type(id) == :upload
-      value = Upload.find_by(url: value) || ''
+      value = Upload.get_from_url(value) || ""
     end
 
     update_existing_users = params[:updateExistingUsers].present?
@@ -54,6 +54,8 @@ class Admin::SiteSettingsController < Admin::AdminController
           notification_level = NotificationLevels.all[:muted]
         when "default_categories_watching_first_post"
           notification_level = NotificationLevels.all[:watching_first_post]
+        when "default_categories_regular"
+          notification_level = NotificationLevels.all[:regular]
         end
 
         CategoryUser.where(category_id: (previous_category_ids - new_category_ids), notification_level: notification_level).delete_all
@@ -131,6 +133,8 @@ class Admin::SiteSettingsController < Admin::AdminController
         notification_level = NotificationLevels.all[:muted]
       when "default_categories_watching_first_post"
         notification_level = NotificationLevels.all[:watching_first_post]
+      when "default_categories_regular"
+        notification_level = NotificationLevels.all[:regular]
       end
 
       user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)
@@ -194,6 +198,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       default_other_auto_track_topics_after_msecs: "auto_track_topics_after_msecs",
       default_other_notification_level_when_replying: "notification_level_when_replying",
       default_other_like_notification_frequency: "like_notification_frequency",
+      default_other_skip_new_user_tips: "skip_new_user_tips",
       default_email_digest_frequency: "digest_after_minutes",
       default_include_tl0_in_digests: "include_tl0_in_digests",
       default_text_size: "text_size_key",

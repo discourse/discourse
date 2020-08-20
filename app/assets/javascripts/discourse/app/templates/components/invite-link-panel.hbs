@@ -9,27 +9,29 @@
     {{generated-invite-link link=inviteModel.inviteLink}}
   {{else}}
 
-    <div class="group-access-control">
-      <label class="instructions">
-        {{i18n "topic.automatically_add_to_groups"}}
-      </label>
-      {{group-selector
-        fullWidthWrap=true
-        groupFinder=groupFinder
-        groupNames=inviteModel.groupNames
-        placeholderKey="topic.invite_private.group_name"}}
-    </div>
+    {{#if showGroups}}
+      <div class="group-access-control">
+        <label class="instructions">
+          {{i18n "topic.automatically_add_to_groups"}}
+        </label>
+        {{group-chooser
+          content=allGroups
+          value=groupIds
+          labelProperty="name"
+          onChange=(action (mut groupIds))}}
+      </div>
+    {{/if}}
 
     <div class="max-redemptions-allowed">
       <label class="instructions">
-        {{i18n 'user.invited.invite_link.max_redemptions_allowed_label'}}
+        {{i18n "user.invited.invite_link.max_redemptions_allowed_label"}}
       </label>
       {{input type="number" value=maxRedemptionAllowed class="max-redemptions-allowed-input" min="2" max=siteSettings.invite_link_max_redemptions_limit}}
     </div>
 
     <div class="invite-link-expires-at">
       <label class="instructions">
-        {{i18n 'user.invited.invite_link.expires_at'}}
+        {{i18n "user.invited.invite_link.expires_at"}}
       </label>
       {{future-date-input
         includeDateTime=true

@@ -1,11 +1,10 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 zh_CN:
   site_settings:
-    presence_enabled: "显示正在回复或者编辑当前主题的用户"
-    presence_max_users_shown: "展示用户数量的最大值。"
+    presence_enabled: "展示当前正在回复当前主题或编辑当前帖子的用户？"
+    presence_max_users_shown: "展示用户的最大数量。"

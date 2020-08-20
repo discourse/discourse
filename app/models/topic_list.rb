@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class TopicList
-  include ActiveModel::Serialization
-
+class TopicList < DraftableList
   cattr_accessor :preloaded_custom_fields
   self.preloaded_custom_fields = Set.new
 
@@ -28,9 +26,6 @@ class TopicList
   attr_accessor(
     :more_topics_url,
     :prev_topics_url,
-    :draft,
-    :draft_key,
-    :draft_sequence,
     :filter,
     :for_period,
     :per_page,
@@ -57,6 +52,8 @@ class TopicList
     end
 
     @publish_read_state = !!@opts[:publish_read_state]
+
+    super(current_user)
   end
 
   def top_tags
@@ -110,8 +107,7 @@ class TopicList
       user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
     end
 
-    avatar_lookup = AvatarLookup.new(user_ids)
-    primary_group_lookup = PrimaryGroupLookup.new(user_ids)
+    user_lookup = UserLookup.new(user_ids)
 
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
@@ -122,11 +118,13 @@ class TopicList
       end
 
       ft.posters = ft.posters_summary(
-        avatar_lookup: avatar_lookup,
-        primary_group_lookup: primary_group_lookup
+        user_lookup: user_lookup
       )
 
-      ft.participants = ft.participants_summary(avatar_lookup: avatar_lookup, user: @current_user)
+      ft.participants = ft.participants_summary(
+        user_lookup: user_lookup,
+        user: @current_user
+      )
       ft.topic_list = self
     end
 

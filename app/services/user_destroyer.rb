@@ -44,7 +44,7 @@ class UserDestroyer
           if opts[:block_urls]
             post.topic_links.each do |link|
               next if link.internal
-              next if Oneboxer.engine(link.url) != Onebox::Engine::WhitelistedGenericOnebox
+              next if Oneboxer.engine(link.url) != Onebox::Engine::AllowlistedGenericOnebox
               ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address)&.record_match!
             end
           end

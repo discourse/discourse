@@ -17,7 +17,7 @@ class UploadRecovery
       analyzer.cooked_stripped.css("img", "a").each do |media|
         if media.name == "img" && orig_src = media["data-orig-src"]
           if dom_class = media["class"]
-            if (Post.white_listed_image_classes & dom_class.split).count > 0
+            if (Post.allowed_image_classes & dom_class.split).count > 0
               next
             end
           end

@@ -1,5 +1,3 @@
-var clock;
-
 import {
   relativeAge,
   autoUpdatingRelativeAge,
@@ -8,98 +6,126 @@ import {
   longDate,
   durationTiny
 } from "discourse/lib/formatter";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("lib:formatter", {
+discourseModule("lib:formatter", {
   beforeEach() {
-    clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
+    this.clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
   },
 
   afterEach() {
-    clock.restore();
+    this.clock.restore();
   }
 });
 
-var format = "tiny";
-var leaveAgo = false;
-var mins_ago = function(mins) {
-  return new Date(new Date() - mins * 60 * 1000);
-};
+function formatMins(mins, opts = {}) {
+  let dt = new Date(new Date() - mins * 60 * 1000);
+  return relativeAge(dt, {
+    format: opts.format || "tiny",
+    leaveAgo: opts.leaveAgo
+  });
+}
 
-var formatMins = function(mins) {
-  return relativeAge(mins_ago(mins), { format: format, leaveAgo: leaveAgo });
-};
+function formatHours(hours, opts) {
+  return formatMins(hours * 60, opts);
+}
 
-var formatHours = function(hours) {
-  return formatMins(hours * 60);
-};
+function formatDays(days, opts) {
+  return formatHours(days * 24, opts);
+}
 
-var formatDays = function(days) {
-  return formatHours(days * 24);
-};
-
-var shortDate = function(days) {
+function shortDate(days) {
   return moment()
     .subtract(days, "days")
     .format("MMM D");
-};
+}
 
-QUnit.test("formating medium length dates", assert => {
-  format = "medium";
-  var strip = function(html) {
-    return $(html).text();
-  };
-
-  var shortDateYear = function(days) {
+function shortDateTester(format) {
+  return function(days) {
     return moment()
       .subtract(days, "days")
-      .format("MMM D, 'YY");
+      .format(format);
   };
+}
 
-  leaveAgo = true;
-  assert.equal(strip(formatMins(1.4)), "1 min ago");
-  assert.equal(strip(formatMins(2)), "2 mins ago");
-  assert.equal(strip(formatMins(55)), "55 mins ago");
-  assert.equal(strip(formatMins(56)), "1 hour ago");
-  assert.equal(strip(formatHours(4)), "4 hours ago");
-  assert.equal(strip(formatHours(22)), "22 hours ago");
-  assert.equal(strip(formatHours(23)), "23 hours ago");
-  assert.equal(strip(formatHours(23.5)), "1 day ago");
-  assert.equal(strip(formatDays(4.85)), "4 days ago");
+function strip(html) {
+  return $(html).text();
+}
 
-  leaveAgo = false;
-  assert.equal(strip(formatMins(0)), "just now");
-  assert.equal(strip(formatMins(1.4)), "1 min");
-  assert.equal(strip(formatMins(2)), "2 mins");
-  assert.equal(strip(formatMins(55)), "55 mins");
-  assert.equal(strip(formatMins(56)), "1 hour");
-  assert.equal(strip(formatHours(4)), "4 hours");
-  assert.equal(strip(formatHours(22)), "22 hours");
-  assert.equal(strip(formatHours(23)), "23 hours");
-  assert.equal(strip(formatHours(23.5)), "1 day");
-  assert.equal(strip(formatDays(4.85)), "4 days");
+QUnit.test("formating medium length dates", function(assert) {
+  let shortDateYear = shortDateTester("MMM D, 'YY");
 
-  assert.equal(strip(formatDays(6)), shortDate(6));
-  assert.equal(strip(formatDays(100)), shortDate(100)); // eg: Jan 23
-  assert.equal(strip(formatDays(500)), shortDateYear(500));
+  assert.equal(
+    strip(formatMins(1.4, { format: "medium", leaveAgo: true })),
+    "1 min ago"
+  );
+  assert.equal(
+    strip(formatMins(2, { format: "medium", leaveAgo: true })),
+    "2 mins ago"
+  );
+  assert.equal(
+    strip(formatMins(55, { format: "medium", leaveAgo: true })),
+    "55 mins ago"
+  );
+  assert.equal(
+    strip(formatMins(56, { format: "medium", leaveAgo: true })),
+    "1 hour ago"
+  );
+  assert.equal(
+    strip(formatHours(4, { format: "medium", leaveAgo: true })),
+    "4 hours ago"
+  );
+  assert.equal(
+    strip(formatHours(22, { format: "medium", leaveAgo: true })),
+    "22 hours ago"
+  );
+  assert.equal(
+    strip(formatHours(23, { format: "medium", leaveAgo: true })),
+    "23 hours ago"
+  );
+  assert.equal(
+    strip(formatHours(23.5, { format: "medium", leaveAgo: true })),
+    "1 day ago"
+  );
+  assert.equal(
+    strip(formatDays(4.85, { format: "medium", leaveAgo: true })),
+    "4 days ago"
+  );
 
-  assert.equal($(formatDays(0)).attr("title"), longDate(new Date()));
-  assert.equal($(formatDays(0)).attr("class"), "date");
+  assert.equal(strip(formatMins(0, { format: "medium" })), "just now");
+  assert.equal(strip(formatMins(1.4, { format: "medium" })), "1 min");
+  assert.equal(strip(formatMins(2, { format: "medium" })), "2 mins");
+  assert.equal(strip(formatMins(55, { format: "medium" })), "55 mins");
+  assert.equal(strip(formatMins(56, { format: "medium" })), "1 hour");
+  assert.equal(strip(formatHours(4, { format: "medium" })), "4 hours");
+  assert.equal(strip(formatHours(22, { format: "medium" })), "22 hours");
+  assert.equal(strip(formatHours(23, { format: "medium" })), "23 hours");
+  assert.equal(strip(formatHours(23.5, { format: "medium" })), "1 day");
+  assert.equal(strip(formatDays(4.85, { format: "medium" })), "4 days");
 
-  clock.restore();
-  clock = sinon.useFakeTimers(new Date(2012, 0, 9, 12, 0).getTime()); // Jan 9, 2012
+  assert.equal(strip(formatDays(6, { format: "medium" })), shortDate(6));
+  assert.equal(strip(formatDays(100, { format: "medium" })), shortDate(100)); // eg: Jan 23
+  assert.equal(
+    strip(formatDays(500, { format: "medium" })),
+    shortDateYear(500)
+  );
 
-  assert.equal(strip(formatDays(8)), shortDate(8));
-  assert.equal(strip(formatDays(10)), shortDateYear(10));
+  assert.equal(
+    $(formatDays(0, { format: "medium" })).attr("title"),
+    longDate(new Date())
+  );
+  assert.equal($(formatDays(0, { format: "medium" })).attr("class"), "date");
+
+  this.clock.restore();
+  this.clock = sinon.useFakeTimers(new Date(2012, 0, 9, 12, 0).getTime()); // Jan 9, 2012
+
+  assert.equal(strip(formatDays(8, { format: "medium" })), shortDate(8));
+  assert.equal(strip(formatDays(10, { format: "medium" })), shortDateYear(10));
 });
 
-QUnit.test("formating tiny dates", assert => {
-  var shortDateYear = function(days) {
-    return moment()
-      .subtract(days, "days")
-      .format("MMM 'YY");
-  };
+QUnit.test("formating tiny dates", function(assert) {
+  let shortDateYear = shortDateTester("MMM 'YY");
 
-  format = "tiny";
   assert.equal(formatMins(0), "1m");
   assert.equal(formatMins(1), "1m");
   assert.equal(formatMins(2), "2m");
@@ -117,16 +143,16 @@ QUnit.test("formating tiny dates", assert => {
   assert.equal(formatDays(500), shortDateYear(500));
   assert.equal(formatDays(365 * 2 + 1), shortDateYear(365 * 2 + 1)); // one leap year
 
-  var originalValue = Discourse.SiteSettings.relative_date_duration;
-  Discourse.SiteSettings.relative_date_duration = 7;
+  var originalValue = this.siteSettings.relative_date_duration;
+  this.siteSettings.relative_date_duration = 7;
   assert.equal(formatDays(7), "7d");
   assert.equal(formatDays(8), shortDate(8));
 
-  Discourse.SiteSettings.relative_date_duration = 1;
+  this.siteSettings.relative_date_duration = 1;
   assert.equal(formatDays(1), "1d");
   assert.equal(formatDays(2), shortDate(2));
 
-  Discourse.SiteSettings.relative_date_duration = 0;
+  this.siteSettings.relative_date_duration = 0;
   assert.equal(formatMins(0), "1m");
   assert.equal(formatMins(1), "1m");
   assert.equal(formatMins(2), "2m");
@@ -135,32 +161,32 @@ QUnit.test("formating tiny dates", assert => {
   assert.equal(formatDays(2), shortDate(2));
   assert.equal(formatDays(366), shortDateYear(366));
 
-  Discourse.SiteSettings.relative_date_duration = null;
+  this.siteSettings.relative_date_duration = null;
   assert.equal(formatDays(1), "1d");
   assert.equal(formatDays(14), "14d");
   assert.equal(formatDays(15), shortDate(15));
 
-  Discourse.SiteSettings.relative_date_duration = 14;
+  this.siteSettings.relative_date_duration = 14;
 
-  clock.restore();
-  clock = sinon.useFakeTimers(new Date(2012, 0, 12, 12, 0).getTime()); // Jan 12, 2012
+  this.clock.restore();
+  this.clock = sinon.useFakeTimers(new Date(2012, 0, 12, 12, 0).getTime()); // Jan 12, 2012
 
   assert.equal(formatDays(11), "11d");
   assert.equal(formatDays(14), "14d");
   assert.equal(formatDays(15), shortDateYear(15));
   assert.equal(formatDays(366), shortDateYear(366));
 
-  clock.restore();
-  clock = sinon.useFakeTimers(new Date(2012, 0, 20, 12, 0).getTime()); // Jan 20, 2012
+  this.clock.restore();
+  this.clock = sinon.useFakeTimers(new Date(2012, 0, 20, 12, 0).getTime()); // Jan 20, 2012
 
   assert.equal(formatDays(14), "14d");
   assert.equal(formatDays(15), shortDate(15));
   assert.equal(formatDays(20), shortDateYear(20));
 
-  Discourse.SiteSettings.relative_date_duration = originalValue;
+  this.siteSettings.relative_date_duration = originalValue;
 });
 
-QUnit.test("autoUpdatingRelativeAge", assert => {
+QUnit.test("autoUpdatingRelativeAge", function(assert) {
   var d = moment()
     .subtract(1, "day")
     .toDate();
@@ -192,7 +218,7 @@ QUnit.test("autoUpdatingRelativeAge", assert => {
   assert.equal($elem.html(), "1 day");
 });
 
-QUnit.test("updateRelativeAge", assert => {
+QUnit.test("updateRelativeAge", function(assert) {
   var d = new Date();
   var $elem = $(autoUpdatingRelativeAge(d));
   $elem.data("time", d.getTime() - 2 * 60 * 1000);
@@ -210,7 +236,7 @@ QUnit.test("updateRelativeAge", assert => {
   assert.equal($elem.html(), "2 mins ago");
 });
 
-QUnit.test("number", assert => {
+QUnit.test("number", function(assert) {
   assert.equal(number(123), "123", "it returns a string version of the number");
   assert.equal(number("123"), "123", "it works with a string command");
   assert.equal(number(NaN), "0", "it returns 0 for NaN");
@@ -241,7 +267,7 @@ QUnit.test("number", assert => {
   );
 });
 
-QUnit.test("durationTiny", assert => {
+QUnit.test("durationTiny", function(assert) {
   assert.equal(durationTiny(), "&mdash;", "undefined is a dash");
   assert.equal(durationTiny(null), "&mdash;", "null is a dash");
   assert.equal(durationTiny(0), "< 1m", "0 seconds shows as < 1m");

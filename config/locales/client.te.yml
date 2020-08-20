@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 te:
   js:
@@ -163,6 +162,7 @@ te:
     bookmarks:
       remove: "పేజీక తొలగించండి"
       save: "భద్రపరచు"
+      search: "వెతుకు"
       reminders:
         tomorrow: "రేపు"
         next_week: "వచ్చే వారం"
@@ -256,6 +256,11 @@ te:
           title: ప్రవర
         interaction:
           posting: రాస్తున్నారు
+        email:
+          title: "ఈమెయిల్"
+          credentials:
+            username: "వాడుకరి పేరు"
+            password: "సంకేతపదం"
         membership:
           title: సభ్యత్వం
         logs:
@@ -304,12 +309,14 @@ te:
       "3": "పేజీకలు"
       "4": "విషయాలు"
       "5": "జవాబులు"
+      "6": "Responses"
       "7": "ప్రస్తావనలు"
       "9": "కోట్ లు"
       "11": "సవరణలు"
       "12": "పంపిన అంశాలు"
       "13": "ఇన్ బాక్స్"
       "14": "పెండింగు"
+      "15": "Drafts"
     categories:
       all: "అన్ని వర్గాలు"
       all_subcategories: "అన్నీ"
@@ -636,7 +643,7 @@ te:
     email_login:
       complete_username_not_found: "మీ సభ్యనామం <b>%{username}</b> తో ఏ ఖాతా సరిపోవడంలేదు."
       complete_email_not_found: "<b>%{email}</b> తో ఏ ఖాతా సరిపోవడంలేదు"
-      confirm_title: "%{site_name} కు కొనసాగండి"
+      confirm_title: '%{site_name} కు కొనసాగండి'
     login:
       title: "లాగిన్"
       username: "వాడుకరి"
@@ -850,7 +857,7 @@ te:
       read_more: "మరిన్ని చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink}."
       browse_all_categories: అన్ని వర్గాలూ జల్లించు
       view_latest_topics: తాజా విషయాలు చూడు
-      suggest_create_topic: "ఓ విషయమెందుకు సృష్టించకూడదూ?"
+      suggest_create_topic: ఓ విషయమెందుకు సృష్టించకూడదూ?
       jump_reply_up: పాత జవాబుకు వెళ్లు
       jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
@@ -888,6 +895,8 @@ te:
           "3_2": "మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ విషయంపై కన్నేసారు."
           "3_1": "మీకు ప్రకటనలు వస్తాయి ఎందుకంటే మీరు ఈ విషయాన్ని సృష్టించారు."
           "3": "మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ విషయంపై కన్నేసారు."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "1": "You will be notified if someone mentions your @name or replies to you."
           "0_7": "ఈ వర్గంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు."
           "0_2": "ఈ విషయంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు."
           "0": "ఈ విషయంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు."
@@ -1679,7 +1688,6 @@ te:
           domain: "డొమైన్"
         screened_ips:
           title: "స్క్రీన్ చేసిన ఐపీలు"
-          description: 'IP చిరునామాలు చూస్తారు.IP చిరునామాల "అనుమతి"లో మంచివరుస పాటించండి.'
           delete_confirm: "మీరు నిజంగా %{ip_address} కు ఈ నియమాన్ని తొలగించాలనుకుంటున్నారా? "
           rolled_up_some_subnets: "IP నిషేధిత ప్రవేశాలు ఈ సబ్‌నెట్స్‌కు విజయవంతంగా చేర్చారు: %{subnets}."
           rolled_up_no_subnet: "రోల్ అప్ చేయుటకు ఏమీ లేదు."
@@ -1773,8 +1781,8 @@ te:
         private_topics_count: ప్రైవేటు విషయాలు
         posts_read_count: చదివిన టపాలు
         post_count: టపాలు సృష్టించిన
-        topics_entered: "సందర్శించిన విషయాలు "
-        flags_given_count: "ఇచ్చిన కేతనాలు "
+        topics_entered: సందర్శించిన విషయాలు
+        flags_given_count: ఇచ్చిన కేతనాలు
         flags_received_count: వచ్చిన కేతనాలు
         warnings_received_count: అందిన హెచ్చరికలు
         flags_given_received_count: "ఇచ్చిన కేతనాలు"
@@ -1918,7 +1926,7 @@ te:
       badges:
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ
-        new: "కొత్త "
+        new: కొత్త
         name: పేరు
         badge: బ్యాడ్జీ
         display_name: ప్రదర్శించు పేరు
@@ -1932,10 +1940,10 @@ te:
         reason_help: (టపాకి లేదా విషయానికి లంకె )
         save: భద్రపరచు
         delete: తొలగించు
-        delete_confirm: "మీరు నిజంగా ఈ బ్యాడ్జి తొలగించాలనుకుంటున్నారా?"
+        delete_confirm: మీరు నిజంగా ఈ బ్యాడ్జి తొలగించాలనుకుంటున్నారా?
         revoke: రివోక్
         reason: కారణం
-        revoke_confirm: "మీరు నిజంగా ఈ బ్యాడ్జిని రివోక్ చేయాలనుకుంటున్నారా? "
+        revoke_confirm: మీరు నిజంగా ఈ బ్యాడ్జిని రివోక్ చేయాలనుకుంటున్నారా?
         edit_badges: బ్యాడ్జీలు సవరించు
         grant_badge: బ్యాడ్జి ఇవ్వు
         granted_badges: ఇచ్చిన బ్యాడ్జీలు
@@ -1965,9 +1973,9 @@ te:
           no_grant_count: "ఏ చిహ్నాలు కేటాయించలేదు."
           sample: "నమూనా:"
           grant:
-            with: "<span class=\"username\">%{వినియోగదారు పేరు}</span>"
-            with_post: "<span class=\"username\">%{username}</span> టపా కొరకు%{link}"
-            with_post_time: "<span class=\"సభ్యుల పేరు\">%{username}</span> for post in %{link} at <span class=\"సమయం\">%{time}</span>"
+            with: <span class="username">%{వినియోగదారు పేరు}</span>
+            with_post: <span class="username">%{username}</span> టపా కొరకు%{link}
+            with_post_time: <span class="సభ్యుల పేరు">%{username}</span> for post in %{link} at <span class="సమయం">%{time}</span>
       emoji:
         title: "ఇమోజి"
         add: "కొత్త ఇమోజి కలుపు"

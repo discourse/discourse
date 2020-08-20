@@ -15,11 +15,14 @@ export default {
     const router = container.lookup("router:main");
 
     router.on("routeWillChange", viewTrackingRequired);
-    router.on("routeDidChange", cleanDOM);
+    router.on("routeDidChange", () => {
+      cleanDOM(container);
+    });
 
     let appEvents = container.lookup("service:app-events");
+    let documentTitle = container.lookup("service:document-title");
 
-    startPageTracking(router, appEvents);
+    startPageTracking(router, appEvents, documentTitle);
 
     // Out of the box, Discourse tries to track google analytics
     // if it is present

@@ -114,7 +114,10 @@ export const WidgetDropdownItemClass = {
   },
 
   buildAttributes(attrs) {
-    return { "data-id": attrs.item.id };
+    return {
+      "data-id": attrs.item.id,
+      tabindex: attrs.item === "separator" ? -1 : 0
+    };
   },
 
   buildClasses(attrs) {
@@ -122,6 +125,13 @@ export const WidgetDropdownItemClass = {
       "widget-dropdown-item",
       attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`
     ].join(" ");
+  },
+
+  keyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.sendWidgetAction("_onChange", this.attrs.item);
+    }
   },
 
   click(event) {
@@ -139,6 +149,29 @@ export const WidgetDropdownItemClass = {
 };
 
 createWidget("widget-dropdown-item", WidgetDropdownItemClass);
+
+export const WidgetDropdownBodyClass = {
+  tagName: "div",
+
+  buildClasses(attrs) {
+    return `widget-dropdown-body ${attrs.class || ""}`;
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("hideBody");
+  },
+
+  template: hbs`
+    {{#each attrs.content as |item|}}
+      {{attach
+        widget="widget-dropdown-item"
+        attrs=(hash item=item)
+      }}
+    {{/each}}
+  `
+};
+
+createWidget("widget-dropdown-body", WidgetDropdownBodyClass);
 
 export const WidgetDropdownClass = {
   tagName: "div",
@@ -178,21 +211,18 @@ export const WidgetDropdownClass = {
   },
 
   transform(attrs) {
-    const options = attrs.options || {};
-
     return {
-      options,
-      bodyClass: `widget-dropdown-body ${options.bodyClass || ""}`
+      options: attrs.options || {}
     };
   },
 
-  clickOutside() {
+  hideBody() {
     this.state.opened = false;
-    this.scheduleRerender();
   },
 
   _onChange(params) {
     this.state.opened = false;
+
     if (this.attrs.onChange) {
       if (typeof this.attrs.onChange === "string") {
         this.sendWidgetAction(this.attrs.onChange, params);
@@ -202,23 +232,47 @@ export const WidgetDropdownClass = {
     }
   },
 
-  _onTrigger() {
-    if (this.state.opened) {
-      this.state.opened = false;
-      this._closeDropdown(this.attrs.id);
-    } else {
-      this.state.opened = true;
-      this._openDropdown(this.attrs.id);
-    }
-
-    this._popper && this._popper.update();
-  },
-
   destroy() {
     if (this._popper) {
       this._popper.destroy();
       this._popper = null;
     }
+  },
+
+  _onTrigger() {
+    this.state.opened = !this.state.opened;
+
+    schedule("afterRender", () => {
+      const dropdownHeader = document.querySelector(
+        `#${this.attrs.id} .widget-dropdown-header`
+      );
+      const dropdownBody = document.querySelector(
+        `#${this.attrs.id} .widget-dropdown-body`
+      );
+
+      if (this.state.opened && dropdownHeader && dropdownBody) {
+        if (this.state.popper) {
+          this.state.popper.destroy();
+        }
+
+        /* global Popper:true */
+        this.state.popper = Popper.createPopper(dropdownHeader, dropdownBody, {
+          strategy: "fixed",
+          placement: "bottom-start",
+          modifiers: [
+            {
+              name: "preventOverflow"
+            },
+            {
+              name: "offset",
+              options: {
+                offset: [0, 5]
+              }
+            }
+          ]
+        });
+      }
+    });
   },
 
   template: hbs`
@@ -234,50 +288,18 @@ export const WidgetDropdownClass = {
         )
       }}
 
-      <div class={{transformed.bodyClass}}>
-        {{#each attrs.content as |item|}}
-          {{attach
-            widget="widget-dropdown-item"
-            attrs=(hash item=item)
-          }}
-        {{/each}}
-      </div>
+      {{#if this.state.opened}}
+        {{attach
+          widget="widget-dropdown-body"
+          attrs=(hash
+            id=attrs.id
+            class=this.transformed.options.bodyClass
+            content=attrs.content
+          )
+        }}
+      {{/if}}
     {{/if}}
-  `,
-
-  _closeDropdown() {
-    this._popper && this._popper.destroy();
-  },
-
-  _openDropdown(id) {
-    const dropdownHeader = document.querySelector(
-      `#${id} .widget-dropdown-header`
-    );
-    const dropdownBody = document.querySelector(`#${id} .widget-dropdown-body`);
-
-    if (dropdownHeader && dropdownBody) {
-      /* global Popper:true */
-      this._popper = Popper.createPopper(dropdownHeader, dropdownBody, {
-        strategy: "fixed",
-        placement: "bottom-start",
-        modifiers: [
-          {
-            name: "preventOverflow"
-          },
-          {
-            name: "offset",
-            options: {
-              offset: [0, 5]
-            }
-          }
-        ]
-      });
-    }
-
-    schedule("afterRender", () => {
-      this._popper && this._popper.update();
-    });
-  }
+  `
 };
 
 export default createWidget("widget-dropdown", WidgetDropdownClass);

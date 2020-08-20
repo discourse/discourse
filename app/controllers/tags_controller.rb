@@ -12,7 +12,6 @@ class TagsController < ::ApplicationController
     :show,
     :tag_feed,
     :search,
-    :check_hashtag,
     :info,
     Discourse.anonymous_filters.map { |f| :"show_#{f}" }
   ].flatten
@@ -79,12 +78,13 @@ class TagsController < ::ApplicationController
       @additional_tags = params[:additional_tag_ids].to_s.split('/').map { |t| t.force_encoding("UTF-8") }
 
       list_opts = build_topic_list_options
+      @list = nil
 
-      @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
-
-      @list.draft_key = Draft::NEW_TOPIC
-      @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-      @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
+      if filter == :top
+        @list = TopicQuery.new(current_user, list_opts).public_send("list_top_for", SiteSetting.top_page_default_timeframe.to_sym)
+      else
+        @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+      end
 
       @list.more_topics_url = construct_url_with(:next, list_opts)
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
@@ -214,6 +214,10 @@ class TagsController < ::ApplicationController
       exclude_has_synonyms: params[:excludeHasSynonyms]
     }
 
+    if filter_params[:limit] && filter_params[:limit].to_i < 0
+      raise Discourse::InvalidParameters.new(:limit)
+    end
+
     if params[:categoryId]
       filter_params[:category] = Category.find_by_id(params[:categoryId])
     end
@@ -277,14 +281,6 @@ class TagsController < ::ApplicationController
     level = params[:tag_notification][:notification_level].to_i
     TagUser.change(current_user.id, tag.id, level)
     render json: { notification_level: level, tag_id: tag.id }
-  end
-
-  def check_hashtag
-    valid_tags = Tag.where_name(params[:tag_values]).map do |tag|
-      { value: tag.name, url: tag.full_url }
-    end.compact
-
-    render json: { valid: valid_tags }
   end
 
   def personal_messages

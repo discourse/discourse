@@ -48,20 +48,16 @@ widgetTest("staff menu - not staff", {
   }
 });
 
-widgetTest("staff menu", {
+widgetTest("staff menu - moderator", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
-    this.currentUser.setProperties({
-      moderator: true,
-      reviewable_count: 3
-    });
+    this.currentUser.set("moderator", true);
   },
 
   test(assert) {
     assert.ok(find(".admin-link").length);
     assert.ok(find(".review").length);
-    assert.equal(find(".reviewables").text(), "3");
     assert.ok(!find(".settings-link").length);
   }
 });
@@ -75,21 +71,6 @@ widgetTest("staff menu - admin", {
 
   test(assert) {
     assert.ok(find(".settings-link").length);
-  }
-});
-
-widgetTest("reviewable content", {
-  template: '{{mount-widget widget="hamburger-menu"}}',
-
-  beforeEach() {
-    this.currentUser.setProperties({
-      moderator: true,
-      reviewable_count: 5
-    });
-  },
-
-  test(assert) {
-    assert.equal(this.$(".reviewables").text(), "5");
   }
 });
 
@@ -177,10 +158,22 @@ widgetTest("top categories", {
           c.set("notification_level", NotificationLevels.MUTED);
         } else if (unreadCategoryIds.length === 0) {
           unreadCategoryIds.push(c.id);
-          c.set("unreadTopics", 5);
+          for (let i = 0; i < 5; i++) {
+            c.topicTrackingState.states["t123" + i] = {
+              category_id: c.id,
+              last_read_post_number: 1,
+              highest_post_number: 2,
+              notification_level: NotificationLevels.TRACKING
+            };
+          }
         } else {
           unreadCategoryIds.splice(0, 0, c.id);
-          c.set("newTopics", 10);
+          for (let i = 0; i < 10; i++) {
+            c.topicTrackingState.states["t321" + i] = {
+              category_id: c.id,
+              last_read_post_number: null
+            };
+          }
           return false;
         }
       }

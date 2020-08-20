@@ -893,7 +893,7 @@ QUnit.test("Code Blocks", assert => {
   assert.cooked(
     "```eviltrout\nhello\n```",
     '<pre><code class="lang-auto">hello\n</code></pre>',
-    "it doesn't not whitelist all classes"
+    "it doesn't not allowlist all classes"
   );
 
   assert.cooked(
@@ -1025,38 +1025,10 @@ QUnit.test("attachment - mapped url - secure media enabled", assert => {
   );
 });
 
-QUnit.test("video - secure media enabled", assert => {
-  assert.cookedOptions(
-    "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
-    { siteSettings: { secure_media: true } },
-    `<p><div class="video-container">
-    <p class="video-description">baby shark</p>
-    <video width="100%" height="100%" preload="none" controls>
-      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
-      <a href="/404">/404</a>
-    </video>
-  </div></p>`,
-    "It returns the correct video player HTML"
-  );
-});
-
-QUnit.test("audio - secure media enabled", assert => {
-  assert.cookedOptions(
-    "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
-    { siteSettings: { secure_media: true } },
-    `<p><audio preload="none" controls>
-    <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3">
-    <a href="/404">/404</a>
-  </audio></p>`,
-    "It returns the correct audio player HTML"
-  );
-});
-
 QUnit.test("video", assert => {
   assert.cooked(
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
     `<p><div class="video-container">
-    <p class="video-description">baby shark</p>
     <video width="100%" height="100%" preload="metadata" controls>
       <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
       <a href="/404">/404</a>
@@ -1083,8 +1055,7 @@ QUnit.test("video - mapped url - secure media enabled", assert => {
       lookupUploadUrls: lookupUploadUrls
     },
     `<p><div class="video-container">
-    <p class="video-description">baby shark</p>
-    <video width="100%" height="100%" preload="none" controls>
+    <video width="100%" height="100%" preload="metadata" controls>
       <source src="/secure-media-uploads/original/3X/c/b/test.mp4">
       <a href="/secure-media-uploads/original/3X/c/b/test.mp4">/secure-media-uploads/original/3X/c/b/test.mp4</a>
     </video>
@@ -1120,7 +1091,7 @@ QUnit.test("audio - mapped url - secure media enabled", assert => {
       siteSettings: { secure_media: true },
       lookupUploadUrls: lookupUploadUrls
     },
-    `<p><audio preload="none" controls>
+    `<p><audio preload="metadata" controls>
     <source src="/secure-media-uploads/original/3X/c/b/test.mp3">
     <a href="/secure-media-uploads/original/3X/c/b/test.mp3">/secure-media-uploads/original/3X/c/b/test.mp3</a>
   </audio></p>`,
@@ -1546,20 +1517,20 @@ QUnit.test("emoji - emojiSet", assert => {
 });
 
 QUnit.test("emoji - registerEmoji", assert => {
-  registerEmoji("foo", "/foo.png");
+  registerEmoji("foo", "/images/d-logo-sketch.png");
 
   assert.cookedOptions(
     ":foo:",
     {},
-    `<p><img src="/foo.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
+    `<p><img src="/images/d-logo-sketch.png?v=${v}" title=":foo:" class="emoji emoji-custom only-emoji" alt=":foo:"></p>`
   );
 
-  registerEmoji("bar", "/bar.png", "baz");
+  registerEmoji("bar", "/images/avatar.png", "baz");
 
   assert.cookedOptions(
     ":bar:",
     {},
-    `<p><img src="/bar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
+    `<p><img src="/images/avatar.png?v=${v}" title=":bar:" class="emoji emoji-custom only-emoji" alt=":bar:"></p>`
   );
 });
 

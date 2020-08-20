@@ -6,6 +6,7 @@ import {
   avatarUrl,
   getRawSize,
   avatarImg,
+  initializeDefaultHomepage,
   defaultHomepage,
   setDefaultHomepage,
   caretRowCol,
@@ -16,15 +17,12 @@ import {
   inCodeBlock
 } from "discourse/lib/utilities";
 import Handlebars from "handlebars";
+import { discourseModule } from "helpers/qunit-helpers";
 
-QUnit.module("lib:utilities");
+discourseModule("lib:utilities");
 
 QUnit.test("escapeExpression", assert => {
-  assert.equal(
-    escapeExpression(">"),
-    "&gt;",
-    "escapes unsafe characters"
-  );
+  assert.equal(escapeExpression(">"), "&gt;", "escapes unsafe characters");
 
   assert.equal(
     escapeExpression(new Handlebars.SafeString("&gt;")),
@@ -135,17 +133,12 @@ QUnit.test("avatarImg", assert => {
   setDevicePixelRatio(oldRatio);
 });
 
-QUnit.test("defaultHomepage", assert => {
-  Discourse.SiteSettings.top_menu = "latest|top|hot";
-  assert.equal(
-    defaultHomepage(),
-    "latest",
-    "default homepage is the first item in the top_menu site setting"
-  );
-  var meta = document.createElement("meta");
+QUnit.test("defaultHomepage via meta tag", function(assert) {
+  let meta = document.createElement("meta");
   meta.name = "discourse_current_homepage";
   meta.content = "hot";
   document.body.appendChild(meta);
+  initializeDefaultHomepage(this.siteSettings);
   assert.equal(
     defaultHomepage(),
     "hot",
@@ -154,18 +147,21 @@ QUnit.test("defaultHomepage", assert => {
   document.body.removeChild(meta);
 });
 
-QUnit.test("setDefaultHomepage", assert => {
-  var meta = document.createElement("meta");
-  meta.name = "discourse_current_homepage";
-  meta.content = "hot";
-  document.body.appendChild(meta);
-  setDefaultHomepage("top");
+QUnit.test("defaultHomepage via site settings", function(assert) {
+  this.siteSettings.top_menu = "top|latest|hot";
+  initializeDefaultHomepage(this.siteSettings);
   assert.equal(
-    meta.content,
+    defaultHomepage(),
     "top",
-    "default homepage set by setDefaultHomepage"
+    "default homepage is the first item in the top_menu site setting"
   );
-  document.body.removeChild(meta);
+});
+
+QUnit.test("setDefaultHomepage", function(assert) {
+  initializeDefaultHomepage(this.siteSettings);
+  assert.equal(defaultHomepage(), "latest");
+  setDefaultHomepage("top");
+  assert.equal(defaultHomepage(), "top");
 });
 
 QUnit.test("caretRowCol", assert => {

@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { empty } from "@ember/object/computed";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(bufferedProperty("model"), {
   isNew: empty("model.id"),
@@ -51,6 +52,15 @@ export default Controller.extend(bufferedProperty("model"), {
 
     undoRevokeKey(key) {
       key.undoRevoke().catch(popupAjaxError);
+    },
+
+    showURLs(urls) {
+      return showModal("admin-api-key-urls", {
+        admin: true,
+        model: {
+          urls
+        }
+      });
     }
   }
 });

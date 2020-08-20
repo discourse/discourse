@@ -33,7 +33,7 @@ QUnit.test("counts", assert => {
     "sums 7 days excluding today"
   );
 
-  report.set("method", "average");
+  report.set("type", "time_to_first_response");
   assert.equal(
     report.valueFor(2, 4),
     2,

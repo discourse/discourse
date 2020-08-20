@@ -1084,7 +1084,7 @@ describe CookedPostProcessor do
 
       post = Fabricate(:post, raw: url)
 
-      post.custom_fields[Post::LARGE_IMAGES] = "[\"//image.com/avatar.png\"]"
+      post.custom_fields[Post::LARGE_IMAGES] = ["//image.com/avatar.png"]
       post.save_custom_fields
 
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
@@ -1102,13 +1102,13 @@ describe CookedPostProcessor do
       SiteSetting.add_rel_nofollow_to_user_content = false
       Oneboxer.expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
-        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener ugc">GANGNAM STYLE</a></aside>')
       cpp.post_process_oneboxes
     end
 
     it "removes nofollow noopener from links" do
       expect(cpp).to be_dirty
-      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener">GANGNAM STYLE</a></aside>'
     end
   end
 
@@ -1123,13 +1123,13 @@ describe CookedPostProcessor do
       SiteSetting.tl3_links_no_follow = false
       Oneboxer.expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
-        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener">GANGNAM STYLE</a></aside>')
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow ugc noopener">GANGNAM STYLE</a></aside>')
       cpp.post_process_oneboxes
     end
 
-    it "removes nofollow noopener from links" do
+    it "removes nofollow ugc from links" do
       expect(cpp).to be_dirty
-      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0">GANGNAM STYLE</a></aside>'
+      expect(cpp.html).to match_html '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener">GANGNAM STYLE</a></aside>'
     end
   end
 
@@ -1491,19 +1491,22 @@ describe CookedPostProcessor do
       end
 
       context "and there is enough disk space" do
-        before { cpp.expects(:disable_if_low_on_disk_space) }
+        before { cpp.expects(:disable_if_low_on_disk_space).at_least_once }
 
         context "and the post has been updated by an actual user" do
 
           before { post.id = 42 }
 
           it "ensures only one job is scheduled right after the editing_grace_period" do
+            freeze_time
+
             Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
 
             delay = SiteSetting.editing_grace_period + 1
-            Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id).once
 
-            cpp.pull_hotlinked_images
+            expect_enqueued_with(job: :pull_hotlinked_images, args: { post_id: post.id }, at: Time.zone.now + delay.seconds) do
+              cpp.pull_hotlinked_images
+            end
           end
 
         end
@@ -1597,7 +1600,7 @@ describe CookedPostProcessor do
     context "onebox" do
       before do
         Oneboxer.stubs(:onebox).with(anything, anything).returns(nil)
-        Oneboxer.stubs(:onebox).with('https://discourse.org', anything).returns("<aside class=\"onebox whitelistedgeneric\">the rest of the onebox</aside>")
+        Oneboxer.stubs(:onebox).with('https://discourse.org', anything).returns("<aside class=\"onebox allowlistedgeneric\">the rest of the onebox</aside>")
       end
 
       it "awards the badge for using an onebox" do

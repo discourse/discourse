@@ -3,13 +3,17 @@ import User from "discourse/models/user";
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 import { REMINDER_TYPES } from "discourse/lib/bookmark";
 import { fakeTime } from "helpers/qunit-helpers";
+
 let BookmarkController;
 
 moduleFor("controller:bookmark", {
   beforeEach() {
     logIn();
-    KeyboardShortcutInitializer.initialize(Discourse.__container__);
-    BookmarkController = this.subject({ currentUser: User.current() });
+    KeyboardShortcutInitializer.initialize(this.container);
+    BookmarkController = this.subject({
+      currentUser: User.current(),
+      site: { isMobileDevice: false }
+    });
     BookmarkController.onShow();
   },
 

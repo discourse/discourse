@@ -250,12 +250,33 @@ describe PostSerializer do
         context "if topic_view is blank" do
           let(:topic_view) { nil }
 
-          it "does not return the bookmarked attribute" do
-            expect(serialized.as_json.key?(:bookmarked)).to eq(false)
+          it "the bookmarked attribute will be false" do
+            expect(serialized.as_json[:bookmarked]).to eq(false)
           end
         end
       end
     end
+  end
+
+  context "posts when group moderation is enabled" do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:group_user) { Fabricate(:group_user) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.enable_category_group_moderation = true
+      topic.category.update!(reviewable_by_group_id: group_user.group.id)
+    end
+
+    it "does nothing for regular users" do
+      expect(serialized_post_for_user(nil)[:group_moderator]).to eq(nil)
+    end
+
+    it "returns a group_moderator attribute for category group moderators" do
+      post.update!(user: group_user.user)
+      expect(serialized_post_for_user(nil)[:group_moderator]).to eq(true)
+    end
+
   end
 
   def serialized_post(u)

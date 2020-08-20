@@ -19,6 +19,7 @@ function addBulkButton(action, key, opts) {
     label: `topics.bulk.${key}`,
     icon: opts.icon,
     buttonVisible: opts.buttonVisible || alwaysTrue,
+    enabledSetting: opts.enabledSetting,
     class: opts.class
   };
 
@@ -56,16 +57,16 @@ addBulkButton("relistTopics", "relist_topics", {
   class: "btn-default",
   buttonVisible: topics => topics.some(t => !t.visible)
 });
-if (Discourse.SiteSettings.tagging_enabled) {
-  addBulkButton("showTagTopics", "change_tags", {
-    icon: "tag",
-    class: "btn-default"
-  });
-  addBulkButton("showAppendTagTopics", "append_tags", {
-    icon: "tag",
-    class: "btn-default"
-  });
-}
+addBulkButton("showTagTopics", "change_tags", {
+  icon: "tag",
+  class: "btn-default",
+  enabledSetting: "tagging_enabled"
+});
+addBulkButton("showAppendTagTopics", "append_tags", {
+  icon: "tag",
+  class: "btn-default",
+  enabledSetting: "tagging_enabled"
+});
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
   class: "btn-danger"
@@ -80,11 +81,14 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     const topics = this.get("model.topics");
-    // const relistButtonIndex = _buttons.findIndex(b => b.action === 'relistTopics');
-
     this.set(
       "buttons",
-      _buttons.filter(b => b.buttonVisible(topics))
+      _buttons.filter(b => {
+        if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
+          return false;
+        }
+        return b.buttonVisible(topics);
+      })
     );
     this.set("modal.modalClass", "topic-bulk-actions-modal small");
     this.send("changeBulkTemplate", "modal/bulk-actions-buttons");

@@ -8,7 +8,7 @@ class Upload < ActiveRecord::Base
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
-  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
+  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
   SECURE_MEDIA_ROUTE = "secure-media-uploads"
 
   belongs_to :user
@@ -38,6 +38,11 @@ class Upload < ActiveRecord::Base
   validates_presence_of :original_filename
 
   validates_with UploadValidator
+
+  before_destroy do
+    UserProfile.where(card_background_upload_id: self.id).update_all(card_background_upload_id: nil)
+    UserProfile.where(profile_background_upload_id: self.id).update_all(profile_background_upload_id: nil)
+  end
 
   after_destroy do
     User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
@@ -399,10 +404,6 @@ class Upload < ActiveRecord::Base
     end
 
     problems
-  end
-
-  def self.reset_unknown_extensions!
-    Upload.where(extension: "unknown").update_all(extension: nil)
   end
 
   private

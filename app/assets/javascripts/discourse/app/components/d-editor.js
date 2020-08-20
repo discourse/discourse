@@ -15,7 +15,7 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { siteDir } from "discourse/lib/text-direction";
 import {
   determinePostReplaceSelection,
-  clipboardData,
+  clipboardHelpers,
   safariHacksDisabled,
   caretPosition,
   inCodeBlock
@@ -29,6 +29,7 @@ import { emojiUrlFor } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { isTesting } from "discourse-common/config/environment";
+import { SKIP } from "discourse/lib/autocomplete";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -230,6 +231,7 @@ export default Component.extend({
   showLink: true,
   emojiPickerIsActive: false,
   emojiStore: service("emoji-store"),
+  isEditorFocused: false,
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
@@ -405,7 +407,10 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-input")).autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
-      afterComplete: () => this._focusTextArea(),
+      afterComplete: value => {
+        this.set("value", value);
+        return this._focusTextArea();
+      },
       transformComplete: obj => {
         return obj.text;
       },
@@ -439,7 +444,7 @@ export default Component.extend({
           return false;
         }
 
-        const matches = /(?:^|[>.,\/#!$%^&*;:{}=\-_`~()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
+        const matches = /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
           text.substring(0, cp)
         );
 
@@ -455,7 +460,6 @@ export default Component.extend({
         } else {
           $editorInput.autocomplete({ cancel: true });
           this.setProperties({
-            isEditorFocused: $("textarea.d-editor-input").is(":focus"),
             emojiPickerIsActive: true
           });
 
@@ -480,7 +484,7 @@ export default Component.extend({
           term = term.toLowerCase();
 
           if (term.length < this.siteSettings.emoji_autocomplete_min_chars) {
-            return resolve([]);
+            return resolve(SKIP);
           }
 
           if (term === "") {
@@ -862,7 +866,10 @@ export default Component.extend({
     }
 
     const isComposer = $("#reply-control .d-editor-input").is(":focus");
-    let { clipboard, canPasteHtml, canUpload } = clipboardData(e, isComposer);
+    let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
+      siteSettings: this.siteSettings,
+      canUpload: isComposer
+    });
 
     let plainText = clipboard.getData("text/plain");
     let html = clipboard.getData("text/html");
@@ -940,7 +947,6 @@ export default Component.extend({
         return;
       }
 
-      this.set("isEditorFocused", $("textarea.d-editor-input").is(":focus"));
       this.set("emojiPickerIsActive", !this.emojiPickerIsActive);
     },
 
@@ -1051,6 +1057,14 @@ export default Component.extend({
           );
         }
       }
+    },
+
+    focusIn() {
+      this.set("isEditorFocused", true);
+    },
+
+    focusOut() {
+      this.set("isEditorFocused", false);
     }
   }
 });

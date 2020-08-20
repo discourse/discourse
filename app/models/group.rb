@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'net/imap'
+
 class Group < ActiveRecord::Base
   # TODO(2021-05-26): remove
   self.ignored_columns = %w{
@@ -27,6 +29,8 @@ class Group < ActiveRecord::Base
   has_many :group_histories, dependent: :destroy
   has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
+  has_many :group_category_notification_defaults, dependent: :destroy
+  has_many :group_tag_notification_defaults, dependent: :destroy
 
   belongs_to :flair_upload, class_name: 'Upload'
 
@@ -49,10 +53,12 @@ class Group < ActiveRecord::Base
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
   after_commit :trigger_group_destroyed_event, on: :destroy
+  after_commit :set_default_notifications, on: [:create, :update]
 
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
+    Discourse.cache.delete("group_imap_mailboxes_#{self.id}")
   end
 
   def remove_review_groups
@@ -104,6 +110,8 @@ class Group < ActiveRecord::Base
 
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
+
+  scope :with_imap_configured, -> { where.not(imap_mailbox_name: '') }
 
   scope :visible_groups, Proc.new { |user, order, opts|
     groups = self.order(order || "name ASC")
@@ -379,6 +387,13 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.set_category_and_tag_default_notification_levels!(user, group_name)
+    if group = lookup_group(group_name)
+      GroupUser.set_category_notifications(group, user)
+      GroupUser.set_tag_notifications(group, user)
+    end
+  end
+
   def self.refresh_automatic_group!(name)
     return unless id = AUTO_GROUPS[name]
 
@@ -534,7 +549,7 @@ class Group < ActiveRecord::Base
 
   def self.lookup_groups(group_ids: [], group_names: [])
     if group_ids.present?
-      group_ids = group_ids.split(",")
+      group_ids = group_ids.split(",") if group_ids.is_a?(String)
       group_ids.map!(&:to_i)
       groups = Group.where(id: group_ids) if group_ids.present?
     end
@@ -752,6 +767,87 @@ class Group < ActiveRecord::Base
     flair_icon.presence || flair_upload&.short_path
   end
 
+  [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
+    define_method("#{level}_category_ids=") do |category_ids|
+      @category_notifications ||= {}
+      @category_notifications[level] = category_ids
+    end
+
+    define_method("#{level}_tags=") do |tag_names|
+      @tag_notifications ||= {}
+      @tag_notifications[level] = tag_names
+    end
+  end
+
+  def set_default_notifications
+    if @category_notifications
+      @category_notifications.each do |level, category_ids|
+        GroupCategoryNotificationDefault.batch_set(self, level, category_ids)
+      end
+    end
+
+    if @tag_notifications
+      @tag_notifications.each do |level, tag_names|
+        GroupTagNotificationDefault.batch_set(self, level, tag_names)
+      end
+    end
+  end
+
+  def imap_mailboxes
+    return [] if self.imap_server.blank? ||
+                 self.email_username.blank? ||
+                 self.email_password.blank? ||
+                 !SiteSetting.enable_imap
+
+    Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
+      Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
+      mailboxes = []
+
+      begin
+        imap_provider = Imap::Providers::Detector.init_with_detected_provider(
+          self.imap_config
+        )
+        imap_provider.connect!
+        mailboxes = imap_provider.list_mailboxes
+        imap_provider.disconnect!
+
+        update_columns(imap_last_error: nil)
+      rescue => ex
+        Rails.logger.warn("[IMAP] Mailbox refresh failed for group #{self.name} with error: #{ex}")
+        update_columns(imap_last_error: ex.message)
+      end
+
+      mailboxes
+    end
+  end
+
+  def imap_config
+    {
+      server: self.imap_server,
+      port: self.imap_port,
+      ssl: self.imap_ssl,
+      username: self.email_username,
+      password: self.email_password
+    }
+  end
+
+  def email_username_regex
+    user, domain = email_username.split('@')
+    if user.present? && domain.present?
+      /^#{Regexp.escape(user)}(\+[^@]*)?@#{Regexp.escape(domain)}$/i
+    end
+  end
+
+  def notify_added_to_group(user, owner: false)
+    SystemMessage.create_from_system_user(
+      user,
+      :user_added_to_group,
+      group_name: self.full_name.presence || self.name,
+      group_path: "/g/#{self.name}",
+      membership_level: owner ? "an owner" : "a member"
+    )
+  end
+
   protected
 
   def name_format_validator
@@ -935,10 +1031,24 @@ end
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  smtp_server                        :string
+#  smtp_port                          :integer
+#  smtp_ssl                           :boolean
+#  imap_server                        :string
+#  imap_port                          :integer
+#  imap_ssl                           :boolean
+#  imap_mailbox_name                  :string           default(""), not null
+#  imap_uid_validity                  :integer          default(0), not null
+#  imap_last_uid                      :integer          default(0), not null
+#  email_username                     :string
+#  email_password                     :string
 #  publish_read_state                 :boolean          default(FALSE), not null
 #  members_visibility_level           :integer          default(0), not null
 #  flair_icon                         :string
 #  flair_upload_id                    :integer
+#  imap_last_error                    :text
+#  imap_old_emails                    :integer
+#  imap_new_emails                    :integer
 #
 # Indexes
 #

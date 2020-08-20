@@ -1,12 +1,12 @@
 import I18n from "I18n";
 import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
-import { isDevelopment } from "discourse-common/config/environment";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
 let warnMissingIcons = true;
+let _iconList;
 
 const REPLACEMENTS = {
   "d-tracking": "bell",
@@ -41,7 +41,9 @@ const REPLACEMENTS = {
   "notification.group_message_summary": "users",
   "notification.post_approved": "check",
   "notification.membership_request_accepted": "user-plus",
-  "notification.membership_request_consolidated": "users"
+  "notification.membership_request_consolidated": "users",
+  "notification.reaction": "bell",
+  "notification.votes_released": "plus"
 };
 
 export function replaceIcon(source, destination) {
@@ -88,11 +90,6 @@ export function convertIconClass(icon) {
     .trim();
 }
 
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.iconNode = iconNode;
-}
-
 export function registerIconRenderer(renderer) {
   _renderers.unshift(renderer);
 }
@@ -113,14 +110,12 @@ function iconClasses(icon, params) {
   return classNames;
 }
 
+export function setIconList(iconList) {
+  _iconList = iconList;
+}
+
 function warnIfMissing(id) {
-  if (
-    typeof Discourse !== "undefined" &&
-    isDevelopment() &&
-    warnMissingIcons &&
-    Discourse.SvgIconList &&
-    Discourse.SvgIconList.indexOf(id) === -1
-  ) {
+  if (warnMissingIcons && _iconList && _iconList.indexOf(id) === -1) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }

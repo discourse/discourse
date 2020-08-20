@@ -64,11 +64,6 @@ export function avatarFor(wanted, attrs) {
   );
 }
 
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.avatar = avatarFor;
-}
-
 createWidget("select-post", {
   tagName: "div.select-posts",
 
@@ -407,9 +402,7 @@ createWidget("post-contents", {
       result.push(
         h("section.embedded-posts.bottom", [
           repliesBelow.map(p => {
-            return this.attach("embedded-post", p, {
-              model: this.store.createRecord("post", p)
-            });
+            return this.attach("embedded-post", p, { model: p.asPost });
           }),
           this.attach("button", {
             title: "post.collapse",
@@ -449,8 +442,10 @@ createWidget("post-contents", {
       .find("post-reply", { postId: this.attrs.id })
       .then(posts => {
         this.state.repliesBelow = posts.map(p => {
-          p.shareUrl = `${topicUrl}/${p.post_number}`;
-          return transformWithCallbacks(p);
+          let result = transformWithCallbacks(p);
+          result.shareUrl = `${topicUrl}/${p.post_number}`;
+          result.asPost = this.store.createRecord("post", p);
+          return result;
         });
       });
   },
@@ -565,7 +560,7 @@ createWidget("post-article", {
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map(p => {
         return this.attach("embedded-post", p, {
-          model: this.store.createRecord("post", p),
+          model: p.asPost,
           state: { above: true }
         });
       });
@@ -673,6 +668,9 @@ export default createWidget("post", {
     }
     if (attrs.topicOwner) {
       classNames.push("topic-owner");
+    }
+    if (attrs.groupModerator) {
+      classNames.push("category-moderator");
     }
     if (attrs.hidden) {
       classNames.push("post-hidden");

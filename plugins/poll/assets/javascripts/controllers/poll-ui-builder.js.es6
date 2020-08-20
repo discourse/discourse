@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import Controller from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
@@ -350,6 +350,7 @@ export default Controller.extend({
       pollStep: 1,
       autoClose: false,
       chartType: BAR_CHART_TYPE,
+      pollResult: this.alwaysPollResult,
       pollGroups: null,
       date: moment()
         .add(1, "day")

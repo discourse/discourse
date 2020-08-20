@@ -8,8 +8,9 @@
   </div>
 {{/if}}
 
-{{notifications-filter value=filter onChange=(action "filterNotifications")}}
-<span class="user-notifications-filter-separator"></span>
+<div class="user-notifications-filter-select-kit">
+  {{notifications-filter value=filter onChange=(action (mut filter))}}
+</div>
 
 {{#if hasFilteredNotifications}}
   {{user-notifications-large notifications=model filter=filter}}
