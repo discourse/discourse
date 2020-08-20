@@ -1645,6 +1645,7 @@ describe User do
     fab!(:category1) { Fabricate(:category) }
     fab!(:category2) { Fabricate(:category) }
     fab!(:category3) { Fabricate(:category) }
+    fab!(:category4) { Fabricate(:category) }
 
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
@@ -1666,6 +1667,7 @@ describe User do
       SiteSetting.default_categories_tracking = category1.id.to_s
       SiteSetting.default_categories_muted = category2.id.to_s
       SiteSetting.default_categories_watching_first_post = category3.id.to_s
+      SiteSetting.default_categories_regular = category4.id.to_s
     end
 
     it "has overriden preferences" do
@@ -1688,6 +1690,7 @@ describe User do
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([category1.id])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([category2.id])
       expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([category3.id])
+      expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([category4.id])
     end
 
     it "does not set category preferences for staged users" do
@@ -1696,6 +1699,7 @@ describe User do
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([])
       expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([])
+      expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([])
     end
   end
 

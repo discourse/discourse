@@ -42,12 +42,13 @@
 //
 //= require jquery.magnific-popup.min.js
 
+let App = window.Discourse;
 let resetSettings = require("helpers/site-settings").resetSettings;
 let createHelperContext = require("discourse-common/lib/helpers")
   .createHelperContext;
 
 const buildResolver = require("discourse-common/resolver").buildResolver;
-window.setResolver(buildResolver("discourse").create({ namespace: Discourse }));
+window.setResolver(buildResolver("discourse").create({ namespace: App }));
 
 sinon.config = {
   injectIntoThis: false,
@@ -71,10 +72,10 @@ d.write(
   "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
 );
 
-Discourse.rootElement = "#ember-testing";
-Discourse.setupForTesting();
-Discourse.injectTestHelpers();
-Discourse.start();
+App.rootElement = "#ember-testing";
+App.setupForTesting();
+App.injectTestHelpers();
+App.start();
 
 // disable logster error reporting
 if (window.Logster) {

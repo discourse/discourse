@@ -70,5 +70,14 @@ export default Component.extend({
   )
   showEmailSettings(emailIn, automatic, isAdmin) {
     return emailIn && isAdmin && !automatic;
+  },
+
+  @discourseComputed(
+    "model.isCreated",
+    "model.can_admin_group",
+    "currentUser.can_create_group"
+  )
+  canAdminGroup(isCreated, canAdmin, canCreate) {
+    return (!isCreated && canCreate) || (isCreated && canAdmin);
   }
 });

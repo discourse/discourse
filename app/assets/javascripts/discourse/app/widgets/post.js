@@ -474,8 +474,7 @@ createWidget("post-notice", {
 
   html(attrs) {
     const user =
-      this.siteSettings.display_name_on_posts &&
-      prioritizeNameInUx(attrs.name, this.siteSettings)
+      this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name)
         ? attrs.name
         : attrs.username;
     let text, icon;

@@ -715,6 +715,23 @@ RSpec.describe TopicsController do
         expect(t2.deleted_at).to be_nil
         expect(p3.user).to eq(user_a)
       end
+
+      it "removes likes by new owner" do
+        now = Time.zone.now
+        freeze_time(now - 1.day)
+        PostActionCreator.like(user_a, p1)
+        p1.reload
+        freeze_time(now)
+        post "/t/#{topic.id}/change-owner.json", params: {
+          username: user_a.username_lower, post_ids: [p1.id]
+        }
+        topic.reload
+        p1.reload
+        expect(response.status).to eq(200)
+        expect(topic.user.username).to eq(user_a.username)
+        expect(p1.user.username).to eq(user_a.username)
+        expect(p1.like_count).to eq(0)
+      end
     end
   end
 

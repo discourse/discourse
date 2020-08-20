@@ -163,11 +163,13 @@ describe SiteSettingExtension do
   end
 
   describe "multisite" do
-    it "has no db cross talk" do
+    it "has no db cross talk", type: :multisite do
       settings.setting(:hello, 1)
       settings.hello = 100
-      settings.provider.current_site = "boom"
-      expect(settings.hello).to eq(1)
+
+      test_multisite_connection("second") do
+        expect(settings.hello).to eq(1)
+      end
     end
   end
 

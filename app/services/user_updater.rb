@@ -6,6 +6,7 @@ class UserUpdater
     watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
     tracked_category_ids: :tracking,
+    regular_category_ids: :regular,
     muted_category_ids: :muted
   }
 

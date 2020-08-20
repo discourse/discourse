@@ -5,26 +5,42 @@ class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def update_private_message_flag
-    execute <<~SQL
-    UPDATE post_search_data
-    SET private_message = true
-    FROM posts
-    INNER JOIN topics ON topics.id = posts.topic_id AND topics.archetype = 'private_message'
-    WHERE posts.id = post_search_data.post_id AND
-      (private_message IS NULL or private_message = false)
+
+    sql = <<~SQL
+      UPDATE post_search_data
+      SET private_message = X.private_message
+      FROM
+      (
+        SELECT post_id,
+          CASE WHEN t.archetype = 'private_message' THEN TRUE ELSE FALSE END private_message
+        FROM posts p
+        JOIN post_search_data pd ON pd.post_id = p.id
+        JOIN topics t ON t.id = p.topic_id
+        WHERE pd.private_message IS NULL OR
+          pd.private_message <> CASE WHEN t.archetype = 'private_message' THEN TRUE ELSE FALSE END
+        LIMIT 3000000
+      ) X
+      WHERE X.post_id = post_search_data.post_id
     SQL
 
-    execute <<~SQL
-    UPDATE post_search_data
-    SET private_message = false
-    FROM posts
-    INNER JOIN topics ON topics.id = posts.topic_id AND topics.archetype <> 'private_message'
-    WHERE posts.id = post_search_data.post_id AND
-      (private_message IS NULL or private_message = true)
-    SQL
+    while true
+      count = execute(sql).cmd_tuples
+      if count == 0
+        break
+      else
+        puts "Migrated batch of #{count} on post_search_date to new schema"
+      end
+    end
   end
 
   def up
+
+    # must drop index cause we do not want an enormous amount of work done
+    # as we are changing data
+    execute <<~SQL
+     DROP INDEX CONCURRENTLY IF EXISTS idx_regular_post_search_data
+    SQL
+
     # Delete post_search_data of orphaned posts
     execute <<~SQL
     DELETE FROM post_search_data
@@ -53,6 +69,11 @@ class UpdatePrivateMessageOnPostSearchData < ActiveRecord::Migration[6.0]
       update_private_message_flag
       change_column_null(:post_search_data, :private_message, false)
     end
+
+    execute <<~SQL
+      CREATE INDEX CONCURRENTLY idx_regular_post_search_data
+       ON post_search_data USING GIN(search_data) WHERE NOT private_message
+    SQL
   end
 
   def down

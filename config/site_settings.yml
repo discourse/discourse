@@ -1452,7 +1452,7 @@ security:
     regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
-  moderators_create_categories: false
+  moderators_manage_categories_and_groups: false
   moderators_view_emails:
     client: true
     default: false
@@ -2172,6 +2172,9 @@ user_preferences:
     type: category_list
     default: ""
   default_categories_watching_first_post:
+    type: category_list
+    default: ""
+  default_categories_regular:
     type: category_list
     default: ""
   mute_all_categories_by_default:

@@ -144,7 +144,7 @@ GEM
     guess_html_encoding (0.0.11)
     hashdiff (1.0.1)
     hashie (4.1.0)
-    highline (1.7.10)
+    highline (2.0.3)
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
@@ -315,8 +315,7 @@ GEM
       rack (>= 1.4)
     rexml (3.2.4)
     rinku (2.0.6)
-    rotp (5.1.0)
-      addressable (~> 2.5)
+    rotp (6.1.0)
     rqrcode (1.1.2)
       chunky_png (~> 1.0)
       rqrcode_core (~> 0.1)
@@ -479,7 +478,7 @@ DEPENDENCIES
   fastimage
   flamegraph
   gc_tracer
-  highline (~> 1.7.0)
+  highline
   htmlentities
   http_accept_language
   json
@@ -534,7 +533,7 @@ DEPENDENCIES
   redis
   redis-namespace
   rinku
-  rotp (= 5.1.0)
+  rotp
   rqrcode
   rspec
   rspec-html-matchers

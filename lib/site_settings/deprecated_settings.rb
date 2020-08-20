@@ -9,7 +9,8 @@ module SiteSettings::DeprecatedSettings
     ['disable_edit_notifications', 'disable_system_edit_notifications', true, '2.4'],
     ['enable_category_group_review', 'enable_category_group_moderation', true, '2.7'],
     ['newuser_max_images', 'newuser_max_embedded_media', true, '2.7'],
-    ['min_trust_to_post_images', 'min_trust_to_post_embedded_media', true, '2.7']
+    ['min_trust_to_post_images', 'min_trust_to_post_embedded_media', true, '2.7'],
+    ['moderators_create_categories', 'moderators_manage_categories_and_groups', '2.7']
   ]
 
   def setup_deprecated_methods

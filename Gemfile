@@ -125,8 +125,7 @@ gem 'mini_scheduler'
 gem 'execjs', require: false
 gem 'mini_racer'
 
-# TODO: determine why highline is being held back and upgrade to latest
-gem 'highline', '~> 1.7.0', require: false
+gem 'highline', require: false
 
 gem 'rack'
 
@@ -224,8 +223,7 @@ gem 'logster'
 gem 'sassc', '2.0.1', require: false
 gem "sassc-rails"
 
-# see: https://github.com/mdp/rotp/issues/98
-gem 'rotp', '5.1.0' , require: false
+gem 'rotp', require: false
 
 gem 'rqrcode'
 

@@ -31,6 +31,7 @@ class BasicGroupSerializer < ApplicationSerializer
              :is_group_owner,
              :members_visibility_level,
              :can_see_members,
+             :can_admin_group,
              :publish_read_state
 
   def self.admin_attributes(*attrs)
@@ -113,6 +114,14 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def include_is_group_owner?
     owner_group_ids.present?
+  end
+
+  def can_admin_group
+    scope.can_admin_group?(object)
+  end
+
+  def include_can_admin_group?
+    scope.can_admin_group?(object)
   end
 
   def is_group_owner

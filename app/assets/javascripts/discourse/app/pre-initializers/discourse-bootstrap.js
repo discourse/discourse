@@ -11,12 +11,15 @@ import {
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
 import { setIconList } from "discourse-common/lib/icon-library";
+import { setPluginContainer } from "discourse/lib/plugin-api";
 
 export default {
   name: "discourse-bootstrap",
 
   // The very first initializer to run
   initialize(container, app) {
+    setPluginContainer(container);
+
     // Our test environment has its own bootstrap code
     if (isTesting()) {
       return;
@@ -37,8 +40,6 @@ export default {
         }
       });
     }
-
-    app.CDN = setupData.cdn;
 
     let baseUrl = setupData.baseUrl;
     Object.defineProperty(app, "BaseUrl", {
@@ -63,51 +64,40 @@ export default {
     setupURL(setupData.cdn, baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
     app.SiteSettings = PreloadStore.get("siteSettings");
-    app.ThemeSettings = PreloadStore.get("themeSettings");
-    app.LetterAvatarVersion = setupData.letterAvatarVersion;
-    app.MarkdownItURL = setupData.markdownItUrl;
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};
     window.Logster.enabled = setupData.enableJsErrorReporting === "true";
 
-    Session.currentProp("serviceWorkerURL", setupData.serviceWorkerUrl);
-    Session.currentProp("assetVersion", setupData.assetVersion);
-
-    Session.currentProp(
-      "disableCustomCSS",
-      setupData.disableCustomCss === "true"
-    );
+    let session = Session.current();
+    session.serviceWorkerURL = setupData.serviceWorkerUrl;
+    session.assetVersion = setupData.assetVersion;
+    session.disableCustomCSS = setupData.disableCustomCss === "true";
+    session.markdownItURL = setupData.markdownItUrl;
 
     if (setupData.safeMode) {
-      Session.currentProp("safe_mode", setupData.safeMode);
+      session.safe_mode = setupData.safeMode;
     }
 
-    Session.currentProp(
-      "darkModeAvailable",
+    session.darkModeAvailable =
       document.head.querySelectorAll(
         'link[media="(prefers-color-scheme: dark)"]'
-      ).length > 0
-    );
+      ).length > 0;
 
-    Session.currentProp(
-      "defaultColorSchemeIsDark",
+    session.darkColorScheme =
       !window.matchMedia("(prefers-color-scheme: dark)").matches &&
         getComputedStyle(document.documentElement)
           .getPropertyValue("--scheme-type")
-          .trim() === "dark"
-    );
+          .trim() === "dark";
 
-    Session.currentProp("highlightJsPath", setupData.highlightJsPath);
-    Session.currentProp("svgSpritePath", setupData.svgSpritePath);
+    session.highlightJsPath = setupData.highlightJsPath;
+    session.svgSpritePath = setupData.svgSpritePath;
 
     if (isDevelopment()) {
       setIconList(setupData.svgIconList);
     }
 
     if (setupData.s3BaseUrl) {
-      app.S3CDN = setupData.s3Cdn;
-      app.S3BaseUrl = setupData.s3BaseUrl;
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
     }
 

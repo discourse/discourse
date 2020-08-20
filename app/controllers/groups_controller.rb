@@ -140,11 +140,17 @@ class GroupsController < ApplicationController
 
   def update
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group) unless current_user.admin
+    guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
     if group.update(group_params(automatic: group.automatic))
-      GroupActionLogger.new(current_user, group).log_change_group_settings
-      render json: success_json
+      GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
+
+      if guardian.can_see?(group)
+        render json: success_json
+      else
+        # They can no longer see the group after changing permissions
+        render json: { route_to: '/g' }
+      end
     else
       render_json_error(group)
     end
@@ -511,7 +517,7 @@ class GroupsController < ApplicationController
 
   def histories
     group = find_group(:group_id)
-    guardian.ensure_can_edit!(group) unless current_user.admin
+    guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
     page_size = 25
     offset = (params[:offset] && params[:offset].to_i) || 0
@@ -582,7 +588,7 @@ class GroupsController < ApplicationController
           membership_request_template
         }
 
-        if current_user.admin
+        if current_user.staff?
           default_params.push(*[
             :incoming_email,
             :smtp_server,

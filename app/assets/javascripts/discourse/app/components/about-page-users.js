@@ -11,7 +11,7 @@ export default Component.extend({
     return (this.users || []).map(user => {
       let name = user.name;
       let username = user.username;
-      let prioritizeName = prioritizeNameInUx(name, this.siteSettings);
+      let prioritizeName = prioritizeNameInUx(name);
       let hideName = false;
       if (name && normalize(username) === normalize(name)) {
         hideName = true;
