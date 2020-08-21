@@ -41,9 +41,20 @@ export default Controller.extend({
       });
   },
 
-  @discourseComputed("loaded", "content.length", "noResultsHelp")
-  noContent(loaded, contentLength, noResultsHelp) {
-    return loaded && contentLength === 0 && noResultsHelp;
+  @discourseComputed("loaded", "content.length")
+  noContent(loaded, contentLength) {
+    return loaded && contentLength === 0;
+  },
+
+  @discourseComputed("noResultsHelp", "noContent")
+  noResultsHelpMessage(noResultsHelp, noContent) {
+    if (noResultsHelp) {
+      return noResultsHelp;
+    }
+    if (noContent) {
+      return I18n.t("bookmarks.no_user_bookmarks");
+    }
+    return "";
   },
 
   @action
@@ -78,7 +89,6 @@ export default Controller.extend({
 
   _processLoadResponse(response) {
     if (!response) {
-      this._bookmarksListDenied();
       return;
     }
 
