@@ -933,33 +933,33 @@ class Search
       if aggregate_search
         aggregate_relation = aggregate_relation
           .select(
-            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.created_at DESC))[1] post_number",
+            "MAX(subquery.post_number) post_number",
             "MAX(subquery.created_at) created_at"
           )
           .order("created_at DESC")
       end
     elsif @order == :latest_topic
-      posts = posts.order("topic_created_at DESC")
+      posts = posts.order("topics.created_at DESC")
 
       if aggregate_search
         posts = posts.select("topics.created_at topic_created_at")
 
         aggregate_relation = aggregate_relation
           .select(
-            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_created_at DESC))[1] post_number",
+            "MIN(subquery.post_number) post_number",
             "MAX(subquery.topic_created_at) topic_created_at"
           )
           .order("topic_created_at DESC")
       end
     elsif @order == :views
-      posts = posts.order("topic_views DESC")
+      posts = posts.order("topics.views DESC")
 
       if aggregate_search
         posts = posts.select("topics.views topic_views")
 
         aggregate_relation = aggregate_relation
           .select(
-            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_views DESC))[1] post_number",
+            "MIN(subquery.post_number) post_number",
             "MAX(subquery.topic_views) topic_views"
           )
           .order("topic_views DESC")
