@@ -54,7 +54,7 @@ describe 'api keys' do
       plugin.add_api_parameter_route method: :get, route: "session#current", format: "*"
     end
 
-    it 'allows allows parameter access to the registered route' do
+    it 'allows parameter access to the registered route' do
       get '/session/current.json', params: {
         api_key: api_key.key
       }
