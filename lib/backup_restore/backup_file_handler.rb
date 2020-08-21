@@ -67,6 +67,8 @@ module BackupRestore
       log "Unzipping archive, this may take a while..."
       Discourse::Utils.execute_command(
         'tar', '--extract', '--gzip', '--file', @archive_path, '--directory', @tmp_directory,
+        '--transform', 's|var/www/discourse/public/uploads/|uploads/|',
+        # the transformation is a workaround for a bug which existed between v2.6.0.beta1 and v2.6.0.beta2
         failure_message: "Failed to decompress archive."
       )
     end
