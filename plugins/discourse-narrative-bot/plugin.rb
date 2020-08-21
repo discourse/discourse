@@ -300,4 +300,17 @@ after_initialize do
     DiscourseNarrativeBot::BOT_USER_ID,
     "discobot@discourse.org"
   )
+
+  PostGuardian.class_eval do
+    alias_method :existing_can_create_post?, :can_create_post?
+
+    def can_create_post?(parent)
+      return true if SiteSetting.discourse_narrative_bot_enabled &&
+        parent.try(:subtype) == "system_message" &&
+        parent.try(:user) == ::DiscourseNarrativeBot::Base.new.discobot_user
+
+      existing_can_create_post?(parent)
+    end
+  end
+
 end
