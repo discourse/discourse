@@ -782,6 +782,21 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
 
+  # Register a route which can be authenticated using an api key or user api key
+  # in a query parameter rather than a header. For example:
+  #
+  # add_api_parameter_route(
+  #   method: :get,
+  #   route: "users#bookmarks",
+  #   format: :ics
+  # )
+  #
+  # See Auth::DefaultCurrentUserProvider::PARAMETER_API_PATTERNS for more examples
+  # and Auth::DefaultCurrentUserProvider#api_parameter_allowed? for implementation
+  def add_api_parameter_route(method:, route:, format:)
+    DiscoursePluginRegistry.register_api_parameter_route({ method: method, route: route, format: format }, self)
+  end
+
   protected
 
   def self.js_path
