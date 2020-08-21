@@ -20,9 +20,7 @@ export default SelectKitRowComponent.extend({
   }),
 
   backgroundColor: computed("item.colors.[]", function() {
-    const secondary = (this.item.colors || []).find(
-      c => c.name === "secondary"
-    );
+    const secondary = (this.item.colors || []).findBy("name", "secondary");
 
     if (secondary && secondary.hex) {
       return `background-color:#${escapeExpression(secondary.hex)}`.htmlSafe();
