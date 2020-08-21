@@ -7,7 +7,7 @@ describe BackupRestore::BackupFileHandler do
   include_context "shared stuff"
 
   def expect_decompress_and_clean_up_to_work(backup_filename:, expected_dump_filename: "dump.sql",
-                                             require_metadata_file:, require_uploads:)
+                                             require_metadata_file:, require_uploads:, expected_upload_paths: nil)
 
     freeze_time(DateTime.parse('2019-12-24 14:31:48'))
 
@@ -31,8 +31,13 @@ describe BackupRestore::BackupFileHandler do
       expect(File.exist?(File.join(tmp_directory, "meta.json"))).to eq(require_metadata_file)
 
       if require_uploads
-        upload_filename = "uploads/default/original/3X/b/d/bd269860bb508aebcb6f08fe7289d5f117830383.png"
-        expect(File.exist?(File.join(tmp_directory, upload_filename))).to eq(true)
+        expected_upload_paths ||= ["uploads/default/original/3X/b/d/bd269860bb508aebcb6f08fe7289d5f117830383.png"]
+
+        expected_upload_paths.each do |upload_path|
+          absolute_upload_path = File.join(tmp_directory, upload_path)
+          expect(File.exist?(absolute_upload_path)).to eq(true), "expected file #{upload_path} does not exist"
+          yield(absolute_upload_path) if block_given?
+        end
       else
         expect(Dir.exist?(File.join(tmp_directory, "uploads"))).to eq(false)
       end
@@ -73,5 +78,27 @@ describe BackupRestore::BackupFileHandler do
       require_metadata_file: false,
       require_uploads: false
     )
+  end
+
+  it "works with backup file which uses wrong upload path" do
+    expect_decompress_and_clean_up_to_work(
+      backup_filename: "backup_with_wrong_upload_path.tar.gz",
+      require_metadata_file: false,
+      require_uploads: true,
+      expected_upload_paths: [
+        "uploads/default/original/1X/both.txt",
+        "uploads/default/original/1X/only-uploads.txt",
+        "uploads/default/original/1X/only-var.txt"
+      ]
+    ) do |upload_path|
+      content = File.read(upload_path).chomp
+
+      case File.basename(upload_path)
+      when "both.txt", "only-var.txt"
+        expect(content).to eq("var")
+      when "only-uploads.txt"
+        expect(content).to eq("uploads")
+      end
+    end
   end
 end

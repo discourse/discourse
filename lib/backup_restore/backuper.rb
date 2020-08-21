@@ -234,15 +234,17 @@ module BackupRestore
       log "Archiving uploads..."
 
       if has_local_uploads?
+        upload_directory = Discourse.store.upload_path
+
         if SiteSetting.include_thumbnails_in_backups
           exclude_optimized = ""
         else
-          optimized_path = File.join(local_uploads_directory, 'optimized')
+          optimized_path = File.join(upload_directory, 'optimized')
           exclude_optimized = "--exclude=#{optimized_path}"
         end
 
         Discourse::Utils.execute_command(
-          'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, local_uploads_directory,
+          'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
           failure_message: "Failed to archive uploads.", success_status_codes: [0, 1],
           chdir: File.join(Rails.root, "public")
         )
