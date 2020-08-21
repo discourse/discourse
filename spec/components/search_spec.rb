@@ -259,7 +259,7 @@ describe Search do
       expect(results.posts).to contain_exactly(reply)
 
       results = Search.execute(
-        'mars in:private',
+        'mars in:personal',
         search_context: post.user,
         guardian: Guardian.new(post.user)
       )
@@ -276,7 +276,7 @@ describe Search do
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 
       results = Search.execute(
-        'mars in:private',
+        'mars in:personal',
         guardian: Guardian.new(user)
       )
 

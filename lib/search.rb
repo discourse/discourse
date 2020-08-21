@@ -688,7 +688,7 @@ class Search
       elsif word == 'in:all'
         @search_all_topics = true
         nil
-      elsif %w{in:private in:personal}.include?(word) # remove private after 2.4 release
+      elsif word == 'in:personal'
         @search_pms = true
         nil
       elsif word == "in:personal-direct"
