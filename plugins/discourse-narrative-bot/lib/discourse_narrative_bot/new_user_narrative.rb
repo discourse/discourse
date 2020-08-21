@@ -298,7 +298,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      post_liked = PostAction.find_by(
+      post_liked = PostAction.exists?(
         post_action_type_id: PostActionType.types[:like],
         post_id: @data[:last_post_id],
         user_id: @user.id
@@ -394,7 +394,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      post_liked = PostAction.find_by(
+      post_liked = PostAction.exists?(
         post_action_type_id: PostActionType.types[:like],
         post_id: @data[:last_post_id],
         user_id: @user.id
