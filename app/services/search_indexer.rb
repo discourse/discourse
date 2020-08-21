@@ -96,7 +96,8 @@ class SearchIndexer
       # instead in the post processor
       Discourse.warn_exception(
         e,
-        message: "Unexpected error while indexing #{table} for search"
+        message: "Unexpected error while indexing #{table} for search",
+        env: { id: id }
       )
     end
   end
