@@ -135,8 +135,6 @@ class Admin::ThemesController < Admin::AdminController
                                           theme_fields: :upload
                                           )
     @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
-    light = ColorScheme.new(name: I18n.t("color_schemes.light_default"))
-    @color_schemes.unshift(light)
 
     payload = {
       themes: ActiveModel::ArraySerializer.new(@themes, each_serializer: ThemeSerializer),
