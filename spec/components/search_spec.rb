@@ -1118,37 +1118,41 @@ describe Search do
         .to eq([post_2])
     end
 
-    it 'supports before and after, in:first, user:, @username' do
-
+    it 'supports before and after filters' do
       time = Time.zone.parse('2001-05-20 2:55')
       freeze_time(time)
 
+      post_1 = Fabricate(:post, raw: 'hi this is a test 123 123', created_at: time.months_ago(2))
+      post_2 = Fabricate(:post, raw: 'boom boom shake the room test')
+
+      expect(Search.execute('test before:1').posts).to contain_exactly(post_1)
+      expect(Search.execute('test before:2001-04-20').posts).to contain_exactly(post_1)
+      expect(Search.execute('test before:2001').posts).to eq([])
+      expect(Search.execute('test after:2001').posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute('test before:monday').posts).to contain_exactly(post_1)
+      expect(Search.execute('test after:jan').posts).to contain_exactly(post_1, post_2)
+    end
+
+    it 'supports in:first, user:, @username' do
       topic = Fabricate(:topic)
-      Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic, created_at: time.months_ago(2))
-      _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
+      post_1 = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+      post_2 = Fabricate(:post, raw: 'boom boom shake the room test', topic: topic)
 
-      expect(Search.execute('test before:1').posts.length).to eq(1)
-      expect(Search.execute('test before:2001-04-20').posts.length).to eq(1)
-      expect(Search.execute('test before:2001').posts.length).to eq(0)
-      expect(Search.execute('test before:monday').posts.length).to eq(1)
+      expect(Search.execute('test in:first').posts).to contain_exactly(post_1)
 
-      expect(Search.execute('test after:jan').posts.length).to eq(1)
+      expect(Search.execute('boom').posts).to contain_exactly(post_2)
 
-      expect(Search.execute('test in:first').posts.length).to eq(1)
+      expect(Search.execute('boom in:first').posts).to eq([])
+      expect(Search.execute('boom f').posts).to eq([])
 
-      expect(Search.execute('boom').posts.length).to eq(1)
+      expect(Search.execute('123 in:first').posts).to contain_exactly(post_1)
+      expect(Search.execute('123 f').posts).to contain_exactly(post_1)
 
-      expect(Search.execute('boom in:first').posts.length).to eq(0)
-      expect(Search.execute('boom f').posts.length).to eq(0)
+      expect(Search.execute('user:nobody').posts).to eq([])
+      expect(Search.execute("user:#{post_1.user.username}").posts).to contain_exactly(post_1)
+      expect(Search.execute("user:#{post_1.user_id}").posts).to contain_exactly(post_1)
 
-      expect(Search.execute('123 in:first').posts.length).to eq(1)
-      expect(Search.execute('123 f').posts.length).to eq(1)
-
-      expect(Search.execute('user:nobody').posts.length).to eq(0)
-      expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
-      expect(Search.execute("user:#{_post.user_id}").posts.length).to eq(1)
-
-      expect(Search.execute("@#{_post.user.username}").posts.length).to eq(1)
+      expect(Search.execute("@#{post_1.user.username}").posts).to contain_exactly(post_1)
     end
 
     it 'supports group' do
