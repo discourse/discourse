@@ -112,6 +112,8 @@ describe Guardian do
     it "returns false when the post is deleted" do
       post.deleted_at = Time.now
       expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
+      expect(Guardian.new(admin).post_can_act?(post, :spam)).to be_truthy
+      expect(Guardian.new(admin).post_can_act?(post, :notify_user)).to be_truthy
     end
 
     it "works as expected for silenced users" do

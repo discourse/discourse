@@ -1213,10 +1213,24 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
-        it 'fails when multiple member already exists' do
+        it 'adds missing users even if some exists' do
           user2.update!(username: 'alice')
           user3 = Fabricate(:user, username: 'bob')
           [user2, user3].each { |user| group.add(user) }
+
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { user_emails: [user1.email, user2.email, user3.email].join(",") }
+          end.to change { group.users.count }.by(1)
+
+          expect(response.status).to eq(200)
+        end
+
+        it 'displays warning when all members already exists' do
+          user1.update!(username: 'john')
+          user2.update!(username: 'alice')
+          user3 = Fabricate(:user, username: 'bob')
+          [user1, user2, user3].each { |user| group.add(user) }
 
           expect do
             put "/groups/#{group.id}/members.json",
@@ -1227,8 +1241,8 @@ describe GroupsController do
 
           expect(response.parsed_body["errors"]).to include(I18n.t(
             "groups.errors.member_already_exist",
-            username: "alice, bob",
-            count: 2
+            username: "alice, bob, john",
+            count: 3
           ))
         end
       end

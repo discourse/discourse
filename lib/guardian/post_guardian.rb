@@ -33,7 +33,7 @@ module PostGuardian
     return false if action_key == :notify_user && (post.user.blank? || (!is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true'))
 
     taken = opts[:taken_actions].try(:keys).to_a
-    is_flag = PostActionType.notify_flag_types[action_key]
+    is_flag = PostActionType.notify_flag_types[action_key] || PostActionType.custom_types[action_key]
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
     already_did_flagging      = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
 

@@ -397,20 +397,32 @@ class BadgeGranter
 
   def self.revoke_ungranted_titles!
     DB.exec <<~SQL
-      UPDATE users SET title = ''
-      WHERE NOT title IS NULL AND
-         title <> '' AND
-         EXISTS (
-            SELECT 1
-            FROM user_profiles
-            WHERE user_id = users.id AND badge_granted_title
-         ) AND
-         title NOT IN (
-            SELECT name
-            FROM badges
-            WHERE allow_title AND enabled AND
-              badges.id IN (SELECT badge_id FROM user_badges ub where ub.user_id = users.id)
+      UPDATE users u
+      SET title = ''
+      FROM user_profiles up
+      WHERE u.title IS NOT NULL
+        AND u.title <> ''
+        AND up.user_id = u.id
+        AND up.badge_granted_title
+        AND up.granted_title_badge_id IS NOT NULL
+        AND NOT EXISTS(
+          SELECT 1
+          FROM badges b
+                 JOIN user_badges ub ON ub.user_id = u.id AND ub.badge_id = b.id
+          WHERE b.id = up.granted_title_badge_id
+            AND b.allow_title
+            AND b.enabled
         )
+    SQL
+
+    DB.exec <<~SQL
+      UPDATE user_profiles up
+      SET badge_granted_title    = FALSE,
+          granted_title_badge_id = NULL
+      FROM users u
+      WHERE up.user_id = u.id
+        AND (u.title IS NULL OR u.title = '')
+        AND (up.badge_granted_title OR up.granted_title_badge_id IS NOT NULL)
     SQL
   end
 

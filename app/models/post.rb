@@ -57,7 +57,7 @@ class Post < ActiveRecord::Base
 
   validates_with PostValidator, unless: :skip_validation
 
-  after_save :index_search
+  after_commit :index_search
 
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
@@ -898,7 +898,9 @@ class Post < ActiveRecord::Base
   end
 
   def index_search
-    SearchIndexer.index(self)
+    Scheduler::Defer.later "Index post for search" do
+      SearchIndexer.index(self)
+    end
   end
 
   def locked?

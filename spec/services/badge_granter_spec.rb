@@ -17,32 +17,93 @@ describe BadgeGranter do
   end
 
   describe 'revoke_titles' do
-    it 'can correctly revoke titles' do
-      badge = Fabricate(:badge, allow_title: true)
-      user = Fabricate(:user, title: badge.name)
-      user.reload
+    let(:user) { Fabricate(:user) }
+    let(:badge) { Fabricate(:badge, allow_title: true) }
 
-      user.user_profile.update_column(:badge_granted_title, true)
-
+    it 'revokes title when badge is not allowed as title' do
       BadgeGranter.grant(badge, user)
-      BadgeGranter.revoke_ungranted_titles!
+      user.update!(title: badge.name)
 
+      BadgeGranter.revoke_ungranted_titles!
       user.reload
       expect(user.title).to eq(badge.name)
+      expect(user.user_profile.badge_granted_title).to eq(true)
+      expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
 
       badge.update_column(:allow_title, false)
       BadgeGranter.revoke_ungranted_titles!
-
       user.reload
-      expect(user.title).to eq('')
+      expect(user.title).to be_blank
+      expect(user.user_profile.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to be_nil
+    end
 
+    it 'revokes title when badge is disabled' do
+      BadgeGranter.grant(badge, user)
+      user.update!(title: badge.name)
+
+      BadgeGranter.revoke_ungranted_titles!
+      user.reload
+      expect(user.title).to eq(badge.name)
+      expect(user.user_profile.badge_granted_title).to eq(true)
+      expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
+
+      badge.update_column(:enabled, false)
+      BadgeGranter.revoke_ungranted_titles!
+      user.reload
+      expect(user.title).to be_blank
+      expect(user.user_profile.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to be_nil
+    end
+
+    it 'revokes title when user badge is revoked' do
+      BadgeGranter.grant(badge, user)
+      user.update!(title: badge.name)
+
+      BadgeGranter.revoke_ungranted_titles!
+      user.reload
+      expect(user.title).to eq(badge.name)
+      expect(user.user_profile.badge_granted_title).to eq(true)
+      expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
+
+      BadgeGranter.revoke(user.user_badges.first)
+      BadgeGranter.revoke_ungranted_titles!
+      user.reload
+      expect(user.title).to be_blank
+      expect(user.user_profile.badge_granted_title).to eq(false)
+      expect(user.user_profile.granted_title_badge_id).to be_nil
+    end
+
+    it 'does not revoke custom title' do
       user.title = "CEO"
-      user.save
+      user.save!
 
       BadgeGranter.revoke_ungranted_titles!
 
       user.reload
       expect(user.title).to eq("CEO")
+    end
+
+    it 'does not revoke localized title' do
+      badge = Badge.find(Badge::Regular)
+      badge_name = nil
+      BadgeGranter.grant(badge, user)
+
+      I18n.with_locale(:de) do
+        badge_name = badge.display_name
+        user.update!(title: badge_name)
+      end
+
+      user.reload
+      expect(user.title).to eq(badge_name)
+      expect(user.user_profile.badge_granted_title).to eq(true)
+      expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
+
+      BadgeGranter.revoke_ungranted_titles!
+      user.reload
+      expect(user.title).to eq(badge_name)
+      expect(user.user_profile.badge_granted_title).to eq(true)
+      expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
     end
   end
 
