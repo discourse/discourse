@@ -176,7 +176,10 @@ export default Component.extend({
       return false;
     }
 
-    this.set("hoveredEmoji", event.target.title);
+    this.set(
+      "hoveredEmoji",
+      this._codeWithDiversity(event.target.title, this.selectedDiversity)
+    );
   },
 
   @action
@@ -241,7 +244,9 @@ export default Component.extend({
   },
 
   _codeWithDiversity(code, selectedDiversity) {
-    if (selectedDiversity !== 0 && isSkinTonableEmoji(code)) {
+    if (/:t\d/.test(code)) {
+      return code;
+    } else if (selectedDiversity !== 0 && isSkinTonableEmoji(code)) {
       return `${code}:t${selectedDiversity + 1}`;
     } else {
       return code;
