@@ -281,13 +281,31 @@ describe Search do
     end
 
     context 'personal_messages filter' do
-      it 'correctly searches for the PM of the given user' do
+      it 'does not allow a normal user to search for personal messages of another user' do
+        expect do
+          results = Search.execute(
+            "mars personal_messages:#{post.user.username}",
+            guardian: Guardian.new(post.user)
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+      end
+
+      it 'searches correctly for the PM of the given user' do
         results = Search.execute(
           "mars personal_messages:#{post.user.username}",
-          guardian: Guardian.new(post.user)
+          guardian: Guardian.new(admin)
         )
 
         expect(results.posts).to contain_exactly(reply)
+      end
+
+      it 'returns the right results if username is invalid' do
+        results = Search.execute(
+          "mars personal_messages:random_username",
+          guardian: Guardian.new(admin)
+        )
+
+        expect(results.posts).to eq([])
       end
     end
 

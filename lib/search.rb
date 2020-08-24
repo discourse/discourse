@@ -694,9 +694,10 @@ class Search
         @search_pms = true
         nil
       elsif word =~ /^personal_messages:(.+)$/
-        @search_pms = true
+        raise Discourse::InvalidAccess.new unless @guardian.is_admin?
 
         if user = User.find_by_username($1)
+          @search_pms = true
           @search_context = user
         end
 
