@@ -61,7 +61,7 @@ sup img.emoji {
     box-sizing: border-box;
     padding: 0.25em;
     height: 100%;
-    background: $secondary;
+    background: var(--secondary);
 
     .section {
       margin-bottom: 1em;
@@ -107,7 +107,7 @@ sup img.emoji {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    border-right: 1px solid $primary-low;
+    border-right: 1px solid var(--primary-low);
 
     .category-button {
       background: none;
@@ -133,7 +133,7 @@ sup img.emoji {
   width: 100%;
   position: relative;
   padding: 0.25em;
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
   box-sizing: border-box;
   align-items: center;
 
@@ -149,7 +149,7 @@ sup img.emoji {
   }
 
   .d-icon {
-    color: $primary-medium;
+    color: var(--primary-medium);
     margin-right: 0.5em;
   }
 }
@@ -158,7 +158,7 @@ sup img.emoji {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
 }
 
 .emoji-picker-emoji-info {
@@ -224,5 +224,5 @@ sup img.emoji {
   width: 100%;
   height: 100%;
   opacity: 0.8;
-  background-color: $primary;
+  background-color: var(--primary);
 }
