@@ -60,6 +60,45 @@ QUnit.test("editTopic", function (assert) {
   );
 });
 
+QUnit.test("deleteTopic", function (assert) {
+  const model = Topic.create();
+  const controller = this.subject({
+    model,
+    siteSettings: {
+      min_topic_view_amount_for_delete_confirmation: 5
+    }
+  });
+
+  assert.not(model.get("deleted"), "topic is not deleted by default");
+
+  model.set("views", 3);
+  controller.send("deleteTopic");
+
+  // TODO: find a way to get updated model attributes
+  // Logging the entire model will correctly show the updated values, but getting them directly only shows initial ones
+  // controller.get("model") --> shows `deleted: true` and `deleted_at` exists
+  // controller.get("model.deleted") or model.get("deleted") or controller.get("buffered.deleted") all show
+  // initial false value
+
+  // assert.ok(
+  //   controller.get("buffered.deleted"),
+  //   "calling deleteTopic will delete the topic if the number of views it has is less than the minimum required to " +
+  //   "display a confirmation popup"
+  // );
+
+  controller.send("recoverTopic");
+  model.set("views", 10);
+
+  // TODO: fix injection error for deleteTopic when it calls showModal during test
+  // controller.send("deleteTopic");
+
+  // assert.not(
+  //   controller.get("buffered.deleted"),
+  //   "calling deleteTopic will not delete the topic if the number of views it has is greater than the " +
+  //   "minimum required to display a confirmation popup, since it will display the confirmation modal"
+  // );
+});
+
 QUnit.test("toggleMultiSelect", function (assert) {
   const model = Topic.create();
   const controller = this.subject({ model });
