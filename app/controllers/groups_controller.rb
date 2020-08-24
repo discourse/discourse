@@ -36,6 +36,7 @@ class GroupsController < ApplicationController
       groups.where(automatic: true)
     }
   }
+  ADD_MEMBERS_LIMIT = 1000
 
   def index
     unless SiteSetting.enable_group_directory? || current_user&.staff?
@@ -327,6 +328,11 @@ class GroupsController < ApplicationController
     if users.empty? && emails.empty?
       raise Discourse::InvalidParameters.new(
         'usernames or emails must be present'
+      )
+    end
+    if users.length > ADD_MEMBERS_LIMIT
+      return render_json_error(
+        I18n.t("groups.errors.adding_too_many_users", limit: ADD_MEMBERS_LIMIT)
       )
     end
     usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
