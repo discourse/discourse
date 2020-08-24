@@ -459,9 +459,7 @@ export default Component.extend({
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
-          this.setProperties({
-            emojiPickerIsActive: true
-          });
+          this.set("emojiPickerIsActive", true);
 
           schedule("afterRender", () => {
             const filterInput = document.querySelector(

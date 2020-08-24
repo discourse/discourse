@@ -28,15 +28,18 @@ sup img.emoji {
 }
 
 .emoji-picker {
-  background-clip: padding-box;
-  z-index: z("modal", "content");
-  position: fixed;
-  display: none;
-  flex-direction: row;
-  height: 320px;
+  width: 100%;
   color: var(--primary);
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
+  display: flex;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  z-index: z("modal", "content");
+  flex-direction: row;
+  height: 320px;
+  max-height: 50vh;
+  max-width: 420px;
 
   img.emoji {
     // custom emojis might import images of various sizes
@@ -44,175 +47,176 @@ sup img.emoji {
     width: 20px !important;
     height: 20px !important;
   }
+
+  .emoji-picker-content {
+    display: flex;
+    flex-direction: column;
+    flex: 20;
+  }
+
+  .emoji-picker-emoji-area {
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.25em;
+    height: 100%;
+    background: $secondary;
+
+    .section {
+      margin-bottom: 1em;
+      content-visibility: auto;
+
+      .trash-recent {
+        background: none;
+        font-size: $font-down-1;
+      }
+    }
+
+    .section-header {
+      font-weight: 900;
+      padding: 0.25em 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-group,
+    .results {
+      img.emoji {
+        padding: 0.25em;
+        cursor: pointer;
+
+        &:hover {
+          background: $tertiary-low;
+        }
+      }
+    }
+
+    .results {
+      padding: 0.25em 0;
+      img.emoji {
+        padding: 0.5em;
+      }
+    }
+  }
+
+  .emoji-picker-category-buttons {
+    overflow-y: scroll;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-right: 1px solid $primary-low;
+
+    .category-button {
+      background: none;
+      border: none;
+      padding: 0.5em;
+      outline: none;
+
+      .emoji {
+        pointer-events: none;
+        filter: grayscale(100%);
+      }
+
+      &:hover .emoji,
+      &.current .emoji {
+        filter: grayscale(0);
+      }
+    }
+  }
 }
 
-.emoji-picker .categories-column {
+.emoji-picker-search-container {
   display: flex;
-  flex-direction: column;
-  flex: 1 0 0px;
+  width: 100%;
+  position: relative;
+  padding: 0.25em;
+  border-bottom: 1px solid $primary-low;
+  box-sizing: border-box;
   align-items: center;
-  justify-content: space-between;
-  border-right: 1px solid var(--primary-low);
-  min-width: 36px;
-  overflow-y: auto;
-  padding: 0.5em;
-}
 
-.emoji-picker .category-icon {
-  display: block;
-  margin: 4px auto;
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%);
-
-  button.emoji {
+  .filter {
+    flex: 1 0 auto;
     margin: 0;
+    border: 0;
     padding: 0;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .d-icon {
+    color: $primary-medium;
+    margin-right: 0.5em;
   }
 }
 
-.emoji-picker .category-icon.current,
-.emoji-picker .category-icon:hover {
-  -webkit-filter: grayscale(0%);
-  filter: grayscale(0%);
-}
-
-.emoji-picker .main-column {
+.emoji-picker-footer {
   display: flex;
-  flex-direction: column;
-  flex: 20;
-}
-
-.emoji-picker .list {
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  padding: 0;
-  flex: 1 0 0px;
-  flex-direction: column;
-}
-
-.emoji-picker .section-header {
-  padding: 8px;
-  margin-top: 2px;
-  margin-bottom: 0px;
-  padding-bottom: 0px;
   justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid $primary-low;
+}
+
+.emoji-picker-emoji-info {
   display: flex;
   align-items: center;
-  font-weight: bold;
-}
+  padding-left: 0.5em;
 
-.emoji-picker .section-header .title {
-  color: var(--primary);
-}
-
-.emoji-picker .section-header .clear-recent .fa {
-  margin: 0;
-  padding: 0;
-  color: var(--primary-medium);
-
-  &:hover {
-    color: var(--primary-high);
+  img.emoji {
+    height: 32px !important;
+    width: 32px !important;
   }
 }
 
-.emoji-picker .section-group {
-  flex-wrap: wrap;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 4px;
-}
-
-.emoji-picker .footer {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid var(--primary-low);
-}
-
-.emoji-picker .info {
-  @include ellipsis;
-  padding-left: 8px;
-  font-weight: 700;
-  max-width: 125px;
-}
-
-.emoji-picker .diversity-picker {
-  display: flex;
-  justify-content: flex-end;
-  padding: 8px;
-}
-
-.emoji-picker .diversity-picker .diversity-scale {
-  width: 20px;
-  height: 20px;
-  margin-left: 5px;
+.emoji-picker-diversity-picker {
   border: 0;
-  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-.emoji-picker .diversity-picker .diversity-scale.default {
-  background: #ffcc4d;
-}
-.emoji-picker .diversity-picker .diversity-scale.light {
-  background: #f7dece;
-}
-.emoji-picker .diversity-picker .diversity-scale.medium-light {
-  background: #f3d2a2;
-}
-.emoji-picker .diversity-picker .diversity-scale.medium {
-  background: #d5ab88;
-}
-.emoji-picker .diversity-picker .diversity-scale.medium-dark {
-  background: #af7e57;
-}
-.emoji-picker .diversity-picker .diversity-scale.dark {
-  background: #7c533e;
+  padding: 0.5em;
+
+  .diversity-scale {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: auto;
+    border-radius: 3px;
+    margin: 0.15em;
+    height: 24px;
+    width: 24px;
+
+    .d-icon {
+      color: #fff;
+      filter: drop-shadow(0.5px 1.5px 0 rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  .diversity-scale.default {
+    background: #ffcc4d;
+  }
+  .diversity-scale.light {
+    background: #f7dece;
+  }
+  .diversity-scale.medium-light {
+    background: #f3d2a2;
+  }
+  .diversity-scale.medium {
+    background: #d5ab88;
+  }
+  .diversity-scale.medium-dark {
+    background: #af7e57;
+  }
+  .diversity-scale.dark {
+    background: #7c533e;
+  }
 }
 
-.emoji-picker .diversity-picker .diversity-scale.selected .d-icon {
-  display: block;
-}
-
-.emoji-picker .diversity-picker .d-icon {
-  display: none;
-}
-
-.emoji-picker .diversity-picker .d-icon {
-  color: #fff;
-  font-size: $font-0;
-  filter: drop-shadow(0.5px 1.5px 0 rgba(0, 0, 0, 0.3));
-}
-
-.emoji-picker button.emoji {
-  background: transparent;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 0;
-  background-size: 20px 20px;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  height: 20px;
-  border: 0;
-  vertical-align: top;
-  width: 20px;
-  outline: none;
-  padding: 3px;
-  margin: 2px;
-}
-
-.emoji-picker .section-group button.emoji:hover,
-.emoji-picker .results button.emoji:hover {
-  display: inline-block;
-  vertical-align: top;
-  border-radius: 2px;
-  background-color: var(--tertiary-low);
-}
-
-.emoji-picker-modal.fadeIn {
+.emoji-picker-modal-overlay {
   z-index: z("modal", "overlay");
   position: fixed;
   left: 0;
@@ -220,70 +224,5 @@ sup img.emoji {
   width: 100%;
   height: 100%;
   opacity: 0.8;
-  background-color: black;
-}
-
-.emoji-picker .filter {
-  background-color: none;
-  border-bottom: 1px solid var(--primary-low);
-  padding: 5px;
-  display: flex;
-  position: relative;
-  align-items: center;
-
-  input[type="text"] {
-    width: auto !important;
-  }
-}
-
-.emoji-picker .filter .d-icon-search {
-  color: var(--primary-medium);
-  font-size: $font-up-1;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-.emoji-picker .filter input {
-  height: 24px;
-  margin: 0;
-  flex: 1 0 0px;
-  border: none;
-  box-shadow: none;
-  padding-right: 24px;
-  outline: none;
-  color: var(--primary);
-  background: var(--secondary);
-
-  &:focus {
-    border: none;
-    box-shadow: none;
-  }
-}
-
-.emoji-picker .filter input::-ms-clear {
-  display: none;
-}
-
-.emoji-picker .results {
-  display: none;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 4px;
-  flex: 1 0 0px;
-}
-
-.emoji-picker .filter .clear-filter {
-  position: absolute;
-  right: 5px;
-  top: 12px;
-  border: 0;
-  background: none;
-  color: var(--primary-high);
-  outline: none;
-  display: none;
-
-  &:hover {
-    color: var(--primary);
-  }
+  background-color: $primary;
 }

@@ -1,12 +1,8 @@
 .emoji-picker {
-  max-height: 280px;
   border: none;
-}
-
-.emoji-picker .category-icon {
-  margin: 2px;
-}
-
-.emoji-picker .categories-column {
-  padding: 0;
+  position: fixed;
+  width: 100%;
+  max-width: 100vh;
+  top: 0;
+  left: 0;
 }
