@@ -10,73 +10,6 @@ RSpec.describe UploadSecurity do
   let(:opts) { { type: type } }
   subject { described_class.new(upload, opts) }
 
-  context "when uploading in public context" do
-    describe "for a public type avatar" do
-      let(:type) { 'avatar' }
-      it "returns false" do
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-    describe "for a public type custom_emoji" do
-      let(:type) { 'custom_emoji' }
-      it "returns false" do
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-    describe "for a public type profile_background" do
-      let(:type) { 'profile_background' }
-      it "returns false" do
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-    describe "for a public type avatar" do
-      let(:type) { 'avatar' }
-      it "returns false" do
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-
-    describe "for_theme" do
-      before do
-        upload.stubs(:for_theme).returns(true)
-      end
-      it "returns false" do
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-    describe "for_site_setting" do
-      before do
-        upload.stubs(:for_site_setting).returns(true)
-      end
-      it "returns false" do
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-    describe "for_gravatar" do
-      before do
-        upload.stubs(:for_gravatar).returns(true)
-      end
-      it "returns false" do
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-
-    describe "when the upload is used for a custom emoji" do
-      it "returns false" do
-        CustomEmoji.create(name: 'meme', upload: upload)
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-
-    describe "when it is based on a regular emoji" do
-      it "returns false" do
-        falafel = Emoji.all.find { |e| e.url == '/images/emoji/twitter/falafel.png?v=9' }
-        upload.update!(origin: "http://localhost:3000#{falafel.url}")
-        expect(subject.should_be_secure?).to eq(false)
-      end
-    end
-  end
-
   context "when secure media is enabled" do
     before do
       SiteSetting.enable_s3_uploads = true
@@ -86,12 +19,90 @@ RSpec.describe UploadSecurity do
       SiteSetting.secure_media = true
     end
 
-    context "when login_required" do
+    context "when login_required (everything should be secure except public context items)" do
       before do
         SiteSetting.login_required = true
       end
       it "returns true" do
         expect(subject.should_be_secure?).to eq(true)
+      end
+
+      context "when uploading in public context" do
+        describe "for a public type avatar" do
+          let(:type) { 'avatar' }
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for a public type custom_emoji" do
+          let(:type) { 'custom_emoji' }
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for a public type profile_background" do
+          let(:type) { 'profile_background' }
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for a public type avatar" do
+          let(:type) { 'avatar' }
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for a public type category_logo" do
+          let(:type) { 'category_logo' }
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for a public type category_background" do
+          let(:type) { 'category_background' }
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for_theme" do
+          before do
+            upload.stubs(:for_theme).returns(true)
+          end
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for_site_setting" do
+          before do
+            upload.stubs(:for_site_setting).returns(true)
+          end
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for_gravatar" do
+          before do
+            upload.stubs(:for_gravatar).returns(true)
+          end
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+
+        describe "when the upload is used for a custom emoji" do
+          it "returns false" do
+            CustomEmoji.create(name: 'meme', upload: upload)
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+
+        describe "when it is based on a regular emoji" do
+          it "returns false" do
+            falafel = Emoji.all.find { |e| e.url == '/images/emoji/twitter/falafel.png?v=9' }
+            upload.update!(origin: "http://localhost:3000#{falafel.url}")
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
       end
     end
 
