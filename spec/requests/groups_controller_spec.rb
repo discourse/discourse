@@ -1247,25 +1247,30 @@ describe GroupsController do
         end
 
         it 'display error when try to add to many users at once' do
-          GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
-          GroupsController.const_set("ADD_MEMBERS_LIMIT", 4)
-          user1.update!(username: 'john')
-          user2.update!(username: 'alice')
-          user3 = Fabricate(:user, username: 'bob')
-          user4 = Fabricate(:user, username: 'anna')
-          user5 = Fabricate(:user, username: 'sarah')
+          begin
+            GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
+            GroupsController.const_set("ADD_MEMBERS_LIMIT", 4)
+            user1.update!(username: 'john')
+            user2.update!(username: 'alice')
+            user3 = Fabricate(:user, username: 'bob')
+            user4 = Fabricate(:user, username: 'anna')
+            user5 = Fabricate(:user, username: 'sarah')
 
-          expect do
-            put "/groups/#{group.id}/members.json",
-              params: { user_emails: [user1.email, user2.email, user3.email, user4.email, user5.email].join(",") }
-          end.to change { group.users.count }.by(0)
+            expect do
+              put "/groups/#{group.id}/members.json",
+                params: { user_emails: [user1.email, user2.email, user3.email, user4.email, user5.email].join(",") }
+            end.to change { group.users.count }.by(0)
 
-          expect(response.status).to eq(422)
+            expect(response.status).to eq(422)
 
-          expect(response.parsed_body["errors"]).to include(I18n.t(
-            "groups.errors.adding_too_many_users",
-            limit: 4
-          ))
+            expect(response.parsed_body["errors"]).to include(I18n.t(
+              "groups.errors.adding_too_many_users",
+              limit: 4
+            ))
+          ensure
+            GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
+            GroupsController.const_set("ADD_MEMBERS_LIMIT", 1000)
+          end
         end
       end
 
