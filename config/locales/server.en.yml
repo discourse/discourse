@@ -428,7 +428,6 @@ en:
       title: "You've been accepted into @%{group_name}"
       body: |
         Your request to enter @%{group_name} has been accepted and you are now a member.
-    view_hidden_topic_request_reason: "I would like to join the group '%{group_name}', so I may access [this topic](%{topic_url})"
 
   education:
     until_posts:
