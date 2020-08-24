@@ -170,14 +170,14 @@ export function acceptance(name, options) {
       clearHTMLCache();
       resetPluginApi();
 
+      if (options.site) {
+        resetSite(currentSettings(), options.site);
+      }
+
       Discourse.reset();
       this.container = getOwner(this);
       setURLContainer(this.container);
       setDefaultOwner(this.container);
-
-      if (options.site) {
-        resetSite(currentSettings(), options.site);
-      }
 
       if (options.beforeEach) {
         options.beforeEach.call(this);
