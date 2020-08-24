@@ -176,10 +176,7 @@ export default Component.extend({
       return false;
     }
 
-    this.set(
-      "hoveredEmoji",
-      this._codeWithDiversity(event.target.title, this.selectedDiversity)
-    );
+    this.set("hoveredEmoji", event.target.title);
   },
 
   @action
