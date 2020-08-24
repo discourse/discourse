@@ -986,7 +986,7 @@ en:
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
       regular_categories: "Regular"
-      regular_categories_instructions: "You will see these topics in the `latest` and `top` topic lists."
+      regular_categories_instructions: "You will see these topics in the “Latest” and “Top” topic lists."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
