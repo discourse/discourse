@@ -1,3 +1,4 @@
+import { observes } from "discourse-common/utils/decorators";
 import { bind } from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
 import { emojiUnescape } from "discourse/lib/text";
@@ -55,9 +56,11 @@ export default Component.extend({
     this.appEvents.on("emoji-picker:close", this, "onClose");
   },
 
-  didReceiveAttrs() {
-    this._super(...arguments);
-
+  // didReceiveAttrs would be a better choice here, but this is sadly causing
+  // too many unexpected reloads as it's triggered for other reasons than a mutation
+  // of isActive
+  @observes("isActive")
+  _setup() {
     if (this.isActive) {
       this.onShow();
     } else {
@@ -82,18 +85,6 @@ export default Component.extend({
 
       const emojiPicker = document.querySelector(".emoji-picker");
       if (!emojiPicker) return;
-
-      if (
-        (!this.site.isMobileDevice || this.isEditorFocused) &&
-        !safariHacksDisabled()
-      ) {
-        const filter = emojiPicker.querySelector("input.filter");
-        filter && filter.focus();
-      }
-
-      if (this.selectedDiversity !== 0) {
-        this._applyDiversity(this.selectedDiversity);
-      }
 
       if (!this.site.isMobileDevice) {
         this._popper = createPopper(
@@ -122,7 +113,23 @@ export default Component.extend({
 
       // this is a low-tech trick to prevent appending hundreds of emojis
       // of blocking the rendering of the picker
-      later(() => this.set("isLoading", false), 50);
+      later(() => {
+        this.set("isLoading", false);
+
+        schedule("afterRender", () => {
+          if (
+            (!this.site.isMobileDevice || this.isEditorFocused) &&
+            !safariHacksDisabled()
+          ) {
+            const filter = emojiPicker.querySelector("input.filter");
+            filter && filter.focus();
+          }
+
+          if (this.selectedDiversity !== 0) {
+            this._applyDiversity(this.selectedDiversity);
+          }
+        });
+      }, 50);
     });
   },
 
@@ -178,12 +185,14 @@ export default Component.extend({
   @action
   onEmojiSelection(event) {
     const img = event.target;
+
     if (!img.classList.contains("emoji") || img.tagName !== "IMG") {
       return false;
     }
 
     let code = event.target.title;
     code = this._codeWithDiversity(code, this.selectedDiversity);
+
     this.emojiSelected(code);
 
     if (!img.parentNode.parentNode.classList.contains("recent")) {
@@ -241,10 +250,11 @@ export default Component.extend({
   _applyDiversity(diversity) {
     const emojiPickerArea = document.querySelector(".emoji-picker-emoji-area");
 
-    emojiPickerArea.querySelectorAll(".emoji.diversity").forEach(img => {
-      const code = this._codeWithDiversity(img.title, diversity);
-      img.src = emojiUrlFor(code);
-    });
+    emojiPickerArea &&
+      emojiPickerArea.querySelectorAll(".emoji.diversity").forEach(img => {
+        const code = this._codeWithDiversity(img.title, diversity);
+        img.src = emojiUrlFor(code);
+      });
   },
 
   _setupSectionObserver() {
