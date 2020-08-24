@@ -689,12 +689,9 @@ class Search
         nil
       elsif word == 'in:personal'
         @search_pms = true
-        @search_context = @guardian.user
         nil
       elsif word == "in:personal-direct"
         @search_pms = true
-        @direct_pms_only = true
-        @search_context = @guardian.user
         nil
       elsif word =~ /^personal_messages:(.+)$/
         @search_pms = true
@@ -900,7 +897,7 @@ class Search
       if @search_context.present?
         if @search_context.is_a?(User)
           if type_filter === "private_messages"
-            @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
+            posts.private_posts_for_user(@search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end
