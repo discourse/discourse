@@ -92,6 +92,13 @@ sup img.emoji {
         }
       }
     }
+
+    .results {
+      padding: 0.25em 0;
+      img.emoji {
+        padding: 0.5em;
+      }
+    }
   }
 
   .emoji-picker-category-buttons {
