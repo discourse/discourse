@@ -81,7 +81,7 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    loadScript("/javascripts/ace/ace.js").then(() => {
+    loadScript("/javascripts/ace/ace.js?v=1.4.12").then(() => {
       window.ace.require(["ace/ace"], loadedAce => {
         loadedAce.config.set("loadWorkerFromBlob", false);
         loadedAce.config.set("workerPath", getURL("/javascripts/ace")); // Do not use CDN for workers
