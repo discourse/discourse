@@ -696,7 +696,7 @@ class Search
         @direct_pms_only = true
         @search_context = @guardian.user
         nil
-      elsif word =~  /^personal_messages:(.+)$/
+      elsif word =~ /^personal_messages:(.+)$/
         @search_pms = true
 
         if user = User.find_by_username($1)
