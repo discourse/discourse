@@ -62,6 +62,12 @@ QUnit.test("getURL on subfolder install", assert => {
   );
 
   assert.equal(
+    getURL(""),
+    "/forum",
+    "relative url has subfolder without trailing slash"
+  );
+
+  assert.equal(
     getURL("/svg-sprite/forum.example.com/svg-sprite.js"),
     "/forum/svg-sprite/forum.example.com/svg-sprite.js",
     "works when the url has the prefix in the middle"
