@@ -21,6 +21,7 @@ export default Controller.extend({
   selectableUserBadges(filteredList) {
     return [
       EmberObject.create({
+        id: 0,
         badge: Badge.create({ name: I18n.t("badges.none") })
       }),
       ...filteredList.uniqBy("badge.name")

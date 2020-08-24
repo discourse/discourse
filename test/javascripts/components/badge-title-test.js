@@ -13,6 +13,7 @@ componentTest("badge title", {
     this.set("subject", selectKit());
     this.set("selectableUserBadges", [
       EmberObject.create({
+        id: 0,
         badge: { name: "(none)" }
       }),
       EmberObject.create({
