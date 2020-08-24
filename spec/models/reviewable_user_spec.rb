@@ -48,6 +48,8 @@ RSpec.describe ReviewableUser, type: :model do
 
       UserDestroyer.new(Discourse.system_user).destroy(user)
       expect(reviewable.reload.rejected?).to eq(true)
+      expect(reviewable.target_id).to be_nil
+      expect(reviewable.target_type).to be_nil
     end
   end
 
@@ -91,6 +93,8 @@ RSpec.describe ReviewableUser, type: :model do
         # Rejecting deletes the user record
         reviewable.reload
         expect(reviewable.target).to be_blank
+        expect(reviewable.target_id).to be_nil
+        expect(reviewable.target_type).to be_nil
 
         expect(ScreenedEmail.should_block?(email)).to eq(true)
         expect(ScreenedIpAddress.should_block?(ip)).to eq(true)
