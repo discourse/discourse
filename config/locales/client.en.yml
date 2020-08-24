@@ -3662,12 +3662,15 @@ en:
           allowed_urls: Allowed URLs
           descriptions:
             topics:
-              read: |
-                Read a topic or a specific post in it. RSS is also supported.
-              write: |
-                Create a new topic or post to an existing one.
-              read_lists: |
-                Read topic lists like top, new, latest, etc. RSS is also supported.
+              read: Read a topic or a specific post in it. RSS is also supported.
+              write: Create a new topic or post to an existing one.
+              read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
+              wordpress: Necessary for the WordPress wp-discourse plugin to work.
+            users:
+              bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
+              sync_sso: Synchronize a user using SSO.
+              show: Obtain information about an user.
+              check_emails: List user emails.
 
       web_hooks:
         title: "Webhooks"
