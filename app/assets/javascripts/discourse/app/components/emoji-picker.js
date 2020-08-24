@@ -195,6 +195,10 @@ export default Component.extend({
     if (!img.parentNode.parentNode.classList.contains("recent")) {
       this._trackEmojiUsage(code);
     }
+
+    if (this.site.isMobileDevice) {
+      this.onClose();
+    }
   },
 
   @action
