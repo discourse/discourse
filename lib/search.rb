@@ -185,9 +185,8 @@ class Search
       @original_term = PG::Connection.escape_string(@term)
     end
 
-    if @search_pms && @guardian.user
+    if @search_pms
       @opts[:type_filter] = "private_messages"
-      @search_context = @guardian.user
     end
 
     if @search_all_topics && @guardian.user
@@ -690,13 +689,20 @@ class Search
         nil
       elsif word == 'in:personal'
         @search_pms = true
+        @search_context = @guardian.user
         nil
       elsif word == "in:personal-direct"
         @search_pms = true
         @direct_pms_only = true
+        @search_context = @guardian.user
         nil
-      elsif word =~ /^personal_messages:(.+)$/
+      elsif word =~  /^personal_messages:(.+)$/
         @search_pms = true
+
+        if user = User.find_by_username($1)
+          @search_context = user
+        end
+
         nil
       else
         found ? nil : word

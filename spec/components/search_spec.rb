@@ -190,19 +190,20 @@ describe Search do
   end
 
   context 'private messages' do
-    let!(:topic) do
-      Fabricate(:topic, category_id: nil, archetype: 'private_message')
-    end
+    let!(:post) { Fabricate(:private_message_post) }
 
-    let!(:post) { Fabricate(:post, topic: topic) }
+    let(:topic) { post.topic }
 
     let!(:reply) do
-      Fabricate(:post, topic: topic, raw: 'hello from mars, we just landed')
+      Fabricate(:private_message_post,
+        topic: post.topic,
+        raw: 'hello from mars, we just landed',
+        user: post.user
+      )
     end
 
     let!(:post2) do
-      Fabricate(:post,
-        topic: Fabricate(:topic, category_id: nil, archetype: 'private_message'),
+      Fabricate(:private_message_post,
         raw: 'another secret pm from mars, testing'
       )
     end
@@ -211,9 +212,6 @@ describe Search do
       expect do
         Search.execute('mars', type_filter: 'private_messages')
       end.to raise_error(Discourse::InvalidAccess)
-
-      TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
-      TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
 
       results = Search.execute(
         'mars',
@@ -260,7 +258,6 @@ describe Search do
 
       results = Search.execute(
         'mars in:personal',
-        search_context: post.user,
         guardian: Guardian.new(post.user)
       )
 
@@ -281,6 +278,17 @@ describe Search do
       )
 
       expect(results.posts).to contain_exactly(reply)
+    end
+
+    context 'personal_messages filter' do
+      it 'correctly searches for the PM of the given user' do
+        results = Search.execute(
+          "mars personal_messages:#{post.user.username}",
+          guardian: Guardian.new(post.user)
+        )
+
+        expect(results.posts).to contain_exactly(reply)
+      end
     end
 
     context 'personal-direct flag' do

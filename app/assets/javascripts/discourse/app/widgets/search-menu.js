@@ -98,13 +98,18 @@ export default createWidget("search-menu", {
       query += `q=${encodeURIComponent(searchData.term)}`;
 
       if (contextEnabled && ctx) {
-        if (
-          this.currentUser &&
-          ctx.id.toString().toLowerCase() ===
-            this.currentUser.get("username_lower") &&
-          type === "private_messages"
-        ) {
-          query += " in:personal";
+        if (type === "private_messages") {
+          if (
+            this.currentUser &&
+            ctx.id.toString().toLowerCase() ===
+              this.currentUser.get("username_lower")
+          ) {
+            query += " in:personal";
+          } else {
+            query += encodeURIComponent(
+              ` personal_messages:${ctx.id.toString().toLowerCase()}`
+            );
+          }
         } else {
           query += encodeURIComponent(" " + type + ":" + ctx.id);
         }
