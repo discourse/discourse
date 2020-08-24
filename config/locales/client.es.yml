@@ -552,6 +552,8 @@ es:
     groups:
       member_added: "Añadido"
       member_requested: "Solicitado el"
+      add_members:
+        notify_users: "Notificaciones a usuarios"
       requests:
         title: "Solicitudes"
         reason: "Motivo"
@@ -593,6 +595,8 @@ es:
         membership:
           title: Membresía
           access: Acceso
+        categories:
+          title: Categorías
         logs:
           title: "Registros"
           when: "Cuándo"

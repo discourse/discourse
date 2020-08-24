@@ -606,6 +606,7 @@ nl:
           watched_categories_instructions: "Automatisch alle topics in deze categorieën in de gaten houden. Groepsleden ontvangen meldingen bij alle nieuwe berichten en topics, en het aantal nieuwe berichten verschijnt ook naast het topic."
           tracked_categories_instructions: "Automatisch alle topics in deze categorieën volgen. Het aantal nieuwe berichten verschijnt naast het topic."
           watching_first_post_categories_instructions: "Gebruikers ontvangen een melding bij het eerste bericht in elk nieuw topic in deze categorieën."
+          regular_categories_instructions: "Als deze categorieën zijn gedempt, wordt het dempen opgeheven voor groepsleden. Gebruikers ontvangen een melding als ze worden genoemd of als iemand erop antwoordt."
           muted_categories_instructions: "Gebruikers ontvangen geen enkele melding over nieuwe topics in deze categorieën, en ze verschijnen niet op de pagina's Categorieën of Nieuwste."
         tags:
           title: Tags
@@ -614,6 +615,7 @@ nl:
           watched_tags_instructions: "Automatisch alle topics met deze tags in de gaten houden. Groepsleden ontvangen meldingen bij alle nieuwe berichten en topics, en het aantal nieuwe berichten verschijnt ook naast het topic."
           tracked_tags_instructions: "Automatisch alle topics met deze tags volgen. Het aantal nieuwe berichten verschijnt naast het topic."
           watching_first_post_tags_instructions: "Gebruikers ontvangen een melding bij het eerste bericht in elk nieuw topic met deze tags."
+          regular_tags_instructions: "Als deze tags zijn gedempt, wordt het dempen opgeheven voor groepsleden. Gebruikers ontvangen een melding als ze worden genoemd of als iemand erop antwoordt."
           muted_tags_instructions: "Gebruikers ontvangen geen enkele melding over nieuwe topics met deze tags, en ze verschijnen niet in Nieuwste."
         logs:
           title: "Logboeken"
@@ -625,6 +627,10 @@ nl:
           details: "Details"
           from: "Van"
           to: "Naar"
+      permissions:
+        title: "Toestemmingen"
+        none: "Er zijn geen categorieën aan deze groep gekoppeld."
+        description: "Leden van deze groep hebben toegang tot deze categorieën"
       public_admission: "Gebruikers mogen vrij aan de groep deelnemen (Vereist openbaar zichtbare groep)"
       public_exit: "Gebruikers mogen vrij de groep verlaten"
       empty:

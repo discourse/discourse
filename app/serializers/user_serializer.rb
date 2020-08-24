@@ -16,7 +16,9 @@ class UserSerializer < UserCardSerializer
              :second_factor_backup_enabled,
              :second_factor_remaining_backup_codes,
              :associated_accounts,
-             :profile_background_upload_url
+             :profile_background_upload_url,
+             :can_upload_profile_header,
+             :can_upload_user_card_background
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -33,6 +35,7 @@ class UserSerializer < UserCardSerializer
 
   private_attributes :locale,
                      :muted_category_ids,
+                     :regular_category_ids,
                      :watched_tags,
                      :watching_first_post_tags,
                      :tracked_tags,
@@ -170,6 +173,14 @@ class UserSerializer < UserCardSerializer
     scope.can_edit_name?(object)
   end
 
+  def can_upload_profile_header
+    scope.can_upload_profile_header?(object)
+  end
+
+  def can_upload_user_card_background
+    scope.can_upload_user_card_background?(object)
+  end
+
   ###
   ### STAFF ATTRIBUTES
   ###
@@ -207,6 +218,10 @@ class UserSerializer < UserCardSerializer
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def regular_category_ids
+    CategoryUser.lookup(object, :regular).pluck(:category_id)
   end
 
   def tracked_category_ids

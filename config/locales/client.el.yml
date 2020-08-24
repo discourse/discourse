@@ -168,6 +168,8 @@ el:
         sa_east_1: "Νότια Αμερική (Σάο Πάολο)"
         us_east_1: "Ανατολικές ΗΠΑ (Β. Βιρτζίνια)"
         us_east_2: "Ανατολικές ΗΠΑ (Οχάιο)"
+        us_gov_east_1: "AWS GovCloud (US-East)"
+        us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "Δυτικές ΗΠΑ (Β. Καλιφόρνια)"
         us_west_2: "Δυτικές ΗΠΑ (Όρεγκον)"
     edit: "αλλαγή του τίτλου και της κατηγορίας του νήματος"
@@ -272,8 +274,13 @@ el:
         tomorrow: "Αύριο"
         next_week: "Την άλλη εβδομάδα"
         later_this_week: "Αργότερα αυτή την εβδομάδα"
+        start_of_next_business_week: "Την Δευτέρα"
+        start_of_next_business_week_alt: "Την επόμενη Δευτέρα"
         next_month: "Τον άλλο μήνα"
+    copy_codeblock:
+      copied: "αντιγράφηκε!"
     drafts:
+      resume: "Βιογραφικό"
       remove: "Αναίρεση Πρόσκλησης"
       abandon:
         yes_value: "Ναί, απέρριψέ τη"
@@ -298,16 +305,21 @@ el:
       edit: "Επεξεργασία αυτής της ανακοίνωσης >>"
     choose_topic:
       none_found: "Δεν βρέθηκαν νήματα."
+    choose_message:
+      none_found: "Δε βρέθηκαν αποτελέσματα."
     review:
+      order_by: "Ταξινόμηση κατά"
       explain:
         total: "Σύνολο"
         trust_level_bonus:
           name: "επίπεδο εμπιστοσύνης"
+      awaiting_approval: "Αναμονή έγκρισης"
       delete: "Σβήσιμο"
       settings:
         saved: "Αποθηκεύτηκε! "
         save_changes: "Αποθήκευση Αλλαγών"
         title: "Ρυθμίσεις"
+      moderation_history: "Ιστορικό εποπτείας"
       view_all: "Προβολή Όλων"
       topic: "Νήμα:"
       filtered_user: "Χρήστης"
@@ -315,12 +327,14 @@ el:
       deleted_user: "(ο χρήστης διαγράφηκε)"
       user:
         bio: "Βιογραφικό"
+        website: "Website"
         username: "Όνομα Χρήστη"
         email: "Διεύθυνση Email"
         name: "Όνομα"
         fields: "Πεδία"
       topics:
         topic: "Νήμα"
+        deleted: "[Το θέμα διαγράφηκε]"
         details: "λεπτομέρειες"
       edit: "Επεξεργασία"
       save: "Αποθήκευση"
@@ -402,6 +416,8 @@ el:
         make_user_group_owner: "Κάνε ιδιοκτήτη"
         remove_user_as_group_owner: "Απέσυρε ιδιοκτήτη"
     groups:
+      add_members:
+        title: "Προσθήκη μελών στο %{group_name}"
       requests:
         reason: "Αιτία"
       manage:
@@ -416,11 +432,23 @@ el:
         email:
           title: "Διεύθυνση Email"
           credentials:
+            smtp_server: "SMTP Server"
+            smtp_port: "SMTP Port"
+            smtp_ssl: "Χρήση SSL για SMTP"
+            imap_server: "IMAP Server"
+            imap_port: "IMAP Port"
+            imap_ssl: "Χρήση SSL για SMTP"
             username: "Όνομα Χρήστη"
             password: "Κωδικός Πρόσβασης"
         membership:
           title: Συνδρομή
           access: Πρόσβαση
+        categories:
+          title: Κατηγορίες
+          long_title: "Προεπιλεγμένες ειδοποιήσεις κατηγορίας"
+        tags:
+          title: Ετικέτες
+          long_title: "Προεπιλεγμένες ειδοποιήσεις ετικετών"
         logs:
           title: "Αρχεία καταγραφής"
           when: "Πότε"
@@ -431,6 +459,8 @@ el:
           details: "Λεπτομέρειες"
           from: "Από"
           to: "Προς"
+      permissions:
+        title: "Δικαιώματα"
       public_admission: "Επίτρεψε στους χρήστες να προσχωρήσουν στην ομάδα (Απαιτεί δημόσια ορατή ομάδα)"
       public_exit: "Επίτρεψε στους χρήστες να αποχωρήσουν από την ομάδα"
       empty:
@@ -441,8 +471,11 @@ el:
         topics: "Δεν υπάρχουν νήματα από μέλη της ομάδας."
         logs: "Δεν υπάρχουν logs για αυτή την ομάδα."
       add: "Προσθήκη"
+      join: "Γίνετε μέλος"
+      leave: "Αποχώρηση"
       request: "Αίτημα"
       message: "Μήνυμα"
+      confirm_leave: "Είστε βέβαιοι ότι θέλετε να αποχωρήσετε από αυτήν την ομάδα;"
       membership_request_template: "Προσαρμοσμένο πρότυπο που θα εμφανίζεται στους χρήστες όταν αποστέλλεται αίτημα συμμετοχής"
       membership_request:
         submit: "Αποστολή Αιτήματος"
@@ -450,13 +483,17 @@ el:
         reason: "Ενημέρωσε τους ιδιοκτήτες της ομάδας για τον λόγο που θέλεις να συμμετέχεις σε αυτήν"
       membership: "Συνδρομή"
       name: "Όνομα"
+      group_name: "Όνομα ομάδας"
       user_count: "Χρήστες"
       bio: "Σχετικά με την Ομάδα"
       selector_placeholder: "εισαγωγή ονόματος χρήστη"
       owner: "ιδιοκτήτης"
       index:
         title: "Ομάδες"
+        all: "Όλες οι ομάδες"
         empty: "Δεν υπάρχουν ορατές ομάδες."
+        filter: "Φιλτράρισμα κατά τύπο ομάδας"
+        automatic_groups: "Αυτόματες ομάδες"
         automatic: "Αυτόματα"
         public: "Δημόσια"
         private: "Ιδιωτική"
@@ -579,6 +616,7 @@ el:
           unread: "Αδιάβαστα"
         ignore_duration_title: "Αγνόησε χρήστη"
         ignore_duration_username: "Όνομα Χρήστη"
+        ignore_duration_when: "Διάρκεια:"
         ignore_duration_save: "Αγνόηση"
         ignore_option: "Αγνοήθηκε "
         mute_option: "Σίγαση"
@@ -720,6 +758,8 @@ el:
         security_key:
           register: "Εγγραφή"
           title: "Κλειδιά ασφαλείας"
+          add: "Προσθήκη κλειδιού ασφαλείας"
+          default_name: "Κύριο κλειδί ασφαλείας"
           save: "Αποθήκευση"
       change_about:
         title: "Άλλαξε τα «σχετικά με εμένα»"
@@ -748,7 +788,10 @@ el:
         instructions: "Οι εικόνες στο φόντο θα κεντραρίζονται και το προκαθορισμένο πλάτος τους είναι 590px."
       email:
         title: "Email"
+        primary: "Πρωτεύον email"
+        secondary: "Δευτερεύοντα email"
         primary_label: "κύριο"
+        unconfirmed_label: "ανεξακρίβωτο"
         update_email: "Αλλαγή διεύθυνσης Email"
         ok: "Για επιβεβαίωση θα σου στείλουμε ένα email"
         required: "Παρακαλώ εισάγετε μια διεύθυνση ηλεκτρονικού ταχυδρομείου"
@@ -789,6 +832,10 @@ el:
       auth_tokens:
         ip: "IP"
         details: "Λεπτομέρειες"
+        log_out_all: "Αποσύνδεση όλων"
+        active: "ενεργό τώρα"
+        secure_account: "Ασφάλισε τον λογαριασμό μου"
+        latest_post: "Τελευταία δημοσιεύσατε το…"
       last_posted: "Τελευταία Ανάρτηση"
       last_emailed: "Τελευταίο email"
       last_seen: "Εθεάθη"
@@ -1018,6 +1065,8 @@ el:
       hide_session: "Υπενθύμιση αύριο"
       hide_forever: "όχι ευχαριστώ"
       hidden_for_session: "Εντάξει, θα σε ρωτήσω αύριο. Μπορείς πάντα να χρησιμοποιείς τη \"Σύνδεση\" για να δημιουργήσεις ένα λογαριασμό."
+      intro: "Γεια! Φαίνεται ότι απολαμβάνεις τη συζήτηση, αλλά δεν έχεις εγγραφεί ακόμα για λογαριασμό."
+      value_prop: "Όταν δημιουργείτε έναν λογαριασμό, θυμόμαστε ακριβώς τι έχετε διαβάσει, έτσι ώστε να επιστρέφετε πάντα από εκεί που σταματήσατε. Μπορείτε επίσης να λαμβάνετε ειδοποιήσεις, εδώ και μέσω ηλεκτρονικού ταχυδρομείου, κάθε φορά που κάποιος σας απαντά. Και μπορείτε να σας αρέσουν οι δημοσιεύσεις και να μοιραστείς την αγάπη. :heartpulse:"
     summary:
       enabled_description: "Βλέπεις μια περίληψη αυτού του νήματος: οι πιο ενδιαφέρουσες αναρτήσεις, όπως αυτές καθορίστηκαν από την κοινότητα."
       description: "Υπάρχουν <b>%{replyCount}</b> απαντήσεις."
@@ -1052,12 +1101,15 @@ el:
       reset: "Επαναφορά Κωδικού Πρόσβασης"
       complete_username: "Αν βρεθεί λογαριασμός με το όνομα χρήστη <b>%{username}</b>, σύντομα θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
       complete_email: "Αν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>, σε λίγο θα λάβεις ένα email με οδηγίες για το πως να ορίσεις νέο κωδικό πρόσβασης."
+      complete_username_found: "Βρήκαμε έναν λογαριασμό που να ταιριάζει με το όνομα χρήστη <b>%{username}</b>. Θα πρέπει να λάβετε ένα email με οδηγίες σχετικά με τον τρόπο επαναφοράς του κωδικού πρόσβασής σας σύντομα."
+      complete_email_found: "Βρήκαμε έναν λογαριασμό που να ταιριάζει με το <b>%{email}</b>. Θα πρέπει να λάβετε ένα email με οδηγίες σχετικά με τον τρόπο επαναφοράς του κωδικού πρόσβασής σας σύντομα."
       complete_username_not_found: "Δεν υπάρχει λογαριασμός με το όνομα χρήστη <b>%{username}</b>"
       complete_email_not_found: "Δεν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>"
       help: "Δεν λαμβάνετε το email; Ελέγξτε αρχικά τον φάκελο spam.<p>Δεν γνωρίζετε ποια διεύθυνση email χρησιμοποιήσατε; Πείτε μας την διεύθυνση που θεωρείτε πιο πιθανή και θα σας πούμε αν υπάρχει στο σύστημα.</p><p>Αν δεν έχετε πλέον πρόσβαση στην διεύθυνση email του λογαριασμού σας, παρακαλούμε επικοινωνήστε<a href='%{basePath}/about'>με την ομάδα διαχείρισης.</a></p>"
       button_ok: "OK"
       button_help: "Βοήθεια"
     email_login:
+      link_label: "Στείλτε μου ένα σύνδεσμο σύνδεσης"
       complete_username_not_found: "Δεν υπάρχει λογαριασμός με το όνομα χρήστη <b>%{username}</b>"
       complete_email_not_found: "Δεν υπάρχει λογαριασμός με τη διεύθυνση <b>%{email}</b>"
       confirm_title: Συνεχίστε στην %{site_name}
@@ -1097,11 +1149,16 @@ el:
         name: "Twitter"
         title: "μέσω του Twitter"
       instagram:
+        name: "Instagram"
         title: "μέσω του Instagram"
       facebook:
+        name: "Facebook"
         title: "μέσω του Facebook"
       github:
+        name: "GitHub"
         title: "μέσω του GitHub"
+      discord:
+        name: "Discord"
     invites:
       accept_title: "Πρόσκληση"
       welcome_to: "Καλώς ήλθατε στην %{site_name}!"
@@ -1141,7 +1198,14 @@ el:
       to: Προς
     emoji_picker:
       filter_placeholder: Αναζήτηση για emoji
+      smileys_&_emotion: Χαμόγελα και συγκίνηση
+      people_&_body: Άνθρωποι και Σώμα
+      animals_&_nature: Ζώα και Φύση
+      food_&_drink: Φαγητό και Ποτό
+      travel_&_places: Ταξίδια και μέρη
+      activities: Δραστηριότητες
       objects: Αντικείμενα
+      symbols: Σύμβολα
       flags: Σημάνσεις
       recent: Πρόσφατα χρησιμοποιημένα
       default_tone: Χωρίς απόχρωση επιδερμίδας
@@ -1151,6 +1215,8 @@ el:
       medium_dark_tone: Σκουρόχρωμη απόχρωση επιδερμίδας
       dark_tone: Σκούρη απόχρωση επιδερμίδας
       default: Προσαρμοσμένα emojis
+    shared_drafts:
+      title: "Κοινόχρηστα Προσχέδια"
     composer:
       emoji: "Emoji :)"
       more_emoji: "περισσότερα..."
@@ -1230,6 +1296,7 @@ el:
       admin_options_title: "Προαιρετικές ρυθμίσεις συνεργατών για αυτό το νήμα"
       composer_actions:
         reply: Απάντηση
+        draft: Προσχέδιο
         edit: Επεξεργασία
         create_topic:
           label: "Νέο Νήμα"

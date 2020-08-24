@@ -658,7 +658,7 @@ componentTest("emoji", {
     await click("button.emoji");
 
     await click(
-      '.emoji-picker .section[data-section="smileys_&_emotion"] button.emoji[title="grinning"]'
+      '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
     );
     assert.equal(this.value, "hello world. :grinning:");
   }

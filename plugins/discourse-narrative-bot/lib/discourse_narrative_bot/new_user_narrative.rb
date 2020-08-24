@@ -80,7 +80,22 @@ module DiscourseNarrativeBot
         }
       },
 
+      # Note: tutorial_images and tutorial_likes are mutually exclusive.
+      #       The prerequisites should ensure only one of them is called.
       tutorial_images: {
+        prerequisite: Proc.new { @user.has_trust_level?(SiteSetting.min_trust_to_post_embedded_media) },
+        next_state: :tutorial_likes,
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.likes.instructions", base_uri: Discourse.base_uri) },
+        reply: {
+          action: :reply_to_image
+        },
+        like: {
+          action: :track_images_like
+        }
+      },
+
+      tutorial_likes: {
+        prerequisite: Proc.new { !@user.has_trust_level?(SiteSetting.min_trust_to_post_embedded_media) },
         next_state: :tutorial_flag,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.flag.instructions",
@@ -88,11 +103,12 @@ module DiscourseNarrativeBot
             about_url: url_helpers(:about_index_url),
             base_uri: Discourse.base_uri)
         },
-        reply: {
-          action: :reply_to_image
-        },
         like: {
-          action: :track_like
+          action: :reply_to_likes
+        },
+        reply: {
+          next_state: :tutorial_likes,
+          action: :missing_likes_like
         }
       },
 
@@ -278,11 +294,11 @@ module DiscourseNarrativeBot
       end
     end
 
-    def track_like
+    def track_images_like
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      post_liked = PostAction.find_by(
+      post_liked = PostAction.exists?(
         post_action_type_id: PostActionType.types[:like],
         post_id: @data[:last_post_id],
         user_id: @user.id
@@ -360,6 +376,45 @@ module DiscourseNarrativeBot
       reply = reply_to(@post, raw) unless @data[:attempted] && !transition
       enqueue_timeout_job(@user)
       transition ? reply : false
+    end
+
+    def missing_likes_like
+      return unless valid_topic?(@post.topic_id)
+      return if @post.user_id == self.discobot_user.id
+
+      fake_delay
+      enqueue_timeout_job(@user)
+
+      last_post = Post.find_by(id: @data[:last_post_id])
+      reply_to(@post, I18n.t("#{I18N_KEY}.likes.not_found", i18n_post_args(url: last_post.url)))
+      false
+    end
+
+    def reply_to_likes
+      post_topic_id = @post.topic_id
+      return unless valid_topic?(post_topic_id)
+
+      post_liked = PostAction.exists?(
+        post_action_type_id: PostActionType.types[:like],
+        post_id: @data[:last_post_id],
+        user_id: @user.id
+      )
+
+      if post_liked
+        raw = <<~RAW
+          #{I18n.t("#{I18N_KEY}.likes.reply", i18n_post_args)}
+
+          #{instance_eval(&@next_instructions)}
+        RAW
+
+        fake_delay
+
+        reply = reply_to(@post, raw)
+        enqueue_timeout_job(@user)
+        return reply
+      end
+
+      false
     end
 
     def reply_to_formatting

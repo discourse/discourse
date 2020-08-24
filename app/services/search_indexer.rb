@@ -85,6 +85,7 @@ class SearchIndexer
       "search_data" => tsvector,
     }
 
+    yield params if block_given?
     table_name.camelize.constantize.upsert(params)
   rescue => e
     if Rails.env.test?
@@ -95,7 +96,8 @@ class SearchIndexer
       # instead in the post processor
       Discourse.warn_exception(
         e,
-        message: "Unexpected error while indexing #{table} for search"
+        message: "Unexpected error while indexing #{table} for search",
+        env: { id: id }
       )
     end
   end
@@ -111,7 +113,7 @@ class SearchIndexer
     )
   end
 
-  def self.update_posts_index(post_id, topic_title, category_name, topic_tags, cooked)
+  def self.update_posts_index(post_id:, topic_title:, category_name:, topic_tags:, cooked:, private_message:)
     update_index(
       table: 'post',
       id: post_id,
@@ -119,7 +121,9 @@ class SearchIndexer
       b_weight: category_name,
       c_weight: topic_tags,
       d_weight: scrub_html_for_search(cooked)
-    )
+    ) do |params|
+      params["private_message"] = private_message
+    end
   end
 
   def self.update_users_index(user_id, username, name)
@@ -198,13 +202,21 @@ class SearchIndexer
 
     if Post === obj && obj.raw.present? &&
        (
+         force ||
          obj.saved_change_to_cooked? ||
-         obj.saved_change_to_topic_id? ||
-         force
+         obj.saved_change_to_topic_id?
        )
 
       if topic
-        SearchIndexer.update_posts_index(obj.id, topic.title, category_name, tag_names, obj.cooked)
+        SearchIndexer.update_posts_index(
+          post_id: obj.id,
+          topic_title: topic.title,
+          category_name: category_name,
+          topic_tags: tag_names,
+          cooked: obj.cooked,
+          private_message: topic.private_message?
+        )
+
         SearchIndexer.update_topics_index(topic.id, topic.title, obj.cooked) if obj.is_first_post?
       end
     end
@@ -216,7 +228,15 @@ class SearchIndexer
     if Topic === obj && (obj.saved_change_to_title? || force)
       if obj.posts
         if post = obj.posts.find_by(post_number: 1)
-          SearchIndexer.update_posts_index(post.id, obj.title, category_name, tag_names, post.cooked)
+          SearchIndexer.update_posts_index(
+            post_id: post.id,
+            topic_title: obj.title,
+            category_name: category_name,
+            topic_tags: tag_names,
+            cooked: post.cooked,
+            private_message: obj.private_message?
+          )
+
           SearchIndexer.update_topics_index(obj.id, obj.title, post.cooked)
         end
       end

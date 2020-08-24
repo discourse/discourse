@@ -165,7 +165,7 @@ const Bookmark = RestModel.extend({
 Bookmark.reopenClass({
   create(args) {
     args = args || {};
-    args.currentUser = args.currentUser || Discourse.currentUser;
+    args.currentUser = args.currentUser || User.current();
     return this._super(args);
   }
 });

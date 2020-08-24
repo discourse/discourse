@@ -413,4 +413,25 @@ describe Upload do
       "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
     )
   end
+
+  context '.destroy' do
+
+    it "can correctly clear information when destroying an upload" do
+      upload = Fabricate(:upload)
+      user = Fabricate(:user)
+
+      user.user_profile.update!(
+        card_background_upload_id: upload.id,
+        profile_background_upload_id: upload.id
+      )
+
+      upload.destroy
+
+      user.user_profile.reload
+
+      expect(user.user_profile.card_background_upload_id).to eq(nil)
+      expect(user.user_profile.profile_background_upload_id).to eq(nil)
+    end
+
+  end
 end

@@ -20,12 +20,13 @@ describe UserAvatarsController do
 
   context 'show' do
 
-    context 'invalid' do
-      after do
-        FileUtils.rm(Discourse.store.path_for(upload))
-      end
-      # travis is not good here, no image magick
-      if !ENV["TRAVIS"]
+    # travis is not good here, no image magick
+    if !ENV["TRAVIS"]
+      context 'invalid' do
+        after do
+          FileUtils.rm(Discourse.store.path_for(upload))
+        end
+
         let :upload do
           File.open(file_from_fixtures("cropped.png")) do |f|
             UploadCreator.new(
@@ -65,7 +66,6 @@ describe UserAvatarsController do
           expect(upload.extension).to eq('png')
         end
       end
-
     end
 
     it 'handles non local content correctly' do

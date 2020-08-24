@@ -157,43 +157,6 @@ export const WidgetDropdownBodyClass = {
     return `widget-dropdown-body ${attrs.class || ""}`;
   },
 
-  init(attrs) {
-    schedule("afterRender", () => {
-      const dropdownHeader = document.querySelector(
-        `#${attrs.id} .widget-dropdown-header`
-      );
-      const dropdownBody = document.querySelector(
-        `#${attrs.id} .widget-dropdown-body`
-      );
-
-      if (dropdownHeader && dropdownBody) {
-        /* global Popper:true */
-        this._popper = Popper.createPopper(dropdownHeader, dropdownBody, {
-          strategy: "fixed",
-          placement: "bottom-start",
-          modifiers: [
-            {
-              name: "preventOverflow"
-            },
-            {
-              name: "offset",
-              options: {
-                offset: [0, 5]
-              }
-            }
-          ]
-        });
-      }
-    });
-  },
-
-  destroy() {
-    if (this._popper) {
-      this._popper.destroy();
-      this._popper = null;
-    }
-  },
-
   clickOutside() {
     this.sendWidgetAction("hideBody");
   },
@@ -269,8 +232,47 @@ export const WidgetDropdownClass = {
     }
   },
 
+  destroy() {
+    if (this._popper) {
+      this._popper.destroy();
+      this._popper = null;
+    }
+  },
+
   _onTrigger() {
     this.state.opened = !this.state.opened;
+
+    schedule("afterRender", () => {
+      const dropdownHeader = document.querySelector(
+        `#${this.attrs.id} .widget-dropdown-header`
+      );
+      const dropdownBody = document.querySelector(
+        `#${this.attrs.id} .widget-dropdown-body`
+      );
+
+      if (this.state.opened && dropdownHeader && dropdownBody) {
+        if (this.state.popper) {
+          this.state.popper.destroy();
+        }
+
+        /* global Popper:true */
+        this.state.popper = Popper.createPopper(dropdownHeader, dropdownBody, {
+          strategy: "fixed",
+          placement: "bottom-start",
+          modifiers: [
+            {
+              name: "preventOverflow"
+            },
+            {
+              name: "offset",
+              options: {
+                offset: [0, 5]
+              }
+            }
+          ]
+        });
+      }
+    });
   },
 
   template: hbs`

@@ -128,7 +128,7 @@ export default Controller.extend({
     return (
       this.currentUser &&
       (this.currentUser.canManageGroup(model) ||
-        (this.currentUser.admin && automatic))
+        (model.can_admin_group && automatic))
     );
   },
 

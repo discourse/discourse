@@ -303,6 +303,7 @@ en:
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
       list_permission_denied: "You do not have permission to view this user's bookmarks."
+      no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       auto_delete_preference:
         label: "Automatically delete"
         never: "Never"
@@ -930,7 +931,10 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       first_notification: "Your first notification! Select it to begin."
       dynamic_favicon: "Show counts on browser icon"
-      skip_new_user_tips: "Skip new user onboarding tips and badges"
+      skip_new_user_tips:
+        description: "Skip new user onboarding tips and badges"
+        not_first_time: "Not your first time?"
+        skip_link: "Skip these tips"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       dark_mode: "Dark Mode"
       dark_mode_enable: "Enable automatic dark mode color scheme"
@@ -981,6 +985,8 @@ en:
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
+      regular_categories: "Regular"
+      regular_categories_instructions: "You will see these topics in the `latest` and `top` topic lists."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -3352,6 +3358,7 @@ en:
       delete_unused_confirmation_more_tags:
         one: "%{tags} and %{count} more"
         other: "%{tags} and %{count} more"
+      delete_no_unused_tags: "There are no unused tags."
       delete_unused: "Delete Unused Tags"
       delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
       cancel_delete_unused: "Cancel"
@@ -3643,12 +3650,24 @@ en:
         continue: Continue
         use_global_key: Global Key (allows all actions)
         scopes:
+          description: |
+            When using scopes, you can restrict an API key to a specific set of endpoints.
+            You can also define which parameters will be allowed. Use commas to separate multiple values.
           title: Scopes
           resource: Resource
           action: Action
           allowed_parameters: Allowed Parameters
           optional_allowed_parameters: Allowed Parameters (optional)
           any_parameter: (any parameter)
+          allowed_urls: Allowed URLs
+          descriptions:
+            topics:
+              read: |
+                Read a topic or a specific post in it. RSS is also supported.
+              write: |
+                Create a new topic or post to an existing one.
+              read_lists: |
+                Read topic lists like top, new, latest, etc. RSS is also supported.
 
       web_hooks:
         title: "Webhooks"
@@ -3894,6 +3913,7 @@ en:
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme: "Color Palette"
+          default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
@@ -3991,6 +4011,10 @@ en:
           embedded_scss:
             text: "Embedded CSS"
             title: "Enter custom CSS to deliver with embedded version of comments"
+          color_definitions:
+            text: "Color Definitions"
+            title: "Enter custom color definitions (advanced users only)"
+            placeholder: "\r\nUse this stylesheet to add custom colors to the list of CSS custom properties.\r\n\r\nExample: \r\n\r\n:root {\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\r\n}\r\n\r\nPrefixing the property names is highly recommended to avoid conflicts with plugins and/or core."
           head_tag:
             text: "</head>"
             title: "HTML that will be inserted before the </head> tag"

@@ -3,6 +3,7 @@ import { isBlank } from "@ember/utils";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
   userModes: [
@@ -48,6 +49,15 @@ export default Controller.extend({
 
     continue() {
       this.transitionToRoute("adminApiKeys.show", this.model.id);
+    },
+
+    showURLs(urls) {
+      return showModal("admin-api-key-urls", {
+        admin: true,
+        model: {
+          urls
+        }
+      });
     }
   }
 });

@@ -7,6 +7,7 @@ import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
+import User from "discourse/models/user";
 
 let _trackView = false;
 let _transientHeader = null;
@@ -80,7 +81,7 @@ export function ajax() {
   function performAjax(resolve, reject) {
     args.headers = args.headers || {};
 
-    if (Discourse.__container__.lookup("current-user:main")) {
+    if (User.current()) {
       args.headers["Discourse-Logged-In"] = "true";
     }
 

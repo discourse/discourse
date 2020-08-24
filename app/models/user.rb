@@ -568,7 +568,8 @@ class User < ActiveRecord::Base
 
   def read_first_notification?
     if (trust_level > TrustLevel[1] ||
-        (first_seen_at.present? && first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago))
+        (first_seen_at.present? && first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago) ||
+        user_option.skip_new_user_tips)
 
       return true
     end
@@ -1447,7 +1448,7 @@ class User < ActiveRecord::Base
 
     values = []
 
-    %w{watching watching_first_post tracking muted}.each do |s|
+    %w{watching watching_first_post tracking regular muted}.each do |s|
       category_ids = SiteSetting.get("default_categories_#{s}").split("|").map(&:to_i)
       category_ids.each do |category_id|
         next if category_id == 0

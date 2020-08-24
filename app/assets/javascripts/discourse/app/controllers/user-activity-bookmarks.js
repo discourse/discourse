@@ -1,16 +1,10 @@
 import I18n from "I18n";
-import { schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
-import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { inject } from "@ember/controller";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import Bookmark from "discourse/models/bookmark";
-import {
-  shouldOpenInNewTab,
-  openLinkInNewTab
-} from "discourse/lib/click-track";
 
 export default Controller.extend({
   application: inject(),
@@ -24,11 +18,6 @@ export default Controller.extend({
 
   queryParams: ["q"],
 
-  init() {
-    this._super(...arguments);
-    this._boundClick = false;
-  },
-
   loadItems() {
     this.setProperties({
       content: [],
@@ -38,26 +27,6 @@ export default Controller.extend({
 
     if (this.q && !this.searchTerm) {
       this.set("searchTerm", this.q);
-    }
-
-    if (!this._boundClick) {
-      schedule("afterRender", () => {
-        // TODO(martin): This should be pulled out into a bookmark-list component,
-        // the controller is not the best place for this.
-        let wrapper = document.querySelector(".bookmark-list-wrapper");
-        if (!wrapper) {
-          return;
-        }
-        wrapper.addEventListener("click", function(e) {
-          if (e.target && e.target.tagName === "A") {
-            let link = e.target;
-            if (shouldOpenInNewTab(link.href)) {
-              openLinkInNewTab(link);
-            }
-          }
-        });
-        this._boundClick = true;
-      });
     }
 
     return this.model
@@ -72,13 +41,20 @@ export default Controller.extend({
       });
   },
 
-  @discourseComputed("loaded", "content.length", "noResultsHelp")
-  noContent(loaded, contentLength, noResultsHelp) {
-    return loaded && contentLength === 0 && noResultsHelp;
+  @discourseComputed("loaded", "content.length")
+  noContent(loaded, contentLength) {
+    return loaded && contentLength === 0;
   },
 
-  _removeBookmarkFromList(bookmark) {
-    this.content.removeObject(bookmark);
+  @discourseComputed("noResultsHelp", "noContent")
+  noResultsHelpMessage(noResultsHelp, noContent) {
+    if (noResultsHelp) {
+      return noResultsHelp;
+    }
+    if (noContent) {
+      return I18n.t("bookmarks.no_user_bookmarks");
+    }
+    return "";
   },
 
   @action
@@ -88,37 +64,8 @@ export default Controller.extend({
   },
 
   @action
-  removeBookmark(bookmark) {
-    const deleteBookmark = () => {
-      return bookmark
-        .destroy()
-        .then(() => this._removeBookmarkFromList(bookmark));
-    };
-    if (!bookmark.reminder_at) {
-      return deleteBookmark();
-    }
-    bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
-      if (result) {
-        return deleteBookmark();
-      }
-    });
-  },
-
-  @action
-  editBookmark(bookmark) {
-    let controller = showModal("bookmark", {
-      model: {
-        postId: bookmark.post_id,
-        id: bookmark.id,
-        reminderAt: bookmark.reminder_at,
-        name: bookmark.name
-      },
-      title: "post.bookmarks.edit",
-      modalClass: "bookmark-with-reminder"
-    });
-    controller.setProperties({
-      afterSave: () => this.loadItems()
-    });
+  reload() {
+    this.loadItems();
   },
 
   @action
@@ -142,7 +89,6 @@ export default Controller.extend({
 
   _processLoadResponse(response) {
     if (!response) {
-      this._bookmarksListDenied();
       return;
     }
 

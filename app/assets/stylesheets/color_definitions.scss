@@ -14,7 +14,16 @@
   @return red($hex), green($hex), blue($hex);
 }
 
+@function schemeType() {
+  @if is-light-color-scheme() {
+    @return "light";
+  } @else {
+    @return "dark";
+  }
+}
+
 :root {
+  --scheme-type: #{schemeType()};
   --primary: #{$primary};
   --secondary: #{$secondary};
   --tertiary: #{$tertiary};

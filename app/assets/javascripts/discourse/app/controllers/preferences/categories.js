@@ -9,6 +9,7 @@ export default Controller.extend({
 
     this.saveAttrNames = [
       "muted_category_ids",
+      "regular_category_ids",
       "watched_category_ids",
       "tracked_category_ids",
       "watched_first_post_category_ids"
@@ -19,10 +20,13 @@ export default Controller.extend({
     "model.watchedCategories",
     "model.watchedFirstPostCategories",
     "model.trackedCategories",
+    "model.regularCategories",
     "model.mutedCategories"
   )
-  selectedCategories(watched, watchedFirst, tracked, muted) {
-    return [].concat(watched, watchedFirst, tracked, muted).filter(t => t);
+  selectedCategories(watched, watchedFirst, tracked, regular, muted) {
+    return []
+      .concat(watched, watchedFirst, tracked, regular, muted)
+      .filter(t => t);
   },
 
   @discourseComputed

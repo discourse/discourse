@@ -829,6 +829,10 @@ fr:
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       dynamic_favicon: "Faire apparaître le compteur sur l'icône du navigateur"
+      skip_new_user_tips:
+        description: "Ignorer les badges et conseils d'intégration des nouveaux utilisateurs."
+        not_first_time: "Pas votre première fois ?"
+        skip_link: "Ignorer ces conseils"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"

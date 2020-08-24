@@ -570,6 +570,7 @@ zh_CN:
           watched_categories_instructions: "自动监控这些类别中的所有主题。组成员将收到所有新帖子和主题的通知，主题旁边还会显示新帖子的计数。"
           tracked_categories_instructions: "自动跟踪这些类别中的所有主题。新帖子的计数将显示在主题旁边。"
           watching_first_post_categories_instructions: "用户将收到这些类别中每个新主题的第一篇文章的通知。"
+          regular_categories_instructions: "如果这些分类已经被静音，将为群组成员取消静音。用户被提及到或被回复时会被通知。"
           muted_categories_instructions: "用户不会收到有关这些类别中新主题的任何通知，也不会出现在类别或最新主题页面上。"
         tags:
           title: 标签
@@ -578,6 +579,7 @@ zh_CN:
           watched_tags_instructions: "自动监控带有这些标签的所有主题。组成员将收到所有新帖子和主题的通知，主题旁边还会显示新帖子的计数。"
           tracked_tags_instructions: "使用这些标签自动跟踪所有主题。新帖子的计数将显示在主题旁边。"
           watching_first_post_tags_instructions: "用户将收到每个新主题中带有这些标签的第一篇文章的通知。"
+          regular_tags_instructions: "如果这些分类已经被静音，将为群组成员取消静音。用户被提及到或被回复时会被通知。"
           muted_tags_instructions: "用户不会收到任何有关这些标签的新主题的通知，也不会显示在最新通知中。"
         logs:
           title: "日志"
@@ -589,6 +591,10 @@ zh_CN:
           details: "详情"
           from: "从"
           to: "到"
+      permissions:
+        title: "权限"
+        none: "没有分类关联到这个群组。"
+        description: "这个群组的成员可以访问这些分类。"
       public_admission: "允许用户自由加入群组（需要群组公开可见）"
       public_exit: "允许用户自由离开群组"
       empty:

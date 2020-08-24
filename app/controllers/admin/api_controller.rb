@@ -25,7 +25,15 @@ class Admin::ApiController < Admin::AdminController
   def scopes
     scopes = ApiKeyScope.scope_mappings.reduce({}) do |memo, (resource, actions)|
       memo.tap do |m|
-        m[resource] = actions.map { |k, v| { id: "#{resource}:#{k}", name: k, params: v[:params] } }
+        m[resource] = actions.map do |k, v|
+          {
+            id: "#{resource}:#{k}",
+            key: k,
+            name: k.to_s.gsub('_', ' '),
+            params: v[:params],
+            urls: v[:urls]
+          }
+        end
       end
     end
 

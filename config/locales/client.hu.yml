@@ -178,14 +178,14 @@ hu:
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Párizs)"
         sa_east_1: "Dél-Amerika (São Paulo)"
-        us_east_1: "US Kelet (N. Virginia)"
+        us_east_1: "USA keleti része (Észak-Virginia)"
         us_east_2: "US Kelet (Ohio)"
-        us_gov_east_1: "AWS GovCloud (US-Kelet)"
-        us_gov_west_1: "AWS GovCloud (US-Nyugat)"
-        us_west_1: "US Nyugat (N. California)"
-        us_west_2: "US Nyugat (Oregon)"
+        us_gov_east_1: "AWS GovCloud (USA keleti része)"
+        us_gov_west_1: "AWS GovCloud (USA nyugati része)"
+        us_west_1: "USA nyugati része (Észak-Kalifornia)"
+        us_west_2: "USA nyugati része (Oregon)"
     edit: "a téma címének és kategóriájának szerkesztése"
-    expand: "Kibővítés"
+    expand: "Kibontás"
     not_implemented: "Ez a funkció még nincs megvalósítva."
     no_value: "Nem"
     yes_value: "Igen"
@@ -203,7 +203,7 @@ hu:
     links: "Hivatkozások"
     links_lowercase:
       one: "hivatkozás"
-      other: "hivatkozások"
+      other: "hivatkozás"
     faq: "GYIK"
     guidelines: "Irányelvek"
     privacy_policy: "Adatvédelmi szabályzat"
@@ -224,8 +224,8 @@ hu:
     every_hour: "óránként"
     daily: "naponta"
     weekly: "hetente"
-    every_month: "minden hónapban"
-    every_six_months: "minden hat hónapban"
+    every_month: "havonta"
+    every_six_months: "hat havonta"
     max_of_count: "legfeljebb %{count}"
     alternation: "vagy"
     character_count:
@@ -238,8 +238,8 @@ hu:
       title: "Ajánlott témák"
       pm_title: "Ajánlott üzenetek"
     about:
-      simple_title: "A fórumról"
-      title: "A(z) %{title} fórumról"
+      simple_title: "Névjegy"
+      title: "A(z) %{title} névjegye"
       stats: "Webhelystatisztika"
       our_admins: "Adminisztrátoraink"
       our_moderators: "Moderátoraink"
@@ -264,7 +264,7 @@ hu:
     bookmarks:
       not_bookmarked: "bejegyzés könyvjelzőzése"
       remove: "Könyvjelző eltávolítása"
-      confirm_clear: "Biztos, hogy törli az összes könyvjelzőjétt ebből a témából?"
+      confirm_clear: "Biztos, hogy törli az összes könyvjelzőjét ebből a témából?"
       save: "Mentés"
       search: "Keresés"
       reminders:
@@ -318,12 +318,12 @@ hu:
       none_found: "Nem találhatók témák."
       title:
         search: "Téma keresése"
-        placeholder: "ide írd a témakör címét, URL-jét vagy azonosítóját"
+        placeholder: "írja ide a témakör címét, URL-jét vagy azonosítóját"
     choose_message:
       none_found: "Nem található üzenet."
       title:
         search: "Üzenet keresése"
-        placeholder: "ide írd az üzenet címét, URL-jét vagy azonosítóját"
+        placeholder: "írja ide az üzenet címét, URL-jét vagy azonosítóját"
     review:
       order_by: "Rendezés:"
       in_reply_to: "válasz erre:"
@@ -344,7 +344,7 @@ hu:
         title: "téma zárolása"
       unclaim:
         help: "zárolás eltávolítása"
-      awaiting_approval: "Jóváhagyásra vár "
+      awaiting_approval: "Jóváhagyásra vár"
       delete: "Törlés"
       settings:
         saved: "Mentve"
@@ -378,8 +378,8 @@ hu:
           one: "%{agreed}, %{disagreed}, %{ignored} (összesen %{count} megjelölés)"
           other: "%{agreed}, %{disagreed}, %{ignored} (összesen %{count} megjelölés)"
         agreed:
-          one: "%{count}% egyetért "
-          other: "%{count}% egyetért "
+          one: "%{count}% egyetért"
+          other: "%{count}% egyetért"
         disagreed:
           one: "%{count}% nem ért egyet"
           other: "%{count}% nem ért egyet"
@@ -402,7 +402,7 @@ hu:
       edit: "Szerkesztés"
       save: "Mentés"
       cancel: "Mégse"
-      new_topic: "Az elem jóváhagyása új témát hoz létre."
+      new_topic: "Az elem jóváhagyása új témát hoz létre"
       filters:
         all_categories: "(összes kategória)"
         type:
@@ -442,7 +442,7 @@ hu:
         ignored:
           title: "Figyelmen kívül hagyva"
         deleted:
-          title: "Törölve "
+          title: "Törölve"
         reviewed:
           title: "(összes jóváhagyott)"
         all:
@@ -465,8 +465,8 @@ hu:
           other: "<strong>%{count}</strong> függőben lévő bejegyzése van."
         ok: "Rendben"
     user_action:
-      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> kitett <a href='%{topicUrl}'>egy témát</a>"
-      you_posted_topic: "<a href='%{userUrl}'>Ön</a> kitett <a href='%{topicUrl}'>egy témát</a>"
+      user_posted_topic: "<a href='%{userUrl}'>%{user}</a> közzétett <a href='%{topicUrl}'>egy témát</a>"
+      you_posted_topic: "<a href='%{userUrl}'>Ön</a> közzétett <a href='%{topicUrl}'>egy témát</a>"
       user_replied_to_post: "<a href='%{userUrl}'>%{user}</a> válaszolt a következő bejegyzésre: <a href='%{postUrl}'>%{post_number}</a>"
       you_replied_to_post: "<a href='%{userUrl}'>Ön</a> válaszolt a következő bejegyzésre: <a href='%{postUrl}'>%{post_number}</a>"
       user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> válaszolt <a href='%{topicUrl}'>a témára</a>"
@@ -483,16 +483,16 @@ hu:
       title: "Felhasználók"
       likes_given: "Adott"
       likes_received: "Kapott"
-      topics_entered: "Megtekintve"
-      topics_entered_long: "Megtekintett témák"
+      topics_entered: "Megtekintett"
+      topics_entered_long: "Megtekintett téma"
       time_read: "Olvasással töltött idő"
       topic_count: "Téma"
       topic_count_long: "Létrehozott téma"
       post_count: "Válasz"
-      post_count_long: "Elküldött válasz"
+      post_count_long: "Közzétett válasz"
       no_results: "Nincs találat."
-      days_visited: "Látogatások"
-      days_visited_long: "Látogatott napok"
+      days_visited: "Látogatás"
+      days_visited_long: "Látogatott nap"
       posts_read: "Olvasott"
       posts_read_long: "Elolvasott bejegyzések"
       last_updated: "Legutóbb frissítve:"

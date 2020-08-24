@@ -145,8 +145,6 @@ describe UserUpdater do
       date_of_birth = Time.zone.now
 
       theme = Fabricate(:theme, user_selectable: true)
-      upload1 = Fabricate(:upload)
-      upload2 = Fabricate(:upload)
 
       seq = user.user_option.theme_key_seq
 
@@ -161,9 +159,7 @@ describe UserUpdater do
         email_in_reply_to: false,
         date_of_birth: date_of_birth,
         theme_ids: [theme.id],
-        allow_private_messages: false,
-        card_background_upload_url: upload1.url,
-        profile_background_upload_url: upload2.url
+        allow_private_messages: false
       )
 
       expect(val).to be_truthy
@@ -182,19 +178,36 @@ describe UserUpdater do
       expect(user.user_option.theme_key_seq).to eq(seq + 1)
       expect(user.user_option.allow_private_messages).to eq(false)
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
-      expect(user.card_background_upload).to eq(upload1)
-      expect(user.profile_background_upload).to eq(upload2)
+    end
 
-      success = updater.update(
-        profile_background_upload_url: "",
-        card_background_upload_url: ""
-      )
-
+    it "allows user to update profile header when the user has required trust level" do
+      user = Fabricate(:user, trust_level: 2)
+      updater = UserUpdater.new(user, user)
+      upload = Fabricate(:upload)
+      SiteSetting.min_trust_level_to_allow_profile_background = 2
+      val = updater.update(profile_background_upload_url: upload.url)
+      expect(val).to be_truthy
       user.reload
-
+      expect(user.profile_background_upload).to eq(upload)
+      success = updater.update(profile_background_upload_url: "")
       expect(success).to eq(true)
-      expect(user.card_background_upload).to eq(nil)
+      user.reload
       expect(user.profile_background_upload).to eq(nil)
+    end
+
+    it "allows user to update user card background when the user has required trust level" do
+      user = Fabricate(:user, trust_level: 2)
+      updater = UserUpdater.new(user, user)
+      upload = Fabricate(:upload)
+      SiteSetting.min_trust_level_to_allow_user_card_background = 2
+      val = updater.update(card_background_upload_url: upload.url)
+      expect(val).to be_truthy
+      user.reload
+      expect(user.card_background_upload).to eq(upload)
+      success = updater.update(card_background_upload_url: "")
+      expect(success).to eq(true)
+      user.reload
+      expect(user.card_background_upload).to eq(nil)
     end
 
     it "disables email_digests when enabling mailing_list_mode" do
@@ -349,9 +362,7 @@ describe UserUpdater do
     context 'with permission to update title' do
       it 'allows user to change title' do
         user = Fabricate(:user, title: 'Emperor')
-        guardian = stub
-        guardian.stubs(:can_grant_title?).with(user, 'Minion').returns(true)
-        Guardian.stubs(:new).with(acting_user).returns(guardian)
+        Guardian.any_instance.stubs(:can_grant_title?).with(user, 'Minion').returns(true)
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(title: 'Minion')
@@ -390,9 +401,7 @@ describe UserUpdater do
           user.update(title: badge.name)
           user.user_profile.update(badge_granted_title: true)
 
-          guardian = stub
-          guardian.stubs(:can_grant_title?).with(user, 'Dancer').returns(true)
-          Guardian.stubs(:new).with(user).returns(guardian)
+          Guardian.any_instance.stubs(:can_grant_title?).with(user, 'Dancer').returns(true)
 
           updater = UserUpdater.new(user, user)
           updater.update(title: 'Dancer')
@@ -415,9 +424,7 @@ describe UserUpdater do
     context 'without permission to update title' do
       it 'does not allow user to change title' do
         user = Fabricate(:user, title: 'Emperor')
-        guardian = stub
-        guardian.stubs(:can_grant_title?).with(user, 'Minion').returns(false)
-        Guardian.stubs(:new).with(acting_user).returns(guardian)
+        Guardian.any_instance.stubs(:can_grant_title?).with(user, 'Minion').returns(false)
         updater = UserUpdater.new(acting_user, user)
 
         updater.update(title: 'Minion')

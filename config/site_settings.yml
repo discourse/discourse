@@ -74,6 +74,18 @@ branding:
     default: ""
     client: true
     type: upload
+  logo_dark:
+    default: ""
+    client: true
+    type: upload
+  logo_small_dark:
+    default: ""
+    client: true
+    type: upload
+  mobile_logo_dark:
+    default: ""
+    client: true
+    type: upload
   large_icon:
     default: ""
     client: true
@@ -1354,6 +1366,14 @@ trust:
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
+  min_trust_level_to_allow_profile_background:
+    default: 0
+    client: true
+    enum: "TrustLevelSetting"
+  min_trust_level_to_allow_user_card_background:
+    default: 0
+    client: true
+    enum: "TrustLevelSetting"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   tl1_requires_topics_entered: 5
@@ -1432,7 +1452,7 @@ security:
     regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
-  moderators_create_categories: false
+  moderators_manage_categories_and_groups: false
   moderators_view_emails:
     client: true
     default: false
@@ -2152,6 +2172,9 @@ user_preferences:
     type: category_list
     default: ""
   default_categories_watching_first_post:
+    type: category_list
+    default: ""
+  default_categories_regular:
     type: category_list
     default: ""
   mute_all_categories_by_default:

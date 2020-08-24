@@ -13,7 +13,7 @@ componentTest("updates once after initialization", {
     this.set("loadMore", () => this.set("loadedMore", true));
     configureEyeline({
       skipUpdate: false,
-      rootElement: Discourse.rootElement
+      rootElement: "#ember-testing"
     });
   },
 

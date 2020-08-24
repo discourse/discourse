@@ -168,6 +168,7 @@ da:
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Du kan ikke aktivere beholdning til S3, medmindre du har aktiveret S3-uploads."
       s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan ikke gennemtvinge 2FA, hvis lokale logins er deaktiveret."
   invite:
     not_found: "Dit invitationstoken er ugyldigt. Kontakt venligst <a href='%{base_url}/about'>personale</a> ."
     not_found_json: "Dit invitationstoken er ugyldigt. Kontakt venligst personale."

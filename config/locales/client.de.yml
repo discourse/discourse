@@ -2939,7 +2939,7 @@ de:
         one: "%{count}-mal verliehen"
         other: "%{count}-mal verliehen"
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
-      none: "(keine)"
+      none: "(keines)"
       successfully_granted: "%{badge} erfolgreich verliehen an %{username}"
       badge_grouping:
         getting_started:

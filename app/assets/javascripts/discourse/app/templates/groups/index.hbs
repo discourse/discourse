@@ -1,6 +1,6 @@
 {{#d-section pageClass="groups"}}
   <div class="groups-header">
-    {{#if currentUser.admin}}
+    {{#if currentUser.can_create_group}}
       {{d-button
         action=(action "new")
         class="btn-default groups-header-new pull-right"

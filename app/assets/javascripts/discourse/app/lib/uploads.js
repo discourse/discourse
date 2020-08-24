@@ -113,7 +113,7 @@ function validateUploadedFile(file, opts) {
   return true;
 }
 
-const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico)/i;
+const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico|heic|heif)/i;
 
 function extensionsToArray(exts) {
   return exts
@@ -177,7 +177,7 @@ export function authorizedExtensions(staff, siteSettings) {
 
 function authorizedImagesExtensions(staff, siteSettings) {
   return authorizesAllExtensions(staff, siteSettings)
-    ? "png, jpg, jpeg, gif, svg, ico"
+    ? "png, jpg, jpeg, gif, svg, ico, heic, heif"
     : imagesExtensions(staff, siteSettings).join(", ");
 }
 
