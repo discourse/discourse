@@ -363,7 +363,7 @@ GEM
     rubocop-discourse (2.3.1)
       rubocop (>= 0.69.0)
       rubocop-rspec (>= 1.39.0)
-    rubocop-rspec (1.43.1)
+    rubocop-rspec (1.43.2)
       rubocop (~> 0.87)
     ruby-prof (1.4.1)
     ruby-progressbar (1.10.1)
