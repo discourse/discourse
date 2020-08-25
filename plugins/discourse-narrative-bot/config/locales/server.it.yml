@@ -190,12 +190,6 @@ it:
           Bell'immagine – Ho premuto il pulsante mi piace :heart: per farti sapere quanto l'ho apprezzata :heart_eyes:
         like_not_found: |-
           Hai dimenticato di mettere Mi piace :heart: al mio [messaggio?](%{url}) :crying_cat_face:
-        not_found: |-
-          Sembra che tu non abbia caricato un'immagine, così ne ho scelta una io che sono _sicuro_ ti piacerà.
-
-          `%{image_url}`
-
-          Prova a caricare questa nel prossimo messaggio, o incolla il collegamento su una riga isolata!
       formatting:
         instructions: |-
           Puoi scrivere alcune parole in **grassetto** o _italico_ nella tua risposta?

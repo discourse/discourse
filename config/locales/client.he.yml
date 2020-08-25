@@ -323,6 +323,7 @@ he:
       no_timezone: 'עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href="%{basePath}/my/preferences/profile">בפרופיל שלך</a>.'
       invalid_custom_datetime: "התאריך והשעה שסיפקת שגויים, נא לנסות שוב."
       list_permission_denied: "אין לך הרשאה לצפות בסימניות של המשתמש הזה."
+      no_user_bookmarks: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
       auto_delete_preference:
         label: "למחוק אוטומטית"
         never: "לעולם לא"
@@ -1001,6 +1002,7 @@ he:
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
       muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר בנוגע לנושאים בקטגוריות האלו."
+      regular_categories: "רגילות"
       no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מנוטרלת."
       delete_account: "מחיקת החשבון שלי"
       delete_account_confirm: "להסיר את החשבון? לא ניתן לבטל פעולה זו!"
@@ -2210,9 +2212,6 @@ he:
       toggle_information: "הצגת פרטי נושא"
       read_more_in_category: "רוצים לקרוא עוד? עיינו בנושאים אחרים ב %{catLink} או %{latestLink}."
       read_more: "רוצה לקרוא עוד? %{catLink} or %{latestLink}."
-      group_request: "עליך לבקש חברות בקבוצה `%{name}` כדי לצפות בנושא הזה"
-      group_join: "עליך להצטרף לקבוצה `%{name}` כדי לצפות בנושא הזה"
-      group_request_sent: "בקשת החברות שלך נשלחה לקבוצה הזו. ניידע אותך כשהיא תתקבל."
       unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
       read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 שלא נקרא</a> } other { <a href='{basePath}/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='{basePath}/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='{basePath}/new'>#</a> נושאים חדשים} } נותרים, או {CATEGORY, select, true {עיין בנושאים אחרים ב־{catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -3350,6 +3349,7 @@ he:
         two: "%{tags} ו־%{count} נוספות"
         many: "%{tags} ו־%{count} נוספות"
         other: "%{tags} ו־%{count} נוספות"
+      delete_no_unused_tags: "אין תגיות שאינן בשימוש."
       delete_unused: "מחיקת תגיות שאינן בשימוש"
       delete_unused_description: "למחוק את כל התגיות שאינן מקושרות לנושאים או להודעות פרטיות כלל"
       cancel_delete_unused: "ביטול"
@@ -3624,12 +3624,27 @@ he:
         continue: המשך
         use_global_key: מפתח כללי (מאפשר את כל הפעולות)
         scopes:
+          description: |
+            בעת שימוש בתחומים, ניתן להגביל מפתח API לקבוצה מסוימת של נקודות גישה.
+            ניתן גם להגדיר אילו משתנים יורשו. ניתן להשתמש בפסיקים כדי להפריד מגוון ערכים.
           title: תחומים
           resource: משאב
           action: פעולה
           allowed_parameters: משתנים מורשים
           optional_allowed_parameters: משתנים מורשים (רשות)
           any_parameter: (כל משתנה שהוא)
+          allowed_urls: כתובות מורשות
+          descriptions:
+            topics:
+              read: קריאת נושא או פוסט מסוים בתוכו. יש גם תמיכה ב־RSS.
+              write: יצירת נושא חדש או פרסום לאחד קיים.
+              read_lists: לקרוא רשימת נושאים כמו מובילים, חדשים, אחרונים וכו׳. יש גם תמיכה ב־RSS.
+              wordpress: נחוץ כדי שהתוסף wp-discourse ל־WordPress יעבוד.
+            users:
+              bookmarks: הצגת סימניות המשתמשים. מחזירה תזכורות לסימניות בעת שימוש בתצורת ICS.
+              sync_sso: סנכרון משתמש באמצעות SSO.
+              show: קבלת מידע על משתמש.
+              check_emails: הצגת כתובות הדוא״ל של המשתמשים.
       web_hooks:
         title: "Webhooks"
         none: "אין כרגע webhooks."
@@ -3873,6 +3888,7 @@ he:
           is_default: "ערכת עיצוב מאופשרת כבררת מחדל"
           user_selectable: "המשתמשים יכולים לבחור את ערכת העיצוב"
           color_scheme: "מבחר צבעים"
+          default_light_scheme: "בהירה (בררת מחדל)"
           color_scheme_select: "בחירת צבעים לשימושה של ערכת העיצוב"
           custom_sections: "אזורים מותאמים אישית:"
           theme_components: "רכיבי ערכת העיצוב"
@@ -3972,6 +3988,10 @@ he:
           embedded_scss:
             text: "CSS משולב"
             title: "הכניסו CSS מותאם לשליחה עם הגרסה המשולבת של ההערות"
+          color_definitions:
+            text: "ערכות צבע"
+            title: "למלא ערכות צבע מותאמות אישית (משתמשים מתקדמים בלבד)"
+            placeholder: "\\r\nיש להשתמש בגיליון סגנון זה כדי להוסיף צבעים מותאמים אישית לרשימת מאפייני ה־CSS בהתאמה אישית.\\r\n\\r\nדוגמה: \\r\n\\r\n‎:root {\\r\n  ‎--mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\nמומלץ מאוד להוסיף קידומת לשמות המאפיינים כדי להימנע מסתירות מול תוספים ו/או הליבה."
           head_tag:
             text: "</head>"
             title: "HTML שיוכנס לפני התג </head>"

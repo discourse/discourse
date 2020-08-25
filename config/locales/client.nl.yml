@@ -275,6 +275,7 @@ nl:
       no_timezone: 'U hebt nog geen tijdzone ingesteld. Hierdoor kunt u geen herinneringen instellen. Stel er een in <a href="%{basePath}/my/preferences/profile">in uw profiel</a>.'
       invalid_custom_datetime: "De datum en tijd die u hebt opgegeven is ongeldig, probeer het opnieuw."
       list_permission_denied: "U hebt geen toestemming om de bladwijzers van deze gebruiker te bekijken."
+      no_user_bookmarks: "U hebt geen bladwijzers voor berichten; via bladwijzers kunt u snel bepaalde berichten raadplegen."
       auto_delete_preference:
         label: "Automatisch verwijderen"
         never: "Nooit"
@@ -868,6 +869,10 @@ nl:
       dismiss_notifications_tooltip: "Alle ongelezen meldingen markeren als gelezen"
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
       dynamic_favicon: "Aantal op browserpictogram tonen"
+      skip_new_user_tips:
+        description: "Onboarding-tips en badges voor nieuwe gebruikers overslaan"
+        not_first_time: "Niet uw eerste keer?"
+        skip_link: "Deze tips overslaan"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
       dark_mode: "Donkere modus"
       dark_mode_enable: "Automatisch kleurenschema voor donkere modus inschakelen"
@@ -917,6 +922,7 @@ nl:
       muted_categories: "Genegeerd"
       muted_categories_instructions: "U ontvangt geen enkele melding over nieuwe topics en berichten in deze categorieën, en ze verschijnen niet op de pagina's Categorieën of Nieuwste."
       muted_categories_instructions_dont_hide: "U ontvangt geen enkele melding over nieuwe topics in deze categorieën."
+      regular_categories: "Normaal"
       no_category_access: "Als moderator hebt u beperkte toegang tot categorieën, opslaan is uitgeschakeld."
       delete_account: "Mijn account verwijderen"
       delete_account_confirm: "Weet u zeker dat u uw account definitief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!"
@@ -1299,7 +1305,7 @@ nl:
         time_read: "leestijd"
         recent_time_read: "recente leestijd"
         topic_count:
-          one: "Onderwerp gemaakt"
+          one: "topic gemaakt"
           other: "topics gemaakt"
         post_count:
           one: "bericht gemaakt"
@@ -2065,9 +2071,6 @@ nl:
       toggle_information: "topicdetails in-/uitschakelen"
       read_more_in_category: "Wilt u meer lezen? U kunt door andere topics in %{catLink} bladeren, of de %{latestLink}."
       read_more: "Wilt u meer lezen? %{catLink} of %{latestLink}."
-      group_request: "U dient lidmaatschap voor de groep `%{name}` aan te vragen om dit topic te zien"
-      group_join: "U dient lid van de groep `%{name}` te zijn om dit topic te zien"
-      group_request_sent: "Uw lidmaatschapsaanvraag voor de groep is verstuurd. U ontvangt een melding zodra deze is geaccepteerd."
       unread_indicator: "Nog geen enkel lid heeft het laatste bericht van dit topic gelezen."
       read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 ongelezen</a> } other { zijn <a href='{basePath}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='{basePath}/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -3101,6 +3104,7 @@ nl:
       delete_unused_confirmation_more_tags:
         one: "%{tags} en nog %{count}"
         other: "%{tags} en nog %{count}"
+      delete_no_unused_tags: "Er zijn geen ongebruikte tags."
       delete_unused: "Ongebruikte tags verwijderen"
       delete_unused_description: "Alle tags verwijderen die niet aan topics of persoonlijke berichten zijn gekoppeld"
       cancel_delete_unused: "Annuleren"
@@ -3373,12 +3377,27 @@ nl:
         continue: Doorgaan
         use_global_key: Algemene sleutel (staat alle acties toe)
         scopes:
+          description: |
+            Bij het gebruik van scopes kunt u een API-sleutel tot een bepaalde groep eindpunten beperken.
+            U kunt ook definiëren welke parameters worden toegestaan. Gebruik komma's om meerdere waarden te scheiden.
           title: Scopes
           resource: Bron
           action: Actie
           allowed_parameters: Toegestane parameters
           optional_allowed_parameters: Toegestane parameters (optioneel)
           any_parameter: (alle parameters)
+          allowed_urls: Toegestane URL's
+          descriptions:
+            topics:
+              read: Een topic of een specifiek bericht erin lezen. RSS wordt ook ondersteund.
+              write: Een nieuw topic maken of bericht in een bestaand topic plaatsen.
+              read_lists: Topiclijsten zoals Top, Nieuw, Nieuwste, etc. lezen. RSS wordt ook ondersteund.
+              wordpress: Noodzakelijk om de WordPress wp-discourse-plug-in te laten werken.
+            users:
+              bookmarks: Bladwijzers van gebruiker weergeven. Geeft bladwijzerherinneringen terug bij gebruik van de ICS-indeling.
+              sync_sso: Een gebruiker synchroniseren via SSO.
+              show: Informatie over een gebruiker verkrijgen.
+              check_emails: E-mailadressen van gebruiker weergeven.
       web_hooks:
         title: "Webhooks"
         none: "Er zijn op dit moment geen webhooks."
@@ -3618,6 +3637,7 @@ nl:
           is_default: "Thema is standaard ingeschakeld"
           user_selectable: "Thema kan door gebruikers worden geselecteerd"
           color_scheme: "Kleurenpalet"
+          default_light_scheme: "Licht (standaard)"
           color_scheme_select: "Kleuren die door thema worden gebruikt selecteren"
           custom_sections: "Aangepaste secties:"
           theme_components: "Themaonderdelen"
@@ -3715,6 +3735,10 @@ nl:
           embedded_scss:
             text: "Ingebedde CSS"
             title: "Voer aangepaste CSS in om met ingebedde versie van opmerkingen te leveren"
+          color_definitions:
+            text: "Kleurdefinities"
+            title: "Aangepaste kleurdefinities invoeren (alleen gevorderde gebruikers)"
+            placeholder: "\\r\nGebruik dit stylesheet om aangepaste kleuren aan de lijst van aangepaste CSS-eigenschappen toe te voegen.\\r\n\\r\nVoorbeeld: \\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\nVoorvoegsels bij eigenschapnamen worden ten sterkste aanbevolen om conflicten met plug-ins en/of kern te vermijden."
           head_tag:
             text: "</head>"
             title: "HTML die voor de </head>-tag wordt ingevoegd"

@@ -349,7 +349,6 @@ ca:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Sol·licitud d'afiliació a @%{group_name}"
-    view_hidden_topic_request_reason: "Voldria unir-me al grup '%{group_name}' de manera que tingui accés a [aquest tema](%{topic_url})"
   education:
     until_posts:
       one: "%{count} publicació"
@@ -1369,7 +1368,6 @@ ca:
     ga_universal_domain_name: "Nom de domini de Google Universal Analytics (analytics.js), p. ex.: mysite.com; vegeu <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Habilita el seguiment entre dominis (cross-domain tracking) de Google Universal Analytics (analytics.js). Els enllaços de sortida a aquests dominis tindran afegit l'identificador del client. Consulteu <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>la guia de seguiment entre dominis de Google.</a>"
     enable_escaped_fragments: "Torna a l'API Ajax-Crawling de Google si no es detecta cap rastrejador web. Consulteu <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>."
-    moderators_create_categories: "Permet als moderadors crear categories noves"
     cors_origins: "Orígens permesos per a peticions d'origen encreuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha de ser \"true\" per a habilitar CORS."
     allowed_iframes: "Llista dels prefixos de domini en el codi d'iframe que Discourse pot permetre de manera segura en les publicacions"
     slow_down_crawler_user_agents: "Agents d'usuari dels rastrejadors web que haurien de ser limitats en robots.txt utilitzant la directiva de retard (Crawl-delay)."

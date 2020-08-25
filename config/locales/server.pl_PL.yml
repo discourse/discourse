@@ -419,7 +419,6 @@ pl_PL:
       title: "Przyjęto Cię do @%{group_name}"
       body: |
         Twoja prośba o dołączenie do @%{group_name} została zaakceptowana i jesteś teraz jej członkiem.
-    view_hidden_topic_request_reason: "Chciał(a)by dołączyć do grupy %{group_name}, aby uzyskać dostęp do [tego tematu](%{topic_url})"
   education:
     until_posts:
       one: "%{count} wpis"
@@ -1494,7 +1493,6 @@ pl_PL:
     ga_universal_domain_name: "Nazwa domeny Google Universal Analytics (analytics.js), np .: mysite.com; patrz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach Google Universal Analytics (analytics.js). W linkach wychodzących do tych domen zostanie dodany identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>przewodnik śledzenia między domenami Google.</a>"
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Zezwól moderatorom na tworzenie nowych kategorii"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     allowed_iframes: "Lista prefiksów domeny src iframe, które dyskurs może bezpiecznie dopuścić w wpisach"
     slow_down_crawler_user_agents: "Programy klienckie robotów indeksujących, które powinny mieć ograniczoną szybkość w pliku robots.txt, korzystając z dyrektywy o opóźnieniu indeksowania"

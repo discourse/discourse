@@ -269,7 +269,6 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
-    view_hidden_topic_request_reason: "Szeretnék csatlakozni a(z) „%{group_name}” csoporthoz, hogy elérjem [ezt a témát](%{topic_url})"
   education:
     until_posts:
       one: "%{count} bejegyzés"
@@ -762,7 +761,6 @@ hu:
     memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
   site_settings:
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
-    moderators_create_categories: "Új kategóriák létrehozásának engedélyezése a moderátorok számára"
     enable_badges: "A jelvény rendszer engedélyezése"
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."

@@ -30,7 +30,7 @@ ru:
           time_title: 'Определение частоты повторения события. Кроме того, можно вручную изменить автоматически установленную частоту повтора, и использовать один из следующих ключей: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds.'
           format_title: Формат даты
           timezone: Часовой пояс
-          until: До...
+          until: По...
           recurring:
             every_day: "Каждый день"
             every_week: "Каждую неделю"

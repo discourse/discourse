@@ -1842,9 +1842,6 @@ ur:
       toggle_information: "ٹاپک تفصیلات ٹَوگل کریں"
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
-      group_request: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `%{name}` گروپ میں رکنیت کیلئے درخواست کی ضرورت ہے"
-      group_join: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `%{name}` گروپ میں شامل ہونے کی ضرورت ہے"
-      group_request_sent: "آپ کی گروپ میں رکنیت کی درخواست بھیج دی گئی ہے۔ اُس کے قبول ہونے پر آپ کو مطلع کر دیا جائے گا۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں

@@ -40,7 +40,7 @@ zh_CN:
   topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
-  powered_by_html: '采用 <a href="https://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳体验'
+  powered_by_html: '由 <a href="https://www.discourse.org">Discourse</a>提供支持，启用 JavaScript 以获得最佳体验'
   sign_up: "注册"
   log_in: "登录"
   submit: "提交"
@@ -124,7 +124,7 @@ zh_CN:
     messages:
       too_long_validation: "最多只能有 %{max} 个字；你已经输入了 %{length} 个字。"
       invalid_boolean: "无效布尔值。"
-      taken: "不能和已有的%{attribute}重复"
+      taken: "已经被采用"
       accepted: 必须被接受
       blank: 不能为空
       present: 必须为空
@@ -135,7 +135,7 @@ zh_CN:
       exclusion: 被保留
       greater_than: 必须大于 %{count}
       greater_than_or_equal_to: 必须大于或等于 %{count}
-      has_already_been_used: "不能和其他%{attribute}重复"
+      has_already_been_used: "已经被使用"
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
@@ -179,6 +179,7 @@ zh_CN:
       s3_bucket_reused: "你不可以将同一个 bucket 同时用作 ‘s3_upload_bucket’ 和 ‘s3_backup_bucket’。请选择一个不同的 bucket 或为每个 bucket 使用不同的路径。"
       secure_media_requirements: "在启用安全媒体之前，必须先启用S3上传。"
       share_quote_facebook_requirements: "你必须设置一个Facebook app id 才能启用Facebook的引用分享功能。"
+      second_factor_cannot_enforce_with_socials: "你不能在启用社交登录时强制启用双重认证。你必须先禁用以下登录方式：%{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录则无法强制启用2FA。"
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制启用2FA则不能禁用本地登录。在禁用本地登录之前，请禁用强制启用2FA。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "你无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
@@ -357,6 +358,7 @@ zh_CN:
       email_already_used_in_category: "“%{email}”已经被分类“%{category_name}”使用了。"
       cant_allow_membership_requests: "对没有拥有者的群组，你无法批准成员请求。"
       already_requested_membership: "你已请求成为该群组的成员。"
+      adding_too_many_users: "最多可以同时添加 %{limit} 个用户"
     default_names:
       everyone: "任何人"
       admins: "管理员"
@@ -373,7 +375,6 @@ zh_CN:
       title: "你已接受加入@%{group_name}"
       body: |
         你要加入@%{group_name}的请求已被允许，现在你是其中一员了。
-    view_hidden_topic_request_reason: "我希望加入群组 “%{group_name}” 以访问[此主题](%{topic_url})"
   education:
     until_posts:
       other: "%{count} 个帖子"
@@ -1351,6 +1352,9 @@ zh_CN:
     logo_small: "出现在你站点左上角的小号的商标图像，滚动后可见。使用方形120×120的图像。如果留空，将显示一个主页图标。"
     digest_logo: "邮件摘要顶部所使用的备用商标图像。使用宽矩形的图像。不要使用SVG图像。 如果留空，将使用`logo`设置中的图像。"
     mobile_logo: "网站的移动版本上使用的商标。使用高120且宽高比大于3:1的宽矩形图像。 如果留空，将使用`logo`设置中的图像。"
+    logo_dark: "用于深色模式的“logo\"站点设置。"
+    logo_small_dark: "用于深色模式的“logo small\"站点设置。"
+    mobile_logo_dark: "用于深色模式的“mobile logo\"站点设置。"
     large_icon: "用作其他元数据图标的基础的图像。 理想情况下应大于512 x 512。如果留空，将使用logo_small。"
     manifest_icon: "用作Android图标的图像。会被自动调整为512×512。如果留空，将使用large_icon。"
     favicon: "你的站点图标（favicon），参考<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是png图片。会被调整为32x32。如果留空，将使用large_icon。"
@@ -1407,7 +1411,7 @@ zh_CN:
     ga_universal_auto_link_domains: "启用Google Universal Analytics（analytics.js）跨域跟踪。 这些域的传出链接将添加客户端ID。请参阅<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google的跨域跟踪指南。</a>"
     gtm_container_id: "Google Tag Manager的容器id。例如：GTM-ABCDEF。<br/>注意：由GTM加载的第三方脚本需要被添加到“content security policy script src”列表。"
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "允许版主创建新的分类"
+    moderators_manage_categories_and_groups: "允许版主管理分类和群组"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
     use_admin_ip_allowlist: "当使用的IP地址在已屏蔽IP列表（管理>日志>已屏蔽的IP）中时，只有管理员能够登录。"
     blocked_ip_blocks: "不应被Discourse爬取的私有IP屏蔽列表"
@@ -1618,6 +1622,8 @@ zh_CN:
     min_trust_to_flag_posts: "标记帖子所需的最低信任级别"
     min_trust_to_post_links: "在帖子中包含链接所需的最低信任级别"
     min_trust_to_post_embedded_media: "在帖子中嵌入媒体项目所需的最低信任等级"
+    min_trust_level_to_allow_profile_background: "上传用户资料背景所需的最低信任等级"
+    min_trust_level_to_allow_user_card_background: "上传用户卡片背景所需的最低信任等级"
     allowed_link_domains: "即使用户没有发布链接的信任等级也被视为链接的域名。"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
     newuser_max_embedded_media: "新用户能够在帖子中嵌入多少个媒体项目。"
@@ -1894,6 +1900,7 @@ zh_CN:
     default_categories_tracking: "默认跟踪的分类列表。"
     default_categories_muted: "默认静音的分类列表"
     default_categories_watching_first_post: "默认关注该分类中每个新主题的第一个帖子"
+    default_categories_regular: "默认为非静音状态的分类列表。作用于站点设置`mute_all_categories_by_default`被启用的时候。"
     mute_all_categories_by_default: "将所有分类的默认通知级别设置为静音。要求用户选择在“最新”和“分类”页面中出现的分类。如果您希望修改匿名用户的默认设置，请设置 'default_categories_'。"
     default_tags_watching: "默认监看的标签列表。"
     default_tags_tracking: "默认追踪的标签列表。"

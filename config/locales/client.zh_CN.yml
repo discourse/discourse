@@ -139,7 +139,7 @@ zh_CN:
     bootstrap_mode_disabled: "初始化模式将会在24小时内关闭。"
     themes:
       default_description: "默认"
-      broken_theme_alert: "因为主题或组件%{theme}有错误，你的网站可能无法正常运行。 在%{path}禁用它。"
+      broken_theme_alert: "因为主题或组件%{theme}有错误，你的站点可能无法正常运行。 在%{path}禁用它。"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -251,6 +251,7 @@ zh_CN:
       no_timezone: '你尚未设置时区。您将无法设置提醒。在 <a href="%{basePath}/my/preferences/profile">你的个人资料中</a>设置。'
       invalid_custom_datetime: "你所提供的日期和时间无效，请重试。"
       list_permission_denied: "你没有权限查看该用户的收藏。"
+      no_user_bookmarks: "你没有已收藏的帖子；收藏可让你快速定位特定的帖子。"
       auto_delete_preference:
         label: "自动删除"
         never: "从不"
@@ -828,6 +829,10 @@ zh_CN:
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
       first_notification: "你的头一个通知！选中它开始。"
       dynamic_favicon: "在浏览器图标上显示计数"
+      skip_new_user_tips:
+        description: "跳过新用户流程提示和徽章"
+        not_first_time: "不是第一次？"
+        skip_link: "跳过这些提示"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
       dark_mode: "深色模式"
       dark_mode_enable: "自动启用深色模式配色方案"
@@ -845,7 +850,7 @@ zh_CN:
       silenced_tooltip: "该用户已被禁言。"
       suspended_notice: "该用户将被禁止登录，直至 %{date}。"
       suspended_permanently: "该用户被封禁了。"
-      suspended_reason: "原因："
+      suspended_reason: "原因： "
       github_profile: "Github"
       email_activity_summary: "活动摘要"
       mailing_list_mode:
@@ -877,6 +882,7 @@ zh_CN:
       muted_categories: "静音"
       muted_categories_instructions: "你不会收到这些分类中任何关于新主题的通知，并且这些新主题也不会出现在分类或最新的页面上。"
       muted_categories_instructions_dont_hide: "你将不会收到在这些分类中的新主题通知。"
+      regular_categories: "活跃用户"
       no_category_access: "无法保存，作为审核人你仅具有受限的 分类 访问权限"
       delete_account: "删除我的账户"
       delete_account_confirm: "你真的要永久删除自己的账户吗？删除之后无法恢复！"
@@ -1334,7 +1340,7 @@ zh_CN:
       close: "关闭"
       dismiss_error: "忽略错误"
     close: "关闭"
-    assets_changed_confirm: "网站刚更新了，刷新使用新版本？"
+    assets_changed_confirm: "此网站刚刚已更新，你要刷新页面以获得最新版本吗？"
     logout: "你已退出登录。"
     refresh: "刷新"
     home: "首页"
@@ -1381,7 +1387,7 @@ zh_CN:
       hide_forever: "不了"
       hidden_for_session: "好的，我会在明天提醒你。不过你随时都可以使用“登录”来创建账户。"
       intro: "你好！看起来你正在享受讨论，但还没有注册一个账户。"
-      value_prop: "当你创建了账户，我们就可以准确地记录你的阅读进度，你再次访问时就可以回到之前离开的地方。当有人回复你，你可以通过这里或电子邮件收到通知。并且你还可以通过点赞帖子向他人分享你的喜爱之情。:heartbeat:"
+      value_prop: "当你创建了账户，我们就可以准确地记录你的阅读进度，你再次访问时就可以回到之前离开的地方。当有人回复你，你可以通过这里或电子邮件收到通知。并且你还可以通过点赞帖子向他人分享你的喜爱之情。:heartpulse:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
       description: "有 <b>%{replyCount}</b> 个回复。"
@@ -1421,7 +1427,7 @@ zh_CN:
       complete_username_found: "我们找到一个与用户名<b>%{username}</b>匹配的账户。你应该会收到一封说明如何重设密码的电子邮件。"
       complete_email_found: "我们找到一个与<b>%{email}</b>相匹配的账户。你应该会收到一封说明如何重设密码的电子邮件。"
       complete_username_not_found: "没有找到用户 <b>%{username}</b>"
-      complete_email_not_found: "没有找到用户 <b>%{email}</b> "
+      complete_email_not_found: "没有找到用户 <b>%{email}</b>"
       help: "没收到邮件？请先查看你的垃圾邮件文件夹。<p>不确定使用了哪个邮箱地址？输入邮箱地址来查看是否存在。</p><p>如果你已无法进入你账户的邮箱，请联系<a href='%{basePath}/about'>我们的工作人员。</a></p>"
       button_ok: "OK"
       button_help: "帮助"
@@ -1607,7 +1613,7 @@ zh_CN:
         other: "提及 %{group} 时，你将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
       cannot_see_mention:
         category: "你提到了 %{username} ，然而他们不能访问该分类，所以他们不会被通知。你需要把他们加入到能访问该分类的群组中。"
-        private: "你提到了%{userrname}，然而他们不能访问该私信，所以他们不会被通知。你需要邀请他们至私信中。"
+        private: "你提到了%{username}，然而他们不能访问该私信，所以他们不会被通知。你需要邀请他们至私信中。"
       duplicate_link: "好像<b>@%{username}</b>在<a href='%{post_url}'>%{ago}</a>中前的回复中已经发了你的链接 <b>%{domain}</b> － 你想再次发表链接吗？"
       reference_topic_title: "回复：%{title}"
       error:
@@ -1804,7 +1810,7 @@ zh_CN:
       remote_tip_with_attachments: "链接到图片或文件 %{authorized_extensions}"
       local_tip: "从你的设备中选择图片"
       local_tip_with_attachments: "从你的设备 %{authorized_extensions} 选择图片或文件"
-      hint: "你也可以通过拖放至编辑器的方式来上传"
+      hint: "（你也可以通过拖放到编辑器的方式来上传）"
       hint_for_supported_browsers: "可以拖放或复制粘帖至编辑器以上传"
       uploading: "上传中"
       select_file: "选择文件"
@@ -1930,7 +1936,7 @@ zh_CN:
         category: "%{category}分类中没有主题。"
         top: "没有热门主题。"
         educate:
-          new: '<p>这里会显示近期的新主题。 </p><p>默认情况下，会显示近 2 天内创建的主题，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>的标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改。</p>'
+          new: '<p>这里会显示近期的新主题。 </p><p>默认情况下，会显示近 2 天内创建的主题，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>的标志。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改。</p>'
           unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟随或关注。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
       bottom:
         latest: "没有更多主题可看了。"
@@ -1992,16 +1998,13 @@ zh_CN:
       new_posts:
         other: "自你上一次阅读此主题后，又有 %{count} 个新帖子发表了"
       likes:
-        other: "本主题已得到 %{number} 个赞"
+        other: "这个主题收到了 %{count} 个赞"
       back_to_list: "返回列表"
       options: "主题选项"
       show_links: "显示此主题中的链接"
       toggle_information: "切换主题详情"
       read_more_in_category: "想阅读更多？浏览%{catLink}的其他主题或%{latestLink}。"
       read_more: "想阅读更多？%{catLink}或%{latestLink}。"
-      group_request: "你需要请求加入`%{name}`群组才能查看此主题。"
-      group_join: "你需要加入`%{name}`群组以查看此主题"
-      group_request_sent: "你加入群组的请求已发送。当被接受时你会收到通知。"
       unread_indicator: "还没有成员读过此主题的最新帖子。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -2072,7 +2075,7 @@ zh_CN:
         auto_delete_replies: "此主题的回复会在%{duration}后自动删除。"
       auto_close_title: "自动关闭设置"
       auto_close_immediate:
-        other: "主题中的最后一帖是 %{hours} 小时前发出的，所以主题将会立即关闭。"
+        other: "主题中的最后一个帖子已经存在 %{count} 小时，因此该主题将立即关闭。"
       timeline:
         back: "返回"
         back_description: "回到最后一个未读帖子"
@@ -2326,11 +2329,11 @@ zh_CN:
         description:
           other: "已选择 <b>%{count}</b> 个帖子。"
       deleted_by_author:
-        other: "（主题被作者撤回，除非被标记，不然将在%{count}小时后自动删除）"
+        other: "（主题被作者删除，如无标记将在 %{count} 小时后自动删除）"
     post:
       quote_reply: "引用"
       quote_share: "分享"
-      edit_reason: "理由："
+      edit_reason: "理由： "
       post_number: "帖子 %{number}"
       ignored: "忽视的内容"
       wiki_last_edited_on: "维基最后修改于"
@@ -2573,7 +2576,7 @@ zh_CN:
       images: "图片"
       email_in: "自定义进站电子邮件地址："
       email_in_allow_strangers: "接受无账户的匿名用户的邮件"
-      email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
+      email_in_disabled: "站点设置中禁用了通过电子邮件发布新主题的功能。要启用通过电子邮件发布新主题， "
       email_in_disabled_click: '启用“邮件发表”设置。'
       mailinglist_mirror: "分类镜像了一个邮件列表"
       show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
@@ -2595,7 +2598,7 @@ zh_CN:
       this_year: "今年"
       position: "分类页面位置："
       default_position: "默认位置"
-      position_disabled: "分类按照其活跃程度的顺序显示。要固定分类列表的显示顺序，"
+      position_disabled: "分类按照其活跃程度的顺序显示。要固定分类列表的显示顺序， "
       position_disabled_click: '启用“固定分类位置”设置。'
       minimum_required_tags: "在一个主题中至少含有多少个标签："
       parent: "上级分类"
@@ -2616,7 +2619,7 @@ zh_CN:
           description: "如果有人@你或回复你，将通知你。"
         muted:
           title: "静音"
-          description: "在这些分类里面，你将不会收到新主题任何通知，它们也不会出现在“最新”主题列表。 "
+          description: "在这些分类里面，你将不会收到新主题任何通知，它们也不会出现在“最新”主题列表。"
       search_priority:
         label: "搜索优先级"
         options:
@@ -2844,7 +2847,7 @@ zh_CN:
         profile: "%{shortcut} 个人页面"
         messages: "%{shortcut} 私信"
         drafts: "%{shortcut}草稿"
-        next: "%{shortcut} 下一主题"
+        next: "%{shortcut} 下一个主题"
         previous: "%{shortcut} 上一个主题"
       navigation:
         title: "导航"
@@ -2983,6 +2986,7 @@ zh_CN:
         other: "%{count}标签将被删除：%{tags}"
       delete_unused_confirmation_more_tags:
         other: "%{tags}和%{count}更多"
+      delete_no_unused_tags: "没有未使用的标签。"
       delete_unused: "删除未使用的标签"
       delete_unused_description: "删除所有未与主题或私信关联的标签"
       cancel_delete_unused: "取消"
@@ -3080,7 +3084,7 @@ zh_CN:
         version_check_pending: "看来你最近刚更新过。太棒了！"
         installed_version: "已安装"
         latest_version: "最新版本"
-        problems_found: "根据您当前的网站设置提供一些建议"
+        problems_found: "根据您当前的站点设置提供一些建议"
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题."
@@ -3254,12 +3258,27 @@ zh_CN:
         continue: 继续
         use_global_key: 全局密钥（允许所有操作）
         scopes:
+          description: |
+            使用作用域时，你可以将一个API密钥限定于一组特定的终端节点。
+            你还可以定义允许哪些参数。使用逗号分隔多个值。
           title: 范围
           resource: 资源
           action: 操作
           allowed_parameters: 允许的参数
           optional_allowed_parameters: 允许的参数 (可选)
           any_parameter: '（任意参数）'
+          allowed_urls: 允许的URL
+          descriptions:
+            topics:
+              read: 阅读一个主题或其中的一个帖子。支持RSS。
+              write: 创建一个新的主题或发表到一个现有的主题。
+              read_lists: 阅读如热门、最新、新的主题这样的主题列表。支持RSS。
+              wordpress: 需要 WordPress 才能使 wp-discourse 插件正常工作。
+            users:
+              bookmarks: 列出用户书签。使用 ICS 格式时，它将返回书签提醒。
+              sync_sso: 使用 SSO 同步用户。
+              show: 获取有关用户的信息。
+              check_emails: 列出用户电子邮件。
       web_hooks:
         title: "Webhooks"
         none: "当前没有 Webhooks。"
@@ -3497,6 +3516,7 @@ zh_CN:
           is_default: "主题默认启用"
           user_selectable: "用户可选择主题"
           color_scheme: "调色板"
+          default_light_scheme: "浅色（默认）"
           color_scheme_select: "选择主题使用的颜色"
           custom_sections: "自定义段落："
           theme_components: "主题组件"
@@ -3510,14 +3530,14 @@ zh_CN:
           inactive_components: "未使用的组件："
           broken_theme_tooltip: "此主题的CSS，HTML或YAML中存在错误"
           disabled_component_tooltip: "此组件已被停用"
-          default_theme_tooltip: "此主题是网站的默认主题"
+          default_theme_tooltip: "此主题是站点的默认主题"
           updates_available_tooltip: "此主题有更新可用"
           and_x_more: "和%{count}更多。"
           collapse: 折叠
           uploads: "上传"
           no_uploads: "你可以上传与主题相关的组件，例如字体和图片"
           add_upload: "添加上传"
-          upload_file_tip: "选择资源上传（png、woff2、其他…）"
+          upload_file_tip: "选择要上传的资源（png、woff2等）"
           variable_name: "SCSS 变量名："
           variable_name_invalid: "变量名无效。只允许使用字母数字。必须以字母开头。必须是独特的。"
           variable_name_error:
@@ -3593,6 +3613,10 @@ zh_CN:
           embedded_scss:
             text: "嵌入使用的 CSS"
             title: "输入用于嵌入评论的自定义 CSS "
+          color_definitions:
+            text: "颜色配置"
+            title: "输入自定义颜色配置（仅限高级用户）"
+            placeholder: "\\r\n使用该样式将自定义颜色添加到CSS自定义属性列表。\\r\n\\r\n例如：\\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\n强烈建议使用前缀为属性命名以避免与插件或主程序发生冲突。"
           head_tag:
             text: "</head>"
             title: "将在 </head> 标签前插入的 HTML"
@@ -4108,7 +4132,7 @@ zh_CN:
         delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
         send_activation_email: "发送激活邮件"
         activation_email_sent: "激活邮件已发送。"
-        send_activation_email_failed: "在发送激活邮件时发生了错误。"
+        send_activation_email_failed: "在发送激活邮件时发生了错误。%{error}"
         activate: "激活账户"
         activate_failed: "在激活用户帐号时发生了错误。"
         deactivate_account: "停用账户"
@@ -4313,7 +4337,7 @@ zh_CN:
         icon: 图标
         image: 图片
         icon_help: "输入一个 Font Awsome 图标的名称（使用前缀“far-”表示常规图标，“fab-”表示品牌图标）"
-        image_help: "输入图像的 URL（如果同时设置了 URL 和图标，则覆 URL 会覆盖图标）"
+        image_help: "输入图像的 URL（如果同时设置了 URL 和图标，则 URL 会覆盖图标）"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询
@@ -4360,7 +4384,7 @@ zh_CN:
           replace_owners: 从所有者中删除这个徽章
       emoji:
         title: "Emoji"
-        help: "增加所有人可用的 emoji。（高端技巧：一次性拖进多个文件）"
+        help: "增加所有人可用的 emoji。（提示：一次性拖进多个文件）"
         add: "增加新的 Emoji"
         uploading: "上传中…"
         name: "名称"

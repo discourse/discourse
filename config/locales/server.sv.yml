@@ -184,6 +184,7 @@ sv:
       s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
       secure_media_requirements: "S3-uppladdningar måste ha aktiverats innan du aktiverar säkra medier."
       share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
+      second_factor_cannot_enforce_with_socials: "Du kan inte tvinga 2FA med sociala inloggningar aktiverade. Du måste först inaktivera inloggning via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan inte inaktivera lokal inloggning om 2FA har genomdrivits. Inaktivera genomdriven 2FA innan du inaktiverar lokala inloggningar."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan inte aktivera S3-uppladdningar eftersom S3-uppladdningar redan är aktiverade globalt, och aktivering av denna webbplatsnivå kan orsaka kritiska problem med uppladdningar"
@@ -376,6 +377,7 @@ sv:
       email_already_used_in_category: "'%{email}' är redan använd av kategorin '%{category_name}'."
       cant_allow_membership_requests: "Du kan inte tillåta begäran om medlemskap för en grupp utan ägare."
       already_requested_membership: "Du har redan begärt medlemskap i denna grupp."
+      adding_too_many_users: "Max %{limit} användare kan läggas till på en gång"
     default_names:
       everyone: "alla"
       admins: "administratörer"
@@ -392,7 +394,6 @@ sv:
       title: "Du har blivit accepterad in i @%{group_name}"
       body: |
         Din begäran om tillträde i @%{group_name} har blivit accepterad och du är nu medlem.
-    view_hidden_topic_request_reason: "Jag skulle vilja gå med i gruppen '%{group_name}', så att jag kan gå till [detta ämne](%{topic_url})"
   education:
     until_posts:
       one: "%{count} inlägg"
@@ -1437,7 +1438,7 @@ sv:
     ga_universal_auto_link_domains: "Aktivera Google Universal Analytics (analytics.js) korsspårning över domäner. Utgående länkar till dessa domäner kommer att få klient-ID tillagt för dem. Se <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles kors-spårningsguide över domäner.</a> "
     gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Tillåt moderatorer att skapa nya kategorier"
+    moderators_manage_categories_and_groups: "Tillåt moderatorer att hantera kategorier och grupper"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. DISCOURSE_ENABLE_CORS env variabeln måste sättas till true för att aktivera CORS."
     use_admin_ip_allowlist: "Administratörer kan bara logga in om de är på en IP-adress definierad i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
     blocked_ip_blocks: "En lista över privata IP-block som aldrig bör genomsökas av Discourse"
@@ -1926,6 +1927,7 @@ sv:
     default_categories_tracking: "Lista av kategorier som är följda som standard."
     default_categories_muted: "Lista av kategorier som är tystade som standard."
     default_categories_watching_first_post: "Förteckning över kategorier i vilket första inlägget i varje nytt ämne kommer att bevakas som standard."
+    default_categories_regular: "Lista över kategorier som inte är tystade som standard. Användbart när webbplatsinställningen för att tysta alla kategorier som standard, `mute_all_categories_by_default`, är aktiverad."
     mute_all_categories_by_default: "Ställ in standardmeddelandenivån för alla kategorier som ska stängas av. Kräv att användare väljer kategorier för att de ska visas på sidorna 'senaste' och 'kategorier'. Om du vill ändra standardvärdena för anonyma användare ställer du in inställningarna i 'default_category_'."
     default_tags_watching: "Lista med taggar som bevakas som standard."
     default_tags_tracking: "Lista med taggar som följs som standard."

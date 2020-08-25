@@ -185,12 +185,6 @@ de:
           Hübsches Bild – ich habe die Like-Schaltfläche :heart: gedrückt, um dich wissen zu lassen, wie sehr es mir gefällt :heart_eyes:
         like_not_found: |-
           Hast du vergessen meinen [Beitrag](%{url}) mit einem Like :heart: zu markieren? :crying_cat_face:
-        not_found: |-
-          Sieht so aus, als hättest du kein Bild hochgeladen. Deshalb habe ich ein Bild ausgesucht, von dem ich _sicher_ bin, dass es dir gefällt.
-
-          `%{image_url}`
-
-          Versuche dieses als nächstes hochzuladen, oder füge den Link auf einer eigenen Zeile ein!
       formatting:
         instructions: |-
           Kannst du einige Wörter in deiner Antwort **fett** oder _kursiv_ markieren?

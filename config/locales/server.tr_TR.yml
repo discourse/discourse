@@ -362,7 +362,6 @@ tr_TR:
       trust_level_4: "güven_seviyesi_4"
     request_membership_pm:
       title: "@ %{group_name} için üyelik talebi"
-    view_hidden_topic_request_reason: "'%{group_name}', grubuna katılmak istiyorum, böylece katılabilirim[bu konuya](%{topic_url})"
   education:
     until_posts:
       one: "%{count} gönderi"
@@ -1387,7 +1386,6 @@ tr_TR:
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) alan adı, örn: sitem.com; bkz. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics (analytics.js) web alanları arası izlemeyi etkinleştirin. Bu alan adlarına giden bağlantılar, kendilerine istemci kimliği ekleyecektir. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google&#39;ın Web Alanları Arası İzleme kılavuzuna bakın.</a>"
     enable_escaped_fragments: "Eğer bir ağ gezgini algılanmazsa Google'ın Ajax Crawling API'ına geri dönün. Bkz. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Moderatörlerin yeni kategoriler oluşturmasına izin ver"
     cors_origins: "Cross-origin isteklerin (CORS) izin verilen originler. Her origin http:// veya https:// içermeli. CORS'u etkinleştirebilmek için DISCOURSE_ENABLE_CORS env değişkeni doğru olarak ayarlanmalı."
     allowed_iframes: "Gönderilerde güvenli bir şekilde izin verebilecek iframe src alan adı öneklerinin listesi"
     slow_down_crawler_user_agents: "Tarama gecikmesi yönergesi kullanılarak robots.txt dosyasında hız sınırlaması gereken ağ tarayıcılarının kullanıcı aracıları"

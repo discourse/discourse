@@ -8,7 +8,7 @@ bs_BA:
   js:
     discourse_local_dates:
       relative_dates:
-        today: Danas%{time}
+        today: Danas %{time}
         tomorrow: Sutra %{time}
         yesterday: Jučer %{time}
         countdown:

@@ -368,6 +368,7 @@ fr:
       email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
       cant_allow_membership_requests: "Vous ne pouvez pas autoriser les requêtes d'adhésion pour un groupe sans propriétaires."
       already_requested_membership: "Vous avez déjà demandé à adhérer à ce groupe."
+      adding_too_many_users: "Un maximum de %{limit} utilisateurs peuvent être ajoutés à la fois"
     default_names:
       everyone: "tous"
       admins: "administrateurs"
@@ -384,7 +385,6 @@ fr:
       title: "Vous avez été accepté dans @%{group_name}"
       body: |
         Votre demande à rejoindre @%{group_name} a été acceptée et vous êtes désormais un membre.
-    view_hidden_topic_request_reason: "J'aimerais rejoindre le groupe « %{group_name} » afin d'accéder à [ce sujet](%{topic_url})."
   education:
     until_posts:
       one: "%{count} message"
@@ -1438,7 +1438,6 @@ fr:
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Activer Google Universal Analytics (analytics.js) pour le suivi interdomaine. Les liens sortants vers ces domaines auront l'identifiant client ajouté. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Cross-Domain Tracking de Google</a>."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
     allowed_iframes: "Une liste des préfixes du domaine src iframe que Discourse peut autoriser en toute sécurité dans les messages"
     slow_down_crawler_user_agents: "Agents utilisateurs des robots d'indexation qui devraient être limités dans robots.txt avec la commande Crawl-delay"

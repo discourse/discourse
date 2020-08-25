@@ -26,8 +26,32 @@ ko:
   title: "Discourse"
   topics: "주제"
   posts: "게시물"
+  loading: "로딩 중"
+  powered_by_html: '<a href="https://www.discourse.org">Discourse</a>로 만들었습니다. JavaScript가 활성화 된 상태에서 가장 잘 보입니다.'
   sign_up: "가입하기"
   log_in: "로그인"
+  submit: "제출"
+  themes:
+    compile_error:
+      unrecognized_extension: "인식할 수 없는 파일 확장자: %{extension}"
+    import_error:
+      generic: 해당 테마를 가져오는 동안 오류가 발생했습니다.
+      about_json: "가져오기 오류: about.json이 없거나 유효하지 않습니다. Discourse용 테마가 맞는지 확인해주세요."
+      about_json_values: "about.json에 잘못된 값이 포함되어 있습니다. %{errors}"
+      unpack_failed: "파일 압축을 풀지 못했습니다."
+      file_too_big: "압축되지 않은 파일이 너무 큽니다."
+      unknown_file_type: "업로드 한 파일이 올바른 Discourse 테마가 아닌 것 같습니다."
+    errors:
+      component_no_user_selectable: "테마 구성 요소는 사용자가 선택할 수 없습니다."
+      component_no_default: "테마 구성 요소는 기본 테마가 될 수 없습니다."
+      component_no_color_scheme: "테마 구성 요소에는 색상 팔레트를 포함할 수 없습니다."
+      no_multilevels_components: "하위 테마가 있는 테마는 하위 테마가 될 수 없습니다."
+      optimized_link: 최적화된 이미지 링크는 일시적으로만 사용되어야 하며 테마 소스 코드에 포함해서는 안 됩니다.
+    settings_errors:
+      invalid_yaml: "제공된 YAML이 유효하지 않습니다."
+      data_type_not_a_number: "`%{name}` 설정에 해당 형식은 지원되지 않습니다. 지원되는 형식은 `integer`, `bool`, `list`, `enum` 및 `upload`입니다."
+      name_too_long: "설정 이름이 너무 깁니다. 설정 이름의 길이는 최대 255자입니다."
+      default_value_missing: "`%{name}` 설정에 기본 값이 없습니다"
   likes: "좋아하기"
   bookmarks:
     reminders:

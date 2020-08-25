@@ -430,7 +430,6 @@ uk:
       title: "Вас прийняли в @%{group_name}"
       body: |
         Ваш запит на вступ до @%{group_name} прийнято, і ви зараз є членом групи.
-    view_hidden_topic_request_reason: "Я хочу приєднатися до групи '%{group_name}', щоб я міг отримати доступ до [this topic](%{topic_url})"
   education:
     until_posts:
       one: "%{count} допис"
@@ -1502,7 +1501,6 @@ uk:
     must_approve_users: "Персонал повинен схвалити всі нові облікові записи користувачів, перш ніж їм буде надано доступ до сайту"
     pending_users_reminder_delay: "Повідомляти модераторів, якщо нові користувачі чекають схвалення довше ніж стільки годин. Встановіть -1 для відключення цих повідомлень."
     maximum_session_age: "Користувач залишиться в системі протягом n годин з моменту останнього відвідування"
-    moderators_create_categories: "Дозволити модераторам створювати нові категорії"
     cors_origins: "Дозволити origins для запитів CORS. Кожне origin повинне містити http:// або https://. Змінна DISCOURSE_ENABLE_CORS env повинна бути true, щоб увімкнути CORS."
     allowed_iframes: "Список префіксів домену iframe src, які discourse може безпечно дозволити в повідомленнях"
     slow_down_crawler_user_agents: "Користувацькі агенти веб-сканерів, які повинні бути обмежені в robots.txt, використовуючи директиву Crawl-delay"
