@@ -6,7 +6,9 @@ acceptance("Managing Group Membership", {
 });
 
 QUnit.test("As an admin", async assert => {
-  await visit("/g/discourse/manage/membership");
+  updateCurrentUser({ can_create_group: true });
+
+  await visit("/g/alternative-group/manage/membership");
 
   assert.ok(
     find('label[for="automatic_membership"]').length === 1,

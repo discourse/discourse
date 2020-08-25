@@ -42,10 +42,13 @@
 //
 //= require jquery.magnific-popup.min.js
 
+let App = window.Discourse;
 let resetSettings = require("helpers/site-settings").resetSettings;
+let createHelperContext = require("discourse-common/lib/helpers")
+  .createHelperContext;
 
 const buildResolver = require("discourse-common/resolver").buildResolver;
-window.setResolver(buildResolver("discourse").create({ namespace: Discourse }));
+window.setResolver(buildResolver("discourse").create({ namespace: App }));
 
 sinon.config = {
   injectIntoThis: false,
@@ -69,10 +72,10 @@ d.write(
   "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
 );
 
-Discourse.rootElement = "#ember-testing";
-Discourse.setupForTesting();
-Discourse.injectTestHelpers();
-Discourse.start();
+App.rootElement = "#ember-testing";
+App.setupForTesting();
+App.injectTestHelpers();
+App.start();
 
 // disable logster error reporting
 if (window.Logster) {
@@ -89,6 +92,7 @@ var createPretender = require("helpers/create-pretender", null, null, false),
   _DiscourseURL = require("discourse/lib/url", null, null, false).default,
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
+  getOwner = require("discourse-common/lib/get-owner").getOwner,
   server,
   acceptanceModulePrefix = "Acceptance: ";
 
@@ -106,7 +110,7 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
-  resetSettings();
+  let settings = resetSettings();
   server = createPretender.default;
   createPretender.applyDefaultHandlers(server);
   server.handlers = [];
@@ -152,8 +156,6 @@ QUnit.testStart(function(ctx) {
     );
   }
 
-  resetSettings();
-
   let getURL = require("discourse-common/lib/get-url");
   getURL.setupURL(null, "http://localhost:3000", "");
   getURL.setupS3CDN(null, null);
@@ -162,7 +164,8 @@ QUnit.testStart(function(ctx) {
   let Session = require("discourse/models/session").default;
   Session.resetCurrent();
   User.resetCurrent();
-  resetSite(Discourse.SiteSettings);
+  resetSite(settings);
+  createHelperContext({ siteSettings: settings });
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {
@@ -191,9 +194,7 @@ QUnit.testDone(function() {
   // ensures any event not removed is not leaking between tests
   // most likely in intialisers, other places (controller, component...)
   // should be fixed in code
-  require("discourse/services/app-events").clearAppEventsCache(
-    window.Discourse.__container__
-  );
+  require("discourse/services/app-events").clearAppEventsCache(getOwner(this));
 
   MessageBus.unsubscribe("*");
   delete window.server;

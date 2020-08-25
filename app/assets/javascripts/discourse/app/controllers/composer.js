@@ -323,12 +323,15 @@ export default Controller.extend({
 
   @discourseComputed
   allowUpload() {
-    return authorizesOneOrMoreExtensions(this.currentUser.staff);
+    return authorizesOneOrMoreExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
   },
 
   @discourseComputed()
   uploadIcon() {
-    return uploadIcon(this.currentUser.staff);
+    return uploadIcon(this.currentUser.staff, this.siteSettings);
   },
 
   @action
@@ -614,6 +617,10 @@ export default Controller.extend({
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.showWarning) {
       this.set("model.isWarning", false);
+    }
+
+    if (this.site.mobileView && this.showPreview) {
+      this.set("showPreview", false);
     }
 
     const composer = this.model;

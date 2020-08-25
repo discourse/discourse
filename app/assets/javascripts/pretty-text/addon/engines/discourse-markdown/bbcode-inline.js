@@ -1,6 +1,6 @@
 import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
 
-function tokanizeBBCode(state, silent, ruler) {
+function tokenizeBBCode(state, silent, ruler) {
   let pos = state.pos;
 
   // 91 = [
@@ -162,7 +162,7 @@ export function setup(helper) {
     const ruler = md.inline.bbcode.ruler;
 
     md.inline.ruler.push("bbcode-inline", (state, silent) =>
-      tokanizeBBCode(state, silent, ruler)
+      tokenizeBBCode(state, silent, ruler)
     );
     md.inline.ruler2.before("text_collapse", "bbcode-inline", processBBCode);
 

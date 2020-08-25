@@ -28,23 +28,28 @@ describe Jobs::ReindexSearch do
 
       subject.execute({})
       expect(model.public_send("#{m}_search_data").version)
-        .to eq(SearchIndexer::INDEX_VERSION)
+        .to eq("SearchIndexer::#{m.upcase}_INDEX_VERSION".constantize)
     end
   end
 
   describe 'rebuild_problem_posts' do
     class FakeIndexer
       def self.index(post, force:)
-        @posts ||= []
-        @posts.push(post)
+        get_posts.push(post)
       end
 
       def self.posts
-        @posts
+        get_posts
       end
 
       def self.reset
-        @posts.clear
+        get_posts.clear
+      end
+
+      private
+
+      def self.get_posts
+        @posts ||= []
       end
     end
 
@@ -66,6 +71,14 @@ describe Jobs::ReindexSearch do
       subject.rebuild_problem_posts(indexer: FakeIndexer)
 
       expect(FakeIndexer.posts).to contain_exactly(post)
+    end
+
+    it 'should not reindex posts with a developmental version' do
+      post = Fabricate(:post, version: SearchIndexer::MIN_POST_REINDEX_VERSION + 1)
+
+      subject.rebuild_problem_posts(indexer: FakeIndexer)
+
+      expect(FakeIndexer.posts).to eq([])
     end
 
     it 'should not reindex posts with empty raw' do

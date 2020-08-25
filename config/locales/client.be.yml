@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 be:
   js:
@@ -164,6 +163,7 @@ be:
     bookmarks:
       remove: "выдаліць закладку"
       save: "Захаваць"
+      search: "Пошук"
       reminders:
         tomorrow: "заўтра"
     drafts:
@@ -276,8 +276,6 @@ be:
         add_user_to_group: "дадаць карыстальніка"
         remove_user_from_group: "выдаліць карыстальніка"
     groups:
-      add_members:
-        title: "Дадаць удзельнікаў"
       requests:
         reason: "прычына"
         handle: "звяртацца з просьбай аб членстве"
@@ -290,6 +288,11 @@ be:
           title: Профіль
         interaction:
           posting: апублікаванне
+        email:
+          title: "Электронная пошта"
+          credentials:
+            username: "Імя карыстальніка"
+            password: "Пароль"
         membership:
           access: доступ
         logs:
@@ -350,6 +353,7 @@ be:
       "3": "закладкі"
       "4": "тэмы"
       "5": "адказы"
+      "6": "Responses"
       "7": "згадкі"
       "9": "цытаты"
       "11": "рэдагаванне"
@@ -691,7 +695,7 @@ be:
       reset: "скінуць пароль"
       button_ok: "Добра"
     email_login:
-      confirm_title: "Працягнуць да %{site_name}"
+      confirm_title: Працягнуць да %{site_name}
     login:
       title: "Увайсці"
       username: "Карыстальнік"
@@ -932,7 +936,7 @@ be:
       read_more: "Хочаце пачытаць яшчэ? %{CatLink} або %{latestLink}."
       browse_all_categories: Паглядзець усе катэгорыі
       view_latest_topics: Праглядзіце апошнія тэмы
-      suggest_create_topic: "Чаму б не стварыць тэму?"
+      suggest_create_topic: Чаму б не стварыць тэму?
       jump_reply_up: перайсці да больш ранняй адказы
       jump_reply_down: перайсці да больш позняй адказы
       deleted: "Тэма была выдаленая"
@@ -960,6 +964,8 @@ be:
           "3_2": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
           "3_1": "Вы будзеце атрымліваць апавяшчэнні, таму што вы стварылі гэтую тэму."
           "3": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "1": "You will be notified if someone mentions your @name or replies to you."
           "0_7": "Вы ігнаруеце ўсе паведамленні ў гэтай катэгорыі."
           "0_2": "Вы ігнаруеце ўсе паведамлення па гэтай тэме."
           "0": "Вы ігнаруеце ўсе паведамлення па гэтай тэме."
@@ -1236,7 +1242,7 @@ be:
         mark_tracking: "%{shortcut}Сачыць за тэмай"
     badges:
       title: значкі
-      select_badge_for_title: "Выберыце значок, будзе вашым званнем"
+      select_badge_for_title: Выберыце значок, будзе вашым званнем
       badge_grouping:
         community:
           name: супольнасць
@@ -1626,7 +1632,6 @@ be:
           domain: "дамен"
         screened_ips:
           title: "Screened IPs"
-          description: 'IP-адрасы, адсочваюцца. Выкарыстоўвайце "Дазволіць", каб уключыць IP-адрас у белы спіс.'
           delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць правіла для %{ip_address}?"
           actions:
             block: "заблакаваць"
@@ -1832,7 +1837,7 @@ be:
         badge_grouping: група
         save: захаваць
         delete: выдаліць
-        delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтае адрозненне?"
+        delete_confirm: Вы ўпэўненыя, што жадаеце выдаліць гэтае адрозненне?
         revoke: адклікаць
         reason: прычына
         edit_badges: рэдагаваць Значкі
@@ -1840,7 +1845,7 @@ be:
         granted_badges: Якія прадстаўляюцца Значкі
         grant: Выдаць
         no_user_badges: " %{Name} не атрымліваў ні аднаго."
-        no_badges: "Тут няма значкоў, якія могуць быць прадастаўлены."
+        no_badges: Тут няма значкоў, якія могуць быць прадастаўлены.
         allow_title: Дазволіць выкарыстанне значкоў як званняў
         icon: Абразка
         image: Выява
@@ -1870,7 +1875,6 @@ be:
         add_host: "дадаць Хост"
         embed_by_username: "Імя карыстальніка для стварэння тэмы"
         embed_post_limit: "Максімальную колькасць паведамленняў для ўстаўкі"
-        embed_classname_whitelist: "Дазволеныя імёны класаў CSS"
       permalink:
         title: "Сталыя спасылкі"
         url: "URL спасылка"
@@ -1880,8 +1884,7 @@ be:
         post_title: "Паведамленне"
         category_id: "ID катэгорыі"
         category_title: "Катэгорыя"
-        external_url: "знешняя спасылка"
-        delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэта пастаянную спасылку?"
+        delete_confirm: Вы ўпэўненыя, што жадаеце выдаліць гэта пастаянную спасылку?
         form:
           label: "новы:"
           add: "Дадаць"

@@ -40,7 +40,7 @@ QUnit.test("displayEdit", async function(assert) {
   const html = `<div class="revision-content">
   <p><img src="/uploads/default/original/1X/6b963ffc13cb0c053bbb90c92e99d4fe71b286ef.jpg" alt="" class="diff-del"><img/src=x onerror=alert(document.domain)>" width="276" height="183"></p>
 </div>
-<aside class="onebox whitelistedgeneric">
+<aside class="onebox allowlistedgeneric">
   <header class="source">
     <img src="/uploads/default/original/1X/1b0984d7ee08bce90572f46a1950e1ced436d028.png" class="site-icon" width="32" height="32">
     <a href="https://meta.discourse.org/t/discourse-version-2-5/125302">Discourse Meta – 9 Aug 19</a>
@@ -69,7 +69,7 @@ QUnit.test("displayEdit", async function(assert) {
   const expectedOutput = `<div class="revision-content">
   <p><img src="/uploads/default/original/1X/6b963ffc13cb0c053bbb90c92e99d4fe71b286ef.jpg" alt class="diff-del">" width="276" height="183"&gt;</p>
 </div>
-<aside class="onebox whitelistedgeneric">
+<aside class="onebox allowlistedgeneric">
   <header class="source">
     <img src="/uploads/default/original/1X/1b0984d7ee08bce90572f46a1950e1ced436d028.png" class="site-icon" width="32" height="32">
     <a href="https://meta.discourse.org/t/discourse-version-2-5/125302">Discourse Meta – 9 Aug 19</a>

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sl:
   site_settings:
@@ -11,10 +10,15 @@ sl:
     poll_maximum_options: "Največje dovoljeno število izbir v anketi."
     poll_edit_window_mins: "Število minut po objavi prispevka, ko je možno anketo še spreminjati."
     poll_minimum_trust_level_to_create: "Določite najnižjo stopnjo zaupanja za dodajanje anket."
+    poll_groupable_user_fields: "Nabor imen uporabniških polj, ki jih lahko uporabite za združevanje in filtriranje rezultatov ankete."
+    poll_export_data_explorer_query_id: "ID poizvedbe raziskovalca podatkov, ki jo želite uporabiti za izvoz rezultatov ankete (0, če želite onemogočiti)."
   poll:
+    poll: "anketa"
     invalid_argument: "Napačna vrednost '%{value}' za parameter '%{argument}'."
     multiple_polls_without_name: "Vnesli ste več anket brez imena. Uporabite '<code>name</code>' lastnost za enolično določanje imena ankete."
     multiple_polls_with_same_name: "Vnesli ste več anket z enakim imenom: <strong>%{name}</strong>. Uporabite '<code>name</code>' lastnost za enolično določanje imena ankete."
+    default_poll_must_have_at_least_1_option: "Anketa mora vsebovati vsaj eno izbiro."
+    named_poll_must_have_at_least_1_option: "Anketa z imenom <strong>%{name}</strong> mora vsebovati vsaj eno izbiro."
     default_poll_must_have_less_options:
       one: "Anketa mora imeti manj kot %{count} izbiro."
       two: "Anketa mora imeti manj kot %{count} izbiri."
@@ -27,6 +31,8 @@ sl:
       other: "Anketa z imenom <strong>%{name}</strong> mora imeti manj kot %{count} izbir."
     default_poll_must_have_different_options: "Anketa mora imeti različne izbire."
     named_poll_must_have_different_options: "Anketa z imenom <strong>%{name}</strong> mora imeti različne izbire."
+    default_poll_must_not_have_any_empty_options: "Anketa ne sme vsebovati praznih izbir."
+    named_poll_must_not_have_any_empty_options: "Anketa z imenom <strong>%{name}</strong> ne sme vsebovati praznih izbir."
     default_poll_with_multiple_choices_has_invalid_parameters: "Anketa z več možnostjo več izbirami ima napačne parametre."
     named_poll_with_multiple_choices_has_invalid_parameters: "Anketa z imenom <strong>%{name}</strong> z možnostjo več izbirami ima napačne parametre."
     requires_at_least_1_valid_option: "Izbrati morate vsaj 1 izbiro."
@@ -43,3 +49,5 @@ sl:
     insufficient_rights_to_create: "Nimate dovoljenja za ustvarjanje anket."
     email:
       link_to_poll: "Kliknite za prikaz ankete."
+    user_field:
+      no_data: "Ni podatkov"

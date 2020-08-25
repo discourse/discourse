@@ -1,5 +1,6 @@
 app/assets/stylesheets/vendor/
 plugins/**/assets/stylesheets/vendor/
+plugins/**/assets/javascripts/vendor/
 package.json
 config/locales/**/*.yml
 !config/locales/**/*.en*.yml

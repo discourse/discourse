@@ -24,6 +24,8 @@ class EmailController < ApplicationController
 
         watching = TopicUser.notification_levels[:watching]
 
+        @unsubscribed_from_all = @user.user_option.unsubscribed_from_all?
+
         if @topic
           @watching_topic = TopicUser.exists?(user_id: @user.id, notification_level: watching, topic_id: @topic.id)
           if @topic.category_id
@@ -98,7 +100,8 @@ class EmailController < ApplicationController
     if params["unsubscribe_all"]
       user.user_option.update_columns(email_digests: false,
                                       email_level: UserOption.email_level_types[:never],
-                                      email_messages_level: UserOption.email_level_types[:never])
+                                      email_messages_level: UserOption.email_level_types[:never],
+                                      mailing_list_mode: false)
       updated = true
     end
 
@@ -132,16 +135,17 @@ class EmailController < ApplicationController
 
   def digest_frequencies(user)
     frequency_in_minutes = user.user_option.digest_after_minutes
+    email_digests = user.user_option.email_digests
     frequencies = DigestEmailSiteSetting.values.dup
     never = frequencies.delete_at(0)
     allowed_frequencies = %w[never weekly every_month every_six_months]
 
     result = frequencies.reduce(frequencies: [], current: nil, selected: nil, take_next: false) do |memo, v|
-      memo[:current] = v[:name] if v[:value] == frequency_in_minutes
+      memo[:current] = v[:name] if v[:value] == frequency_in_minutes && email_digests
       next(memo) unless allowed_frequencies.include?(v[:name])
 
       memo.tap do |m|
-        m[:selected] = v[:value] if m[:take_next]
+        m[:selected] = v[:value] if m[:take_next] && email_digests
         m[:frequencies] << [I18n.t("unsubscribe.digest_frequency.#{v[:name]}"), v[:value]]
         m[:take_next] = !m[:take_next] && m[:current]
       end

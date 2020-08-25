@@ -25,7 +25,7 @@ describe Search do
 
       expect do
         topic.update!(title: "harpi is the new title")
-      end.to change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
       expect(post.post_search_data.reload.search_data).to match(/harpi/)
     end
@@ -33,8 +33,8 @@ describe Search do
     it 'should update posts index when topic category changes' do
       expect do
         topic.update!(category: Fabricate(:category))
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
     end
 
     it 'should update posts index when topic tags changes' do
@@ -44,8 +44,8 @@ describe Search do
       expect do
         DiscourseTagging.tag_topic_by_names(topic, Guardian.new(admin), [tag.name])
         topic.save!
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
       expect(topic.tags).to eq([tag])
     end
@@ -77,10 +77,10 @@ describe Search do
     it 'should update posts index when category name changes' do
       expect do
         category.update!(name: 'some new name')
-      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
-        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+      end.to change { post.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
+        .and change { post2.reload.post_search_data.version }.from(SearchIndexer::POST_INDEX_VERSION).to(SearchIndexer::REINDEX_VERSION)
 
-      expect(post3.post_search_data.version).to eq(SearchIndexer::INDEX_VERSION)
+      expect(post3.post_search_data.version).to eq(SearchIndexer::POST_INDEX_VERSION)
     end
   end
 
@@ -190,60 +190,78 @@ describe Search do
   end
 
   context 'private messages' do
+    let!(:post) { Fabricate(:private_message_post) }
 
-    let(:topic) {
-      Fabricate(:topic,
-                  category_id: nil,
-                  archetype: 'private_message')
-    }
+    let(:topic) { post.topic }
 
-    let(:post) { Fabricate(:post, topic: topic) }
-    let(:reply) { Fabricate(:post, topic: topic,
-                                   raw: 'hello from mars, we just landed') }
+    let!(:reply) do
+      Fabricate(:private_message_post,
+        topic: post.topic,
+        raw: 'hello from mars, we just landed',
+        user: post.user
+      )
+    end
+
+    let!(:post2) do
+      Fabricate(:private_message_post,
+        raw: 'another secret pm from mars, testing'
+      )
+    end
 
     it 'searches correctly' do
       expect do
         Search.execute('mars', type_filter: 'private_messages')
       end.to raise_error(Discourse::InvalidAccess)
 
-      TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
-      TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(reply.user)
+      )
 
-      results = Search.execute('mars',
-                              type_filter: 'private_messages',
-                              guardian: Guardian.new(reply.user))
+      expect(results.posts).to contain_exactly(reply)
 
-      expect(results.posts.length).to eq(1)
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(admin)
+      )
 
-      results = Search.execute('mars',
-                              search_context: topic,
-                              guardian: Guardian.new(reply.user))
+      expect(results.posts).to contain_exactly(reply, post2)
 
-      expect(results.posts.length).to eq(1)
+      results = Search.execute(
+        'mars',
+        search_context: topic,
+        guardian: Guardian.new(reply.user)
+      )
+
+      expect(results.posts).to contain_exactly(reply)
 
       # does not leak out
-      results = Search.execute('mars',
-                              type_filter: 'private_messages',
-                              guardian: Guardian.new(Fabricate(:user)))
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(Fabricate(:user))
+      )
 
-      expect(results.posts.length).to eq(0)
-
-      Fabricate(:topic, category_id: nil, archetype: 'private_message')
-      Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
+      expect(results.posts.empty?).to eq(true)
 
       # admin can search everything with correct context
-      results = Search.execute('mars',
-                              type_filter: 'private_messages',
-                              search_context: post.user,
-                              guardian: Guardian.new(admin))
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        search_context: post.user,
+        guardian: Guardian.new(admin)
+      )
 
-      expect(results.posts.length).to eq(1)
+      expect(results.posts).to contain_exactly(reply)
 
-      results = Search.execute('mars in:private',
-                              search_context: post.user,
-                              guardian: Guardian.new(post.user))
+      results = Search.execute(
+        'mars in:personal',
+        guardian: Guardian.new(post.user)
+      )
 
-      expect(results.posts.length).to eq(1)
+      expect(results.posts).to contain_exactly(reply)
 
       # can search group PMs as well as non admin
       #
@@ -254,11 +272,41 @@ describe Search do
 
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 
-      results = Search.execute('mars in:private',
-                              guardian: Guardian.new(user))
+      results = Search.execute(
+        'mars in:personal',
+        guardian: Guardian.new(user)
+      )
 
-      expect(results.posts.length).to eq(1)
+      expect(results.posts).to contain_exactly(reply)
+    end
 
+    context 'personal_messages filter' do
+      it 'does not allow a normal user to search for personal messages of another user' do
+        expect do
+          results = Search.execute(
+            "mars personal_messages:#{post.user.username}",
+            guardian: Guardian.new(post.user)
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+      end
+
+      it 'searches correctly for the PM of the given user' do
+        results = Search.execute(
+          "mars personal_messages:#{post.user.username}",
+          guardian: Guardian.new(admin)
+        )
+
+        expect(results.posts).to contain_exactly(reply)
+      end
+
+      it 'returns the right results if username is invalid' do
+        results = Search.execute(
+          "mars personal_messages:random_username",
+          guardian: Guardian.new(admin)
+        )
+
+        expect(results.posts).to eq([])
+      end
     end
 
     context 'personal-direct flag' do
@@ -341,61 +389,54 @@ describe Search do
         TopicAllowedUser.create!(user_id: u2.id, topic_id: private_topic.id)
 
         # private only
-        results = Search.execute('in:all cheese',
-                                guardian: Guardian.new(u1))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all cheese', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(private_post1)
 
         # public only
-        results = Search.execute('in:all eggs',
-                                guardian: Guardian.new(u1))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all eggs', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(public_post1)
 
         # both
-        results = Search.execute('in:all spam',
-                                guardian: Guardian.new(u1))
-        expect(results.posts.length).to eq(2)
+        results = Search.execute('in:all spam', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(public_post2, private_post2)
 
         # for anon
-        results = Search.execute('in:all spam',
-                                guardian: Guardian.new)
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all spam', guardian: Guardian.new)
+        expect(results.posts).to contain_exactly(public_post2)
 
         # nonparticipatory user
-        results = Search.execute('in:all cheese',
-                                guardian: Guardian.new(u3))
-        expect(results.posts.length).to eq(0)
+        results = Search.execute('in:all cheese', guardian: Guardian.new(u3))
+        expect(results.posts.empty?).to eq(true)
 
-        results = Search.execute('in:all eggs',
-                                guardian: Guardian.new(u3))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all eggs', guardian: Guardian.new(u3))
+        expect(results.posts).to contain_exactly(public_post1)
 
-        results = Search.execute('in:all spam',
-                                guardian: Guardian.new(u3))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all spam', guardian: Guardian.new(u3))
+        expect(results.posts).to contain_exactly(public_post2)
 
         # Admin doesn't see private topic
-        results = Search.execute('in:all spam',
-                  guardian: Guardian.new(u4))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all spam', guardian: Guardian.new(u4))
+        expect(results.posts).to contain_exactly(public_post2)
 
         # same keyword for different users
-        results = Search.execute('in:all ham',
-                                guardian: Guardian.new(u1))
-        expect(results.posts.length).to eq(2)
+        results = Search.execute('in:all ham', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(public_post1, private_post1)
 
-        results = Search.execute('in:all ham',
-                                guardian: Guardian.new(u2))
-        expect(results.posts.length).to eq(2)
+        results = Search.execute('in:all ham', guardian: Guardian.new(u2))
+        expect(results.posts).to contain_exactly(public_post1, private_post1)
 
-        results = Search.execute('in:all ham',
-                                guardian: Guardian.new(u3))
-        expect(results.posts.length).to eq(1)
+        results = Search.execute('in:all ham', guardian: Guardian.new(u3))
+        expect(results.posts).to contain_exactly(public_post1)
       end
     end
   end
 
   context 'posts' do
-    let(:post) { Fabricate(:post) }
+    fab!(:post) do
+      SearchIndexer.enable
+      Fabricate(:post)
+    end
+
     let(:topic) { post.topic }
 
     let!(:reply) do
@@ -406,27 +447,63 @@ describe Search do
     end
 
     let(:expected_blurb) do
-      "...quire content longer than the typical test post raw content. It really is some long content, folks. elephant"
+      "#{Search::GroupedSearchResults::OMISSION}hundred characters to satisfy any test conditions that require content longer than the typical test post raw content. It really is some long content, folks. <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">elephant</span>"
     end
 
     it 'returns the post' do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
       result = Search.execute('elephant',
         type_filter: 'topic',
         include_blurbs: true
       )
 
-      expect(result.posts).to contain_exactly(reply)
-      expect(result.blurb(reply)).to eq(expected_blurb)
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+
+      post = result.posts.first
+
+      expect(result.blurb(post)).to eq(expected_blurb)
+      expect(post.topic_title_headline).to eq(topic.fancy_title)
+    end
+
+    it "only applies highlighting to the first #{Search::MAX_LENGTH_FOR_HEADLINE} characters" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      reply.update!(raw: "#{'a' * Search::MAX_LENGTH_FOR_HEADLINE} #{reply.raw}")
+
+      result = Search.execute('elephant')
+
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+
+      post = result.posts.first
+
+      expect(post.headline.include?('elephant')).to eq(false)
+    end
+
+    it "limits the search headline to #{Search::GroupedSearchResults::BLURB_LENGTH} characters" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      reply.update!(raw: "#{'a' * Search::GroupedSearchResults::BLURB_LENGTH} elephant")
+
+      result = Search.execute('elephant')
+
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+
+      post = result.posts.first
+
+      expect(result.blurb(post)).to eq("#{'a' * Search::GroupedSearchResults::BLURB_LENGTH}#{Search::GroupedSearchResults::OMISSION}")
     end
 
     it 'returns the right post and blurb for searches with phrase' do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
       result = Search.execute('"elephant"',
         type_filter: 'topic',
         include_blurbs: true
       )
 
-      expect(result.posts).to contain_exactly(reply)
-      expect(result.blurb(reply)).to eq(expected_blurb)
+      expect(result.posts.map(&:id)).to contain_exactly(reply.id)
+      expect(result.blurb(result.posts.first)).to eq(expected_blurb)
     end
 
     it 'applies a small penalty to closed topic when ranking' do
@@ -487,6 +564,18 @@ describe Search do
       ])
     ensure
       Discourse.cache.clear
+    end
+
+    it 'allows staff to search for whispers' do
+      post.update!(post_type: Post.types[:whisper], raw: 'this is a tiger')
+
+      results = Search.execute('tiger')
+
+      expect(results.posts).to eq([])
+
+      results = Search.execute('tiger', guardian: Guardian.new(admin))
+
+      expect(results.posts).to eq([post])
     end
   end
 
@@ -1055,37 +1144,41 @@ describe Search do
         .to eq([post_2])
     end
 
-    it 'supports before and after, in:first, user:, @username' do
-
+    it 'supports before and after filters' do
       time = Time.zone.parse('2001-05-20 2:55')
       freeze_time(time)
 
+      post_1 = Fabricate(:post, raw: 'hi this is a test 123 123', created_at: time.months_ago(2))
+      post_2 = Fabricate(:post, raw: 'boom boom shake the room test')
+
+      expect(Search.execute('test before:1').posts).to contain_exactly(post_1)
+      expect(Search.execute('test before:2001-04-20').posts).to contain_exactly(post_1)
+      expect(Search.execute('test before:2001').posts).to eq([])
+      expect(Search.execute('test after:2001').posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute('test before:monday').posts).to contain_exactly(post_1)
+      expect(Search.execute('test after:jan').posts).to contain_exactly(post_1, post_2)
+    end
+
+    it 'supports in:first, user:, @username' do
       topic = Fabricate(:topic)
-      Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic, created_at: time.months_ago(2))
-      _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
+      post_1 = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+      post_2 = Fabricate(:post, raw: 'boom boom shake the room test', topic: topic)
 
-      expect(Search.execute('test before:1').posts.length).to eq(1)
-      expect(Search.execute('test before:2001-04-20').posts.length).to eq(1)
-      expect(Search.execute('test before:2001').posts.length).to eq(0)
-      expect(Search.execute('test before:monday').posts.length).to eq(1)
+      expect(Search.execute('test in:first').posts).to contain_exactly(post_1)
 
-      expect(Search.execute('test after:jan').posts.length).to eq(1)
+      expect(Search.execute('boom').posts).to contain_exactly(post_2)
 
-      expect(Search.execute('test in:first').posts.length).to eq(1)
+      expect(Search.execute('boom in:first').posts).to eq([])
+      expect(Search.execute('boom f').posts).to eq([])
 
-      expect(Search.execute('boom').posts.length).to eq(1)
+      expect(Search.execute('123 in:first').posts).to contain_exactly(post_1)
+      expect(Search.execute('123 f').posts).to contain_exactly(post_1)
 
-      expect(Search.execute('boom in:first').posts.length).to eq(0)
-      expect(Search.execute('boom f').posts.length).to eq(0)
+      expect(Search.execute('user:nobody').posts).to eq([])
+      expect(Search.execute("user:#{post_1.user.username}").posts).to contain_exactly(post_1)
+      expect(Search.execute("user:#{post_1.user_id}").posts).to contain_exactly(post_1)
 
-      expect(Search.execute('123 in:first').posts.length).to eq(1)
-      expect(Search.execute('123 f').posts.length).to eq(1)
-
-      expect(Search.execute('user:nobody').posts.length).to eq(0)
-      expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
-      expect(Search.execute("user:#{_post.user_id}").posts.length).to eq(1)
-
-      expect(Search.execute("@#{_post.user.username}").posts.length).to eq(1)
+      expect(Search.execute("@#{post_1.user.username}").posts).to contain_exactly(post_1)
     end
 
     it 'supports group' do
@@ -1670,4 +1763,24 @@ describe Search do
     end
   end
 
+  context 'plugin extensions' do
+    let!(:post0) { Fabricate(:post, raw: 'this is the first post about advanced filter with length more than 50 chars') }
+    let!(:post1) { Fabricate(:post, raw: 'this is the second post about advanced filter') }
+
+    it 'allows to define custom filter' do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+      Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
+        posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+      end
+      expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
+    end
+
+    it 'allows to define custom order' do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+      Search.advanced_order(:chars) do |posts|
+        posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+      end
+      expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    end
+  end
 end

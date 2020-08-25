@@ -14,9 +14,9 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
 
   buildKey: () => "quick-access-profile",
 
-  hasMore() {
+  hideBottomItems() {
     // Never show the button to the full profile page.
-    return false;
+    return true;
   },
 
   findNewItems() {

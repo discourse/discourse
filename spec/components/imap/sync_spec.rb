@@ -26,7 +26,20 @@ describe Imap::Sync do
     )
   end
 
-  let(:sync_handler) { Imap::Sync.new(group, provider: MockedImapProvider) }
+  let(:sync_handler) { Imap::Sync.new(group) }
+
+  before do
+    mocked_imap_provider = MockedImapProvider.new(
+      group.imap_server,
+      port: group.imap_port,
+      ssl: group.imap_ssl,
+      username: group.email_username,
+      password: group.email_password
+    )
+    Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(
+      mocked_imap_provider
+    )
+  end
 
   context 'no previous sync' do
     let(:from) { 'john@free.fr' }
@@ -71,7 +84,7 @@ describe Imap::Sync do
       topic = Topic.last
       expect(topic.title).to eq(subject)
       expect(topic.user.email).to eq(from)
-      expect(topic.tags.pluck(:name)).to eq(%w[seen important test-label])
+      expect(topic.tags.pluck(:name)).to contain_exactly("seen", "important", "test-label")
 
       post = topic.first_post
       expect(post.raw).to eq('This is an email *body*. :smile:')
@@ -84,6 +97,29 @@ describe Imap::Sync do
       expect(incoming_email.imap_uid_validity).to eq(1)
       expect(incoming_email.imap_uid).to eq(100)
       expect(incoming_email.imap_sync).to eq(false)
+      expect(incoming_email.imap_group_id).to eq(group.id)
+    end
+
+    context "when tagging not enabled" do
+      before do
+        SiteSetting.tagging_enabled = false
+        SiteSetting.allow_staff_to_tag_pms = false
+      end
+
+      it "creates a topic from an incoming email but with no tags added" do
+        expect { sync_handler.process }
+          .to change { Topic.count }.by(1)
+          .and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+          .and change { IncomingEmail.count }.by(1)
+
+        expect(group.imap_uid_validity).to eq(1)
+        expect(group.imap_last_uid).to eq(100)
+
+        topic = Topic.last
+        expect(topic.title).to eq(subject)
+        expect(topic.user.email).to eq(from)
+        expect(topic.tags).to eq([])
+      end
     end
 
     it 'does not duplicate topics' do
@@ -98,19 +134,39 @@ describe Imap::Sync do
         .and change { IncomingEmail.count }.by(0)
     end
 
-    it 'does not duplicate incoming emails' do
+    it 'creates a new incoming email if the message ID does not match the receiver post id regex' do
       incoming_email = Fabricate(:incoming_email, message_id: message_id)
 
       expect { sync_handler.process }
-        .to change { Topic.count }.by(0)
-        .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
-        .and change { IncomingEmail.count }.by(0)
+        .to change { Topic.count }.by(1)
+        .and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+        .and change { IncomingEmail.count }.by(1)
 
-      incoming_email.reload
-      expect(incoming_email.message_id).to eq(message_id)
-      expect(incoming_email.imap_uid_validity).to eq(1)
-      expect(incoming_email.imap_uid).to eq(100)
-      expect(incoming_email.imap_sync).to eq(false)
+      last_incoming = IncomingEmail.where(message_id: message_id).last
+      expect(last_incoming.message_id).to eq(message_id)
+      expect(last_incoming.imap_uid_validity).to eq(1)
+      expect(last_incoming.imap_uid).to eq(100)
+      expect(last_incoming.imap_sync).to eq(false)
+      expect(last_incoming.imap_group_id).to eq(group.id)
+    end
+
+    context "when the message id matches the receiver post id regex" do
+      let(:message_id) { "topic/999/324@test.localhost" }
+      it 'does not duplicate incoming email' do
+        incoming_email = Fabricate(:incoming_email, message_id: message_id)
+
+        expect { sync_handler.process }
+          .to change { Topic.count }.by(0)
+          .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
+          .and change { IncomingEmail.count }.by(0)
+
+        incoming_email.reload
+        expect(incoming_email.message_id).to eq(message_id)
+        expect(incoming_email.imap_uid_validity).to eq(1)
+        expect(incoming_email.imap_uid).to eq(100)
+        expect(incoming_email.imap_sync).to eq(false)
+        expect(incoming_email.imap_group_id).to eq(group.id)
+      end
     end
   end
 
@@ -165,7 +221,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 100).returns([100])
       provider.stubs(:uids).with(from: 101).returns([200])
-      provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS'], anything).returns(
+      provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
         [
           {
             'UID' => 100,
@@ -205,7 +261,7 @@ describe Imap::Sync do
 
       provider.stubs(:uids).with(to: 200).returns([100, 200])
       provider.stubs(:uids).with(from: 201).returns([])
-      provider.stubs(:emails).with([100, 200], ['UID', 'FLAGS', 'LABELS'], anything).returns(
+      provider.stubs(:emails).with([100, 200], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
         [
           {
             'UID' => 100,
@@ -231,6 +287,200 @@ describe Imap::Sync do
 
       expect(Topic.last.posts.where(post_type: Post.types[:regular]).count).to eq(2)
     end
+
+    describe "detecting deleted emails and deleting the topic in discourse" do
+      let(:provider) { MockedImapProvider.any_instance }
+      before do
+        provider.stubs(:open_mailbox).returns(uid_validity: 1)
+
+        provider.stubs(:uids).with.returns([100])
+        provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
+          [
+            {
+              'UID' => 100,
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen],
+              'RFC822' => EmailFabricator(
+                message_id: first_message_id,
+                from: first_from,
+                to: group.email_username,
+                cc: second_from,
+                subject: subject,
+                body: first_body
+              )
+            }
+          ]
+        )
+
+      end
+
+      it "detects previously synced UIDs are missing and deletes the posts if they are in the trash mailbox" do
+        sync_handler.process
+        incoming_100 = IncomingEmail.find_by(imap_uid: 100)
+        provider.stubs(:uids).with.returns([])
+
+        provider.stubs(:uids).with(to: 100).returns([])
+        provider.stubs(:uids).with(from: 101).returns([])
+        provider.stubs(:find_trashed_by_message_ids).returns(
+          stub(
+            trashed_emails: [
+              stub(
+                uid: 10,
+                message_id: incoming_100.message_id
+              )
+            ],
+            trash_uid_validity: 99
+          )
+        )
+        sync_handler.process
+
+        incoming_100.reload
+        expect(incoming_100.imap_uid_validity).to eq(99)
+        expect(incoming_100.imap_uid).to eq(10)
+        expect(Post.with_deleted.find(incoming_100.post_id).deleted_at).not_to eq(nil)
+        expect(Topic.with_deleted.find(incoming_100.topic_id).deleted_at).not_to eq(nil)
+      end
+
+      it "detects the topic being deleted on the discourse site and deletes on the IMAP server and
+      does not attempt to delete again on discourse site when deleted already by us on the IMAP server" do
+        SiteSetting.enable_imap_write = true
+        sync_handler.process
+        incoming_100 = IncomingEmail.find_by(imap_uid: 100)
+        provider.stubs(:uids).with.returns([100])
+
+        provider.stubs(:uids).with(to: 100).returns([100])
+        provider.stubs(:uids).with(from: 101).returns([])
+
+        PostDestroyer.new(Discourse.system_user, incoming_100.post).destroy
+        provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
+          [
+            {
+              'UID' => 100,
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen],
+              'RFC822' => EmailFabricator(
+                message_id: first_message_id,
+                from: first_from,
+                to: group.email_username,
+                cc: second_from,
+                subject: subject,
+                body: first_body
+              )
+            }
+          ]
+        )
+        provider.stubs(:emails).with(100, ['FLAGS', 'LABELS']).returns(
+          [
+            {
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen]
+            }
+          ]
+        )
+
+        provider.expects(:trash).with(100)
+        sync_handler.process
+
+        provider.stubs(:uids).with.returns([])
+
+        provider.stubs(:uids).with(to: 100).returns([])
+        provider.stubs(:uids).with(from: 101).returns([])
+        provider.stubs(:find_trashed_by_message_ids).returns(
+          stub(
+            trashed_emails: [
+              stub(
+                uid: 10,
+                message_id: incoming_100.message_id
+              )
+            ],
+            trash_uid_validity: 99
+          )
+        )
+        PostDestroyer.expects(:new).never
+
+        sync_handler.process
+
+        incoming_100.reload
+        expect(incoming_100.imap_uid_validity).to eq(99)
+        expect(incoming_100.imap_uid).to eq(10)
+      end
+    end
+
+    describe "archiving emails" do
+      let(:provider) { MockedImapProvider.any_instance }
+      before do
+        SiteSetting.enable_imap_write = true
+        provider.stubs(:open_mailbox).returns(uid_validity: 1)
+
+        provider.stubs(:uids).with.returns([100])
+        provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
+          [
+            {
+              'UID' => 100,
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen],
+              'RFC822' => EmailFabricator(
+                message_id: first_message_id,
+                from: first_from,
+                to: group.email_username,
+                cc: second_from,
+                subject: subject,
+                body: first_body
+              )
+            }
+          ]
+        )
+
+        sync_handler.process
+        @incoming_email = IncomingEmail.find_by(message_id: first_message_id)
+        @topic = @incoming_email.topic
+
+        provider.stubs(:uids).with(to: 100).returns([100])
+        provider.stubs(:uids).with(from: 101).returns([101])
+        provider.stubs(:emails).with([100], ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'], anything).returns(
+          [
+            {
+              'UID' => 100,
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen]
+            }
+          ]
+        )
+        provider.stubs(:emails).with([101], ['UID', 'FLAGS', 'LABELS', 'RFC822'], anything).returns(
+          []
+        )
+        provider.stubs(:emails).with(100, ['FLAGS', 'LABELS']).returns(
+          [
+            {
+              'LABELS' => %w[\\Inbox],
+              'FLAGS' => %i[Seen]
+            }
+          ]
+        )
+      end
+
+      it "archives an email on the IMAP server when archived in discourse" do
+        GroupArchivedMessage.archive!(group.id, @topic, skip_imap_sync: false)
+        @incoming_email.update(imap_sync: true)
+
+        provider.stubs(:store).with(100, 'FLAGS', anything, anything)
+        provider.stubs(:store).with(100, 'LABELS', ["\\Inbox"], ["seen"])
+
+        provider.expects(:archive).with(100)
+        sync_handler.process
+      end
+
+      it "does not archive email if not archived in discourse, it unarchives it instead" do
+        @incoming_email.update(imap_sync: true)
+        provider.stubs(:store).with(100, 'FLAGS', anything, anything)
+        provider.stubs(:store).with(100, 'LABELS', ["\\Inbox"], ["\\Inbox", "seen"])
+
+        provider.expects(:archive).with(100).never
+        provider.expects(:unarchive).with(100)
+        sync_handler.process
+      end
+    end
+
   end
 
   context 'invaidated previous sync' do
@@ -244,7 +494,9 @@ describe Imap::Sync do
     let(:second_message_id) { SecureRandom.hex }
     let(:second_body) { '<p>This is an <b>answer</b> to this message.</p>' }
 
-    it 'is updated' do
+    # TODO: Improve the invalidating flow for mailbox change. This is a destructive
+    # action so it should not be done often.
+    xit 'is updated' do
       provider = MockedImapProvider.any_instance
 
       provider.stubs(:open_mailbox).returns(uid_validity: 1)
@@ -285,8 +537,8 @@ describe Imap::Sync do
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(2)
         .and change { IncomingEmail.count }.by(2)
 
-      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid)
-      expect(imap_data).to contain_exactly([1, 100], [1, 200])
+      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid, :imap_group_id)
+      expect(imap_data).to contain_exactly([1, 100, group.id], [1, 200, group.id])
 
       provider.stubs(:open_mailbox).returns(uid_validity: 2)
       provider.stubs(:uids).with.returns([111, 222])
@@ -326,8 +578,8 @@ describe Imap::Sync do
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
         .and change { IncomingEmail.count }.by(0)
 
-      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid)
-      expect(imap_data).to contain_exactly([2, 111], [2, 222])
+      imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid, :imap_group_id)
+      expect(imap_data).to contain_exactly([2, 111, group.id], [2, 222, group.id])
     end
   end
 end

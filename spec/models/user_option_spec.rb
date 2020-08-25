@@ -56,6 +56,7 @@ describe UserOption do
       SiteSetting.default_other_enable_defer = true
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_dynamic_favicon = true
+      SiteSetting.default_other_skip_new_user_tips = true
 
       user = Fabricate(:user)
 
@@ -63,6 +64,7 @@ describe UserOption do
       expect(user.user_option.enable_defer).to eq(true)
       expect(user.user_option.external_links_in_new_tab).to eq(true)
       expect(user.user_option.dynamic_favicon).to eq(true)
+      expect(user.user_option.skip_new_user_tips).to eq(true)
     end
   end
 
@@ -122,12 +124,17 @@ describe UserOption do
               user.stubs(:last_seen_at).returns(5.minutes.ago)
             end
 
+            after do
+              $redis.flushdb
+            end
+
             it "should have a reason for the first visit" do
               freeze_time do
                 delay = SiteSetting.active_user_rate_limit_secs / 2
-                Jobs.expects(:enqueue_in).with(delay, :update_top_redirection, user_id: user.id, redirected_at: Time.zone.now)
 
-                expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.new_user'), period: :monthly)
+                expect_enqueued_with(job: :update_top_redirection, args: { user_id: user.id, redirected_at: Time.zone.now.to_s }, at: Time.zone.now + delay) do
+                  expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.new_user'), period: :monthly)
+                end
               end
             end
 

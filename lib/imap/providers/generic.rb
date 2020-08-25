@@ -4,8 +4,22 @@ require 'net/imap'
 
 module Imap
   module Providers
-    class Generic
+    class WriteDisabledError < StandardError; end
 
+    class TrashedMailResponse
+      attr_accessor :trashed_emails, :trash_uid_validity
+    end
+
+    class BasicMail
+      attr_accessor :uid, :message_id
+
+      def initialize(uid: nil, message_id: nil)
+        @uid = uid
+        @message_id = message_id
+      end
+    end
+
+    class Generic
       def initialize(server, options = {})
         @server = server
         @port = options[:port] || 993
@@ -13,6 +27,10 @@ module Imap
         @username = options[:username]
         @password = options[:password]
         @timeout = options[:timeout] || 10
+      end
+
+      def account_digest
+        @account_digest ||= Digest::MD5.hexdigest("#{@username}:#{@server}")
       end
 
       def imap
@@ -65,11 +83,16 @@ module Imap
 
       def open_mailbox(mailbox_name, write: false)
         if write
-          raise 'two-way IMAP sync is disabled' if !SiteSetting.enable_imap_write
+          if !SiteSetting.enable_imap_write
+            raise WriteDisabledError.new("Two-way IMAP sync is disabled! Cannot write to inbox.")
+          end
           imap.select(mailbox_name)
         else
           imap.examine(mailbox_name)
         end
+
+        @open_mailbox_name = mailbox_name
+        @open_mailbox_write = write
 
         {
           uid_validity: imap.responses['UIDVALIDITY'][-1]
@@ -77,7 +100,14 @@ module Imap
       end
 
       def emails(uids, fields, opts = {})
-        imap.uid_fetch(uids, fields).map do |email|
+        fetched = imap.uid_fetch(uids, fields)
+
+        # This will happen if the email does not exist in the provided mailbox.
+        # It may have been deleted or otherwise moved, e.g. if deleted in Gmail
+        # it will end up in "[Gmail]/Bin"
+        return [] if fetched.nil?
+
+        fetched.map do |email|
           attributes = {}
 
           fields.each do |field|
@@ -105,11 +135,113 @@ module Imap
       end
 
       def tag_to_label(tag)
-        labels[tag]
+        tag
       end
 
-      def list_mailboxes
-        imap.list('', '*').map(&:name)
+      def list_mailboxes(attr_filter = nil)
+        # Basically, list all mailboxes in the root of the server.
+        # ref: https://tools.ietf.org/html/rfc3501#section-6.3.8
+        imap.list('', '*').reject do |m|
+
+          # Noselect cannot be selected with the SELECT command.
+          # technically we could use this for readonly mode when
+          # SiteSetting.imap_write is disabled...maybe a later TODO
+          # ref: https://tools.ietf.org/html/rfc3501#section-7.2.2
+          m.attr.include?(:Noselect)
+        end.select do |m|
+
+          # There are Special-Use mailboxes denoted by an attribute. For
+          # example, some common ones are \Trash or \Sent.
+          # ref: https://tools.ietf.org/html/rfc6154
+          if attr_filter
+            m.attr.include? attr_filter
+          else
+            true
+          end
+        end.map do |m|
+          m.name
+        end
+      end
+
+      def archive(uid)
+        # do nothing by default, just removing the Inbox label should be enough
+      end
+
+      def unarchive(uid)
+        # same as above
+      end
+
+      # Look for the special Trash XLIST attribute.
+      # TODO: It might be more efficient to just store this against the group.
+      # Another table is looking more and more attractive....
+      def trash_mailbox
+        Discourse.cache.fetch("imap_trash_mailbox_#{account_digest}", expires_in: 30.minutes) do
+          list_mailboxes(:Trash).first
+        end
+      end
+
+      # open the trash mailbox for inspection or writing. after the yield we
+      # close the trash and reopen the original mailbox to continue operations.
+      # the normal open_mailbox call can be made if more extensive trash ops
+      # need to be done.
+      def open_trash_mailbox(write: false)
+        open_mailbox_before_trash = @open_mailbox_name
+        open_mailbox_before_trash_write = @open_mailbox_write
+
+        trash_uid_validity = open_mailbox(trash_mailbox, write: write)[:uid_validity]
+
+        yield(trash_uid_validity) if block_given?
+
+        open_mailbox(open_mailbox_before_trash, write: open_mailbox_before_trash_write)
+        trash_uid_validity
+      end
+
+      def find_trashed_by_message_ids(message_ids)
+        trashed_emails = []
+        trash_uid_validity = open_trash_mailbox do
+          header_message_id_terms = message_ids.map do |msgid|
+            "HEADER Message-ID '#{Email.message_id_rfc_format(msgid)}'"
+          end
+
+          # OR clauses are written in Polish notation...so the query looks like this:
+          # OR OR HEADER Message-ID XXXX HEADER Message-ID XXXX HEADER Message-ID XXXX
+          or_clauses = 'OR ' * (header_message_id_terms.length - 1)
+          query = "#{or_clauses}#{header_message_id_terms.join(" ")}"
+
+          trashed_email_uids = imap.uid_search(query)
+          if trashed_email_uids.any?
+            trashed_emails = emails(trashed_email_uids, ["UID", "ENVELOPE"]).map do |e|
+              BasicMail.new(message_id: Email.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
+            end
+          end
+        end
+
+        TrashedMailResponse.new.tap do |resp|
+          resp.trashed_emails = trashed_emails
+          resp.trash_uid_validity = trash_uid_validity
+        end
+      end
+
+      def trash(uid)
+        # MOVE is way easier than doing the COPY \Deleted EXPUNGE dance ourselves.
+        # It is supported by Gmail and Outlook.
+        if can?('MOVE')
+          trash_move(uid)
+        else
+
+          # default behaviour for IMAP servers is to add the \Deleted flag
+          # then EXPUNGE the mailbox which permanently deletes these messages
+          # https://tools.ietf.org/html/rfc3501#section-6.4.3
+          #
+          # TODO: We may want to add the option at some point to copy to some
+          # other mailbox first before doing this (e.g. Trash)
+          store(uid, 'FLAGS', [], ["\\Deleted"])
+          imap.expunge
+        end
+      end
+
+      def trash_move(uid)
+        # up to the provider
       end
     end
   end

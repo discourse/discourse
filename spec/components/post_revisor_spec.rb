@@ -425,7 +425,7 @@ describe PostRevisor do
       fab!(:changed_by) { Fabricate(:admin) }
 
       before do
-        SiteSetting.newuser_max_images = 0
+        SiteSetting.newuser_max_embedded_media = 0
         url = "http://i.imgur.com/wfn7rgU.jpg"
         Oneboxer.stubs(:onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(changed_by, raw: "So, post them here!\n#{url}")
@@ -443,7 +443,7 @@ describe PostRevisor do
 
     describe "new user editing their own post" do
       before do
-        SiteSetting.newuser_max_images = 0
+        SiteSetting.newuser_max_embedded_media = 0
         url = "http://i.imgur.com/FGg7Vzu.gif"
         Oneboxer.stubs(:cached_onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(post.user, raw: "So, post them here!\n#{url}")
@@ -595,6 +595,28 @@ describe PostRevisor do
           action: UserHistory.actions[:post_edit]
         )
         expect(log).to be_blank
+      end
+    end
+
+    context "logging group moderator edits" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        topic.update!(category: category)
+        post.update!(topic: topic)
+      end
+
+      it "logs an edit when a group moderator revises the category description" do
+        PostRevisor.new(post).revise!(group_user.user, raw: "a group moderator can update the description")
+
+        log = UserHistory.where(
+          acting_user_id: group_user.user.id,
+          action: UserHistory.actions[:post_edit]
+        ).first
+        expect(log).to be_present
+        expect(log.details).to eq("Hello world\n\n---\n\na group moderator can update the description")
       end
     end
 

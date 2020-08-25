@@ -22,8 +22,3 @@ export default class RawHtml {
 }
 
 RawHtml.prototype.type = "Widget";
-
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.rawHtml = RawHtml;
-}

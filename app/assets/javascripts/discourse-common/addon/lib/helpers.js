@@ -45,6 +45,17 @@ export function registerHelpers(registry) {
   });
 }
 
+let _helperContext;
+export function createHelperContext(ctx) {
+  _helperContext = ctx;
+}
+
+// This can be used by a helper to get the SiteSettings. Note you should not
+// be using it outside of helpers (or lib code that helpers use!)
+export function helperContext() {
+  return _helperContext;
+}
+
 function resolveParams(ctx, options) {
   let params = {};
   const hash = options.hash;

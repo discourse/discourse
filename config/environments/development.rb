@@ -52,7 +52,10 @@ Discourse::Application.configure do
     end
   end
 
-  config.load_mini_profiler = true
+  if !ENV["DISABLE_MINI_PROFILER"]
+    config.load_mini_profiler = true
+  end
+
   if hosts = ENV['DISCOURSE_DEV_HOSTS']
     config.hosts.concat(hosts.split(","))
   end

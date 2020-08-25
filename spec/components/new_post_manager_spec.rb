@@ -182,6 +182,23 @@ describe NewPostManager do
       end
     end
 
+    context 'with a fast typer' do
+      let(:manager) { NewPostManager.new(topic.user, raw: 'this is new post content', topic_id: topic.id, first_post_checks: true) }
+      let(:user) { manager.user }
+
+      before do
+        user.update!(trust_level: 0)
+      end
+
+      it "adds the silence reason in the system locale" do
+        I18n.with_locale(:fr) do # Simulate french user
+          result = NewPostManager.default_handler(manager)
+        end
+        expect(user.silenced?).to eq(true)
+        expect(user.silence_reason).to eq(I18n.t("user.new_user_typed_too_fast", locale: :en))
+      end
+    end
+
   end
 
   context "new topic handler" do
@@ -272,6 +289,9 @@ describe NewPostManager do
     it "calls custom enqueuing handlers" do
       Reviewable.set_priorities(high: 20.5)
       SiteSetting.reviewable_default_visibility = 'high'
+      SiteSetting.tagging_enabled = true
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
 
       manager = NewPostManager.new(
         topic.user,

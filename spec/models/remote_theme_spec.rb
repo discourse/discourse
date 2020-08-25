@@ -60,6 +60,7 @@ describe RemoteTheme do
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
+        "common/color_definitions.scss" => ":root{--color-var: red}",
         "assets/font.woff2" => "FAKE FONT",
         "settings.yaml" => "boolean_setting: true",
         "locales/en.yml" => "sometranslations"
@@ -90,12 +91,14 @@ describe RemoteTheme do
 
       expect(@theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
 
-      expect(@theme.theme_fields.length).to eq(9)
+      expect(@theme.theme_fields.length).to eq(10)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
+
       expect(mapped["0-header"]).to eq("I AM HEADER")
       expect(mapped["1-scss"]).to eq(scss_data)
       expect(mapped["0-embedded_scss"]).to eq("EMBED")
+      expect(mapped["0-color_definitions"]).to eq(":root{--color-var: red}")
 
       expect(mapped["0-font"]).to eq("")
 
@@ -103,7 +106,7 @@ describe RemoteTheme do
 
       expect(mapped["4-en"]).to eq("sometranslations")
 
-      expect(mapped.length).to eq(9)
+      expect(mapped.length).to eq(10)
 
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)

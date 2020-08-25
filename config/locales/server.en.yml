@@ -1,19 +1,3 @@
-# encoding: utf-8
-# This file contains content for the server portion of Discourse used by Ruby
-#
-# To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
-
 en:
   dates:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
@@ -139,7 +123,7 @@ en:
         bounced_email_error: "Email is a bounced email report."
         screened_email_error: "Happens when the sender's email address was already screened."
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
-        email_not_allowed: "Happens when the email address is not on the whitelist or is on the blacklist."
+        email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
       unrecognized_error: "Unrecognized Error"
     secure_media_placeholder: "Redacted: this site has secure media enabled, visit the topic to see the attached image/audio/video."
 
@@ -209,6 +193,7 @@ en:
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_media_requirements: "S3 uploads must be enabled before enabling secure media."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
+      second_factor_cannot_enforce_with_socials: "You cannot enforce 2FA with social logins enabled. You must first disable login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
@@ -244,6 +229,7 @@ en:
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
+    not_allowed: "Sorry, that user can't be invited."
 
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
@@ -321,11 +307,11 @@ en:
   too_many_mentions_newuser:
     one: "Sorry, new users can only mention one other user in a post."
     other: "Sorry, new users can only mention %{count} users in a post."
-  no_images_allowed_trust: "Sorry, you can't put images in a post"
-  no_images_allowed: "Sorry, new users can't put images in posts."
-  too_many_images:
-    one: "Sorry, new users can only put one image in a post."
-    other: "Sorry, new users can only put %{count} images in a post."
+  no_embedded_media_allowed_trust: "Sorry, you can't embed media items in a post."
+  no_embedded_media_allowed: "Sorry, new users can't embed media items in posts."
+  too_many_embedded_media:
+    one: "Sorry, new users can only put one embedded media item in a post."
+    other: "Sorry, new users can only put %{count} embedded media items in a post."
   no_attachments_allowed: "Sorry, new users can't put attachments in posts."
   too_many_attachments:
     one: "Sorry, new users can only put one attachment in a post."
@@ -425,6 +411,7 @@ en:
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       cant_allow_membership_requests: "You cannot allow membership requests for a group without any owners."
       already_requested_membership: "You have already requested membership for this group."
+      adding_too_many_users: "Maximum %{limit} users can be added at once"
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -545,6 +532,7 @@ en:
               reply_by_email_disabled: "Reply by email has been disabled."
               target_user_not_found: "One of the users you are sending this message to could not be found."
               unable_to_update: "There was an error updating that topic."
+              unable_to_tag: "There was an error tagging the topic."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
               invalid_category: "can't be edited in this category."
@@ -1028,6 +1016,7 @@ en:
     submit: "Save preferences"
     digest_frequency:
       title: "You are receiving summary emails %{frequency}"
+      never_title: "You are not receiving summary emails"
       select_title: "Set summary emails frequency to:"
 
       never: "never"
@@ -1425,7 +1414,7 @@ en:
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text</a>."
     allow_user_locale: "Allow users to choose their own language interface preference"
-    set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
+    set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
     min_post_length: "Minimum allowed post length in characters"
     min_first_post_length: "Minimum allowed first post (topic body) length in characters"
@@ -1484,9 +1473,9 @@ en:
     show_pinned_excerpt_mobile: "Show excerpt on pinned topics in mobile view."
     show_pinned_excerpt_desktop: "Show excerpt on pinned topics in desktop view."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
-    onebox_domains_blacklist: "A list of domains that will never be oneboxed."
-    inline_onebox_domains_whitelist: "A list of domains that will be oneboxed in miniature form if linked without a title"
-    enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_whitelist site setting and allow inline onebox on all domains."
+    blocked_onebox_domains: "A list of domains that will never be oneboxed."
+    allowed_inline_onebox_domains: "A list of domains that will be oneboxed in miniature form if linked without a title"
+    enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
 
@@ -1494,6 +1483,9 @@ en:
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
     mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
+    logo_dark: "Dark scheme alternative for the 'logo' site setting."
+    logo_small_dark: "Dark scheme alternative for the 'logo small' site setting."
+    mobile_logo_dark: "Dark scheme alternative for the 'mobile logo' site setting."
     large_icon: "Image used as the base for other metadata icons. Should ideally be larger than 512 x 512. If left blank, logo_small will be used."
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
@@ -1555,22 +1547,22 @@ en:
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
+    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Allow moderators to create new categories"
+    moderators_manage_categories_and_groups: "Allow moderators to manage categories and groups"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
-    blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
-    whitelist_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
+    use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
+    blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
+    allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
-    whitelisted_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
-    blacklisted_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if whitelist is defined."
+    allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
+    blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: "User agents of web crawlers that should be rate limited in robots.txt using the Crawl-delay directive"
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
     content_security_policy: "Enable Content-Security-Policy"
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
-    content_security_policy_script_src: "Additional whitelisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
+    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
@@ -1600,8 +1592,8 @@ en:
     enable_whispers: "Allow staff private communication within topics."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
-    email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
-    email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
+    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
+    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved."
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup and from the forgot password form."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
@@ -1617,7 +1609,7 @@ en:
     min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
     max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"
     unicode_usernames: "Allow usernames and group names to contain Unicode letters and numbers."
-    unicode_username_character_whitelist: "Regular expression to allow only some Unicode characters within usernames. ASCII letters and numbers will always be allowed and don't need to be included in the whitelist."
+    allowed_unicode_username_characters: "Regular expression to allow only some Unicode characters within usernames. ASCII letters and numbers will always be allowed and don't need to be included in the allowlist."
 
     reserved_usernames: "Usernames for which signup is not allowed. Wildcard symbol * can be used to match any character zero or more times."
 
@@ -1763,6 +1755,7 @@ en:
     png_to_jpg_quality: "Quality of the converted JPG file (1 is lowest quality, 99 is best quality, 100 to disable)."
 
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
+    convert_heif_to_jpeg: "Convert '.heic' or '.heif' image uploads to jpeg."
 
     strip_image_metadata: "Strip image metadata."
 
@@ -1815,12 +1808,13 @@ en:
     min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
-    min_trust_to_post_images: "The minimum trust level required to include images in a post"
-
-    whitelisted_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
+    min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
+    min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
+    min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
+    allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
-    newuser_max_images: "How many images a new user can add to a post."
+    newuser_max_embedded_media: "How many embedded media items a new user can add to a post."
     newuser_max_attachments: "How many attachments a new user can add to a post."
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
     newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
@@ -1847,6 +1841,8 @@ en:
     desktop_category_page_style: "Visual style for the /categories page."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
+    default_dark_mode_color_scheme_id: "The color scheme used when in dark mode."
+    dark_mode_none: "None"
 
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
@@ -1885,7 +1881,7 @@ en:
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
-    white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
+    allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
     topic_view_duration_hours: "Count a new topic view once per IP/User every N hours"
     user_profile_view_duration_hours: "Count a new user profile view once per IP/User every N hours"
@@ -1931,7 +1927,7 @@ en:
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     maximum_staged_users_per_email: "Maximum number of staged users created when processing an incoming email."
-    auto_generated_whitelist: "List of email addresses that won't be checked for auto-generated content. Example: foo@bar.com|discourse@bar.com"
+    auto_generated_allowlist: "List of email addresses that won't be checked for auto-generated content. Example: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
     ignore_by_title: "Ignore incoming emails based on their title."
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
@@ -1941,8 +1937,8 @@ en:
     bounce_score_threshold: "Max bounce score before we will stop emailing a user."
     reset_bounce_score_after_days: "Automatically reset bounce score after X days."
 
-    attachment_content_type_blacklist: "List of keywords used to blacklist attachments based on the content type."
-    attachment_filename_blacklist: "List of keywords used to blacklist attachments based on the filename."
+    blocked_attachment_content_types: "List of keywords used to blocklist attachments based on the content type."
+    blocked_attachment_filenames: "List of keywords used to blocklist attachments based on the filename."
 
     forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
@@ -2044,7 +2040,7 @@ en:
 
     max_notifications_per_user: "Maximum amount of notifications per user, if this number is exceeded old notifications will be deleted. Enforced weekly. Set to 0 to disable"
 
-    user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
+    allowed_user_website_domains: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
@@ -2108,7 +2104,7 @@ en:
     embed_truncate: "Truncate the embedded posts."
     embed_unlisted: "Imported topics will be unlisted until a user replies."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
-    embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
+    allowed_embed_selectors: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
@@ -2167,6 +2163,7 @@ en:
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_enable_defer: "Enable defer topic functionality by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
+    default_other_skip_new_user_tips: "Skip new user onboarding tips and badges."
 
     default_other_like_notification_frequency: "Notify users on likes by default"
 
@@ -2176,6 +2173,7 @@ en:
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
+    default_categories_regular: "List of categories that are not muted by default. Useful when `mute_all_categories_by_default` site setting is enabled."
     mute_all_categories_by_default: "Set the default notification level of all the categories to muted. Require users opt-in to categories for them to appear in 'latest' and 'categories' pages. If you wish to amend the defaults for anonymous users set 'default_categories_' settings."
 
     default_tags_watching: "List of tags that are watched by default."
@@ -2278,7 +2276,7 @@ en:
         low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
         high_weight_invalid: "You cannot set the weight to be smaller or equal to 1 or greater than 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "You cannot set the weight to be smaller than 'category_search_priority_high_weight'."
-      unicode_username_whitelist:
+      allowed_unicode_usernames:
         regex_invalid: "The regular expression is invalid: %{error}"
         leading_trailing_slash: "The regular expression must not start and end with a slash."
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
@@ -2640,7 +2638,7 @@ en:
 
       - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
 
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
+      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blocklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
       - We highly recommend you **send a test email to [mail-tester.com][mt]** to verify that all the above is working correctly.
 
@@ -2909,6 +2907,11 @@ en:
         ``` text
         %{logs}
         ```
+    user_added_to_group:
+      title: "Added to Group"
+      subject_template: "You have been added as %{membership_level} of the %{group_name} group"
+      text_body_template: |
+        You have been added as a %{membership_level} of the [%{group_name}](%{base_url}%{group_path}) group.
 
     csv_export_succeeded:
       title: "CSV Export Succeeded"
@@ -3234,7 +3237,7 @@ en:
 
         Please [review the user](%{user_url}).
 
-        This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings. Consider adding %{domains} to the whitelist if they should be exempt.
+        This can be modified via the `newuser_spam_host_threshold` and `allowed_spam_host_domains` site settings. Consider adding %{domains} to the allowlist if they should be exempt.
 
     unsilenced:
       title: "Unsilenced"

@@ -8,6 +8,7 @@
 
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/common/poll-ui-builder.scss"
+register_asset "stylesheets/common/poll-breakdown.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
 register_asset "stylesheets/mobile/poll-ui-builder.scss", :mobile
@@ -562,7 +563,7 @@ after_initialize do
 
   register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)
 
-  topic_view_post_custom_fields_whitelister { [DiscoursePoll::HAS_POLLS] }
+  topic_view_post_custom_fields_allowlister { [DiscoursePoll::HAS_POLLS] }
 
   add_to_class(:topic_view, :polls) do
     @polls ||= begin

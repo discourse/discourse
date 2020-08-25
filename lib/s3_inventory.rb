@@ -12,8 +12,14 @@ class S3Inventory
   INVENTORY_PREFIX ||= "inventory"
   INVENTORY_VERSION ||= "1"
 
-  def initialize(s3_helper, type)
+  def initialize(s3_helper, type, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
     @s3_helper = s3_helper
+
+    if preloaded_inventory_file && preloaded_inventory_date
+      # Data preloaded, so we don't need to fetch it again
+      @preloaded_inventory_file = preloaded_inventory_file
+      @inventory_date = preloaded_inventory_date
+    end
 
     if type == :upload
       @type = "original"
@@ -25,32 +31,25 @@ class S3Inventory
   end
 
   def backfill_etags_and_list_missing
-    if files.blank?
+    if !@preloaded_inventory_file && files.blank?
       error("Failed to list inventory from S3")
       return
     end
 
     DistributedMutex.synchronize("s3_inventory_list_missing_#{type}", validity: 30.minutes) do
       begin
-        files.each do |file|
-          next if File.exists?(file[:filename][0...-3])
-
-          download_inventory_file_to_tmp_directory(file)
-          decompress_inventory_file(file)
-        end
+        download_and_decompress_files if !@preloaded_inventory_file
 
         multisite_prefix = Discourse.store.upload_path
         ActiveRecord::Base.transaction do
           begin
             connection.exec("CREATE TEMP TABLE #{table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))")
             connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
-              files.each do |file|
-                CSV.foreach(file[:filename][0...-3], headers: false) do |row|
-                  key = row[CSV_KEY_INDEX]
-                  next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
-                  url = File.join(Discourse.store.absolute_base_url, key)
-                  connection.put_copy_data("#{url},#{row[CSV_ETAG_INDEX]}\n")
-                end
+              for_each_inventory_row do |row|
+                key = row[CSV_KEY_INDEX]
+                next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
+                url = File.join(Discourse.store.absolute_base_url, key)
+                connection.put_copy_data("#{url},#{row[CSV_ETAG_INDEX]}\n")
               end
             end
 
@@ -61,17 +60,48 @@ class S3Inventory
               WHERE #{model.table_name}.etag IS NULL AND
                 #{model.table_name}.url = #{table_name}.url")
 
-            uploads = model.by_users.where("updated_at < ?", inventory_date)
+            uploads = model.where("updated_at < ?", inventory_date)
+            uploads = uploads.by_users if model == Upload
+
             missing_uploads = uploads
               .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
-              .where("#{table_name}.etag IS NULL AND #{model.table_name}.etag IS NOT NULL")
+              .where("#{table_name}.etag IS NULL")
+
+            exists_with_different_etag = missing_uploads
+              .joins("LEFT JOIN #{table_name} inventory2 ON inventory2.url = #{model.table_name}.url")
+              .where("inventory2.etag IS NOT NULL").pluck(:id)
+
+            # marking as verified/not verified
+            id_threshold_clause = model == Upload ? " AND model_table.id > #{model::SEEDED_ID_THRESHOLD}" : ""
+            DB.exec(<<~SQL, inventory_date
+              UPDATE #{model.table_name}
+              SET verified = CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+              FROM #{model.table_name} AS model_table
+              LEFT JOIN #{table_name} AS table_name_alias ON model_table.etag = table_name_alias.etag
+              WHERE model_table.id = #{model.table_name}.id
+              AND model_table.updated_at < ?
+              AND (
+                model_table.verified IS NULL OR
+                model_table.verified <> CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+              )
+               #{id_threshold_clause}
+              SQL
+            )
 
             if (missing_count = missing_uploads.count) > 0
               missing_uploads.select(:id, :url).find_each do |upload|
-                log upload.url
+                if exists_with_different_etag.include?(upload.id)
+                  log "#{upload.url} has different etag"
+                else
+                  log upload.url
+                end
               end
 
               log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
+              if exists_with_different_etag.present?
+                log "#{exists_with_different_etag.count} of these are caused by differing etags"
+                log "Null the etag column and re-run for automatic backfill"
+              end
             end
 
             Discourse.stats.set("missing_s3_#{model.table_name}", missing_count)
@@ -81,6 +111,16 @@ class S3Inventory
         end
       ensure
         cleanup!
+      end
+    end
+  end
+
+  def for_each_inventory_row
+    if @preloaded_inventory_file
+      CSV.foreach(@preloaded_inventory_file) { |row| yield(row) }
+    else
+      files.each do |file|
+        CSV.foreach(file[:filename][0...-3]) { |row| yield(row) }
       end
     end
   end
@@ -134,9 +174,36 @@ class S3Inventory
     )
   end
 
+  def prepare_for_all_sites
+    db_names = RailsMultisite::ConnectionManagement.all_dbs
+    db_files = {}
+
+    db_names.each do |db|
+      db_files[db] = Tempfile.new("#{db}-inventory.csv")
+    end
+
+    download_and_decompress_files
+    for_each_inventory_row do |row|
+      key = row[CSV_KEY_INDEX]
+      row_db = key.match(/uploads\/([^\/]+)\//)&.[](1)
+      if row_db && file = db_files[row_db]
+        file.write(row.to_csv)
+      end
+    end
+
+    db_names.each do |db|
+      db_files[db].rewind
+    end
+
+    db_files
+  ensure
+    cleanup!
+  end
+
   private
 
   def cleanup!
+    return if @preloaded_inventory_file
     files.each do |file|
       File.delete(file[:filename]) if File.exists?(file[:filename])
       File.delete(file[:filename][0...-3]) if File.exists?(file[:filename][0...-3])
@@ -152,6 +219,7 @@ class S3Inventory
   end
 
   def files
+    return if @preloaded_inventory_file
     @files ||= begin
       symlink_file = unsorted_files.sort_by { |file| -file.last_modified.to_i }.first
       return [] if symlink_file.blank?
@@ -166,6 +234,15 @@ class S3Inventory
         key = key.sub("s3://#{bucket_name}/", "").sub("\n", "")
         { key: key, filename: File.join(tmp_directory, File.basename(key)) }
       end
+    end
+  end
+
+  def download_and_decompress_files
+    files.each do |file|
+      next if File.exists?(file[:filename][0...-3])
+
+      download_inventory_file_to_tmp_directory(file)
+      decompress_inventory_file(file)
     end
   end
 

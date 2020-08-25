@@ -14,10 +14,13 @@
     </div>
 
     <div class="bookmark-options-panel">
-      <label for="delete_when_reminder_sent">
-        {{i18n "bookmarks.delete_when_reminder_sent"}}
-        {{input id="delete_when_reminder_sent" type="checkbox" checked=options.deleteWhenReminderSent}}
-      </label>
+      <label class="control-label" for="bookmark_auto_delete_preference">{{i18n "bookmarks.auto_delete_preference.label"}}</label>
+      {{combo-box
+        content=autoDeletePreferences
+        value=autoDeletePreference
+        class="bookmark-option-selector"
+        onChange=(action (mut autoDeletePreference))
+      }}
     </div>
 
     {{#if showExistingReminderAt }}

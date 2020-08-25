@@ -81,7 +81,7 @@ acceptance("Group Requests", {
 });
 
 QUnit.test("Group Requests", async assert => {
-  await visit("/groups/Macdonald/requests");
+  await visit("/g/Macdonald/requests");
 
   assert.equal(find(".group-members tr").length, 2);
   assert.equal(

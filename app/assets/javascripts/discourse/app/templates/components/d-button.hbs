@@ -1,17 +1,17 @@
 {{#if icon}}
   {{#if isLoading}}
-    {{d-icon "spinner" class="loading-icon"}}
+    {{~d-icon "spinner" class="loading-icon"~}}
   {{else}}
-    {{d-icon icon}}
+    {{~d-icon icon~}}
   {{/if}}
 {{else}}
   {{#if isLoading}}
-    {{d-icon "spinner" class="loading-icon"}}
+    {{~d-icon "spinner" class="loading-icon"~}}
   {{/if}}
 {{/if}}
 
-{{#if computedLabel}}
+{{~#if computedLabel~}}
   <span class="d-button-label">{{html-safe computedLabel}}{{#if ellipsis}}&hellip;{{/if}}</span>
-{{/if}}
+{{~/if~}}
 
 {{yield}}

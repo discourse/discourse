@@ -140,7 +140,7 @@ module Jobs
     def load_problem_post_ids(limit)
       params = {
         locale: SiteSetting.default_locale,
-        version: SearchIndexer::INDEX_VERSION,
+        version: SearchIndexer::MIN_POST_REINDEX_VERSION,
         limit: limit
       }
 
@@ -151,7 +151,7 @@ module Jobs
         JOIN topics ON topics.id = posts.topic_id
         LEFT JOIN post_search_data pd
           ON pd.locale = :locale
-          AND pd.version = :version
+          AND pd.version >= :version
           AND pd.post_id = posts.id
         WHERE pd.post_id IS NULL
         AND posts.deleted_at IS NULL
@@ -165,7 +165,7 @@ module Jobs
     def load_problem_category_ids(limit)
       Category.joins(:category_search_data)
         .where('category_search_data.locale != ?
-                OR category_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+                OR category_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::CATEGORY_INDEX_VERSION)
         .order('categories.id asc')
         .limit(limit)
         .pluck(:id)
@@ -174,7 +174,7 @@ module Jobs
     def load_problem_topic_ids(limit)
       Topic.joins(:topic_search_data)
         .where('topic_search_data.locale != ?
-                OR topic_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+                OR topic_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::TOPIC_INDEX_VERSION)
         .order('topics.id desc')
         .limit(limit)
         .pluck(:id)
@@ -183,7 +183,7 @@ module Jobs
     def load_problem_user_ids(limit)
       User.joins(:user_search_data)
         .where('user_search_data.locale != ?
-                OR user_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+                OR user_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::USER_INDEX_VERSION)
         .order('users.id asc')
         .limit(limit)
         .pluck(:id)
@@ -192,7 +192,7 @@ module Jobs
     def load_problem_tag_ids(limit)
       Tag.joins(:tag_search_data)
         .where('tag_search_data.locale != ?
-                OR tag_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
+                OR tag_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::TAG_INDEX_VERSION)
         .order('tags.id asc')
         .limit(limit)
         .pluck(:id)

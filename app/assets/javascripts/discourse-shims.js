@@ -16,3 +16,14 @@ define("ember", ["exports"], function(__exports__) {
 define("message-bus-client", ["exports"], function(__exports__) {
   __exports__.default = window.MessageBus;
 });
+
+define("ember-buffered-proxy/proxy", ["exports"], function(__exports__) {
+  __exports__.default = window.BufferedProxy;
+});
+
+define("@popperjs/core", ["exports"], function(__exports__) {
+  __exports__.default = window.Popper;
+  __exports__.createPopper = window.Popper.createPopper;
+  __exports__.defaultModifiers = window.Popper.defaultModifiers;
+  __exports__.popperGenerator = window.Popper.popperGenerator;
+});

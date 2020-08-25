@@ -4,28 +4,25 @@ import getAbsoluteURL from "discourse-common/lib/get-url";
 export default {
   name: "register-service-worker",
 
-  initialize() {
+  initialize(container) {
     const isSecured =
       document.location.protocol === "https:" ||
       location.hostname === "localhost";
 
-    const isSupported = isSecured && "serviceWorker" in navigator;
-
-    if (isSupported) {
-      const caps = Discourse.__container__.lookup("capabilities:main");
+    if (isSecured && "serviceWorker" in navigator) {
+      let { serviceWorkerURL } = container.lookup("session:main");
+      const caps = container.lookup("capabilities:main");
       const isAppleBrowser =
         caps.isSafari ||
         (caps.isIOS &&
           !window.matchMedia("(display-mode: standalone)").matches);
 
-      if (Discourse.ServiceWorkerURL && !isAppleBrowser) {
+      if (serviceWorkerURL && !isAppleBrowser) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
           for (let registration of registrations) {
             if (
               registration.active &&
-              !registration.active.scriptURL.includes(
-                Discourse.ServiceWorkerURL
-              )
+              !registration.active.scriptURL.includes(serviceWorkerURL)
             ) {
               this.unregister(registration);
             }
@@ -33,7 +30,7 @@ export default {
         });
 
         navigator.serviceWorker
-          .register(getAbsoluteURL(`/${Discourse.ServiceWorkerURL}`))
+          .register(getAbsoluteURL(`/${serviceWorkerURL}`))
           .catch(error => {
             // eslint-disable-next-line no-console
             console.info(`Failed to register Service Worker: ${error}`);

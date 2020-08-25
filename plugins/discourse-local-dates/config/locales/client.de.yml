@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 de:
   js:
@@ -14,30 +13,30 @@ de:
         yesterday: Gestern %{time}
         countdown:
           passed: Datum liegt in der Vergangenheit
-      title: Datum / Zeit einfügen
+      title: Datum / Uhrzeit einfügen
       create:
         form:
           insert: Einfügen
           advanced_mode: Erweiterter Modus
           simple_mode: Einfacher Modus
-          format_description: "Format für die Benutzeranzeige von Datumswerten. Verwende \"\\T\\Z\", um die Benutzerzeitzone in Worten darzustellen (Europe/Paris)"
+          format_description: "Format, das verwendet wird, um dem Benutzer das Datum anzuzeigen. Verwende „\\T\\ Z“, um die Zeitzone des Benutzers in Worten anzuzeigen (Europa/Paris)"
           timezones_title: Anzuzeigende Zeitzonen
-          timezones_description: Zeitzonen werden für die Anzeige von Datumswerten in der Zukunft und in der Vergangenheit verwendet.
+          timezones_description: Zeitzonen werden verwendet, um Datumsangaben in der Vorschau und als Ausweichlösung anzuzeigen.
           recurring_title: Wiederholung
-          recurring_description: "Definiere die Wiederholung eines Ereignisses. Du kannst die Wiederholungsoptionen auch manuell bearbeiten, die vom Formular generiert wurden, und einen der folgenden Schlüssel verwenden: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_description: "Definiere die Wiederholung eines Ereignisses. Du kannst die vom Formular generierte Wiederholung auch manuell ändern und einen der folgenden Schlüssel verwenden: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds"
           recurring_none: Keine Wiederholung
-          invalid_date: Ungültige Datumsangabe, stelle sicher, dass Datum und Zeit korrekt sind.
+          invalid_date: Ungültige Datumsangabe. Stelle sicher, dass Datum und Uhrzeit korrekt sind.
           date_title: Datum
           time_title: Uhrzeit
           format_title: Datumsformat
           timezone: Zeitzone
-          until: Bis...
+          until: Bis …
           recurring:
             every_day: "Jeden Tag"
             every_week: "Jede Woche"
-            every_two_weeks: "Alle zwei Wochen"
+            every_two_weeks: "Alle 2 Wochen"
             every_month: "Jeden Monat"
-            every_two_months: "Alle zwei Monate"
-            every_three_months: "Alle drei Monate"
-            every_six_months: "Alle sechs Monate"
+            every_two_months: "Alle 2 Monate"
+            every_three_months: "Alle 3 Monate"
+            every_six_months: "Alle 6 Monate"
             every_year: "Jedes Jahr"

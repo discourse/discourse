@@ -276,6 +276,7 @@ const User = RestModel.extend({
       "user_fields",
       "muted_usernames",
       "ignored_usernames",
+      "allowed_pm_usernames",
       "profile_background_upload_url",
       "card_background_upload_url",
       "muted_tags",
@@ -299,6 +300,7 @@ const User = RestModel.extend({
       "email_messages_level",
       "email_level",
       "email_previous_replies",
+      "dark_scheme_id",
       "dynamic_favicon",
       "enable_quoting",
       "enable_defer",
@@ -311,11 +313,13 @@ const User = RestModel.extend({
       "include_tl0_in_digests",
       "theme_ids",
       "allow_private_messages",
+      "enable_allowed_pm_users",
       "homepage_id",
       "hide_profile_and_presence",
       "text_size",
       "title_count_mode",
-      "timezone"
+      "timezone",
+      "skip_new_user_tips"
     ];
 
     if (fields) {
@@ -328,25 +332,27 @@ const User = RestModel.extend({
 
     var updatedState = {};
 
-    ["muted", "watched", "tracked", "watched_first_post"].forEach(s => {
-      if (fields === undefined || fields.includes(s + "_category_ids")) {
-        let prop =
-          s === "watched_first_post"
-            ? "watchedFirstPostCategories"
-            : s + "Categories";
-        let cats = this.get(prop);
-        if (cats) {
-          let cat_ids = cats.map(c => c.get("id"));
-          updatedState[s + "_category_ids"] = cat_ids;
+    ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
+      s => {
+        if (fields === undefined || fields.includes(s + "_category_ids")) {
+          let prop =
+            s === "watched_first_post"
+              ? "watchedFirstPostCategories"
+              : s + "Categories";
+          let cats = this.get(prop);
+          if (cats) {
+            let cat_ids = cats.map(c => c.get("id"));
+            updatedState[s + "_category_ids"] = cat_ids;
 
-          // HACK: denote lack of categories
-          if (cats.length === 0) {
-            cat_ids = [-1];
+            // HACK: denote lack of categories
+            if (cats.length === 0) {
+              cat_ids = [-1];
+            }
+            data[s + "_category_ids"] = cat_ids;
           }
-          data[s + "_category_ids"] = cat_ids;
         }
       }
-    });
+    );
 
     [
       "muted_tags",
@@ -661,10 +667,12 @@ const User = RestModel.extend({
   },
 
   isAllowedToUploadAFile(type) {
+    const settingName = type === "image" ? "embedded_media" : "attachments";
+
     return (
       this.staff ||
       this.trust_level > 0 ||
-      this.siteSettings[`newuser_max_${type}s`] > 0
+      this.siteSettings[`newuser_max_${settingName}`] > 0
     );
   },
 
@@ -696,6 +704,14 @@ const User = RestModel.extend({
   @observes("muted_category_ids")
   updateMutedCategories() {
     this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
+  },
+
+  @observes("regular_category_ids")
+  updateRegularCategories() {
+    this.set(
+      "regularCategories",
+      Category.findByIds(this.regular_category_ids)
+    );
   },
 
   @observes("tracked_category_ids")
@@ -827,7 +843,7 @@ const User = RestModel.extend({
   canManageGroup(group) {
     return group.get("automatic")
       ? false
-      : this.admin || group.get("is_group_owner");
+      : group.get("can_admin_group") || group.get("is_group_owner");
   },
 
   @discourseComputed("groups.@each.title", "badges.[]")
@@ -965,11 +981,6 @@ User.reopenClass(Singleton, {
       return store.createRecord("user", userJson);
     }
     return null;
-  },
-
-  resetCurrent(user) {
-    this._super(user);
-    Discourse.currentUser = user;
   },
 
   checkUsername(username, email, for_user_id) {

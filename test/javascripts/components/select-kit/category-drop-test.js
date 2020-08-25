@@ -86,7 +86,7 @@ componentTest("[not staff - TL0] displayCategoryDescription", {
 
   beforeEach() {
     set(this.currentUser, "staff", false);
-    set(this.currentUser, "trustLevel", 0);
+    set(this.currentUser, "trust_level", 0);
 
     initCategories(this);
   },
@@ -106,9 +106,9 @@ componentTest("[not staff - TL1] displayCategoryDescription", {
   template: template(),
 
   beforeEach() {
-    set(this.currentUser, "staff", false);
-    set(this.currentUser, "trustLevel", 1);
-
+    set(this.currentUser, "moderator", false);
+    set(this.currentUser, "admin", false);
+    set(this.currentUser, "trust_level", 1);
     initCategories(this);
   },
 
@@ -117,8 +117,8 @@ componentTest("[not staff - TL1] displayCategoryDescription", {
 
     const row = this.subject.rowByValue(this.category.id);
     assert.ok(
-      exists(row.el().find(".category-desc")),
-      "it doesn't show category description for TL0+"
+      !exists(row.el().find(".category-desc")),
+      "it doesn't shows category description for TL0+"
     );
   }
 });
@@ -127,8 +127,8 @@ componentTest("[staff - TL0] displayCategoryDescription", {
   template: template(),
 
   beforeEach() {
-    set(this.currentUser, "staff", true);
-    set(this.currentUser, "trustLevel", 0);
+    set(this.currentUser, "moderator", true);
+    set(this.currentUser, "trust_level", 0);
 
     initCategories(this);
   },
@@ -138,7 +138,7 @@ componentTest("[staff - TL0] displayCategoryDescription", {
 
     const row = this.subject.rowByValue(this.category.id);
     assert.ok(
-      exists(row.el().find(".category-desc")),
+      !exists(row.el().find(".category-desc")),
       "it doesn't show category description for staff"
     );
   }

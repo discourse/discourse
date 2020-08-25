@@ -156,6 +156,7 @@ en:
       reset_trigger: "tutorial"
       title: "New user tutorial completion certificate"
       cert_title: "In recognition of successful completion of the new user tutorial"
+      delete_reason: "User skipped the new user tips"
 
       hello:
         title: "Greetings!"
@@ -200,11 +201,23 @@ en:
         like_not_found: |-
           Did you forget to like :heart: my [post?](%{url}) :crying_cat_face:
         not_found: |-
-          Looks like you didn’t upload an image so I’ve choosen a picture that I’m _sure_ you will enjoy.
+          Looks like you didn’t upload an image so I’ve chosen a picture that I’m _sure_ you will enjoy.
 
           `%{image_url}`
 
           Try uploading that one next, or pasting the link in on a line by itself!
+
+      likes:
+        instructions: |-
+          Here’s a picture of a unicorn:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          If you like it (and who wouldn’t!) go ahead and press the like :heart: button below this post to let me know.
+        reply: |-
+          Thanks for liking my post!
+        not_found: |-
+          Did you forget to like :heart: my [post?](%{url}) :crying_cat_face:
 
       formatting:
         instructions: |-
@@ -291,7 +304,7 @@ en:
         reply: |-
           [Our staff](%{base_uri}/groups/staff) will be privately notified about your flag. If enough community members flag a post, it will also be automatically hidden as a precaution. (Since I didn’t actually write a nasty post :angel:, I’ve gone ahead and removed the flag for now.)
         not_found: |-
-          Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
+          Oh no, my nasty post hasn’t been flagged as inappropriate yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
 
       search:
         instructions: |-

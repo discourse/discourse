@@ -39,6 +39,11 @@ class Upload < ActiveRecord::Base
 
   validates_with UploadValidator
 
+  before_destroy do
+    UserProfile.where(card_background_upload_id: self.id).update_all(card_background_upload_id: nil)
+    UserProfile.where(profile_background_upload_id: self.id).update_all(profile_background_upload_id: nil)
+  end
+
   after_destroy do
     User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
     UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
@@ -401,10 +406,6 @@ class Upload < ActiveRecord::Base
     problems
   end
 
-  def self.reset_unknown_extensions!
-    Upload.where(extension: "unknown").update_all(extension: nil)
-  end
-
   private
 
   def short_url_basename
@@ -436,6 +437,7 @@ end
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
 #  original_sha1          :string
+#  verified               :boolean
 #
 # Indexes
 #

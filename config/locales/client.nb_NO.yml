@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nb_NO:
   js:
@@ -117,9 +116,6 @@ nb_NO:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber}"
       close: "lukk"
-      twitter: "Del denne lenka på Twitter"
-      facebook: "Del denne lenka på Facebook"
-      email: "Send denne lenka i en e-post"
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
       private_topic: "gjorde dette emnet om til en personlig melding %{when}"
@@ -259,6 +255,7 @@ nb_NO:
       confirm_clear: "Er du sikker på at du vil fjerne alle favoritter fra dette emnet?"
       save: "Lagre"
       no_timezone: 'Du har ikke ennå satt tidssone. Du vil ikke kunne sette påminnelser. Sett tidssone <a href="%{basePath}/my/preferences/profile">i profilen din</a>.'
+      search: "Søk"
       reminders:
         at_desktop: "Neste gang jeg er på datamaskinen min"
         later_today: "Senere i dag"
@@ -444,10 +441,6 @@ nb_NO:
         make_user_group_owner: "Gjør til eier"
         remove_user_as_group_owner: "Trekk tilbake eierstatus"
     groups:
-      add_members:
-        title: "Legg til medlemmer"
-        description: "Endre medlemskapet i denne gruppen"
-        usernames: "Brukernavn"
       requests:
         title: "Forespørsler"
         reason: "Begrunnelse"
@@ -465,6 +458,11 @@ nb_NO:
           title: Interaksjon
           posting: Publisering
           notification: Varsling
+        email:
+          title: "E-post"
+          credentials:
+            username: "Brukernavn"
+            password: "Passord"
         membership:
           title: Medlemskap
           access: Tilgang
@@ -1152,7 +1150,7 @@ nb_NO:
       complete_email_found: "Vi fant en konto som matcher <b>%{email}</b>, du vil snart motta en e-post med lenke for innlogging."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
       complete_email_not_found: "Ingen konto med e-postadressen <b>%{email}</b> er registrert"
-      confirm_title: "Fortsett til %{site_name}"
+      confirm_title: Fortsett til %{site_name}
     login:
       title: "Logg Inn"
       username: "Bruker"
@@ -1359,7 +1357,7 @@ nb_NO:
         draft: Utkast
         edit: Rediger
         reply_to_post:
-          label: "Svar på innlegg %{postNumber} av %{postUsername}"
+          label: Svar på innlegg %{postNumber} av %{postUsername}
           desc: Svar på et spesifikt innlegg
         reply_as_new_topic:
           label: Svar med lenket emne
@@ -1369,7 +1367,7 @@ nb_NO:
           desc: Opprett en ny personlig melding
         reply_to_topic:
           label: Svar på emnet
-          desc: "Svar på emnet, ikke et spesifikt innlegg "
+          desc: Svar på emnet, ikke et spesifikt innlegg
         toggle_whisper:
           label: Veksle visking
           desc: Hvisking er kun synlig for stab
@@ -1633,7 +1631,7 @@ nb_NO:
       read_more_MF: "Det { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulest</a> } other { finnes <a href='{basePath}/unread'># uleste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {finnes } other{}} <a href='{basePath}/new'>1 nytt</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emner} } igjen, eller {CATEGORY, select, true {se andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
-      suggest_create_topic: "Kanskje du kan lage et nytt emne?"
+      suggest_create_topic: Kanskje du kan lage et nytt emne?
       jump_reply_up: hopp til tidligere svar
       jump_reply_down: hopp til senere svar
       deleted: "Emnet ble slettet"
@@ -1722,6 +1720,7 @@ nb_NO:
           "2_8": "Du vil se antall nye svar fordi du følger denne kategorien."
           "2_4": "Du vil se antall nye svar fordi du skrev et svar i dette emnet."
           "2_2": "Du vil se antall nye svar fordi du overvåker dette emnet."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "1": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "0_7": "Du ignorerer alle varsler i denne kategorien."
@@ -2494,7 +2493,6 @@ nb_NO:
         new: "Ny gruppe"
         tags_label: "Stikkord i denne gruppen:"
         parent_tag_label: "Overordnet stikkord:"
-        parent_tag_placeholder: "Valgfritt"
         parent_tag_description: "Stikkord fra denne gruppen kan ikke brukes med mindre det overordnede stikkordet er til stede."
         one_per_topic_label: "Begrens til ett stikkord fra denne gruppen per emne "
         new_name: "Ny stikkordgruppe"
@@ -2575,7 +2573,7 @@ nb_NO:
         show_traffic_report: "Vis detaljert trafikkrapport"
         community_health: Samfunnshelse
         moderators_activity: Moderatoraktivitet
-        whats_new_in_discourse: "Hva er nytt i Discourse?"
+        whats_new_in_discourse: Hva er nytt i Discourse?
         activity_metrics: Aktivitetsmåling
         all_reports: "Alle rapporter"
         general_tab: "Generelt"
@@ -2583,8 +2581,8 @@ nb_NO:
         security_tab: "Sikkerhet"
         report_filter_any: "alle"
         disabled: Deaktivert
-        timeout_error: "Beklager, spørringen tar for lang tid, vennligst velg et kortere tidsrom"
-        exception_error: "Beklager, en feil oppstod under kjøringen av denne spørringen"
+        timeout_error: Beklager, spørringen tar for lang tid, vennligst velg et kortere tidsrom
+        exception_error: Beklager, en feil oppstod under kjøringen av denne spørringen
         reports:
           trend_title: "%{percent} endring. Nåværende %{current}, var %{prev} i forrige periode."
           today: "I dag"
@@ -2863,7 +2861,6 @@ nb_NO:
           subject: "Emne"
           multiple_subjects: "Denne e-postmalen har flere emner."
           body: "Meldingstekst"
-          none_selected: "Velg en e-postmal for å begynne å redigere."
           revert: "Tilbakestill endringer"
           revert_confirm: "Er du sikker på at du vil tilbakestille dine endringer?"
         theme:
@@ -3159,7 +3156,6 @@ nb_NO:
           domain: "Domene"
         screened_ips:
           title: "Kontrollerte IP-er"
-          description: 'IP-adresser som blir fulgt. Benytt "Tillat" for å hvitliste IP-adresser.'
           delete_confirm: "Er du sikker på at du vil fjerne regelen for %{ip_address}?"
           roll_up_confirm: "Er du sikker på at du vil rulle opp vanligvis undersøkte IP-adresser i delnett?"
           rolled_up_some_subnets: "Fullførte sammenslåingen av blokkerte IP-adresser til disse subnettene: %{subnets}."
@@ -3536,11 +3532,11 @@ nb_NO:
         reason_help: (En lenke til et innlegg eller emne)
         save: Lagre
         delete: Slett
-        delete_confirm: "Er du sikker på at du vil slette dette merket?"
+        delete_confirm: Er du sikker på at du vil slette dette merket?
         revoke: Trekk tilbake
         reason: Grunn
         expand: Ekspander
-        revoke_confirm: "Er du sikker på at du vil trekke tilbake dette merket?"
+        revoke_confirm: Er du sikker på at du vil trekke tilbake dette merket?
         edit_badges: Rediger merker
         grant_badge: Tildel merke
         granted_badges: Tildelte merker
@@ -3582,10 +3578,10 @@ nb_NO:
             other: "<b>%{count}</b> merker å tildele."
           sample: "Eksempel:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> for innlegg i %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> for innlegg i %{link} - <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> - <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for innlegg i %{link}
+            with_post_time: <span class="username">%{username}</span> for innlegg i %{link} - <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
         help: "Legg til en ny emoji som vil være tilgjengelig for alle. (PROFFTIPS: Dra og slipp flere filer samtidig)"
@@ -3602,7 +3598,6 @@ nb_NO:
         title: "Innbygging"
         host: "Tillatte verter"
         class_name: "Klassenavn"
-        path_whitelist: "Tillatte stier"
         edit: "rediger"
         category: "Legg til innlegg i kategori"
         add_host: "Legg til vert"
@@ -3613,9 +3608,6 @@ nb_NO:
         embed_post_limit: "Maksimalt antall innlegg å bygge inn"
         embed_title_scrubber: "Regulære uttrykk brukt til å finne og korrigere feil i titler"
         embed_truncate: "Forkort de innebygde innleggene"
-        embed_whitelist_selector: "CSS-velger for elementer som tillates i innbygginger"
-        embed_blacklist_selector: "CSS-velger for element som fjernes fra innbygginger"
-        embed_classname_whitelist: "Tillatte navn for CSS-klasser"
         save: "Lagre innbyggingsinnstillinger"
       permalink:
         title: "Permalenker"
@@ -3626,8 +3618,7 @@ nb_NO:
         post_title: "Innlegg"
         category_id: "Kategori-ID"
         category_title: "Kategori"
-        external_url: "Ekstern URL"
-        delete_confirm: "Er du sikker på at du vil slette denne permalenken?"
+        delete_confirm: Er du sikker på at du vil slette denne permalenken?
         form:
           label: "Ny:"
           add: "Legg til"

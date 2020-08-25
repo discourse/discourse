@@ -2137,14 +2137,14 @@ describe UsersController do
       context 'for an activated account with unconfirmed email' do
         it 'should send an email' do
           user = post_user
-          user.update(active: true)
-          user.save!
-          user.email_tokens.create(email: user.email)
-          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup, to_address: user.email))
+          user.update!(active: true)
+          user.email_tokens.create!(email: user.email)
 
-          post "/u/action/send_activation_email.json", params: {
-            username: user.username
-          }
+          expect_enqueued_with(job: :critical_user_email, args: { type: :signup, to_address: user.email }) do
+            post "/u/action/send_activation_email.json", params: {
+              username: user.username
+            }
+          end
 
           expect(response.status).to eq(200)
 
@@ -2192,10 +2192,14 @@ describe UsersController do
       context 'with a valid email_token' do
         it 'should send the activation email' do
           user = post_user
-          Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
-          post "/u/action/send_activation_email.json", params: {
-            username: user.username
-          }
+
+          expect_enqueued_with(job: :critical_user_email, args: { type: :signup }) do
+            post "/u/action/send_activation_email.json", params: {
+              username: user.username
+            }
+          end
+
+          expect(response.status).to eq(200)
           expect(session[SessionController::ACTIVATE_USER_KEY]).to eq(nil)
         end
       end
@@ -2366,6 +2370,17 @@ describe UsersController do
           it 'can successfully select an avatar' do
             events = DiscourseEvent.track_events do
               put "/u/#{user.username}/preferences/avatar/select.json", params: { url: avatar1.url }
+            end
+
+            expect(events.map { |event| event[:event_name] }).to include(:user_updated)
+            expect(response.status).to eq(200)
+            expect(user.reload.uploaded_avatar_id).to eq(avatar1.id)
+            expect(user.user_avatar.reload.custom_upload_id).to eq(avatar1.id)
+          end
+
+          it 'can succesfully select an avatar using a cooked URL' do
+            events = DiscourseEvent.track_events do
+              put "/u/#{user.username}/preferences/avatar/select.json", params: { url: UrlHelper.cook_url(avatar1.url) }
             end
 
             expect(events.map { |event| event[:event_name] }).to include(:user_updated)
@@ -2978,9 +2993,9 @@ describe UsersController do
         expect(response.status).to eq(422)
       end
 
-      it "raises an error when the email is blacklisted" do
+      it "raises an error when the email is blocklisted" do
         post_user
-        SiteSetting.email_domains_blacklist = 'example.com'
+        SiteSetting.blocked_email_domains = 'example.com'
         put "/u/update-activation-email.json", params: { email: 'test@example.com' }
         expect(response.status).to eq(422)
       end

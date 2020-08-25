@@ -284,10 +284,10 @@ module PrettyText
   end
 
   def self.add_rel_nofollow_to_user_content(doc)
-    whitelist = []
+    allowlist = []
 
     domains = SiteSetting.exclude_rel_nofollow_domains
-    whitelist = domains.split('|') if domains.present?
+    allowlist = domains.split('|') if domains.present?
 
     site_uri = nil
     doc.css("a").each do |l|
@@ -299,7 +299,7 @@ module PrettyText
         if !uri.host.present? ||
            uri.host == site_uri.host ||
            uri.host.ends_with?(".#{site_uri.host}") ||
-           whitelist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
+           allowlist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
           # we are good no need for nofollow
           l.remove_attribute("rel")
         else

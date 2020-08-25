@@ -1,13 +1,13 @@
-import { bind } from "@ember/runloop";
 import Component from "@ember/component";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
 
 const USER_DISMISSED_PROMPT_KEY = "dismissed-pwa-install-banner";
 
 export default Component.extend({
   deferredInstallPromptEvent: null,
 
-  _handleInstallPromptEvent(event) {
+  @bind
+  _onInstallPrompt(event) {
     // Prevent Chrome 76+ from automatically showing the prompt
     event.preventDefault();
     // Stash the event so it can be triggered later
@@ -16,13 +16,12 @@ export default Component.extend({
 
   @on("didInsertElement")
   _registerListener() {
-    this._promptEventHandler = bind(this, this._handleInstallPromptEvent);
-    window.addEventListener("beforeinstallprompt", this._promptEventHandler);
+    window.addEventListener("beforeinstallprompt", this._onInstallPrompt);
   },
 
   @on("willDestroyElement")
   _unregisterListener() {
-    window.removeEventListener("beforeinstallprompt", this._promptEventHandler);
+    window.removeEventListener("beforeinstallprompt", this._onInstallPrompt);
   },
 
   @discourseComputed

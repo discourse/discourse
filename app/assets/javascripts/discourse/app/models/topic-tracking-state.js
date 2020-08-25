@@ -27,14 +27,14 @@ function isUnseen(topic) {
   return !topic.is_seen;
 }
 
-function hasMutedTags(topicTagIds, mutedTagIds) {
+function hasMutedTags(topicTagIds, mutedTagIds, siteSettings) {
   if (!mutedTagIds || !topicTagIds) {
     return false;
   }
   return (
-    (Discourse.SiteSettings.remove_muted_tags_from_latest === "always" &&
+    (siteSettings.remove_muted_tags_from_latest === "always" &&
       topicTagIds.any(tagId => mutedTagIds.includes(tagId))) ||
-    (Discourse.SiteSettings.remove_muted_tags_from_latest === "only_muted" &&
+    (siteSettings.remove_muted_tags_from_latest === "only_muted" &&
       topicTagIds.every(tagId => mutedTagIds.includes(tagId)))
   );
 }
@@ -81,7 +81,13 @@ const TopicTrackingState = EmberObject.extend({
 
       if (["new_topic", "latest"].includes(data.message_type)) {
         const mutedTagIds = User.currentProp("muted_tag_ids");
-        if (hasMutedTags(data.payload.topic_tag_ids, mutedTagIds)) {
+        if (
+          hasMutedTags(
+            data.payload.topic_tag_ids,
+            mutedTagIds,
+            this.siteSettings
+          )
+        ) {
           return;
         }
       }
@@ -309,7 +315,7 @@ const TopicTrackingState = EmberObject.extend({
     });
   },
 
-  sync(list, filter) {
+  sync(list, filter, queryParams) {
     const tracker = this,
       states = tracker.states;
 
@@ -362,7 +368,18 @@ const TopicTrackingState = EmberObject.extend({
     });
 
     // Correct missing states, safeguard in case message bus is corrupt
-    if ((filter === "new" || filter === "unread") && !list.more_topics_url) {
+    let shouldCompensate =
+      (filter === "new" || filter === "unread") && !list.more_topics_url;
+
+    if (shouldCompensate && queryParams) {
+      Object.keys(queryParams).forEach(k => {
+        if (k !== "ascending" && k !== "order") {
+          shouldCompensate = false;
+        }
+      });
+    }
+
+    if (shouldCompensate) {
       const ids = {};
       list.topics.forEach(r => (ids["t" + r.id] = true));
 
@@ -435,6 +452,18 @@ const TopicTrackingState = EmberObject.extend({
     return this.countCategoryByState("unread", categoryId, tagId);
   },
 
+  forEachTracked(fn) {
+    Object.values(this.states).forEach(topic => {
+      if (topic.archetype !== "private_message" && !topic.deleted) {
+        let newTopic = isNew(topic);
+        let unreadTopic = isUnread(topic);
+        if (newTopic || unreadTopic) {
+          fn(topic, newTopic, unreadTopic);
+        }
+      }
+    });
+  },
+
   countTags(tags) {
     let counts = {};
 
@@ -442,26 +471,18 @@ const TopicTrackingState = EmberObject.extend({
       counts[tag] = { unreadCount: 0, newCount: 0 };
     });
 
-    Object.values(this.states).forEach(topic => {
-      if (
-        topic.archetype !== "private_message" &&
-        !topic.deleted &&
-        topic.tags
-      ) {
-        let newTopic = isNew(topic);
-        let unreadTopic = isUnread(topic);
-        if (isUnread || isNew) {
-          tags.forEach(tag => {
-            if (topic.tags.indexOf(tag) > -1) {
-              if (unreadTopic) {
-                counts[tag].unreadCount++;
-              }
-              if (newTopic) {
-                counts[tag].newCount++;
-              }
+    this.forEachTracked((topic, newTopic, unreadTopic) => {
+      if (topic.tags) {
+        tags.forEach(tag => {
+          if (topic.tags.indexOf(tag) > -1) {
+            if (unreadTopic) {
+              counts[tag].unreadCount++;
             }
-          });
-        }
+            if (newTopic) {
+              counts[tag].newCount++;
+            }
+          }
+        });
       }
     });
 

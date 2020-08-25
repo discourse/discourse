@@ -50,8 +50,8 @@ describe SpamRule::FlagSockpuppets do
       expect(described_class.new(post2).reply_is_from_sockpuppet?).to eq(true)
     end
 
-    it 'is false if the ip address is whitelisted' do
-      ScreenedIpAddress.stubs(:is_whitelisted?).with(user1.ip_address).returns(true)
+    it 'is false if the ip address is allowlisted' do
+      ScreenedIpAddress.stubs(:is_allowed?).with(user1.ip_address).returns(true)
       post2 = Fabricate(:post, user: Fabricate(:user, ip_address: user1.ip_address), topic: post1.topic)
       expect(described_class.new(post2).reply_is_from_sockpuppet?).to eq(false)
     end

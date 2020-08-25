@@ -8,7 +8,7 @@ componentTest("highlighting code", {
   template: "{{highlighted-code lang='ruby' code=code}}",
 
   beforeEach() {
-    Discourse.HighlightJSPath =
+    this.session.highlightJsPath =
       "assets/highlightjs/highlight-test-bundle.min.js";
     this.set("code", "def test; end");
   },
@@ -27,7 +27,7 @@ componentTest("large code blocks are not highlighted", {
   template: "{{highlighted-code lang='ruby' code=code}}",
 
   beforeEach() {
-    Discourse.HighlightJSPath =
+    this.session.highlightJsPath =
       "assets/highlightjs/highlight-test-bundle.min.js";
     this.set("code", LONG_CODE_BLOCK);
   },

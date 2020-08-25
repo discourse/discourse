@@ -76,10 +76,10 @@ gem 'message_bus'
 
 gem 'rails_multisite'
 
-gem 'fast_xs', platform: :mri
+gem 'fast_xs', platform: :ruby
 
 # may move to xorcist post: https://github.com/fny/xorcist/issues/4
-gem 'fast_xor', platform: :mri
+gem 'fast_xor', platform: :ruby
 
 gem 'fastimage'
 
@@ -125,8 +125,7 @@ gem 'mini_scheduler'
 gem 'execjs', require: false
 gem 'mini_racer'
 
-# TODO: determine why highline is being held back and upgrade to latest
-gem 'highline', '~> 1.7.0', require: false
+gem 'highline', require: false
 
 gem 'rack'
 
@@ -187,7 +186,7 @@ end
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
-gem 'fast_blank', platform: :mri
+gem 'fast_blank', platform: :ruby
 
 # this provides a very efficient lru cache
 gem 'lru_redux'
@@ -201,7 +200,7 @@ gem 'htmlentities', require: false
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: ['enable_rails_patches']
 
-gem 'unicorn', require: false, platform: :mri
+gem 'unicorn', require: false, platform: :ruby
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
@@ -224,8 +223,7 @@ gem 'logster'
 gem 'sassc', '2.0.1', require: false
 gem "sassc-rails"
 
-# see: https://github.com/mdp/rotp/issues/98
-gem 'rotp', '5.1.0' , require: false
+gem 'rotp', require: false
 
 gem 'rqrcode'
 
@@ -234,7 +232,7 @@ gem 'rubyzip', require: false
 gem 'sshkey', require: false
 
 gem 'rchardet', require: false
-gem 'lz4-ruby', require: false, platform: :mri
+gem 'lz4-ruby', require: false, platform: :ruby
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'

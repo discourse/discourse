@@ -4,6 +4,7 @@ import extractValue from "discourse-common/utils/extract-value";
 import decoratorAlias from "discourse-common/utils/decorator-alias";
 import macroAlias from "discourse-common/utils/macro-alias";
 import { schedule, next } from "@ember/runloop";
+import { bind as emberBind } from "@ember/runloop";
 
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
@@ -26,6 +27,22 @@ export function afterRender(target, name, descriptor) {
         }
       });
     });
+  };
+}
+
+export function bind(target, name, descriptor) {
+  return {
+    configurable: true,
+    get() {
+      const bound = emberBind(this, descriptor.value);
+      const attributes = Object.assign({}, descriptor, {
+        value: bound
+      });
+
+      Object.defineProperty(this, name, attributes);
+
+      return bound;
+    }
   };
 }
 

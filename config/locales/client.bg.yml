@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 bg:
   js:
@@ -120,9 +119,6 @@ bg:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикации #%{postNumber}"
       close: "затвори"
-      twitter: "Споделете тази връзка в Twitter"
-      facebook: "Споделете тази връзка във Facebook"
-      email: "Изпратете тази връзка с имейл"
     action_codes:
       public_topic: "направи тази тема публична на %{when}"
       private_topic: "направи тази тема персонално съобщение%{when}"
@@ -152,6 +148,7 @@ bg:
         disabled: "премахната от списъка %{when}"
       banner:
         enabled: "направи темата банер на %{when}. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя. "
+        disabled: "Тази тема вече не е банер %{when} . Тя няма да се показва най-отгоре на всяка страница."
       forwarded: "препрати горния имейл"
     topic_admin_menu: "действия по темата"
     wizard_required: "Добре дошли във вашия нов Discourse! Нека започнем с <a href='%{url}' data-auto-route='true'>съветника за настройка</a> ✨"
@@ -260,7 +257,9 @@ bg:
       help:
         bookmark: "Щракнете за да добавите в отметки първата публикация в тази тема"
         unbookmark: "Щракнете тук за да изтриите всички отметки в тази тема"
+        unbookmark_with_reminder: "Натиснете за да премахнете всички отметки в тази тема. Имате напомняне %{reminder_at} за тази тема."
     bookmarks:
+      created: "Вие добавихте отметка към този пост %{name}."
       not_bookmarked: "добавете тази публикация в Отметки"
       remove: "Премахнете отметката"
       delete: "Изтрийте отметката"
@@ -270,6 +269,7 @@ bg:
       no_timezone: 'Не може да получавате напомняния, защото не сте настроили своята часова зона. Може да го направите <a href="%{basePath}/my/preferences/profile">във Вашия профил</a>.'
       invalid_custom_datetime: "Въведените дата и час не са валидни. Опитайте отново."
       list_permission_denied: "Нямате право да преглеждате отметките на този потребител."
+      search: "Търсене"
       reminders:
         at_desktop: "Следващия път, когато съм на компютъра"
         later_today: "По-късно днес"
@@ -277,7 +277,7 @@ bg:
         tomorrow: "Утре"
         next_week: "Следваща седмица"
         later_this_week: "По-късно тази седмица"
-        start_of_next_business_week: "Следващия понеделник"
+        start_of_next_business_week_alt: "Следващия понеделник"
         next_month: "Следващия месец"
         custom: "Друга дата и час"
         none: "Без напомняне"
@@ -466,9 +466,6 @@ bg:
         remove_user_as_group_owner: "Премахни като собственик"
     groups:
       member_added: "Добавено"
-      add_members:
-        title: "Добавете потребители"
-        usernames: "Потебителско име"
       requests:
         title: "Заявки"
         reason: "Причина"
@@ -484,6 +481,11 @@ bg:
         interaction:
           posting: Публикуване
           notification: Известие
+        email:
+          title: "Имейл"
+          credentials:
+            username: "Потребителско име"
+            password: "Парола"
         membership:
           title: Членство
           access: Достъп
@@ -598,6 +600,7 @@ bg:
       "12": "Изпратени"
       "13": "Кутия"
       "14": "Чакащи"
+      "15": "Drafts"
     categories:
       all: "всички категории"
       all_subcategories: "всички подкатегории"
@@ -1129,7 +1132,7 @@ bg:
       complete_email_found: "Намерихме профил, който съвпада с <b>%{email}</b>, трябва да получите имейл с линк за логин."
       complete_username_not_found: "Няма профил, който да съвпада с потребителскоto име <b>%{username}</b>"
       complete_email_not_found: "Няма акаунт който да съвпада с <b>%{email}</b>"
-      confirm_title: "Продължете към %{site_name}"
+      confirm_title: Продължете към %{site_name}
     login:
       title: "Вход"
       username: "Потребител"
@@ -1200,7 +1203,7 @@ bg:
       loading: Зарежда се...
     select_kit:
       default_header_text: Изберете...
-      filter_placeholder: "Търсене ... "
+      filter_placeholder: Търсене ...
     date_time_picker:
       from: От
       to: До
@@ -1399,9 +1402,7 @@ bg:
         top: "Няма топ теми."
         educate:
           new: '<p>Непрочетените теми се появяват тук.</p><p>По подразбиране темите се считат за непрочетени и ще показват бройката <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> нови</span> ако са създадени през последните 2 дни.</p><p> Моля посетете вашите <a href="%{userPrefsUrl}">настройки</a> за да промените това.</p>'
-          unread: '<p>Вашите непрочетени теми са тук.</p><p>По подразбиране, темите се считат за непрочетени и ще им се показва брояч <span class="badge new-posts badge-notification">1</span> ако вие:</p><ul><li>Сте създали тема</li><li>Отговорили на тема</li><li>Прочели темата преди повече от 4 минути</li></ul><p>Или ако са изрично определени в темата да бъдат проследявани и гледани чрез контрол на уведомление в долната част на всяка тема.
-
-            </p><p>За да промените това, влезте във <a href="%{userPrefsUrl}">вашите настройки от тук.</a></p>'
+          unread: '<p>Вашите непрочетени теми са тук.</p><p>По подразбиране, темите се считат за непрочетени и ще им се показва брояч <span class="badge new-posts badge-notification">1</span> ако вие:</p><ul><li>Сте създали тема</li><li>Отговорили на тема</li><li>Прочели темата преди повече от 4 минути</li></ul><p>Или ако са изрично определени в темата да бъдат проследявани и гледани чрез контрол на уведомление в долната част на всяка тема. </p><p>За да промените това, влезте във <a href="%{userPrefsUrl}">вашите настройки от тук.</a></p>'
       bottom:
         latest: "Няма повече теми в Последни."
         posted: "Няма повече публикувани теми."
@@ -1467,7 +1468,7 @@ bg:
       read_more_MF: "Има { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочетено</a> } other { <a href='{basePath}/unread'># непрочетени </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 нова </a> тема} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># теми </a>} } или {CATEGORY, select, true {потърси други теми в {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Прегледай всички категории
       view_latest_topics: виж последните теми
-      suggest_create_topic: "Защо не създадете тема ?"
+      suggest_create_topic: Защо не създадете тема ?
       jump_reply_up: към по ранен отговор
       jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"
@@ -1513,6 +1514,7 @@ bg:
           "3_2": "Ще получавате известия, защото наблюдавате тази тема."
           "3_1": "Ще получавате известия, защото създадохте тази тема."
           "3": "Ще получавате известия, защото наблюдавате тази тема."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Ще ви уведобим, ако някой ви отговори или спомене вашето @име"
           "1": "Ще ви уведобим, ако някой ви отговори или спомене вашето @име"
           "0_7": "Вие игнорирате всички известия в тази категория."
@@ -1677,10 +1679,10 @@ bg:
           label: "избери"
         select_replies:
           label: "избери +отговори "
-        delete: "изтрий избраните "
+        delete: изтрий избраните
         cancel: прекрати избирането
-        select_all: "избери всички "
-        deselect_all: "премахване на всички "
+        select_all: избери всички
+        deselect_all: премахване на всички
         description:
           one: Вие избрахте <b>%{count}</b> публикация.
           other: "Вие избрахте <b>%{count}</b> публикации. "
@@ -2151,14 +2153,14 @@ bg:
       others_count: "Други са такава значка (%{count})"
       title: Значки
       allow_title: "Може да използвате тази значка като титла."
-      select_badge_for_title: "Изберете значка за титла?"
+      select_badge_for_title: Изберете значка за титла?
       none: "(никой)"
       successfully_granted: "Успешно дадохте %{badge}на %{username}"
       badge_grouping:
         getting_started:
           name: В началото
         community:
-          name: "Общност "
+          name: Общност
         trust_level:
           name: Ниво на Доверие
         other:
@@ -2326,7 +2328,7 @@ bg:
         generate: "Генраирай"
         revoke: "Анулирай"
         all_users: "Всички потребители"
-        show_details: "Детайли "
+        show_details: Детайли
         description: Описание
         save: Запази
         continue: Напред
@@ -2437,7 +2439,6 @@ bg:
           subject: "Тема"
           multiple_subjects: "Този мейл шаблон има няколко теми."
           body: "Тяло"
-          none_selected: "Избери мейл шаблон за да започнеш редактирането."
           revert: "Върни промените"
           revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
         theme:
@@ -2653,7 +2654,6 @@ bg:
           domain: "Домейн"
         screened_ips:
           title: "Проверени IP-та"
-          description: 'IP-та, които са наблюдавани. Използвайте "Позволи", за да ги сложите в списъка с разрешени. '
           delete_confirm: "Сигурни ли сте, че искате да премахнете правилото за %{ip_address}? "
           roll_up_confirm: "Сигурни ли сте, че искате да обедените често проверените IP адреси в подмрежи?"
           rolled_up_some_subnets: "Успешно групирани IP бан записи към следните подмрежи: %{subnets}. "
@@ -2754,17 +2754,17 @@ bg:
         unsuspend: "Върнат"
         suspend: "Отстрани "
         reputation: Репутация
-        permissions: "Позволения "
+        permissions: Позволения
         activity: Активност
-        like_count: "Харесвания Дадени / Получени "
+        like_count: Харесвания Дадени / Получени
         last_100_days: "В последните 100 дни "
         private_topics_count: Частни теми
-        posts_read_count: "Прочетени публикации "
-        post_count: "Създадени публикации "
-        topics_entered: "Прегледани теми "
-        flags_given_count: "Дадени сигнали "
-        flags_received_count: "Получени сигнали "
-        warnings_received_count: "Получени предупреждения "
+        posts_read_count: Прочетени публикации
+        post_count: Създадени публикации
+        topics_entered: Прегледани теми
+        flags_given_count: Дадени сигнали
+        flags_received_count: Получени сигнали
+        warnings_received_count: Получени предупреждения
         flags_given_received_count: "Сигнали Дадени / Получени "
         approve: "Одобри "
         approved_by: "одобрено от "
@@ -2950,11 +2950,11 @@ bg:
         reason_help: (Връзка към публикация или тема)
         save: Запази
         delete: Изтрий
-        delete_confirm: "Искате ли да изтриете тази значка?"
+        delete_confirm: Искате ли да изтриете тази значка?
         revoke: Анулирай
         reason: Причина
         expand: Разширяване &hellip;
-        revoke_confirm: "Сигурни ли сте, че искате да анулирате значката?"
+        revoke_confirm: Сигурни ли сте, че искате да анулирате значката?
         edit_badges: Редактирай значката
         grant_badge: Присъдени значка
         granted_badges: Присъединени значки
@@ -2969,10 +2969,10 @@ bg:
         icon: Икона
         image: Изображение
         query: Badge Query (SQL)
-        target_posts: "Запитване за насочени публикации "
+        target_posts: Запитване за насочени публикации
         auto_revoke: Пусни заявката за отмяна ежедневно
-        show_posts: " Покажи съобщението, заради което е дадена значката, на страницата със значките "
-        trigger: "Тригер "
+        show_posts: ' Покажи съобщението, заради което е дадена значката, на страницата със значките '
+        trigger: Тригер
         trigger_type:
           none: "Обнови дневно "
           post_action: "Когато потребителят въздейства върху публикация"
@@ -2995,10 +2995,10 @@ bg:
             other: "<b>%{count}</b> значки за закачане."
           sample: "Образец: "
           grant:
-            with: "<span class=\"username\">%{username}</span> "
-            with_post: "<span class=\"username\">%{username}</span> за публикации в %{link} "
-            with_post_time: "<span class=\"username\">%{username}</span> за публикация %{link} в <span class=\"time\">%{time}</span> "
-            with_time: "<span class=\"username\">%{username}</span> в <span class=\"time\">%{time}</span> "
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> за публикации в %{link}
+            with_post_time: <span class="username">%{username}</span> за публикация %{link} в <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> в <span class="time">%{time}</span>
         badge_intro:
           title: "Изберете съществуваща значка или създайте нова, за да започнете"
           what_are_badges_title: "Какво са значките?"
@@ -3026,8 +3026,6 @@ bg:
         embed_by_username: "Потребител за създаване на темата"
         embed_post_limit: "Максимален брой публикации за вграждане."
         embed_truncate: "Изтрий вградените постове"
-        embed_whitelist_selector: "Избор на CSS елементи които са разрешени за вграждане"
-        embed_blacklist_selector: "Избор на CSS елементи които не са разрешени за вграждане"
         save: "Запамети настройките за вграждане"
       permalink:
         title: "Постоянни адреси"
@@ -3038,8 +3036,7 @@ bg:
         post_title: "Публикация"
         category_id: "Категория ID"
         category_title: "Категория"
-        external_url: "Външен URL"
-        delete_confirm: "Сигурни ли сте, че искате да изриете този постоянен адрес?"
+        delete_confirm: Сигурни ли сте, че искате да изриете този постоянен адрес?
         form:
           label: "Нов:"
           add: "Добави"

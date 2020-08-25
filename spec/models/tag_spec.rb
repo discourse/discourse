@@ -194,6 +194,9 @@ describe Tag do
       Fabricate(:tag, name: "unused2", topic_count: 0, pm_topic_count: 0)]
     end
 
+    let(:tag_in_group) { Fabricate(:tag, name: "unused_in_group", topic_count: 0, pm_topic_count: 0) }
+    let!(:tag_group) { Fabricate(:tag_group, tag_names: [tag_in_group.name]) }
+
     it "returns the correct tags" do
       expect(Tag.unused.pluck(:name)).to contain_exactly("unused1", "unused2")
     end

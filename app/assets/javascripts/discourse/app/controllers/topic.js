@@ -23,6 +23,8 @@ import showModal from "discourse/lib/show-modal";
 import TopicTimer from "discourse/models/topic-timer";
 import { Promise } from "rsvp";
 import { escapeExpression } from "discourse/lib/utilities";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import { inject as service } from "@ember/service";
 
 let customPostMessageCallbacks = {};
 
@@ -41,6 +43,9 @@ export function registerCustomPostMessageCallback(type, callback) {
 export default Controller.extend(bufferedProperty("model"), {
   composer: controller(),
   application: controller(),
+  documentTitle: service(),
+  screenTrack: service(),
+
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
@@ -110,6 +115,10 @@ export default Controller.extend(bufferedProperty("model"), {
     this._super(...arguments);
 
     this.appEvents.on("post:show-revision", this, "_showRevision");
+    this.appEvents.on("post:created", this, () => {
+      this._removeDeleteOnOwnerReplyBookmarks();
+      this.appEvents.trigger("post-stream:refresh", { force: true });
+    });
 
     this.setProperties({
       selectedPostIds: [],
@@ -181,6 +190,22 @@ export default Controller.extend(bufferedProperty("model"), {
     return category && category.minimum_required_tags > 0
       ? category.minimum_required_tags
       : null;
+  },
+
+  _removeDeleteOnOwnerReplyBookmarks() {
+    const posts = this.get("model.postStream.posts");
+    if (posts) {
+      posts
+        .filter(
+          p =>
+            p.bookmarked &&
+            p.bookmark_auto_delete_preference ===
+              AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
+        )
+        .forEach(p => {
+          p.clearBookmark();
+        });
+    }
   },
 
   _forceRefreshPostStream() {
@@ -431,8 +456,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     deferTopic() {
-      const screenTrack = Discourse.__container__.lookup("screen-track:main");
-      const currentUser = this.currentUser;
+      const { screenTrack, currentUser } = this;
       const topic = this.model;
 
       screenTrack.reset();
@@ -1329,7 +1353,7 @@ export default Controller.extend(bufferedProperty("model"), {
           case "created": {
             postStream.triggerNewPostInStream(data.id).then(() => refresh());
             if (this.get("currentUser.id") !== data.user_id) {
-              Discourse.incrementBackgroundContextCount();
+              this.documentTitle.incrementBackgroundContextCount();
             }
             break;
           }

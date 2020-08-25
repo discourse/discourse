@@ -10,9 +10,11 @@ moduleFor("controller:topic", "controller:topic", {
   needs: [
     "controller:composer",
     "controller:application",
-    "service:app-events"
+    "service:app-events",
+    "service:document-title"
   ],
   beforeEach() {
+    this.registry.register("service:screen-track", {}, { instantiate: false });
     this.registry.injection("controller", "appEvents", "service:app-events");
   }
 });

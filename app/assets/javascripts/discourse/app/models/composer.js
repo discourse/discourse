@@ -1045,7 +1045,6 @@ const Composer = RestModel.extend({
             x => x.id === (parseInt(createdPost.category, 10) || 1)
           );
           if (category) category.incrementProperty("topic_count");
-          Discourse.notifyPropertyChange("globalNotice");
         }
 
         composer.clearState();

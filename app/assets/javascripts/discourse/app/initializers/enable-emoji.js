@@ -18,7 +18,8 @@ export default {
           group: "extras",
           icon: "far-smile",
           action: () => toolbar.context.send("emoji"),
-          title: "composer.emoji"
+          title: "composer.emoji",
+          className: "emoji insert-emoji"
         });
       });
     });

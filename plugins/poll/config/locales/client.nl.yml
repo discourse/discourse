@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nl:
   js:
@@ -50,9 +49,6 @@ nl:
       group-results:
         title: "Stemmen groeperen op gebruikersveld"
         label: "Verdeling tonen"
-      ungroup-results:
-        title: "Alle stemmen combineren"
-        label: "Verdeling verbergen"
       export-results:
         title: "De pollresultaten exporteren"
         label: "Exporteren"
@@ -67,6 +63,12 @@ nl:
       automatic_close:
         closes_in: "Sluit over <strong>%{timeLeft}</strong>."
         age: "Gesloten: <strong>%{age}</strong>"
+      breakdown:
+        title: "Pollresultaten"
+        votes: "%{count} stemmen"
+        breakdown: "Verdeling"
+        percentage: "Percentage"
+        count: "Aantal"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
       error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van uw stemmen."
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."

@@ -89,7 +89,7 @@ export default Controller.extend({
 
   @discourseComputed("q")
   searchActive(q) {
-    return isValidSearchTerm(q);
+    return isValidSearchTerm(q, this.siteSettings);
   },
 
   @discourseComputed("q")
@@ -209,7 +209,7 @@ export default Controller.extend({
 
     this.set("invalidSearch", false);
     const searchTerm = this.searchTerm;
-    if (!isValidSearchTerm(searchTerm)) {
+    if (!isValidSearchTerm(searchTerm, this.siteSettings)) {
       this.set("invalidSearch", true);
       return;
     }

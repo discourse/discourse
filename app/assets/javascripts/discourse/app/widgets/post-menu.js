@@ -332,7 +332,7 @@ registerButton(
 );
 
 registerButton("admin", attrs => {
-  if (!attrs.canManage && !attrs.canWiki) {
+  if (!attrs.canManage && !attrs.canWiki && !attrs.canEditStaffNotes) {
     return;
   }
   return {

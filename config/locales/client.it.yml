@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 it:
   js:
@@ -120,9 +119,9 @@ it:
       topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
       post: "messaggio n°%{postNumber}"
       close: "chiudi"
-      twitter: "Condividi questo collegamento su Twitter"
-      facebook: "Condividi questo collegamento su Facebook"
-      email: "Invia questo collegamento per email"
+      twitter: "Condividi su Twitter"
+      facebook: "Condividi su Facebook"
+      email: "Invia per email"
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
       private_topic: "ha reso questo argomento un messaggio personale %{when}"
@@ -276,7 +275,13 @@ it:
       no_timezone: 'Non hai ancora impostato un fuso orario. Non sarai in grado di impostare promemoria. Creane uno <a href="%{basePath}/my/preferences/profile">nel tuo profilo</a> .'
       invalid_custom_datetime: "La data e l'ora fornite non sono valide, riprova."
       list_permission_denied: "Non sei autorizzato a visualizzare i segnalibri di questo utente."
-      delete_when_reminder_sent: "Elimina questo segnalibro quando viene inviata la notifica del promemoria."
+      auto_delete_preference:
+        label: "Elimina automaticamente"
+        never: "Mai"
+        when_reminder_sent: "Una volta inviato il promemoria"
+        on_owner_reply: "Dopo aver risposto a questo argomento"
+      search_placeholder: "Cerca nei segnalibri per nome, titolo dell'argomento o contenuto del messaggio"
+      search: "Cerca"
       reminders:
         at_desktop: "La prossima volta che sarò al mio desktop"
         later_today: "Più tardi oggi"
@@ -284,7 +289,8 @@ it:
         tomorrow: "Domani"
         next_week: "La prossima settimana"
         later_this_week: "Più tardi questa settimana"
-        start_of_next_business_week: "Il prossimo Lunedì"
+        start_of_next_business_week: "Lunedi"
+        start_of_next_business_week_alt: "Il prossimo Lunedì"
         next_month: "Il prossimo mese"
         custom: "Data e ora personalizzate"
         last_custom: "Ultimo"
@@ -306,14 +312,14 @@ it:
         yes_value: "Sì, abbandona"
         no_value: "No, mantieni"
     topic_count_latest:
-      one: "Visualizza %{count} argomenti nuovi o aggiornati"
+      one: "Visualizza %{count} argomento nuovi o aggiornato"
       other: "Visualizza %{count} argomenti nuovi o aggiornati."
     topic_count_unread:
-      one: "V"
+      one: "Visualizza %{count} argomento non letto"
       other: "Visualizza %{count} argomenti non letti "
     topic_count_new:
-      one: "V"
-      other: "Visualizza %{count} nuovi argomenti"
+      one: "Vedi %{count} nuovo argomento"
+      other: "Vedi %{count} nuovi argomenti"
     preview: "anteprima"
     cancel: "annulla"
     save: "Salva Modifiche"
@@ -453,7 +459,7 @@ it:
           score: "Punteggio"
           score_asc: "Punteggio (inverso)"
           created_at: "Creato il"
-          created_at_asc: "Data creazione (inversa)"
+          created_at_asc: "Creato il (inverso)"
         priority:
           title: "Priorità Minima"
           low: "(qualsiasi)"
@@ -546,10 +552,6 @@ it:
     groups:
       member_added: "Aggiunto"
       member_requested: "Richiesto alle"
-      add_members:
-        title: "Aggiungi Membri"
-        description: "Gestisci le iscrizioni di questo gruppo"
-        usernames: "Nomi Utente"
       requests:
         title: "Richieste"
         reason: "Motivo"
@@ -571,6 +573,23 @@ it:
           title: Interazione
           posting: Pubblicazione
           notification: Notifica
+        email:
+          title: "Email"
+          status: "Sincronizzate %{old_emails} / %{total_emails} email via IMAP."
+          credentials:
+            title: "Credenziali"
+            smtp_server: "Server SMTP"
+            smtp_port: "Porta SMTP"
+            smtp_ssl: "Usa SSL per SMTP"
+            imap_server: "Server IMAP"
+            imap_port: "Porta IMAP"
+            imap_ssl: "Usa SSL per IMAP"
+            username: "Nome utente"
+            password: "Password"
+          mailboxes:
+            synchronized: "Maibox sincronizzata"
+            none_found: "Nessuna mailbox trovata in questo account e-mail."
+            disabled: "disabilitata"
         membership:
           title: Iscrizione
           access: Accesso
@@ -770,6 +789,7 @@ it:
           all: "Tutti"
           read: "Letti"
           unread: "Non letti"
+        ignore_duration_title: "Ignora utente"
         ignore_duration_username: "Nome utente"
         ignore_duration_when: "Durata:"
         ignore_duration_save: "Ignora"
@@ -876,6 +896,9 @@ it:
       users: "Utenti"
       muted_users: "Silenziati"
       muted_users_instructions: "Elimina tutte le notifiche e i PM da questi utenti."
+      allowed_pm_users: "Consentito"
+      allowed_pm_users_instructions: "Consenti i PM solo da questi utenti."
+      allow_private_messages_from_specific_users: "Consenti solo a utenti specifici di inviarmi messaggi personali"
       ignored_users: "Ignorato"
       ignored_users_instructions: "Elimina tutti i post, le notifiche e i PM da questi utenti."
       tracked_topics_link: "Mostra"
@@ -1113,6 +1136,7 @@ it:
       enable_physical_keyboard: "Attiva supporto alla tastiera fisica su iPad"
       text_size:
         title: "Dimensioni del testo"
+        smallest: "Più piccolo"
         smaller: "Più piccolo"
         normal: "Normale"
         larger: "Più grande"
@@ -1426,8 +1450,8 @@ it:
       complete_email_found: "Abbiamo trovato un account che corrisponde a <b>%{email}</b>, a breve dovresti ricevere una email con un collegamento per l'accesso."
       complete_username_not_found: "Nessun account con nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account con email <b>%{email}</b>"
-      confirm_title: "Procedi su %{site_name}"
-      logging_in_as: "Accesso come %{email}"
+      confirm_title: Procedi su %{site_name}
+      logging_in_as: Accesso come %{email}
       confirm_button: Completa l'accesso
     login:
       title: "Connetti"
@@ -1680,18 +1704,21 @@ it:
         draft: Bozza
         edit: Modifica
         reply_to_post:
-          label: "Rispondi al messaggio %{postNumber} di %{postUsername}"
+          label: Rispondi al messaggio %{postNumber} di %{postUsername}
           desc: Rispondi a uno specifico messaggio
         reply_as_new_topic:
           label: Rispondi con un argomento correlato
           desc: Crea un nuovo argomento collegato a questo argomento
-          confirm: "È stata salvata una nuova bozza di argomento, che verrà sovrascritta se si crea un argomento collegato."
+          confirm: È stata salvata una nuova bozza di argomento, che verrà sovrascritta se si crea un argomento collegato.
+        reply_as_new_group_message:
+          label: Rispondi come nuovo messaggio di gruppo
+          desc: Crea un nuovo messaggio privato con gli stessi destinatari
         reply_as_private_message:
           label: Nuovo messaggio
           desc: Crea un nuovo messaggio personale
         reply_to_topic:
           label: Rispondi all'argomento
-          desc: "Rispondi all'argomento, non a uno specifico messaggio"
+          desc: Rispondi all'argomento, non a uno specifico messaggio
         toggle_whisper:
           label: Commuta Sussurri
           desc: I Sussurri sono visibili solo ai membri dello staff
@@ -2005,7 +2032,7 @@ it:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza gli argomenti più recenti
-      suggest_create_topic: "Perché non crei un argomento?"
+      suggest_create_topic: Perché non crei un argomento?
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato eliminato"
@@ -2019,9 +2046,10 @@ it:
         when: "Quando:"
         public_timer_types: Timer Argomento
         private_timer_types: Timer Argomento per Utente
-        time_frame_required: "Per favore, seleziona un lasso di tempo"
+        time_frame_required: Per favore, seleziona un lasso di tempo
       auto_update_input:
         none: "Seleziona un lasso di tempo"
+        now: "Adesso"
         later_today: "Più tardi oggi"
         tomorrow: "Domani"
         later_this_week: "Più tardi questa settimana"
@@ -2102,7 +2130,7 @@ it:
           "2_8": "Vedrai un conteggio delle nuove risposte perché stai seguendo questa categoria."
           "2_4": "Vedrai un conteggio delle nuove risposte perché hai pubblicato una risposta in questo argomento."
           "2_2": "Vedrai un conteggio delle nuove risposte perché stai seguendo questo argomento."
-          "2": 'Vedrai un conteggio delle nuove risposte perché hai <a href="%{basePath}/u/%{username}/preferences/notifications">letto questo argomento</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "1": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "0_7": "Stai ignorando tutte le notifiche di questa categoria."
@@ -2284,11 +2312,13 @@ it:
         description: "Quando un argomento viene pubblicato come pagina, l'URL può essere condiviso e verrà visualizzato con uno stile personalizzato."
         slug: "Abbreviazione"
         public: "Pubblico"
+        public_description: "Le persone possono vedere la pagina anche se l&#39;argomento associato è privato."
         publish_url: "La tua pagina è stata pubblicata su:"
         topic_published: "Il tuo argomento è stato pubblicato su:"
         preview_url: "La tua pagina sarà pubblicata su:"
         invalid_slug: "Spiacenti, non puoi pubblicare questa pagina."
         unpublish: "Non pubblicato"
+        update: "Aggiorna"
         unpublished: "La tua pagina non è stata pubblicata e non è più accessibile."
         publishing_settings: "Impostazioni di Pubblicazione"
       change_owner:
@@ -2335,6 +2365,7 @@ it:
         other: "(Argomento eliminato dall'autore, verrà automaticamente cancellato in %{count} ore, se non segnalato)"
     post:
       quote_reply: "Cita"
+      quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
       ignored: "Contenuto ignorato"
@@ -2362,6 +2393,7 @@ it:
       has_replies:
         one: "%{count} Risposta"
         other: "%{count} Risposte"
+      unknown_user: "(utente sconosciuto / eliminato)"
       has_likes_title:
         one: "Una persona ha messo \"Mi piace\" a questo messaggio"
         other: "%{count} persone hanno messo \"Mi piace\" a questo messaggio"
@@ -2495,6 +2527,7 @@ it:
           last: "Ultima revisione"
           hide: "Nascondi revisione"
           show: "Mostra revisione"
+          revert: "Ripristina revisione %{revision}"
           edit_wiki: "Modifica Wiki"
           edit_post: "Modifica Messaggio"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
@@ -2605,7 +2638,7 @@ it:
       default_list_filter: "Filtro predefinito della lista:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
-      reviewable_by_group: "Oltre che dallo staff, i messaggi e le segnalazioni in questa categoria possono essere revisionati da:"
+      reviewable_by_group: "Oltre allo staff, i contenuti di questa categoria possono essere esaminati da:"
       review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutte le nuove risposte"
@@ -3049,9 +3082,7 @@ it:
         about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
         new: "Nuovo Gruppo"
         tags_label: "Etichette in questo gruppo:"
-        tags_placeholder: "etichette"
         parent_tag_label: "Etichetta padre:"
-        parent_tag_placeholder: "Opzionale"
         parent_tag_description: "Le etichette di questo gruppo non possono essere usate finché è presente l'etichetta padre."
         one_per_topic_label: "Limita ad una sola etichetta per argomento in questo gruppo"
         new_name: "Nuovo Gruppo Etichette"
@@ -3092,6 +3123,7 @@ it:
       dismiss: "Ignora"
     safe_mode:
       enabled: "La modalità sicura è attiva, per disattivarla chiudi il browser"
+    image_removed: "(immagine rimossa)"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3144,7 +3176,7 @@ it:
         show_traffic_report: "Mostra rapporto di traffico dettagliato"
         community_health: Stato di salute
         moderators_activity: Attività dei Moderatori
-        whats_new_in_discourse: "Novità in Discourse?"
+        whats_new_in_discourse: Novità in Discourse?
         activity_metrics: Metriche Attività
         all_reports: "Tutti i rapporti"
         general_tab: "Generale"
@@ -3153,10 +3185,10 @@ it:
         reports_tab: "Rapporti"
         report_filter_any: "qualunque"
         disabled: Disabilitato
-        timeout_error: "Spiacenti, la ricerca sta impiegando troppo tempo, per favore scegli un intervallo più breve"
-        exception_error: "Spiacenti, si è verificato un errore nell'esecuzione della query"
+        timeout_error: Spiacenti, la ricerca sta impiegando troppo tempo, per favore scegli un intervallo più breve
+        exception_error: Spiacenti, si è verificato un errore nell'esecuzione della query
         too_many_requests: Hai eseguito questa operazione troppe volte. Attendi prima di riprovare.
-        not_found_error: "Spiacenti, questo rapporto non esiste"
+        not_found_error: Spiacenti, questo rapporto non esiste
         filter_reports: Filtra rapporti
         reports:
           trend_title: "Variazione del %{percent}. Attualmente %{current}, era %{prev} nel periodo precedente."
@@ -3281,13 +3313,18 @@ it:
         impersonate_all_users: Impersona qualsiasi utente
         single_user: "Utente Singolo"
         user_placeholder: Inserisci nome utente
-        description_placeholder: "A cosa servirà questa chiave?"
+        description_placeholder: A cosa servirà questa chiave?
         save: Salva
         new_key: Nuova Chiave API
         revoked: Revocata
         delete: Cancellata Permanentemente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
+        use_global_key: Chiave globale (consente tutte le azioni)
+        scopes:
+          allowed_parameters: Parametri consentiti
+          optional_allowed_parameters: Parametri Consentiti (Opzionali)
+          any_parameter: (qualsiasi parametro)
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."
@@ -3488,7 +3525,6 @@ it:
           subject: "Oggetto"
           multiple_subjects: "Questo modello email ha più di un campo oggetto."
           body: "Corpo"
-          none_selected: "Scegli un modello di e-mail per iniziare la modifica."
           revert: "Annulla Cambiamenti"
           revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
         theme:
@@ -3889,6 +3925,12 @@ it:
             add_email: "aggiungi email"
             update_email: "aggiorna email"
             destroy_email: "distruggi email"
+            topic_closed: "argomento chiuso"
+            topic_opened: "topic aperto"
+            topic_archived: "argomento archiviato"
+            topic_unarchived: "argomento de-archiviato"
+            post_staff_note_create: "aggiungi note dello staff"
+            post_staff_note_destroy: "distruggi la nota dello staff"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -3902,7 +3944,6 @@ it:
           domain: "Dominio"
         screened_ips:
           title: "IP scansionati"
-          description: 'Gli indirizzi IP che sono sotto controllo. Usa "Permetti" per inserirli nella lista bianca.'
           delete_confirm: "Davvero vuoi rimuovere la regola per %{ip_address}?"
           roll_up_confirm: "Sicuro di voler raggruppare in sottoreti gli indirizzi IP schermati normalmente?"
           rolled_up_some_subnets: " L'elenco di indirizzi IP interdetti sono stati sintetizzati correttamente: %{subnets}."
@@ -4074,7 +4115,7 @@ it:
         reputation: Reputazione
         permissions: Permessi
         activity: Attività
-        like_count: "\"Mi piace\" Assegnati / Ricevuti"
+        like_count: '"Mi piace" Assegnati / Ricevuti'
         last_100_days: "negli ultimi 100 giorni"
         private_topics_count: Argomenti Privati
         posts_read_count: Messaggi Letti
@@ -4325,11 +4366,11 @@ it:
         reason_help: (Un collegamento a un messaggio o argomento)
         save: Salva
         delete: Cancella
-        delete_confirm: "Sei sicuro di voler cancellare questo distintivo?"
+        delete_confirm: Sei sicuro di voler cancellare questo distintivo?
         revoke: Revoca
         reason: Motivo
         expand: Espandi &hellip;
-        revoke_confirm: "Sei sicuro di voler revocare questo distintivo?"
+        revoke_confirm: Sei sicuro di voler revocare questo distintivo?
         edit_badges: Modifica Distintivi
         grant_badge: Assegna Distintivo
         granted_badges: Distintivi Assegnati
@@ -4372,10 +4413,10 @@ it:
             other: "<b>%{count}</b> distintivi da assegnare."
           sample: "Esempio:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> per il messaggio in %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> per messaggio in %{link} in data <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> in data <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> per il messaggio in %{link}
+            with_post_time: <span class="username">%{username}</span> per messaggio in %{link} in data <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> in data <span class="time">%{time}</span>
         badge_intro:
           title: "Seleziona un Distintivo esistente o creane uno nuovo per iniziare"
           emoji: "emoji woman student"
@@ -4407,7 +4448,6 @@ it:
         title: "Incorporo"
         host: "Host Abilitati"
         class_name: "Nome Classe"
-        path_whitelist: "Percorso Whitelist"
         edit: "modifica"
         category: "Pubblica nella Categoria"
         add_host: "Aggiungi Host"
@@ -4419,9 +4459,6 @@ it:
         embed_title_scrubber: "Espressione regolare usata per ripulire i titoli dei messaggi"
         embed_truncate: "Tronca i messaggi incorporati"
         embed_unlisted: "Gli argomenti importati non saranno visibili fino a quando non ci sarà una risposta."
-        embed_whitelist_selector: "Selettore CSS per gli elementi da permettere negli embed"
-        embed_blacklist_selector: "Selettore CSS per gli elementi da rimuovere dagli embed"
-        embed_classname_whitelist: "Classi CSS permesse"
         save: "Salva Impostazioni Inclusione"
       permalink:
         title: "Collegamenti permanenti"
@@ -4434,9 +4471,10 @@ it:
         category_id: "ID della categoria"
         category_title: "Categoria"
         tag_name: "Nome etichetta"
-        external_url: "URL esterna"
+        external_url: "URL esterno o relativo"
         destination: "Destinazione"
-        delete_confirm: "Sei sicuro di voler cancellare questo collegamento permanente?"
+        copy_to_clipboard: "Copia Permalink nella clipboard"
+        delete_confirm: Sei sicuro di voler cancellare questo collegamento permanente?
         form:
           label: "Nuovo:"
           add: "Aggiungi"

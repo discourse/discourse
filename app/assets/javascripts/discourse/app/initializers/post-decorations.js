@@ -9,9 +9,22 @@ export default {
   initialize(container) {
     withPluginApi("0.1", api => {
       const siteSettings = container.lookup("site-settings:main");
-      api.decorateCooked(highlightSyntax, {
-        id: "discourse-syntax-highlighting"
-      });
+      const session = container.lookup("session:main");
+      api.decorateCooked(
+        elem => {
+          return highlightSyntax(elem, siteSettings, session);
+        },
+        {
+          id: "discourse-syntax-highlighting"
+        }
+      );
+
+      api.decorateCookedElement(
+        elem => {
+          return lightbox(elem, siteSettings);
+        },
+        { id: "discourse-lightbox" }
+      );
       api.decorateCookedElement(lightbox, { id: "discourse-lightbox" });
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCooked(setTextDirections, {
@@ -43,16 +56,22 @@ export default {
       if (caps.isSafari || caps.isIOS) {
         api.decorateCookedElement(
           elem => {
-            const video = elem.querySelector("video");
-            if (video && !video.poster) {
+            elem.querySelectorAll("video").forEach(video => {
+              if (video.poster && video.poster !== "" && !video.autoplay)
+                return;
+
               const source = video.querySelector("source");
               if (source) {
-                // this tricks Safari into loading the video preview
+                // In post-cooked.js, we create the video element in a detached DOM
+                // then adopt it into to the real DOM.
+                // This confuses safari, and preloading/autoplay do not happen.
+
+                // Calling `.load()` tricks Safari into loading the video element correctly
                 source.parentElement.load();
               }
-            }
+            });
           },
-          { id: "safari-video-poster", afterAdopt: true }
+          { id: "safari-video-poster", afterAdopt: true, onlyStream: true }
         );
       }
     });

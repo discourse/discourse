@@ -35,6 +35,13 @@ Fabricator(:image_upload, from: :upload) do
   end
 end
 
+Fabricator(:upload_no_dimensions, from: :upload) do
+  width nil
+  height nil
+  thumbnail_width nil
+  thumbnail_height nil
+end
+
 Fabricator(:video_upload, from: :upload) do
   original_filename "video.mp4"
   width nil

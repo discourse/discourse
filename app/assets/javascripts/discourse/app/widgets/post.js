@@ -64,11 +64,6 @@ export function avatarFor(wanted, attrs) {
   );
 }
 
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.avatar = avatarFor;
-}
-
 createWidget("select-post", {
   tagName: "div.select-posts",
 
@@ -673,6 +668,9 @@ export default createWidget("post", {
     }
     if (attrs.topicOwner) {
       classNames.push("topic-owner");
+    }
+    if (attrs.groupModerator) {
+      classNames.push("category-moderator");
     }
     if (attrs.hidden) {
       classNames.push("post-hidden");

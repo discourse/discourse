@@ -188,13 +188,7 @@ private
     return if !@created_by.staff? && @post.user&.staff?
     return unless PostActionType.auto_action_flag_types.include?(@post_action_name)
 
-    # Special case: If you have TL3 and the user is TL0, and the flag is spam,
-    # hide it immediately.
-    if SiteSetting.high_trust_flaggers_auto_hide_posts &&
-        @post_action_name == :spam &&
-        @created_by.has_trust_level?(TrustLevel[3]) &&
-        @post.user&.trust_level == TrustLevel[0]
-
+    if trusted_spam_flagger?
       @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
       return
     end
@@ -203,6 +197,15 @@ private
     if score >= Reviewable.score_required_to_hide_post
       @post.hide!(@post_action_type_id)
     end
+  end
+
+  # Special case: If you have TL3 and the user is TL0, and the flag is spam,
+  # hide it immediately.
+  def trusted_spam_flagger?
+    SiteSetting.high_trust_flaggers_auto_hide_posts &&
+      @post_action_name == :spam &&
+      @created_by.has_trust_level?(TrustLevel[3]) &&
+      @post.user&.trust_level == TrustLevel[0]
   end
 
   def create_post_action
@@ -315,7 +318,8 @@ private
       created_at: @created_at,
       take_action: @take_action,
       meta_topic_id: @meta_post&.topic_id,
-      reason: @reason
+      reason: @reason,
+      force_review: trusted_spam_flagger?
     )
   end
 

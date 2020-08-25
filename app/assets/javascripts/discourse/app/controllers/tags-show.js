@@ -61,13 +61,14 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return NavItem.buildList(category, {
       tagId,
       filterType,
-      noSubcategories
+      noSubcategories,
+      siteSettings: this.siteSettings
     });
   },
 
   @discourseComputed("category")
   showTagFilter() {
-    return Discourse.SiteSettings.show_filter_by_tag;
+    return this.siteSettings.show_filter_by_tag;
   },
 
   @discourseComputed("additionalTags", "category", "tag.id")
@@ -119,7 +120,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     },
 
     refresh() {
-      // TODO: this probably doesn't work anymore
       return this.store
         .findFiltered("topicList", { filter: "tags/" + this.get("tag.id") })
         .then(list => {

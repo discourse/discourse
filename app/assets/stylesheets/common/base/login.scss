@@ -1,5 +1,5 @@
 .caps-lock-warning {
-  color: $danger;
+  color: var(--danger);
   font-size: $font-down-1;
   font-weight: bold;
 }
@@ -17,7 +17,7 @@
     width: 100%;
   }
   a {
-    color: $primary-high;
+    color: var(--primary-high);
   }
   td {
     padding-right: 5px;
@@ -65,7 +65,7 @@
 
 .create-account {
   .disclaimer {
-    color: $primary-medium;
+    color: var(--primary-medium);
     margin-top: 0.5em;
   }
 
@@ -101,7 +101,7 @@
       }
       .instructions {
         margin-top: 0.15em;
-        color: $primary-medium;
+        color: var(--primary-medium);
         line-height: $line-height-medium;
       }
     }
@@ -111,7 +111,7 @@
 .password-reset {
   .instructions {
     label {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 }
@@ -143,7 +143,7 @@
       margin-bottom: 10px;
     }
     .instructions {
-      color: $primary-medium;
+      color: var(--primary-medium);
       margin: 0;
       font-size: $font-down-1;
       font-weight: normal;
@@ -167,7 +167,7 @@
   flex-direction: column;
   margin-top: 0.15em;
   label {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 }
 
@@ -176,7 +176,7 @@
 button#login-link,
 button#new-account-link {
   background: transparent;
-  color: $primary-high;
+  color: var(--primary-high);
 }
 
 #security-key {
@@ -193,6 +193,6 @@ button#new-account-link {
   a {
     display: inline-block;
     padding: 1em 0.5em 1em 0;
-    color: $tertiary;
+    color: var(--tertiary);
   }
 }

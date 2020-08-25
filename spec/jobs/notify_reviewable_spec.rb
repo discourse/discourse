@@ -111,6 +111,6 @@ describe Jobs::NotifyReviewable do
       described_class.new.execute(reviewable_id: reviewable.id)
     end
 
-    expect(messages.size).to eq(1)
+    expect(messages.size).to eq(0)
   end
 end

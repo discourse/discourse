@@ -24,6 +24,11 @@ describe ReviewablesController do
       delete "/review/123"
       expect(response.code).to eq("403")
     end
+
+    it "denies count" do
+      get "/review/count.json"
+      expect(response.code).to eq("403")
+    end
   end
 
   context "regular user" do
@@ -196,7 +201,7 @@ describe ReviewablesController do
       context "with user custom field" do
         before do
           plugin = Plugin::Instance.new
-          plugin.whitelist_public_user_custom_field :public_field
+          plugin.allow_public_user_custom_field :public_field
         end
 
         after do
@@ -590,7 +595,7 @@ describe ReviewablesController do
     end
 
     context "#destroy" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user) { Fabricate(:user) }
 
       before do
         sign_in(user)
@@ -612,6 +617,28 @@ describe ReviewablesController do
         delete "/review/#{queued_post.id}.json"
         expect(response.code).to eq("200")
         expect(queued_post.reload).to be_deleted
+      end
+    end
+
+    context "#count" do
+      fab!(:admin) { Fabricate(:admin) }
+
+      before do
+        sign_in(admin)
+      end
+
+      it "returns the number of reviewables" do
+        get "/review/count.json"
+        expect(response.code).to eq("200")
+        json = response.parsed_body
+        expect(json["count"]).to eq(0)
+
+        Fabricate(:reviewable_queued_post)
+
+        get "/review/count.json"
+        expect(response.code).to eq("200")
+        json = response.parsed_body
+        expect(json["count"]).to eq(1)
       end
     end
 

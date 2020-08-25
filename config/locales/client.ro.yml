@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ro:
   js:
@@ -258,6 +257,7 @@ ro:
     bookmarks:
       remove: "Șterge semn de carte"
       save: "Salvează"
+      search: "Caută"
       reminders:
         later_today: "Mai târziu azi"
         tomorrow: "Mâine"
@@ -390,10 +390,6 @@ ro:
         make_user_group_owner: "Fă proprietar"
         remove_user_as_group_owner: "Revocă proprietar"
     groups:
-      add_members:
-        title: "Adaugă membri"
-        description: "Gestionează "
-        usernames: "Nume de utilizatori"
       requests:
         reason: "Motiv"
         accepted: "acceptat"
@@ -409,6 +405,11 @@ ro:
           title: Interacțiune
           posting: Publicare
           notification: Notificare
+        email:
+          title: "Email"
+          credentials:
+            username: "Nume utilizator"
+            password: "Parolă"
         membership:
           title: Abonare
           access: Acces
@@ -529,6 +530,7 @@ ro:
       "12": "Elemente trimise"
       "13": "Primite"
       "14": "În așteptare"
+      "15": "Drafts"
     categories:
       all: "Toate categoriile"
       all_subcategories: "tot"
@@ -1073,7 +1075,7 @@ ro:
     email_login:
       complete_username_not_found: "Nici un cont nu se potriveşte cu utilizatorul <b>%{username}</b>"
       complete_email_not_found: "Nici un cont nu se potrivește cu adresa <b>%{email}</b>"
-      confirm_title: "Continuă la %{site_name}"
+      confirm_title: Continuă la %{site_name}
     login:
       title: "Autentificare"
       username: "Utilizator"
@@ -1254,7 +1256,7 @@ ro:
           label: Mesaj nou
         reply_to_topic:
           label: Răspunde la subiect
-          desc: "Răspundeți subiectului, nu unei anumite postări"
+          desc: Răspundeți subiectului, nu unei anumite postări
         create_topic:
           label: "Discuție nouă"
         shared_draft:
@@ -1500,7 +1502,7 @@ ro:
       read_more_MF: "{ UNREAD, plural, =0 {} one { Există <a href='{basePath}/unread'>un subiect necitit</a> } other { Sunt <a href='{basePath}/unread'># subiecte necitite</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{și } false {există } other{}} <a href='{basePath}/new'>un subiect nou</a>} other { {BOTH, select, true{și } false {sunt } other{}} <a href='{basePath}/new'># subiecte noi</a>} } rămas(e), sau {CATEGORY, select, true {răsfoiți alte subiecte în {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Răsfoiți prin toate categoriile
       view_latest_topics: arată ultimele subiecte
-      suggest_create_topic: "Ce ar fi să creezi un subiect?"
+      suggest_create_topic: Ce ar fi să creezi un subiect?
       jump_reply_up: sări la un răspuns mai vechi
       jump_reply_down: sări la un răspuns mai nou
       deleted: "Subiectul a fost șters"
@@ -1580,6 +1582,7 @@ ro:
           "3_1": "Vei primi notificări deoarece ai creat acest subiect."
           "3": "Vei primi notificări deoarece urmărești activ acest subiect."
           "2_2": "Vei vedea numărul răspunsurilor noi deoarece urmărești acest subiect."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
           "1": "Vei fi notificat dacă cineva îți menționează @numele sau îți scrie un răspuns."
           "0_7": "Ignori toate notificările din această categorie."
@@ -2348,7 +2351,6 @@ ro:
         new: "Grup nou"
         tags_label: "Etichete din acest grup:"
         parent_tag_label: "Etichetă părinte:"
-        parent_tag_placeholder: "Opțional"
         parent_tag_description: "Etichetele din acest grup nu pot fi folosite dacă eticheta părinte nu este prezentă."
         one_per_topic_label: "Limitare la o singură etichetă pe subiect din acest grup"
         new_name: "Grup nou de etichete"
@@ -2667,7 +2669,6 @@ ro:
           subject: "Subiect"
           multiple_subjects: "Acest șablon are mai multe subiecte"
           body: "Body"
-          none_selected: "Selectează un șablon pentru a începe editarea"
           revert: "Revocă schimbările"
           revert_confirm: "Ești sigur că vrei să revoci schimbările?"
         theme:
@@ -2918,7 +2919,6 @@ ro:
           domain: "Domeniu"
         screened_ips:
           title: "IP-uri filtrate"
-          description: 'adrese IP supravegheate. Folosește "permite" să marchezi IP-urile ca permise'
           delete_confirm: "Ești sigur că vrei să anulezi regula pentru %{ip_address}?"
           roll_up_confirm: "Ești sigur că vrei să consolidezi adresele IP monitorizate în mod obișnuit în subrețele?"
           rolled_up_some_subnets: "S-au consolidat cu succes înregistrările de IP-uri blocate pe următoarele subrețele: %{subnets}."
@@ -3248,11 +3248,11 @@ ro:
         reason_help: (O legătură către o postare sau un subiect)
         save: Salvează
         delete: Șterge
-        delete_confirm: "Ești sigur că vrei să ștergi acest ecuson?"
+        delete_confirm: Ești sigur că vrei să ștergi acest ecuson?
         revoke: Revocă
         reason: Motiv
         expand: Extinde &hellip;
-        revoke_confirm: "Ești sigur că vrei să revoci ecusonul?"
+        revoke_confirm: Ești sigur că vrei să revoci ecusonul?
         edit_badges: Editează ecusoane
         grant_badge: Acordă ecuson
         granted_badges: Ecusoane acordate
@@ -3294,10 +3294,10 @@ ro:
             other: "<b>%{count}</b> de ecusoane pentru atribuire."
           sample: "Exemplu:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> pentru mesajul în %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> pentru mesajul în %{link} la <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> la <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> pentru mesajul în %{link}
+            with_post_time: <span class="username">%{username}</span> pentru mesajul în %{link} la <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> la <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
         help: "Adaugă un nou \"emoji\" care va fi disponibil pentru toţi. (PROTIP: trage şi adaugă mai multe fişiere odată)"
@@ -3314,7 +3314,6 @@ ro:
         title: "Embedding"
         host: "Host-uri permise"
         class_name: "Numele clasei"
-        path_whitelist: "Cale permise"
         edit: "editează"
         category: "Postează în categoria"
         add_host: "Adaugă host"
@@ -3325,9 +3324,6 @@ ro:
         embed_post_limit: "Numărul maxim de postări de încorporat."
         embed_title_scrubber: "Expresie obișnuită pentru a curăța titlurile postărilor"
         embed_truncate: "Scurtează postările embedded."
-        embed_whitelist_selector: "Selector CSS pentru elemente care nu sunt permise în embeds."
-        embed_blacklist_selector: "Selector CSS pentru elemente care sunt șterse din emebds."
-        embed_classname_whitelist: "Nume de clase CSS permise"
         save: "Salvați setările pentru embeding"
       permalink:
         title: "Adrese permanente"
@@ -3338,8 +3334,7 @@ ro:
         post_title: "Postare"
         category_id: "ID categorie"
         category_title: "Categorie"
-        external_url: "URL extern"
-        delete_confirm: "Ești sigur că vrei să ștergi această adresă permanentă?"
+        delete_confirm: Ești sigur că vrei să ștergi această adresă permanentă?
         form:
           label: "Nou:"
           add: "Adaugă"

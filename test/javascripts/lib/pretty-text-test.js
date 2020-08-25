@@ -893,7 +893,7 @@ QUnit.test("Code Blocks", assert => {
   assert.cooked(
     "```eviltrout\nhello\n```",
     '<pre><code class="lang-auto">hello\n</code></pre>',
-    "it doesn't not whitelist all classes"
+    "it doesn't not allowlist all classes"
   );
 
   assert.cooked(

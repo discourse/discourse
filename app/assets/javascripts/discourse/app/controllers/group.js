@@ -79,6 +79,13 @@ export default Controller.extend({
       );
     }
 
+    defaultTabs.push(
+      Tab.create({
+        name: "permissions",
+        i18nKey: "permissions.title"
+      })
+    );
+
     return defaultTabs;
   },
 
@@ -89,11 +96,6 @@ export default Controller.extend({
     }
 
     return isGroupUser || (this.currentUser && this.currentUser.admin);
-  },
-
-  @discourseComputed("model.is_group_owner", "model.automatic")
-  canEditGroup(isGroupOwner, automatic) {
-    return !automatic && isGroupOwner;
   },
 
   @discourseComputed("model.displayName", "model.full_name")
@@ -126,7 +128,7 @@ export default Controller.extend({
     return (
       this.currentUser &&
       (this.currentUser.canManageGroup(model) ||
-        (this.currentUser.admin && automatic))
+        (model.can_admin_group && automatic))
     );
   },
 

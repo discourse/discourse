@@ -103,11 +103,10 @@ describe PostActionCreator do
       before do
         user.trust_level = TrustLevel[3]
         post.user.trust_level = TrustLevel[0]
+        SiteSetting.high_trust_flaggers_auto_hide_posts = true
       end
 
       it "hides the post when the flagger is a TL3 user and the poster is a TL0 user" do
-        SiteSetting.high_trust_flaggers_auto_hide_posts = true
-
         result = PostActionCreator.create(user, post, :spam)
 
         expect(post.hidden?).to eq(true)
@@ -119,6 +118,17 @@ describe PostActionCreator do
         result = PostActionCreator.create(user, post, :spam)
 
         expect(post.hidden?).to eq(false)
+      end
+
+      it 'forces the review to surpass the minimum priority threshold' do
+        Reviewable.set_priorities(high: 40.0)
+        SiteSetting.reviewable_default_visibility = 'high'
+        result = PostActionCreator.create(user, post, :spam)
+
+        reviewable = result.reviewable
+        reviewable_score = reviewable.reviewable_scores.find_by(user: user)
+
+        expect(reviewable_score.score).to eq(Reviewable.min_score_for_priority)
       end
     end
 

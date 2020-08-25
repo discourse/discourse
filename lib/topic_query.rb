@@ -52,6 +52,7 @@ class TopicQuery
          state
          search
          q
+         f
          group_name
          tags
          match_all_tags
@@ -806,7 +807,7 @@ class TopicQuery
       end
     end
 
-    if (filter = options[:filter]) && @user
+    if (filter = (options[:filter] || options[:f])) && @user
       action =
         if filter == "bookmarked"
           PostActionType.types[:bookmark]
@@ -823,6 +824,33 @@ class TopicQuery
                            )', user_id: @user.id,
                                action: action
                            )
+      end
+
+      if filter == "tracked"
+        sql = +<<~SQL
+          topics.category_id IN (
+            SELECT cu.category_id FROM category_users cu
+            WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
+          )
+        SQL
+
+        if SiteSetting.tagging_enabled
+          sql << <<~SQL
+            OR topics.id IN (
+              SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (
+                SELECT tu.tag_id
+                FROM tag_users tu
+                WHERE tu.user_id = :user_id AND tu.notification_level >= :tracking
+              )
+            )
+          SQL
+        end
+
+        result = result.where(
+          sql,
+          user_id: @user.id,
+          tracking: NotificationLevels.all[:tracking]
+        )
       end
     end
 
@@ -863,7 +891,8 @@ class TopicQuery
       category_ids = [
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
-        SiteSetting.default_categories_watching_first_post.split("|")
+        SiteSetting.default_categories_watching_first_post.split("|"),
+        SiteSetting.default_categories_regular.split("|")
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
@@ -879,11 +908,18 @@ class TopicQuery
   end
 
   def remove_muted_tags(list, user, opts = nil)
-    if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
+    if !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
     end
 
-    muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    muted_tag_ids = []
+
+    if user.present?
+      muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    else
+      muted_tag_ids = SiteSetting.default_tags_muted.split("|").map(&:to_i)
+    end
+
     if muted_tag_ids.blank?
       return list
     end

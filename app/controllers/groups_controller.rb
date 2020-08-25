@@ -36,6 +36,7 @@ class GroupsController < ApplicationController
       groups.where(automatic: true)
     }
   }
+  ADD_MEMBERS_LIMIT = 1000
 
   def index
     unless SiteSetting.enable_group_directory? || current_user&.staff?
@@ -140,11 +141,17 @@ class GroupsController < ApplicationController
 
   def update
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group) unless current_user.admin
+    guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
     if group.update(group_params(automatic: group.automatic))
-      GroupActionLogger.new(current_user, group).log_change_group_settings
-      render json: success_json
+      GroupActionLogger.new(current_user, group, skip_guardian: true).log_change_group_settings
+
+      if guardian.can_see?(group)
+        render json: success_json
+      else
+        # They can no longer see the group after changing permissions
+        render json: { route_to: '/g' }
+      end
     else
       render_json_error(group)
     end
@@ -298,8 +305,7 @@ class GroupsController < ApplicationController
   def add_members
     group = Group.find(params[:id])
     group.public_admission ? ensure_logged_in : guardian.ensure_can_edit!(group)
-
-    users = users_from_params
+    users = users_from_params.to_a
 
     if group.public_admission
       if !guardian.can_log_group_changes?(group) && current_user != users.first
@@ -311,17 +317,38 @@ class GroupsController < ApplicationController
       end
     end
 
-    if (usernames = group.users.where(id: users.pluck(:id)).pluck(:username)).present?
+    emails = []
+    if params[:emails]
+      params[:emails].split(",").each do |email|
+        existing_user = User.find_by_email(email)
+        existing_user.present? ? users.push(existing_user) : emails.push(email)
+      end
+    end
+
+    if users.empty? && emails.empty?
+      raise Discourse::InvalidParameters.new(
+        'usernames or emails must be present'
+      )
+    end
+    if users.length > ADD_MEMBERS_LIMIT
+      return render_json_error(
+        I18n.t("groups.errors.adding_too_many_users", limit: ADD_MEMBERS_LIMIT)
+      )
+    end
+    usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
+    if usernames_already_in_group.present? && usernames_already_in_group.length == users.length
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
-        username: usernames.sort.join(", "),
-        count: usernames.size
+        username: usernames_already_in_group.sort.join(", "),
+        count: usernames_already_in_group.size
       ))
     else
-      users.each do |user|
+      uniq_users = users.uniq
+      uniq_users.each do |user|
         begin
           group.add(user)
           GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+          group.notify_added_to_group(user) if params[:notify_users]&.to_s == "true"
         rescue ActiveRecord::RecordNotUnique
           # Under concurrency, we might attempt to insert two records quickly and hit a DB
           # constraint. In this case we can safely ignore the error and act as if the user
@@ -329,8 +356,13 @@ class GroupsController < ApplicationController
         end
       end
 
+      emails.each do |email|
+        Invite.invite_by_email(email, current_user, nil, [group.id])
+      end
+
       render json: success_json.merge!(
-        usernames: users.map(&:username)
+        usernames: uniq_users.map(&:username),
+        emails: emails
       )
     end
   end
@@ -401,6 +433,9 @@ class GroupsController < ApplicationController
     params[:user_emails] = params[:user_email] if params[:user_email].present?
 
     users = users_from_params
+    raise Discourse::InvalidParameters.new(
+      'user_ids or usernames or user_emails must be present'
+    ) if users.empty?
 
     if group.public_exit
       if !guardian.can_log_group_changes?(group) && current_user != users.first
@@ -412,16 +447,25 @@ class GroupsController < ApplicationController
       end
     end
 
+    removed_users = []
+    skipped_users = []
+
     users.each do |user|
       if group.remove(user)
+        removed_users << user.username
         GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
       else
-        raise Discourse::InvalidParameters
+        if group.users.exclude? user
+          skipped_users << user.username
+        else
+          raise Discourse::InvalidParameters
+        end
       end
     end
 
     render json: success_json.merge!(
-      usernames: users.map(&:username)
+      usernames: removed_users,
+      skipped_usernames: skipped_users
     )
   end
 
@@ -479,7 +523,7 @@ class GroupsController < ApplicationController
 
   def histories
     group = find_group(:group_id)
-    guardian.ensure_can_edit!(group) unless current_user.admin
+    guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
     page_size = 25
     offset = (params[:offset] && params[:offset].to_i) || 0
@@ -514,6 +558,12 @@ class GroupsController < ApplicationController
     render_serialized(groups, BasicGroupSerializer)
   end
 
+  def permissions
+    group = find_group(:id)
+    category_groups = group.category_groups.select { |category_group| guardian.can_see_category?(category_group.category) }
+    render_serialized(category_groups.sort_by { |category_group| category_group.category.name }, CategoryGroupSerializer)
+  end
+
   private
 
   def group_params(automatic: false)
@@ -544,7 +594,7 @@ class GroupsController < ApplicationController
           membership_request_template
         }
 
-        if current_user.admin
+        if current_user.staff?
           default_params.push(*[
             :incoming_email,
             :smtp_server,
@@ -572,6 +622,13 @@ class GroupsController < ApplicationController
         default_params
       end
 
+    if !automatic || current_user.admin
+      [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
+        permitted_params << { "#{level}_category_ids" => [] }
+        permitted_params << { "#{level}_tags" => [] }
+      end
+    end
+
     params.require(:group).permit(*permitted_params)
   end
 
@@ -596,9 +653,7 @@ class GroupsController < ApplicationController
       users = User.with_email(params[:user_emails].split(","))
       raise Discourse::InvalidParameters.new(:user_emails) if users.blank?
     else
-      raise Discourse::InvalidParameters.new(
-        'user_ids or usernames or user_emails must be present'
-      )
+      users = []
     end
     users
   end

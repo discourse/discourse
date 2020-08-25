@@ -92,7 +92,8 @@ Discourse::Application.routes.draw do
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
 
-      resources :groups, constraints: AdminConstraint.new do
+      resources :groups, only: [:create]
+      resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
           get 'bulk'
           get 'bulk-complete' => 'groups#bulk'
@@ -338,6 +339,7 @@ Discourse::Application.routes.draw do
     get "review" => "reviewables#index" # For ember app
     get "review/:reviewable_id" => "reviewables#show", constraints: { reviewable_id: /\d+/ }
     get "review/:reviewable_id/explain" => "reviewables#explain", constraints: { reviewable_id: /\d+/ }
+    get "review/count" => "reviewables#count"
     get "review/topics" => "reviewables#topics"
     get "review/settings" => "reviewables#settings"
     put "review/settings" => "reviewables#settings"
@@ -559,7 +561,7 @@ Discourse::Application.routes.draw do
 
         collection do
           get "check-name" => 'groups#check_name'
-          get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
+          get 'custom/new' => 'groups#new', constraints: StaffConstraint.new
           get "search" => "groups#search"
         end
 
@@ -577,11 +579,14 @@ Discourse::Application.routes.draw do
             manage/membership
             manage/interaction
             manage/email
+            manage/categories
+            manage/tags
             manage/logs
           }.each do |path|
             get path => 'groups#show'
           end
 
+          get "permissions" => "groups#permissions"
           put "members" => "groups#add_members"
           delete "members" => "groups#remove_member"
           post "request_membership" => "groups#request_membership"
@@ -679,8 +684,6 @@ Discourse::Application.routes.draw do
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", format: :rss
     scope path: 'c/*category_slug_path_with_id' do
       get "/none" => "list#category_none_latest"
-      get "/none/l/top" => "list#category_none_top", as: "category_none_top"
-      get "/l/top" => "list#category_top", as: "category_top"
 
       TopTopic.periods.each do |period|
         get "/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"
@@ -711,7 +714,6 @@ Discourse::Application.routes.draw do
       get "#{filter}" => "list##{filter}"
     end
 
-    get "top" => "list#top"
     get "search/query" => "search#query"
     get "search" => "search#show"
     post "search/click" => "search#click"
@@ -943,8 +945,6 @@ Discourse::Application.routes.draw do
     end
     # special case for categories
     root to: "categories#index", constraints: HomePageConstraint.new("categories"), as: "categories_index"
-    # special case for top
-    root to: "list#top", constraints: HomePageConstraint.new("top"), as: "top_lists"
 
     root to: 'finish_installation#index', constraints: HomePageConstraint.new("finish_installation"), as: 'installation_redirect'
 

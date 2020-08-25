@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sw:
   site_settings:
@@ -45,34 +44,34 @@ sw:
         > :game_die: %{results}
     quote:
       trigger: "nukulu"
-      '1':
+      "1":
         quote: "Katikati ya kila ugumu kuna fursa"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Hakuna umuhimu wa kuwa na uhuru kama hakuna uhuru wa kufanya makosa."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Usilie sababu imeisha, tabasamu kwa sababu ilitokea."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Ukitaka kitu kifanyike vizuri, fanya mwenyewe."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Amini kuwa unaweza na utakuwa umemaliza nusu ya safari."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Maisha ni kama sanduku la chocolate. Hauwezi kujua utapata nini."
         author: "Mama yake na Forrest Gump"
-      '7':
+      "7":
         quote: "Hiyo ni hatua moja kwa mtu, hatua kubwa kwa binadamu."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Kila siku fanya kitu ninachokutisha."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Makosa yanasemehewa, kama mtendaji yuko tayari kukiri."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Chochote ambacho akili ya binadamu inaweza kufikiria na kuamini, inaweza kukifanya."
         author: "Napoleon Hill"
       results: |-
@@ -80,25 +79,26 @@ sw:
     magic_8_ball:
       trigger: "Mali au Bahati"
       answers:
-        '1': "Inawezekana"
-        '2': "Imeamuliwa kuwa hivyo"
-        '3': "Hakuna shaka"
-        '4': "Kweli kabisa"
-        '5': "Unaweza ukaiamini"
-        '6': "Kana ninavyoiona, ndio"
-        '7': "Inawezekana kuwa hivyo"
-        '8': "Outlook iko vizuri"
-        '9': "Ndio"
-        '10': "Ishara inaonekana kuwa ndio"
-        '12': "Tafadhali, uliza tena baadae"
-        '13': "Afadhali kutokukwambia kwa sasa"
-        '14': "Haiwezi ikabashiri sasa hivi"
-        '15': "Kuwa makini na uliza tena"
-        '16': "Usiwe na hakika nacho"
-        '17': "Jibu langu ni hapana"
-        '18': "Ufuo wangu umesema hapana"
-        '19': "Outlook haiko vizuri"
-        '20': "Uhakika Kidogo Sana"
+        "1": "Inawezekana"
+        "2": "Imeamuliwa kuwa hivyo"
+        "3": "Hakuna shaka"
+        "4": "Kweli kabisa"
+        "5": "Unaweza ukaiamini"
+        "6": "Kana ninavyoiona, ndio"
+        "7": "Inawezekana kuwa hivyo"
+        "8": "Outlook iko vizuri"
+        "9": "Ndio"
+        "10": "Ishara inaonekana kuwa ndio"
+        "11": "Reply hazy, try again"
+        "12": "Tafadhali, uliza tena baadae"
+        "13": "Afadhali kutokukwambia kwa sasa"
+        "14": "Haiwezi ikabashiri sasa hivi"
+        "15": "Kuwa makini na uliza tena"
+        "16": "Usiwe na hakika nacho"
+        "17": "Jibu langu ni hapana"
+        "18": "Ufuo wangu umesema hapana"
+        "19": "Outlook haiko vizuri"
+        "20": "Uhakika Kidogo Sana"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -228,8 +228,6 @@ sw:
           Nadhani unajua chakufanya, **Bonyeza hiyo bendera**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kuashiria kuwa kuna tatizo na ujumbe uliosoma!
         reply: |-
           [Wasaidizi](%{base_uri}/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi sijaandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
-        not_found: |-
-          Jamani, taarifa yangu chafu nilioandika bado haijapewa bendera. :worried: Unaweza ukamjulisha mtu kuwa ni chafu kwa kutumia **flag**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Usisahau kutumia kitufe za zaidi<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">kuonyesha vitendo zaidi kwa ajili ya kila taarifa.
       search:
         instructions: |-
           _psst_ ...Nimeficha kitu kwenye hii mada. Kama unapenda kujua, **chagua ikoni ya utafiti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> upande wa juu mkono wako wa kulia &#8599; kukitafuta hicho kitu

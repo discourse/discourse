@@ -76,7 +76,7 @@ export default buildCategoryPanel("general", {
   parentCategories() {
     return this.site
       .get("categoriesList")
-      .filter(c => c.level + 1 < Discourse.SiteSettings.max_category_nesting);
+      .filter(c => c.level + 1 < this.siteSettings.max_category_nesting);
   },
 
   @discourseComputed(

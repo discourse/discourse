@@ -34,8 +34,43 @@ export function isValidLink($link) {
   );
 }
 
+export function shouldOpenInNewTab(href) {
+  const isInternal = DiscourseURL.isInternal(href);
+  const openExternalInNewTab = User.currentProp("external_links_in_new_tab");
+  return !isInternal && openExternalInNewTab;
+}
+
+export function openLinkInNewTab(link) {
+  let href = (link.href || link.dataset.href || "").trim();
+  if (href === "") {
+    return;
+  }
+
+  const newWindow = window.open(href, "_blank");
+  newWindow.opener = null;
+  newWindow.focus();
+
+  // Hack to prevent changing current window.location.
+  // e.preventDefault() does not work.
+  if (!link.dataset.href) {
+    link.classList.add("no-href");
+    link.dataset.href = link.href;
+    link.dataset.autoRoute = true;
+    link.removeAttribute("href");
+
+    later(() => {
+      if (link) {
+        link.classList.remove("no-href");
+        link.setAttribute("href", link.dataset.href);
+        delete link.dataset.href;
+        delete link.dataset.autoRoute;
+      }
+    }, 50);
+  }
+}
+
 export default {
-  trackClick(e) {
+  trackClick(e, siteSettings) {
     // right clicks are not tracked
     if (e.which === 3) {
       return true;
@@ -65,7 +100,8 @@ export default {
     if ($link.hasClass("attachment")) {
       // Warn the user if they cannot download the file.
       if (
-        Discourse.SiteSettings.prevent_anons_from_downloading_files &&
+        siteSettings &&
+        siteSettings.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
         bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
@@ -120,33 +156,12 @@ export default {
       }
     }
 
-    const isInternal = DiscourseURL.isInternal(href);
-    const openExternalInNewTab = User.currentProp("external_links_in_new_tab");
-
     if (!wantsNewWindow(e)) {
-      if (!isInternal && openExternalInNewTab) {
-        const newWindow = window.open(href, "_blank");
-        newWindow.opener = null;
-        newWindow.focus();
-
-        // Hack to prevent changing current window.location.
-        // e.preventDefault() does not work.
-        if (!$link.data("href")) {
-          $link.addClass("no-href");
-          $link.data("href", $link.attr("href"));
-          $link.attr("href", null);
-          $link.data("auto-route", true);
-
-          later(() => {
-            $link.removeClass("no-href");
-            $link.attr("href", $link.data("href"));
-            $link.data("href", null);
-            $link.data("auto-route", null);
-          }, 50);
-        }
+      if (shouldOpenInNewTab(href)) {
+        openLinkInNewTab($link[0]);
       } else {
         trackPromise.finally(() => {
-          if (isInternal) {
+          if (DiscourseURL.isInternal(href)) {
             DiscourseURL.routeTo(href);
           } else {
             DiscourseURL.redirectTo(href);

@@ -3,14 +3,13 @@
 {{/if}}
 
 {{user-card-contents
-  currentPath=router._router.currentPath
   topic=topic.model
   showUser=(action "showUser")
   togglePosts=(action "togglePosts")
+  composePrivateMessage=(route-action "composePrivateMessage")
   createNewMessageViaParams=(route-action "createNewMessageViaParams")}}
 
 {{group-card-contents
-  currentPath=router._router.currentPath
   topic=topic.model
   showUser=(action "showUser")
   showGroup=(action "showGroup")

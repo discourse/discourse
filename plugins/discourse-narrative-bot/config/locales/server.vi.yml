@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 vi:
   site_settings:
@@ -20,21 +19,36 @@ vi:
       description: "Đã hoàn thành hướng dẫn nâng cao cho thành viên mới của chúng tôi"
   discourse_narrative_bot:
     quote:
-      '3':
+      "3":
         quote: "Đừng khóc vì nó đã qua, hãy cười vì điều đó đã xảy ra."
-      '4':
+      "4":
         quote: "Nếu bạn muốn một cái gì đó được thực hiện đúng theo ý bạn, hãy tự làm nó."
-      '5':
+      "5":
         quote: "Hãy tin rằng bạn có thể và bạn đã làm được một nửa."
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       answers:
-        '2': "Nó được quyết định như vậy"
-        '9': "Đồng ý"
-        '11': "Trả lời không rõ ràng, hãy thử lại"
-        '15': "Tập trung và hỏi lại lần nữa"
-        '20': "Rất đáng ngờ"
+        "1": "It is certain"
+        "2": "Nó được quyết định như vậy"
+        "3": "Without a doubt"
+        "4": "Yes definitely"
+        "5": "You may rely on it"
+        "6": "As I see it, yes"
+        "7": "Most likely"
+        "8": "Outlook good"
+        "9": "Đồng ý"
+        "10": "Signs point to yes"
+        "11": "Trả lời không rõ ràng, hãy thử lại"
+        "12": "Ask again later"
+        "13": "Better not tell you now"
+        "14": "Cannot predict now"
+        "15": "Tập trung và hỏi lại lần nữa"
+        "16": "Don't count on it"
+        "17": "My reply is no"
+        "18": "My sources say no"
+        "19": "Outlook not so good"
+        "20": "Rất đáng ngờ"
     new_user_narrative:
       images:
         reply: |-

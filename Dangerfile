@@ -17,7 +17,7 @@ locales_changes = git.modified_files.grep(%r{config/locales})
 has_non_en_locales_changes = locales_changes.grep_v(%r{config/locales/(?:client|server)\.(?:en|en_US)\.yml}).any?
 
 if locales_changes.any? && has_non_en_locales_changes
-  fail("Please submit your non-English translation updates via [Transifex](https://www.transifex.com/discourse/discourse-org/). You can read more on how to contribute translations [here](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882).")
+  fail("Please submit your non-English translation updates via [Crowdin](https://translate.discourse.org/). You can read more on how to contribute translations [here](https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882).")
 end
 
 files = (git.added_files + git.modified_files)

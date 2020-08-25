@@ -108,6 +108,21 @@ describe User do
       end
     end
 
+    context 'when user skipped the new user tips' do
+      let(:user) { Fabricate(:user) }
+
+      it 'should not initiate the bot' do
+        SiteSetting.default_other_skip_new_user_tips = true
+        expect { user }.to_not change { Post.count }
+      end
+
+      it 'should delete the existing PM' do
+        user.user_option.skip_new_user_tips = true
+
+        expect { user.user_option.save! }.to change { Topic.count }.by(-1)
+      end
+    end
+
     context 'when user is anonymous?' do
       before do
         SiteSetting.allow_anonymous_posting = true

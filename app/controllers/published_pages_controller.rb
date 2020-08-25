@@ -31,6 +31,9 @@ class PublishedPagesController < ApplicationController
 
     @topic = pp.topic
     @canonical_url = @topic.url
+    @logo = SiteSetting.logo_small
+    @site_url = Discourse.base_url
+    @border_color = "#" + ColorScheme.base_colors["tertiary"]
 
     @body_classes = Set.new([
       'published-page',

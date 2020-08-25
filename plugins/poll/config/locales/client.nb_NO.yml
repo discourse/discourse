@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nb_NO:
   js:
@@ -38,7 +37,7 @@ nb_NO:
       error_while_fetching_voters: "Beklager, det oppstod en feil når stemmegivere skulle vises."
       ui_builder:
         title: Lag avstemning.
-        insert: 'Sett inn avstemning '
+        insert: Sett inn avstemning
         help:
           invalid_values: Minimumsverdien må være mindre enn maksimumsverdien.
           min_step_value: Minimal stegverdi er 1

@@ -113,10 +113,10 @@ const Group = RestModel.extend({
     }).then(() => this.findMembers(params, true));
   },
 
-  addMembers(usernames, filter) {
+  addMembers(usernames, filter, notifyUsers, emails = []) {
     return ajax(`/groups/${this.id}/members.json`, {
       type: "PUT",
-      data: { usernames }
+      data: { usernames, emails, notify_users: notifyUsers }
     }).then(response => {
       if (filter) {
         this._filterMembers(response);
@@ -126,10 +126,10 @@ const Group = RestModel.extend({
     });
   },
 
-  addOwners(usernames, filter) {
+  addOwners(usernames, filter, notifyUsers) {
     return ajax(`/admin/groups/${this.id}/owners.json`, {
       type: "PUT",
-      data: { group: { usernames } }
+      data: { group: { usernames, notify_users: notifyUsers } }
     }).then(response => {
       if (filter) {
         this._filterMembers(response);
@@ -176,6 +176,31 @@ const Group = RestModel.extend({
     }
   },
 
+  @discourseComputed("watching_category_ids")
+  watchingCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
+  },
+
+  @discourseComputed("tracking_category_ids")
+  trackingCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
+  },
+
+  @discourseComputed("watching_first_post_category_ids")
+  watchingFirstPostCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
+  },
+
+  @discourseComputed("regular_category_ids")
+  regularCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
+  },
+
+  @discourseComputed("muted_category_ids")
+  mutedCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
+  },
+
   asJSON() {
     const attrs = {
       name: this.name,
@@ -210,6 +235,28 @@ const Group = RestModel.extend({
       membership_request_template: this.membership_request_template,
       publish_read_state: this.publish_read_state
     };
+
+    ["muted", "regular", "watching", "tracking", "watching_first_post"].forEach(
+      s => {
+        let prop =
+          s === "watching_first_post"
+            ? "watchingFirstPostCategories"
+            : s + "Categories";
+
+        let categories = this.get(prop);
+
+        if (categories) {
+          attrs[s + "_category_ids"] =
+            categories.length > 0 ? categories.map(c => c.get("id")) : [-1];
+        }
+
+        let tags = this.get(s + "_tags");
+
+        if (tags) {
+          attrs[s + "_tags"] = tags.length > 0 ? tags : [""];
+        }
+      }
+    );
 
     if (this.flair_type === "icon") {
       attrs["flair_icon"] = this.flair_icon;

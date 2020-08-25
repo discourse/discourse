@@ -20,6 +20,15 @@
   </div>
 {{/if}}
 
+{{#if showDarkModeToggle}}
+  <div class="control-group dark-mode">
+    <label class="control-label">{{i18n "user.dark_mode"}}</label>
+    <div class="controls">
+      {{preference-checkbox labelKey="user.dark_mode_enable" checked=enableDarkMode}}
+    </div>
+  </div>
+{{/if}}
+
 <div class="control-group text-size">
   <label class="control-label">{{i18n "user.text_size.title"}}</label>
   <div class="controls">
@@ -94,6 +103,7 @@
       onChange=(action (mut model.user_option.title_count_mode))
     }}
   </div>
+  {{preference-checkbox labelKey="user.skip_new_user_tips.description" checked=model.user_option.skip_new_user_tips  class="pref-new-user-tips"}}
 </div>
 
 {{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}

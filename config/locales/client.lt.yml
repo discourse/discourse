@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 lt:
   js:
@@ -151,8 +150,6 @@ lt:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "įrašas #%{postNumber}"
       close: "uždaryti"
-      twitter: "Dalintis nuoroda Twitter"
-      facebook: "Dalintis nuoroda Facebook"
     action_codes:
       public_topic: "nustatė diskusijas viešom %{when}"
       private_topic: "pakeisti temą į asmeninę žinutę 1%{when}"
@@ -285,6 +282,7 @@ lt:
     bookmarks:
       remove: "Pašalinti Žymę"
       save: "Saugoti"
+      search: "Paieška"
       reminders:
         later_today: "Šiandien vėliau"
         tomorrow: "Rytoj"
@@ -414,10 +412,6 @@ lt:
         remove_user_as_group_owner: "Atšaukti valdytoją"
     groups:
       member_added: "Pridėta"
-      add_members:
-        title: "Pridėti narius"
-        description: "Valdykite šios grupės narystę"
-        usernames: "Slapyvardžiai"
       requests:
         reason: "Priežastis"
         accepted: "patvirtinta"
@@ -433,6 +427,11 @@ lt:
           title: Integracija
           posting: Skelbiama
           notification: Perspėjimai
+        email:
+          title: "Epaštas"
+          credentials:
+            username: "Slapyvardis"
+            password: "Slaptažodis"
         membership:
           title: Narystė
           access: Prieiga
@@ -1065,7 +1064,7 @@ lt:
     email_login:
       complete_username_not_found: "Jokia paskyra nesutampa su vartotojo vardu <b>%{username}</b>"
       complete_email_not_found: "Jokia paskyra nesutampa su <b>%{email}</b>"
-      confirm_title: "Tęsti į %{site_name}"
+      confirm_title: Tęsti į %{site_name}
     login:
       title: "Prisijungti"
       username: "Vartotojas"
@@ -1231,7 +1230,7 @@ lt:
         draft: Juodraštis
         edit: Redaguoti
         reply_to_post:
-          label: "Atsakyti į %{postNumber} įrašą, %{postUsername}autoriaus"
+          label: Atsakyti į %{postNumber} įrašą, %{postUsername}autoriaus
         reply_as_private_message:
           label: Nauja žinutė
           desc: Sukurti naują asmeninę žinutę
@@ -1500,7 +1499,7 @@ lt:
       read_more_MF: "Šiuo metu { UNREAD, plural, =0 {} one { yra <a href='{basePath}/unread'>1 neperskaityta</a> } other { yra <a href='{basePath}/unread'># neperskaitytos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nauja</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># naujos</a> temos} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Žiūrėkite visas kategorijas
       view_latest_topics: peržiūrėkite paskutines temas
-      suggest_create_topic: "Kodėl gi nesukūrus naujos temos?"
+      suggest_create_topic: Kodėl gi nesukūrus naujos temos?
       jump_reply_up: Pereiti į ankstesnį atsakymą
       jump_reply_down: Pereitį į sekantį atsakymą
       deleted: "Tema buvo ištrinta"
@@ -1561,6 +1560,7 @@ lt:
           "3_2": "Gausite pranešimus, nes Stebite šią temą."
           "3_1": "Gausite pranešimus, nes sukūrėte šią temą."
           "3": "Gausite pranešimus, nes Stebite šią temą."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
           "1": "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
           "0_7": "Jūs ignoruojate visus šios temos pranešimus"
@@ -2240,7 +2240,7 @@ lt:
         few: "+%{count}Daugiau"
         many: "+%{count}Daugiau"
         other: "+%{count}Daugiau"
-      select_badge_for_title: "Pasirinkti trofėjų ir naudoti, kaip antraštę"
+      select_badge_for_title: Pasirinkti trofėjų ir naudoti, kaip antraštę
       none: "(nieko)"
       badge_grouping:
         getting_started:
@@ -2285,7 +2285,6 @@ lt:
         new: "Nauja grupė"
         tags_label: "Žymos šioje grupėje"
         parent_tag_label: "Panašios žymos:"
-        parent_tag_placeholder: "Pasirinktinai"
         new_name: "Nauja žymos grupė"
         save: "Saugoti"
         delete: "Pašalinti"
@@ -2352,7 +2351,7 @@ lt:
         show_traffic_report: "Show Detailed Traffic Report"
         community_health: Bendruomenės sveikata
         moderators_activity: Moderatorių veikla
-        whats_new_in_discourse: "Kas aujo Discourse?"
+        whats_new_in_discourse: Kas aujo Discourse?
         activity_metrics: Aktyvumas
         all_reports: "Visi pranešimai"
         general_tab: "Bendrieji"
@@ -2552,7 +2551,6 @@ lt:
           subject: "Tema"
           multiple_subjects: "El. laiško pavyzdys priskirtas keletui subjektų"
           body: "Tekstas"
-          none_selected: "Pasirink el. laiško pavyzdį, kad pradėtum redaguoti"
           revert: "Atstatyti Pakeitimus"
           revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
         theme:
@@ -2779,7 +2777,6 @@ lt:
           domain: "Domenas"
         screened_ips:
           title: "Tikrinti IP adresai"
-          description: 'IP, kurie yra stebimi. Paspasuk "Leisti", kad išbrauktum IP iš šio sąrašo.'
           delete_confirm: "Ar tikrai norite ištrinti taisyklę IP adresui %{ip_address}?"
           roll_up_confirm: "Ar tikrai nori sujungti/kaupti dažnus IP adresus į atskirą tinklą"
           rolled_up_some_subnets: "Blokuoti IP sekmingai sujungti/sukaupti į atskirą tinklą: %{subnets}."
@@ -3101,17 +3098,17 @@ lt:
         reason_help: (nuoroda į įrašą ar temą)
         save: Išsaugoti
         delete: Ištrinti
-        delete_confirm: "Ar tikrai norite ištrinti šitą ženklelį?"
+        delete_confirm: Ar tikrai norite ištrinti šitą ženklelį?
         revoke: Atšaukti
         reason: Priežastis
         expand: Keisti formatą
-        revoke_confirm: "Ar tikrai norite atšaukti šitą ženklelį?"
+        revoke_confirm: Ar tikrai norite atšaukti šitą ženklelį?
         edit_badges: Redaguoti Trofėjus
         grant_badge: Suteikti ženklelį
         granted_badges: Suteikti Trofėjai
         grant: Suteikti
         no_user_badges: "%{name} dar negavo jokių trofėjų"
-        no_badges: "Nėra jokių trofėjų, kuriuos galima suteikti."
+        no_badges: Nėra jokių trofėjų, kuriuos galima suteikti.
         none_selected: "Pasirinkite ženklelį, kad pradėtumėt"
         allow_title: Leisti naudoti ženklelį kaip antraštę
         multiple_grant: Gali būti suteikta keleta kartų
@@ -3147,10 +3144,10 @@ lt:
             other: "priskirta <b>%{count}</b> trofėjų"
           sample: "Pavyzdys:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> fuž įrašą %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> už įrašą %{link} <span class=\"time\">%{time}</span> laiku"
-            with_time: "<span class=\"username\">%{username}</span> <span class=\"time\">%{time}</span> laiku"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> fuž įrašą %{link}
+            with_post_time: <span class="username">%{username}</span> už įrašą %{link} <span class="time">%{time}</span> laiku
+            with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> laiku
       emoji:
         title: "Šypsenėlės"
         help: "Pridėti naują šypsenėlę, kurią galės matyti visi (patarimas: kelis failus kelk tuo pačiu metu)"
@@ -3176,9 +3173,6 @@ lt:
         embed_by_username: "Vartotojo vardas skirtas temų sukūrimui"
         embed_post_limit: "Maskimalus įterpiamų įrašų skaičius"
         embed_truncate: "Truncate the embedded posts"
-        embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
-        embed_blacklist_selector: "CSS selector for elements that are removed from embeds"
-        embed_classname_whitelist: "Leidžiamos CSS klasės"
         save: "Išsaugoti Įterpimo Nustatymus"
       permalink:
         title: "Laikinos Nuorodos"
@@ -3189,8 +3183,7 @@ lt:
         post_title: "Įrašai"
         category_id: "Kategorijos ID"
         category_title: "Kategorija"
-        external_url: "Išorinis ID"
-        delete_confirm: "Ar tikrain nori ištrinti šią laikiną nuorodą?"
+        delete_confirm: Ar tikrain nori ištrinti šią laikiną nuorodą?
         form:
           label: "Nauja:"
           add: "Pridėti"

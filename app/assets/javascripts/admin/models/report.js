@@ -340,7 +340,8 @@ const Report = EmberObject.extend({
 
       const avatarImg = renderAvatar(user, {
         imageSize: "tiny",
-        ignoreTitle: true
+        ignoreTitle: true,
+        siteSettings: this.siteSettings
       });
 
       return `<a href='${href}'>${avatarImg}<span class='username'>${user.name}</span></a>`;

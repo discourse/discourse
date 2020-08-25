@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sr:
   js:
@@ -350,6 +349,11 @@ sr:
           title: Profil
         interaction:
           posting: Poruke
+        email:
+          title: "E-mail"
+          credentials:
+            username: "Korisničko ime"
+            password: "Šifra"
         logs:
           title: "Logovi"
           when: "Kada"
@@ -398,12 +402,14 @@ sr:
       "3": "Markirano"
       "4": "Teme"
       "5": "Odgovori"
+      "6": "Responses"
       "7": "Spomeni"
       "9": "Citati"
       "11": "Izmene"
       "12": "Poslato"
       "13": "Primljeno"
       "14": "U toku"
+      "15": "Drafts"
     categories:
       all: "sve kategorije"
       all_subcategories: "sve"
@@ -958,7 +964,7 @@ sr:
       advanced:
         title: Napredna pretraga
         posted_by:
-          label: "Postavio "
+          label: Postavio
         post:
           time:
             label: Pisao
@@ -1059,7 +1065,7 @@ sr:
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pregledaj sve kategorije
       view_latest_topics: pogledaj najnovije teme
-      suggest_create_topic: "Zašto ne otvorite temu?"
+      suggest_create_topic: Zašto ne otvorite temu?
       jump_reply_up: skoči na raniji odgovor
       jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"
@@ -1089,6 +1095,7 @@ sr:
           "3_2": "Primaćete obaveštenja jer posmatrate temu."
           "3_1": "Primaćete obaveštenja jer ste vi otvorili temu."
           "3": "Primaćete obaveštenja jer posmatrate temu."
+          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "1": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "0_7": "Ignorirate sva obaveštenja iz ove kategorije."
@@ -1920,7 +1927,6 @@ sr:
           domain: "Domen"
         screened_ips:
           title: "Provereni IP-ovi"
-          description: 'IP adrese koje se posmatraju. Upotrebi "Dozvoli" da staviš IP adrese na belu listu.'
           delete_confirm: "Jeste li sigruni da želite ukloniti pravilo za %{ip_address}?"
           roll_up_confirm: "Jeste li sigurni da želite zaokružiti često proveraavnje IP adrese u pod-mreže?"
           rolled_up_some_subnets: "Uspešno zaokruženi zabranjeni IP unosi u ove pod-mreže: %{subnets}."
@@ -2180,10 +2186,10 @@ sr:
         granted_at: Dodeljeno Pri
         save: Sačuvaj
         delete: Obriši
-        delete_confirm: "Jeste li sigurni da želite izbrisati ovu značku?"
+        delete_confirm: Jeste li sigurni da želite izbrisati ovu značku?
         revoke: Povuci
         reason: Razlog
-        revoke_confirm: "Jeste li sigurni da želite povući ovu značku?"
+        revoke_confirm: Jeste li sigurni da želite povući ovu značku?
         edit_badges: Izmeni Značke
         grant_badge: Dodeli Značku
         granted_badges: Dodeli Značke
@@ -2220,10 +2226,10 @@ sr:
           no_grant_count: "Nema značaka za dodeliti."
           sample: "Uzorak:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> za poruku u %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> za poruku u %{link} u <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> u <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> za poruku u %{link}
+            with_post_time: <span class="username">%{username}</span> za poruku u %{link} u <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
         help: "Dodajte nove Emoji-e koji će biti dostupni svima. (Savet: povuci i ispusti više datoteka odjednom)"

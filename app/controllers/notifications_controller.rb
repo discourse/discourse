@@ -25,7 +25,7 @@ class NotificationsController < ApplicationController
       notifications = Notification.recent_report(current_user, limit)
       changed = false
 
-      if notifications.present? && !(params.has_key?(:slient) || @readonly_mode)
+      if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
         # ordering can be off due to PMs
         max_id = notifications.map(&:id).max
         changed = current_user.saw_notification_id(max_id)
