@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/nbianca/discourse-fonts.git
+  remote: https://github.com/discourse/discourse-fonts.git
   revision: dba37b04fbf358a5fd727f27d3e35bc0237254b6
   specs:
     discourse-fonts (0.0.1)
