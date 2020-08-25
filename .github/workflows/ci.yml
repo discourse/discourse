@@ -151,14 +151,14 @@ jobs:
       - name: ESLint (core plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
         run: |
-          yarn eslint plugins/**
-          yarn eslint --global I18n --ext .es6 plugins/**
+          yarn eslint plugins/**/assets/javascripts plugins/**/test/javascripts
+          yarn eslint --global I18n --ext .es6 plugins/**/assets/javascripts plugins/**/test/javascripts
 
       - name: ESLint (all plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
         run: |
-          yarn eslint plugins/**
-          yarn eslint --global I18n --ext .es6 plugins/**
+          yarn eslint plugins/**/assets/javascripts plugins/**/test/javascripts
+          yarn eslint --global I18n --ext .es6 plugins/**/assets/javascripts plugins/**/test/javascripts
 
       - name: Prettier (core and core plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
