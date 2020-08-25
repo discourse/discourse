@@ -354,7 +354,7 @@ describe HasCustomFields do
          expect(test_item.custom_fields[:bob]).to eq('marley')
          expect(test_item.custom_fields[:jack]).to eq('black')
 
-         ## Update via string index again
+         # Update via string index again
          test_item.custom_fields['bob'] = 'the builder'
 
          expect(test_item.custom_fields[:bob]).to eq('the builder')
