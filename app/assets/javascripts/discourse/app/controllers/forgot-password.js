@@ -31,7 +31,7 @@ export default Controller.extend(ModalFunctionality, {
     help() {
       this.setProperties({
         offerHelp: I18n.t("forgot_password.help", {
-          basePath: getURL("/")
+          basePath: getURL("")
         }),
         helpSeen: true
       });

@@ -58,7 +58,7 @@ const TopicDetails = RestModel.extend({
     } else {
       return I18n.t(localeString, {
         username: User.currentProp("username_lower"),
-        basePath: getURL("/")
+        basePath: getURL("")
       });
     }
   },
