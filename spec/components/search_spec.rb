@@ -1489,6 +1489,14 @@ describe Search do
         expect(Search.execute('tags:さようなら').posts.map(&:id)).to eq([post.id])
       end
 
+      it 'can find posts with thai tag' do
+        topic = Fabricate(:topic)
+        topic.tags = [Fabricate(:tag, name: 'เรซิ่น')]
+        post = Fabricate(:post, raw: 'Testing post', topic: topic)
+
+        expect(Search.execute('tags:เรซิ่น').posts.map(&:id)).to eq([post.id])
+      end
+
       it 'can find posts with any tag from multiple tags' do
         expect(Search.execute('tags:eggs,lunch').posts.map(&:id).sort).to eq([post1.id, post2.id, post3.id, post4.id, post5.id].sort)
       end
