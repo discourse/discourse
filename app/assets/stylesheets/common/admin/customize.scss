@@ -108,19 +108,21 @@
     display: inline-block;
     vertical-align: top;
 
-    .btn {
-      line-height: $line-height-medium; // Temporary button-height fix
-    }
-
     .title {
       font-size: $font-up-4;
       font-weight: bold;
-      margin-bottom: 10px;
-      a {
-        font-size: $font-down-2;
+      margin-bottom: 0.25em;
+      display: flex;
+      align-items: stretch;
+
+      input {
+        margin: 0;
       }
       .btn {
-        line-height: $line-height-small;
+        margin-left: 0.5em;
+      }
+      a {
+        font-size: $font-down-2;
       }
     }
 
@@ -161,14 +163,21 @@
       margin-bottom: 7px;
     }
     .control-unit {
-      margin-bottom: 25px;
-      margin-top: 15px;
+      margin-top: 0.5em;
+      margin-bottom: 2em;
     }
     .control {
       margin-bottom: 10px;
     }
     .description {
       margin-bottom: 12px;
+    }
+    .theme-controls {
+      display: flex;
+      flex-wrap: wrap;
+      .btn {
+        margin: 0 0.5em 0.5em 0;
+      }
     }
   }
   .add-component-button {
@@ -329,6 +338,9 @@
         margin-top: 0;
         margin-bottom: 0.5rem;
       }
+    }
+    .setting {
+      padding-bottom: 0;
     }
   }
 
