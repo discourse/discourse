@@ -274,7 +274,7 @@ module HasCustomFields
 protected
 
   def refresh_custom_fields_from_db
-    target = Hash.new
+    target = HashWithIndifferentAccess.new
     _custom_fields.order('id asc').pluck(:name, :value).each do |key, value|
       self.class.append_custom_field(target, key, value)
     end

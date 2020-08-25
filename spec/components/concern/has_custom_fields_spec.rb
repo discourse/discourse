@@ -337,6 +337,32 @@ describe HasCustomFields do
         expect(test_item.custom_fields['hello']).to eq('world')
         expect(test_item.custom_fields['abc']).to eq('ghi')
       end
+
+      it 'allows using string and symbol indices interchangably' do
+        test_item = CustomFieldsTestItem.new
+
+        test_item.custom_fields["bob"] = "marley"
+        test_item.custom_fields["jack"] = "black"
+
+         # In memory
+         expect(test_item.custom_fields[:bob]).to eq('marley')
+         expect(test_item.custom_fields[:jack]).to eq('black')
+
+         # Persisted
+         test_item.save
+         test_item.reload
+         expect(test_item.custom_fields[:bob]).to eq('marley')
+         expect(test_item.custom_fields[:jack]).to eq('black')
+
+         ## Update via string index again
+         test_item.custom_fields['bob'] = 'the builder'
+
+         expect(test_item.custom_fields[:bob]).to eq('the builder')
+         test_item.save
+         test_item.reload
+
+         expect(test_item.custom_fields[:bob]).to eq('the builder')
+      end
     end
   end
 end
