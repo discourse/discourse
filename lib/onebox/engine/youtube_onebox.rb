@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'onebox/oembed'
-
 module Onebox
   module Engine
     class YoutubeOnebox
@@ -15,10 +13,10 @@ module Onebox
       HEIGHT ||= 360
 
       def placeholder_html
-        if video_id
-          "<img src='https://i.ytimg.com/vi/#{video_id}/hqdefault.jpg' width='#{WIDTH}' height='#{HEIGHT}' #{video_oembed_data.title_attr}>"
-        elsif list_id
-          "<img src='#{list_thumbnail_url}' width='#{WIDTH}' height='#{HEIGHT}' #{list_oembed_data.title_attr}>"
+        og = get_opengraph.data
+
+        if video_id || list_id
+          "<img src='#{og[:image]}' width='#{WIDTH}' height='#{HEIGHT}' title='#{og[:title]}'>"
         else
           to_html
         end
@@ -53,7 +51,7 @@ module Onebox
       end
 
       def video_title
-        @video_title ||= video_oembed_data.title
+        @video_title ||= get_opengraph.data[:title]
       end
 
       private
@@ -79,29 +77,6 @@ module Onebox
 
       def list_id
         @list_id ||= params['list']
-      end
-
-      def list_thumbnail_url
-        @list_thumbnail_url ||= begin
-          url = "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/playlist?list=#{list_id}"
-          response = Onebox::Helpers.fetch_response(url) rescue "{}"
-          data = Onebox::Oembed.new(response)
-          data.thumbnail_url
-        rescue
-          nil
-        end
-      end
-
-      def video_oembed_data
-        url = "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=#{video_id}"
-        response = Onebox::Helpers.fetch_response(url) rescue "{}"
-        Onebox::Oembed.new(response)
-      end
-
-      def list_oembed_data
-        url = "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/playlist?list=#{list_id}"
-        response = Onebox::Helpers.fetch_response(url) rescue "{}"
-        Onebox::Oembed.new(response)
       end
 
       def embed_params
