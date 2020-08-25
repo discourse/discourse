@@ -1248,28 +1248,24 @@ describe GroupsController do
 
         it 'display error when try to add to many users at once' do
           begin
+            old_constant = GroupsController.const_get("ADD_MEMBERS_LIMIT")
             GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
-            GroupsController.const_set("ADD_MEMBERS_LIMIT", 4)
-            user1.update!(username: 'john')
-            user2.update!(username: 'alice')
-            user3 = Fabricate(:user, username: 'bob')
-            user4 = Fabricate(:user, username: 'anna')
-            user5 = Fabricate(:user, username: 'sarah')
+            GroupsController.const_set("ADD_MEMBERS_LIMIT", 1)
 
             expect do
               put "/groups/#{group.id}/members.json",
-                params: { user_emails: [user1.email, user2.email, user3.email, user4.email, user5.email].join(",") }
-            end.to change { group.users.count }.by(0)
+                params: { user_emails: [user1.email, user2.email].join(",") }
+            end.to change { group.reload.users.count }.by(0)
 
             expect(response.status).to eq(422)
 
             expect(response.parsed_body["errors"]).to include(I18n.t(
               "groups.errors.adding_too_many_users",
-              limit: 4
+              limit: 1
             ))
           ensure
             GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
-            GroupsController.const_set("ADD_MEMBERS_LIMIT", 1000)
+            GroupsController.const_set("ADD_MEMBERS_LIMIT", old_constant)
           end
         end
       end
