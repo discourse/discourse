@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/discourse/onebox
-  revision: d11fc20e0bd9ec3159418c94cfbe5c9c796e70c7
+  revision: a096d1804e657b55d86e40714b338e07913bf48a
   branch: iframe-control
   specs:
     onebox (2.0.2)
