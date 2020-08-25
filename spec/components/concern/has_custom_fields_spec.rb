@@ -338,7 +338,7 @@ describe HasCustomFields do
         expect(test_item.custom_fields['abc']).to eq('ghi')
       end
 
-      it 'allows using string and symbol indices interchangably' do
+      it 'allows using string and symbol indices interchangeably' do
         test_item = CustomFieldsTestItem.new
 
         test_item.custom_fields["bob"] = "marley"
