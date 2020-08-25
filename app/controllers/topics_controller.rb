@@ -463,6 +463,15 @@ class TopicsController < ApplicationController
     options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
     options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
+    # Be sure to close/open the topic when setting an auto-open/auto-close timer
+    if status_type == TopicTimer.types[:open]
+      topic.update_status('closed', true, current_user) if !topic.closed
+    end
+
+    if status_type == TopicTimer.types[:close]
+      topic.update_status('closed', false, current_user) if topic.closed
+    end
+
     topic_status_update = topic.set_or_create_timer(
       status_type,
       params[:time],

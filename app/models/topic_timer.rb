@@ -127,7 +127,6 @@ class TopicTimer < ActiveRecord::Base
 
   def schedule_auto_open_job(time)
     return unless topic
-    topic.update_status('closed', true, user) if !topic.closed
 
     Jobs.enqueue_at(time, :toggle_topic_closed,
       topic_timer_id: id,
@@ -137,7 +136,6 @@ class TopicTimer < ActiveRecord::Base
 
   def schedule_auto_close_job(time)
     return unless topic
-    topic.update_status('closed', false, user) if topic.closed
 
     Jobs.enqueue_at(time, :toggle_topic_closed,
       topic_timer_id: id,
