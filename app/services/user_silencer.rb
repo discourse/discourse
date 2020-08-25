@@ -22,11 +22,6 @@ class UserSilencer
     UserHistory.where(action: UserHistory.actions[:silence_user], post: post).exists?
   end
 
-  # Allow plugins to update and send extra silence message params
-  def silence_message_params
-    {}
-  end
-
   def silence
     hide_posts unless @opts[:keep_posts]
     unless @user.silenced_till.present?
@@ -41,7 +36,7 @@ class UserSilencer
         ).format
 
         context = "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"
-        SystemMessage.create(@user, message_type, **silence_message_params)
+        SystemMessage.create(@user, message_type)
 
         if @by_user
           log_params = { context: context, details: details }
