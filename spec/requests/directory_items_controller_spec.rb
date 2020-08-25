@@ -60,6 +60,11 @@ describe DirectoryItemsController do
       expect(response).not_to be_successful
     end
 
+    it "sort username with period all" do
+      get '/directory_items.json', params: { order: 'username', period: 'all' }
+      expect(response.status).to eq(200)
+    end
+
     it "finds user by name" do
       get '/directory_items.json', params: { period: 'all', name: 'eviltrout' }
       expect(response.status).to eq(200)
