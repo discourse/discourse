@@ -437,6 +437,7 @@ end
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
 #  original_sha1          :string
+#  verified               :boolean
 #
 # Indexes
 #

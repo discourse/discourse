@@ -1290,7 +1290,7 @@ export default {
       mentionable: true,
       messageable: true,
       can_see_members: true,
-      can_admin_group: true,
+      can_admin_group: true
     },
     extras: {
       visible_group_names: ["alternative-group"]

@@ -515,6 +515,10 @@ describe Topic do
       end
     end
 
+    it 'does not result in a syntax error when raw is blank after cooking' do
+      expect(Topic.similar_to('some title', '#')).to eq([])
+    end
+
     context 'with a similar topic' do
       fab!(:post) {
         SearchIndexer.enable

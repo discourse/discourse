@@ -281,6 +281,19 @@ describe TopicQuery do
       end
     end
 
+    context 'remove_muted_tags' do
+      fab!(:topic) { Fabricate(:topic, tags: [tag]) }
+
+      before do
+        SiteSetting.remove_muted_tags_from_latest = 'always'
+        SiteSetting.default_tags_muted = tag.id.to_s
+      end
+
+      it 'removes default muted tag topics for anonymous users' do
+        expect(TopicQuery.new(nil).list_latest.topics.map(&:id)).not_to include(topic.id)
+      end
+    end
+
     context "and categories too" do
       let(:category1) { Fabricate(:category_with_definition) }
       let(:category2) { Fabricate(:category_with_definition) }

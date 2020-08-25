@@ -411,6 +411,7 @@ en:
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       cant_allow_membership_requests: "You cannot allow membership requests for a group without any owners."
       already_requested_membership: "You have already requested membership for this group."
+      adding_too_many_users: "Maximum %{limit} users can be added at once"
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -427,7 +428,6 @@ en:
       title: "You've been accepted into @%{group_name}"
       body: |
         Your request to enter @%{group_name} has been accepted and you are now a member.
-    view_hidden_topic_request_reason: "I would like to join the group '%{group_name}', so I may access [this topic](%{topic_url})"
 
   education:
     until_posts:
@@ -2172,7 +2172,7 @@ en:
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
-    default_categories_regular: "List of categories that are normal by default. Useful when `mute_all_categories_by_default` site setting is enabled."
+    default_categories_regular: "List of categories that are not muted by default. Useful when `mute_all_categories_by_default` site setting is enabled."
     mute_all_categories_by_default: "Set the default notification level of all the categories to muted. Require users opt-in to categories for them to appear in 'latest' and 'categories' pages. If you wish to amend the defaults for anonymous users set 'default_categories_' settings."
 
     default_tags_watching: "List of tags that are watched by default."
@@ -3874,7 +3874,6 @@ en:
   color_schemes:
     base_theme_name: "Base"
     light: "Light"
-    light_default: "Light (default)"
     dark: "Dark"
     neutral: "Neutral"
     grey_amber: "Grey Amber"

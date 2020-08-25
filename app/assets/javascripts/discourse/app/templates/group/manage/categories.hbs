@@ -9,7 +9,7 @@
 
     {{category-selector
       categories=model.watchingCategories
-      blocklist=selectedCategories
+      blockedCategories=selectedCategories
       onChange=(action (mut model.watchingCategories))
     }}
 
@@ -23,7 +23,7 @@
 
     {{category-selector
       categories=model.trackingCategories
-      blocklist=selectedCategories
+      blockedCategories=selectedCategories
       onChange=(action (mut model.trackingCategories))
     }}
 
@@ -37,7 +37,7 @@
 
     {{category-selector
       categories=model.watchingFirstPostCategories
-      blocklist=selectedCategories
+      blockedCategories=selectedCategories
       onChange=(action (mut model.watchingFirstPostCategories))
     }}
 
@@ -51,7 +51,7 @@
 
     {{category-selector
       categories=model.regularCategories
-      blocklist=selectedCategories
+      blockedCategories=selectedCategories
       onChange=(action (mut model.regularCategories))
     }}
 
@@ -65,7 +65,7 @@
 
     {{category-selector
       categories=model.mutedCategories
-      blocklist=selectedCategories
+      blockedCategories=selectedCategories
       onChange=(action (mut model.mutedCategories))
     }}
 

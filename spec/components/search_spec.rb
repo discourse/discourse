@@ -190,19 +190,20 @@ describe Search do
   end
 
   context 'private messages' do
-    let!(:topic) do
-      Fabricate(:topic, category_id: nil, archetype: 'private_message')
-    end
+    let!(:post) { Fabricate(:private_message_post) }
 
-    let!(:post) { Fabricate(:post, topic: topic) }
+    let(:topic) { post.topic }
 
     let!(:reply) do
-      Fabricate(:post, topic: topic, raw: 'hello from mars, we just landed')
+      Fabricate(:private_message_post,
+        topic: post.topic,
+        raw: 'hello from mars, we just landed',
+        user: post.user
+      )
     end
 
     let!(:post2) do
-      Fabricate(:post,
-        topic: Fabricate(:topic, category_id: nil, archetype: 'private_message'),
+      Fabricate(:private_message_post,
         raw: 'another secret pm from mars, testing'
       )
     end
@@ -211,9 +212,6 @@ describe Search do
       expect do
         Search.execute('mars', type_filter: 'private_messages')
       end.to raise_error(Discourse::InvalidAccess)
-
-      TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
-      TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
 
       results = Search.execute(
         'mars',
@@ -259,8 +257,7 @@ describe Search do
       expect(results.posts).to contain_exactly(reply)
 
       results = Search.execute(
-        'mars in:private',
-        search_context: post.user,
+        'mars in:personal',
         guardian: Guardian.new(post.user)
       )
 
@@ -276,11 +273,40 @@ describe Search do
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 
       results = Search.execute(
-        'mars in:private',
+        'mars in:personal',
         guardian: Guardian.new(user)
       )
 
       expect(results.posts).to contain_exactly(reply)
+    end
+
+    context 'personal_messages filter' do
+      it 'does not allow a normal user to search for personal messages of another user' do
+        expect do
+          results = Search.execute(
+            "mars personal_messages:#{post.user.username}",
+            guardian: Guardian.new(post.user)
+          )
+        end.to raise_error(Discourse::InvalidAccess)
+      end
+
+      it 'searches correctly for the PM of the given user' do
+        results = Search.execute(
+          "mars personal_messages:#{post.user.username}",
+          guardian: Guardian.new(admin)
+        )
+
+        expect(results.posts).to contain_exactly(reply)
+      end
+
+      it 'returns the right results if username is invalid' do
+        results = Search.execute(
+          "mars personal_messages:random_username",
+          guardian: Guardian.new(admin)
+        )
+
+        expect(results.posts).to eq([])
+      end
     end
 
     context 'personal-direct flag' do
@@ -1118,37 +1144,41 @@ describe Search do
         .to eq([post_2])
     end
 
-    it 'supports before and after, in:first, user:, @username' do
-
+    it 'supports before and after filters' do
       time = Time.zone.parse('2001-05-20 2:55')
       freeze_time(time)
 
+      post_1 = Fabricate(:post, raw: 'hi this is a test 123 123', created_at: time.months_ago(2))
+      post_2 = Fabricate(:post, raw: 'boom boom shake the room test')
+
+      expect(Search.execute('test before:1').posts).to contain_exactly(post_1)
+      expect(Search.execute('test before:2001-04-20').posts).to contain_exactly(post_1)
+      expect(Search.execute('test before:2001').posts).to eq([])
+      expect(Search.execute('test after:2001').posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute('test before:monday').posts).to contain_exactly(post_1)
+      expect(Search.execute('test after:jan').posts).to contain_exactly(post_1, post_2)
+    end
+
+    it 'supports in:first, user:, @username' do
       topic = Fabricate(:topic)
-      Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic, created_at: time.months_ago(2))
-      _post = Fabricate(:post, raw: 'boom boom shake the room', topic: topic)
+      post_1 = Fabricate(:post, raw: 'hi this is a test 123 123', topic: topic)
+      post_2 = Fabricate(:post, raw: 'boom boom shake the room test', topic: topic)
 
-      expect(Search.execute('test before:1').posts.length).to eq(1)
-      expect(Search.execute('test before:2001-04-20').posts.length).to eq(1)
-      expect(Search.execute('test before:2001').posts.length).to eq(0)
-      expect(Search.execute('test before:monday').posts.length).to eq(1)
+      expect(Search.execute('test in:first').posts).to contain_exactly(post_1)
 
-      expect(Search.execute('test after:jan').posts.length).to eq(1)
+      expect(Search.execute('boom').posts).to contain_exactly(post_2)
 
-      expect(Search.execute('test in:first').posts.length).to eq(1)
+      expect(Search.execute('boom in:first').posts).to eq([])
+      expect(Search.execute('boom f').posts).to eq([])
 
-      expect(Search.execute('boom').posts.length).to eq(1)
+      expect(Search.execute('123 in:first').posts).to contain_exactly(post_1)
+      expect(Search.execute('123 f').posts).to contain_exactly(post_1)
 
-      expect(Search.execute('boom in:first').posts.length).to eq(0)
-      expect(Search.execute('boom f').posts.length).to eq(0)
+      expect(Search.execute('user:nobody').posts).to eq([])
+      expect(Search.execute("user:#{post_1.user.username}").posts).to contain_exactly(post_1)
+      expect(Search.execute("user:#{post_1.user_id}").posts).to contain_exactly(post_1)
 
-      expect(Search.execute('123 in:first').posts.length).to eq(1)
-      expect(Search.execute('123 f').posts.length).to eq(1)
-
-      expect(Search.execute('user:nobody').posts.length).to eq(0)
-      expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
-      expect(Search.execute("user:#{_post.user_id}").posts.length).to eq(1)
-
-      expect(Search.execute("@#{_post.user.username}").posts.length).to eq(1)
+      expect(Search.execute("@#{post_1.user.username}").posts).to contain_exactly(post_1)
     end
 
     it 'supports group' do
@@ -1457,6 +1487,14 @@ describe Search do
         post = Fabricate(:post, raw: 'Testing post', topic: topic)
 
         expect(Search.execute('tags:さようなら').posts.map(&:id)).to eq([post.id])
+      end
+
+      it 'can find posts with thai tag' do
+        topic = Fabricate(:topic)
+        topic.tags = [Fabricate(:tag, name: 'เรซิ่น')]
+        post = Fabricate(:post, raw: 'Testing post', topic: topic)
+
+        expect(Search.execute('tags:เรซิ่น').posts.map(&:id)).to eq([post.id])
       end
 
       it 'can find posts with any tag from multiple tags' do

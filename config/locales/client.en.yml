@@ -303,6 +303,7 @@ en:
       no_timezone: 'You have not set a timezone yet. You will not be able to set reminders. Set one up <a href="%{basePath}/my/preferences/profile">in your profile</a>.'
       invalid_custom_datetime: "The date and time you provided is invalid, please try again."
       list_permission_denied: "You do not have permission to view this user's bookmarks."
+      no_user_bookmarks: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
       auto_delete_preference:
         label: "Automatically delete"
         never: "Never"
@@ -986,7 +987,7 @@ en:
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
       regular_categories: "Regular"
-      regular_categories_instructions: "These category topics will be displayed in the `latest` and `top` topics list."
+      regular_categories_instructions: "You will see these topics in the “Latest” and “Top” topic lists."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -2236,9 +2237,6 @@ en:
       toggle_information: "toggle topic details"
       read_more_in_category: "Want to read more? Browse other topics in %{catLink} or %{latestLink}."
       read_more: "Want to read more? %{catLink} or %{latestLink}."
-      group_request: "You need to request membership to the `%{name}` group to see this topic"
-      group_join: "You need join the `%{name}` group to see this topic"
-      group_request_sent: "Your group membership request has been sent. You will be informed when it's accepted."
       unread_indicator: "No member has read the last post of this topic yet."
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
@@ -3662,12 +3660,15 @@ en:
           allowed_urls: Allowed URLs
           descriptions:
             topics:
-              read: |
-                Read a topic or a specific post in it. RSS is also supported.
-              write: |
-                Create a new topic or post to an existing one.
-              read_lists: |
-                Read topic lists like top, new, latest, etc. RSS is also supported.
+              read: Read a topic or a specific post in it. RSS is also supported.
+              write: Create a new topic or post to an existing one.
+              read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
+              wordpress: Necessary for the WordPress wp-discourse plugin to work.
+            users:
+              bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
+              sync_sso: Synchronize a user using SSO.
+              show: Obtain information about an user.
+              check_emails: List user emails.
 
       web_hooks:
         title: "Webhooks"

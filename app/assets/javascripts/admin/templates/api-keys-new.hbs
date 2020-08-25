@@ -39,17 +39,23 @@
     {{#unless useGlobalKey}}
       <div class="scopes-title">{{i18n "admin.api.scopes.title"}}</div>
       <p>{{i18n "admin.api.scopes.description"}}</p>
-      {{#each-in scopes as |resource actions|}}
-        <table class="scopes-table">
-          <thead>
+      <table class="scopes-table">
+        <thead>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>{{i18n "admin.api.scopes.allowed_urls"}}</td>
+            <td>{{i18n "admin.api.scopes.optional_allowed_parameters"}}</td>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each-in scopes as |resource actions|}}
             <tr>
-              <td><b>{{resource}}</b></td>
+              <td class="scope-resource-name"><b>{{resource}}</b></td>
               <td></td>
-              <td>{{i18n "admin.api.scopes.allowed_urls"}}</td>
-              <td>{{i18n "admin.api.scopes.optional_allowed_parameters"}}</td>
+              <td></td>
+              <td></td>
             </tr>
-          </thead>
-          <tbody>
             {{#each actions as |act|}}
               <tr>
                 <td>{{input type="checkbox" checked=act.selected}}</td>
@@ -71,9 +77,9 @@
                 </td>
               </tr>
             {{/each}}
-          </tbody>
-        </table>
-      {{/each-in}}
+          {{/each-in}}
+        </tbody>
+      </table>
     {{/unless}}
 
     {{d-button icon="check" label="admin.api.save" action=(action "save") class="btn-primary" disabled=saveDisabled}}

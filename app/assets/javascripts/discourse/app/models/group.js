@@ -176,41 +176,29 @@ const Group = RestModel.extend({
     }
   },
 
-  @observes("watching_category_ids")
-  _updateWatchingCategories() {
-    this.set(
-      "watchingCategories",
-      Category.findByIds(this.watching_category_ids)
-    );
+  @discourseComputed("watching_category_ids")
+  watchingCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
   },
 
-  @observes("tracking_category_ids")
-  _updateTrackingCategories() {
-    this.set(
-      "trackingCategories",
-      Category.findByIds(this.tracking_category_ids)
-    );
+  @discourseComputed("tracking_category_ids")
+  trackingCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
   },
 
-  @observes("watching_first_post_category_ids")
-  _updateWatchingFirstPostCategories() {
-    this.set(
-      "watchingFirstPostCategories",
-      Category.findByIds(this.watching_first_post_category_ids)
-    );
+  @discourseComputed("watching_first_post_category_ids")
+  watchingFirstPostCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
   },
 
-  @observes("regular_category_ids")
-  _updateRegularCategories() {
-    this.set(
-      "regularCategories",
-      Category.findByIds(this.regular_category_ids)
-    );
+  @discourseComputed("regular_category_ids")
+  regularCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
   },
 
-  @observes("muted_category_ids")
-  _updateMutedCategories() {
-    this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
+  @discourseComputed("muted_category_ids")
+  mutedCategories(categoryIds) {
+    return Category.findByIds(categoryIds);
   },
 
   asJSON() {

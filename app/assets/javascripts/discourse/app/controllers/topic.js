@@ -721,8 +721,12 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpBottom() {
+      // When a topic only has one lengthy post
+      const jumpEnd = this.model.highest_post_number === 1 ? true : false;
+
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
-        skipIfOnScreen: false
+        skipIfOnScreen: false,
+        jumpEnd
       });
     },
 

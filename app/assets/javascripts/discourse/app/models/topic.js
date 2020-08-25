@@ -165,11 +165,11 @@ const Topic = RestModel.extend({
       return tags;
     }
 
-    const title = this.title;
+    const title = this.title.toLowerCase();
     const newTags = [];
 
     tags.forEach(function(tag) {
-      if (title.toLowerCase().indexOf(tag) === -1) {
+      if (title.indexOf(tag.toLowerCase()) === -1) {
         newTags.push(tag);
       }
     });

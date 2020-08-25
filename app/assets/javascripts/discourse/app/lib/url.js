@@ -35,6 +35,11 @@ const SERVER_SIDE_ONLY = [
   /^\/invites\//
 ];
 
+// The amount of height (in pixles) that we factor in when jumpEnd is called so
+// that we show a little bit of the post text even on mobile devices instead of
+// scrolling to "suggested topics".
+const JUMP_END_BUFFER = 250;
+
 export function rewritePath(path) {
   const params = path.split("?");
 
@@ -110,13 +115,9 @@ const DiscourseURL = EmberObject.extend({
         let holderHeight = $holder.height();
         let windowHeight = $(window).height() - offsetCalculator();
 
-        // scroll to the bottom of the post and if the post is yuge we go back up the
-        // timeline by a small % of the post height so we can see the bottom of the text.
-        //
-        // otherwise just jump to the top of the post using the lock & holder method.
         if (holderHeight > windowHeight) {
           $(window).scrollTop(
-            $holder.offset().top + (holderHeight - holderHeight / 10)
+            $holder.offset().top + (holderHeight - JUMP_END_BUFFER)
           );
           _transitioning = false;
           return;

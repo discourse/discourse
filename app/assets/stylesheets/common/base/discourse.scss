@@ -444,6 +444,11 @@ table {
   width: 230px;
   line-height: $line-height-medium;
 
+  > span:first-child {
+    display: inline-block;
+    margin-bottom: 36px;
+  }
+
   .skip-new-user-tips {
     font-size: $font-down-1;
     color: var(--secondary);

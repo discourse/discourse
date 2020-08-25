@@ -185,9 +185,8 @@ class Search
       @original_term = PG::Connection.escape_string(@term)
     end
 
-    if @search_pms && @guardian.user
+    if @search_pms
       @opts[:type_filter] = "private_messages"
-      @search_context = @guardian.user
     end
 
     if @search_all_topics && @guardian.user
@@ -479,7 +478,7 @@ class Search
     end
   end
 
-  advanced_filter(/^\#([\p{L}0-9\-:=]+)$/) do |posts, match|
+  advanced_filter(/^\#([\p{L}\p{M}0-9\-:=]+)$/) do |posts, match|
 
     exact = true
 
@@ -601,11 +600,11 @@ class Search
     end
   end
 
-  advanced_filter(/^tags?:([\p{L}0-9,\-_+]+)$/) do |posts, match|
+  advanced_filter(/^tags?:([\p{L}\p{M}0-9,\-_+]+)$/) do |posts, match|
     search_tags(posts, match, positive: true)
   end
 
-  advanced_filter(/^\-tags?:([\p{L}0-9,\-_+]+)$/) do |posts, match|
+  advanced_filter(/^\-tags?:([\p{L}\p{M}0-9,\-_+]+)$/) do |posts, match|
     search_tags(posts, match, positive: false)
   end
 
@@ -688,15 +687,20 @@ class Search
       elsif word == 'in:all'
         @search_all_topics = true
         nil
-      elsif %w{in:private in:personal}.include?(word) # remove private after 2.4 release
+      elsif word == 'in:personal'
         @search_pms = true
         nil
       elsif word == "in:personal-direct"
         @search_pms = true
-        @direct_pms_only = true
         nil
       elsif word =~ /^personal_messages:(.+)$/
-        @search_pms = true
+        raise Discourse::InvalidAccess.new unless @guardian.is_admin?
+
+        if user = User.find_by_username($1)
+          @search_pms = true
+          @search_context = user
+        end
+
         nil
       else
         found ? nil : word
@@ -894,7 +898,7 @@ class Search
       if @search_context.present?
         if @search_context.is_a?(User)
           if type_filter === "private_messages"
-            @direct_pms_only ? posts : posts.private_posts_for_user(@search_context)
+            posts.private_posts_for_user(@search_context)
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end
@@ -933,33 +937,33 @@ class Search
       if aggregate_search
         aggregate_relation = aggregate_relation
           .select(
-            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.created_at DESC))[1] post_number",
+            "MAX(subquery.post_number) post_number",
             "MAX(subquery.created_at) created_at"
           )
           .order("created_at DESC")
       end
     elsif @order == :latest_topic
-      posts = posts.order("topic_created_at DESC")
+      posts = posts.order("topics.created_at DESC")
 
       if aggregate_search
         posts = posts.select("topics.created_at topic_created_at")
 
         aggregate_relation = aggregate_relation
           .select(
-            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_created_at DESC))[1] post_number",
+            "MIN(subquery.post_number) post_number",
             "MAX(subquery.topic_created_at) topic_created_at"
           )
           .order("topic_created_at DESC")
       end
     elsif @order == :views
-      posts = posts.order("topic_views DESC")
+      posts = posts.order("topics.views DESC")
 
       if aggregate_search
         posts = posts.select("topics.views topic_views")
 
         aggregate_relation = aggregate_relation
           .select(
-            "(ARRAY_AGG(subquery.post_number ORDER BY subquery.topic_views DESC))[1] post_number",
+            "MIN(subquery.post_number) post_number",
             "MAX(subquery.topic_views) topic_views"
           )
           .order("topic_views DESC")

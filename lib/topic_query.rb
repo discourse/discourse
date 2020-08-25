@@ -908,11 +908,18 @@ class TopicQuery
   end
 
   def remove_muted_tags(list, user, opts = nil)
-    if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
+    if !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
     end
 
-    muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    muted_tag_ids = []
+
+    if user.present?
+      muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    else
+      muted_tag_ids = SiteSetting.default_tags_muted.split("|").map(&:to_i)
+    end
+
     if muted_tag_ids.blank?
       return list
     end

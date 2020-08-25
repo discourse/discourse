@@ -94,8 +94,6 @@ createWidget("header-notifications", {
               {},
               h("h1.ring-first-notification", {}, [
                 h("span", {}, I18n.t("user.first_notification")),
-                h("br"),
-                h("br"),
                 h("span", {}, [
                   I18n.t("user.skip_new_user_tips.not_first_time"),
                   " ",
