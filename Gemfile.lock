@@ -1,3 +1,16 @@
+GIT
+  remote: https://github.com/discourse/onebox
+  revision: d11fc20e0bd9ec3159418c94cfbe5c9c796e70c7
+  branch: iframe-control
+  specs:
+    onebox (2.0.2)
+      addressable (~> 2.7.0)
+      htmlentities (~> 4.3)
+      multi_json (~> 1.11)
+      mustache
+      nokogiri (~> 1.7)
+      sanitize
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -242,13 +255,6 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (2.0.2)
-      addressable (~> 2.7.0)
-      htmlentities (~> 4.3)
-      multi_json (~> 1.11)
-      mustache
-      nokogiri (~> 1.7)
-      sanitize
     openssl-signature_algorithm (1.0.0)
     optimist (3.0.1)
     parallel (1.19.2)
@@ -511,7 +517,7 @@ DEPENDENCIES
   omniauth-instagram
   omniauth-oauth2
   omniauth-twitter
-  onebox
+  onebox!
   parallel_tests
   pg
   pry-byebug

@@ -311,9 +311,16 @@ module Oneboxer
       uri = fd.resolve
       return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
+      allowed_iframe_origins = SiteSetting.allowed_onebox_iframes.split("|")
+      if allowed_iframe_origins.include?("*")
+        allowed_iframe_origins = Onebox::Engine.all_iframe_origins
+      end
+      allowed_iframe_origins += SiteSetting.allowed_iframes.split("|")
+
       options = {
         max_width: 695,
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
+        allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
       }
 

@@ -60,7 +60,7 @@ gem 'redis-namespace'
 # better maintained living fork
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox'
+gem 'onebox', git: "https://github.com/discourse/onebox", branch: :"iframe-control"
 
 gem 'http_accept_language', require: false
 
