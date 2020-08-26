@@ -243,14 +243,19 @@ export const WidgetDropdownClass = {
   },
 
   didRenderWidget() {
-    const dropdownHeader = document.querySelector(
-      `#${this.attrs.id} .widget-dropdown-header`
-    );
-    const dropdownBody = document.querySelector(
-      `#${this.attrs.id} .widget-dropdown-body`
-    );
+    if (this.state.opened) {
+      const dropdownHeader = document.querySelector(
+        `#${this.attrs.id} .widget-dropdown-header`
+      );
 
-    if (this.state.opened && dropdownHeader && dropdownBody) {
+      if (!dropdownHeader) return;
+
+      const dropdownBody = document.querySelector(
+        `#${this.attrs.id} .widget-dropdown-body`
+      );
+
+      if (!dropdownBody) return;
+
       /* global Popper:true */
       this._popper = Popper.createPopper(dropdownHeader, dropdownBody, {
         strategy: "fixed",

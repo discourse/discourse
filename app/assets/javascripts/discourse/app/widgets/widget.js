@@ -36,22 +36,14 @@ export function decorateWidget(widgetName, cb) {
   _decorators[widgetName].push(cb);
 }
 
-export function listCustomWidgets(tree) {
-  let widgets = [];
+export function traverseCustomWidgets(tree, callback) {
+  if (tree.constructor.name === "CustomWidget") {
+    callback(tree);
+  }
 
-  const findWidgets = widget => {
-    (widget.vnode ? widget.vnode.children : widget.children).forEach(child => {
-      if (child.constructor.name === "CustomWidget") {
-        widgets.push(child);
-      }
-
-      if (child.vnode || child.children) findWidgets(child);
-    });
-  };
-
-  findWidgets(tree);
-
-  return widgets;
+  (tree.children || (tree.vnode ? tree.vnode.children : [])).forEach(node => {
+    traverseCustomWidgets(node, callback);
+  });
 }
 
 export function applyDecorators(widget, type, attrs, state) {
