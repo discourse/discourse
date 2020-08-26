@@ -291,10 +291,9 @@ en:
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic. You have a reminder set %{reminder_at} for this topic."
 
     bookmarks:
-      created: "you've bookmarked this post%{name}"
+      created: "You've bookmarked this post. %{name}"
       not_bookmarked: "bookmark this post"
-      created_with_reminder: "you've bookmarked this post with a reminder %{date}%{name}"
-      created_with_at_desktop_reminder: "you've bookmarked this post and will be reminded next time you are at your desktop%{name}"
+      created_with_reminder: "You've bookmarked this post with a reminder %{date}. %{name}"
       remove: "Remove Bookmark"
       delete: "Delete Bookmark"
       confirm_delete: "Are you sure you want to delete this bookmark? The reminder will also be deleted."
@@ -312,7 +311,6 @@ en:
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       reminders:
-        at_desktop: "Next time I'm at my desktop"
         later_today: "Later today"
         next_business_day: "Next business day"
         tomorrow: "Tomorrow"
@@ -327,7 +325,7 @@ en:
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
-        existing_reminder: "You have a reminder set for this bookmark which will be sent"
+        existing_reminder: "You have a reminder set for this bookmark which will be sent %{at_date_time}"
 
     copy_codeblock:
       copied: "copied!"
@@ -987,7 +985,7 @@ en:
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
       muted_categories_instructions_dont_hide: "You will not be notified of anything about new topics in these categories."
       regular_categories: "Regular"
-      regular_categories_instructions: "You will see these topics in the “Latest” and “Top” topic lists."
+      regular_categories_instructions: "You will see these categories in the “Latest” and “Top” topic lists."
       no_category_access: "As a moderator you have limited category access, save is disabled."
       delete_account: "Delete My Account"
       delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
@@ -1752,7 +1750,7 @@ en:
       invalid_selection_length: "Selection must be at least %{count} characters."
       components:
         categories_admin_dropdown:
-          title: "Categories admin dropdown"
+          title: "Manage categories"
 
     date_time_picker:
       from: From
@@ -2574,7 +2572,6 @@ en:
         preview_url: "Your page will be published at:"
         invalid_slug: "Sorry, you can't publish this page."
         unpublish: "Unpublish"
-        update: "Update"
         unpublished: "Your page has been unpublished and is no longer accessible."
         publishing_settings: "Publishing Settings"
 
@@ -2748,23 +2745,7 @@ en:
         remove_timer: "remove timer"
 
       actions:
-        flag: "Flag"
-        defer_flags:
-          one: "Ignore flag"
-          other: "Ignore flags"
-        undo:
-          off_topic: "Undo flag"
-          spam: "Undo flag"
-          inappropriate: "Undo flag"
-          bookmark: "Undo bookmark"
-          like: "Undo like"
         people:
-          off_topic: "flagged this as off-topic"
-          spam: "flagged this as spam"
-          inappropriate: "flagged this as inappropriate"
-          notify_moderators: "notified moderators"
-          notify_user: "sent a message"
-          bookmark: "bookmarked this"
           like:
             one: "liked this"
             other: "liked this"
@@ -2783,8 +2764,6 @@ en:
           inappropriate: "You flagged this as inappropriate"
           notify_moderators: "You flagged this for moderation"
           notify_user: "You sent a message to this user"
-          bookmark: "You bookmarked this post"
-          like: "You liked this"
 
       delete:
         confirm:
