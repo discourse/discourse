@@ -941,10 +941,11 @@ en:
       color_schemes:
         default_description: "Default"
         disable_dark_scheme: "Same as regular"
-        instructions: "Toggle dark mode on your device to preview each color scheme."
+        dark_instructions: "You can preview the dark mode color scheme by toggling your device's dark mode."
         undo: "Reset"
         regular: "Regular"
         dark: "Dark mode color scheme"
+        default_dark_scheme: "(site default)"
       dark_mode: "Dark Mode"
       dark_mode_enable: "Enable automatic dark mode color scheme"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"

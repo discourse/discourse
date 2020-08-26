@@ -20,10 +20,7 @@ const ColorScheme = EmberObject.extend({
   },
 
   startTrackingChanges() {
-    this.set("originals", {
-      name: this.name,
-      userSelectable: this.user_selectable
-    });
+    this.set("originals", { name: this.name });
   },
 
   schemeJson() {
@@ -49,16 +46,10 @@ const ColorScheme = EmberObject.extend({
     return newScheme;
   },
 
-  @discourseComputed(
-    "name",
-    "user_selectable",
-    "colors.@each.changed",
-    "saving"
-  )
-  changed(name, userSelectable) {
+  @discourseComputed("name", "colors.@each.changed", "saving")
+  changed(name) {
     if (!this.originals) return false;
     if (this.originals.name !== name) return true;
-    if (this.originals.userSelectable !== userSelectable) return true;
     if (this.colors.any(c => c.get("changed"))) return true;
 
     return false;
@@ -84,7 +75,6 @@ const ColorScheme = EmberObject.extend({
 
     if (!opts || !opts.enabledOnly) {
       data.name = this.name;
-      data.user_selectable = this.user_selectable;
       data.base_scheme_id = this.base_scheme_id;
       data.colors = [];
       this.colors.forEach(c => {
@@ -114,6 +104,17 @@ const ColorScheme = EmberObject.extend({
 
       this.setProperties({ savingStatus: I18n.t("saved"), saving: false });
       this.notifyPropertyChange("description");
+    });
+  },
+
+  updateUserSelectable(value) {
+    if (!this.id) return;
+
+    return ajax(`/admin/color_schemes/${this.id}.json`, {
+      data: JSON.stringify({ color_scheme: { user_selectable: value } }),
+      type: "PUT",
+      dataType: "json",
+      contentType: "application/json"
     });
   },
 

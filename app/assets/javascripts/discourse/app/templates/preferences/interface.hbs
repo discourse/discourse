@@ -51,7 +51,7 @@
       </div>
 
       <div class="instructions">
-        {{i18n "user.color_schemes.instructions" }}
+        {{i18n "user.color_schemes.dark_instructions" }}
       </div>
     {{/if}}
 
@@ -60,7 +60,7 @@
         {{d-button action=(action "undoColorSchemePreview") label="user.color_schemes.undo" icon="undo" class="btn-default btn-small undo-preview"}}
       {{/if}}
 
-      <div class="controls">
+      <div class="controls color-scheme-checkbox">
         {{preference-checkbox labelKey="user.color_scheme_default_on_all_devices" checked=makeColorSchemeDefault}}
       </div>
     {{/if}}

@@ -81,6 +81,11 @@ export default Controller.extend({
   },
 
   @discourseComputed
+  defaultDarkSchemeId() {
+    return this.siteSettings.default_dark_mode_color_scheme_id;
+  },
+
+  @discourseComputed
   textSizes() {
     return TEXT_SIZES.map(value => {
       return { name: I18n.t(`user.text_size.${value}`), value };
@@ -186,10 +191,7 @@ export default Controller.extend({
 
   @discourseComputed
   showDarkModeToggle() {
-    return (
-      this.userSelectableDarkColorSchemes.length <= 2 &&
-      this.siteSettings.default_dark_mode_color_scheme_id > 0
-    );
+    return this.defaultDarkSchemeId > 0 && !this.showDarkColorSchemeSelector;
   },
 
   @discourseComputed
@@ -200,8 +202,9 @@ export default Controller.extend({
   },
 
   @discourseComputed("userSelectableDarkColorSchemes")
-  showDarkColorSchemeSelector(colorSchemes) {
-    return colorSchemes && colorSchemes.length > 2;
+  showDarkColorSchemeSelector(darkSchemes) {
+    const minToShow = this.defaultDarkSchemeId > 0 ? 2 : 1;
+    return darkSchemes && darkSchemes.length > minToShow;
   },
 
   selectedDarkColorSchemeId: computed({
@@ -251,9 +254,8 @@ export default Controller.extend({
       } else {
         // if chosen dark scheme matches site dark scheme, no need to store
         if (
-          this.siteSettings.default_dark_mode_color_scheme_id > 0 &&
-          this.selectedDarkColorSchemeId ===
-            this.siteSettings.default_dark_mode_color_scheme_id
+          this.defaultDarkSchemeId > 0 &&
+          this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
         ) {
           this.set("model.user_option.dark_scheme_id", null);
         } else {
@@ -290,9 +292,8 @@ export default Controller.extend({
             updateColorSchemeCookie(this.selectedColorSchemeId);
 
             if (
-              this.siteSettings.default_dark_mode_color_scheme_id > 0 &&
-              this.selectedDarkColorSchemeId ===
-                this.siteSettings.default_dark_mode_color_scheme_id
+              this.defaultDarkSchemeId > 0 &&
+              this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
             ) {
               updateColorSchemeCookie(null, { dark: true });
             } else {

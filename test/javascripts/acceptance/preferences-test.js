@@ -121,51 +121,6 @@ QUnit.test("update some fields", async assert => {
   );
 });
 
-QUnit.test("font size change", async assert => {
-  $.removeCookie("text_size");
-
-  const savePreferences = async () => {
-    assert.ok(!exists(".saved"), "it hasn't been saved yet");
-    await click(".save-changes");
-    assert.ok(exists(".saved"), "it displays the saved message");
-    find(".saved").remove();
-  };
-
-  await visit("/u/eviltrout/preferences/interface");
-
-  // Live changes without reload
-  await selectKit(".text-size .combobox").expand();
-  await selectKit(".text-size .combobox").selectRowByValue("larger");
-  assert.ok(document.documentElement.classList.contains("text-size-larger"));
-
-  await selectKit(".text-size .combobox").expand();
-  await selectKit(".text-size .combobox").selectRowByValue("largest");
-  assert.ok(document.documentElement.classList.contains("text-size-largest"));
-
-  assert.equal($.cookie("text_size"), null, "cookie is not set");
-
-  // Click save (by default this sets for all browsers, no cookie)
-  await savePreferences();
-
-  assert.equal($.cookie("text_size"), null, "cookie is not set");
-
-  await selectKit(".text-size .combobox").expand();
-  await selectKit(".text-size .combobox").selectRowByValue("larger");
-  await click(".text-size input[type=checkbox]");
-
-  await savePreferences();
-
-  assert.equal($.cookie("text_size"), "larger|1", "cookie is set");
-  await click(".text-size input[type=checkbox]");
-  await selectKit(".text-size .combobox").expand();
-  await selectKit(".text-size .combobox").selectRowByValue("largest");
-
-  await savePreferences();
-  assert.equal($.cookie("text_size"), null, "cookie is removed");
-
-  $.removeCookie("text_size");
-});
-
 QUnit.test("username", async assert => {
   await visit("/u/eviltrout/preferences/username");
   assert.ok(exists("#change_username"), "it has the input element");
@@ -481,17 +436,4 @@ QUnit.test("can select an option from a dropdown", async assert => {
   await field.expand();
   await field.selectRowByValue("Cat");
   assert.equal(field.header().value(), "Cat", "it sets the value of the field");
-});
-
-acceptance("User Preferences disabling dark mode", {
-  loggedIn: true,
-  settings: { default_dark_mode_color_scheme_id: 1 }
-});
-
-QUnit.test("shows option to disable dark mode", async assert => {
-  await visit("/u/eviltrout/preferences/interface");
-  assert.ok(
-    $(".control-group.dark-mode").length,
-    "it has the option to disable dark mode"
-  );
 });

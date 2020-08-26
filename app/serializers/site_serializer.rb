@@ -25,6 +25,7 @@ class SiteSerializer < ApplicationSerializer
     :topic_featured_link_allowed_category_ids,
     :user_themes,
     :user_color_schemes,
+    :default_dark_color_scheme,
     :censored_regexp,
     :shared_drafts_category_id,
     :custom_emoji_translation
@@ -49,10 +50,13 @@ class SiteSerializer < ApplicationSerializer
 
   def user_color_schemes
     cache_fragment("user_color_schemes") do
-      schemes = ColorScheme.where('id = :default_dark OR user_selectable',
-                                  default_dark: SiteSetting.default_dark_mode_color_scheme_id).order(:name)
+      schemes = ColorScheme.where('user_selectable').order(:name)
       ActiveModel::ArraySerializer.new(schemes, each_serializer: ColorSchemeSelectableSerializer).as_json
     end
+  end
+
+  def default_dark_color_scheme
+    ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id).as_json
   end
 
   def groups

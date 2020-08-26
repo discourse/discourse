@@ -31,7 +31,7 @@ class ColorSchemeRevisor
 
       if has_colors ||
          @color_scheme.saved_change_to_name? ||
-         @color_scheme.saved_change_to_user_selectable? ||
+         @color_scheme.will_save_change_to_user_selectable? ||
          @color_scheme.saved_change_to_base_scheme_id?
 
         @color_scheme.save

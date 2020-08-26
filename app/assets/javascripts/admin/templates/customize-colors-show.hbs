@@ -40,16 +40,9 @@
 
     <br>
 
-    {{#unless model.theme_id}}
-      <div class="admin-controls">
-        <div class="search controls">
-          <label>
-            {{input type="checkbox" checked=model.user_selectable}}
-            {{i18n "admin.customize.theme.color_scheme_user_selectable"}}
-          </label>
-        </div>
-      </div>
-    {{/unless}}
+    <div class="admin-controls">
+      {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.color_scheme_user_selectable" checked=model.user_selectable}}
+    </div>
 
     {{#if colors.length}}
       <table class="table colors">

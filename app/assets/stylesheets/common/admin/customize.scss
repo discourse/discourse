@@ -179,6 +179,10 @@
         margin: 0 0.5em 0.5em 0;
       }
     }
+
+    &.color-scheme .admin-controls {
+      padding: 0.5em;
+    }
   }
   .add-component-button {
     vertical-align: middle;

@@ -10,6 +10,9 @@ export function listColorSchemes(site, options = {}) {
 
   let results = [];
 
+  if (!options.darkOnly) {
+    schemes = schemes.sort((a, b) => Number(a.is_dark) - Number(b.is_dark));
+  }
   schemes.forEach(s => {
     if ((options.darkOnly && s.is_dark) || !options.darkOnly) {
       results.push({
@@ -20,6 +23,19 @@ export function listColorSchemes(site, options = {}) {
   });
 
   if (options.darkOnly) {
+    const defaultDarkColorScheme = site.get("default_dark_color_scheme");
+    if (defaultDarkColorScheme) {
+      const existing = schemes.findBy("id", defaultDarkColorScheme.id);
+      if (!existing) {
+        results.unshift({
+          id: defaultDarkColorScheme.id,
+          name: `${defaultDarkColorScheme.name} ${I18n.t(
+            "user.color_schemes.default_dark_scheme"
+          )}`
+        });
+      }
+    }
+
     results.unshift({
       id: -1,
       name: I18n.t("user.color_schemes.disable_dark_scheme")
@@ -30,11 +46,12 @@ export function listColorSchemes(site, options = {}) {
 }
 
 export function loadColorSchemeStylesheet(
-  color_scheme_id,
+  colorSchemeId,
   theme_id,
   dark = false
 ) {
-  ajax(`/color-scheme-stylesheet/${color_scheme_id}/${theme_id}`).then(
+  const themeId = theme_id ? `/${theme_id}` : "";
+  ajax(`/color-scheme-stylesheet/${colorSchemeId}${themeId}.json`).then(
     result => {
       if (result && result.new_href) {
         const elementId = dark ? "cs-preview-dark" : "cs-preview-light";
