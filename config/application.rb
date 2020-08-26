@@ -316,6 +316,7 @@ module Discourse
       DiscourseFonts.fonts.each do |font|
         file.write <<~EOF
           .font-#{font[:key].tr("_", "-")} {
+            --font-family: #{font[:name]};
             font-family: #{font[:name]};
           }
         EOF
