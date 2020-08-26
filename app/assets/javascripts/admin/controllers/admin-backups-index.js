@@ -4,6 +4,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { setting, i18n } from "discourse/lib/computed";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   adminBackups: controller(),

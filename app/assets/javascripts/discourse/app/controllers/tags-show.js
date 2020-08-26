@@ -6,6 +6,7 @@ import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import NavItem from "discourse/models/nav-item";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import { queryParams } from "discourse/controllers/discovery-sortable";
+import bootbox from "bootbox";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   application: controller(),

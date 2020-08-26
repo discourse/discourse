@@ -10,6 +10,7 @@ import {
 import * as Utilities from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import { discourseModule } from "helpers/qunit-helpers";
+import bootbox from "bootbox";
 
 discourseModule("lib:uploads");
 

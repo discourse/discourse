@@ -1,4 +1,6 @@
 import I18n from "I18n";
+import bootbox from "bootbox";
+
 export default {
   name: "localization",
   after: "inject-objects",

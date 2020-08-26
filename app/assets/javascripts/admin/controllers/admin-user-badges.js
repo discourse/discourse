@@ -5,6 +5,7 @@ import { next } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export default Controller.extend(GrantBadgeController, {
   adminUser: controller(),

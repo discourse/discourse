@@ -8,6 +8,7 @@ import BackupStatus from "admin/models/backup-status";
 import Backup from "admin/models/backup";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
+import bootbox from "bootbox";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 

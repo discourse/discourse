@@ -27,6 +27,7 @@ import { Promise } from "rsvp";
 import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
+import bootbox from "bootbox";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();

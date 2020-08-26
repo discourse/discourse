@@ -3,6 +3,7 @@ import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
+import bootbox from "bootbox";
 
 export default Component.extend({
   classNames: ["group-membership-button"],

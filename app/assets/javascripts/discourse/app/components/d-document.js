@@ -4,6 +4,7 @@ import { bind } from "discourse-common/utils/decorators";
 import logout from "discourse/lib/logout";
 import I18n from "I18n";
 import { setLogoffCallback } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 
 export default Component.extend({
   tagName: "",

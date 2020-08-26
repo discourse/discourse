@@ -21,6 +21,10 @@ define("ember-buffered-proxy/proxy", ["exports"], function(__exports__) {
   __exports__.default = window.BufferedProxy;
 });
 
+define("bootbox", ["exports"], function(__exports__) {
+  __exports__.default = window.bootbox;
+});
+
 define("@popperjs/core", ["exports"], function(__exports__) {
   __exports__.default = window.Popper;
   __exports__.createPopper = window.Popper.createPopper;

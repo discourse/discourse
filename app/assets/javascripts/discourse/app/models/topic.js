@@ -22,6 +22,7 @@ import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import bootbox from "bootbox";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);

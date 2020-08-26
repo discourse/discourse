@@ -4,6 +4,7 @@ import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ensureJSON, plainJSON, prettyJSON } from "discourse/lib/formatter";
+import bootbox from "bootbox";
 
 export default Component.extend({
   tagName: "li",

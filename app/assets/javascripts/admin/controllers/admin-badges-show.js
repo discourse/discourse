@@ -6,6 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { run } from "@ember/runloop";
+import bootbox from "bootbox";
 
 export default Controller.extend(bufferedProperty("model"), {
   adminBadges: controller(),

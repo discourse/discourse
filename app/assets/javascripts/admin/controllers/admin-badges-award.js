@@ -2,6 +2,7 @@ import I18n from "I18n";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   saving: false,

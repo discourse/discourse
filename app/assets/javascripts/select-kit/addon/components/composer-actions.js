@@ -12,6 +12,7 @@ import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
+import bootbox from "bootbox";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;

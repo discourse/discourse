@@ -13,6 +13,7 @@ import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import logout from "discourse/lib/logout";
 import EmberObject from "@ember/object";
+import bootbox from "bootbox";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
