@@ -216,8 +216,8 @@ class Wizard
           value: SiteSetting.base_font
         )
 
-        BaseFontSetting::FONTS.each do |font_name, font_stack|
-          field.add_choice(font_name, data: { font_stack: font_stack })
+        DiscourseFonts.fonts.each do |font|
+          field.add_choice(font[:key], data: { class: font[:key].tr("_", "-"), font_stack: font[:stack] })
         end
 
         step.on_update do |updater|
