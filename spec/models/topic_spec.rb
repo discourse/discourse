@@ -1580,6 +1580,7 @@ describe Topic do
         describe 'when new category is set to auto close by default' do
           before do
             new_category.update!(auto_close_hours: 5)
+            topic.user.update!(admin: true)
           end
 
           it 'should set a topic timer' do
@@ -1592,6 +1593,7 @@ describe Topic do
 
             topic_timer = TopicTimer.last
 
+            expect(topic_timer.user).to eq(Discourse.system_user)
             expect(topic_timer.topic).to eq(topic)
             expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
           end

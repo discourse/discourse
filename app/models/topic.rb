@@ -380,6 +380,7 @@ class Topic < ActiveRecord::Base
       self.set_or_create_timer(
         TopicTimer.types[:close],
         self.category.auto_close_hours,
+        by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
         duration: duration
       )
