@@ -578,6 +578,7 @@ en:
       sent_by_you: "Sent by <a href='%{userUrl}'>you</a>"
 
     directory:
+      username: "Username"
       filter_name: "filter by username"
       title: "Users"
       likes_given: "Given"
