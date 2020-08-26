@@ -191,7 +191,6 @@
   .user-selector,
   .title-and-category {
     display: flex;
-    flex-wrap: wrap;
     width: 100%;
     align-items: center;
     margin-bottom: 5px;
@@ -219,7 +218,8 @@
 
   .category-input {
     display: flex;
-    flex: 1 0 35%;
+    flex: 1 0 40%;
+    max-width: 40%;
     margin: 0 0 5px 10px;
     @media screen and (max-width: 955px) {
       flex: 1 0 100%;
@@ -228,15 +228,42 @@
     .category-chooser {
       display: flex;
       flex: 1 0 auto;
+      max-width: 100%;
       width: auto;
+      .select-kit-header {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      // below needed for text-overflow: ellipsis;
+      .selected-name {
+        max-width: 100%;
+        overflow: hidden;
+        .name {
+          max-width: 100%;
+          overflow: hidden;
+          display: flex;
+          .badge-wrapper {
+            overflow: hidden;
+          }
+          // This prevents the first category from being too-truncated at the expense of a long subcategory
+          .badge-wrapper:first-of-type:not(:last-of-type) {
+            flex: 1 0 auto;
+            max-width: 50%;
+          }
+        }
+      }
     }
   }
 
   .with-tags {
+    .title-and-category {
+      flex-wrap: wrap;
+    }
     .category-input {
-      flex-basis: 25%;
       margin-left: 0;
-      margin-right: 5px;
+      min-width: 0; // allows flex to shrink
+      flex-wrap: wrap;
+      max-width: 50%;
       @media screen and (max-width: 920px) {
         flex-basis: 100%;
         margin-right: 0;
@@ -256,20 +283,17 @@
   #reply-title {
     margin: 0 0 5px 0;
     flex-basis: 50%;
+    width: unset;
     &:focus {
       box-shadow: none;
     }
   }
 
   .mini-tag-chooser {
-    flex: 1 1 25%;
-    margin: 0 0 5px 0;
+    width: 49%;
+    margin: 0 0 5px auto;
     background: var(--secondary);
     z-index: z("composer", "dropdown");
-    @media all and (max-width: 900px) {
-      margin: 0;
-      flex: 1 1 100%;
-    }
   }
 
   .popup-tip {
@@ -507,5 +531,13 @@ body.ios-safari-composer-hacks {
 body:not(.ios-safari-composer-hacks) {
   #reply-control.open {
     padding-bottom: var(--composer-ipad-padding);
+  }
+}
+
+.show-preview {
+  @media screen and (max-width: 850px) {
+    .d-editor-button-bar {
+      font-size: $font-down-1;
+    }
   }
 }

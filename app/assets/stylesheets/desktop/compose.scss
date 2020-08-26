@@ -24,10 +24,14 @@
   .select-kit.is-expanded {
     z-index: z("composer", "dropdown") + 1;
   }
-}
 
-.category-input {
-  margin-left: 10px;
+  .d-editor-textarea-wrapper {
+    overflow: hidden;
+  }
+  .d-editor-button-bar {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
 }
 
 .edit-title {
@@ -45,9 +49,6 @@
   .with-tags {
     .d-editor-preview-wrapper {
       margin-top: -77px;
-      @media screen and (max-width: 900px) {
-        margin-top: -105px;
-      }
     }
   }
 }
