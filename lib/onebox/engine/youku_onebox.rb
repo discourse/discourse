@@ -19,7 +19,13 @@ module Onebox
       end
 
       def to_html
-        "<embed width='570' height='360' src='https://players.youku.com/player.php/sid/#{video_id}/v.swf' type='application/x-shockwave-flash'></embed>"
+<<~HTML
+  <iframe src="https://player.youku.com/embed/#{video_id}"
+          width="640" height="430"
+          frameborder='0'
+          allowfullscreen >
+  </iframe>
+HTML
       end
 
       private
