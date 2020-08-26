@@ -1,3 +1,5 @@
+import DiscourseURL from "discourse/lib/url";
+import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 import MessageBus from "message-bus-client";
 
@@ -107,3 +109,22 @@ QUnit.test("Live update unread state", async assert => {
     "shows the topic read"
   );
 });
+
+QUnit.test(
+  "Using period chooser when query params are present",
+  async assert => {
+    await visit("/top?f=foo&d=bar");
+
+    sandbox.stub(DiscourseURL, "routeTo");
+
+    const periodChooser = selectKit(".period-chooser");
+
+    await periodChooser.expand();
+    await periodChooser.selectRowByValue("yearly");
+
+    assert.ok(
+      DiscourseURL.routeTo.calledWith("/top/yearly?f=foo&d=bar"),
+      "it keeps the query params"
+    );
+  }
+);
