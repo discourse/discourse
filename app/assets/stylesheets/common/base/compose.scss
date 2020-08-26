@@ -245,6 +245,7 @@
           .badge-wrapper {
             overflow: hidden;
           }
+          // This prevents the first category from being too-truncated at the expense of a long subcategory
           .badge-wrapper:first-of-type:not(:last-of-type) {
             flex: 1 0 auto;
             max-width: 50%;

@@ -185,14 +185,11 @@
 
   .with-tags {
     .mini-tag-chooser {
-      margin-bottom: 5px;
       z-index: z("base");
     }
 
     .selected-name {
-      overflow: hidden;
       .name {
-        @include ellipsis;
         font-size: $font-down-1;
         .badge-wrapper {
           font-size: $font-0;
@@ -201,8 +198,10 @@
     }
   }
 
-  .title-input,
-  .category-input,
+  .user-selector {
+    flex-wrap: wrap;
+  }
+
   .users-input,
   .add-warning {
     width: 100%;
