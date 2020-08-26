@@ -2925,29 +2925,6 @@ RSpec.describe TopicsController do
           expect(response.body).to include('status_type')
         end
       end
-
-      it 'should close the topic when setting an auto-open timer' do
-        post "/t/#{topic.id}/timer.json", params: {
-          time: 24,
-          status_type: "open"
-        }
-        expect(response.status).to eq(200)
-        topic_status_update = TopicTimer.last
-        topic = topic_status_update.topic
-        expect(topic.closed).to eq(true)
-      end
-
-      it 'should open the topic when setting an auto-close timer' do
-        topic = Fabricate(:topic, user: user, closed: true)
-        post "/t/#{topic.id}/timer.json", params: {
-          time: 24,
-          status_type: "close"
-        }
-        expect(response.status).to eq(200)
-        topic_status_update = TopicTimer.last
-        topic = topic_status_update.topic
-        expect(topic.closed).to eq(false)
-      end
     end
   end
 
