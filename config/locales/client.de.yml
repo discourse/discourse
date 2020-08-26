@@ -26,10 +26,10 @@ de:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
-      time_with_zone: "HH: mm (z)"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "dd, HH:mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM, HH: mm"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D. MMM"
       full_no_year_no_time: "D. MMMM"
       long_with_year: "D. MMM YYYY [um] HH:mm"
@@ -259,23 +259,22 @@ de:
       title: "Lesezeichen setzen"
       clear_bookmarks: "Lesezeichen entfernen"
       help:
-        bookmark: "Klicke hier, um ein Lesezeichen auf den ersten Beitrag in diesem Thema zu setzen."
+        bookmark: "Klicke hier, um den ersten Beitrag in diesem Thema mit einem Lesezeichen zu versehen."
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
-        unbookmark_with_reminder: "Klicke hier um alle Lesezeichen und Erinnerungen in diesem Thema zu löschen. Du hast eine Erinnerung für %{reminder_at} zu diesem Thema."
+        unbookmark_with_reminder: "Klicke hier, um alle Lesezeichen und Erinnerungen in diesem Thema zu löschen. Die nächste Erinnerung ist %{reminder_at} geplant."
     bookmarks:
-      created: "du hast ein Lesezeichen für diesen Beitrag %{name} gesetzt"
-      not_bookmarked: "Lesezeichen auf diesen Beitrag setzen"
-      created_with_reminder: "Lesezeichen mit Erinnerung für %{date}%{name} gesetz "
+      not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
+      created_with_reminder: "Du wirst %{date} an dieses Lesezeichen erinnert.%{name}"
       created_with_at_desktop_reminder: "Du hast ein Lesezeichen für diesen Beitrag gesetzt und wirst das nächste Mal, wenn Du am Rechner sitzt, daran erinnert.%{name}"
       remove: "Lesezeichen entfernen"
       delete: "Lesezeichen löschen"
-      confirm_delete: "Lesezeichen wirklich löschen? Die Erinnerung daran wird dann auch gelöscht."
-      confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest? "
+      confirm_delete: "Möchtest du dieses Lesezeichen wirklich löschen? Die Erinnerung wird ebenfalls gelöscht."
+      confirm_clear: "Möchtest du wirklich alle deine Lesezeichen in diesem Thema löschen?"
       save: "Speichern"
-      no_timezone: 'Du hast noch keine Zeitzone ausgewählt. Du wirst keine Erinnerungen erstellen können. Stelle eine <a href="%{basePath}/my/preferences/profile">in deinem Profil</a> ein.'
-      invalid_custom_datetime: "Ungültiges Datum und/oder Uhrzeit. Bitte nochmals versuchen.\n "
-      list_permission_denied: "Dir fehlt die Erlaubnis, die Lesezeichen dieses Nutzers gezeigt zu bekommen."
-      no_user_bookmarks: "Du hast keine Beiträge mit Lesezeichen; Lesezeichen erlauben es Dir schnell zu einem spezifischen Beitrag zu referenzieren."
+      no_timezone: 'Du hast noch keine Zeitzone ausgewählt und wirst deswegen keine Erinnerungen erstellen können. Wähle deine Zeitzone <a href="%{basePath}/my/preferences/profile">in deinem Profil</a> aus.'
+      invalid_custom_datetime: "Das angegebene Datum und die Uhrzeit sind ungültig. Bitte versuche es erneut."
+      list_permission_denied: "Du hast keine Berechtigung, die Lesezeichen dieses Benutzers anzuzeigen."
+      no_user_bookmarks: "Du hast noch keine Beiträge mit einem Lesezeichen versehen. Lesezeichen erlauben dir den schnellen Zugriff auf bestimmte Beiträge."
       auto_delete_preference:
         label: "Automatisch löschen"
         never: "Nie"
@@ -286,20 +285,19 @@ de:
       reminders:
         at_desktop: "Nächstes mal wenn ich an meinem PC bin"
         later_today: "Im Laufe des Tages"
-        next_business_day: "Nächster Werktag"
+        next_business_day: "Nächster Arbeitstag"
         tomorrow: "Morgen"
         next_week: "Nächste Woche"
         later_this_week: "Später in dieser Woche"
         start_of_next_business_week: "Montag"
-        start_of_next_business_week_alt: "Nächster Montag"
-        next_month: "Nächster Monat"
-        custom: "Eigenes Datum und Zeit"
-        last_custom: "Letzter"
-        none: "Keine Erinnerung nötig"
+        start_of_next_business_week_alt: "Am kommenden Montag"
+        next_month: "Nächsten Monat"
+        custom: "Datum und Uhrzeit auswählen"
+        last_custom: "Zuletzt gewählter Termin"
+        none: "Keine Erinnerung erforderlich"
         today_with_time: "heute um %{time}"
         tomorrow_with_time: "morgen um %{time}"
-        at_time: "um %{date_time}"
-        existing_reminder: "Es gibt eine Erinnerung für dieses Lesezeichen, die versendet werden wird"
+        at_time: "am %{date_time}"
     copy_codeblock:
       copied: "kopiert!"
     drafts:
@@ -923,6 +921,7 @@ de:
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
       muted_categories_instructions_dont_hide: "Du bekommst keine Benachrichtigung über irgendetwas an neuen Themen in diesen Kategorien."
       regular_categories: "Stammgast"
+      regular_categories_instructions: "Themen aus diesen Kategorien werden dir unter „Aktuell” und „Angesagt” angezeigt."
       no_category_access: "Moderaturen haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
@@ -1352,7 +1351,7 @@ de:
         title: "IP-Adresse bei Registrierung"
       avatar:
         title: "Profilbild"
-        header_title: "Profil. Nachrichten, Lesezeichen und Einstellungen"
+        header_title: "Profil, Nachrichten, Lesezeichen und Einstellungen"
       title:
         title: "Titel"
         none: "(keiner)"
@@ -1645,7 +1644,7 @@ de:
       destination_category: "Ziel-Kategorie"
       publish: "Gemeinsame Vorlage veröffentlichen"
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
-      publishing: "Thema wird veröffentlicht..."
+      publishing: "Thema wird veröffentlicht…"
     composer:
       emoji: "Emoji :)"
       more_emoji: "mehr…"
@@ -1756,7 +1755,7 @@ de:
           desc: Erstelle ein neues Thema, das auf dieses Thema verweist
           confirm: Du hast einen neuen Themen-Entwurf gespeichert. Wenn du ein verlinktes Thema erstellst, wird er überschrieben.
         reply_as_new_group_message:
-          label: Als neue Gruppennachricht antworten
+          label: Als neue Gruppen-Nachricht antworten
           desc: Erstellen Sie eine neue private Nachricht mit denselben Empfängern
         reply_as_private_message:
           label: Neue Nachricht
@@ -1848,8 +1847,8 @@ de:
         posted: "neuer Beitrag"
         moved_post: "Beitrag verschoben"
         linked: "verknüpft"
-        bookmark_reminder: "Lesezeichen-Erinnerung"
-        bookmark_reminder_with_name: "Lesezeichen-Erinnerung - %{name}"
+        bookmark_reminder: "Erinnerung an Lesezeichen"
+        bookmark_reminder_with_name: "Erinnerung an Lesezeichen — %{name}"
         granted_badge: "Abzeichen gewährt"
         invited_to_topic: "zum Thema eingeladen"
         group_mentioned: "Gruppe erwähnt"
@@ -1929,7 +1928,7 @@ de:
           watching: Themen, die ich beobachte
           tracking: Themen, denen ich folge
           private: Beiträge in meinen Unterhaltungen
-          bookmarks: Themen/Beiträge mit Lesezeichen
+          bookmarks: von mir mit Lesezeichen versehen
           first: Erste Beiträge in Themen
           pinned: Angeheftete Themen
           seen: Gelesene Themen/Beiträge
@@ -1994,7 +1993,7 @@ de:
         read: "Du hast noch keine Themen gelesen."
         posted: "Du hast noch keine Beiträge verfasst."
         latest: "Es gibt keine aktuellen Themen. Das ist schade."
-        bookmarks: "Du hast noch keine Themen, in denen du ein Lesezeichen gesetzt hast."
+        bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
         top: "Es gibt keine Top-Themen."
         educate:
@@ -2008,7 +2007,7 @@ de:
         unread: "Das waren alle ungelesen Themen."
         category: "Das waren alle Themen in der Kategorie „%{category}“."
         top: "Das waren alle angesagten Themen."
-        bookmarks: "Das waren alle Themen mit Lesezeichen."
+        bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
     topic:
       filter_to:
         one: "%{count} Beitrag im Thema"
@@ -2136,7 +2135,7 @@ de:
       status_update_notice:
         auto_open: "Dieses Thema wird automatisch geöffnet %{timeLeft}."
         auto_close: "Dieses Thema wird automatisch geschlossen %{timeLeft}."
-        auto_publish_to_category: "Dieses Thema wird in <a href=%{categoryUrl}>#%{categoryName}</a> veröffentlicht %{timeLeft}."
+        auto_publish_to_category: "Dieses Thema wird %{timeLeft} in <a href=%{categoryUrl}>#%{categoryName}</a> veröffentlicht."
         auto_close_based_on_last_post: "Dieses Thema wird %{duration} nach der letzten Antwort geschlossen."
         auto_delete: "Dieses Thema wird automatisch gelöscht %{timeLeft}."
         auto_bump: "Dieses Thema wird automatisch nach oben verschoben %{timeLeft}."
@@ -2355,17 +2354,20 @@ de:
         action: "ausgewählte Beiträge zusammenführen"
         error: "Es gab einen Fehler beim Zusammenführen der ausgewählten Beiträge."
       publish_page:
-        title: "Veröffentlichen von Seiten"
+        title: "Als Seite veröffentlichen"
         publish: "Veröffentlichen"
         description: "Wenn ein Thema als Seite veröffentlicht wird, kann seine URL geteilt werden und es wird mit benutzerdefiniertem Styling angezeigt."
-        slug: "Schnecke"
+        slug: "Sprechender Name für URL"
         public: "Öffentlich"
         public_description: "Benutzer können die Seite auch dann sehen, wenn das zugehörige Thema privat ist."
-        publish_url: "Deine Seite wurde veröffentlicht unter:"
-        topic_published: "Dein Thema wurde veröffentlicht unter:"
-        preview_url: "Deine Seite wird veröffentlicht unter:"
+        publish_url: "Die Seite wurde unter folgender URL veröffentlicht:"
+        topic_published: "Das Thema wurde unter folgender URL veröffentlicht:"
+        preview_url: "Die Seite wird unter folgender URL veröffentlicht:"
         invalid_slug: "Du kannst diese Seite leider nicht veröffentlichen."
-        unpublish: "Veröffentlichung rückgängig machen"
+        unpublish: "Veröffentlichung aufheben"
+        update: "Aktualisieren"
+        unpublished: "Die Veröffentlichung der Seite wurde aufgehoben."
+        publishing_settings: "Veröffentlichungseinstellungen"
       change_owner:
         title: "Eigentümer ändern"
         action: "Eigentümer ändern"
@@ -2501,7 +2503,7 @@ de:
         convert_to_moderator: "Team-Einfärbung hinzufügen"
         revert_to_regular: "Team-Einfärbung entfernen"
         rebake: "HTML erneuern"
-        publish_page: "Seitenveröffentlichung"
+        publish_page: "Als Seite veröffentlichen…"
         unhide: "Einblenden"
         change_owner: "Eigentümer ändern"
         grant_badge: "Abzeichen verleihen"
@@ -2551,7 +2553,7 @@ de:
           inappropriate: "Du hast das als Unangemessen gemeldet"
           notify_moderators: "Du hast dies den Moderatoren gemeldet"
           notify_user: "Du hast diesem Benutzer eine Nachricht gesendet"
-          bookmark: "Du hast bei diesem Beitrag ein Lesezeichen gesetzt"
+          bookmark: "Du hast diesen Beitrag mit einem Lesezeichen versehen."
           like: "Dir gefällt dieser Beitrag"
       delete:
         confirm:
@@ -2605,10 +2607,10 @@ de:
         actions:
           delete_bookmark:
             name: "Lesezeichen löschen"
-            description: "Entfernt das Lesezeichen von deinem Profil und beendet alle Erinnerungen für dieses Lesezeichen"
+            description: "Entfernt das Lesezeichen aus deinem Profil und stoppt alle Erinnerungen für dieses Lesezeichen."
           edit_bookmark:
             name: "Lesezeichen bearbeiten"
-            description: "Lesezeichennamen bearbeiten oder Erinnerungsdatum und -zeit ändern"
+            description: "Ändere den Namen des Lesezeichens oder den Erinnerungszeitpunkt."
     category:
       can: "kann&hellip; "
       none: "(keine Kategorie)"
@@ -2794,7 +2796,7 @@ de:
       warning:
         help: "Dies ist eine offizielle Warnung."
       bookmarked:
-        help: "Du hast in diesem Thema ein Lesezeichen gesetzt."
+        help: "Du hast dieses Thema mit einem Lesezeichen versehen."
       locked:
         help: "Dieses Thema ist geschlossen. Das Antworten ist nicht mehr möglich."
       archived:
@@ -2885,7 +2887,7 @@ de:
         help: "Themen zu denen du beigetragen hast"
       bookmarks:
         title: "Lesezeichen"
-        help: "Themen, in denen du ein Lesezeichen gesetzt hast"
+        help: "Themen, die du mit einem Lesezeichen versehen hast."
       category:
         title: "%{categoryName}"
         title_with_count:
@@ -2928,9 +2930,9 @@ de:
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
-      shortcut_delimiter_or: " %{shortcut1} oder %{shortcut2} "
-      shortcut_delimiter_slash: " %{shortcut1}/%{shortcut2} "
-      shortcut_delimiter_space: " %{shortcut1} %{shortcut2} "
+      shortcut_delimiter_or: "%{shortcut1} oder %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Tastenkombinationen"
       jump_to:
         title: "Springe zu"
@@ -2944,14 +2946,16 @@ de:
         profile: "%{shortcut} Profil"
         messages: "%{shortcut} Nachrichten"
         drafts: "%{shortcut} Entwürfe"
+        next: "%{shortcut} Nächstes Thema"
+        previous: "%{shortcut} Vorheriges Thema"
       navigation:
         title: "Navigation"
-        jump: "%{shortcut} Gehe zu Beitrag #"
+        jump: "%{shortcut} Springe zu Beitrag #"
         back: "%{shortcut} Zurück"
         up_down: "%{shortcut} Auswahl bewegen &uarr; &darr;"
         open: "%{shortcut} Ausgewähltes Thema öffnen"
         next_prev: "%{shortcut} Nächster/vorheriger Abschnitt"
-        go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag gehen"
+        go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag springen"
       application:
         title: "Anwendung"
         create: "%{shortcut} Neues Thema erstellen"
@@ -2960,14 +2964,27 @@ de:
         user_profile_menu: "%{shortcut} Benutzermenü öffnen"
         show_incoming_updated_topics: "%{shortcut} Aktualisierte Themen anzeigen"
         search: "%{shortcut} Suche"
-        help: "%{shortcut} Tastaturhilfe öffnen"
-        dismiss_new_posts: "%{shortcut} Neue/ausgewählte Beiträge ausblenden"
-        dismiss_topics: "%{shortcut} Themen ausblenden"
+        help: "%{shortcut} Tastenkombinationen anzeigen"
+        dismiss_new_posts: "%{shortcut} Neue Themen oder Beiträge ignorieren"
+        dismiss_topics: "%{shortcut} Themen ignorieren"
         log_out: "%{shortcut} Abmelden"
       composing:
         title: "Schreiben"
         return: "%{shortcut} Zurück zum Editor"
         fullscreen: "%{shortcut} Vollbild-Editor"
+      bookmarks:
+        title: "Lesezeichen setzen"
+        enter: "%{shortcut} Speichern und schließen"
+        later_today: "%{shortcut} Im Laufe des Tages"
+        later_this_week: "%{shortcut} Später in dieser Woche"
+        tomorrow: "%{shortcut} Morgen"
+        next_week: "%{shortcut} Nächste Woche"
+        next_month: "%{shortcut} Nächsten Monat"
+        next_business_week: "%{shortcut} Anfang nächster Woche"
+        next_business_day: "%{shortcut} Nächster Arbeitstag"
+        custom: "%{shortcut} Datum und Uhrzeit auswählen"
+        none: "%{shortcut} Keine Erinnerung"
+        delete: "%{shortcut} Lesezeichen löschen"
       actions:
         title: "Aktionen"
         bookmark_topic: "%{shortcut} Lesezeichen hinzufügen/entfernen"
@@ -2980,7 +2997,7 @@ de:
         quote_post: "%{shortcut} Beitrag zitieren"
         like: "%{shortcut} Beitrag mit „Gefällt mir“ markieren"
         flag: "%{shortcut} Beitrag melden"
-        bookmark: "%{shortcut} Lesezeichen auf Beitrag setzen"
+        bookmark: "%{shortcut} Beitrag mit Lesezeichen versehen"
         edit: "%{shortcut} Beitrag bearbeiten"
         delete: "%{shortcut} Beitrag löschen"
         mark_muted: "%{shortcut} Thema stummschalten"
@@ -2990,6 +3007,10 @@ de:
         print: "%{shortcut} Thema ausdrucken"
         defer: "%{shortcut} Thema ignorieren"
         topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
+      search_menu:
+        title: "Suche"
+        prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
+        insert_url: "%{shortcut} Auswahl in geöffneten Editor einfügen"
     badges:
       earned_n_times:
         one: "Abzeichen %{count}-mal erhalten"
@@ -3122,7 +3143,7 @@ de:
           read: "Du hast noch keine Themen gelesen."
           posted: "Du hast noch keine Beiträge verfasst."
           latest: "Es gibt keine aktuellen Themen."
-          bookmarks: "Du hast noch keine Themen, in denen du ein Lesezeichen gesetzt hast."
+          bookmarks: "Du hast noch keine Themen, die du mit einem Lesezeichen versehen hast."
           top: "Es gibt keine Top-Themen."
         bottom:
           latest: "Das waren die aktuellen Themen."
@@ -3131,7 +3152,7 @@ de:
           new: "Das waren alle neuen Themen."
           unread: "Das waren alle ungelesen Themen."
           top: "Das waren alle Top-Themen."
-          bookmarks: "Das waren alle Themen mit Lesezeichen."
+          bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
     invite:
       custom_message: "Gestalte deine Einladung etwas persönlicher, in dem du eine <a href>eigene Nachricht</a> schreibst."
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
@@ -3276,7 +3297,7 @@ de:
             members_visibility_levels:
               title: "Wer kann die Mitglieder dieser Gruppe sehen?"
               description: "Administratoren können die Mitglieder aller Gruppen sehen."
-            publish_read_state: "Auf Gruppen-Benachrichtigungen veröffentliche Gruppen-gelesen-Status"
+            publish_read_state: "In Gruppen-Nachrichten den Lesestatus anzeigen"
           membership:
             automatic: Automatisch
             trust_levels_title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
@@ -3931,7 +3952,7 @@ de:
             api_key_destroy: "Api Schlüssel zerstören"
             override_upload_secure_status: "Hochladesicherheitsstatus überschreiben"
             page_published: "Seite veröffentlicht"
-            page_unpublished: "Seite unveröffentlicht"
+            page_unpublished: "Veröffentlichung von Seite aufgehoben"
             add_email: "E-Mail hinzufügen"
             update_email: "E-Mail aktualisieren"
             destroy_email: "E-Mail zerstören"

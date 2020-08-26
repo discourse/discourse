@@ -69,9 +69,9 @@ bs_BA:
           few: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "%{count} mj."
-          few: "%{count} mj."
-          other: "%{count} mj."
+          one: "%{count} mj"
+          few: "%{count} mj"
+          other: "%{count} mj"
         about_x_years:
           one: "%{count} god."
           few: "%{count} god."
@@ -218,7 +218,7 @@ bs_BA:
     sign_up: "Učlani se"
     log_in: "Prijavi se"
     age: "Godište"
-    joined: "Registrovan"
+    joined: "Pridružio se"
     admin_title: "Admin"
     show_more: "prikaži još"
     show_help: "opcije"
@@ -857,7 +857,7 @@ bs_BA:
         filters:
           filter_by: "Filtriraj po"
           all: "Sve"
-          read: "Učitaj"
+          read: "Čitao"
           unread: "Nepročitano"
         ignore_duration_title: "Ignoriraj korisnika"
         ignore_duration_username: "Ime"
@@ -1465,10 +1465,10 @@ bs_BA:
     first_post: Prva objava
     mute: Utišaj
     unmute: Normalno
-    last_post: Objavljeno
+    last_post: Zadnja objava
     local_time: "Lokalno vrijeme"
-    time_read: Učitaj
-    time_read_recently: "%{time_read} skoro"
+    time_read: Čitao
+    time_read_recently: "%{time_read} nedavno"
     time_read_tooltip: "%{time_read} ukupno vrijeme čitanja"
     time_read_recently_tooltip: "%{time_read} ukupno vrijeme čitanja (%{recent_time_read} u zadnjih 60 dana)"
     last_reply_lowercase: zadnji odgovor
@@ -1985,7 +1985,7 @@ bs_BA:
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
     topics:
-      new_messages_marker: "posljednja posjeta"
+      new_messages_marker: "zadnja posjeta"
       bulk:
         select_all: "Označi sve"
         clear_all: "Očisti sve"
@@ -2028,7 +2028,7 @@ bs_BA:
           new: '<p>Ovdje se pojavljuju vaše nove teme.</p><p>Načelno, teme se smatraju novim i pokazivati će<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nova</span> indikator u slučaju da su objavljena u zadnja 2 dana.</p><p>Posjetite svoje <a href="%{userPrefsUrl}">postavke</a> ukoliko želite da tu opciju izmijenite.</p>'
           unread: '<p>Vaše nepročitane teme se ovdje pojavljuju.</p><p>Načelno, teme su smatrane nepročitanim i prikazivat će brojač nepročitanih poruka<span class="badge new-posts badge-notification">1</span> ukoliko ste:</p><ul><li>Kreirali temu</li><li>Odgovorili na temu</li><li>Čitali temu duže od 4 minuta</li></ul><p>Ili ako ste explicitno označili temu za Praćenje ili Posmatrane preko kontrole obavještenja na dnu svake od tema.</p><p>Posjetite vaše <a href="%{userPrefsUrl}">postavke</a> ukoliko želite da to izmijenite.</p>'
       bottom:
-        latest: "Nema više najnovijih tema."
+        latest: "Nema više novijih tema."
         posted: "There are no more posted topics."
         read: "Nema više pročitanih tema."
         new: "Nema više novih tema."
@@ -2101,7 +2101,7 @@ bs_BA:
       toggle_information: "uključi detalje teme"
       read_more_in_category: "Želite čitati više? Pregledajte druge teme u %{catLink} ili %{latestLink}."
       read_more: "Želite li čitati više? %{catLink} Ili %{latestLink}."
-      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Postoj{ UNREAD, plural, =0 {} one {i <a href='{basePath}/unread'>1 nepročitana</a> } few {e <a href='{basePath}/unread'># nepročitane</a> } other {i <a href='{basePath}/unread'># nepročitanih</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {i } other{}} <a href='{basePath}/new'>1 nova</a> tema} few {} other { {BOTH, select, true{i } false {e } other{}} <a href='{basePath}/new'># novih</a> tema} } preostalih za čitati, ili {CATEGORY, select, true {pogledajte ostale teme u {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pregledaj sve kategorije
       view_latest_topics: pogledaj posljednje teme
       suggest_create_topic: Zašto ne kreirati novu temu?
@@ -2815,7 +2815,7 @@ bs_BA:
       high {with an extremely high like to post ratio}
       other {}}
     original_post: "Originalni Odgovor"
-    views: "Pogledi"
+    views: "Pregledi"
     views_lowercase:
       one: "pregled"
       few: "pregleda"
@@ -2825,7 +2825,7 @@ bs_BA:
       one: "ova tema je pregledana %{count} put"
       few: "ova tema je %{number} puta pregledana"
       other: "ova tema je %{number} puta pogledana"
-    activity: "Aktivnosti"
+    activity: "Aktivnost"
     likes: "Lajkovi"
     likes_lowercase:
       one: "sviđanje"
@@ -3027,7 +3027,7 @@ bs_BA:
         few: "%{count} Značke"
         other: "%{count} Značkih"
       more_badges:
-        one: "+ %{count} Više"
+        one: "Još + %{count}"
         few: "+ %{count} Više"
         other: "+ %{count} Više"
       granted:
@@ -3155,7 +3155,7 @@ bs_BA:
           new: "Nemate više novih tema."
           read: "Niste pročitali nijednu temu."
           posted: "Niste odgovorili ni na jednu temu."
-          latest: "Nema najnovijih tema."
+          latest: "Nema više novijih tema."
           bookmarks: "Nemate još bookmark-iranih tema."
           top: "Nema više top tema."
         bottom:

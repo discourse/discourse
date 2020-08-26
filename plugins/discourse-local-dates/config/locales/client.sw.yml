@@ -12,7 +12,6 @@ sw:
           insert: Weka
           advanced_mode: Hali-tumizi ya juu
           simple_mode: Hali-tumizi rahisi
-          format_description: "Muundo uliotumika kuonesha tarehe kwa mtumiaji. Tumia \"\\T\\Z\" kuonesha muda halisi wa mahali pa mtumiaji kwa maneno (Ulaya/Paris)"
           timezones_title: Majira za saa za kuonyeshwa
           timezones_description: Majina ya saa yatatumika kuonyesha tarehe kwenye kihakiki na marejesho ya mfumo.
           recurring_title: Kurudiarudia

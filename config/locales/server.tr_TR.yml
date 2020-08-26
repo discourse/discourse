@@ -2165,7 +2165,7 @@ tr_TR:
       %{site_name} topluluğuna olan davetiyeni kabul ettiğin için teşekkür ederiz -- hoş geldin!
 
       Şimdi bir parola seçmek için şu bağlantıya tıklayın:
-      %{base_url}/users/password-reset/%{email_token}
+      %{base_url}/u/password-reset/%{email_token}
 
       (Eğer yukarıdaki bağlantının süresi dolmuşsa e-posta adresinizle giriş yaparken "Parolamı unuttum" bağlantısına tıklayınız.)
   download_backup_mailer:

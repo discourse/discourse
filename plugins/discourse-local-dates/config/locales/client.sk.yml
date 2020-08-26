@@ -12,7 +12,6 @@ sk:
           insert: Vložiť
           advanced_mode: Pokročilý režim
           simple_mode: Jednoduchý režim
-          format_description: "Formát použitý na zobrazenie dátumu používateľovi. Použite \"\\T\\Z\" na zobrazenie časového pásma používateľa slovami (Európa/Paríž)"
           timezones_title: Časové pásma na zobrazenie
           timezones_description: Časové pásma sa použijú na zobrazenie dátumov v náhľade a núdzových situáciách.
           recurring_title: Opakovanie

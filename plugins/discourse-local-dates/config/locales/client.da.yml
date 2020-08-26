@@ -17,7 +17,6 @@ da:
           insert: Indsæt
           advanced_mode: Avanceret tilstand
           simple_mode: Enkel tilstand
-          format_description: "Format, der bruges til at vise datoen til brugeren. Brug \"\\T\\Z\" til at vise brugerens tidszone i ord (Europa / Paris)"
           timezones_title: Tidszoner, der skal vises
           timezones_description: Tidszoner vil blive brugt til at vise datoer i forhåndsvisning og fallback.
           recurring_title: Tilbagevenden
