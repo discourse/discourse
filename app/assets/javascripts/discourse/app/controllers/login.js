@@ -16,6 +16,7 @@ import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import bootbox from "bootbox";
 
 // This is happening outside of the app via popup
 const AuthErrors = [

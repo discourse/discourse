@@ -4,6 +4,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import Permalink from "admin/models/permalink";
 import { observes } from "discourse-common/utils/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   loading: false,

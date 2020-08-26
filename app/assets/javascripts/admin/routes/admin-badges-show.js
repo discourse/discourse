@@ -4,6 +4,7 @@ import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import showModal from "discourse/lib/show-modal";
+import bootbox from "bootbox";
 
 export default Route.extend({
   serialize(m) {

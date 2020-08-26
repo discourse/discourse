@@ -10,6 +10,7 @@ import Group from "discourse/models/group";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
+import bootbox from "bootbox";
 
 const wrapAdmin = user => (user ? AdminUser.create(user) : null);
 

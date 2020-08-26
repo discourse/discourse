@@ -3,6 +3,7 @@ import { sort } from "@ember/object/computed";
 import EmberObject, { action, computed } from "@ember/object";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 
 const ALL_FILTER = "all";
 

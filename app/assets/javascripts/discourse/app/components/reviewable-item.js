@@ -8,6 +8,7 @@ import optionalService from "discourse/lib/optional-service";
 import showModal from "discourse/lib/show-modal";
 import { dasherize } from "@ember/string";
 import { set } from "@ember/object";
+import bootbox from "bootbox";
 
 let _components = {};
 

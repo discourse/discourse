@@ -8,6 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import showModal from "discourse/lib/show-modal";
+import bootbox from "bootbox";
 
 export default Controller.extend(CanCheckEmails, {
   loading: false,

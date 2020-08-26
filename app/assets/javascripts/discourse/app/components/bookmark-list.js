@@ -6,6 +6,7 @@ import {
   shouldOpenInNewTab,
   openLinkInNewTab
 } from "discourse/lib/click-track";
+import bootbox from "bootbox";
 
 export default Component.extend({
   classNames: ["bookmark-list-wrapper"],

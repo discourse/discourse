@@ -6,6 +6,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { reads, and } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import bootbox from "bootbox";
 
 export default Component.extend({
   tagName: "",

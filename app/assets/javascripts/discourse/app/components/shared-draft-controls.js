@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import bootbox from "bootbox";
 
 export default Component.extend({
   tagName: "",

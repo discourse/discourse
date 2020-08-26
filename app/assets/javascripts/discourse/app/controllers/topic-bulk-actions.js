@@ -4,6 +4,7 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Topic from "discourse/models/topic";
 import Category from "discourse/models/category";
+import bootbox from "bootbox";
 
 const _buttons = [];
 

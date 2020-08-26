@@ -7,6 +7,7 @@ import {
 import getUrl from "discourse-common/lib/get-url";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
+import bootbox from "bootbox";
 
 export default Mixin.create({
   uploading: false,

@@ -4,6 +4,7 @@ import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import PermissionType from "discourse/models/permission-type";
+import bootbox from "bootbox";
 
 export default Component.extend(bufferedProperty("model"), {
   tagName: "",

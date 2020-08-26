@@ -9,6 +9,7 @@ import discourseComputed, {
   observes
 } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
+import bootbox from "bootbox";
 
 export default Controller.extend(ModalFunctionality, {
   selectedTab: null,

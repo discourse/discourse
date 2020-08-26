@@ -4,6 +4,7 @@ import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import { observes } from "discourse-common/utils/decorators";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   application: controller(),

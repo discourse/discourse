@@ -3,6 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
 import { on } from "@ember/object/evented";
+import bootbox from "bootbox";
 
 export default Component.extend(UploadMixin, {
   type: "csv",

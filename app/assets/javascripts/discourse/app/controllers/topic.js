@@ -25,6 +25,7 @@ import { Promise } from "rsvp";
 import { escapeExpression } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { inject as service } from "@ember/service";
+import bootbox from "bootbox";
 
 let customPostMessageCallbacks = {};
 

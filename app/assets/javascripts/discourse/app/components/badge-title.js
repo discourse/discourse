@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 
 export default Component.extend({
   classNames: ["badge-title"],
