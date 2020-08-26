@@ -68,8 +68,8 @@ gem 'http_accept_language', require: false
 # behavior, we will push these versions up when upgrading ember
 gem 'ember-rails', '0.18.5'
 gem 'discourse-ember-source', '~> 3.12.2'
-gem 'discourse-fonts', git: 'https://github.com/discourse/discourse-fonts.git'
 gem 'ember-handlebars-template', '0.8.0'
+gem 'discourse-fonts'
 
 gem 'barber'
 
