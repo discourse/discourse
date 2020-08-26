@@ -917,7 +917,8 @@ class TopicQuery
     if user.present?
       muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
     else
-      muted_tag_ids = SiteSetting.default_tags_muted.split("|").map(&:to_i)
+      muted_tag_names = SiteSetting.default_tags_muted.split("|")
+      muted_tag_ids = Tag.where(name: muted_tag_names).pluck(:id)
     end
 
     if muted_tag_ids.blank?
