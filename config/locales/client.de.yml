@@ -2848,8 +2848,8 @@ de:
       not_available: "Nicht verfügbar!"
     categories_list: "Liste der Kategorien"
     filters:
-      with_topics: "%{filter}e Themen"
-      with_category: "%{filter}e Themen in %{category}"
+      with_topics: "%{filter}"
+      with_category: "%{filter} in %{category}"
       latest:
         title: "Aktuell"
         title_with_count:
