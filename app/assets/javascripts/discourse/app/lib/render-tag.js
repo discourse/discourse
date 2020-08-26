@@ -16,7 +16,7 @@ export function defaultRenderTag(tag, params) {
   params = params || {};
   const visibleName = escapeExpression(tag);
   tag = visibleName.toLowerCase();
-  const classes = ["discourse-tag", tag];
+  const classes = ["discourse-tag"];
   const tagName = params.tagName || "a";
   let path;
   if (tagName === "a" && !params.noHref) {
