@@ -6,11 +6,12 @@ module Jobs
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])
       state = !!args[:state]
 
-      if topic_timer.blank? ||
-         topic_timer.execute_at > Time.zone.now ||
-         (topic = topic_timer.topic).blank? ||
-         topic.closed == state
+      if topic_timer.blank? || topic_timer.execute_at > Time.zone.now
+        return
+      end
 
+      if (topic = topic_timer.topic).blank? || topic.closed == state
+        topic_timer.destroy!
         return
       end
 

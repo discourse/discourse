@@ -72,16 +72,33 @@ describe Jobs::ToggleTopicClosed do
     end
   end
 
+  describe 'when trying to close a topic that has already been closed' do
+    it 'should delete the topic timer' do
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
+
+      topic.update!(closed: true)
+
+      expect do
+        described_class.new.execute(
+          topic_timer_id: topic.public_topic_timer.id,
+          state: true
+        )
+      end.to change { TopicTimer.exists?(topic_id: topic.id) }.from(true).to(false)
+    end
+  end
+
   describe 'when trying to close a topic that has been deleted' do
-    it 'should not do anything' do
+    it 'should delete the topic timer' do
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
+
       topic.trash!
 
-      Topic.any_instance.expects(:update_status).never
-
-      described_class.new.execute(
-        topic_timer_id: topic.public_topic_timer.id,
-        state: true
-      )
+      expect do
+        described_class.new.execute(
+          topic_timer_id: topic.public_topic_timer.id,
+          state: true
+        )
+      end.to change { TopicTimer.exists?(topic_id: topic.id) }.from(true).to(false)
     end
   end
 
