@@ -52,7 +52,7 @@ RSpec.describe RobotsTxtController do
         set_subfolder "/forum"
 
         get '/robots.txt'
-        expect(response.body).to include("\nDisallow: /forum/admin")
+        expect(response.body).to include("\nDisallow: /forum/email/")
       end
     end
 
