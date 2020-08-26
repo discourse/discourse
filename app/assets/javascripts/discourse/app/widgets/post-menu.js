@@ -313,7 +313,7 @@ registerButton(
       }
 
       if (attrs.bookmarkName) {
-        titleOptions.name = `. ${attrs.bookmarkName}`;
+        titleOptions.name = attrs.bookmarkName;
       }
     }
 
@@ -323,10 +323,7 @@ registerButton(
       title,
       titleOptions,
       className: classNames.join(" "),
-      icon:
-        attrs.bookmarkReminderAt || attrs.bookmarkReminderType === "at_desktop"
-          ? "discourse-bookmark-clock"
-          : "bookmark"
+      icon: attrs.bookmarkReminderAt ? "discourse-bookmark-clock" : "bookmark"
     };
   }
 );
