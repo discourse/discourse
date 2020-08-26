@@ -1007,7 +1007,9 @@ def analyze_missing_s3
 
   lookup = {}
   other = []
+  all = []
   DB.query(sql).each do |r|
+    all << r
     if r.post_id
       lookup[r.post_id] ||= []
       lookup[r.post_id] << [r.url, r.sha1, r.extension]
@@ -1029,26 +1031,35 @@ def analyze_missing_s3
   puts "Total missing uploads: #{Upload.where(verified: false).count}"
   puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
   puts "Other missing uploads count: #{other.count}"
-  if other.count > 0
-    ids = other.map { |r| r.id }
-    count = DB.query_single(<<~SQL, ids: ids).first
-      SELECT COUNT(*) FROM users WHERE uploaded_avatar_id IN (:ids)
-    SQL
-    if count > 0
-      puts "Found #{count} uploaded avatars"
+
+  if all.count > 0
+    ids = all.map { |r| r.id }
+
+    lookups = [
+      [:post_uploads, :upload_id],
+      [:users, :uploaded_avatar_id],
+      [:user_avatars, :gravatar_upload_id],
+      [:user_avatars, :custom_upload_id],
+      [:site_settings, ["NULLIF(value, '')::integer", "data_type = #{SiteSettings::TypeSupervisor.types[:upload].to_i}"]],
+      [:user_profiles, :profile_background_upload_id],
+      [:user_profiles, :card_background_upload_id],
+      [:categories, :uploaded_logo_id],
+      [:categories, :uploaded_background_id],
+      [:custom_emojis, :upload_id],
+      [:theme_fields, :upload_id],
+      [:user_exports, :upload_id],
+      [:groups, :flair_upload_id],
+    ]
+
+    lookups.each do |table, (column, where)|
+      count = DB.query_single(<<~SQL, ids: ids).first
+        SELECT COUNT(*) FROM #{table} WHERE #{column} IN (:ids) #{"AND #{where}" if where}
+      SQL
+      if count > 0
+        puts "Found #{count} missing row#{"s" if count > 1} in #{table}(#{column})"
+      end
     end
-    count = DB.query_single(<<~SQL, ids: ids).first
-      SELECT COUNT(*) FROM user_avatars WHERE gravatar_upload_id IN (:ids)
-    SQL
-    if count > 0
-      puts "Found #{count} gravatars"
-    end
-    count = DB.query_single(<<~SQL, ids: ids).first
-      SELECT COUNT(*) FROM user_avatars WHERE custom_upload_id IN (:ids)
-    SQL
-    if count > 0
-      puts "Found #{count} custom uploaded avatars"
-    end
+
   end
 
 end
