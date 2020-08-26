@@ -26,7 +26,7 @@ describe UserSilencer do
     context 'given a staff user argument' do
       it 'sends the correct message to the silenced user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(true)
+        SystemMessage.expects(:create).with(user, :silenced_by_staff, {}).returns(true)
         UserSilencer.silence(user, Fabricate.build(:admin))
       end
     end
@@ -34,7 +34,7 @@ describe UserSilencer do
     context 'not given a staff user argument' do
       it 'sends a default message to the user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(true)
+        SystemMessage.expects(:create).with(user, :silenced_by_staff, {}).returns(true)
         UserSilencer.silence(user, Fabricate.build(:admin))
       end
     end
@@ -42,7 +42,7 @@ describe UserSilencer do
     context 'given a message option' do
       it 'sends that message to the user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :the_custom_message).returns(true)
+        SystemMessage.expects(:create).with(user, :the_custom_message, {}).returns(true)
         UserSilencer.silence(user, Fabricate.build(:admin), message: :the_custom_message)
       end
     end
