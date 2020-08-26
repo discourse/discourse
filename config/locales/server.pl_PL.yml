@@ -2622,7 +2622,7 @@ pl_PL:
         Jeśli to nie Ty, możesz bezpiecznie zignorować tę wiadomość.
 
         Kliknij na poniższy link by wybrać nowe hasło:
-        %{base_url}/users/password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Zaloguj za pomocą linku"
     set_password:
