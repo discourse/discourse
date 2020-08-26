@@ -138,7 +138,7 @@ RSpec.describe TopicTimer, type: :model do
       end
     end
 
-    describe 'when a open topic status update is created for an open topic' do
+    describe 'when a topic has been deleted' do
       fab!(:topic) { Fabricate(:topic, closed: false) }
       fab!(:topic_timer) do
         Fabricate(:topic_timer,
@@ -151,46 +151,11 @@ RSpec.describe TopicTimer, type: :model do
         Jobs.run_immediately!
       end
 
-      it 'should close the topic' do
+      it 'should not queue the job' do
+        topic.trash!
         topic_timer
-        expect(topic.reload.closed).to eq(true)
-      end
 
-      describe 'when topic has been deleted' do
-        it 'should not queue the job' do
-          topic.trash!
-          topic_timer
-
-          expect(Jobs::ToggleTopicClosed.jobs).to eq([])
-        end
-      end
-    end
-
-    describe 'when a close topic status update is created for a closed topic' do
-      fab!(:topic) { Fabricate(:topic, closed: true) }
-      fab!(:topic_timer) do
-        Fabricate(:topic_timer,
-          status_type: described_class.types[:close],
-          topic: topic
-        )
-      end
-
-      before do
-        Jobs.run_immediately!
-      end
-
-      it 'should open the topic' do
-        topic_timer
-        expect(topic.reload.closed).to eq(false)
-      end
-
-      describe 'when topic has been deleted' do
-        it 'should not queue the job' do
-          topic.trash!
-          topic_timer
-
-          expect(Jobs::ToggleTopicClosed.jobs).to eq([])
-        end
+        expect(Jobs::ToggleTopicClosed.jobs).to eq([])
       end
     end
 
