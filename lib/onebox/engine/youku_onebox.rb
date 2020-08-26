@@ -19,13 +19,14 @@ module Onebox
       end
 
       def to_html
-<<~HTML
-  <iframe src="https://player.youku.com/embed/#{video_id}"
-          width="640" height="430"
-          frameborder='0'
-          allowfullscreen >
-  </iframe>
-HTML
+        <<~HTML
+          <iframe src="https://player.youku.com/embed/#{video_id}"
+                  width="640"
+                  height="430"
+                  frameborder='0'
+                  allowfullscreen>
+          </iframe>
+        HTML
       end
 
       private
