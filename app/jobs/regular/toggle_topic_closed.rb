@@ -29,6 +29,13 @@ module Jobs
         end
 
         topic.inherit_auto_close_from_category if state == false
+      else
+        topic_timer.destroy!
+        topic.reload
+
+        if topic_timer.based_on_last_post
+          topic.inherit_auto_close_from_category
+        end
       end
     end
   end
