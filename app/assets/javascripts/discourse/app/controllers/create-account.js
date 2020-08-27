@@ -21,6 +21,7 @@ import { findAll } from "discourse/models/login-method";
 import EmberObject from "@ember/object";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -270,7 +271,7 @@ export default Controller.extend(
       const destinationUrl = this.get("authOptions.destination_url");
 
       if (!isEmpty(destinationUrl)) {
-        $.cookie("destination_url", destinationUrl, { path: "/" });
+        cookie("destination_url", destinationUrl, { path: "/" });
       }
 
       // Add the userfields to the data
@@ -326,12 +327,12 @@ export default Controller.extend(
               this.rejectedPasswords.pushObject(attrs.accountPassword);
             }
             this.set("formSubmitted", false);
-            $.removeCookie("destination_url");
+            removeCookie("destination_url");
           }
         },
         () => {
           this.set("formSubmitted", false);
-          $.removeCookie("destination_url");
+          removeCookie("destination_url");
           return this.flash(I18n.t("create_account.failed"), "error");
         }
       );

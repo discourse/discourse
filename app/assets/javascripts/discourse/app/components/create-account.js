@@ -1,12 +1,14 @@
 import Component from "@ember/component";
+import cookie from "discourse/lib/cookie";
+
 export default Component.extend({
   classNames: ["create-account"],
 
   didInsertElement() {
     this._super(...arguments);
 
-    if ($.cookie("email")) {
-      this.set("email", $.cookie("email"));
+    if (cookie("email")) {
+      this.set("email", cookie("email"));
     }
 
     $(this.element).on("keydown.discourse-create-account", e => {

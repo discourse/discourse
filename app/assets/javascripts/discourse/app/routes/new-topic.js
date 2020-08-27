@@ -1,6 +1,7 @@
 import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import Category from "discourse/models/category";
+import cookie from "discourse/lib/cookie";
 
 export default DiscourseRoute.extend({
   beforeModel(transition) {
@@ -58,7 +59,7 @@ export default DiscourseRoute.extend({
       }
     } else {
       // User is not logged in
-      $.cookie("destination_url", window.location.href);
+      cookie("destination_url", window.location.href);
       this.replaceWith("login");
     }
   },

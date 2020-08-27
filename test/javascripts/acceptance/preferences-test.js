@@ -2,6 +2,7 @@ import I18n from "I18n";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
 import User from "discourse/models/user";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 function preferencesPretender(server, helper) {
   server.post("/u/second_factors.json", () => {
@@ -122,7 +123,7 @@ QUnit.test("update some fields", async assert => {
 });
 
 QUnit.test("font size change", async assert => {
-  $.removeCookie("text_size");
+  removeCookie("text_size");
 
   const savePreferences = async () => {
     assert.ok(!exists(".saved"), "it hasn't been saved yet");
@@ -142,12 +143,12 @@ QUnit.test("font size change", async assert => {
   await selectKit(".text-size .combobox").selectRowByValue("largest");
   assert.ok(document.documentElement.classList.contains("text-size-largest"));
 
-  assert.equal($.cookie("text_size"), null, "cookie is not set");
+  assert.equal(cookie("text_size"), null, "cookie is not set");
 
   // Click save (by default this sets for all browsers, no cookie)
   await savePreferences();
 
-  assert.equal($.cookie("text_size"), null, "cookie is not set");
+  assert.equal(cookie("text_size"), null, "cookie is not set");
 
   await selectKit(".text-size .combobox").expand();
   await selectKit(".text-size .combobox").selectRowByValue("larger");
@@ -155,15 +156,15 @@ QUnit.test("font size change", async assert => {
 
   await savePreferences();
 
-  assert.equal($.cookie("text_size"), "larger|1", "cookie is set");
+  assert.equal(cookie("text_size"), "larger|1", "cookie is set");
   await click(".text-size input[type=checkbox]");
   await selectKit(".text-size .combobox").expand();
   await selectKit(".text-size .combobox").selectRowByValue("largest");
 
   await savePreferences();
-  assert.equal($.cookie("text_size"), null, "cookie is removed");
+  assert.equal(cookie("text_size"), null, "cookie is removed");
 
-  $.removeCookie("text_size");
+  removeCookie("text_size");
 });
 
 QUnit.test("username", async assert => {
