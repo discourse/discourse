@@ -2505,6 +2505,26 @@ RSpec.describe TopicsController do
         expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
       end
 
+      it "can mark tag topics unread" do
+        tag = Fabricate(:tag)
+        TopicTag.create!(
+          topic_id: topic.id,
+          tag_id: tag.id
+        )
+
+        post1 = create_post(user: user, topic_id: topic.id)
+        create_post(topic_id: topic.id)
+
+        put "/topics/bulk.json", params: {
+          tag_name: tag.name,
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' }
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
+      end
+
       it "can find unread" do
         # mark all unread muted
         put "/topics/bulk.json", params: {

@@ -2166,6 +2166,7 @@ en:
         new: "There are no more new topics."
         unread: "There are no more unread topics."
         category: "There are no more %{category} topics."
+        tag: "There are no more %{tag} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
 
@@ -2256,6 +2257,7 @@ en:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
 
       browse_all_categories: Browse all categories
+      browse_all_tags: Browse all tags
 
       view_latest_topics: view latest topics
       suggest_create_topic: Why not create a topic?
@@ -3388,14 +3390,6 @@ en:
           latest: "There are no latest topics."
           bookmarks: "You have no bookmarked topics yet."
           top: "There are no top topics."
-        bottom:
-          latest: "There are no more latest topics."
-          posted: "There are no more posted topics."
-          read: "There are no more read topics."
-          new: "There are no more new topics."
-          unread: "There are no more unread topics."
-          top: "There are no more top topics."
-          bookmarks: "There are no more bookmarked topics."
 
     invite:
       custom_message: "Make your invite a little bit more personal by writing a <a href>custom message</a>."
