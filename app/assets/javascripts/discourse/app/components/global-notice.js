@@ -4,6 +4,7 @@ import I18n from "I18n";
 import Component from "@ember/component";
 import LogsNotice from "discourse/services/logs-notice";
 import EmberObject, { computed } from "@ember/object";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 const _pluginNotices = [];
 
@@ -67,8 +68,8 @@ export default Component.extend({
     function() {
       let notices = [];
 
-      if ($.cookie("dosp") === "1") {
-        $.removeCookie("dosp", { path: "/" });
+      if (cookie("dosp") === "1") {
+        removeCookie("dosp", { path: "/" });
         notices.push(
           Notice.create({
             text: I18n.t("forced_anonymous"),

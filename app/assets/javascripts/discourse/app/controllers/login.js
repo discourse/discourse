@@ -17,6 +17,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import bootbox from "bootbox";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -187,19 +188,19 @@ export default Controller.extend(ModalFunctionality, {
               hiddenLoginForm.querySelector(`input[name=${key}]`).value = value;
             };
 
-            const destinationUrl = $.cookie("destination_url");
-            const ssoDestinationUrl = $.cookie("sso_destination_url");
+            const destinationUrl = cookie("destination_url");
+            const ssoDestinationUrl = cookie("sso_destination_url");
 
             applyHiddenFormInputValue(this.loginName, "username");
             applyHiddenFormInputValue(this.loginPassword, "password");
 
             if (ssoDestinationUrl) {
-              $.removeCookie("sso_destination_url");
+              removeCookie("sso_destination_url");
               window.location.assign(ssoDestinationUrl);
               return;
             } else if (destinationUrl) {
               // redirect client to the original URL
-              $.removeCookie("destination_url");
+              removeCookie("destination_url");
 
               applyHiddenFormInputValue(destinationUrl, "redirect");
             } else {
@@ -369,10 +370,10 @@ export default Controller.extend(ModalFunctionality, {
     // Reload the page if we're authenticated
     if (options.authenticated) {
       const destinationUrl =
-        $.cookie("destination_url") || options.destination_url;
+        cookie("destination_url") || options.destination_url;
       if (destinationUrl) {
         // redirect client to the original URL
-        $.removeCookie("destination_url");
+        removeCookie("destination_url");
         window.location.href = destinationUrl;
       } else if (window.location.pathname === getURL("/login")) {
         window.location = getURL("/");
