@@ -432,6 +432,37 @@ describe Upload do
       expect(user.user_profile.card_background_upload_id).to eq(nil)
       expect(user.user_profile.profile_background_upload_id).to eq(nil)
     end
+  end
 
+  context ".secure_media_url?" do
+    it "works for a secure media url with or without schema + host" do
+      url = "//localhost:3000/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_media_url?(url)).to eq(true)
+      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_media_url?(url)).to eq(true)
+      url = "http://localhost:3000/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_media_url?(url)).to eq(true)
+    end
+
+    it "does not get false positives on a topic url" do
+      url = "/t/secure-media-uploads-are-cool/42839"
+      expect(Upload.secure_media_url?(url)).to eq(false)
+    end
+
+    it "returns true only for secure media URL for actual media (images/video/audio)" do
+      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp4"
+      expect(Upload.secure_media_url?(url)).to eq(true)
+      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_media_url?(url)).to eq(true)
+      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp3"
+      expect(Upload.secure_media_url?(url)).to eq(true)
+      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.pdf"
+      expect(Upload.secure_media_url?(url)).to eq(false)
+    end
+
+    it "does not work for regular upload urls" do
+      url = "/uploads/default/test_0/original/1X/e1864389d8252958586c76d747b069e9f68827e3.png"
+      expect(Upload.secure_media_url?(url)).to eq(false)
+    end
   end
 end
