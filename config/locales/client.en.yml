@@ -944,7 +944,7 @@ en:
         dark_instructions: "You can preview the dark mode color scheme by toggling your device's dark mode."
         undo: "Reset"
         regular: "Regular"
-        dark: "Dark mode color scheme"
+        dark: "Dark mode"
         default_dark_scheme: "(site default)"
       dark_mode: "Dark Mode"
       dark_mode_enable: "Enable automatic dark mode color scheme"
