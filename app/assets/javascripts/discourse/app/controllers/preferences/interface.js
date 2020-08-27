@@ -203,6 +203,9 @@ export default Controller.extend({
 
   @discourseComputed("userSelectableDarkColorSchemes")
   showDarkColorSchemeSelector(darkSchemes) {
+    // when a default dark scheme is set
+    // dropdown has two items (disable / use site default)
+    // but we show a checkbox in that case
     const minToShow = this.defaultDarkSchemeId > 0 ? 2 : 1;
     return darkSchemes && darkSchemes.length > minToShow;
   },

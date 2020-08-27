@@ -676,9 +676,9 @@
   }
 
   @mixin inactiveMode() {
-    color: $primary-medium;
+    color: var(--primary-medium);
     .select-kit.combo-box .select-kit-header {
-      border-color: $primary-medium;
+      border-color: var(--primary-medium);
     }
   }
 
