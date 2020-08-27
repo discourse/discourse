@@ -17,7 +17,7 @@ module Jobs
         return
       end
 
-      SiteSetting.search_recent_regular_posts_offset_post_id = self.regular_offset_post_id
+      SiteSetting.search_recent_regular_posts_offset_post_id = regular_offset_post_id
 
       DB.exec(<<~SQL)
       DROP INDEX IF EXISTS temp_idx_recent_regular_post_search_data;
