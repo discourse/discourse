@@ -923,6 +923,7 @@ nl:
       muted_categories_instructions: "U ontvangt geen enkele melding over nieuwe topics en berichten in deze categorieën, en ze verschijnen niet op de pagina's Categorieën of Nieuwste."
       muted_categories_instructions_dont_hide: "U ontvangt geen enkele melding over nieuwe topics in deze categorieën."
       regular_categories: "Normaal"
+      regular_categories_instructions: "Deze topics ziet u in de topiclijsten 'Nieuwste' en 'Top'."
       no_category_access: "Als moderator hebt u beperkte toegang tot categorieën, opslaan is uitgeschakeld."
       delete_account: "Mijn account verwijderen"
       delete_account_confirm: "Weet u zeker dat u uw account definitief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!"

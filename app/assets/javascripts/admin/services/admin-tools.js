@@ -10,6 +10,7 @@ import showModal from "discourse/lib/show-modal";
 import { getOwner } from "discourse-common/lib/get-owner";
 import Service from "@ember/service";
 import { Promise } from "rsvp";
+import bootbox from "bootbox";
 
 export default Service.extend({
   init() {

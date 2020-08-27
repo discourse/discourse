@@ -6,6 +6,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 import { observes } from "discourse-common/utils/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   loading: false,

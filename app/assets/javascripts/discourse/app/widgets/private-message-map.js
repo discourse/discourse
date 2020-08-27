@@ -5,6 +5,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { avatarFor, avatarImg } from "discourse/widgets/post";
 import hbs from "discourse/widgets/hbs-compiler";
+import bootbox from "bootbox";
 
 createWidget("pm-remove-group-link", {
   tagName: "a.remove-invited.no-text.btn-icon.btn",

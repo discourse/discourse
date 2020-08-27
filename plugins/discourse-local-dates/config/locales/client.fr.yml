@@ -19,7 +19,6 @@ fr:
           insert: Insérer
           advanced_mode: Mode avancé
           simple_mode: Mode simple
-          format_description: "Format utilisé pour afficher la date pour l'utilisateur. Utiliser « \\T\\Z » pour afficher le fuseau horaire de l'utilisateur en toutes lettres (Europe/Paris)"
           timezones_title: Fuseaux horaires à afficher
           timezones_description: Les fuseaux horaires seront utilisés pour afficher les dates en aperçu et en mode recours.
           recurring_title: Périodicité

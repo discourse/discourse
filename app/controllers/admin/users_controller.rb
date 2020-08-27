@@ -92,6 +92,8 @@ class Admin::UsersController < Admin::AdminController
 
   def suspend
     guardian.ensure_can_suspend!(@user)
+    params.require([:suspend_until, :reason])
+
     @user.suspended_till = params[:suspend_until]
     @user.suspended_at = DateTime.now
 

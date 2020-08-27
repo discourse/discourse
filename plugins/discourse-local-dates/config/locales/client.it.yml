@@ -19,7 +19,6 @@ it:
           insert: Inserisci
           advanced_mode: Modalità avanzata
           simple_mode: Modalità semplice
-          format_description: "Formato usato per mostrare la data all'utente. Usa \"\\T\\Z\" per visualizzare il fuso orario per esteso (Europe/Paris)"
           timezones_title: Fusi orari da visualizzare
           timezones_description: I fusi orari verranno utilizzati per visualizzare le date nell'anteprima e nel fallback.
           recurring_title: Ricorrenza

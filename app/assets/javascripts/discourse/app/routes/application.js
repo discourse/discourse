@@ -13,6 +13,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { inject as service } from "@ember/service";
+import bootbox from "bootbox";
 
 function unlessReadOnly(method, message) {
   return function() {

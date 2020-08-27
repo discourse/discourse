@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import { isAppleDevice } from "discourse/lib/utilities";
+import bootbox from "bootbox";
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -269,8 +270,9 @@ export function getUploadMarkdown(upload) {
 export function displayErrorForUpload(data, siteSettings) {
   if (data.jqXHR) {
     switch (data.jqXHR.status) {
-      // cancelled by the user
+      // didn't get headers from server, or browser refuses to tell us
       case 0:
+        bootbox.alert(I18n.t("post.errors.upload"));
         return;
 
       // entity too large, usually returned from the web server

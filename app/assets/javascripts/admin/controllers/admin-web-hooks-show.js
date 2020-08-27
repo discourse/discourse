@@ -7,6 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { extractDomainFromUrl } from "discourse/lib/utilities";
 import EmberObject from "@ember/object";
 import { isAbsoluteURL } from "discourse-common/lib/get-url";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   adminWebHooks: controller(),

@@ -13,7 +13,14 @@
               </div>
             {{/if}}
           </div>
-          {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+          <div>
+            <span class="total-rows">
+              {{#if model.totalRows}}
+                {{i18n "directory.total_rows" count=model.totalRows}}
+              {{/if}}
+            </span>
+            {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+          </div>
         </div>
 
         {{#conditional-loading-spinner condition=isLoading}}
@@ -21,7 +28,7 @@
 
             <table>
               <thead>
-                <th>{{i18n "directory.total_rows" count=model.totalRows}}</th>
+                {{table-header-toggle field="username" order=order asc=asc}}
                 {{table-header-toggle field="likes_received" order=order asc=asc icon="heart"}}
                 {{table-header-toggle field="likes_given" order=order asc=asc icon="heart"}}
                 {{table-header-toggle field="topic_count" order=order asc=asc}}

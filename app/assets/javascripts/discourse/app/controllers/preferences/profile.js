@@ -8,6 +8,7 @@ import { cookAsync } from "discourse/lib/text";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 import { readOnly } from "@ember/object/computed";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   init() {

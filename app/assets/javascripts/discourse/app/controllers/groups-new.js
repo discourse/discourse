@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export function popupAutomaticMembershipAlert(group_id, email_domains) {
   if (!email_domains) {

@@ -2,6 +2,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { later } from "@ember/runloop";
 import Controller from "@ember/controller";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   @discourseComputed("model.colors", "onlyOverridden")

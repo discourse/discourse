@@ -22,6 +22,7 @@ import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import bootbox from "bootbox";
 
 export function loadTopicView(topic, args) {
   const data = _.merge({}, args);
@@ -799,14 +800,21 @@ Topic.reopenClass({
     });
   },
 
-  bulkOperationByFilter(filter, operation, categoryId, options) {
+  bulkOperationByFilter(filter, operation, options) {
     let data = { filter, operation };
 
-    if (options && options.includeSubcategories) {
-      data.include_subcategories = true;
+    if (options) {
+      if (options.categoryId) {
+        data.category_id = options.categoryId;
+      }
+      if (options.includeSubcategories) {
+        data.include_subcategories = true;
+      }
+      if (options.tagName) {
+        data.tag_name = options.tagName;
+      }
     }
 
-    if (categoryId) data.category_id = categoryId;
     return ajax("/topics/bulk", {
       type: "PUT",
       data

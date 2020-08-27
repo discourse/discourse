@@ -883,6 +883,7 @@ zh_CN:
       muted_categories_instructions: "你不会收到这些分类中任何关于新主题的通知，并且这些新主题也不会出现在分类或最新的页面上。"
       muted_categories_instructions_dont_hide: "你将不会收到在这些分类中的新主题通知。"
       regular_categories: "活跃用户"
+      regular_categories_instructions: "你会在`最新`和`热门`主题列表中看到这些主题。"
       no_category_access: "无法保存，作为审核人你仅具有受限的 分类 访问权限"
       delete_account: "删除我的账户"
       delete_account_confirm: "你真的要永久删除自己的账户吗？删除之后无法恢复！"

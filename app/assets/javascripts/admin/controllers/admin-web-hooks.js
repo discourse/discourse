@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   actions: {

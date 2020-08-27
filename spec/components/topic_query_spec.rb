@@ -286,7 +286,7 @@ describe TopicQuery do
 
       before do
         SiteSetting.remove_muted_tags_from_latest = 'always'
-        SiteSetting.default_tags_muted = tag.id.to_s
+        SiteSetting.default_tags_muted = tag.name
       end
 
       it 'removes default muted tag topics for anonymous users' do

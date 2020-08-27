@@ -1090,7 +1090,18 @@ class Search
       type_filter: opts[:type_filter]
     }
 
-    min_id = Search.min_post_id
+    min_id =
+      if SiteSetting.search_recent_regular_posts_offset_post_id > 0
+        if %w{all_topics private_message}.include?(opts[:type_filter])
+          0
+        else
+          SiteSetting.search_recent_regular_posts_offset_post_id
+        end
+      else
+        # This is kept around for backwards compatibility.
+        # TODO: Drop this code path after Discourse 2.7 has been released.
+        Search.min_post_id
+      end
 
     if @order == :likes
       # likes are a pain to aggregate so skip

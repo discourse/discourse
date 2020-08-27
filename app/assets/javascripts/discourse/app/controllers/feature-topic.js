@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import EmberObject from "@ember/object";
+import bootbox from "bootbox";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),

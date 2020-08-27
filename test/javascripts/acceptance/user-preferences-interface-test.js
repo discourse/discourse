@@ -2,13 +2,14 @@ import { acceptance } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
 import Site from "discourse/models/site";
 import Session from "discourse/models/session";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 acceptance("User Preferences - Interface", {
   loggedIn: true
 });
 
 QUnit.test("font size change", async assert => {
-  $.removeCookie("text_size");
+  removeCookie("text_size");
 
   const savePreferences = async () => {
     assert.ok(!exists(".saved"), "it hasn't been saved yet");
@@ -28,12 +29,12 @@ QUnit.test("font size change", async assert => {
   await selectKit(".text-size .combobox").selectRowByValue("largest");
   assert.ok(document.documentElement.classList.contains("text-size-largest"));
 
-  assert.equal($.cookie("text_size"), null, "cookie is not set");
+  assert.equal(cookie("text_size"), null, "cookie is not set");
 
   // Click save (by default this sets for all browsers, no cookie)
   await savePreferences();
 
-  assert.equal($.cookie("text_size"), null, "cookie is not set");
+  assert.equal(cookie("text_size"), null, "cookie is not set");
 
   await selectKit(".text-size .combobox").expand();
   await selectKit(".text-size .combobox").selectRowByValue("larger");
@@ -41,15 +42,15 @@ QUnit.test("font size change", async assert => {
 
   await savePreferences();
 
-  assert.equal($.cookie("text_size"), "larger|1", "cookie is set");
+  assert.equal(cookie("text_size"), "larger|1", "cookie is set");
   await click(".text-size input[type=checkbox]");
   await selectKit(".text-size .combobox").expand();
   await selectKit(".text-size .combobox").selectRowByValue("largest");
 
   await savePreferences();
-  assert.equal($.cookie("text_size"), null, "cookie is removed");
+  assert.equal(cookie("text_size"), null, "cookie is removed");
 
-  $.removeCookie("text_size");
+  removeCookie("text_size");
 });
 
 QUnit.test(
@@ -148,24 +149,24 @@ QUnit.test("light and dark color scheme pickers", async assert => {
     "it does not show disable dark mode checkbox"
   );
 
-  $.removeCookie("color_scheme_id");
-  $.removeCookie("dark_scheme_id");
+  removeCookie("color_scheme_id");
+  removeCookie("dark_scheme_id");
 
   await selectKit(".light-color-scheme .combobox").expand();
   await selectKit(".light-color-scheme .combobox").selectRowByValue(2);
-  assert.equal($.cookie("color_scheme_id"), null, "cookie is not set");
+  assert.equal(cookie("color_scheme_id"), null, "cookie is not set");
   assert.ok(
     exists(".color-scheme-checkbox input:checked"),
     "defaults to storing values in user options"
   );
 
   await savePreferences();
-  assert.equal($.cookie("color_scheme_id"), null, "cookie is unchanged");
+  assert.equal(cookie("color_scheme_id"), null, "cookie is unchanged");
 
   // Switch to saving changes in cookies
   await click(".color-scheme-checkbox input[type=checkbox]");
   await savePreferences();
-  assert.equal($.cookie("color_scheme_id"), 2, "cookie is set");
+  assert.equal(cookie("color_scheme_id"), 2, "cookie is set");
 
   // dark scheme
   await selectKit(".dark-color-scheme .combobox").expand();
@@ -178,13 +179,13 @@ QUnit.test("light and dark color scheme pickers", async assert => {
 
   await selectKit(".dark-color-scheme .combobox").selectRowByValue(-1);
   assert.equal(
-    $.cookie("dark_scheme_id"),
+    cookie("dark_scheme_id"),
     null,
     "cookie is not set before saving"
   );
 
   await savePreferences();
-  assert.equal($.cookie("dark_scheme_id"), -1, "cookie is set");
+  assert.equal(cookie("dark_scheme_id"), -1, "cookie is set");
 
   await click("button.undo-preview");
   assert.equal(

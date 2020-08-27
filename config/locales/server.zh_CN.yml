@@ -781,7 +781,7 @@ zh_CN:
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
       long_form: "标记为不当内容"
     notify_user:
-      title: "给 @%{username}发送一条私信"
+      title: "给@%{username}发送一条私信"
       description: "我想亲自与此人私下交流关于该帖子的事情。"
       short_description: "我想亲自与此人私下交流关于该帖子的事情。"
       long_form: "以发送私信给用户"

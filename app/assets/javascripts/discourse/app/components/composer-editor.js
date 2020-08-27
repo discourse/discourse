@@ -36,6 +36,7 @@ import {
   getUploadMarkdown,
   displayErrorForUpload
 } from "discourse/lib/uploads";
+import bootbox from "bootbox";
 
 import {
   cacheShortUploadUrl,

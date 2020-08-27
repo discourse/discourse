@@ -9,7 +9,8 @@ export default Component.extend({
   classNameBindings: [
     ":latest-topic-list-item",
     "topic.archived",
-    "topic.visited"
+    "topic.visited",
+    "topic.pinned"
   ],
 
   showEntrance,

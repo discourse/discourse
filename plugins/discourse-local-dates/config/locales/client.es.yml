@@ -19,7 +19,6 @@ es:
           insert: Insertar
           advanced_mode: Modo avanzado
           simple_mode: Modo simple
-          format_description: "Formato usado para mostrar la fecha al usuario. Use «\\T\\Z» para mostrar la zona horaria del usuario en palabras (Europa/París)"
           timezones_title: Zonas horarias que se muestran
           timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retrospectiva.
           recurring_title: Recurrencia

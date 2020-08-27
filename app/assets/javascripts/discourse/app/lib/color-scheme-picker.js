@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 export function listColorSchemes(site, options = {}) {
   let schemes = site.get("user_color_schemes");
@@ -77,11 +78,11 @@ export function loadColorSchemeStylesheet(
 export function updateColorSchemeCookie(id, options = {}) {
   const cookieName = options.dark ? "dark_scheme_id" : "color_scheme_id";
   if (id) {
-    $.cookie(cookieName, id, {
+    cookie(cookieName, id, {
       path: "/",
       expires: 9999
     });
   } else {
-    $.removeCookie(cookieName, { path: "/", expires: 1 });
+    removeCookie(cookieName, { path: "/", expires: 1 });
   }
 }

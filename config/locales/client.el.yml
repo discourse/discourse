@@ -107,6 +107,7 @@ el:
       next_month: "Επόμενος μήνας"
       placeholder: ημερομηνία
     share:
+      topic_html: 'Θέμα: <span class="topic-title">%{topicTitle}</span>'
       post: "ανάρτηση #%{postNumber}"
       close: "κλείσιμο"
       twitter: "Μοιραστείτε στο Twitter"
@@ -142,6 +143,7 @@ el:
       banner:
         enabled: "το έκανε ανακοίνωση στις %{when}. Θα εμφανίζεται στην κορυφή κάθε σελίδας μέχρι να απορριφθεί από τον χρήστη."
         disabled: "το αφαίρεσε από ανακοίνωση %{when}. Δεν θα εμφανίζεται πλέον στην κορυφή κάθε σελίδας."
+      forwarded: "προώθησε το παραπάνω email"
     topic_admin_menu: "ρυθμίσεις νήματος"
     wizard_required: "Καλώς ήλθατε στο νέο σας Discourse! Ας αρχίσουμε με τον <a href='%{url}' data-auto-route='true'>οδηγό εγκατάστασης</a> ✨"
     emails_are_disabled: "Τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί κανένα email."
@@ -180,6 +182,7 @@ el:
     submit: "Υποβολή"
     generic_error: "Λυπούμαστε, προέκυψε κάποιο σφάλμα."
     generic_error_with_reason: "Προέκυψε ένα σφάλμα: %{error}"
+    go_ahead: "Προχωρήστε"
     sign_up: "Εγγραφείτε"
     log_in: "Συνδεθείτε"
     age: "Ηλικία"
@@ -212,6 +215,7 @@ el:
     daily: "καθημερινά"
     weekly: "κάθε εβδομάδα"
     every_month: "κάθε μήνα"
+    every_six_months: "κάθε έξι μήνες"
     max_of_count: "μέγιστο %{count}"
     alternation: "ή"
     character_count:
@@ -219,6 +223,7 @@ el:
       other: "%{count} χαρακτήρες"
     related_messages:
       title: "Σχετικά Μηνύματα"
+      see_all: 'Δείτε <a href="%{path}">όλα τα μηνύματα</a> από @%{username}...'
     suggested_topics:
       title: "Προτεινόμενα Νήματα"
       pm_title: "Προτεινόμενα Μηνύματα"
@@ -260,6 +265,7 @@ el:
       no_timezone: 'Δεν έχετε ορίσει ζώνη ώρας ακόμη. Δεν θα μπορείτε να ορίσετε υπενθυμίσεις. Ρυθμίστε ένα <a href="%{basePath}/my/preferences/profile">στο προφίλ σας</a>.'
       invalid_custom_datetime: "Η ημερομηνία και η ώρα που δώσατε δεν είναι έγκυρη, δοκιμάστε ξανά."
       list_permission_denied: "Δεν έχετε άδεια για την προβολή των σελιδοδεικτών αυτού του χρήστη."
+      no_user_bookmarks: "Δεν έχετε σελιδοδείκτες. Οι σελιδοδείκτες σας επιτρέπουν να ανατρέξετε γρήγορα σε συγκεκριμένες αναρτήσεις."
       auto_delete_preference:
         label: "Αυτόματη διαγραφή"
         never: "Ποτέ"
@@ -277,14 +283,34 @@ el:
         start_of_next_business_week: "Την Δευτέρα"
         start_of_next_business_week_alt: "Την επόμενη Δευτέρα"
         next_month: "Τον άλλο μήνα"
+        custom: "Προσαρμοσμένη ημερομηνία και ώρα"
+        last_custom: "Τελευταία"
+        none: "Δεν απαιτείται υπενθύμιση"
+        today_with_time: "σήμερα στις %{time}"
+        tomorrow_with_time: "αύριο στις %{time}"
+        at_time: "στις %{date_time}"
+        existing_reminder: "Έχετε ορίσει μια υπενθύμιση για αυτόν τον σελιδοδείκτη που θα σταλεί"
     copy_codeblock:
       copied: "αντιγράφηκε!"
     drafts:
       resume: "Βιογραφικό"
       remove: "Αναίρεση Πρόσκλησης"
+      new_topic: "Νέο προσχέδιο θέματος"
+      new_private_message: "Νέο προσχέδιο ιδιωτικού μηνύματος"
+      topic_reply: "Προσχέδιο απάντησης"
       abandon:
+        confirm: "Έχετε ήδη ανοίξει ένα άλλο προσχέδιο σε αυτό το θέμα. Είστε βέβαιοι ότι θέλετε να το εγκαταλείψετε;"
         yes_value: "Ναί, απέρριψέ τη"
         no_value: "Όχι, κράτησέ τη"
+    topic_count_latest:
+      one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
+      other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
+    topic_count_unread:
+      one: "%{count} μη αναγνωσμένο θέμα"
+      other: "Δείτε %{count} μη αναγνωσμένα θέματα"
+    topic_count_new:
+      one: "Δείτε %{count} νέο θέμα"
+      other: "Δείτε %{count} νέα θέματα"
     preview: "προεπισκόπιση"
     cancel: "ακύρωση"
     save: "Αποθήκευση Αλλαγών"
@@ -292,9 +318,13 @@ el:
     saved: "Αποθηκεύτηκε!"
     upload: "Ανέβασμα"
     uploading: "Ανεβαίνει..."
+    uploading_filename: "Μεταφόρτωση: %{filename}..."
+    clipboard: "πρόχειρο"
     uploaded: "Ανέβηκε!"
+    pasting: "Επικόλληση ..."
     enable: "Ενεργοποίηση"
     disable: "Απενεργοποίηση"
+    continue: "Συνεχίστε"
     undo: "Αναίρεση"
     revert: "Επαναφορά"
     failed: "Απέτυχε"
@@ -305,6 +335,8 @@ el:
       edit: "Επεξεργασία αυτής της ανακοίνωσης >>"
     choose_topic:
       none_found: "Δεν βρέθηκαν νήματα."
+      title:
+        search: "Αναζητήστε ένα θέμα"
     choose_message:
       none_found: "Δε βρέθηκαν αποτελέσματα."
     review:

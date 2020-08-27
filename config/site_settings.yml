@@ -1824,6 +1824,12 @@ search:
   search_recent_posts_size:
     default: 100000
     max: 100000
+  search_recent_regular_posts_offset_post_id:
+    default: 0
+    hidden: true
+  search_enable_recent_regular_posts_offset_size:
+    default: 200000
+    hidden: true
   log_search_queries:
     client: true
     default: true

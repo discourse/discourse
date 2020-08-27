@@ -9,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { url } from "discourse/lib/computed";
+import bootbox from "bootbox";
 
 const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5];

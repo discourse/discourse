@@ -1003,6 +1003,7 @@ he:
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
       muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר בנוגע לנושאים בקטגוריות האלו."
       regular_categories: "רגילות"
+      regular_categories_instructions: "הנושאים האלו יופיעו תחת רשימות הנושאים `אחרונים` ו־`מובילים`."
       no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מנוטרלת."
       delete_account: "מחיקת החשבון שלי"
       delete_account_confirm: "להסיר את החשבון? לא ניתן לבטל פעולה זו!"

@@ -2,6 +2,7 @@ import I18n from "I18n";
 import { gte, sort } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 const MAX_FIELDS = 20;
 

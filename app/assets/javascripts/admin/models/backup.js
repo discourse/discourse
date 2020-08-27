@@ -4,6 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import EmberObject from "@ember/object";
 import MessageBus from "message-bus-client";
+import bootbox from "bootbox";
 
 const Backup = EmberObject.extend({
   destroy() {

@@ -19,7 +19,6 @@ bs_BA:
           insert: Unesi
           advanced_mode: Napredni način
           simple_mode: Jednostavan način
-          format_description: "Format koji je korišten kako bi prikazali vrijeme korisniku. Koristite \"\\T\\Z\" kako bi korisniku prikazali vremensku zonu riječima (Europe/Paris)"
           timezones_title: Vremenske zone za prikazati
           timezones_description: Vremenske zone će biti korištene kako bi prikazale datume u pregledu i u nazad.
           recurring_title: Vraćanje

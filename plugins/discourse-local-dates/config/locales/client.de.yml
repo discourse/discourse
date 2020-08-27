@@ -19,7 +19,6 @@ de:
           insert: Einfügen
           advanced_mode: Erweiterter Modus
           simple_mode: Einfacher Modus
-          format_description: "Format, das verwendet wird, um dem Benutzer das Datum anzuzeigen. Verwende „\\T\\ Z“, um die Zeitzone des Benutzers in Worten anzuzeigen (Europa/Paris)"
           timezones_title: Anzuzeigende Zeitzonen
           timezones_description: Zeitzonen werden verwendet, um Datumsangaben in der Vorschau und als Ausweichlösung anzuzeigen.
           recurring_title: Wiederholung
