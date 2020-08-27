@@ -67,6 +67,11 @@ class UrlHelper
     UrlHelper.encode_component(CGI.unescapeHTML(UrlHelper.unencode(uri)))
   end
 
+  def self.rails_route_from_url(url)
+    path = URI.parse(url).path
+    Rails.application.routes.recognize_path(path)
+  end
+
   def self.s3_presigned_url?(url)
     url[/x-amz-(algorithm|credential)/i].present?
   end
