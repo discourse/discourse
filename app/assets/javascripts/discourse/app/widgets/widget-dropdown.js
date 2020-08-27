@@ -1,6 +1,5 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { schedule } from "@ember/runloop";
 import hbs from "discourse/widgets/hbs-compiler";
 
 /*
@@ -239,40 +238,45 @@ export const WidgetDropdownClass = {
     }
   },
 
-  _onTrigger() {
-    this.state.opened = !this.state.opened;
+  willRerenderWidget() {
+    this._popper && this._popper.destroy();
+  },
 
-    schedule("afterRender", () => {
+  didRenderWidget() {
+    if (this.state.opened) {
       const dropdownHeader = document.querySelector(
         `#${this.attrs.id} .widget-dropdown-header`
       );
+
+      if (!dropdownHeader) return;
+
       const dropdownBody = document.querySelector(
         `#${this.attrs.id} .widget-dropdown-body`
       );
 
-      if (this.state.opened && dropdownHeader && dropdownBody) {
-        if (this.state.popper) {
-          this.state.popper.destroy();
-        }
+      if (!dropdownBody) return;
 
-        /* global Popper:true */
-        this.state.popper = Popper.createPopper(dropdownHeader, dropdownBody, {
-          strategy: "fixed",
-          placement: "bottom-start",
-          modifiers: [
-            {
-              name: "preventOverflow"
-            },
-            {
-              name: "offset",
-              options: {
-                offset: [0, 5]
-              }
+      /* global Popper:true */
+      this._popper = Popper.createPopper(dropdownHeader, dropdownBody, {
+        strategy: "fixed",
+        placement: "bottom-start",
+        modifiers: [
+          {
+            name: "preventOverflow"
+          },
+          {
+            name: "offset",
+            options: {
+              offset: [0, 5]
             }
-          ]
-        });
-      }
-    });
+          }
+        ]
+      });
+    }
+  },
+
+  _onTrigger() {
+    this.state.opened = !this.state.opened;
   },
 
   template: hbs`
