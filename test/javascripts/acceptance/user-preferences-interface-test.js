@@ -154,13 +154,18 @@ QUnit.test("light and dark color scheme pickers", async assert => {
   await selectKit(".light-color-scheme .combobox").expand();
   await selectKit(".light-color-scheme .combobox").selectRowByValue(2);
   assert.equal($.cookie("color_scheme_id"), null, "cookie is not set");
+  assert.ok(
+    exists(".color-scheme-checkbox input:checked"),
+    "defaults to storing values in user options"
+  );
+
+  await savePreferences();
+  assert.equal($.cookie("color_scheme_id"), null, "cookie is unchanged");
+
+  // Switch to saving changes in cookies
+  await click(".color-scheme-checkbox input[type=checkbox]");
   await savePreferences();
   assert.equal($.cookie("color_scheme_id"), 2, "cookie is set");
-
-  await click(".color-scheme-checkbox input[type=checkbox]");
-
-  await savePreferences();
-  assert.equal($.cookie("color_scheme_id"), null, "cookie is removed");
 
   // dark scheme
   await selectKit(".dark-color-scheme .combobox").expand();
@@ -172,9 +177,29 @@ QUnit.test("light and dark color scheme pickers", async assert => {
   );
 
   await selectKit(".dark-color-scheme .combobox").selectRowByValue(-1);
-  assert.equal($.cookie("dark_scheme_id"), null, "cookie is not set");
-  await click(".color-scheme-checkbox input[type=checkbox]");
+  assert.equal(
+    $.cookie("dark_scheme_id"),
+    null,
+    "cookie is not set before saving"
+  );
 
   await savePreferences();
   assert.equal($.cookie("dark_scheme_id"), -1, "cookie is set");
+
+  await click("button.undo-preview");
+  assert.equal(
+    selectKit(".light-color-scheme .combobox")
+      .header()
+      .value(),
+    null,
+    "resets light scheme dropdown"
+  );
+
+  assert.equal(
+    selectKit(".dark-color-scheme .combobox")
+      .header()
+      .value(),
+    session.userDarkSchemeId,
+    "resets dark scheme dropdown"
+  );
 });

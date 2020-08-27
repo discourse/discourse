@@ -17,6 +17,7 @@ import {
   iOSWithVisualViewport
 } from "discourse/lib/utilities";
 import { computed } from "@ember/object";
+import { reads } from "@ember/object/computed";
 
 const USER_HOMES = {
   1: "latest",
@@ -32,7 +33,18 @@ const TITLE_COUNT_MODES = ["notifications", "contextual"];
 export default Controller.extend({
   currentThemeId: -1,
   previewingColorScheme: false,
+  selectedColorSchemeId: null,
+  selectedDarkColorSchemeId: null,
   preferencesController: inject("preferences"),
+
+  init() {
+    this._super(...arguments);
+
+    this.setProperties({
+      selectedColorSchemeId: this.session.userColorSchemeId,
+      selectedDarkColorSchemeId: this.session.userDarkSchemeId
+    });
+  },
 
   @discourseComputed("makeThemeDefault", "makeColorSchemeDefault")
   saveAttrNames(makeThemeDefault, makeColorSchemeDefault) {
@@ -135,24 +147,10 @@ export default Controller.extend({
     return listColorSchemes(this.site);
   },
 
-  @discourseComputed("userSelectableColorSchemes")
-  showColorSchemeSelector(colorSchemes) {
-    return colorSchemes && colorSchemes.length;
-  },
-
-  @discourseComputed
-  selectedColorSchemeNoneLabel() {
-    return I18n.t("user.color_schemes.default_description");
-  },
-
-  selectedColorSchemeId: computed({
-    set(key, value) {
-      return value;
-    },
-    get() {
-      return this.get("userColorSchemeId");
-    }
-  }),
+  showColorSchemeSelector: reads("userSelectableColorSchemes.length"),
+  selectedColorSchemeNoneLabel: I18n.t(
+    "user.color_schemes.default_description"
+  ),
 
   @discourseComputed("model.user_option.theme_ids", "themeId")
   showThemeSetDefault(userOptionThemes, selectedTheme) {
@@ -210,15 +208,6 @@ export default Controller.extend({
     return darkSchemes && darkSchemes.length > minToShow;
   },
 
-  selectedDarkColorSchemeId: computed({
-    set(key, value) {
-      return value;
-    },
-    get() {
-      return this.get("userDarkSchemeId");
-    }
-  }),
-
   enableDarkMode: computed({
     set(key, value) {
       return value;
@@ -241,8 +230,7 @@ export default Controller.extend({
         this.set("model.user_option.text_size", this.textSize);
       }
 
-      const makeColorSchemeDefault = this.makeColorSchemeDefault;
-      if (makeColorSchemeDefault) {
+      if (this.makeColorSchemeDefault) {
         this.set(
           "model.user_option.color_scheme_id",
           this.selectedColorSchemeId
@@ -288,7 +276,7 @@ export default Controller.extend({
             this.model.updateTextSizeCookie(this.textSize);
           }
 
-          if (makeColorSchemeDefault) {
+          if (this.makeColorSchemeDefault) {
             updateColorSchemeCookie(null);
             updateColorSchemeCookie(null, { dark: true });
           } else {
@@ -349,8 +337,9 @@ export default Controller.extend({
       });
 
       if (colorSchemeId < 0) {
-        const defaultTheme = this.userSelectableThemes.find(
-          t => t.id === this.themeId
+        const defaultTheme = this.userSelectableThemes.findBy(
+          "id",
+          this.themeId
         );
 
         if (defaultTheme && defaultTheme.color_scheme_id) {
@@ -384,8 +373,8 @@ export default Controller.extend({
 
     undoColorSchemePreview() {
       this.setProperties({
-        selectedColorSchemeId: this.userColorSchemeId,
-        selectedDarkColorSchemeId: this.userDarkSchemeId,
+        selectedColorSchemeId: this.session.userColorSchemeId,
+        selectedDarkColorSchemeId: this.session.userDarkSchemeId,
         previewingColorScheme: false
       });
       const darkStylesheet = document.querySelector("link#cs-preview-dark"),
