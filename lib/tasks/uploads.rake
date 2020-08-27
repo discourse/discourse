@@ -1008,6 +1008,7 @@ def analyze_missing_s3
   lookup = {}
   other = []
   all = []
+
   DB.query(sql).each do |r|
     all << r
     if r.post_id
@@ -1028,7 +1029,8 @@ def analyze_missing_s3
     puts
   end
 
-  puts "Total missing uploads: #{Upload.where(verified: false).count}"
+  missing_uploads = Upload.where(verified: false)
+  puts "Total missing uploads: #{missing_uploads.count}, newest is #{missing_uploads.maximum(:created_at)}"
   puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
   puts "Other missing uploads count: #{other.count}"
 
@@ -1062,6 +1064,36 @@ def analyze_missing_s3
 
   end
 
+end
+
+def delete_missing_s3
+  missing = Upload.where(verified: false).order(:created_at)
+  count = missing.count
+  if count > 0
+    puts "The following uploads will be deleted from the database"
+    missing.each do |upload|
+      puts "#{upload.id} - #{upload.url} - #{upload.created_at}"
+    end
+    puts "Please confirm you wish to delete #{count} upload records by typing YES"
+    confirm = STDIN.gets.strip
+    if confirm == "YES"
+      missing.destroy_all
+      puts "#{count} records were deleted"
+    else
+      STDERR.puts "Aborting"
+      exit 1
+    end
+  end
+end
+
+task "uploads:delete_missing_s3" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    delete_missing_s3
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      delete_missing_s3
+    end
+  end
 end
 
 task "uploads:analyze_missing_s3" => :environment do
@@ -1138,9 +1170,13 @@ def fix_missing_s3
   SQL
 
   DB.query_single(sql).each do |post_id|
-    post = Post.find(post_id)
-    post.rebake!
-    print "."
+    post = Post.find_by(id: post_id)
+    if post
+      post.rebake!
+      print "."
+    else
+      puts "Skipping #{post_id} since it is deleted"
+    end
   end
   puts
 end
