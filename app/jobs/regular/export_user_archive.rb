@@ -7,6 +7,7 @@ module Jobs
     sidekiq_options retry: false
 
     attr_accessor :current_user
+    # note: contents provided entirely by user
     attr_accessor :extra
 
     COMPONENTS ||= %w(
