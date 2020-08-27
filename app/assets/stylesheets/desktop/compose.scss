@@ -24,14 +24,6 @@
   .select-kit.is-expanded {
     z-index: z("composer", "dropdown") + 1;
   }
-
-  .d-editor-textarea-wrapper {
-    overflow: hidden;
-  }
-  .d-editor-button-bar {
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
 }
 
 .edit-title {
