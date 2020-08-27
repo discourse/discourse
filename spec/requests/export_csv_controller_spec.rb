@@ -8,13 +8,12 @@ describe ExportCsvController do
     before { sign_in(user) }
 
     describe "#export_entity" do
-      it "enqueues export job" do
+      it "enqueues user archive job" do
         post "/export_csv/export_entity.json", params: { entity: "user_archive" }
         expect(response.status).to eq(200)
-        expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
+        expect(Jobs::ExportUserArchive.jobs.size).to eq(1)
 
-        job_data = Jobs::ExportCsvFile.jobs.first["args"].first
-        expect(job_data["entity"]).to eq("user_archive")
+        job_data = Jobs::ExportUserArchive.jobs.first["args"].first
         expect(job_data["user_id"]).to eq(user.id)
       end
 
@@ -22,7 +21,7 @@ describe ExportCsvController do
         UserExport.create(file_name: "user-archive-codinghorror-150116-003249", user_id: user.id)
         post "/export_csv/export_entity.json", params: { entity: "user_archive" }
         expect(response.status).to eq(422)
-        expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+        expect(Jobs::ExportUserArchive.jobs.size).to eq(0)
       end
 
       it "returns 404 when normal user tries to export admin entity" do

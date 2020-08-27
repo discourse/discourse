@@ -5,26 +5,30 @@ require 'rails_helper'
 describe Jobs::ExportCsvFile do
 
   context '#execute' do
-    fab!(:user) { Fabricate(:user, username: "john_doe") }
+    let(:other_user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
+    let(:action_log) { StaffActionLogger.new(admin).log_revoke_moderation(other_user) }
 
     it 'raises an error when the entity is missing' do
-      expect { Jobs::ExportCsvFile.new.execute(user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
+      expect { Jobs::ExportCsvFile.new.execute(user_id: admin.id) }.to raise_error(Discourse::InvalidParameters)
     end
 
     it 'works' do
+      action_log
+
       begin
         expect do
           Jobs::ExportCsvFile.new.execute(
-            user_id: user.id,
-            entity: "user_archive"
+            user_id: admin.id,
+            entity: "staff_action"
           )
         end.to change { Upload.count }.by(1)
 
-        system_message = user.topics_allowed.last
+        system_message = admin.topics_allowed.last
 
         expect(system_message.title).to eq(I18n.t(
           "system_messages.csv_export_succeeded.subject_template",
-          export_title: "User Archive"
+          export_title: "Staff Action"
         ))
 
         upload = system_message.first_post.uploads.first
@@ -42,41 +46,10 @@ describe Jobs::ExportCsvFile do
           zip_file.each { |entry| files << entry.name }
         end
 
-        expect(files.size).to eq(2)
+        expect(files.size).to eq(1)
       ensure
-        user.uploads.each(&:destroy!)
+        admin.uploads.each(&:destroy!)
       end
-    end
-  end
-
-  context '#user_archive_export' do
-    let(:user) { Fabricate(:user) }
-
-    let(:category) { Fabricate(:category_with_definition) }
-    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
-    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
-
-    it 'works with sub-sub-categories' do
-      SiteSetting.max_category_nesting = 3
-      topic = Fabricate(:topic, category: subsubcategory)
-      post = Fabricate(:post, topic: topic, user: user)
-
-      exporter = Jobs::ExportCsvFile.new
-      exporter.current_user = User.find_by(id: user.id)
-
-      rows = []
-      exporter.user_archive_export { |row| rows << row }
-
-      expect(rows.length).to eq(1)
-
-      first_row = Jobs::ExportCsvFile::HEADER_ATTRS_FOR['user_archive'].zip(rows[0]).to_h
-
-      expect(first_row["topic_title"]).to eq(topic.title)
-      expect(first_row["categories"]).to eq("#{category.name}|#{subcategory.name}|#{subsubcategory.name}")
-      expect(first_row["is_pm"]).to eq(I18n.t("csv_export.boolean_no"))
-      expect(first_row["post"]).to eq(post.raw)
-      expect(first_row["like_count"]).to eq(0)
-      expect(first_row["reply_count"]).to eq(0)
     end
   end
 
