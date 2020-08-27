@@ -856,6 +856,11 @@ class TopicsController < ApplicationController
           topics = topics.where('category_id = ?', params[:category_id])
         end
       end
+
+      if params[:tag_name].present?
+        topics = topics.joins(:tags).where("tags.name": params[:tag_name])
+      end
+
       topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)

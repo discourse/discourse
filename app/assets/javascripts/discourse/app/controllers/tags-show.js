@@ -7,6 +7,7 @@ import NavItem from "discourse/models/nav-item";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import { queryParams } from "discourse/controllers/discovery-sortable";
 import bootbox from "bootbox";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   application: controller(),
@@ -88,7 +89,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
   @discourseComputed("navMode", "list.topics.length", "loading")
   footerMessage(navMode, listTopicsLength, loading) {
-    if (loading || listTopicsLength !== 0) {
+    if (loading) {
       return;
     }
 
@@ -97,13 +98,29 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         tag: this.get("tag.id")
       });
     } else {
-      return I18n.t(`tagging.topics.bottom.${navMode}`, {
+      return I18n.t(`topics.bottom.tag`, {
         tag: this.get("tag.id")
       });
     }
   },
 
+  isFilterPage: function(filter, filterType) {
+    if (!filter) {
+      return false;
+    }
+    return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
+  },
+
+  @discourseComputed("list.filter", "list.topics.length")
+  showDismissRead(filter, topicsLength) {
+    return this.isFilterPage(filter, "unread") && topicsLength > 0;
+  },
+
   actions: {
+    dismissReadPosts() {
+      showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
+    },
+
     changeSort(order) {
       if (order === this.order) {
         this.toggleProperty("ascending");
@@ -122,7 +139,9 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
     refresh() {
       return this.store
-        .findFiltered("topicList", { filter: "tags/" + this.get("tag.id") })
+        .findFiltered("topicList", {
+          filter: this.get("list.filter")
+        })
         .then(list => {
           this.set("list", list);
           this.resetSelected();
