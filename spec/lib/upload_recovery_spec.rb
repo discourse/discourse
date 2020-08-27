@@ -49,7 +49,7 @@ RSpec.describe UploadRecovery do
 
   describe '#recover' do
     describe 'when given an invalid sha1' do
-      xit 'should not do anything' do
+      it 'does nothing' do
         upload_recovery.expects(:recover_from_local).never
 
         post.update!(
@@ -66,7 +66,7 @@ RSpec.describe UploadRecovery do
       end
     end
 
-    xit 'accepts a custom ActiveRecord relation' do
+    it 'accepts a custom ActiveRecord relation' do
       post.update!(updated_at: 2.days.ago)
       upload.destroy!
 
@@ -85,7 +85,7 @@ RSpec.describe UploadRecovery do
         ).tap(&:link_post_uploads)
       end
 
-      xit 'should recover the attachment' do
+      it 'recovers the attachment' do
         expect do
           upload2.destroy!
         end.to change { post.reload.uploads.count }.from(1).to(0)
@@ -99,7 +99,7 @@ RSpec.describe UploadRecovery do
       end
     end
 
-    xit 'should recover uploads and attachments' do
+    it 'recovers uploads and attachments' do
       stub_request(:get, "http://test.localhost#{upload.url}")
         .to_return(status: 200)
 
@@ -125,7 +125,7 @@ RSpec.describe UploadRecovery do
         ).tap(&:link_post_uploads)
       end
 
-      xit 'should recover the upload' do
+      it 'recovers the upload' do
         stub_request(:get, "http://test.localhost#{upload.url}")
           .to_return(status: 200)
 
@@ -152,7 +152,7 @@ RSpec.describe UploadRecovery do
         ).tap(&:link_post_uploads)
       end
 
-      xit 'should recover the upload' do
+      it 'recovers the upload' do
         stub_request(:get, "http://test.localhost#{upload.url}")
           .to_return(status: 200)
 
@@ -179,7 +179,7 @@ RSpec.describe UploadRecovery do
         ).tap(&:link_post_uploads)
       end
 
-      xit 'should recover the upload' do
+      it 'recovers the upload' do
         stub_request(:get, "http://test.localhost#{upload.url}")
           .to_return(status: 200)
 
