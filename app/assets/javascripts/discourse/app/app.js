@@ -1,6 +1,6 @@
-/*global Mousetrap:true*/
 import Application from "@ember/application";
 import { buildResolver } from "discourse-common/resolver";
+import Mousetrap from "mousetrap";
 
 const _pluginCallbacks = [];
 
