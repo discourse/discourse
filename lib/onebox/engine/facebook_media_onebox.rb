@@ -8,6 +8,7 @@ module Onebox
 
       matches_regexp(/^https?:\/\/.*\.facebook\.com\/(\w+)\/(videos|\?).*/)
       always_https
+      requires_iframe_origins "https://www.facebook.com"
 
       def to_html
         metadata = get_twitter

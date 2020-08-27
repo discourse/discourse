@@ -7,6 +7,7 @@ module Onebox
       def self.included(klass)
         klass.include(Onebox::Engine)
         klass.matches_regexp(klass.twitch_regexp)
+        klass.requires_iframe_origins "https://player.twitch.tv"
         klass.include(InstanceMethods)
       end
 
@@ -25,7 +26,7 @@ module Onebox
 
         def to_html
           <<~HTML
-          <iframe src="//#{base_url}#{query_params}&parent=#{options[:hostname]}&autoplay=false" width="620" height="378" frameborder="0" style="overflow: hidden;" scrolling="no" allowfullscreen="allowfullscreen"></iframe>
+          <iframe src="https://#{base_url}#{query_params}&parent=#{options[:hostname]}&autoplay=false" width="620" height="378" frameborder="0" style="overflow: hidden;" scrolling="no" allowfullscreen="allowfullscreen"></iframe>
           HTML
         end
       end

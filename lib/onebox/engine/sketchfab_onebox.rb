@@ -8,6 +8,7 @@ module Onebox
 
       matches_regexp(/^https?:\/\/sketchfab\.com\/(?:models\/|3d-models\/(?:[^\/\s]+-)?)([a-z0-9]{32})/)
       always_https
+      requires_iframe_origins("https://sketchfab.com")
 
       def to_html
         og = get_opengraph

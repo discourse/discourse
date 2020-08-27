@@ -7,6 +7,7 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/^https:\/\/trello\.com\/[bc]\/\W*/)
+      requires_iframe_origins "https://trello.com"
       always_https
 
       def to_html

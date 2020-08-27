@@ -7,6 +7,7 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/^https?:\/\/(www\.)?vimeo\.com\/\d+/)
+      requires_iframe_origins "https://player.vimeo.com"
       always_https
 
       WIDTH  ||= 640

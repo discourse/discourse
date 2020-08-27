@@ -6,6 +6,7 @@ module Onebox
       include Engine
 
       matches_regexp(/^https?:\/\/[a-z0-9\-_]+\.typeform\.com\/to\/[a-zA-Z0-9]+/)
+      requires_iframe_origins "https://*.typeform.com"
       always_https
 
       def to_html

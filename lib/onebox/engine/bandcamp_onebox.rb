@@ -8,6 +8,7 @@ module Onebox
 
       matches_regexp(/^https?:\/\/.*\.bandcamp\.com\/(album|track)\//)
       always_https
+      requires_iframe_origins "https://bandcamp.com"
 
       def placeholder_html
         og = get_opengraph

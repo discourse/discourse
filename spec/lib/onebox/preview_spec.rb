@@ -73,4 +73,34 @@ describe Onebox::Preview do
 
   end
 
+  describe "iframe sanitizer" do
+    let(:iframe_html) { "<iframe src='https://thirdparty.example.com'>" }
+
+    it "sanitizes iframes from unknown origins" do
+      preview = described_class.new(preview_url)
+      allow(preview).to receive(:engine_html) { iframe_html }
+
+      result = preview.to_s
+      expect(result).not_to include(' src="https://thirdparty.example.com"')
+      expect(result).to include(' data-unsanitized-src="https://thirdparty.example.com"')
+    end
+
+    it "allows allowed origins" do
+      preview = described_class.new(preview_url, allowed_iframe_origins: ["https://thirdparty.example.com"])
+      allow(preview).to receive(:engine_html) { iframe_html }
+
+      result = preview.to_s
+      expect(result).to include ' src="https://thirdparty.example.com"'
+    end
+
+    it "allows wildcard allowed origins" do
+      preview = described_class.new(preview_url, allowed_iframe_origins: ["https://*.example.com"])
+      allow(preview).to receive(:engine_html) { iframe_html }
+
+      result = preview.to_s
+      expect(result).to include ' src="https://thirdparty.example.com"'
+    end
+
+  end
+
 end

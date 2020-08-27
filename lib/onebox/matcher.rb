@@ -2,8 +2,9 @@
 
 module Onebox
   class Matcher
-    def initialize(link)
+    def initialize(link, options = {})
       @url = link
+      @options = options
     end
 
     def ordered_engines
@@ -16,9 +17,14 @@ module Onebox
       uri = URI(@url)
       return unless uri.port.nil? || Onebox.options.allowed_ports.include?(uri.port)
       return unless uri.scheme.nil? || Onebox.options.allowed_schemes.include?(uri.scheme)
-      ordered_engines.find { |engine| engine === uri }
+      ordered_engines.find { |engine| engine === uri && has_allowed_iframe_origins?(engine) }
     rescue URI::InvalidURIError
       nil
+    end
+
+    def has_allowed_iframe_origins?(engine)
+      allowed_regexes = @options[:allowed_iframe_regexes] || []
+      engine.iframe_origins.all? { |o| allowed_regexes.any? { |r| o =~ r } }
     end
   end
 end

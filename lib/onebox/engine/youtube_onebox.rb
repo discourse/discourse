@@ -7,6 +7,7 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/^https?:\/\/(?:www\.)?(?:m\.)?(?:youtube\.com|youtu\.be)\/.+$/)
+      requires_iframe_origins "https://www.youtube.com"
       always_https
 
       WIDTH  ||= 480

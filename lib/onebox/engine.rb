@@ -12,6 +12,22 @@ module Onebox
       end.map(&method(:const_get))
     end
 
+    def self.all_iframe_origins
+      engines.flat_map { |e| e.iframe_origins }.uniq.compact
+    end
+
+    def self.origins_to_regexes(origins)
+      return /.*/ if origins.include?("*")
+      origins.map do |origin|
+        escaped_origin = Regexp.escape(origin)
+        if origin.start_with?("*.", "https://*.", "http://*.")
+          escaped_origin = escaped_origin.sub("\\*", '\S*')
+        end
+
+        Regexp.new("\\A#{escaped_origin}", 'i')
+      end
+    end
+
     attr_reader :url, :uri
     attr_reader :timeout
 
@@ -98,6 +114,14 @@ module Onebox
 
       def matches_regexp(r)
         class_variable_set :@@matcher, r
+      end
+
+      def requires_iframe_origins(*origins)
+        class_variable_set :@@iframe_origins, origins
+      end
+
+      def iframe_origins
+        class_variable_defined?(:@@iframe_origins) ? class_variable_get(:@@iframe_origins) : []
       end
 
       # calculates a name for onebox using the class name of engine

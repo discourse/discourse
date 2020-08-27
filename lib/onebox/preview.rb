@@ -7,10 +7,14 @@ module Onebox
     client_exception = defined?(Net::HTTPClientException) ? Net::HTTPClientException : Net::HTTPServerException
     WEB_EXCEPTIONS ||= [client_exception, OpenURI::HTTPError, Timeout::Error, Net::HTTPError, Errno::ECONNREFUSED]
 
-    def initialize(link, parameters = Onebox.options)
+    def initialize(link, options = Onebox.options)
       @url = link
-      @options = parameters
-      @engine_class = Matcher.new(@url).oneboxed
+      @options = options.dup
+
+      allowed_origins = @options[:allowed_iframe_origins] || Onebox::Engine.all_iframe_origins
+      @options[:allowed_iframe_regexes] = Engine.origins_to_regexes(allowed_origins)
+
+      @engine_class = Matcher.new(@url, @options).oneboxed
     end
 
     def to_s
@@ -63,7 +67,10 @@ module Onebox
     end
 
     def sanitize(html)
-      Sanitize.fragment(html, @options[:sanitize_config] || Sanitize::Config::ONEBOX)
+      config = @options[:sanitize_config] || Sanitize::Config::ONEBOX
+      config = config.merge(allowed_iframe_regexes: @options[:allowed_iframe_regexes])
+
+      Sanitize.fragment(html, config)
     end
 
     def engine

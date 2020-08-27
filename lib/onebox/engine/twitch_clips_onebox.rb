@@ -9,6 +9,8 @@ class Onebox::Engine::TwitchClipsOnebox
   end
   include Onebox::Mixins::TwitchOnebox
 
+  requires_iframe_origins "https://clips.twitch.tv"
+
   def query_params
     "clip=#{twitch_id}"
   end

@@ -7,10 +7,11 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/^https?:\/\/slides\.com\/[\p{Alnum}_\-]+\/[\p{Alnum}_\-]+$/)
+      requires_iframe_origins "https://slides.com"
 
       def to_html
         <<-HTML
-          <iframe src="//slides.com#{uri.path}/embed?style=light"
+          <iframe src="https://slides.com#{uri.path}/embed?style=light"
                   width="576"
                   height="420"
                   scrolling="no"

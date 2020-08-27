@@ -281,7 +281,9 @@ module Onebox
       end
 
       def is_card?
-        data[:card] == 'player' && data[:player] =~ URI::regexp
+        data[:card] == 'player' &&
+          data[:player] =~ URI::regexp &&
+          options[:allowed_iframe_regexes]&.any? { |r| data[:player] =~ r }
       end
 
       def is_article?
@@ -305,16 +307,19 @@ module Onebox
       end
 
       def is_video?
-        data[:type] =~ /^video[\/\.]/ && !Onebox::Helpers.blank?(data[:video])
+        data[:type] =~ /^video[\/\.]/ &&
+          data[:video_type] == "video/mp4" && # Many sites include 'videos' with text/html types (i.e. iframes)
+          !Onebox::Helpers.blank?(data[:video])
       end
 
       def is_embedded?
-        data[:html] &&
-        data[:height] &&
-        (
-          data[:html]["iframe"] ||
-          AllowlistedGenericOnebox.html_providers.include?(data[:provider_name])
-        )
+        return false unless data[:html] && data[:height]
+        return true if AllowlistedGenericOnebox.html_providers.include?(data[:provider_name])
+        return false unless data[:html]["iframe"]
+
+        fragment = Nokogiri::HTML::fragment(data[:html])
+        src = fragment.at_css('iframe')&.[]("src")
+        options[:allowed_iframe_regexes]&.any? { |r| src =~ r }
       end
 
       def card_html

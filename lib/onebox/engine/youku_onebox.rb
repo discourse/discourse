@@ -7,6 +7,7 @@ module Onebox
       include HTML
 
       matches_regexp(/^(https?:\/\/)?([\da-z\.-]+)(youku.com\/)(.)+\/?$/)
+      requires_iframe_origins "https://player.youku.com"
 
       # Try to get the video ID. Works for URLs of the form:
       # * http://v.youku.com/v_show/id_XNjM3MzAxNzc2.html

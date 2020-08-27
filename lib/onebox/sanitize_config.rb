@@ -12,7 +12,7 @@ class Sanitize
         'a' => RELAXED[:attributes]['a'] + %w(target),
         'audio' => %w[controls],
         'embed' => %w[height src type width],
-        'iframe' => %w[allowfullscreen frameborder height scrolling src width data-original-href],
+        'iframe' => %w[allowfullscreen frameborder height scrolling src width data-original-href data-unsanitized-src],
         'source' => %w[src type],
         'video' => %w[controls height loop width autoplay muted poster controlslist playsinline],
         'path' => %w[d],
@@ -38,6 +38,22 @@ class Sanitize
             a_tag['rel'] = 'nofollow ugc noopener'
           else
             a_tag.remove_attribute('target')
+          end
+        end,
+
+        lambda do |env|
+          next unless env[:node_name] == 'iframe'
+
+          iframe = env[:node]
+          allowed_regexes = env[:config][:allowed_iframe_regexes] || [/.*/]
+
+          allowed = allowed_regexes.any? { |r| iframe["src"] =~ r }
+
+          if !allowed
+            # add a data attribute with the blocked src. This is not required
+            # but makes it much easier to troubleshoot onebox issues
+            iframe["data-unsanitized-src"] = iframe["src"]
+            iframe.remove_attribute("src")
           end
         end
       ],

@@ -8,6 +8,7 @@ module Onebox
 
       always_https
       matches_regexp(/^https?:\/\/store\.steampowered\.com\/app\/\d+/)
+      requires_iframe_origins "https://store.steampowered.com"
 
       def placeholder_html
         og = get_opengraph

@@ -43,7 +43,7 @@ shared_examples_for "an engine" do
   end
 
   it "correctly matches the url" do
-    onebox = Onebox::Matcher.new(link).oneboxed
+    onebox = Onebox::Matcher.new(link, { allowed_iframe_regexes: [/.*/] }).oneboxed
     expect(onebox).to be(described_class)
   end
 

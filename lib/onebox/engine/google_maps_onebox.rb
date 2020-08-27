@@ -23,6 +23,8 @@ module Onebox
 
       always_https
 
+      requires_iframe_origins("https://maps.google.com", "https://google.com")
+
       # Matches shortened Google Maps URLs
       matches_regexp :short,      %r"^(https?:)?//goo\.gl/maps/"
 

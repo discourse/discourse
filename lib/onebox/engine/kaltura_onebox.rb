@@ -8,6 +8,7 @@ module Onebox
 
       always_https
       matches_regexp(/^https?:\/\/[a-z0-9]+\.kaltura\.com\/id\/[a-zA-Z0-9]+/)
+      requires_iframe_origins "https://*.kaltura.com"
 
       def preview_html
         og = get_opengraph
