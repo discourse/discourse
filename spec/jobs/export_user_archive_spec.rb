@@ -149,6 +149,37 @@ describe Jobs::ExportUserArchive do
     end
   end
 
+  context 'badges' do
+    let(:component) { 'badges' }
+
+    let(:admin) { Fabricate(:admin) }
+    let(:badge1) { Fabricate(:badge) }
+    let(:badge2) { Fabricate(:badge, multiple_grant: true) }
+    let(:badge3) { Fabricate(:badge, multiple_grant: true) }
+    let(:day_ago) { 1.day.ago }
+
+    it 'properly includes badge records' do
+      grant_start = Time.now.utc
+      BadgeGranter.grant(badge1, user)
+      BadgeGranter.grant(badge2, user)
+      BadgeGranter.grant(badge2, user, granted_by: admin)
+      BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
+      BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
+      BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
+
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(6)
+
+      expect(data[0]['badge_id']).to eq(badge1.id.to_s)
+      expect(data[0]['badge_name']).to eq(badge1.display_name)
+      expect(data[0]['featured_rank']).to_not eq('')
+      expect(DateTime.parse(data[0]['granted_at'])).to be >= DateTime.parse(grant_start.to_s)
+      expect(data[2]['granted_manually']).to eq('true')
+      expect(Post.find(data[3]['post_id'])).to_not be_nil
+    end
+
+  end
+
   context 'category_preferences' do
     let(:component) { 'category_preferences' }
 
