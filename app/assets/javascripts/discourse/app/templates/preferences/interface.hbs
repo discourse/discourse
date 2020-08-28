@@ -20,6 +20,53 @@
   </div>
 {{/if}}
 
+{{#if showColorSchemeSelector}}
+  <div class="control-group color-scheme">
+    <label class="control-label">{{i18n "user.color_scheme"}}</label>
+    <div class="control-subgroup light-color-scheme">
+      {{#if showDarkColorSchemeSelector}}
+        <div class="instructions">{{i18n "user.color_schemes.regular" }}</div>
+      {{/if}}
+      <div class="controls">
+        {{combo-box
+                content=userSelectableColorSchemes
+                value=selectedColorSchemeId
+                onChange=(action "loadColorScheme")
+                options=(hash
+                  translatedNone=selectedColorSchemeNoneLabel
+                )
+
+              }}
+      </div>
+    </div>
+    {{#if showDarkColorSchemeSelector}}
+      <div class="control-subgroup dark-color-scheme">
+        <div class="instructions">{{i18n "user.color_schemes.dark" }}</div>
+        <div class="controls">
+          {{combo-box
+            content=userSelectableDarkColorSchemes
+            value=selectedDarkColorSchemeId
+            onChange=(action "loadDarkColorScheme")}}
+        </div>
+      </div>
+
+      <div class="instructions">
+        {{i18n "user.color_schemes.dark_instructions" }}
+      </div>
+    {{/if}}
+
+    {{#if previewingColorScheme}}
+      {{#if previewingColorScheme}}
+        {{d-button action=(action "undoColorSchemePreview") label="user.color_schemes.undo" icon="undo" class="btn-default btn-small undo-preview"}}
+      {{/if}}
+
+      <div class="controls color-scheme-checkbox">
+        {{preference-checkbox labelKey="user.color_scheme_default_on_all_devices" checked=makeColorSchemeDefault}}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}
+
 {{#if showDarkModeToggle}}
   <div class="control-group dark-mode">
     <label class="control-label">{{i18n "user.dark_mode"}}</label>

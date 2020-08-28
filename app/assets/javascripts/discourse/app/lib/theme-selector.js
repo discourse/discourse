@@ -94,7 +94,11 @@ export function listThemes(site) {
   }
 
   themes.forEach(t => {
-    results.push({ name: t.name, id: t.theme_id });
+    results.push({
+      name: t.name,
+      id: t.theme_id,
+      color_scheme_id: t.color_scheme_id
+    });
   });
 
   return results.length === 0 ? null : results;

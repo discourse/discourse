@@ -96,5 +96,10 @@ describe ColorScheme do
       ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: 'F8F8F8' }, { name: 'secondary', hex: '232323' }])
       expect(scheme.is_dark?).to eq(true)
     end
+
+    it "does not break in scheme without colors" do
+      scheme = ColorScheme.create(name: "No Bueno")
+      expect(scheme.is_dark?).to eq(nil)
+    end
   end
 end
