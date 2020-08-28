@@ -39,21 +39,27 @@
         {{/if}}
       </tbody>
     </table>
-    <footer class="clearfix">
+    <footer class="clearfix category-topics-count">
       <figure title={{i18n "all_time_desc"}}>
-        {{number category.topics_all_time}}
-        <figcaption>{{i18n "all_time"}}</figcaption>
+        <a href={{category.url}}>
+          {{number category.topics_all_time}}
+          <figcaption>{{i18n "all_time"}}</figcaption>
+        </a>
       </figure>
       {{#if category.pickMonth}}
         <figure title={{i18n "month_desc"}}>
-          {{number category.topics_month}}
-          <figcaption>/ {{i18n "month"}}</figcaption>
+          <a href={{category.url}}>
+            {{number category.topics_month}}
+            <figcaption>/ {{i18n "month"}}</figcaption>
+          </a>
         </figure>
       {{/if}}
       {{#if category.pickWeek}}
         <figure title={{i18n "week_desc"}}>
-          {{number category.topics_week}}
-          <figcaption>/ {{i18n "week"}}</figcaption>
+          <a href={{category.url}}>
+            {{number category.topics_week}}
+            <figcaption>/ {{i18n "week"}}</figcaption>
+          </a>
         </figure>
       {{/if}}
     </footer>

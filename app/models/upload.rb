@@ -9,7 +9,6 @@ class Upload < ActiveRecord::Base
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
-  SECURE_MEDIA_ROUTE = "secure-media-uploads"
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -155,16 +154,28 @@ class Upload < ActiveRecord::Base
   def self.secure_media_url?(url)
     # we do not want to exclude topic links that for whatever reason
     # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
-    url.include?(SECURE_MEDIA_ROUTE) && !url.include?("/t/") && FileHelper.is_supported_media?(url)
+    route = UrlHelper.rails_route_from_url(url)
+    route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
+  rescue ActionController::RoutingError
+    false
   end
 
   def self.signed_url_from_secure_media_url(url)
-    secure_upload_s3_path = url.sub(Discourse.base_url, "").sub("/#{SECURE_MEDIA_ROUTE}/", "")
+    route = UrlHelper.rails_route_from_url(url)
+    url = Rails.application.routes.url_for(route.merge(only_path: true))
+    secure_upload_s3_path = url[url.index(route[:path])..-1]
     Discourse.store.signed_url_for_path(secure_upload_s3_path)
   end
 
   def self.secure_media_url_from_upload_url(url)
-    url.sub(SiteSetting.Upload.absolute_base_url, "/#{SECURE_MEDIA_ROUTE}")
+    return url if !url.include?(SiteSetting.Upload.absolute_base_url)
+    uri = URI.parse(url)
+    Rails.application.routes.url_for(
+      controller: "uploads",
+      action: "show_secure",
+      path: uri.path[1..-1],
+      only_path: true
+    )
   end
 
   def self.short_path(sha1:, extension:)

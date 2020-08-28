@@ -6,7 +6,10 @@ import {
   filterQueryParams,
   findTopicList
 } from "discourse/routes/build-topic-route";
-import { queryParams } from "discourse/controllers/discovery-sortable";
+import {
+  resetParams,
+  queryParams
+} from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
 import FilterModeMixin from "discourse/mixins/filter-mode";
@@ -206,6 +209,30 @@ export default DiscourseRoute.extend(FilterModeMixin, {
           });
       }
     },
+
+    dismissReadTopics(dismissTopics) {
+      const operationType = dismissTopics ? "topics" : "posts";
+      this.send("dismissRead", operationType);
+    },
+
+    dismissRead(operationType) {
+      const controller = this.controllerFor("tags-show");
+      let options = {
+        tagName: controller.get("tag.id")
+      };
+      const categoryId = controller.get("category.id");
+
+      if (categoryId) {
+        options = $.extend({}, options, {
+          categoryId: categoryId,
+          includeSubcategories: !controller.noSubcategories
+        });
+      }
+
+      controller.send("dismissRead", operationType, options);
+    },
+
+    resetParams,
 
     didTransition() {
       this.controllerFor("tags.show")._showFooter();

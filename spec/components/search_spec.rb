@@ -543,27 +543,24 @@ describe Search do
       ])
     end
 
-    it "allows the configuration of search to prefer recent posts" do
-      SiteSetting.search_prefer_recent_posts = true
-      SiteSetting.search_recent_posts_size = 1
-      post = Fabricate(:post, topic: topic, raw: "this is a play post")
+    it "is able to search with an offset when configured" do
+      post_1 = Fabricate(:post, raw: "this is a play post")
+      SiteSetting.search_recent_regular_posts_offset_post_id = post_1.id + 1
+
+      results = Search.execute('play post')
+
+      expect(results.posts).to eq([post_1])
+
+      post_2 = Fabricate(:post, raw: "this is another play post")
+
+      SiteSetting.search_recent_regular_posts_offset_post_id = post_2.id
 
       results = Search.execute('play post')
 
       expect(results.posts.map(&:id)).to eq([
-        post.id
+        post_2.id,
+        post_1.id
       ])
-
-      post2 = Fabricate(:post, raw: "this is a play post")
-
-      results = Search.execute('play post')
-
-      expect(results.posts.map(&:id)).to eq([
-        post2.id,
-        post.id
-      ])
-    ensure
-      Discourse.cache.clear
     end
 
     it 'allows staff to search for whispers' do

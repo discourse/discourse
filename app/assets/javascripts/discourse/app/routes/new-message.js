@@ -4,6 +4,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import User from "discourse/models/user";
 import Group from "discourse/models/group";
 import bootbox from "bootbox";
+import cookie from "discourse/lib/cookie";
 
 export default DiscourseRoute.extend({
   beforeModel(transition) {
@@ -58,7 +59,7 @@ export default DiscourseRoute.extend({
         }
       });
     } else {
-      $.cookie("destination_url", window.location.href);
+      cookie("destination_url", window.location.href);
       this.replaceWith("login");
     }
   }

@@ -1,5 +1,5 @@
-/*global Mousetrap:true*/
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import Mousetrap from "mousetrap";
 
 export default {
   name: "keyboard-shortcuts",

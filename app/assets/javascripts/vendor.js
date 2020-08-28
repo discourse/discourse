@@ -13,7 +13,6 @@
 //= require favcount.js
 //= require jquery.ba-resize.js
 //= require jquery.color.js
-//= require jquery.cookie.js
 //= require jquery.fileupload.js
 //= require jquery.iframe-transport.js
 //= require jquery.tagsinput.js

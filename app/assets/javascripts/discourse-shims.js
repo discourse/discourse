@@ -25,6 +25,10 @@ define("bootbox", ["exports"], function(__exports__) {
   __exports__.default = window.bootbox;
 });
 
+define("mousetrap", ["exports"], function(__exports__) {
+  __exports__.default = window.Mousetrap;
+});
+
 define("@popperjs/core", ["exports"], function(__exports__) {
   __exports__.default = window.Popper;
   __exports__.createPopper = window.Popper.createPopper;
