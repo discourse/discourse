@@ -1181,20 +1181,12 @@ def fix_missing_s3
   puts
 end
 
-def allow_all_uploads
-  old_staff_extension = SiteSetting.authorized_extensions_for_staff
-  SiteSetting.authorized_extensions_for_staff = "*"
-  yield
-ensure
-  SiteSetting.authorized_extensions_for_staff = old_staff_extension
-end
-
 task "uploads:fix_missing_s3" => :environment do
   if RailsMultisite::ConnectionManagement.current_db != "default"
-    allow_all_uploads { fix_missing_s3 }
+    fix_missing_s3
   else
     RailsMultisite::ConnectionManagement.each_connection do
-      allow_all_uploads { fix_missing_s3 }
+      fix_missing_s3
     end
   end
 end
