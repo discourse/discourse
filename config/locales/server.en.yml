@@ -126,6 +126,7 @@ en:
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
       unrecognized_error: "Unrecognized Error"
     secure_media_placeholder: "Redacted: this site has secure media enabled, visit the topic to see the attached image/audio/video."
+    view_redacted_media: "View Media"
 
   errors: &errors
     format: ! "%{attribute} %{message}"

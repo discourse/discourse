@@ -198,7 +198,6 @@ module Email
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
       style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
-      style('.secure-image-notice', 'font-style: italic; background-color: #f1f1ff; padding: 5px;')
       style('.summary-email', "-moz-box-sizing:border-box;-ms-text-size-adjust:100%;-webkit-box-sizing:border-box;-webkit-text-size-adjust:100%;box-sizing:border-box;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.3;margin:0;min-width:100%;padding:0;width:100%")
 
       style('.previous-discussion', 'font-size: 17px; color: #444; margin-bottom:10px;')
@@ -238,9 +237,12 @@ module Email
     end
 
     def to_html
+      # needs to be before class + id strip because we need to style redacted
+      # media and also not double-redact already redacted from lower levels
+      replace_secure_media_urls
+
       strip_classes_and_ids
       replace_relative_urls
-      replace_secure_media_urls
 
       if SiteSetting.preserve_email_structure_when_styling
         @fragment.to_html
@@ -298,19 +300,12 @@ module Email
     end
 
     def replace_secure_media_urls
-      @fragment.css('[href]').each do |a|
-        if Upload.secure_media_url?(a['href'])
-          a.add_next_sibling "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
-          a.remove
-        end
-      end
+      # strip again, this can be done at a lower level like in the user
+      # notification template but that may not catch everything
+      PrettyText.strip_secure_media(@fragment)
 
-      @fragment.search('img[src]').each do |img|
-        if Upload.secure_media_url?(img['src'])
-          img.add_next_sibling "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
-          img.remove
-        end
-      end
+      style('div.secure-media-notice', 'border: 5px solid #e9e9e9; padding: 5px; display: inline-block;')
+      style('div.secure-media-notice a', "color: #{SiteSetting.email_link_color}")
     end
 
     def correct_first_body_margin

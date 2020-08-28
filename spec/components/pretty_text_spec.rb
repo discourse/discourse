@@ -928,6 +928,24 @@ describe PrettyText do
         expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
         expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
       end
+
+      it "replaces secure media within a link with a placeholder" do
+        html = <<~HTML
+        <a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>
+        HTML
+        md = PrettyText.format_for_email(html, post)
+        expect(md).not_to include('<img')
+        expect(md).to include("Redacted")
+      end
+
+      it "replaces secure images with a placeholder" do
+        html = <<~HTML
+        <img src=\"/secure-media-uploads/original/1X/testimage.png\">
+        HTML
+        md = PrettyText.format_for_email(html, post)
+        expect(md).not_to include('<img')
+        expect(md).to include("Redacted")
+      end
     end
   end
 
