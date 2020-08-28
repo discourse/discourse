@@ -73,8 +73,8 @@ describe Jobs::ExportUserArchive do
       end
 
       expect(files.size).to eq(Jobs::ExportUserArchive::COMPONENTS.length)
-      expect(files.find { |f| f.match 'user_archive-john_doe-' }).to_not be_nil
-      expect(files.find { |f| f.match 'user_archive_profile-john_doe-' }).to_not be_nil
+      expect(files.find { |f| f == 'user_archive.csv' }).to_not be_nil
+      expect(files.find { |f| f == 'category_preferences.csv' }).to_not be_nil
     end
   end
 

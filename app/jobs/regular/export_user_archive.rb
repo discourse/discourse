@@ -36,13 +36,13 @@ module Jobs
         if respond_to? filename_method
           h[:filename] = public_send(filename_method)
         else
-          h[:filename] = "#{name}-#{@current_user.username}-#{@timestamp}"
+          h[:filename] = name
         end
         components.push(h)
       end
 
       export_title = 'user_archive'.titleize
-      filename = components.first[:filename]
+      filename = "user_archive-#{@current_user.username}-#{@timestamp}"
       user_export = UserExport.create(file_name: filename, user_id: @current_user.id)
 
       filename = "#{filename}-#{user_export.id}"
