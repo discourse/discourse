@@ -144,6 +144,16 @@ module Jobs
 
     private
 
+    def piped_category_name(category_id)
+      return "-" unless category_id
+      category = Category.find(category_id)
+      categories = [category.name]
+      while category.parent_category_id && category = category.parent_category
+        categories << category.name
+      end
+      categories.reverse.join("|")
+    end
+
     def get_user_archive_fields(user_archive)
       user_archive_array = []
       topic_data = user_archive.topic
@@ -151,17 +161,7 @@ module Jobs
       topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
       return user_archive_array if topic_data.nil?
 
-      all_categories = Category.all.to_h { |category| [category.id, category] }
-
-      categories = "-"
-      if topic_data.category_id && category = all_categories[topic_data.category_id]
-        categories = [category.name]
-        while category.parent_category_id && category = all_categories[category.parent_category_id]
-          categories << category.name
-        end
-        categories = categories.reverse.join("|")
-      end
-
+      categories = piped_category_name(topic_data.category_id)
       is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
       url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 
