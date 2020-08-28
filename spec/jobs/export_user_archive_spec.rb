@@ -17,7 +17,7 @@ describe Jobs::ExportUserArchive do
   def make_component_csv
     CSV.generate do |csv|
       csv << job.get_header(component)
-      job.public_send(:"#{component}_export").each { |d| csv << d }
+      job.public_send(:"#{component}_export") { |d| csv << d }
     end
   end
 

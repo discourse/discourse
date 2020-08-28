@@ -57,7 +57,7 @@ module Jobs
           when :csv
             CSV.open("#{dirname}/#{component[:filename]}.csv", "w") do |csv|
               csv << get_header(component[:name])
-              public_send(component[:method]).each { |d| csv << d }
+              public_send(component[:method]) { |d| csv << d }
             end
           else
             raise 'unknown export filetype'
