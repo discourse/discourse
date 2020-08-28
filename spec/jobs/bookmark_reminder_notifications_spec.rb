@@ -59,4 +59,9 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
       end
     end
   end
+
+  it 'will not send notification when topic is not available' do
+    bookmark1.topic.destroy
+    expect { subject.execute }.not_to raise_error
+  end
 end
