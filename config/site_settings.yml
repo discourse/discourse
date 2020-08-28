@@ -324,7 +324,7 @@ basic:
     default: ""
     hidden: true
   base_font:
-    default: "Helvetica"
+    default: "helvetica"
     enum: "BaseFontSetting"
     refresh: true
 
