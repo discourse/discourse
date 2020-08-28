@@ -38,7 +38,7 @@
             value=emailOrUsername
             placeholderKey="topic.invite_reply.email_placeholder"}}
         {{/if}}
-        {{#if showContactPicker}}
+        {{#if capabilities.hasContactPicker}}
           {{d-button
             icon="address-book"
             action=(action "searchContact")

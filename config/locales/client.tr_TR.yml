@@ -1906,9 +1906,6 @@ tr_TR:
       toggle_information: "konu ayrıntılarını değiştir"
       read_more_in_category: "Daha fazlası için %{catLink} kategorisine göz atabilir ya da %{latestLink}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? %{catLink} ya da %{latestLink}."
-      group_request: "Bu konuyu görebilmek için `%{name}` grubundan üyelik talebinde bulunmalısınız."
-      group_join: "Bu konuyu görebilmek için %{name} grubuna katılmalısınız."
-      group_request_sent: "Grup üyeliği isteğiniz gönderildi. Kabul edildiğinde bilgilendirileceksiniz."
       unread_indicator: "Bu konunun son mesajını henüz hiç üye okumamış."
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 okunmamış mesaj</a> } other { <a href='{basePath}/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='{basePath}/new'>1 yeni</a> konu} other { {BOTH, select, true{ve } false {} other{}} <a href='{basePath}/new'># yeni</a> konu} } var. {CATEGORY, select, true {{catLink} kategorisine} false {{latestLink}} other {}} göz atabilirsin."
       browse_all_categories: Bütün kategorilere göz at

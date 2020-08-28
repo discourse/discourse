@@ -185,12 +185,6 @@ pt_BR:
           Imagem bacana – eu pressionei o botão :heart: de curtir para que você saiba o quanto eu gostei dela :heart_eyes:
         like_not_found: |-
           Você esqueceu de curtir :heart: minha [postagem?](%{url}) :crying_cat_face:
-        not_found: |-
-          Parece que você não fez o upload de uma imagem, então eu escolhi uma foto que eu tenho _certeza_ de que você vai gostar.
-
-          `%{image_url}`
-
-          Tente fazer o upload de uma da próxima vez, ou colar o link em uma linha por si só!
       formatting:
         instructions: |-
           Você pode colocar algumas palavras em **negrito** ou _itálico_ na sua resposta?

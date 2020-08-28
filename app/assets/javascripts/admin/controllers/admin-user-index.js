@@ -11,6 +11,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { htmlSafe } from "@ember/template";
 import showModal from "discourse/lib/show-modal";
+import bootbox from "bootbox";
 
 export default Controller.extend(CanCheckEmails, {
   adminTools: service(),

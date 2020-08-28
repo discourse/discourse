@@ -13,6 +13,7 @@ import { ajax } from "discourse/lib/ajax";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { formattedReminderTime, REMINDER_TYPES } from "discourse/lib/bookmark";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import bootbox from "bootbox";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed

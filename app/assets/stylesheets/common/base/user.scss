@@ -656,6 +656,46 @@
   .save-theme-alert {
     font-size: $font-down-1;
   }
+
+  .control-subgroup {
+    float: left;
+    + .controls {
+      clear: both;
+      padding-top: 1em;
+    }
+  }
+
+  .light-color-scheme {
+    margin-right: 1em;
+  }
+
+  .instructions {
+    clear: both;
+    display: inline-block;
+    margin-top: 4px;
+  }
+
+  @mixin inactiveMode() {
+    color: var(--primary-medium);
+    .select-kit.combo-box .select-kit-header {
+      border-color: var(--primary-medium);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .light-color-scheme {
+      @include inactiveMode;
+    }
+  }
+  @media (prefers-color-scheme: light) {
+    .dark-color-scheme {
+      @include inactiveMode;
+    }
+  }
+
+  .undo-preview {
+    margin-bottom: 1em;
+  }
 }
 
 .paginated-topics-list {

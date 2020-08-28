@@ -5,6 +5,7 @@ import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   sortedByCount: true,

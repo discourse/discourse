@@ -252,7 +252,7 @@ describe Admin::ThemesController do
 
       json = response.parsed_body
 
-      expect(json["extras"]["color_schemes"].length).to eq(2)
+      expect(json["extras"]["color_schemes"].length).to eq(1)
       theme_json = json["themes"].find { |t| t["id"] == theme.id }
       expect(theme_json["theme_fields"].length).to eq(2)
       expect(theme_json["remote_theme"]["remote_version"]).to eq("7")

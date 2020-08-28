@@ -73,6 +73,9 @@ ru:
       automatic_close:
         closes_in: "Закроется через <strong>%{timeLeft}</strong>."
         age: "Закрыто <strong>%{age}</strong>"
+      breakdown:
+        title: "Результаты опроса"
+        votes: "%{count} голосов"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
       error_while_fetching_voters: "Произошла ошибка в процессе получения списка проголосовавших."

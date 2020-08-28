@@ -76,6 +76,10 @@ ko:
           other: "%{count}시간 전"
         x_days:
           other: "%{count}일 전"
+        x_months:
+          other: "%{count}개월 전"
+        x_years:
+          other: "%{count}년 전"
       later:
         x_days:
           other: "%{count}일 후"
@@ -86,24 +90,52 @@ ko:
       previous_month: "이전 달"
       next_month: "다음 달"
     share:
+      topic_html: '토픽: <span class="topic-title">%{topicTitle}</span>'
       post: "포스트 #%{postNumber}"
       close: "닫기"
+      twitter: "Twitter에서 공유하기"
+      facebook: "Facebook에서 공유하기"
+      email: "메일로 보내기"
     action_codes:
       public_topic: "이 토픽을 %{when}에 공개"
       split_topic: "이 토픽을 %{when}에 분할하기"
+      autoclosed:
+        enabled: "%{when} 닫힘"
+        disabled: "%{when} 열림"
+      closed:
+        enabled: "%{when} 닫힘"
+        disabled: "%{when} 열림"
+      archived:
+        enabled: "%{when} 보관 됨"
+        disabled: "%{when} 복원 됨"
+      pinned:
+        enabled: "%{when} 고정됨"
+        disabled: "%{when} 해제됨"
     emails_are_disabled: "모든 이메일은 관리자에 의해서 세계적으로 발송 불가합니다. 어떠한 종류의 알림 이메일도 발송되지 않을 것입니다."
     s3:
       regions:
         ap_northeast_1: "아시아 퍼시픽 (도쿄)"
         ap_northeast_2: "아시아 퍼시픽 (서울)"
+        ap_south_1: "아시아 태평양 (뭄바이)"
         ap_southeast_1: "아시아 퍼시픽 (싱가폴)"
         ap_southeast_2: "아시아 퍼시픽 (시드니)"
+        ca_central_1: "캐나다 (중부)"
+        cn_north_1: "중국 (베이징)"
+        cn_northwest_1: "중국 (닝샤)"
         eu_central_1: "유럽연합 (프랑크푸르트)"
+        eu_north_1: "EU (스톡홀름)"
         eu_west_1: "유럽연합 (아일랜드)"
+        eu_west_2: "EU (런던)"
+        eu_west_3: "EU (파리)"
+        sa_east_1: "남아메리카 (상파울루)"
         us_east_1: "미국 동부 (버지니아 북쪽)"
+        us_east_2: "미국 동부 (오하이오)"
+        us_gov_east_1: "AWS GovCloud (미국 동부)"
+        us_gov_west_1: "AWS GovCloud (미국 서부)"
         us_west_1: "미국 서부 (캘리포니아 북쪽)"
         us_west_2: "미국 서부 (오레곤)"
     edit: "제목과 주제의 카테고리를 편집하세요"
+    expand: "더 보기"
     not_implemented: "죄송합니다, 이 기능은 아직 시행되지 않았습니다!"
     no_value: "아니오"
     yes_value: "예"
@@ -159,8 +191,18 @@ ko:
         unbookmark: "이 주제의 첫 번째 게시물에 북마크 없애기 위해 클릭하기"
     bookmarks:
       remove: "북마크 없애기"
+      auto_delete_preference:
+        label: "자동으로 삭제"
+      search: "검색"
       reminders:
         tomorrow: "내일"
+        next_week: "다음 주"
+        start_of_next_business_week: "월요일"
+        start_of_next_business_week_alt: "다음 주 월요일"
+        next_month: "다음 달"
+        last_custom: "마지막"
+    copy_codeblock:
+      copied: "복사되었습니다!"
     preview: "미리보기"
     cancel: "취소하기"
     save: "수정사항 저장하기"
@@ -168,9 +210,13 @@ ko:
     saved: "저장되었습니다!"
     upload: "업로드"
     uploading: "업로드 중입니다..."
+    uploading_filename: "%{filename} 업로드 중..."
+    clipboard: "클립보드"
     uploaded: "업로드 되었습니다!"
+    pasting: "붙여 넣는 중..."
     enable: "허용"
     disable: "거절"
+    continue: "계속하기"
     undo: "취소"
     revert: "복귀"
     failed: "실패되었습니다"
@@ -182,11 +228,49 @@ ko:
     choose_topic:
       none_found: "주제를 찾을 수 없습니다."
     review:
+      delete: "삭제"
       settings:
+        saved: "저장됨"
         save_changes: "수정사항 저장하기"
+        title: "설정"
+        priorities:
+          title: "검토 가능한 우선 순위"
+      moderation_history: "중재 이력"
+      view_all: "모두 보기"
+      grouped_by_topic: "주제별 그룹화"
+      none: "검토할 항목이 없습니다."
+      title: "리뷰"
       topic: "주제"
+      filtered_user: "사용자"
+      show_all_topics: "모든 토픽 보기"
+      deleted_post: "(포스트 삭제됨)"
+      deleted_user: "(사용자 삭제됨)"
+      user:
+        bio: "약력"
+        website: "웹 사이트"
+        username: "사용자 이름"
+        name: "이름"
+        fields: "필드"
+      user_percentage:
+        summary:
+          other: "%{agreed}, %{disagreed}, %{ignored} (총 %{count}개 플래그)"
+      topics:
+        topic: "토픽"
+        reviewable_count: "개수"
+        reported_by: "에 의해 보고됨"
+        deleted: "[토픽 삭제됨]"
       edit: "편집"
+      save: "저장"
       cancel: "취소"
+      filters:
+        type:
+          title: "종류"
+          all: "(모든 종류)"
+        minimum_score: "최소 점수:"
+        refresh: "새로 고침"
+      types:
+        reviewable_user:
+          title: "사용자"
       approval:
         title: "게시물은 승인이 필요합니다."
         description: "저희는 당신의 신규 게시물을 받았으나 게시되기 전에 중재자에 의해 승인 되야 합니다. 잠시만 기다려 주세요."

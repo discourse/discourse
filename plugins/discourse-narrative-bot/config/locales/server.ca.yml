@@ -185,12 +185,6 @@ ca:
           Excel·lent imatge. He premut el botó 'M'agrada' :heart: perquè sapigueu que m'ha agradat molt :heart_eyes:
         like_not_found: |-
           Us heu descuidat de fer clic en 'M'agrada' :heart: en la meva [publicació?](%{url}) :crying_cat_face:
-        not_found: |-
-          Sembla que no heu carregat cap imatge, així que he triat una imatge que estic segur que us agradarà.
-
-          `%{image_url}`
-
-          Intenteu carregar aquesta, o bé enganxeu l'enllaç tot sol en una línia!
       formatting:
         instructions: |-
           ¿Podeu convertir algunes paraules en **negreta** o _cursiva_ en la vostra resposta?

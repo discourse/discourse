@@ -184,25 +184,12 @@
   }
 
   .with-tags {
-    .category-input {
-      flex: 1 0 0px;
-      margin: 0;
-      width: 45%;
-      margin-bottom: 5px;
-    }
-
     .mini-tag-chooser {
-      width: 50%;
-      flex: 1 0 0px;
-      margin-left: 5px;
-      margin-bottom: 5px;
       z-index: z("base");
     }
 
     .selected-name {
-      overflow: hidden;
       .name {
-        @include ellipsis;
         font-size: $font-down-1;
         .badge-wrapper {
           font-size: $font-0;
@@ -211,8 +198,10 @@
     }
   }
 
-  .title-input,
-  .category-input,
+  .user-selector {
+    flex-wrap: wrap;
+  }
+
   .users-input,
   .add-warning {
     width: 100%;

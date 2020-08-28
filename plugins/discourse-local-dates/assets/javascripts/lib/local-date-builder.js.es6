@@ -83,9 +83,7 @@ export default class LocalDateBuilder {
     const previewedTimezones = [];
 
     const timezones = this.timezones.filter(
-      timezone =>
-        !this._isEqualZones(timezone, this.localTimezone) &&
-        !this._isEqualZones(timezone, this.timezone)
+      timezone => !this._isEqualZones(timezone, this.localTimezone)
     );
 
     previewedTimezones.push({
@@ -105,7 +103,8 @@ export default class LocalDateBuilder {
       this.timezone &&
       displayedTimezone === this.localTimezone &&
       this.timezone !== displayedTimezone &&
-      !this._isEqualZones(displayedTimezone, this.timezone)
+      !this._isEqualZones(displayedTimezone, this.timezone) &&
+      !this.timezones.any(t => this._isEqualZones(t, this.timezone))
     ) {
       timezones.unshift(this.timezone);
     }

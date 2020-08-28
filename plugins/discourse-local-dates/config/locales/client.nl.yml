@@ -19,7 +19,6 @@ nl:
           insert: Invoegen
           advanced_mode: Geavanceerde modus
           simple_mode: Eenvoudige modus
-          format_description: "Gebruikte notatie voor het weergeven van de datum aan de gebruiker. Gebruik \"\\T\\Z\" om de tijdzone van de gebruiker in woorden weer te geven (Europe/Paris)"
           timezones_title: Tijdzones om weer te geven
           timezones_description: Tijdzones worden gebruikt voor het weergeven van datums in voorbeeld en terugval.
           recurring_title: Herhaling

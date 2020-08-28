@@ -6,6 +6,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
 import copyText from "discourse/lib/copy-text";
+import bootbox from "bootbox";
 
 export default Component.extend({
   classNames: ["ip-lookup"],

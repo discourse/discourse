@@ -26,10 +26,6 @@
   }
 }
 
-.category-input {
-  margin-left: 10px;
-}
-
 .edit-title {
   .d-editor-preview-wrapper {
     margin-top: -43px;
@@ -45,9 +41,6 @@
   .with-tags {
     .d-editor-preview-wrapper {
       margin-top: -77px;
-      @media screen and (max-width: 900px) {
-        margin-top: -105px;
-      }
     }
   }
 }

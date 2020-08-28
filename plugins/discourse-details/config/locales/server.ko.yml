@@ -4,4 +4,8 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-ko: 
+ko:
+  site_settings:
+    details_enabled: '세부 정보 기능을 활성화합니다. 이 설정을 변경하면 "rake posts:rebake"로 모든 게시물을 다시 구워야 합니다.'
+  details:
+    excerpt_details: "(자세한 내용을 보려면 클릭)"

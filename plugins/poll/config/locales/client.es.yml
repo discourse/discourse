@@ -63,6 +63,12 @@ es:
       automatic_close:
         closes_in: "Cierra en <strong>%{timeLeft}</strong>."
         age: "Cerrado <strong>%{age}</strong>"
+      breakdown:
+        title: "Resultados de la encuesta"
+        votes: "%{count} votos"
+        breakdown: "Desglose"
+        percentage: "Porcentaje"
+        count: "Contar"
       error_while_toggling_status: "Lo sentimos, se produjo un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, se produjo un error al emitir tus votos."
       error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."

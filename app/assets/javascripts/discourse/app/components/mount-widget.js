@@ -2,7 +2,7 @@ import { cancel, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { diff, patch } from "virtual-dom";
 import { WidgetClickHook } from "discourse/widgets/hooks";
-import { queryRegistry } from "discourse/widgets/widget";
+import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
 import { getRegister } from "discourse-common/lib/get-owner";
 import DirtyKeys from "discourse/lib/dirty-keys";
 import { camelize } from "@ember/string";
@@ -124,11 +124,17 @@ export default Component.extend({
       newTree._emberView = this;
       const patches = diff(this._tree || this._rootNode, newTree);
 
+      if (this._tree) {
+        traverseCustomWidgets(this._tree, w => w.willRerenderWidget());
+      }
+
       this.beforePatch();
       this._rootNode = patch(this._rootNode, patches);
       this.afterPatch();
 
       this._tree = newTree;
+
+      traverseCustomWidgets(newTree, w => w.didRenderWidget());
 
       if (this._renderCallback) {
         this._renderCallback();

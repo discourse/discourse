@@ -82,13 +82,21 @@
                   changeSort=(action "changeSort")
                 }}
               {{/discovery-topics-list}}
-            {{else}}
-              <footer class="topic-list-bottom">
-                <h3>
-                  {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n "topic.browse_all_categories"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
-                </h3>
-              </footer>
             {{/if}}
+            <footer class="topic-list-bottom">
+              {{#if showDismissRead}}
+                {{d-button
+                  class="btn-default dismiss-read"
+                  id="dismiss-topics"
+                  action=(action "dismissReadPosts")
+                  title="topics.bulk.dismiss_tooltip"
+                  label="topics.bulk.dismiss_button"}}
+              {{/if}}
+
+              {{#footer-message education=footerEducation message=footerMessage}}
+                {{#link-to "tags"}} {{i18n "topic.browse_all_tags"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
+              {{/footer-message}}
+            </footer>
           {{/unless}}
 
           {{conditional-loading-spinner condition=list.loadingMore}}

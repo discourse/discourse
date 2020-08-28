@@ -93,6 +93,7 @@ var createPretender = require("helpers/create-pretender", null, null, false),
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
   getOwner = require("discourse-common/lib/get-owner").getOwner,
+  setDefaultOwner = require("discourse-common/lib/get-owner").setDefaultOwner,
   server,
   acceptanceModulePrefix = "Acceptance: ";
 
@@ -106,7 +107,7 @@ function resetSite(siteSettings, extras) {
   let Site = require("discourse/models/site").default;
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
-  Site.resetCurrent(Site.create(siteAttrs));
+  return Site.resetCurrent(Site.create(siteAttrs));
 }
 
 QUnit.testStart(function(ctx) {
@@ -135,8 +136,9 @@ QUnit.testStart(function(ctx) {
 
     const error =
       "Unhandled request in test environment: " + path + " (" + verb + ")";
+
     window.console.error(error);
-    throw error;
+    throw new Error(error);
   };
 
   server.checkPassthrough = request =>
@@ -164,8 +166,12 @@ QUnit.testStart(function(ctx) {
   let Session = require("discourse/models/session").default;
   Session.resetCurrent();
   User.resetCurrent();
-  resetSite(settings);
-  createHelperContext({ siteSettings: settings });
+  let site = resetSite(settings);
+  createHelperContext({
+    siteSettings: settings,
+    capabilities: {},
+    site
+  });
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {
@@ -230,5 +236,5 @@ Object.keys(requirejs.entries).forEach(function(entry) {
 
 // forces 0 as duration for all jquery animations
 jQuery.fx.off = true;
-
+setDefaultOwner(App.__container__);
 resetSite();

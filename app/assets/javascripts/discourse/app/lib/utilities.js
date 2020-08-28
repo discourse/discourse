@@ -3,6 +3,7 @@ import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
 import Handlebars from "handlebars";
 import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
+import { helperContext } from "discourse-common/lib/helpers";
 
 let _defaultHomepage;
 
@@ -271,7 +272,7 @@ export function determinePostReplaceSelection({
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  const caps = Discourse.__container__.lookup("capabilities:main");
+  let caps = helperContext().capabilities;
   return caps.isIOS && !navigator.userAgent.match(/Trident/g);
 }
 
@@ -401,7 +402,7 @@ export function areCookiesEnabled() {
 }
 
 export function isiOSPWA() {
-  const caps = Discourse.__container__.lookup("capabilities:main");
+  let caps = helperContext().capabilities;
   return window.matchMedia("(display-mode: standalone)").matches && caps.isIOS;
 }
 

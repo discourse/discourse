@@ -30,6 +30,8 @@ import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { escapeExpression } from "discourse/lib/utilities";
+import { getOwner } from "discourse-common/lib/get-owner";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -300,6 +302,7 @@ const User = RestModel.extend({
       "email_messages_level",
       "email_level",
       "email_previous_replies",
+      "color_scheme_id",
       "dark_scheme_id",
       "dynamic_favicon",
       "enable_quoting",
@@ -794,8 +797,7 @@ const User = RestModel.extend({
   },
 
   summary() {
-    // let { store } = this; would fail in tests
-    const store = Discourse.__container__.lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
 
     return ajax(userPath(`${this.username_lower}/summary.json`)).then(json => {
       const summary = json.user_summary;
@@ -874,8 +876,8 @@ const User = RestModel.extend({
 
   @discourseComputed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
-    if ($.cookie("text_size")) {
-      const [cookieSize, cookieSeq] = $.cookie("text_size").split("|");
+    if (cookie("text_size")) {
+      const [cookieSize, cookieSeq] = cookie("text_size").split("|");
       if (cookieSeq >= serverSeq) {
         return cookieSize;
       }
@@ -886,12 +888,12 @@ const User = RestModel.extend({
   updateTextSizeCookie(newSize) {
     if (newSize) {
       const seq = this.get("user_option.text_size_seq");
-      $.cookie("text_size", `${newSize}|${seq}`, {
+      cookie("text_size", `${newSize}|${seq}`, {
         path: "/",
         expires: 9999
       });
     } else {
-      $.removeCookie("text_size", { path: "/", expires: 1 });
+      removeCookie("text_size", { path: "/", expires: 1 });
     }
   },
 
@@ -977,7 +979,7 @@ User.reopenClass(Singleton, {
 
     if (userJson) {
       userJson = User.munge(userJson);
-      const store = Discourse.__container__.lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       return store.createRecord("user", userJson);
     }
     return null;

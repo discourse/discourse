@@ -13,8 +13,6 @@ class RobotsTxtController < ApplicationController
     /email/
     /session
     /session/
-    /admin
-    /admin/
     /user-api-key
     /user-api-key/
     /*?api_key*

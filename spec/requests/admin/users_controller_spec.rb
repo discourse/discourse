@@ -149,6 +149,22 @@ RSpec.describe Admin::UsersController do
       expect(log.details).to match(/because I said so/)
     end
 
+    it "requires suspend_until and reason" do
+      expect(user).not_to be_suspended
+      put "/admin/users/#{user.id}/suspend.json", params: {}
+      expect(response.status).to eq(400)
+      user.reload
+      expect(user).not_to be_suspended
+
+      expect(user).not_to be_suspended
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now
+      }
+      expect(response.status).to eq(400)
+      user.reload
+      expect(user).not_to be_suspended
+    end
+
     context "with an associated post" do
       it "can have an associated post" do
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params

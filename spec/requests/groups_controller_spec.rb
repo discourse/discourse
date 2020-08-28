@@ -1213,10 +1213,24 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
-        it 'fails when multiple member already exists' do
+        it 'adds missing users even if some exists' do
           user2.update!(username: 'alice')
           user3 = Fabricate(:user, username: 'bob')
           [user2, user3].each { |user| group.add(user) }
+
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { user_emails: [user1.email, user2.email, user3.email].join(",") }
+          end.to change { group.users.count }.by(1)
+
+          expect(response.status).to eq(200)
+        end
+
+        it 'displays warning when all members already exists' do
+          user1.update!(username: 'john')
+          user2.update!(username: 'alice')
+          user3 = Fabricate(:user, username: 'bob')
+          [user1, user2, user3].each { |user| group.add(user) }
 
           expect do
             put "/groups/#{group.id}/members.json",
@@ -1227,9 +1241,32 @@ describe GroupsController do
 
           expect(response.parsed_body["errors"]).to include(I18n.t(
             "groups.errors.member_already_exist",
-            username: "alice, bob",
-            count: 2
+            username: "alice, bob, john",
+            count: 3
           ))
+        end
+
+        it 'display error when try to add to many users at once' do
+          begin
+            old_constant = GroupsController.const_get("ADD_MEMBERS_LIMIT")
+            GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
+            GroupsController.const_set("ADD_MEMBERS_LIMIT", 1)
+
+            expect do
+              put "/groups/#{group.id}/members.json",
+                params: { user_emails: [user1.email, user2.email].join(",") }
+            end.to change { group.reload.users.count }.by(0)
+
+            expect(response.status).to eq(422)
+
+            expect(response.parsed_body["errors"]).to include(I18n.t(
+              "groups.errors.adding_too_many_users",
+              limit: 1
+            ))
+          ensure
+            GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
+            GroupsController.const_set("ADD_MEMBERS_LIMIT", old_constant)
+          end
         end
       end
 

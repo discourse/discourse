@@ -95,21 +95,14 @@ class UploadRecovery
   end
 
   def recover_from_local(sha1:, user_id:)
-    public_path = Rails.root.join("public")
-
     @paths ||= begin
       Dir.glob(File.join(
-        public_path,
-        'uploads',
-        'tombstone',
-        RailsMultisite::ConnectionManagement.current_db,
+        Discourse.store.tombstone_dir,
         'original',
         '**',
         '*.*'
       )).concat(Dir.glob(File.join(
-        public_path,
-        'uploads',
-        RailsMultisite::ConnectionManagement.current_db,
+        Discourse.store.upload_path,
         'original',
         '**',
         '*.*'

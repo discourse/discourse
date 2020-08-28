@@ -32,7 +32,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       # Save to redis, with a secret token, then redirect to confirmation screen
       token = SecureRandom.hex
       Discourse.redis.setex "#{Users::AssociateAccountsController::REDIS_PREFIX}_#{current_user.id}_#{token}", 10.minutes, auth.to_json
-      return redirect_to Discourse.base_uri("/associate/#{token}")
+      return redirect_to "#{Discourse.base_uri}/associate/#{token}"
     else
       @auth_result = authenticator.after_authenticate(auth)
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
@@ -55,7 +55,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
       if parsed && # Valid
          (parsed.host == nil || parsed.host == Discourse.current_hostname) && # Local
-         !parsed.path.starts_with?(Discourse.base_uri("/auth/")) # Not /auth URL
+         !parsed.path.starts_with?("#{Discourse.base_uri}/auth/") # Not /auth URL
         @origin = +"#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end

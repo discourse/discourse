@@ -60,6 +60,25 @@ describe DirectoryItemsController do
       expect(response).not_to be_successful
     end
 
+    it "sort username with asc as a parameter" do
+      get '/directory_items.json', params: { asc: true, order: 'username', period: 'all' }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      names = json['directory_items'].map { |item| item['user']['username'] }
+      expect(names).to eq(names.sort)
+    end
+
+    it "sort username without asc as a parameter" do
+      get '/directory_items.json', params: { order: 'username', period: 'all' }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      names = json['directory_items'].map { |item| item['user']['username'] }
+
+      expect(names).to eq(names.sort.reverse)
+    end
+
     it "finds user by name" do
       get '/directory_items.json', params: { period: 'all', name: 'eviltrout' }
       expect(response.status).to eq(200)

@@ -96,7 +96,8 @@ class SearchIndexer
       # instead in the post processor
       Discourse.warn_exception(
         e,
-        message: "Unexpected error while indexing #{table} for search"
+        message: "Unexpected error while indexing #{table} for search",
+        env: { id: id }
       )
     end
   end
@@ -201,9 +202,9 @@ class SearchIndexer
 
     if Post === obj && obj.raw.present? &&
        (
+         force ||
          obj.saved_change_to_cooked? ||
-         obj.saved_change_to_topic_id? ||
-         force
+         obj.saved_change_to_topic_id?
        )
 
       if topic

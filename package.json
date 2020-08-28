@@ -47,6 +47,8 @@
     "ember-template-lint": "^2.5.2",
     "eslint-config-discourse": "latest",
     "eslint-plugin-discourse-ember": "latest",
+    "eslint-plugin-ember": "^7.7.1",
+    "eslint-plugin-node": "^10.0.0",
     "lodash-cli": "https://github.com/lodash-archive/lodash-cli.git",
     "pretender": "^1.6",
     "puppeteer": "1.20",

@@ -48,6 +48,19 @@ describe 'api keys' do
     expect(response.status).to eq(302)
   end
 
+  context "with a plugin registered filter" do
+    before do
+      plugin = Plugin::Instance.new
+      plugin.add_api_parameter_route method: :get, route: "session#current", format: "*"
+    end
+
+    it 'allows parameter access to the registered route' do
+      get '/session/current.json', params: {
+        api_key: api_key.key
+      }
+      expect(response.status).to eq(200)
+    end
+  end
 end
 
 describe 'user api keys' do

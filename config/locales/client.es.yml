@@ -553,6 +553,10 @@ es:
       member_added: "Añadido"
       member_requested: "Solicitado el"
       add_members:
+        title: "Agregar miembros a %{group_name}"
+        description: "También puede pegar en una lista separada por comas."
+        usernames: "Ingrese nombres de usuario o direcciones de correo electrónico"
+        input_placeholder: "Nombre de usuario o correo electrónico"
         notify_users: "Notificaciones a usuarios"
       requests:
         title: "Solicitudes"
@@ -597,6 +601,7 @@ es:
           access: Acceso
         categories:
           title: Categorías
+          long_title: "Notificaciones predeterminadas de categoría"
         logs:
           title: "Registros"
           when: "Cuándo"
@@ -2036,9 +2041,6 @@ es:
       toggle_information: "activar/desactivar detalles del tema"
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en %{catLink} o %{latestLink}."
       read_more: "¿Quieres leer más? %{catLink} o %{latestLink}."
-      group_request: "Necesitas solicitar la membresía al grupo «%{name}» para ver este tema"
-      group_join: "Debes unirte al grupo «%{name}» para ver este tema"
-      group_request_sent: "Tu solicitud de membresía al grupo fue enviada. Se te informará cuando seas aceptado."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
       read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no leído</a> } other { <a href='{basePath}/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -3680,6 +3682,8 @@ es:
           embedded_scss:
             text: "CSS insertado"
             title: "Ingresar CSS personalizado para mostrar en la versión insertada de los comentarios"
+          color_definitions:
+            text: "Definiciones de color"
           head_tag:
             text: "</head>"
             title: "HTML que será insertado antes de la </head> etiqueta"
@@ -4478,6 +4482,7 @@ es:
         embed_title_scrubber: "Expresión regular utilizada para depurar el título de las publicaciones"
         embed_truncate: "Truncar las publicaciones insertadas"
         embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
+        allowed_embed_selectors: "Selector CSS para elementos permitidos en los insertados"
         save: "Guardar ajustes de insertado"
       permalink:
         title: "Enlaces permanentes"

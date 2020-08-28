@@ -32,9 +32,9 @@ sv:
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
-      long_with_year: "D MMM, YYYY h:mm a"
+      long_with_year: "D MMM, YYYY h:mm"
       long_with_year_no_time: "D MMM, YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
@@ -42,37 +42,37 @@ sv:
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} sedan"
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1 min"
         less_than_x_seconds:
-          one: "< %{count}s"
-          other: "< %{count}s"
+          one: "< %{count} s"
+          other: "< %{count} s"
         x_seconds:
-          one: "%{count}s"
-          other: "%{count}s"
+          one: "%{count} s"
+          other: "%{count} s"
         less_than_x_minutes:
-          one: "< %{count}m"
-          other: "< %{count}m"
+          one: "< %{count} min"
+          other: "< %{count} min"
         x_minutes:
-          one: "%{count}m"
-          other: "%{count}m"
+          one: "%{count} min"
+          other: "%{count} min"
         about_x_hours:
-          one: "%{count}h"
-          other: "%{count}h"
+          one: "%{count} h"
+          other: "%{count} h"
         x_days:
-          one: "%{count}d"
-          other: "%{count}d"
+          one: "%{count} d"
+          other: "%{count} d"
         x_months:
-          one: "%{count}mån"
-          other: "%{count}mån"
+          one: "%{count} mån"
+          other: "%{count} mån"
         about_x_years:
-          one: "%{count}å"
-          other: "%{count}å"
+          one: "%{count} å"
+          other: "%{count} å"
         over_x_years:
-          one: "> %{count}å"
-          other: "> %{count}å"
+          one: "> %{count} år"
+          other: "> %{count} år"
         almost_x_years:
-          one: "%{count}å"
-          other: "%{count}å"
+          one: "%{count} år"
+          other: "%{count} år"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
@@ -97,7 +97,7 @@ sv:
           one: "%{count} dag sedan"
           other: "%{count} dagar sedan"
         x_months:
-          one: "%{count}månad sedan"
+          one: "%{count} månad sedan"
           other: "%{count} månader sedan"
         x_years:
           one: "%{count} år sedan"
@@ -275,6 +275,7 @@ sv:
       no_timezone: 'Du har ännu inte valt tidszon. Du kommer därför inte kunna sätta påminnelser. Ange en <a href="%{basePath}/my/preferences/profile">i din profil</a>.'
       invalid_custom_datetime: "Datumet och tiden du har angivit är ogiltig, vänligen försök igen."
       list_permission_denied: "Du har inte behörighet att visa bokmärken för denna användare."
+      no_user_bookmarks: "Du har inga bokmärkta inlägg; bokmärken tillåter dig att snabbt referera till ett specifikt inlägg."
       auto_delete_preference:
         label: "Radera automatiskt"
         never: "Aldrig"
@@ -920,6 +921,7 @@ sv:
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att notifieras om någonting gällande nya ämnen i dessa kategorier, och de kommer inte dyka upp på kategorier eller senaste sidorna. "
       muted_categories_instructions_dont_hide: "Du kommer inte att notifieras om någonting gällande nya ämnen i dessa kategorier."
+      regular_categories: "Regelbundna"
       no_category_access: "Som moderator har du begränsat tillträde till kategorier, spara är avstängt."
       delete_account: "Radera mitt konto"
       delete_account_confirm: "Är du säker på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
@@ -2072,9 +2074,6 @@ sv:
       toggle_information: "slå av/på ämnesdetaljer"
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{catLink} eller %{latestLink}."
       read_more: "Vill du läsa mer? %{catLink} eller %{latestLink}."
-      group_request: "Du behöver begära medlemskap i `%{name}` gruppen för att se detta ämne"
-      group_join: "Du behöver gå med i `%{name}` gruppen för att se detta ämne"
-      group_request_sent: "Din begäran om gruppmedlemskap har skickats. Du kommer informeras om den har accepterats."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
       read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 oläst</a> } other { <a href='{basePath}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'>1 nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -3108,6 +3107,7 @@ sv:
       delete_unused_confirmation_more_tags:
         one: "%{tags} och %{count} till"
         other: "%{tags} och %{count} till"
+      delete_no_unused_tags: "Det finns inga oanvända taggar."
       delete_unused: "Radera oanvända taggar"
       delete_unused_description: "Radera alla taggar som inte är kopplade till något ämne eller personliga meddelanden"
       cancel_delete_unused: "Avbryt"
@@ -3380,12 +3380,27 @@ sv:
         continue: Fortsätt
         use_global_key: Global nyckel (tillåter alla åtgärder)
         scopes:
+          description: |
+            När du använder omfång kan du begränsa en API-nyckel till en specifik uppsättning slutpunkter.
+            Du kan också definiera vilka parametrar som ska tillåtas. Använd kommatecken för att separera flera värden.
           title: Omfattningar
           resource: Resurs
           action: Åtgärd
           allowed_parameters: Tillåtna parametrar
           optional_allowed_parameters: Tillåtna parametrar (valfritt)
           any_parameter: (valfri parameter)
+          allowed_urls: Tillåtna webbadresser
+          descriptions:
+            topics:
+              read: Läs ett ämne eller ett specifikt inlägg i det. RSS stöds också.
+              write: Skapa ett nytt ämne eller inlägg till en befintligt sådan.
+              read_lists: Läs ämneslistor som topp, ny, senaste osv. RSS stöds också.
+              wordpress: Nödvändigt för att WordPress-tillägget wp-discourse ska fungera.
+            users:
+              bookmarks: Lista användarbokmärken. Det returnerar bokmärkespåminnelser när ICS-formatet används.
+              sync_sso: Synkronisera en användare genom SSO.
+              show: Erhåll information om en användare.
+              check_emails: Lista användares e-post.
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."
@@ -3625,6 +3640,7 @@ sv:
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
           color_scheme: "Färgpalett"
+          default_light_scheme: "Ljus (standard)"
           color_scheme_select: "Välj färger som ska användas av temat"
           custom_sections: "Anpassade avsnitt:"
           theme_components: "Temakomponenter"
@@ -3722,6 +3738,10 @@ sv:
           embedded_scss:
             text: "Inbäddad CSS"
             title: "Ange anpassad CSS som ska levereras med inbäddade versionen av kommentarer"
+          color_definitions:
+            text: "Färgdefinitioner"
+            title: "Ange anpassade färgdefinitioner (endast avancerade användare)"
+            placeholder: "\\r\nAnvänd denna stilmall för att lägga till anpassade färger i listan över CSS-anpassade egenskaper.\\r\n\\r\nExempel: \\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\nAnvändning av prefix för egenskapsnamnen rekommenderas starkt för att undvika konflikter med tillägg och/eller grundläggande mjukvara."
           head_tag:
             text: "</head>"
             title: "HTML som kommer att sättas in före </head> taggen"

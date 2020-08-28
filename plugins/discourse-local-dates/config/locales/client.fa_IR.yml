@@ -13,7 +13,6 @@ fa_IR:
           insert: درج کردن
           advanced_mode: حالت پیشرفته
           simple_mode: حالت ساده
-          format_description: "فرمت مورد استفاده نمایش تاریخ به کاربر. برای نمایش منطقه زمانی کاربر در کلمات از \"T\\Z\\\" استفاده کنید (برای مثال Europe/Paris)"
           timezones_title: نمایش منطقه زمانی
           recurring_title: همروندی
           recurring_none: بدون همروندی

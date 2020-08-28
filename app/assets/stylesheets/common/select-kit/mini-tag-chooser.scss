@@ -21,9 +21,10 @@
           box-shadow: none;
           cursor: pointer;
           max-width: 250px;
+          overflow: hidden;
 
           .name {
-            white-space: nowrap;
+            @include ellipsis;
           }
         }
       }

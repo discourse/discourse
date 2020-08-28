@@ -858,7 +858,6 @@ ro:
     must_approve_users: "Personalul trebuie să aprobe toate conturile utilizatorilor noi înainte ca ei să aibă aces în site."
     pending_users_reminder_delay: "Notifică moderatorii dacă noii utilizatori sunt în așteptarea aprobării de mai mult de atâtea ore. Setează la -1 pentru a dezactiva notificările."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
-    moderators_create_categories: "Permite moderatorilor să creeze noi categorii"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     top_menu: "Determină ce elemente apar în navigare pe pagina principală și în ce ordine. Exemplu: ultimele|noi|necitite|categorii|top|citite|semnedecarte"
     post_menu: "Determină ce elemente apar în meniul de postare și în ce ordine . Exemplu: apreciere|editează|marchează|șterge|distribuie|semne de carte|răspunde"

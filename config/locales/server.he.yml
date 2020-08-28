@@ -194,6 +194,7 @@ he:
       s3_bucket_reused: "אין לך אפשרות להשתמש באותו הדלי עבור ‚s3_upload_bucket’ וגם ‚s3_backup_bucket’. נא לבחור בדלי שונה או להשתמש בנתיב שונה לכל דלי."
       secure_media_requirements: "יש להפעיל העלאה ל־S3 בטרם הפעלת מדיה מאובטחת."
       share_quote_facebook_requirements: "עליך להגדיר מזהה יישומון פייסבוק כדי להפעיל שיתוף ציטוטים עבור פייסבוק"
+      second_factor_cannot_enforce_with_socials: "לא ניתן לאכוף אימות דו־שלבי כאשר מופעלת כניסה דרך רשתות חברתיות. תחילה עליך להשבית כניסה דרך: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
       local_login_cannot_be_disabled_if_second_factor_enforced: "אי אפשר להשבית כניסה מקומית אם נאכף אימות דו־שלבי. יש להשבית את אכיפת האימות הדו־שלבי בטרם השבתת כניסה מקומית."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "לא ניתן להפעיל העלאות ל־S3 כיוון שהעלאות ל־S3 כבר פעילות באופן גלובלי והפעלת האפשרות הזאת ברמת האתר עשויה להוביל לתקלות חמורות בהעלאה."
@@ -409,6 +410,7 @@ he:
       email_already_used_in_category: "‚%{email}’ כבר בשימוש על ידי הקטגוריה ‚%{category_name}’."
       cant_allow_membership_requests: "אין לך אפשרות לאפשר בקשות חברות לקבוצה ללא בעלים."
       already_requested_membership: "כבר ביקשת חברות בקבוצה זו."
+      adding_too_many_users: "ניתן להוסיף %{limit} משתמשים לכל היותר בבת אחת"
     default_names:
       everyone: "כולם"
       admins: "מנהלים"
@@ -425,7 +427,6 @@ he:
       title: "התקבלת אל ‎@%{group_name}‎"
       body: |
         בקשתך להיכנס אל ‎@%{group_name}‎ אושרה והתקבלת לחברות.
-    view_hidden_topic_request_reason: "אבקש להצטרף לקבוצה ‚%{group_name}’, כדי שאוכל לגשת ל[נושא הזה](%{topic_url})"
   education:
     until_posts:
       one: "פוסט אחד"
@@ -1526,7 +1527,7 @@ he:
     ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות מתחם מטעם Google Universal Analytics (analytics.js). לקישורים יוצאים המקשרים לשמות מתחם אלה יצורף מזהה הלקוח. יש לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>מדריך למעקב חוצה שמות מתחם מבית Google.</a>"
     gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
     enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "לאפשר למפקחים ליצור קטגוריות חדשות"
+    moderators_manage_categories_and_groups: "לאפשר למפקחים לנהל קטגוריות וקבוצות"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     use_admin_ip_allowlist: "מנהלים יכולים להיכנס רק אם הכתובת שלהם מופיעה ברשימת כתובות ה־IP המפוקחות (ניהול > יומנים > כתובות IP מפוקחות)."
     blocked_ip_blocks: "רשימת מקטעי כתובות IP פרטיות ש־Discourse לא אמור לסרוק"
@@ -2015,6 +2016,7 @@ he:
     default_categories_tracking: "רשימת קטגוריות שנעקבת כברירת מחדל."
     default_categories_muted: "רשימת קטגוריות שמושתקות כברירת מחדל."
     default_categories_watching_first_post: "רשימת קטגוריות שבה הפוסט הראשון בכל נושא ייצפה אוטומטית."
+    default_categories_regular: "רשימת הקטגוריות שאינן מושתקות כבררת מחדל. שימושי כאשר הגדרת האתר `mute_all_categories_by_default` (השתקת כל הקטגוריות כבררת מחדל) מופעלת."
     mute_all_categories_by_default: "הגדרת כל רמות ההתראות כבררת מחדל בכל הקטגוריות למושתק. לדרוש ממשתמשים לבחור באופן יזום קטגוריות שיופיעו תחת ‚אחרונים’ ו־‚קטגוריות’. אם ברצונך להוסיף את בררות המחדל למשתמשים אלמוניים עליך להגדיר את ‚default_categories_‎’."
     default_tags_watching: "רשימת תגיות שבצפייה כבררת מחדל."
     default_tags_tracking: "רשימת תגיות שבמעקב כבררת מחדל"

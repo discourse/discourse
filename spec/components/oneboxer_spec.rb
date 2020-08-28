@@ -183,4 +183,69 @@ describe Oneboxer do
 
     expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to be_present
   end
+
+  context "with youtube stub" do
+    let(:html) do
+      <<~HTML
+        <html>
+        <head>
+          <meta property="og:title" content="Onebox1">
+          <meta property="og:description" content="this is bodycontent">
+        </head>
+        <body>
+           <p>body</p>
+        </body>
+        <html>
+      HTML
+    end
+
+    before do
+      stub_request(:any, "https://www.youtube.com/watch?v=dQw4w9WgXcQ").to_return(status: 200, body: html)
+    end
+
+    it "allows restricting engines based on the allowed_onebox_iframes setting" do
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(output).to include("<iframe") # Regular youtube onebox
+
+      # Disable all onebox iframes:
+      SiteSetting.allowed_onebox_iframes = ""
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(output).not_to include("<iframe") # Generic onebox
+      expect(output).to include("allowlistedgeneric")
+
+      # Just enable youtube:
+      SiteSetting.allowed_onebox_iframes = "https://www.youtube.com"
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(output).to include("<iframe") # Regular youtube onebox
+    end
+  end
+
+  it "allows iframes from generic sites via the allowed_iframes setting" do
+    allowlisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://allowlist.ed/iframes.json" />'
+    blocklisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://blocklist.ed/iframes.json" />'
+
+    allowlisted_oembed = {
+      type: "rich",
+      height: "100",
+      html: "<iframe src='https://ifram.es/foo/bar'></iframe>"
+    }
+
+    blocklisted_oembed = {
+      type: "rich",
+      height: "100",
+      html: "<iframe src='https://malicious/discourse.org/'></iframe>"
+    }
+
+    stub_request(:any, "https://blocklist.ed/iframes").to_return(status: 200, body: blocklisted_body)
+    stub_request(:any, "https://blocklist.ed/iframes.json").to_return(status: 200, body: blocklisted_oembed.to_json)
+
+    stub_request(:any, "https://allowlist.ed/iframes").to_return(status: 200, body: allowlisted_body)
+    stub_request(:any, "https://allowlist.ed/iframes.json").to_return(status: 200, body: allowlisted_oembed.to_json)
+
+    SiteSetting.allowed_iframes = "discourse.org|https://ifram.es"
+
+    expect(Oneboxer.onebox("https://blocklist.ed/iframes", invalidate_oneboxes: true)).to be_empty
+    expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match("iframe src")
+  end
+
 end

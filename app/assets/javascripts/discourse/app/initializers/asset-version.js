@@ -1,5 +1,7 @@
 import I18n from "I18n";
 import { later } from "@ember/runloop";
+import bootbox from "bootbox";
+
 //  Subscribe to "asset-version" change events via the Message Bus
 export default {
   name: "asset-version",

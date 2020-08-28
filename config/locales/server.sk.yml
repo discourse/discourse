@@ -834,7 +834,6 @@ sk:
     traditional_markdown_linebreaks: "V Markdown použiť tradičné oddeľovače riadkov, čo vyžaduje dve koncové medzery ako oddeľovač riadku."
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
-    moderators_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     top_menu: "Určuje, ktoré položky sa zobrazia na navigácií na domovskej stránke a v akom poradí. Napríklad posledné|neprečítané|kategórie|naj|prečítané|záložky"
     post_menu: "Určuje, ktoré položky sa objavia v menu príspevku a v akom poradí. Napríklad páči sa mi|upraviť|označiť|vymazať|zdieľať|záložka|odpovedať"

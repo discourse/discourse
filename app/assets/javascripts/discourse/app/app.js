@@ -1,6 +1,6 @@
-/*global Mousetrap:true*/
 import Application from "@ember/application";
 import { buildResolver } from "discourse-common/resolver";
+import Mousetrap from "mousetrap";
 
 const _pluginCallbacks = [];
 
@@ -17,12 +17,6 @@ const Discourse = Application.extend({
   },
 
   Resolver: buildResolver("discourse"),
-
-  authenticationComplete(options) {
-    // TODO, how to dispatch this to the controller without the container?
-    const loginController = this.__container__.lookup("controller:login");
-    return loginController.authenticationComplete(options);
-  },
 
   _prepareInitializer(moduleName) {
     const module = requirejs(moduleName, null, null, true);

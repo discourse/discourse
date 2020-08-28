@@ -11,14 +11,16 @@ import {
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
 import { setIconList } from "discourse-common/lib/icon-library";
-import { setPluginContainer } from "discourse/lib/plugin-api";
+import { setURLContainer } from "discourse/lib/url";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 export default {
   name: "discourse-bootstrap",
 
   // The very first initializer to run
   initialize(container, app) {
-    setPluginContainer(container);
+    setURLContainer(container);
+    setDefaultOwner(container);
 
     // Our test environment has its own bootstrap code
     if (isTesting()) {
@@ -84,14 +86,13 @@ export default {
         'link[media="(prefers-color-scheme: dark)"]'
       ).length > 0;
 
-    session.darkColorScheme =
-      !window.matchMedia("(prefers-color-scheme: dark)").matches &&
-        getComputedStyle(document.documentElement)
-          .getPropertyValue("--scheme-type")
-          .trim() === "dark";
+    session.defaultColorSchemeIsDark = setupData.colorSchemeIsDark === "true";
 
     session.highlightJsPath = setupData.highlightJsPath;
     session.svgSpritePath = setupData.svgSpritePath;
+    session.userColorSchemeId =
+      parseInt(setupData.userColorSchemeId, 10) || null;
+    session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10) || -1;
 
     if (isDevelopment()) {
       setIconList(setupData.svgIconList);

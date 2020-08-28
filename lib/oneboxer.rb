@@ -138,7 +138,9 @@ module Oneboxer
   end
 
   def self.engine(url)
-    Onebox::Matcher.new(url).oneboxed
+    Onebox::Matcher.new(url, {
+      allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(allowed_iframe_origins)
+    }).oneboxed
   end
 
   def self.recently_failed?(url)
@@ -300,6 +302,14 @@ module Oneboxer
     @preserve_fragment_url_hosts ||= ['http://github.com']
   end
 
+  def self.allowed_iframe_origins
+    allowed = SiteSetting.allowed_onebox_iframes.split("|")
+    if allowed.include?("*")
+      allowed = Onebox::Engine.all_iframe_origins
+    end
+    allowed += SiteSetting.allowed_iframes.split("|")
+  end
+
   def self.external_onebox(url)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url,
@@ -314,6 +324,7 @@ module Oneboxer
       options = {
         max_width: 695,
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
+        allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
       }
 

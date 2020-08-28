@@ -25,6 +25,7 @@ import { Promise } from "rsvp";
 import { escapeExpression } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { inject as service } from "@ember/service";
+import bootbox from "bootbox";
 
 let customPostMessageCallbacks = {};
 
@@ -721,8 +722,12 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpBottom() {
+      // When a topic only has one lengthy post
+      const jumpEnd = this.model.highest_post_number === 1 ? true : false;
+
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
-        skipIfOnScreen: false
+        skipIfOnScreen: false,
+        jumpEnd
       });
     },
 

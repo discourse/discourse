@@ -11,6 +11,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import Post from "discourse/models/post";
 import Category from "discourse/models/category";
 import { computed } from "@ember/object";
+import bootbox from "bootbox";
 
 function customTagArray(fieldName) {
   return computed(fieldName, function() {

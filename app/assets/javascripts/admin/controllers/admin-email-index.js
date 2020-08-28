@@ -3,6 +3,7 @@ import { empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { observes } from "discourse-common/utils/decorators";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   /**

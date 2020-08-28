@@ -8,6 +8,7 @@ class UserOptionSerializer < ApplicationSerializer
              :email_level,
              :email_messages_level,
              :external_links_in_new_tab,
+             :color_scheme_id,
              :dark_scheme_id,
              :dynamic_favicon,
              :enable_quoting,

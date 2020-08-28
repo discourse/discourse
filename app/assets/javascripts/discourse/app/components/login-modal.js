@@ -1,5 +1,7 @@
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import cookie from "discourse/lib/cookie";
+
 export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
@@ -11,8 +13,8 @@ export default Component.extend({
         "loginPassword",
         $("#hidden-login-form input[name=password]").val()
       );
-    } else if ($.cookie("email")) {
-      this.set("loginName", $.cookie("email"));
+    } else if (cookie("email")) {
+      this.set("loginName", cookie("email"));
     }
 
     schedule("afterRender", () => {

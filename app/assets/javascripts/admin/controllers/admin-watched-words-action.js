@@ -7,6 +7,7 @@ import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   adminWatchedWords: controller(),

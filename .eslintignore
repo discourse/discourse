@@ -8,7 +8,7 @@ lib/javascripts/locale/
 lib/javascripts/messageformat.js
 lib/highlight_js/
 plugins/**/lib/javascripts/locale
-public/javascripts/
+public/
 vendor/
 test/javascripts/test_helper.js
 test/javascripts/fixtures

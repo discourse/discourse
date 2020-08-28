@@ -189,7 +189,7 @@
         </div>
       {{/if}}
 
-      <div class="card-row">
+      <div class="card-row metadata-row">
         {{#unless this.user.profile_hidden}}
           <div class="metadata">
             {{#if this.user.last_posted_at}}
@@ -225,7 +225,7 @@
             {{plugin-outlet name="user-card-metadata" args=(hash user=this.user)}}
           </div>
         {{/unless}}
-        {{plugin-outlet name="user-card-after-metadata" args=(hash user=this.user)}}
+        {{plugin-outlet name="user-card-after-metadata" args=(hash user=this.user) tagName=""}}
       </div>
 
       {{#if this.publicUserFields}}
@@ -243,7 +243,7 @@
         </div>
       {{/if}}
 
-      {{plugin-outlet name="user-card-before-badges" args=(hash user=this.user)}}
+      {{plugin-outlet name="user-card-before-badges" args=(hash user=this.user) tagName=""}}
 
       {{#if this.showBadges}}
         <div class="card-row">

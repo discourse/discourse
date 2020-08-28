@@ -131,8 +131,8 @@ class ColorScheme < ActiveRecord::Base
 
   before_save :bump_version
   after_save :publish_discourse_stylesheet
-  after_save :dump_hex_cache
-  after_destroy :dump_hex_cache
+  after_save :dump_caches
+  after_destroy :dump_caches
   belongs_to :theme
 
   validates_associated :color_scheme_colors
@@ -286,8 +286,9 @@ class ColorScheme < ActiveRecord::Base
     end
   end
 
-  def dump_hex_cache
+  def dump_caches
     self.class.hex_cache.clear
+    ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
   end
 
   def bump_version
@@ -296,18 +297,33 @@ class ColorScheme < ActiveRecord::Base
     end
   end
 
+  def is_dark?
+    return if colors.empty?
+
+    primary_b = brightness(colors_by_name["primary"].hex)
+    secondary_b = brightness(colors_by_name["secondary"].hex)
+
+    primary_b > secondary_b
+  end
+
+  # Equivalent to dc-color-brightness() in variables.scss
+  def brightness(color)
+    rgb = color.scan(/../).map { |c| c.to_i(16) }
+    (rgb[0].to_i * 299 + rgb[1].to_i * 587 + rgb[2].to_i * 114) / 1000.0
+  end
 end
 
 # == Schema Information
 #
 # Table name: color_schemes
 #
-#  id             :integer          not null, primary key
-#  name           :string           not null
-#  version        :integer          default(1), not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  via_wizard     :boolean          default(FALSE), not null
-#  base_scheme_id :string
-#  theme_id       :integer
+#  id              :integer          not null, primary key
+#  name            :string           not null
+#  version         :integer          default(1), not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  via_wizard      :boolean          default(FALSE), not null
+#  base_scheme_id  :string
+#  theme_id        :integer
+#  user_selectable :boolean          default(FALSE), not null
 #

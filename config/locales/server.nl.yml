@@ -115,6 +115,7 @@ nl:
         bounced_email_error: "E-mail is een rapport over gebouncete e-mail."
         screened_email_error: "Gebeurt wanneer het e-mailadres van de afzender al was gecontroleerd."
         unsubscribe_not_allowed: "Gebeurt wanneer uitschrijven via e-mail niet is toegestaan voor deze gebruiker."
+        email_not_allowed: "Gebeurt wanneer het e-mailadres zich niet op de acceptatielijst of wel op de blokkeerlijst bevindt."
       unrecognized_error: "Niet-herkende fout"
     secure_media_placeholder: "Geredigeerd: deze website heeft beveiligde media ingeschakeld; bezoek het topic om de gekoppelde afbeelding/audio/video te zien."
   errors: &errors
@@ -209,6 +210,7 @@ nl:
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. U kunt een gebruiker maar één keer voor een topic uitnodigen."
+    not_allowed: "Sorry, die gebruiker kan niet worden uitgenodigd."
   backup:
     operation_already_running: "Er wordt al een bewerking uitgevoerd. Er kan nu geen nieuwe taak worden gestart."
     backup_file_should_be_tar_gz: "Het back-upbestand dient een .tar.gz-archief te zijn."
@@ -331,7 +333,7 @@ nl:
     group_mentions: "Nieuwste vermeldingen van %{group_name}"
     user_posts: "Nieuwste berichten van @%{username}"
     user_topics: "Nieuwste topics van @%{username}"
-    tag: "Gemarkeerde onderwerpen"
+    tag: "Topics met tags"
     badge: "%{display_name}-badge op %{site_title}"
   too_late_to_edit: "Dat bericht is te lang geleden geschreven. Het kan niet meer worden gewijzigd of verwijderd."
   edit_conflict: "Dat bericht is door een andere gebruiker bewerkt, en uw wijzigingen kunnen niet meer worden opgeslagen."
@@ -384,7 +386,6 @@ nl:
       title: "U bent geaccepteerd in @%{group_name}"
       body: |
         Uw aanvraag om toe te treden tot @%{group_name} is geaccepteerd, en u bent nu lid.
-    view_hidden_topic_request_reason: "Ik wil toetreden tot de groep '%{group_name}', zodat ik toegang heb tot [dit topic](%{topic_url})"
   education:
     until_posts:
       one: "%{count} bericht"
@@ -1317,6 +1318,7 @@ nl:
     delete_old_hidden_posts: "Verborgen berichten die meer dan 30 dagen verborgen blijven automatisch verwijderen"
     default_locale: "De standaardtaal van deze Discourse-instantie. U kunt de tekst van door het systeem gegenereerde categorieën en topics vervangen onder <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Aanpassen / Tekst</a>."
     allow_user_locale: "Gebruikers mogen een eigen voorkeur voor de interfacetaal kiezen"
+    set_locale_from_accept_language_header: "interfacetaal voor anonieme gebruikers instellen vanuit de taalheaders van hun browser"
     support_mixed_text_direction: "Gemengde links-naar-rechts- en rechts-naar-links-tekstrichtingen ondersteunen."
     min_post_length: "Minimaal toegestane lengte van een bericht in tekens"
     min_first_post_length: "Minimaal toegestane lengte van eerste bericht (topictekst) in tekens"
@@ -1374,6 +1376,7 @@ nl:
     show_pinned_excerpt_mobile: "Fragment tonen bij vastgemaakte topics in mobiele weergave."
     show_pinned_excerpt_desktop: "Fragment tonen bij vastgemaakte topics in desktopweergave."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse'-bericht in tekens."
+    enable_inline_onebox_on_all_domains: "Website-instelling inline_onebox_domain_allowlist negeren en inline onebox op alle domeinen toestaan."
     force_custom_user_agent_hosts: "Hosts waarvoor bij alle aanvragen de aangepaste onebox-useragent wordt gebruikt. (Met name handig voor hosts die toegang beperken via de useragent)."
     max_oneboxes_per_post: "Maximale aantal oneboxes in een bericht."
     logo: "De logoafbeelding links bovenaan op uw website. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 en een hoogte-breedteverhouding groter dan 3:1. Bij leeg laten wordt de titeltekst van de website getoond."
@@ -1434,8 +1437,8 @@ nl:
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)-trackingcode-ID, bv. UA-12345678-9; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js)-domeinnaam, bv. mysite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Google Universal Analytics (analytics.js)-cross-domain-tracking inschakelen. Aan uitgaande koppelingen naar deze domeinen wordt de client-ID toegevoegd. Zie <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domein Tracking-handleiding.</a>"
+    gtm_container_id: "Google Tag Manager-container-ID, bv. GTM-ABCDEF. <br/>Opmerking: scripts van derden die door GTM worden geladen, dienen mogelijk op de acceptatielijst te worden geplaatst in 'content security policy script src'."
     enable_escaped_fragments: "Terugvallen naar Google's Ajax-Crawling-API als geen webcrawler wordt gedetecteerd. Zie <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Moderators mogen nieuwe categorieën maken"
     cors_origins: "Toegestane domeinen voor cross-origin-aanvragen (CORS). Elk domein moet http:// of https:// bevatten. De omgevingsvariabele DISCOURSE_ENABLE_CORS moet op true zijn ingesteld om CORS in te schakelen."
     allowed_iframes: "Een lijst van 'iframe src'-domeinvoorvoegsels die Discourse veilig kan toestaan in berichten"
     slow_down_crawler_user_agents: "Useragents van webcrawlers waarvan aanvragen beperkt moeten zijn in robots.txt via de Crawl-delay-instructie"
@@ -1443,6 +1446,7 @@ nl:
     content_security_policy: "Content-Security-Policy inschakelen"
     content_security_policy_report_only: "Content-Security-Policy-Report-Only inschakelen"
     content_security_policy_collect_reports: "Rapportverzameling voor CSP-schendingen inschakelen via /csp_reports"
+    content_security_policy_script_src: "Aanvullende scriptbronnen op de acceptatielijst. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy</a>."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     top_menu: "Bepalen welke items in het hoofdnavigatiemenu verschijnen, en in welke volgorde. Voorbeeld: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Bepalen welke items in het berichtmenu verschijnen, en in welke volgorde. Voorbeeld: like|edit|flag|delete|share|bookmark|reply"
@@ -1520,6 +1524,7 @@ nl:
     instagram_consumer_key: "Consumentsleutel voor Instagram-authenticatie"
     instagram_consumer_secret: "Consumentgeheim voor Instagram-authenticatie"
     enable_facebook_logins: "Facebook-authenticatie inschakelen, vereist facebook_app_id en facebook_app_secret. Zie <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
+    facebook_app_id: "App-ID voor Facebook-authenticatie en delen, geregistreerd bij <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App-geheim voor Facebook-authenticatie, geregistreerd bij <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_github_logins: "Github-authenticatie inschakelen, vereist github_client_id en github_client_secret. Zie <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
     github_client_id: "Client-ID voor Github-authenticatie, geregistreerd bij <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
@@ -1656,6 +1661,7 @@ nl:
     desktop_category_page_style: "Visuele stijl voor de /categories-pagina."
     category_colors: "Een lijst van hexadecimale kleurwaarden die voor categorieën zijn toegestaan."
     category_style: "Visuele stijl voor categoriebadges."
+    default_dark_mode_color_scheme_id: "Het kleurenschema dat wordt gebruikt in donkere modus."
     max_image_size_kb: "De maximale grootte van te uploaden afbeeldingen in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy. Afbeeldingen die groter zijn dan deze waarde en kleiner dan client_max_body_size worden bij het uploaden verkleind."
     max_attachment_size_kb: "De maximale grootte van te uploaden bijlagen in kB. Dit moet ook worden geconfigureerd in nginx (client_max_body_size) / apache of proxy."
     authorized_extensions: "Een lijst van toegestane bestandsextensies voor uploaden (gebruik '*' voor alle bestandstypen)"
@@ -2645,12 +2651,21 @@ nl:
     anniversary:
       name: Jubileum
       description: Actief lid sinds een jaar, heeft minstens eenmaal iets geplaatst
+    nice_post:
+      description: Heeft 10 likes op een antwoord ontvangen
+    good_post:
+      description: Heeft 25 likes op een antwoord ontvangen
+    great_post:
+      description: Heeft 50 likes op een antwoord ontvangen
     nice_topic:
       name: Leuk topic
+      description: Heeft 10 likes op een topic ontvangen
     good_topic:
       name: Goed topic
+      description: Heeft 25 likes op een topic ontvangen
     great_topic:
       name: Geweldig topic
+      description: Heeft 50 likes op een topic ontvangen
     nice_share:
       name: Leuk gedeeld
       description: Heeft een bericht met 25 unieke bezoekers gedeeld
@@ -2687,16 +2702,21 @@ nl:
       description: Heeft de <a href="%{base_uri}/guidelines">gemeenschapsrichtlijnen</a> gelezen
     reader:
       name: Lezer
+      description: Heeft alle antwoorden in een topic met meer dan 100 antwoorden gelezen
     popular_link:
       name: Populaire koppeling
+      description: Heeft een externe koppeling met 50 klikken geplaatst
     hot_link:
       name: Zeer populaire koppeling
+      description: Heeft een externe koppeling met 300 klikken geplaatst
     famous_link:
       name: Uiterst populaire koppeling
+      description: Heeft een externe koppeling met 1000 klikken geplaatst
     appreciated:
       name: Gewaardeerd
     respected:
       name: Gerespecteerd
+      description: Heeft 2 likes op 100 berichten ontvangen
     admired:
       name: Bewonderd
       description: Heeft 5 likes op 300 berichten ontvangen
@@ -2720,6 +2740,8 @@ nl:
     first_emoji:
       name: Eerste emoji
       description: Een emoji in een bericht gebruikt
+    first_mention:
+      description: Heeft een gebruiker genoemd in een bericht
     first_reply_by_email:
       name: Eerste antwoord via e-mail
       description: Bericht beantwoord via e-mail

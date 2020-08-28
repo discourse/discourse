@@ -948,6 +948,9 @@ uk:
       dismiss_notifications_tooltip: "Позначити всі сповіщення як прочитані"
       first_notification: "Ваше перше сповіщення! Оберіть його, щоб почати."
       dynamic_favicon: "Показувати кількість на іконці браузера"
+      skip_new_user_tips:
+        not_first_time: "Вже тут не вперше?"
+        skip_link: "Пропустити ці поради"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
       dark_mode: "Темний режим"
       dark_mode_enable: "Увімкнути автоматично темний режим"
@@ -1919,6 +1922,9 @@ uk:
       watching_first_post: "<span>Нова тема</span> %{description}"
       membership_request_accepted: "Запит на вступ прийнятий '%{group_name}'"
       membership_request_consolidated: "%{count} відкрити запити на членство для &quot;%{group_name}&quot;"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - завершено"
       group_message_summary:
         one: "%{count} повідомлення в вашій групі: %{group_name} "
         few: "%{count} повідомлень в вашій групі: %{group_name} "
@@ -2192,9 +2198,6 @@ uk:
       toggle_information: "показати/сховати деталі теми"
       read_more_in_category: "Хочете почитати ще? Перегляньте інші теми в %{catLink} або %{latestLink}."
       read_more: "Хочете почитати ще? %{catLink} або %{latestLink}."
-      group_request: "Вам потрібно надіслати запит на приєднання в групу `%{name}` щоб побачити цю тему."
-      group_join: "Вам потрібно приєднатися до групи `%{name}` щоб побачити цю тему."
-      group_request_sent: "Ваш запит на членство в групі був відправлений. Вам повідомлять, коли буде схвалено."
       unread_indicator: "Жоден учасник ще не прочитав останній пост цієї теми."
       read_more_MF: "У вас залишилося { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитана</a> } other { <a href='{basePath}/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 нова</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># нових</a> тем} }, або {CATEGORY, select, true {подивіться інші теми в розділі {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -3160,6 +3163,8 @@ uk:
         profile: "%{shortcut} Профіль"
         messages: "%{shortcut} Особисті повідомлення"
         drafts: "%{shortcut} Чернетки"
+        next: "%{shortcut} Наступна тема"
+        previous: "%{shortcut} Попередня тема"
       navigation:
         title: "Навігація"
         jump: "%{shortcut} Перейти до повідомлення №"
@@ -3186,6 +3191,17 @@ uk:
         fullscreen: "%{shortcut} Повноекранний редактор"
       bookmarks:
         title: "Закладка"
+        enter: "%{shortcut} Зберегти і закрити"
+        later_today: "%{shortcut} Пізніше сьогодні"
+        later_this_week: "%{shortcut} Пізніше цього тижня"
+        tomorrow: "%{shortcut} Завтра"
+        next_week: "%{shortcut} Наступного тижня"
+        next_month: "%{shortcut} Наступного місяця"
+        next_business_week: "%{shortcut} Початок наступного тижня"
+        next_business_day: "%{shortcut} Наступний бізнес день"
+        custom: "%{shortcut} Обрана дата та час"
+        none: "%{shortcut} Без нагадування"
+        delete: "%{shortcut} Видалити закладку"
       actions:
         title: "Дії"
         bookmark_topic: "%{shortcut} Додати/видалити з заклодок"
@@ -3210,6 +3226,8 @@ uk:
         topic_admin_actions: "%{shortcut} Відкрити дії адміністратора теми"
       search_menu:
         title: "Меню «Пошук»"
+        prev_next: "%{shortcut} Переміщення по результатам пошуку"
+        insert_url: "%{shortcut} Вставити посилання на позначене повідомлення у відкритий редактор"
     badges:
       earned_n_times:
         one: "Заробив цю нагороду %{count} раз"
@@ -3597,6 +3615,12 @@ uk:
           allowed_parameters: Дозволені параметри
           optional_allowed_parameters: Дозволені параметри (необов’язково)
           any_parameter: (будь-який параметр)
+          allowed_urls: Дозволені URL-адреси
+          descriptions:
+            topics:
+              read: Читати тему або певні повідомлення в ньому. RSS також підтримується.
+              write: Створіть нову тему чи допис у вже існуючій.
+              read_lists: Читайте списки тем, як топ, нові, останні тощо. RSS також підтримується.
       web_hooks:
         title: "Вебгуки"
         none: "Зараз вебгуків немає."
@@ -3840,6 +3864,7 @@ uk:
           is_default: "Активувати за замовчуванням"
           user_selectable: "Користувачі можуть вибирати стиль"
           color_scheme: "Колірна палітра"
+          default_light_scheme: "Світла (за замовчуванням)"
           color_scheme_select: "Виберіть кольори для стилю"
           custom_sections: "Налаштування секцій:"
           theme_components: "Компоненти стилю"
@@ -3939,6 +3964,9 @@ uk:
           embedded_scss:
             text: "Вбудований CSS"
             title: "Введіть CSS для вбудовування коментарів"
+          color_definitions:
+            text: "Визначення кольорів"
+            title: "Введіть власні визначення кольорів (лише для досвідчених користувачів)"
           head_tag:
             text: "</head>"
             title: "HTML-код, який буде вставлений перед міткою </head>"

@@ -5,6 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import { readOnly } from "@ember/object/computed";
 import deprecated from "discourse-common/lib/deprecated";
+import bootbox from "bootbox";
 
 const Tab = EmberObject.extend({
   init() {

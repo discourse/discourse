@@ -23,6 +23,9 @@
   .directory-controls {
     display: flex;
     justify-content: space-between;
+    .total-rows {
+      color: var(--primary-medium);
+    }
     .filter-name {
       height: 1em;
     }

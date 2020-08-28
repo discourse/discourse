@@ -26,6 +26,7 @@ class UserUpdater
     :external_links_in_new_tab,
     :enable_quoting,
     :enable_defer,
+    :color_scheme_id,
     :dark_scheme_id,
     :dynamic_favicon,
     :automatically_unpin_topics,

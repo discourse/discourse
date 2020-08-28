@@ -15,6 +15,7 @@ import showModal from "discourse/lib/show-modal";
 import ThemeSettings from "admin/models/theme-settings";
 import { THEMES, COMPONENTS } from "admin/models/theme";
 import EmberObject from "@ember/object";
+import bootbox from "bootbox";
 
 const THEME_UPLOAD_VAR = 2;
 

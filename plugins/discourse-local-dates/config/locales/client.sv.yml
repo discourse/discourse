@@ -19,7 +19,6 @@ sv:
           insert: Ange
           advanced_mode: Avancerat läge
           simple_mode: Enkelt läge
-          format_description: "Format som används för att visa datum för användaren. Använd \"\\T\\Z\" för att visa användarens tidszon i klartext (Europa/Paris)"
           timezones_title: Tidszon att visa
           timezones_description: Tidszon kommer att användas för att visa datum i förhandsgranskning och reserv.
           recurring_title: Upprepning

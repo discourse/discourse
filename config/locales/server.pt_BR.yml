@@ -369,7 +369,6 @@ pt_BR:
       title: "Você foi aceito em @%{group_name}"
       body: |
         Seu pedido para entrar no @%{group_name} foi aceito e você agora é um membro.
-    view_hidden_topic_request_reason: "Gostaria de fazer parte do grupo '%{group_name}' para poder acessar [este tópico](%{topic_url})"
   education:
     until_posts:
       one: "%{count} mensagem"
@@ -1372,7 +1371,6 @@ pt_BR:
     ga_universal_domain_name: "O nome de domínio do Google Universal Analytics (analytics.js), por exemplo: mysite.com; consulte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Habilitar o acompanhamento de vários domínios do Google Universal Analytics (analytics.js). Os links de saída para estes domínios terão o ID do cliente adicionado a eles. Veja o <a href='https://support.google.com/analytics/answer/1034342?hl=pt-BR' target='_blank'>Guia de acompanhamento de vários domínios do Google.</a>"
     enable_escaped_fragments: "Voltar para a API do Google Ajax-Crawling se não for encontrado um webcrawler. Consulte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Permitir a criação de categorias por moderadores"
     cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o discurso pode permitir com segurança em postagens"
     slow_down_crawler_user_agents: "Agentes do usuário de rastreadores da web que devem ter uma taxa limitada em robots.txt usando a diretiva de rastreamento atrasado"

@@ -198,6 +198,17 @@ he:
           `%{image_url}`
 
           עכשיו יש לנסות להעלות אותה, או להדביק את הקישור בשורה נפרדת!
+      likes:
+        instructions: |-
+          הנה תמונה של חד־קרן:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          אם הוא נושא חן בעיניך (ברור שכן!) אז כפתור הלייק :heart: שמתחת לפוסט הזה מחכה ללחיצה ממך כדי שאדע שאהבת.
+        reply: |-
+          תודה שסימנת את הפוסט שלי בלייק!
+        not_found: |-
+          שכחת לעשות לייק :heart: ל[פוסט](%{url}) שלי? :crying_cat_face:
       formatting:
         instructions: |-
           למה שלא **נדגיש** או _נטה_ מספר מילים בתגובה שלך?
