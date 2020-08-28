@@ -34,10 +34,11 @@ const IN_OPTIONS_MAPPING = { images: "with" };
 
 export default Component.extend({
   classNames: ["search-advanced-options"],
-
   init() {
     this._super(...arguments);
 
+    this.regExpInMatch =
+      "(in|with):(posted|created|watching|tracking|bookmarks|first|pinned|wiki|unseen|image";
     this.inOptionsForUsers = [
       { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
       { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
@@ -122,7 +123,11 @@ export default Component.extend({
       return;
     }
 
-    this.setSearchedTermValue("searchedTerms.username", REGEXP_USERNAME_PREFIX);
+    this.setSearchedTermValue(
+      "searchedTerms.username",
+      new RegExp(this.regExpInMatch + ")"),
+      REGEXP_USERNAME_PREFIX
+    );
     this.setSearchedTermValueForCategory();
     this.setSearchedTermValueForGroup();
     this.setSearchedTermValueForBadge();
