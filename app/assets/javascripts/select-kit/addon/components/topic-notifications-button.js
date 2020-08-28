@@ -1,8 +1,9 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
+import layout from "select-kit/templates/components/topic-notifications-button";
 
 export default Component.extend({
-  layoutName: "select-kit/templates/components/topic-notifications-button",
+  layout,
   classNames: ["topic-notifications-button"],
   classNameBindings: ["isLoading"],
   appendReason: true,

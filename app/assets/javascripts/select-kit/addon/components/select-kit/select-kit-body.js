@@ -1,9 +1,10 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { bind } from "@ember/runloop";
+import layout from "select-kit/templates/components/select-kit/select-kit-body";
 
 export default Component.extend({
-  layoutName: "select-kit/templates/components/select-kit/select-kit-body",
+  layout,
   classNames: ["select-kit-body"],
   attributeBindings: ["selectKitId:data-select-kit-id"],
   selectKitId: computed("selectKit.uniqueID", function() {
