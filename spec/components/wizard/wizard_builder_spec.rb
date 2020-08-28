@@ -46,7 +46,7 @@ describe Wizard::Builder do
     let(:field) { fonts_step.fields.first }
 
     it 'should set the right font' do
-      expect(field.choices.size).to eq(BaseFontSetting::FONTS.size)
+      expect(field.choices.size).to eq(DiscourseFonts.fonts.size)
     end
   end
 
