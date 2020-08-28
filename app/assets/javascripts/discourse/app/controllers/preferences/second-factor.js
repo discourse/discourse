@@ -128,7 +128,7 @@ export default Controller.extend(CanCheckEmails, {
           link: true
         },
         {
-          label: `${iconHTML("ban")}` + I18n.t("user.second_factor.disable"),
+          label: `${iconHTML("ban")}${I18n.t("user.second_factor.disable")}`,
           class: "btn-danger btn-icon-text",
           callback: () => {
             this.model

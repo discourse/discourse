@@ -4088,14 +4088,8 @@ describe UsersController do
       end
       context 'when user has a registered totp and security key' do
         before do
-          expect(user.user_second_factors).to be_empty
-          expect(user.security_keys).to be_empty
-
           totp_second_factor = Fabricate(:user_second_factor_totp, user: user)
           security_key_second_factor = Fabricate(:user_security_key, user: user, factor_type: UserSecurityKey.factor_types[:second_factor])
-
-          expect(user.reload.user_second_factors.totps.first).to eq(totp_second_factor)
-          expect(user.security_keys.first).to eq(security_key_second_factor)
         end
 
         it 'should disable all totp and security keys' do
