@@ -6,6 +6,8 @@ import { Promise } from "rsvp";
 const _loaded = {};
 const _loading = {};
 
+let PublicJsHash;
+
 function loadWithTag(path, cb) {
   const head = document.getElementsByTagName("head")[0];
 
@@ -48,6 +50,20 @@ export default function loadScript(url, opts) {
 
   if (_loaded[url]) {
     return Promise.resolve();
+  }
+
+  if (PublicJsHash && !opts.css) {
+    let pathParts = url.split('/');
+    if (pathParts[1] === 'javascripts') {
+      if (pathParts[2].substring(pathParts[2].length - 3) === '.js') {
+        let fileName = pathParts[2].substr(0, pathParts[2].length - 3);
+        pathParts[2] = fileName + '-' + PublicJsHash + '.js';
+      } else if (pathParts.length > 3) {
+        let dirName = pathParts[2];
+        pathParts[2] = dirName + '-' + PublicJsHash;
+      }
+    }
+    url = pathParts.join('/');
   }
 
   // Scripts should always load from CDN
@@ -101,4 +117,8 @@ export default function loadScript(url, opts) {
       loadWithTag(fullUrl, cb);
     }
   });
+}
+
+export function setupPublicJsHash(configPublicJsHash) {
+  PublicJsHash = configPublicJsHash;
 }

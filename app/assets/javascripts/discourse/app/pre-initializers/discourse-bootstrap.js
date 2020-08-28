@@ -9,6 +9,7 @@ import {
   isDevelopment
 } from "discourse-common/config/environment";
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
+import { setupPublicJsHash } from "discourse/lib/load-script";
 import deprecated from "discourse-common/lib/deprecated";
 import { setIconList } from "discourse-common/lib/icon-library";
 import { setURLContainer } from "discourse/lib/url";
@@ -100,6 +101,10 @@ export default {
 
     if (setupData.s3BaseUrl) {
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
+    }
+
+    if (setupData.publicJsHash) {
+      setupPublicJsHash(setupData.publicJsHash);
     }
 
     RSVP.configure("onerror", function(e) {

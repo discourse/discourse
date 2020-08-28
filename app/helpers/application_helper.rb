@@ -517,6 +517,10 @@ module ApplicationHelper
       setup_data[:s3_base_url] = SiteSetting.Upload.s3_base_url
     end
 
+    if Discourse.public_js_git_hash_stamp.present?
+      setup_data[:public_js_hash] = Discourse.public_js_git_hash_stamp
+    end
+
     setup_data
   end
 
