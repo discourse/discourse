@@ -13,11 +13,13 @@ module Jobs
     COMPONENTS ||= %w(
       user_archive
       user_archive_profile
+      category_preferences
     )
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
       user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
       user_archive_profile: ['location', 'website', 'bio', 'views'],
+      category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
     )
 
     def execute(args)
@@ -121,6 +123,22 @@ module Jobs
         .select(:location, :website, :bio_raw, :views)
         .each do |user_profile|
         yield get_user_archive_profile_fields(user_profile)
+      end
+    end
+
+    def category_preferences_export
+      return enum_for(:category_preferences_export) unless block_given?
+
+      CategoryUser
+        .where(user_id: @current_user.id)
+        .select(:category_id, :notification_level, :last_seen_at)
+        .each do |cu|
+        yield [
+          cu.category_id,
+          piped_category_name(cu.category.id),
+          NotificationLevels.all[cu.notification_level],
+          cu.last_seen_at
+        ]
       end
     end
 
