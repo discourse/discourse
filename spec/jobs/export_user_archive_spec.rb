@@ -15,10 +15,15 @@ describe Jobs::ExportUserArchive do
   let(:component) { raise 'component not set' }
 
   def make_component_csv
-    CSV.generate do |csv|
+    data_rows = []
+    csv_out = CSV.generate do |csv|
       csv << job.get_header(component)
-      job.public_send(:"#{component}_export") { |d| csv << d }
+      job.public_send(:"#{component}_export") do |row|
+        csv << row
+        data_rows << Jobs::ExportUserArchive::HEADER_ATTRS_FOR[component].zip(row.map(&:to_s)).to_h.with_indifferent_access
+      end
     end
+    [data_rows, csv_out]
   end
 
   context '#execute' do
@@ -137,10 +142,62 @@ describe Jobs::ExportUserArchive do
     end
 
     it 'properly includes the profile fields' do
-      csv_out = make_component_csv
+      _, csv_out = make_component_csv
 
       expect(csv_out).to match('doe.example.com')
       expect(csv_out).to match("Doe\n\nHere")
+    end
+  end
+
+  context 'category_preferences' do
+    let(:component) { 'category_preferences' }
+
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+    let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
+    let(:announcements) { Fabricate(:category_with_definition) }
+
+    let(:reset_at) { DateTime.parse('2017-03-01 12:00') }
+
+    before do
+      SiteSetting.max_category_nesting = 3
+
+      # TopicsController#reset-new?category_id=&include_subcategories=true
+      category_ids = [subcategory.id, subsubcategory.id]
+      category_ids.each do |category_id|
+        user
+          .category_users
+          .where(category_id: category_id)
+          .first_or_initialize
+          .update!(last_seen_at: reset_at)
+        #TopicTrackingState.publish_dismiss_new(user.id, category_id)
+      end
+
+      # Set Watching First Post on announcements, Tracking on subcategory, nothing on subsubcategory
+      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:watching_first_post], announcements.id)
+      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:tracking], subcategory.id)
+    end
+
+    it 'correctly exports the CategoryUser table' do
+      data, csv_out = make_component_csv
+
+      expect(data.find { |r| r['category_id'] == category.id }).to be_nil
+
+      data.sort { |a, b| a['category_id'] <=> b['category_id'] }
+
+      expect(data[0][:category_id]).to eq(subcategory.id.to_s)
+      expect(data[0][:notification_level].to_s).to eq('tracking')
+      expect(DateTime.parse(data[0][:dismiss_new_timestamp])).to eq(reset_at)
+
+      expect(data[1][:category_id]).to eq(subsubcategory.id.to_s)
+      expect(data[1][:category_names]).to eq("#{category.name}|#{subcategory.name}|#{subsubcategory.name}")
+      expect(data[1][:notification_level]).to eq('') # empty string, not 'normal'
+      expect(DateTime.parse(data[1][:dismiss_new_timestamp])).to eq(reset_at)
+
+      expect(data[2][:category_id]).to eq(announcements.id.to_s)
+      expect(data[2][:category_names]).to eq(announcements.name)
+      expect(data[2][:notification_level]).to eq('watching_first_post')
+      expect(data[2][:dismiss_new_timestamp]).to eq('')
     end
   end
 
