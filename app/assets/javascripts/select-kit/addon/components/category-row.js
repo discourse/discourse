@@ -5,9 +5,10 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { isEmpty, isNone } from "@ember/utils";
 import { computed } from "@ember/object";
 import { setting } from "discourse/lib/computed";
+import layout from "select-kit/templates/components/category-row";
 
 export default SelectKitRowComponent.extend({
-  layoutName: "select-kit/templates/components/category-row",
+  layout,
   classNames: ["category-row"],
   hideParentCategory: bool("selectKit.options.hideParentCategory"),
   allowUncategorized: bool("selectKit.options.allowUncategorized"),

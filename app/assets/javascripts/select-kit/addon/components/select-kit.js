@@ -37,7 +37,6 @@ export default Component.extend(
   UtilsMixin,
   {
     pluginApiIdentifiers: ["select-kit"],
-    layoutName: "select-kit/templates/components/select-kit",
     classNames: ["select-kit"],
     classNameBindings: [
       "selectKit.isLoading:is-loading",

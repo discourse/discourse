@@ -4,9 +4,10 @@ import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 import { guidFor } from "@ember/object/internals";
 import UtilsMixin from "select-kit/mixins/utils";
+import layout from "select-kit/templates/components/select-kit/select-kit-row";
 
 export default Component.extend(UtilsMixin, {
-  layoutName: "select-kit/templates/components/select-kit/select-kit-row",
+  layout,
   classNames: ["select-kit-row"],
   tagName: "li",
   tabIndex: -1,
