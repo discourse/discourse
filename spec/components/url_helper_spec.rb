@@ -139,6 +139,22 @@ describe UrlHelper do
     end
   end
 
+  describe "#rails_route_from_url" do
+    it "recognizes a user path" do
+      result = UrlHelper.rails_route_from_url('http://example.com/u/john_smith')
+      expect(result[:controller]).to eq("users")
+      expect(result[:action]).to eq("show")
+      expect(result[:username]).to eq("john_smith")
+    end
+
+    it "recognizes a user path with unicode characters in the username" do
+      result = UrlHelper.rails_route_from_url('http://example.com/u/björn_ulvaeus')
+      expect(result[:controller]).to eq("users")
+      expect(result[:action]).to eq("show")
+      expect(result[:username].force_encoding('UTF-8')).to eq("björn_ulvaeus")
+    end
+  end
+
   describe "#cook_url" do
     let(:url) { "//s3bucket.s3.dualstack.us-east-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg" }
 
