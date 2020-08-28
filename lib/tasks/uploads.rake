@@ -1138,7 +1138,7 @@ def fix_missing_s3
       end
 
       if fix_error
-        puts "Failed to fix upload #{e}"
+        puts "Failed to fix upload #{fix_error}"
       else
         # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
         # we may end up breaking posts
@@ -1181,12 +1181,20 @@ def fix_missing_s3
   puts
 end
 
+def allow_all_uploads
+  old_staff_extension = SiteSetting.authorized_extensions_for_staff
+  SiteSetting.authorized_extensions_for_staff = "*"
+  yield
+ensure
+  SiteSetting.authorized_extensions_for_staff = old_staff_extension
+end
+
 task "uploads:fix_missing_s3" => :environment do
   if RailsMultisite::ConnectionManagement.current_db != "default"
-    fix_missing_s3
+    allow_all_uploads { fix_missing_s3 }
   else
     RailsMultisite::ConnectionManagement.each_connection do
-      fix_missing_s3
+      allow_all_uploads { fix_missing_s3 }
     end
   end
 end
