@@ -4,8 +4,24 @@ require 'rails_helper'
 require 'csv'
 
 describe Jobs::ExportUserArchive do
+  let(:user) { Fabricate(:user, username: "john_doe") }
+  let(:extra) { {} }
+  let(:job) {
+    j = Jobs::ExportUserArchive.new
+    j.current_user = user
+    j.extra = extra
+    j
+  }
+  let(:component) { raise 'component not set' }
+
+  def make_component_csv
+    CSV.generate do |csv|
+      csv << job.get_header(component)
+      job.public_send(:"#{component}_export").each { |d| csv << d }
+    end
+  end
+
   context '#execute' do
-    let(:user) { Fabricate(:user, username: "john_doe") }
     let(:post) { Fabricate(:post, user: user) }
 
     before do
@@ -59,13 +75,7 @@ describe Jobs::ExportUserArchive do
 
   context 'user_archive posts' do
     let(:component) { 'user_archive' }
-    let(:user) { Fabricate(:user, username: "john_doe") }
     let(:user2) { Fabricate(:user) }
-    let(:job) {
-      j = Jobs::ExportUserArchive.new
-      j.current_user = user
-      j
-    }
     let(:category) { Fabricate(:category_with_definition) }
     let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
@@ -119,12 +129,6 @@ describe Jobs::ExportUserArchive do
 
   context 'user_archive_profile' do
     let(:component) { 'user_archive_profile' }
-    let(:user) { Fabricate(:user, username: "john_doe") }
-    let(:job) {
-      j = Jobs::ExportUserArchive.new
-      j.current_user = user
-      j
-    }
 
     before do
       user.user_profile.website = 'https://doe.example.com/john'
@@ -133,10 +137,7 @@ describe Jobs::ExportUserArchive do
     end
 
     it 'properly includes the profile fields' do
-      csv_out = CSV.generate do |csv|
-        csv << job.get_header(component)
-        job.user_archive_profile_export.each { |d| csv << d }
-      end
+      csv_out = make_component_csv
 
       expect(csv_out).to match('doe.example.com')
       expect(csv_out).to match("Doe\n\nHere")
