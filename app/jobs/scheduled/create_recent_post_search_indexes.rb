@@ -4,7 +4,7 @@ module Jobs
   class CreateRecentPostSearchIndexes < ::Jobs::Scheduled
     every 1.day
 
-    REGULAR_POST_SEARCH_DATA_INDEX_NAME = 'idx_recent_regular_post_search_data'
+    REGULAR_POST_SEARCH_DATA_INDEX_NAME ||= 'idx_recent_regular_post_search_data'
 
     def execute(_)
       create_recent_regular_post_search_index
