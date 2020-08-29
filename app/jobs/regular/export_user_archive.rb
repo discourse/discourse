@@ -15,6 +15,7 @@ module Jobs
       user_archive_profile
       badges
       category_preferences
+      visits
     )
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
@@ -22,6 +23,7 @@ module Jobs
       user_archive_profile: ['location', 'website', 'bio', 'views'],
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
+      visits: ['visited_at', 'posts_read', 'mobile', 'time_read'],
     )
 
     def execute(args)
@@ -163,6 +165,22 @@ module Jobs
           piped_category_name(cu.category.id),
           NotificationLevels.all[cu.notification_level],
           cu.last_seen_at
+        ]
+      end
+    end
+
+    def visits_export
+      return enum_for(:visits_export) unless block_given?
+
+      UserVisit
+        .where(user_id: @current_user.id)
+        .order(visited_at: :asc)
+        .each do |uv|
+        yield [
+          uv.visited_at,
+          uv.posts_read,
+          uv.mobile,
+          uv.time_read,
         ]
       end
     end

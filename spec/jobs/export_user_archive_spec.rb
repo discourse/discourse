@@ -232,4 +232,30 @@ describe Jobs::ExportUserArchive do
     end
   end
 
+  context 'visits' do
+    let(:component) { 'visits' }
+    let(:user2) { Fabricate(:user) }
+
+    it 'correctly exports the UserVisit table' do
+      freeze_time '2017-03-01 12:00'
+
+      UserVisit.create(user_id: user.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 10)
+      UserVisit.create(user_id: user.id, visited_at: 2.days.ago, posts_read: 2, mobile: false, time_read: 20)
+      UserVisit.create(user_id: user.id, visited_at: 1.week.ago, posts_read: 3, mobile: true, time_read: 30)
+      UserVisit.create(user_id: user.id, visited_at: 1.year.ago, posts_read: 4, mobile: false, time_read: 40)
+      UserVisit.create(user_id: user2.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 50)
+
+      data, csv_out = make_component_csv
+
+      # user2's data is not mixed in
+      expect(data.length).to eq(4)
+      expect(data.find { |r| r['time_read'] == 50 }).to be_nil
+
+      expect(data[0]['visited_at']).to eq('2016-03-01')
+      expect(data[0]['posts_read']).to eq('4')
+      expect(data[0]['time_read']).to eq('40')
+      expect(data[1]['mobile']).to eq('true')
+      expect(data[3]['visited_at']).to eq('2017-03-01')
+    end
+  end
 end
