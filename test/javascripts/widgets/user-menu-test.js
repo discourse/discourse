@@ -9,7 +9,7 @@ widgetTest("basics", {
 
   test(assert) {
     assert.ok(find(".user-menu").length);
-    assert.ok(find(".user-activity-link").length);
+    assert.ok(find(".user-preferences-link").length);
     assert.ok(find(".user-notifications-link").length);
     assert.ok(find(".user-bookmarks-link").length);
     assert.ok(find(".quick-access-panel").length);
@@ -82,7 +82,7 @@ widgetTest("log out", {
   },
 
   async test(assert) {
-    await click(".user-activity-link");
+    await click(".user-preferences-link");
     assert.ok(find(".logout").length);
 
     await click(".logout");
@@ -178,7 +178,7 @@ widgetTest("anonymous", {
   },
 
   async test(assert) {
-    await click(".user-activity-link");
+    await click(".user-preferences-link");
     assert.ok(find(".enable-anonymous").length);
 
     await click(".enable-anonymous");
@@ -194,7 +194,7 @@ widgetTest("anonymous - disabled", {
   },
 
   async test(assert) {
-    await click(".user-activity-link");
+    await click(".user-preferences-link");
     assert.ok(!find(".enable-anonymous").length);
   }
 });
@@ -211,7 +211,7 @@ widgetTest("anonymous - switch back", {
   },
 
   async test(assert) {
-    await click(".user-activity-link");
+    await click(".user-preferences-link");
     assert.ok(find(".disable-anonymous").length);
 
     await click(".disable-anonymous");
