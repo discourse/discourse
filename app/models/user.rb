@@ -727,13 +727,26 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_last_seen!(now = Time.zone.now)
+  def last_seen_redis_key(now)
     now_date = now.to_date
-    # Only update last seen once every minute
-    redis_key = "user:#{id}:#{now_date}"
-    return unless Discourse.redis.setnx(redis_key, "1")
+    "user:#{id}:#{now_date}"
+  end
 
-    Discourse.redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
+  def clear_last_seen_cache!(now = Time.zone.now)
+    Discourse.redis.del(last_seen_redis_key(now))
+  end
+
+  def update_last_seen!(now = Time.zone.now)
+    redis_key = last_seen_redis_key(now)
+
+    if SiteSetting.active_user_rate_limit_secs > 0
+      return if !Discourse.redis.set(
+        redis_key, "1",
+        nx: true,
+        ex: SiteSetting.active_user_rate_limit_secs
+      )
+    end
+
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
