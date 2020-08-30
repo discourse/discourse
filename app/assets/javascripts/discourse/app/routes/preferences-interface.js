@@ -12,7 +12,6 @@ export default RestrictedUserRoute.extend({
       makeThemeDefault:
         !user.get("user_option.theme_ids") ||
         currentThemeId() === user.get("user_option.theme_ids")[0],
-      makeColorSchemeDefault: !user.get("user_option.color_scheme_id"),
       makeTextSizeDefault:
         user.get("currentTextSize") === user.get("user_option.text_size")
     });

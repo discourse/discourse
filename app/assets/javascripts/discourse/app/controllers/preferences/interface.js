@@ -36,6 +36,7 @@ export default Controller.extend({
   selectedColorSchemeId: null,
   selectedDarkColorSchemeId: null,
   preferencesController: inject("preferences"),
+  makeColorSchemeDefault: true,
 
   init() {
     this._super(...arguments);
@@ -46,8 +47,8 @@ export default Controller.extend({
     });
   },
 
-  @discourseComputed("makeThemeDefault", "makeColorSchemeDefault")
-  saveAttrNames(makeThemeDefault, makeColorSchemeDefault) {
+  @discourseComputed("makeThemeDefault")
+  saveAttrNames(makeThemeDefault) {
     let attrs = [
       "locale",
       "external_links_in_new_tab",
@@ -61,17 +62,15 @@ export default Controller.extend({
       "hide_profile_and_presence",
       "text_size",
       "title_count_mode",
-      "skip_new_user_tips"
+      "skip_new_user_tips",
+      "color_scheme_id",
+      "dark_scheme_id"
     ];
 
     if (makeThemeDefault) {
       attrs.push("theme_ids");
     }
 
-    if (makeColorSchemeDefault) {
-      attrs.push("color_scheme_id");
-      attrs.push("dark_scheme_id");
-    }
     return attrs;
   },
 
@@ -230,7 +229,9 @@ export default Controller.extend({
         this.set("model.user_option.text_size", this.textSize);
       }
 
-      if (this.makeColorSchemeDefault) {
+      if (!this.showColorSchemeSelector) {
+        this.set("model.user_option.color_scheme_id", null);
+      } else if (this.makeColorSchemeDefault) {
         this.set(
           "model.user_option.color_scheme_id",
           this.selectedColorSchemeId
