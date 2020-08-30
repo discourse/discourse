@@ -34,11 +34,10 @@ const IN_OPTIONS_MAPPING = { images: "with" };
 
 export default Component.extend({
   classNames: ["search-advanced-options"],
+
   init() {
     this._super(...arguments);
 
-    this.regExpInMatch =
-      "(in|with):(posted|created|watching|tracking|bookmarks|first|pinned|wiki|unseen|image";
     this.inOptionsForUsers = [
       { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
       { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
@@ -123,17 +122,20 @@ export default Component.extend({
       return;
     }
 
-    this.setSearchedTermValue(
-      "searchedTerms.username",
-      new RegExp(this.regExpInMatch + ")"),
-      REGEXP_USERNAME_PREFIX
-    );
+    this.setSearchedTermValue("searchedTerms.username", REGEXP_USERNAME_PREFIX);
     this.setSearchedTermValueForCategory();
     this.setSearchedTermValueForGroup();
     this.setSearchedTermValueForBadge();
     this.setSearchedTermValueForTags();
 
-    this.setSearchedTermValue("searchedTerms.in", REGEXP_IN_PREFIX);
+    let regExpInMatch = this.inOptions.map(option => option.value).join("|");
+    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`);
+
+    this.setSearchedTermValue(
+      "searchedTerms.in",
+      REGEXP_IN_PREFIX,
+      REGEXP_IN_MATCH
+    );
 
     this.setSearchedTermSpecialInValue(
       "searchedTerms.special.in.likes",
@@ -155,7 +157,16 @@ export default Component.extend({
       REGEXP_SPECIAL_IN_SEEN_MATCH
     );
 
-    this.setSearchedTermValue("searchedTerms.status", REGEXP_STATUS_PREFIX);
+    let regExpStatusMatch = this.statusOptions
+      .map(status => status.value)
+      .join("|");
+    const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
+
+    this.setSearchedTermValue(
+      "searchedTerms.status",
+      REGEXP_STATUS_PREFIX,
+      REGEXP_STATUS_MATCH
+    );
     this.setSearchedTermValueForPostTime();
 
     this.setSearchedTermValue(
@@ -480,7 +491,10 @@ export default Component.extend({
 
   @observes("searchedTerms.in")
   updateSearchTermForIn() {
-    const match = this.filterBlocks(REGEXP_IN_PREFIX);
+    let regExpInMatch = this.inOptions.map(option => option.value).join("|");
+    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`);
+
+    const match = this.filterBlocks(REGEXP_IN_MATCH);
     const inFilter = this.get("searchedTerms.in");
     let keyword = "in";
     if (inFilter in IN_OPTIONS_MAPPING) {
@@ -540,7 +554,12 @@ export default Component.extend({
 
   @observes("searchedTerms.status")
   updateSearchTermForStatus() {
-    const match = this.filterBlocks(REGEXP_STATUS_PREFIX);
+    let regExpStatusMatch = this.statusOptions
+      .map(status => status.value)
+      .join("|");
+    const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
+
+    const match = this.filterBlocks(REGEXP_STATUS_MATCH);
     const statusFilter = this.get("searchedTerms.status");
     let searchTerm = this.searchTerm || "";
 
