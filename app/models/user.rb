@@ -273,8 +273,8 @@ class User < ActiveRecord::Base
 
   def self.editable_user_custom_fields(by_staff: false)
     fields = []
-    fields.push *DiscoursePluginRegistry.self_editable_user_custom_fields
-    fields.push *DiscoursePluginRegistry.staff_editable_user_custom_fields if by_staff
+    fields.push(*DiscoursePluginRegistry.self_editable_user_custom_fields)
+    fields.push(*DiscoursePluginRegistry.staff_editable_user_custom_fields) if by_staff
 
     fields.uniq
   end
@@ -297,18 +297,18 @@ class User < ActiveRecord::Base
   def self.allowed_user_custom_fields(guardian)
     fields = []
 
-    fields.push *DiscoursePluginRegistry.public_user_custom_fields
+    fields.push(*DiscoursePluginRegistry.public_user_custom_fields)
 
     if SiteSetting.public_user_custom_fields.present?
-      fields.push *SiteSetting.public_user_custom_fields.split('|')
+      fields.push(*SiteSetting.public_user_custom_fields.split('|'))
     end
 
     if guardian.is_staff?
       if SiteSetting.staff_user_custom_fields.present?
-        fields.push *SiteSetting.staff_user_custom_fields.split('|')
+        fields.push(*SiteSetting.staff_user_custom_fields.split('|'))
       end
 
-      fields.push *DiscoursePluginRegistry.staff_user_custom_fields
+      fields.push(*DiscoursePluginRegistry.staff_user_custom_fields)
     end
 
     fields.uniq
