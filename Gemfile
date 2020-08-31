@@ -79,8 +79,7 @@ gem 'rails_multisite'
 
 gem 'fast_xs', platform: :ruby
 
-# may move to xorcist post: https://github.com/fny/xorcist/issues/4
-gem 'fast_xor', platform: :ruby
+gem 'xorcist'
 
 gem 'fastimage'
 

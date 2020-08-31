@@ -130,9 +130,6 @@ GEM
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     fast_blank (1.0.0)
-    fast_xor (1.1.3)
-      rake
-      rake-compiler
     fast_xs (0.8.0)
     fastimage (2.2.0)
     ffi (1.13.1)
@@ -296,8 +293,6 @@ GEM
     rainbow (3.0.0)
     raindrops (0.19.1)
     rake (13.0.1)
-    rake-compiler (1.1.1)
-      rake
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -429,6 +424,7 @@ GEM
     webpush (1.0.0)
       hkdf (~> 0.2)
       jwt (~> 2.0)
+    xorcist (1.1.2)
     yaml-lint (0.0.10)
     zeitwerk (2.4.0)
 
@@ -472,7 +468,6 @@ DEPENDENCIES
   fabrication
   fakeweb
   fast_blank
-  fast_xor
   fast_xs
   fastimage
   flamegraph
@@ -560,6 +555,7 @@ DEPENDENCIES
   unicorn
   webmock
   webpush
+  xorcist
   yaml-lint
 
 BUNDLED WITH
