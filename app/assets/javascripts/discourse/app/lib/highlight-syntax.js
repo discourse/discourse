@@ -31,6 +31,8 @@ export default function highlightSyntax(elem, siteSettings, session) {
   }
 
   return loadScript(path).then(() => {
+    customHighlightJSLanguages();
+
     elem.querySelectorAll(selector).forEach(e => {
       // Large code blocks can cause crashes or slowdowns
       if (e.innerHTML.length > 30000) {
@@ -38,7 +40,6 @@ export default function highlightSyntax(elem, siteSettings, session) {
       }
 
       e.classList.remove("lang-auto");
-      customHighlightJSLanguages();
       hljs.highlightBlock(e);
     });
   });
