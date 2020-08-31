@@ -261,12 +261,6 @@
     color: var(--header_primary);
     display: block;
     @include ellipsis;
-    // Some characters like '/' and 'j' can be wider than the font's em-box
-    // this causes some left/right text clipping with overflow hidden
-    // extra padding adds space to account for this; negative margin repositions
-    $wiggle-room: 0.15em;
-    padding-left: $wiggle-room;
-    margin-left: -#{$wiggle-room};
   }
   .topic-statuses {
     .d-icon {
