@@ -31,6 +31,7 @@ import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { isTesting } from "discourse-common/config/environment";
 import { SKIP } from "discourse/lib/autocomplete";
+import { isEmpty } from "@ember/utils";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -953,7 +954,7 @@ export default Component.extend({
       let selected = this._getSelected();
       const captures = selected.pre.match(/\B:(\w*)$/);
 
-      if (_.isEmpty(captures)) {
+      if (isEmpty(captures)) {
         if (selected.pre.match(/\S$/)) {
           this._addText(selected, ` :${code}:`);
         } else {

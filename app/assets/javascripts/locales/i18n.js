@@ -323,7 +323,7 @@ I18n.enableVerboseLocalization = function() {
     if (!current) {
       current = keys[scope] = ++counter;
       var message = "Translation #" + current + ": " + scope;
-      if (!_.isEmpty(value)) {
+      if (value && Object.keys(value).length > 0) {
         message += ", parameters: " + JSON.stringify(value);
       }
       // eslint-disable-next-line no-console
