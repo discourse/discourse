@@ -102,8 +102,6 @@ task 'javascript:update' do
     }, {
       source: 'jquery-color/dist/jquery.color.js'
     }, {
-      source: 'jquery.cookie/jquery.cookie.js'
-    }, {
       source: 'blueimp-file-upload/js/jquery.fileupload.js',
     }, {
       source: 'blueimp-file-upload/js/jquery.iframe-transport.js',
