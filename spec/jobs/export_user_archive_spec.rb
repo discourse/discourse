@@ -73,8 +73,8 @@ describe Jobs::ExportUserArchive do
       end
 
       expect(files.size).to eq(Jobs::ExportUserArchive::COMPONENTS.length)
-      expect(files.find { |f| f.match 'user_archive-john_doe-' }).to_not be_nil
-      expect(files.find { |f| f.match 'user_archive_profile-john_doe-' }).to_not be_nil
+      expect(files.find { |f| f == 'user_archive.csv' }).to_not be_nil
+      expect(files.find { |f| f == 'category_preferences.csv' }).to_not be_nil
     end
   end
 
@@ -149,6 +149,37 @@ describe Jobs::ExportUserArchive do
     end
   end
 
+  context 'badges' do
+    let(:component) { 'badges' }
+
+    let(:admin) { Fabricate(:admin) }
+    let(:badge1) { Fabricate(:badge) }
+    let(:badge2) { Fabricate(:badge, multiple_grant: true) }
+    let(:badge3) { Fabricate(:badge, multiple_grant: true) }
+    let(:day_ago) { 1.day.ago }
+
+    it 'properly includes badge records' do
+      grant_start = Time.now.utc
+      BadgeGranter.grant(badge1, user)
+      BadgeGranter.grant(badge2, user)
+      BadgeGranter.grant(badge2, user, granted_by: admin)
+      BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
+      BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
+      BadgeGranter.grant(badge3, user, post_id: Fabricate(:post).id)
+
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(6)
+
+      expect(data[0]['badge_id']).to eq(badge1.id.to_s)
+      expect(data[0]['badge_name']).to eq(badge1.display_name)
+      expect(data[0]['featured_rank']).to_not eq('')
+      expect(DateTime.parse(data[0]['granted_at'])).to be >= DateTime.parse(grant_start.to_s)
+      expect(data[2]['granted_manually']).to eq('true')
+      expect(Post.find(data[3]['post_id'])).to_not be_nil
+    end
+
+  end
+
   context 'category_preferences' do
     let(:component) { 'category_preferences' }
 
@@ -201,4 +232,30 @@ describe Jobs::ExportUserArchive do
     end
   end
 
+  context 'visits' do
+    let(:component) { 'visits' }
+    let(:user2) { Fabricate(:user) }
+
+    it 'correctly exports the UserVisit table' do
+      freeze_time '2017-03-01 12:00'
+
+      UserVisit.create(user_id: user.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 10)
+      UserVisit.create(user_id: user.id, visited_at: 2.days.ago, posts_read: 2, mobile: false, time_read: 20)
+      UserVisit.create(user_id: user.id, visited_at: 1.week.ago, posts_read: 3, mobile: true, time_read: 30)
+      UserVisit.create(user_id: user.id, visited_at: 1.year.ago, posts_read: 4, mobile: false, time_read: 40)
+      UserVisit.create(user_id: user2.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 50)
+
+      data, csv_out = make_component_csv
+
+      # user2's data is not mixed in
+      expect(data.length).to eq(4)
+      expect(data.find { |r| r['time_read'] == 50 }).to be_nil
+
+      expect(data[0]['visited_at']).to eq('2016-03-01')
+      expect(data[0]['posts_read']).to eq('4')
+      expect(data[0]['time_read']).to eq('40')
+      expect(data[1]['mobile']).to eq('true')
+      expect(data[3]['visited_at']).to eq('2017-03-01')
+    end
+  end
 end

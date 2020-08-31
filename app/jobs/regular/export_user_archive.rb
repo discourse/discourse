@@ -13,13 +13,17 @@ module Jobs
     COMPONENTS ||= %w(
       user_archive
       user_archive_profile
+      badges
       category_preferences
+      visits
     )
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
       user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
       user_archive_profile: ['location', 'website', 'bio', 'views'],
+      badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
+      visits: ['visited_at', 'posts_read', 'mobile', 'time_read'],
     )
 
     def execute(args)
@@ -36,13 +40,13 @@ module Jobs
         if respond_to? filename_method
           h[:filename] = public_send(filename_method)
         else
-          h[:filename] = "#{name}-#{@current_user.username}-#{@timestamp}"
+          h[:filename] = name
         end
         components.push(h)
       end
 
       export_title = 'user_archive'.titleize
-      filename = components.first[:filename]
+      filename = "user_archive-#{@current_user.username}-#{@timestamp}"
       user_export = UserExport.create(file_name: filename, user_id: @current_user.id)
 
       filename = "#{filename}-#{user_export.id}"
@@ -126,6 +130,29 @@ module Jobs
       end
     end
 
+    def badges_export
+      return enum_for(:badges_export) unless block_given?
+
+      UserBadge
+        .where(user_id: @current_user.id)
+        .joins(:badge)
+        .select(:badge_id, :granted_at, :post_id, :seq, :granted_by_id, :notification_id, :featured_rank)
+        .order(:granted_at)
+        .each do |ub|
+        yield [
+          ub.badge_id,
+          ub.badge.display_name,
+          ub.granted_at,
+          ub.post_id,
+          ub.seq,
+          # Hide the admin's identity, simply indicate human or system
+          User.human_user_id?(ub.granted_by_id),
+          ub.notification_id,
+          ub.featured_rank,
+        ]
+      end
+    end
+
     def category_preferences_export
       return enum_for(:category_preferences_export) unless block_given?
 
@@ -138,6 +165,22 @@ module Jobs
           piped_category_name(cu.category.id),
           NotificationLevels.all[cu.notification_level],
           cu.last_seen_at
+        ]
+      end
+    end
+
+    def visits_export
+      return enum_for(:visits_export) unless block_given?
+
+      UserVisit
+        .where(user_id: @current_user.id)
+        .order(visited_at: :asc)
+        .each do |uv|
+        yield [
+          uv.visited_at,
+          uv.posts_read,
+          uv.mobile,
+          uv.time_read,
         ]
       end
     end
