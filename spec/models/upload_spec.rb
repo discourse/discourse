@@ -434,41 +434,6 @@ describe Upload do
     end
   end
 
-  context ".signed_url_from_secure_media_url" do
-    before do
-      # must be done so signed_url_for_path exists
-      enable_secure_media
-    end
-
-    it "correctly gives back a signed url from a path only" do
-      secure_url = "/secure-media-uploads/original/1X/c5a2c4ba0fa390f5aac5c2c1a12416791ebdd9e9.png"
-      signed_url = Upload.signed_url_from_secure_media_url(secure_url)
-      expect(signed_url).not_to include("secure-media-uploads")
-      expect(UrlHelper.s3_presigned_url?(signed_url)).to eq(true)
-    end
-
-    it "correctly gives back a signed url from a full url" do
-      secure_url = "http://localhost:3000/secure-media-uploads/original/1X/c5a2c4ba0fa390f5aac5c2c1a12416791ebdd9e9.png"
-      signed_url = Upload.signed_url_from_secure_media_url(secure_url)
-      expect(signed_url).not_to include(Discourse.base_url)
-      expect(UrlHelper.s3_presigned_url?(signed_url)).to eq(true)
-    end
-  end
-
-  context ".secure_media_url_from_upload_url" do
-    before do
-      # must be done so signed_url_for_path exists
-      enable_secure_media
-    end
-
-    it "gets the secure media url from an S3 upload url" do
-      upload = Fabricate(:upload_s3, secure: true)
-      url = upload.url
-      secure_url = Upload.secure_media_url_from_upload_url(url)
-      expect(secure_url).not_to include(SiteSetting.Upload.absolute_base_url)
-    end
-  end
-
   context ".secure_media_url?" do
     it "works for a secure media url with or without schema + host" do
       url = "//localhost:3000/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
