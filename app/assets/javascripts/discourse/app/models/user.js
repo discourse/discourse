@@ -864,7 +864,8 @@ const User = RestModel.extend({
       }
     });
 
-    return _.uniq(titles)
+    return titles
+      .uniq()
       .sort()
       .map(title => {
         return {
