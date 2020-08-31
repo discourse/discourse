@@ -305,7 +305,7 @@ export function relativeAge(date, options) {
   } else if (format === "medium-with-ago") {
     return relativeAgeMedium(
       date,
-      _.extend(options, { format: "medium", leaveAgo: true })
+      Object.assign(options, { format: "medium", leaveAgo: true })
     );
   }
 
