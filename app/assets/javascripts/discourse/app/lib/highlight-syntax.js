@@ -5,14 +5,14 @@ import deprecated from "discourse-common/lib/deprecated";
 let _moreLanguages = [];
 
 export default function highlightSyntax(elem, siteSettings, session) {
+  if (!elem) {
+    return;
+  }
+
   const selector = siteSettings.autohighlight_all_code
     ? "pre code"
     : "pre code[class]";
   const path = session.highlightJsPath;
-
-  if (!elem) {
-    return;
-  }
 
   if (elem instanceof jQuery) {
     deprecated(
