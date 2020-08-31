@@ -130,6 +130,18 @@ describe Jobs::ExportUserArchive do
       expect(post2['reply_count']).to eq(0)
     end
 
+    it 'can export a post from a deleted category' do
+      cat2 = Fabricate(:category)
+      topic2 = Fabricate(:topic, category: cat2, user: user)
+      post2 = Fabricate(:post, topic: topic2, user: user)
+
+      cat2_id = cat2.id
+      cat2.destroy!
+
+      _, csv_out = make_component_csv
+      expect(csv_out).to match cat2_id.to_s
+      puts csv_out
+    end
   end
 
   context 'user_archive_profile' do
