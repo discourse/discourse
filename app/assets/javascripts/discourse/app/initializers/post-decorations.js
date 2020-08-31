@@ -10,7 +10,7 @@ export default {
     withPluginApi("0.1", api => {
       const siteSettings = container.lookup("site-settings:main");
       const session = container.lookup("session:main");
-      api.decorateCooked(
+      api.decorateCookedElement(
         elem => {
           return highlightSyntax(elem, siteSettings, session);
         },

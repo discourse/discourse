@@ -1,26 +1,43 @@
+import loadScript from "discourse/lib/load-script";
+import deprecated from "discourse-common/lib/deprecated";
+
 /*global hljs:true */
 let _moreLanguages = [];
 
-import loadScript from "discourse/lib/load-script";
-
-export default function highlightSyntax($elem, siteSettings, session) {
+export default function highlightSyntax(elem, siteSettings, session) {
   const selector = siteSettings.autohighlight_all_code
-      ? "pre code"
-      : "pre code[class]",
-    path = session.highlightJsPath;
+    ? "pre code"
+    : "pre code[class]";
+  const path = session.highlightJsPath;
+
+  if (!elem) {
+    return;
+  }
+
+  if (elem instanceof jQuery) {
+    deprecated(
+      "highlightSyntax now takes a DOM node instead of a jQuery object.",
+      {
+        since: "2.6.0",
+        dropFrom: "2.7.0"
+      }
+    );
+
+    elem = elem[0];
+  }
 
   if (!path) {
     return;
   }
 
-  $(selector, $elem).each(function(i, e) {
-    // Large code blocks can cause crashes or slowdowns
-    if (e.innerHTML.length > 30000) {
-      return;
-    }
+  return loadScript(path).then(() => {
+    elem.querySelectorAll(selector).forEach(e => {
+      // Large code blocks can cause crashes or slowdowns
+      if (e.innerHTML.length > 30000) {
+        return;
+      }
 
-    $(e).removeClass("lang-auto");
-    loadScript(path).then(() => {
+      e.classList.remove("lang-auto");
       customHighlightJSLanguages();
       hljs.highlightBlock(e);
     });
@@ -28,7 +45,7 @@ export default function highlightSyntax($elem, siteSettings, session) {
 }
 
 export function registerHighlightJSLanguage(name, fn) {
-  _moreLanguages.push({ name: name, fn: fn });
+  _moreLanguages.push({ name, fn });
 }
 
 function customHighlightJSLanguages() {
