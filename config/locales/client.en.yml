@@ -1086,6 +1086,7 @@ en:
       second_factor:
         title: "Two Factor Authentication"
         enable: "Manage Two Factor Authentication"
+        disable_all: "Disable All"
         forgot_password: "Forgot password?"
         confirm_password_description: "Please confirm your password to continue"
         name: "Name"
@@ -1103,7 +1104,7 @@ en:
         use: "Use Authenticator app"
         enforced_notice: "You are required to enable two factor authentication before accessing this site."
         disable: "Disable"
-        disable_confirm: "Are you sure you want to disable all second factors?"
+        disable_confirm: "Are you sure you want to disable all second factor methods?"
         save: "Save"
         edit: "Edit"
         edit_title: "Edit Second Factor"

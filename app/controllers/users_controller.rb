@@ -1385,6 +1385,7 @@ class UsersController < ApplicationController
   def disable_second_factor
     # delete all second factors for a user
     current_user.user_second_factors.destroy_all
+    current_user.security_keys.destroy_all
 
     Jobs.enqueue(
       :critical_user_email,
