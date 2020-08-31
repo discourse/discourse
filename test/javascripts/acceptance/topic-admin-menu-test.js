@@ -34,3 +34,16 @@ QUnit.test(
     );
   }
 );
+
+QUnit.test("Toggle the menu as admin focuses the first item", async assert => {
+  updateCurrentUser({ admin: true });
+
+  await visit("/t/internationalization-localization/280");
+  assert.ok(exists("#topic"), "The topic was rendered");
+  await click(".toggle-admin-menu");
+
+  assert.equal(
+    document.activeElement,
+    document.querySelector(".topic-admin-multi-select > button")
+  );
+});

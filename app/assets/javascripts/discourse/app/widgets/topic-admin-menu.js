@@ -1,4 +1,5 @@
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
+import { next } from "@ember/runloop";
 import { h } from "virtual-dom";
 
 createWidget("admin-menu-button", {
@@ -106,6 +107,16 @@ createWidget("topic-admin-menu-button", {
     }
 
     this.state.position = position;
+
+    next(() => {
+      let menuButtons = document.querySelectorAll(
+        ".topic-admin-popup-menu button"
+      );
+
+      if (menuButtons && menuButtons[0]) {
+        menuButtons[0].focus();
+      }
+    });
   },
 
   topicToggleActions() {
