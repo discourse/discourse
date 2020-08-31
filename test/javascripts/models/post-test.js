@@ -56,11 +56,11 @@ QUnit.test("updateFromPost", assert => {
   assert.equal(post.get("raw"), "different raw", "raw field updated");
 });
 
-QUnit.test("destroy by staff", assert => {
-  var user = User.create({ username: "staff", moderator: true }),
-    post = buildPost({ user: user });
+QUnit.test("destroy by staff", async assert => {
+  let user = User.create({ username: "staff", moderator: true });
+  let post = buildPost({ user: user });
 
-  post.destroy(user);
+  await post.destroy(user);
 
   assert.present(post.get("deleted_at"), "it has a `deleted_at` field.");
   assert.equal(
@@ -69,7 +69,8 @@ QUnit.test("destroy by staff", assert => {
     "it has the user in the `deleted_by` field"
   );
 
-  post.recover();
+  await post.recover();
+
   assert.blank(
     post.get("deleted_at"),
     "it clears `deleted_at` when recovering"
