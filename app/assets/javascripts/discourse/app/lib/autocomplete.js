@@ -113,7 +113,7 @@ export default function(options) {
     if (options.single) {
       inputSelectedItems = [];
     }
-    transformed = _.isArray(transformedItem)
+    transformed = Array.isArray(transformedItem)
       ? transformedItem
       : [transformedItem || item];
 

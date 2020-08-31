@@ -6,7 +6,7 @@ import { htmlSafe as htmlSafeTemplateHelper } from "@ember/template";
 function addonFmt(str, formats) {
   let cachedFormats = formats;
 
-  if (!_.isArray(cachedFormats) || arguments.length > 2) {
+  if (!Array.isArray(cachedFormats) || arguments.length > 2) {
     cachedFormats = new Array(arguments.length - 1);
 
     for (let i = 1, l = arguments.length; i < l; i++) {

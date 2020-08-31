@@ -5,6 +5,8 @@
     "discourse-ember/global-ember": 2
   },
   "globals": {
-    "bootbox": "off"
+    "bootbox": "off",
+    "Mousetrap": "off",
+    "_": "off"
   }
 }

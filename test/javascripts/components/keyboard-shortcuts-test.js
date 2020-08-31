@@ -13,7 +13,7 @@ QUnit.module("lib:keyboard-shortcuts", {
           _bindings[binding] = callback;
         }.bind(this);
 
-        if (_.isArray(bindings)) {
+        if (Array.isArray(bindings)) {
           bindings.forEach(registerBinding, this);
         } else {
           registerBinding(bindings);
