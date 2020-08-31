@@ -521,17 +521,15 @@ export function applyDefaultHandlers(pretender) {
         post_number: parseInt(p, 10)
       }));
     } else if (postNumber && request.queryParams.asc === "true") {
-      posts = _.range(postNumber + 1, postNumber + 6).map(p => ({
-        id: parseInt(p, 10),
-        post_number: parseInt(p, 10)
+      posts = [...Array(5).keys()].map(p => ({
+        id: p + postNumber + 1,
+        post_number: p + postNumber + 1
       }));
     } else if (postNumber && request.queryParams.asc === "false") {
-      posts = _.range(postNumber - 5, postNumber)
-        .reverse()
-        .map(p => ({
-          id: parseInt(p, 10),
-          post_number: parseInt(p, 10)
-        }));
+      posts = [...Array(5).keys()].map(p => ({
+        id: postNumber - p - 1,
+        post_number: postNumber - p - 1
+      }));
     }
 
     return response(200, { post_stream: { posts } });
