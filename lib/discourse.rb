@@ -640,7 +640,9 @@ module Discourse
   end
 
   def self.public_js_git_hash_stamp
-    @public_js_git_hash_stamp ||= File.read(File.join(Rails.root, 'public', 'javascripts', 'REVISION')) rescue ''
+    @public_js_git_hash_stamp ||= begin
+      File.read(StampedFiles.revision_filename) rescue ''
+    end
   end
 
   # Either returns the site_contact_username user or the first admin.

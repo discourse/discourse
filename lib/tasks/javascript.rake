@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'stamped_files'
+
 def public_root
   "#{Rails.root}/public"
 end
@@ -225,6 +227,7 @@ task 'javascript:update' => :remove_stamped_files do
     if src.include? "ace.js"
       ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
       addtl_files = [ "ext-searchbox", "mode-html", "mode-scss", "mode-sql", "theme-chrome", "worker-html"]
+      FileUtils.mkdir(dest) unless File.directory?(dest)
       addtl_files.each do |file|
         FileUtils.cp_r("#{ace_root}#{file}.js", dest)
       end
@@ -249,83 +252,27 @@ task 'javascript:update' => :remove_stamped_files do
     # NOTE: Once we're confident there are no hardcoded calls to non-stamped filenames
     #       we can remove this step, and simply replace the dest for stamp'ed files
     if f[:stamp]
-      stamped = "#{public_js}/#{stamp_filename(filename)}"
+      stamped = "#{public_js}/#{StampedFiles.update_filename(filename)}"
       FileUtils.copy_entry(dest, stamped)
     end
   end
 
-  File.write("#{public_js}/REVISION", git_hash)
+  puts "git_hash REVISION: #{StampedFiles.git_hash}"
+  File.write(StampedFiles.revision_filename, StampedFiles.git_hash)
 
   STDERR.puts "Completed copying dependencies: #{(Time.now - start).round(2)} secs"
 end
 
 task 'javascript:remove_stamped_files' do
-  dir_contents = Dir.glob(File.join(Rails.root, 'public', 'javascripts', '*'))
+  revisions_to_keep = 0
 
-  # Keep anything that doesn't appear to have been stamped
-  file_regex, dir_regex = stamping_regexes
-
-  dir_contents.delete_if do |filename|
-    if File.file?(filename)
-      filename !~ file_regex
-    elsif File.directory?(filename)
-      filename !~ dir_regex
-    end
-  end
-
-  revisions = {}
-  dir_contents.each do |filename|
-    name, _, suffix = filename.rpartition('-')
-    revisions[name] = [] unless revisions[name]
-    revisions[name] << filename
-  end
-
-  revisions.each_key do |filename|
-    files_to_delete = revisions[filename].sort_by { |f| File.mtime(f) }
-
-    # Take a subset of known stamped files
-    files_to_delete = files_to_delete[0...-revisions_to_keep] if revisions_to_keep > 0
-
-    files_to_delete.each { |delete_file| FileUtils.remove_dir(delete_file) }
-  end
-
-  if revisions_to_keep == 0
-    FileUtils.rm_f(File.join(Rails.root, 'public', 'javascripts', 'REVISION'))
-  end
-end
-
-def stamp_filename(filename)
-  if filename[-3..-1] == '.js'
-    "#{filename[0..-4]}-#{git_hash}.js"
-  else
-    "#{filename}-#{git_hash}"
-  end
-end
-
-def revisions_to_keep
-  @revisions_to_keep ||= begin
-    if ENV['REVISIONS_TO_KEEP']
-      if ENV['REVISIONS_TO_KEEP'].to_i.to_s != ENV['REVISIONS_TO_KEEP']
-        raise 'javascript:remove_stamped_files - REVISIONS_TO_KEEP must be an integer'
-      else
-        revisions_to_keep = ENV['REVISIONS_TO_KEEP'].to_i
-      end
+  if ENV['REVISIONS_TO_KEEP']
+    if ENV['REVISIONS_TO_KEEP'].to_i.to_s != ENV['REVISIONS_TO_KEEP']
+      raise 'javascript:remove_stamped_files - REVISIONS_TO_KEEP must be an integer'
     else
-      revisions_to_keep = 0
+      revisions_to_keep = ENV['REVISIONS_TO_KEEP'].to_i
     end
   end
-end
 
-def stamping_regexes
-  [/(-{1}[a-z0-9]{40}*\.{1}){1}/, /(-{1}[a-z0-9]{40}$){1}/]
-end
-
-def git_hash
-  @git_hash ||= begin
-    git_cmd = 'git rev-parse HEAD:public/javascripts'
-    Discourse.try_git(git_cmd, 'unknown')
-
-    # TODO - remove this, it's just for debugging
-    # SecureRandom.hex(20)
-  end
+  StampedFiles.cleanup(revisions_to_keep) unless Rails.env.test?
 end
