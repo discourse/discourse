@@ -52,6 +52,35 @@ const Wizard = EmberObject.extend({
     }
 
     return option.data.colors;
+  },
+
+  getCurrentFont(fontId) {
+    const fontsStep = this.steps.findBy("id", "fonts");
+    if (!fontsStep) {
+      return;
+    }
+
+    const fontChoice = fontsStep.get("fieldsById.font_previews");
+    if (!fontChoice) {
+      return;
+    }
+
+    const choiceId = fontId ? fontId : fontChoice.get("value");
+    if (!choiceId) {
+      return;
+    }
+
+    const choices = fontChoice.get("choices");
+    if (!choices) {
+      return;
+    }
+
+    const option = choices.findBy("id", choiceId);
+    if (!option) {
+      return;
+    }
+
+    return option.data.font_stack.split(",")[0];
   }
 });
 

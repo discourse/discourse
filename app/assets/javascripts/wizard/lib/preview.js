@@ -55,6 +55,10 @@ export function createPreviewComponent(width, height, obj) {
 
       images() {},
 
+      loadFonts() {
+        return document.fonts.ready;
+      },
+
       loadImages() {
         const images = this.images();
         if (images) {
@@ -68,7 +72,7 @@ export function createPreviewComponent(width, height, obj) {
       },
 
       reload() {
-        this.loadImages().then(() => {
+        Promise.all([this.loadFonts(), this.loadImages()]).then(() => {
           this.loaded = true;
           this.triggerRepaint();
         });
@@ -88,12 +92,17 @@ export function createPreviewComponent(width, height, obj) {
           return;
         }
 
+        const font = this.wizard.getCurrentFont(this.fontId);
+        if (!font) {
+          return;
+        }
+
         const { ctx } = this;
 
         ctx.fillStyle = colors.secondary;
         ctx.fillRect(0, 0, width, height);
 
-        this.paint(ctx, colors, this.width, this.height);
+        this.paint(ctx, colors, font, this.width, this.height);
 
         // draw border
         ctx.beginPath();
@@ -133,7 +142,7 @@ export function createPreviewComponent(width, height, obj) {
         ctx.drawImage(scaled[key], x, y, w, h);
       },
 
-      drawFullHeader(colors) {
+      drawFullHeader(colors, font) {
         const { ctx } = this;
 
         const headerHeight = height * 0.15;
@@ -147,7 +156,7 @@ export function createPreviewComponent(width, height, obj) {
 
         ctx.beginPath();
         ctx.fillStyle = colors.header_primary;
-        ctx.font = `bold ${logoHeight}px 'Arial'`;
+        ctx.font = `bold ${logoHeight}px '${font}'`;
         ctx.fillText("Discourse", headerMargin, headerHeight - headerMargin);
 
         // Top right menu
@@ -188,7 +197,7 @@ export function createPreviewComponent(width, height, obj) {
         ctx.restore();
       },
 
-      drawPills(colors, headerHeight, opts) {
+      drawPills(colors, font, headerHeight, opts) {
         opts = opts || {};
 
         const { ctx } = this;
@@ -210,7 +219,7 @@ export function createPreviewComponent(width, height, obj) {
 
         const fontSize = Math.round(badgeHeight * 0.5);
 
-        ctx.font = `${fontSize}px 'Arial'`;
+        ctx.font = `${fontSize}px '${font}'`;
         ctx.fillStyle = colors.primary;
         ctx.fillText(
           "all categories",
@@ -246,7 +255,7 @@ export function createPreviewComponent(width, height, obj) {
         );
         ctx.fill();
 
-        ctx.font = `${fontSize}px 'Arial'`;
+        ctx.font = `${fontSize}px '${font}'`;
         ctx.fillStyle = colors.secondary;
         let x = headerMargin * 3.0 + categoriesSize;
         ctx.fillText(

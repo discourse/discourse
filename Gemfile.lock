@@ -99,6 +99,7 @@ GEM
     diff-lcs (1.4.4)
     diffy (3.4.0)
     discourse-ember-source (3.12.2.2)
+    discourse-fonts (0.0.2)
     discourse_image_optim (0.26.2)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
@@ -461,6 +462,7 @@ DEPENDENCIES
   css_parser
   diffy
   discourse-ember-source (~> 3.12.2)
+  discourse-fonts
   discourse_image_optim
   email_reply_trimmer
   ember-handlebars-template (= 0.8.0)

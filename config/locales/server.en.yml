@@ -2222,6 +2222,8 @@ en:
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
 
+    base_font: "Font to use in most places on the site. Themes can override."
+
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
@@ -4679,6 +4681,9 @@ en:
           <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
           </ul>
           Popular theme components (for more, browse <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
+
+      fonts:
+        title: "Fonts"
 
       logos:
         title: "Logos"

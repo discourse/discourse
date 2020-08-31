@@ -1733,6 +1733,31 @@ en:
       categories_boxes: "Boxes with Subcategories"
       categories_boxes_with_topics: "Boxes with Featured Topics"
 
+    base_font_setting:
+      helvetica: "Helvetica/Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "RobotoCondensed"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
+
+
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"

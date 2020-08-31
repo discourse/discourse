@@ -21,36 +21,36 @@ export default createPreviewComponent(659, 320, {
     };
   },
 
-  paint(ctx, colors, width, height) {
-    this.drawFullHeader(colors);
+  paint(ctx, colors, font, width, height) {
+    this.drawFullHeader(colors, font);
 
     if (this.get("step.fieldsById.homepage_style.value") === "latest") {
-      this.drawPills(colors, height * 0.15);
-      this.renderLatest(ctx, colors, width, height);
+      this.drawPills(colors, font, height * 0.15);
+      this.renderLatest(ctx, colors, font, width, height);
     } else if (
       ["categories_only", "categories_with_featured_topics"].includes(
         this.get("step.fieldsById.homepage_style.value")
       )
     ) {
-      this.drawPills(colors, height * 0.15, { categories: true });
-      this.renderCategories(ctx, colors, width, height);
+      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.renderCategories(ctx, colors, font, width, height);
     } else if (
       ["categories_boxes", "categories_boxes_with_topics"].includes(
         this.get("step.fieldsById.homepage_style.value")
       )
     ) {
-      this.drawPills(colors, height * 0.15, { categories: true });
+      this.drawPills(colors, font, height * 0.15, { categories: true });
       const topics =
         this.get("step.fieldsById.homepage_style.value") ===
         "categories_boxes_with_topics";
-      this.renderCategoriesBoxes(ctx, colors, width, height, { topics });
+      this.renderCategoriesBoxes(ctx, colors, font, width, height, { topics });
     } else {
-      this.drawPills(colors, height * 0.15, { categories: true });
-      this.renderCategoriesWithTopics(ctx, colors, width, height);
+      this.drawPills(colors, font, height * 0.15, { categories: true });
+      this.renderCategoriesWithTopics(ctx, colors, font, width, height);
     }
   },
 
-  renderCategoriesBoxes(ctx, colors, width, height, opts) {
+  renderCategoriesBoxes(ctx, colors, font, width, height, opts) {
     opts = opts || {};
 
     const borderColor = darkLightDiff(
@@ -83,7 +83,7 @@ export default createPreviewComponent(659, 320, {
         ]
       );
 
-      ctx.font = `Bold ${bodyFontSize * 1.3}em 'Arial'`;
+      ctx.font = `Bold ${bodyFontSize * 1.3}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.textAlign = "center";
       ctx.fillText(category.name, boxStartX + boxWidth / 2, boxStartY + 25);
@@ -92,7 +92,7 @@ export default createPreviewComponent(659, 320, {
       if (opts.topics) {
         let startY = boxStartY + 60;
         this.getTitles().forEach(title => {
-          ctx.font = `${bodyFontSize * 1}em 'Arial'`;
+          ctx.font = `${bodyFontSize * 1}em '${font}'`;
           ctx.fillStyle = colors.tertiary;
           startY +=
             this.fillTextMultiLine(
@@ -105,7 +105,7 @@ export default createPreviewComponent(659, 320, {
             ) + 8;
         });
       } else {
-        ctx.font = `${bodyFontSize * 1}em 'Arial'`;
+        ctx.font = `${bodyFontSize * 1}em '${font}'`;
         ctx.fillStyle = textColor;
         ctx.textAlign = "center";
         this.fillTextMultiLine(
@@ -121,7 +121,7 @@ export default createPreviewComponent(659, 320, {
     });
   },
 
-  renderCategories(ctx, colors, width, height) {
+  renderCategories(ctx, colors, font, width, height) {
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const margin = height * 0.03;
     const bodyFontSize = height / 440.0;
@@ -144,7 +144,7 @@ export default createPreviewComponent(659, 320, {
     const cols = [0.025, 0.45, 0.53, 0.58, 0.94, 0.96].map(c => c * width);
 
     const headingY = height * 0.33;
-    ctx.font = `${bodyFontSize * 0.9}em 'Arial'`;
+    ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
     ctx.fillStyle = textColor;
     ctx.fillText("Category", cols[0], headingY);
     if (
@@ -165,11 +165,11 @@ export default createPreviewComponent(659, 320, {
     // Categories
     this.categories().forEach(category => {
       const textPos = y + categoryHeight * 0.35;
-      ctx.font = `Bold ${bodyFontSize * 1.1}em 'Arial'`;
+      ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.fillText(category.name, cols[0], textPos);
 
-      ctx.font = `${bodyFontSize * 0.8}em 'Arial'`;
+      ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
       ctx.fillStyle = textColor;
       ctx.fillText(
         titles[0],
@@ -188,14 +188,14 @@ export default createPreviewComponent(659, 320, {
         this.get("step.fieldsById.homepage_style.value") ===
         "categories_with_featured_topics"
       ) {
-        ctx.font = `${bodyFontSize}em 'Arial'`;
+        ctx.font = `${bodyFontSize}em '${font}'`;
         ctx.fillText(
           Math.floor(Math.random() * 90) + 10,
           cols[1] + 15,
           textPos
         );
       } else {
-        ctx.font = `${bodyFontSize}em 'Arial'`;
+        ctx.font = `${bodyFontSize}em '${font}'`;
         ctx.fillText(Math.floor(Math.random() * 90) + 10, cols[5], textPos);
       }
 
@@ -216,7 +216,7 @@ export default createPreviewComponent(659, 320, {
       ctx.fillStyle = colors.tertiary;
 
       titles.forEach(title => {
-        ctx.font = `${bodyFontSize}em 'Arial'`;
+        ctx.font = `${bodyFontSize}em '${font}'`;
         const textPos = y + topicHeight * 0.35;
         ctx.fillStyle = colors.tertiary;
         ctx.fillText(`${title}`, cols[2], textPos);
@@ -225,7 +225,7 @@ export default createPreviewComponent(659, 320, {
     }
   },
 
-  renderCategoriesWithTopics(ctx, colors, width, height) {
+  renderCategoriesWithTopics(ctx, colors, font, width, height) {
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const margin = height * 0.03;
     const bodyFontSize = height / 440.0;
@@ -246,7 +246,7 @@ export default createPreviewComponent(659, 320, {
     const cols = [0.025, 0.42, 0.53, 0.58, 0.94].map(c => c * width);
 
     const headingY = height * 0.33;
-    ctx.font = `${bodyFontSize * 0.9}em 'Arial'`;
+    ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
     ctx.fillStyle = textColor;
     ctx.fillText("Category", cols[0], headingY);
     ctx.fillText("Topics", cols[1], headingY);
@@ -270,11 +270,11 @@ export default createPreviewComponent(659, 320, {
     // Categories
     this.categories().forEach(category => {
       const textPos = y + categoryHeight * 0.35;
-      ctx.font = `Bold ${bodyFontSize * 1.1}em 'Arial'`;
+      ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.fillText(category.name, cols[0], textPos);
 
-      ctx.font = `${bodyFontSize * 0.8}em 'Arial'`;
+      ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
       ctx.fillStyle = textColor;
       ctx.fillText(
         titles[0],
@@ -289,7 +289,7 @@ export default createPreviewComponent(659, 320, {
       ctx.lineTo(margin, y + categoryHeight);
       ctx.stroke();
 
-      ctx.font = `${bodyFontSize}em 'Arial'`;
+      ctx.font = `${bodyFontSize}em '${font}'`;
       ctx.fillText(Math.floor(Math.random() * 90) + 10, cols[1] + 15, textPos);
 
       y += categoryHeight;
@@ -306,7 +306,7 @@ export default createPreviewComponent(659, 320, {
 
     titles.forEach(title => {
       const category = this.categories()[0];
-      ctx.font = `${bodyFontSize}em 'Arial'`;
+      ctx.font = `${bodyFontSize}em '${font}'`;
       const textPos = y + topicHeight * 0.45;
       ctx.fillStyle = textColor;
       this.scaleImage(
@@ -318,15 +318,15 @@ export default createPreviewComponent(659, 320, {
       );
       ctx.fillText(title, cols[3], textPos);
 
-      ctx.font = `Bold ${bodyFontSize}em 'Arial'`;
+      ctx.font = `Bold ${bodyFontSize}em '${font}'`;
       ctx.fillText(Math.floor(Math.random() * 90) + 10, cols[4], textPos);
-      ctx.font = `${bodyFontSize}em 'Arial'`;
+      ctx.font = `${bodyFontSize}em '${font}'`;
       ctx.fillText(`1h`, cols[4], textPos + topicHeight * 0.4);
 
       ctx.beginPath();
       ctx.fillStyle = category.color;
       const badgeSize = topicHeight * 0.1;
-      ctx.font = `Bold ${bodyFontSize * 0.5}em 'Arial'`;
+      ctx.font = `Bold ${bodyFontSize * 0.5}em '${font}'`;
       ctx.rect(
         cols[3] + margin * 0.5,
         y + topicHeight * 0.65,
@@ -357,12 +357,12 @@ export default createPreviewComponent(659, 320, {
     return LOREM.split(".");
   },
 
-  renderLatest(ctx, colors, width, height) {
+  renderLatest(ctx, colors, font, width, height) {
     const rowHeight = height / 6.6;
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const bodyFontSize = height / 440.0;
 
-    ctx.font = `${bodyFontSize}em 'Arial'`;
+    ctx.font = `${bodyFontSize}em '${font}'`;
 
     const margin = height * 0.03;
 
@@ -385,7 +385,7 @@ export default createPreviewComponent(659, 320, {
     const headingY = height * 0.33;
 
     ctx.fillStyle = textColor;
-    ctx.font = `${bodyFontSize * 0.9}em 'Arial'`;
+    ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
     ctx.fillText("Topic", cols[0], headingY);
     ctx.fillText("Replies", cols[2], headingY);
     ctx.fillText("Views", cols[3], headingY);
@@ -396,7 +396,7 @@ export default createPreviewComponent(659, 320, {
     ctx.lineWidth = 2;
     drawLine(y);
 
-    ctx.font = `${bodyFontSize}em 'Arial'`;
+    ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.lineWidth = 1;
     this.getTitles().forEach(title => {
       const textPos = y + rowHeight * 0.4;
@@ -407,7 +407,7 @@ export default createPreviewComponent(659, 320, {
       ctx.beginPath();
       ctx.fillStyle = category.color;
       const badgeSize = rowHeight * 0.15;
-      ctx.font = `Bold ${bodyFontSize * 0.75}em 'Arial'`;
+      ctx.font = `Bold ${bodyFontSize * 0.75}em '${font}'`;
       ctx.rect(cols[0] + 4, y + rowHeight * 0.6, badgeSize, badgeSize);
       ctx.fill();
 
@@ -426,7 +426,7 @@ export default createPreviewComponent(659, 320, {
       );
 
       ctx.fillStyle = textColor;
-      ctx.font = `${bodyFontSize}em 'Arial'`;
+      ctx.font = `${bodyFontSize}em '${font}'`;
       for (let j = 2; j <= 4; j++) {
         ctx.fillText(
           j === 4 ? "1h" : Math.floor(Math.random() * 90) + 10,

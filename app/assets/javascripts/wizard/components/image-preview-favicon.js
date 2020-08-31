@@ -14,7 +14,7 @@ export default createPreviewComponent(371, 124, {
     return { tab: "/images/wizard/tab.png", image: this.get("field.value") };
   },
 
-  paint(ctx, colors, width, height) {
+  paint(ctx, colors, font, width, height) {
     this.scaleImage(this.tab, 0, 0, width, height);
     this.scaleImage(this.image, 40, 25, 30, 30);
 

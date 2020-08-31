@@ -14,13 +14,13 @@ export default createPreviewComponent(305, 165, {
 
   classNameBindings: ["isSelected"],
 
-  @discourseComputed("selectedId", "colorsId")
-  isSelected(selectedId, colorsId) {
-    return selectedId === colorsId;
+  @discourseComputed("selectedId", "fontId")
+  isSelected(selectedId, fontId) {
+    return selectedId === fontId;
   },
 
   click() {
-    this.onChange(this.colorsId);
+    this.onChange(this.fontId);
   },
 
   @observes("step.fieldsById.base_scheme_id.value")

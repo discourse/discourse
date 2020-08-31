@@ -119,6 +119,7 @@ module ApplicationHelper
     list << 'ios-device' if ios_device?
     list << 'rtl' if rtl?
     list << text_size_class
+    list << font_class
     list << 'anon' unless current_user
     list.join(' ')
   end
@@ -149,6 +150,10 @@ module ApplicationHelper
 
     size = cookie_size || current_user&.user_option&.text_size || SiteSetting.default_text_size
     "text-size-#{size}"
+  end
+
+  def font_class
+    "font-#{SiteSetting.base_font.tr("_", "-")}"
   end
 
   def escape_unicode(javascript)
