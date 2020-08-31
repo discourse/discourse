@@ -275,7 +275,7 @@ export default Component.extend({
     const group = this.get("searchedTerms.group");
 
     if (match.length !== 0) {
-      const existingInput = _.isArray(group) ? group[0] : group;
+      const existingInput = Array.isArray(group) ? group[0] : group;
       const userInput = match[0].replace(REGEXP_GROUP_PREFIX, "");
 
       if (existingInput !== userInput) {
@@ -294,7 +294,7 @@ export default Component.extend({
     const badge = this.get("searchedTerms.badge");
 
     if (match.length !== 0) {
-      const existingInput = _.isArray(badge) ? badge[0] : badge;
+      const existingInput = Array.isArray(badge) ? badge[0] : badge;
       const userInput = match[0].replace(REGEXP_BADGE_PREFIX, "");
 
       if (existingInput !== userInput) {
@@ -317,7 +317,7 @@ export default Component.extend({
 
     if (match.length !== 0) {
       const join_char = contain_all_tags ? "+" : ",";
-      const existingInput = _.isArray(tags) ? tags.join(join_char) : tags;
+      const existingInput = Array.isArray(tags) ? tags.join(join_char) : tags;
       const userInput = match[0].replace(REGEXP_TAGS_REPLACE, "");
 
       if (existingInput !== userInput) {
