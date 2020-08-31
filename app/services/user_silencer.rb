@@ -61,7 +61,7 @@ class UserSilencer
           silence_message_params: silence_message_params
         )
 
-        SystemMessage.create(@user, message_type, **silence_message_params)
+        SystemMessage.create(@user, message_type, silence_message_params)
         true
       end
     else
