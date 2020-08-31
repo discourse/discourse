@@ -4,6 +4,7 @@ class PostActionNotifier
 
   def self.disable
     @disabled = true
+    @custom_post_revision_notifier_recipients = nil
   end
 
   def self.enable
