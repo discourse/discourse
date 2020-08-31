@@ -6,9 +6,9 @@
 require 'openssl'
 require 'xorcist'
 require 'xorcist/refinements'
-using Xorcist::Refinements
 
 class Pbkdf2
+  using Xorcist::Refinements
 
   def self.hash_password(password, salt, iterations, algorithm = "sha256")
 
