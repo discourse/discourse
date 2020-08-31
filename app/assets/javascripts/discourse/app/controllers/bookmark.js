@@ -14,6 +14,7 @@ import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { formattedReminderTime, REMINDER_TYPES } from "discourse/lib/bookmark";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import bootbox from "bootbox";
+import { isEmpty } from "@ember/utils";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
@@ -294,7 +295,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("userTimezone")
   userHasTimezoneSet(userTimezone) {
-    return !_.isEmpty(userTimezone);
+    return !isEmpty(userTimezone);
   },
 
   _saveBookmark() {
