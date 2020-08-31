@@ -108,6 +108,10 @@ describe PostActionNotifier do
         end
       end
 
+      after do
+        PostActionNotifier.reset!
+      end
+
       it 'notifies the specified user of the revision' do
         expect {
           post.revise(evil_trout, raw: "world is the new body of the message")
