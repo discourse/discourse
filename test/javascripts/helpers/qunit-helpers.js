@@ -267,7 +267,7 @@ QUnit.assert.present = function(actual, message) {
 };
 
 QUnit.assert.containsInstance = function(collection, klass, message) {
-  const result = klass.detectInstance(_.first(collection));
+  const result = klass.detectInstance(collection[0]);
   this.pushResult({
     result,
     message

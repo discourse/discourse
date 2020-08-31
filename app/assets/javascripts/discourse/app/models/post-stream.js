@@ -145,8 +145,12 @@ export default RestModel.extend({
   **/
   @discourseComputed("posts.[]", "stream.[]")
   previousWindow() {
+    if (!this.posts) {
+      return [];
+    }
+
     // If we can't find the last post loaded, bail
-    const firstPost = _.first(this.posts);
+    const firstPost = this.posts[0];
     if (!firstPost) {
       return [];
     }
