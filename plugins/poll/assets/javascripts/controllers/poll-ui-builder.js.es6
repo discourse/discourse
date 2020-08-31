@@ -334,10 +334,11 @@ export default Controller.extend({
     return EmberObject.create(options);
   },
 
-  _comboboxOptions(start_index, end_index) {
-    return _.range(start_index, end_index).map(number => {
-      return { value: number, name: number };
-    });
+  _comboboxOptions(startIndex, endIndex) {
+    return [...Array(endIndex - startIndex).keys()].map(number => ({
+      value: number + startIndex,
+      name: number + startIndex
+    }));
   },
 
   _setupPoll() {

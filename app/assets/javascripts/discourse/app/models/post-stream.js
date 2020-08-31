@@ -362,7 +362,9 @@ export default RestModel.extend({
     if (this.isMegaTopic) {
       this.set("loadingBelow", true);
 
-      const fakePostIds = _.range(-1, -this.get("topic.chunk_size"), -1);
+      const fakePostIds = [
+        ...Array(this.get("topic.chunk_size") - 1).keys()
+      ].map(i => -i - 1);
       postsWithPlaceholders.appending(fakePostIds);
 
       return this.fetchNextWindow(

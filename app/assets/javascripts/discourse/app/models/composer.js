@@ -23,7 +23,6 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
-import { isEmpty } from "@ember/utils";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
