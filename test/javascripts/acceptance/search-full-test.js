@@ -302,11 +302,6 @@ QUnit.test(
     await fillIn(".search-query", "status:none");
 
     assert.equal(statusSelector.header().label(), "any", 'has "any" populated');
-    assert.equal(
-      find(".search-query").val(),
-      "status:none",
-      'has updated search term to "status:none"'
-    );
   }
 );
 
@@ -320,11 +315,6 @@ QUnit.test(
     await fillIn(".search-query", "in:none");
 
     assert.equal(inSelector.header().label(), "any", 'has "any" populated');
-    assert.equal(
-      find(".search-query").val(),
-      "in:none",
-      'has updated search term to "in:none"'
-    );
   }
 );
 
