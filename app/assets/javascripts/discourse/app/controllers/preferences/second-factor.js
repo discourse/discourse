@@ -2,6 +2,7 @@ import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -120,12 +121,17 @@ export default Controller.extend(CanCheckEmails, {
       if (this.loading) {
         return;
       }
-      bootbox.confirm(
-        I18n.t("user.second_factor.disable_confirm"),
-        I18n.t("cancel"),
-        I18n.t("user.second_factor.disable"),
-        result => {
-          if (result) {
+      const message = I18n.t("user.second_factor.disable_confirm");
+      const buttons = [
+        {
+          label: I18n.t("cancel"),
+          class: "d-modal-cancel",
+          link: true
+        },
+        {
+          label: `${iconHTML("ban")}${I18n.t("user.second_factor.disable")}`,
+          class: "btn-danger btn-icon-text",
+          callback: () => {
             this.model
               .disableAllSecondFactors()
               .then(() => {
@@ -138,7 +144,11 @@ export default Controller.extend(CanCheckEmails, {
               .finally(() => this.set("loading", false));
           }
         }
-      );
+      ];
+
+      bootbox.dialog(message, buttons, {
+        classes: "disable-second-factor-modal"
+      });
     },
 
     createTotp() {

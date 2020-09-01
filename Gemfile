@@ -69,6 +69,7 @@ gem 'http_accept_language', require: false
 gem 'ember-rails', '0.18.5'
 gem 'discourse-ember-source', '~> 3.12.2'
 gem 'ember-handlebars-template', '0.8.0'
+gem 'discourse-fonts'
 
 gem 'barber'
 
@@ -78,8 +79,7 @@ gem 'rails_multisite'
 
 gem 'fast_xs', platform: :ruby
 
-# may move to xorcist post: https://github.com/fny/xorcist/issues/4
-gem 'fast_xor', platform: :ruby
+gem 'xorcist'
 
 gem 'fastimage'
 

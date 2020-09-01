@@ -1,10 +1,10 @@
 import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
+import layout from "select-kit/templates/components/dropdown-select-box/dropdown-select-box-header";
 
 export default SingleSelectHeaderComponent.extend({
-  layoutName:
-    "select-kit/templates/components/dropdown-select-box/dropdown-select-box-header",
+  layout,
   classNames: ["btn-default", "dropdown-select-box-header"],
   tagName: "button",
   classNameBindings: ["btnClassName"],

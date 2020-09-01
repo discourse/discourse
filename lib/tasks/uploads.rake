@@ -1138,7 +1138,7 @@ def fix_missing_s3
       end
 
       if fix_error
-        puts "Failed to fix upload #{e}"
+        puts "Failed to fix upload #{fix_error}"
       else
         # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
         # we may end up breaking posts

@@ -12,8 +12,6 @@ module Jobs
     attr_accessor :entity
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
-      user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
-      user_archive_profile: ['location', 'website', 'bio', 'views'],
       user_list: ['id', 'name', 'username', 'email', 'title', 'created_at', 'last_seen_at', 'last_posted_at', 'last_emailed_at', 'trust_level', 'approved', 'suspended_at', 'suspended_till', 'silenced_till', 'active', 'admin', 'moderator', 'ip_address', 'staged', 'secondary_emails'],
       user_stats: ['topics_entered', 'posts_read_count', 'time_read', 'topic_count', 'post_count', 'likes_given', 'likes_received'],
       user_profile: ['location', 'website', 'views'],
@@ -31,7 +29,6 @@ module Jobs
       @current_user = User.find_by(id: args[:user_id])
 
       entities = [{ name: @entity }]
-      entities << { name: "user_archive_profile" } if @entity === "user_archive"
 
       entities.each do |entity|
         entity[:method] = :"#{entity[:name]}_export"
@@ -39,9 +36,7 @@ module Jobs
 
         @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
         entity[:filename] =
-          if entity[:name] == "user_archive" || entity[:name] === "user_archive_profile"
-            "#{entity[:name].dasherize}-#{@current_user.username}-#{@timestamp}"
-          elsif entity[:name] == "report" && @extra[:name].present?
+          if entity[:name] == "report" && @extra[:name].present?
             "#{@extra[:name].dasherize}-#{@timestamp}"
           else
             "#{entity[:name].dasherize}-#{@timestamp}"
@@ -105,30 +100,6 @@ module Jobs
         topic = post.topic
         user_export.update_columns(topic_id: topic.id)
         topic.update_status('closed', true, Discourse.system_user)
-      end
-    end
-
-    def user_archive_export
-      return enum_for(:user_archive_export) unless block_given?
-
-      Post.includes(topic: :category)
-        .where(user_id: @current_user.id)
-        .select(:topic_id, :post_number, :raw, :like_count, :reply_count, :created_at)
-        .order(:created_at)
-        .with_deleted
-        .each do |user_archive|
-        yield get_user_archive_fields(user_archive)
-      end
-    end
-
-    def user_archive_profile_export
-      return enum_for(:user_archive_profile_export) unless block_given?
-
-      UserProfile
-        .where(user_id: @current_user.id)
-        .select(:location, :website, :bio_raw, :views)
-        .each do |user_profile|
-        yield get_user_archive_profile_fields(user_profile)
       end
     end
 
@@ -339,54 +310,6 @@ module Jobs
       group_names = user.groups.map { |g| g.name }.join(";")
       user_info_array << escape_comma(group_names) if group_names.present?
       user_info_array
-    end
-
-    def get_user_archive_fields(user_archive)
-      user_archive_array = []
-      topic_data = user_archive.topic
-      user_archive = user_archive.as_json
-      topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
-      return user_archive_array if topic_data.nil?
-
-      all_categories = Category.all.to_h { |category| [category.id, category] }
-
-      categories = "-"
-      if topic_data.category_id && category = all_categories[topic_data.category_id]
-        categories = [category.name]
-        while category.parent_category_id && category = all_categories[category.parent_category_id]
-          categories << category.name
-        end
-        categories = categories.reverse.join("|")
-      end
-
-      is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
-      url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
-
-      topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "categories" => categories, "is_pm" => is_pm, "url" => url }
-      user_archive.merge!(topic_hash)
-
-      HEADER_ATTRS_FOR['user_archive'].each do |attr|
-        user_archive_array.push(user_archive[attr])
-      end
-
-      user_archive_array
-    end
-
-    def get_user_archive_profile_fields(user_profile)
-      user_archive_profile = []
-
-      HEADER_ATTRS_FOR['user_archive_profile'].each do |attr|
-        data =
-          if attr == 'bio'
-            user_profile.attributes['bio_raw']
-          else
-            user_profile.attributes[attr]
-          end
-
-          user_archive_profile.push(data)
-      end
-
-      user_archive_profile
     end
 
     def get_staff_action_fields(staff_action)

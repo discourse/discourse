@@ -1,7 +1,6 @@
 import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { formatUsername } from "discourse/lib/utilities";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess"
@@ -24,23 +23,15 @@ export function addUserMenuGlyph(glyph) {
 createWidget("user-menu-links", {
   tagName: "div.menu-links-header",
 
-  profileLink() {
-    const link = {
+  profileGlyph() {
+    return {
+      label: "user.preferences",
+      className: "user-preferences-link",
+      icon: "cog",
+      href: `${this.attrs.path}/preferences`,
       action: UserMenuAction.QUICK_ACCESS,
-      actionParam: QuickAccess.PROFILE,
-      route: "user",
-      model: this.currentUser,
-      className: "user-activity-link",
-      icon: "user",
-      rawLabel: formatUsername(this.currentUser.username)
+      actionParam: QuickAccess.PROFILE
     };
-
-    if (this.currentUser.is_anonymous) {
-      link.label = "user.profile";
-      link.rawLabel = null;
-    }
-
-    return link;
   },
 
   notificationsGlyph() {
@@ -91,7 +82,6 @@ createWidget("user-menu-links", {
   },
 
   html() {
-    const links = [this.profileLink()];
     const glyphs = [];
 
     if (extraGlyphs) {
@@ -112,8 +102,9 @@ createWidget("user-menu-links", {
       glyphs.push(this.messagesGlyph());
     }
 
+    glyphs.push(this.profileGlyph());
+
     return h("ul.menu-links-row", [
-      links.map(l => h("li.user", this.linkHtml(l))),
       h(
         "li.glyphs",
         glyphs.map(l => this.glyphHtml(l))

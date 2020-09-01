@@ -119,6 +119,7 @@ module ApplicationHelper
     list << 'ios-device' if ios_device?
     list << 'rtl' if rtl?
     list << text_size_class
+    list << font_class
     list << 'anon' unless current_user
     list.join(' ')
   end
@@ -149,6 +150,10 @@ module ApplicationHelper
 
     size = cookie_size || current_user&.user_option&.text_size || SiteSetting.default_text_size
     "text-size-#{size}"
+  end
+
+  def font_class
+    "font-#{SiteSetting.base_font.tr("_", "-")}"
   end
 
   def escape_unicode(javascript)
@@ -402,11 +407,20 @@ module ApplicationHelper
   end
 
   def scheme_id
+    custom_user_scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    if custom_user_scheme_id && ColorScheme.find_by_id(custom_user_scheme_id)
+      return custom_user_scheme_id
+    end
+
     return if theme_ids.blank?
     Theme
       .where(id: theme_ids.first)
       .pluck(:color_scheme_id)
       .first
+  end
+
+  def dark_scheme_id
+    cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id || SiteSetting.default_dark_mode_color_scheme_id
   end
 
   def current_homepage
@@ -454,9 +468,6 @@ module ApplicationHelper
     result = +""
     result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(scheme_id, 'all', theme_ids)
 
-    user_dark_scheme_id = current_user&.user_option&.dark_scheme_id
-    dark_scheme_id =  user_dark_scheme_id || SiteSetting.default_dark_mode_color_scheme_id
-
     if dark_scheme_id != -1
       result << Stylesheet::Manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)', theme_ids)
     end
@@ -489,7 +500,9 @@ module ApplicationHelper
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_ids),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
-      color_scheme_is_dark: dark_color_scheme?
+      color_scheme_is_dark: dark_color_scheme?,
+      user_color_scheme_id: scheme_id,
+      user_dark_scheme_id: dark_scheme_id
     }
 
     if Rails.env.development?

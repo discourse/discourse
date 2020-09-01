@@ -5,9 +5,10 @@ import { isPresent } from "@ember/utils";
 import { computed } from "@ember/object";
 import { not } from "@ember/object/computed";
 import UtilsMixin from "select-kit/mixins/utils";
+import layout from "select-kit/templates/components/select-kit/select-kit-filter";
 
 export default Component.extend(UtilsMixin, {
-  layoutName: "select-kit/templates/components/select-kit/select-kit-filter",
+  layout,
   classNames: ["select-kit-filter"],
   classNameBindings: ["isExpanded:is-expanded"],
   attributeBindings: ["selectKitId:data-select-kit-id"],

@@ -68,7 +68,7 @@ class UrlHelper
   end
 
   def self.rails_route_from_url(url)
-    path = URI.parse(url).path
+    path = URI.parse(encode(url)).path
     Rails.application.routes.recognize_path(path)
   end
 

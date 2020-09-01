@@ -7,6 +7,7 @@
 @import "common/foundation/mixins";
 @import "common/select-kit/*";
 @import "common/components/svg";
+@import "common/fonts";
 
 body.wizard {
   background-color: #fff;
@@ -131,7 +132,8 @@ body.wizard {
   }
 }
 
-.wizard-step-colors {
+.wizard-step-colors,
+.wizard-step-fonts {
   max-height: 465px;
   overflow-y: auto;
   .grid {
@@ -188,6 +190,10 @@ body.wizard {
   min-width: 280px;
   width: 100%;
   border: 1px solid #ccc;
+
+  .preloaded-font-styles {
+    font-size: 1px;
+  }
 
   .wizard-step-contents {
     height: 550px;

@@ -108,6 +108,16 @@ createWidget("topic-admin-menu-button", {
     this.state.position = position;
   },
 
+  didRenderWidget() {
+    let menuButtons = document.querySelectorAll(
+      ".topic-admin-popup-menu button"
+    );
+
+    if (menuButtons && menuButtons[0]) {
+      menuButtons[0].focus();
+    }
+  },
+
   topicToggleActions() {
     this.state.expanded ? this.hideAdminMenu() : this.showAdminMenu();
   }

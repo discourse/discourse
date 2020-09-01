@@ -6,6 +6,14 @@ export default Application.extend({
   Resolver: buildResolver("wizard"),
 
   start() {
+    // required for select kit to work without Ember CLI
+    Object.keys(Ember.TEMPLATES).forEach(k => {
+      if (k.indexOf("select-kit") === 0) {
+        let template = Ember.TEMPLATES[k];
+        define(k, () => template);
+      }
+    });
+
     Object.keys(requirejs._eak_seen).forEach(key => {
       if (/\/initializers\//.test(key)) {
         const module = requirejs(key, null, null, true);

@@ -41,6 +41,15 @@ describe Wizard::Builder do
     expect(invites_step.disabled).to be_truthy
   end
 
+  context 'fonts step' do
+    let(:fonts_step) { wizard.steps.find { |s| s.id == 'fonts' } }
+    let(:field) { fonts_step.fields.first }
+
+    it 'should set the right font' do
+      expect(field.choices.size).to eq(DiscourseFonts.fonts.size)
+    end
+  end
+
   context 'logos step' do
     let(:logos_step) { wizard.steps.find { |s| s.id == 'logos' } }
 

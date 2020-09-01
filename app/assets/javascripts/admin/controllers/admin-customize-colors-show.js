@@ -72,6 +72,10 @@ export default Controller.extend({
       this.model.save();
     },
 
+    applyUserSelectable() {
+      this.model.updateUserSelectable(this.get("model.user_selectable"));
+    },
+
     destroy: function() {
       const model = this.model;
       return bootbox.confirm(

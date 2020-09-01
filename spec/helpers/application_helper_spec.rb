@@ -374,11 +374,44 @@ describe ApplicationHelper do
       expect(cs_stylesheets).not_to include("(prefers-color-scheme: dark)")
     end
 
-    context "with a user option" do
+    context "custom light scheme" do
+      before do
+        @new_cs = Fabricate(:color_scheme, name: 'Flamboyant')
+        user.user_option.color_scheme_id = @new_cs.id
+        user.user_option.save!
+        helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+      end
+
+      it "returns color scheme from user option value" do
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).to include("color_definitions_flamboyant")
+      end
+
+      it "returns color scheme from cookie value" do
+        cs = ColorScheme.where(name: "Dark").first
+        helper.request.cookies["color_scheme_id"] = cs.id
+
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+
+        expect(color_stylesheets).to include("color_definitions_dark")
+        expect(color_stylesheets).not_to include("color_definitions_flamboyant")
+      end
+
+      it "falls back to base scheme with invalid cookie value" do
+        helper.request.cookies["color_scheme_id"] = -50
+
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).not_to include("color_definitions_flamboyant")
+        expect(color_stylesheets).to include("color_definitions_base")
+      end
+    end
+
+    context "dark scheme with user option and/or cookies" do
       before do
         user.user_option.dark_scheme_id = -1
         user.user_option.save!
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
+        @new_cs = Fabricate(:color_scheme, name: 'Custom Color Scheme')
 
         SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pluck(:id).first
       end
@@ -391,12 +424,26 @@ describe ApplicationHelper do
       end
 
       it "returns user-selected dark color scheme stylesheet" do
-        new_cs = Fabricate(:color_scheme, name: 'Custom Color Scheme')
-        user.user_option.update!(dark_scheme_id: new_cs.id)
+        user.user_option.update!(dark_scheme_id: @new_cs.id)
 
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).to include("(prefers-color-scheme: dark)")
         expect(color_stylesheets).to include("custom-color-scheme")
+      end
+
+      it "respects cookie value over user option for dark color scheme" do
+        helper.request.cookies["dark_scheme_id"] = @new_cs.id
+
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).to include("(prefers-color-scheme: dark)")
+        expect(color_stylesheets).to include("custom-color-scheme")
+      end
+
+      it "returns no dark scheme with invalid cookie value" do
+        helper.request.cookies["dark_scheme_id"] = -10
+
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).not_to include("(prefers-color-scheme: dark)")
       end
 
     end

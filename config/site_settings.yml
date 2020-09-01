@@ -323,6 +323,10 @@ basic:
   vapid_base_url:
     default: ""
     hidden: true
+  base_font:
+    default: "helvetica"
+    enum: "BaseFontSetting"
+    refresh: true
 
 login:
   invite_only:

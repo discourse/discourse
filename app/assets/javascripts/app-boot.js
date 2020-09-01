@@ -11,6 +11,14 @@
     "discourse-common/lib/raw-templates"
   ).__DISCOURSE_RAW_TEMPLATES;
 
+  // required for select kit to work without Ember CLI
+  Object.keys(Ember.TEMPLATES).forEach(k => {
+    if (k.indexOf("select-kit") === 0) {
+      let template = Ember.TEMPLATES[k];
+      define(k, () => template);
+    }
+  });
+
   // ensure Discourse is added as a global
   window.Discourse = Discourse;
 })();

@@ -53,6 +53,8 @@ end
 
 require 'pry-rails' if Rails.env.development?
 
+require 'discourse_fonts'
+
 if defined?(Bundler)
   bundler_groups = [:default]
 
@@ -305,6 +307,32 @@ module Discourse
 
     Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
       config.assets.precompile << "#{file}.js"
+    end
+
+    # Use discourse-fonts gem to symlink fonts and generate .scss file
+    fonts_path = File.join(config.root, 'public/fonts')
+    Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
+    File.open(File.join(config.root, 'app/assets/stylesheets/common/fonts.scss'), 'w') do |file|
+      DiscourseFonts.fonts.each do |font|
+        file.write <<~EOF
+          .font-#{font[:key].tr("_", "-")} {
+            --font-family: #{font[:name]};
+            font-family: #{font[:name]};
+          }
+        EOF
+
+        if font[:variants].present?
+          font[:variants].each do |variant|
+            file.write <<~EOF
+              @font-face {
+                font-family: #{font[:name]};
+                src: asset-url("/fonts/#{variant[:filename]}") format("#{variant[:format]}");
+                font-weight: #{variant[:weight]};
+              }
+            EOF
+          end
+        end
+      end
     end
 
     require_dependency 'stylesheet/manager'

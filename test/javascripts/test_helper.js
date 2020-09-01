@@ -136,8 +136,9 @@ QUnit.testStart(function(ctx) {
 
     const error =
       "Unhandled request in test environment: " + path + " (" + verb + ")";
+
     window.console.error(error);
-    throw error;
+    throw new Error(error);
   };
 
   server.checkPassthrough = request =>

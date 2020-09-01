@@ -109,7 +109,7 @@ describe PostActionNotifier do
       end
 
       after do
-        DiscoursePluginRegistry.reset!
+        PostActionNotifier.reset!
       end
 
       it 'notifies the specified user of the revision' do
