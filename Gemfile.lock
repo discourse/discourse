@@ -521,7 +521,6 @@ DEPENDENCIES
   railties (= 6.0.3.2)
   rake
   rb-fsevent
-  rb-inotify (~> 0.9)
   rbtrace
   rchardet
   redis
