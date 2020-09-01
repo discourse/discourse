@@ -6,6 +6,6 @@ export default Component.extend({
   @on("didInsertElement")
   @observes("code")
   _refresh() {
-    highlightSyntax($(this.element), this.siteSettings, this.session);
+    highlightSyntax(this.element, this.siteSettings, this.session);
   }
 });
