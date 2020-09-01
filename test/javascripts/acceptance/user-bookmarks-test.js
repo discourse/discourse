@@ -22,7 +22,10 @@ test("listing user bookmarks", async assert => {
 });
 
 test("removing a bookmark with a reminder shows a confirmation", async assert => {
-  let listResponse = _.clone(userFixtures["/u/eviltrout/bookmarks.json"]);
+  let listResponse = Object.assign(
+    {},
+    userFixtures["/u/eviltrout/bookmarks.json"]
+  );
   listResponse.user_bookmark_list.bookmarks[0].reminder_at = "2028-01-01T08:00";
   pretender.get("/u/eviltrout/bookmarks.json", () => [
     200,
