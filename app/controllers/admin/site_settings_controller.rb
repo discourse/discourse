@@ -59,7 +59,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         end
 
         categories_to_unwatch = previous_category_ids - new_category_ids
-        CategoryUser.where(category_id: (categories_to_unwatch), notification_level: notification_level).delete_all
+        CategoryUser.where(category_id: categories_to_unwatch, notification_level: notification_level).delete_all
         TopicUser
           .joins(:topic)
           .where(notification_level: TopicUser.notification_levels[:watching],
