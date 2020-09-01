@@ -25,6 +25,7 @@ const USER_HOMES = {
   3: "unread",
   4: "new",
   5: "top",
+  6: "bookmarks",
 };
 
 const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];

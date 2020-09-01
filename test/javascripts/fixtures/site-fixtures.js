@@ -31,7 +31,8 @@ export default {
         "starred",
         "read",
         "posted",
-        "search"
+        "search",
+        "bookmarks"
       ],
       periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
@@ -42,15 +43,10 @@ export default {
         "read",
         "posted",
         "categories",
-        "top"
-      ],
-      anonymous_top_menu_items: [
-        "latest",
         "top",
-        "categories",
-        "categories",
-        "top"
+        "bookmarks"
       ],
+      anonymous_top_menu_items: ["latest", "top", "categories"],
       uncategorized_category_id: 17,
       is_readonly: false,
       categories: [
