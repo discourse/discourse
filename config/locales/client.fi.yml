@@ -260,10 +260,7 @@ fi:
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
         unbookmark_with_reminder: "Poista kaikki kirjanmerkkisi ja muistutuksesi tästä ketjusta klikkaamalla. Olet asettanut muistutuksen tästä ketjusta ajankohtaan %{reminder_at}."
     bookmarks:
-      created: "olet kirjanmerkinnyt tämän viestin%{name}"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
-      created_with_reminder: "olet kirjanmerkinnyt tämän viestin muistutuksen kera %{date}%{name}"
-      created_with_at_desktop_reminder: "olet kirjanmerkinnyt tämän viestin ja siitä muistutetaan kun olet seuraavan kerran työpöytäympäristössä%{name}"
       remove: "Poista kirjanmerkki"
       delete: "Poista kirjanmerkki"
       confirm_delete: "Oletko varma, että haluat poistaa tämän kirjanmerkin? Muistutus poistetaan myös."
@@ -274,7 +271,6 @@ fi:
       list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
       search: "Haku"
       reminders:
-        at_desktop: "Ensi kerralla kun olen työpöytäympäristössäni"
         later_today: "Myöhemmin tänään"
         next_business_day: "Seuraavana arkipäivänä"
         tomorrow: "Huomenna"
@@ -288,7 +284,6 @@ fi:
         today_with_time: "tänään klo %{time}"
         tomorrow_with_time: "huomenna klo %{time}"
         at_time: "%{date_time}"
-        existing_reminder: "Olet pyytänyt muistutuksen tästä kirjanmerkistä"
     copy_codeblock:
       copied: "kopioitiin!"
     drafts:
@@ -961,7 +956,6 @@ fi:
         use: "Käytä Authenticator-sovellusta"
         enforced_notice: "Kaksivaiheinen tunnistautuminen pitää ottaa käyttöön, jotta voi käyttää sivustoa."
         disable: "Poista käytöstä"
-        disable_confirm: "Oletko varma, että haluat ottaa kaikki kaksivaiheiset tunnistautumismuodot käytöstä?"
         save: "Tallenna"
         edit: "Muokkaa"
         edit_title: "Muokkaa kaksivaiheista tunnistautumista"
@@ -2287,7 +2281,6 @@ fi:
         preview_url: "Sivusi julkaistaan osoitteessa:"
         invalid_slug: "Pahoittelut, et voi julkaista tätä sivua."
         unpublish: "Peru julkaisu"
-        update: "Päivitä"
         unpublished: "Sivusi julkaisu peruttiin, sille ei ole enää pääsyä."
         publishing_settings: "Julkaisuasetukset"
       change_owner:
@@ -2441,23 +2434,7 @@ fi:
         remove_post_notice: "Poista henkilökuntanootti"
         remove_timer: "poista ajastin"
       actions:
-        flag: "Liputa"
-        defer_flags:
-          one: "Sivuuta lippu"
-          other: "Sivuuta liput"
-        undo:
-          off_topic: "Peru lippu"
-          spam: "Peru lippu"
-          inappropriate: "Peru lippu"
-          bookmark: "Peru kirjanmerkki"
-          like: "Peru tykkäys"
         people:
-          off_topic: "liputti tämän eksyvän aiheesta"
-          spam: "liputti tämän roskapostiksi"
-          inappropriate: "liputti tämän sopimattomaksi"
-          notify_moderators: "ilmoitti valvojille"
-          notify_user: "lähetti viestin"
-          bookmark: "lisäsi tämän kirjanmerkkeihin"
           like:
             one: "tykkäsi tästä"
             other: "tykkäsivät tästä"
@@ -2476,8 +2453,6 @@ fi:
           inappropriate: "Liputit tämän sopimattomaksi"
           notify_moderators: "Liputit tämän valvojille tiedoksi"
           notify_user: "Lähetit viestin tälle käyttäjälle"
-          bookmark: "Olet lisännyt viestin kirjainmerkkeihisi"
-          like: "Tykkäsit tästä"
       delete:
         confirm:
           one: "Oletko varma, että haluat poistaa viestin?"
@@ -3070,14 +3045,6 @@ fi:
           latest: "Tuoreimpia ketjuja ei ole."
           bookmarks: "Et ole vielä merkinnyt kirjanmerkkejä."
           top: "Kuumia ketjuja ei ole."
-        bottom:
-          latest: "Tuoreimpia ketjuja ei ole enempää."
-          posted: "Ketjuja, joihin olet kirjoittanut ei ole enempää."
-          read: "Luettuja ketjuja ei ole enempää."
-          new: "Uusia ketjuja ei ole enempää."
-          unread: "Ketjuja ei ole enempää lukematta."
-          top: "Kuumia ketjuja ei ole enempää."
-          bookmarks: "Merkattuja ketjuja ei ole enempää."
     invite:
       custom_message: "Tee kutsusta persoonallisempi kirjoittamalla <a href>yksilöllinen viesti</a>."
       custom_message_placeholder: "Kirjoita henkilökohtainen viestisi"

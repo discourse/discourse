@@ -117,6 +117,8 @@ bs_BA:
       has_already_been_used: "već se koristi"
     embed:
       load_from_remote: "There was an error loading that post."
+  invite:
+    confirm_email: "<p>Skoro ste gotovi! Na vašu e-adresu poslali smo aktivacijski mail. Slijedite upute u pošti da biste aktivirali svoj račun.</p><p>Ako ne stigne, provjerite svoju mapu neželjene pošte.</p>"
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -127,12 +129,20 @@ bs_BA:
     join_group: "Pridruži se grupi"
   likes: "Sviđanja"
   embed:
-    start_discussion: "Start Discussion"
+    start_discussion: "Pokreni raspravu"
     continue: "Continue Discussion"
+    more_replies:
+      one: "još %{count} odgovor"
+      few: "još %{count} odgovora"
+      other: "još %{count} odgovora"
     loading: "Loading Discussion..."
     permalink: "Permalink"
-    imported_from: "This is a companion discussion topic for the original entry at %{link}"
+    imported_from: "Ovo je prateća tema rasprave za originalni unos na %{link}"
     in_reply_to: "▶ %{username}"
+    replies:
+      one: "%{count} odgovor"
+      few: "%{count} odgovora"
+      other: "%{count} odgovora"
     created: "Kreiran"
     new_topic: "Otvori novu temu"
   no_mentions_allowed: "Žao nam je, ne možete spominjati druge korisnike."
@@ -287,6 +297,7 @@ bs_BA:
     please_continue: "Continue to %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
   activation:
+    action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"
     already_done: "Link za konfirmaciju nije validan. Možda ste već aktivirani?"
     please_continue: "Vaš novi nalog je verifikovan, i možete se ulogovati."
     continue_button: "Nastavi na %{site_name}"
@@ -324,6 +335,9 @@ bs_BA:
       description: "Lajkuj ovaj post"
       short_description: "Lajkuj ovaj post"
       long_form: "lajkovao si ovo"
+  user_activity:
+    no_replies:
+      others: "Nema odgovora."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -453,6 +467,7 @@ bs_BA:
       xaxis: "Day"
       yaxis: "Number of private messages"
     user_to_user_private_messages_with_replies:
+      title: "Korisnik prema korisniku (s odgovorima)"
       xaxis: "Day"
       yaxis: "Number of private messages"
     system_private_messages:
@@ -550,6 +565,7 @@ bs_BA:
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
+    update_mail_receiver: "Otkrili smo zastarjelu verziju mail-prijemnika. Kliknite <a href='https://meta.discourse.org/t/-/133491'>ovdje</a> za upute za ažuriranje. Nakon ažuriranja ova poruka može trajati još 24 sata prije nego nestane."
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -687,6 +703,7 @@ bs_BA:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     staff_like_weight: "How much extra weighting factor to give staff likes."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
+    min_ban_entries_for_roll_up: "Kada kliknete tipku Roll up, stvorit ćete novi unos za subnet ban ako ima najmanje (N) unosa."
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
@@ -779,6 +796,7 @@ bs_BA:
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
+    click_to_continue: "Klikni ovdje da nastavite dalje"
     second_factor_title: "Two Factor Authentication"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
   admin:
@@ -847,6 +865,14 @@ bs_BA:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
+  unsubscribe_link: |
+    Da biste otkazali pretplatu na ove e-poruke, [kliknite ovdje] (%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Da biste otkazali pretplatu na ove e-poruke, [kliknite ovdje] (%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Ovo primate jer ste omogućili režim slanja liste objava putem poštanskih adresa.
+
+    Da biste otkazali pretplatu na ove e-poruke, [kliknite ovdje] (%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PM] "
   user_notifications:
@@ -861,6 +887,14 @@ bs_BA:
       new_users: "Users"
       join_the_discussion: "Pročitaj Više"
       click_here: "klikni ovdje"
+    email_login:
+      text_body_template: |
+        Evo vaše veze za prijavu na [%{site_name}] (%{base_url}).
+
+        Ako niste zatražili ovu vezu, možete sigurno zanemariti ovu e-poštu.
+
+        Kliknite sljedeći link za prijavu:
+        %{base_url}/session/e-mail-login/%{email_token}
     set_password:
       title: "Postavi šifru"
     signup_after_approval:

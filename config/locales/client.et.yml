@@ -1802,28 +1802,12 @@ et:
         lock_post: "Lukusta postitus"
         delete_topic: "kustuta teema"
       actions:
-        flag: "Tähis"
-        undo:
-          off_topic: "Tühista tähise andmine"
-          spam: "Tühista tähise andmine"
-          inappropriate: "Tühista tähise andmine"
-          bookmark: "Tühista järjehoidja lisamine"
-          like: "Tühista meeldimise andmine"
-        people:
-          off_topic: "tähistasin selle kui teemavälise"
-          spam: "tähistasin selle kui spämmi"
-          inappropriate: "tähistasin selle kui sobimatu"
-          notify_moderators: "teavitasin moderaatoreid"
-          notify_user: "saatsin sõnumi"
-          bookmark: "lisasin sellele järjehoidja"
         by_you:
           off_topic: "Tähistasid selle kui teemavälise"
           spam: "Tähistasid selle kui spämmi"
           inappropriate: "Tähistasid selle kui sobimatu"
           notify_moderators: "Tähistasid selle modereerimiseks"
           notify_user: "Saatsid sellele kasutajale sõnumi"
-          bookmark: "Lisasid sellele postitusele järjehoidja"
-          like: "Märkisid selle kui meeldiva"
       delete:
         confirm:
           one: "Oled sa kindel, et soovid seda postitust kustutada?"
@@ -2265,14 +2249,6 @@ et:
           latest: "Ühtegi värsket teemat pole."
           bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
           top: "Ühtegi parimat teemat pole."
-        bottom:
-          latest: "Rohkem värskeid teemasid pole."
-          posted: "Rohkem uute postitustega teemasid pole."
-          read: "Rohkem loetud teemasid pole."
-          new: "Rohkem uusi teemasid pole."
-          unread: "Rohkem lugemata teemasid pole."
-          top: "Rohkem parimaid teemasid pole."
-          bookmarks: "Rohkem järjehoidjaga teemasid pole."
     invite:
       custom_message_placeholder: "Sisesta oma individuaalne sõnum"
       custom_message_template_forum: "Kuule, Sa peaksid selle foorumiga liituma!"

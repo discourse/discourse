@@ -1416,6 +1416,7 @@ zh_CN:
     use_admin_ip_allowlist: "当使用的IP地址在已屏蔽IP列表（管理>日志>已屏蔽的IP）中时，只有管理员能够登录。"
     blocked_ip_blocks: "不应被Discourse爬取的私有IP屏蔽列表"
     allowed_internal_hosts: "可以安全地进行onebox或其它用途的爬取的内网主机列表"
+    allowed_onebox_iframes: "允许通过Onebox嵌入的iframe源域名。`*`会允许所有默认的Onebox引擎。"
     allowed_iframes: "可以令 Discourse 在主题中安全地发布的 iframe src 域名前缀列表"
     allowed_crawler_user_agents: "允许访问本站点的Web爬虫用户代理。警告！设置后将屏蔽所有不在此列表中的爬虫！"
     blocked_crawler_user_agents: "用于识别不被允许访问本站点的用户代理的字符（不区分大小且独特的）。如果定义了允许列表，则无效。"
@@ -1875,8 +1876,8 @@ zh_CN:
     new_user_notice_tl: "查看新用户发帖通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回归用户发帖通知所需的最低信任级别。"
     returning_users_days: "在用户被认为回归之前应该经过多少天。"
-    enable_page_publishing: "允许工作人员以新的链接和自定义样式出版主题。"
-    show_published_pages_login_required: "匿名用户可以不经过登录查看发布的页面。"
+    enable_page_publishing: "允许工作人员使用自定义样式主题将主题发布到新的链接。"
+    show_published_pages_login_required: "即使要求登录，匿名用户也可以查看公开的页面。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "在摘要邮件中默认包含新用户帖子。用户可以自行在参数设置中更改这个设置。"
     default_email_level: "设置常规主题的默认电子邮件通知级别。"
@@ -1939,6 +1940,7 @@ zh_CN:
     shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "在通知中所使用的图标。推荐使用一个96×96的单色且为透明背景的PNG图像。"
+    base_font: "被用在本站点上大多数地方的字体。可用主题覆盖。"
     short_title: "短标题将用于用户主页、启动器或其他可能空间有限的地方。应该控制在12个字符内。"
     dashboard_hidden_reports: "允许从仪表盘中隐藏指定的报告。"
     dashboard_visible_tabs: "选择可见的仪表盘标签页"
@@ -3200,11 +3202,9 @@ zh_CN:
       title: "确认旧邮箱（添加）"
       subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
       text_body_template: |
-        在我们添加新的电子邮件地址之前，我们需要确认你控制了
-        当前的电子邮件账户。在你完成这一步后，我们会让你确认
-        新的电子邮件地址。
+        在我们添加新的电子邮件地址之前，我们需要确认你掌控当前的电子邮件账户。在你完成这一步后，我们会让你确认新的电子邮件地址。
 
-        点击以下链接，确认你当前的%{site_name}电子邮件地址：
+        点击以下链接，确认你当前在%{site_name}电子邮件地址：
 
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
@@ -3229,7 +3229,7 @@ zh_CN:
         %{new_email}
     signup_after_approval:
       title: "在审批之后注册"
-      subject_template: "你已经被 %{site_name} 批准加入了！"
+      subject_template: "你通过了%{site_name}的审核！"
       text_body_template: |
         欢迎来到%{site_name}！
 
@@ -4115,6 +4115,8 @@ zh_CN:
         - <li><a href='https://meta.discourse.org/t/110448' target='_blank'>主题开发者快速参考指南</a></li>
         - </ul>
         - '热门的主题组件（更多内容请浏览<a href=''https://meta.discourse.org/c/theme/l/latest'' target=''_blank''>#theme</a>）”'
+      fonts:
+        title: "字体"
       logos:
         title: "标志"
         fields:

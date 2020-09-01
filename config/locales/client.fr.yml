@@ -260,10 +260,7 @@ fr:
         unbookmark: "Cliquer pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquer pour supprimer tous les signets et rappels de ce sujet. Vous avez un rappel pour %{reminder_at} sur ce sujet."
     bookmarks:
-      created: "vous avez mis un signet à ce message %{name}"
       not_bookmarked: "mettre un signet à ce message"
-      created_with_reminder: "vous avez épinglé ce message avec un rappel pour %{date} %{name}"
-      created_with_at_desktop_reminder: "vous avez épinglé ce message et vous recevrez un rappel la prochaine fois que vous êtes à votre bureau %{name}"
       remove: "Retirer le signet"
       delete: "Supprimer le signet"
       confirm_delete: "Êtes-vous sûr de vouloir supprimer ce signet ? Le rappel sera aussi supprimé."
@@ -274,7 +271,6 @@ fr:
       list_permission_denied: "Vous n'avez pas la permission de voir les signets de cet utilisateur."
       search: "Recherche"
       reminders:
-        at_desktop: "La prochaine fois je suis à mon bureau"
         later_today: "Plus tard aujourd'hui"
         next_business_day: "Prochain jour ouvré"
         tomorrow: "Demain"
@@ -289,7 +285,6 @@ fr:
         today_with_time: "aujourd'hui à %{time}"
         tomorrow_with_time: "demain à %{time}"
         at_time: "à %{date_time}"
-        existing_reminder: "Vous avez un rappel configuré pour ce signet qui sera envoyé"
     copy_codeblock:
       copied: "copié !"
     drafts:
@@ -978,7 +973,6 @@ fr:
         use: "Utiliser l'application Authenticator"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs pour accéder à ce site."
         disable: "Désactiver"
-        disable_confirm: "Êtes-vous sûr de vouloir désactiver tous les facteurs secondaires ?"
         save: "Sauvegarder"
         edit: "Modifier"
         edit_title: "Modifier le second facteur"
@@ -1544,6 +1538,29 @@ fr:
       categories_and_top_topics: "Catégories et meilleurs sujets"
       categories_boxes: "Boîtes avec sous-catégories"
       categories_boxes_with_topics: "Boîtes avec sujets à la une"
+    base_font_setting:
+      helvetica: "Helvetica / Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "Roboto Condensé"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -1566,9 +1583,6 @@ fr:
         one: "Sélectionner au moins %{count} élément."
         other: "Sélectionner au moins %{count} éléments."
       invalid_selection_length: "La sélection doit faire au minimum %{count} caractères ."
-      components:
-        categories_admin_dropdown:
-          title: "Menu déroulant d'administration des catégories"
     date_time_picker:
       from: De
       to: À
@@ -2315,7 +2329,6 @@ fr:
         preview_url: "Votre page sera publiée sur :"
         invalid_slug: "Désolé, vous ne pouvez pas publier cette page."
         unpublish: "Annuler la publication"
-        update: "Mettre à jour"
         unpublished: "La publication de votre page a été annulée et elle n'est plus accessible."
         publishing_settings: "Paramètres de publication"
       change_owner:
@@ -2470,23 +2483,7 @@ fr:
         remove_post_notice: "Retirer la note pour les responsables"
         remove_timer: "supprimer la planification"
       actions:
-        flag: "Signaler"
-        defer_flags:
-          one: "Ignorer le signalement"
-          other: "Ignorer les signalements"
-        undo:
-          off_topic: "Annuler le signalement"
-          spam: "Annuler le signalement"
-          inappropriate: "Annuler le signalement"
-          bookmark: "Retirer le signet"
-          like: "Annuler le J'aime"
         people:
-          off_topic: "signalé comme hors-sujet"
-          spam: "signalé comme spam"
-          inappropriate: "signalé comme inapproprié"
-          notify_moderators: "signalé aux modérateurs"
-          notify_user: "a envoyé un message"
-          bookmark: "signet ajouté"
           like:
             one: "a aimé ceci"
             other: "ont aimé ceci"
@@ -2505,8 +2502,6 @@ fr:
           inappropriate: "Vous l'avez signalé comme étant inapproprié"
           notify_moderators: "Vous l'avez signalé pour modération"
           notify_user: "Vous avez envoyé un message à cet utilisateur"
-          bookmark: "Vous avez mis un signet à ce message"
-          like: "Vous l'avez aimé"
       delete:
         confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
@@ -3107,14 +3102,6 @@ fr:
           latest: "Il n'y a pas de sujets récents."
           bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
           top: "Il n'y a pas de meilleurs sujets."
-        bottom:
-          latest: "Il n'y a plus de sujets récents."
-          posted: "Il n'y a plus de sujets publiés."
-          read: "Il n'y a plus de sujets lus."
-          new: "Il n'y a plus de nouveaux sujets."
-          unread: "Il n'y a plus de sujets non lus."
-          top: "Il n'y a plus de meilleurs sujets."
-          bookmarks: "Il n'y a plus de sujets avec des signets."
     invite:
       custom_message: "Rendez votre invitation plus personnelle en écrivant un <a href>message personnalisé</a>."
       custom_message_placeholder: "Entrez votre message personnalisé"

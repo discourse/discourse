@@ -63,6 +63,11 @@ pl_PL:
       automatic_close:
         closes_in: "Zamknięcie ankiety w ciągu <strong>%{timeLeft}</strong>."
         age: "Zamknięta <strong>%{age}</strong>"
+      breakdown:
+        title: "Wyniki ankiety"
+        breakdown: "Podział"
+        percentage: "Procent"
+        count: "Liczba"
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
       error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."

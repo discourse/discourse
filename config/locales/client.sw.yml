@@ -1868,31 +1868,12 @@ sw:
         unlock_post_description: "mruhusu mchapishaji kuhariri chapisho hili"
         delete_topic: "futa mada"
       actions:
-        flag: "Bendera"
-        defer_flags:
-          one: "Puuzia bendera"
-          other: "Puuzia bendera"
-        undo:
-          off_topic: "Ondoa bendera"
-          spam: "Ondoa bendera"
-          inappropriate: "Ondoa bendera"
-          bookmark: "Ondoa Alamisho"
-          like: "Ondoa upendo"
-        people:
-          off_topic: "imeripotiwa kama haihusiki "
-          spam: "ameripoti hii kuwa barua taka"
-          inappropriate: "imeripotiwa kuwa haiko sawa"
-          notify_moderators: "wajulishe wasimamizi"
-          notify_user: "ujumbe umetumwa"
-          bookmark: "alamisha hii"
         by_you:
           off_topic: "Umeripoti hii kuwa haihusiki"
           spam: "Umeripoti hii kuwa ni taka"
           inappropriate: "Umeripoti kuwa haiko sawa"
           notify_moderators: "Umeripoti ili ipitiwe na msimamizi"
           notify_user: "Umetuma ujumbe kwa mtumiaji huyu"
-          bookmark: "Umealamisha chapisho hili"
-          like: "Umeipenda hii"
       delete:
         confirm:
           one: "Je, umeridhia kufuta chapisho hili?"
@@ -2302,14 +2283,6 @@ sw:
           latest: "Hakuna mada zingine za hivi karibuni."
           bookmarks: "Bado hauja alamisha mada yoyote."
           top: "Hakuna mada za juu."
-        bottom:
-          latest: "Hakuna mada zingine za hivi karibuni."
-          posted: "Hakuna mada mpya zilizochapishwa."
-          read: "Hakuna mada zingine zilizosomwa."
-          new: "Hakuna mada mpya zingine."
-          unread: "Hakuna mada zingine ambazo hazijasomwa."
-          top: "Hakuna mada za juu zingine."
-          bookmarks: "Hakuna mada zingine zilizoalamishwa."
     invite:
       custom_message_placeholder: "Andika ujumbe binafsi"
       custom_message_template_forum: "Habari, jiunge kwenye jumuiya yetu!"

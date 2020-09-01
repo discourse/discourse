@@ -1905,6 +1905,7 @@ nl:
     default_categories_tracking: "Lijst van categorieën die standaard worden gevolgd."
     default_categories_muted: "Lijst van categorieën die standaard worden gedempt."
     default_categories_watching_first_post: "Lijst van categorieën waarin het eerste bericht in elk nieuw topic standaard in de gaten wordt gehouden."
+    default_categories_regular: "Lijst van categorieën die niet standaard worden gedempt. Handig wanneer de website-instelling 'mute_all_categories_by_default' is ingeschakeld."
     mute_all_categories_by_default: "Het standaard meldingsniveau van alle categorieën instellen op gedempt. Gebruikers moeten zich bij categorieën aanmelden om deze in de pagina's 'nieuwste' en 'categorieën' te laten verschijnen. Als u de standaardwaarden voor anonieme gebruikers wilt wijzigen, stel dan de instellingen voor 'default_categories_' in."
     default_tags_watching: "Lijst van tags die standaard in de gaten worden gehouden."
     default_tags_tracking: "Lijst van tags die standaard worden gevolgd."
@@ -2638,6 +2639,7 @@ nl:
       description: Alle essentiële gemeenschapsfuncties <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">toegekend</a>
     member:
       name: Lid
+      description: Uitnodigingen, groepsberichten, meer likes <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">toegekend</a>
     regular:
       name: Normaal
     leader:
@@ -2695,8 +2697,10 @@ nl:
       description: Heeft een bericht gedeeld
     first_link:
       name: Eerste koppeling
+      description: Heeft een koppeling naar een ander topic toegevoegd
     first_quote:
       name: Eerste citaat
+      description: Heeft een bericht geciteerd
     read_guidelines:
       name: Richtlijnen gelezen
       description: Heeft de <a href="%{base_uri}/guidelines">gemeenschapsrichtlijnen</a> gelezen
@@ -2714,6 +2718,7 @@ nl:
       description: Heeft een externe koppeling met 1000 klikken geplaatst
     appreciated:
       name: Gewaardeerd
+      description: Heeft 1 like op 20 berichten ontvangen
     respected:
       name: Gerespecteerd
       description: Heeft 2 likes op 100 berichten ontvangen
@@ -2731,7 +2736,7 @@ nl:
     crazy_in_love:
       description: 20 keer %{max_likes_per_day} likes op een dag gebruikt
       long_description: |
-        Deze badge wordt toegekend wanneer u 20 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Wow! U bent een rolmodel voor het aanmoedigen van uw medegemeenschapesleden!
+        Deze badge wordt toegekend wanneer u 20 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Wow! U bent een rolmodel voor het aanmoedigen van uw medegemeenschapsleden!
     thank_you:
       name: Bedankt
     empathetic:
@@ -2739,7 +2744,7 @@ nl:
       description: Heeft 500 geliket en 1000 likes gegeven
     first_emoji:
       name: Eerste emoji
-      description: Een emoji in een bericht gebruikt
+      description: Heeft een emoji in een bericht gebruikt
     first_mention:
       description: Heeft een gebruiker genoemd in een bericht
     first_reply_by_email:

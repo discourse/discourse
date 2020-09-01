@@ -311,10 +311,7 @@ sl:
         unbookmark: "odstrani vse zaznamke v tej temi"
         unbookmark_with_reminder: "Kliknite, če želite odstraniti vse zaznamke in opomnike v tej temi. Za to temo imate opomnik nastavljen %{reminder_at}."
     bookmarks:
-      created: "to objavo ste zaznamovali z %{name}"
       not_bookmarked: "zaznamuj prispevek"
-      created_with_reminder: "to objavo ste zaznamovali z opomnikom %{date}%{name}"
-      created_with_at_desktop_reminder: "to objavo ste zaznamovali, opomnili vas bomo, ko boste naslednjič za računalnikom %{name}"
       remove: "Odstrani zaznamek"
       delete: "Odstrani zaznamek"
       confirm_delete: "Ali ste prepričani, da želite odstraniti ta zaznamek? Opomnik bo prav tako odstranjen."
@@ -332,7 +329,6 @@ sl:
       search_placeholder: "Iščite zaznamke po imenu, naslovu teme ali vsebini objave"
       search: "Išči"
       reminders:
-        at_desktop: "Naslednjič, ko bom za svojim računalnikom"
         later_today: "Kasneje v dnevu"
         next_business_day: "Naslednji delovni dan"
         tomorrow: "Jutri"
@@ -347,7 +343,6 @@ sl:
         today_with_time: "danes ob %{time}"
         tomorrow_with_time: "jutri ob %{time}"
         at_time: "ob %{date_time}"
-        existing_reminder: "Za ta zaznamek imate nastavljen opomnik, ki bo poslan"
     copy_codeblock:
       copied: "kopirano!"
     drafts:
@@ -2401,25 +2396,7 @@ sl:
         remove_post_notice: "Odstrani obvestilo osebja"
         remove_timer: "odstrani opomnik"
       actions:
-        flag: "Prijavi"
-        defer_flags:
-          one: "Ne upoštevaj prijavo"
-          two: "Ne upoštevaj prijavi"
-          few: "Ne upoštevaj prijave"
-          other: "Ne upoštevaj prijav"
-        undo:
-          off_topic: "Razveljavi prijavo"
-          spam: "Razveljavi prijavo"
-          inappropriate: "Razveljavi prijavo"
-          bookmark: "Razveljavi zaznamek"
-          like: "Razveljavi všeček"
         people:
-          off_topic: "prijavljeno kot ne ustreza temi"
-          spam: "prijavljeno kot neželeno"
-          inappropriate: "prijavljeno kot neprimerno"
-          notify_moderators: "opozoril moderatorje"
-          notify_user: "pošlji opozorilo"
-          bookmark: "je zaznamovalo"
           like_capped:
             one: "in %{count} drugemu uporabniku je prispevek všeč"
             two: "in %{count} drugima uporabnikoma je prispevek všeč"
@@ -2431,8 +2408,6 @@ sl:
           inappropriate: "Vi ste prijavili kot neprimerno"
           notify_moderators: "Ta prispevek ste prijavil moderatorjem"
           notify_user: "Poslali ste opozorilo avtorju"
-          bookmark: "Zaznamovali ste ta prispevek"
-          like: "Vam je všeč"
       delete:
         confirm:
           one: "Ali ste prepričani da hočete izbrisati ta %{count} prispevek?"
@@ -3009,14 +2984,6 @@ sl:
           latest: "Ni najnovejših tem."
           bookmarks: "Nimate tem z zaznamki."
           top: "Ni najboljših tem."
-        bottom:
-          latest: "Ni več zadnjih tem."
-          posted: "Ni več objavljenih tem."
-          read: "Ni več prebranih tem."
-          new: "Ni več novih tem."
-          unread: "Ni več neprebranih tem."
-          top: "Ni več najboljših tem."
-          bookmarks: "Ni več tem z zaznamki."
     invite:
       custom_message: "Naredite vaše povabilo bolj osebno tako da napišete <a href>osebno sporočilo</a>."
       custom_message_placeholder: "Vnesi sporočilo po meri"

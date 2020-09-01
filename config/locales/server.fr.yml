@@ -115,6 +115,7 @@ fr:
         bounced_email_error: "Le courriel est un rapport de courriel non délivré."
         screened_email_error: "Se produit quand l'adresse courriel de l'expéditeur est déjà sous surveillance."
         unsubscribe_not_allowed: "Se produit lorsque le désabonnement via courriel n'est pas autorisé pour cet utilisateur."
+        email_not_allowed: "Se produit quand l'adresse courriel n'est pas dans la liste autorisée ou est dans la liste des indésirables."
       unrecognized_error: "Erreur non reconnue"
     secure_media_placeholder: "Expurgé : ce site a activé la sécurisation des médias. Visitez le sujet pour visualiser le fichier image/audio/vidéo correspondant."
   errors: &errors
@@ -198,6 +199,7 @@ fr:
     error_message: "Il y a eu une erreur lors de l'acceptation d'une invitation. Merci de contacter l'administrateur du site."
     user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='%{base_path}/u/%{username}/summary'>a déjà un compte</a> !"
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
+    cant_invite_to_group: "Vous n'êtes pas autorisé à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     max_rows: "Les premières %{max_bulk_invites} invitations ont été envoyées. Essayez de diviser le fichier en parties plus petites."
@@ -1925,6 +1927,7 @@ fr:
     shared_drafts_category: "Activez la fonction Brouillons partagés en désignant une catégorie pour les brouillons de sujet. Les sujets dans cette catégorie ne figureront pas dans les listes de sujets pour les responsables."
     push_notifications_prompt: "Afficher la demande de consentement de l'utilisateur"
     push_notifications_icon: "L'icône du badge qui apparaît dans les notifications. Une image monochrome de taille 96×96 et au format PNG avec transparence est recommandée."
+    base_font: "Police utilisée pour le site. Peut être changée par les thèmes."
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, le lanceur d'applications ou d'autres endroits où la place disponible est limitée. Il devrait être limité à 12 caractères."
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
@@ -4107,6 +4110,8 @@ fr:
         title: "Thème"
       themes_further_reading:
         title: "Thèmes"
+      fonts:
+        title: "Polices"
       logos:
         title: "Logos"
         fields:

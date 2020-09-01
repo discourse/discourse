@@ -2084,22 +2084,7 @@ zh_TW:
         add_post_notice: "加入工作人員通知"
         remove_post_notice: "移除工作人員通知"
       actions:
-        flag: "檢舉"
-        defer_flags:
-          other: "忽略檢舉"
-        undo:
-          off_topic: "撤回檢舉"
-          spam: "撤回檢舉"
-          inappropriate: "撤回檢舉"
-          bookmark: "移除書籤"
-          like: "撤回讚"
         people:
-          off_topic: "檢舉為離題內容"
-          spam: "檢舉為垃圾內容"
-          inappropriate: "檢舉為不當內容"
-          notify_moderators: "已通知的版主"
-          notify_user: "已送出一則訊息"
-          bookmark: "收藏"
           like_capped:
             other: "和其他%{count}人都說讚"
         by_you:
@@ -2108,8 +2093,6 @@ zh_TW:
           inappropriate: "你已檢舉此貼文內容不妥"
           notify_moderators: "你已通知版主此貼文"
           notify_user: "您已送出訊息給這位使用者"
-          bookmark: "你已將此貼文加上書籤"
-          like: "你已在此貼文按讚"
       delete:
         confirm:
           other: "您是否確定要刪除%{count}篇貼文？"
@@ -2603,14 +2586,6 @@ zh_TW:
           latest: "沒有最新話題。"
           bookmarks: "你還沒有收藏話題。"
           top: "沒有最佳話題。"
-        bottom:
-          latest: "沒有更多的最新話題。"
-          posted: "沒有更多的發佈話題。"
-          read: "沒有更多已閲話題可看了。"
-          new: "已經沒有其他新話題了。"
-          unread: "沒有更多未讀話題了。"
-          top: "沒有更多最佳話題了。"
-          bookmarks: "沒有更多收藏的話題了。"
     invite:
       custom_message: "撰寫<a href>自訂訊息</a>，來個人化您的邀請"
       custom_message_placeholder: "輸入留言"

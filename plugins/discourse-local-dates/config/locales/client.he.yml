@@ -19,6 +19,7 @@ he:
           insert: כתיבה
           advanced_mode: מצב מורחב
           simple_mode: מצב פשוט
+          format_description: "תבנית המשמשת להצגת התאריך למשתמש. Z משמש להצגת ההפרש ו־zz לשם אזור הזמן."
           timezones_title: אזורי זמן
           timezones_description: באזורי זמן נעשה שימוש לטובת הצגת תאריך בתצוגה מקדימה וכבררת מחדל.
           recurring_title: חזרה

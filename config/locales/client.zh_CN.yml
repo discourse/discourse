@@ -62,7 +62,7 @@ zh_CN:
           other: "> %{count}y"
         almost_x_years:
           other: "%{count}y"
-        date_month: "D MMM"
+        date_month: "M[月]D[日]"
         date_year: "YY[年]M[月]"
       medium:
         x_minutes:
@@ -71,7 +71,7 @@ zh_CN:
           other: "%{count} 小时"
         x_days:
           other: "%{count} 天"
-        date_year: "D MMM 'YY"
+        date_year: "YY[年]M[月]D[日]"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分钟前"
@@ -239,10 +239,9 @@ zh_CN:
         unbookmark: "点击删除本主题的所有收藏"
         unbookmark_with_reminder: "点击以移除该主题上的所有收藏和提醒。你在该主题中设定了一个于%{reminder_at}的提醒。"
     bookmarks:
-      created: "你已收藏了该帖子%{name}"
+      created: "你已收藏了该帖子。%{name}"
       not_bookmarked: "收藏此帖"
-      created_with_reminder: "你已收藏了该帖子并设置了一个提醒 %{date}%{name}"
-      created_with_at_desktop_reminder: "你所收藏的此帖将会在你下次使用桌面设备时提醒你 %{name}"
+      created_with_reminder: "你已收藏了该帖子并设置了一个于%{date}的提醒。%{name}"
       remove: "取消收藏"
       delete: "删除收藏"
       confirm_delete: "你确定要删除该收藏吗？你所设置的提醒也会被一并删除。"
@@ -260,7 +259,6 @@ zh_CN:
       search_placeholder: "按名称、主题标题或帖子内容搜索书签"
       search: "搜索"
       reminders:
-        at_desktop: "下次我使用桌面设备时"
         later_today: "今天的某个时候"
         next_business_day: "下一个工作日"
         tomorrow: "明天"
@@ -275,7 +273,7 @@ zh_CN:
         today_with_time: "今天%{time}"
         tomorrow_with_time: "明天%{time}"
         at_time: "于%{date_time}"
-        existing_reminder: "你为该收藏所设定的提醒将被发出"
+        existing_reminder: "你为该收藏所设定的提醒将被在%{at_date_time}发出"
     copy_codeblock:
       copied: "已复制！"
     drafts:
@@ -488,6 +486,7 @@ zh_CN:
       sent_by_user: "由<a href='%{userUrl}'>%{user}</a>发送"
       sent_by_you: "由 <a href='%{userUrl}'>你</a>发送"
     directory:
+      username: "用户名"
       filter_name: "按用户名筛选"
       title: "用户"
       likes_given: "点赞"
@@ -834,6 +833,16 @@ zh_CN:
         not_first_time: "不是第一次？"
         skip_link: "跳过这些提示"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
+      color_scheme_default_on_all_devices: "为我所有的设备上设置默认配色方案"
+      color_scheme: "配色方案"
+      color_schemes:
+        default_description: "默认"
+        disable_dark_scheme: "与常规相同"
+        dark_instructions: "你可以通过切换你的设备的深色模式来预览深色模式的配色方案。"
+        undo: "重置"
+        regular: "常规的"
+        dark: "深色模式"
+        default_dark_scheme: "（站点默认值）"
       dark_mode: "深色模式"
       dark_mode_enable: "自动启用深色模式配色方案"
       text_size_default_on_all_devices: "将其设为我所有设备上的默认字体大小"
@@ -883,7 +892,7 @@ zh_CN:
       muted_categories_instructions: "你不会收到这些分类中任何关于新主题的通知，并且这些新主题也不会出现在分类或最新的页面上。"
       muted_categories_instructions_dont_hide: "你将不会收到在这些分类中的新主题通知。"
       regular_categories: "活跃用户"
-      regular_categories_instructions: "你会在`最新`和`热门`主题列表中看到这些主题。"
+      regular_categories_instructions: "你会在“最新”和“热门”主题列表中看到这些分类。"
       no_category_access: "无法保存，作为审核人你仅具有受限的 分类 访问权限"
       delete_account: "删除我的账户"
       delete_account_confirm: "你真的要永久删除自己的账户吗？删除之后无法恢复！"
@@ -968,6 +977,7 @@ zh_CN:
       second_factor:
         title: "双重验证"
         enable: "管理两步验证"
+        disable_all: "全部禁用"
         forgot_password: "忘记密码？"
         confirm_password_description: "请确认密码后继续"
         name: "名称"
@@ -985,7 +995,7 @@ zh_CN:
         use: "使用身份验证器应用"
         enforced_notice: "在访问此站点之前，你需要启用双重身份验证。"
         disable: "停用"
-        disable_confirm: "确定禁用所有的两步验证吗？"
+        disable_confirm: "你确定要禁用所有的两步验证方法吗？"
         save: "保存"
         edit: "编辑"
         edit_title: "编辑次要身份验证器"
@@ -1540,6 +1550,29 @@ zh_CN:
       categories_and_top_topics: "分类和最热主题"
       categories_boxes: "带子分类的框"
       categories_boxes_with_topics: "有特色主题的框"
+    base_font_setting:
+      helvetica: "Helvetica/Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "RobotoCondensed"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1562,7 +1595,7 @@ zh_CN:
       invalid_selection_length: "选择的字符至少为%{count}个字符。"
       components:
         categories_admin_dropdown:
-          title: "分类管理下拉菜单"
+          title: "分类管理"
     date_time_picker:
       from: 从
       to: 发至
@@ -1946,6 +1979,7 @@ zh_CN:
         new: "没有更多的近期主题。"
         unread: "没有更多未读主题了。"
         category: "没有更多%{category}分类的主题了。"
+        tag: "没有更多带有%{tag}标签的主题了。"
         top: "没有更多的热门主题."
         bookmarks: "没有更多收藏的主题了。"
     topic:
@@ -2010,6 +2044,7 @@ zh_CN:
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: 浏览所有分类
+      browse_all_tags: 浏览所有标签
       view_latest_topics: 查阅最新主题
       suggest_create_topic: 创建一个新的主题吧！
       jump_reply_up: 转到更早的回复
@@ -2045,7 +2080,7 @@ zh_CN:
         pick_date_and_time: "选择日期和时间"
         set_based_on_last_post: "按照最新帖子关闭"
       publish_to_category:
-        title: "计划发布"
+        title: "定时发布"
       temp_open:
         title: "临时开启"
       auto_reopen:
@@ -2068,7 +2103,7 @@ zh_CN:
       status_update_notice:
         auto_open: "本主题将在%{timeLeft}自动开启。"
         auto_close: "本主题将在%{timeLeft}自动关闭。"
-        auto_publish_to_category: "主题%{timeLeft}将发布到<a href=%{categoryUrl}>#%{categoryName}</a> 。"
+        auto_publish_to_category: "主题将在%{timeLeft}后被发布到<a href=%{categoryUrl}>#%{categoryName}</a> 。"
         auto_close_based_on_last_post: "如在 %{duration}内没有新回复后主题将被关闭。"
         auto_delete: "主题在%{timeLeft}后将被自动删除。"
         auto_bump: "此主题将在%{timeLeft}后自动顶起。"
@@ -2279,20 +2314,19 @@ zh_CN:
         action: "合并选择的帖子"
         error: "合并帖子时发生了错误。"
       publish_page:
-        title: "页面发布中"
+        title: "页面发布"
         publish: "出版"
-        description: "当一个主题被出版为一个页面时，其链接是共享的，并且会以自定义的样式显示。"
+        description: "当一个主题被发布为页面，其链接可以是共享的，并且会以自定义的样式显示。"
         slug: "Slug"
         public: "公开"
-        public_description: "尽管关联的主题是私有主题，但还是能被其他用户查看。"
-        publish_url: "你的页面已出版于："
-        topic_published: "你的主题已出版于："
-        preview_url: "你的页面将出版于："
-        invalid_slug: "抱歉，您不能出版此页面。"
-        unpublish: "取消出版"
-        update: "更新"
+        public_description: "即使关联的主题是私有的，用户也可以看到该页面。"
+        publish_url: "你的页面已发布在："
+        topic_published: "你的主题已发布在："
+        preview_url: "你的页面将被发布在："
+        invalid_slug: "抱歉，您不能发布该页面。"
+        unpublish: "取消发布"
         unpublished: "你的页面已经取消出版并且不再可用。"
-        publishing_settings: "出版设置"
+        publishing_settings: "发布设置"
       change_owner:
         title: "更改所有者"
         action: "更改作者"
@@ -2420,7 +2454,7 @@ zh_CN:
         convert_to_moderator: "添加管理人员颜色标识"
         revert_to_regular: "移除管理人员颜色标识"
         rebake: "重建 HTML"
-        publish_page: "页面发布中"
+        publish_page: "页面发布"
         unhide: "显示"
         change_owner: "更改作者"
         grant_badge: "授予徽章"
@@ -2435,22 +2469,7 @@ zh_CN:
         remove_post_notice: "移除管理人员通知"
         remove_timer: "移除计时器"
       actions:
-        flag: "标记"
-        defer_flags:
-          other: "忽略标记"
-        undo:
-          off_topic: "撤回标记"
-          spam: "撤回标记"
-          inappropriate: "撤回标记"
-          bookmark: "取消收藏"
-          like: "取消赞"
         people:
-          off_topic: "标记为偏离主题"
-          spam: "标记为垃圾信息"
-          inappropriate: "不恰当的言辞"
-          notify_moderators: "通知版主"
-          notify_user: "发送私信"
-          bookmark: "收藏"
           like:
             other: "点赞"
           read:
@@ -2465,8 +2484,6 @@ zh_CN:
           inappropriate: "你标记其为不恰当的言辞"
           notify_moderators: "你标记了本帖要求管理人员处理"
           notify_user: "你已经通知了该用户"
-          bookmark: "你以收藏了该帖"
-          like: "你赞了它"
       delete:
         confirm:
           other: "你确定要删除%{count}个帖子吗？"
@@ -3037,14 +3054,6 @@ zh_CN:
           latest: "没有最新主题。"
           bookmarks: "你还没有收藏主题。"
           top: "没有热门主题。"
-        bottom:
-          latest: "没有更多的最新主题。"
-          posted: "没有更多的发布主题。"
-          read: "没有更多已阅主题可看了。"
-          new: "没有更多的近期主题。"
-          unread: "没有更多未读主题了。"
-          top: "没有更多的热门主题."
-          bookmarks: "没有更多收藏的主题了。"
     invite:
       custom_message: "通过编写<a href>自定义消息</a>，使你的邀请更个性化。"
       custom_message_placeholder: "输入留言"
@@ -3516,6 +3525,7 @@ zh_CN:
           hide_unused_fields: "隐藏未使用的设置"
           is_default: "主题默认启用"
           user_selectable: "用户可选择主题"
+          color_scheme_user_selectable: "配色方案可由用户选择"
           color_scheme: "调色板"
           default_light_scheme: "浅色（默认）"
           color_scheme_select: "选择主题使用的颜色"
@@ -3877,8 +3887,8 @@ zh_CN:
             api_key_update: "更新api密钥"
             api_key_destroy: "销毁api密钥"
             override_upload_secure_status: "覆盖上传安全状态"
-            page_published: "页面已出版"
-            page_unpublished: "页面未出版"
+            page_published: "页面发布"
+            page_unpublished: "取消页面发布"
             add_email: "添加邮箱"
             update_email: "更新邮箱"
             destroy_email: "删除邮箱"

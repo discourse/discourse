@@ -48,6 +48,9 @@ el:
   remove_posts_deleted_by_author: "Διαγράφηκε από τον συγγραφέα"
   themes:
     other_error: "Κάτι πήγε στραβά κατά την ενημέρωση του θέματος"
+    settings_errors:
+      string_value_not_valid_min: "Πρέπει να είναι τουλάχιστον %{min} χαρακτήρες."
+      string_value_not_valid_max: "Πρέπει να είναι το πολύ %{max} χαρακτήρες."
   emails:
     incoming:
       default_subject: "Αυτό το θέμα χρειάζεται τίτλο"

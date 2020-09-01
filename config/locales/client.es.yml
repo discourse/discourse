@@ -263,10 +263,7 @@ es:
         unbookmark: "Haz clic para eliminar todos los marcadores en este tema"
         unbookmark_with_reminder: "Haz clic para quitar todos los marcadores y recordatorios en este tema. Tienes un recordatorio puesto %{reminder_at} para este tema."
     bookmarks:
-      created: "has guardado esta publicación en marcadores%{name}"
       not_bookmarked: "marcar esta publicación"
-      created_with_reminder: "has añadido esta publicación a marcadores con un recordatorio %{date}%{name}"
-      created_with_at_desktop_reminder: "has añadido esta publicación a marcadores y se te recordará la próxima vez que estés en tu ordenador de escritorio%{name}"
       remove: "Eliminar marcador"
       delete: "Borrar marcador"
       confirm_delete: "¿Seguro que quieres borrar este marcados? El recordatorio también se borrará."
@@ -283,7 +280,6 @@ es:
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
       search: "Buscar"
       reminders:
-        at_desktop: "La próxima vez que esté en mi ordenador"
         later_today: "Más tarde durante el día de hoy"
         next_business_day: "Siguiente día hábil"
         tomorrow: "Mañana"
@@ -298,7 +294,6 @@ es:
         today_with_time: "hoy a las %{time}"
         tomorrow_with_time: "mañana a las %{time}"
         at_time: "a las %{date_time}"
-        existing_reminder: "Tienes un recordatorio puesto para este marcador que será enviado"
     copy_codeblock:
       copied: "¡copiado!"
     drafts:
@@ -602,6 +597,7 @@ es:
         categories:
           title: Categorías
           long_title: "Notificaciones predeterminadas de categoría"
+          regular_categories_instructions: "Si estas categorías están silenciadas, no estarán silenciadas para los miembros del grupo. Se les notificará a los usuarios si son mencionados o si alguien les responde."
         logs:
           title: "Registros"
           when: "Cuándo"
@@ -749,6 +745,7 @@ es:
       latest_by: "recientes por"
       toggle_ordering: "cambiar orden"
       subcategories: "Subcategorías"
+      muted: "Categorías silenciadas"
       topic_sentence:
         one: "%{count} tema"
         other: "%{count} temas"
@@ -996,7 +993,6 @@ es:
         use: "Usar app Authenticator"
         enforced_notice: "Se necesita que actives la autenticación en dos pasos antes de acceder a este sitio."
         disable: "Inhabilitar"
-        disable_confirm: "¿Estás seguro de que quieres inhabilitar todos los segundos factores?"
         save: "Guardar"
         edit: "Editar"
         edit_title: "Editar segundo factor"
@@ -1584,9 +1580,6 @@ es:
         one: "Seleccionar al menos %{count} item."
         other: "Selecciona al menos %{count} elementos."
       invalid_selection_length: "La selección debe tener al menos %{count} caracteres."
-      components:
-        categories_admin_dropdown:
-          title: "Menú desplegable de administración de categorías"
     date_time_picker:
       from: Desde
       to: Hasta
@@ -2332,7 +2325,6 @@ es:
         preview_url: "La página será publicada en:"
         invalid_slug: "Lo sentimos, no puedes publicar esta página."
         unpublish: "Despublicar"
-        update: "Actualizar"
         unpublished: "La página se ha despublicado y ya no se puede acceder a ella."
         publishing_settings: "Ajustes de publicación"
       change_owner:
@@ -2488,23 +2480,7 @@ es:
         remove_post_notice: "Eliminar aviso del staff"
         remove_timer: "quitar temporizador"
       actions:
-        flag: "Reportar"
-        defer_flags:
-          one: "Ignorar reporte"
-          other: "Ignorar reportes"
-        undo:
-          off_topic: "Deshacer reporte"
-          spam: "Deshacer reporte"
-          inappropriate: "Deshacer reporte"
-          bookmark: "Deshacer marcador"
-          like: "Deshacer me gusta"
         people:
-          off_topic: "reportó esto como sin relación con el tema"
-          spam: "reportó esto como spam"
-          inappropriate: "reportó esto como inapropiado"
-          notify_moderators: "notificó a moderadores"
-          notify_user: "envió un mensaje"
-          bookmark: "guardó esto en marcadores"
           like:
             one: "le dio me gusta a esto"
             other: "le dieron me gusta a esto"
@@ -2523,8 +2499,6 @@ es:
           inappropriate: "Reportaste esto como inapropiado"
           notify_moderators: "Reportaste esto para que sea atendido por un moderador"
           notify_user: "Enviaste un mensaje a este usuario"
-          bookmark: "Guardaste esta publicación en marcadores"
-          like: "Te gustó esto"
       delete:
         confirm:
           one: "¿Estás seguro que quieres eliminar ese post?"
@@ -3120,14 +3094,6 @@ es:
           latest: "No hay temas recientes."
           bookmarks: "No has guardado ningún tema en marcadores todavía."
           top: "No hay temas destacados."
-        bottom:
-          latest: "No hay más temas recientes."
-          posted: "No hay más temas publicados."
-          read: "No hay más temas leídos."
-          new: "No hay más temas nuevos."
-          unread: "No hay más temas sin leer."
-          top: "No hay más temas destacados"
-          bookmarks: "No hay más temas guardados en marcadores."
     invite:
       custom_message: "Dale a tu invitación un toque personal escribiendo un <a href>mensaje personalizado</a>."
       custom_message_placeholder: "Ingresa tu mensaje personalizado"

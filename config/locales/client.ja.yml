@@ -1919,28 +1919,12 @@ ja:
         grant_badge: "バッジを付与"
         delete_topic: "トピック削除"
       actions:
-        flag: "通報"
-        undo:
-          off_topic: "通報を取り消す"
-          spam: "通報を取り消す"
-          inappropriate: "通報を取り消す"
-          bookmark: "ブックマークを取り消す"
-          like: "「いいね！」を取り消す"
-        people:
-          off_topic: "関係無い話題として通報"
-          spam: "スパムとして通報"
-          inappropriate: "不適切な発言として通報"
-          notify_moderators: "モデレータに通知"
-          notify_user: "メッセージを送信しました。"
-          bookmark: "これをブックマークしました。"
         by_you:
           off_topic: "関係のない話題として通報しました"
           spam: "スパム報告として通報しました"
           inappropriate: "不適切であると報告されています"
           notify_moderators: "スタッフによる確認が必要として通報しました"
           notify_user: "このユーザにメッセージを送信しました"
-          bookmark: "この投稿をブックマークしました"
-          like: "あなたが「いいね！」しました"
       merge:
         confirm:
           other: "これらの%{count}の投稿を統合したいですか?"
@@ -2342,14 +2326,6 @@ ja:
           latest: "最新のトピックはありません。"
           bookmarks: "ブックマークしたトピックはありません。"
           top: "トップトピックはありません。"
-        bottom:
-          latest: "最新のトピックは以上です。"
-          posted: "投稿のあるトピックは以上です。"
-          read: "既読のトピックは以上です。"
-          new: "新着トピックは以上です。"
-          unread: "未読のトピックは以上です。"
-          top: "トップトピックは以上です。"
-          bookmarks: "ブックマーク済みのトピックは以上です。"
     invite:
       custom_message: "<a href>カスタムメッセージ</a>を作成して、あなたの招待状をもう少し個人的なものにします。"
       custom_message_placeholder: "メッセージを入力"
