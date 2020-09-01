@@ -1445,7 +1445,7 @@ export default Controller.extend(bufferedProperty("model"), {
         this.currentUser.automatically_unpin_topics
       ) {
         // automatically unpin topics when the user reaches the bottom
-        const max = _.max(postNumbers);
+        const max = Math.max(...postNumbers);
         if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
           next(() => topic.clearPin());
         }
