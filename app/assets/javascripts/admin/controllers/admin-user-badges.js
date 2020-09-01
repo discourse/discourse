@@ -24,13 +24,17 @@ export default Controller.extend(GrantBadgeController, {
   groupedBadges() {
     const allBadges = this.model;
 
-    var grouped = _.groupBy(allBadges, badge => badge.badge_id);
+    let grouped = {};
+    allBadges.forEach(b => {
+      grouped[b.badge_id] = grouped[b.badge_id] || [];
+      grouped[b.badge_id].push(b);
+    });
 
-    var expanded = [];
+    let expanded = [];
     const expandedBadges = allBadges.get("expandedBadges") || [];
 
-    _(grouped).each(function(badges) {
-      var lastGranted = badges[0].granted_at;
+    Object.values(grouped).forEach(function(badges) {
+      let lastGranted = badges[0].granted_at;
 
       badges.forEach(badge => {
         lastGranted =
@@ -42,7 +46,7 @@ export default Controller.extend(GrantBadgeController, {
         return;
       }
 
-      var result = {
+      let result = {
         badge: badges[0].badge,
         granted_at: lastGranted,
         badges: badges,
@@ -53,10 +57,7 @@ export default Controller.extend(GrantBadgeController, {
       expanded.push(result);
     });
 
-    return _(expanded)
-      .sortBy(group => group.granted_at)
-      .reverse()
-      .value();
+    return expanded.sortBy("granted_at").reverse();
   },
 
   actions: {
