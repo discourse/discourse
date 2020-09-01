@@ -293,13 +293,13 @@ QUnit.test("update status through advanced search ui", async assert => {
 QUnit.test(
   "doesn't update status filter header if wrong value entered through searchbox",
   async assert => {
-    const inSelector = selectKit(".search-advanced-options .select-kit#status");
+    const statusSelector = selectKit(".search-advanced-options .select-kit#status");
 
     await visit("/search");
 
     await fillIn(".search-query", "status:none");
 
-    assert.equal(inSelector.header().label(), "any", 'has "any" populated');
+    assert.equal(statusSelector.header().label(), "any", 'has "any" populated');
     assert.equal(
       find(".search-query").val(),
       "status:none",
