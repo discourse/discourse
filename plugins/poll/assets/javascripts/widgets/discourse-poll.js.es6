@@ -211,7 +211,7 @@ createWidget("discourse-poll-standard-results", {
       const voters = poll.get("voters");
       const isPublic = poll.get("public");
 
-      const ordered = _.clone(options).sort((a, b) => {
+      const ordered = [...options].sort((a, b) => {
         if (a.votes < b.votes) {
           return 1;
         } else if (a.votes === b.votes) {
