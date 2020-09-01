@@ -20,7 +20,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       value = Upload.get_from_url(value) || ""
     end
 
-    update_existing_users = params[:updateExistingUsers].present?
+    update_existing_users = params[:update_existing_user].present?
     previous_value = SiteSetting.send(id) || "" if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
