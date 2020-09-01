@@ -10,7 +10,7 @@ export function lookupCachedUploadUrl(shortUrl) {
 const MISSING = "missing";
 
 export function lookupUncachedUploadUrls(urls, ajax) {
-  urls = _.compact(urls);
+  urls = urls.filter(Boolean);
   if (urls.length === 0) {
     return;
   }

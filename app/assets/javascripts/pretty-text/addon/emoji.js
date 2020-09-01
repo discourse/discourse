@@ -253,7 +253,7 @@ export function emojiSearch(term, options) {
 }
 
 export function isSkinTonableEmoji(term) {
-  const match = _.compact(term.split(":"))[0];
+  const match = term.split(":").filter(Boolean)[0];
   if (match) {
     return tonableEmojis.indexOf(match) !== -1;
   }
