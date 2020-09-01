@@ -68,6 +68,29 @@ describe UserSilencer do
       }.to change { UserHistory.count }.by(1)
       expect(UserHistory.last.context).to be_present
     end
+
+    context 'with a plugin hook' do
+
+      before do
+        @override_silence_message = -> (opts) do
+          opts[:silence_message_params][:message_title] = "override title"
+          opts[:silence_message_params][:message_raw] = "override raw"
+        end
+        DiscourseEvent.on(:user_silenced, &@override_silence_message)
+      end
+
+      after do
+        DiscourseEvent.off(:user_silenced, &@override_silence_message)
+      end
+
+      it 'allows the message to be overridden' do
+        SystemMessage.unstub(:create)
+        UserSilencer.silence(user, Fabricate.build(:admin))
+        post = Discourse.system_user.posts.last
+        expect(post.topic.title).to eq("override title")
+        expect(post.raw).to eq("override raw")
+      end
+    end
   end
 
   describe 'unsilence' do
