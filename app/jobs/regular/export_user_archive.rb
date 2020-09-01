@@ -207,7 +207,8 @@ module Jobs
 
     def piped_category_name(category_id)
       return "-" unless category_id
-      category = Category.find(category_id)
+      category = Category.find_by(id: category_id)
+      return "#{category_id}" unless category
       categories = [category.name]
       while category.parent_category_id && category = category.parent_category
         categories << category.name
