@@ -24,6 +24,18 @@ QUnit.skip(
   }
 );
 
+QUnit.test("works when a hash is not present", async assert => {
+  setupPublicJsHash(undefined);
+  assert.equal(
+    addHashToURL("/javascripts/pikaday.js"),
+    "/javascripts/pikaday.js"
+  );
+  assert.equal(
+    addHashToURL("/javascripts/ace/ace.js"),
+    "/javascripts/ace/ace.js"
+  );
+});
+
 QUnit.test("generates URLs with a hash", async assert => {
   setupPublicJsHash("abc123");
   assert.equal(
@@ -33,16 +45,5 @@ QUnit.test("generates URLs with a hash", async assert => {
   assert.equal(
     addHashToURL("/javascripts/ace/ace.js"),
     "/javascripts/ace-abc123/ace.js"
-  );
-});
-
-QUnit.test("works when a hash is not present", async assert => {
-  assert.equal(
-    addHashToURL("/javascripts/pikaday.js"),
-    "/javascripts/pikaday.js"
-  );
-  assert.equal(
-    addHashToURL("/javascripts/ace/ace.js"),
-    "/javascripts/ace/ace.js"
   );
 });
