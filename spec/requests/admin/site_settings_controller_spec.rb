@@ -125,6 +125,18 @@ describe Admin::SiteSettingsController do
 
           expect(CategoryUser.where(category_id: category_ids.first, notification_level: watching).count).to eq(0)
           expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(User.real.where(staged: false).count - 1)
+
+          topic = Fabricate(:topic, category_id: category_ids.last)
+          topic_user1 = Fabricate(:topic_user, topic: topic, notification_level: TopicUser.notification_levels[:watching], notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category])
+          topic_user2 = Fabricate(:topic_user, topic: topic, notification_level: TopicUser.notification_levels[:watching], notifications_reason_id: TopicUser.notification_reasons[:user_changed])
+
+          put "/admin/site_settings/default_categories_watching.json", params: {
+            default_categories_watching: "",
+            updateExistingUsers: true
+          }
+          expect(CategoryUser.where(category_id: category_ids, notification_level: watching).count).to eq(0)
+          expect(topic_user1.reload.notification_level).to eq(TopicUser.notification_levels[:regular])
+          expect(topic_user2.reload.notification_level).to eq(TopicUser.notification_levels[:watching])
         end
 
         it 'should not update existing users user preference' do
@@ -135,6 +147,16 @@ describe Admin::SiteSettingsController do
           }.to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }.by(0)
 
           expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(0)
+
+          topic = Fabricate(:topic, category_id: category_ids.last)
+          topic_user1 = Fabricate(:topic_user, topic: topic, notification_level: TopicUser.notification_levels[:watching], notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category])
+          topic_user2 = Fabricate(:topic_user, topic: topic, notification_level: TopicUser.notification_levels[:watching], notifications_reason_id: TopicUser.notification_reasons[:user_changed])
+          put "/admin/site_settings/default_categories_watching.json", params: {
+            default_categories_watching: "",
+          }
+          expect(CategoryUser.where(category_id: category_ids.first, notification_level: watching).count).to eq(0)
+          expect(topic_user1.reload.notification_level).to eq(TopicUser.notification_levels[:watching])
+          expect(topic_user2.reload.notification_level).to eq(TopicUser.notification_levels[:watching])
         end
       end
 
