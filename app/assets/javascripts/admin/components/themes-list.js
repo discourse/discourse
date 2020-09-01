@@ -52,16 +52,19 @@ export default Component.extend({
     if (this.componentsTabActive) {
       return themes.filter(theme => theme.get("parent_themes.length") > 0);
     } else {
-      themes = themes.filter(
-        theme => theme.get("user_selectable") || theme.get("default")
-      );
-      return _.sortBy(themes, t => {
-        return [
-          !t.get("default"),
-          !t.get("user_selectable"),
-          t.get("name").toLowerCase()
-        ];
-      });
+      return themes
+        .filter(theme => theme.get("user_selectable") || theme.get("default"))
+        .sort((a, b) => {
+          if (a.get("default") && !b.get("default")) {
+            return -1;
+          } else if (b.get("default")) {
+            return 1;
+          }
+          return a
+            .get("name")
+            .toLowerCase()
+            .localeCompare(b.get("name").toLowerCase());
+        });
     }
   },
 

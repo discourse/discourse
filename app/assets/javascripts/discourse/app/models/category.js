@@ -544,9 +544,7 @@ Category.reopenClass({
       }
     }
 
-    return _.sortBy(data, category => {
-      return category.get("read_restricted");
-    });
+    return data.sortBy("read_restricted");
   }
 });
 

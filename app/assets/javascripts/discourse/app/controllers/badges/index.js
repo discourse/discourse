@@ -1,20 +1,20 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 
+function badgeKey(badge) {
+  let pos = badge.get("badge_grouping.position");
+  let type = badge.get("badge_type_id");
+  let name = badge.get("name");
+  return ("000" + pos).slice(-4) + (10 - type) + name;
+}
+
 export default Controller.extend({
   @discourseComputed("model")
   badgeGroups(model) {
-    var sorted = _.sortBy(model, function(badge) {
-      var pos = badge.get("badge_grouping.position");
-      var type = badge.get("badge_type_id");
-      var name = badge.get("name");
-
-      return ("000" + pos).slice(-4) + (10 - type) + name;
-    });
-
-    var grouped = [];
-    var group = [],
-      groupId;
+    let sorted = model.sort((a, b) => badgeKey(a).localeCompare(badgeKey(b)));
+    let grouped = [];
+    let group = [];
+    let groupId;
 
     sorted.forEach(function(badge) {
       if (groupId !== badge.badge_grouping_id) {
