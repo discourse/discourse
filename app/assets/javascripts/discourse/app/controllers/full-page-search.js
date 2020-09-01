@@ -59,8 +59,10 @@ export default Controller.extend({
     if (!q) {
       return;
     }
-    // remove l which can be used for sorting
-    return _.reject(q.split(/\s+/), t => t === "l").join(" ");
+    return q
+      .split(/\s+/)
+      .filter(t => t !== "l")
+      .join(" ");
   },
 
   @discourseComputed("skip_context", "context")
