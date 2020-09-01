@@ -5,7 +5,7 @@ module Jobs
   class ReindexSearch < ::Jobs::Scheduled
     every 2.hours
 
-    CLEANUP_GRACE_PERIOD ||= 1.day.ago
+    CLEANUP_GRACE_PERIOD = 1.day.ago
 
     def execute(args)
       @verbose = true if args && Hash === args && args[:verbose]
