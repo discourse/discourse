@@ -1,4 +1,4 @@
-import loadScript from "discourse/lib/load-script";
+import { loadScript, setupPublicJsHash, addHashToURL } from "discourse/lib/load-script";
 
 QUnit.module("lib:load-script");
 
@@ -19,3 +19,14 @@ QUnit.skip(
     );
   }
 );
+
+QUnit.test("generates URLs with a hash", async assert => {
+  setupPublicJsHash('abc123');
+  assert.equal(addHashToURL("/javascripts/pikaday.js"), "/javascripts/pikaday-abc123.js");
+  assert.equal(addHashToURL("/javascripts/ace/ace.js"), "/javascripts/ace-abc123/ace.js");
+});
+
+QUnit.test("works when a hash is not present", async assert => {
+  assert.equal(addHashToURL("/javascripts/pikaday.js"), "/javascripts/pikaday.js");
+  assert.equal(addHashToURL("/javascripts/ace/ace.js"), "/javascripts/ace/ace.js");
+});

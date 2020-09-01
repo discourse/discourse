@@ -53,17 +53,7 @@ export default function loadScript(url, opts) {
   }
 
   if (PublicJsHash && !opts.css) {
-    let pathParts = url.split('/');
-    if (pathParts[1] === 'javascripts') {
-      if (pathParts[2].substring(pathParts[2].length - 3) === '.js') {
-        let fileName = pathParts[2].substr(0, pathParts[2].length - 3);
-        pathParts[2] = fileName + '-' + PublicJsHash + '.js';
-      } else if (pathParts.length > 3) {
-        let dirName = pathParts[2];
-        pathParts[2] = dirName + '-' + PublicJsHash;
-      }
-    }
-    url = pathParts.join('/');
+    url = addHashToURL(url);
   }
 
   // Scripts should always load from CDN
@@ -121,4 +111,22 @@ export default function loadScript(url, opts) {
 
 export function setupPublicJsHash(configPublicJsHash) {
   PublicJsHash = configPublicJsHash;
+}
+
+export function addHashToURL(url) {
+  if (PublicJsHash) {
+    let pathParts = url.split('/');
+    if (pathParts[1] === 'javascripts') {
+      if (pathParts[2].substring(pathParts[2].length - 3) === '.js') {
+        let fileName = pathParts[2].substr(0, pathParts[2].length - 3);
+        pathParts[2] = fileName + '-' + PublicJsHash + '.js';
+      } else if (pathParts.length > 3) {
+        let dirName = pathParts[2];
+        pathParts[2] = dirName + '-' + PublicJsHash;
+      }
+    }
+    return pathParts.join('/');
+  } else {
+    return url;
+  }
 }
