@@ -290,6 +290,34 @@ QUnit.test("update status through advanced search ui", async assert => {
   );
 });
 
+QUnit.test(
+  "doesn't update status filter header if wrong value entered through searchbox",
+  async assert => {
+    const statusSelector = selectKit(
+      ".search-advanced-options .select-kit#status"
+    );
+
+    await visit("/search");
+
+    await fillIn(".search-query", "status:none");
+
+    assert.equal(statusSelector.header().label(), "any", 'has "any" populated');
+  }
+);
+
+QUnit.test(
+  "doesn't update in filter header if wrong value entered through searchbox",
+  async assert => {
+    const inSelector = selectKit(".search-advanced-options .select-kit#in");
+
+    await visit("/search");
+
+    await fillIn(".search-query", "in:none");
+
+    assert.equal(inSelector.header().label(), "any", 'has "any" populated');
+  }
+);
+
 QUnit.test("update post time through advanced search ui", async assert => {
   await visit("/search?expanded=true&q=after:2018-08-22");
 
