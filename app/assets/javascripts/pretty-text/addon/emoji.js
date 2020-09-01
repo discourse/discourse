@@ -215,7 +215,11 @@ export function emojiSearch(term, options) {
 
   toSearch =
     toSearch ||
-    _.union(_.keys(emojiHash), _.keys(extendedEmoji), _.keys(aliasHash)).sort();
+    [
+      ...Object.keys(emojiHash),
+      ...Object.keys(extendedEmoji),
+      ...Object.keys(aliasHash)
+    ].sort();
 
   const results = [];
 

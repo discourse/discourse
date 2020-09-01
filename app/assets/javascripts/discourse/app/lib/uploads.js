@@ -140,7 +140,7 @@ function imagesExtensions(staff, siteSettings) {
     const staffExts = staffExtensions(siteSettings).filter(ext =>
       IMAGES_EXTENSIONS_REGEX.test(ext)
     );
-    exts = _.union(exts, staffExts);
+    exts = exts.concat(staffExts);
   }
   return exts;
 }
