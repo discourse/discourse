@@ -429,19 +429,19 @@ const TopicTrackingState = EmberObject.extend({
     const subcategoryIds = this.getSubCategoryIds(categoryId);
     const mutedCategoryIds =
       this.currentUser && this.currentUser.muted_category_ids;
-    return _.chain(this.states)
-      .filter(type === "new" ? isNew : isUnread)
-      .filter(
-        topic =>
-          topic.archetype !== "private_message" &&
-          !topic.deleted &&
-          (!categoryId || subcategoryIds.has(topic.category_id)) &&
-          (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1)) &&
-          (type !== "new" ||
-            !mutedCategoryIds ||
-            mutedCategoryIds.indexOf(topic.category_id) === -1)
-      )
-      .value().length;
+    let filter = type === "new" ? isNew : isUnread;
+
+    return Object.values(this.states).filter(
+      topic =>
+        filter(topic) &&
+        topic.archetype !== "private_message" &&
+        !topic.deleted &&
+        (!categoryId || subcategoryIds.has(topic.category_id)) &&
+        (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1)) &&
+        (type !== "new" ||
+          !mutedCategoryIds ||
+          mutedCategoryIds.indexOf(topic.category_id) === -1)
+    ).length;
   },
 
   countNew(categoryId, tagId) {
