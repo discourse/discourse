@@ -159,10 +159,6 @@ group :test, :development do
 
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
 
-  # TODO determine if we can update this to 0.10, API changes happened
-  # we would like to upgrade it if possible
-  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
-
   gem 'rspec-rails'
 
   gem 'shoulda-matchers', require: false
