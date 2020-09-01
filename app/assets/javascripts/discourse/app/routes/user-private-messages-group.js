@@ -21,7 +21,10 @@ export default createPMRoute("groups", "private-messages-groups").extend({
   },
 
   afterModel(model) {
-    const groupName = _.last(model.get("filter").split("/"));
+    const groupName = model
+      .get("filter")
+      .split("/")
+      .pop();
     this.set("groupName", groupName);
     const group = this.modelFor("user")
       .get("groups")
@@ -31,7 +34,10 @@ export default createPMRoute("groups", "private-messages-groups").extend({
 
   setupController(controller, model) {
     this._super.apply(this, arguments);
-    const group = _.last(model.get("filter").split("/"));
+    const group = model
+      .get("filter")
+      .split("/")
+      .pop();
     this.controllerFor("user-private-messages").set("groupFilter", group);
     this.controllerFor("user-private-messages").set("archive", false);
     this.controllerFor("user-topics-list").subscribe(
