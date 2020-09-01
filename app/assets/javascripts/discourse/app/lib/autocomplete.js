@@ -473,7 +473,7 @@ export default function(options) {
           inputSelectedItems.push("");
         }
 
-        if (_.isString(inputSelectedItems[0]) && me.val().length > 0) {
+        if (typeof inputSelectedItems[0] === "string" && me.val().length > 0) {
           inputSelectedItems.pop();
           inputSelectedItems.push(me.val());
           if (options.onChangeItems) {
