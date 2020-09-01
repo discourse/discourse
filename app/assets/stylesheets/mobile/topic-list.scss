@@ -67,11 +67,11 @@
     flex-wrap: wrap;
     width: 100%;
     .edit-category {
-      .d-icon {
-        margin: 0;
-      }
       @media screen and (max-width: 374px) {
         // Hide edit label on very tiny screens
+        .d-icon {
+          margin: 0;
+        }
         .d-button-label {
           display: none;
         }
