@@ -17,5 +17,6 @@ end
 #
 # Indexes
 #
+#  idx_user_custom_fields_on_holiday             (name,user_id) UNIQUE WHERE ((name)::text = 'on_holiday'::text)
 #  index_user_custom_fields_on_user_id_and_name  (user_id,name)
 #
