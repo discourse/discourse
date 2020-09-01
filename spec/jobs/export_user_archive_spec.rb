@@ -140,7 +140,6 @@ describe Jobs::ExportUserArchive do
 
       _, csv_out = make_component_csv
       expect(csv_out).to match cat2_id.to_s
-      puts csv_out
     end
   end
 
@@ -200,6 +199,8 @@ describe Jobs::ExportUserArchive do
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
     let(:announcements) { Fabricate(:category_with_definition) }
 
+    let(:deleted_category) { Fabricate(:category) }
+
     let(:reset_at) { DateTime.parse('2017-03-01 12:00') }
 
     before do
@@ -216,16 +217,19 @@ describe Jobs::ExportUserArchive do
         #TopicTrackingState.publish_dismiss_new(user.id, category_id)
       end
 
-      # Set Watching First Post on announcements, Tracking on subcategory, nothing on subsubcategory
+      # Set Watching First Post on announcements, Tracking on subcategory, Muted on deleted, nothing on subsubcategory
       CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:watching_first_post], announcements.id)
       CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:tracking], subcategory.id)
+      CategoryUser.set_notification_level_for_category(user, NotificationLevels.all[:muted], deleted_category.id)
+
+      deleted_category.destroy!
     end
 
     it 'correctly exports the CategoryUser table' do
       data, csv_out = make_component_csv
 
       expect(data.find { |r| r['category_id'] == category.id }).to be_nil
-
+      expect(data.length).to eq(4)
       data.sort { |a, b| a['category_id'] <=> b['category_id'] }
 
       expect(data[0][:category_id]).to eq(subcategory.id.to_s)
@@ -241,6 +245,8 @@ describe Jobs::ExportUserArchive do
       expect(data[2][:category_names]).to eq(announcements.name)
       expect(data[2][:notification_level]).to eq('watching_first_post')
       expect(data[2][:dismiss_new_timestamp]).to eq('')
+
+      expect(data[3][:category_names]).to eq(data[3][:category_id])
     end
   end
 

@@ -162,7 +162,7 @@ module Jobs
         .each do |cu|
         yield [
           cu.category_id,
-          piped_category_name(cu.category.id),
+          piped_category_name(cu.category_id),
           NotificationLevels.all[cu.notification_level],
           cu.last_seen_at
         ]
