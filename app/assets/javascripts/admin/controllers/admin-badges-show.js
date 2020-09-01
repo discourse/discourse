@@ -85,8 +85,8 @@ export default Controller.extend(bufferedProperty("model"), {
         ];
 
         if (this.get("buffered.system")) {
-          var protectedFields = this.protectedSystemFields || [];
-          fields = _.filter(fields, f => !protectedFields.includes(f));
+          let protectedFields = this.protectedSystemFields || [];
+          fields = fields.filter(f => !protectedFields.includes(f));
         }
 
         this.set("saving", true);
