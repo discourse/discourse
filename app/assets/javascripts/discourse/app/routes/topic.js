@@ -272,10 +272,10 @@ const TopicRoute = DiscourseRoute.extend({
       this.setupParams(topic, queryParams);
       return topic;
     } else {
-      topic = this.store.createRecord(
-        "topic",
-        _.omit(params, "username_filters", "filter")
-      );
+      let props = Object.assign({}, params);
+      delete props.username_filters;
+      delete props.filter;
+      topic = this.store.createRecord("topic", props);
       return this.setupParams(topic, queryParams);
     }
   },
