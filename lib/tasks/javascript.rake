@@ -188,7 +188,7 @@ task 'javascript:update' do
       system("cd node_modules/highlight.js && yarn install")
 
       puts "Build Highlight.js"
-      system("cd node_modules/highlight.js && node tools/build.js -t cdn none")
+      system("cd node_modules/highlight.js && node tools/build.js -t cdn")
 
       puts "Cleanup unused styles folder"
       system("rm -rf node_modules/highlight.js/build/styles")
