@@ -328,7 +328,6 @@ module Discourse
         file.write <<~EOF
           .font-#{font[:key].tr("_", "-")} {
             --font-family: #{font[:name]};
-            font-family: #{font[:name]};
           }
         EOF
 
