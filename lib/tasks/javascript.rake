@@ -193,8 +193,6 @@ task 'javascript:update' do
       puts "Cleanup unused styles folder"
       system("rm -rf node_modules/highlight.js/build/styles")
 
-      langs_dir = 'vendor/assets/javascripts/highlightjs/languages/*.min.js'
-
       # We don't need every language for tests
       langs = ['javascript', 'sql', 'ruby']
       test_bundle_dest = 'vendor/assets/javascripts/highlightjs/highlight-test-bundle.min.js'
