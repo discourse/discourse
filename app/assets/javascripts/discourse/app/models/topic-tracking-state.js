@@ -5,6 +5,7 @@ import discourseComputed, { on } from "discourse-common/utils/decorators";
 import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
+import { deepEqual } from "discourse-common/lib/object";
 
 function isNew(topic) {
   return (
@@ -115,7 +116,7 @@ const TopicTrackingState = EmberObject.extend({
       if (["new_topic", "unread", "read"].includes(data.message_type)) {
         tracker.notify(data);
         const old = tracker.states["t" + data.topic_id];
-        if (!_.isEqual(old, data.payload)) {
+        if (!deepEqual(old, data.payload)) {
           tracker.states["t" + data.topic_id] = data.payload;
           tracker.notifyPropertyChange("states");
           tracker.incrementMessageCount();
