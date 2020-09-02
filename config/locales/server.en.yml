@@ -2909,11 +2909,17 @@ en:
         ``` text
         %{logs}
         ```
-    user_added_to_group:
-      title: "Added to Group"
-      subject_template: "You have been added as %{membership_level} of the %{group_name} group"
+    user_added_to_group_as_owner:
+      title: "Added to Group as Owner"
+      subject_template: "You have been added as an owner of the %{group_name} group"
       text_body_template: |
-        You have been added as a %{membership_level} of the [%{group_name}](%{base_url}%{group_path}) group.
+        You have been added as an owner of the [%{group_name}](%{base_url}%{group_path}) group.
+
+    user_added_to_group_as_member:
+      title: "Added to Group as Member"
+      subject_template: "You have been added as a member of the %{group_name} group"
+      text_body_template: |
+        You have been added as a member of the [%{group_name}](%{base_url}%{group_path}) group.
 
     csv_export_succeeded:
       title: "CSV Export Succeeded"

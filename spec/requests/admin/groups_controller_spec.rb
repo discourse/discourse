@@ -131,7 +131,10 @@ RSpec.describe Admin::GroupsController do
       }
       expect(response.status).to eq(200)
 
-      topic = Topic.find_by(title: "You have been added as an owner of the #{group.name} group", archetype: "private_message")
+      topic = Topic.find_by(
+        title: I18n.t("system_messages.user_added_to_group_as_owner.subject_template", group_name: group.name),
+        archetype: "private_message"
+      )
       expect(topic.nil?).to eq(true)
     end
 
@@ -144,7 +147,10 @@ RSpec.describe Admin::GroupsController do
       }
       expect(response.status).to eq(200)
 
-      topic = Topic.find_by(title: "You have been added as an owner of the #{group.name} group", archetype: "private_message")
+      topic = Topic.find_by(
+        title: I18n.t("system_messages.user_added_to_group_as_owner.subject_template", group_name: group.name),
+        archetype: "private_message"
+      )
       expect(topic.nil?).to eq(false)
       expect(topic.topic_users.map(&:user_id)).to include(-1, user.id)
     end
