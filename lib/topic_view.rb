@@ -56,7 +56,7 @@ class TopicView
     @user = user
     @guardian = Guardian.new(@user)
 
-    check_and_raise_exceptions
+    check_and_raise_exceptions(options[:skip_staff_action])
 
     @message_bus_last_id = MessageBus.last_id("/topic/#{@topic.id}")
     @print = options[:print].present?
@@ -783,7 +783,7 @@ class TopicView
 
   end
 
-  def check_and_raise_exceptions
+  def check_and_raise_exceptions(skip_staff_action)
     raise Discourse::NotFound if @topic.blank?
     # Special case: If the topic is private and the user isn't logged in, ask them
     # to log in!
@@ -793,7 +793,7 @@ class TopicView
     # can user see this topic?
     raise Discourse::InvalidAccess.new("can't see #{@topic}", @topic) unless @guardian.can_see?(@topic)
     # log personal message views
-    if SiteSetting.log_personal_messages_views && @topic.present? && @topic.private_message? && @topic.all_allowed_users.where(id: @user.id).blank?
+    if SiteSetting.log_personal_messages_views && !skip_staff_action && @topic.present? && @topic.private_message? && @topic.all_allowed_users.where(id: @user.id).blank?
       unless UserHistory.where(acting_user_id: @user.id, action: UserHistory.actions[:check_personal_message], topic_id: @topic.id).where("created_at > ?", 1.hour.ago).exists?
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end

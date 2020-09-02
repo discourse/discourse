@@ -57,10 +57,11 @@ class PostDestroyer
     payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
     topic = @post.topic
     is_first_post = @post.is_first_post? && topic
+    has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic).exists?
 
-    if is_first_post
-      topic_view = TopicView.new(topic.id, Discourse.system_user)
-      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer) if WebHook.active_web_hooks(:topic).exists?
+    if has_topic_web_hooks
+      topic_view = TopicView.new(topic.id, Discourse.system_user, skip_staff_action: true)
+      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
     end
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
@@ -80,7 +81,7 @@ class PostDestroyer
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
       UserActionManager.topic_destroyed(topic)
       DiscourseEvent.trigger(:topic_destroyed, topic, @user)
-      WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload)
+      WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload) if has_topic_web_hooks
     end
   end
 
