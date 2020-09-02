@@ -40,6 +40,32 @@ module Stylesheet
         end
       end
 
+      register_import "fonts" do
+        contents = +""
+
+        DiscourseFonts.fonts.each do |font|
+          if font[:variants].present?
+            font[:variants].each do |variant|
+              contents << <<~EOF
+                @font-face {
+                  font-family: #{font[:name]};
+                  src: asset-url("/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}") format("#{variant[:format]}");
+                  font-weight: #{variant[:weight]};
+                }
+              EOF
+            end
+          end
+
+          contents << <<~EOF
+            .font-#{font[:key].tr("_", "-")} {
+              --font-family: #{font[:name]};
+            }
+          EOF
+        end
+
+        Import.new("fonts.scss", source: contents)
+      end
+
       register_import "plugins_variables" do
         import_files(DiscoursePluginRegistry.sass_variables)
       end
