@@ -11,6 +11,7 @@ import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import { inject as service } from "@ember/service";
+import { deepEqual } from "discourse-common/lib/object";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
@@ -39,7 +40,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
         cachedList &&
         cachedList.get("filter") === filter &&
         (cachedList.get("topics.length") || 0) > cachedList.get("per_page") &&
-        _.isEqual(cachedList.get("listParams"), filterParams)
+        deepEqual(cachedList.get("listParams"), filterParams)
       ) {
         cachedList.set("loaded", true);
 
