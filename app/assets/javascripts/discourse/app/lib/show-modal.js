@@ -1,9 +1,11 @@
 import I18n from "I18n";
 import { dasherize } from "@ember/string";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default function(name, opts) {
   opts = opts || {};
-  const container = Discourse.__container__;
+
+  let container = getOwner(this);
 
   // We use the container here because modals are like singletons
   // in Discourse. Only one can be shown with a particular state.

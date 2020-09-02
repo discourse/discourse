@@ -16,7 +16,7 @@ QUnit.test("As an admin", async assert => {
   await visit("/g/discourse/manage/tags");
 
   assert.ok(
-    find(".groups-notifications-form .tag-chooser").length === 4,
+    find(".groups-notifications-form .tag-chooser").length === 5,
     "it should display tag inputs"
   );
 });
@@ -27,7 +27,7 @@ QUnit.test("As a group owner", async assert => {
   await visit("/g/discourse/manage/tags");
 
   assert.ok(
-    find(".groups-notifications-form .tag-chooser").length === 4,
+    find(".groups-notifications-form .tag-chooser").length === 5,
     "it should display tag inputs"
   );
 });

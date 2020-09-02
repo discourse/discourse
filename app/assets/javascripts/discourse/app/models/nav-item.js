@@ -8,6 +8,7 @@ import { reads } from "@ember/object/computed";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -182,7 +183,7 @@ NavItem.reopenClass({
       _.merge(args, cb.call(this, filterType, opts))
     );
 
-    const store = Discourse.__container__.lookup("service:store");
+    let store = getOwner(this).lookup("service:store");
     return store.createRecord("nav-item", args);
   },
 
@@ -198,7 +199,7 @@ NavItem.reopenClass({
         since: "2.6.0",
         dropFrom: "2.7.0"
       });
-      args.siteSettings = Discourse.SiteSettings;
+      args.siteSettings = getOwner(this).lookup("site-settings:main");
     }
     let items = args.siteSettings.top_menu.split("|");
 

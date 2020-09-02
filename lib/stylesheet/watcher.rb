@@ -68,11 +68,9 @@ module Stylesheet
                 end
 
                 target = nil
-                if !plugin_name
-                  target_match = long.match(/admin|desktop|mobile|publish/)
-                  if target_match&.length
-                    target = target_match[0]
-                  end
+                target_match = long.match(/admin|desktop|mobile|publish/)
+                if target_match&.length
+                  target = target_match[0]
                 end
 
                 {
@@ -106,11 +104,14 @@ module Stylesheet
       MessageBus.publish '/file-change', message
     end
 
-    def plugin_assets_refresh(plugin_name)
+    def plugin_assets_refresh(plugin_name, target)
       Stylesheet::Manager.clear_plugin_cache!(plugin_name)
-      targets = [plugin_name]
-      targets.push("#{plugin_name}_mobile") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :mobile)
-      targets.push("#{plugin_name}_desktop") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :desktop)
+      targets = []
+      if target.present?
+        targets.push("#{plugin_name}_#{target.to_s}") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, target.to_sym)
+      else
+        targets.push(plugin_name)
+      end
       message = targets.map! do |name|
         msgs = []
         active_themes.each do |theme_id|
@@ -129,7 +130,7 @@ module Stylesheet
       end
 
       if path[:plugin_name]
-        plugin_assets_refresh(path[:plugin_name])
+        plugin_assets_refresh(path[:plugin_name], path[:target])
       else
         core_assets_refresh(path[:target])
       end

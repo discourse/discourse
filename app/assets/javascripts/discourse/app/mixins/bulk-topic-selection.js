@@ -21,7 +21,7 @@ export default Mixin.create({
       this.selected.clear();
     },
 
-    dismissRead(operationType, categoryOptions) {
+    dismissRead(operationType, options) {
       let operation;
       if (operationType === "posts") {
         operation = { type: "dismiss_posts" };
@@ -36,12 +36,7 @@ export default Mixin.create({
       if (this.selected.length > 0) {
         promise = Topic.bulkOperation(this.selected, operation);
       } else {
-        promise = Topic.bulkOperationByFilter(
-          "unread",
-          operation,
-          this.get("category.id"),
-          categoryOptions
-        );
+        promise = Topic.bulkOperationByFilter("unread", operation, options);
       }
 
       promise.then(result => {

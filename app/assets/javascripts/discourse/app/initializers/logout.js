@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import logout from "discourse/lib/logout";
+import bootbox from "bootbox";
 
 let _showingLogout = false;
 

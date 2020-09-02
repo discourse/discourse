@@ -1866,20 +1866,7 @@ ro:
         delete_topic_disallowed: "nu ai permisiuni suficiente pentru a șterge această discuție"
         delete_topic: "șterge subiectul"
       actions:
-        flag: "Marchează cu marcaj de avertizare"
-        undo:
-          off_topic: "Retrage marcaj de avertizare"
-          spam: "Retrage marcaj de avertizare"
-          inappropriate: "Retrage marcaj de avertizare"
-          bookmark: "Șterge semn de carte"
-          like: "Retrage apreciere"
         people:
-          off_topic: "marcat cu marcaj de avertizare \"în afara subiectului\""
-          spam: "marcat cu marcaj de avertizare \"spam\""
-          inappropriate: "marcat cu marcaj de avertizare \"inadecvat\""
-          notify_moderators: "moderatori notificați"
-          notify_user: "a trimis un mesaj"
-          bookmark: "a pus semn de carte la asta"
           like_capped:
             one: "și %{count} altul au apreciat asta"
             few: "și %{count} alții au apreciat asta"
@@ -1890,8 +1877,6 @@ ro:
           inappropriate: "Ai marcat asta cu mesaj de avertizare, ca fiind inadecvat"
           notify_moderators: "Ai marcat asta cu mesaj de avertizare, pentru moderare"
           notify_user: "Ai trimis un mesaj către acest utilizator"
-          bookmark: "Ai marcat ca semn de carte această postare"
-          like: "Ai apreciat"
       delete:
         confirm:
           one: "Ești sigur că vrei să ștergi aca postare?"
@@ -2366,14 +2351,6 @@ ro:
           latest: "Nu există subiecte recente."
           bookmarks: "Nu există încă subiecte cu semn de carte."
           top: "Nu există încă subiecte de top."
-        bottom:
-          latest: "Nu mai există alte subiecte recente."
-          posted: "Nu mai există alte subiecte postate."
-          read: "Nu mai exisă subiecte citite."
-          new: "Nu mai există alte subiecte noi."
-          unread: "Nu mai există subiecte necitite."
-          top: "Nu mai există subiecte de top."
-          bookmarks: "Nu mai există subiecte cu semn de carte."
     invite:
       custom_message_placeholder: "Introdu mesajul tău personalizat"
       custom_message_template_forum: "Salutare! Ar trebui să te alături acestui forum!"

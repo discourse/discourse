@@ -40,7 +40,7 @@ zh_CN:
   topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
-  powered_by_html: '采用 <a href="https://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳体验'
+  powered_by_html: '由 <a href="https://www.discourse.org">Discourse</a>提供支持，启用 JavaScript 以获得最佳体验'
   sign_up: "注册"
   log_in: "登录"
   submit: "提交"
@@ -60,7 +60,7 @@ zh_CN:
       about_json: "导入错误：about.json不存在或无效。你确定这是一个Discourse主题码？"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 的修改包含无效值：%{errors}"
-      git: "克隆 git 储存库时出错，访问被拒绝或找不到存储库"
+      git: "克隆git仓库时出错，访问被拒绝或找不到仓库"
       unpack_failed: "无法解压缩文件"
       file_too_big: "未压缩的文件太大。"
       unknown_file_type: "你上传的文件似乎不是一个有效的 Discourse 主题。"
@@ -124,7 +124,7 @@ zh_CN:
     messages:
       too_long_validation: "最多只能有 %{max} 个字；你已经输入了 %{length} 个字。"
       invalid_boolean: "无效布尔值。"
-      taken: "不能和已有的%{attribute}重复"
+      taken: "已经被采用"
       accepted: 必须被接受
       blank: 不能为空
       present: 必须为空
@@ -135,7 +135,7 @@ zh_CN:
       exclusion: 被保留
       greater_than: 必须大于 %{count}
       greater_than_or_equal_to: 必须大于或等于 %{count}
-      has_already_been_used: "不能和其他%{attribute}重复"
+      has_already_been_used: "已经被使用"
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
@@ -179,6 +179,7 @@ zh_CN:
       s3_bucket_reused: "你不可以将同一个 bucket 同时用作 ‘s3_upload_bucket’ 和 ‘s3_backup_bucket’。请选择一个不同的 bucket 或为每个 bucket 使用不同的路径。"
       secure_media_requirements: "在启用安全媒体之前，必须先启用S3上传。"
       share_quote_facebook_requirements: "你必须设置一个Facebook app id 才能启用Facebook的引用分享功能。"
+      second_factor_cannot_enforce_with_socials: "你不能在启用社交登录时强制启用双重认证。你必须先禁用以下登录方式：%{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录则无法强制启用2FA。"
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制启用2FA则不能禁用本地登录。在禁用本地登录之前，请禁用强制启用2FA。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "你无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
@@ -269,6 +270,10 @@ zh_CN:
   no_mentions_allowed_newuser: "抱歉，新用户不能@其它用户。"
   too_many_mentions_newuser:
     other: "抱歉，新用户在一个帖子中最多能@ %{count} 位用户。"
+  no_embedded_media_allowed_trust: "抱歉，你不能在帖子中嵌入媒体项目。"
+  no_embedded_media_allowed: "抱歉，新用户不能在帖子中嵌入媒体项目。"
+  too_many_embedded_media:
+    other: "抱歉，新用户只能在帖子中嵌入%{count}个媒体项目。"
   no_attachments_allowed: "抱歉，新用户不能在帖子中上传附件。"
   too_many_attachments:
     other: "抱歉，新用户在一个帖子中仅能上传 %{count} 个附件。"
@@ -353,6 +358,7 @@ zh_CN:
       email_already_used_in_category: "“%{email}”已经被分类“%{category_name}”使用了。"
       cant_allow_membership_requests: "对没有拥有者的群组，你无法批准成员请求。"
       already_requested_membership: "你已请求成为该群组的成员。"
+      adding_too_many_users: "最多可以同时添加 %{limit} 个用户"
     default_names:
       everyone: "任何人"
       admins: "管理员"
@@ -369,7 +375,6 @@ zh_CN:
       title: "你已接受加入@%{group_name}"
       body: |
         你要加入@%{group_name}的请求已被允许，现在你是其中一员了。
-    view_hidden_topic_request_reason: "我希望加入群组 “%{group_name}” 以访问[此主题](%{topic_url})"
   education:
     until_posts:
       other: "%{count} 个帖子"
@@ -459,6 +464,7 @@ zh_CN:
               reply_by_email_disabled: "用邮件回复已被禁止"
               target_user_not_found: "未找到你要向其发送此消息的其中一个用户"
               unable_to_update: "更新该主题时发生错误。"
+              unable_to_tag: "给主题设置标签时发生错误。"
             featured_link:
               invalid: "不合法。URL 应包括 http:// 或 https://。"
               invalid_category: "无法编辑该分类。"
@@ -775,7 +781,7 @@ zh_CN:
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
       long_form: "标记为不当内容"
     notify_user:
-      title: "给 @%{username}发送一条私信"
+      title: "给@%{username}发送一条私信"
       description: "我想亲自与此人私下交流关于该帖子的事情。"
       short_description: "我想亲自与此人私下交流关于该帖子的事情。"
       long_form: "以发送私信给用户"
@@ -1346,6 +1352,9 @@ zh_CN:
     logo_small: "出现在你站点左上角的小号的商标图像，滚动后可见。使用方形120×120的图像。如果留空，将显示一个主页图标。"
     digest_logo: "邮件摘要顶部所使用的备用商标图像。使用宽矩形的图像。不要使用SVG图像。 如果留空，将使用`logo`设置中的图像。"
     mobile_logo: "网站的移动版本上使用的商标。使用高120且宽高比大于3:1的宽矩形图像。 如果留空，将使用`logo`设置中的图像。"
+    logo_dark: "用于深色模式的“logo\"站点设置。"
+    logo_small_dark: "用于深色模式的“logo small\"站点设置。"
+    mobile_logo_dark: "用于深色模式的“mobile logo\"站点设置。"
     large_icon: "用作其他元数据图标的基础的图像。 理想情况下应大于512 x 512。如果留空，将使用logo_small。"
     manifest_icon: "用作Android图标的图像。会被自动调整为512×512。如果留空，将使用large_icon。"
     favicon: "你的站点图标（favicon），参考<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是png图片。会被调整为32x32。如果留空，将使用large_icon。"
@@ -1402,11 +1411,12 @@ zh_CN:
     ga_universal_auto_link_domains: "启用Google Universal Analytics（analytics.js）跨域跟踪。 这些域的传出链接将添加客户端ID。请参阅<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google的跨域跟踪指南。</a>"
     gtm_container_id: "Google Tag Manager的容器id。例如：GTM-ABCDEF。<br/>注意：由GTM加载的第三方脚本需要被添加到“content security policy script src”列表。"
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "允许版主创建新的分类"
+    moderators_manage_categories_and_groups: "允许版主管理分类和群组"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
     use_admin_ip_allowlist: "当使用的IP地址在已屏蔽IP列表（管理>日志>已屏蔽的IP）中时，只有管理员能够登录。"
     blocked_ip_blocks: "不应被Discourse爬取的私有IP屏蔽列表"
     allowed_internal_hosts: "可以安全地进行onebox或其它用途的爬取的内网主机列表"
+    allowed_onebox_iframes: "允许通过Onebox嵌入的iframe源域名。`*`会允许所有默认的Onebox引擎。"
     allowed_iframes: "可以令 Discourse 在主题中安全地发布的 iframe src 域名前缀列表"
     allowed_crawler_user_agents: "允许访问本站点的Web爬虫用户代理。警告！设置后将屏蔽所有不在此列表中的爬虫！"
     blocked_crawler_user_agents: "用于识别不被允许访问本站点的用户代理的字符（不区分大小且独特的）。如果定义了允许列表，则无效。"
@@ -1612,8 +1622,12 @@ zh_CN:
     min_trust_to_send_messages: "创建新个人消息所需的最低信任级别。"
     min_trust_to_flag_posts: "标记帖子所需的最低信任级别"
     min_trust_to_post_links: "在帖子中包含链接所需的最低信任级别"
+    min_trust_to_post_embedded_media: "在帖子中嵌入媒体项目所需的最低信任等级"
+    min_trust_level_to_allow_profile_background: "上传用户资料背景所需的最低信任等级"
+    min_trust_level_to_allow_user_card_background: "上传用户卡片背景所需的最低信任等级"
     allowed_link_domains: "即使用户没有发布链接的信任等级也被视为链接的域名。"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
+    newuser_max_embedded_media: "新用户能够在帖子中嵌入多少个媒体项目。"
     newuser_max_attachments: "一个新用户可以添加到一个帖子里的附件数量。"
     newuser_max_mentions_per_post: "一个访问者可以在一个帖子里使用 @name 提及的最大数量。"
     newuser_max_replies_per_topic: "直至有人回复他们前，新用户在一个帖子里的最大回复数量。"
@@ -1635,6 +1649,8 @@ zh_CN:
     desktop_category_page_style: "/categories 页面的视觉样式。"
     category_colors: "设置分类颜色的十六进制色彩值列表。"
     category_style: "分类图标的视觉样式。"
+    default_dark_mode_color_scheme_id: "在黑暗模式下使用的配色方案。"
+    dark_mode_none: "无"
     max_image_size_kb: "以kB为单位的上传图像最大尺寸。必须同样在nginx（client_max_body_size）/ apache或代理中配置。大于或小于client_max_body_size的图片将被在上传时调整至适当的大小。"
     max_attachment_size_kb: "允许用户上传的最大文件大小（单位：KB）——同时在 nginx（client_max_body_size），apache 或代理中配置他们。"
     authorized_extensions: "允许上传文件的扩展名列表（'*' 表示允许所有文件类型）"
@@ -1860,8 +1876,8 @@ zh_CN:
     new_user_notice_tl: "查看新用户发帖通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回归用户发帖通知所需的最低信任级别。"
     returning_users_days: "在用户被认为回归之前应该经过多少天。"
-    enable_page_publishing: "允许工作人员以新的链接和自定义样式出版主题。"
-    show_published_pages_login_required: "匿名用户可以不经过登录查看发布的页面。"
+    enable_page_publishing: "允许工作人员使用自定义样式主题将主题发布到新的链接。"
+    show_published_pages_login_required: "即使要求登录，匿名用户也可以查看公开的页面。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "在摘要邮件中默认包含新用户帖子。用户可以自行在参数设置中更改这个设置。"
     default_email_level: "设置常规主题的默认电子邮件通知级别。"
@@ -1878,12 +1894,14 @@ zh_CN:
     default_other_enable_quoting: "默认在高亮选择文字时启用引用回复"
     default_other_enable_defer: "默认启用延迟主题功能"
     default_other_dynamic_favicon: "默认在浏览器图标上显示新/更新的主题数量"
+    default_other_skip_new_user_tips: "跳过新用户的流程提示和徽章。"
     default_other_like_notification_frequency: "默认通知用户赞的私信"
     default_topics_automatic_unpin: "默认时当用户到达底部时自动解除主题置顶。"
     default_categories_watching: "默认监看的分类列表。"
     default_categories_tracking: "默认跟踪的分类列表。"
     default_categories_muted: "默认静音的分类列表"
     default_categories_watching_first_post: "默认关注该分类中每个新主题的第一个帖子"
+    default_categories_regular: "默认为非静音状态的分类列表。作用于站点设置`mute_all_categories_by_default`被启用的时候。"
     mute_all_categories_by_default: "将所有分类的默认通知级别设置为静音。要求用户选择在“最新”和“分类”页面中出现的分类。如果您希望修改匿名用户的默认设置，请设置 'default_categories_'。"
     default_tags_watching: "默认监看的标签列表。"
     default_tags_tracking: "默认追踪的标签列表。"
@@ -1922,6 +1940,7 @@ zh_CN:
     shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "在通知中所使用的图标。推荐使用一个96×96的单色且为透明背景的PNG图像。"
+    base_font: "被用在本站点上大多数地方的字体。可用主题覆盖。"
     short_title: "短标题将用于用户主页、启动器或其他可能空间有限的地方。应该控制在12个字符内。"
     dashboard_hidden_reports: "允许从仪表盘中隐藏指定的报告。"
     dashboard_visible_tabs: "选择可见的仪表盘标签页"
@@ -3183,11 +3202,9 @@ zh_CN:
       title: "确认旧邮箱（添加）"
       subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
       text_body_template: |
-        在我们添加新的电子邮件地址之前，我们需要确认你控制了
-        当前的电子邮件账户。在你完成这一步后，我们会让你确认
-        新的电子邮件地址。
+        在我们添加新的电子邮件地址之前，我们需要确认你掌控当前的电子邮件账户。在你完成这一步后，我们会让你确认新的电子邮件地址。
 
-        点击以下链接，确认你当前的%{site_name}电子邮件地址：
+        点击以下链接，确认你当前在%{site_name}电子邮件地址：
 
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
@@ -3212,7 +3229,7 @@ zh_CN:
         %{new_email}
     signup_after_approval:
       title: "在审批之后注册"
-      subject_template: "你已经被 %{site_name} 批准加入了！"
+      subject_template: "你通过了%{site_name}的审核！"
       text_body_template: |
         欢迎来到%{site_name}！
 
@@ -4098,6 +4115,8 @@ zh_CN:
         - <li><a href='https://meta.discourse.org/t/110448' target='_blank'>主题开发者快速参考指南</a></li>
         - </ul>
         - '热门的主题组件（更多内容请浏览<a href=''https://meta.discourse.org/c/theme/l/latest'' target=''_blank''>#theme</a>）”'
+      fonts:
+        title: "字体"
       logos:
         title: "标志"
         fields:

@@ -115,6 +115,7 @@ fr:
         bounced_email_error: "Le courriel est un rapport de courriel non délivré."
         screened_email_error: "Se produit quand l'adresse courriel de l'expéditeur est déjà sous surveillance."
         unsubscribe_not_allowed: "Se produit lorsque le désabonnement via courriel n'est pas autorisé pour cet utilisateur."
+        email_not_allowed: "Se produit quand l'adresse courriel n'est pas dans la liste autorisée ou est dans la liste des indésirables."
       unrecognized_error: "Erreur non reconnue"
     secure_media_placeholder: "Expurgé : ce site a activé la sécurisation des médias. Visitez le sujet pour visualiser le fichier image/audio/vidéo correspondant."
   errors: &errors
@@ -198,6 +199,7 @@ fr:
     error_message: "Il y a eu une erreur lors de l'acceptation d'une invitation. Merci de contacter l'administrateur du site."
     user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='%{base_path}/u/%{username}/summary'>a déjà un compte</a> !"
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
+    cant_invite_to_group: "Vous n'êtes pas autorisé à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     max_rows: "Les premières %{max_bulk_invites} invitations ont été envoyées. Essayez de diviser le fichier en parties plus petites."
@@ -368,6 +370,7 @@ fr:
       email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
       cant_allow_membership_requests: "Vous ne pouvez pas autoriser les requêtes d'adhésion pour un groupe sans propriétaires."
       already_requested_membership: "Vous avez déjà demandé à adhérer à ce groupe."
+      adding_too_many_users: "Un maximum de %{limit} utilisateurs peuvent être ajoutés à la fois"
     default_names:
       everyone: "tous"
       admins: "administrateurs"
@@ -384,7 +387,6 @@ fr:
       title: "Vous avez été accepté dans @%{group_name}"
       body: |
         Votre demande à rejoindre @%{group_name} a été acceptée et vous êtes désormais un membre.
-    view_hidden_topic_request_reason: "J'aimerais rejoindre le groupe « %{group_name} » afin d'accéder à [ce sujet](%{topic_url})."
   education:
     until_posts:
       one: "%{count} message"
@@ -1438,7 +1440,6 @@ fr:
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Activer Google Universal Analytics (analytics.js) pour le suivi interdomaine. Les liens sortants vers ces domaines auront l'identifiant client ajouté. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Cross-Domain Tracking de Google</a>."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
     allowed_iframes: "Une liste des préfixes du domaine src iframe que Discourse peut autoriser en toute sécurité dans les messages"
     slow_down_crawler_user_agents: "Agents utilisateurs des robots d'indexation qui devraient être limités dans robots.txt avec la commande Crawl-delay"
@@ -1926,6 +1927,7 @@ fr:
     shared_drafts_category: "Activez la fonction Brouillons partagés en désignant une catégorie pour les brouillons de sujet. Les sujets dans cette catégorie ne figureront pas dans les listes de sujets pour les responsables."
     push_notifications_prompt: "Afficher la demande de consentement de l'utilisateur"
     push_notifications_icon: "L'icône du badge qui apparaît dans les notifications. Une image monochrome de taille 96×96 et au format PNG avec transparence est recommandée."
+    base_font: "Police utilisée pour le site. Peut être changée par les thèmes."
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, le lanceur d'applications ou d'autres endroits où la place disponible est limitée. Il devrait être limité à 12 caractères."
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
@@ -4108,6 +4110,8 @@ fr:
         title: "Thème"
       themes_further_reading:
         title: "Thèmes"
+      fonts:
+        title: "Polices"
       logos:
         title: "Logos"
         fields:

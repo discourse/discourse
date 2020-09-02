@@ -8,6 +8,7 @@ class UserOptionSerializer < ApplicationSerializer
              :email_level,
              :email_messages_level,
              :external_links_in_new_tab,
+             :color_scheme_id,
              :dark_scheme_id,
              :dynamic_favicon,
              :enable_quoting,
@@ -30,7 +31,8 @@ class UserOptionSerializer < ApplicationSerializer
              :text_size,
              :text_size_seq,
              :title_count_mode,
-             :timezone
+             :timezone,
+             :skip_new_user_tips
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

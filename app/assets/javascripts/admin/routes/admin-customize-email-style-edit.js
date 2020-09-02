@@ -1,5 +1,7 @@
 import I18n from "I18n";
 import Route from "@ember/routing/route";
+import bootbox from "bootbox";
+
 export default Route.extend({
   model(params) {
     return {

@@ -75,6 +75,7 @@ export default DiscourseRoute.extend(OpenComposer, {
     dismissRead(operationType) {
       const controller = this.controllerFor("discovery/topics");
       controller.send("dismissRead", operationType, {
+        categoryId: controller.get("category.id"),
         includeSubcategories: !controller.noSubcategories
       });
     }

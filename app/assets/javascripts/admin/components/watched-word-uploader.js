@@ -3,6 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
+import bootbox from "bootbox";
 
 export default Component.extend(UploadMixin, {
   type: "txt",

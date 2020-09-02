@@ -1,6 +1,5 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { schedule } from "@ember/runloop";
 import hbs from "discourse/widgets/hbs-compiler";
 
 /*
@@ -157,43 +156,6 @@ export const WidgetDropdownBodyClass = {
     return `widget-dropdown-body ${attrs.class || ""}`;
   },
 
-  init(attrs) {
-    schedule("afterRender", () => {
-      const dropdownHeader = document.querySelector(
-        `#${attrs.id} .widget-dropdown-header`
-      );
-      const dropdownBody = document.querySelector(
-        `#${attrs.id} .widget-dropdown-body`
-      );
-
-      if (dropdownHeader && dropdownBody) {
-        /* global Popper:true */
-        this._popper = Popper.createPopper(dropdownHeader, dropdownBody, {
-          strategy: "fixed",
-          placement: "bottom-start",
-          modifiers: [
-            {
-              name: "preventOverflow"
-            },
-            {
-              name: "offset",
-              options: {
-                offset: [0, 5]
-              }
-            }
-          ]
-        });
-      }
-    });
-  },
-
-  destroy() {
-    if (this._popper) {
-      this._popper.destroy();
-      this._popper = null;
-    }
-  },
-
   clickOutside() {
     this.sendWidgetAction("hideBody");
   },
@@ -266,6 +228,50 @@ export const WidgetDropdownClass = {
       } else {
         this.attrs.onChange(params);
       }
+    }
+  },
+
+  destroy() {
+    if (this._popper) {
+      this._popper.destroy();
+      this._popper = null;
+    }
+  },
+
+  willRerenderWidget() {
+    this._popper && this._popper.destroy();
+  },
+
+  didRenderWidget() {
+    if (this.state.opened) {
+      const dropdownHeader = document.querySelector(
+        `#${this.attrs.id} .widget-dropdown-header`
+      );
+
+      if (!dropdownHeader) return;
+
+      const dropdownBody = document.querySelector(
+        `#${this.attrs.id} .widget-dropdown-body`
+      );
+
+      if (!dropdownBody) return;
+
+      /* global Popper:true */
+      this._popper = Popper.createPopper(dropdownHeader, dropdownBody, {
+        strategy: "fixed",
+        placement: "bottom-start",
+        modifiers: [
+          {
+            name: "preventOverflow"
+          },
+          {
+            name: "offset",
+            options: {
+              offset: [0, 5]
+            }
+          }
+        ]
+      });
     }
   },
 

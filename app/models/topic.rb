@@ -115,6 +115,8 @@ class Topic < ActiveRecord::Base
         image_upload &&
         SiteSetting.create_thumbnails &&
         image_upload.filesize < SiteSetting.max_image_size_kb.kilobytes &&
+        image_upload.read_attribute(:width) &&
+        image_upload.read_attribute(:height) &&
         enqueue_if_missing &&
         Discourse.redis.set(thumbnail_job_redis_key([]), 1, nx: true, ex: 1.minute)
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id })
@@ -378,6 +380,7 @@ class Topic < ActiveRecord::Base
       self.set_or_create_timer(
         TopicTimer.types[:close],
         self.category.auto_close_hours,
+        by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
         duration: duration
       )
@@ -595,12 +598,14 @@ class Topic < ActiveRecord::Base
         PrettyText.cook(raw[0...MAX_SIMILAR_BODY_LENGTH].strip)
       )
 
-      raw_tsquery = Search.set_tsquery_weight_filter(
-        Search.prepare_data(cooked),
-        'B'
-      )
+      if cooked.present?
+        raw_tsquery = Search.set_tsquery_weight_filter(
+          Search.prepare_data(cooked),
+          'B'
+        )
 
-      tsquery = "#{tsquery} & #{raw_tsquery}"
+        tsquery = "#{tsquery} & #{raw_tsquery}"
+      end
     end
 
     tsquery = Search.to_tsquery(term: tsquery, joiner: "|")

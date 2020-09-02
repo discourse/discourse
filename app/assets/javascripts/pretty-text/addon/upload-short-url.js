@@ -147,10 +147,6 @@ function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
 
           upload.src = url;
 
-          // this is necessary, otherwise because of the src change the
-          // video/audio just doesn't bother loading!
-          upload.parentElement.load();
-
           // set the url and text for the <a> tag within the <video/audio> tag
           const link = upload.parentElement.querySelector("a");
           if (link) {

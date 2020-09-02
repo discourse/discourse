@@ -1,7 +1,7 @@
 import EmailLog from "admin/models/email-log";
 import { setPrefix } from "discourse-common/lib/get-url";
 
-QUnit.module("Discourse.EmailLog");
+QUnit.module("model:email-log");
 
 QUnit.test("create", assert => {
   assert.ok(EmailLog.create(), "it can be created without arguments");

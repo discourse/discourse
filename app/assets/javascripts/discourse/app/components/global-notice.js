@@ -1,9 +1,10 @@
 import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import { bind, cancel } from "@ember/runloop";
 import Component from "@ember/component";
 import LogsNotice from "discourse/services/logs-notice";
 import EmberObject, { computed } from "@ember/object";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 const _pluginNotices = [];
 
@@ -67,8 +68,8 @@ export default Component.extend({
     function() {
       let notices = [];
 
-      if ($.cookie("dosp") === "1") {
-        $.removeCookie("dosp", { path: "/" });
+      if (cookie("dosp") === "1") {
+        removeCookie("dosp", { path: "/" });
         notices.push(
           Notice.create({
             text: I18n.t("forced_anonymous"),
@@ -197,22 +198,16 @@ export default Component.extend({
   },
 
   _setupObservers() {
-    this._boundLogsNoticeHandler = bind(this, this._handleLogsNoticeUpdate);
-    LogsNotice.current().addObserver("hidden", this._boundLogsNoticeHandler);
-    LogsNotice.current().addObserver("text", this._boundLogsNoticeHandler);
+    LogsNotice.current().addObserver("hidden", this._handleLogsNoticeUpdate);
+    LogsNotice.current().addObserver("text", this._handleLogsNoticeUpdate);
   },
 
   _tearDownObservers() {
-    if (this._boundLogsNoticeHandler) {
-      LogsNotice.current().removeObserver("text", this._boundLogsNoticeHandler);
-      LogsNotice.current().removeObserver(
-        "hidden",
-        this._boundLogsNoticeHandler
-      );
-      cancel(this._boundLogsNoticeHandler);
-    }
+    LogsNotice.current().removeObserver("text", this._handleLogsNoticeUpdate);
+    LogsNotice.current().removeObserver("hidden", this._handleLogsNoticeUpdate);
   },
 
+  @bind
   _handleLogsNoticeUpdate() {
     const logNotice = Notice.create({
       text: LogsNotice.currentProp("message"),

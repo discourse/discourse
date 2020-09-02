@@ -4,6 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Mixin from "@ember/object/mixin";
 import { next } from "@ember/runloop";
 import { Promise } from "rsvp";
+import bootbox from "bootbox";
 
 export default Mixin.create(ModalFunctionality, {
   reason: null,

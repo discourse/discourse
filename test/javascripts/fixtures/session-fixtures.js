@@ -14,6 +14,7 @@ export default {
       site_flagged_posts_count: 1,
       moderator: true,
       staff: true,
+      can_create_group: true,
       title: "co-founder",
       reply_count: 859,
       topic_count: 36,
@@ -29,7 +30,8 @@ export default {
       dismissed_banner_key: null,
       akismet_review_count: 0,
       title_count_mode: "notifications",
-      timezone: "Australia/Brisbane"
+      timezone: "Australia/Brisbane",
+      skip_new_user_tips: false
     }
   }
 };

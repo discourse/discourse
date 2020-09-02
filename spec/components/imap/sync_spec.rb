@@ -100,6 +100,28 @@ describe Imap::Sync do
       expect(incoming_email.imap_group_id).to eq(group.id)
     end
 
+    context "when tagging not enabled" do
+      before do
+        SiteSetting.tagging_enabled = false
+        SiteSetting.allow_staff_to_tag_pms = false
+      end
+
+      it "creates a topic from an incoming email but with no tags added" do
+        expect { sync_handler.process }
+          .to change { Topic.count }.by(1)
+          .and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+          .and change { IncomingEmail.count }.by(1)
+
+        expect(group.imap_uid_validity).to eq(1)
+        expect(group.imap_last_uid).to eq(100)
+
+        topic = Topic.last
+        expect(topic.title).to eq(subject)
+        expect(topic.user.email).to eq(from)
+        expect(topic.tags).to eq([])
+      end
+    end
+
     it 'does not duplicate topics' do
       expect { sync_handler.process }
         .to change { Topic.count }.by(1)
@@ -451,7 +473,7 @@ describe Imap::Sync do
       it "does not archive email if not archived in discourse, it unarchives it instead" do
         @incoming_email.update(imap_sync: true)
         provider.stubs(:store).with(100, 'FLAGS', anything, anything)
-        provider.stubs(:store).with(100, 'LABELS', ["\\Inbox"], ["seen", "\\Inbox"])
+        provider.stubs(:store).with(100, 'LABELS', ["\\Inbox"], ["\\Inbox", "seen"])
 
         provider.expects(:archive).with(100).never
         provider.expects(:unarchive).with(100)

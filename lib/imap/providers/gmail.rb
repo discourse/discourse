@@ -77,7 +77,7 @@ module Imap
           new_labels = labels.reject { |l| l == "\\Inbox" }
           store(email["UID"], "LABELS", labels, new_labels)
         end
-        Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) archived in Gmail mailbox for #{@username}")
+        ImapSyncLog.log("Thread ID #{thread_id} (UID #{uid}) archived in Gmail mailbox for #{@username}", :debug)
       end
 
       # Though Gmail considers the email thread unarchived if the first email
@@ -94,7 +94,7 @@ module Imap
           end
           store(email["UID"], "LABELS", labels, new_labels)
         end
-        Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) unarchived in Gmail mailbox for #{@username}")
+        ImapSyncLog.log("Thread ID #{thread_id} (UID #{uid}) unarchived in Gmail mailbox for #{@username}", :debug)
       end
 
       def thread_id_from_uid(uid)
@@ -116,7 +116,7 @@ module Imap
         email_uids_to_trash = emails_in_thread(thread_id).map { |e| e['UID'] }
 
         imap.uid_move(email_uids_to_trash, trash_mailbox)
-        Imap::Sync::Logger.log("[IMAP] Thread ID #{thread_id} (UID #{uid}) trashed in Gmail mailbox for #{@username}")
+        ImapSyncLog.log("Thread ID #{thread_id} (UID #{uid}) trashed in Gmail mailbox for #{@username}", :debug)
         { trash_uid_validity: open_trash_mailbox, email_uids_to_trash: email_uids_to_trash }
       end
 

@@ -57,7 +57,7 @@ class Post < ActiveRecord::Base
 
   validates_with PostValidator, unless: :skip_validation
 
-  after_save :index_search
+  after_commit :index_search
 
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
@@ -304,7 +304,11 @@ class Post < ActiveRecord::Base
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
-          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/#{Upload::SECURE_MEDIA_ROUTE}")
+          raw = raw.sub(
+            url, Rails.application.routes.url_for(
+              controller: "uploads", action: "show_secure", path: uri.path[1..-1], host: Discourse.current_hostname
+            )
+          )
         end
       end
     end
@@ -898,7 +902,9 @@ class Post < ActiveRecord::Base
   end
 
   def index_search
-    SearchIndexer.index(self)
+    Scheduler::Defer.later "Index post for search" do
+      SearchIndexer.index(self)
+    end
   end
 
   def locked?

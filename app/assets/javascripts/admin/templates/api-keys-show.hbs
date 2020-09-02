@@ -81,14 +81,14 @@
   {{/admin-form-row}}
 
   {{#if model.api_key_scopes.length}}
-    {{#admin-form-row label="admin.api.scopes.title"}}
-    {{/admin-form-row}}
+    <div class="scopes-title">{{i18n "admin.api.scopes.title"}}</div>
 
     <table class="scopes-table">
       <thead>
         <tr>
           <td>{{i18n "admin.api.scopes.resource"}}</td>
           <td>{{i18n "admin.api.scopes.action"}}</td>
+          <td>{{i18n "admin.api.scopes.allowed_urls"}}</td>
           <td>{{i18n "admin.api.scopes.allowed_parameters"}}</td>
         </tr>
       </thead>
@@ -96,7 +96,17 @@
         {{#each model.api_key_scopes as |scope|}}
           <tr>
             <td>{{scope.resource}}</td>
-            <td>{{scope.action}}</td>
+            <td>
+              {{scope.action}}
+              <span
+                class="scope-tooltip"
+                data-tooltip={{i18n (concat "admin.api.scopes.descriptions." scope.resource "." scope.key)}}>
+                {{d-icon "question-circle"}}
+              </span>
+            </td>
+            <td>
+              {{d-button icon="link" action=(action "showURLs" scope.urls) class="btn-info"}}
+            </td>
             <td>
               {{#each scope.parameters as |p|}}
                 <div>

@@ -60,7 +60,7 @@ function initializePolls(api) {
       return;
     }
 
-    let post = helper.getModel();
+    const post = helper.getModel();
     api.preventCloak(post.id);
     post.pollsChanged();
 
@@ -73,25 +73,24 @@ function initializePolls(api) {
       const $poll = $(pollElem);
       const pollName = $poll.data("poll-name");
       let poll = polls[pollName];
+      let pollPost = post;
       let vote = votes[pollName] || [];
 
       const quotedId = $poll.parent(".expanded-quote").data("post-id");
-      if (quotedId) {
-        const quotedPost = post.quoted[quotedId];
-        if (quotedPost) {
-          post = EmberObject.create(quotedPost);
-          poll = EmberObject.create(
-            quotedPost.polls.find(p => p.name === pollName)
-          );
-          vote = quotedPost.polls_votes || {};
-          vote = vote[pollName] || [];
-        }
+      if (quotedId && post.quoted[quotedId]) {
+        pollPost = post.quoted[quotedId];
+        pollPost = EmberObject.create(pollPost);
+        poll = EmberObject.create(
+          pollPost.polls.find(p => p.name === pollName)
+        );
+        vote = pollPost.polls_votes || {};
+        vote = vote[pollName] || [];
       }
 
       if (poll) {
         const attrs = {
-          id: `${pollName}-${post.id}`,
-          post,
+          id: `${pollName}-${pollPost.id}`,
+          post: pollPost,
           poll,
           vote,
           groupableUserFields: (

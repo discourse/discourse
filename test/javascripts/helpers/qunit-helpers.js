@@ -28,6 +28,9 @@ import { mapRoutes } from "discourse/mapping-router";
 import { currentSettings, mergeSettings } from "helpers/site-settings";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
+import { setURLContainer } from "discourse/lib/url";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
+import bootbox from "bootbox";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -95,7 +98,7 @@ function AcceptanceModal(option, _relatedTarget) {
   });
 }
 
-window.bootbox.$body = $("#ember-testing");
+bootbox.$body = $("#ember-testing");
 $.fn.modal = AcceptanceModal;
 
 let _pretenderCallbacks = {};
@@ -164,15 +167,19 @@ export function acceptance(name, options) {
       }
       this.siteSettings = currentSettings();
 
+      clearOutletCache();
+      clearHTMLCache();
+      resetPluginApi();
+
       if (options.site) {
         resetSite(currentSettings(), options.site);
       }
 
-      clearOutletCache();
-      clearHTMLCache();
-      resetPluginApi();
       Discourse.reset();
       this.container = getOwner(this);
+      setURLContainer(this.container);
+      setDefaultOwner(this.container);
+
       if (options.beforeEach) {
         options.beforeEach.call(this);
       }
@@ -201,6 +208,8 @@ export function acceptance(name, options) {
       resetCustomPostMessageCallbacks();
       setTopicList(null);
       _clearSnapshots();
+      setURLContainer(null);
+      setDefaultOwner(null);
       Discourse._runInitializer(
         "instanceInitializers",
         (initName, initializer) => {

@@ -107,6 +107,17 @@ const ColorScheme = EmberObject.extend({
     });
   },
 
+  updateUserSelectable(value) {
+    if (!this.id) return;
+
+    return ajax(`/admin/color_schemes/${this.id}.json`, {
+      data: JSON.stringify({ color_scheme: { user_selectable: value } }),
+      type: "PUT",
+      dataType: "json",
+      contentType: "application/json"
+    });
+  },
+
   destroy() {
     if (this.id) {
       return ajax(`/admin/color_schemes/${this.id}`, { type: "DELETE" });
@@ -129,6 +140,7 @@ ColorScheme.reopenClass({
             theme_id: colorScheme.theme_id,
             theme_name: colorScheme.theme_name,
             base_scheme_id: colorScheme.base_scheme_id,
+            user_selectable: colorScheme.user_selectable,
             colors: colorScheme.colors.map(c => {
               return ColorSchemeColor.create({
                 name: c.name,

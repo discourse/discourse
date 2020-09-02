@@ -63,7 +63,7 @@ export default Component.extend({
         CATEGORY: category ? true : false,
         latestLink: opts.latestLink,
         catLink: opts.catLink,
-        basePath: ""
+        basePath: getURL("")
       });
     } else if (category) {
       return I18n.t("topic.read_more_in_category", opts);

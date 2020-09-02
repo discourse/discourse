@@ -115,13 +115,19 @@ module Stylesheet
 
     register_imports!
 
-    def self.import_color_definitions
-      return "" unless DiscoursePluginRegistry.color_definition_stylesheets.length
+    def self.import_color_definitions(theme_id)
       contents = +""
       DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
         contents << "// Color definitions from #{name}\n\n"
         contents << File.read(path.to_s)
         contents << "\n\n"
+      end
+
+      if theme_id
+        Theme.list_baked_fields([theme_id], :common, :color_definitions).each do |row|
+          contents << "// Color definitions from #{Theme.find_by_id(theme_id)&.name}\n\n"
+          contents << row.value
+        end
       end
       contents
     end

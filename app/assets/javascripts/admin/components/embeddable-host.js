@@ -8,6 +8,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { on, observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
+import bootbox from "bootbox";
 
 export default Component.extend(bufferedProperty("host"), {
   editToggled: false,

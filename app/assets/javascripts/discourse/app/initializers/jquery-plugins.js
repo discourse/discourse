@@ -1,4 +1,5 @@
 import autocomplete from "discourse/lib/autocomplete";
+import bootbox from "bootbox";
 
 export default {
   name: "jquery-plugins",

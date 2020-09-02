@@ -1819,25 +1819,12 @@ sk:
         unlock_post: "Odblokovať príspevok"
         delete_topic: "odstrániť tému"
       actions:
-        flag: "Označ"
-        undo:
-          off_topic: "Zruš označenie"
-          spam: "Zruš označenie"
-          inappropriate: "Zruš označenie"
-          bookmark: "Vrátiť záložku späť"
-          like: "Zruš \"Páči sa\""
-        people:
-          off_topic: "toto je označené ako \"Mimo témy\""
-          spam: "označiť toto ako spam"
-          inappropriate: "toto označ ako nevhodné"
         by_you:
           off_topic: "Označíli ste to ako mimo tému"
           spam: "Označíli ste to ako spam"
           inappropriate: "Označíli ste to ako nevhodné"
           notify_moderators: "Označíli ste to pre moderátora"
           notify_user: "Poslali ste správu používateľovi "
-          bookmark: "Vytvorili ste si záložku na tento príspevok"
-          like: "Páči sa Vám to"
       revisions:
         controls:
           first: "Prvá revízia"
@@ -2267,14 +2254,6 @@ sk:
           latest: "Nie sú žiadne najnovšie témy."
           bookmarks: "Nemáte ešte žiadne témy v záložkách."
           top: "Nie sú žiadne top témy."
-        bottom:
-          latest: "Žiadne ďalšie najnovšie témy."
-          posted: "Žiadne ďalšie témy na čítanie."
-          read: "Žiadne ďalšie prečítané témy."
-          new: "Žiadne ďalšie nové témy."
-          unread: "Žiadne ďalšie neprečítané témy."
-          top: "Žiadne ďalšie top témy."
-          bookmarks: "Žiadne ďalšie zazáložkované témy."
     invite:
       custom_message_placeholder: "Zadajte Vašu vlastnú správu"
     footer_nav:

@@ -25,21 +25,21 @@ function storeMap(type, id, obj) {
 
 function fromMap(type, id) {
   const byType = _identityMap[type];
-  if (byType) {
+  if (byType && byType.hasOwnProperty(id)) {
     return byType[id];
   }
 }
 
 function removeMap(type, id) {
   const byType = _identityMap[type];
-  if (byType) {
+  if (byType && byType.hasOwnProperty(id)) {
     delete byType[id];
   }
 }
 
 function findAndRemoveMap(type, id) {
   const byType = _identityMap[type];
-  if (byType) {
+  if (byType && byType.hasOwnProperty(id)) {
     const result = byType[id];
     delete byType[id];
     return result;

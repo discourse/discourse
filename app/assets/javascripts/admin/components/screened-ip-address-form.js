@@ -2,6 +2,8 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import bootbox from "bootbox";
+
 /**
   A form to create an IP address that will be blocked or allowed.
   Example usage:

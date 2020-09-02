@@ -9,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { url } from "discourse/lib/computed";
+import bootbox from "bootbox";
 
 const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5];
@@ -72,7 +73,7 @@ const Theme = RestModel.extend({
     }
 
     return {
-      common: [...common, "embedded_scss"],
+      common: [...common, "embedded_scss", "color_definitions"],
       desktop: common,
       mobile: common,
       settings: ["yaml"],
@@ -313,7 +314,7 @@ const Theme = RestModel.extend({
           }
         );
         // TODO: Models shouldn't be updating the DOM
-        highlightSyntax(undefined, this.siteSettings);
+        highlightSyntax(undefined, this.siteSettings, this.session);
       } else {
         return this.save({ remote_update: true }).then(() =>
           this.set("changed", false)

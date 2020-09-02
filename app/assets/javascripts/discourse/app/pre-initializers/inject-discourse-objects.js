@@ -71,17 +71,14 @@ export default {
     ALL_TARGETS.forEach(t => app.inject(t, "session", "session:main"));
     app.inject("service", "session", "session:main");
 
+    // TODO: Automatically register this service
     const screenTrack = new ScreenTrack(
       topicTrackingState,
       siteSettings,
       session,
       currentUser
     );
-
-    app.register("screen-track:main", screenTrack, { instantiate: false });
-    ["component", "route"].forEach(t =>
-      app.inject(t, "screenTrack", "screen-track:main")
-    );
+    app.register("service:screen-track", screenTrack, { instantiate: false });
 
     if (currentUser) {
       ["component", "route", "controller", "service"].forEach(t => {

@@ -1,32 +1,36 @@
 import Component from "@ember/component";
-import { bind } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
+import logout from "discourse/lib/logout";
+import I18n from "I18n";
+import { setLogoffCallback } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 
 export default Component.extend({
-  _boundFocusChange: null,
   tagName: "",
   documentTitle: service(),
+  _showingLogout: false,
 
   didInsertElement() {
     this._super(...arguments);
 
     this.documentTitle.setTitle(document.title);
-    this._boundFocusChange = bind(this, this._focusChanged);
-    document.addEventListener("visibilitychange", this._boundFocusChange);
-    document.addEventListener("resume", this._boundFocusChange);
-    document.addEventListener("freeze", this._boundFocusChange);
+    document.addEventListener("visibilitychange", this._focusChanged);
+    document.addEventListener("resume", this._focusChanged);
+    document.addEventListener("freeze", this._focusChanged);
     this.session.hasFocus = true;
 
     this.appEvents.on("notifications:changed", this, this._updateNotifications);
+    setLogoffCallback(() => this.displayLogoff());
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    document.removeEventListener("visibilitychange", this._boundFocusChange);
-    document.removeEventListener("resume", this._boundFocusChange);
-    document.removeEventListener("freeze", this._boundFocusChange);
-    this._boundFocusChange = null;
+    setLogoffCallback(null);
+    document.removeEventListener("visibilitychange", this._focusChanged);
+    document.removeEventListener("resume", this._focusChanged);
+    document.removeEventListener("freeze", this._focusChanged);
 
     this.appEvents.off(
       "notifications:changed",
@@ -46,6 +50,7 @@ export default Component.extend({
     );
   },
 
+  @bind
   _focusChanged() {
     if (document.visibilityState === "hidden") {
       if (this.session.hasFocus) {
@@ -54,5 +59,22 @@ export default Component.extend({
     } else if (!this.hasFocus) {
       this.documentTitle.setFocus(true);
     }
+  },
+
+  displayLogoff() {
+    if (this._showingLogout) {
+      return;
+    }
+
+    this._showingLogout = true;
+    this.messageBus.stop();
+    bootbox.dialog(
+      I18n.t("logout"),
+      { label: I18n.t("refresh"), callback: logout },
+      {
+        onEscape: () => logout(),
+        backdrop: "static"
+      }
+    );
   }
 });

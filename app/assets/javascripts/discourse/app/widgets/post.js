@@ -19,6 +19,7 @@ import hbs from "discourse/widgets/hbs-compiler";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { Promise } from "rsvp";
+import bootbox from "bootbox";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -474,8 +475,7 @@ createWidget("post-notice", {
 
   html(attrs) {
     const user =
-      this.siteSettings.display_name_on_posts &&
-      prioritizeNameInUx(attrs.name, this.siteSettings)
+      this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name)
         ? attrs.name
         : attrs.username;
     let text, icon;

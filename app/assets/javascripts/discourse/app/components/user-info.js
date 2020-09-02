@@ -11,16 +11,12 @@ export default Component.extend({
   classNameBindings: [":user-info", "size"],
   attributeBindings: ["data-username"],
   size: "small",
+  "data-username": alias("user.username"),
 
   @discourseComputed("user.username")
   userPath(username) {
     return userPath(username);
   },
-
-  "data-username": alias("user.username"),
-
-  // TODO: In later ember releases `hasBlock` works without this
-  hasBlock: alias("template"),
 
   @discourseComputed("user.name", "user.username")
   name(name, username) {

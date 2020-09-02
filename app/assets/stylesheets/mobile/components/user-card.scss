@@ -8,7 +8,7 @@ $avatar_width: 120px;
   z-index: z("mobile-composer") + 2;
   max-width: 95vw;
   margin: 0 2.5vw;
-  max-height: 90vh;
+  max-height: 85vh; // 2.5vh margin-top and margin-bottom. 10vh top
   // avatar - names - controls
   .first-row {
     flex-wrap: wrap;

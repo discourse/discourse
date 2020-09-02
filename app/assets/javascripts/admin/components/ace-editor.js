@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import loadScript from "discourse/lib/load-script";
+import getURL from "discourse-common/lib/get-url";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 
@@ -29,6 +30,15 @@ export default Component.extend({
   modeChanged() {
     if (this._editor && !this._skipContentChangeEvent) {
       this._editor.getSession().setMode("ace/mode/" + this.mode);
+    }
+  },
+
+  @observes("placeholder")
+  placeholderChanged() {
+    if (this._editor) {
+      this._editor.setOptions({
+        placeholder: this.placeholder
+      });
     }
   },
 
@@ -71,9 +81,11 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-
-    loadScript("/javascripts/ace/ace.js").then(() => {
+    loadScript("/javascripts/ace/ace.js?v=1.4.12").then(() => {
       window.ace.require(["ace/ace"], loadedAce => {
+        loadedAce.config.set("loadWorkerFromBlob", false);
+        loadedAce.config.set("workerPath", getURL("/javascripts/ace")); // Do not use CDN for workers
+
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
@@ -81,7 +93,7 @@ export default Component.extend({
 
         editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
-        editor.setOptions({ fontSize: "14px" });
+        editor.setOptions({ fontSize: "14px", placeholder: this.placeholder });
         editor.getSession().setMode("ace/mode/" + this.mode);
         editor.on("change", () => {
           this._skipContentChangeEvent = true;

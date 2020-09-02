@@ -63,6 +63,12 @@ nl:
       automatic_close:
         closes_in: "Sluit over <strong>%{timeLeft}</strong>."
         age: "Gesloten: <strong>%{age}</strong>"
+      breakdown:
+        title: "Pollresultaten"
+        votes: "%{count} stemmen"
+        breakdown: "Verdeling"
+        percentage: "Percentage"
+        count: "Aantal"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
       error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van uw stemmen."
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."

@@ -7,6 +7,7 @@ import {
 import getUrl from "discourse-common/lib/get-url";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
+import bootbox from "bootbox";
 
 export default Mixin.create({
   uploading: false,
@@ -106,7 +107,7 @@ export default Mixin.create({
     });
 
     $upload.on("fileuploadfail", (e, data) => {
-      if (!data || data.errorThrown !== "abort") {
+      if (!data) {
         displayErrorForUpload(data, this.siteSettings);
       }
       reset();

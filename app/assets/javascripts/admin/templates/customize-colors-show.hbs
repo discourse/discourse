@@ -22,9 +22,12 @@
         icon="far-clipboard"
         label="admin.customize.copy_to_clipboard"
       }}
+      <span class="saving {{unless model.savingStatus "hidden"}}">{{model.savingStatus}}</span>
       {{#if model.theme_id}}
-        {{i18n "admin.customize.theme_owner"}}
-        {{#link-to "adminCustomizeThemes.show" model.theme_id}}{{model.theme_name}}{{/link-to}}
+        <span class="not-editable">
+          {{i18n "admin.customize.theme_owner"}}
+          {{#link-to "adminCustomizeThemes.show" model.theme_id}}{{model.theme_name}}{{/link-to}}
+        </span>
       {{else}}
         {{d-button
           action=(action "destroy")
@@ -33,27 +36,29 @@
           label="admin.customize.delete"
         }}
       {{/if}}
-      <span class="saving {{unless model.savingStatus "hidden"}}">{{model.savingStatus}}</span>
     </div>
 
     <br>
 
     <div class="admin-controls">
-      <div class="search controls">
-        <label>
-          {{input type="checkbox" checked=onlyOverridden}}
-          {{i18n "admin.settings.show_overriden"}}
-        </label>
-      </div>
+      {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.color_scheme_user_selectable" checked=model.user_selectable}}
     </div>
 
     {{#if colors.length}}
       <table class="table colors">
         <thead>
           <tr>
-            <th></th>
+            <th>
+            </th>
             <th class="hex">{{i18n "admin.customize.color"}}</th>
-            <th></th>
+            <th class="overriden">
+              {{#unless model.theme_id}}
+                <label>
+                  {{input type="checkbox" checked=onlyOverridden}}
+                  {{i18n "admin.settings.show_overriden"}}
+                </label>
+              {{/unless}}
+            </th>
           </tr>
         </thead>
         <tbody>

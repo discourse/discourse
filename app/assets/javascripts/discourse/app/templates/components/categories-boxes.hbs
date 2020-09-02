@@ -17,6 +17,7 @@
         <div class="category-box-heading">
           <a class="parent-box-link" href={{c.url}}>
             <h3>
+              {{category-title-before category=c}}
               {{#if c.read_restricted}}
                 {{d-icon "lock"}}
               {{/if}}

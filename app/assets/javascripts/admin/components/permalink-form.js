@@ -4,6 +4,7 @@ import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import Permalink from "admin/models/permalink";
+import bootbox from "bootbox";
 
 export default Component.extend({
   classNames: ["permalink-form"],

@@ -21,7 +21,14 @@ describe SearchIndexer do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
 
-    SearchIndexer.update_posts_index(post_id, "", "", "", data)
+    SearchIndexer.update_posts_index(
+      post_id: post_id,
+      topic_title: "",
+      category_name: "",
+      topic_tags: "",
+      cooked: data,
+      private_message: false
+    )
 
     post_search_data = PostSearchData.find_by(post_id: post_id)
 
@@ -95,11 +102,27 @@ describe SearchIndexer do
 
   it 'correctly indexes a post according to version' do
     # Preparing so that they can be indexed to right version
-    SearchIndexer.update_posts_index(post_id, "dummy", "", nil, nil)
+    SearchIndexer.update_posts_index(
+      post_id: post_id,
+      topic_title: "dummy",
+      category_name: "",
+      topic_tags: nil,
+      cooked: nil,
+      private_message: false
+    )
+
     PostSearchData.find_by(post_id: post_id).update!(version: -1)
 
     data = "<a>This</a> is a test"
-    SearchIndexer.update_posts_index(post_id, "", "", nil, data)
+
+    SearchIndexer.update_posts_index(
+      post_id: post_id,
+      topic_title: "",
+      category_name: "",
+      topic_tags: nil,
+      cooked: data,
+      private_message: false
+    )
 
     raw_data, locale, version = PostSearchData.where(post_id: post_id).pluck(:raw_data, :locale, :version)[0]
     expect(raw_data).to eq("This is a test")

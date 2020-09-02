@@ -1,4 +1,6 @@
 import I18n from "I18n";
+import bootbox from "bootbox";
+
 export function extractError(error, defaultMessage) {
   if (error instanceof Error) {
     // eslint-disable-next-line no-console

@@ -4,6 +4,7 @@ import { A } from "@ember/array";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { observes } from "discourse-common/utils/decorators";
+import bootbox from "bootbox";
 
 export default Controller.extend(ModalFunctionality, {
   @observes("model")

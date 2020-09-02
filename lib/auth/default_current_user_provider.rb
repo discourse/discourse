@@ -359,6 +359,10 @@ class Auth::DefaultCurrentUserProvider
 
   private
 
+  def parameter_api_patterns
+    PARAMETER_API_PATTERNS + DiscoursePluginRegistry.api_parameter_routes
+  end
+
   # By default we only allow headers for sending API credentials
   # However, in some scenarios it is essential to send them via url parameters
   # so we need to add some exceptions
@@ -369,7 +373,7 @@ class Auth::DefaultCurrentUserProvider
     path_params = @env['action_dispatch.request.path_parameters']
     request_route = "#{path_params[:controller]}##{path_params[:action]}" if path_params
 
-    PARAMETER_API_PATTERNS.any? do |p|
+    parameter_api_patterns.any? do |p|
       (p[:method] == "*" || Array(p[:method]).include?(request_method)) &&
       (p[:format] == "*" || Array(p[:format]).include?(request_format)) &&
       (p[:route] == "*" || Array(p[:route]).include?(request_route))

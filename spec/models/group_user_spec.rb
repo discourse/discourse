@@ -39,6 +39,7 @@ describe GroupUser do
     let(:category2) { Fabricate(:category) }
     let(:category3) { Fabricate(:category) }
     let(:category4) { Fabricate(:category) }
+    let(:category5) { Fabricate(:category) }
 
     def levels
       CategoryUser.notification_levels
@@ -50,16 +51,18 @@ describe GroupUser do
 
     it "adds new category notifications" do
       group.muted_category_ids = [category1.id]
-      group.tracking_category_ids = [category2.id]
-      group.watching_category_ids = [category3.id]
-      group.watching_first_post_category_ids = [category4.id]
+      group.regular_category_ids = [category2.id]
+      group.tracking_category_ids = [category3.id]
+      group.watching_category_ids = [category4.id]
+      group.watching_first_post_category_ids = [category5.id]
       group.save!
-      expect { group.add(user) }.to change { CategoryUser.count }.by(4)
+      expect { group.add(user) }.to change { CategoryUser.count }.by(5)
       h = CategoryUser.notification_levels_for(Guardian.new(user))
       expect(h[category1.id]).to eq(levels[:muted])
-      expect(h[category2.id]).to eq(levels[:tracking])
-      expect(h[category3.id]).to eq(levels[:watching])
-      expect(h[category4.id]).to eq(levels[:watching_first_post])
+      expect(h[category2.id]).to eq(levels[:regular])
+      expect(h[category3.id]).to eq(levels[:tracking])
+      expect(h[category4.id]).to eq(levels[:watching])
+      expect(h[category5.id]).to eq(levels[:watching_first_post])
     end
 
     it "only upgrades notifications" do
@@ -67,11 +70,12 @@ describe GroupUser do
       CategoryUser.create!(user: user, category_id: category2.id, notification_level: levels[:tracking])
       CategoryUser.create!(user: user, category_id: category3.id, notification_level: levels[:watching_first_post])
       CategoryUser.create!(user: user, category_id: category4.id, notification_level: levels[:watching])
-      group.watching_first_post_category_ids = [category1.id, category2.id, category3.id, category4.id]
+      group.regular_category_ids = [category1.id]
+      group.watching_first_post_category_ids = [category2.id, category3.id, category4.id]
       group.save!
       group.add(user)
       h = CategoryUser.notification_levels_for(Guardian.new(user))
-      expect(h[category1.id]).to eq(levels[:watching_first_post])
+      expect(h[category1.id]).to eq(levels[:regular])
       expect(h[category2.id]).to eq(levels[:watching_first_post])
       expect(h[category3.id]).to eq(levels[:watching_first_post])
       expect(h[category4.id]).to eq(levels[:watching])
@@ -100,6 +104,7 @@ describe GroupUser do
     let(:tag2) { Fabricate(:tag) }
     let(:tag3) { Fabricate(:tag) }
     let(:tag4) { Fabricate(:tag) }
+    let(:tag5) { Fabricate(:tag) }
     let(:synonym1) { Fabricate(:tag, target_tag: tag1) }
 
     def levels
@@ -112,15 +117,17 @@ describe GroupUser do
 
     it "adds new tag notifications" do
       group.muted_tags = [synonym1.name]
-      group.tracking_tags = [tag2.name]
-      group.watching_tags = [tag3.name]
-      group.watching_first_post_tags = [tag4.name]
+      group.regular_tags = [tag2.name]
+      group.tracking_tags = [tag3.name]
+      group.watching_tags = [tag4.name]
+      group.watching_first_post_tags = [tag5.name]
       group.save!
-      expect { group.add(user) }.to change { TagUser.count }.by(4)
+      expect { group.add(user) }.to change { TagUser.count }.by(5)
       expect(TagUser.lookup(user, :muted).pluck(:tag_id)).to eq([tag1.id])
-      expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to eq([tag2.id])
-      expect(TagUser.lookup(user, :watching).pluck(:tag_id)).to eq([tag3.id])
-      expect(TagUser.lookup(user, :watching_first_post).pluck(:tag_id)).to eq([tag4.id])
+      expect(TagUser.lookup(user, :regular).pluck(:tag_id)).to eq([tag2.id])
+      expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to eq([tag3.id])
+      expect(TagUser.lookup(user, :watching).pluck(:tag_id)).to eq([tag4.id])
+      expect(TagUser.lookup(user, :watching_first_post).pluck(:tag_id)).to eq([tag5.id])
     end
 
     it "only upgrades notifications" do
@@ -128,13 +135,15 @@ describe GroupUser do
       TagUser.create!(user: user, tag_id: tag2.id, notification_level: levels[:tracking])
       TagUser.create!(user: user, tag_id: tag3.id, notification_level: levels[:watching_first_post])
       TagUser.create!(user: user, tag_id: tag4.id, notification_level: levels[:watching])
-      group.watching_first_post_tags = [tag1.name, tag2.name, tag3.name, tag4.name]
+      group.regular_tags = [tag1.name]
+      group.watching_first_post_tags = [tag2.name, tag3.name, tag4.name]
       group.save!
       group.add(user)
       expect(TagUser.lookup(user, :muted).pluck(:tag_id)).to be_empty
+      expect(TagUser.lookup(user, :regular).pluck(:tag_id)).to eq([tag1.id])
       expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to be_empty
       expect(TagUser.lookup(user, :watching).pluck(:tag_id)).to eq([tag4.id])
-      expect(TagUser.lookup(user, :watching_first_post).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id, tag3.id)
+      expect(TagUser.lookup(user, :watching_first_post).pluck(:tag_id)).to contain_exactly(tag2.id, tag3.id)
     end
 
     it "merges notifications" do

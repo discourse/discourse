@@ -63,7 +63,7 @@ task 'javascript:update' do
       source: 'bootstrap/js/modal.js',
       destination: 'bootstrap-modal.js'
     }, {
-      source: 'ace-builds/src-min-noconflict/.',
+      source: 'ace-builds/src-min-noconflict/ace.js',
       destination: 'ace',
       public: true
     }, {
@@ -101,8 +101,6 @@ task 'javascript:update' do
       destination: 'jquery.autoellipsis-1.0.10.js'
     }, {
       source: 'jquery-color/dist/jquery.color.js'
-    }, {
-      source: 'jquery.cookie/jquery.cookie.js'
     }, {
       source: 'blueimp-file-upload/js/jquery.fileupload.js',
     }, {
@@ -203,17 +201,20 @@ task 'javascript:update' do
       File.write(test_bundle_dest, HighlightJs.bundle(langs))
     end
 
-    if src.include? "ace-builds"
-      puts "Cleanup unused snippets folder for ACE"
-      system("rm -rf node_modules/ace-builds/src-min-noconflict/snippets")
-    end
-
     if f[:public_root]
       dest = "#{public_root}/#{filename}"
     elsif f[:public]
       dest = "#{public_js}/#{filename}"
     else
       dest = "#{vendor_js}/#{filename}"
+    end
+
+    if src.include? "ace.js"
+      ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
+      addtl_files = [ "ext-searchbox", "mode-html", "mode-scss", "mode-sql", "theme-chrome", "worker-html"]
+      addtl_files.each do |file|
+        FileUtils.cp_r("#{ace_root}#{file}.js", dest)
+      end
     end
 
     # lodash.js needs building

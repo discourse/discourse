@@ -5,6 +5,7 @@ import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   sortedByCount: true,
@@ -64,6 +65,12 @@ export default Controller.extend({
         .then(result => {
           const displayN = 20;
           const tags = result["tags"];
+
+          if (tags.length === 0) {
+            bootbox.alert(I18n.t("tagging.delete_no_unused_tags"));
+            return;
+          }
+
           const joinedTags = tags.slice(0, displayN).join(", ");
           var more = Math.max(0, tags.length - displayN);
 

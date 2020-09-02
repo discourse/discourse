@@ -3,6 +3,7 @@ import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import WatchedWord from "admin/models/watched-word";
+import bootbox from "bootbox";
 import discourseComputed, {
   on,
   observes

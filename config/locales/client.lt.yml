@@ -1842,15 +1842,7 @@ lt:
         unlock_post: "Atrakinti įrašą"
         delete_topic: "ištrinti temą"
       actions:
-        flag: "Uždėk vėliavą"
-        undo:
-          off_topic: "Nuimti vėliavą"
-          spam: "Nuimti vėliavą"
-          inappropriate: "Nuimti vėliavą"
-          bookmark: "Anuliuoti žymę"
-          like: "Anuliuoti Patinka"
         people:
-          spam: "pažymėtas kaip šlamštas"
           like_capped:
             one: "ir %{count}kitas mėgsta tai"
             few: "ir %{count}kitų mėgsta tai"
@@ -1862,8 +1854,6 @@ lt:
           inappropriate: "Tu pažymėjai tai, kaip nepriimtiną"
           notify_moderators: "Tu pasiūlei moderavimą."
           notify_user: "Jūs išsiuntėt žinutę šiam vartotojui"
-          bookmark: "Jūs uždėjot žymą ant šio įrašo"
-          like: "Jūs tai mėgstate"
       revisions:
         controls:
           first: "Pirmoji peržiūra"
@@ -2296,14 +2286,6 @@ lt:
           posted: "Jūs dar nerašėte jokiose temose."
           bookmarks: "Jūs dar neturite pažymėtų temų."
           top: "Nėra jokių TOP temų."
-        bottom:
-          latest: "Daugiau nėra jokių naujausių temų."
-          posted: "Daugiau nėra jokių paskelbtų temų."
-          read: "Daugiau nėra jokių perskaitytų temų."
-          new: "Daugiau nėra jokių naujų temų."
-          unread: "Daugiau nėra jokių neperskaitytų temų."
-          top: "Daugiau nėra jokių populiarių temų."
-          bookmarks: "Daugiau pažymėtų temų nėra"
     invite:
       custom_message_placeholder: "Įveskite savo pasirinktinę žinutę"
       custom_message_template_forum: "Labas, užsiregistruok ir tu!\nČia bus vienas geriausių forumų..."

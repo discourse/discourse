@@ -384,7 +384,6 @@ gl:
       title: "Aceptouse a túa solicitude para  @%{group_name}"
       body: |
         A túa solicitude para entrar no grupo @%{group_name} foi aceptada e agora xa es membro.
-    view_hidden_topic_request_reason: "Gustaríame unirme ao grupo '%{group_name}' para poder acceder a [este tema](%{topic_url})"
   education:
     until_posts:
       one: "%{count} publicación"
@@ -1428,7 +1427,6 @@ gl:
     ga_universal_domain_name: "Nome do dominio establecido en Google Universal Analytics (analytics.js), ex: mysite.com; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Habilitar o seguimento multidominio de Google Universal Analytics (analytics.js). As ligazóns saíntes destes dominios terán a ID do cliente agregadas. Revisa <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>A guía de Google para o seguimento multidominio."
     enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún  webcrawler is detected. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Permitir que os moderadores cren novas categorías"
     cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadeiro para activar CORS."
     allowed_iframes: "Unha listaxe de prefixos de dominios para iframe src que Discourse pode permitir de forma segura en publicacións"
     slow_down_crawler_user_agents: "Axentes de usuario de rastrexadores web aos que se lles debe aplicar unha cota limitada en robots.txt utilizando a directiva de atraso no rastrexo"

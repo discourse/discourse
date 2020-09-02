@@ -59,6 +59,7 @@ import { on } from "@ember/object/evented";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.10.2";
@@ -1204,7 +1205,7 @@ function getPluginApi(version) {
   version = version.toString();
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
-      _pluginv01 = new PluginApi(version, Discourse.__container__);
+      _pluginv01 = new PluginApi(version, getOwner(this));
     }
 
     // We are recycling the compatible object, but let's update to the higher version

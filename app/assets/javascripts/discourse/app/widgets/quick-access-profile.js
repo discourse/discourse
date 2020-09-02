@@ -55,14 +55,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         className: "activity"
       }
     ];
-    if (this.siteSettings.enable_personal_messages) {
-      defaultItems.push({
-        icon: "envelope",
-        href: `${this.attrs.path}/messages`,
-        content: I18n.t("user.private_messages"),
-        className: "messages"
-      });
-    }
+
     defaultItems.push(
       {
         icon: "pencil-alt",

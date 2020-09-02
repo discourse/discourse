@@ -42,12 +42,13 @@
 //
 //= require jquery.magnific-popup.min.js
 
+let App = window.Discourse;
 let resetSettings = require("helpers/site-settings").resetSettings;
 let createHelperContext = require("discourse-common/lib/helpers")
   .createHelperContext;
 
 const buildResolver = require("discourse-common/resolver").buildResolver;
-window.setResolver(buildResolver("discourse").create({ namespace: Discourse }));
+window.setResolver(buildResolver("discourse").create({ namespace: App }));
 
 sinon.config = {
   injectIntoThis: false,
@@ -71,10 +72,10 @@ d.write(
   "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
 );
 
-Discourse.rootElement = "#ember-testing";
-Discourse.setupForTesting();
-Discourse.injectTestHelpers();
-Discourse.start();
+App.rootElement = "#ember-testing";
+App.setupForTesting();
+App.injectTestHelpers();
+App.start();
 
 // disable logster error reporting
 if (window.Logster) {
@@ -92,6 +93,7 @@ var createPretender = require("helpers/create-pretender", null, null, false),
   applyPretender = require("helpers/qunit-helpers", null, null, false)
     .applyPretender,
   getOwner = require("discourse-common/lib/get-owner").getOwner,
+  setDefaultOwner = require("discourse-common/lib/get-owner").setDefaultOwner,
   server,
   acceptanceModulePrefix = "Acceptance: ";
 
@@ -105,7 +107,7 @@ function resetSite(siteSettings, extras) {
   let Site = require("discourse/models/site").default;
   siteAttrs.store = createStore();
   siteAttrs.siteSettings = siteSettings;
-  Site.resetCurrent(Site.create(siteAttrs));
+  return Site.resetCurrent(Site.create(siteAttrs));
 }
 
 QUnit.testStart(function(ctx) {
@@ -134,8 +136,9 @@ QUnit.testStart(function(ctx) {
 
     const error =
       "Unhandled request in test environment: " + path + " (" + verb + ")";
+
     window.console.error(error);
-    throw error;
+    throw new Error(error);
   };
 
   server.checkPassthrough = request =>
@@ -163,8 +166,12 @@ QUnit.testStart(function(ctx) {
   let Session = require("discourse/models/session").default;
   Session.resetCurrent();
   User.resetCurrent();
-  resetSite(settings);
-  createHelperContext(settings);
+  let site = resetSite(settings);
+  createHelperContext({
+    siteSettings: settings,
+    capabilities: {},
+    site
+  });
 
   _DiscourseURL.redirectedTo = null;
   _DiscourseURL.redirectTo = function(url) {
@@ -229,5 +236,5 @@ Object.keys(requirejs.entries).forEach(function(entry) {
 
 // forces 0 as duration for all jquery animations
 jQuery.fx.off = true;
-
+setDefaultOwner(App.__container__);
 resetSite();

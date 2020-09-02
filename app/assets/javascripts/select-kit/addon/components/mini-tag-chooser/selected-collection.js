@@ -1,10 +1,10 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { reads, notEmpty } from "@ember/object/computed";
+import layout from "select-kit/templates/components/mini-tag-chooser/selected-collection";
 
 export default Component.extend({
-  layoutName:
-    "select-kit/templates/components/mini-tag-chooser/selected-collection",
+  layout,
   classNames: ["mini-tag-chooser-selected-collection", "selected-tags"],
   isVisible: notEmpty("selectedTags.[]"),
   selectedTags: reads("collection.content.selectedTags.[]"),

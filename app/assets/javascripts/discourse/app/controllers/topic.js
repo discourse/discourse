@@ -25,6 +25,7 @@ import { Promise } from "rsvp";
 import { escapeExpression } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { inject as service } from "@ember/service";
+import bootbox from "bootbox";
 
 let customPostMessageCallbacks = {};
 
@@ -43,6 +44,9 @@ export function registerCustomPostMessageCallback(type, callback) {
 export default Controller.extend(bufferedProperty("model"), {
   composer: controller(),
   application: controller(),
+  documentTitle: service(),
+  screenTrack: service(),
+
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
@@ -60,7 +64,6 @@ export default Controller.extend(bufferedProperty("model"), {
   username_filters: null,
   filter: null,
   quoteState: null,
-  documentTitle: service(),
 
   canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
@@ -454,8 +457,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     deferTopic() {
-      const screenTrack = Discourse.__container__.lookup("screen-track:main");
-      const currentUser = this.currentUser;
+      const { screenTrack, currentUser } = this;
       const topic = this.model;
 
       screenTrack.reset();
@@ -720,8 +722,12 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpBottom() {
+      // When a topic only has one lengthy post
+      const jumpEnd = this.model.highest_post_number === 1 ? true : false;
+
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
-        skipIfOnScreen: false
+        skipIfOnScreen: false,
+        jumpEnd
       });
     },
 

@@ -6,6 +6,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   user: null,

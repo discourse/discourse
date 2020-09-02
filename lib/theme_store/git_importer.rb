@@ -25,8 +25,7 @@ class ThemeStore::GitImporter
     end
     if version = Discourse.find_compatible_git_resource(@temp_folder)
       Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
-        Rails.logger.warn "git reset --hard #{version}"
-        return runner.exec("git", "reset", "--hard", version)
+        return runner.exec("git cat-file -e #{version} || git fetch --depth 1 $(git rev-parse --symbolic-full-name @{upstream} | awk -F '/' '{print $3}') #{version}; git reset --hard #{version}")
       end
     end
   end

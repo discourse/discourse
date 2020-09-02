@@ -1056,11 +1056,6 @@ be:
         grant_badge: "даць Значок"
         delete_topic: "выдаліць тэму"
       actions:
-        flag: "Пазначыць"
-        people:
-          off_topic: "заўважана гэта, як ад тэмы"
-          spam: "пазначаны як спам"
-          inappropriate: "пазначыў гэта як непрыстойныя"
         by_you:
           notify_moderators: "Вы пазначылі гэта для мадэрацыі"
       revisions:
@@ -1280,14 +1275,6 @@ be:
           posted: "Вы яшчэ не дапісвалі ў адну тэму."
           bookmarks: "У вас пакуль няма тэмаў у закладках."
           top: "There are no top topics."
-        bottom:
-          latest: "Усе апошнія тэмы адлюстраваныя."
-          posted: "There are no more posted topics."
-          read: "Больш няма прачытаных тэм."
-          new: "Больш няма новых тэм."
-          unread: "Непрачытаныя тэмы скончыліся."
-          top: "There are no more top topics."
-          bookmarks: "Тэмы ў закладках адсутнічаюць."
     footer_nav:
       back: "Назад"
       share: "Падзяліцца"

@@ -14,6 +14,7 @@ moduleFor("controller:topic", "controller:topic", {
     "service:document-title"
   ],
   beforeEach() {
+    this.registry.register("service:screen-track", {}, { instantiate: false });
     this.registry.injection("controller", "appEvents", "service:app-events");
   }
 });

@@ -183,6 +183,9 @@ class SiteSetting < ActiveRecord::Base
     site_logo_small_url
     site_mobile_logo_url
     site_favicon_url
+    site_logo_dark_url
+    site_logo_small_dark_url
+    site_mobile_logo_dark_url
   }.each { |client_setting| client_settings << client_setting }
 
   %i{
@@ -190,6 +193,9 @@ class SiteSetting < ActiveRecord::Base
     logo_small
     digest_logo
     mobile_logo
+    logo_dark
+    logo_small_dark
+    mobile_logo_dark
     large_icon
     manifest_icon
     favicon

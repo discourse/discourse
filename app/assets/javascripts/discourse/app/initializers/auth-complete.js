@@ -14,9 +14,10 @@ export default {
     if (lastAuthResult) {
       const router = container.lookup("router:main");
       router.one("didTransition", () => {
-        next(() =>
-          Discourse.authenticationComplete(JSON.parse(lastAuthResult))
-        );
+        next(() => {
+          let loginController = container.lookup("controller:login");
+          loginController.authenticationComplete(JSON.parse(lastAuthResult));
+        });
       });
     }
   }

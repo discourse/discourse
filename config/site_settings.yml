@@ -74,6 +74,18 @@ branding:
     default: ""
     client: true
     type: upload
+  logo_dark:
+    default: ""
+    client: true
+    type: upload
+  logo_small_dark:
+    default: ""
+    client: true
+    type: upload
+  mobile_logo_dark:
+    default: ""
+    client: true
+    type: upload
   large_icon:
     default: ""
     client: true
@@ -311,6 +323,10 @@ basic:
   vapid_base_url:
     default: ""
     hidden: true
+  base_font:
+    default: "helvetica"
+    enum: "BaseFontSetting"
+    refresh: true
 
 login:
   invite_only:
@@ -1354,6 +1370,14 @@ trust:
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
+  min_trust_level_to_allow_profile_background:
+    default: 0
+    client: true
+    enum: "TrustLevelSetting"
+  min_trust_level_to_allow_user_card_background:
+    default: 0
+    client: true
+    enum: "TrustLevelSetting"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   tl1_requires_topics_entered: 5
@@ -1432,7 +1456,7 @@ security:
     regex: "^(Lax|Strict|Disabled|None)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
-  moderators_create_categories: false
+  moderators_manage_categories_and_groups: false
   moderators_view_emails:
     client: true
     default: false
@@ -1462,6 +1486,11 @@ security:
   allowed_internal_hosts:
     default: ""
     type: list
+  allowed_onebox_iframes:
+    default: "*"
+    type: list
+    allow_any: false
+    choices: "['*'] + Onebox::Engine.all_iframe_origins"
   allowed_iframes:
     default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/"
     type: list
@@ -1804,6 +1833,12 @@ search:
   search_recent_posts_size:
     default: 100000
     max: 100000
+  search_recent_regular_posts_offset_post_id:
+    default: 0
+    hidden: true
+  search_enable_recent_regular_posts_offset_size:
+    default: 200000
+    hidden: true
   log_search_queries:
     client: true
     default: true
@@ -2133,6 +2168,7 @@ user_preferences:
   default_other_enable_quoting: true
   default_other_enable_defer: false
   default_other_dynamic_favicon: false
+  default_other_skip_new_user_tips: false
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
     default: 1
@@ -2151,6 +2187,9 @@ user_preferences:
     type: category_list
     default: ""
   default_categories_watching_first_post:
+    type: category_list
+    default: ""
+  default_categories_regular:
     type: category_list
     default: ""
   mute_all_categories_by_default:

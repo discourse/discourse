@@ -107,7 +107,7 @@ export default Controller.extend(PeriodComputationMixin, {
   @discourseComputed
   trendingSearchDisabledLabel() {
     return I18n.t("admin.dashboard.reports.trending_search.disabled", {
-      basePath: getURL("/")
+      basePath: getURL("")
     });
   },
 

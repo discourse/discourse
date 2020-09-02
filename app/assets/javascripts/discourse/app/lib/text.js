@@ -8,18 +8,18 @@ import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
 import { helperContext } from "discourse-common/lib/helpers";
+import Session from "discourse/models/session";
 
 function getOpts(opts) {
-  const siteSettings = Discourse.__container__.lookup("site-settings:main"),
-    site = Discourse.__container__.lookup("site:main");
+  let context = helperContext();
 
-  opts = _.merge(
+  opts = Object.assign(
     {
       getURL: getURLWithCDN,
-      currentUser: Discourse.__container__.lookup("current-user:main"),
-      censoredRegexp: site.censored_regexp,
-      customEmojiTranslation: site.custom_emoji_translation,
-      siteSettings,
+      currentUser: context.currentUser,
+      censoredRegexp: context.site.censored_regexp,
+      customEmojiTranslation: context.site.custom_emoji_translation,
+      siteSettings: context.siteSettings,
       formatUsername
     },
     opts
@@ -59,14 +59,19 @@ export function sanitizeAsync(text, options) {
 }
 
 function loadMarkdownIt() {
-  if (Discourse.MarkdownItURL) {
-    return loadScript(Discourse.MarkdownItURL).catch(e => {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    });
-  } else {
-    return Promise.resolve();
-  }
+  return new Promise(resolve => {
+    let markdownItURL = Session.currentProp("markdownItURL");
+    if (markdownItURL) {
+      loadScript(markdownItURL)
+        .then(() => resolve())
+        .catch(e => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
+    } else {
+      resolve();
+    }
+  });
 }
 
 function createPrettyText(options) {

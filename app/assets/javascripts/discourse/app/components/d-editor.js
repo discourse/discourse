@@ -2,7 +2,8 @@ import I18n from "I18n";
 import { debounce, later, next, schedule, scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
-/*global Mousetrap:true */
+import Mousetrap from "mousetrap";
+
 import discourseComputed, {
   on,
   observes
@@ -407,7 +408,10 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-input")).autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
-      afterComplete: () => this._focusTextArea(),
+      afterComplete: value => {
+        this.set("value", value);
+        return this._focusTextArea();
+      },
       transformComplete: obj => {
         return obj.text;
       },
@@ -456,9 +460,7 @@ export default Component.extend({
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
-          this.setProperties({
-            emojiPickerIsActive: true
-          });
+          this.set("emojiPickerIsActive", true);
 
           schedule("afterRender", () => {
             const filterInput = document.querySelector(

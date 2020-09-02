@@ -111,6 +111,8 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
+  scope :with_imap_configured, -> { where.not(imap_mailbox_name: '') }
+
   scope :visible_groups, Proc.new { |user, order, opts|
     groups = self.order(order || "name ASC")
 
@@ -765,7 +767,7 @@ class Group < ActiveRecord::Base
     flair_icon.presence || flair_upload&.short_path
   end
 
-  [:muted, :tracking, :watching, :watching_first_post].each do |level|
+  [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
     define_method("#{level}_category_ids=") do |category_ids|
       @category_notifications ||= {}
       @category_notifications[level] = category_ids

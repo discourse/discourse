@@ -5,12 +5,12 @@ class PostActionDestroyer
     attr_accessor :post
   end
 
-  def initialize(destroyed_by, post, post_action_type_id)
-    @destroyed_by, @post, @post_action_type_id = destroyed_by, post, post_action_type_id
+  def initialize(destroyed_by, post, post_action_type_id, opts = {})
+    @destroyed_by, @post, @post_action_type_id, @opts = destroyed_by, post, post_action_type_id, opts
   end
 
-  def self.destroy(destroyed_by, post, action_key)
-    new(destroyed_by, post, PostActionType.types[action_key]).perform
+  def self.destroy(destroyed_by, post, action_key, opts = {})
+    new(destroyed_by, post, PostActionType.types[action_key], opts).perform
   end
 
   def perform
@@ -34,7 +34,7 @@ class PostActionDestroyer
       return result
     end
 
-    unless guardian.can_delete?(post_action)
+    unless @opts[:skip_delete_check] == true || guardian.can_delete?(post_action)
       result.forbidden = true
       result.add_error(I18n.t("invalid_access"))
       return result

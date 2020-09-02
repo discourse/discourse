@@ -12,7 +12,7 @@ describe UserAvatarsController do
     end
 
     it 'returns an avatar if we are allowing the proxy' do
-      stub_request(:get, "https://avatars.discourse.org/v3/letter/a/aaaaaa/360.png").to_return(body: 'image')
+      stub_request(:get, "https://avatars.discourse-cdn.com/v3/letter/a/aaaaaa/360.png").to_return(body: 'image')
       get "/letter_avatar_proxy/v3/letter/a/aaaaaa/360.png"
       expect(response.status).to eq(200)
     end
@@ -20,12 +20,13 @@ describe UserAvatarsController do
 
   context 'show' do
 
-    context 'invalid' do
-      after do
-        FileUtils.rm(Discourse.store.path_for(upload))
-      end
-      # travis is not good here, no image magick
-      if !ENV["TRAVIS"]
+    # travis is not good here, no image magick
+    if !ENV["TRAVIS"]
+      context 'invalid' do
+        after do
+          FileUtils.rm(Discourse.store.path_for(upload))
+        end
+
         let :upload do
           File.open(file_from_fixtures("cropped.png")) do |f|
             UploadCreator.new(
@@ -65,7 +66,6 @@ describe UserAvatarsController do
           expect(upload.extension).to eq('png')
         end
       end
-
     end
 
     it 'handles non local content correctly' do

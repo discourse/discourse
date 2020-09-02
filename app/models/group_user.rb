@@ -86,7 +86,7 @@ class GroupUser < ActiveRecord::Base
 
     higher_level_category_ids = user_levels.values.flatten
 
-    [:muted, :tracking, :watching_first_post, :watching].each do |level|
+    [:muted, :regular, :tracking, :watching_first_post, :watching].each do |level|
       level_num = NotificationLevels.all[level]
       higher_level_category_ids -= (user_levels[level_num] || [])
       if group_category_ids = group_levels[level_num]
@@ -118,7 +118,7 @@ class GroupUser < ActiveRecord::Base
 
     higher_level_tag_ids = user_levels.values.flatten
 
-    [:muted, :tracking, :watching_first_post, :watching].each do |level|
+    [:muted, :regular, :tracking, :watching_first_post, :watching].each do |level|
       level_num = NotificationLevels.all[level]
       higher_level_tag_ids -= (user_levels[level_num] || [])
       if group_tag_ids = group_levels[level_num]

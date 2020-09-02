@@ -32,7 +32,7 @@ SiteSetting.reopenClass({
     data[key] = value;
 
     if (opts["updateExistingUsers"] === true) {
-      data["updateExistingUsers"] = true;
+      data["update_existing_user"] = true;
     }
 
     return ajax(`/admin/site_settings/${key}`, { type: "PUT", data });

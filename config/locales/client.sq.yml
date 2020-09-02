@@ -1491,28 +1491,12 @@ sq:
         grant_badge: "Dhuroni Stemë"
         delete_topic: "fshi temën"
       actions:
-        flag: "Sinjalizoni"
-        undo:
-          off_topic: "Anulo sinjalizimin"
-          spam: "Anulo sinjalizimin"
-          inappropriate: "Anulo sinjalizimin"
-          bookmark: "Hiqe nga të preferuarat"
-          like: "Anulo pëlqimin"
-        people:
-          off_topic: "sinjalizoi këtë postim si jashtë teme"
-          spam: "sinjalizoi këtë postim si spam"
-          inappropriate: "sinjalizoi këtë postim si të papërshtatshëm"
-          notify_moderators: "njoftoi moderatorët"
-          notify_user: "dërgoi një mesazh"
-          bookmark: "e shtoi këtë tek të preferuarat"
         by_you:
           off_topic: "Ti sinjalizove këtë postim si jashtë teme"
           spam: "Ti sinjalizove këtë postim si spam"
           inappropriate: "Ti sinjalizove këtë postim si të papërshtatshëm"
           notify_moderators: "Ti sinjalizove këtë postim për moderim"
           notify_user: "Ju i dërguat një mesazh këtij përdoruesi"
-          bookmark: "E ruajte këtë temë tek të preferuarat e tua"
-          like: "Ju e pëlqyet këtë"
       revisions:
         controls:
           first: "Revizioni i parë"
@@ -1923,14 +1907,6 @@ sq:
           latest: "Nuk ka tema të reja."
           bookmarks: "Nuk keni ende tema të preferuara. "
           top: "Nuk ka tema popullore."
-        bottom:
-          latest: "Nuk ka më tema të reja."
-          posted: "Nuk ka më tema të publikuara."
-          read: "Nuk ka më tema të lexuara."
-          new: "Nuk ka më tema të reja."
-          unread: "Nuk ka më tema të palexuara."
-          top: "Nuk ka më tema popullore."
-          bookmarks: "Nuk ka më tema të preferuara."
     invite:
       custom_message_placeholder: "Vendosni mesazhin"
       custom_message_template_forum: "Hej, hajde bashkoju këtij forumi!"
