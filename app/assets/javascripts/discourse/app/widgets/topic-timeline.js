@@ -8,6 +8,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import RawHtml from "discourse/widgets/raw-html";
 import renderTags from "discourse/lib/render-tags";
 import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
+import { merge } from "discourse-common/lib/object";
 
 const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;
@@ -240,7 +241,7 @@ createWidget("timeline-scrollarea", {
       this.attach("timeline-padding", { height: before }),
       this.attach(
         "timeline-scroller",
-        _.merge(position, {
+        merge(position, {
           showDockedButton: !attrs.mobileView && hasBackPosition && !showButton,
           fullScreen: attrs.fullScreen
         })
