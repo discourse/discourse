@@ -13,7 +13,7 @@ import User from "discourse/models/user";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import { escapeExpression } from "discourse/lib/utilities";
-import { merge } from "discourse-common/lib/object";
+import { deepMerge } from "discourse-common/lib/object";
 
 export function translateResults(results, opts) {
   opts = opts || {};
@@ -207,7 +207,7 @@ export function applySearchAutocomplete(
   };
 
   $input.autocomplete(
-    merge(
+    deepMerge(
       {
         template: findRawTemplate("category-tag-autocomplete"),
         key: "#",
@@ -227,7 +227,7 @@ export function applySearchAutocomplete(
 
   if (siteSettings.enable_mentions) {
     $input.autocomplete(
-      merge(
+      deepMerge(
         {
           template: findRawTemplate("user-selector-autocomplete"),
           key: "@",

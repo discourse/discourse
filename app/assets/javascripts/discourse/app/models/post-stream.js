@@ -10,7 +10,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { loadTopicView } from "discourse/models/topic";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
-import { merge } from "discourse-common/lib/object";
+import { deepMerge } from "discourse-common/lib/object";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -275,7 +275,7 @@ export default RestModel.extend({
     this.set("loadingFilter", true);
     this.set("loadingNearPost", opts.nearPost);
 
-    opts = merge(opts, this.streamFilters);
+    opts = deepMerge(opts, this.streamFilters);
 
     // Request a topicView
     return loadTopicView(topic, opts)
@@ -944,7 +944,7 @@ export default RestModel.extend({
       include_suggested: includeSuggested
     };
 
-    data = merge(data, this.streamFilters);
+    data = deepMerge(data, this.streamFilters);
     const store = this.store;
 
     return ajax(url, { data }).then(result => {

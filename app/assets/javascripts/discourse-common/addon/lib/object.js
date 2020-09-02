@@ -1,9 +1,9 @@
-// a fairly simple deep merge based on: https://gist.github.com/ahtcx/0cd94e62691f539160b32ecda18af3d6
 function isObject(obj) {
   return obj && typeof obj === "object";
 }
 
-export function merge(...objects) {
+// a fairly simple deep merge based on: https://gist.github.com/ahtcx/0cd94e62691f539160b32ecda18af3d6
+export function deepMerge(...objects) {
   function deepMergeInner(target, source) {
     Object.keys(source).forEach(key => {
       const targetValue = target[key];
