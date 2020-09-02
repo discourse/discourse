@@ -4,6 +4,7 @@ import toMarkdown from "discourse/lib/to-markdown";
 import Handlebars from "handlebars";
 import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
+import { merge } from "discourse-common/lib/object";
 
 let _defaultHomepage;
 
@@ -85,7 +86,7 @@ export function avatarImg(options, customGetURL) {
 
 export function tinyAvatar(avatarTemplate, options) {
   return avatarImg(
-    _.merge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
+    merge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
   );
 }
 

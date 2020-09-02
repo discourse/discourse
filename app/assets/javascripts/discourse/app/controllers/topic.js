@@ -26,6 +26,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { inject as service } from "@ember/service";
 import bootbox from "bootbox";
+import { merge } from "discourse-common/lib/object";
 
 let customPostMessageCallbacks = {};
 
@@ -249,7 +250,7 @@ export default Controller.extend(bufferedProperty("model"), {
     this.set("loadingPostIds", true);
 
     return ajax(url, {
-      data: _.merge(
+      data: merge(
         { post_number: post.get("post_number") },
         postStream.get("streamFilters")
       )

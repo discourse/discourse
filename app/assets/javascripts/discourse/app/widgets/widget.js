@@ -22,6 +22,7 @@ import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { Promise } from "rsvp";
 import { isProduction } from "discourse-common/config/environment";
 import { get } from "@ember/object";
+import { merge } from "discourse-common/lib/object";
 
 const _registry = {};
 
@@ -185,7 +186,7 @@ export default class Widget {
 
     // Sometimes we pass state down from the parent
     if (this.mergeState) {
-      this.state = _.merge(this.state, this.mergeState);
+      this.state = merge(this.state, this.mergeState);
     }
 
     if (prev) {

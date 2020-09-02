@@ -8,6 +8,7 @@ import {
 } from "pretty-text/inline-oneboxer";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
+import { merge } from "discourse-common/lib/object";
 
 QUnit.module("lib:pretty-text");
 
@@ -38,7 +39,7 @@ QUnit.assert.cooked = function(input, expected, message) {
 };
 
 QUnit.assert.cookedOptions = function(input, opts, expected, message) {
-  const merged = _.merge({}, rawOpts, opts);
+  const merged = merge({}, rawOpts, opts);
   const actual = new PrettyText(buildOptions(merged)).cook(input);
   this.pushResult({
     result: actual === expected,
