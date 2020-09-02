@@ -9,7 +9,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { merge } from "discourse-common/lib/object";
+import { deepMerge } from "discourse-common/lib/object";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -181,7 +181,7 @@ NavItem.reopenClass({
       args.noSubcategories = true;
     }
     NavItem.extraArgsCallbacks.forEach(cb =>
-      merge(args, cb.call(this, filterType, opts))
+      deepMerge(args, cb.call(this, filterType, opts))
     );
 
     let store = getOwner(this).lookup("service:store");
@@ -223,7 +223,9 @@ NavItem.reopenClass({
     };
 
     const extraItems = NavItem.extraNavItemDescriptors
-      .map(descriptor => ExtraNavItem.create(merge({}, context, descriptor)))
+      .map(descriptor =>
+        ExtraNavItem.create(deepMerge({}, context, descriptor))
+      )
       .filter(item => {
         if (!item.customFilter) return true;
         return item.customFilter(category, args);

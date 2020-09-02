@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import PreloadStore from "discourse/lib/preload-store";
-import { merge } from "discourse-common/lib/object";
+import { deepMerge } from "discourse-common/lib/object";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -11,7 +11,7 @@ export default DiscourseRoute.extend({
   model(params) {
     if (PreloadStore.get("invite_info")) {
       return PreloadStore.getAndRemove("invite_info").then(json =>
-        merge(params, json)
+        deepMerge(params, json)
       );
     } else {
       return {};
