@@ -1,17 +1,20 @@
 export default function() {
-  const outlets = [".above-site-header-outlet", ".below-site-header-outlet"];
+  const outletSelector = [
+    ".above-site-header-outlet",
+    ".below-site-header-outlet"
+  ];
   // If these outlets have height they impact timeline and usercard positioning
 
   let outletHeights = 0;
 
-  outlets.forEach(function(outletClass) {
+  outletSelector.forEach(function(outletClass) {
     if (document.querySelector(outletClass)) {
-      let outlet = document.querySelectorAll(outletClass);
-      for (var i = 0; i < outlet.length; i++) {
-        if (outlet[i].offsetHeight) {
-          outletHeights += parseInt(outlet[i].offsetHeight, 10);
+      let outlets = document.querySelectorAll(outletClass);
+      outlets.forEach(outlet => {
+        if (outlet.offsetHeight) {
+          outletHeights += parseInt(outlet.offsetHeight, 10);
         }
-      }
+      });
     }
   });
 
