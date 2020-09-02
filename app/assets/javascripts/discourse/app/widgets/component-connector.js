@@ -1,5 +1,5 @@
 import { scheduleOnce } from "@ember/runloop";
-import { setOwner, getOwner } from "@ember/application";
+import { getOwner } from "@ember/application";
 
 export default class ComponentConnector {
   constructor(widget, componentName, opts, trackedProperties) {
@@ -40,21 +40,18 @@ export default class ComponentConnector {
     const { elem, opts, widget, componentName } = this;
 
     const mounted = widget._findView();
-    const view = widget.register
-      .lookupFactory(`component:${componentName}`)
+    const component = getOwner(mounted)
+      .factoryFor(`component:${componentName}`)
       .create(opts);
-
-    if (setOwner) {
-      setOwner(view, getOwner(mounted));
-    }
 
     // component connector is not triggering didReceiveAttrs
     // we force it for selectKit components
-    if (view.selectKit) {
-      view.didReceiveAttrs();
+    if (component.selectKit) {
+      component.didReceiveAttrs();
     }
-    mounted._connected.push(view);
-    view.renderer.appendTo(view, elem);
+
+    mounted._connected.push(component);
+    component.renderer.appendTo(component, elem);
   }
 }
 
