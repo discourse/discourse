@@ -16,8 +16,8 @@ RSpec.describe "Javascript rake tasks" do
   #   StampedFiles.cleanup(0, test_git_hash)
   # end
 
-  xit "javascript:update" do
-    describe "creates the expected files" do
+  describe "javascript:update" do
+    xit "creates the expected files" do
       capture_stdout do
         Rake::Task['javascript:update'].invoke
       end
