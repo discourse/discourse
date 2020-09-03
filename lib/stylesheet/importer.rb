@@ -47,7 +47,7 @@ module Stylesheet
           #{font_css(font)}
 
           :root {
-            --font-family: #{font[:name]};
+            --font-family: #{font[:stack]};
           }
         EOF
 
@@ -61,7 +61,7 @@ module Stylesheet
           contents << font_css(font)
           contents << <<~EOF
             .font-#{font[:key].tr("_", "-")} {
-              font-family: #{font[:name]};
+              font-family: #{font[:stack]};
             }
           EOF
         end
