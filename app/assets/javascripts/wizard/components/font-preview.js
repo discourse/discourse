@@ -58,7 +58,11 @@ export default createPreviewComponent(305, 165, {
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
     ctx.font = `bold ${titleFontSize}em '${font}'`;
-    ctx.fillText(I18n.t("wizard.previews.topic_title"), margin, height * 0.3);
+    ctx.fillText(
+      I18n.t("wizard.previews.font_title", { font }),
+      margin,
+      height * 0.3
+    );
 
     const bodyFontSize = height / 220.0;
     ctx.font = `${bodyFontSize}em '${font}'`;
