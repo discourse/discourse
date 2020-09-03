@@ -160,4 +160,64 @@ describe GroupUser do
       expect(TagUser.lookup(user, :watching_first_post).pluck(:tag_id)).to eq([tag4.id])
     end
   end
+
+  describe '#ensure_consistency!' do
+    fab!(:group) { Fabricate(:group) }
+
+    fab!(:pm_post) { Fabricate(:private_message_post) }
+
+    fab!(:pm_topic) do
+      pm_post.topic.tap { |t| t.allowed_groups << group }
+    end
+
+    fab!(:user) do
+      Fabricate(:user, last_seen_at: Time.zone.now).tap do |u|
+        group.add(u)
+
+        TopicUser.change(u.id, pm_topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+          last_read_post_number: pm_post.post_number
+        )
+      end
+    end
+
+    # User that is not tracking topic
+    fab!(:user_2) do
+      Fabricate(:user, last_seen_at: Time.zone.now).tap do |u|
+        group.add(u)
+
+        TopicUser.change(u.id, pm_topic.id,
+          notification_level: TopicUser.notification_levels[:regular],
+          last_read_post_number: pm_post.post_number
+        )
+      end
+    end
+
+    # User that has not been seen
+    fab!(:user_3) do
+      Fabricate(:user).tap do |u|
+        group.add(u)
+
+        TopicUser.change(u.id, pm_topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+          last_read_post_number: pm_post.post_number
+        )
+      end
+    end
+
+    it 'updates first unread pm timestamp correctly' do
+      freeze_time 10.minutes.from_now
+
+      post = create_post(
+        user: pm_topic.user,
+        topic_id: pm_topic.id
+      )
+
+      GroupUser.ensure_consistency!
+
+      expect(group.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(post.topic.updated_at)
+      expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to_not eq_time(post.topic.updated_at)
+      expect(group.group_users.find_by(user_id: user_3.id).first_unread_pm_at).to_not eq_time(post.topic.updated_at)
+    end
+  end
 end
