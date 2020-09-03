@@ -40,30 +40,34 @@ module Stylesheet
         end
       end
 
-      register_import "fonts" do
+      register_import "font" do
+        font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+
+        contents = <<~EOF
+          #{font_css(font)}
+
+          :root {
+            --font-family: #{font[:name]};
+          }
+        EOF
+
+        Import.new("font.scss", source: contents)
+      end
+
+      register_import "wizard_fonts" do
         contents = +""
 
         DiscourseFonts.fonts.each do |font|
-          if font[:variants].present?
-            font[:variants].each do |variant|
-              contents << <<~EOF
-                @font-face {
-                  font-family: #{font[:name]};
-                  src: asset-url("/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}") format("#{variant[:format]}");
-                  font-weight: #{variant[:weight]};
-                }
-              EOF
-            end
-          end
-
+          contents << font_css(font)
           contents << <<~EOF
             .font-#{font[:key].tr("_", "-")} {
               --font-family: #{font[:name]};
+              font-family: #{font[:name]};
             }
           EOF
         end
 
-        Import.new("fonts.scss", source: contents)
+        Import.new("wizard_fonts.scss", source: contents)
       end
 
       register_import "plugins_variables" do
@@ -247,6 +251,24 @@ module Stylesheet
 
     def category_css(category)
       "body.category-#{category.slug}, body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+    end
+
+    def font_css(font)
+      contents = +""
+
+      if font[:variants].present?
+        font[:variants].each do |variant|
+          contents << <<~EOF
+            @font-face {
+              font-family: #{font[:name]};
+              src: asset-url("/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}") format("#{variant[:format]}");
+              font-weight: #{variant[:weight]};
+            }
+          EOF
+        end
+      end
+
+      contents
     end
 
     def to_scss_variable(name, value)
