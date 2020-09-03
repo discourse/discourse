@@ -25,13 +25,15 @@ end
   end
 end
 
-DiscourseEvent.on(:post_edited) do |post, topic_changed|
+DiscourseEvent.on(:post_edited) do |post|
   unless post.topic&.trashed?
     WebHook.enqueue_post_hooks(:post_edited, post)
+  end
+end
 
-    if post.is_first_post? && topic_changed
-      WebHook.enqueue_topic_hooks(:topic_edited, post.topic)
-    end
+DiscourseEvent.on(:topic_edited) do |topic|
+  unless topic&.trashed?
+    WebHook.enqueue_topic_hooks(:topic_edited, topic)
   end
 end
 

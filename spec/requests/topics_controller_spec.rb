@@ -1203,6 +1203,17 @@ RSpec.describe TopicsController do
           expect(response.parsed_body['basic_topic']).to be_present
         end
 
+        it 'should trigger only the `topic_edited` event' do
+          put "/t/#{topic.slug}/#{topic.id}.json", params: {
+            title: "New topic title"
+          }
+
+          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(1)
+          job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
+
+          expect(job_args["event_name"]).to eq("topic_edited")
+        end
+
         it "throws an error if it could not be saved" do
           PostRevisor.any_instance.stubs(:should_revise?).returns(false)
           put "/t/#{topic.slug}/#{topic.id}.json", params: { title: "brand new title" }
@@ -1232,12 +1243,12 @@ RSpec.describe TopicsController do
           topic.reload
           expect(topic.title).to eq('This is a new title for the topic')
 
-          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(2)
+          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(1)
           job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
 
-          expect(job_args["event_name"]).to eq("post_edited")
+          expect(job_args["event_name"]).to eq("topic_edited")
           payload = JSON.parse(job_args["payload"])
-          expect(payload["topic_title"]).to eq('This is a new title for the topic')
+          expect(payload["title"]).to eq('This is a new title for the topic')
         end
 
         it "returns errors with invalid titles" do
