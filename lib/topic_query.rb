@@ -960,9 +960,19 @@ class TopicQuery
   def unread_messages(params)
     query = TopicQuery.unread_filter(
       messages_for_groups_or_user(params[:my_group_ids]),
-      @user&.id,
-      staff: @user&.staff?)
-      .limit(params[:count])
+      @user.id,
+      staff: @user.staff?
+    )
+
+    first_unread_pm_at =
+      if params[:my_group_ids].present?
+        GroupUser.where(user_id: @user.id, group_id: params[:my_group_ids]).minimum(:first_unread_pm_at)
+      else
+        UserStat.where(user_id: @user.id).pluck(:first_unread_pm_at).first
+      end
+
+    query = query.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
+    query = query.limit(params[:count]) if params[:count]
     query
   end
 
