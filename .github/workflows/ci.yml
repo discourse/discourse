@@ -146,19 +146,19 @@ jobs:
 
       - name: ESLint (core)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
-        run: yarn eslint app/assets/javascripts test/javascripts
+        run: yarn eslint --ext .js app/assets/javascripts test/javascripts
 
       - name: ESLint (core plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
         run: |
-          yarn eslint plugins/**/assets/javascripts plugins/**/test/javascripts
-          yarn eslint --global I18n --ext .es6 plugins/**/assets/javascripts plugins/**/test/javascripts
+          yarn eslint --ext .js plugins/**/assets/javascripts plugins/**/test/javascripts
+          yarn eslint --ext .es6 plugins/**/assets/javascripts plugins/**/test/javascripts
 
       - name: ESLint (all plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
         run: |
-          yarn eslint plugins/**/assets/javascripts plugins/**/test/javascripts
-          yarn eslint --global I18n --ext .es6 plugins/**/assets/javascripts plugins/**/test/javascripts
+          yarn eslint --ext .js plugins/**/assets/javascripts plugins/**/test/javascripts
+          yarn eslint --ext .es6 plugins/**/assets/javascripts plugins/**/test/javascripts
 
       - name: Prettier (core and core plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
