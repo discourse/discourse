@@ -4,7 +4,7 @@ import EmberObject from "@ember/object";
 
 export default DiscourseRoute.extend({
   queryParams: {
-    filters: { refreshModel: true }
+    filters: { refreshModel: true },
   },
 
   deserializeQueryParam(value, urlKey, defaultValueType) {
@@ -37,7 +37,7 @@ export default DiscourseRoute.extend({
   // TODO: make this automatic using an `{{outlet}}`
   renderTemplate() {
     this.render("admin/templates/logs/staff-action-logs", {
-      into: "adminLogs"
+      into: "adminLogs",
     });
   },
 
@@ -58,9 +58,9 @@ export default DiscourseRoute.extend({
         this.transitionTo("adminLogs.staffActionLogs");
       } else {
         this.transitionTo("adminLogs.staffActionLogs", {
-          queryParams: { filters }
+          queryParams: { filters },
         });
       }
-    }
-  }
+    },
+  },
 });

@@ -21,7 +21,7 @@ export default Route.extend({
 
     parentController.setProperties({
       editingTheme: false,
-      currentTab: model.get("component") ? COMPONENTS : THEMES
+      currentTab: model.get("component") ? COMPONENTS : THEMES,
     });
 
     controller.setProperties({
@@ -30,7 +30,7 @@ export default Route.extend({
       allThemes: parentController.get("model"),
       colorSchemeId: model.get("color_scheme_id"),
       colorSchemes: parentController.get("model.extras.color_schemes"),
-      editingName: false
+      editingName: false,
     });
 
     this.handleHighlight(model);
@@ -42,8 +42,8 @@ export default Route.extend({
 
   handleHighlight(theme) {
     this.get("controller.allThemes")
-      .filter(t => t.get("selected"))
-      .forEach(t => t.set("selected", false));
+      .filter((t) => t.get("selected"))
+      .forEach((t) => t.set("selected", false));
     if (theme) {
       theme.set("selected", true);
     }
@@ -61,7 +61,7 @@ export default Route.extend({
           I18n.t("admin.customize.theme.unsaved_parent_themes"),
           I18n.t("admin.customize.theme.discard"),
           I18n.t("admin.customize.theme.stay"),
-          result => {
+          (result) => {
             if (!result) {
               this.controller.model.setProperties({ recentlyInstalled: false });
               transition.retry();
@@ -69,6 +69,6 @@ export default Route.extend({
           }
         );
       }
-    }
-  }
+    },
+  },
 });

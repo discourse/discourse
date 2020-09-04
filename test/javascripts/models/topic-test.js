@@ -7,17 +7,17 @@ import { discourseModule } from "helpers/qunit-helpers";
 
 discourseModule("model:topic");
 
-QUnit.test("defaults", assert => {
+QUnit.test("defaults", (assert) => {
   const topic = Topic.create({ id: 1234 });
 
   assert.blank(topic.get("deleted_at"), "deleted_at defaults to blank");
   assert.blank(topic.get("deleted_by"), "deleted_by defaults to blank");
 });
 
-QUnit.test("visited", assert => {
+QUnit.test("visited", (assert) => {
   const topic = Topic.create({
     highest_post_number: 2,
-    last_read_post_number: 1
+    last_read_post_number: 1,
   });
 
   assert.not(
@@ -35,16 +35,16 @@ QUnit.test("visited", assert => {
   );
 });
 
-QUnit.test("lastUnreadUrl", assert => {
+QUnit.test("lastUnreadUrl", (assert) => {
   const category = EmberObject.create({
-    navigate_to_first_post_after_read: true
+    navigate_to_first_post_after_read: true,
   });
 
   const topic = Topic.create({
     id: 101,
     highest_post_number: 10,
     last_read_post_number: 10,
-    slug: "hello"
+    slug: "hello",
   });
 
   topic.set("category", category);
@@ -52,7 +52,7 @@ QUnit.test("lastUnreadUrl", assert => {
   assert.equal(topic.get("lastUnreadUrl"), "/t/hello/101/1");
 });
 
-QUnit.test("has details", assert => {
+QUnit.test("has details", (assert) => {
   const topic = Topic.create({ id: 1234 });
   const topicDetails = topic.get("details");
 
@@ -64,7 +64,7 @@ QUnit.test("has details", assert => {
   );
 });
 
-QUnit.test("has a postStream", assert => {
+QUnit.test("has a postStream", (assert) => {
   const topic = Topic.create({ id: 1234 });
   const postStream = topic.get("postStream");
 
@@ -76,7 +76,7 @@ QUnit.test("has a postStream", assert => {
   );
 });
 
-QUnit.test("has suggestedTopics", assert => {
+QUnit.test("has suggestedTopics", (assert) => {
   const topic = Topic.create({ suggested_topics: [{ id: 1 }, { id: 2 }] });
   const suggestedTopics = topic.get("suggestedTopics");
 
@@ -84,7 +84,7 @@ QUnit.test("has suggestedTopics", assert => {
   assert.containsInstance(suggestedTopics, Topic);
 });
 
-QUnit.test("category relationship", assert => {
+QUnit.test("category relationship", (assert) => {
   // It finds the category by id
   const category = Category.list()[0];
   const topic = Topic.create({ id: 1111, category_id: category.get("id") });
@@ -92,7 +92,7 @@ QUnit.test("category relationship", assert => {
   assert.equal(topic.get("category"), category);
 });
 
-QUnit.test("updateFromJson", assert => {
+QUnit.test("updateFromJson", (assert) => {
   const topic = Topic.create({ id: 1234 });
   const category = Category.list()[0];
 
@@ -100,7 +100,7 @@ QUnit.test("updateFromJson", assert => {
     post_stream: [1, 2, 3],
     details: { hello: "world" },
     cool: "property",
-    category_id: category.get("id")
+    category_id: category.get("id"),
   });
 
   assert.blank(topic.get("post_stream"), "it does not update post_stream");
@@ -109,12 +109,12 @@ QUnit.test("updateFromJson", assert => {
   assert.equal(topic.get("category"), category);
 });
 
-QUnit.test("recover", assert => {
+QUnit.test("recover", (assert) => {
   const user = User.create({ username: "eviltrout" });
   const topic = Topic.create({
     id: 1234,
     deleted_at: new Date(),
-    deleted_by: user
+    deleted_by: user,
   });
 
   topic.recover();
@@ -122,9 +122,9 @@ QUnit.test("recover", assert => {
   assert.blank(topic.get("deleted_by"), "it clears deleted_by");
 });
 
-QUnit.test("fancyTitle", assert => {
+QUnit.test("fancyTitle", (assert) => {
   const topic = Topic.create({
-    fancy_title: ":smile: with all :) the emojis :pear::peach:"
+    fancy_title: ":smile: with all :) the emojis :pear::peach:",
   });
 
   assert.equal(
@@ -134,7 +134,7 @@ QUnit.test("fancyTitle", assert => {
   );
 });
 
-QUnit.test("fancyTitle direction", function(assert) {
+QUnit.test("fancyTitle direction", function (assert) {
   const rtlTopic = Topic.create({ fancy_title: "هذا اختبار" });
   const ltrTopic = Topic.create({ fancy_title: "This is a test" });
 
@@ -151,10 +151,10 @@ QUnit.test("fancyTitle direction", function(assert) {
   );
 });
 
-QUnit.test("excerpt", assert => {
+QUnit.test("excerpt", (assert) => {
   const topic = Topic.create({
     excerpt: "This is a test topic :smile:",
-    pinned: true
+    pinned: true,
   });
 
   assert.equal(

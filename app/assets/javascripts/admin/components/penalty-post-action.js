@@ -13,7 +13,7 @@ export default Component.extend({
 
   @discourseComputed
   penaltyActions() {
-    return ACTIONS.map(id => {
+    return ACTIONS.map((id) => {
       return { id, name: I18n.t(`admin.user.penalty_post_${id}`) };
     });
   },
@@ -28,7 +28,7 @@ export default Component.extend({
       if (postAction === "edit") {
         this._focusEditTextarea();
       }
-    }
+    },
   },
 
   @afterRender
@@ -37,5 +37,5 @@ export default Component.extend({
     const body = elem.closest(".modal-body");
     body.scrollTo(0, body.clientHeight);
     elem.querySelector(".post-editor").focus();
-  }
+  },
 });

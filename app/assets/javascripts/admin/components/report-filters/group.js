@@ -6,7 +6,7 @@ export default FilterComponent.extend({
 
   @computed
   get groupOptions() {
-    return (this.site.groups || []).map(group => {
+    return (this.site.groups || []).map((group) => {
       return { name: group["name"], value: group["id"] };
     });
   },
@@ -14,5 +14,5 @@ export default FilterComponent.extend({
   @computed("filter.default")
   get groupId() {
     return this.filter.default ? parseInt(this.filter.default, 10) : null;
-  }
+  },
 });

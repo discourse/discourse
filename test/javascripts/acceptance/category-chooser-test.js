@@ -4,11 +4,11 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("CategoryChooser", {
   loggedIn: true,
   settings: {
-    allow_uncategorized_topics: false
-  }
+    allow_uncategorized_topics: false,
+  },
 });
 
-QUnit.test("does not display uncategorized if not allowed", async assert => {
+QUnit.test("does not display uncategorized if not allowed", async (assert) => {
   const categoryChooser = selectKit(".category-chooser");
 
   await visit("/");
@@ -19,18 +19,13 @@ QUnit.test("does not display uncategorized if not allowed", async assert => {
   assert.ok(categoryChooser.rowByIndex(0).name() !== "uncategorized");
 });
 
-QUnit.test("prefill category when category_id is set", async assert => {
+QUnit.test("prefill category when category_id is set", async (assert) => {
   await visit("/new-topic?category_id=1");
 
-  assert.equal(
-    selectKit(".category-chooser")
-      .header()
-      .value(),
-    1
-  );
+  assert.equal(selectKit(".category-chooser").header().value(), 1);
 });
 
-QUnit.test("filter is case insensitive", async assert => {
+QUnit.test("filter is case insensitive", async (assert) => {
   const categoryChooser = selectKit(".category-chooser");
 
   await visit("/");

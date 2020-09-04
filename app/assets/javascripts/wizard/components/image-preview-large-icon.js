@@ -13,12 +13,12 @@ export default createPreviewComponent(325, 125, {
   images() {
     return {
       ios: "/images/wizard/apple-mask.png",
-      image: this.get("field.value")
+      image: this.get("field.value"),
     };
   },
 
   paint(ctx, colors, font, width, height) {
     this.scaleImage(this.image, 10, 8, 87, 87);
     this.scaleImage(this.ios, 0, 0, width, height);
-  }
+  },
 });

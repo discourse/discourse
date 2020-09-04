@@ -46,7 +46,7 @@ export default Component.extend({
     if (isPresent(this.date)) {
       this.setProperties({
         hours: this.date.hours(),
-        minutes: this.date.minutes()
+        minutes: this.date.minutes(),
       });
     }
 
@@ -57,12 +57,12 @@ export default Component.extend({
     ) {
       this.setProperties({
         hours: null,
-        minutes: null
+        minutes: null,
       });
     }
   },
 
-  minimumTime: computed("relativeDate", "date", function() {
+  minimumTime: computed("relativeDate", "date", function () {
     if (this.relativeDate) {
       if (this.date) {
         if (this.date.diff(this.relativeDate, "minutes") > 1440) {
@@ -76,7 +76,7 @@ export default Component.extend({
     }
   }),
 
-  timeOptions: computed("minimumTime", "hours", "minutes", function() {
+  timeOptions: computed("minimumTime", "hours", "minutes", function () {
     let options = [];
 
     const start = this.minimumTime
@@ -111,7 +111,7 @@ export default Component.extend({
 
     options = options.sort((a, b) => a - b);
 
-    return options.map(option => {
+    return options.map((option) => {
       let name = convertMinutesToString(option);
       let label;
 
@@ -126,12 +126,12 @@ export default Component.extend({
         id: option,
         name,
         label,
-        title: name
+        title: name,
       };
     });
   }),
 
-  time: computed("minimumTime", "hours", "minutes", function() {
+  time: computed("minimumTime", "hours", "minutes", function () {
     if (isPresent(this.hours) && isPresent(this.minutes)) {
       return parseInt(this.hours, 10) * 60 + parseInt(this.minutes, 10);
     }
@@ -157,15 +157,15 @@ export default Component.extend({
 
           this.onChange({
             hours: parseInt(hours, 10),
-            minutes: parseInt(minutes, 10)
+            minutes: parseInt(minutes, 10),
           });
         }
       } else {
         this.onChange({
           hours: convertMinutes(time).hours,
-          minutes: convertMinutes(time).minutes
+          minutes: convertMinutes(time).minutes,
         });
       }
     }
-  }
+  },
 });

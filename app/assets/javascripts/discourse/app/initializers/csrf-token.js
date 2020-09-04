@@ -15,7 +15,7 @@ export default {
       installed = true;
     }
 
-    callbacks.add(function(options, originalOptions, xhr) {
+    callbacks.add(function (options, originalOptions, xhr) {
       if (!options.crossDomain) {
         xhr.setRequestHeader("X-CSRF-Token", session.get("csrfToken"));
       }
@@ -24,5 +24,5 @@ export default {
 
   teardown() {
     callbacks.empty();
-  }
+  },
 };

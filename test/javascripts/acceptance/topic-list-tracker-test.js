@@ -2,11 +2,11 @@ import { acceptance } from "helpers/qunit-helpers";
 import {
   nextTopicUrl,
   previousTopicUrl,
-  setTopicId
+  setTopicId,
 } from "discourse/lib/topic-list-tracker";
 acceptance("Topic list tracking");
 
-QUnit.test("Navigation", async assert => {
+QUnit.test("Navigation", async (assert) => {
   await visit("/");
   let url = await nextTopicUrl();
   assert.equal(url, "/t/error-after-upgrade-to-0-9-7-9/11557");

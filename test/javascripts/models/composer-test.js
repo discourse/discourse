@@ -5,7 +5,7 @@ import {
   EDIT,
   REPLY,
   CREATE_TOPIC,
-  PRIVATE_MESSAGE
+  PRIVATE_MESSAGE,
 } from "discourse/models/composer";
 import Post from "discourse/models/post";
 import createStore from "helpers/create-store";
@@ -25,8 +25,8 @@ function openComposer(opts) {
   return composer;
 }
 
-QUnit.test("replyLength", assert => {
-  const replyLength = function(val, expectedLength) {
+QUnit.test("replyLength", (assert) => {
+  const replyLength = function (val, expectedLength) {
     const composer = createComposer({ reply: val });
     assert.equal(composer.get("replyLength"), expectedLength);
   };
@@ -46,9 +46,9 @@ QUnit.test("replyLength", assert => {
   );
 });
 
-QUnit.test("missingReplyCharacters", function(assert) {
+QUnit.test("missingReplyCharacters", function (assert) {
   this.siteSettings.min_first_post_length = 40;
-  const missingReplyCharacters = function(
+  const missingReplyCharacters = function (
     val,
     isPM,
     isFirstPost,
@@ -96,7 +96,7 @@ QUnit.test("missingReplyCharacters", function(assert) {
     categoryId: 12345,
     featuredLink: link,
     action: CREATE_TOPIC,
-    reply: link
+    reply: link,
   });
 
   assert.equal(
@@ -106,11 +106,11 @@ QUnit.test("missingReplyCharacters", function(assert) {
   );
 });
 
-QUnit.test("missingTitleCharacters", function(assert) {
-  const missingTitleCharacters = function(val, isPM, expected, message) {
+QUnit.test("missingTitleCharacters", function (assert) {
+  const missingTitleCharacters = function (val, isPM, expected, message) {
     const composer = createComposer({
       title: val,
-      action: isPM ? PRIVATE_MESSAGE : REPLY
+      action: isPM ? PRIVATE_MESSAGE : REPLY,
     });
     assert.equal(composer.get("missingTitleCharacters"), expected, message);
   };
@@ -129,13 +129,13 @@ QUnit.test("missingTitleCharacters", function(assert) {
   );
 });
 
-QUnit.test("replyDirty", assert => {
+QUnit.test("replyDirty", (assert) => {
   const composer = createComposer();
   assert.ok(!composer.get("replyDirty"), "by default it's false");
 
   composer.setProperties({
     originalText: "hello",
-    reply: "hello"
+    reply: "hello",
   });
 
   assert.ok(
@@ -146,7 +146,7 @@ QUnit.test("replyDirty", assert => {
   assert.ok(composer.get("replyDirty"), "it's true when the reply changes");
 });
 
-QUnit.test("appendText", assert => {
+QUnit.test("appendText", (assert) => {
   const composer = createComposer();
 
   assert.blank(composer.get("reply"), "the reply is blank by default");
@@ -179,7 +179,7 @@ QUnit.test("appendText", assert => {
   assert.equal(composer.get("reply"), "c\n\nab");
 });
 
-QUnit.test("prependText", assert => {
+QUnit.test("prependText", (assert) => {
   const composer = createComposer();
 
   assert.blank(composer.get("reply"), "the reply is blank by default");
@@ -202,7 +202,7 @@ QUnit.test("prependText", assert => {
   );
 });
 
-QUnit.test("Title length for regular topics", function(assert) {
+QUnit.test("Title length for regular topics", function (assert) {
   this.siteSettings.min_topic_title_length = 5;
   this.siteSettings.max_topic_title_length = 10;
   const composer = createComposer();
@@ -217,7 +217,7 @@ QUnit.test("Title length for regular topics", function(assert) {
   assert.ok(composer.get("titleLengthValid"), "in the range is okay");
 });
 
-QUnit.test("Title length for private messages", function(assert) {
+QUnit.test("Title length for private messages", function (assert) {
   this.siteSettings.min_personal_message_title_length = 5;
   this.siteSettings.max_topic_title_length = 10;
   const composer = createComposer({ action: PRIVATE_MESSAGE });
@@ -232,15 +232,18 @@ QUnit.test("Title length for private messages", function(assert) {
   assert.ok(composer.get("titleLengthValid"), "in the range is okay");
 });
 
-QUnit.test("Post length for private messages with non human users", assert => {
-  const composer = createComposer({
-    topic: EmberObject.create({ pm_with_non_human_user: true })
-  });
+QUnit.test(
+  "Post length for private messages with non human users",
+  (assert) => {
+    const composer = createComposer({
+      topic: EmberObject.create({ pm_with_non_human_user: true }),
+    });
 
-  assert.equal(composer.get("minimumPostLength"), 1);
-});
+    assert.equal(composer.get("minimumPostLength"), 1);
+  }
+);
 
-QUnit.test("editingFirstPost", assert => {
+QUnit.test("editingFirstPost", (assert) => {
   const composer = createComposer();
   assert.ok(!composer.get("editingFirstPost"), "it's false by default");
 
@@ -258,12 +261,12 @@ QUnit.test("editingFirstPost", assert => {
   );
 });
 
-QUnit.test("clearState", assert => {
+QUnit.test("clearState", (assert) => {
   const composer = createComposer({
     originalText: "asdf",
     reply: "asdf2",
     post: Post.create({ id: 1 }),
-    title: "wat"
+    title: "wat",
   });
 
   composer.clearState();
@@ -274,24 +277,24 @@ QUnit.test("clearState", assert => {
   assert.blank(composer.get("title"));
 });
 
-QUnit.test("initial category when uncategorized is allowed", function(assert) {
+QUnit.test("initial category when uncategorized is allowed", function (assert) {
   this.siteSettings.allow_uncategorized_topics = true;
   const composer = openComposer({
     action: CREATE_TOPIC,
     draftKey: "asfd",
-    draftSequence: 1
+    draftSequence: 1,
   });
   assert.ok(!composer.get("categoryId"), "Uncategorized by default");
 });
 
-QUnit.test("initial category when uncategorized is not allowed", function(
+QUnit.test("initial category when uncategorized is not allowed", function (
   assert
 ) {
   this.siteSettings.allow_uncategorized_topics = false;
   const composer = openComposer({
     action: CREATE_TOPIC,
     draftKey: "asfd",
-    draftSequence: 1
+    draftSequence: 1,
   });
   assert.ok(
     !composer.get("categoryId"),
@@ -299,15 +302,15 @@ QUnit.test("initial category when uncategorized is not allowed", function(
   );
 });
 
-QUnit.test("open with a quote", assert => {
+QUnit.test("open with a quote", (assert) => {
   const quote =
     '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
-  const newComposer = function() {
+  const newComposer = function () {
     return openComposer({
       action: REPLY,
       draftKey: "asfd",
       draftSequence: 1,
-      quote: quote
+      quote: quote,
     });
   };
 
@@ -323,7 +326,7 @@ QUnit.test("open with a quote", assert => {
   );
 });
 
-QUnit.test("Title length for static page topics as admin", function(assert) {
+QUnit.test("Title length for static page topics as admin", function (assert) {
   this.siteSettings.min_topic_title_length = 5;
   this.siteSettings.max_topic_title_length = 10;
   const composer = createComposer();
@@ -331,7 +334,7 @@ QUnit.test("Title length for static page topics as admin", function(assert) {
   const post = Post.create({
     id: 123,
     post_number: 2,
-    static_doc: true
+    static_doc: true,
   });
   composer.setProperties({ post: post, action: EDIT });
 
@@ -351,7 +354,7 @@ QUnit.test("Title length for static page topics as admin", function(assert) {
   );
 });
 
-QUnit.test("title placeholder depends on what you're doing", function(assert) {
+QUnit.test("title placeholder depends on what you're doing", function (assert) {
   let composer = createComposer({ action: CREATE_TOPIC });
   assert.equal(
     composer.get("titlePlaceholder"),
@@ -383,7 +386,9 @@ QUnit.test("title placeholder depends on what you're doing", function(assert) {
   );
 });
 
-QUnit.test("allows featured link before choosing a category", function(assert) {
+QUnit.test("allows featured link before choosing a category", function (
+  assert
+) {
   this.siteSettings.topic_featured_link_enabled = true;
   this.siteSettings.allow_uncategorized_topics = false;
   let composer = createComposer({ action: CREATE_TOPIC });
@@ -395,14 +400,14 @@ QUnit.test("allows featured link before choosing a category", function(assert) {
   assert.ok(composer.get("canEditTopicFeaturedLink"), "can paste link");
 });
 
-QUnit.test("targetRecipientsArray contains types", assert => {
+QUnit.test("targetRecipientsArray contains types", (assert) => {
   let composer = createComposer({
-    targetRecipients: "test,codinghorror,staff,foo@bar.com"
+    targetRecipients: "test,codinghorror,staff,foo@bar.com",
   });
   assert.ok(composer.targetRecipientsArray, [
     { type: "group", name: "test" },
     { type: "user", name: "codinghorror" },
     { type: "group", name: "staff" },
-    { type: "email", name: "foo@bar.com" }
+    { type: "email", name: "foo@bar.com" },
   ]);
 });

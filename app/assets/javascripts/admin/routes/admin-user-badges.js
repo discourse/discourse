@@ -11,7 +11,7 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     // Find all badges.
     controller.set("loading", true);
-    Badge.findAll().then(function(badges) {
+    Badge.findAll().then(function (badges) {
       controller.set("badges", badges);
       if (badges.length > 0) {
         var grantableBadges = controller.get("grantableBadges");
@@ -23,5 +23,5 @@ export default DiscourseRoute.extend({
     });
     // Set the model.
     controller.set("model", model);
-  }
+  },
 });

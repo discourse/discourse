@@ -79,7 +79,7 @@ export default class LockOn {
   _addListener() {
     const body = document.querySelector("body");
 
-    SCROLL_EVENTS.forEach(event => {
+    SCROLL_EVENTS.forEach((event) => {
       body.addEventListener(event, this._scrollListener);
     });
   }
@@ -87,7 +87,7 @@ export default class LockOn {
   _removeListener() {
     const body = document.querySelector("body");
 
-    SCROLL_EVENTS.forEach(event => {
+    SCROLL_EVENTS.forEach((event) => {
       body.removeEventListener(event, this._scrollListener);
     });
   }

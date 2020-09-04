@@ -10,7 +10,7 @@ import round from "discourse/lib/round";
 import {
   fillMissingDates,
   formatUsername,
-  toNumber
+  toNumber,
 } from "discourse/lib/utilities";
 import { number, durationTiny } from "discourse/lib/formatter";
 import { renderAvatar } from "discourse/helpers/user-avatar";
@@ -28,15 +28,9 @@ const Report = EmberObject.extend({
 
   @discourseComputed("type", "start_date", "end_date")
   reportUrl(type, start_date, end_date) {
-    start_date = moment
-      .utc(start_date)
-      .locale("en")
-      .format("YYYY-MM-DD");
+    start_date = moment.utc(start_date).locale("en").format("YYYY-MM-DD");
 
-    end_date = moment
-      .utc(end_date)
-      .locale("en")
-      .format("YYYY-MM-DD");
+    end_date = moment.utc(end_date).locale("en").format("YYYY-MM-DD");
 
     return getURL(
       `/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`
@@ -49,7 +43,7 @@ const Report = EmberObject.extend({
         .subtract(numDaysAgo, "days")
         .locale("en")
         .format("YYYY-MM-DD");
-      const item = this.data.find(d => d.x === wantedDate);
+      const item = this.data.find((d) => d.x === wantedDate);
       if (item) {
         return item.y;
       }
@@ -59,16 +53,12 @@ const Report = EmberObject.extend({
 
   valueFor(startDaysAgo, endDaysAgo) {
     if (this.data) {
-      const earliestDate = moment()
-        .subtract(endDaysAgo, "days")
-        .startOf("day");
-      const latestDate = moment()
-        .subtract(startDaysAgo, "days")
-        .startOf("day");
+      const earliestDate = moment().subtract(endDaysAgo, "days").startOf("day");
+      const latestDate = moment().subtract(startDaysAgo, "days").startOf("day");
       let d,
         sum = 0,
         count = 0;
-      this.data.forEach(datum => {
+      this.data.forEach((datum) => {
         d = moment(datum.x);
         if (d >= earliestDate && d <= latestDate) {
           sum += datum.y;
@@ -218,7 +208,7 @@ const Report = EmberObject.extend({
     return I18n.t("admin.dashboard.reports.trend_title", {
       percent,
       prev,
-      current
+      current,
     });
   },
 
@@ -268,7 +258,7 @@ const Report = EmberObject.extend({
 
   @discourseComputed("labels")
   computedLabels(labels) {
-    return labels.map(label => {
+    return labels.map((label) => {
       const type = label.type || "string";
 
       let mainProperty;
@@ -317,9 +307,9 @@ const Report = EmberObject.extend({
             value,
             type,
             property: mainProperty,
-            formatedValue: value ? escapeExpression(value) : "—"
+            formatedValue: value ? escapeExpression(value) : "—",
           };
-        }
+        },
       };
     });
   },
@@ -333,7 +323,7 @@ const Report = EmberObject.extend({
       const user = EmberObject.create({
         username,
         name: formatUsername(username),
-        avatar_template: row[properties.avatar]
+        avatar_template: row[properties.avatar],
       });
 
       const href = getURL(`/admin/users/${userId}/${username}`);
@@ -341,7 +331,7 @@ const Report = EmberObject.extend({
       const avatarImg = renderAvatar(user, {
         imageSize: "tiny",
         ignoreTitle: true,
-        siteSettings: this.siteSettings
+        siteSettings: this.siteSettings,
       });
 
       return `<a href='${href}'>${avatarImg}<span class='username'>${user.name}</span></a>`;
@@ -349,7 +339,7 @@ const Report = EmberObject.extend({
 
     return {
       value: username,
-      formatedValue: username ? formatedValue() : "—"
+      formatedValue: username ? formatedValue() : "—",
     };
   },
 
@@ -364,7 +354,7 @@ const Report = EmberObject.extend({
 
     return {
       value: topicTitle,
-      formatedValue: topicTitle ? formatedValue() : "—"
+      formatedValue: topicTitle ? formatedValue() : "—",
     };
   },
 
@@ -380,21 +370,21 @@ const Report = EmberObject.extend({
       formatedValue:
         postTitle && href
           ? `<a href='${href}'>${escapeExpression(postTitle)}</a>`
-          : "—"
+          : "—",
     };
   },
 
   _secondsLabel(value) {
     return {
       value: toNumber(value),
-      formatedValue: durationTiny(value)
+      formatedValue: durationTiny(value),
     };
   },
 
   _percentLabel(value) {
     return {
       value: toNumber(value),
-      formatedValue: value ? `${value}%` : "—"
+      formatedValue: value ? `${value}%` : "—",
     };
   },
 
@@ -407,21 +397,21 @@ const Report = EmberObject.extend({
 
     return {
       value: toNumber(value),
-      formatedValue: value ? formatedValue() : "—"
+      formatedValue: value ? formatedValue() : "—",
     };
   },
 
   _bytesLabel(value) {
     return {
       value: toNumber(value),
-      formatedValue: I18n.toHumanSize(value)
+      formatedValue: I18n.toHumanSize(value),
     };
   },
 
   _dateLabel(value, date, format = "LL") {
     return {
       value,
-      formatedValue: value ? date.format(format) : "—"
+      formatedValue: value ? date.format(format) : "—",
     };
   },
 
@@ -430,7 +420,7 @@ const Report = EmberObject.extend({
 
     return {
       value,
-      formatedValue: value ? escaped : "—"
+      formatedValue: value ? escaped : "—",
     };
   },
 
@@ -445,7 +435,7 @@ const Report = EmberObject.extend({
 
     return {
       value,
-      formatedValue: value ? formatedValue(value, row[properties[1]]) : "—"
+      formatedValue: value ? formatedValue(value, row[properties[1]]) : "—",
     };
   },
 
@@ -482,7 +472,7 @@ const Report = EmberObject.extend({
       default:
         return "minus";
     }
-  }
+  },
 });
 
 Report.reopenClass({
@@ -503,7 +493,7 @@ Report.reopenClass({
         .format("YYYY-MM-DD");
 
       if (report.modes[0] === "stacked_chart") {
-        report[filledField] = report[dataField].map(rep => {
+        report[filledField] = report[dataField].map((rep) => {
           return {
             req: rep.req,
             label: rep.label,
@@ -512,7 +502,7 @@ Report.reopenClass({
               JSON.parse(JSON.stringify(rep.data)),
               startDateFormatted,
               endDateFormatted
-            )
+            ),
           };
         });
       } else {
@@ -531,9 +521,9 @@ Report.reopenClass({
         start_date: startDate,
         end_date: endDate,
         category_id: categoryId,
-        group_id: groupId
-      }
-    }).then(json => {
+        group_id: groupId,
+      },
+    }).then((json) => {
       // don’t fill for large multi column tables
       // which are not date based
       const modes = json.report.modes;
@@ -547,7 +537,7 @@ Report.reopenClass({
       if (json.report.related_report) {
         // TODO: fillMissingDates if xaxis is date
         const related = Report.create({
-          type: json.report.related_report.type
+          type: json.report.related_report.type,
         });
         related.setProperties(json.report.related_report);
         model.set("relatedReport", related);
@@ -555,7 +545,7 @@ Report.reopenClass({
 
       return model;
     });
-  }
+  },
 });
 
 export default Report;

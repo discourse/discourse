@@ -63,8 +63,8 @@ export function createPreviewComponent(width, height, obj) {
         const images = this.images();
         if (images) {
           return Promise.all(
-            Object.keys(images).map(id => {
-              return loadImage(images[id]).then(img => (this[id] = img));
+            Object.keys(images).map((id) => {
+              return loadImage(images[id]).then((img) => (this[id] = img));
             })
           );
         }
@@ -115,7 +115,7 @@ export function createPreviewComponent(width, height, obj) {
         return [
           { name: "consecteteur", color: "#652D90" },
           { name: "ultrices", color: "#3AB54A" },
-          { name: "placerat", color: "#25AAE2" }
+          { name: "placerat", color: "#25AAE2" },
         ];
       },
 
@@ -273,7 +273,7 @@ export function createPreviewComponent(width, height, obj) {
 
         x += categoriesSize * 0.6;
         ctx.fillText("Top", x, headerHeight + headerMargin * 1.5 + fontSize);
-      }
+      },
     },
     obj
   );
@@ -286,7 +286,7 @@ function loadImage(src) {
 
   const img = new Image();
   img.src = getUrl(src);
-  return new Promise(resolve => (img.onload = () => resolve(img)));
+  return new Promise((resolve) => (img.onload = () => resolve(img)));
 }
 
 export function parseColor(color) {
@@ -296,7 +296,7 @@ export function parseColor(color) {
     return [
       parseInt(c.substr(0, 2), 16),
       parseInt(c.substr(2, 2), 16),
-      parseInt(c.substr(4, 2), 16)
+      parseInt(c.substr(4, 2), 16),
     ];
   }
 

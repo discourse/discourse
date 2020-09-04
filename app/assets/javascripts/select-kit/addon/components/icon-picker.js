@@ -5,7 +5,7 @@ import { makeArray } from "discourse-common/lib/helpers";
 import {
   convertIconClass,
   disableMissingIconWarning,
-  enableMissingIconWarning
+  enableMissingIconWarning,
 } from "discourse-common/lib/icon-library";
 import { isDevelopment } from "discourse-common/config/environment";
 
@@ -23,7 +23,7 @@ export default MultiSelectComponent.extend({
     }
   },
 
-  content: computed("value.[]", function() {
+  content: computed("value.[]", function () {
     return makeArray(this.value).map(this._processIcon);
   }),
 
@@ -36,8 +36,8 @@ export default MultiSelectComponent.extend({
       return this._cachedIconsList;
     } else {
       return ajax("/svg-sprite/picker-search", {
-        data: { filter }
-      }).then(icons => {
+        data: { filter },
+      }).then((icons) => {
         icons = icons.map(this._processIcon);
         if (filter === "") {
           this._cachedIconsList = icons;
@@ -70,7 +70,7 @@ export default MultiSelectComponent.extend({
     return {
       id: iconName,
       name: iconName,
-      icon: strippedIconName
+      icon: strippedIconName,
     };
   },
 
@@ -93,6 +93,6 @@ export default MultiSelectComponent.extend({
       }
 
       this.attrs.onChange && this.attrs.onChange(value, item);
-    }
-  }
+    },
+  },
 });

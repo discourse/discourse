@@ -7,9 +7,9 @@ let _events = {};
 export function clearAppEventsCache(container) {
   if (container) {
     const appEvents = container.lookup("service:app-events");
-    Object.keys(_events).forEach(eventKey => {
+    Object.keys(_events).forEach((eventKey) => {
       const event = _events[eventKey];
-      event.forEach(listener => {
+      event.forEach((listener) => {
         if (appEvents.has(eventKey)) {
           appEvents.off(eventKey, listener.target, listener.fn);
         }
@@ -49,18 +49,18 @@ export default Service.extend(Evented, {
           "Removing all event listeners at once is deprecated, please remove each listener individually."
         );
 
-        _events[name].forEach(ref => {
+        _events[name].forEach((ref) => {
           this._super(name, ref.target, ref.fn);
         });
         delete _events[name];
       } else if (arguments.length === 3) {
         this._super(...arguments);
 
-        _events[name] = _events[name].filter(e => e.fn !== fn);
+        _events[name] = _events[name].filter((e) => e.fn !== fn);
         if (_events[name].length === 0) delete _events[name];
       }
     }
 
     return this;
-  }
+  },
 });

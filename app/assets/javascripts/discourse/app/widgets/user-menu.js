@@ -3,14 +3,14 @@ import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 
 const UserMenuAction = {
-  QUICK_ACCESS: "quickAccess"
+  QUICK_ACCESS: "quickAccess",
 };
 
 const QuickAccess = {
   BOOKMARKS: "bookmarks",
   MESSAGES: "messages",
   NOTIFICATIONS: "notifications",
-  PROFILE: "profile"
+  PROFILE: "profile",
 };
 
 let extraGlyphs;
@@ -30,7 +30,7 @@ createWidget("user-menu-links", {
       icon: "cog",
       href: `${this.attrs.path}/preferences`,
       action: UserMenuAction.QUICK_ACCESS,
-      actionParam: QuickAccess.PROFILE
+      actionParam: QuickAccess.PROFILE,
     };
   },
 
@@ -41,7 +41,7 @@ createWidget("user-menu-links", {
       icon: "bell",
       href: `${this.attrs.path}/notifications`,
       action: UserMenuAction.QUICK_ACCESS,
-      actionParam: QuickAccess.NOTIFICATIONS
+      actionParam: QuickAccess.NOTIFICATIONS,
     };
   },
 
@@ -52,7 +52,7 @@ createWidget("user-menu-links", {
       label: "user.bookmarks",
       className: "user-bookmarks-link",
       icon: "bookmark",
-      href: `${this.attrs.path}/activity/bookmarks`
+      href: `${this.attrs.path}/activity/bookmarks`,
     };
   },
 
@@ -63,7 +63,7 @@ createWidget("user-menu-links", {
       label: "user.private_messages",
       className: "user-pms-link",
       icon: "envelope",
-      href: `${this.attrs.path}/messages`
+      href: `${this.attrs.path}/messages`,
     };
   },
 
@@ -85,7 +85,7 @@ createWidget("user-menu-links", {
     const glyphs = [];
 
     if (extraGlyphs) {
-      extraGlyphs.forEach(g => {
+      extraGlyphs.forEach((g) => {
         if (typeof g === "function") {
           g = g(this);
         }
@@ -107,8 +107,8 @@ createWidget("user-menu-links", {
     return h("ul.menu-links-row", [
       h(
         "li.glyphs",
-        glyphs.map(l => this.glyphHtml(l))
-      )
+        glyphs.map((l) => this.glyphHtml(l))
+      ),
     ]);
   },
 
@@ -132,7 +132,7 @@ createWidget("user-menu-links", {
       action === UserMenuAction.QUICK_ACCESS &&
       actionParam === this.attrs.currentQuickAccess
     );
-  }
+  },
 });
 
 export default createWidget("user-menu", {
@@ -141,14 +141,14 @@ export default createWidget("user-menu", {
 
   settings: {
     maxWidth: 320,
-    showLogoutButton: true
+    showLogoutButton: true,
   },
 
   defaultState() {
     return {
       currentQuickAccess: QuickAccess.NOTIFICATIONS,
       hasUnread: false,
-      markUnread: null
+      markUnread: null,
     };
   },
 
@@ -159,9 +159,9 @@ export default createWidget("user-menu", {
     const result = [
       this.attach("user-menu-links", {
         path,
-        currentQuickAccess
+        currentQuickAccess,
       }),
-      this.quickAccessPanel(path)
+      this.quickAccessPanel(path),
     ];
 
     return result;
@@ -179,7 +179,7 @@ export default createWidget("user-menu", {
   html() {
     return this.attach("menu-panel", {
       maxWidth: this.settings.maxWidth,
-      contents: () => this.panelContents()
+      contents: () => this.panelContents(),
     });
   },
 
@@ -222,7 +222,7 @@ export default createWidget("user-menu", {
     // This deliberately does NOT fallback to a default quick access panel.
     return this.attach(`quick-access-${this.state.currentQuickAccess}`, {
       path,
-      showLogoutButton
+      showLogoutButton,
     });
-  }
+  },
 });

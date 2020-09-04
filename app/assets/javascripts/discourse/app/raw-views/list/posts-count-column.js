@@ -38,5 +38,5 @@ export default EmberObject.extend({
     return "";
   },
 
-  likesHeat: fmt("ratioText", "heatmap-%@")
+  likesHeat: fmt("ratioText", "heatmap-%@"),
 });

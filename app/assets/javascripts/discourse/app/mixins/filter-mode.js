@@ -8,7 +8,7 @@ export default Mixin.create({
     "filterType",
     "category",
     "noSubcategories",
-    function() {
+    function () {
       const rawFilterMode = this.rawFilterMode;
       if (rawFilterMode) {
         return rawFilterMode;
@@ -45,6 +45,6 @@ export default Mixin.create({
       }
 
       return value;
-    }
-  })
+    },
+  }),
 });

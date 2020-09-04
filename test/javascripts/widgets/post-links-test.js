@@ -11,14 +11,14 @@ widgetTest("duplicate links", {
         {
           title: "Evil Trout Link",
           url: "http://eviltrout.com",
-          reflection: true
+          reflection: true,
         },
         {
           title: "Evil Trout Link",
           url: "http://dupe.eviltrout.com",
-          reflection: true
-        }
-      ]
+          reflection: true,
+        },
+      ],
     });
   },
   test(assert) {
@@ -27,7 +27,7 @@ widgetTest("duplicate links", {
       1,
       "it hides the dupe link"
     );
-  }
+  },
 });
 
 widgetTest("collapsed links", {
@@ -42,13 +42,13 @@ widgetTest("collapsed links", {
         { title: "Link 4", url: "http://eviltrout.com?4", reflection: true },
         { title: "Link 5", url: "http://eviltrout.com?5", reflection: true },
         { title: "Link 6", url: "http://eviltrout.com?6", reflection: true },
-        { title: "Link 7", url: "http://eviltrout.com?7", reflection: true }
-      ]
+        { title: "Link 7", url: "http://eviltrout.com?7", reflection: true },
+      ],
     });
   },
   async test(assert) {
     assert.ok(find(".expand-links").length === 1, "collapsed by default");
     await click("a.expand-links");
     assert.equal(find(".post-links a.track-link").length, 7);
-  }
+  },
 });

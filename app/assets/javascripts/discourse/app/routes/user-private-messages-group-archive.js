@@ -11,7 +11,7 @@ export default createPMRoute("groups", "private-messages-groups").extend({
     if (groupName) {
       return [
         `${groupName.capitalize()} ${I18n.t("user.messages.archive")}`,
-        I18n.t("user.private_messages")
+        I18n.t("user.private_messages"),
       ];
     }
   },
@@ -44,5 +44,5 @@ export default createPMRoute("groups", "private-messages-groups").extend({
     this.controllerFor("user-topics-list").subscribe(
       `/private-messages/group/${group}/archive`
     );
-  }
+  },
 });

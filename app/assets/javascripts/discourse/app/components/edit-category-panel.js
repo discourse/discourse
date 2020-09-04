@@ -11,8 +11,8 @@ export function buildCategoryPanel(tab, extras) {
       classNameBindings: [
         ":modal-tab",
         "activeTab::hide",
-        `:edit-category-tab-${tab}`
-      ]
+        `:edit-category-tab-${tab}`,
+      ],
     },
     extras || {}
   );

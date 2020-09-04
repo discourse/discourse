@@ -16,7 +16,7 @@ export default Component.extend({
     this.setProperties({
       loading: true,
       noResults: true,
-      selectedTopicId: null
+      selectedTopicId: null,
     });
     this.search(this.messageTitle);
   },
@@ -30,7 +30,7 @@ export default Component.extend({
     this.set("loading", false);
   },
 
-  search: discourseDebounce(function(title) {
+  search: discourseDebounce(function (title) {
     const currentTopicId = this.currentTopicId;
 
     if (isEmpty(title)) {
@@ -41,14 +41,14 @@ export default Component.extend({
     searchForTerm(title, {
       typeFilter: "private_messages",
       searchForId: true,
-      restrictToArchetype: "private_message"
-    }).then(results => {
+      restrictToArchetype: "private_message",
+    }).then((results) => {
       if (results && results.posts && results.posts.length > 0) {
         this.set(
           "messages",
           results.posts
             .mapBy("topic")
-            .filter(t => t.get("id") !== currentTopicId)
+            .filter((t) => t.get("id") !== currentTopicId)
         );
       } else {
         this.setProperties({ messages: null, loading: false });
@@ -62,6 +62,6 @@ export default Component.extend({
       this.set("selectedTopicId", messageId);
       next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
       return false;
-    }
-  }
+    },
+  },
 });

@@ -15,7 +15,7 @@ import {
   WidgetMouseOverHook,
   WidgetMouseOutHook,
   WidgetTouchStartHook,
-  WidgetTouchEndHook
+  WidgetTouchEndHook,
 } from "discourse/widgets/hooks";
 import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -42,7 +42,7 @@ export function traverseCustomWidgets(tree, callback) {
     callback(tree);
   }
 
-  (tree.children || (tree.vnode ? tree.vnode.children : [])).forEach(node => {
+  (tree.children || (tree.vnode ? tree.vnode.children : [])).forEach((node) => {
     traverseCustomWidgets(node, callback);
   });
 }
@@ -52,14 +52,14 @@ export function applyDecorators(widget, type, attrs, state) {
 
   if (decorators.length) {
     const helper = new DecoratorHelper(widget, attrs, state);
-    return decorators.map(d => d(helper));
+    return decorators.map((d) => d(helper));
   }
 
   return [];
 }
 
 export function resetDecorators() {
-  Object.keys(_decorators).forEach(key => delete _decorators[key]);
+  Object.keys(_decorators).forEach((key) => delete _decorators[key]);
 }
 
 const _customSettings = {};
@@ -81,7 +81,7 @@ export function createWidgetFrom(base, name, opts) {
     opts.html = opts.template;
   }
 
-  Object.keys(opts).forEach(k => (result.prototype[k] = opts[k]));
+  Object.keys(opts).forEach((k) => (result.prototype[k] = opts[k]));
   return result;
 }
 
@@ -101,13 +101,13 @@ export function reopenWidget(name, opts) {
     opts.html = opts.template;
   }
 
-  Object.keys(opts).forEach(k => {
+  Object.keys(opts).forEach((k) => {
     let old = existing.prototype[k];
 
     if (old instanceof Function) {
       // Add support for `this._super()` to reopened widgets if the prototype exists in the
       // base object
-      existing.prototype[k] = function(...args) {
+      existing.prototype[k] = function (...args) {
         let ctx = Object.create(this);
         ctx._super = (...superArgs) => old.apply(this, superArgs);
         return opts[k].apply(ctx, args);
@@ -154,7 +154,7 @@ export default class Widget {
     if (this.name) {
       const custom = _customSettings[this.name];
       if (custom) {
-        Object.keys(custom).forEach(k => (this.settings[k] = custom[k]));
+        Object.keys(custom).forEach((k) => (this.settings[k] = custom[k]));
       }
     }
   }

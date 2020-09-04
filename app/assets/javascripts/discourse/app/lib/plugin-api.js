@@ -15,7 +15,7 @@ import {
   createWidget,
   reopenWidget,
   decorateWidget,
-  changeSetting
+  changeSetting,
 } from "discourse/widgets/widget";
 import { preventCloak } from "discourse/widgets/post-stream";
 import { h } from "virtual-dom";
@@ -30,11 +30,11 @@ import { addPostClassesCallback } from "discourse/widgets/post";
 import { addPostTransformCallback } from "discourse/widgets/post-stream";
 import {
   attachAdditionalPanel,
-  addToHeaderIcons
+  addToHeaderIcons,
 } from "discourse/widgets/header";
 import {
   registerIconRenderer,
-  replaceIcon
+  replaceIcon,
 } from "discourse-common/lib/icon-library";
 import { replaceCategoryLinkRenderer } from "discourse/helpers/category-link";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
@@ -49,7 +49,7 @@ import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1
 import Sharing from "discourse/lib/sharing";
 import {
   addComposerUploadHandler,
-  addComposerUploadMarkdownResolver
+  addComposerUploadMarkdownResolver,
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { addExtraIconRenderer } from "discourse/helpers/category-link";
@@ -289,7 +289,7 @@ class PluginApi {
     const site = this._lookupContainer("site:main");
     const loc = site && site.mobileView ? "before" : "after";
 
-    decorateWidget(`poster-name:${loc}`, dec => {
+    decorateWidget(`poster-name:${loc}`, (dec) => {
       const attrs = dec.attrs;
       const result = cb(attrs.userCustomFields || {}, attrs);
 
@@ -299,7 +299,7 @@ class PluginApi {
         if (result.icon) {
           iconBody = iconNode(result.icon);
         } else if (result.emoji) {
-          iconBody = result.emoji.split("|").map(name => {
+          iconBody = result.emoji.split("|").map((name) => {
             let widgetAttrs = { name };
             if (result.emojiTitle) widgetAttrs.title = true;
             return dec.attach("emoji", widgetAttrs);
@@ -491,7 +491,7 @@ class PluginApi {
    ```
    **/
   onPageChange(fn) {
-    this.onAppEvent("page:changed", data => fn(data.url, data.title));
+    this.onAppEvent("page:changed", (data) => fn(data.url, data.title));
   }
 
   /**
@@ -810,7 +810,7 @@ class PluginApi {
       const customHref = item.customHref;
       if (customHref) {
         const router = this.container.lookup("service:router");
-        item.customHref = function(category, args) {
+        item.customHref = function (category, args) {
           return customHref(category, args, router);
         };
       }
@@ -818,7 +818,7 @@ class PluginApi {
       const customFilter = item.customFilter;
       if (customFilter) {
         const router = this.container.lookup("service:router");
-        item.customFilter = function(category, args) {
+        item.customFilter = function (category, args) {
           return customFilter(category, args, router);
         };
       }
@@ -826,7 +826,7 @@ class PluginApi {
       const forceActive = item.forceActive;
       if (forceActive) {
         const router = this.container.lookup("service:router");
-        item.forceActive = function(category, args) {
+        item.forceActive = function (category, args) {
           return forceActive(category, args, router);
         };
       }
@@ -834,7 +834,7 @@ class PluginApi {
       const init = item.init;
       if (init) {
         const router = this.container.lookup("service:router");
-        item.init = function(navItem, category, args) {
+        item.init = function (navItem, category, args) {
           init(navItem, category, args, router);
         };
       }
@@ -1257,7 +1257,7 @@ function decorate(klass, evt, cb, id) {
   }
 
   const mixin = {};
-  mixin["_decorate_" + _decorateId++] = on(evt, function(elem) {
+  mixin["_decorate_" + _decorateId++] = on(evt, function (elem) {
     elem = elem || this.element;
     if (elem) {
       cb(elem);

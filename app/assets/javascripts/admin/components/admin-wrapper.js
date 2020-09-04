@@ -8,5 +8,5 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     $("body").removeClass("admin-interface");
-  }
+  },
 });

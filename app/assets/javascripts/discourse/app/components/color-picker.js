@@ -5,6 +5,6 @@ export default Component.extend({
   actions: {
     selectColor(color) {
       this.set("value", color);
-    }
-  }
+    },
+  },
 });

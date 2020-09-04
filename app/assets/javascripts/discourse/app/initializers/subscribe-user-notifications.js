@@ -4,12 +4,12 @@ import {
   init as initDesktopNotifications,
   onNotification,
   alertChannel,
-  disable as disableDesktopNotifications
+  disable as disableDesktopNotifications,
 } from "discourse/lib/desktop-notifications";
 import {
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
-  isPushNotificationsEnabled
+  isPushNotificationsEnabled,
 } from "discourse/lib/push-notifications";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -23,13 +23,13 @@ export default {
     const appEvents = container.lookup("service:app-events");
 
     if (user) {
-      bus.subscribe("/reviewable_counts", data => {
+      bus.subscribe("/reviewable_counts", (data) => {
         user.set("reviewable_count", data.reviewable_count);
       });
 
       bus.subscribe(
         `/notification/${user.get("id")}`,
-        data => {
+        (data) => {
           const store = container.lookup("service:store");
           const oldUnread = user.get("unread_notifications");
           const oldHighPriority = user.get(
@@ -40,7 +40,7 @@ export default {
             unread_notifications: data.unread_notifications,
             unread_high_priority_notifications:
               data.unread_high_priority_notifications,
-            read_first_notification: data.read_first_notification
+            read_first_notification: data.read_first_notification,
           });
 
           if (
@@ -69,7 +69,7 @@ export default {
           if (stale && stale.hasResults && lastNotification) {
             const oldNotifications = stale.results.get("content");
             const staleIndex = oldNotifications.findIndex(
-              n => n.id === lastNotification.id
+              (n) => n.id === lastNotification.id
             );
 
             if (staleIndex === -1) {
@@ -77,7 +77,7 @@ export default {
               let insertPosition = 0;
               if (lastNotification.notification_type !== 6) {
                 insertPosition = oldNotifications.findIndex(
-                  n => n.notification_type !== 6 || n.read
+                  (n) => n.notification_type !== 6 || n.read
                 );
                 insertPosition =
                   insertPosition === -1
@@ -117,17 +117,19 @@ export default {
       const siteSettings = container.lookup("site-settings:main");
       const router = container.lookup("router:main");
 
-      bus.subscribe("/categories", data => {
-        (data.categories || []).forEach(c => site.updateCategory(c));
-        (data.deleted_categories || []).forEach(id => site.removeCategory(id));
+      bus.subscribe("/categories", (data) => {
+        (data.categories || []).forEach((c) => site.updateCategory(c));
+        (data.deleted_categories || []).forEach((id) =>
+          site.removeCategory(id)
+        );
       });
 
-      bus.subscribe("/client_settings", data =>
+      bus.subscribe("/client_settings", (data) =>
         set(siteSettings, data.name, data.value)
       );
 
       if (!isTesting()) {
-        bus.subscribe(alertChannel(user), data =>
+        bus.subscribe(alertChannel(user), (data) =>
           onNotification(data, siteSettings)
         );
         initDesktopNotifications(bus, appEvents);
@@ -140,5 +142,5 @@ export default {
         }
       }
     }
-  }
+  },
 };

@@ -10,12 +10,12 @@ export default NotificationsButtonComponent.extend({
   selectKitOptions: {
     i18nPrefix: "topic.notifications",
     i18nPostfix: "i18nPostfix",
-    showCaret: true
+    showCaret: true,
   },
 
   i18nPrefix: "topic.notifications",
 
-  i18nPostfix: computed("topic.archetype", function() {
+  i18nPostfix: computed("topic.archetype", function () {
     return this.topic.archetype === "private_message" ? "_pm" : "";
-  })
+  }),
 });

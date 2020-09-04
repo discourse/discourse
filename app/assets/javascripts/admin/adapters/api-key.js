@@ -9,5 +9,5 @@ export default RESTAdapter.extend({
 
   apiNameFor() {
     return "key";
-  }
+  },
 });

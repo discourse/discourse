@@ -5,5 +5,5 @@ export default RestrictedUserRoute.extend({
 
   redirect() {
     this.transitionTo("preferences.account");
-  }
+  },
 });

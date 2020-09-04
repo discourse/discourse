@@ -9,9 +9,9 @@ const DEFAULT_CONTENT = {
     { id: 2, translatedLabel: "FooBar" },
     "separator",
     { id: 3, translatedLabel: "With icon", icon: "times" },
-    { id: 4, html: "<b>baz</b>" }
+    { id: 4, html: "<b>baz</b>" },
   ],
-  label: "foo"
+  label: "foo",
 };
 
 async function clickRowById(id) {
@@ -63,7 +63,7 @@ widgetTest("dropdown id", {
 
   test(assert) {
     assert.ok(exists("#my-dropdown"));
-  }
+  },
 });
 
 widgetTest("label", {
@@ -82,7 +82,7 @@ widgetTest("label", {
 
   test(assert) {
     assert.equal(headerLabel(), "FooBaz");
-  }
+  },
 });
 
 widgetTest("translatedLabel", {
@@ -102,7 +102,7 @@ widgetTest("translatedLabel", {
 
   test(assert) {
     assert.equal(headerLabel(), this.translatedLabel);
-  }
+  },
 });
 
 widgetTest("content", {
@@ -117,7 +117,7 @@ widgetTest("content", {
     assert.equal(rowById(1).dataset.id, 1, "it creates rows");
     assert.equal(rowById(2).dataset.id, 2, "it creates rows");
     assert.equal(rowById(3).dataset.id, 3, "it creates rows");
-  }
+  },
 });
 
 widgetTest("onChange action", {
@@ -139,7 +139,7 @@ widgetTest("onChange action", {
 
     this.on(
       "onChange",
-      item => (this._element.querySelector("#test").innerText = item.id)
+      (item) => (this._element.querySelector("#test").innerText = item.id)
     );
   },
 
@@ -147,7 +147,7 @@ widgetTest("onChange action", {
     await toggle();
     await clickRowById(2);
     assert.equal(find("#test").text(), 2, "it calls the onChange actions");
-  }
+  },
 });
 
 widgetTest("can be opened and closed", {
@@ -167,7 +167,7 @@ widgetTest("can be opened and closed", {
     await toggle();
     assert.ok(exists("#my-dropdown.closed"));
     assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
-  }
+  },
 });
 
 widgetTest("icon", {
@@ -180,7 +180,7 @@ widgetTest("icon", {
 
   test(assert) {
     assert.ok(exists(header().querySelector(".d-icon-times")));
-  }
+  },
 });
 
 widgetTest("class", {
@@ -193,7 +193,7 @@ widgetTest("class", {
 
   test(assert) {
     assert.ok(exists("#my-dropdown.activated"));
-  }
+  },
 });
 
 widgetTest("content with translatedLabel", {
@@ -206,7 +206,7 @@ widgetTest("content with translatedLabel", {
   async test(assert) {
     await toggle();
     assert.equal(rowById(2).innerText.trim(), "FooBar");
-  }
+  },
 });
 
 widgetTest("content with label", {
@@ -226,7 +226,7 @@ widgetTest("content with label", {
   async test(assert) {
     await toggle();
     assert.equal(rowById(1).innerText.trim(), "FooBaz");
-  }
+  },
 });
 
 widgetTest("content with icon", {
@@ -239,7 +239,7 @@ widgetTest("content with icon", {
   async test(assert) {
     await toggle();
     assert.ok(exists(rowById(3).querySelector(".d-icon-times")));
-  }
+  },
 });
 
 widgetTest("content with html", {
@@ -252,7 +252,7 @@ widgetTest("content with html", {
   async test(assert) {
     await toggle();
     assert.equal(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
-  }
+  },
 });
 
 widgetTest("separator", {
@@ -269,7 +269,7 @@ widgetTest("separator", {
         "#my-dropdown .widget-dropdown-item:nth-child(3)"
       )[0].classList.contains("separator")
     );
-  }
+  },
 });
 
 widgetTest("hides widget if no content", {
@@ -282,7 +282,7 @@ widgetTest("hides widget if no content", {
   test(assert) {
     assert.notOk(exists("#my-dropdown .widget-dropdown-header"));
     assert.notOk(exists("#my-dropdown .widget-dropdown-body"));
-  }
+  },
 });
 
 widgetTest("headerClass option", {
@@ -297,7 +297,7 @@ widgetTest("headerClass option", {
     assert.ok(header().classList.contains("widget-dropdown-header"));
     assert.ok(header().classList.contains("btn-small"));
     assert.ok(header().classList.contains("and-text"));
-  }
+  },
 });
 
 widgetTest("bodyClass option", {
@@ -313,7 +313,7 @@ widgetTest("bodyClass option", {
     assert.ok(body().classList.contains("widget-dropdown-body"));
     assert.ok(body().classList.contains("gigantic"));
     assert.ok(body().classList.contains("and-yet-small"));
-  }
+  },
 });
 
 widgetTest("caret option", {
@@ -328,5 +328,5 @@ widgetTest("caret option", {
     assert.ok(
       exists("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
     );
-  }
+  },
 });

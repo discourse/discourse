@@ -6,5 +6,5 @@ export default Component.extend({
   layout,
   classNames: ["select-kit-errors-collection"],
   tagName: "ul",
-  isVisible: notEmpty("collection.content")
+  isVisible: notEmpty("collection.content"),
 });

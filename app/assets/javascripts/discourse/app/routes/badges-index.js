@@ -6,7 +6,7 @@ import PreloadStore from "discourse/lib/preload-store";
 export default DiscourseRoute.extend({
   model() {
     if (PreloadStore.get("badges")) {
-      return PreloadStore.getAndRemove("badges").then(json =>
+      return PreloadStore.getAndRemove("badges").then((json) =>
         Badge.createFromJson(json)
       );
     } else {
@@ -22,6 +22,6 @@ export default DiscourseRoute.extend({
     didTransition() {
       this.controllerFor("application").set("showFooter", true);
       return true;
-    }
-  }
+    },
+  },
 });

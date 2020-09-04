@@ -6,7 +6,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import formatTextWithSelection from "helpers/d-editor-helper";
 import {
   setTextareaSelection,
-  getTextareaSelection
+  getTextareaSelection,
 } from "helpers/textarea-selection-helper";
 
 moduleForComponent("d-editor", { integration: true });
@@ -20,12 +20,10 @@ componentTest("preview updates with markdown", {
 
     assert.equal(this.value, "hello **world**");
     assert.equal(
-      find(".d-editor-preview")
-        .html()
-        .trim(),
+      find(".d-editor-preview").html().trim(),
       "<p>hello <strong>world</strong></p>"
     );
-  }
+  },
 });
 
 componentTest("preview sanitizes HTML", {
@@ -33,13 +31,8 @@ componentTest("preview sanitizes HTML", {
 
   async test(assert) {
     await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
-    assert.equal(
-      find(".d-editor-preview")
-        .html()
-        .trim(),
-      '<p>"&gt;</p>'
-    );
-  }
+    assert.equal(find(".d-editor-preview").html().trim(), '<p>"&gt;</p>');
+  },
 });
 
 componentTest("updating the value refreshes the preview", {
@@ -50,21 +43,11 @@ componentTest("updating the value refreshes the preview", {
   },
 
   async test(assert) {
-    assert.equal(
-      find(".d-editor-preview")
-        .html()
-        .trim(),
-      "<p>evil trout</p>"
-    );
+    assert.equal(find(".d-editor-preview").html().trim(), "<p>evil trout</p>");
 
     await this.set("value", "zogstrip");
-    assert.equal(
-      find(".d-editor-preview")
-        .html()
-        .trim(),
-      "<p>zogstrip</p>"
-    );
-  }
+    assert.equal(find(".d-editor-preview").html().trim(), "<p>zogstrip</p>");
+  },
 });
 
 function jumpEnd(textarea) {
@@ -82,7 +65,7 @@ function testCase(title, testFunc) {
     test(assert) {
       const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
       testFunc.call(this, assert, textarea);
-    }
+    },
   });
 }
 
@@ -95,11 +78,14 @@ function composerTestCase(title, testFunc) {
     test(assert) {
       const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
       testFunc.call(this, assert, textarea);
-    }
+    },
   });
 }
 
-testCase(`selecting the space before a word`, async function(assert, textarea) {
+testCase(`selecting the space before a word`, async function (
+  assert,
+  textarea
+) {
   textarea.selectionStart = 5;
   textarea.selectionEnd = 7;
 
@@ -110,7 +96,7 @@ testCase(`selecting the space before a word`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 9);
 });
 
-testCase(`selecting the space after a word`, async function(assert, textarea) {
+testCase(`selecting the space after a word`, async function (assert, textarea) {
   textarea.selectionStart = 0;
   textarea.selectionEnd = 6;
 
@@ -121,7 +107,7 @@ testCase(`selecting the space after a word`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 7);
 });
 
-testCase(`bold button with no selection`, async function(assert, textarea) {
+testCase(`bold button with no selection`, async function (assert, textarea) {
   await click(`button.bold`);
 
   const example = I18n.t(`composer.bold_text`);
@@ -130,7 +116,7 @@ testCase(`bold button with no selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 14 + example.length);
 });
 
-testCase(`bold button with a selection`, async function(assert, textarea) {
+testCase(`bold button with a selection`, async function (assert, textarea) {
   textarea.selectionStart = 6;
   textarea.selectionEnd = 11;
 
@@ -145,7 +131,7 @@ testCase(`bold button with a selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 11);
 });
 
-testCase(`bold with a multiline selection`, async function(assert, textarea) {
+testCase(`bold with a multiline selection`, async function (assert, textarea) {
   this.set("value", "hello\n\nworld\n\ntest.");
 
   textarea.selectionStart = 0;
@@ -162,7 +148,7 @@ testCase(`bold with a multiline selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 12);
 });
 
-testCase(`italic button with no selection`, async function(assert, textarea) {
+testCase(`italic button with no selection`, async function (assert, textarea) {
   await click(`button.italic`);
   const example = I18n.t(`composer.italic_text`);
   assert.equal(this.value, `hello world.*${example}*`);
@@ -171,7 +157,7 @@ testCase(`italic button with no selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 13 + example.length);
 });
 
-testCase(`italic button with a selection`, async function(assert, textarea) {
+testCase(`italic button with a selection`, async function (assert, textarea) {
   textarea.selectionStart = 6;
   textarea.selectionEnd = 11;
 
@@ -186,7 +172,10 @@ testCase(`italic button with a selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 11);
 });
 
-testCase(`italic with a multiline selection`, async function(assert, textarea) {
+testCase(`italic with a multiline selection`, async function (
+  assert,
+  textarea
+) {
   this.set("value", "hello\n\nworld\n\ntest.");
 
   textarea.selectionStart = 0;
@@ -235,7 +224,7 @@ function xyz(x, y, z) {
     }
 `
     );
-  }
+  },
 });
 
 componentTest("code button", {
@@ -317,7 +306,7 @@ third line`
     assert.equal(this.value, "first line\n\nsecond line\n\nthird line");
     assert.equal(textarea.selectionStart, 0);
     assert.equal(textarea.selectionEnd, 23);
-  }
+  },
 });
 
 componentTest("code fences", {
@@ -430,7 +419,7 @@ third line`
 
     assert.equal(textarea.selectionStart, 27);
     assert.equal(textarea.selectionEnd, 27);
-  }
+  },
 });
 
 componentTest("quote button - empty lines", {
@@ -451,7 +440,7 @@ componentTest("quote button - empty lines", {
 
     await click("button.quote");
     assert.equal(this.value, "one\n\ntwo\n\nthree");
-  }
+  },
 });
 
 componentTest("quote button - selecting empty lines", {
@@ -467,10 +456,10 @@ componentTest("quote button - selecting empty lines", {
 
     await click("button.quote");
     assert.equal(this.value, "one\n\n\n> \n> two");
-  }
+  },
 });
 
-testCase("quote button", async function(assert, textarea) {
+testCase("quote button", async function (assert, textarea) {
   textarea.selectionStart = 6;
   textarea.selectionEnd = 9;
 
@@ -492,7 +481,7 @@ testCase("quote button", async function(assert, textarea) {
   assert.equal(this.value, "hello\n\nwor\n\nld.\n\n> Blockquote");
 });
 
-testCase(`bullet button with no selection`, async function(assert, textarea) {
+testCase(`bullet button with no selection`, async function (assert, textarea) {
   const example = I18n.t("composer.list_item");
 
   await click(`button.bullet`);
@@ -504,7 +493,7 @@ testCase(`bullet button with no selection`, async function(assert, textarea) {
   assert.equal(this.value, `hello world.\n\n${example}`);
 });
 
-testCase(`bullet button with a selection`, async function(assert, textarea) {
+testCase(`bullet button with a selection`, async function (assert, textarea) {
   textarea.selectionStart = 6;
   textarea.selectionEnd = 11;
 
@@ -519,7 +508,7 @@ testCase(`bullet button with a selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 12);
 });
 
-testCase(`bullet button with a multiple line selection`, async function(
+testCase(`bullet button with a multiple line selection`, async function (
   assert,
   textarea
 ) {
@@ -539,7 +528,7 @@ testCase(`bullet button with a multiple line selection`, async function(
   assert.equal(textarea.selectionEnd, 24);
 });
 
-testCase(`list button with no selection`, async function(assert, textarea) {
+testCase(`list button with no selection`, async function (assert, textarea) {
   const example = I18n.t("composer.list_item");
 
   await click(`button.list`);
@@ -553,7 +542,7 @@ testCase(`list button with no selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 14 + example.length);
 });
 
-testCase(`list button with a selection`, async function(assert, textarea) {
+testCase(`list button with a selection`, async function (assert, textarea) {
   textarea.selectionStart = 6;
   textarea.selectionEnd = 11;
 
@@ -568,7 +557,7 @@ testCase(`list button with a selection`, async function(assert, textarea) {
   assert.equal(textarea.selectionEnd, 12);
 });
 
-testCase(`list button with line sequence`, async function(assert, textarea) {
+testCase(`list button with line sequence`, async function (assert, textarea) {
   this.set("value", "Hello\n\nWorld\n\nEvil");
 
   textarea.selectionStart = 0;
@@ -596,7 +585,7 @@ componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
     const textarea = find("textarea.d-editor-input");
     await click("button.toggle-direction");
     assert.equal(textarea.attr("dir"), "rtl");
-  }
+  },
 });
 
 componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
@@ -611,10 +600,10 @@ componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
     textarea.attr("dir", "ltr");
     await click("button.toggle-direction");
     assert.equal(textarea.attr("dir"), "rtl");
-  }
+  },
 });
 
-testCase(`doesn't jump to bottom with long text`, async function(
+testCase(`doesn't jump to bottom with long text`, async function (
   assert,
   textarea
 ) {
@@ -636,13 +625,13 @@ componentTest("emoji", {
   template: "{{d-editor value=value}}",
   beforeEach() {
     // Test adding a custom button
-    withPluginApi("0.1", api => {
-      api.onToolbarCreate(toolbar => {
+    withPluginApi("0.1", (api) => {
+      api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
           icon: "far-smile",
-          action: () => toolbar.context.send("emoji")
+          action: () => toolbar.context.send("emoji"),
         });
       });
     });
@@ -661,10 +650,10 @@ componentTest("emoji", {
       '.emoji-picker .section[data-section="smileys_&_emotion"] img.emoji[title="grinning"]'
     );
     assert.equal(this.value, "hello world. :grinning:");
-  }
+  },
 });
 
-testCase("replace-text event by default", async function(assert) {
+testCase("replace-text event by default", async function (assert) {
   this.set("value", "red green blue");
 
   await this.container
@@ -674,7 +663,7 @@ testCase("replace-text event by default", async function(assert) {
   assert.equal(this.value, "red green blue");
 });
 
-composerTestCase("replace-text event for composer", async function(assert) {
+composerTestCase("replace-text event for composer", async function (assert) {
   this.set("value", "red green blue");
 
   await this.container
@@ -695,56 +684,56 @@ composerTestCase("replace-text event for composer", async function(assert) {
     {
       description: "cursor at start remains there",
       before: [0, 0],
-      after: [0, 0]
+      after: [0, 0],
     },
     {
       description: "cursor before needle becomes cursor before replacement",
       before: [BEFORE.indexOf(NEEDLE), 0],
-      after: [AFTER.indexOf(REPLACE), 0]
+      after: [AFTER.indexOf(REPLACE), 0],
     },
     {
       description: "cursor at needle start + 1 moves behind replacement",
       before: [BEFORE.indexOf(NEEDLE) + 1, 0],
-      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0]
+      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0],
     },
     {
       description: "cursor at needle end - 1 stays behind replacement",
       before: [BEFORE.indexOf(NEEDLE) + NEEDLE.length - 1, 0],
-      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0]
+      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0],
     },
     {
       description: "cursor behind needle becomes cursor behind replacement",
       before: [BEFORE.indexOf(NEEDLE) + NEEDLE.length, 0],
-      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0]
+      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0],
     },
     {
       description: "cursor at end remains there",
       before: [BEFORE.length, 0],
-      after: [AFTER.length, 0]
+      after: [AFTER.length, 0],
     },
     {
       description:
         "selection spanning needle start becomes selection until replacement start",
       before: [BEFORE.indexOf(NEEDLE) - 1, 2],
-      after: [AFTER.indexOf(REPLACE) - 1, 1]
+      after: [AFTER.indexOf(REPLACE) - 1, 1],
     },
     {
       description:
         "selection spanning needle end becomes selection from replacement end",
       before: [BEFORE.indexOf(NEEDLE) + NEEDLE.length - 1, 2],
-      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 1]
+      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 1],
     },
     {
       description:
         "selection spanning needle becomes selection spanning replacement",
       before: [BEFORE.indexOf(NEEDLE) - 1, NEEDLE.length + 2],
-      after: [AFTER.indexOf(REPLACE) - 1, REPLACE.length + 2]
+      after: [AFTER.indexOf(REPLACE) - 1, REPLACE.length + 2],
     },
     {
       description: "complete selection remains complete",
       before: [0, BEFORE.length],
-      after: [0, AFTER.length]
-    }
+      after: [0, AFTER.length],
+    },
   ];
 
   for (let i = 0; i < CASES.length; i++) {

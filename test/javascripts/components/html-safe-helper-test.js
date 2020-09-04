@@ -10,5 +10,5 @@ componentTest("default", {
 
   async test(assert) {
     assert.ok(exists("p.cookies"), "it displays the string as html");
-  }
+  },
 });

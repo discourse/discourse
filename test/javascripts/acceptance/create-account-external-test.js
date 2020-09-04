@@ -7,7 +7,7 @@ acceptance("Create Account - external auth", {
       auth_provider: "test",
       email: "blah@example.com",
       can_edit_username: true,
-      can_edit_name: true
+      can_edit_name: true,
     });
     node.id = "data-authentication";
     document.querySelector("head").appendChild(node);
@@ -16,10 +16,10 @@ acceptance("Create Account - external auth", {
     document
       .querySelector("head")
       .removeChild(document.getElementById("data-authentication"));
-  }
+  },
 });
 
-QUnit.test("when skip is disabled (default)", async assert => {
+QUnit.test("when skip is disabled (default)", async (assert) => {
   await visit("/");
 
   assert.ok(
@@ -30,7 +30,7 @@ QUnit.test("when skip is disabled (default)", async assert => {
   assert.ok(exists("#new-account-username"), "it shows the fields");
 });
 
-QUnit.test("when skip is enabled", async function(assert) {
+QUnit.test("when skip is enabled", async function (assert) {
   this.siteSettings.external_auth_skip_create_confirm = true;
   await visit("/");
 

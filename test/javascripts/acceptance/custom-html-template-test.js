@@ -9,10 +9,10 @@ acceptance("CustomHTML template", {
 
   afterEach() {
     delete Ember.TEMPLATES["top"];
-  }
+  },
 });
 
-QUnit.test("renders custom template", async assert => {
+QUnit.test("renders custom template", async (assert) => {
   await visit("/static/faq");
   assert.equal(find("span.top-span").text(), "TOP", "it inserted the template");
 });

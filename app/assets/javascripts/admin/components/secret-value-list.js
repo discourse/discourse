@@ -40,7 +40,7 @@ export default Component.extend({
 
     removeValue(value) {
       this._removeValue(value);
-    }
+    },
   },
 
   _checkInvalidInput(inputs) {
@@ -78,7 +78,7 @@ export default Component.extend({
     this.set(
       "values",
       this.collection
-        .map(function(elem) {
+        .map(function (elem) {
           return `${elem.key}|${elem.secret}`;
         })
         .join("\n")
@@ -89,9 +89,9 @@ export default Component.extend({
     if (values && values.length) {
       const keys = ["key", "secret"];
       var res = [];
-      values.split(delimiter).forEach(function(str) {
+      values.split(delimiter).forEach(function (str) {
         var object = {};
-        str.split("|").forEach(function(a, i) {
+        str.split("|").forEach(function (a, i) {
           object[keys[i]] = a;
         });
         res.push(object);
@@ -101,5 +101,5 @@ export default Component.extend({
     } else {
       return [];
     }
-  }
+  },
 });

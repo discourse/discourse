@@ -6,7 +6,7 @@ import WatchedWord from "admin/models/watched-word";
 import bootbox from "bootbox";
 import discourseComputed, {
   on,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 
 export default Component.extend({
@@ -33,9 +33,11 @@ export default Component.extend({
   @discourseComputed("word")
   isUniqueWord(word) {
     const words = this.filteredContent || [];
-    const filtered = words.filter(content => content.action === this.actionKey);
+    const filtered = words.filter(
+      (content) => content.action === this.actionKey
+    );
     return filtered.every(
-      content => content.word.toLowerCase() !== word.toLowerCase()
+      (content) => content.word.toLowerCase() !== word.toLowerCase()
     );
   },
 
@@ -44,7 +46,7 @@ export default Component.extend({
       if (!this.isUniqueWord) {
         this.setProperties({
           showMessage: true,
-          message: I18n.t("admin.watched_words.form.exists")
+          message: I18n.t("admin.watched_words.form.exists"),
         });
         return;
       }
@@ -54,29 +56,29 @@ export default Component.extend({
 
         const watchedWord = WatchedWord.create({
           word: this.word,
-          action: this.actionKey
+          action: this.actionKey,
         });
 
         watchedWord
           .save()
-          .then(result => {
+          .then((result) => {
             this.setProperties({
               word: "",
               formSubmitted: false,
               showMessage: true,
-              message: I18n.t("admin.watched_words.form.success")
+              message: I18n.t("admin.watched_words.form.success"),
             });
             this.action(WatchedWord.create(result));
             schedule("afterRender", () =>
               this.element.querySelector(".watched-word-input").focus()
             );
           })
-          .catch(e => {
+          .catch((e) => {
             this.set("formSubmitted", false);
             const msg =
               e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors
                 ? I18n.t("generic_error_with_reason", {
-                    error: e.jqXHR.responseJSON.errors.join(". ")
+                    error: e.jqXHR.responseJSON.errors.join(". "),
                   })
                 : I18n.t("generic_error");
             bootbox.alert(msg, () =>
@@ -84,17 +86,17 @@ export default Component.extend({
             );
           });
       }
-    }
+    },
   },
 
   @on("didInsertElement")
   _init() {
     schedule("afterRender", () => {
-      $(this.element.querySelector(".watched-word-input")).keydown(e => {
+      $(this.element.querySelector(".watched-word-input")).keydown((e) => {
         if (e.keyCode === 13) {
           this.send("submit");
         }
       });
     });
-  }
+  },
 });

@@ -22,7 +22,7 @@ export default Controller.extend({
     this.setProperties({
       content: [],
       loading: true,
-      noResultsHelp: null
+      noResultsHelp: null,
     });
 
     if (this.q && !this.searchTerm) {
@@ -31,12 +31,12 @@ export default Controller.extend({
 
     return this.model
       .loadItems({ q: this.searchTerm })
-      .then(response => this._processLoadResponse(response))
+      .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => {
         this.setProperties({
           loaded: true,
-          loading: false
+          loading: false,
         });
       });
   },
@@ -78,7 +78,7 @@ export default Controller.extend({
 
     return this.model
       .loadMore({ q: this.searchTerm })
-      .then(response => this._processLoadResponse(response))
+      .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
   },
@@ -102,8 +102,8 @@ export default Controller.extend({
 
     if (response.bookmarks) {
       this.content.pushObjects(
-        response.bookmarks.map(bookmark => Bookmark.create(bookmark))
+        response.bookmarks.map((bookmark) => Bookmark.create(bookmark))
       );
     }
-  }
+  },
 });

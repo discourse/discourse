@@ -22,7 +22,7 @@ function template(options = []) {
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
   { id: 2, name: "bar" },
-  { id: 3, name: "baz" }
+  { id: 3, name: "baz" },
 ];
 
 const DEFAULT_VALUE = 1;
@@ -34,9 +34,9 @@ const setDefaultState = (ctx, options) => {
       value: DEFAULT_VALUE,
       nameProperty: "name",
       valueProperty: "id",
-      onChange: value => {
+      onChange: (value) => {
         ctx.set("value", value);
-      }
+      },
     },
     options || {}
   );
@@ -70,7 +70,7 @@ componentTest("content", {
       null,
       "it doesn't set a value from the content"
     );
-  }
+  },
 });
 
 componentTest("value", {
@@ -86,7 +86,7 @@ componentTest("value", {
       1,
       "it selects the correct content to display"
     );
-  }
+  },
 });
 
 componentTest("options.filterable", {
@@ -107,7 +107,7 @@ componentTest("options.filterable", {
       filter,
       "it filters the list"
     );
-  }
+  },
 });
 
 componentTest("options.limitMatches", {
@@ -126,7 +126,7 @@ componentTest("options.limitMatches", {
       1,
       "it returns only 1 result"
     );
-  }
+  },
 });
 
 componentTest("valueAttribute (deprecated)", {
@@ -146,7 +146,7 @@ componentTest("valueAttribute (deprecated)", {
       { name: "Smaller", value: "smaller" },
       { name: "Normal", value: "normal" },
       { name: "Larger", value: "larger" },
-      { name: "Largest", value: "largest" }
+      { name: "Largest", value: "largest" },
     ];
     this.set("content", content);
   },
@@ -155,7 +155,7 @@ componentTest("valueAttribute (deprecated)", {
     await this.subject.expand();
 
     assert.equal(this.subject.selectedRow().value(), this.value);
-  }
+  },
 });
 
 componentTest("none:string", {
@@ -172,7 +172,7 @@ componentTest("none:string", {
     const noneRow = this.subject.rowByIndex(0);
     assert.equal(noneRow.value(), null);
     assert.equal(noneRow.name(), I18n.t("test.none"));
-  }
+  },
 });
 
 componentTest("none:object", {
@@ -188,7 +188,7 @@ componentTest("none:object", {
     const noneRow = this.subject.rowByIndex(0);
     assert.equal(noneRow.value(), null);
     assert.equal(noneRow.name(), "(default)");
-  }
+  },
 });
 
 componentTest("content is a basic array", {
@@ -200,7 +200,7 @@ componentTest("content is a basic array", {
       nameProperty: null,
       valueProperty: null,
       value: "foo",
-      content: ["foo", "bar", "baz"]
+      content: ["foo", "bar", "baz"],
     });
   },
 
@@ -215,7 +215,7 @@ componentTest("content is a basic array", {
     await this.subject.selectRowByIndex(0);
 
     assert.equal(this.value, null);
-  }
+  },
 });
 
 componentTest("selected value can be 0", {
@@ -226,8 +226,8 @@ componentTest("selected value can be 0", {
       value: 1,
       content: [
         { id: 0, name: "foo" },
-        { id: 1, name: "bar" }
-      ]
+        { id: 1, name: "bar" },
+      ],
     });
   },
 
@@ -238,7 +238,7 @@ componentTest("selected value can be 0", {
     await this.subject.selectRowByValue(0);
 
     assert.equal(this.subject.header().value(), 0);
-  }
+  },
 });
 
 componentTest("prevents propagating click event on header", {
@@ -249,7 +249,7 @@ componentTest("prevents propagating click event on header", {
     this.setProperties({
       onClick: () => this.set("value", "foo"),
       content: DEFAULT_CONTENT,
-      value: DEFAULT_VALUE
+      value: DEFAULT_VALUE,
     });
   },
 
@@ -257,7 +257,7 @@ componentTest("prevents propagating click event on header", {
     assert.equal(this.value, DEFAULT_VALUE);
     await this.subject.expand();
     assert.equal(this.value, DEFAULT_VALUE);
-  }
+  },
 });
 
 componentTest("labelProperty", {
@@ -266,7 +266,7 @@ componentTest("labelProperty", {
   beforeEach() {
     this.setProperties({
       content: [{ id: 1, name: "john", foo: "JACKSON" }],
-      value: 1
+      value: 1,
     });
   },
 
@@ -278,7 +278,7 @@ componentTest("labelProperty", {
     const row = this.subject.rowByValue(1);
 
     assert.equal(row.label(), "JACKSON");
-  }
+  },
 });
 
 componentTest("titleProperty", {
@@ -287,7 +287,7 @@ componentTest("titleProperty", {
   beforeEach() {
     this.setProperties({
       content: [{ id: 1, name: "john", foo: "JACKSON" }],
-      value: 1
+      value: 1,
     });
   },
 
@@ -299,5 +299,5 @@ componentTest("titleProperty", {
     const row = this.subject.rowByValue(1);
 
     assert.equal(row.title(), "JACKSON");
-  }
+  },
 });

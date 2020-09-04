@@ -6,5 +6,5 @@ export default DiscourseRoute.extend({
       "adminWatchedWords.action",
       this.modelFor("adminWatchedWords")[0].nameKey
     );
-  }
+  },
 });

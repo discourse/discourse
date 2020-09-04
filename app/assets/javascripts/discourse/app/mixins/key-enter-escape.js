@@ -17,5 +17,5 @@ export default {
       this.save();
       return false;
     }
-  }
+  },
 };

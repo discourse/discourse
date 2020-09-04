@@ -48,10 +48,10 @@ export function setup(helper) {
           return helper.getOptions().acceptableCodeClasses.indexOf(m[1]) !== -1;
         }
       }
-    }
+    },
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.renderer.rules.fence = (tokens, idx, options, env, slf) =>
       render(tokens, idx, options, env, slf, md);
   });

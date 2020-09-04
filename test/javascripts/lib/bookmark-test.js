@@ -8,12 +8,12 @@ QUnit.module("lib:bookmark", {
 
   afterEach() {
     sandbox.restore();
-  }
+  },
 });
 
 QUnit.test(
   "formattedReminderTime works when the reminder time is tomorrow",
-  assert => {
+  (assert) => {
     let reminderAt = "2020-04-12 09:45:00";
     let reminderAtDate = moment
       .tz(reminderAt, "Australia/Brisbane")
@@ -27,7 +27,7 @@ QUnit.test(
 
 QUnit.test(
   "formattedReminderTime works when the reminder time is today",
-  assert => {
+  (assert) => {
     let reminderAt = "2020-04-11 09:45:00";
     let reminderAtDate = moment
       .tz(reminderAt, "Australia/Brisbane")
@@ -41,7 +41,7 @@ QUnit.test(
 
 QUnit.test(
   "formattedReminderTime works when the reminder time is in the future",
-  assert => {
+  (assert) => {
     let reminderAt = "2020-04-15 09:45:00";
     let reminderAtDate = moment
       .tz(reminderAt, "Australia/Brisbane")

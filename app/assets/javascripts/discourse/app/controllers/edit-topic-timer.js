@@ -26,32 +26,32 @@ export default Controller.extend(ModalFunctionality, {
         id: CLOSE_STATUS_TYPE,
         name: I18n.t(
           closed ? "topic.temp_open.title" : "topic.auto_close.title"
-        )
+        ),
       },
       {
         id: OPEN_STATUS_TYPE,
         name: I18n.t(
           closed ? "topic.auto_reopen.title" : "topic.temp_close.title"
-        )
+        ),
       },
       {
         id: PUBLISH_TO_CATEGORY_STATUS_TYPE,
-        name: I18n.t("topic.publish_to_category.title")
+        name: I18n.t("topic.publish_to_category.title"),
       },
       {
         id: BUMP_TYPE,
-        name: I18n.t("topic.auto_bump.title")
-      }
+        name: I18n.t("topic.auto_bump.title"),
+      },
     ];
     if (this.currentUser.get("staff")) {
       types.push(
         {
           id: DELETE_STATUS_TYPE,
-          name: I18n.t("topic.auto_delete.title")
+          name: I18n.t("topic.auto_delete.title"),
         },
         {
           id: DELETE_REPLIES_TYPE,
-          name: I18n.t("topic.auto_delete_replies.title")
+          name: I18n.t("topic.auto_delete_replies.title"),
         }
       );
     }
@@ -88,14 +88,14 @@ export default Controller.extend(ModalFunctionality, {
       categoryId,
       duration
     )
-      .then(result => {
+      .then((result) => {
         if (time || duration) {
           this.send("closeModal");
 
           setProperties(this.topicTimer, {
             execute_at: result.execute_at,
             duration: result.duration,
-            category_id: result.category_id
+            category_id: result.category_id,
           });
 
           this.set("model.closed", result.closed);
@@ -105,7 +105,7 @@ export default Controller.extend(ModalFunctionality, {
           this.set(`model.${topicTimer}`, EmberObject.create({}));
 
           this.setProperties({
-            selection: null
+            selection: null,
           });
         }
       })
@@ -164,6 +164,6 @@ export default Controller.extend(ModalFunctionality, {
 
     removeTimer() {
       this._setTimer(null, null, this.get("topicTimer.status_type"));
-    }
-  }
+    },
+  },
 });

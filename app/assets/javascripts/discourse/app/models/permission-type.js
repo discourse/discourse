@@ -10,7 +10,7 @@ const PermissionType = EmberObject.extend({
   @discourseComputed("id")
   description(id) {
     return buildPermissionDescription(id);
-  }
+  },
 });
 
 PermissionType.FULL = 1;
@@ -19,7 +19,7 @@ PermissionType.READONLY = 3;
 PermissionType.DESCRIPTION_KEYS = {
   1: "full",
   2: "create_post",
-  3: "readonly"
+  3: "readonly",
 };
 
 export default PermissionType;

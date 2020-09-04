@@ -7,5 +7,5 @@ export default Component.extend({
   @action
   onChange(value) {
     this.set("value", value.join(this.inputDelimiter || "\n"));
-  }
+  },
 });

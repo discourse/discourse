@@ -3,7 +3,7 @@ import { fixture } from "helpers/qunit-helpers";
 
 QUnit.module("lib:highlight-search");
 
-QUnit.test("highlighting text", assert => {
+QUnit.test("highlighting text", (assert) => {
   fixture().html(
     `
     <p>This is some text to highlight</p>
@@ -25,7 +25,7 @@ QUnit.test("highlighting text", assert => {
   );
 });
 
-QUnit.test("highlighting unicode text", assert => {
+QUnit.test("highlighting unicode text", (assert) => {
   fixture().html(
     `
     <p>This is some தமிழ் & русский text to highlight</p>

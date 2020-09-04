@@ -18,7 +18,7 @@ export default {
           !window.matchMedia("(display-mode: standalone)").matches);
 
       if (serviceWorkerURL && !isAppleBrowser) {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
           for (let registration of registrations) {
             if (
               registration.active &&
@@ -31,12 +31,12 @@ export default {
 
         navigator.serviceWorker
           .register(getAbsoluteURL(`/${serviceWorkerURL}`))
-          .catch(error => {
+          .catch((error) => {
             // eslint-disable-next-line no-console
             console.info(`Failed to register Service Worker: ${error}`);
           });
       } else {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
           for (let registration of registrations) {
             this.unregister(registration);
           }
@@ -49,5 +49,5 @@ export default {
     if (isAbsoluteURL(registration.scope)) {
       registration.unregister();
     }
-  }
+  },
 };

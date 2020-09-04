@@ -15,5 +15,5 @@ export default Component.extend({
     var username = this.get("user.username_lower") || "";
     username = username !== "" ? "?username=" + username : "";
     return this.get("badge.url") + username;
-  }
+  },
 });

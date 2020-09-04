@@ -41,7 +41,7 @@ function handleRedirect(data) {
 }
 
 export function updateCsrfToken() {
-  return ajax("/session/csrf").then(result => {
+  return ajax("/session/csrf").then((result) => {
     Session.currentProp("csrfToken", result.csrf);
   });
 }
@@ -138,7 +138,7 @@ export function ajax() {
       run(null, reject, {
         jqXHR: xhr,
         textStatus: textStatus,
-        errorThrown: errorThrown
+        errorThrown: errorThrown,
       });
     };
 

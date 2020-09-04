@@ -19,13 +19,13 @@ const TopicDetails = RestModel.extend({
     const topic = this.topic;
 
     if (details.allowed_users) {
-      details.allowed_users = details.allowed_users.map(function(u) {
+      details.allowed_users = details.allowed_users.map(function (u) {
         return User.create(u);
       });
     }
 
     if (details.participants) {
-      details.participants = details.participants.map(function(p) {
+      details.participants = details.participants.map(function (p) {
         p.topic = topic;
         return EmberObject.create(p);
       });
@@ -58,7 +58,7 @@ const TopicDetails = RestModel.extend({
     } else {
       return I18n.t(localeString, {
         username: User.currentProp("username_lower"),
-        basePath: getURL("")
+        basePath: getURL(""),
       });
     }
   },
@@ -66,11 +66,11 @@ const TopicDetails = RestModel.extend({
   updateNotifications(level) {
     return ajax(`/t/${this.get("topic.id")}/notifications`, {
       type: "POST",
-      data: { notification_level: level }
+      data: { notification_level: level },
     }).then(() => {
       this.setProperties({
         notification_level: level,
-        notifications_reason_id: null
+        notifications_reason_id: null,
       });
     });
   },
@@ -81,7 +81,7 @@ const TopicDetails = RestModel.extend({
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-group", {
       type: "PUT",
-      data: { name: name }
+      data: { name: name },
     }).then(() => {
       groups.removeObject(groups.findBy("name", name));
     });
@@ -93,11 +93,11 @@ const TopicDetails = RestModel.extend({
 
     return ajax("/t/" + this.get("topic.id") + "/remove-allowed-user", {
       type: "PUT",
-      data: { username: username }
+      data: { username: username },
     }).then(() => {
       users.removeObject(users.findBy("username", username));
     });
-  }
+  },
 });
 
 export default TopicDetails;

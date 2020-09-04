@@ -69,7 +69,7 @@ export default EmberObject.extend({
         this.num_likes_received_users >= this.min_likes_received_users,
       level_locked: this.trust_level_locked,
       silenced: this.get("penalty_counts.silenced") === 0,
-      suspended: this.get("penalty_counts.suspended") === 0
+      suspended: this.get("penalty_counts.suspended") === 0,
     };
-  }
+  },
 });

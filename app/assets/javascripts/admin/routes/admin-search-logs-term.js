@@ -8,7 +8,7 @@ export default DiscourseRoute.extend({
   queryParams: {
     term: { refreshModel: true },
     period: { refreshModel: true },
-    searchType: { refreshModel: true }
+    searchType: { refreshModel: true },
   },
 
   model(params) {
@@ -18,9 +18,9 @@ export default DiscourseRoute.extend({
       data: {
         period: params.period,
         search_type: params.searchType,
-        term: params.term
-      }
-    }).then(json => {
+        term: params.term,
+      },
+    }).then((json) => {
       // Add zero values for missing dates
       if (json.term.data.length > 0) {
         const startDate =
@@ -46,7 +46,7 @@ export default DiscourseRoute.extend({
       model,
       term: params.term,
       period: params.period,
-      searchType: params.searchType
+      searchType: params.searchType,
     });
-  }
+  },
 });

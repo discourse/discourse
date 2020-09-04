@@ -41,9 +41,9 @@ export default Component.extend({
             nextMonth: I18n.t("dates.next_month"),
             months: moment.months(),
             weekdays: moment.weekdays(),
-            weekdaysShort: moment.weekdaysMin()
+            weekdaysShort: moment.weekdaysMin(),
           },
-          onSelect: date => this._handleSelection(date)
+          onSelect: (date) => this._handleSelection(date),
         };
 
         this._picker = new Pikaday(Object.assign(options, this._opts()));
@@ -88,5 +88,5 @@ export default Component.extend({
 
   _opts() {
     return null;
-  }
+  },
 });

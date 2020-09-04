@@ -32,7 +32,7 @@ export default RestModel.extend({
     const posts = [];
     const postsWithPlaceholders = PostsWithPlaceholders.create({
       posts,
-      store: this.store
+      store: this.store,
     });
 
     this.setProperties({
@@ -46,7 +46,7 @@ export default RestModel.extend({
       loadingBelow: false,
       loadingFilter: false,
       stagingPost: false,
-      timelineLookup: []
+      timelineLookup: [],
     });
   },
 
@@ -279,15 +279,15 @@ export default RestModel.extend({
 
     // Request a topicView
     return loadTopicView(topic, opts)
-      .then(json => {
+      .then((json) => {
         this.updateFromJson(json.post_stream);
         this.setProperties({
           loadingFilter: false,
           timelineLookup: json.timeline_lookup,
-          loaded: true
+          loaded: true,
         });
       })
-      .catch(result => {
+      .catch((result) => {
         this.errorLoading(result);
         throw new Error(result);
       })
@@ -313,8 +313,8 @@ export default RestModel.extend({
       let tailGap = gap.slice(this.topic.chunk_size);
       stream.splice.apply(stream, [idx, 0].concat(headGap));
       if (postIdx !== -1) {
-        return this.findPostsByIds(headGap).then(posts => {
-          posts.forEach(p => {
+        return this.findPostsByIds(headGap).then((posts) => {
+          posts.forEach((p) => {
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
               currentPosts.insertAt(postIdx++, stored);
@@ -368,14 +368,14 @@ export default RestModel.extend({
       this.set("loadingBelow", true);
 
       const fakePostIds = [
-        ...Array(this.get("topic.chunk_size") - 1).keys()
-      ].map(i => -i - 1);
+        ...Array(this.get("topic.chunk_size") - 1).keys(),
+      ].map((i) => -i - 1);
       postsWithPlaceholders.appending(fakePostIds);
 
       return this.fetchNextWindow(
         this.get("posts.lastObject.post_number"),
         true,
-        p => {
+        (p) => {
           this.appendPost(p);
         }
       ).finally(() => {
@@ -389,8 +389,8 @@ export default RestModel.extend({
       postsWithPlaceholders.appending(postIds);
 
       return this.findPostsByIds(postIds)
-        .then(posts => {
-          posts.forEach(p => this.appendPost(p));
+        .then((posts) => {
+          posts.forEach((p) => this.appendPost(p));
           return posts;
         })
         .finally(() => {
@@ -414,7 +414,7 @@ export default RestModel.extend({
       return this.fetchNextWindow(
         this.get("posts.firstObject.post_number"),
         false,
-        p => {
+        (p) => {
           this.prependPost(p);
           prependedIds.push(p.get("id"));
         }
@@ -429,8 +429,8 @@ export default RestModel.extend({
       this.set("loadingAbove", true);
 
       return this.findPostsByIds(postIds.reverse())
-        .then(posts => {
-          posts.forEach(p => this.prependPost(p));
+        .then((posts) => {
+          posts.forEach((p) => this.prependPost(p));
         })
         .finally(() => {
           const postsWithPlaceholders = this.postsWithPlaceholders;
@@ -458,14 +458,14 @@ export default RestModel.extend({
       posts_count: (topic.get("posts_count") || 0) + 1,
       last_posted_at: new Date(),
       "details.last_poster": user,
-      highest_post_number: (topic.get("highest_post_number") || 0) + 1
+      highest_post_number: (topic.get("highest_post_number") || 0) + 1,
     });
 
     post.setProperties({
       post_number: topic.get("highest_post_number"),
       topic: topic,
       created_at: new Date(),
-      id: -1
+      id: -1,
     });
 
     // If we're at the end of the stream, add the post
@@ -506,7 +506,7 @@ export default RestModel.extend({
 
     topic.setProperties({
       highest_post_number: (topic.get("highest_post_number") || 0) - 1,
-      posts_count: (topic.get("posts_count") || 0) - 1
+      posts_count: (topic.get("posts_count") || 0) - 1,
     });
 
     // TODO unfudge reply count on parent post
@@ -549,12 +549,12 @@ export default RestModel.extend({
 
     this.postsWithPlaceholders.refreshAll(() => {
       const allPosts = this.posts;
-      const postIds = posts.map(p => p.get("id"));
+      const postIds = posts.map((p) => p.get("id"));
       const identityMap = this._identityMap;
 
       this.stream.removeObjects(postIds);
       allPosts.removeObjects(posts);
-      postIds.forEach(id => delete identityMap[id]);
+      postIds.forEach((id) => delete identityMap[id]);
     });
   },
 
@@ -567,7 +567,7 @@ export default RestModel.extend({
     const url = `/posts/by_number/${this.get("topic.id")}/${postNumber}`;
     const store = this.store;
 
-    return ajax(url).then(post => {
+    return ajax(url).then((post) => {
       return this.storePost(store.createRecord("post", post));
     });
   },
@@ -576,7 +576,7 @@ export default RestModel.extend({
     const url = `/posts/by-date/${this.get("topic.id")}/${date}`;
     const store = this.store;
 
-    return ajax(url).then(post => {
+    return ajax(url).then((post) => {
       return this.storePost(store.createRecord("post", post));
     });
   },
@@ -586,7 +586,7 @@ export default RestModel.extend({
     const store = this.store;
     const existing = this._identityMap[postId];
 
-    return ajax(url).then(p => {
+    return ajax(url).then((p) => {
       if (existing) {
         p.cooked = existing.cooked;
       }
@@ -619,10 +619,10 @@ export default RestModel.extend({
       if (loadedAllPosts) {
         this.set("loadingLastPost", true);
         return this.findPostsByIds([postId])
-          .then(posts => {
+          .then((posts) => {
             const ignoredUsers =
               User.current() && User.current().get("ignored_users");
-            posts.forEach(p => {
+            posts.forEach((p) => {
               if (ignoredUsers && ignoredUsers.includes(p.username)) {
                 this.stream.removeObject(postId);
                 return;
@@ -649,7 +649,7 @@ export default RestModel.extend({
       const url = `/posts/${postId}`;
       const store = this.store;
 
-      return ajax(url).then(p => {
+      return ajax(url).then((p) => {
         const post = store.createRecord("post", p);
         const stream = this.stream;
         const posts = this.posts;
@@ -657,7 +657,7 @@ export default RestModel.extend({
 
         // we need to zip this into the stream
         let index = 0;
-        stream.forEach(pid => {
+        stream.forEach((pid) => {
           if (pid < p.id) {
             index += 1;
           }
@@ -666,7 +666,7 @@ export default RestModel.extend({
         stream.insertAt(index, p.id);
 
         index = 0;
-        posts.forEach(_post => {
+        posts.forEach((_post) => {
           if (_post.id < p.id) {
             index += 1;
           }
@@ -693,7 +693,7 @@ export default RestModel.extend({
       const store = this.store;
 
       return ajax(url)
-        .then(p => {
+        .then((p) => {
           this.storePost(store.createRecord("post", p));
         })
         .catch(() => {
@@ -715,7 +715,7 @@ export default RestModel.extend({
     if (existing && existing.updated_at !== updatedAt) {
       const url = "/posts/" + postId;
       const store = this.store;
-      return ajax(url).then(p => {
+      return ajax(url).then((p) => {
         if (opts.preserveCooked) {
           p.cooked = existing.get("cooked");
         }
@@ -744,7 +744,7 @@ export default RestModel.extend({
       return;
     }
 
-    return this.posts.find(p => {
+    return this.posts.find((p) => {
       return p.get("post_number") === postNumber;
     });
   },
@@ -760,7 +760,7 @@ export default RestModel.extend({
     }
 
     let closest = null;
-    this.posts.forEach(p => {
+    this.posts.forEach((p) => {
       if (!closest) {
         closest = p;
         return;
@@ -805,7 +805,7 @@ export default RestModel.extend({
     }
 
     let closest = null;
-    this.posts.forEach(p => {
+    this.posts.forEach((p) => {
       if (closest === postNumber) {
         return;
       }
@@ -887,7 +887,7 @@ export default RestModel.extend({
     if (postStreamData) {
       // Load posts if present
       const store = this.store;
-      postStreamData.posts.forEach(p =>
+      postStreamData.posts.forEach((p) =>
         this.appendPost(store.createRecord("post", p))
       );
       delete postStreamData.posts;
@@ -941,13 +941,13 @@ export default RestModel.extend({
     let data = {
       post_number: postNumber,
       asc: asc,
-      include_suggested: includeSuggested
+      include_suggested: includeSuggested,
     };
 
     data = deepMerge(data, this.streamFilters);
     const store = this.store;
 
-    return ajax(url, { data }).then(result => {
+    return ajax(url, { data }).then((result) => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }
@@ -955,7 +955,7 @@ export default RestModel.extend({
       const posts = get(result, "post_stream.posts");
 
       if (posts) {
-        posts.forEach(p => {
+        posts.forEach((p) => {
           p = this.storePost(store.createRecord("post", p));
 
           if (callback) {
@@ -968,11 +968,11 @@ export default RestModel.extend({
 
   findPostsByIds(postIds) {
     const identityMap = this._identityMap;
-    const unloaded = postIds.filter(p => !identityMap[p]);
+    const unloaded = postIds.filter((p) => !identityMap[p]);
 
     // Load our unloaded posts by id
     return this.loadIntoIdentityMap(unloaded).then(() => {
-      return postIds.map(p => identityMap[p]).compact();
+      return postIds.map((p) => identityMap[p]).compact();
     });
   },
 
@@ -987,7 +987,7 @@ export default RestModel.extend({
     const data = { post_ids: postIds, include_suggested: includeSuggested };
     const store = this.store;
 
-    return ajax(url, { data }).then(result => {
+    return ajax(url, { data }).then((result) => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }
@@ -995,7 +995,7 @@ export default RestModel.extend({
       const posts = get(result, "post_stream.posts");
 
       if (posts) {
-        posts.forEach(p => this.storePost(store.createRecord("post", p)));
+        posts.forEach((p) => this.storePost(store.createRecord("post", p)));
       }
     });
   },
@@ -1028,15 +1028,15 @@ export default RestModel.extend({
     }
 
     let data = {
-      post_ids: postIds
+      post_ids: postIds,
     };
 
     this._excerpts.loading = ajax(
       "/t/" + this.get("topic.id") + "/excerpts.json",
       { data }
     )
-      .then(excerpts => {
-        excerpts.forEach(obj => {
+      .then((excerpts) => {
+        excerpts.forEach((obj) => {
           this._excerpts[obj.post_id] = obj;
         });
       })
@@ -1049,7 +1049,7 @@ export default RestModel.extend({
 
   excerpt(streamPosition) {
     if (this.isMegaTopic) {
-      return new Promise(resolve => resolve(""));
+      return new Promise((resolve) => resolve(""));
     }
 
     const stream = this.stream;
@@ -1066,7 +1066,7 @@ export default RestModel.extend({
         .then(() => {
           resolve(this._excerpts[stream[streamPosition]]);
         })
-        .catch(e => reject(e));
+        .catch((e) => reject(e));
     });
   },
 
@@ -1088,5 +1088,5 @@ export default RestModel.extend({
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", result.jqXHR.status === 403);
     }
-  }
+  },
 });

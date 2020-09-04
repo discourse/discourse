@@ -21,7 +21,7 @@ export default Controller.extend(ModalFunctionality, {
     save() {
       return ajax(`/u/${this.model.username}/feature-topic`, {
         type: "PUT",
-        data: { topic_id: this.newFeaturedTopic.id }
+        data: { topic_id: this.newFeaturedTopic.id },
       })
         .then(() => {
           this.model.set("featured_topic", this.newFeaturedTopic);
@@ -32,6 +32,6 @@ export default Controller.extend(ModalFunctionality, {
 
     newTopicSelected(topic) {
       this.set("newFeaturedTopic", topic);
-    }
-  }
+    },
+  },
 });

@@ -38,7 +38,7 @@ export default Component.extend({
         promise = this._loadPikadayPicker(container);
       }
 
-      promise.then(picker => {
+      promise.then((picker) => {
         this._picker = picker;
 
         if (this._picker && this.date) {
@@ -77,14 +77,14 @@ export default Component.extend({
           nextMonth: I18n.t("dates.next_month"),
           months: moment.months(),
           weekdays: moment.weekdays(),
-          weekdaysShort: moment.weekdaysShort()
+          weekdaysShort: moment.weekdaysShort(),
         },
-        onSelect: date => this._handleSelection(date)
+        onSelect: (date) => this._handleSelection(date),
       };
 
       if (this.relativeDate) {
         defaultOptions = Object.assign({}, defaultOptions, {
-          minDate: moment(this.relativeDate).toDate()
+          minDate: moment(this.relativeDate).toDate(),
         });
       }
 
@@ -102,10 +102,10 @@ export default Component.extend({
     picker.destroy = () => {
       /* do nothing for native */
     };
-    picker.setDate = date => {
+    picker.setDate = (date) => {
       picker.value = date ? moment(date).format("YYYY-MM-DD") : null;
     };
-    picker.setMinDate = date => {
+    picker.setMinDate = (date) => {
       picker.min = date;
     };
 
@@ -144,5 +144,5 @@ export default Component.extend({
   @action
   onChangeDate(event) {
     this._handleSelection(event.target.value);
-  }
+  },
 });

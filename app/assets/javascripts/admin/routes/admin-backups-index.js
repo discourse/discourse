@@ -3,10 +3,10 @@ import Backup from "admin/models/backup";
 
 export default Route.extend({
   activate() {
-    this.messageBus.subscribe("/admin/backups", backups =>
+    this.messageBus.subscribe("/admin/backups", (backups) =>
       this.controller.set(
         "model",
-        backups.map(backup => Backup.create(backup))
+        backups.map((backup) => Backup.create(backup))
       )
     );
   },
@@ -17,5 +17,5 @@ export default Route.extend({
 
   deactivate() {
     this.messageBus.unsubscribe("/admin/backups");
-  }
+  },
 });

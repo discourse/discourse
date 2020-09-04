@@ -4,11 +4,11 @@ import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:user-search", {
   beforeEach() {
-    const response = object => {
+    const response = (object) => {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    pretender.get("/u/search/users", request => {
+    pretender.get("/u/search/users", (request) => {
       // special responder for per category search
       const categoryMatch = request.url.match(/category_id=([0-9]+)/);
       if (categoryMatch) {
@@ -21,9 +21,9 @@ QUnit.module("lib:user-search", {
               username: `category_${categoryMatch[1]}`,
               name: "category user",
               avatar_template:
-                "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png"
-            }
-          ]
+                "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+            },
+          ],
         });
       }
 
@@ -37,55 +37,55 @@ QUnit.module("lib:user-search", {
             username: "TeaMoe",
             name: "TeaMoe",
             avatar_template:
-              "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png"
+              "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
           },
           {
             username: "TeamOneJ",
             name: "J Cobb",
             avatar_template:
-              "https://avatars.discourse.org/v3/letter/t/3d9bf3/{size}.png"
+              "https://avatars.discourse.org/v3/letter/t/3d9bf3/{size}.png",
           },
           {
             username: "kudos",
             name: "Team Blogeto.com",
             avatar_template:
-              "/user_avatar/meta.discourse.org/kudos/{size}/62185_1.png"
+              "/user_avatar/meta.discourse.org/kudos/{size}/62185_1.png",
           },
           {
             username: "RosieLinda",
             name: "Linda Teaman",
             avatar_template:
-              "https://avatars.discourse.org/v3/letter/r/bc8723/{size}.png"
+              "https://avatars.discourse.org/v3/letter/r/bc8723/{size}.png",
           },
           {
             username: "legalatom",
             name: "Team LegalAtom",
             avatar_template:
-              "https://avatars.discourse.org/v3/letter/l/a9a28c/{size}.png"
+              "https://avatars.discourse.org/v3/letter/l/a9a28c/{size}.png",
           },
           {
             username: "dzsat_team",
             name: "Dz Sat Dz Sat",
             avatar_template:
-              "https://avatars.discourse.org/v3/letter/d/eb9ed0/{size}.png"
-          }
+              "https://avatars.discourse.org/v3/letter/d/eb9ed0/{size}.png",
+          },
         ],
         groups: [
           {
             name: "bob",
-            usernames: []
+            usernames: [],
           },
           {
             name: "team",
-            usernames: []
-          }
-        ]
+            usernames: [],
+          },
+        ],
       });
     });
-  }
+  },
 });
 
-QUnit.test("it flushes cache when switching categories", async assert => {
+QUnit.test("it flushes cache when switching categories", async (assert) => {
   let results = await userSearch({ term: "hello", categoryId: 1 });
   assert.equal(results[0].username, "category_1");
   assert.equal(results.length, 1);
@@ -102,7 +102,7 @@ QUnit.test("it flushes cache when switching categories", async assert => {
 
 QUnit.test(
   "it returns cancel when eager completing with no results",
-  async assert => {
+  async (assert) => {
     // Do everything twice, to check the cache works correctly
 
     for (let i = 0; i < 2; i++) {
@@ -126,23 +126,26 @@ QUnit.test(
   }
 );
 
-QUnit.test("it places groups unconditionally for exact match", async assert => {
-  let results = await userSearch({ term: "Team" });
-  assert.equal(results[results.length - 1]["name"], "team");
-});
+QUnit.test(
+  "it places groups unconditionally for exact match",
+  async (assert) => {
+    let results = await userSearch({ term: "Team" });
+    assert.equal(results[results.length - 1]["name"], "team");
+  }
+);
 
-QUnit.test("it strips @ from the beginning", async assert => {
+QUnit.test("it strips @ from the beginning", async (assert) => {
   let results = await userSearch({ term: "@Team" });
   assert.equal(results[results.length - 1]["name"], "team");
 });
 
-QUnit.test("it skips a search depending on punctuations", async assert => {
+QUnit.test("it skips a search depending on punctuations", async (assert) => {
   let results;
   let skippedTerms = [
     "@sam  s", // double space is not allowed
     "@sam;",
     "@sam,",
-    "@sam:"
+    "@sam:",
   ];
 
   for (let term of skippedTerms) {
@@ -155,7 +158,7 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
     "@sam.sam",
     "@sam_sam",
     "@sam-sam",
-    "@"
+    "@",
   ];
 
   let topicId = 100;
@@ -177,7 +180,7 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
 
   results = await userSearch({
     term: "no-results@example.com",
-    allowEmails: true
+    allowEmails: true,
   });
   assert.equal(results.length, 1);
 });

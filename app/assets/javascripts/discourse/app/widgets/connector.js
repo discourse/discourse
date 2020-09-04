@@ -20,7 +20,7 @@ export default class Connector {
           .factoryFor("component:connector-container")
           .create({
             layoutName: `components/${opts.component}`,
-            model: widget.findAncestorModel()
+            model: widget.findAncestorModel(),
           });
 
         mounted._connected.push(component);

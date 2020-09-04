@@ -13,5 +13,5 @@ export default Controller.extend({
   @discourseComputed("category")
   filteredContent(category) {
     return category ? category.siteSettings : [];
-  }
+  },
 });

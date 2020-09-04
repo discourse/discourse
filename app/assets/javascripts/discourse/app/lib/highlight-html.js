@@ -35,17 +35,17 @@ function highlight(node, pattern, nodeName, className) {
   return 0;
 }
 
-export default function(node, words, opts = {}) {
+export default function (node, words, opts = {}) {
   let settings = {
     nodeName: "span",
     className: "highlighted",
-    matchCase: false
+    matchCase: false,
   };
 
   settings = Object.assign({}, settings, opts);
   words = makeArray(words)
     .filter(Boolean)
-    .map(word => word.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"));
+    .map((word) => word.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"));
 
   if (!words.length) return node;
 
@@ -69,14 +69,14 @@ export default function(node, words, opts = {}) {
 export function unhighlightHTML(opts = {}) {
   let settings = {
     nodeName: "span",
-    className: "highlighted"
+    className: "highlighted",
   };
 
   settings = Object.assign({}, settings, opts);
 
   document
     .querySelectorAll(`${settings.nodeName}.${settings.className}`)
-    .forEach(element => {
+    .forEach((element) => {
       const parentNode = element.parentNode;
       parentNode.replaceChild(element.firstChild, element);
       parentNode.normalize();

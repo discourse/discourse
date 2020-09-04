@@ -10,18 +10,18 @@ acceptance("User's bookmarks", {
     pretender.delete("/bookmarks/576", () => [
       200,
       { "Content-Type": "application/json" },
-      {}
+      {},
     ]);
-  }
+  },
 });
 
-test("listing user bookmarks", async assert => {
+test("listing user bookmarks", async (assert) => {
   await visit("/u/eviltrout/activity/bookmarks");
 
   assert.ok(find(".bookmark-list-item").length);
 });
 
-test("removing a bookmark with a reminder shows a confirmation", async assert => {
+test("removing a bookmark with a reminder shows a confirmation", async (assert) => {
   let listResponse = Object.assign(
     {},
     userFixtures["/u/eviltrout/bookmarks.json"]
@@ -30,7 +30,7 @@ test("removing a bookmark with a reminder shows a confirmation", async assert =>
   pretender.get("/u/eviltrout/bookmarks.json", () => [
     200,
     { "Content-Type": "application/json" },
-    listResponse
+    listResponse,
   ]);
   await visit("/u/eviltrout/activity/bookmarks");
 
@@ -45,16 +45,16 @@ test("removing a bookmark with a reminder shows a confirmation", async assert =>
   listResponse.user_bookmark_list.bookmarks[0].reminder_at = null;
 });
 
-test("listing users bookmarks - no bookmarks", async assert => {
+test("listing users bookmarks - no bookmarks", async (assert) => {
   pretender.get("/u/eviltrout/bookmarks.json", () => [
     200,
     {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     {
       bookmarks: [],
-      no_results_help: "no bookmarks"
-    }
+      no_results_help: "no bookmarks",
+    },
   ]);
 
   await visit("/u/eviltrout/activity/bookmarks");
@@ -62,7 +62,7 @@ test("listing users bookmarks - no bookmarks", async assert => {
   assert.equal(find(".alert.alert-info").text(), "no bookmarks");
 });
 
-test("removing a bookmark with no reminder does not show a confirmation", async assert => {
+test("removing a bookmark with no reminder does not show a confirmation", async (assert) => {
   await visit("/u/eviltrout/activity/bookmarks");
 
   const dropdown = selectKit(".bookmark-actions-dropdown");

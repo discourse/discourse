@@ -7,20 +7,20 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 export default {
   name: "post-decorations",
   initialize(container) {
-    withPluginApi("0.1", api => {
+    withPluginApi("0.1", (api) => {
       const siteSettings = container.lookup("site-settings:main");
       const session = container.lookup("session:main");
       api.decorateCookedElement(
-        elem => {
+        (elem) => {
           return highlightSyntax(elem, siteSettings, session);
         },
         {
-          id: "discourse-syntax-highlighting"
+          id: "discourse-syntax-highlighting",
         }
       );
 
       api.decorateCookedElement(
-        elem => {
+        (elem) => {
           return lightbox(elem, siteSettings);
         },
         { id: "discourse-lightbox" }
@@ -28,14 +28,14 @@ export default {
       api.decorateCookedElement(lightbox, { id: "discourse-lightbox" });
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCooked(setTextDirections, {
-          id: "discourse-text-direction"
+          id: "discourse-text-direction",
         });
       }
 
       setupLazyLoading(api);
 
       api.decorateCooked(
-        $elem => {
+        ($elem) => {
           const players = $("audio", $elem);
           if (players.length) {
             players.on("play", () => {
@@ -55,8 +55,8 @@ export default {
       const caps = container.lookup("capabilities:main");
       if (caps.isSafari || caps.isIOS) {
         api.decorateCookedElement(
-          elem => {
-            elem.querySelectorAll("video").forEach(video => {
+          (elem) => {
+            elem.querySelectorAll("video").forEach((video) => {
               if (video.poster && video.poster !== "" && !video.autoplay)
                 return;
 
@@ -75,5 +75,5 @@ export default {
         );
       }
     });
-  }
+  },
 };

@@ -20,5 +20,5 @@ export default RestModel.extend({
       actionType === UserAction.TYPES.replies ||
       actionType === UserAction.TYPES.quotes
     );
-  }
+  },
 });

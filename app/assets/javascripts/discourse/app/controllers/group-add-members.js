@@ -21,7 +21,7 @@ export default Controller.extend(ModalFunctionality, {
       usernames: [],
       emails: [],
       setAsOwner: false,
-      notifyUsers: false
+      notifyUsers: false,
     });
   },
 
@@ -81,12 +81,12 @@ export default Controller.extend(ModalFunctionality, {
         }
 
         this.transitionToRoute("group.members", this.get("model.name"), {
-          queryParams
+          queryParams,
         });
 
         this.send("closeModal");
       })
-      .catch(error => this.flash(extractError(error), "error"))
+      .catch((error) => this.flash(extractError(error), "error"))
       .finally(() => this.set("loading", false));
   },
 
@@ -94,11 +94,11 @@ export default Controller.extend(ModalFunctionality, {
     let emails = [];
     let usernames = [];
 
-    this.usernamesAndEmails.split(",").forEach(u => {
+    this.usernamesAndEmails.split(",").forEach((u) => {
       emailValid(u) ? emails.push(u) : usernames.push(u);
     });
 
     this.set("emails", emails.join(","));
     this.set("usernames", usernames.join(","));
-  }
+  },
 });

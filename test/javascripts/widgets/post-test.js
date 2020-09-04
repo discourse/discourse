@@ -15,7 +15,7 @@ widgetTest("basic elements", {
     assert.ok(find("a.post-date").length, "includes post date");
     assert.ok(find("a.post-date[data-share-url]").length);
     assert.ok(find("a.post-date[data-post-number]").length);
-  }
+  },
 });
 
 widgetTest("post - links", {
@@ -26,14 +26,14 @@ widgetTest("post - links", {
         "<a href='http://link1.example.com/'>first link</a> and <a href='http://link2.example.com/?some=query'>second link</a>",
       linkCounts: [
         { url: "http://link1.example.com/", clicks: 1, internal: true },
-        { url: "http://link2.example.com/", clicks: 2, internal: true }
-      ]
+        { url: "http://link2.example.com/", clicks: 2, internal: true },
+      ],
     });
   },
   async test(assert) {
     assert.equal(find(".badge.clicks:nth(0)").text(), "1");
     assert.equal(find(".badge.clicks:nth(1)").text(), "2");
-  }
+  },
 });
 
 widgetTest("wiki", {
@@ -49,7 +49,7 @@ widgetTest("wiki", {
       this.historyShown,
       "clicking the wiki icon displays the post history"
     );
-  }
+  },
 });
 
 widgetTest("wiki without revision", {
@@ -62,7 +62,7 @@ widgetTest("wiki without revision", {
   async test(assert) {
     await click(".post-info .wiki");
     assert.ok(this.editPostCalled, "clicking wiki icon edits the post");
-  }
+  },
 });
 
 widgetTest("via-email", {
@@ -75,7 +75,7 @@ widgetTest("via-email", {
   async test(assert) {
     await click(".post-info.via-email");
     assert.ok(this.rawEmailShown, "clicking the envelope shows the raw email");
-  }
+  },
 });
 
 widgetTest("via-email without permission", {
@@ -91,7 +91,7 @@ widgetTest("via-email without permission", {
       !this.rawEmailShown,
       "clicking the envelope doesn't show the raw email"
     );
-  }
+  },
 });
 
 widgetTest("history", {
@@ -104,7 +104,7 @@ widgetTest("history", {
   async test(assert) {
     await click(".post-info.edits");
     assert.ok(this.historyShown, "clicking the pencil shows the history");
-  }
+  },
 });
 
 widgetTest("history without view permission", {
@@ -120,7 +120,7 @@ widgetTest("history without view permission", {
       !this.historyShown,
       `clicking the pencil doesn't show the history`
     );
-  }
+  },
 });
 
 widgetTest("whisper", {
@@ -131,7 +131,7 @@ widgetTest("whisper", {
   test(assert) {
     assert.ok(find(".topic-post.whisper").length === 1);
     assert.ok(find(".post-info.whisper").length === 1);
-  }
+  },
 });
 
 widgetTest("like count button", {
@@ -143,7 +143,7 @@ widgetTest("like count button", {
       post_number: 1,
       topic,
       like_count: 3,
-      actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }]
+      actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
     });
     this.set("post", post);
     this.set("args", { likeCount: 1 });
@@ -161,7 +161,7 @@ widgetTest("like count button", {
     await click("button.like-count");
     assert.ok(find(".who-liked").length === 0);
     assert.ok(find(".who-liked a.trigger-user-card").length === 0);
-  }
+  },
 });
 
 widgetTest(`like count with no likes`, {
@@ -171,7 +171,7 @@ widgetTest(`like count with no likes`, {
   },
   test(assert) {
     assert.ok(find("button.like-count").length === 0);
-  }
+  },
 });
 
 widgetTest("share button", {
@@ -184,7 +184,7 @@ widgetTest("share button", {
       !!find(".actions button[data-share-url]").length,
       "it renders a share button"
     );
-  }
+  },
 });
 
 widgetTest("liking", {
@@ -211,7 +211,7 @@ widgetTest("liking", {
     assert.ok(!!find(".actions button.like").length);
     assert.ok(!find(".actions button.has-like").length);
     assert.ok(find(".actions button.like-count").length === 0);
-  }
+  },
 });
 
 widgetTest("anon liking", {
@@ -235,7 +235,7 @@ widgetTest("anon liking", {
 
     await click(".actions button.like");
     assert.ok(this.loginShown);
-  }
+  },
 });
 
 widgetTest("edit button", {
@@ -248,7 +248,7 @@ widgetTest("edit button", {
   async test(assert) {
     await click("button.edit");
     assert.ok(this.editPostCalled, "it triggered the edit action");
-  }
+  },
 });
 
 widgetTest(`edit button - can't edit`, {
@@ -258,7 +258,7 @@ widgetTest(`edit button - can't edit`, {
   },
   test(assert) {
     assert.equal(find("button.edit").length, 0, `button is not displayed`);
-  }
+  },
 });
 
 widgetTest("recover button", {
@@ -271,7 +271,7 @@ widgetTest("recover button", {
   async test(assert) {
     await click("button.delete");
     assert.ok(this.deletePostCalled, "it triggered the delete action");
-  }
+  },
 });
 
 widgetTest("delete topic button", {
@@ -284,7 +284,7 @@ widgetTest("delete topic button", {
   async test(assert) {
     await click("button.delete");
     assert.ok(this.deletePostCalled, "it triggered the delete action");
-  }
+  },
 });
 
 widgetTest(`delete topic button - can't delete`, {
@@ -294,7 +294,7 @@ widgetTest(`delete topic button - can't delete`, {
   },
   test(assert) {
     assert.equal(find("button.delete").length, 0, `button is not displayed`);
-  }
+  },
 });
 
 widgetTest(
@@ -304,7 +304,7 @@ widgetTest(
     beforeEach() {
       this.set("args", {
         canDeleteTopic: false,
-        showFlagDelete: true
+        showFlagDelete: true,
       });
     },
 
@@ -315,7 +315,7 @@ widgetTest(
         I18n.t("post.controls.delete_topic_disallowed"),
         `shows the right button title for users without permissions`
       );
-    }
+    },
   }
 );
 
@@ -329,7 +329,7 @@ widgetTest("recover topic button", {
   async test(assert) {
     await click("button.recover");
     assert.ok(this.recovered);
-  }
+  },
 });
 
 widgetTest(`recover topic button - can't recover`, {
@@ -339,7 +339,7 @@ widgetTest(`recover topic button - can't recover`, {
   },
   test(assert) {
     assert.equal(find("button.recover").length, 0, `button is not displayed`);
-  }
+  },
 });
 
 widgetTest("delete post button", {
@@ -352,7 +352,7 @@ widgetTest("delete post button", {
   async test(assert) {
     await click("button.delete");
     assert.ok(this.deletePostCalled, "it triggered the delete action");
-  }
+  },
 });
 
 widgetTest(`delete post button - can't delete`, {
@@ -362,7 +362,7 @@ widgetTest(`delete post button - can't delete`, {
   },
   test(assert) {
     assert.equal(find("button.delete").length, 0, `button is not displayed`);
-  }
+  },
 });
 
 widgetTest("recover post button", {
@@ -375,7 +375,7 @@ widgetTest("recover post button", {
   async test(assert) {
     await click("button.recover");
     assert.ok(this.recovered);
-  }
+  },
 });
 
 widgetTest(`recover post button - can't recover`, {
@@ -385,7 +385,7 @@ widgetTest(`recover post button - can't recover`, {
   },
   test(assert) {
     assert.equal(find("button.recover").length, 0, `button is not displayed`);
-  }
+  },
 });
 
 widgetTest(`flagging`, {
@@ -400,7 +400,7 @@ widgetTest(`flagging`, {
 
     await click("button.create-flag");
     assert.ok(this.flagsShown, "it triggered the action");
-  }
+  },
 });
 
 widgetTest(`flagging: can't flag`, {
@@ -410,7 +410,7 @@ widgetTest(`flagging: can't flag`, {
   },
   test(assert) {
     assert.ok(find("button.create-flag").length === 0);
-  }
+  },
 });
 
 widgetTest(`flagging: can't flag when post is hidden`, {
@@ -420,7 +420,7 @@ widgetTest(`flagging: can't flag when post is hidden`, {
   },
   test(assert) {
     assert.ok(find("button.create-flag").length === 0);
-  }
+  },
 });
 
 widgetTest(`read indicator`, {
@@ -430,7 +430,7 @@ widgetTest(`read indicator`, {
   },
   test(assert) {
     assert.ok(find(".read-state.read").length);
-  }
+  },
 });
 
 widgetTest(`unread indicator`, {
@@ -440,7 +440,7 @@ widgetTest(`unread indicator`, {
   },
   test(assert) {
     assert.ok(find(".read-state").length);
-  }
+  },
 });
 
 widgetTest("reply directly above (supressed)", {
@@ -449,7 +449,7 @@ widgetTest("reply directly above (supressed)", {
     this.set("args", {
       replyToUsername: "eviltrout",
       replyToAvatarTemplate: "/images/avatar.png",
-      replyDirectlyAbove: true
+      replyDirectlyAbove: true,
     });
   },
   test(assert) {
@@ -459,7 +459,7 @@ widgetTest("reply directly above (supressed)", {
       0,
       "doesn't have the avoid tab class"
     );
-  }
+  },
 });
 
 widgetTest("reply a few posts above (supressed)", {
@@ -468,13 +468,13 @@ widgetTest("reply a few posts above (supressed)", {
     this.set("args", {
       replyToUsername: "eviltrout",
       replyToAvatarTemplate: "/images/avatar.png",
-      replyDirectlyAbove: false
+      replyDirectlyAbove: false,
     });
   },
   test(assert) {
     assert.ok(find("a.reply-to-tab").length, "shows the tab");
     assert.equal(find(".avoid-tab").length, 1, "has the avoid tab class");
-  }
+  },
 });
 
 widgetTest("reply directly above", {
@@ -483,7 +483,7 @@ widgetTest("reply directly above", {
     this.set("args", {
       replyToUsername: "eviltrout",
       replyToAvatarTemplate: "/images/avatar.png",
-      replyDirectlyAbove: true
+      replyDirectlyAbove: true,
     });
     this.siteSettings.suppress_reply_directly_above = false;
   },
@@ -492,7 +492,7 @@ widgetTest("reply directly above", {
     await click("a.reply-to-tab");
     assert.equal(find("section.embedded-posts.top .cooked").length, 1);
     assert.equal(find("section.embedded-posts .d-icon-arrow-up").length, 1);
-  }
+  },
 });
 
 widgetTest("cooked content hidden", {
@@ -505,7 +505,7 @@ widgetTest("cooked content hidden", {
   async test(assert) {
     await click(".topic-body .expand-hidden");
     assert.ok(this.unhidden, "triggers the action");
-  }
+  },
 });
 
 widgetTest("expand first post", {
@@ -517,7 +517,7 @@ widgetTest("expand first post", {
   async test(assert) {
     await click(".topic-body .expand-post");
     assert.equal(find(".expand-post").length, 0, "button is gone");
-  }
+  },
 });
 
 widgetTest("can't bookmark", {
@@ -528,7 +528,7 @@ widgetTest("can't bookmark", {
   test(assert) {
     assert.equal(find("button.bookmark").length, 0);
     assert.equal(find("button.bookmarked").length, 0);
-  }
+  },
 });
 
 widgetTest("bookmark", {
@@ -543,7 +543,7 @@ widgetTest("bookmark", {
   async test(assert) {
     assert.equal(find(".post-menu-area .bookmark").length, 1);
     assert.equal(find("button.bookmarked").length, 0);
-  }
+  },
 });
 
 widgetTest("can't show admin menu when you can't manage", {
@@ -553,7 +553,7 @@ widgetTest("can't show admin menu when you can't manage", {
   },
   test(assert) {
     assert.equal(find(".post-menu-area .show-post-admin-menu").length, 0);
-  }
+  },
 });
 
 widgetTest("show admin menu", {
@@ -571,7 +571,7 @@ widgetTest("show admin menu", {
       0,
       "clicking outside clears the popup"
     );
-  }
+  },
 });
 
 widgetTest("toggle moderator post", {
@@ -588,7 +588,7 @@ widgetTest("toggle moderator post", {
 
     assert.ok(this.toggled);
     assert.equal(find(".post-admin-menu").length, 0, "also hides the menu");
-  }
+  },
 });
 widgetTest("toggle moderator post", {
   template:
@@ -604,7 +604,7 @@ widgetTest("toggle moderator post", {
 
     assert.ok(this.toggled);
     assert.equal(find(".post-admin-menu").length, 0, "also hides the menu");
-  }
+  },
 });
 
 widgetTest("rebake post", {
@@ -619,7 +619,7 @@ widgetTest("rebake post", {
     await click(".post-admin-menu .rebuild-html");
     assert.ok(this.baked);
     assert.equal(find(".post-admin-menu").length, 0, "also hides the menu");
-  }
+  },
 });
 
 widgetTest("unhide post", {
@@ -634,7 +634,7 @@ widgetTest("unhide post", {
     await click(".post-admin-menu .unhide-post");
     assert.ok(this.unhidden);
     assert.equal(find(".post-admin-menu").length, 0, "also hides the menu");
-  }
+  },
 });
 
 widgetTest("change owner", {
@@ -650,7 +650,7 @@ widgetTest("change owner", {
     await click(".post-admin-menu .change-owner");
     assert.ok(this.owned);
     assert.equal(find(".post-admin-menu").length, 0, "also hides the menu");
-  }
+  },
 });
 
 widgetTest("reply", {
@@ -663,7 +663,7 @@ widgetTest("reply", {
   async test(assert) {
     await click(".post-controls .create");
     assert.ok(this.replied);
-  }
+  },
 });
 
 widgetTest("reply - without permissions", {
@@ -673,7 +673,7 @@ widgetTest("reply - without permissions", {
   },
   test(assert) {
     assert.equal(find(".post-controls .create").length, 0);
-  }
+  },
 });
 
 widgetTest("replies - no replies", {
@@ -683,7 +683,7 @@ widgetTest("replies - no replies", {
   },
   test(assert) {
     assert.equal(find("button.show-replies").length, 0);
-  }
+  },
 });
 
 widgetTest("replies - multiple replies", {
@@ -694,7 +694,7 @@ widgetTest("replies - multiple replies", {
   },
   test(assert) {
     assert.equal(find("button.show-replies").length, 1);
-  }
+  },
 });
 
 widgetTest("replies - one below, suppressed", {
@@ -705,7 +705,7 @@ widgetTest("replies - one below, suppressed", {
   },
   test(assert) {
     assert.equal(find("button.show-replies").length, 0);
-  }
+  },
 });
 
 widgetTest("replies - one below, not suppressed", {
@@ -718,7 +718,7 @@ widgetTest("replies - one below, not suppressed", {
     await click("button.show-replies");
     assert.equal(find("section.embedded-posts.bottom .cooked").length, 1);
     assert.equal(find("section.embedded-posts .d-icon-arrow-down").length, 1);
-  }
+  },
 });
 
 widgetTest("topic map not shown", {
@@ -728,7 +728,7 @@ widgetTest("topic map not shown", {
   },
   test(assert) {
     assert.equal(find(".topic-map").length, 0);
-  }
+  },
 });
 
 widgetTest("topic map - few posts", {
@@ -737,7 +737,7 @@ widgetTest("topic map - few posts", {
     this.set("args", {
       showTopicMap: true,
       topicPostsCount: 2,
-      participants: [{ username: "eviltrout" }, { username: "codinghorror" }]
+      participants: [{ username: "eviltrout" }, { username: "codinghorror" }],
     });
   },
   async test(assert) {
@@ -753,7 +753,7 @@ widgetTest("topic map - few posts", {
       2,
       "shows all when expanded"
     );
-  }
+  },
 });
 
 widgetTest("topic map - participants", {
@@ -766,9 +766,9 @@ widgetTest("topic map - participants", {
         { username: "eviltrout" },
         { username: "codinghorror" },
         { username: "sam" },
-        { username: "ZogStrIP" }
+        { username: "ZogStrIP" },
       ],
-      userFilters: ["sam", "codinghorror"]
+      userFilters: ["sam", "codinghorror"],
     });
   },
   async test(assert) {
@@ -786,7 +786,7 @@ widgetTest("topic map - participants", {
       "shows all when expanded"
     );
     assert.equal(find("a.poster.toggled").length, 2, "two are toggled");
-  }
+  },
 });
 
 widgetTest("topic map - links", {
@@ -800,8 +800,8 @@ widgetTest("topic map - links", {
         { url: "http://link3.example.com", clicks: 0 },
         { url: "http://link4.example.com", clicks: 0 },
         { url: "http://link5.example.com", clicks: 0 },
-        { url: "http://link6.example.com", clicks: 0 }
-      ]
+        { url: "http://link6.example.com", clicks: 0 },
+      ],
     });
   },
   async test(assert) {
@@ -825,7 +825,7 @@ widgetTest("topic map - links", {
       6,
       "all links now shown"
     );
-  }
+  },
 });
 
 widgetTest("topic map - no summary", {
@@ -835,7 +835,7 @@ widgetTest("topic map - no summary", {
   },
   test(assert) {
     assert.equal(find(".toggle-summary").length, 0);
-  }
+  },
 });
 
 widgetTest("topic map - has summary", {
@@ -850,7 +850,7 @@ widgetTest("topic map - has summary", {
 
     await click(".toggle-summary button");
     assert.ok(this.summaryToggled);
-  }
+  },
 });
 
 widgetTest("pm map", {
@@ -860,13 +860,13 @@ widgetTest("pm map", {
       showTopicMap: true,
       showPMMap: true,
       allowedGroups: [],
-      allowedUsers: [EmberObject.create({ username: "eviltrout" })]
+      allowedUsers: [EmberObject.create({ username: "eviltrout" })],
     });
   },
   test(assert) {
     assert.equal(find(".private-message-map").length, 1);
     assert.equal(find(".private-message-map .user").length, 1);
-  }
+  },
 });
 
 widgetTest("post notice - with username", {
@@ -882,20 +882,18 @@ widgetTest("post notice - with username", {
       noticeTime: twoDaysAgo,
       username: "codinghorror",
       name: "Jeff",
-      created_at: new Date()
+      created_at: new Date(),
     });
   },
   test(assert) {
     assert.equal(
-      find(".post-notice.returning-user:not(.old)")
-        .text()
-        .trim(),
+      find(".post-notice.returning-user:not(.old)").text().trim(),
       I18n.t("post.notice.returning_user", {
         user: "codinghorror",
-        time: "2 days ago"
+        time: "2 days ago",
       })
     );
-  }
+  },
 });
 
 widgetTest("post notice - with name", {
@@ -908,17 +906,15 @@ widgetTest("post notice - with name", {
       noticeType: "new_user",
       username: "codinghorror",
       name: "Jeff",
-      created_at: new Date(2019, 0, 1)
+      created_at: new Date(2019, 0, 1),
     });
   },
   test(assert) {
     assert.equal(
-      find(".post-notice.old.new-user")
-        .text()
-        .trim(),
+      find(".post-notice.old.new-user").text().trim(),
       I18n.t("post.notice.new_user", { user: "Jeff", time: "Jan '10" })
     );
-  }
+  },
 });
 
 widgetTest("show group request in post", {
@@ -926,12 +922,12 @@ widgetTest("show group request in post", {
   beforeEach() {
     this.set("args", {
       username: "foo",
-      requestedGroupName: "testGroup"
+      requestedGroupName: "testGroup",
     });
   },
   test(assert) {
     const link = find(".group-request a");
     assert.equal(link.text().trim(), I18n.t("groups.requests.handle"));
     assert.equal(link.attr("href"), "/g/testGroup/requests?filter=foo");
-  }
+  },
 });

@@ -15,5 +15,5 @@ export default Component.extend({
   @discourseComputed("currentSortDirection")
   sortIcon(currentSortDirection) {
     return currentSortDirection === 1 ? "caret-up" : "caret-down";
-  }
+  },
 });

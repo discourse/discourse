@@ -18,13 +18,13 @@ export default Component.extend({
 
   @discourseComputed("buttons.[]")
   inlineButtons(buttons) {
-    return buttons.filter(button => !button.dropdown);
+    return buttons.filter((button) => !button.dropdown);
   },
 
   // topic.assigned_to_user is for backward plugin support
   @discourseComputed("buttons.[]", "topic.assigned_to_user")
   dropdownButtons(buttons) {
-    return buttons.filter(button => button.dropdown);
+    return buttons.filter((button) => button.dropdown);
   },
 
   @discourseComputed("topic.isPrivateMessage")
@@ -41,13 +41,13 @@ export default Component.extend({
   showEditOnFooter: and("topic.isPrivateMessage", "site.can_tag_pms"),
 
   @discourseComputed("topic.message_archived")
-  archiveIcon: archived => (archived ? "envelope" : "folder"),
+  archiveIcon: (archived) => (archived ? "envelope" : "folder"),
 
   @discourseComputed("topic.message_archived")
-  archiveTitle: archived =>
+  archiveTitle: (archived) =>
     archived ? "topic.move_to_inbox.help" : "topic.archive_message.help",
 
   @discourseComputed("topic.message_archived")
-  archiveLabel: archived =>
-    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title"
+  archiveLabel: (archived) =>
+    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title",
 });

@@ -14,5 +14,5 @@ export default Controller.extend({
     } else {
       return this.routing.currentRouteName;
     }
-  }
+  },
 });

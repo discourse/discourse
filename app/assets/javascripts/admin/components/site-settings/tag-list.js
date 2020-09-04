@@ -7,11 +7,11 @@ export default Component.extend({
   selectedTags: {
     get(value) {
       return value.split("|").filter(Boolean);
-    }
+    },
   },
 
   @action
   changeSelectedTags(tags) {
     this.set("value", tags.join("|"));
-  }
+  },
 });

@@ -14,10 +14,10 @@ export default Component.extend({
     $(this.element).on(
       "click.discourse-staff-logs",
       "[data-link-post-id]",
-      e => {
+      (e) => {
         let postId = $(e.target).attr("data-link-post-id");
 
-        this.store.find("post", postId).then(p => {
+        this.store.find("post", postId).then((p) => {
           DiscourseURL.routeTo(p.get("url"));
         });
         return false;
@@ -27,7 +27,7 @@ export default Component.extend({
     $(this.element).on(
       "click.discourse-staff-logs",
       "[data-link-topic-id]",
-      e => {
+      (e) => {
         let topicId = $(e.target).attr("data-link-topic-id");
 
         DiscourseURL.routeTo(`/t/${topicId}`);
@@ -35,5 +35,5 @@ export default Component.extend({
         return false;
       }
     );
-  }
+  },
 });

@@ -19,8 +19,8 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
 
   ajax(`/admin/groups/automatic_membership_count.json`, {
     type: "PUT",
-    data
-  }).then(result => {
+    data,
+  }).then((result) => {
     const count = result.user_count;
 
     if (count > 0) {
@@ -54,5 +54,5 @@ export default Controller.extend({
       })
       .catch(popupAjaxError)
       .finally(() => this.set("saving", false));
-  }
+  },
 });

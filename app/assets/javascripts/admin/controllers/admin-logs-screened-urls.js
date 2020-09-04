@@ -8,7 +8,7 @@ export default Controller.extend({
 
   show() {
     this.set("loading", true);
-    ScreenedUrl.findAll().then(result => {
+    ScreenedUrl.findAll().then((result) => {
       this.set("model", result);
       this.set("loading", false);
     });
@@ -17,6 +17,6 @@ export default Controller.extend({
   actions: {
     exportScreenedUrlList() {
       exportEntity("screened_url").then(outputExportResult);
-    }
-  }
+    },
+  },
 });

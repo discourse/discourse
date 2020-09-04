@@ -2,10 +2,10 @@ import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Category Edit - security", {
-  loggedIn: true
+  loggedIn: true,
 });
 
-QUnit.test("default", async assert => {
+QUnit.test("default", async (assert) => {
   await visit("/c/bug");
 
   await click(".edit-category");
@@ -13,20 +13,14 @@ QUnit.test("default", async assert => {
 
   const $permissionListItems = find(".permission-list li");
 
-  const badgeName = $permissionListItems
-    .eq(0)
-    .find(".badge-group")
-    .text();
+  const badgeName = $permissionListItems.eq(0).find(".badge-group").text();
   assert.equal(badgeName, "everyone");
 
-  const permission = $permissionListItems
-    .eq(0)
-    .find(".permission")
-    .text();
+  const permission = $permissionListItems.eq(0).find(".permission").text();
   assert.equal(permission, "Create / Reply / See");
 });
 
-QUnit.test("removing a permission", async assert => {
+QUnit.test("removing a permission", async (assert) => {
   const availableGroups = selectKit(".available-groups");
 
   await visit("/c/bug");
@@ -52,7 +46,7 @@ QUnit.test("removing a permission", async assert => {
   );
 });
 
-QUnit.test("adding a permission", async assert => {
+QUnit.test("adding a permission", async (assert) => {
   const availableGroups = selectKit(".available-groups");
   const permissionSelector = selectKit(".permission-selector");
 
@@ -78,7 +72,7 @@ QUnit.test("adding a permission", async assert => {
   assert.equal(permission, "Reply / See");
 });
 
-QUnit.test("adding a previously removed permission", async assert => {
+QUnit.test("adding a previously removed permission", async (assert) => {
   const availableGroups = selectKit(".available-groups");
 
   await visit("/c/bug");
@@ -108,15 +102,9 @@ QUnit.test("adding a previously removed permission", async assert => {
 
   const $permissionListItems = find(".permission-list li");
 
-  const badgeName = $permissionListItems
-    .eq(0)
-    .find(".badge-group")
-    .text();
+  const badgeName = $permissionListItems.eq(0).find(".badge-group").text();
   assert.equal(badgeName, "everyone");
 
-  const permission = $permissionListItems
-    .eq(0)
-    .find(".permission")
-    .text();
+  const permission = $permissionListItems.eq(0).find(".permission").text();
   assert.equal(permission, "Create / Reply / See");
 });

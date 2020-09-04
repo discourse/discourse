@@ -15,9 +15,9 @@ acceptance("Search - Full Page", {
           {
             username: "admin",
             name: "admin",
-            avatar_template: "/images/avatar.png"
-          }
-        ]
+            avatar_template: "/images/avatar.png",
+          },
+        ],
       });
     });
 
@@ -40,7 +40,7 @@ acceptance("Search - Full Page", {
         mentionable: false,
         flair_url: null,
         flair_bg_color: null,
-        flair_color: null
+        flair_color: null,
       });
     });
 
@@ -53,8 +53,8 @@ acceptance("Search - Full Page", {
             name: "Getting Started",
             description: null,
             position: 10,
-            system: true
-          }
+            system: true,
+          },
         ],
         badges: [
           {
@@ -75,15 +75,15 @@ acceptance("Search - Full Page", {
               "This badge is granted the first time you read a long topic with more than 100 replies. Reading a conversation closely helps you follow the discussion, understand different viewpoints, and leads to more interesting conversations. The more you read, the better the conversation gets. As we like to say, Reading is Fundamental! :slight_smile:\n",
             slug: "reader",
             has_badge: false,
-            badge_type_id: 3
-          }
-        ]
+            badge_type_id: 3,
+          },
+        ],
       });
     });
-  }
+  },
 });
 
-QUnit.test("perform various searches", async assert => {
+QUnit.test("perform various searches", async (assert) => {
   await visit("/search");
 
   assert.ok($("body.search-page").length, "has body class");
@@ -103,7 +103,7 @@ QUnit.test("perform various searches", async assert => {
   assert.ok(find(".fps-topic").length === 1, "has one post");
 });
 
-QUnit.test("escape search term", async assert => {
+QUnit.test("escape search term", async (assert) => {
   await visit("/search");
   await fillIn(".search-query", "@<script>prompt(1337)</script>gmail.com");
 
@@ -115,7 +115,7 @@ QUnit.test("escape search term", async assert => {
   );
 });
 
-QUnit.skip("update username through advanced search ui", async assert => {
+QUnit.skip("update username through advanced search ui", async (assert) => {
   await visit("/search");
   await fillIn(".search-query", "none");
   await fillIn(".search-advanced-options .user-selector", "admin");
@@ -148,7 +148,7 @@ QUnit.skip("update username through advanced search ui", async assert => {
   });
 });
 
-QUnit.test("update category through advanced search ui", async assert => {
+QUnit.test("update category through advanced search ui", async (assert) => {
   const categoryChooser = selectKit(
     ".search-advanced-options .category-chooser"
   );
@@ -174,7 +174,7 @@ QUnit.test("update category through advanced search ui", async assert => {
 
 QUnit.test(
   "update in:title filter through advanced search ui",
-  async assert => {
+  async (assert) => {
     await visit("/search");
     await fillIn(".search-query", "none");
     await click(".search-advanced-options .in-title");
@@ -193,7 +193,7 @@ QUnit.test(
 
 QUnit.test(
   "update in:likes filter through advanced search ui",
-  async assert => {
+  async (assert) => {
     await visit("/search");
     await fillIn(".search-query", "none");
     await click(".search-advanced-options .in-likes");
@@ -212,7 +212,7 @@ QUnit.test(
 
 QUnit.test(
   "update in:personal filter through advanced search ui",
-  async assert => {
+  async (assert) => {
     await visit("/search");
     await fillIn(".search-query", "none");
     await click(".search-advanced-options .in-private");
@@ -229,24 +229,27 @@ QUnit.test(
   }
 );
 
-QUnit.test("update in:seen filter through advanced search ui", async assert => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await click(".search-advanced-options .in-seen");
+QUnit.test(
+  "update in:seen filter through advanced search ui",
+  async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await click(".search-advanced-options .in-seen");
 
-  assert.ok(
-    exists(".search-advanced-options .in-seen:checked"),
-    "it should check the right checkbox"
-  );
+    assert.ok(
+      exists(".search-advanced-options .in-seen:checked"),
+      "it should check the right checkbox"
+    );
 
-  assert.equal(
-    find(".search-query").val(),
-    "none in:seen",
-    "it should update the search term"
-  );
-});
+    assert.equal(
+      find(".search-query").val(),
+      "none in:seen",
+      "it should update the search term"
+    );
+  }
+);
 
-QUnit.test("update in filter through advanced search ui", async assert => {
+QUnit.test("update in filter through advanced search ui", async (assert) => {
   const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
   await visit("/search");
@@ -267,7 +270,7 @@ QUnit.test("update in filter through advanced search ui", async assert => {
   );
 });
 
-QUnit.test("update status through advanced search ui", async assert => {
+QUnit.test("update status through advanced search ui", async (assert) => {
   const statusSelector = selectKit(
     ".search-advanced-options .select-kit#status"
   );
@@ -292,7 +295,7 @@ QUnit.test("update status through advanced search ui", async assert => {
 
 QUnit.test(
   "doesn't update status filter header if wrong value entered through searchbox",
-  async assert => {
+  async (assert) => {
     const statusSelector = selectKit(
       ".search-advanced-options .select-kit#status"
     );
@@ -307,7 +310,7 @@ QUnit.test(
 
 QUnit.test(
   "doesn't update in filter header if wrong value entered through searchbox",
-  async assert => {
+  async (assert) => {
     const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
     await visit("/search");
@@ -318,7 +321,7 @@ QUnit.test(
   }
 );
 
-QUnit.test("update post time through advanced search ui", async assert => {
+QUnit.test("update post time through advanced search ui", async (assert) => {
   await visit("/search?expanded=true&q=after:2018-08-22");
 
   assert.equal(
@@ -351,24 +354,27 @@ QUnit.test("update post time through advanced search ui", async assert => {
   );
 });
 
-QUnit.test("update min post count through advanced search ui", async assert => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await fillIn("#search-min-post-count", "5");
+QUnit.test(
+  "update min post count through advanced search ui",
+  async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await fillIn("#search-min-post-count", "5");
 
-  assert.equal(
-    find(".search-advanced-options #search-min-post-count").val(),
-    "5",
-    'has "5" populated'
-  );
-  assert.equal(
-    find(".search-query").val(),
-    "none min_post_count:5",
-    'has updated search term to "none min_post_count:5"'
-  );
-});
+    assert.equal(
+      find(".search-advanced-options #search-min-post-count").val(),
+      "5",
+      'has "5" populated'
+    );
+    assert.equal(
+      find(".search-query").val(),
+      "none min_post_count:5",
+      'has updated search term to "none min_post_count:5"'
+    );
+  }
+);
 
-QUnit.test("validate advanced search when initially empty", async assert => {
+QUnit.test("validate advanced search when initially empty", async (assert) => {
   await visit("/search?expanded=true");
   await click(".search-advanced-options .in-likes");
 

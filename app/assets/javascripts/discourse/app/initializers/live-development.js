@@ -19,10 +19,10 @@ export default {
         10
       );
       if (!isNaN(themeId)) {
-        const patchState = function(f) {
+        const patchState = function (f) {
           const patched = window.history[f];
 
-          window.history[f] = function(stateObj, name, url) {
+          window.history[f] = function (stateObj, name, url) {
             if (url.indexOf("preview_theme_id=") === -1) {
               const joiner = url.indexOf("?") === -1 ? "?" : "&";
               url = `${url}${joiner}preview_theme_id=${themeId}`;
@@ -37,11 +37,11 @@ export default {
     }
 
     // Custom header changes
-    $("header.custom").each(function() {
+    $("header.custom").each(function () {
       const header = $(this);
       return messageBus.subscribe(
         "/header-change/" + $(this).data("id"),
-        function(data) {
+        function (data) {
           return header.html(data);
         }
       );
@@ -53,18 +53,18 @@ export default {
     }
 
     // Observe file changes
-    messageBus.subscribe("/file-change", function(data) {
+    messageBus.subscribe("/file-change", function (data) {
       if (Handlebars.compile && !Ember.TEMPLATES.empty) {
         // hbs notifications only happen in dev
         Ember.TEMPLATES.empty = Handlebars.compile("<div></div>");
       }
-      data.forEach(me => {
+      data.forEach((me) => {
         if (me === "refresh") {
           // Refresh if necessary
           document.location.reload(true);
         } else {
           const themeIds = currentThemeIds();
-          $("link").each(function() {
+          $("link").each(function () {
             if (me.hasOwnProperty("theme_id") && me.new_href) {
               const target = $(this).data("target");
               const themeId = $(this).data("theme-id");
@@ -82,5 +82,5 @@ export default {
         }
       });
     });
-  }
+  },
 };

@@ -13,7 +13,7 @@ export default EmberObject.extend({
     this.setProperties({
       itemsLoaded: 0,
       canLoadMore: true,
-      content: []
+      content: [],
     });
   },
 
@@ -34,7 +34,7 @@ export default EmberObject.extend({
         {
           itemsLoaded: 0,
           content: [],
-          lastLoadedUrl: null
+          lastLoadedUrl: null,
         },
         opts
       )
@@ -51,17 +51,17 @@ export default EmberObject.extend({
     this.set("loading", true);
 
     return ajax(this.url, { cache: false })
-      .then(result => {
+      .then((result) => {
         if (result) {
-          const posts = result.map(post => UserAction.create(post));
+          const posts = result.map((post) => UserAction.create(post));
           this.content.pushObjects(posts);
           this.setProperties({
             loaded: true,
             itemsLoaded: this.itemsLoaded + posts.length,
-            canLoadMore: posts.length > 0
+            canLoadMore: posts.length > 0,
           });
         }
       })
       .finally(() => this.set("loading", false));
-  }
+  },
 });

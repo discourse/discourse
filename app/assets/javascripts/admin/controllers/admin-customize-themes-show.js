@@ -5,7 +5,7 @@ import {
   filterBy,
   match,
   mapBy,
-  notEmpty
+  notEmpty,
 } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -38,14 +38,14 @@ export default Controller.extend({
   @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
     const descriptions = [];
-    ["common", "desktop", "mobile"].forEach(target => {
+    ["common", "desktop", "mobile"].forEach((target) => {
       const fields = this.editedFieldsForTarget(target);
       if (fields.length < 1) {
         return;
       }
       let resultString = I18n.t("admin.customize.theme." + target);
       const formattedFields = fields
-        .map(f => I18n.t("admin.customize.theme." + f.name + ".text"))
+        .map((f) => I18n.t("admin.customize.theme." + f.name + ".text"))
         .join(" , ");
       resultString += `: ${formattedFields}`;
       descriptions.push(resultString);
@@ -64,7 +64,7 @@ export default Controller.extend({
     if (available) {
       const themes = !childThemes
         ? available
-        : available.filter(theme => childThemes.indexOf(theme) === -1);
+        : available.filter((theme) => childThemes.indexOf(theme) === -1);
       return themes.length === 0 ? null : themes;
     }
   },
@@ -83,7 +83,7 @@ export default Controller.extend({
       value: this.parentThemesNames.join("|"),
       defaultValues: this.availableActiveThemesNames.join("|"),
       allThemes: this.allThemes,
-      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes")
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes"),
     });
   },
 
@@ -101,7 +101,7 @@ export default Controller.extend({
       value: this.childThemesNames.join("|"),
       defaultValues: this.availableActiveComponentsNames.join("|"),
       allThemes: this.allThemes,
-      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all")
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all"),
     });
   },
 
@@ -110,7 +110,7 @@ export default Controller.extend({
     if (!this.get("model.component")) {
       const themeId = this.get("model.id");
       return allThemes.filter(
-        theme => theme.get("id") !== themeId && theme.get("component")
+        (theme) => theme.get("id") !== themeId && theme.get("component")
       );
     }
   },
@@ -134,14 +134,14 @@ export default Controller.extend({
 
   @discourseComputed("model.settings")
   settings(settings) {
-    return settings.map(setting => ThemeSettings.create(setting));
+    return settings.map((setting) => ThemeSettings.create(setting));
   },
 
   hasSettings: notEmpty("settings"),
 
   @discourseComputed("model.translations")
   translations(translations) {
-    return translations.map(setting => ThemeSettings.create(setting));
+    return translations.map((setting) => ThemeSettings.create(setting));
   },
 
   hasTranslations: notEmpty("translations"),
@@ -153,7 +153,7 @@ export default Controller.extend({
 
   editedFieldsForTarget(target) {
     return this.get("model.editedFields").filter(
-      field => field.target === target
+      (field) => field.target === target
     );
   },
 
@@ -178,10 +178,10 @@ export default Controller.extend({
           color_scheme_id: null,
           user_selectable: false,
           child_themes: [],
-          childThemes: []
+          childThemes: [],
         });
 
-        this.get("parentController.model.content").forEach(theme => {
+        this.get("parentController.model.content").forEach((theme) => {
           const children = makeArray(theme.get("childThemes"));
           const rawChildren = makeArray(theme.get("child_themes"));
           const index = children ? children.indexOf(model) : -1;
@@ -190,7 +190,7 @@ export default Controller.extend({
             rawChildren.splice(index, 1);
             theme.setProperties({
               childThemes: children,
-              child_themes: rawChildren
+              child_themes: rawChildren,
             });
           }
         });
@@ -245,7 +245,7 @@ export default Controller.extend({
     addUpload(info) {
       let model = this.model;
       model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
-      model.saveChanges("theme_fields").catch(e => popupAjaxError(e));
+      model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
     },
 
     cancelChangeScheme() {
@@ -276,7 +276,7 @@ export default Controller.extend({
       if (this.get("model.remote_theme.is_git")) {
         bootbox.confirm(
           I18n.t("admin.customize.theme.edit_confirm"),
-          result => {
+          (result) => {
             if (result) {
               this.transitionToEditRoute();
             }
@@ -291,7 +291,7 @@ export default Controller.extend({
       const model = this.model;
       model.saveChanges("default").then(() => {
         if (model.get("default")) {
-          this.allThemes.forEach(theme => {
+          this.allThemes.forEach((theme) => {
             if (theme !== model && theme.get("default")) {
               theme.set("default", false);
             }
@@ -315,7 +315,7 @@ export default Controller.extend({
         I18n.t("admin.customize.theme.delete_upload_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             this.model.removeField(upload);
           }
@@ -332,11 +332,11 @@ export default Controller.extend({
     destroy() {
       return bootbox.confirm(
         I18n.t("admin.customize.delete_confirm", {
-          theme_name: this.get("model.name")
+          theme_name: this.get("model.name"),
         }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             const model = this.model;
             model.setProperties({ recentlyInstalled: false });
@@ -354,14 +354,14 @@ export default Controller.extend({
         ? this.parentThemes
         : this.get("model.childThemes");
       if (relatives && relatives.length > 0) {
-        const names = relatives.map(relative => relative.get("name"));
+        const names = relatives.map((relative) => relative.get("name"));
         bootbox.confirm(
           I18n.t(`${this.convertKey}_alert`, {
-            relatives: names.join(", ")
+            relatives: names.join(", "),
           }),
           I18n.t("no_value"),
           I18n.t("yes_value"),
-          result => {
+          (result) => {
             if (result) {
               this.commitSwitchType();
             }
@@ -384,6 +384,6 @@ export default Controller.extend({
       this.model
         .saveChanges("enabled")
         .catch(() => this.model.set("enabled", true));
-    }
-  }
+    },
+  },
 });

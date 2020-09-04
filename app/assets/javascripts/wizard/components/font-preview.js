@@ -5,7 +5,7 @@ import {
   createPreviewComponent,
   darkLightDiff,
   chooseDarker,
-  LOREM
+  LOREM,
 } from "wizard/lib/preview";
 
 export default createPreviewComponent(305, 165, {
@@ -31,7 +31,7 @@ export default createPreviewComponent(305, 165, {
   images() {
     return {
       logo: this.wizard.getLogoUrl(),
-      avatar: "/images/wizard/trout.png"
+      avatar: "/images/wizard/trout.png",
     };
   },
 
@@ -121,5 +121,5 @@ export default createPreviewComponent(305, 165, {
     ctx.font = `Bold ${bodyFontSize}em ${font}`;
     ctx.fillStyle = colors.primary;
     ctx.fillText("1 / 20", timelineX + margin, height * 0.3 + margin * 1.5);
-  }
+  },
 });

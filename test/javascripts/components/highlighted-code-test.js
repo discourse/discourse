@@ -15,12 +15,10 @@ componentTest("highlighting code", {
 
   test(assert) {
     assert.equal(
-      find("code.ruby.hljs .hljs-function .hljs-keyword")
-        .text()
-        .trim(),
+      find("code.ruby.hljs .hljs-function .hljs-keyword").text().trim(),
       "def"
     );
-  }
+  },
 });
 
 componentTest("large code blocks are not highlighted", {
@@ -33,11 +31,6 @@ componentTest("large code blocks are not highlighted", {
   },
 
   test(assert) {
-    assert.equal(
-      find("code")
-        .text()
-        .trim(),
-      LONG_CODE_BLOCK.trim()
-    );
-  }
+    assert.equal(find("code").text().trim(), LONG_CODE_BLOCK.trim());
+  },
 });

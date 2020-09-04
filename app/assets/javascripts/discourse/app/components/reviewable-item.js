@@ -64,7 +64,7 @@ export default Component.extend({
       return claimedBy.id === this.currentUser.id
         ? I18n.t("review.claim_help.claimed_by_you")
         : I18n.t("review.claim_help.claimed_by_other", {
-            username: claimedBy.username
+            username: claimedBy.username,
           });
     }
 
@@ -99,10 +99,10 @@ export default Component.extend({
       return ajax(
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
         {
-          type: "PUT"
+          type: "PUT",
         }
       )
-        .then(result => {
+        .then((result) => {
           let performResult = result.reviewable_perform_result;
 
           // "fast track" to update the current user's reviewable count before the message bus finds out.
@@ -151,7 +151,7 @@ export default Component.extend({
       return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
-        before: performAction
+        before: performAction,
       });
     }
   },
@@ -160,7 +160,7 @@ export default Component.extend({
     explainReviewable(reviewable) {
       showModal("explain-reviewable", {
         title: "review.explain.title",
-        model: reviewable
+        model: reviewable,
       });
     },
 
@@ -177,7 +177,7 @@ export default Component.extend({
       let updates = this._updates;
 
       // Remove empty objects
-      Object.keys(updates).forEach(name => {
+      Object.keys(updates).forEach((name) => {
         let attr = updates[name];
         if (typeof attr === "object" && Object.keys(attr).length === 0) {
           delete updates[name];
@@ -213,7 +213,7 @@ export default Component.extend({
 
       let msg = action.get("confirm_message");
       if (msg) {
-        bootbox.confirm(msg, answer => {
+        bootbox.confirm(msg, (answer) => {
           if (answer) {
             return this._performConfirmed(action);
           }
@@ -221,6 +221,6 @@ export default Component.extend({
       } else {
         return this._performConfirmed(action);
       }
-    }
-  }
+    },
+  },
 });

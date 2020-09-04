@@ -13,22 +13,22 @@ acceptance("Password Reset", {
       helper.response(200, { success: "OK" })
     );
 
-    server.put("/u/password-reset/myvalidtoken.json", request => {
+    server.put("/u/password-reset/myvalidtoken.json", (request) => {
       const body = parsePostData(request.requestBody);
       if (body.password === "jonesyAlienSlayer") {
         return helper.response(200, {
           success: false,
-          errors: { password: ["is the name of your cat"] }
+          errors: { password: ["is the name of your cat"] },
         });
       } else {
         return helper.response(200, {
           success: "OK",
-          message: I18n.t("password_reset.success")
+          message: I18n.t("password_reset.success"),
         });
       }
     });
 
-    server.put("/u/password-reset/requiretwofactor.json", request => {
+    server.put("/u/password-reset/requiretwofactor.json", (request) => {
       const body = parsePostData(request.requestBody);
       if (
         body.password === "perf3ctly5ecur3" &&
@@ -36,25 +36,25 @@ acceptance("Password Reset", {
       ) {
         return helper.response(200, {
           success: "OK",
-          message: I18n.t("password_reset.success")
+          message: I18n.t("password_reset.success"),
         });
       } else if (body.second_factor_token === "123123") {
         return helper.response(200, {
           success: false,
-          errors: { password: ["invalid"] }
+          errors: { password: ["invalid"] },
         });
       } else {
         return helper.response(200, {
           success: false,
           message: "invalid token",
-          errors: { user_second_factors: ["invalid token"] }
+          errors: { user_second_factors: ["invalid token"] },
         });
       }
     });
-  }
+  },
 });
 
-QUnit.test("Password Reset Page", async assert => {
+QUnit.test("Password Reset Page", async (assert) => {
   PreloadStore.store("password_reset", { is_developer: false });
 
   await visit("/u/password-reset/myvalidtoken");
@@ -76,9 +76,8 @@ QUnit.test("Password Reset Page", async assert => {
   await click(".password-reset form button");
   assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
   assert.ok(
-    find(".password-reset .tip.bad")
-      .html()
-      .indexOf("is the name of your cat") > -1,
+    find(".password-reset .tip.bad").html().indexOf("is the name of your cat") >
+      -1,
     "server validation error message shows"
   );
 
@@ -87,10 +86,10 @@ QUnit.test("Password Reset Page", async assert => {
   assert.ok(!exists(".password-reset form"), "form is gone");
 });
 
-QUnit.test("Password Reset Page With Second Factor", async assert => {
+QUnit.test("Password Reset Page With Second Factor", async (assert) => {
   PreloadStore.store("password_reset", {
     is_developer: false,
-    second_factor_required: true
+    second_factor_required: true,
   });
 
   await visit("/u/password-reset/requiretwofactor");
@@ -104,9 +103,7 @@ QUnit.test("Password Reset Page With Second Factor", async assert => {
   assert.ok(exists(".alert-error"), "shows 2 factor error");
 
   assert.ok(
-    find(".alert-error")
-      .html()
-      .indexOf("invalid token") > -1,
+    find(".alert-error").html().indexOf("invalid token") > -1,
     "shows server validation error message"
   );
 

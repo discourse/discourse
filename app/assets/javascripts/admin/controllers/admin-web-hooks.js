@@ -10,7 +10,7 @@ export default Controller.extend({
         I18n.t("admin.web_hooks.delete_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             webhook
               .destroyRecord()
@@ -25,6 +25,6 @@ export default Controller.extend({
 
     loadMore() {
       this.model.loadMore();
-    }
-  }
+    },
+  },
 });

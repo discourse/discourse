@@ -24,7 +24,7 @@ const FooterNavComponent = MountWidget.extend(
     buildArgs() {
       return {
         canGoBack: this.canGoBack,
-        canGoForward: this.canGoForward
+        canGoForward: this.canGoForward,
       };
     },
 
@@ -154,7 +154,7 @@ const FooterNavComponent = MountWidget.extend(
 
       this.set("canGoBack", index > 1 || document.referrer ? true : false);
       this.set("canGoForward", index < this.routeHistory.length ? true : false);
-    }
+    },
   }
 );
 

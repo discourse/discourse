@@ -7,24 +7,24 @@ import Site from "discourse/models/site";
 import Session from "discourse/models/session";
 import { currentSettings } from "helpers/site-settings";
 
-export default function(name, opts) {
+export default function (name, opts) {
   opts = opts || {};
 
   if (opts.skip) {
     return;
   }
 
-  test(name, function(assert) {
+  test(name, function (assert) {
     this.site = Site.current();
     this.session = Session.current();
 
     this.registry.register("site-settings:main", currentSettings(), {
-      instantiate: false
+      instantiate: false,
     });
     this.registry.register("capabilities:main", EmberObject);
     this.registry.register("site:main", this.site, { instantiate: false });
     this.registry.register("session:main", this.session, {
-      instantiate: false
+      instantiate: false,
     });
     this.registry.injection("component", "siteSettings", "site-settings:main");
     this.registry.injection("component", "appEvents", "service:app-events");
@@ -40,7 +40,7 @@ export default function(name, opts) {
       const currentUser = User.create({ username: "eviltrout" });
       this.currentUser = currentUser;
       this.registry.register("current-user:main", this.currentUser, {
-        instantiate: false
+        instantiate: false,
       });
       this.registry.injection("component", "currentUser", "current-user:main");
       this.registry.register(

@@ -23,5 +23,5 @@ export default Component.extend({
     if (name && normalize(username) !== normalize(name)) {
       return name;
     }
-  }
+  },
 });

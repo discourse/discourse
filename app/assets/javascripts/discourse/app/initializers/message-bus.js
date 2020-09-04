@@ -9,7 +9,7 @@ const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 function ajax(opts) {
   if (opts.complete) {
     const oldComplete = opts.complete;
-    opts.complete = function(xhr, stat) {
+    opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
     };
@@ -66,7 +66,7 @@ export default {
 
     if (messageBus.baseUrl !== "/") {
       // zepto compatible, 1 param only
-      messageBus.ajax = function(opts) {
+      messageBus.ajax = function (opts) {
         opts.headers = opts.headers || {};
         opts.headers["X-Shared-Session-Key"] = $(
           "meta[name=shared_session_key]"
@@ -77,7 +77,7 @@ export default {
         return ajax(opts);
       };
     } else {
-      messageBus.ajax = function(opts) {
+      messageBus.ajax = function (opts) {
         opts.headers = opts.headers || {};
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
@@ -92,5 +92,5 @@ export default {
       messageBus.callbackInterval = siteSettings.polling_interval;
       messageBus.enableLongPolling = true;
     }
-  }
+  },
 };

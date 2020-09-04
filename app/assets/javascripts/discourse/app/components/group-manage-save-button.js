@@ -25,7 +25,7 @@ export default Component.extend({
 
       return group
         .save()
-        .then(data => {
+        .then((data) => {
           if (data.route_to) {
             DiscourseURL.routeTo(data.route_to);
           }
@@ -34,6 +34,6 @@ export default Component.extend({
         })
         .catch(popupAjaxError)
         .finally(() => this.set("saving", false));
-    }
-  }
+    },
+  },
 });

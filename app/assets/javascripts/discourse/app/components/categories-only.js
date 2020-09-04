@@ -30,7 +30,7 @@ export default Component.extend({
       return [];
     }
 
-    return categories.filter(cat => !cat.isHidden);
+    return categories.filter((cat) => !cat.isHidden);
   },
 
   @discourseComputed("categories", "categories.length")
@@ -50,5 +50,5 @@ export default Component.extend({
   @action
   toggleShowMuted() {
     this.toggleProperty("showMuted");
-  }
+  },
 });

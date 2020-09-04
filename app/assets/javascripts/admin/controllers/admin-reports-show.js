@@ -19,5 +19,5 @@ export default Controller.extend({
     options.chartGrouping = this.chart_grouping;
 
     return options;
-  }
+  },
 });

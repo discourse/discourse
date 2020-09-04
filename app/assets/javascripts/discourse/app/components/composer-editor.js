@@ -5,15 +5,15 @@ import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import discourseComputed, {
   observes,
-  on
+  on,
 } from "discourse-common/utils/decorators";
 import {
   linkSeenMentions,
-  fetchUnseenMentions
+  fetchUnseenMentions,
 } from "discourse/lib/link-mentions";
 import {
   linkSeenHashtags,
-  fetchUnseenHashtags
+  fetchUnseenHashtags,
 } from "discourse/lib/link-hashtags";
 import Composer from "discourse/models/composer";
 import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
@@ -27,20 +27,20 @@ import {
   formatUsername,
   clipboardHelpers,
   caretPosition,
-  inCodeBlock
+  inCodeBlock,
 } from "discourse/lib/utilities";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import {
   validateUploadedFiles,
   authorizesOneOrMoreImageExtensions,
   getUploadMarkdown,
-  displayErrorForUpload
+  displayErrorForUpload,
 } from "discourse/lib/uploads";
 import bootbox from "bootbox";
 
 import {
   cacheShortUploadUrl,
-  resolveAllShortUrls
+  resolveAllShortUrls,
 } from "pretty-text/upload-short-url";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -50,7 +50,7 @@ const uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
   uploadHandlers.push({
     extensions,
-    method
+    method,
   });
 }
 
@@ -160,7 +160,7 @@ export default Component.extend({
             return quotedPost.primary_group_name;
           }
         }
-      }
+      },
     };
   },
 
@@ -174,7 +174,7 @@ export default Component.extend({
       term,
       topicId,
       categoryId,
-      includeGroups: true
+      includeGroups: true,
     });
   },
 
@@ -186,17 +186,17 @@ export default Component.extend({
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: term => this.userSearchTerm.call(this, term),
+        dataSource: (term) => this.userSearchTerm.call(this, term),
         key: "@",
-        transformComplete: v => v.username || v.name,
-        afterComplete: value => {
+        transformComplete: (v) => v.username || v.name,
+        afterComplete: (value) => {
           this.composer.set("reply", value);
 
           // ensures textarea scroll position is correct
           schedule("afterRender", () => $input.blur().focus());
         },
-        triggerRule: textarea =>
-          !inCodeBlock(textarea.value, caretPosition(textarea))
+        triggerRule: (textarea) =>
+          !inCodeBlock(textarea.value, caretPosition(textarea)),
       });
     }
 
@@ -253,7 +253,7 @@ export default Component.extend({
       return EmberObject.create({
         failed: true,
         reason,
-        lastShownAt: lastValidatedAt
+        lastShownAt: lastValidatedAt,
       });
     }
   },
@@ -267,7 +267,7 @@ export default Component.extend({
     // and add order nr to the next one: [Uplodading: test.png(1)...]
     const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regexString = `\\[${I18n.t("uploading_filename", {
-      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?"
+      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
     })}\\]\\(\\)`;
     const globalRegex = new RegExp(regexString, "g");
     const matchingPlaceholder = this.get("composer.reply").match(globalRegex);
@@ -315,7 +315,7 @@ export default Component.extend({
   },
 
   _initInputPreviewSync($input, $preview) {
-    REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
+    REBUILD_SCROLL_MAP_EVENTS.forEach((event) => {
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
@@ -351,13 +351,13 @@ export default Component.extend({
   _teardownInputPreviewSync() {
     [
       $(this.element.querySelector(".d-editor-input")),
-      $(this.element.querySelector(".d-editor-preview-wrapper"))
-    ].forEach($element => {
+      $(this.element.querySelector(".d-editor-preview-wrapper")),
+    ].forEach(($element) => {
       $element.off("mouseenter touchstart");
       $element.off("scroll");
     });
 
-    REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
+    REBUILD_SCROLL_MAP_EVENTS.forEach((event) => {
       this.appEvents.off(event, this, this._resetShouldBuildScrollMap);
     });
   },
@@ -373,7 +373,7 @@ export default Component.extend({
         "font-size": $input.css("font-size"),
         "font-family": $input.css("font-family"),
         "line-height": $input.css("line-height"),
-        "white-space": $input.css("white-space")
+        "white-space": $input.css("white-space"),
       })
       .appendTo("body");
 
@@ -383,7 +383,7 @@ export default Component.extend({
     $input
       .val()
       .split("\n")
-      .forEach(text => {
+      .forEach((text) => {
         linesMap.push(numberOfLines);
 
         if (text.length === 0) {
@@ -506,7 +506,7 @@ export default Component.extend({
     } else {
       const lineHeight = parseFloat($input.css("line-height"));
       scrollTop =
-        lineHeight * scrollMap.findIndex(offset => offset > previewScrollTop);
+        lineHeight * scrollMap.findIndex((offset) => offset > previewScrollTop);
     }
 
     $input.stop(true).animate({ scrollTop }, 100, "linear");
@@ -534,7 +534,7 @@ export default Component.extend({
   _loadInlineOneboxes(inline) {
     applyInlineOneboxes(inline, ajax, {
       categoryId: this.get("composer.category.id"),
-      topicId: this.get("composer.topic.id")
+      topicId: this.get("composer.topic.id"),
     });
   },
 
@@ -548,14 +548,14 @@ export default Component.extend({
       post.set("refreshedPost", true);
     }
 
-    Object.values(oneboxes).forEach(onebox => {
-      onebox.forEach($onebox => {
+    Object.values(oneboxes).forEach((onebox) => {
+      onebox.forEach(($onebox) => {
         load({
           elem: $onebox,
           refresh,
           ajax,
           categoryId: this.get("composer.category.id"),
-          topicId: this.get("composer.topic.id")
+          topicId: this.get("composer.topic.id"),
         });
       });
     });
@@ -572,8 +572,8 @@ export default Component.extend({
             {
               name: name,
               user_count: $e.data("mentionable-user-count"),
-              max_mentions: $e.data("max-mentions")
-            }
+              max_mentions: $e.data("max-mentions"),
+            },
           ]);
           found.push(name);
         }
@@ -629,7 +629,7 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: false,
-          isCancellable: false
+          isCancellable: false,
         });
       }
       if (removePlaceholder) {
@@ -652,10 +652,10 @@ export default Component.extend({
     $element.fileupload({
       url: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       dataType: "json",
-      pasteZone: $element
+      pasteZone: $element,
     });
 
-    $element.on("fileuploadpaste", e => {
+    $element.on("fileuploadpaste", (e) => {
       this._pasted = true;
 
       if (!$(".d-editor-input").is(":focus")) {
@@ -664,7 +664,7 @@ export default Component.extend({
 
       const { canUpload, canPasteHtml, types } = clipboardHelpers(e, {
         siteSettings: this.siteSettings,
-        canUpload: true
+        canUpload: true,
       });
 
       if (!canUpload || canPasteHtml || types.includes("text/plain")) {
@@ -684,7 +684,7 @@ export default Component.extend({
       }
 
       // Look for a matching file upload handler contributed from a plugin
-      const matcher = handler => {
+      const matcher = (handler) => {
         const ext = handler.extensions.join("|");
         const regex = new RegExp(`\\.(${ext})$`, "i");
         return regex.test(data.files[0].name);
@@ -709,7 +709,7 @@ export default Component.extend({
         siteSettings: this.siteSettings,
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings
-          .allow_staff_to_upload_any_file_in_pm
+          .allow_staff_to_upload_any_file_in_pm,
       };
 
       const isUploading = validateUploadedFiles(data.files, opts);
@@ -774,7 +774,7 @@ export default Component.extend({
     });
 
     if (this.site.mobileView) {
-      $("#reply-control .mobile-file-upload").on("click.uploader", function() {
+      $("#reply-control .mobile-file-upload").on("click.uploader", function () {
         // redirect the click on the hidden file input
         $("#mobile-uploader").click();
       });
@@ -794,13 +794,8 @@ export default Component.extend({
     // All matches are whitespace tolerant as long it's still valid markdown.
     // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
     const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
-    $preview.off("click", ".scale-btn").on("click", ".scale-btn", e => {
-      const index = parseInt(
-        $(e.target)
-          .parent()
-          .attr("data-image-index"),
-        10
-      );
+    $preview.off("click", ".scale-btn").on("click", ".scale-btn", (e) => {
+      const index = parseInt($(e.target).parent().attr("data-image-index"), 10);
 
       const scale = e.target.attributes["data-scale"].value;
       const matchingPlaceholder = this.get("composer.reply").match(
@@ -893,7 +888,7 @@ export default Component.extend({
         icon: "far-comment",
         sendAction: this.importQuote,
         title: "composer.quote_post_title",
-        unshift: true
+        unshift: true,
       });
 
       if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
@@ -902,7 +897,7 @@ export default Component.extend({
           group: "insertions",
           icon: this.uploadIcon,
           title: "upload",
-          sendAction: this.showUploadModal
+          sendAction: this.showUploadModal,
         });
       }
 
@@ -912,7 +907,7 @@ export default Component.extend({
         icon: "cog",
         title: "composer.options",
         sendAction: this.onExpandPopupMenuOptions.bind(this),
-        popupMenu: true
+        popupMenu: true,
       });
     },
 
@@ -999,6 +994,6 @@ export default Component.extend({
 
       this.trigger("previewRefreshed", $preview[0]);
       this.afterRefresh($preview);
-    }
-  }
+    },
+  },
 });

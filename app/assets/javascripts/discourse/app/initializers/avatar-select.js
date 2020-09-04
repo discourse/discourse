@@ -28,9 +28,9 @@ export default {
     modal.setProperties({ user, selected });
 
     if (this.selectableAvatarsEnabled) {
-      ajax("/site/selectable-avatars.json").then(avatars =>
+      ajax("/site/selectable-avatars.json").then((avatars) =>
         modal.set("selectableAvatars", avatars)
       );
     }
-  }
+  },
 };

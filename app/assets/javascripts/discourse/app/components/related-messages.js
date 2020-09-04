@@ -16,9 +16,9 @@ export default Component.extend({
       topic.relatedMessages.length >= 5 &&
       allowedUsers.length === 2 &&
       topic.details.allowed_groups.length === 0 &&
-      allowedUsers.find(u => u.username === this.currentUser.username)
+      allowedUsers.find((u) => u.username === this.currentUser.username)
     ) {
-      return allowedUsers.find(u => u.username !== this.currentUser.username);
+      return allowedUsers.find((u) => u.username !== this.currentUser.username);
     }
   },
 
@@ -32,5 +32,5 @@ export default Component.extend({
   @discourseComputed("topic")
   relatedTitleLink(topic) {
     return this.currentUser && this.currentUser.pmPath(topic);
-  }
+  },
 });

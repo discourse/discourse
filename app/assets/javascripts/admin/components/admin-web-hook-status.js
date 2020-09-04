@@ -11,7 +11,7 @@ export default Component.extend({
 
   @discourseComputed("deliveryStatuses", "model.last_delivery_status")
   status(deliveryStatuses, lastDeliveryStatus) {
-    return deliveryStatuses.find(s => s.id === lastDeliveryStatus);
+    return deliveryStatuses.find((s) => s.id === lastDeliveryStatus);
   },
 
   @discourseComputed("status.id", "icons")
@@ -34,5 +34,5 @@ export default Component.extend({
       "deliveryStatus",
       I18n.t(`admin.web_hooks.delivery_status.${this.get("status.name")}`)
     );
-  }
+  },
 });

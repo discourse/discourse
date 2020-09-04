@@ -41,10 +41,10 @@ export default Mixin.create({
           moment(),
           this.statusType !== CLOSE_STATUS_TYPE ? 8 : 18
         ),
-        icon: details.icon
+        icon: details.icon,
       };
     }
 
     return { time: moment() };
-  }
+  },
 });

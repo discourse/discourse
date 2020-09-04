@@ -6,17 +6,17 @@ import Site from "discourse/models/site";
 
 QUnit.module("NavItem", {
   beforeEach() {
-    run(function() {
+    run(function () {
       const asianCategory = Category.create({
         name: "确实是这样",
-        id: 343434
+        id: 343434,
       });
       Site.currentProp("categories").addObject(asianCategory);
     });
-  }
+  },
 });
 
-QUnit.test("href", assert => {
+QUnit.test("href", (assert) => {
   assert.expect(2);
 
   function href(text, expected, label) {
@@ -27,7 +27,7 @@ QUnit.test("href", assert => {
   href("categories", "/categories", "categories");
 });
 
-QUnit.test("count", assert => {
+QUnit.test("count", (assert) => {
   const navItem = createStore().createRecord("nav-item", { name: "new" });
 
   assert.equal(navItem.get("count"), 0, "it has no count by default");

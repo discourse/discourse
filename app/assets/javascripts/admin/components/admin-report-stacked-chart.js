@@ -56,14 +56,14 @@ export default Component.extend({
 
     const data = {
       labels: chartData[0].data.mapBy("x"),
-      datasets: chartData.map(cd => {
+      datasets: chartData.map((cd) => {
         return {
           label: cd.label,
           stack: "pageviews-stack",
-          data: cd.data.map(d => Math.round(parseFloat(d.y))),
-          backgroundColor: cd.color
+          data: cd.data.map((d) => Math.round(parseFloat(d.y))),
+          backgroundColor: cd.color,
         };
-      })
+      }),
     };
 
     loadScript("/javascripts/Chart.min.js").then(() => {
@@ -83,30 +83,30 @@ export default Component.extend({
         responsiveAnimationDuration: 0,
         hover: { mode: "index" },
         animation: {
-          duration: 0
+          duration: 0,
         },
         tooltips: {
           mode: "index",
           intersect: false,
           callbacks: {
-            beforeFooter: tooltipItem => {
+            beforeFooter: (tooltipItem) => {
               let total = 0;
               tooltipItem.forEach(
-                item => (total += parseInt(item.yLabel || 0, 10))
+                (item) => (total += parseInt(item.yLabel || 0, 10))
               );
               return `= ${total}`;
             },
-            title: tooltipItem =>
-              moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL")
-          }
+            title: (tooltipItem) =>
+              moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL"),
+          },
         },
         layout: {
           padding: {
             left: 0,
             top: 0,
             right: 0,
-            bottom: 0
-          }
+            bottom: 0,
+          },
         },
         scales: {
           yAxes: [
@@ -114,15 +114,15 @@ export default Component.extend({
               stacked: true,
               display: true,
               ticks: {
-                userCallback: label => {
+                userCallback: (label) => {
                   if (Math.floor(label) === label) return label;
                 },
-                callback: label => number(label),
+                callback: (label) => number(label),
                 sampleSize: 5,
                 maxRotation: 25,
-                minRotation: 25
-              }
-            }
+                minRotation: 25,
+              },
+            },
           ],
           xAxes: [
             {
@@ -132,17 +132,17 @@ export default Component.extend({
               offset: true,
               time: {
                 parser: "YYYY-MM-DD",
-                minUnit: "day"
+                minUnit: "day",
               },
               ticks: {
                 sampleSize: 5,
                 maxRotation: 50,
-                minRotation: 50
-              }
-            }
-          ]
-        }
-      }
+                minRotation: 50,
+              },
+            },
+          ],
+        },
+      },
     };
   },
 
@@ -151,5 +151,5 @@ export default Component.extend({
       this._chart.destroy();
       this._chart = null;
     }
-  }
+  },
 });

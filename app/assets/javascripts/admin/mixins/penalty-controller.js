@@ -26,7 +26,7 @@ export default Mixin.create(ModalFunctionality, {
       postAction: "delete",
       before: null,
       successCallback: null,
-      confirmClose: false
+      confirmClose: false,
     });
   },
 
@@ -38,7 +38,7 @@ export default Mixin.create(ModalFunctionality, {
         (this.message && this.message.length > 1))
     ) {
       this.send("hideModal");
-      bootbox.confirm(I18n.t("admin.user.confirm_cancel_penalty"), result => {
+      bootbox.confirm(I18n.t("admin.user.confirm_cancel_penalty"), (result) => {
         if (result) {
           next(() => {
             this.set("confirmClose", true);
@@ -58,7 +58,7 @@ export default Mixin.create(ModalFunctionality, {
 
     return promise
       .then(() => cb())
-      .then(result => {
+      .then((result) => {
         this.set("confirmClose", true);
         this.send("closeModal");
         let callback = this.successCallback;
@@ -67,5 +67,5 @@ export default Mixin.create(ModalFunctionality, {
         }
       })
       .catch(popupAjaxError);
-  }
+  },
 });

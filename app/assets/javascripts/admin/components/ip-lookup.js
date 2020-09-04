@@ -24,7 +24,9 @@ export default Component.extend({
       this.set("show", true);
 
       if (!this.location) {
-        ajax("/admin/users/ip-info", { data: { ip: this.ip } }).then(location =>
+        ajax("/admin/users/ip-info", {
+          data: { ip: this.ip },
+        }).then((location) =>
           this.set("location", EmberObject.create(location))
         );
       }
@@ -35,17 +37,17 @@ export default Component.extend({
         const data = {
           ip: this.ip,
           exclude: this.userId,
-          order: "trust_level DESC"
+          order: "trust_level DESC",
         };
 
-        ajax("/admin/users/total-others-with-same-ip", { data }).then(result =>
-          this.set("totalOthersWithSameIP", result.total)
-        );
+        ajax("/admin/users/total-others-with-same-ip", {
+          data,
+        }).then((result) => this.set("totalOthersWithSameIP", result.total));
 
-        AdminUser.findAll("active", data).then(users => {
+        AdminUser.findAll("active", data).then((users) => {
           this.setProperties({
             other_accounts: users,
-            otherAccountsLoading: false
+            otherAccountsLoading: false,
           });
         });
       }
@@ -91,12 +93,12 @@ export default Component.extend({
         I18n.t("ip_lookup.confirm_delete_other_accounts"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed => {
+        (confirmed) => {
           if (confirmed) {
             this.setProperties({
               other_accounts: null,
               otherAccountsLoading: true,
-              totalOthersWithSameIP: null
+              totalOthersWithSameIP: null,
             });
 
             ajax("/admin/users/delete-others-with-same-ip.json", {
@@ -104,12 +106,12 @@ export default Component.extend({
               data: {
                 ip: this.ip,
                 exclude: this.userId,
-                order: "trust_level DESC"
-              }
+                order: "trust_level DESC",
+              },
             }).then(() => this.send("lookup"));
           }
         }
       );
-    }
-  }
+    },
+  },
 });

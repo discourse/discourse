@@ -15,24 +15,27 @@ acceptance("Topic - Quote button - logged in", {
   loggedIn: true,
   settings: {
     share_quote_visibility: "anonymous",
-    share_quote_buttons: "twitter|email"
-  }
-});
-
-QUnit.test("Does not show the quote share buttons by default", async assert => {
-  await visit("/t/internationalization-localization/280");
-  selectText("#post_5 blockquote");
-  assert.ok(exists(".insert-quote"), "it shows the quote button");
-  assert.equal(
-    find(".quote-sharing").length,
-    0,
-    "it does not show quote sharing"
-  );
+    share_quote_buttons: "twitter|email",
+  },
 });
 
 QUnit.test(
+  "Does not show the quote share buttons by default",
+  async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    selectText("#post_5 blockquote");
+    assert.ok(exists(".insert-quote"), "it shows the quote button");
+    assert.equal(
+      find(".quote-sharing").length,
+      0,
+      "it does not show quote sharing"
+    );
+  }
+);
+
+QUnit.test(
   "Shows quote share buttons with the right site settings",
-  async function(assert) {
+  async function (assert) {
     this.siteSettings.share_quote_visibility = "all";
 
     await visit("/t/internationalization-localization/280");
@@ -54,13 +57,13 @@ acceptance("Topic - Quote button - anonymous", {
   loggedIn: false,
   settings: {
     share_quote_visibility: "anonymous",
-    share_quote_buttons: "twitter|email"
-  }
+    share_quote_buttons: "twitter|email",
+  },
 });
 
 QUnit.test(
   "Shows quote share buttons with the right site settings",
-  async function(assert) {
+  async function (assert) {
     await visit("/t/internationalization-localization/280");
     selectText("#post_5 blockquote");
 
@@ -83,7 +86,7 @@ QUnit.test(
 
 QUnit.test(
   "Shows single share button when site setting only has one item",
-  async function(assert) {
+  async function (assert) {
     this.siteSettings.share_quote_buttons = "twitter";
 
     await visit("/t/internationalization-localization/280");
@@ -102,7 +105,9 @@ QUnit.test(
   }
 );
 
-QUnit.test("Shows nothing when visibility is disabled", async function(assert) {
+QUnit.test("Shows nothing when visibility is disabled", async function (
+  assert
+) {
   this.siteSettings.share_quote_visibility = "none";
 
   await visit("/t/internationalization-localization/280");

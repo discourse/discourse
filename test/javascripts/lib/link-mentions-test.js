@@ -1,13 +1,13 @@
 import {
   fetchUnseenMentions,
-  linkSeenMentions
+  linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { Promise } from "rsvp";
 import pretender from "helpers/create-pretender";
 
 QUnit.module("lib:link-mentions");
 
-QUnit.test("linkSeenMentions replaces users and groups", async assert => {
+QUnit.test("linkSeenMentions replaces users and groups", async (assert) => {
   pretender.get("/u/is_local_username", () => [
     200,
     { "Content-Type": "application/json" },
@@ -17,19 +17,19 @@ QUnit.test("linkSeenMentions replaces users and groups", async assert => {
       mentionable_groups: [
         {
           name: "mentionable_group",
-          user_count: 1
-        }
+          user_count: 1,
+        },
       ],
       cannot_see: [],
-      max_users_notified_per_group_mention: 100
-    }
+      max_users_notified_per_group_mention: 100,
+    },
   ]);
 
   await fetchUnseenMentions([
     "valid_user",
     "mentionable_group",
     "valid_group",
-    "invalid"
+    "invalid",
   ]);
 
   let $root = $(`
@@ -45,7 +45,7 @@ QUnit.test("linkSeenMentions replaces users and groups", async assert => {
 
   // Ember.Test.registerWaiter is not available here, so we are implementing
   // our own
-  await new Promise(resolve => {
+  await new Promise((resolve) => {
     const interval = setInterval(() => {
       if ($("a", $root).length > 0) {
         clearInterval(interval);

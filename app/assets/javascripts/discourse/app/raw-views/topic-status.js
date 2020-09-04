@@ -34,7 +34,7 @@ export default EmberObject.extend({
         extraClasses,
         icon: "bookmark",
         key: "bookmarked",
-        href: url
+        href: url,
       });
     }
 
@@ -58,7 +58,7 @@ export default EmberObject.extend({
       results.push({ icon: "far-eye-slash", key: "unlisted" });
     }
 
-    results.forEach(result => {
+    results.forEach((result) => {
       result.title = I18n.t(`topic_statuses.${result.key}.help`);
       if (
         this.currentUser &&
@@ -77,5 +77,5 @@ export default EmberObject.extend({
       this.set("showDefault", defaultIcon);
     }
     return results;
-  }
+  },
 });

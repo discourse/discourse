@@ -19,7 +19,7 @@ export default Component.extend({
       { id: "post_id", name: I18n.t("admin.permalink.post_id") },
       { id: "category_id", name: I18n.t("admin.permalink.category_id") },
       { id: "tag_name", name: I18n.t("admin.permalink.tag_name") },
-      { id: "external_url", name: I18n.t("admin.permalink.external_url") }
+      { id: "external_url", name: I18n.t("admin.permalink.external_url") },
     ];
   },
 
@@ -27,7 +27,7 @@ export default Component.extend({
     this._super(...arguments);
 
     schedule("afterRender", () => {
-      $(this.element.querySelector(".external-url")).keydown(e => {
+      $(this.element.querySelector(".external-url")).keydown((e) => {
         // enter key
         if (e.keyCode === 13) {
           this.send("submit");
@@ -50,28 +50,28 @@ export default Component.extend({
         Permalink.create({
           url: this.url,
           permalink_type: this.permalinkType,
-          permalink_type_value: this.permalink_type_value
+          permalink_type_value: this.permalink_type_value,
         })
           .save()
           .then(
-            result => {
+            (result) => {
               this.setProperties({
                 url: "",
                 permalink_type_value: "",
-                formSubmitted: false
+                formSubmitted: false,
               });
 
               this.action(Permalink.create(result.permalink));
 
               this.focusPermalink();
             },
-            e => {
+            (e) => {
               this.set("formSubmitted", false);
 
               let error;
               if (e.responseJSON && e.responseJSON.errors) {
                 error = I18n.t("generic_error_with_reason", {
-                  error: e.responseJSON.errors.join(". ")
+                  error: e.responseJSON.errors.join(". "),
                 });
               } else {
                 error = I18n.t("generic_error");
@@ -84,6 +84,6 @@ export default Component.extend({
 
     onChangePermalinkType(type) {
       this.set("permalinkType", type);
-    }
-  }
+    },
+  },
 });

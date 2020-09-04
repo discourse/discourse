@@ -28,7 +28,7 @@ export default buildCategoryPanel("images").extend({
 
     backgroundUploadDeleted() {
       this._deleteUpload("category.uploaded_background");
-    }
+    },
   },
 
   _deleteUpload(path) {
@@ -36,7 +36,7 @@ export default buildCategoryPanel("images").extend({
       path,
       EmberObject.create({
         id: null,
-        url: null
+        url: null,
       })
     );
   },
@@ -46,8 +46,8 @@ export default buildCategoryPanel("images").extend({
       path,
       EmberObject.create({
         url: upload.url,
-        id: upload.id
+        id: upload.id,
       })
     );
-  }
+  },
 });

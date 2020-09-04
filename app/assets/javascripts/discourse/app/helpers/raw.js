@@ -24,7 +24,7 @@ function renderRaw(ctx, template, templateName, params) {
   return htmlSafe(template(params));
 }
 
-registerUnbound("raw", function(templateName, params) {
+registerUnbound("raw", function (templateName, params) {
   templateName = templateName.replace(".", "/");
 
   const template = findRawTemplate(templateName);

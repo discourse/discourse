@@ -12,7 +12,7 @@ export default Component.extend({
 
   selectedThemeComponents() {
     return this.shuffle()
-      .filter(theme => theme.component)
+      .filter((theme) => theme.component)
       .slice(0, 5);
   },
 
@@ -26,5 +26,5 @@ export default Component.extend({
     }
 
     return array;
-  }
+  },
 });

@@ -5,7 +5,7 @@ import User from "discourse/models/user";
 
 QUnit.module("model:user-drafts");
 
-QUnit.test("stream", assert => {
+QUnit.test("stream", (assert) => {
   const user = User.create({ id: 1, username: "eviltrout" });
   const stream = user.get("userDraftsStream");
   assert.present(stream, "a user has a drafts stream by default");
@@ -13,15 +13,15 @@ QUnit.test("stream", assert => {
   assert.blank(stream.get("content"), "no content by default");
 });
 
-QUnit.test("draft", assert => {
+QUnit.test("draft", (assert) => {
   const drafts = [
     UserDraft.create({
       draft_key: "topic_1",
-      post_number: "10"
+      post_number: "10",
     }),
     UserDraft.create({
-      draft_key: NEW_TOPIC_KEY
-    })
+      draft_key: NEW_TOPIC_KEY,
+    }),
   ];
 
   assert.equal(drafts.length, 2, "drafts count is right");

@@ -11,5 +11,5 @@ export default {
       application.set("showFooter", false);
       return true;
     });
-  }
+  },
 };

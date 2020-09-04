@@ -9,7 +9,7 @@ const CookText = Component.extend({
 
   didReceiveAttrs() {
     this._super(...arguments);
-    cookAsync(this.rawText).then(cooked => {
+    cookAsync(this.rawText).then((cooked) => {
       this.set("cooked", cooked);
       this._resolveUrls();
     });
@@ -18,7 +18,7 @@ const CookText = Component.extend({
   @afterRender
   _resolveUrls() {
     resolveAllShortUrls(ajax, this.siteSettings, this.element, this.opts);
-  }
+  },
 });
 
 CookText.reopenClass({ positionalParams: ["rawText"] });

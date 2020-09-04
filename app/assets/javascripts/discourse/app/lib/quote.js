@@ -9,7 +9,7 @@ export function buildQuote(post, contents, opts = {}) {
   const params = [
     opts.username || post.username,
     `post:${opts.post || post.post_number}`,
-    `topic:${opts.topic || post.topic_id}`
+    `topic:${opts.topic || post.topic_id}`,
   ];
 
   if (opts.full) params.push("full:true");

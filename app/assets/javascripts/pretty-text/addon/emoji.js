@@ -4,7 +4,7 @@ import {
   searchAliases,
   translations,
   tonableEmojis,
-  replacements
+  replacements,
 } from "pretty-text/emoji/data";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
@@ -25,17 +25,11 @@ export function buildReplacementsList(emojiReplacements) {
   return Object.keys(emojiReplacements)
     .sort()
     .reverse()
-    .map(emoji => {
+    .map((emoji) => {
       return emoji
         .split("")
-        .map(chr => {
-          return (
-            "\\u" +
-            chr
-              .charCodeAt(0)
-              .toString(16)
-              .padStart(4, "0")
-          );
+        .map((chr) => {
+          return "\\u" + chr.charCodeAt(0).toString(16).padStart(4, "0");
         })
         .join("");
     })
@@ -69,12 +63,12 @@ function unicodeRegexp(inlineEmoji) {
 }
 
 // add all default emojis
-emojis.forEach(code => (emojiHash[code] = true));
+emojis.forEach((code) => (emojiHash[code] = true));
 
 // and their aliases
 const aliasHash = {};
-Object.keys(aliases).forEach(name => {
-  aliases[name].forEach(alias => (aliasHash[alias] = name));
+Object.keys(aliases).forEach((name) => {
+  aliases[name].forEach((alias) => (aliasHash[alias] = name));
 });
 
 function isReplacableInlineEmoji(string, index, inlineEmoji) {
@@ -218,7 +212,7 @@ export function emojiSearch(term, options) {
     [
       ...Object.keys(emojiHash),
       ...Object.keys(extendedEmoji),
-      ...Object.keys(aliasHash)
+      ...Object.keys(aliasHash),
     ].sort();
 
   const results = [];

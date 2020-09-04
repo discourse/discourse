@@ -33,9 +33,9 @@ export default Component.extend({
         this.set("visible", false);
         this.keyValueStore.set({
           key: "dismissed_banner_key",
-          value: this.get("banner.key")
+          value: this.get("banner.key"),
         });
       }
-    }
-  }
+    },
+  },
 });

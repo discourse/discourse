@@ -15,11 +15,11 @@ export default Controller.extend({
   canDownloadPosts: alias("user.viewingSelf"),
 
   @observes("userActionType", "model.stream.itemsLoaded")
-  _showFooter: function() {
+  _showFooter: function () {
     var showFooter;
     if (this.userActionType) {
       const stat = (this.get("model.stats") || []).find(
-        s => s.action_type === this.userActionType
+        (s) => s.action_type === this.userActionType
       );
       showFooter = stat && stat.count <= this.get("model.stream.itemsLoaded");
     } else {
@@ -36,8 +36,8 @@ export default Controller.extend({
         I18n.t("user.download_archive.confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed => (confirmed ? exportUserArchive() : null)
+        (confirmed) => (confirmed ? exportUserArchive() : null)
       );
-    }
-  }
+    },
+  },
 });

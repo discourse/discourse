@@ -41,11 +41,11 @@ export default createWidget("link", {
       href: this.href(attrs),
       title: attrs.title
         ? I18n.t(attrs.title, attrs.titleOptions)
-        : this.label(attrs)
+        : this.label(attrs),
     };
     if (attrs.attributes) {
       Object.keys(attrs.attributes).forEach(
-        k => (ret[k] = attrs.attributes[k])
+        (k) => (ret[k] = attrs.attributes[k])
       );
     }
     return ret;
@@ -90,7 +90,7 @@ export default createWidget("link", {
             "span.badge-notification",
             {
               className: attrs.badgeClass,
-              attributes: { title }
+              attributes: { title },
             },
             val
           )
@@ -115,5 +115,5 @@ export default createWidget("link", {
     }
 
     return DiscourseURL.routeToTag($(e.target).closest("a")[0]);
-  }
+  },
 });

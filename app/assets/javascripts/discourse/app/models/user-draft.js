@@ -6,7 +6,7 @@ import { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
 import {
   NEW_TOPIC_KEY,
-  NEW_PRIVATE_MESSAGE_KEY
+  NEW_PRIVATE_MESSAGE_KEY,
 } from "discourse/models/composer";
 
 export default RestModel.extend({
@@ -37,5 +37,5 @@ export default RestModel.extend({
       default:
         return false;
     }
-  }
+  },
 });

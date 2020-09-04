@@ -45,11 +45,11 @@ export default Controller.extend(bufferedProperty("emailTemplate"), {
     this.set("saved", false);
     bootbox.confirm(
       I18n.t("admin.customize.email_templates.revert_confirm"),
-      result => {
+      (result) => {
         if (result) {
           this.emailTemplate
             .revert()
-            .then(props => {
+            .then((props) => {
               const buffered = this.buffered;
               buffered.setProperties(props);
               this.commitBuffer();
@@ -58,5 +58,5 @@ export default Controller.extend(bufferedProperty("emailTemplate"), {
         }
       }
     );
-  }
+  },
 });

@@ -6,12 +6,12 @@ export default Component.extend({
 
   @discourseComputed("period")
   periods(period) {
-    return this.site.get("periods").filter(p => p !== period);
+    return this.site.get("periods").filter((p) => p !== period);
   },
 
   actions: {
     changePeriod(p) {
       this.action(p);
-    }
-  }
+    },
+  },
 });

@@ -14,5 +14,5 @@ export default createWidget("post-placeholder", {
         <div class='placeholder-text placeholder-animation'></div>
       </div>
     </div>
-  `
+  `,
 });

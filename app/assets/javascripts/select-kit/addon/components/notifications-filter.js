@@ -5,24 +5,24 @@ import { computed } from "@ember/object";
 export default DropdownSelectBoxComponent.extend({
   classNames: ["notifications-filter"],
 
-  content: computed(function() {
+  content: computed(function () {
     return [
       {
         id: "all",
-        label: I18n.t("user.user_notifications.filters.all")
+        label: I18n.t("user.user_notifications.filters.all"),
       },
       {
         id: "read",
-        label: I18n.t("user.user_notifications.filters.read")
+        label: I18n.t("user.user_notifications.filters.read"),
       },
       {
         id: "unread",
-        label: I18n.t("user.user_notifications.filters.unread")
-      }
+        label: I18n.t("user.user_notifications.filters.unread"),
+      },
     ];
   }),
 
   selectKitOptions: {
-    headerComponent: "notifications-filter/notifications-filter-header"
-  }
+    headerComponent: "notifications-filter/notifications-filter-header",
+  },
 });

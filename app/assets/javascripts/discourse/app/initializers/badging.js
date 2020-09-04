@@ -19,5 +19,5 @@ export default {
 
   _updateBadge() {
     navigator.setAppBadge(this.notifications);
-  }
+  },
 };

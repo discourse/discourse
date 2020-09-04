@@ -5,7 +5,7 @@ function daysSinceEpoch(dt) {
   return dt.getTime() / 86400000;
 }
 
-registerUnbound("cold-age-class", function(dt, params) {
+registerUnbound("cold-age-class", function (dt, params) {
   let className = params["class"] || "age";
 
   if (!dt) {

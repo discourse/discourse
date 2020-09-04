@@ -36,9 +36,9 @@ export function getRegister(obj) {
             "Use `this.register` or `getOwner` instead of `this.container`"
           );
           return register;
-        }
+        },
       });
-    }
+    },
   };
 
   return register;

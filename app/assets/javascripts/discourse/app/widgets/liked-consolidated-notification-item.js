@@ -11,11 +11,9 @@ createWidgetFrom(
   {
     url(data) {
       return userPath(
-        `${this.attrs.username ||
-          this.currentUser
-            .username}/notifications/likes-received?acting_username=${
-          data.display_username
-        }`
+        `${
+          this.attrs.username || this.currentUser.username
+        }/notifications/likes-received?acting_username=${data.display_username}`
       );
     },
 
@@ -23,11 +21,11 @@ createWidgetFrom(
       const description = I18n.t(
         "notifications.liked_consolidated_description",
         {
-          count: parseInt(data.count, 10)
+          count: parseInt(data.count, 10),
         }
       );
 
       return isEmpty(description) ? "" : escapeExpression(description);
-    }
+    },
   }
 );

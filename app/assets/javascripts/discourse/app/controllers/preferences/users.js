@@ -23,7 +23,7 @@ export default Controller.extend({
       }
 
       return makeArray(usernames).uniq();
-    }
+    },
   }),
 
   allowedPmUsernames: computed("model.allowed_pm_usernames", {
@@ -35,7 +35,7 @@ export default Controller.extend({
       }
 
       return makeArray(usernames).uniq();
-    }
+    },
   }),
 
   init() {
@@ -45,7 +45,7 @@ export default Controller.extend({
       "muted_usernames",
       "ignored_usernames",
       "allowed_pm_usernames",
-      "enable_allowed_pm_users"
+      "enable_allowed_pm_users",
     ];
   },
 
@@ -72,5 +72,5 @@ export default Controller.extend({
       .save(this.saveAttrNames)
       .then(() => this.set("saved", true))
       .catch(popupAjaxError);
-  }
+  },
 });

@@ -33,20 +33,20 @@ export default ComboBoxComponent.extend({
     countSubcategories: false,
     autoInsertNoneItem: false,
     displayCategoryDescription: "displayCategoryDescription",
-    headerComponent: "category-drop/category-drop-header"
+    headerComponent: "category-drop/category-drop-header",
   },
 
   modifyComponentForRow() {
     return "category-row";
   },
 
-  displayCategoryDescription: computed(function() {
+  displayCategoryDescription: computed(function () {
     return !(
       this.get("currentUser.staff") || this.get("currentUser.trust_level") > 0
     );
   }),
 
-  hideParentCategory: computed(function() {
+  hideParentCategory: computed(function () {
     return this.options.subCategory || false;
   }),
 
@@ -54,7 +54,7 @@ export default ComboBoxComponent.extend({
     "categories.[]",
     "value",
     "selectKit.options.{subCategory,noSubcategories}",
-    function() {
+    function () {
       const shortcuts = [];
 
       if (
@@ -64,7 +64,7 @@ export default ComboBoxComponent.extend({
       ) {
         shortcuts.push({
           id: ALL_CATEGORIES_ID,
-          name: this.allCategoriesLabel
+          name: this.allCategoriesLabel,
         });
       }
 
@@ -74,7 +74,7 @@ export default ComboBoxComponent.extend({
       ) {
         shortcuts.push({
           id: NO_CATEGORIES_ID,
-          name: this.noCategoriesLabel
+          name: this.noCategoriesLabel,
         });
       }
 
@@ -98,7 +98,7 @@ export default ComboBoxComponent.extend({
       content.label = categoryBadgeHTML(category, {
         link: false,
         allowUncategorized: true,
-        hideParent: true
+        hideParent: true,
       }).htmlSafe();
     }
 
@@ -112,10 +112,10 @@ export default ComboBoxComponent.extend({
   allCategoriesLabel: computed(
     "parentCategoryName",
     "selectKit.options.subCategory",
-    function() {
+    function () {
       if (this.selectKit.options.subCategory) {
         return I18n.t("categories.all_subcategories", {
-          categoryName: this.parentCategoryName
+          categoryName: this.parentCategoryName,
         });
       }
 
@@ -126,7 +126,7 @@ export default ComboBoxComponent.extend({
   allCategoriesUrl: computed(
     "parentCategoryUrl",
     "selectKit.options.subCategory",
-    function() {
+    function () {
       return getURL(
         this.selectKit.options.subCategory
           ? `${this.parentCategoryUrl}/all` || "/"
@@ -135,7 +135,7 @@ export default ComboBoxComponent.extend({
     }
   ),
 
-  noCategoriesUrl: computed("parentCategoryUrl", function() {
+  noCategoriesUrl: computed("parentCategoryUrl", function () {
     return getURL(`${this.parentCategoryUrl}/none`);
   }),
 
@@ -173,16 +173,16 @@ export default ComboBoxComponent.extend({
       DiscourseURL.routeToUrl(categoryURL);
 
       return false;
-    }
+    },
   },
 
   _filterUncategorized(content) {
     if (!this.siteSettings.allow_uncategorized_topics) {
       content = content.filter(
-        c => c.id !== this.site.uncategorized_category_id
+        (c) => c.id !== this.site.uncategorized_category_id
       );
     }
 
     return content;
-  }
+  },
 });

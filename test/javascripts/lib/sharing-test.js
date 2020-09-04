@@ -6,28 +6,28 @@ QUnit.module("lib:sharing", {
   },
   afterEach() {
     Sharing._reset();
-  }
+  },
 });
 
-QUnit.test("addSource", assert => {
+QUnit.test("addSource", (assert) => {
   const sharingSettings = "facebook|twitter";
 
   assert.blank(Sharing.activeSources(sharingSettings));
 
   Sharing.addSource({
-    id: "facebook"
+    id: "facebook",
   });
 
   assert.equal(Sharing.activeSources(sharingSettings).length, 1);
 });
 
-QUnit.test("addSharingId", assert => {
+QUnit.test("addSharingId", (assert) => {
   const sharingSettings = "";
 
   assert.blank(Sharing.activeSources(sharingSettings));
 
   Sharing.addSource({
-    id: "new-source"
+    id: "new-source",
   });
 
   assert.blank(
@@ -46,7 +46,7 @@ QUnit.test("addSharingId", assert => {
   const privateContext = true;
 
   Sharing.addSource({
-    id: "another-source"
+    id: "another-source",
   });
   Sharing.addSharingId("another-source");
 
@@ -58,7 +58,7 @@ QUnit.test("addSharingId", assert => {
 
   Sharing.addSource({
     id: "a-private-friendly-source",
-    showInPrivateContext: true
+    showInPrivateContext: true,
   });
   Sharing.addSharingId("a-private-friendly-source");
 

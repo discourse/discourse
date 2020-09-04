@@ -16,7 +16,7 @@ function toItem(message) {
     href: postUrl(message.slug, message.id, nextUnreadPostNumber),
     icon: ICON,
     read: message.last_read_post_number >= message.highest_post_number,
-    username: message.last_poster_username
+    username: message.last_poster_username,
   };
 }
 
@@ -31,7 +31,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
   findNewItems() {
     return this.store
       .findFiltered("topicList", {
-        filter: `topics/private-messages/${this.currentUser.username_lower}`
+        filter: `topics/private-messages/${this.currentUser.username_lower}`,
       })
       .then(({ topic_list }) => {
         return topic_list.topics.map(toItem);
@@ -40,5 +40,5 @@ createWidgetFrom(QuickAccessPanel, "quick-access-messages", {
 
   itemHtml(message) {
     return this.attach("quick-access-item", message);
-  }
+  },
 });

@@ -35,22 +35,22 @@ const BOOKMARK_BINDINGS = {
   "l t": { handler: "selectReminderType", args: [REMINDER_TYPES.LATER_TODAY] },
   "l w": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.LATER_THIS_WEEK]
+    args: [REMINDER_TYPES.LATER_THIS_WEEK],
   },
   "n b d": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.NEXT_BUSINESS_DAY]
+    args: [REMINDER_TYPES.NEXT_BUSINESS_DAY],
   },
   "n d": { handler: "selectReminderType", args: [REMINDER_TYPES.TOMORROW] },
   "n w": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_WEEK] },
   "n b w": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK]
+    args: [REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK],
   },
   "n m": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_MONTH] },
   "c r": { handler: "selectReminderType", args: [REMINDER_TYPES.CUSTOM] },
   "n r": { handler: "selectReminderType", args: [REMINDER_TYPES.NONE] },
-  "d d": { handler: "delete" }
+  "d d": { handler: "delete" },
 };
 
 export default Controller.extend(ModalFunctionality, {
@@ -80,7 +80,7 @@ export default Controller.extend(ModalFunctionality, {
       lastCustomReminderTime: null,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
-      model: this.model || {}
+      model: this.model || {},
     });
 
     this._loadBookmarkOptions();
@@ -110,7 +110,7 @@ export default Controller.extend(ModalFunctionality, {
     this._unbindKeyboardShortcuts();
     this._restoreGlobalShortcuts();
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {
-      this._saveBookmark().catch(e => this._handleSaveError(e));
+      this._saveBookmark().catch((e) => this._handleSaveError(e));
     }
     if (this.onCloseWithoutSaving && this._closeWithoutSaving) {
       this.onCloseWithoutSaving();
@@ -128,7 +128,7 @@ export default Controller.extend(ModalFunctionality, {
       this.setProperties({
         customReminderDate: parsedReminderAt.format("YYYY-MM-DD"),
         customReminderTime: parsedReminderAt.format("HH:mm"),
-        selectedReminderType: REMINDER_TYPES.CUSTOM
+        selectedReminderType: REMINDER_TYPES.CUSTOM,
       });
     }
   },
@@ -178,14 +178,14 @@ export default Controller.extend(ModalFunctionality, {
       this.setProperties({
         lastCustomReminderDate: lastDate,
         lastCustomReminderTime: lastTime,
-        parsedLastCustomReminderDatetime: parsed
+        parsedLastCustomReminderDatetime: parsed,
       });
     }
   },
 
   _bindKeyboardShortcuts() {
     KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
-    Object.keys(BOOKMARK_BINDINGS).forEach(shortcut => {
+    Object.keys(BOOKMARK_BINDINGS).forEach((shortcut) => {
       KeyboardShortcuts.addShortcut(shortcut, () => {
         let binding = BOOKMARK_BINDINGS[shortcut];
         if (binding.args) {
@@ -226,10 +226,10 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed()
   autoDeletePreferences: () => {
-    return Object.keys(AUTO_DELETE_PREFERENCES).map(key => {
+    return Object.keys(AUTO_DELETE_PREFERENCES).map((key) => {
       return {
         id: AUTO_DELETE_PREFERENCES[key],
-        name: I18n.t(`bookmarks.auto_delete_preference.${key.toLowerCase()}`)
+        name: I18n.t(`bookmarks.auto_delete_preference.${key.toLowerCase()}`),
       };
     });
   },
@@ -328,13 +328,13 @@ export default Controller.extend(ModalFunctionality, {
       name: this.model.name,
       post_id: this.model.postId,
       id: this.model.id,
-      auto_delete_preference: this.autoDeletePreference
+      auto_delete_preference: this.autoDeletePreference,
     };
 
     if (this._editingExistingBookmark()) {
       return ajax("/bookmarks/" + this.model.id, {
         type: "PUT",
-        data
+        data,
       }).then(() => {
         if (this.afterSave) {
           this.afterSave({
@@ -342,19 +342,19 @@ export default Controller.extend(ModalFunctionality, {
             reminderType: this.selectedReminderType,
             autoDeletePreference: this.autoDeletePreference,
             id: this.model.id,
-            name: this.model.name
+            name: this.model.name,
           });
         }
       });
     } else {
-      return ajax("/bookmarks", { type: "POST", data }).then(response => {
+      return ajax("/bookmarks", { type: "POST", data }).then((response) => {
         if (this.afterSave) {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
             autoDeletePreference: this.autoDeletePreference,
             id: response.id,
-            name: this.model.name
+            name: this.model.name,
           });
         }
       });
@@ -363,8 +363,8 @@ export default Controller.extend(ModalFunctionality, {
 
   _deleteBookmark() {
     return ajax("/bookmarks/" + this.model.id, {
-      type: "DELETE"
-    }).then(response => {
+      type: "DELETE",
+    }).then((response) => {
       if (this.afterDelete) {
         this.afterDelete(response.topic_bookmarked);
       }
@@ -412,7 +412,7 @@ export default Controller.extend(ModalFunctionality, {
         if (!customDateTime.isValid()) {
           this.setProperties({
             customReminderTime: null,
-            customReminderDate: null
+            customReminderDate: null,
           });
           return;
         }
@@ -488,7 +488,7 @@ export default Controller.extend(ModalFunctionality, {
     this._savingBookmarkManually = true;
     return this._saveBookmark()
       .then(() => this.send("closeModal"))
-      .catch(e => this._handleSaveError(e))
+      .catch((e) => this._handleSaveError(e))
       .finally(() => (this._saving = false));
   },
 
@@ -502,11 +502,11 @@ export default Controller.extend(ModalFunctionality, {
           this._deleting = false;
           this.send("closeModal");
         })
-        .catch(e => this._handleSaveError(e));
+        .catch((e) => this._handleSaveError(e));
     };
 
     if (this._existingBookmarkHasReminder()) {
-      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
+      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
         if (result) {
           deleteAction();
         }
@@ -533,5 +533,5 @@ export default Controller.extend(ModalFunctionality, {
     if (type !== REMINDER_TYPES.CUSTOM) {
       return this.saveAndClose();
     }
-  }
+  },
 });

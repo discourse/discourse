@@ -25,5 +25,5 @@ export default Component.extend({
     if (this.onSelectPanel) {
       this.onSelectPanel(this.panel);
     }
-  }
+  },
 });

@@ -6,7 +6,7 @@ import DiscourseURL from "discourse/lib/url";
 import { extractError } from "discourse/lib/ajax-error";
 import discourseComputed, {
   on,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import bootbox from "bootbox";
@@ -22,7 +22,7 @@ export default Controller.extend(ModalFunctionality, {
   _initPanels() {
     this.setProperties({
       panels: [],
-      validators: []
+      validators: [],
     });
   },
 
@@ -45,7 +45,7 @@ export default Controller.extend(ModalFunctionality, {
   title(model) {
     if (model.id) {
       return I18n.t("category.edit_dialog_title", {
-        categoryName: model.name
+        categoryName: model.name,
       });
     }
     return I18n.t("category.create");
@@ -87,7 +87,7 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     saveCategory() {
-      if (this.validators.some(validator => validator())) {
+      if (this.validators.some((validator) => validator())) {
         return;
       }
       const model = this.model;
@@ -101,16 +101,16 @@ export default Controller.extend(ModalFunctionality, {
 
       model
         .save()
-        .then(result => {
+        .then((result) => {
           this.set("saving", false);
           this.send("closeModal");
           model.setProperties({
             slug: result.category.slug,
-            id: result.category.id
+            id: result.category.id,
           });
           DiscourseURL.redirectTo(`/c/${Category.slugFor(model)}/${model.id}`);
         })
-        .catch(error => {
+        .catch((error) => {
           this.flash(extractError(error), "error");
           this.set("saving", false);
         });
@@ -124,7 +124,7 @@ export default Controller.extend(ModalFunctionality, {
         I18n.t("category.delete_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             this.model.destroy().then(
               () => {
@@ -132,7 +132,7 @@ export default Controller.extend(ModalFunctionality, {
                 this.send("closeModal");
                 DiscourseURL.redirectTo("/categories");
               },
-              error => {
+              (error) => {
                 this.flash(extractError(error), "error");
                 this.send("reopenModal");
                 this.displayErrors([I18n.t("category.delete_error")]);
@@ -149,6 +149,6 @@ export default Controller.extend(ModalFunctionality, {
 
     toggleDeleteTooltip() {
       this.toggleProperty("hiddenTooltip");
-    }
-  }
+    },
+  },
 });

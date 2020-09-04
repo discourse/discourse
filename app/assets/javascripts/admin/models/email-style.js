@@ -6,5 +6,5 @@ export default RestModel.extend({
   setField(fieldName, value) {
     this.set(`${fieldName}`, value);
     this.set("changed", true);
-  }
+  },
 });

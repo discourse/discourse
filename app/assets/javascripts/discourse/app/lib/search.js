@@ -26,13 +26,13 @@ export function translateResults(results, opts) {
   results.groups = results.groups || [];
 
   const topicMap = {};
-  results.topics = results.topics.map(function(topic) {
+  results.topics = results.topics.map(function (topic) {
     topic = Topic.create(topic);
     topicMap[topic.id] = topic;
     return topic;
   });
 
-  results.posts = results.posts.map(post => {
+  results.posts = results.posts.map((post) => {
     if (post.username) {
       post.userPath = userPath(post.username.toLowerCase());
     }
@@ -42,18 +42,18 @@ export function translateResults(results, opts) {
     return post;
   });
 
-  results.users = results.users.map(function(user) {
+  results.users = results.users.map(function (user) {
     return User.create(user);
   });
 
   results.categories = results.categories
-    .map(function(category) {
+    .map(function (category) {
       return Category.list().findBy("id", category.id);
     })
     .compact();
 
   results.groups = results.groups
-    .map(group => {
+    .map((group) => {
       const name = escapeExpression(group.name);
       const fullName = escapeExpression(group.full_name || group.display_name);
       const flairUrl = isEmpty(group.flair_url)
@@ -69,17 +69,17 @@ export function translateResults(results, opts) {
         flairBgColor,
         fullName,
         name,
-        url: getURL(`/g/${name}`)
+        url: getURL(`/g/${name}`),
       };
     })
     .compact();
 
   results.tags = results.tags
-    .map(function(tag) {
+    .map(function (tag) {
       const tagName = escapeExpression(tag.name);
       return EmberObject.create({
         id: tagName,
-        url: getURL("/tag/" + tagName)
+        url: getURL("/tag/" + tagName),
       });
     })
     .compact();
@@ -94,8 +94,8 @@ export function translateResults(results, opts) {
       ["user", "users"],
       ["group", "groups"],
       ["category", "categories"],
-      ["tag", "tags"]
-    ].forEach(function(pair) {
+      ["tag", "tags"],
+    ].forEach(function (pair) {
       const type = pair[0];
       const name = pair[1];
       if (results[name].length > 0) {
@@ -109,7 +109,7 @@ export function translateResults(results, opts) {
           results: results[name],
           componentName: `search-result-${componentName}`,
           type,
-          more: groupedSearchResult[`more_${name}`]
+          more: groupedSearchResult[`more_${name}`],
         };
 
         if (result.more && componentName === "topic" && opts.fullSearchUrl) {
@@ -146,13 +146,13 @@ export function searchForTerm(term, opts) {
     data.search_context = {
       type: opts.searchContext.type,
       id: opts.searchContext.id,
-      name: opts.searchContext.name
+      name: opts.searchContext.name,
     };
   }
 
   let promise = ajax("/search/query", { data: data });
 
-  promise.then(results => {
+  promise.then((results) => {
     return translateResults(results, opts);
   });
 
@@ -200,7 +200,7 @@ export function applySearchAutocomplete(
   appEvents,
   options
 ) {
-  const afterComplete = function() {
+  const afterComplete = function () {
     if (appEvents) {
       appEvents.trigger("search-autocomplete:after-complete");
     }
@@ -219,7 +219,7 @@ export function applySearchAutocomplete(
         dataSource(term) {
           return searchCategoryTag(term, siteSettings);
         },
-        afterComplete
+        afterComplete,
       },
       options
     )
@@ -233,9 +233,9 @@ export function applySearchAutocomplete(
           key: "@",
           width: "100%",
           treatAsTextarea: true,
-          transformComplete: v => v.username || v.name,
-          dataSource: term => userSearch({ term, includeGroups: true }),
-          afterComplete
+          transformComplete: (v) => v.username || v.name,
+          dataSource: (term) => userSearch({ term, includeGroups: true }),
+          afterComplete,
         },
         options
       )

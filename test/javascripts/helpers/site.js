@@ -13,7 +13,7 @@ PreloadStore.store("site", {
     invited_to_private_message: 7,
     invitee_accepted: 8,
     posted: 9,
-    moved_post: 10
+    moved_post: 10,
   },
   post_types: { regular: 1, moderator_action: 2 },
   groups: [
@@ -27,7 +27,7 @@ PreloadStore.store("site", {
     { id: 13, name: "trust_level_3" },
     { id: 14, name: "trust_level_4" },
     { id: 20, name: "ubuntu" },
-    { id: 21, name: "test" }
+    { id: 21, name: "test" },
   ],
   filters: ["latest", "unread", "new", "starred", "read", "posted"],
   periods: ["all", "yearly", "monthly", "weekly", "daily"],
@@ -39,7 +39,7 @@ PreloadStore.store("site", {
     "read",
     "posted",
     "categories",
-    "top"
+    "top",
   ],
   anonymous_top_menu_items: ["latest", "categories", "top"],
   uncategorized_category_id: 17,
@@ -56,7 +56,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-extensibility/28",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 7,
@@ -70,7 +70,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-dev/1026",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 1,
@@ -84,7 +84,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-bug/2",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 8,
@@ -98,7 +98,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-hosting/2626",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 6,
@@ -112,7 +112,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-support/389",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 2,
@@ -126,7 +126,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-feature/11",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 13,
@@ -140,7 +140,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-blog/5250",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 12,
@@ -154,7 +154,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-discourse-hub/3038",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 11,
@@ -168,7 +168,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-login/2828",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 3,
@@ -182,7 +182,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-meta/24",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 10,
@@ -196,7 +196,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-howto/2629",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 14,
@@ -210,7 +210,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-marketplace/5425",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 17,
@@ -223,7 +223,7 @@ PreloadStore.store("site", {
       topic_url: null,
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 9,
@@ -237,7 +237,7 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-ux/2628",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
+      permission: null,
     },
     {
       id: 4,
@@ -251,8 +251,8 @@ PreloadStore.store("site", {
       topic_url: "/t/category-definition-for-faq/25",
       hotness: 5.0,
       read_restricted: false,
-      permission: null
-    }
+      permission: null,
+    },
   ],
   post_action_types: [
     {
@@ -263,7 +263,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: null,
       id: 1,
-      is_custom_flag: false
+      is_custom_flag: false,
     },
     {
       name_key: "like",
@@ -273,7 +273,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: "heart",
       id: 2,
-      is_custom_flag: false
+      is_custom_flag: false,
     },
     {
       name_key: "off_topic",
@@ -284,7 +284,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 3,
-      is_custom_flag: false
+      is_custom_flag: false,
     },
     {
       name_key: "inappropriate",
@@ -295,7 +295,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 4,
-      is_custom_flag: false
+      is_custom_flag: false,
     },
     {
       name_key: "vote",
@@ -305,7 +305,7 @@ PreloadStore.store("site", {
       is_flag: false,
       icon: null,
       id: 5,
-      is_custom_flag: false
+      is_custom_flag: false,
     },
     {
       name_key: "spam",
@@ -316,7 +316,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 8,
-      is_custom_flag: false
+      is_custom_flag: false,
     },
     {
       name_key: "notify_user",
@@ -327,7 +327,7 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 6,
-      is_custom_flag: true
+      is_custom_flag: true,
     },
     {
       name_key: "notify_moderators",
@@ -338,15 +338,15 @@ PreloadStore.store("site", {
       is_flag: true,
       icon: null,
       id: 7,
-      is_custom_flag: true
-    }
+      is_custom_flag: true,
+    },
   ],
   trust_levels: [
     { id: 0, name: "new user" },
     { id: 1, name: "basic user" },
     { id: 2, name: "member" },
     { id: 3, name: "regular" },
-    { id: 4, name: "leader" }
+    { id: 4, name: "leader" },
   ],
-  archetypes: [{ id: "regular", name: "Regular Topic", options: [] }]
+  archetypes: [{ id: "regular", name: "Regular Topic", options: [] }],
 });

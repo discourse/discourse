@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import {
   shouldOpenInNewTab,
-  openLinkInNewTab
+  openLinkInNewTab,
 } from "discourse/lib/click-track";
 import bootbox from "bootbox";
 
@@ -21,7 +21,7 @@ export default Component.extend({
     if (!bookmark.reminder_at) {
       return deleteBookmark();
     }
-    bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
+    bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
       if (result) {
         return deleteBookmark();
       }
@@ -45,17 +45,17 @@ export default Component.extend({
         postId: bookmark.post_id,
         id: bookmark.id,
         reminderAt: bookmark.reminder_at,
-        name: bookmark.name
+        name: bookmark.name,
       },
       title: "post.bookmarks.edit",
-      modalClass: "bookmark-with-reminder"
+      modalClass: "bookmark-with-reminder",
     });
     controller.setProperties({
-      afterSave: () => this.reload()
+      afterSave: () => this.reload(),
     });
   },
 
   _removeBookmarkFromList(bookmark) {
     this.content.removeObject(bookmark);
-  }
+  },
 });

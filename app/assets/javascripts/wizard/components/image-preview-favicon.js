@@ -27,5 +27,5 @@ export default createPreviewComponent(371, 124, {
     }
 
     ctx.fillText(title, 80, 48);
-  }
+  },
 });

@@ -24,7 +24,7 @@ export default ComboBox.extend(TagsMixin, {
     "mainCollection.[]",
     "errorsCollection.[]",
     "highlightedTag",
-    function() {
+    function () {
       return this._super(...arguments);
     }
   ),
@@ -41,7 +41,7 @@ export default ComboBox.extend(TagsMixin, {
     none: "tagging.choose_for_topic",
     closeOnChange: false,
     maximum: "maximumSelectedTags",
-    autoInsertNoneItem: false
+    autoInsertNoneItem: false,
   },
 
   modifyComponentForRow(collection, item) {
@@ -62,14 +62,14 @@ export default ComboBox.extend(TagsMixin, {
     if (collection === SELECTED_TAGS_COLLECTION) {
       return {
         selectedTags: this.value,
-        highlightedTag: this.highlightedTag
+        highlightedTag: this.highlightedTag,
       };
     }
   },
 
   allowAnyTag: or("allowCreate", "site.can_create_tag"),
 
-  maximumSelectedTags: computed(function() {
+  maximumSelectedTags: computed(function () {
     return parseInt(
       this.options.limit ||
         this.selectKit.options.maximum ||
@@ -98,7 +98,7 @@ export default ComboBox.extend(TagsMixin, {
     this.insertAfterCollection(ERRORS_COLLECTION, SELECTED_TAGS_COLLECTION);
   },
 
-  caretIcon: computed("value.[]", function() {
+  caretIcon: computed("value.[]", function () {
     const maximum = this.selectKit.options.maximum;
     return maximum && makeArray(this.value).length >= parseInt(maximum, 10)
       ? null
@@ -129,7 +129,7 @@ export default ComboBox.extend(TagsMixin, {
     const data = {
       q: filter || "",
       limit: this.maxTagSearchResults,
-      categoryId: this.selectKit.options.categoryId
+      categoryId: this.selectKit.options.categoryId,
     };
 
     if (this.value) {
@@ -146,7 +146,7 @@ export default ComboBox.extend(TagsMixin, {
 
     context.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
-      termMatchErrorMessage: json.forbidden_message
+      termMatchErrorMessage: json.forbidden_message,
     });
 
     if (context.get("siteSettings.tags_sort_alphabetically")) {
@@ -154,8 +154,8 @@ export default ComboBox.extend(TagsMixin, {
     }
 
     results = results
-      .filter(r => !makeArray(context.tags).includes(r.id))
-      .map(result => {
+      .filter((r) => !makeArray(context.tags).includes(r.id))
+      .map((result) => {
         return { id: result.text, name: result.text, count: result.count };
       });
 
@@ -227,5 +227,5 @@ export default ComboBox.extend(TagsMixin, {
         this.deselect(highlightedTag);
       }
     }
-  }
+  },
 });

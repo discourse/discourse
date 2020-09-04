@@ -26,5 +26,5 @@ export default {
         style +
         "}</style>"
     ).appendTo("head");
-  }
+  },
 };

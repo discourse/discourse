@@ -25,13 +25,13 @@ acceptance("Group logs", {
           bio_cooked: null,
           public: true,
           is_group_user: true,
-          is_group_owner: true
-        }
+          is_group_owner: true,
+        },
       });
     });
 
     // Workaround while awaiting https://github.com/tildeio/route-recognizer/issues/53
-    server.get("/groups/snorlax/logs.json", request => {
+    server.get("/groups/snorlax/logs.json", (request) => {
       if (request.queryParams["filters[action]"]) {
         return helper.response({
           logs: [
@@ -44,12 +44,12 @@ acceptance("Group logs", {
               acting_user: {
                 id: 1,
                 username: "tgx",
-                avatar_template: "/images/avatar.png"
+                avatar_template: "/images/avatar.png",
               },
-              target_user: null
-            }
+              target_user: null,
+            },
           ],
-          all_loaded: true
+          all_loaded: true,
         });
       } else {
         return helper.response({
@@ -63,9 +63,9 @@ acceptance("Group logs", {
               acting_user: {
                 id: 1,
                 username: "tgx",
-                avatar_template: "/images/avatar.png"
+                avatar_template: "/images/avatar.png",
               },
-              target_user: null
+              target_user: null,
             },
             {
               action: "add_user_to_group",
@@ -76,23 +76,23 @@ acceptance("Group logs", {
               acting_user: {
                 id: 1,
                 username: "tgx",
-                avatar_template: "/images/avatar.png"
+                avatar_template: "/images/avatar.png",
               },
               target_user: {
                 id: 1,
                 username: "tgx",
-                avatar_template: "/images/avatar.png"
-              }
-            }
+                avatar_template: "/images/avatar.png",
+              },
+            },
           ],
-          all_loaded: true
+          all_loaded: true,
         });
       }
     });
-  }
+  },
 });
 
-QUnit.test("Browsing group logs", async assert => {
+QUnit.test("Browsing group logs", async (assert) => {
   await visit("/g/snorlax/manage/logs");
   assert.ok(
     find("tr.group-manage-logs-row").length === 2,

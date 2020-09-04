@@ -2,7 +2,7 @@ import I18n from "I18n";
 import { warn } from "@ember/debug";
 import {
   displayErrorForUpload,
-  validateUploadedFiles
+  validateUploadedFiles,
 } from "discourse/lib/uploads";
 import getUrl from "discourse-common/lib/get-url";
 import { on } from "@ember/object/evented";
@@ -16,7 +16,7 @@ export default Mixin.create({
 
   uploadDone() {
     warn("You should implement `uploadDone`", {
-      id: "discourse.upload.missing-upload-done"
+      id: "discourse.upload.missing-upload-done",
     });
   },
 
@@ -39,7 +39,7 @@ export default Mixin.create({
     return {};
   },
 
-  _initialize: on("didInsertElement", function() {
+  _initialize: on("didInsertElement", function () {
     const $upload = $(this.element);
     const reset = () => {
       this.setProperties({ uploading: false, uploadProgress: 0 });
@@ -63,7 +63,7 @@ export default Mixin.create({
           dataType: "json",
           replaceFileInput: false,
           dropZone: $upload,
-          pasteZone: $upload
+          pasteZone: $upload,
         },
         this.uploadOptions()
       )
@@ -73,7 +73,7 @@ export default Mixin.create({
       if (maxFiles > 0 && data.files.length > maxFiles) {
         bootbox.alert(
           I18n.t("post.errors.too_many_dragged_and_dropped_files", {
-            max: maxFiles
+            max: maxFiles,
           })
         );
         return false;
@@ -87,7 +87,7 @@ export default Mixin.create({
         {
           bypassNewUserRestriction: true,
           user: this.currentUser,
-          siteSettings: this.siteSettings
+          siteSettings: this.siteSettings,
         },
         this.validateUploadedFilesOptions()
       );
@@ -115,7 +115,7 @@ export default Mixin.create({
     });
   }),
 
-  _destroy: on("willDestroyElement", function() {
+  _destroy: on("willDestroyElement", function () {
     this.messageBus && this.messageBus.unsubscribe("/uploads/" + this.type);
 
     const $upload = $(this.element);
@@ -125,5 +125,5 @@ export default Mixin.create({
       /* wasn't initialized yet */
     }
     $upload.off();
-  })
+  }),
 });

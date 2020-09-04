@@ -5,11 +5,11 @@ acceptance("Composer and uncategorized is not allowed", {
   loggedIn: true,
   settings: {
     enable_whispers: true,
-    allow_uncategorized_topics: false
-  }
+    allow_uncategorized_topics: false,
+  },
 });
 
-QUnit.test("Disable body until category is selected", async assert => {
+QUnit.test("Disable body until category is selected", async (assert) => {
   updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
   await visit("/");

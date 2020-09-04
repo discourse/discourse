@@ -44,14 +44,14 @@ export default Component.extend({
       { name: I18n.t("search.advanced.filters.created"), value: "created" },
       { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
       { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
-      { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" }
+      { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" },
     ];
 
     this.inOptionsForAll = [
       { name: I18n.t("search.advanced.filters.first"), value: "first" },
       { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
       { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
-      { name: I18n.t("search.advanced.filters.images"), value: "images" }
+      { name: I18n.t("search.advanced.filters.images"), value: "images" },
     ];
 
     this.statusOptions = [
@@ -61,17 +61,17 @@ export default Component.extend({
       { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
       {
         name: I18n.t("search.advanced.statuses.noreplies"),
-        value: "noreplies"
+        value: "noreplies",
       },
       {
         name: I18n.t("search.advanced.statuses.single_user"),
-        value: "single_user"
-      }
+        value: "single_user",
+      },
     ];
 
     this.postTimeOptions = [
       { name: I18n.t("search.advanced.post.time.before"), value: "before" },
-      { name: I18n.t("search.advanced.post.time.after"), value: "after" }
+      { name: I18n.t("search.advanced.post.time.after"), value: "after" },
     ];
 
     this._init();
@@ -99,20 +99,20 @@ export default Component.extend({
             title: false,
             likes: false,
             personal: false,
-            seen: false
+            seen: false,
           },
-          all_tags: false
+          all_tags: false,
         },
         status: "",
         min_post_count: "",
         time: {
           when: "before",
-          days: ""
-        }
+          days: "",
+        },
       },
       inOptions: this.currentUser
         ? this.inOptionsForUsers.concat(this.inOptionsForAll)
-        : this.inOptionsForAll
+        : this.inOptionsForAll,
     });
   },
 
@@ -128,7 +128,7 @@ export default Component.extend({
     this.setSearchedTermValueForBadge();
     this.setSearchedTermValueForTags();
 
-    let regExpInMatch = this.inOptions.map(option => option.value).join("|");
+    let regExpInMatch = this.inOptions.map((option) => option.value).join("|");
     const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`);
 
     this.setSearchedTermValue(
@@ -158,7 +158,7 @@ export default Component.extend({
     );
 
     let regExpStatusMatch = this.statusOptions
-      .map(status => status.value)
+      .map((status) => status.value)
       .join("|");
     const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
 
@@ -183,7 +183,7 @@ export default Component.extend({
     if (!blocks) return [];
 
     let result = [];
-    blocks.forEach(block => {
+    blocks.forEach((block) => {
       if (block.length !== 0) result.push(block);
     });
 
@@ -195,7 +195,7 @@ export default Component.extend({
     if (!blocks) return [];
 
     let result = [];
-    blocks.forEach(block => {
+    blocks.forEach((block) => {
       if (block.search(regexPrefix) !== -1) result.push(block);
     });
 
@@ -491,7 +491,7 @@ export default Component.extend({
 
   @observes("searchedTerms.in")
   updateSearchTermForIn() {
-    let regExpInMatch = this.inOptions.map(option => option.value).join("|");
+    let regExpInMatch = this.inOptions.map((option) => option.value).join("|");
     const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`);
 
     const match = this.filterBlocks(REGEXP_IN_MATCH);
@@ -555,7 +555,7 @@ export default Component.extend({
   @observes("searchedTerms.status")
   updateSearchTermForStatus() {
     let regExpStatusMatch = this.statusOptions
-      .map(status => status.value)
+      .map((status) => status.value)
       .join("|");
     const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
 
@@ -648,6 +648,6 @@ export default Component.extend({
       } else {
         this.set("searchedTerms.category", null);
       }
-    }
-  }
+    },
+  },
 });

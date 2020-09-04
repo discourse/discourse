@@ -6,5 +6,5 @@ export default Route.extend({
 
   setupController(controller, siteText) {
     controller.setProperties({ siteText, saved: false });
-  }
+  },
 });

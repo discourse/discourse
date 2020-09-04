@@ -2,7 +2,7 @@ import componentTest from "helpers/component-test";
 import selectKit, {
   testSelectKitModule,
   setDefaultState,
-  DEFAULT_CONTENT
+  DEFAULT_CONTENT,
 } from "helpers/select-kit-helper";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";
@@ -11,13 +11,13 @@ testSelectKitModule("select-kit:api", {
   beforeEach() {
     this.setProperties({
       comboBox: selectKit(".combo-box"),
-      singleSelect: selectKit(".single-select:not(.combo-box)")
+      singleSelect: selectKit(".single-select:not(.combo-box)"),
     });
   },
 
   afterEach() {
     clearCallbacks();
-  }
+  },
 });
 
 componentTest("modifySelectKit(identifier).appendContent", {
@@ -29,11 +29,11 @@ componentTest("modifySelectKit(identifier).appendContent", {
   beforeEach() {
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
-    withPluginApi("0.8.43", api => {
+    withPluginApi("0.8.43", (api) => {
       api.modifySelectKit("combo-box").appendContent(() => {
         return {
           id: "alpaca",
-          name: "Alpaca"
+          name: "Alpaca",
         };
       });
       api.modifySelectKit("combo-box").appendContent(() => {});
@@ -52,7 +52,7 @@ componentTest("modifySelectKit(identifier).appendContent", {
     await this.comboBox.collapse();
 
     assert.notOk(this.singleSelect.rowByValue("alpaca").exists());
-  }
+  },
 });
 
 componentTest("modifySelectKit(identifier).prependContent", {
@@ -64,11 +64,11 @@ componentTest("modifySelectKit(identifier).prependContent", {
   beforeEach() {
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
-    withPluginApi("0.8.43", api => {
+    withPluginApi("0.8.43", (api) => {
       api.modifySelectKit("combo-box").prependContent(() => {
         return {
           id: "alpaca",
-          name: "Alpaca"
+          name: "Alpaca",
         };
       });
       api.modifySelectKit("combo-box").prependContent(() => {});
@@ -87,7 +87,7 @@ componentTest("modifySelectKit(identifier).prependContent", {
     await this.comboBox.collapse();
 
     assert.notOk(this.singleSelect.rowByValue("alpaca").exists());
-  }
+  },
 });
 
 componentTest("modifySelectKit(identifier).onChange", {
@@ -99,7 +99,7 @@ componentTest("modifySelectKit(identifier).onChange", {
   beforeEach() {
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
-    withPluginApi("0.8.43", api => {
+    withPluginApi("0.8.43", (api) => {
       api.modifySelectKit("combo-box").onChange((component, value, item) => {
         find("#test").text(item.name);
       });
@@ -111,5 +111,5 @@ componentTest("modifySelectKit(identifier).onChange", {
     await this.comboBox.selectRowByIndex(0);
 
     assert.equal(find("#test").text(), "foo");
-  }
+  },
 });

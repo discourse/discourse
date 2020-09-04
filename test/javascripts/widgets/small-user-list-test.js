@@ -8,13 +8,13 @@ widgetTest("renders avatars and support for unknown", {
     this.set("args", {
       users: [
         { id: 456, username: "eviltrout" },
-        { id: 457, username: "someone", unknown: true }
-      ]
+        { id: 457, username: "someone", unknown: true },
+      ],
     });
   },
   async test(assert) {
     assert.ok(find("[data-user-card=eviltrout]").length === 1);
     assert.ok(find("[data-user-card=someone]").length === 0);
     assert.ok(find(".unknown").length, "includes unkown user");
-  }
+  },
 });

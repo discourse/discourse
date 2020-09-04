@@ -57,7 +57,7 @@ export default Controller.extend({
         schedule("afterRender", () => {
           // remove from other actions lists
           let match = null;
-          this.get("adminWatchedWords.model").forEach(action => {
+          this.get("adminWatchedWords.model").forEach((action) => {
             if (match) return;
 
             if (action.nameKey !== this.actionNameKey) {
@@ -80,7 +80,7 @@ export default Controller.extend({
     },
 
     uploadComplete() {
-      WatchedWord.findAll().then(data => {
+      WatchedWord.findAll().then((data) => {
         this.set("adminWatchedWords.model", data);
       });
     },
@@ -91,16 +91,16 @@ export default Controller.extend({
         I18n.t(`admin.watched_words.clear_all_confirm_${actionKey}`),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             ajax(`/admin/logs/watched_words/action/${actionKey}.json`, {
-              type: "DELETE"
+              type: "DELETE",
             }).then(() => {
               const action = this.findAction(actionKey);
               if (action) {
                 action.setProperties({
                   words: [],
-                  count: 0
+                  count: 0,
                 });
               }
             });
@@ -110,13 +110,13 @@ export default Controller.extend({
     },
 
     test() {
-      WatchedWord.findAll().then(data => {
+      WatchedWord.findAll().then((data) => {
         this.set("adminWatchedWords.model", data);
         showModal("admin-watched-word-test", {
           admin: true,
-          model: this.currentAction
+          model: this.currentAction,
         });
       });
-    }
-  }
+    },
+  },
 });

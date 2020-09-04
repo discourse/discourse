@@ -25,7 +25,7 @@ export default class ComponentConnector {
     // state we will re-init the whole component, be careful when using this
     // to not track a property which would be updated too often (on scroll for example)
     let shouldInit = false;
-    this.trackedProperties.forEach(prop => {
+    this.trackedProperties.forEach((prop) => {
       if (prev.opts[prop] !== this.opts[prop]) {
         shouldInit = true;
       }

@@ -16,7 +16,7 @@ import { inject as service } from "@ember/service";
 import bootbox from "bootbox";
 
 function unlessReadOnly(method, message) {
-  return function() {
+  return function () {
     if (this.site.get("isReadOnly")) {
       bootbox.alert(message);
     } else {
@@ -66,7 +66,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     postWasEnqueued(details) {
       showModal("post-enqueued", {
         model: details,
-        title: "review.approval.title"
+        title: "review.approval.title",
       });
     },
 
@@ -77,7 +77,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         : null;
       const title = post
         ? I18n.t("composer.reference_topic_title", {
-            title: post.topic.title
+            title: post.topic.title,
           })
         : null;
 
@@ -89,7 +89,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
         draftSequence: 0,
         reply,
-        title
+        title,
       });
     },
 
@@ -114,7 +114,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
       exceptionController.setProperties({
         lastTransition: transition,
-        thrown: xhrOrErr
+        thrown: xhrOrErr,
       });
 
       this.intermediateTransitionTo("exception");
@@ -134,7 +134,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     showForgotPassword() {
       this.controllerFor("forgot-password").setProperties({
         offerHelp: null,
-        helpSeen: false
+        helpSeen: false,
       });
       showModal("forgotPassword", { title: "forgot_password.title" });
     },
@@ -146,13 +146,13 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     showUploadSelector(toolbarEvent) {
       showModal("uploadSelector").setProperties({
         toolbarEvent,
-        imageUrl: null
+        imageUrl: null,
       });
     },
 
     showKeyboardShortcutsHelp() {
       showModal("keyboard-shortcuts-help", {
-        title: "keyboard_shortcuts_help.title"
+        title: "keyboard_shortcuts_help.title",
       });
     },
 
@@ -182,7 +182,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         if (controller && controller.onClose) {
           controller.onClose({
             initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
-            initiatedByClickOut: initiatedBy === "initiatedByClickOut"
+            initiatedByClickOut: initiatedBy === "initiatedByClickOut",
           });
         }
         modalController.set("name", null);
@@ -203,7 +203,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     editCategory(category) {
-      Category.reloadById(category.get("id")).then(atts => {
+      Category.reloadById(category.get("id")).then((atts) => {
         const model = this.store.createRecord("category", atts.category);
         model.setupGroupsAndPermissions();
         this.site.updateCategory(model);
@@ -222,7 +222,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       this.render(w, {
         into: "modal/topic-bulk-actions",
         outlet: "bulkOutlet",
-        controller: controller ? controllerName : "topic-bulk-actions"
+        controller: controller ? controllerName : "topic-bulk-actions",
       });
     },
 
@@ -238,7 +238,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
     createNewMessageViaParams(recipients, title, body) {
       this.openComposerWithMessageParams(recipients, title, body);
-    }
+    },
   },
 
   renderTemplate() {
@@ -286,7 +286,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     if (this.currentUser) {
       this.currentUser.destroySession().then(() => logout());
     }
-  }
+  },
 });
 
 export default ApplicationRoute;

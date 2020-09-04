@@ -54,7 +54,7 @@ export default Component.extend({
         I18n.t("admin.web_hooks.events.redeliver_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             ajax(
               `/admin/api/web_hooks/${this.get(
@@ -62,7 +62,7 @@ export default Component.extend({
               )}/events/${this.get("model.id")}/redeliver`,
               { type: "POST" }
             )
-              .then(json => {
+              .then((json) => {
                 this.set("model", json.web_hook_event);
               })
               .catch(popupAjaxError);
@@ -78,7 +78,7 @@ export default Component.extend({
         let headers = Object.assign(
           {
             "Request URL": this.get("model.request_url"),
-            "Request method": "POST"
+            "Request method": "POST",
           },
           ensureJSON(this.get("model.headers"))
         );
@@ -86,7 +86,7 @@ export default Component.extend({
           headers: plainJSON(headers),
           body: prettyJSON(this.get("model.payload")),
           expandDetails: expandDetailsKey,
-          bodyLabel: I18n.t("admin.web_hooks.events.payload")
+          bodyLabel: I18n.t("admin.web_hooks.events.payload"),
         });
       } else {
         this.set("expandDetails", null);
@@ -101,11 +101,11 @@ export default Component.extend({
           headers: plainJSON(this.get("model.response_headers")),
           body: this.get("model.response_body"),
           expandDetails: expandDetailsKey,
-          bodyLabel: I18n.t("admin.web_hooks.events.body")
+          bodyLabel: I18n.t("admin.web_hooks.events.body"),
         });
       } else {
         this.set("expandDetails", null);
       }
-    }
-  }
+    },
+  },
 });

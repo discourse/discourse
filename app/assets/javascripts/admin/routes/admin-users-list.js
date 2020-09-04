@@ -7,7 +7,7 @@ export default DiscourseRoute.extend({
   actions: {
     exportUsers() {
       exportEntity("user_list", {
-        trust_level: this.controllerFor("admin-users-list-show").get("query")
+        trust_level: this.controllerFor("admin-users-list-show").get("query"),
       }).then(outputExportResult);
     },
 
@@ -17,6 +17,6 @@ export default DiscourseRoute.extend({
 
     deleteUser(user) {
       AdminUser.create(user).destroy({ deletePosts: true });
-    }
-  }
+    },
+  },
 });

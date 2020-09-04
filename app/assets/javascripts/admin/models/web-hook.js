@@ -21,7 +21,7 @@ export default RestModel.extend({
     },
     set(value) {
       this.set("wildcard_web_hook", value === "wildcard");
-    }
+    },
   },
 
   @discourseComputed("category_ids")
@@ -51,7 +51,7 @@ export default RestModel.extend({
   description(isWildcardWebHook, types) {
     let desc = "";
 
-    types.forEach(type => {
+    types.forEach((type) => {
       const name = `${type.name.toLowerCase()}_event`;
       desc += desc !== "" ? `, ${name}` : name;
     });
@@ -61,7 +61,7 @@ export default RestModel.extend({
 
   createProperties() {
     const types = this.web_hook_event_types;
-    const categoryIds = this.categories.map(c => c.id);
+    const categoryIds = this.categories.map((c) => c.id);
     const tagNames = this.tag_names;
 
     // Hack as {{group-selector}} accepts a comma-separated string as data source, but
@@ -79,7 +79,7 @@ export default RestModel.extend({
       active: this.active,
       web_hook_event_type_ids: isEmpty(types)
         ? [null]
-        : types.map(type => type.id),
+        : types.map((type) => type.id),
       category_ids: isEmpty(categoryIds) ? [null] : categoryIds,
       tag_names: isEmpty(tagNames) ? [null] : tagNames,
       group_ids:
@@ -90,11 +90,11 @@ export default RestModel.extend({
                 groupIds.push(g.id);
               }
               return groupIds;
-            }, [])
+            }, []),
     };
   },
 
   updateProperties() {
     return this.createProperties();
-  }
+  },
 });

@@ -60,7 +60,7 @@ export default Component.extend(bufferedProperty("host"), {
     },
 
     delete() {
-      bootbox.confirm(I18n.t("admin.embedding.confirm_delete"), result => {
+      bootbox.confirm(I18n.t("admin.embedding.confirm_delete"), (result) => {
         if (result) {
           this.host.destroyRecord().then(() => {
             this.deleteHost(this.host);
@@ -77,6 +77,6 @@ export default Component.extend(bufferedProperty("host"), {
         this.rollbackBuffer();
         this.set("editToggled", false);
       }
-    }
-  }
+    },
+  },
 });

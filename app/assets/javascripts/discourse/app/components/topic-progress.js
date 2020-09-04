@@ -50,7 +50,7 @@ export default Component.extend({
   jumpToBottomTitle(hugeNumberOfPosts, highestPostNumber) {
     if (hugeNumberOfPosts) {
       return I18n.t("topic.progress.jump_bottom_with_number", {
-        post_number: highestPostNumber
+        post_number: highestPostNumber,
       });
     } else {
       return I18n.t("topic.progress.jump_bottom");
@@ -205,6 +205,6 @@ export default Component.extend({
 
     goBack() {
       this.attrs.jumpToPost(this.get("topic.last_read_post_number"));
-    }
-  }
+    },
+  },
 });

@@ -4,5 +4,5 @@ export default {
 
   initialize() {
     delete moment.tz._links["us_pacific-new"];
-  }
+  },
 };

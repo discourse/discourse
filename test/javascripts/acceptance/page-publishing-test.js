@@ -11,18 +11,18 @@ acceptance("Page Publishing", {
     server.get("/pub/by-topic/280", () => {
       return helper.response({});
     });
-    server.get("/pub/check-slug", req => {
+    server.get("/pub/check-slug", (req) => {
       if (req.queryParams.slug === "internationalization-localization") {
         return validSlug;
       }
       return helper.response({
         valid_slug: false,
-        reason: "i don't need a reason"
+        reason: "i don't need a reason",
       });
     });
-  }
+  },
 });
-QUnit.test("can publish a page via modal", async assert => {
+QUnit.test("can publish a page via modal", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click(".topic-post:eq(0) button.show-more-actions");
   await click(".topic-post:eq(0) button.show-post-admin-menu");

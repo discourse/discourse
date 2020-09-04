@@ -44,7 +44,7 @@ export const ButtonClass = {
 
     if (attrs.data) {
       Object.keys(attrs.data).forEach(
-        k => (attributes[`data-${k}`] = attrs.data[k])
+        (k) => (attributes[`data-${k}`] = attrs.data[k])
       );
     }
 
@@ -78,9 +78,7 @@ export const ButtonClass = {
       return;
     }
 
-    $(`button.widget-button`)
-      .removeClass("d-hover")
-      .blur();
+    $(`button.widget-button`).removeClass("d-hover").blur();
     if (attrs.secondaryAction) {
       this.sendWidgetAction(attrs.secondaryAction);
     }
@@ -93,7 +91,7 @@ export const ButtonClass = {
       return this.sendWidgetAction(attrs.action, e);
     }
     return this.sendWidgetAction(attrs.action, attrs.actionParam);
-  }
+  },
 };
 
 export default createWidget("button", ButtonClass);
@@ -101,6 +99,6 @@ export default createWidget("button", ButtonClass);
 createWidget(
   "flat-button",
   jQuery.extend(ButtonClass, {
-    tagName: "button.widget-button.btn-flat"
+    tagName: "button.widget-button.btn-flat",
   })
 );

@@ -2,7 +2,7 @@ QUnit.module("service:store");
 
 import createStore from "helpers/create-store";
 
-QUnit.test("createRecord", assert => {
+QUnit.test("createRecord", (assert) => {
   const store = createStore();
   const widget = store.createRecord("widget", { id: 111, name: "hello" });
 
@@ -11,7 +11,7 @@ QUnit.test("createRecord", assert => {
   assert.equal(widget.get("id"), 111);
 });
 
-QUnit.test("createRecord without an `id`", assert => {
+QUnit.test("createRecord without an `id`", (assert) => {
   const store = createStore();
   const widget = store.createRecord("widget", { name: "hello" });
 
@@ -19,7 +19,7 @@ QUnit.test("createRecord without an `id`", assert => {
   assert.ok(!widget.get("id"), "there is no id");
 });
 
-QUnit.test("createRecord doesn't modify the input `id` field", assert => {
+QUnit.test("createRecord doesn't modify the input `id` field", (assert) => {
   const store = createStore();
   const widget = store.createRecord("widget", { id: 1, name: "hello" });
 
@@ -31,7 +31,7 @@ QUnit.test("createRecord doesn't modify the input `id` field", assert => {
   assert.equal(obj.id, 1, "it does not remove the id from the input");
 });
 
-QUnit.test("createRecord without attributes", assert => {
+QUnit.test("createRecord without attributes", (assert) => {
   const store = createStore();
   const widget = store.createRecord("widget");
 
@@ -41,7 +41,7 @@ QUnit.test("createRecord without attributes", assert => {
 
 QUnit.test(
   "createRecord with a record as attributes returns that record from the map",
-  assert => {
+  (assert) => {
     const store = createStore();
     const widget = store.createRecord("widget", { id: 33 });
     const secondWidget = store.createRecord("widget", { id: 33 });
@@ -50,7 +50,7 @@ QUnit.test(
   }
 );
 
-QUnit.test("find", async assert => {
+QUnit.test("find", async (assert) => {
   const store = createStore();
 
   const widget = await store.find("widget", 123);
@@ -65,19 +65,19 @@ QUnit.test("find", async assert => {
   assert.equal(widget.get("extras.hello"), "world", "extra attributes are set");
 });
 
-QUnit.test("find with object id", async assert => {
+QUnit.test("find with object id", async (assert) => {
   const store = createStore();
   const widget = await store.find("widget", { id: 123 });
   assert.equal(widget.get("firstObject.name"), "Trout Lure");
 });
 
-QUnit.test("find with query param", async assert => {
+QUnit.test("find with query param", async (assert) => {
   const store = createStore();
   const widget = await store.find("widget", { name: "Trout Lure" });
   assert.equal(widget.get("firstObject.id"), 123);
 });
 
-QUnit.test("findStale with no stale results", async assert => {
+QUnit.test("findStale with no stale results", async (assert) => {
   const store = createStore();
   const stale = store.findStale("widget", { name: "Trout Lure" });
 
@@ -91,20 +91,20 @@ QUnit.test("findStale with no stale results", async assert => {
   );
 });
 
-QUnit.test("update", async assert => {
+QUnit.test("update", async (assert) => {
   const store = createStore();
   const result = await store.update("widget", 123, { name: "hello" });
   assert.ok(result);
 });
 
-QUnit.test("update with a multi world name", async assert => {
+QUnit.test("update with a multi world name", async (assert) => {
   const store = createStore();
   const result = await store.update("cool-thing", 123, { name: "hello" });
   assert.ok(result);
   assert.equal(result.payload.name, "hello");
 });
 
-QUnit.test("findAll", async assert => {
+QUnit.test("findAll", async (assert) => {
   const store = createStore();
   const result = await store.findAll("widget");
   assert.equal(result.get("length"), 2);
@@ -114,21 +114,21 @@ QUnit.test("findAll", async assert => {
   assert.equal(widget.get("name"), "Evil Repellant");
 });
 
-QUnit.test("destroyRecord", async assert => {
+QUnit.test("destroyRecord", async (assert) => {
   const store = createStore();
   const widget = await store.find("widget", 123);
 
   assert.ok(await store.destroyRecord("widget", widget));
 });
 
-QUnit.test("destroyRecord when new", async assert => {
+QUnit.test("destroyRecord when new", async (assert) => {
   const store = createStore();
   const widget = store.createRecord("widget", { name: "hello" });
 
   assert.ok(await store.destroyRecord("widget", widget));
 });
 
-QUnit.test("find embedded", async assert => {
+QUnit.test("find embedded", async (assert) => {
   const store = createStore();
   const fruit = await store.find("fruit", 1);
   assert.ok(fruit.get("farmer"), "it has the embedded object");
@@ -141,7 +141,7 @@ QUnit.test("find embedded", async assert => {
   assert.ok(fruit.get("category"), "categories are found automatically");
 });
 
-QUnit.test("embedded records can be cleared", async assert => {
+QUnit.test("embedded records can be cleared", async (assert) => {
   const store = createStore();
   let fruit = await store.find("fruit", 4);
   fruit.set("farmer", { dummy: "object" });
@@ -150,7 +150,7 @@ QUnit.test("embedded records can be cleared", async assert => {
   assert.ok(!fruit.get("farmer"));
 });
 
-QUnit.test("meta types", async assert => {
+QUnit.test("meta types", async (assert) => {
   const store = createStore();
   const barn = await store.find("barn", 1);
   assert.equal(
@@ -160,7 +160,7 @@ QUnit.test("meta types", async assert => {
   );
 });
 
-QUnit.test("findAll embedded", async assert => {
+QUnit.test("findAll embedded", async (assert) => {
   const store = createStore();
   const fruits = await store.findAll("fruit");
   assert.equal(fruits.objectAt(0).get("farmer.name"), "Old MacDonald");
@@ -183,7 +183,7 @@ QUnit.test("findAll embedded", async assert => {
   assert.equal(fruits.objectAt(2).get("farmer.name"), "Luke Skywalker");
 });
 
-QUnit.test("custom primaryKey", async assert => {
+QUnit.test("custom primaryKey", async (assert) => {
   const store = createStore();
   const cats = await store.findAll("cat");
   assert.equal(cats.objectAt(0).name, "souna");

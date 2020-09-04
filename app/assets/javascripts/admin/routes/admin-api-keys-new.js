@@ -7,11 +7,11 @@ export default Route.extend({
   },
 
   setupController(controller, model) {
-    ajax("/admin/api/keys/scopes.json").then(data => {
+    ajax("/admin/api/keys/scopes.json").then((data) => {
       controller.setProperties({
         scopes: data.scopes,
-        model
+        model,
       });
     });
-  }
+  },
 });

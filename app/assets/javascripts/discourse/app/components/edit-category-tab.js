@@ -25,7 +25,7 @@ export default Component.extend({
     scheduleOnce("afterRender", this, this._addToCollection);
   },
 
-  _addToCollection: function() {
+  _addToCollection: function () {
     this.panels.addObject(this.tabClassName);
   },
 
@@ -39,9 +39,9 @@ export default Component.extend({
   },
 
   actions: {
-    select: function() {
+    select: function () {
       this.set("selectedTab", this.tab);
       this._resetModalScrollState();
-    }
-  }
+    },
+  },
 });

@@ -5,7 +5,7 @@ import { getProperties } from "@ember/object";
 export default Route.extend({
   queryParams: {
     q: { replace: true },
-    overridden: { replace: true }
+    overridden: { replace: true },
   },
 
   model(params) {
@@ -22,6 +22,6 @@ export default Route.extend({
   actions: {
     showReseedModal() {
       showModal("admin-reseed", { admin: true });
-    }
-  }
+    },
+  },
 });

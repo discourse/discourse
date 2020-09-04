@@ -7,24 +7,21 @@ export default Component.extend({
 
   createdChoices: null,
 
-  settingValue: computed("value", function() {
-    return this.value
-      .toString()
-      .split(this.tokenSeparator)
-      .filter(Boolean);
+  settingValue: computed("value", function () {
+    return this.value.toString().split(this.tokenSeparator).filter(Boolean);
   }),
 
   settingChoices: computed(
     "settingValue",
     "setting.choices.[]",
     "createdChoices.[]",
-    function() {
+    function () {
       return [
         ...new Set([
           ...makeArray(this.settingValue),
           ...makeArray(this.setting.choices),
-          ...makeArray(this.createdChoices)
-        ])
+          ...makeArray(this.createdChoices),
+        ]),
       ];
     }
   ),
@@ -36,8 +33,8 @@ export default Component.extend({
 
     onChangeChoices(choices) {
       this.set("createdChoices", [
-        ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)])
+        ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)]),
       ]);
-    }
-  }
+    },
+  },
 });

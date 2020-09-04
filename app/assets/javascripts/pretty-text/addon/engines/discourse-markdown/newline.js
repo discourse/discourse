@@ -50,7 +50,7 @@ function newline(state, silent) {
 }
 
 export function setup(helper) {
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.inline.ruler.at("newline", newline);
   });
 }

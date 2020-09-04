@@ -44,12 +44,12 @@ const LoginMethod = EmberObject.extend({
     if (paramKeys.length > 0) {
       authUrl += "?";
       authUrl += paramKeys
-        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+        .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
         .join("&");
     }
 
-    return LoginMethod.buildPostForm(authUrl).then(form => form.submit());
-  }
+    return LoginMethod.buildPostForm(authUrl).then((form) => form.submit());
+  },
 });
 
 LoginMethod.reopenClass({
@@ -71,7 +71,7 @@ LoginMethod.reopenClass({
 
       return form;
     });
-  }
+  },
 });
 
 let methods;
@@ -81,12 +81,12 @@ export function findAll() {
 
   methods = [];
 
-  Site.currentProp("auth_providers").forEach(provider =>
+  Site.currentProp("auth_providers").forEach((provider) =>
     methods.pushObject(LoginMethod.create(provider))
   );
 
   // exclude FA icon for Google, uses custom SVG
-  methods.forEach(m => m.set("isGoogle", m.name === "google_oauth2"));
+  methods.forEach((m) => m.set("isGoogle", m.name === "google_oauth2"));
 
   return methods;
 }

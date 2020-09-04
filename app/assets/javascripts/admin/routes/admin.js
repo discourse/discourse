@@ -9,11 +9,11 @@ export default DiscourseRoute.extend({
   activate() {
     this.controllerFor("application").setProperties({
       showTop: false,
-      showFooter: false
+      showFooter: false,
     });
   },
 
   deactivate() {
     this.controllerFor("application").set("showTop", true);
-  }
+  },
 });

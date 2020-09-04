@@ -30,5 +30,5 @@ export default Component.extend({
         .toLowerCase();
       return fieldName && `user-field-${fieldName}`;
     }
-  }
+  },
 });

@@ -32,5 +32,5 @@ export default createPreviewComponent(400, 100, {
     );
 
     this.drawPills(colors, font, height / 2);
-  }
+  },
 });

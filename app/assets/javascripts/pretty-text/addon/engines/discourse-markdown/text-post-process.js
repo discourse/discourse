@@ -18,10 +18,10 @@ export class TextPostProcessRuler {
     const rules = [];
     const flags = new Set("g");
 
-    this.rules.forEach(r => {
+    this.rules.forEach((r) => {
       const matcher = r.rule.matcher;
       rules.push(`(${matcher.source})`);
-      matcher.flags.split("").forEach(f => flags.add(f));
+      matcher.flags.split("").forEach((f) => flags.add(f));
     });
 
     let i;
@@ -130,11 +130,11 @@ function textPostProcess(content, state, ruler) {
 }
 
 export function setup(helper) {
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     const ruler = md.core.textPostProcess.ruler;
     const replacer = (content, state) => textPostProcess(content, state, ruler);
 
-    md.core.ruler.push("text-post-process", state =>
+    md.core.ruler.push("text-post-process", (state) =>
       md.options.discourse.helpers.textReplace(state, replacer, true)
     );
   });

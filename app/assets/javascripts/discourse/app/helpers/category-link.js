@@ -159,7 +159,7 @@ function defaultCategoryLinkRenderer(category, opts) {
   if (restricted) {
     html += iconHTML("lock");
   }
-  _extraIconRenderers.forEach(renderer => {
+  _extraIconRenderers.forEach((renderer) => {
     const iconName = renderer(category);
     if (iconName) {
       html += iconHTML(iconName);

@@ -7,14 +7,14 @@ Draft.reopenClass({
   clear(key, sequence) {
     return ajax("/draft.json", {
       type: "DELETE",
-      data: { draft_key: key, sequence }
+      data: { draft_key: key, sequence },
     });
   },
 
   get(key) {
     return ajax("/draft.json", {
       data: { draft_key: key },
-      dataType: "json"
+      dataType: "json",
     });
   },
 
@@ -27,9 +27,9 @@ Draft.reopenClass({
     data = typeof data === "string" ? data : JSON.stringify(data);
     return ajax("/draft.json", {
       type: "POST",
-      data: { draft_key: key, sequence, data, owner: clientId }
+      data: { draft_key: key, sequence, data, owner: clientId },
     });
-  }
+  },
 });
 
 export default Draft;

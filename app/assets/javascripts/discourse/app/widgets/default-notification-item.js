@@ -9,7 +9,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import {
   postUrl,
   escapeExpression,
-  formatUsername
+  formatUsername,
 } from "discourse/lib/utilities";
 import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
@@ -85,7 +85,7 @@ export const DefaultNotificationItem = createWidget(
 
       return I18n.t(`notifications.${notificationName}`, {
         description,
-        username
+        username,
       });
     },
 
@@ -154,7 +154,7 @@ export const DefaultNotificationItem = createWidget(
             this.attrs.post_number,
             this.attrs.data.revision_number
           );
-        }
+        },
       });
     },
 
@@ -164,9 +164,9 @@ export const DefaultNotificationItem = createWidget(
         this.attrs.set("read", true);
         ajax("/notifications/mark-read", {
           method: "PUT",
-          data: { id: this.attrs.id }
+          data: { id: this.attrs.id },
         });
       }
-    }
+    },
   }
 );

@@ -31,7 +31,7 @@ export default Controller.extend({
           I18n.t("admin.backups.read_only.enable.confirm"),
           I18n.t("no_value"),
           I18n.t("yes_value"),
-          confirmed => {
+          (confirmed) => {
             if (confirmed) {
               this.set("currentUser.hideReadOnlyAlert", true);
               this._toggleReadOnlyMode(true);
@@ -48,13 +48,13 @@ export default Controller.extend({
       ajax(`/admin/backups/${link}`, { type: "PUT" }).then(() =>
         bootbox.alert(I18n.t("admin.backups.operations.download.alert"))
       );
-    }
+    },
   },
 
   _toggleReadOnlyMode(enable) {
     ajax("/admin/backups/readonly", {
       type: "PUT",
-      data: { enable }
+      data: { enable },
     }).then(() => this.site.set("isReadOnly", enable));
-  }
+  },
 });

@@ -28,9 +28,9 @@ EmailLog.reopenClass({
     delete filter.status;
 
     return ajax(`/admin/email/${status}.json?offset=${offset}`, {
-      data: filter
-    }).then(logs => logs.map(log => EmailLog.create(log)));
-  }
+      data: filter,
+    }).then((logs) => logs.map((log) => EmailLog.create(log)));
+  },
 });
 
 export default EmailLog;

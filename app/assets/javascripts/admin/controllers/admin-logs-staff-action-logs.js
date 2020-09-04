@@ -24,18 +24,18 @@ export default Controller.extend({
   },
 
   _refresh() {
-    this.store.findAll("staff-action-log", this.filters).then(result => {
+    this.store.findAll("staff-action-log", this.filters).then((result) => {
       this.set("model", result);
 
       if (!this.userHistoryActions) {
         this.set(
           "userHistoryActions",
           result.extras.user_history_actions
-            .map(action => ({
+            .map((action) => ({
               id: action.id,
               action_id: action.action_id,
               name: I18n.t("admin.logs.staff_actions.actions." + action.id),
-              name_raw: action.id
+              name_raw: action.id,
             }))
             .sort((a, b) => a.name.localeCompare(b.name))
         );
@@ -50,7 +50,7 @@ export default Controller.extend({
   resetFilters() {
     this.setProperties({
       model: EmberObject.create({ loadingMore: true }),
-      filters: EmberObject.create()
+      filters: EmberObject.create(),
     });
     this.scheduleRefresh();
   },
@@ -62,7 +62,7 @@ export default Controller.extend({
       this.set("filters", EmberObject.create());
     }
 
-    Object.keys(props).forEach(key => {
+    Object.keys(props).forEach((key) => {
       if (props[key] === undefined || props[key] === null) {
         this.filters.set(key, undefined);
         delete this.filters[key];
@@ -81,7 +81,7 @@ export default Controller.extend({
         this.changeFilters({
           action_name: filterActionId,
           action_id: this.userHistoryActions.findBy("id", filterActionId)
-            .action_id
+            .action_id,
         });
       }
     },
@@ -92,7 +92,7 @@ export default Controller.extend({
         this.changeFilters({
           action_name: null,
           action_id: null,
-          custom_type: null
+          custom_type: null,
         });
       } else {
         this.changeFilters({ [key]: null });
@@ -108,7 +108,7 @@ export default Controller.extend({
       this.changeFilters({
         action_name: logItem.get("action_name"),
         action_id: logItem.get("action"),
-        custom_type: logItem.get("custom_type")
+        custom_type: logItem.get("custom_type"),
       });
     },
 
@@ -130,6 +130,6 @@ export default Controller.extend({
 
     loadMore() {
       this.model.loadMore();
-    }
-  }
+    },
+  },
 });

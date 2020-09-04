@@ -36,5 +36,5 @@ export default Component.extend({
     if (bodyClass) {
       $("body").removeClass(bodyClass);
     }
-  }
+  },
 });

@@ -10,5 +10,5 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.badgeSortOrder = ["badge.badge_type.sort_order", "badge.name"];
-  }
+  },
 });

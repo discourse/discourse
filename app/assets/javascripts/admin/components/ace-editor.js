@@ -37,7 +37,7 @@ export default Component.extend({
   placeholderChanged() {
     if (this._editor) {
       this._editor.setOptions({
-        placeholder: this.placeholder
+        placeholder: this.placeholder,
       });
     }
   },
@@ -54,13 +54,13 @@ export default Component.extend({
       editor.setOptions({
         readOnly: disabled,
         highlightActiveLine: !disabled,
-        highlightGutterLine: !disabled
+        highlightGutterLine: !disabled,
       });
       editor.container.parentNode.setAttribute("data-disabled", disabled);
     }
   },
 
-  _destroyEditor: on("willDestroyElement", function() {
+  _destroyEditor: on("willDestroyElement", function () {
     if (this._editor) {
       this._editor.destroy();
       this._editor = null;
@@ -82,7 +82,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     loadScript("/javascripts/ace/ace.js?v=1.4.12").then(() => {
-      window.ace.require(["ace/ace"], loadedAce => {
+      window.ace.require(["ace/ace"], (loadedAce) => {
         loadedAce.config.set("loadWorkerFromBlob", false);
         loadedAce.config.set("workerPath", getURL("/javascripts/ace")); // Do not use CDN for workers
 
@@ -129,6 +129,6 @@ export default Component.extend({
         this._editor.focus();
         this._editor.navigateFileEnd();
       }
-    }
-  }
+    },
+  },
 });

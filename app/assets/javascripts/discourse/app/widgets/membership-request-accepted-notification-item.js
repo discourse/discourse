@@ -13,8 +13,8 @@ createWidgetFrom(
 
     text(notificationName, data) {
       return I18n.t(`notifications.${notificationName}`, {
-        group_name: data.group_name
+        group_name: data.group_name,
       });
-    }
+    },
   }
 );

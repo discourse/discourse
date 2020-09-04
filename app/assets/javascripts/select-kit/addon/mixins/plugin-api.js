@@ -30,14 +30,14 @@ function onChange(pluginApiIdentifiers, mutationFunction) {
 }
 
 export function applyContentPluginApiCallbacks(content, component) {
-  makeArray(component.pluginApiIdentifiers).forEach(key => {
-    (_prependContentCallbacks[key] || []).forEach(c => {
+  makeArray(component.pluginApiIdentifiers).forEach((key) => {
+    (_prependContentCallbacks[key] || []).forEach((c) => {
       const prependedContent = c(component, content);
       if (prependedContent) {
         content = makeArray(prependedContent).concat(content);
       }
     });
-    (_appendContentCallbacks[key] || []).forEach(c => {
+    (_appendContentCallbacks[key] || []).forEach((c) => {
       const appendedContent = c(component, content);
       if (appendedContent) {
         content = content.concat(makeArray(appendedContent));
@@ -49,25 +49,25 @@ export function applyContentPluginApiCallbacks(content, component) {
 }
 
 export function applyOnChangePluginApiCallbacks(value, items, component) {
-  makeArray(component.pluginApiIdentifiers).forEach(key => {
-    (_onChangeCallbacks[key] || []).forEach(c => c(component, value, items));
+  makeArray(component.pluginApiIdentifiers).forEach((key) => {
+    (_onChangeCallbacks[key] || []).forEach((c) => c(component, value, items));
   });
 }
 
 export function modifySelectKit(targetedIdentifier) {
   return {
-    appendContent: callback => {
+    appendContent: (callback) => {
       appendContent(targetedIdentifier, callback);
       return modifySelectKit(targetedIdentifier);
     },
-    prependContent: callback => {
+    prependContent: (callback) => {
       prependContent(targetedIdentifier, callback);
       return modifySelectKit(targetedIdentifier);
     },
-    onChange: callback => {
+    onChange: (callback) => {
       onChange(targetedIdentifier, callback);
       return modifySelectKit(targetedIdentifier);
-    }
+    },
   };
 }
 
@@ -80,5 +80,5 @@ export function clearCallbacks() {
 const EMPTY_ARRAY = Object.freeze([]);
 export default Mixin.create({
   concatenatedProperties: ["pluginApiIdentifiers"],
-  pluginApiIdentifiers: EMPTY_ARRAY
+  pluginApiIdentifiers: EMPTY_ARRAY,
 });

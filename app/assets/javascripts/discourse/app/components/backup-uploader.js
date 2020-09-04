@@ -33,22 +33,22 @@ export default Component.extend(UploadMixin, {
       type: "PUT",
       dataType: "xml",
       autoUpload: false,
-      multipart: false
+      multipart: false,
     };
   },
 
-  _init: on("didInsertElement", function() {
+  _init: on("didInsertElement", function () {
     const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {
       ajax("/admin/backups/upload_url", {
-        data: { filename: data.files[0].name }
+        data: { filename: data.files[0].name },
       })
-        .then(result => {
+        .then((result) => {
           data.url = result.url;
           data.submit();
         })
         .catch(popupAjaxError);
     });
-  })
+  }),
 });

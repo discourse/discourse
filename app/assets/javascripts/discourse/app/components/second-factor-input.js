@@ -20,5 +20,5 @@ export default Component.extend({
   maxlength(secondFactorMethod) {
     if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) return "6";
     if (secondFactorMethod === SECOND_FACTOR_METHODS.BACKUP_CODE) return "32";
-  }
+  },
 });

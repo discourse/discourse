@@ -26,12 +26,12 @@ export default Controller.extend({
   },
 
   @observes("searchTerm")
-  _searchTermChanged: discourseDebounce(function() {
+  _searchTermChanged: discourseDebounce(function () {
     Invite.findInvitedBy(
       this.user,
       this.filter,
       this.searchTerm
-    ).then(invites => this.set("model", invites));
+    ).then((invites) => this.set("model", invites));
   }, INPUT_DELAY),
 
   inviteRedeemed: equal("filter", "redeemed"),
@@ -64,7 +64,7 @@ export default Controller.extend({
   pendingLabel(invitesCountTotal, invitesCountPending) {
     if (invitesCountTotal > 50) {
       return I18n.t("user.invited.pending_tab_with_count", {
-        count: invitesCountPending
+        count: invitesCountPending,
       });
     } else {
       return I18n.t("user.invited.pending_tab");
@@ -75,7 +75,7 @@ export default Controller.extend({
   redeemedLabel(invitesCountTotal, invitesCountRedeemed) {
     if (invitesCountTotal > 50) {
       return I18n.t("user.invited.redeemed_tab_with_count", {
-        count: invitesCountRedeemed
+        count: invitesCountRedeemed,
       });
     } else {
       return I18n.t("user.invited.redeemed_tab");
@@ -86,7 +86,7 @@ export default Controller.extend({
   linksLabel(invitesCountTotal, invitesCountLinks) {
     if (invitesCountTotal > 50) {
       return I18n.t("user.invited.links_tab_with_count", {
-        count: invitesCountLinks
+        count: invitesCountLinks,
       });
     } else {
       return I18n.t("user.invited.links_tab");
@@ -100,7 +100,7 @@ export default Controller.extend({
     },
 
     rescindAll() {
-      bootbox.confirm(I18n.t("user.invited.rescind_all_confirm"), confirm => {
+      bootbox.confirm(I18n.t("user.invited.rescind_all_confirm"), (confirm) => {
         if (confirm) {
           Invite.rescindAll()
             .then(() => {
@@ -117,13 +117,16 @@ export default Controller.extend({
     },
 
     reinviteAll() {
-      bootbox.confirm(I18n.t("user.invited.reinvite_all_confirm"), confirm => {
-        if (confirm) {
-          Invite.reinviteAll()
-            .then(() => this.set("reinvitedAll", true))
-            .catch(popupAjaxError);
+      bootbox.confirm(
+        I18n.t("user.invited.reinvite_all_confirm"),
+        (confirm) => {
+          if (confirm) {
+            Invite.reinviteAll()
+              .then(() => this.set("reinvitedAll", true))
+              .catch(popupAjaxError);
+          }
         }
-      });
+      );
     },
 
     loadMore() {
@@ -136,7 +139,7 @@ export default Controller.extend({
           this.filter,
           this.searchTerm,
           model.invites.length
-        ).then(invite_model => {
+        ).then((invite_model) => {
           this.set("invitesLoading", false);
           model.invites.pushObjects(invite_model.invites);
           if (
@@ -147,6 +150,6 @@ export default Controller.extend({
           }
         });
       }
-    }
-  }
+    },
+  },
 });

@@ -25,6 +25,6 @@ export default EmberObject.extend({
       context.type = value;
       this.set("searchContext", context);
       return this.get("searchContext.type");
-    }
-  }
+    },
+  },
 });

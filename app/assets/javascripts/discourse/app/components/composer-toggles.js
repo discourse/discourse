@@ -34,5 +34,5 @@ export default Component.extend({
       : composeState === "fullscreen"
       ? "discourse-compress"
       : "discourse-expand";
-  }
+  },
 });
