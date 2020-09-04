@@ -2,7 +2,6 @@
 
 class BootstrapController < ApplicationController
   include ApplicationHelper
-  include ActionView::Helpers::AssetUrlHelper
 
   # This endpoint allows us to produce the data required to start up Discourse via JSON API,
   # so that you don't have to scrape the HTML for `data-*` payloads
