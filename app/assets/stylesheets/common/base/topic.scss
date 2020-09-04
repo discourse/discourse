@@ -35,7 +35,7 @@
 
   // timeline
   @media screen and (min-width: 925px) {
-    // max timeline width is 924
+    // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     .topic-navigation {
       grid-area: timeline;
       align-self: start;
@@ -46,12 +46,12 @@
     }
   }
 
-  //progress bar
+  // progress bar
   @media screen and (max-width: 924px) {
-    // max timeline width is 924
+    // at 924px viewport width and below the progress bar is visible (see topic-navigation.js)
     grid-template-areas: "posts posts";
     .timeline-container:not(.timeline-fullscreen) {
-      display: none;
+      display: none; // hiding this because sometimes the JS switch lags and causes layout issues
     }
     .timeline-container {
       .timeline-scroller-content {
