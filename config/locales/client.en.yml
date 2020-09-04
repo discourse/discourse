@@ -4910,5 +4910,6 @@ en:
 
       previews:
         topic_title: "Discussion topic"
+        font_title: "%{font} Font"
         share_button: "Share"
         reply_button: "Reply"

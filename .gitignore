@@ -132,7 +132,6 @@ node_modules
 
 # ignore auto-generated plugin js assets
 /app/assets/javascripts/plugins/*
-/app/assets/stylesheets/common/fonts.scss
 
 # ignore generated api documentation files
 openapi/*
