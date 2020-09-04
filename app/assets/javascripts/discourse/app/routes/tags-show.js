@@ -1,3 +1,4 @@
+import { makeArray } from "discourse-common/lib/helpers";
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import Composer from "discourse/models/composer";
@@ -199,7 +200,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
                 "tags",
                 [
                   controller.get("model.id"),
-                  ...controller.get("additionalTags"),
+                  ...makeArray(controller.additionalTags),
                 ].filter(Boolean)
               );
             }
