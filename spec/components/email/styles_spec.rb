@@ -4,6 +4,7 @@ require 'rails_helper'
 require 'email'
 
 describe Email::Styles do
+  let(:attachments) { {} }
 
   def basic_fragment(html)
     styler = Email::Styles.new(html)
@@ -187,6 +188,7 @@ describe Email::Styles do
   end
 
   context "replace_secure_media_urls" do
+    let(:attachments) { { 'testimage.png' => stub(url: 'email/test.png') } }
     it "replaces secure media within a link with a placeholder" do
       frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
       expect(frag.at('img')).not_to be_present

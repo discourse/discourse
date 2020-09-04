@@ -422,7 +422,7 @@ module PrettyText
 
   def self.secure_media_placeholder(doc, url)
     <<~HTML
-    <div class="secure-media-notice">
+    <div class="secure-media-notice" data-stripped-secure-media="#{url}">
       #{I18n.t('emails.secure_media_placeholder')} <a class='stripped-secure-view-media' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
     </div>
     HTML

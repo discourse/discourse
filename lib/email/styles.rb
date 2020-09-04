@@ -236,11 +236,31 @@ module Email
       @@plugin_callbacks.each { |block| block.call(@fragment, @opts) }
     end
 
-    def to_html
+    def inline_secure_images(attachments)
       # needs to be before class + id strip because we need to style redacted
       # media and also not double-redact already redacted from lower levels
-      replace_secure_media_urls
+      # strip again, this can be done at a lower level like in the user
+      # notification template but that may not catch everything
+      @fragment.css('[data-stripped-secure-media]').each do |div|
+        if Upload.secure_media_url?(div['data-stripped-secure-media'])
+          filename = File.basename(div['data-stripped-secure-media'])
+          sha1 = filename.gsub(File.extname(filename), "")
+          original_filename = Upload.select(:original_filename).find_by(sha1: sha1).original_filename
 
+          if attachments[original_filename]
+            url = attachments[original_filename].url
+
+            div.add_next_sibling(
+              "<img src=\"#{url}\" style=\"max-width: 50%; max-height: 400px;\" />"
+            )
+            div.remove
+          end
+        end
+      end
+    end
+
+    def to_html
+      replace_secure_media_urls
       strip_classes_and_ids
       replace_relative_urls
 
@@ -249,6 +269,10 @@ module Email
       else
         include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
       end
+    end
+
+    def to_s
+      @fragment.to_s
     end
 
     def include_body?
@@ -269,8 +293,6 @@ module Email
           img.remove
         end
       end
-
-      @fragment.to_s
     end
 
     def make_all_links_absolute
