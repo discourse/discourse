@@ -23,10 +23,10 @@ export default class LocalDateBuilder {
   }
 
   build() {
-    const [year, month, day] = this.date.split("-").map(x => parseInt(x, 10));
+    const [year, month, day] = this.date.split("-").map((x) => parseInt(x, 10));
     const [hour, minute, second] = (this.time || "")
       .split(":")
-      .map(x => (x ? parseInt(x, 10) : undefined));
+      .map((x) => (x ? parseInt(x, 10) : undefined));
 
     let displayedTimezone;
     if (this.time) {
@@ -44,7 +44,7 @@ export default class LocalDateBuilder {
       minute,
       second,
       timezone: this.timezone,
-      localTimezone: this.localTimezone
+      localTimezone: this.localTimezone,
     });
 
     if (this.recurring) {
@@ -66,13 +66,13 @@ export default class LocalDateBuilder {
         moment.tz(this.localTimezone).isAfter(localDate.datetime),
       formated: this._applyFormatting(localDate, displayedTimezone),
       previews,
-      textPreview: this._generateTextPreviews(previews)
+      textPreview: this._generateTextPreviews(previews),
     };
   }
 
   _generateTextPreviews(previews) {
     return previews
-      .map(preview => {
+      .map((preview) => {
         const formatedZone = this._zoneWithoutPrefix(preview.timezone);
         return `${formatedZone} ${preview.formated}`;
       })
@@ -83,7 +83,7 @@ export default class LocalDateBuilder {
     const previewedTimezones = [];
 
     const timezones = this.timezones.filter(
-      timezone => !this._isEqualZones(timezone, this.localTimezone)
+      (timezone) => !this._isEqualZones(timezone, this.localTimezone)
     );
 
     previewedTimezones.push({
@@ -96,7 +96,7 @@ export default class LocalDateBuilder {
           this.localTimezone
         ),
         this.time
-      )
+      ),
     });
 
     if (
@@ -104,12 +104,12 @@ export default class LocalDateBuilder {
       displayedTimezone === this.localTimezone &&
       this.timezone !== displayedTimezone &&
       !this._isEqualZones(displayedTimezone, this.timezone) &&
-      !this.timezones.any(t => this._isEqualZones(t, this.timezone))
+      !this.timezones.any((t) => this._isEqualZones(t, this.timezone))
     ) {
       timezones.unshift(this.timezone);
     }
 
-    timezones.forEach(timezone => {
+    timezones.forEach((timezone) => {
       if (this._isEqualZones(timezone, displayedTimezone)) {
         return;
       }
@@ -127,7 +127,7 @@ export default class LocalDateBuilder {
             timezone
           ),
           this.time
-        )
+        ),
       });
     });
 
@@ -158,7 +158,7 @@ export default class LocalDateBuilder {
       return [
         startRange.format("LLLL"),
         RANGE_SEPARATOR,
-        endRange.format("LLLL")
+        endRange.format("LLLL"),
       ].join(" ");
     }
   }
@@ -209,19 +209,19 @@ export default class LocalDateBuilder {
       sameDay: this._translateCalendarKey(time, "today"),
       nextDay: this._translateCalendarKey(time, "tomorrow"),
       lastDay: this._translateCalendarKey(time, "yesterday"),
-      sameElse: "L"
+      sameElse: "L",
     };
   }
 
   _translateCalendarKey(time, key) {
     const translated = I18n.t(`discourse_local_dates.relative_dates.${key}`, {
-      time: "LT"
+      time: "LT",
     });
 
     if (time) {
       return translated
         .split("LT")
-        .map(w => `[${w}]`)
+        .map((w) => `[${w}]`)
         .join("LT");
     } else {
       return `[${translated.replace(" LT", "")}]`;
@@ -229,10 +229,7 @@ export default class LocalDateBuilder {
   }
 
   _formatTimezone(timezone) {
-    return timezone
-      .replace("_", " ")
-      .replace("Etc/", "")
-      .split("/");
+    return timezone.replace("_", " ").replace("Etc/", "").split("/");
   }
 
   _zoneWithoutPrefix(timezone) {

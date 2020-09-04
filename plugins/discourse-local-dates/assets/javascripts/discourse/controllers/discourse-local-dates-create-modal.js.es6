@@ -17,5 +17,5 @@ export default Controller.extend(ModalFunctionality, {
       );
       localDatesBtn && localDatesBtn.focus();
     });
-  }
+  },
 });
