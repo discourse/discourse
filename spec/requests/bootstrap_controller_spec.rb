@@ -15,6 +15,8 @@ describe BootstrapController do
     expect(bootstrap).to be_present
     expect(bootstrap['title']).to be_present
     expect(bootstrap['setup_data']['base_url']).to eq(Discourse.base_url)
+    expect(bootstrap['stylesheets']).to be_present
+
     preloaded = bootstrap['preloaded']
     expect(preloaded['site']).to be_present
     expect(preloaded['siteSettings']).to be_present
