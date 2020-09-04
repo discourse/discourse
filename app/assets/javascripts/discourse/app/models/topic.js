@@ -23,9 +23,10 @@ import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
+import { deepMerge } from "discourse-common/lib/object";
 
 export function loadTopicView(topic, args) {
-  const data = _.merge({}, args);
+  const data = deepMerge({}, args);
   const url = `${getURL("/t/")}${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 

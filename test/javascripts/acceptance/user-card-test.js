@@ -12,7 +12,7 @@ acceptance("User Card - Show Local Time", {
 
 QUnit.skip("user card local time", async assert => {
   User.current().changeTimezone("Australia/Brisbane");
-  let cardResponse = _.clone(userFixtures["/u/eviltrout/card.json"]);
+  let cardResponse = Object.assign({}, userFixtures["/u/eviltrout/card.json"]);
   cardResponse.user.timezone = "Australia/Perth";
 
   pretender.get("/u/eviltrout/card.json", () => [
@@ -39,7 +39,7 @@ QUnit.skip("user card local time", async assert => {
     "user card contains the user's local time"
   );
 
-  cardResponse = _.clone(userFixtures["/u/charlie/card.json"]);
+  cardResponse = Object.assign({}, userFixtures["/u/charlie/card.json"]);
   cardResponse.user.timezone = "America/New_York";
 
   pretender.get("/u/charlie/card.json", () => [
@@ -68,7 +68,7 @@ QUnit.test(
   "user card local time - does not update timezone for another user",
   async assert => {
     User.current().changeTimezone("Australia/Brisbane");
-    let cardResponse = _.clone(userFixtures["/u/charlie/card.json"]);
+    let cardResponse = Object.assign({}, userFixtures["/u/charlie/card.json"]);
     delete cardResponse.user.timezone;
 
     pretender.get("/u/charlie/card.json", () => [

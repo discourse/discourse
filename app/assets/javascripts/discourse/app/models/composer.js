@@ -996,7 +996,7 @@ const Composer = RestModel.extend({
       // Furthermore calculating cooked is very complicated, especially since
       // we would need to handle oneboxes and other bits that are not even in the
       // engine, staging will just cause a blank post to render
-      if (!_.isEmpty(createdPost.cooked)) {
+      if (!isEmpty(createdPost.cooked)) {
         state = postStream.stagePost(createdPost, user);
         if (state === "alreadyStaging") {
           return;

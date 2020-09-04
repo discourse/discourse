@@ -290,7 +290,7 @@ const User = RestModel.extend({
     ];
 
     const data = this.getProperties(
-      fields ? _.intersection(userFields, fields) : userFields
+      userFields.filter(uf => !fields || fields.indexOf(uf) !== -1)
     );
 
     let userOptionFields = [
@@ -326,7 +326,9 @@ const User = RestModel.extend({
     ];
 
     if (fields) {
-      userOptionFields = _.intersection(userOptionFields, fields);
+      userOptionFields = userOptionFields.filter(
+        uo => fields.indexOf(uo) !== -1
+      );
     }
 
     userOptionFields.forEach(s => {
@@ -864,7 +866,8 @@ const User = RestModel.extend({
       }
     });
 
-    return _.uniq(titles)
+    return titles
+      .uniq()
       .sort()
       .map(title => {
         return {

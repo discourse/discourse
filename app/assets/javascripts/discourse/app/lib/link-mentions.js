@@ -64,15 +64,17 @@ function updateFound($mentions, usernames) {
 export function linkSeenMentions($elem, siteSettings) {
   const $mentions = $("span.mention:not(.mention-tested)", $elem);
   if ($mentions.length) {
-    const usernames = $mentions.map((_, e) =>
-      $(e)
-        .text()
-        .substr(1)
-    );
+    const usernames = [
+      ...$mentions.map((_, e) =>
+        $(e)
+          .text()
+          .substr(1)
+      )
+    ];
     updateFound($mentions, usernames);
-    return _.uniq(usernames).filter(
-      u => !checked[u] && u.length >= siteSettings.min_username_length
-    );
+    return usernames
+      .uniq()
+      .filter(u => !checked[u] && u.length >= siteSettings.min_username_length);
   }
   return [];
 }

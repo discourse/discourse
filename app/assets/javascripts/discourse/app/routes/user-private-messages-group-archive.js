@@ -29,8 +29,9 @@ export default createPMRoute("groups", "private-messages-groups").extend({
     const split = model.get("filter").split("/");
     const groupName = split[split.length - 2];
     this.set("groupName", groupName);
-    const groups = this.modelFor("user").get("groups");
-    const group = _.first(groups.filterBy("name", groupName));
+    const group = this.modelFor("user")
+      .get("groups")
+      .filterBy("name", groupName)[0];
     this.controllerFor("user-private-messages").set("group", group);
   },
 

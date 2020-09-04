@@ -113,7 +113,7 @@ export default function(options) {
     if (options.single) {
       inputSelectedItems = [];
     }
-    transformed = _.isArray(transformedItem)
+    transformed = Array.isArray(transformedItem)
       ? transformedItem
       : [transformedItem || item];
 
@@ -473,7 +473,7 @@ export default function(options) {
           inputSelectedItems.push("");
         }
 
-        if (_.isString(inputSelectedItems[0]) && me.val().length > 0) {
+        if (typeof inputSelectedItems[0] === "string" && me.val().length > 0) {
           inputSelectedItems.pop();
           inputSelectedItems.push(me.val());
           if (options.onChangeItems) {

@@ -1,11 +1,12 @@
 import Post from "discourse/models/post";
 import User from "discourse/models/user";
+import { deepMerge } from "discourse-common/lib/object";
 
 QUnit.module("model: Post");
 
 var buildPost = function(args) {
   return Post.create(
-    _.merge(
+    deepMerge(
       {
         id: 1,
         can_delete: true,

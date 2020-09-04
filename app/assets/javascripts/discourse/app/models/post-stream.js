@@ -10,6 +10,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { loadTopicView } from "discourse/models/topic";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
+import { deepMerge } from "discourse-common/lib/object";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -145,8 +146,12 @@ export default RestModel.extend({
   **/
   @discourseComputed("posts.[]", "stream.[]")
   previousWindow() {
+    if (!this.posts) {
+      return [];
+    }
+
     // If we can't find the last post loaded, bail
-    const firstPost = _.first(this.posts);
+    const firstPost = this.posts[0];
     if (!firstPost) {
       return [];
     }
@@ -270,7 +275,7 @@ export default RestModel.extend({
     this.set("loadingFilter", true);
     this.set("loadingNearPost", opts.nearPost);
 
-    opts = _.merge(opts, this.streamFilters);
+    opts = deepMerge(opts, this.streamFilters);
 
     // Request a topicView
     return loadTopicView(topic, opts)
@@ -362,7 +367,9 @@ export default RestModel.extend({
     if (this.isMegaTopic) {
       this.set("loadingBelow", true);
 
-      const fakePostIds = _.range(-1, -this.get("topic.chunk_size"), -1);
+      const fakePostIds = [
+        ...Array(this.get("topic.chunk_size") - 1).keys()
+      ].map(i => -i - 1);
       postsWithPlaceholders.appending(fakePostIds);
 
       return this.fetchNextWindow(
@@ -937,7 +944,7 @@ export default RestModel.extend({
       include_suggested: includeSuggested
     };
 
-    data = _.merge(data, this.streamFilters);
+    data = deepMerge(data, this.streamFilters);
     const store = this.store;
 
     return ajax(url, { data }).then(result => {

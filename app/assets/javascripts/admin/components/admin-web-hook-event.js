@@ -75,7 +75,7 @@ export default Component.extend({
       const expandDetailsKey = this.expandDetailsRequestKey;
 
       if (this.expandDetails !== expandDetailsKey) {
-        let headers = _.extend(
+        let headers = Object.assign(
           {
             "Request URL": this.get("model.request_url"),
             "Request method": "POST"

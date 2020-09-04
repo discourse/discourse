@@ -5,6 +5,7 @@ import discourseComputed, { on } from "discourse-common/utils/decorators";
 import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
+import { deepEqual } from "discourse-common/lib/object";
 
 function isNew(topic) {
   return (
@@ -115,7 +116,7 @@ const TopicTrackingState = EmberObject.extend({
       if (["new_topic", "unread", "read"].includes(data.message_type)) {
         tracker.notify(data);
         const old = tracker.states["t" + data.topic_id];
-        if (!_.isEqual(old, data.payload)) {
+        if (!deepEqual(old, data.payload)) {
           tracker.states["t" + data.topic_id] = data.payload;
           tracker.notifyPropertyChange("states");
           tracker.incrementMessageCount();
@@ -429,19 +430,19 @@ const TopicTrackingState = EmberObject.extend({
     const subcategoryIds = this.getSubCategoryIds(categoryId);
     const mutedCategoryIds =
       this.currentUser && this.currentUser.muted_category_ids;
-    return _.chain(this.states)
-      .filter(type === "new" ? isNew : isUnread)
-      .filter(
-        topic =>
-          topic.archetype !== "private_message" &&
-          !topic.deleted &&
-          (!categoryId || subcategoryIds.has(topic.category_id)) &&
-          (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1)) &&
-          (type !== "new" ||
-            !mutedCategoryIds ||
-            mutedCategoryIds.indexOf(topic.category_id) === -1)
-      )
-      .value().length;
+    let filter = type === "new" ? isNew : isUnread;
+
+    return Object.values(this.states).filter(
+      topic =>
+        filter(topic) &&
+        topic.archetype !== "private_message" &&
+        !topic.deleted &&
+        (!categoryId || subcategoryIds.has(topic.category_id)) &&
+        (!tagId || (topic.tags && topic.tags.indexOf(tagId) > -1)) &&
+        (type !== "new" ||
+          !mutedCategoryIds ||
+          mutedCategoryIds.indexOf(topic.category_id) === -1)
+    ).length;
   },
 
   countNew(categoryId, tagId) {

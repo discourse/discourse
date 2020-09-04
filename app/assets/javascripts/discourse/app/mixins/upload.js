@@ -8,6 +8,7 @@ import getUrl from "discourse-common/lib/get-url";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
 import bootbox from "bootbox";
+import { deepMerge } from "discourse-common/lib/object";
 
 export default Mixin.create({
   uploading: false,
@@ -56,7 +57,7 @@ export default Mixin.create({
     });
 
     $upload.fileupload(
-      _.merge(
+      deepMerge(
         {
           url: this.calculateUploadUrl(),
           dataType: "json",
@@ -82,7 +83,7 @@ export default Mixin.create({
     });
 
     $upload.on("fileuploadsubmit", (e, data) => {
-      const opts = _.merge(
+      const opts = deepMerge(
         {
           bypassNewUserRestriction: true,
           user: this.currentUser,

@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { sanitize, emojiUnescape } from "discourse/lib/text";
+import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
   size: "medium",
@@ -25,7 +26,7 @@ export default Component.extend({
   summary(size) {
     if (size === "large") {
       const longDescription = this.get("badge.long_description");
-      if (!_.isEmpty(longDescription)) {
+      if (!isEmpty(longDescription)) {
         return emojiUnescape(sanitize(longDescription));
       }
     }

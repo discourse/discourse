@@ -492,7 +492,7 @@ Report.reopenClass({
     const startDate = options.startDate || "start_date";
     const endDate = options.endDate || "end_date";
 
-    if (_.isArray(report[dataField])) {
+    if (Array.isArray(report[dataField])) {
       const startDateFormatted = moment
         .utc(report[startDate])
         .locale("en")

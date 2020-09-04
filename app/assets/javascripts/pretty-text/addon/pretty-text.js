@@ -2,6 +2,7 @@ import {
   cook as cookIt,
   setup as setupIt
 } from "pretty-text/engines/discourse-markdown-it";
+import { deepMerge } from "discourse-common/lib/object";
 
 export function registerOption() {
   // TODO next major version deprecate this
@@ -48,7 +49,7 @@ export function buildOptions(state) {
   };
 
   if (state.features) {
-    features = _.merge(features, state.features);
+    features = deepMerge(features, state.features);
   }
 
   const options = {

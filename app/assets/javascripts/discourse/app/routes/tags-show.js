@@ -195,15 +195,12 @@ export default DiscourseRoute.extend(FilterModeMixin, {
             // Pre-fill the tags input field
             if (controller.get("model.id")) {
               const composerModel = this.controllerFor("composer").get("model");
-
               composerModel.set(
                 "tags",
-                _.compact(
-                  _.flatten([
-                    controller.get("model.id"),
-                    controller.get("additionalTags")
-                  ])
-                )
+                [
+                  controller.get("model.id"),
+                  ...controller.get("additionalTags")
+                ].filter(Boolean)
               );
             }
           });

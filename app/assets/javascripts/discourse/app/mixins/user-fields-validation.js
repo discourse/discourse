@@ -13,9 +13,9 @@ export default Mixin.create({
 
     let userFields = this.site.get("user_fields");
     if (userFields) {
-      userFields = _.sortBy(userFields, "position").map(function(f) {
-        return EmberObject.create({ value: null, field: f });
-      });
+      userFields = userFields
+        .sortBy("position")
+        .map(f => EmberObject.create({ value: null, field: f }));
     }
     this.set("userFields", userFields);
   },

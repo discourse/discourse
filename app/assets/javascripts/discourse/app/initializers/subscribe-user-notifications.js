@@ -68,16 +68,15 @@ export default {
 
           if (stale && stale.hasResults && lastNotification) {
             const oldNotifications = stale.results.get("content");
-            const staleIndex = _.findIndex(oldNotifications, {
-              id: lastNotification.id
-            });
+            const staleIndex = oldNotifications.findIndex(
+              n => n.id === lastNotification.id
+            );
 
             if (staleIndex === -1) {
               // this gets a bit tricky, unread pms are bumped to front
               let insertPosition = 0;
               if (lastNotification.notification_type !== 6) {
-                insertPosition = _.findIndex(
-                  oldNotifications,
+                insertPosition = oldNotifications.findIndex(
                   n => n.notification_type !== 6 || n.read
                 );
                 insertPosition =

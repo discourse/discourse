@@ -26,6 +26,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { inject as service } from "@ember/service";
 import bootbox from "bootbox";
+import { deepMerge } from "discourse-common/lib/object";
 
 let customPostMessageCallbacks = {};
 
@@ -249,7 +250,7 @@ export default Controller.extend(bufferedProperty("model"), {
     this.set("loadingPostIds", true);
 
     return ajax(url, {
-      data: _.merge(
+      data: deepMerge(
         { post_number: post.get("post_number") },
         postStream.get("streamFilters")
       )
@@ -1445,7 +1446,7 @@ export default Controller.extend(bufferedProperty("model"), {
         this.currentUser.automatically_unpin_topics
       ) {
         // automatically unpin topics when the user reaches the bottom
-        const max = _.max(postNumbers);
+        const max = Math.max(...postNumbers);
         if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
           next(() => topic.clearPin());
         }
