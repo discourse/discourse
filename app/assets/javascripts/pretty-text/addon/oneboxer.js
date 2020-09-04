@@ -6,7 +6,7 @@ import {
   setFailedCache,
   resetLocalCache,
   resetFailedCache,
-  normalize
+  normalize,
 } from "pretty-text/oneboxer-cache";
 
 let timeout;
@@ -69,18 +69,18 @@ function loadNext(ajax) {
       url,
       refresh,
       category_id: categoryId,
-      topic_id: topicId
+      topic_id: topicId,
     },
-    cache: true
+    cache: true,
   })
     .then(
-      html => {
+      (html) => {
         let $html = $(html);
         setLocalCache(normalize(url), $html);
         $elem.replaceWith($html);
         applySquareGenericOnebox($html);
       },
-      result => {
+      (result) => {
         if (result && result.jqXHR && result.jqXHR.status === 429) {
           timeoutMs = 2000;
           removeLoading = false;
@@ -107,7 +107,7 @@ export function load({
   ajax,
   synchronous = false,
   categoryId,
-  topicId
+  topicId,
 }) {
   const $elem = $(elem);
 

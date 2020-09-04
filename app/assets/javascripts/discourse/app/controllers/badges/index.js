@@ -16,12 +16,12 @@ export default Controller.extend({
     let group = [];
     let groupId;
 
-    sorted.forEach(function(badge) {
+    sorted.forEach(function (badge) {
       if (groupId !== badge.badge_grouping_id) {
         if (group && group.length > 0) {
           grouped.push({
             badges: group,
-            badgeGrouping: group[0].badge_grouping
+            badgeGrouping: group[0].badge_grouping,
           });
         }
         group = [];
@@ -35,5 +35,5 @@ export default Controller.extend({
     }
 
     return grouped;
-  }
+  },
 });

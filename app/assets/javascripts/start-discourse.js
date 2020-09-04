@@ -1,4 +1,4 @@
 // discourse-skip-module
-(function() {
+(function () {
   Discourse.start();
 })();

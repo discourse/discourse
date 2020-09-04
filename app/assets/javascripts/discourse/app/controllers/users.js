@@ -22,13 +22,13 @@ export default Controller.extend({
 
     this.store
       .find("directoryItem", params)
-      .then(model => {
+      .then((model) => {
         const lastUpdatedAt = model.get("resultSetMeta.last_updated_at");
         this.setProperties({
           model,
           lastUpdatedAt: lastUpdatedAt ? longDate(lastUpdatedAt) : null,
           period: params.period,
-          nameInput: params.name
+          nameInput: params.name,
         });
       })
       .finally(() => {
@@ -37,18 +37,18 @@ export default Controller.extend({
   },
 
   @observes("nameInput")
-  _setName: discourseDebounce(function() {
+  _setName: discourseDebounce(function () {
     this.set("name", this.nameInput);
   }, 500),
 
   @observes("model.canLoadMore")
-  _showFooter: function() {
+  _showFooter: function () {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
   actions: {
     loadMore() {
       this.model.loadMore();
-    }
-  }
+    },
+  },
 });

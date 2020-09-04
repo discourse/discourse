@@ -9,5 +9,5 @@ export default Button.extend({
 
   click() {
     return true;
-  }
+  },
 });

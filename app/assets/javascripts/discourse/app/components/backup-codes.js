@@ -55,12 +55,12 @@ export default Component.extend({
     copyToClipboard() {
       this._selectAllBackupCodes();
       this.copyBackupCode(document.execCommand("copy"));
-    }
+    },
   },
 
   _selectAllBackupCodes() {
     const textArea = this.element.querySelector("#backupCodes");
     textArea.focus();
     textArea.setSelectionRange(0, this.formattedBackupCodes.length);
-  }
+  },
 });

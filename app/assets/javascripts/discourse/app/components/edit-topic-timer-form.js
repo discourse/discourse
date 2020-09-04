@@ -9,7 +9,7 @@ import {
   REMINDER_TYPE,
   CLOSE_STATUS_TYPE,
   BUMP_TYPE,
-  DELETE_REPLIES_TYPE
+  DELETE_REPLIES_TYPE,
 } from "discourse/controllers/edit-topic-timer";
 
 export default Component.extend({
@@ -60,5 +60,5 @@ export default Component.extend({
         );
       }
     });
-  }
+  },
 });

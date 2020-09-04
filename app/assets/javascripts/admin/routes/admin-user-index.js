@@ -8,7 +8,7 @@ export default DiscourseRoute.extend({
 
   afterModel(model) {
     if (this.currentUser.admin) {
-      return Group.findAll().then(groups => {
+      return Group.findAll().then((groups) => {
         this._availableGroups = groups.filterBy("automatic", false);
         return model;
       });
@@ -20,7 +20,7 @@ export default DiscourseRoute.extend({
       originalPrimaryGroupId: model.primary_group_id,
       availableGroups: this._availableGroups,
       customGroupIdsBuffer: model.customGroups.mapBy("id"),
-      model
+      model,
     });
-  }
+  },
 });

@@ -45,7 +45,7 @@ export default Component.extend({
     if (!icon) return;
 
     if (!$(`${c} symbol#${icon}`).length) {
-      ajax(`/svg-sprite/search/${icon}`).then(function(data) {
+      ajax(`/svg-sprite/search/${icon}`).then(function (data) {
         if ($(singleIconEl).length === 0) $(c).append(`<div class="${h}">`);
 
         $(singleIconEl).html(
@@ -107,7 +107,7 @@ export default Component.extend({
   setFlairImage(upload) {
     this.model.setProperties({
       flair_url: getURL(upload.url),
-      flair_upload_id: upload.id
+      flair_upload_id: upload.id,
     });
   },
 
@@ -115,7 +115,7 @@ export default Component.extend({
   removeFlairImage() {
     this.model.setProperties({
       flair_url: null,
-      flair_upload_id: null
+      flair_upload_id: null,
     });
-  }
+  },
 });

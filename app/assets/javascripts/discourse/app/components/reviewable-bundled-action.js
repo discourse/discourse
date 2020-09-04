@@ -13,6 +13,6 @@ export default Component.extend({
 
     perform(action) {
       this.attrs.performAction(action);
-    }
-  }
+    },
+  },
 });

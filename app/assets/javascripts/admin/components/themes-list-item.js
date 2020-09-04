@@ -67,7 +67,7 @@ export default Component.extend({
     children = this.childrenExpanded
       ? children
       : children.slice(0, MAX_COMPONENTS);
-    return children.map(t => {
+    return children.map((t) => {
       const name = escape(t.name);
       return t.enabled ? name : `${iconHTML("ban")} ${name}`;
     });
@@ -96,22 +96,22 @@ export default Component.extend({
     $list.css("display", "");
     $container.animate(
       {
-        height: `${$container.height() + $list.outerHeight(true)}px`
+        height: `${$container.height() + $list.outerHeight(true)}px`,
       },
       {
         duration,
         done: () => {
           $list.css("display", "");
           $container.css("height", "");
-        }
+        },
       }
     );
     $list.animate(
       {
-        opacity: 1
+        opacity: 1,
       },
       {
-        duration
+        duration,
       }
     );
   },
@@ -119,22 +119,22 @@ export default Component.extend({
   collapseComponentsList($container, $list, duration) {
     $container.animate(
       {
-        height: `${$container.height() - $list.outerHeight(true)}px`
+        height: `${$container.height() - $list.outerHeight(true)}px`,
       },
       {
         duration,
         done: () => {
           $list.css("display", "none");
           $container.css("height", "");
-        }
+        },
       }
     );
     $list.animate(
       {
-        opacity: 0
+        opacity: 0,
       },
       {
-        duration
+        duration,
       }
     );
   },
@@ -142,6 +142,6 @@ export default Component.extend({
   actions: {
     toggleChildrenExpanded() {
       this.toggleProperty("childrenExpanded");
-    }
-  }
+    },
+  },
 });

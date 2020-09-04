@@ -9,20 +9,20 @@ export default Controller.extend({
   actions: {
     save() {
       let priorities = {};
-      this.get("settings.reviewable_score_types").forEach(st => {
+      this.get("settings.reviewable_score_types").forEach((st) => {
         priorities[st.id] = parseFloat(st.reviewable_priority);
       });
 
       this.set("saving", true);
       ajax("/review/settings", {
         type: "PUT",
-        data: { reviewable_priorities: priorities }
+        data: { reviewable_priorities: priorities },
       })
         .then(() => {
           this.set("saved", true);
         })
         .catch(popupAjaxError)
         .finally(() => this.set("saving", false));
-    }
-  }
+    },
+  },
 });

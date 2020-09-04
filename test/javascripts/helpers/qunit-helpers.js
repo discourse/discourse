@@ -8,7 +8,7 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { resetPluginApi } from "discourse/lib/plugin-api";
 import {
   clearCache as clearOutletCache,
-  resetExtraClasses
+  resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { flushMap } from "discourse/models/store";
@@ -54,7 +54,7 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
   let now = moment.tz(timeString, timezone);
   return sandbox.useFakeTimers({
     now: now.valueOf(),
-    shouldAdvanceTime: advanceTime
+    shouldAdvanceTime: advanceTime,
   });
 }
 
@@ -80,7 +80,7 @@ const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
 
 function AcceptanceModal(option, _relatedTarget) {
-  return this.each(function() {
+  return this.each(function () {
     var $this = $(this);
     var data = $this.data("bs.modal");
     var options = $.extend(
@@ -118,7 +118,7 @@ export function controllerModule(name, args = {}) {
         args.setupController(controller);
       }
     },
-    needs: args.needs
+    needs: args.needs,
   });
 }
 
@@ -135,7 +135,7 @@ export function discourseModule(name, hooks) {
       if (hooks && hooks.afterEach) {
         hooks.afterEach.call(this);
       }
-    }
+    },
   });
 }
 
@@ -151,7 +151,7 @@ export function acceptance(name, options) {
       resetMobile();
 
       // For now don't do scrolling stuff in Test Mode
-      HeaderComponent.reopen({ examineDockHeader: function() {} });
+      HeaderComponent.reopen({ examineDockHeader: function () {} });
 
       resetExtraClasses();
       if (options.mobileView) {
@@ -222,7 +222,7 @@ export function acceptance(name, options) {
 
       // We do this after reset so that the willClearRender will have already fired
       resetWidgetCleanCallbacks();
-    }
+    },
   });
 }
 
@@ -241,36 +241,36 @@ export function fixture(selector) {
   return $("#qunit-fixture");
 }
 
-QUnit.assert.not = function(actual, message) {
+QUnit.assert.not = function (actual, message) {
   this.pushResult({
     result: !actual,
     actual,
     expected: !actual,
-    message
+    message,
   });
 };
 
-QUnit.assert.blank = function(actual, message) {
+QUnit.assert.blank = function (actual, message) {
   this.pushResult({
     result: isEmpty(actual),
     actual,
-    message
+    message,
   });
 };
 
-QUnit.assert.present = function(actual, message) {
+QUnit.assert.present = function (actual, message) {
   this.pushResult({
     result: !isEmpty(actual),
     actual,
-    message
+    message,
   });
 };
 
-QUnit.assert.containsInstance = function(collection, klass, message) {
+QUnit.assert.containsInstance = function (collection, klass, message) {
   const result = klass.detectInstance(collection[0]);
   this.pushResult({
     result,
-    message
+    message,
   });
 };
 

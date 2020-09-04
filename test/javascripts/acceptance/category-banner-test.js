@@ -21,7 +21,7 @@ acceptance("Category Banners", {
         id: 5,
         name: "test read only without banner",
         slug: "test-read-only-without-banner",
-        permission: null
+        permission: null,
       },
       {
         id: 6,
@@ -29,13 +29,13 @@ acceptance("Category Banners", {
         slug: "test-read-only-with-banner",
         permission: null,
         read_only_banner:
-          "You need to video yourself doing the secret handshake to post here"
-      }
-    ]
-  }
+          "You need to video yourself doing the secret handshake to post here",
+      },
+    ],
+  },
 });
 
-QUnit.test("Does not display category banners when not set", async assert => {
+QUnit.test("Does not display category banners when not set", async (assert) => {
   await visit("/c/test-read-only-without-banner");
 
   await click("#create-topic");
@@ -46,7 +46,7 @@ QUnit.test("Does not display category banners when not set", async assert => {
   );
 });
 
-QUnit.test("Displays category banners when set", async assert => {
+QUnit.test("Displays category banners when set", async (assert) => {
   await visit("/c/test-read-only-with-banner");
 
   await click("#create-topic");
@@ -74,13 +74,13 @@ acceptance("Anonymous Category Banners", {
         slug: "test-read-only-with-banner",
         permission: null,
         read_only_banner:
-          "You need to video yourself doing the secret handshake to post here"
-      }
-    ]
-  }
+          "You need to video yourself doing the secret handshake to post here",
+      },
+    ],
+  },
 });
 
-QUnit.test("Does not display category banners when set", async assert => {
+QUnit.test("Does not display category banners when set", async (assert) => {
   await visit("/c/test-read-only-with-banner");
   assert.ok(
     !visible(".category-read-only-banner"),

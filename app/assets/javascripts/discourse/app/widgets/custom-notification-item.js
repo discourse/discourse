@@ -18,5 +18,5 @@ createWidgetFrom(DefaultNotificationItem, "custom-notification-item", {
 
   icon(notificationName, data) {
     return iconNode(`notification.${data.message}`);
-  }
+  },
 });

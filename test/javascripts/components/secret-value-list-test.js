@@ -39,7 +39,7 @@ componentTest("adding a value", {
       "firstKey|FirstValue\nsecondKey|secondValue\nthirdKey|thirdValue",
       "it adds the value to the list of values"
     );
-  }
+  },
 });
 
 componentTest("adding an invalid value", {
@@ -67,7 +67,7 @@ componentTest("adding an invalid value", {
         .indexOf(I18n.t("admin.site_settings.secret_list.invalid_input")) > -1,
       "it shows validation error"
     );
-  }
+  },
 });
 
 componentTest("removing a value", {
@@ -88,5 +88,5 @@ componentTest("removing a value", {
       "secondKey|secondValue",
       "it removes the expected value"
     );
-  }
+  },
 });

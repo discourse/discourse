@@ -53,5 +53,5 @@ export default Component.extend({
     return values && values.length
       ? values.split(delimiter || "\n").filter(Boolean)
       : [];
-  }
+  },
 });

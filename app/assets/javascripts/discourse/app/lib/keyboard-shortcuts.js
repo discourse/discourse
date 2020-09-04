@@ -7,7 +7,7 @@ import { throttle, schedule } from "@ember/runloop";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import {
   nextTopicUrl,
-  previousTopicUrl
+  previousTopicUrl,
 } from "discourse/lib/topic-list-tracker";
 
 const DEFAULT_BINDINGS = {
@@ -60,9 +60,9 @@ const DEFAULT_BINDINGS = {
       ".latest-topic-list .latest-topic-list-item.selected div.main-link a.title",
       ".top-topic-list .latest-topic-list-item.selected div.main-link a.title",
       ".latest .featured-topic.selected a.title",
-      ".search-results .fps-result.selected .search-link"
+      ".search-results .fps-result.selected .search-link",
     ].join(", "),
-    anonymous: true
+    anonymous: true,
   }, // open selected topic on latest or categories page
   tab: { handler: "switchFocusCategoriesPage", anonymous: true },
   p: { handler: "showCurrentUser" },
@@ -82,9 +82,9 @@ const DEFAULT_BINDINGS = {
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
-    click: "#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top"
+    click: "#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top",
   }, // dismiss new/posts
-  "x t": { click: "#dismiss-topics,#dismiss-topics-top" } // dismiss topics
+  "x t": { click: "#dismiss-topics,#dismiss-topics-top" }, // dismiss topics
 };
 
 const animationDuration = 100;
@@ -112,7 +112,7 @@ export default {
   },
 
   bindEvents() {
-    Object.keys(DEFAULT_BINDINGS).forEach(key => {
+    Object.keys(DEFAULT_BINDINGS).forEach((key) => {
       this.bindKey(key);
     });
   },
@@ -149,12 +149,12 @@ export default {
   // for cases when you want to disable global keyboard shortcuts
   // so that you can override them (e.g. inside a modal)
   pause(combinations) {
-    combinations.forEach(combo => this.keyTrapper.unbind(combo));
+    combinations.forEach((combo) => this.keyTrapper.unbind(combo));
   },
 
   // restore global shortcuts that you have paused
   unpause(combinations) {
-    combinations.forEach(combo => this.bindKey(combo));
+    combinations.forEach((combo) => this.bindKey(combo));
   },
 
   /**
@@ -235,7 +235,7 @@ export default {
   },
 
   goToNextTopic() {
-    nextTopicUrl().then(url => {
+    nextTopicUrl().then((url) => {
       if (url) {
         DiscourseURL.routeTo(url);
       }
@@ -243,7 +243,7 @@ export default {
   },
 
   goToPreviousTopic() {
-    previousTopicUrl().then(url => {
+    previousTopicUrl().then((url) => {
       if (url) {
         DiscourseURL.routeTo(url);
       }
@@ -258,7 +258,7 @@ export default {
       const controller = this.container.lookup("controller:topic");
       // Only the last page contains list of suggested topics.
       const url = `/t/${controller.get("model.id")}/last.json`;
-      ajax(url).then(result => {
+      ajax(url).then((result) => {
         if (result.suggested_topics && result.suggested_topics.length > 0) {
           const topic = controller.store.createRecord(
             "topic",
@@ -318,7 +318,7 @@ export default {
     run(() => {
       this.appEvents.trigger("header:keyboard-trigger", {
         type: "page-search",
-        event
+        event,
       });
     });
   },
@@ -348,7 +348,7 @@ export default {
 
     this.container.lookup("controller:composer").open({
       action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY
+      draftKey: Composer.NEW_TOPIC_KEY,
     });
   },
 
@@ -385,7 +385,7 @@ export default {
   toggleSearch(event) {
     this.appEvents.trigger("header:keyboard-trigger", {
       type: "search",
-      event
+      event,
     });
 
     return false;
@@ -394,7 +394,7 @@ export default {
   toggleHamburgerMenu(event) {
     this.appEvents.trigger("header:keyboard-trigger", {
       type: "hamburger",
-      event
+      event,
     });
   },
 
@@ -499,7 +499,7 @@ export default {
 
   _bindToClick(selector, binding) {
     binding = binding.split(",");
-    this.keyTrapper.bind(binding, function(e) {
+    this.keyTrapper.bind(binding, function (e) {
       const $sel = $(selector);
 
       // Special case: We're binding to enter.
@@ -568,7 +568,7 @@ export default {
       const offset = minimumOffset();
       $selected = $articles
         .toArray()
-        .find(article =>
+        .find((article) =>
           direction > 0
             ? article.getBoundingClientRect().top > offset
             : article.getBoundingClientRect().bottom > offset
@@ -721,17 +721,14 @@ export default {
       index = $sections.index(active) + direction;
 
     if (index >= 0 && index < $sections.length) {
-      $sections
-        .eq(index)
-        .find("a")
-        .click();
+      $sections.eq(index).find("a").click();
     }
   },
 
   _stopCallback() {
     const oldStopCallback = this.keyTrapper.prototype.stopCallback;
 
-    this.keyTrapper.prototype.stopCallback = function(
+    this.keyTrapper.prototype.stopCallback = function (
       e,
       element,
       combo,
@@ -765,5 +762,5 @@ export default {
 
   toggleAdminActions() {
     this.appEvents.trigger("topic:toggle-actions");
-  }
+  },
 };

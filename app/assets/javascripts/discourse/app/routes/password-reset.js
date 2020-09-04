@@ -12,7 +12,7 @@ export default DiscourseRoute.extend({
 
   model(params) {
     if (PreloadStore.get("password_reset")) {
-      return PreloadStore.getAndRemove("password_reset").then(json =>
+      return PreloadStore.getAndRemove("password_reset").then((json) =>
         deepMerge(params, json)
       );
     }
@@ -23,8 +23,8 @@ export default DiscourseRoute.extend({
     if (model) {
       return ajax({
         url: userPath(`confirm-email-token/${model.token}.json`),
-        dataType: "json"
+        dataType: "json",
       });
     }
-  }
+  },
 });

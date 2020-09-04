@@ -4,5 +4,5 @@ export default Component.extend({
   tagName: null,
   href: null,
   title: null,
-  ariaLabel: null
+  ariaLabel: null,
 });

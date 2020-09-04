@@ -56,7 +56,7 @@ const StaffActionLog = RestModel.extend({
       format("admin.logs.ip_address", ipAddress),
       format("admin.logs.topic_id", topicLink, false),
       format("admin.logs.post_id", postLink, false),
-      format("admin.logs.category_id", categoryId)
+      format("admin.logs.category_id", categoryId),
     ];
 
     if (!useCustomModalForDetails) {
@@ -70,7 +70,7 @@ const StaffActionLog = RestModel.extend({
       lines = [...lines, ...escapeExpression(details).split("\n")];
     }
 
-    const formatted = lines.filter(l => l.length > 0).join("<br/>");
+    const formatted = lines.filter((l) => l.length > 0).join("<br/>");
     return formatted.length > 0 ? formatted + "<br/>" : "";
   },
 
@@ -82,7 +82,7 @@ const StaffActionLog = RestModel.extend({
   @discourseComputed("action_name")
   useCustomModalForDetails(actionName) {
     return ["change_theme", "delete_theme"].includes(actionName);
-  }
+  },
 });
 
 StaffActionLog.reopenClass({
@@ -97,15 +97,17 @@ StaffActionLog.reopenClass({
   },
 
   findAll(data) {
-    return ajax("/admin/logs/staff_action_logs.json", { data }).then(result => {
-      return {
-        staff_action_logs: result.staff_action_logs.map(s =>
-          StaffActionLog.create(s)
-        ),
-        user_history_actions: result.user_history_actions
-      };
-    });
-  }
+    return ajax("/admin/logs/staff_action_logs.json", { data }).then(
+      (result) => {
+        return {
+          staff_action_logs: result.staff_action_logs.map((s) =>
+            StaffActionLog.create(s)
+          ),
+          user_history_actions: result.user_history_actions,
+        };
+      }
+    );
+  },
 });
 
 export default StaffActionLog;

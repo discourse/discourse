@@ -3,7 +3,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default DiscourseRoute.extend({
   queryParams: {
     order: { refreshModel: true },
-    asc: { refreshModel: true }
+    asc: { refreshModel: true },
   },
 
   // TODO: this has been introduced to fix a bug in admin-users-list-show
@@ -12,7 +12,7 @@ export default DiscourseRoute.extend({
     const routeName = "adminUsersList.show";
 
     if (transition.targetName === routeName) {
-      const params = transition.routeInfos.find(a => a.name === routeName)
+      const params = transition.routeInfos.find((a) => a.name === routeName)
         .params;
       const controller = this.controllerFor(routeName);
       if (controller) {
@@ -20,11 +20,11 @@ export default DiscourseRoute.extend({
           order: transition.to.queryParams.order,
           asc: transition.to.queryParams.asc,
           query: params.filter,
-          refreshing: false
+          refreshing: false,
         });
 
         controller.resetFilters();
       }
     }
-  }
+  },
 });

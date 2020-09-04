@@ -3,7 +3,7 @@ import User from "discourse/models/user";
 export function parsePostData(query) {
   const result = {};
   if (query) {
-    query.split("&").forEach(function(part) {
+    query.split("&").forEach(function (part) {
       const item = part.split("=");
       const firstSeg = decodeURIComponent(item[0]);
       const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
@@ -42,7 +42,7 @@ export default new Pretender();
 
 export function applyDefaultHandlers(pretender) {
   // Autoload any `*-pretender` files
-  Object.keys(requirejs.entries).forEach(e => {
+  Object.keys(requirejs.entries).forEach((e) => {
     let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);
     if (m && m[1] !== "create") {
       let result = requirejs(e).default.call(pretender, helpers);
@@ -90,7 +90,7 @@ export function applyDefaultHandlers(pretender) {
         tags: [
           { id: "eviltrout", count: 1 },
           { id: "planned", text: "planned", count: 7, pm_count: 0 },
-          { id: "private", text: "private", count: 0, pm_count: 7 }
+          { id: "private", text: "private", count: 0, pm_count: 7 },
         ],
         extras: {
           tag_groups: [
@@ -99,28 +99,28 @@ export function applyDefaultHandlers(pretender) {
               name: "Ford Cars",
               tags: [
                 { id: "Escort", text: "Escort", count: 1, pm_count: 0 },
-                { id: "focus", text: "focus", count: 3, pm_count: 0 }
-              ]
+                { id: "focus", text: "focus", count: 3, pm_count: 0 },
+              ],
             },
             {
               id: 1,
               name: "Honda Cars",
               tags: [
                 { id: "civic", text: "civic", count: 4, pm_count: 0 },
-                { id: "accord", text: "accord", count: 2, pm_count: 0 }
-              ]
+                { id: "accord", text: "accord", count: 2, pm_count: 0 },
+              ],
             },
             {
               id: 1,
               name: "Makes",
               tags: [
                 { id: "ford", text: "ford", count: 5, pm_count: 0 },
-                { id: "honda", text: "honda", count: 6, pm_count: 0 }
-              ]
-            }
-          ]
-        }
-      }
+                { id: "honda", text: "honda", count: 6, pm_count: 0 },
+              ],
+            },
+          ],
+        },
+      },
     ];
   });
 
@@ -128,14 +128,14 @@ export function applyDefaultHandlers(pretender) {
     return response({ results: [{ text: "monkey", count: 1 }] });
   });
 
-  pretender.get(`/u/:username/emails.json`, request => {
+  pretender.get(`/u/:username/emails.json`, (request) => {
     if (request.params.username === "regular2") {
       return response({
         email: "regular2@example.com",
         secondary_emails: [
           "regular2alt1@example.com",
-          "regular2alt2@example.com"
-        ]
+          "regular2alt2@example.com",
+        ],
       });
     }
     return response({ email: "eviltrout@example.com" });
@@ -167,18 +167,18 @@ export function applyDefaultHandlers(pretender) {
             read_restricted: false,
             parent_category_id: null,
             topic_count: 1,
-            post_count: 1
-          }
-        ]
+            post_count: 1,
+          },
+        ],
       },
       badges: [{ id: 444, count: 1 }],
-      topics: [{ id: 1234, title: "cool title", slug: "cool-title" }]
+      topics: [{ id: 1234, title: "cool title", slug: "cool-title" }],
     });
   });
 
   pretender.get("/u/eviltrout/invited_count.json", () => {
     return response({
-      counts: { pending: 1, redeemed: 0, total: 0 }
+      counts: { pending: 1, redeemed: 0, total: 0 },
     });
   });
 
@@ -194,7 +194,7 @@ export function applyDefaultHandlers(pretender) {
     return response({
       pinned_in_category_count: 0,
       pinned_globally_count: 0,
-      banner_count: 0
+      banner_count: 0,
     });
   });
 
@@ -209,34 +209,34 @@ export function applyDefaultHandlers(pretender) {
   pretender.put("/t/internationalization-localization/280/status", () => {
     return response({
       success: "OK",
-      topic_status_update: null
+      topic_status_update: null,
     });
   });
 
   pretender.post("/clicks/track", success);
 
-  pretender.get("/search", request => {
+  pretender.get("/search", (request) => {
     if (request.queryParams.q === "posts") {
       return response({
         posts: [
           {
-            id: 1234
-          }
-        ]
+            id: 1234,
+          },
+        ],
       });
     } else if (request.queryParams.q === "evil") {
       return response({
         posts: [
           {
-            id: 1234
-          }
+            id: 1234,
+          },
         ],
         tags: [
           {
             id: 6,
-            name: "eviltrout"
-          }
-        ]
+            name: "eviltrout",
+          },
+        ],
       });
     }
 
@@ -266,7 +266,7 @@ export function applyDefaultHandlers(pretender) {
     return response({
       id: 280,
       slug: "internationalization-localization",
-      url: "/t/internationalization-localization/280"
+      url: "/t/internationalization-localization/280",
     });
   });
 
@@ -277,7 +277,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/permalink-check.json", () => {
     return response({
       found: false,
-      html: "<div class='page-not-found'>not found</div>"
+      html: "<div class='page-not-found'>not found</div>",
     });
   });
 
@@ -293,9 +293,9 @@ export function applyDefaultHandlers(pretender) {
           id: 1,
           username: "eviltrout",
           avatar_template: "/user_avatar/default/eviltrout/{size}/1.png",
-          username_lower: "eviltrout"
-        }
-      ]
+          username_lower: "eviltrout",
+        },
+      ],
     });
   });
 
@@ -311,7 +311,7 @@ export function applyDefaultHandlers(pretender) {
     response(fixturesByUrl["/categories_and_latest.json"])
   );
 
-  pretender.put("/categories/:category_id", request => {
+  pretender.put("/categories/:category_id", (request) => {
     const category = parsePostData(request.requestBody);
     category.id = parseInt(request.params.category_id, 10);
 
@@ -322,14 +322,14 @@ export function applyDefaultHandlers(pretender) {
     return response({ category });
   });
 
-  pretender.get("/draft.json", request => {
+  pretender.get("/draft.json", (request) => {
     if (request.queryParams.draft_key === "new_topic") {
       return response(fixturesByUrl["/draft.json"]);
     } else if (request.queryParams.draft_key.startsWith("topic_"))
       return response(
         fixturesByUrl[request.url] || {
           draft: null,
-          draft_sequence: 0
+          draft_sequence: 0,
         }
       );
     return response({});
@@ -337,17 +337,17 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/drafts.json", () => response(fixturesByUrl["/drafts.json"]));
 
-  pretender.put("/queued_posts/:queued_post_id", function(request) {
+  pretender.put("/queued_posts/:queued_post_id", function (request) {
     return response({ queued_post: { id: request.params.queued_post_id } });
   });
 
-  pretender.get("/queued_posts", function() {
+  pretender.get("/queued_posts", function () {
     return response({
-      queued_posts: [{ id: 1, raw: "queued post text", can_delete_user: true }]
+      queued_posts: [{ id: 1, raw: "queued post text", can_delete_user: true }],
     });
   });
 
-  pretender.post("/session", function(request) {
+  pretender.post("/session", function (request) {
     const data = parsePostData(request.requestBody);
 
     if (data.password === "correct") {
@@ -359,7 +359,7 @@ export function applyDefaultHandlers(pretender) {
         error: "not active",
         reason: "not_activated",
         sent_to_email: "<small>eviltrout@example.com</small>",
-        current_email: "<small>current@example.com</small>"
+        current_email: "<small>current@example.com</small>",
       });
     }
 
@@ -368,7 +368,7 @@ export function applyDefaultHandlers(pretender) {
         error: "not active",
         reason: "not_activated",
         sent_to_email: "eviltrout@example.com",
-        current_email: "current@example.com"
+        current_email: "current@example.com",
       });
     }
 
@@ -385,7 +385,7 @@ export function applyDefaultHandlers(pretender) {
         backup_enabled: true,
         security_key_enabled: false,
         totp_enabled: true,
-        multiple_second_factor_methods: false
+        multiple_second_factor_methods: false,
       });
     }
 
@@ -405,7 +405,7 @@ export function applyDefaultHandlers(pretender) {
         totp_enabled: false,
         multiple_second_factor_methods: false,
         allowed_credential_ids: ["allowed_credential_ids"],
-        challenge: "challenge"
+        challenge: "challenge",
       });
     }
 
@@ -415,14 +415,14 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/u/action/send_activation_email", success);
   pretender.put("/u/update-activation-email", success);
 
-  pretender.get("/u/hp.json", function() {
+  pretender.get("/u/hp.json", function () {
     return response({
       value: "32faff1b1ef1ac3",
-      challenge: "61a3de0ccf086fb9604b76e884d75801"
+      challenge: "61a3de0ccf086fb9604b76e884d75801",
     });
   });
 
-  pretender.get("/session/csrf", function() {
+  pretender.get("/session/csrf", function () {
     return response({ csrf: "mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs=" });
   });
 
@@ -430,7 +430,7 @@ export function applyDefaultHandlers(pretender) {
     return response({ available: true });
   });
 
-  pretender.get("/u/check_username", function(request) {
+  pretender.get("/u/check_username", function (request) {
     if (request.queryParams.username === "taken") {
       return response({ available: false, suggestion: "nottaken" });
     }
@@ -445,13 +445,13 @@ export function applyDefaultHandlers(pretender) {
   pretender.put("/posts/:post_id/recover", success);
   pretender.get("/posts/:post_id/expand-embed", success);
 
-  pretender.put("/posts/:post_id", request => {
+  pretender.put("/posts/:post_id", (request) => {
     const data = parsePostData(request.requestBody);
     if (data.post.raw === "this will 409") {
       return [
         409,
         { "Content-Type": "application/json" },
-        { errors: ["edit conflict"] }
+        { errors: ["edit conflict"] },
       ];
     }
     data.post.id = request.params.post_id;
@@ -463,7 +463,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/t/404.json", () => response(404, "not found"));
   pretender.get("/t/500.json", () => response(502, {}));
 
-  pretender.put("/t/:slug/:id", request => {
+  pretender.put("/t/:slug/:id", (request) => {
     const isJSON = request.requestHeaders["Content-Type"].includes(
       "application/json"
     );
@@ -477,8 +477,8 @@ export function applyDefaultHandlers(pretender) {
         id: request.params.id,
         title: data.title,
         fancy_title: data.title,
-        slug: request.params.slug
-      }
+        slug: request.params.slug,
+      },
     });
   });
 
@@ -510,25 +510,25 @@ export function applyDefaultHandlers(pretender) {
     return response(200, fixturesByUrl["/groups/discourse/members.json"]);
   });
 
-  pretender.get("/t/:topic_id/posts.json", request => {
+  pretender.get("/t/:topic_id/posts.json", (request) => {
     const postIds = request.queryParams.post_ids;
     const postNumber = parseInt(request.queryParams.post_number, 10);
     let posts;
 
     if (postIds) {
-      posts = postIds.map(p => ({
+      posts = postIds.map((p) => ({
         id: parseInt(p, 10),
-        post_number: parseInt(p, 10)
+        post_number: parseInt(p, 10),
       }));
     } else if (postNumber && request.queryParams.asc === "true") {
-      posts = [...Array(5).keys()].map(p => ({
+      posts = [...Array(5).keys()].map((p) => ({
         id: p + postNumber + 1,
-        post_number: p + postNumber + 1
+        post_number: p + postNumber + 1,
       }));
     } else if (postNumber && request.queryParams.asc === "false") {
-      posts = [...Array(5).keys()].map(p => ({
+      posts = [...Array(5).keys()].map((p) => ({
         id: postNumber - p - 1,
-        post_number: postNumber - p - 1
+        post_number: postNumber - p - 1,
       }));
     }
 
@@ -542,7 +542,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/posts/:post_id/reply-ids.json", () => {
     return response(200, {
       direct_reply_ids: [45],
-      all_reply_ids: [45, 100]
+      all_reply_ids: [45, 100],
     });
   });
 
@@ -551,7 +551,7 @@ export function applyDefaultHandlers(pretender) {
   );
   pretender.delete("/user_badges/:badge_id", success);
 
-  pretender.post("/posts", function(request) {
+  pretender.post("/posts", function (request) {
     const data = parsePostData(request.requestBody);
 
     if (data.title === "this title triggers an error") {
@@ -564,8 +564,8 @@ export function applyDefaultHandlers(pretender) {
         action: "enqueued",
         pending_post: {
           id: 1234,
-          raw: data.raw
-        }
+          raw: data.raw,
+        },
       });
     }
 
@@ -574,7 +574,7 @@ export function applyDefaultHandlers(pretender) {
         success: true,
         action: "custom",
         message: "This is a custom response",
-        route_to: "/faq"
+        route_to: "/faq",
       });
     }
 
@@ -584,8 +584,8 @@ export function applyDefaultHandlers(pretender) {
       post: {
         id: 12345,
         topic_id: 280,
-        topic_slug: "internationalization-localization"
-      }
+        topic_slug: "internationalization-localization",
+      },
     });
   });
 
@@ -595,27 +595,27 @@ export function applyDefaultHandlers(pretender) {
   const overridden = {
     id: "site.overridden",
     value: "Overridden",
-    overridden: true
+    overridden: true,
   };
 
-  pretender.get("/admin/users/list/active.json", request => {
+  pretender.get("/admin/users/list/active.json", (request) => {
     let store = [
       {
         id: 1,
         username: "eviltrout",
-        email: "<small>eviltrout@example.com</small>"
+        email: "<small>eviltrout@example.com</small>",
       },
       {
         id: 3,
         username: "discobot",
-        email: "<small>discobot_email</small>"
-      }
+        email: "<small>discobot_email</small>",
+      },
     ];
 
     const showEmails = request.queryParams.show_emails;
 
     if (showEmails === "false") {
-      store = store.map(item => {
+      store = store.map((item) => {
         delete item.email;
         return item;
       });
@@ -625,7 +625,7 @@ export function applyDefaultHandlers(pretender) {
     const order = request.queryParams.order;
 
     if (order) {
-      store = store.sort(function(a, b) {
+      store = store.sort(function (a, b) {
         return a[order] - b[order];
       });
     }
@@ -642,12 +642,12 @@ export function applyDefaultHandlers(pretender) {
       {
         id: 2,
         username: "sam",
-        email: "<small>sam@example.com</small>"
-      }
+        email: "<small>sam@example.com</small>",
+      },
     ]);
   });
 
-  pretender.get("/admin/customize/site_texts", request => {
+  pretender.get("/admin/customize/site_texts", (request) => {
     if (request.queryParams.overridden) {
       return response(200, { site_texts: [overridden] });
     } else {
@@ -662,7 +662,7 @@ export function applyDefaultHandlers(pretender) {
     response(200, { site_text: siteText })
   );
 
-  pretender.put("/admin/customize/site_texts/:key", request => {
+  pretender.put("/admin/customize/site_texts/:key", (request) => {
     const result = parsePostData(request.requestBody);
     result.id = request.params.key;
     result.can_revert = true;
@@ -676,7 +676,7 @@ export function applyDefaultHandlers(pretender) {
       id: 1,
       username: "eviltrout",
       email: "eviltrout@example.com",
-      admin: true
+      admin: true,
     });
   });
 
@@ -684,7 +684,7 @@ export function applyDefaultHandlers(pretender) {
     return response(200, {
       id: 2,
       username: "sam",
-      admin: true
+      admin: true,
     });
   });
 
@@ -693,21 +693,21 @@ export function applyDefaultHandlers(pretender) {
       id: 3,
       username: "markvanlan",
       email: "markvanlan@example.com",
-      secondary_emails: ["markvanlan1@example.com", "markvanlan2@example.com"]
+      secondary_emails: ["markvanlan1@example.com", "markvanlan2@example.com"],
     });
   });
 
   pretender.get("/admin/users/1234.json", () => {
     return response(200, {
       id: 1234,
-      username: "regular"
+      username: "regular",
     });
   });
 
   pretender.get("/admin/users/1235.json", () => {
     return response(200, {
       id: 1235,
-      username: "regular2"
+      username: "regular2",
     });
   });
 
@@ -720,7 +720,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/admin/logs/staff_action_logs.json", () => {
     return response(200, {
       staff_action_logs: [],
-      extras: { user_history_actions: [] }
+      extras: { user_history_actions: [] },
     });
   });
 
@@ -729,7 +729,7 @@ export function applyDefaultHandlers(pretender) {
   });
   pretender.delete("/admin/logs/watched_words/:id.json", success);
 
-  pretender.post("/admin/logs/watched_words.json", request => {
+  pretender.post("/admin/logs/watched_words.json", (request) => {
     const result = parsePostData(request.requestBody);
     result.id = new Date().getTime();
     return response(200, result);
@@ -737,7 +737,7 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/admin/logs/search_logs.json", () => {
     return response(200, [
-      { term: "foobar", searches: 35, click_through: 6, unique: 16 }
+      { term: "foobar", searches: 35, click_through: 6, unique: 16 },
     ]);
   });
 
@@ -747,8 +747,8 @@ export function applyDefaultHandlers(pretender) {
         type: "search_log_term",
         title: "Search Count",
         term: "ruby",
-        data: [{ x: "2017-07-20", y: 2 }]
-      }
+        data: [{ x: "2017-07-20", y: 2 }],
+      },
     });
   });
 
@@ -757,23 +757,23 @@ export function applyDefaultHandlers(pretender) {
       imageFilename: "somefile.png",
       imageFilesize: "10 KB",
       imageWidth: "1",
-      imageHeight: "1"
+      imageHeight: "1",
     });
   });
 
-  pretender.get("/inline-onebox", request => {
+  pretender.get("/inline-onebox", (request) => {
     if (
       request.queryParams.urls.includes("http://www.example.com/has-title.html")
     ) {
       return [
         200,
         { "Content-Type": "application/html" },
-        '{"inline-oneboxes":[{"url":"http://www.example.com/has-title.html","title":"This is a great title"}]}'
+        '{"inline-oneboxes":[{"url":"http://www.example.com/has-title.html","title":"This is a great title"}]}',
       ];
     }
   });
 
-  pretender.get("/onebox", request => {
+  pretender.get("/onebox", (request) => {
     if (
       request.queryParams.url === "http://www.example.com/has-title.html" ||
       request.queryParams.url ===
@@ -782,7 +782,7 @@ export function applyDefaultHandlers(pretender) {
       return [
         200,
         { "Content-Type": "application/html" },
-        '<aside class="onebox"><article class="onebox-body"><h3><a href="http://www.example.com/article.html">An interesting article</a></h3></article></aside>'
+        '<aside class="onebox"><article class="onebox-body"><h3><a href="http://www.example.com/article.html">An interesting article</a></h3></article></aside>',
       ];
     }
 
@@ -790,7 +790,7 @@ export function applyDefaultHandlers(pretender) {
       return [
         200,
         { "Content-Type": "application/html" },
-        '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>'
+        '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>',
       ];
     }
 
@@ -798,7 +798,7 @@ export function applyDefaultHandlers(pretender) {
       return [
         200,
         { "Content-Type": "application/html" },
-        '<aside class="onebox"><article class="onebox-body"><h3><a href="/internal-page.html">Internal Page 4 U</a></h3></article></aside>'
+        '<aside class="onebox"><article class="onebox-body"><h3><a href="/internal-page.html">Internal Page 4 U</a></h3></article></aside>',
       ];
     }
     if (request.queryParams.url === "http://somegoodurl.com/") {
@@ -818,7 +818,7 @@ export function applyDefaultHandlers(pretender) {
       <div class="onebox-metadata"></div>
       <div style="clear: both"></div>
     </aside>
-  `
+  `,
       ];
     }
     return [404, { "Content-Type": "application/html" }, ""];

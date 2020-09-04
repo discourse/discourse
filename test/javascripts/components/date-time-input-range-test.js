@@ -32,5 +32,5 @@ componentTest("default", {
     assert.equal(fromTimeInput().dataset.name, "14:45");
     assert.equal(toDateInput().value, "");
     assert.equal(toTimeInput().dataset.name, "--:--");
-  }
+  },
 });

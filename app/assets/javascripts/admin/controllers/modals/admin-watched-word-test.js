@@ -8,5 +8,5 @@ export default Controller.extend(ModalFunctionality, {
     if (!value || !regexpString) return;
     let censorRegexp = new RegExp(regexpString, "ig");
     return value.match(censorRegexp);
-  }
+  },
 });

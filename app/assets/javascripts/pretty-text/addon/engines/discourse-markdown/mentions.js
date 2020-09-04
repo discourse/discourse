@@ -23,10 +23,10 @@ export function setup(helper) {
     opts.features.unicodeUsernames = !!siteSettings.unicode_usernames;
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     const rule = {
       matcher: mentionRegex(md.options.discourse.features.unicodeUsernames),
-      onMatch: addMention
+      onMatch: addMention,
     };
 
     md.core.textPostProcess.ruler.push("mentions", rule);

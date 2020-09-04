@@ -19,15 +19,15 @@ export default {
     app.DiscoveryCategoryRoute = buildCategoryRoute("default");
     app.DiscoveryParentCategoryRoute = buildCategoryRoute("default");
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute("default", {
-      no_subcategories: true
+      no_subcategories: true,
     });
     app.DiscoveryCategoryAllRoute = buildCategoryRoute("default", {
-      no_subcategories: false
+      no_subcategories: false,
     });
     app.DiscoveryCategoryWithIDRoute = buildCategoryRoute("default");
 
     const site = Site.current();
-    site.get("filters").forEach(filter => {
+    site.get("filters").forEach((filter) => {
       const filterCapitalized = filter.capitalize();
       app[
         `Discovery${filterCapitalized}Controller`
@@ -62,11 +62,11 @@ export default {
           User.currentProp("should_be_redirected_to_top", false);
           User.currentProp("redirected_to_top.reason", null);
           return this._super(...arguments);
-        }
-      }
+        },
+      },
     });
 
-    site.get("periods").forEach(period => {
+    site.get("periods").forEach((period) => {
       const periodCapitalized = period.capitalize();
       app[
         `DiscoveryTop${periodCapitalized}Controller`
@@ -96,18 +96,18 @@ export default {
 
     app["TagsShowCategoryRoute"] = TagsShowRoute.extend();
     app["TagsShowCategoryNoneRoute"] = TagsShowRoute.extend({
-      noSubcategories: true
+      noSubcategories: true,
     });
     app["TagsShowParentCategoryRoute"] = TagsShowRoute.extend();
 
     app["TagShowRoute"] = TagsShowRoute;
 
-    site.get("filters").forEach(function(filter) {
+    site.get("filters").forEach(function (filter) {
       app["TagsShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
-        navMode: filter
+        navMode: filter,
       });
       app["TagShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
-        navMode: filter
+        navMode: filter,
       });
       app[
         "TagsShowCategory" + filter.capitalize() + "Route"
@@ -119,5 +119,5 @@ export default {
         "TagsShowParentCategory" + filter.capitalize() + "Route"
       ] = TagsShowRoute.extend({ navMode: filter });
     });
-  }
+  },
 };

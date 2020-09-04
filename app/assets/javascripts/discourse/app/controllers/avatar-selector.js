@@ -65,7 +65,7 @@ export default Controller.extend(ModalFunctionality, {
         `/user_avatar/${this.get("user.username")}/refresh_gravatar.json`,
         { type: "POST" }
       )
-        .then(result => {
+        .then((result) => {
           if (!result.gravatar_upload_id) {
             this.set("gravatarFailed", true);
           } else {
@@ -73,7 +73,7 @@ export default Controller.extend(ModalFunctionality, {
 
             this.user.setProperties({
               gravatar_avatar_upload_id: result.gravatar_upload_id,
-              gravatar_avatar_template: result.gravatar_avatar_template
+              gravatar_avatar_template: result.gravatar_avatar_template,
             });
           }
         })
@@ -95,6 +95,6 @@ export default Controller.extend(ModalFunctionality, {
         .pickAvatar(selectedUploadId, type)
         .then(() => window.location.reload())
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

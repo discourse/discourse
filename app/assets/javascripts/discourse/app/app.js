@@ -8,7 +8,7 @@ const Discourse = Application.extend({
   rootElement: "#main",
 
   customEvents: {
-    paste: "paste"
+    paste: "paste",
   },
 
   reset() {
@@ -34,7 +34,7 @@ const Discourse = Application.extend({
   start() {
     $("noscript").remove();
 
-    Object.keys(requirejs._eak_seen).forEach(key => {
+    Object.keys(requirejs._eak_seen).forEach((key) => {
       if (/\/pre\-initializers\//.test(key)) {
         this.initializer(this._prepareInitializer(key));
       } else if (/\/initializers\//.test(key)) {
@@ -45,18 +45,18 @@ const Discourse = Application.extend({
     // Plugins that are registered via `<script>` tags.
     const withPluginApi = requirejs("discourse/lib/plugin-api").withPluginApi;
     let initCount = 0;
-    _pluginCallbacks.forEach(cb => {
+    _pluginCallbacks.forEach((cb) => {
       this.instanceInitializer({
         name: `_discourse_plugin_${++initCount}`,
         after: "inject-objects",
-        initialize: () => withPluginApi(cb.version, cb.code)
+        initialize: () => withPluginApi(cb.version, cb.code),
       });
     });
   },
 
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
-  }
+  },
 });
 
 export default Discourse;

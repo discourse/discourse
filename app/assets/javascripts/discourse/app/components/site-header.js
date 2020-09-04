@@ -5,7 +5,7 @@ import Docking from "discourse/mixins/docking";
 import PanEvents, {
   SWIPE_VELOCITY,
   SWIPE_DISTANCE_THRESHOLD,
-  SWIPE_VELOCITY_THRESHOLD
+  SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
@@ -210,7 +210,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       !this.get("currentUser.read_first_notification") &&
       !this.get("currentUser.enforcedSecondFactor")
     ) {
-      this._dismissFirstNotification = e => {
+      this._dismissFirstNotification = (e) => {
         if (
           !e.target.closest("#current-user") &&
           !e.target.closest(".ring-backdrop") &&
@@ -255,14 +255,14 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   buildArgs() {
     return {
       topic: this._topic,
-      canSignUp: this.canSignUp
+      canSignUp: this.canSignUp,
     };
   },
 
   afterRender() {
     const headerTitle = document.querySelector(".header-title .topic-link");
     if (headerTitle && this._topic) {
-      topicTitleDecorators.forEach(cb =>
+      topicTitleDecorators.forEach((cb) =>
         cb(this._topic, headerTitle, "header-title")
       );
     }
@@ -368,7 +368,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       $headerCloak.css("opacity", 0.5);
       this._animate = false;
     });
-  }
+  },
 });
 
 export default SiteHeaderComponent;

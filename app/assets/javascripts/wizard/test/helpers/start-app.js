@@ -5,7 +5,7 @@ import initializer from "wizard/initializers/load-helpers";
 let app;
 let started = false;
 
-export default function() {
+export default function () {
   run(() => (app = Wizard.create({ rootElement: "#ember-testing" })));
 
   if (!started) {

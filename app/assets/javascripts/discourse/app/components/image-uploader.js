@@ -69,7 +69,7 @@ export default Component.extend(UploadMixin, {
       imageFilesize: upload.human_filesize,
       imageFilename: upload.original_filename,
       imageWidth: upload.width,
-      imageHeight: upload.height
+      imageHeight: upload.height,
     });
 
     this._applyLightbox();
@@ -98,14 +98,14 @@ export default Component.extend(UploadMixin, {
 
         ajax(`/uploads/lookup-metadata`, {
           type: "POST",
-          data: { url: this.imageUrl }
+          data: { url: this.imageUrl },
         })
-          .then(json => {
+          .then((json) => {
             this.setProperties({
               imageFilename: json.original_filename,
               imageFilesize: json.human_filesize,
               imageWidth: json.width,
-              imageHeight: json.height
+              imageHeight: json.height,
             });
 
             this._openLightbox();
@@ -121,6 +121,6 @@ export default Component.extend(UploadMixin, {
       if (this.onUploadDeleted) {
         this.onUploadDeleted();
       }
-    }
-  }
+    },
+  },
 });

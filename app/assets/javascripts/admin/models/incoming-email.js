@@ -31,15 +31,15 @@ IncomingEmail.reopenClass({
     delete filter.status;
 
     return ajax(`/admin/email/${status}.json?offset=${offset}`, {
-      data: filter
-    }).then(incomings =>
-      incomings.map(incoming => IncomingEmail.create(incoming))
+      data: filter,
+    }).then((incomings) =>
+      incomings.map((incoming) => IncomingEmail.create(incoming))
     );
   },
 
   loadRawEmail(id) {
     return ajax(`/admin/email/incoming/${id}/raw.json`);
-  }
+  },
 });
 
 export default IncomingEmail;

@@ -21,5 +21,5 @@ export default Component.extend({
   @discourseComputed("pinned", "topic.deleted", "topic.unpinned")
   isHidden(pinned, deleted, unpinned) {
     return deleted || (!pinned && !unpinned);
-  }
+  },
 });

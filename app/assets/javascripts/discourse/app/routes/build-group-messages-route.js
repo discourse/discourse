@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 
-export default type => {
+export default (type) => {
   return UserTopicListRoute.extend({
     titleToken() {
       return I18n.t(`user.messages.${type}`);
@@ -25,12 +25,12 @@ export default type => {
 
       this.controllerFor("user-topics-list").setProperties({
         hideCategory: true,
-        showPosters: true
+        showPosters: true,
       });
     },
 
     _isArchive() {
       return type === "archive";
-    }
+    },
   });
 };

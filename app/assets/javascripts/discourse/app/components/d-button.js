@@ -22,7 +22,7 @@ export default Component.extend({
     set(key, value) {
       this.set("forceDisabled", value);
       return value;
-    }
+    },
   }),
 
   classNameBindings: [
@@ -30,7 +30,7 @@ export default Component.extend({
     "btnLink::btn",
     "btnLink",
     "noText",
-    "btnType"
+    "btnType",
   ],
   attributeBindings: [
     "form",
@@ -38,10 +38,10 @@ export default Component.extend({
     "computedTitle:title",
     "computedAriaLabel:aria-label",
     "tabindex",
-    "type"
+    "type",
   ],
 
-  isDisabled: computed("disabled", "forceDisabled", function() {
+  isDisabled: computed("disabled", "forceDisabled", function () {
     return this.forceDisabled || this.disabled;
   }),
 
@@ -99,5 +99,5 @@ export default Component.extend({
     }
 
     return false;
-  }
+  },
 });

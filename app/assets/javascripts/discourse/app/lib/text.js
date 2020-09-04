@@ -20,7 +20,7 @@ function getOpts(opts) {
       censoredRegexp: context.site.censored_regexp,
       customEmojiTranslation: context.site.custom_emoji_translation,
       siteSettings: context.siteSettings,
-      formatUsername
+      formatUsername,
     },
     opts
   );
@@ -44,7 +44,7 @@ export function cookAsync(text, options) {
 export function generateCookFunction(options) {
   return loadMarkdownIt().then(() => {
     const prettyText = createPrettyText(options);
-    return text => prettyText.cook(text);
+    return (text) => prettyText.cook(text);
   });
 }
 
@@ -59,12 +59,12 @@ export function sanitizeAsync(text, options) {
 }
 
 function loadMarkdownIt() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     let markdownItURL = Session.currentProp("markdownItURL");
     if (markdownItURL) {
       loadScript(markdownItURL)
         .then(() => resolve())
-        .catch(e => {
+        .catch((e) => {
           // eslint-disable-next-line no-console
           console.error(e);
         });
@@ -85,10 +85,10 @@ function emojiOptions() {
   }
 
   return {
-    getURL: url => getURLWithCDN(url),
+    getURL: (url) => getURLWithCDN(url),
     emojiSet: siteSettings.emoji_set,
     enableEmojiShortcuts: siteSettings.enable_emoji_shortcuts,
-    inlineEmoji: siteSettings.enable_inline_emoji_translation
+    inlineEmoji: siteSettings.enable_inline_emoji_translation,
   };
 }
 

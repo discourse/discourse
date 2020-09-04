@@ -26,7 +26,7 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.setProperties({
       saving: false,
-      new_user: ""
+      new_user: "",
     });
   },
 
@@ -36,7 +36,7 @@ export default Controller.extend(ModalFunctionality, {
 
       const options = {
         post_ids: this.get("topicController.selectedPostIds"),
-        username: this.new_user
+        username: this.new_user,
       };
 
       Topic.changeOwners(this.get("topicController.model.id"), options).then(
@@ -57,6 +57,6 @@ export default Controller.extend(ModalFunctionality, {
       );
 
       return false;
-    }
-  }
+    },
+  },
 });

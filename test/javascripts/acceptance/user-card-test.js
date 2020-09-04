@@ -7,10 +7,10 @@ import User from "discourse/models/user";
 
 acceptance("User Card - Show Local Time", {
   loggedIn: true,
-  settings: { display_local_time_in_user_card: true }
+  settings: { display_local_time_in_user_card: true },
 });
 
-QUnit.skip("user card local time", async assert => {
+QUnit.skip("user card local time", async (assert) => {
   User.current().changeTimezone("Australia/Brisbane");
   let cardResponse = Object.assign({}, userFixtures["/u/eviltrout/card.json"]);
   cardResponse.user.timezone = "Australia/Perth";
@@ -18,7 +18,7 @@ QUnit.skip("user card local time", async assert => {
   pretender.get("/u/eviltrout/card.json", () => [
     200,
     { "Content-Type": "application/json" },
-    cardResponse
+    cardResponse,
   ]);
 
   await visit("/t/internationalization-localization/280");
@@ -32,9 +32,7 @@ QUnit.skip("user card local time", async assert => {
 
   assert.ok(visible(".user-card"), "card should appear");
   assert.equal(
-    find(".user-card .local-time")
-      .text()
-      .trim(),
+    find(".user-card .local-time").text().trim(),
     expectedTime,
     "user card contains the user's local time"
   );
@@ -45,7 +43,7 @@ QUnit.skip("user card local time", async assert => {
   pretender.get("/u/charlie/card.json", () => [
     200,
     { "Content-Type": "application/json" },
-    cardResponse
+    cardResponse,
   ]);
 
   await click("a[data-user-card=charlie]:first");
@@ -56,9 +54,7 @@ QUnit.skip("user card local time", async assert => {
     .format("h:mm a");
 
   assert.equal(
-    find(".user-card .local-time")
-      .text()
-      .trim(),
+    find(".user-card .local-time").text().trim(),
     expectedTime,
     "opening another user card updates the local time in the card (no caching)"
   );
@@ -66,7 +62,7 @@ QUnit.skip("user card local time", async assert => {
 
 QUnit.test(
   "user card local time - does not update timezone for another user",
-  async assert => {
+  async (assert) => {
     User.current().changeTimezone("Australia/Brisbane");
     let cardResponse = Object.assign({}, userFixtures["/u/charlie/card.json"]);
     delete cardResponse.user.timezone;
@@ -74,7 +70,7 @@ QUnit.test(
     pretender.get("/u/charlie/card.json", () => [
       200,
       { "Content-Type": "application/json" },
-      cardResponse
+      cardResponse,
     ]);
 
     await visit("/t/internationalization-localization/280");
@@ -89,16 +85,14 @@ QUnit.test(
 
 acceptance("User Card", { loggedIn: true });
 
-QUnit.skip("user card", async assert => {
+QUnit.skip("user card", async (assert) => {
   await visit("/t/internationalization-localization/280");
   assert.ok(invisible(".user-card"), "user card is invisible by default");
 
   await click("a[data-user-card=eviltrout]:first");
   assert.ok(visible(".user-card"), "card should appear");
   assert.equal(
-    find(".user-card .username")
-      .text()
-      .trim(),
+    find(".user-card .username").text().trim(),
     "eviltrout",
     "user card contains the data"
   );
@@ -113,9 +107,7 @@ QUnit.skip("user card", async assert => {
   await click("a[data-user-card=charlie]:first");
   assert.ok(visible(".user-card"), "card should appear");
   assert.equal(
-    find(".user-card .username")
-      .text()
-      .trim(),
+    find(".user-card .username").text().trim(),
     "charlie",
     "user card contains the data"
   );
@@ -138,9 +130,7 @@ QUnit.skip("user card", async assert => {
   await click("a.mention .icon");
   assert.ok(visible(".user-card"), "card should appear");
   assert.equal(
-    find(".user-card .username")
-      .text()
-      .trim(),
+    find(".user-card .username").text().trim(),
     "eviltrout",
     "user card contains the data"
   );

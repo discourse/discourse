@@ -15,8 +15,8 @@ export default SingleSelectHeaderComponent.extend({
     "selectKit.isExpanded",
     "caretUpIcon",
     "caretDownIcon",
-    function() {
+    function () {
       return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
     }
-  )
+  ),
 });

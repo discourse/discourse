@@ -37,16 +37,16 @@ const Theme = RestModel.extend({
         name: "translations",
         icon: "globe",
         advanced: true,
-        customNames: true
+        customNames: true,
       },
       {
         id: 5,
         name: "extra_scss",
         icon: "paint-brush",
         advanced: true,
-        customNames: true
-      }
-    ].map(target => {
+        customNames: true,
+      },
+    ].map((target) => {
       target["edited"] = this.hasEdited(target.name);
       target["error"] = this.hasError(target.name);
       return target;
@@ -61,12 +61,12 @@ const Theme = RestModel.extend({
       "header",
       "after_header",
       "body_tag",
-      "footer"
+      "footer",
     ];
 
     const scss_fields = (this.theme_fields || [])
-      .filter(f => f.target === "extra_scss" && f.name !== "")
-      .map(f => f.name);
+      .filter((f) => f.target === "extra_scss" && f.name !== "")
+      .map((f) => f.name);
 
     if (scss_fields.length < 1) {
       scss_fields.push("importable_scss");
@@ -80,10 +80,10 @@ const Theme = RestModel.extend({
       translations: [
         "en",
         ...(this.theme_fields || [])
-          .filter(f => f.target === "translations" && f.name !== "en")
-          .map(f => f.name)
+          .filter((f) => f.target === "translations" && f.name !== "en")
+          .map((f) => f.name),
       ],
-      extra_scss: scss_fields
+      extra_scss: scss_fields,
     };
   },
 
@@ -94,12 +94,12 @@ const Theme = RestModel.extend({
   )
   fields(fieldNames) {
     const hash = {};
-    Object.keys(fieldNames).forEach(target => {
-      hash[target] = fieldNames[target].map(fieldName => {
+    Object.keys(fieldNames).forEach((target) => {
+      hash[target] = fieldNames[target].map((fieldName) => {
         const field = {
           name: fieldName,
           edited: this.hasEdited(target, fieldName),
-          error: this.hasError(target, fieldName)
+          error: this.hasError(target, fieldName),
         };
 
         if (target === "translations" || target === "extra_scss") {
@@ -129,7 +129,7 @@ const Theme = RestModel.extend({
     }
 
     let hash = {};
-    fields.forEach(field => {
+    fields.forEach((field) => {
       if (!field.type_id || FIELDS_IDS.includes(field.type_id)) {
         hash[this.getKey(field)] = field;
       }
@@ -143,19 +143,21 @@ const Theme = RestModel.extend({
       return [];
     }
     return fields.filter(
-      f => f.target === "common" && f.type_id === THEME_UPLOAD_VAR
+      (f) => f.target === "common" && f.type_id === THEME_UPLOAD_VAR
     );
   },
 
   @discourseComputed("theme_fields", "theme_fields.@each.error")
   isBroken(fields) {
-    return fields && fields.any(field => field.error && field.error.length > 0);
+    return (
+      fields && fields.any((field) => field.error && field.error.length > 0)
+    );
   },
 
   @discourseComputed("theme_fields.[]")
   editedFields(fields) {
     return fields.filter(
-      field => !isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
+      (field) => !isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
     );
   },
 
@@ -176,15 +178,15 @@ const Theme = RestModel.extend({
     } else {
       let fields = this.theme_fields || [];
       return fields.any(
-        field => field.target === target && !isEmpty(field.value)
+        (field) => field.target === target && !isEmpty(field.value)
       );
     }
   },
 
   hasError(target, name) {
     return this.theme_fields
-      .filter(f => f.target === target && (!name || name === f.name))
-      .any(f => f.error);
+      .filter((f) => f.target === target && (!name || name === f.name))
+      .any((f) => f.error);
   },
 
   getError(target, name) {
@@ -219,7 +221,7 @@ const Theme = RestModel.extend({
     if (type_id && type_id > 1) {
       let fields = this.theme_fields;
       let existing = fields.find(
-        f => f.target === target && f.name === name && f.type_id === type_id
+        (f) => f.target === target && f.name === name && f.type_id === type_id
       );
       if (existing) {
         existing.value = value;
@@ -253,7 +255,7 @@ const Theme = RestModel.extend({
   @discourseComputed("childThemes.[]")
   child_theme_ids(childThemes) {
     if (childThemes) {
-      return childThemes.map(theme => get(theme, "id"));
+      return childThemes.map((theme) => get(theme, "id"));
     }
   },
 
@@ -290,11 +292,11 @@ const Theme = RestModel.extend({
   },
 
   updateToLatest() {
-    return ajax(this.diffLocalChangesUrl).then(json => {
+    return ajax(this.diffLocalChangesUrl).then((json) => {
       if (json && json.error) {
         bootbox.alert(
           I18n.t("generic_error_with_reason", {
-            error: json.error
+            error: json.error,
           })
         );
       } else if (json && json.diff) {
@@ -305,7 +307,7 @@ const Theme = RestModel.extend({
             )}</code></pre>`,
           I18n.t("cancel"),
           I18n.t("admin.customize.theme.update_confirm_yes"),
-          result => {
+          (result) => {
             if (result) {
               return this.save({ remote_update: true }).then(() =>
                 this.set("changed", false)
@@ -340,7 +342,7 @@ const Theme = RestModel.extend({
 
   saveTranslation(name, value) {
     return this.save({ translations: { [name]: value } });
-  }
+  },
 });
 
 export default Theme;

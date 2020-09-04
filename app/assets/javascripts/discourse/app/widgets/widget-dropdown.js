@@ -91,7 +91,7 @@ export const WidgetDropdownHeaderClass = {
 
   _buildLabel(attrs) {
     return attrs.translatedLabel ? attrs.translatedLabel : I18n.t(attrs.label);
-  }
+  },
 };
 
 createWidget("widget-dropdown-header", WidgetDropdownHeaderClass);
@@ -108,21 +108,21 @@ export const WidgetDropdownItemClass = {
           ? attrs.item.html
           : attrs.item.translatedLabel
           ? attrs.item.translatedLabel
-          : I18n.t(attrs.item.label)
+          : I18n.t(attrs.item.label),
     };
   },
 
   buildAttributes(attrs) {
     return {
       "data-id": attrs.item.id,
-      tabindex: attrs.item === "separator" ? -1 : 0
+      tabindex: attrs.item === "separator" ? -1 : 0,
     };
   },
 
   buildClasses(attrs) {
     return [
       "widget-dropdown-item",
-      attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`
+      attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`,
     ].join(" ");
   },
 
@@ -144,7 +144,7 @@ export const WidgetDropdownItemClass = {
       {{d-icon attrs.item.icon}}
     {{/if}}
     {{{transformed.content}}}
-  `
+  `,
 };
 
 createWidget("widget-dropdown-item", WidgetDropdownItemClass);
@@ -167,7 +167,7 @@ export const WidgetDropdownBodyClass = {
         attrs=(hash item=item)
       }}
     {{/each}}
-  `
+  `,
 };
 
 createWidget("widget-dropdown-body", WidgetDropdownBodyClass);
@@ -189,7 +189,7 @@ export const WidgetDropdownClass = {
     }
   },
 
-  buildKey: attrs => {
+  buildKey: (attrs) => {
     return attrs.id;
   },
 
@@ -199,7 +199,7 @@ export const WidgetDropdownClass = {
 
   defaultState() {
     return {
-      opened: false
+      opened: false,
     };
   },
 
@@ -211,7 +211,7 @@ export const WidgetDropdownClass = {
 
   transform(attrs) {
     return {
-      options: attrs.options || {}
+      options: attrs.options || {},
     };
   },
 
@@ -262,15 +262,15 @@ export const WidgetDropdownClass = {
         placement: "bottom-start",
         modifiers: [
           {
-            name: "preventOverflow"
+            name: "preventOverflow",
           },
           {
             name: "offset",
             options: {
-              offset: [0, 5]
-            }
-          }
-        ]
+              offset: [0, 5],
+            },
+          },
+        ],
       });
     }
   },
@@ -303,7 +303,7 @@ export const WidgetDropdownClass = {
         }}
       {{/if}}
     {{/if}}
-  `
+  `,
 };
 
 export default createWidget("widget-dropdown", WidgetDropdownClass);

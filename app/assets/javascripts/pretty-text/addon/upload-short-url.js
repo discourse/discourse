@@ -17,19 +17,19 @@ export function lookupUncachedUploadUrls(urls, ajax) {
 
   return ajax("/uploads/lookup-urls", {
     type: "POST",
-    data: { short_urls: urls }
-  }).then(uploads => {
-    uploads.forEach(upload => {
+    data: { short_urls: urls },
+  }).then((uploads) => {
+    uploads.forEach((upload) => {
       cacheShortUploadUrl(upload.short_url, {
         url: upload.url,
-        short_path: upload.short_path
+        short_path: upload.short_path,
       });
     });
 
-    urls.forEach(url =>
+    urls.forEach((url) =>
       cacheShortUploadUrl(url, {
         url: lookupCachedUploadUrl(url).url || MISSING,
-        short_path: lookupCachedUploadUrl(url).short_path || MISSING
+        short_path: lookupCachedUploadUrl(url).short_path || MISSING,
       })
     );
 
@@ -124,22 +124,22 @@ function getAttributeBasedUrl(dataAttribute, cachedUpload, siteSettings) {
 }
 
 function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
-  uploadElements.forEach(upload => {
+  uploadElements.forEach((upload) => {
     switch (upload.tagName) {
       case "A":
-        retrieveCachedUrl(upload, siteSettings, "orig-href", opts, url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-href", opts, (url) => {
           upload.href = url;
         });
 
         break;
       case "IMG":
-        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, (url) => {
           upload.src = url;
         });
 
         break;
       case "SOURCE": // video/audio tag > source tag
-        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, url => {
+        retrieveCachedUrl(upload, siteSettings, "orig-src", opts, (url) => {
           if (url.startsWith(`//${window.location.host}`)) {
             let hostRegex = new RegExp("//" + window.location.host, "g");
             url = url.replace(hostRegex, "");
@@ -161,7 +161,7 @@ function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
 }
 
 function _loadShortUrls(uploads, ajax, siteSettings, opts) {
-  let urls = [...uploads].map(upload => {
+  let urls = [...uploads].map((upload) => {
     return (
       upload.getAttribute("data-orig-src") ||
       upload.getAttribute("data-orig-href")

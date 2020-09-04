@@ -15,7 +15,7 @@ export default Controller.extend(ModalFunctionality, {
       linkText: "",
       searchResults: [],
       searchLoading: false,
-      selectedRow: -1
+      selectedRow: -1,
     });
 
     schedule("afterRender", () => {
@@ -90,7 +90,7 @@ export default Controller.extend(ModalFunctionality, {
     this.setProperties({
       linkUrl: el.href,
       searchResults: [],
-      selectedRow: -1
+      selectedRow: -1,
     });
 
     if (!this.linkText && el.dataset.title) {
@@ -104,10 +104,10 @@ export default Controller.extend(ModalFunctionality, {
     if (this.linkUrl.length > 3 && this.linkUrl.indexOf("http") === -1) {
       this.set("searchLoading", true);
       this._activeSearch = searchForTerm(this.linkUrl, {
-        typeFilter: "topic"
+        typeFilter: "topic",
       });
       this._activeSearch
-        .then(results => {
+        .then((results) => {
           if (results && results.topics && results.topics.length > 0) {
             this.set("searchResults", results.topics);
           } else {
@@ -129,7 +129,7 @@ export default Controller.extend(ModalFunctionality, {
     }
     this.setProperties({
       searchResults: [],
-      searchLoading: false
+      searchLoading: false,
     });
   },
 
@@ -180,6 +180,6 @@ export default Controller.extend(ModalFunctionality, {
     },
     search() {
       this._debounced = debounce(this, this.triggerSearch, 400);
-    }
-  }
+    },
+  },
 });

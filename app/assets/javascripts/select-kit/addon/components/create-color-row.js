@@ -14,5 +14,5 @@ export default SelectKitRowComponent.extend({
       const color = escapeExpression(this.rowValue);
       this.element.style.borderLeftColor = `#${color}`;
     });
-  }
+  },
 });

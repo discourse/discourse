@@ -5,13 +5,13 @@ moduleForComponent("select-kit/dropdown-select-box", {
   integration: true,
   beforeEach() {
     this.set("subject", selectKit());
-  }
+  },
 });
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
   { id: 2, name: "bar" },
-  { id: 3, name: "baz" }
+  { id: 3, name: "baz" },
 ];
 
 const DEFAULT_VALUE = 1;
@@ -21,9 +21,9 @@ const setDefaultState = (ctx, options) => {
     {
       content: DEFAULT_CONTENT,
       value: DEFAULT_VALUE,
-      onChange: value => {
+      onChange: (value) => {
         this.set("value", value);
-      }
+      },
     },
     options || {}
   );
@@ -51,7 +51,7 @@ componentTest("selection behavior", {
       this.subject.isExpanded(),
       "it collapses the dropdown on select"
     );
-  }
+  },
 });
 
 componentTest("options.showFullTitle=false", {
@@ -71,30 +71,22 @@ componentTest("options.showFullTitle=false", {
     setDefaultState(this, {
       value: null,
       showFullTitle: false,
-      none: "test_none"
+      none: "test_none",
     });
   },
 
   async test(assert) {
     assert.ok(
-      !exists(
-        this.subject
-          .header()
-          .el()
-          .find(".selected-name")
-      ),
+      !exists(this.subject.header().el().find(".selected-name")),
       "it hides the text of the selected item"
     );
 
     assert.equal(
-      this.subject
-        .header()
-        .el()
-        .attr("title"),
+      this.subject.header().el().attr("title"),
       "[en_US.test_none]",
       "it adds a title attribute to the button"
     );
-  }
+  },
 });
 
 componentTest("options.showFullTitle=true", {
@@ -114,13 +106,8 @@ componentTest("options.showFullTitle=true", {
 
   async test(assert) {
     assert.ok(
-      exists(
-        this.subject
-          .header()
-          .el()
-          .find(".selected-name")
-      ),
+      exists(this.subject.header().el().find(".selected-name")),
       "it shows the text of the selected item"
     );
-  }
+  },
 });

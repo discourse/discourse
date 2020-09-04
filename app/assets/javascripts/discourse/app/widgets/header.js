@@ -37,12 +37,12 @@ const dropdown = {
     if (!this.attrs.active) {
       this.sendWidgetAction(this.attrs.action);
     }
-  }
+  },
 };
 
 createWidget("header-notifications", {
   settings: {
-    avatarSize: "medium"
+    avatarSize: "medium",
   },
 
   html(attrs) {
@@ -50,7 +50,7 @@ createWidget("header-notifications", {
 
     let avatarAttrs = {
       template: user.get("avatar_template"),
-      username: user.get("username")
+      username: user.get("username"),
     };
 
     if (this.siteSettings.enable_names) {
@@ -61,7 +61,7 @@ createWidget("header-notifications", {
       avatarImg(
         this.settings.avatarSize,
         addExtraUserClasses(user, avatarAttrs)
-      )
+      ),
     ];
 
     const unreadNotifications = user.get("unread_notifications");
@@ -73,7 +73,7 @@ createWidget("header-notifications", {
           rawLabel: unreadNotifications,
           omitSpan: true,
           title: "notifications.tooltip.regular",
-          titleOptions: { count: unreadNotifications }
+          titleOptions: { count: unreadNotifications },
         })
       );
     }
@@ -102,9 +102,9 @@ createWidget("header-notifications", {
                     className: "skip-new-user-tips",
                     label: "user.skip_new_user_tips.skip_link",
                     title: "user.skip_new_user_tips.description",
-                    omitSpan: true
-                  })
-                ])
+                    omitSpan: true,
+                  }),
+                ]),
               ])
             )
           );
@@ -119,13 +119,13 @@ createWidget("header-notifications", {
           rawLabel: unreadHighPriority,
           omitSpan: true,
           title: "notifications.tooltip.high_priority",
-          titleOptions: { count: unreadHighPriority }
+          titleOptions: { count: unreadHighPriority },
         })
       );
     }
 
     return contents;
-  }
+  },
 });
 
 createWidget(
@@ -145,12 +145,12 @@ createWidget(
             attributes: {
               href: attrs.user.get("path"),
               title: attrs.user.get("name"),
-              "data-auto-route": true
-            }
+              "data-auto-route": true,
+            },
           },
           this.attach("header-notifications", attrs)
         );
-      }
+      },
     },
     dropdown
   )
@@ -178,12 +178,12 @@ createWidget(
               "data-auto-route": true,
               title,
               "aria-label": title,
-              id: attrs.iconId
-            }
+              id: attrs.iconId,
+            },
           },
           body
         );
-      }
+      },
     },
     dropdown
   )
@@ -204,7 +204,7 @@ createWidget("header-icons", {
     const icons = [];
 
     if (_extraHeaderIcons) {
-      _extraHeaderIcons.forEach(icon => {
+      _extraHeaderIcons.forEach((icon) => {
         icons.push(this.attach(icon));
       });
     }
@@ -216,7 +216,7 @@ createWidget("header-icons", {
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
       href: getURL("/search"),
-      classNames: ["search-dropdown"]
+      classNames: ["search-dropdown"],
     });
 
     icons.push(search);
@@ -237,13 +237,13 @@ createWidget("header-icons", {
             "div.badge-notification.reviewables",
             {
               attributes: {
-                title: I18n.t("notifications.reviewable_items")
-              }
+                title: I18n.t("notifications.reviewable_items"),
+              },
             },
             this.currentUser.reviewable_count
           );
         }
-      }
+      },
     });
 
     icons.push(hamburger);
@@ -254,13 +254,13 @@ createWidget("header-icons", {
           active: attrs.userVisible,
           action: "toggleUserMenu",
           ringBackdrop: attrs.ringBackdrop,
-          user: attrs.user
+          user: attrs.user,
         })
       );
     }
 
     return icons;
-  }
+  },
 });
 
 createWidget("header-buttons", {
@@ -278,7 +278,7 @@ createWidget("header-buttons", {
         this.attach("button", {
           label: "sign_up",
           className: "btn-primary btn-small sign-up-button",
-          action: "showCreateAccount"
+          action: "showCreateAccount",
         })
       );
     }
@@ -288,11 +288,11 @@ createWidget("header-buttons", {
         label: "log_in",
         className: "btn-primary btn-small login-button",
         action: "showLogin",
-        icon: "user"
+        icon: "user",
       })
     );
     return buttons;
-  }
+  },
 });
 
 createWidget("header-cloak", {
@@ -301,7 +301,7 @@ createWidget("header-cloak", {
     return "";
   },
   click() {},
-  scheduleRerender() {}
+  scheduleRerender() {},
 });
 
 const forceContextEnabled = ["category", "user", "private_messages", "tag"];
@@ -320,7 +320,7 @@ export default createWidget("header", {
       searchVisible: false,
       hamburgerVisible: false,
       userVisible: false,
-      ringBackdrop: true
+      ringBackdrop: true,
     };
 
     if (this.site.mobileView) {
@@ -338,7 +338,7 @@ export default createWidget("header", {
         searchVisible: state.searchVisible,
         ringBackdrop: state.ringBackdrop,
         flagCount: attrs.flagCount,
-        user: this.currentUser
+        user: this.currentUser,
       });
 
       if (attrs.onlyIcons) {
@@ -370,7 +370,7 @@ export default createWidget("header", {
         panels.push(this.attach("user-menu"));
       }
 
-      additionalPanels.map(panel => {
+      additionalPanels.map((panel) => {
         if (this.state[panel.toggle]) {
           panels.push(
             this.attach(
@@ -421,8 +421,8 @@ export default createWidget("header", {
           data: {
             search_log_id: searchLogId,
             search_result_id: searchResultId,
-            search_result_type: searchResultType
-          }
+            search_result_type: searchResultType,
+          },
         });
       }
     }
@@ -470,7 +470,7 @@ export default createWidget("header", {
           this.siteSettings,
           this.appEvents,
           {
-            appendSelector: ".menu-panel"
+            appendSelector: ".menu-panel",
           }
         );
       });
@@ -495,11 +495,11 @@ export default createWidget("header", {
     if (!this.site.mobileView) return;
     if (bool) {
       document.body.addEventListener("touchmove", this.preventDefault, {
-        passive: false
+        passive: false,
       });
     } else {
       document.body.removeEventListener("touchmove", this.preventDefault, {
-        passive: false
+        passive: false,
       });
     }
   },
@@ -525,7 +525,7 @@ export default createWidget("header", {
       .get("_router.currentPath");
     const blocklist = [/^discovery\.categories/];
     const allowlist = [/^topic\./];
-    const check = function(regex) {
+    const check = function (regex) {
       return !!currentPath.match(regex);
     };
     let showSearch = allowlist.any(check) && !blocklist.any(check);
@@ -578,7 +578,7 @@ export default createWidget("header", {
         {
           recent: true,
           silent: this.get("currentUser.enforcedSecondFactor"),
-          limit: 5
+          limit: 5,
         },
         { cacheKey: "recent-notifications" }
       )
@@ -593,8 +593,8 @@ export default createWidget("header", {
     ajax(userPath(this.currentUser.username_lower), {
       type: "PUT",
       data: {
-        skip_new_user_tips: true
-      }
+        skip_new_user_tips: true,
+      },
     }).then(() => {
       this.currentUser.set("skip_new_user_tips", true);
     });
@@ -632,5 +632,5 @@ export default createWidget("header", {
         return get(ctx, "type");
       }
     }
-  }
+  },
 });

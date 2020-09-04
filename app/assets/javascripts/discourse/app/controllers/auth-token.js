@@ -10,7 +10,7 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     ajax(
       userPath(`${this.get("currentUser.username_lower")}/activity.json`)
-    ).then(posts => {
+    ).then((posts) => {
       if (posts.length > 0) {
         this.set("latest_post", posts[0]);
       }
@@ -35,9 +35,9 @@ export default Controller.extend(ModalFunctionality, {
 
         window.scrollTo({
           top: $prefPasswordDiv.offset().top,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       });
-    }
-  }
+    },
+  },
 });

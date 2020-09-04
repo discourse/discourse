@@ -4,21 +4,21 @@ import createStore from "helpers/create-store";
 import RestModel from "discourse/models/rest";
 import RestAdapter from "discourse/adapters/rest";
 
-QUnit.test("munging", assert => {
+QUnit.test("munging", (assert) => {
   const store = createStore();
   const Grape = RestModel.extend();
   Grape.reopenClass({
-    munge: function(json) {
+    munge: function (json) {
       json.inverse = 1 - json.percent;
       return json;
-    }
+    },
   });
 
   var g = Grape.create({ store, percent: 0.4 });
   assert.equal(g.get("inverse"), 0.6, "it runs `munge` on `create`");
 });
 
-QUnit.test("update", async assert => {
+QUnit.test("update", async (assert) => {
   const store = createStore();
   const widget = await store.find("widget", 123);
   assert.equal(widget.get("name"), "Trout Lure");
@@ -39,7 +39,7 @@ QUnit.test("update", async assert => {
   assert.equal(result.target.name, widget.get("name"));
 });
 
-QUnit.test("updating simultaneously", async assert => {
+QUnit.test("updating simultaneously", async (assert) => {
   assert.expect(2);
 
   const store = createStore();
@@ -48,16 +48,16 @@ QUnit.test("updating simultaneously", async assert => {
   const firstPromise = widget.update({ name: "new name" });
   const secondPromise = widget.update({ name: "new name" });
 
-  firstPromise.then(function() {
+  firstPromise.then(function () {
     assert.ok(true, "the first promise succeeeds");
   });
 
-  secondPromise.catch(function() {
+  secondPromise.catch(function () {
     assert.ok(true, "the second promise fails");
   });
 });
 
-QUnit.test("save new", async assert => {
+QUnit.test("save new", async (assert) => {
   const store = createStore();
   const widget = store.createRecord("widget");
 
@@ -83,7 +83,7 @@ QUnit.test("save new", async assert => {
   assert.equal(result.target.name, widget.get("name"));
 });
 
-QUnit.test("creating simultaneously", assert => {
+QUnit.test("creating simultaneously", (assert) => {
   assert.expect(2);
 
   const store = createStore();
@@ -91,31 +91,31 @@ QUnit.test("creating simultaneously", assert => {
 
   const firstPromise = widget.save({ name: "Evil Widget" });
   const secondPromise = widget.save({ name: "Evil Widget" });
-  firstPromise.then(function() {
+  firstPromise.then(function () {
     assert.ok(true, "the first promise succeeeds");
   });
 
-  secondPromise.catch(function() {
+  secondPromise.catch(function () {
     assert.ok(true, "the second promise fails");
   });
 });
 
-QUnit.test("destroyRecord", async assert => {
+QUnit.test("destroyRecord", async (assert) => {
   const store = createStore();
   const widget = await store.find("widget", 123);
 
   assert.ok(await widget.destroyRecord());
 });
 
-QUnit.test("custom api name", async assert => {
-  const store = createStore(type => {
+QUnit.test("custom api name", async (assert) => {
+  const store = createStore((type) => {
     if (type === "adapter:my-widget") {
       return RestAdapter.extend({
         // An adapter like this is used when the server-side key/url
         // do not match the name of the es6 class
         apiNameFor() {
           return "widget";
-        }
+        },
       }).create();
     }
   });

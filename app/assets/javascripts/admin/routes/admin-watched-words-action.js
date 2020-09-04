@@ -14,7 +14,7 @@ export default DiscourseRoute.extend({
     return EmberObject.create({
       nameKey: params.action_id,
       name: I18n.t("admin.watched_words.actions." + params.action_id),
-      words: filteredContent
+      words: filteredContent,
     });
-  }
+  },
 });

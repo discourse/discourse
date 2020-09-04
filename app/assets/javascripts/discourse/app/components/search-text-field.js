@@ -24,5 +24,5 @@ export default TextField.extend({
     // at the top of the page
     $(window).scrollTop(0);
     $searchInput.focus();
-  }
+  },
 });

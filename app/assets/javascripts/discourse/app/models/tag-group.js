@@ -14,5 +14,5 @@ export default RestModel.extend({
     } else {
       return "private";
     }
-  }
+  },
 });

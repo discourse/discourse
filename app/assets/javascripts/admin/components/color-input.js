@@ -18,7 +18,7 @@ export default Component.extend({
 
   styleSelection: true,
 
-  maxlength: computed("onlyHex", function() {
+  maxlength: computed("onlyHex", function () {
     return this.onlyHex ? 6 : null;
   }),
 
@@ -28,7 +28,7 @@ export default Component.extend({
   },
 
   @observes("hexValue", "brightnessValue", "valid")
-  hexValueChanged: function() {
+  hexValueChanged: function () {
     const hex = this.hexValue;
     let text = this.element.querySelector("input.hex-input");
 
@@ -47,7 +47,7 @@ export default Component.extend({
 
       if (this.pickerLoaded) {
         $(this.element.querySelector(".picker")).spectrum({
-          color: "#" + hex
+          color: "#" + hex,
         });
       }
     } else {
@@ -69,5 +69,5 @@ export default Component.extend({
       });
     });
     schedule("afterRender", () => this.hexValueChanged());
-  }
+  },
 });

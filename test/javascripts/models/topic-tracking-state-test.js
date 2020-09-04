@@ -11,49 +11,49 @@ QUnit.module("model:topic-tracking-state", {
 
   afterEach() {
     this.clock.restore();
-  }
+  },
 });
 
-QUnit.test("tag counts", function(assert) {
+QUnit.test("tag counts", function (assert) {
   const state = TopicTrackingState.create();
 
   state.loadStates([
     {
       topic_id: 1,
       last_read_post_number: null,
-      tags: ["foo", "new"]
+      tags: ["foo", "new"],
     },
     {
       topic_id: 2,
       last_read_post_number: null,
-      tags: ["new"]
+      tags: ["new"],
     },
     {
       topic_id: 3,
       last_read_post_number: null,
-      tags: ["random"]
+      tags: ["random"],
     },
     {
       topic_id: 4,
       last_read_post_number: 1,
       highest_post_number: 7,
       tags: ["unread"],
-      notification_level: NotificationLevels.TRACKING
+      notification_level: NotificationLevels.TRACKING,
     },
     {
       topic_id: 5,
       last_read_post_number: 1,
       highest_post_number: 7,
       tags: ["bar", "unread"],
-      notification_level: NotificationLevels.TRACKING
+      notification_level: NotificationLevels.TRACKING,
     },
     {
       topic_id: 6,
       last_read_post_number: 1,
       highest_post_number: 7,
       tags: null,
-      notification_level: NotificationLevels.TRACKING
-    }
+      notification_level: NotificationLevels.TRACKING,
+    },
   ]);
 
   const states = state.countTags(["new", "unread"]);
@@ -64,24 +64,24 @@ QUnit.test("tag counts", function(assert) {
   assert.equal(states["unread"].newCount, 0, "unread counts");
 });
 
-QUnit.test("forEachTracked", function(assert) {
+QUnit.test("forEachTracked", function (assert) {
   const state = TopicTrackingState.create();
 
   state.loadStates([
     {
       topic_id: 1,
       last_read_post_number: null,
-      tags: ["foo", "new"]
+      tags: ["foo", "new"],
     },
     {
       topic_id: 2,
       last_read_post_number: null,
-      tags: ["new"]
+      tags: ["new"],
     },
     {
       topic_id: 3,
       last_read_post_number: null,
-      tags: ["random"]
+      tags: ["random"],
     },
     {
       topic_id: 4,
@@ -89,7 +89,7 @@ QUnit.test("forEachTracked", function(assert) {
       highest_post_number: 7,
       category_id: 7,
       tags: ["unread"],
-      notification_level: NotificationLevels.TRACKING
+      notification_level: NotificationLevels.TRACKING,
     },
     {
       topic_id: 5,
@@ -97,15 +97,15 @@ QUnit.test("forEachTracked", function(assert) {
       highest_post_number: 7,
       tags: ["bar", "unread"],
       category_id: 7,
-      notification_level: NotificationLevels.TRACKING
+      notification_level: NotificationLevels.TRACKING,
     },
     {
       topic_id: 6,
       last_read_post_number: 1,
       highest_post_number: 7,
       tags: null,
-      notification_level: NotificationLevels.TRACKING
-    }
+      notification_level: NotificationLevels.TRACKING,
+    },
   ]);
 
   let randomUnread = 0,
@@ -139,7 +139,7 @@ QUnit.test("forEachTracked", function(assert) {
   assert.equal(sevenUnread, 2, "seven unread");
 });
 
-QUnit.test("sync", function(assert) {
+QUnit.test("sync", function (assert) {
   const state = TopicTrackingState.create();
   state.states["t111"] = { last_read_post_number: null };
 
@@ -150,9 +150,9 @@ QUnit.test("sync", function(assert) {
         highest_post_number: null,
         id: 111,
         unread: 10,
-        new_posts: 10
-      }
-    ]
+        new_posts: 10,
+      },
+    ],
   };
 
   state.sync(list, "new");
@@ -163,13 +163,13 @@ QUnit.test("sync", function(assert) {
   );
 });
 
-QUnit.test("subscribe to category", function(assert) {
+QUnit.test("subscribe to category", function (assert) {
   const store = createStore();
   const darth = store.createRecord("category", { id: 1, slug: "darth" }),
     luke = store.createRecord("category", {
       id: 2,
       slug: "luke",
-      parentCategory: darth
+      parentCategory: darth,
     }),
     categoryList = [darth, luke];
 
@@ -182,17 +182,17 @@ QUnit.test("subscribe to category", function(assert) {
   state.notify({
     message_type: "new_topic",
     topic_id: 1,
-    payload: { category_id: 2, topic_id: 1 }
+    payload: { category_id: 2, topic_id: 1 },
   });
   state.notify({
     message_type: "new_topic",
     topic_id: 2,
-    payload: { category_id: 3, topic_id: 2 }
+    payload: { category_id: 3, topic_id: 2 },
   });
   state.notify({
     message_type: "new_topic",
     topic_id: 3,
-    payload: { category_id: 1, topic_id: 3 }
+    payload: { category_id: 1, topic_id: 3 },
   });
 
   assert.equal(
@@ -207,17 +207,17 @@ QUnit.test("subscribe to category", function(assert) {
   state.notify({
     message_type: "new_topic",
     topic_id: 1,
-    payload: { category_id: 2, topic_id: 1 }
+    payload: { category_id: 2, topic_id: 1 },
   });
   state.notify({
     message_type: "new_topic",
     topic_id: 2,
-    payload: { category_id: 3, topic_id: 2 }
+    payload: { category_id: 3, topic_id: 2 },
   });
   state.notify({
     message_type: "new_topic",
     topic_id: 3,
-    payload: { category_id: 1, topic_id: 3 }
+    payload: { category_id: 1, topic_id: 3 },
   });
 
   assert.equal(
@@ -227,18 +227,18 @@ QUnit.test("subscribe to category", function(assert) {
   );
 });
 
-QUnit.test("getSubCategoryIds", assert => {
+QUnit.test("getSubCategoryIds", (assert) => {
   const store = createStore();
   const foo = store.createRecord("category", { id: 1, slug: "foo" });
   const bar = store.createRecord("category", {
     id: 2,
     slug: "bar",
-    parent_category_id: foo.id
+    parent_category_id: foo.id,
   });
   const baz = store.createRecord("category", {
     id: 3,
     slug: "baz",
-    parent_category_id: bar.id
+    parent_category_id: bar.id,
   });
   sandbox.stub(Category, "list").returns([foo, bar, baz]);
 
@@ -248,31 +248,31 @@ QUnit.test("getSubCategoryIds", assert => {
   assert.deepEqual(Array.from(state.getSubCategoryIds(3)), [3]);
 });
 
-QUnit.test("countNew", assert => {
+QUnit.test("countNew", (assert) => {
   const store = createStore();
   const foo = store.createRecord("category", {
     id: 1,
-    slug: "foo"
+    slug: "foo",
   });
   const bar = store.createRecord("category", {
     id: 2,
     slug: "bar",
-    parent_category_id: foo.id
+    parent_category_id: foo.id,
   });
   const baz = store.createRecord("category", {
     id: 3,
     slug: "baz",
-    parent_category_id: bar.id
+    parent_category_id: bar.id,
   });
   const qux = store.createRecord("category", {
     id: 4,
-    slug: "qux"
+    slug: "qux",
   });
   sandbox.stub(Category, "list").returns([foo, bar, baz, qux]);
 
   let currentUser = User.create({
     username: "chuck",
-    muted_category_ids: [4]
+    muted_category_ids: [4],
   });
 
   const state = TopicTrackingState.create({ currentUser });
@@ -285,7 +285,7 @@ QUnit.test("countNew", assert => {
     last_read_post_number: null,
     id: 112,
     notification_level: NotificationLevels.TRACKING,
-    category_id: 2
+    category_id: 2,
   };
 
   assert.equal(state.countNew(1), 1);
@@ -298,7 +298,7 @@ QUnit.test("countNew", assert => {
     id: 113,
     notification_level: NotificationLevels.TRACKING,
     category_id: 3,
-    tags: ["amazing"]
+    tags: ["amazing"],
   };
 
   assert.equal(state.countNew(1), 2);
@@ -311,7 +311,7 @@ QUnit.test("countNew", assert => {
     last_read_post_number: null,
     id: 111,
     notification_level: NotificationLevels.TRACKING,
-    category_id: 1
+    category_id: 1,
   };
 
   assert.equal(state.countNew(1), 3);
@@ -321,15 +321,15 @@ QUnit.test("countNew", assert => {
   state.states["t115"] = {
     last_read_post_number: null,
     id: 115,
-    category_id: 4
+    category_id: 4,
   };
   assert.equal(state.countNew(4), 0);
 });
 
-QUnit.test("mute topic", function(assert) {
+QUnit.test("mute topic", function (assert) {
   let currentUser = User.create({
     username: "chuck",
-    muted_category_ids: []
+    muted_category_ids: [],
   });
 
   const state = TopicTrackingState.create({ currentUser });

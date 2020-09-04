@@ -10,11 +10,11 @@ export default DiscourseRoute.extend({
 
   model(params) {
     if (PreloadStore.get("invite_info")) {
-      return PreloadStore.getAndRemove("invite_info").then(json =>
+      return PreloadStore.getAndRemove("invite_info").then((json) =>
         deepMerge(params, json)
       );
     } else {
       return {};
     }
-  }
+  },
 });

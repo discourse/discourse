@@ -13,7 +13,7 @@ componentTest("default theme", {
   test(assert) {
     assert.expect(1);
     assert.equal(find(".d-icon-check").length, 1, "shows default theme icon");
-  }
+  },
 });
 
 componentTest("pending updates", {
@@ -28,7 +28,7 @@ componentTest("pending updates", {
   test(assert) {
     assert.expect(1);
     assert.equal(find(".d-icon-sync").length, 1, "shows pending update icon");
-  }
+  },
 });
 
 componentTest("broken theme", {
@@ -38,7 +38,7 @@ componentTest("broken theme", {
       "theme",
       Theme.create({
         name: "Test",
-        theme_fields: [{ name: "scss", type_id: 1, error: "something" }]
+        theme_fields: [{ name: "scss", type_id: 1, error: "something" }],
       })
     );
   },
@@ -50,14 +50,14 @@ componentTest("broken theme", {
       1,
       "shows broken theme icon"
     );
-  }
+  },
 });
 
 componentTest("with children", {
   template: "{{themes-list-item theme=theme}}",
 
   beforeEach() {
-    this.childrenList = [1, 2, 3, 4, 5].map(num =>
+    this.childrenList = [1, 2, 3, 4, 5].map((num) =>
       Theme.create({ name: `Child ${num}`, component: true })
     );
 
@@ -66,7 +66,7 @@ componentTest("with children", {
       Theme.create({
         name: "Test",
         childThemes: this.childrenList,
-        default: true
+        default: true,
       })
     );
   },
@@ -78,20 +78,18 @@ componentTest("with children", {
         .text()
         .trim()
         .split(",")
-        .map(n => n.trim())
+        .map((n) => n.trim())
         .join(","),
       this.childrenList
         .splice(0, 4)
-        .map(theme => theme.get("name"))
+        .map((theme) => theme.get("name"))
         .join(","),
       "lists the first 4 children"
     );
     assert.deepEqual(
-      find(".others-count")
-        .text()
-        .trim(),
+      find(".others-count").text().trim(),
       I18n.t("admin.customize.theme.and_x_more", { count: 1 }),
       "shows count of remaining children"
     );
-  }
+  },
 });

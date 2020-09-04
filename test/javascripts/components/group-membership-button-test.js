@@ -1,8 +1,8 @@
 moduleFor("component:group-membership-button");
 
-QUnit.test("canJoinGroup", function(assert) {
+QUnit.test("canJoinGroup", function (assert) {
   this.subject().setProperties({
-    model: { public_admission: false, is_group_user: true }
+    model: { public_admission: false, is_group_user: true },
   });
 
   assert.equal(
@@ -28,9 +28,9 @@ QUnit.test("canJoinGroup", function(assert) {
   );
 });
 
-QUnit.test("canLeaveGroup", function(assert) {
+QUnit.test("canLeaveGroup", function (assert) {
   this.subject().setProperties({
-    model: { public_exit: false, is_group_user: false }
+    model: { public_exit: false, is_group_user: false },
   });
 
   assert.equal(
@@ -56,9 +56,9 @@ QUnit.test("canLeaveGroup", function(assert) {
   );
 });
 
-QUnit.test("canRequestMembership", function(assert) {
+QUnit.test("canRequestMembership", function (assert) {
   this.subject().setProperties({
-    model: { allow_membership_requests: true, is_group_user: true }
+    model: { allow_membership_requests: true, is_group_user: true },
   });
 
   assert.equal(
@@ -76,9 +76,9 @@ QUnit.test("canRequestMembership", function(assert) {
   );
 });
 
-QUnit.test("userIsGroupUser", function(assert) {
+QUnit.test("userIsGroupUser", function (assert) {
   this.subject().setProperties({
-    model: { is_group_user: true }
+    model: { is_group_user: true },
   });
 
   assert.equal(this.subject().get("userIsGroupUser"), true);

@@ -23,15 +23,15 @@ export default Controller.extend(ModalFunctionality, {
       changeEmail({
         username: login.get("loginName"),
         password: login.get("loginPassword"),
-        email: this.newEmail
+        email: this.newEmail,
       })
         .then(() => {
           const modal = this.showModal("activation-resent", {
-            title: "log_in"
+            title: "log_in",
           });
           modal.set("currentEmail", this.newEmail);
         })
-        .catch(err => this.flash(extractError(err), "error"));
-    }
-  }
+        .catch((err) => this.flash(extractError(err), "error"));
+    },
+  },
 });

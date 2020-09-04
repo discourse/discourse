@@ -4,26 +4,26 @@ import { deepMerge } from "discourse-common/lib/object";
 
 QUnit.module("model: Post");
 
-var buildPost = function(args) {
+var buildPost = function (args) {
   return Post.create(
     deepMerge(
       {
         id: 1,
         can_delete: true,
-        version: 1
+        version: 1,
       },
       args || {}
     )
   );
 };
 
-QUnit.test("defaults", assert => {
+QUnit.test("defaults", (assert) => {
   var post = Post.create({ id: 1 });
   assert.blank(post.get("deleted_at"), "it has no deleted_at by default");
   assert.blank(post.get("deleted_by"), "there is no deleted_by by default");
 });
 
-QUnit.test("new_user", assert => {
+QUnit.test("new_user", (assert) => {
   var post = Post.create({ trust_level: 0 });
   assert.ok(post.get("new_user"), "post is from a new user");
 
@@ -31,7 +31,7 @@ QUnit.test("new_user", assert => {
   assert.ok(!post.get("new_user"), "post is no longer from a new user");
 });
 
-QUnit.test("firstPost", assert => {
+QUnit.test("firstPost", (assert) => {
   var post = Post.create({ post_number: 1 });
   assert.ok(post.get("firstPost"), "it's the first post");
 
@@ -39,25 +39,25 @@ QUnit.test("firstPost", assert => {
   assert.ok(!post.get("firstPost"), "post is no longer the first post");
 });
 
-QUnit.test("updateFromPost", assert => {
+QUnit.test("updateFromPost", (assert) => {
   var post = Post.create({
     post_number: 1,
-    raw: "hello world"
+    raw: "hello world",
   });
 
   post.updateFromPost(
     Post.create({
       raw: "different raw",
-      wat: function() {
+      wat: function () {
         return 123;
-      }
+      },
     })
   );
 
   assert.equal(post.get("raw"), "different raw", "raw field updated");
 });
 
-QUnit.test("destroy by staff", async assert => {
+QUnit.test("destroy by staff", async (assert) => {
   let user = User.create({ username: "staff", moderator: true });
   let post = buildPost({ user: user });
 
@@ -82,7 +82,7 @@ QUnit.test("destroy by staff", async assert => {
   );
 });
 
-QUnit.test("destroy by non-staff", async assert => {
+QUnit.test("destroy by non-staff", async (assert) => {
   const originalCooked = "this is the original cooked value";
   const user = User.create({ username: "evil trout" });
   const post = buildPost({ user: user, cooked: originalCooked });

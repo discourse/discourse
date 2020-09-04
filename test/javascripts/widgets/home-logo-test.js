@@ -25,7 +25,7 @@ widgetTest("basics", {
     assert.ok(find("img#site-logo.logo-big").length === 1);
     assert.equal(find("#site-logo").attr("src"), bigLogo);
     assert.equal(find("#site-logo").attr("alt"), title);
-  }
+  },
 });
 
 widgetTest("basics - minimized", {
@@ -42,7 +42,7 @@ widgetTest("basics - minimized", {
     assert.equal(find("img.logo-small").attr("src"), smallLogo);
     assert.equal(find("img.logo-small").attr("alt"), title);
     assert.equal(find("img.logo-small").attr("width"), 36);
-  }
+  },
 });
 
 widgetTest("no logo", {
@@ -57,7 +57,7 @@ widgetTest("no logo", {
   test(assert) {
     assert.ok(find("h1#site-text-logo.text-logo").length === 1);
     assert.equal(find("#site-text-logo").text(), title);
-  }
+  },
 });
 
 widgetTest("no logo - minimized", {
@@ -71,7 +71,7 @@ widgetTest("no logo - minimized", {
 
   test(assert) {
     assert.ok(find(".d-icon-home").length === 1);
-  }
+  },
 });
 
 widgetTest("mobile logo", {
@@ -85,7 +85,7 @@ widgetTest("mobile logo", {
   test(assert) {
     assert.ok(find("img#site-logo.logo-mobile").length === 1);
     assert.equal(find("#site-logo").attr("src"), mobileLogo);
-  }
+  },
 });
 
 widgetTest("mobile without logo", {
@@ -98,7 +98,7 @@ widgetTest("mobile without logo", {
   test(assert) {
     assert.ok(find("img#site-logo.logo-big").length === 1);
     assert.equal(find("#site-logo").attr("src"), bigLogo);
-  }
+  },
 });
 
 widgetTest("logo with dark mode alternative", {
@@ -126,7 +126,7 @@ widgetTest("logo with dark mode alternative", {
       darkLogo,
       "includes dark mode alternative logo source"
     );
-  }
+  },
 });
 
 widgetTest("mobile logo with dark mode alternative", {
@@ -156,7 +156,7 @@ widgetTest("mobile logo with dark mode alternative", {
       darkLogo,
       "includes dark mode alternative logo source"
     );
-  }
+  },
 });
 
 widgetTest("dark mode enabled but no dark logo set", {
@@ -177,7 +177,7 @@ widgetTest("dark mode enabled but no dark logo set", {
       find("picture").length === 0,
       "does not include alternative logo"
     );
-  }
+  },
 });
 
 widgetTest("dark logo set but no dark mode", {
@@ -194,7 +194,7 @@ widgetTest("dark logo set but no dark mode", {
       find("picture").length === 0,
       "does not include alternative logo"
     );
-  }
+  },
 });
 
 widgetTest("dark color scheme and dark logo set", {
@@ -214,7 +214,7 @@ widgetTest("dark color scheme and dark logo set", {
       find("picture").length === 0,
       "does not add dark mode alternative"
     );
-  }
+  },
 });
 
 widgetTest("dark color scheme and dark logo not set", {
@@ -234,5 +234,5 @@ widgetTest("dark color scheme and dark logo not set", {
       bigLogo,
       "uses regular logo on dark scheme if no dark logo"
     );
-  }
+  },
 });

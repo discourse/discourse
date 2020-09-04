@@ -23,7 +23,7 @@ export function tinyDateYear(date) {
 // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
 // TODO: locale support ?
 export function toTitleCase(str) {
-  return str.replace(/\w\S*/g, function(txt) {
+  return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
@@ -46,12 +46,12 @@ export function longDateNoYear(dt) {
 
 export function updateRelativeAge(elems) {
   // jQuery .each
-  elems.each(function() {
+  elems.each(function () {
     const $this = $(this);
     $this.html(
       relativeAge(new Date($this.data("time")), {
         format: $this.data("format"),
-        wrapInSpan: false
+        wrapInSpan: false,
       })
     );
   });
@@ -108,7 +108,7 @@ export function durationTiny(distance, ageOpts) {
   const dividedDistance = Math.round(distance / 60.0);
   const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
 
-  const t = function(key, opts) {
+  const t = function (key, opts) {
     const result = I18n.t("dates.tiny." + key, opts);
     return ageOpts && ageOpts.addAgo ? wrapAgo(result) : result;
   };
@@ -127,7 +127,7 @@ export function durationTiny(distance, ageOpts) {
       break;
     case distanceInMinutes >= 90 && distanceInMinutes <= 1409:
       formatted = t("about_x_hours", {
-        count: Math.round(distanceInMinutes / 60.0)
+        count: Math.round(distanceInMinutes / 60.0),
       });
       break;
     case distanceInMinutes >= 1410 && distanceInMinutes <= 2519:
@@ -135,12 +135,12 @@ export function durationTiny(distance, ageOpts) {
       break;
     case distanceInMinutes >= 2520 && distanceInMinutes <= 129599:
       formatted = t("x_days", {
-        count: Math.round(distanceInMinutes / 1440.0)
+        count: Math.round(distanceInMinutes / 1440.0),
       });
       break;
     case distanceInMinutes >= 129600 && distanceInMinutes <= 525599:
       formatted = t("x_months", {
-        count: Math.round(distanceInMinutes / 43200.0)
+        count: Math.round(distanceInMinutes / 43200.0),
       });
       break;
     default:
@@ -167,7 +167,7 @@ function relativeAgeTiny(date, ageOpts) {
   const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
 
   let formatted;
-  const t = function(key, opts) {
+  const t = function (key, opts) {
     const result = I18n.t("dates." + format + "." + key, opts);
     return ageOpts && ageOpts.addAgo ? wrapAgo(result) : result;
   };
@@ -184,7 +184,7 @@ function relativeAgeTiny(date, ageOpts) {
       break;
     case distanceInMinutes >= 90 && distanceInMinutes <= 1409:
       formatted = t("about_x_hours", {
-        count: Math.round(distanceInMinutes / 60.0)
+        count: Math.round(distanceInMinutes / 60.0),
       });
       break;
     case siteSettings.relative_date_duration === 0 &&
@@ -197,7 +197,7 @@ function relativeAgeTiny(date, ageOpts) {
     case distanceInMinutes >= 2520 &&
       distanceInMinutes <= (siteSettings.relative_date_duration || 14) * 1440:
       formatted = t("x_days", {
-        count: Math.round(distanceInMinutes / 1440.0)
+        count: Math.round(distanceInMinutes / 1440.0),
       });
       break;
     default:
@@ -220,7 +220,7 @@ export function relativeAgeMediumSpan(distance, leaveAgo) {
   let formatted;
   const distanceInMinutes = Math.round(distance / 60.0);
 
-  const t = function(key, opts) {
+  const t = function (key, opts) {
     return I18n.t(
       "dates.medium" + (leaveAgo ? "_with_ago" : "") + "." + key,
       opts
@@ -242,17 +242,17 @@ export function relativeAgeMediumSpan(distance, leaveAgo) {
       break;
     case distanceInMinutes >= 2520 && distanceInMinutes <= 129599:
       formatted = t("x_days", {
-        count: Math.round((distanceInMinutes - 720.0) / 1440.0)
+        count: Math.round((distanceInMinutes - 720.0) / 1440.0),
       });
       break;
     case distanceInMinutes >= 129600 && distanceInMinutes <= 525599:
       formatted = t("x_months", {
-        count: Math.round(distanceInMinutes / 43200.0)
+        count: Math.round(distanceInMinutes / 43200.0),
       });
       break;
     default:
       formatted = t("x_years", {
-        count: Math.round(distanceInMinutes / 525600.0)
+        count: Math.round(distanceInMinutes / 525600.0),
       });
       break;
   }
@@ -338,7 +338,7 @@ export function ensureJSON(json) {
 export function plainJSON(val) {
   let json = ensureJSON(val);
   let headers = "";
-  Object.keys(json).forEach(k => {
+  Object.keys(json).forEach((k) => {
     headers += `${k}: ${json[k]}\n`;
   });
   return headers;

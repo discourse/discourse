@@ -6,7 +6,7 @@ const helper = {
     const mainOffset = $("#main").offset();
     const offsetTop = mainOffset ? mainOffset.top : 0;
     return (window.pageYOffset || $("html").scrollTop()) - offsetTop;
-  }
+  },
 };
 
 export default Mixin.create({
@@ -40,5 +40,5 @@ export default Mixin.create({
     this._super(...arguments);
     $(window).unbind("scroll.discourse-dock", this.queueDockCheck);
     $(document).unbind("touchmove.discourse-dock", this.queueDockCheck);
-  }
+  },
 });

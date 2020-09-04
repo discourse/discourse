@@ -11,5 +11,5 @@ export default {
 
   teardown() {
     KeyboardShortcuts.teardown();
-  }
+  },
 };

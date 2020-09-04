@@ -7,11 +7,9 @@ export default Component.extend({
     this.onClick();
 
     schedule("afterRender", () => {
-      $(this.element)
-        .find("input")
-        .focus();
+      $(this.element).find("input").focus();
     });
 
     return false;
-  }
+  },
 });

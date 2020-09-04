@@ -6,24 +6,24 @@ import {
   isAbsoluteURL,
   getAbsoluteURL,
   setPrefix,
-  withoutPrefix
+  withoutPrefix,
 } from "discourse-common/lib/get-url";
 
 QUnit.module("lib:get-url");
 
-QUnit.test("isAbsoluteURL", assert => {
+QUnit.test("isAbsoluteURL", (assert) => {
   setupURL(null, "https://example.com", "/forum");
   assert.ok(isAbsoluteURL("https://example.com/test/thing"));
   assert.ok(!isAbsoluteURL("http://example.com/test/thing"));
   assert.ok(!isAbsoluteURL("https://discourse.org/test/thing"));
 });
 
-QUnit.test("getAbsoluteURL", assert => {
+QUnit.test("getAbsoluteURL", (assert) => {
   setupURL(null, "https://example.com", "/forum");
   assert.equal(getAbsoluteURL("/cool/path"), "https://example.com/cool/path");
 });
 
-QUnit.test("withoutPrefix", assert => {
+QUnit.test("withoutPrefix", (assert) => {
   setPrefix("/eviltrout");
   assert.equal(withoutPrefix("/eviltrout/hello"), "/hello");
   assert.equal(withoutPrefix("/eviltrout/"), "/");
@@ -40,7 +40,7 @@ QUnit.test("withoutPrefix", assert => {
   assert.equal(withoutPrefix("/"), "/");
 });
 
-QUnit.test("getURL with empty paths", assert => {
+QUnit.test("getURL with empty paths", (assert) => {
   setupURL(null, "https://example.com", "/");
   assert.equal(getURL("/"), "/");
   assert.equal(getURL(""), "");
@@ -52,7 +52,7 @@ QUnit.test("getURL with empty paths", assert => {
   assert.equal(getURL(""), "");
 });
 
-QUnit.test("getURL on subfolder install", assert => {
+QUnit.test("getURL on subfolder install", (assert) => {
   setupURL(null, "", "/forum");
   assert.equal(getURL("/"), "/forum/", "root url has subfolder");
   assert.equal(
@@ -80,7 +80,7 @@ QUnit.test("getURL on subfolder install", assert => {
   );
 });
 
-QUnit.test("getURLWithCDN on subfolder install with S3", assert => {
+QUnit.test("getURLWithCDN on subfolder install with S3", (assert) => {
   setupURL(null, "", "/forum");
   setupS3CDN(
     "//test.s3-us-west-1.amazonaws.com/site",

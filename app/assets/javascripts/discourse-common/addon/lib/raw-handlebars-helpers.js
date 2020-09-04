@@ -5,7 +5,7 @@ export function registerRawHelpers(hbs, handlebarsClass) {
     hbs.helpers = Object.create(handlebarsClass.helpers);
   }
 
-  hbs.helpers["get"] = function(context, options) {
+  hbs.helpers["get"] = function (context, options) {
     if (!context || !options.contexts) {
       return;
     }
@@ -25,7 +25,7 @@ export function registerRawHelpers(hbs, handlebarsClass) {
   };
 
   // #each .. in support (as format is transformed to this)
-  hbs.registerHelper("each", function(
+  hbs.registerHelper("each", function (
     localName,
     inKeyword,
     contextName,
@@ -43,7 +43,7 @@ export function registerRawHelpers(hbs, handlebarsClass) {
 
   function stringCompatHelper(fn) {
     const old = hbs.helpers[fn];
-    hbs.helpers[fn] = function(context, options) {
+    hbs.helpers[fn] = function (context, options) {
       return old.apply(this, [hbs.helpers.get(context, options), options]);
     };
   }
@@ -62,14 +62,14 @@ export function registerRawHelpers(hbs, handlebarsClass) {
   // The following code ensures that patched-unless will call `if` directly,
   // `patched-unless("var")` will return `!if(val)`.
   const oldIf = hbs.helpers["if"];
-  hbs.helpers["unless"] = function(context, options) {
+  hbs.helpers["unless"] = function (context, options) {
     return oldIf.apply(this, [
       hbs.helpers.get(context, options),
       {
         fn: options.inverse,
         inverse: options.fn,
-        hash: options.hash
-      }
+        hash: options.hash,
+      },
     ]);
   };
 

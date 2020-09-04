@@ -28,6 +28,6 @@ export default Controller.extend(ModalFunctionality, {
         })
         .catch(popupAjaxError)
         .finally(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });

@@ -1,13 +1,14 @@
-const trimLeft = text => text.replace(/^\s+/, "");
-const trimRight = text => text.replace(/\s+$/, "");
-const countPipes = text => (text.replace(/\\\|/, "").match(/\|/g) || []).length;
+const trimLeft = (text) => text.replace(/^\s+/, "");
+const trimRight = (text) => text.replace(/\s+$/, "");
+const countPipes = (text) =>
+  (text.replace(/\\\|/, "").match(/\|/g) || []).length;
 const msoListClasses = [
   "MsoListParagraphCxSpFirst",
   "MsoListParagraphCxSpMiddle",
-  "MsoListParagraphCxSpLast"
+  "MsoListParagraphCxSpLast",
 ];
 const hasChild = (e, n) => {
-  return (e.children || []).some(c => c.name === n);
+  return (e.children || []).some((c) => c.name === n);
 };
 
 export class Tag {
@@ -60,7 +61,7 @@ export class Tag {
       "nav",
       "p",
       "pre",
-      "section"
+      "section",
     ];
   }
 
@@ -75,7 +76,7 @@ export class Tag {
       ["i", "*"],
       ["em", "*"],
       ["s", "~~"],
-      ["strike", "~~"]
+      ["strike", "~~"],
     ];
   }
 
@@ -98,7 +99,7 @@ export class Tag {
       "table",
       "ol",
       "tr",
-      "ul"
+      "ul",
     ];
   }
 
@@ -138,7 +139,7 @@ export class Tag {
         }
 
         const blockquote = this.element.children.find(
-          child => child.name === "blockquote"
+          (child) => child.name === "blockquote"
         );
 
         if (!blockquote) {
@@ -250,7 +251,7 @@ export class Tag {
           hasChild(e, "img")
         ) {
           let href = attr.href;
-          const img = (e.children || []).find(c => c.name === "img");
+          const img = (e.children || []).find((c) => c.name === "img");
           const base62SHA1 = img.attributes["data-base62-sha1"];
           text = attr.title || "";
 
@@ -400,9 +401,7 @@ export class Tag {
           this.inline = true;
         }
 
-        text = $("<textarea />")
-          .html(text)
-          .text();
+        text = $("<textarea />").html(text).text();
         return super.decorate(text);
       }
     };
@@ -522,11 +521,11 @@ export class Tag {
 
 function tags() {
   return [
-    ...Tag.blocks().map(b => Tag.block(b)),
+    ...Tag.blocks().map((b) => Tag.block(b)),
     ...Tag.headings().map((h, i) => Tag.heading(h, i + 1)),
-    ...Tag.slices().map(s => Tag.slice(s, "\n")),
-    ...Tag.emphases().map(e => Tag.emphasis(e[0], e[1])),
-    ...Tag.allowedTags().map(t => Tag.allowedTag(t)),
+    ...Tag.slices().map((s) => Tag.slice(s, "\n")),
+    ...Tag.emphases().map((e) => Tag.emphasis(e[0], e[1])),
+    ...Tag.allowedTags().map((t) => Tag.allowedTag(t)),
     Tag.aside(),
     Tag.cell("td"),
     Tag.cell("th"),
@@ -542,7 +541,7 @@ function tags() {
     Tag.tr(),
     Tag.ol(),
     Tag.list("ul"),
-    Tag.span()
+    Tag.span(),
   ];
 }
 
@@ -572,7 +571,7 @@ class Element {
   }
 
   tag() {
-    const tag = new (tags().filter(t => new t().name === this.name)[0] ||
+    const tag = new (tags().filter((t) => new t().name === this.name)[0] ||
       Tag)();
     tag.element = this;
     return tag;
@@ -611,7 +610,7 @@ class Element {
   }
 
   filterParentNames(names) {
-    return this.parentNames.filter(p => names.includes(p));
+    return this.parentNames.filter((p) => names.includes(p));
   }
 
   static toMarkdown(element, parent, prev, next) {
@@ -664,17 +663,13 @@ function putPlaceholders(html) {
   while (match) {
     const placeholder = `DISCOURSE_PLACEHOLDER_${placeholders.length + 1}`;
     let code = match[1];
-    code = $("<div />")
-      .html(code)
-      .text()
-      .replace(/^\n/, "")
-      .replace(/\n$/, "");
+    code = $("<div />").html(code).text().replace(/^\n/, "").replace(/\n$/, "");
     placeholders.push([placeholder, code]);
     html = html.replace(match[0], `<code>${placeholder}</code>`);
     match = codeRegEx.exec(origHtml);
   }
 
-  const transformNode = node => {
+  const transformNode = (node) => {
     if (node.nodeName !== "#text" && node.length !== undefined) {
       const ret = [];
       for (let i = 0; i < node.length; ++i) {
@@ -689,7 +684,7 @@ function putPlaceholders(html) {
       name: node.nodeName.toLowerCase(),
       data: node.data,
       children: [],
-      attributes: {}
+      attributes: {},
     };
 
     if (node.nodeName === "#text") {
@@ -714,7 +709,7 @@ function putPlaceholders(html) {
 }
 
 function replacePlaceholders(markdown, placeholders) {
-  placeholders.forEach(p => {
+  placeholders.forEach((p) => {
     markdown = markdown.replace(p[0], p[1]);
   });
   return markdown;

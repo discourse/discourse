@@ -30,7 +30,7 @@ export default Component.extend({
 
   @discourseComputed("choices.[]", "collection.[]")
   filteredChoices(choices, collection) {
-    return makeArray(choices).filter(i => collection.indexOf(i) < 0);
+    return makeArray(choices).filter((i) => collection.indexOf(i) < 0);
   },
 
   keyDown(event) {
@@ -55,7 +55,7 @@ export default Component.extend({
 
     selectChoice(choice) {
       this._addValue(choice);
-    }
+    },
   },
 
   _addValue(value) {
@@ -98,9 +98,9 @@ export default Component.extend({
 
   _splitValues(values, delimiter) {
     if (values && values.length) {
-      return values.split(delimiter).filter(x => x);
+      return values.split(delimiter).filter((x) => x);
     } else {
       return [];
     }
-  }
+  },
 });

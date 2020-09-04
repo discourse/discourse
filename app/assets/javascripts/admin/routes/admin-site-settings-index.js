@@ -11,5 +11,5 @@ export default DiscourseRoute.extend({
       this.controllerFor("adminSiteSettings").get("visibleSiteSettings")[0]
         .nameKey
     );
-  }
+  },
 });

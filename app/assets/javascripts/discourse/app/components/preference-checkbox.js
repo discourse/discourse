@@ -19,5 +19,5 @@ export default Component.extend({
     }
 
     return true;
-  }
+  },
 });

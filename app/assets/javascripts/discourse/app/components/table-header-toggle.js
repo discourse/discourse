@@ -48,5 +48,5 @@ export default Component.extend({
       let columnIcon = iconHTML(this.icon);
       this.set("columnIcon", `${columnIcon}`.htmlSafe());
     }
-  }
+  },
 });

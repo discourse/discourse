@@ -3,34 +3,34 @@ import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import Topic from "discourse/models/topic";
 
-const buildTopic = function(archetype) {
+const buildTopic = function (archetype) {
   return Topic.create({
-    id: 4563
+    id: 4563,
   }).updateFromJson({
     title: "Qunit Test Topic",
     details: {
-      notification_level: 1
+      notification_level: 1,
     },
-    archetype
+    archetype,
   });
 };
 
 function extractDescs(rows) {
   return Array.from(
-    rows.find(".desc").map(function() {
+    rows.find(".desc").map(function () {
       return this.textContent.trim();
     })
   );
 }
 
 function getTranslations(type = "") {
-  return ["watching", "tracking", "regular", "muted"].map(key => {
+  return ["watching", "tracking", "regular", "muted"].map((key) => {
     return I18n.t(`topic.notifications.${key}${type}.description`);
   });
 }
 
 moduleForComponent("select-kit/topic-notifications-options", {
-  integration: true
+  integration: true,
 });
 
 componentTest("regular topic notification level descriptions", {
@@ -59,7 +59,7 @@ componentTest("regular topic notification level descriptions", {
         "it has the correct copy"
       );
     });
-  }
+  },
 });
 
 componentTest("PM topic notification level descriptions", {
@@ -89,5 +89,5 @@ componentTest("PM topic notification level descriptions", {
         "it has the correct copy"
       );
     });
-  }
+  },
 });

@@ -2,7 +2,7 @@ import componentTest from "helpers/component-test";
 import pretender from "helpers/create-pretender";
 
 moduleForComponent("admin-report", {
-  integration: true
+  integration: true,
 });
 
 componentTest("default", {
@@ -14,9 +14,7 @@ componentTest("default", {
     assert.ok(exists(".admin-report.signups", "it defaults to table mode"));
 
     assert.equal(
-      find(".header .item.report")
-        .text()
-        .trim(),
+      find(".header .item.report").text().trim(),
       "Signups",
       "it has a title"
     );
@@ -28,17 +26,13 @@ componentTest("default", {
     );
 
     assert.equal(
-      find(".admin-report-table thead tr th:first-child .title")
-        .text()
-        .trim(),
+      find(".admin-report-table thead tr th:first-child .title").text().trim(),
       "Day",
       "it has col headers"
     );
 
     assert.equal(
-      find(".admin-report-table thead tr th:nth-child(2) .title")
-        .text()
-        .trim(),
+      find(".admin-report-table thead tr th:nth-child(2) .title").text().trim(),
       "Count",
       "it has col headers"
     );
@@ -70,7 +64,7 @@ componentTest("default", {
       "7",
       "it can sort rows"
     );
-  }
+  },
 });
 
 componentTest("options", {
@@ -80,8 +74,8 @@ componentTest("options", {
     this.set("options", {
       table: {
         perPage: 4,
-        total: false
-      }
+        total: false,
+      },
     });
   },
 
@@ -94,7 +88,7 @@ componentTest("options", {
     );
 
     assert.notOk(exists(".totals-sample-table"), "it hides totals");
-  }
+  },
 });
 
 componentTest("switch modes", {
@@ -105,7 +99,7 @@ componentTest("switch modes", {
 
     assert.notOk(exists(".admin-report-table"), "it removes the table");
     assert.ok(exists(".admin-report-chart"), "it shows the chart");
-  }
+  },
 });
 
 componentTest("timeout", {
@@ -113,7 +107,7 @@ componentTest("timeout", {
 
   test(assert) {
     assert.ok(exists(".alert-error.timeout"), "it displays a timeout error");
-  }
+  },
 });
 
 componentTest("no data", {
@@ -121,7 +115,7 @@ componentTest("no data", {
 
   test(assert) {
     assert.ok(exists(".no-data"), "it displays a no data alert");
-  }
+  },
 });
 
 componentTest("exception", {
@@ -129,7 +123,7 @@ componentTest("exception", {
 
   test(assert) {
     assert.ok(exists(".alert-error.exception"), "it displays an error");
-  }
+  },
 });
 
 componentTest("rate limited", {
@@ -140,11 +134,11 @@ componentTest("rate limited", {
         { "Content-Type": "application/json" },
         {
           errors: [
-            "You’ve performed this action too many times. Please wait 10 seconds before trying again."
+            "You’ve performed this action too many times. Please wait 10 seconds before trying again.",
           ],
           error_type: "rate_limit",
-          extras: { wait_seconds: 10 }
-        }
+          extras: { wait_seconds: 10 },
+        },
       ];
     });
   },
@@ -156,7 +150,7 @@ componentTest("rate limited", {
       exists(".alert-error.rate-limited"),
       "it displays a rate limited error"
     );
-  }
+  },
 });
 
 componentTest("not found", {
@@ -167,5 +161,5 @@ componentTest("not found", {
       exists(".alert-error.not-found"),
       "it displays a not found error"
     );
-  }
+  },
 });

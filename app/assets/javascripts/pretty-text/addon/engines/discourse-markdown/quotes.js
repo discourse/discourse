@@ -125,7 +125,7 @@ const rule = {
               getURL: options.getURL,
               emojiSet: options.emojiSet,
               enableEmojiShortcuts: options.enableEmojiShortcuts,
-              inlineEmoji: options.inlineEmoji
+              inlineEmoji: options.inlineEmoji,
             });
           }
 
@@ -150,10 +150,10 @@ const rule = {
     state.push("bbcode_open", "blockquote", 1);
   },
 
-  after: function(state) {
+  after: function (state) {
     state.push("bbcode_close", "blockquote", -1);
     state.push("bbcode_close", "aside", -1);
-  }
+  },
 };
 
 export function setup(helper) {
@@ -164,7 +164,7 @@ export function setup(helper) {
     opts.inlineEmoji = siteSettings.enable_inline_emoji_translation;
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.block.bbcode.ruler.push("quotes", rule);
   });
 
@@ -176,6 +176,6 @@ export function setup(helper) {
           value === "quote no-group" || !!/^quote group\-(.+)$/.exec(value)
         );
       }
-    }
+    },
   });
 }

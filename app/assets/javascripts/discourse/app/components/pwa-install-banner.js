@@ -32,7 +32,7 @@ export default Component.extend({
     },
     get() {
       return this.keyValueStore.get(USER_DISMISSED_PROMPT_KEY);
-    }
+    },
   },
 
   @discourseComputed("deferredInstallPromptEvent", "bannerDismissed")
@@ -57,6 +57,6 @@ export default Component.extend({
     },
     dismiss() {
       this.set("bannerDismissed", true);
-    }
-  }
+    },
+  },
 });

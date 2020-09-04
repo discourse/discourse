@@ -8,15 +8,15 @@ export default Route.extend({
   beforeModel() {
     const logs = this.controllerFor("adminBackupsLogs").get("logs");
     // preload the logs if any
-    PreloadStore.getAndRemove("logs").then(function(preloadedLogs) {
+    PreloadStore.getAndRemove("logs").then(function (preloadedLogs) {
       if (preloadedLogs && preloadedLogs.length) {
         // we need to filter out message like: "[SUCCESS]"
         // and convert POJOs to Ember Objects
         const newLogs = preloadedLogs
-          .filter(log => {
+          .filter((log) => {
             return log.message.length > 0 && log.message[0] !== "[";
           })
-          .map(log => EmberObject.create(log));
+          .map((log) => EmberObject.create(log));
         logs.pushObjects(newLogs);
       }
     });
@@ -24,5 +24,5 @@ export default Route.extend({
 
   setupController() {
     /* prevent default behavior */
-  }
+  },
 });

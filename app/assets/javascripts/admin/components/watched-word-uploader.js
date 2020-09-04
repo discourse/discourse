@@ -25,5 +25,5 @@ export default Component.extend(UploadMixin, {
       bootbox.alert(I18n.t("admin.watched_words.form.upload_successful"));
       this.done();
     }
-  }
+  },
 });

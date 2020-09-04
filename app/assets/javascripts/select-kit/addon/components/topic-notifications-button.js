@@ -13,7 +13,7 @@ export default Component.extend({
   topic: null,
   showCaret: true,
   isLoading: false,
-  icon: computed("isLoading", function() {
+  icon: computed("isLoading", function () {
     return this.isLoading ? "spinner" : null;
   }),
 
@@ -25,5 +25,5 @@ export default Component.extend({
         .updateNotifications(levelId)
         .finally(() => this.set("isLoading", false));
     }
-  }
+  },
 });

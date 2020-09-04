@@ -30,18 +30,19 @@ export default Service.extend({
   },
 
   checkSpammer(userId) {
-    return AdminUser.find(userId).then(au => this.spammerDetails(au));
+    return AdminUser.find(userId).then((au) => this.spammerDetails(au));
   },
 
   deleteUser(id) {
-    AdminUser.find(id).then(user => user.destroy({ deletePosts: true }));
+    AdminUser.find(id).then((user) => user.destroy({ deletePosts: true }));
   },
 
   spammerDetails(adminUser) {
     return {
       deleteUser: () => this._deleteSpammer(adminUser),
       canDelete:
-        adminUser.get("can_be_deleted") && adminUser.get("can_delete_all_posts")
+        adminUser.get("can_be_deleted") &&
+        adminUser.get("can_delete_all_posts"),
     };
   },
 
@@ -50,19 +51,19 @@ export default Service.extend({
 
     let controller = showModal(`admin-${type}-user`, {
       admin: true,
-      modalClass: `${type}-user-modal`
+      modalClass: `${type}-user-modal`,
     });
     controller.setProperties({ postId: opts.postId, postEdit: opts.postEdit });
 
     return (user.adminUserView
       ? Promise.resolve(user)
       : AdminUser.find(user.get("id"))
-    ).then(loadedUser => {
+    ).then((loadedUser) => {
       controller.setProperties({
         user: loadedUser,
         loadingUser: false,
         before: opts.before,
-        successCallback: opts.successCallback
+        successCallback: opts.successCallback,
       });
     });
   },
@@ -88,7 +89,7 @@ export default Service.extend({
         email:
           adminUser.get("email") || I18n.t("flagging.hidden_email_address"),
         ip_address:
-          adminUser.get("ip_address") || I18n.t("flagging.ip_address_missing")
+          adminUser.get("ip_address") || I18n.t("flagging.ip_address_missing"),
       });
 
       let userId = adminUser.get("id");
@@ -98,7 +99,7 @@ export default Service.extend({
           {
             label: I18n.t("composer.cancel"),
             class: "d-modal-cancel",
-            link: true
+            link: true,
           },
           {
             label:
@@ -114,10 +115,10 @@ export default Service.extend({
                   block_urls: true,
                   block_ip: true,
                   delete_as_spammer: true,
-                  context: window.location.pathname
-                }
+                  context: window.location.pathname,
+                },
               })
-                .then(result => {
+                .then((result) => {
                   if (result.deleted) {
                     resolve();
                   } else {
@@ -128,14 +129,14 @@ export default Service.extend({
                   bootbox.alert(I18n.t("admin.user.delete_failed"));
                   reject();
                 });
-            }
-          }
+            },
+          },
         ];
 
         bootbox.dialog(message, buttons, {
-          classes: "flagging-delete-spammer"
+          classes: "flagging-delete-spammer",
         });
       });
     });
-  }
+  },
 });

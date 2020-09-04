@@ -24,7 +24,7 @@ export default Component.extend({
         postCount = 0;
 
       // Use data we already have before fetching live stats
-      this.site.get("categories").forEach(c => {
+      this.site.get("categories").forEach((c) => {
         if (!c.get("read_restricted")) {
           topicCount += c.get("topic_count");
           postCount += c.get("post_count");
@@ -88,7 +88,7 @@ export default Component.extend({
         requiredTopics: this.requiredTopics,
         requiredPosts: this.requiredPosts,
         currentTopics: this.publicTopicCount,
-        currentPosts: this.publicPostCount
+        currentPosts: this.publicPostCount,
       })
     );
   },
@@ -99,7 +99,7 @@ export default Component.extend({
       return;
     }
 
-    LivePostCounts.find().then(stats => {
+    LivePostCounts.find().then((stats) => {
       if (stats) {
         this.set("publicTopicCount", stats.get("public_topic_count"));
         this.set("publicPostCount", stats.get("public_post_count"));
@@ -111,5 +111,5 @@ export default Component.extend({
         }
       }
     });
-  }
+  },
 });

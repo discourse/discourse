@@ -7,16 +7,16 @@ export default Controller.extend({
 
   @discourseComputed("model", "model.@each.component")
   fullThemes(themes) {
-    return themes.filter(t => !t.get("component"));
+    return themes.filter((t) => !t.get("component"));
   },
 
   @discourseComputed("model", "model.@each.component")
   childThemes(themes) {
-    return themes.filter(t => t.get("component"));
+    return themes.filter((t) => t.get("component"));
   },
 
   @discourseComputed("model", "model.@each.component")
   installedThemes(themes) {
-    return themes.map(t => t.name);
-  }
+    return themes.map((t) => t.name);
+  },
 });

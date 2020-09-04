@@ -14,7 +14,7 @@ widgetTest("basics", {
     assert.ok(find(".user-bookmarks-link").length);
     assert.ok(find(".quick-access-panel").length);
     assert.ok(find(".notifications-dismiss").length);
-  }
+  },
 });
 
 widgetTest("notifications", {
@@ -35,7 +35,7 @@ widgetTest("notifications", {
     assert.equal(
       $links[1].text,
       `aquaman ${I18n.t("notifications.liked_consolidated_description", {
-        count: 5
+        count: 5,
       })}`
     );
 
@@ -44,7 +44,7 @@ widgetTest("notifications", {
       $links[2].innerHTML.includes(
         I18n.t("notifications.group_message_summary", {
           count: 5,
-          group_name: "test"
+          group_name: "test",
         })
       )
     );
@@ -60,7 +60,7 @@ widgetTest("notifications", {
     assert.ok(
       $links[4].innerHTML.includes(
         I18n.t("notifications.membership_request_accepted", {
-          group_name: "test"
+          group_name: "test",
         })
       )
     );
@@ -71,7 +71,7 @@ widgetTest("notifications", {
       routeToStub.calledWith(find(".user-notifications-link")[0].href),
       "a second click should redirect to the full notifications page"
     );
-  }
+  },
 });
 
 widgetTest("log out", {
@@ -87,7 +87,7 @@ widgetTest("log out", {
 
     await click(".logout");
     assert.ok(this.loggedOut);
-  }
+  },
 });
 
 widgetTest("private messages - disabled", {
@@ -98,7 +98,7 @@ widgetTest("private messages - disabled", {
 
   test(assert) {
     assert.ok(!find(".user-pms-link").length);
-  }
+  },
 });
 
 widgetTest("private messages - enabled", {
@@ -134,7 +134,7 @@ widgetTest("private messages - enabled", {
       routeToStub.calledWith(userPmsLink.href),
       "a second click should redirect to the full private messages page"
     );
-  }
+  },
 });
 
 widgetTest("bookmarks", {
@@ -162,7 +162,7 @@ widgetTest("bookmarks", {
       routeToStub.calledWith(find(".user-bookmarks-link")[0].href),
       "a second click should redirect to the full bookmarks page"
     );
-  }
+  },
 });
 
 widgetTest("anonymous", {
@@ -183,7 +183,7 @@ widgetTest("anonymous", {
 
     await click(".enable-anonymous");
     assert.ok(this.anonymous);
-  }
+  },
 });
 
 widgetTest("anonymous - disabled", {
@@ -196,7 +196,7 @@ widgetTest("anonymous - disabled", {
   async test(assert) {
     await click(".user-preferences-link");
     assert.ok(!find(".enable-anonymous").length);
-  }
+  },
 });
 
 widgetTest("anonymous - switch back", {
@@ -216,5 +216,5 @@ widgetTest("anonymous - switch back", {
 
     await click(".disable-anonymous");
     assert.notOk(this.anonymous);
-  }
+  },
 });

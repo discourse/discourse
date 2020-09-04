@@ -9,6 +9,6 @@ export default Controller.extend({
 
     undoRevokeKey(key) {
       key.undoRevoke().catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

@@ -7,10 +7,10 @@ import { buildResolver } from "discourse-common/resolver";
 import { currentSettings } from "helpers/site-settings";
 
 const CatAdapter = RestAdapter.extend({
-  primaryKey: "cat_id"
+  primaryKey: "cat_id",
 });
 
-export default function(customLookup = () => {}) {
+export default function (customLookup = () => {}) {
   const resolver = buildResolver("discourse").create();
 
   return Store.create({
@@ -51,9 +51,9 @@ export default function(customLookup = () => {}) {
         const split = type.split(":");
         return resolver.customResolve({
           type: split[0],
-          fullNameWithoutType: split[1]
+          fullNameWithoutType: split[1],
         });
-      }
-    }
+      },
+    },
   });
 }

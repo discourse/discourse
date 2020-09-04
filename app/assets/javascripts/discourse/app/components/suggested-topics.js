@@ -9,7 +9,7 @@ import Site from "discourse/models/site";
 export default Component.extend({
   tagName: "",
 
-  suggestedTitleLabel: computed("topic", function() {
+  suggestedTitleLabel: computed("topic", function () {
     const href = this.currentUser && this.currentUser.pmPath(this.topic);
     if (this.topic.get("isPrivateMessage") && href) {
       return "suggested_topics.pm_title";
@@ -28,7 +28,7 @@ export default Component.extend({
     const opts = {
       latestLink: `<a href="${getURL("/latest")}">${I18n.t(
         "topic.view_latest_topics"
-      )}</a>`
+      )}</a>`,
     };
     let category = topic.get("category");
 
@@ -63,12 +63,12 @@ export default Component.extend({
         CATEGORY: category ? true : false,
         latestLink: opts.latestLink,
         catLink: opts.catLink,
-        basePath: getURL("")
+        basePath: getURL(""),
       });
     } else if (category) {
       return I18n.t("topic.read_more_in_category", opts);
     } else {
       return I18n.t("topic.read_more", opts);
     }
-  }
+  },
 });

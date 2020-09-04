@@ -18,10 +18,10 @@ export default ComboBoxComponent.extend({
   selectKitOptions: {
     caretDownIcon: "caret-right",
     caretUpIcon: "caret-down",
-    filterable: "hasManyGroups"
+    filterable: "hasManyGroups",
   },
 
-  groupsWithShortcut: computed("groups.[]", function() {
+  groupsWithShortcut: computed("groups.[]", function () {
     const shortcuts = [];
 
     if (this.enableGroupDirectory || this.get("currentUser.staff")) {
@@ -38,6 +38,6 @@ export default ComboBoxComponent.extend({
       } else {
         DiscourseURL.routeToUrl(`/g`);
       }
-    }
-  }
+    },
+  },
 });

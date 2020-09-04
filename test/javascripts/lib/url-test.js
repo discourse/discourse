@@ -5,7 +5,7 @@ import User from "discourse/models/user";
 
 QUnit.module("lib:url");
 
-QUnit.test("isInternal with a HTTP url", assert => {
+QUnit.test("isInternal with a HTTP url", (assert) => {
   sandbox.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 
   assert.not(DiscourseURL.isInternal(null), "a blank URL is not internal");
@@ -32,7 +32,7 @@ QUnit.test("isInternal with a HTTP url", assert => {
   );
 });
 
-QUnit.test("isInternal with a HTTPS url", assert => {
+QUnit.test("isInternal with a HTTPS url", (assert) => {
   sandbox.stub(DiscourseURL, "origin").returns("https://eviltrout.com");
   assert.ok(
     DiscourseURL.isInternal("http://eviltrout.com/monocle"),
@@ -40,7 +40,7 @@ QUnit.test("isInternal with a HTTPS url", assert => {
   );
 });
 
-QUnit.test("isInternal on subfolder install", assert => {
+QUnit.test("isInternal on subfolder install", (assert) => {
   sandbox.stub(DiscourseURL, "origin").returns("http://eviltrout.com/forum");
   assert.not(
     DiscourseURL.isInternal("http://eviltrout.com"),
@@ -56,20 +56,20 @@ QUnit.test("isInternal on subfolder install", assert => {
   );
 });
 
-QUnit.test("userPath", assert => {
+QUnit.test("userPath", (assert) => {
   assert.equal(userPath(), "/u");
   assert.equal(userPath("eviltrout"), "/u/eviltrout");
   assert.equal(userPath("hp.json"), "/u/hp.json");
 });
 
-QUnit.test("userPath with prefix", assert => {
+QUnit.test("userPath with prefix", (assert) => {
   setPrefix("/forum");
   assert.equal(userPath(), "/forum/u");
   assert.equal(userPath("eviltrout"), "/forum/u/eviltrout");
   assert.equal(userPath("hp.json"), "/forum/u/hp.json");
 });
 
-QUnit.test("routeTo with prefix", async assert => {
+QUnit.test("routeTo with prefix", async (assert) => {
   setPrefix("/forum");
   logIn();
   const user = User.current();

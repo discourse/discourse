@@ -27,22 +27,22 @@ export default Component.extend(UtilsMixin, {
     "roleButton:role",
     "selectedValue:data-value",
     "selectedNames:data-name",
-    "buttonTitle:title"
+    "buttonTitle:title",
   ],
 
-  selectedValue: computed("value", function() {
+  selectedValue: computed("value", function () {
     return this.value === this.getValue(this.selectKit.noneItem)
       ? null
       : makeArray(this.value).join(",");
   }),
 
-  selectedNames: computed("selectedContent.[]", function() {
+  selectedNames: computed("selectedContent.[]", function () {
     return makeArray(this.selectedContent)
-      .map(s => this.getName(s))
+      .map((s) => this.getName(s))
       .join(",");
   }),
 
-  buttonTitle: computed("value", "selectKit.noneItem", function() {
+  buttonTitle: computed("value", "selectKit.noneItem", function () {
     if (
       !this.value &&
       this.selectKit.noneItem &&
@@ -52,23 +52,23 @@ export default Component.extend(UtilsMixin, {
     }
   }),
 
-  icons: computed("selectKit.options.{icon,icons}", function() {
+  icons: computed("selectKit.options.{icon,icons}", function () {
     const icon = makeArray(this.selectKit.options.icon);
     const icons = makeArray(this.selectKit.options.icons);
     return icon.concat(icons).filter(Boolean);
   }),
 
-  selectKitId: computed("selectKit.uniqueID", function() {
+  selectKitId: computed("selectKit.uniqueID", function () {
     return `${this.selectKit.uniqueID}-header`;
   }),
 
-  ariaIsExpanded: computed("selectKit.isExpanded", function() {
+  ariaIsExpanded: computed("selectKit.isExpanded", function () {
     return this.selectKit.isExpanded ? "true" : "false";
   }),
 
   ariaHasPopup: true,
 
-  ariaOwns: computed("selectKit.uniqueID", function() {
+  ariaOwns: computed("selectKit.uniqueID", function () {
     return `[data-select-kit-id=${this.selectKit.uniqueID}-body]`;
   }),
 
@@ -182,5 +182,5 @@ export default Component.extend(UtilsMixin, {
       const filterInput = filterContainer.querySelector(".filter-input");
       filterInput && filterInput.focus();
     }
-  }
+  },
 });

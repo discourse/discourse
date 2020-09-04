@@ -21,21 +21,21 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   loadRawEmail(postId) {
-    return Post.loadRawEmail(postId).then(result =>
+    return Post.loadRawEmail(postId).then((result) =>
       this.setProperties({
         rawEmail: result.raw_email,
         textPart: result.text_part,
-        htmlPart: result.html_part
+        htmlPart: result.html_part,
       })
     );
   },
 
   loadIncomingRawEmail(incomingEmailId) {
-    return IncomingEmail.loadRawEmail(incomingEmailId).then(result =>
+    return IncomingEmail.loadRawEmail(incomingEmailId).then((result) =>
       this.setProperties({
         rawEmail: result.raw_email,
         textPart: result.text_part,
-        htmlPart: result.html_part
+        htmlPart: result.html_part,
       })
     );
   },
@@ -49,6 +49,6 @@ export default Controller.extend(ModalFunctionality, {
     },
     displayHtmlPart() {
       this.set("tab", "html_part");
-    }
-  }
+    },
+  },
 });

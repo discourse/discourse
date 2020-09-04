@@ -36,13 +36,13 @@ export default Controller.extend(ModalFunctionality, {
 
     this.createTypes = [
       { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
-      { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS }
+      { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS },
     ];
   },
 
   @discourseComputed("themesController.installedThemes")
   themes(installedThemes) {
-    return POPULAR_THEMES.map(t => {
+    return POPULAR_THEMES.map((t) => {
       if (installedThemes.includes(t.name)) {
         set(t, "installed", true);
       }
@@ -86,10 +86,10 @@ export default Controller.extend(ModalFunctionality, {
     if (checked && !this._keyLoading) {
       this._keyLoading = true;
       ajax(this.keyGenUrl, { type: "POST" })
-        .then(pair => {
+        .then((pair) => {
           this.setProperties({
             privateKey: pair.private_key,
-            publicKey: pair.public_key
+            publicKey: pair.public_key,
           });
         })
         .catch(popupAjaxError)
@@ -156,7 +156,7 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       let options = {
-        type: "POST"
+        type: "POST",
       };
 
       if (this.local) {
@@ -169,7 +169,7 @@ export default Controller.extend(ModalFunctionality, {
       if (this.remote || this.popular) {
         options.data = {
           remote: this.uploadUrl,
-          branch: this.branch
+          branch: this.branch,
         };
 
         if (this.privateChecked) {
@@ -184,7 +184,7 @@ export default Controller.extend(ModalFunctionality, {
 
       this.set("loading", true);
       ajax(this.importUrl, options)
-        .then(result => {
+        .then((result) => {
           const theme = this.store.createRecord(this.recordType, result.theme);
           this.adminCustomizeThemes.send("addTheme", theme);
           this.send("closeModal");
@@ -194,6 +194,6 @@ export default Controller.extend(ModalFunctionality, {
         })
         .catch(popupAjaxError)
         .finally(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });

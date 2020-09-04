@@ -3,7 +3,7 @@ import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
 import discourseComputed, {
   on,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 
@@ -35,7 +35,7 @@ export default Component.extend({
       single: this.single,
       fullWidthWrap: this.fullWidthWrap,
       updateData: opts && opts.updateData ? opts.updateData : false,
-      onChangeItems: items => {
+      onChangeItems: (items) => {
         selectedGroups = items;
 
         if (this.onChangeCallback) {
@@ -44,19 +44,19 @@ export default Component.extend({
           this.set("groupNames", items.join(","));
         }
       },
-      transformComplete: g => {
+      transformComplete: (g) => {
         return g.name;
       },
-      dataSource: term => {
-        return this.groupFinder(term).then(groups => {
+      dataSource: (term) => {
+        return this.groupFinder(term).then((groups) => {
           if (!selectedGroups) return groups;
 
-          return groups.filter(group => {
-            return !selectedGroups.any(s => s === group.name);
+          return groups.filter((group) => {
+            return !selectedGroups.any((s) => s === group.name);
           });
         });
       },
-      template: findRawTemplate("group-selector-autocomplete")
+      template: findRawTemplate("group-selector-autocomplete"),
     });
-  }
+  },
 });

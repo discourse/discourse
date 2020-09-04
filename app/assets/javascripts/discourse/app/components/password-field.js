@@ -35,5 +35,5 @@ export default TextField.extend({
 
   focusIn() {
     this.set("canToggle", false); // can't know the state of caps lock yet. keyPress will figure it out.
-  }
+  },
 });

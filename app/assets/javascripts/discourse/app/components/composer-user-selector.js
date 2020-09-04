@@ -27,7 +27,7 @@ export default Component.extend({
     $acWrap
       .find(".item")
       .toArray()
-      .forEach(item => {
+      .forEach((item) => {
         width += $(item).outerWidth(true);
         const result = width < limit;
 
@@ -77,9 +77,7 @@ export default Component.extend({
       this.set("showSelector", true);
 
       schedule("afterRender", () => {
-        $(this.element)
-          .find("input")
-          .focus();
+        $(this.element).find("input").focus();
       });
     },
 
@@ -87,6 +85,6 @@ export default Component.extend({
       this.appEvents.trigger("composer:resize");
       const $this = $(this.element).find(".ac-wrap");
       if ($this.height() >= 150) $this.scrollTop($this.height());
-    }
-  }
+    },
+  },
 });

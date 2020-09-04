@@ -25,7 +25,7 @@ const ColorScheme = EmberObject.extend({
 
   schemeJson() {
     const buffer = [];
-    this.colors.forEach(c => {
+    this.colors.forEach((c) => {
       buffer.push(`  "${c.get("name")}": "${c.get("hex")}"`);
     });
 
@@ -36,9 +36,9 @@ const ColorScheme = EmberObject.extend({
     const newScheme = ColorScheme.create({
       name: this.name,
       can_edit: true,
-      colors: A()
+      colors: A(),
     });
-    this.colors.forEach(c => {
+    this.colors.forEach((c) => {
       newScheme.colors.pushObject(
         ColorSchemeColor.create(c.getProperties("name", "hex", "default_hex"))
       );
@@ -50,7 +50,7 @@ const ColorScheme = EmberObject.extend({
   changed(name) {
     if (!this.originals) return false;
     if (this.originals.name !== name) return true;
-    if (this.colors.any(c => c.get("changed"))) return true;
+    if (this.colors.any((c) => c.get("changed"))) return true;
 
     return false;
   },
@@ -61,7 +61,7 @@ const ColorScheme = EmberObject.extend({
       return false;
     }
 
-    return !changed || this.saving || this.colors.any(c => !c.get("valid"));
+    return !changed || this.saving || this.colors.any((c) => !c.get("valid"));
   },
 
   newRecord: not("id"),
@@ -77,7 +77,7 @@ const ColorScheme = EmberObject.extend({
       data.name = this.name;
       data.base_scheme_id = this.base_scheme_id;
       data.colors = [];
-      this.colors.forEach(c => {
+      this.colors.forEach((c) => {
         if (!this.id || c.get("changed")) {
           data.colors.pushObject(c.getProperties("name", "hex"));
         }
@@ -90,16 +90,16 @@ const ColorScheme = EmberObject.extend({
         data: JSON.stringify({ color_scheme: data }),
         type: this.id ? "PUT" : "POST",
         dataType: "json",
-        contentType: "application/json"
+        contentType: "application/json",
       }
-    ).then(result => {
+    ).then((result) => {
       if (result.id) {
         this.set("id", result.id);
       }
 
       if (!opts || !opts.enabledOnly) {
         this.startTrackingChanges();
-        this.colors.forEach(c => c.startTrackingChanges());
+        this.colors.forEach((c) => c.startTrackingChanges());
       }
 
       this.setProperties({ savingStatus: I18n.t("saved"), saving: false });
@@ -114,7 +114,7 @@ const ColorScheme = EmberObject.extend({
       data: JSON.stringify({ color_scheme: { user_selectable: value } }),
       type: "PUT",
       dataType: "json",
-      contentType: "application/json"
+      contentType: "application/json",
     });
   },
 
@@ -122,7 +122,7 @@ const ColorScheme = EmberObject.extend({
     if (this.id) {
       return ajax(`/admin/color_schemes/${this.id}`, { type: "DELETE" });
     }
-  }
+  },
 });
 
 const ColorSchemes = ArrayProxy.extend({});
@@ -130,8 +130,8 @@ const ColorSchemes = ArrayProxy.extend({});
 ColorScheme.reopenClass({
   findAll() {
     const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    return ajax("/admin/color_schemes").then(all => {
-      all.forEach(colorScheme => {
+    return ajax("/admin/color_schemes").then((all) => {
+      all.forEach((colorScheme) => {
         colorSchemes.pushObject(
           ColorScheme.create({
             id: colorScheme.id,
@@ -141,20 +141,20 @@ ColorScheme.reopenClass({
             theme_name: colorScheme.theme_name,
             base_scheme_id: colorScheme.base_scheme_id,
             user_selectable: colorScheme.user_selectable,
-            colors: colorScheme.colors.map(c => {
+            colors: colorScheme.colors.map((c) => {
               return ColorSchemeColor.create({
                 name: c.name,
                 hex: c.hex,
                 default_hex: c.default_hex,
-                is_advanced: c.is_advanced
+                is_advanced: c.is_advanced,
               });
-            })
+            }),
           })
         );
       });
       return colorSchemes;
     });
-  }
+  },
 });
 
 export default ColorScheme;

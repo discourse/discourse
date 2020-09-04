@@ -13,7 +13,7 @@ acceptance("Plugin Outlet - Decorator", {
       `${PREFIX}/discovery-list-container-top/bar`
     ] = Ember.HTMLBars.compile("BAR");
 
-    withPluginApi("0.8.38", api => {
+    withPluginApi("0.8.38", (api) => {
       api.decoratePluginOutlet(
         "discovery-list-container-top",
         (elem, args) => {
@@ -35,12 +35,12 @@ acceptance("Plugin Outlet - Decorator", {
   afterEach() {
     delete Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/foo`];
     delete Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/bar`];
-  }
+  },
 });
 
 QUnit.test(
   "Calls the plugin callback with the rendered outlet",
-  async assert => {
+  async (assert) => {
     await visit("/");
 
     const fooConnector = find(".discovery-list-container-top-outlet.foo ")[0];

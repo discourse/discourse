@@ -111,7 +111,7 @@ function applyOnebox(state, silent) {
 }
 
 export function setup(helper) {
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.core.ruler.after("linkify", "onebox", applyOnebox);
   });
 }

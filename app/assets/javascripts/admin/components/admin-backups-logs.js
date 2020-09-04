@@ -35,7 +35,7 @@ export default Component.extend({
 
   @on("init")
   @observes("logs.[]")
-  _updateFormattedLogs: discourseDebounce(function() {
+  _updateFormattedLogs: discourseDebounce(function () {
     const logs = this.logs;
     if (logs.length === 0) return;
 
@@ -49,7 +49,7 @@ export default Component.extend({
     // update the formatted logs & cache index
     this.setProperties({
       formattedLogs: formattedLogs,
-      index: logs.length
+      index: logs.length,
     });
     // force rerender
     this.renderLogs();
@@ -70,5 +70,5 @@ export default Component.extend({
     } else {
       this.set("showLoadingSpinner", false);
     }
-  }
+  },
 });

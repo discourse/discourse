@@ -31,7 +31,7 @@ componentTest("with image", {
       1,
       "it displays the image lightbox"
     );
-  }
+  },
 });
 
 componentTest("without image", {
@@ -55,7 +55,7 @@ componentTest("without image", {
       0,
       "it does not display the button to open image lightbox"
     );
-  }
+  },
 });
 
 componentTest("with placeholder", {
@@ -85,5 +85,5 @@ componentTest("with placeholder", {
       1,
       "it displays the placeholder image"
     );
-  }
+  },
 });

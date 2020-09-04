@@ -4,7 +4,7 @@ export default DiscourseRoute.extend({
   noContentHelpKey: "user_activity.no_bookmarks",
 
   queryParams: {
-    acting_username: { refreshModel: true }
+    acting_username: { refreshModel: true },
   },
 
   model() {
@@ -24,6 +24,6 @@ export default DiscourseRoute.extend({
     didTransition() {
       this.controllerFor("user-activity")._showFooter();
       return true;
-    }
-  }
+    },
+  },
 });

@@ -46,14 +46,14 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         icon: "user",
         href: `${this.attrs.path}/summary`,
         content: I18n.t("user.summary.title"),
-        className: "summary"
+        className: "summary",
       },
       {
         icon: "stream",
         href: `${this.attrs.path}/activity`,
         content: I18n.t("user.activity_stream"),
-        className: "activity"
-      }
+        className: "activity",
+      },
     ];
 
     defaultItems.push(
@@ -61,13 +61,13 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         icon: "pencil-alt",
         href: `${this.attrs.path}/activity/drafts`,
         content: I18n.t("user_action_groups.15"),
-        className: "drafts"
+        className: "drafts",
       },
       {
         icon: "cog",
         href: `${this.attrs.path}/preferences`,
         content: I18n.t("user.preferences"),
-        className: "preferences"
+        className: "preferences",
       }
     );
     return defaultItems;
@@ -79,14 +79,14 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         action: "toggleAnonymous",
         className: "disable-anonymous",
         content: I18n.t("switch_from_anon"),
-        icon: "ban"
+        icon: "ban",
       };
     } else {
       return {
         action: "toggleAnonymous",
         className: "enable-anonymous",
         content: I18n.t("switch_to_anon"),
-        icon: "user-secret"
+        icon: "user-secret",
       };
     }
   },
@@ -96,7 +96,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
       action: "logout",
       className: "logout",
       content: I18n.t("user.log_out"),
-      icon: "sign-out-alt"
+      icon: "sign-out-alt",
     };
   },
 
@@ -107,5 +107,5 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
           this.siteSettings.anonymous_posting_min_trust_level) ||
       this.currentUser.is_anonymous
     );
-  }
+  },
 });

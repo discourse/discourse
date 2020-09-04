@@ -11,16 +11,11 @@ function hasMetadata(token) {
 function appendMetaData(index, token) {
   const sizePart = token.content
     .split("|")
-    .find(x => x.match(/\d{1,4}x\d{1,4}(,\s*\d{1,3}%)?/));
+    .find((x) => x.match(/\d{1,4}x\d{1,4}(,\s*\d{1,3}%)?/));
   let selectedScale =
-    sizePart &&
-    sizePart
-      .split(",")
-      .pop()
-      .trim()
-      .replace("%", "");
+    sizePart && sizePart.split(",").pop().trim().replace("%", "");
 
-  const overwriteScale = !SCALES.find(scale => scale === selectedScale);
+  const overwriteScale = !SCALES.find((scale) => scale === selectedScale);
   if (overwriteScale) selectedScale = "100";
 
   token.attrs.push(["index-image", index]);
@@ -76,13 +71,13 @@ export function setup(helper) {
       "span[class=scale-btn active]",
       "span.separator",
       "span.scale-btn[data-scale]",
-      "span.button-wrapper[data-image-index]"
+      "span.button-wrapper[data-image-index]",
     ]);
 
-    helper.registerPlugin(md => {
+    helper.registerPlugin((md) => {
       const oldRule = md.renderer.rules.image;
 
-      md.renderer.rules.image = function(tokens, idx, options, env, slf) {
+      md.renderer.rules.image = function (tokens, idx, options, env, slf) {
         const token = tokens[idx];
         const scaleIndex = token.attrIndex("scale");
         const imageIndex = token.attrIndex("index-image");
@@ -97,7 +92,7 @@ export function setup(helper) {
           result +=
             "<span class='button-wrapper' data-image-index='" + index + "'>";
 
-          result += SCALES.map(scale =>
+          result += SCALES.map((scale) =>
             buildScaleButton(selectedScale, scale)
           ).join("");
 

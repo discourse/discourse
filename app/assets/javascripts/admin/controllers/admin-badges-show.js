@@ -57,7 +57,7 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   @observes("model.id")
-  _resetSaving: function() {
+  _resetSaving: function () {
     this.set("saving", false);
     this.set("savingStatus", "");
   },
@@ -81,12 +81,12 @@ export default Controller.extend(bufferedProperty("model"), {
           "query",
           "badge_grouping_id",
           "trigger",
-          "badge_type_id"
+          "badge_type_id",
         ];
 
         if (this.get("buffered.system")) {
           let protectedFields = this.protectedSystemFields || [];
-          fields = fields.filter(f => !protectedFields.includes(f));
+          fields = fields.filter((f) => !protectedFields.includes(f));
         }
 
         this.set("saving", true);
@@ -99,12 +99,12 @@ export default Controller.extend(bufferedProperty("model"), {
           "auto_revoke",
           "enabled",
           "show_posts",
-          "target_posts"
+          "target_posts",
         ];
 
         const data = {};
         const buffered = this.buffered;
-        fields.forEach(function(field) {
+        fields.forEach(function (field) {
           var d = buffered.get(field);
           if (boolFields.includes(field)) {
             d = !!d;
@@ -149,7 +149,7 @@ export default Controller.extend(bufferedProperty("model"), {
         I18n.t("admin.badges.delete_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             model
               .destroy()
@@ -163,6 +163,6 @@ export default Controller.extend(bufferedProperty("model"), {
           }
         }
       );
-    }
-  }
+    },
+  },
 });

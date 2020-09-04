@@ -20,7 +20,7 @@ export function buildGroupPage(type) {
       this.controllerFor("group-activity-posts").setProperties({
         model,
         type,
-        canLoadMore: !loadedAll
+        canLoadMore: !loadedAll,
       });
       this.controllerFor("application").set("showFooter", loadedAll);
     },
@@ -32,8 +32,8 @@ export function buildGroupPage(type) {
     actions: {
       didTransition() {
         return true;
-      }
-    }
+      },
+    },
   });
 }
 

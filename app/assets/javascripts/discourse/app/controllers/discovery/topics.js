@@ -7,7 +7,7 @@ import {
   empty,
   notEmpty,
   equal,
-  readOnly
+  readOnly,
 } from "@ember/object/computed";
 import { inject as controller } from "@ember/controller";
 import DiscoveryController from "discourse/controllers/discovery";
@@ -72,7 +72,7 @@ const controllerOpts = {
       this.set("discovery.loading", true);
 
       this.topicTrackingState.resetTracking();
-      this.store.findFiltered("topicList", { filter }).then(list => {
+      this.store.findFiltered("topicList", { filter }).then((list) => {
         TopicList.hideUniformCategory(list, this.category);
 
         this.setProperties({ model: list });
@@ -94,10 +94,10 @@ const controllerOpts = {
 
     dismissReadPosts() {
       showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
-    }
+    },
   },
 
-  isFilterPage: function(filter, filterType) {
+  isFilterPage: function (filter, filterType) {
     if (!filter) {
       return false;
     }
@@ -141,17 +141,17 @@ const controllerOpts = {
     const category = this.category;
     if (category) {
       return I18n.t("topics.bottom.category", {
-        category: category.get("name")
+        category: category.get("name"),
       });
     } else {
       const split = (this.get("model.filter") || "").split("/");
       if (topicsLength === 0) {
         return I18n.t("topics.none." + split[0], {
-          category: split[1]
+          category: split[1],
         });
       } else {
         return I18n.t("topics.bottom." + split[0], {
-          category: split[1]
+          category: split[1],
         });
       }
     }
@@ -173,9 +173,9 @@ const controllerOpts = {
     return I18n.t("topics.none.educate." + tab, {
       userPrefsUrl: userPath(
         `${this.currentUser.get("username_lower")}/preferences`
-      )
+      ),
     });
-  }
+  },
 };
 
 export default DiscoveryController.extend(controllerOpts, BulkTopicSelection);

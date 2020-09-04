@@ -8,7 +8,7 @@ import showModal from "discourse/lib/show-modal";
 export default Controller.extend({
   userModes: [
     { id: "all", name: I18n.t("admin.api.all_users") },
-    { id: "single", name: I18n.t("admin.api.single_user") }
+    { id: "single", name: I18n.t("admin.api.single_user") },
   ],
   useGlobalKey: false,
   scopes: null,
@@ -37,7 +37,7 @@ export default Controller.extend({
       if (!this.useGlobalKey) {
         const selectedScopes = Object.values(this.scopes)
           .flat()
-          .filter(action => {
+          .filter((action) => {
             return action.selected;
           });
 
@@ -55,9 +55,9 @@ export default Controller.extend({
       return showModal("admin-api-key-urls", {
         admin: true,
         model: {
-          urls
-        }
+          urls,
+        },
       });
-    }
-  }
+    },
+  },
 });

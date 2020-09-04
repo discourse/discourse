@@ -16,7 +16,7 @@ export default Controller.extend({
 
     this.setProperties({
       filter: ALL_FILTER,
-      sorting: ["group", "name"]
+      sorting: ["group", "name"],
     });
   },
 
@@ -25,13 +25,13 @@ export default Controller.extend({
   emojiGroups: computed("model", {
     get() {
       return this.model.mapBy("group").uniq();
-    }
+    },
   }),
 
   sortingGroups: computed("emojiGroups.[]", {
     get() {
       return [ALL_FILTER].concat(this.emojiGroups);
-    }
+    },
   }),
 
   filteredEmojis: computed("model.[]", "filter", {
@@ -41,7 +41,7 @@ export default Controller.extend({
       } else {
         return this.model.filterBy("group", this.filter);
       }
-    }
+    },
   }),
 
   @action
@@ -62,15 +62,15 @@ export default Controller.extend({
       I18n.t("admin.emoji.delete_confirm", { name: emoji.get("name") }),
       I18n.t("no_value"),
       I18n.t("yes_value"),
-      destroy => {
+      (destroy) => {
         if (destroy) {
           return ajax("/admin/customize/emojis/" + emoji.get("name"), {
-            type: "DELETE"
+            type: "DELETE",
           }).then(() => {
             this.model.removeObject(emoji);
           });
         }
       }
     );
-  }
+  },
 });

@@ -1,5 +1,3 @@
-/*global I18n:true */
-
 // Instantiate the object
 var I18n = I18n || {};
 

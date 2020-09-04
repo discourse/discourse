@@ -1,6 +1,6 @@
 import {
   registerHelpers,
-  createHelperContext
+  createHelperContext,
 } from "discourse-common/lib/helpers";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
@@ -8,7 +8,7 @@ import Handlebars from "handlebars";
 import { setOwner } from "@ember/application";
 
 export function autoLoadModules(container, registry) {
-  Object.keys(requirejs.entries).forEach(entry => {
+  Object.keys(requirejs.entries).forEach((entry) => {
     if (/\/helpers\//.test(entry) && !/-test/.test(entry)) {
       requirejs(entry, null, null, true);
     }
@@ -25,7 +25,7 @@ export function autoLoadModules(container, registry) {
     currentUser: container.lookup("current-user:main"),
     site: container.lookup("site:main"),
     session: container.lookup("session:main"),
-    topicTrackingState: container.lookup("topic-tracking-state:main")
+    topicTrackingState: container.lookup("topic-tracking-state:main"),
   };
   setOwner(context, container);
 
@@ -36,5 +36,5 @@ export function autoLoadModules(container, registry) {
 
 export default {
   name: "auto-load-modules",
-  initialize: autoLoadModules
+  initialize: autoLoadModules,
 };

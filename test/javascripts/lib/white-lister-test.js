@@ -2,7 +2,7 @@ import WhiteLister from "pretty-text/white-lister";
 
 QUnit.module("lib:whiteLister");
 
-QUnit.test("whiteLister", assert => {
+QUnit.test("whiteLister", (assert) => {
   const whiteLister = new WhiteLister();
 
   assert.ok(
@@ -21,7 +21,7 @@ QUnit.test("whiteLister", assert => {
     "custom.foo",
     "custom.baz",
     "custom[data-*]",
-    "custom[rel=nofollow]"
+    "custom[rel=nofollow]",
   ]);
 
   whiteLister.whiteListFeature("test", ["custom[rel=test]"]);
@@ -32,15 +32,15 @@ QUnit.test("whiteLister", assert => {
     whiteLister.getWhiteList(),
     {
       tagList: {
-        custom: []
+        custom: [],
       },
       attrList: {
         custom: {
           class: ["foo", "baz"],
           "data-*": ["*"],
-          rel: ["nofollow", "test"]
-        }
-      }
+          rel: ["nofollow", "test"],
+        },
+      },
     },
     "Expecting a correct white list"
   );
@@ -51,7 +51,7 @@ QUnit.test("whiteLister", assert => {
     whiteLister.getWhiteList(),
     {
       tagList: {},
-      attrList: {}
+      attrList: {},
     },
     "Expecting an empty white list"
   );

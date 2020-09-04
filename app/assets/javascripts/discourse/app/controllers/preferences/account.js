@@ -85,14 +85,14 @@ export default Controller.extend(CanCheckEmails, {
   authProviders(accounts) {
     const allMethods = findAll();
 
-    const result = allMethods.map(method => {
+    const result = allMethods.map((method) => {
       return {
         method,
-        account: accounts.find(account => account.name === method.name) // Will be undefined if no account
+        account: accounts.find((account) => account.name === method.name), // Will be undefined if no account
       };
     });
 
-    return result.filter(value => value.account || value.method.can_connect);
+    return result.filter((value) => value.account || value.method.can_connect);
   },
 
   disableConnectButtons: propertyNotEqual("model.id", "currentUser.id"),
@@ -110,19 +110,19 @@ export default Controller.extend(CanCheckEmails, {
         EmberObject.create({
           email: primaryEmail,
           primary: true,
-          confirmed: true
+          confirmed: true,
         })
       );
     }
 
     if (secondaryEmails) {
-      secondaryEmails.forEach(email => {
+      secondaryEmails.forEach((email) => {
         emails.push(EmberObject.create({ email, confirmed: true }));
       });
     }
 
     if (unconfirmedEmails) {
-      unconfirmedEmails.forEach(email => {
+      unconfirmedEmails.forEach((email) => {
         emails.push(EmberObject.create({ email }));
       });
     }
@@ -175,7 +175,7 @@ export default Controller.extend(CanCheckEmails, {
       this.model.setProperties({
         name: this.newNameInput,
         title: this.newTitleInput,
-        primary_group_id: this.newPrimaryGroupInput
+        primary_group_id: this.newPrimaryGroupInput,
       });
 
       return this.model
@@ -216,14 +216,14 @@ export default Controller.extend(CanCheckEmails, {
             // password changed
             this.setProperties({
               changePasswordProgress: false,
-              passwordProgress: I18n.t("user.change_password.success")
+              passwordProgress: I18n.t("user.change_password.success"),
             });
           })
           .catch(() => {
             // password failed to change
             this.setProperties({
               changePasswordProgress: false,
-              passwordProgress: I18n.t("user.change_password.error")
+              passwordProgress: I18n.t("user.change_password.error"),
             });
           });
       }
@@ -240,7 +240,7 @@ export default Controller.extend(CanCheckEmails, {
             link: true,
             callback: () => {
               this.set("deleting", false);
-            }
+            },
           },
           {
             label:
@@ -259,8 +259,8 @@ export default Controller.extend(CanCheckEmails, {
                   this.set("deleting", false);
                 }
               );
-            }
-          }
+            },
+          },
         ];
       bootbox.dialog(message, buttons, { classes: "delete-account" });
     },
@@ -270,7 +270,7 @@ export default Controller.extend(CanCheckEmails, {
 
       this.model
         .revokeAssociatedAccount(account.name)
-        .then(result => {
+        .then((result) => {
           if (result.success) {
             this.model.associated_accounts.removeObject(account);
           } else {
@@ -292,7 +292,7 @@ export default Controller.extend(CanCheckEmails, {
         ),
         {
           type: "POST",
-          data: token ? { token_id: token.id } : {}
+          data: token ? { token_id: token.id } : {},
         }
       )
         .then(() => {
@@ -307,6 +307,6 @@ export default Controller.extend(CanCheckEmails, {
 
     connectAccount(method) {
       method.doLogin({ reconnect: true });
-    }
-  }
+    },
+  },
 });

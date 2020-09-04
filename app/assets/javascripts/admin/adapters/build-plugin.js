@@ -6,6 +6,6 @@ export default function buildPluginAdapter(pluginName) {
       return (
         "/admin/plugins/" + pluginName + this._super(store, type, findArgs)
       );
-    }
+    },
   });
 }

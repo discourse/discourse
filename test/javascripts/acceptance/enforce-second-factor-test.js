@@ -6,13 +6,13 @@ acceptance("Enforce Second Factor", {
     server.post("/u/second_factors.json", () => {
       return helper.response({
         success: "OK",
-        password_required: "true"
+        password_required: "true",
       });
     });
-  }
+  },
 });
 
-QUnit.test("as an admin", async function(assert) {
+QUnit.test("as an admin", async function (assert) {
   await visit("/u/eviltrout/preferences/second-factor");
   this.siteSettings.enforce_second_factor = "staff";
 
@@ -34,7 +34,7 @@ QUnit.test("as an admin", async function(assert) {
   );
 });
 
-QUnit.test("as a user", async function(assert) {
+QUnit.test("as a user", async function (assert) {
   updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/u/eviltrout/preferences/second-factor");
@@ -58,7 +58,7 @@ QUnit.test("as a user", async function(assert) {
   );
 });
 
-QUnit.test("as an anonymous user", async function(assert) {
+QUnit.test("as an anonymous user", async function (assert) {
   updateCurrentUser({ moderator: false, admin: false, is_anonymous: true });
 
   await visit("/u/eviltrout/preferences/second-factor");

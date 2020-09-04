@@ -12,30 +12,30 @@ export default Component.extend({
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.public"
         ),
-        value: 0
+        value: 0,
       },
       {
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.logged_on_users"
         ),
-        value: 1
+        value: 1,
       },
       {
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.members"
         ),
-        value: 2
+        value: 2,
       },
       {
         name: I18n.t("admin.groups.manage.interaction.visibility_levels.staff"),
-        value: 3
+        value: 3,
       },
       {
         name: I18n.t(
           "admin.groups.manage.interaction.visibility_levels.owners"
         ),
-        value: 4
-      }
+        value: 4,
+      },
     ];
 
     this.aliasLevelOptions = [
@@ -44,7 +44,7 @@ export default Component.extend({
       { name: I18n.t("groups.alias_levels.mods_and_admins"), value: 2 },
       { name: I18n.t("groups.alias_levels.members_mods_and_admins"), value: 3 },
       { name: I18n.t("groups.alias_levels.owners_mods_and_admins"), value: 4 },
-      { name: I18n.t("groups.alias_levels.everyone"), value: 99 }
+      { name: I18n.t("groups.alias_levels.everyone"), value: 99 },
     ];
   },
 
@@ -79,5 +79,5 @@ export default Component.extend({
   )
   canAdminGroup(isCreated, canAdmin, canCreate) {
     return (!isCreated && canCreate) || (isCreated && canAdmin);
-  }
+  },
 });

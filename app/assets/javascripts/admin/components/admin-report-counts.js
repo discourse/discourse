@@ -7,5 +7,5 @@ export default Component.extend({
     "report.type",
     /^(time_to_first_response|topics_with_no_response)$/
   ),
-  classNameBindings: ["reverseColors"]
+  classNameBindings: ["reverseColors"],
 });

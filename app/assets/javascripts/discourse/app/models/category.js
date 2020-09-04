@@ -25,11 +25,11 @@ const Category = RestModel.extend({
     if (groupPermissions) {
       this.set(
         "permissions",
-        groupPermissions.map(elem => {
+        groupPermissions.map((elem) => {
           availableGroups.removeObject(elem.group_name);
           return {
             group_name: elem.group_name,
-            permission: PermissionType.create({ id: elem.permission_type })
+            permission: PermissionType.create({ id: elem.permission_type }),
           };
         })
       );
@@ -48,7 +48,7 @@ const Category = RestModel.extend({
     return [
       PermissionType.create({ id: PermissionType.FULL }),
       PermissionType.create({ id: PermissionType.CREATE_POST }),
-      PermissionType.create({ id: PermissionType.READONLY })
+      PermissionType.create({ id: PermissionType.READONLY }),
     ];
   },
 
@@ -77,7 +77,7 @@ const Category = RestModel.extend({
     return (
       subcategories &&
       subcategories.some(
-        cat => cat.subcategories && cat.subcategories.length > 0
+        (cat) => cat.subcategories && cat.subcategories.length > 0
       )
     );
   },
@@ -95,7 +95,7 @@ const Category = RestModel.extend({
       return true;
     }
 
-    if (subcategories.some(cat => !cat.isHidden)) {
+    if (subcategories.some((cat) => !cat.isHidden)) {
       return false;
     }
 
@@ -110,7 +110,7 @@ const Category = RestModel.extend({
       return false;
     }
 
-    if (subcategories.some(cat => cat.hasMuted)) {
+    if (subcategories.some((cat) => cat.hasMuted)) {
       return true;
     }
 
@@ -121,7 +121,7 @@ const Category = RestModel.extend({
   notificationLevelString(notificationLevel) {
     // Get the key from the value
     const notificationLevelString = Object.keys(NotificationLevels).find(
-      key => NotificationLevels[key] === notificationLevel
+      (key) => NotificationLevels[key] === notificationLevel
     );
     if (notificationLevelString) return notificationLevelString.toLowerCase();
   },
@@ -164,7 +164,7 @@ const Category = RestModel.extend({
   @discourseComputed("topic_count", "subcategories.[]")
   totalTopicCount(topicCount, subcategories) {
     if (subcategories) {
-      subcategories.forEach(subcategory => {
+      subcategories.forEach((subcategory) => {
         topicCount += subcategory.topic_count;
       });
     }
@@ -220,22 +220,22 @@ const Category = RestModel.extend({
         search_priority: this.search_priority,
         reviewable_by_group_name: this.reviewable_by_group_name,
         read_only_banner: this.read_only_banner,
-        default_list_filter: this.default_list_filter
+        default_list_filter: this.default_list_filter,
       },
-      type: id ? "PUT" : "POST"
+      type: id ? "PUT" : "POST",
     });
   },
 
   _permissionsForUpdate() {
     const permissions = this.permissions;
     let rval = {};
-    permissions.forEach(p => (rval[p.group_name] = p.permission.id));
+    permissions.forEach((p) => (rval[p.group_name] = p.permission.id));
     return rval;
   },
 
   destroy() {
     return ajax(`/categories/${this.id || this.slug}`, {
-      type: "DELETE"
+      type: "DELETE",
     });
   },
 
@@ -292,7 +292,7 @@ const Category = RestModel.extend({
   @discourseComputed("id")
   isUncategorizedCategory(id) {
     return id === Site.currentProp("uncategorized_category_id");
-  }
+  },
 });
 
 var _uncategorized;
@@ -346,9 +346,11 @@ Category.reopenClass({
 
   findSingleBySlug(slug) {
     if (!this.slugEncoded()) {
-      return Category.list().find(c => Category.slugFor(c) === slug);
+      return Category.list().find((c) => Category.slugFor(c) === slug);
     } else {
-      return Category.list().find(c => Category.slugFor(c) === encodeURI(slug));
+      return Category.list().find(
+        (c) => Category.slugFor(c) === encodeURI(slug)
+      );
     }
   },
 
@@ -361,7 +363,7 @@ Category.reopenClass({
 
   findByIds(ids = []) {
     const categories = [];
-    ids.forEach(id => {
+    ids.forEach((id) => {
       const found = Category.findById(id);
       if (found) {
         categories.push(found);
@@ -374,7 +376,7 @@ Category.reopenClass({
     if (this.slugEncoded()) {
       slug = encodeURI(slug);
     }
-    return Category.list().find(category => {
+    return Category.list().find((category) => {
       return (
         category.slug === slug &&
         (category.parentCategory || null) === parentCategory
@@ -400,7 +402,7 @@ Category.reopenClass({
     let parts = slugPathWithID.split("/").filter(Boolean);
     // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
     if (this.slugEncoded()) {
-      parts = parts.map(urlPart => decodeURI(urlPart));
+      parts = parts.map((urlPart) => decodeURI(urlPart));
     }
     let category = null;
 
@@ -436,7 +438,7 @@ Category.reopenClass({
           return parentCategory;
         }
 
-        category = categories.find(item => {
+        category = categories.find((item) => {
           return (
             item &&
             item.get("parentCategory") === parentCategory &&
@@ -511,14 +513,8 @@ Category.reopenClass({
       if (
         (emptyTerm && !category.get("parent_category_id")) ||
         (!emptyTerm &&
-          (category
-            .get("name")
-            .toLowerCase()
-            .indexOf(term) === 0 ||
-            category
-              .get("slug")
-              .toLowerCase()
-              .indexOf(slugTerm) === 0))
+          (category.get("name").toLowerCase().indexOf(term) === 0 ||
+            category.get("slug").toLowerCase().indexOf(slugTerm) === 0))
       ) {
         data.push(category);
       }
@@ -530,14 +526,8 @@ Category.reopenClass({
 
         if (
           !emptyTerm &&
-          (category
-            .get("name")
-            .toLowerCase()
-            .indexOf(term) > 0 ||
-            category
-              .get("slug")
-              .toLowerCase()
-              .indexOf(slugTerm) > 0)
+          (category.get("name").toLowerCase().indexOf(term) > 0 ||
+            category.get("slug").toLowerCase().indexOf(slugTerm) > 0)
         ) {
           if (data.indexOf(category) === -1) data.push(category);
         }
@@ -545,7 +535,7 @@ Category.reopenClass({
     }
 
     return data.sortBy("read_restricted");
-  }
+  },
 });
 
 export default Category;

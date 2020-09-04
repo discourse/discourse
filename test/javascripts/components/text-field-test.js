@@ -8,7 +8,7 @@ componentTest("renders correctly with no properties set", {
 
   test(assert) {
     assert.ok(find("input[type=text]").length);
-  }
+  },
 });
 
 componentTest("support a placeholder", {
@@ -21,7 +21,7 @@ componentTest("support a placeholder", {
   test(assert) {
     assert.ok(find("input[type=text]").length);
     assert.equal(find("input").prop("placeholder"), "placeholder.i18n.key");
-  }
+  },
 });
 
 componentTest("sets the dir attribute to ltr for Hebrew text", {
@@ -32,7 +32,7 @@ componentTest("sets the dir attribute to ltr for Hebrew text", {
 
   test(assert) {
     assert.equal(find("input").attr("dir"), "rtl");
-  }
+  },
 });
 
 componentTest("sets the dir attribute to ltr for English text", {
@@ -43,7 +43,7 @@ componentTest("sets the dir attribute to ltr for English text", {
 
   test(assert) {
     assert.equal(find("input").attr("dir"), "ltr");
-  }
+  },
 });
 
 componentTest("supports onChange", {
@@ -52,7 +52,7 @@ componentTest("supports onChange", {
     this.called = false;
     this.newValue = null;
     this.set("value", "hello");
-    this.set("changed", v => {
+    this.set("changed", (v) => {
       this.newValue = v;
       this.called = true;
     });
@@ -63,7 +63,7 @@ componentTest("supports onChange", {
     await fillIn(".tf-test", "new text");
     assert.ok(this.called);
     assert.equal(this.newValue, "new text");
-  }
+  },
 });
 
 componentTest("supports onChangeImmediate", {
@@ -72,7 +72,7 @@ componentTest("supports onChangeImmediate", {
     this.called = false;
     this.newValue = null;
     this.set("value", "old");
-    this.set("changed", v => {
+    this.set("changed", (v) => {
       this.newValue = v;
       this.called = true;
     });
@@ -83,5 +83,5 @@ componentTest("supports onChangeImmediate", {
     await fillIn(".tf-test", "no longer old");
     assert.ok(this.called);
     assert.equal(this.newValue, "no longer old");
-  }
+  },
 });

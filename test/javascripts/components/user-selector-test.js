@@ -35,7 +35,7 @@ componentTest("pasting a list of usernames", {
     this.set("usernames", null);
     paste(element, "eviltrout\nsam\ncodinghorror");
     assert.equal(this.get("usernames"), "eviltrout,sam,codinghorror");
-  }
+  },
 });
 
 componentTest("excluding usernames", {
@@ -50,5 +50,5 @@ componentTest("excluding usernames", {
     let element = find(".test-selector")[0];
     paste(element, "roman,penar,jeff,robin");
     assert.equal(this.get("usernames"), "mark,roman,penar");
-  }
+  },
 });

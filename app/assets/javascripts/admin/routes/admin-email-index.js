@@ -4,5 +4,5 @@ import EmailSettings from "admin/models/email-settings";
 export default DiscourseRoute.extend({
   model() {
     return EmailSettings.find();
-  }
+  },
 });

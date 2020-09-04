@@ -10,13 +10,13 @@ function loadOnebox(element) {
     ajax,
     synchronous: true,
     categoryId: 1,
-    topicId: 1
+    topicId: 1,
   });
 }
 
 QUnit.module("lib:oneboxer");
 
-QUnit.test("load - failed onebox", async assert => {
+QUnit.test("load - failed onebox", async (assert) => {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
 
@@ -34,7 +34,7 @@ QUnit.test("load - failed onebox", async assert => {
   );
 });
 
-QUnit.test("load - successful onebox", async assert => {
+QUnit.test("load - successful onebox", async (assert) => {
   const html = `
     <aside class="onebox allowlistedgeneric">
       <header class="source">

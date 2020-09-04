@@ -3,17 +3,17 @@ import pretender from "helpers/create-pretender";
 
 acceptance("Keyboard Shortcuts", { loggedIn: true });
 
-test("go to first suggested topic", async assert => {
+test("go to first suggested topic", async (assert) => {
   pretender.get("/t/27331/4.json", () => [
     200,
     { "Content-Type": "application/json" },
-    {}
+    {},
   ]);
 
   pretender.get("/t/27331.json", () => [
     200,
     { "Content-Type": "application/json" },
-    {}
+    {},
   ]);
 
   /*
@@ -23,7 +23,7 @@ test("go to first suggested topic", async assert => {
   pretender.get("/t/9/last.json", () => [
     200,
     { "Content-Type": "application/json" },
-    {}
+    {},
   ]);
 
   await visit("/t/this-is-a-test-topic/9");
@@ -51,10 +51,10 @@ test("go to first suggested topic", async assert => {
       suggested_topics: [
         {
           id: 27331,
-          slug: "keyboard-shortcuts-are-awesome"
-        }
-      ]
-    }
+          slug: "keyboard-shortcuts-are-awesome",
+        },
+      ],
+    },
   ]);
 
   await visit("/t/1-3-0beta9-no-rate-limit-popups/28830");

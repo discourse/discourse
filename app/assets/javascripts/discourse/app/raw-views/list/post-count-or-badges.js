@@ -12,5 +12,5 @@ export default EmberObject.extend({
     return this.currentUser && this.currentUser.trust_level > 0
       ? ""
       : I18n.t("filters.new.lower_title");
-  }
+  },
 });

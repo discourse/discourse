@@ -10,5 +10,5 @@ export default DropdownSelectBoxRowComponent.extend({
   @discourseComputed("rowName")
   title(rowName) {
     return I18n.t(`filters.top.${rowName || "this_week"}`).title;
-  }
+  },
 });

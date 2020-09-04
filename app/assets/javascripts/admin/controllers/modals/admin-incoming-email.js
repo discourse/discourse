@@ -12,15 +12,15 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   load(id) {
-    return IncomingEmail.find(id).then(result => this.set("model", result));
+    return IncomingEmail.find(id).then((result) => this.set("model", result));
   },
 
   loadFromBounced(id) {
     return IncomingEmail.findByBounced(id)
-      .then(result => this.set("model", result))
-      .catch(error => {
+      .then((result) => this.set("model", result))
+      .catch((error) => {
         this.send("closeModal");
         popupAjaxError(error);
       });
-  }
+  },
 });

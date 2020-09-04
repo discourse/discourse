@@ -18,6 +18,6 @@ export default Component.extend({
   actions: {
     closeMessage() {
       this.closeMessage(this.message);
-    }
-  }
+    },
+  },
 });

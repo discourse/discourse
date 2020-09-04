@@ -16,7 +16,7 @@ export default Mixin.create({
   computedValueProperty: computed(
     "valueProperty",
     "validValues.[]",
-    function() {
+    function () {
       if (isPresent(this.valueProperty)) {
         return this.valueProperty;
       }
@@ -29,7 +29,7 @@ export default Mixin.create({
     }
   ),
 
-  computedNameProperty: computed("nameProperty", "validValues.[]", function() {
+  computedNameProperty: computed("nameProperty", "validValues.[]", function () {
     if (isPresent(this.nameProperty)) {
       return this.nameProperty;
     }
@@ -46,7 +46,7 @@ export default Mixin.create({
     const vals = [],
       translateNames = this.translate_names;
 
-    validValues.forEach(v => {
+    validValues.forEach((v) => {
       if (v.name && v.name.length > 0 && translateNames) {
         vals.addObject({ name: I18n.t(v.name), value: v.value });
       } else {
@@ -61,5 +61,5 @@ export default Mixin.create({
     if (validValues && validValues.indexOf("") >= 0) {
       return "admin.settings.none";
     }
-  }
+  },
 });

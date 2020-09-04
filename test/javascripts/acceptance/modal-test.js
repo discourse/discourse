@@ -10,18 +10,18 @@ acceptance("Modal", {
     I18n.translations = {
       en: {
         js: {
-          test_title: "Test title"
-        }
-      }
+          test_title: "Test title",
+        },
+      },
     };
   },
 
   afterEach() {
     I18n.translations = this._translations;
-  }
+  },
 });
 
-QUnit.skip("modal", async function(assert) {
+QUnit.skip("modal", async function (assert) {
   await visit("/");
 
   assert.ok(
@@ -71,26 +71,24 @@ QUnit.skip("modal", async function(assert) {
   );
 });
 
-QUnit.test("rawTitle in modal panels", async function(assert) {
+QUnit.test("rawTitle in modal panels", async function (assert) {
   Ember.TEMPLATES["modal/test-raw-title-panels"] = Ember.HTMLBars.compile("");
   const panels = [
     { id: "test1", rawTitle: "Test 1" },
-    { id: "test2", rawTitle: "Test 2" }
+    { id: "test2", rawTitle: "Test 2" },
   ];
 
   await visit("/");
   run(() => showModal("test-raw-title-panels", { panels }));
 
   assert.equal(
-    find(".d-modal .modal-tab:first-child")
-      .text()
-      .trim(),
+    find(".d-modal .modal-tab:first-child").text().trim(),
     "Test 1",
     "it should display the raw title"
   );
 });
 
-QUnit.test("modal title", async function(assert) {
+QUnit.test("modal title", async function (assert) {
   Ember.TEMPLATES["modal/test-title"] = Ember.HTMLBars.compile("");
   Ember.TEMPLATES["modal/test-title-with-body"] = Ember.HTMLBars.compile(
     "{{#d-modal-body}}test{{/d-modal-body}}"
@@ -100,9 +98,7 @@ QUnit.test("modal title", async function(assert) {
 
   run(() => showModal("test-title", { title: "test_title" }));
   assert.equal(
-    find(".d-modal .title")
-      .text()
-      .trim(),
+    find(".d-modal .title").text().trim(),
     "Test title",
     "it should display the title"
   );
@@ -111,9 +107,7 @@ QUnit.test("modal title", async function(assert) {
 
   run(() => showModal("test-title-with-body", { title: "test_title" }));
   assert.equal(
-    find(".d-modal .title")
-      .text()
-      .trim(),
+    find(".d-modal .title").text().trim(),
     "Test title",
     "it should display the title when used with d-modal-body"
   );
@@ -129,7 +123,7 @@ QUnit.test("modal title", async function(assert) {
 
 acceptance("Modal Keyboard Events", { loggedIn: true });
 
-QUnit.test("modal-keyboard-events", async function(assert) {
+QUnit.test("modal-keyboard-events", async function (assert) {
   await visit("/t/internationalization-localization/280");
 
   await click(".toggle-admin-menu");

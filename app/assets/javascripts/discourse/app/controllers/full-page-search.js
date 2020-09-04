@@ -7,7 +7,7 @@ import {
   translateResults,
   searchContextDescription,
   getSearchKey,
-  isValidSearchTerm
+  isValidSearchTerm,
 } from "discourse/lib/search";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
@@ -21,7 +21,7 @@ const SortOrders = [
   { name: I18n.t("search.latest_post"), id: 1, term: "order:latest" },
   { name: I18n.t("search.most_liked"), id: 2, term: "order:likes" },
   { name: I18n.t("search.most_viewed"), id: 3, term: "order:views" },
-  { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" }
+  { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" },
 ];
 const PAGE_LIMIT = 10;
 
@@ -61,7 +61,7 @@ export default Controller.extend({
     }
     return q
       .split(/\s+/)
-      .filter(t => t !== "l")
+      .filter((t) => t !== "l")
       .join(" ");
   },
 
@@ -72,7 +72,7 @@ export default Controller.extend({
     },
     set(val) {
       this.set("skip_context", val ? "false" : "true");
-    }
+    },
   },
 
   @discourseComputed("context", "context_id")
@@ -116,7 +116,7 @@ export default Controller.extend({
 
   cleanTerm(term) {
     if (term) {
-      SortOrders.forEach(order => {
+      SortOrders.forEach((order) => {
         if (order.term) {
           let matches = term.match(new RegExp(`${order.term}\\b`));
           if (matches) {
@@ -238,14 +238,14 @@ export default Controller.extend({
     if ((!skip && this.context) || skip === "false") {
       args.search_context = {
         type: this.context,
-        id: this.context_id
+        id: this.context_id,
       };
     }
 
     const searchKey = getSearchKey(args);
 
     ajax("/search", { data: args })
-      .then(results => {
+      .then((results) => {
         const model = translateResults(results) || {};
 
         if (results.grouped_search_result) {
@@ -285,12 +285,12 @@ export default Controller.extend({
       this.composer.open({
         action: Composer.CREATE_TOPIC,
         draftKey: Composer.NEW_TOPIC_KEY,
-        topicCategory
+        topicCategory,
       });
     },
 
     selectAll() {
-      this.selected.addObjects(this.get("model.posts").map(r => r.topic));
+      this.selected.addObjects(this.get("model.posts").map((r) => r.topic));
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array
       // in the component, however, when we select ANYTHING, we would force
@@ -340,10 +340,10 @@ export default Controller.extend({
               "model.grouped_search_result.search_log_id"
             ),
             search_result_id: topicId,
-            search_result_type: "topic"
-          }
+            search_result_type: "topic",
+          },
         });
       }
-    }
-  }
+    },
+  },
 });

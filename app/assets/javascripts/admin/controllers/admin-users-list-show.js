@@ -32,7 +32,7 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   @observes("listFilter")
-  _filterUsers: discourseDebounce(function() {
+  _filterUsers: discourseDebounce(function () {
     this.resetFilters();
   }, INPUT_DELAY),
 
@@ -55,9 +55,9 @@ export default Controller.extend(CanCheckEmails, {
       show_emails: this.showEmails,
       order: this.order,
       asc: this.asc,
-      page: this._page
+      page: this._page,
     })
-      .then(result => {
+      .then((result) => {
         if (!result || result.length === 0) {
           this._canLoadMore = false;
         }
@@ -77,6 +77,6 @@ export default Controller.extend(CanCheckEmails, {
     toggleEmailVisibility() {
       this.toggleProperty("showEmails");
       this.resetFilters();
-    }
-  }
+    },
+  },
 });

@@ -15,7 +15,7 @@ function censorTree(state, censor) {
     return;
   }
 
-  recurse(state.tokens, token => {
+  recurse(state.tokens, (token) => {
     if (token.content) {
       token.content = censor(token.content);
     }
@@ -28,13 +28,13 @@ export function setup(helper) {
       siteSettings.watched_words_regular_expressions;
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     const censoredRegexp = md.options.discourse.censoredRegexp;
 
     if (censoredRegexp) {
       const replacement = String.fromCharCode(9632);
       const censor = censorFn(censoredRegexp, replacement);
-      md.core.ruler.push("censored", state => censorTree(state, censor));
+      md.core.ruler.push("censored", (state) => censorTree(state, censor));
     }
   });
 }

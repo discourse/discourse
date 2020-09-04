@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import discourseComputed, {
   observes,
-  on
+  on,
 } from "discourse-common/utils/decorators";
 import { propertyNotEqual } from "discourse/lib/computed";
 import EmberObject from "@ember/object";
@@ -98,7 +98,7 @@ const ColorSchemeColor = EmberObject.extend({
   @discourseComputed("hex")
   valid(hex) {
     return hex.match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
-  }
+  },
 });
 
 export default ColorSchemeColor;

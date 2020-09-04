@@ -21,7 +21,7 @@ function addBulkButton(action, key, opts) {
     icon: opts.icon,
     buttonVisible: opts.buttonVisible || alwaysTrue,
     enabledSetting: opts.enabledSetting,
-    class: opts.class
+    class: opts.class,
   };
 
   _buttons.push(btn);
@@ -30,47 +30,47 @@ function addBulkButton(action, key, opts) {
 // Default buttons
 addBulkButton("showChangeCategory", "change_category", {
   icon: "pencil-alt",
-  class: "btn-default"
+  class: "btn-default",
 });
 addBulkButton("closeTopics", "close_topics", {
   icon: "lock",
-  class: "btn-default"
+  class: "btn-default",
 });
 addBulkButton("archiveTopics", "archive_topics", {
   icon: "folder",
-  class: "btn-default"
+  class: "btn-default",
 });
 addBulkButton("showNotificationLevel", "notification_level", {
   icon: "d-regular",
-  class: "btn-default"
+  class: "btn-default",
 });
 addBulkButton("resetRead", "reset_read", {
   icon: "backward",
-  class: "btn-default"
+  class: "btn-default",
 });
 addBulkButton("unlistTopics", "unlist_topics", {
   icon: "far-eye-slash",
   class: "btn-default",
-  buttonVisible: topics => topics.some(t => t.visible)
+  buttonVisible: (topics) => topics.some((t) => t.visible),
 });
 addBulkButton("relistTopics", "relist_topics", {
   icon: "far-eye",
   class: "btn-default",
-  buttonVisible: topics => topics.some(t => !t.visible)
+  buttonVisible: (topics) => topics.some((t) => !t.visible),
 });
 addBulkButton("showTagTopics", "change_tags", {
   icon: "tag",
   class: "btn-default",
-  enabledSetting: "tagging_enabled"
+  enabledSetting: "tagging_enabled",
 });
 addBulkButton("showAppendTagTopics", "append_tags", {
   icon: "tag",
   class: "btn-default",
-  enabledSetting: "tagging_enabled"
+  enabledSetting: "tagging_enabled",
 });
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
-  class: "btn-danger"
+  class: "btn-danger",
 });
 
 // Modal for performing bulk actions on topics
@@ -84,7 +84,7 @@ export default Controller.extend(ModalFunctionality, {
     const topics = this.get("model.topics");
     this.set(
       "buttons",
-      _buttons.filter(b => {
+      _buttons.filter((b) => {
         if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
           return false;
         }
@@ -100,10 +100,10 @@ export default Controller.extend(ModalFunctionality, {
 
     const topics = this.get("model.topics");
     return Topic.bulkOperation(topics, operation)
-      .then(result => {
+      .then((result) => {
         this.set("loading", false);
         if (result && result.topic_ids) {
-          return result.topic_ids.map(t => topics.findBy("id", t));
+          return result.topic_ids.map((t) => topics.findBy("id", t));
         }
         return result;
       })
@@ -114,7 +114,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   forEachPerformed(operation, cb) {
-    this.perform(operation).then(topics => {
+    this.perform(operation).then((topics) => {
       if (topics) {
         topics.forEach(cb);
         (this.refreshClosure || identity)();
@@ -168,19 +168,21 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     closeTopics() {
-      this.forEachPerformed({ type: "close" }, t => t.set("closed", true));
+      this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
     },
 
     archiveTopics() {
-      this.forEachPerformed({ type: "archive" }, t => t.set("archived", true));
+      this.forEachPerformed({ type: "archive" }, (t) =>
+        t.set("archived", true)
+      );
     },
 
     unlistTopics() {
-      this.forEachPerformed({ type: "unlist" }, t => t.set("visible", false));
+      this.forEachPerformed({ type: "unlist" }, (t) => t.set("visible", false));
     },
 
     relistTopics() {
-      this.forEachPerformed({ type: "relist" }, t => t.set("visible", true));
+      this.forEachPerformed({ type: "relist" }, (t) => t.set("visible", true));
     },
 
     changeCategory() {
@@ -188,8 +190,8 @@ export default Controller.extend(ModalFunctionality, {
       const category = Category.findById(categoryId);
 
       this.perform({ type: "change_category", category_id: categoryId }).then(
-        topics => {
-          topics.forEach(t => t.set("category", category));
+        (topics) => {
+          topics.forEach((t) => t.set("category", category));
           (this.refreshClosure || identity)();
           this.send("closeModal");
         }
@@ -198,8 +200,8 @@ export default Controller.extend(ModalFunctionality, {
 
     resetRead() {
       this.performAndRefresh({ type: "reset_read" });
-    }
-  }
+    },
+  },
 });
 
 export { addBulkButton };

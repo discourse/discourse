@@ -9,7 +9,7 @@ export default Component.extend({
     ":d-modal",
     "modalClass",
     "modalStyle",
-    "hasPanels"
+    "hasPanels",
   ],
   attributeBindings: ["data-keyboard", "aria-modal"],
   dismissable: true,
@@ -34,7 +34,7 @@ export default Component.extend({
 
   @on("didInsertElement")
   setUp() {
-    $("html").on("keyup.discourse-modal", e => {
+    $("html").on("keyup.discourse-modal", (e) => {
       //only respond to events when the modal is visible
       if (!this.element.classList.contains("hidden")) {
         if (e.which === 27 && this.dismissable) {
@@ -116,5 +116,5 @@ export default Component.extend({
     } else {
       this.set("dismissable", true);
     }
-  }
+  },
 });

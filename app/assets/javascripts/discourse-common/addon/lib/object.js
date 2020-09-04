@@ -5,7 +5,7 @@ function isObject(obj) {
 // a fairly simple deep merge based on: https://gist.github.com/ahtcx/0cd94e62691f539160b32ecda18af3d6
 export function deepMerge(...objects) {
   function deepMergeInner(target, source) {
-    Object.keys(source).forEach(key => {
+    Object.keys(source).forEach((key) => {
       const targetValue = target[key];
       const sourceValue = source[key];
 
@@ -24,7 +24,7 @@ export function deepMerge(...objects) {
     return target;
   }
 
-  if (objects.some(object => object && !isObject(object))) {
+  if (objects.some((object) => object && !isObject(object))) {
     throw new Error('deepMerge: all values should be of type "object"');
   }
 

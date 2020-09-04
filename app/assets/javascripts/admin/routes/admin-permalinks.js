@@ -8,5 +8,5 @@ export default DiscourseRoute.extend({
 
   setupController(controller, model) {
     controller.set("model", model);
-  }
+  },
 });

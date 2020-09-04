@@ -26,7 +26,7 @@ const CUSTOM_TYPES = [
   "group_list",
   "tag_list",
   "color",
-  "simple_list"
+  "simple_list",
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
@@ -60,7 +60,7 @@ export default Mixin.create({
       let category = this.site.get("categories.firstObject");
       if (category) {
         return categoryLinkHTML(category, {
-          categoryStyle: value
+          categoryStyle: value,
         });
       }
     }
@@ -124,26 +124,30 @@ export default Mixin.create({
     return (
       defaultValues &&
       defaultValues.length > 0 &&
-      !defaultValues.every(value => bufferedValues.includes(value))
+      !defaultValues.every((value) => bufferedValues.includes(value))
     );
   },
 
-  _watchEnterKey: on("didInsertElement", function() {
-    $(this.element).on("keydown.setting-enter", ".input-setting-string", e => {
-      if (e.keyCode === 13) {
-        // enter key
-        this.send("save");
+  _watchEnterKey: on("didInsertElement", function () {
+    $(this.element).on(
+      "keydown.setting-enter",
+      ".input-setting-string",
+      (e) => {
+        if (e.keyCode === 13) {
+          // enter key
+          this.send("save");
+        }
       }
-    });
+    );
   }),
 
-  _removeBindings: on("willDestroyElement", function() {
+  _removeBindings: on("willDestroyElement", function () {
     $(this.element).off("keydown.setting-enter");
   }),
 
   _save() {
     warn("You should define a `_save` method", {
-      id: "discourse.setting-component.missing-save"
+      id: "discourse.setting-component.missing-save",
     });
     return Promise.resolve();
   },
@@ -179,7 +183,7 @@ export default Mixin.create({
         "default_tags_muted",
         "default_tags_watching_first_post",
         "default_text_size",
-        "default_title_count_mode"
+        "default_title_count_mode",
       ];
       const key = this.buffered.get("setting");
 
@@ -189,17 +193,17 @@ export default Mixin.create({
 
         ajax(`/admin/site_settings/${key}/user_count.json`, {
           type: "PUT",
-          data
-        }).then(result => {
+          data,
+        }).then((result) => {
           const count = result.user_count;
 
           if (count > 0) {
             const controller = showModal("site-setting-default-categories", {
               model: {
                 count: result.user_count,
-                key: key.replace(/_/g, " ")
+                key: key.replace(/_/g, " "),
               },
-              admin: true
+              admin: true,
             });
 
             controller.set("onClose", () => {
@@ -224,7 +228,7 @@ export default Mixin.create({
             this.afterSave();
           }
         })
-        .catch(e => {
+        .catch((e) => {
           if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
             this.set("validationMessage", e.jqXHR.responseJSON.errors[0]);
           } else {
@@ -248,12 +252,9 @@ export default Mixin.create({
     setDefaultValues() {
       this.set(
         "buffered.value",
-        this.bufferedValues
-          .concat(this.defaultValues)
-          .uniq()
-          .join("|")
+        this.bufferedValues.concat(this.defaultValues).uniq().join("|")
       );
       return false;
-    }
-  }
+    },
+  },
 });

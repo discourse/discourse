@@ -7,25 +7,25 @@ acceptance("Create Account - User Fields", {
         id: 34,
         name: "I've read the terms of service",
         field_type: "confirm",
-        required: true
+        required: true,
       },
       {
         id: 35,
         name: "What is your pet's name?",
         field_type: "text",
-        required: true
+        required: true,
       },
       {
         id: 36,
         name: "What's your dad like?",
         field_type: "text",
-        required: false
-      }
-    ]
-  }
+        required: false,
+      },
+    ],
+  },
 });
 
-QUnit.test("create account with user fields", async assert => {
+QUnit.test("create account with user fields", async (assert) => {
   await visit("/");
   await click("header .sign-up-button");
 

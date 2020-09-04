@@ -25,7 +25,7 @@ export default DiscourseRoute.extend({
 
     revokeApiKey(key) {
       key.revoke();
-    }
+    },
   },
 
   beforeModel() {
@@ -44,7 +44,7 @@ export default DiscourseRoute.extend({
     }
 
     return User.create({
-      username: encodeURIComponent(params.username)
+      username: encodeURIComponent(params.username),
     });
   },
 
@@ -72,7 +72,7 @@ export default DiscourseRoute.extend({
     this._super(...arguments);
 
     const user = this.modelFor("user");
-    this.messageBus.subscribe(`/u/${user.username_lower}`, data =>
+    this.messageBus.subscribe(`/u/${user.username_lower}`, (data) =>
       user.loadUserAction(data)
     );
   },
@@ -85,5 +85,5 @@ export default DiscourseRoute.extend({
 
     // Remove the search context
     this.searchService.set("searchContext", null);
-  }
+  },
 });

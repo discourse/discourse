@@ -14,7 +14,7 @@ export default Component.extend(LoadMore, {
   // Overwrite this to perform client side filtering of topics, if desired
   filteredTopics: alias("topics"),
 
-  _init: on("init", function() {
+  _init: on("init", function () {
     this.addObserver("hideCategory", this.rerender);
     this.addObserver("order", this.rerender);
     this.addObserver("ascending", this.rerender);
@@ -149,7 +149,7 @@ export default Component.extend(LoadMore, {
 
   click(e) {
     var self = this;
-    var onClick = function(sel, callback) {
+    var onClick = function (sel, callback) {
       var target = $(e.target).closest(sel);
 
       if (target.length === 1) {
@@ -157,22 +157,22 @@ export default Component.extend(LoadMore, {
       }
     };
 
-    onClick("button.bulk-select", function() {
+    onClick("button.bulk-select", function () {
       this.toggleBulkSelect();
       this.rerender();
     });
 
-    onClick("button.bulk-select-all", function() {
+    onClick("button.bulk-select-all", function () {
       $("input.bulk-select:not(:checked)").click();
     });
 
-    onClick("button.bulk-clear-all", function() {
+    onClick("button.bulk-clear-all", function () {
       $("input.bulk-select:checked").click();
     });
 
-    onClick("th.sortable", function(e2) {
+    onClick("th.sortable", function (e2) {
       this.changeSort(e2.data("sort-order"));
       this.rerender();
     });
-  }
+  },
 });

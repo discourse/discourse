@@ -17,35 +17,35 @@ export default Component.extend(UtilsMixin, {
     "rowValue:data-value",
     "rowName:data-name",
     "ariaLabel:aria-label",
-    "guid:data-guid"
+    "guid:data-guid",
   ],
   classNameBindings: [
     "isHighlighted",
     "isSelected",
     "isNone",
     "isNone:none",
-    "item.classNames"
+    "item.classNames",
   ],
 
-  isNone: computed("rowValue", function() {
+  isNone: computed("rowValue", function () {
     return this.rowValue === this.getValue(this.selectKit.noneItem);
   }),
 
-  guid: computed("item", function() {
+  guid: computed("item", function () {
     return guidFor(this.item);
   }),
 
-  ariaLabel: computed("item.ariaLabel", "title", function() {
+  ariaLabel: computed("item.ariaLabel", "title", function () {
     return this.getProperty(this.item, "ariaLabel") || this.title;
   }),
 
-  title: computed("rowTitle", "item.title", "rowName", function() {
+  title: computed("rowTitle", "item.title", "rowName", function () {
     return (
       this.rowTitle || this.getProperty(this.item, "title") || this.rowName
     );
   }),
 
-  label: computed("rowLabel", "item.label", "title", "rowName", function() {
+  label: computed("rowLabel", "item.label", "title", "rowName", function () {
     const label =
       this.rowLabel ||
       this.getProperty(this.item, "label") ||
@@ -69,25 +69,25 @@ export default Component.extend(UtilsMixin, {
       rowName: this.getName(this.item),
       rowValue: this.getValue(this.item),
       rowLabel: this.getProperty(this.item, "labelProperty"),
-      rowTitle: this.getProperty(this.item, "titleProperty")
+      rowTitle: this.getProperty(this.item, "titleProperty"),
     });
   },
 
-  icons: computed("item.{icon,icons}", function() {
+  icons: computed("item.{icon,icons}", function () {
     const icon = makeArray(this.getProperty(this.item, "icon"));
     const icons = makeArray(this.getProperty(this.item, "icons"));
     return icon.concat(icons).filter(Boolean);
   }),
 
-  highlightedValue: computed("selectKit.highlighted", function() {
+  highlightedValue: computed("selectKit.highlighted", function () {
     return this.getValue(this.selectKit.highlighted);
   }),
 
-  isHighlighted: computed("rowValue", "highlightedValue", function() {
+  isHighlighted: computed("rowValue", "highlightedValue", function () {
     return this.rowValue === this.highlightedValue;
   }),
 
-  isSelected: computed("rowValue", "value", function() {
+  isSelected: computed("rowValue", "value", function () {
     return this.rowValue === this.value;
   }),
 
@@ -101,5 +101,5 @@ export default Component.extend(UtilsMixin, {
   click() {
     this.selectKit.select(this.rowValue, this.item);
     return false;
-  }
+  },
 });

@@ -9,6 +9,6 @@ export default Route.extend({
   actions: {
     refresh() {
       this.refresh();
-    }
-  }
+    },
+  },
 });

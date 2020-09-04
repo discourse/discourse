@@ -3,5 +3,5 @@ import layout from "select-kit/templates/components/mini-tag-chooser/mini-tag-ch
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
   layout,
-  classNames: ["mini-tag-chooser-header"]
+  classNames: ["mini-tag-chooser-header"],
 });

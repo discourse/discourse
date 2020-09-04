@@ -2,7 +2,7 @@ import { cleanDOM } from "discourse/lib/clean-dom";
 import {
   startPageTracking,
   resetPageTracking,
-  googleTagManagerPageChanged
+  googleTagManagerPageChanged,
 } from "discourse/lib/page-tracker";
 import { viewTrackingRequired } from "discourse/lib/ajax";
 
@@ -27,7 +27,7 @@ export default {
     // Out of the box, Discourse tries to track google analytics
     // if it is present
     if (typeof window._gaq !== "undefined") {
-      appEvents.on("page:changed", data => {
+      appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
           window._gaq.push(["_set", "title", data.title]);
           window._gaq.push(["_trackPageview", data.url]);
@@ -38,7 +38,7 @@ export default {
 
     // Also use Universal Analytics if it is present
     if (typeof window.ga !== "undefined") {
-      appEvents.on("page:changed", data => {
+      appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
           window.ga("send", "pageview", { page: data.url, title: data.title });
         }
@@ -47,7 +47,7 @@ export default {
 
     // And Google Tag Manager too
     if (typeof window.dataLayer !== "undefined") {
-      appEvents.on("page:changed", data => {
+      appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
           googleTagManagerPageChanged(data);
         }
@@ -57,5 +57,5 @@ export default {
 
   teardown() {
     resetPageTracking();
-  }
+  },
 };

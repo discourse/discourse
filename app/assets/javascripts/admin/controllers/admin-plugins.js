@@ -3,9 +3,9 @@ import Controller from "@ember/controller";
 
 export default Controller.extend({
   @discourseComputed
-  adminRoutes: function() {
+  adminRoutes: function () {
     return this.model
-      .map(p => {
+      .map((p) => {
         if (p.get("enabled")) {
           return p.admin_route;
         }
@@ -20,6 +20,6 @@ export default Controller.extend({
 
     toggleMenu() {
       $(".admin-detail").toggleClass("mobile-closed mobile-open");
-    }
-  }
+    },
+  },
 });

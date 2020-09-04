@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Signing In");
 
-QUnit.test("sign in", async assert => {
+QUnit.test("sign in", async (assert) => {
   await visit("/");
   await click("header .login-button");
   assert.ok(exists(".login-modal"), "it shows the login modal");
@@ -25,7 +25,7 @@ QUnit.test("sign in", async assert => {
   );
 });
 
-QUnit.test("sign in - not activated", async assert => {
+QUnit.test("sign in - not activated", async (assert) => {
   await visit("/");
   await click("header .login-button");
   assert.ok(exists(".login-modal"), "it shows the login modal");
@@ -47,7 +47,7 @@ QUnit.test("sign in - not activated", async assert => {
   assert.ok(!exists(".modal-body small"), "it escapes the email address");
 });
 
-QUnit.test("sign in - not activated - edit email", async assert => {
+QUnit.test("sign in - not activated - edit email", async (assert) => {
   await visit("/");
   await click("header .login-button");
   assert.ok(exists(".login-modal"), "it shows the login modal");
@@ -68,7 +68,7 @@ QUnit.test("sign in - not activated - edit email", async assert => {
   assert.equal(find(".modal-body b").text(), "different@example.com");
 });
 
-QUnit.skip("second factor", async assert => {
+QUnit.skip("second factor", async (assert) => {
   await visit("/");
   await click("header .login-button");
 
@@ -101,7 +101,7 @@ QUnit.skip("second factor", async assert => {
   );
 });
 
-QUnit.skip("security key", async assert => {
+QUnit.skip("security key", async (assert) => {
   await visit("/");
   await click("header .login-button");
 
@@ -127,7 +127,7 @@ QUnit.skip("security key", async assert => {
   assert.not(exists("#login-button:visible"), "hides the login button");
 });
 
-QUnit.test("create account", async assert => {
+QUnit.test("create account", async (assert) => {
   await visit("/");
   await click("header .sign-up-button");
 
@@ -163,7 +163,7 @@ QUnit.test("create account", async assert => {
   );
 });
 
-QUnit.test("second factor backup - valid token", async assert => {
+QUnit.test("second factor backup - valid token", async (assert) => {
   await visit("/");
   await click("header .login-button");
   await fillIn("#login-account-name", "eviltrout");
@@ -179,7 +179,7 @@ QUnit.test("second factor backup - valid token", async assert => {
   );
 });
 
-QUnit.test("second factor backup - invalid token", async assert => {
+QUnit.test("second factor backup - invalid token", async (assert) => {
   await visit("/");
   await click("header .login-button");
   await fillIn("#login-account-name", "eviltrout");

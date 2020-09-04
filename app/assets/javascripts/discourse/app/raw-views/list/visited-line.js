@@ -3,7 +3,7 @@ import EmberObject from "@ember/object";
 
 export default EmberObject.extend({
   @discourseComputed
-  isLastVisited: function() {
+  isLastVisited: function () {
     return this.lastVisitedTopic === this.topic;
-  }
+  },
 });

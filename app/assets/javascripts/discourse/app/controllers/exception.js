@@ -7,23 +7,23 @@ import discourseComputed, { on } from "discourse-common/utils/decorators";
 const ButtonBackBright = {
     classes: "btn-primary",
     action: "back",
-    key: "errors.buttons.back"
+    key: "errors.buttons.back",
   },
   ButtonBackDim = {
     classes: "",
     action: "back",
-    key: "errors.buttons.back"
+    key: "errors.buttons.back",
   },
   ButtonTryAgain = {
     classes: "btn-primary",
     action: "tryLoading",
     key: "errors.buttons.again",
-    icon: "sync"
+    icon: "sync",
   },
   ButtonLoadPage = {
     classes: "btn-primary",
     action: "tryLoading",
-    key: "errors.buttons.fixed"
+    key: "errors.buttons.fixed",
   };
 
 // The controller for the nice error page
@@ -86,7 +86,7 @@ export default Controller.extend({
       return I18n.t("errors.desc.not_found");
     } else if (this.isServer) {
       return I18n.t("errors.desc.server", {
-        status: this.get("thrown.status") + " " + this.get("thrown.statusText")
+        status: this.get("thrown.status") + " " + this.get("thrown.statusText"),
       });
     } else {
       // TODO
@@ -117,6 +117,6 @@ export default Controller.extend({
         this.lastTransition.retry();
         this.set("loading", false);
       });
-    }
-  }
+    },
+  },
 });

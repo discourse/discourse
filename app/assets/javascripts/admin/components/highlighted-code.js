@@ -7,5 +7,5 @@ export default Component.extend({
   @observes("code")
   _refresh() {
     highlightSyntax(this.element, this.siteSettings, this.session);
-  }
+  },
 });

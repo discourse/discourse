@@ -7,13 +7,13 @@ export default SelectKitHeaderComponent.extend({
   classNames: ["multi-select-header"],
   layout,
 
-  selectedNames: computed("selectedContent", function() {
-    return makeArray(this.selectedContent).map(c => this.getName(c));
+  selectedNames: computed("selectedContent", function () {
+    return makeArray(this.selectedContent).map((c) => this.getName(c));
   }),
 
-  selectedValue: computed("selectedContent", function() {
+  selectedValue: computed("selectedContent", function () {
     return makeArray(this.selectedContent)
-      .map(c => {
+      .map((c) => {
         if (this.getName(c) !== this.getName(this.selectKit.noneItem)) {
           return this.getValue(c);
         }
@@ -21,5 +21,5 @@ export default SelectKitHeaderComponent.extend({
         return null;
       })
       .filter(Boolean);
-  })
+  }),
 });

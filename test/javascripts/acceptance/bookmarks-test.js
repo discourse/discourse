@@ -3,7 +3,7 @@ import selectKit from "helpers/select-kit-helper";
 import {
   acceptance,
   loggedInUser,
-  acceptanceUseFakeClock
+  acceptanceUseFakeClock,
 } from "helpers/qunit-helpers";
 import pretender from "helpers/create-pretender";
 import { parsePostData } from "helpers/create-pretender";
@@ -12,7 +12,7 @@ acceptance("Bookmarking", {
   loggedIn: true,
   afterEach() {
     sandbox.restore();
-  }
+  },
 });
 
 function handleRequest(assert, request) {
@@ -22,18 +22,18 @@ function handleRequest(assert, request) {
   return [
     200,
     {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     {
       id: 999,
-      success: "OK"
-    }
+      success: "OK",
+    },
   ];
 }
 
 function mockSuccessfulBookmarkPost(assert) {
-  pretender.post("/bookmarks", request => handleRequest(assert, request));
-  pretender.put("/bookmarks/999", request => handleRequest(assert, request));
+  pretender.post("/bookmarks", (request) => handleRequest(assert, request));
+  pretender.put("/bookmarks/999", (request) => handleRequest(assert, request));
 }
 
 async function openBookmarkModal() {
@@ -48,13 +48,13 @@ async function openEditBookmarkModal() {
   await click(".topic-post:first-child button.bookmarked");
 }
 
-test("Bookmarks modal opening", async assert => {
+test("Bookmarks modal opening", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await openBookmarkModal();
   assert.ok(exists("#bookmark-reminder-modal"), "it shows the bookmark modal");
 });
 
-test("Bookmarks modal selecting reminder type", async assert => {
+test("Bookmarks modal selecting reminder type", async (assert) => {
   mockSuccessfulBookmarkPost(assert);
 
   await visit("/t/internationalization-localization/280");
@@ -83,11 +83,11 @@ test("Bookmarks modal selecting reminder type", async assert => {
     "start_of_next_business_week",
     "next_week",
     "next_month",
-    "custom"
+    "custom",
   ]);
 });
 
-test("Saving a bookmark with a reminder", async assert => {
+test("Saving a bookmark with a reminder", async (assert) => {
   mockSuccessfulBookmarkPost(assert);
   await visit("/t/internationalization-localization/280");
   await openBookmarkModal();
@@ -107,7 +107,7 @@ test("Saving a bookmark with a reminder", async assert => {
   assert.verifySteps(["tomorrow"]);
 });
 
-test("Opening the options panel and remembering the option", async assert => {
+test("Opening the options panel and remembering the option", async (assert) => {
   mockSuccessfulBookmarkPost(assert);
   await visit("/t/internationalization-localization/280");
   await openBookmarkModal();
@@ -125,16 +125,11 @@ test("Opening the options panel and remembering the option", async assert => {
     exists(".bookmark-options-panel"),
     "it should reopen the options panel"
   );
-  assert.equal(
-    selectKit(".bookmark-option-selector")
-      .header()
-      .value(),
-    1
-  );
+  assert.equal(selectKit(".bookmark-option-selector").header().value(), 1);
   assert.verifySteps(["none"]);
 });
 
-test("Saving a bookmark with no reminder or name", async assert => {
+test("Saving a bookmark with no reminder or name", async (assert) => {
   mockSuccessfulBookmarkPost(assert);
   await visit("/t/internationalization-localization/280");
   await openBookmarkModal();
@@ -153,16 +148,16 @@ test("Saving a bookmark with no reminder or name", async assert => {
   assert.verifySteps(["none"]);
 });
 
-test("Deleting a bookmark with a reminder", async assert => {
+test("Deleting a bookmark with a reminder", async (assert) => {
   pretender.delete("/bookmarks/999", () => [
     200,
     {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     {
       success: "OK",
-      topic_bookmarked: false
-    }
+      topic_bookmarked: false,
+    },
   ]);
 
   mockSuccessfulBookmarkPost(assert);
@@ -181,9 +176,7 @@ test("Deleting a bookmark with a reminder", async assert => {
 
   assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
   assert.ok(
-    find(".bootbox.modal")
-      .text()
-      .includes(I18n.t("bookmarks.confirm_delete")),
+    find(".bootbox.modal").text().includes(I18n.t("bookmarks.confirm_delete")),
     "it shows delete confirmation message"
   );
 
@@ -195,7 +188,7 @@ test("Deleting a bookmark with a reminder", async assert => {
   );
 });
 
-test("Cancelling saving a bookmark", async assert => {
+test("Cancelling saving a bookmark", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await openBookmarkModal();
   await click(".d-modal-cancel");
@@ -205,7 +198,7 @@ test("Cancelling saving a bookmark", async assert => {
   );
 });
 
-test("Editing a bookmark", async assert => {
+test("Editing a bookmark", async (assert) => {
   mockSuccessfulBookmarkPost(assert);
 
   await visit("/t/internationalization-localization/280");
@@ -239,12 +232,12 @@ acceptance("Bookmarking - Mobile", {
   mobileView: true,
   afterEach() {
     sandbox.restore();
-  }
+  },
 });
 
 QUnit.skip(
   "Editing a bookmark that has a Later Today reminder, and it is before 6pm today",
-  async assert => {
+  async (assert) => {
     await acceptanceUseFakeClock("2020-05-04T13:00:00", async () => {
       mockSuccessfulBookmarkPost(assert);
       await visit("/t/internationalization-localization/280");

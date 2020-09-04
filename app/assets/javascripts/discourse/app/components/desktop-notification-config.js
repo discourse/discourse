@@ -4,14 +4,14 @@ import Component from "@ember/component";
 import KeyValueStore from "discourse/lib/key-value-store";
 import {
   context,
-  confirmNotification
+  confirmNotification,
 } from "discourse/lib/desktop-notifications";
 import {
   subscribe as subscribePushNotification,
   unsubscribe as unsubscribePushNotification,
   isPushNotificationsSupported,
   keyValueStore as pushNotificationKeyValueStore,
-  userSubscriptionKey as pushNotificationUserSubscriptionKey
+  userSubscriptionKey as pushNotificationUserSubscriptionKey,
 } from "discourse/lib/push-notifications";
 
 const keyValueStore = new KeyValueStore(context);
@@ -32,7 +32,7 @@ export default Component.extend({
     },
     get() {
       return keyValueStore.getItem("notifications-disabled");
-    }
+    },
   },
 
   @discourseComputed
@@ -77,7 +77,7 @@ export default Component.extend({
             pushNotificationUserSubscriptionKey(user)
           )
         : false;
-    }
+    },
   },
 
   isEnabled: or("isEnabledDesktop", "isEnabledPush"),
@@ -118,6 +118,6 @@ export default Component.extend({
           this.notifyPropertyChange("notificationsPermission");
         });
       }
-    }
-  }
+    },
+  },
 });

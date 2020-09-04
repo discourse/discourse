@@ -31,5 +31,5 @@ export default Component.extend({
       }
     }
     return sanitize(this.get("badge.description"));
-  }
+  },
 });

@@ -18,7 +18,7 @@ export default Controller.extend({
   @discourseComputed("baseColorScheme")
   baseColors(baseColorScheme) {
     const baseColorsHash = EmberObject.create({});
-    baseColorScheme.get("colors").forEach(color => {
+    baseColorScheme.get("colors").forEach((color) => {
       baseColorsHash.set(color.get("name"), color);
     });
     return baseColorsHash;
@@ -30,7 +30,7 @@ export default Controller.extend({
       const newColorScheme = base.copy();
       newColorScheme.setProperties({
         name: I18n.t("admin.customize.colors.new_name"),
-        base_scheme_id: base.get("base_scheme_id")
+        base_scheme_id: base.get("base_scheme_id"),
       });
       newColorScheme.save().then(() => {
         this.model.pushObject(newColorScheme);
@@ -42,8 +42,8 @@ export default Controller.extend({
     newColorScheme() {
       showModal("admin-color-scheme-select-base", {
         model: this.baseColorSchemes,
-        admin: true
+        admin: true,
       });
-    }
-  }
+    },
+  },
 });

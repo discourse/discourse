@@ -20,7 +20,7 @@ export default Controller.extend({
     const types = [];
 
     if (typeFilters) {
-      typeFilters.forEach(type =>
+      typeFilters.forEach((type) =>
         types.push({ id: type, name: I18n.t(`groups.index.${type}_groups`) })
       );
     }
@@ -33,7 +33,7 @@ export default Controller.extend({
 
     this.store
       .findAll("group", params)
-      .then(groups => {
+      .then((groups) => {
         this.set("groups", groups);
 
         if (groups.canLoadMore) {
@@ -60,5 +60,5 @@ export default Controller.extend({
 
   _debouncedFilter(filter) {
     this.set("filter", filter);
-  }
+  },
 });

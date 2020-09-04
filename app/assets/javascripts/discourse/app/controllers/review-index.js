@@ -14,7 +14,7 @@ export default Controller.extend({
     "from_date",
     "to_date",
     "sort_order",
-    "additional_filters"
+    "additional_filters",
   ],
   type: null,
   status: "pending",
@@ -37,32 +37,34 @@ export default Controller.extend({
 
   @discourseComputed("reviewableTypes")
   allTypes() {
-    return (this.reviewableTypes || []).map(type => {
+    return (this.reviewableTypes || []).map((type) => {
       return {
         id: type,
-        name: I18n.t(`review.types.${type.underscore()}.title`)
+        name: I18n.t(`review.types.${type.underscore()}.title`),
       };
     });
   },
 
   @discourseComputed
   priorities() {
-    return ["low", "medium", "high"].map(priority => {
+    return ["low", "medium", "high"].map((priority) => {
       return {
         id: priority,
-        name: I18n.t(`review.filters.priority.${priority}`)
+        name: I18n.t(`review.filters.priority.${priority}`),
       };
     });
   },
 
   @discourseComputed
   sortOrders() {
-    return ["score", "score_asc", "created_at", "created_at_asc"].map(order => {
-      return {
-        id: order,
-        name: I18n.t(`review.filters.orders.${order}`)
-      };
-    });
+    return ["score", "score_asc", "created_at", "created_at_asc"].map(
+      (order) => {
+        return {
+          id: order,
+          name: I18n.t(`review.filters.orders.${order}`),
+        };
+      }
+    );
   },
 
   @discourseComputed
@@ -74,8 +76,8 @@ export default Controller.extend({
       "deleted",
       "ignored",
       "reviewed",
-      "all"
-    ].map(id => {
+      "all",
+    ].map((id) => {
       return { id, name: I18n.t(`review.statuses.${id}.title`) };
     });
   },
@@ -95,7 +97,7 @@ export default Controller.extend({
         return;
       }
 
-      let newList = this.reviewables.reject(reviewable => {
+      let newList = this.reviewables.reject((reviewable) => {
         return ids.indexOf(reviewable.id) !== -1;
       });
       this.set("reviewables", newList);
@@ -118,7 +120,7 @@ export default Controller.extend({
         "rejected",
         "deleted",
         "ignored",
-        "pending"
+        "pending",
       ];
 
       if (
@@ -152,7 +154,7 @@ export default Controller.extend({
           ? this.filterToDate.toISOString(true).split("T")[0]
           : null,
         sort_order: nextOrder,
-        additional_filters: JSON.stringify(this.additionalFilters)
+        additional_filters: JSON.stringify(this.additionalFilters),
       });
 
       this.send("refreshRoute");
@@ -164,6 +166,6 @@ export default Controller.extend({
 
     toggleFilters() {
       this.toggleProperty("filtersExpanded");
-    }
-  }
+    },
+  },
 });

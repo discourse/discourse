@@ -22,6 +22,6 @@ export default Controller.extend(ModalFunctionality, {
         this.selectedBaseThemeId
       );
       this.send("closeModal");
-    }
-  }
+    },
+  },
 });

@@ -2,7 +2,7 @@ export const SEPARATOR = ":";
 import {
   caretRowCol,
   caretPosition,
-  inCodeBlock
+  inCodeBlock,
 } from "discourse/lib/utilities";
 
 export function replaceSpan($elem, categorySlug, categoryLink, type) {

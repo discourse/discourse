@@ -30,20 +30,20 @@ export default Component.extend({
         { id: "block", name: I18n.t("admin.logs.screened_ips.actions.block") },
         {
           id: "do_nothing",
-          name: I18n.t("admin.logs.screened_ips.actions.do_nothing")
+          name: I18n.t("admin.logs.screened_ips.actions.do_nothing"),
         },
         {
           id: "allow_admin",
-          name: I18n.t("admin.logs.screened_ips.actions.allow_admin")
-        }
+          name: I18n.t("admin.logs.screened_ips.actions.allow_admin"),
+        },
       ];
     } else {
       return [
         { id: "block", name: I18n.t("admin.logs.screened_ips.actions.block") },
         {
           id: "do_nothing",
-          name: I18n.t("admin.logs.screened_ips.actions.do_nothing")
-        }
+          name: I18n.t("admin.logs.screened_ips.actions.do_nothing"),
+        },
       ];
     }
   },
@@ -54,23 +54,23 @@ export default Component.extend({
         this.set("formSubmitted", true);
         const screenedIpAddress = ScreenedIpAddress.create({
           ip_address: this.ip_address,
-          action_name: this.actionName
+          action_name: this.actionName,
         });
         screenedIpAddress
           .save()
-          .then(result => {
+          .then((result) => {
             this.setProperties({ ip_address: "", formSubmitted: false });
             this.action(ScreenedIpAddress.create(result.screened_ip_address));
             schedule("afterRender", () =>
               this.element.querySelector(".ip-address-input").focus()
             );
           })
-          .catch(e => {
+          .catch((e) => {
             this.set("formSubmitted", false);
             const msg =
               e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors
                 ? I18n.t("generic_error_with_reason", {
-                    error: e.jqXHR.responseJSON.errors.join(". ")
+                    error: e.jqXHR.responseJSON.errors.join(". "),
                   })
                 : I18n.t("generic_error");
             bootbox.alert(msg, () =>
@@ -78,17 +78,17 @@ export default Component.extend({
             );
           });
       }
-    }
+    },
   },
 
   @on("didInsertElement")
   _init() {
     schedule("afterRender", () => {
-      $(this.element.querySelector(".ip-address-input")).keydown(e => {
+      $(this.element.querySelector(".ip-address-input")).keydown((e) => {
         if (e.keyCode === 13) {
           this.send("submit");
         }
       });
     });
-  }
+  },
 });

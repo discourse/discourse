@@ -8,6 +8,6 @@ export default Route.extend({
 
     new() {
       this.transitionTo("adminApiKeys.new");
-    }
-  }
+    },
+  },
 });

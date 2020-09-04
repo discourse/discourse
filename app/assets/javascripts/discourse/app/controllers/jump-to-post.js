@@ -20,7 +20,7 @@ export default Controller.extend(ModalFunctionality, {
       } else if (this.postDate) {
         this._jumpToDate(this.postDate);
       }
-    }
+    },
   },
 
   _jumpToIndex(postsCounts, postNumber) {
@@ -37,5 +37,5 @@ export default Controller.extend(ModalFunctionality, {
   _close() {
     this.setProperties({ postNumber: null, postDate: null });
     this.send("closeModal");
-  }
+  },
 });

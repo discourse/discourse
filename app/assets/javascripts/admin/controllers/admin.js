@@ -20,7 +20,7 @@ export default Controller.extend({
   adminContentsClassName(currentPath) {
     let cssClasses = currentPath
       .split(".")
-      .filter(segment => {
+      .filter((segment) => {
         return (
           segment !== "index" &&
           segment !== "loading" &&
@@ -37,5 +37,5 @@ export default Controller.extend({
     }
 
     return cssClasses;
-  }
+  },
 });

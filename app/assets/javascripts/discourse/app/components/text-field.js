@@ -13,7 +13,7 @@ export default TextField.extend({
     "autofocus",
     "maxLength",
     "dir",
-    "aria-label"
+    "aria-label",
   ],
 
   init() {
@@ -87,6 +87,6 @@ export default TextField.extend({
     },
     set(value) {
       return (this._placeholder = value);
-    }
-  }
+    },
+  },
 });

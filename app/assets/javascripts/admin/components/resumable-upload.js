@@ -36,8 +36,8 @@ export default Component.extend({
       maxFiles: 1, // only 1 file at a time
       headers: {
         "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")
-          .content
-      }
+          .content,
+      },
     });
 
     this.resumable.on("fileAdded", () => {
@@ -51,7 +51,7 @@ export default Component.extend({
       });
     });
 
-    this.resumable.on("fileProgress", file => {
+    this.resumable.on("fileProgress", (file) => {
       // update progress
       later(() => {
         this.set("progress", parseInt(file.progress() * 100, 10));
@@ -59,7 +59,7 @@ export default Component.extend({
       });
     });
 
-    this.resumable.on("fileSuccess", file => {
+    this.resumable.on("fileSuccess", (file) => {
       later(() => {
         // mark as not uploading anymore
         this._reset();
@@ -136,5 +136,5 @@ export default Component.extend({
     this.setProperties({ isUploading: false, progress: 0 });
     this._updateIcon();
     this._updateProgressBar();
-  }
+  },
 });

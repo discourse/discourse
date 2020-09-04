@@ -35,10 +35,10 @@ export default Component.extend({
   )
   inactiveThemes(themes) {
     if (this.componentsTabActive) {
-      return themes.filter(theme => theme.get("parent_themes.length") <= 0);
+      return themes.filter((theme) => theme.get("parent_themes.length") <= 0);
     }
     return themes.filter(
-      theme => !theme.get("user_selectable") && !theme.get("default")
+      (theme) => !theme.get("user_selectable") && !theme.get("default")
     );
   },
 
@@ -50,10 +50,10 @@ export default Component.extend({
   )
   activeThemes(themes) {
     if (this.componentsTabActive) {
-      return themes.filter(theme => theme.get("parent_themes.length") > 0);
+      return themes.filter((theme) => theme.get("parent_themes.length") > 0);
     } else {
       return themes
-        .filter(theme => theme.get("user_selectable") || theme.get("default"))
+        .filter((theme) => theme.get("user_selectable") || theme.get("default"))
         .sort((a, b) => {
           if (a.get("default") && !b.get("default")) {
             return -1;
@@ -76,6 +76,6 @@ export default Component.extend({
     },
     navigateToTheme(theme) {
       this.router.transitionTo("adminCustomizeThemes.show", theme);
-    }
-  }
+    },
+  },
 });

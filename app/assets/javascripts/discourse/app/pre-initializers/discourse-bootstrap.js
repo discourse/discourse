@@ -6,7 +6,7 @@ import {
   setEnvironment,
   isTesting,
   isProduction,
-  isDevelopment
+  isDevelopment,
 } from "discourse-common/config/environment";
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
@@ -32,7 +32,7 @@ export default {
     if (preloadedDataElement) {
       const preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
 
-      Object.keys(preloaded).forEach(function(key) {
+      Object.keys(preloaded).forEach(function (key) {
         PreloadStore.store(key, JSON.parse(preloaded[key]));
 
         if (setupData.debugPreloadedAppData === "true") {
@@ -48,20 +48,20 @@ export default {
       get() {
         deprecated(`use "get-url" helpers instead of Discourse.BaseUrl`, {
           since: "2.5",
-          dropFrom: "2.6"
+          dropFrom: "2.6",
         });
         return baseUrl;
-      }
+      },
     });
     let baseUri = setupData.baseUri;
     Object.defineProperty(app, "BaseUri", {
       get() {
         deprecated(`use "get-url" helpers instead of Discourse.BaseUri`, {
           since: "2.5",
-          dropFrom: "2.6"
+          dropFrom: "2.6",
         });
         return baseUri;
-      }
+      },
     });
     setupURL(setupData.cdn, baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
@@ -102,7 +102,7 @@ export default {
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
     }
 
-    RSVP.configure("onerror", function(e) {
+    RSVP.configure("onerror", function (e) {
       // Ignore TransitionAborted exceptions that bubble up
       if (e && e.message === "TransitionAborted") {
         return;
@@ -129,19 +129,19 @@ export default {
     // Deprecate lodash usage
     let lo = window._;
     if (lo) {
-      Object.keys(lo).forEach(m => {
+      Object.keys(lo).forEach((m) => {
         let old = lo[m];
-        lo[m] = function() {
+        lo[m] = function () {
           deprecated(
             `lodash is deprecated and will be removed from Discourse.`,
             {
               since: "2.6",
-              dropFrom: "2.7"
+              dropFrom: "2.7",
             }
           );
           return old(...arguments);
         };
       });
     }
-  }
+  },
 };

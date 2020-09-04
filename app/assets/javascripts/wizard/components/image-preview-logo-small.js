@@ -70,5 +70,5 @@ export default createPreviewComponent(375, 100, {
       const line = height * 0.55 + i * (LINE_HEIGHT * 1.5);
       ctx.fillText(lines[i], afterLogo, line);
     }
-  }
+  },
 });

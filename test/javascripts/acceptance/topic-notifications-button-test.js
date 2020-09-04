@@ -7,10 +7,10 @@ acceptance("Topic Notifications button", {
     server.post("/t/280/notifications", () => {
       return helper.response({});
     });
-  }
+  },
 });
 
-QUnit.test("Updating topic notification level", async assert => {
+QUnit.test("Updating topic notification level", async (assert) => {
   const notificationOptions = selectKit(
     "#topic-footer-buttons .topic-notifications-options"
   );

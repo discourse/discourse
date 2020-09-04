@@ -151,8 +151,8 @@ export default {
           data: {
             url: href,
             post_id: postId,
-            topic_id: topicId
-          }
+            topic_id: topicId,
+          },
         });
       }
     }
@@ -174,5 +174,5 @@ export default {
     }
 
     return true;
-  }
+  },
 };

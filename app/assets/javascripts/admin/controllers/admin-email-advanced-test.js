@@ -15,17 +15,17 @@ export default Controller.extend({
 
       ajax("/admin/email/advanced-test", {
         type: "POST",
-        data: { email: this.email }
+        data: { email: this.email },
       })
-        .then(data => {
+        .then((data) => {
           this.setProperties({
             text: data.text,
             elided: data.elided,
-            format: data.format
+            format: data.format,
           });
         })
         .catch(popupAjaxError)
         .finally(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });

@@ -8,7 +8,7 @@ export default Controller.extend({
 
   actions: {
     clearBlock(row) {
-      row.clearBlock().then(function() {
+      row.clearBlock().then(function () {
         // feeling lazy
         window.location.reload();
       });
@@ -16,14 +16,14 @@ export default Controller.extend({
 
     exportScreenedEmailList() {
       exportEntity("screened_email").then(outputExportResult);
-    }
+    },
   },
 
   show() {
     this.set("loading", true);
-    ScreenedEmail.findAll().then(result => {
+    ScreenedEmail.findAll().then((result) => {
       this.set("model", result);
       this.set("loading", false);
     });
-  }
+  },
 });

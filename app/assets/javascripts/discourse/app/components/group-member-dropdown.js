@@ -8,19 +8,19 @@ export default DropdownSelectBoxComponent.extend({
 
   selectKitOptions: {
     icon: "wrench",
-    showFullTitle: false
+    showFullTitle: false,
   },
 
-  content: computed("member.owner", function() {
+  content: computed("member.owner", function () {
     const items = [
       {
         id: "removeMember",
         name: I18n.t("groups.members.remove_member"),
         description: I18n.t("groups.members.remove_member_description", {
-          username: this.get("member.username")
+          username: this.get("member.username"),
         }),
-        icon: "user-times"
-      }
+        icon: "user-times",
+      },
     ];
 
     if (this.get("currentUser.admin")) {
@@ -29,22 +29,22 @@ export default DropdownSelectBoxComponent.extend({
           id: "removeOwner",
           name: I18n.t("groups.members.remove_owner"),
           description: I18n.t("groups.members.remove_owner_description", {
-            username: this.get("member.username")
+            username: this.get("member.username"),
           }),
-          icon: "shield-alt"
+          icon: "shield-alt",
         });
       } else {
         items.push({
           id: "makeOwner",
           name: I18n.t("groups.members.make_owner"),
           description: I18n.t("groups.members.make_owner_description", {
-            username: this.get("member.username")
+            username: this.get("member.username"),
           }),
-          icon: "shield-alt"
+          icon: "shield-alt",
         });
       }
     }
 
     return items;
-  })
+  }),
 });

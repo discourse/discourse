@@ -12,17 +12,17 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     ajax("/admin/customize/reseed")
-      .then(result => {
+      .then((result) => {
         this.setProperties({
           categories: result.categories,
-          topics: result.topics
+          topics: result.topics,
         });
       })
       .finally(() => this.set("loading", false));
   },
 
   _extractSelectedIds(items) {
-    return items.filter(item => item.selected).map(item => item.id);
+    return items.filter((item) => item.selected).map((item) => item.id);
   },
 
   actions: {
@@ -31,15 +31,15 @@ export default Controller.extend(ModalFunctionality, {
       ajax("/admin/customize/reseed", {
         data: {
           category_ids: this._extractSelectedIds(this.categories),
-          topic_ids: this._extractSelectedIds(this.topics)
+          topic_ids: this._extractSelectedIds(this.topics),
         },
-        type: "POST"
+        type: "POST",
       })
         .then(
           () => this.send("closeModal"),
           () => bootbox.alert(I18n.t("generic_error"))
         )
         .finally(() => this.set("reseeding", false));
-    }
-  }
+    },
+  },
 });

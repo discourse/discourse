@@ -17,7 +17,7 @@ export default Controller.extend({
           type: "POST",
           processData: false,
           contentType: false,
-          data: new FormData()
+          data: new FormData(),
         };
 
         options.data.append("file", file);
@@ -34,6 +34,6 @@ export default Controller.extend({
       } else {
         bootbox.alert(I18n.t("admin.badges.mass_award.aborted"));
       }
-    }
-  }
+    },
+  },
 });

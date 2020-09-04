@@ -33,7 +33,7 @@ const SERVER_SIDE_ONLY = [
   /^\/logs($|\/)/,
   /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
-  /^\/invites\//
+  /^\/invites\//,
 ];
 
 // The amount of height (in pixles) that we factor in when jumpEnd is called so
@@ -45,8 +45,8 @@ export function rewritePath(path) {
   const params = path.split("?");
 
   let result = params[0];
-  rewrites.forEach(rw => {
-    if ((rw.opts.exceptions || []).some(ex => path.indexOf(ex) === 0)) {
+  rewrites.forEach((rw) => {
+    if ((rw.opts.exceptions || []).some((ex) => path.indexOf(ex) === 0)) {
       return;
     }
     result = result.replace(rw.regexp, rw.replacement);
@@ -83,7 +83,7 @@ export function jumpToElement(elementId) {
   const selector = `#main #${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
 
-  schedule("afterRender", function() {
+  schedule("afterRender", function () {
     if (lockon) {
       lockon.clearLock();
     }
@@ -92,7 +92,7 @@ export function jumpToElement(elementId) {
       finished() {
         _jumpScheduled = false;
         lockon = null;
-      }
+      },
     });
     lockon.lock();
   });
@@ -152,7 +152,7 @@ const DiscourseURL = EmberObject.extend({
         finished() {
           _transitioning = false;
           lockon = null;
-        }
+        },
       });
 
       if (holder && opts.skipIfOnScreen) {
@@ -236,7 +236,7 @@ const DiscourseURL = EmberObject.extend({
       return redirectTo(path);
     }
 
-    const serverSide = SERVER_SIDE_ONLY.some(r => {
+    const serverSide = SERVER_SIDE_ONLY.some((r) => {
       if (pathname.match(r)) {
         return redirectTo(path);
       }
@@ -381,13 +381,13 @@ const DiscourseURL = EmberObject.extend({
           const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
           topicController.setProperties({
             "model.currentPost": closest,
-            enteredAt: Date.now().toString()
+            enteredAt: Date.now().toString(),
           });
 
           this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen,
-            jumpEnd: routeOpts.jumpEnd
+            jumpEnd: routeOpts.jumpEnd,
           };
 
           const anchorMatch = /#(.+)$/.exec(path);
@@ -484,7 +484,7 @@ const DiscourseURL = EmberObject.extend({
 
     const promise = transition.promise || transition;
     promise.then(() => jumpToElement(elementId));
-  }
+  },
 });
 let _urlInstance = DiscourseURL.create();
 
