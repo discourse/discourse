@@ -120,7 +120,7 @@ class PostActionNotifier
     end
 
     custom_post_revision_notifier_recipients.each do |block|
-      user_ids.concat(block.call(post_revision))
+      user_ids.concat(Array(block.call(post_revision)))
     end
 
     if user_ids.present?
