@@ -3,18 +3,18 @@ import { controllerModule } from "helpers/qunit-helpers";
 controllerModule("controller:poll-ui-builder", {
   setupController(controller) {
     controller.set("toolbarEvent", {
-      getText: () => ""
+      getText: () => "",
     });
   },
-  needs: ["controller:modal"]
+  needs: ["controller:modal"],
 });
 
-test("isMultiple", function(assert) {
+test("isMultiple", function (assert) {
   const controller = this.subject();
 
   controller.setProperties({
     pollType: controller.multiplePollType,
-    pollOptions: "a"
+    pollOptions: "a",
   });
 
   assert.equal(controller.isMultiple, true, "it should be true");
@@ -28,7 +28,7 @@ test("isMultiple", function(assert) {
   assert.equal(controller.isMultiple, false, "it should be false");
 });
 
-test("isNumber", function(assert) {
+test("isNumber", function (assert) {
   const controller = this.subject();
 
   controller.set("pollType", controller.regularPollType);
@@ -40,7 +40,7 @@ test("isNumber", function(assert) {
   assert.equal(controller.isNumber, true, "it should be true");
 });
 
-test("showMinMax", function(assert) {
+test("showMinMax", function (assert) {
   const controller = this.subject();
 
   controller.set("pollType", controller.numberPollType);
@@ -53,7 +53,7 @@ test("showMinMax", function(assert) {
   assert.equal(controller.showMinMax, false, "it should be false");
 });
 
-test("pollOptionsCount", function(assert) {
+test("pollOptionsCount", function (assert) {
   const controller = this.subject();
 
   controller.set("pollOptions", "1\n2\n");
@@ -65,12 +65,12 @@ test("pollOptionsCount", function(assert) {
   assert.equal(controller.pollOptionsCount, 0, "it should equal 0");
 });
 
-test("pollMinOptions", function(assert) {
+test("pollMinOptions", function (assert) {
   const controller = this.subject();
 
   controller.setProperties({
     pollType: controller.multiplePollType,
-    pollOptions: "z"
+    pollOptions: "z",
   });
 
   assert.deepEqual(
@@ -85,7 +85,7 @@ test("pollMinOptions", function(assert) {
     controller.pollMinOptions,
     [
       { name: 1, value: 1 },
-      { name: 2, value: 2 }
+      { name: 2, value: 2 },
     ],
     "it should return the right options"
   );
@@ -97,19 +97,19 @@ test("pollMinOptions", function(assert) {
     controller.pollMinOptions,
     [
       { name: 1, value: 1 },
-      { name: 2, value: 2 }
+      { name: 2, value: 2 },
     ],
     "it should return the right options"
   );
 });
 
-test("pollMaxOptions", function(assert) {
+test("pollMaxOptions", function (assert) {
   const controller = this.subject();
 
   controller.setProperties({
     pollType: controller.multiplePollType,
     pollOptions: "y",
-    pollMin: 1
+    pollMin: 1,
   });
 
   assert.deepEqual(
@@ -130,7 +130,7 @@ test("pollMaxOptions", function(assert) {
   controller.setProperties({
     pollType: controller.get("numberPollType"),
     pollStep: 2,
-    pollMin: 1
+    pollMin: 1,
   });
 
   assert.deepEqual(
@@ -140,13 +140,13 @@ test("pollMaxOptions", function(assert) {
       { name: 3, value: 3 },
       { name: 4, value: 4 },
       { name: 5, value: 5 },
-      { name: 6, value: 6 }
+      { name: 6, value: 6 },
     ],
     "it should return the right options"
   );
 });
 
-test("pollStepOptions", function(assert) {
+test("pollStepOptions", function (assert) {
   const controller = this.subject();
   controller.siteSettings.poll_maximum_options = 3;
 
@@ -159,13 +159,13 @@ test("pollStepOptions", function(assert) {
     [
       { name: 1, value: 1 },
       { name: 2, value: 2 },
-      { name: 3, value: 3 }
+      { name: 3, value: 3 },
     ],
     "it should return the right options"
   );
 });
 
-test("disableInsert", function(assert) {
+test("disableInsert", function (assert) {
   const controller = this.subject();
 
   assert.equal(controller.disableInsert, true, "it should be true");
@@ -180,33 +180,33 @@ test("disableInsert", function(assert) {
 
   controller.setProperties({
     pollType: controller.regularPollType,
-    pollOptions: "a\nb\nc"
+    pollOptions: "a\nb\nc",
   });
 
   assert.equal(controller.disableInsert, false, "it should be false");
 
   controller.setProperties({
     pollType: controller.regularPollType,
-    pollOptions: ""
+    pollOptions: "",
   });
 
   assert.equal(controller.disableInsert, true, "it should be true");
 
   controller.setProperties({
     pollType: controller.regularPollType,
-    pollOptions: "w"
+    pollOptions: "w",
   });
 
   assert.equal(controller.disableInsert, false, "it should be false");
 });
 
-test("number pollOutput", function(assert) {
+test("number pollOutput", function (assert) {
   const controller = this.subject();
   controller.siteSettings.poll_maximum_options = 20;
 
   controller.setProperties({
     pollType: controller.numberPollType,
-    pollMin: 1
+    pollMin: 1,
   });
 
   assert.equal(
@@ -240,14 +240,14 @@ test("number pollOutput", function(assert) {
   );
 });
 
-test("regular pollOutput", function(assert) {
+test("regular pollOutput", function (assert) {
   const controller = this.subject();
   controller.siteSettings.poll_maximum_options = 20;
 
   controller.set("pollOptions", "1\n2");
   controller.setProperties({
     pollOptions: "1\n2",
-    pollType: controller.regularPollType
+    pollType: controller.regularPollType,
   });
 
   assert.equal(
@@ -273,14 +273,14 @@ test("regular pollOutput", function(assert) {
   );
 });
 
-test("multiple pollOutput", function(assert) {
+test("multiple pollOutput", function (assert) {
   const controller = this.subject();
   controller.siteSettings.poll_maximum_options = 20;
 
   controller.setProperties({
     pollType: controller.multiplePollType,
     pollMin: 1,
-    pollOptions: "\n\n1\n\n2"
+    pollOptions: "\n\n1\n\n2",
   });
 
   assert.equal(
@@ -298,7 +298,7 @@ test("multiple pollOutput", function(assert) {
   );
 });
 
-test("staff_only option is not present for non-staff", function(assert) {
+test("staff_only option is not present for non-staff", function (assert) {
   const controller = this.subject();
   controller.currentUser = { staff: false };
 
@@ -308,12 +308,12 @@ test("staff_only option is not present for non-staff", function(assert) {
   );
 });
 
-test("poll result is always by default", function(assert) {
+test("poll result is always by default", function (assert) {
   const controller = this.subject();
   assert.equal(controller.pollResult, "always");
 });
 
-test("staff_only option is present for staff", function(assert) {
+test("staff_only option is present for staff", function (assert) {
   const controller = this.subject();
   controller.currentUser = { staff: true };
 

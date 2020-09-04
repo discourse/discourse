@@ -15,7 +15,7 @@ widgetTest("options in descending order", {
       "poll",
       EmberObject.create({
         options: [{ votes: 5 }, { votes: 4 }],
-        voters: 9
+        voters: 9,
       })
     );
   },
@@ -23,7 +23,7 @@ widgetTest("options in descending order", {
   test(assert) {
     assert.equal(find(".option .percentage:eq(0)").text(), "56%");
     assert.equal(find(".option .percentage:eq(1)").text(), "44%");
-  }
+  },
 });
 
 widgetTest("options in ascending order", {
@@ -34,7 +34,7 @@ widgetTest("options in ascending order", {
       "poll",
       EmberObject.create({
         options: [{ votes: 4 }, { votes: 5 }],
-        voters: 9
+        voters: 9,
       })
     );
   },
@@ -42,7 +42,7 @@ widgetTest("options in ascending order", {
   test(assert) {
     assert.equal(find(".option .percentage:eq(0)").text(), "56%");
     assert.equal(find(".option .percentage:eq(1)").text(), "44%");
-  }
+  },
 });
 
 widgetTest("multiple options in descending order", {
@@ -59,9 +59,9 @@ widgetTest("multiple options in descending order", {
           { votes: 2, html: "b" },
           { votes: 4, html: "c" },
           { votes: 1, html: "b" },
-          { votes: 1, html: "a" }
+          { votes: 1, html: "a" },
         ],
-        voters: 12
+        voters: 12,
       })
     );
   },
@@ -74,5 +74,5 @@ widgetTest("multiple options in descending order", {
     assert.equal(find(".option span:nth-child(2):eq(3)").text(), "a");
     assert.equal(find(".option .percentage:eq(4)").text(), "8%");
     assert.equal(find(".option span:nth-child(2):eq(4)").text(), "b");
-  }
+  },
 });

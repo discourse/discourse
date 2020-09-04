@@ -6,10 +6,10 @@ acceptance("Rendering polls with bar charts - desktop", {
   settings: { poll_enabled: true },
   beforeEach() {
     clearPopupMenuOptionsCallback();
-  }
+  },
 });
 
-test("Polls", async assert => {
+test("Polls", async (assert) => {
   await visit("/t/-/15");
 
   const polls = find(".poll");
@@ -29,7 +29,7 @@ test("Polls", async assert => {
   );
 });
 
-test("Public poll", async assert => {
+test("Public poll", async (assert) => {
   await visit("/t/-/14");
 
   const polls = find(".poll");
@@ -52,10 +52,10 @@ test("Public poll", async assert => {
             id: 777,
             username: "bruce777",
             avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne"
-          }
-        ]
-      }
+            name: "Bruce Wayne",
+          },
+        ],
+      },
     };
 
     return [200, { "Content-Type": "application/json" }, body];
@@ -70,7 +70,7 @@ test("Public poll", async assert => {
   );
 });
 
-test("Public number poll", async assert => {
+test("Public number poll", async (assert) => {
   await visit("/t/-/13");
 
   const polls = find(".poll");
@@ -96,8 +96,8 @@ test("Public number poll", async assert => {
         id: 600 + i,
         username: `bruce${600 + i}`,
         avatar_template: "/images/avatar.png",
-        name: "Bruce Wayne"
-      }))
+        name: "Bruce Wayne",
+      })),
     };
 
     return [200, { "Content-Type": "application/json" }, body];
