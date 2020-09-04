@@ -10,7 +10,7 @@ function initialize(api) {
     didInsertElement() {
       this._super(...arguments);
       this.dispatch("header:search-context-trigger", "header");
-    }
+    },
   });
 
   api.modifyClass("model:post", {
@@ -22,21 +22,21 @@ function initialize(api) {
       if (this.user_id === discobotUserId && !this.bookmarked) {
         return ajax("/bookmarks", {
           type: "POST",
-          data: { post_id: this.id }
-        }).then(response => {
+          data: { post_id: this.id },
+        }).then((response) => {
           this.setProperties({
             "topic.bookmarked": true,
             bookmarked: true,
-            bookmark_id: response.id
+            bookmark_id: response.id,
           });
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         });
       }
       return this._super();
-    }
+    },
   });
 
-  api.attachWidgetAction("header", "headerSearchContextTrigger", function() {
+  api.attachWidgetAction("header", "headerSearchContextTrigger", function () {
     if (this.site.mobileView) {
       this.state.skipSearchContext = false;
     } else {
@@ -59,5 +59,5 @@ export default {
     const siteSettings = container.lookup("site-settings:main");
     if (siteSettings.discourse_narrative_bot_enabled)
       withPluginApi("0.8.7", initialize);
-  }
+  },
 };
