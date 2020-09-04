@@ -13,22 +13,22 @@ function buildDateHelper(params = {}) {
     hour: params.hour || 10,
     minute: params.minute || 5,
     timezone: params.timezone,
-    localTimezone: PARIS
+    localTimezone: PARIS,
   });
 }
 
-QUnit.test("#format", assert => {
+QUnit.test("#format", (assert) => {
   let date = buildDateHelper({
     day: 15,
     month: 2,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
   assert.equal(date.format(), "2020-03-15T15:36:00.000+01:00");
 });
 
-QUnit.test("#repetitionsBetweenDates", assert => {
+QUnit.test("#repetitionsBetweenDates", (assert) => {
   let date;
 
   date = buildDateHelper({
@@ -36,7 +36,7 @@ QUnit.test("#repetitionsBetweenDates", assert => {
     month: 1,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
   assert.equal(
     date.repetitionsBetweenDates(
@@ -52,7 +52,7 @@ QUnit.test("#repetitionsBetweenDates", assert => {
     month: 1,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
   assert.equal(
     date.repetitionsBetweenDates(
@@ -68,7 +68,7 @@ QUnit.test("#repetitionsBetweenDates", assert => {
     month: 1,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
   assert.equal(
     date.repetitionsBetweenDates(
@@ -84,7 +84,7 @@ QUnit.test("#repetitionsBetweenDates", assert => {
     month: 1,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
   assert.equal(
     date.repetitionsBetweenDates(
@@ -96,7 +96,7 @@ QUnit.test("#repetitionsBetweenDates", assert => {
   );
 });
 
-QUnit.test("#add", assert => {
+QUnit.test("#add", (assert) => {
   let date;
   let futureLocalDate;
 
@@ -105,7 +105,7 @@ QUnit.test("#add", assert => {
     month: 2,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
 
   assert.notOk(date.isDST());
@@ -122,7 +122,7 @@ QUnit.test("#add", assert => {
     month: 3,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
   assert.ok(date.isDST());
   futureLocalDate = date.add(1, "year");
@@ -138,7 +138,7 @@ QUnit.test("#add", assert => {
     month: 2,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
   assert.notOk(date.isDST());
   futureLocalDate = date.add(1, "week");
@@ -154,7 +154,7 @@ QUnit.test("#add", assert => {
     month: 3,
     hour: 15,
     minute: 36,
-    timezone: PARIS
+    timezone: PARIS,
   });
 
   assert.ok(date.isDST());

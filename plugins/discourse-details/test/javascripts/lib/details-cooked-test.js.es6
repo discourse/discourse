@@ -7,13 +7,13 @@ const defaultOpts = buildOptions({
     enable_emoji: true,
     emoji_set: "emoji_one",
     highlighted_languages: "json|ruby|javascript",
-    default_code_lang: "auto"
+    default_code_lang: "auto",
   },
   censoredWords: "shucks|whiz|whizzer",
-  getURL: url => url
+  getURL: (url) => url,
 });
 
-test("details", assert => {
+test("details", (assert) => {
   const cooked = (input, expected, text) => {
     assert.equal(
       new PrettyText(defaultOpts).cook(input),

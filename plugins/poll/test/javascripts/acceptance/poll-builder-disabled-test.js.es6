@@ -6,14 +6,14 @@ acceptance("Poll Builder - polls are disabled", {
   loggedIn: true,
   settings: {
     poll_enabled: false,
-    poll_minimum_trust_level_to_create: 2
+    poll_minimum_trust_level_to_create: 2,
   },
-  beforeEach: function() {
+  beforeEach: function () {
     clearPopupMenuOptionsCallback();
-  }
+  },
 });
 
-test("regular user - sufficient trust level", async assert => {
+test("regular user - sufficient trust level", async (assert) => {
   updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });
 
   await displayPollBuilderButton();
@@ -24,7 +24,7 @@ test("regular user - sufficient trust level", async assert => {
   );
 });
 
-test("regular user - insufficient trust level", async assert => {
+test("regular user - insufficient trust level", async (assert) => {
   updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
   await displayPollBuilderButton();
@@ -35,7 +35,7 @@ test("regular user - insufficient trust level", async assert => {
   );
 });
 
-test("staff", async assert => {
+test("staff", async (assert) => {
   updateCurrentUser({ moderator: true });
 
   await displayPollBuilderButton();

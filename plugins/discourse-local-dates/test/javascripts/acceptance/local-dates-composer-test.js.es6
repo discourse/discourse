@@ -2,11 +2,11 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Local Dates - composer", {
   loggedIn: true,
-  settings: { discourse_local_dates_enabled: true }
+  settings: { discourse_local_dates_enabled: true },
 });
 
-test("composer bbcode", async assert => {
-  const getAttr = attr => {
+test("composer bbcode", async (assert) => {
+  const getAttr = (attr) => {
     return find(".d-editor-preview .discourse-local-date.cooked-date").attr(
       `data-${attr}`
     );
