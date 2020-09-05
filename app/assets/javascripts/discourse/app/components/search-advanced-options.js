@@ -129,6 +129,8 @@ export default Component.extend({
       inOptions: this.currentUser
         ? inOptionsForUsers.concat(inOptionsForAll)
         : inOptionsForAll,
+      statusOptions: statusOptions,
+      postTimeOptions: postTimeOptions,
     });
   },
 
@@ -173,7 +175,7 @@ export default Component.extend({
       REGEXP_SPECIAL_IN_SEEN_MATCH
     );
 
-    let regExpStatusMatch = statusOptions
+    let regExpStatusMatch = this.statusOptions
       .map((status) => status.value)
       .join("|");
     const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
@@ -570,7 +572,7 @@ export default Component.extend({
 
   @observes("searchedTerms.status")
   updateSearchTermForStatus() {
-    let regExpStatusMatch = statusOptions
+    let regExpStatusMatch = this.statusOptions
       .map((status) => status.value)
       .join("|");
     const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
