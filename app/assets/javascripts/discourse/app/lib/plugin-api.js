@@ -60,6 +60,12 @@ import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profil
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import { getOwner } from "discourse-common/lib/get-owner";
+import {
+  addInOptionsForUsers,
+  addInOptionsForAll,
+  addStatusOptions,
+  addPostTimeOptions,
+} from "discourse/components/search-advanced-options";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.10.2";
@@ -1179,6 +1185,22 @@ class PluginApi {
 
   addFeaturedLinkMetaDecorator(decorator) {
     addFeaturedLinkMetaDecorator(decorator);
+  }
+
+  addInOptionsForUsers(options) {
+    addInOptionsForUsers(options);
+  }
+
+  addInOptionsForAll(options) {
+    addInOptionsForAll(options);
+  }
+
+  addStatusOptions(options) {
+    addStatusOptions(options);
+  }
+
+  addPostTimeOptions(options) {
+    addPostTimeOptions(options);
   }
 }
 
