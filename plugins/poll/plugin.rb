@@ -67,7 +67,7 @@ after_initialize do
             raise StandardError.new I18n.t("poll.user_cant_post_in_topic")
           end
 
-          poll = Poll.includes(poll_options: :poll_votes).find_by(post_id: post_id, name: poll_name)
+          poll = Poll.includes(:poll_options).find_by(post_id: post_id, name: poll_name)
 
           raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) unless poll
           raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll.is_closed?
@@ -90,17 +90,17 @@ after_initialize do
             obj << option.id if options.include?(option.digest)
           end
 
+          old_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
+            if option.poll_votes.where(user_id: user.id).exists?
+              obj << option.id
+            end
+          end
+
           # remove non-selected votes
           PollVote
             .where(poll: poll, user: user)
             .where.not(poll_option_id: new_option_ids)
             .delete_all
-
-          old_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
-            if option.poll_votes.any? { |v| v.user_id == user.id }
-              obj << option.id
-            end
-          end
 
           # create missing votes
           (new_option_ids - old_option_ids).each do |option_id|
@@ -574,7 +574,6 @@ after_initialize do
 
       if post_with_polls.present?
         Poll
-          .includes(poll_options: :poll_votes, poll_votes: :poll_option)
           .where(post_id: post_with_polls)
           .each do |p|
             polls[p.post_id] ||= []
@@ -590,7 +589,7 @@ after_initialize do
     @preloaded_polls ||= if @topic_view.present?
       @topic_view.polls[object.id]
     else
-      Poll.includes(poll_options: :poll_votes).where(post: object)
+      Poll.includes(:poll_options).where(post: object)
     end
   end
 
@@ -608,11 +607,12 @@ after_initialize do
 
   add_to_serializer(:post, :polls_votes, false) do
     preloaded_polls.map do |poll|
-      user_poll_votes = poll.poll_votes.each_with_object([]) do |vote, obj|
-        if vote.user_id == scope.user.id
-          obj << vote.poll_option.digest
-        end
-      end
+      user_poll_votes =
+        poll
+          .poll_votes
+          .where(user_id: scope.user.id)
+          .joins(:poll_option)
+          .pluck("poll_options.digest")
 
       [poll.name, user_poll_votes]
     end.to_h
