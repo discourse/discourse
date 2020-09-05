@@ -7,10 +7,10 @@ acceptance("Rendering polls with bar charts - mobile", {
   settings: { poll_enabled: true },
   beforeEach() {
     clearPopupMenuOptionsCallback();
-  }
+  },
 });
 
-test("Public number poll", async assert => {
+test("Public number poll", async (assert) => {
   await visit("/t/-/13");
 
   const polls = find(".poll");
@@ -36,8 +36,8 @@ test("Public number poll", async assert => {
         id: 500 + i,
         username: `bruce${500 + i}`,
         avatar_template: "/images/avatar.png",
-        name: "Bruce Wayne"
-      }))
+        name: "Bruce Wayne",
+      })),
     };
 
     return [200, { "Content-Type": "application/json" }, body];

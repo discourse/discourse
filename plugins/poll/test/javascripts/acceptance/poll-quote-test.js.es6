@@ -10,7 +10,7 @@ acceptance("Poll quote", {
   },
   pretend(server, helper) {
     server.get("/t/topic_with_two_polls.json", () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve(
           helper.response({
             post_stream: {
@@ -54,8 +54,8 @@ acceptance("Poll quote", {
                       internal: true,
                       reflection: true,
                       title: "Topic with two quoted polls",
-                      clicks: 0
-                    }
+                      clicks: 0,
+                    },
                   ],
                   read: true,
                   user_title: "Tester",
@@ -64,20 +64,20 @@ acceptance("Poll quote", {
                   actions_summary: [
                     {
                       id: 3,
-                      can_act: true
+                      can_act: true,
                     },
                     {
                       id: 4,
-                      can_act: true
+                      can_act: true,
                     },
                     {
                       id: 8,
-                      can_act: true
+                      can_act: true,
                     },
                     {
                       id: 7,
-                      can_act: true
-                    }
+                      can_act: true,
+                    },
                   ],
                   moderator: false,
                   admin: true,
@@ -104,16 +104,16 @@ acceptance("Poll quote", {
                         {
                           id: "bf48cd4958a17180e2a298e246988f94",
                           html: "Alpha",
-                          votes: 0
+                          votes: 0,
                         },
                         {
                           id: "c19aa835729ab0413a84a2c9850c4005",
                           html: "Beta",
-                          votes: 0
-                        }
+                          votes: 0,
+                        },
                       ],
                       voters: 0,
-                      chart_type: "bar"
+                      chart_type: "bar",
                     },
                     {
                       name: "poll2",
@@ -124,21 +124,21 @@ acceptance("Poll quote", {
                         {
                           id: "def034c6770c6fd3754c054ef9ec4721",
                           html: "First",
-                          votes: 0
+                          votes: 0,
                         },
                         {
                           id: "e0f55d1a981683789bec2a0b05eb70ef",
                           html: "Second",
-                          votes: 0
-                        }
+                          votes: 0,
+                        },
                       ],
                       voters: 0,
-                      chart_type: "bar"
-                    }
-                  ]
-                }
+                      chart_type: "bar",
+                    },
+                  ],
+                },
               ],
-              stream: [133]
+              stream: [133],
             },
             timeline_lookup: [[1, 0]],
             suggested_topics: [],
@@ -184,20 +184,20 @@ acceptance("Poll quote", {
                 id: 4,
                 count: 0,
                 hidden: false,
-                can_act: true
+                can_act: true,
               },
               {
                 id: 8,
                 count: 0,
                 hidden: false,
-                can_act: true
+                can_act: true,
               },
               {
                 id: 7,
                 count: 0,
                 hidden: false,
-                can_act: true
-              }
+                can_act: true,
+              },
             ],
             chunk_size: 20,
             bookmarked: false,
@@ -241,32 +241,32 @@ acceptance("Poll quote", {
                   primary_group_name: null,
                   primary_group_flair_url: null,
                   primary_group_flair_color: null,
-                  primary_group_flair_bg_color: null
-                }
+                  primary_group_flair_bg_color: null,
+                },
               ],
               created_by: {
                 id: 1,
                 username: "bianca",
                 name: null,
                 avatar_template:
-                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png"
+                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
               },
               last_poster: {
                 id: 1,
                 username: "bianca",
                 name: null,
                 avatar_template:
-                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png"
-              }
+                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
+              },
             },
-            pending_posts: []
+            pending_posts: [],
           })
         );
       });
     });
 
     server.get("/posts/by_number/130/1", () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve(
           helper.response({
             id: 133,
@@ -308,20 +308,20 @@ acceptance("Poll quote", {
             actions_summary: [
               {
                 id: 3,
-                can_act: true
+                can_act: true,
               },
               {
                 id: 4,
-                can_act: true
+                can_act: true,
               },
               {
                 id: 8,
-                can_act: true
+                can_act: true,
               },
               {
                 id: 7,
-                can_act: true
-              }
+                can_act: true,
+              },
             ],
             moderator: false,
             admin: true,
@@ -348,16 +348,16 @@ acceptance("Poll quote", {
                   {
                     id: "bf48cd4958a17180e2a298e246988f94",
                     html: "Alpha",
-                    votes: 0
+                    votes: 0,
                   },
                   {
                     id: "c19aa835729ab0413a84a2c9850c4005",
                     html: "Beta",
-                    votes: 0
-                  }
+                    votes: 0,
+                  },
                 ],
                 voters: 0,
-                chart_type: "bar"
+                chart_type: "bar",
               },
               {
                 name: "poll2",
@@ -368,25 +368,25 @@ acceptance("Poll quote", {
                   {
                     id: "def034c6770c6fd3754c054ef9ec4721",
                     html: "First",
-                    votes: 0
+                    votes: 0,
                   },
                   {
                     id: "e0f55d1a981683789bec2a0b05eb70ef",
                     html: "Second",
-                    votes: 0
-                  }
+                    votes: 0,
+                  },
                 ],
                 voters: 0,
-                chart_type: "bar"
-              }
-            ]
+                chart_type: "bar",
+              },
+            ],
           })
         );
       });
     });
 
     server.get("/t/topic_with_two_quoted_polls.json", () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve(
           helper.response({
             post_stream: {
@@ -430,8 +430,8 @@ acceptance("Poll quote", {
                       internal: true,
                       reflection: false,
                       title: "Topic with two polls",
-                      clicks: 0
-                    }
+                      clicks: 0,
+                    },
                   ],
                   read: true,
                   user_title: "Tester",
@@ -440,20 +440,20 @@ acceptance("Poll quote", {
                   actions_summary: [
                     {
                       id: 3,
-                      can_act: true
+                      can_act: true,
                     },
                     {
                       id: 4,
-                      can_act: true
+                      can_act: true,
                     },
                     {
                       id: 8,
-                      can_act: true
+                      can_act: true,
                     },
                     {
                       id: 7,
-                      can_act: true
-                    }
+                      can_act: true,
+                    },
                   ],
                   moderator: false,
                   admin: true,
@@ -469,10 +469,10 @@ acceptance("Poll quote", {
                   reviewable_id: 0,
                   reviewable_score_count: 0,
                   reviewable_score_pending_count: 0,
-                  calendar_details: []
-                }
+                  calendar_details: [],
+                },
               ],
-              stream: [134]
+              stream: [134],
             },
             timeline_lookup: [[1, 0]],
             suggested_topics: [
@@ -516,10 +516,10 @@ acceptance("Poll quote", {
                       username: "foo2",
                       name: null,
                       avatar_template:
-                        "/letter_avatar_proxy/v4/letter/f/8edcca/{size}.png"
-                    }
-                  }
-                ]
+                        "/letter_avatar_proxy/v4/letter/f/8edcca/{size}.png",
+                    },
+                  },
+                ],
               },
               {
                 id: 130,
@@ -561,11 +561,11 @@ acceptance("Poll quote", {
                       username: "bianca",
                       name: null,
                       avatar_template:
-                        "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png"
-                    }
-                  }
-                ]
-              }
+                        "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
+                    },
+                  },
+                ],
+              },
             ],
             tags: [],
             id: 131,
@@ -609,20 +609,20 @@ acceptance("Poll quote", {
                 id: 4,
                 count: 0,
                 hidden: false,
-                can_act: true
+                can_act: true,
               },
               {
                 id: 8,
                 count: 0,
                 hidden: false,
-                can_act: true
+                can_act: true,
               },
               {
                 id: 7,
                 count: 0,
                 hidden: false,
-                can_act: true
-              }
+                can_act: true,
+              },
             ],
             chunk_size: 20,
             bookmarked: false,
@@ -666,33 +666,33 @@ acceptance("Poll quote", {
                   primary_group_name: null,
                   primary_group_flair_url: null,
                   primary_group_flair_color: null,
-                  primary_group_flair_bg_color: null
-                }
+                  primary_group_flair_bg_color: null,
+                },
               ],
               created_by: {
                 id: 1,
                 username: "bianca",
                 name: null,
                 avatar_template:
-                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png"
+                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
               },
               last_poster: {
                 id: 1,
                 username: "bianca",
                 name: null,
                 avatar_template:
-                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png"
-              }
+                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
+              },
             },
-            pending_posts: []
+            pending_posts: [],
           })
         );
       });
     });
-  }
+  },
 });
 
-test("Quoted polls", async assert => {
+test("Quoted polls", async (assert) => {
   await visit("/t/-/topic_with_two_quoted_polls");
   await click(".quote-controls");
   assert.equal(find(".poll").length, 2);

@@ -135,7 +135,10 @@ class Stylesheet::Manager
     return '' if !stylesheet
 
     href = stylesheet[:new_href]
-    %[<link href="#{href}" media="#{media}" rel="stylesheet"/>].html_safe
+
+    css_class = media == 'all' ? "light-scheme" : "dark-scheme"
+
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
   end
 
   def self.color_scheme_cache_key(color_scheme, theme_id = nil)

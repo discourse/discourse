@@ -11,6 +11,11 @@ export default Component.extend({
       : "composer.collapse";
   },
 
+  @discourseComputed("showToolbar")
+  toggleToolbarTitle(showToolbar) {
+    return showToolbar ? "composer.hide_toolbar" : "composer.show_toolbar";
+  },
+
   @discourseComputed("composeState")
   fullscreenTitle(composeState) {
     return composeState === "draft"

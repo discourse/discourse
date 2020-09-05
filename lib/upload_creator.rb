@@ -128,7 +128,7 @@ class UploadCreator
       add_metadata!
       return @upload unless @upload.save
 
-      DiscourseEvent.trigger(:before_upload_creation, @file, is_image)
+      DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
 
       # store the file and update its url
       File.open(@file.path) do |f|

@@ -98,6 +98,13 @@ GEM
     debug_inspector (0.0.3)
     diff-lcs (1.4.4)
     diffy (3.4.0)
+    discourse-ember-rails (0.18.6)
+      active_model_serializers
+      ember-data-source (>= 1.0.0.beta.5)
+      ember-handlebars-template (>= 0.1.1, < 1.0)
+      ember-source (>= 1.1.0)
+      jquery-rails (>= 1.0.17)
+      railties (>= 3.1)
     discourse-ember-source (3.12.2.2)
     discourse-fonts (0.0.3)
     discourse_image_optim (0.26.2)
@@ -113,13 +120,6 @@ GEM
     ember-handlebars-template (0.8.0)
       barber (>= 0.11.0)
       sprockets (>= 3.3, < 4.1)
-    ember-rails (0.18.5)
-      active_model_serializers
-      ember-data-source (>= 1.0.0.beta.5)
-      ember-handlebars-template (>= 0.1.1, < 1.0)
-      ember-source (>= 1.1.0)
-      jquery-rails (>= 1.0.17)
-      railties (>= 3.1)
     ember-source (2.18.2)
     erubi (1.9.0)
     excon (0.76.0)
@@ -457,12 +457,12 @@ DEPENDENCIES
   cppjieba_rb
   css_parser
   diffy
+  discourse-ember-rails (= 0.18.6)
   discourse-ember-source (~> 3.12.2)
   discourse-fonts
   discourse_image_optim
   email_reply_trimmer
   ember-handlebars-template (= 0.8.0)
-  ember-rails (= 0.18.5)
   excon
   execjs
   fabrication
