@@ -7,6 +7,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 // The modal will display only if the topic exceeds a certain amount of views
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
+  deletingTopic: false,
 
   @discourseComputed("deletingTopic")
   buttonTitle(deletingTopic) {
