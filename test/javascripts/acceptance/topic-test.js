@@ -208,6 +208,18 @@ QUnit.skip("Deleting a topic", async (assert) => {
   assert.ok(exists(".widget-button.recover"), "it shows the recover button");
 });
 
+QUnit.test("Deleting a popular topic", async function (assert) {
+  this.siteSettings.min_topic_view_amount_for_delete_confirmation = 10;
+  await visit("/t/internationalization-localization/280");
+  await click(".topic-post:eq(0) button.show-more-actions");
+  await click(".widget-button.delete");
+
+  assert.ok(
+    exists(".delete-topic-confirm-modal"),
+    "it shows the delete confirmation modal"
+  );
+});
+
 QUnit.test("Group category moderator posts", async (assert) => {
   await visit("/t/topic-for-group-moderators/2480");
 
