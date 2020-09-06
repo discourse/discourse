@@ -1303,7 +1303,9 @@ export default Controller.extend(bufferedProperty("model"), {
         model: this.model,
         title: "topic.actions.delete",
       });
-    } else this.model.destroy(this.currentUser);
+    } else {
+      this.model.destroy(this.currentUser);
+    }
   },
 
   retryOnRateLimit(times, promise, topicId) {
