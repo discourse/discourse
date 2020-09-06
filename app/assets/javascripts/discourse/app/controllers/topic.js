@@ -1291,7 +1291,7 @@ export default Controller.extend(bufferedProperty("model"), {
     ) {
       showModal("delete-topic-confirm", {
         model: this.model,
-        title: "topic.actions.delete"
+        title: "topic.actions.delete",
       });
     } else this.model.destroy(this.currentUser);
   },

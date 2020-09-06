@@ -32,6 +32,6 @@ export default Controller.extend(ModalFunctionality, {
         });
 
       return false;
-    }
-  }
+    },
+  },
 });
