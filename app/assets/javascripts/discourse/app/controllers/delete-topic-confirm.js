@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller, { inject } from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -20,19 +21,18 @@ export default Controller.extend(ModalFunctionality, {
     this.set("deletingTopic", false);
   },
 
-  actions: {
-    deleteTopic() {
-      this.set("deletingTopic", true);
+  @action
+  deleteTopic() {
+    this.set("deletingTopic", true);
 
-      this.topicController.model
-        .destroy(this.currentUser)
-        .then(() => this.send("closeModal"))
-        .catch(() => {
-          this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error");
-          this.set("deletingTopic", false);
-        });
+    this.topicController.model
+      .destroy(this.currentUser)
+      .then(() => this.send("closeModal"))
+      .catch(() => {
+        this.flash(I18n.t("post.controls.delete_topic_error"), "alert-error");
+        this.set("deletingTopic", false);
+      });
 
-      return false;
-    },
+    return false;
   },
 });
