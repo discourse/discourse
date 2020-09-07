@@ -2,8 +2,8 @@
 
 QUnit.module("lib:breakString", {});
 
-QUnit.test("breakString", assert => {
-  var b = function(s, hint) {
+QUnit.test("breakString", (assert) => {
+  var b = function (s, hint) {
     return new BreakString(s).break(hint);
   };
 

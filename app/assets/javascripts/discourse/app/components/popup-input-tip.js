@@ -64,5 +64,5 @@ export default Component.extend({
         .animate({ right: "-=" + this.bouncePixels }, this.bounceDelay)
         .animate({ right: "+=" + this.bouncePixels }, this.bounceDelay);
     }
-  }
+  },
 });

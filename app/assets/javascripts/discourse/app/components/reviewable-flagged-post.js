@@ -21,15 +21,15 @@ export default Component.extend({
   actions: {
     showEditHistory() {
       let postId = this.get("reviewable.post_id");
-      this.store.find("post", postId).then(post => {
+      this.store.find("post", postId).then((post) => {
         let historyController = showModal("history", {
           model: post,
-          modalClass: "history-modal"
+          modalClass: "history-modal",
         });
         historyController.refresh(postId, "latest");
         historyController.set("post", post);
         historyController.set("topicController", null);
       });
-    }
-  }
+    },
+  },
 });

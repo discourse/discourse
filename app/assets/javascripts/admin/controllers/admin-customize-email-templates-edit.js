@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { action } from "@ember/object";
 import { inject as controller } from "@ember/controller";
+import bootbox from "bootbox";
 
 export default Controller.extend(bufferedProperty("emailTemplate"), {
   adminCustomizeEmailTemplates: controller(),
@@ -44,11 +45,11 @@ export default Controller.extend(bufferedProperty("emailTemplate"), {
     this.set("saved", false);
     bootbox.confirm(
       I18n.t("admin.customize.email_templates.revert_confirm"),
-      result => {
+      (result) => {
         if (result) {
           this.emailTemplate
             .revert()
-            .then(props => {
+            .then((props) => {
               const buffered = this.buffered;
               buffered.setProperties(props);
               this.commitBuffer();
@@ -57,5 +58,5 @@ export default Controller.extend(bufferedProperty("emailTemplate"), {
         }
       }
     );
-  }
+  },
 });

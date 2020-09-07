@@ -7,17 +7,17 @@ let searchArgs = {
   pretend(server) {
     server.handledRequest = (verb, path, request) => {
       if (request.queryParams["search_context[type]"] === undefined) {
-        emptySearchContextCallbacks.forEach(callback => {
+        emptySearchContextCallbacks.forEach((callback) => {
           callback.call();
         });
       }
     };
-  }
+  },
 };
 
 acceptance("Search", searchArgs);
 
-QUnit.test("search", async assert => {
+QUnit.test("search", async (assert) => {
   await visit("/");
 
   await click("#search-button");
@@ -43,7 +43,7 @@ QUnit.test("search", async assert => {
   assert.ok(exists(".search-advanced-options"), "advanced search is expanded");
 });
 
-QUnit.test("search for a tag", async assert => {
+QUnit.test("search for a tag", async (assert) => {
   await visit("/");
 
   await click("#search-button");
@@ -53,7 +53,7 @@ QUnit.test("search for a tag", async assert => {
   assert.ok(exists(".search-menu .results ul li"), "it shows results");
 });
 
-QUnit.test("search scope checkbox", async assert => {
+QUnit.test("search scope checkbox", async (assert) => {
   await visit("/tag/important");
   await click("#search-button");
   assert.ok(
@@ -86,7 +86,7 @@ QUnit.test("search scope checkbox", async assert => {
   );
 });
 
-QUnit.test("Search with context", async assert => {
+QUnit.test("Search with context", async (assert) => {
   await visit("/t/internationalization-localization/280/1");
 
   await click("#search-button");
@@ -126,7 +126,7 @@ QUnit.test("Search with context", async assert => {
   assert.ok(!$(".search-context input[type=checkbox]").is(":checked"));
 });
 
-QUnit.test("Right filters are shown to anonymous users", async assert => {
+QUnit.test("Right filters are shown to anonymous users", async (assert) => {
   const inSelector = selectKit(".select-kit#in");
 
   await visit("/search?expanded=true");
@@ -151,7 +151,7 @@ QUnit.test("Right filters are shown to anonymous users", async assert => {
 
 acceptance("Search", Object.assign({ loggedIn: true, searchArgs }));
 
-QUnit.test("Right filters are shown to logged-in users", async assert => {
+QUnit.test("Right filters are shown to logged-in users", async (assert) => {
   const inSelector = selectKit(".select-kit#in");
 
   await visit("/search?expanded=true");
@@ -179,11 +179,11 @@ acceptance(
   Object.assign({
     loggedIn: true,
     searchArgs,
-    settings: { tagging_enabled: true }
+    settings: { tagging_enabled: true },
   })
 );
 
-QUnit.test("displays tags", async assert => {
+QUnit.test("displays tags", async (assert) => {
   await visit("/");
 
   await click("#search-button");

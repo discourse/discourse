@@ -1725,28 +1725,12 @@ lv:
         grant_badge: "Piešķirt Žetonu"
         delete_topic: "Dzēst tēmu"
       actions:
-        flag: "Ziņot"
-        undo:
-          off_topic: "Atcelt ziņošanu"
-          spam: "Atcelt ziņošanu"
-          inappropriate: "Atcelt ziņošanu"
-          bookmark: "Atcelt grāmatzīmi"
-          like: "Atcelt atzinību"
-        people:
-          off_topic: "ziņot par šo kā novirzīšanos no tēmas"
-          spam: "ziņot par šo kā spamu"
-          inappropriate: "ziņot par šo kā nepiedienīgu"
-          notify_moderators: "paziņoja moderatoriem"
-          notify_user: "nosūtīja ziņu"
-          bookmark: "pievienoja grāmatzīmēm"
         by_you:
           off_topic: "Jūs ziņojāt par šo kā novirzīšanos no tēmas"
           spam: "Jūs ziņojāt par šo kā spamu"
           inappropriate: "Jūs ziņojāt par šo kā nepiedienīgu"
           notify_moderators: "Jūs ziņojāt par šo moderācijai"
           notify_user: "Jūs nosūtījāt ziņu šim lietotājam"
-          bookmark: "Jūs pievienojāt šo ierakstu grāmatzīmēm"
-          like: "Jūs izteicāt atzinību šim"
       merge:
         confirm:
           zero: "Vai jūs esat drošs, ka vēlaties apvienot šos %{count} ierakstus?"
@@ -2198,14 +2182,6 @@ lv:
           latest: "Nav pēdējo tēmu."
           bookmarks: "Jūs vēl neesat pievienojis nevienu tēmu grāmatzīmēm."
           top: "Nav populāru tēmu."
-        bottom:
-          latest: "Vairāk pēdējo tēmu nav."
-          posted: "Vairāk publicētu tēmu nav."
-          read: "Vairāk lasītu tēmu nav."
-          new: "Vairāk jaunu tēmu nav."
-          unread: "Vairāk nelasītu tēmu nav."
-          top: "Vairāk populāru tēmu nav."
-          bookmarks: "Vairāk tēmu grāmatzīmēs nav."
     invite:
       custom_message_placeholder: "Ievadi savu ziņas tekstu"
       custom_message_template_forum: "Sveiks, Tev ir jāpievienojas šim forumam!"

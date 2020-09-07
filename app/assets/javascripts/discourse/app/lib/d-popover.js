@@ -20,17 +20,13 @@ export const POPOVER_SELECTORS =
   "[data-html-popover], [data-html-tooltip], [data-popover], [data-tooltip]";
 
 export function hidePopover() {
-  getPopover()
-    .fadeOut()
-    .remove();
+  getPopover().fadeOut().remove();
 
   return getPopover();
 }
 
 export function showPopover(event, options = {}) {
-  let $enteredElement = $(event.target)
-    .closest(POPOVER_SELECTORS)
-    .first();
+  let $enteredElement = $(event.target).closest(POPOVER_SELECTORS).first();
 
   if (!$enteredElement.length) {
     $enteredElement = $(event.target);
@@ -52,9 +48,9 @@ export function showPopover(event, options = {}) {
   positionPopover($enteredElement);
 
   return {
-    html: content => replaceHtmlContent($enteredElement, content),
-    text: content => replaceTextContent($enteredElement, content),
-    hide: hidePopover
+    html: (content) => replaceHtmlContent($enteredElement, content),
+    text: (content) => replaceTextContent($enteredElement, content),
+    hide: hidePopover,
   };
 }
 
@@ -78,18 +74,14 @@ function setPopoverTextContent($enteredElement, content) {
 
 function replaceTextContent($enteredElement, content) {
   if (content) {
-    getPopover()
-      .find(".d-popover-content")
-      .text(content);
+    getPopover().find(".d-popover-content").text(content);
     window.requestAnimationFrame(() => positionPopover($enteredElement));
   }
 }
 
 function replaceHtmlContent($enteredElement, content) {
   if (content) {
-    getPopover()
-      .find(".d-popover-content")
-      .html(content);
+    getPopover().find(".d-popover-content").html(content);
     window.requestAnimationFrame(() => positionPopover($enteredElement));
   }
 }
@@ -103,14 +95,14 @@ function positionPopover($element) {
     left: 0,
     top: $dHeader.length ? $dHeader[0].getBoundingClientRect().bottom : 0,
     width: $(window).width(),
-    height: $(window).height()
+    height: $(window).height(),
   };
 
   const popoverRect = {
     width: $popover.width(),
     height: $popover.height(),
     left: null,
-    right: null
+    right: null,
   };
 
   if (popoverRect.width > windowRect.width - D_HORIZONTAL_MARGIN * 2) {

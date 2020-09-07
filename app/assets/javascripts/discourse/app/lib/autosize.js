@@ -1,7 +1,7 @@
 const set =
   typeof Set === "function"
     ? new Set()
-    : (function() {
+    : (function () {
         const list = [];
 
         return {
@@ -13,7 +13,7 @@ const set =
           },
           delete(key) {
             list.splice(list.indexOf(key), 1);
-          }
+          },
         };
       })();
 
@@ -129,7 +129,7 @@ function assign(ta, { setOverflowX = true, setOverflowY = true } = {}) {
     }
   };
 
-  const destroy = style => {
+  const destroy = (style) => {
     window.removeEventListener("resize", pageResize, false);
     ta.removeEventListener("input", update, false);
     ta.removeEventListener("keyup", update, false);
@@ -137,7 +137,7 @@ function assign(ta, { setOverflowX = true, setOverflowY = true } = {}) {
     ta.removeEventListener("autosize:update", update, false);
     set.delete(ta);
 
-    Object.keys(style).forEach(key => {
+    Object.keys(style).forEach((key) => {
       ta.style[key] = style[key];
     });
   };
@@ -180,19 +180,19 @@ function exportUpdate(ta) {
 
 let autosize = (el, options) => {
   if (el) {
-    Array.prototype.forEach.call(el.length ? el : [el], x =>
+    Array.prototype.forEach.call(el.length ? el : [el], (x) =>
       assign(x, options)
     );
   }
   return el;
 };
-autosize.destroy = el => {
+autosize.destroy = (el) => {
   if (el) {
     Array.prototype.forEach.call(el.length ? el : [el], exportDestroy);
   }
   return el;
 };
-autosize.update = el => {
+autosize.update = (el) => {
   if (el) {
     Array.prototype.forEach.call(el.length ? el : [el], exportUpdate);
   }

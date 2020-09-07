@@ -35,6 +35,7 @@ class UserSerializer < UserCardSerializer
 
   private_attributes :locale,
                      :muted_category_ids,
+                     :regular_category_ids,
                      :watched_tags,
                      :watching_first_post_tags,
                      :tracked_tags,
@@ -217,6 +218,10 @@ class UserSerializer < UserCardSerializer
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def regular_category_ids
+    CategoryUser.lookup(object, :regular).pluck(:category_id)
   end
 
   def tracked_category_ids

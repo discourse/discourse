@@ -5,7 +5,7 @@ export default createPMRoute("tags", "private-messages-tags").extend({
     this.controllerFor("user-private-messages").set("tagId", params.id);
     const username = this.modelFor("user").get("username_lower");
     return this.store.findFiltered("topicList", {
-      filter: `topics/private-messages-tags/${username}/${params.id}`
+      filter: `topics/private-messages-tags/${username}/${params.id}`,
     });
-  }
+  },
 });

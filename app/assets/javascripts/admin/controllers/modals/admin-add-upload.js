@@ -50,7 +50,7 @@ const SCSS_VARIABLE_NAMES = [
   "danger-low",
   "danger-medium",
   "success-low",
-  "love-low"
+  "love-low",
 ];
 
 export default Controller.extend(ModalFunctionality, {
@@ -77,7 +77,7 @@ export default Controller.extend(ModalFunctionality, {
         return I18n.t("admin.customize.theme.variable_name_error.no_overwrite");
       } else if (
         themeFields.some(
-          tf =>
+          (tf) =>
             THEME_FIELD_VARIABLE_TYPE_IDS.includes(tf.type_id) &&
             name === tf.name
         )
@@ -119,24 +119,24 @@ export default Controller.extend(ModalFunctionality, {
         type: "POST",
         processData: false,
         contentType: false,
-        data: new FormData()
+        data: new FormData(),
       };
 
       options.data.append("file", file);
 
       ajax(this.uploadUrl, options)
-        .then(result => {
+        .then((result) => {
           const upload = {
             upload_id: result.upload_id,
             name: this.name,
-            original_filename: file.name
+            original_filename: file.name,
           };
           this.adminCustomizeThemesShow.send("addUpload", upload);
           this.send("closeModal");
         })
-        .catch(e => {
+        .catch((e) => {
           popupAjaxError(e);
         });
-    }
-  }
+    },
+  },
 });

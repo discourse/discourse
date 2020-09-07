@@ -4,6 +4,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { setting, i18n } from "discourse/lib/computed";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   adminBackups: controller(),
@@ -30,7 +31,7 @@ export default Controller.extend({
           I18n.t("admin.backups.read_only.enable.confirm"),
           I18n.t("no_value"),
           I18n.t("yes_value"),
-          confirmed => {
+          (confirmed) => {
             if (confirmed) {
               this.set("currentUser.hideReadOnlyAlert", true);
               this._toggleReadOnlyMode(true);
@@ -47,13 +48,13 @@ export default Controller.extend({
       ajax(`/admin/backups/${link}`, { type: "PUT" }).then(() =>
         bootbox.alert(I18n.t("admin.backups.operations.download.alert"))
       );
-    }
+    },
   },
 
   _toggleReadOnlyMode(enable) {
     ajax("/admin/backups/readonly", {
       type: "PUT",
-      data: { enable }
+      data: { enable },
     }).then(() => this.site.set("isReadOnly", enable));
-  }
+  },
 });

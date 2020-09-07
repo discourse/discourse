@@ -19,6 +19,6 @@ export default Component.extend({
   actions: {
     externalLogin(provider) {
       this.externalLogin(provider);
-    }
-  }
+    },
+  },
 });

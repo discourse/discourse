@@ -5,7 +5,7 @@ export default DiscourseRoute.extend({
     start_date: { refreshModel: true },
     end_date: { refreshModel: true },
     filters: { refreshModel: true },
-    chart_grouping: { refreshModel: true }
+    chart_grouping: { refreshModel: true },
   },
 
   model(params) {
@@ -22,10 +22,7 @@ export default DiscourseRoute.extend({
     delete params.start_date;
 
     params.endDate =
-      params.end_date ||
-      moment()
-        .endOf("day")
-        .format("YYYY-MM-DD");
+      params.end_date || moment().endOf("day").format("YYYY-MM-DD");
     delete params.end_date;
 
     params.chartGrouping = params.chart_grouping || "daily";
@@ -65,10 +62,10 @@ export default DiscourseRoute.extend({
         filters: params.filters,
         end_date: params.endDate
           ? params.endDate.toISOString(true).split("T")[0]
-          : null
+          : null,
       };
 
       this.transitionTo("adminReports.show", { queryParams });
-    }
-  }
+    },
+  },
 });

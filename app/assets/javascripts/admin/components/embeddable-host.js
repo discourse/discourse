@@ -8,6 +8,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { on, observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
+import bootbox from "bootbox";
 
 export default Component.extend(bufferedProperty("host"), {
   editToggled: false,
@@ -59,7 +60,7 @@ export default Component.extend(bufferedProperty("host"), {
     },
 
     delete() {
-      bootbox.confirm(I18n.t("admin.embedding.confirm_delete"), result => {
+      bootbox.confirm(I18n.t("admin.embedding.confirm_delete"), (result) => {
         if (result) {
           this.host.destroyRecord().then(() => {
             this.deleteHost(this.host);
@@ -76,6 +77,6 @@ export default Component.extend(bufferedProperty("host"), {
         this.rollbackBuffer();
         this.set("editToggled", false);
       }
-    }
-  }
+    },
+  },
 });

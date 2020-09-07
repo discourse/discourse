@@ -29,8 +29,8 @@ export default {
         "/u/account-created",
         "/users/account-created",
         "/u/password-reset",
-        "/users/password-reset"
-      ]
+        "/users/password-reset",
+      ],
     });
-  }
+  },
 };

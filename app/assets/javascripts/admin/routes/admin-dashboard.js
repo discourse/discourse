@@ -6,5 +6,5 @@ export default DiscourseRoute.extend({
     this.controllerFor("admin-dashboard").fetchProblems();
     this.controllerFor("admin-dashboard").fetchDashboard();
     scrollTop();
-  }
+  },
 });

@@ -22,7 +22,7 @@ export default Controller.extend({
   subscribe() {
     this.messageBus.subscribe(
       `/web_hook_events/${this.get("model.extras.web_hook_id")}`,
-      data => {
+      (data) => {
         if (data.event_type === "ping") {
           this.set("pingDisabled", false);
         }
@@ -54,9 +54,9 @@ export default Controller.extend({
       ajax(
         `/admin/api/web_hooks/${this.get("model.extras.web_hook_id")}/ping`,
         {
-          type: "POST"
+          type: "POST",
         }
-      ).catch(error => {
+      ).catch((error) => {
         this.set("pingDisabled", false);
         popupAjaxError(error);
       });
@@ -67,14 +67,14 @@ export default Controller.extend({
 
       ajax(`/admin/api/web_hooks/${webHookId}/events/bulk`, {
         type: "GET",
-        data: { ids: this.incomingEventIds }
-      }).then(data => {
-        const objects = data.map(event =>
+        data: { ids: this.incomingEventIds },
+      }).then((data) => {
+        const objects = data.map((event) =>
           this.store.createRecord("web-hook-event", event)
         );
         this.model.unshiftObjects(objects);
         this.set("incomingEventIds", []);
       });
-    }
-  }
+    },
+  },
 });

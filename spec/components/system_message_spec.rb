@@ -55,6 +55,19 @@ describe SystemMessage do
       ).count).to eq(0)
     end
 
+    it 'allows message_title and message_raw ops to override content' do
+      user = Fabricate(:user)
+      system_user = Discourse.system_user
+
+      post = SystemMessage.create_from_system_user(user, :welcome_invite, { message_title: "override title", message_raw: "override body" })
+      topic = post.topic
+
+      expect(topic.private_message?).to eq(true)
+      expect(topic.title).to eq("override title")
+      expect(topic.subtype).to eq(TopicSubtype.system_message)
+      expect(post.raw).to eq("override body")
+    end
+
     it 'should allow site_contact_group_name' do
       group = Fabricate(:group)
       SiteSetting.site_contact_group_name = group.name

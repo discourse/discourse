@@ -9,13 +9,13 @@ var dummy = document.createElement("div"),
     webkit: "webkitTransitionEnd",
     Moz: "transitionend",
     O: "oTransitionEnd",
-    ms: "MSTransitionEnd"
+    ms: "MSTransitionEnd",
   };
 
-var transitionEnd = (function() {
+var transitionEnd = (function () {
   var retValue;
   retValue = "transitionend";
-  Object.keys(eventNameHash).some(function(vendor) {
+  Object.keys(eventNameHash).some(function (vendor) {
     if (vendor + "TransitionProperty" in dummy.style) {
       retValue = eventNameHash[vendor];
       return true;
@@ -24,8 +24,8 @@ var transitionEnd = (function() {
   return retValue;
 })();
 
-export default function(element, callback) {
-  return $(element).on(transitionEnd, event => {
+export default function (element, callback) {
+  return $(element).on(transitionEnd, (event) => {
     if (event.target !== event.currentTarget) return;
     return callback(event);
   });

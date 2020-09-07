@@ -6,5 +6,5 @@ export default RestModel.extend({
   @discourseComputed("id")
   name(id) {
     return I18n.t(`admin.flags.summary.action_type_${id}`, { count: 1 });
-  }
+  },
 });

@@ -13,42 +13,42 @@ acceptance("Redirect to Top", {
       return helper.response(DiscoveryFixtures["/latest.json"]);
     });
   },
-  loggedIn: true
+  loggedIn: true,
 });
 
-QUnit.test("redirects categories to weekly top", async assert => {
+QUnit.test("redirects categories to weekly top", async (assert) => {
   updateCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {
       period: "weekly",
-      reason: "Welcome back!"
-    }
+      reason: "Welcome back!",
+    },
   });
 
   await visit("/categories");
   assert.equal(currentPath(), "discovery.topWeekly", "it works for categories");
 });
 
-QUnit.test("redirects latest to monthly top", async assert => {
+QUnit.test("redirects latest to monthly top", async (assert) => {
   updateCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {
       period: "monthly",
-      reason: "Welcome back!"
-    }
+      reason: "Welcome back!",
+    },
   });
 
   await visit("/latest");
   assert.equal(currentPath(), "discovery.topMonthly", "it works for latest");
 });
 
-QUnit.test("redirects root to All top", async assert => {
+QUnit.test("redirects root to All top", async (assert) => {
   updateCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {
       period: null,
-      reason: "Welcome back!"
-    }
+      reason: "Welcome back!",
+    },
   });
 
   await visit("/");

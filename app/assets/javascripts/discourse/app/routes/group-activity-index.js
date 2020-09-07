@@ -8,5 +8,5 @@ export default Route.extend({
     } else {
       this.transitionTo("group.activity.mentions");
     }
-  }
+  },
 });

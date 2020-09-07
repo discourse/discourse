@@ -27,7 +27,7 @@ export default Controller.extend({
   queryPlanHtml(queryPlan) {
     let output = `<pre class="badge-query-plan">`;
 
-    queryPlan.forEach(linehash => {
+    queryPlan.forEach((linehash) => {
       output += escapeExpression(linehash["QUERY PLAN"]);
       output += "<br>";
     });
@@ -36,7 +36,7 @@ export default Controller.extend({
     return output;
   },
 
-  processedSample: map("model.sample", grant => {
+  processedSample: map("model.sample", (grant) => {
     let i18nKey = "admin.badges.preview.grant.with";
     const i18nParams = { username: escapeExpression(grant.username) };
 
@@ -55,5 +55,5 @@ export default Controller.extend({
     }
 
     return I18n.t(i18nKey, i18nParams);
-  })
+  }),
 });

@@ -715,6 +715,23 @@ RSpec.describe TopicsController do
         expect(t2.deleted_at).to be_nil
         expect(p3.user).to eq(user_a)
       end
+
+      it "removes likes by new owner" do
+        now = Time.zone.now
+        freeze_time(now - 1.day)
+        PostActionCreator.like(user_a, p1)
+        p1.reload
+        freeze_time(now)
+        post "/t/#{topic.id}/change-owner.json", params: {
+          username: user_a.username_lower, post_ids: [p1.id]
+        }
+        topic.reload
+        p1.reload
+        expect(response.status).to eq(200)
+        expect(topic.user.username).to eq(user_a.username)
+        expect(p1.user.username).to eq(user_a.username)
+        expect(p1.like_count).to eq(0)
+      end
     end
   end
 
@@ -2480,6 +2497,26 @@ RSpec.describe TopicsController do
         put "/topics/bulk.json", params: {
           category_id: category.id,
           include_subcategories: true,
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' }
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
+      end
+
+      it "can mark tag topics unread" do
+        tag = Fabricate(:tag)
+        TopicTag.create!(
+          topic_id: topic.id,
+          tag_id: tag.id
+        )
+
+        post1 = create_post(user: user, topic_id: topic.id)
+        create_post(topic_id: topic.id)
+
+        put "/topics/bulk.json", params: {
+          tag_name: tag.name,
           filter: 'unread',
           operation: { type: 'dismiss_posts' }
         }

@@ -760,7 +760,7 @@ describe 'posts' do
         description: 'Enum: `all`, `yearly`, `quarterly`, `monthly`, `weekly`, `daily`')
 
       produces 'application/json'
-      response '200', 'topic updated' do
+      response '200', 'response' do
         schema type: :object, properties: {
           users: {
             type: :array,

@@ -13,17 +13,17 @@ export const queryParams = {
   tags: { replace: true },
   before: { replace: true, refreshModel: true },
   bumped_before: { replace: true, refreshModel: true },
-  f: { replace: true, refreshModel: true }
+  f: { replace: true, refreshModel: true },
 };
 
 // Basic controller options
 const controllerOpts = {
   discoveryTopics: inject("discovery/topics"),
-  queryParams: Object.keys(queryParams)
+  queryParams: Object.keys(queryParams),
 };
 
 // Default to `null`
-controllerOpts.queryParams.forEach(p => {
+controllerOpts.queryParams.forEach((p) => {
   controllerOpts[p] = queryParams[p].default;
 });
 
@@ -41,14 +41,14 @@ export function changeSort(sortBy) {
 
 export function resetParams() {
   let { controller } = this;
-  controllerOpts.queryParams.forEach(p => {
+  controllerOpts.queryParams.forEach((p) => {
     controller.set(p, queryParams[p].default);
   });
 }
 
 const SortableController = Controller.extend(controllerOpts);
 
-export const addDiscoveryQueryParam = function(p, opts) {
+export const addDiscoveryQueryParam = function (p, opts) {
   queryParams[p] = opts;
   const cOpts = {};
   cOpts[p] = null;

@@ -22,5 +22,5 @@ export default {
         postRNWebviewMessage("headerBg", styles.backgroundColor);
       }
     }, 500);
-  }
+  },
 };

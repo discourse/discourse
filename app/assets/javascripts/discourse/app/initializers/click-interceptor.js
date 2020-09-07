@@ -8,5 +8,5 @@ export default {
     $(window).on("hashchange", () =>
       DiscourseURL.routeTo(document.location.hash)
     );
-  }
+  },
 };

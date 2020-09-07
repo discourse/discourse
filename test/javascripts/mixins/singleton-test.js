@@ -3,7 +3,7 @@ import Singleton from "discourse/mixins/singleton";
 
 QUnit.module("mixin:singleton");
 
-QUnit.test("current", assert => {
+QUnit.test("current", (assert) => {
   var DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
 
@@ -21,7 +21,7 @@ QUnit.test("current", assert => {
   );
 });
 
-QUnit.test("currentProp reading", assert => {
+QUnit.test("currentProp reading", (assert) => {
   var DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
   var current = DummyModel.current();
@@ -38,7 +38,7 @@ QUnit.test("currentProp reading", assert => {
   );
 });
 
-QUnit.test("currentProp writing", assert => {
+QUnit.test("currentProp writing", (assert) => {
   var DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
 
@@ -65,12 +65,12 @@ QUnit.test("currentProp writing", assert => {
   );
 });
 
-QUnit.test("createCurrent", assert => {
+QUnit.test("createCurrent", (assert) => {
   var Shoe = EmberObject.extend({});
   Shoe.reopenClass(Singleton, {
-    createCurrent: function() {
+    createCurrent: function () {
       return Shoe.create({ toes: 5 });
-    }
+    },
   });
 
   assert.equal(
@@ -80,12 +80,12 @@ QUnit.test("createCurrent", assert => {
   );
 });
 
-QUnit.test("createCurrent that returns null", assert => {
+QUnit.test("createCurrent that returns null", (assert) => {
   var Missing = EmberObject.extend({});
   Missing.reopenClass(Singleton, {
-    createCurrent: function() {
+    createCurrent: function () {
       return null;
-    }
+    },
   });
 
   assert.blank(Missing.current(), "it doesn't return an instance");

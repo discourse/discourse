@@ -39,5 +39,5 @@ export default Component.extend({
   @discourseComputed("uploadStats.free_bytes")
   freeUploadSpace(bytes) {
     return I18n.toHumanSize(bytes);
-  }
+  },
 });

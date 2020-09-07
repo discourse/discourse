@@ -151,6 +151,7 @@ es:
       reset_trigger: "tutorial"
       title: "Certificado de finalización del tutorial de usuario nuevo"
       cert_title: "En reconocimiento a la finalización exitosa del tutorial de nuevo usuario"
+      delete_reason: "El usuario omitió las sugerencias para nuevos usuarios"
       hello:
         title: "¡Saludos!"
         message: |-
@@ -191,10 +192,6 @@ es:
           Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié heart_eyes
         like_not_found: |-
           ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
-        not_found: |-
-          Parece que no subiste ninguna imagen, así que he elegido una imagen que estoy _seguro_ que disfrutarás.
-          `%{image_url}`
-          ¡Trata de subir esta ahora o bien copia el enlace de la imagen y pégalo en una única línea dentro del mensaje!
       formatting:
         instructions: |-
           ¿Puedes poner algunas letras en **negrita** o _cursiva_ en tu respuesta?
@@ -272,6 +269,8 @@ es:
           Me imagino que sabes qué hacer. ¡Anímate y **reporta este mensaje** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
         reply: |-
           [Nuestro staff](%{base_uri}/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, este se ocultará automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado el reporte por ahora)
+        not_found: |-
+          Oh no, mi mensaje asqueroso no ha sido reportado aún. :worried: ¿Puedes reportar como inapropiado usando el botón de **reportar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que debes primero presionar el botón ver más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que se muestren otras opciones para cada mensaje.
       search:
         instructions: |-
           _psst_ … He ocultado una sorpresa en este tema. Si estás listo para el desafío, **selecciona el botón para buscar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> que está arriba a la derecha &#8599; y ahí puedes buscar palabras.

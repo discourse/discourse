@@ -15,7 +15,7 @@ const WHITELISTED_ATTRIBUTES = [
   "groups",
   "status",
   "step",
-  "type"
+  "type",
 ];
 
 function replaceToken(tokens, target, list) {
@@ -84,14 +84,14 @@ function invalidPoll(state, tag) {
 const rule = {
   tag: "poll",
 
-  before: function(state, tagInfo, raw) {
+  before: function (state, tagInfo, raw) {
     let token = state.push("text", "", 0);
     token.content = raw;
     token.bbcode_attrs = tagInfo.attrs;
     token.bbcode_type = "poll_open";
   },
 
-  after: function(state, openToken, raw) {
+  after: function (state, openToken, raw) {
     let items = getListItems(state.tokens, openToken);
     if (!items) {
       return invalidPoll(state, raw);
@@ -106,7 +106,7 @@ const rule = {
       attributes.push([DATA_PREFIX + "status", "open"]);
     }
 
-    WHITELISTED_ATTRIBUTES.forEach(name => {
+    WHITELISTED_ATTRIBUTES.forEach((name) => {
       if (attrs[name]) {
         attributes.push([DATA_PREFIX + name, attrs[name]]);
       }
@@ -221,7 +221,7 @@ const rule = {
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
-  }
+  },
 };
 
 function newApiInit(helper) {
@@ -230,7 +230,7 @@ function newApiInit(helper) {
     opts.pollMaximumOptions = siteSettings.poll_maximum_options;
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.block.bbcode.ruler.push("poll", rule);
   });
 }
@@ -247,7 +247,7 @@ export function setup(helper) {
     "span.info-label",
     "a.button.cast-votes",
     "a.button.toggle-results",
-    "li[data-*]"
+    "li[data-*]",
   ]);
 
   newApiInit(helper);

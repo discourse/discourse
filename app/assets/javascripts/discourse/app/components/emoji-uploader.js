@@ -35,7 +35,7 @@ export default Component.extend(UploadMixin, {
   createEmojiGroup(group) {
     this.setProperties({
       newEmojiGroups: this.emojiGroups.concat([group]).uniq(),
-      group
+      group,
     });
   },
 
@@ -61,5 +61,5 @@ export default Component.extend(UploadMixin, {
   uploadDone(upload) {
     this.done(upload, this.group);
     this.setProperties({ name: null, group: DEFAULT_GROUP });
-  }
+  },
 });

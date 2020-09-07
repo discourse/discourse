@@ -32,9 +32,9 @@ export default Controller.extend(PenaltyController, {
           message: this.message,
           post_id: this.postId,
           post_action: this.postAction,
-          post_edit: this.postEdit
+          post_edit: this.postEdit,
         });
       }).finally(() => this.set("suspending", false));
-    }
-  }
+    },
+  },
 });

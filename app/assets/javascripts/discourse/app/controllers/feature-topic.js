@@ -6,6 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import EmberObject from "@ember/object";
+import bootbox from "bootbox";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),
@@ -20,7 +21,7 @@ export default Controller.extend(ModalFunctionality, {
       "model.pinnedInCategoryUntil": null,
       "model.pinnedGloballyUntil": null,
       pinInCategoryTipShownAt: false,
-      pinGloballyTipShownAt: false
+      pinGloballyTipShownAt: false,
     });
   },
 
@@ -82,7 +83,7 @@ export default Controller.extend(ModalFunctionality, {
     if (pinDisabled) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("topic.feature_topic.pin_validation")
+        reason: I18n.t("topic.feature_topic.pin_validation"),
       });
     }
   },
@@ -92,7 +93,7 @@ export default Controller.extend(ModalFunctionality, {
     if (pinGloballyDisabled) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("topic.feature_topic.pin_validation")
+        reason: I18n.t("topic.feature_topic.pin_validation"),
       });
     }
   },
@@ -109,14 +110,14 @@ export default Controller.extend(ModalFunctionality, {
     this.set("loading", true);
 
     return ajax("/topics/feature_stats.json", {
-      data: { category_id: this.get("model.category.id") }
+      data: { category_id: this.get("model.category.id") },
     })
-      .then(result => {
+      .then((result) => {
         if (result) {
           this.setProperties({
             pinnedInCategoryCount: result.pinned_in_category_count,
             pinnedGloballyCount: result.pinned_globally_count,
-            bannerCount: result.banner_count
+            bannerCount: result.banner_count,
           });
         }
       })
@@ -137,7 +138,7 @@ export default Controller.extend(ModalFunctionality, {
         I18n.t("topic.feature_topic.confirm_" + name, { count }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed =>
+        (confirmed) =>
           confirmed ? this._forwardAction(action) : this.send("reopenModal")
       );
     }
@@ -172,6 +173,6 @@ export default Controller.extend(ModalFunctionality, {
     },
     removeBanner() {
       this._forwardAction("removeBanner");
-    }
-  }
+    },
+  },
 });

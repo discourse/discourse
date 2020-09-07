@@ -14,7 +14,7 @@ const ESCAPE_REPLACEMENTS = {
   ">": "&gt;",
   '"': "&quot;",
   "'": "&#x27;",
-  "`": "&#x60;"
+  "`": "&#x60;",
 };
 const BAD_CHARS = /[&<>"'`]/g;
 const POSSIBLE_CHARS = /[&<>"'`]/;
@@ -84,7 +84,7 @@ export function sanitize(text, whiteLister) {
 
   if (allowedHrefSchemes && allowedHrefSchemes.length > 0) {
     extraHrefMatchers = [
-      new RegExp("^(" + allowedHrefSchemes.join("|") + ")://[\\w\\.\\-]+", "i")
+      new RegExp("^(" + allowedHrefSchemes.join("|") + ")://[\\w\\.\\-]+", "i"),
     ];
     if (allowedHrefSchemes.includes("tel")) {
       extraHrefMatchers.push(new RegExp("^tel://\\+?[\\w\\.\\-]+", "i"));
@@ -113,7 +113,7 @@ export function sanitize(text, whiteLister) {
               hrefAllowed(value, extraHrefMatchers))) ||
           (tag === "iframe" &&
             name === "src" &&
-            allowedIframes.some(i => {
+            allowedIframes.some((i) => {
               return value.toLowerCase().indexOf((i || "").toLowerCase()) === 0;
             }))
         ) {
@@ -140,7 +140,7 @@ export function sanitize(text, whiteLister) {
           }
         }
       }
-    }
+    },
   });
 
   return result

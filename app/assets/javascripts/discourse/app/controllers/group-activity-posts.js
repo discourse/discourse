@@ -29,7 +29,7 @@ export default Controller.extend({
 
         group
           .findPosts(opts)
-          .then(newPosts => {
+          .then((newPosts) => {
             posts.addObjects(newPosts);
             if (newPosts.length === 0) {
               this.set("canLoadMore", false);
@@ -39,11 +39,11 @@ export default Controller.extend({
             this.set("loading", false);
           });
       }
-    }
+    },
   },
 
   @observes("canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.canLoadMore);
-  }
+  },
 });

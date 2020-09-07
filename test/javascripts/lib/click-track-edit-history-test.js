@@ -8,7 +8,7 @@ QUnit.module("lib:click-track-edit-history", {
   beforeEach() {
     logIn();
 
-    let win = { focus: function() {} };
+    let win = { focus: function () {} };
     sandbox.stub(window, "open").returns(win);
     sandbox.stub(win, "focus");
 
@@ -49,7 +49,7 @@ QUnit.module("lib:click-track-edit-history", {
          </div>
        </div>`
     );
-  }
+  },
 });
 
 var track = ClickTrack.trackClick;
@@ -58,12 +58,12 @@ function generateClickEventOn(selector) {
   return $.Event("click", { currentTarget: fixture(selector).first() });
 }
 
-QUnit.skip("tracks internal URLs", async assert => {
+QUnit.skip("tracks internal URLs", async (assert) => {
   assert.expect(2);
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   const done = assert.async();
-  pretender.post("/clicks/track", request => {
+  pretender.post("/clicks/track", (request) => {
     assert.equal(
       request.requestBody,
       "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
@@ -74,11 +74,11 @@ QUnit.skip("tracks internal URLs", async assert => {
   assert.notOk(track(generateClickEventOn("#same-site")));
 });
 
-QUnit.skip("tracks external URLs", async assert => {
+QUnit.skip("tracks external URLs", async (assert) => {
   assert.expect(2);
 
   const done = assert.async();
-  pretender.post("/clicks/track", request => {
+  pretender.post("/clicks/track", (request) => {
     assert.equal(
       request.requestBody,
       "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
@@ -91,12 +91,12 @@ QUnit.skip("tracks external URLs", async assert => {
 
 QUnit.skip(
   "tracks external URLs when opening in another window",
-  async assert => {
+  async (assert) => {
     assert.expect(3);
     User.currentProp("external_links_in_new_tab", true);
 
     const done = assert.async();
-    pretender.post("/clicks/track", request => {
+    pretender.post("/clicks/track", (request) => {
       assert.equal(
         request.requestBody,
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"

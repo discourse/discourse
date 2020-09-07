@@ -32,7 +32,7 @@ export default Component.extend({
         this.setProperties({
           selection: "pick_date_and_time",
           date: datetime.format("YYYY-MM-DD"),
-          time: datetime.format("HH:mm")
+          time: datetime.format("HH:mm"),
         });
         this._updateInput();
       }
@@ -164,5 +164,5 @@ export default Component.extend({
       );
       return I18n.t("topic.auto_close_immediate", { count: diff });
     }
-  }
+  },
 });

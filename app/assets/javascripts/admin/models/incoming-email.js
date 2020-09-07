@@ -28,18 +28,18 @@ IncomingEmail.reopenClass({
     offset = offset || 0;
 
     const status = filter.status || "received";
-    filter = _.omit(filter, "status");
+    delete filter.status;
 
     return ajax(`/admin/email/${status}.json?offset=${offset}`, {
-      data: filter
-    }).then(incomings =>
-      incomings.map(incoming => IncomingEmail.create(incoming))
+      data: filter,
+    }).then((incomings) =>
+      incomings.map((incoming) => IncomingEmail.create(incoming))
     );
   },
 
   loadRawEmail(id) {
     return ajax(`/admin/email/incoming/${id}/raw.json`);
-  }
+  },
 });
 
 export default IncomingEmail;

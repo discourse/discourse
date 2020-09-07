@@ -10,8 +10,8 @@ export default {
     }
 
     const site = container.lookup("site:main");
-    messageBus.subscribe("/site/read-only", function(enabled) {
+    messageBus.subscribe("/site/read-only", function (enabled) {
       site.set("isReadOnly", enabled);
     });
-  }
+  },
 };

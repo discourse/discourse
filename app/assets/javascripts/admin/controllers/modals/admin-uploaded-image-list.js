@@ -22,6 +22,6 @@ export default Controller.extend(ModalFunctionality, {
     close() {
       this.save(this.images.join("\n"));
       this.send("closeModal");
-    }
-  }
+    },
+  },
 });

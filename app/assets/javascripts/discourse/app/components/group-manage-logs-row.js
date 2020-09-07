@@ -10,6 +10,6 @@ export default Component.extend({
 
     filter(params) {
       this.set(`filters.${params.key}`, params.value);
-    }
-  }
+    },
+  },
 });

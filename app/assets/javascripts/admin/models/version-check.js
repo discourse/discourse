@@ -30,13 +30,15 @@ const VersionCheck = EmberObject.extend({
     if (installedSHA) {
       return installedSHA.substr(0, 10);
     }
-  }
+  },
 });
 
 VersionCheck.reopenClass({
   find() {
-    return ajax("/admin/version_check").then(json => VersionCheck.create(json));
-  }
+    return ajax("/admin/version_check").then((json) =>
+      VersionCheck.create(json)
+    );
+  },
 });
 
 export default VersionCheck;

@@ -7,18 +7,18 @@ export default DropdownSelectBoxComponent.extend({
 
   selectKitOptions: {
     icon: "bars",
-    showFullTitle: false
+    showFullTitle: false,
   },
 
-  content: computed(function() {
+  content: computed(function () {
     const items = [
       {
         id: "showAddMembersModal",
         name: I18n.t("groups.add_members.title", {
-          group_name: this.groupName
+          group_name: this.groupName,
         }),
-        icon: "user-plus"
-      }
+        icon: "user-plus",
+      },
     ];
     return items;
   }),
@@ -26,5 +26,5 @@ export default DropdownSelectBoxComponent.extend({
   @action
   onChange(id) {
     this.attrs && this.attrs[id] && this.attrs[id]();
-  }
+  },
 });

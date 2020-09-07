@@ -17,7 +17,7 @@ export default Controller.extend({
   loading: false,
 
   @observes("filterInput")
-  _setFilter: discourseDebounce(function() {
+  _setFilter: discourseDebounce(function () {
     this.set("filter", this.filterInput);
   }, 500),
 
@@ -73,7 +73,7 @@ export default Controller.extend({
   handleRequest(data) {
     ajax(`/groups/${this.get("model.id")}/handle_membership_request.json`, {
       data,
-      type: "PUT"
+      type: "PUT",
     }).catch(popupAjaxError);
   },
 
@@ -86,14 +86,14 @@ export default Controller.extend({
       this.handleRequest({ user_id: user.get("id"), accept: true });
       user.setProperties({
         request_accepted: true,
-        request_denied: false
+        request_denied: false,
       });
     },
 
     undoAcceptRequest(user) {
       ajax("/groups/" + this.get("model.id") + "/members.json", {
         type: "DELETE",
-        data: { user_id: user.get("id") }
+        data: { user_id: user.get("id") },
       }).then(() => {
         user.set("request_undone", true);
       });
@@ -103,8 +103,8 @@ export default Controller.extend({
       this.handleRequest({ user_id: user.get("id") });
       user.setProperties({
         request_accepted: false,
-        request_denied: true
+        request_denied: true,
       });
-    }
-  }
+    },
+  },
 });

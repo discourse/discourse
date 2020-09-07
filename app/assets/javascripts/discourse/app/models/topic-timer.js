@@ -14,7 +14,7 @@ TopicTimer.reopenClass({
   ) {
     let data = {
       time,
-      status_type: statusType
+      status_type: statusType,
     };
 
     if (basedOnLastPost) data.based_on_last_post = basedOnLastPost;
@@ -24,9 +24,9 @@ TopicTimer.reopenClass({
     return ajax({
       url: `/t/${topicId}/timer`,
       type: "POST",
-      data
+      data,
     });
-  }
+  },
 });
 
 export default TopicTimer;

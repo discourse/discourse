@@ -22,15 +22,15 @@ const Eyeline = function Eyeline(selector) {
   this.appEvents = AppEvents.create();
 };
 
-Eyeline.prototype.on = function(name, cb) {
+Eyeline.prototype.on = function (name, cb) {
   this.appEvents.on(name, cb);
 };
 
-Eyeline.prototype.off = function(name, cb) {
+Eyeline.prototype.off = function (name, cb) {
   this.appEvents.off(name, cb);
 };
 
-Eyeline.prototype.update = function() {
+Eyeline.prototype.update = function () {
   if (_skipUpdate) {
     return;
   }

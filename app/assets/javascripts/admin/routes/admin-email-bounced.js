@@ -8,6 +8,6 @@ export default AdminEmailLogs.extend({
     showIncomingEmail(id) {
       showModal("admin-incoming-email", { admin: true });
       this.controllerFor("modals/admin-incoming-email").loadFromBounced(id);
-    }
-  }
+    },
+  },
 });

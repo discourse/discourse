@@ -9,17 +9,17 @@ export default DropdownSelectBoxRowComponent.extend({
   i18nPrefix: readOnly("selectKit.options.i18nPrefix"),
   i18nPostfix: readOnly("selectKit.options.i18nPostfix"),
 
-  label: computed("_start", function() {
+  label: computed("_start", function () {
     return escapeExpression(I18n.t(`${this._start}.title`));
   }),
 
   title: readOnly("label"),
 
-  icons: computed("title", "item.icon", function() {
+  icons: computed("title", "item.icon", function () {
     return [escapeExpression(this.item.icon)];
   }),
 
-  description: computed("_start", function() {
+  description: computed("_start", function () {
     if (this.site && this.site.mobileView) {
       return null;
     }
@@ -27,7 +27,7 @@ export default DropdownSelectBoxRowComponent.extend({
     return escapeExpression(I18n.t(`${this._start}.description`));
   }),
 
-  _start: computed("i18nPrefix", "i18nPostfix", "rowName", function() {
+  _start: computed("i18nPrefix", "i18nPostfix", "rowName", function () {
     return `${this.i18nPrefix}.${this.rowName}${this.i18nPostfix}`;
-  })
+  }),
 });

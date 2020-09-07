@@ -1,15 +1,17 @@
 import Component from "@ember/component";
+import cookie from "discourse/lib/cookie";
+
 export default Component.extend({
   classNames: ["create-account"],
 
   didInsertElement() {
     this._super(...arguments);
 
-    if ($.cookie("email")) {
-      this.set("email", $.cookie("email"));
+    if (cookie("email")) {
+      this.set("email", cookie("email"));
     }
 
-    $(this.element).on("keydown.discourse-create-account", e => {
+    $(this.element).on("keydown.discourse-create-account", (e) => {
       if (!this.disabled && e.keyCode === 13) {
         e.preventDefault();
         e.stopPropagation();
@@ -18,7 +20,7 @@ export default Component.extend({
       }
     });
 
-    $(this.element).on("click.dropdown-user-field-label", "[for]", event => {
+    $(this.element).on("click.dropdown-user-field-label", "[for]", (event) => {
       const $element = $(event.target);
       const $target = $(`#${$element.attr("for")}`);
 
@@ -34,5 +36,5 @@ export default Component.extend({
 
     $(this.element).off("keydown.discourse-create-account");
     $(this.element).off("click.dropdown-user-field-label");
-  }
+  },
 });

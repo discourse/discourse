@@ -24,7 +24,7 @@ export default DiscourseRoute.extend({
     return postStream
       .refresh(params)
       .then(() => params)
-      .catch(e => {
+      .catch((e) => {
         if (!isTesting()) {
           // eslint-disable-next-line no-console
           console.log("Could not view topic", e);
@@ -68,7 +68,7 @@ export default DiscourseRoute.extend({
     topicController.setProperties({
       "model.currentPost": closest,
       enteredIndex: topic.postStream.progressIndexOfPost(closestPost),
-      enteredAt: Date.now().toString()
+      enteredAt: Date.now().toString(),
     });
 
     this.appEvents.trigger("page:topic-loaded", topic);
@@ -99,7 +99,7 @@ export default DiscourseRoute.extend({
         draftKey: topic.draft_key,
         draftSequence: topic.draft_sequence,
         ignoreIfChanged: true,
-        topic
+        topic,
       });
     }
   },
@@ -114,6 +114,6 @@ export default DiscourseRoute.extend({
       // NOTE: omitting this return can break the back button when transitioning quickly between
       // topics and the latest page.
       return true;
-    }
-  }
+    },
+  },
 });

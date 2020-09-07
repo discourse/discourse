@@ -10,7 +10,7 @@ export default Controller.extend(ModalFunctionality, {
 
     this.store
       .find("reviewable-explanation", this.model.id)
-      .then(result => this.set("reviewableExplanation", result))
+      .then((result) => this.set("reviewableExplanation", result))
       .finally(() => this.set("loading", false));
-  }
+  },
 });

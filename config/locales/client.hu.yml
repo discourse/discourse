@@ -1979,18 +1979,7 @@ hu:
         unlock_post: "Bejegyzés zárolásának feloldása"
         delete_topic: "témakör törlése"
       actions:
-        flag: "Megjelölés"
-        undo:
-          off_topic: "Megjelölés visszavonása"
-          spam: "Megjelölés visszavonása"
-          inappropriate: "Megjelölés visszavonása"
-          bookmark: "Könyvjelző eltávolítása"
-          like: "Kedvelés visszavonása"
         people:
-          off_topic: "megjelölve mint off-topic"
-          spam: "spamnek jelölve"
-          inappropriate: "nem a témába tartozónak jelölve"
-          notify_user: "üzenet küldése"
           like_capped:
             one: "és %{count} ezt likeolták"
             other: "és %{count} embernek tetszett"
@@ -2000,8 +1989,6 @@ hu:
           inappropriate: "Ide nem illőnek jelölted"
           notify_moderators: "Moderálásra jelölted"
           notify_user: "Üzenetet küldtél ennek a felhasználónak"
-          bookmark: "A bejegyzést hozzáadtad a könyvjelzőkhöz"
-          like: "Kedvelted ezt a bejegyzést"
       revisions:
         controls:
           edit_wiki: "Wiki szerkesztése"
@@ -2386,14 +2373,6 @@ hu:
           latest: "Nincsenek legutóbbi témák"
           bookmarks: "Még nem adtál hozzá témakört a könyvjelzőidhez."
           top: "Nincsenek top témák"
-        bottom:
-          latest: "Nincsen több újabb téma"
-          posted: "Nincsen több közzétett téma"
-          read: "Nincs több olvasott téma."
-          new: "Nincsen több új témájú bejegyzés"
-          unread: "Nincsen több olvasatlan témájú bejegyzés"
-          top: "Nincsen több top témájó bejegyzés"
-          bookmarks: "Nincs több témakör a könyvjelzőben"
     invite:
       custom_message_placeholder: "Add meg az egyéni üzenetedet"
       custom_message_template_forum: "Hej, csatlakoznód kéne ehez a fórumhoz"

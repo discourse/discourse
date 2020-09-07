@@ -9,7 +9,7 @@ widgetTest("basic rendering", {
       username: "eviltrout",
       usernameUrl: "/u/eviltrout",
       name: "Robin Ward",
-      user_title: "Trout Master"
+      user_title: "Trout Master",
     });
   },
   test(assert) {
@@ -19,7 +19,7 @@ widgetTest("basic rendering", {
     assert.equal(find(".username a").text(), "eviltrout");
     assert.equal(find(".full-name a").text(), "Robin Ward");
     assert.equal(find(".user-title").text(), "Trout Master");
-  }
+  },
 });
 
 widgetTest("extra classes and glyphs", {
@@ -32,7 +32,7 @@ widgetTest("extra classes and glyphs", {
       admin: true,
       moderator: true,
       new_user: true,
-      primary_group_name: "fish"
+      primary_group_name: "fish",
     });
   },
   test(assert) {
@@ -42,7 +42,7 @@ widgetTest("extra classes and glyphs", {
     assert.ok(find(".d-icon-shield-alt").length);
     assert.ok(find("span.new-user").length);
     assert.ok(find("span.fish").length);
-  }
+  },
 });
 
 widgetTest("disable display name on posts", {
@@ -53,7 +53,7 @@ widgetTest("disable display name on posts", {
   },
   test(assert) {
     assert.equal(find(".full-name").length, 0);
-  }
+  },
 });
 
 widgetTest("doesn't render a name if it's similar to the username", {
@@ -65,5 +65,5 @@ widgetTest("doesn't render a name if it's similar to the username", {
   },
   test(assert) {
     assert.equal(find(".second").length, 0);
-  }
+  },
 });

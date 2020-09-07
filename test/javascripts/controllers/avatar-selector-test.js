@@ -4,10 +4,10 @@ moduleFor("controller:avatar-selector", "controller:avatar-selector", {
   beforeEach() {
     this.registry.register("router:main", mapRoutes());
   },
-  needs: ["controller:modal"]
+  needs: ["controller:modal"],
 });
 
-QUnit.test("avatarTemplate", function(assert) {
+QUnit.test("avatarTemplate", function (assert) {
   const avatarSelectorController = this.subject();
 
   avatarSelectorController.setProperties({
@@ -15,8 +15,8 @@ QUnit.test("avatarTemplate", function(assert) {
     user: {
       system_avatar_upload_id: 1,
       gravatar_avatar_upload_id: 2,
-      custom_avatar_upload_id: 3
-    }
+      custom_avatar_upload_id: 3,
+    },
   });
 
   assert.equal(

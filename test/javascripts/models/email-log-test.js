@@ -1,13 +1,13 @@
 import EmailLog from "admin/models/email-log";
 import { setPrefix } from "discourse-common/lib/get-url";
 
-QUnit.module("Discourse.EmailLog");
+QUnit.module("model:email-log");
 
-QUnit.test("create", assert => {
+QUnit.test("create", (assert) => {
   assert.ok(EmailLog.create(), "it can be created without arguments");
 });
 
-QUnit.test("subfolder support", assert => {
+QUnit.test("subfolder support", (assert) => {
   setPrefix("/forum");
   const attrs = {
     id: 60,
@@ -22,8 +22,8 @@ QUnit.test("subfolder support", assert => {
       id: 9,
       username: "wikiman",
       avatar_template:
-        "/forum/letter_avatar_proxy/v2/letter/w/dfb087/{size}.png"
-    }
+        "/forum/letter_avatar_proxy/v2/letter/w/dfb087/{size}.png",
+    },
   };
   const emailLog = EmailLog.create(attrs);
   assert.equal(

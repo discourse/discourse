@@ -6,7 +6,7 @@ moduleForComponent("time-input", {
 
   beforeEach() {
     this.set("subject", selectKit());
-  }
+  },
 });
 
 function setTime(time) {
@@ -22,7 +22,7 @@ componentTest("default", {
 
   test(assert) {
     assert.equal(this.subject.header().name(), "14:58");
-  }
+  },
 });
 
 componentTest("prevents mutations", {
@@ -36,7 +36,7 @@ componentTest("prevents mutations", {
     await this.subject.expand();
     await this.subject.selectRowByIndex(3);
     assert.equal(this.subject.header().name(), "14:58");
-  }
+  },
 });
 
 componentTest("allows mutations through actions", {
@@ -51,5 +51,5 @@ componentTest("allows mutations through actions", {
     await this.subject.expand();
     await this.subject.selectRowByIndex(3);
     assert.equal(this.subject.header().name(), "00:45");
-  }
+  },
 });

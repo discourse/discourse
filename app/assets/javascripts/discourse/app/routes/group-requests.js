@@ -16,9 +16,9 @@ export default DiscourseRoute.extend({
 
     controller.setProperties({
       model,
-      filterInput: this._params.filter
+      filterInput: this._params.filter,
     });
 
     controller.findRequesters(true);
-  }
+  },
 });

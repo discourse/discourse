@@ -10,7 +10,7 @@ function addHashtag(buffer, matches, state) {
     token = new state.Token("link_open", "a", 1);
     token.attrs = [
       ["class", "hashtag"],
-      ["href", result[0]]
+      ["href", result[0]],
     ];
     token.block = false;
     buffer.push(token);
@@ -45,10 +45,10 @@ function addHashtag(buffer, matches, state) {
 }
 
 export function setup(helper) {
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     const rule = {
       matcher: /#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})/,
-      onMatch: addHashtag
+      onMatch: addHashtag,
     };
 
     md.core.textPostProcess.ruler.push("category-hashtag", rule);

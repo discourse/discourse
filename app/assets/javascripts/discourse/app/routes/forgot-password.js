@@ -11,10 +11,10 @@ ForgotPasswordRoute.reopen({
     );
     this.replaceWith(
       loginRequired ? "login" : `discovery.${defaultHomepage()}`
-    ).then(e => {
+    ).then((e) => {
       next(() => e.send("showForgotPassword"));
     });
-  }
+  },
 });
 
 export default ForgotPasswordRoute;

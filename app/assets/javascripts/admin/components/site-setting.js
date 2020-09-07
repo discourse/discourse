@@ -9,7 +9,7 @@ export default Component.extend(BufferedContent, SettingComponent, {
   _save() {
     const setting = this.buffered;
     return SiteSetting.update(setting.get("setting"), setting.get("value"), {
-      updateExistingUsers: this.updateExistingUsers
+      updateExistingUsers: this.updateExistingUsers,
     });
-  }
+  },
 });

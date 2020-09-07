@@ -383,7 +383,6 @@ it:
       title: "Sei stato accettato in @ %{group_name}"
       body: |
         La tua richiesta di far parte di @ %{group_name} è stata accettata e ora sei un membro.
-    view_hidden_topic_request_reason: "Vorrei far parte del gruppo '%{group_name}', per accedere [all'argomento](%{topic_url})"
   education:
     until_posts:
       one: "%{count} messaggio"
@@ -1423,7 +1422,6 @@ it:
     ga_universal_domain_name: "Nome di dominio di Google Universal Analytics (analytics.js), ad esempio: mysite.com; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Abilita il monitoraggio interdominio di Google Universal Analytics (analytics.js). I collegamenti in uscita a questi domini avranno aggiunto l'ID client. Consulta <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>la guida al monitoraggio del dominio incrociato di Google.</a>"
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Permetti ai moderatori di creare nuove categorie"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
     slow_down_crawler_user_agents: "Agenti utente di crawler Web che devono essere limitati in frequenza in robots.txt utilizzando la direttiva di ritardo della scansione"

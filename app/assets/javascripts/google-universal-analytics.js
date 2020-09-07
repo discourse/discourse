@@ -7,7 +7,7 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 /* eslint-enable */
 
-(function() {
+(function () {
   const gaDataElement = document.getElementById("data-ga-universal-analytics");
   const gaJson = JSON.parse(gaDataElement.dataset.json);
 

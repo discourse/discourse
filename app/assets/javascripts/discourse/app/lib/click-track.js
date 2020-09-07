@@ -8,6 +8,7 @@ import { selectedText } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { isTesting } from "discourse-common/config/environment";
 import User from "discourse/models/user";
+import bootbox from "bootbox";
 
 export function isValidLink($link) {
   // .hashtag == category/tag link
@@ -150,8 +151,8 @@ export default {
           data: {
             url: href,
             post_id: postId,
-            topic_id: topicId
-          }
+            topic_id: topicId,
+          },
         });
       }
     }
@@ -173,5 +174,5 @@ export default {
     }
 
     return true;
-  }
+  },
 };

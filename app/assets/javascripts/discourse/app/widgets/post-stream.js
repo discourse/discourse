@@ -157,5 +157,5 @@ export default createWidget("post-stream", {
       prevPost = post;
     }
     return result;
-  }
+  },
 });

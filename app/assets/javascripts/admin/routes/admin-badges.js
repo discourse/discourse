@@ -8,7 +8,7 @@ export default DiscourseRoute.extend({
   _json: null,
 
   model() {
-    return ajax("/admin/badges.json").then(json => {
+    return ajax("/admin/badges.json").then((json) => {
       this._json = json;
       return Badge.createFromJson(json);
     });
@@ -19,15 +19,15 @@ export default DiscourseRoute.extend({
     const badgeTriggers = [];
     const badgeGroupings = [];
 
-    Object.keys(json.admin_badges.triggers).forEach(k => {
+    Object.keys(json.admin_badges.triggers).forEach((k) => {
       const id = json.admin_badges.triggers[k];
       badgeTriggers.push({
         id,
-        name: I18n.t("admin.badges.trigger_type." + k)
+        name: I18n.t("admin.badges.trigger_type." + k),
       });
     });
 
-    json.badge_groupings.forEach(function(badgeGroupingJson) {
+    json.badge_groupings.forEach(function (badgeGroupingJson) {
       badgeGroupings.push(BadgeGrouping.create(badgeGroupingJson));
     });
 
@@ -36,7 +36,7 @@ export default DiscourseRoute.extend({
       badgeTypes: json.badge_types,
       protectedSystemFields: json.admin_badges.protected_system_fields,
       badgeTriggers,
-      model
+      model,
     });
-  }
+  },
 });

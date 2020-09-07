@@ -257,7 +257,6 @@ nb_NO:
       no_timezone: 'Du har ikke ennå satt tidssone. Du vil ikke kunne sette påminnelser. Sett tidssone <a href="%{basePath}/my/preferences/profile">i profilen din</a>.'
       search: "Søk"
       reminders:
-        at_desktop: "Neste gang jeg er på datamaskinen min"
         later_today: "Senere i dag"
         tomorrow: "I morgen"
         next_week: "Neste uke"
@@ -1998,23 +1997,7 @@ nb_NO:
         delete_topic_disallowed: "du har ikke rettigheter til å slette dette emnet"
         delete_topic: "slett emne"
       actions:
-        flag: "Rapportering"
-        defer_flags:
-          one: "Ignorer flagg"
-          other: "Ignorer flagg"
-        undo:
-          off_topic: "Angre rapportering"
-          spam: "Angre rapportering"
-          inappropriate: "Angre rapportering"
-          bookmark: "Angre bokmerking"
-          like: "Angre liker"
         people:
-          off_topic: "markerte dette som utenfor temaet"
-          spam: "flagget dette som søppelpost"
-          inappropriate: "flagget dette som upassende"
-          notify_moderators: "varslet moderatorer"
-          notify_user: "sendte en melding"
-          bookmark: "bokmerket dette"
           like_capped:
             one: "og %{count} annen likte dette"
             other: "og %{count} andre likte dette"
@@ -2024,8 +2007,6 @@ nb_NO:
           inappropriate: "Du rapporterte dette som upassende"
           notify_moderators: "Du rapporterte dette for moderering"
           notify_user: "Du sendte en melding til denne brukeren"
-          bookmark: "Du bokmerket dette innlegget"
-          like: "Du likte dette"
       delete:
         confirm:
           one: "Er du sikker på at du ønsker å slette dette innlegget?"
@@ -2511,14 +2492,6 @@ nb_NO:
           latest: "Det finnes ingen flere siste emner."
           bookmarks: "Du har ikke bokmerket noen emner ennå."
           top: "Det finnes ingen populære emner."
-        bottom:
-          latest: "Det finnes ingen flere siste emner."
-          posted: "Det finnes ingen flere emner med innlegg."
-          read: "Det finnes ingen flere leste emner."
-          new: "Det finnes ingen flere nye emner."
-          unread: "Det finnes ingen flere uleste emner."
-          top: "Det finnes ingen flere populære emner."
-          bookmarks: "Det finnes ingen bokmerkede emner."
     invite:
       custom_message_placeholder: "Skriv inn din egendefinerte melding"
       custom_message_template_forum: "Hei, du burde ta del i dette forumet!"

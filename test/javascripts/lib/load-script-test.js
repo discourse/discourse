@@ -4,7 +4,7 @@ QUnit.module("lib:load-script");
 
 QUnit.skip(
   "load with a script tag, and callbacks are only executed after script is loaded",
-  async assert => {
+  async (assert) => {
     assert.ok(
       typeof window.ace === "undefined",
       "ensures ace is not previously loaded"

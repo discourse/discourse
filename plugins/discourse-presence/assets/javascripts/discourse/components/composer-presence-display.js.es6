@@ -4,14 +4,14 @@ import { equal, gt } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import discourseComputed, {
   observes,
-  on
+  on,
 } from "discourse-common/utils/decorators";
 import {
   REPLYING,
   CLOSED,
   EDITING,
   COMPOSER_TYPE,
-  KEEP_ALIVE_DURATION_SECONDS
+  KEEP_ALIVE_DURATION_SECONDS,
 } from "discourse/plugins/discourse-presence/discourse/lib/presence";
 
 import { REPLY, EDIT } from "discourse/models/composer";
@@ -74,7 +74,7 @@ export default Component.extend({
       state: action === EDIT ? EDITING : REPLYING,
       whisper: this.get("model.whisper"),
       postId: this.get("model.post.id"),
-      presenceStaffOnly: this.get("model._presenceStaffOnly")
+      presenceStaffOnly: this.get("model._presenceStaffOnly"),
     };
 
     this._prevPublishData = data;
@@ -118,5 +118,5 @@ export default Component.extend({
       cancel(this._throttle);
       this._throttle = null;
     }
-  }
+  },
 });

@@ -1,7 +1,6 @@
 import { Promise } from "rsvp";
 
-export function nativeShare(data) {
-  const caps = Discourse.__container__.lookup("capabilities:main");
+export function nativeShare(caps, data) {
   return new Promise((resolve, reject) => {
     if (!(caps.isIOS || caps.isAndroid || caps.isWinphone)) {
       reject();
@@ -14,7 +13,7 @@ export function nativeShare(data) {
       window.navigator
         .share(data)
         .then(resolve)
-        .catch(e => {
+        .catch((e) => {
           if (e.name === "AbortError") {
             // closing share panel do nothing
           } else {
@@ -27,12 +26,10 @@ export function nativeShare(data) {
   });
 }
 
-export function getNativeContact(properties, multiple) {
-  const caps = Discourse.__container__.lookup("capabilities:main");
+export function getNativeContact(caps, properties, multiple) {
   return new Promise((resolve, reject) => {
     if (!caps.hasContactPicker) {
-      reject();
-      return;
+      return reject();
     }
 
     navigator.contacts

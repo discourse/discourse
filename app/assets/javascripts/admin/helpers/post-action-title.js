@@ -3,7 +3,7 @@ import Helper from "@ember/component/helper";
 
 function postActionTitle([id, nameKey]) {
   let title = I18n.t(`admin.flags.short_names.${nameKey}`, {
-    defaultValue: null
+    defaultValue: null,
   });
 
   // TODO: We can remove this once other translations have been updated

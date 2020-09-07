@@ -62,11 +62,11 @@ export default Component.extend({
     );
   },
 
-  checkGroupName: discourseDebounce(function() {
+  checkGroupName: discourseDebounce(function () {
     if (isEmpty(this.nameInput)) return;
 
     Group.checkName(this.nameInput)
-      .then(response => {
+      .then((response) => {
         const validationName = "uniqueNameValidation";
 
         if (response.available) {
@@ -74,7 +74,7 @@ export default Component.extend({
             validationName,
             EmberObject.create({
               ok: true,
-              reason: I18n.t("admin.groups.new.name.available")
+              reason: I18n.t("admin.groups.new.name.available"),
             })
           );
 
@@ -101,5 +101,5 @@ export default Component.extend({
     const options = { failed: true };
     if (reason) options.reason = reason;
     this.set("basicNameValidation", EmberObject.create(options));
-  }
+  },
 });

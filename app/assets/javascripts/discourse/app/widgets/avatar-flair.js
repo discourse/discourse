@@ -56,5 +56,5 @@ createWidget("avatar-flair", {
     } else {
       return [];
     }
-  }
+  },
 });

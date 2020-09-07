@@ -14,5 +14,5 @@ export default Controller.extend({
   @action
   onSelectTemplate(template) {
     this.transitionToRoute("adminCustomizeEmailTemplates.edit", template);
-  }
+  },
 });

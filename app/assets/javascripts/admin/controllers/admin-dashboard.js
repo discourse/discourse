@@ -18,21 +18,21 @@ export default Controller.extend({
     return this.currentUser.get("admin") && (problemsLength || 0) > 0;
   },
 
-  visibleTabs: computed("siteSettings.dashboard_visible_tabs", function() {
+  visibleTabs: computed("siteSettings.dashboard_visible_tabs", function () {
     return (this.siteSettings.dashboard_visible_tabs || "")
       .split("|")
       .filter(Boolean);
   }),
 
-  isModerationTabVisible: computed("visibleTabs", function() {
+  isModerationTabVisible: computed("visibleTabs", function () {
     return this.visibleTabs.includes("moderation");
   }),
 
-  isSecurityTabVisible: computed("visibleTabs", function() {
+  isSecurityTabVisible: computed("visibleTabs", function () {
     return this.visibleTabs.includes("security");
   }),
 
-  isReportsTabVisible: computed("visibleTabs", function() {
+  isReportsTabVisible: computed("visibleTabs", function () {
     return this.visibleTabs.includes("reports");
   }),
 
@@ -41,9 +41,8 @@ export default Controller.extend({
 
     if (
       !this.problemsFetchedAt ||
-      moment()
-        .subtract(PROBLEMS_CHECK_MINUTES, "minutes")
-        .toDate() > this.problemsFetchedAt
+      moment().subtract(PROBLEMS_CHECK_MINUTES, "minutes").toDate() >
+        this.problemsFetchedAt
     ) {
       this._loadProblems();
     }
@@ -56,16 +55,14 @@ export default Controller.extend({
 
     if (
       !this.dashboardFetchedAt ||
-      moment()
-        .subtract(30, "minutes")
-        .toDate() > this.dashboardFetchedAt
+      moment().subtract(30, "minutes").toDate() > this.dashboardFetchedAt
     ) {
       this.set("isLoading", true);
 
       AdminDashboard.fetch()
-        .then(model => {
+        .then((model) => {
           let properties = {
-            dashboardFetchedAt: new Date()
+            dashboardFetchedAt: new Date(),
           };
 
           if (versionChecks) {
@@ -74,7 +71,7 @@ export default Controller.extend({
 
           this.setProperties(properties);
         })
-        .catch(e => {
+        .catch((e) => {
           this.exceptionController.set("thrown", e.jqXHR);
           this.replaceRoute("exception");
         })
@@ -87,24 +84,22 @@ export default Controller.extend({
   _loadProblems() {
     this.setProperties({
       loadingProblems: true,
-      problemsFetchedAt: new Date()
+      problemsFetchedAt: new Date(),
     });
 
     AdminDashboard.fetchProblems()
-      .then(model => this.set("problems", model.problems))
+      .then((model) => this.set("problems", model.problems))
       .finally(() => this.set("loadingProblems", false));
   },
 
   @discourseComputed("problemsFetchedAt")
   problemsTimestamp(problemsFetchedAt) {
-    return moment(problemsFetchedAt)
-      .locale("en")
-      .format("LLL");
+    return moment(problemsFetchedAt).locale("en").format("LLL");
   },
 
   actions: {
     refreshProblems() {
       this._loadProblems();
-    }
-  }
+    },
+  },
 });

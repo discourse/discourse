@@ -25,5 +25,5 @@ export default Controller.extend({
   @discourseComputed
   showFooterNav() {
     return isAppWebview() || isiOSPWA();
-  }
+  },
 });

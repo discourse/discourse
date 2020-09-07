@@ -1,7 +1,7 @@
 import componentTest from "helpers/component-test";
 import {
   testSelectKitModule,
-  setDefaultState
+  setDefaultState,
 } from "helpers/select-kit-helper";
 
 testSelectKitModule("notifications-button");
@@ -39,5 +39,5 @@ componentTest("default", {
       icon.classList.contains("d-icon-d-regular"),
       "it shows the correct icon"
     );
-  }
+  },
 });

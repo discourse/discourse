@@ -143,12 +143,6 @@ id:
           Gambar yang menarik – Saya telah menekan tombol :heart: supaya Anda tahu kalau saya menghargainya :heart_eyes:
         like_not_found: |-
           Apakah Anda lupa menyukai :heart: kiriman saya [post?](%{url}) :crying_cat_face:
-        not_found: |-
-          Sepertinya Anda tidak memasukkan sebuah gambar jadi saya pilihkan sebuah gambar yang sepertinya I’m _sure_ you Anda akan suka.
-
-          `%{image_url}`
-
-          Coba selanjutnya unggah gambar lagi, atau tempelkan tautannya dalam sebuah baris tersendiri!
       formatting:
         instructions: |-
           Bisakah Anda menjadikan beberapa kata menjadi **bold** atau _italic_ dalam balasan Anda?

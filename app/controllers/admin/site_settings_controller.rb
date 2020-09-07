@@ -20,7 +20,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       value = Upload.get_from_url(value) || ""
     end
 
-    update_existing_users = params[:updateExistingUsers].present?
+    update_existing_users = params[:update_existing_user].present?
     previous_value = SiteSetting.send(id) || "" if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
@@ -54,9 +54,18 @@ class Admin::SiteSettingsController < Admin::AdminController
           notification_level = NotificationLevels.all[:muted]
         when "default_categories_watching_first_post"
           notification_level = NotificationLevels.all[:watching_first_post]
+        when "default_categories_regular"
+          notification_level = NotificationLevels.all[:regular]
         end
 
-        CategoryUser.where(category_id: (previous_category_ids - new_category_ids), notification_level: notification_level).delete_all
+        categories_to_unwatch = previous_category_ids - new_category_ids
+        CategoryUser.where(category_id: categories_to_unwatch, notification_level: notification_level).delete_all
+        TopicUser
+          .joins(:topic)
+          .where(notification_level: TopicUser.notification_levels[:watching],
+                 notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
+                 topics: { category_id: categories_to_unwatch })
+          .update_all(notification_level: TopicUser.notification_levels[:regular])
 
         (new_category_ids - previous_category_ids).each do |category_id|
           skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
@@ -131,6 +140,8 @@ class Admin::SiteSettingsController < Admin::AdminController
         notification_level = NotificationLevels.all[:muted]
       when "default_categories_watching_first_post"
         notification_level = NotificationLevels.all[:watching_first_post]
+      when "default_categories_regular"
+        notification_level = NotificationLevels.all[:regular]
       end
 
       user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)

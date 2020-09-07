@@ -64,4 +64,34 @@ describe Search do
     end
   end
 
+  context "#execute" do
+    before do
+      SiteSetting.tagging_enabled = true
+    end
+
+    context "staff tags" do
+      fab!(:hidden_tag) { Fabricate(:tag) }
+      let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+      fab!(:topic) { Fabricate(:topic, tags: [hidden_tag]) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+
+        SearchIndexer.enable
+        SearchIndexer.index(hidden_tag, force: true)
+        SearchIndexer.index(topic, force: true)
+      end
+
+      it "are visible to staff users" do
+        result = Search.execute(hidden_tag.name, guardian: Guardian.new(Fabricate(:admin)))
+        expect(result.tags).to contain_exactly(hidden_tag)
+      end
+
+      it "are hidden to regular users" do
+        result = Search.execute(hidden_tag.name, guardian: Guardian.new(Fabricate(:user)))
+        expect(result.tags).to contain_exactly()
+      end
+    end
+  end
 end

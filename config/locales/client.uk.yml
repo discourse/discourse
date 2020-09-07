@@ -311,10 +311,7 @@ uk:
         unbookmark: "Натисніть, щоб видалити усі закладки у цій темі"
         unbookmark_with_reminder: "Клацніть, щоб видалити всі закладки та нагадування в цій темі. Ви маєте набір нагадувань %{reminder_at} для цієї теми."
     bookmarks:
-      created: "ви додали закладку для цього допису%{name}"
       not_bookmarked: "додати цей допис до закладок"
-      created_with_reminder: "ви додали це повідомлення в закладку із нагадуванням %{date}%{name}"
-      created_with_at_desktop_reminder: "ви додали до закладок цей допис із назвою %{name}, з нагадуванням наступного разу, коли ви відкриєте це повідомлення на настільному комп’ютері"
       remove: "Вилучити закладку"
       delete: "Видалити закладку"
       confirm_delete: "Ви впевнені, що хочете видалити цю закладку? Нагадування також буде видалено."
@@ -331,7 +328,6 @@ uk:
       search_placeholder: "Пошук закладок за назвою, назвою теми або вмістом публікації"
       search: "Пошук"
       reminders:
-        at_desktop: "Наступного разу на мій робочий стіл"
         later_today: "Пізніше сьогодні"
         next_business_day: "Наступний робочий день"
         tomorrow: "Завтра"
@@ -346,7 +342,6 @@ uk:
         today_with_time: "сьогодні о %{time}"
         tomorrow_with_time: "завтра о %{time}"
         at_time: "на %{date_time}"
-        existing_reminder: "У вас встановлено нагадування для цієї закладки, яке буде надіслано"
     copy_codeblock:
       copied: "скопійовано!"
     drafts:
@@ -948,6 +943,9 @@ uk:
       dismiss_notifications_tooltip: "Позначити всі сповіщення як прочитані"
       first_notification: "Ваше перше сповіщення! Оберіть його, щоб почати."
       dynamic_favicon: "Показувати кількість на іконці браузера"
+      skip_new_user_tips:
+        not_first_time: "Вже тут не вперше?"
+        skip_link: "Пропустити ці поради"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
       dark_mode: "Темний режим"
       dark_mode_enable: "Увімкнути автоматично темний режим"
@@ -1098,7 +1096,6 @@ uk:
         use: "Використовуйте додаток для перевірки автентифікації "
         enforced_notice: "Ви мусите увімкнути двофакторну автентифікацію, щоб отримати доступ до цього сайту."
         disable: "Вимкнути"
-        disable_confirm: "Ви впевнені, що бажаєте вимкнути усі другі фактори?"
         save: "Зберегти"
         edit: "Редагувати"
         edit_title: "Редагувати другий фактор"
@@ -1701,9 +1698,6 @@ uk:
         many: "Введіть хоча б %{count} елементів."
         other: "Введіть хоча б %{count} елемент."
       invalid_selection_length: "Вибір повинен містити не менше %{count} символів."
-      components:
-        categories_admin_dropdown:
-          title: "Випадаючий список категорій"
     date_time_picker:
       from: Від
       to: До
@@ -1919,6 +1913,9 @@ uk:
       watching_first_post: "<span>Нова тема</span> %{description}"
       membership_request_accepted: "Запит на вступ прийнятий '%{group_name}'"
       membership_request_consolidated: "%{count} відкрити запити на членство для &quot;%{group_name}&quot;"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - завершено"
       group_message_summary:
         one: "%{count} повідомлення в вашій групі: %{group_name} "
         few: "%{count} повідомлень в вашій групі: %{group_name} "
@@ -2192,9 +2189,6 @@ uk:
       toggle_information: "показати/сховати деталі теми"
       read_more_in_category: "Хочете почитати ще? Перегляньте інші теми в %{catLink} або %{latestLink}."
       read_more: "Хочете почитати ще? %{catLink} або %{latestLink}."
-      group_request: "Вам потрібно надіслати запит на приєднання в групу `%{name}` щоб побачити цю тему."
-      group_join: "Вам потрібно приєднатися до групи `%{name}` щоб побачити цю тему."
-      group_request_sent: "Ваш запит на членство в групі був відправлений. Вам повідомлять, коли буде схвалено."
       unread_indicator: "Жоден учасник ще не прочитав останній пост цієї теми."
       read_more_MF: "У вас залишилося { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитана</a> } other { <a href='{basePath}/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 нова</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># нових</a> тем} }, або {CATEGORY, select, true {подивіться інші теми в розділі {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -2503,7 +2497,6 @@ uk:
         preview_url: "Ваша сторінка буде опублікована за адресою:"
         invalid_slug: "На жаль, ви не можете опублікувати цю сторінку."
         unpublish: "Скасувати публікацію"
-        update: "Оновити"
         unpublished: "Ваша сторінка не опублікована і більше не доступна."
         publishing_settings: "Налаштування публікації"
       change_owner:
@@ -2681,25 +2674,7 @@ uk:
         remove_post_notice: "Видалити повідомлення модератору"
         remove_timer: "скасувати таймер"
       actions:
-        flag: "Поскаржитися"
-        defer_flags:
-          one: "Ігнорувати скаргу"
-          few: "ігнорувати скарги"
-          many: "ігнорувати скарги"
-          other: "ігнорувати скарги"
-        undo:
-          off_topic: "Відкликати скаргу"
-          spam: "Відкликати скаргу"
-          inappropriate: "Відкликати скаргу"
-          bookmark: "Скасувати закладку"
-          like: "Скасувати вподобання"
         people:
-          off_topic: "це позначено як поза темою"
-          spam: "flagged this as spam"
-          inappropriate: "flagged this as inappropriate"
-          notify_moderators: "notified moderators"
-          notify_user: "надіслати повідомлення"
-          bookmark: "Додати закладку"
           like:
             one: "сподобалось це"
             few: "сподобалось це"
@@ -2726,8 +2701,6 @@ uk:
           inappropriate: "Ви поскаржилися на це як на неприпустиме"
           notify_moderators: "Ви позначили допис для модерації"
           notify_user: "Ви відправили повідомлення цьому користувачеві"
-          bookmark: "Ви лишили тут закладку"
-          like: "Ви це вподобали"
       delete:
         confirm:
           one: "Ви впевнені, що хочете видалити це повідомлення?"
@@ -3160,6 +3133,8 @@ uk:
         profile: "%{shortcut} Профіль"
         messages: "%{shortcut} Особисті повідомлення"
         drafts: "%{shortcut} Чернетки"
+        next: "%{shortcut} Наступна тема"
+        previous: "%{shortcut} Попередня тема"
       navigation:
         title: "Навігація"
         jump: "%{shortcut} Перейти до повідомлення №"
@@ -3186,6 +3161,17 @@ uk:
         fullscreen: "%{shortcut} Повноекранний редактор"
       bookmarks:
         title: "Закладка"
+        enter: "%{shortcut} Зберегти і закрити"
+        later_today: "%{shortcut} Пізніше сьогодні"
+        later_this_week: "%{shortcut} Пізніше цього тижня"
+        tomorrow: "%{shortcut} Завтра"
+        next_week: "%{shortcut} Наступного тижня"
+        next_month: "%{shortcut} Наступного місяця"
+        next_business_week: "%{shortcut} Початок наступного тижня"
+        next_business_day: "%{shortcut} Наступний бізнес день"
+        custom: "%{shortcut} Обрана дата та час"
+        none: "%{shortcut} Без нагадування"
+        delete: "%{shortcut} Видалити закладку"
       actions:
         title: "Дії"
         bookmark_topic: "%{shortcut} Додати/видалити з заклодок"
@@ -3210,6 +3196,8 @@ uk:
         topic_admin_actions: "%{shortcut} Відкрити дії адміністратора теми"
       search_menu:
         title: "Меню «Пошук»"
+        prev_next: "%{shortcut} Переміщення по результатам пошуку"
+        insert_url: "%{shortcut} Вставити посилання на позначене повідомлення у відкритий редактор"
     badges:
       earned_n_times:
         one: "Заробив цю нагороду %{count} раз"
@@ -3366,14 +3354,6 @@ uk:
           latest: "Немає останніх тем."
           bookmarks: "У вас поки немає тем в закладках."
           top: "Топових тем немає."
-        bottom:
-          latest: "Більше немає останніх тем."
-          posted: "Більше немає опублікованих тем."
-          read: "Більше немає прочитаних тем."
-          new: "Більше немає нових тем."
-          unread: "Більше немає непрочитаних тем."
-          top: "Топових тем більше немає."
-          bookmarks: "Більше немає тем в закладках."
     invite:
       custom_message: "Зробити запрошення трохи більш особистим, написавши <a href> повідомлення користувачеві</a>."
       custom_message_placeholder: "Напишіть сюди ваше особисте повідомлення"
@@ -3597,6 +3577,12 @@ uk:
           allowed_parameters: Дозволені параметри
           optional_allowed_parameters: Дозволені параметри (необов’язково)
           any_parameter: (будь-який параметр)
+          allowed_urls: Дозволені URL-адреси
+          descriptions:
+            topics:
+              read: Читати тему або певні повідомлення в ньому. RSS також підтримується.
+              write: Створіть нову тему чи допис у вже існуючій.
+              read_lists: Читайте списки тем, як топ, нові, останні тощо. RSS також підтримується.
       web_hooks:
         title: "Вебгуки"
         none: "Зараз вебгуків немає."
@@ -3840,6 +3826,7 @@ uk:
           is_default: "Активувати за замовчуванням"
           user_selectable: "Користувачі можуть вибирати стиль"
           color_scheme: "Колірна палітра"
+          default_light_scheme: "Світла (за замовчуванням)"
           color_scheme_select: "Виберіть кольори для стилю"
           custom_sections: "Налаштування секцій:"
           theme_components: "Компоненти стилю"
@@ -3939,6 +3926,9 @@ uk:
           embedded_scss:
             text: "Вбудований CSS"
             title: "Введіть CSS для вбудовування коментарів"
+          color_definitions:
+            text: "Визначення кольорів"
+            title: "Введіть власні визначення кольорів (лише для досвідчених користувачів)"
           head_tag:
             text: "</head>"
             title: "HTML-код, який буде вставлений перед міткою </head>"

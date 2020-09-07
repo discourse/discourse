@@ -8,7 +8,7 @@ const subcategoryStyleComponentNames = {
   rows: "categories_only",
   rows_with_featured_topics: "categories_with_featured_topics",
   boxes: "categories_boxes",
-  boxes_with_featured_topics: "categories_boxes_with_topics"
+  boxes_with_featured_topics: "categories_boxes_with_topics",
 };
 
 export default DiscoveryController.extend({
@@ -23,7 +23,7 @@ export default DiscoveryController.extend({
   latestTopicOnly() {
     return (
       this.get("model.categories").find(
-        c => c.get("featuredTopics.length") > 1
+        (c) => c.get("featuredTopics.length") > 1
       ) === undefined
     );
   },
@@ -50,6 +50,6 @@ export default DiscoveryController.extend({
   actions: {
     refresh() {
       this.send("triggerRefresh");
-    }
-  }
+    },
+  },
 });

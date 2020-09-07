@@ -19,7 +19,7 @@ export default Controller.extend({
   showActions: false,
 
   @observes("filterInput")
-  _setFilter: discourseDebounce(function() {
+  _setFilter: discourseDebounce(function () {
     this.set("filter", this.filterInput);
   }, 500),
 
@@ -43,7 +43,7 @@ export default Controller.extend({
       this.setProperties({
         "application.showFooter":
           this.model.members.length >= this.model.user_count,
-        loading: false
+        loading: false,
       });
     });
   },
@@ -117,5 +117,5 @@ export default Controller.extend({
         .then(() => this.set("usernames", []))
         .catch(popupAjaxError);
     }
-  }
+  },
 });

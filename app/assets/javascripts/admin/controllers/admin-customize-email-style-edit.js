@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   @discourseComputed("model.isSaving")
@@ -19,17 +20,17 @@ export default Controller.extend({
         this.set("saving", true);
         this.model
           .update(this.model.getProperties("html", "css"))
-          .catch(e => {
+          .catch((e) => {
             const msg =
               e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors
                 ? I18n.t("admin.customize.email_style.save_error_with_reason", {
-                    error: e.jqXHR.responseJSON.errors.join(". ")
+                    error: e.jqXHR.responseJSON.errors.join(". "),
                   })
                 : I18n.t("generic_error");
             bootbox.alert(msg);
           })
           .finally(() => this.set("model.changed", false));
       }
-    }
-  }
+    },
+  },
 });

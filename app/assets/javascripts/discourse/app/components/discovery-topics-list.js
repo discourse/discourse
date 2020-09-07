@@ -38,14 +38,14 @@ const DiscoveryTopicsListComponent = Component.extend(UrlRefresh, LoadMore, {
   actions: {
     loadMore() {
       this.documentTitle.updateContextCount(0);
-      this.model.loadMore().then(hasMoreResults => {
+      this.model.loadMore().then((hasMoreResults) => {
         schedule("afterRender", () => this.saveScrollPosition());
         if (hasMoreResults && $(window).height() >= $(document).height()) {
           this.send("loadMore");
         }
       });
-    }
-  }
+    },
+  },
 });
 
 export default DiscoveryTopicsListComponent;

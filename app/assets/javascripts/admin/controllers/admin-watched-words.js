@@ -28,8 +28,8 @@ export default Controller.extend({
 
     const matchesByAction = [];
 
-    this.allWatchedWords.forEach(wordsForAction => {
-      const wordRecords = wordsForAction.words.filter(wordRecord => {
+    this.allWatchedWords.forEach((wordsForAction) => {
+      const wordRecords = wordsForAction.words.filter((wordRecord) => {
         return wordRecord.word.indexOf(filter) > -1;
       });
       matchesByAction.pushObject(
@@ -37,7 +37,7 @@ export default Controller.extend({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
           words: wordRecords,
-          count: wordRecords.length
+          count: wordRecords.length,
         })
       );
     });
@@ -46,7 +46,7 @@ export default Controller.extend({
   },
 
   @observes("filter")
-  filterContent: discourseDebounce(function() {
+  filterContent: discourseDebounce(function () {
     this.filterContentNow();
     this.set("filtered", !isEmpty(this.filter));
   }, INPUT_DELAY),
@@ -58,6 +58,6 @@ export default Controller.extend({
 
     toggleMenu() {
       $(".admin-detail").toggleClass("mobile-closed mobile-open");
-    }
-  }
+    },
+  },
 });

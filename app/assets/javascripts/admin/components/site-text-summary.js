@@ -15,7 +15,7 @@ export default Component.extend({
         this.element.querySelector(".site-text-id, .site-text-value"),
         term,
         {
-          className: "text-highlight"
+          className: "text-highlight",
         }
       );
     }
@@ -36,5 +36,5 @@ export default Component.extend({
     }
 
     return this.term;
-  }
+  },
 });

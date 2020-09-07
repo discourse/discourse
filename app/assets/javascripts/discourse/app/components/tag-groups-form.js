@@ -4,6 +4,7 @@ import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import PermissionType from "discourse/models/permission-type";
+import bootbox from "bootbox";
 
 export default Component.extend(bufferedProperty("model"), {
   tagName: "",
@@ -17,16 +18,16 @@ export default Component.extend(bufferedProperty("model"), {
     setPermissions(permissionName) {
       if (permissionName === "private") {
         this.buffered.set("permissions", {
-          staff: PermissionType.FULL
+          staff: PermissionType.FULL,
         });
       } else if (permissionName === "visible") {
         this.buffered.set("permissions", {
           staff: PermissionType.FULL,
-          everyone: PermissionType.READONLY
+          everyone: PermissionType.READONLY,
         });
       } else {
         this.buffered.set("permissions", {
-          everyone: PermissionType.FULL
+          everyone: PermissionType.FULL,
         });
       }
     },
@@ -54,7 +55,7 @@ export default Component.extend(bufferedProperty("model"), {
         I18n.t("tagging.groups.confirm_delete"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        destroy => {
+        (destroy) => {
           if (!destroy) {
             return;
           }
@@ -66,6 +67,6 @@ export default Component.extend(bufferedProperty("model"), {
           });
         }
       );
-    }
-  }
+    },
+  },
 });

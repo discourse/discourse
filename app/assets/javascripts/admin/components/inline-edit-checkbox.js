@@ -37,6 +37,6 @@ export default Component.extend({
     finished() {
       this.set("checked", this.checkedInternal);
       this.action();
-    }
-  }
+    },
+  },
 });

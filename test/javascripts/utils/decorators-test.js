@@ -24,7 +24,7 @@ const fooComponent = Component.extend({
   @afterRender
   setBaz(baz) {
     this.set("baz", baz);
-  }
+  },
 });
 
 moduleForComponent("utils:decorators", { integration: true });
@@ -45,5 +45,5 @@ componentTest("afterRender", {
 
     assert.ok(!exists(document.querySelector(".foo-component")));
     assert.equal(this.baz, 1);
-  }
+  },
 });

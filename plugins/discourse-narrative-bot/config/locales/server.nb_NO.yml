@@ -147,12 +147,6 @@ nb_NO:
           Et flott bilde - jeg trykket på :heart: knappen så du også skal få vite at jeg satte stor pris på det :heart_eyes:
         like_not_found: |-
           Glemte du å trykke :heart:? Liker du ikke [innlegget mitt?](%{url}) :crying_cat_face:
-        not_found: |-
-          Det ser ut som du ikke lastet opp et bilde, så da valgte jeg like godt et bilde som jeg er _sikker_ på at du synes er fint for deg.
-
-          `%{image_url}`
-
-          Prøv å laste opp dette bildet på neste forsøk, eller bare lim inn lenken til bildet på en egen linje!
       formatting:
         instructions: |-
           Klarer du å gjøre noen ord **uthevet** eller _kursiv_ i svaret ditt?

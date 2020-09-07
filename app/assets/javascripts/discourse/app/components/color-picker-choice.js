@@ -25,5 +25,5 @@ export default Component.extend({
   click(e) {
     e.preventDefault();
     this.selectColor(this.color);
-  }
+  },
 });

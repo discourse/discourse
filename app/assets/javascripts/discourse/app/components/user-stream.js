@@ -11,12 +11,12 @@ import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 
 export default Component.extend(LoadMore, {
-  _initialize: on("init", function() {
+  _initialize: on("init", function () {
     const filter = this.get("stream.filter");
     if (filter) {
       this.set("classNames", [
         "user-stream",
-        "filter-" + filter.toString().replace(",", "-")
+        "filter-" + filter.toString().replace(",", "-"),
       ]);
     }
   }),
@@ -26,11 +26,11 @@ export default Component.extend(LoadMore, {
   classNames: ["user-stream"],
 
   @observes("stream.user.id")
-  _scrollTopOnModelChange: function() {
+  _scrollTopOnModelChange: function () {
     schedule("afterRender", () => $(document).scrollTop(0));
   },
 
-  _inserted: on("didInsertElement", function() {
+  _inserted: on("didInsertElement", function () {
     this.bindScrolling({ name: "user-stream-view" });
 
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
@@ -40,13 +40,13 @@ export default Component.extend(LoadMore, {
       "details.disabled",
       () => false
     );
-    $(this.element).on("click.discourse-redirect", ".excerpt a", e => {
+    $(this.element).on("click.discourse-redirect", ".excerpt a", (e) => {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
   }),
 
   // This view is being removed. Shut down operations
-  _destroyed: on("willDestroyElement", function() {
+  _destroyed: on("willDestroyElement", function () {
     this.unbindScrolling("user-stream-view");
     $(window).unbind("resize.discourse-on-scroll");
     $(this.element).off("click.details-disabled", "details.disabled");
@@ -74,7 +74,7 @@ export default Component.extend(LoadMore, {
         DiscourseURL.routeTo(item.get("postUrl"));
       } else {
         Draft.get(item.draft_key)
-          .then(d => {
+          .then((d) => {
             const draft = d.draft || item.data;
             if (!draft) {
               return;
@@ -83,10 +83,10 @@ export default Component.extend(LoadMore, {
             composer.open({
               draft,
               draftKey: item.draft_key,
-              draftSequence: d.draft_sequence
+              draftSequence: d.draft_sequence,
             });
           })
-          .catch(error => {
+          .catch((error) => {
             popupAjaxError(error);
           });
       }
@@ -98,7 +98,7 @@ export default Component.extend(LoadMore, {
         .then(() => {
           stream.remove(draft);
         })
-        .catch(error => {
+        .catch((error) => {
           popupAjaxError(error);
         });
     },
@@ -111,6 +111,6 @@ export default Component.extend(LoadMore, {
       this.set("loading", true);
       const stream = this.stream;
       stream.findItems().then(() => this.set("loading", false));
-    }
-  }
+    },
+  },
 });

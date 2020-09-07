@@ -19,7 +19,7 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
 
-    if invite.present?
+    if invite.present? && !invite.expired?
       if !invite.redeemed?
         store_preloaded("invite_info", MultiJson.dump(
           invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),

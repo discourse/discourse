@@ -25,14 +25,14 @@ widgetTest("sets notification as read on middle click", {
           original_post_type: 1,
           original_username: "discobot",
           revision_number: null,
-          display_username: "discobot"
-        }
+          display_username: "discobot",
+        },
       })
     );
   },
   async test(assert) {
     let requests = 0;
-    pretender.put("/notifications/mark-read", request => {
+    pretender.put("/notifications/mark-read", (request) => {
       ++requests;
 
       assert.equal(
@@ -50,11 +50,11 @@ widgetTest("sets notification as read on middle click", {
       $.Event("mouseup", {
         target: find("li")[0],
         button: 1,
-        which: 2
+        which: 2,
       })
     );
 
     assert.equal(find("li.read").length, 1);
     assert.equal(requests, 1);
-  }
+  },
 });

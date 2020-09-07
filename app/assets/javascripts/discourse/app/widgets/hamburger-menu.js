@@ -9,7 +9,7 @@ import { userPath } from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
-const flatten = array => [].concat.apply([], array);
+const flatten = (array) => [].concat.apply([], array);
 
 createWidget("priority-faq-link", {
   tagName: "a.faq-priority.widget-link",
@@ -22,7 +22,7 @@ createWidget("priority-faq-link", {
     return [
       I18n.t("faq"),
       " ",
-      h("span.badge.badge-notification", I18n.t("new_item"))
+      h("span.badge.badge-notification", I18n.t("new_item")),
     ];
   },
 
@@ -30,7 +30,7 @@ createWidget("priority-faq-link", {
     const {
       attrs: { href },
       currentUser,
-      siteSettings
+      siteSettings,
     } = this;
 
     if (siteSettings.faq_url === href) {
@@ -52,7 +52,7 @@ createWidget("priority-faq-link", {
       e.preventDefault();
       DiscourseURL.routeTo(href);
     }
-  }
+  },
 });
 
 export default createWidget("hamburger-menu", {
@@ -64,7 +64,7 @@ export default createWidget("hamburger-menu", {
     showCategories: true,
     maxWidth: 320,
     showFAQ: true,
-    showAbout: true
+    showAbout: true,
   },
 
   defaultState() {
@@ -79,8 +79,8 @@ export default createWidget("hamburger-menu", {
         route: "admin",
         className: "admin-link",
         icon: "wrench",
-        label: "admin_title"
-      }
+        label: "admin_title",
+      },
     ];
 
     if (currentUser.admin) {
@@ -88,11 +88,11 @@ export default createWidget("hamburger-menu", {
         href: "/admin/site_settings",
         icon: "cog",
         label: "admin.site_settings.title",
-        className: "settings-link"
+        className: "settings-link",
       });
     }
 
-    return links.map(l => this.attach("link", l));
+    return links.map((l) => this.attach("link", l));
   },
 
   lookupCount(type) {
@@ -108,7 +108,7 @@ export default createWidget("hamburger-menu", {
       route: "discovery.latest",
       className: "latest-topics-link",
       label: "filters.latest.title",
-      title: "filters.latest.help"
+      title: "filters.latest.help",
     });
 
     if (currentUser) {
@@ -118,7 +118,7 @@ export default createWidget("hamburger-menu", {
         labelCount: "filters.new.title_with_count",
         label: "filters.new.title",
         title: "filters.new.help",
-        count: this.lookupCount("new")
+        count: this.lookupCount("new"),
       });
 
       links.push({
@@ -127,7 +127,7 @@ export default createWidget("hamburger-menu", {
         labelCount: "filters.unread.title_with_count",
         label: "filters.unread.title",
         title: "filters.unread.help",
-        count: this.lookupCount("unread")
+        count: this.lookupCount("unread"),
       });
 
       // Staff always see the review link.
@@ -140,7 +140,7 @@ export default createWidget("hamburger-menu", {
           className: "review",
           label: "review.title",
           badgeCount: "reviewable_count",
-          badgeClass: "reviewables"
+          badgeClass: "reviewables",
         });
       }
     }
@@ -149,14 +149,14 @@ export default createWidget("hamburger-menu", {
       route: "discovery.top",
       className: "top-topics-link",
       label: "filters.top.title",
-      title: "filters.top.help"
+      title: "filters.top.help",
     });
 
     if (siteSettings.enable_badges) {
       links.push({
         route: "badges",
         className: "badge-link",
-        label: "badges.title"
+        label: "badges.title",
       });
     }
 
@@ -166,7 +166,7 @@ export default createWidget("hamburger-menu", {
       links.push({
         route: "users",
         className: "user-directory-link",
-        label: "directory.title"
+        label: "directory.title",
       });
     }
 
@@ -174,7 +174,7 @@ export default createWidget("hamburger-menu", {
       links.push({
         route: "groups",
         className: "groups-link",
-        label: "groups.index.title"
+        label: "groups.index.title",
       });
     }
 
@@ -186,7 +186,7 @@ export default createWidget("hamburger-menu", {
       applyDecorators(this, "generalLinks", attrs, state)
     );
 
-    return links.concat(extraLinks).map(l => this.attach("link", l));
+    return links.concat(extraLinks).map((l) => this.attach("link", l));
   },
 
   listCategories() {
@@ -198,10 +198,10 @@ export default createWidget("hamburger-menu", {
     if (currentUser) {
       const allCategories = site
         .get("categories")
-        .filter(c => c.notification_level !== NotificationLevels.MUTED);
+        .filter((c) => c.notification_level !== NotificationLevels.MUTED);
 
       categories = allCategories
-        .filter(c => c.get("newTopics") > 0 || c.get("unreadTopics") > 0)
+        .filter((c) => c.get("newTopics") > 0 || c.get("unreadTopics") > 0)
         .sort((a, b) => {
           return (
             b.get("newTopics") +
@@ -212,8 +212,8 @@ export default createWidget("hamburger-menu", {
 
       const topCategoryIds = currentUser.get("top_category_ids") || [];
 
-      topCategoryIds.forEach(id => {
-        const category = allCategories.find(c => c.id === id);
+      topCategoryIds.forEach((id) => {
+        const category = allCategories.find((c) => c.id === id);
         if (category && !categories.includes(category)) {
           categories.push(category);
         }
@@ -221,18 +221,18 @@ export default createWidget("hamburger-menu", {
 
       categories = categories.concat(
         allCategories
-          .filter(c => !categories.includes(c))
+          .filter((c) => !categories.includes(c))
           .sort((a, b) => b.topic_count - a.topic_count)
       );
     } else {
       categories = site
         .get("categoriesByCount")
-        .filter(c => c.notification_level !== NotificationLevels.MUTED);
+        .filter((c) => c.notification_level !== NotificationLevels.MUTED);
     }
 
     if (!siteSettings.allow_uncategorized_topics) {
       categories = categories.filter(
-        c => c.id !== site.uncategorized_category_id
+        (c) => c.id !== site.uncategorized_category_id
       );
     }
 
@@ -250,7 +250,7 @@ export default createWidget("hamburger-menu", {
       links.push({
         route: "about",
         className: "about-link",
-        label: "about.simple_title"
+        label: "about.simple_title",
       });
     }
 
@@ -263,7 +263,7 @@ export default createWidget("hamburger-menu", {
         href: "",
         action: "showKeyboard",
         className: "keyboard-shortcuts-link",
-        label: "keyboard_shortcuts_help.title"
+        label: "keyboard_shortcuts_help.title",
       });
     }
 
@@ -272,7 +272,7 @@ export default createWidget("hamburger-menu", {
       links.push({
         action: "toggleMobileView",
         className: "mobile-toggle-link",
-        label: site.mobileView ? "desktop_view" : "mobile_view"
+        label: site.mobileView ? "desktop_view" : "mobile_view",
       });
     }
 
@@ -280,7 +280,7 @@ export default createWidget("hamburger-menu", {
       applyDecorators(this, "footerLinks", attrs, state)
     );
 
-    return links.concat(extraLinks).map(l => this.attach("link", l));
+    return links.concat(extraLinks).map((l) => this.attach("link", l));
   },
 
   panelContents() {
@@ -297,7 +297,7 @@ export default createWidget("hamburger-menu", {
           heading: true,
           contents: () => {
             return this.attach("priority-faq-link", { href: faqUrl });
-          }
+          },
         })
       );
     }
@@ -311,7 +311,7 @@ export default createWidget("hamburger-menu", {
               applyDecorators(this, "admin-links", attrs, state)
             );
             return this.adminLinks().concat(extraLinks);
-          }
+          },
         })
       );
     }
@@ -319,7 +319,7 @@ export default createWidget("hamburger-menu", {
     results.push(
       this.attach("menu-links", {
         name: "general-links",
-        contents: () => this.generalLinks()
+        contents: () => this.generalLinks(),
       })
     );
 
@@ -332,7 +332,7 @@ export default createWidget("hamburger-menu", {
       this.attach("menu-links", {
         name: "footer-links",
         omitRule: true,
-        contents: () => this.footerLinks(prioritizeFaq, faqUrl)
+        contents: () => this.footerLinks(prioritizeFaq, faqUrl),
       })
     );
 
@@ -362,7 +362,7 @@ export default createWidget("hamburger-menu", {
 
     return this.attach("menu-panel", {
       contents: () => this.panelContents(),
-      maxWidth: this.settings.maxWidth
+      maxWidth: this.settings.maxWidth,
     });
   },
 
@@ -393,5 +393,5 @@ export default createWidget("hamburger-menu", {
     } else {
       this.sendWidgetAction("toggleHamburger");
     }
-  }
+  },
 });

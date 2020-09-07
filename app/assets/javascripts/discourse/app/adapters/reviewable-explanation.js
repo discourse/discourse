@@ -5,5 +5,5 @@ export default RestAdapter.extend({
 
   pathFor(store, type, id) {
     return `/review/${id}/explain.json`;
-  }
+  },
 });

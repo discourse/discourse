@@ -22,7 +22,7 @@ export default Controller.extend({
     this.setProperties({
       content: [],
       loading: true,
-      noResultsHelp: null
+      noResultsHelp: null,
     });
 
     if (this.q && !this.searchTerm) {
@@ -31,19 +31,30 @@ export default Controller.extend({
 
     return this.model
       .loadItems({ q: this.searchTerm })
-      .then(response => this._processLoadResponse(response))
+      .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => {
         this.setProperties({
           loaded: true,
-          loading: false
+          loading: false,
         });
       });
   },
 
-  @discourseComputed("loaded", "content.length", "noResultsHelp")
-  noContent(loaded, contentLength, noResultsHelp) {
-    return loaded && contentLength === 0 && noResultsHelp;
+  @discourseComputed("loaded", "content.length")
+  noContent(loaded, contentLength) {
+    return loaded && contentLength === 0;
+  },
+
+  @discourseComputed("noResultsHelp", "noContent")
+  noResultsHelpMessage(noResultsHelp, noContent) {
+    if (noResultsHelp) {
+      return noResultsHelp;
+    }
+    if (noContent) {
+      return I18n.t("bookmarks.no_user_bookmarks");
+    }
+    return "";
   },
 
   @action
@@ -67,7 +78,7 @@ export default Controller.extend({
 
     return this.model
       .loadMore({ q: this.searchTerm })
-      .then(response => this._processLoadResponse(response))
+      .then((response) => this._processLoadResponse(response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
   },
@@ -78,7 +89,6 @@ export default Controller.extend({
 
   _processLoadResponse(response) {
     if (!response) {
-      this._bookmarksListDenied();
       return;
     }
 
@@ -92,8 +102,8 @@ export default Controller.extend({
 
     if (response.bookmarks) {
       this.content.pushObjects(
-        response.bookmarks.map(bookmark => Bookmark.create(bookmark))
+        response.bookmarks.map((bookmark) => Bookmark.create(bookmark))
       );
     }
-  }
+  },
 });

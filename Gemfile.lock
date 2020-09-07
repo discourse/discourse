@@ -70,7 +70,6 @@ GEM
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
-    bigdecimal (2.0.0)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     bootsnap (1.4.8)
@@ -99,7 +98,15 @@ GEM
     debug_inspector (0.0.3)
     diff-lcs (1.4.4)
     diffy (3.4.0)
+    discourse-ember-rails (0.18.6)
+      active_model_serializers
+      ember-data-source (>= 1.0.0.beta.5)
+      ember-handlebars-template (>= 0.1.1, < 1.0)
+      ember-source (>= 1.1.0)
+      jquery-rails (>= 1.0.17)
+      railties (>= 3.1)
     discourse-ember-source (3.12.2.2)
+    discourse-fonts (0.0.3)
     discourse_image_optim (0.26.2)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
@@ -113,13 +120,6 @@ GEM
     ember-handlebars-template (0.8.0)
       barber (>= 0.11.0)
       sprockets (>= 3.3, < 4.1)
-    ember-rails (0.18.5)
-      active_model_serializers
-      ember-data-source (>= 1.0.0.beta.5)
-      ember-handlebars-template (>= 0.1.1, < 1.0)
-      ember-source (>= 1.1.0)
-      jquery-rails (>= 1.0.17)
-      railties (>= 3.1)
     ember-source (2.18.2)
     erubi (1.9.0)
     excon (0.76.0)
@@ -130,9 +130,6 @@ GEM
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     fast_blank (1.0.0)
-    fast_xor (1.1.3)
-      rake
-      rake-compiler
     fast_xs (0.8.0)
     fastimage (2.2.0)
     ffi (1.13.1)
@@ -144,7 +141,7 @@ GEM
     guess_html_encoding (0.0.11)
     hashdiff (1.0.1)
     hashie (4.1.0)
-    highline (1.7.10)
+    highline (2.0.3)
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
@@ -174,8 +171,8 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.9.2)
-    loofah (2.6.0)
+    logster (2.9.4)
+    loofah (2.7.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
@@ -196,9 +193,9 @@ GEM
     mini_sql (0.3)
     mini_suffix (0.3.0)
       ffi (~> 1.9)
-    minitest (5.14.1)
+    minitest (5.14.2)
     mocha (1.11.2)
-    mock_redis (0.25.0)
+    mock_redis (0.26.0)
     msgpack (1.3.3)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -216,12 +213,11 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    oj (3.10.9)
-      bigdecimal (~> 2.0)
+    oj (3.10.13)
     omniauth (1.9.1)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
-    omniauth-facebook (6.0.0)
+    omniauth-facebook (7.0.0)
       omniauth-oauth2 (~> 1.2)
     omniauth-github (1.4.0)
       omniauth (~> 1.5)
@@ -242,7 +238,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (2.0.2)
+    onebox (2.1.1)
       addressable (~> 2.7.0)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
@@ -252,7 +248,7 @@ GEM
     openssl-signature_algorithm (1.0.0)
     optimist (3.0.1)
     parallel (1.19.2)
-    parallel_tests (3.1.0)
+    parallel_tests (3.2.0)
       parallel
     parser (2.7.1.4)
       ast (~> 2.4.1)
@@ -266,7 +262,7 @@ GEM
       pry (~> 0.13.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    public_suffix (4.0.5)
+    public_suffix (4.0.6)
     puma (4.3.5)
       nio4r (~> 2.0)
     r2 (0.2.7)
@@ -297,8 +293,6 @@ GEM
     rainbow (3.0.0)
     raindrops (0.19.1)
     rake (13.0.1)
-    rake-compiler (1.1.1)
-      rake
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -308,15 +302,14 @@ GEM
       optimist (>= 3.0.0)
     rchardet (1.8.0)
     redis (4.2.1)
-    redis-namespace (1.7.0)
+    redis-namespace (1.8.0)
       redis (>= 3.0.4)
     regexp_parser (1.7.1)
     request_store (1.5.0)
       rack (>= 1.4)
     rexml (3.2.4)
     rinku (2.0.6)
-    rotp (5.1.0)
-      addressable (~> 2.5)
+    rotp (6.1.0)
     rqrcode (1.1.2)
       chunky_png (~> 1.0)
       rqrcode_core (~> 0.1)
@@ -350,7 +343,7 @@ GEM
       json-schema (~> 2.2)
       railties (>= 3.1, < 7.0)
     rtlit (0.0.5)
-    rubocop (0.89.1)
+    rubocop (0.90.0)
       parallel (~> 1.10)
       parser (>= 2.7.1.1)
       rainbow (>= 2.2.2, < 4.0)
@@ -361,10 +354,10 @@ GEM
       unicode-display_width (>= 1.4.0, < 2.0)
     rubocop-ast (0.3.0)
       parser (>= 2.7.1.4)
-    rubocop-discourse (2.3.1)
+    rubocop-discourse (2.3.2)
       rubocop (>= 0.69.0)
       rubocop-rspec (>= 1.39.0)
-    rubocop-rspec (1.43.1)
+    rubocop-rspec (1.43.2)
       rubocop (~> 0.87)
     ruby-prof (1.4.1)
     ruby-progressbar (1.10.1)
@@ -389,13 +382,12 @@ GEM
     seed-fu (2.3.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
-    shoulda-matchers (4.3.0)
+    shoulda-matchers (4.4.1)
       activesupport (>= 4.2.0)
-    sidekiq (6.0.7)
+    sidekiq (6.1.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
-      rack-protection (>= 2.0.0)
-      redis (>= 4.1.0)
+      redis (>= 4.2.0)
     simplecov (0.19.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -409,7 +401,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.15)
-    test-prof (0.12.0)
+    test-prof (0.12.2)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -432,6 +424,7 @@ GEM
     webpush (1.0.0)
       hkdf (~> 0.2)
       jwt (~> 2.0)
+    xorcist (1.1.2)
     yaml-lint (0.0.10)
     zeitwerk (2.4.0)
 
@@ -464,22 +457,22 @@ DEPENDENCIES
   cppjieba_rb
   css_parser
   diffy
+  discourse-ember-rails (= 0.18.6)
   discourse-ember-source (~> 3.12.2)
+  discourse-fonts
   discourse_image_optim
   email_reply_trimmer
   ember-handlebars-template (= 0.8.0)
-  ember-rails (= 0.18.5)
   excon
   execjs
   fabrication
   fakeweb
   fast_blank
-  fast_xor
   fast_xs
   fastimage
   flamegraph
   gc_tracer
-  highline (~> 1.7.0)
+  highline
   htmlentities
   http_accept_language
   json
@@ -528,13 +521,12 @@ DEPENDENCIES
   railties (= 6.0.3.2)
   rake
   rb-fsevent
-  rb-inotify (~> 0.9)
   rbtrace
   rchardet
   redis
   redis-namespace
   rinku
-  rotp (= 5.1.0)
+  rotp
   rqrcode
   rspec
   rspec-html-matchers
@@ -562,6 +554,7 @@ DEPENDENCIES
   unicorn
   webmock
   webpush
+  xorcist
   yaml-lint
 
 BUNDLED WITH

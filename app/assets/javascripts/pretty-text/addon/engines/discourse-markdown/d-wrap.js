@@ -16,7 +16,7 @@ function camelCaseToDash(str) {
 }
 
 function applyDataAttributes(token, state, attributes) {
-  Object.keys(attributes).forEach(tag => {
+  Object.keys(attributes).forEach((tag) => {
     const value = state.md.utils.escapeHtml(attributes[tag]);
     tag = camelCaseToDash(
       state.md.utils.escapeHtml(tag.replace(/[^A-Za-z\-0-9]/g, ""))
@@ -40,7 +40,7 @@ const blockRule = {
 
   after(state) {
     state.push("wrap_close", "div", -1);
-  }
+  },
 };
 
 const inlineRule = {
@@ -59,11 +59,11 @@ const inlineRule = {
 
     state.push("wrap_close", "span", -1);
     return true;
-  }
+  },
 };
 
 export function setup(helper) {
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.inline.bbcode.ruler.push("inline-wrap", inlineRule);
     md.block.bbcode.ruler.push("block-wrap", blockRule);
   });

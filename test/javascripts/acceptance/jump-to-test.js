@@ -8,19 +8,19 @@ acceptance("Jump to", {
   pretend(server, helper) {
     server.get("/t/280/excerpts.json", () => helper.response(200, []));
     server.get("/t/280/3.json", () => helper.response(200, {}));
-    server.get("/posts/by-date/280/:date", req => {
+    server.get("/posts/by-date/280/:date", (req) => {
       if (req.params["date"] === "2014-02-24") {
         return helper.response(200, {
-          post_number: 3
+          post_number: 3,
         });
       }
 
       return helper.response(404, null);
     });
-  }
+  },
 });
 
-QUnit.test("default", async assert => {
+QUnit.test("default", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("nav#topic-progress .nums");
   await click("button.jump-to-post");
@@ -37,7 +37,7 @@ QUnit.test("default", async assert => {
   );
 });
 
-QUnit.test("invalid date", async assert => {
+QUnit.test("invalid date", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("nav#topic-progress .nums");
   await click("button.jump-to-post");

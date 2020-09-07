@@ -21,7 +21,13 @@ class Tag < ActiveRecord::Base
     where("lower(tags.name) IN (?)", name)
   end
 
-  scope :unused, -> { where(topic_count: 0, pm_topic_count: 0) }
+  # tags that have never been used and don't belong to a tag group
+  scope :unused, -> do
+    where(topic_count: 0, pm_topic_count: 0)
+      .joins("LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id")
+      .where("tgm.tag_id IS NULL")
+  end
+
   scope :base_tags, -> { where(target_tag_id: nil) }
 
   has_many :tag_users, dependent: :destroy # notification settings

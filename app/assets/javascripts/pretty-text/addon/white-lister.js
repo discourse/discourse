@@ -14,7 +14,7 @@ export default class WhiteLister {
     this._cache = null;
 
     if (options && options.features) {
-      Object.keys(options.features).forEach(f => {
+      Object.keys(options.features).forEach((f) => {
         if (options.features[f]) {
           this._enabled[f] = true;
         }
@@ -53,7 +53,7 @@ export default class WhiteLister {
         info = [info];
       }
 
-      (info || []).forEach(tag => {
+      (info || []).forEach((tag) => {
         const classes = tag.split(".");
         const tagWithAttr = classes.shift();
 
@@ -221,5 +221,5 @@ export const DEFAULT_LIST = [
   "rb[lang]",
   "rp",
   "rt",
-  "rt[lang]"
+  "rt[lang]",
 ];

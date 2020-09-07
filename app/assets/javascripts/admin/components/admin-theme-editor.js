@@ -7,7 +7,7 @@ import { fmt } from "discourse/lib/computed";
 export default Component.extend({
   @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
   visibleTargets(targets, onlyOverridden, showAdvanced) {
-    return targets.filter(target => {
+    return targets.filter((target) => {
       if (target.advanced && !showAdvanced) {
         return false;
       }
@@ -22,7 +22,7 @@ export default Component.extend({
   visibleFields(targetName, onlyOverridden, fields) {
     fields = fields[targetName];
     if (onlyOverridden) {
-      fields = fields.filter(field => field.edited);
+      fields = fields.filter((field) => field.edited);
     }
     return fields;
   },
@@ -50,7 +50,7 @@ export default Component.extend({
     set(value, fieldName, target, model) {
       model.setField(target, fieldName, value);
       return value;
-    }
+    },
   },
 
   editorId: fmt("fieldName", "currentTargetName", "%@|%@"),
@@ -62,7 +62,7 @@ export default Component.extend({
 
   @discourseComputed("currentTargetName", "theme.targets")
   showAddField(currentTargetName, targets) {
-    return targets.find(t => t.name === currentTargetName).customNames;
+    return targets.find((t) => t.name === currentTargetName).customNames;
   },
 
   @discourseComputed(
@@ -95,13 +95,13 @@ export default Component.extend({
       this.fieldAdded(this.currentTargetName, name);
     },
 
-    toggleMaximize: function() {
+    toggleMaximize: function () {
       this.toggleProperty("maximized");
       next(() => this.appEvents.trigger("ace:resize"));
     },
 
     onlyOverriddenChanged(value) {
       this.onlyOverriddenChanged(value);
-    }
-  }
+    },
+  },
 });

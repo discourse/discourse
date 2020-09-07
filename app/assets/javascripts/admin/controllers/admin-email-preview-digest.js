@@ -2,6 +2,7 @@ import { empty, or, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmailPreview from "admin/models/email-preview";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   username: null,
@@ -25,7 +26,7 @@ export default Controller.extend({
         this.set("username", username);
       }
 
-      EmailPreview.findDigest(username, this.lastSeen).then(email => {
+      EmailPreview.findDigest(username, this.lastSeen).then((email) => {
         model.setProperties(
           email.getProperties("html_content", "text_content")
         );
@@ -42,7 +43,7 @@ export default Controller.extend({
       this.set("sentEmail", false);
 
       EmailPreview.sendDigest(this.username, this.lastSeen, this.email)
-        .then(result => {
+        .then((result) => {
           if (result.errors) {
             bootbox.alert(result.errors);
           } else {
@@ -53,6 +54,6 @@ export default Controller.extend({
         .finally(() => {
           this.set("sendingEmail", false);
         });
-    }
-  }
+    },
+  },
 });

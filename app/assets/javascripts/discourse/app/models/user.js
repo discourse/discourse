@@ -30,14 +30,16 @@ import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { escapeExpression } from "discourse/lib/utilities";
+import { getOwner } from "discourse-common/lib/get-owner";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
-  SECURITY_KEY: 3
+  SECURITY_KEY: 3,
 };
 
-const isForever = dt => moment().diff(dt, "years") < -500;
+const isForever = (dt) => moment().diff(dt, "years") < -500;
 
 const User = RestModel.extend({
   hasPMs: gt("private_messages_stats.all", 0),
@@ -45,7 +47,7 @@ const User = RestModel.extend({
   hasUnreadPMs: gt("private_messages_stats.unread", 0),
 
   redirected_to_top: {
-    reason: null
+    reason: null,
   },
 
   @discourseComputed("can_be_deleted", "post_count")
@@ -82,7 +84,7 @@ const User = RestModel.extend({
     // prevents staff property to be overridden
     set() {
       return this.admin || this.moderator;
-    }
+    },
   }),
 
   destroySession() {
@@ -94,7 +96,7 @@ const User = RestModel.extend({
     return {
       type: "user",
       id: username,
-      user: this
+      user: this,
     };
   },
 
@@ -124,7 +126,7 @@ const User = RestModel.extend({
   userApiKeys() {
     const keys = this.user_api_keys;
     if (keys) {
-      return keys.map(raw => {
+      return keys.map((raw) => {
         let obj = EmberObject.create(raw);
 
         obj.revoke = () => {
@@ -143,7 +145,7 @@ const User = RestModel.extend({
   revokeApiKey(key) {
     return ajax("/user-api-key/revoke", {
       type: "POST",
-      data: { id: key.get("id") }
+      data: { id: key.get("id") },
     }).then(() => {
       key.set("revoked", true);
     });
@@ -152,7 +154,7 @@ const User = RestModel.extend({
   undoRevokeApiKey(key) {
     return ajax("/user-api-key/undo-revoke", {
       type: "POST",
-      data: { id: key.get("id") }
+      data: { id: key.get("id") },
     }).then(() => {
       key.set("revoked", false);
     });
@@ -242,21 +244,21 @@ const User = RestModel.extend({
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
       type: "PUT",
-      data: { new_username }
+      data: { new_username },
     });
   },
 
   addEmail(email) {
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "POST",
-      data: { email }
+      data: { email },
     });
   },
 
   changeEmail(email) {
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "PUT",
-      data: { email }
+      data: { email },
     });
   },
 
@@ -284,11 +286,11 @@ const User = RestModel.extend({
       "watched_tags",
       "watching_first_post_tags",
       "date_of_birth",
-      "primary_group_id"
+      "primary_group_id",
     ];
 
     const data = this.getProperties(
-      fields ? _.intersection(userFields, fields) : userFields
+      userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
     );
 
     let userOptionFields = [
@@ -300,6 +302,7 @@ const User = RestModel.extend({
       "email_messages_level",
       "email_level",
       "email_previous_replies",
+      "color_scheme_id",
       "dark_scheme_id",
       "dynamic_favicon",
       "enable_quoting",
@@ -319,45 +322,49 @@ const User = RestModel.extend({
       "text_size",
       "title_count_mode",
       "timezone",
-      "skip_new_user_tips"
+      "skip_new_user_tips",
     ];
 
     if (fields) {
-      userOptionFields = _.intersection(userOptionFields, fields);
+      userOptionFields = userOptionFields.filter(
+        (uo) => fields.indexOf(uo) !== -1
+      );
     }
 
-    userOptionFields.forEach(s => {
+    userOptionFields.forEach((s) => {
       data[s] = this.get(`user_option.${s}`);
     });
 
     var updatedState = {};
 
-    ["muted", "watched", "tracked", "watched_first_post"].forEach(s => {
-      if (fields === undefined || fields.includes(s + "_category_ids")) {
-        let prop =
-          s === "watched_first_post"
-            ? "watchedFirstPostCategories"
-            : s + "Categories";
-        let cats = this.get(prop);
-        if (cats) {
-          let cat_ids = cats.map(c => c.get("id"));
-          updatedState[s + "_category_ids"] = cat_ids;
+    ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
+      (s) => {
+        if (fields === undefined || fields.includes(s + "_category_ids")) {
+          let prop =
+            s === "watched_first_post"
+              ? "watchedFirstPostCategories"
+              : s + "Categories";
+          let cats = this.get(prop);
+          if (cats) {
+            let cat_ids = cats.map((c) => c.get("id"));
+            updatedState[s + "_category_ids"] = cat_ids;
 
-          // HACK: denote lack of categories
-          if (cats.length === 0) {
-            cat_ids = [-1];
+            // HACK: denote lack of categories
+            if (cats.length === 0) {
+              cat_ids = [-1];
+            }
+            data[s + "_category_ids"] = cat_ids;
           }
-          data[s + "_category_ids"] = cat_ids;
         }
       }
-    });
+    );
 
     [
       "muted_tags",
       "tracked_tags",
       "watched_tags",
-      "watching_first_post_tags"
-    ].forEach(prop => {
+      "watching_first_post_tags",
+    ].forEach((prop) => {
       if (fields === undefined || fields.includes(prop)) {
         data[prop] = this.get(prop) ? this.get(prop).join(",") : "";
       }
@@ -367,9 +374,9 @@ const User = RestModel.extend({
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
       data: data,
-      type: "PUT"
+      type: "PUT",
     })
-      .then(result => {
+      .then((result) => {
         this.set("bio_excerpt", result.user.bio_excerpt);
         const userProps = getProperties(
           this.user_option,
@@ -389,7 +396,7 @@ const User = RestModel.extend({
   setPrimaryEmail(email) {
     return ajax(userPath(`${this.username}/preferences/primary-email.json`), {
       type: "PUT",
-      data: { email }
+      data: { email },
     }).then(() => {
       this.secondary_emails.removeObject(email);
       this.secondary_emails.pushObject(this.email);
@@ -400,7 +407,7 @@ const User = RestModel.extend({
   destroyEmail(email) {
     return ajax(userPath(`${this.username}/preferences/email.json`), {
       type: "DELETE",
-      data: { email }
+      data: { email },
     }).then(() => {
       this.secondary_emails.removeObject(email);
       this.unconfirmed_emails.removeObject(email);
@@ -411,33 +418,33 @@ const User = RestModel.extend({
     return ajax("/session/forgot_password", {
       dataType: "json",
       data: { login: this.username },
-      type: "POST"
+      type: "POST",
     });
   },
 
   loadSecondFactorCodes(password) {
     return ajax("/u/second_factors.json", {
       data: { password },
-      type: "POST"
+      type: "POST",
     });
   },
 
   requestSecurityKeyChallenge() {
     return ajax("/u/create_second_factor_security_key.json", {
-      type: "POST"
+      type: "POST",
     });
   },
 
   registerSecurityKey(credential) {
     return ajax("/u/register_second_factor_security_key.json", {
       data: credential,
-      type: "POST"
+      type: "POST",
     });
   },
 
   createSecondFactorTotp() {
     return ajax("/u/create_second_factor_totp.json", {
-      type: "POST"
+      type: "POST",
     });
   },
 
@@ -445,15 +452,15 @@ const User = RestModel.extend({
     return ajax("/u/enable_second_factor_totp.json", {
       data: {
         second_factor_token: authToken,
-        name
+        name,
       },
-      type: "POST"
+      type: "POST",
     });
   },
 
   disableAllSecondFactors() {
     return ajax("/u/disable_second_factor.json", {
-      type: "PUT"
+      type: "PUT",
     });
   },
 
@@ -463,9 +470,9 @@ const User = RestModel.extend({
         second_factor_target: targetMethod,
         name,
         disable,
-        id
+        id,
       },
-      type: "PUT"
+      type: "PUT",
     });
   },
 
@@ -474,9 +481,9 @@ const User = RestModel.extend({
       data: {
         name,
         disable,
-        id
+        id,
       },
-      type: "PUT"
+      type: "PUT",
     });
   },
 
@@ -486,41 +493,43 @@ const User = RestModel.extend({
         second_factor_token: authToken,
         second_factor_method: authMethod,
         second_factor_target: targetMethod,
-        enable
+        enable,
       },
-      type: "PUT"
+      type: "PUT",
     });
   },
 
   generateSecondFactorCodes() {
     return ajax("/u/second_factors_backup.json", {
-      type: "PUT"
+      type: "PUT",
     });
   },
 
   revokeAssociatedAccount(providerName) {
     return ajax(userPath(`${this.username}/preferences/revoke-account`), {
       data: { provider_name: providerName },
-      type: "POST"
+      type: "POST",
     });
   },
 
   loadUserAction(id) {
     const stream = this.stream;
-    return ajax(`/user_actions/${id}.json`, { cache: "false" }).then(result => {
-      if (result && result.user_action) {
-        const ua = result.user_action;
+    return ajax(`/user_actions/${id}.json`, { cache: "false" }).then(
+      (result) => {
+        if (result && result.user_action) {
+          const ua = result.user_action;
 
-        if ((this.get("stream.filter") || ua.action_type) !== ua.action_type)
-          return;
-        if (!this.get("stream.filter") && !this.inAllStream(ua)) return;
+          if ((this.get("stream.filter") || ua.action_type) !== ua.action_type)
+            return;
+          if (!this.get("stream.filter") && !this.inAllStream(ua)) return;
 
-        ua.title = emojiUnescape(escapeExpression(ua.title));
-        const action = UserAction.collapseStream([UserAction.create(ua)]);
-        stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
-        stream.get("content").insertAt(0, action[0]);
+          ua.title = emojiUnescape(escapeExpression(ua.title));
+          const action = UserAction.collapseStream([UserAction.create(ua)]);
+          stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
+          stream.get("content").insertAt(0, action[0]);
+        }
       }
-    });
+    );
   },
 
   inAllStream(ua) {
@@ -536,7 +545,7 @@ const User = RestModel.extend({
   filteredGroups() {
     const groups = this.groups || [];
 
-    return groups.filter(group => {
+    return groups.filter((group) => {
       return !group.automatic || group.name === "moderators";
     });
   },
@@ -557,7 +566,7 @@ const User = RestModel.extend({
   statsCountNonPM() {
     if (isEmpty(this.statsExcludingPms)) return 0;
     let count = 0;
-    this.statsExcludingPms.forEach(val => {
+    this.statsExcludingPms.forEach((val) => {
       if (this.inAllStream(val)) {
         count += val.count;
       }
@@ -589,10 +598,10 @@ const User = RestModel.extend({
         : `${user.get("username")}.json`;
 
       return ajax(userPath(path), { data: options });
-    }).then(json => {
+    }).then((json) => {
       if (!isEmpty(json.user.stats)) {
         json.user.stats = User.groupStats(
-          json.user.stats.map(s => {
+          json.user.stats.map((s) => {
             if (s.count) s.count = parseInt(s.count, 10);
             return UserActionStat.create(s);
           })
@@ -617,11 +626,11 @@ const User = RestModel.extend({
 
       if (!isEmpty(json.user.featured_user_badge_ids)) {
         const userBadgesMap = {};
-        UserBadge.createFromJson(json).forEach(userBadge => {
+        UserBadge.createFromJson(json).forEach((userBadge) => {
           userBadgesMap[userBadge.get("id")] = userBadge;
         });
         json.user.featured_user_badges = json.user.featured_user_badge_ids.map(
-          id => userBadgesMap[id]
+          (id) => userBadgesMap[id]
         );
       }
 
@@ -644,7 +653,7 @@ const User = RestModel.extend({
       return Promise.resolve(null);
     }
     return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
-      info => {
+      (info) => {
         this.setProperties(info);
       }
     );
@@ -653,14 +662,14 @@ const User = RestModel.extend({
   pickAvatar(upload_id, type) {
     return ajax(userPath(`${this.username_lower}/preferences/avatar/pick`), {
       type: "PUT",
-      data: { upload_id, type }
+      data: { upload_id, type },
     });
   },
 
   selectAvatar(avatarUrl) {
     return ajax(userPath(`${this.username_lower}/preferences/avatar/select`), {
       type: "PUT",
-      data: { url: avatarUrl }
+      data: { url: avatarUrl },
     });
   },
 
@@ -677,14 +686,14 @@ const User = RestModel.extend({
   createInvite(email, group_ids, custom_message) {
     return ajax("/invites", {
       type: "POST",
-      data: { email, group_ids, custom_message }
+      data: { email, group_ids, custom_message },
     });
   },
 
   generateInviteLink(email, group_ids, topic_id) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { email, group_ids, topic_id }
+      data: { email, group_ids, topic_id },
     });
   },
 
@@ -695,13 +704,21 @@ const User = RestModel.extend({
   ) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { group_ids, max_redemptions_allowed, expires_at }
+      data: { group_ids, max_redemptions_allowed, expires_at },
     });
   },
 
   @observes("muted_category_ids")
   updateMutedCategories() {
     this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
+  },
+
+  @observes("regular_category_ids")
+  updateRegularCategories() {
+    this.set(
+      "regularCategories",
+      Category.findByIds(this.regular_category_ids)
+    );
   },
 
   @observes("tracked_category_ids")
@@ -733,11 +750,11 @@ const User = RestModel.extend({
     return !this.siteSettings.enable_sso && canDeleteAccount;
   },
 
-  delete: function() {
+  delete: function () {
     if (this.can_delete_account) {
       return ajax(userPath(this.username + ".json"), {
         type: "DELETE",
-        data: { context: window.location.pathname }
+        data: { context: window.location.pathname },
       });
     } else {
       return Promise.reject(I18n.t("user.delete_yourself_not_allowed"));
@@ -747,7 +764,7 @@ const User = RestModel.extend({
   updateNotificationLevel(level, expiringAt) {
     return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
-      data: { notification_level: level, expiring_at: expiringAt }
+      data: { notification_level: level, expiring_at: expiringAt },
     }).then(() => {
       const currentUser = User.current();
       if (currentUser) {
@@ -764,108 +781,110 @@ const User = RestModel.extend({
     this.set("dismissed_banner_key", bannerKey);
     ajax(userPath(this.username + ".json"), {
       type: "PUT",
-      data: { dismissed_banner_key: bannerKey }
+      data: { dismissed_banner_key: bannerKey },
     });
   },
 
   checkEmail() {
     return ajax(userPath(`${this.username_lower}/emails.json`), {
-      data: { context: window.location.pathname }
-    }).then(result => {
+      data: { context: window.location.pathname },
+    }).then((result) => {
       if (result) {
         this.setProperties({
           email: result.email,
           secondary_emails: result.secondary_emails,
           unconfirmed_emails: result.unconfirmed_emails,
-          associated_accounts: result.associated_accounts
+          associated_accounts: result.associated_accounts,
         });
       }
     });
   },
 
   summary() {
-    // let { store } = this; would fail in tests
-    const store = Discourse.__container__.lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
 
-    return ajax(userPath(`${this.username_lower}/summary.json`)).then(json => {
-      const summary = json.user_summary;
-      const topicMap = {};
-      const badgeMap = {};
+    return ajax(userPath(`${this.username_lower}/summary.json`)).then(
+      (json) => {
+        const summary = json.user_summary;
+        const topicMap = {};
+        const badgeMap = {};
 
-      json.topics.forEach(
-        t => (topicMap[t.id] = store.createRecord("topic", t))
-      );
-      Badge.createFromJson(json).forEach(b => (badgeMap[b.id] = b));
+        json.topics.forEach(
+          (t) => (topicMap[t.id] = store.createRecord("topic", t))
+        );
+        Badge.createFromJson(json).forEach((b) => (badgeMap[b.id] = b));
 
-      summary.topics = summary.topic_ids.map(id => topicMap[id]);
+        summary.topics = summary.topic_ids.map((id) => topicMap[id]);
 
-      summary.replies.forEach(r => {
-        r.topic = topicMap[r.topic_id];
-        r.url = r.topic.urlForPostNumber(r.post_number);
-        r.createdAt = new Date(r.created_at);
-      });
-
-      summary.links.forEach(l => {
-        l.topic = topicMap[l.topic_id];
-        l.post_url = l.topic.urlForPostNumber(l.post_number);
-      });
-
-      if (summary.badges) {
-        summary.badges = summary.badges.map(ub => {
-          const badge = badgeMap[ub.badge_id];
-          badge.count = ub.count;
-          return badge;
+        summary.replies.forEach((r) => {
+          r.topic = topicMap[r.topic_id];
+          r.url = r.topic.urlForPostNumber(r.post_number);
+          r.createdAt = new Date(r.created_at);
         });
-      }
 
-      if (summary.top_categories) {
-        summary.top_categories.forEach(c => {
-          if (c.parent_category_id) {
-            c.parentCategory = Category.findById(c.parent_category_id);
-          }
+        summary.links.forEach((l) => {
+          l.topic = topicMap[l.topic_id];
+          l.post_url = l.topic.urlForPostNumber(l.post_number);
         });
-      }
 
-      return summary;
-    });
+        if (summary.badges) {
+          summary.badges = summary.badges.map((ub) => {
+            const badge = badgeMap[ub.badge_id];
+            badge.count = ub.count;
+            return badge;
+          });
+        }
+
+        if (summary.top_categories) {
+          summary.top_categories.forEach((c) => {
+            if (c.parent_category_id) {
+              c.parentCategory = Category.findById(c.parent_category_id);
+            }
+          });
+        }
+
+        return summary;
+      }
+    );
   },
 
   canManageGroup(group) {
     return group.get("automatic")
       ? false
-      : this.admin || group.get("is_group_owner");
+      : group.get("can_admin_group") || group.get("is_group_owner");
   },
 
   @discourseComputed("groups.@each.title", "badges.[]")
   availableTitles() {
     let titles = [];
 
-    (this.groups || []).forEach(group => {
+    (this.groups || []).forEach((group) => {
       if (group.get("title")) {
         titles.push(group.get("title"));
       }
     });
 
-    (this.badges || []).forEach(badge => {
+    (this.badges || []).forEach((badge) => {
       if (badge.get("allow_title")) {
         titles.push(badge.get("name"));
       }
     });
 
-    return _.uniq(titles)
+    return titles
+      .uniq()
       .sort()
-      .map(title => {
+      .map((title) => {
         return {
           name: escapeExpression(title),
-          id: title
+          id: title,
         };
       });
   },
 
   @discourseComputed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
-    if ($.cookie("text_size")) {
-      const [cookieSize, cookieSeq] = $.cookie("text_size").split("|");
+    if (cookie("text_size")) {
+      const [cookieSize, cookieSeq] = cookie("text_size").split("|");
       if (cookieSeq >= serverSeq) {
         return cookieSize;
       }
@@ -876,12 +895,12 @@ const User = RestModel.extend({
   updateTextSizeCookie(newSize) {
     if (newSize) {
       const seq = this.get("user_option.text_size_seq");
-      $.cookie("text_size", `${newSize}|${seq}`, {
+      cookie("text_size", `${newSize}|${seq}`, {
         path: "/",
-        expires: 9999
+        expires: 9999,
       });
     } else {
-      $.removeCookie("text_size", { path: "/", expires: 1 });
+      removeCookie("text_size", { path: "/", expires: 1 });
     }
   },
 
@@ -906,7 +925,7 @@ const User = RestModel.extend({
       ajax(userPath(this.username + ".json"), {
         type: "PUT",
         dataType: "json",
-        data: { timezone: this._timezone }
+        data: { timezone: this._timezone },
       });
     }
 
@@ -929,9 +948,9 @@ const User = RestModel.extend({
     if (notificationLevel === NotificationLevels.MUTED) {
       return muted_ids.concat(id).uniq();
     } else {
-      return muted_ids.filter(existing_id => existing_id !== id);
+      return muted_ids.filter((existing_id) => existing_id !== id);
     }
-  }
+  },
 });
 
 User.reopenClass(Singleton, {
@@ -958,7 +977,7 @@ User.reopenClass(Singleton, {
 
     if (userJson && userJson.primary_group_id) {
       const primaryGroup = userJson.groups.find(
-        group => group.id === userJson.primary_group_id
+        (group) => group.id === userJson.primary_group_id
       );
       if (primaryGroup) {
         userJson.primary_group_name = primaryGroup.name;
@@ -967,30 +986,25 @@ User.reopenClass(Singleton, {
 
     if (userJson) {
       userJson = User.munge(userJson);
-      const store = Discourse.__container__.lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       return store.createRecord("user", userJson);
     }
     return null;
   },
 
-  resetCurrent(user) {
-    this._super(user);
-    Discourse.currentUser = user;
-  },
-
   checkUsername(username, email, for_user_id) {
     return ajax(userPath("check_username"), {
-      data: { username, email, for_user_id }
+      data: { username, email, for_user_id },
     });
   },
 
   groupStats(stats) {
     const responses = UserActionStat.create({
       count: 0,
-      action_type: UserAction.TYPES.replies
+      action_type: UserAction.TYPES.replies,
     });
 
-    stats.filterBy("isResponse").forEach(stat => {
+    stats.filterBy("isResponse").forEach((stat) => {
       responses.set("count", responses.get("count") + stat.get("count"));
     });
 
@@ -1021,7 +1035,7 @@ User.reopenClass(Singleton, {
       password_confirmation: attrs.accountPasswordConfirm,
       challenge: attrs.accountChallenge,
       user_fields: attrs.userFields,
-      timezone: moment.tz.guess()
+      timezone: moment.tz.guess(),
     };
 
     if (attrs.inviteCode) {
@@ -1030,9 +1044,9 @@ User.reopenClass(Singleton, {
 
     return ajax(userPath(), {
       data,
-      type: "POST"
+      type: "POST",
     });
-  }
+  },
 });
 
 if (typeof Discourse !== "undefined") {
@@ -1042,12 +1056,12 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the User class instead of using User", {
           since: "2.4.0",
-          dropFrom: "2.6.0"
+          dropFrom: "2.6.0",
         });
         warned = true;
       }
       return User;
-    }
+    },
   });
 }
 

@@ -4,7 +4,7 @@ import {
   updateRelativeAge,
   number,
   longDate,
-  durationTiny
+  durationTiny,
 } from "discourse/lib/formatter";
 import { discourseModule } from "helpers/qunit-helpers";
 
@@ -15,14 +15,14 @@ discourseModule("lib:formatter", {
 
   afterEach() {
     this.clock.restore();
-  }
+  },
 });
 
 function formatMins(mins, opts = {}) {
   let dt = new Date(new Date() - mins * 60 * 1000);
   return relativeAge(dt, {
     format: opts.format || "tiny",
-    leaveAgo: opts.leaveAgo
+    leaveAgo: opts.leaveAgo,
   });
 }
 
@@ -35,16 +35,12 @@ function formatDays(days, opts) {
 }
 
 function shortDate(days) {
-  return moment()
-    .subtract(days, "days")
-    .format("MMM D");
+  return moment().subtract(days, "days").format("MMM D");
 }
 
 function shortDateTester(format) {
-  return function(days) {
-    return moment()
-      .subtract(days, "days")
-      .format(format);
+  return function (days) {
+    return moment().subtract(days, "days").format(format);
   };
 }
 
@@ -52,7 +48,7 @@ function strip(html) {
   return $(html).text();
 }
 
-QUnit.test("formating medium length dates", function(assert) {
+QUnit.test("formating medium length dates", function (assert) {
   let shortDateYear = shortDateTester("MMM D, 'YY");
 
   assert.equal(
@@ -123,7 +119,7 @@ QUnit.test("formating medium length dates", function(assert) {
   assert.equal(strip(formatDays(10, { format: "medium" })), shortDateYear(10));
 });
 
-QUnit.test("formating tiny dates", function(assert) {
+QUnit.test("formating tiny dates", function (assert) {
   let shortDateYear = shortDateTester("MMM 'YY");
 
   assert.equal(formatMins(0), "1m");
@@ -186,10 +182,8 @@ QUnit.test("formating tiny dates", function(assert) {
   this.siteSettings.relative_date_duration = originalValue;
 });
 
-QUnit.test("autoUpdatingRelativeAge", function(assert) {
-  var d = moment()
-    .subtract(1, "day")
-    .toDate();
+QUnit.test("autoUpdatingRelativeAge", function (assert) {
+  var d = moment().subtract(1, "day").toDate();
 
   var $elem = $(autoUpdatingRelativeAge(d));
   assert.equal($elem.data("format"), "tiny");
@@ -203,7 +197,7 @@ QUnit.test("autoUpdatingRelativeAge", function(assert) {
     autoUpdatingRelativeAge(d, {
       format: "medium",
       title: true,
-      leaveAgo: true
+      leaveAgo: true,
     })
   );
   assert.equal($elem.data("format"), "medium-with-ago");
@@ -218,7 +212,7 @@ QUnit.test("autoUpdatingRelativeAge", function(assert) {
   assert.equal($elem.html(), "1 day");
 });
 
-QUnit.test("updateRelativeAge", function(assert) {
+QUnit.test("updateRelativeAge", function (assert) {
   var d = new Date();
   var $elem = $(autoUpdatingRelativeAge(d));
   $elem.data("time", d.getTime() - 2 * 60 * 1000);
@@ -236,7 +230,7 @@ QUnit.test("updateRelativeAge", function(assert) {
   assert.equal($elem.html(), "2 mins ago");
 });
 
-QUnit.test("number", function(assert) {
+QUnit.test("number", function (assert) {
   assert.equal(number(123), "123", "it returns a string version of the number");
   assert.equal(number("123"), "123", "it works with a string command");
   assert.equal(number(NaN), "0", "it returns 0 for NaN");
@@ -267,7 +261,7 @@ QUnit.test("number", function(assert) {
   );
 });
 
-QUnit.test("durationTiny", function(assert) {
+QUnit.test("durationTiny", function (assert) {
   assert.equal(durationTiny(), "&mdash;", "undefined is a dash");
   assert.equal(durationTiny(null), "&mdash;", "null is a dash");
   assert.equal(durationTiny(0), "< 1m", "0 seconds shows as < 1m");

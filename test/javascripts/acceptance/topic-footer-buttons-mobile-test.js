@@ -12,10 +12,10 @@ acceptance("Topic footer buttons mobile", {
   beforeEach() {
     I18n.translations[I18n.locale].js.test = {
       title: "My title",
-      label: "My Label"
+      label: "My Label",
     };
 
-    withPluginApi("0.8.28", api => {
+    withPluginApi("0.8.28", (api) => {
       api.registerTopicFooterButton({
         id: "my-button",
         icon: "user",
@@ -24,7 +24,7 @@ acceptance("Topic footer buttons mobile", {
         dropdown: true,
         action() {
           _test = 2;
-        }
+        },
       });
     });
   },
@@ -32,10 +32,10 @@ acceptance("Topic footer buttons mobile", {
   afterEach() {
     clearTopicFooterButtons();
     _test = undefined;
-  }
+  },
 });
 
-QUnit.test("default", async assert => {
+QUnit.test("default", async (assert) => {
   await visit("/t/internationalization-localization/280");
 
   assert.equal(_test, null);

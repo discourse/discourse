@@ -29,7 +29,7 @@ componentTest("default", {
 
   test(assert) {
     assert.equal(dateInput().val(), "January 29, 2019");
-  }
+  },
 });
 
 componentTest("prevents mutations", {
@@ -45,7 +45,7 @@ componentTest("prevents mutations", {
     await pika(2019, 0, 2);
 
     assert.ok(this.date.isSame(DEFAULT_DATE));
-  }
+  },
 });
 
 componentTest("allows mutations through actions", {
@@ -61,5 +61,5 @@ componentTest("allows mutations through actions", {
     await pika(2019, 0, 2);
 
     assert.ok(this.date.isSame(moment("2019-01-02")));
-  }
+  },
 });

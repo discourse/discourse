@@ -16,7 +16,7 @@ const TABLE_OPTIONS = {
   perPage: 8,
   total: true,
   limit: 20,
-  formatNumbers: true
+  formatNumbers: true,
 };
 
 const CHART_OPTIONS = {};
@@ -46,7 +46,7 @@ export default Component.extend({
     "isVisible",
     "isEnabled",
     "isLoading",
-    "dasherizedDataSourceName"
+    "dasherizedDataSourceName",
   ],
   classNames: ["admin-report"],
   isEnabled: true,
@@ -75,14 +75,14 @@ export default Component.extend({
     this._reports = [];
   },
 
-  isHidden: computed("siteSettings.dashboard_hidden_reports", function() {
+  isHidden: computed("siteSettings.dashboard_hidden_reports", function () {
     return (this.siteSettings.dashboard_hidden_reports || "")
       .split("|")
       .filter(Boolean)
       .includes(this.dataSourceName);
   }),
 
-  startDate: computed("filters.startDate", function() {
+  startDate: computed("filters.startDate", function () {
     if (this.filters && isPresent(this.filters.startDate)) {
       return moment(this.filters.startDate, "YYYY-MM-DD");
     } else {
@@ -90,7 +90,7 @@ export default Component.extend({
     }
   }),
 
-  endDate: computed("filters.endDate", function() {
+  endDate: computed("filters.endDate", function () {
     if (this.filters && isPresent(this.filters.endDate)) {
       return moment(this.filters.endDate, "YYYY-MM-DD");
     } else {
@@ -139,7 +139,7 @@ export default Component.extend({
   @action
   changeGrouping(grouping) {
     this.send("refreshReport", {
-      chartGrouping: grouping
+      chartGrouping: grouping,
     });
   },
 
@@ -147,14 +147,14 @@ export default Component.extend({
   displayedModes(currentMode, reportModes, forcedModes) {
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
 
-    return makeArray(modes).map(mode => {
+    return makeArray(modes).map((mode) => {
       const base = `btn-default mode-btn ${mode}`;
       const cssClass = currentMode === mode ? `${base} is-current` : base;
 
       return {
         mode,
         cssClass,
-        icon: mode === "table" ? "table" : "signal"
+        icon: mode === "table" ? "table" : "signal",
       };
     });
   },
@@ -187,10 +187,10 @@ export default Component.extend({
       customFilters
         ? JSON.stringify(customFilters, (k, v) => (k ? `${v}` : v))
         : null,
-      SCHEMA_VERSION
+      SCHEMA_VERSION,
     ]
-      .filter(x => x)
-      .map(x => x.toString())
+      .filter((x) => x)
+      .map((x) => x.toString())
       .join(":");
 
     return reportKey;
@@ -200,11 +200,11 @@ export default Component.extend({
   chartGroupings(chartGrouping) {
     chartGrouping = chartGrouping || "daily";
 
-    return ["daily", "weekly", "monthly"].map(id => {
+    return ["daily", "weekly", "monthly"].map((id) => {
       return {
         id,
         label: `admin.dashboard.reports.${id}`,
-        class: `chart-grouping ${chartGrouping === id ? "active" : "inactive"}`
+        class: `chart-grouping ${chartGrouping === id ? "active" : "inactive"}`,
       };
     });
   },
@@ -213,7 +213,7 @@ export default Component.extend({
   onChangeDateRange(range) {
     this.send("refreshReport", {
       startDate: range.from,
-      endDate: range.to
+      endDate: range.to,
     });
   },
 
@@ -228,7 +228,7 @@ export default Component.extend({
     }
 
     this.send("refreshReport", {
-      filters: customFilters
+      filters: customFilters,
     });
   },
 
@@ -250,7 +250,7 @@ export default Component.extend({
       filters:
         typeof options.filters === "undefined"
           ? this.get("filters.customFilters")
-          : options.filters
+          : options.filters,
     });
   },
 
@@ -259,7 +259,7 @@ export default Component.extend({
     const args = {
       name: this.get("model.type"),
       start_date: this.startDate.toISOString(true).split("T")[0],
-      end_date: this.endDate.toISOString(true).split("T")[0]
+      end_date: this.endDate.toISOString(true).split("T")[0],
     };
 
     const customFilters = this.get("filters.customFilters");
@@ -275,7 +275,7 @@ export default Component.extend({
     this.set("currentMode", mode);
 
     this.send("refreshReport", {
-      chartGrouping: null
+      chartGrouping: null,
     });
   },
 
@@ -295,7 +295,7 @@ export default Component.extend({
     let filteredReports = this._reports.uniqBy("report_key");
     let report;
 
-    const sort = r => {
+    const sort = (r) => {
       if (r.length > 1) {
         return r.findBy("type", this.dataSourceName);
       } else {
@@ -307,7 +307,7 @@ export default Component.extend({
       report = sort(filteredReports)[0];
     } else {
       report = sort(
-        filteredReports.filter(r => r.report_key.includes(this.reportKey))
+        filteredReports.filter((r) => r.report_key.includes(this.reportKey))
       )[0];
 
       if (!report) return;
@@ -327,7 +327,7 @@ export default Component.extend({
     this.setProperties({
       model: report,
       currentMode,
-      options: this._buildOptions(currentMode)
+      options: this._buildOptions(currentMode),
     });
   },
 
@@ -339,7 +339,7 @@ export default Component.extend({
     next(() => {
       let payload = this._buildPayload(["prev_period"]);
 
-      const callback = response => {
+      const callback = (response) => {
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
@@ -399,7 +399,7 @@ export default Component.extend({
       const chartOptions = JSON.parse(JSON.stringify(CHART_OPTIONS));
       return EmberObject.create(
         Object.assign(chartOptions, this.get("reportOptions.chart") || {}, {
-          chartGrouping: this.get("reportOptions.chartGrouping")
+          chartGrouping: this.get("reportOptions.chartGrouping"),
         })
       );
     }
@@ -409,13 +409,13 @@ export default Component.extend({
     Report.fillMissingDates(jsonReport, { filledField: "chartData" });
 
     if (jsonReport.chartData && jsonReport.modes[0] === "stacked_chart") {
-      jsonReport.chartData = jsonReport.chartData.map(chartData => {
+      jsonReport.chartData = jsonReport.chartData.map((chartData) => {
         if (chartData.length > 40) {
           return {
             data: collapseWeekly(chartData.data),
             req: chartData.req,
             label: chartData.label,
-            color: chartData.color
+            color: chartData.color,
           };
         } else {
           return chartData;
@@ -433,7 +433,7 @@ export default Component.extend({
         filledField: "prevChartData",
         dataField: "prev_data",
         starDate: jsonReport.prev_startDate,
-        endDate: jsonReport.prev_endDate
+        endDate: jsonReport.prev_endDate,
       });
 
       if (jsonReport.prevChartData && jsonReport.prevChartData.length > 40) {
@@ -445,5 +445,5 @@ export default Component.extend({
     }
 
     return Report.create(jsonReport);
-  }
+  },
 });

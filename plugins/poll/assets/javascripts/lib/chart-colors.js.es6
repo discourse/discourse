@@ -9,7 +9,7 @@ export function getColors(count, palette) {
         25: [220, 237, 200],
         50: [66, 179, 213],
         75: [26, 39, 62],
-        100: [0, 0, 0]
+        100: [0, 0, 0],
       };
       break;
     case "warm":
@@ -18,7 +18,7 @@ export function getColors(count, palette) {
         25: [254, 235, 101],
         50: [228, 82, 27],
         75: [77, 52, 47],
-        100: [0, 0, 0]
+        100: [0, 0, 0],
       };
       break;
   }

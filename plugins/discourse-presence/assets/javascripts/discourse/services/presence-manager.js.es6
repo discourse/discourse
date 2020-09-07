@@ -1,6 +1,6 @@
 import Service from "@ember/service";
 import Presence, {
-  CLOSED
+  CLOSED,
 } from "discourse/plugins/discourse-presence/discourse/lib/presence";
 
 const PresenceManager = Service.extend({
@@ -10,7 +10,7 @@ const PresenceManager = Service.extend({
     this._super(...arguments);
 
     this.setProperties({
-      presences: {}
+      presences: {},
     });
   },
 
@@ -49,7 +49,7 @@ const PresenceManager = Service.extend({
   },
 
   cleanUpPresence(type) {
-    Object.keys(this.presences).forEach(key => {
+    Object.keys(this.presences).forEach((key) => {
       this.publish(key, CLOSED);
       this.unsubscribe(key, type);
     });
@@ -61,12 +61,12 @@ const PresenceManager = Service.extend({
         messageBus: this.messageBus,
         siteSettings: this.siteSettings,
         currentUser: this.currentUser,
-        topicId
+        topicId,
       });
     }
 
     return this.presences[topicId];
-  }
+  },
 });
 
 export default PresenceManager;

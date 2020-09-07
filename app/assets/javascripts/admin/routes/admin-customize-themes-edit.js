@@ -1,5 +1,7 @@
 import I18n from "I18n";
 import Route from "@ember/routing/route";
+import bootbox from "bootbox";
+
 export default Route.extend({
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
@@ -8,7 +10,7 @@ export default Route.extend({
       ? {
           model,
           target: params.target,
-          field_name: params.field_name
+          field_name: params.field_name,
         }
       : this.replaceWith("adminCustomizeThemes.index");
   },
@@ -18,12 +20,14 @@ export default Route.extend({
       model: wrapper.model,
       target: wrapper.target || "common",
       field_name: wrapper.field_name || "scss",
-      theme_id: wrapper.model.get("id")
+      theme_id: wrapper.model.get("id"),
     };
   },
 
   setupController(controller, wrapper) {
-    const fields = wrapper.model.get("fields")[wrapper.target].map(f => f.name);
+    const fields = wrapper.model
+      .get("fields")
+      [wrapper.target].map((f) => f.name);
     if (!fields.includes(wrapper.field_name)) {
       this.transitionTo(
         "adminCustomizeThemes.edit",
@@ -52,7 +56,7 @@ export default Route.extend({
           I18n.t("admin.customize.theme.unsaved_changes_alert"),
           I18n.t("admin.customize.theme.discard"),
           I18n.t("admin.customize.theme.stay"),
-          result => {
+          (result) => {
             if (!result) {
               this.set("shouldAlertUnsavedChanges", false);
               transition.retry();
@@ -60,6 +64,6 @@ export default Route.extend({
           }
         );
       }
-    }
-  }
+    },
+  },
 });

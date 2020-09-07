@@ -239,7 +239,6 @@ id:
       save: "Simpan"
       no_timezone: 'Anda belum menetapkan zona waktu. Anda tidak akan dapat mengatur pengingat. Tetapkan satu <a href="%{basePath}/my/preferences/profile">di profil Anda</a> .'
       reminders:
-        at_desktop: "Lain kali saat saya di depan komputer"
         custom: "Tanggal dan waktu tersuai"
     drafts:
       resume: "Lanjut"
@@ -1410,13 +1409,6 @@ id:
       controls:
         edit_action: "Ubah"
         more: "Selengkapnya"
-      actions:
-        people:
-          spam: "menandai sebagai spam"
-          inappropriate: "menandai sebagai tidak pantas"
-          notify_moderators: "telah mengirimkan notifikasi kepada moderator"
-        by_you:
-          bookmark: "Anda menandai pos ini"
       revisions:
         controls:
           first: "Revisi pertama"
@@ -1544,8 +1536,6 @@ id:
       topics:
         none:
           new: "Anda tidak memiliki topik baru"
-        bottom:
-          new: "Tidak ada topik baru lagi"
     footer_nav:
       dismiss: "Bubar"
   admin_js:

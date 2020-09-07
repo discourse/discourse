@@ -47,7 +47,7 @@ export default Controller.extend(
     @discourseComputed
     welcomeTitle() {
       return I18n.t("invites.welcome_to", {
-        site_name: this.siteSettings.title
+        site_name: this.siteSettings.title,
       });
     },
 
@@ -73,27 +73,27 @@ export default Controller.extend(
       // If blank, fail without a reason
       if (isEmpty(email)) {
         return EmberObject.create({
-          failed: true
+          failed: true,
         });
       }
 
       if (rejectedEmails.includes(email)) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("user.email.invalid")
+          reason: I18n.t("user.email.invalid"),
         });
       }
 
       if (emailValid(email)) {
         return EmberObject.create({
           ok: true,
-          reason: I18n.t("user.email.ok")
+          reason: I18n.t("user.email.ok"),
         });
       }
 
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("user.email.invalid")
+        reason: I18n.t("user.email.invalid"),
       });
     },
 
@@ -102,7 +102,7 @@ export default Controller.extend(
         const userFields = this.userFields;
         let userCustomFields = {};
         if (!isEmpty(userFields)) {
-          userFields.forEach(function(f) {
+          userFields.forEach(function (f) {
             userCustomFields[f.get("field.id")] = f.get("value");
           });
         }
@@ -116,10 +116,10 @@ export default Controller.extend(
             name: this.accountName,
             password: this.accountPassword,
             user_custom_fields: userCustomFields,
-            timezone: moment.tz.guess()
-          }
+            timezone: moment.tz.guess(),
+          },
         })
-          .then(result => {
+          .then((result) => {
             if (result.success) {
               this.set(
                 "successMessage",
@@ -153,10 +153,10 @@ export default Controller.extend(
               }
             }
           })
-          .catch(error => {
+          .catch((error) => {
             throw new Error(error);
           });
-      }
-    }
+      },
+    },
   }
 );

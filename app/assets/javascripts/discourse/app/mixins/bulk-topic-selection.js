@@ -21,14 +21,14 @@ export default Mixin.create({
       this.selected.clear();
     },
 
-    dismissRead(operationType, categoryOptions) {
+    dismissRead(operationType, options) {
       let operation;
       if (operationType === "posts") {
         operation = { type: "dismiss_posts" };
       } else {
         operation = {
           type: "change_notification_level",
-          notification_level_id: NotificationLevels.REGULAR
+          notification_level_id: NotificationLevels.REGULAR,
         };
       }
 
@@ -36,24 +36,19 @@ export default Mixin.create({
       if (this.selected.length > 0) {
         promise = Topic.bulkOperation(this.selected, operation);
       } else {
-        promise = Topic.bulkOperationByFilter(
-          "unread",
-          operation,
-          this.get("category.id"),
-          categoryOptions
-        );
+        promise = Topic.bulkOperationByFilter("unread", operation, options);
       }
 
-      promise.then(result => {
+      promise.then((result) => {
         if (result && result.topic_ids) {
           const tracker = this.topicTrackingState;
-          result.topic_ids.forEach(t => tracker.removeTopic(t));
+          result.topic_ids.forEach((t) => tracker.removeTopic(t));
           tracker.incrementMessageCount();
         }
 
         this.send("closeModal");
         this.send("refresh");
       });
-    }
-  }
+    },
+  },
 });

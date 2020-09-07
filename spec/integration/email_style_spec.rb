@@ -94,14 +94,14 @@ describe EmailStyle do
       context 'translation override' do
         before do
           TranslationOverride.upsert!(
-            'en',
+            SiteSetting.default_locale,
             'user_notifications.signup.text_body_template',
             "CLICK THAT LINK: %{base_url}/u/activate-account/%{email_token}"
           )
         end
 
         after do
-          TranslationOverride.revert!('en', ['user_notifications.signup.text_body_template'])
+          TranslationOverride.revert!(SiteSetting.default_locale, ['user_notifications.signup.text_body_template'])
         end
 
         it "applies customizations when translation override exists" do

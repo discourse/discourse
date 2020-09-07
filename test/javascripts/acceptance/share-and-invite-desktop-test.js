@@ -1,10 +1,10 @@
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Share and Invite modal - desktop", {
-  loggedIn: true
+  loggedIn: true,
 });
 
-QUnit.test("Topic footer button", async assert => {
+QUnit.test("Topic footer button", async (assert) => {
   await visit("/t/internationalization-localization/280");
 
   assert.ok(
@@ -64,7 +64,7 @@ QUnit.test("Topic footer button", async assert => {
   );
 });
 
-QUnit.test("Post date link", async assert => {
+QUnit.test("Post date link", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#post_2 .post-info.post-date a");
 

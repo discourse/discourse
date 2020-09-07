@@ -73,7 +73,7 @@ async function keyboardHelper(value, target, selector) {
       escape: { keyCode: 27 },
       down: { keyCode: 40 },
       up: { keyCode: 38 },
-      tab: { keyCode: 9 }
+      tab: { keyCode: 9 },
     };
 
     await triggerEvent(
@@ -96,10 +96,7 @@ function rowHelper(row) {
       return row.attr("title");
     },
     label() {
-      return row
-        .find(".name")
-        .text()
-        .trim();
+      return row.find(".name").text().trim();
     },
     value() {
       const value = row.attr("data-value");
@@ -110,7 +107,7 @@ function rowHelper(row) {
     },
     el() {
       return row;
-    }
+    },
   };
 }
 
@@ -134,7 +131,7 @@ function headerHelper(header) {
     },
     el() {
       return header;
-    }
+    },
   };
 }
 
@@ -151,7 +148,7 @@ function filterHelper(filter) {
     },
     el() {
       return filter;
-    }
+    },
   };
 }
 
@@ -228,7 +225,7 @@ export default function selectKit(selector) {
         .map((_, row) => {
           return {
             name: row.getAttribute("data-name"),
-            id: row.getAttribute("data-value")
+            id: row.getAttribute("data-value"),
           };
         })
         .toArray();
@@ -280,15 +277,13 @@ export default function selectKit(selector) {
 
     async deselectItem(value) {
       await click(
-        find(selector)
-          .find(".select-kit-header")
-          .find(`[data-value=${value}]`)
+        find(selector).find(".select-kit-header").find(`[data-value=${value}]`)
       );
     },
 
     exists() {
       return exists(selector);
-    }
+    },
   };
 }
 
@@ -303,23 +298,23 @@ export function testSelectKitModule(moduleName, options = {}) {
 
     afterEach() {
       options.afterEach && options.afterEach.call(this);
-    }
+    },
   });
 }
 
 export const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
   { id: 2, name: "bar" },
-  { id: 3, name: "baz" }
+  { id: 3, name: "baz" },
 ];
 
 export function setDefaultState(ctx, value, options = {}) {
   const properties = Object.assign(
     {
       value,
-      onChange: v => {
+      onChange: (v) => {
         ctx.set("value", v);
-      }
+      },
     },
     options || {}
   );

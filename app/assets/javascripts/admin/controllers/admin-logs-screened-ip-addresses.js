@@ -6,6 +6,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 import { observes } from "discourse-common/utils/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   loading: false,
@@ -13,9 +14,9 @@ export default Controller.extend({
   savedIpAddress: null,
 
   @observes("filter")
-  show: discourseDebounce(function() {
+  show: discourseDebounce(function () {
     this.set("loading", true);
-    ScreenedIpAddress.findAll(this.filter).then(result => {
+    ScreenedIpAddress.findAll(this.filter).then((result) => {
       this.setProperties({ model: result, loading: false });
     });
   }, INPUT_DELAY),
@@ -52,11 +53,11 @@ export default Controller.extend({
       record
         .save()
         .then(() => this.set("savedIpAddress", null))
-        .catch(e => {
+        .catch((e) => {
           if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
             bootbox.alert(
               I18n.t("generic_error_with_reason", {
-                error: e.jqXHR.responseJSON.errors.join(". ")
+                error: e.jqXHR.responseJSON.errors.join(". "),
               })
             );
           } else {
@@ -69,25 +70,25 @@ export default Controller.extend({
     destroy(record) {
       return bootbox.confirm(
         I18n.t("admin.logs.screened_ips.delete_confirm", {
-          ip_address: record.get("ip_address")
+          ip_address: record.get("ip_address"),
         }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             record
               .destroy()
-              .then(deleted => {
+              .then((deleted) => {
                 if (deleted) {
                   this.model.removeObject(record);
                 } else {
                   bootbox.alert(I18n.t("generic_error"));
                 }
               })
-              .catch(e => {
+              .catch((e) => {
                 bootbox.alert(
                   I18n.t("generic_error_with_reason", {
-                    error: `http: ${e.status} - ${e.body}`
+                    error: `http: ${e.status} - ${e.body}`,
                   })
                 );
               });
@@ -105,16 +106,16 @@ export default Controller.extend({
         I18n.t("admin.logs.screened_ips.roll_up_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed => {
+        (confirmed) => {
           if (confirmed) {
             this.set("loading", true);
-            return ScreenedIpAddress.rollUp().then(results => {
+            return ScreenedIpAddress.rollUp().then((results) => {
               if (results && results.subnets) {
                 if (results.subnets.length > 0) {
                   this.send("show");
                   bootbox.alert(
                     I18n.t("admin.logs.screened_ips.rolled_up_some_subnets", {
-                      subnets: results.subnets.join(", ")
+                      subnets: results.subnets.join(", "),
                     })
                   );
                 } else {
@@ -132,6 +133,6 @@ export default Controller.extend({
 
     exportScreenedIpList() {
       exportEntity("screened_ip").then(outputExportResult);
-    }
-  }
+    },
+  },
 });

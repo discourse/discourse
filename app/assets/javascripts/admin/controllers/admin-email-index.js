@@ -3,6 +3,7 @@ import { empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { observes } from "discourse-common/utils/decorators";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   /**
@@ -18,7 +19,7 @@ export default Controller.extend({
     @method testEmailAddressChanged
   **/
   @observes("testEmailAddress")
-  testEmailAddressChanged: function() {
+  testEmailAddressChanged: function () {
     this.set("sentTestEmail", false);
   },
 
@@ -28,24 +29,24 @@ export default Controller.extend({
 
       @method sendTestEmail
     **/
-    sendTestEmail: function() {
+    sendTestEmail: function () {
       this.setProperties({
         sendingEmail: true,
-        sentTestEmail: false
+        sentTestEmail: false,
       });
 
       ajax("/admin/email/test", {
         type: "POST",
-        data: { email_address: this.testEmailAddress }
+        data: { email_address: this.testEmailAddress },
       })
-        .then(response =>
+        .then((response) =>
           this.set("sentTestEmailMessage", response.sent_test_email_message)
         )
-        .catch(e => {
+        .catch((e) => {
           if (e.responseJSON && e.responseJSON.errors) {
             bootbox.alert(
               I18n.t("admin.email.error", {
-                server_error: e.responseJSON.errors[0]
+                server_error: e.responseJSON.errors[0],
               })
             );
           } else {
@@ -53,6 +54,6 @@ export default Controller.extend({
           }
         })
         .finally(() => this.set("sendingEmail", false));
-    }
-  }
+    },
+  },
 });

@@ -17,7 +17,7 @@ const ApiKey = RestModel.extend({
         this.set("_user", value);
       }
       return this._user;
-    }
+    },
   }),
 
   @discourseComputed("description")
@@ -30,14 +30,14 @@ const ApiKey = RestModel.extend({
 
   revoke() {
     return ajax(`${this.basePath}/revoke`, {
-      type: "POST"
-    }).then(result => this.setProperties(result.api_key));
+      type: "POST",
+    }).then((result) => this.setProperties(result.api_key));
   },
 
   undoRevoke() {
     return ajax(`${this.basePath}/undo-revoke`, {
-      type: "POST"
-    }).then(result => this.setProperties(result.api_key));
+      type: "POST",
+    }).then((result) => this.setProperties(result.api_key));
   },
 
   createProperties() {
@@ -49,7 +49,7 @@ const ApiKey = RestModel.extend({
     return this.store
       .adapterFor("api-key")
       .pathFor(this.store, "api-key", this.id);
-  }
+  },
 });
 
 export default ApiKey;

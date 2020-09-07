@@ -199,9 +199,18 @@ class PostAlerter
     end
   end
 
-  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned, :watching_first_post].map { |t|
-    Notification.types[t]
-  }
+  NOTIFIABLE_TYPES = [
+    :mentioned,
+    :replied,
+    :quoted,
+    :posted,
+    :linked,
+    :private_message,
+    :group_mentioned,
+    :watching_first_post,
+    :event_reminder,
+    :event_invitation
+  ].map { |t| Notification.types[t] }
 
   def group_stats(topic)
     sql = <<~SQL

@@ -86,4 +86,20 @@ describe ColorScheme do
       end
     end
   end
+
+  describe "is_dark?" do
+    it "works as expected" do
+      scheme = ColorScheme.create_from_base(name: 'Tester')
+      ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: '333333' }, { name: 'secondary', hex: 'DDDDDD' }])
+      expect(scheme.is_dark?).to eq(false)
+
+      ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: 'F8F8F8' }, { name: 'secondary', hex: '232323' }])
+      expect(scheme.is_dark?).to eq(true)
+    end
+
+    it "does not break in scheme without colors" do
+      scheme = ColorScheme.create(name: "No Bueno")
+      expect(scheme.is_dark?).to eq(nil)
+    end
+  end
 end

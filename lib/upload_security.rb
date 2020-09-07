@@ -14,7 +14,10 @@
 # on the current secure? status, otherwise there would be a lot of additional
 # complex queries and joins to perform.
 class UploadSecurity
-  PUBLIC_TYPES = %w[avatar custom_emoji profile_background card_background]
+  PUBLIC_TYPES = %w[
+    avatar custom_emoji profile_background card_background category_logo category_background
+  ]
+
   def initialize(upload, opts = {})
     @upload = upload
     @opts = opts
@@ -30,7 +33,12 @@ class UploadSecurity
   private
 
   def uploading_in_public_context?
-    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji? || based_on_regular_emoji?
+    @upload.for_theme ||
+      @upload.for_site_setting ||
+      @upload.for_gravatar ||
+      public_type? ||
+      used_for_custom_emoji? ||
+      based_on_regular_emoji?
   end
 
   def uploading_in_secure_context?

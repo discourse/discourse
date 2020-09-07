@@ -11,6 +11,6 @@ export default Component.extend(LoadMore, {
   actions: {
     loadMore() {
       this.action();
-    }
-  }
+    },
+  },
 });

@@ -6,7 +6,7 @@ import EmberObject from "@ember/object";
 
 const Wizard = EmberObject.extend({
   @discourseComputed("steps.length")
-  totalSteps: length => length,
+  totalSteps: (length) => length,
 
   getTitle() {
     const titleStep = this.steps.findBy("id", "forum-title");
@@ -52,15 +52,44 @@ const Wizard = EmberObject.extend({
     }
 
     return option.data.colors;
-  }
+  },
+
+  getCurrentFont(fontId) {
+    const fontsStep = this.steps.findBy("id", "fonts");
+    if (!fontsStep) {
+      return;
+    }
+
+    const fontChoice = fontsStep.get("fieldsById.font_previews");
+    if (!fontChoice) {
+      return;
+    }
+
+    const choiceId = fontId ? fontId : fontChoice.get("value");
+    if (!choiceId) {
+      return;
+    }
+
+    const choices = fontChoice.get("choices");
+    if (!choices) {
+      return;
+    }
+
+    const option = choices.findBy("id", choiceId);
+    if (!option) {
+      return;
+    }
+
+    return option.data.font_stack.split(",")[0];
+  },
 });
 
 export function findWizard() {
-  return ajax({ url: "/wizard.json" }).then(response => {
+  return ajax({ url: "/wizard.json" }).then((response) => {
     const wizard = response.wizard;
-    wizard.steps = wizard.steps.map(step => {
+    wizard.steps = wizard.steps.map((step) => {
       const stepObj = Step.create(step);
-      stepObj.fields = stepObj.fields.map(f => WizardField.create(f));
+      stepObj.fields = stepObj.fields.map((f) => WizardField.create(f));
       return stepObj;
     });
 

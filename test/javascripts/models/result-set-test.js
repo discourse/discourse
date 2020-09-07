@@ -3,7 +3,7 @@ QUnit.module("result-set");
 import ResultSet from "discourse/models/result-set";
 import createStore from "helpers/create-store";
 
-QUnit.test("defaults", assert => {
+QUnit.test("defaults", (assert) => {
   const resultSet = ResultSet.create({ content: [] });
   assert.equal(resultSet.get("length"), 0);
   assert.equal(resultSet.get("totalRows"), 0);
@@ -13,7 +13,7 @@ QUnit.test("defaults", assert => {
   assert.ok(!resultSet.get("refreshing"));
 });
 
-QUnit.test("pagination support", async assert => {
+QUnit.test("pagination support", async (assert) => {
   const store = createStore();
   const resultSet = await store.findAll("widget");
   assert.equal(resultSet.get("length"), 2);
@@ -32,7 +32,7 @@ QUnit.test("pagination support", async assert => {
   assert.ok(!resultSet.get("canLoadMore"));
 });
 
-QUnit.test("refresh support", async assert => {
+QUnit.test("refresh support", async (assert) => {
   const store = createStore();
   const resultSet = await store.findAll("widget");
   assert.equal(

@@ -10,6 +10,11 @@ class PostActionNotifier
     @disabled = false
   end
 
+  # For testing purposes
+  def self.reset!
+    @custom_post_revision_notifier_recipients = nil
+  end
+
   def self.alerter
     @alerter ||= PostAlerter.new
   end
@@ -115,7 +120,7 @@ class PostActionNotifier
     end
 
     custom_post_revision_notifier_recipients.each do |block|
-      user_ids.concat(block.call(post_revision))
+      user_ids.concat(Array(block.call(post_revision)))
     end
 
     if user_ids.present?

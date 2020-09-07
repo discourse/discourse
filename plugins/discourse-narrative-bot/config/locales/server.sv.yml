@@ -198,6 +198,17 @@ sv:
           `%{image_url}`
 
           Försök nu att ladda upp denna, eller klistra in länken på en egen rad!
+      likes:
+        instructions: |-
+          Här är en bild på en enhörning:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Om du gillar den (och vem gör inte det!) gå vidare och tryck på knappen gilla :heart: nedanför detta inlägg för att informera mig.
+        reply: |-
+          Tack för att du gillar mitt inlägg!
+        not_found: |-
+          Glömde du att gilla :heart: mitt [inlägg?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Kan du göra några ord **feta** eller _kursiva_ i ditt nästa svar?

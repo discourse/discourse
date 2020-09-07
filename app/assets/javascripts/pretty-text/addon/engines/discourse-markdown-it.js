@@ -5,7 +5,7 @@ import guid from "pretty-text/guid";
 export const ATTACHMENT_CSS_CLASS = "attachment";
 
 function deprecate(feature, name) {
-  return function() {
+  return function () {
     if (window.console && window.console.log) {
       window.console.log(
         feature +
@@ -27,7 +27,7 @@ function createHelper(
 ) {
   let helper = {};
   helper.markdownIt = true;
-  helper.whiteList = info => whiteListed.push([featureName, info]);
+  helper.whiteList = (info) => whiteListed.push([featureName, info]);
   helper.registerInline = deprecate(featureName, "registerInline");
   helper.replaceBlock = deprecate(featureName, "replaceBlock");
   helper.addPreProcessor = deprecate(featureName, "addPreProcessor");
@@ -41,11 +41,11 @@ function createHelper(
   // hack to allow moving of getOptions
   helper.getOptions = () => getOptions.f();
 
-  helper.registerOptions = callback => {
+  helper.registerOptions = (callback) => {
     optionCallbacks.push([featureName, callback]);
   };
 
-  helper.registerPlugin = callback => {
+  helper.registerPlugin = (callback) => {
     pluginCallbacks.push([featureName, callback]);
   };
 
@@ -280,14 +280,14 @@ export function setup(opts, siteSettings, state) {
 
   // ideally I would like to change the top level API a bit, but in the mean time this will do
   let getOptions = {
-    f: () => opts
+    f: () => opts,
   };
 
   const check = /discourse-markdown\/|markdown-it\//;
   let features = [];
   let whiteListed = [];
 
-  Object.keys(require._eak_seen).forEach(entry => {
+  Object.keys(require._eak_seen).forEach((entry) => {
     if (check.test(entry)) {
       const module = requirejs(entry);
       if (module && module.setup) {
@@ -307,7 +307,7 @@ export function setup(opts, siteSettings, state) {
     }
   });
 
-  Object.entries(state.whiteListed || {}).forEach(entry => {
+  Object.entries(state.whiteListed || {}).forEach((entry) => {
     whiteListed.push(entry);
   });
 
@@ -316,27 +316,27 @@ export function setup(opts, siteSettings, state) {
   });
 
   // enable all features by default
-  features.forEach(feature => {
+  features.forEach((feature) => {
     if (!opts.features.hasOwnProperty(feature)) {
       opts.features[feature] = true;
     }
   });
 
   let copy = {};
-  Object.keys(opts).forEach(entry => {
+  Object.keys(opts).forEach((entry) => {
     copy[entry] = opts[entry];
     delete opts[entry];
   });
 
   copy.helpers = {
-    textReplace: Helpers.textReplace
+    textReplace: Helpers.textReplace,
   };
 
   opts.discourse = copy;
   getOptions.f = () => opts.discourse;
 
   opts.discourse.limitedSiteSettings = {
-    secureMedia: siteSettings.secure_media
+    secureMedia: siteSettings.secure_media,
   };
 
   opts.engine = window.markdownit({
@@ -345,7 +345,7 @@ export function setup(opts, siteSettings, state) {
     breaks: opts.discourse.features.newline,
     xhtmlOut: false,
     linkify: siteSettings.enable_markdown_linkify,
-    typographer: siteSettings.enable_markdown_typographer
+    typographer: siteSettings.enable_markdown_typographer,
   });
 
   const quotation_marks = siteSettings.markdown_typographer_quotation_marks;
@@ -383,8 +383,8 @@ export function setup(opts, siteSettings, state) {
     });
 
     opts.sanitizer = opts.discourse.sanitizer = !!opts.discourse.sanitize
-      ? a => sanitize(a, whiteLister)
-      : a => a;
+      ? (a) => sanitize(a, whiteLister)
+      : (a) => a;
   }
 }
 
@@ -402,8 +402,8 @@ export function cook(raw, opts) {
   if (keys.length) {
     let found = true;
 
-    const unhoist = function(key) {
-      cooked = cooked.replace(new RegExp(key, "g"), function() {
+    const unhoist = function (key) {
+      cooked = cooked.replace(new RegExp(key, "g"), function () {
         found = true;
         return hoisted[key];
       });

@@ -9,6 +9,6 @@ export default Controller.extend({
       tagGroups.removeObject(this.model);
 
       this.transitionToRoute("tagGroups.index");
-    }
-  }
+    },
+  },
 });

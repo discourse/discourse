@@ -2,10 +2,10 @@ import I18n from "I18n";
 import { controllerModule } from "helpers/qunit-helpers";
 
 controllerModule("controller:create-account", {
-  needs: ["controller:modal", "controller:login"]
+  needs: ["controller:modal", "controller:login"],
 });
 
-test("basicUsernameValidation", async function(assert) {
+test("basicUsernameValidation", async function (assert) {
   const subject = this.subject;
 
   const testInvalidUsername = async (username, expectedReason) => {
@@ -34,7 +34,7 @@ test("basicUsernameValidation", async function(assert) {
   const controller = await subject();
   controller.setProperties({
     accountUsername: "porkchops",
-    prefilledUsername: "porkchops"
+    prefilledUsername: "porkchops",
   });
 
   assert.equal(
@@ -49,7 +49,7 @@ test("basicUsernameValidation", async function(assert) {
   );
 });
 
-test("passwordValidation", async function(assert) {
+test("passwordValidation", async function (assert) {
   const controller = await this.subject();
 
   controller.set("authProvider", "");
@@ -86,7 +86,7 @@ test("passwordValidation", async function(assert) {
   testInvalidPassword("pork@chops.com", I18n.t("user.password.same_as_email"));
 });
 
-test("authProviderDisplayName", async function(assert) {
+test("authProviderDisplayName", async function (assert) {
   const controller = this.subject();
 
   assert.equal(

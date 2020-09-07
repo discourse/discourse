@@ -8,5 +8,5 @@ export default FilterComponent.extend({
   @action
   onChange(categoryId) {
     this.applyFilter(this.filter.id, categoryId || undefined);
-  }
+  },
 });

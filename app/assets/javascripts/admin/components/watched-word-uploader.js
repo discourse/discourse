@@ -3,6 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
+import bootbox from "bootbox";
 
 export default Component.extend(UploadMixin, {
   type: "txt",
@@ -24,5 +25,5 @@ export default Component.extend(UploadMixin, {
       bootbox.alert(I18n.t("admin.watched_words.form.upload_successful"));
       this.done();
     }
-  }
+  },
 });

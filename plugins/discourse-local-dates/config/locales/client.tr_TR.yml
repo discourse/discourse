@@ -19,7 +19,6 @@ tr_TR:
           insert: Ekle
           advanced_mode: Gelişmiş mod
           simple_mode: Basit mod
-          format_description: "Kullanıcının tarihini görüntülemek için kullanılan format. Kullanıcı saat dilimi kelimesini görüntülemek için &quot;\\ T \\ Z&quot; kullanın (Avrupa / Paris)"
           timezones_title: Görüntülenecek zaman dilimleri
           timezones_description: Saat dilimleri önizleme ve geri dönüş tarihlerini görüntülemek için kullanılacaktır.
           recurring_title: Yinelenme

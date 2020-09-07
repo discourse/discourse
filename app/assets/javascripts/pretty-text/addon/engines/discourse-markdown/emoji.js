@@ -23,7 +23,7 @@ function buildTranslationTree(customEmojiTranslation) {
     customEmojiTranslation || {}
   );
 
-  Object.keys(allTranslations).forEach(key => {
+  Object.keys(allTranslations).forEach((key) => {
     let node = tree;
 
     for (let i = 0; i < key.length; i++) {
@@ -117,7 +117,7 @@ function getEmojiTokenByName(name, state) {
       ["src", info.url],
       ["title", info.title],
       ["class", info.classes],
-      ["alt", info.title]
+      ["alt", info.title],
     ];
 
     return token;
@@ -261,12 +261,12 @@ function applyEmoji(
     if (
       result[0].type === "emoji" &&
       result[result.length - 1].type === "emoji" &&
-      result.filter(r => r.type === "emoji").length <= 3
+      result.filter((r) => r.type === "emoji").length <= 3
     ) {
       let onlyEmojiLine = true;
       let index = 0;
 
-      const checkNextToken = t => {
+      const checkNextToken = (t) => {
         if (!t) {
           return;
         }
@@ -295,7 +295,7 @@ function applyEmoji(
       checkNextToken(result[index]);
 
       if (onlyEmojiLine) {
-        result.forEach(r => {
+        result.forEach((r) => {
           if (r.type === "emoji") {
             applyOnlyEmojiClass(r);
           }
@@ -308,7 +308,7 @@ function applyEmoji(
 }
 
 function applyOnlyEmojiClass(token) {
-  token.attrs.forEach(attr => {
+  token.attrs.forEach((attr) => {
     if (attr[0] === "class") {
       attr[1] = `${attr[1]} only-emoji`;
     }
@@ -324,8 +324,8 @@ export function setup(helper) {
     opts.customEmoji = state.customEmoji;
   });
 
-  helper.registerPlugin(md => {
-    md.core.ruler.push("emoji", state =>
+  helper.registerPlugin((md) => {
+    md.core.ruler.push("emoji", (state) =>
       md.options.discourse.helpers.textReplace(state, (c, s) =>
         applyEmoji(
           c,
@@ -343,6 +343,6 @@ export function setup(helper) {
     "img[class=emoji]",
     "img[class=emoji emoji-custom]",
     "img[class=emoji emoji-custom only-emoji]",
-    "img[class=emoji only-emoji]"
+    "img[class=emoji only-emoji]",
   ]);
 }

@@ -32,18 +32,18 @@ export default buildCategoryPanel("settings", {
         name: I18n.t(
           "category.subcategory_list_styles.rows_with_featured_topics"
         ),
-        value: "rows_with_featured_topics"
+        value: "rows_with_featured_topics",
       },
       {
         name: I18n.t("category.subcategory_list_styles.boxes"),
-        value: "boxes"
+        value: "boxes",
       },
       {
         name: I18n.t(
           "category.subcategory_list_styles.boxes_with_featured_topics"
         ),
-        value: "boxes_with_featured_topics"
-      }
+        value: "boxes_with_featured_topics",
+      },
     ];
   },
 
@@ -55,14 +55,14 @@ export default buildCategoryPanel("settings", {
   availableViews() {
     return [
       { name: I18n.t("filters.latest.title"), value: "latest" },
-      { name: I18n.t("filters.top.title"), value: "top" }
+      { name: I18n.t("filters.top.title"), value: "top" },
     ];
   },
 
   @discourseComputed
   availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
-      p => {
+      (p) => {
         return { name: I18n.t(`filters.top.${p}.title`), value: p };
       }
     );
@@ -70,7 +70,7 @@ export default buildCategoryPanel("settings", {
 
   @discourseComputed
   availableListFilters() {
-    return ["all", "none"].map(p => {
+    return ["all", "none"].map((p) => {
       return { name: I18n.t(`category.list_filters.${p}`), value: p };
     });
   },
@@ -79,12 +79,12 @@ export default buildCategoryPanel("settings", {
   searchPrioritiesOptions() {
     const options = [];
 
-    Object.entries(SEARCH_PRIORITIES).forEach(entry => {
+    Object.entries(SEARCH_PRIORITIES).forEach((entry) => {
       const [name, value] = entry;
 
       options.push({
         name: I18n.t(`category.search_priority.options.${name}`),
-        value
+        value,
       });
     });
 
@@ -101,10 +101,10 @@ export default buildCategoryPanel("settings", {
       "activity",
       "posters",
       "category",
-      "created"
+      "created",
     ]
       .concat(categorySortCriteria)
-      .map(s => ({ name: I18n.t("category.sort_options." + s), value: s }))
+      .map((s) => ({ name: I18n.t("category.sort_options." + s), value: s }))
       .sort((a, b) => a.name.localeCompare(b.name));
   },
 
@@ -119,7 +119,7 @@ export default buildCategoryPanel("settings", {
   sortAscendingOptions() {
     return [
       { name: I18n.t("category.sort_ascending"), value: true },
-      { name: I18n.t("category.sort_descending"), value: false }
+      { name: I18n.t("category.sort_descending"), value: false },
     ];
-  }
+  },
 });

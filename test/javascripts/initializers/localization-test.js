@@ -13,19 +13,19 @@ QUnit.module("initializer:localization", {
       fr: {
         js: {
           composer: {
-            reply: "Répondre"
-          }
-        }
+            reply: "Répondre",
+          },
+        },
       },
       en: {
         js: {
           topic: {
             reply: {
-              help: "begin composing a reply to this topic"
-            }
-          }
-        }
-      }
+              help: "begin composing a reply to this topic",
+            },
+          },
+        },
+      },
     };
   },
 
@@ -33,13 +33,13 @@ QUnit.module("initializer:localization", {
     I18n.locale = this._locale;
     I18n.translations = this._translations;
     I18n._overrides = this._overrides;
-  }
+  },
 });
 
-QUnit.test("translation overrides", function(assert) {
+QUnit.test("translation overrides", function (assert) {
   I18n._overrides = {
     "js.composer.reply": "WAT",
-    "js.topic.reply.help": "foobar"
+    "js.topic.reply.help": "foobar",
   };
   LocalizationInitializer.initialize(this.registry);
 
@@ -57,10 +57,10 @@ QUnit.test("translation overrides", function(assert) {
 
 QUnit.test(
   "skip translation override if parent node is not an object",
-  function(assert) {
+  function (assert) {
     I18n._overrides = {
       "js.composer.reply": "WAT",
-      "js.composer.reply.help": "foobar"
+      "js.composer.reply.help": "foobar",
     };
     LocalizationInitializer.initialize(this.registry);
 

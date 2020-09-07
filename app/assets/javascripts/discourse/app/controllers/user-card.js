@@ -16,6 +16,6 @@ export default Controller.extend({
 
     showGroup(group) {
       DiscourseURL.routeTo(groupPath(group.name));
-    }
-  }
+    },
+  },
 });

@@ -14,7 +14,7 @@ export default Controller.extend({
   _performSearch() {
     this.store
       .find("site-text", this.getProperties("q", "overridden"))
-      .then(results => {
+      .then((results) => {
         this.set("siteTexts", results);
       })
       .finally(() => this.set("searching", false));
@@ -38,6 +38,6 @@ export default Controller.extend({
         debounce(this, this._performSearch, 400);
         lastSearch = q;
       }
-    }
-  }
+    },
+  },
 });

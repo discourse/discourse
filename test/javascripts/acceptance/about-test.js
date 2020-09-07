@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("About");
 
-QUnit.test("viewing", async assert => {
+QUnit.test("viewing", async (assert) => {
   await visit("/about");
 
   assert.ok($("body.about-page").length, "has body class");

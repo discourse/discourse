@@ -8,16 +8,14 @@ function reportWithData(data) {
     type: "topics",
     data: data.map((val, index) => {
       return {
-        x: moment()
-          .subtract(index, "days")
-          .format("YYYY-MM-DD"),
-        y: val
+        x: moment().subtract(index, "days").format("YYYY-MM-DD"),
+        y: val,
       };
-    })
+    }),
   });
 }
 
-QUnit.test("counts", assert => {
+QUnit.test("counts", (assert) => {
   const report = reportWithData([5, 4, 3, 2, 1, 100, 99, 98, 1000]);
 
   assert.equal(report.get("todayCount"), 5);
@@ -41,7 +39,7 @@ QUnit.test("counts", assert => {
   );
 });
 
-QUnit.test("percentChangeString", assert => {
+QUnit.test("percentChangeString", (assert) => {
   const report = reportWithData([]);
 
   assert.equal(report.percentChangeString(5, 8), "+60%", "value increased");
@@ -58,19 +56,19 @@ QUnit.test("percentChangeString", assert => {
   );
 });
 
-QUnit.test("yesterdayCountTitle with valid values", assert => {
+QUnit.test("yesterdayCountTitle with valid values", (assert) => {
   const title = reportWithData([6, 8, 5, 2, 1]).get("yesterdayCountTitle");
   assert.ok(title.indexOf("+60%") !== -1);
   assert.ok(title.match(/Was 5/));
 });
 
-QUnit.test("yesterdayCountTitle when two days ago was 0", assert => {
+QUnit.test("yesterdayCountTitle when two days ago was 0", (assert) => {
   const title = reportWithData([6, 8, 0, 2, 1]).get("yesterdayCountTitle");
   assert.equal(title.indexOf("%"), -1);
   assert.ok(title.match(/Was 0/));
 });
 
-QUnit.test("sevenDaysCountTitle", assert => {
+QUnit.test("sevenDaysCountTitle", (assert) => {
   const title = reportWithData([
     100,
     1,
@@ -88,13 +86,13 @@ QUnit.test("sevenDaysCountTitle", assert => {
     2,
     2,
     100,
-    100
+    100,
   ]).get("sevenDaysCountTitle");
   assert.ok(title.match(/-50%/));
   assert.ok(title.match(/Was 14/));
 });
 
-QUnit.test("thirtyDaysCountTitle", assert => {
+QUnit.test("thirtyDaysCountTitle", (assert) => {
   const report = reportWithData([5, 5, 5, 5]);
   report.set("prev30Days", 10);
   const title = report.get("thirtyDaysCountTitle");
@@ -103,7 +101,7 @@ QUnit.test("thirtyDaysCountTitle", assert => {
   assert.ok(title.match(/Was 10/));
 });
 
-QUnit.test("sevenDaysTrend", assert => {
+QUnit.test("sevenDaysTrend", (assert) => {
   let report;
   let trend;
 
@@ -128,7 +126,7 @@ QUnit.test("sevenDaysTrend", assert => {
   assert.ok(trend === "trending-down");
 });
 
-QUnit.test("yesterdayTrend", assert => {
+QUnit.test("yesterdayTrend", (assert) => {
   let report;
   let trend;
 
@@ -153,7 +151,7 @@ QUnit.test("yesterdayTrend", assert => {
   assert.ok(trend === "trending-down");
 });
 
-QUnit.test("thirtyDaysTrend", assert => {
+QUnit.test("thirtyDaysTrend", (assert) => {
   let report;
   let trend;
 
@@ -188,7 +186,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     1,
     1,
     1,
-    1
+    1,
   ]);
   report.set("prev30Days", 30);
   trend = report.get("thirtyDaysTrend");
@@ -225,7 +223,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     1,
     1,
     1,
-    1
+    1,
   ]);
   report.set("prev30Days", 0);
   trend = report.get("thirtyDaysTrend");
@@ -262,7 +260,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     1,
     1,
     1,
-    1
+    1,
   ]);
   report.set("prev30Days", 25);
   trend = report.get("thirtyDaysTrend");
@@ -299,7 +297,7 @@ QUnit.test("thirtyDaysTrend", assert => {
     0,
     0,
     0,
-    0
+    0,
   ]);
   report.set("prev30Days", 60);
   trend = report.get("thirtyDaysTrend");
@@ -336,14 +334,14 @@ QUnit.test("thirtyDaysTrend", assert => {
     1,
     1,
     1,
-    0
+    0,
   ]);
   report.set("prev30Days", 35);
   trend = report.get("thirtyDaysTrend");
   assert.ok(trend === "trending-down");
 });
 
-QUnit.test("higher is better false", assert => {
+QUnit.test("higher is better false", (assert) => {
   let report;
   let trend;
 
@@ -368,7 +366,7 @@ QUnit.test("higher is better false", assert => {
   assert.ok(trend === "trending-up");
 });
 
-QUnit.test("small variation (-2/+2% change) is no-change", assert => {
+QUnit.test("small variation (-2/+2% change) is no-change", (assert) => {
   let report;
   let trend;
 
@@ -381,7 +379,7 @@ QUnit.test("small variation (-2/+2% change) is no-change", assert => {
   assert.ok(trend === "no-change");
 });
 
-QUnit.test("average", assert => {
+QUnit.test("average", (assert) => {
   let report;
 
   report = reportWithData([5, 5, 5, 5, 5, 5, 5, 5]);
@@ -393,7 +391,7 @@ QUnit.test("average", assert => {
   assert.ok(report.get("lastSevenDaysCount") === 35);
 });
 
-QUnit.test("computed labels", assert => {
+QUnit.test("computed labels", (assert) => {
   const data = [
     {
       username: "joffrey",
@@ -406,8 +404,8 @@ QUnit.test("computed labels", assert => {
       topic_title: "Test topic <html>",
       post_number: 3,
       post_raw: "This is the beginning of <html>",
-      filesize: 582641
-    }
+      filesize: 582641,
+    },
   ];
 
   const labels = [
@@ -416,9 +414,9 @@ QUnit.test("computed labels", assert => {
       properties: {
         username: "username",
         id: "user_id",
-        avatar: "user_avatar"
+        avatar: "user_avatar",
       },
-      title: "Moderator"
+      title: "Moderator",
     },
     { type: "number", property: "flag_count", title: "Flag count" },
     { type: "seconds", property: "time_read", title: "Time read" },
@@ -427,26 +425,26 @@ QUnit.test("computed labels", assert => {
       type: "topic",
       properties: {
         title: "topic_title",
-        id: "topic_id"
+        id: "topic_id",
       },
-      title: "Topic"
+      title: "Topic",
     },
     {
       type: "post",
       properties: {
         topic_id: "topic_id",
         number: "post_number",
-        truncated_raw: "post_raw"
+        truncated_raw: "post_raw",
       },
-      title: "Post"
+      title: "Post",
     },
-    { type: "bytes", property: "filesize", title: "Filesize" }
+    { type: "bytes", property: "filesize", title: "Filesize" },
   ];
 
   const report = Report.create({
     type: "topics",
     labels,
-    data
+    data,
   });
 
   const row = report.get("data.0");
@@ -473,7 +471,7 @@ QUnit.test("computed labels", assert => {
   assert.equal(computedFlagCountLabel.formatedValue, "1.9k");
   assert.strictEqual(computedFlagCountLabel.value, 1876);
   computedFlagCountLabel = flagCountLabel.compute(row, {
-    formatNumbers: false
+    formatNumbers: false,
   });
   assert.equal(computedFlagCountLabel.formatedValue, 1876);
 

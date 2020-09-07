@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import bootbox from "bootbox";
 
 export default Component.extend({
   tagName: "",
@@ -17,7 +18,7 @@ export default Component.extend({
     },
 
     publish() {
-      bootbox.confirm(I18n.t("shared_drafts.confirm_publish"), result => {
+      bootbox.confirm(I18n.t("shared_drafts.confirm_publish"), (result) => {
         if (result) {
           this.set("publishing", true);
           let destId = this.get("topic.destination_category_id");
@@ -31,6 +32,6 @@ export default Component.extend({
             });
         }
       });
-    }
-  }
+    },
+  },
 });

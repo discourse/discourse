@@ -4,17 +4,14 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
   model() {
-    return ajax("/about.json").then(result => {
+    return ajax("/about.json").then((result) => {
       let activeAdmins = [];
       let activeModerators = [];
-      const yearAgo = moment()
-        .locale("en")
-        .utc()
-        .subtract(1, "year");
-      result.about.admins.forEach(r => {
+      const yearAgo = moment().locale("en").utc().subtract(1, "year");
+      result.about.admins.forEach((r) => {
         if (moment(r.last_seen_at) > yearAgo) activeAdmins.push(r);
       });
-      result.about.moderators.forEach(r => {
+      result.about.moderators.forEach((r) => {
         if (moment(r.last_seen_at) > yearAgo) activeModerators.push(r);
       });
       result.about.admins = activeAdmins;
@@ -39,6 +36,6 @@ export default DiscourseRoute.extend({
     didTransition() {
       this.controllerFor("application").set("showFooter", true);
       return true;
-    }
-  }
+    },
+  },
 });

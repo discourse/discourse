@@ -17,6 +17,6 @@ export default Route.extend({
           controller.filterContentNow("plugins");
         }
       });
-    }
-  }
+    },
+  },
 });

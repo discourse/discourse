@@ -5,7 +5,7 @@ import toMarkdown from "discourse/lib/to-markdown";
 import {
   selectedText,
   selectedElement,
-  postUrl
+  postUrl,
 } from "discourse/lib/utilities";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { INPUT_DELAY } from "discourse-common/config/environment";
@@ -77,7 +77,7 @@ export default Component.extend({
     const postBody = toMarkdown(cooked.innerHTML);
 
     let opts = {
-      full: _selectedText === postBody
+      full: _selectedText === postBody,
     };
 
     for (
@@ -181,7 +181,7 @@ export default Component.extend({
     );
 
     $(document)
-      .on("mousedown.quote-button", e => {
+      .on("mousedown.quote-button", (e) => {
         this._prevSelection = null;
         this._isMouseDown = true;
         this._reselected = false;
@@ -265,7 +265,7 @@ export default Component.extend({
     Sharing.shareSource(source, {
       url: this.shareUrl,
       title: this.topic.title,
-      quote: window.getSelection().toString()
+      quote: window.getSelection().toString(),
     });
-  }
+  },
 });

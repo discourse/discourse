@@ -67,11 +67,11 @@
     flex-wrap: wrap;
     width: 100%;
     .edit-category {
-      .d-icon {
-        margin: 0;
-      }
       @media screen and (max-width: 374px) {
         // Hide edit label on very tiny screens
+        .d-icon {
+          margin: 0;
+        }
         .d-button-label {
           display: none;
         }
@@ -407,6 +407,10 @@ tr.category-topic-link {
   h3 {
     margin: 0 0 0.5em 0;
   }
+}
+
+.category-topics-count a {
+  color: var(--primary);
 }
 
 .topic-list-bottom {

@@ -5,7 +5,7 @@ import {
   createPreviewComponent,
   darkLightDiff,
   chooseDarker,
-  LOREM
+  LOREM,
 } from "wizard/lib/preview";
 
 export default createPreviewComponent(305, 165, {
@@ -31,14 +31,14 @@ export default createPreviewComponent(305, 165, {
   images() {
     return {
       logo: this.wizard.getLogoUrl(),
-      avatar: "/images/wizard/trout.png"
+      avatar: "/images/wizard/trout.png",
     };
   },
 
-  paint(ctx, colors, width, height) {
+  paint(ctx, colors, font, width, height) {
     const headerHeight = height * 0.3;
 
-    this.drawFullHeader(colors);
+    this.drawFullHeader(colors, font);
 
     const margin = width * 0.04;
     const avatarSize = height * 0.2;
@@ -57,11 +57,11 @@ export default createPreviewComponent(305, 165, {
 
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
-    ctx.font = `bold ${titleFontSize}em 'Arial'`;
+    ctx.font = `bold ${titleFontSize}em '${font}'`;
     ctx.fillText(I18n.t("wizard.previews.topic_title"), margin, height * 0.3);
 
     const bodyFontSize = height / 220.0;
-    ctx.font = `${bodyFontSize}em 'Arial'`;
+    ctx.font = `${bodyFontSize}em '${font}'`;
 
     let line = 0;
     const lines = LOREM.split("\n");
@@ -76,7 +76,7 @@ export default createPreviewComponent(305, 165, {
     ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 90, 65);
     ctx.fill();
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
-    ctx.font = `${bodyFontSize}em 'Arial'`;
+    ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.share_button"),
       margin + width / 55,
@@ -94,7 +94,7 @@ export default createPreviewComponent(305, 165, {
     ctx.fillStyle = colors.tertiary;
     ctx.fill();
     ctx.fillStyle = colors.secondary;
-    ctx.font = `${bodyFontSize}em 'Arial'`;
+    ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.reply_button"),
       margin * 2 + width * 0.14 + width / 55,
@@ -118,8 +118,8 @@ export default createPreviewComponent(305, 165, {
     ctx.lineTo(timelineX, height * 0.4);
     ctx.stroke();
 
-    ctx.font = `Bold ${bodyFontSize}em Arial`;
+    ctx.font = `Bold ${bodyFontSize}em ${font}`;
     ctx.fillStyle = colors.primary;
     ctx.fillText("1 / 20", timelineX + margin, height * 0.3 + margin * 1.5);
-  }
+  },
 });

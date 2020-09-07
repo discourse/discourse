@@ -2,20 +2,20 @@ import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import Topic from "discourse/models/topic";
 
-const buildTopic = function(pinned = true) {
+const buildTopic = function (pinned = true) {
   return Topic.create({
     id: 1234,
     title: "Qunit Test Topic",
     deleted_at: new Date(),
-    pinned
+    pinned,
   });
 };
 
 moduleForComponent("select-kit/pinned-options", {
   integration: true,
-  beforeEach: function() {
+  beforeEach: function () {
     this.set("subject", selectKit());
-  }
+  },
 });
 
 componentTest("unpinning", {
@@ -33,7 +33,7 @@ componentTest("unpinning", {
     await this.subject.selectRowByValue("unpinned");
 
     assert.equal(this.subject.header().name(), "unpinned");
-  }
+  },
 });
 
 componentTest("pinning", {
@@ -51,5 +51,5 @@ componentTest("pinning", {
     await this.subject.selectRowByValue("pinned");
 
     assert.equal(this.subject.header().name(), "pinned");
-  }
+  },
 });

@@ -11,7 +11,7 @@
       icon="search"}}
 </div>
 {{#if noContent}}
-  <div class="alert alert-info">{{noResultsHelp}}</div>
+  <div class="alert alert-info">{{noResultsHelpMessage}}</div>
 {{else}}
   {{bookmark-list
     loadMore=(action "loadMore")

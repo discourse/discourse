@@ -2,6 +2,7 @@ import I18n from "I18n";
 import { gte, sort } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 const MAX_FIELDS = 20;
 
@@ -20,7 +21,7 @@ export default Controller.extend({
     createField() {
       const f = this.store.createRecord("user-field", {
         field_type: "text",
-        position: MAX_FIELDS
+        position: MAX_FIELDS,
       });
       this.model.pushObject(f);
     },
@@ -52,12 +53,12 @@ export default Controller.extend({
 
       // Only confirm if we already been saved
       if (f.get("id")) {
-        bootbox.confirm(I18n.t("admin.user_fields.delete_confirm"), function(
+        bootbox.confirm(I18n.t("admin.user_fields.delete_confirm"), function (
           result
         ) {
           if (result) {
             f.destroyRecord()
-              .then(function() {
+              .then(function () {
                 model.removeObject(f);
               })
               .catch(popupAjaxError);
@@ -66,6 +67,6 @@ export default Controller.extend({
       } else {
         model.removeObject(f);
       }
-    }
-  }
+    },
+  },
 });

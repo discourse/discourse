@@ -8,5 +8,5 @@ export default EmberObject.extend({
   @discourseComputed("allowRestore", "isOperationRunning")
   restoreEnabled(allowRestore, isOperationRunning) {
     return allowRestore && !isOperationRunning;
-  }
+  },
 });

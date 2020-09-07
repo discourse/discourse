@@ -341,7 +341,6 @@ ur:
       trust_level_4: "ٹرسٹ_لَیول_4"
     request_membership_pm:
       title: "@%{group_name} کیلئے رکنیت کی درخواست"
-    view_hidden_topic_request_reason: "میں '%{group_name}' گروپ میں شامل ہونا چاہتا ہوں، تاکہ میں [اِس ٹاپک](%{topic_url}) تک رسائی حاصل کر سکوں"
   education:
     until_posts:
       one: "%{count} پوسٹ"
@@ -1325,7 +1324,6 @@ ur:
     ga_universal_domain_name: "گُوگل یونیوَرسل اَینَیلَیٹِکس (analytics.js) ڈَومَین نام، مثال: mysite.com؛ دیکھیے <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "گُوگل یونیوَرسل اَینَیلَیٹِکس (analytics.js) کراس ڈَومَین ٹرَیکِنگ فعال کریں۔ اِن ڈومینز کے باہر جانے والے لِنکس کے ساتھ کلائینٹ id شامل کر دی جائے گی۔ <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>گُوگل کی کراس ڈَومَین ٹریکنگ گائیڈ</a> ملاحظہ کریں۔"
     enable_escaped_fragments: "اگر کسی وَیب کرالر کا پتہ نہ لگے تو گُوگل اَیجَیکس-کرالِنگ API کا استعمال کریں۔ دیکھیے <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "منتظمین کو نئے زُمرہ جات بنانے کی اجازت دیں"
     cors_origins: "وہ اَوریجِن جن کیلئے کراس-اَوریجِن درخواستوں (CORS) کی اجازت ہے۔ ہراَوریجِن میں http:// یا https:// شامل ہونا ضروری ہے۔ CORS کو فعال کرنے کیلئے DISCOURSE_ENABLE_CORS کی وَیلِیو ٹرُو پر مقرر ہونا لاذمی ہے۔"
     allowed_iframes: "iframe src ڈَومَین کے سابقوں کی ایک فہرست جو ڈِسکَورس محفوظ طریقے سے پوسٹس میں شامل ہونے کی اجازت دے سکتا ہے"
     slow_down_crawler_user_agents: "crawl-delay ہدایت کا استعمال کرتے ہوئے، ویب کرالرز کے صارف ایجنٹ جو robots.txt میں شرح محدود ہونے چاہئیں"

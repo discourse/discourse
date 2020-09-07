@@ -32,7 +32,7 @@ componentTest("default", {
   test(assert) {
     assert.equal(dateInput().value, "January 29, 2019");
     assert.equal(timeInput().dataset.name, "14:45");
-  }
+  },
 });
 
 componentTest("prevents mutations", {
@@ -47,7 +47,7 @@ componentTest("prevents mutations", {
     await pika(2019, 0, 2);
 
     assert.ok(this.date.isSame(DEFAULT_DATE_TIME));
-  }
+  },
 });
 
 componentTest("allows mutations through actions", {
@@ -63,7 +63,7 @@ componentTest("allows mutations through actions", {
     await pika(2019, 0, 2);
 
     assert.ok(this.date.isSame(moment("2019-01-02 14:45")));
-  }
+  },
 });
 
 componentTest("can hide time", {
@@ -75,5 +75,5 @@ componentTest("can hide time", {
 
   async test(assert) {
     assert.notOk(exists(timeInput()));
-  }
+  },
 });

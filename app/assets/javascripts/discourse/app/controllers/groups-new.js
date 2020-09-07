@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export function popupAutomaticMembershipAlert(group_id, email_domains) {
   if (!email_domains) {
@@ -18,8 +19,8 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
 
   ajax(`/admin/groups/automatic_membership_count.json`, {
     type: "PUT",
-    data
-  }).then(result => {
+    data,
+  }).then((result) => {
     const count = result.user_count;
 
     if (count > 0) {
@@ -53,5 +54,5 @@ export default Controller.extend({
       })
       .catch(popupAjaxError)
       .finally(() => this.set("saving", false));
-  }
+  },
 });

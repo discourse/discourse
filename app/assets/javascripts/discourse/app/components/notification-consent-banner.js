@@ -13,7 +13,7 @@ export default DesktopNotificationConfig.extend({
     },
     get() {
       return pushNotificationKeyValueStore.getItem(userDismissedPromptKey);
-    }
+    },
   },
 
   @discourseComputed(
@@ -47,6 +47,6 @@ export default DesktopNotificationConfig.extend({
     },
     dismiss() {
       this.set("bannerDismissed", true);
-    }
-  }
+    },
+  },
 });

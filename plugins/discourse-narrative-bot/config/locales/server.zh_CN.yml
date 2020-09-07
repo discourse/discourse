@@ -151,6 +151,7 @@ zh_CN:
       reset_trigger: "教程"
       title: "新用户教程完成证明"
       cert_title: "你已经成功完成新用户教程了"
+      delete_reason: "用户跳过了新用户提示"
       hello:
         title: "欢迎！"
         message: |-
@@ -192,11 +193,22 @@ zh_CN:
         like_not_found: |-
           你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
         not_found: |-
-          看起来你没有上传我**肯定**会喜欢的图片。
+          看起来你还没有上传一张图片，因此我选择了一张可以令你满意的。
 
           `%{image_url}`
 
-          试试再传一个，或者复制一个占一行的链接！
+          试试再上传一张，或者将链接粘贴在单独的一行中！
+      likes:
+        instructions: |-
+          这是一只独角兽的照片：
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          如果你喜欢的话（谁会不喜欢呢！）点击帖子底部的赞:heart:按钮让我知道。
+        reply: |-
+          谢谢你喜欢我的帖子！
+        not_found: |-
+          你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
       formatting:
         instructions: |-
           你可以在下一个回复中加粗或斜体这些词语么？

@@ -47,9 +47,9 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
       {
         recent: true,
         silent: this.currentUser.enforcedSecondFactor,
-        limit: 30
+        limit: 30,
       },
       { cacheKey: "recent-notifications" }
     );
-  }
+  },
 });

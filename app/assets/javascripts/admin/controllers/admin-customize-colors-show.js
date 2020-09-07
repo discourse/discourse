@@ -2,23 +2,24 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { later } from "@ember/runloop";
 import Controller from "@ember/controller";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   @discourseComputed("model.colors", "onlyOverridden")
   colors(allColors, onlyOverridden) {
     if (onlyOverridden) {
-      return allColors.filter(color => color.get("overridden"));
+      return allColors.filter((color) => color.get("overridden"));
     } else {
       return allColors;
     }
   },
 
   actions: {
-    revert: function(color) {
+    revert: function (color) {
       color.revert();
     },
 
-    undo: function(color) {
+    undo: function (color) {
       color.undo();
     },
 
@@ -67,17 +68,21 @@ export default Controller.extend({
       });
     },
 
-    save: function() {
+    save: function () {
       this.model.save();
     },
 
-    destroy: function() {
+    applyUserSelectable() {
+      this.model.updateUserSelectable(this.get("model.user_selectable"));
+    },
+
+    destroy: function () {
       const model = this.model;
       return bootbox.confirm(
         I18n.t("admin.customize.colors.delete_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             model.destroy().then(() => {
               this.allColors.removeObject(model);
@@ -86,6 +91,6 @@ export default Controller.extend({
           }
         }
       );
-    }
-  }
+    },
+  },
 });

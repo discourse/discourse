@@ -63,6 +63,12 @@ de:
       automatic_close:
         closes_in: "Schließt in <strong>%{timeLeft}</strong>."
         age: "Geschlossen <strong>%{age}</strong>"
+      breakdown:
+        title: "Umfrageergebnisse"
+        votes: "%{count} Stimmen"
+        breakdown: "Aufschlüsselung"
+        percentage: "Prozentsatz"
+        count: "Anzahl"
       error_while_toggling_status: "Entschuldige, beim Wechseln des Status dieser Umfrage ist ein Fehler aufgetreten."
       error_while_casting_votes: "Entschuldige, beim Abgeben deiner Stimme ist ein Fehler aufgetreten."
       error_while_fetching_voters: "Entschuldige, beim Anzeigen der Teilnehmer ist ein Fehler aufgetreten."
@@ -89,6 +95,8 @@ de:
           label: Zugelassene Gruppen
         poll_chart_type:
           label: Diagrammtyp
+          bar: Balken
+          pie: Torte
         poll_config:
           max: max.
           min: min.

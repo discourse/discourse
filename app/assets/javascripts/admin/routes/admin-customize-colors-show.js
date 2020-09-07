@@ -13,5 +13,5 @@ export default Route.extend({
   setupController(controller, model) {
     controller.set("model", model);
     controller.set("allColors", this.modelFor("adminCustomize.colors"));
-  }
+  },
 });

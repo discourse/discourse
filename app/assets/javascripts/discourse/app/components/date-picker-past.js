@@ -8,7 +8,7 @@ export default DatePicker.extend({
       defaultDate:
         moment(this.defaultDate, "YYYY-MM-DD").toDate() || new Date(),
       setDefaultDate: !!this.defaultDate,
-      maxDate: new Date()
+      maxDate: new Date(),
     };
-  }
+  },
 });

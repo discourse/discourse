@@ -3,7 +3,7 @@ import { computed } from "@ember/object";
 import {
   default as userSearch,
   skipSearch,
-  eagerCompleteSearch
+  eagerCompleteSearch,
 } from "discourse/lib/user-search";
 import { makeArray } from "discourse-common/lib/helpers";
 
@@ -24,11 +24,11 @@ export default MultiSelectComponent.extend({
     includeMentionableGroups: false,
     includeMessageableGroups: false,
     allowEmails: false,
-    groupMembersOf: undefined
+    groupMembersOf: undefined,
   },
 
-  content: computed("value.[]", function() {
-    return makeArray(this.value).map(x => this.defaultItem(x, x));
+  content: computed("value.[]", function () {
+    return makeArray(this.value).map((x) => this.defaultItem(x, x));
   }),
 
   excludedUsers: computed(
@@ -45,7 +45,7 @@ export default MultiSelectComponent.extend({
         }
 
         return usernames.concat(options.excludedUsernames || []);
-      }
+      },
     }
   ),
 
@@ -73,13 +73,13 @@ export default MultiSelectComponent.extend({
       includeMentionableGroups: options.includeMentionableGroups,
       includeMessageableGroups: options.includeMessageableGroups,
       groupMembersOf: options.groupMembersOf,
-      allowEmails: options.allowEmails
-    }).then(result => {
+      allowEmails: options.allowEmails,
+    }).then((result) => {
       if (typeof result === "string") {
         // do nothing promise probably got cancelled
       } else {
         return result;
       }
     });
-  }
+  },
 });

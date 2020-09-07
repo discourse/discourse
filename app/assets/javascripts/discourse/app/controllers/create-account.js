@@ -9,7 +9,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
 import discourseComputed, {
   observes,
-  on
+  on,
 } from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
 import PasswordValidation from "discourse/mixins/password-validation";
@@ -21,6 +21,7 @@ import { findAll } from "discourse/models/login-method";
 import EmberObject from "@ember/object";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -62,7 +63,7 @@ export default Controller.extend(
         rejectedEmails: [],
         rejectedPasswords: [],
         prefilledUsername: null,
-        isDeveloper: false
+        isDeveloper: false,
       });
       this._createUserFields();
     },
@@ -110,7 +111,7 @@ export default Controller.extend(
       return I18n.t("create_account.disclaimer", {
         tos_link: this.get("siteSettings.tos_url") || getURL("/tos"),
         privacy_link:
-          this.get("siteSettings.privacy_policy_url") || getURL("/privacy")
+          this.get("siteSettings.privacy_policy_url") || getURL("/privacy"),
       });
     },
 
@@ -119,14 +120,14 @@ export default Controller.extend(
     emailValidation(email, rejectedEmails) {
       const failedAttrs = {
         failed: true,
-        element: document.querySelector("#new-account-email")
+        element: document.querySelector("#new-account-email"),
       };
 
       // If blank, fail without a reason
       if (isEmpty(email)) {
         return EmberObject.create(
           Object.assign(failedAttrs, {
-            message: I18n.t("user.email.required")
+            message: I18n.t("user.email.required"),
           })
         );
       }
@@ -134,7 +135,7 @@ export default Controller.extend(
       if (rejectedEmails.includes(email)) {
         return EmberObject.create(
           Object.assign(failedAttrs, {
-            reason: I18n.t("user.email.invalid")
+            reason: I18n.t("user.email.invalid"),
           })
         );
       }
@@ -148,21 +149,21 @@ export default Controller.extend(
           reason: I18n.t("user.email.authenticated", {
             provider: this.authProviderDisplayName(
               this.get("authOptions.auth_provider")
-            )
-          })
+            ),
+          }),
         });
       }
 
       if (emailValid(email)) {
         return EmberObject.create({
           ok: true,
-          reason: I18n.t("user.email.ok")
+          reason: I18n.t("user.email.ok"),
         });
       }
 
       return EmberObject.create(
         Object.assign(failedAttrs, {
-          reason: I18n.t("user.email.invalid")
+          reason: I18n.t("user.email.invalid"),
         })
       );
     },
@@ -180,7 +181,7 @@ export default Controller.extend(
     },
 
     authProviderDisplayName(providerName) {
-      const matchingProvider = findAll().find(provider => {
+      const matchingProvider = findAll().find((provider) => {
         return provider.name === providerName;
       });
       return matchingProvider
@@ -189,7 +190,7 @@ export default Controller.extend(
     },
 
     @observes("emailValidation", "accountEmail")
-    prefillUsername: function() {
+    prefillUsername: function () {
       if (this.prefilledUsername) {
         // If username field has been filled automatically, and email field just changed,
         // then remove the username.
@@ -223,7 +224,7 @@ export default Controller.extend(
       }
 
       this._hpPromise = ajax(userPath("hp.json"))
-        .then(json => {
+        .then((json) => {
           this._challengeDate = new Date();
           // remove 30 seconds for jitter, make sure this works for at least
           // 30 seconds so we don't have hard loops
@@ -234,10 +235,7 @@ export default Controller.extend(
 
           this.setProperties({
             accountHoneypot: json.value,
-            accountChallenge: json.challenge
-              .split("")
-              .reverse()
-              .join("")
+            accountChallenge: json.challenge.split("").reverse().join(""),
           });
         })
         .finally(() => (this._hpPromise = undefined));
@@ -270,20 +268,20 @@ export default Controller.extend(
       const destinationUrl = this.get("authOptions.destination_url");
 
       if (!isEmpty(destinationUrl)) {
-        $.cookie("destination_url", destinationUrl, { path: "/" });
+        cookie("destination_url", destinationUrl, { path: "/" });
       }
 
       // Add the userfields to the data
       if (!isEmpty(userFields)) {
         attrs.userFields = {};
         userFields.forEach(
-          f => (attrs.userFields[f.get("field.id")] = f.get("value"))
+          (f) => (attrs.userFields[f.get("field.id")] = f.get("value"))
         );
       }
 
       this.set("formSubmitted", true);
       return User.createAccount(attrs).then(
-        result => {
+        (result) => {
           this.set("isDeveloper", false);
           if (result.success) {
             // invalidate honeypot
@@ -326,12 +324,12 @@ export default Controller.extend(
               this.rejectedPasswords.pushObject(attrs.accountPassword);
             }
             this.set("formSubmitted", false);
-            $.removeCookie("destination_url");
+            removeCookie("destination_url");
           }
         },
         () => {
           this.set("formSubmitted", false);
-          $.removeCookie("destination_url");
+          removeCookie("destination_url");
           return this.flash(I18n.t("create_account.failed"), "error");
         }
       );
@@ -358,8 +356,8 @@ export default Controller.extend(
           this.usernameValidation,
           this.nameValidation,
           this.passwordValidation,
-          this.userFieldsValidation
-        ].find(v => v.failed);
+          this.userFieldsValidation,
+        ].find((v) => v.failed);
 
         if (validation) {
           if (validation.message) {
@@ -380,7 +378,7 @@ export default Controller.extend(
         }
 
         this.performAccountCreation();
-      }
-    }
+      },
+    },
   }
 );

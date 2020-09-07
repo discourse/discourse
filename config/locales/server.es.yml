@@ -281,6 +281,11 @@ es:
   too_many_mentions_newuser:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en un post."
     other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en una publicación."
+  no_embedded_media_allowed_trust: "Lo sentimos, no puedes insertar elementos multimedia en una publicación."
+  no_embedded_media_allowed: "Lo sentimos, los nuevos usuarios no pueden insertar elementos multimedia en las publicaciones."
+  too_many_embedded_media:
+    one: "Lo sentimos, los nuevos usuarios solo pueden poner un elemento multimedia incrustado en una publicación."
+    other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} elementos multimedia incrustados en una publicación."
   no_attachments_allowed: "Lo sentimos, los usuarios nuevos no pueden adjuntar archivos en publicaciones."
   too_many_attachments:
     one: "Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por post"
@@ -387,7 +392,6 @@ es:
       title: "Te han aceptado para el grupo @%{group_name}"
       body: |
         Tu solicitud para entrar al grupo @%{group_name} ha sido aceptada y ahora eres parte de él.
-    view_hidden_topic_request_reason: "Me gustaría unirme al grupo «%{group_name}» para poder acceder a [este tema](%{topic_url})"
   education:
     until_posts:
       one: "%{count} post"
@@ -478,6 +482,7 @@ es:
               reply_by_email_disabled: "Las respuestas por correo electrónico han sido desactivadas."
               target_user_not_found: "No se pudo encontrar a uno de los usuarios a los que envías este mensaje."
               unable_to_update: "Hubo un error actualizando ese tema."
+              unable_to_tag: "Hubo un error al etiquetar el tema."
             featured_link:
               invalid: "es inválido. El URL debería incluir http:// o https://."
               invalid_category: "no se puede editar en esta categoría."
@@ -1392,6 +1397,8 @@ es:
     logo_small: "La pequeña imagen del logotipo en la parte superior izquierda de tu sitio al desplazarse hacia abajo. Utiliza un cuadrado de 120 x 120. Si se deja en blanco, se mostrará un glifo local."
     digest_logo: "La imagen de logotipo alternativa utilizada en la parte superior del resumen de correo electrónico de su sitio. Utiliza un rectángulo ancho. No debe ser una imagen SVG. Si se deja en blanco, se utilizará la imagen del «logo»."
     mobile_logo: "El logo utilizado en la versión móvil de su sitio. Utiliza una imagen rectangular ancha de 120 y un ratio mayor a 3:1. Si se deja en blanco, se usará la imagen que se configuró en «logo»."
+    logo_dark: "Alternativa de esquema oscuro para la configuración del sitio 'logo'."
+    logo_small_dark: "Alternativa de esquema oscuro para la configuración del sitio 'logo pequeño'."
     large_icon: "Imagen utilizada como base para otros iconos de metadatos. Lo ideal sería que fuera mayor que 512 x 512. Si se deja en blanco, se utilizará logo_small."
     manifest_icon: "Imagen utilizada como logo/imagen de bienvenida en Android. Se cambiará automáticamente el tamaño a 512 × 512. Si se deja en blanco, se utilizará large_icon."
     favicon: "Un favicon para su sitio, ve <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://es.wikipedia.org/wiki/Favicon</a>. Para trabajar correctamente sobre un CDN debe ser un png. Se cambiará automáticamente el tamaño a 32x32. Si se deja en blanco, se utilizará large_icon."
@@ -1447,7 +1454,6 @@ es:
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Habilitar el seguimiento multidominio de Google Universal Analytics (analytics.js). Los enlaces salientes de estos dominios tendrán la ID del cliente agregados. Revisa <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>La guía de Google para el seguimiento multidominio.</a>"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita </a>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Permitir que los moderadores creen nuevas categorías"
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
     allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
     slow_down_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe aplicar una cuota limitada en robots.txt utilizando la directiva de retardo de rastreo"
@@ -1670,6 +1676,7 @@ es:
     desktop_category_page_style: "Estilo visual de la página de /categorías."
     category_colors: "Una lista de valores en hexadecimal de los colores para las categorías."
     category_style: "Estilo visual de las etiquetas de categoría."
+    dark_mode_none: "Ninguno"
     max_image_size_kb: "El tamaño máximo que puede tener una imagen que se subirá en kB. Esto se tiene que configurar en nginx (client_max_body_size) / apache o proxy también. Las imágenes con un tamaño mayor que este y menores que el client_max_body_size sufrirán una adaptación de tamaño para ajustarse al tamaño de subida."
     max_attachment_size_kb: "El tamaño máximo, en kB, de los archivos que se pueden adjuntar. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     authorized_extensions: "Una lista de las extensiones de archivo que se permite subir (usa «*» para habilitar todos los tipos de archivo)"

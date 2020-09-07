@@ -7,6 +7,7 @@ class BookmarkReminderNotificationHandler
       if bookmark.post.blank? || bookmark.post.deleted_at.present?
         return clear_reminder(bookmark)
       end
+      return unless bookmark.topic
 
       create_notification(bookmark)
 

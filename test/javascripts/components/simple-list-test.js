@@ -34,7 +34,7 @@ componentTest("adding a value", {
       find(".values .value").length === 4,
       "it adds the value when keying Enter"
     );
-  }
+  },
 });
 
 componentTest("removing a value", {
@@ -56,7 +56,7 @@ componentTest("removing a value", {
       find(".values .value[data-index='0'] .value-input")[0].value === "osama",
       "it removes the correct value"
     );
-  }
+  },
 });
 
 componentTest("delimiter support", {
@@ -80,5 +80,5 @@ componentTest("delimiter support", {
         "eviltrout",
       "it adds the correct value"
     );
-  }
+  },
 });

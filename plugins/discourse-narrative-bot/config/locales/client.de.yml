@@ -9,4 +9,4 @@ de:
     discourse_narrative_bot:
       welcome_post_type:
         new_user_track: "Starte bei allen neuen Benutzern das „Tutorial für neue Benutzer“"
-        welcome_message: "Sende allen neuen Benutzern eine Willkommensnachricht mit einer Kurzanleitung"
+        welcome_message: "Sende allen neuen Benutzern eine Begrüßungsnachricht mit einer Kurzanleitung"

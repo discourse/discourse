@@ -1,5 +1,5 @@
 import { set } from "@ember/object";
-export default function(helpers) {
+export default function (helpers) {
   const { response } = helpers;
 
   let flag = {
@@ -8,7 +8,7 @@ export default function(helpers) {
     score: 3.0,
     target_created_by_id: 1,
     cooked: "<b>cooked content</b>",
-    reviewable_score_ids: [1, 2]
+    reviewable_score_ids: [1, 2],
   };
 
   this.get("/review", () => {
@@ -24,7 +24,7 @@ export default function(helpers) {
           created_at: "2019-01-14T19:49:53.571Z",
           username: "newbie",
           email: "newbie@example.com",
-          bundled_action_ids: ["approve", "reject"]
+          bundled_action_ids: ["approve", "reject"],
         },
         {
           id: 4321,
@@ -35,7 +35,7 @@ export default function(helpers) {
           target_created_by_id: 1,
           payload: {
             raw: "existing body",
-            tags: ["hello", "world"]
+            tags: ["hello", "world"],
           },
           version: 1,
           can_edit: true,
@@ -43,33 +43,33 @@ export default function(helpers) {
             { id: "category_id", type: "category" },
             { id: "payload.title", type: "text" },
             { id: "payload.raw", type: "textarea" },
-            { id: "payload.tags", type: "tags" }
+            { id: "payload.tags", type: "tags" },
           ],
-          bundled_action_ids: ["approve", "reject"]
+          bundled_action_ids: ["approve", "reject"],
         },
-        flag
+        flag,
       ],
       bundled_actions: [
         {
           id: "approve",
-          action_ids: ["approve"]
+          action_ids: ["approve"],
         },
         {
           id: "reject",
-          action_ids: ["reject"]
-        }
+          action_ids: ["reject"],
+        },
       ],
       actions: [
         {
           id: "approve",
           label: "Approve",
-          icon: "far-thumbs-up"
+          icon: "far-thumbs-up",
         },
         {
           id: "reject",
           label: "Reject",
-          icon: "far-thumbs-down"
-        }
+          icon: "far-thumbs-down",
+        },
       ],
       reviewable_scores: [{ id: 1 }, { id: 2 }],
       users: [{ id: 1, username: "eviltrout" }],
@@ -77,16 +77,16 @@ export default function(helpers) {
         total_rows_reviewables: 2,
         types: {
           created_by: "user",
-          target_created_by: "user"
-        }
+          target_created_by: "user",
+        },
       },
-      __rest_serializer: "1"
+      __rest_serializer: "1",
     });
   });
 
   this.get("/review/topics", () => {
     return response(200, {
-      reviewable_topics: [{ id: 1234, title: "Cool topic" }]
+      reviewable_topics: [{ id: 1234, title: "Cool topic" }],
     });
   });
 
@@ -96,13 +96,13 @@ export default function(helpers) {
         {
           id: 3,
           title: "Off-Topic",
-          reviewable_priority: 0
+          reviewable_priority: 0,
         },
         {
           id: 4,
           title: "Inappropriate",
-          reviewable_priority: 5
-        }
+          reviewable_priority: 5,
+        },
       ],
       reviewable_settings: {
         id: 13870,
@@ -110,10 +110,10 @@ export default function(helpers) {
         reviewable_priorities: [
           { id: 0, name: "Low" },
           { id: 5, name: "Medium" },
-          { id: 10, name: "High" }
-        ]
+          { id: 10, name: "High" },
+        ],
       },
-      __rest_serializer: "1"
+      __rest_serializer: "1",
     });
   });
 
@@ -121,22 +121,22 @@ export default function(helpers) {
 
   this.get("/review/:id", () => {
     return response(200, {
-      reviewable: flag
+      reviewable: flag,
     });
   });
 
-  this.put("/review/:id/perform/:actionId", request => {
+  this.put("/review/:id/perform/:actionId", (request) => {
     return response(200, {
       reviewable_perform_result: {
         success: true,
-        remove_reviewable_ids: [parseInt(request.params.id, 10)]
-      }
+        remove_reviewable_ids: [parseInt(request.params.id, 10)],
+      },
     });
   });
 
-  this.put("/review/:id", request => {
+  this.put("/review/:id", (request) => {
     let result = { payload: {} };
-    Object.entries(JSON.parse(request.requestBody).reviewable).forEach(t => {
+    Object.entries(JSON.parse(request.requestBody).reviewable).forEach((t) => {
       set(result, t[0], t[1]);
     });
     return response(200, result);

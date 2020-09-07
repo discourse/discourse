@@ -19,7 +19,7 @@ export default Controller.extend(ModalFunctionality, BufferedContent, {
     performRename() {
       this.model
         .update({ id: this.get("buffered.id") })
-        .then(result => {
+        .then((result) => {
           this.send("closeModal");
 
           if (result.responseJson.tag) {
@@ -28,7 +28,7 @@ export default Controller.extend(ModalFunctionality, BufferedContent, {
             this.flash(extractError(result.responseJson.errors[0]), "error");
           }
         })
-        .catch(error => this.flash(extractError(error), "error"));
-    }
-  }
+        .catch((error) => this.flash(extractError(error), "error"));
+    },
+  },
 });

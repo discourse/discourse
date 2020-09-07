@@ -2095,25 +2095,7 @@ cs:
         delete_topic_disallowed: "nemáte práva smazat toto téma"
         delete_topic: "smazat téma"
       actions:
-        flag: "Nahlásit"
-        defer_flags:
-          one: "Ignorovat nahlášení"
-          few: "Ignorovat nahlášení"
-          many: "Ignorovat nahlášení"
-          other: "Ignorovat nahlášení"
-        undo:
-          off_topic: "Zrušit nahlášení"
-          spam: "Zrušit nahlášení"
-          inappropriate: "Zrušit nahlášení"
-          bookmark: "Odebrat ze záložek"
-          like: "Už se mi to nelíbí"
         people:
-          off_topic: "označil příspěvek jako off-topic"
-          spam: "označil příspěvek jako spam"
-          inappropriate: "označil příspěvek jako nevhodný"
-          notify_moderators: "označil příspěvek pro moderátora"
-          notify_user: "odeslal zprávu"
-          bookmark: "záložka přidána"
           like_capped:
             one: "a jednomu dalšímu se to líbí"
             few: "a %{count} dalším se to líbí"
@@ -2125,8 +2107,6 @@ cs:
           inappropriate: "Označili jste tento příspěvek jako nevhodný"
           notify_moderators: "Nahlásili jste tento příspěvek"
           notify_user: "Tomuto uživateli jste zaslali zprávu"
-          bookmark: "Přidali jste si tento příspěvek do záložek"
-          like: "Toto se vám líbí"
       delete:
         confirm:
           one: "Jsi si jistý, že chceš smazat tento příspěvek?"
@@ -2655,14 +2635,6 @@ cs:
           latest: "Nejsou tu žádná další témata z poslední doby k přečtení."
           bookmarks: "V tématech nemáte žádné záložky."
           top: "Nejsou tu žádná populární témata."
-        bottom:
-          latest: "Nejsou tu žádná další témata z poslední doby k přečtení."
-          posted: "Nejsou tu žádná další zaslaná témata k přečtení."
-          read: "Nejsou tu žádná další přečtená témata."
-          new: "Nejsou tu žádná další nová témata k přečtení."
-          unread: "Nejsou tu žádná další nepřečtená témata."
-          top: "Nejsou tu žádná další populární témata."
-          bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
     invite:
       custom_message: "Aby byla pozvánka osobnější, napište <a href>vlastní zprávu</a>"
       custom_message_placeholder: "Vložte vlastní zprávu"

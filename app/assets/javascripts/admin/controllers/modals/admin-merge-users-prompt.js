@@ -26,5 +26,5 @@ export default Controller.extend(ModalFunctionality, {
   @action
   close() {
     this.send("closeModal");
-  }
+  },
 });

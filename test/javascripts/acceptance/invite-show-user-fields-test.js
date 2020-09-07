@@ -8,36 +8,36 @@ acceptance("Accept Invite - User Fields", {
         id: 34,
         name: "I've read the terms of service",
         field_type: "confirm",
-        required: true
+        required: true,
       },
       {
         id: 35,
         name: "What is your pet's name?",
         field_type: "text",
-        required: true
+        required: true,
       },
       {
         id: 36,
         name: "What's your dad like?",
         field_type: "text",
-        required: false
-      }
-    ]
-  }
+        required: false,
+      },
+    ],
+  },
 });
 
-QUnit.test("accept invite with user fields", async assert => {
+QUnit.test("accept invite with user fields", async (assert) => {
   PreloadStore.store("invite_info", {
     invited_by: {
       id: 123,
       username: "neil",
       avatar_template: "/user_avatar/localhost/neil/{size}/25_1.png",
       name: "Neil Lalonde",
-      title: "team"
+      title: "team",
     },
     email: "invited@asdf.com",
     username: "invited",
-    is_invite_link: false
+    is_invite_link: false,
   });
 
   await visit("/invites/myvalidinvitetoken");

@@ -1,17 +1,17 @@
 export function setup(helper) {
-  helper.registerPlugin(md => {
-    md.renderer.rules.table_open = function() {
+  helper.registerPlugin((md) => {
+    md.renderer.rules.table_open = function () {
       return '<div class="md-table">\n<table>\n';
     };
 
-    md.renderer.rules.table_close = function() {
+    md.renderer.rules.table_close = function () {
       return "</table>\n</div>";
     };
   });
 
   // we need a custom callback for style handling
   helper.whiteList({
-    custom: function(tag, attr, val) {
+    custom: function (tag, attr, val) {
       if (tag !== "th" && tag !== "td") {
         return false;
       }
@@ -25,7 +25,7 @@ export function setup(helper) {
         val === "text-align:left" ||
         val === "text-align:center"
       );
-    }
+    },
   });
 
   helper.whiteList([
@@ -35,6 +35,6 @@ export function setup(helper) {
     "tr",
     "th",
     "td",
-    "div.md-table"
+    "div.md-table",
   ]);
 }

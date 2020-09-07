@@ -26,7 +26,7 @@ function parseName(fullName) {
     fullNameWithoutType,
     name: fullNameWithoutType,
     root,
-    resolveMethodName: "resolve" + classify(type)
+    resolveMethodName: "resolve" + classify(type),
   };
 }
 
@@ -85,7 +85,7 @@ export function buildResolver(baseName) {
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
         dashed = dasherize(suffix),
-        moduleName = Object.keys(requirejs.entries).find(function(e) {
+        moduleName = Object.keys(requirejs.entries).find(function (e) {
           return (
             e.indexOf(suffix, e.length - suffix.length) !== -1 ||
             e.indexOf(dashed, e.length - dashed.length) !== -1
@@ -259,6 +259,6 @@ export function buildResolver(baseName) {
           Ember.TEMPLATES[dashed.replace("admin-", "admin/")]
         );
       }
-    }
+    },
   });
 }

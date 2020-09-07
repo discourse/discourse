@@ -35,6 +35,19 @@ describe Stylesheet::Importer do
     expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(https://s3.cdn/original")
   end
 
+  it "includes font variable" do
+    expect(compile_css("desktop"))
+      .to include(":root{--font-family: Helvetica, Arial, sans-serif}")
+  end
+
+  it "includes all fonts in wizard" do
+    expect(compile_css("wizard").scan(/\.font-/).count)
+      .to eq(DiscourseFonts.fonts.count)
+
+    expect(compile_css("wizard").scan(/@font-face/).count)
+      .to eq(DiscourseFonts.fonts.map { |f| f[:variants]&.count || 0 }.sum)
+  end
+
   context "#theme_variables" do
 
     let!(:theme) { Fabricate(:theme) }

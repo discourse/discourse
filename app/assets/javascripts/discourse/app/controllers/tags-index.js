@@ -5,6 +5,7 @@ import Controller from "@ember/controller";
 import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   sortedByCount: true,
@@ -34,7 +35,7 @@ export default Controller.extend({
     return {
       manageGroups: () => this.send("showTagGroups"),
       uploadTags: () => this.send("showUploader"),
-      deleteUnusedTags: () => this.send("deleteUnused")
+      deleteUnusedTags: () => this.send("deleteUnused"),
     };
   },
 
@@ -43,7 +44,7 @@ export default Controller.extend({
       this.setProperties({
         sortProperties: ["totalCount:desc", "id"],
         sortedByCount: true,
-        sortedByName: false
+        sortedByName: false,
       });
     },
 
@@ -51,7 +52,7 @@ export default Controller.extend({
       this.setProperties({
         sortProperties: ["id"],
         sortedByCount: false,
-        sortedByName: true
+        sortedByName: true,
       });
     },
 
@@ -61,9 +62,15 @@ export default Controller.extend({
 
     deleteUnused() {
       ajax("/tags/unused", { type: "GET" })
-        .then(result => {
+        .then((result) => {
           const displayN = 20;
           const tags = result["tags"];
+
+          if (tags.length === 0) {
+            bootbox.alert(I18n.t("tagging.delete_no_unused_tags"));
+            return;
+          }
+
           const joinedTags = tags.slice(0, displayN).join(", ");
           var more = Math.max(0, tags.length - displayN);
 
@@ -72,19 +79,19 @@ export default Controller.extend({
               ? joinedTags
               : I18n.t("tagging.delete_unused_confirmation_more_tags", {
                   count: more,
-                  tags: joinedTags
+                  tags: joinedTags,
                 });
 
           const string = I18n.t("tagging.delete_unused_confirmation", {
             count: tags.length,
-            tags: tagsString
+            tags: tagsString,
           });
 
           bootbox.confirm(
             string,
             I18n.t("tagging.cancel_delete_unused"),
             I18n.t("tagging.delete_unused"),
-            proceed => {
+            (proceed) => {
               if (proceed) {
                 ajax("/tags/unused", { type: "DELETE" })
                   .then(() => this.send("refresh"))
@@ -94,6 +101,6 @@ export default Controller.extend({
           );
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

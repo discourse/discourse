@@ -8,7 +8,7 @@ widgetTest("post deleted", {
     this.set("args", {
       deleted_at: "2016-01-01",
       deletedByUsername: "eviltrout",
-      deletedByAvatarTemplate: "/images/avatar.png"
+      deletedByAvatarTemplate: "/images/avatar.png",
     });
   },
   test(assert) {
@@ -20,5 +20,5 @@ widgetTest("post deleted", {
       find(".avatar[title=eviltrout]").length === 1,
       "it has the deleted by avatar"
     );
-  }
+  },
 });

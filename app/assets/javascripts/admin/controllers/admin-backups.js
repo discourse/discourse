@@ -7,5 +7,5 @@ export default Controller.extend({
     "model.restoreEnabled",
     "noOperationIsRunning"
   ),
-  rollbackDisabled: not("rollbackEnabled")
+  rollbackDisabled: not("rollbackEnabled"),
 });

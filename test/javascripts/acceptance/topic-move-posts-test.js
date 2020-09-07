@@ -2,16 +2,14 @@ import I18n from "I18n";
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Topic move posts", { loggedIn: true });
 
-QUnit.test("default", async assert => {
+QUnit.test("default", async (assert) => {
   await visit("/t/internationalization-localization");
   await click(".toggle-admin-menu");
   await click(".topic-admin-multi-select .btn");
   await click("#post_11 .select-below");
 
   assert.equal(
-    find(".selected-posts .move-to-topic")
-      .text()
-      .trim(),
+    find(".selected-posts .move-to-topic").text().trim(),
     I18n.t("topic.move_to.action"),
     "it should show the move to button"
   );
@@ -47,7 +45,7 @@ QUnit.test("default", async assert => {
   );
 });
 
-QUnit.test("moving all posts", async assert => {
+QUnit.test("moving all posts", async (assert) => {
   await visit("/t/internationalization-localization");
   await click(".toggle-admin-menu");
   await click(".topic-admin-multi-select .btn");
@@ -83,16 +81,14 @@ QUnit.test("moving all posts", async assert => {
   );
 });
 
-QUnit.test("moving posts from personal message", async assert => {
+QUnit.test("moving posts from personal message", async (assert) => {
   await visit("/t/pm-for-testing/12");
   await click(".toggle-admin-menu");
   await click(".topic-admin-multi-select .btn");
   await click("#post_1 .select-post");
 
   assert.equal(
-    find(".selected-posts .move-to-topic")
-      .text()
-      .trim(),
+    find(".selected-posts .move-to-topic").text().trim(),
     I18n.t("topic.move_to.action"),
     "it should show the move to button"
   );
@@ -121,16 +117,14 @@ QUnit.test("moving posts from personal message", async assert => {
   );
 });
 
-QUnit.test("group moderator moving posts", async assert => {
+QUnit.test("group moderator moving posts", async (assert) => {
   await visit("/t/topic-for-group-moderators/2480");
   await click(".toggle-admin-menu");
   await click(".topic-admin-multi-select .btn");
   await click("#post_2 .select-below");
 
   assert.equal(
-    find(".selected-posts .move-to-topic")
-      .text()
-      .trim(),
+    find(".selected-posts .move-to-topic").text().trim(),
     I18n.t("topic.move_to.action"),
     "it should show the move to button"
   );

@@ -4,6 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Mixin from "@ember/object/mixin";
 import { next } from "@ember/runloop";
 import { Promise } from "rsvp";
+import bootbox from "bootbox";
 
 export default Mixin.create(ModalFunctionality, {
   reason: null,
@@ -25,7 +26,7 @@ export default Mixin.create(ModalFunctionality, {
       postAction: "delete",
       before: null,
       successCallback: null,
-      confirmClose: false
+      confirmClose: false,
     });
   },
 
@@ -37,7 +38,7 @@ export default Mixin.create(ModalFunctionality, {
         (this.message && this.message.length > 1))
     ) {
       this.send("hideModal");
-      bootbox.confirm(I18n.t("admin.user.confirm_cancel_penalty"), result => {
+      bootbox.confirm(I18n.t("admin.user.confirm_cancel_penalty"), (result) => {
         if (result) {
           next(() => {
             this.set("confirmClose", true);
@@ -57,7 +58,7 @@ export default Mixin.create(ModalFunctionality, {
 
     return promise
       .then(() => cb())
-      .then(result => {
+      .then((result) => {
         this.set("confirmClose", true);
         this.send("closeModal");
         let callback = this.successCallback;
@@ -66,5 +67,5 @@ export default Mixin.create(ModalFunctionality, {
         }
       })
       .catch(popupAjaxError);
-  }
+  },
 });

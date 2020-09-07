@@ -14,5 +14,5 @@ export default Route.extend({
 
   deactivate() {
     this.controller.set("emailTemplate", null);
-  }
+  },
 });

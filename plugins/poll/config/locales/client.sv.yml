@@ -48,7 +48,7 @@ sv:
         label: "Visa röst"
       group-results:
         title: "Gruppera röster baserat på användarfält"
-        label: " Visa uppdelning"
+        label: "Visa uppdelning"
       export-results:
         title: "Exportera omröstningsresultatet"
         label: "Exportera"

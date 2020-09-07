@@ -19,7 +19,7 @@ export default Component.extend({
 
   @discourseComputed("model.[]", "typeName")
   eventTypeExists(eventTypes, typeName) {
-    return eventTypes.any(event => event.name === typeName);
+    return eventTypes.any((event) => event.name === typeName);
   },
 
   @discourseComputed("eventTypeExists")
@@ -36,12 +36,12 @@ export default Component.extend({
           model.addObject(type);
         } else {
           model.removeObjects(
-            model.filter(eventType => eventType.name === type.name)
+            model.filter((eventType) => eventType.name === type.name)
           );
         }
       }
 
       return value;
-    }
-  }
+    },
+  },
 });

@@ -108,30 +108,44 @@ describe PostAlerter do
       post = Fabricate(:post, raw: 'I love waffles')
 
       admin = Fabricate(:admin)
-      post.revise(admin, raw: 'I made a revision')
+
+      expect do
+        post.revise(admin, raw: 'I made a revision')
+      end.to add_notification(post.user, :edited)
 
       # lets also like this post which should trigger a notification
-      PostActionCreator.new(
-        admin,
-        post,
-        PostActionType.types[:like]
-      ).perform
+      expect do
+        PostActionCreator.new(
+          admin,
+          post,
+          PostActionType.types[:like]
+        ).perform
+      end.to add_notification(post.user, :liked)
 
       # skip this notification cause we already notified on an edit by the same user
       # in the previous edit
       freeze_time 2.hours.from_now
-      post.revise(admin, raw: 'I made another revision')
+
+      expect do
+        post.revise(admin, raw: 'I made another revision')
+      end.to_not change { Notification.count }
 
       # this we do not skip cause 1 day has passed
       freeze_time 23.hours.from_now
-      post.revise(admin, raw: 'I made another revision xyz')
 
-      post.revise(Fabricate(:admin), raw: 'I made a revision')
+      expect do
+        post.revise(admin, raw: 'I made another revision xyz')
+      end.to add_notification(post.user, :edited)
+
+      expect do
+        post.revise(Fabricate(:admin), raw: 'I made a revision')
+      end.to add_notification(post.user, :edited)
 
       freeze_time 2.hours.from_now
-      post.revise(admin, raw: 'I made another revision')
 
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(5)
+      expect do
+        post.revise(admin, raw: 'I made another revision')
+      end.to add_notification(post.user, :edited)
     end
 
     it 'notifies flaggers when flagged post gets unhidden by edit' do

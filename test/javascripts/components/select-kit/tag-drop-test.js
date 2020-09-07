@@ -10,36 +10,36 @@ testSelectKitModule("tag-drop", {
     const site = Site.current();
     set(site, "top_tags", ["jeff", "neil", "arpit", "régis"]);
 
-    const response = object => {
+    const response = (object) => {
       return [200, { "Content-Type": "application/json" }, object];
     };
 
-    pretender.get("/tags/filter/search", params => {
+    pretender.get("/tags/filter/search", (params) => {
       if (params.queryParams.q === "rég") {
         return response({
-          results: [{ id: "régis", text: "régis", count: 2, pm_count: 0 }]
+          results: [{ id: "régis", text: "régis", count: 2, pm_count: 0 }],
         });
       } else if (params.queryParams.q === "dav") {
         return response({
-          results: [{ id: "David", text: "David", count: 2, pm_count: 0 }]
+          results: [{ id: "David", text: "David", count: 2, pm_count: 0 }],
         });
       }
     });
-  }
+  },
 });
 
 function initTags(context) {
   const categories = context.site.categoriesList;
   const parentCategory = categories.findBy("id", 2);
   const childCategories = categories.filter(
-    c => c.parentCategory === parentCategory
+    (c) => c.parentCategory === parentCategory
   );
 
   // top_tags
   context.setProperties({
     firstCategory: parentCategory,
     secondCategory: childCategories.firstObject,
-    tagId: "jeff"
+    tagId: "jeff",
   });
 }
 
@@ -85,5 +85,5 @@ componentTest("default", {
       I18n.t("tagging.selector_all_tags"),
       "it has the correct label for all-tags"
     );
-  }
+  },
 });

@@ -9,8 +9,8 @@ acceptance("Plugin Outlet - Connector Class", {
       actions: {
         sayHello() {
           this.set("hello", "hello!");
-        }
-      }
+        },
+      },
     });
 
     extraConnectorClass("user-profile-primary/hi", {
@@ -30,13 +30,13 @@ acceptance("Plugin Outlet - Connector Class", {
       @action
       sayHi() {
         this.appEvents.trigger("hi:sayHi");
-      }
+      },
     });
 
     extraConnectorClass("user-profile-primary/dont-render", {
       shouldRender(args) {
         return args.model.get("username") !== "eviltrout";
-      }
+      },
     });
 
     Ember.TEMPLATES[
@@ -61,10 +61,10 @@ acceptance("Plugin Outlet - Connector Class", {
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hello`];
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hi`];
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/dont-render`];
-  }
+  },
 });
 
-QUnit.test("Renders a template into the outlet", async assert => {
+QUnit.test("Renders a template into the outlet", async (assert) => {
   await visit("/u/eviltrout");
   assert.ok(
     find(".user-profile-primary-outlet.hello").length === 1,

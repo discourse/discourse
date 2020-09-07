@@ -2,6 +2,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
 import Component from "@ember/component";
+import bootbox from "bootbox";
 
 export default Component.extend({
   editorId: reads("fieldName"),
@@ -27,18 +28,18 @@ export default Component.extend({
     set(value, styles, fieldName) {
       styles.setField(fieldName, value);
       return value;
-    }
+    },
   },
 
   actions: {
     reset() {
       bootbox.confirm(
         I18n.t("admin.customize.email_style.reset_confirm", {
-          fieldName: I18n.t(`admin.customize.email_style.${this.fieldName}`)
+          fieldName: I18n.t(`admin.customize.email_style.${this.fieldName}`),
         }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             this.styles.setField(
               this.fieldName,
@@ -48,6 +49,6 @@ export default Component.extend({
           }
         }
       );
-    }
-  }
+    },
+  },
 });

@@ -19,6 +19,6 @@ export default Component.extend({
     save() {
       // Action has to toggle 'editing' property.
       this.action(this.buffer);
-    }
-  }
+    },
+  },
 });

@@ -1,12 +1,18 @@
 import deprecated from "discourse-common/lib/deprecated";
-import { getOwner as emberGetOwner } from "@ember/application";
+import { getOwner as emberGetOwner, setOwner } from "@ember/application";
+
+let _default = {};
 
 export function getOwner(obj) {
   if (emberGetOwner) {
-    return emberGetOwner(obj) || Discourse.__container__;
+    return emberGetOwner(obj || _default) || emberGetOwner(_default);
   }
 
   return obj.container;
+}
+
+export function setDefaultOwner(container) {
+  setOwner(_default, container);
 }
 
 // `this.container` is deprecated, but we can still build a container-like
@@ -30,9 +36,9 @@ export function getRegister(obj) {
             "Use `this.register` or `getOwner` instead of `this.container`"
           );
           return register;
-        }
+        },
       });
-    }
+    },
   };
 
   return register;

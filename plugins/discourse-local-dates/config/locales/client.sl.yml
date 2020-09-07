@@ -19,7 +19,6 @@ sl:
           insert: Dodaj
           advanced_mode: Napredni način
           simple_mode: Enostavni način
-          format_description: "Format, ki se uporablja za prikazovanje datuma. Uporabite \"\\T\\Z\" za prikaz uporabnikovega časovnega pasu z besedo (Europe/Paris)"
           timezones_title: Časovni pas za prikaz
           timezones_description: Časovni pas bo uporabljen za prikaz v predogledu ali kot rezerva.
           recurring_title: Ponovitev

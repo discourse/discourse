@@ -134,7 +134,9 @@ export default Component.extend({
 
     // use native webshare only when the user clicks on the "chain" icon
     if (!$currentTarget.hasClass("post-date")) {
-      nativeShare({ url }).then(null, () => this._showUrl($currentTarget, url));
+      nativeShare(this.capabilities, { url }).then(null, () =>
+        this._showUrl($currentTarget, url)
+      );
     } else {
       this._showUrl($currentTarget, url);
     }
@@ -197,15 +199,15 @@ export default Component.extend({
         link: null,
         postNumber: null,
         postId: null,
-        visible: false
+        visible: false,
       });
     },
 
     share(source) {
       Sharing.shareSource(source, {
         url: this.link,
-        title: this.get("topic.title")
+        title: this.get("topic.title"),
       });
-    }
-  }
+    },
+  },
 });

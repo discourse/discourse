@@ -5,13 +5,13 @@ moduleForComponent("select-kit/combo-box", {
   integration: true,
   beforeEach() {
     this.set("subject", selectKit());
-  }
+  },
 });
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
   { id: 2, name: "bar" },
-  { id: 3, name: "baz" }
+  { id: 3, name: "baz" },
 ];
 
 const DEFAULT_VALUE = 1;
@@ -20,7 +20,7 @@ const setDefaultState = (ctx, options) => {
   const properties = Object.assign(
     {
       content: DEFAULT_CONTENT,
-      value: DEFAULT_VALUE
+      value: DEFAULT_VALUE,
     },
     options || {}
   );
@@ -40,9 +40,9 @@ componentTest("options.clearable", {
   beforeEach() {
     setDefaultState(this, {
       clearable: true,
-      onChange: value => {
+      onChange: (value) => {
         this.set("value", value);
-      }
+      },
     });
   },
 
@@ -62,7 +62,7 @@ componentTest("options.clearable", {
       "it hides the clear button"
     );
     assert.equal($header.value(), null);
-  }
+  },
 });
 
 componentTest("options.{caretUpIcon,caretDownIcon}", {
@@ -80,7 +80,7 @@ componentTest("options.{caretUpIcon,caretDownIcon}", {
   beforeEach() {
     setDefaultState(this, {
       caretUpIcon: "pencil-alt",
-      caretDownIcon: "trash-alt"
+      caretDownIcon: "trash-alt",
     });
   },
 
@@ -98,5 +98,5 @@ componentTest("options.{caretUpIcon,caretDownIcon}", {
       exists($header.find(`.d-icon-${this.caretUpIcon}`)),
       "it uses the icon provided"
     );
-  }
+  },
 });

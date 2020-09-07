@@ -60,7 +60,7 @@ describe Topic do
 
             expect(topic_status_update.topic).to eq(staff_topic)
             expect(topic_status_update.execute_at).to eq_time(2.hours.from_now)
-            expect(topic_status_update.user).to eq(admin)
+            expect(topic_status_update.user).to eq(Discourse.system_user)
 
             args = job_klass.jobs.last['args'].first
 

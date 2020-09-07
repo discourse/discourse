@@ -7,11 +7,11 @@ import { computed } from "@ember/object";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export default Component.extend({
-  usersTemplates: computed("users.[]", function() {
-    return (this.users || []).map(user => {
+  usersTemplates: computed("users.[]", function () {
+    return (this.users || []).map((user) => {
       let name = user.name;
       let username = user.username;
-      let prioritizeName = prioritizeNameInUx(name, this.siteSettings);
+      let prioritizeName = prioritizeNameInUx(name);
       let hideName = false;
       if (name && normalize(username) === normalize(name)) {
         hideName = true;
@@ -23,13 +23,13 @@ export default Component.extend({
         userPath: userPath(username),
         avatar: renderAvatar(user, {
           imageSize: "large",
-          siteSettings: this.siteSettings
+          siteSettings: this.siteSettings,
         }),
         title: user.title || "",
         formatedUsername: formatUsername(username),
         prioritizeName,
-        hideName
+        hideName,
       };
     });
-  })
+  }),
 });

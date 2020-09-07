@@ -10,6 +10,6 @@ export default Controller.extend({
     },
     editActivationEmail() {
       this.transitionToRoute("account-created.edit-email");
-    }
-  }
+    },
+  },
 });

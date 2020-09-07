@@ -17,7 +17,7 @@ export default DropdownSelectBoxComponent.extend({
     filterable: false,
     autoFilterable: false,
     fullDay: "fullDay",
-    headerComponent: "period-chooser/period-chooser-header"
+    headerComponent: "period-chooser/period-chooser-header",
   },
 
   actions: {
@@ -27,6 +27,6 @@ export default DropdownSelectBoxComponent.extend({
       } else {
         this.attrs.onChange && this.attrs.onChange(value);
       }
-    }
-  }
+    },
+  },
 });

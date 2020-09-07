@@ -891,7 +891,8 @@ class TopicQuery
       category_ids = [
         SiteSetting.default_categories_watching.split("|"),
         SiteSetting.default_categories_tracking.split("|"),
-        SiteSetting.default_categories_watching_first_post.split("|")
+        SiteSetting.default_categories_watching_first_post.split("|"),
+        SiteSetting.default_categories_regular.split("|")
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
@@ -907,11 +908,19 @@ class TopicQuery
   end
 
   def remove_muted_tags(list, user, opts = nil)
-    if user.nil? || !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
+    if !SiteSetting.tagging_enabled || SiteSetting.remove_muted_tags_from_latest == 'never'
       return list
     end
 
-    muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    muted_tag_ids = []
+
+    if user.present?
+      muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    else
+      muted_tag_names = SiteSetting.default_tags_muted.split("|")
+      muted_tag_ids = Tag.where(name: muted_tag_names).pluck(:id)
+    end
+
     if muted_tag_ids.blank?
       return list
     end

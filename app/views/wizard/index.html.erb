@@ -1,4 +1,4 @@
-<html>
+<html class="discourse-wizard">
   <head>
     <%= discourse_stylesheet_link_tag :wizard, theme_ids: nil %>
     <%= preload_script "locales/#{I18n.locale}" %>
@@ -25,6 +25,5 @@
         <%= raw SvgSprite.bundle %>
       </div>
     </div>
-
   </body>
 </html>
