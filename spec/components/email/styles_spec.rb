@@ -206,4 +206,38 @@ describe Email::Styles do
       expect(frag.to_s).not_to include("Redacted")
     end
   end
+
+  context "inline_secure_images" do
+    let(:attachments) { { 'testimage.png' => stub(url: 'cid:email/test.png') } }
+    fab!(:upload) { Fabricate(:upload, original_filename: 'testimage.png', secure: true, sha1: '123456') }
+
+    def strip_and_inline
+      html = "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\"></a>"
+
+      # strip out the secure media
+      styler = Email::Styles.new(html)
+      styler.format_basic
+      styler.format_html
+      html = styler.to_html
+
+      # pass in the attachments to match uploads based on sha + original filename
+      styler = Email::Styles.new(html)
+      styler.inline_secure_images(attachments)
+      @frag = Nokogiri::HTML5.fragment(styler.to_s)
+    end
+
+    it "inlines attachments where stripped-secure-media data attr is present" do
+      strip_and_inline
+      expect(@frag.to_s).to include("cid:email/test.png")
+      expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+    end
+
+    it "does not inline anything if the upload cannot be found" do
+      upload.update(sha1: 'blah12')
+      strip_and_inline
+
+      expect(@frag.to_s).not_to include("cid:email/test.png")
+      expect(@frag.css('[data-stripped-secure-media]')).to be_present
+    end
+  end
 end

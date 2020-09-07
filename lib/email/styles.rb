@@ -237,29 +237,36 @@ module Email
     end
 
     def inline_secure_images(attachments)
-      # needs to be before class + id strip because we need to style redacted
-      # media and also not double-redact already redacted from lower levels
-      # strip again, this can be done at a lower level like in the user
-      # notification template but that may not catch everything
-      @fragment.css('[data-stripped-secure-media]').each do |div|
-        if Upload.secure_media_url?(div['data-stripped-secure-media'])
-          filename = File.basename(div['data-stripped-secure-media'])
-          sha1 = filename.gsub(File.extname(filename), "")
-          original_filename = Upload.select(:original_filename).find_by(sha1: sha1).original_filename
+      stripped_media = @fragment.css('[data-stripped-secure-media]')
+      upload_shas = {}
+      stripped_media.each do |div|
+        url = div['data-stripped-secure-media']
+        filename = File.basename(url)
+        sha1 = filename.gsub(File.extname(filename), "")
+        upload_shas[url] = sha1
+      end
+      uploads = Upload.select(:original_filename, :sha1).where(sha1: upload_shas.values)
 
-          if attachments[original_filename]
-            url = attachments[original_filename].url
+      stripped_media.each do |div|
+        upload = uploads.find { |upl| upl.sha1 == upload_shas[div['data-stripped-secure-media']] }
+        next if !upload
 
-            div.add_next_sibling(
-              "<img src=\"#{url}\" style=\"max-width: 50%; max-height: 400px;\" />"
-            )
-            div.remove
-          end
+        original_filename = upload.original_filename
+
+        if attachments[original_filename]
+          url = attachments[original_filename].url
+
+          div.add_next_sibling(
+            "<img src=\"#{url}\" style=\"max-width: 50%; max-height: 400px;\" />"
+          )
+          div.remove
         end
       end
     end
 
     def to_html
+      # needs to be before class + id strip because we need to style redacted
+      # media and also not double-redact already redacted from lower levels
       replace_secure_media_urls
       strip_classes_and_ids
       replace_relative_urls
