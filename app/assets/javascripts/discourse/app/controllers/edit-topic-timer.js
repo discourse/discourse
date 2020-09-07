@@ -12,7 +12,6 @@ export const CLOSE_STATUS_TYPE = "close";
 export const OPEN_STATUS_TYPE = "open";
 export const PUBLISH_TO_CATEGORY_STATUS_TYPE = "publish_to_category";
 export const DELETE_STATUS_TYPE = "delete";
-export const REMINDER_TYPE = "reminder";
 export const BUMP_TYPE = "bump";
 export const DELETE_REPLIES_TYPE = "delete_replies";
 

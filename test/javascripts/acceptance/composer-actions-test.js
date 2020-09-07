@@ -295,7 +295,6 @@ QUnit.test("reply_as_new_group_message", async (assert) => {
         bookmarked: false,
         message_archived: false,
         topic_timer: null,
-        private_topic_timer: null,
         message_bus_last_id: 5,
         participant_count: 1,
         pm_with_non_human_user: false,

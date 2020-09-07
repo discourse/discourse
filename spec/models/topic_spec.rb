@@ -1711,20 +1711,6 @@ describe Topic do
     end
   end
 
-  describe '#private_topic_timer' do
-    let(:topic_timer) do
-      Fabricate(:topic_timer,
-        public_type: false,
-        user: user,
-        status_type: TopicTimer.private_types[:reminder]
-      )
-    end
-
-    it 'should return the right record' do
-      expect(topic_timer.topic.private_topic_timer(user)).to eq(topic_timer)
-    end
-  end
-
   describe '#set_or_create_timer' do
     let(:topic) { Fabricate.build(:topic) }
 
@@ -1873,38 +1859,6 @@ describe Topic do
 
         TopicTimer.ensure_consistency!
         expect(topic.reload.closed).to eq(true)
-      end
-    end
-
-    describe "private status type" do
-      fab!(:topic) { Fabricate(:topic) }
-      let(:reminder) { Fabricate(:topic_timer, user: admin, topic: topic, status_type: TopicTimer.types[:reminder]) }
-      fab!(:other_admin) { Fabricate(:admin) }
-
-      it "lets two users have their own record" do
-        reminder
-        expect {
-          topic.set_or_create_timer(TopicTimer.types[:reminder], 2, by_user: other_admin)
-        }.to change { TopicTimer.count }.by(1)
-      end
-
-      it 'should not be override when setting a public topic timer' do
-        reminder
-
-        expect do
-          topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: reminder.user)
-        end.to change { TopicTimer.count }.by(1)
-      end
-
-      it "can update a user's existing record" do
-        freeze_time now
-
-        reminder
-        expect {
-          topic.set_or_create_timer(TopicTimer.types[:reminder], 11, by_user: admin)
-        }.to_not change { TopicTimer.count }
-        reminder.reload
-        expect(reminder.execute_at).to eq_time(11.hours.from_now)
       end
     end
   end
