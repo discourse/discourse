@@ -349,6 +349,24 @@ describe TopicView do
       end
     end
 
+    context "#first_post_bookmark_reminder_at" do
+      let!(:user) { Fabricate(:user) }
+      let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
+
+      it "gets the first post bookmark reminder at for the user" do
+        expect(TopicView.new(topic.id, user).first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+      end
+
+      context "when the topic is deleted" do
+        it "gets the first post bookmark reminder at for the user" do
+          topic_view = TopicView.new(topic, user)
+          PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
+          topic.reload
+          expect(topic_view.first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+        end
+      end
+    end
+
     context '.topic_user' do
       it 'returns nil when there is no user' do
         expect(TopicView.new(topic.id, nil).topic_user).to be_blank
