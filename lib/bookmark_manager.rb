@@ -12,10 +12,10 @@ class BookmarkManager
     reminder_type = parse_reminder_type(reminder_type)
 
     # no bookmarking deleted posts or topics
-    raise Discourse::InvalidAccess.new if post.blank? || post.topic.blank?
+    raise Discourse::InvalidAccess if post.blank? || post.topic.blank?
 
     if !Guardian.new(@user).can_see_post?(post) || !Guardian.new(@user).can_see_topic?(post.topic)
-      raise Discourse::InvalidAccess.new
+      raise Discourse::InvalidAccess
     end
 
     bookmark = Bookmark.create(
