@@ -540,7 +540,8 @@ class TopicQuery
               SELECT group_id
               FROM group_users
               WHERE user_id = #{user.id.to_i}
-              OR #{user.staff?}
+              OR #{user.admin?}
+              OR (#{user.staff?} AND group_id <> #{Group::AUTO_GROUPS[:admins]})
             )
           )
           AND group_id IN (SELECT id FROM groups WHERE name ilike ?)
