@@ -60,7 +60,13 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
     end
 
     Bookmark.insert_all(new_bookmarks)
-    TopicTimer.where(id: topic_timers_to_migrate.map(&:id)).destroy_all
+
+    # TODO(2021-01-07): delete leftover trashed records
+    # trash these so the records are kept around for any possible data issues,
+    # they can be deleted in a few months
+    TopicTimer.where(id: topic_timers_to_migrate.map(&:id)).update_all(
+      deleted_at: Time.zone.now, deleted_by: Discourse.system_user
+    )
   end
 
   def down
