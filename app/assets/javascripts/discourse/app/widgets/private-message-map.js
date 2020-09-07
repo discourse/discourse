@@ -162,14 +162,12 @@ export default createWidget("private-message-map", {
 
     if (attrs.canInvite || canRemove) {
       let key;
-      let action;
+      let action = "toggleEditing";
 
       if (attrs.canInvite && canRemove) {
         key = "edit";
-        action = "toggleEditing";
       } else if (!attrs.canInvite && canRemove) {
         key = "remove";
-        action = "toggleEditing";
       } else {
         key = "add";
         action = "showInvite";
