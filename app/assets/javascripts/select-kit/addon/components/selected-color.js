@@ -14,5 +14,5 @@ export default SelectedNameComponent.extend({
 
       if (el) el.style.borderBottomColor = `#${color}`;
     });
-  }
+  },
 });

@@ -8,22 +8,22 @@ acceptance("Admin - Suspend User", {
     server.put("/admin/users/:user_id/suspend", () =>
       helper.response(200, {
         suspension: {
-          suspended_till: "2099-01-01T12:00:00.000Z"
-        }
+          suspended_till: "2099-01-01T12:00:00.000Z",
+        },
       })
     );
 
     server.put("/admin/users/:user_id/unsuspend", () =>
       helper.response(200, {
         suspension: {
-          suspended_till: null
-        }
+          suspended_till: null,
+        },
       })
     );
-  }
+  },
 });
 
-QUnit.test("suspend a user - cancel", async assert => {
+QUnit.test("suspend a user - cancel", async (assert) => {
   await visit("/admin/users/1234/regular");
   await click(".suspend-user");
 
@@ -34,7 +34,7 @@ QUnit.test("suspend a user - cancel", async assert => {
   assert.equal(find(".suspend-user-modal:visible").length, 0);
 });
 
-QUnit.test("suspend a user - cancel with input", async assert => {
+QUnit.test("suspend a user - cancel with input", async (assert) => {
   await visit("/admin/users/1234/regular");
   await click(".suspend-user");
 
@@ -61,7 +61,7 @@ QUnit.test("suspend a user - cancel with input", async assert => {
   assert.equal(find(".bootbox.modal:visible").length, 0);
 });
 
-QUnit.test("suspend, then unsuspend a user", async assert => {
+QUnit.test("suspend, then unsuspend a user", async (assert) => {
   const suspendUntilCombobox = selectKit(".suspend-until .combobox");
 
   await visit("/admin/flags/active");

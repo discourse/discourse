@@ -4,11 +4,11 @@ export default {
   name: "load-helpers",
 
   initialize(application) {
-    Object.keys(requirejs.entries).forEach(entry => {
+    Object.keys(requirejs.entries).forEach((entry) => {
       if (/\/helpers\//.test(entry)) {
         requirejs(entry, null, null, true);
       }
     });
     registerHelpers(application);
-  }
+  },
 };

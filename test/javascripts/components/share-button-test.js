@@ -12,5 +12,5 @@ componentTest("share button", {
       find('button[data-share-url="https://eviltrout.com"]').length,
       "it has the data attribute for sharing"
     );
-  }
+  },
 });

@@ -26,7 +26,7 @@ componentTest("adding a value", {
       "vinkas\nosama\neviltrout",
       "it adds the value to the list of values"
     );
-  }
+  },
 });
 
 componentTest("removing a value", {
@@ -53,7 +53,7 @@ componentTest("removing a value", {
         .innerText === "vinkas",
       "it adds the removed value to choices"
     );
-  }
+  },
 });
 
 componentTest("selecting a value", {
@@ -62,7 +62,7 @@ componentTest("selecting a value", {
   beforeEach() {
     this.setProperties({
       values: "vinkas\nosama",
-      choices: ["maja", "michael"]
+      choices: ["maja", "michael"],
     });
   },
 
@@ -80,7 +80,7 @@ componentTest("selecting a value", {
       "vinkas\nosama\nmaja",
       "it adds the value to the list of values"
     );
-  }
+  },
 });
 
 componentTest("array support", {
@@ -107,7 +107,7 @@ componentTest("array support", {
       ["vinkas", "osama", "eviltrout"],
       "it adds the value to the list of values"
     );
-  }
+  },
 });
 
 componentTest("delimiter support", {
@@ -134,5 +134,5 @@ componentTest("delimiter support", {
       "vinkas|osama|eviltrout",
       "it adds the value to the list of values"
     );
-  }
+  },
 });

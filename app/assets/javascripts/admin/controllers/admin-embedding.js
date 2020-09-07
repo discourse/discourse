@@ -50,6 +50,6 @@ export default Controller.extend({
 
     deleteHost(host) {
       this.get("embedding.embeddable_hosts").removeObject(host);
-    }
-  }
+    },
+  },
 });

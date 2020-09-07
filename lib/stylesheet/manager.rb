@@ -135,7 +135,10 @@ class Stylesheet::Manager
     return '' if !stylesheet
 
     href = stylesheet[:new_href]
-    %[<link href="#{href}" media="#{media}" rel="stylesheet"/>].html_safe
+
+    css_class = media == 'all' ? "light-scheme" : "dark-scheme"
+
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
   end
 
   def self.color_scheme_cache_key(color_scheme, theme_id = nil)
@@ -398,7 +401,7 @@ class Stylesheet::Manager
 
     if cs || category_updated > 0
       theme_color_defs = theme&.resolve_baked_field(:common, :color_definitions)
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}"
+      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{SiteSetting.base_font}"
     else
       digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}"
 

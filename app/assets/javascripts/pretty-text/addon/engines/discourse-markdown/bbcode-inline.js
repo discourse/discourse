@@ -73,7 +73,7 @@ function tokenizeBBCode(state, silent, ruler) {
       token: state.tokens.length - 1,
       level: state.level,
       end: -1,
-      jump: 0
+      jump: 0,
     });
 
     state.pos = pos + tagInfo.length;
@@ -151,14 +151,14 @@ export function setup(helper) {
     "span.bbcode-b",
     "span.bbcode-i",
     "span.bbcode-u",
-    "span.bbcode-s"
+    "span.bbcode-s",
   ]);
 
-  helper.registerOptions(opts => {
+  helper.registerOptions((opts) => {
     opts.features["bbcode-inline"] = true;
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     const ruler = md.inline.bbcode.ruler;
 
     md.inline.ruler.push("bbcode-inline", (state, silent) =>
@@ -168,18 +168,18 @@ export function setup(helper) {
 
     ruler.push("code", {
       tag: "code",
-      replace: function(state, tagInfo, content) {
+      replace: function (state, tagInfo, content) {
         let token;
         token = state.push("code_inline", "code", 0);
         token.content = content;
         return true;
-      }
+      },
     });
 
     const simpleUrlRegex = /^http[s]?:\/\//;
     ruler.push("url", {
       tag: "url",
-      wrap: function(startToken, endToken, tagInfo, content) {
+      wrap: function (startToken, endToken, tagInfo, content) {
         const url = (tagInfo.attrs["_default"] || content).trim();
 
         if (simpleUrlRegex.test(url)) {
@@ -187,7 +187,7 @@ export function setup(helper) {
           startToken.tag = "a";
           startToken.attrs = [
             ["href", url],
-            ["data-bbcode", "true"]
+            ["data-bbcode", "true"],
           ];
           startToken.content = "";
           startToken.nesting = 1;
@@ -207,19 +207,19 @@ export function setup(helper) {
         }
 
         return false;
-      }
+      },
     });
 
     ruler.push("email", {
       tag: "email",
-      replace: function(state, tagInfo, content) {
+      replace: function (state, tagInfo, content) {
         let token;
         let email = tagInfo.attrs["_default"] || content;
 
         token = state.push("link_open", "a", 1);
         token.attrs = [
           ["href", "mailto:" + email],
-          ["data-bbcode", "true"]
+          ["data-bbcode", "true"],
         ];
 
         token = state.push("text", "", 0);
@@ -227,40 +227,40 @@ export function setup(helper) {
 
         state.push("link_close", "a", -1);
         return true;
-      }
+      },
     });
 
     ruler.push("image", {
       tag: "img",
-      replace: function(state, tagInfo, content) {
+      replace: function (state, tagInfo, content) {
         let token = state.push("image", "img", 0);
         token.attrs = [
           ["src", content],
-          ["alt", ""]
+          ["alt", ""],
         ];
         token.children = [];
         return true;
-      }
+      },
     });
 
     ruler.push("bold", {
       tag: "b",
-      wrap: "span.bbcode-b"
+      wrap: "span.bbcode-b",
     });
 
     ruler.push("italic", {
       tag: "i",
-      wrap: "span.bbcode-i"
+      wrap: "span.bbcode-i",
     });
 
     ruler.push("underline", {
       tag: "u",
-      wrap: "span.bbcode-u"
+      wrap: "span.bbcode-u",
     });
 
     ruler.push("strike", {
       tag: "s",
-      wrap: "span.bbcode-s"
+      wrap: "span.bbcode-s",
     });
   });
 }

@@ -17,7 +17,7 @@ export default DiscourseRoute.extend({
     controller.setProperties({
       model,
       filterInput: this._params.filter,
-      showing: "members"
+      showing: "members",
     });
 
     controller.findMembers(true);
@@ -32,5 +32,5 @@ export default DiscourseRoute.extend({
   didTransition() {
     this.controllerFor("group-index").set("filterInput", this._params.filter);
     return true;
-  }
+  },
 });

@@ -19,7 +19,7 @@ const BareRouter = EmberRouter.extend({
       }
     }
     return this._super(url);
-  }
+  },
 });
 
 // Ember's router can't be extended. We need to allow plugins to add routes to routes that were defined
@@ -74,13 +74,13 @@ class RouteNode {
   mapRoutes(router) {
     const children = this.children;
     if (this.name === "root") {
-      children.forEach(c => c.mapRoutes(router));
+      children.forEach((c) => c.mapRoutes(router));
     } else {
       const builder =
         children.length === 0
           ? undefined
-          : function() {
-              children.forEach(c => c.mapRoutes(this));
+          : function () {
+              children.forEach((c) => c.mapRoutes(this));
             };
       router.route(this.name, this.opts, builder);
     }
@@ -111,7 +111,7 @@ export function mapRoutes() {
   // will be built automatically. You can supply a `resource` property to
   // automatically put it in that resource, such as `admin`. That way plugins
   // can define admin routes.
-  Object.keys(requirejs._eak_seen).forEach(function(key) {
+  Object.keys(requirejs._eak_seen).forEach(function (key) {
     if (/route-map$/.test(key)) {
       var module = requirejs(key, null, null, true);
       if (!module || !module.default) {
@@ -127,7 +127,7 @@ export function mapRoutes() {
     }
   });
 
-  extras.forEach(extra => {
+  extras.forEach((extra) => {
     let node = tree.findPath(extra.resource);
     if (node) {
       node.extract(extra.map);
@@ -135,8 +135,8 @@ export function mapRoutes() {
   });
 
   return BareRouter.extend({
-    rootURL: getURL("/")
-  }).map(function() {
+    rootURL: getURL("/"),
+  }).map(function () {
     tree.mapRoutes(this);
     this.route("unknown", { path: "*path" });
   });

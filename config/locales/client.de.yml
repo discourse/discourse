@@ -263,9 +263,9 @@ de:
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
         unbookmark_with_reminder: "Klicke hier, um alle Lesezeichen und Erinnerungen in diesem Thema zu löschen. Die nächste Erinnerung ist %{reminder_at} geplant."
     bookmarks:
+      created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
-      created_with_reminder: "Du wirst %{date} an dieses Lesezeichen erinnert.%{name}"
-      created_with_at_desktop_reminder: "Du hast ein Lesezeichen für diesen Beitrag gesetzt und wirst das nächste Mal, wenn Du am Rechner sitzt, daran erinnert.%{name}"
+      created_with_reminder: "Du wirst %{date} an dieses Lesezeichen erinnert. %{name}"
       remove: "Lesezeichen entfernen"
       delete: "Lesezeichen löschen"
       confirm_delete: "Möchtest du dieses Lesezeichen wirklich löschen? Die Erinnerung wird ebenfalls gelöscht."
@@ -283,7 +283,6 @@ de:
       search_placeholder: "Lesezeichen nach Namen, Thementitel oder Beitragsinhalt durchsuchen"
       search: "Suche"
       reminders:
-        at_desktop: "Nächstes mal wenn ich an meinem PC bin"
         later_today: "Im Laufe des Tages"
         next_business_day: "Nächster Arbeitstag"
         tomorrow: "Morgen"
@@ -298,6 +297,7 @@ de:
         today_with_time: "heute um %{time}"
         tomorrow_with_time: "morgen um %{time}"
         at_time: "am %{date_time}"
+        existing_reminder: "Du wirst %{at_date_time} an dieses Lesezeichen erinnert."
     copy_codeblock:
       copied: "kopiert!"
     drafts:
@@ -406,8 +406,8 @@ de:
       filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
       filtered_user: "Benutzer"
       show_all_topics: "Zeige alle Themen"
-      deleted_post: "Beitrag gelöscht"
-      deleted_user: "Benutzer gelöscht"
+      deleted_post: "(Beitrag gelöscht)"
+      deleted_user: "(Benutzer gelöscht)"
       user:
         bio: "Bio"
         website: "Website"
@@ -433,7 +433,7 @@ de:
         reviewable_count: "Anzahl"
         reported_by: "Gemeldet von"
         deleted: "[Thema gelöscht]"
-        original: "(usprüngliches Thema)"
+        original: "(ursprüngliches Thema)"
         details: "Details"
         unique_users:
           one: "%{count} Benutzer"
@@ -501,7 +501,7 @@ de:
           title: "Benutzer"
       approval:
         title: "Beitrag muss genehmigt werden"
-        description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
+        description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
         pending_posts:
           one: "Du hast <strong>%{count}</strong> verbleibenden Beitrag."
           other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
@@ -889,7 +889,7 @@ de:
       suspended_notice: "Dieser Benutzer ist bis zum %{date} gesperrt."
       suspended_permanently: "Der Benutzer ist gesperrt."
       suspended_reason: "Grund: "
-      github_profile: "Github"
+      github_profile: "GitHub"
       email_activity_summary: "Aktivitäts-Übersicht"
       mailing_list_mode:
         label: "Mailinglisten-Modus"
@@ -921,7 +921,6 @@ de:
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
       muted_categories_instructions_dont_hide: "Du bekommst keine Benachrichtigung über irgendetwas an neuen Themen in diesen Kategorien."
       regular_categories: "Stammgast"
-      regular_categories_instructions: "Themen aus diesen Kategorien werden dir unter „Aktuell” und „Angesagt” angezeigt."
       no_category_access: "Moderaturen haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
@@ -1023,7 +1022,6 @@ de:
         use: "Benutze die Authentifizierungs-App"
         enforced_notice: "Du musst Zwei-Faktor-Authentifizierung aktivieren, bevor du auf diese Seite zugreifen kannst."
         disable: "Deaktivieren"
-        disable_confirm: "Sollen alle zweiten Faktoren deaktiviert werden?"
         save: "Speichern"
         edit: "Bearbeiten"
         edit_title: "Zweiten Faktor bearbeiten"
@@ -1611,9 +1609,6 @@ de:
         one: "Wähle mindestens einen Eintrag aus."
         other: "Wähle mindestens %{count} Einträge aus."
       invalid_selection_length: "Es müssen wenigstens%{count} Zeichen markiert sein."
-      components:
-        categories_admin_dropdown:
-          title: "Kategorien Admin Dropdown"
     date_time_picker:
       from: Von
       to: An
@@ -2131,7 +2126,7 @@ de:
       reminder:
         title: "Erinnere mich"
       auto_delete_replies:
-        title: "Thema automatisch löschen"
+        title: "Antworten automatisch löschen"
       status_update_notice:
         auto_open: "Dieses Thema wird automatisch geöffnet %{timeLeft}."
         auto_close: "Dieses Thema wird automatisch geschlossen %{timeLeft}."
@@ -2365,7 +2360,6 @@ de:
         preview_url: "Die Seite wird unter folgender URL veröffentlicht:"
         invalid_slug: "Du kannst diese Seite leider nicht veröffentlichen."
         unpublish: "Veröffentlichung aufheben"
-        update: "Aktualisieren"
         unpublished: "Die Veröffentlichung der Seite wurde aufgehoben."
         publishing_settings: "Veröffentlichungseinstellungen"
       change_owner:
@@ -2518,23 +2512,7 @@ de:
         remove_post_notice: "Team Notiz entfernen"
         remove_timer: "Stoppuhr entfernen"
       actions:
-        flag: "Melden"
-        defer_flags:
-          one: "Meldung ignorieren"
-          other: "Meldungen ignorieren"
-        undo:
-          off_topic: "Meldung widerrufen"
-          spam: "Meldung widerrufen"
-          inappropriate: "Meldung widerrufen"
-          bookmark: "Lesezeichen entfernen"
-          like: "Gefällt mir nicht mehr"
         people:
-          off_topic: "meldete/n dies als „am Thema vorbei“"
-          spam: "Melde es als Spam"
-          inappropriate: "meldete/n dies als unangemessen"
-          notify_moderators: "informierte/n die Moderatoren"
-          notify_user: "hat eine Nachricht gesendet"
-          bookmark: "hat/haben ein Lesezeichen gesetzt"
           like:
             one: "gefällt dies"
             other: "gefällt dies"
@@ -2553,8 +2531,6 @@ de:
           inappropriate: "Du hast das als Unangemessen gemeldet"
           notify_moderators: "Du hast dies den Moderatoren gemeldet"
           notify_user: "Du hast diesem Benutzer eine Nachricht gesendet"
-          bookmark: "Du hast diesen Beitrag mit einem Lesezeichen versehen."
-          like: "Dir gefällt dieser Beitrag"
       delete:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
@@ -2639,7 +2615,7 @@ de:
       create: "Neue Kategorie"
       create_long: "Eine neue Kategorie erstellen"
       save: "Kategorie speichern"
-      slug: "Sprechender Name für URL (optional)"
+      slug: "Sprechender Name für URL"
       slug_placeholder: "Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
@@ -2848,14 +2824,14 @@ de:
       not_available: "Nicht verfügbar!"
     categories_list: "Liste der Kategorien"
     filters:
-      with_topics: "%{filter}e Themen"
-      with_category: "%{filter}e Themen in %{category}"
+      with_topics: "%{filter}"
+      with_category: "%{filter} in %{category}"
       latest:
         title: "Aktuell"
         title_with_count:
           one: "Aktuell (%{count})"
           other: "Aktuell (%{count})"
-        help: "die zuletzt geänderten Themen"
+        help: "Themen mit aktuellen Beiträgen"
       read:
         title: "Gelesen"
         help: "Themen, die du gelesen hast; werden in der Reihenfolge angezeigt, in der du diese gelesen hast"
@@ -2884,7 +2860,7 @@ de:
         help: "Themen, die in den letzten paar Tagen erstellt wurden"
       posted:
         title: "Meine Beiträge"
-        help: "Themen zu denen du beigetragen hast"
+        help: "Themen, zu denen du beigetragen hast"
       bookmarks:
         title: "Lesezeichen"
         help: "Themen, die du mit einem Lesezeichen versehen hast."
@@ -2923,10 +2899,10 @@ de:
       download: "herunterladen"
       previous: "Vorhergehend (linke Pfeiltaste)"
       next: "Nächste (rechte Pfeiltaste)"
-      counter: "%curr% von %total% "
+      counter: "%curr% von %total%"
       close: "Schließen (Esc)"
       content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
-      image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden. '
+      image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden.'
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3057,8 +3033,8 @@ de:
       synonyms: "Synonyme"
       synonyms_description: "Wenn die folgenden Schlagwörter verwendet werden, werden sie durch <b>%{base_tag_name} </b> ersetzt."
       tag_groups_info:
-        one: 'Dieser Tag gehört zur Gruppe &quot;%{tag_groups}&quot;.'
-        other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}."
+        one: 'Dieses Schlagwort gehört zur Gruppe „%{tag_groups}”.'
+        other: "Dieses Schlagwort gehört zu diesen Gruppen: %{tag_groups}"
       category_restrictions:
         one: "Es kann nur in dieser Kategorie verwendet werden:"
         other: "Es kann nur in folgenden Kategorien verwendet werden:"
@@ -3145,16 +3121,8 @@ de:
           latest: "Es gibt keine aktuellen Themen."
           bookmarks: "Du hast noch keine Themen, die du mit einem Lesezeichen versehen hast."
           top: "Es gibt keine Top-Themen."
-        bottom:
-          latest: "Das waren die aktuellen Themen."
-          posted: "Das waren alle deine Themen."
-          read: "Das waren alle gelesenen Themen."
-          new: "Das waren alle neuen Themen."
-          unread: "Das waren alle ungelesen Themen."
-          top: "Das waren alle Top-Themen."
-          bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
     invite:
-      custom_message: "Gestalte deine Einladung etwas persönlicher, in dem du eine <a href>eigene Nachricht</a> schreibst."
+      custom_message: "Gestalte deine Einladung etwas persönlicher, indem du eine <a href>eigene Nachricht</a> schreibst."
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
@@ -4238,7 +4206,7 @@ de:
         confirm_cancel_penalty: "Sind Du sicher, dass Du die Strafe verwerfen möchtest?"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
-        trust_level_locked_tip: "Vertrauensstufe ist nicht gesperrt. Das System wird den Benutzer nicht befördern oder zurückstufen. "
+        trust_level_locked_tip: "Die Vertrauensstufe ist gesperrt. Das System wird den Benutzer nicht befördern oder zurückstufen."
         trust_level_unlocked_tip: "Vertrauensstufe ist nicht gesperrt. Das System kann den Benutzer befördern oder zurückstufen. "
         lock_trust_level: "Vertrauensstufe sperren"
         unlock_trust_level: "Vertrauensstufe entsperren"

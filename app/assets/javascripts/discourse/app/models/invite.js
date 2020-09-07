@@ -10,7 +10,7 @@ const Invite = EmberObject.extend({
   rescind() {
     ajax("/invites", {
       type: "DELETE",
-      data: { id: this.id }
+      data: { id: this.id },
     });
     this.set("rescinded", true);
   },
@@ -18,11 +18,11 @@ const Invite = EmberObject.extend({
   reinvite() {
     return ajax("/invites/reinvite", {
       type: "POST",
-      data: { email: this.email }
+      data: { email: this.email },
     })
       .then(() => this.set("reinvited", true))
       .catch(popupAjaxError);
-  }
+  },
 });
 
 Invite.reopenClass({
@@ -50,9 +50,9 @@ Invite.reopenClass({
     }
 
     return ajax(path, {
-      data
-    }).then(result => {
-      result.invites = result.invites.map(i => Invite.create(i));
+      data,
+    }).then((result) => {
+      result.invites = result.invites.map((i) => Invite.create(i));
       return EmberObject.create(result);
     });
   },
@@ -62,7 +62,7 @@ Invite.reopenClass({
 
     return ajax(
       userPath(`${user.username_lower}/invited_count.json`)
-    ).then(result => EmberObject.create(result.counts));
+    ).then((result) => EmberObject.create(result.counts));
   },
 
   reinviteAll() {
@@ -71,7 +71,7 @@ Invite.reopenClass({
 
   rescindAll() {
     return ajax("/invites/rescind-all", { type: "POST" });
-  }
+  },
 });
 
 export default Invite;

@@ -43,7 +43,7 @@ const REPLACEMENTS = {
   "notification.membership_request_accepted": "user-plus",
   "notification.membership_request_consolidated": "users",
   "notification.reaction": "bell",
-  "notification.votes_released": "plus"
+  "notification.votes_released": "plus",
 };
 
 export function replaceIcon(source, destination) {
@@ -167,13 +167,13 @@ registerIconRenderer({
       "svg",
       {
         attributes: { class: classes, "aria-hidden": true },
-        namespace: SVG_NAMESPACE
+        namespace: SVG_NAMESPACE,
       },
       [
         h("use", {
           "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#${id}`),
-          namespace: SVG_NAMESPACE
-        })
+          namespace: SVG_NAMESPACE,
+        }),
       ]
     );
 
@@ -182,12 +182,12 @@ registerIconRenderer({
         "span",
         {
           title: params.title,
-          attributes: { class: "svg-icon-title" }
+          attributes: { class: "svg-icon-title" },
         },
         [svg]
       );
     } else {
       return svg;
     }
-  }
+  },
 });

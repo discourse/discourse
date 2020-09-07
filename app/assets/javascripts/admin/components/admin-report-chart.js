@@ -59,13 +59,13 @@ export default Component.extend({
       model.get("prevChartData") || model.get("prev_data")
     );
 
-    const labels = chartData.map(d => d.x);
+    const labels = chartData.map((d) => d.x);
 
     const data = {
       labels,
       datasets: [
         {
-          data: chartData.map(d => Math.round(parseFloat(d.y))),
+          data: chartData.map((d) => Math.round(parseFloat(d.y))),
           backgroundColor: prevChartData.length
             ? "transparent"
             : model.secondary_color,
@@ -73,19 +73,19 @@ export default Component.extend({
           pointRadius: 3,
           borderWidth: 1,
           pointBackgroundColor: model.primary_color,
-          pointBorderColor: model.primary_color
-        }
-      ]
+          pointBorderColor: model.primary_color,
+        },
+      ],
     };
 
     if (prevChartData.length) {
       data.datasets.push({
-        data: prevChartData.map(d => Math.round(parseFloat(d.y))),
+        data: prevChartData.map((d) => Math.round(parseFloat(d.y))),
         borderColor: model.primary_color,
         borderDash: [5, 5],
         backgroundColor: "transparent",
         borderWidth: 1,
-        pointRadius: 0
+        pointRadius: 0,
       });
     }
 
@@ -110,41 +110,41 @@ export default Component.extend({
       options: {
         tooltips: {
           callbacks: {
-            title: tooltipItem =>
-              moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL")
-          }
+            title: (tooltipItem) =>
+              moment(tooltipItem[0].xLabel, "YYYY-MM-DD").format("LL"),
+          },
         },
         legend: {
-          display: false
+          display: false,
         },
         responsive: true,
         maintainAspectRatio: false,
         responsiveAnimationDuration: 0,
         animation: {
-          duration: 0
+          duration: 0,
         },
         layout: {
           padding: {
             left: 0,
             top: 0,
             right: 0,
-            bottom: 0
-          }
+            bottom: 0,
+          },
         },
         scales: {
           yAxes: [
             {
               display: true,
               ticks: {
-                userCallback: label => {
+                userCallback: (label) => {
                   if (Math.floor(label) === label) return label;
                 },
-                callback: label => number(label),
+                callback: (label) => number(label),
                 sampleSize: 5,
                 maxRotation: 25,
-                minRotation: 25
-              }
-            }
+                minRotation: 25,
+              },
+            },
           ],
           xAxes: [
             {
@@ -152,17 +152,17 @@ export default Component.extend({
               gridLines: { display: false },
               type: "time",
               time: {
-                unit: this._unitForGrouping(options)
+                unit: this._unitForGrouping(options),
               },
               ticks: {
                 sampleSize: 5,
                 maxRotation: 50,
-                minRotation: 50
-              }
-            }
-          ]
-        }
-      }
+                minRotation: 50,
+              },
+            },
+          ],
+        },
+      },
     };
   },
 
@@ -192,11 +192,11 @@ export default Component.extend({
       const transformedData = [
         {
           x: currentStart.format("YYYY-MM-DD"),
-          y: 0
-        }
+          y: 0,
+        },
       ];
 
-      data.forEach(d => {
+      data.forEach((d) => {
         let date = moment(d.x, "YYYY-MM-DD");
 
         if (!date.isBetween(currentStart, currentEnd)) {
@@ -210,7 +210,7 @@ export default Component.extend({
         } else {
           transformedData[currentIndex] = {
             x: d.x,
-            y: d.y
+            y: d.y,
           };
         }
       });
@@ -231,5 +231,5 @@ export default Component.extend({
       default:
         return "day";
     }
-  }
+  },
 });

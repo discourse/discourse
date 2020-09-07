@@ -1,5 +1,5 @@
 // discourse-skip-module
-(function() {
+(function () {
   const gtmDataElement = document.getElementById("data-google-tag-manager");
   const dataLayerJson = JSON.parse(gtmDataElement.dataset.dataLayer);
 

@@ -6,7 +6,7 @@ export default DiscourseRoute.extend({
   serialize(model) {
     return {
       user_id: model.get("id"),
-      username: model.get("username").toLowerCase()
+      username: model.get("username").toLowerCase(),
     };
   },
 
@@ -19,9 +19,9 @@ export default DiscourseRoute.extend({
   },
 
   afterModel(adminUser) {
-    return adminUser.loadDetails().then(function() {
+    return adminUser.loadDetails().then(function () {
       adminUser.setOriginalTrustLevel();
       return adminUser;
     });
-  }
+  },
 });

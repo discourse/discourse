@@ -73,8 +73,8 @@ export default Component.extend({
       { label: I18n.t("refresh"), callback: logout },
       {
         onEscape: () => logout(),
-        backdrop: "static"
+        backdrop: "static",
       }
     );
-  }
+  },
 });

@@ -3,9 +3,9 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 export default {
   name: "apply-lazyYT",
   initialize() {
-    withPluginApi("0.1", api => {
+    withPluginApi("0.1", (api) => {
       api.decorateCooked(
-        $elem => {
+        ($elem) => {
           const iframes = $(".lazyYT", $elem);
           if (iframes.length === 0) {
             return;
@@ -21,11 +21,11 @@ export default {
               if (postId) {
                 api.preventCloak(postId);
               }
-            }
+            },
           });
         },
         { id: "discourse-lazyyt" }
       );
     });
-  }
+  },
 };

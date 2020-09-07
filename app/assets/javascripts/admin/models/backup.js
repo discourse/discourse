@@ -14,19 +14,19 @@ const Backup = EmberObject.extend({
   restore() {
     return ajax("/admin/backups/" + this.filename + "/restore", {
       type: "POST",
-      data: { client_id: MessageBus.clientId }
+      data: { client_id: MessageBus.clientId },
     });
-  }
+  },
 });
 
 Backup.reopenClass({
   find() {
     return ajax("/admin/backups.json")
-      .then(backups => backups.map(backup => Backup.create(backup)))
-      .catch(error => {
+      .then((backups) => backups.map((backup) => Backup.create(backup)))
+      .catch((error) => {
         bootbox.alert(
           I18n.t("admin.backups.backup_storage_error", {
-            error_message: extractError(error)
+            error_message: extractError(error),
           })
         );
         return [];
@@ -41,9 +41,9 @@ Backup.reopenClass({
       type: "POST",
       data: {
         with_uploads: withUploads,
-        client_id: MessageBus.clientId
-      }
-    }).then(result => {
+        client_id: MessageBus.clientId,
+      },
+    }).then((result) => {
       if (!result.success) {
         bootbox.alert(result.message);
       }
@@ -52,8 +52,8 @@ Backup.reopenClass({
 
   cancel() {
     return ajax("/admin/backups/cancel.json", {
-      type: "DELETE"
-    }).then(result => {
+      type: "DELETE",
+    }).then((result) => {
       if (!result.success) {
         bootbox.alert(result.message);
       }
@@ -62,8 +62,8 @@ Backup.reopenClass({
 
   rollback() {
     return ajax("/admin/backups/rollback.json", {
-      type: "POST"
-    }).then(result => {
+      type: "POST",
+    }).then((result) => {
       if (!result.success) {
         bootbox.alert(result.message);
       } else {
@@ -71,7 +71,7 @@ Backup.reopenClass({
         window.location = getURL("/");
       }
     });
-  }
+  },
 });
 
 export default Backup;

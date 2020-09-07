@@ -35,7 +35,7 @@ export default Component.extend(Scrolling, {
 
     this.session.set(this.trackerName, {
       position: $(window).scrollTop(),
-      tag: this.tag
+      tag: this.tag,
     });
-  }
+  },
 });

@@ -48,14 +48,14 @@ function performSearch(
       include_mentionable_groups: includeMentionableGroups,
       include_messageable_groups: includeMessageableGroups,
       groups: groupMembersOf,
-      topic_allowed_users: allowedUsers
-    }
+      topic_allowed_users: allowedUsers,
+    },
   });
 
   var returnVal = CANCELLED_STATUS;
 
   oldSearch
-    .then(function(r) {
+    .then(function (r) {
       const hasResults = !!(
         (r.users && r.users.length) ||
         (r.groups && r.groups.length) ||
@@ -75,7 +75,7 @@ function performSearch(
         returnVal = r;
       }
     })
-    .always(function() {
+    .always(function () {
       oldSearch = null;
       resultsFn(returnVal);
     });
@@ -96,7 +96,7 @@ function organizeResults(r, options) {
     results = [];
 
   if (r.users) {
-    r.users.every(function(u) {
+    r.users.every(function (u) {
       if (exclude.indexOf(u.username) === -1) {
         users.push(u);
         results.push(u);
@@ -112,7 +112,7 @@ function organizeResults(r, options) {
   }
 
   if (r.groups) {
-    r.groups.every(function(g) {
+    r.groups.every(function (g) {
       if (
         options.term.toLowerCase() === g.name.toLowerCase() ||
         results.length < limit
@@ -173,7 +173,7 @@ export default function userSearch(options) {
 
   currentTerm = term;
 
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     const newCacheKey = `${topicId}-${categoryId}`;
 
     if (new Date() - cacheTime > 30000 || cacheKey !== newCacheKey) {
@@ -201,7 +201,7 @@ export default function userSearch(options) {
       includeMessageableGroups,
       allowedUsers,
       groupMembersOf,
-      function(r) {
+      function (r) {
         cancel(clearPromise);
         resolve(organizeResults(r, options));
       }

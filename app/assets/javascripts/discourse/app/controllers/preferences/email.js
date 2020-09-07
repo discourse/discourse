@@ -50,7 +50,7 @@ export default Controller.extend({
     if (invalidEmail && (oldEmail || newEmail)) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("user.email.invalid")
+        reason: I18n.t("user.email.invalid"),
       });
     }
   },
@@ -61,7 +61,7 @@ export default Controller.extend({
       saving: false,
       error: false,
       success: false,
-      newEmail: null
+      newEmail: null,
     });
   },
 
@@ -74,7 +74,7 @@ export default Controller.extend({
         : this.model.changeEmail(this.newEmail)
       ).then(
         () => this.set("success", true),
-        e => {
+        (e) => {
           this.setProperties({ error: true, saving: false });
           if (
             e.jqXHR.responseJSON &&
@@ -87,6 +87,6 @@ export default Controller.extend({
           }
         }
       );
-    }
-  }
+    },
+  },
 });

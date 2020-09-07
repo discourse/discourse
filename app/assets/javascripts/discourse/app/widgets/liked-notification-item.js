@@ -16,18 +16,18 @@ createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
         return I18n.t("notifications.liked_2", {
           description,
           username,
-          username2
+          username2,
         });
       } else {
         return I18n.t("notifications.liked_many", {
           description,
           username,
           username2,
-          count
+          count,
         });
       }
     }
 
     return I18n.t("notifications.liked", { description, username });
-  }
+  },
 });

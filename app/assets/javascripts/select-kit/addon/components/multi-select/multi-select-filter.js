@@ -12,5 +12,5 @@ export default SelectKitFilterComponent.extend({
   computedPlaceholder(placeholder, hasSelection) {
     if (hasSelection) return "";
     return isEmpty(placeholder) ? "" : I18n.t(placeholder);
-  }
+  },
 });

@@ -85,7 +85,7 @@ function paragraph(state, startLine /*, endLine*/) {
 }
 
 export function setup(helper) {
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.block.ruler.at("paragraph", paragraph);
   });
 }

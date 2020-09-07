@@ -65,5 +65,5 @@ export default {
     screenTrack.registerAnonCallback(checkSignupCtaRequirements);
 
     checkSignupCtaRequirements();
-  }
+  },
 };

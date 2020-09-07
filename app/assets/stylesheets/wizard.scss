@@ -1,3 +1,4 @@
+@import "wizard_fonts";
 @import "color_definitions";
 @import "vendor/normalize";
 @import "vendor/normalize-ext";
@@ -7,7 +8,6 @@
 @import "common/foundation/mixins";
 @import "common/select-kit/*";
 @import "common/components/svg";
-@import "common/fonts";
 
 body.wizard {
   background-color: #fff;

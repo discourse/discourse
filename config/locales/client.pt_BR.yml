@@ -260,10 +260,7 @@ pt_BR:
         unbookmark: "Clique para remover todos os favoritos neste tópico"
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes deste tópico. Você tem um lembrete definido %{reminder_at} para este tópico."
     bookmarks:
-      created: "você favoritou esta postagem %{name}"
       not_bookmarked: "marcar postagem como favorita"
-      created_with_reminder: "você favoritou esta postagem com um lembrete %{date} %{name}"
-      created_with_at_desktop_reminder: "você favoritou esta postagem e será lembrado na próxima vez que estiver em seu desktop %{name}"
       remove: "Remover Favorito"
       delete: "Excluir Favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
@@ -274,7 +271,6 @@ pt_BR:
       list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário."
       search: "Pesquisar"
       reminders:
-        at_desktop: "Da próxima vez que estiver em meu desktop"
         later_today: "Mais tarde hoje"
         next_business_day: "Próximo dia útil"
         tomorrow: "Amanhã"
@@ -288,7 +284,6 @@ pt_BR:
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
         at_time: "em %{date_time}"
-        existing_reminder: "Você tem um lembrete definido para este favorito que será enviado"
     copy_codeblock:
       copied: "copiado!"
     drafts:
@@ -962,7 +957,6 @@ pt_BR:
         use: "Use o Aplicativo Autenticador"
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
         disable: "Desabilitar"
-        disable_confirm: "Tem certeza que você quer desabilitar todos os segundos fatores?"
         save: "Salvar"
         edit: "Editar"
         edit_title: "Editar Segundo Fator"
@@ -1540,9 +1534,6 @@ pt_BR:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
       invalid_selection_length: "A seleção deve ter pelo menos %{count} caracteres."
-      components:
-        categories_admin_dropdown:
-          title: "Categorias na caixa de seleção da administração"
     date_time_picker:
       from: De
       to: Para
@@ -2436,23 +2427,7 @@ pt_BR:
         remove_post_notice: "Remover Aviso da Staff"
         remove_timer: "remover contador"
       actions:
-        flag: "Sinalização"
-        defer_flags:
-          one: "Ignorar sinalizações"
-          other: "Ignorar sinalizações"
-        undo:
-          off_topic: "Desfazer sinalização"
-          spam: "Desfazer sinalização"
-          inappropriate: "Desfazer sinalização"
-          bookmark: "Remover favorito"
-          like: "Desfazer curtida"
         people:
-          off_topic: "marcado como off-topic"
-          spam: "marcado como spam"
-          inappropriate: "marcado como inapropriado"
-          notify_moderators: "notificaram os moderadores"
-          notify_user: "enviou uma mensagem"
-          bookmark: "favoritaram isto"
           like:
             one: "curtiu"
             other: "curtiram"
@@ -2471,8 +2446,6 @@ pt_BR:
           inappropriate: "Você sinalizou isto como inapropriado"
           notify_moderators: "Você sinalizou isto para a moderação"
           notify_user: "Você enviou uma mensagem particular para este usuário"
-          bookmark: "Você favoritou esta resposta"
-          like: "Você curtiu"
       delete:
         confirm:
           one: "Tem certeza de que deseja excluir esta postagem?"
@@ -3062,14 +3035,6 @@ pt_BR:
           latest: "Não há tópicos recentes."
           bookmarks: "Você ainda não tem tópicos nos favoritos."
           top: "Não há tópicos em alta."
-        bottom:
-          latest: "Não há mais tópicos recentes."
-          posted: "Não há mais tópicos postados."
-          read: "Não há mais tópicos lidos."
-          new: "Não há mais tópicos novos."
-          unread: "Não há mais tópicos não lidos."
-          top: "Não há mais tópicos em alta."
-          bookmarks: "Não há mais tópicos nos favoritos."
     invite:
       custom_message: "Faça o seu convite um pouco mais pessoal escrevendo uma <a href>mensagem personalizada</a>."
       custom_message_placeholder: "Insira a sua mensagem personalizada"

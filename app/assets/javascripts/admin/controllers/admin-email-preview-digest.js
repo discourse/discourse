@@ -26,7 +26,7 @@ export default Controller.extend({
         this.set("username", username);
       }
 
-      EmailPreview.findDigest(username, this.lastSeen).then(email => {
+      EmailPreview.findDigest(username, this.lastSeen).then((email) => {
         model.setProperties(
           email.getProperties("html_content", "text_content")
         );
@@ -43,7 +43,7 @@ export default Controller.extend({
       this.set("sentEmail", false);
 
       EmailPreview.sendDigest(this.username, this.lastSeen, this.email)
-        .then(result => {
+        .then((result) => {
           if (result.errors) {
             bootbox.alert(result.errors);
           } else {
@@ -54,6 +54,6 @@ export default Controller.extend({
         .finally(() => {
           this.set("sendingEmail", false);
         });
-    }
-  }
+    },
+  },
 });

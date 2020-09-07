@@ -2,10 +2,10 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Rendering polls with pie charts - desktop", {
   loggedIn: true,
-  settings: { poll_enabled: true, poll_groupable_user_fields: "something" }
+  settings: { poll_enabled: true, poll_groupable_user_fields: "something" },
 });
 
-test("Displays the pie chart", async assert => {
+test("Displays the pie chart", async (assert) => {
   await visit("/t/-/topic_with_pie_chart_poll");
 
   const poll = find(".poll")[0];

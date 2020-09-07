@@ -101,5 +101,5 @@ export default Service.extend({
 
       new window.Favcount(url).set(this._displayCount());
     }
-  }
+  },
 });

@@ -13,14 +13,14 @@ acceptance("Tag Groups", {
           tag_names: ["monkey"],
           parent_tag_name: [],
           one_per_topic: false,
-          permissions: { everyone: 1 }
-        }
+          permissions: { everyone: 1 },
+        },
       });
     });
-  }
+  },
 });
 
-QUnit.test("tag groups can be saved and deleted", async assert => {
+QUnit.test("tag groups can be saved and deleted", async (assert) => {
   const tags = selectKit(".tag-chooser");
 
   await visit("/tag_groups");

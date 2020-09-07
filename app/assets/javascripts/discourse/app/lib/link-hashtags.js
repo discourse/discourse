@@ -31,18 +31,18 @@ export function linkSeenHashtags($elem) {
     });
   });
 
-  return slugs.uniq().filter(slug => !checkedHashtags.has(slug));
+  return slugs.uniq().filter((slug) => !checkedHashtags.has(slug));
 }
 
 export function fetchUnseenHashtags(slugs) {
   return ajax("/hashtags", {
-    data: { slugs }
-  }).then(response => {
-    Object.keys(response.categories).forEach(slug => {
+    data: { slugs },
+  }).then((response) => {
+    Object.keys(response.categories).forEach((slug) => {
       categoryHashtags[slug] = response.categories[slug];
     });
 
-    Object.keys(response.tags).forEach(slug => {
+    Object.keys(response.tags).forEach((slug) => {
       tagHashtags[slug] = response.tags[slug];
     });
 

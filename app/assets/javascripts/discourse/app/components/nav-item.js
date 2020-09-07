@@ -31,5 +31,5 @@ export default Component.extend({
     }
 
     return this.router.isActive(route);
-  }
+  },
 });

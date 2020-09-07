@@ -8,12 +8,12 @@ widgetTest("basics", {
   beforeEach(store) {
     this.set("args", {
       topic: store.createRecord("topic", { closed: true }),
-      disableActions: true
+      disableActions: true,
     });
   },
   test(assert) {
     assert.ok(find(".topic-status .d-icon-lock").length);
-  }
+  },
 });
 
 widgetTest("extendability", {
@@ -22,16 +22,16 @@ widgetTest("extendability", {
     TopicStatusIcons.addObject([
       "has_accepted_answer",
       "far-check-square",
-      "solved"
+      "solved",
     ]);
     this.set("args", {
       topic: store.createRecord("topic", {
-        has_accepted_answer: true
+        has_accepted_answer: true,
       }),
-      disableActions: true
+      disableActions: true,
     });
   },
   test(assert) {
     assert.ok(find(".topic-status .d-icon-far-check-square").length);
-  }
+  },
 });

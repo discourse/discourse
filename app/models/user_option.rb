@@ -238,6 +238,7 @@ end
 #  enable_allowed_pm_users          :boolean          default(FALSE), not null
 #  dark_scheme_id                   :integer
 #  skip_new_user_tips               :boolean          default(FALSE), not null
+#  color_scheme_id                  :integer
 #
 # Indexes
 #

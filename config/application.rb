@@ -312,28 +312,6 @@ module Discourse
     # Use discourse-fonts gem to symlink fonts and generate .scss file
     fonts_path = File.join(config.root, 'public/fonts')
     Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
-    File.open(File.join(config.root, 'app/assets/stylesheets/common/fonts.scss'), 'w') do |file|
-      DiscourseFonts.fonts.each do |font|
-        file.write <<~EOF
-          .font-#{font[:key].tr("_", "-")} {
-            --font-family: #{font[:name]};
-            font-family: #{font[:name]};
-          }
-        EOF
-
-        if font[:variants].present?
-          font[:variants].each do |variant|
-            file.write <<~EOF
-              @font-face {
-                font-family: #{font[:name]};
-                src: asset-url("/fonts/#{variant[:filename]}") format("#{variant[:format]}");
-                font-weight: #{variant[:weight]};
-              }
-            EOF
-          end
-        end
-      end
-    end
 
     require_dependency 'stylesheet/manager'
     require_dependency 'svg_sprite/svg_sprite'

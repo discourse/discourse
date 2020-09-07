@@ -311,10 +311,9 @@ ru:
         unbookmark: "Удалить все закладки в этой теме"
         unbookmark_with_reminder: "Нажмите для удаления всех закладок и напоминаний в этой теме. У вас уже есть напоминание для этой темы, настроенное на %{reminder_at}."
     bookmarks:
-      created: "Вы добавили это сообщение в закладки под именем %{name}"
+      created: "Вы добавили это сообщение в закладки под именем '%{name}'"
       not_bookmarked: "Добавить сообщение в закладки"
-      created_with_reminder: "Вы добавили это сообщение в закладки под именем %{name} с последующим напоминанием %{date}"
-      created_with_at_desktop_reminder: "Вы добавили это сообщение в закладки под именем %{name} с последующим напоминанием, которое появится, когда вы откроете это сообщение на настольном компьютере"
+      created_with_reminder: "Вы добавили это сообщение в закладки под именем '%{name}' с последующим напоминанием %{date}"
       remove: "Удаление закладки"
       delete: "Удалить закладку"
       confirm_delete: "Вы действительно хотите удалить эту закладку? Напоминание также будет удалено."
@@ -332,7 +331,6 @@ ru:
       search_placeholder: "Поиск закладок по имени, названию темы или по содержанию сообщения"
       search: "Поиск"
       reminders:
-        at_desktop: "При следующем посещении форума через настольный компьютер"
         later_today: "Сегодня, но позже"
         next_business_day: "На следующий рабочий день"
         tomorrow: "Завтра"
@@ -347,7 +345,7 @@ ru:
         today_with_time: "сегодня в %{time}"
         tomorrow_with_time: "завтра в %{time}"
         at_time: "%{date_time}"
-        existing_reminder: "Для этой закладки уже настроено напоминание, которое будет отправлено"
+        existing_reminder: "Для этой закладки уже настроено напоминание, которое будет отправлено %{at_date_time}"
     copy_codeblock:
       copied: "Код скопирован!"
     drafts:
@@ -954,10 +952,18 @@ ru:
         not_first_time: "Не в первый раз?"
         skip_link: "Пропустить эти советы"
       theme_default_on_all_devices: "Сделать эту тему темой по умолчанию на всех моих устройствах"
+      color_scheme_default_on_all_devices: "Установить цветовую схему по умолчанию на всех моих устройствах"
+      color_scheme: "Цветовая схема"
+      color_schemes:
+        default_description: "Цветовая схема по умолчанию"
+        undo: "Сбросить"
+        regular: "Обычная"
+        dark: "Тёмный режим"
+        default_dark_scheme: "(цветовая схема по умолчанию)"
       dark_mode: "Тёмный режим"
       dark_mode_enable: "Включить тёмный режим"
       text_size_default_on_all_devices: "Сделать это размер текста размером по умолчанию на всех моих устройствах"
-      allow_private_messages: "Разрешать другим пользователям отправлять мне личные сообщения"
+      allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Позволить отвечать с цитированием выделенного текста"
       enable_defer: "Включить кнопку 'Отложить', чтобы помечать темы как непрочитанные"
@@ -993,16 +999,17 @@ ru:
       muted_tags_instructions: "Вы не будете получать уведомления о новых темах, помеченные этими тегами. Также эти темы не будут показываться во вкладке 'Непрочитанные'."
       watched_categories: "Наблюдение"
       watched_categories_instructions: "Вы будете автоматически наблюдать все темы в этих разделах. Вам будут приходить уведомления о новых сообщениях и темах, рядом со списком тем будет отображено количество новых сообщений."
-      tracked_categories: "Отслеживаемые разделы"
-      tracked_categories_instructions: "Вы будете автоматически отслеживать все темы в этом разделе. Рядом с темой будет отображено количество новых сообщений."
+      tracked_categories: "Отслеживание"
+      tracked_categories_instructions: "Вы будете автоматически отслеживать все темы в этих разделах. Рядом с темой будет отображено количество новых сообщений."
       watched_first_post_categories: "Отслеживание первого сообщения"
       watched_first_post_categories_instructions: "Уведомлять только о первом сообщении в каждой новой теме в этих разделах."
       watched_first_post_tags: "Отслеживающие первое сообщение"
       watched_first_post_tags_instructions: "Вы будете получать уведомления о новых темах с одним сообщением, если тема помечена такими тегами."
-      muted_categories: "Выключенные разделы"
+      muted_categories: "Выключенные"
       muted_categories_instructions: "Не уведомлять меня о новых темах в этих разделах и не показывать новые темы на странице 'Непрочитанные'."
       muted_categories_instructions_dont_hide: "Вы не будете уведомлены о новых темах в этих разделах."
       regular_categories: "Активный"
+      regular_categories_instructions: "Вы будете видеть эти разделы в секциях 'Последние' и 'Обсуждаемые'."
       no_category_access: "Как модератор Вы ограничены в доступе к разделу, сохранения отклонены."
       delete_account: "Удалить мою учётную запись"
       delete_account_confirm: "Вы действительно хотите удалить свою учётную запись? Отменить удаление будет невозможно!"
@@ -1015,7 +1022,7 @@ ru:
       muted_users_instructions: "Игнорировать все уведомления и личные сообщения от этих пользователей."
       allowed_pm_users: "Разрешённые"
       allowed_pm_users_instructions: "Разрешать только личные сообщения только от этих пользователей."
-      allow_private_messages_from_specific_users: "Разрешать отправлять мне личные сообщения только определенным пользователям"
+      allow_private_messages_from_specific_users: "Разрешить отправлять мне личные сообщения только определенным пользователям"
       ignored_users: "Игнорируемые"
       ignored_users_instructions: "Игнорировать все сообщения, уведомления и личные сообщения от этих пользователей."
       tracked_topics_link: "Показать"
@@ -1087,6 +1094,7 @@ ru:
       second_factor:
         title: "Двухфакторная аутентификация"
         enable: "Управление двухфакторной аутентификацией"
+        disable_all: "Отключить всё"
         forgot_password: "Забыли пароль?"
         confirm_password_description: "Подтвердите ваш пароль, чтобы продолжить"
         name: "Имя"
@@ -1104,7 +1112,7 @@ ru:
         use: "Используйте приложение Authenticator"
         enforced_notice: "Вы должны включить двухфакторную аутентификацию перед тем как зайти на этот сайт."
         disable: "Отключить"
-        disable_confirm: "Вы действительно хотите отключить все вторые факторы?"
+        disable_confirm: "Вы действительно хотите отключить все методы второго фактора?"
         save: "Сохранить"
         edit: "Редактировать"
         edit_title: "Изменение второго фактора"
@@ -1692,6 +1700,29 @@ ru:
       categories_and_top_topics: "Разделы и популярные темы"
       categories_boxes: "Блоки с подразделами"
       categories_boxes_with_topics: "Блоки с избранными темами"
+    base_font_setting:
+      helvetica: "Helvetica/Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "RobotoCondensed"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1720,7 +1751,7 @@ ru:
       invalid_selection_length: "Необходимо выбрать не менее %{count} символов."
       components:
         categories_admin_dropdown:
-          title: "Раскрывающийся список разделов"
+          title: "Управление разделами"
     date_time_picker:
       from: От
       to: Кому
@@ -2131,6 +2162,7 @@ ru:
         new: "Новых тем больше нет."
         unread: "Непрочитанных тем больше нет."
         category: "В разделе %{category} больше нет тем."
+        tag: "Нет больше тем, помеченных тегом %{tag}."
         top: "Обсуждаемых тем больше нет."
         bookmarks: "Тем, помеченных закладкам,. больше нет."
     topic:
@@ -2216,6 +2248,7 @@ ru:
       read_more_MF: "У вас осталось { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитанная</a> } few { <a href='{basePath}/unread'># непрочитанные</a> } other { <a href='{basePath}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 новая</a> тема} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новые</a> темы} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новых</a> тем} }, вы также можете {CATEGORY, select, true {посмотреть другие темы в разделе {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Просмотреть все разделы
+      browse_all_tags: Просмотреть все теги
       view_latest_topics: Просмотреть последние темы
       suggest_create_topic: Почему бы вам не создать новую тему?
       jump_reply_up: Перейти к более ранним ответам
@@ -2520,7 +2553,6 @@ ru:
         preview_url: "Ваша страница будет опубликована по адресу:"
         invalid_slug: "Извините, вы не можете опубликовать эту страницу."
         unpublish: "Отменить публикацию"
-        update: "Обновить"
         unpublished: "Публикация страницы была отменена и более недоступна по указанному ранее адресу."
         publishing_settings: "Настройки публикации"
       change_owner:
@@ -2698,25 +2730,7 @@ ru:
         remove_post_notice: "Удалить сообщение модератора"
         remove_timer: "Отменить таймер"
       actions:
-        flag: "Жалоба"
-        defer_flags:
-          one: "Игнорировать жалобу"
-          few: "Игнорировать жалобы"
-          many: "Игнорировать жалобы"
-          other: "Игнорировать жалобы"
-        undo:
-          off_topic: "Отозвать жалобу"
-          spam: "Отозвать жалобу"
-          inappropriate: "Отозвать жалобу"
-          bookmark: "Удалить из закладок"
-          like: "Больше не нравится"
         people:
-          off_topic: "Помечено как оффтопик"
-          spam: "Помечено как спам"
-          inappropriate: "Помечено как неуместное"
-          notify_moderators: "Уведомлённые модераторы"
-          notify_user: "отправил сообщение"
-          bookmark: "добавил закладку"
           like:
             one: "понравилось"
             few: "понравилось"
@@ -2743,8 +2757,6 @@ ru:
           inappropriate: "Помечено вами как неуместное"
           notify_moderators: "Вы отправили жалобу модератору"
           notify_user: "Вы отправили сообщение этому пользователю"
-          bookmark: "Вы добавили сообщение в закладки"
-          like: "Вам нравится"
       delete:
         confirm:
           one: "Вы действительно хотите удалить это сообщение?"
@@ -3399,14 +3411,6 @@ ru:
           latest: "Нет последних тем."
           bookmarks: "У вас пока нет тем в закладках."
           top: "Нет обсуждаемых тем."
-        bottom:
-          latest: "Больше нет последних тем."
-          posted: "Больше нет тем с новыми сообщениями."
-          read: "Больше нет прочитанных тем."
-          new: "Больше нет новых тем."
-          unread: "Больше нет непрочитанных тем."
-          top: "Больше нет обсуждаемых тем."
-          bookmarks: "Больше нет тем в закладках."
     invite:
       custom_message: "Сделать приглашение немного более личным, написав <a href>сообщение пользователю</a>."
       custom_message_placeholder: "Напишите здесь ваше личное сообщение"
@@ -3886,7 +3890,8 @@ ru:
           hide_advanced: "Скрыть дополнительные поля"
           hide_unused_fields: "Скрыть неиспользуемые поля"
           is_default: "Активирована по умолчанию"
-          user_selectable: "Тема может быть выбрана пользователями"
+          user_selectable: "Тема может быть выбрана пользователем"
+          color_scheme_user_selectable: "Цветовая схема может быть выбрана пользователем"
           color_scheme: "Цветовая палитра"
           default_light_scheme: "Light (используется по умолчанию)"
           color_scheme_select: "Выберите цвета темы"
@@ -4193,7 +4198,7 @@ ru:
             delete_post: "Удаление сообщения"
             impersonate: "Вход от имени пользователя"
             anonymize_user: "Анонимизация пользователя"
-            roll_up: "Сгруппировать IP-адреса"
+            roll_up: "Группировка IP-адресов"
             change_category_settings: "Изменение настроек раздела"
             delete_category: "Удаление раздела"
             create_category: "Создание раздела"
@@ -4218,7 +4223,7 @@ ru:
             backup_download: "Загрузка резервной копии"
             backup_destroy: "Удаление резервной копии"
             reviewed_post: "Рецензирование сообщения"
-            custom_staff: "Действия в плагинах"
+            custom_staff: "Действия с плагинами"
             post_locked: "Заморозка сообщения"
             post_edit: "Редактирование сообщения"
             post_unlocked: "Разморозка сообщения"
@@ -4255,7 +4260,7 @@ ru:
             page_unpublished: "Отмена публикации страницы"
             add_email: "Добавление адреса e-mail"
             update_email: "Обновление адреса e-mail"
-            destroy_email: "Уничтожение адреса e-mail"
+            destroy_email: "Удаление e-mail"
             topic_closed: "Закрытие темы"
             topic_opened: "Открытие темы"
             topic_archived: "Архивация темы"
@@ -4532,7 +4537,7 @@ ru:
         reset_bounce_score:
           label: "Сбросить"
           title: "сбросить карму к 0"
-        visit_profile: "Посетите <a href='%{url}'>страницу настроек этого пользователя</a>, чтобы отредактировать его профиль"
+        visit_profile: "Посетите <a href='%{url}'> страницу настроек этого пользователя</a>, чтобы отредактировать его профиль"
         deactivate_explanation: "Деактивированный пользователь должен заново подтвердить свой Email."
         suspended_explanation: "Замороженный пользователь не может войти в систему."
         silence_explanation: "Заблокированный пользователь не может создавать темы или отвечать на сообщения."

@@ -3,22 +3,22 @@ import PreloadStore from "discourse/lib/preload-store";
 
 acceptance("Invite Accept", {
   settings: {
-    full_name_required: true
-  }
+    full_name_required: true,
+  },
 });
 
-QUnit.test("Invite Acceptance Page", async assert => {
+QUnit.test("Invite Acceptance Page", async (assert) => {
   PreloadStore.store("invite_info", {
     invited_by: {
       id: 123,
       username: "neil",
       avatar_template: "/user_avatar/localhost/neil/{size}/25_1.png",
       name: "Neil Lalonde",
-      title: "team"
+      title: "team",
     },
     email: null,
     username: "invited",
-    is_invite_link: true
+    is_invite_link: true,
   });
 
   await visit("/invites/myvalidinvitetoken");

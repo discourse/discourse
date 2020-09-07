@@ -18,7 +18,7 @@ export default DiscourseRoute.extend({
       name: I18n.t("admin.site_settings.categories." + params.category_id),
       siteSettings: this.controllerFor("adminSiteSettingsCategory").get(
         "filteredContent"
-      )
+      ),
     });
-  }
+  },
 });

@@ -17,5 +17,5 @@ export default DiscourseRoute.extend({
 
   renderTemplate() {
     this.render("admin/templates/web-hooks-show-events", { into: "adminApi" });
-  }
+  },
 });

@@ -43,11 +43,11 @@ export default Component.extend({
       reason = I18n.t("composer.error.title_missing");
     } else if (missingTitleChars > 0) {
       reason = I18n.t("composer.error.title_too_short", {
-        min: minimumTitleLength
+        min: minimumTitleLength,
       });
     } else if (titleLength > this.siteSettings.max_topic_title_length) {
       reason = I18n.t("composer.error.title_too_long", {
-        max: this.siteSettings.max_topic_title_length
+        max: this.siteSettings.max_topic_title_length,
       });
     }
 
@@ -55,7 +55,7 @@ export default Component.extend({
       return EmberObject.create({
         failed: true,
         reason,
-        lastShownAt: lastValidatedAt
+        lastShownAt: lastValidatedAt,
       });
     }
   },
@@ -121,7 +121,7 @@ export default Component.extend({
         ajax,
         synchronous: true,
         categoryId: this.get("composer.category.id"),
-        topicId: this.get("composer.topic.id")
+        topicId: this.get("composer.topic.id"),
       });
 
       if (loadOnebox && loadOnebox.then) {
@@ -189,5 +189,5 @@ export default Component.extend({
       reply.length === 0 ||
       reply === (this.get("composer.category.topic_template") || "")
     );
-  }
+  },
 });

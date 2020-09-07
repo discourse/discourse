@@ -9,5 +9,5 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.logs = [];
-  }
+  },
 });

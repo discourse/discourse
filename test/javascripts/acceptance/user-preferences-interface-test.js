@@ -5,10 +5,10 @@ import Session from "discourse/models/session";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 
 acceptance("User Preferences - Interface", {
-  loggedIn: true
+  loggedIn: true,
 });
 
-QUnit.test("font size change", async assert => {
+QUnit.test("font size change", async (assert) => {
   removeCookie("text_size");
 
   const savePreferences = async () => {
@@ -55,17 +55,17 @@ QUnit.test("font size change", async assert => {
 
 QUnit.test(
   "does not show option to disable dark mode by default",
-  async assert => {
+  async (assert) => {
     await visit("/u/eviltrout/preferences/interface");
     assert.equal($(".control-group.dark-mode").length, 0);
   }
 );
 
-QUnit.test("shows light/dark color scheme pickers", async assert => {
+QUnit.test("shows light/dark color scheme pickers", async (assert) => {
   let site = Site.current();
   site.set("user_color_schemes", [
     { id: 2, name: "Cool Breeze" },
-    { id: 3, name: "Dark Night", is_dark: true }
+    { id: 3, name: "Dark Night", is_dark: true },
   ]);
 
   await visit("/u/eviltrout/preferences/interface");
@@ -76,7 +76,7 @@ QUnit.test("shows light/dark color scheme pickers", async assert => {
 function interfacePretender(server, helper) {
   server.get("/color-scheme-stylesheet/2.json", () => {
     return helper.response({
-      success: "OK"
+      success: "OK",
     });
   });
 }
@@ -84,10 +84,10 @@ function interfacePretender(server, helper) {
 acceptance("User Preferences Color Schemes (with default dark scheme)", {
   loggedIn: true,
   settings: { default_dark_mode_color_scheme_id: 1 },
-  pretend: interfacePretender
+  pretend: interfacePretender,
 });
 
-QUnit.test("show option to disable dark mode", async assert => {
+QUnit.test("show option to disable dark mode", async (assert) => {
   await visit("/u/eviltrout/preferences/interface");
 
   assert.ok(
@@ -96,7 +96,7 @@ QUnit.test("show option to disable dark mode", async assert => {
   );
 });
 
-QUnit.test("no color scheme picker by default", async assert => {
+QUnit.test("no color scheme picker by default", async (assert) => {
   let site = Site.current();
   site.set("user_color_schemes", []);
 
@@ -104,7 +104,7 @@ QUnit.test("no color scheme picker by default", async assert => {
   assert.equal($(".control-group.color-scheme").length, 0);
 });
 
-QUnit.test("light color scheme picker", async assert => {
+QUnit.test("light color scheme picker", async (assert) => {
   let site = Site.current();
   site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
@@ -117,7 +117,7 @@ QUnit.test("light color scheme picker", async assert => {
   );
 });
 
-QUnit.test("light and dark color scheme pickers", async assert => {
+QUnit.test("light and dark color scheme pickers", async (assert) => {
   let site = Site.current();
   let session = Session.current();
   session.userDarkSchemeId = 1; // same as default set in site settings
@@ -125,7 +125,7 @@ QUnit.test("light and dark color scheme pickers", async assert => {
   site.set("default_dark_color_scheme", { id: 1, name: "Dark" });
   site.set("user_color_schemes", [
     { id: 2, name: "Cool Breeze" },
-    { id: 3, name: "Dark Night", is_dark: true }
+    { id: 3, name: "Dark Night", is_dark: true },
   ]);
 
   const savePreferences = async () => {
@@ -171,9 +171,7 @@ QUnit.test("light and dark color scheme pickers", async assert => {
   // dark scheme
   await selectKit(".dark-color-scheme .combobox").expand();
   assert.ok(
-    selectKit(".dark-color-scheme .combobox")
-      .rowByValue(1)
-      .exists(),
+    selectKit(".dark-color-scheme .combobox").rowByValue(1).exists(),
     "default dark scheme is included"
   );
 
@@ -189,17 +187,13 @@ QUnit.test("light and dark color scheme pickers", async assert => {
 
   await click("button.undo-preview");
   assert.equal(
-    selectKit(".light-color-scheme .combobox")
-      .header()
-      .value(),
+    selectKit(".light-color-scheme .combobox").header().value(),
     null,
     "resets light scheme dropdown"
   );
 
   assert.equal(
-    selectKit(".dark-color-scheme .combobox")
-      .header()
-      .value(),
+    selectKit(".dark-color-scheme .combobox").header().value(),
     session.userDarkSchemeId,
     "resets dark scheme dropdown"
   );

@@ -26,7 +26,7 @@ export default Component.extend({
   showTotalForSample(totalsForSample, total, datesFiltering) {
     // check if we have at least one cell which contains a value
     const sum = totalsForSample
-      .map(t => t.value)
+      .map((t) => t.value)
       .compact()
       .reduce((s, v) => s + v, 0);
 
@@ -64,7 +64,7 @@ export default Component.extend({
 
   @discourseComputed("totalsForSampleRow", "model.computedLabels")
   totalsForSample(row, labels) {
-    return labels.map(label => {
+    return labels.map((label) => {
       const computedLabel = label.compute(row);
       computedLabel.type = label.type;
       computedLabel.property = label.mainProperty;
@@ -78,7 +78,7 @@ export default Component.extend({
 
     let totalsRow = {};
 
-    labels.forEach(label => {
+    labels.forEach((label) => {
       const reducer = (sum, row) => {
         const computedLabel = label.compute(row);
         const value = computedLabel.value;
@@ -137,11 +137,11 @@ export default Component.extend({
       pagesIndexes.push(i);
     }
 
-    let pages = pagesIndexes.map(v => {
+    let pages = pagesIndexes.map((v) => {
       return {
         page: v + 1,
         index: v,
-        class: v === page ? "is-current" : null
+        class: v === page ? "is-current" : null,
       };
     });
 
@@ -165,6 +165,6 @@ export default Component.extend({
       } else {
         this.set("sortLabel", label);
       }
-    }
-  }
+    },
+  },
 });

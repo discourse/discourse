@@ -13,11 +13,11 @@ export default DiscourseRoute.extend({
     const groupName = params.groupname || params.group_name;
 
     if (this.currentUser) {
-      this.replaceWith("discovery.latest").then(e => {
+      this.replaceWith("discovery.latest").then((e) => {
         if (params.username) {
           // send a message to a user
           User.findByUsername(encodeURIComponent(params.username))
-            .then(user => {
+            .then((user) => {
               if (user.can_send_private_message_to_user) {
                 next(() =>
                   e.send(
@@ -37,7 +37,7 @@ export default DiscourseRoute.extend({
         } else if (groupName) {
           // send a message to a group
           Group.messageable(groupName)
-            .then(result => {
+            .then((result) => {
               if (result.messageable) {
                 next(() =>
                   e.send(
@@ -62,5 +62,5 @@ export default DiscourseRoute.extend({
       cookie("destination_url", window.location.href);
       this.replaceWith("login");
     }
-  }
+  },
 });

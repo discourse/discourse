@@ -263,10 +263,9 @@ nl:
         unbookmark: "Klik om alle bladwijzers in dit topic te verwijderen"
         unbookmark_with_reminder: "Klik om alle bladwijzers en herinneringen in dit topic te verwijderen. U hebt voor dit topic een herinnering ingesteld voor %{reminder_at}."
     bookmarks:
-      created: "u hebt een bladwijzer voor dit bericht gemaakt%{name}"
+      created: "U hebt een bladwijzer voor dit bericht gemaakt. %{name}"
       not_bookmarked: "bladwijzer voor dit bericht maken"
-      created_with_reminder: "u hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}%{name}"
-      created_with_at_desktop_reminder: "u hebt een bladwijzer voor dit bericht gemaakt en wordt de volgende keer dat u uw computer gebruikt herinnerd%{name}"
+      created_with_reminder: "U hebt een bladwijzer voor dit bericht gemaakt met een herinnering voor %{date}. %{name}"
       remove: "Bladwijzer verwijderen"
       delete: "Bladwijzer verwijderen"
       confirm_delete: "Weet u zeker dat u deze bladwijzer wilt verwijderen? De herinnering wordt ook verwijderd."
@@ -284,7 +283,6 @@ nl:
       search_placeholder: "Bladwijzers doorzoeken op naam, topictitel of berichtinhoud"
       search: "Zoeken"
       reminders:
-        at_desktop: "De volgende keer vanaf mijn computer"
         later_today: "Later vandaag"
         next_business_day: "Volgende werkdag"
         tomorrow: "Morgen"
@@ -299,7 +297,7 @@ nl:
         today_with_time: "vandaag om %{time}"
         tomorrow_with_time: "morgen om %{time}"
         at_time: "op %{date_time}"
-        existing_reminder: "U hebt een herinnering voor deze bladwijzer ingesteld die wordt verzonden"
+        existing_reminder: "U hebt een herinnering voor deze bladwijzer ingesteld die %{at_date_time} wordt verzonden"
     copy_codeblock:
       copied: "gekopieerd!"
     drafts:
@@ -523,6 +521,7 @@ nl:
       sent_by_user: "Verzonden door <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Verzonden door <a href='%{userUrl}'>u</a>"
     directory:
+      username: "Gebruikersnaam"
       filter_name: "filteren op gebruikersnaam"
       title: "Gebruikers"
       likes_given: "Gegeven"
@@ -874,6 +873,16 @@ nl:
         not_first_time: "Niet uw eerste keer?"
         skip_link: "Deze tips overslaan"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
+      color_scheme_default_on_all_devices: "Standaard kleurenschema(’s) op al mijn apparaten instellen"
+      color_scheme: "Kleurenschema"
+      color_schemes:
+        default_description: "Standaard"
+        disable_dark_scheme: "Hetzelfde als normaal"
+        dark_instructions: "U kunt een voorbeeld van het kleurenschema van de donkere modus bekijken door de donkere modus van uw apparaat om te schakelen."
+        undo: "Terugzetten"
+        regular: "Normaal"
+        dark: "Donkere modus"
+        default_dark_scheme: "(standaard voor website)"
       dark_mode: "Donkere modus"
       dark_mode_enable: "Automatisch kleurenschema voor donkere modus inschakelen"
       text_size_default_on_all_devices: "Dit de standaard tekstgrootte maken op al mijn apparaten"
@@ -923,7 +932,7 @@ nl:
       muted_categories_instructions: "U ontvangt geen enkele melding over nieuwe topics en berichten in deze categorieën, en ze verschijnen niet op de pagina's Categorieën of Nieuwste."
       muted_categories_instructions_dont_hide: "U ontvangt geen enkele melding over nieuwe topics in deze categorieën."
       regular_categories: "Normaal"
-      regular_categories_instructions: "Deze topics ziet u in de topiclijsten 'Nieuwste' en 'Top'."
+      regular_categories_instructions: "Deze categorieën ziet u in de topiclijsten ‘Nieuwste’ en ‘Top’."
       no_category_access: "Als moderator hebt u beperkte toegang tot categorieën, opslaan is uitgeschakeld."
       delete_account: "Mijn account verwijderen"
       delete_account_confirm: "Weet u zeker dat u uw account definitief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt!"
@@ -1025,7 +1034,6 @@ nl:
         use: "Authenticator-app gebruiken"
         enforced_notice: "U dient twee-factor-authenticatie in te schakelen voordat u deze website bezoekt."
         disable: "Uitschakelen"
-        disable_confirm: "Weet u zeker dat u alle tweede factoren wilt uitschakelen?"
         save: "Opslaan"
         edit: "Bewerken"
         edit_title: "Tweede factor bewerken"
@@ -1591,6 +1599,29 @@ nl:
       categories_and_top_topics: "Categorieën en toptopics"
       categories_boxes: "Vakken met subcategorieën"
       categories_boxes_with_topics: "Vakken met aanbevolen topics"
+    base_font_setting:
+      helvetica: "Helvetica/Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "RobotoCondensed"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1613,6 +1644,9 @@ nl:
         one: "Selecteer minstens %{count} item."
         other: "Selecteer minstens %{count} items."
       invalid_selection_length: "Selectie moet minstens %{count} tekens bevatten."
+      components:
+        categories_admin_dropdown:
+          title: "Categorieën beheren"
     date_time_picker:
       from: Van
       to: Aan
@@ -2005,6 +2039,7 @@ nl:
         new: "Er zijn geen nieuwe topics meer."
         unread: "Er zijn geen ongelezen topics meer."
         category: "Er zijn geen topics meer in %{category}."
+        tag: "Er zijn geen topics meer in %{tag}."
         top: "Er zijn geen toptopics meer."
         bookmarks: "Er zijn geen topics met bladwijzers meer."
     topic:
@@ -2076,6 +2111,7 @@ nl:
       read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 ongelezen</a> } other { zijn <a href='{basePath}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='{basePath}/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle categorieën bekijken
+      browse_all_tags: Alle tags bekijken
       view_latest_topics: nieuwste topics bekijken
       suggest_create_topic: Waarom maakt u geen topic aan?
       jump_reply_up: naar eerder antwoord springen
@@ -2364,7 +2400,6 @@ nl:
         preview_url: "Uw pagina wordt gepubliceerd op:"
         invalid_slug: "Sorry, u kunt deze pagina niet publiceren."
         unpublish: "Publicatie ongedaan maken"
-        update: "Bijwerken"
         unpublished: "Uw pagina is niet meer gepubliceerd en niet meer toegankelijk."
         publishing_settings: "Publicatie-instellingen"
       change_owner:
@@ -2520,23 +2555,7 @@ nl:
         remove_post_notice: "Stafmelding verwijderen"
         remove_timer: "timer verwijderen"
       actions:
-        flag: "Markeren"
-        defer_flags:
-          one: "Markering negeren"
-          other: "Markeringen negeren"
-        undo:
-          off_topic: "Markering verwijderen"
-          spam: "Markering verwijderen"
-          inappropriate: "Markering verwijderen"
-          bookmark: "Bladwijzer verwijderen"
-          like: "Like ongedaan maken"
         people:
-          off_topic: "heeft dit als off-topic gemarkeerd"
-          spam: "heeft dit als spam gemarkeerd"
-          inappropriate: "heeft dit als ongepast gemarkeerd"
-          notify_moderators: "heeft moderators ingelicht"
-          notify_user: "heeft een bericht gestuurd"
-          bookmark: "heeft dit aan bladwijzers toegevoegd"
           like:
             one: "heeft dit geliket"
             other: "hebben dit geliket"
@@ -2555,8 +2574,6 @@ nl:
           inappropriate: "U hebt dit als ongepast gemarkeerd"
           notify_moderators: "U hebt dit voor moderatie gemarkeerd"
           notify_user: "U hebt een bericht naar deze gebruiker gestuurd"
-          bookmark: "U hebt een bladwijzer voor dit bericht gemaakt"
-          like: "U hebt dit geliket"
       delete:
         confirm:
           one: "Weet u zeker dat u dat bericht wilt verwijderen?"
@@ -3155,14 +3172,6 @@ nl:
           latest: "Er zijn geen nieuwste topics."
           bookmarks: "U hebt nog geen topics met bladwijzers."
           top: "Er zijn geen toptopics."
-        bottom:
-          latest: "Er zijn geen nieuwste topics meer."
-          posted: "Er zijn geen geplaatste topics meer."
-          read: "Er zijn geen gelezen topics meer."
-          new: "Er zijn geen nieuwe topics meer."
-          unread: "Er zijn geen ongelezen topics meer."
-          top: "Er zijn geen toptopics meer."
-          bookmarks: "Er zijn geen topics met bladwijzers meer."
     invite:
       custom_message: "Maak uw uitnodiging iets persoonlijker door een <a href>eigen bericht</a> te schrijven."
       custom_message_placeholder: "Voer uw eigen bericht in"
@@ -3637,6 +3646,7 @@ nl:
           hide_unused_fields: "Ongebruikte velden verbergen"
           is_default: "Thema is standaard ingeschakeld"
           user_selectable: "Thema kan door gebruikers worden geselecteerd"
+          color_scheme_user_selectable: "Kleurenschema kan door gebruikers worden geselecteerd"
           color_scheme: "Kleurenpalet"
           default_light_scheme: "Licht (standaard)"
           color_scheme_select: "Kleuren die door thema worden gebruikt selecteren"

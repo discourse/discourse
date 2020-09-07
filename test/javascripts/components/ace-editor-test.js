@@ -8,7 +8,7 @@ componentTest("css editor", {
   test(assert) {
     assert.expect(1);
     assert.ok(find(".ace_editor").length, "it renders the ace editor");
-  }
+  },
 });
 
 componentTest("html editor", {
@@ -17,7 +17,7 @@ componentTest("html editor", {
   test(assert) {
     assert.expect(1);
     assert.ok(find(".ace_editor").length, "it renders the ace editor");
-  }
+  },
 });
 
 componentTest("sql editor", {
@@ -26,7 +26,7 @@ componentTest("sql editor", {
   test(assert) {
     assert.expect(1);
     assert.ok(find(".ace_editor").length, "it renders the ace editor");
-  }
+  },
 });
 
 componentTest("disabled editor", {
@@ -38,10 +38,7 @@ componentTest("disabled editor", {
     assert.expect(3);
     assert.ok($ace.length, "it renders the ace editor");
     assert.equal(
-      $ace
-        .parent()
-        .data()
-        .editor.getReadOnly(),
+      $ace.parent().data().editor.getReadOnly(),
       true,
       "it sets ACE to read-only mode"
     );
@@ -50,5 +47,5 @@ componentTest("disabled editor", {
       "true",
       "ACE wrapper has `data-disabled` attribute set to true"
     );
-  }
+  },
 });

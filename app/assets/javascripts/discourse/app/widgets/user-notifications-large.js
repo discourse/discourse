@@ -23,9 +23,9 @@ createWidget("large-notification-item", {
         {},
         { fallbackWidgetName: "default-notification-item" }
       ),
-      h("span.time", dateNode(attrs.created_at))
+      h("span.time", dateNode(attrs.created_at)),
     ];
-  }
+  },
 });
 
 export default createWidget("user-notifications-large", {
@@ -33,9 +33,9 @@ export default createWidget("user-notifications-large", {
     const notifications = attrs.notifications;
     const username = notifications.findArgs.username;
 
-    return notifications.map(n => {
+    return notifications.map((n) => {
       n.username = username;
       return this.attach("large-notification-item", n);
     });
-  }
+  },
 });

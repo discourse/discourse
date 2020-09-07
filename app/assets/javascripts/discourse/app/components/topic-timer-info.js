@@ -6,7 +6,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
 import {
   REMINDER_TYPE,
-  DELETE_REPLIES_TYPE
+  DELETE_REPLIES_TYPE,
 } from "discourse/controllers/edit-topic-timer";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -69,7 +69,7 @@ export default Component.extend({
 
       let options = {
         timeLeft: duration.humanize(true),
-        duration: moment.duration(durationHours, "hours").humanize()
+        duration: moment.duration(durationHours, "hours").humanize(),
       };
 
       const categoryId = this.categoryId;
@@ -79,7 +79,7 @@ export default Component.extend({
         options = Object.assign(
           {
             categoryName: category.get("slug"),
-            categoryUrl: category.get("url")
+            categoryUrl: category.get("url"),
           },
           options
         );
@@ -88,7 +88,7 @@ export default Component.extend({
       this.setProperties({
         title: `${moment(this.executeAt).format("LLLL")}`.htmlSafe(),
         notice: `${I18n.t(this._noticeKey(), options)}`.htmlSafe(),
-        showTopicTimer: true
+        showTopicTimer: true,
       });
 
       // TODO Sam: concerned this can cause a heavy rerender loop
@@ -135,5 +135,5 @@ export default Component.extend({
     } else {
       return `topic.status_update_notice.auto_${statusType}`;
     }
-  }
+  },
 });

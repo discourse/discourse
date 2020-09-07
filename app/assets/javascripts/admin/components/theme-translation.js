@@ -14,5 +14,5 @@ export default Component.extend(BufferedContent, SettingComponent, {
       this.get("translation.key"),
       this.get("buffered.value")
     );
-  }
+  },
 });

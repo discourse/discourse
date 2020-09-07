@@ -14,7 +14,7 @@ export default Controller.extend(ModalFunctionality, {
     const store = this.store;
 
     if (model) {
-      model.forEach(o =>
+      model.forEach((o) =>
         copy.pushObject(store.createRecord("badge-grouping", o))
       );
     }
@@ -56,23 +56,23 @@ export default Controller.extend(ModalFunctionality, {
     add() {
       const obj = this.store.createRecord("badge-grouping", {
         editing: true,
-        name: I18n.t("admin.badges.badge_grouping")
+        name: I18n.t("admin.badges.badge_grouping"),
       });
       this.workingCopy.pushObject(obj);
     },
     saveAll() {
       let items = this.workingCopy;
-      const groupIds = items.map(i => i.get("id") || -1);
-      const names = items.map(i => i.get("name"));
+      const groupIds = items.map((i) => i.get("id") || -1);
+      const names = items.map((i) => i.get("name"));
 
       ajax("/admin/badges/badge_groupings", {
         data: { ids: groupIds, names },
-        type: "POST"
+        type: "POST",
       }).then(
-        data => {
+        (data) => {
           items = this.model;
           items.clear();
-          data.badge_groupings.forEach(g => {
+          data.badge_groupings.forEach((g) => {
             items.pushObject(this.store.createRecord("badge-grouping", g));
           });
           this.setProperties({ model: null, workingCopy: null });
@@ -80,6 +80,6 @@ export default Controller.extend(ModalFunctionality, {
         },
         () => bootbox.alert(I18n.t("generic_error"))
       );
-    }
-  }
+    },
+  },
 });

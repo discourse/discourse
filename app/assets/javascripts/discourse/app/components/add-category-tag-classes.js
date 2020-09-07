@@ -24,7 +24,7 @@ export default Component.extend({
       classes.push("category");
       classes.push(`category-${slug}`);
     }
-    if (tags) tags.forEach(t => classes.push(`tag-${t}`));
+    if (tags) tags.forEach((t) => classes.push(`tag-${t}`));
     if (classes.length > 0) $("body").addClass(classes.join(" "));
   },
 
@@ -42,5 +42,5 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this._removeClass();
-  }
+  },
 });

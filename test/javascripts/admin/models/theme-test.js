@@ -2,7 +2,7 @@ import Theme from "admin/models/theme";
 
 QUnit.module("model:theme");
 
-QUnit.test("can add an upload correctly", function(assert) {
+QUnit.test("can add an upload correctly", function (assert) {
   let theme = Theme.create();
 
   assert.equal(

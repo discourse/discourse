@@ -126,7 +126,7 @@ export default Controller.extend(CanCheckEmails, {
       return siteUserFields
         .filterBy("show_on_profile", true)
         .sortBy("position")
-        .map(field => {
+        .map((field) => {
           set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields
             ? userFields[field.get("id").toString()]
@@ -141,7 +141,7 @@ export default Controller.extend(CanCheckEmails, {
     "currentUser.ignored_ids",
     "model.ignored",
     "model.muted",
-    function() {
+    function () {
       if (this.get("model.ignored")) {
         return "changeToIgnored";
       } else if (this.get("model.muted")) {
@@ -164,7 +164,7 @@ export default Controller.extend(CanCheckEmails, {
     showSuspensions() {
       this.adminTools.showActionLogs(this, {
         target_user: this.get("model.username"),
-        action_name: "suspend_user"
+        action_name: "suspend_user",
       });
     },
 
@@ -175,6 +175,6 @@ export default Controller.extend(CanCheckEmails, {
     updateNotificationLevel(level) {
       const user = this.model;
       return user.updateNotificationLevel(level);
-    }
-  }
+    },
+  },
 });

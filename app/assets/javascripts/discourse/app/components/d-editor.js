@@ -6,7 +6,7 @@ import Mousetrap from "mousetrap";
 
 import discourseComputed, {
   on,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
@@ -19,7 +19,7 @@ import {
   clipboardHelpers,
   safariHacksDisabled,
   caretPosition,
-  inCodeBlock
+  inCodeBlock,
 } from "discourse/lib/utilities";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
@@ -31,6 +31,7 @@ import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { isTesting } from "discourse-common/config/environment";
 import { SKIP } from "discourse/lib/autocomplete";
+import { isEmpty } from "@ember/utils";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -50,7 +51,7 @@ function getButtonLabel(labelKey, defaultLabel) {
 const OP = {
   NONE: 0,
   REMOVED: 1,
-  ADDED: 2
+  ADDED: 2,
 };
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
@@ -71,7 +72,7 @@ class Toolbar {
     this.groups = [
       { group: "fontStyles", buttons: [] },
       { group: "insertions", buttons: [] },
-      { group: "extras", buttons: [] }
+      { group: "extras", buttons: [] },
     ];
 
     this.addButton({
@@ -81,7 +82,7 @@ class Toolbar {
       icon: "bold",
       label: getButtonLabel("composer.bold_label", "B"),
       shortcut: "B",
-      perform: e => e.applySurround("**", "**", "bold_text")
+      perform: (e) => e.applySurround("**", "**", "bold_text"),
     });
 
     this.addButton({
@@ -91,7 +92,7 @@ class Toolbar {
       icon: "italic",
       label: getButtonLabel("composer.italic_label", "I"),
       shortcut: "I",
-      perform: e => e.applySurround("*", "*", "italic_text")
+      perform: (e) => e.applySurround("*", "*", "italic_text"),
     });
 
     if (opts.showLink) {
@@ -100,7 +101,7 @@ class Toolbar {
         group: "insertions",
         shortcut: "K",
         trimLeading: true,
-        sendAction: event => this.context.send("showLinkModal", event)
+        sendAction: (event) => this.context.send("showLinkModal", event),
       });
     }
 
@@ -109,18 +110,18 @@ class Toolbar {
       group: "insertions",
       icon: "quote-right",
       shortcut: "Shift+9",
-      perform: e =>
+      perform: (e) =>
         e.applyList("> ", "blockquote_text", {
           applyEmptyLines: true,
-          multiline: true
-        })
+          multiline: true,
+        }),
     });
 
     this.addButton({
       id: "code",
       group: "insertions",
       shortcut: "Shift+C",
-      action: (...args) => this.context.send("formatCode", args)
+      action: (...args) => this.context.send("formatCode", args),
     });
 
     this.addButton({
@@ -129,7 +130,7 @@ class Toolbar {
       icon: "list-ul",
       shortcut: "Shift+8",
       title: "composer.ulist_title",
-      perform: e => e.applyList("* ", "list_item")
+      perform: (e) => e.applyList("* ", "list_item"),
     });
 
     this.addButton({
@@ -138,8 +139,11 @@ class Toolbar {
       icon: "list-ol",
       shortcut: "Shift+7",
       title: "composer.olist_title",
-      perform: e =>
-        e.applyList(i => (!i ? "1. " : `${parseInt(i, 10) + 1}. `), "list_item")
+      perform: (e) =>
+        e.applyList(
+          (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+          "list_item"
+        ),
     });
 
     if (siteSettings.support_mixed_text_direction) {
@@ -149,7 +153,7 @@ class Toolbar {
         icon: "exchange-alt",
         shortcut: "Shift+6",
         title: "composer.toggle_direction",
-        perform: e => e.toggleDirection()
+        perform: (e) => e.toggleDirection(),
       });
     }
 
@@ -167,10 +171,10 @@ class Toolbar {
       className: button.className || button.id,
       label: button.label,
       icon: button.label ? null : button.icon || button.id,
-      action: button.action || (a => this.context.send("toolbarButton", a)),
-      perform: button.perform || function() {},
+      action: button.action || ((a) => this.context.send("toolbarButton", a)),
+      perform: button.perform || function () {},
       trimLeading: button.trimLeading,
-      popupMenu: button.popupMenu || false
+      popupMenu: button.popupMenu || false,
     };
 
     if (button.sendAction) {
@@ -266,7 +270,7 @@ export default Component.extend({
     const mouseTrap = Mousetrap(this.element.querySelector(".d-editor-input"));
     const shortcuts = this.get("toolbar.shortcuts");
 
-    Object.keys(shortcuts).forEach(sc => {
+    Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
       mouseTrap.bind(sc, () => {
         button.action(button);
@@ -277,7 +281,7 @@ export default Component.extend({
     // disable clicking on links in the preview
     $(this.element.querySelector(".d-editor-preview")).on(
       "click.preview",
-      e => {
+      (e) => {
         if (wantsNewWindow(e)) {
           return;
         }
@@ -326,7 +330,7 @@ export default Component.extend({
     }
 
     const mouseTrap = this._mouseTrap;
-    Object.keys(this.get("toolbar.shortcuts")).forEach(sc =>
+    Object.keys(this.get("toolbar.shortcuts")).forEach((sc) =>
       mouseTrap.unbind(sc)
     );
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
@@ -339,7 +343,7 @@ export default Component.extend({
     );
     toolbar.context = this;
 
-    _createCallbacks.forEach(cb => cb(toolbar));
+    _createCallbacks.forEach((cb) => cb(toolbar));
 
     if (this.extraButtons) {
       this.extraButtons(toolbar);
@@ -353,7 +357,7 @@ export default Component.extend({
     }
 
     const markdownOptions = this.markdownOptions || {};
-    return generateCookFunction(markdownOptions).then(cook => {
+    return generateCookFunction(markdownOptions).then((cook) => {
       this._cachedCookFunction = cook;
       return cook(text);
     });
@@ -366,7 +370,7 @@ export default Component.extend({
 
     const value = this.value;
 
-    this.cachedCookAsync(value).then(cooked => {
+    this.cachedCookAsync(value).then((cooked) => {
       if (this.isDestroyed) {
         return;
       }
@@ -408,14 +412,14 @@ export default Component.extend({
     $(this.element.querySelector(".d-editor-input")).autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
-      afterComplete: value => {
+      afterComplete: (value) => {
         this.set("value", value);
         return this._focusTextArea();
       },
-      transformComplete: obj => {
+      transformComplete: (obj) => {
         return obj.text;
       },
-      dataSource: term => {
+      dataSource: (term) => {
         if (term.match(/\s/)) {
           return null;
         }
@@ -423,7 +427,7 @@ export default Component.extend({
       },
       triggerRule: (textarea, opts) => {
         return categoryHashtagTriggerRule(textarea, opts);
-      }
+      },
     });
   },
 
@@ -435,7 +439,7 @@ export default Component.extend({
     $editorInput.autocomplete({
       template: findRawTemplate("emoji-selector-autocomplete"),
       key: ":",
-      afterComplete: text => {
+      afterComplete: (text) => {
         this.set("value", text);
         this._focusTextArea();
       },
@@ -454,7 +458,7 @@ export default Component.extend({
         }
       },
 
-      transformComplete: v => {
+      transformComplete: (v) => {
         if (v.code) {
           this.emojiStore.track(v.code);
           return `${v.code}:`;
@@ -477,8 +481,8 @@ export default Component.extend({
         }
       },
 
-      dataSource: term => {
-        return new Promise(resolve => {
+      dataSource: (term) => {
+        return new Promise((resolve) => {
           const full = `:${term}`;
           term = term.toLowerCase();
 
@@ -495,7 +499,7 @@ export default Component.extend({
                 "smile",
                 "wink",
                 "sunny",
-                "blush"
+                "blush",
               ]);
             }
           }
@@ -520,7 +524,7 @@ export default Component.extend({
               if (scale) {
                 return resolve([`${name}:t${scale}`]);
               } else {
-                return resolve([2, 3, 4, 5, 6].map(x => `${name}:t${x}`));
+                return resolve([2, 3, 4, 5, 6].map((x) => `${name}:t${x}`));
               }
             }
           }
@@ -529,12 +533,12 @@ export default Component.extend({
 
           return resolve(options);
         })
-          .then(list =>
-            list.map(code => {
+          .then((list) =>
+            list.map((code) => {
               return { code, src: emojiUrlFor(code) };
             })
           )
-          .then(list => {
+          .then((list) => {
             if (list.length) {
               list.push({ label: I18n.t("composer.more_emoji"), term });
             }
@@ -542,8 +546,8 @@ export default Component.extend({
           });
       },
 
-      triggerRule: textarea =>
-        !inCodeBlock(textarea.value, caretPosition(textarea))
+      triggerRule: (textarea) =>
+        !inCodeBlock(textarea.value, caretPosition(textarea)),
     });
   },
 
@@ -605,7 +609,7 @@ export default Component.extend({
     const applyEmptyLines = opts && opts.applyEmptyLines;
 
     return lines
-      .map(l => {
+      .map((l) => {
         if (!applyEmptyLines && l.length === 0) {
           return l;
         }
@@ -745,12 +749,12 @@ export default Component.extend({
     const newSelection = determinePostReplaceSelection({
       selection: { start: textarea.selectionStart, end: textarea.selectionEnd },
       needle: { start: needleStart, end: needleStart + oldVal.length },
-      replacement: { start: needleStart, end: needleStart + newVal.length }
+      replacement: { start: needleStart, end: needleStart + newVal.length },
     });
 
     if (opts.index && opts.regex) {
       let i = -1;
-      const newValue = val.replace(opts.regex, match => {
+      const newValue = val.replace(opts.regex, (match) => {
         i++;
         return i === opts.index ? newVal : match;
       });
@@ -834,7 +838,7 @@ export default Component.extend({
     let rows = text.split("\n");
 
     if (rows.length > 1) {
-      const columns = rows.map(r => r.split("\t").length);
+      const columns = rows.map((r) => r.split("\t").length);
       const isTable =
         columns.reduce((a, b) => a && columns[0] === b && b > 1) &&
         !(columns[0] === 2 && rows[0].split("\t")[0].match(/^•$|^\d+.$/)); // to skip tab delimited lists
@@ -844,7 +848,7 @@ export default Component.extend({
         rows.splice(1, 0, splitterRow);
 
         return (
-          "|" + rows.map(r => r.split("\t").join("|")).join("|\n|") + "|\n"
+          "|" + rows.map((r) => r.split("\t").join("|")).join("|\n|") + "|\n"
         );
       }
     }
@@ -867,7 +871,7 @@ export default Component.extend({
     const isComposer = $("#reply-control .d-editor-input").is(":focus");
     let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
       siteSettings: this.siteSettings,
-      canUpload: isComposer
+      canUpload: isComposer,
     });
 
     let plainText = clipboard.getData("text/plain");
@@ -953,7 +957,7 @@ export default Component.extend({
       let selected = this._getSelected();
       const captures = selected.pre.match(/\B:(\w*)$/);
 
-      if (_.isEmpty(captures)) {
+      if (isEmpty(captures)) {
         if (selected.pre.match(/\S$/)) {
           this._addText(selected, ` :${code}:`);
         } else {
@@ -984,10 +988,10 @@ export default Component.extend({
           this._applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>
           this._applyList(selected, head, exampleKey, opts),
-        addText: text => this._addText(selected, text),
-        replaceText: text => this._addText({ pre: "", post: "" }, text),
+        addText: (text) => this._addText(selected, text),
+        replaceText: (text) => this._addText({ pre: "", post: "" }, text),
         getText: () => this.value,
-        toggleDirection: () => this._toggleDirection()
+        toggleDirection: () => this._toggleDirection(),
       };
 
       if (button.sendAction) {
@@ -1011,7 +1015,7 @@ export default Component.extend({
 
       showModal("insert-hyperlink").setProperties({
         linkText,
-        toolbarEvent
+        toolbarEvent,
       });
     },
 
@@ -1064,6 +1068,6 @@ export default Component.extend({
 
     focusOut() {
       this.set("isEditorFocused", false);
-    }
-  }
+    },
+  },
 });

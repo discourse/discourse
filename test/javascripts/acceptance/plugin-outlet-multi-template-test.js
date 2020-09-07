@@ -20,10 +20,10 @@ acceptance("Plugin Outlet - Multi Template", {
     delete Ember.TEMPLATES[HELLO];
     delete Ember.TEMPLATES[GOODBYE];
     clearCache();
-  }
+  },
 });
 
-QUnit.test("Renders a template into the outlet", async assert => {
+QUnit.test("Renders a template into the outlet", async (assert) => {
   await visit("/u/eviltrout");
   assert.ok(
     find(".user-profile-primary-outlet.hello").length === 1,

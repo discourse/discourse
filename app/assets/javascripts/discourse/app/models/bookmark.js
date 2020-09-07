@@ -15,7 +15,7 @@ import { formattedReminderTime } from "discourse/lib/bookmark";
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
   WHEN_REMINDER_SENT: 1,
-  ON_OWNER_REPLY: 2
+  ON_OWNER_REPLY: 2,
 };
 
 const Bookmark = RestModel.extend({
@@ -30,7 +30,7 @@ const Bookmark = RestModel.extend({
     if (this.newBookmark) return Promise.resolve();
 
     return ajax(this.url, {
-      type: "DELETE"
+      type: "DELETE",
     });
   },
 
@@ -69,7 +69,7 @@ const Bookmark = RestModel.extend({
       FIRST_POST: firstPost,
       CREATED_AT: createdAtDate,
       LAST_POST: lastPost,
-      BUMPED_AT: bumpedAtDate
+      BUMPED_AT: bumpedAtDate,
     });
   },
 
@@ -92,7 +92,7 @@ const Bookmark = RestModel.extend({
     const title = this.title;
     const newTags = [];
 
-    tags.forEach(function(tag) {
+    tags.forEach(function (tag) {
       if (title.toLowerCase().indexOf(tag) === -1) {
         newTags.push(tag);
       }
@@ -157,9 +157,9 @@ const Bookmark = RestModel.extend({
     return User.create({
       username: post_user_username,
       avatar_template: avatarTemplate,
-      name: name
+      name: name,
     });
-  }
+  },
 });
 
 Bookmark.reopenClass({
@@ -167,7 +167,7 @@ Bookmark.reopenClass({
     args = args || {};
     args.currentUser = args.currentUser || User.current();
     return this._super(args);
-  }
+  },
 });
 
 export default Bookmark;

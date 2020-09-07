@@ -23,7 +23,7 @@ const ScrollingDOMMethods = {
 
   screenNotFull() {
     return $(window).height() > $("#main").height();
-  }
+  },
 };
 
 const Scrolling = Mixin.create({
@@ -55,7 +55,7 @@ const Scrolling = Mixin.create({
 
   unbindScrolling(name) {
     ScrollingDOMMethods.unbindOnScroll(name);
-  }
+  },
 });
 
 export { ScrollingDOMMethods };

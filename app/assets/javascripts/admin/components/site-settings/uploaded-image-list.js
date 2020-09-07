@@ -7,10 +7,10 @@ export default Component.extend({
       showModal("admin-uploaded-image-list", {
         admin: true,
         title: `admin.site_settings.${setting.setting}.title`,
-        model: { value, setting }
+        model: { value, setting },
       }).setProperties({
-        save: v => this.set("value", v)
+        save: (v) => this.set("value", v),
       });
-    }
-  }
+    },
+  },
 });

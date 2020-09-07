@@ -24,15 +24,15 @@ export default Component.extend({
       const controller = showModal("topic-bulk-actions", {
         model: {
           topics: this.selected,
-          category: this.category
+          category: this.category,
         },
-        title: "topics.bulk.actions"
+        title: "topics.bulk.actions",
       });
 
       const action = this.action;
       if (action) {
         controller.set("refreshClosure", () => action());
       }
-    }
-  }
+    },
+  },
 });

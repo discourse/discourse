@@ -28,7 +28,7 @@ export default Mixin.create({
       } else {
         operation = {
           type: "change_notification_level",
-          notification_level_id: NotificationLevels.REGULAR
+          notification_level_id: NotificationLevels.REGULAR,
         };
       }
 
@@ -39,16 +39,16 @@ export default Mixin.create({
         promise = Topic.bulkOperationByFilter("unread", operation, options);
       }
 
-      promise.then(result => {
+      promise.then((result) => {
         if (result && result.topic_ids) {
           const tracker = this.topicTrackingState;
-          result.topic_ids.forEach(t => tracker.removeTopic(t));
+          result.topic_ids.forEach((t) => tracker.removeTopic(t));
           tracker.incrementMessageCount();
         }
 
         this.send("closeModal");
         this.send("refresh");
       });
-    }
-  }
+    },
+  },
 });

@@ -2,7 +2,7 @@ import { acceptance } from "helpers/qunit-helpers";
 import compile from "handlebars-compiler";
 import {
   addRawTemplate,
-  removeRawTemplate
+  removeRawTemplate,
 } from "discourse-common/lib/raw-templates";
 
 const CONNECTOR =
@@ -18,10 +18,10 @@ acceptance("Raw Plugin Outlet", {
 
   afterEach() {
     removeRawTemplate(CONNECTOR);
-  }
+  },
 });
 
-QUnit.test("Renders the raw plugin outlet", async assert => {
+QUnit.test("Renders the raw plugin outlet", async (assert) => {
   await visit("/");
   assert.ok(find(".topic-lala").length > 0, "it renders the outlet");
   assert.equal(

@@ -2,7 +2,7 @@ import Group from "discourse/models/group";
 
 QUnit.module("model:group");
 
-QUnit.test("displayName", assert => {
+QUnit.test("displayName", (assert) => {
   const group = Group.create({ name: "test", display_name: "donkey" });
 
   assert.equal(

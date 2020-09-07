@@ -74,6 +74,6 @@ export default Controller.extend({
     },
     selectAll() {
       $("input.bulk-select:not(checked)").click();
-    }
-  }
+    },
+  },
 });

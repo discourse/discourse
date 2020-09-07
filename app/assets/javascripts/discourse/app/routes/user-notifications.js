@@ -13,7 +13,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
     didTransition() {
       this.controllerFor("user-notifications")._showFooter();
       return true;
-    }
+    },
   },
 
   model(params) {
@@ -25,7 +25,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
     ) {
       return this.store.find("notification", {
         username: username,
-        filter: params.filter
+        filter: params.filter,
       });
     }
   },
@@ -34,5 +34,5 @@ export default DiscourseRoute.extend(ViewingActionType, {
     controller.set("model", model);
     controller.set("user", this.modelFor("user"));
     this.viewingActionType(-1);
-  }
+  },
 });

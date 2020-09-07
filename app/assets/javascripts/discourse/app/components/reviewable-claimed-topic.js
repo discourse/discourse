@@ -14,7 +14,7 @@ export default Component.extend({
   actions: {
     unclaim() {
       ajax(`/reviewable_claimed_topics/${this.topicId}`, {
-        type: "DELETE"
+        type: "DELETE",
       }).then(() => {
         this.set("claimedBy", null);
       });
@@ -29,6 +29,6 @@ export default Component.extend({
           this.set("claimedBy", this.currentUser);
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

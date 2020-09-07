@@ -8,5 +8,5 @@ export default Route.extend({
         parseInt(params.badge_id, 10)
       );
     }
-  }
+  },
 });

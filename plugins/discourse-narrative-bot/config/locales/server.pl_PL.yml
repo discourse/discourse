@@ -187,6 +187,21 @@ pl_PL:
           Ładne zdjęcie - nacisnąłem przycisk lajka :heart:, żeby Ci podziękować :heart_eyes:
         like_not_found: |-
           Zapomniałeś polajkować :heart: mój [wpis]?(%{url}) :crying_cat_face:
+        not_found: |-
+          Wygląda na to, że nie przesłałeś obrazu, więc wybrałem zdjęcie, które _na pewno_ Ci się podoba.
+
+          `%{image_url}`
+
+          Spróbuj przesłać go jeszcze raz lub wkleić link sam w liście!
+      likes:
+        instructions: |-
+          Oto zdjęcie jednorożca:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Śmiało naciśnij przycisk Lubię to :heart: pod tym postem jeśli Ci się to podoba (a komu by się nie podobało?)
+        reply: |-
+          Dzięki za polubienie mojego posta!
       formatting:
         instructions: |-
           Czy możesz **pogrubić** lub zastosować _kursywę_ dla części słów w swojej odpowiedzi?

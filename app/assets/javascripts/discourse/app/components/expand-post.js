@@ -24,13 +24,13 @@ export default Component.extend({
 
       this._loading = true;
       ajax(`/posts/by_number/${topicId}/${postNumber}.json`)
-        .then(result => {
+        .then((result) => {
           this.set("expanded", true);
           item.set("expandedExcerpt", result.cooked);
         })
         .finally(() => (this._loading = false));
 
       return false;
-    }
-  }
+    },
+  },
 });

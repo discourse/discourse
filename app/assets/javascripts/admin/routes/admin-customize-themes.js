@@ -20,6 +20,6 @@ export default Route.extend({
       this.refresh();
       theme.setProperties({ recentlyInstalled: true });
       this.transitionTo("adminCustomizeThemes.show", theme.get("id"));
-    }
-  }
+    },
+  },
 });

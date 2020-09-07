@@ -91,10 +91,10 @@ export function setup(helper) {
   helper.whiteList([
     "img[data-orig-src]",
     "img[data-base62-sha1]",
-    "a[data-orig-href]"
+    "a[data-orig-href]",
   ]);
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.core.ruler.push("upload-protocol", rule);
   });
 }

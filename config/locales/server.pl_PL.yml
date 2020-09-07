@@ -499,6 +499,7 @@ pl_PL:
               reply_by_email_disabled: "Odpowiedź przez e-mail została wyłączona."
               target_user_not_found: "Jeden z użytkowników, do których chciałaś/łeś wysłać tę wiadomość nie został znaleziony."
               unable_to_update: "Wystąpił błąd przy aktualizacji tego tematu."
+              unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
             featured_link:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
               invalid_category: "nie może być edytowany w tej kategorii."

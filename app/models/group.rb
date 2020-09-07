@@ -841,10 +841,9 @@ class Group < ActiveRecord::Base
   def notify_added_to_group(user, owner: false)
     SystemMessage.create_from_system_user(
       user,
-      :user_added_to_group,
+      owner ? :user_added_to_group_as_owner : :user_added_to_group_as_member,
       group_name: self.full_name.presence || self.name,
-      group_path: "/g/#{self.name}",
-      membership_level: owner ? "an owner" : "a member"
+      group_path: "/g/#{self.name}"
     )
   end
 

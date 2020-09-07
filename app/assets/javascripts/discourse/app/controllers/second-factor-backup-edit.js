@@ -19,7 +19,7 @@ export default Controller.extend(ModalFunctionality, {
       loading: false,
       errorMessage: null,
       successMessage: null,
-      backupCodes: null
+      backupCodes: null,
     });
   },
 
@@ -46,7 +46,7 @@ export default Controller.extend(ModalFunctionality, {
 
       this.model
         .updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE)
-        .then(response => {
+        .then((response) => {
           if (response.error) {
             this.set("errorMessage", response.error);
             return;
@@ -57,7 +57,7 @@ export default Controller.extend(ModalFunctionality, {
           this.markDirty();
           this.send("closeModal");
         })
-        .catch(error => {
+        .catch((error) => {
           this.send("closeModal");
           this.onError(error);
         })
@@ -68,7 +68,7 @@ export default Controller.extend(ModalFunctionality, {
       this.set("loading", true);
       this.model
         .generateSecondFactorCodes()
-        .then(response => {
+        .then((response) => {
           if (response.error) {
             this.set("errorMessage", response.error);
             return;
@@ -79,19 +79,19 @@ export default Controller.extend(ModalFunctionality, {
             errorMessage: null,
             backupCodes: response.backup_codes,
             backupEnabled: true,
-            remainingCodes: response.backup_codes.length
+            remainingCodes: response.backup_codes.length,
           });
         })
-        .catch(error => {
+        .catch((error) => {
           this.send("closeModal");
           this.onError(error);
         })
         .finally(() => {
           this.setProperties({
-            loading: false
+            loading: false,
           });
         });
-    }
+    },
   },
 
   _hideCopyMessage() {
@@ -99,5 +99,5 @@ export default Controller.extend(ModalFunctionality, {
       () => this.setProperties({ successMessage: null, errorMessage: null }),
       2000
     );
-  }
+  },
 });

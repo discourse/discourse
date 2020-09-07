@@ -18,14 +18,14 @@ function template(options = []) {
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
   { id: 2, name: "bar" },
-  { id: 3, name: "baz" }
+  { id: 3, name: "baz" },
 ];
 
 const setDefaultState = (ctx, options) => {
   const properties = Object.assign(
     {
       content: DEFAULT_CONTENT,
-      value: null
+      value: null,
     },
     options || {}
   );
@@ -59,5 +59,5 @@ componentTest("content", {
       null,
       "it doesn't set a value from the content"
     );
-  }
+  },
 });

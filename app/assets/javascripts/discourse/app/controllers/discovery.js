@@ -19,7 +19,7 @@ export default Controller.extend({
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
   @observes("loadedAllItems")
-  _showFooter: function() {
+  _showFooter: function () {
     this.set("application.showFooter", this.loadedAllItems);
   },
 
@@ -40,7 +40,7 @@ export default Controller.extend({
       url =
         `${url}?` +
         Object.keys(queryParams)
-          .map(key => `${key}=${queryParams[key]}`)
+          .map((key) => `${key}=${queryParams[key]}`)
           .join("&");
     }
 
@@ -50,6 +50,6 @@ export default Controller.extend({
   actions: {
     changePeriod(p) {
       DiscourseURL.routeTo(this.showMoreUrl(p));
-    }
-  }
+    },
+  },
 });

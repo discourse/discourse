@@ -64,7 +64,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       tagId,
       filterType,
       noSubcategories,
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     });
   },
 
@@ -95,16 +95,16 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
     if (listTopicsLength === 0) {
       return I18n.t(`tagging.topics.none.${navMode}`, {
-        tag: this.get("tag.id")
+        tag: this.get("tag.id"),
       });
     } else {
       return I18n.t(`topics.bottom.tag`, {
-        tag: this.get("tag.id")
+        tag: this.get("tag.id"),
       });
     }
   },
 
-  isFilterPage: function(filter, filterType) {
+  isFilterPage: function (filter, filterType) {
     if (!filter) {
       return false;
     }
@@ -129,7 +129,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       }
 
       this.transitionToRoute({
-        queryParams: { order, ascending: this.ascending }
+        queryParams: { order, ascending: this.ascending },
       });
     },
 
@@ -140,9 +140,9 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     refresh() {
       return this.store
         .findFiltered("topicList", {
-          filter: this.get("list.filter")
+          filter: this.get("list.filter"),
         })
-        .then(list => {
+        .then((list) => {
           this.set("list", list);
           this.resetSelected();
         });
@@ -161,11 +161,11 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         confirmText +=
           " " +
           I18n.t("tagging.delete_confirm_synonyms", {
-            count: tagInfo.synonyms.length
+            count: tagInfo.synonyms.length,
           });
       }
 
-      bootbox.confirm(confirmText, result => {
+      bootbox.confirm(confirmText, (result) => {
         if (!result) return;
 
         this.tag
@@ -178,7 +178,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     changeTagNotificationLevel(notificationLevel) {
       this.tagNotification
         .update({ notification_level: notificationLevel })
-        .then(response => {
+        .then((response) => {
           this.currentUser.set(
             "muted_tag_ids",
             this.currentUser.calculateMutedIds(
@@ -188,6 +188,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
             )
           );
         });
-    }
-  }
+    },
+  },
 });

@@ -10,7 +10,7 @@ acceptance("Poll breakdown", {
   },
   pretend(server, helper) {
     server.get("/polls/grouped_poll_results.json", () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve(
           helper.response({
             grouped_results: [
@@ -20,19 +20,19 @@ acceptance("Poll breakdown", {
                   {
                     digest: "687a1ccf3c6a260f9aeeb7f68a1d463c",
                     html: "This Is",
-                    votes: 1
+                    votes: 1,
                   },
                   {
                     digest: "9377906763a1221d31d656ea0c4a4495",
                     html: "A test for sure",
-                    votes: 1
+                    votes: 1,
                   },
                   {
                     digest: "ecf47c65a85a0bb20029072b1b721977",
                     html: "Why not give it some more",
-                    votes: 1
-                  }
-                ]
+                    votes: 1,
+                  },
+                ],
               },
               {
                 group: "Marketing",
@@ -40,29 +40,29 @@ acceptance("Poll breakdown", {
                   {
                     digest: "687a1ccf3c6a260f9aeeb7f68a1d463c",
                     html: "This Is",
-                    votes: 1
+                    votes: 1,
                   },
                   {
                     digest: "9377906763a1221d31d656ea0c4a4495",
                     html: "A test for sure",
-                    votes: 1
+                    votes: 1,
                   },
                   {
                     digest: "ecf47c65a85a0bb20029072b1b721977",
                     html: "Why not give it some more",
-                    votes: 1
-                  }
-                ]
-              }
-            ]
+                    votes: 1,
+                  },
+                ],
+              },
+            ],
           })
         );
       });
     });
-  }
+  },
 });
 
-test("Displaying the poll breakdown modal", async assert => {
+test("Displaying the poll breakdown modal", async (assert) => {
   await visit("/t/-/topic_with_pie_chart_poll");
 
   assert.equal(
@@ -91,7 +91,7 @@ test("Displaying the poll breakdown modal", async assert => {
   );
 });
 
-test("Changing the display mode from percentage to count", async assert => {
+test("Changing the display mode from percentage to count", async (assert) => {
   await visit("/t/-/topic_with_pie_chart_poll");
   await click(".poll-show-breakdown:first");
 

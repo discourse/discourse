@@ -1,12 +1,12 @@
 import {
   iconHTML,
   iconNode,
-  convertIconClass
+  convertIconClass,
 } from "discourse-common/lib/icon-library";
 
 QUnit.module("lib:icon-library");
 
-QUnit.test("return icon markup", assert => {
+QUnit.test("return icon markup", (assert) => {
   assert.ok(iconHTML("bars").indexOf('use xlink:href="#bars"') > -1);
 
   const nodeIcon = iconNode("bars");
@@ -17,7 +17,7 @@ QUnit.test("return icon markup", assert => {
   );
 });
 
-QUnit.test("convert icon names", assert => {
+QUnit.test("convert icon names", (assert) => {
   const fa5Icon = convertIconClass("fab fa-facebook");
   assert.ok(iconHTML(fa5Icon).indexOf("fab-facebook") > -1, "FA 5 syntax");
 

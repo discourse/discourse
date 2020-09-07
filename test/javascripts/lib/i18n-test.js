@@ -14,21 +14,21 @@ QUnit.module("lib:i18n", {
         js: {
           topic: {
             reply: {
-              title: "Foo"
-            }
-          }
-        }
+              title: "Foo",
+            },
+          },
+        },
       },
       fr: {
         js: {
           hello: "Bonjour",
           topic: {
             reply: {
-              title: "Répondre"
+              title: "Répondre",
             },
             share: {
-              title: "Partager"
-            }
+              title: "Partager",
+            },
           },
           character_count: {
             zero: "{{count}} ZERO",
@@ -36,40 +36,40 @@ QUnit.module("lib:i18n", {
             two: "{{count}} TWO",
             few: "{{count}} FEW",
             many: "{{count}} MANY",
-            other: "{{count}} OTHER"
+            other: "{{count}} OTHER",
           },
           days: {
-            other: "%{count} jours"
-          }
-        }
+            other: "%{count} jours",
+          },
+        },
       },
       en: {
         js: {
           hello: {
             world: "Hello World!",
-            universe: ""
+            universe: "",
           },
           topic: {
             reply: {
-              help: "begin composing a reply to this topic"
-            }
+              help: "begin composing a reply to this topic",
+            },
           },
           word_count: {
             one: "1 word",
-            other: "{{count}} words"
+            other: "{{count}} words",
           },
           days: {
             one: "%{count} day",
-            other: "%{count} days"
+            other: "%{count} days",
           },
-          dollar_sign: "Hi {{description}}"
-        }
-      }
+          dollar_sign: "Hi {{description}}",
+        },
+      },
     };
 
     // fake pluralization rules
     I18n.pluralizationRules = Object.assign({}, I18n.pluralizationRules);
-    I18n.pluralizationRules.fr = function(n) {
+    I18n.pluralizationRules.fr = function (n) {
       if (n === 0) return "zero";
       if (n === 1) return "one";
       if (n === 2) return "two";
@@ -85,15 +85,15 @@ QUnit.module("lib:i18n", {
     I18n.translations = this._translations;
     I18n.extras = this._extras;
     I18n.pluralizationRules = this._pluralizationRules;
-  }
+  },
 });
 
-QUnit.test("defaults", assert => {
+QUnit.test("defaults", (assert) => {
   assert.equal(I18n.defaultLocale, "en", "it has English as default locale");
   assert.ok(I18n.pluralizationRules["en"], "it has English pluralizer");
 });
 
-QUnit.test("translations", assert => {
+QUnit.test("translations", (assert) => {
   assert.equal(
     I18n.t("topic.reply.title"),
     "Répondre",
@@ -112,7 +112,7 @@ QUnit.test("translations", assert => {
   assert.equal(I18n.t("hello.universe"), "", "allows empty strings");
 });
 
-QUnit.test("extra translations", assert => {
+QUnit.test("extra translations", (assert) => {
   I18n.locale = "pl_PL";
   I18n.extras = {
     en: {
@@ -121,23 +121,23 @@ QUnit.test("extra translations", assert => {
           title: "Dashboard",
           backup_count: {
             one: "%{count} backup",
-            other: "%{count} backups"
-          }
+            other: "%{count} backups",
+          },
         },
         web_hooks: {
           events: {
             incoming: {
               one: "There is a new event.",
-              other: "There are %{count} new events."
-            }
-          }
-        }
-      }
+              other: "There are %{count} new events.",
+            },
+          },
+        },
+      },
     },
     pl_PL: {
       admin: {
         dashboard: {
-          title: "Raporty"
+          title: "Raporty",
         },
         web_hooks: {
           events: {
@@ -145,14 +145,14 @@ QUnit.test("extra translations", assert => {
               one: "Istnieje nowe wydarzenie",
               few: "Istnieją %{count} nowe wydarzenia.",
               many: "Istnieje %{count} nowych wydarzeń.",
-              other: "Istnieje %{count} nowych wydarzeń."
-            }
-          }
-        }
-      }
-    }
+              other: "Istnieje %{count} nowych wydarzeń.",
+            },
+          },
+        },
+      },
+    },
   };
-  I18n.pluralizationRules.pl_PL = function(n) {
+  I18n.pluralizationRules.pl_PL = function (n) {
     if (n === 1) return "one";
     if (n % 10 >= 2 && n % 10 <= 4) return "few";
     if (n % 10 === 0) return "many";
@@ -178,7 +178,7 @@ QUnit.test("extra translations", assert => {
   );
 });
 
-QUnit.test("pluralizations", assert => {
+QUnit.test("pluralizations", (assert) => {
   assert.equal(I18n.t("character_count", { count: 0 }), "0 ZERO");
   assert.equal(I18n.t("character_count", { count: 1 }), "1 ONE");
   assert.equal(I18n.t("character_count", { count: 2 }), "2 TWO");
@@ -194,7 +194,7 @@ QUnit.test("pluralizations", assert => {
   assert.equal(I18n.t("word_count", { count: 100 }), "100 words");
 });
 
-QUnit.test("fallback", assert => {
+QUnit.test("fallback", (assert) => {
   assert.equal(
     I18n.t("days", { count: 1 }),
     "1 day",
@@ -226,10 +226,10 @@ QUnit.test("fallback", assert => {
   );
 });
 
-QUnit.test("Dollar signs are properly escaped", assert => {
+QUnit.test("Dollar signs are properly escaped", (assert) => {
   assert.equal(
     I18n.t("dollar_sign", {
-      description: "$& $&"
+      description: "$& $&",
     }),
     "Hi $& $&"
   );

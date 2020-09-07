@@ -51,5 +51,5 @@ export default Mixin.create({
     if (this._bottomHit === 1) {
       this.set("mobileScrollDirection", null);
     }
-  }
+  },
 });

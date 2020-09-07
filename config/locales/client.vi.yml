@@ -244,7 +244,6 @@ vi:
       list_permission_denied: "Bạn không có quyền xem chỉ mục của người dùng này"
       search: "Tìm kiếm"
       reminders:
-        at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
         tomorrow: "Ngày mai"
         next_week: "Tuần tới"
         next_month: "Tháng t"
@@ -1831,20 +1830,7 @@ vi:
         grant_badge: "Cấp huy hiệu"
         delete_topic: "xóa chủ đề"
       actions:
-        flag: "Gắn cờ"
-        undo:
-          off_topic: "Hủy gắn cờ"
-          spam: "Hủy gắn cờ"
-          inappropriate: "Hủy gắn cờ"
-          bookmark: "Hủy đánh dấu"
-          like: "Hủy like"
         people:
-          off_topic: "đánh dấu là chủ đề đóng"
-          spam: "đánh dấu là spam"
-          inappropriate: "đánh dấu là không phù hợp"
-          notify_moderators: "đã thông báo với BQT"
-          notify_user: "đã gửi tin nhắn"
-          bookmark: "đã đánh dấu bài này"
           like:
             other: "thích này"
           like_capped:
@@ -1855,8 +1841,6 @@ vi:
           inappropriate: "Bạn đã đánh dấu cái này là không phù hợp"
           notify_moderators: "Bạn đã đánh dấu cái này cho điều tiết"
           notify_user: "Bạn đã gửi một tin nhắn đến người dùng này"
-          bookmark: "Bạn đã đánh dấu bài viết này"
-          like: "Bạn đã thích cái này"
       revisions:
         controls:
           first: "Sửa đổi đầu tiên"
@@ -2247,14 +2231,6 @@ vi:
           latest: "Không có chủ đề mới nhất"
           bookmarks: "Bạn chưa chủ đề nào được đánh dấu."
           top: "Không có chủ đề top."
-        bottom:
-          latest: "Không còn thêm chủ đề nào nữa."
-          posted: "Ở đây không có thêm chủ đề nào được đăng."
-          read: "Không còn thêm chủ đề chưa đọc nào nữa."
-          new: "Không còn thêm chủ đề mới nào nữa."
-          unread: "Không còn thêm chủ đề chưa đọc nào nữa."
-          top: "Không còn của đề top nào nữa."
-          bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     footer_nav:
       back: "Quay lại"
       share: "Chia sẻ"

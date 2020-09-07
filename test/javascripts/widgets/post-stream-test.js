@@ -10,10 +10,10 @@ function postStreamTest(name, attrs) {
     beforeEach() {
       const site = this.container.lookup("site:main");
       let posts = attrs.posts.call(this);
-      posts.forEach(p => p.set("site", site));
+      posts.forEach((p) => p.set("site", site));
       this.set("posts", posts);
     },
-    test: attrs.test
+    test: attrs.test,
   });
 }
 
@@ -29,35 +29,35 @@ postStreamTest("basics", {
         post_number: 1,
         user_id: 123,
         primary_group_name: "trout",
-        avatar_template: "/images/avatar.png"
+        avatar_template: "/images/avatar.png",
       }),
       Post.create({
         topic,
         id: 2,
         post_number: 2,
-        post_type: site.get("post_types.moderator_action")
+        post_type: site.get("post_types.moderator_action"),
       }),
       Post.create({ topic, id: 3, post_number: 3, hidden: true }),
       Post.create({
         topic,
         id: 4,
         post_number: 4,
-        post_type: site.get("post_types.whisper")
+        post_type: site.get("post_types.whisper"),
       }),
       Post.create({
         topic,
         id: 5,
         post_number: 5,
         wiki: true,
-        via_email: true
+        via_email: true,
       }),
       Post.create({
         topic,
         id: 6,
         post_number: 6,
         via_email: true,
-        is_auto_generated: true
-      })
+        is_auto_generated: true,
+      }),
     ];
   },
 
@@ -114,7 +114,7 @@ postStreamTest("basics", {
       1,
       "renders the main avatar"
     );
-  }
+  },
 });
 
 postStreamTest("deleted posts", {
@@ -126,8 +126,8 @@ postStreamTest("deleted posts", {
         topic,
         id: 1,
         post_number: 1,
-        deleted_at: new Date().toString()
-      })
+        deleted_at: new Date().toString(),
+      }),
     ];
   },
 
@@ -142,5 +142,5 @@ postStreamTest("deleted posts", {
       1,
       "it has the trash avatar"
     );
-  }
+  },
 });

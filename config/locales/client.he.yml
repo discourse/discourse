@@ -311,10 +311,9 @@ he:
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא הזה. יש לך תזכורת שמוגדרת ל־%{reminder_at} עבור הנושא הזה."
     bookmarks:
-      created: "סימנת את הפוסט הזה%{name}"
+      created: "הוספת את הפוסט הזה לסימניות. %{name}"
       not_bookmarked: "סמנו פוסט זה עם סימנייה"
-      created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}%{name}"
-      created_with_at_desktop_reminder: "סימנת את הפוסט הזה ותישלח אליך תזכורת עם ההתחברות הבאה שלך משולחן עבודה%{name}"
+      created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
       remove: "הסרה מהסימניות"
       delete: "מחיקת סימנייה"
       confirm_delete: "למחוק את הסימנייה הזאת? גם התזכורת תימחק."
@@ -332,7 +331,6 @@ he:
       search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן הפוסט"
       search: "חיפוש"
       reminders:
-        at_desktop: "בשימוש הבא דרך שולחן העבודה"
         later_today: "בהמשך היום"
         next_business_day: "יום העסקים הבא"
         tomorrow: "מחר"
@@ -347,7 +345,7 @@ he:
         today_with_time: "היום ב־%{time}"
         tomorrow_with_time: "מחר ב־%{time}"
         at_time: "ב־%{date_time}"
-        existing_reminder: "הגדרת תזכורת שתישלח עבור הסימנייה הזאת"
+        existing_reminder: "הגדרת תזכורת עבור הסימנייה הזאת שתישלח ב־%{at_date_time}"
     copy_codeblock:
       copied: "הועתק!"
     drafts:
@@ -593,6 +591,7 @@ he:
       sent_by_user: "נשלח על ידי <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "נשלח <a href='%{userUrl}'>על ידך</a>"
     directory:
+      username: "שם משתמש"
       filter_name: "סינון לפי שם משתמש"
       title: "משתמשים"
       likes_given: "הוענקו"
@@ -954,6 +953,16 @@ he:
         not_first_time: "לא הפעם הראשונה שלך?"
         skip_link: "דילוג על העצות האלו"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
+      color_scheme_default_on_all_devices: "הגדרת ערכות צבעים כבררת מחדל לכל המכשירים שלי"
+      color_scheme: "ערכת צבעים"
+      color_schemes:
+        default_description: "בררת מחדל"
+        disable_dark_scheme: "כמו הרגילה"
+        dark_instructions: "ניתן להדגים את ערכת צבעי הערכה הכהה על ידי החלפת מצב התצוגה הכהה במכשיר שלך."
+        undo: "איפוס"
+        regular: "רגילה"
+        dark: "מצב כהה"
+        default_dark_scheme: "(בררת המחדל של האתר)"
       dark_mode: "מצב כהה"
       dark_mode_enable: "הפעלת ערכת צבעים כהה אוטומטית"
       text_size_default_on_all_devices: "הפוך את גודל הטקסט הזה לברירת המחדל בכל המכשירים שלי"
@@ -1003,7 +1012,7 @@ he:
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
       muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר בנוגע לנושאים בקטגוריות האלו."
       regular_categories: "רגילות"
-      regular_categories_instructions: "הנושאים האלו יופיעו תחת רשימות הנושאים `אחרונים` ו־`מובילים`."
+      regular_categories_instructions: "הקטגוריות האלו תופענה תחת רשימות הנושאים „אחרונים” ו־„מובילים”."
       no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מנוטרלת."
       delete_account: "מחיקת החשבון שלי"
       delete_account_confirm: "להסיר את החשבון? לא ניתן לבטל פעולה זו!"
@@ -1088,6 +1097,7 @@ he:
       second_factor:
         title: "אימות ב2 גורמים"
         enable: "ניהול אימות דו־שלבי"
+        disable_all: "להשבית הכול"
         forgot_password: "שכחת את הססמה?"
         confirm_password_description: "אנא אשר את סיסמתך בכדי להמשיך"
         name: "שם"
@@ -1105,7 +1115,7 @@ he:
         use: "להשתמש ביישומון אימות"
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
         disable: "בטל"
-        disable_confirm: "לנטרל את כל האימותים הדו־שלביים?"
+        disable_confirm: "להשבית את כל שיטות האימות הדו־שלבי?"
         save: "שמירה"
         edit: "עריכה"
         edit_title: "עריכת אימות דו־שלבי"
@@ -1693,6 +1703,29 @@ he:
       categories_and_top_topics: "קטגוריות ונושאים מובילים"
       categories_boxes: "תיבות עם תתי קטגוריות"
       categories_boxes_with_topics: "תיבות עם נושאים מומלצים"
+    base_font_setting:
+      helvetica: "Helvetica/Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "RobotoCondensed"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1721,7 +1754,7 @@ he:
       invalid_selection_length: "אורך הבחירה חייב להיות %{count} תווים לפחות."
       components:
         categories_admin_dropdown:
-          title: "תפריט קטגוריות ניהול נגלל"
+          title: "ניהול קטגוריות"
     date_time_picker:
       from: מאת
       to: אל
@@ -2132,6 +2165,7 @@ he:
         new: "אין עוד נושאים חדשים."
         unread: "אין עוד נושאים שלא נקראו."
         category: "אין עוד נושאים בקטגוריה %{category}."
+        tag: "אין יותר נושאי %{tag}."
         top: "אין עוד נושאים מובילים."
         bookmarks: "אין עוד סימניות לנושאים."
     topic:
@@ -2217,6 +2251,7 @@ he:
       read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 שלא נקרא</a> } other { <a href='{basePath}/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='{basePath}/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='{basePath}/new'>#</a> נושאים חדשים} } נותרים, או {CATEGORY, select, true {עיין בנושאים אחרים ב־{catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: עיינו בכל הקטגוריות
+      browse_all_tags: עיון בכל התגיות
       view_latest_topics: הצגת נושאים אחרונים
       suggest_create_topic: למה לא ליצור נושא חדש?
       jump_reply_up: קפיצה לתגובה קודמת
@@ -2521,7 +2556,6 @@ he:
         preview_url: "העמוד שלך יפורסם ב־:"
         invalid_slug: "אין לך אפשרות לפרסם את העמוד הזה, עמך הסליחה."
         unpublish: "משיכת הפרסום"
-        update: "עדכון"
         unpublished: "פרסום העמוד שלך נמשך ואין זמין עוד."
         publishing_settings: "הגדרות פרסום"
       change_owner:
@@ -2699,25 +2733,7 @@ he:
         remove_post_notice: "הסרת התראת סגל"
         remove_timer: "הסרת שעון עצר"
       actions:
-        flag: "דיגול"
-        defer_flags:
-          one: "התעלמות מדגל"
-          two: "התעלמות מדגלים"
-          many: "התעלמות מדגלים"
-          other: "התעלמות מדגלים"
-        undo:
-          off_topic: "ביטול דיגול"
-          spam: "ביטול דיגול"
-          inappropriate: "ביטול דיגול"
-          bookmark: "בטל העדפה"
-          like: "בטל לייק"
         people:
-          off_topic: "דוגל כאוף-טופיק"
-          spam: "דוגל כספאם"
-          inappropriate: "דוגל כלא ראוי"
-          notify_moderators: "דיווח למפקחים"
-          notify_user: "נשלחה הודעה"
-          bookmark: "סומן"
           like:
             one: "אהב/ה את זה"
             two: "אהבו את זה"
@@ -2744,8 +2760,6 @@ he:
           inappropriate: "דיגלתם את זה כלא ראוי"
           notify_moderators: "סימנת זאת בדגל לפיקוח"
           notify_user: "שלחתם הודעה למשתמש זה"
-          bookmark: "סימנתם פוסט זה עם סימנייה"
-          like: "נתת לזה לייק"
       delete:
         confirm:
           one: "למחוק את הפוסט הזה?"
@@ -3400,14 +3414,6 @@ he:
           latest: "אין נושאים אחרונים."
           bookmarks: "עדיין אין לך נושאים מסומנים."
           top: "אין נושאים מובילים."
-        bottom:
-          latest: "אין יותר נושאים אחרונים."
-          posted: "אין יותר נושאים שפורסמו."
-          read: "אין יותר נושאים שניקראו."
-          new: "אין יותר נושאים חדשים."
-          unread: "אין יותר נושאים שלא-נקראו."
-          top: "אין יותר נושאים מובילים."
-          bookmarks: "אין יותר נושאים שסומנו."
     invite:
       custom_message: "ניתן להעניק להזמנה שלך מגע אישי יותר על ידי כתיבת <a href>הודעה אישית</a>."
       custom_message_placeholder: "הכניסו את הודעתכם האישית"
@@ -3888,6 +3894,7 @@ he:
           hide_unused_fields: "הסתרת שדות שאינם בשימוש"
           is_default: "ערכת עיצוב מאופשרת כבררת מחדל"
           user_selectable: "המשתמשים יכולים לבחור את ערכת העיצוב"
+          color_scheme_user_selectable: "המשתמשים יכולים לבחור את ערכת הצבעים"
           color_scheme: "מבחר צבעים"
           default_light_scheme: "בהירה (בררת מחדל)"
           color_scheme_select: "בחירת צבעים לשימושה של ערכת העיצוב"
@@ -4286,7 +4293,7 @@ he:
             do_nothing: "לאפשר"
             allow_admin: "לאפשר להנהלה"
           form:
-            label: "חדש:"
+            label: "חדשה:"
             ip_address: "כתובת IP"
             add: "הוספה"
             filter: "חיפוש"

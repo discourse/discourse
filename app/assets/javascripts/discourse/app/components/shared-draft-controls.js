@@ -18,7 +18,7 @@ export default Component.extend({
     },
 
     publish() {
-      bootbox.confirm(I18n.t("shared_drafts.confirm_publish"), result => {
+      bootbox.confirm(I18n.t("shared_drafts.confirm_publish"), (result) => {
         if (result) {
           this.set("publishing", true);
           let destId = this.get("topic.destination_category_id");
@@ -32,6 +32,6 @@ export default Component.extend({
             });
         }
       });
-    }
-  }
+    },
+  },
 });

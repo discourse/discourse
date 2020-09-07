@@ -24,43 +24,44 @@ export default Controller.extend(GrantBadgeController, {
   groupedBadges() {
     const allBadges = this.model;
 
-    var grouped = _.groupBy(allBadges, badge => badge.badge_id);
+    let grouped = {};
+    allBadges.forEach((b) => {
+      grouped[b.badge_id] = grouped[b.badge_id] || [];
+      grouped[b.badge_id].push(b);
+    });
 
-    var expanded = [];
+    let expanded = [];
     const expandedBadges = allBadges.get("expandedBadges") || [];
 
-    _(grouped).each(function(badges) {
-      var lastGranted = badges[0].granted_at;
+    Object.values(grouped).forEach(function (badges) {
+      let lastGranted = badges[0].granted_at;
 
-      badges.forEach(badge => {
+      badges.forEach((badge) => {
         lastGranted =
           lastGranted < badge.granted_at ? badge.granted_at : lastGranted;
       });
 
       if (badges.length === 1 || expandedBadges.includes(badges[0].badge.id)) {
-        badges.forEach(badge => expanded.push(badge));
+        badges.forEach((badge) => expanded.push(badge));
         return;
       }
 
-      var result = {
+      let result = {
         badge: badges[0].badge,
         granted_at: lastGranted,
         badges: badges,
         count: badges.length,
-        grouped: true
+        grouped: true,
       };
 
       expanded.push(result);
     });
 
-    return _(expanded)
-      .sortBy(group => group.granted_at)
-      .reverse()
-      .value();
+    return expanded.sortBy("granted_at").reverse();
   },
 
   actions: {
-    expandGroup: function(userBadge) {
+    expandGroup: function (userBadge) {
       const model = this.model;
       model.set("expandedBadges", model.get("expandedBadges") || []);
       model.get("expandedBadges").pushObject(userBadge.badge.id);
@@ -82,7 +83,7 @@ export default Controller.extend(GrantBadgeController, {
             }
           });
         },
-        function(error) {
+        function (error) {
           popupAjaxError(error);
         }
       );
@@ -93,7 +94,7 @@ export default Controller.extend(GrantBadgeController, {
         I18n.t("admin.badges.revoke_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             userBadge.revoke().then(() => {
               this.model.removeObject(userBadge);
@@ -101,6 +102,6 @@ export default Controller.extend(GrantBadgeController, {
           }
         }
       );
-    }
-  }
+    },
+  },
 });

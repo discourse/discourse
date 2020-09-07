@@ -2,7 +2,7 @@ import { later } from "@ember/runloop";
 import discourseDebounce from "discourse/lib/debounce";
 import {
   safariHacksDisabled,
-  iOSWithVisualViewport
+  iOSWithVisualViewport,
 } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { helperContext } from "discourse-common/lib/helpers";
@@ -96,7 +96,7 @@ function positioningWorkaround($fixedElement) {
   var originalScrollTop = 0;
   let lastTouchedElement = null;
 
-  positioningWorkaround.blur = function(evt) {
+  positioningWorkaround.blur = function (evt) {
     if (workaroundActive) {
       $("body").removeClass("ios-safari-composer-hacks");
       window.scrollTo(0, originalScrollTop);
@@ -114,7 +114,7 @@ function positioningWorkaround($fixedElement) {
     }
   };
 
-  var blurredNow = function(evt) {
+  var blurredNow = function (evt) {
     // we cannot use evt.relatedTarget to get the last focused element in safari iOS
     // document.activeElement is also unreliable (iOS does not mark buttons as focused)
     // so instead, we store the last touched element and check against it
@@ -147,7 +147,7 @@ function positioningWorkaround($fixedElement) {
 
   var blurred = discourseDebounce(blurredNow, INPUT_DELAY);
 
-  var positioningHack = function(evt) {
+  var positioningHack = function (evt) {
     let _this = this;
 
     if (evt === undefined) {
@@ -170,7 +170,7 @@ function positioningWorkaround($fixedElement) {
 
     let delay = caps.isIpadOS ? 350 : 150;
 
-    later(function() {
+    later(function () {
       if (caps.isIpadOS && iOSWithVisualViewport()) {
         // disable hacks when using a hardware keyboard
         // by default, a hardware keyboard will show the keyboard accessory bar
@@ -201,7 +201,7 @@ function positioningWorkaround($fixedElement) {
     }, delay);
   };
 
-  var lastTouched = function(evt) {
+  var lastTouched = function (evt) {
     if (evt && evt.target) {
       lastTouchedElement = evt.target;
     }
@@ -214,15 +214,15 @@ function positioningWorkaround($fixedElement) {
     }
   }
 
-  const checkForInputs = discourseDebounce(function() {
+  const checkForInputs = discourseDebounce(function () {
     attachTouchStart(fixedElement, lastTouched);
 
-    $fixedElement.find("input[type=text],textarea").each(function() {
+    $fixedElement.find("input[type=text],textarea").each(function () {
       attachTouchStart(this, positioningHack);
     });
   }, 100);
 
-  positioningWorkaround.touchstartEvent = function(element) {
+  positioningWorkaround.touchstartEvent = function (element) {
     var triggerHack = positioningHack.bind(element);
     triggerHack();
   };
@@ -231,7 +231,7 @@ function positioningWorkaround($fixedElement) {
     childList: true,
     subtree: true,
     attributes: false,
-    characterData: false
+    characterData: false,
   };
   const observer = new MutationObserver(checkForInputs);
   observer.observe(fixedElement, config);

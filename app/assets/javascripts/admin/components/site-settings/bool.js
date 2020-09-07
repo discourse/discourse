@@ -14,6 +14,6 @@ export default Component.extend({
     set(value) {
       this.set("value", value ? "true" : "false");
       return value;
-    }
-  }
+    },
+  },
 });

@@ -18,7 +18,7 @@ export default Controller.extend(ModalFunctionality, {
         return;
       }
       this.set("loading", true);
-      User.findByUsername(this.ignoredUsername).then(user => {
+      User.findByUsername(this.ignoredUsername).then((user) => {
         user
           .updateNotificationLevel("ignore", this.ignoredUntil)
           .then(() => {
@@ -28,6 +28,6 @@ export default Controller.extend(ModalFunctionality, {
           .catch(popupAjaxError)
           .finally(() => this.set("loading", false));
       });
-    }
-  }
+    },
+  },
 });

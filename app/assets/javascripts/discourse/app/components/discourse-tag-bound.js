@@ -15,5 +15,5 @@ export default Component.extend({
   @discourseComputed("tagRecord.id")
   href(tagRecordId) {
     return getURL("/tag/" + tagRecordId);
-  }
+  },
 });

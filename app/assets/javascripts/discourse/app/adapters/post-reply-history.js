@@ -6,8 +6,8 @@ export default RestAdapter.extend({
     const maxReplies = this.siteSettings.max_reply_history;
     return ajax(
       `/posts/${findArgs.postId}/reply-history?max_replies=${maxReplies}`
-    ).then(replies => {
+    ).then((replies) => {
       return { post_reply_histories: replies };
     });
-  }
+  },
 });

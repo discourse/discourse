@@ -18,7 +18,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
   @discourseComputed("site.categories")
   categoriesBuffered(categories) {
     const bufProxy = EmberObjectProxy.extend(BufferedProxy);
-    return categories.map(c => bufProxy.create({ content: c }));
+    return categories.map((c) => bufProxy.create({ content: c }));
   },
 
   categoriesOrdered: sort("categoriesBuffered", "categoriesSorting"),
@@ -39,7 +39,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
   @on("init")
   reorder() {
     const reorderChildren = (categoryId, depth, index) => {
-      this.categoriesOrdered.forEach(category => {
+      this.categoriesOrdered.forEach((category) => {
         if (
           (categoryId === null && !category.get("parent_category_id")) ||
           category.get("parent_category_id") === categoryId
@@ -54,7 +54,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
 
     reorderChildren(null, 0, 0);
 
-    this.categoriesBuffered.forEach(bc => {
+    this.categoriesBuffered.forEach((bc) => {
       if (bc.get("hasBufferedChanges")) {
         bc.applyBufferedChanges();
       }
@@ -70,21 +70,21 @@ export default Controller.extend(ModalFunctionality, Evented, {
       // First category above current one
       const categoriesOrderedDesc = this.categoriesOrdered.reverse();
       otherCategory = categoriesOrderedDesc.find(
-        c =>
+        (c) =>
           category.get("parent_category_id") === c.get("parent_category_id") &&
           c.get("position") < category.get("position")
       );
     } else if (direction === 1) {
       // First category under current one
       otherCategory = this.categoriesOrdered.find(
-        c =>
+        (c) =>
           category.get("parent_category_id") === c.get("parent_category_id") &&
           c.get("position") > category.get("position")
       );
     } else {
       // Find category occupying target position
       otherCategory = this.categoriesOrdered.find(
-        c => c.get("position") === category.get("position") + direction
+        (c) => c.get("position") === category.get("position") + direction
       );
     }
 
@@ -127,16 +127,16 @@ export default Controller.extend(ModalFunctionality, Evented, {
       this.reorder();
 
       const data = {};
-      this.categoriesBuffered.forEach(cat => {
+      this.categoriesBuffered.forEach((cat) => {
         data[cat.get("id")] = cat.get("position");
       });
 
       ajax("/categories/reorder", {
         type: "POST",
-        data: { mapping: JSON.stringify(data) }
+        data: { mapping: JSON.stringify(data) },
       })
         .then(() => this.send("closeModal"))
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

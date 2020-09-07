@@ -27,21 +27,21 @@ export default Component.extend(UtilsMixin, {
       headerTitle: this.getProperty(this.item, "titleProperty"),
       name: this.getName(this.item),
       value:
-        this.item === this.selectKit.noneItem ? null : this.getValue(this.item)
+        this.item === this.selectKit.noneItem ? null : this.getValue(this.item),
     });
   },
 
-  ariaLabel: computed("item", "sanitizedTitle", function() {
+  ariaLabel: computed("item", "sanitizedTitle", function () {
     return this._safeProperty("ariaLabel", this.item) || this.sanitizedTitle;
   }),
 
   // this might need a more advanced solution
   // but atm it's the only case we have to handle
-  sanitizedTitle: computed("title", function() {
+  sanitizedTitle: computed("title", function () {
     return String(this.title).replace("&hellip;", "");
   }),
 
-  title: computed("headerTitle", "item", function() {
+  title: computed("headerTitle", "item", function () {
     return (
       this.headerTitle ||
       this._safeProperty("title", this.item) ||
@@ -50,7 +50,7 @@ export default Component.extend(UtilsMixin, {
     );
   }),
 
-  label: computed("headerLabel", "title", "name", function() {
+  label: computed("headerLabel", "title", "name", function () {
     return (
       this.headerLabel ||
       this._safeProperty("label", this.item) ||
@@ -59,7 +59,7 @@ export default Component.extend(UtilsMixin, {
     );
   }),
 
-  icons: computed("item.{icon,icons}", function() {
+  icons: computed("item.{icon,icons}", function () {
     const icon = makeArray(this._safeProperty("icon", this.item));
     const icons = makeArray(this._safeProperty("icons", this.item));
     return icon.concat(icons).filter(Boolean);
@@ -71,5 +71,5 @@ export default Component.extend(UtilsMixin, {
     }
 
     return get(content, name);
-  }
+  },
 });

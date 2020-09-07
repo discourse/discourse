@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import {
   translateResults,
   getSearchKey,
-  isValidSearchTerm
+  isValidSearchTerm,
 } from "discourse/lib/search";
 import PreloadStore from "discourse/lib/preload-store";
 import { getTransient, setTransient } from "discourse/lib/page-tracker";
@@ -16,7 +16,7 @@ export default DiscourseRoute.extend({
     expanded: false,
     context_id: {},
     context: {},
-    skip_context: {}
+    skip_context: {},
   },
   category: null,
 
@@ -24,7 +24,7 @@ export default DiscourseRoute.extend({
     return I18n.t("search.results_page", {
       term: escapeExpression(
         this.controllerFor("full-page-search").get("searchTerm")
-      )
+      ),
     });
   },
 
@@ -34,7 +34,7 @@ export default DiscourseRoute.extend({
     if (params.context_id && !args.skip_context) {
       args.search_context = {
         type: params.context,
-        id: params.context_id
+        id: params.context_id,
       };
     }
 
@@ -52,12 +52,12 @@ export default DiscourseRoute.extend({
       } else {
         return null;
       }
-    }).then(results => {
+    }).then((results) => {
       const grouped_search_result = results
         ? results.grouped_search_result
         : {};
       const model = (results && translateResults(results)) || {
-        grouped_search_result
+        grouped_search_result,
       };
       setTransient("lastSearch", { searchKey, model }, 5);
       return model;
@@ -68,6 +68,6 @@ export default DiscourseRoute.extend({
     didTransition() {
       this.controllerFor("full-page-search")._showFooter();
       return true;
-    }
-  }
+    },
+  },
 });

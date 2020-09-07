@@ -7,14 +7,14 @@ import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
 import {
   listColorSchemes,
   loadColorSchemeStylesheet,
-  updateColorSchemeCookie
+  updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { reload } from "discourse/helpers/page-reloader";
 import {
   safariHacksDisabled,
   isiPad,
-  iOSWithVisualViewport
+  iOSWithVisualViewport,
 } from "discourse/lib/utilities";
 import { computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
@@ -24,7 +24,7 @@ const USER_HOMES = {
   2: "categories",
   3: "unread",
   4: "new",
-  5: "top"
+  5: "top",
 };
 
 const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
@@ -43,7 +43,7 @@ export default Controller.extend({
 
     this.setProperties({
       selectedColorSchemeId: this.session.userColorSchemeId,
-      selectedDarkColorSchemeId: this.session.userDarkSchemeId
+      selectedDarkColorSchemeId: this.session.userDarkSchemeId,
     });
   },
 
@@ -64,7 +64,7 @@ export default Controller.extend({
       "title_count_mode",
       "skip_new_user_tips",
       "color_scheme_id",
-      "dark_scheme_id"
+      "dark_scheme_id",
     ];
 
     if (makeThemeDefault) {
@@ -98,7 +98,7 @@ export default Controller.extend({
 
   @discourseComputed
   textSizes() {
-    return TEXT_SIZES.map(value => {
+    return TEXT_SIZES.map((value) => {
       return { name: I18n.t(`user.text_size.${value}`), value };
     });
   },
@@ -106,7 +106,7 @@ export default Controller.extend({
   homepageId: computed(
     "model.user_option.homepage_id",
     "userSelectableHome.[]",
-    function() {
+    function () {
       return (
         this.model.user_option.homepage_id ||
         this.userSelectableHome.firstObject.value
@@ -116,7 +116,7 @@ export default Controller.extend({
 
   @discourseComputed
   titleCountModes() {
-    return TITLE_COUNT_MODES.map(value => {
+    return TITLE_COUNT_MODES.map((value) => {
       return { name: I18n.t(`user.title_count_mode.${value}`), value };
     });
   },
@@ -171,13 +171,13 @@ export default Controller.extend({
   @discourseComputed()
   userSelectableHome() {
     let homeValues = {};
-    Object.keys(USER_HOMES).forEach(newValue => {
+    Object.keys(USER_HOMES).forEach((newValue) => {
       const newKey = USER_HOMES[newValue];
       homeValues[newKey] = newValue;
     });
 
     let result = [];
-    this.siteSettings.top_menu.split("|").forEach(m => {
+    this.siteSettings.top_menu.split("|").forEach((m) => {
       let id = homeValues[m];
       if (id) {
         result.push({ name: I18n.t(`filters.${m}.title`), value: Number(id) });
@@ -194,7 +194,7 @@ export default Controller.extend({
   @discourseComputed
   userSelectableDarkColorSchemes() {
     return listColorSchemes(this.site, {
-      darkOnly: true
+      darkOnly: true,
     });
   },
 
@@ -213,7 +213,7 @@ export default Controller.extend({
     },
     get() {
       return this.get("model.user_option.dark_scheme_id") === -1 ? false : true;
-    }
+    },
   }),
 
   actions: {
@@ -290,7 +290,7 @@ export default Controller.extend({
               updateColorSchemeCookie(null, { dark: true });
             } else {
               updateColorSchemeCookie(this.selectedDarkColorSchemeId, {
-                dark: true
+                dark: true,
               });
             }
           }
@@ -317,7 +317,7 @@ export default Controller.extend({
     selectTextSize(newSize) {
       const classList = document.documentElement.classList;
 
-      TEXT_SIZES.forEach(name => {
+      TEXT_SIZES.forEach((name) => {
         const className = `text-size-${name}`;
         if (newSize === name) {
           classList.add(className);
@@ -334,7 +334,7 @@ export default Controller.extend({
     loadColorScheme(colorSchemeId) {
       this.setProperties({
         selectedColorSchemeId: colorSchemeId,
-        previewingColorScheme: true
+        previewingColorScheme: true,
       });
 
       if (colorSchemeId < 0) {
@@ -357,7 +357,7 @@ export default Controller.extend({
     loadDarkColorScheme(colorSchemeId) {
       this.setProperties({
         selectedDarkColorSchemeId: colorSchemeId,
-        previewingColorScheme: true
+        previewingColorScheme: true,
       });
 
       if (colorSchemeId === -1) {
@@ -376,13 +376,13 @@ export default Controller.extend({
       this.setProperties({
         selectedColorSchemeId: this.session.userColorSchemeId,
         selectedDarkColorSchemeId: this.session.userDarkSchemeId,
-        previewingColorScheme: false
+        previewingColorScheme: false,
       });
       const darkStylesheet = document.querySelector("link#cs-preview-dark"),
         lightStylesheet = document.querySelector("link#cs-preview-light");
       if (darkStylesheet) darkStylesheet.remove();
 
       if (lightStylesheet) lightStylesheet.remove();
-    }
-  }
+    },
+  },
 });

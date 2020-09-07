@@ -26,29 +26,31 @@ const ScreenedIpAddress = EmberObject.extend({
         type: this.id ? "PUT" : "POST",
         data: {
           ip_address: this.ip_address,
-          action_name: this.action_name
-        }
+          action_name: this.action_name,
+        },
       }
     );
   },
 
   destroy() {
     return ajax("/admin/logs/screened_ip_addresses/" + this.id + ".json", {
-      type: "DELETE"
+      type: "DELETE",
     });
-  }
+  },
 });
 
 ScreenedIpAddress.reopenClass({
   findAll(filter) {
     return ajax("/admin/logs/screened_ip_addresses.json", {
-      data: { filter: filter }
-    }).then(screened_ips => screened_ips.map(b => ScreenedIpAddress.create(b)));
+      data: { filter: filter },
+    }).then((screened_ips) =>
+      screened_ips.map((b) => ScreenedIpAddress.create(b))
+    );
   },
 
   rollUp() {
     return ajax("/admin/logs/screened_ip_addresses/roll_up", { type: "POST" });
-  }
+  },
 });
 
 export default ScreenedIpAddress;

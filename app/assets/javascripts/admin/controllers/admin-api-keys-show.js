@@ -58,9 +58,9 @@ export default Controller.extend(bufferedProperty("model"), {
       return showModal("admin-api-key-urls", {
         admin: true,
         model: {
-          urls
-        }
+          urls,
+        },
       });
-    }
-  }
+    },
+  },
 });

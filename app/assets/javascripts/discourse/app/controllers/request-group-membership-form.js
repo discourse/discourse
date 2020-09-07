@@ -28,7 +28,7 @@ export default Controller.extend(ModalFunctionality, {
 
         this.model
           .requestMembership(this.reason)
-          .then(result => {
+          .then((result) => {
             DiscourseURL.routeTo(result.relative_url);
           })
           .catch(popupAjaxError)
@@ -38,6 +38,6 @@ export default Controller.extend(ModalFunctionality, {
       } else {
         this._showLoginModal();
       }
-    }
-  }
+    },
+  },
 });

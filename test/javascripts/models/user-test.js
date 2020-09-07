@@ -5,7 +5,7 @@ import pretender from "helpers/create-pretender";
 
 QUnit.module("model:user");
 
-QUnit.test("staff", assert => {
+QUnit.test("staff", (assert) => {
   var user = User.create({ id: 1, username: "eviltrout" });
 
   assert.ok(!user.get("staff"), "user is not staff");
@@ -17,7 +17,7 @@ QUnit.test("staff", assert => {
   assert.ok(user.get("staff"), "admins are staff");
 });
 
-QUnit.test("searchContext", assert => {
+QUnit.test("searchContext", (assert) => {
   var user = User.create({ id: 1, username: "EvilTrout" });
 
   assert.deepEqual(
@@ -27,7 +27,7 @@ QUnit.test("searchContext", assert => {
   );
 });
 
-QUnit.test("isAllowedToUploadAFile", assert => {
+QUnit.test("isAllowedToUploadAFile", (assert) => {
   var user = User.create({ trust_level: 0, admin: true });
   assert.ok(
     user.isAllowedToUploadAFile("image"),
@@ -41,7 +41,7 @@ QUnit.test("isAllowedToUploadAFile", assert => {
   );
 });
 
-QUnit.test("canMangeGroup", assert => {
+QUnit.test("canMangeGroup", (assert) => {
   let user = User.create({ admin: true });
   let group = Group.create({ automatic: true });
 
@@ -70,7 +70,7 @@ QUnit.test("canMangeGroup", assert => {
   );
 });
 
-QUnit.test("resolvedTimezone", assert => {
+QUnit.test("resolvedTimezone", (assert) => {
   const tz = "Australia/Brisbane";
   let user = User.create({ timezone: tz, username: "chuck", id: 111 });
   let stub = sandbox.stub(moment.tz, "guess").returns("America/Chicago");
@@ -99,7 +99,7 @@ QUnit.test("resolvedTimezone", assert => {
     spy.calledWith("/u/chuck.json", {
       type: "PUT",
       dataType: "json",
-      data: { timezone: "America/Chicago" }
+      data: { timezone: "America/Chicago" },
     }),
     "if the user has no timezone save it with an AJAX update"
   );
@@ -114,7 +114,7 @@ QUnit.test("resolvedTimezone", assert => {
     spy.calledWith("/u/howardhamlin.json", {
       type: "PUT",
       dataType: "json",
-      data: { timezone: "America/Chicago" }
+      data: { timezone: "America/Chicago" },
     }),
     "if the user has no timezone, and the user is not the current user, do NOT save it with an AJAX update"
   );
@@ -122,7 +122,7 @@ QUnit.test("resolvedTimezone", assert => {
   stub.restore();
 });
 
-QUnit.test("muted ids", assert => {
+QUnit.test("muted ids", (assert) => {
   let user = User.create({ username: "chuck", muted_category_ids: [] });
 
   assert.deepEqual(user.calculateMutedIds(0, 1, "muted_category_ids"), [1]);

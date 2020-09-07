@@ -1,15 +1,16 @@
+import I18n from "I18n";
 import { acceptance } from "helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import selectKit from "helpers/select-kit-helper";
 
 acceptance("Details Button", {
   loggedIn: true,
-  beforeEach: function() {
+  beforeEach: function () {
     clearPopupMenuOptionsCallback();
-  }
+  },
 });
 
-test("details button", async assert => {
+test("details button", async (assert) => {
   const popupMenu = selectKit(".toolbar-popup-menu-options");
 
   await visit("/");
@@ -109,7 +110,7 @@ test("details button", async assert => {
   );
 });
 
-test("details button surrounds all selected text in a single details block", async assert => {
+test("details button surrounds all selected text in a single details block", async (assert) => {
   const multilineInput = "first line\n\nsecond line\n\nthird line";
   const popupMenu = selectKit(".toolbar-popup-menu-options");
 

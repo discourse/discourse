@@ -19,12 +19,12 @@ export default Component.extend({
       .then(() => {
         this.action(this.word);
       })
-      .catch(e => {
+      .catch((e) => {
         bootbox.alert(
           I18n.t("generic_error_with_reason", {
-            error: `http: ${e.status} - ${e.body}`
+            error: `http: ${e.status} - ${e.body}`,
           })
         );
       });
-  }
+  },
 });

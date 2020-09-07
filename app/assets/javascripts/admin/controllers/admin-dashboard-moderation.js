@@ -10,14 +10,14 @@ export default Controller.extend(PeriodComputationMixin, {
     return {
       table: {
         total: false,
-        perPage: 10
-      }
+        perPage: 10,
+      },
     };
   },
 
   isModeratorsActivityVisible: computed(
     "siteSettings.dashboard_hidden_reports",
-    function() {
+    function () {
       return !(this.siteSettings.dashboard_hidden_reports || "")
         .split("|")
         .filter(Boolean)
@@ -30,8 +30,8 @@ export default Controller.extend(PeriodComputationMixin, {
     return {
       table: {
         total: false,
-        perPage: 10
-      }
+        perPage: 10,
+      },
     };
   },
 
@@ -47,5 +47,5 @@ export default Controller.extend(PeriodComputationMixin, {
 
   _reportsForPeriodURL(period) {
     return getURL(`/admin/dashboard/moderation?period=${period}`);
-  }
+  },
 });

@@ -12,7 +12,7 @@ componentTest("icon only button", {
     );
     assert.ok(find("button .d-icon.d-icon-plus").length, "it has the icon");
     assert.equal(find("button").attr("tabindex"), "3", "it has the tabindex");
-  }
+  },
 });
 
 componentTest("icon and text button", {
@@ -25,7 +25,7 @@ componentTest("icon and text button", {
     );
     assert.ok(find("button .d-icon.d-icon-plus").length, "it has the icon");
     assert.ok(find("button span.d-button-label").length, "it has the label");
-  }
+  },
 });
 
 componentTest("text only button", {
@@ -34,7 +34,7 @@ componentTest("text only button", {
   test(assert) {
     assert.ok(find("button.btn.btn-text").length, "it has all the classes");
     assert.ok(find("button span.d-button-label").length, "it has the label");
-  }
+  },
 });
 
 componentTest("form attribute", {
@@ -42,7 +42,7 @@ componentTest("form attribute", {
 
   test(assert) {
     assert.ok(exists("button[form=login-form]"), "it has the form attribute");
-  }
+  },
 });
 
 componentTest("link-styled button", {
@@ -53,7 +53,7 @@ componentTest("link-styled button", {
       find("button.btn-link:not(.btn)").length,
       "it has the right classes"
     );
-  }
+  },
 });
 
 componentTest("isLoading button", {
@@ -83,7 +83,7 @@ componentTest("isLoading button", {
       find("button:not([disabled])").length,
       "while not loading the button is enabled"
     );
-  }
+  },
 });
 
 componentTest("disabled button", {
@@ -99,7 +99,7 @@ componentTest("disabled button", {
     this.set("disabled", false);
 
     assert.ok(find("button:not([disabled])").length, "the button is enabled");
-  }
+  },
 });
 
 componentTest("aria-label", {
@@ -120,11 +120,11 @@ componentTest("aria-label", {
 
     this.setProperties({
       ariaLabel: null,
-      translatedAriaLabel: "bar"
+      translatedAriaLabel: "bar",
     });
 
     assert.equal(find("button")[0].getAttribute("aria-label"), "bar");
-  }
+  },
 });
 
 componentTest("title", {
@@ -143,11 +143,11 @@ componentTest("title", {
 
     this.setProperties({
       title: null,
-      translatedTitle: "bar"
+      translatedTitle: "bar",
     });
 
     assert.equal(find("button")[0].getAttribute("title"), "bar");
-  }
+  },
 });
 
 componentTest("label", {
@@ -167,9 +167,9 @@ componentTest("label", {
 
     this.setProperties({
       label: null,
-      translatedLabel: "bar"
+      translatedLabel: "bar",
     });
 
     assert.equal(find("button .d-button-label").text(), "bar");
-  }
+  },
 });

@@ -11,8 +11,8 @@ import { computed } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 
 function staticReport(reportType) {
-  return computed("reports.[]", function() {
-    return makeArray(this.reports).find(report => report.type === reportType);
+  return computed("reports.[]", function () {
+    return makeArray(this.reports).find((report) => report.type === reportType);
   });
 }
 
@@ -27,7 +27,7 @@ export default Controller.extend(PeriodComputationMixin, {
     return (metrics || "").split("|").filter(Boolean);
   },
 
-  hiddenReports: computed("siteSettings.dashboard_hidden_reports", function() {
+  hiddenReports: computed("siteSettings.dashboard_hidden_reports", function () {
     return (this.siteSettings.dashboard_hidden_reports || "")
       .split("|")
       .filter(Boolean);
@@ -36,21 +36,21 @@ export default Controller.extend(PeriodComputationMixin, {
   isActivityMetricsVisible: computed(
     "activityMetrics",
     "hiddenReports",
-    function() {
+    function () {
       return (
         this.activityMetrics.length &&
-        this.activityMetrics.some(x => !this.hiddenReports.includes(x))
+        this.activityMetrics.some((x) => !this.hiddenReports.includes(x))
       );
     }
   ),
 
-  isSearchReportsVisible: computed("hiddenReports", function() {
+  isSearchReportsVisible: computed("hiddenReports", function () {
     return ["top_referred_topics", "trending_search"].some(
-      x => !this.hiddenReports.includes(x)
+      (x) => !this.hiddenReports.includes(x)
     );
   }),
 
-  isCommunityHealthVisible: computed("hiddenReports", function() {
+  isCommunityHealthVisible: computed("hiddenReports", function () {
     return [
       "consolidated_page_views",
       "signups",
@@ -58,56 +58,52 @@ export default Controller.extend(PeriodComputationMixin, {
       "posts",
       "dau_by_mau",
       "daily_engaged_users",
-      "new_contributors"
-    ].some(x => !this.hiddenReports.includes(x));
+      "new_contributors",
+    ].some((x) => !this.hiddenReports.includes(x));
   }),
 
   @discourseComputed
   activityMetricsFilters() {
     return {
       startDate: this.lastMonth,
-      endDate: this.today
+      endDate: this.today,
     };
   },
 
   @discourseComputed
   topReferredTopicsOptions() {
     return {
-      table: { total: false, limit: 8 }
+      table: { total: false, limit: 8 },
     };
   },
 
   @discourseComputed
   topReferredTopicsFilters() {
     return {
-      startDate: moment()
-        .subtract(6, "days")
-        .startOf("day"),
-      endDate: this.today
+      startDate: moment().subtract(6, "days").startOf("day"),
+      endDate: this.today,
     };
   },
 
   @discourseComputed
   trendingSearchFilters() {
     return {
-      startDate: moment()
-        .subtract(1, "month")
-        .startOf("day"),
-      endDate: this.today
+      startDate: moment().subtract(1, "month").startOf("day"),
+      endDate: this.today,
     };
   },
 
   @discourseComputed
   trendingSearchOptions() {
     return {
-      table: { total: false, limit: 8 }
+      table: { total: false, limit: 8 },
     };
   },
 
   @discourseComputed
   trendingSearchDisabledLabel() {
     return I18n.t("admin.dashboard.reports.trending_search.disabled", {
-      basePath: getURL("")
+      basePath: getURL(""),
     });
   },
 
@@ -120,23 +116,21 @@ export default Controller.extend(PeriodComputationMixin, {
 
     if (
       !this.dashboardFetchedAt ||
-      moment()
-        .subtract(30, "minutes")
-        .toDate() > this.dashboardFetchedAt
+      moment().subtract(30, "minutes").toDate() > this.dashboardFetchedAt
     ) {
       this.set("isLoading", true);
 
       AdminDashboard.fetchGeneral()
-        .then(adminDashboardModel => {
+        .then((adminDashboardModel) => {
           this.setProperties({
             dashboardFetchedAt: new Date(),
             model: adminDashboardModel,
-            reports: makeArray(adminDashboardModel.reports).map(x =>
+            reports: makeArray(adminDashboardModel.reports).map((x) =>
               Report.create(x)
-            )
+            ),
           });
         })
-        .catch(e => {
+        .catch((e) => {
           this.exceptionController.set("thrown", e.jqXHR);
           this.replaceRoute("exception");
         })
@@ -151,5 +145,5 @@ export default Controller.extend(PeriodComputationMixin, {
 
   _reportsForPeriodURL(period) {
     return getURL(`/admin?period=${period}`);
-  }
+  },
 });

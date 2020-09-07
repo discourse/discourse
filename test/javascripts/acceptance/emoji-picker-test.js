@@ -8,10 +8,10 @@ acceptance("EmojiPicker", {
   },
   afterEach() {
     this.emojiStore.reset();
-  }
+  },
 });
 
-QUnit.test("emoji picker can be opened/closed", async assert => {
+QUnit.test("emoji picker can be opened/closed", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
@@ -22,7 +22,7 @@ QUnit.test("emoji picker can be opened/closed", async assert => {
   assert.notOk(exists(".emoji-picker.opened"), "it closes the picker");
 });
 
-QUnit.test("emoji picker triggers event when picking emoji", async assert => {
+QUnit.test("emoji picker triggers event when picking emoji", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
   await click("button.emoji.btn");
@@ -37,7 +37,7 @@ QUnit.test("emoji picker triggers event when picking emoji", async assert => {
 
 QUnit.test(
   "emoji picker adds leading whitespace before emoji",
-  async assert => {
+  async (assert) => {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
@@ -63,47 +63,50 @@ QUnit.test(
   }
 );
 
-QUnit.test("emoji picker has a list of recently used emojis", async assert => {
-  await visit("/t/internationalization-localization/280");
-  await click("#topic-footer-buttons .btn.create");
-  await click("button.emoji.btn");
-  await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
+QUnit.test(
+  "emoji picker has a list of recently used emojis",
+  async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await click("button.emoji.btn");
+    await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-  assert.ok(
-    exists(
-      ".emoji-picker .section.recent .section-group img.emoji[title='grinning']"
-    ),
-    "it shows recent selected emoji"
-  );
+    assert.ok(
+      exists(
+        ".emoji-picker .section.recent .section-group img.emoji[title='grinning']"
+      ),
+      "it shows recent selected emoji"
+    );
 
-  assert.ok(
-    exists('.emoji-picker .category-button[data-section="recent"]'),
-    "it shows recent category icon"
-  );
+    assert.ok(
+      exists('.emoji-picker .category-button[data-section="recent"]'),
+      "it shows recent category icon"
+    );
 
-  await click(".emoji-picker .trash-recent");
+    await click(".emoji-picker .trash-recent");
 
-  assert.notOk(
-    exists(
-      ".emoji-picker .section.recent .section-group img.emoji[title='grinning']"
-    ),
-    "it has cleared recent emojis"
-  );
+    assert.notOk(
+      exists(
+        ".emoji-picker .section.recent .section-group img.emoji[title='grinning']"
+      ),
+      "it has cleared recent emojis"
+    );
 
-  assert.notOk(
-    exists('.emoji-picker .section[data-section="recent"]'),
-    "it hides recent section"
-  );
+    assert.notOk(
+      exists('.emoji-picker .section[data-section="recent"]'),
+      "it hides recent section"
+    );
 
-  assert.notOk(
-    exists('.emoji-picker .category-button[data-section="recent"]'),
-    "it hides recent category icon"
-  );
-});
+    assert.notOk(
+      exists('.emoji-picker .category-button[data-section="recent"]'),
+      "it hides recent category icon"
+    );
+  }
+);
 
 QUnit.test(
   "emoji picker correctly orders recently used emojis",
-  async assert => {
+  async (assert) => {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
@@ -118,9 +121,7 @@ QUnit.test(
 
     assert.equal(
       /grinning/.test(
-        find(".section.recent .section-group img.emoji")
-          .first()
-          .attr("src")
+        find(".section.recent .section-group img.emoji").first().attr("src")
       ),
       true,
       "it puts the last used emoji in first"
@@ -128,7 +129,7 @@ QUnit.test(
   }
 );
 
-QUnit.test("emoji picker persists state", async assert => {
+QUnit.test("emoji picker persists state", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
   await click("button.emoji.btn");

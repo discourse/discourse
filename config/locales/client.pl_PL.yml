@@ -310,9 +310,7 @@ pl_PL:
         bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
     bookmarks:
-      created: "wpis już dodano do zakładek%{name}"
       not_bookmarked: "dodaj do zakładek"
-      created_with_reminder: "dodałeś ten wpis do zakładek z przypomnieniem %{date}%{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
@@ -324,7 +322,6 @@ pl_PL:
         never: "Nigdy"
       search: "Wyszukaj"
       reminders:
-        at_desktop: "Następnym razem będę na swoim pulpicie"
         later_today: "Później dzisiaj"
         next_business_day: "Następny dzień roboczy"
         tomorrow: "Jutro"
@@ -654,6 +651,10 @@ pl_PL:
         membership:
           title: Członkostwo
           access: Dostęp
+        categories:
+          title: Kategorie
+        tags:
+          title: Tagi
         logs:
           title: "Logi"
           when: "Kiedy"
@@ -769,6 +770,7 @@ pl_PL:
       flair_preview_image: "Podgląd obrazka"
       flair_type:
         icon: "Wybierz ikonę"
+        image: "Prześlij obraz"
     user_action_groups:
       "1": "Polobienia"
       "2": "Otrzymane polubienia"
@@ -1043,7 +1045,6 @@ pl_PL:
         use: "Użyj aplikacji Authenticator"
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
-        disable_confirm: "Czy na pewno chcesz wyłączyć wszystkie drugie czynniki?"
         save: "Zapisz"
         edit: "Edytuj"
         edit_title: "Edytuj drugi czynnik"
@@ -2567,33 +2568,12 @@ pl_PL:
         add_post_notice: "Dodaj notatkę personelu"
         remove_post_notice: "Usuń wiadomość dla zespołu zarządzającego"
       actions:
-        flag: "Oflaguj"
-        defer_flags:
-          one: "Ignoruj flagę"
-          few: "Ignoruj oflagowanie"
-          many: "Ignoruj flagi"
-          other: "Ignoruj flagi"
-        undo:
-          off_topic: "Cofnij flagę"
-          spam: "Cofnij flagę"
-          inappropriate: "Cofnij flagę"
-          bookmark: "Cofnij zakładkę"
-          like: "Cofnij"
-        people:
-          off_topic: "Oflagowano jako nie-na-temat"
-          spam: "oznacz jako spam"
-          inappropriate: "Oflagowano jako nieodpowiednie"
-          notify_moderators: "Powiadomiono moderatorów"
-          notify_user: "Wysłano wiadomość"
-          bookmark: "dodaj do zakładek"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
           inappropriate: "Oznaczono jako niewłaściwe"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
-          bookmark: "Dodano zakładkę w tym wpisie"
-          like: "Polubiłeś/aś ten wpis"
       delete:
         confirm:
           one: "Czy na pewno chcesz usunąć ten post?"
@@ -3146,14 +3126,6 @@ pl_PL:
           latest: "Brak najnowszych tematów."
           bookmarks: "Nie posiadasz tematów dodanych do zakładek."
           top: "Brak najlepszych tematów."
-        bottom:
-          latest: "Nie ma więcej najnowszych tematów."
-          posted: "Nie ma więcej tematów, w których pisałeś."
-          read: "Nie ma więcej przeczytanych tematów."
-          new: "Nie ma więcej nowych tematów."
-          unread: "Nie ma więcej nieprzeczytanych tematów."
-          top: "Nie ma już więcej najlepszych tematów."
-          bookmarks: "Nie ma więcej dodanych tematów do zakładek."
     invite:
       custom_message_placeholder: "Wpisz swoją niestandardową wiadomość"
       custom_message_template_forum: "Hej, należy dołączyć do tego forum!"

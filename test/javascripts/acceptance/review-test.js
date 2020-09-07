@@ -2,12 +2,12 @@ import selectKit from "helpers/select-kit-helper";
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Review", {
-  loggedIn: true
+  loggedIn: true,
 });
 
 const user = ".reviewable-item[data-reviewable-id=1234]";
 
-QUnit.test("It returns a list of reviewable items", async assert => {
+QUnit.test("It returns a list of reviewable items", async (assert) => {
   await visit("/review");
 
   assert.ok(find(".reviewable-item").length, "has a list of items");
@@ -26,7 +26,7 @@ QUnit.test("It returns a list of reviewable items", async assert => {
   );
 });
 
-QUnit.test("Grouped by topic", async assert => {
+QUnit.test("Grouped by topic", async (assert) => {
   await visit("/review/topics");
   assert.ok(
     find(".reviewable-topic").length,
@@ -34,7 +34,7 @@ QUnit.test("Grouped by topic", async assert => {
   );
 });
 
-QUnit.test("Settings", async assert => {
+QUnit.test("Settings", async (assert) => {
   await visit("/review/settings");
 
   assert.ok(find(".reviewable-score-type").length, "has a list of bonuses");
@@ -47,7 +47,7 @@ QUnit.test("Settings", async assert => {
   assert.ok(find(".reviewable-settings .saved").length, "it saved");
 });
 
-QUnit.test("Flag related", async assert => {
+QUnit.test("Flag related", async (assert) => {
   await visit("/review");
 
   assert.ok(
@@ -56,16 +56,14 @@ QUnit.test("Flag related", async assert => {
   );
 
   assert.equal(
-    find(".reviewable-flagged-post .post-body")
-      .html()
-      .trim(),
+    find(".reviewable-flagged-post .post-body").html().trim(),
     "<b>cooked content</b>"
   );
 
   assert.equal(find(".reviewable-flagged-post .reviewable-score").length, 2);
 });
 
-QUnit.test("Flag related", async assert => {
+QUnit.test("Flag related", async (assert) => {
   await visit("/review/1");
 
   assert.ok(
@@ -74,13 +72,13 @@ QUnit.test("Flag related", async assert => {
   );
 });
 
-QUnit.test("Clicking the buttons triggers actions", async assert => {
+QUnit.test("Clicking the buttons triggers actions", async (assert) => {
   await visit("/review");
   await click(`${user} .reviewable-action.approve`);
   assert.equal(find(user).length, 0, "it removes the reviewable on success");
 });
 
-QUnit.test("Editing a reviewable", async assert => {
+QUnit.test("Editing a reviewable", async (assert) => {
   const topic = ".reviewable-item[data-reviewable-id=4321]";
   await visit("/review");
   assert.ok(find(`${topic} .reviewable-action.approve`).length);
@@ -88,12 +86,7 @@ QUnit.test("Editing a reviewable", async assert => {
   assert.equal(find(`${topic} .discourse-tag:eq(0)`).text(), "hello");
   assert.equal(find(`${topic} .discourse-tag:eq(1)`).text(), "world");
 
-  assert.equal(
-    find(`${topic} .post-body`)
-      .text()
-      .trim(),
-    "existing body"
-  );
+  assert.equal(find(`${topic} .post-body`).text().trim(), "existing body");
 
   await click(`${topic} .reviewable-action.edit`);
   await click(`${topic} .reviewable-action.save-edit`);
@@ -112,9 +105,7 @@ QUnit.test("Editing a reviewable", async assert => {
   await fillIn(".editable-field.payload-raw textarea", "new raw contents");
   await click(`${topic} .reviewable-action.cancel-edit`);
   assert.equal(
-    find(`${topic} .post-body`)
-      .text()
-      .trim(),
+    find(`${topic} .post-body`).text().trim(),
     "existing body",
     "cancelling does not update the value"
   );
@@ -136,16 +127,6 @@ QUnit.test("Editing a reviewable", async assert => {
   assert.equal(find(`${topic} .discourse-tag:eq(1)`).text(), "world");
   assert.equal(find(`${topic} .discourse-tag:eq(2)`).text(), "monkey");
 
-  assert.equal(
-    find(`${topic} .post-body`)
-      .text()
-      .trim(),
-    "new raw contents"
-  );
-  assert.equal(
-    find(`${topic} .category-name`)
-      .text()
-      .trim(),
-    "support"
-  );
+  assert.equal(find(`${topic} .post-body`).text().trim(), "new raw contents");
+  assert.equal(find(`${topic} .category-name`).text().trim(), "support");
 });

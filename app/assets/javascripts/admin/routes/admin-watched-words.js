@@ -3,7 +3,7 @@ import WatchedWord from "admin/models/watched-word";
 
 export default DiscourseRoute.extend({
   queryParams: {
-    filter: { replace: true }
+    filter: { replace: true },
   },
 
   model() {
@@ -22,5 +22,5 @@ export default DiscourseRoute.extend({
       "allWatchedWords",
       watchedWordsList
     );
-  }
+  },
 });

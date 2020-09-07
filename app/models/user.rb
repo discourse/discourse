@@ -1077,7 +1077,10 @@ class User < ActiveRecord::Base
 
     avatar = user_avatar || create_user_avatar
 
-    if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
+    if self.primary_email.present? &&
+        SiteSetting.automatically_download_gravatars? &&
+        !avatar.last_gravatar_download_attempt
+
       Jobs.cancel_scheduled_job(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
       Jobs.enqueue_in(1.second, :update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end

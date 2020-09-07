@@ -263,7 +263,6 @@ tr_TR:
       no_timezone: 'Henüz bir saat dilimi belirlemediniz. Hatırlatıcı ayarlayamazsınız. <a href="%{basePath}/my/preferences/profile">Profilinizde</a> bir tane oluşturun.'
       search: "Arama"
       reminders:
-        at_desktop: "Bir dahaki sefere masaüstümdeyim"
         later_today: "Bugün ilerleyen saatlerde"
         tomorrow: "Yarın"
         next_week: "Gelecek hafta"
@@ -923,7 +922,6 @@ tr_TR:
         use: "Authenticator uygulamasını kullan"
         enforced_notice: "Bu siteye erişmeden önce iki faktörlü kimlik doğrulamasını etkinleştirmeniz gerekir."
         disable: "Devre dışı bırak"
-        disable_confirm: "Bütün ikinci faktörleri inaktifleştirmek istediğinize emin misiniz?"
         save: "Kaydet"
         edit: "Düzenle"
         edit_title: "İkinci Faktörü Düzenle"
@@ -2328,23 +2326,7 @@ tr_TR:
         remove_post_notice: "Personel Bilgisini Kaldır"
         remove_timer: "zamanlayıcıyı kaldır"
       actions:
-        flag: "Bayrakla işaretle"
-        defer_flags:
-          one: "Bildirimi yoksay"
-          other: "Bildirimleri yoksay"
-        undo:
-          off_topic: "Bayrakla işaretlemeyi geri al"
-          spam: "Bayrakla işaretlemeyi geri al"
-          inappropriate: "Bayrakla işaretlemeyi geri al"
-          bookmark: "İşaretlemeyi geri al"
-          like: "Beğenini geri al"
         people:
-          off_topic: "Bayrakla \"konu dışı\" olarak işaretlendi"
-          spam: "Bayrakla \"istenmeyen e-posta\" olarak işaretlendi"
-          inappropriate: "Bayrakla \"uygunsuz\" olarak işaretlendi"
-          notify_moderators: "bilgilendirilen moderatörler "
-          notify_user: "mesaj gönderdi"
-          bookmark: "bunu işaretledi"
           like:
             one: "bu beğenildi"
             other: "bunlar beğenildi"
@@ -2363,8 +2345,6 @@ tr_TR:
           inappropriate: "Bunu bayrakla \"uygunsuz\" olarak işaretledin"
           notify_moderators: "Bunu moderatörün denetlemesi için bayrakla işaretledin"
           notify_user: "Bu kullanıcıya mesaj gönderdin"
-          bookmark: "Bu gönderiyi işaretledin"
-          like: "Bunu beğendin"
       delete:
         confirm:
           one: "Bu gönderiyi silmek istediğinize emin misiniz?"
@@ -2924,14 +2904,6 @@ tr_TR:
           latest: "Yeni eklenen konu bulunmuyor."
           bookmarks: "Henüz işaretlenmemiş bir konun bulunmuyor."
           top: "Güncel bir konu bulunmuyor."
-        bottom:
-          latest: "Yeni eklenmiş konu bulunmuyor."
-          posted: "Daha fazla gönderilmiş konu bulunmuyor."
-          read: "Okunacak daha fazla konu bulunmuyor."
-          new: "Daha fazla yeni konu bulunmuyor."
-          unread: "Daha fazla okunmamış konu bulunmuyor."
-          top: "Daha fazla güncel konu bulunmuyor."
-          bookmarks: "Daha fazla işaretlenmiş konu bulunmuyor."
     invite:
       custom_message: "Davetini az da olsa kişiselleştirilmiş <a href>özel bir mesajla</a> yaz"
       custom_message_placeholder: "Kişiselleştirilmiş mesajlarını düzenle"

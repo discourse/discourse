@@ -1,5 +1,5 @@
 // discourse-skip-module
-(function() {
+(function () {
   const wizard = require("wizard/wizard").default.create();
   wizard.start();
 })();

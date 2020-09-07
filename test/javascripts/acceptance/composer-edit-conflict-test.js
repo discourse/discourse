@@ -3,19 +3,17 @@ import { acceptance } from "helpers/qunit-helpers";
 import pretender from "helpers/create-pretender";
 
 acceptance("Composer - Edit conflict", {
-  loggedIn: true
+  loggedIn: true,
 });
 
-QUnit.test("Edit a post that causes an edit conflict", async assert => {
+QUnit.test("Edit a post that causes an edit conflict", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click(".topic-post:eq(0) button.show-more-actions");
   await click(".topic-post:eq(0) button.edit");
   await fillIn(".d-editor-input", "this will 409");
   await click("#reply-control button.create");
   assert.equal(
-    find("#reply-control button.create")
-      .text()
-      .trim(),
+    find("#reply-control button.create").text().trim(),
     I18n.t("composer.overwrite_edit"),
     "it shows the overwrite button"
   );
@@ -27,7 +25,7 @@ QUnit.test("Edit a post that causes an edit conflict", async assert => {
 });
 
 function handleDraftPretender(assert) {
-  pretender.post("/draft.json", request => {
+  pretender.post("/draft.json", (request) => {
     if (
       request.requestBody.indexOf("%22reply%22%3A%22%22") === -1 &&
       request.requestBody.indexOf("Any+plans+to+support+localization") !== -1
@@ -51,7 +49,7 @@ function handleDraftPretender(assert) {
 
 QUnit.test(
   "Should not send originalText when posting a new reply",
-  async assert => {
+  async (assert) => {
     handleDraftPretender(assert);
 
     await visit("/t/internationalization-localization/280");
@@ -63,7 +61,7 @@ QUnit.test(
   }
 );
 
-QUnit.test("Should send originalText when editing a reply", async assert => {
+QUnit.test("Should send originalText when editing a reply", async (assert) => {
   handleDraftPretender(assert);
 
   await visit("/t/internationalization-localization/280");

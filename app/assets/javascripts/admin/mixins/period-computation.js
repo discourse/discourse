@@ -14,10 +14,7 @@ export default Mixin.create({
 
   @discourseComputed("period")
   startDate(period) {
-    let fullDay = moment()
-      .locale("en")
-      .utc()
-      .subtract(1, "day");
+    let fullDay = moment().locale("en").utc().subtract(1, "day");
 
     switch (period) {
       case "yearly":
@@ -39,42 +36,27 @@ export default Mixin.create({
 
   @discourseComputed()
   lastWeek() {
-    return moment()
-      .locale("en")
-      .utc()
-      .endOf("day")
-      .subtract(1, "week");
+    return moment().locale("en").utc().endOf("day").subtract(1, "week");
   },
 
   @discourseComputed()
   lastMonth() {
-    return moment()
-      .locale("en")
-      .utc()
-      .startOf("day")
-      .subtract(1, "month");
+    return moment().locale("en").utc().startOf("day").subtract(1, "month");
   },
 
   @discourseComputed()
   endDate() {
-    return moment()
-      .locale("en")
-      .utc()
-      .subtract(1, "day")
-      .endOf("day");
+    return moment().locale("en").utc().subtract(1, "day").endOf("day");
   },
 
   @discourseComputed()
   today() {
-    return moment()
-      .locale("en")
-      .utc()
-      .endOf("day");
+    return moment().locale("en").utc().endOf("day");
   },
 
   actions: {
     changePeriod(period) {
       DiscourseURL.routeTo(this._reportsForPeriodURL(period));
-    }
-  }
+    },
+  },
 });

@@ -7,7 +7,7 @@ export default Component.extend({
   layout,
   classNames: ["select-kit-body"],
   attributeBindings: ["selectKitId:data-select-kit-id"],
-  selectKitId: computed("selectKit.uniqueID", function() {
+  selectKitId: computed("selectKit.uniqueID", function () {
     return `${this.selectKit.uniqueID}-body`;
   }),
   rootEventType: "click",
@@ -56,5 +56,5 @@ export default Component.extend({
     }
 
     this.selectKit.close(event);
-  }
+  },
 });

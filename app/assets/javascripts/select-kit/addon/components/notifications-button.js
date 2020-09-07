@@ -13,7 +13,7 @@ export default DropdownSelectBoxComponent.extend({
     autoFilterable: false,
     filterable: false,
     i18nPrefix: "",
-    i18nPostfix: ""
+    i18nPostfix: "",
   },
 
   modifyComponentForRow() {
@@ -29,12 +29,12 @@ export default DropdownSelectBoxComponent.extend({
     setProperties(content, {
       title,
       label: title,
-      icon: this.buttonForValue.icon
+      icon: this.buttonForValue.icon,
     });
     return content;
   },
 
-  buttonForValue: computed("value", function() {
+  buttonForValue: computed("value", function () {
     return buttonDetails(this.value);
-  })
+  }),
 });

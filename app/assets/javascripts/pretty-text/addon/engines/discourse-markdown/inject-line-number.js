@@ -24,10 +24,10 @@ export function setup(helper) {
       "ul.preview-sync-line",
       "ul[data-line-number]",
       "ol.preview-sync-line",
-      "ol[data-line-number]"
+      "ol[data-line-number]",
     ]);
 
-    helper.registerPlugin(md => {
+    helper.registerPlugin((md) => {
       const injectLineNumber = (tokens, index, options, env, self) => {
         let line;
         const token = tokens[index];

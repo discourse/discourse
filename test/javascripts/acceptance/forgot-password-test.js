@@ -7,13 +7,13 @@ acceptance("Forgot password", {
   pretend(server, helper) {
     server.post("/session/forgot_password", () => {
       return helper.response({
-        user_found: userFound
+        user_found: userFound,
       });
     });
-  }
+  },
 });
 
-QUnit.test("requesting password reset", async assert => {
+QUnit.test("requesting password reset", async (assert) => {
   await visit("/");
   await click("header .login-button");
   await click("#forgot-password-link");
@@ -28,11 +28,9 @@ QUnit.test("requesting password reset", async assert => {
   await click(".forgot-password-reset");
 
   assert.equal(
-    find(".alert-error")
-      .html()
-      .trim(),
+    find(".alert-error").html().trim(),
     I18n.t("forgot_password.complete_username_not_found", {
-      username: "someuser"
+      username: "someuser",
     }),
     "it should display an error for an invalid username"
   );
@@ -41,11 +39,9 @@ QUnit.test("requesting password reset", async assert => {
   await click(".forgot-password-reset");
 
   assert.equal(
-    find(".alert-error")
-      .html()
-      .trim(),
+    find(".alert-error").html().trim(),
     I18n.t("forgot_password.complete_email_not_found", {
-      email: "someuser@gmail.com"
+      email: "someuser@gmail.com",
     }),
     "it should display an error for an invalid email"
   );
@@ -62,11 +58,9 @@ QUnit.test("requesting password reset", async assert => {
   );
 
   assert.equal(
-    find(".modal-body")
-      .html()
-      .trim(),
+    find(".modal-body").html().trim(),
     I18n.t("forgot_password.complete_username_found", {
-      username: "someuser"
+      username: "someuser",
     }),
     "it should display a success message for a valid username"
   );
@@ -78,11 +72,9 @@ QUnit.test("requesting password reset", async assert => {
   await click(".forgot-password-reset");
 
   assert.equal(
-    find(".modal-body")
-      .html()
-      .trim(),
+    find(".modal-body").html().trim(),
     I18n.t("forgot_password.complete_email_found", {
-      email: "someuser@gmail.com"
+      email: "someuser@gmail.com",
     }),
     "it should display a success message for a valid email"
   );

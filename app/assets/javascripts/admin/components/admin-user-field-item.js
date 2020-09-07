@@ -10,7 +10,7 @@ import { propertyEqual } from "discourse/lib/computed";
 import { i18n } from "discourse/lib/computed";
 import discourseComputed, {
   observes,
-  on
+  on,
 } from "discourse-common/utils/decorators";
 
 export default Component.extend(bufferedProperty("userField"), {
@@ -103,6 +103,6 @@ export default Component.extend(bufferedProperty("userField"), {
         this.rollbackBuffer();
         this.set("editing", false);
       }
-    }
-  }
+    },
+  },
 });

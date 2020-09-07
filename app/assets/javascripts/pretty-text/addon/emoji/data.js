@@ -1657,7 +1657,7 @@ export const emojis = [
   "mechanical_arm",
   "white_heart",
   "brown_heart",
-  "transgender_flag"
+  "transgender_flag",
 ];
 export const tonableEmojis = [
   "raised_hands",
@@ -1825,7 +1825,7 @@ export const tonableEmojis = [
   "person_in_lotus_position",
   "woman_in_lotus_position",
   "love_you_gesture",
-  "palms_up_together"
+  "palms_up_together",
 ];
 export const aliases = {
   right_anger_bubble: ["anger_right"],
@@ -1868,7 +1868,7 @@ export const aliases = {
   hammer_and_pick: ["hammer_pick"],
   heavy_heart_exclamation: [
     "heart_exclamation",
-    "heavy_heart_exclamation_mark_ornament"
+    "heavy_heart_exclamation_mark_ornament",
   ],
   houses: ["homes", "house_buildings"],
   hotdog: ["hot_dog"],
@@ -1907,7 +1907,7 @@ export const aliases = {
   "+1": ["thumbsup"],
   cloud_with_lightning_and_rain: [
     "thunder_cloud_rain",
-    "thunder_cloud_and_rain"
+    "thunder_cloud_and_rain",
   ],
   tickets: ["admission_tickets"],
   next_track_button: ["track_next", "next_track"],
@@ -1917,7 +1917,7 @@ export const aliases = {
   sun_behind_large_cloud: ["white_sun_cloud", "white_sun_behind_cloud"],
   sun_behind_rain_cloud: [
     "white_sun_rain_cloud",
-    "white_sun_behind_cloud_with_rain"
+    "white_sun_behind_cloud_with_rain",
   ],
   partly_sunny: ["white_sun_small_cloud", "white_sun_with_small_cloud"],
   open_umbrella: ["umbrella2"],
@@ -1942,7 +1942,7 @@ export const aliases = {
   raised_hand: ["hand"],
   vulcan_salute: [
     "vulcan",
-    "raised_hand_with_part_between_middle_and_ring_fingers"
+    "raised_hand_with_part_between_middle_and_ring_fingers",
   ],
   policeman: ["cop"],
   running_man: ["runner"],
@@ -2026,7 +2026,7 @@ export const aliases = {
   new_moon: ["moon"],
   oncoming_automobile: ["car", "automobile"],
   fleur_de_lis: ["fleur-de-lis"],
-  face_vomiting: ["puke"]
+  face_vomiting: ["puke"],
 };
 export const searchAliases = {
   sad: [
@@ -2034,9 +2034,9 @@ export const searchAliases = {
     "slightly_frowning_face",
     "sob",
     "crying_cat_face",
-    "cry"
+    "cry",
   ],
-  cry: ["sob"]
+  cry: ["sob"],
 };
 export const translations = {
   ":)": "slight_smile",
@@ -2064,7 +2064,7 @@ export const translations = {
   ";P": "stuck_out_tongue_winking_eye",
   ";-P": "stuck_out_tongue_winking_eye",
   ":$": "blush",
-  ":-$": "blush"
+  ":-$": "blush",
 };
 export const replacements = {
   "😀": "grinning",
@@ -4550,5 +4550,5 @@ export const replacements = {
   "🤎": "brown_heart",
   "🏳️‍⚧": "transgender_flag",
   "☻": "slight_smile",
-  "♡": "heart"
+  "♡": "heart",
 };

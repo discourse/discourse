@@ -7,7 +7,7 @@ widgetTest("rendering basics", {
   test(assert) {
     assert.ok(find("header.d-header").length);
     assert.ok(find("#site-logo").length);
-  }
+  },
 });
 
 widgetTest("sign up / login buttons", {
@@ -30,7 +30,7 @@ widgetTest("sign up / login buttons", {
 
     await click("button.login-button");
     assert.ok(this.loginShown);
-  }
+  },
 });
 
 widgetTest("anon when login required", {
@@ -50,7 +50,7 @@ widgetTest("anon when login required", {
     assert.ok(exists("button.sign-up-button"));
     assert.ok(!exists("#search-button"));
     assert.ok(!exists("#toggle-hamburger-menu"));
-  }
+  },
 });
 
 widgetTest("logged in when login required", {
@@ -70,5 +70,5 @@ widgetTest("logged in when login required", {
     assert.ok(exists("#search-button"));
     assert.ok(exists("#toggle-hamburger-menu"));
     assert.ok(exists("#current-user"));
-  }
+  },
 });

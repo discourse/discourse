@@ -45,14 +45,14 @@ export default Controller.extend({
       if (secret.indexOf(" ") !== -1) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("admin.web_hooks.secret_invalid")
+          reason: I18n.t("admin.web_hooks.secret_invalid"),
         });
       }
 
       if (secret.length < 12) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("admin.web_hooks.secret_too_short")
+          reason: I18n.t("admin.web_hooks.secret_too_short"),
         });
       }
     }
@@ -63,7 +63,7 @@ export default Controller.extend({
     if (!isWildcard && isEmpty(eventTypes)) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("admin.web_hooks.event_type_missing")
+        reason: I18n.t("admin.web_hooks.event_type_missing"),
       });
     }
   },
@@ -117,7 +117,7 @@ export default Controller.extend({
           I18n.t("admin.web_hooks.warn_local_payload_url"),
           I18n.t("no_value"),
           I18n.t("yes_value"),
-          result => {
+          (result) => {
             if (result) {
               return saveWebHook();
             }
@@ -133,7 +133,7 @@ export default Controller.extend({
         I18n.t("admin.web_hooks.delete_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        result => {
+        (result) => {
           if (result) {
             const model = this.model;
             model
@@ -146,6 +146,6 @@ export default Controller.extend({
           }
         }
       );
-    }
-  }
+    },
+  },
 });

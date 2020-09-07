@@ -341,22 +341,22 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 }
 
 export function setup(helper) {
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     const ruler = md.block.bbcode.ruler;
 
     ruler.push("excerpt", {
       tag: "excerpt",
-      wrap: "div.excerpt"
+      wrap: "div.excerpt",
     });
 
     ruler.push("code", {
       tag: "code",
-      replace: function(state, tagInfo, content) {
+      replace: function (state, tagInfo, content) {
         let token;
         token = state.push("fence", "code", 0);
         token.content = content;
         return true;
-      }
+      },
     });
 
     isWhiteSpace = md.utils.isWhiteSpace;

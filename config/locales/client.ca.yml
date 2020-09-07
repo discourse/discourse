@@ -255,7 +255,6 @@ ca:
         bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
     bookmarks:
-      created: "Heu marcat aquesta publicació %{name}com a preferida"
       not_bookmarked: "marca aquesta publicació com a preferit"
       remove: "Elimina preferit"
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
@@ -914,7 +913,6 @@ ca:
         use: "Utilitza l'aplicació Authenticator"
         enforced_notice: "Cal que activeu l'autenticació de dos factors abans d'accedir a aquest lloc web."
         disable: "Desactiva"
-        disable_confirm: "Esteu segur que voleu deshabilitar tots els factors segons?"
         save: "Desa"
         edit: "Edita"
         edit_title: "Edita el factor segon"
@@ -2309,23 +2307,7 @@ ca:
         remove_post_notice: "Elimina l'avís a l'equip responsable"
         remove_timer: "elimina el temporitzador"
       actions:
-        flag: "Bandera"
-        defer_flags:
-          one: "Ignora la bandera"
-          other: "Ignora les banderes"
-        undo:
-          off_topic: "Desfés bandera"
-          spam: "Desfés bandera"
-          inappropriate: "Desfés bandera"
-          bookmark: "Desfés preferit"
-          like: "Desfés 'M'agrada'"
         people:
-          off_topic: "marcat amb bandera de fora de context"
-          spam: "marcat amb bandera com a brossa"
-          inappropriate: "marcat amb bandera com a inapropiat"
-          notify_moderators: "s'ha notificat els moderadors"
-          notify_user: "ha enviat un missatge"
-          bookmark: "marcat com a preferit"
           like:
             one: "ha fet 'M'agrada' "
             other: "han fet 'M'agrada' "
@@ -2338,8 +2320,6 @@ ca:
           inappropriate: "Ho heu marcat amb bandera d'inapropiat"
           notify_moderators: "Ho heu marcat amb bandera per a moderar"
           notify_user: "Heu enviat un missatge a aquest usuari."
-          bookmark: "Heu marcat aquesta publicació com a preferit"
-          like: "Això us ha agradat"
       delete:
         confirm:
           one: "Esteu segur que voleu suprimir aquesta publicació?"
@@ -2876,14 +2856,6 @@ ca:
           latest: "No hi ha temes recents."
           bookmarks: "Encara no heu marcat temes com a preferits."
           top: "No hi ha temes principals."
-        bottom:
-          latest: "No hi ha més temes recents."
-          posted: "No hi ha més temes publicats."
-          read: "No hi ha més temes llegits."
-          new: "No hi ha més temes nous."
-          unread: "No hi ha més temes sense llegir."
-          top: "No hi ha més temes principals."
-          bookmarks: "No hi ha més temes marcats com a preferits."
     invite:
       custom_message: "Feu que la invitació tingui un toc personal escrivint un <a href>missatge personalitzat</a>."
       custom_message_placeholder: "Introduïu el vostre missatge personalitzat"

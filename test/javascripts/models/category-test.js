@@ -3,10 +3,10 @@ import Category from "discourse/models/category";
 
 QUnit.module("model:category");
 
-QUnit.test("slugFor", assert => {
+QUnit.test("slugFor", (assert) => {
   const store = createStore();
 
-  const slugFor = function(cat, val, text) {
+  const slugFor = function (cat, val, text) {
     assert.equal(Category.slugFor(cat), val, text);
   };
 
@@ -33,12 +33,12 @@ QUnit.test("slugFor", assert => {
 
   const parentCategory = store.createRecord("category", {
     id: 345,
-    slug: "darth"
+    slug: "darth",
   });
   slugFor(
     store.createRecord("category", {
       slug: "luke",
-      parentCategory: parentCategory
+      parentCategory: parentCategory,
     }),
     "darth/luke",
     "it uses the parent slug before the child"
@@ -58,7 +58,7 @@ QUnit.test("slugFor", assert => {
   );
 });
 
-QUnit.test("findBySlug", assert => {
+QUnit.test("findBySlug", (assert) => {
   assert.expect(6);
 
   const store = createStore();
@@ -66,23 +66,23 @@ QUnit.test("findBySlug", assert => {
     luke = store.createRecord("category", {
       id: 2,
       slug: "luke",
-      parentCategory: darth
+      parentCategory: darth,
     }),
     hurricane = store.createRecord("category", { id: 3, slug: "熱帶風暴畫眉" }),
     newsFeed = store.createRecord("category", {
       id: 4,
       slug: "뉴스피드",
-      parentCategory: hurricane
+      parentCategory: hurricane,
     }),
     time = store.createRecord("category", {
       id: 5,
       slug: "时间",
-      parentCategory: darth
+      parentCategory: darth,
     }),
     bah = store.createRecord("category", {
       id: 6,
       slug: "bah",
-      parentCategory: hurricane
+      parentCategory: hurricane,
     }),
     categoryList = [darth, luke, hurricane, newsFeed, time, bah];
 
@@ -122,7 +122,7 @@ QUnit.test("findBySlug", assert => {
   sandbox.restore();
 });
 
-QUnit.test("findSingleBySlug", assert => {
+QUnit.test("findSingleBySlug", (assert) => {
   assert.expect(6);
 
   const store = createStore();
@@ -130,23 +130,23 @@ QUnit.test("findSingleBySlug", assert => {
     luke = store.createRecord("category", {
       id: 2,
       slug: "luke",
-      parentCategory: darth
+      parentCategory: darth,
     }),
     hurricane = store.createRecord("category", { id: 3, slug: "熱帶風暴畫眉" }),
     newsFeed = store.createRecord("category", {
       id: 4,
       slug: "뉴스피드",
-      parentCategory: hurricane
+      parentCategory: hurricane,
     }),
     time = store.createRecord("category", {
       id: 5,
       slug: "时间",
-      parentCategory: darth
+      parentCategory: darth,
     }),
     bah = store.createRecord("category", {
       id: 6,
       slug: "bah",
-      parentCategory: hurricane
+      parentCategory: hurricane,
     }),
     categoryList = [darth, luke, hurricane, newsFeed, time, bah];
 
@@ -184,19 +184,19 @@ QUnit.test("findSingleBySlug", assert => {
   );
 });
 
-QUnit.test("findBySlugPathWithID", assert => {
+QUnit.test("findBySlugPathWithID", (assert) => {
   const store = createStore();
 
   const foo = store.createRecord("category", { id: 1, slug: "foo" });
   const bar = store.createRecord("category", {
     id: 2,
     slug: "bar",
-    parentCategory: foo
+    parentCategory: foo,
   });
   const baz = store.createRecord("category", {
     id: 3,
     slug: "baz",
-    parentCategory: foo
+    parentCategory: foo,
   });
 
   const categoryList = [foo, bar, baz];
@@ -208,17 +208,17 @@ QUnit.test("findBySlugPathWithID", assert => {
   assert.deepEqual(Category.findBySlugPathWithID("foo/baz/3"), baz);
 });
 
-QUnit.test("search with category name", assert => {
+QUnit.test("search with category name", (assert) => {
   const store = createStore(),
     category1 = store.createRecord("category", {
       id: 1,
       name: "middle term",
-      slug: "different-slug"
+      slug: "different-slug",
     }),
     category2 = store.createRecord("category", {
       id: 2,
       name: "middle term",
-      slug: "another-different-slug"
+      slug: "another-different-slug",
     });
 
   sandbox.stub(Category, "listByActivity").returns([category1, category2]);
@@ -258,12 +258,12 @@ QUnit.test("search with category name", assert => {
   const child_category1 = store.createRecord("category", {
       id: 3,
       name: "term start",
-      parent_category_id: category1.get("id")
+      parent_category_id: category1.get("id"),
     }),
     read_restricted_category = store.createRecord("category", {
       id: 4,
       name: "some term",
-      read_restricted: true
+      read_restricted: true,
     });
 
   sandbox
@@ -297,17 +297,17 @@ QUnit.test("search with category name", assert => {
   sandbox.restore();
 });
 
-QUnit.test("search with category slug", assert => {
+QUnit.test("search with category slug", (assert) => {
   const store = createStore(),
     category1 = store.createRecord("category", {
       id: 1,
       name: "middle term",
-      slug: "different-slug"
+      slug: "different-slug",
     }),
     category2 = store.createRecord("category", {
       id: 2,
       name: "middle term",
-      slug: "another-different-slug"
+      slug: "another-different-slug",
     });
 
   sandbox.stub(Category, "listByActivity").returns([category1, category2]);

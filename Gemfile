@@ -66,7 +66,7 @@ gem 'http_accept_language', require: false
 
 # Ember related gems need to be pinned cause they control client side
 # behavior, we will push these versions up when upgrading ember
-gem 'ember-rails', '0.18.5'
+gem 'discourse-ember-rails', '0.18.6', require: 'ember-rails'
 gem 'discourse-ember-source', '~> 3.12.2'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'discourse-fonts'
@@ -158,10 +158,6 @@ group :test, :development do
   gem 'mocha', require: false
 
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
-
-  # TODO determine if we can update this to 0.10, API changes happened
-  # we would like to upgrade it if possible
-  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
 
   gem 'rspec-rails'
 

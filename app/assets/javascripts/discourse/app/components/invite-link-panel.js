@@ -11,9 +11,7 @@ export default Component.extend({
   userInvitedShow: readOnly("panel.model.userInvitedShow"),
   isStaff: readOnly("currentUser.staff"),
   maxRedemptionAllowed: 5,
-  inviteExpiresAt: moment()
-    .add(1, "month")
-    .format("YYYY-MM-DD"),
+  inviteExpiresAt: moment().add(1, "month").format("YYYY-MM-DD"),
   groupIds: null,
   allGroups: null,
 
@@ -44,21 +42,21 @@ export default Component.extend({
   @discourseComputed("isAdmin", "inviteModel.group_users")
   showGroups(isAdmin, groupUsers) {
     return (
-      isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner))
+      isAdmin || (groupUsers && groupUsers.some((groupUser) => groupUser.owner))
     );
   },
 
   reset() {
     this.setProperties({
       maxRedemptionAllowed: 5,
-      groupIds: []
+      groupIds: [],
     });
 
     this.inviteModel.setProperties({
       error: false,
       saving: false,
       finished: false,
-      inviteLink: null
+      inviteLink: null,
     });
   },
 
@@ -81,26 +79,26 @@ export default Component.extend({
         maxRedemptionAllowed,
         inviteExpiresAt
       )
-      .then(result => {
+      .then((result) => {
         model.setProperties({
           saving: false,
           finished: true,
-          inviteLink: result
+          inviteLink: result,
         });
 
         if (userInvitedController) {
           Invite.findInvitedBy(
             this.currentUser,
             userInvitedController.filter
-          ).then(inviteModel => {
+          ).then((inviteModel) => {
             userInvitedController.setProperties({
               model: inviteModel,
-              totalInvites: inviteModel.invites.length
+              totalInvites: inviteModel.invites.length,
             });
           });
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
           this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
         } else {
@@ -115,8 +113,8 @@ export default Component.extend({
   },
 
   setGroupOptions() {
-    Group.findAll().then(groups => {
+    Group.findAll().then((groups) => {
       this.set("allGroups", groups.filterBy("automatic", false));
     });
-  }
+  },
 });

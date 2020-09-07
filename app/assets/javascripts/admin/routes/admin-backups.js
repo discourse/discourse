@@ -14,16 +14,14 @@ const LOG_CHANNEL = "/admin/backups/logs";
 
 export default DiscourseRoute.extend({
   activate() {
-    this.messageBus.subscribe(LOG_CHANNEL, log => {
+    this.messageBus.subscribe(LOG_CHANNEL, (log) => {
       if (log.message === "[STARTED]") {
         User.currentProp("hideReadOnlyAlert", true);
         this.controllerFor("adminBackups").set(
           "model.isOperationRunning",
           true
         );
-        this.controllerFor("adminBackupsLogs")
-          .get("logs")
-          .clear();
+        this.controllerFor("adminBackupsLogs").get("logs").clear();
       } else if (log.message === "[FAILED]") {
         this.controllerFor("adminBackups").set(
           "model.isOperationRunning",
@@ -31,7 +29,7 @@ export default DiscourseRoute.extend({
         );
         bootbox.alert(
           I18n.t("admin.backups.operations.failed", {
-            operation: log.operation
+            operation: log.operation,
           })
         );
       } else if (log.message === "[SUCCESS]") {
@@ -55,11 +53,11 @@ export default DiscourseRoute.extend({
   model() {
     return PreloadStore.getAndRemove("operations_status", () =>
       ajax("/admin/backups/status.json")
-    ).then(status =>
+    ).then((status) =>
       BackupStatus.create({
         isOperationRunning: status.is_operation_running,
         canRollback: status.can_rollback,
-        allowRestore: status.allow_restore
+        allowRestore: status.allow_restore,
       })
     );
   },
@@ -84,13 +82,15 @@ export default DiscourseRoute.extend({
         I18n.t("admin.backups.operations.destroy.confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed => {
+        (confirmed) => {
           if (confirmed) {
-            backup.destroy().then(() =>
-              this.controllerFor("adminBackupsIndex")
-                .get("model")
-                .removeObject(backup)
-            );
+            backup
+              .destroy()
+              .then(() =>
+                this.controllerFor("adminBackupsIndex")
+                  .get("model")
+                  .removeObject(backup)
+              );
           }
         }
       );
@@ -101,7 +101,7 @@ export default DiscourseRoute.extend({
         I18n.t("admin.backups.operations.restore.confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed => {
+        (confirmed) => {
           if (confirmed) {
             this.transitionTo("admin.backups.logs");
             backup.restore();
@@ -115,7 +115,7 @@ export default DiscourseRoute.extend({
         I18n.t("admin.backups.operations.cancel.confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed => {
+        (confirmed) => {
           if (confirmed) {
             Backup.cancel().then(() => {
               this.controllerFor("adminBackups").set(
@@ -133,7 +133,7 @@ export default DiscourseRoute.extend({
         I18n.t("admin.backups.operations.rollback.confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        confirmed => {
+        (confirmed) => {
           if (confirmed) {
             Backup.rollback();
           }
@@ -152,12 +152,12 @@ export default DiscourseRoute.extend({
     },
 
     remoteUploadSuccess() {
-      Backup.find().then(backups => {
+      Backup.find().then((backups) => {
         this.controllerFor("adminBackupsIndex").set(
           "model",
-          backups.map(backup => Backup.create(backup))
+          backups.map((backup) => Backup.create(backup))
         );
       });
-    }
-  }
+    },
+  },
 });

@@ -917,7 +917,6 @@ da:
         use: "Brug Autentificeringsapp"
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "Deaktivér"
-        disable_confirm: "Er du sikker på, at du vil deaktivere alle andre faktorer?"
         save: "Gem"
         edit: "Rediger"
         edit_title: "Rediger anden faktor"
@@ -2126,7 +2125,6 @@ da:
         error: "Der opstod en fejl med at flette de valgte indlæg."
       publish_page:
         public: "Offentlig"
-        update: "Opdater"
       change_owner:
         title: "Skift ejer"
         action: "skift ejerskab"
@@ -2272,23 +2270,7 @@ da:
         remove_post_notice: "Fjern Hjælperteam Notits"
         remove_timer: "fjern timer"
       actions:
-        flag: "Flag"
-        defer_flags:
-          one: "Ignorer flag"
-          other: "Ignorér markeringer"
-        undo:
-          off_topic: "Undo flag"
-          spam: "Undo flag"
-          inappropriate: "Undo flag"
-          bookmark: "Undo bookmark"
-          like: "Undo like"
         people:
-          off_topic: "markerede dette som off-topic"
-          spam: "markerede dette som spam"
-          inappropriate: "markerede dette som upassende"
-          notify_moderators: "informerede moderatorer"
-          notify_user: "sendte en besked"
-          bookmark: "bogmærkede dette"
           like_capped:
             one: "og %{count} anden kunne lide dette"
             other: "og %{count} andre kunne lide dette"
@@ -2298,8 +2280,6 @@ da:
           inappropriate: "Du flagede dette som upassende"
           notify_moderators: "Du flagede dette til gennemsyn"
           notify_user: "Du har sendt en besked til denne bruger"
-          bookmark: "Du bogmærkede dette indlæg"
-          like: "Du liker dette indlæg"
       delete:
         confirm:
           one: "Er du sikker på, at du vil slette dette indlæg?"
@@ -2830,14 +2810,6 @@ da:
           latest: "Der er ikke nogen seneste emner."
           bookmarks: "Du har ikke bogmærket nogen emner endnu."
           top: "Der er ikke nogen populære emner."
-        bottom:
-          latest: "Der er ikke flere seneste emner."
-          posted: "Der er ikke flere oprettede emner."
-          read: "Der er ikke flere læste emner."
-          new: "Der er ikke flere nye emner."
-          unread: "Der er ikke flere ulæste emner."
-          top: "Der er ikke flere populære emner."
-          bookmarks: "Der er ikke flere bogmærkede emner."
     invite:
       custom_message: "Gør din invitation lidt mere personlig ved at skrive en <a href>brugerdefineret besked</a> ."
       custom_message_placeholder: "Skriv en personlig besked"

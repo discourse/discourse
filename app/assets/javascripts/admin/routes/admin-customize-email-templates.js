@@ -22,5 +22,5 @@ export default Route.extend({
         this.controller.get("sortedTemplates.firstObject")
       );
     }
-  }
+  },
 });

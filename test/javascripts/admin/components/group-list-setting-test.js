@@ -11,12 +11,12 @@ componentTest("default", {
     this.site.groups = [
       {
         id: 1,
-        name: "Donuts"
+        name: "Donuts",
       },
       {
         id: 2,
-        name: "Cheese cake"
-      }
+        name: "Cheese cake",
+      },
     ];
 
     this.set(
@@ -33,7 +33,7 @@ componentTest("default", {
         setting: "foo_bar",
         type: "group_list",
         validValues: undefined,
-        value: "1"
+        value: "1",
       })
     );
   },
@@ -55,5 +55,5 @@ componentTest("default", {
       "1,2",
       "it allows to select a setting from the list of choices"
     );
-  }
+  },
 });

@@ -10,7 +10,7 @@ import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export default DiscourseRoute.extend(OpenComposer, {
   queryParams: {
-    filter: { refreshModel: true }
+    filter: { refreshModel: true },
   },
 
   redirect() {
@@ -76,8 +76,8 @@ export default DiscourseRoute.extend(OpenComposer, {
       const controller = this.controllerFor("discovery/topics");
       controller.send("dismissRead", operationType, {
         categoryId: controller.get("category.id"),
-        includeSubcategories: !controller.noSubcategories
+        includeSubcategories: !controller.noSubcategories,
       });
-    }
-  }
+    },
+  },
 });

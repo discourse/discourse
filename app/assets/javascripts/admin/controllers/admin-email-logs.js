@@ -15,7 +15,7 @@ export default Controller.extend({
 
     return sourceModel
       .findAll(this.filter, loadMore ? this.get("model.length") : null)
-      .then(logs => {
+      .then((logs) => {
         if (this.model && loadMore && logs.length < 50) {
           this.model.set("allLoaded", true);
         }
@@ -32,6 +32,6 @@ export default Controller.extend({
   actions: {
     loadMore() {
       this.loadLogs(EmailLog, true);
-    }
-  }
+    },
+  },
 });

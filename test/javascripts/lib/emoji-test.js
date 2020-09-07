@@ -5,7 +5,7 @@ import { discourseModule } from "helpers/qunit-helpers";
 
 discourseModule("lib:emoji");
 
-QUnit.test("emojiUnescape", function(assert) {
+QUnit.test("emojiUnescape", function (assert) {
   const testUnescape = (input, expected, description, settings = {}) => {
     const originalSettings = {};
     for (const [key, value] of Object.entries(settings)) {
@@ -103,7 +103,7 @@ QUnit.test("emojiUnescape", function(assert) {
     "Hello😊World",
     "keeps Unicode emoji when inline translation disabled",
     {
-      enable_inline_emoji_translation: false
+      enable_inline_emoji_translation: false,
     }
   );
   testUnescape(
@@ -111,7 +111,7 @@ QUnit.test("emojiUnescape", function(assert) {
     `Hello<img src='/images/emoji/emoji_one/blush.png?v=${v}' title='blush' alt='blush' class='emoji'>World`,
     "emoji from Unicode emoji when inline translation enabled",
     {
-      enable_inline_emoji_translation: true
+      enable_inline_emoji_translation: true,
     }
   );
   testUnescape(
@@ -119,7 +119,7 @@ QUnit.test("emojiUnescape", function(assert) {
     "hi:smile:",
     "no emojis when inline translation disabled",
     {
-      enable_inline_emoji_translation: false
+      enable_inline_emoji_translation: false,
     }
   );
   testUnescape(
@@ -130,7 +130,7 @@ QUnit.test("emojiUnescape", function(assert) {
   );
 });
 
-QUnit.test("Emoji search", assert => {
+QUnit.test("Emoji search", (assert) => {
   // able to find an alias
   assert.equal(emojiSearch("+1").length, 1);
 

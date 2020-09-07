@@ -2,7 +2,7 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Groups");
 
-QUnit.test("Browsing Groups", async assert => {
+QUnit.test("Browsing Groups", async (assert) => {
   await visit("/g?username=eviltrout");
 
   assert.equal(count(".group-box"), 1, "it displays user's groups");
@@ -36,9 +36,7 @@ QUnit.test("Browsing Groups", async assert => {
   await click("a[href='/g/discourse/members']");
 
   assert.equal(
-    find(".group-info-name")
-      .text()
-      .trim(),
+    find(".group-info-name").text().trim(),
     "Awesome Team",
     "it displays the group page"
   );

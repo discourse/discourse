@@ -14,19 +14,19 @@ export default Component.extend({
     "selectedTags.[]",
     "highlightedTag",
     "selectKit.filter",
-    function() {
+    function () {
       if (!this.selectedTags) {
         return [];
       }
 
       let tags = this.selectedTags;
       if (tags.length >= 20 && this.selectKit.filter) {
-        tags = tags.filter(t => t.indexOf(this.selectKit.filter) >= 0);
+        tags = tags.filter((t) => t.indexOf(this.selectKit.filter) >= 0);
       } else if (tags.length >= 20) {
         tags = tags.slice(0, 20);
       }
 
-      tags = tags.map(selectedTag => {
+      tags = tags.map((selectedTag) => {
         const classNames = ["selected-tag"];
         if (selectedTag === this.highlightedTag) {
           classNames.push("is-highlighted");
@@ -34,7 +34,7 @@ export default Component.extend({
 
         return {
           value: selectedTag,
-          classNames: classNames.join(" ")
+          classNames: classNames.join(" "),
         };
       });
 
@@ -45,6 +45,6 @@ export default Component.extend({
   actions: {
     deselectTag(tag) {
       return this.selectKit.deselect(tag);
-    }
-  }
+    },
+  },
 });

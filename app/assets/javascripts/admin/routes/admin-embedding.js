@@ -6,5 +6,5 @@ export default Route.extend({
 
   setupController(controller, model) {
     controller.set("embedding", model);
-  }
+  },
 });

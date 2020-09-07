@@ -6,5 +6,5 @@ export default EmberObject.extend({
       this.items = [];
     }
     return this.items.push(item);
-  }
+  },
 });

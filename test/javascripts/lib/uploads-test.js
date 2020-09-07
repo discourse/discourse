@@ -5,7 +5,7 @@ import {
   isImage,
   allowsImages,
   allowsAttachments,
-  getUploadMarkdown
+  getUploadMarkdown,
 } from "discourse/lib/uploads";
 import * as Utilities from "discourse/lib/utilities";
 import User from "discourse/models/user";
@@ -14,7 +14,7 @@ import bootbox from "bootbox";
 
 discourseModule("lib:uploads");
 
-QUnit.test("validateUploadedFiles", function(assert) {
+QUnit.test("validateUploadedFiles", function (assert) {
   assert.not(
     validateUploadedFiles(null, { siteSettings: this.siteSettings }),
     "no files are invalid"
@@ -29,7 +29,7 @@ QUnit.test("validateUploadedFiles", function(assert) {
   );
 });
 
-QUnit.test("uploading one file", function(assert) {
+QUnit.test("uploading one file", function (assert) {
   sandbox.stub(bootbox, "alert");
 
   assert.not(
@@ -38,14 +38,14 @@ QUnit.test("uploading one file", function(assert) {
   assert.ok(bootbox.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
 });
 
-QUnit.test("new user cannot upload images", function(assert) {
+QUnit.test("new user cannot upload images", function (assert) {
   this.siteSettings.newuser_max_embedded_media = 0;
   sandbox.stub(bootbox, "alert");
 
   assert.not(
     validateUploadedFiles([{ name: "image.png" }], {
       user: User.create(),
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     }),
     "the upload is not valid"
   );
@@ -57,7 +57,7 @@ QUnit.test("new user cannot upload images", function(assert) {
   );
 });
 
-QUnit.test("new user can upload images if allowed", function(assert) {
+QUnit.test("new user can upload images if allowed", function (assert) {
   this.siteSettings.newuser_max_embedded_media = 1;
   this.siteSettings.default_trust_level = 0;
   sandbox.stub(bootbox, "alert");
@@ -65,31 +65,31 @@ QUnit.test("new user can upload images if allowed", function(assert) {
   assert.ok(
     validateUploadedFiles([{ name: "image.png" }], {
       user: User.create(),
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     })
   );
 });
 
-QUnit.test("TL1 can upload images", function(assert) {
+QUnit.test("TL1 can upload images", function (assert) {
   this.siteSettings.newuser_max_embedded_media = 0;
   sandbox.stub(bootbox, "alert");
 
   assert.ok(
     validateUploadedFiles([{ name: "image.png" }], {
       user: User.create({ trust_level: 1 }),
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     })
   );
 });
 
-QUnit.test("new user cannot upload attachments", function(assert) {
+QUnit.test("new user cannot upload attachments", function (assert) {
   this.siteSettings.newuser_max_attachments = 0;
   sandbox.stub(bootbox, "alert");
 
   assert.not(
     validateUploadedFiles([{ name: "roman.txt" }], {
       user: User.create(),
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     })
   );
   assert.ok(
@@ -99,41 +99,41 @@ QUnit.test("new user cannot upload attachments", function(assert) {
   );
 });
 
-QUnit.test("ensures an authorized upload", function(assert) {
+QUnit.test("ensures an authorized upload", function (assert) {
   sandbox.stub(bootbox, "alert");
   assert.not(
     validateUploadedFiles([{ name: "unauthorized.html" }], {
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     })
   );
   assert.ok(
     bootbox.alert.calledWith(
       I18n.t("post.errors.upload_not_authorized", {
-        authorized_extensions: authorizedExtensions(false, this.siteSettings)
+        authorized_extensions: authorizedExtensions(false, this.siteSettings),
       })
     )
   );
 });
 
-QUnit.test("skipping validation works", function(assert) {
+QUnit.test("skipping validation works", function (assert) {
   const files = [{ name: "backup.tar.gz" }];
   sandbox.stub(bootbox, "alert");
 
   assert.not(
     validateUploadedFiles(files, {
       skipValidation: false,
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     })
   );
   assert.ok(
     validateUploadedFiles(files, {
       skipValidation: true,
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     })
   );
 });
 
-QUnit.test("staff can upload anything in PM", function(assert) {
+QUnit.test("staff can upload anything in PM", function (assert) {
   const files = [{ name: "some.docx" }];
   this.siteSettings.authorized_extensions = "jpeg";
   sandbox.stub(bootbox, "alert");
@@ -147,14 +147,14 @@ QUnit.test("staff can upload anything in PM", function(assert) {
       isPrivateMessage: true,
       allowStaffToUploadAnyFileInPm: true,
       siteSettings: this.siteSettings,
-      user
+      user,
     })
   );
 });
 
 const imageSize = 10 * 1024;
 
-const dummyBlob = function() {
+const dummyBlob = function () {
   const BlobBuilder =
     window.BlobBuilder ||
     window.WebKitBlobBuilder ||
@@ -169,7 +169,7 @@ const dummyBlob = function() {
   }
 };
 
-QUnit.test("allows valid uploads to go through", function(assert) {
+QUnit.test("allows valid uploads to go through", function (assert) {
   sandbox.stub(bootbox, "alert");
 
   let user = User.create({ trust_level: 1 });
@@ -184,15 +184,15 @@ QUnit.test("allows valid uploads to go through", function(assert) {
   assert.ok(
     validateUploadedFiles([pastedImage], {
       user,
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     })
   );
 
   assert.not(bootbox.alert.calledOnce);
 });
 
-QUnit.test("isImage", assert => {
-  ["png", "webp", "jpg", "jpeg", "gif", "ico"].forEach(extension => {
+QUnit.test("isImage", (assert) => {
+  ["png", "webp", "jpg", "jpeg", "gif", "ico"].forEach((extension) => {
     var image = "image." + extension;
     assert.ok(isImage(image), image + " is recognized as an image");
     assert.ok(
@@ -205,7 +205,7 @@ QUnit.test("isImage", assert => {
   assert.not(isImage(""));
 });
 
-QUnit.test("allowsImages", function(assert) {
+QUnit.test("allowsImages", function (assert) {
   this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
   assert.ok(allowsImages(false, this.siteSettings), "works");
 
@@ -228,7 +228,7 @@ QUnit.test("allowsImages", function(assert) {
   );
 });
 
-QUnit.test("allowsAttachments", function(assert) {
+QUnit.test("allowsAttachments", function (assert) {
   this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
   assert.not(
     allowsAttachments(false, this.siteSettings),
@@ -262,14 +262,14 @@ function testUploadMarkdown(filename, opts = {}) {
         filesize: 42,
         thumbnail_width: 100,
         thumbnail_height: 200,
-        url: "/uploads/123/abcdef.ext"
+        url: "/uploads/123/abcdef.ext",
       },
       opts
     )
   );
 }
 
-QUnit.test("getUploadMarkdown", assert => {
+QUnit.test("getUploadMarkdown", (assert) => {
   assert.equal(
     testUploadMarkdown("lolcat.gif"),
     "![lolcat|100x200](/uploads/123/abcdef.ext)"
@@ -298,7 +298,7 @@ QUnit.test("getUploadMarkdown", assert => {
 
 QUnit.test(
   "getUploadMarkdown - replaces GUID in image alt text on iOS",
-  assert => {
+  (assert) => {
     assert.equal(
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
       "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"

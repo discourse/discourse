@@ -3,11 +3,11 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Login with email disabled", {
   settings: {
     enable_local_logins_via_email: false,
-    enable_facebook_logins: true
-  }
+    enable_facebook_logins: true,
+  },
 });
 
-QUnit.test("with email button", async assert => {
+QUnit.test("with email button", async (assert) => {
   await visit("/");
   await click("header .login-button");
 

@@ -56,14 +56,14 @@ export default createWidget("post-edits-indicator", {
     const contents = [
       attrs.version > 1 ? attrs.version - 1 : "",
       " ",
-      iconNode(icon)
+      iconNode(icon),
     ];
 
     return h(
       "a",
       {
         className,
-        attributes: { title, href: "#" }
+        attributes: { title, href: "#" },
       },
       contents
     );
@@ -76,5 +76,5 @@ export default createWidget("post-edits-indicator", {
     } else if (this.attrs.canViewEditHistory) {
       this.sendWidgetAction("showHistory");
     }
-  }
+  },
 });

@@ -12,14 +12,14 @@ export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-filter"],
   classNameBindings: ["isExpanded:is-expanded"],
   attributeBindings: ["selectKitId:data-select-kit-id"],
-  selectKitId: computed("selectKit.uniqueID", function() {
+  selectKitId: computed("selectKit.uniqueID", function () {
     return `${this.selectKit.uniqueID}-filter`;
   }),
 
   isHidden: computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
     "content.[]",
-    function() {
+    function () {
       return (
         !this.selectKit.options.filterable &&
         !this.selectKit.options.allowAny &&
@@ -105,6 +105,6 @@ export default Component.extend(UtilsMixin, {
         this.selectKit.close(event);
         return;
       }
-    }
-  }
+    },
+  },
 });

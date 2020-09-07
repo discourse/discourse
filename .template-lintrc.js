@@ -50,6 +50,6 @@ module.exports = {
     "simple-unless": true,
     "style-concatenation": true,
     "table-groups": true,
-    "link-href-attributes": false
-  }
+    "link-href-attributes": false,
+  },
 };

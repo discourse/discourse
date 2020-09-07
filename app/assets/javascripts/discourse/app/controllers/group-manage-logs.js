@@ -32,12 +32,12 @@ export default Controller.extend({
   _refreshModel() {
     this.get("group.model")
       .findLogs(0, this.filterParams)
-      .then(results => {
+      .then((results) => {
         this.set("offset", 0);
 
         this.model.setProperties({
           logs: results.logs,
-          all_loaded: results.all_loaded
+          all_loaded: results.all_loaded,
         });
       });
   },
@@ -50,7 +50,7 @@ export default Controller.extend({
   reset() {
     this.setProperties({
       offset: 0,
-      filters: EmberObject.create()
+      filters: EmberObject.create(),
     });
   },
 
@@ -62,8 +62,8 @@ export default Controller.extend({
 
     this.get("group.model")
       .findLogs(this.offset + 1, this.filterParams)
-      .then(results => {
-        results.logs.forEach(result =>
+      .then((results) => {
+        results.logs.forEach((result) =>
           this.get("model.logs").addObject(result)
         );
         this.incrementProperty("offset");
@@ -75,5 +75,5 @@ export default Controller.extend({
   @action
   clearFilter(key) {
     this.set(`filters.${key}`, "");
-  }
+  },
 });

@@ -6,5 +6,5 @@ export default SelectKitRowComponent.extend({
   layout,
   classNames: ["dropdown-select-box-row"],
 
-  description: readOnly("item.description")
+  description: readOnly("item.description"),
 });

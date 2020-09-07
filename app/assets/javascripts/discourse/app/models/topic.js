@@ -15,7 +15,7 @@ import { userPath } from "discourse/lib/url";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import discourseComputed, {
   observes,
-  on
+  on,
 } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
@@ -23,9 +23,10 @@ import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
+import { deepMerge } from "discourse-common/lib/object";
 
 export function loadTopicView(topic, args) {
-  const data = _.merge({}, args);
+  const data = deepMerge({}, args);
   const url = `${getURL("/t/")}${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
@@ -35,7 +36,7 @@ export function loadTopicView(topic, args) {
 
   return PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
     ajax(jsonUrl, { data })
-  ).then(json => {
+  ).then((json) => {
     topic.updateFromJson(json);
     return json;
   });
@@ -63,7 +64,7 @@ const Topic = RestModel.extend({
     let user;
     if (posters && posters.length > 0) {
       const latest = posters.filter(
-        p => p.extras && p.extras.indexOf("latest") >= 0
+        (p) => p.extras && p.extras.indexOf("latest") >= 0
       )[0];
       user = latest;
     }
@@ -95,8 +96,10 @@ const Topic = RestModel.extend({
         }
       }
 
-      const poster_ids = posters.map(p => p.user && p.user.id).filter(id => id);
-      participants.some(p => {
+      const poster_ids = posters
+        .map((p) => p.user && p.user.id)
+        .filter((id) => id);
+      participants.some((p) => {
         if (!poster_ids.includes(p.user_id)) {
           users.splice(users.length - pushOffset, 0, p);
           if (users.length === maxUserCount) {
@@ -110,7 +113,7 @@ const Topic = RestModel.extend({
     if (this.isPrivateMessage && allowedUserCount > maxUserCount) {
       users.splice(maxUserCount - 2, 1); // remove second-last avatar
       users.push({
-        moreCount: `+${allowedUserCount - maxUserCount + 1}`
+        moreCount: `+${allowedUserCount - maxUserCount + 1}`,
       });
     }
 
@@ -143,7 +146,7 @@ const Topic = RestModel.extend({
       FIRST_POST: firstPost,
       CREATED_AT: createdAtDate,
       LAST_POST: lastPost,
-      BUMPED_AT: bumpedAtDate
+      BUMPED_AT: bumpedAtDate,
     });
   },
 
@@ -156,7 +159,7 @@ const Topic = RestModel.extend({
   postStream() {
     return this.store.createRecord("postStream", {
       id: this.id,
-      topic: this
+      topic: this,
     });
   },
 
@@ -169,7 +172,7 @@ const Topic = RestModel.extend({
     const title = this.title.toLowerCase();
     const newTags = [];
 
-    tags.forEach(function(tag) {
+    tags.forEach(function (tag) {
       if (title.indexOf(tag.toLowerCase()) === -1) {
         newTags.push(tag);
       }
@@ -185,7 +188,7 @@ const Topic = RestModel.extend({
 
       return this.set(
         "related_messages",
-        relatedMessages.map(st => store.createRecord("topic", st))
+        relatedMessages.map((st) => store.createRecord("topic", st))
       );
     }
   },
@@ -197,7 +200,7 @@ const Topic = RestModel.extend({
 
       return this.set(
         "suggested_topics",
-        suggestedTopics.map(st => store.createRecord("topic", st))
+        suggestedTopics.map((st) => store.createRecord("topic", st))
       );
     }
   },
@@ -211,7 +214,7 @@ const Topic = RestModel.extend({
   details() {
     return this.store.createRecord("topicDetails", {
       id: this.id,
-      topic: this
+      topic: this,
     });
   },
 
@@ -233,7 +236,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("tags")
   tagClasses(tags) {
-    return tags && tags.map(t => `tag-${t}`).join(" ");
+    return tags && tags.map((t) => `tag-${t}`).join(" ");
   },
 
   @discourseComputed("url")
@@ -363,8 +366,8 @@ const Topic = RestModel.extend({
       data: {
         status: property,
         enabled: !!value,
-        until
-      }
+        until,
+      },
     });
   },
 
@@ -376,7 +379,7 @@ const Topic = RestModel.extend({
 
   removeBanner() {
     return ajax(`/t/${this.id}/remove-banner`, {
-      type: "PUT"
+      type: "PUT",
     }).then(() => this.set("archetype", "regular"));
   },
 
@@ -418,10 +421,10 @@ const Topic = RestModel.extend({
     const bookmark = !this.bookmarked;
     let posts = this.postStream.posts;
 
-    return this.firstPost().then(firstPost => {
+    return this.firstPost().then((firstPost) => {
       const toggleBookmarkOnServer = () => {
         if (bookmark) {
-          return firstPost.toggleBookmark().then(opts => {
+          return firstPost.toggleBookmark().then((opts) => {
             this.set("bookmarking", false);
             if (opts.closedWithoutSaving) {
               return;
@@ -437,11 +440,11 @@ const Topic = RestModel.extend({
                 bookmarked: false,
                 bookmark_id: null,
                 bookmark_name: null,
-                bookmark_reminder_at: null
+                bookmark_reminder_at: null,
               };
               if (posts) {
                 const updated = [];
-                posts.forEach(post => {
+                posts.forEach((post) => {
                   if (post.bookmarked) {
                     post.setProperties(clearedBookmarkProps);
                     updated.push(post.id);
@@ -458,16 +461,18 @@ const Topic = RestModel.extend({
 
       const unbookmarkedPosts = [];
       if (!bookmark && posts) {
-        posts.forEach(post => post.bookmarked && unbookmarkedPosts.push(post));
+        posts.forEach(
+          (post) => post.bookmarked && unbookmarkedPosts.push(post)
+        );
       }
 
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         if (unbookmarkedPosts.length > 1) {
           bootbox.confirm(
             I18n.t("bookmarks.confirm_clear"),
             I18n.t("no_value"),
             I18n.t("yes_value"),
-            confirmed =>
+            (confirmed) =>
               confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
           );
         } else {
@@ -480,21 +485,21 @@ const Topic = RestModel.extend({
   createGroupInvite(group) {
     return ajax(`/t/${this.id}/invite-group`, {
       type: "POST",
-      data: { group }
+      data: { group },
     });
   },
 
   createInvite(user, group_ids, custom_message) {
     return ajax(`/t/${this.id}/invite`, {
       type: "POST",
-      data: { user, group_ids, custom_message }
+      data: { user, group_ids, custom_message },
     });
   },
 
   generateInviteLink(email, group_ids, topic_id) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { email, group_ids, topic_id }
+      data: { email, group_ids, topic_id },
     });
   },
 
@@ -502,14 +507,14 @@ const Topic = RestModel.extend({
   destroy(deleted_by) {
     return ajax(`/t/${this.id}`, {
       data: { context: window.location.pathname },
-      type: "DELETE"
+      type: "DELETE",
     })
       .then(() => {
         this.setProperties({
           deleted_at: new Date(),
           deleted_by: deleted_by,
           "details.can_delete": false,
-          "details.can_recover": true
+          "details.can_recover": true,
         });
       })
       .catch(popupAjaxError);
@@ -521,11 +526,11 @@ const Topic = RestModel.extend({
       deleted_at: null,
       deleted_by: null,
       "details.can_delete": true,
-      "details.can_recover": false
+      "details.can_recover": false,
     });
     return ajax(`/t/${this.id}/recover`, {
       data: { context: window.location.pathname },
-      type: "PUT"
+      type: "PUT",
     });
   },
 
@@ -544,12 +549,12 @@ const Topic = RestModel.extend({
         );
       }
     }
-    keys.forEach(key => this.set(key, json[key]));
+    keys.forEach((key) => this.set(key, json[key]));
     return this;
   },
 
   reload() {
-    return ajax(`/t/${this.id}`, { type: "GET" }).then(topic_json =>
+    return ajax(`/t/${this.id}`, { type: "GET" }).then((topic_json) =>
       this.updateFromJson(topic_json)
     );
   },
@@ -561,7 +566,7 @@ const Topic = RestModel.extend({
     this.setProperties({ pinned: false, unpinned: true });
 
     ajax(`/t/${this.id}/clear-pin`, {
-      type: "PUT"
+      type: "PUT",
     }).then(null, () => {
       // On error, put the pin back
       this.setProperties({ pinned: true, unpinned: false });
@@ -581,7 +586,7 @@ const Topic = RestModel.extend({
     this.setProperties({ pinned: true, unpinned: false });
 
     ajax(`/t/${this.id}/re-pin`, {
-      type: "PUT"
+      type: "PUT",
     }).then(null, () => {
       // On error, put the pin back
       this.setProperties({ pinned: true, unpinned: false });
@@ -607,11 +612,11 @@ const Topic = RestModel.extend({
   archiveMessage() {
     this.set("archiving", true);
     const promise = ajax(`/t/${this.id}/archive-message`, {
-      type: "PUT"
+      type: "PUT",
     });
 
     promise
-      .then(msg => {
+      .then((msg) => {
         this.set("message_archived", true);
         if (msg && msg.group_name) {
           this.set("inboxGroupName", msg.group_name);
@@ -627,7 +632,7 @@ const Topic = RestModel.extend({
     const promise = ajax(`/t/${this.id}/move-to-inbox`, { type: "PUT" });
 
     promise
-      .then(msg => {
+      .then((msg) => {
         this.set("message_archived", false);
         if (msg && msg.group_name) {
           this.set("inboxGroupName", msg.group_name);
@@ -641,7 +646,7 @@ const Topic = RestModel.extend({
   publish() {
     return ajax(`/t/${this.id}/publish`, {
       type: "PUT",
-      data: this.getProperties("destination_category_id")
+      data: this.getProperties("destination_category_id"),
     })
       .then(() => this.set("destination_category_id", null))
       .catch(popupAjaxError);
@@ -651,7 +656,7 @@ const Topic = RestModel.extend({
     this.set("destination_category_id", categoryId);
     return ajax(`/t/${this.id}/shared-draft`, {
       type: "PUT",
-      data: { category_id: categoryId }
+      data: { category_id: categoryId },
     });
   },
 
@@ -676,9 +681,9 @@ const Topic = RestModel.extend({
 
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
-      data: { tags: tags }
+      data: { tags: tags },
     });
-  }
+  },
 });
 
 Topic.reopenClass({
@@ -686,13 +691,13 @@ Topic.reopenClass({
     WATCHING: 3,
     TRACKING: 2,
     REGULAR: 1,
-    MUTED: 0
+    MUTED: 0,
   },
 
   createActionSummary(result) {
     if (result.actions_summary) {
       const lookup = EmberObject.create();
-      result.actions_summary = result.actions_summary.map(a => {
+      result.actions_summary = result.actions_summary.map((a) => {
         a.post = result;
         a.actionType = Site.current().postActionTypeById(a.id);
         const actionSummary = ActionSummary.create(a);
@@ -718,8 +723,8 @@ Topic.reopenClass({
     return ajax(topic.get("url"), {
       type: "PUT",
       data: JSON.stringify(props),
-      contentType: "application/json"
-    }).then(result => {
+      contentType: "application/json",
+    }).then((result) => {
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
@@ -754,7 +759,7 @@ Topic.reopenClass({
     // Add username filters if we have them
     if (opts.userFilters && opts.userFilters.length > 0) {
       data.username_filters = [];
-      opts.userFilters.forEach(function(username) {
+      opts.userFilters.forEach(function (username) {
         data.username_filters.push(username);
       });
     }
@@ -771,8 +776,8 @@ Topic.reopenClass({
   changeOwners(topicId, opts) {
     const promise = ajax(`/t/${topicId}/change-owner`, {
       type: "POST",
-      data: opts
-    }).then(result => {
+      data: opts,
+    }).then((result) => {
       if (result.success) return result;
       promise.reject(new Error("error changing ownership of posts"));
     });
@@ -782,8 +787,8 @@ Topic.reopenClass({
   changeTimestamp(topicId, timestamp) {
     const promise = ajax(`/t/${topicId}/change-timestamp`, {
       type: "PUT",
-      data: { timestamp }
-    }).then(result => {
+      data: { timestamp },
+    }).then((result) => {
       if (result.success) return result;
       promise.reject(new Error("error updating timestamp of topic"));
     });
@@ -794,9 +799,9 @@ Topic.reopenClass({
     return ajax("/topics/bulk", {
       type: "PUT",
       data: {
-        topic_ids: topics.map(t => t.get("id")),
-        operation
-      }
+        topic_ids: topics.map((t) => t.get("id")),
+        operation,
+      },
     });
   },
 
@@ -817,7 +822,7 @@ Topic.reopenClass({
 
     return ajax("/topics/bulk", {
       type: "PUT",
-      data
+      data,
     });
   },
 
@@ -830,7 +835,7 @@ Topic.reopenClass({
 
   idForSlug(slug) {
     return ajax(`/t/id_for/${slug}`);
-  }
+  },
 });
 
 function moveResult(result) {

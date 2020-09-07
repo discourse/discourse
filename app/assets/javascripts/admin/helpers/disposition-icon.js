@@ -23,5 +23,5 @@ export default Helper.extend({
       }
     }
     return iconHTML(icon, { title }).htmlSafe();
-  }
+  },
 });

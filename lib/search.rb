@@ -809,8 +809,10 @@ class Search
       .order("name asc")
       .limit(limit)
 
+    hidden_tag_names = DiscourseTagging.hidden_tag_names(@guardian)
+
     tags.each do |tag|
-      @results.add(tag)
+      @results.add(tag) if !hidden_tag_names.include?(tag.name)
     end
   end
 

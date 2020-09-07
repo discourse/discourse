@@ -32,9 +32,9 @@ export default Controller.extend(ModalFunctionality, {
     help() {
       this.setProperties({
         offerHelp: I18n.t("forgot_password.help", {
-          basePath: getURL("")
+          basePath: getURL(""),
         }),
-        helpSeen: true
+        helpSeen: true,
       });
     },
 
@@ -46,9 +46,9 @@ export default Controller.extend(ModalFunctionality, {
 
       ajax("/session/forgot_password", {
         data: { login: this.accountEmailOrUsername.trim() },
-        type: "POST"
+        type: "POST",
       })
-        .then(data => {
+        .then((data) => {
           const accountEmailOrUsername = escapeExpression(
             this.accountEmailOrUsername
           );
@@ -65,7 +65,7 @@ export default Controller.extend(ModalFunctionality, {
               "offerHelp",
               I18n.t(key, {
                 email: accountEmailOrUsername,
-                username: accountEmailOrUsername
+                username: accountEmailOrUsername,
               })
             );
           } else {
@@ -77,13 +77,13 @@ export default Controller.extend(ModalFunctionality, {
             this.flash(
               I18n.t(key, {
                 email: accountEmailOrUsername,
-                username: accountEmailOrUsername
+                username: accountEmailOrUsername,
               }),
               extraClass
             );
           }
         })
-        .catch(e => {
+        .catch((e) => {
           this.flash(extractError(e), "error");
         })
         .finally(() => {
@@ -91,6 +91,6 @@ export default Controller.extend(ModalFunctionality, {
         });
 
       return false;
-    }
-  }
+    },
+  },
 });

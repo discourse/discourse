@@ -6,5 +6,5 @@ export default Component.extend({
   layout,
   classNames: ["select-kit-collection"],
   tagName: "ul",
-  isVisible: notEmpty("collection")
+  isVisible: notEmpty("collection"),
 });

@@ -19,6 +19,7 @@ de:
           insert: Einfügen
           advanced_mode: Erweiterter Modus
           simple_mode: Einfacher Modus
+          format_description: "Format, mit dem das Datum dem Benutzer angezeigt wird. Verwende „Z” zum Anzeigen der Differenz zu UTC und „zz” für den Zeitzonen-Namen."
           timezones_title: Anzuzeigende Zeitzonen
           timezones_description: Zeitzonen werden verwendet, um Datumsangaben in der Vorschau und als Ausweichlösung anzuzeigen.
           recurring_title: Wiederholung

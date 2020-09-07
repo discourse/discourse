@@ -1,10 +1,10 @@
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Composer - Hyperlink", {
-  loggedIn: true
+  loggedIn: true,
 });
 
-QUnit.test("add a hyperlink to a reply", async assert => {
+QUnit.test("add a hyperlink to a reply", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click(".topic-post:first-child button.reply");
   await fillIn(".d-editor-input", "This is a link to ");
@@ -90,9 +90,7 @@ QUnit.test("add a hyperlink to a reply", async assert => {
   );
 
   assert.ok(
-    find(".link-url")
-      .val()
-      .includes("http"),
+    find(".link-url").val().includes("http"),
     "replaces link url field with internal link"
   );
 });

@@ -58,6 +58,6 @@ export default Controller.extend(ModalFunctionality, {
         .finally(() => this.set("saving", false));
 
       return false;
-    }
-  }
+    },
+  },
 });

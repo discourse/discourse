@@ -34,7 +34,7 @@ export default Component.extend(UploadMixin, {
     return { autoUpload: false };
   },
 
-  _init: on("didInsertElement", function() {
+  _init: on("didInsertElement", function () {
     const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {
@@ -42,8 +42,8 @@ export default Component.extend(UploadMixin, {
         I18n.t(`${this.i18nPrefix}.confirmation_message`),
         I18n.t("cancel"),
         I18n.t("go_ahead"),
-        result => (result ? data.submit() : data.abort())
+        (result) => (result ? data.submit() : data.abort())
       );
     });
-  })
+  }),
 });

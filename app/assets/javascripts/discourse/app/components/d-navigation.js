@@ -58,7 +58,7 @@ export default Component.extend(FilterModeMixin, {
   },
 
   @discourseComputed("category.can_edit")
-  showCategoryEdit: canEdit => canEdit,
+  showCategoryEdit: (canEdit) => canEdit,
 
   @discourseComputed("filterType", "category", "noSubcategories")
   navItems(filterType, category, noSubcategories) {
@@ -68,7 +68,7 @@ export default Component.extend(FilterModeMixin, {
       filterType,
       noSubcategories,
       currentRouteQueryParams,
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     });
   },
 
@@ -94,6 +94,6 @@ export default Component.extend(FilterModeMixin, {
       } else {
         this.createTopic();
       }
-    }
-  }
+    },
+  },
 });

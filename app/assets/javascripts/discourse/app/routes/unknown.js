@@ -6,8 +6,8 @@ export default DiscourseRoute.extend({
   model(params, transition) {
     const path = params.path;
     return ajax("/permalink-check.json", {
-      data: { path }
-    }).then(results => {
+      data: { path },
+    }).then((results) => {
       if (results.found) {
         // Avoid polluting the history stack for external links
         transition.abort();
@@ -29,5 +29,5 @@ export default DiscourseRoute.extend({
         return results.html;
       }
     });
-  }
+  },
 });

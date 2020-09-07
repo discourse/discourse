@@ -13,8 +13,8 @@ export default Component.extend(BufferedContent, SettingComponent, {
       type: "PUT",
       data: {
         name: this.setting.setting,
-        value: this.get("buffered.value")
-      }
+        value: this.get("buffered.value"),
+      },
     });
-  }
+  },
 });

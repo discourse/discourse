@@ -306,7 +306,7 @@ sv:
   pm_reached_recipients_limit: "Tyvärr kan du inte ha fler än %{recipients_limit} mottagare för ett meddelande."
   removed_direct_reply_full_quotes: "Automatiskt borttaget citat av hela det föregående inlägget."
   secure_upload_not_allowed_in_public_topic: "Tyvärr kan följande säkra uppladdning(ar) inte användas i ett offentligt ämne: %{upload_filenames}."
-  create_pm_on_existing_topic: "Tyvärr kan du inte skapa ett PM för ett existerande ämne."
+  create_pm_on_existing_topic: "Tyvärr kan du inte skapa ett PM för ett befintligt ämne."
   just_posted_that: "är för likt det du nyligen postade"
   invalid_characters: "innehåller otillåtna tecken"
   is_invalid: "verkar oklart, det är en komplett mening"
@@ -1443,6 +1443,7 @@ sv:
     use_admin_ip_allowlist: "Administratörer kan bara logga in om de är på en IP-adress definierad i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
     blocked_ip_blocks: "En lista över privata IP-block som aldrig bör genomsökas av Discourse"
     allowed_internal_hosts: "En lista över interna värdar som discourse säkert kan söka igenom för oneboxar och andra syften"
+    allowed_onebox_iframes: "En lista över källdomäner för iframe som är tillåtna via Onebox-inbäddningar. `*` kommer tillåta alla standard motorer för Onebox."
     allowed_iframes: "En lista med iframekällors domänprefix som Discourse säkert kan tillåta i inlägg"
     allowed_crawler_user_agents: "Användaragenter för sökrobotar som ska få åtkomst till webbplatsen. VARNING! INSTÄLLNING AV DETTA FÖRBJUDER ALLA SÖKMOTORER SOM INTE LISTAS HÄR!"
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista är definierad."
@@ -1488,8 +1489,8 @@ sv:
     invite_expiry_days: "Hur länge användarinbjudningsnycklar är giltiga, i dagar"
     invite_only: "Alla nya användare måste uttryckligen bjudas in av betrodda användare eller personal. Allmän registrering är inaktiverad."
     login_required: "Kräv autentisering för att läsa innehåll på den här webbplatsen, avvisa anonym tillgång."
-    min_username_length: "Minsta längd på användarnamnet. Varning: om någon existerande användare eller grupp har namn kortare än detta, er sida kommer att gå sönder!"
-    max_username_length: "Längsta användarnamn. Varning: om någon existerande användare eller grupp har ett namn längre än detta, er sida kommer att gå sönder."
+    min_username_length: "Minsta längd på användarnamnet. Varning: om någon befintlig användare eller grupp har namn kortare än detta, er sida kommer att gå sönder!"
+    max_username_length: "Längsta användarnamn. Varning: om någon befintlig användare eller grupp har ett namn som är längre än detta kommer er sida att gå sönder."
     unicode_usernames: "Låt användarnamn och gruppnamn innehålla Unicode-bokstäver eller siffror."
     allowed_unicode_username_characters: "Regelbundet uttryck för att endast tillåta några Unicode-tecken i användarnamn. ASCII-bokstäver och siffror kommer alltid att tillåtas och behöver inte inkluderas i den tillåtna listan."
     reserved_usernames: "Användarnamn för vilka registrering inte är tillåten. Jokersymbol * kan användas för att matcha valfritt tecken, noll eller flera gånger."
@@ -1966,6 +1967,7 @@ sv:
     shared_drafts_category: "Aktivera funktionen delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin exkluderas från ämneslistor för personalanvändare."
     push_notifications_prompt: "Visa användarens samtycke genast."
     push_notifications_icon: "Utmärkelseikonen som visas i notifieringshörnet. En 96x96 enfärgad PNG med genomskinlighet rekommenderas."
+    base_font: "Typsnitt att använda på de flesta platser för webbplatsen. Teman kan åsidosätta detta."
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Det bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2067,11 +2069,11 @@ sv:
       one: " Ett inlägg delades upp till ett nytt meddelande: %{topic_link}"
       other: "%{count} inlägg delades upp till ett nytt meddelande:  %{topic_link}"
     existing_topic_moderator_post:
-      one: "Ett inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
-      other: "%{count} inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
+      one: "Ett inlägg har sammanfogats med ett befintligt ämne: %{topic_link}"
+      other: "%{count} inlägg har sammanfogats med ett befintligt ämne: %{topic_link}"
     existing_message_moderator_post:
-      one: "Ett inlägg har sammanfogats med ett existerande meddelande:  %{topic_link}"
-      other: "%{count} inlägg har sammanfogats med ett existerande meddelande: %{topic_link}"
+      one: "Ett inlägg har sammanfogats med ett befintligt meddelande: %{topic_link}"
+      other: "%{count} inlägg har sammanfogats med ett befintligt meddelande: %{topic_link}"
   change_owner:
     post_revision_text: "Ägarskap överfört"
   publish_page:
@@ -3203,7 +3205,7 @@ sv:
       Ett konto krävs för att logga in. Var god och skapa ett konto eller logga in för att fortsätta.
     welcome_message_invite_only: |
       ##[Välkommen till %{title}](#welcome)
-      Ett konto krävs för att logga in. Vänligen be en existerande användare om en inbjudan eller logga in för att fortsätta.
+      Det krävs ett konto för att logga in. Be en befintlig användare om en inbjudan eller logga in för att fortsätta.
   deleted: "raderad"
   image: "bild"
   upload:
@@ -3280,7 +3282,104 @@ sv:
     Redigera det första inlägget i det här ämnet för att ändra innehållet i %{page_name} sidan.
   guidelines_topic:
     title: "FAQ/Riktlinjer"
-    body: "<a name=\"civilized\"></a>\n\n## [Detta är en civiliserad plats för offentlig diskussion](#civilized)\n\nVänligen behandla detta diskussionsforum med samma respekt som en offentlig park. Vi är också en delad gemensam resurs — en plats att dela färdigheter, kunskap och intressen genom pågående konversation.\n\nDet här är inte hårda och snabba regler, bara riktlinjer för att hjälpa den humana bedömningen av vår gemenskap och hålla detta till en ren och ordnad plats för civiliserad allmän dialog.\n\n<a name=\"improve\"></a>\n\n## [Förbättra diskussionen](#improve)\n\nHjälp oss att göra detta till ett bra ställe för dialog genom att alltid arbeta för att förbättra diskussionen på något sätt, hur liten som helst. Om du inte är säker på att ditt inlägg bidrar till konversationen, tänk över vad du vill säga och försök igen senare.\n\nÄmnen som diskuteras här är viktiga för oss, och vi vill att du ska agera som om de också är betydelsefulla för dig. Var respektfull för ämnena och de personer som diskuterar dem, även om du inte håller med om något av det som sägs.\n\nEtt sätt att förbättra diskussionen är genom att upptäcka det som redan händer. Spendera tid på att bläddra i ämnena här innan du svarar eller startar ditt eget, och du har bättre chans att träffa andra som delar dina intressen.\n\n<a name=\"agreeable\"></a>\n\n## [Var öppen, även om du inte håller med](#agreeable)\n\nDu kanske vill svara på något genom att inte hålla med om det. Det är okej. Men kom ihåg att _kritisera idéer, inte människor_. Vänligen undvik:\n\n* Skällsord\n* Personliga påhopp\n* Svara på inläggets ton istället för dess faktiska innehåll\n* Impulsiva motsägelser\n* Ange istället motiverade motargument som förbättrar konversationen.\n\n<a name=\"participate\"></a>\n\n## [Ditt deltagande är betydelsefullt](#participate)\n\nDe samtal vi har här sätter tonen för varje ny medlem. Hjälp oss att påverka gemenskapens framtid genom att välja att delta i diskussioner som gör detta forum till en intressant plats att vara — och undvika de som inte gör det.\n\nDiscourse tillhandahåller verktyg som gör det möjligt för föreningen att kollektivt identifiera de bästa (och värsta) bidrag: bokmärken, gillningar, flaggor, svar, redigeringar och så vidare. Använd dessa verktyg för att förbättra din egen upplevelse, och alla andras också.\n\nLåt oss lämna vår gemenskap bättre än vi hittade den.\n\n<a name=\"flag-problems\"></a>\n\n## [Om du ser ett problem, markera det](#flag-problems)\n\nModeratorer har särskild auktoritet; de ansvarar för detta forum. Men så gör också du. Med din hjälp kan moderatorer vara samhällsansvariga, inte bara agera vaktmästare eller polis.\n\nNär du ser dåligt beteende ska du inte svara. Det uppmuntrar till dåligt beteende genom att det bekräftas, det kommer förbruka din energi och slösa bort allas tid. _Bara flagga det istället_. Om tillräckligt med flaggor sätts kommer åtgärder vidtas antingen automatiskt eller genom att moderatorer ingriper.\n\nFör att upprätthålla vår gemenskap, förbehåller sig moderatorer rätten att ta bort allt innehåll och alla användarkonton på grund av valfri anledning, när som helst. Moderatorer förhandsgranskar inte nya inlägg; moderatorerna och webbplatsoperatörerna tar inget ansvar för något innehåll som publiceras av medlemmarna.\n\n<a name=\"be-civil\"></a>\n\n## [Var alltid artig](#be-civil)\n\nIngenting saboterar en hälsosam konversation som oförskämdheter:\n\n* Var artig. Lägg inte in något som en rimlig person anser stötande, oförskämt eller hatfullt.\n* Håll det rent. Lägg inte in något obscent eller sexuellt stötande.\n* Respektera varandra. Trakassera inte eller gör narr av någon, imitera inte personligheter eller avslöja andras privata information.\n* Respektera vårt forum. Skicka inte skräppost eller skada forumet på annat sätt.\n\nDetta är inte konkreta termer med exakta definitioner — undvik även andra former som liknar någon av dessa saker. Om du är osäker, fråga dig själv hur du skulle känna om ditt inlägg presenterades på framsidan av Dagens Nyheter.\n\nDetta är ett offentligt forum och sökmotorer indexerar dessa diskussioner. Håll språk, länkar och bilder anpassade för familj och vänner.\n\n<a name=\"keep-tidy\"></a>\n\n## [Håll det städat(#keep-tidy)\n\nAnsträng dig för att sätta saker på rätt plats så att vi kan spendera mer tid på att diskutera och mindre på att städa upp. Således:\n\n* Starta inte ett ämne i fel kategori.\n* Skriv inte samma sak i flera ämnen.\n* Skicka inga svar utan innehåll.\n* Ändra inte ett samtalsämne genom att byta ämne mitt i.\n* Skriv inte under dina inlägg — Varje inlägg har redan din profilinformation bifogad.\n* Istället för att posta “+1” eller “Instämmer”, använd knappen \nGilla. \n* Istället för att ta ett befintligt ämne i en radikalt annan riktning, använd Svara som ett länkat ämne.\n\n<a name=\"stealing\"></a>\n\n## [Lägg bara in dina egna saker](#stealing)\n\nDu får inte publicera något digitalt som tillhör någon annan utan tillstånd. Du får inte publicera beskrivningar av, länkar till eller metoder för att stjäla någons immateriella rättigheter (programvara, video, ljud, bilder) eller för att bryta någon annan lag.\n\n<a name=\"power\"></a>\n\n## [Drivs av dig](#power)\n\nDenna webbplats drivs av din [vänliga lokala personal](%{base_path}/about) och \"dig\", vilket tillsammans utgör gemenskapen. Om du har ytterligare frågor om hur saker och ting ska fungera här, öppna ett nytt ämne i [kategorin för feedback](%{base_path}/c/site-feedback) och låt oss diskutera! Om det finns en kritisk eller brådskande fråga som inte kan hanteras av en flaggning eller ämnestaggning, kontakta oss via [personalsidan](%{base_path}/about).\n\n<a name=\"tos\"></a>\n\n## [Användarvillkor](#tos)\n\nJa, regler är tråkiga, men vi måste skydda oss själva &ndash; och som tillägg, dig och dina data &ndash; mot ovänliga människor. Vi har ett [Servicevillkor](%{base_path}/tos) som beskriver ditt (och vårt) beteende och rättigheter relaterade till innehåll, integritet och lagar. För att använda denna tjänst måste du acceptera att du följer våra [Användarvillkor](%{base_path}/tos).\n"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Detta är en civiliserad plats för offentlig diskussion](#civilized)
+
+      Vi ber dig behandla detta diskussionsforum med samma respekt som en offentlig park. Vi är också en delad gemensam resurs — en plats där du kan dela färdigheter, kunskap och intressen genom pågående konversation.
+
+      Det här är inte strikt bindande regler, utan riktlinjer som hjälper den mänskliga bedömningen av vår gemenskap och bevarar denna som en ren och ordnad plats för civiliserad offentligt dialog.
+
+      <a name="improve"></a>
+
+      ## [Förbättra diskussionen](#improve)
+
+      Hjälp oss att göra detta till ett bra ställe för dialog genom att alltid arbeta för att förbättra diskussionen på något sätt, hur liten som helst. Om du inte är säker på att ditt inlägg bidrar till konversationen, tänk över vad du vill säga och försök igen senare.
+
+      Ämnen som diskuteras här är viktiga för oss, och vi vill att du ska agera som om de också är betydelsefulla för dig. Ha respekt för ämnena och personerna som diskuterar dem, även om du inte håller med om något av det som sägs.
+
+      Ett sätt att förbättra diskussionen är genom att uppforska det som redan händer. Lägg lite tid på att bläddra i ämnena här innan du svarar eller startar ditt eget, så har du bättre chans att träffa andra som delar dina intressen.
+
+      <a name="agreeable"></a>
+
+      ## [Var öppen, även om du inte håller med](#agreeable)
+
+      Du kanske vill svara på något genom att inte hålla med om det. Det är okej. Men kom ihåg att _kritisera idéer, inte människor_. Vi ber dig att undvika:
+
+      * Skällsord
+      * Personliga påhopp
+      * Svara på inläggets ton istället för dess faktiska innehåll
+      * Impulsiva motsägelser
+
+      Ange istället motiverade motargument som förbättrar samtalet.
+
+      <a name="participate"></a>
+
+      ## [Ditt deltagande är betydelsefullt](#participate)
+
+      De samtal vi har här sätter tonen för varje ny medlem. Hjälp oss att påverka gemenskapens framtid genom att välja att delta i diskussioner som gör detta forum till en intressant plats att vara — och undvika de som inte gör det.
+
+      Discourse tillhandahåller verktyg som gör det möjligt för gemenskapen att kollektivt identifiera de bästa (och värsta) bidragen: bokmärken, gillningar, flaggor, svar, redigeringar och så vidare. Använd dessa verktyg för att förbättra din egen upplevelse, och alla andras också.
+
+      Låt oss lämna vår gemenskap bättre än vi hittade den.
+
+      <a name="flag-problems"></a>
+
+      ## [Om du ser ett problem, markera det](#flag-problems)
+
+      Moderatorer har särskild auktoritet; de ansvarar för detta forum. Men det gör du också. Med din hjälp kan moderatorer vara gemenskapens hjälpare, inte bara agera vaktmästare eller polis.
+
+      När du ser dåligt beteende ska du inte svara. Det uppmuntrar till dåligt beteende genom att det bekräftas, det kommer förbruka din energi och slösa bort allas tid. _Bara flagga det istället_. Om tillräckligt med flaggor sätts kommer åtgärder vidtas antingen automatiskt eller genom att moderatorer ingriper.
+
+      För att upprätthålla vår gemenskap, förbehåller sig moderatorer rätten att ta bort allt innehåll och alla användarkonton på grund av valfri anledning, när som helst. Moderatorer förhandsgranskar inte nya inlägg; moderatorerna och webbplatsoperatörerna tar inget ansvar för något innehåll som publiceras av medlemmarna.
+
+      <a name="be-civil"></a>
+
+      ## [Var alltid artig](#be-civil)
+
+      Ingenting saboterar ett hälsosamt samtal så effektivt som oförskämdheter:
+
+      * Var artig. Publicera inte något som en rimlig person skulle anse vara stötande, oförskämt eller hatfullt.
+      * Håll det rent. Publicera inte in något som är obscent eller sexuellt stötande.
+      * Respektera varandra. Trakassera inte eller gör narr av någon, imitera inte personligheter eller avslöja andras privata information.
+      * Respektera vårt forum. Skicka inte skräppost eller skada forumet på annat sätt.
+
+      Detta är inte konkreta begrepp med exakta definitioner — undvik även andra former som liknar någon av dessa punkter. Om du är osäker, fråga dig själv hur det skulle kännas om ditt inlägg hade presenterats på Dagens Nyheters förstasida.
+
+      Detta är ett offentligt forum och sökmotorer indexerar dessa diskussioner. Håll språk, länkar och bilder anpassade för familj och vänner.
+
+      <a name="keep-tidy"></a>
+
+      ## [Håll det städat(#keep-tidy)
+
+      Ansträng dig för att sätta saker på rätt plats så att vi kan spendera mer tid på att diskutera och mindre på att städa upp. Alltså:
+
+      * Starta inte ett ämne i fel kategori.
+      * Skriv inte samma sak i flera ämnen.
+      * Skicka inga svar utan innehåll.
+      * Ändra inte ett samtalsämne genom att byta ämne mitt i.
+      * Skriv inte under dina inlägg — Varje inlägg har redan din profilinformation bifogad.
+
+      Istället för att posta “+1” eller “Instämmer”, använd knappen Gilla. Istället för att ta ett befintligt ämne i en radikalt annorlunda riktning, använd Svara som ett länkat ämne.
+
+      <a name="stealing"></a>
+
+      ## [Lägg bara in dina egna saker](#stealing)
+
+      Du får inte publicera något digitalt som tillhör någon annan utan tillstånd. Du får inte publicera beskrivningar av, länkar till eller metoder för att stjäla någons immateriella rättigheter (programvara, video, ljud, bilder) eller för att bryta någon annan lag.
+
+      <a name="power"></a>
+
+      ## [Drivs av dig](#power)
+
+      Denna webbplats drivs av din [vänliga lokala personal](%{base_path}/about) och _dig_, som tillsammans utgör gemenskapen. Om du har ytterligare frågor om hur saker och ting ska fungera här, öppna ett nytt ämne i [kategorin för feedback](%{base_path}/c/site-feedback) och låt oss diskutera! Om det finns en kritisk eller brådskande fråga som inte kan hanteras av en flaggning eller ämnestaggning, kontakta oss via [personalsidan](%{base_path}/about).
+
+      <a name="tos"></a>
+
+      ## [Användarvillkor](#tos)
+
+      Ja, regler är tråkiga, men vi måste skydda oss själva &ndash; och i förlängningen dig och dina data &ndash; mot ovänliga människor. Vi har [Användarvillkor](%{base_path}/tos) som beskriver ditt (och vårt) beteende och rättigheter relaterade till innehåll, integritet och lagar. För att använda denna tjänst måste du gå med på att följa våra [Användarvillkor](%{base_path}/tos).
   tos_topic:
     title: "Villkor"
     body: "Dessa villkor styr användningen av Internetforumet på < %{base_url}>. För att använda forumet måste du acceptera dessa villkor med %{company_name}, organisationen som driver forumet.\n\nOrganisationen kan erbjuda andra produkter och tjänster under olika villkor. Dessa villkor gäller endast för användning av forumet.\n\nHoppa till:\n\n- [Viktiga villkor](#heading--important-terms)\n- [Din tillåtelse att använda forumet](#heading--permission)\n- [Villkor för användning av forumet](#heading--conditions)\n- [Acceptabel användning](#heading--acceptable-use)\n- [Innehållsstandarder](#heading--content-standards)\n- [Verkställande](#heading--enforcement)\n- [Ditt konto](#heading--your-account)\n- [Ditt innehåll](#heading--your-content)\n- [Ditt ansvar](#heading--responsibility)\n- [Ansvarsfriskrivning](#heading--disclaimers)\n- [Ansvarsbegränsning](#heading--liability)\n- [Återkoppling](#heading--feedback)\n- [Uppsägning](#heading--termination)\n- [Tvister](#heading--disputes)\n- [Allmänna villkor](#heading--general)\n- [Kontakt](#heading--contact)\n- [Ändringar](#heading--changes)\n\n<h2 id=\"heading--important-terms\"><a href=\"#heading--important-terms\">Viktiga villkor</a></h2>\n\n***Dessa villkor inkluderar ett antal viktiga bestämmelser som påverkar dina rättigheter och skyldigheter, såsom ansvarsfriskrivningar i [Ansvarsfriskrivning](#heading--disclaimers), begränsningar för organisationens ansvar gentemot dig i  [Ansvarsbegränsning](#heading--liability), ditt avtal om att täcka företaget för skador orsakade av ditt missbruk av forumet i [Ditt ansvar](#heading--responsibility), och ett avtal om skiljedom i tvister i [Tvister](#heading--disputes).***\n\n<h2 id=\"heading--permission\"><a href=\"#heading--permission\">Din tillåtelse att använda forumet</a></h2>\n\nMed förbehåll för dessa villkor ger organisationen dig tillåtelse att använda forumet. Alla måste gå med på dessa villkor för att använda forumet.\n\n<h2 id=\"heading--conditions\"><a href=\"#heading--conditions\">Villkor för användning av forumet</a></h2>\n\nDin tillåtelse att använda forumet omfattas av följande villkor:\n\n1. Du måste vara minst tretton år gammal.\n\n2. Du får inte längre använda forumet om organisationen kontaktar dig direkt och har informera dig om att du inte får göra det.\n\n3. Du måste använda forumet i enlighet med [Acceptabel användning] (#heading--acceptable-use) och [Innehållsstandarder](#heading--content-standards).\n\n<h2 id=\"heading--acceptable-use\"><a href=\"#heading--acceptable-use\">Acceptabel användning</a></h2>\n\n 1. Du får inte bryta mot lagen vid användande av forumet.\n\n2. Du får inte använda eller försöka använda en annans konto på forumet utan deras specifika tillstånd.\n\n3. Du får inte köpa, sälja eller på annat sätt handla med användarnamn eller andra unika identifierare på forumet.\n\n4. Du får inte skicka annonser, kedjebrev eller andra uppmaningar genom forumet eller använda forumet för att samla in adresser eller annan personlig information för kommersiella adresslistor eller databaser.\n\n5. Du får inte automatisera åtkomst till forumet, eller övervaka forumet, till exempel med en sökmotor, webbläsarprogram eller tillägg, eller något annat datorprogram som inte är en webbläsare. Du kan genomsöka forumet för att indexera det för en allmänt tillgänglig sökmotor, om du hanterar en.\n\n6. Du får inte använda forumet för att skicka e-post till distributionslistor, nyhetsgrupper eller alias för grupp-postkonton.\n\n7. Du får inte felaktigt antyda att du är ansluten till eller godkänd av organisationen.\n\n8. Du får inte hyperlänka till bilder eller annat innehåll som inte är hypertext i forumet på andra webbsidor.\n\n9. Du får inte ta bort några märkningar som visar äganderätt från material som du laddar ner från forumet.\n\n10. Du får inte visa någon del av forumet på andra webbplatser genom `<iframe>`.\n \n11. Du får inte inaktivera, undvika eller kringgå några säkerhets- eller åtkomstbegränsningar i forumet.\n\n12. Du får inte belasta infrastrukturen i forumet med en orimlig mängd förfrågningar, eller förfrågningar som är utformade för att lägga en orimlig belastning på informationssystem som ligger till grund för forumet.\n\n13. Du får inte utge dig för att vara någon annan person genom forumet.\n\n14. Du får inte uppmuntra eller hjälpa någon som bryter mot dessa villkor.\n\n<h2 id=\"heading--content-standards\"><a href=\"#heading--content-standards\">Innehållsstandarder</a></h2>\n\n1. Du får inte skicka innehåll till forumet som är olagligt, stötande eller på annat sätt skadligt för andra. Detta inkluderar innehåll som är trakasserande, olämpligt eller missbrukande.\n\n2. Du får inte skicka innehåll till forumet som bryter mot lagen, kränker någons immateriella rättigheter, kränker någons integritet eller bryter mot avtal du har med andra.\n\n3. Du får inte skicka innehåll till forumet som innehåller skadlig datakod, t.ex. datavirus eller spionprogram.\n\n4. Du får inte skicka innehåll till forumet som enbart är en platshållare, för att inneha en viss adress, användarnamn eller annan unik identifierare.\n\n5. Du får inte använda forumet för att avslöja information som du inte har rätt att avslöja, liksom andras konfidentiella eller personliga information.\n\n<h2 id=\"heading--enforcement\"><a href=\"#heading--enforcement\">Verkställande</a></h2>\n\nOrganisationen kan utreda och åtala brott mot dessa villkor till fullo i en rättslig omfattning. Företaget kan meddela och samarbeta med brottsbekämpande myndigheter för att åtala brott mot lagen och dessa villkor.\n\nOrganisationen förbehåller sig rätten att ändra, redigera och ta bort innehåll på forumet av endera anledning. Om du tror att någon har skickat innehåll till forumet i strid med dessa villkor, [kontakta oss omedelbart](#heading--contact).\n\n<h2 id=\"heading--your-account\"><a href=\"#heading--your-account\">Ditt konto</a></h2>\n\nDu måste skapa och logga in på ett konto för att använda vissa funktioner i forumet.\n \nFör att skapa ett konto måste du ange lite information om dig själv. Om du skapar ett konto accepterar du att tillhandahålla minst en giltig e-postadress och att hålla den adressen uppdaterad. Du kan avsluta ditt konto när som helst genom att e-posta <%{contact_email}>.\n\nDu samtycker till att vara ansvarig för alla åtgärder som vidtas genom ditt konto, oavsett om de godkänts av dig eller inte, tills du antingen avslutar ditt konto eller meddelar organisationen att ditt konto har äventyrats. Du samtycker till att meddela organisationen omedelbart om du misstänker att ditt konto har äventyrats. Du samtycker till att välja ett säkert lösenord för ditt konto och hålla det hemligt.\n\nOrganisationen kan begränsa, stänga av eller avsluta ditt konto på forumet i enlighet med dess policy för hantering av upphovsrättsrelaterade borttagningsförfrågningar, eller om organisationen rimligen anser att du har brutit någon regel i dessa villkor.\n\n<h2 id=\"heading--your-content\"><a href=\"#heading--your-content\">Ditt innehåll</a></h2>\n \nIngenting i dessa villkor ger organisationen äganderätt till immateriell egendom som du delar med forumet, till exempel din kontoinformation, inlägg eller annat innehåll som du skickar till forumet. Ingenting i dessa villkor ger dig heller äganderätt till organisationens immateriella rättigheter.\n\nMellan dig och företaget förblir du ensam ansvarig för innehåll du skickar till forumet. Du samtycker till att inte felaktigt antyda att innehåll som du skickar till forumet sponsras eller godkänts av organisationen. Dessa villkor ålägger inte organisationen att lagra, underhålla eller tillhandahålla kopior av innehållet du skickar in och att ändra det enligt dessa villkor.\n\nInnehåll som du skickar till forumet tillhör dig och du bestämmer vilken tillåtelse du vill ge andra för det. Men åtminstone samtycker du att organisationen tillhandahålla innehåll som du skickar till forumet för att delas med andra användare av forumet. Det speciella samtycket gör det även möjligt för organisationen att kopiera, publicera och analysera innehåll du skickar till forumet.\n\nNär innehåll du skickat tas bort från forumet, vare sig av dig eller av organisationen, upphör organisationens medgivande när den sista kopian försvinner från organisationen säkerhetskopior, cachar eller andra system. Andra medgivanden som du givit när du medger externa funktioner, till exempel [Creative Commons](https://creativecommons.org), kan fortsätta gälla efter att ditt innehåll har tagits bort. Dessa medgivanden kan ge andra, eller själva organisationen, rätten att dela ditt innehåll igenom forumet igen.\n\nAndra som får ta del av innehåll som du skickar till forumet kan bryta mot villkoren som du medgivit för ditt innehåll. Du samtycker till att organisationen inte kommer att vara ansvarigt gentemot dig för dessa överträdelser eller deras konsekvenser.\n\n<h2 id=\"heading--responsibility\"><a href=\"#heading--responsibility\">Ditt ansvar</a></h2>\n\nDu samtycker till att ersätta organisationen från lagliga anspråk från andra relaterade till ditt brott mot dessa villkor, eller brott mot dessa villkor av andra som använder ditt konto på forumet. Både du och organisationen är överens om att meddela den andra sidan om eventuella juridiska fordringar som du kan behöva ersätta organisationen för så snart som möjligt. Om organisationen inte underrättar dig om ett juridiskt krav omedelbart, kommer du inte att behöva ersätta organisationen för skador som du kunde ha försvarat eller mildrat genom snabb upplysning. Du samtycker till att låta organisationen ta del av utredning, försvar och avveckling av juridiska fordringar som du skulle behöva ersätta organisationen för och att samarbeta genom att genomföra dessa ansträngningar. Organisationen samtycker till att inte acceptera någon lösning som medger att felet är ditt eller ålägger dig skyldigheter utan ditt medgivande.\n\n<h2 id=\"heading--disclaimers\"><a href=\"#heading--disclaimers\">Ansvarsfriskrivning</a></h2>\n\n***Du accepterar all risk med att använda forumet och för innehållet på forumet. Såvitt lagen tillåter tillhandahåller organisationen och dess leverantörer forumet som det är, utan någon garanti överhuvudtaget.*** \n\nForumet kan hyperlänka till och integrera forum och tjänster som drivs av andra. Organisationen ger inga garantier för tjänster som drivs av andra, eller innehåll de kan tillhandahålla. Användning av tjänster som drivs av andra kan regleras av andra villkor mellan dig och den som hanterar tjänsten.\n\n<h2 id=\"heading--liability\"><a href=\"#heading--liability\">Ansvarsbegränsning</a></h2>\n\n***Varken organisationen eller dess leverantörer är ansvariga gentemot dig för avtalsbrott vilka personalen inte rimligen kunde ha förutsett när du gick med på dessa villkor.***\n\n***Såvitt lagen tillåter kommer det totala ansvaret gentemot dig för fordringar av något slag som är relaterat till forumet eller innehållet på forumet att begränsas till 500 kr.***\n\n<h2 id=\"heading--feedback\"><a href=\"#heading--feedback\">Återkoppling</a></h2>\n\nOrganisationen välkomnar din feedback och förslag till forumet. Se avsnittet [Kontakt](#heading--contact) nedan för hur du kommer i kontakt med oss.\n\nDu samtycker till att organisationen kommer att vara fritt att agera på feedback och förslag du lämnar, och att organisationen inte kommer att behöva meddela dig om att din feedback användes, få ditt tillstånd att använda det eller betala dig för den. Du samtycker till att inte skicka feedback eller förslag som du tror kan vara konfidentiella eller äganderättsliga, för dig eller andra.\n\n<h2 id=\"heading--termination\"><a href=\"#heading--termination\">Uppsägning</a></h2>\n\nAntingen du eller organisationen kan när som helst avsluta avtalet som skrivs ut i dessa villkor. När vårt avtal upphör upphör din tillåtelse att använda forumet.\n\nFöljande bestämmelser fortsätter efter avslut av vårt avtal: [Ditt innehåll](#heading--your-content), [Återkoppling](#heading--feedback), [Ditt ansvar](#heading--responsibility), [Ansvarsfriskrivning](#heading--disclaimers), [Ansvarsbegränsning](#heading--liability) och [Allmänna villkor](#heading--general).\n \n<h2 id=\"heading--disputes\"><a href=\"#heading--disputes\">Tvister</a></h2>\n\n%{governing_law} kommer att styra alla tvister relaterade till dessa villkor eller din användning av forumet.\n\nDu och organisationen samtycker till att begära förelägganden relaterade till dessa villkor endast i statliga eller federala domstol i %{city_for_disputes}. Varken du eller företaget kommer att invända mot jurisdiktion, forum eller plats i domstolarna.\n\n***Annat än att begära ett föreläggande eller för anspråk enligt lagen för datorbedrägeri och missbruk, kommer du och organisationen att lösa eventuella tvister genom bindande svensk skiljedom. Skiljedom kommer att följa svenska kommersiella skiljedomsregler och kompletterande förfaranden för konsumentrelaterade tvister. Skiljedom kommer att ske i %{city_for_disputes}. Du kommer att lösa alla tvister som en individ och inte som en del av en grupphandling eller ett annat representativt förfarande, vare sig som klagande eller grupptalan. Ingen skiljedomare kommer att konsolidera någon tvist med någon annan skiljedom utan organisationens tillstånd.***\n\nAlla skiljedomar kan innehålla kostnader för skiljedom, rimliga advokatavgifter och rimliga kostnader för vittnen. Du och organisationen kan delta i skiljedomar i valfri domstol med behörighet.\n\n<h2 id=\"heading--general\"><a href=\"#heading--general\">Allmänna villkor</a></h2>\n\nOm en bestämmelse av dessa villkor inte kan verkställas som skriven, men kan ändras för att göra den verkställbar, bör den bestämmelsen ändras till den minsta utsträckning som krävs för att göra den verkställbar. Annars bör denna bestämmelse tas bort.\n\nDu får inte tilldela någon annan ditt avtal med organisationen . Organisationen kan däremot tilldela ditt avtal till alla dotterbolag i organisationen , alla andra organisationen som får kontroll över organisationen eller någon annan organisation som köper tillgångar i organisationen relaterat till forumet. Alla försök av tilldelning av dessa villkor till annan har ingen rättslig effekt.\n\nVarken utövandet av någon rättighet enligt detta avtal eller upphävelse från brott mot detta avtal upphäver någon annan överträdelse av detta avtal.\n\nDessa villkor innehåller alla avtalsvillkor mellan dig och organisationen gällande användning av forumet. Dessa villkor ersätter helt andra avtal om din användning av forumet, skriftligt eller muntligt.\n\n<h2 id=\"heading--contact\"><a href=\"#heading--contact\">Kontakt</a></h2>\n\nDu kan meddela organisationen enligt dessa villkor och skicka frågor till organisationen på <%{contact_email}>.\n\nOrganisationen kan meddela dig enligt dessa villkor med hjälp av den e-postadress du anger för ditt konto på forumet eller genom att skicka ett meddelande till startsida för forumet eller genom din kontosida.\n\n<h2 id=\"heading--changes\"><a href=\"#heading--changes\">Ändringar</a></h2>\n\nOrganisationen uppdaterade senast dessa villkor den 25 januari 2020 och kan uppdatera dessa villkor igen. Företaget kommer att publicera alla uppdateringar till forumet. För uppdateringar som innehåller väsentliga förändringar samtycker företaget till att skicka e-post till dig om du har skapat ett konto och angett en giltig e-postadress. Företaget kan också meddela uppdateringar med special-meddelanden eller varningar på forumet.\n\nNär du får ett meddelande om en uppdatering av dessa villkor måste du godkänna de nya villkoren för att fortsätta använda forumet.\n"
@@ -3754,6 +3853,8 @@ sv:
         - <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Snabbreferensguide för temautvecklare </a></li>
         - </ul>
         - 'Populära temakomponenter (för fler, bläddra bland <a href=''https://meta.discourse.org/c/theme/l/latest'' target=''_blank''>#theme</a>) "'
+      fonts:
+        title: "Typsnitt"
       logos:
         title: "Logotyper"
         fields:

@@ -20,7 +20,7 @@ acceptance("Encoded Sub Category Discovery", {
     );
   },
   settings: {
-    slug_generation_method: "encoded"
+    slug_generation_method: "encoded",
   },
   site: {
     categories: [
@@ -28,20 +28,20 @@ acceptance("Encoded Sub Category Discovery", {
         id: 5,
         name: "漢字-parent",
         slug: "%E6%BC%A2%E5%AD%97-parent",
-        permission: null
+        permission: null,
       },
       {
         id: 6,
         name: "漢字-subcategory",
         slug: "%E6%BC%A2%E5%AD%97-subcategory",
         permission: null,
-        parent_category_id: 5
-      }
-    ]
-  }
+        parent_category_id: 5,
+      },
+    ],
+  },
 });
 
-QUnit.test("Visit subcategory by slug", async assert => {
+QUnit.test("Visit subcategory by slug", async (assert) => {
   let bodySelector =
     "body.category-\\%E6\\%BC\\%A2\\%E5\\%AD\\%97-parent-\\%E6\\%BC\\%A2\\%E5\\%AD\\%97-subcategory";
   await visit("/c/%E6%BC%A2%E5%AD%97-parent/%E6%BC%A2%E5%AD%97-subcategory");

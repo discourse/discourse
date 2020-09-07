@@ -15,6 +15,6 @@ export default Controller.extend(ModalFunctionality, {
     cancel() {
       this.set("updateExistingUsers", false);
       this.send("closeModal");
-    }
-  }
+    },
+  },
 });

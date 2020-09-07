@@ -1,12 +1,12 @@
 import I18n from "I18n";
 import {
   translateResults,
-  searchContextDescription
+  searchContextDescription,
 } from "discourse/lib/search";
 
 QUnit.module("lib:search");
 
-QUnit.test("unescapesEmojisInBlurbs", assert => {
+QUnit.test("unescapesEmojisInBlurbs", (assert) => {
   const source = {
     posts: [
       {
@@ -17,15 +17,15 @@ QUnit.test("unescapesEmojisInBlurbs", assert => {
         like_count: 1,
         blurb: ":thinking: This here is a test of emojis in search blurbs.",
         post_number: 1,
-        topic_id: 41
-      }
+        topic_id: 41,
+      },
     ],
     topics: [],
     users: [],
     categories: [],
     tags: [],
     groups: [],
-    grouped_search_result: false
+    grouped_search_result: false,
   };
 
   const results = translateResults(source);
@@ -36,7 +36,7 @@ QUnit.test("unescapesEmojisInBlurbs", assert => {
   assert.ok(blurb.indexOf(":thinking:") === -1);
 });
 
-QUnit.test("searchContextDescription", assert => {
+QUnit.test("searchContextDescription", (assert) => {
   assert.equal(
     searchContextDescription("topic"),
     I18n.t("search.context.topic")

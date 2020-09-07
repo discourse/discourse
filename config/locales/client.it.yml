@@ -263,10 +263,7 @@ it:
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
         unbookmark_with_reminder: "Fare clic per rimuovere tutti i segnalibri e i promemoria in questo argomento. Hai un promemoria impostato %{reminder_at} per questo argomento."
     bookmarks:
-      created: "hai aggiunto questo messaggio ai segnalibri %{name}"
       not_bookmarked: "aggiungi ai segnalibri"
-      created_with_reminder: "hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}%{name}"
-      created_with_at_desktop_reminder: "hai aggiunto ai segnalibri questo messaggio e ti verrà ricordato la prossima volta che sarai sul desktop%{name}"
       remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
       confirm_delete: "Sicuro di voler eliminare questo segnalibro? Anche il promemoria verrà eliminato."
@@ -283,7 +280,6 @@ it:
       search_placeholder: "Cerca nei segnalibri per nome, titolo dell'argomento o contenuto del messaggio"
       search: "Cerca"
       reminders:
-        at_desktop: "La prossima volta che sarò al mio desktop"
         later_today: "Più tardi oggi"
         next_business_day: "Il prossimo giorno lavorativo"
         tomorrow: "Domani"
@@ -298,7 +294,6 @@ it:
         today_with_time: "oggi alle %{time}"
         tomorrow_with_time: "domani alle %{time}"
         at_time: "a %{date_time}"
-        existing_reminder: "È stato impostato un promemoria per questo segnalibro che verrà inviato"
     copy_codeblock:
       copied: "copiato!"
     drafts:
@@ -987,7 +982,6 @@ it:
         use: "Usa l'app Authenticator"
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
         disable: "Disabilita"
-        disable_confirm: "Sei sicuro di voler disabilitare tutti i secondi fattori?"
         save: "Salva"
         edit: "Modifica"
         edit_title: "Modifica secondo fattore"
@@ -2315,7 +2309,6 @@ it:
         preview_url: "La tua pagina sarà pubblicata su:"
         invalid_slug: "Spiacenti, non puoi pubblicare questa pagina."
         unpublish: "Non pubblicato"
-        update: "Aggiorna"
         unpublished: "La tua pagina non è stata pubblicata e non è più accessibile."
         publishing_settings: "Impostazioni di Pubblicazione"
       change_owner:
@@ -2471,23 +2464,7 @@ it:
         remove_post_notice: "Rimuovi Note Staff"
         remove_timer: "rimuovi il timer"
       actions:
-        flag: "Segnala"
-        defer_flags:
-          one: "Ignore flag"
-          other: "Ignora le segnalazioni"
-        undo:
-          off_topic: "Rimuovi segnalazione"
-          spam: "Rimuovi segnalazione"
-          inappropriate: "Rimuovi segnalazione"
-          bookmark: "Annulla segnalibro"
-          like: "Annulla il \"Mi piace\""
         people:
-          off_topic: "l'hanno segnalato come fuori tema"
-          spam: "l'hanno segnalato come spam"
-          inappropriate: "l'hanno segnalato come inappropriato"
-          notify_moderators: "hanno informato i moderatori"
-          notify_user: "hanno inviato un messaggio"
-          bookmark: "l'hanno aggiunto ai segnalibri"
           like:
             one: "ha messo \"Mi piace\""
             other: "ha messo \"Mi piace\""
@@ -2506,8 +2483,6 @@ it:
           inappropriate: "L'hai segnalato come inappropriato"
           notify_moderators: "L'hai segnalato per la moderazione"
           notify_user: "Hai inviato un messaggio a questo utente"
-          bookmark: "Hai inserito questo messaggio nei segnalibri"
-          like: "Ti piace"
       delete:
         confirm:
           one: "Vuoi davvero eliminare quel messaggio?"
@@ -3099,14 +3074,6 @@ it:
           latest: "Non ci sono argomenti più recenti."
           bookmarks: "Non hai ancora argomenti nei segnalibri."
           top: "Non ci sono argomenti popolari."
-        bottom:
-          latest: "Non ci sono ulteriori argomenti più recenti."
-          posted: "Non ci sono ulteriori argomenti inseriti."
-          read: "Non ci sono ulteriori argomenti letti."
-          new: "Non ci sono ulteriori nuovi argomenti."
-          unread: "Non ci sono ulteriori argomenti non letti."
-          top: "Non ci sono ulteriori argomenti popolari."
-          bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
     invite:
       custom_message: "Rendi il tuo invito un po' più personale scrivendo un <a href>messaggio personalizzato</a>."
       custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"

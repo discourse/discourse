@@ -7,7 +7,7 @@ export default Controller.extend(FilterModeMixin, {
   discoveryTopics: controller("discovery/topics"),
 
   @discourseComputed("discoveryTopics.model", "discoveryTopics.model.draft")
-  draft: function() {
+  draft: function () {
     return this.get("discoveryTopics.model.draft");
-  }
+  },
 });

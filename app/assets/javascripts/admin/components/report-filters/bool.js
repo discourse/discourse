@@ -12,5 +12,5 @@ export default FilterComponent.extend({
   @action
   onChange() {
     this.applyFilter(this.filter.id, !this.checked || undefined);
-  }
+  },
 });

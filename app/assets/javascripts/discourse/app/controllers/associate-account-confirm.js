@@ -8,9 +8,9 @@ export default Controller.extend(ModalFunctionality, {
     finishConnect() {
       ajax({
         url: `/associate/${encodeURIComponent(this.model.token)}`,
-        type: "POST"
+        type: "POST",
       })
-        .then(result => {
+        .then((result) => {
           if (result.success) {
             this.transitionToRoute(
               "preferences.account",
@@ -22,6 +22,6 @@ export default Controller.extend(ModalFunctionality, {
           }
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

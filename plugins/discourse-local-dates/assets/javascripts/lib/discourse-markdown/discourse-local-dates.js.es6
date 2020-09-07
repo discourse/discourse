@@ -10,7 +10,7 @@ function addLocalDate(buffer, matches, state) {
     format: null,
     timezones: null,
     displayedTimezone: null,
-    countdown: null
+    countdown: null,
   };
 
   const matchString = matches[1].replace(/„|“/g, '"');
@@ -64,14 +64,14 @@ function addLocalDate(buffer, matches, state) {
   if (config.countdown) {
     token.attrs.push([
       "data-countdown",
-      state.md.utils.escapeHtml(config.countdown)
+      state.md.utils.escapeHtml(config.countdown),
     ]);
   }
 
   if (config.calendar) {
     token.attrs.push([
       "data-calendar",
-      state.md.utils.escapeHtml(config.calendar)
+      state.md.utils.escapeHtml(config.calendar),
     ]);
   }
 
@@ -81,25 +81,25 @@ function addLocalDate(buffer, matches, state) {
   ) {
     token.attrs.push([
       "data-displayed-timezone",
-      state.md.utils.escapeHtml(config.displayedTimezone)
+      state.md.utils.escapeHtml(config.displayedTimezone),
     ]);
   }
 
   if (config.timezones) {
-    const timezones = config.timezones.split("|").filter(timezone => {
+    const timezones = config.timezones.split("|").filter((timezone) => {
       return moment.tz.names().includes(timezone);
     });
 
     token.attrs.push([
       "data-timezones",
-      state.md.utils.escapeHtml(timezones.join("|"))
+      state.md.utils.escapeHtml(timezones.join("|")),
     ]);
   }
 
   if (config.timezone && moment.tz.names().includes(config.timezone)) {
     token.attrs.push([
       "data-timezone",
-      state.md.utils.escapeHtml(config.timezone)
+      state.md.utils.escapeHtml(config.timezone),
     ]);
     dateTime = moment.tz(dateTime, config.timezone);
   } else {
@@ -109,7 +109,7 @@ function addLocalDate(buffer, matches, state) {
   if (config.recurring) {
     token.attrs.push([
       "data-recurring",
-      state.md.utils.escapeHtml(config.recurring)
+      state.md.utils.escapeHtml(config.recurring),
     ]);
   }
 
@@ -141,7 +141,7 @@ export function setup(helper) {
   helper.whiteList([
     "span.discourse-local-date",
     "span[data-*]",
-    "span[aria-label]"
+    "span[aria-label]",
   ]);
 
   helper.registerOptions((opts, siteSettings) => {
@@ -152,10 +152,10 @@ export function setup(helper) {
     ] = !!siteSettings.discourse_local_dates_enabled;
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     const rule = {
       matcher: /\[date(=.+?)\]/,
-      onMatch: addLocalDate
+      onMatch: addLocalDate,
     };
 
     md.core.textPostProcess.ruler.push("discourse-local-dates", rule);

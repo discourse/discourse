@@ -15,12 +15,13 @@ export default Component.extend(BufferedContent, SettingComponent, {
     return this.get("buffered.value")
       .split("|")
       .filter(Boolean)
-      .map(themeName => {
+      .map((themeName) => {
         if (themeName !== "") {
-          return this.setting.allThemes.find(theme => theme.name === themeName)
-            .id;
+          return this.setting.allThemes.find(
+            (theme) => theme.name === themeName
+          ).id;
         }
         return themeName;
       });
-  }
+  },
 });

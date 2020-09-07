@@ -3,15 +3,15 @@ import selectKit from "helpers/select-kit-helper";
 import componentTest from "helpers/component-test";
 import Topic from "discourse/models/topic";
 
-const buildTopic = function(level, archetype = "regular") {
+const buildTopic = function (level, archetype = "regular") {
   return Topic.create({
-    id: 4563
+    id: 4563,
   }).updateFromJson({
     title: "Qunit Test Topic",
     details: {
-      notification_level: level
+      notification_level: level,
     },
-    archetype
+    archetype,
   });
 };
 
@@ -23,7 +23,7 @@ moduleForComponent("select-kit/topic-notifications-button", {
 
   afterEach() {
     I18n.translations.en.js.topic.notifications.tracking_pm.title = originalTranslation;
-  }
+  },
 });
 
 componentTest("the header has a localized title", {
@@ -36,9 +36,7 @@ componentTest("the header has a localized title", {
 
   async test(assert) {
     assert.equal(
-      selectKit()
-        .header()
-        .label(),
+      selectKit().header().label(),
       "Normal",
       "it has the correct label"
     );
@@ -46,13 +44,11 @@ componentTest("the header has a localized title", {
     await this.set("topic", buildTopic(2));
 
     assert.equal(
-      selectKit()
-        .header()
-        .label(),
+      selectKit().header().label(),
       "Tracking",
       "it correctly changes the label"
     );
-  }
+  },
 });
 
 componentTest("the header has a localized title", {
@@ -66,11 +62,9 @@ componentTest("the header has a localized title", {
 
   test(assert) {
     assert.equal(
-      selectKit()
-        .header()
-        .label(),
+      selectKit().header().label(),
       `${originalTranslation} PM`,
       "it has the correct label for PMs"
     );
-  }
+  },
 });

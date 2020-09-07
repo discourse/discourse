@@ -23,7 +23,7 @@ export default {
     // makes sures the queue is not filling indefinitely
     if (_queue.length >= MAX_QUEUE_SIZE) {
       const removedJobs = _queue.splice(0, 1)[0];
-      removedJobs.forEach(job => {
+      removedJobs.forEach((job) => {
         // this is technically not a 429, but it's the result
         // of client doing too many requests so we want the same
         // behavior
@@ -50,19 +50,19 @@ export default {
     }
 
     let reports = {};
-    jobs.forEach(job => {
+    jobs.forEach((job) => {
       reports[job.type] = job.params;
     });
 
     ajax(BULK_REPORTS_ENDPOINT, { data: { reports } })
-      .then(response => {
-        jobs.forEach(job => {
+      .then((response) => {
+        jobs.forEach((job) => {
           const report = response.reports.findBy("type", job.type);
           job.runnable()(report);
         });
       })
-      .catch(data => {
-        jobs.forEach(job => {
+      .catch((data) => {
+        jobs.forEach((job) => {
           if (data.jqXHR && data.jqXHR.status === 429) {
             job.runnable()(429);
           } else if (data.jqXHR && data.jqXHR.status === 500) {
@@ -82,5 +82,5 @@ export default {
   _reset() {
     _queue = [];
     _processing = 0;
-  }
+  },
 };

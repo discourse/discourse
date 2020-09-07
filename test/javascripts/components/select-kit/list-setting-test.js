@@ -31,5 +31,5 @@ componentTest("default", {
 
     assert.equal(this.subject.rows().length, 1);
     assert.equal(this.subject.rowByIndex(0).value(), "underline");
-  }
+  },
 });

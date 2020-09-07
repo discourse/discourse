@@ -16,7 +16,7 @@ export default Controller.extend({
   filterReports(reports, filter) {
     if (filter) {
       filter = filter.toLowerCase();
-      reports = reports.filter(report => {
+      reports = reports.filter((report) => {
         return (
           (get(report, "title") || "").toLowerCase().indexOf(filter) > -1 ||
           (get(report, "description") || "").toLowerCase().indexOf(filter) > -1
@@ -27,7 +27,7 @@ export default Controller.extend({
     const hiddenReports = (this.siteSettings.dashboard_hidden_reports || "")
       .split("|")
       .filter(Boolean);
-    reports = reports.filter(report => !hiddenReports.includes(report.type));
+    reports = reports.filter((report) => !hiddenReports.includes(report.type));
 
     return reports;
   },
@@ -35,10 +35,10 @@ export default Controller.extend({
   actions: {
     filterReports(filter) {
       debounce(this, this._performFiltering, filter, INPUT_DELAY);
-    }
+    },
   },
 
   _performFiltering(filter) {
     this.set("filter", filter);
-  }
+  },
 });

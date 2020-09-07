@@ -199,15 +199,15 @@ export default Component.extend({
         link: null,
         postNumber: null,
         postId: null,
-        visible: false
+        visible: false,
       });
     },
 
     share(source) {
       Sharing.shareSource(source, {
         url: this.link,
-        title: this.get("topic.title")
+        title: this.get("topic.title"),
       });
-    }
-  }
+    },
+  },
 });

@@ -26,7 +26,7 @@ describe UserSilencer do
     context 'given a staff user argument' do
       it 'sends the correct message to the silenced user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(true)
+        SystemMessage.expects(:create).with(user, :silenced_by_staff, {}).returns(true)
         UserSilencer.silence(user, Fabricate.build(:admin))
       end
     end
@@ -34,7 +34,7 @@ describe UserSilencer do
     context 'not given a staff user argument' do
       it 'sends a default message to the user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(true)
+        SystemMessage.expects(:create).with(user, :silenced_by_staff, {}).returns(true)
         UserSilencer.silence(user, Fabricate.build(:admin))
       end
     end
@@ -42,7 +42,7 @@ describe UserSilencer do
     context 'given a message option' do
       it 'sends that message to the user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :the_custom_message).returns(true)
+        SystemMessage.expects(:create).with(user, :the_custom_message, {}).returns(true)
         UserSilencer.silence(user, Fabricate.build(:admin), message: :the_custom_message)
       end
     end
@@ -67,6 +67,29 @@ describe UserSilencer do
         UserSilencer.silence(user, Fabricate(:admin))
       }.to change { UserHistory.count }.by(1)
       expect(UserHistory.last.context).to be_present
+    end
+
+    context 'with a plugin hook' do
+
+      before do
+        @override_silence_message = -> (opts) do
+          opts[:silence_message_params][:message_title] = "override title"
+          opts[:silence_message_params][:message_raw] = "override raw"
+        end
+        DiscourseEvent.on(:user_silenced, &@override_silence_message)
+      end
+
+      after do
+        DiscourseEvent.off(:user_silenced, &@override_silence_message)
+      end
+
+      it 'allows the message to be overridden' do
+        SystemMessage.unstub(:create)
+        UserSilencer.silence(user, Fabricate.build(:admin))
+        post = Discourse.system_user.posts.last
+        expect(post.topic.title).to eq("override title")
+        expect(post.raw).to eq("override raw")
+      end
     end
   end
 

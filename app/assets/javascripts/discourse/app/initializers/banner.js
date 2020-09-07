@@ -16,8 +16,8 @@ export default {
       return;
     }
 
-    messageBus.subscribe("/site/banner", function(ban) {
+    messageBus.subscribe("/site/banner", function (ban) {
       site.set("banner", EmberObject.create(ban || {}));
     });
-  }
+  },
 };

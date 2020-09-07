@@ -4,7 +4,7 @@ import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
 import discourseComputed, {
   on,
-  observes
+  observes,
 } from "discourse-common/utils/decorators";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { htmlSafe } from "@ember/template";
@@ -21,7 +21,7 @@ const LogsNotice = EmberObject.extend({
     const text = this.keyValueStore.getItem(LOGS_NOTICE_KEY);
     if (text) this.set("text", text);
 
-    this.messageBus.subscribe("/logs_error_rate_exceeded", data => {
+    this.messageBus.subscribe("/logs_error_rate_exceeded", (data) => {
       const duration = data.duration;
       const rate = data.rate;
       let siteSettingLimit = 0;
@@ -43,7 +43,7 @@ const LogsNotice = EmberObject.extend({
           ),
           rate,
           limit: siteSettingLimit,
-          url: getURL("/logs")
+          url: getURL("/logs"),
         })
       );
     });
@@ -80,7 +80,7 @@ const LogsNotice = EmberObject.extend({
   )
   isActivated(errorsPerHour, errorsPerMinute) {
     return errorsPerHour > 0 || errorsPerMinute > 0;
-  }
+  },
 });
 
 export default LogsNotice;

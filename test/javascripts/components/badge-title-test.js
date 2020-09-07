@@ -14,13 +14,13 @@ componentTest("badge title", {
     this.set("selectableUserBadges", [
       EmberObject.create({
         id: 0,
-        badge: { name: "(none)" }
+        badge: { name: "(none)" },
       }),
       EmberObject.create({
         id: 42,
         badge_id: 102,
-        badge: { name: "Test" }
-      })
+        badge: { name: "Test" },
+      }),
     ]);
   },
 
@@ -28,11 +28,11 @@ componentTest("badge title", {
     pretender.put("/u/eviltrout/preferences/badge_title", () => [
       200,
       { "Content-Type": "application/json" },
-      {}
+      {},
     ]);
     await this.subject.expand();
     await this.subject.selectRowByValue(42);
     await click(".btn");
     assert.equal(this.currentUser.title, "Test");
-  }
+  },
 });

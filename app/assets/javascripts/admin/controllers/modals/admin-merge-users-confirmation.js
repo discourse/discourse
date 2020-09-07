@@ -18,7 +18,7 @@ export default Controller.extend(ModalFunctionality, {
   text(username, targetUsername) {
     return I18n.t(`admin.user.merge.confirmation.text`, {
       username,
-      targetUsername
+      targetUsername,
     });
   },
 
@@ -36,5 +36,5 @@ export default Controller.extend(ModalFunctionality, {
   @action
   close() {
     this.send("closeModal");
-  }
+  },
 });

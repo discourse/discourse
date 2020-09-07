@@ -30,9 +30,9 @@ export default {
             id: "share",
             title: "topic.share.extended_title",
             model: {
-              topic: this.topic
-            }
-          }
+              topic: this.topic,
+            },
+          },
         ];
 
         if (this.canInviteTo && !this.inviteDisabled) {
@@ -50,14 +50,14 @@ export default {
             id: "invite",
             title: invitePanelTitle,
             model: {
-              inviteModel: this.topic
-            }
+              inviteModel: this.topic,
+            },
           });
         }
 
         showModal("share-and-invite", {
           modalClass: "share-and-invite",
-          panels
+          panels,
         });
       },
       dropdown() {
@@ -70,8 +70,8 @@ export default {
         "canInviteTo",
         "inviteDisabled",
         "isPM",
-        "invitingToTopic"
-      ]
+        "invitingToTopic",
+      ],
     });
 
     registerTopicFooterButton({
@@ -91,7 +91,7 @@ export default {
           this.get("topic.details.can_flag_topic") &&
           !this.get("topic.isPrivateMessage")
         );
-      }
+      },
     });
 
     registerTopicFooterButton({
@@ -123,7 +123,7 @@ export default {
               reminder_at: formattedReminderTime(
                 bookmark_reminder_at,
                 currentUser.resolvedTimezone(currentUser)
-              )
+              ),
             });
           }
           return I18n.t("bookmarked.help.unbookmark");
@@ -133,7 +133,7 @@ export default {
       action: "toggleBookmark",
       dropdown() {
         return this.site.mobileView;
-      }
+      },
     });
 
     registerTopicFooterButton({
@@ -155,14 +155,14 @@ export default {
         "archiveIcon",
         "archiveLabel",
         "archiveTitle",
-        "toggleArchiveMessage"
+        "toggleArchiveMessage",
       ],
       dropdown() {
         return this.site.mobileView;
       },
       displayed() {
         return this.canArchive;
-      }
+      },
     });
 
     registerTopicFooterButton({
@@ -177,7 +177,7 @@ export default {
       },
       dropdown() {
         return this.site.mobileView;
-      }
+      },
     });
-  }
+  },
 };

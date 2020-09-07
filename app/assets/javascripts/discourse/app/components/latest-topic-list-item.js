@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import {
   showEntrance,
-  navigateToTopic
+  navigateToTopic,
 } from "discourse/components/topic-list-item";
 
 export default Component.extend({
@@ -10,7 +10,7 @@ export default Component.extend({
     ":latest-topic-list-item",
     "topic.archived",
     "topic.visited",
-    "topic.pinned"
+    "topic.pinned",
   ],
 
   showEntrance,
@@ -26,5 +26,5 @@ export default Component.extend({
   },
 
   // Can be overwritten by plugins to handle clicks on other parts of the row
-  unhandledRowClick() {}
+  unhandledRowClick() {},
 });

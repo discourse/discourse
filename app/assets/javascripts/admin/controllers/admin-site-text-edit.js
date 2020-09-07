@@ -27,11 +27,11 @@ export default Controller.extend(bufferedProperty("siteText"), {
 
     revertChanges() {
       this.set("saved", false);
-      bootbox.confirm(I18n.t("admin.site_text.revert_confirm"), result => {
+      bootbox.confirm(I18n.t("admin.site_text.revert_confirm"), (result) => {
         if (result) {
           this.siteText
             .revert()
-            .then(props => {
+            .then((props) => {
               const buffered = this.buffered;
               buffered.setProperties(props);
               this.commitBuffer();
@@ -39,6 +39,6 @@ export default Controller.extend(bufferedProperty("siteText"), {
             .catch(popupAjaxError);
         }
       });
-    }
-  }
+    },
+  },
 });

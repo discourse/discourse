@@ -1,6 +1,6 @@
 const rule = {
   tag: "details",
-  before: function(state, tagInfo) {
+  before: function (state, tagInfo) {
     const attrs = tagInfo.attrs;
     state.push("bbcode_open", "details", 1);
     state.push("bbcode_open", "summary", 1);
@@ -11,9 +11,9 @@ const rule = {
     state.push("bbcode_close", "summary", -1);
   },
 
-  after: function(state) {
+  after: function (state) {
     state.push("bbcode_close", "details", -1);
-  }
+  },
 };
 
 export function setup(helper) {
@@ -22,10 +22,10 @@ export function setup(helper) {
     "summary[title]",
     "details",
     "details[open]",
-    "details.elided"
+    "details.elided",
   ]);
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.block.bbcode.ruler.push("details", rule);
   });
 }

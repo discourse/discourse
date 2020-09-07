@@ -3,11 +3,11 @@ import Site from "discourse/models/site";
 
 QUnit.module("model:site");
 
-QUnit.test("create", assert => {
+QUnit.test("create", (assert) => {
   assert.ok(Site.create(), "it can create with no parameters");
 });
 
-QUnit.test("instance", assert => {
+QUnit.test("instance", (assert) => {
   const site = Site.current();
 
   assert.present(site, "We have a current site singleton");
@@ -25,14 +25,14 @@ QUnit.test("instance", assert => {
   );
 });
 
-QUnit.test("create categories", assert => {
+QUnit.test("create categories", (assert) => {
   const store = createStore();
   const site = store.createRecord("site", {
     categories: [
       { id: 1234, name: "Test" },
       { id: 3456, name: "Test Subcategory", parent_category_id: 1234 },
-      { id: 3458, name: "Invalid Subcategory", parent_category_id: 6666 }
-    ]
+      { id: 3458, name: "Invalid Subcategory", parent_category_id: 6666 },
+    ],
   });
 
   const categories = site.get("categories");

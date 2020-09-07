@@ -3,13 +3,13 @@ import { hrefAllowed } from "pretty-text/sanitizer";
 
 QUnit.module("lib:sanitizer");
 
-QUnit.test("sanitize", assert => {
+QUnit.test("sanitize", (assert) => {
   const pt = new PrettyText(
     buildOptions({
       siteSettings: {
         allowed_iframes:
-          "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?"
-      }
+          "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?",
+      },
     })
   );
   const cooked = (input, expected, text) =>
@@ -130,7 +130,7 @@ QUnit.test("sanitize", assert => {
   cooked(`<div dir="rtl">RTL text</div>`, `<div dir="rtl">RTL text</div>`);
 });
 
-QUnit.test("ids on headings", assert => {
+QUnit.test("ids on headings", (assert) => {
   const pt = new PrettyText(buildOptions({ siteSettings: {} }));
   assert.equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
   assert.equal(
@@ -159,7 +159,7 @@ QUnit.test("ids on headings", assert => {
   );
 });
 
-QUnit.test("poorly formed ids on headings", assert => {
+QUnit.test("poorly formed ids on headings", (assert) => {
   let pt = new PrettyText(buildOptions({ siteSettings: {} }));
   assert.equal(
     pt.sanitize(`<h1 id="evil-trout">Test Heading</h1>`),
@@ -187,7 +187,7 @@ QUnit.test("poorly formed ids on headings", assert => {
   );
 });
 
-QUnit.test("urlAllowed", assert => {
+QUnit.test("urlAllowed", (assert) => {
   const allowed = (url, msg) => assert.equal(hrefAllowed(url), url, msg);
 
   allowed("/foo/bar.html", "allows relative urls");

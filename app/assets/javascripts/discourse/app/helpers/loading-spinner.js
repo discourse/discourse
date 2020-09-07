@@ -9,7 +9,7 @@ function renderSpinner(cssClass) {
 }
 var spinnerHTML = renderSpinner();
 
-export default htmlHelper(params => {
+export default htmlHelper((params) => {
   const hash = params.hash;
   return renderSpinner(hash && hash.size ? hash.size : undefined);
 });

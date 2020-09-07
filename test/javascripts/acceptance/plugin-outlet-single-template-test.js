@@ -11,10 +11,10 @@ acceptance("Plugin Outlet - Single Template", {
 
   afterEach() {
     delete Ember.TEMPLATES[CONNECTOR];
-  }
+  },
 });
 
-QUnit.test("Renders a template into the outlet", async assert => {
+QUnit.test("Renders a template into the outlet", async (assert) => {
   await visit("/u/eviltrout");
   assert.ok(
     find(".user-profile-primary-outlet.hello").length === 1,

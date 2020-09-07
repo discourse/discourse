@@ -12,7 +12,7 @@ export default DiscourseRoute.extend({
       model,
       username: this.currentUser.get("username"),
       lastSeen: oneWeekAgo(),
-      showHtml: true
+      showHtml: true,
     });
-  }
+  },
 });
