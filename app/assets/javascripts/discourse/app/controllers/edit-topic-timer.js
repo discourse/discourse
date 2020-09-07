@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import { alias } from "@ember/object/computed";
 import EmberObject, { setProperties } from "@ember/object";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -58,24 +59,7 @@ export default Controller.extend(ModalFunctionality, {
     return types;
   },
 
-  @discourseComputed()
-  privateTimerTypes() {
-    return [{ id: REMINDER_TYPE, name: I18n.t("topic.reminder.title") }];
-  },
-
-  @discourseComputed("isPublic", "publicTimerTypes", "privateTimerTypes")
-  selections(isPublic, publicTimerTypes, privateTimerTypes) {
-    return "true" === isPublic ? publicTimerTypes : privateTimerTypes;
-  },
-
-  @discourseComputed(
-    "isPublic",
-    "model.topic_timer",
-    "model.private_topic_timer"
-  )
-  topicTimer(isPublic, publicTopicTimer, privateTopicTimer) {
-    return "true" === isPublic ? publicTopicTimer : privateTopicTimer;
-  },
+  topicTimer: alias("model.topic_timer"),
 
   _setTimer(time, duration, statusType, basedOnLastPost, categoryId) {
     this.set("loading", true);
@@ -100,9 +84,7 @@ export default Controller.extend(ModalFunctionality, {
 
           this.set("model.closed", result.closed);
         } else {
-          const topicTimer =
-            this.isPublic === "true" ? "topic_timer" : "private_topic_timer";
-          this.set(`model.${topicTimer}`, EmberObject.create({}));
+          this.set("model.topic_timer", EmberObject.create({}));
 
           this.setProperties({
             selection: null,
