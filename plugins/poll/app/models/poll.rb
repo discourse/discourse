@@ -55,7 +55,7 @@ class Poll < ActiveRecord::Base
   end
 
   def has_voted?(user)
-    user&.id && poll_votes.any? { |v| v.user_id == user.id }
+    user&.id && poll_votes.where(user_id: user.id).exists?
   end
 
   def can_see_voters?(user)
