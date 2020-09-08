@@ -206,6 +206,11 @@ class Plugin::Instance
     Search.advanced_filter(trigger, &block)
   end
 
+  # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems
+  def register_search_topic_eager_load(&block)
+    Search.custom_topic_eager_load(&block)
+  end
+
   # Request a new size for topic thumbnails
   # Will respect plugin enabled setting is enabled
   # Size should be an array with two elements [max_width, max_height]

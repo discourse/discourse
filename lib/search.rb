@@ -292,6 +292,14 @@ class Search
     @advanced_filters
   end
 
+  def self.custom_topic_eager_load(&block)
+    (@custom_topic_eager_loads ||= []) << block
+  end
+
+  def self.custom_topic_eager_loads
+    Array.wrap(@custom_topic_eager_loads)
+  end
+
   advanced_filter(/^in:personal-direct$/) do |posts|
     if @guardian.user
       posts
@@ -1189,6 +1197,10 @@ class Search
 
     if SiteSetting.tagging_enabled
       topic_eager_loads << :tags
+    end
+
+    Search.custom_topic_eager_loads.each do |block|
+      block.call(topic_eager_loads, search_pms: @search_pms)
     end
 
     query.includes(topic: topic_eager_loads)
