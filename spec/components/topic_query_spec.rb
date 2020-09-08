@@ -1157,7 +1157,9 @@ describe TopicQuery do
     end
 
     it 'should return the right list for an admin not part of the group' do
-      topics = TopicQuery.new(nil, group_name: group.name)
+      group.update!(name: group.name.capitalize)
+
+      topics = TopicQuery.new(nil, group_name: group.name.upcase)
         .list_private_messages_group(Fabricate(:admin))
         .topics
 
