@@ -273,6 +273,21 @@ describe Stylesheet::Manager do
 
       expect(stylesheet).to include("--special: rebeccapurple")
     end
+
+    context 'encoded slugs' do
+      before { SiteSetting.slug_generation_method = 'encoded' }
+      after { SiteSetting.slug_generation_method = 'ascii' }
+
+      it "strips unicode in color scheme stylesheet filenames" do
+        cs = Fabricate(:color_scheme, name: 'Grün')
+        cs2 = Fabricate(:color_scheme, name: '어두운')
+
+        link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(cs.id)
+        expect(link).to include("/stylesheets/color_definitions_grun_#{cs.id}_")
+        link2 = Stylesheet::Manager.color_scheme_stylesheet_link_tag(cs2.id)
+        expect(link2).to include("/stylesheets/color_definitions_scheme_#{cs2.id}_")
+      end
+    end
   end
 
   # this test takes too long, we don't run it by default

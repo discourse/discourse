@@ -313,7 +313,7 @@ class Stylesheet::Manager
     if is_theme?
       "#{@target}_#{theme.id}"
     elsif @color_scheme
-      "#{@target}_#{Slug.for(@color_scheme.name)}_#{@color_scheme&.id.to_s}"
+      "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}"
     else
       scheme_string = theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"
@@ -331,6 +331,10 @@ class Stylesheet::Manager
 
   def is_theme?
     !!(@target.to_s =~ THEME_REGEX)
+  end
+
+  def scheme_slug
+    Slug.for(ActiveSupport::Inflector.transliterate(@color_scheme.name), 'scheme')
   end
 
   # digest encodes the things that trigger a recompile
