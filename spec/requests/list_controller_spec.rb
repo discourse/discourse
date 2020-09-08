@@ -408,9 +408,9 @@ RSpec.describe ListController do
         end
 
         context "with invalid slug" do
-          xit "redirects" do
+          it "redirects" do
             get "/c/random_slug/another_random_slug/#{child_category.id}/l/latest"
-            expect(response).to redirect_to(child_category.url)
+            expect(response).to redirect_to("#{child_category.url}/l/latest")
           end
         end
       end
