@@ -18,7 +18,6 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     current_post_number
     chunk_size
     topic_timer
-    private_topic_timer
     details
     image_url
   }.each do |attr|
