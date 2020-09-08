@@ -531,22 +531,15 @@ class TopicQuery
     result = Topic.includes(:tags)
 
     if type == :group
-      result = result.includes(:allowed_users)
-      result = result.where("
-        topics.id IN (
-          SELECT topic_id FROM topic_allowed_groups
-          WHERE (
-            group_id IN (
-              SELECT group_id
-              FROM group_users
-              WHERE user_id = #{user.id.to_i}
-              OR #{user.staff?}
-            )
-          )
-          AND group_id IN (SELECT id FROM groups WHERE name ilike ?)
-        )",
-        @options[:group_name]
-      )
+      result = result
+        .includes(:allowed_users)
+        .joins("INNER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id IN (SELECT id FROM groups WHERE name ilike '#{sanitize_sql_array([@options[:group_name]])}')")
+
+      unless user.admin?
+        result = result.joins("INNER JOIN group_users gu ON gu.group_id = tag.group_id AND gu.user_id = #{user.id.to_i}")
+      end
+
+      result
     elsif type == :user
       result = result.includes(:allowed_users)
       result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
