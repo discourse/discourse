@@ -183,8 +183,17 @@ RSpec.describe ListController do
     describe 'with unicode_usernames' do
       before { SiteSetting.unicode_usernames = false }
 
+      it 'should return the right response when user does not belong to group' do
+        Fabricate(:private_message_topic, allowed_groups: [group])
+
+        group.remove(user)
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(404)
+      end
+
       it 'should return the right response' do
-        group.add(user)
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
         get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
 
