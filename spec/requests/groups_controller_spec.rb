@@ -357,7 +357,7 @@ describe GroupsController do
 
       get "/groups/#{group.name}.json"
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "returns the right response" do
@@ -430,7 +430,7 @@ describe GroupsController do
 
       get "/groups/#{group.name}/posts.json"
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "ensures the group members can be seen" do
@@ -473,7 +473,7 @@ describe GroupsController do
 
       get "/groups/#{group.name}/members.json"
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     it "ensures the group members can be seen" do
@@ -1888,7 +1888,7 @@ describe GroupsController do
 
       get "/groups/#{group.name}/permissions.json"
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
     end
 
     describe "with varying category permissions" do
