@@ -88,7 +88,7 @@ class NewPostManager
 
     return :post_count if (
       user.trust_level <= TrustLevel.levels[:basic] &&
-      user.post_count < SiteSetting.approve_post_count
+      (user.post_count + user.topic_count) < SiteSetting.approve_post_count
     )
 
     return :trust_level if user.trust_level < SiteSetting.approve_unless_trust_level.to_i

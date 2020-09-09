@@ -71,6 +71,32 @@ describe NewPostManager do
       end
     end
 
+    context 'basic post/topic count restrictions' do
+      before do
+        SiteSetting.approve_post_count = 1
+      end
+
+      it "works with a correct `user_stat.post_count`" do
+        result = NewPostManager.default_handler(manager)
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
+
+        manager.user.user_stat.update(post_count: 1)
+        result = NewPostManager.default_handler(manager)
+        expect(result).to eq(nil)
+      end
+
+      it "works with a correct `user_stat.topic_count`" do
+        result = NewPostManager.default_handler(manager)
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
+
+        manager.user.user_stat.update(topic_count: 1)
+        result = NewPostManager.default_handler(manager)
+        expect(result).to eq(nil)
+      end
+    end
+
     context 'with a high approval post count and TL0' do
       before do
         SiteSetting.approve_post_count = 100
