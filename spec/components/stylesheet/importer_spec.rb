@@ -142,10 +142,12 @@ describe Stylesheet::Importer do
     let(:scss) { ":root { --custom-color: green}" }
     let(:scss_child) { ":root { --custom-color: red}" }
 
-    let(:theme) { Fabricate(:theme).tap { |t|
-      t.set_field(target: :common, name: "color_definitions", value: scss)
-      t.save!
-    }}
+    let(:theme) do
+      Fabricate(:theme).tap do |t|
+        t.set_field(target: :common, name: "color_definitions", value: scss)
+        t.save!
+      end
+    end
 
     let(:child) { Fabricate(:theme, component: true).tap { |t|
       t.set_field(target: :common, name: "color_definitions", value: scss_child)
