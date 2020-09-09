@@ -408,9 +408,25 @@ module PrettyText
     doc.css("a[href]").each do |a|
       if Upload.secure_media_url?(a["href"])
         target = %w(video audio).include?(a&.parent&.name) ? a.parent : a
-        target.replace "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>"
+        next if target.to_s.include?("stripped-secure-view-media")
+        target.add_next_sibling secure_media_placeholder(doc, a['href'])
+        target.remove
       end
     end
+    doc.css('img[src]').each do |img|
+      if Upload.secure_media_url?(img['src'])
+        img.add_next_sibling secure_media_placeholder(doc, img['src'])
+        img.remove
+      end
+    end
+  end
+
+  def self.secure_media_placeholder(doc, url)
+    <<~HTML
+    <div class="secure-media-notice" data-stripped-secure-media="#{url}">
+      #{I18n.t('emails.secure_media_placeholder')} <a class='stripped-secure-view-media' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
+    </div>
+    HTML
   end
 
   def self.format_for_email(html, post = nil)

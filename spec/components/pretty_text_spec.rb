@@ -928,6 +928,40 @@ describe PrettyText do
         expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
         expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
       end
+
+      it "replaces secure media within a link with a placeholder, keeping the url in an attribute" do
+        url = "#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png"
+        html = <<~HTML
+        <a href=\"#{url}\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>
+        HTML
+        md = PrettyText.format_for_email(html, post)
+        expect(md).not_to include('<img')
+        expect(md).to include("Redacted")
+        expect(md).to include("data-stripped-secure-media=\"#{url}\"")
+      end
+
+      it "does not create nested redactions from double processing because of the view media link" do
+        url = "#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png"
+        html = <<~HTML
+        <a href=\"#{url}\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>
+        HTML
+        md = PrettyText.format_for_email(html, post)
+        md = PrettyText.format_for_email(md, post)
+
+        expect(md.scan(/stripped-secure-view-media/).length).to eq(1)
+        expect(md.scan(/Redacted/).length).to eq(1)
+      end
+
+      it "replaces secure images with a placeholder, keeping the url in an attribute" do
+        url = "/secure-media-uploads/original/1X/testimage.png"
+        html = <<~HTML
+        <img src=\"#{url}\">
+        HTML
+        md = PrettyText.format_for_email(html, post)
+        expect(md).not_to include('<img')
+        expect(md).to include("Redacted")
+        expect(md).to include("data-stripped-secure-media=\"#{url}\"")
+      end
     end
   end
 
