@@ -380,16 +380,21 @@ HTML
       (function () {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
           var __theme_name__ = "awesome theme\\\"";
+
           var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
           var themePrefix = function themePrefix(key) {
-            return 'theme_translations.#{theme.id}.' + key;
+            return "theme_translations.#{theme.id}.".concat(key);
           };
 
           Discourse._registerPluginCode('1.0', function (api) {
             try {
-              alert(settings.name);var a = function a() {};
+              alert(settings.name);
+
+              var a = function a() {};
             } catch (err) {
               var rescue = require("discourse/lib/utilities").rescueThemeError;
+
               rescue(__theme_name__, err, api);
             }
           });
@@ -416,16 +421,21 @@ HTML
       (function () {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
           var __theme_name__ = "awesome theme\\\"";
+
           var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
           var themePrefix = function themePrefix(key) {
-            return 'theme_translations.#{theme.id}.' + key;
+            return "theme_translations.#{theme.id}.".concat(key);
           };
 
           Discourse._registerPluginCode('1.0', function (api) {
             try {
-              alert(settings.name);var a = function a() {};
+              alert(settings.name);
+
+              var a = function a() {};
             } catch (err) {
               var rescue = require("discourse/lib/utilities").rescueThemeError;
+
               rescue(__theme_name__, err, api);
             }
           });
