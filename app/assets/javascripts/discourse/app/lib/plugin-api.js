@@ -60,9 +60,10 @@ import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profil
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.10.2";
+const PLUGIN_API_VERSION = "0.11.0";
 
 class PluginApi {
   constructor(version, container) {
@@ -1179,6 +1180,30 @@ class PluginApi {
 
   addFeaturedLinkMetaDecorator(decorator) {
     addFeaturedLinkMetaDecorator(decorator);
+  }
+
+  /**
+   * Adds items to dropdown's in search-advanced-options.
+   *
+   * ```
+   * api.addAdvancedSearchOptions({
+   *   inOptionsForUsers:[{
+   *     name: I18n.t("search.advanced.in.assigned"),
+   *     value: "assigned",
+   *   },
+   *   {
+   *     name: I18n.t("search.advanced.in.not_assigned"),
+   *     value: "not_assigned",
+   *   },]
+   *   statusOptions: [{
+   *     name: I18n.t("search.advanced.status.open"),
+   *     value: "open"
+   *   }]
+   * ```
+   *
+   **/
+  addAdvancedSearchOptions(options) {
+    addAdvancedSearchOptions(options);
   }
 }
 
