@@ -152,8 +152,12 @@ module Stylesheet
         contents << "\n\n"
       end
 
-      if theme_id
-        Theme.list_baked_fields([theme_id], :common, :color_definitions).each do |row|
+      theme_id ||= SiteSetting.default_theme_id
+      resolved_ids = Theme.transform_ids([theme_id])
+
+      if resolved_ids
+        contents << " @import \"theme_variables\";"
+        Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |row|
           contents << "// Color definitions from #{Theme.find_by_id(theme_id)&.name}\n\n"
           contents << row.value
         end
