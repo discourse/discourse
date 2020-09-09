@@ -177,4 +177,21 @@ describe Onebox::Engine::AllowlistedGenericOnebox do
     end
   end
 
+  describe 'missing description' do
+    context 'works without description' do
+      let(:cnn_url) { "https://edition.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html" }
+      before do
+        fake(cnn_url, response('cnn'))
+      end
+
+      it 'shows basic onebox' do
+        onebox = described_class.new(cnn_url)
+        expect(onebox.to_html).not_to be_nil
+        expect(onebox.to_html).to include("https://edition.cnn.com/2020/05/15/health/gallery/coronavirus-people-adopting-pets-photos/index.html")
+        expect(onebox.to_html).to include("https://cdn.cnn.com/cnnnext/dam/assets/200427093451-10-coronavirus-people-adopting-pets-super-tease.jpg")
+        expect(onebox.to_html).to include("People are fostering and adopting pets during the pandemic")
+      end
+    end
+  end
+
 end

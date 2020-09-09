@@ -292,8 +292,7 @@ module Onebox
       end
 
       def has_text?
-        !Onebox::Helpers.blank?(data[:title]) &&
-        !Onebox::Helpers.blank?(data[:description])
+        !Onebox::Helpers.blank?(data[:title])
       end
 
       def is_image?
