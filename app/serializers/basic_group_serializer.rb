@@ -134,11 +134,23 @@ class BasicGroupSerializer < ApplicationSerializer
 
   [:watching, :regular, :tracking, :watching_first_post, :muted].each do |level|
     define_method("#{level}_category_ids") do
-      GroupCategoryNotificationDefault.lookup(object, level).pluck(:category_id)
+      @group_category_notification_defaults ||= begin
+        GroupCategoryNotificationDefault.where(group: object).pluck(:category_id)
+      end
+
+      @group_category_notification_defaults.filter do |default|
+        default.notification_level == NotificationLevels.all[level]
+      end
     end
 
     define_method("#{level}_tags") do
-      GroupTagNotificationDefault.lookup(object, level).joins(:tag).pluck('tags.name')
+      @group_tag_notification_defaults ||= begin
+        GroupTagNotificationDefault.where(group: object).joins(:tag).pluck('tags.name')
+      end
+
+      @group_tag_notification_defaults.filter do |default|
+        default.notification_level == NotificationLevels.all[level]
+      end
     end
   end
 
