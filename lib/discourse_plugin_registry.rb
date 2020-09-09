@@ -68,6 +68,7 @@ class DiscoursePluginRegistry
   define_register :vendored_pretty_text, Set
   define_register :vendored_core_pretty_text, Set
   define_register :seedfu_filter, Set
+  define_register :permitted_bulk_action_parameters, Set
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -207,6 +208,10 @@ class DiscoursePluginRegistry
 
   def self.register_seedfu_filter(filter = nil)
     self.seedfu_filter << filter
+  end
+
+  def self.register_permitted_bulk_action_parameters(filter = nil)
+    self.permitted_bulk_action_parameters << filter
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {

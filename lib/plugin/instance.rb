@@ -899,4 +899,8 @@ class Plugin::Instance
     end
     nil
   end
+
+  def register_permitted_bulk_action_parameter(name = nil)
+    DiscoursePluginRegistry.register_permitted_bulk_action_parameters(name)
+  end
 end
