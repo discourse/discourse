@@ -209,7 +209,6 @@ describe NewPostManager do
     end
 
     context 'with a fast typer' do
-      let(:manager) { NewPostManager.new(topic.user, raw: 'this is new post content', topic_id: topic.id, first_post_checks: true) }
       let(:user) { manager.user }
 
       before do
@@ -217,11 +216,26 @@ describe NewPostManager do
       end
 
       it "adds the silence reason in the system locale" do
+        manager = build_manager_with('this is new post content')
         I18n.with_locale(:fr) do # Simulate french user
           result = NewPostManager.default_handler(manager)
         end
         expect(user.silenced?).to eq(true)
         expect(user.silence_reason).to eq(I18n.t("user.new_user_typed_too_fast", locale: :en))
+      end
+
+      it 'runs the watched words check before checking if the user is a fast typer' do
+        Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
+        manager = build_manager_with('this is darn new post content')
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:watched_word)
+      end
+
+      def build_manager_with(raw)
+        NewPostManager.new(topic.user, raw: raw, topic_id: topic.id, first_post_checks: true)
       end
     end
 
