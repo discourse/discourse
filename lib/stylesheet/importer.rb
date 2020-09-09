@@ -152,7 +152,7 @@ module Stylesheet
         contents << "\n\n"
       end
 
-      theme_id = theme_id || SiteSetting.default_theme_id
+      theme_id ||= SiteSetting.default_theme_id
       resolved_ids = Theme.transform_ids([theme_id])
 
       if resolved_ids
