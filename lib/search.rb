@@ -292,8 +292,8 @@ class Search
     @advanced_filters
   end
 
-  def self.custom_topic_eager_load(&block)
-    (@custom_topic_eager_loads ||= []) << block
+  def self.custom_topic_eager_load(tables, &block)
+    (@custom_topic_eager_loads ||= []) << (tables || block)
   end
 
   def self.custom_topic_eager_loads
@@ -1199,8 +1199,8 @@ class Search
       topic_eager_loads << :tags
     end
 
-    Search.custom_topic_eager_loads.each do |block|
-      block.call(topic_eager_loads, search_pms: @search_pms)
+    Search.custom_topic_eager_loads.each do |custom_loads|
+      topic_eager_loads = custom_loads.is_a?(Array) ? custom_loads : custom_loads.call(search_pms: @search_pms).to_a
     end
 
     query.includes(topic: topic_eager_loads)
