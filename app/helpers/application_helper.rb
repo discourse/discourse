@@ -402,13 +402,16 @@ module ApplicationHelper
   end
 
   def scheme_id
+    return @scheme_id if defined?(@scheme_id)
+
     custom_user_scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
     if custom_user_scheme_id && ColorScheme.find_by_id(custom_user_scheme_id)
       return custom_user_scheme_id
     end
 
     return if theme_ids.blank?
-    Theme
+
+    @scheme_id = Theme
       .where(id: theme_ids.first)
       .pluck(:color_scheme_id)
       .first
