@@ -3823,7 +3823,7 @@ zh_CN:
             removed_unsuspend_user: "禁止的用户（已移除）"
             grant_badge: "授予徽章"
             revoke_badge: "撤销徽章"
-            check_email: "检查电子邮件"
+            check_email: "查看电子邮件"
             delete_topic: "删除主题"
             recover_topic: "撤销删除帖子"
             delete_post: "删除帖子"

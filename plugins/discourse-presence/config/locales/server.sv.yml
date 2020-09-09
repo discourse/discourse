@@ -6,5 +6,5 @@
 
 sv:
   site_settings:
-    presence_enabled: "Visa användare som just nu svarar på nuvarande ämnet, eller redigerar nuvarande inlägg?"
-    presence_max_users_shown: "Maximalt antal användare visade."
+    presence_enabled: "Vill du visa användarna som just nu svarar på aktuellt ämne, eller redigerar aktuellt inlägg?"
+    presence_max_users_shown: "Maximalt antal användare visas."

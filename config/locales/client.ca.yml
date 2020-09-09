@@ -26,7 +26,10 @@ ca:
         millions: "%{number}M"
     dates:
       time: "h:mm a"
+      time_with_zone: "HH:mm (z)"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM YYYY HH:mm"
@@ -116,6 +119,9 @@ ca:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber}"
       close: "tanca"
+      twitter: "Comparteix en Twitter"
+      facebook: "Comparteix en Facebook"
+      email: "Envia per correu electrònic"
     action_codes:
       public_topic: "tema fet públic %{when}"
       private_topic: "s'ha convertit el tema en un missatge personal %{when}"
@@ -147,6 +153,7 @@ ca:
       banner:
         enabled: "convertit en bàner %{when}. Apareixerà a dalt de cada pàgina fins que sigui descartat per l'usuari."
         disabled: "ha suprimit aquest bàner %{when}. No apareixerà més a dalt de cada pàgina."
+      forwarded: "el missatge de dalt s'ha reenviat"
     topic_admin_menu: "accions del tema"
     wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
@@ -254,18 +261,37 @@ ca:
       help:
         bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
+        unbookmark_with_reminder: "Feu clic per a eliminar tots els marcadors i recordatoris d’aquest tema. Teniu un recordatori establert %{reminder_at} per a aquest tema."
     bookmarks:
+      created: "Heu marcat com a preferida aquesta publicació. %{name}"
       not_bookmarked: "marca aquesta publicació com a preferit"
       remove: "Elimina preferit"
       confirm_clear: "Esteu segur que voleu eliminar tots els preferits d'aquest tema?"
       save: "Desa"
+      auto_delete_preference:
+        never: "Mai"
+        when_reminder_sent: "Una vegada enviat el recordatori"
+        on_owner_reply: "Després de respondre a aquest tema"
+      search_placeholder: "Cerqueu preferits per nom, títol del tema o contingut de la publicació"
       search: "Cerca"
       reminders:
         later_today: "Més tard avui"
+        next_business_day: "El pròxim dia feiner"
         tomorrow: "Demà"
         next_week: "La setmana que ve"
         later_this_week: "Més avant aquesta setmana"
+        start_of_next_business_week: "Dilluns"
+        start_of_next_business_week_alt: "Dilluns vinent"
         next_month: "El mes que ve"
+        custom: "Data i hora personalitzades"
+        last_custom: "Darrer"
+        none: "No cal cap recordatori"
+        today_with_time: "avui a les %{time}"
+        tomorrow_with_time: "demà a les %{time}"
+        at_time: "%{date_time}"
+        existing_reminder: "Teniu un recordatori definit per a aquest preferit que se us enviarà: %{at_date_time}"
+    copy_codeblock:
+      copied: "copiat!"
     drafts:
       resume: "Reprèn"
       remove: "Elimina"
@@ -318,6 +344,7 @@ ca:
       none_found: "No s'han trobat missatges."
       title:
         search: "Cerqueu un missatge"
+        placeholder: "escriviu aquí el títol, l'URL o l'identificador del missatge"
     review:
       order_by: "Ordena per"
       in_reply_to: "en resposta a"
@@ -375,6 +402,7 @@ ca:
       deleted_user: "(usuari suprimit)"
       user:
         bio: "Biografia"
+        website: "Lloc web"
         username: "Nom d'usuari"
         email: "Correu electrònic"
         name: "Nom"
@@ -420,6 +448,7 @@ ca:
         category: "Categoria"
         orders:
           score: "Puntuació"
+          score_asc: "Puntuació (inversa)"
           created_at: "Creat"
           created_at_asc: "Creat (invers)"
         priority:
@@ -500,6 +529,7 @@ ca:
       days_visited_long: "Dies visitats"
       posts_read: "Llegit"
       posts_read_long: "Publicacions llegides"
+      last_updated: "Última actualització:"
       total_rows:
         one: "%{count} usuari"
         other: "%{count} usuaris"
@@ -513,6 +543,12 @@ ca:
     groups:
       member_added: "Afegit"
       member_requested: "Sol·licitat"
+      add_members:
+        title: "Afegeix membres a %{group_name}"
+        description: "També podeu enganxar una llista separada per comes."
+        usernames: "Introduïu noms d’usuari o adreces de correu electrònic"
+        input_placeholder: "Noms d’usuari o correus electrònics"
+        notify_users: "Notifiqueu els usuaris"
       requests:
         title: "Sol·licituds"
         reason: "Motiu"
@@ -537,6 +573,13 @@ ca:
         email:
           title: "Correu electrònic"
           credentials:
+            title: "Credencials"
+            smtp_server: "Servidor SMTP"
+            smtp_port: "Port SMTP"
+            smtp_ssl: "Utilitza SSL per a SMTP"
+            imap_server: "Servidor IMAP"
+            imap_port: "Port IMAP"
+            imap_ssl: "Utilitza SSL per a SMTP"
             username: "Nom d'usuari"
             password: "Contrasenya"
         membership:
@@ -776,12 +819,23 @@ ca:
       first_notification: "La vostra primera notificació! Seleccioneu-la per a començar."
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
+      color_schemes:
+        default_description: "Per defecte"
+        disable_dark_scheme: "Igual que habitualment"
+        dark_instructions: "Podeu previsualitzar l’esquema de colors del mode fosc alternant el mode fosc del dispositiu."
+        undo: "Restableix"
+        regular: "Habitual"
+        dark: "Mode fosc"
+        default_dark_scheme: "(lloc predeterminat)"
+      dark_mode: "Mode fosc"
+      dark_mode_enable: "Activa l'esquema de colors automàtic en mode fosc"
       text_size_default_on_all_devices: "Fes que aquesta sigui la mida de text predeterminada en tots els meus dispositius"
       allow_private_messages: "Permet a altres usuaris d'enviar-me missatges personals"
       external_links_in_new_tab: "Obre tots els enllaços externs en una pestanya nova"
       enable_quoting: "Permet citar la resposta en el text destacat"
       enable_defer: "Habilita l'ajornament per a marcar temes no llegits"
       change: "canvia"
+      featured_topic: "Tema destacat"
       moderator: "%{user} és un moderador"
       admin: "%{user} és un administrador"
       moderator_tooltip: "Aquest usuari és un moderador."
@@ -821,6 +875,8 @@ ca:
       muted_categories: "Silenciat"
       muted_categories_instructions: "No us notificarem res sobre temes nous en aquestes categories, i no apareixeran en les pàgines de categories o de més recents."
       muted_categories_instructions_dont_hide: "No sereu notificat de res sobre temes nous en aquestes categories."
+      regular_categories: "Habitual"
+      regular_categories_instructions: "Veureu aquestes categories en les llistes de temes \"Darrers\" i \"Principals\"."
       no_category_access: "Com a moderador teniu accés limitat a la categoria. Desar està inhabilitat."
       delete_account: "Suprimeix el meu compte"
       delete_account_confirm: "Esteu segur que voleu suprimir el vostre compte permanentment? Aquesta acció no es pot desfer!"
@@ -967,11 +1023,17 @@ ca:
         primary: "Adreça de correu primària"
         secondary: "Adreces de correu secundàries"
         primary_label: "primari"
+        resending_label: "enviant ..."
+        resent_label: "correu electrònic enviat"
         update_email: "Canvi de correu"
+        set_primary: "Estableix el correu electrònic principal"
+        destroy: "Elimina el correu electrònic"
+        add_email: "Afegeix un correu electrònic alternatiu"
         sso_override_instructions: "L'adreça de correu es pot actualitzar des d'un proveïdor SSO"
         no_secondary: "Sense adreces de correu secundàries"
         instructions: "No es mostra mai en públic."
         ok: "Us enviarem un correu electrònic de confirmació"
+        required: "Introduïu una adreça de correu electrònic"
         invalid: "Introduïu una adreça vàlida de correu electrònic"
         authenticated: "El vostre correu electrònic ha estat autenticat per %{provider}"
         frequency_immediately: "Us enviarem un correu immediatament si no heu llegit la cosa sobre la qual us escrivim."

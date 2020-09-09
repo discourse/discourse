@@ -130,12 +130,12 @@ bs_BA:
   likes: "Sviđanja"
   embed:
     start_discussion: "Pokreni raspravu"
-    continue: "Continue Discussion"
+    continue: "Nastavi raspravu"
     more_replies:
       one: "još %{count} odgovor"
       few: "još %{count} odgovora"
       other: "još %{count} odgovora"
-    loading: "Loading Discussion..."
+    loading: "Učitavanje rasprave..."
     permalink: "Permalink"
     imported_from: "Ovo je prateća tema rasprave za originalni unos na %{link}"
     in_reply_to: "▶ %{username}"
@@ -345,9 +345,11 @@ bs_BA:
       long_form: "opomenuo kao spam"
     inappropriate:
       title: "Inappropriate"
+      description: 'Ova tema sadrži sadržaj koji bi razumna osoba smatrala uvredljivim, nasilnim ili kršenjem <a href="%{base_path}/guidelines">smjernica naše zajednice</a>.'
       long_form: "opomenuto kao neprikladno"
     notify_moderators:
       title: "Obavijesti Moderatore"
+      description: 'Ova tema zahtijeva opću pažnju administratora na osnovu <a href="%{base_path}/guidelines">smjernica</a>, <a href="%{tos_url}">TOS</a> ili iz drugog razloga koji nije gore naveden.'
       long_form: "moderator obaviješten"
       email_title: 'Ova tema "%{title}" treba pažnju moderatora'
       email_body: "%{link}\n\n%{message}"
