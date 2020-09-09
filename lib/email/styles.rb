@@ -257,7 +257,7 @@ module Email
           url = attachments[original_filename].url
 
           div.add_next_sibling(
-            "<img src=\"#{url}\" style=\"max-width: 50%; max-height: 400px;\" />"
+            "<img src=\"#{url}\" data-embedded-secure-image=\"true\" style=\"max-width: 50%; max-height: 400px;\" />"
           )
           div.remove
         end
