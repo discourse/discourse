@@ -68,20 +68,11 @@ const postTimeOptions = [
   { name: I18n.t("search.advanced.post.time.after"), value: "after" },
 ];
 
-function addInOptionsForAll(options) {
-  inOptionsForAll.pushObjects(options);
-}
-
-function addInOptionsForUsers(options) {
-  inOptionsForUsers.pushObjects(options);
-}
-
-function addStatusOptions(options) {
-  statusOptions.pushObjects(options);
-}
-
-function addPostTimeOptions(options) {
-  postTimeOptions.pushObjects(options);
+function addAdvancedSearchOptions(options) {
+  inOptionsForAll.pushObjects(options.inOptionsForAll);
+  inOptionsForUsers.pushObjects(options.inOptionsForUsers);
+  statusOptions.pushObjects(options.statusOptions);
+  postTimeOptions.pushObjects(options.postTimeOptions);
 }
 
 export default Component.extend({
@@ -670,9 +661,4 @@ export default Component.extend({
   },
 });
 
-export {
-  addInOptionsForUsers,
-  addInOptionsForAll,
-  addStatusOptions,
-  addPostTimeOptions,
-};
+export { addAdvancedSearchOptions };
