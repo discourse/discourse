@@ -473,6 +473,7 @@ module ApplicationHelper
   end
 
   def dark_color_scheme?
+    return false if scheme_id.blank?
     ColorScheme.find_by_id(scheme_id)&.is_dark?
   end
 
