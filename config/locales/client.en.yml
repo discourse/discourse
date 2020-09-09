@@ -3655,7 +3655,7 @@ en:
         save: Save
         new_key: New API Key
         revoked: Revoked
-        delete: Permenantly Delete
+        delete: Permanently Delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
         use_global_key: Global Key (allows all actions)
