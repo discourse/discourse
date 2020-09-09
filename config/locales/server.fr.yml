@@ -2517,6 +2517,16 @@ fr:
         ```text
         %{logs}
         ```
+    user_added_to_group_as_owner:
+      title: "Ajouté au groupe en tant que propriétaire"
+      subject_template: "Vous avez été ajouté en tant que propriétaire du groupe %{group_name}"
+      text_body_template: |
+        Vous avez été ajouté en tant que propriétaire du groupe [%{group_name}] (%{base_url}%{group_path}).
+    user_added_to_group_as_member:
+      title: "Ajouté au groupe en tant que membre"
+      subject_template: "Vous êtes maintenant membre du groupe %{group_name}."
+      text_body_template: |
+        Vous êtes maintenant membre du groupe [%{group_name}](%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "Export CSV réussi"
       subject_template: "[%{export_title}] Exportation des données terminée"

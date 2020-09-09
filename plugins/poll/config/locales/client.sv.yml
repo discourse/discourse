@@ -69,10 +69,10 @@ sv:
         breakdown: "Fördelning"
         percentage: "Procent"
         count: "Räkna"
-      error_while_toggling_status: "Tyvärr, ett fel uppstod vid ändring av status för den här omröstningen."
-      error_while_casting_votes: "Tyvärr, ett fel uppstod vid röstningen."
-      error_while_fetching_voters: "Tyvärr, ett fel uppstod vid visningen av röster."
-      error_while_exporting_results: "Tyvärr, ett fel uppstod vid export av omröstningsresultatet."
+      error_while_toggling_status: "Tyvärr uppstod det ett fel vid ändring av status för den här omröstningen."
+      error_while_casting_votes: "Tyvärr uppstod det ett fel vid röstningen."
+      error_while_fetching_voters: "Tyvärr uppstod det ett fel vid visningen av röster."
+      error_while_exporting_results: "Tyvärr uppstod det ett fel vid export av omröstningsresultatet."
       ui_builder:
         title: Skapa omröstning
         insert: Lägg till omröstning
@@ -102,7 +102,7 @@ sv:
           min: Min
           step: Steg
         poll_public:
-          label: Visa vilka som röstat
+          label: Visa vem som röstat
         poll_options:
           label: Ange ett omröstningsalternativ per rad
         automatic_close:

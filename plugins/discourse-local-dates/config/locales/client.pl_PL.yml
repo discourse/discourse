@@ -19,6 +19,7 @@ pl_PL:
           insert: Wstaw
           advanced_mode: Tryb zaawansowany
           simple_mode: Tryb prosty
+          format_description: "Format używany do wyświetlania daty dla użytkownika. Użyj Z, aby wyświetlić różnicę i zz dla nazwy strefy czasowej."
           timezones_title: Strefy czasowe do wyświetlenia
           timezones_description: Strefy czasowe zostaną użyte do wyświetlenia dat w podglądzie i fallbacku
           recurring_title: Powtarzanie

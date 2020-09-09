@@ -106,6 +106,10 @@ class TopicCreator
       topic_params[:views] = @opts[:views].to_i
     end
 
+    if topic_params[:import_mode] && @opts[:participant_count].to_i > 0
+      topic_params[:participant_count] = @opts[:participant_count].to_i
+    end
+
     # Automatically give it a moderator warning subtype if specified
     topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 

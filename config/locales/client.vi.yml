@@ -97,6 +97,9 @@ vi:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
       post: "đăng #%{postNumber}"
       close: "đóng"
+      twitter: "Chia sẻ trên Twitter"
+      facebook: "Chia sẻ trên Facebook"
+      email: "Gửi qua email"
     action_codes:
       public_topic: "hiển thị chủ đề này công khai lúc %{when}"
       private_topic: "tạo một tin nhắn từ chủ đề này %{when}"
@@ -234,8 +237,11 @@ vi:
       help:
         bookmark: "Chọn bài viết đầu tiên của chủ đề cho vào dấu trang"
         unbookmark: "Chọn để xoá toàn bộ dấu trang trong chủ đề này"
+        unbookmark_with_reminder: "Nhấp để xóa tất cả dấu trang và lời nhắc trong chủ đề này. Bạn có lời nhắc đặt %{reminder_at} cho chủ đề này."
     bookmarks:
+      created: "Bạn đã đánh dấu bài đăng này. %{name}"
       not_bookmarked: "đánh dấu bài viết này"
+      created_with_reminder: "Bạn đã đánh dấu bài đăng này với lời nhắc %{date}. %{name}"
       remove: "Xóa dấu trang"
       delete: "Xóa chỉ mục"
       confirm_clear: "Bạn có chắc muốn xóa toàn bộ đánh dấu trong chủ đề này?"

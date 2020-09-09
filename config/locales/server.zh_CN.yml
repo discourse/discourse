@@ -1582,7 +1582,6 @@ zh_CN:
     allow_all_attachments_for_group_messages: "允许群组私信中包含任何邮件附件。"
     png_to_jpg_quality: "转换 JPG 文件的质量（1 是最低，99 最高，100 禁用）。"
     allow_staff_to_upload_any_file_in_pm: "允许管理人员在私信中上传任意文件。"
-    convert_heif_to_jpeg: "将上传的“'heic\"或\".heif\"图像转换成jpeg."
     strip_image_metadata: "剥离图像元数据。"
     min_ratio_to_crop: "用于裁剪高图像的比率。输入宽/高值。"
     simultaneous_uploads: "可以在编辑器中拖放的最大文件数"
@@ -2510,11 +2509,16 @@ zh_CN:
         ```text
         %{logs}
         ```
-    user_added_to_group:
-      title: "已添加到群组"
-      subject_template: "你已作为%{membership_level}被添加到%{group_name}群组"
+    user_added_to_group_as_owner:
+      title: "添加为群组的所有者"
+      subject_template: "你已被添加为 %{group_name} 群组的所有者"
       text_body_template: |
-        你已被添加为[%{group_name}](%{base_url}%{group_path})群组的%{membership_level}。
+        你已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的所有者。
+    user_added_to_group_as_member:
+      title: "添加为群组的成员"
+      subject_template: "你已被添加为 %{group_name} 群组的成员"
+      text_body_template: |
+        你已被添加为 [%{group_name}] (%{base_url}%{group_path}) 群组的成员。
     csv_export_succeeded:
       title: "CSV导出成功"
       subject_template: "[%{export_title}]数据导出完成"

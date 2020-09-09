@@ -1698,7 +1698,6 @@ he:
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
     png_to_jpg_quality: "האיכות של קובץ JPG שמומר (1 הנמוכה ביותר, 99 הטובה ביותר, 100 לניטרול)."
     allow_staff_to_upload_any_file_in_pm: "אפשרו לחברי צוות להעלות כל קובץ בהודעה פרטית."
-    convert_heif_to_jpeg: "המרת תמונות ‚‎.heic’ או ‚‎.heif’ שמועלות ל־jpeg."
     strip_image_metadata: "הסרת מטה-דאטה מהתמונה"
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
@@ -2734,11 +2733,16 @@ he:
 
         %{logs}
         ```
-    user_added_to_group:
-      title: "נוסף לקבוצה"
-      subject_template: "נוספת לקבוצה %{group_name} בתור %{membership_level}"
+    user_added_to_group_as_owner:
+      title: "נוסף לקבוצה כבעלים"
+      subject_template: "נוספת לקבוצה %{group_name} כבעלים"
       text_body_template: |
-        נוספת לקבוצה [%{group_name}](%{base_url}%{group_path}) בתור %{membership_level}.
+        נוספת לקבוצה [%{group_name}](%{base_url}%{group_path}) כבעלים.
+    user_added_to_group_as_member:
+      title: "נוסף לקבוצה כחבר"
+      subject_template: "נוספת לקבוצה %{group_name} כחבר"
+      text_body_template: |
+        נוספת לקבוצה [%{group_name}](%{base_url}%{group_path}) כחבר.
     csv_export_succeeded:
       title: "יצוא CSV הצליח"
       subject_template: "[%{export_title}] ייצוא הנתונים הושלם"

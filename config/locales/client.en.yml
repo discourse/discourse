@@ -1586,6 +1586,8 @@ en:
       title: "Message"
       invite: "Invite Others ..."
       edit: "Add or Remove ..."
+      remove: "Remove ..."
+      add: "Add ..."
       leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove %{name} from this message?"
       remove_allowed_group: "Do you really want to remove %{name} from this message?"
@@ -3653,7 +3655,7 @@ en:
         save: Save
         new_key: New API Key
         revoked: Revoked
-        delete: Permenantly Delete
+        delete: Permanently Delete
         not_shown_again: This key will not be displayed again. Make sure you take a copy before continuing.
         continue: Continue
         use_global_key: Global Key (allows all actions)

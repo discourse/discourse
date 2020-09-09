@@ -127,8 +127,12 @@ ro:
       next_month: "Luna următoare"
       placeholder: dată
     share:
+      topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
       post: "Distribuie postarea #%{postNumber}"
       close: "Închide"
+      twitter: "Distribuie pe Twitter"
+      facebook: "Distribuie pe Facebook"
+      email: "Trimite prin e-mail"
     action_codes:
       public_topic: "a făcut acest subiect public %{when}"
       private_topic: "fă acest subiect un mesaj personal %{when}"
@@ -159,6 +163,8 @@ ro:
       banner:
         enabled: "a creat acest banner %{when}. Va apărea la începutul fiecărei pagini până când va fi ascuns de către utilizator."
         disabled: "a îndepărtat acest banner %{when}. Nu va mai apărea la începutul fiecărei pagini."
+      forwarded: "a redirecționat e-mailul de mai sus"
+    topic_admin_menu: "acțiuni subiect"
     wizard_required: "Bine ai venit la noul tău Discourse! Să începem cu <a href='%{url}' data-auto-route='true'>expertul de configurare</a> ✨"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
     bootstrap_mode_enabled: "Pentru a simplifica lansarea noului dv. site, sunteți în modul bootstrap. Toți utilizatorii noi vor primi nivelul 1 de încredere și vor avea activată primirea zilnică de e-mail-uri rezumat. Această funcționalitate va fi oprită automat după ce se înregistrează primii %{min_users} membri."
@@ -172,14 +178,19 @@ ro:
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ca_central_1: "Canada (Central)"
         cn_north_1: "China (Beijing)"
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "UE (Stockholm)"
         eu_west_1: "EU (Irlanda)"
         eu_west_2: "UE (Londra)"
         eu_west_3: "EU (Paris)"
+        sa_east_1: "America de Sud (São Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "America de Est (Ohio)"
+        us_gov_east_1: "AWS GovCloud (SUA-Est)"
+        us_gov_west_1: "AWS GovCloud (SUA-Vest)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "Editează titlul și categoria acestui subiect"
@@ -190,6 +201,7 @@ ro:
     submit: "Trimite"
     generic_error: "A apărut o eroare."
     generic_error_with_reason: "A apărut o eroare: %{error}"
+    go_ahead: "Mai departe"
     sign_up: "Înregistrare"
     log_in: "Autentificare"
     age: "Vârsta"
@@ -208,6 +220,7 @@ ro:
     privacy: "Confidențialitate"
     tos: "Termenii serviciului"
     rules: "Reguli"
+    conduct: "Codul de conduită"
     mobile_view: "Vedere pentru mobil"
     desktop_view: "Vedere pentru desktop"
     you: "Tu"
@@ -221,12 +234,17 @@ ro:
     every_hour: "La fiecare oră"
     daily: "Zilnic"
     weekly: "Săptămânal"
+    every_month: "în fiecare lună"
+    every_six_months: "la fiecare șase luni"
     max_of_count: "max din %{count}"
     alternation: "sau"
     character_count:
       one: "Un caracter"
       few: "%{count} caractere"
       other: "%{count} de caractere"
+    related_messages:
+      title: "Mesaje legate de"
+      see_all: 'Vezi <a href="%{path}">toate mesajele</a> de la @%{username}...'
     suggested_topics:
       title: "Subiecte sugerate"
       pm_title: "Mesaje sugerate"
@@ -255,15 +273,35 @@ ro:
         bookmark: "Click pentru a adăuga semn de carte la subiectul acesta"
         unbookmark: "Click pentru a șterge semnele de carte"
     bookmarks:
+      created: "Ai marcat acestă postare %{name} ca semn de carte"
+      not_bookmarked: "marchează ca semn de carte acest post"
       remove: "Șterge semn de carte"
+      delete: "Șterge semn de carte"
+      confirm_delete: "Sunteţi sigur că doriţi să ştergeţi acest semn de carte? Mementoul va fi de asemenea şters."
       save: "Salvează"
+      auto_delete_preference:
+        label: "Ștergere automată"
+        never: "Niciodată"
+        on_owner_reply: "După ce răspund la acest subiect"
+      search_placeholder: "Căutați marcaje după nume, titlul subiectului sau conținutul postării"
       search: "Caută"
       reminders:
         later_today: "Mai târziu azi"
+        next_business_day: "Următoarea zi lucrătoare"
         tomorrow: "Mâine"
         next_week: "Săptămâna viitoare"
         later_this_week: "Mai târziu săptămâna asta"
+        start_of_next_business_week: "Luni"
+        start_of_next_business_week_alt: "Lunea viitoare"
         next_month: "Luna viitoare"
+        custom: "Data și ora personalizată"
+        last_custom: "Ultima"
+        none: "Nu este necesar un memento"
+        today_with_time: "astăzi la %{time}"
+        tomorrow_with_time: "mâine la %{time}"
+        at_time: "la %{date_time}"
+    copy_codeblock:
+      copied: "copiat!"
     drafts:
       resume: "Reluați"
       remove: "Eliminați"
@@ -307,6 +345,9 @@ ro:
       edit: "Editează acest banner."
     choose_topic:
       none_found: "Nu au fost găsite subiecte noi."
+    choose_message:
+      title:
+        search: "Căutați un mesaj"
     review:
       explain:
         total: "Total"
@@ -1034,6 +1075,8 @@ ro:
       hide_session: "Amintește-mi mai târziu."
       hide_forever: "Nu, mulțumesc"
       hidden_for_session: "OK, vom reveni. Poți oricând folosi secțiunea de 'Autentificare' pentru a crea un cont."
+      intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
+      value_prop: "Când creezi un cont, ne amintim exact ce ai citit, astfel încât să te întorci întotdeauna de unde ai rămas. Primești de asemenea notificări, aici și prin e-mail, ori de câte ori cineva îți răspunde. Și poți aprecia și comentariile bune. :heartpulse:"
     summary:
       enabled_description: "Vizualizezi un rezumat al acestui subiect: cea mai interesantă postare, așa cum a fost desemnată de comunitate. "
       description: "Există <b>%{replyCount}</b> răspunsuri."
