@@ -646,6 +646,14 @@ describe Email::Receiver do
       MD
     end
 
+    it "can decode attachments" do
+      SiteSetting.authorized_extensions = "pdf"
+      Fabricate(:group, incoming_email: "one@foo.com")
+
+      process(:encoded_filename)
+      expect(Upload.last.original_filename).to eq("This is a test.pdf")
+    end
+
     context "when attachment is rejected" do
       it "sends out the warning email" do
         expect { process(:attached_txt_file) }.to change { EmailLog.count }.by(1)
