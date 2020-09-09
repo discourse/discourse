@@ -173,15 +173,44 @@ RSpec.describe ListController do
   end
 
   describe '#private_messages_group' do
-    let(:user) do
-      user = Fabricate(:user)
-      group.add(user)
-      sign_in(user)
-      user
+    let(:user) { Fabricate(:user) }
+
+    describe 'with personal_messages disabled' do
+      let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
+
+      before do
+        group.add(user)
+        SiteSetting.enable_personal_messages = false
+      end
+
+      it 'should display group private messages for an admin' do
+        sign_in(Fabricate(:admin))
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["topic_list"]["topics"].first["id"])
+          .to eq(topic.id)
+      end
+
+      it "should not display group private messages for a moderator's group" do
+        moderator = Fabricate(:moderator)
+        sign_in(moderator)
+        group.add(moderator)
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(404)
+      end
     end
 
     describe 'with unicode_usernames' do
-      before { SiteSetting.unicode_usernames = false }
+      before do
+        group.add(user)
+        sign_in(user)
+        SiteSetting.unicode_usernames = false
+      end
 
       it 'should return the right response when user does not belong to group' do
         Fabricate(:private_message_topic, allowed_groups: [group])
@@ -205,7 +234,10 @@ RSpec.describe ListController do
     end
 
     describe 'with unicode_usernames' do
-      before { SiteSetting.unicode_usernames = true }
+      before do
+        sign_in(user)
+        SiteSetting.unicode_usernames = true
+      end
 
       it 'Returns a 200 with unicode group name' do
         unicode_group = Fabricate(:group, name: '群群组')
