@@ -158,15 +158,25 @@ export default createWidget("private-message-map", {
     const result = [h(`div.participants${hideNamesClass}`, participants)];
     const controls = [];
 
-    if (
-      attrs.canInvite ||
-      attrs.canRemoveAllowedUsers ||
-      attrs.canRemoveSelfId
-    ) {
+    const canRemove = attrs.canRemoveAllowedUsers || attrs.canRemoveSelfId;
+
+    if (attrs.canInvite || canRemove) {
+      let key;
+      let action = "toggleEditing";
+
+      if (attrs.canInvite && canRemove) {
+        key = "edit";
+      } else if (!attrs.canInvite && canRemove) {
+        key = "remove";
+      } else {
+        key = "add";
+        action = "showInvite";
+      }
+
       controls.push(
         this.attach("button", {
-          action: "toggleEditing",
-          label: "private_message_info.edit",
+          action,
+          label: `private_message_info.${key}`,
           className: "btn btn-default add-remove-participant-btn",
         })
       );

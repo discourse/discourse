@@ -145,7 +145,7 @@ class TopicQuery
 
         # strip out users in groups you already belong to
         target_users = target_users
-          .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND gu.group_id IN (#{sanitize_sql_array(my_group_ids)})")
+          .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND #{ActiveRecord::Base.sanitize_sql_array(['gu.group_id IN (?)', my_group_ids])}")
           .where('gu.group_id IS NULL')
       end
 
@@ -531,22 +531,15 @@ class TopicQuery
     result = Topic.includes(:tags)
 
     if type == :group
-      result = result.includes(:allowed_users)
-      result = result.where("
-        topics.id IN (
-          SELECT topic_id FROM topic_allowed_groups
-          WHERE (
-            group_id IN (
-              SELECT group_id
-              FROM group_users
-              WHERE user_id = #{user.id.to_i}
-              OR #{user.staff?}
-            )
-          )
-          AND group_id IN (SELECT id FROM groups WHERE name ilike ?)
-        )",
-        @options[:group_name]
-      )
+      result = result
+        .includes(:allowed_users)
+        .joins("INNER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id IN (SELECT id FROM groups WHERE LOWER(name) = '#{PG::Connection.escape_string(@options[:group_name].downcase)}')")
+
+      unless user.admin?
+        result = result.joins("INNER JOIN group_users gu ON gu.group_id = tag.group_id AND gu.user_id = #{user.id.to_i}")
+      end
+
+      result
     elsif type == :user
       result = result.includes(:allowed_users)
       result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
@@ -967,9 +960,19 @@ class TopicQuery
   def unread_messages(params)
     query = TopicQuery.unread_filter(
       messages_for_groups_or_user(params[:my_group_ids]),
-      @user&.id,
-      staff: @user&.staff?)
-      .limit(params[:count])
+      @user.id,
+      staff: @user.staff?
+    )
+
+    first_unread_pm_at =
+      if params[:my_group_ids].present?
+        GroupUser.where(user_id: @user.id, group_id: params[:my_group_ids]).minimum(:first_unread_pm_at)
+      else
+        UserStat.where(user_id: @user.id).pluck(:first_unread_pm_at).first
+      end
+
+    query = query.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
+    query = query.limit(params[:count]) if params[:count]
     query
   end
 
@@ -992,7 +995,7 @@ class TopicQuery
         messages.joins("
           LEFT JOIN topic_allowed_users ta2
           ON topics.id = ta2.topic_id
-          AND ta2.user_id IN (#{sanitize_sql_array(user_ids)})
+          AND #{ActiveRecord::Base.sanitize_sql_array(['ta2.user_id IN (?)', user_ids])}
         ")
     end
 
@@ -1001,7 +1004,7 @@ class TopicQuery
         messages.joins("
           LEFT JOIN topic_allowed_groups tg2
           ON topics.id = tg2.topic_id
-          AND tg2.group_id IN (#{sanitize_sql_array(group_ids)})
+          AND #{ActiveRecord::Base.sanitize_sql_array(['tg2.group_id IN (?)', group_ids])}
         ")
     end
 
@@ -1024,7 +1027,7 @@ class TopicQuery
             LEFT JOIN group_users gu
             ON gu.user_id = #{@user.id.to_i}
             AND gu.group_id = _tg.group_id
-            WHERE gu.group_id IN (#{sanitize_sql_array(group_ids)})
+            WHERE #{ActiveRecord::Base.sanitize_sql_array(['gu.group_id IN (?)', group_ids])}
           ) tg ON topics.id = tg.topic_id
         ")
         .where("tg.topic_id IS NOT NULL")
@@ -1096,10 +1099,6 @@ class TopicQuery
   end
 
   private
-
-  def sanitize_sql_array(input)
-    ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))
-  end
 
   def append_read_state(list, group)
     group_id = group&.id

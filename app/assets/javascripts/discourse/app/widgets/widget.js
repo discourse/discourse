@@ -38,7 +38,7 @@ export function decorateWidget(widgetName, cb) {
 }
 
 export function traverseCustomWidgets(tree, callback) {
-  if (tree.constructor.name === "CustomWidget") {
+  if (tree.__type === "CustomWidget") {
     callback(tree);
   }
 
@@ -70,6 +70,11 @@ export function changeSetting(widgetName, settingName, newValue) {
 
 export function createWidgetFrom(base, name, opts) {
   const result = class CustomWidget extends base {};
+
+  // todo this shouldn't been needed anymore once we don't transpile for IE anymore
+  // see: https://discuss.emberjs.com/t/constructor-name-behaves-differently-in-dev-and-prod-builds-for-models-defined-with-the-es6-class-syntax/15572/6
+  // once done, we can just check on constructor.name
+  result.prototype.__type = "CustomWidget";
 
   if (name) {
     _registry[name] = result;

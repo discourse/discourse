@@ -1157,14 +1157,24 @@ describe TopicQuery do
     end
 
     it 'should return the right list for an admin not part of the group' do
-      topics = TopicQuery.new(nil, group_name: group.name)
+      group.update!(name: group.name.capitalize)
+
+      topics = TopicQuery.new(nil, group_name: group.name.upcase)
         .list_private_messages_group(Fabricate(:admin))
         .topics
 
       expect(topics).to contain_exactly(group_message)
     end
 
-    it 'should return the right list for a user not part of the group' do
+    it "should not allow a moderator not part of the group to view the group's messages" do
+      topics = TopicQuery.new(nil, group_name: group.name)
+        .list_private_messages_group(Fabricate(:moderator))
+        .topics
+
+      expect(topics).to eq([])
+    end
+
+    it "should not allow a user not part of the group to view the group's messages" do
       topics = TopicQuery.new(nil, group_name: group.name)
         .list_private_messages_group(Fabricate(:user))
         .topics

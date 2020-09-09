@@ -35,6 +35,9 @@ module Jobs
       UserStat.ensure_consistency!(13.hours.ago)
       measure(UserStat)
 
+      GroupUser.ensure_consistency!(13.hours.ago)
+      measure(GroupUser)
+
       Rails.logger.debug(format_measure)
       nil
     end
