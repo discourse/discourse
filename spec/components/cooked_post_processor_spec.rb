@@ -237,13 +237,13 @@ describe CookedPostProcessor do
             count: 1
           )
 
-          expect(html).to have_tag("a[rel='nofollow noopener']")
+          expect(html).to have_tag("a[rel='noopener nofollow ugc']")
         end
 
         it 'removes nofollow if user is staff/tl3' do
           cpp = CookedPostProcessor.new(staff_post, invalidate_oneboxes: true)
           cpp.post_process
-          expect(cpp.html).to_not have_tag("a[rel='nofollow noopener']")
+          expect(cpp.html).to_not have_tag("a[rel='noopener nofollow ugc']")
         end
       end
     end
@@ -1102,7 +1102,7 @@ describe CookedPostProcessor do
       SiteSetting.add_rel_nofollow_to_user_content = false
       Oneboxer.expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
-        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow noopener ugc">GANGNAM STYLE</a></aside>')
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener nofollow ugc">GANGNAM STYLE</a></aside>')
       cpp.post_process_oneboxes
     end
 
@@ -1123,7 +1123,7 @@ describe CookedPostProcessor do
       SiteSetting.tl3_links_no_follow = false
       Oneboxer.expects(:onebox)
         .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
-        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="nofollow ugc noopener">GANGNAM STYLE</a></aside>')
+        .returns('<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener nofollow ugc">GANGNAM STYLE</a></aside>')
       cpp.post_process_oneboxes
     end
 
@@ -1204,7 +1204,7 @@ describe CookedPostProcessor do
       expect(cpp.html).to match_html <<~HTML.rstrip
         <p><a href="//test.localhost/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
         <img src="//test.localhost/#{upload_path}/original/1X/1234567890123456.jpg"><br>
-        <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
+        <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
         <img src="http://foo.bar/image.png"><br>
         <a class="attachment" href="//test.localhost/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
         <img src="//test.localhost/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
@@ -1219,7 +1219,7 @@ describe CookedPostProcessor do
         expect(cpp.html).to match_html <<~HTML.rstrip
           <p><a href="//my.cdn.com/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="//my.cdn.com/#{upload_path}/original/1X/1234567890123456.jpg"><br>
-          <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
+          <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//my.cdn.com/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
           <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
@@ -1232,7 +1232,7 @@ describe CookedPostProcessor do
         expect(cpp.html).to match_html <<~HTML.rstrip
           <p><a href="https://my.cdn.com/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="https://my.cdn.com/#{upload_path}/original/1X/1234567890123456.jpg"><br>
-          <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
+          <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="https://my.cdn.com/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
           <img src="https://my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
@@ -1246,7 +1246,7 @@ describe CookedPostProcessor do
         expect(cpp.html).to match_html <<~HTML.rstrip
           <p><a href="//my.cdn.com/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="//my.cdn.com/#{upload_path}/original/1X/1234567890123456.jpg"><br>
-          <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
+          <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
           <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
@@ -1260,7 +1260,7 @@ describe CookedPostProcessor do
         expect(cpp.html).to match_html <<~HTML.rstrip
           <p><a href="//my.cdn.com/#{upload_path}/original/2X/2345678901234567.jpg">Link</a><br>
           <img src="//my.cdn.com/#{upload_path}/original/1X/1234567890123456.jpg"><br>
-          <a href="http://www.google.com" rel="nofollow noopener">Google</a><br>
+          <a href="http://www.google.com" rel="noopener nofollow ugc">Google</a><br>
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/#{upload_path}/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
           <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>
