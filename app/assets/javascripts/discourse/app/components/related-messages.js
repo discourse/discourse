@@ -10,7 +10,9 @@ export default Component.extend({
     if (!topic || !topic.isPrivateMessage) {
       return;
     }
+
     const allowedUsers = topic.details.allowed_users;
+
     if (
       topic.relatedMessages &&
       topic.relatedMessages.length >= 5 &&
@@ -27,10 +29,5 @@ export default Component.extend({
     return getURL(
       `/search?expanded=true&q=%40${this.targetUser.username}%20in%3Apersonal-direct`
     );
-  },
-
-  @discourseComputed("topic")
-  relatedTitleLink(topic) {
-    return this.currentUser && this.currentUser.pmPath(topic);
   },
 });
