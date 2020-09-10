@@ -900,7 +900,7 @@ class Plugin::Instance
     nil
   end
 
-  def register_permitted_bulk_action_parameter(name = nil)
-    DiscoursePluginRegistry.register_permitted_bulk_action_parameters(name)
+  def register_permitted_bulk_action_parameter(name)
+    DiscoursePluginRegistry.register_permitted_bulk_action_parameter(name, self)
   end
 end
