@@ -1,17 +1,12 @@
 # frozen_string_literal: true
 
 class ImapSyncLog < ActiveRecord::Base
-  RETAIN_LOGS_DAYS = 5
+  RETAIN_LOGS_DAYS ||= 5
 
   belongs_to :group
 
   def self.levels
-    @levels ||= Enum.new(
-      debug: 1,
-      info: 2,
-      warn: 3,
-      error: 4
-    )
+    @levels ||= Enum.new(:debug, :info, :warn, :error)
   end
 
   def self.log(message, level, group_id = nil)
