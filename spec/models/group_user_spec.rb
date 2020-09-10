@@ -163,6 +163,7 @@ describe GroupUser do
 
   describe '#ensure_consistency!' do
     fab!(:group) { Fabricate(:group) }
+    fab!(:group_2) { Fabricate(:group) }
 
     fab!(:pm_post) { Fabricate(:private_message_post) }
 
@@ -173,6 +174,7 @@ describe GroupUser do
     fab!(:user) do
       Fabricate(:user, last_seen_at: Time.zone.now).tap do |u|
         group.add(u)
+        group_2.add(u)
 
         TopicUser.change(u.id, pm_topic.id,
           notification_level: TopicUser.notification_levels[:tracking],
@@ -213,11 +215,13 @@ describe GroupUser do
         topic_id: pm_topic.id
       )
 
-      GroupUser.ensure_consistency!
+      expect { GroupUser.ensure_consistency! }
+        .to_not change { group.group_users.find_by(user_id: user_3.id).first_unread_pm_at }
 
+      expect(post.topic.updated_at).to_not eq(10.minutes.ago)
       expect(group.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(post.topic.updated_at)
-      expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to_not eq_time(post.topic.updated_at)
-      expect(group.group_users.find_by(user_id: user_3.id).first_unread_pm_at).to_not eq_time(post.topic.updated_at)
+      expect(group_2.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(10.minutes.ago)
+      expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to eq_time(10.minutes.ago)
     end
   end
 end

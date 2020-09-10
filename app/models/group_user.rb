@@ -24,7 +24,7 @@ class GroupUser < ActiveRecord::Base
   end
 
   def self.update_first_unread_pm(last_seen, limit: 10_000)
-    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit)
+    DB.exec(<<~SQL, archetype: Archetype.private_message, last_seen: last_seen, limit: limit, now: 10.minutes.ago)
     UPDATE group_users gu
     SET first_unread_pm_at = Y.min_date
     FROM (
@@ -34,23 +34,30 @@ class GroupUser < ActiveRecord::Base
         X.min_date
       FROM (
         SELECT
-          gu2.group_id,
-          gu2.user_id,
-          MIN(t.updated_at) min_date
-        FROM group_users gu2
-        INNER JOIN topic_allowed_groups tag ON tag.group_id = gu2.group_id
-        INNER JOIN topics t ON t.id = tag.topic_id
-        INNER JOIN users u ON u.id = gu2.user_id
-        LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = gu2.user_id
-        WHERE t.deleted_at IS NULL
-        AND t.archetype = :archetype
-        AND tu.last_read_post_number < CASE
-                                       WHEN u.admin OR u.moderator
-                                       THEN t.highest_staff_post_number
-                                       ELSE t.highest_post_number
-                                       END
-        AND (COALESCE(tu.notification_level, 1) >= 2)
-        GROUP BY gu2.user_id, gu2.group_id
+          gu.group_id,
+          gu.user_id,
+          COALESCE(Z.min_date, :now) min_date
+        FROM group_users gu
+        LEFT JOIN (
+          SELECT
+            gu2.group_id,
+            gu2.user_id,
+            MIN(t.updated_at) min_date
+          FROM group_users gu2
+          INNER JOIN topic_allowed_groups tag ON tag.group_id = gu2.group_id
+          INNER JOIN topics t ON t.id = tag.topic_id
+          INNER JOIN users u ON u.id = gu2.user_id
+          LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = gu2.user_id
+          WHERE t.deleted_at IS NULL
+          AND t.archetype = :archetype
+          AND tu.last_read_post_number < CASE
+                                         WHEN u.admin OR u.moderator
+                                         THEN t.highest_staff_post_number
+                                         ELSE t.highest_post_number
+                                         END
+          AND (COALESCE(tu.notification_level, 1) >= 2)
+          GROUP BY gu2.user_id, gu2.group_id
+        ) AS Z ON Z.user_id = gu.user_id AND Z.group_id = gu.group_id
       ) AS X
       WHERE X.user_id IN (
         SELECT id
