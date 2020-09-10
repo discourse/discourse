@@ -27,7 +27,7 @@ export default Component.extend({
           });
       };
       if (!bookmark.reminder_at) {
-        deleteBookmark();
+        return deleteBookmark();
       }
       bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
         if (result) {
