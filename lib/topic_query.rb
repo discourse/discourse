@@ -748,7 +748,7 @@ class TopicQuery
       result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
     end
 
-    if search = options[:search]
+    if search = options[:search].presence
       result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(term: search.to_s)})")
     end
 
