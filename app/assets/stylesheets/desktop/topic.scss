@@ -77,12 +77,22 @@
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 1em;
+  right: 2em;
   bottom: 0;
+  left: 0;
+  margin: 0 auto;
+  max-width: $reply-area-max-width;
+  display: flex;
+  justify-content: flex-end;
   z-index: z("timeline");
   &.docked {
     position: absolute;
     bottom: -70px;
+  }
+  html.rtl & {
+    justify-content: flex-start;
+    right: 0;
+    left: 2em;
   }
 }
 
@@ -192,14 +202,6 @@
   #topic-progress-expanded {
     right: 0;
     left: 0;
-  }
-
-  #topic-progress-wrapper {
-    right: 19vw;
-  }
-
-  #topic-progress-wrapper.docked {
-    right: 19vw;
   }
 
   #topic-footer-main-buttons {
