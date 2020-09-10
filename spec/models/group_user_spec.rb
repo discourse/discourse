@@ -218,7 +218,7 @@ describe GroupUser do
       expect { GroupUser.ensure_consistency! }
         .to_not change { group.group_users.find_by(user_id: user_3.id).first_unread_pm_at }
 
-      expect(post.topic.updated_at).to_not eq(10.minutes.ago)
+      expect(post.topic.updated_at).to_not eq_time(10.minutes.ago)
       expect(group.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(post.topic.updated_at)
       expect(group_2.group_users.find_by(user_id: user.id).first_unread_pm_at).to eq_time(10.minutes.ago)
       expect(group.group_users.find_by(user_id: user_2.id).first_unread_pm_at).to eq_time(10.minutes.ago)
