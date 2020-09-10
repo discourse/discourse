@@ -362,6 +362,7 @@ describe GroupsController do
 
     it "returns the right response" do
       sign_in(user)
+      mod_group = Group.find(moderator_group_id)
       get "/groups/#{group.name}.json"
 
       expect(response.status).to eq(200)
@@ -369,7 +370,7 @@ describe GroupsController do
       body = response.parsed_body
 
       expect(body['group']['id']).to eq(group.id)
-      expect(body['extras']["visible_group_names"]).to eq([group.name])
+      expect(body['extras']["visible_group_names"]).to eq([mod_group.name, group.name])
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
