@@ -639,12 +639,6 @@ module Discourse
     version_value
   end
 
-  def self.public_js_git_hash_stamp
-    @public_js_git_hash_stamp ||= begin
-      File.read(StampedFiles.revision_filename) rescue ''
-    end
-  end
-
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
     user = User.find_by(username_lower: SiteSetting.site_contact_username.downcase) if SiteSetting.site_contact_username.present?

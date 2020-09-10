@@ -292,16 +292,6 @@ describe ApplicationHelper do
           expect(helper.client_side_setup_data[:debug_preloaded_app_data]).to eq(true)
         end
       end
-
-      context "if public/javascript/REVISIONS exists" do
-        before do
-          Discourse.stubs(:public_js_git_hash_stamp).returns('abcdef1234567890abcdef1234567890abcdef12')
-        end
-
-        it "returns public_js_hash in the setup data" do
-          expect(helper.client_side_setup_data[:public_js_hash]).to eq('abcdef1234567890abcdef1234567890abcdef12')
-        end
-      end
     end
   end
 

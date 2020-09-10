@@ -1,14 +1,11 @@
-import {
-  loadScript,
-  setupPublicJsHash,
-  addHashToURL
-} from "discourse/lib/load-script";
+import { loadScript, cacheBuster } from "discourse/lib/load-script";
+import { PUBLIC_JS_VERSIONS as jsVersions } from "discourse/lib/public_js_versions";
 
 QUnit.module("lib:load-script");
 
 QUnit.skip(
   "load with a script tag, and callbacks are only executed after script is loaded",
-  async assert => {
+  async (assert) => {
     assert.ok(
       typeof window.ace === "undefined",
       "ensures ace is not previously loaded"
@@ -24,26 +21,24 @@ QUnit.skip(
   }
 );
 
-QUnit.test("works when a hash is not present", async assert => {
-  setupPublicJsHash(undefined);
+QUnit.test("works when a value is not present", async (assert) => {
   assert.equal(
-    addHashToURL("/javascripts/pikaday.js"),
-    "/javascripts/pikaday.js"
+    cacheBuster("/javascripts/my-script.js"),
+    "/javascripts/my-script.js"
   );
   assert.equal(
-    addHashToURL("/javascripts/ace/ace.js"),
-    "/javascripts/ace/ace.js"
+    cacheBuster("/javascripts/my-project/script.js"),
+    "/javascripts/my-project/script.js"
   );
 });
 
-QUnit.test("generates URLs with a hash", async assert => {
-  setupPublicJsHash("abc123");
+QUnit.test("generates URLs with a hash", async (assert) => {
   assert.equal(
-    addHashToURL("/javascripts/pikaday.js"),
-    "/javascripts/pikaday-abc123.js"
+    cacheBuster("/javascripts/pikaday.js"),
+    `/javascripts/pikaday.js?v=${jsVersions["pikaday.js"]}`
   );
   assert.equal(
-    addHashToURL("/javascripts/ace/ace.js"),
-    "/javascripts/ace-abc123/ace.js"
+    cacheBuster("/javascripts/ace/ace.js"),
+    `/javascripts/ace/ace.js?v=${jsVersions["ace"]}`
   );
 });
