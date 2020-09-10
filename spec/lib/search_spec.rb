@@ -96,20 +96,28 @@ describe Search do
   end
 
   context "custom_eager_load" do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(topic, force: true)
+    end
+
     it "includes custom tables" do
       begin
-        expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category] }])
+        expect(Search.execute("test").posts[0].topic.association(:category).loaded?).to be true
+        expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be false
 
         SiteSetting.tagging_enabled = true
-        expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags] }])
-
-        Search.custom_topic_eager_load([:test_array])
-        expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags, :test_array] }])
-
+        Search.custom_topic_eager_load([:topic_users])
         Search.custom_topic_eager_load() do
-          [:test_block]
+          [:bookmarks]
         end
-        expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags, :test_array, :test_block] }])
+
+        expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be true
+        expect(Search.execute("test").posts[0].topic.association(:topic_users).loaded?).to be true
+        expect(Search.execute("test").posts[0].topic.association(:bookmarks).loaded?).to be true
       ensure
         SiteSetting.tagging_enabled = false
         Search.instance_variable_set(:@custom_topic_eager_loads, [])
