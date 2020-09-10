@@ -97,18 +97,23 @@ describe Search do
 
   context "custom_eager_load" do
     it "includes custom tables" do
-      expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category] }])
+      begin
+        expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category] }])
 
-      SiteSetting.tagging_enabled = true
-      expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags] }])
+        SiteSetting.tagging_enabled = true
+        expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags] }])
 
-      Search.custom_topic_eager_load([:test_array])
-      expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags, :test_array] }])
+        Search.custom_topic_eager_load([:test_array])
+        expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags, :test_array] }])
 
-      Search.custom_topic_eager_load(nil) do
-        [:test_block]
+        Search.custom_topic_eager_load() do
+          [:test_block]
+        end
+        expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags, :test_array, :test_block] }])
+      ensure
+        SiteSetting.tagging_enabled = false
+        Search.instance_variable_set(:@custom_topic_eager_loads, [])
       end
-      expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags, :test_array, :test_block] }])
     end
   end
 end

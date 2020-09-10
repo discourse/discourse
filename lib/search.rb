@@ -292,7 +292,7 @@ class Search
     @advanced_filters
   end
 
-  def self.custom_topic_eager_load(tables, &block)
+  def self.custom_topic_eager_load(tables = nil, &block)
     (@custom_topic_eager_loads ||= []) << (tables || block)
   end
 
@@ -1205,8 +1205,6 @@ class Search
 
     query.includes(topic: topic_eager_loads)
   end
-
-  private
 
   # Limited for performance reasons since `TS_HEADLINE` is slow when the text
   # document is too long.
