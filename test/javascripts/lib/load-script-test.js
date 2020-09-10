@@ -32,13 +32,16 @@ QUnit.test("works when a value is not present", async (assert) => {
   );
 });
 
-QUnit.test("generates URLs with version number in the query params", async (assert) => {
-  assert.equal(
-    cacheBuster("/javascripts/pikaday.js"),
-    `/javascripts/pikaday.js?v=${jsVersions["pikaday.js"]}`
-  );
-  assert.equal(
-    cacheBuster("/javascripts/ace/ace.js"),
-    `/javascripts/ace/ace.js?v=${jsVersions["ace"]}`
-  );
-});
+QUnit.test(
+  "generates URLs with version number in the query params",
+  async (assert) => {
+    assert.equal(
+      cacheBuster("/javascripts/pikaday.js"),
+      `/javascripts/pikaday.js?v=${jsVersions["pikaday.js"]}`
+    );
+    assert.equal(
+      cacheBuster("/javascripts/ace/ace.js"),
+      `/javascripts/ace/ace.js?v=${jsVersions["ace"]}`
+    );
+  }
+);
