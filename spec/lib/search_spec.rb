@@ -94,4 +94,21 @@ describe Search do
       end
     end
   end
+
+  context "custom_eager_load" do
+    it "includes custom tables" do
+      expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category] }])
+
+      SiteSetting.tagging_enabled = true
+      expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags] }])
+
+      Search.custom_topic_eager_load([:test_array])
+      expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags, :test_array] }])
+
+      Search.custom_topic_eager_load(nil) do
+        [:test_block]
+      end
+      expect(Search.new("test").send(:posts_eager_loads, Post).includes_values).to eq([:user, :post_search_data, { topic: [:category, :tags, :test_array, :test_block] }])
+    end
+  end
 end

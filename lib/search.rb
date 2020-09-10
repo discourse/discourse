@@ -1200,7 +1200,7 @@ class Search
     end
 
     Search.custom_topic_eager_loads.each do |custom_loads|
-      topic_eager_loads = custom_loads.is_a?(Array) ? custom_loads : custom_loads.call(search_pms: @search_pms).to_a
+      topic_eager_loads.concat(custom_loads.is_a?(Array) ? custom_loads : custom_loads.call(search_pms: @search_pms).to_a)
     end
 
     query.includes(topic: topic_eager_loads)
