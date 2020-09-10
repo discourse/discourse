@@ -1,4 +1,5 @@
-import loadScript from "discourse/lib/load-script";
+import { loadScript, cacheBuster } from "discourse/lib/load-script";
+import { PUBLIC_JS_VERSIONS as jsVersions } from "discourse/lib/public_js_versions";
 
 QUnit.module("lib:load-script");
 
@@ -19,3 +20,25 @@ QUnit.skip(
     );
   }
 );
+
+QUnit.test("works when a value is not present", async (assert) => {
+  assert.equal(
+    cacheBuster("/javascripts/my-script.js"),
+    "/javascripts/my-script.js"
+  );
+  assert.equal(
+    cacheBuster("/javascripts/my-project/script.js"),
+    "/javascripts/my-project/script.js"
+  );
+});
+
+QUnit.test("generates URLs with version number in the query params", async (assert) => {
+  assert.equal(
+    cacheBuster("/javascripts/pikaday.js"),
+    `/javascripts/pikaday.js?v=${jsVersions["pikaday.js"]}`
+  );
+  assert.equal(
+    cacheBuster("/javascripts/ace/ace.js"),
+    `/javascripts/ace/ace.js?v=${jsVersions["ace"]}`
+  );
+});
