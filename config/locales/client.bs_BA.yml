@@ -946,7 +946,7 @@ bs_BA:
       tracked_tags: "Praćeno"
       tracked_tags_instructions: "Automatski će te pratiti sve teme sa ovim tagovima. Broj novih objava će se pojaviti pored teme."
       muted_tags: "Utišan"
-      muted_tags_instructions: "Nećete biti obavješteni o novim temama sa ovim tagom, i neće biti prikazani u listi Novije."
+      muted_tags_instructions: "Nećete biti obavješteni o novim temama sa ovim tagom, i neće biti prikazani u listi Zadnje."
       watched_categories: "Motren"
       watched_categories_instructions: "Automatski će te gledati sve teme u ovim kategorijama. Bit će te obavješteni o svim novim objavama i temama, i također broj novih objava će biti prikazan pored teme."
       tracked_categories: "Praćen"
@@ -2220,11 +2220,11 @@ bs_BA:
           title: "Normalno"
           description: "Dobiti ćete obavijest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
         muted_pm:
-          title: "Mutirano"
+          title: "Utišano"
           description: "You will never be notified of anything about this private message."
         muted:
-          title: "Mutirano"
-          description: "Nećete biti nikad obavješteni o bilo čemu sa ove teme, i neće biti prikazana u Novije"
+          title: "Utišano"
+          description: "Nećete biti nikad obavješteni o bilo čemu sa ove teme, i neće biti prikazana u Zadnje"
       actions:
         title: "Akcije"
         recover: "Un-Delete Topic"
@@ -2693,7 +2693,7 @@ bs_BA:
           title: "Normalno"
           description: "Dobiti ćete obavjest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
         muted:
-          title: "Mutirano"
+          title: "Utišano"
       search_priority:
         label: "Prioritet pretraživanja"
         options:
@@ -2759,7 +2759,7 @@ bs_BA:
           few: "%{count} preostalo"
           other: "%{count} preostalo"
     flagging_topic:
-      title: "Zašto privatno opominjete ovu temu?"
+      title: "Hvala što pomažete održavati našu zajednicu pristojnom."
       action: "Prijavi temu"
       notify_action: "Privatna poruka"
     topic_map:
@@ -3193,7 +3193,7 @@ bs_BA:
         stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
         version_check_pending: "Looks like you upgraded recently. Fantastic!"
         installed_version: "Installed"
-        latest_version: "Posljednje"
+        latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"

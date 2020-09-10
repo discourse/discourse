@@ -393,12 +393,6 @@ ko:
         tomorrow: "내일"
       progress:
         jump_prompt_or: "또는"
-      notifications:
-        reasons:
-          "3": "You will receive notifications because you are watching this topic."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
-          "1": "You will be notified if someone mentions your @name or replies to you."
-          "0": "You are ignoring all notifications on this topic."
       share:
         help: "이 주제에 대해 링크 공유하기"
     post:

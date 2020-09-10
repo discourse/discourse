@@ -55,6 +55,7 @@ module BackupRestore
       clear_category_cache
       clear_emoji_cache
       clear_theme_cache
+      clear_stats
       reload_translations
 
       @uploads_restorer.restore(@tmp_directory)
@@ -168,6 +169,10 @@ module BackupRestore
       ThemeField.force_recompilation!
       Theme.expire_site_cache!
       Stylesheet::Manager.cache.clear
+    end
+
+    def clear_stats
+      Discourse.stats.remove("missing_s3_uploads")
     end
 
     def after_restore_hook

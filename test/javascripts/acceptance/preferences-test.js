@@ -427,3 +427,33 @@ QUnit.test("can select an option from a dropdown", async (assert) => {
   await field.selectRowByValue("Cat");
   assert.equal(field.header().value(), "Cat", "it sets the value of the field");
 });
+
+acceptance(
+  "User Preferences, selecting bookmarks discovery as user's default homepage",
+  {
+    loggedIn: true,
+    settings: {
+      top_menu: "categories|latest|top|bookmarks",
+    },
+  }
+);
+
+QUnit.test(
+  "selecting bookmarks as home directs home to bookmarks",
+  async (assert) => {
+    await visit("/u/eviltrout/preferences/interface");
+    assert.ok(exists(".home .combo-box"), "it has a home selector combo-box");
+
+    const field = selectKit(".home .combo-box");
+    await field.expand();
+    await field.selectRowByValue("6");
+    await click(".save-changes");
+    await visit("/");
+    assert.ok(exists(".topic-list"), "The list of topics was rendered");
+    assert.equal(
+      currentPath(),
+      "discovery.bookmarks",
+      "it navigates to bookmarks"
+    );
+  }
+);

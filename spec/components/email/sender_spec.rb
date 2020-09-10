@@ -404,6 +404,87 @@ describe Email::Sender do
         .to contain_exactly(*[small_pdf, large_pdf, csv_file].map(&:original_filename))
     end
 
+    context "when secure media enabled" do
+      def enable_s3_uploads
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "some key"
+        SiteSetting.s3_secret_access_key = "some secrets3_region key"
+        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
+        stub_request(
+          :put,
+          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image.sha1}.#{image.extension}?acl"
+        )
+        store = FileStore::S3Store.new
+        s3_helper = store.instance_variable_get(:@s3_helper)
+        client = Aws::S3::Client.new(stub_responses: true)
+        s3_helper.stubs(:s3_client).returns(client)
+        Discourse.stubs(:store).returns(store)
+      end
+
+      before do
+        enable_s3_uploads
+        SiteSetting.secure_media = true
+        SiteSetting.login_required = true
+        SiteSetting.email_total_attachment_size_limit_kb = 14_000
+        SiteSetting.secure_media_max_email_embed_image_size_kb = 5_000
+
+        Jobs.run_immediately!
+        Jobs::PullHotlinkedImages.any_instance.expects(:execute)
+        FileStore::S3Store.any_instance.expects(:has_been_uploaded?).returns(true).at_least_once
+        CookedPostProcessor.any_instance.stubs(:get_size).returns([244, 66])
+
+        @secure_image = UploadCreator.new(file_from_fixtures("logo.png", "images"), "logo.png")
+          .create_for(Discourse.system_user.id)
+        @secure_image.update_secure_status(secure_override_value: true)
+        @secure_image.update(access_control_post_id: reply.id)
+        reply.update(raw: reply.raw + "\n" + "#{UploadMarkdown.new(@secure_image).image_markdown}")
+        reply.rebake!
+      end
+
+      it "does not attach images when embedding them is not allowed" do
+        Email::Sender.new(message, :valid_type).send
+        expect(message.attachments.length).to eq(3)
+      end
+
+      context "when embedding secure images in email is allowed" do
+        before do
+          SiteSetting.secure_media_allow_embed_images_in_emails = true
+        end
+
+        it "does not attach images that are not marked as secure" do
+          Email::Sender.new(message, :valid_type).send
+          expect(message.attachments.length).to eq(4)
+        end
+
+        it "does not embed images that are too big" do
+          SiteSetting.secure_media_max_email_embed_image_size_kb = 1
+          Email::Sender.new(message, :valid_type).send
+          expect(message.attachments.length).to eq(3)
+        end
+
+        it "uses the email styles to inline secure images and attaches the secure image upload to the email" do
+          Email::Sender.new(message, :valid_type).send
+          expect(message.attachments.length).to eq(4)
+          expect(message.attachments.map(&:filename))
+            .to contain_exactly(*[small_pdf, large_pdf, csv_file, @secure_image].map(&:original_filename))
+          expect(message.html_part.body).to include("cid:")
+          expect(message.html_part.body).to include("embedded-secure-image")
+          expect(message.attachments.length).to eq(4)
+        end
+      end
+    end
+
+    it "adds only non-image uploads as attachments to the email and leaves the image intact with original source" do
+      SiteSetting.email_total_attachment_size_limit_kb = 10_000
+      Email::Sender.new(message, :valid_type).send
+
+      expect(message.attachments.length).to eq(3)
+      expect(message.attachments.map(&:filename))
+        .to contain_exactly(*[small_pdf, large_pdf, csv_file].map(&:original_filename))
+      expect(message.html_part.body).to include("<img src=\"#{Discourse.base_url}#{image.url}\"")
+    end
+
     it "respects the size limit and attaches only files that fit into the max email size" do
       SiteSetting.email_total_attachment_size_limit_kb = 40
       Email::Sender.new(message, :valid_type).send

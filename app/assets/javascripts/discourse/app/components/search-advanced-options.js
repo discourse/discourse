@@ -21,10 +21,10 @@ const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
 const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
-const REGEXP_SPECIAL_IN_LIKES_MATCH = /^in:likes/gi;
-const REGEXP_SPECIAL_IN_TITLE_MATCH = /^in:title/gi;
-const REGEXP_SPECIAL_IN_PERSONAL_MATCH = /^in:personal/gi;
-const REGEXP_SPECIAL_IN_SEEN_MATCH = /^in:seen/gi;
+const REGEXP_SPECIAL_IN_LIKES_MATCH = /^in:likes$/gi;
+const REGEXP_SPECIAL_IN_TITLE_MATCH = /^in:title$/gi;
+const REGEXP_SPECIAL_IN_PERSONAL_MATCH = /^in:personal$/gi;
+const REGEXP_SPECIAL_IN_SEEN_MATCH = /^in:seen$/gi;
 
 const REGEXP_CATEGORY_SLUG = /^(\#[a-zA-Z0-9\-:]+)/gi;
 const REGEXP_CATEGORY_ID = /^(category:[0-9]+)/gi;
@@ -32,47 +32,54 @@ const REGEXP_POST_TIME_WHEN = /^(before|after)/gi;
 
 const IN_OPTIONS_MAPPING = { images: "with" };
 
+const inOptionsForUsers = [
+  { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
+  { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
+  { name: I18n.t("search.advanced.filters.created"), value: "created" },
+  { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
+  { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
+  { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" },
+];
+
+const inOptionsForAll = [
+  { name: I18n.t("search.advanced.filters.first"), value: "first" },
+  { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
+  { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
+  { name: I18n.t("search.advanced.filters.images"), value: "images" },
+];
+
+const statusOptions = [
+  { name: I18n.t("search.advanced.statuses.open"), value: "open" },
+  { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
+  { name: I18n.t("search.advanced.statuses.public"), value: "public" },
+  { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
+  {
+    name: I18n.t("search.advanced.statuses.noreplies"),
+    value: "noreplies",
+  },
+  {
+    name: I18n.t("search.advanced.statuses.single_user"),
+    value: "single_user",
+  },
+];
+
+const postTimeOptions = [
+  { name: I18n.t("search.advanced.post.time.before"), value: "before" },
+  { name: I18n.t("search.advanced.post.time.after"), value: "after" },
+];
+
+function addAdvancedSearchOptions(options) {
+  inOptionsForAll.pushObjects(options.inOptionsForAll);
+  inOptionsForUsers.pushObjects(options.inOptionsForUsers);
+  statusOptions.pushObjects(options.statusOptions);
+  postTimeOptions.pushObjects(options.postTimeOptions);
+}
+
 export default Component.extend({
   classNames: ["search-advanced-options"],
 
   init() {
     this._super(...arguments);
-
-    this.inOptionsForUsers = [
-      { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
-      { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
-      { name: I18n.t("search.advanced.filters.created"), value: "created" },
-      { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
-      { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
-      { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" },
-    ];
-
-    this.inOptionsForAll = [
-      { name: I18n.t("search.advanced.filters.first"), value: "first" },
-      { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
-      { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
-      { name: I18n.t("search.advanced.filters.images"), value: "images" },
-    ];
-
-    this.statusOptions = [
-      { name: I18n.t("search.advanced.statuses.open"), value: "open" },
-      { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
-      { name: I18n.t("search.advanced.statuses.public"), value: "public" },
-      { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
-      {
-        name: I18n.t("search.advanced.statuses.noreplies"),
-        value: "noreplies",
-      },
-      {
-        name: I18n.t("search.advanced.statuses.single_user"),
-        value: "single_user",
-      },
-    ];
-
-    this.postTimeOptions = [
-      { name: I18n.t("search.advanced.post.time.before"), value: "before" },
-      { name: I18n.t("search.advanced.post.time.after"), value: "after" },
-    ];
 
     this._init();
 
@@ -111,8 +118,10 @@ export default Component.extend({
         },
       },
       inOptions: this.currentUser
-        ? this.inOptionsForUsers.concat(this.inOptionsForAll)
-        : this.inOptionsForAll,
+        ? inOptionsForUsers.concat(inOptionsForAll)
+        : inOptionsForAll,
+      statusOptions: statusOptions,
+      postTimeOptions: postTimeOptions,
     });
   },
 
@@ -651,3 +660,5 @@ export default Component.extend({
     },
   },
 });
+
+export { addAdvancedSearchOptions };

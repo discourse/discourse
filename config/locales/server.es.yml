@@ -1614,7 +1614,6 @@ es:
     allow_all_attachments_for_group_messages: "Permitir todos los archivos adjuntos de correo electrónico para los mensajes grupales."
     png_to_jpg_quality: "Calidad del archivo JPG convertido (1 es calidad mínima, 99 es máxima calidad, 100 para deshabilitar conversión)."
     allow_staff_to_upload_any_file_in_pm: "Permitir a los miembros del staff subir cualquier archivo en MP."
-    convert_heif_to_jpeg: "Convertir imagenes subidas de tipo '.heic' o '.heif' a jpeg."
     strip_image_metadata: "Eliminar metadatos de imágenes."
     min_ratio_to_crop: "Proporción utilizada para recortar imágenes altas. Ingresa el resultado de anchura / altura."
     simultaneous_uploads: "Número máximo de archivos que se pueden arrastrar y soltar en el editor"

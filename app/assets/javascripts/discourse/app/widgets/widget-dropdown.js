@@ -1,6 +1,8 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
+import { schedule } from "@ember/runloop";
+import { createPopper } from "@popperjs/core";
 
 /*
 
@@ -244,33 +246,34 @@ export const WidgetDropdownClass = {
 
   didRenderWidget() {
     if (this.state.opened) {
-      const dropdownHeader = document.querySelector(
-        `#${this.attrs.id} .widget-dropdown-header`
-      );
+      schedule("afterRender", () => {
+        const dropdownHeader = document.querySelector(
+          `#${this.attrs.id} .widget-dropdown-header`
+        );
 
-      if (!dropdownHeader) return;
+        if (!dropdownHeader) return;
 
-      const dropdownBody = document.querySelector(
-        `#${this.attrs.id} .widget-dropdown-body`
-      );
+        const dropdownBody = document.querySelector(
+          `#${this.attrs.id} .widget-dropdown-body`
+        );
 
-      if (!dropdownBody) return;
+        if (!dropdownBody) return;
 
-      /* global Popper:true */
-      this._popper = Popper.createPopper(dropdownHeader, dropdownBody, {
-        strategy: "fixed",
-        placement: "bottom-start",
-        modifiers: [
-          {
-            name: "preventOverflow",
-          },
-          {
-            name: "offset",
-            options: {
-              offset: [0, 5],
+        this._popper = createPopper(dropdownHeader, dropdownBody, {
+          strategy: "fixed",
+          placement: "bottom-start",
+          modifiers: [
+            {
+              name: "preventOverflow",
             },
-          },
-        ],
+            {
+              name: "offset",
+              options: {
+                offset: [0, 5],
+              },
+            },
+          ],
+        });
       });
     }
   },

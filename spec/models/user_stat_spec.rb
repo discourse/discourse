@@ -88,6 +88,46 @@ describe UserStat do
       post.user.user_stat.reload
       expect(post.user.user_stat.first_unread_at).to eq_time(Time.zone.now)
     end
+
+    it 'updates first unread pm timestamp correctly' do
+      pm_topic = Fabricate(:private_message_topic)
+      user = pm_topic.user
+      user.update!(last_seen_at: Time.zone.now)
+      create_post(user: user, topic_id: pm_topic.id)
+
+      TopicUser.change(user.id, pm_topic.id,
+        notification_level: TopicUser.notification_levels[:tracking]
+      )
+
+      # user that is not tracking PM topic
+      user_2 = Fabricate(:user, last_seen_at: Time.zone.now)
+      pm_topic.allowed_users << user_2
+
+      TopicUser.change(user_2.id, pm_topic.id,
+        notification_level: TopicUser.notification_levels[:regular]
+      )
+
+      # User that has not been seen
+      user_3 = Fabricate(:user)
+      pm_topic.allowed_users << user_3
+
+      TopicUser.change(user_3.id, pm_topic.id,
+        notification_level: TopicUser.notification_levels[:tracking]
+      )
+
+      freeze_time 10.minutes.from_now
+
+      post = create_post(
+        user: Fabricate(:admin),
+        topic_id: pm_topic.id
+      )
+
+      UserStat.ensure_consistency!
+
+      expect(user.user_stat.reload.first_unread_pm_at).to eq_time(post.topic.updated_at)
+      expect(user_2.user_stat.reload.first_unread_pm_at).to_not eq_time(post.topic.updated_at)
+      expect(user_3.user_stat.reload.first_unread_pm_at).to_not eq_time(post.topic.updated_at)
+    end
   end
 
   describe 'update_time_read!' do

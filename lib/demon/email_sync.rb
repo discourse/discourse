@@ -68,9 +68,7 @@ class Demon::EmailSync < ::Demon::Base
 
     @sync_data.each do |db, sync_data|
       sync_data.each do |_, data|
-        data[:thread].kill
-        data[:thread].join
-        data[:syncer]&.disconnect! rescue nil
+        kill_and_disconnect!(data)
       end
     end
 
@@ -104,9 +102,7 @@ class Demon::EmailSync < ::Demon::Base
         next true if all_dbs.include?(db)
 
         sync_data.each do |_, data|
-          data[:thread].kill
-          data[:thread].join
-          data[:syncer]&.disconnect!
+          kill_and_disconnect!(data)
         end
 
         false
@@ -130,10 +126,7 @@ class Demon::EmailSync < ::Demon::Base
               ImapSyncLog.warn("Thread for group is dead", group_id)
             end
 
-            data[:thread].kill
-            data[:thread].join
-            data[:syncer]&.disconnect!
-
+            kill_and_disconnect!(data)
             false
           end
 
@@ -165,5 +158,15 @@ class Demon::EmailSync < ::Demon::Base
     STDERR.puts e.message
     STDERR.puts e.backtrace.join("\n")
     exit 1
+  end
+
+  def kill_and_disconnect!(data)
+    data[:thread].kill
+    data[:thread].join
+    begin
+      data[:syncer]&.disconnect!
+    rescue Net::IMAP::ResponseError => err
+      puts "[EmailSync] Encountered a response error when disconnecting: #{err.to_s}"
+    end
   end
 end

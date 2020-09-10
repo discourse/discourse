@@ -208,6 +208,58 @@ describe Search do
       )
     end
 
+    it 'searches correctly as an admin' do
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(admin)
+      )
+
+      expect(results.posts).to eq([])
+    end
+
+    it "searches correctly as an admin given another user's context" do
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        search_context: reply.user,
+        guardian: Guardian.new(admin)
+      )
+
+      expect(results.posts).to contain_exactly(reply)
+    end
+
+    it "raises the right error when a normal user searches for another user's context" do
+      expect do
+        Search.execute(
+          'mars',
+          search_context: reply.user,
+          type_filter: 'private_messages',
+          guardian: Guardian.new(Fabricate(:user))
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it 'searches correctly as a user' do
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(reply.user)
+      )
+
+      expect(results.posts).to contain_exactly(reply)
+    end
+
+    it 'searches correctly for a user with no private messages' do
+      results = Search.execute(
+        'mars',
+        type_filter: 'private_messages',
+        guardian: Guardian.new(Fabricate(:user))
+       )
+
+      expect(results.posts).to eq([])
+    end
+
     it 'searches correctly' do
       expect do
         Search.execute('mars', type_filter: 'private_messages')
@@ -223,42 +275,8 @@ describe Search do
 
       results = Search.execute(
         'mars',
-        type_filter: 'private_messages',
-        guardian: Guardian.new(admin)
-      )
-
-      expect(results.posts).to contain_exactly(reply, post2)
-
-      results = Search.execute(
-        'mars',
         search_context: topic,
         guardian: Guardian.new(reply.user)
-      )
-
-      expect(results.posts).to contain_exactly(reply)
-
-      # does not leak out
-      results = Search.execute(
-        'mars',
-        type_filter: 'private_messages',
-        guardian: Guardian.new(Fabricate(:user))
-      )
-
-      expect(results.posts.empty?).to eq(true)
-
-      # admin can search everything with correct context
-      results = Search.execute(
-        'mars',
-        type_filter: 'private_messages',
-        search_context: post.user,
-        guardian: Guardian.new(admin)
-      )
-
-      expect(results.posts).to contain_exactly(reply)
-
-      results = Search.execute(
-        'mars in:personal',
-        guardian: Guardian.new(post.user)
       )
 
       expect(results.posts).to contain_exactly(reply)
@@ -285,7 +303,7 @@ describe Search do
         expect do
           results = Search.execute(
             "mars personal_messages:#{post.user.username}",
-            guardian: Guardian.new(post.user)
+            guardian: Guardian.new(Fabricate(:user))
           )
         end.to raise_error(Discourse::InvalidAccess)
       end

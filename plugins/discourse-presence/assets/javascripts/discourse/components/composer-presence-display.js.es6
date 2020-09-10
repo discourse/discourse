@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { cancel, throttle } from "@ember/runloop";
-import { equal, gt } from "@ember/object/computed";
+import { gt, readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import discourseComputed, {
   observes,
@@ -13,8 +13,6 @@ import {
   COMPOSER_TYPE,
   KEEP_ALIVE_DURATION_SECONDS,
 } from "discourse/plugins/discourse-presence/discourse/lib/presence";
-
-import { REPLY, EDIT } from "discourse/models/composer";
 
 export default Component.extend({
   // Passed in variables
@@ -30,7 +28,8 @@ export default Component.extend({
     return this.presenceManager.editingUsers(topicId);
   },
 
-  isReply: equal("model.action", REPLY),
+  isReply: readOnly("model.replyingToTopic"),
+  isEdit: readOnly("model.editingPost"),
 
   @on("didInsertElement")
   subscribe() {
@@ -41,12 +40,13 @@ export default Component.extend({
     "model.post.id",
     "editingUsers.@each.last_seen",
     "users.@each.last_seen",
-    "model.action"
+    "isReply",
+    "isEdit"
   )
-  presenceUsers(postId, editingUsers, users, action) {
-    if (action === EDIT) {
+  presenceUsers(postId, editingUsers, users, isReply, isEdit) {
+    if (isEdit) {
       return editingUsers.filterBy("post_id", postId);
-    } else if (action === REPLY) {
+    } else if (isReply) {
       return users;
     }
     return [];
@@ -60,18 +60,13 @@ export default Component.extend({
   },
 
   _typing() {
-    const action = this.get("model.action");
-
-    if (
-      (action !== REPLY && action !== EDIT) ||
-      !this.get("model.composerOpened")
-    ) {
+    if ((!this.isReply && !this.isEdit) || !this.get("model.composerOpened")) {
       return;
     }
 
     let data = {
       topicId: this.get("model.topic.id"),
-      state: action === EDIT ? EDITING : REPLYING,
+      state: this.isEdit ? EDITING : REPLYING,
       whisper: this.get("model.whisper"),
       postId: this.get("model.post.id"),
       presenceStaffOnly: this.get("model._presenceStaffOnly"),

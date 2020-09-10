@@ -82,6 +82,8 @@ class DiscoursePluginRegistry
   define_filtered_register :api_parameter_routes
   define_filtered_register :api_key_scope_mappings
 
+  define_filtered_register :permitted_bulk_action_parameters
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

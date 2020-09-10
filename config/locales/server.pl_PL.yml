@@ -115,6 +115,7 @@ pl_PL:
         bounced_email_error: "Email jest cofniętym raportem emaila."
         screened_email_error: "Zdarza się kiedy adres email nadawcy został zasłonięty. "
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
+        email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
       unrecognized_error: "Niezidentyfikowany błąd"
     secure_media_placeholder: "Zredagowano: ta strona ma włączone bezpieczne media, przejdź do tematu, aby zobaczyć załączony obraz / audio / wideo."
   errors: &errors
@@ -192,6 +193,8 @@ pl_PL:
       s3_backup_requires_s3_settings: "Nie możesz używać S3 do tworzenia kopii zapasowych bez podania \"%{setting_name}\"."
       s3_bucket_reused: "Nie możesz używać tego samego bucketu jako \"s3_upload_bucket\" i \"s3_backup_bucket\". Wybierz inny bucket albo podaj różne ścieżki dla każdego z bucketów."
       secure_media_requirements: "Przesyłanie S3 musi być włączone przed włączeniem bezpiecznych mediów."
+      share_quote_facebook_requirements: "Aby włączyć udostępnianie na Facebooku, musisz ustawić identyfikator aplikacji Facebook."
+      second_factor_cannot_enforce_with_socials: "Nie można wymusić 2FA z włączonym logowaniu społecznościowym. Najpierw musisz wyłączyć logowanie przez: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nie można wymusić 2FA, jeśli lokalne logowanie jest wyłączone."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Nie można wyłączyć lokalnego logowania, jeśli wymuszone jest 2FA. Wyłącz wymuszone 2FA przed wyłączeniem lokalnych logowań."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nie można włączyć przesyłania S3, ponieważ przesyłanie S3 jest już włączone globalnie, a włączenie tego poziomu witryny może powodować krytyczne problemy z przesyłaniem"
@@ -208,6 +211,7 @@ pl_PL:
     error_message: "Podczas akceptowania zaproszenia wystąpił błąd. Skontaktuj się z administratorem strony."
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!"
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy email aktywacyjny na Twój adres mailowy. Postępuj zgodnie z instrukcjami w mailu, aby aktywować konto. </p><p>Jeśli email nie przyszedł, sprawdź folder ze spamem.</p>"
+    cant_invite_to_group: "Nie możesz zapraszać użytkowników do określonej grupy. Upewnij się, że jesteś właścicielem grupy, do których próbujesz zaprosić."
   bulk_invite:
     file_should_be_csv: "Wgrywany plik powinien być formatu csv."
     max_rows: "Wysłano %{max_bulk_invites} pierwszych zaproszeń. Sprobuj podzielić plik na mniejsze części."
@@ -218,6 +222,7 @@ pl_PL:
   topic_invite:
     failed_to_invite: "Nie można zaprosić użytkownika do tego tematu, ponieważ nie jest członkiem choć jednej z następujących grup: %{group_names}."
     user_exists: "Przepraszamy, ten użytkownik został już zaproszony. Możesz zaprosić użytkownika do tematu tylko raz."
+    not_allowed: "Przepraszamy, ten użytkownik nie może zostać zaproszony."
   backup:
     operation_already_running: "Operacja jest już uruchomiona. Nie można teraz utworzyć nowej."
     backup_file_should_be_tar_gz: "Plik z kopią zapasową powinien mieć postać archiwum .tar.gz."
@@ -301,6 +306,8 @@ pl_PL:
     few: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach w poście."
     many: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach w poście."
     other: "Przepraszamy, nowi użytkownicy mogą wspomnieć tylko o %{count} użytkownikach we wpisie.."
+  no_embedded_media_allowed_trust: "Przepraszamy, nie możesz osadzić elementów multimedialnych w poście."
+  no_embedded_media_allowed: "Przepraszamy, nowi użytkownicy nie mogą osadzić elementów multimedialnych w poście."
   no_attachments_allowed: "Przepraszamy, nowi użytkownicy nie mogą dodawać załączników do wpisów."
   too_many_attachments:
     one: "Przepraszamy, nowi użytkownicy mogą dodawać tylko jeden załącznik do wpisu."
@@ -403,6 +410,7 @@ pl_PL:
       email_already_used_in_category: "'%{email}' jest już używany przez kategorię '%{category_name}'."
       cant_allow_membership_requests: "Nie możesz zatwierdzić członkostwa w grupie bez żadnego właściela"
       already_requested_membership: "Już zażądałaś/łeś dostępu do tej grupy."
+      adding_too_many_users: "Jednocześnie można dodać maksymalnie %{limit} użytkowników"
     default_names:
       everyone: "wszyscy"
       admins: "administratorzy"
@@ -462,6 +470,12 @@ pl_PL:
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
+    dominating_topic: |
+      ### Pozwól innym przyłączyć się do rozmowy
+
+      Ten temat jest dla Ciebie wyraźnie ważny &ndash; opublikowałeś tutaj ponad %{percent}% odpowiedzi.
+
+      Byłoby jeszcze lepiej, gdybyś dał innym ludziom przestrzeń do podzielenia się swoimi punktami widzenia. Możesz ich zaprosić?
     get_a_room: "### Zachęć każdego do zaangażowania się w rozmowę\n\nW tym temacie odpowiedziałaś/łeś %{reply_username} już %{count} razy!\n\nDobra dyskusja uwzględnia wiele głosów i perspektyw. Czy możesz tu zaangażować kogoś jeszcze?\n\nNie zapominaj, że jeśli chciał(a)byś kontynuować rozmowę z tym użytkownikiem bez publiczności, to możesz [wysłać im prywatną wiadomość](%{base_path}/u/{%reply_username}).\n \n"
     too_many_replies: |
       ### Osiągnąłeś limit odpowiedzi w tym temacie
@@ -579,6 +593,27 @@ pl_PL:
       Rozważ zamknięcie tego tematu poprzez administracyjny :wrench: (w prawym górnym i dolnym rogu), aby zapobiec niepotrzebnym odpowiedziom do ogłoszenia.
   lounge_welcome:
     title: "Witaj w Salonie"
+    body: |2
+
+      Gratulacje! :confetti_ball:
+
+      Jeśli widzisz ten temat, niedawno awansowałeś na **regularny** (poziom zaufania 3).
+
+      Możesz teraz &hellip;
+
+      * Edytować tytuł dowolnego tematu
+      * Zmienić kategorię dowolnego tematu
+      * Umożliwić wyszukiwarce podążać za Twoimi linkami ([automatyczne nofollow] (https://en.wikipedia.org/wiki/Nofollow) zostało usunięte )
+      * Przeglądać prywatną kategorię widoczną tylko dla użytkowników o poziomie zaufania 3 i wyższym
+      * Ukrywać spam za pomocą jednej flagi
+
+      Oto [aktualna lista innych stałych bywalców] (%{base_path}/badges/3/regular). Nie zapomnij się przywitać.
+
+      Dziękujemy za bycie ważną częścią tej społeczności!
+
+      (Aby uzyskać więcej informacji na temat poziomów zaufania, [zobacz ten temat][trust]. Należy pamiętać, że stałymi członkami pozostaną tylko członkowie, którzy z czasem będą nadal spełniać wymagania).
+
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "README: Skrócony poradnik administratora"
   category:
     topic_prefix: "O kategorii %{category}"
@@ -817,6 +852,7 @@ pl_PL:
     confirmed: "Twój email został zmieniony."
     please_continue: "Przejdź do %{site_name}"
     error: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
+    doesnt_exist: "Ten adres e-mail nie jest powiązany z Twoim kontem."
     error_staged: "Podczas próby zmiany Twojego adresu email wystąpił błąd. Być może ten adres jest już używany?"
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twój mail został zmieniony?"
     confirm: "Potwierdź"

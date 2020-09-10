@@ -1143,6 +1143,250 @@ export default {
       ]
     }
   },
+  "/bookmarks.json": {
+    users: [
+      { id: 7204, username: "reyman64", avatar_template: "/images/avatar.png" },
+      { id: 1, username: "sam", avatar_template: "/images/avatar.png" },
+      { id: 5481, username: "f0rkz", avatar_template: "/images/avatar.png" },
+      { id: 6473, username: "jkf", avatar_template: "/images/avatar.png" },
+      {
+        id: 6973,
+        username: "stellarhopper",
+        avatar_template: "/images/avatar.png"
+      },
+      {
+        id: 19,
+        username: "eviltrout",
+        name: "Evil Trout",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 14, username: "clay", avatar_template: "/images/avatar.png" },
+      {
+        id: 32,
+        username: "codinghorror",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 1917, username: "sil", avatar_template: "/images/avatar.png" },
+      { id: 7197, username: "peeja", avatar_template: "/images/avatar.png" },
+      { id: 1995, username: "zogstrip", avatar_template: "/images/avatar.png" },
+      {
+        id: 8021,
+        username: "Abhishek_Gupta",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 2291, username: "PabloC", avatar_template: "/images/avatar.png" },
+      { id: 791, username: "srid", avatar_template: "/images/avatar.png" },
+      {
+        id: 1580,
+        username: "ABillionSuns",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 7270, username: "mhurwi", avatar_template: "/images/avatar.png" },
+      {
+        id: 6695,
+        username: "illspirit",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 6929, username: "BCHK", avatar_template: "/images/avatar.png" },
+      { id: 4385, username: "jeans", avatar_template: "/images/avatar.png" },
+      { id: 7073, username: "5an1ty", avatar_template: "/images/avatar.png" },
+      { id: 6626, username: "riking", avatar_template: "/images/avatar.png" },
+      { id: 4457, username: "Lee_Ars", avatar_template: "/images/avatar.png" },
+      { id: 4263, username: "mcwumbly", avatar_template: "/images/avatar.png" },
+      {
+        id: 8134,
+        username: "iontishina",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 2072, username: "nXqd", avatar_template: "/images/avatar.png" },
+      {
+        id: 4983,
+        username: "hey_julien",
+        avatar_template: "/images/avatar.png"
+      },
+      {
+        id: 3657,
+        username: "steelmaiden",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 2624, username: "BowlingX", avatar_template: "/images/avatar.png" },
+      {
+        id: 8085,
+        username: "watchmanmonitor",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 4612, username: "Iszi", avatar_template: "/images/avatar.png" },
+      {
+        id: 8018,
+        username: "shivermetimbers",
+        avatar_template: "/images/avatar.png"
+      },
+      {
+        id: 6060,
+        username: "lightyear",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 2, username: "neil", avatar_template: "/images/avatar.png" },
+      { id: 8037, username: "printec", avatar_template: "/images/avatar.png" },
+      { id: 3415, username: "radq", avatar_template: "/images/avatar.png" },
+      {
+        id: 6283,
+        username: "hrishikesh",
+        avatar_template: "/images/avatar.png"
+      },
+      {
+        id: 471,
+        username: "BhaelOchon",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 6548, username: "michaeld", avatar_template: "/images/avatar.png" },
+      {
+        id: 7286,
+        username: "mrotsnahoj",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 3169, username: "dgw", avatar_template: "/images/avatar.png" },
+      {
+        id: 926,
+        username: "martinnormark",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 2003, username: "taylor", avatar_template: "/images/avatar.png" },
+      { id: 369, username: "CvX", avatar_template: "/images/avatar.png" },
+      { id: 562, username: "nightpool", avatar_template: "/images/avatar.png" },
+      { id: 6653, username: "amitfrid", avatar_template: "/images/avatar.png" },
+      {
+        id: 6677,
+        username: "Tropnevad",
+        avatar_template: "/images/avatar.png"
+      },
+      {
+        id: 5048,
+        username: "SneakySly",
+        avatar_template: "/images/avatar.png"
+      },
+      { id: 7333, username: "Jong", avatar_template: "/images/avatar.png" },
+      { id: 3124, username: "sipp11", avatar_template: "/images/avatar.png" },
+      { id: 7604, username: "citkane", avatar_template: "/images/avatar.png" },
+      { id: 3929, username: "ScotterC", avatar_template: "/images/avatar.png" },
+      { id: 6680, username: "cdman", avatar_template: "/images/avatar.png" },
+      { id: 500, username: "aeid", avatar_template: "/images/avatar.png" },
+      { id: 8, username: "geek", avatar_template: "/images/avatar.png" },
+      { id: 606, username: "Cafeine", avatar_template: "/images/avatar.png" }
+    ],
+    topic_list: {
+      can_create_topic: false,
+      more_topics_url: "/bookmarks.json?page=1",
+      draft: null,
+      draft_key: "new_topic",
+      draft_sequence: null,
+      topics: [
+        {
+          id: 11557,
+          title: "Error after upgrade to 0.9.7.9+",
+          fancy_title: "Error after upgrade to 0.9.7.9+",
+          slug: "error-after-upgrade-to-0-9-7-9",
+          posts_count: 83,
+          reply_count: 58,
+          highest_post_number: 85,
+          image_url: null,
+          created_at: "2013-12-22T17:12:05.000-05:00",
+          last_posted_at: "2014-01-16T00:52:30.000-05:00",
+          bumped: true,
+          bumped_at: "2014-01-16T00:52:30.000-05:00",
+          unseen: false,
+          pinned: true,
+          excerpt:
+            "Hi, \n\nI&#39;m using webfaction postgresql specific private instance to run discourse (custom port already configured for discourse 0.9.7.6). \n\nThis is not my first update, but this time i have an error. Impossible to upgrade&hellip;",
+          visible: true,
+          closed: false,
+          archived: false,
+          views: 1230,
+          like_count: 40,
+          has_summary: true,
+          archetype: "regular",
+          last_poster_username: "stellarhopper",
+          category_id: 17,
+          posters: [
+            { extras: null, description: "Original Poster", user_id: 7204 },
+            { extras: null, description: "Most Posts", user_id: 1 },
+            { extras: null, description: "Frequent Poster", user_id: 5481 },
+            { extras: null, description: "Frequent Poster", user_id: 6473 },
+            {
+              extras: "latest",
+              description: "Most Recent Poster",
+              user_id: 6973
+            }
+          ]
+        },
+        {
+          id: 1,
+          title: "Welcome to meta.discourse.org",
+          fancy_title: "Welcome to meta.discourse.org",
+          slug: "welcome-to-meta-discourse-org",
+          posts_count: 5,
+          reply_count: 5,
+          highest_post_number: 23,
+          image_url: null,
+          created_at: "2013-01-31T23:52:28.000-05:00",
+          last_posted_at: "2013-02-07T16:50:41.000-05:00",
+          bumped: true,
+          bumped_at: "2013-02-07T11:57:34.000-05:00",
+          unseen: false,
+          pinned: true,
+          excerpt:
+            "Welcome to meta, the official site for discussing the next-gen open source Discourse forum software. You&#39;ll find topics on features, bugs, hosting, development, and general support here. \n\nDiscourse is early beta softwar&hellip;",
+          visible: true,
+          closed: true,
+          archived: false,
+          views: 13792,
+          like_count: 108,
+          has_summary: false,
+          archetype: "regular",
+          last_poster_username: "codinghorror",
+          category_id: 17,
+          posters: [
+            { extras: null, description: "Original Poster", user_id: 1 },
+            { extras: null, description: "Most Posts", user_id: 19 },
+            { extras: null, description: "Frequent Poster", user_id: 14 },
+            { extras: "latest", description: "Most Recent Poster", user_id: 32 }
+          ]
+        },
+        {
+          id: 11997,
+          title: "Create topic in the future",
+          fancy_title: "Create topic in the future",
+          slug: "create-topic-in-the-future",
+          posts_count: 1,
+          reply_count: 0,
+          highest_post_number: 1,
+          image_url: null,
+          created_at: "2014-01-16T12:14:36.000-05:00",
+          last_posted_at: "2014-01-16T12:14:36.000-05:00",
+          bumped: false,
+          bumped_at: "2014-01-16T12:14:36.000-05:00",
+          unseen: false,
+          pinned: false,
+          visible: true,
+          closed: false,
+          archived: false,
+          views: 7,
+          like_count: 0,
+          has_summary: false,
+          archetype: "regular",
+          last_poster_username: "sil",
+          category_id: 2,
+          posters: [
+            {
+              extras: "latest",
+              description: "Original Poster, Most Recent Poster",
+              user_id: 1917
+            }
+          ]
+        }
+      ]
+    }
+  },
   "/categories.json": {
     category_list: {
       can_create_category: false,

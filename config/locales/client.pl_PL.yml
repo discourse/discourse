@@ -319,6 +319,7 @@ pl_PL:
       invalid_custom_datetime: "Podana data i godzina są nieprawidłowe, spróbuj ponownie."
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
       auto_delete_preference:
+        label: "Usuń automatycznie"
         never: "Nigdy"
       search: "Wyszukaj"
       reminders:
@@ -580,6 +581,7 @@ pl_PL:
       sent_by_user: "Wysłano przez <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Wysłano przez <a href='%{userUrl}'>Ciebie</a>"
     directory:
+      username: "Nazwa użytkownika"
       filter_name: "sortuj po nazwie użytkownika"
       title: "Użytkownicy"
       likes_given: "Oddane"
@@ -853,6 +855,7 @@ pl_PL:
       private_messages: "Wiadomości"
       user_notifications:
         filters:
+          filter_by: "Filtruj według"
           all: "Wszystkie"
           read: "Przeczytane"
           unread: "Nieprzeczytane"
@@ -907,6 +910,8 @@ pl_PL:
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
+      color_schemes:
+        default_description: "Domyślny"
       text_size_default_on_all_devices: "Ustaw ten domyślny rozmiar tekstu na wszystkich urządzeniach"
       allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"

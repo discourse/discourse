@@ -88,7 +88,7 @@ class NewPostManager
 
     return :post_count if (
       user.trust_level <= TrustLevel.levels[:basic] &&
-      user.post_count < SiteSetting.approve_post_count
+      (user.post_count + user.topic_count) < SiteSetting.approve_post_count
     )
 
     return :trust_level if user.trust_level < SiteSetting.approve_unless_trust_level.to_i
@@ -98,11 +98,11 @@ class NewPostManager
       user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i
     )
 
+    return :watched_word if WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
+
     return :fast_typer if is_fast_typer?(manager)
 
     return :auto_silence_regex if matches_auto_silence_regex?(manager)
-
-    return :watched_word if WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
 
     return :staged if SiteSetting.approve_unless_staged? && user.staged?
 

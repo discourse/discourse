@@ -451,7 +451,7 @@ describe ApplicationHelper do
 
   describe "dark_color_scheme?" do
     it 'returns nil for the base color scheme' do
-      expect(helper.dark_color_scheme?).to eq(nil)
+      expect(helper.dark_color_scheme?).to eq(false)
     end
 
     it 'works correctly for a dark scheme' do

@@ -70,6 +70,16 @@ describe TopicCreator do
           expect(topic).to be_valid
           expect(topic.category).to eq(category)
         end
+
+        it "ignores participant_count without raising an error" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(participant_count: 3))
+          expect(topic.participant_count).to eq(1)
+        end
+
+        it "accepts participant_count in import mode" do
+          topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(import_mode: true, participant_count: 3))
+          expect(topic.participant_count).to eq(3)
+        end
       end
     end
 

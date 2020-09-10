@@ -263,15 +263,43 @@ describe Stylesheet::Manager do
       expect(stylesheet2).to include("--primary: #c00;")
     end
 
-    it "includes theme color definitions in color scheme" do
-      theme = Fabricate(:theme)
-      theme.set_field(target: :common, name: :color_definitions, value: ':root {--special: rebeccapurple;}')
-      theme.save!
+    context "theme colors" do
+      let(:theme) { Fabricate(:theme).tap { |t|
+        t.set_field(target: :common, name: "color_definitions", value: ':root {--special: rebeccapurple;}')
+        t.save!
+      }}
 
-      scheme = ColorScheme.base
-      stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile
+      let(:scheme) { ColorScheme.base }
 
-      expect(stylesheet).to include("--special: rebeccapurple")
+      it "includes theme color definitions in color scheme" do
+        stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile
+        expect(stylesheet).to include("--special: rebeccapurple")
+      end
+
+      it "fails gracefully for broken SCSS" do
+        scss = "$test: $missing-var;"
+        theme.set_field(target: :common, name: "color_definitions", value: scss)
+        theme.save!
+
+        stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme)
+
+        expect { stylesheet.compile }.not_to raise_error
+      end
+    end
+
+    context 'encoded slugs' do
+      before { SiteSetting.slug_generation_method = 'encoded' }
+      after { SiteSetting.slug_generation_method = 'ascii' }
+
+      it "strips unicode in color scheme stylesheet filenames" do
+        cs = Fabricate(:color_scheme, name: 'Grün')
+        cs2 = Fabricate(:color_scheme, name: '어두운')
+
+        link = Stylesheet::Manager.color_scheme_stylesheet_link_tag(cs.id)
+        expect(link).to include("/stylesheets/color_definitions_grun_#{cs.id}_")
+        link2 = Stylesheet::Manager.color_scheme_stylesheet_link_tag(cs2.id)
+        expect(link2).to include("/stylesheets/color_definitions_scheme_#{cs2.id}_")
+      end
     end
   end
 
