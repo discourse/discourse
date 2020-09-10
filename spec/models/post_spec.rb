@@ -1025,7 +1025,7 @@ describe Post do
     it "should add nofollow to links in the post for trust levels below 3" do
       post.user.trust_level = 2
       post.save
-      expect(post.cooked).to match(/nofollow noopener/)
+      expect(post.cooked).to match(/noopener nofollow ugc/)
     end
 
     it "when tl3_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
@@ -1039,7 +1039,7 @@ describe Post do
       SiteSetting.tl3_links_no_follow = true
       post.user.trust_level = 3
       post.save
-      expect(post.cooked).to match(/nofollow noopener/)
+      expect(post.cooked).to match(/noopener nofollow ugc/)
     end
 
     describe 'mentions' do

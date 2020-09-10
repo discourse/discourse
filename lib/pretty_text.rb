@@ -269,9 +269,8 @@ module PrettyText
 
     doc = Nokogiri::HTML5.fragment(sanitized)
 
-    if !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
-      add_rel_nofollow_to_user_content(doc)
-    end
+    add_nofollow = !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+    add_rel_attributes_to_user_content(doc, add_nofollow)
 
     if SiteSetting.enable_mentions
       add_mentions(doc, user_id: opts[:user_id])
@@ -284,7 +283,7 @@ module PrettyText
     loofah_fragment.scrub!(scrubber).to_html
   end
 
-  def self.add_rel_nofollow_to_user_content(doc)
+  def self.add_rel_attributes_to_user_content(doc, add_nofollow)
     allowlist = []
 
     domains = SiteSetting.exclude_rel_nofollow_domains
@@ -293,22 +292,21 @@ module PrettyText
     site_uri = nil
     doc.css("a").each do |l|
       href = l["href"].to_s
+      l["rel"] = "noopener" if l["target"] == "_blank"
+
       begin
         uri = URI(UrlHelper.encode_component(href))
         site_uri ||= URI(Discourse.base_url)
 
-        if !uri.host.present? ||
-           uri.host == site_uri.host ||
-           uri.host.ends_with?(".#{site_uri.host}") ||
-           allowlist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
-          # we are good no need for nofollow
-          l.remove_attribute("rel")
-        else
-          l["rel"] = "nofollow noopener"
-        end
+        same_domain = !uri.host.present? ||
+          uri.host == site_uri.host ||
+          uri.host.ends_with?(".#{site_uri.host}") ||
+          allowlist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
+
+        l["rel"] = "noopener nofollow ugc" if add_nofollow && !same_domain
       rescue URI::Error
         # add a nofollow anyway
-        l["rel"] = "nofollow noopener"
+        l["rel"] = "noopener nofollow ugc"
       end
     end
   end
