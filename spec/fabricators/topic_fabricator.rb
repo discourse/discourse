@@ -26,6 +26,6 @@ Fabricator(:private_message_topic, from: :topic) do
   archetype "private_message"
   topic_allowed_users { |t| [
     Fabricate.build(:topic_allowed_user, user: t[:user]),
-    Fabricate.build(:topic_allowed_user, user: Fabricate(:coding_horror))
+    Fabricate.build(:topic_allowed_user, user: Fabricate(:user))
   ]}
 end
