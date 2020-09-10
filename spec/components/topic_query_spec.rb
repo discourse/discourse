@@ -9,7 +9,7 @@ describe TopicQuery do
   #  it indeed happens first, but is not obvious later in the tests we depend on the user being
   #  created so early otherwise finding new topics does not work
   #  we should remove the let! here and use freeze time to communicate how the clock moves
-  let!(:user) { Fabricate(:coding_horror) }
+  let!(:user) { Fabricate(:user) }
 
   fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
