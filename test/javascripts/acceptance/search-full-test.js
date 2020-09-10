@@ -188,6 +188,13 @@ QUnit.test(
       "none in:title",
       'has updated search term to "none in:title"'
     );
+
+    await fillIn(".search-query", "none in:titleasd");
+
+    assert.not(
+      exists(".search-advanced-options .in-title:checked"),
+      "does not populate title only checkbox"
+    );
   }
 );
 
@@ -221,10 +228,18 @@ QUnit.test(
       exists(".search-advanced-options .in-private:checked"),
       'has "are in my messages" populated'
     );
+
     assert.equal(
       find(".search-query").val(),
       "none in:personal",
       'has updated search term to "none in:personal"'
+    );
+
+    await fillIn(".search-query", "none in:personal-direct");
+
+    assert.not(
+      exists(".search-advanced-options .in-private:checked"),
+      "does not populate messages checkbox"
     );
   }
 );
@@ -245,6 +260,13 @@ QUnit.test(
       find(".search-query").val(),
       "none in:seen",
       "it should update the search term"
+    );
+
+    await fillIn(".search-query", "none in:seenasdan");
+
+    assert.not(
+      exists(".search-advanced-options .in-seen:checked"),
+      "does not populate seen checkbox"
     );
   }
 );
@@ -382,9 +404,17 @@ QUnit.test("validate advanced search when initially empty", async (assert) => {
     selectKit(".search-advanced-options .in-likes:checked"),
     'has "I liked" populated'
   );
+
   assert.equal(
     find(".search-query").val(),
     "in:likes",
     'has updated search term to "in:likes"'
+  );
+
+  await fillIn(".search-query", "in:likesasdas");
+
+  assert.not(
+    exists(".search-advanced-options .in-likes:checked"),
+    "does not populate the likes checkbox"
   );
 });
