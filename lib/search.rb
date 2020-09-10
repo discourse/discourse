@@ -185,8 +185,13 @@ class Search
       @original_term = PG::Connection.escape_string(@term)
     end
 
-    if @search_pms
+    if @search_pms || @opts[:type_filter] == 'private_messages'
       @opts[:type_filter] = "private_messages"
+      @search_context ||= @guardian.user
+
+      unless @search_context.present? && @guardian.can_see_private_messages?(@search_context.id)
+        raise Discourse::InvalidAccess.new
+      end
     end
 
     if @search_all_topics && @guardian.user
@@ -694,8 +699,6 @@ class Search
         @search_pms = true
         nil
       elsif word =~ /^personal_messages:(.+)$/
-        raise Discourse::InvalidAccess.new unless @guardian.is_admin?
-
         if user = User.find_by_username($1)
           @search_pms = true
           @search_context = user
@@ -900,7 +903,7 @@ class Search
       if @search_context.present?
         if @search_context.is_a?(User)
           if type_filter === "private_messages"
-            posts.private_posts_for_user(@search_context)
+            @guardian.is_admin? ? posts.private_posts_for_user(@search_context) : posts
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end
