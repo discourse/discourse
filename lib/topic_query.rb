@@ -951,10 +951,9 @@ class TopicQuery
   end
 
   def new_messages(params)
-    query = TopicQuery
+    TopicQuery
       .new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
       .limit(params[:count])
-    query
   end
 
   def unread_messages(params)
