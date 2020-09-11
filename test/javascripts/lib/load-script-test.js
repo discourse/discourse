@@ -1,5 +1,5 @@
 import { loadScript, cacheBuster } from "discourse/lib/load-script";
-import { PUBLIC_JS_VERSIONS as jsVersions } from "discourse/lib/public_js_versions";
+import { PUBLIC_JS_VERSIONS as jsVersions } from "discourse/lib/public-js-versions";
 
 QUnit.module("lib:load-script");
 
