@@ -528,23 +528,19 @@ class TopicQuery
     options = @options
     options.reverse_merge!(per_page: per_page_setting)
 
-    result = Topic.includes(:tags)
+    result = Topic.includes(:tags, :allowed_users)
 
     if type == :group
-      result = result
-        .includes(:allowed_users)
-        .joins("INNER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id IN (SELECT id FROM groups WHERE LOWER(name) = '#{PG::Connection.escape_string(@options[:group_name].downcase)}')")
+      result = result.joins(
+        "INNER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id IN (SELECT id FROM groups WHERE LOWER(name) = '#{PG::Connection.escape_string(@options[:group_name].downcase)}')"
+      )
 
       unless user.admin?
         result = result.joins("INNER JOIN group_users gu ON gu.group_id = tag.group_id AND gu.user_id = #{user.id.to_i}")
       end
-
-      result
     elsif type == :user
-      result = result.includes(:allowed_users)
       result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
     elsif type == :all
-      result = result.includes(:allowed_users)
       result = result.where("topics.id IN (
             SELECT topic_id
             FROM topic_allowed_users
