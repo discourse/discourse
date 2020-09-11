@@ -39,18 +39,14 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
       if !bookmark
         # create one
         now = Time.zone.now
-        new_bookmarks << {
-          user_id: tt.user_id,
-          topic_id: tt.topic_id,
-          post_id: tt.first_post_id,
-          reminder_at: tt.execute_at,
-          reminder_type: 6, # custom
-          created_at: now,
-          updated_at: now
-        }
+        new_bookmarks << "(#{tt.user_id}, #{tt.topic_id}, #{tt.first_post_id}, #{tt.execute_at}, 6, #{now}, #{now})"
       else
         if !bookmark.reminder_at
-          Bookmark.find(bookmark.id).update(reminder_at: tt.execute_at, reminder_type: 6)
+          DB.exec(
+            "UPDATE bookmarks SET reminder_at = :reminder_at, reminder_type = 6 WHERE id = :bookmark_id",
+            reminder_at: tt.execute_at,
+            bookmark_id: bookmark.id
+          )
         end
 
         # if there is a bookmark with reminder already do nothing,
@@ -59,20 +55,22 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
       end
     end
 
-    Bookmark.insert_all(new_bookmarks)
+    DB.exec(<<~SQL, new_bookmarks: new_bookmarks)
+    INSERT INTO bookmarks(user_id, topic_id, post_id, reminder_at, reminder_type, created_at, updated_at)
+    VALUES :new_bookmarks
+    ON CONFLICT DO NOTHING
+    SQL
 
     # TODO(2021-01-07): delete leftover trashed records
     # trash these so the records are kept around for any possible data issues,
     # they can be deleted in a few months
     topic_timers_to_migrate_ids = topic_timers_to_migrate.map(&:id)
-    TopicTimer.where(id: topic_timers_to_migrate_ids).update_all(
-      deleted_at: Time.zone.now, deleted_by: Discourse.system_user
+    DB.exec(
+      "UPDATE topic_timers SET deleted_at = :deleted_at, deleted_by = :deleted_by WHERE ID IN (:ids)",
+      ids: topic_timers_to_migrate_ids,
+      deleted_at: Time.zone.now,
+      deleted_by: Discourse.system_user
     )
-
-    # Cancel all the outstanding jobs as well.
-    topic_timers_to_migrate_ids.each do |ttid|
-      Jobs.cancel_scheduled_job(:topic_reminder, topic_timer_id: ttid)
-    end
   end
 
   def down
