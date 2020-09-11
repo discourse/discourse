@@ -17,7 +17,7 @@
       {{#topic-title cancelled=(action "cancelEditingTopic") save=(action "finishedEditingTopic") model=model}}
         {{#if editingTopic}}
           <div class="edit-topic-title">
-            {{private-message-glyph isVisible=model.isPrivateMessage}}
+            {{private-message-glyph shouldShow=model.isPrivateMessage}}
 
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
 
@@ -61,13 +61,13 @@
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
                 {{private-message-glyph
-                  isVisible=model.isPrivateMessage
+                  shouldShow=model.isPrivateMessage
                   href=pmPath
                   title="topic_statuses.personal_message.title"
                   ariaLabel="user.messages.inbox"
                 }}
               {{else}}
-                {{private-message-glyph isVisible=model.isPrivateMessage}}
+                {{private-message-glyph shouldShow=model.isPrivateMessage}}
               {{/if}}
             {{/unless}}
 
