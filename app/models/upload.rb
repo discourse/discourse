@@ -57,9 +57,9 @@ class Upload < ActiveRecord::Base
 
   def self.verification_statuses
     @verification_statuses ||= Enum.new(
-      not_checked: 1,
+      unchecked: 1,
       verified: 2,
-      not_verified: 3
+      invalid_etag: 3
     )
   end
 

@@ -75,14 +75,14 @@ class S3Inventory
             id_threshold_clause = model == Upload ? " AND model_table.id > #{model::SEEDED_ID_THRESHOLD}" : ""
             sql_params = {
               inventory_date: inventory_date,
-              not_checked: Upload.verification_statuses[:not_checked],
-              not_verified: Upload.verification_statuses[:not_verified],
+              unchecked: Upload.verification_statuses[:unchecked],
+              invalid_etag: Upload.verification_statuses[:invalid_etag],
               verified: Upload.verification_statuses[:verified]
             }
             DB.exec(<<~SQL, sql_params
               UPDATE #{model.table_name}
               SET verification_status = CASE WHEN table_name_alias.etag IS NULL
-                THEN :not_verified
+                THEN :invalid_etag
                 ELSE :verified
               END
               FROM #{model.table_name} AS model_table
@@ -91,9 +91,9 @@ class S3Inventory
               WHERE model_table.id = #{model.table_name}.id
               AND model_table.updated_at < :inventory_date
               AND (
-                model_table.verification_status = :not_checked OR
+                model_table.verification_status = :unchecked OR
                 model_table.verification_status <> CASE WHEN table_name_alias.etag IS NULL
-                  THEN :not_verified
+                  THEN :invalid_etag
                   ELSE :verified
                 END
               )
