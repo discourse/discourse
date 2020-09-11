@@ -121,37 +121,44 @@ class Group < ActiveRecord::Base
     end
 
     if !user&.admin
-      is_staff = !!user&.staff?
+      sql = <<~SQL
+        groups.id IN (
+          SELECT id
+            FROM groups
+           WHERE visibility_level = :public
 
-      if user.blank?
-        sql = "groups.visibility_level = :public"
-      elsif is_staff
-        sql = "groups.visibility_level IN (:public, :logged_on_users, :members, :staff)"
-      else
-        sql = <<~SQL
-          groups.id IN (
-            SELECT id
-              FROM groups
-            WHERE visibility_level IN (:public, :logged_on_users)
+          UNION ALL
 
-            UNION ALL
+          SELECT id
+            FROM groups
+           WHERE visibility_level = :logged_on_users
+             AND :user_id IS NOT NULL
 
-            SELECT g.id
-              FROM groups g
-              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
-            WHERE g.visibility_level = :members
+          UNION ALL
 
-            UNION ALL
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
+           WHERE g.visibility_level = :members
 
-            SELECT g.id
-              FROM groups g
-              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
-            WHERE g.visibility_level IN (:staff, :owners)
-          )
-        SQL
-      end
+          UNION ALL
 
-      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: is_staff)
+          SELECT g.id
+            FROM groups g
+       LEFT JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.visibility_level = :staff
+             AND (gu.id IS NOT NULL OR :is_staff)
+
+          UNION ALL
+
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.visibility_level = :owners
+        )
+      SQL
+
+      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
       groups = groups.where(sql, params)
     end
 
@@ -166,37 +173,44 @@ class Group < ActiveRecord::Base
     end
 
     if !user&.admin
-      is_staff = !!user&.staff?
+      sql = <<~SQL
+        groups.id IN (
+          SELECT id
+            FROM groups
+           WHERE members_visibility_level = :public
 
-      if user.blank?
-        sql = "groups.members_visibility_level = :public"
-      elsif is_staff
-        sql = "groups.members_visibility_level IN (:public, :logged_on_users, :members, :staff)"
-      else
-        sql = <<~SQL
-          groups.id IN (
-            SELECT id
-              FROM groups
-            WHERE members_visibility_level IN (:public, :logged_on_users)
+          UNION ALL
 
-            UNION ALL
+          SELECT id
+            FROM groups
+           WHERE members_visibility_level = :logged_on_users
+             AND :user_id IS NOT NULL
 
-            SELECT g.id
-              FROM groups g
-              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
-            WHERE g.members_visibility_level = :members
+          UNION ALL
 
-            UNION ALL
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
+           WHERE g.members_visibility_level = :members
 
-            SELECT g.id
-              FROM groups g
-              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
-            WHERE g.members_visibility_level IN (:staff, :owners)
-          )
-        SQL
-      end
+          UNION ALL
 
-      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: is_staff)
+          SELECT g.id
+            FROM groups g
+       LEFT JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.members_visibility_level = :staff
+             AND (gu.id IS NOT NULL OR :is_staff)
+
+          UNION ALL
+
+          SELECT g.id
+            FROM groups g
+            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+           WHERE g.members_visibility_level = :owners
+        )
+      SQL
+
+      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
       groups = groups.where(sql, params)
     end
 
