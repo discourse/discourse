@@ -243,7 +243,7 @@ task 'javascript:update' do
     end
   end
 
-  write_template("discourse/app/lib/public_js_versions.js", "update", <<~JS)
+  write_template("discourse/app/lib/public-js-versions.js", "update", <<~JS)
     export const PUBLIC_JS_VERSIONS = #{versions.to_json};
   JS
 

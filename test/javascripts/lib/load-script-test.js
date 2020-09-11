@@ -21,7 +21,7 @@ QUnit.skip(
   }
 );
 
-QUnit.test("works when a value is not present", async (assert) => {
+QUnit.test("works when a value is not present", (assert) => {
   assert.equal(
     cacheBuster("/javascripts/my-script.js"),
     "/javascripts/my-script.js"
@@ -34,7 +34,7 @@ QUnit.test("works when a value is not present", async (assert) => {
 
 QUnit.test(
   "generates URLs with version number in the query params",
-  async (assert) => {
+  (assert) => {
     assert.equal(
       cacheBuster("/javascripts/pikaday.js"),
       `/javascripts/pikaday.js?v=${jsVersions["pikaday.js"]}`

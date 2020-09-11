@@ -113,7 +113,7 @@ export function cacheBuster(url) {
     const pathParts = url.split("/");
     if (pathParts[1] === "javascripts") {
       const version = PUBLIC_JS_VERSIONS[pathParts[2]];
-      if (version !== undefined) {
+      if (typeof version !== "undefined") {
         return `${url}?v=${version}`;
       }
     }
