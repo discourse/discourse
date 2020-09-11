@@ -27,7 +27,7 @@ export default Controller.extend(ModalFunctionality, {
         .closest(".modal-inner-container")
         .addEventListener("mousedown", this.mouseDown);
 
-      document.querySelector("input.link-url").focus();
+      document.activeElement.blur();
     });
   },
 
