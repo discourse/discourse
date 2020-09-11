@@ -21,7 +21,6 @@ import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
 } from "select-kit/mixins/plugin-api";
-import { createPopper } from "@popperjs/core";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -773,7 +772,8 @@ export default Component.extend(
 
         const verticalOffset = this.multiSelect ? 0 : 3;
 
-        this.popper = createPopper(anchor, popper, {
+        /* global Popper:true */
+        this.popper = Popper.createPopper(anchor, popper, {
           eventsEnabled: false,
           strategy: placementStrategy,
           placement: this.selectKit.options.placement,
