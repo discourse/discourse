@@ -323,6 +323,16 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/topic/anything/goes", params.merge("HTTP_DISCOURSE_PRESENT" => "true")).should_update_last_seen?).to eq(true)
   end
 
+  it "supports non persistent sessions" do
+    SiteSetting.persistent_sessions = false
+
+    @provider = provider('/')
+    cookies = {}
+    @provider.log_on_user(user, {}, cookies)
+
+    expect(cookies["_t"][:expires]).to eq(nil)
+  end
+
   it "correctly rotates tokens" do
     SiteSetting.maximum_session_age = 3
     @provider = provider('/')
