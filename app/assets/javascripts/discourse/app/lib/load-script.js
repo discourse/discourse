@@ -1,6 +1,7 @@
 import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
 import { run } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
 import { Promise } from "rsvp";
 
 const _loaded = {};
@@ -48,6 +49,10 @@ export default function loadScript(url, opts) {
 
   if (_loaded[url]) {
     return Promise.resolve();
+  }
+
+  if (PUBLIC_JS_VERSIONS && !opts.css) {
+    url = cacheBuster(url);
   }
 
   // Scripts should always load from CDN
@@ -101,4 +106,18 @@ export default function loadScript(url, opts) {
       loadWithTag(fullUrl, cb);
     }
   });
+}
+
+export function cacheBuster(url) {
+  if (PUBLIC_JS_VERSIONS) {
+    const pathParts = url.split("/");
+    if (pathParts[1] === "javascripts") {
+      const version = PUBLIC_JS_VERSIONS[pathParts[2]];
+      if (typeof version !== "undefined") {
+        return `${url}?v=${version}`;
+      }
+    }
+  }
+
+  return url;
 }
