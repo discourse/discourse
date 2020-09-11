@@ -1,3 +1,4 @@
+import { next } from "@ember/runloop";
 import I18n from "I18n";
 import { dasherize } from "@ember/string";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -72,7 +73,7 @@ export default function (name, opts) {
     controller.set("model", model);
   }
   if (controller.onShow) {
-    controller.onShow();
+    next(() => controller.onShow());
   }
   controller.set("flashMessage", null);
 
