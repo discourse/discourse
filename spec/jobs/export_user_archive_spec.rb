@@ -61,7 +61,7 @@ describe Jobs::ExportUserArchive do
 
       expect(system_message.first_post.raw).to eq(I18n.t(
         "system_messages.csv_export_succeeded.text_body_template",
-        download_link: "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.filesize} Bytes)"
+        download_link: "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})"
       ).chomp)
 
       expect(system_message.id).to eq(UserExport.last.topic_id)
@@ -187,6 +187,63 @@ describe Jobs::ExportUserArchive do
       expect(DateTime.parse(data[0]['granted_at'])).to be >= DateTime.parse(grant_start.to_s)
       expect(data[2]['granted_manually']).to eq('true')
       expect(Post.find(data[3]['post_id'])).to_not be_nil
+    end
+
+  end
+
+  context 'bookmarks' do
+    let(:component) { 'bookmarks' }
+
+    let(:name) { 'Collect my thoughts on this' }
+    let(:manager) { BookmarkManager.new(user) }
+    let(:topic1) { Fabricate(:topic) }
+    let(:post1) { Fabricate(:post, topic: topic1, post_number: 5) }
+    let(:post2) { Fabricate(:post) }
+    let(:post3) { Fabricate(:post) }
+    let(:message) { Fabricate(:private_message_topic) }
+    let(:post4) { Fabricate(:post, topic: message) }
+    let(:reminder_type) { Bookmark.reminder_types[:tomorrow] }
+    let(:reminder_at) { 1.day.from_now }
+
+    it 'properly includes bookmark records' do
+      now = freeze_time '2017-03-01 12:00'
+
+      bkmk1 = manager.create(post_id: post1.id, name: name)
+      update1_at = now + 1.hours
+      bkmk1.update(name: 'great food recipe', updated_at: update1_at)
+
+      manager.create(post_id: post2.id, name: name, reminder_type: :tomorrow, reminder_at: reminder_at, options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] })
+      twelve_hr_ago = freeze_time now - 12.hours
+      pending_reminder = manager.create(post_id: post3.id, name: name, reminder_type: :later_today, reminder_at: now - 8.hours)
+      freeze_time now
+
+      tau_record = message.topic_allowed_users.create!(user_id: user.id)
+      manager.create(post_id: post4.id, name: name)
+      tau_record.destroy!
+
+      BookmarkReminderNotificationHandler.send_notification(pending_reminder)
+
+      data, csv_out = make_component_csv
+
+      expect(data.length).to eq(4)
+
+      expect(data[0]['post_id']).to eq(post1.id.to_s)
+      expect(data[0]['topic_id']).to eq(topic1.id.to_s)
+      expect(data[0]['post_number']).to eq('5')
+      expect(data[0]['link']).to eq(post1.full_url)
+      expect(DateTime.parse(data[0]['updated_at'])).to eq(DateTime.parse(update1_at.to_s))
+
+      expect(data[1]['name']).to eq(name)
+      expect(data[1]['reminder_type']).to eq('tomorrow')
+      expect(DateTime.parse(data[1]['reminder_at'])).to eq(DateTime.parse(reminder_at.to_s))
+      expect(data[1]['auto_delete_preference']).to eq('when_reminder_sent')
+
+      expect(DateTime.parse(data[2]['created_at'])).to eq(DateTime.parse(twelve_hr_ago.to_s))
+      expect(DateTime.parse(data[2]['reminder_last_sent_at'])).to eq(DateTime.parse(now.to_s))
+      expect(data[2]['reminder_set_at']).to eq('')
+
+      expect(data[3]['topic_id']).to eq(message.id.to_s)
+      expect(data[3]['link']).to eq('')
     end
 
   end
