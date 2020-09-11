@@ -39,7 +39,7 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
       if !bookmark
         # create one
         now = Time.zone.now
-        new_bookmarks << "(#{tt.user_id}, #{tt.topic_id}, #{tt.first_post_id}, #{tt.execute_at}, 6, #{now}, #{now})"
+        new_bookmarks << "(#{tt.user_id}, #{tt.topic_id}, #{tt.first_post_id}, '#{tt.execute_at}', 6, '#{now}', '#{now}')"
       else
         if !bookmark.reminder_at
           DB.exec(
@@ -55,9 +55,9 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
       end
     end
 
-    DB.exec(<<~SQL, new_bookmarks: new_bookmarks)
+    DB.exec(<<~SQL)
     INSERT INTO bookmarks(user_id, topic_id, post_id, reminder_at, reminder_type, created_at, updated_at)
-    VALUES :new_bookmarks
+    VALUES #{new_bookmarks.join(",\n")}
     ON CONFLICT DO NOTHING
     SQL
 
@@ -66,7 +66,7 @@ class MigrateUserTopicTimersToBookmarkReminders < ActiveRecord::Migration[6.0]
     # they can be deleted in a few months
     topic_timers_to_migrate_ids = topic_timers_to_migrate.map(&:id)
     DB.exec(
-      "UPDATE topic_timers SET deleted_at = :deleted_at, deleted_by = :deleted_by WHERE ID IN (:ids)",
+      "UPDATE topic_timers SET deleted_at = :deleted_at, deleted_by_id = :deleted_by WHERE ID IN (:ids)",
       ids: topic_timers_to_migrate_ids,
       deleted_at: Time.zone.now,
       deleted_by: Discourse.system_user
