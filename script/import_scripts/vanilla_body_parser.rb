@@ -28,7 +28,7 @@ class VanillaBodyParser
   end
 
   def rich?
-    @row['Format'] == 'Rich'
+    @row['Format'].casecmp?('Rich')
   end
 
   def json
