@@ -220,7 +220,9 @@ export default Component.extend({
     results.innerHTML = "";
 
     if (event.target.value) {
-      results.innerHTML = emojiSearch(event.target.value, { maxResults: 10 })
+      results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
+        maxResults: 10,
+      })
         .map(this._replaceEmoji)
         .join("");
 
