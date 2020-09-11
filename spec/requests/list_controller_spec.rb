@@ -729,7 +729,15 @@ RSpec.describe ListController do
     end
 
     context "with subfolder" do
-      it "redirects to URL containing the updated slug" do
+      it "main category redirects to URL containing the updated slug" do
+        set_subfolder "/forum"
+        get "/c/#{category.slug}"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}")
+      end
+
+      it "sub-sub-category redirects to URL containing the updated slug" do
         set_subfolder "/forum"
         get "/c/hello/world/bye/#{subsubcategory.id}"
 
