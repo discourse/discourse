@@ -3,11 +3,12 @@ import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-bo
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
+  classNameBindings: ["showPeriods::hidden"],
   content: oneWay("site.periods"),
   value: readOnly("period"),
-  isVisible: readOnly("showPeriods"),
   valueProperty: null,
   nameProperty: null,
+  showPeriods: true,
 
   modifyComponentForRow() {
     return "period-chooser/period-chooser-row";
