@@ -29,7 +29,15 @@ PreloadStore.store("site", {
     { id: 20, name: "ubuntu" },
     { id: 21, name: "test" },
   ],
-  filters: ["latest", "unread", "new", "starred", "read", "posted"],
+  filters: [
+    "latest",
+    "unread",
+    "new",
+    "starred",
+    "read",
+    "posted",
+    "bookmarks",
+  ],
   periods: ["all", "yearly", "monthly", "weekly", "daily"],
   top_menu_items: [
     "latest",

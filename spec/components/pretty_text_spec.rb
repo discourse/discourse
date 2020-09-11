@@ -425,7 +425,7 @@ describe PrettyText do
     end
 
     it "can handle mentions inside a hyperlink" do
-      expect(PrettyText.cook("[link @inner](http://site.com)")).to match_html '<p><a href="http://site.com" rel="nofollow noopener">link @inner</a></p>'
+      expect(PrettyText.cook("[link @inner](http://site.com)")).to match_html '<p><a href="http://site.com" rel="noopener nofollow ugc">link @inner</a></p>'
     end
 
     it "can handle a list of mentions" do
@@ -513,42 +513,56 @@ describe PrettyText do
     end
   end
 
-  describe "rel nofollow" do
+  describe "rel attributes" do
     before do
       SiteSetting.add_rel_nofollow_to_user_content = true
       SiteSetting.exclude_rel_nofollow_domains = "foo.com|bar.com"
     end
 
     it "should inject nofollow in all user provided links" do
-      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow noopener/)
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/noopener nofollow ugc/)
     end
 
     it "should not inject nofollow in all local links" do
-      expect(PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(true)
     end
 
     it "should not inject nofollow in all subdomain links" do
-      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(true)
     end
 
     it "should inject nofollow in all non subdomain links" do
-      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla')}/test.html'>cnn</a>")).to match(/nofollow/)
+      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla')}/test.html'>cnn</a>")).to match(/nofollow ugc/)
     end
 
     it "should not inject nofollow for foo.com" do
-      expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(true)
     end
 
     it "should inject nofollow for afoo.com" do
-      expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(/nofollow/)
+      expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(/nofollow ugc/)
     end
 
     it "should not inject nofollow for bar.foo.com" do
-      expect(PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(true)
     end
 
     it "should not inject nofollow if omit_nofollow option is given" do
-      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow ugc/).to eq(true)
+    end
+
+    it 'adds the noopener attribute even if omit_nofollow option is given' do
+      raw_html = '<a href="https://www.mysite.com/" target="_blank">Check out my site!</a>'
+      expect(
+        PrettyText.cook(raw_html, omit_nofollow: true)
+      ).to match(/noopener/)
+    end
+
+    it 'adds the noopener attribute even if omit_nofollow option is given' do
+      raw_html = '<a href="https://www.mysite.com/" target="_blank">Check out my site!</a>'
+      expect(
+        PrettyText.cook(raw_html, omit_nofollow: false)
+      ).to match(/noopener nofollow ugc/)
     end
   end
 
@@ -724,7 +738,7 @@ describe PrettyText do
       more stuff
       RAW
       post = Fabricate(:post, raw: raw)
-      expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"nofollow noopener\">site</a>")
+      expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"noopener nofollow ugc\">site</a>")
     end
 
     it "handles span excerpt at the beginning of a post" do
@@ -1109,7 +1123,7 @@ describe PrettyText do
   it "supports href schemes" do
     SiteSetting.allowed_href_schemes = "macappstore|steam"
     cooked = cook("[Steam URL Scheme](steam://store/452530)")
-    expected = '<p><a href="steam://store/452530" rel="nofollow noopener">Steam URL Scheme</a></p>'
+    expected = '<p><a href="steam://store/452530" rel="noopener nofollow ugc">Steam URL Scheme</a></p>'
     expect(cooked).to eq(n expected)
   end
 
@@ -1123,7 +1137,7 @@ describe PrettyText do
   it 'allows only tel URL scheme to start with a plus character' do
     SiteSetting.allowed_href_schemes = "tel|steam"
     cooked = cook("[Tel URL Scheme](tel://+452530579785)")
-    expected = '<p><a href="tel://+452530579785" rel="nofollow noopener">Tel URL Scheme</a></p>'
+    expected = '<p><a href="tel://+452530579785" rel="noopener nofollow ugc">Tel URL Scheme</a></p>'
     expect(cooked).to eq(n expected)
 
     cooked2 = cook("[Steam URL Scheme](steam://+store/452530)")
@@ -1151,7 +1165,7 @@ describe PrettyText do
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)")
 
     html = <<~HTML
-      <p><a href="http://example.com" rel="nofollow noopener"><code>a</code> #known::tag here</a></p>
+      <p><a href="http://example.com" rel="noopener nofollow ugc"><code>a</code> #known::tag here</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1251,7 +1265,7 @@ HTML
 
       it "won't break links by censoring them." do
         expect_cooked_match("The link still works. [whiz](http://www.whiz.com)",
-                            '<p>The link still works. <a href="http://www.whiz.com" rel="nofollow noopener">■■■■</a></p>')
+                            '<p>The link still works. <a href="http://www.whiz.com" rel="noopener nofollow ugc">■■■■</a></p>')
       end
 
       it "escapes regexp characters" do
@@ -1415,19 +1429,19 @@ HTML
 
   it "supports url bbcode" do
     cooked = PrettyText.cook "[url]http://sam.com[/url]"
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>'
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="noopener nofollow ugc">http://sam.com</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports nesting tags in url" do
     cooked = PrettyText.cook("[url=http://sam.com][b]I am sam[/b][/url]")
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>'
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="noopener nofollow ugc"><span class="bbcode-b">I am sam</span></a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports query params in bbcode url" do
     cooked = PrettyText.cook("[url=https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse]BBcode link[/url]")
-    html = '<p><a href="https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse" data-bbcode="true" rel="nofollow noopener">BBcode link</a></p>'
+    html = '<p><a href="https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse" data-bbcode="true" rel="noopener nofollow ugc">BBcode link</a></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1445,13 +1459,13 @@ HTML
 
   it "support special handling for space in urls" do
     cooked = PrettyText.cook "http://testing.com?a%20b"
-    html = '<p><a href="http://testing.com?a%20b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?a%20b</a></p>'
+    html = '<p><a href="http://testing.com?a%20b" class="onebox" target="_blank" rel="noopener nofollow ugc">http://testing.com?a%20b</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports onebox for decoded urls" do
     cooked = PrettyText.cook "http://testing.com?a%50b"
-    html = '<p><a href="http://testing.com?a%50b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?aPb</a></p>'
+    html = '<p><a href="http://testing.com?a%50b" class="onebox" target="_blank" rel="noopener nofollow ugc">http://testing.com?aPb</a></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1613,7 +1627,7 @@ HTML
     cooked = PrettyText.cook(md)
 
     html = <<~HTML
-      <p><a href="http://www.cnn.com" rel="nofollow noopener">www.cnn.com</a> test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+      <p><a href="http://www.cnn.com" rel="noopener nofollow ugc">www.cnn.com</a> test.it <a href="http://test.com" rel="noopener nofollow ugc">http://test.com</a> <a href="https://test.ab" rel="noopener nofollow ugc">https://test.ab</a> <a href="https://a" rel="noopener nofollow ugc">https://a</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1623,7 +1637,7 @@ HTML
 
     cooked = PrettyText.cook(md)
     html = <<~HTML
-    <p>www.cnn.com <a href="http://test.it" rel="nofollow noopener">test.it</a> <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    <p>www.cnn.com <a href="http://test.it" rel="noopener nofollow ugc">test.it</a> <a href="http://test.com" rel="noopener nofollow ugc">http://test.com</a> <a href="https://test.ab" rel="noopener nofollow ugc">https://test.ab</a> <a href="https://a" rel="noopener nofollow ugc">https://a</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1633,7 +1647,7 @@ HTML
 
     cooked = PrettyText.cook(md)
     html = <<~HTML
-      <p>www.cnn.com test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+      <p>www.cnn.com test.it <a href="http://test.com" rel="noopener nofollow ugc">http://test.com</a> <a href="https://test.ab" rel="noopener nofollow ugc">https://test.ab</a> <a href="https://a" rel="noopener nofollow ugc">https://a</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)

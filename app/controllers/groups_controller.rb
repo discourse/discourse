@@ -121,7 +121,9 @@ class GroupsController < ApplicationController
 
       format.json do
         groups = Group.visible_groups(current_user)
-        groups = groups.where(automatic: false) if !guardian.is_staff?
+        if !guardian.is_staff?
+          groups = groups.where("automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}")
+        end
 
         render_json_dump(
           group: serialize_data(group, GroupShowSerializer, root: nil),

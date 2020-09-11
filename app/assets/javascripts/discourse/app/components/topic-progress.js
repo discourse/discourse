@@ -162,7 +162,7 @@ export default Component.extend({
     if ($iPadFooterNav && $iPadFooterNav.length > 0) {
       bottom += $iPadFooterNav.outerHeight();
     }
-    const wrapperDir = $html.hasClass("rtl") ? "left" : "right";
+
     const draftComposerHeight = 40;
 
     if (composerHeight > 0) {
@@ -178,13 +178,6 @@ export default Component.extend({
     }
 
     this.set("docked", isDocked);
-
-    const $replyArea = $("#reply-control .reply-area");
-    if ($replyArea && $replyArea.length > 0) {
-      $wrapper.css(wrapperDir, `${$replyArea.offset().left}px`);
-    } else {
-      $wrapper.css(wrapperDir, "1em");
-    }
 
     $wrapper.css(
       "margin-bottom",

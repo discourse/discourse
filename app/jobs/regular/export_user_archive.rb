@@ -14,6 +14,7 @@ module Jobs
       user_archive
       user_archive_profile
       badges
+      bookmarks
       category_preferences
       visits
     )
@@ -22,6 +23,7 @@ module Jobs
       user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
       user_archive_profile: ['location', 'website', 'bio', 'views'],
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
+      bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_type', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
       visits: ['visited_at', 'posts_read', 'mobile', 'time_read'],
     )
@@ -153,6 +155,35 @@ module Jobs
       end
     end
 
+    def bookmarks_export
+      return enum_for(:bookmarks_export) unless block_given?
+
+      Bookmark
+        .where(user_id: @current_user.id)
+        .joins(:post)
+        .order(:id)
+        .each do |bkmk|
+        link = ''
+        if guardian.can_see_post?(bkmk.post)
+          link = bkmk.post.full_url
+        end
+        yield [
+          bkmk.post_id,
+          bkmk.topic_id,
+          bkmk.post&.post_number,
+          link,
+          bkmk.name,
+          bkmk.created_at,
+          bkmk.updated_at,
+          Bookmark.reminder_types[bkmk.reminder_type],
+          bkmk.reminder_at,
+          bkmk.reminder_last_sent_at,
+          bkmk.reminder_set_at,
+          Bookmark.auto_delete_preferences[bkmk.auto_delete_preference],
+        ]
+      end
+    end
+
     def category_preferences_export
       return enum_for(:category_preferences_export) unless block_given?
 
@@ -204,6 +235,10 @@ module Jobs
     end
 
     private
+
+    def guardian
+      @guardian ||= Guardian.new(@current_user)
+    end
 
     def piped_category_name(category_id)
       return "-" unless category_id

@@ -3588,8 +3588,8 @@ en:
               title: "Who can see this group?"
               public: "Everyone"
               logged_on_users: "Logged on users"
-              members: "Group owners, members"
-              staff: "Group owners and staff"
+              members: "Group owners, members and moderators"
+              staff: "Group owners and moderators"
               owners: "Group owners"
               description: "Admins can see all groups."
             members_visibility_levels:

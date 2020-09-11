@@ -83,7 +83,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_group_users?
-    (object.id && object.id == scope.user.try(:id)) || scope.is_staff?
+    (object.id && object.id == scope.user.try(:id)) || scope.is_admin?
   end
 
   def include_associated_accounts?
@@ -91,7 +91,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_second_factor_enabled?
-    (object&.id == scope.user&.id) || scope.is_staff?
+    (object&.id == scope.user&.id) || scope.is_admin?
   end
 
   def second_factor_enabled

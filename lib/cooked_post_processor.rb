@@ -656,9 +656,8 @@ class CookedPostProcessor
   end
 
   def enforce_nofollow
-    if !@omit_nofollow && SiteSetting.add_rel_nofollow_to_user_content
-      PrettyText.add_rel_nofollow_to_user_content(@doc)
-    end
+    add_nofollow = !@omit_nofollow && SiteSetting.add_rel_nofollow_to_user_content
+    PrettyText.add_rel_attributes_to_user_content(@doc, add_nofollow)
   end
 
   def pull_hotlinked_images

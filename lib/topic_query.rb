@@ -748,7 +748,7 @@ class TopicQuery
       result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
     end
 
-    if search = options[:search]
+    if search = options[:search].presence
       result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(term: search.to_s)})")
     end
 
@@ -951,10 +951,9 @@ class TopicQuery
   end
 
   def new_messages(params)
-    query = TopicQuery
+    TopicQuery
       .new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
       .limit(params[:count])
-    query
   end
 
   def unread_messages(params)

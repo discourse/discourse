@@ -3,20 +3,33 @@
 require 'rails_helper'
 
 describe UserSerializer do
+  fab!(:user) { Fabricate(:user, trust_level: 0) }
 
   context "with a TL0 user seen as anonymous" do
-    let(:user) { Fabricate.build(:user, trust_level: 0, user_profile: Fabricate.build(:user_profile)) }
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
-
     let(:untrusted_attributes) { %i{bio_raw bio_cooked bio_excerpt location website website_name profile_background card_background} }
 
     it "doesn't serialize untrusted attributes" do
       untrusted_attributes.each { |attr| expect(json).not_to have_key(attr) }
     end
 
-    it "doesn't serialize group_users" do
-      expect(json[:group_users]).to be_nil
+    it "serializes correctly" do
+      expect(json[:group_users]).to eq(nil)
+      expect(json[:second_factor_enabled]).to eq(nil)
+    end
+  end
+
+  context "as moderator" do
+    it "serializes correctly" do
+      json = UserSerializer.new(
+        user,
+        scope: Guardian.new(Fabricate(:moderator)),
+        root: false
+      ).as_json
+
+      expect(json[:group_users]).to eq(nil)
+      expect(json[:second_factor_enabled]).to eq(nil)
     end
   end
 
@@ -41,8 +54,8 @@ describe UserSerializer do
       expect(json[:user_option][:new_topic_duration_minutes]).to eq(60 * 24)
       expect(json[:user_option][:auto_track_topics_after_msecs]).to eq(0)
       expect(json[:user_option][:notification_level_when_replying]).to eq(3)
-
       expect(json[:group_users]).to eq([])
+      expect(json[:second_factor_enabled]).to eq(false)
     end
   end
 

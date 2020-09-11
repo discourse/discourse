@@ -58,6 +58,7 @@ class GroupShowSerializer < BasicGroupSerializer
   end
 
   def fetch_group_user
-    @group_user ||= object.group_users.find_by(user: scope.user)
+    return @group_user if defined?(@group_user)
+    @group_user = object.group_users.find_by(user: scope.user)
   end
 end
