@@ -248,7 +248,7 @@ describe GroupsController do
 
         expect(response.status).to eq(200)
         group_names = response.parsed_body["groups"].map { |g| g["name"] }
-        expect(group_names).to contain_exactly("0_0", "0_1", "0_3", "1_0", "1_1", "1_3", "3_0", "3_1", "3_3")
+        expect(group_names).to contain_exactly("0_0", "0_1", "0_2", "0_3", "1_0", "1_1", "1_2", "1_3", "2_0", "2_1", "2_2", "2_3", "3_0", "3_1", "3_2", "3_3")
 
         # admin
         sign_in(admin)
