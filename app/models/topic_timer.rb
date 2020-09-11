@@ -156,7 +156,7 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def schedule_auto_reminder_job(time)
-    # noop, TODO(martin): Remove this after timers migrated and outstanding jobs cancelled
+    # noop, TODO(martin 2021-03-11): Remove this after timers migrated and outstanding jobs cancelled
   end
 end
 
