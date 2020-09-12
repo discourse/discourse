@@ -109,7 +109,7 @@ QUnit.test("escape search term", async (assert) => {
 
   assert.ok(
     exists(
-      '.search-advanced-options span:contains("<script>prompt(1337)</script>gmail.com")'
+      '.search-advanced-options span:contains("&lt;script&gt;prompt(1337)&lt;/script&gt;gmail.com")'
     ),
     "it escapes search term"
   );
