@@ -194,7 +194,8 @@ export default Component.extend({
     let val = this.get(key);
     if (match.length !== 0) {
       const userInput = match[0].replace(replaceRegEx, "");
-      if (val !== userInput) {
+
+      if (val !== userInput && userInput.length) {
         this.set(key, userInput);
       }
     } else if (val && val.length !== 0) {
