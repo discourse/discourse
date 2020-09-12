@@ -350,7 +350,10 @@ export default Component.extend({
   @action
   onChangeWhenDate(date) {
     if (date) {
-      this.set("searchedTerms.time.days", moment(date).format("YYYY-MM-DD"));
+      this.set(
+        "searchedTerms.time.days",
+        date ? date.format("YYYY-MM-DD") : null
+      );
       this._updateSearchTermForPostTime();
     }
   },
