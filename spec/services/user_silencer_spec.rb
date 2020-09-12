@@ -70,8 +70,9 @@ describe UserSilencer do
     end
 
     context 'with a plugin hook' do
-
       before do
+        SystemMessage.unstub(:create)
+
         @override_silence_message = -> (opts) do
           opts[:silence_message_params][:message_title] = "override title"
           opts[:silence_message_params][:message_raw] = "override raw"
@@ -84,8 +85,8 @@ describe UserSilencer do
       end
 
       it 'allows the message to be overridden' do
-        SystemMessage.unstub(:create)
-        UserSilencer.silence(user, Fabricate.build(:admin))
+        UserSilencer.silence(user, Fabricate(:admin))
+
         post = Discourse.system_user.posts.last
         expect(post.topic.title).to eq("override title")
         expect(post.raw).to eq("override raw")
