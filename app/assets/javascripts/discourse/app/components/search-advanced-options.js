@@ -230,7 +230,7 @@ export default Component.extend({
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         ) {
-          this._setCategory(userInput);
+          this.set("searchedTerms.category", userInput);
         }
       } else if (isNaN(subcategories)) {
         const userInput = Category.findSingleBySlug(subcategories[0]);
@@ -238,7 +238,7 @@ export default Component.extend({
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         ) {
-          this._setCategory(userInput);
+          this.set("searchedTerms.category", userInput);
         }
       } else {
         const userInput = Category.findById(subcategories[0]);
@@ -246,11 +246,11 @@ export default Component.extend({
           (!existingInput && userInput) ||
           (existingInput && userInput && existingInput.id !== userInput.id)
         ) {
-          this._setCategory(userInput);
+          this.set("searchedTerms.category", userInput);
         }
       }
     } else {
-      this._setCategory(null);
+      this.set("searchedTerms.category", null);
     }
   },
 
@@ -358,8 +358,11 @@ export default Component.extend({
   @action
   onChangeSearchTermForCategory(categoryId) {
     if (categoryId) {
-      this.set("searchedTerms.category", Category.findById(categoryId));
+      const category = Category.findById(categoryId);
+      this.onChangeCategory && this.onChangeCategory(category);
+      this.set("searchedTerms.category", category);
     } else {
+      this.onChangeCategory && this.onChangeCategory(null);
       this.set("searchedTerms.category", null);
     }
 
@@ -593,11 +596,6 @@ export default Component.extend({
 
   _updateSearchTerm(searchTerm) {
     this.onChangeSearchTerm(searchTerm.trim());
-  },
-
-  _setCategory(category) {
-    this.onChangeCategory && this.onChangeCategory(category);
-    this.set("searchedTerms.category", category);
   },
 });
 
