@@ -11,6 +11,10 @@ export default SelectKitHeaderComponent.extend({
     return makeArray(this.selectedContent).map((c) => this.getName(c));
   }),
 
+  hasReachedMaximumSelection: computed("selectedValue", function () {
+    return this.selectedValue.length >= this.selectKit.options.maximum;
+  }),
+
   selectedValue: computed("selectedContent", function () {
     return makeArray(this.selectedContent)
       .map((c) => {
