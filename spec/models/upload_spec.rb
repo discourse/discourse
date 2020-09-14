@@ -78,6 +78,17 @@ describe Upload do
     expect(upload.thumbnail_width).to eq(nil)
   end
 
+  it 'returns error when image resolution is to big' do
+    begin
+      SiteSetting.max_image_megapixels = 10
+      upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
+      expect(upload.id).to be_nil
+      expect(upload.errors.messages[:base].first).to eq("Sorry, the image you are trying to upload is too large (maximum dimension is 20-megapixels), please resize it and try again.")
+    ensure
+      SiteSetting.max_image_megapixels = 40
+    end
+  end
+
   it "extracts file extension" do
     created_upload = UploadCreator.new(image, image_filename).create_for(user_id)
     expect(created_upload.extension).to eq("png")
