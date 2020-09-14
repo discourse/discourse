@@ -1049,4 +1049,18 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe '#sso_record' do
+    fab!(:sso_user) { Fabricate(:user) }
+    fab!(:sso_record) { SingleSignOnRecord.create!(user_id: sso_user.id, external_id: '12345', external_email: sso_user.email, last_payload: '') }
+
+    it "deletes the record" do
+      SiteSetting.sso_url = "https://www.example.com/sso"
+      SiteSetting.enable_sso = true
+
+      delete "/admin/users/#{sso_user.id}/sso_record.json"
+      expect(response.status).to eq(200)
+      expect(sso_user.single_sign_on_record).to eq(nil)
+    end
+  end
+
 end

@@ -567,6 +567,18 @@ const AdminUser = User.extend({
   _formatError(event) {
     return `http: ${event.status} - ${event.body}`;
   },
+
+  deleteSSORecord() {
+    return ajax(`/admin/users/${this.id}/sso_record.json`, {
+      type: "DELETE",
+    })
+      .then(() => {
+        this.setProperties({
+          single_sign_on_record: null,
+        });
+      })
+      .catch(popupAjaxError);
+  },
 });
 
 AdminUser.reopenClass({
