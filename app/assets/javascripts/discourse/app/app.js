@@ -37,7 +37,7 @@ const Discourse = Application.extend({
     Object.keys(requirejs._eak_seen).forEach((key) => {
       if (/\/pre\-initializers\//.test(key)) {
         this.initializer(this._prepareInitializer(key));
-      } else if (/\/initializers\//.test(key)) {
+      } else if (/\/(api\-)?initializers\//.test(key)) {
         this.instanceInitializer(this._prepareInitializer(key));
       }
     });
