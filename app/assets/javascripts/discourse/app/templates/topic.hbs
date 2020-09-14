@@ -286,15 +286,6 @@
                 </div>
               {{/if}}
 
-              {{#if model.private_topic_timer.execute_at}}
-                {{topic-timer-info
-                    topicClosed=model.closed
-                    statusType=model.private_topic_timer.status_type
-                    executeAt=model.private_topic_timer.execute_at
-                    duration=model.private_topic_timer.duration
-                    removeTopicTimer=(action "removeTopicTimer" model.private_topic_timer.status_type "private_topic_timer")}}
-              {{/if}}
-
               {{topic-timer-info
                   topicClosed=model.closed
                   statusType=model.topic_timer.status_type

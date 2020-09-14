@@ -5071,7 +5071,6 @@ export default {
     bookmarked: false,
     message_archived: false,
     topic_timer: null,
-    private_topic_timer: null,
     message_bus_last_id: 7,
     participant_count: 2,
     pm_with_non_human_user: false
@@ -5352,7 +5351,6 @@ export default {
     chunk_size: 20,
     bookmarked: false,
     topic_timer: null,
-    private_topic_timer: null,
     message_bus_last_id: 4,
     participant_count: 2,
     show_read_indicator: false,
