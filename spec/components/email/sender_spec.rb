@@ -408,25 +408,10 @@ describe Email::Sender do
     end
 
     context "when secure media enabled" do
-      def enable_s3_uploads
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secrets3_region key"
-        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-        stub_request(
-          :put,
-          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image.sha1}.#{image.extension}?acl"
-        )
-        store = FileStore::S3Store.new
-        s3_helper = store.instance_variable_get(:@s3_helper)
-        client = Aws::S3::Client.new(stub_responses: true)
-        s3_helper.stubs(:s3_client).returns(client)
-        Discourse.stubs(:store).returns(store)
-      end
-
       before do
-        enable_s3_uploads
+        setup_s3
+        stub_s3_store
+
         SiteSetting.secure_media = true
         SiteSetting.login_required = true
         SiteSetting.email_total_attachment_size_limit_kb = 14_000

@@ -12,9 +12,7 @@ describe "S3Inventory" do
   let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
 
   before do
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_access_key_id = "abc"
-    SiteSetting.s3_secret_access_key = "def"
+    setup_s3
     SiteSetting.enable_s3_inventory = true
 
     client.stub_responses(:list_objects, -> (context) {
