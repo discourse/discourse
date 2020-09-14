@@ -573,9 +573,7 @@ const AdminUser = User.extend({
       type: "DELETE",
     })
       .then(() => {
-        this.setProperties({
-          single_sign_on_record: null,
-        });
+        this.set("single_sign_on_record", null);
       })
       .catch(popupAjaxError);
   },

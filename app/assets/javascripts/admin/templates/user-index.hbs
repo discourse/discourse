@@ -681,7 +681,11 @@
       {{#if sso.last_payload}}
         <div class="display-row">
           <div class="field">{{i18n "admin.user.sso.last_payload"}}</div>
-          <div class="value">{{sso.last_payload}}</div>
+          <div class="value">
+            {{#each ssoPayload as |line|}}
+              {{line}}<br>
+            {{/each}}
+          </div>
         </div>
       {{/if}}
     {{/with}}

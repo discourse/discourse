@@ -132,6 +132,11 @@ export default Controller.extend(CanCheckEmails, {
       .catch(() => bootbox.alert(I18n.t("generic_error")));
   },
 
+  @discourseComputed("model.single_sign_on_record.last_payload")
+  ssoPayload(lastPayload) {
+    return lastPayload.split("&");
+  },
+
   actions: {
     impersonate() {
       return this.model.impersonate();
