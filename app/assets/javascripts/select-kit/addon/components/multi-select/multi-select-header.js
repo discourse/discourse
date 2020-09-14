@@ -12,6 +12,10 @@ export default SelectKitHeaderComponent.extend({
   }),
 
   hasReachedMaximumSelection: computed("selectedValue", function () {
+    if (!this.selectKit.options.maximum) {
+      return false;
+    }
+
     return this.selectedValue.length >= this.selectKit.options.maximum;
   }),
 
