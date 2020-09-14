@@ -3,7 +3,7 @@
   {{i18n "admin.api.all_api_keys"}}
 {{/link-to}}
 
-<div class="api-key">
+<div class="api-key api-key-show">
   {{#admin-form-row label="admin.api.key"}}
     {{#if model.revoked_at}}{{d-icon "times-circle"}}{{/if}}
     {{model.truncatedKey}}
@@ -57,6 +57,8 @@
   {{#admin-form-row label="admin.api.revoked"}}
     {{#if model.revoked_at}}
       {{format-date model.revoked_at leaveAgo="true"}}
+    {{else}}
+      <span>{{i18n "no_value"}}</span>
     {{/if}}
     <div class="controls">
       {{#if model.revoked_at}}
@@ -83,7 +85,7 @@
   {{#if model.api_key_scopes.length}}
     <div class="scopes-title">{{i18n "admin.api.scopes.title"}}</div>
 
-    <table class="scopes-table">
+    <table class="scopes-table grid">
       <thead>
         <tr>
           <td>{{i18n "admin.api.scopes.resource"}}</td>

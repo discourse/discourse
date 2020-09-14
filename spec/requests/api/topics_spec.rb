@@ -309,7 +309,6 @@ describe 'posts' do
           chunk_size: { type: :integer },
           bookmarked: { type: :boolean },
           topic_timer: { type: :string, nullable: true },
-          private_topic_timer: { type: :string, nullable: true },
           message_bus_last_id: { type: :integer },
           participant_count: { type: :integer },
           show_read_indicator: { type: :boolean },

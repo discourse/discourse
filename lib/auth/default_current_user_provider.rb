@@ -224,9 +224,12 @@ class Auth::DefaultCurrentUserProvider
     hash = {
       value: unhashed_auth_token,
       httponly: true,
-      expires: SiteSetting.maximum_session_age.hours.from_now,
       secure: SiteSetting.force_https
     }
+
+    if SiteSetting.persistent_sessions
+      hash[:expires] = SiteSetting.maximum_session_age.hours.from_now
+    end
 
     if SiteSetting.same_site_cookies != "Disabled"
       hash[:same_site] = SiteSetting.same_site_cookies

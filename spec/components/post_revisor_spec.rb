@@ -951,5 +951,37 @@ describe PostRevisor do
         end
       end
     end
+
+    context "uploads" do
+      let(:image1) { Fabricate(:upload) }
+      let(:image2) { Fabricate(:upload) }
+      let(:image3) { Fabricate(:upload) }
+      let(:image4) { Fabricate(:upload) }
+      let(:post_args) do
+        {
+          user: user,
+          topic: topic,
+          raw: <<~RAW
+            This is a post with multiple uploads
+            ![image1](#{image1.short_url})
+            ![image2](#{image2.short_url})
+          RAW
+        }
+      end
+
+      it "updates linked post uploads" do
+        post.link_post_uploads
+        expect(post.post_uploads.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
+
+        subject.revise!(user, raw: <<~RAW)
+            This is a post with multiple uploads
+            ![image2](#{image2.short_url})
+            ![image3](#{image3.short_url})
+            ![image4](#{image4.short_url})
+        RAW
+
+        expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
+      end
+    end
   end
 end

@@ -114,11 +114,6 @@ const TopicRoute = DiscourseRoute.extend({
         model.set("topic_timer", {});
       }
 
-      const privateTopicTimer = model.get("private_topic_timer");
-      if (!privateTopicTimer) {
-        model.set("private_topic_timer", {});
-      }
-
       showModal("edit-topic-timer", { model });
       this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
     },

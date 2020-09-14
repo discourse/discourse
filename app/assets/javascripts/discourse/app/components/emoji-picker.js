@@ -150,7 +150,7 @@ export default Component.extend({
     ].map((name, index) => {
       return {
         name,
-        icon: index === this.selectedDiversity ? "check" : "",
+        icon: index + 1 === this.selectedDiversity ? "check" : "",
       };
     });
   }),
@@ -162,7 +162,8 @@ export default Component.extend({
   },
 
   @action
-  onDiversitySelection(scale) {
+  onDiversitySelection(index) {
+    const scale = index + 1;
     this.emojiStore.diversity = scale;
     this.set("selectedDiversity", scale);
 
@@ -220,7 +221,9 @@ export default Component.extend({
     results.innerHTML = "";
 
     if (event.target.value) {
-      results.innerHTML = emojiSearch(event.target.value, { maxResults: 10 })
+      results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
+        maxResults: 10,
+      })
         .map(this._replaceEmoji)
         .join("");
 
@@ -246,8 +249,8 @@ export default Component.extend({
   _codeWithDiversity(code, selectedDiversity) {
     if (/:t\d/.test(code)) {
       return code;
-    } else if (selectedDiversity !== 0 && isSkinTonableEmoji(code)) {
-      return `${code}:t${selectedDiversity + 1}`;
+    } else if (selectedDiversity > 1 && isSkinTonableEmoji(code)) {
+      return `${code}:t${selectedDiversity}`;
     } else {
       return code;
     }

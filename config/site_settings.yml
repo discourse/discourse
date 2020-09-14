@@ -478,6 +478,7 @@ login:
   pending_users_reminder_delay:
     min: -1
     default: 8
+  persistent_sessions: true
   maximum_session_age:
     default: 1440
     min: 1

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@arkweid/lefthook@^0.6.3":
-  version "0.6.7"
-  resolved "https://registry.yarnpkg.com/@arkweid/lefthook/-/lefthook-0.6.7.tgz#a3509532830c58319f88ec9264c49190b56bb8fb"
-  integrity sha512-UAsXrRpiRRlOC5B2E6Lfg8QpvPouBrtOsLGlUXRHkJNkrDX69ouh+rUwj+o1N/Nf0lCgvOlj04NFayQyu3u4ew==
+"@arkweid/lefthook@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@arkweid/lefthook/-/lefthook-0.7.2.tgz#ce2ee89f32bd8899bfee1a61d1fbe68a7dee7601"
+  integrity sha512-r34fl/qiny7564aL+MLmkVbUMjr39vSqSGvUoA7e3FwpvD/ubJkxdDFCDJECvOYiYMXwwaqJc6txXtfnvDY3YQ==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":
   version "7.10.4"

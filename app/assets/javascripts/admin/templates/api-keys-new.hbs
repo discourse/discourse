@@ -3,7 +3,7 @@
   {{i18n "admin.api.all_api_keys"}}
 {{/link-to}}
 
-<div class="api-key">
+<div class="api-key api-key-new">
   {{#if model.id}}
     {{#admin-form-row label="admin.api.key"}}
       <div>{{model.key}}</div>
@@ -39,7 +39,7 @@
     {{#unless useGlobalKey}}
       <div class="scopes-title">{{i18n "admin.api.scopes.title"}}</div>
       <p>{{i18n "admin.api.scopes.description"}}</p>
-      <table class="scopes-table">
+      <table class="scopes-table grid">
         <thead>
           <tr>
             <td></td>
@@ -50,8 +50,8 @@
         </thead>
         <tbody>
           {{#each-in scopes as |resource actions|}}
-            <tr>
-              <td class="scope-resource-name"><b>{{resource}}</b></td>
+            <tr class="scope-resource-name">
+              <td><b>{{resource}}</b></td>
               <td></td>
               <td></td>
               <td></td>
@@ -70,9 +70,7 @@
                 </td>
                 <td>
                   {{#each act.params as |p|}}
-                    <div>
-                      {{input maxlength="255" value=(get act p) placeholder=p}}
-                    </div>
+                    {{input maxlength="255" value=(get act p) placeholder=p}}
                   {{/each}}
                 </td>
               </tr>

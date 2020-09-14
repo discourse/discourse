@@ -15,7 +15,7 @@ export const NONE_TAG_ID = "none";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
-  classNameBindings: ["categoryStyle", "tagClass"],
+  classNameBindings: ["categoryStyle", "tagClass", "shouldHide:hidden"],
   classNames: ["tag-drop"],
   value: readOnly("tagId"),
   tagName: "li",
@@ -24,12 +24,12 @@ export default ComboBoxComponent.extend(TagsMixin, {
   categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
   sortTagsAlphabetically: setting("tags_sort_alphabetically"),
-  isVisible: computed("showFilterByTag", "content.[]", function () {
+  shouldHide: computed("showFilterByTag", "content.[]", function () {
     if (this.showFilterByTag && !isEmpty(this.content)) {
-      return true;
+      return false;
     }
 
-    return false;
+    return true;
   }),
 
   selectKitOptions: {
