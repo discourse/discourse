@@ -4,17 +4,6 @@ require "rails_helper"
 require "cooked_post_processor"
 require "file_store/s3_store"
 
-def s3_setup
-  Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
-
-  SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-  SiteSetting.s3_access_key_id = "s3-access-key-id"
-  SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-  SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-  SiteSetting.enable_s3_uploads = true
-  SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
-end
-
 describe CookedPostProcessor do
   fab!(:upload) { Fabricate(:upload) }
   let(:upload_path) { Discourse.store.upload_path }
@@ -483,17 +472,16 @@ describe CookedPostProcessor do
 
         context "s3_uploads" do
           let(:upload) { Fabricate(:secure_upload_s3) }
+
           before do
-            s3_setup
+            setup_s3
+            SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+            SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
+
             stored_path = Discourse.store.get_path_for_upload(upload)
             upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
 
-            stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-            stub_request(
-              :put,
-              "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/optimized/1X/#{upload.sha1}_2_#{optimized_size}.#{upload.extension}"
-            )
-            stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
+            stub_upload(upload)
 
             SiteSetting.login_required = true
             SiteSetting.secure_media = true
@@ -1049,11 +1037,11 @@ describe CookedPostProcessor do
 
       context "when the post is with_secure_media and the upload is secure and secure media is enabled" do
         before do
+          setup_s3
           upload.update(secure: true)
+
           SiteSetting.login_required = true
-          s3_setup
           SiteSetting.secure_media = true
-          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
         end
 
         it "does not use the direct URL, uses the cooked URL instead (because of the private ACL preventing w/h fetch)" do
@@ -1269,7 +1257,11 @@ describe CookedPostProcessor do
 
       context "s3_uploads" do
         before do
-          s3_setup
+          Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+
+          setup_s3
+          SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+          SiteSetting.authorized_extensions = "png|jpg|gif|mov|ogg|"
 
           uploaded_file = file_from_fixtures("smallest.png")
           upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
@@ -1546,9 +1538,7 @@ describe CookedPostProcessor do
       end
 
       it "doesn't disable download_remote_images_to_local if site uses S3" do
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-        SiteSetting.enable_s3_uploads = true
+        setup_s3
         cpp.disable_if_low_on_disk_space
 
         expect(SiteSetting.download_remote_images_to_local).to eq(true)

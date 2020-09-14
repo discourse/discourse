@@ -179,10 +179,7 @@ describe Upload do
       let(:path) { upload.url.sub(SiteSetting.Upload.s3_base_url, '') }
 
       before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secret key"
+        setup_s3
       end
 
       it "should return the right upload when using base url (not CDN) for s3" do
@@ -407,22 +404,12 @@ describe Upload do
   end
 
   def enable_secure_media
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "some key"
-    SiteSetting.s3_secret_access_key = "some secrets3_region key"
+    setup_s3
     SiteSetting.secure_media = true
-
-    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-    stub_request(
-      :put,
-      "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
-    )
+    stub_upload(upload)
   end
 
   context '.destroy' do
-
     it "can correctly clear information when destroying an upload" do
       upload = Fabricate(:upload)
       user = Fabricate(:user)

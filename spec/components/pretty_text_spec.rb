@@ -902,11 +902,8 @@ describe PrettyText do
 
     describe "#strip_secure_media" do
       before do
-        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        setup_s3
         SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-        SiteSetting.enable_s3_uploads = true
         SiteSetting.secure_media = true
         SiteSetting.login_required = true
       end

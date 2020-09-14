@@ -1092,23 +1092,20 @@ RSpec.describe SessionController do
 
       it 'handles non local content correctly' do
         SiteSetting.avatar_sizes = "100|49"
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_access_key_id = "XXX"
-        SiteSetting.s3_secret_access_key = "XXX"
-        SiteSetting.s3_upload_bucket = "test"
+        setup_s3
         SiteSetting.s3_cdn_url = "http://cdn.com"
 
-        stub_request(:any, /test.s3.dualstack.us-east-1.amazonaws.com/).to_return(status: 200, body: "", headers: { referer: "fgdfds" })
+        stub_request(:any, /s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/).to_return(status: 200, body: "", headers: { referer: "fgdfds" })
 
         @user.create_user_avatar!
-        upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
+        upload = Fabricate(:upload, url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/something")
 
         Fabricate(:optimized_image,
           sha1: SecureRandom.hex << "A" * 8,
           upload: upload,
           width: 98,
           height: 98,
-          url: "//test.s3.amazonaws.com/something/else"
+          url: "//s3-upload-bucket.s3.amazonaws.com/something/else"
         )
 
         @user.update_columns(uploaded_avatar_id: upload.id)

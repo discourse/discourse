@@ -156,16 +156,15 @@ describe UrlHelper do
   end
 
   describe "#cook_url" do
-    let(:url) { "//s3bucket.s3.dualstack.us-east-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg" }
+    let(:url) { "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg" }
 
     before do
-      FileStore::S3Store.any_instance.stubs(:has_been_uploaded?).returns(true)
-      Rails.configuration.action_controller.asset_host = "https://test.some-cdn.com/dev"
-      SiteSetting.enable_s3_uploads = true
+      setup_s3
       SiteSetting.s3_upload_bucket = "s3bucket"
-      SiteSetting.s3_access_key_id = "s3_access_key_id"
-      SiteSetting.s3_secret_access_key = "s3_secret_access_key"
       SiteSetting.login_required = true
+      Rails.configuration.action_controller.asset_host = "https://test.some-cdn.com/dev"
+
+      FileStore::S3Store.any_instance.stubs(:has_been_uploaded?).returns(true)
     end
 
     def cooked
@@ -187,7 +186,7 @@ describe UrlHelper do
 
       it "returns the local_cdn_url" do
         expect(cooked).to eq(
-          "//s3bucket.s3.dualstack.us-east-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+          "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
         )
       end
     end
