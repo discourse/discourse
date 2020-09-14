@@ -56,11 +56,11 @@ describe Upload do
 
     upload = Upload.find(upload.id)
 
-    expect(upload.width).to eq(64250)
-    expect(upload.height).to eq(64250)
+    expect(upload.width).to eq(8900)
+    expect(upload.height).to eq(8900)
 
     upload.reload
-    expect(upload.read_attribute(:width)).to eq(64250)
+    expect(upload.read_attribute(:width)).to eq(8900)
 
     upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
 
