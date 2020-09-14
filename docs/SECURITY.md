@@ -18,6 +18,7 @@ Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm 
 - `pbkdf2_iterations`: the number of iterations to run (default 64000)
 
 ### XSS
+### xss hilal 
 
 The main vector for [XSS](https://en.wikipedia.org/wiki/Cross-site_scripting) attacks is via the post composer, as we allow users to enter Markdown, HTML (a safe subset thereof), and BBCode to format posts.
 
