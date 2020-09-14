@@ -94,4 +94,34 @@ describe Search do
       end
     end
   end
+
+  context "custom_eager_load" do
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(topic, force: true)
+    end
+
+    it "includes custom tables" do
+      begin
+        expect(Search.execute("test").posts[0].topic.association(:category).loaded?).to be true
+        expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be false
+
+        SiteSetting.tagging_enabled = true
+        Search.custom_topic_eager_load([:topic_users])
+        Search.custom_topic_eager_load() do
+          [:bookmarks]
+        end
+
+        expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be true
+        expect(Search.execute("test").posts[0].topic.association(:topic_users).loaded?).to be true
+        expect(Search.execute("test").posts[0].topic.association(:bookmarks).loaded?).to be true
+      ensure
+        SiteSetting.tagging_enabled = false
+        Search.instance_variable_set(:@custom_topic_eager_loads, [])
+      end
+    end
+  end
 end
