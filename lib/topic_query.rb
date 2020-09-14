@@ -70,7 +70,8 @@ class TopicQuery
          visible
          guardian
          no_definitions
-         destination_category_id)
+         destination_category_id
+         include_pms)
   end
 
   # Maps `order` to a columns in `topics`
@@ -724,7 +725,15 @@ class TopicQuery
     end
 
     result = apply_ordering(result, options)
-    result = result.listable_topics
+
+    all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
+
+    if options[:include_pms]
+      all_pm_topics = Topic.unscoped.private_messages_for_user(@user)
+      result = result.merge(all_listable_topics.or(all_pm_topics))
+    else
+      result = result.merge(all_listable_topics)
+    end
 
     # Don't include the category topics if excluded
     if options[:no_definitions]
@@ -851,7 +860,7 @@ class TopicQuery
 
     result = TopicQuery.apply_custom_filters(result, self)
 
-    @guardian.filter_allowed_categories(result)
+    result
   end
 
   def remove_muted_topics(list, user)
