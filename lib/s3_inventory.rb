@@ -71,22 +71,23 @@ class S3Inventory
               .joins("LEFT JOIN #{table_name} inventory2 ON inventory2.url = #{model.table_name}.url")
               .where("inventory2.etag IS NOT NULL").pluck(:id)
 
-            # marking as verified/not verified
-            id_threshold_clause = model == Upload ? " AND model_table.id > #{model::SEEDED_ID_THRESHOLD}" : ""
-            DB.exec(<<~SQL, inventory_date
-              UPDATE #{model.table_name}
-              SET verified = CASE when table_name_alias.etag IS NULL THEN false ELSE true END
-              FROM #{model.table_name} AS model_table
-              LEFT JOIN #{table_name} AS table_name_alias ON model_table.etag = table_name_alias.etag
-              WHERE model_table.id = #{model.table_name}.id
-              AND model_table.updated_at < ?
-              AND (
-                model_table.verified IS NULL OR
-                model_table.verified <> CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+            if model == Upload
+              # marking as verified/not verified
+              DB.exec(<<~SQL, inventory_date
+                UPDATE #{model.table_name}
+                SET verified = CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+                FROM #{model.table_name} AS model_table
+                LEFT JOIN #{table_name} AS table_name_alias ON model_table.etag = table_name_alias.etag
+                WHERE model_table.id = #{model.table_name}.id
+                AND model_table.updated_at < ?
+                AND (
+                  model_table.verified IS NULL OR
+                  model_table.verified <> CASE when table_name_alias.etag IS NULL THEN false ELSE true END
+                )
+                AND model_table.id > #{model::SEEDED_ID_THRESHOLD}
+                SQL
               )
-               #{id_threshold_clause}
-              SQL
-            )
+            end
 
             if (missing_count = missing_uploads.count) > 0
               missing_uploads.select(:id, :url).find_each do |upload|
