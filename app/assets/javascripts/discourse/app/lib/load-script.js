@@ -110,10 +110,11 @@ export default function loadScript(url, opts) {
 
 export function cacheBuster(url) {
   if (PUBLIC_JS_VERSIONS) {
-    const pathParts = url.split("/");
-    if (pathParts[1] === "javascripts") {
-      const version = PUBLIC_JS_VERSIONS[pathParts[2]];
-      if (typeof version !== "undefined") {
+    // eslint-disable-next-line no-unused-vars
+    const [_, folder, lib] = url.split("/");
+    if (folder === "javascripts") {
+      const version = PUBLIC_JS_VERSIONS[lib];
+      if (version) {
         return `${url}?v=${version}`;
       }
     }
