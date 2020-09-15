@@ -85,6 +85,14 @@
   display: flex;
   justify-content: flex-end;
   z-index: z("timeline");
+  // max-width + bottom + left/right makes this element take up the whole width
+  // albeit as a transparent row, but we disable pointer-events to allow user to
+  // interact with visible elements at bottom of viewport
+  pointer-events: none;
+  > * {
+    // and then we reset for its children
+    pointer-events: auto;
+  }
   &.docked {
     position: absolute;
     bottom: -70px;
