@@ -218,7 +218,9 @@ class Post < ActiveRecord::Base
         .pluck(:id)
     end
 
-    MessageBus.publish(channel, message, opts)
+    if opts[:user_ids] != [] && opts[:group_ids] != []
+      MessageBus.publish(channel, message, opts)
+    end
   end
 
   def trash!(trashed_by = nil)
