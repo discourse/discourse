@@ -328,7 +328,15 @@ class TopicQuery
 
   def list_private_messages_unread(user)
     list = private_messages_for(user, :user)
-    list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
+
+    list = TopicQuery.unread_filter(
+      list,
+      user.id,
+      staff: user.staff?
+    )
+
+    first_unread_pm_at = UserStat.where(user_id: user.id).pluck(:first_unread_pm_at).first
+    list = list.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
     create_list(:private_messages, {}, list)
   end
 

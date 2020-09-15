@@ -638,26 +638,35 @@ RSpec.describe ListController do
     end
   end
 
-  describe "private_messages_unread" do
-    before do
-      u = Fabricate(:user)
-      pm = Fabricate(:private_message_topic, user: u)
-      Fabricate(:post, user: u, topic: pm, post_number: 1)
-      pm.topic_allowed_users.create!(user: user)
+  describe "#private_messages_unread" do
+    fab!(:pm_user) { Fabricate(:user) }
+
+    fab!(:pm) do
+      Fabricate(:private_message_topic).tap do |t|
+        t.allowed_users << pm_user
+        create_post(user: pm_user, topic_id: t.id)
+      end
     end
 
     it "returns 403 error when the user can't see private message" do
       sign_in(Fabricate(:user))
-      get "/topics/private-messages-unread/#{user.username}.json"
-      expect(response).to be_forbidden
+      get "/topics/private-messages-unread/#{pm_user.username}.json"
+      expect(response.status).to eq(403)
     end
 
     it "succeeds when the user can see private messages" do
-      sign_in(user)
-      get "/topics/private-messages-unread/#{user.username}.json"
+      TopicUser.find_by(topic: pm, user: pm_user).update!(
+        notification_level: TopicUser.notification_levels[:tracking],
+        last_read_post_number: 0,
+      )
+
+      sign_in(pm_user)
+      get "/topics/private-messages-unread/#{pm_user.username}.json"
+
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
+      expect(json["topic_list"]["topics"][0]["id"]).to eq(pm.id)
     end
   end
 
