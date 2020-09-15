@@ -412,6 +412,12 @@ export default Component.extend({
     this.updateInRegex(REGEXP_SPECIAL_IN_TITLE_MATCH, "title");
   },
 
+  @action
+  onChangeSearchedTermField(path, updateFnName, value) {
+    this.set(`searchedTerms.${path}`, value);
+    this[updateFnName]();
+  },
+
   _updateSearchTermForTags() {
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tagFilter = this.get("searchedTerms.tags");
