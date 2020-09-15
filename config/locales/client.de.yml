@@ -2085,8 +2085,6 @@ de:
         remove: "Zeitschaltuhr deaktivieren"
         publish_to: "Veröffentlichen in:"
         when: "Wann:"
-        public_timer_types: Globale Zeitschaltuhren
-        private_timer_types: Zeitschaltuhren für Benutzer
         time_frame_required: Bitte wähle einen Zeitrahmen aus
       auto_update_input:
         none: "Wähle einen Zeitbereich aus"
@@ -3258,8 +3256,6 @@ de:
               title: "Wer kann diese Gruppe sehen?"
               public: "Jeder"
               logged_on_users: "Angemeldete Benutzer"
-              members: "Gruppenbesitzer, Mitglieder"
-              staff: "Gruppenbesitzer und Team"
               owners: "Gruppenbesitzer"
               description: "Administratoren können alle Gruppen sehen."
             members_visibility_levels:
@@ -3322,7 +3318,6 @@ de:
         save: Speichern
         new_key: Neuer API Schlüssel
         revoked: Widerrufen
-        delete: Endgültig gelöscht
         not_shown_again: Dieser Schlüssel wird nicht noch einmal angezeigt. Stelle sicher, dass du eine Kopie hast, bevor du fortfährst.
         continue: Weiter
       web_hooks:

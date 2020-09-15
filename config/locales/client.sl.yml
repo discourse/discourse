@@ -1955,8 +1955,6 @@ sl:
         remove: "Odstrani opomnik"
         publish_to: "Objavi v:"
         when: "Kdaj:"
-        public_timer_types: Opomniki teme
-        private_timer_types: Uporabnikovi opomniki teme
         time_frame_required: Izberite časovni okvir
       auto_update_input:
         none: "Izberi časovni okvir"
@@ -3114,7 +3112,6 @@ sl:
             visibility_levels:
               title: "Kdo lahko vidi to skupino?"
               public: "Vsi"
-              staff: "Skrbniki skupine in osebje foruma"
           membership:
             automatic: Samodejno
             trust_levels_title: "Stopnja zaupanja, ki je samodejno dodeljena članom, ko so dodani:"

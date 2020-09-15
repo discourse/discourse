@@ -2266,7 +2266,6 @@ lv:
             visibility_levels:
               title: "Kas var redzēt grupu?"
               public: "Ikviens"
-              staff: "Grupu īpašnieki un personāls"
           membership:
             automatic: Automātiski
             trust_levels_title: "Uzticamības līmenis, ko automātiski piešķir visiem dalībniekiem pievienošanas brīdī:"

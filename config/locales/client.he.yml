@@ -935,7 +935,7 @@ he:
       statistics: "סטטיסטיקות"
       desktop_notifications:
         label: "התראות"
-        not_supported: "התראות לא נתמכות בדפדפן זה. מצטערים."
+        not_supported: "התראות לא נתמכות בדפדפן זה. עמך הסליחה."
         perm_default: "הפעלת התראות"
         perm_denied_btn: "הרשאות נדחו"
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
@@ -975,7 +975,7 @@ he:
       moderator: "ל־%{user} יש תפקיד פיקוח"
       admin: "%{user} הוא מנהל מערכת"
       moderator_tooltip: "משתמש זה הוא מפקח"
-      admin_tooltip: "משתמש זה הינו אדמיניסטרטור"
+      admin_tooltip: "משתמש זה חבר הנהלה"
       silenced_tooltip: "משתמש זה מושתק"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: %{date}."
       suspended_permanently: "משתמש זה מושעה."
@@ -1147,7 +1147,7 @@ he:
         taken: "סליחה, שם המשתמש הזה תפוס."
         invalid: "שם המשתמש אינו תקין. עליו לכלול רק אותיות באנגלית ומספרים."
       add_email:
-        title: "הוסף דוא\"ל"
+        title: "הוספת דוא״ל"
         add: "הוספה"
       change_email:
         title: "שנה דואר אלקטרוני"
@@ -1183,11 +1183,11 @@ he:
         unconfirmed_label: "לא מאושר"
         resend_label: "שליחת הודעת אימות בדוא״ל מחדש"
         resending_label: "שולח..."
-        resent_label: "דוא\"ל נשלח"
+        resent_label: "הודעת דוא״ל נשלחה"
         update_email: "שנה דואר אלקטרוני"
-        set_primary: "הגדר כתובת דוא\"ל ראשית"
-        destroy: "הסר דוא\"ל"
-        add_email: "הוסף דוא\"ל חלופי"
+        set_primary: "הגדרת כתובת דוא״ל ראשית"
+        destroy: "הסרת דוא״ל"
+        add_email: "הוספת כתובת דוא״ל חלופית"
         sso_override_instructions: "ניתן לעדכן את כתובת הדוא״ל דרך ספק ה־SSO."
         no_secondary: "אין כתובות דוא״ל משניות"
         instructions: "לעולם לא מוצג לציבור."
@@ -1342,7 +1342,7 @@ he:
         pending: "הזמנות ממתינות"
         pending_tab: "ממתין"
         pending_tab_with_count: "ממתינות (%{count})"
-        topics_entered: "נושאים נצפו"
+        topics_entered: "נושאים שנצפו"
         posts_read_count: "פוסטים נקראו"
         expired: "פג תוקף ההזמנה."
         rescind: "הסרה"
@@ -1383,7 +1383,7 @@ he:
           none: "עדיין לא הזמנתם לכאן אף אחד. שילחו הזמנות אישיות, או הזמינו הרבה אנשים ביחד על ידי <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>העלאת קובץ CSV</a>."
           text: "הזמנה כמותית"
           success: "העלאת הקובץ החלה בהצלחה, תקבלו התראה באמצעות מסר כאשר התהליך יושלם."
-          error: "מצטערים, לקובץ צריך להיות פורמט CSV"
+          error: "הקובץ אמור להיות בתצורת CSV, עמך הסליחה."
           confirmation_message: "פעולה זו תשלח הזמנות בדוא״ל לכל מי שבקובץ שהועלה."
       password:
         title: "סיסמה"
@@ -1490,7 +1490,7 @@ he:
         network: "נא לבדוק את החיבור שלך."
         network_fixed: "נראה שזה חזר לעבוד."
         server: "קוד שגיאה: %{status}"
-        forbidden: "אינכם רשאים לצפות בזה."
+        forbidden: "אין לך הרשאה לצפות בזה."
         not_found: "אופס, ניסינו לטעון עמוד שאיננו קיים."
         unknown: "משהו השתבש."
       buttons:
@@ -1885,7 +1885,7 @@ he:
       hide_toolbar: "הסתרת סרגל כתיבת הודעות"
       modal_ok: "אישור"
       modal_cancel: "ביטול"
-      cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה ל-%{username}."
+      cant_send_pm: "אין לך אפשרות לשלוח הודעה אל %{username}, עמך הסליחה."
       yourself_confirm:
         title: "שחכתם להוסיף נמענים?"
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
@@ -2269,8 +2269,6 @@ he:
         remove: "הסרת שעון עצר"
         publish_to: "פרסום ל:"
         when: "מתי:"
-        public_timer_types: שעוני עצר לנושא
-        private_timer_types: מתזמני נושאי משתמש
         time_frame_required: נא לבחור מסגרת זמנים
       auto_update_input:
         none: "נא לבחור טווח זמן"
@@ -2881,7 +2879,7 @@ he:
       email_in: "כתובת דואר נכנס מותאמת אישית:"
       email_in_allow_strangers: "קבלת דוא״ל ממשתמשים אלמוניים ללא חשבונות במערכת הפורומים"
       email_in_disabled: "האפשרות לשליחת נושאים חדשים בדוא״ל הושבתה בהגדרות האתר. כדי להפעיל פרסום של נושאים חדשים דרך דוא״ל,"
-      email_in_disabled_click: 'הפעל את ההגדרה "דוא"ל נכנס"'
+      email_in_disabled_click: 'הפעלת ההגדרה „דוא״ל נכנס”.'
       mailinglist_mirror: "קטגוריה שמשקפת רשימת תפוצה"
       show_subcategory_list: "הצגת רשימת קטגוריות משנה מעל נושאים בקטגוריה זו."
       read_only_banner: "טקסט כרזה כאשר משתמש לא יכול ליצור נושא בקטגוריה הזו:"
@@ -3565,8 +3563,8 @@ he:
               title: "מי יכול לראות קבוצה זו?"
               public: "כולם"
               logged_on_users: "משתמשים שנכנסו ונמצאים כרגע במערכת"
-              members: "בעלי קבוצות, חברים"
-              staff: "בעלי קבוצות וסגל"
+              members: "בעלי קבוצות, חברים ומפקחים"
+              staff: "בעלי קבוצות ומפקחים"
               owners: "בעלי קבוצות"
               description: "מנהלים יכולים לראות את כל הקבוצות."
             members_visibility_levels:
@@ -4214,7 +4212,7 @@ he:
             removed_silence_user: "השתקת משתמש (הוסר)"
             removed_unsilence_user: "ביטול השתקת משתמש (הוסר)"
             grant_admin: "הענקת ניהול"
-            revoke_admin: "שללו אדמיניסטרציה"
+            revoke_admin: "שלילת ניהול"
             grant_moderation: "הענקת פיקוח"
             revoke_moderation: "שלילת פיקוח"
             backup_create: "יצירת גיבוי"

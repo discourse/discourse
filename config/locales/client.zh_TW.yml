@@ -1705,8 +1705,6 @@ zh_TW:
         remove: "移除計時器"
         publish_to: "發佈至："
         when: "當："
-        public_timer_types: 話題計時器
-        private_timer_types: 使用者話題計時器
         time_frame_required: 請選擇一個有效時間範圍
       auto_update_input:
         none: "選擇有效時間範圍"
@@ -2717,7 +2715,6 @@ zh_TW:
             visibility_levels:
               title: "誰能看到這個群組？"
               public: "所有使用者"
-              staff: "群組管理人及管理人員"
           membership:
             automatic: 自動
             trust_levels_title: "當這些成員加入時，自動提升信任等級："

@@ -311,7 +311,9 @@ uk:
         unbookmark: "Натисніть, щоб видалити усі закладки у цій темі"
         unbookmark_with_reminder: "Клацніть, щоб видалити всі закладки та нагадування в цій темі. Ви маєте набір нагадувань %{reminder_at} для цієї теми."
     bookmarks:
+      created: "Ви додали повідомлення в закладки. %{name}"
       not_bookmarked: "додати цей допис до закладок"
+      created_with_reminder: "Ви додали цей допис в закладку із нагадуванням %{date}. %{name}"
       remove: "Вилучити закладку"
       delete: "Видалити закладку"
       confirm_delete: "Ви впевнені, що хочете видалити цю закладку? Нагадування також буде видалено."
@@ -320,6 +322,7 @@ uk:
       no_timezone: 'Ви ще не встановили часовий пояс. Ви не зможете встановити нагадування. Налаштуйте його <a href="%{basePath}/my/preferences/profile">у своєму профілі</a> .'
       invalid_custom_datetime: "Вказана дата і час недійсні, будь ласка, спробуйте ще раз."
       list_permission_denied: "У Вас немає прав для перегляду закладок цього користувача."
+      no_user_bookmarks: "У вас немає публікацій у закладках. Закладки дозволяють швидко переходити до обраних дискусій."
       auto_delete_preference:
         label: "Автоматичне видалення"
         never: "Ніколи"
@@ -342,6 +345,7 @@ uk:
         today_with_time: "сьогодні о %{time}"
         tomorrow_with_time: "завтра о %{time}"
         at_time: "на %{date_time}"
+        existing_reminder: "Нагадування для цієї закладки, буде надіслано %{at_date_time}"
     copy_codeblock:
       copied: "скопійовано!"
     drafts:
@@ -587,6 +591,7 @@ uk:
       sent_by_user: "Надіслано користувачем <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Надіслано <a href='%{userUrl}'>Вами</a>"
     directory:
+      username: "Ім'я користувача"
       filter_name: "фільтрувати за іменем користувача"
       title: "Користувачі"
       likes_given: "Відправлено"
@@ -944,9 +949,20 @@ uk:
       first_notification: "Ваше перше сповіщення! Оберіть його, щоб почати."
       dynamic_favicon: "Показувати кількість на іконці браузера"
       skip_new_user_tips:
+        description: "Пропустити поради щодо створення користувача та значків"
         not_first_time: "Вже тут не вперше?"
         skip_link: "Пропустити ці поради"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
+      color_scheme_default_on_all_devices: "Встановити типові схеми кольорів на всіх моїх пристроях"
+      color_scheme: "Схема кольорів"
+      color_schemes:
+        default_description: "За замовчуванням"
+        disable_dark_scheme: "Те саме, що і звичайне"
+        dark_instructions: "Ви можете переглянути кольорову схему темного режиму, увімкнувши темний режим на вашому пристрої."
+        undo: "Скинути"
+        regular: "Звичайний"
+        dark: "Темний режим"
+        default_dark_scheme: "(сайт за замовчуванням)"
       dark_mode: "Темний режим"
       dark_mode_enable: "Увімкнути автоматично темний режим"
       text_size_default_on_all_devices: "Зробити цей розмір тексту базовим для всіх моїх пристроїв"
@@ -995,6 +1011,8 @@ uk:
       muted_categories: "Вимкнено"
       muted_categories_instructions: "Ви не будете отримувати жодних сповіщень про нові теми у цих категоріях, і вони не з'являтимуться на сторінках категорій чи найсвіжіших."
       muted_categories_instructions_dont_hide: "Ви не будете сповіщені ні про що, що стосується нових тем у цих категоріях."
+      regular_categories: "Звичайний"
+      regular_categories_instructions: "Ви побачите ці категорії в списках тем «Останні» і «Топ»."
       no_category_access: "Як модератор, ви маєте обмежений доступ до категорій, збереження вимкнене."
       delete_account: "Вилучити мій обліковий запис"
       delete_account_confirm: "Ви впевнені, що бажаєте остаточно вилучити свій обліковий запис? Цю дію не можна скасувати!"
@@ -1079,6 +1097,7 @@ uk:
       second_factor:
         title: "Двофакторна автентифікація"
         enable: "Керувати двофакторною автентифікацією"
+        disable_all: "Вимкнути всі"
         forgot_password: "Забули пароль?"
         confirm_password_description: "Будь ласка, підтвердіть свій пароль для продовження"
         name: "Ім'я"
@@ -1096,6 +1115,7 @@ uk:
         use: "Використовуйте додаток для перевірки автентифікації "
         enforced_notice: "Ви мусите увімкнути двофакторну автентифікацію, щоб отримати доступ до цього сайту."
         disable: "Вимкнути"
+        disable_confirm: "Ви впевнені, що хочете вимкнути всі методи другого фактора?"
         save: "Зберегти"
         edit: "Редагувати"
         edit_title: "Редагувати другий фактор"
@@ -1536,6 +1556,8 @@ uk:
       title: "Повідомлення"
       invite: "Запросити інших..."
       edit: "Додати або Видалити..."
+      remove: "Видалити ..."
+      add: "Додати…"
       leave_message: "Ви дійсно хочете залишити це повідомлення?"
       remove_allowed_user: "Ви впевнені, що хочете видалити %{name} з цього повідомлення?"
       remove_allowed_group: "Ви впевнені, що хочете видалити %{name} з цього повідомлення?"
@@ -1672,6 +1694,29 @@ uk:
       categories_and_top_topics: "Категорії та головні теми"
       categories_boxes: "Коробки з підкатегорій"
       categories_boxes_with_topics: "Коробки з Обраними Темами"
+    base_font_setting:
+      helvetica: "Helvetica/Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "RobotoCondensed"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1698,6 +1743,9 @@ uk:
         many: "Введіть хоча б %{count} елементів."
         other: "Введіть хоча б %{count} елемент."
       invalid_selection_length: "Вибір повинен містити не менше %{count} символів."
+      components:
+        categories_admin_dropdown:
+          title: "Керування категоріями"
     date_time_picker:
       from: Від
       to: До
@@ -1822,6 +1870,8 @@ uk:
       abandon: "закрити композитор та скасувати чернетку"
       enter_fullscreen: "введіть повноекранний композитор"
       exit_fullscreen: "вийти з повноекранного режиму композитора"
+      show_toolbar: "Показати панель редактора"
+      hide_toolbar: "приховати панель редактора"
       modal_ok: "OK"
       modal_cancel: "Скасувати"
       cant_send_pm: "На жаль, ви не можете відправляти повідомлення користувачу %{username}."
@@ -2108,6 +2158,7 @@ uk:
         new: "Більше немає нових тем."
         unread: "Більше немає непрочитаних тем."
         category: "Більше немає тем в категорії %{category}."
+        tag: "Немає більше %{tag} тем."
         top: "Топових тем більше немає."
         bookmarks: "Більше немає обраних тем."
     topic:
@@ -2193,6 +2244,7 @@ uk:
       read_more_MF: "У вас залишилося { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитана</a> } other { <a href='{basePath}/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 нова</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># нових</a> тем} }, або {CATEGORY, select, true {подивіться інші теми в розділі {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Переглянути всі категорії
+      browse_all_tags: Переглянути всі теги
       view_latest_topics: перегляньте останні теми
       suggest_create_topic: Чому б не створити тему?
       jump_reply_up: перейти до ранішої відповіді
@@ -2206,8 +2258,6 @@ uk:
         remove: "Видалити Таймер"
         publish_to: "Публікувати в:"
         when: "Коли:"
-        public_timer_types: Таймер теми
-        private_timer_types: Таймер Тем користувача
         time_frame_required: Будь ласка, виберіть період часу
       auto_update_input:
         none: "Вибір таймфрейма"
@@ -3305,6 +3355,7 @@ uk:
         few: "%{tags} і ще %{count} "
         many: "%{tags} і ще %{count} "
         other: "%{tags} і ще %{count}"
+      delete_no_unused_tags: "Немає невикористаних тегів."
       delete_unused: "Вилучити невикористовувані мітки"
       delete_unused_description: "Вилучити усі мітки, які не прикріплені до жодної теми чи особистих повідомлень"
       cancel_delete_unused: "Скасувати"
@@ -3501,8 +3552,8 @@ uk:
               title: "Хто може бачити цю групу?"
               public: "Усі"
               logged_on_users: "Зареєстровані користувачі"
-              members: "Власники групи, учасники"
-              staff: "Власники групи та персонал"
+              members: "Власники груп, учасники та модератори"
+              staff: "Власники груп та модератори"
               owners: "Власники групи"
               description: "Адміністратори можуть бачити всі групи."
             members_visibility_levels:
@@ -3571,6 +3622,9 @@ uk:
         continue: Продовжити
         use_global_key: Глобальний ключ (дозволяє всі дії)
         scopes:
+          description: |
+            Під час використання областей ви можете обмежити ключ API певним набором кінцевих точок.
+            Ви також можете визначити, які параметри будуть дозволені. Використовуйте коми для розділення кількох значень.
           title: Області використання
           resource: Ресурс
           action: Дія
@@ -3583,6 +3637,12 @@ uk:
               read: Читати тему або певні повідомлення в ньому. RSS також підтримується.
               write: Створіть нову тему чи допис у вже існуючій.
               read_lists: Читайте списки тем, як топ, нові, останні тощо. RSS також підтримується.
+              wordpress: Необхідний для роботи WordPress плагін wp-discourse.
+            users:
+              bookmarks: Список закладок користувача. Це повертає нагадування під час використання ICS формату.
+              sync_sso: Синхронізація користувача за допомогою SSO.
+              show: Отримати інформацію про користувача.
+              check_emails: Список emails користувача.
       web_hooks:
         title: "Вебгуки"
         none: "Зараз вебгуків немає."
@@ -3825,6 +3885,7 @@ uk:
           hide_unused_fields: "Приховати невикористовувані поля"
           is_default: "Активувати за замовчуванням"
           user_selectable: "Користувачі можуть вибирати стиль"
+          color_scheme_user_selectable: "Схема кольорів може бути вибрана користувачами"
           color_scheme: "Колірна палітра"
           default_light_scheme: "Світла (за замовчуванням)"
           color_scheme_select: "Виберіть кольори для стилю"
@@ -4799,5 +4860,6 @@ uk:
           regular: "Звичайний користувач"
       previews:
         topic_title: "Тема обговорення"
+        font_title: "%{font} Шрифт"
         share_button: "Поширити"
         reply_button: "Відповісти"

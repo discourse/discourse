@@ -64,6 +64,7 @@ fa_IR:
       default_subject: "این موضوع نیاز به عنوان دارد"
       show_trimmed_content: "نمایش محتوای پنهان شده."
       maximum_staged_user_per_email_reached: "به حداکثر ظرفیت تعداد حساب های کاربری با هر ایمیل رسیده."
+      no_subject: "(بدون موضوع)"
       errors:
         empty_email_error: "در هنگام دریافت ایمیل خالی رخ می‌دهد."
         no_message_id_error: "این اتفاق زمانی رخ می‌دهد که شناسه پیام در سربرگ ایمیل وجود ندارد."
@@ -80,6 +81,7 @@ fa_IR:
       unrecognized_error: "خطای نامشخص"
   errors: &errors
     format: ! "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "محدود به %{max} نویسه؛ شما %{length} نویسه وارد کردیدکردید "
       invalid_boolean: "عملگر دودویی نامعتبر است."
@@ -140,6 +142,9 @@ fa_IR:
     backup_file_should_be_tar_gz: "فایل پشتیبان باید یک فایل فشرده با پسوند tar.gz. باشد."
     not_enough_space_on_disk: "فضای کافی برای بارگذاری این فایل پشتیبان وجود ندارد."
     invalid_filename: "نام فایل پشتیبان نویسه‌های ممنوعه می باشد. نویسه قابل استفاده a-z و 0-9 -ـ . می باشد."
+    location:
+      local: "محلی"
+      s3: "آمازون S3"
   not_logged_in: "برای انجام این‌کار شما باید وارد شوید."
   not_found: "URL یا منبع درخواست شده یافت نشد."
   invalid_access: "شما اجازه مشاهده منبع درخواست شده را ندارید."
@@ -168,7 +173,9 @@ fa_IR:
     replies:
       one: "%{count} پاسخ"
       other: "%{count} پاسخ"
+    last_reply: "آخرین پاسخ"
     created: "ساخته شده"
+    new_topic: "ایجاد موضوع جدید"
   no_mentions_allowed: "متأسفیم، شما نمی‌توانید به کاربران دیگر اشاره کنید."
   too_many_mentions:
     one: "متأسفیم، شما در هر نوشته تنها می‌توانید به %{count} کاربر اشاره کنید."
@@ -415,6 +422,7 @@ fa_IR:
     seconds:
       one: "%{count} ثانیه"
       other: "%{count} ثانیه"
+    short_time: "چند ثانیه"
   datetime:
     distance_in_words:
       half_a_minute: "< 1 دقیقه"
@@ -493,12 +501,45 @@ fa_IR:
     title: "بازیابی رمز‌عبور"
     success: "شما با موفقیت رمز‌عبورتان را تغییر دادید و الان وارد سیستم هستید. "
     success_unapproved: "شما با موفقیت رمز‌عبورتان را تغییر دادید."
+  user_auth_tokens:
+    browser:
+      chrome: "گوگل کروم"
+      discoursehub: "برنامه DiscourseHub"
+      edge: "مایکروسافت اج"
+      firefox: "فایرفاکس"
+      ie: "اینترنت اکسپلورر"
+      opera: "اپرا"
+      safari: "سافاری"
+      unknown: "مرورگر ناشناخته"
+    device:
+      android: "دستگاه اندروید"
+      chromebook: "کروم‌بوک"
+      ipad: "آی‌پد"
+      iphone: "آیفون"
+      ipod: "آی‌پاد"
+      linux: "کامپیوتر گنو/لینوکس"
+      mac: "مک"
+      mobile: "دستگاه موبایل"
+      windows: "کامپیوتر ویندوز"
+      unknown: "دستگاه ناشناس"
+    os:
+      android: "اندروید"
+      chromeos: "کروم‌اواس"
+      ios: "آی‌او‌اس"
+      linux: "لینوکس"
+      macos: "مک‌او‌اس"
+      windows: "مایکروسافت ویندوز"
+      unknown: "سیستم‌عامل ناشناخته"
   change_email:
     confirmed: "ایمیل شما به روز شد."
     please_continue: "برو به %{site_name}"
     error: "در تغییر ایمیلتان خطایی روی داد. شاید قبلا در سایت استفاده شده است؟"
     error_staged: "خطایی در تغییر ایمیل رخ داده است. این ایمیل در حال حاضر در یک حساب‌کاربری خودکار استفاده می‌شود."
     already_done: "با عرض پوزش، پیوند تایید نامعتبر است. شاید ایمیل شما تغییر کرده؟"
+    confirm: "تایید"
+    authorizing_old:
+      old_email: "ایمیل قدیمی: %{email}"
+      new_email: "ایمیل جدید: %{email}"
   activation:
     action: "برای فعال کردن حساب‌کاربری خود اینجا کلیک کنید"
     already_done: "متاسفیم، این پیوند تاییدیه حساب کاربری دیگر معتبر نیست. شاید حساب‌کاربری شما در حال حاضر فعال است."
@@ -694,6 +735,9 @@ fa_IR:
       title: "کاربران بر اساس سطح‌اعتماد"
       xaxis: "سطح‌اعتماد"
       yaxis: "تعداد کاربران"
+      labels:
+        level: سطح
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "نوع"
       yaxis: "تعداد کاربران"
@@ -822,6 +866,7 @@ fa_IR:
       labels:
         user: کاربر
         location: موقعیت
+        os: سیستم‌عامل
     staff_logins:
       labels:
         user: کاربر

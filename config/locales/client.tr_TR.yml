@@ -1919,8 +1919,6 @@ tr_TR:
         remove: "Zamanlayıcıyı Kaldır"
         publish_to: "Şuraya Yayınla:"
         when: "Ne zaman:"
-        public_timer_types: Konu Zamanlayıcıları
-        private_timer_types: Kullanıcı Konu Zamanlayıcıları
         time_frame_required: Bir zaman dilimi seç
       auto_update_input:
         none: "Zaman aralığı seç"
@@ -3041,8 +3039,6 @@ tr_TR:
               title: "Bu grubu kimler görebilir?"
               public: "Herkes"
               logged_on_users: "Giriş yapan kullanıcılar"
-              members: "Grup yöneticileri, üyeler"
-              staff: "Grup sahipleri ve personel"
               owners: "Grup yöneticileri"
               description: "Yöneticiler tüm grupları görebilir."
             members_visibility_levels:
@@ -3105,7 +3101,6 @@ tr_TR:
         save: Kaydet
         new_key: Yeni API Anahtarı
         revoked: İptal edilmiş
-        delete: Kalıcı Sil
         not_shown_again: Bu anahtar bir daha gösterilmez. Devam etmeden önce bir kopyasını aldığınızdan emin olun.
         continue: Devam et
       web_hooks:

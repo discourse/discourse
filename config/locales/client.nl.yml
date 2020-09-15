@@ -852,7 +852,7 @@ nl:
       invited_by: "Uitgenodigd door"
       trust_level: "Vertrouwensniveau"
       notifications: "Meldingen"
-      statistics: "Statistieken "
+      statistics: "Statistieken"
       desktop_notifications:
         label: "Livemeldingen"
         not_supported: "Meldingen worden in deze browser niet ondersteund. Sorry."
@@ -1311,8 +1311,8 @@ nl:
         instructions: "minstens %{count} tekens"
         required: "Voer een wachtwoord in"
       summary:
-        title: "Samenvatting "
-        stats: "Statistieken "
+        title: "Samenvatting"
+        stats: "Statistieken"
         time_read: "leestijd"
         recent_time_read: "recente leestijd"
         topic_count:
@@ -1486,8 +1486,8 @@ nl:
       action: "Ik ben mijn wachtwoord vergeten"
       invite: "Voer uw gebruikersnaam of e-mailadres in, en we sturen u een e-mail om uw wachtwoord opnieuw in te stellen."
       reset: "Wachtwoord herinitialiseren"
-      complete_username: "Als er een account met de gebruikersnaam <b>%{username}<b/> overeenkomt, zou u spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
-      complete_email: "Als er een account met het e-mailadres <b>%{email}<b/> overeenkomt, zou u spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
+      complete_username: "Als een account overeenkomt met de gebruikersnaam <b>%{username}</b>, zou u spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
+      complete_email: "Als een account overeenkomt met <b>%{email}</b>, zou u spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
       complete_username_found: "We hebben een account gevonden die met de gebruikersnaam <b>%{username}</b> overeenkomt. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
       complete_email_found: "We hebben een account gevonden die met het e-mailadres <b>%{email}</b> overeenkomt. U zou spoedig een e-mail moeten ontvangen met instructies om uw wachtwoord opnieuw in te stellen."
       complete_username_not_found: "Geen account met de gebruikersnaam <b>%{username}</b> gevonden"
@@ -1898,7 +1898,7 @@ nl:
         post_approved: "bericht goedgekeurd"
         membership_request_consolidated: "nieuwe lidmaatschapsaanvragen"
         reaction: "nieuwe reactie"
-        votes_released: "Stem is uitgebracht"
+        votes_released: "Stem is vrijgegeven"
     upload_selector:
       title: "Een afbeelding toevoegen"
       title_with_attachments: "Een afbeelding of bestand toevoegen"
@@ -2131,8 +2131,6 @@ nl:
         remove: "Timer verwijderen"
         publish_to: "Publiceren naar:"
         when: "Wanneer:"
-        public_timer_types: Topictimers
-        private_timer_types: Gebruikerstopictimers
         time_frame_required: Selecteer een tijdsbestek
       auto_update_input:
         none: "Selecteer een tijdsbestek"
@@ -3323,8 +3321,8 @@ nl:
               title: "Wie kan deze groep zien?"
               public: "Iedereen"
               logged_on_users: "Aangemelde gebruikers"
-              members: "Groepseigenaren, leden"
-              staff: "Groepseigenaren en stafleden"
+              members: "Groepseigenaren, leden en moderators"
+              staff: "Groepseigenaren en moderators"
               owners: "Groepseigenaren"
               description: "Beheerders kunnen alle groepen zien."
             members_visibility_levels:
@@ -3350,7 +3348,7 @@ nl:
         delete: "Verwijderen"
         delete_confirm: "Deze groepen verwijderen?"
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet worden verwijderd."
-        delete_owner_confirm: "Eigenaarsprivileges van '% {username}' verwijderen?"
+        delete_owner_confirm: "Eigenaarsprivileges van '%{username}' verwijderen?"
         add: "Toevoegen"
         custom: "Aangepast"
         automatic: "Automatisch"
@@ -3842,7 +3840,7 @@ nl:
         skipped: "Overgeslagen"
         bounced: "Gebouncet"
         received: "Ontvangen"
-        rejected: "Geweigerd "
+        rejected: "Geweigerd"
         sent_at: "Verzonden op"
         time: "Tijd"
         user: "Gebruiker"
@@ -4612,6 +4610,6 @@ nl:
           regular: "Vaste gebruiker"
       previews:
         topic_title: "Discussietopic"
-        font_title: "%{font} Lettertype"
+        font_title: "Lettertype %{font}"
         share_button: "Delen"
         reply_button: "Antwoorden"

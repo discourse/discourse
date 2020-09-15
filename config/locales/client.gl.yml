@@ -1877,8 +1877,6 @@ gl:
         remove: "Eliminar temporizador"
         publish_to: "Publicar en:"
         when: "Cando:"
-        public_timer_types: Temporizadores do tema
-        private_timer_types: Temporizadores do tema do usuario
         time_frame_required: Escribe un marco temporal
       auto_update_input:
         none: "Selecciona un intervalo de tempo"
@@ -2966,7 +2964,6 @@ gl:
               title: "Quen pode ver este grupo?"
               public: "Todos"
               logged_on_users: "Usuarios conectados"
-              staff: "Propietarios e membros do grupo"
               owners: "Propietarios do grupo"
               description: "Os administradores poden ver todos os grupos."
             members_visibility_levels:
@@ -3023,7 +3020,6 @@ gl:
         description_placeholder: Para que se usa esta chave?
         save: Gardar
         revoked: Revogada
-        delete: Eliminar permanentemente
         continue: Continuar
       web_hooks:
         create: "Crear"

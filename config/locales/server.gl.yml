@@ -116,7 +116,6 @@ gl:
         screened_email_error: "Sucede cando o enderezo electrónico do destinatario xa foi bloqueado. "
         unsubscribe_not_allowed: "Sucede cando a este usuario non se lle permite cancelar a subscrición vía correo electrónico."
       unrecognized_error: "Erro non recoñecido"
-    secure_media_placeholder: "Redactado: este sitio ten habilitados medios seguros; visita o tema para ver as imaxes/audios/vídeos anexados."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"

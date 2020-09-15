@@ -115,7 +115,6 @@ fi:
         screened_email_error: "Näin käy, kun lähettäjän sähköpostiosoite on jo seulottu."
         unsubscribe_not_allowed: "Näin käy, kun tämä käyttäjä ei voi perua tilausta sähköpostitse."
       unrecognized_error: "Tuntematon virhe"
-    secure_media_placeholder: "Salattu: sivustolla medialataukset on salattuja; vieraile ketjussa niin näet liitetyt kuvat, äänet ja videot."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"

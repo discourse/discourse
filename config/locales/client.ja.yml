@@ -2413,7 +2413,6 @@ ja:
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
               public: "だれでも"
-              staff: "グループオーナーとスタッフ"
           membership:
             automatic: 自動
             trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与されるトラストレベル："

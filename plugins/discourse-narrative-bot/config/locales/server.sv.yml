@@ -139,7 +139,7 @@ sv:
         first_response: |-
           Halloj, tack för svaret!
 
-          Oturligt, eftersom jag är en dåligt programmerad bot, förstår jag inte riktigt detta. :frowning:
+          Tyvärr är jag en dåligt programmerad bot och förstår inte riktigt detta. :frowning:
         track_response: Du kan försöka igen, eller om du vill hoppa över detta steg, säg `%{skip_trigger}`. Annars, för att starta om, säg `%{reset_trigger}`.
         second_response: |-
           Åhh, tyvärr. Jag förstår fortfarande inte. :anguished:
@@ -382,17 +382,17 @@ sv:
           Utmärkt! Kom ihåg att detta fungerar både för kategorier _och_ taggar, om taggar är aktiverat.
       change_topic_notification_level:
         instructions: |-
-          Varje ämne har en notifierings nivå. Det börjar med 'normalt', vilket innebär att du normalt enbart notifieras när någon talar direkt till dig.
+          Varje ämne har en aviseringsnivå. Det börjar med 'normal', vilket innebär att du normalt enbart aviseras när någon talar direkt till dig.
 
-          Som standard sätts notifierings nivån för privata meddelanden till den högsta nivån vid 'bevakning', vilket innebär att du kommer notifieras vid varje svar. Men du kan kringgå notifierings nivån för _valfritt_ ämne genom att 'bevaka', 'följa' eller 'tysta'.
+          Som standard sätts aviseringsnivån för privata meddelanden till den högsta nivån vid 'bevakning', vilket innebär att du aviseras vid varje svar. Men du kan kringgå aviseringsnivån för _valfritt_ ämne genom att 'bevaka', 'följa' eller 'tysta'.
 
-          Låt oss försöka ändra notifierings nivån för detta ämne. I underkant av ämnet kommer du hitta en knapp som visar att du **bevakar** detta ämne. Kan du ändra notifierings nivån till **följer*?
+          Låt oss försöka ändra aviseringsnivån för detta ämne. I underkant av ämnet kommer du hitta en knapp som visar att du **bevakar** detta ämne. Kan du ändra aviseringsnivån till **följer*?
         not_found: |-
           Det verkar som du fortfarande bevakar :eyes: detta ämne! Om du har problem med att hitta den, så är knappen för notifierings nivån i underkant av ämnet.
         reply: |-
           Asbra jobbat! Jag hoppas du inte tystade detta ämne då jag kan vara lite för pratsam emellanåt :grin:.
 
-          Notera att när du besvarar ett ämne, eller läser ett ämne i mer än ett par minuter,  sätts notifierings nivån automatiskt till 'följer'. Du kan ändra detta i [dina användarinställningar](%{base_uri}/my/preferences).
+          Notera att när du besvarar ett ämne, eller läser ett ämne i mer än ett par minuter, ställs aviseringsnivån automatiskt in till 'följer'. Du kan ändra detta i [dina användarinställningar](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Visste du att du kan lägga till omröstningar till valfritt inlägg? Testa att använda <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulet i redigeraren för att **skapa en omröstning**.

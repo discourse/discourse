@@ -6,4 +6,10 @@
 
 ko:
   site_settings:
+    poll_enabled: "설문 조사를 허용하시겠습니까?"
     poll_maximum_options: "여론조사가 가능한 최대 옵션 수"
+    poll_edit_window_mins: "글 작성 후 설문을 편집할 수 있는 시간 입니다."
+    poll_minimum_trust_level_to_create: "설문을 만들 수 있는 최소 신뢰 레벨을 설정합니다."
+  poll:
+    user_field:
+      no_data: "데이터 없음"

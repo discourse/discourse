@@ -1414,6 +1414,8 @@ zh_CN:
       title: "私信"
       invite: "邀请其他人..."
       edit: "添加或移除..."
+      remove: "删除..."
+      add: "添加..."
       leave_message: "你真的想要发送消息么？"
       remove_allowed_user: "确定将 %{name} 从本条私信中移除？"
       remove_allowed_group: "确定将 %{name} 从本条私信中移除？"
@@ -1717,6 +1719,8 @@ zh_CN:
       abandon: "关闭编辑面板并放弃草稿"
       enter_fullscreen: "进入全屏编辑模式"
       exit_fullscreen: "退出全屏编辑模式"
+      show_toolbar: "显示编辑器工具栏"
+      hide_toolbar: "隐藏编辑器工具栏"
       modal_ok: "确认"
       modal_cancel: "取消"
       cant_send_pm: "抱歉，你不能向 %{username} 发送私信。"
@@ -2058,8 +2062,6 @@ zh_CN:
         remove: "撤销计时器"
         publish_to: "发布至："
         when: "时间："
-        public_timer_types: 主题计时器
-        private_timer_types: 用户主题计时器
         time_frame_required: 请选择一个时间范围
       auto_update_input:
         none: "选择时间范围"
@@ -3198,8 +3200,8 @@ zh_CN:
               title: "此群组对谁可见？"
               public: "所有人"
               logged_on_users: "已登录用户"
-              members: "群组拥有者，成员"
-              staff: "群组拥有者及管理人员"
+              members: "群组的所有者、成员还有版主"
+              staff: "群组的所有者和成员"
               owners: "群组拥有者"
               description: "管理员能看到所有群组。"
             members_visibility_levels:
@@ -4477,5 +4479,6 @@ zh_CN:
           regular: "普通用户"
       previews:
         topic_title: "讨论主题"
+        font_title: "%{font}字体"
         share_button: "分享"
         reply_button: "回复"

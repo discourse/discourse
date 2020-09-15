@@ -906,7 +906,7 @@ sv:
         label: "Utskicksläge"
         enabled: "Aktivera mottagning av e-post för varje nytt inlägg"
         instructions: |
-          Den här inställningen åsidosätter aktivitetssummeringen.<br />Tystade ämnen och kategorier är inte inkluderade i de här e-postmeddelandena.
+          Den här inställningen åsidosätter aktivitetssammanfattningen.<br />Tystade ämnen och kategorier omfattas inte i dessa e-postmeddelanden.
         individual: "Skicka ett e-postmeddelande för varje nytt inlägg."
         individual_no_echo: "Jag vill få e-post när nya poster publiceras"
         many_per_day: "Skicka ett e-postmeddelande för varje nytt inlägg (ungefär %{dailyEmailEstimate} per dag)"
@@ -1218,7 +1218,7 @@ sv:
         only_when_away: "bara när jag är borta"
         never: "aldrig"
       email_messages_level: "Sänd mig e-post när någon skickar mig ett meddelande"
-      include_tl0_in_digests: "Inkludera innehåll från nya användare i sammanfattningsmeddelanden via e-post"
+      include_tl0_in_digests: "Inkludera innehåll från nya användare i sammanfattningen som skickas via e-post"
       email_in_reply_to: "Inkludera ett utdrag av inlägg som svarats på i e-postmeddelanden"
       other_settings: "Övrigt"
       categories_settings: "Kategorier"
@@ -2131,8 +2131,6 @@ sv:
         remove: "Ta bort timer:"
         publish_to: "Publicera till:"
         when: "När:"
-        public_timer_types: Ämnestidtagningar
-        private_timer_types: Användares ämnestidtagning
         time_frame_required: Välj en tidsram
       auto_update_input:
         none: "Välj en tidsram"
@@ -2729,7 +2727,7 @@ sv:
           description: "Du kommer att aviseras vid nya ämnen för denna kategori, men inte svar på ämnen."
         tracking:
           title: "Följer"
-          description: "Du kommer automatiskt att följa alla ämnen i de här kategorierna. Du blir notifierad om någon nämner ditt @namn eller svarar på ditt inlägg, och en räknare över antalet nya inlägg visas."
+          description: "Du kommer automatiskt att följa alla ämnen i de här kategorierna. Du aviseras om någon nämner ditt @namn eller svarar på ditt inlägg, och det visas en räknare över antalet nya inlägg."
         regular:
           title: "Normal"
           description: "Du aviseras om någon nämner ditt @namn eller svarar på ditt inlägg."
@@ -3323,8 +3321,8 @@ sv:
               title: "Vem kan se denna grupp?"
               public: "Alla"
               logged_on_users: "Inloggade användare"
-              members: "Gruppägare, medlemmar"
-              staff: "Gruppägare och personal"
+              members: "Gruppägare, medlemmar och moderatorer"
+              staff: "Gruppägare och moderatorer"
               owners: "Gruppägare"
               description: "Administratörer kan se alla grupper."
             members_visibility_levels:
