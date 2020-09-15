@@ -168,6 +168,6 @@ module UserGuardian
   end
 
   def can_delete_sso_record?(user)
-    SiteSetting.enable_sso && user && is_staff?
+    SiteSetting.enable_sso && user && is_admin?
   end
 end
