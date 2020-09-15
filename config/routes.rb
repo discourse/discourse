@@ -144,6 +144,7 @@ Discourse::Application.routes.draw do
         post "merge"
         post "reset_bounce_score"
         put "disable_second_factor"
+        delete "sso_record"
       end
       get "users/:id.json" => 'users#show', defaults: { format: 'json' }
       get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }
