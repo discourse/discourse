@@ -281,7 +281,7 @@ GEM
     rails_failover (0.5.6)
       activerecord (~> 6.0)
       railties (~> 6.0)
-    rails_multisite (2.3.0)
+    rails_multisite (2.4.0)
       activerecord (> 5.0, < 7)
       railties (> 5.0, < 7)
     railties (6.0.3.3)
