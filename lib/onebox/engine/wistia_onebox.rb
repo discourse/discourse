@@ -7,7 +7,7 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/https?:\/\/(.+)?(wistia.com|wi.st)\/(medias|embed)\/.*/)
-      requires_iframe_origins "https://fast.wistia.com"
+      requires_iframe_origins("https://fast.wistia.com", "https://fast.wistia.net")
       always_https
 
       def to_html
