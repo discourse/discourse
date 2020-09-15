@@ -411,7 +411,7 @@ class Stylesheet::Manager
       theme_color_defs = theme&.resolve_baked_field(:common, :color_definitions)
       Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{SiteSetting.base_font}"
     else
-      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}"
+      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}-#{SiteSetting.base_font}"
 
       if cdn_url = GlobalSetting.cdn_url
         digest_string = "#{digest_string}-#{cdn_url}"
