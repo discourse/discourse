@@ -10,18 +10,41 @@ workbox.setConfig({
 var authUrl = "<%= Discourse.base_path %>/auth/";
 
 var cacheVersion = "1";
+var discourseCacheName = "discourse-" + cacheVersion;
+var externalCacheName = "external-" + cacheVersion;
 
 // Cache all GET requests, so Discourse can be used while offline
+
 workbox.routing.registerRoute(
   function(args) {
-    return !(args.url.origin === location.origin && args.url.pathname.startsWith(authUrl));
+    return args.url.origin === location.origin && !args.url.pathname.startsWith(authUrl);
   }, // Match all except auth routes
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
-    cacheName: "discourse-" + cacheVersion,
+    cacheName: discourseCacheName,
     plugins: [
       new workbox.expiration.Plugin({
         maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
-        maxEntries: 500,
+        maxEntries: 250,
+        purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
+      }),
+    ],
+  })
+);
+
+workbox.routing.registerRoute(
+  function(args) {
+    return args.url.origin !== location.origin;
+  }, // Match all external resources
+  new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
+    cacheName: externalCacheName,
+    fetchOptions: {
+      mode: 'cors',
+      credentials: 'omit'
+    },
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
+        maxEntries: 250,
         purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
       }),
     ],
