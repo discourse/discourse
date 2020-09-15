@@ -1,4 +1,4 @@
-import xss from "xss";
+import xss from "pretty-text/xss";
 
 function attr(name, value) {
   if (value) {

@@ -25,10 +25,6 @@ define("bootbox", ["exports"], function (__exports__) {
   __exports__.default = window.bootbox;
 });
 
-define("xss", ["exports"], function (__exports__) {
-  __exports__.default = window.filterXSS;
-});
-
 define("mousetrap", ["exports"], function (__exports__) {
   __exports__.default = window.Mousetrap;
 });
