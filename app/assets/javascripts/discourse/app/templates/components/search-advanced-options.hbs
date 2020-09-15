@@ -2,14 +2,17 @@
 
 <div class="container advanced-search-posted-by-group">
   <div class="control-group pull-left">
-    <label class="control-label" for="search-posted-by">{{i18n "search.advanced.posted_by.label"}}</label>
+    <label class="control-label" for="search-posted-by">
+      {{i18n "search.advanced.posted_by.label"}}
+    </label>
     <div class="controls">
-      {{user-selector
-        excludeCurrentUser=false
-        usernames=searchedTerms.username
-        single=true
-        canReceiveUpdates=true
-        class="user-selector"
+      {{user-chooser
+        value=searchedTerms.username
+        onChange=(action "onChangeSearchTermForUsername")
+        options=(hash
+          maximum=1
+          excludeCurrentUser=false
+        )
       }}
     </div>
   </div>
@@ -18,27 +21,11 @@
     <div class="controls">
       {{search-advanced-category-chooser
         value=searchedTerms.category.id
-        onChange=(action "onChangeCategory")
+        onChange=(action "onChangeSearchTermForCategory")
       }}
     </div>
   </div>
 </div>
-
-{{!-- disable these super-advanced searches for now
-<div class="container">
-  <div class="control-group pull-left">
-    <label class="control-label" for="search-in-group">{{i18n "search.advanced.in_group.label"}}</label>
-    <div class="controls">
-      {{group-selector groupFinder=groupFinder groupNames=searchedTerms.group single="true" canReceiveUpdates="true"}}
-    </div>
-  </div>
-  <div class="control-group pull-left">
-    <label class="control-label" for="search-with-badge">{{i18n "search.advanced.with_badge.label"}}</label>
-    <div class="controls">
-      {{badge-selector badgeFinder=badgeFinder badgeNames=searchedTerms.badge single="true" canReceiveUpdates="true"}}
-    </div>
-  </div>
-</div> --}}
 
 {{#if siteSettings.tagging_enabled}}
   <div class="container advanced-search-tag-group">
@@ -50,10 +37,18 @@
           allowCreate=false
           everyTag=true
           unlimitedTagCount=true
-          onChange=(action (mut searchedTerms.tags))
+          onChange=(action "onChangeSearchTermForTags")
         }}
         <section class="field">
-          <label>{{ input type="checkbox" class="all-tags" checked=searchedTerms.special.all_tags}} {{i18n "search.advanced.filters.all_tags"}} </label>
+          <label>
+            {{input
+              type="checkbox"
+              class="all-tags"
+              checked=searchedTerms.special.all_tags
+              click=(action "onChangeSearchTermForAllTags" value="target.checked")
+            }}
+            {{i18n "search.advanced.filters.all_tags"}}
+          </label>
         </section>
       </div>
     </div>
@@ -66,10 +61,42 @@
     <div class="controls">
       {{#if currentUser}}
         <section class="field">
-          <label>{{input type="checkbox" class="in-title" checked=searchedTerms.special.in.title}} {{i18n "search.advanced.filters.title"}}</label>
-          <label>{{input type="checkbox" class="in-likes" checked=searchedTerms.special.in.likes}} {{i18n "search.advanced.filters.likes"}}</label>
-          <label>{{input type="checkbox" class="in-private" checked=searchedTerms.special.in.personal}} {{i18n "search.advanced.filters.private"}}</label>
-          <label>{{input type="checkbox" class="in-seen" checked=searchedTerms.special.in.seen}} {{i18n "search.advanced.filters.seen"}}</label>
+          <label>
+            {{input
+              type="checkbox"
+              class="in-title"
+              checked=searchedTerms.special.in.title
+              click=(action "onChangeSearchTermForSpecialInTitle" value="target.checked")
+            }}
+            {{i18n "search.advanced.filters.title"}}
+          </label>
+          <label>
+            {{input
+              type="checkbox"
+              class="in-likes"
+              checked=searchedTerms.special.in.likes
+              click=(action "onChangeSearchTermForSpecialInLikes" value="target.checked")
+            }}
+            {{i18n "search.advanced.filters.likes"}}
+          </label>
+          <label>
+            {{input
+              type="checkbox"
+              class="in-private"
+              checked=searchedTerms.special.in.personal
+              click=(action "onChangeSearchTermForSpecialInPersonal" value="target.checked")
+            }}
+            {{i18n "search.advanced.filters.private"}}
+          </label>
+          <label>
+            {{input
+              type="checkbox"
+              class="in-seen"
+              checked=searchedTerms.special.in.seen
+              click=(action "onChangeSearchTermForSpecialInSeen" value="target.checked")
+            }}
+            {{i18n "search.advanced.filters.seen"}}
+          </label>
         </section>
       {{/if}}
       {{combo-box
@@ -77,8 +104,11 @@
         valueProperty="value"
         content=inOptions
         value=searchedTerms.in
-        none="user.locale.any"
-        onChange=(action (mut searchedTerms.in))
+        onChange=(action "onChangeSearchTermForIn")
+        options=(hash
+          none="user.locale.any"
+          clearable=true
+        )
       }}
     </div>
   </div>
@@ -90,8 +120,11 @@
         valueProperty="value"
         content=statusOptions
         value=searchedTerms.status
-        none="user.locale.any"
-        onChange=(action (mut searchedTerms.status))
+        onChange=(action "onChangeSearchTermForStatus")
+        options=(hash
+          none="user.locale.any"
+          clearable=true
+        )
       }}
     </div>
   </div>
@@ -118,7 +151,13 @@
   <div class="control-group pull-left">
     <label class="control-label" for="search-min-post-count">{{i18n "search.advanced.post.count.label"}}</label>
     <div class="controls">
-      {{input type="number" value=searchedTerms.min_post_count class="input-small" id="search-min-post-count"}}
+      {{input
+        type="number"
+        value=(readonly searchedTerms.min_post_count)
+        class="input-small"
+        id="search-min-post-count"
+        input=(action "onChangeSearchTermMinPostCount" value="target.value")
+      }}
     </div>
   </div>
 </div>

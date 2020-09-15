@@ -12,7 +12,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    justify-content: space-between;
     margin-bottom: 1em;
 
     .search-query {
@@ -133,11 +132,7 @@
       }
       font-weight: 700;
       text-align: left;
-      font-weight: bold;
-
-      &.btn {
-        background: var(--primary-low);
-      }
+      cursor: pointer;
 
       .d-icon {
         margin: 0;
