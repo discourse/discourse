@@ -24,6 +24,12 @@ class SystemMessage
     title = params[:message_title] || I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.subject_template", params) }
     raw = params[:message_raw] || I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.text_body_template", params) }
 
+    custom_message = SystemMessage.custom_messages[type.to_sym]&.call
+    if custom_message
+      title = custom_message[:title] if custom_message[:title]
+      raw = custom_message[:raw] if custom_message[:raw]
+    end
+
     if from_system
       user = Discourse.system_user
       target_group_names = nil
@@ -65,4 +71,11 @@ class SystemMessage
     }
   end
 
+  def self.custom_message(message_type, &block)
+    (@custom_messages ||= {})[message_type] = block
+  end
+
+  def self.custom_messages
+    @custom_messages || {}
+  end
 end

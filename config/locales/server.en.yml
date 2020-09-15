@@ -2847,6 +2847,13 @@ en:
 
         [prefs]: %{user_preferences_url}
 
+    tl2_promotion_message:
+      subject_template: "Congratulations on your trust level promotion!"
+      text_body_template: |
+        We’ve promoted you up a [trust level!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+
+        We invite you to keep getting involved – we enjoy having you around.
+
     backup_succeeded:
       title: "Backup Succeeded"
       subject_template: "Backup completed successfully"

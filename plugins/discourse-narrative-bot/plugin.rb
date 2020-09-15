@@ -33,7 +33,6 @@ after_initialize do
     '../autoload/jobs/narrative_timeout.rb',
     '../autoload/jobs/narrative_init.rb',
     '../autoload/jobs/send_default_welcome_message.rb',
-    '../autoload/jobs/send_advanced_tutorial_message.rb',
     '../autoload/jobs/onceoff/grant_badges.rb',
     '../autoload/jobs/onceoff/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
@@ -282,24 +281,23 @@ after_initialize do
     end
   end
 
-  self.on(:user_promoted) do |args|
-    promoted_from_tl1 = args[:new_trust_level] == TrustLevel[2] &&
-      args[:old_trust_level] == TrustLevel[1]
-
-    if SiteSetting.discourse_narrative_bot_enabled && promoted_from_tl1
-      # The event 'user_promoted' is sometimes called from inside a transaction.
-      # Use this helper to ensure the job is enqueued after commit to prevent
-      # any race conditions.
-      DB.after_commit do
-        Jobs.enqueue(:send_advanced_tutorial_message, user_id: args[:user_id])
-      end
-    end
-  end
-
   UserAvatar.register_custom_user_gravatar_email_hash(
     DiscourseNarrativeBot::BOT_USER_ID,
     "discobot@discourse.org"
   )
+
+  SystemMessage.custom_message(:tl2_promotion_message) do
+    reset_trigger = DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger
+    discobot_username = DiscourseNarrativeBot::AdvancedUserNarrative.new.discobot_username
+    if SiteSetting.discourse_narrative_bot_enabled
+      {
+        title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template", reset_trigger: reset_trigger, discobot_username: discobot_username),
+        raw: I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template", reset_trigger: reset_trigger, discobot_username: discobot_username)
+      }
+    else
+      {}
+    end
+  end
 
   PostGuardian.class_eval do
     alias_method :existing_can_create_post?, :can_create_post?

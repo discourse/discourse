@@ -79,6 +79,15 @@ describe SystemMessage do
       post = SystemMessage.create(user, :welcome_invite)
       expect(post.topic.allowed_groups).to eq([])
     end
-  end
 
+    it 'allows plugin to override content' do
+      SystemMessage.custom_message(:tl2_promotion_message) do
+        { title: 'override title', raw: 'override body' }
+      end
+      system_message = SystemMessage.new(user)
+      post = system_message.create(:tl2_promotion_message)
+      expect(post.topic.title).to eq("override title")
+      expect(post.raw).to eq("override body")
+    end
+  end
 end
