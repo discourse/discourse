@@ -501,7 +501,7 @@ class Admin::UsersController < Admin::AdminController
 
   def sso_record
     guardian.ensure_can_delete_sso_record!(@user)
-    @user.single_sign_on_record.destroy
+    @user.single_sign_on_record.destroy!
     render json: success_json
   end
 
