@@ -105,14 +105,17 @@
     display: flex;
     flex-direction: column;
 
-    #search-min-post-count,
+    .input-small,
     .combo-box,
     .ac-wrap,
     .control-group,
+    .multi-select,
     .search-advanced-category-chooser {
       box-sizing: border-box;
       width: 100%;
       min-width: 100%;
+      margin: 0;
+
       input,
       .item {
         padding-left: 4px; // temporarily normalizing input padding for this section
