@@ -1,6 +1,6 @@
 import afterTransition from "discourse/lib/after-transition";
 import I18n from "I18n";
-import { next, schedule } from "@ember/runloop";
+import { next } from "@ember/runloop";
 import { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
@@ -118,16 +118,14 @@ export default Component.extend({
       this.set("dismissable", true);
     }
 
-    schedule("afterRender", () => {
-      if (this.element) {
-        const autofocusInputs = this.element.querySelectorAll(
-          ".modal-body input[autofocus]"
-        );
+    if (this.element) {
+      const autofocusInputs = this.element.querySelectorAll(
+        ".modal-body input[autofocus]"
+      );
 
-        if (autofocusInputs.length) {
-          afterTransition(() => autofocusInputs[0].focus());
-        }
+      if (autofocusInputs.length) {
+        afterTransition(() => autofocusInputs[0].focus());
       }
-    });
+    }
   },
 });
