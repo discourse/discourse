@@ -34,18 +34,19 @@ workbox.routing.registerRoute(
   })
 );
 
-var cdnHostnames = [];
+var cdnUrls = [];
 
 <% if GlobalSetting.try(:cdn_cors_enabled) %>
-cdnHostnames = ["<%= "#{GlobalSetting.s3_cdn_url}" %>", "<%= "#{GlobalSetting.cdn_url}" %>"].filter(Boolean);
+cdnUrls = ["<%= "#{GlobalSetting.s3_cdn_url}" %>", "<%= "#{GlobalSetting.cdn_url}" %>"].filter(Boolean);
 <% end %>
 
-if (cdnHostnames.length > 0) {
+if (cdnUrls.length > 0) {
   var cdnCacheName = "cdn-" + cacheVersion;
 
   workbox.routing.registerRoute(
     function(args) {
-      return cdnHostnames.includes(args.url.origin);
+      var matching = cdnUrls.filter((url) => args.url.href.startsWith(url));
+      return matching.length > 0;
     }, // Match all cdn resources
     new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
       cacheName: cdnCacheName,
@@ -66,7 +67,12 @@ if (cdnHostnames.length > 0) {
 
 workbox.routing.registerRoute(
   function(args) {
-    return !(args.url.origin === location.origin || cdnHostnames.includes(args.url.origin));
+    if (args.url.origin === location.origin) {
+      return false;
+    }
+
+    var matching = cdnUrls.filter((url) => args.url.href.startsWith(url));
+    return matching.length === 0;
   }, // Match all other external resources
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
     cacheName: externalCacheName,
