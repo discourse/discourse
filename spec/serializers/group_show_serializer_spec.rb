@@ -91,6 +91,8 @@ describe GroupShowSerializer do
     let(:tag2) { Fabricate(:tag) }
 
     before do
+      SiteSetting.tagging_enabled = true
+
       GroupCategoryNotificationDefault.create!(
         group: group,
         category: category1,
@@ -137,6 +139,12 @@ describe GroupShowSerializer do
         expect(subject.as_json[:watching_first_post_tags]).to eq([])
         expect(subject.as_json[:regular_tags]).to eq([])
         expect(subject.as_json[:muted_tags]).to eq([])
+      end
+
+      it "doesn't include tag fields if tags are disabled" do
+        SiteSetting.tagging_enabled = false
+        expect(subject.as_json.keys.select { |k| k.to_s.ends_with?("_category_ids") }.length).to eq(5)
+        expect(subject.as_json.keys.select { |k| k.to_s.ends_with?("_tags") }).to be_empty
       end
     end
   end

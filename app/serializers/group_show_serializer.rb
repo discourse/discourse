@@ -101,7 +101,8 @@ class GroupShowSerializer < BasicGroupSerializer
     end
 
     define_method("include_#{level}_tags?") do
-      SiteSetting.tagging_enabled?
+      SiteSetting.tagging_enabled? &&
+        scope.is_admin? || (include_is_group_owner? && is_group_owner)
     end
 
     define_method("#{level}_tags") do
