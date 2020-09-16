@@ -160,6 +160,10 @@ task 'javascript:update' do
       destination: 'workbox',
       public: true
     }, {
+      source: 'workbox-cacheable-response/build/.',
+      destination: 'workbox',
+      public: true
+    }, {
       source: '@popperjs/core/dist/umd/popper.js'
     }, {
       source: '@popperjs/core/dist/umd/popper.js.map',
