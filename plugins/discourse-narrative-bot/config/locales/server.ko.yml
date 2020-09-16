@@ -5,10 +5,61 @@
 # https://translate.discourse.org/
 
 ko:
+  site_settings:
+    discourse_narrative_bot_enabled: "Discourse Narrative Bot 사용 (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Discourse Narrative Bot의 환영 게시물 비활성화"
+    discourse_narrative_bot_ignored_usernames: "Discourse Narrative Bot이 무시해야하는 사용자 이름"
+    discourse_narrative_bot_disable_public_replies: "Discourse Narrative Bot의 공개 댓글 비활성화"
+    discourse_narrative_bot_welcome_post_type: "Discourse Narrative Bot이 보내야하는 환영 게시물 유형"
+    discourse_narrative_bot_welcome_post_delay: "Discourse Narrative Bot이 환영 게시물을 보내기 전에 (n)초 기다립니다."
+    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot 안내 건너 뛰기"
+  badges:
+    certified:
+      name: 인증
+      description: "새로운 사용자 튜토리얼을 완료했습니다."
+    licensed:
+      name: 라이선스
+      description: "고급 사용자 튜토리얼 완료"
   discourse_narrative_bot:
+    tl2_promotion_message:
+      subject_template: "회원 레벨 승격을 축하합니다!"
+    dice:
+      trigger: "롤"
+    quote:
+      trigger: "인용"
+      "1":
+        quote: "모든 어려움의 한 가운데에는 기회가 있습니다."
+        author: "알버트 아인슈타인"
+      "2":
+        quote: "실수 할 자유를 의미하지 않는다면 자유는 가질 가치가 없습니다."
+        author: "마하트마 간디"
+      "3":
+        quote: "다 끝났다고 울지 말고 일이 있었으니 웃으세요."
+        author: "닥터 수스"
+      "4":
+        quote: "뭔가를 올바르게 하려면 직접하십시오."
+        author: "샤를 기욤 에티엔"
+      "5":
+        quote: "당신이 할 수 있다고 믿으십시오. 그리고 당신은 그곳에 있습니다."
+        author: "시어도어 루스벨트"
+      "6":
+        quote: "인생은 초콜릿 상자와 같다. 당신이 어떤 것을 얻게 될지 결코 알 수 없는 것이다."
+        author: "포레스트 검프의 엄마"
+      "7":
+        quote: "인류에게는 작은 발걸음, 인류에게는 커다란 도약."
+        author: "닐 암스트롱"
+      "8":
+        quote: "당신이 두려워하는 일을 매일 하라."
+        author: "엘리노어 루즈벨트"
+      "9":
+        quote: "실수는 용서할 수 있다, 다만 그가 인정할 용기를 가지고 있을 때에만."
+        author: "브루스 리"
+      "10":
+        quote: "사람의 마음이 생각하고 믿을 수 있는 것은 무엇이든 이룰 수 있습니다."
+        author: "나폴레옹 힐"
     magic_8_ball:
       answers:
-        "1": "It is certain"
+        "1": "그것은 확실합니다"
         "2": "It is decidedly so"
         "3": "Without a doubt"
         "4": "Yes definitely"
@@ -28,3 +79,10 @@ ko:
         "18": "My sources say no"
         "19": "Outlook not so good"
         "20": "Very doubtful"
+    new_user_narrative:
+      likes:
+        reply: |-
+          내 글을 좋아해 주셔서 감사합니다!
+    advanced_user_narrative:
+      reset_trigger: "고급 튜토리얼"
+      cert_title: "고급 사용자 튜토리얼의 성공적인 완료"

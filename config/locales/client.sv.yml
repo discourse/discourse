@@ -2216,14 +2216,14 @@ sv:
           "2_4": "Du kommer att se en räknare för nya svar eftersom du postat ett svar i detta ämne."
           "2_2": "Du kommer att se en räknare för nya svar eftersom du följer detta ämne."
           "2": 'Du kommer att se en räknare för nya svar eftersom du <a href="%{basePath}u/%{username}/preferences/notifications">läser detta ämne</a>.'
-          "1_2": "Du kommer att aviseras om någon nämner ditt @namn eller svarar på ditt inlägg."
-          "1": "Du kommer att aviseras om någon nämner ditt @namn eller svarar på ditt inlägg."
+          "1_2": "Du aviseras om någon nämner ditt @namn eller svarar dig."
+          "1": "Du aviseras om någon nämner ditt @namn eller svarar dig."
           "0_7": "Du ignorerar alla aviseringar i den här kategorin."
           "0_2": "Du ignorerar alla aviseringar för detta ämne."
           "0": "Du ignorerar alla aviseringar för detta ämne."
         watching_pm:
           title: "Bevakar"
-          description: "Du kommer att aviseras om varje nytt svar i detta ämne, samt en räknare med antalet nya svar."
+          description: "Du aviseras om varje nytt svar i detta meddelande, samt det visas en räknare med antalet nya svar."
         watching:
           title: "Bevakar"
           description: "Du kommer att aviseras om varje nytt svar i detta ämne, och ett räknare över nya svar visas."
@@ -2235,7 +2235,7 @@ sv:
           description: "En räknare över antal nya svar visas för detta ämne. Du aviseras om någon nämner ditt @namn eller svarar dig."
         regular:
           title: "Normal"
-          description: "Du kommer att aviseras om någon nämner ditt @namn eller svarar dig."
+          description: "Du aviseras om någon nämner ditt @namn eller svarar dig."
         regular_pm:
           title: "Normal"
           description: "Du kommer att aviseras om någon nämner ditt @namn eller svarar dig."
@@ -3147,10 +3147,10 @@ sv:
           description: "Du kommer automatiskt följa alla ämnen med den här taggen. En räknare över olästa och nya inlägg kommer att visas bredvid ämnet."
         regular:
           title: "Vanlig"
-          description: "Du kommer att få en avisering om någon nämner ditt @namn eller svarar på ditt inlägg."
+          description: "Du aviseras om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
-          description: "Du kommer inte att få aviseringar om nya ämnen med den här taggen, och de kommer inte att visas på din \"oläst\"-flik."
+          description: "Du aviseras inte om nya ämnen med den här taggen, och de kommer inte att visas på din \"oläst\"-flik."
       groups:
         title: "Taggrupper"
         about: "Lägg till taggar i grupper för att lättare hantera dem."
@@ -4340,6 +4340,9 @@ sv:
           external_name: "Namn"
           external_email: "E-post"
           external_avatar_url: "URL till profilbild"
+          last_payload: "Senaste nyttolast"
+          delete_sso_record: "Ta bort SSO-post"
+          confirm_delete: "Är du säker på att du vill ta bort denna enstaka SSO-post (Single Sign-On)?"
       user_fields:
         title: "Användarfält"
         help: "Lägg till fält som dina användare kan fylla i."

@@ -4340,6 +4340,9 @@ nl:
           external_name: "Naam"
           external_email: "E-mailadres"
           external_avatar_url: "URL van profielafbeelding"
+          last_payload: "Laatste payload"
+          delete_sso_record: "SSO-record verwijderen"
+          confirm_delete: "Weet u zeker dat u deze record voor eenmalige aanmelding (SSO) wilt verwijderen?"
       user_fields:
         title: "Gebruikersvelden"
         help: "Voeg velden toe die uw gebruikers kunnen invullen."

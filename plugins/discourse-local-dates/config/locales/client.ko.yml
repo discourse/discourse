@@ -4,4 +4,34 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-ko: 
+ko:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: 오늘 %{time}
+        tomorrow: 내일 %{time}
+        yesterday: 어제 %{time}
+        countdown:
+          passed: 날짜가 지났습니다.
+      title: 날짜 / 시간 삽입
+      create:
+        form:
+          insert: 삽입
+          advanced_mode: 고급 모드
+          simple_mode: 단순 모드
+          timezones_title: 표시할 시간대
+          timezones_description: 시간대는 미리 보기 및 대체 날짜에 날짜를 표시하는 데 사용됩니다.
+          date_title: 날짜
+          time_title: 시간
+          format_title: 날짜 형식
+          timezone: 시간대
+          until: 다음 까지...
+          recurring:
+            every_day: "매일"
+            every_week: "매주"
+            every_two_weeks: "2주 마다"
+            every_month: "매달"
+            every_two_months: "2개월마다"
+            every_three_months: "3개월마다"
+            every_six_months: "6개월마다"
+            every_year: "매년"

@@ -4598,6 +4598,8 @@ ru:
           external_name: "Имя"
           external_email: "Email"
           external_avatar_url: "URL аватара"
+          delete_sso_record: "Удалить запись SSO"
+          confirm_delete: "Вы действительно хотите удалить эту запись системы единого входа (SSO)?"
       user_fields:
         title: "Поля пользователя"
         help: "Добавить поля, которые пользователи смогут заполнять."

@@ -11,18 +11,21 @@ ko:
   date:
     month_names:
     - null
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
+    - 1월
+    - 2월
+    - 3월
+    - 4월
+    - 5월
+    - 6월
+    - 7월
+    - 8월
+    - 9월
+    - 10월
+    - 11월
+    - 12월
+  time:
+    am: "오전"
+    pm: "오후"
   title: "Discourse"
   topics: "주제"
   posts: "게시물"
@@ -31,6 +34,8 @@ ko:
   sign_up: "가입하기"
   log_in: "로그인"
   submit: "제출"
+  anonymous: "익명"
+  remove_posts_deleted_by_author: "작성자에 의해 삭제됨"
   themes:
     compile_error:
       unrecognized_extension: "인식할 수 없는 파일 확장자: %{extension}"
@@ -52,29 +57,186 @@ ko:
       data_type_not_a_number: "`%{name}` 설정에 해당 형식은 지원되지 않습니다. 지원되는 형식은 `integer`, `bool`, `list`, `enum` 및 `upload`입니다."
       name_too_long: "설정 이름이 너무 깁니다. 설정 이름의 길이는 최대 255자입니다."
       default_value_missing: "`%{name}` 설정에 기본 값이 없습니다"
+  emails:
+    view_redacted_media: "미디어 보기"
   likes: "좋아하기"
+  embed:
+    permalink: "퍼머 링크"
+    last_reply: "마지막 댓글"
+    created: "작성됨"
+    new_topic: "새 글 쓰기"
+  next_page: "다음 페이지 →"
+  prev_page: "← 이전 페이지"
+  page_num: "%{num}페이지"
+  home_title: "홈"
+  rss_description:
+    top: "주요 글"
+    posts: "최근 글"
+  excerpt_image: "이미지"
   bookmarks:
     reminders:
+      later_today: "오늘 나중에"
+      next_business_day: "다음 영업일"
       tomorrow: "내일"
+      next_week: "다음 주"
+      next_month: "다음 달"
+      custom: "사용자 지정 날짜 및 시간"
+  groups:
+    default_names:
+      everyone: "모두"
+      admins: "관리자"
+      moderators: "관리자"
+      staff: "관리자"
+  activerecord:
+    attributes:
+      topic:
+        title: "제목"
+        featured_link: "주요 링크"
+        category_id: "카테고리"
+      post:
+        raw: "본문"
+      user_profile:
+        bio_raw: "내 소개"
+  vip_category_name: "라운지"
+  meta_category_name: "사이트 피드백"
+  staff_category_name: "관리자"
+  category:
+    errors:
+      not_found: "카테고리를 찾을 수 없습니다!"
+  trust_levels:
+    newuser:
+      title: "새 사용자"
+    basic:
+      title: "기본 사용자"
+    member:
+      title: "회원"
+    leader:
+      title: "리더"
+  rate_limiter:
+    hours:
+      other: "%{count}시간"
+    minutes:
+      other: "%{count}분"
+    seconds:
+      other: "%{count}초"
+    short_time: "몇 초"
   datetime:
     distance_in_words:
       half_a_minute: "방금 전"
     distance_in_words_verbose:
       half_a_minute: "지금 바로"
       less_than_x_seconds: "지금 바로"
+      x_seconds:
+        other: "%{count}초 전"
+      less_than_x_minutes:
+        other: "%{count}분 이내"
+      x_minutes:
+        other: "%{count}분 전"
+      about_x_hours:
+        other: "%{count}시간 전"
+      x_days:
+        other: "%{count}일 전"
+      about_x_months:
+        other: "약 %{count}개월 전"
+  user_auth_tokens:
+    browser:
+      chrome: "구글 크롬"
+      discoursehub: "DiscourseHub 앱"
+      edge: "마이크로소프트 에지"
+      firefox: "파이어 폭스"
+      ie: "인터넷 익스플로러"
+      opera: "오페라"
+      safari: "사파리"
+      unknown: "알 수 없는 브라우저"
+    device:
+      android: "안드로이드 기기"
+      chromebook: "크롬북"
+      ipad: "아이패드"
+      iphone: "아이폰"
+      ipod: "아이팟"
+      linux: "GNU/Linux 컴퓨터"
+      mac: "Mac"
+      mobile: "휴대 기기"
+      windows: "Windows 컴퓨터"
+      unknown: "알 수 없는 디바이스"
+    os:
+      android: "안드로이드"
+      chromeos: "ChromeOS"
+      ios: "iOS"
+      linux: "리눅스"
+      macos: "맥OS"
+      windows: "마이크로 소프트 윈도우"
+      unknown: "알 수 없는 운영 체제"
+  change_email:
+    confirm: "확인"
+    authorizing_old:
+      old_email: "이전 이메일: %{email}"
+      new_email: "새 이메일: %{email}"
+  associated_accounts:
+    connected: "(연결됨)"
+  activation:
+    action: "계정을 활성화하려면 여기를 클릭하십시오"
+    already_done: "죄송합니다.이 계정 확인 링크는 더 이상 유효하지 않습니다. 계정이 이미 활성화되어 있습니까?"
+    please_continue: "새 계정이 확인되었습니다. 홈 페이지로 이동됩니다."
+    continue_button: "%{site_name}으로 계속"
+    welcome_to: "%{site_name}에 오신 것을 환영합니다!"
   reviewable_score_types:
     needs_approval:
       title: "승인 필요"
   post_action_types:
     bookmark:
       title: "북마크"
+      description: "이 글 북마크"
+      short_description: "이 글 북마크"
+      long_form: "이 글 북마크됨"
+    like:
+      title: "좋아요"
+  user_activity:
+    no_replies:
+      others: "댓글이 없습니다."
+  topic_flag_types:
+    spam:
+      title: "스팸"
   unsubscribe:
+    title: "구독 취소"
+    log_out: "로그아웃"
     digest_frequency:
       never: "절대"
       every_30_minutes: "30분 마다"
+      every_hour: "매시간"
       daily: "날마다"
       weekly: "주마다"
+      every_month: "매달"
+      every_six_months: "6개월마다"
+  user_api_key:
+    title: "애플리케이션 액세스 권한 부여"
+    authorize: "권한 부여"
+    invalid_public_key: "죄송합니다. 공개 키가 잘못되었습니다."
   reports:
+    default:
+      labels:
+        percent: 퍼센트
+    post_edits:
+      labels:
+        edited_at: 날짜
+    moderators_activity:
+      labels:
+        moderator: 관리자
+    flags_status:
+      title: "신고 상태"
+      labels:
+        flag: 유형
+        flagger: 신고자
+    signups:
+      title: "가입"
+      yaxis: "가입 수"
+    consolidated_page_views:
+      xaxis:
+        page_view_crawler: "크롤러"
+        page_view_anon: "익명 사용자"
+        page_view_logged_in: "로그인중인 사용자"
+      labels:
+        edit_reason: 이유
     topics:
       title: "주제"
     posts:
@@ -83,9 +245,15 @@ ko:
       title: "좋아하기"
     flags:
       title: "표시하기"
+    bookmarks:
+      title: "북마크"
     users_by_type:
+      xaxis: "종류"
+      labels:
+        type: 종류
       xaxis_labels:
         admin: 관리자
+        moderator: 관리자
     top_referrers:
       num_topics: "주제"
       labels:
