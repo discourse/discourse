@@ -30,8 +30,6 @@ en:
 
         Reply to this message with `@%{discobot_username} %{reset_trigger}` to find out more about what you can do.
 
-        We invite you to keep getting involved – we enjoy having you around.
-
     timeout:
       message: |-
         Hey @%{username}, just checking in because I haven’t heard from you in a while.

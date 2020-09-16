@@ -80,14 +80,13 @@ describe SystemMessage do
       expect(post.topic.allowed_groups).to eq([])
     end
 
-    it 'allows plugin to override content' do
-      SystemMessage.custom_message(:tl2_promotion_message) do
-        { title: 'override title', raw: 'override body' }
-      end
+    it 'sends event with post id' do
       system_message = SystemMessage.new(user)
-      post = system_message.create(:tl2_promotion_message)
-      expect(post.topic.title).to eq("override title")
-      expect(post.raw).to eq("override body")
+      event = DiscourseEvent.track(:system_message_sent) {
+        system_message.create(:tl2_promotion_message)
+      }
+      expect(event[:event_name]).to eq(:system_message_sent)
+      expect(event[:params].first[:message_type]).to eq(:tl2_promotion_message)
     end
   end
 end

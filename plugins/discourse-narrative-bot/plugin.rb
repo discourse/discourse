@@ -286,17 +286,21 @@ after_initialize do
     "discobot@discourse.org"
   )
 
-  SystemMessage.custom_message(:tl2_promotion_message) do
-    reset_trigger = DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger
-    discobot_username = DiscourseNarrativeBot::AdvancedUserNarrative.new.discobot_username
-    if SiteSetting.discourse_narrative_bot_enabled
-      {
-        title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template", reset_trigger: reset_trigger, discobot_username: discobot_username),
-        raw: I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template", reset_trigger: reset_trigger, discobot_username: discobot_username)
-      }
-    else
-      {}
-    end
+  self.on(:system_message_sent) do |args|
+    return if args[:message_type] != 'tl2_promotion_message'
+    return if !SiteSetting.discourse_narrative_bot_enabled
+
+    raw = I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template",
+                 discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
+                 reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
+
+    PostCreator.create!(
+      ::DiscourseNarrativeBot::Base.new.discobot_user,
+      title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
+      raw: raw,
+      topic_id: args[:topic_id],
+      skip_validations: true
+    )
   end
 
   PostGuardian.class_eval do
