@@ -347,7 +347,7 @@ ru:
         at_time: "%{date_time}"
         existing_reminder: "Для этой закладки уже настроено напоминание, которое будет отправлено %{at_date_time}"
     copy_codeblock:
-      copied: "Код скопирован!"
+      copied: "Скопировано!"
     drafts:
       resume: "Продолжить"
       remove: "Удалить"
