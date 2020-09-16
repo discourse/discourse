@@ -17,13 +17,19 @@ export default Controller.extend({
         route: "group.manage.categories",
         title: "groups.manage.categories.title",
       },
-      {
+    ];
+
+    if (this.siteSettings.tagging_enabled) {
+      defaultTabs.push({
         route: "group.manage.tags",
         title: "groups.manage.tags.title",
-      },
+      });
+    }
 
-      { route: "group.manage.logs", title: "groups.manage.logs.title" },
-    ];
+    defaultTabs.push({
+      route: "group.manage.logs",
+      title: "groups.manage.logs.title",
+    });
 
     if (!automatic) {
       if (this.siteSettings.enable_imap && this.siteSettings.enable_smtp) {

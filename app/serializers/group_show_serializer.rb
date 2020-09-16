@@ -100,6 +100,10 @@ class GroupShowSerializer < BasicGroupSerializer
       group_category_notifications[NotificationLevels.all[level]] || []
     end
 
+    define_method("include_#{level}_tags?") do
+      SiteSetting.tagging_enabled?
+    end
+
     define_method("#{level}_tags") do
       group_tag_notifications[NotificationLevels.all[level]] || []
     end
