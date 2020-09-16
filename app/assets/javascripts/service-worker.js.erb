@@ -45,7 +45,9 @@ if (cdnUrls.length > 0) {
 
   workbox.routing.registerRoute(
     function(args) {
-      var matching = cdnUrls.filter((url) => args.url.href.startsWith(url));
+      var matching = cdnUrls.filter((url) => {
+        return args.url.href.startsWith(url);
+      });
       return matching.length > 0;
     }, // Match all cdn resources
     new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
@@ -71,7 +73,9 @@ workbox.routing.registerRoute(
       return false;
     }
 
-    var matching = cdnUrls.filter((url) => args.url.href.startsWith(url));
+    var matching = cdnUrls.filter((url) => {
+      return args.url.href.startsWith(url);
+    });
     return matching.length === 0;
   }, // Match all other external resources
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
