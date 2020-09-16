@@ -26,8 +26,6 @@ export default Controller.extend(ModalFunctionality, {
       element
         .closest(".modal-inner-container")
         .addEventListener("mousedown", this.mouseDown);
-
-      document.activeElement.blur();
     });
   },
 
