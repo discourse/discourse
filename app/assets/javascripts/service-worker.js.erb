@@ -36,7 +36,7 @@ workbox.routing.registerRoute(
 
 var cdnHostnames = [];
 
-<% if GlobalSetting.cdn_cors_enabled %>
+<% if GlobalSetting.try(:cdn_cors_enabled) %>
 cdnHostnames = ["<%= "#{GlobalSetting.s3_cdn_url}" %>", "<%= "#{GlobalSetting.cdn_url}" %>"].filter(Boolean);
 <% end %>
 
