@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
+  before_action :set_mp_snapshot_fields
   before_action :clear_notifications
   around_action :with_resolved_locale
   before_action :set_mobile_view
@@ -293,6 +294,12 @@ class ApplicationController < ActionController::Base
       response.headers["X-Discourse-Username"] = current_user.username
     end
     response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
+  end
+
+  def set_mp_snapshot_fields
+    if defined?(Rack::MiniProfiler)
+      Rack::MiniProfiler.add_snapshot_custom_field("application version", Discourse.git_version)
+    end
   end
 
   def clear_notifications
