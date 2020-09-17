@@ -112,6 +112,13 @@ class GlobalSetting
     @use_s3 = nil
   end
 
+  def self.cdn_hostnames
+    hostnames = []
+    hostnames << URI.parse(cdn_url).host if cdn_url.present?
+    hostnames << cdn_origin_hostname if cdn_origin_hostname.present?
+    hostnames
+  end
+
   def self.database_config
     hash = { "adapter" => "postgresql" }
 

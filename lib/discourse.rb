@@ -909,12 +909,11 @@ module Discourse
   end
 
   def self.is_cdn_request?(env)
-    return unless GlobalSetting.cdn_url
+    cdn_hostnames = GlobalSetting.cdn_hostnames
+    return if cdn_hostnames.blank?
 
-    cdn_hostname = URI.parse(GlobalSetting.cdn_url).host
     requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
-
-    cdn_hostname == requested_hostname
+    cdn_hostnames.include?(requested_hostname)
   end
 end
 
