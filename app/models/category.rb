@@ -368,8 +368,22 @@ class Category < ActiveRecord::Base
   end
 
   def publish_category
-    group_ids = self.groups.pluck(:id) if self.read_restricted
-    MessageBus.publish('/categories', { categories: ActiveModel::ArraySerializer.new([self]).as_json }, group_ids: group_ids)
+    if self.read_restricted
+      group_ids = self.groups.pluck(:id)
+
+      if group_ids.present?
+        MessageBus.publish(
+          '/categories',
+          { categories: ActiveModel::ArraySerializer.new([self]).as_json },
+          group_ids: group_ids
+        )
+      end
+    else
+      MessageBus.publish(
+        '/categories',
+        { categories: ActiveModel::ArraySerializer.new([self]).as_json }
+      )
+    end
   end
 
   def remove_site_settings

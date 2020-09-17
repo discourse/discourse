@@ -2112,8 +2112,6 @@ bs_BA:
         remove: "Ukloni tajmer"
         publish_to: "Objavi u:"
         when: "Kada:"
-        public_timer_types: Trajanje tema
-        private_timer_types: Trajanje tema korisnika
         time_frame_required: Odaberite vremenski okvir
       auto_update_input:
         none: "Označi vremenski period"
@@ -3300,8 +3298,6 @@ bs_BA:
               title: "Ko može vidjeti ovu grupu?"
               public: "Svatko"
               logged_on_users: "Prijavljeni korisnici"
-              members: "Vlasnici grupe, članovi"
-              staff: "Vlasnici i osoblje grupe"
               owners: "Vlasnici grupe"
               description: "Administratori mogu vidjeti sve grupe."
             members_visibility_levels:

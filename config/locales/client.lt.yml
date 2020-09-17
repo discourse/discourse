@@ -1510,7 +1510,6 @@ lt:
         remove: "Pašalinti laikmatį"
         publish_to: "Publikuoki į:"
         when: "Kada:"
-        public_timer_types: Temos laikmačiai
       auto_update_input:
         later_today: "Šiandien vėliau"
         tomorrow: "Rytoj"
@@ -2386,7 +2385,6 @@ lt:
             visibility_levels:
               title: "Kas gali matyti šia grupę?"
               public: "Visi"
-              staff: "Grupės valdytojai ir moderatoriai"
           membership:
             automatic: Automatini
             trust_levels_title: "Pasitikėjimo lygis automatiškai suteikiamas nariui kai jis prideda:"

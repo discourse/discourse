@@ -132,6 +132,11 @@ export default Controller.extend(CanCheckEmails, {
       .catch(() => bootbox.alert(I18n.t("generic_error")));
   },
 
+  @discourseComputed("model.single_sign_on_record.last_payload")
+  ssoPayload(lastPayload) {
+    return lastPayload.split("&");
+  },
+
   actions: {
     impersonate() {
       return this.model.impersonate();
@@ -320,6 +325,17 @@ export default Controller.extend(CanCheckEmails, {
 
     resetPrimaryGroup() {
       this.set("model.primary_group_id", this.originalPrimaryGroupId);
+    },
+
+    deleteSSORecord() {
+      return bootbox.confirm(
+        I18n.t("admin.user.sso.confirm_delete"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        () => {
+          return this.model.deleteSSORecord();
+        }
+      );
     },
   },
 });

@@ -1556,7 +1556,6 @@ ro:
         remove: "Elimină temporizator"
         publish_to: "Publică la:"
         when: "Când:"
-        public_timer_types: Temporizatoare subiect
       auto_update_input:
         none: "Alege un interval de timp"
         later_today: "Mai târziu azi"
@@ -2481,7 +2480,6 @@ ro:
             visibility_levels:
               title: "Cine poate vedea acest grup?"
               public: "Toată lumea"
-              staff: "Proprietarii grupului și echipa"
           membership:
             automatic: Automat
             trust_levels_title: "Nivel de încredere acordat automat membrilor atunci când sunt adăugați:"

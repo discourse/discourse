@@ -2054,8 +2054,6 @@ fr:
         remove: "Supprimer la planification"
         publish_to: "Publier dans :"
         when: "Quand :"
-        public_timer_types: Actions planifiées pour le sujet
-        private_timer_types: Actions utilisateurs planifiées pour le sujet
         time_frame_required: Veuillez sélectionner un intervalle de temps
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
@@ -3244,8 +3242,6 @@ fr:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"
               logged_on_users: "Utilisateurs connectés"
-              members: "Propriétaires du groupe, membres"
-              staff: "Propriétaires du groupe et responsables"
               owners: "Propriétaires du groupe"
               description: "Les administrateurs peuvent voir tous les groupes."
             members_visibility_levels:
@@ -3309,7 +3305,6 @@ fr:
         save: Sauvegarder
         new_key: Nouvelle clé pour l’API
         revoked: Révoquée
-        delete: Supprimer de façon permanente
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
         continue: Poursuivre
       web_hooks:

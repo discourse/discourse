@@ -894,9 +894,9 @@ describe Topic do
   end
 
   context 'private message' do
-    let(:coding_horror) { User.find_by(username: "CodingHorror") }
+    let(:coding_horror) { Fabricate(:coding_horror) }
     fab!(:evil_trout) { Fabricate(:evil_trout) }
-    let(:topic) { Fabricate(:private_message_topic) }
+    let(:topic) { Fabricate(:private_message_topic, recipient: coding_horror) }
 
     it "should integrate correctly" do
       expect(Guardian.new(topic.user).can_see?(topic)).to eq(true)

@@ -1,5 +1,5 @@
 import selectKit from "helpers/select-kit-helper";
-import { acceptance, waitFor } from "helpers/qunit-helpers";
+import { selectDate, acceptance, waitFor } from "helpers/qunit-helpers";
 
 acceptance("Search - Full Page", {
   settings: { tagging_enabled: true },
@@ -109,7 +109,7 @@ QUnit.test("escape search term", async (assert) => {
 
   assert.ok(
     exists(
-      '.search-advanced-options span:contains("<script>prompt(1337)</script>gmail.com")'
+      '.search-advanced-options span:contains("&lt;script&gt;prompt(1337)&lt;/script&gt;gmail.com")'
     ),
     "it escapes search term"
   );
@@ -355,7 +355,7 @@ QUnit.test("update post time through advanced search ui", async (assert) => {
   await visit("/search");
 
   await fillIn(".search-query", "none");
-  await fillIn("#search-post-date .date-picker", "2016-10-05");
+  await selectDate("#search-post-date .date-picker", "2016-10-05");
 
   const postTimeSelector = selectKit(
     ".search-advanced-options .select-kit#postTime"

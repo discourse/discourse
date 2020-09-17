@@ -1573,7 +1573,6 @@ id:
             visibility_levels:
               title: "Siapa yang bisa melihat kelompok ini?"
               public: "Semua orang"
-              staff: "Pemilik kelompok dan staf"
           membership:
             automatic: Otomatis
             trust_levels_title: "Tingkat kepercayaan otomatis diberikan kepada anggota ketika mereka ditambahkan:"

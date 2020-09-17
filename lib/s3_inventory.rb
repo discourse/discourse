@@ -72,34 +72,34 @@ class S3Inventory
               .where("inventory2.etag IS NOT NULL").pluck(:id)
 
             # marking as verified/not verified
-            id_threshold_clause = model == Upload ? " AND model_table.id > #{model::SEEDED_ID_THRESHOLD}" : ""
-            sql_params = {
-              inventory_date: inventory_date,
-              unchecked: Upload.verification_statuses[:unchecked],
-              invalid_etag: Upload.verification_statuses[:invalid_etag],
-              verified: Upload.verification_statuses[:verified]
-            }
-            DB.exec(<<~SQL, sql_params
-              UPDATE #{model.table_name}
-              SET verification_status = CASE WHEN table_name_alias.etag IS NULL
-                THEN :invalid_etag
-                ELSE :verified
-              END
-              FROM #{model.table_name} AS model_table
-              LEFT JOIN #{table_name} AS table_name_alias ON
-                model_table.etag = table_name_alias.etag
-              WHERE model_table.id = #{model.table_name}.id
-              AND model_table.updated_at < :inventory_date
-              AND (
-                model_table.verification_status = :unchecked OR
-                model_table.verification_status <> CASE WHEN table_name_alias.etag IS NULL
+            if model == Upload
+              sql_params = {
+                inventory_date: inventory_date,
+                unchecked: Upload.verification_statuses[:unchecked],
+                invalid_etag: Upload.verification_statuses[:invalid_etag],
+                verified: Upload.verification_statuses[:verified]
+              }
+              DB.exec(<<~SQL, sql_params)
+                UPDATE #{model.table_name}
+                SET verification_status = CASE WHEN table_name_alias.etag IS NULL
                   THEN :invalid_etag
                   ELSE :verified
                 END
-              )
-               #{id_threshold_clause}
+                FROM #{model.table_name} AS model_table
+                LEFT JOIN #{table_name} AS table_name_alias ON
+                  model_table.etag = table_name_alias.etag
+                WHERE model_table.id = #{model.table_name}.id
+                AND model_table.updated_at < :inventory_date
+                AND (
+                  model_table.verification_status = :unchecked OR
+                  model_table.verification_status <> CASE WHEN table_name_alias.etag IS NULL
+                    THEN :invalid_etag
+                    ELSE :verified
+                  END
+                )
+                AND model_table.id > #{model::SEEDED_ID_THRESHOLD}
               SQL
-            )
+            end
 
             if (missing_count = missing_uploads.count) > 0
               missing_uploads.select(:id, :url).find_each do |upload|

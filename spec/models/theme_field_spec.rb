@@ -186,14 +186,17 @@ HTML
     theme.save!
 
     expected_js = <<~JS
-      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function () {
+      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function (_ajax) {
         "use strict";
 
         var __theme_name__ = "#{theme.name}";
+
         var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
         var themePrefix = function themePrefix(key) {
-          return "theme_translations.#{theme.id}." + key;
+          return "theme_translations.#{theme.id}.".concat(key);
         };
+
         console.log('hello from .js.es6');
       });
     JS

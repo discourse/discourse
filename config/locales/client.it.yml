@@ -2035,8 +2035,6 @@ it:
         remove: "Rimuovi Timer"
         publish_to: "Pubblica Su:"
         when: "Quando:"
-        public_timer_types: Timer Argomento
-        private_timer_types: Timer Argomento per Utente
         time_frame_required: Per favore, seleziona un lasso di tempo
       auto_update_input:
         none: "Seleziona un lasso di tempo"
@@ -3216,8 +3214,6 @@ it:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
               logged_on_users: "Utenti connessi"
-              members: "Proprietari del gruppo, membri"
-              staff: "Proprietari del gruppo e staff"
               owners: "Proprietari del gruppo"
               description: "Gli amministratori possono vedere tutti i gruppi."
             members_visibility_levels:
@@ -3281,7 +3277,6 @@ it:
         save: Salva
         new_key: Nuova Chiave API
         revoked: Revocata
-        delete: Cancellata Permanentemente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
         use_global_key: Chiave globale (consente tutte le azioni)

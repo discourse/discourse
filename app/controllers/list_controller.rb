@@ -372,6 +372,10 @@ class ListController < ApplicationController
 
     if current_slug != real_slug
       url = request.fullpath.gsub(current_slug, real_slug)
+      if ActionController::Base.config.relative_url_root
+        url = url.sub(ActionController::Base.config.relative_url_root, "")
+      end
+
       return redirect_to path(url), status: 301
     end
 

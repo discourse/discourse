@@ -167,4 +167,7 @@ module UserGuardian
     (is_me?(user) && user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)) || is_staff?
   end
 
+  def can_delete_sso_record?(user)
+    SiteSetting.enable_sso && user && is_admin?
+  end
 end

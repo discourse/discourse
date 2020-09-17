@@ -438,11 +438,13 @@ SQL
     }
 
     channels.each do |channel, ids|
-      MessageBus.publish(
-        channel,
-        message.as_json,
-        user_ids: ids
-      )
+      if ids.present?
+        MessageBus.publish(
+          channel,
+          message.as_json,
+          user_ids: ids
+        )
+      end
     end
   end
 

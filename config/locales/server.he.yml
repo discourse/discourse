@@ -117,7 +117,8 @@ he:
         unsubscribe_not_allowed: "מתרחש כאשר למשתמש אין הרשאה לבטל מינוי דרך דוא״ל."
         email_not_allowed: "מתרחש כאשר כתובת דוא״ל אינה ברשימות ההיתר או החסימה."
       unrecognized_error: "שגיאה לא מוכרת"
-    secure_media_placeholder: "חידוש: באתר זה מופעלת מדיה מאובטחת, יש לבקר בנושא כדי לצפות בתמונה/קטע שמע/סרטון שצורפו."
+    secure_media_placeholder: "נדחס: באתר זה מופעלת מדיה מאובטחת, יש לבקר בנושא או ללחוץ על הצגת מדיה כדי לצפות במדיה המצורפת."
+    view_redacted_media: "הצגת מדיה"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -838,18 +839,18 @@ he:
     confirmed: "כתובת הדוא״ל שלך עודכנה."
     please_continue: "להמשיך אל %{site_name}"
     error: "הייתה שגיאה בעדכון כתובת הדוא״ל. אולי היא כבר בשימוש?"
-    doesnt_exist: "כתובת דוא\"ל זו אינה משויכת לחשבונך."
+    doesnt_exist: "כתובת דוא״ל זו אינה משויכת לחשבונך."
     error_staged: "אירעה שגיאה בהחלפת כתובת הדוא״ל שלך. הכתובת כבר נמצאת בשימוש על ידי משתמשים מבוימים במערכת."
     already_done: "קישור אימות זה אינו תקף עוד, עמך הסליחה. אולי כתובת הדוא״ל שלך כבר הוחלפה?"
     confirm: "אישור"
     authorizing_new:
       title: "אישור כתובת הדוא״ל החדשה שלך"
-      description: "אנא אשר שברצונך שכתובת הדוא\"ל שלך תשתנה ל:"
-      description_add: "אנא אשר שברצונך להוסיף כתובת דוא\"ל חלופית:"
+      description: "נא לאשר שכתובת הדוא״ל שלך תשתנה לכדי:"
+      description_add: "נא לאשר הוספת כתובת דוא״ל חלופית:"
     authorizing_old:
       title: "החלפת כתובת הדוא״ל שלך"
       description: "נא לאשר את החלפת כתובת הדוא״ל שלך"
-      description_add: "אנא אשר שברצונך להוסיף כתובת דוא\"ל חלופית:"
+      description_add: "נא לאשר הוספת כתובת דוא״ל חלופית:"
       old_email: "כתובת דוא״ל ישנה: %{email}"
       new_email: "כתובת דוא״ל חדשה: %{email}"
       almost_done_title: "אישור כתובת הדוא״ל החדשה"
@@ -898,7 +899,7 @@ he:
       description: "ברצוני לשוחח אישית באופן ישיר עם מפרסם הפוסט הזה."
       short_description: "ברצוני לשוחח אישית באופן ישיר עם מפרסם הפוסט הזה."
       long_form: "נשלחה הודעה למשתמש"
-      email_title: 'הפוסט שלכם תחת „%{title}”'
+      email_title: 'הפוסט שלך תחת „%{title}”'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "משהו אחר"
@@ -1368,7 +1369,7 @@ he:
   dashboard:
     rails_env_warning: "השרת שלך רץ במצב %{env}."
     host_names_warning: "הקובץ config/database.yml אצלכם משתמש בכתובת ברירת המחדל - localhost. עדכנו אותה להשתמש בכתובת של השרת שלכם."
-    sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת מיילים, מבוצעות אסינכרונית באמצעות Sidekiq. אנא וודאו שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">לימדו על Sidekiq כאן</a>.'
+    sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת דוא״ל, מבוצעות אסינכרונית באמצעות Sidekiq. אנא לוודא שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">כאן יש מידע נוסף על Sidekiq</a>.'
     queue_size_warning: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
     memory_warning: "בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון."
     google_oauth2_config_warning: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
@@ -1381,15 +1382,15 @@ he:
     failing_emails_warning: 'ישנן %{num_failed_jobs} משימות דוא״ל שנכשלו. נא לבדוק את ה־app.yml שלך ולוודא שהגדרות כתובת שרת הדוא״ל נכונות. <a href="%{base_path}/sidekiq/retries" target="_blank">ניתן לעיין במשימות שנכשלו ב־Sidekiq</a>.'
     subfolder_ends_in_slash: "הגדרת תיקיית המשנה שלך שגויה, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
     email_polling_errored_recently:
-      one: "ניסיונות שליחת מיילים יצרו תקלה ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      two: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      many: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
-      other: "ניסיונות שליחת מיילים יצרו %{count} תקלות ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+      one: "ניסיונות שליפת הודעות דוא״ל יצרו תקלה ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+      two: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+      many: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
+      other: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
     missing_mailgun_api_key: "השרת מוגדר לשלוח דוא״ל דרך Mailgun אך לא סיפקת מפתח API שישמש לאימות ההודעות דרך ההתליה."
     bad_favicon_url: "טעינת סמל האתר נכשלה. נא לבדוק את הגדרות סמל האתר שלך תחת <a href='%{base_path}/admin/site_settings'>הגדרות האתר</a>."
     deprecated_api_usage: "זיהינו בקשת API שהשתמשה בשיטת אימות ישנה. נא לעדכן את הלקוח להשתמש ב<a href='https://meta.discourse.org/t/-/22706'>אימות בכותרת</a>. לאחר העדכון ההודעה הזו תיעלם תוך 24 שעות."
     update_mail_receiver: "זיהינו גרסה מיושנת של mail-receiver. יש ללחוץ <a href='https://meta.discourse.org/t/-/133491'>כאן</a> להנחיות על עדכון. לאחר העדכון ההודעה הזו תיעלם תוך 24 שעות."
-    poll_pop3_timeout: "החיבור לשרת POP3 התנתק. דוא\"ל נכנס לא יכול להשלף ואינו מאוחזר. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם ואת ספק השירות."
+    poll_pop3_timeout: "החיבור לשרת ה־POP3 התנתק. אין אפשרות לשלוף דוא״ל נכנס. נא לבדוק את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה־POP3</a> ואת ספק השירות שלך."
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='%{base_path}/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
     force_https_warning: "האתר שלך משתמש ב־SSL. אך `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` לא מופעל עדיין בהגדרות האתר שלך."
     out_of_date_themes: "יש עדכונים זמינים לערכות העיצוב הבאות:"
@@ -1408,7 +1409,7 @@ he:
     min_personal_message_post_length: "האורך המזערי המותר לפוסט בתווים להודעות"
     max_post_length: "מספר התווים המקסימלי כאורך פוסט"
     topic_featured_link_enabled: "לאפשר פרסום קישור עם נושאים."
-    show_topic_featured_link_in_digest: "הצגת קישור מומלץ של הנושא במייל התמצות."
+    show_topic_featured_link_in_digest: "הצגת קישור מומלץ של הנושא בהודעת התמצית בדוא״ל."
     min_topic_title_length: "מספר התווים המינימלי הנדרש לכותרת נושא"
     max_topic_title_length: "מספר התווים המקסימלי המותר לכותרת נושא"
     min_personal_message_title_length: "אורך הכותרת המזערי המותר להודעה בתווים"
@@ -1477,7 +1478,7 @@ he:
     apple_touch_icon: "סמל שמשמש למכשירי מגע של Apple. גודלו ישתנה אוטומטית לכדי 180 × 180. במקרה של העדר בחירה ייעשה שימוש ב־large_icon (סמל גדול)."
     opengraph_image: "תמונת opengraph כבררת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
     twitter_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמור להיות ברוחב של 280 לפחות ובגובה של 150 לפחות). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ב־opengraph_image (תמונת opengraph)."
-    notification_email: "מאת: נעשה שימוש בכתובת מייל זו כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
+    notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
     email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
@@ -1521,6 +1522,7 @@ he:
     invite_code: "על המשתמש להקליד את הקוד הזה כדי שיתאפשר לו להירשם לחשבון, כשריק אין לזה משמעות (אין משמעות לאותיות גדולות/קטנות)"
     approve_suspect_users: "הוספת משתמשים חשודים לתור הסקירה. משתמשים חשודים מילאו ביוגרפיה/אתר אבל לא קראו שום דבר."
     pending_users_reminder_delay: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של שעות. יש להגדיר ל־‎-1 כדי לנטרל את ההתראות."
+    persistent_sessions: "המשתמשים יישארו במערכת כאשר הדפדפן סגור"
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
     ga_universal_tracking_code: "מזהה קוד מעקב של Google Universal Analytics (analytics.js), למשל: UA-12345678-9; ניתן לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "שם המתחם של Google Universal Analytics (analytics.js), למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1574,7 +1576,7 @@ he:
     hide_email_address_taken: "לא להודיע למשתמשים שקיים חשבון עם כתובת דוא״ל מסוימת במהלך ההרשמה ובטופס שחזור הססמה."
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     version_checks: "לדגום את Discourse Hub כדי למצוא עדכוני גרסאות ולהציג הודעות של גרסאות חדשות בלוח הניהול <a href='%{base_path}/admin' target='_blank'>‎/admin</a>"
-    new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסה חדשה של Discourse זמינה."
+    new_version_emails: "לשלוח הודעת דוא״ל לכתובת contact_email כשגרסה חדשה של Discourse זמינה."
     invite_expiry_days: "מה התוקף מפתחות הזמנת משתמשים, בימים"
     invite_only: "כל המשתמשים החדשים חייבים לקבל הזמנה ממשתמשים מהימנים או חברי סגל. הרשמה ציבורית סגורה."
     login_required: "דרשו הזדהות לקריאת תוכן באתר זה, אל תאפשרו גישה אנונימית."
@@ -1584,7 +1586,7 @@ he:
     allowed_unicode_username_characters: "ביטויים רגולריים שנועדו לאפשר תווי יוניקוד מסוימים בשמות משתמשים. אותיות ASCII ומספרים תמיד יורשו ואין צורך לכלול אותם ברשימת ההיתר."
     reserved_usernames: "שמות משתמשים שלא מותרת הרשמה אליהם. סימון ה wildcard - * ניתן לשימוש כדי להתאים כל תו, 0 פעמים או יותר."
     min_password_length: "אורך סיסמה מינימלי."
-    min_admin_password_length: "אורך סיסמה מינימלית לאדמיניסטרטור."
+    min_admin_password_length: "אורך ססמה מזערי לחברי הנהלה."
     password_unique_characters: "מספר מינימלי של תווים ייחודיים שחייבים להיות בסיסמאות."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     external_auth_skip_create_confirm: בעת הרשמה דרך אימות חיצוני, יש לדלג על החלונית ליצירת חשבון. עדיף להשתמש לצד sso_overrides_email (דריסת דוא״ל מאימות חיצוני), sso_overrides_username (דריסת שם משתמש מאימות חיצוני) ו־sso_overrides_name (דריסת שם מאימות חיצוני).
@@ -1800,7 +1802,7 @@ he:
     levenshtein_distance_spammer_emails: "כאשר מתאימים דוא\"ל של ספאמרים, מספר ההבדלים בתווים שעדיין מאפשרים התאמה מטושטשת."
     max_new_accounts_per_registration_ip: "אם ישנם כבר (n) חשבונות עם רמת אמון 0 מכתובת IP זו (ואף אחד מהם אינו חבר צוות, או בעל/ת רמת אמון 2 ומעלה), הפסיקו קבלת הרשמות מכתובת IP זו."
     min_ban_entries_for_roll_up: "בעת לחיצה על לחצן הגלילה למעלה, ייוצר איסור כניסת משנה (subnet ban entry) חדשה אם יש לפחות (N) ערכים."
-    max_age_unmatched_emails: "מחק ערכי דוא\"ל לא תואמים שמוצגים לאחר (N) ימים."
+    max_age_unmatched_emails: "למחוק רשומות דוא״ל במעקב שלא קיבלו התאמה לאחר (N) ימים."
     max_age_unmatched_ips: "מחק ערכי IP לא תואמים שמוצגים לאחר (N) ימים."
     num_flaggers_to_close_topic: "מספר מינימלי של דגלים שונים שנדרש כדי להשהות באופן אוטומטי אפשות להתערב בנושא"
     num_hours_to_close_topic: "מספר שעות לעצירת נושא לצורך התערבות."
@@ -1820,8 +1822,8 @@ he:
     incoming_email_prefer_html: "להשתמש ב־HTML במקום בטקסט בהודעות דוא״ל נכנסות."
     strip_incoming_email_lines: "להסיר רווחים מובילים וסוגרים בכל שורה בהודעות דוא״ל נכנסות."
     disable_emails: "למנוע מ־Discourse לשלוח כל סוג של הודעות דוא״ל. יש לבחור ב־‚כן’ כדי לנטרל את כל הודעות הדוא״ל לכל המשתמשים. ניתן גם לבחור ב־‚ללא סגל’ כדי לנטרל את ההודעות למשתמשים שאינם נמנים עם הסגל."
-    strip_images_from_short_emails: "הסרת תמונות מדוא\"ל בגודל של פחות מ-2800 בתים"
-    short_email_length: "אורכו של דוא\"ל קצר בבתים (Bytes)"
+    strip_images_from_short_emails: "הסרת תמונות מהודעות דוא״ל שגודלן אינו עולה על 2800 בתים"
+    short_email_length: "אורכו של דוא״ל קצר בבתים"
     display_name_on_email_from: "הצגת שמות מלאים בשדה ה״מאת״ במיילים"
     unsubscribe_via_email: "אפשרו למשתמשים לבטל מנוי אימייל באמצעות שליחת מייל עם המילה ״unsubscribe״ בנושא או גוף המייל"
     unsubscribe_via_email_footer: "צירוף ״ביטול מנוי באמצעות קישור מייל mailto:״ בתחתית מיילים נשלחים"
@@ -1849,10 +1851,10 @@ he:
     raw_rejected_email_max_length: "כמה תווים יאוחסנו מדוא״ל שנדחה."
     delete_rejected_email_after_days: "מחיקת הודעות שנדחו לפני למעלה מ־(n) ימים"
     manual_polling_enabled: "דחיפת מיילים באמצעות ה API לתגובות מייל."
-    pop3_polling_enabled: "משיכה דרך POP3 לתגובות דוא\"ל."
+    pop3_polling_enabled: "למשוך תגובות דוא״ל דרך POP3."
     pop3_polling_ssl: "שימוש ב-SSL בעת חיבור לשרת POP3. (מומלץ)"
     pop3_polling_openssl_verify: "וידוא סרטיפיקט TLS של השרת (ברירת מחדל: מאופשר)"
-    pop3_polling_period_mins: "משך הזמן בדקות בין בדיקת הדוא\"ל בחשבון ה-POP3. הערה: דורש אתחול."
+    pop3_polling_period_mins: "ההפרש בדקות בין בדיקות דוא״ל בחשבון POP3. הערה: נדרשת הפעלה מחדש."
     pop3_polling_port: "החיבור (Port) ממנו יש למשוך נתונים מחשבון POP3."
     pop3_polling_host: "השרת המארח (Host) למשיכת דוא\"ל דרך POP3."
     pop3_polling_username: "שם המשתמש/ת לחשבון ה-POP3 לתשאול דוא\"ל."
@@ -1946,7 +1948,7 @@ he:
     svg_icon_subset: "הוספת סמלים נוספים מתוך FontAwesome 5 אותם ברצונך לכלול בין המשאבים שלך. יש להשתמש בקידומת ‚fa-‎’ לסמלים אחידים, ‚far-‎’ לסמלים רגילים וב־‚fab-‎’ לסמלים ממותגים."
     max_prints_per_hour_per_user: "מספר מקסימלי של צפיות בדף /print (הדפסה) (קיבעו ל 0 כדי לנטרל)"
     full_name_required: "שם מלא הוא שדה נדרש לפרופיל משתמש/ת."
-    enable_names: "הצגת השם המלא של המשתמש/ת בעמודי הפרופיל שלהם, בכרטיסי המשתמש ובדוא\"ל שלהם. נטרלו להסתרת השם המלא בכל מקום."
+    enable_names: "הצגת השם המלא של המשתמש בפרופיל, כרטיס המשתמש והודעות הדוא״ל של המשתמש. ניתן להשבית כדי להסתיר את השם המלא בכל מקום."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפוסטים שלהם, בנוסף ל@שם_המשתמש שלהם."
     show_time_gap_days: "אם שני פוסטים נוצרים מספר זה של ימים אחד מהשני, הציגו את מרווח הזמן בנושא."
     short_progress_text_threshold: "לאחר שמספר הפוסטים בנושא עוברים את המספר הזה, מד ההתקדמות יציג רק את המספר של הפוסט הנוכחי. אם תשנו את רוחב מד ההתקדמות, ייתכן שתצטרכו לשנות ערך זה."
@@ -1971,6 +1973,8 @@ he:
     bootstrap_mode_min_users: "מספר משתמשים מינימלי שנדרש כדי לנטרל מצב איתחול (קבעו ל 0 כדי לנטרל)"
     prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
     secure_media: 'מגביל גישה לכל ההעלאות (תמונות, סרטונים, שמע, טקסט, קובצי PDF, ארכיוני zip ועוד). אם מופעלת האפשרות „דרישת כניסה”, רק משתמשים שנכנסו למערכת יכולים לגשת להעלאות. אחרת, הגישה תוגבל רק להעלאות מסוגי מדיה בהודעות פרטיות ובקטגוריות פרטיות. אזהרה: מדובר בהגדרה מסובכת שדורשת הבנה עמוקה בניהול המערכת. יש לעיין ב<a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">נושא המדיה המאובטחת ב־Meta</a> לקבלת פרטים נוספים.'
+    secure_media_allow_embed_images_in_emails: "מאפשר להטמיע תמונות מאובטחות שבדרך כלל יידחסו אם הגודל שלהן קטן מההגדרה ‚secure media max email embed image size kb’ (גודל תמונה מרבי להטמעה כמדיה מאובטחת בקילובתים)."
+    secure_media_max_email_embed_image_size_kb: "גודל החיתוך לתמונות מאובטחות שיוטמעו בהודעות דוא״ל אם ההגדרה ‚secure media allow embed in emails’ (לאפשר הטמעת מדיה מאובטחת בהודעות דוא״ל) פעילה. אם ההגדרה הזאת אינה פעולה להגדרה זו אין שום משמעות."
     slug_generation_method: "בחרו צורת ייצור slug. צורה של 'encoded' תגרום למחרוזות עם קידוד אחוזים. 'none' ינטרל slug לחלוטין."
     enable_emoji: "הפעלת אמוג׳י"
     enable_emoji_shortcuts: "חייכנים נפוצים כגון ‎:) :p :(‎ יומרו לאמוג׳ים"
@@ -2066,7 +2070,7 @@ he:
     share_quote_buttons: "קביעת הפריטים שיופיעו בווידג׳ט שיתוף הציטוטים ובאיזה סדר."
     share_quote_visibility: "קביעה מתי להציג כפתורי שיתוף ציטוטים: אף פעם למשתמשים אלמוניים בלבד או לכל המשתמשים. "
     errors:
-      invalid_email: "כתובת דוא\"ל לא קיימת."
+      invalid_email: "כתובת דוא״ל שגויה."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
       invalid_group: "אין קבוצה בשם הזה."
       invalid_integer_min_max: "הערך חייב להיות בין %{min} ל-%{max}."
@@ -2080,7 +2084,7 @@ he:
       invalid_string_min: "חייב להיות לפחות %{min} תווים."
       invalid_string_max: "נדרשים לא יותר מ-%{max} תווים."
       invalid_reply_by_email_address: "הערך חייב להכיל '%{reply_key}' ולהיות שונה ממייל ההתראה."
-      invalid_alternative_reply_by_email_addresses: "על הערכים חייבים לכלול  '%{reply_key}' ולהיות שונים ממייל העדכון."
+      invalid_alternative_reply_by_email_addresses: "על כל הערכים לכלול ‚%{reply_key}’ ולהיות שונים מהדוא״ל לעדכונים."
       pop3_polling_host_is_empty: "עליכם לקבוע 'שרת תשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_username_is_empty: "עליכם לקבוע 'שם-משתמש לתשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_password_is_empty: "עליכם לקבוע 'סיסמת תשאול pop3' לפני שתאפשרו תשאול POP3."
@@ -2128,12 +2132,12 @@ he:
   sso:
     login_error: "תקלת התחברות"
     not_found: "לא מצאנו את החשבון שלכם. אנא צרו קשר עם מנהל האתר."
-    account_not_approved: "החשבון שלכם ממתין לאשור. תקבלו דוא\"ל עם עדכון כאשר הוא יאושר."
+    account_not_approved: "החשבון שלך ממתין לאישור. תישלח אליך הודעת דוא״ל לעדכון כאשר הוא יאושר."
     unknown_error: "יש בעיה עם החשבון שלכם. אנא צרו קשר עם מנהל האתר."
     timeout_expired: "הכניסה לחשבון פקעה, אנא נסו להתחבר שוב."
     no_email: "לא סופקה כתובת דוא״ל. נא ליצור קשר עם מנהל האתר."
     blank_id_error: "ה־`external_id` (מזהה חיצוני) נדרש אבל נותר ריק"
-    email_error: "לא ניתן לרשום חשבון עם כתובת המייל <b>%{email}</b>. בבקשה צרו קשר עם האדמיניסטרטור של האתר."
+    email_error: "לא ניתן להירשם לחשבון עם כתובת הדוא״ל <b>%{email}</b>. נא ליצור קשר עם הנהלת האתר."
     missing_secret: "הזדהות SSO נכשלה בשל secret חסר. יש ליצור קשר עם מנהלי האתר כדי לתקן בעיה זו."
   original_poster: "מפרסמים מקוריים"
   most_posts: "מירב הפוסטים"
@@ -2270,8 +2274,8 @@ he:
     active: "החשבון שלך הופעל ומוכן לשימוש."
     activate_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה בדוא״ל אל <b>%{email}</b>. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
     not_activated: "אין לך אפשרות להיכנס עדיין. שלחנו אליך הודעת הפעלה בדוא״ל. נא לעקוב אחר ההוראות שבהודעה כדי להפעיל את החשבון שלך."
-    not_allowed_from_ip_address: "אינכם יכולים להתחבר כ-%{username} מכתובת IP זו. "
-    admin_not_allowed_from_ip_address: "אינכם יכולים להתחבר כמנהלי מערכת מכתובת IP זו."
+    not_allowed_from_ip_address: "אין לך אפשרות להיכנס בתור %{username} מכתובת IP זו."
+    admin_not_allowed_from_ip_address: "אין לך אפשרות להיכנס כהנהלת המערכת מכתובת IP זו."
     reset_not_allowed_from_ip_address: "אי אפשר לבקש איפוס ססמה מכתובת ה־IP הזאת."
     suspended: "אינך יכול להתחבר עד %{date}."
     suspended_with_reason: "חשבון הושעה עד %{date}: %{reason}"
@@ -2286,10 +2290,10 @@ he:
     omniauth_error_unknown: "משהו השתבש במהלך עיבוד ההתחברות שלך, אנא נסו שנית."
     omniauth_confirm_title: "כניסה עם %{provider}"
     omniauth_confirm_button: "המשך"
-    authenticator_error_no_valid_email: "אף אחת מכתובות המייל שמקושרות ל %{account} אינה מותרת. ייתכן ותצטרכו לכוונן את חשבונכם עם כתובת מייל אחרת."
+    authenticator_error_no_valid_email: "אף אחת מהכתובת שמשויכות אל %{account} אינה מורשית. ייתכן שיהיה עליך להגדיר את החשבון שלך עם כתובת דוא״ל אחרת."
     new_registrations_disabled: "הוספת חשבונות חדשים אינה מותרת בעת זו."
     password_too_long: "סיסמאות מוגבלות ל-200 תווים."
-    email_too_long: "המייל שהזנת ארוך מדי. שמות מייל צריכים להכיל לכל היותר 254 תוים, ושמות דומיין צריכים להכיל לכל היותר 253 תוים."
+    email_too_long: "כתובת הדוא״ל שסיפקת ארוכה מדי. שמות תיבות דוא״ל לא יכולים לעלות על 254 תווים ושם התחום חייב להיות קצר מ־253 תווים."
     wrong_invite_code: "קוד ההזמנה שהקלדת שגוי."
     reserved_username: "שם משתמש זה אינו מורשה."
     missing_user_field: "לא מילאת את כל שדות המשתמש/ת"
@@ -2336,7 +2340,7 @@ he:
       invalid: "שגוי."
       not_allowed: "לא מורשה מכתובת הדואר האלקטרוני הזו. בבקשה השתמש בכתובת אחרת."
       blocked: "לא מורשה."
-      revoked: "לא יישלחו מיילים ל '%{email}' עד %{date}."
+      revoked: "לא יישלחו הודעות דוא״ל אל ‚%{email}’ עד %{date}."
     ip_address:
       blocked: "הרשמות חדשות אסורות מכתובת ה-IP שלך."
       max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם איש צוות."
@@ -2362,14 +2366,15 @@ he:
       other: "%{count} פריטים ממתינים לסקירה"
   unsubscribe_mailer:
     title: "שולח-מיילים לביטול מנוי"
-    subject_template: "אשרו שאינכם מעוניינים יותר לקבל עדכוני דוא\"ל מ%{site_title}"
+    subject_template: "נא לאשר שלא מעניין אותך לקבל עוד עדכוני דוא״ל מאת %{site_title}"
     text_body_template: |
-      מישהו (ייתכן שאתם?) ביקש לא לשלוח יותר עדכוני מייל מ-%{site_domain_name} לכתובת זו.
-      אם אתם מעוניינים לאשר זאת, בבקשה לחצו על הקישור:
+      התקבלה בקשה (כנראה ממך?) להפסיק לשלוח עדכוני דוא״ל מהאתר %{site_domain_name} לכתובת זו.
+      נא ללחוץ על הקישור הזה לאישור:
 
       %{confirm_unsubscribe_link}
 
-      אם אתם מעוניינים להמשיך לקבל עדכוני מייל, אתם יכולים להתעלם ממייל זה.
+
+      כדי להמשיך לקבל הודעות עדכון בדוא״ל, ניתן להתעלם מההודעה הזו.
   invite_mailer:
     title: "שולח-מיילים להזמנה"
     subject_template: "הוזמנת על ידי %{inviter_name} לנושא ‚%{topic_title}’ בפורום %{site_domain_name}"
@@ -2451,15 +2456,15 @@ he:
     title: "הורדת גיבוי שולח מיילים"
     subject_template: "הורדת גיבוי אתר [%{email_prefix}]"
     text_body_template: |
-      הנה ה[קישור להורדת גיבוי](%{backup_file_path}) שביקשרתם.
+      להלן ה[קישור להורדת הגיבוי](%{backup_file_path}) שביקשת.
 
-      שלחנו קישור הורדה זה לכתובת המייל המאומתת שלכם מסיבות בטיחותיות.
+      שלחנו קישור הורדה זה לכתובת הדוא״ל המאומתת שלך מטעמי בטיחות.
 
-      (אם *לא* ביקשתם הורדה זו, אתם אמורים להיות מוטרדים למדי -- למישהו יש הרשאות אדמיניסטרציה לאתר שלכם.)
+      (אם *לא* ביקשת הורדה זו, חובה לעשות בדק בית -- מישהו השיג הרשאות ניהול לאתר שלך.)
     no_token: |
       מצטערים, כבר נעשה שימוש בקישור הורדת גיבוי זה או שהוא פקע.
   admin_confirmation_mailer:
-    title: "אישור אדמיניסטרטור"
+    title: "אישור הנהלה"
     subject_template: "[%{email_prefix}] אישור חשבון חדש"
     text_body_template: |
       נא לאשר שברצונך להוסיף את **%{target_username} (%{target_email})** לסגל הניהולי של הפורום שלך.
@@ -2467,7 +2472,7 @@ he:
       [אישור משתמש ניהולי](%{admin_confirm_url})
   test_mailer:
     title: "שולח-מיילים לבדיקה"
-    subject_template: "[%{email_prefix}] מייל בדיקת שליחתיות"
+    subject_template: "[%{email_prefix}] הודעה לבדיקת יכולות שליחה"
     text_body_template: |
       זו הודעת בדיקה מאת
 
@@ -2848,13 +2853,13 @@ he:
       title: "דחיית דוא״ל צוין פוסט שגוי"
       subject_template: "[%{email_prefix}] בעיית דוא״ל -- תקלה בפרסום"
       text_body_template: |
-        אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
+        הודעת הדוא״ל שלך אל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הסיבה:
 
         %{post_error}
 
-        אם תוכלו לתקן את הבעיה, אנא נסו שוב.
+        אם ניתן לתקן את הבעיה, נא לנסות שוב.
       date_invalid: "לא נמצא תאריך יצירת פוסט. האם להודעת הדוא״ל חסרה כותרת תאריך:?"
     email_reject_post_too_short:
       title: "דחיית הודעת דוא״ל עקב פוסט קצר מדי"
@@ -3387,7 +3392,7 @@ he:
         לחצו על הקישור הבא כדי לבחור סיסמה:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
-      title: "התחברות אדמיניסטרטור"
+      title: "כניסת הנהלה"
       subject_template: "[%{email_prefix}] התחברות"
       text_body_template: |
         התקבלה בקשה להיכנס לחשבון שלך אצל [%{site_name}](%{base_url}).
@@ -3423,7 +3428,7 @@ he:
 
         %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email_add:
-      title: "אישור דוא\"ל ישן (הוסף)"
+      title: "אישור דוא״ל ישן (הוספה)"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
       text_body_template: |
         לפני שיתאפשר לנו להוסיף כתובת דוא״ל חדשה, עלינו לאמת את שליטתך על כתובת הדוא״ל
@@ -3529,11 +3534,11 @@ he:
   image: "תמונה"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
-    unauthorized: "מצטערים, הקובץ שאתם מנסים להעלות לא מורשה (סיומות מורשות: %{authorized_extensions})."
+    unauthorized: "הקובץ שמועמד להעלאה אינו מורשה (סיומות מורשות: %{authorized_extensions}), עמך הסליחה."
     pasted_image_filename: "תמונה שהודבקה"
     store_failure: "נכשלה שמירת העלאה #%{upload_id} עבור משתמש #%{user_id}."
     file_missing: "סליחה, עליך לספק קובץ להעלות."
-    empty: "מצטערים, אבל הקובץ שסיפקתם ריק"
+    empty: "הקובץ שסיפקת ריק, עמך הסליחה."
     png_to_jpg_conversion_failure_message: "אירעה שגיאה בעת המרה מ־PNG ל־JPG."
     optimize_failure_message: "אירעה שגיאה בעת מיטוב התמונה שהועלתה."
     attachments:
@@ -4041,7 +4046,7 @@ he:
         עיטור זה מוענק על ביקור יומיומי במשך 365 ימים. ואו, שנה שלמה!
     badge_title_metadata: "עיטור ב-%{site_title} של %{display_name}"
   admin_login:
-    success: "דוא\"ל נשלח"
+    success: "הודעת דוא״ל נשלחה"
     errors:
       unknown_email_address: "כתובת הדוא״ל שגויה."
       invalid_token: "אסימון שגוי."
@@ -4086,7 +4091,7 @@ he:
     congratulations: "ברכותינו, התקנת את Discourse!"
     register:
       button: "הרשמה"
-      title: "הרשמת חשבון אדמיניסטרטור"
+      title: "הרשמת חשבון ניהול"
       help: "רישמו חשבון חדש כדי להתחיל"
       no_emails: "לרוע המזל, לא הוגדרו כתובות דוא״ל של מנהלים במהלך ההקמה, לכן סיום התצורה עשוי להיות מורכב. נא להוסיף כתובת דוא״ל של מפתח בקובץ התצורה או <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>ליצור חשבון מנהל מהמסוף</a>."
     confirm_email:
@@ -4238,7 +4243,7 @@ he:
         description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."
         disabled: "מאחר שכניסה בשליטה מקומית מנוטרלת, אי אפשר לשלוח לכולם הזמנות. נא להמשיך לשלב הבא."
       finished:
-        title: "ה Discourse שלכם מוכן!"
+        title: "ה־Discourse שלך מוכן!"
         description: |
           <p>אם חשקה נפשך בשינוי ההגדרות האלו, <b>יש להפעיל את האשף הזה מחדש</b>, או לבקר ב<a href='%{base_path}/admin' target='_blank'>אגף הניהול</a>; ניתן למצוא אותו ליד סמל מפתח הברגים בתפריט האתר.</p>
           <p>מאחלים לך הנאה מרובה ובהצלחה <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>בהקמת הקהילה החדשה שלך!</a></p>

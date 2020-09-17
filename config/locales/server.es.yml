@@ -117,7 +117,6 @@ es:
         unsubscribe_not_allowed: "Sucede cuando no se le permite a este usuario anular la subscripción por correo electrónico."
         email_not_allowed: "Ocurre cuando la dirección de correo electrónico no está en la lista de permitidos o está en la lista de bloqueo."
       unrecognized_error: "Error no identificado"
-    secure_media_placeholder: "Redactado: este sitio tiene medios seguros habilitados. Visita el tema para ver las imágenes/audio/video adjuntas."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"

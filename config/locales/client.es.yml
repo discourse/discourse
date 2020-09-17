@@ -2051,8 +2051,6 @@ es:
         remove: "Quitar temporizador"
         publish_to: "Publicar en:"
         when: "Cuando:"
-        public_timer_types: Temporizadores de temas
-        private_timer_types: Temporizadores de tema del usuario
         time_frame_required: Por favor, selecciona un plazo
       auto_update_input:
         none: "Selecciona el plazo"
@@ -3236,8 +3234,6 @@ es:
               title: "¿Quién puede ver este grupo?"
               public: "Todos"
               logged_on_users: "Usuarios que hayan iniciado sesión"
-              members: "Propietarios de grupos, miembros"
-              staff: "Propietarios del grupo y staff"
               owners: "Propietarios del grupo"
               description: "Los administradores pueden ver todos los grupos."
             members_visibility_levels:
@@ -3301,7 +3297,6 @@ es:
         save: Guardar
         new_key: Nueva clave de API
         revoked: Revocada
-        delete: Eliminar permanentemente
         not_shown_again: Esta clave no se volverá a mostrar. Asegúrate de copiarla correctamente antes de continuar.
         continue: Continuar
         use_global_key: Clave global (permite todas las acciones)

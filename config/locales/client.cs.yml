@@ -1708,8 +1708,6 @@ cs:
         remove: "Odstranit časovač"
         publish_to: "Publikovat v:"
         when: "Když:"
-        public_timer_types: Časovače tématu
-        private_timer_types: uživatelské časovače témat
       auto_update_input:
         none: "Vyberte časové období"
         later_today: "Později během dnešního dne"
@@ -2735,7 +2733,6 @@ cs:
             visibility_levels:
               title: "Kdo vidí tuto skupinu?"
               public: "Všichni"
-              staff: "Vlastníci a redaktoři skupiny"
           membership:
             automatic: Automatické
             trust_levels_title: "Automaticky přidělená věrohodnost členům když jsou přidáni: "

@@ -113,7 +113,6 @@ de:
         screened_email_error: "Passiert, wenn die Absenderadresse schon einmal gefiltert wurde."
         unsubscribe_not_allowed: "Kommt vor, wenn die Abbestellung per E-Mail für diesen Benutzer nicht erlaubt ist."
       unrecognized_error: "Unbekannter Fehler"
-    secure_media_placeholder: "Editiert: Diese Seite hat sichere Medien aktiviert. Besuche das Thema, um den/das angehängte Bild/Audiodatei/Video zu sehen."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"

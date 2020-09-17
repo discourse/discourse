@@ -113,7 +113,6 @@ el:
         unsubscribe_not_allowed: "Συμβαίνει όταν η απεγγραφή μέσω email δεν επιτρέπεται για αυτόν τον χρήστη."
         email_not_allowed: "Συμβαίνει όταν η διεύθυνση email δε βρίσκεται στη λίστα επιτρεπόμενων ή βρίσκεται στη λίστα αποκλεισμού."
       unrecognized_error: "Άγνωστο Σφάλμα"
-    secure_media_placeholder: "Αναφορά: αυτός ο ιστότοπος έχει ενεργοποιημένα τα ασφαλή πολυμέσα, επισκεφθείτε το θέμα για να δείτε το συνημμένο εικόνας/ήχου/βίντεο."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"

@@ -1962,8 +1962,6 @@ ca:
         remove: "Elimina el temporitzador"
         publish_to: "Publica en:"
         when: "Quan:"
-        public_timer_types: Temporitzadors de temes
-        private_timer_types: Temporitzadors de temes d'usuari
         time_frame_required: Seleccioneu un període de temps
       auto_update_input:
         none: "Seleccioneu un període de temps"
@@ -3055,8 +3053,6 @@ ca:
               title: "Qui pot veure aquest grup?"
               public: "Tothom"
               logged_on_users: "Usuaris connectats"
-              members: "Propietaris del grup, membres"
-              staff: "Propietaris de grup i equip responsable"
               owners: "Propietaris del grup"
               description: "Els administradors poden veure tots els grups."
             members_visibility_levels:

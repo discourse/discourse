@@ -1865,8 +1865,6 @@ da:
         remove: "Fjern timerfunktion"
         publish_to: "Udgiv I:"
         when: "Hvornår:"
-        public_timer_types: Emne timere
-        private_timer_types: bruger emne timers
         time_frame_required: Vælg en tidsramme
       auto_update_input:
         none: "Vælg en tidsramme"
@@ -2947,8 +2945,6 @@ da:
               title: "Hvem kan se denne gruppe?"
               public: "Alle"
               logged_on_users: "Brugere logget på"
-              members: "Gruppeejere, medlemmer"
-              staff: "Gruppeejer og hjælpeteam"
               owners: "Gruppeejere"
               description: "Administratorer kan se alle grupper."
             members_visibility_levels:
