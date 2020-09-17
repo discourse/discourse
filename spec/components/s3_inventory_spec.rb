@@ -107,15 +107,15 @@ describe "S3Inventory" do
     end
 
     it "marks missing uploads as not verified and found uploads as verified. uploads not checked will be verified nil" do
-      expect(Upload.where(verified: nil).count).to eq(12)
+      expect(Upload.where(verification_status: Upload.verification_statuses[:unchecked]).count).to eq(12)
       output = capture_stdout do
         inventory.backfill_etags_and_list_missing
       end
 
-      verified = Upload.pluck(:verified)
-      expect(Upload.where(verified: true).count).to eq(3)
-      expect(Upload.where(verified: false).count).to eq(2)
-      expect(Upload.where(verified: nil).count).to eq(7)
+      verification_status = Upload.pluck(:verification_status)
+      expect(Upload.where(verification_status: Upload.verification_statuses[:verified]).count).to eq(3)
+      expect(Upload.where(verification_status: Upload.verification_statuses[:invalid_etag]).count).to eq(2)
+      expect(Upload.where(verification_status: Upload.verification_statuses[:unchecked]).count).to eq(7)
     end
 
     it "does not affect the updated_at date of uploads" do

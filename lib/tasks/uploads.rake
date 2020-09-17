@@ -1001,7 +1001,7 @@ def analyze_missing_s3
     SELECT post_id, url, sha1, extension, uploads.id
     FROM post_uploads pu
     RIGHT JOIN uploads on uploads.id = pu.upload_id
-    WHERE NOT verified
+    WHERE verification_status = :invalid_etag
     ORDER BY created_at
   SQL
 
@@ -1009,7 +1009,7 @@ def analyze_missing_s3
   other = []
   all = []
 
-  DB.query(sql).each do |r|
+  DB.query(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |r|
     all << r
     if r.post_id
       lookup[r.post_id] ||= []
@@ -1029,7 +1029,7 @@ def analyze_missing_s3
     puts
   end
 
-  missing_uploads = Upload.where(verified: false)
+  missing_uploads = Upload.where(verification_status: Upload.verification_statuses[:invalid_etag])
   puts "Total missing uploads: #{missing_uploads.count}, newest is #{missing_uploads.maximum(:created_at)}"
   puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
   puts "Other missing uploads count: #{other.count}"
@@ -1067,7 +1067,9 @@ def analyze_missing_s3
 end
 
 def delete_missing_s3
-  missing = Upload.where(verified: false).order(:created_at)
+  missing = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).order(:created_at)
   count = missing.count
   if count > 0
     puts "The following uploads will be deleted from the database"
@@ -1110,7 +1112,9 @@ def fix_missing_s3
   Jobs.run_immediately!
 
   puts "Attempting to download missing uploads and recreate"
-  ids = Upload.where(verified: false).pluck(:id)
+  ids = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).pluck(:id)
   ids.each do |id|
     upload = Upload.find(id)
 
@@ -1165,11 +1169,11 @@ def fix_missing_s3
     SELECT post_id
     FROM post_uploads pu
     JOIN uploads on uploads.id = pu.upload_id
-    WHERE NOT verified
+    WHERE verification_status = :invalid_etag
     ORDER BY post_id DESC
   SQL
 
-  DB.query_single(sql).each do |post_id|
+  DB.query_single(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |post_id|
     post = Post.find_by(id: post_id)
     if post
       post.rebake!
