@@ -346,8 +346,16 @@ class PostRevisor
   end
 
   def revise
-    update_post
-    update_topic if topic_changed?
+    if post_changed?
+      update_post
+      DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self) if @post_successfully_saved
+    end
+
+    if topic_changed?
+      update_topic
+      DiscourseEvent.trigger(:topic_edited, @topic, self)
+    end
+
     create_or_update_revision
     remove_flags_and_unhide_post
   end
@@ -601,11 +609,6 @@ class PostRevisor
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
-    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self) if self.post_changed?
-
-    if @post.is_first_post? && self.topic_changed?
-      DiscourseEvent.trigger(:topic_edited, @post.topic, self)
-    end
   end
 
   def update_topic_word_counts
