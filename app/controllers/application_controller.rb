@@ -297,7 +297,9 @@ class ApplicationController < ActionController::Base
   end
 
   def set_mp_snapshot_fields
-    Rack::MiniProfiler.add_snapshot_custom_field("application version", Discourse.git_version)
+    if defined?(Rack::MiniProfiler)
+      Rack::MiniProfiler.add_snapshot_custom_field("application version", Discourse.git_version)
+    end
   end
 
   def clear_notifications
