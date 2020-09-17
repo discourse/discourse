@@ -10,6 +10,7 @@ class ChangeUploadsVerifiedToInteger < ActiveRecord::Migration[6.0]
       UPDATE uploads SET verification_status = CASE WHEN
         verified THEN 2
         WHEN NOT verified THEN 3
+        ELSE 1
         END
       SQL
     )
