@@ -1204,14 +1204,11 @@ RSpec.describe TopicsController do
         end
 
         it 'should trigger only the `topic_edited` event' do
-          put "/t/#{topic.slug}/#{topic.id}.json", params: {
-            title: "New topic title"
-          }
-
-          expect(Jobs::EmitWebHookEvent.jobs.length).to eq(1)
-          job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
-
-          expect(job_args["event_name"]).to eq("topic_edited")
+          expect_enqueued_with(job: :emit_web_hook_event, args: { event_name: "topic_edited" }) do
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: "New topic title"
+            }
+          end
         end
 
         it "throws an error if it could not be saved" do

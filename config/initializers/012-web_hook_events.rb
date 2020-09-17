@@ -25,7 +25,7 @@ end
   end
 end
 
-DiscourseEvent.on(:post_edited) do |post|
+DiscourseEvent.on(:post_edited) do |post, topic_changed|
   unless post.topic&.trashed?
     WebHook.enqueue_post_hooks(:post_edited, post)
   end
