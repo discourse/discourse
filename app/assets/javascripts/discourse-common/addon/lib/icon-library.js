@@ -19,7 +19,7 @@ const REPLACEMENTS = {
   "d-unliked": "far-heart",
   "d-liked": "heart",
   "notification.mentioned": "at",
-  "notification.group_mentioned": "at",
+  "notification.group_mentioned": "users",
   "notification.quoted": "quote-right",
   "notification.replied": "reply",
   "notification.posted": "reply",
