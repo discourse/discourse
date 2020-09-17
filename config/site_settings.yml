@@ -1236,7 +1236,7 @@ files:
     default: false
     client: true
   secure_media_allow_embed_images_in_emails:
-    default: false
+    default: true
   secure_media_max_email_embed_image_size_kb:
     default: 1024
     min: 1
