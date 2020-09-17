@@ -21,9 +21,14 @@ if Rails.env != 'development' || ENV['TRACK_REQUESTS']
 end
 
 if Rails.configuration.multisite
-  RailsMultisite::ConnectionManagement.asset_hostname =
-    GlobalSetting.cdn_origin_hostname ||
-    Discourse::Application.config.database_configuration[Rails.env]["host_names"].first
+  assets_hostnames = GlobalSetting.cdn_hostnames
+
+  if assets_hostnames.empty?
+    assets_hostnames =
+      Discourse::Application.config.database_configuration[Rails.env]["host_names"]
+  end
+
+  RailsMultisite::ConnectionManagement.asset_hostnames = assets_hostnames
 
   # Multisite needs to be first, because the request tracker and message bus rely on it
   Rails.configuration.middleware.unshift RailsMultisite::Middleware, RailsMultisite::DiscoursePatches.config
