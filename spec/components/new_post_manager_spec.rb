@@ -239,6 +239,42 @@ describe NewPostManager do
       end
     end
 
+    context 'with media' do
+      let(:user) { manager.user }
+      let(:manager_opts) do
+        {
+          raw: 'this is new post content', topic_id: topic.id, first_post_checks: false,
+          image_sizes: {
+            "http://localhost:3000/uploads/default/original/1X/652fc9667040b1b89dc4d9b061a823ddb3c0cef0.jpeg" => {
+              "width" => "500", "height" => "500"
+            }
+          }
+        }
+      end
+
+      before do
+        user.update!(trust_level: 0)
+      end
+
+      it 'queues the post for review because if it contains embedded media.' do
+        SiteSetting.review_media_unless_trust_level = 1
+        manager = NewPostManager.new(topic.user, manager_opts)
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it 'does not enqueue the post if the poster is a trusted user' do
+        SiteSetting.review_media_unless_trust_level = 0
+        manager = NewPostManager.new(topic.user, manager_opts)
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result).to be_nil
+      end
+    end
   end
 
   context "new topic handler" do
