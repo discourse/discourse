@@ -3,6 +3,10 @@
 require "digest/sha1"
 
 class Upload < ActiveRecord::Base
+  self.ignored_columns = [
+    "verified" # TODO(2020-12-10): remove
+  ]
+
   include ActionView::Helpers::NumberHelper
   include HasUrl
 
@@ -50,6 +54,14 @@ class Upload < ActiveRecord::Base
   end
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
+
+  def self.verification_statuses
+    @verification_statuses ||= Enum.new(
+      unchecked: 1,
+      verified: 2,
+      invalid_etag: 3
+    )
+  end
 
   def to_s
     self.url
@@ -449,6 +461,7 @@ end
 #  access_control_post_id :bigint
 #  original_sha1          :string
 #  verified               :boolean
+#  verification_status    :integer          default(1), not null
 #
 # Indexes
 #

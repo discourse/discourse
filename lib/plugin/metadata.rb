@@ -13,6 +13,7 @@ class Plugin::Metadata
     "discourse-adplugin",
     "discourse-affiliate",
     "discourse-akismet",
+    "discourse-algolia",
     "discourse-assign",
     "discourse-auto-deactivate",
     "discourse-bbcode",

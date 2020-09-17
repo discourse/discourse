@@ -691,7 +691,6 @@ export default {
     chunk_size: 20,
     bookmarked: false,
     topic_timer: null,
-    private_topic_timer: null,
     message_bus_last_id: 1,
     participant_count: 1,
     show_read_indicator: false,

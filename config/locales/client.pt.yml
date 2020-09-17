@@ -1666,8 +1666,6 @@ pt:
         remove: "Remover Temporizador"
         publish_to: "Publicar para:"
         when: "Quando:"
-        public_timer_types: Temporizadores de Tópico
-        private_timer_types: Temporizadores de Tópico dos Utilizadores
         time_frame_required: Por favor selecione um intervalo de tempo
       auto_update_input:
         none: "Selecione um intervalo de tempo"
@@ -2535,7 +2533,6 @@ pt:
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"
-              staff: "Donos do grupo e equipa"
           membership:
             automatic: Automático
             trust_levels_title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"

@@ -2652,7 +2652,6 @@ ar:
             visibility_levels:
               title: "من يستطيع رؤية هذه المجموعة؟"
               public: "الكل"
-              staff: "مالكي المجموعة و طاقم العمل"
           membership:
             automatic: تلقائي
             trust_levels_title: "مستوى الثقة الذي يُعطى للأعضاء آليا عندما يضافون:"

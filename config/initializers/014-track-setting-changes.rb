@@ -27,7 +27,7 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     end
   end
 
-  Stylesheet::Manager.clear_core_cache!(["desktop", "mobile", "admin"]) if name == :base_font
+  Stylesheet::Manager.clear_core_cache!(["desktop", "mobile"]) if name == :base_font
 
   Report.clear_cache(:storage_stats) if [:backup_location, :s3_backup_bucket].include?(name)
 

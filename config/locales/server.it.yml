@@ -116,7 +116,6 @@ it:
         screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
         unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
       unrecognized_error: "Errore Non Riconosciuto"
-    secure_media_placeholder: "Redatto: questo sito ha abilitato i supporti sicuri, visita l'argomento per vedere immagine/audio/video allegati."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"

@@ -2518,8 +2518,6 @@ th:
             visibility_levels:
               title: "ใครสามารถเห็นกลุ่มนี้"
               public: "ทุกคน"
-              members: "เจ้าของกลุ่ม สมาชิก"
-              staff: "เจ้าของกลุ่มและทีมงาน"
               owners: "เจ้าของกลุ่ม"
               description: "แอดมินสามารถกลุ่มทั้งหมดได้"
             members_visibility_levels:
@@ -2559,7 +2557,6 @@ th:
         description: รายละเอียด
         user_placeholder: กรอกชื่อผู้ใช้
         save: บันทึก
-        delete: ลบถาวร
         continue: ดำเนินการต่อ
       web_hooks:
         create: "สร้าง"

@@ -1477,8 +1477,6 @@ et:
         remove: "Eemalda taimer"
         publish_to: "Avalda:"
         when: "Millal:"
-        public_timer_types: Teemade taimerid
-        private_timer_types: Kasutaja teema taimer
       auto_update_input:
         none: "Vali ajavahemik"
         later_today: "Täna hiljem"
@@ -2349,7 +2347,6 @@ et:
             visibility_levels:
               title: "Kes näevad seda gruppi?"
               public: "Kõik"
-              staff: "Grupi omanikud ja personal"
           membership:
             automatic: Automaatne
             trust_levels_title: "Liikmetele peale lisamist automaatselt omistatud usaldustase:"

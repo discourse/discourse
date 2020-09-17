@@ -4,10 +4,7 @@ import { cancel, later } from "@ember/runloop";
 import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
-import {
-  REMINDER_TYPE,
-  DELETE_REPLIES_TYPE,
-} from "discourse/controllers/edit-topic-timer";
+import { DELETE_REPLIES_TYPE } from "discourse/controllers/edit-topic-timer";
 import { isTesting } from "discourse-common/config/environment";
 
 export default Component.extend({
@@ -20,9 +17,8 @@ export default Component.extend({
   notice: null,
   showTopicTimer: null,
 
-  @discourseComputed("statusType")
-  canRemoveTimer(type) {
-    if (type === REMINDER_TYPE) return true;
+  @discourseComputed
+  canRemoveTimer() {
     return this.currentUser && this.currentUser.get("canManageTopic");
   },
 

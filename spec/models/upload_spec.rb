@@ -56,11 +56,11 @@ describe Upload do
 
     upload = Upload.find(upload.id)
 
-    expect(upload.width).to eq(64250)
-    expect(upload.height).to eq(64250)
+    expect(upload.width).to eq(8900)
+    expect(upload.height).to eq(8900)
 
     upload.reload
-    expect(upload.read_attribute(:width)).to eq(64250)
+    expect(upload.read_attribute(:width)).to eq(8900)
 
     upload.update_columns(width: nil, height: nil, thumbnail_width: nil, thumbnail_height: nil)
 
@@ -76,6 +76,13 @@ describe Upload do
     upload.update_columns(url: missing_url)
     expect(upload.thumbnail_height).to eq(nil)
     expect(upload.thumbnail_width).to eq(nil)
+  end
+
+  it 'returns error when image resolution is to big' do
+    SiteSetting.max_image_megapixels = 10
+    upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
+    expect(upload.persisted?).to eq(false)
+    expect(upload.errors.messages[:base].first).to eq(I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: 20))
   end
 
   it "extracts file extension" do

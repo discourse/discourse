@@ -1,3 +1,4 @@
+import { createPopper } from "@popperjs/core";
 import I18n from "I18n";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -772,8 +773,7 @@ export default Component.extend(
 
         const verticalOffset = this.multiSelect ? 0 : 3;
 
-        /* global Popper:true */
-        this.popper = Popper.createPopper(anchor, popper, {
+        this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
           strategy: placementStrategy,
           placement: this.selectKit.options.placement,

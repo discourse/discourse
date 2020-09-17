@@ -1641,8 +1641,6 @@ nb_NO:
         remove: "Fjern tidsbestemt handling"
         publish_to: "Publiser til:"
         when: "Når:"
-        public_timer_types: Tidsbestemte handlinger for emne
-        private_timer_types: Brukerstyrte tidsbestemte handlinger for emne
       auto_update_input:
         none: "Velg et tidsrom"
         later_today: "Senere i dag"
@@ -2611,7 +2609,6 @@ nb_NO:
             visibility_levels:
               title: "Hvem kan se denne gruppen?"
               public: "Alle"
-              staff: "Gruppeeiere og stab"
           membership:
             automatic: Automatisk
             trust_levels_title: "Tillitsnivå som automatisk gis til nye medlemmer når de legges til:"

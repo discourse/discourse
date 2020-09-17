@@ -4,7 +4,7 @@ import I18n from "I18n";
 import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
 import { gt, equal, or } from "@ember/object/computed";
-import EmberObject, { computed, getProperties } from "@ember/object";
+import EmberObject, { get, computed, getProperties } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -859,14 +859,14 @@ const User = RestModel.extend({
     let titles = [];
 
     (this.groups || []).forEach((group) => {
-      if (group.get("title")) {
-        titles.push(group.get("title"));
+      if (get(group, "title")) {
+        titles.push(get(group, "title"));
       }
     });
 
     (this.badges || []).forEach((badge) => {
-      if (badge.get("allow_title")) {
-        titles.push(badge.get("name"));
+      if (get(badge, "allow_title")) {
+        titles.push(get(badge, "name"));
       }
     });
 

@@ -5,4 +5,5 @@ export default Component.extend({
   href: null,
   title: null,
   ariaLabel: null,
+  shouldShow: null,
 });

@@ -117,7 +117,6 @@ fr:
         unsubscribe_not_allowed: "Se produit lorsque le désabonnement via courriel n'est pas autorisé pour cet utilisateur."
         email_not_allowed: "Se produit quand l'adresse courriel n'est pas dans la liste autorisée ou est dans la liste des indésirables."
       unrecognized_error: "Erreur non reconnue"
-    secure_media_placeholder: "Expurgé : ce site a activé la sécurisation des médias. Visitez le sujet pour visualiser le fichier image/audio/vidéo correspondant."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b> : %{message}"

@@ -35,6 +35,10 @@ fa_IR:
         title: "نظرسنجی را ببند"
         label: "بستن"
         confirm: "آیا از بستن این نظرسنجی اطمینان دارید ؟ "
+      breakdown:
+        title: "نتایج نظرسنجی"
+        votes: "%{count} رای"
+        percentage: "درصد"
       error_while_toggling_status: "متاسفانه در تغییر وضعیت این نظرسنجی، خطایی رخ داده است."
       error_while_casting_votes: "متاسفانه در ثبت رای شما خطایی رخ داده است."
       error_while_fetching_voters: "متاسفانه در نمایش رای دهندگان خطایی رخ داده است."

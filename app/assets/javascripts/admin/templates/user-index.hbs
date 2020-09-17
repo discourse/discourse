@@ -652,6 +652,16 @@
       <div class="display-row">
         <div class="field">{{i18n "admin.user.sso.external_id"}}</div>
         <div class="value">{{sso.external_id}}</div>
+        {{#if model.can_delete_sso_record}}
+          <div class="controls">
+            {{d-button
+              class="btn-danger"
+              action=(action "deleteSSORecord")
+              icon="far-trash-alt"
+              label="admin.user.sso.delete_sso_record"
+            }}
+          </div>
+        {{/if}}
       </div>
       <div class="display-row">
         <div class="field">{{i18n "admin.user.sso.external_username"}}</div>
@@ -671,6 +681,16 @@
         <div class="field">{{i18n "admin.user.sso.external_avatar_url"}}</div>
         <div class="value">{{sso.external_avatar_url}}</div>
       </div>
+      {{#if sso.last_payload}}
+        <div class="display-row">
+          <div class="field">{{i18n "admin.user.sso.last_payload"}}</div>
+          <div class="value">
+            {{#each ssoPayload as |line|}}
+              {{line}}<br>
+            {{/each}}
+          </div>
+        </div>
+      {{/if}}
     {{/with}}
   </section>
 {{/if}}

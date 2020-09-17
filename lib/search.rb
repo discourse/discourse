@@ -297,6 +297,14 @@ class Search
     @advanced_filters
   end
 
+  def self.custom_topic_eager_load(tables = nil, &block)
+    (@custom_topic_eager_loads ||= []) << (tables || block)
+  end
+
+  def self.custom_topic_eager_loads
+    Array.wrap(@custom_topic_eager_loads)
+  end
+
   advanced_filter(/^in:personal-direct$/) do |posts|
     if @guardian.user
       posts
@@ -1194,10 +1202,12 @@ class Search
       topic_eager_loads << :tags
     end
 
+    Search.custom_topic_eager_loads.each do |custom_loads|
+      topic_eager_loads.concat(custom_loads.is_a?(Array) ? custom_loads : custom_loads.call(search_pms: @search_pms).to_a)
+    end
+
     query.includes(topic: topic_eager_loads)
   end
-
-  private
 
   # Limited for performance reasons since `TS_HEADLINE` is slow when the text
   # document is too long.

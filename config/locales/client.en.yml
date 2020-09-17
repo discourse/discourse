@@ -2312,8 +2312,6 @@ en:
         remove: "Remove Timer"
         publish_to: "Publish To:"
         when: "When:"
-        public_timer_types: Topic Timers
-        private_timer_types: User Topic Timers
         time_frame_required: Please select a time frame
       auto_update_input:
         none: "Select a timeframe"
@@ -4628,6 +4626,9 @@ en:
           external_name: "Name"
           external_email: "Email"
           external_avatar_url: "Profile Picture URL"
+          last_payload: "Last Payload"
+          delete_sso_record: "Delete SSO Record"
+          confirm_delete: "Are you sure you would like to delete this single sign on (SSO) record?"
 
       user_fields:
         title: "User Fields"

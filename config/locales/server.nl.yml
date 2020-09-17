@@ -117,7 +117,6 @@ nl:
         unsubscribe_not_allowed: "Gebeurt wanneer uitschrijven via e-mail niet is toegestaan voor deze gebruiker."
         email_not_allowed: "Gebeurt wanneer het e-mailadres zich niet op de acceptatielijst of wel op de blokkeerlijst bevindt."
       unrecognized_error: "Niet-herkende fout"
-    secure_media_placeholder: "Geredigeerd: deze website heeft beveiligde media ingeschakeld; bezoek het topic om de gekoppelde afbeelding/audio/video te zien."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"

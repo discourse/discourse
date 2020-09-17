@@ -21,20 +21,11 @@ acceptance("Topic - Edit timer", {
 
 QUnit.test("default", async (assert) => {
   updateCurrentUser({ moderator: true });
-  const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
   await visit("/t/internationalization-localization");
   await click(".toggle-admin-menu");
   await click(".topic-admin-status-update button");
-
-  assert.equal(futureDateInputSelector.header().label(), "Select a timeframe");
-  assert.equal(futureDateInputSelector.header().value(), null);
-
-  await click("#private-topic-timer");
-
-  assert.equal(timerType.header().label(), "Remind Me");
-  assert.equal(timerType.header().value(), "reminder");
 
   assert.equal(futureDateInputSelector.header().label(), "Select a timeframe");
   assert.equal(futureDateInputSelector.header().value(), null);

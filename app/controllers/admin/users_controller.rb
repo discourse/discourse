@@ -23,7 +23,8 @@ class Admin::UsersController < Admin::AdminController
                                     :merge,
                                     :reset_bounce_score,
                                     :disable_second_factor,
-                                    :delete_posts_batch]
+                                    :delete_posts_batch,
+                                    :sso_record]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -495,6 +496,12 @@ class Admin::UsersController < Admin::AdminController
   def reset_bounce_score
     guardian.ensure_can_reset_bounce_score!(@user)
     @user.user_stat&.reset_bounce_score!
+    render json: success_json
+  end
+
+  def sso_record
+    guardian.ensure_can_delete_sso_record!(@user)
+    @user.single_sign_on_record.destroy!
     render json: success_json
   end
 

@@ -4,6 +4,9 @@ require 'rails_helper'
 require 'email/sender'
 
 describe Email::Sender do
+  before do
+    SiteSetting.secure_media_allow_embed_images_in_emails = false
+  end
   fab!(:post) { Fabricate(:post) }
 
   context "disable_emails is enabled" do

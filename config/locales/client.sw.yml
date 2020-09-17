@@ -1546,8 +1546,6 @@ sw:
         remove: "Ondoa Kipima Mda"
         publish_to: "Chapisha kwenda Kwa:"
         when: "Lini:"
-        public_timer_types: Vipima Mda vya Mada
-        private_timer_types: Vipima Mda vya Mada za Mtumiaji
       auto_update_input:
         none: "Chagua fremu ya mda"
         later_today: "Baada ya mda leo"
@@ -2388,7 +2386,6 @@ sw:
             visibility_levels:
               title: "Nani anaweza kuona kikundi hiki?"
               public: "Kila Mtu"
-              staff: "Wamiliki wa vikundi na wasaidizi"
           membership:
             automatic: Otomatiki
             trust_levels_title: "Wanachama otomatikali watapata kiwango cha uaminifu wakiongezwa:"

@@ -113,7 +113,6 @@ tr_TR:
         screened_email_error: "Bu olay gönderenin e-posta adresi tarandığında olur."
         unsubscribe_not_allowed: "Bu kullanıcı için e-posta aboneliği iptal edilmiş."
       unrecognized_error: "Bilinmeyen Hata"
-    secure_media_placeholder: "Düzenlendi: Bu site güvenli bir medyaya sahip, ekli görüntü/ses/videoyu görmek için konuyu ziyaret edin."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b> : %{message}"

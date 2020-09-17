@@ -2002,8 +2002,6 @@ pt_BR:
         remove: "Remover Temporizador"
         publish_to: "Publicar Em:"
         when: "Quando:"
-        public_timer_types: Temporizadores de Tópico
-        private_timer_types: Temporizadores de Tópico do Usuário
         time_frame_required: Por favor selecione um período de tempo
       auto_update_input:
         none: "Selecione um período de tempo"
@@ -3176,8 +3174,6 @@ pt_BR:
               title: "Quem pode ver este grupo?"
               public: "Todos"
               logged_on_users: "Usuários conectados"
-              members: "Proprietários do grupo, membros"
-              staff: "Proprietários e funcionários do grupo"
               owners: "Proprietários do grupo"
               description: "Administradores podem ver todos os grupos."
             members_visibility_levels:
@@ -3241,7 +3237,6 @@ pt_BR:
         save: Salvar
         new_key: Nova Chave de API
         revoked: Revogada
-        delete: Permanentemente excluída
         not_shown_again: Esta chave não será exibida novamente. Certifique-se de tirar uma cópia antes de continuar.
         continue: Continuar
       web_hooks:

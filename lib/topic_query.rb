@@ -70,7 +70,8 @@ class TopicQuery
          visible
          guardian
          no_definitions
-         destination_category_id)
+         destination_category_id
+         include_pms)
   end
 
   # Maps `order` to a columns in `topics`
@@ -327,7 +328,15 @@ class TopicQuery
 
   def list_private_messages_unread(user)
     list = private_messages_for(user, :user)
-    list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
+
+    list = TopicQuery.unread_filter(
+      list,
+      user.id,
+      staff: user.staff?
+    )
+
+    first_unread_pm_at = UserStat.where(user_id: user.id).pluck(:first_unread_pm_at).first
+    list = list.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
     create_list(:private_messages, {}, list)
   end
 
@@ -724,7 +733,15 @@ class TopicQuery
     end
 
     result = apply_ordering(result, options)
-    result = result.listable_topics
+
+    all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
+
+    if options[:include_pms]
+      all_pm_topics = Topic.unscoped.private_messages_for_user(@user)
+      result = result.merge(all_listable_topics.or(all_pm_topics))
+    else
+      result = result.merge(all_listable_topics)
+    end
 
     # Don't include the category topics if excluded
     if options[:no_definitions]
@@ -851,7 +868,7 @@ class TopicQuery
 
     result = TopicQuery.apply_custom_filters(result, self)
 
-    @guardian.filter_allowed_categories(result)
+    result
   end
 
   def remove_muted_topics(list, user)

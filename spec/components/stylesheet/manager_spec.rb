@@ -143,8 +143,8 @@ describe Stylesheet::Manager do
   end
 
   describe 'color_scheme_digest' do
+    let(:theme) { Fabricate(:theme) }
     it "changes with category background image" do
-      theme = Fabricate(:theme)
       category1 = Fabricate(:category, uploaded_background_id: 123, updated_at: 1.week.ago)
       category2 = Fabricate(:category, uploaded_background_id: 456, updated_at: 2.days.ago)
 
@@ -178,13 +178,21 @@ describe Stylesheet::Manager do
 
     it "updates digest when updating a theme's color definitions" do
       scheme = ColorScheme.base
-      theme = Fabricate(:theme)
       manager = Stylesheet::Manager.new(:color_definitions, theme.id, scheme)
       digest1 = manager.color_scheme_digest
 
       theme.set_field(target: :common, name: :color_definitions, value: 'body {color: brown}')
       theme.save!
 
+      digest2 = manager.color_scheme_digest
+
+      expect(digest1).to_not eq(digest2)
+    end
+
+    it "updates digest when setting base font" do
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
+      digest1 = manager.color_scheme_digest
+      SiteSetting.base_font = "nunito"
       digest2 = manager.color_scheme_digest
 
       expect(digest1).to_not eq(digest2)

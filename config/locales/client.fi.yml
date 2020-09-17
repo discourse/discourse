@@ -2007,8 +2007,6 @@ fi:
         remove: "Poista ajastin"
         publish_to: "Mihin julkaistaan:"
         when: "Milloin:"
-        public_timer_types: Ketjuajastimet
-        private_timer_types: Käyttäjän ketjuajastimet
         time_frame_required: Valitse ajanjakso
       auto_update_input:
         none: "Valitse ajanjakso"
@@ -3185,8 +3183,6 @@ fi:
               title: "Kuka näkee ryhmän?"
               public: "Kaikki"
               logged_on_users: "Sisäänkirjautuneet käyttäjät"
-              members: "Ryhmän isännät, jäsenet"
-              staff: "Ryhmän isännät ja henkilökunta"
               owners: "Ryhmän isännät"
               description: "Ylläpitäjät näkevät kaikki ryhmät."
             members_visibility_levels:
@@ -3250,7 +3246,6 @@ fi:
         save: Tallenna
         new_key: Uusi rajapinta-avain
         revoked: Jäädytetty
-        delete: Poista pysyvästi
         not_shown_again: Tätä avainta ei näytetä toista kertaa. Varmistu että otat talteen ennen kuin jatkat.
         continue: Jatka
       web_hooks:

@@ -1712,7 +1712,6 @@ hu:
         remove: "Időzítő eltávolítása"
         publish_to: "Közzététel itt:"
         when: "Mikor:"
-        private_timer_types: Téma időzítésének használata
         time_frame_required: Kérjük, válassz ki egy időkeretet
       auto_update_input:
         later_today: "A mai nap folyamán"
@@ -2480,7 +2479,6 @@ hu:
             visibility_levels:
               title: "Ki láthatja ezt a csoportot?"
               public: "Mindenki"
-              staff: "Csoport tulajdonosok és a stáb tagjai"
           membership:
             automatic: Autómatikus
             trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott Bizalmi szint: "

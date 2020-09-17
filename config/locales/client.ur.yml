@@ -1856,8 +1856,6 @@ ur:
         remove: "ٹائمر ہٹائیں"
         publish_to: "شائع کریں:"
         when: "کب:"
-        public_timer_types: ٹاپک ٹائمر
-        private_timer_types: صارف کے ٹاپک ٹائمر
         time_frame_required: براہ کرم ایک ٹائم فریم منتخب کریں
       auto_update_input:
         none: "ایک ٹائم فریم منتخب کریں"
@@ -2936,8 +2934,6 @@ ur:
               title: "کون اِس گروپ کو دیکھ سکتا ہے؟"
               public: "ہر کوئی"
               logged_on_users: "لاگ شدہ صارفین"
-              members: "گروپ کے مالکان، اراکین"
-              staff: "گروپ کے مالکان اور اسٹاف"
               owners: "گروپ مالکان"
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
             members_visibility_levels:

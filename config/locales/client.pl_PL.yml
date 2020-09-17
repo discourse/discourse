@@ -2136,7 +2136,6 @@ pl_PL:
         remove: "Usuń czas"
         publish_to: "Opublikuj do:"
         when: "Kiedy:"
-        public_timer_types: Timery tematów
         time_frame_required: Wybierz przedział czasowy
       auto_update_input:
         none: "Wybierz przedział czasowy"
@@ -3266,8 +3265,6 @@ pl_PL:
               title: "Kto może widzieć tę grupę?"
               public: "Wszyscy"
               logged_on_users: "Zalogowani użytkownicy"
-              members: "Właściciele grupy, członkowie"
-              staff: "Właściciele grupy i zespół"
               owners: "Właściciele grupy"
               description: "Administratorzy mogą widzieć wszystkie grupy."
             members_visibility_levels:
@@ -3330,7 +3327,6 @@ pl_PL:
         save: Zapisz
         new_key: Nowy klucz API
         revoked: Unieważniono
-        delete: Permanentnie usuń
         continue: Kontynuuj
       web_hooks:
         title: "Webhooks"

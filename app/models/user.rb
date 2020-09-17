@@ -724,6 +724,28 @@ class User < ActiveRecord::Base
   def update_ip_address!(new_ip_address)
     unless ip_address == new_ip_address || new_ip_address.blank?
       update_column(:ip_address, new_ip_address)
+
+      if SiteSetting.keep_old_ip_address_count > 0
+        DB.exec(<<~SQL, user_id: self.id, ip_address: new_ip_address, current_timestamp: Time.zone.now)
+        INSERT INTO user_ip_address_histories (user_id, ip_address, created_at, updated_at)
+        VALUES (:user_id, :ip_address, :current_timestamp, :current_timestamp)
+        ON CONFLICT (user_id, ip_address)
+        DO
+          UPDATE SET updated_at = :current_timestamp
+        SQL
+
+        DB.exec(<<~SQL, user_id: self.id, offset: SiteSetting.keep_old_ip_address_count)
+        DELETE FROM user_ip_address_histories
+        WHERE id IN (
+          SELECT
+            id
+          FROM user_ip_address_histories
+          WHERE user_id = :user_id
+          ORDER BY updated_at DESC
+          OFFSET :offset
+        )
+        SQL
+      end
     end
   end
 

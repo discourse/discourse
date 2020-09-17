@@ -1,3 +1,4 @@
+import { Promise } from "rsvp";
 import { isEmpty } from "@ember/utils";
 import { later } from "@ember/runloop";
 /* global QUnit, resetSite */
@@ -282,4 +283,16 @@ export function waitFor(assert, callback, timeout) {
     callback();
     done();
   }, timeout);
+}
+
+export async function selectDate(selector, date) {
+  return new Promise((resolve) => {
+    const elem = document.querySelector(selector);
+    elem.value = date;
+    const evt = new Event("input", { bubbles: true, cancelable: false });
+    elem.dispatchEvent(evt);
+    elem.blur();
+
+    resolve();
+  });
 }
