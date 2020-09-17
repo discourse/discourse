@@ -24,7 +24,8 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     connection:  DiscourseRedis.new(nil, namespace: false)
   )
 
-  skip = [
+  Rack::MiniProfiler.config.snapshot_every_n_requests = GlobalSetting.mini_profiler_snapshots_period
+  Rack::MiniProfiler.config.skip_paths = [
     /^\/message-bus/,
     /^\/extra-locales/,
     /topics\/timings/,
@@ -51,10 +52,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
   # so let's rule out all handheld, tablet, and mobile devices
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
-    path = env['PATH_INFO']
-
-    (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Android/) &&
-    !skip.any? { |re| re =~ path }
+    env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Android/
   end
 
   # without a user provider our results will use the ip address for namespacing
