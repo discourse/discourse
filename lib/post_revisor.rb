@@ -153,7 +153,7 @@ class PostRevisor
 
     @validate_topic = true
     @validate_topic = @opts[:validate_topic] if @opts.has_key?(:validate_topic)
-    @validate_topic = !@opts[:validate_topic] if @opts.has_key?(:skip_validations)
+    @validate_topic = !@opts[:skip_validations] if @opts.has_key?(:skip_validations)
 
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
@@ -346,14 +346,13 @@ class PostRevisor
   end
 
   def revise
-    if post_changed?
-      update_post
-      DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self) if @post_successfully_saved
-    end
+    @trigger_post_event = post_changed?
+    update_post
+    @trigger_post_event &&= @post_successfully_saved
 
     if topic_changed?
       update_topic
-      DiscourseEvent.trigger(:topic_edited, @topic, self)
+      @trigger_topic_event = !@topic_changes.errored?
     end
 
     create_or_update_revision
@@ -609,6 +608,8 @@ class PostRevisor
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
+    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self) if @trigger_post_event
+    DiscourseEvent.trigger(:topic_edited, @post.topic, self) if @trigger_topic_event
   end
 
   def update_topic_word_counts

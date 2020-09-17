@@ -197,8 +197,8 @@ describe WebHook do
       expect do
         PostRevisor.new(post, post.topic).revise!(
           post.user,
-          category_id: category.id,
-          skip_validations: true,
+          { category_id: category.id },
+          { skip_validations: true },
         )
       end.to change { Jobs::EmitWebHookEvent.jobs.length }.by(1)
 
