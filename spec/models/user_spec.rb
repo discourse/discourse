@@ -2431,4 +2431,54 @@ describe User do
       expect(user.encoded_username(lower: true)).to eq("l%C3%B6we")
     end
   end
+
+  describe '#update_ip_address!' do
+    it 'updates ip_address correctly' do
+      expect do
+        user.update_ip_address!('127.0.0.1')
+      end.to change { user.reload.ip_address.to_s }.to('127.0.0.1')
+
+      expect do
+        user.update_ip_address!('127.0.0.1')
+      end.to_not change { user.reload.ip_address }
+    end
+
+    describe 'keeping old ip address' do
+      before do
+        SiteSetting.keep_old_ip_address_count = 2
+      end
+
+      it 'tracks old user record correctly' do
+        expect do
+          user.update_ip_address!('127.0.0.1')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(1)
+
+        freeze_time 10.minutes.from_now
+
+        expect do
+          user.update_ip_address!('0.0.0.0')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(1)
+
+        freeze_time 11.minutes.from_now
+
+        expect do
+          user.update_ip_address!('127.0.0.1')
+        end.to_not change { UserIpAddressHistory.where(user_id: user.id).count }
+
+        expect(UserIpAddressHistory.find_by(
+          user_id: user.id, ip_address: '127.0.0.1'
+        ).updated_at).to eq_time(Time.zone.now)
+
+        freeze_time 12.minutes.from_now
+
+        expect do
+          user.update_ip_address!('0.0.0.1')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(0)
+
+        expect(
+          UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)
+        ).to eq(['127.0.0.1', '0.0.0.1'])
+      end
+    end
+  end
 end

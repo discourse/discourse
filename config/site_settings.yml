@@ -1483,6 +1483,9 @@ security:
   cors_origins:
     default: ""
     type: list
+  keep_old_ip_address_count:
+    default: 0
+    hidden: true
   use_admin_ip_allowlist:
     default: false
     client: true
