@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import Component from "@ember/component";
-import { computed } from "@ember/object";
+import { computed, action } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 import { guidFor } from "@ember/object/internals";
 import UtilsMixin from "select-kit/mixins/utils";
@@ -26,6 +26,18 @@ export default Component.extend(UtilsMixin, {
     "isNone:none",
     "item.classNames",
   ],
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.element.addEventListener("mouseenter", this.handleMouseEnter);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    if (this.element) {
+      this.element.removeEventListener("mouseenter", this.handleMouseEnter);
+    }
+  },
 
   isNone: computed("rowValue", function () {
     return this.rowValue === this.getValue(this.selectKit.noneItem);
@@ -91,7 +103,8 @@ export default Component.extend(UtilsMixin, {
     return this.rowValue === this.value;
   }),
 
-  mouseEnter() {
+  @action
+  handleMouseEnter() {
     if (!this.isDestroying || !this.isDestroyed) {
       this.selectKit.onHover(this.rowValue, this.item);
     }
