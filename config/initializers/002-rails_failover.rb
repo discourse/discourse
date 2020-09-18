@@ -17,6 +17,8 @@ if defined?(RailsFailover::Redis)
     ObjectSpace.each_object(DistributedCache) do |cache|
       cache.clear
     end
+
+    SiteSetting.refresh!
   end
 
   if Rails.logger.respond_to? :chained
