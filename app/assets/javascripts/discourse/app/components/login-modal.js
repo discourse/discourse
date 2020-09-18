@@ -27,9 +27,4 @@ export default Component.extend({
       });
     });
   },
-
-  mouseMove(e) {
-    this.set("screenX", e.screenX);
-    this.set("screenY", e.screenY);
-  },
 });
