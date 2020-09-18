@@ -4,7 +4,7 @@ import Component from "@ember/component";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Component.extend({
-  classNameBindings: [":composer-popup", "hidden", "message.extraClass"],
+  classNameBindings: [":composer-popup", "message.extraClass"],
 
   @discourseComputed("message.templateName")
   layout(templateName) {
