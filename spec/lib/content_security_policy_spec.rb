@@ -43,6 +43,17 @@ describe ContentSecurityPolicy do
         http://test.localhost/plugins/
       ])
     end
+
+    context 'content_security_policy_allow_service_worker_blob is enabled' do
+      before do
+        SiteSetting.content_security_policy_allow_service_worker_blob = true
+      end
+
+      it 'contains blob' do
+        worker_srcs = parse(policy)['worker-src']
+        expect(worker_srcs).to include('blob:')
+      end
+    end
   end
 
   describe 'script-src' do

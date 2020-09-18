@@ -1527,6 +1527,8 @@ security:
   content_security_policy_script_src:
     type: simple_list
     default: ""
+  content_security_policy_allow_service_worker_blob:
+    default: false
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0

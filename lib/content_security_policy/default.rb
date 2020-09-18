@@ -65,7 +65,9 @@ class ContentSecurityPolicy
       [
         "'self'", # For service worker
         *script_assets(worker: true)
-      ]
+      ].tap do |sources|
+        sources << "blob:" if SiteSetting.content_security_policy_allow_service_worker_blob
+      end
     end
 
     def report_uri
