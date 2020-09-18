@@ -16,8 +16,6 @@ import {
   fetchUnseenHashtags,
 } from "discourse/lib/link-hashtags";
 import Composer from "discourse/models/composer";
-import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
-import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -43,6 +41,7 @@ import {
   resolveAllShortUrls,
 } from "pretty-text/upload-short-url";
 import { isTesting } from "discourse-common/config/environment";
+import { loadOneboxes } from "discourse/lib/load-oneboxes";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -531,36 +530,6 @@ export default Component.extend({
     }
   },
 
-  _loadInlineOneboxes(inline) {
-    applyInlineOneboxes(inline, ajax, {
-      categoryId: this.get("composer.category.id"),
-      topicId: this.get("composer.topic.id"),
-    });
-  },
-
-  _loadOneboxes(oneboxes) {
-    const post = this.get("composer.post");
-    let refresh = false;
-
-    // If we are editing a post, we'll refresh its contents once.
-    if (post && !post.get("refreshedPost")) {
-      refresh = true;
-      post.set("refreshedPost", true);
-    }
-
-    Object.values(oneboxes).forEach((onebox) => {
-      onebox.forEach(($onebox) => {
-        load({
-          elem: $onebox,
-          refresh,
-          ajax,
-          categoryId: this.get("composer.category.id"),
-          topicId: this.get("composer.topic.id"),
-        });
-      });
-    });
-  },
-
   _warnMentionedGroups($preview) {
     schedule("afterRender", () => {
       var found = this.warnedGroupMentions || [];
@@ -934,50 +903,28 @@ export default Component.extend({
       }
 
       // Paint oneboxes
-      debounce(
-        this,
-        () => {
-          const oneboxes = {};
-          const inlineOneboxes = {};
+      const paintFunc = () => {
+        const post = this.get("composer.post");
+        let refresh = false;
 
-          // Oneboxes = `a.onebox` -> `a.onebox-loading` -> `aside.onebox`
-          // Inline Oneboxes = `a.inline-onebox-loading` -> `a.inline-onebox`
+        //If we are editing a post, we'll refresh its contents once.
+        if (post && !post.get("refreshedPost")) {
+          refresh = true;
+        }
 
-          let loadedOneboxes = $preview.find(
-            `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.inline-onebox`
-          ).length;
+        const paintedCount = loadOneboxes(
+          $preview[0],
+          ajax,
+          this.get("composer.topic.id"),
+          this.get("composer.category.id"),
+          this.siteSettings.max_oneboxes_per_post,
+          refresh
+        );
 
-          $preview.find(`a.onebox, a.inline-onebox-loading`).each((_, link) => {
-            const $link = $(link);
-            const text = $link.text();
-            const isInline = $link.attr("class") === "inline-onebox-loading";
-            const m = isInline ? inlineOneboxes : oneboxes;
+        if (refresh && paintedCount > 0) post.set("refreshedPost", true);
+      };
 
-            if (loadedOneboxes < this.siteSettings.max_oneboxes_per_post) {
-              if (m[text] === undefined) {
-                m[text] = [];
-                loadedOneboxes++;
-              }
-              m[text].push(link);
-            } else {
-              if (m[text] !== undefined) {
-                m[text].push(link);
-              } else if (isInline) {
-                $link.removeClass("inline-onebox-loading");
-              }
-            }
-          });
-
-          if (Object.keys(oneboxes).length > 0) {
-            this._loadOneboxes(oneboxes);
-          }
-
-          if (Object.keys(inlineOneboxes).length > 0) {
-            this._loadInlineOneboxes(inlineOneboxes);
-          }
-        },
-        450
-      );
+      debounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
       resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);

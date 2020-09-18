@@ -960,6 +960,9 @@ posting:
   returning_users_days:
     default: 120
     max: 36500
+  review_media_unless_trust_level:
+    default: 0
+    enum: "TrustLevelSetting"
   enable_page_publishing:
     default: false
   show_published_pages_login_required:
