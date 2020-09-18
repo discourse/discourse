@@ -13,6 +13,10 @@ if defined?(RailsFailover::Redis)
     Discourse.clear_redis_readonly!
     Discourse.request_refresh!
     MessageBus.keepalive_interval = message_bus_keepalive_interval
+
+    ObjectSpace.each_object(DistributedCache) do |cache|
+      cache.clear
+    end
   end
 
   if Rails.logger.respond_to? :chained
