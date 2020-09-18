@@ -10,11 +10,6 @@ export default Component.extend({
     return getOwner(this).lookup(`template:composer/${templateName}`);
   },
 
-  didInsertElement() {
-    this._super(...arguments);
-    this.element.style.display = "block";
-  },
-
   actions: {
     closeMessage() {
       this.closeMessage(this.message);
