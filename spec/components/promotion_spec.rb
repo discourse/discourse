@@ -113,22 +113,21 @@ describe Promotion do
         stat.days_visited = SiteSetting.tl2_requires_days_visited
         stat.likes_received = SiteSetting.tl2_requires_likes_received
         stat.likes_given = SiteSetting.tl2_requires_likes_given
-        stat.stubs(:calc_topic_reply_count!).returns(SiteSetting.tl2_requires_topic_reply_count)
+        SiteSetting.tl2_requires_topic_reply_count = 0
         SiteSetting.send_tl2_promotion_message = true
       end
 
       it "sends promotion message by default" do
-        @result = promotion.review
-        expect(Jobs::SendSystemMessage.jobs.length).to eq(1)
-        job = Jobs::SendSystemMessage.jobs[0]
-        expect(job["args"][0]["user_id"]).to eq(user.id)
-        expect(job["args"][0]["message_type"]).to eq("tl2_promotion_message")
+        expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'tl2_promotion_message' }) do
+          @result = promotion.review
+        end
       end
 
       it "can be turned off" do
         SiteSetting.send_tl2_promotion_message = false
-        @result = promotion.review
-        expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
+        expect_not_enqueued_with(job: :send_system_message) do
+          @result = promotion.review
+        end
       end
     end
   end

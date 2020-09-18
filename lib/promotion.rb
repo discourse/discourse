@@ -34,7 +34,7 @@ class Promotion
 
   def review_tl1
     if Promotion.tl2_met?(@user) && change_trust_level!(TrustLevel[2])
-      SiteSetting.send_tl2_promotion_message && Jobs.enqueue(:send_system_message, user_id: @user.id, message_type: "tl2_promotion_message")
+      @user.enqueue_tl2_promotion_message
       return true
     end
     false
