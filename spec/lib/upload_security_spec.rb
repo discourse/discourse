@@ -74,6 +74,7 @@ RSpec.describe UploadSecurity do
           it "returns false if the custom type has been added" do
             UploadSecurity.register_custom_public_type(type)
             expect(subject.should_be_secure?).to eq(false)
+            UploadSecurity.reset_custom_public_types
           end
         end
         describe "for_theme" do

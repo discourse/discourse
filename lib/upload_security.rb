@@ -29,6 +29,11 @@ class UploadSecurity
     @@custom_public_types << type if !@@custom_public_types.include?(type)
   end
 
+  # used in tests
+  def self.reset_custom_public_types
+    @@custom_public_types = []
+  end
+
   def initialize(upload, opts = {})
     @upload = upload
     @opts = opts
