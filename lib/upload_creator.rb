@@ -8,8 +8,8 @@ class UploadCreator
 
   WHITELISTED_SVG_ELEMENTS ||= %w{
     circle clippath defs ellipse feGaussianBlur filter g line linearGradient
-    path polygon polyline radialGradient rect stop style svg text textpath
-    tref tspan use
+    marker path polygon polyline radialGradient rect stop style svg text
+    textpath tref tspan use
   }.each(&:freeze)
 
   # Available options
