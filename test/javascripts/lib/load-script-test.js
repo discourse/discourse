@@ -37,11 +37,11 @@ QUnit.test(
   (assert) => {
     assert.equal(
       cacheBuster("/javascripts/pikaday.js"),
-      `/javascripts/pikaday.js?v=${jsVersions["pikaday.js"]}`
+      `/javascripts/${jsVersions["pikaday.js"]}`
     );
     assert.equal(
       cacheBuster("/javascripts/ace/ace.js"),
-      `/javascripts/ace/ace.js?v=${jsVersions["ace"]}`
+      `/javascripts/${jsVersions["ace/ace.js"]}`
     );
   }
 );

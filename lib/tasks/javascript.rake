@@ -31,42 +31,14 @@ def write_template(path, task_name, template)
   puts "#{basename} prettified"
 end
 
-task 'javascript:update_constants' => :environment do
-  task_name = 'update_constants'
-
-  write_template("discourse/app/lib/constants.js", task_name, <<~JS)
-    export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
-
-    export const SEARCH_PHRASE_REGEXP = '#{Search::PHRASE_MATCH_REGEXP_PATTERN}';
-  JS
-
-  write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
-    export const emojis = #{Emoji.standard.map(&:name).flatten.inspect};
-    export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
-    export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
-    export const searchAliases = #{Emoji.search_aliases.inspect.gsub("=>", ":")};
-    export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
-    export const replacements = #{Emoji.unicode_replacements_json};
-  JS
-
-  write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
-    export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
-  JS
-end
-
-task 'javascript:update' do
-  require 'uglifier'
-
-  yarn = system("yarn install")
-  abort('Unable to run "yarn install"') unless yarn
-
-  dependencies = [
+def dependencies
+  [
     {
       source: 'bootstrap/js/modal.js',
       destination: 'bootstrap-modal.js'
     }, {
       source: 'ace-builds/src-min-noconflict/ace.js',
-      destination: 'ace',
+      destination: 'ace.js',
       public: true
     }, {
       source: 'chart.js/dist/Chart.min.js',
@@ -86,8 +58,7 @@ task 'javascript:update' do
       public: true
     }, {
       source: 'spectrum-colorpicker/spectrum.css',
-      public: true,
-      skip_versioning: true
+      public: true
     }, {
       source: 'favcount/favcount.js'
     }, {
@@ -142,23 +113,28 @@ task 'javascript:update' do
     }, {
       source: 'workbox-sw/build/.',
       destination: 'workbox',
-      public: true
+      public: true,
+      skip_versioning: true
     }, {
       source: 'workbox-routing/build/.',
       destination: 'workbox',
-      public: true
+      public: true,
+      skip_versioning: true
     }, {
       source: 'workbox-core/build/.',
       destination: 'workbox',
-      public: true
+      public: true,
+      skip_versioning: true
     }, {
       source: 'workbox-strategies/build/.',
       destination: 'workbox',
-      public: true
+      public: true,
+      skip_versioning: true
     }, {
       source: 'workbox-expiration/build/.',
       destination: 'workbox',
-      public: true
+      public: true,
+      skip_versioning: true
     }, {
       source: '@popperjs/core/dist/umd/popper.js'
     }, {
@@ -173,6 +149,44 @@ task 'javascript:update' do
     },
 
   ]
+end
+
+def node_package_name(f)
+  f[:source].split('/').first
+end
+
+def public_path_name(f)
+  f[:destination] || node_package_name(f)
+end
+
+task 'javascript:update_constants' => :environment do
+  task_name = 'update_constants'
+
+  write_template("discourse/app/lib/constants.js", task_name, <<~JS)
+    export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
+
+    export const SEARCH_PHRASE_REGEXP = '#{Search::PHRASE_MATCH_REGEXP_PATTERN}';
+  JS
+
+  write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
+    export const emojis = #{Emoji.standard.map(&:name).flatten.inspect};
+    export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
+    export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
+    export const searchAliases = #{Emoji.search_aliases.inspect.gsub("=>", ":")};
+    export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
+    export const replacements = #{Emoji.unicode_replacements_json};
+  JS
+
+  write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
+    export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
+  JS
+end
+
+task 'javascript:update' => 'clean_up' do
+  require 'uglifier'
+
+  yarn = system("yarn install")
+  abort('Unable to run "yarn install"') unless yarn
 
   versions = {}
   start = Time.now
@@ -206,23 +220,29 @@ task 'javascript:update' do
     if f[:public_root]
       dest = "#{public_root}/#{filename}"
     elsif f[:public]
-      unless f[:skip_versioning]
-        package_name = f[:source].split('/').first
-        package_version = JSON.parse(File.read("#{library_src}/#{package_name}/package.json"))["version"]
-        versions[filename] = package_version
-      end
+      if f[:skip_versioning]
+        dest = "#{public_js}/#{filename}"
+      else
+        package_dir_name = public_path_name(f)
+        package_version = JSON.parse(File.read("#{library_src}/#{node_package_name(f)}/package.json"))["version"]
+        versions[filename] = "#{package_dir_name}/#{package_version}/#{filename}"
 
-      dest = "#{public_js}/#{filename}"
+        path = "#{public_js}/#{package_dir_name}/#{package_version}"
+        dest = "#{path}/#{filename}"
+
+        FileUtils.mkdir_p(path) unless File.exists?(path)
+      end
     else
       dest = "#{vendor_js}/#{filename}"
     end
 
     if src.include? "ace.js"
+      versions["ace/ace.js"] = versions.delete("ace.js")
       ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
       addtl_files = [ "ext-searchbox", "mode-html", "mode-scss", "mode-sql", "theme-chrome", "worker-html"]
-      FileUtils.mkdir(dest) unless File.directory?(dest)
+      dest_path = dest.split('/')[0..-2].join('/')
       addtl_files.each do |file|
-        FileUtils.cp_r("#{ace_root}#{file}.js", dest)
+        FileUtils.cp_r("#{ace_root}#{file}.js", dest_path)
       end
     end
 
@@ -248,4 +268,29 @@ task 'javascript:update' do
   JS
 
   STDERR.puts "Completed copying dependencies: #{(Time.now - start).round(2)} secs"
+end
+
+task 'javascript:clean_up' do
+  processed = []
+  dependencies.each do |f|
+    next unless f[:public] && !f[:skip_versioning]
+
+    package_dir_name = public_path_name(f)
+    next if processed.include?(package_dir_name)
+
+    versions = Dir["#{File.join(public_js, package_dir_name)}/*"].collect { |p| p.split('/').last }
+    next unless versions.present?
+
+    versions = versions.sort { |a, b| Gem::Version.new(a) <=> Gem::Version.new(b) }
+    puts "Keeping #{package_dir_name} version: #{versions[-1]}"
+
+    # Keep the most recent version
+    versions[0..-2].each do |version|
+      remove_path = File.join(public_js, package_dir_name, version)
+      puts "Removing: #{remove_path}"
+      FileUtils.remove_dir(remove_path)
+    end
+
+    processed << package_dir_name
+  end
 end

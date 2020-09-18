@@ -51,7 +51,7 @@ export default function loadScript(url, opts) {
     return Promise.resolve();
   }
 
-  if (PUBLIC_JS_VERSIONS && !opts.css) {
+  if (PUBLIC_JS_VERSIONS) {
     url = cacheBuster(url);
   }
 
@@ -110,12 +110,13 @@ export default function loadScript(url, opts) {
 
 export function cacheBuster(url) {
   if (PUBLIC_JS_VERSIONS) {
-    // eslint-disable-next-line no-unused-vars
-    const [_, folder, lib] = url.split("/");
+    const urlParts = url.split("/");
+    const folder = urlParts[1];
     if (folder === "javascripts") {
-      const version = PUBLIC_JS_VERSIONS[lib];
-      if (version) {
-        return `${url}?v=${version}`;
+      const lib = urlParts.slice(2).join("/");
+      const versionedPath = PUBLIC_JS_VERSIONS[lib];
+      if (versionedPath) {
+        return `/javascripts/${versionedPath}`;
       }
     }
   }
