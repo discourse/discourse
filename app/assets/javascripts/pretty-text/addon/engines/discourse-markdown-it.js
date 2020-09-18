@@ -291,21 +291,27 @@ export function setup(opts, siteSettings, state) {
     if (check.test(entry)) {
       const module = requirejs(entry);
       if (module && module.setup) {
-        const featureName = entry.split("/").reverse()[0];
-        features.push(featureName);
-        module.setup(
-          createHelper(
-            featureName,
-            opts,
-            optionCallbacks,
-            pluginCallbacks,
-            getOptions,
-            whiteListed
-          )
-        );
+        const id = entry.split("/").reverse()[0];
+        let priority = module.priority || 0;
+        features.unshift({ id, setup: module.setup, priority });
       }
     }
   });
+
+  features
+    .sort((a, b) => a.priority - b.priority)
+    .forEach((f) => {
+      f.setup(
+        createHelper(
+          f.id,
+          opts,
+          optionCallbacks,
+          pluginCallbacks,
+          getOptions,
+          whiteListed
+        )
+      );
+    });
 
   Object.entries(state.whiteListed || {}).forEach((entry) => {
     whiteListed.push(entry);
@@ -317,8 +323,8 @@ export function setup(opts, siteSettings, state) {
 
   // enable all features by default
   features.forEach((feature) => {
-    if (!opts.features.hasOwnProperty(feature)) {
-      opts.features[feature] = true;
+    if (!opts.features.hasOwnProperty(feature.id)) {
+      opts.features[feature.id] = true;
     }
   });
 

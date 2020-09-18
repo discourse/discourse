@@ -61,6 +61,9 @@ function buildScaleButton(selectedScale, scale) {
   );
 }
 
+// We need this to load after `upload-protocol` which is priority 0
+export const priority = 1;
+
 export function setup(helper) {
   const opts = helper.getOptions();
   if (opts.previewing) {
