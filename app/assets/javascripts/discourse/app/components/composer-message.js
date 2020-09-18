@@ -1,3 +1,4 @@
+import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -8,5 +9,14 @@ export default Component.extend({
   @discourseComputed("message.templateName")
   layout(templateName) {
     return getOwner(this).lookup(`template:composer/${templateName}`);
+  },
+
+  actions: {
+    closeMessage() {
+      deprecated(
+        'You should use `action=(closeMessage message)` instead of `action=(action "closeMessage")`'
+      );
+      this.closeMessage(this.message);
+    },
   },
 });
