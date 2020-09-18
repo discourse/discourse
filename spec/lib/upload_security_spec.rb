@@ -64,6 +64,18 @@ RSpec.describe UploadSecurity do
             expect(subject.should_be_secure?).to eq(false)
           end
         end
+        describe "for a custom public type" do
+          let(:type) { 'my_custom_type' }
+
+          it "returns true if the custom type has not been added" do
+            expect(subject.should_be_secure?).to eq(true)
+          end
+
+          it "returns false if the custom type has been added" do
+            UploadSecurity.register_custom_public_type(type)
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
         describe "for_theme" do
           before do
             upload.stubs(:for_theme).returns(true)
