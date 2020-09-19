@@ -9,7 +9,7 @@ import getURL from "discourse-common/lib/get-url";
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.
 **/
-import NotificationLevels from "discourse/lib/notification-levels";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import RestModel from "discourse/models/rest";
 
 const TopicDetails = RestModel.extend({
