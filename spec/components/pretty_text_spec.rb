@@ -1711,17 +1711,20 @@ HTML
     end
 
     it "wraps the [wrap] tag in block" do
+      # can interfere with parsing
+      SiteSetting.enable_markdown_typographer = true
+
       md = <<~MD
-        [wrap=toc]
-        taco
+        [wrap=toc id="a” aa='b"' bb="f'"]
+        taco1
         [/wrap]
       MD
 
       cooked = PrettyText.cook(md)
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc">
-        <p>taco</p>
+        <div class="d-wrap" data-wrap="toc" data-id="a" data-aa="b&amp;quot;" data-bb="f'">
+        <p>taco1</p>
         </div>
       HTML
 
