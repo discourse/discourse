@@ -1744,10 +1744,10 @@ HTML
     end
 
     it "adds attributes as data-attributes" do
-      cooked = PrettyText.cook("[wrap=toc name=\"pepper bell\" id=1]taco[/wrap]")
+      cooked = PrettyText.cook("[wrap=toc name=\"single quote's\" id='1\"2']taco[/wrap]")
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc" data-name="pepper bell" data-id="1">
+        <div class="d-wrap" data-wrap="toc" data-name="single quote's" data-id="1&amp;quot;2">
         <p>taco</p>
         </div>
       HTML
