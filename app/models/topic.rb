@@ -597,9 +597,11 @@ class Topic < ActiveRecord::Base
         PrettyText.cook(raw[0...MAX_SIMILAR_BODY_LENGTH].strip)
       )
 
-      if cooked.present?
+      prepared_data = cooked.present? && Search.prepare_data(cooked)
+
+      if prepared_data.present?
         raw_tsquery = Search.set_tsquery_weight_filter(
-          Search.prepare_data(cooked),
+          prepared_data,
           'B'
         )
 
