@@ -2543,6 +2543,36 @@ RSpec.describe TopicsController do
           topic_ids: topic_ids, operation: operation
         }
       end
+
+      it "respects the tracked parameter" do
+        # untracked topic
+        category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:regular],
+                                                     category.id)
+        create_post(user: user, topic_id: topic.id)
+        topic.update!(category_id: category.id)
+        create_post(topic_id: topic.id)
+
+        # tracked topic
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+        tracked_topic = create_post(user: user).topic
+        tracked_topic.update!(category_id: tracked_category.id)
+        create_post(topic_id: tracked_topic.id)
+
+        put "/topics/bulk.json", params: {
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' },
+          tracked: true
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(topic, user).last_read_post_number).to eq(topic.posts.count - 1)
+        expect(TopicUser.get(tracked_topic, user).last_read_post_number).to eq(tracked_topic.posts.count)
+      end
     end
   end
 

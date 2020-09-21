@@ -57,9 +57,11 @@ const controllerOpts = {
       return false;
     },
 
-    refresh() {
+    refresh(resetParams = true) {
       const filter = this.get("model.filter");
-      this.send("resetParams");
+      if (resetParams) {
+        this.send("resetParams");
+      }
 
       // Don't refresh if we're still loading
       if (this.get("discovery.loading")) {
