@@ -1,11 +1,11 @@
 .select-kit {
+  @include unselectable;
   border: none;
   box-sizing: border-box;
   display: inline-block;
   flex-direction: column;
   position: relative;
   vertical-align: middle;
-  user-select: none;
 
   &.is-disabled {
     pointer-events: none;

@@ -81,6 +81,7 @@ $breakpoints: (
   -webkit-user-select: $mode;
   -moz-user-select: $mode;
   -ms-user-select: $mode;
+  user-select: $mode;
 }
 
 @mixin unselectable {
