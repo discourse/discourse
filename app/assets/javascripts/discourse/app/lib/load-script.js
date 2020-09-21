@@ -110,10 +110,9 @@ export default function loadScript(url, opts) {
 
 export function cacheBuster(url) {
   if (PUBLIC_JS_VERSIONS) {
-    const urlParts = url.split("/");
-    const folder = urlParts[1];
+    let [folder, ...lib] = url.split("/").filter(Boolean);
     if (folder === "javascripts") {
-      const lib = urlParts.slice(2).join("/");
+      lib = lib.join("/");
       const versionedPath = PUBLIC_JS_VERSIONS[lib];
       if (versionedPath) {
         return `/javascripts/${versionedPath}`;
