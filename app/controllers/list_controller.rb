@@ -154,6 +154,7 @@ class ListController < ApplicationController
     when :private_messages_group, :private_messages_group_archive
       define_method("#{action}") do
         group = Group.find_by(name: params[:group_name])
+        raise Discourse::NotFound if !group
         raise Discourse::NotFound unless guardian.can_see_group_messages?(group)
 
         message_route(action)
