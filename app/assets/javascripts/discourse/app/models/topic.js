@@ -797,7 +797,7 @@ Topic.reopenClass({
 
   bulkOperation(topics, operation, tracked) {
     const data = {
-      topic_ids: topics.map((t) => t.get("id")),
+      topic_ids: topics.mapBy("id"),
       operation,
       tracked,
     };

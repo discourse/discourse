@@ -57,9 +57,9 @@ const controllerOpts = {
       return false;
     },
 
-    refresh(resetParams = true) {
+    refresh(options = { resetParams: true }) {
       const filter = this.get("model.filter");
-      if (resetParams) {
+      if (options.resetParams) {
         this.send("resetParams");
       }
 

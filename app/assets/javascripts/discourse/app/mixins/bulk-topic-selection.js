@@ -46,7 +46,7 @@ export default Mixin.create({
         }
 
         this.send("closeModal");
-        this.send("refresh", !tracked);
+        this.send("refresh", { resetParams: !tracked });
       });
     },
   },
