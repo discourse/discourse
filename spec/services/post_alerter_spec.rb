@@ -71,19 +71,36 @@ describe PostAlerter do
 
     end
 
-    it "triggers :before_create_notifications_for_users" do
-      pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user: pm.user, topic: pm)
-      user1 = Fabricate(:user)
-      user2 = Fabricate(:user)
-      group = Fabricate(:group, users: [user2])
-      pm.allowed_users << user1
-      pm.allowed_groups << group
-      events = DiscourseEvent.track_events do
-        PostAlerter.post_created(op)
+    context "group inboxes" do
+      fab!(:user1) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
+      fab!(:group) { Fabricate(:group, users: [user2], name: "TestGroup") }
+      fab!(:pm) { Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group]) }
+      fab!(:op) { Fabricate(:post, user: pm.user, topic: pm) }
+
+      it "triggers :before_create_notifications_for_users" do
+        pm.allowed_users << user1
+        events = DiscourseEvent.track_events do
+          PostAlerter.post_created(op)
+        end
+
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user1], op])
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user2], op])
+
       end
-      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user1], op])
-      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user2], op])
+
+      it "triggers group summary notification" do
+        TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        PostAlerter.post_created(op)
+        group_summary_notification = Notification.where(user_id: user2.id)
+
+        expect(group_summary_notification.count).to eq(1)
+        expect(group_summary_notification.first.notification_type).to eq(Notification.types[:group_message_summary])
+
+        notification_payload = JSON.parse(group_summary_notification.first.data)
+        expect(notification_payload["group_name"]).to eq(group.name)
+      end
     end
   end
 
