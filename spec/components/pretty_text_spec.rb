@@ -1715,7 +1715,7 @@ HTML
       SiteSetting.enable_markdown_typographer = true
 
       md = <<~MD
-        [wrap=toc id="a” aa='b"' bb="f'"]
+        [wrap=toc id=“a” aa='b"' bb="f'"]
         taco1
         [/wrap]
       MD

@@ -15,7 +15,17 @@ function trailingSpaceOnly(src, start, max) {
   return true;
 }
 
-const ATTR_REGEX = /^\s*=(.+)$|((([a-z0-9]*)\s*)=)([“”"][^“”"]*[“”"]|['][^']*[']|[^"'“”]\S*)/gi;
+const DEFAULT_ATTRIBUTE_REGEX = /^\s*=(".*?"|'.*?'|“.*?”|.+)$/;
+const ATTRIBUTE_REGEX = /([a-z0-9]+)\s*=(".*?"|'.*?'|“.*?”|\S+)/gi;
+const QUOTE_REGEX = /^(?:'.*'|".*"|“.*?”)$/;
+
+function transformAttributeValue(value) {
+  if (QUOTE_REGEX.test(value)) {
+    return value.slice(1, -1);
+  }
+
+  return value;
+}
 
 // parse a tag [test a=1 b=2] to a data structure
 // {tag: "test", attrs={a: "1", b: "2"}
@@ -77,21 +87,17 @@ export function parseBBCodeTag(src, start, max, multiline) {
 
     // trivial parser that is going to have to be rewritten at some point
     if (raw) {
-      let match, key, val;
+      const defaultAttributeMatch = DEFAULT_ATTRIBUTE_REGEX.exec(raw);
+      if (defaultAttributeMatch) {
+        attrs["_default"] = transformAttributeValue(defaultAttributeMatch[1]);
+      } else {
+        let match;
+        while ((match = ATTRIBUTE_REGEX.exec(raw))) {
+          const [, name, value] = match;
 
-      while ((match = ATTR_REGEX.exec(raw))) {
-        if (match[1]) {
-          key = "_default";
-        } else {
-          key = match[4];
-        }
-
-        val = match[1] || match[5];
-
-        if (val) {
-          val = val.trim();
-          val = val.replace(/^["'“”](.*)["'“”]$/, "$1");
-          attrs[key] = val;
+          if (value) {
+            attrs[name] = transformAttributeValue(value);
+          }
         }
       }
     }

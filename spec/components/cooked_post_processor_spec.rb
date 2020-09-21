@@ -1662,7 +1662,7 @@ describe CookedPostProcessor do
       let(:cp) do
         Fabricate(
           :post,
-          raw: "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}]\nmodified\n[/quote]\ntest"
+          raw: "[quote=\"#{pp.user.username}, post: #{pp.post_number}, topic:#{pp.topic_id}\"]\nmodified\n[/quote]\ntest"
         )
       end
 
