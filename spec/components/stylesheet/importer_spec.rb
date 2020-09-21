@@ -13,12 +13,13 @@ describe Stylesheet::Importer do
     expect(compile_css("category_backgrounds")).to_not include("background-image")
 
     background = Fabricate(:upload)
-    category = Fabricate(:category, uploaded_background: background)
+    parent_category = Fabricate(:category)
+    category = Fabricate(:category, parent_category_id: parent_category.id, uploaded_background: background)
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{category.full_slug}{background-image:url(#{background.url})}")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
 
     GlobalSetting.stubs(:cdn_url).returns("//awesome.cdn")
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{category.full_slug}{background-image:url(//awesome.cdn#{background.url})}")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
   end
 
   it "applies S3 CDN to background category images" do
@@ -32,7 +33,7 @@ describe Stylesheet::Importer do
     background = Fabricate(:upload_s3)
     category = Fabricate(:category, uploaded_background: background)
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(https://s3.cdn/original")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug}{background-image:url(https://s3.cdn/original")
   end
 
   it "includes font variable" do
