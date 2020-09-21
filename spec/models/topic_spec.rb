@@ -519,6 +519,10 @@ describe Topic do
       expect(Topic.similar_to('some title', '#')).to eq([])
     end
 
+    it 'does not result in invalid statement when prepared data is blank' do
+      expect(Topic.similar_to('some title', 'https://discourse.org/#INCORRECT#URI')).to be_empty
+    end
+
     context 'with a similar topic' do
       fab!(:post) {
         SearchIndexer.enable
