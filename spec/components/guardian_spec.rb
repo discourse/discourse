@@ -3193,7 +3193,7 @@ describe Guardian do
       group.add_owner(owner)
       group.reload
 
-      expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
       expect(Guardian.new.can_see_group?(group)).to eq(false)
       expect(Guardian.new(another_user).can_see_group?(group)).to eq(false)
       expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
@@ -3277,7 +3277,7 @@ describe Guardian do
       group.add_owner(owner)
       group.reload
 
-      expect(Guardian.new(moderator).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(moderator).can_see_group_members?(group)).to eq(true)
       expect(Guardian.new.can_see_group_members?(group)).to eq(false)
       expect(Guardian.new(another_user).can_see_group_members?(group)).to eq(false)
       expect(Guardian.new(admin).can_see_group_members?(group)).to eq(true)
@@ -3383,7 +3383,7 @@ describe Guardian do
       group.reload
 
       expect(Guardian.new(another_user).can_see_groups?([group])).to eq(false)
-      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(true)
       expect(Guardian.new.can_see_groups?([group])).to eq(false)
       expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
       expect(Guardian.new(member).can_see_groups?([group])).to eq(true)
@@ -3422,7 +3422,7 @@ describe Guardian do
       group1.add_owner(owner)
       group1.reload
 
-      expect(Guardian.new(moderator).can_see_groups?([group1, group2])).to eq(false)
+      expect(Guardian.new(moderator).can_see_groups?([group1, group2])).to eq(true)
       expect(Guardian.new.can_see_groups?([group1, group2])).to eq(false)
       expect(Guardian.new(admin).can_see_groups?([group1, group2])).to eq(true)
       expect(Guardian.new(member).can_see_groups?([group1, group2])).to eq(false)
