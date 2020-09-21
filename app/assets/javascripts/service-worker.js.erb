@@ -4,7 +4,7 @@ importScripts("<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/wo
 
 workbox.setConfig({
   modulePathPrefix: "<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox" %>",
-  debug: false
+  debug: <%= Rails.env.development? %>
 });
 
 var authUrl = "<%= Discourse.base_path %>/auth/";
@@ -56,7 +56,8 @@ if (cdnUrls.length > 0) {
       cacheName: cdnCacheName,
       fetchOptions: {
         mode: 'cors',
-        credentials: 'omit'
+        credentials: 'omit',
+        cache: 'no-store'
       },
       plugins: [
         new workbox.expiration.Plugin({
