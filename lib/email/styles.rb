@@ -129,7 +129,7 @@ module Email
       style('.onebox-metadata', "color: #919191")
       style('.github-info', "margin-top: 10px;")
       style('.github-info div', "display: inline; margin-right: 10px;")
-      style('.onebox-avatar-inline', "float: none; vertical-align: middle;")
+      style('.onebox-avatar-inline', "width: 20px; height: 20px; float: none; vertical-align: middle;")
 
       @fragment.css('aside.quote blockquote > p').each do |p|
         p['style'] = 'padding: 0;'
