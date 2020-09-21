@@ -845,7 +845,7 @@ describe GroupsController do
       end
 
       it 'should not be able to update a group it cannot see' do
-        group.update!(visibility_level: 2)
+        group.update!(visibility_level: Group.visibility_levels[:owners])
 
         put "/groups/#{group.id}.json", params: { group: { name: 'testing' } }
 
