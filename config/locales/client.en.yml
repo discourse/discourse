@@ -1936,7 +1936,7 @@ en:
         draft: Draft
         edit: Edit
         reply_to_post:
-          label: Reply to post %{postNumber} by %{postUsername}
+          label: Reply to a post by %{postUsername}
           desc: Reply to a specific post
         reply_as_new_topic:
           label: Reply as linked topic

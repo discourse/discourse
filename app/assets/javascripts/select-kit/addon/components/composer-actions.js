@@ -137,7 +137,6 @@ export default DropdownSelectBoxComponent.extend({
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_post.label", {
-          postNumber: _postSnapshot.post_number,
           postUsername: _postSnapshot.username,
         }),
         description: I18n.t("composer.composer_actions.reply_to_post.desc"),
