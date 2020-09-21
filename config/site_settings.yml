@@ -1845,7 +1845,7 @@ search:
   search_prefer_recent_posts: false
   search_recent_posts_size:
     default: 100000
-    max: 100000
+    max: 10000000
   search_recent_regular_posts_offset_post_id:
     default: 0
     hidden: true
