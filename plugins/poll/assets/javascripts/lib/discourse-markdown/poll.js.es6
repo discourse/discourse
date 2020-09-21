@@ -3,7 +3,7 @@ import I18n from "I18n";
 
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL_NAME = "poll";
-const WHITELISTED_ATTRIBUTES = [
+const ALLOWED_ATTRIBUTES = [
   "close",
   "max",
   "min",
@@ -106,7 +106,7 @@ const rule = {
       attributes.push([DATA_PREFIX + "status", "open"]);
     }
 
-    WHITELISTED_ATTRIBUTES.forEach((name) => {
+    ALLOWED_ATTRIBUTES.forEach((name) => {
       if (attrs[name]) {
         attributes.push([DATA_PREFIX + name, attrs[name]]);
       }
