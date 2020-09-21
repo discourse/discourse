@@ -8,6 +8,7 @@ import {
   default as highlightHTML,
   unhighlightHTML,
 } from "discourse/lib/highlight-html";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -185,7 +186,9 @@ export default class PostCooked {
       const originalText =
         $blockQuote.text().trim() ||
         $("> blockquote", this.attrs.cooked).text().trim();
-      $blockQuote.html(I18n.t("loading"));
+
+      $blockQuote.html(spinnerHTML);
+
       let topicId = this.attrs.topicId;
       if ($aside.data("topic")) {
         topicId = $aside.data("topic");
