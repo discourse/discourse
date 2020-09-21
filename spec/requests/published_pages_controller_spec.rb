@@ -98,6 +98,16 @@ RSpec.describe PublishedPagesController do
           expect(response.status).to eq(200)
         end
 
+        it "works even if image logos are not available" do
+          SiteSetting.logo_small = nil
+          get published_page.path
+          expect(response.body).to include("<img class=\"published-page-logo\" src=\"#{SiteSetting.logo.url}\"/>")
+
+          SiteSetting.logo = nil
+          get published_page.path
+          expect(response.body).not_to include("published-page-logo")
+        end
+
         it "defines correct css classes on body" do
           get published_page.path
           expect(response.body).to include("<body class=\"published-page #{published_page.slug} topic-#{published_page.topic_id} recipes uncategorized\">")
