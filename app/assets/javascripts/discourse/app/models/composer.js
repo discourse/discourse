@@ -442,14 +442,11 @@ const Composer = RestModel.extend({
 
   @discourseComputed("canCategorize", "categoryId")
   requiredCategoryMissing(canCategorize, categoryId) {
-    const hasTopicTemplates = this.site.categories.some(
-      (c) => c.topic_template
-    );
     return (
       canCategorize &&
       !categoryId &&
       !this.siteSettings.allow_uncategorized_topics &&
-      hasTopicTemplates
+      !!this._hasTopicTemplates
     );
   },
 
@@ -756,6 +753,10 @@ const Composer = RestModel.extend({
         this.set("categoryId", categories[0].id);
       }
     }
+
+    this._hasTopicTemplates = this.site.categories.some(
+      (c) => c.topic_template
+    );
 
     if (opts.postId) {
       promise = promise.then(() =>
