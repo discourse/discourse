@@ -66,7 +66,8 @@ export default {
           notification_level: null,
           background_url: null,
           show_subcategory_list: false,
-          default_view: "latest"
+          default_view: "latest",
+          topic_template: "my topic template"
         },
         {
           id: 10,

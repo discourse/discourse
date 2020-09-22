@@ -442,10 +442,14 @@ const Composer = RestModel.extend({
 
   @discourseComputed("canCategorize", "categoryId")
   requiredCategoryMissing(canCategorize, categoryId) {
+    const hasTopicTemplates = this.site.categories.some(
+      (c) => c.topic_template
+    );
     return (
       canCategorize &&
       !categoryId &&
-      !this.siteSettings.allow_uncategorized_topics
+      !this.siteSettings.allow_uncategorized_topics &&
+      hasTopicTemplates
     );
   },
 
