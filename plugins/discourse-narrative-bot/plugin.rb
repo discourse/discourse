@@ -287,20 +287,20 @@ after_initialize do
   )
 
   self.on(:system_message_sent) do |args|
-    return if args[:message_type] != 'tl2_promotion_message'
-    return if !SiteSetting.discourse_narrative_bot_enabled
+    if args[:message_type] == 'tl2_promotion_message' && SiteSetting.discourse_narrative_bot_enabled
 
-    raw = I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template",
-                 discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
-                 reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
+      raw = I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template",
+                  discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
+                  reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
 
-    PostCreator.create!(
-      ::DiscourseNarrativeBot::Base.new.discobot_user,
-      title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
-      raw: raw,
-      topic_id: args[:post].topic_id,
-      skip_validations: true
-    )
+      PostCreator.create!(
+        ::DiscourseNarrativeBot::Base.new.discobot_user,
+        title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
+        raw: raw,
+        topic_id: args[:post].topic_id,
+        skip_validations: true
+      )
+    end
   end
 
   PostGuardian.class_eval do
