@@ -35,7 +35,12 @@ export function avatarImg(wanted, attrs) {
   if (!url || url.length === 0) {
     return;
   }
-  const title = attrs.name || formatUsername(attrs.username);
+
+  let title;
+
+  if (!attrs.hideTitle) {
+    title = attrs.name || formatUsername(attrs.username);
+  }
 
   let className =
     "avatar" + (attrs.extraClasses ? " " + attrs.extraClasses : "");
@@ -168,6 +173,7 @@ createWidget("post-avatar", {
         name: attrs.name,
         url: attrs.usernameUrl,
         className: "main-avatar",
+        hideTitle: true,
       });
     }
 
