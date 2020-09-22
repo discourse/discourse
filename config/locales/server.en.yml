@@ -1574,6 +1574,7 @@ en:
     site_contact_group_name: "A valid group name to be invited to all automated messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
+    send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     remove_full_quote: "Automatically remove full quotes on direct replies."
@@ -2846,6 +2847,13 @@ en:
         Enjoy your stay!
 
         [prefs]: %{user_preferences_url}
+
+    tl2_promotion_message:
+      subject_template: "Congratulations on your trust level promotion!"
+      text_body_template: |
+        We’ve promoted you up a [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        We invite you to keep getting involved – we enjoy having you around.
 
     backup_succeeded:
       title: "Backup Succeeded"

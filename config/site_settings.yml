@@ -1390,6 +1390,7 @@ trust:
     enum: "TrustLevelSetting"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
+  send_tl2_promotion_message: true
   tl1_requires_topics_entered: 5
   tl1_requires_read_posts:
     default: 30

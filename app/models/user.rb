@@ -401,6 +401,11 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
   end
 
+  def enqueue_tl2_promotion_message
+    return unless SiteSetting.send_tl2_promotion_message
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: "tl2_promotion_message")
+  end
+
   def enqueue_staff_welcome_message(role)
     return unless staff?
     return if role == :admin && User.real.where(admin: true).count == 1
