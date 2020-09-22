@@ -23,6 +23,7 @@ export default Component.extend(UtilsMixin, {
     "ariaOwns:aria-owns",
     "ariaHasPopup:aria-haspopup",
     "ariaIsExpanded:aria-expanded",
+    "ariaLabel:aria-label",
     "selectKitId:data-select-kit-id",
     "roleButton:role",
     "selectedValue:data-value",
@@ -70,6 +71,10 @@ export default Component.extend(UtilsMixin, {
 
   ariaOwns: computed("selectKit.uniqueID", function () {
     return `[data-select-kit-id=${this.selectKit.uniqueID}-body]`;
+  }),
+
+  ariaLabel: computed("selectKit.options.ariaLabel", function () {
+    return this.selectKit.options.ariaLabel;
   }),
 
   roleButton: "button",
