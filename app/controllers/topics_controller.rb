@@ -901,8 +901,6 @@ class TopicsController < ApplicationController
         current_user.user_stat.update_column(:new_since, Time.zone.now)
         TopicTrackingState.publish_dismiss_new(current_user.id)
       end
-
-      # TopicTrackingState.publish_dismiss_new(current_user.id)
     end
     render body: nil
   end
