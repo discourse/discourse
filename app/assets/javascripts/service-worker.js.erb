@@ -42,10 +42,10 @@ cdnUrls = ["<%= "#{GlobalSetting.s3_cdn_url}" %>", "<%= "#{GlobalSetting.cdn_url
 if (cdnUrls.length > 0) {
   var cdnCacheName = "cdn-" + cacheVersion;
 
-  const appendQueryStringPlugin = {
+  var appendQueryStringPlugin = {
     requestWillFetch: async ({request}) => {
       if (request.url.includes("avatar")) {
-        let url = new URL(request.url);
+        var url = new URL(request.url);
         url.searchParams.append('refresh', 'true');
         return new Request(url.href, request);
       }
