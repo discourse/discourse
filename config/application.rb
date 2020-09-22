@@ -261,6 +261,7 @@ module Discourse
     # Our templates shouldn't start with 'discourse/app/templates'
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
+      'admin/addon/templates' => 'admin/templates/',
       'select-kit/addon/templates' => 'select-kit/templates/'
     }
 

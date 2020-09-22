@@ -141,3 +141,5 @@ dist
 
 # Copyright Deposits
 copyright
+
+yarn-error.log
