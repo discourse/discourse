@@ -10,7 +10,7 @@ export const POPULAR_THEMES = [
   {
     name: "Material Design Theme",
     value: "https://github.com/discourse/material-design-stock-theme",
-    preview: "https://newmaterial.trydiscourse.com",
+    preview: "https://theme-creator.discourse.org/theme/tshenry/material-design",
     description:
       "Inspired by Material Design, this theme comes with several color palettes (incl. a dark one).",
     meta_url: "https://meta.discourse.org/t/material-design-stock-theme/47142",
