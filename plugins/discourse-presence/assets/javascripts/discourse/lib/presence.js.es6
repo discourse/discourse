@@ -54,7 +54,9 @@ const Presence = EmberObject.extend({
         this.channel,
         (message) => {
           const { user, state } = message;
-          if (this.get("currentUser.id") === user.id) return;
+          if (this.get("currentUser.id") === user.id) {
+            return;
+          }
 
           switch (state) {
             case REPLYING:
@@ -100,7 +102,9 @@ const Presence = EmberObject.extend({
   },
 
   publish(state, whisper, postId, staffOnly) {
-    if (this.get("currentUser.hide_profile_and_presence")) return;
+    if (this.get("currentUser.hide_profile_and_presence")) {
+      return;
+    }
 
     const data = {
       state,
@@ -128,7 +132,9 @@ const Presence = EmberObject.extend({
   _removeUser(user) {
     [this.users, this.editingUsers].forEach((users) => {
       const existingUser = users.findBy("id", user.id);
-      if (existingUser) users.removeObject(existingUser);
+      if (existingUser) {
+        users.removeObject(existingUser);
+      }
     });
   },
 
@@ -158,7 +164,9 @@ const Presence = EmberObject.extend({
       }
 
       if (attrs && attrs.post_id) {
-        if (u.post_id === attrs.post_id) usersLength++;
+        if (u.post_id === attrs.post_id) {
+          usersLength++;
+        }
       } else {
         usersLength++;
       }
