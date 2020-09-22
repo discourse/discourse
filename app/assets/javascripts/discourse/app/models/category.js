@@ -123,7 +123,9 @@ const Category = RestModel.extend({
     const notificationLevelString = Object.keys(NotificationLevels).find(
       (key) => NotificationLevels[key] === notificationLevel
     );
-    if (notificationLevelString) return notificationLevelString.toLowerCase();
+    if (notificationLevelString) {
+      return notificationLevelString.toLowerCase();
+    }
   },
 
   @discourseComputed("name")
@@ -314,7 +316,9 @@ Category.reopenClass({
   },
 
   slugFor(category, separator = "/", depth = 3) {
-    if (!category) return "";
+    if (!category) {
+      return "";
+    }
 
     const parentCategory = get(category, "parentCategory");
     let result = "";
@@ -454,7 +458,9 @@ Category.reopenClass({
       category = Category.findSingleBySlug(slug);
 
       // If we have a parent category, we need to enforce it
-      if (category && category.get("parentCategory")) return;
+      if (category && category.get("parentCategory")) {
+        return;
+      }
     }
 
     // In case the slug didn't work, try to find it by id instead.
@@ -529,7 +535,9 @@ Category.reopenClass({
           (category.get("name").toLowerCase().indexOf(term) > 0 ||
             category.get("slug").toLowerCase().indexOf(slugTerm) > 0)
         ) {
-          if (data.indexOf(category) === -1) data.push(category);
+          if (data.indexOf(category) === -1) {
+            data.push(category);
+          }
         }
       }
     }

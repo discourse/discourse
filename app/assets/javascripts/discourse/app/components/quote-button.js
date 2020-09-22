@@ -16,7 +16,9 @@ import { alias } from "@ember/object/computed";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
-  if (!titleEl) return;
+  if (!titleEl) {
+    return;
+  }
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 

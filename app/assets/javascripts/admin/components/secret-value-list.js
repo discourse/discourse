@@ -23,17 +23,23 @@ export default Component.extend({
 
   actions: {
     changeKey(index, newValue) {
-      if (this._checkInvalidInput(newValue)) return;
+      if (this._checkInvalidInput(newValue)) {
+        return;
+      }
       this._replaceValue(index, newValue, "key");
     },
 
     changeSecret(index, newValue) {
-      if (this._checkInvalidInput(newValue)) return;
+      if (this._checkInvalidInput(newValue)) {
+        return;
+      }
       this._replaceValue(index, newValue, "secret");
     },
 
     addValue() {
-      if (this._checkInvalidInput([this.newKey, this.newSecret])) return;
+      if (this._checkInvalidInput([this.newKey, this.newSecret])) {
+        return;
+      }
       this._addValue(this.newKey, this.newSecret);
       this.setProperties({ newKey: "", newSecret: "" });
     },

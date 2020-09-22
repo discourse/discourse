@@ -7,8 +7,9 @@ export default createPMRoute("groups", "private-messages-groups").extend({
 
   titleToken() {
     const groupName = this.groupName;
-    if (groupName)
+    if (groupName) {
       return [groupName.capitalize(), I18n.t("user.private_messages")];
+    }
   },
 
   model(params) {

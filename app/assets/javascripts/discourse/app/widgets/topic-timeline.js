@@ -175,7 +175,9 @@ createWidget("timeline-scrollarea", {
         .get("posts")
         .findBy("id", postStream.get("stream")[current]);
 
-      if (post) date = new Date(post.get("created_at"));
+      if (post) {
+        date = new Date(post.get("created_at"));
+      }
     } else if (daysAgo !== null) {
       date = new Date();
       date.setDate(date.getDate() - daysAgo || 0);

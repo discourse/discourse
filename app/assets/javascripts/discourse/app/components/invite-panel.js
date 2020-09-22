@@ -57,8 +57,12 @@ export default Component.extend({
     saving,
     can_invite_to
   ) {
-    if (saving) return true;
-    if (isEmpty(emailOrUsername)) return true;
+    if (saving) {
+      return true;
+    }
+    if (isEmpty(emailOrUsername)) {
+      return true;
+    }
 
     const emailTrimmed = emailOrUsername.trim();
 
@@ -77,7 +81,9 @@ export default Component.extend({
       return true;
     }
 
-    if (can_invite_to) return false;
+    if (can_invite_to) {
+      return false;
+    }
 
     return false;
   },
@@ -98,9 +104,15 @@ export default Component.extend({
     groupIds,
     hasCustomMessage
   ) {
-    if (hasCustomMessage) return true;
-    if (saving) return true;
-    if (isEmpty(emailOrUsername)) return true;
+    if (hasCustomMessage) {
+      return true;
+    }
+    if (saving) {
+      return true;
+    }
+    if (isEmpty(emailOrUsername)) {
+      return true;
+    }
 
     const email = emailOrUsername.trim();
 

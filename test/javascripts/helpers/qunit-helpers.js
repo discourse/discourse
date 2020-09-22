@@ -91,11 +91,16 @@ function AcceptanceModal(option, _relatedTarget) {
       typeof option === "object" && option
     );
 
-    if (!data) $this.data("bs.modal", (data = new Modal(this, options)));
+    if (!data) {
+      $this.data("bs.modal", (data = new Modal(this, options)));
+    }
     data.$body = $("#ember-testing");
 
-    if (typeof option === "string") data[option](_relatedTarget);
-    else if (options.show) data.show(_relatedTarget);
+    if (typeof option === "string") {
+      data[option](_relatedTarget);
+    } else if (options.show) {
+      data.show(_relatedTarget);
+    }
   });
 }
 
@@ -106,7 +111,9 @@ let _pretenderCallbacks = {};
 
 export function applyPretender(name, server, helper) {
   const cb = _pretenderCallbacks[name];
-  if (cb) cb(server, helper);
+  if (cb) {
+    cb(server, helper);
+  }
 }
 
 export function controllerModule(name, args = {}) {

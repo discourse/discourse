@@ -27,7 +27,9 @@ const Bookmark = RestModel.extend({
   },
 
   destroy() {
-    if (this.newBookmark) return Promise.resolve();
+    if (this.newBookmark) {
+      return Promise.resolve();
+    }
 
     return ajax(this.url, {
       type: "DELETE",

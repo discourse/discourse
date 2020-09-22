@@ -32,7 +32,9 @@ export default Component.extend({
 
   @action
   addValue(newValue) {
-    if (this.inputEmpty) return;
+    if (this.inputEmpty) {
+      return;
+    }
 
     this.set("newValue", null);
     this.collection.addObject(newValue);

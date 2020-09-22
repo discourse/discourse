@@ -37,8 +37,12 @@ export default Controller.extend(ModalFunctionality, {
   )
   unPinMessage(categoryLink, pinnedGlobally, pinnedUntil) {
     let name = "topic.feature_topic.unpin";
-    if (pinnedGlobally) name += "_globally";
-    if (moment(pinnedUntil) > moment()) name += "_until";
+    if (pinnedGlobally) {
+      name += "_globally";
+    }
+    if (moment(pinnedUntil) > moment()) {
+      name += "_until";
+    }
     const until = moment(pinnedUntil).format("LL");
 
     return I18n.t(name, { categoryLink, until });

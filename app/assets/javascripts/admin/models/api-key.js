@@ -22,7 +22,9 @@ const ApiKey = RestModel.extend({
 
   @discourseComputed("description")
   shortDescription(description) {
-    if (!description || description.length < 40) return description;
+    if (!description || description.length < 40) {
+      return description;
+    }
     return `${description.substring(0, 40)}...`;
   },
 

@@ -29,13 +29,17 @@ export function toTitleCase(str) {
 }
 
 export function longDate(dt) {
-  if (!dt) return;
+  if (!dt) {
+    return;
+  }
   return moment(dt).format(I18n.t("dates.long_with_year"));
 }
 
 // suppress year, if current year
 export function longDateNoYear(dt) {
-  if (!dt) return;
+  if (!dt) {
+    return;
+  }
 
   if (new Date().getFullYear() !== dt.getFullYear()) {
     return moment(dt).format(I18n.t("dates.long_date_with_year"));
@@ -58,8 +62,12 @@ export function updateRelativeAge(elems) {
 }
 
 export function autoUpdatingRelativeAge(date, options) {
-  if (!date) return "";
-  if (+date === +new Date(0)) return "";
+  if (!date) {
+    return "";
+  }
+  if (+date === +new Date(0)) {
+    return "";
+  }
 
   options = options || {};
   let format = options.format || "tiny";
@@ -316,7 +324,9 @@ export function number(val) {
   let formattedNumber;
 
   val = Math.round(parseFloat(val));
-  if (isNaN(val)) val = 0;
+  if (isNaN(val)) {
+    val = 0;
+  }
 
   if (val > 999999) {
     formattedNumber = I18n.toNumber(val / 1000000, { precision: 1 });

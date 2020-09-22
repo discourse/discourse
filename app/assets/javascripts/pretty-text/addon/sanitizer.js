@@ -72,7 +72,9 @@ export function hrefAllowed(href, extraHrefMatchers) {
 }
 
 export function sanitize(text, whiteLister) {
-  if (!text) return "";
+  if (!text) {
+    return "";
+  }
 
   // Allow things like <3 and <_<
   text = text.replace(/<([^A-Za-z\/\!]|$)/g, "&lt;$1");

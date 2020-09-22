@@ -14,7 +14,9 @@ export default Component.extend({
 
   @discourseComputed("model.status")
   statusColorClasses(status) {
-    if (!status) return "";
+    if (!status) {
+      return "";
+    }
 
     if (status >= 200 && status <= 299) {
       return "text-successful";

@@ -29,9 +29,15 @@ export default Component.extend({
 
   @discourseComputed("currentTargetName", "fieldName")
   activeSectionMode(targetName, fieldName) {
-    if (["settings", "translations"].includes(targetName)) return "yaml";
-    if (["extra_scss"].includes(targetName)) return "scss";
-    if (["color_definitions"].includes(fieldName)) return "scss";
+    if (["settings", "translations"].includes(targetName)) {
+      return "yaml";
+    }
+    if (["extra_scss"].includes(targetName)) {
+      return "scss";
+    }
+    if (["color_definitions"].includes(fieldName)) {
+      return "scss";
+    }
     return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
   },
 
@@ -88,7 +94,9 @@ export default Component.extend({
     },
 
     addField(name) {
-      if (!name) return;
+      if (!name) {
+        return;
+      }
       name = name.replace(/[^a-zA-Z0-9-_/]/g, "");
       this.theme.setField(this.currentTargetName, name, "");
       this.setProperties({ newFieldName: "", addingField: false });

@@ -12,11 +12,14 @@ export default Mixin.create({
     const delta = Math.floor(offset - this._lastScroll);
 
     // This is a tiny scroll, so we ignore it.
-    if (delta <= MOBILE_SCROLL_TOLERANCE && delta >= -MOBILE_SCROLL_TOLERANCE)
+    if (delta <= MOBILE_SCROLL_TOLERANCE && delta >= -MOBILE_SCROLL_TOLERANCE) {
       return;
+    }
 
     // don't calculate when resetting offset (i.e. going to /latest or to next topic in suggested list)
-    if (offset === 0) return;
+    if (offset === 0) {
+      return;
+    }
 
     const prevDirection = this.mobileScrollDirection;
     const currDirection = delta > 0 ? "down" : null;

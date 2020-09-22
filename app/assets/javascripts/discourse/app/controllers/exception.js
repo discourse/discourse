@@ -34,10 +34,14 @@ export default Controller.extend({
   @discourseComputed
   isNetwork() {
     // never made it on the wire
-    if (this.get("thrown.readyState") === 0) return true;
+    if (this.get("thrown.readyState") === 0) {
+      return true;
+    }
 
     // timed out
-    if (this.get("thrown.jqTextStatus") === "timeout") return true;
+    if (this.get("thrown.jqTextStatus") === "timeout") {
+      return true;
+    }
 
     return false;
   },

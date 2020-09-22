@@ -63,7 +63,9 @@ export default Controller.extend({
           } else {
             bootbox.alert(I18n.t("generic_error"));
           }
-          if (wasEditing) record.set("editing", true);
+          if (wasEditing) {
+            record.set("editing", true);
+          }
         });
     },
 

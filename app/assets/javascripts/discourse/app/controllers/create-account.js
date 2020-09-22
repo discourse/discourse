@@ -70,7 +70,9 @@ export default Controller.extend(
 
     @discourseComputed("formSubmitted")
     submitDisabled() {
-      if (this.formSubmitted) return true;
+      if (this.formSubmitted) {
+        return true;
+      }
 
       return false;
     },
@@ -78,8 +80,12 @@ export default Controller.extend(
     @discourseComputed("userFields", "hasAtLeastOneLoginButton")
     modalBodyClasses(userFields, hasAtLeastOneLoginButton) {
       const classes = [];
-      if (userFields) classes.push("has-user-fields");
-      if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
+      if (userFields) {
+        classes.push("has-user-fields");
+      }
+      if (hasAtLeastOneLoginButton) {
+        classes.push("has-alt-auth");
+      }
       return classes.join(" ");
     },
 

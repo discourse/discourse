@@ -182,7 +182,9 @@ const DiscourseLocation = EmberObject.extend({
       // Ignore initial page load popstate event in Chrome
       if (!popstateFired) {
         popstateFired = true;
-        if (url === this._previousURL) return;
+        if (url === this._previousURL) {
+          return;
+        }
       }
 
       popstateCallbacks.forEach((cb) => cb(url));

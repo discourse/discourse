@@ -74,7 +74,9 @@ export default Component.extend({
 
   @discourseComputed("model.data", "model.computedLabels")
   totalsForSampleRow(rows, labels) {
-    if (!rows || !rows.length) return {};
+    if (!rows || !rows.length) {
+      return {};
+    }
 
     let totalsRow = {};
 
@@ -130,7 +132,9 @@ export default Component.extend({
 
   @discourseComputed("model.data", "perPage", "page")
   pages(data, perPage, page) {
-    if (!data || data.length <= perPage) return [];
+    if (!data || data.length <= perPage) {
+      return [];
+    }
 
     const pagesIndexes = [];
     for (let i = 0; i < Math.ceil(data.length / perPage); i++) {

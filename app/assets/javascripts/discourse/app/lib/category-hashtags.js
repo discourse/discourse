@@ -23,7 +23,9 @@ export function categoryHashtagTriggerRule(textarea, opts) {
     line = line.slice(0, line.length - 1);
 
     // Don't trigger autocomplete when backspacing into a `#category |` => `#category|`
-    if (/^#{1}\w+/.test(line)) return false;
+    if (/^#{1}\w+/.test(line)) {
+      return false;
+    }
   }
 
   // Don't trigger autocomplete when ATX-style headers are used

@@ -150,10 +150,18 @@ export default Component.extend({
       if (typeof time === "string" && time.length) {
         let [hours, minutes] = time.split(":");
         if (hours && minutes) {
-          if (hours < 0) hours = 0;
-          if (hours > 23) hours = 23;
-          if (minutes < 0) minutes = 0;
-          if (minutes > 59) minutes = 59;
+          if (hours < 0) {
+            hours = 0;
+          }
+          if (hours > 23) {
+            hours = 23;
+          }
+          if (minutes < 0) {
+            minutes = 0;
+          }
+          if (minutes > 59) {
+            minutes = 59;
+          }
 
           this.onChange({
             hours: parseInt(hours, 10),

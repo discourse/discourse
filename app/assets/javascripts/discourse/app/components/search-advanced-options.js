@@ -162,14 +162,20 @@ export default Component.extend({
 
   findSearchTerms() {
     const searchTerm = escapeExpression(this.searchTerm);
-    if (!searchTerm) return [];
+    if (!searchTerm) {
+      return [];
+    }
 
     const blocks = searchTerm.match(REGEXP_BLOCKS);
-    if (!blocks) return [];
+    if (!blocks) {
+      return [];
+    }
 
     let result = [];
     blocks.forEach((block) => {
-      if (block.length !== 0) result.push(block);
+      if (block.length !== 0) {
+        result.push(block);
+      }
     });
 
     return result;
@@ -177,11 +183,15 @@ export default Component.extend({
 
   filterBlocks(regexPrefix) {
     const blocks = this.findSearchTerms();
-    if (!blocks) return [];
+    if (!blocks) {
+      return [];
+    }
 
     let result = [];
     blocks.forEach((block) => {
-      if (block.search(regexPrefix) !== -1) result.push(block);
+      if (block.search(regexPrefix) !== -1) {
+        result.push(block);
+      }
     });
 
     return result;
@@ -256,7 +266,9 @@ export default Component.extend({
   },
 
   setSearchedTermValueForTags() {
-    if (!this.siteSettings.tagging_enabled) return;
+    if (!this.siteSettings.tagging_enabled) {
+      return;
+    }
 
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tags = this.get("searchedTerms.tags");
@@ -455,36 +467,42 @@ export default Component.extend({
       const slug = categoryFilter.slug;
       if (categoryFilter.parentCategory) {
         const parentSlug = categoryFilter.parentCategory.slug;
-        if (slugCategoryMatches)
+        if (slugCategoryMatches) {
           searchTerm = searchTerm.replace(
             slugCategoryMatches[0],
             `#${parentSlug}:${slug}`
           );
-        else if (idCategoryMatches)
+        } else if (idCategoryMatches) {
           searchTerm = searchTerm.replace(
             idCategoryMatches[0],
             `category:${id}`
           );
-        else searchTerm += ` #${parentSlug}:${slug}`;
+        } else {
+          searchTerm += ` #${parentSlug}:${slug}`;
+        }
 
         this._updateSearchTerm(searchTerm);
       } else {
-        if (slugCategoryMatches)
+        if (slugCategoryMatches) {
           searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${slug}`);
-        else if (idCategoryMatches)
+        } else if (idCategoryMatches) {
           searchTerm = searchTerm.replace(
             idCategoryMatches[0],
             `category:${id}`
           );
-        else searchTerm += ` #${slug}`;
+        } else {
+          searchTerm += ` #${slug}`;
+        }
 
         this._updateSearchTerm(searchTerm);
       }
     } else {
-      if (slugCategoryMatches)
+      if (slugCategoryMatches) {
         searchTerm = searchTerm.replace(slugCategoryMatches[0], "");
-      if (idCategoryMatches)
+      }
+      if (idCategoryMatches) {
         searchTerm = searchTerm.replace(idCategoryMatches[0], "");
+      }
 
       this._updateSearchTerm(searchTerm);
     }

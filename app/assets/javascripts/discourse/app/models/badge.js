@@ -55,7 +55,9 @@ const Badge = RestModel.extend({
   },
 
   destroy() {
-    if (this.newBadge) return Promise.resolve();
+    if (this.newBadge) {
+      return Promise.resolve();
+    }
 
     return ajax(`/admin/badges/${this.id}`, {
       type: "DELETE",

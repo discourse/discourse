@@ -342,7 +342,9 @@ export default createWidget("hamburger-menu", {
   refreshReviewableCount(state) {
     const { currentUser } = this;
 
-    if (state.loading || !currentUser) return;
+    if (state.loading || !currentUser) {
+      return;
+    }
 
     state.loading = true;
 

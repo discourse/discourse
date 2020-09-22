@@ -15,8 +15,9 @@ export default Component.extend({
 
   @observes("groupNames")
   _update() {
-    if (this.canReceiveUpdates === "true")
+    if (this.canReceiveUpdates === "true") {
       this._initializeAutocomplete({ updateData: true });
+    }
   },
 
   @on("didInsertElement")
@@ -49,7 +50,9 @@ export default Component.extend({
       },
       dataSource: (term) => {
         return this.groupFinder(term).then((groups) => {
-          if (!selectedGroups) return groups;
+          if (!selectedGroups) {
+            return groups;
+          }
 
           return groups.filter((group) => {
             return !selectedGroups.any((s) => s === group.name);

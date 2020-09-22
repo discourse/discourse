@@ -93,7 +93,9 @@ export default Controller.extend(CanCheckEmails, {
 
   actions: {
     confirmPassword() {
-      if (!this.password) return;
+      if (!this.password) {
+        return;
+      }
       this.markDirty();
       this.loadSecondFactors();
       this.set("password", null);

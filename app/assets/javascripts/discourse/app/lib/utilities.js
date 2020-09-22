@@ -187,7 +187,9 @@ export function caretPosition(el) {
   if (document.selection) {
     el.focus();
     r = document.selection.createRange();
-    if (!r) return 0;
+    if (!r) {
+      return 0;
+    }
 
     re = el.createTextRange();
     rc = re.duplicate();
@@ -293,7 +295,9 @@ export function isiPad() {
 }
 
 export function safariHacksDisabled() {
-  if (iOSWithVisualViewport()) return false;
+  if (iOSWithVisualViewport()) {
+    return false;
+  }
 
   let pref = localStorage.getItem("safari-hacks-disabled");
   let result = false;

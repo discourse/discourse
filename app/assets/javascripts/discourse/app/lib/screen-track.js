@@ -168,8 +168,9 @@ export default class {
             if (
               error.status === 405 &&
               error.responseJSON.error_type === "read_only"
-            )
+            ) {
               return;
+            }
           })
           .finally(() => {
             this._inProgress = false;

@@ -32,7 +32,9 @@ export default Component.extend({
 
     if (regex && siteText) {
       const matches = siteText.value.match(new RegExp(regex, "i"));
-      if (matches) return matches[0];
+      if (matches) {
+        return matches[0];
+      }
     }
 
     return this.term;

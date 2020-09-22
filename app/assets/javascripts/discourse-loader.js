@@ -300,7 +300,9 @@ var define, requirejs;
 
   function transformForAliases(name) {
     var alias = ALIASES[name];
-    if (!alias) return name;
+    if (!alias) {
+      return name;
+    }
 
     deprecatedModule(name, alias);
     return alias;

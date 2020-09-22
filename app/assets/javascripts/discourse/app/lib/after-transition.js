@@ -26,7 +26,9 @@ var transitionEnd = (function () {
 
 export default function (element, callback) {
   return $(element).on(transitionEnd, (event) => {
-    if (event.target !== event.currentTarget) return;
+    if (event.target !== event.currentTarget) {
+      return;
+    }
     return callback(event);
   });
 }

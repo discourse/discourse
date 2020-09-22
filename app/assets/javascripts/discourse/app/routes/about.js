@@ -9,10 +9,14 @@ export default DiscourseRoute.extend({
       let activeModerators = [];
       const yearAgo = moment().locale("en").utc().subtract(1, "year");
       result.about.admins.forEach((r) => {
-        if (moment(r.last_seen_at) > yearAgo) activeAdmins.push(r);
+        if (moment(r.last_seen_at) > yearAgo) {
+          activeAdmins.push(r);
+        }
       });
       result.about.moderators.forEach((r) => {
-        if (moment(r.last_seen_at) > yearAgo) activeModerators.push(r);
+        if (moment(r.last_seen_at) > yearAgo) {
+          activeModerators.push(r);
+        }
       });
       result.about.admins = activeAdmins;
       result.about.moderators = activeModerators;

@@ -28,7 +28,9 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   categoryStyle(category, categoryBackgroundColor, categoryTextColor) {
     const categoryStyle = this.siteSettings.category_style;
 
-    if (categoryStyle === "bullet") return;
+    if (categoryStyle === "bullet") {
+      return;
+    }
 
     if (category) {
       if (categoryBackgroundColor || categoryTextColor) {

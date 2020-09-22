@@ -129,7 +129,9 @@ export function ajax() {
       }
 
       // If it's a parsererror, don't reject
-      if (xhr.status === 200) return args.success(xhr);
+      if (xhr.status === 200) {
+        return args.success(xhr);
+      }
 
       // Fill in some extra info
       xhr.jqTextStatus = textStatus;
@@ -149,9 +151,12 @@ export function ajax() {
 
     // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
     // it will not be parsed as an object.
-    if (!args.type) args.type = "GET";
-    if (!args.dataType && args.type.toUpperCase() === "GET")
+    if (!args.type) {
+      args.type = "GET";
+    }
+    if (!args.dataType && args.type.toUpperCase() === "GET") {
       args.dataType = "json";
+    }
 
     if (args.dataType === "script") {
       args.headers["Discourse-Script"] = true;

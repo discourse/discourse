@@ -126,12 +126,16 @@ export default Controller.extend({
 
   @discourseComputed("pollOptions")
   pollOptionsCount(pollOptions) {
-    if (pollOptions.length === 0) return 0;
+    if (pollOptions.length === 0) {
+      return 0;
+    }
 
     let length = 0;
 
     pollOptions.split("\n").forEach((option) => {
-      if (option.length !== 0) length += 1;
+      if (option.length !== 0) {
+        length += 1;
+      }
     });
 
     return length;
@@ -141,7 +145,9 @@ export default Controller.extend({
   _setPollMax() {
     const isMultiple = this.isMultiple;
     const isNumber = this.isNumber;
-    if (!isMultiple && !isNumber) return;
+    if (!isMultiple && !isNumber) {
+      return;
+    }
 
     if (isMultiple) {
       this.set("pollMax", this.pollOptionsCount);
@@ -152,7 +158,9 @@ export default Controller.extend({
 
   @discourseComputed("isRegular", "isMultiple", "isNumber", "pollOptionsCount")
   pollMinOptions(isRegular, isMultiple, isNumber, count) {
-    if (isRegular) return;
+    if (isRegular) {
+      return;
+    }
 
     if (isMultiple) {
       return this._comboboxOptions(1, count + 1);
@@ -173,7 +181,9 @@ export default Controller.extend({
     "pollStep"
   )
   pollMaxOptions(isRegular, isMultiple, isNumber, count, pollMin, pollStep) {
-    if (isRegular) return;
+    if (isRegular) {
+      return;
+    }
     const pollMinInt = parseInt(pollMin, 10) || 1;
 
     if (isMultiple) {
@@ -192,7 +202,9 @@ export default Controller.extend({
 
   @discourseComputed("isNumber", "pollMax")
   pollStepOptions(isNumber, pollMax) {
-    if (!isNumber) return;
+    if (!isNumber) {
+      return;
+    }
     return this._comboboxOptions(1, (parseInt(pollMax, 10) || 1) + 1);
   },
 
@@ -244,14 +256,27 @@ export default Controller.extend({
       step = 1;
     }
 
-    if (pollType) pollHeader += ` type=${pollType}`;
-    if (pollResult) pollHeader += ` results=${pollResult}`;
-    if (pollMin && showMinMax) pollHeader += ` min=${pollMin}`;
-    if (pollMax) pollHeader += ` max=${pollMax}`;
-    if (isNumber) pollHeader += ` step=${step}`;
-    if (publicPoll) pollHeader += ` public=true`;
-    if (chartType && pollType !== "number")
+    if (pollType) {
+      pollHeader += ` type=${pollType}`;
+    }
+    if (pollResult) {
+      pollHeader += ` results=${pollResult}`;
+    }
+    if (pollMin && showMinMax) {
+      pollHeader += ` min=${pollMin}`;
+    }
+    if (pollMax) {
+      pollHeader += ` max=${pollMax}`;
+    }
+    if (isNumber) {
+      pollHeader += ` step=${step}`;
+    }
+    if (publicPoll) {
+      pollHeader += ` public=true`;
+    }
+    if (chartType && pollType !== "number") {
       pollHeader += ` chartType=${chartType}`;
+    }
     if (pollGroups && pollGroups.length > 0) {
       pollHeader += ` groups=${pollGroups}`;
     }
@@ -260,7 +285,9 @@ export default Controller.extend({
         date + " " + time,
         "YYYY-MM-DD HH:mm"
       ).toISOString();
-      if (closeDate) pollHeader += ` close=${closeDate}`;
+      if (closeDate) {
+        pollHeader += ` close=${closeDate}`;
+      }
     }
 
     pollHeader += "]";
@@ -268,7 +295,9 @@ export default Controller.extend({
 
     if (pollOptions.length > 0 && !isNumber) {
       pollOptions.split("\n").forEach((option) => {
-        if (option.length !== 0) output += `* ${option}\n`;
+        if (option.length !== 0) {
+          output += `* ${option}\n`;
+        }
       });
     }
 

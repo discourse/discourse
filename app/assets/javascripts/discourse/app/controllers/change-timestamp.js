@@ -32,7 +32,9 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("saving", "date", "validTimestamp")
   buttonDisabled(saving, date, validTimestamp) {
-    if (saving || validTimestamp) return true;
+    if (saving || validTimestamp) {
+      return true;
+    }
     return isEmpty(date);
   },
 

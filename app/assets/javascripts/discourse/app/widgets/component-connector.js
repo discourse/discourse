@@ -31,7 +31,9 @@ export default class ComponentConnector {
       }
     });
 
-    if (shouldInit) return this.init();
+    if (shouldInit) {
+      return this.init();
+    }
 
     return null;
   }

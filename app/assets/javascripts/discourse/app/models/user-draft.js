@@ -22,7 +22,9 @@ export default RestModel.extend({
 
   @discourseComputed("topic_id")
   postUrl(topicId) {
-    if (!topicId) return;
+    if (!topicId) {
+      return;
+    }
 
     return postUrl(this.slug, this.topic_id, this.post_number);
   },

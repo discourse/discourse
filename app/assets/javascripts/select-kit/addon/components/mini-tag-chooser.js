@@ -136,7 +136,9 @@ export default ComboBox.extend(TagsMixin, {
       data.selected_tags = this.value.slice(0, 100);
     }
 
-    if (!this.selectKit.options.everyTag) data.filterForInput = true;
+    if (!this.selectKit.options.everyTag) {
+      data.filterForInput = true;
+    }
 
     return this.searchTags("/tags/filter/search", data, this._transformJson);
   },

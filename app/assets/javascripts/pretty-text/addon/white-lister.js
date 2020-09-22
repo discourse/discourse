@@ -42,7 +42,9 @@ export default class WhiteLister {
     const custom = [];
 
     this._rawFeatures.forEach(([name, info]) => {
-      if (!this._enabled[name]) return;
+      if (!this._enabled[name]) {
+        return;
+      }
 
       if (info.custom) {
         custom.push(info.custom);

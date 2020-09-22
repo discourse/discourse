@@ -166,7 +166,9 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       }
 
       bootbox.confirm(confirmText, (result) => {
-        if (!result) return;
+        if (!result) {
+          return;
+        }
 
         this.tag
           .destroyRecord()

@@ -136,7 +136,9 @@ const controllerOpts = {
 
   @discourseComputed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {
-    if (!allLoaded) return;
+    if (!allLoaded) {
+      return;
+    }
 
     const category = this.category;
     if (category) {

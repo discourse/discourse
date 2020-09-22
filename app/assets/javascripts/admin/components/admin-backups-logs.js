@@ -37,7 +37,9 @@ export default Component.extend({
   @observes("logs.[]")
   _updateFormattedLogs: discourseDebounce(function () {
     const logs = this.logs;
-    if (logs.length === 0) return;
+    if (logs.length === 0) {
+      return;
+    }
 
     // do the log formatting only once for HELLish performance
     let formattedLogs = this.formattedLogs;

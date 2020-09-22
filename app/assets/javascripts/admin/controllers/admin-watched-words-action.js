@@ -58,7 +58,9 @@ export default Controller.extend({
           // remove from other actions lists
           let match = null;
           this.get("adminWatchedWords.model").forEach((action) => {
-            if (match) return;
+            if (match) {
+              return;
+            }
 
             if (action.nameKey !== this.actionNameKey) {
               match = action.words.findBy("id", arg.id);

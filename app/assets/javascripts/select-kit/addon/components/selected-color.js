@@ -12,7 +12,9 @@ export default SelectedNameComponent.extend({
       const color = escapeExpression(this.name),
         el = document.querySelector(`[data-value="${color}"]`);
 
-      if (el) el.style.borderBottomColor = `#${color}`;
+      if (el) {
+        el.style.borderBottomColor = `#${color}`;
+      }
     });
   },
 });

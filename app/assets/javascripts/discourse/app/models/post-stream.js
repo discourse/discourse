@@ -384,7 +384,9 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.nextWindow;
-      if (isEmpty(postIds)) return Promise.resolve();
+      if (isEmpty(postIds)) {
+        return Promise.resolve();
+      }
       this.set("loadingBelow", true);
       postsWithPlaceholders.appending(postIds);
 
@@ -425,7 +427,9 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.previousWindow;
-      if (isEmpty(postIds)) return Promise.resolve();
+      if (isEmpty(postIds)) {
+        return Promise.resolve();
+      }
       this.set("loadingAbove", true);
 
       return this.findPostsByIds(postIds.reverse())
@@ -844,7 +848,9 @@ export default RestModel.extend({
     }
 
     const val = timelineLookup[high] || timelineLookup[low];
-    if (val) return val[1];
+    if (val) {
+      return val[1];
+    }
   },
 
   // Find a postId for a postNumber, respecting gaps

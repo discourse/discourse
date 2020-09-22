@@ -14,7 +14,9 @@ export default Controller.extend({
 
   filterContentNow(category) {
     // If we have no content, don't bother filtering anything
-    if (!!isEmpty(this.allSiteSettings)) return;
+    if (!!isEmpty(this.allSiteSettings)) {
+      return;
+    }
 
     let filter, pluginFilter;
     if (this.filter) {
@@ -59,8 +61,12 @@ export default Controller.extend({
     const matches = [];
     this.allSiteSettings.forEach((settingsCategory) => {
       const siteSettings = settingsCategory.siteSettings.filter((item) => {
-        if (this.onlyOverridden && !item.get("overridden")) return false;
-        if (pluginFilter && item.plugin !== pluginFilter) return false;
+        if (this.onlyOverridden && !item.get("overridden")) {
+          return false;
+        }
+        if (pluginFilter && item.plugin !== pluginFilter) {
+          return false;
+        }
         if (filter) {
           const setting = item.get("setting").toLowerCase();
           return (

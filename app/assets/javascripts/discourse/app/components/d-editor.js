@@ -240,7 +240,9 @@ export default Component.extend({
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
-    if (placeholder) return I18n.t(placeholder);
+    if (placeholder) {
+      return I18n.t(placeholder);
+    }
     return null;
   },
 
@@ -375,7 +377,9 @@ export default Component.extend({
         return;
       }
 
-      if (this.preview === cooked) return;
+      if (this.preview === cooked) {
+        return;
+      }
 
       this.set("preview", cooked);
       schedule("afterRender", () => {
@@ -383,7 +387,9 @@ export default Component.extend({
           return;
         }
         const $preview = $(this.element.querySelector(".d-editor-preview"));
-        if ($preview.length === 0) return;
+        if ($preview.length === 0) {
+          return;
+        }
 
         if (this.previewUpdated) {
           this.previewUpdated($preview);

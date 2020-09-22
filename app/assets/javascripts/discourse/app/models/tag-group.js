@@ -5,7 +5,9 @@ import PermissionType from "discourse/models/permission-type";
 export default RestModel.extend({
   @discourseComputed("permissions")
   permissionName(permissions) {
-    if (!permissions) return "public";
+    if (!permissions) {
+      return "public";
+    }
 
     if (permissions["everyone"] === PermissionType.FULL) {
       return "public";

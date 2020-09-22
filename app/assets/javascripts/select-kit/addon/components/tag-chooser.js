@@ -91,9 +91,15 @@ export default MultiSelectComponent.extend(TagsMixin, {
         .slice(0, 100);
     }
 
-    if (!this.everyTag) data.filterForInput = true;
-    if (this.excludeSynonyms) data.excludeSynonyms = true;
-    if (this.excludeHasSynonyms) data.excludeHasSynonyms = true;
+    if (!this.everyTag) {
+      data.filterForInput = true;
+    }
+    if (this.excludeSynonyms) {
+      data.excludeSynonyms = true;
+    }
+    if (this.excludeHasSynonyms) {
+      data.excludeHasSynonyms = true;
+    }
 
     return this.searchTags("/tags/filter/search", data, this._transformJson);
   },

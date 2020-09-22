@@ -57,7 +57,8 @@ export default {
 
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
-    if (siteSettings.discourse_narrative_bot_enabled)
+    if (siteSettings.discourse_narrative_bot_enabled) {
       withPluginApi("0.8.7", initialize);
+    }
   },
 };

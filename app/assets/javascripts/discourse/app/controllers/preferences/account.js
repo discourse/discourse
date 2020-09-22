@@ -296,7 +296,9 @@ export default Controller.extend(CanCheckEmails, {
         }
       )
         .then(() => {
-          if (!token) logout(); // All sessions revoked
+          if (!token) {
+            logout();
+          } // All sessions revoked
         })
         .catch(popupAjaxError);
     },

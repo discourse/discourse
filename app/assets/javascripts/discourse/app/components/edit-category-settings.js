@@ -110,8 +110,12 @@ export default buildCategoryPanel("settings", {
 
   @discourseComputed("category.sort_ascending")
   sortAscendingOption(sortAscending) {
-    if (sortAscending === "false") return false;
-    if (sortAscending === "true") return true;
+    if (sortAscending === "false") {
+      return false;
+    }
+    if (sortAscending === "true") {
+      return true;
+    }
     return sortAscending;
   },
 

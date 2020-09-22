@@ -42,7 +42,9 @@ export default Component.extend({
 
       dataSource(term) {
         return this.badgeFinder(term).then((badges) => {
-          if (!selectedBadges) return badges;
+          if (!selectedBadges) {
+            return badges;
+          }
 
           return badges.filter(
             (badge) => !selectedBadges.any((s) => s === badge.name)

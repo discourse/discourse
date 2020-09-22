@@ -70,8 +70,12 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("awaitingApproval", "hasAtLeastOneLoginButton")
   modalBodyClasses(awaitingApproval, hasAtLeastOneLoginButton) {
     const classes = ["login-modal"];
-    if (awaitingApproval) classes.push("awaiting-approval");
-    if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
+    if (awaitingApproval) {
+      classes.push("awaiting-approval");
+    }
+    if (hasAtLeastOneLoginButton) {
+      classes.push("has-alt-auth");
+    }
     return classes.join(" ");
   },
 
@@ -183,7 +187,9 @@ export default Controller.extend(ModalFunctionality, {
               "hidden-login-form"
             );
             const applyHiddenFormInputValue = (value, key) => {
-              if (!hiddenLoginForm) return;
+              if (!hiddenLoginForm) {
+                return;
+              }
 
               hiddenLoginForm.querySelector(`input[name=${key}]`).value = value;
             };
@@ -332,7 +338,9 @@ export default Controller.extend(ModalFunctionality, {
       showModal("login");
 
       next(() => {
-        if (callback) callback();
+        if (callback) {
+          callback();
+        }
         this.flash(errorMsg, className || "success");
       });
     };

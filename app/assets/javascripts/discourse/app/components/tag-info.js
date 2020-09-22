@@ -89,7 +89,9 @@ export default Component.extend({
       bootbox.confirm(
         I18n.t("tagging.delete_synonym_confirm", { tag_name: tag.text }),
         (result) => {
-          if (!result) return;
+          if (!result) {
+            return;
+          }
 
           tag
             .destroyRecord()
@@ -106,7 +108,9 @@ export default Component.extend({
           tag_name: this.tagInfo.name,
         }),
         (result) => {
-          if (!result) return;
+          if (!result) {
+            return;
+          }
 
           ajax(`/tag/${this.tagInfo.name}/synonyms`, {
             type: "POST",

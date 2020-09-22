@@ -614,8 +614,12 @@ export default {
 
     // Try scrolling to post above or below.
     if ($selected.length !== 0) {
-      if (direction === -1 && index === 0) return;
-      if (direction === 1 && index === $articles.length - 1) return;
+      if (direction === -1 && index === 0) {
+        return;
+      }
+      if (direction === 1 && index === $articles.length - 1) {
+        return;
+      }
     }
 
     $article = $articles.eq(index + direction);

@@ -66,7 +66,9 @@ export default Component.extend({
   _handleSelection(value) {
     const formattedDate = moment(value).format(DATE_FORMAT);
 
-    if (!this.element || this.isDestroying || this.isDestroyed) return;
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
 
     if (this.onSelect) {
       this.onSelect(formattedDate);

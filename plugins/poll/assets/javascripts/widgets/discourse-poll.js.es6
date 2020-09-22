@@ -102,7 +102,9 @@ createWidget("discourse-poll-load-more", {
   click() {
     const { state } = this;
 
-    if (state.loading) return;
+    if (state.loading) {
+      return;
+    }
 
     state.loading = true;
     return this.sendWidgetAction("loadMore").finally(
@@ -126,7 +128,9 @@ createWidget("discourse-poll-voters", {
   fetchVoters() {
     const { attrs, state } = this;
 
-    if (state.loaded === "loading") return;
+    if (state.loaded === "loading") {
+      return;
+    }
     state.loaded = "loading";
 
     return _fetchVoters({
@@ -691,7 +695,9 @@ export default createWidget("discourse-poll", {
 
   buildAttributes(attrs) {
     let cssClasses = "poll";
-    if (attrs.poll.chart_type === PIE_CHART_TYPE) cssClasses += " pie";
+    if (attrs.poll.chart_type === PIE_CHART_TYPE) {
+      cssClasses += " pie";
+    }
     return {
       class: cssClasses,
       "data-poll-name": attrs.poll.get("name"),
@@ -900,9 +906,15 @@ export default createWidget("discourse-poll", {
   toggleOption(option) {
     const { attrs } = this;
 
-    if (this.isClosed()) return;
-    if (!this.currentUser) return this.showLogin();
-    if (!checkUserGroups(this.currentUser, this.attrs.poll)) return;
+    if (this.isClosed()) {
+      return;
+    }
+    if (!this.currentUser) {
+      return this.showLogin();
+    }
+    if (!checkUserGroups(this.currentUser, this.attrs.poll)) {
+      return;
+    }
 
     const { vote } = attrs;
     if (!this.isMultiple()) {
@@ -916,8 +928,12 @@ export default createWidget("discourse-poll", {
   },
 
   castVotes() {
-    if (!this.canCastVotes()) return;
-    if (!this.currentUser) return this.showLogin();
+    if (!this.canCastVotes()) {
+      return;
+    }
+    if (!this.currentUser) {
+      return this.showLogin();
+    }
 
     const { attrs, state } = this;
 

@@ -32,7 +32,9 @@ export default Component.extend({
 
   @observes("nameInput")
   _validateName() {
-    if (this.nameInput === this.get("model.name")) return;
+    if (this.nameInput === this.get("model.name")) {
+      return;
+    }
 
     if (this.nameInput === undefined) {
       return this._failedInputValidation();
@@ -63,7 +65,9 @@ export default Component.extend({
   },
 
   checkGroupName: discourseDebounce(function () {
-    if (isEmpty(this.nameInput)) return;
+    if (isEmpty(this.nameInput)) {
+      return;
+    }
 
     Group.checkName(this.nameInput)
       .then((response) => {
@@ -99,7 +103,9 @@ export default Component.extend({
     this.set("disableSave", true);
 
     const options = { failed: true };
-    if (reason) options.reason = reason;
+    if (reason) {
+      options.reason = reason;
+    }
     this.set("basicNameValidation", EmberObject.create(options));
   },
 });

@@ -53,8 +53,9 @@
 
     // Play button from YouTube (exactly as it is in YouTube)
     innerHtml.push('<div class="ytp-large-play-button"');
-    if (width <= 640)
+    if (width <= 640) {
       innerHtml.push(' style="transform: scale(0.563888888888889);"');
+    }
     innerHtml.push(">");
     innerHtml.push("<svg>");
     innerHtml.push(
