@@ -893,8 +893,16 @@ class TopicsController < ApplicationController
         TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
       end
     else
-      current_user.user_stat.update_column(:new_since, Time.zone.now)
-      TopicTrackingState.publish_dismiss_new(current_user.id)
+      if params[:tracked].to_s == "true"
+        topics = TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)
+        topic_users = topics.map { |topic| { topic_id: topic.id, user_id: current_user.id, last_read_post_number: 0 } }
+        TopicUser.insert_all(topic_users) if !topic_users.empty?
+      else
+        current_user.user_stat.update_column(:new_since, Time.zone.now)
+        TopicTrackingState.publish_dismiss_new(current_user.id)
+      end
+
+      # TopicTrackingState.publish_dismiss_new(current_user.id)
     end
     render body: nil
   end

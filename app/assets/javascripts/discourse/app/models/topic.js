@@ -829,10 +829,12 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories) {
-    const data = category
-      ? { category_id: category.id, include_subcategories }
-      : {};
+  resetNew(category, include_subcategories, tracked = false) {
+    const data = { tracked };
+    if (category) {
+      data.category_id = category.id;
+      data.include_subcategories = include_subcategories;
+    }
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 

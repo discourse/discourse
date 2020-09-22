@@ -57,11 +57,9 @@ const controllerOpts = {
       return false;
     },
 
-    refresh(options = { resetParams: true }) {
+    refresh(options = { skipResettingParams: [] }) {
       const filter = this.get("model.filter");
-      if (options.resetParams) {
-        this.send("resetParams");
-      }
+      this.send("resetParams", options.skipResettingParams);
 
       // Don't refresh if we're still loading
       if (this.get("discovery.loading")) {
@@ -74,29 +72,54 @@ const controllerOpts = {
       this.set("discovery.loading", true);
 
       this.topicTrackingState.resetTracking();
+      let self = this;
+
       this.store.findFiltered("topicList", { filter }).then((list) => {
         TopicList.hideUniformCategory(list, this.category);
 
-        this.setProperties({ model: list });
-        this.resetSelected();
-
-        if (this.topicTrackingState) {
-          this.topicTrackingState.sync(list, filter);
+        // If query params are present in the current route, we need still need to sync topic
+        // tracking with the topicList without any query params. Then we set the topic
+        // list to the list filtered with query params in the afterRefresh.
+        const params = this.router.currentRoute.queryParams;
+        if (Object.keys(params).length) {
+          this.store
+            .findFiltered("topicList", { filter, params })
+            .then((listWithParams) => {
+              self.afterRefresh(filter, list, listWithParams);
+            });
+        } else {
+          self.afterRefresh(filter, list);
         }
-
-        this.send("loadingComplete");
       });
     },
 
     resetNew() {
-      Topic.resetNew(this.category, !this.noSubcategories).then(() =>
-        this.send("refresh")
+      const tracked =
+        (this.router.currentRoute.queryParams["f"] ||
+          this.router.currentRoute.queryParams["filter"]) === "tracked";
+
+      Topic.resetNew(this.category, !this.noSubcategories, tracked).then(() =>
+        this.send(
+          "refresh",
+          tracked ? { skipResettingParams: ["filter", "f"] } : {}
+        )
       );
     },
 
     dismissReadPosts() {
       showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
     },
+  },
+
+  afterRefresh(filter, list, listWithParams = list) {
+    this.setProperties({ model: listWithParams });
+    this.resetSelected();
+
+    if (this.topicTrackingState) {
+      this.topicTrackingState.sync(list, filter);
+    }
+
+    this.send("loadingComplete");
   },
 
   isFilterPage: function (filter, filterType) {
