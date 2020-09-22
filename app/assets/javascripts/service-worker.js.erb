@@ -43,8 +43,10 @@ if (cdnUrls.length > 0) {
   var cdnCacheName = "cdn-" + cacheVersion;
 
   var appendQueryStringPlugin = {
-    requestWillFetch: async ({request}) => {
-      if (request.url.includes("avatar")) {
+    requestWillFetch: function (args) {
+      var request = args.request;
+
+      if (request.url.includes("avatar") || request.url.includes("emoji")) {
         var url = new URL(request.url);
         url.searchParams.append('refresh', 'true');
         return new Request(url.href, request);
