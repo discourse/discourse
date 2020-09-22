@@ -1,5 +1,9 @@
 import { get } from "@ember/object";
 
+export const RUNTIME_OPTIONS = {
+  allowProtoPropertiesByDefault: true,
+};
+
 export function registerRawHelpers(hbs, handlebarsClass) {
   if (!hbs.helpers) {
     hbs.helpers = Object.create(handlebarsClass.helpers);
@@ -31,6 +35,9 @@ export function registerRawHelpers(hbs, handlebarsClass) {
     contextName,
     options
   ) {
+    if (typeof contextName === "undefined") {
+      return;
+    }
     var list = get(this, contextName);
     var output = [];
     var innerContext = Object.create(this);
