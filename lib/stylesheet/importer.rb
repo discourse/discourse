@@ -43,13 +43,17 @@ module Stylesheet
       register_import "font" do
         font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
 
-        contents = <<~EOF
-          #{font_css(font)}
+        contents = if font.present?
+          <<~EOF
+            #{font_css(font)}
 
-          :root {
-            --font-family: #{font[:stack]};
-          }
-        EOF
+            :root {
+              --font-family: #{font[:stack]};
+            }
+          EOF
+        else
+          ""
+        end
 
         Import.new("font.scss", source: contents)
       end
