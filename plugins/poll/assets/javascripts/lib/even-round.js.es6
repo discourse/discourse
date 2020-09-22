@@ -21,7 +21,9 @@ export default function (percentages) {
     ++percentages[index];
     decimals[index] = 0;
     // quit early when there is a rounding issue
-    if (sumsUpTo100(percentages)) break;
+    if (sumsUpTo100(percentages)) {
+      break;
+    }
   }
 
   return percentages.map((p) => Math.floor(p));

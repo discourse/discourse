@@ -35,11 +35,17 @@ Invite.reopenClass({
   },
 
   findInvitedBy(user, filter, search, offset) {
-    if (!user) Promise.resolve();
+    if (!user) {
+      Promise.resolve();
+    }
 
     const data = {};
-    if (!isNone(filter)) data.filter = filter;
-    if (!isNone(search)) data.search = search;
+    if (!isNone(filter)) {
+      data.filter = filter;
+    }
+    if (!isNone(search)) {
+      data.search = search;
+    }
     data.offset = offset || 0;
 
     let path;
@@ -58,7 +64,9 @@ Invite.reopenClass({
   },
 
   findInvitedCount(user) {
-    if (!user) Promise.resolve();
+    if (!user) {
+      Promise.resolve();
+    }
 
     return ajax(
       userPath(`${user.username_lower}/invited_count.json`)

@@ -58,9 +58,15 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("saving", "model.name", "model.color", "deleting")
   disabled(saving, name, color, deleting) {
-    if (saving || deleting) return true;
-    if (!name) return true;
-    if (!color) return true;
+    if (saving || deleting) {
+      return true;
+    }
+    if (!name) {
+      return true;
+    }
+    if (!color) {
+      return true;
+    }
     return false;
   },
 
@@ -77,7 +83,9 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("saving", "model.id")
   saveLabel(saving, id) {
-    if (saving) return "saving";
+    if (saving) {
+      return "saving";
+    }
     return id ? "category.save" : "category.create";
   },
 

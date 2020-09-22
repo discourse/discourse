@@ -14,7 +14,9 @@ export default Component.extend({
       return;
     }
 
-    if (showMutedCategories) return "minus";
+    if (showMutedCategories) {
+      return "minus";
+    }
 
     return "plus";
   },

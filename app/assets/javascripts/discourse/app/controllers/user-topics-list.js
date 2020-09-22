@@ -44,7 +44,9 @@ export default Controller.extend({
 
   unsubscribe() {
     const channel = this.channel;
-    if (channel) this.messageBus.unsubscribe(channel);
+    if (channel) {
+      this.messageBus.unsubscribe(channel);
+    }
     this._resetTracking();
     this.set("channel", null);
   },

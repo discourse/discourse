@@ -252,7 +252,9 @@ const Report = EmberObject.extend({
 
   @discourseComputed("data")
   xAxisIsDate() {
-    if (!this.data[0]) return false;
+    if (!this.data[0]) {
+      return false;
+    }
     return this.data && this.data[0].x.match(/\d{4}-\d{1,2}-\d{1,2}/);
   },
 
@@ -262,12 +264,17 @@ const Report = EmberObject.extend({
       const type = label.type || "string";
 
       let mainProperty;
-      if (label.property) mainProperty = label.property;
-      else if (type === "user") mainProperty = label.properties["username"];
-      else if (type === "topic") mainProperty = label.properties["title"];
-      else if (type === "post")
+      if (label.property) {
+        mainProperty = label.property;
+      } else if (type === "user") {
+        mainProperty = label.properties["username"];
+      } else if (type === "topic") {
+        mainProperty = label.properties["title"];
+      } else if (type === "post") {
         mainProperty = label.properties["truncated_raw"];
-      else mainProperty = label.properties[0];
+      } else {
+        mainProperty = label.properties[0];
+      }
 
       return {
         title: label.title,
@@ -283,25 +290,45 @@ const Report = EmberObject.extend({
             value = row[mainProperty];
           }
 
-          if (type === "user") return this._userLabel(label.properties, row);
-          if (type === "post") return this._postLabel(label.properties, row);
-          if (type === "topic") return this._topicLabel(label.properties, row);
-          if (type === "seconds") return this._secondsLabel(value);
-          if (type === "link") return this._linkLabel(label.properties, row);
-          if (type === "percent") return this._percentLabel(value);
-          if (type === "bytes") return this._bytesLabel(value);
+          if (type === "user") {
+            return this._userLabel(label.properties, row);
+          }
+          if (type === "post") {
+            return this._postLabel(label.properties, row);
+          }
+          if (type === "topic") {
+            return this._topicLabel(label.properties, row);
+          }
+          if (type === "seconds") {
+            return this._secondsLabel(value);
+          }
+          if (type === "link") {
+            return this._linkLabel(label.properties, row);
+          }
+          if (type === "percent") {
+            return this._percentLabel(value);
+          }
+          if (type === "bytes") {
+            return this._bytesLabel(value);
+          }
           if (type === "number") {
             return this._numberLabel(value, opts);
           }
           if (type === "date") {
             const date = moment(value);
-            if (date.isValid()) return this._dateLabel(value, date);
+            if (date.isValid()) {
+              return this._dateLabel(value, date);
+            }
           }
           if (type === "precise_date") {
             const date = moment(value);
-            if (date.isValid()) return this._dateLabel(value, date, "LLL");
+            if (date.isValid()) {
+              return this._dateLabel(value, date, "LLL");
+            }
           }
-          if (type === "text") return this._textLabel(value);
+          if (type === "text") {
+            return this._textLabel(value);
+          }
 
           return {
             value,

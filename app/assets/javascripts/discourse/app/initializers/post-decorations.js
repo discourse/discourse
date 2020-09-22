@@ -57,8 +57,9 @@ export default {
         api.decorateCookedElement(
           (elem) => {
             elem.querySelectorAll("video").forEach((video) => {
-              if (video.poster && video.poster !== "" && !video.autoplay)
+              if (video.poster && video.poster !== "" && !video.autoplay) {
                 return;
+              }
 
               const source = video.querySelector("source");
               if (source) {

@@ -145,7 +145,9 @@ export default Component.extend({
 
   _dock() {
     const $wrapper = $(this.element);
-    if (!$wrapper || $wrapper.length === 0) return;
+    if (!$wrapper || $wrapper.length === 0) {
+      return;
+    }
 
     const $html = $("html");
     const offset = window.pageYOffset || $html.scrollTop();

@@ -466,7 +466,9 @@ export default Component.extend(
       }
 
       let none = this.selectKit.options.none;
-      if (isNone(none) && !this.selectKit.options.allowAny) return null;
+      if (isNone(none) && !this.selectKit.options.allowAny) {
+        return null;
+      }
 
       if (
         isNone(none) &&

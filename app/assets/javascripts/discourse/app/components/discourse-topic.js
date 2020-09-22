@@ -67,7 +67,9 @@ export default Component.extend(
     },
 
     _showTopicInHeader(topic) {
-      if (this.pauseHeaderTopicUpdate) return;
+      if (this.pauseHeaderTopicUpdate) {
+        return;
+      }
       this.appEvents.trigger("header:show-topic", topic);
       this._lastShowTopic = true;
     },

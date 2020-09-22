@@ -39,7 +39,9 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     resetPassword() {
-      if (this.submitDisabled) return false;
+      if (this.submitDisabled) {
+        return false;
+      }
       this.set("disabled", true);
 
       this.clearFlash();

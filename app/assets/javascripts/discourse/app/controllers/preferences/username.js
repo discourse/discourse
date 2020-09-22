@@ -38,8 +38,12 @@ export default Controller.extend({
       this.set("taken", false);
       this.set("errorMessage", null);
 
-      if (isEmpty(this.newUsername)) return;
-      if (this.unchanged) return;
+      if (isEmpty(this.newUsername)) {
+        return;
+      }
+      if (this.unchanged) {
+        return;
+      }
 
       User.checkUsername(newUsername, undefined, this.get("model.id")).then(
         (result) => {
@@ -55,7 +59,9 @@ export default Controller.extend({
 
   @discourseComputed("saving")
   saveButtonText(saving) {
-    if (saving) return I18n.t("saving");
+    if (saving) {
+      return I18n.t("saving");
+    }
     return I18n.t("user.change");
   },
 

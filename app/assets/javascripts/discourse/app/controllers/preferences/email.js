@@ -35,8 +35,12 @@ export default Controller.extend({
 
   @discourseComputed("saving", "new")
   saveButtonText(saving, isNew) {
-    if (saving) return I18n.t("saving");
-    if (isNew) return I18n.t("user.add_email.add");
+    if (saving) {
+      return I18n.t("saving");
+    }
+    if (isNew) {
+      return I18n.t("user.add_email.add");
+    }
     return I18n.t("user.change");
   },
 

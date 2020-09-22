@@ -392,15 +392,21 @@ const Composer = RestModel.extend({
     isStaffUser
   ) {
     // can't submit while loading
-    if (loading) return true;
+    if (loading) {
+      return true;
+    }
 
     // title is required when
     //  - creating a new topic/private message
     //  - editing the 1st post
-    if (canEditTitle && !this.titleLengthValid) return true;
+    if (canEditTitle && !this.titleLengthValid) {
+      return true;
+    }
 
     // reply is always required
-    if (missingReplyCharacters > 0) return true;
+    if (missingReplyCharacters > 0) {
+      return true;
+    }
 
     if (
       this.site.can_tag_topics &&
@@ -445,8 +451,12 @@ const Composer = RestModel.extend({
 
   @discourseComputed("minimumTitleLength", "titleLength", "post.static_doc")
   titleLengthValid(minTitleLength, titleLength, staticDoc) {
-    if (this.user.admin && staticDoc && titleLength > 0) return true;
-    if (titleLength < minTitleLength) return false;
+    if (this.user.admin && staticDoc && titleLength > 0) {
+      return true;
+    }
+    if (titleLength < minTitleLength) {
+      return false;
+    }
     return titleLength <= this.siteSettings.max_topic_title_length;
   },
 
@@ -672,7 +682,9 @@ const Composer = RestModel.extend({
   open(opts) {
     let promise = Promise.resolve();
 
-    if (!opts) opts = {};
+    if (!opts) {
+      opts = {};
+    }
     this.set("loading", true);
 
     const replyBlank = isEmpty(this.reply);
@@ -686,7 +698,9 @@ const Composer = RestModel.extend({
       this.set("reply", "");
     }
 
-    if (!opts.draftKey) throw new Error("draft key is required");
+    if (!opts.draftKey) {
+      throw new Error("draft key is required");
+    }
 
     if (opts.draftSequence === null) {
       throw new Error("draft sequence is required");
@@ -1045,7 +1059,9 @@ const Composer = RestModel.extend({
           const category = composer.site.categories.find(
             (x) => x.id === (parseInt(createdPost.category, 10) || 1)
           );
-          if (category) category.incrementProperty("topic_count");
+          if (category) {
+            category.incrementProperty("topic_count");
+          }
         }
 
         composer.clearState();
@@ -1094,14 +1110,20 @@ const Composer = RestModel.extend({
   },
 
   saveDraft() {
-    if (this.draftSaving) return Promise.resolve();
+    if (this.draftSaving) {
+      return Promise.resolve();
+    }
 
     // Do not save when drafts are disabled
-    if (this.disableDrafts) return Promise.resolve();
+    if (this.disableDrafts) {
+      return Promise.resolve();
+    }
 
     if (this.canEditTitle) {
       // Save title and/or post body
-      if (!this.title && !this.reply) return Promise.resolve();
+      if (!this.title && !this.reply) {
+        return Promise.resolve();
+      }
 
       if (
         this.title &&
@@ -1113,11 +1135,14 @@ const Composer = RestModel.extend({
       }
     } else {
       // Do not save when there is no reply
-      if (!this.reply) return Promise.resolve();
+      if (!this.reply) {
+        return Promise.resolve();
+      }
 
       // Do not save when the reply's length is too small
-      if (this.replyLength < this.siteSettings.min_post_length)
+      if (this.replyLength < this.siteSettings.min_post_length) {
         return Promise.resolve();
+      }
     }
 
     this.setProperties({

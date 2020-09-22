@@ -40,7 +40,9 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed("customGroupIdsBuffer", "customGroupIds")
   customGroupsDirty(buffer, original) {
-    if (buffer === null) return false;
+    if (buffer === null) {
+      return false;
+    }
 
     return buffer.length === original.length
       ? buffer.any((id) => !original.includes(id))

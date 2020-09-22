@@ -58,7 +58,9 @@ export default DiscourseRoute.extend({
   },
 
   serialize(model) {
-    if (!model) return {};
+    if (!model) {
+      return {};
+    }
 
     return { username: (model.username || "").toLowerCase() };
   },

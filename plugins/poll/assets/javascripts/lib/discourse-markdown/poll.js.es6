@@ -378,12 +378,15 @@ function md51(s) {
   }
   s = s.substring(i - 64);
   var tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  for (i = 0; i < s.length; i++)
+  for (i = 0; i < s.length; i++) {
     tail[i >> 2] |= s.charCodeAt(i) << (i % 4 << 3);
+  }
   tail[i >> 2] |= 0x80 << (i % 4 << 3);
   if (i > 55) {
     md5cycle(state, tail);
-    for (i = 0; i < 16; i++) tail[i] = 0;
+    for (i = 0; i < 16; i++) {
+      tail[i] = 0;
+    }
   }
   tail[14] = n * 8;
   md5cycle(state, tail);
@@ -409,13 +412,16 @@ var hex_chr = "0123456789abcdef".split("");
 function rhex(n) {
   var s = "",
     j = 0;
-  for (; j < 4; j++)
+  for (; j < 4; j++) {
     s += hex_chr[(n >> (j * 8 + 4)) & 0x0f] + hex_chr[(n >> (j * 8)) & 0x0f];
+  }
   return s;
 }
 
 function hex(x) {
-  for (var i = 0; i < x.length; i++) x[i] = rhex(x[i]);
+  for (var i = 0; i < x.length; i++) {
+    x[i] = rhex(x[i]);
+  }
   return x.join("");
 }
 

@@ -223,15 +223,20 @@ export default Controller.extend({
 
   @discourseComputed("model.action", "isWhispering")
   saveIcon(modelAction, isWhispering) {
-    if (isWhispering) return "far-eye-slash";
+    if (isWhispering) {
+      return "far-eye-slash";
+    }
 
     return SAVE_ICONS[modelAction];
   },
 
   @discourseComputed("model.action", "isWhispering", "model.editConflict")
   saveLabel(modelAction, isWhispering, editConflict) {
-    if (editConflict) return "composer.overwrite_edit";
-    else if (isWhispering) return "composer.create_whisper";
+    if (editConflict) {
+      return "composer.overwrite_edit";
+    } else if (isWhispering) {
+      return "composer.create_whisper";
+    }
 
     return SAVE_LABELS[modelAction];
   },
@@ -361,13 +366,21 @@ export default Controller.extend({
     openComposer(options, post, topic) {
       this.open(options).then(() => {
         let url;
-        if (post) url = post.url;
-        if (!post && topic) url = topic.url;
+        if (post) {
+          url = post.url;
+        }
+        if (!post && topic) {
+          url = topic.url;
+        }
 
         let topicTitle;
-        if (topic) topicTitle = topic.title;
+        if (topic) {
+          topicTitle = topic.title;
+        }
 
-        if (!url || !topicTitle) return;
+        if (!url || !topicTitle) {
+          return;
+        }
 
         url = `${location.protocol}//${location.host}${url}`;
         const link = `[${escapeExpression(topicTitle)}](${url})`;
@@ -613,7 +626,9 @@ export default Controller.extend({
   disableSubmit: or("model.loading", "isUploading"),
 
   save(force) {
-    if (this.disableSubmit) return;
+    if (this.disableSubmit) {
+      return;
+    }
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.showWarning) {
@@ -851,7 +866,9 @@ export default Controller.extend({
           composerModel.draftKey === opts.draftKey
         ) {
           composerModel.set("composeState", Composer.OPEN);
-          if (!opts.action) return resolve();
+          if (!opts.action) {
+            return resolve();
+          }
         }
 
         // If it's a different draft, cancel it and try opening again.

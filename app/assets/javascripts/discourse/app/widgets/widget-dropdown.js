@@ -251,13 +251,17 @@ export const WidgetDropdownClass = {
           `#${this.attrs.id} .widget-dropdown-header`
         );
 
-        if (!dropdownHeader) return;
+        if (!dropdownHeader) {
+          return;
+        }
 
         const dropdownBody = document.querySelector(
           `#${this.attrs.id} .widget-dropdown-body`
         );
 
-        if (!dropdownBody) return;
+        if (!dropdownBody) {
+          return;
+        }
 
         this._popper = createPopper(dropdownHeader, dropdownBody, {
           strategy: "fixed",

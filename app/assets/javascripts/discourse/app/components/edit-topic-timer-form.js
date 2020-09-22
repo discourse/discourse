@@ -34,7 +34,9 @@ export default Component.extend({
 
   @discourseComputed("topic.visible")
   excludeCategoryId(visible) {
-    if (visible) return this.get("topic.category_id");
+    if (visible) {
+      return this.get("topic.category_id");
+    }
   },
 
   @observes("selection")

@@ -112,7 +112,9 @@ export default Controller.extend(PeriodComputationMixin, {
   storageReport: staticReport("storage_report"),
 
   fetchDashboard() {
-    if (this.isLoading) return;
+    if (this.isLoading) {
+      return;
+    }
 
     if (
       !this.dashboardFetchedAt ||

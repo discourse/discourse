@@ -117,7 +117,9 @@ export default Component.extend({
   },
 
   _handleSelection(value) {
-    if (!this.element || this.isDestroying || this.isDestroyed) return;
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
 
     if (this.onChange) {
       this.onChange(value ? moment(value) : null);

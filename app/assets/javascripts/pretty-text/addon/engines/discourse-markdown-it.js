@@ -214,8 +214,13 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
         token.attrs.push(["height", height]);
       }
 
-      if (options.discourse.previewing && match[6] !== "x" && match[4] !== "x")
+      if (
+        options.discourse.previewing &&
+        match[6] !== "x" &&
+        match[4] !== "x"
+      ) {
         token.attrs.push(["class", "resizable"]);
+      }
     } else if ((data = extractDataAttribute(split[i]))) {
       token.attrs.push(data);
     } else {

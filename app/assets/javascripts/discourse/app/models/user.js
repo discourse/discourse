@@ -519,9 +519,14 @@ const User = RestModel.extend({
         if (result && result.user_action) {
           const ua = result.user_action;
 
-          if ((this.get("stream.filter") || ua.action_type) !== ua.action_type)
+          if (
+            (this.get("stream.filter") || ua.action_type) !== ua.action_type
+          ) {
             return;
-          if (!this.get("stream.filter") && !this.inAllStream(ua)) return;
+          }
+          if (!this.get("stream.filter") && !this.inAllStream(ua)) {
+            return;
+          }
 
           ua.title = emojiUnescape(escapeExpression(ua.title));
           const action = UserAction.collapseStream([UserAction.create(ua)]);
@@ -564,7 +569,9 @@ const User = RestModel.extend({
   // The user's stat count, excluding PMs.
   @discourseComputed("statsExcludingPms.@each.count")
   statsCountNonPM() {
-    if (isEmpty(this.statsExcludingPms)) return 0;
+    if (isEmpty(this.statsExcludingPms)) {
+      return 0;
+    }
     let count = 0;
     this.statsExcludingPms.forEach((val) => {
       if (this.inAllStream(val)) {
@@ -577,7 +584,9 @@ const User = RestModel.extend({
   // The user's stats, excluding PMs.
   @discourseComputed("stats.@each.isPM")
   statsExcludingPms() {
-    if (isEmpty(this.stats)) return [];
+    if (isEmpty(this.stats)) {
+      return [];
+    }
     return this.stats.rejectBy("isPM");
   },
 
@@ -591,7 +600,9 @@ const User = RestModel.extend({
       }
 
       const useCardRoute = options && options.forCard;
-      if (options) delete options.forCard;
+      if (options) {
+        delete options.forCard;
+      }
 
       const path = useCardRoute
         ? `${user.get("username")}/card.json`
@@ -602,7 +613,9 @@ const User = RestModel.extend({
       if (!isEmpty(json.user.stats)) {
         json.user.stats = User.groupStats(
           json.user.stats.map((s) => {
-            if (s.count) s.count = parseInt(s.count, 10);
+            if (s.count) {
+              s.count = parseInt(s.count, 10);
+            }
             return UserActionStat.create(s);
           })
         );

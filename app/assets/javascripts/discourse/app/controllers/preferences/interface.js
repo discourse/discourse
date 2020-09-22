@@ -381,9 +381,13 @@ export default Controller.extend({
       });
       const darkStylesheet = document.querySelector("link#cs-preview-dark"),
         lightStylesheet = document.querySelector("link#cs-preview-light");
-      if (darkStylesheet) darkStylesheet.remove();
+      if (darkStylesheet) {
+        darkStylesheet.remove();
+      }
 
-      if (lightStylesheet) lightStylesheet.remove();
+      if (lightStylesheet) {
+        lightStylesheet.remove();
+      }
     },
   },
 });

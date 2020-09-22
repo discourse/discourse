@@ -32,7 +32,9 @@ const Site = RestModel.extend({
   @discourseComputed("post_action_types.[]")
   flagTypes() {
     const postActionTypes = this.post_action_types;
-    if (!postActionTypes) return [];
+    if (!postActionTypes) {
+      return [];
+    }
     return postActionTypes.filterBy("is_flag", true);
   },
 

@@ -138,14 +138,18 @@ const TopicList = RestModel.extend({
         i++;
       });
 
-      if (storeInSession) Session.currentProp("topicList", this);
+      if (storeInSession) {
+        Session.currentProp("topicList", this);
+      }
     });
   },
 });
 
 TopicList.reopenClass({
   topicsFrom(store, result, opts) {
-    if (!result) return;
+    if (!result) {
+      return;
+    }
 
     opts = opts || {};
     let listKey = opts.listKey || "topics";

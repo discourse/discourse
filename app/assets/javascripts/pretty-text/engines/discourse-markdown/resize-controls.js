@@ -16,7 +16,9 @@ function appendMetaData(index, token) {
     sizePart && sizePart.split(",").pop().trim().replace("%", "");
 
   const overwriteScale = !SCALES.find((scale) => scale === selectedScale);
-  if (overwriteScale) selectedScale = "100";
+  if (overwriteScale) {
+    selectedScale = "100";
+  }
 
   token.attrs.push(["index-image", index]);
   token.attrs.push(["scale", selectedScale]);
@@ -34,7 +36,9 @@ function rule(state) {
       currentIndex++;
     }
 
-    if (!blockToken.children) continue;
+    if (!blockToken.children) {
+      continue;
+    }
 
     for (let j = 0; j < blockToken.children.length; j++) {
       let token = blockToken.children[j];

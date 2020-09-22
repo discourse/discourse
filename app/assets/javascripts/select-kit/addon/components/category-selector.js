@@ -21,8 +21,12 @@ export default MultiSelectComponent.extend({
   init() {
     this._super(...arguments);
 
-    if (!this.categories) this.set("categories", []);
-    if (!this.blockedCategories) this.set("blockedCategories", []);
+    if (!this.categories) {
+      this.set("categories", []);
+    }
+    if (!this.blockedCategories) {
+      this.set("blockedCategories", []);
+    }
   },
 
   content: computed("categories.[]", "blockedCategories.[]", function () {

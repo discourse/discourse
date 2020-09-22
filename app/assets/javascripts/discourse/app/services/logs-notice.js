@@ -16,10 +16,14 @@ const LogsNotice = EmberObject.extend({
 
   @on("init")
   _setup() {
-    if (!this.isActivated) return;
+    if (!this.isActivated) {
+      return;
+    }
 
     const text = this.keyValueStore.getItem(LOGS_NOTICE_KEY);
-    if (text) this.set("text", text);
+    if (text) {
+      this.set("text", text);
+    }
 
     this.messageBus.subscribe("/logs_error_rate_exceeded", (data) => {
       const duration = data.duration;

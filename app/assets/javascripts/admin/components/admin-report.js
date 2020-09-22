@@ -171,7 +171,9 @@ export default Component.extend({
     "filters.customFilters"
   )
   reportKey(dataSourceName, startDate, endDate, customFilters) {
-    if (!dataSourceName || !startDate || !endDate) return null;
+    if (!dataSourceName || !startDate || !endDate) {
+      return null;
+    }
 
     startDate = startDate.toISOString(true).split("T")[0];
     endDate = endDate.toISOString(true).split("T")[0];
@@ -310,7 +312,9 @@ export default Component.extend({
         filteredReports.filter((r) => r.report_key.includes(this.reportKey))
       )[0];
 
-      if (!report) return;
+      if (!report) {
+        return;
+      }
     }
 
     if (report.error === "not_found") {

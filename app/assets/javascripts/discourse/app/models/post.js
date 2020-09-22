@@ -85,7 +85,9 @@ const Post = RestModel.extend({
 
   @discourseComputed("link_counts.@each.internal")
   internalLinks() {
-    if (isEmpty(this.link_counts)) return null;
+    if (isEmpty(this.link_counts)) {
+      return null;
+    }
 
     return this.link_counts.filterBy("internal").filterBy("title");
   },

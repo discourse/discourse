@@ -30,9 +30,15 @@ export default Component.extend({
 
   @discourseComputed("isStaff", "inviteModel.saving", "maxRedemptionAllowed")
   disabled(isStaff, saving, canInviteTo, maxRedemptionAllowed) {
-    if (saving) return true;
-    if (!isStaff) return true;
-    if (maxRedemptionAllowed < 2) return true;
+    if (saving) {
+      return true;
+    }
+    if (!isStaff) {
+      return true;
+    }
+    if (maxRedemptionAllowed < 2) {
+      return true;
+    }
 
     return false;
   },

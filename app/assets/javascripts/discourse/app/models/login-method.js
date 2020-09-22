@@ -77,7 +77,9 @@ LoginMethod.reopenClass({
 let methods;
 
 export function findAll() {
-  if (methods) return methods;
+  if (methods) {
+    return methods;
+  }
 
   methods = [];
 

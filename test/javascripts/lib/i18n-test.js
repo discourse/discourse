@@ -70,11 +70,21 @@ QUnit.module("lib:i18n", {
     // fake pluralization rules
     I18n.pluralizationRules = Object.assign({}, I18n.pluralizationRules);
     I18n.pluralizationRules.fr = function (n) {
-      if (n === 0) return "zero";
-      if (n === 1) return "one";
-      if (n === 2) return "two";
-      if (n >= 3 && n <= 9) return "few";
-      if (n >= 10 && n <= 99) return "many";
+      if (n === 0) {
+        return "zero";
+      }
+      if (n === 1) {
+        return "one";
+      }
+      if (n === 2) {
+        return "two";
+      }
+      if (n >= 3 && n <= 9) {
+        return "few";
+      }
+      if (n >= 10 && n <= 99) {
+        return "many";
+      }
       return "other";
     };
   },
@@ -153,9 +163,15 @@ QUnit.test("extra translations", (assert) => {
     },
   };
   I18n.pluralizationRules.pl_PL = function (n) {
-    if (n === 1) return "one";
-    if (n % 10 >= 2 && n % 10 <= 4) return "few";
-    if (n % 10 === 0) return "many";
+    if (n === 1) {
+      return "one";
+    }
+    if (n % 10 >= 2 && n % 10 <= 4) {
+      return "few";
+    }
+    if (n % 10 === 0) {
+      return "many";
+    }
     return "other";
   };
 

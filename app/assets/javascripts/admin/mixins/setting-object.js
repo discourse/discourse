@@ -7,8 +7,12 @@ import { isPresent } from "@ember/utils";
 export default Mixin.create({
   @discourseComputed("value", "default")
   overridden(val, defaultVal) {
-    if (val === null) val = "";
-    if (defaultVal === null) defaultVal = "";
+    if (val === null) {
+      val = "";
+    }
+    if (defaultVal === null) {
+      defaultVal = "";
+    }
 
     return val.toString() !== defaultVal.toString();
   },

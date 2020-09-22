@@ -18,8 +18,12 @@ const ColorSchemeColor = EmberObject.extend({
   // Whether value has changed since it was last saved.
   @discourseComputed("hex")
   changed(hex) {
-    if (!this.originals) return false;
-    if (hex !== this.originals.hex) return true;
+    if (!this.originals) {
+      return false;
+    }
+    if (hex !== this.originals.hex) {
+      return true;
+    }
 
     return false;
   },

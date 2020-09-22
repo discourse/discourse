@@ -161,7 +161,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     const $header = $("header.d-header");
 
     if (this.docAt === null) {
-      if (!($header && $header.length === 1)) return;
+      if (!($header && $header.length === 1)) {
+        return;
+      }
       this.docAt = $header.offset().top;
     }
 

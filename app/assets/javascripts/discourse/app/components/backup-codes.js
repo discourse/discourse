@@ -38,7 +38,9 @@ export default Component.extend({
 
   @discourseComputed("backupCodes")
   formattedBackupCodes(backupCodes) {
-    if (!backupCodes) return null;
+    if (!backupCodes) {
+      return null;
+    }
 
     return backupCodes.join("\n").trim();
   },

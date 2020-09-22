@@ -8,10 +8,15 @@ export default Component.extend(UtilsMixin, {
   eventType: "click",
 
   click(event) {
-    if (typeof document === "undefined") return;
-    if (this.isDestroyed || !this.selectKit || this.selectKit.isDisabled)
+    if (typeof document === "undefined") {
       return;
-    if (this.eventType !== "click" || event.button !== 0) return;
+    }
+    if (this.isDestroyed || !this.selectKit || this.selectKit.isDisabled) {
+      return;
+    }
+    if (this.eventType !== "click" || event.button !== 0) {
+      return;
+    }
     this.selectKit.toggle(event);
     event.preventDefault();
   },

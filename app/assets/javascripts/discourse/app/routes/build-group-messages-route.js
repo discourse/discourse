@@ -11,7 +11,9 @@ export default (type) => {
       const groupName = this.modelFor("group").get("name");
       const username = this.currentUser.get("username_lower");
       let filter = `topics/private-messages-group/${username}/${groupName}`;
-      if (this._isArchive()) filter = `${filter}/archive`;
+      if (this._isArchive()) {
+        filter = `${filter}/archive`;
+      }
       return this.store.findFiltered("topicList", { filter });
     },
 
@@ -20,7 +22,9 @@ export default (type) => {
 
       const groupName = this.modelFor("group").get("name");
       let channel = `/private-messages/group/${groupName}`;
-      if (this._isArchive()) channel = `${channel}/archive`;
+      if (this._isArchive()) {
+        channel = `${channel}/archive`;
+      }
       this.controllerFor("user-topics-list").subscribe(channel);
 
       this.controllerFor("user-topics-list").setProperties({

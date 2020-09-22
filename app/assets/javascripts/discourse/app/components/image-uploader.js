@@ -54,7 +54,9 @@ export default Component.extend(UploadMixin, {
 
   @discourseComputed("imageUrl")
   imageBaseName(imageUrl) {
-    if (isEmpty(imageUrl)) return;
+    if (isEmpty(imageUrl)) {
+      return;
+    }
     return imageUrl.split("/").slice(-1)[0];
   },
 
@@ -86,7 +88,9 @@ export default Component.extend(UploadMixin, {
   },
 
   _applyLightbox() {
-    if (this.imageUrl) next(() => lightbox(this.element, this.siteSettings));
+    if (this.imageUrl) {
+      next(() => lightbox(this.element, this.siteSettings));
+    }
   },
 
   actions: {

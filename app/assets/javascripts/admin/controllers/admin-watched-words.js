@@ -14,7 +14,9 @@ export default Controller.extend({
   regularExpressions: null,
 
   filterContentNow() {
-    if (!!isEmpty(this.allWatchedWords)) return;
+    if (!!isEmpty(this.allWatchedWords)) {
+      return;
+    }
 
     let filter;
     if (this.filter) {

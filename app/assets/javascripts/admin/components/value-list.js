@@ -34,7 +34,9 @@ export default Component.extend({
   },
 
   keyDown(event) {
-    if (event.keyCode === 13) this.send("addValue", this.newValue);
+    if (event.keyCode === 13) {
+      this.send("addValue", this.newValue);
+    }
   },
 
   actions: {
@@ -43,7 +45,9 @@ export default Component.extend({
     },
 
     addValue(newValue) {
-      if (this.inputInvalid) return;
+      if (this.inputInvalid) {
+        return;
+      }
 
       this.set("newValue", null);
       this._addValue(newValue);

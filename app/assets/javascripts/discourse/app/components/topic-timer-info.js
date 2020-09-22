@@ -41,7 +41,9 @@ export default Component.extend({
 
     const topicStatus = this.topicClosed ? "close" : "open";
     const topicStatusKnown = this.topicClosed !== undefined;
-    if (topicStatusKnown && topicStatus === this.statusType) return;
+    if (topicStatusKnown && topicStatus === this.statusType) {
+      return;
+    }
 
     const statusUpdateAt = moment(this.executeAt);
     const duration = moment.duration(statusUpdateAt - moment());

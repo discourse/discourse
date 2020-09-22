@@ -10,7 +10,9 @@ export default SelectKitFilterComponent.extend({
 
   @discourseComputed("placeholder", "selectKit.hasSelection")
   computedPlaceholder(placeholder, hasSelection) {
-    if (hasSelection) return "";
+    if (hasSelection) {
+      return "";
+    }
     return isEmpty(placeholder) ? "" : I18n.t(placeholder);
   },
 });

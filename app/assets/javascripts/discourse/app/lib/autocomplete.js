@@ -45,7 +45,9 @@ let inputTimeout;
 export default function (options) {
   const autocompletePlugin = this;
 
-  if (this.length === 0) return;
+  if (this.length === 0) {
+    return;
+  }
 
   if (options === "destroy" || options.updateData) {
     cancel(inputTimeout);
@@ -58,7 +60,9 @@ export default function (options) {
 
     $(window).off("click.autocomplete");
 
-    if (options === "destroy") return;
+    if (options === "destroy") {
+      return;
+    }
   }
 
   if (options && options.cancel && this.data("closeAutocomplete")) {
@@ -263,7 +267,9 @@ export default function (options) {
     if (div) {
       div.hide().remove();
     }
-    if (autocompleteOptions.length === 0) return;
+    if (autocompleteOptions.length === 0) {
+      return;
+    }
 
     div = $(options.template({ options: autocompleteOptions }));
 
@@ -295,7 +301,9 @@ export default function (options) {
       });
 
       hOffset = 10;
-      if (options.treatAsTextarea) vOffset = -32;
+      if (options.treatAsTextarea) {
+        vOffset = -32;
+      }
     }
 
     div.css({
@@ -366,7 +374,9 @@ export default function (options) {
   }
 
   function updateAutoComplete(r) {
-    if (completeStart === null || r === SKIP) return;
+    if (completeStart === null || r === SKIP) {
+      return;
+    }
 
     if (r && r.then && typeof r.then === "function") {
       if (div) {
@@ -419,7 +429,9 @@ export default function (options) {
   });
 
   function performAutocomplete(e) {
-    if ([keys.esc, keys.enter].indexOf(e.which) !== -1) return true;
+    if ([keys.esc, keys.enter].indexOf(e.which) !== -1) {
+      return true;
+    }
 
     let cp = caretPosition(me[0]);
     const key = me[0].value[cp - 1];
@@ -483,7 +495,9 @@ export default function (options) {
     if (!options.key) {
       completeStart = 0;
     }
-    if (e.which === keys.shift) return;
+    if (e.which === keys.shift) {
+      return;
+    }
     if (completeStart === null && e.which === keys.backSpace && options.key) {
       c = caretPosition(me[0]);
       c -= 1;
@@ -537,7 +551,9 @@ export default function (options) {
       switch (e.which) {
         case keys.enter:
         case keys.tab:
-          if (!autocompleteOptions) return true;
+          if (!autocompleteOptions) {
+            return true;
+          }
           if (
             selectedOption >= 0 &&
             (userToComplete = autocompleteOptions[selectedOption])

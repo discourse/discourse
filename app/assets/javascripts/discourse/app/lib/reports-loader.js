@@ -37,8 +37,12 @@ export default {
   },
 
   _processQueue() {
-    if (_queue.length === 0) return;
-    if (_processing >= MAX_CONCURRENCY) return;
+    if (_queue.length === 0) {
+      return;
+    }
+    if (_processing >= MAX_CONCURRENCY) {
+      return;
+    }
 
     _processing++;
 

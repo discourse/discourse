@@ -47,8 +47,9 @@ export function categoryBadgeHTML(category, opts) {
     (!opts.allowUncategorized &&
       get(category, "id") === Site.currentProp("uncategorized_category_id") &&
       siteSettings.suppress_uncategorized_badge)
-  )
+  ) {
     return "";
+  }
 
   const depth = (opts.depth || 1) + 1;
   if (opts.recursive && depth <= siteSettings.max_category_nesting) {

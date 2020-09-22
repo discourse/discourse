@@ -32,7 +32,9 @@ export default RestModel.extend({
 
   // Perform this action
   act(post, opts) {
-    if (!opts) opts = {};
+    if (!opts) {
+      opts = {};
+    }
 
     // Mark it as acted
     this.setProperties({

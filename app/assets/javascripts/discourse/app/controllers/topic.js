@@ -242,7 +242,9 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _loadPostIds(post) {
-    if (this.loadingPostIds) return;
+    if (this.loadingPostIds) {
+      return;
+    }
 
     const postStream = this.get("model.postStream");
     const url = `/t/${this.get("model.id")}/post_ids.json`;
@@ -805,7 +807,9 @@ export default Controller.extend(bufferedProperty("model"), {
         (result) => {
           if (result) {
             // If all posts are selected, it's the same thing as deleting the topic
-            if (this.selectedAllPosts) return this.deleteTopic();
+            if (this.selectedAllPosts) {
+              return this.deleteTopic();
+            }
 
             Post.deleteMany(this.selectedPostIds);
             this.get("model.postStream.posts").forEach(
@@ -1317,7 +1321,9 @@ export default Controller.extend(bufferedProperty("model"), {
           topic.reload().then(() => {
             this.send("postChangedRoute", topic.get("post_number") || 1);
             this.appEvents.trigger("header:update-topic", topic);
-            if (data.refresh_stream) postStream.refresh();
+            if (data.refresh_stream) {
+              postStream.refresh();
+            }
           });
 
           return;
@@ -1413,14 +1419,18 @@ export default Controller.extend(bufferedProperty("model"), {
   _scrollToPost: discourseDebounce(function (postNumber) {
     const $post = $(`.topic-post article#post_${postNumber}`);
 
-    if ($post.length === 0 || isElementInViewport($post)) return;
+    if ($post.length === 0 || isElementInViewport($post)) {
+      return;
+    }
 
     $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
   }, 500),
 
   unsubscribe() {
     // never unsubscribe when navigating from topic to topic
-    if (!this.get("model.id")) return;
+    if (!this.get("model.id")) {
+      return;
+    }
     this.messageBus.unsubscribe("/topic/*");
   },
 

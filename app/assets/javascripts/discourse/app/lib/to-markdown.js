@@ -284,7 +284,9 @@ export class Tag {
         const pAttr = (e.parent && e.parent.attributes) || {};
         let src = attr.src || pAttr.src;
         const base62SHA1 = attr["data-base62-sha1"];
-        if (base62SHA1) src = `upload://${base62SHA1}`;
+        if (base62SHA1) {
+          src = `upload://${base62SHA1}`;
+        }
         const cssClass = attr.class || pAttr.class;
 
         if (cssClass && cssClass.includes("emoji")) {

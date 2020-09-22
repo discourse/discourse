@@ -48,13 +48,17 @@ export function validateUploadedFiles(files, opts) {
 }
 
 function validateUploadedFile(file, opts) {
-  if (opts.skipValidation) return true;
+  if (opts.skipValidation) {
+    return true;
+  }
 
   opts = opts || {};
   let user = opts.user;
   let staff = user && user.staff;
 
-  if (!authorizesOneOrMoreExtensions(staff, opts.siteSettings)) return false;
+  if (!authorizesOneOrMoreExtensions(staff, opts.siteSettings)) {
+    return false;
+  }
 
   const name = file && file.name;
 
@@ -190,7 +194,9 @@ export function authorizesAllExtensions(staff, siteSettings) {
 }
 
 export function authorizesOneOrMoreExtensions(staff, siteSettings) {
-  if (authorizesAllExtensions(staff, siteSettings)) return true;
+  if (authorizesAllExtensions(staff, siteSettings)) {
+    return true;
+  }
 
   return (
     siteSettings.authorized_extensions.split("|").filter((ext) => ext).length >
@@ -199,7 +205,9 @@ export function authorizesOneOrMoreExtensions(staff, siteSettings) {
 }
 
 export function authorizesOneOrMoreImageExtensions(staff, siteSettings) {
-  if (authorizesAllExtensions(staff, siteSettings)) return true;
+  if (authorizesAllExtensions(staff, siteSettings)) {
+    return true;
+  }
   return imagesExtensions(staff, siteSettings).length > 0;
 }
 

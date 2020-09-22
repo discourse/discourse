@@ -55,10 +55,11 @@ export default MultiSelectComponent.extend({
       holder = "ajax-icon-holder";
 
     if (typeof icon === "object") {
-      if ($(`${spriteEl} .${holder}`).length === 0)
+      if ($(`${spriteEl} .${holder}`).length === 0) {
         $(spriteEl).append(
           `<div class="${holder}" style='display: none;'></div>`
         );
+      }
 
       if (!$(`${spriteEl} symbol#${strippedIconName}`).length) {
         $(`${spriteEl} .${holder}`).append(

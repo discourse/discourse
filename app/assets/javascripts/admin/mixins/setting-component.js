@@ -47,8 +47,12 @@ export default Mixin.create({
 
   @discourseComputed("buffered.value", "setting.value")
   dirty(bufferVal, settingVal) {
-    if (bufferVal === null || bufferVal === undefined) bufferVal = "";
-    if (settingVal === null || settingVal === undefined) settingVal = "";
+    if (bufferVal === null || bufferVal === undefined) {
+      bufferVal = "";
+    }
+    if (settingVal === null || settingVal === undefined) {
+      settingVal = "";
+    }
 
     return bufferVal.toString() !== settingVal.toString();
   },

@@ -84,7 +84,9 @@ export default Component.extend({
       document.addEventListener("click", this.handleOutsideClick);
 
       const emojiPicker = document.querySelector(".emoji-picker");
-      if (!emojiPicker) return;
+      if (!emojiPicker) {
+        return;
+      }
 
       if (!this.site.isMobileDevice) {
         this._popper = createPopper(
@@ -276,7 +278,9 @@ export default Component.extend({
               ".emoji-picker .emoji-picker-category-buttons"
             );
 
-            if (!categoryButtons) return;
+            if (!categoryButtons) {
+              return;
+            }
 
             const button = categoryButtons.querySelector(
               `.category-button[data-section="${sectionName}"]`

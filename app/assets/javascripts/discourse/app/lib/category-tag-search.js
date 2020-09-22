@@ -73,9 +73,13 @@ export function search(term, siteSettings) {
     oldSearch = null;
   }
 
-  if (new Date() - cacheTime > 30000) cache = {};
+  if (new Date() - cacheTime > 30000) {
+    cache = {};
+  }
   const cached = cache[term];
-  if (cached) return cached;
+  if (cached) {
+    return cached;
+  }
 
   const limit = 5;
   var categories = Category.search(term, { limit });

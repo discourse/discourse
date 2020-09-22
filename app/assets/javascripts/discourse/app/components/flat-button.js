@@ -9,7 +9,9 @@ export default Component.extend({
 
   @discourseComputed("title")
   translatedTitle(title) {
-    if (title) return I18n.t(title);
+    if (title) {
+      return I18n.t(title);
+    }
   },
 
   click() {

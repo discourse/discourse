@@ -320,7 +320,9 @@ export default Component.extend({
 
     schedule("afterRender", () => {
       $input.on("touchstart mouseenter", () => {
-        if (!$preview.is(":visible")) return;
+        if (!$preview.is(":visible")) {
+          return;
+        }
         $preview.off("scroll");
 
         $input.on("scroll", () => {
@@ -495,7 +497,9 @@ export default Component.extend({
   },
 
   _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
-    if (scrollMap.length < 1) return;
+    if (scrollMap.length < 1) {
+      return;
+    }
 
     let scrollTop;
     const previewScrollTop = $preview.scrollTop();
@@ -670,8 +674,12 @@ export default Component.extend({
       const isPrivateMessage = this.get("composer.privateMessage");
 
       data.formData = { type: "composer" };
-      if (isPrivateMessage) data.formData.for_private_message = true;
-      if (this._pasted) data.formData.pasted = true;
+      if (isPrivateMessage) {
+        data.formData.for_private_message = true;
+      }
+      if (this._pasted) {
+        data.formData.pasted = true;
+      }
 
       const opts = {
         user: this.currentUser,
@@ -819,8 +827,9 @@ export default Component.extend({
       );
     });
 
-    if (this._enableAdvancedEditorPreviewSync())
+    if (this._enableAdvancedEditorPreviewSync()) {
       this._teardownInputPreviewSync();
+    }
   },
 
   showUploadSelector(toolbarEvent) {
@@ -921,7 +930,9 @@ export default Component.extend({
           refresh
         );
 
-        if (refresh && paintedCount > 0) post.set("refreshedPost", true);
+        if (refresh && paintedCount > 0) {
+          post.set("refreshedPost", true);
+        }
       };
 
       debounce(this, paintFunc, 450);

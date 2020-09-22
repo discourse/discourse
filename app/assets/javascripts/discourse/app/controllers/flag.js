@@ -88,7 +88,9 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("selected.is_custom_flag", "message.length")
   submitEnabled() {
     const selected = this.selected;
-    if (!selected) return false;
+    if (!selected) {
+      return false;
+    }
 
     if (selected.get("is_custom_flag")) {
       const len = this.get("message.length") || 0;

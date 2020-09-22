@@ -37,7 +37,9 @@ export default Controller.extend({
   }),
 
   fetchProblems() {
-    if (this.isLoadingProblems) return;
+    if (this.isLoadingProblems) {
+      return;
+    }
 
     if (
       !this.problemsFetchedAt ||
@@ -51,7 +53,9 @@ export default Controller.extend({
   fetchDashboard() {
     const versionChecks = this.siteSettings.version_checks;
 
-    if (this.isLoading || !versionChecks) return;
+    if (this.isLoading || !versionChecks) {
+      return;
+    }
 
     if (
       !this.dashboardFetchedAt ||

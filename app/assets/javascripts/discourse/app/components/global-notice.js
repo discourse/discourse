@@ -193,7 +193,9 @@ export default Component.extend({
       }
 
       const alert = document.getElementById(`global-notice-${notice.id}`);
-      if (alert) alert.style.display = "none";
+      if (alert) {
+        alert.style.display = "none";
+      }
     },
   },
 

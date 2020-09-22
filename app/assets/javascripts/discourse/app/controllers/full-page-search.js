@@ -312,7 +312,9 @@ export default Controller.extend({
     search() {
       this.set("page", 1);
       this._search();
-      if (this.site.mobileView) this.set("expanded", false);
+      if (this.site.mobileView) {
+        this.set("expanded", false);
+      }
     },
 
     toggleAdvancedSearch() {

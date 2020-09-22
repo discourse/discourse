@@ -115,10 +115,14 @@ export default createWidget("search-menu", {
         }
       }
 
-      if (query) params.push(query);
+      if (query) {
+        params.push(query);
+      }
     }
 
-    if (opts && opts.expanded) params.push("expanded=true");
+    if (opts && opts.expanded) {
+      params.push("expanded=true");
+    }
 
     if (params.length > 0) {
       url = `${url}?${params.join("&")}`;

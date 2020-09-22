@@ -20,8 +20,12 @@ export default Controller.extend({
 
   @discourseComputed("model.description", "model.username", "userMode")
   saveDisabled(description, username, userMode) {
-    if (isBlank(description)) return true;
-    if (userMode === "single" && isBlank(username)) return true;
+    if (isBlank(description)) {
+      return true;
+    }
+    if (userMode === "single" && isBlank(username)) {
+      return true;
+    }
     return false;
   },
 

@@ -133,14 +133,21 @@ export function translateResults(results, opts) {
 }
 
 export function searchForTerm(term, opts) {
-  if (!opts) opts = {};
+  if (!opts) {
+    opts = {};
+  }
 
   // Only include the data we have
   const data = { term: term };
-  if (opts.typeFilter) data.type_filter = opts.typeFilter;
-  if (opts.searchForId) data.search_for_id = true;
-  if (opts.restrictToArchetype)
+  if (opts.typeFilter) {
+    data.type_filter = opts.typeFilter;
+  }
+  if (opts.searchForId) {
+    data.search_for_id = true;
+  }
+  if (opts.restrictToArchetype) {
     data.restrict_to_archetype = opts.restrictToArchetype;
+  }
 
   if (opts.searchContext) {
     data.search_context = {

@@ -778,7 +778,9 @@ Topic.reopenClass({
       type: "POST",
       data: opts,
     }).then((result) => {
-      if (result.success) return result;
+      if (result.success) {
+        return result;
+      }
       promise.reject(new Error("error changing ownership of posts"));
     });
     return promise;
@@ -789,7 +791,9 @@ Topic.reopenClass({
       type: "PUT",
       data: { timestamp },
     }).then((result) => {
-      if (result.success) return result;
+      if (result.success) {
+        return result;
+      }
       promise.reject(new Error("error updating timestamp of topic"));
     });
     return promise;

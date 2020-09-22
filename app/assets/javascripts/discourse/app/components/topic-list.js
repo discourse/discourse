@@ -59,13 +59,17 @@ export default Component.extend(LoadMore, {
   scrolled() {
     this._super(...arguments);
     let onScroll = this.onScroll;
-    if (!onScroll) return;
+    if (!onScroll) {
+      return;
+    }
 
     onScroll.call(this);
   },
 
   scrollToLastPosition() {
-    if (!this.scrollOnLoad) return;
+    if (!this.scrollOnLoad) {
+      return;
+    }
 
     let scrollTo = this.session.get("topicListScrollPosition");
     if (scrollTo && scrollTo >= 0) {

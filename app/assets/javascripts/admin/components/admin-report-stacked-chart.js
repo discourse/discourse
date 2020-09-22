@@ -48,7 +48,9 @@ export default Component.extend({
   },
 
   _renderChart(model, chartCanvas) {
-    if (!chartCanvas) return;
+    if (!chartCanvas) {
+      return;
+    }
 
     const context = chartCanvas.getContext("2d");
 
@@ -115,7 +117,9 @@ export default Component.extend({
               display: true,
               ticks: {
                 userCallback: (label) => {
-                  if (Math.floor(label) === label) return label;
+                  if (Math.floor(label) === label) {
+                    return label;
+                  }
                 },
                 callback: (label) => number(label),
                 sampleSize: 5,

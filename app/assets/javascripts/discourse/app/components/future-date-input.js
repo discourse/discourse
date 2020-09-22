@@ -104,7 +104,9 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    if (this.label) this.set("displayLabel", I18n.t(this.label));
+    if (this.label) {
+      this.set("displayLabel", I18n.t(this.label));
+    }
   },
 
   @discourseComputed(
@@ -129,7 +131,9 @@ export default Component.extend({
     displayNumberInput,
     duration
   ) {
-    if (!statusType || willCloseImmediately) return false;
+    if (!statusType || willCloseImmediately) {
+      return false;
+    }
 
     if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && isEmpty(categoryId)) {
       return false;

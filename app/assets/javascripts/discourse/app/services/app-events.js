@@ -57,7 +57,9 @@ export default Service.extend(Evented, {
         this._super(...arguments);
 
         _events[name] = _events[name].filter((e) => e.fn !== fn);
-        if (_events[name].length === 0) delete _events[name];
+        if (_events[name].length === 0) {
+          delete _events[name];
+        }
       }
     }
 

@@ -492,7 +492,9 @@ export default createWidget("header", {
   },
 
   toggleBodyScrolling(bool) {
-    if (!this.site.mobileView) return;
+    if (!this.site.mobileView) {
+      return;
+    }
     if (bool) {
       document.body.addEventListener("touchmove", this.preventDefault, {
         passive: false,

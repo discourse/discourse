@@ -164,8 +164,12 @@ NavItem.reopenClass({
       }
     }
 
-    if (!Category.list() && filterType === "categories") return null;
-    if (!Site.currentProp("top_menu_items").includes(filterType)) return null;
+    if (!Category.list() && filterType === "categories") {
+      return null;
+    }
+    if (!Site.currentProp("top_menu_items").includes(filterType)) {
+      return null;
+    }
 
     var args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
@@ -228,7 +232,9 @@ NavItem.reopenClass({
         ExtraNavItem.create(deepMerge({}, context, descriptor))
       )
       .filter((item) => {
-        if (!item.customFilter) return true;
+        if (!item.customFilter) {
+          return true;
+        }
         return item.customFilter(category, args);
       });
 

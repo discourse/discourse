@@ -297,7 +297,9 @@ export default DropdownSelectBoxComponent.extend({
         bootbox.confirm(
           I18n.t("composer.composer_actions.reply_as_new_topic.confirm"),
           (result) => {
-            if (result) this._replyAsNewTopicSelect(options);
+            if (result) {
+              this._replyAsNewTopicSelect(options);
+            }
           }
         );
       } else {

@@ -47,7 +47,9 @@ export default function (node, words, opts = {}) {
     .filter(Boolean)
     .map((word) => word.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"));
 
-  if (!words.length) return node;
+  if (!words.length) {
+    return node;
+  }
 
   const pattern = `(${words.join(" ")})`;
   let flag;
