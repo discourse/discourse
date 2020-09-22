@@ -138,6 +138,7 @@ en:
       twitter: "Share on Twitter"
       facebook: "Share on Facebook"
       email: "Send via email"
+      url: "Copy and share URL"
 
     action_codes:
       public_topic: "made this topic public %{when}"
