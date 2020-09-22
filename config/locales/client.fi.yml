@@ -1673,7 +1673,6 @@ fi:
         draft: Luonnos
         edit: Muokkaa
         reply_to_post:
-          label: Vastaus käyttäjän %{postUsername} viestiin %{postNumber}
           desc: Vastaa tiettyyn viestiin
         reply_as_new_topic:
           label: Vastaa sivuavassa ketjussa
@@ -2091,7 +2090,7 @@ fi:
           "2_8": "Näet uusien vastausten määrän, koska olet asettanut tämän alueen seurantaan."
           "2_4": "Näet uusien vastausten määrän, koska olet kirjoittanut ketjuun."
           "2_2": "Näet uusien vastausten määrän, koska olet asettanut ketjun seurantaan."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
           "1": "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
           "0_7": "Et saa mitään ilmoituksia tältä alueelta."

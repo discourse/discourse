@@ -1614,7 +1614,6 @@ sl:
         draft: Osnutek
         edit: Uredi
         reply_to_post:
-          label: Odgovor na prispevek %{postNumber} od %{postUsername}
           desc: Odgovori na posamezen prispevek
         reply_as_new_topic:
           label: Odgovori v novi povezani temi
@@ -2037,7 +2036,7 @@ sl:
           "2_8": "Videli boste število novih odgovorov, ker sledite tej kategoriji."
           "2_4": "Videli boste število novih odgovorov, ker ste objavili odgovor na to temo."
           "2_2": "Videli boste število novih odgovorov, ker sledite tej temi."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
           "1": "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
           "0_7": "Ignorirate vsa obvestila za to kategorijo."

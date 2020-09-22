@@ -27,12 +27,6 @@ fi:
     bio: "Moi! En ole ihminen. Olen botti, ja tarjoan opetusta sivuston käyttämisestä. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
     tl2_promotion_message:
       subject_template: "Onnittelut luottamustasonoususta!"
-      text_body_template: |
-        Nyt kun olet noussut, on aika oppia joitakin kehittyneempiä ominaisuuksia!
-
-        Vastaa tähän viestiin `@%{discobot_username} %{reset_trigger}` niin opit lisää, mitä kaikkia valtuuksia sinulla on.
-
-        Toivon mukaan jatkat osallistumista – on mukavaa että olet täällä.
     timeout:
       message: |-
         Hei @%{username}, kyselen kuulumisia, kun en ole kuullut sinusta hetkeen.

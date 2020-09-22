@@ -27,12 +27,6 @@ id:
     bio: "Salam, saya bukan manusia asli. Saya adalah robot yang akan memandu Anda menggunakan forum ini. Untuk berkomunikasi dengan saya, kirimi saya pesan atau panggil **`@%{discobot_username}`** dimana saja."
     tl2_promotion_message:
       subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
-      text_body_template: |
-        Sekarang setelah Anda dipromosikan, saatnya untuk belajar tentang beberapa fitur lanjutan!
-
-        Balas pesan ini dengan `@ %{discobot_username} %{reset_trigger}` untuk mencari tahu lebih lanjut tentang apa yang dapat Anda lakukan.
-
-        Kami mengundang Anda untuk terus terlibat - kami menikmati kehadiran Anda.
     timeout:
       message: |-
         Salam @%{username}, hanya ingin menyapa karena saya tidak melihat Anda beberapa waktu.

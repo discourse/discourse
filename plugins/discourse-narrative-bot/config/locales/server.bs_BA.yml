@@ -28,12 +28,6 @@ bs_BA:
     bio: "Pozdrav, ja nisam stvarna osoba. Ja sam automatski robot koji će vas naučiti kako da koristite ovaj web sajt. Kako bi komunicirali sa mnom, pošaljite mi poruku ili me spomenite pisajući **`@%{discobot_username}`** bilo gdje."
     tl2_promotion_message:
       subject_template: "Čestitamo na povišenju vašeg nivoa povjerenja!"
-      text_body_template: |
-        Sada kada vam je povišen nivo povjerenja, došlo je vrijeme da naučite neke napredne mogućnosti!
-
-        Odgovori na ovu poruku sa `@%{discobot_username} %{reset_trigger}` kako bi saznali nešto više o tome šta je moguće sve raditi.
-
-        Pozivamo vas da se i dalje ovdje uključite  - uživamo što vas imamo ovdje na forumu.
     timeout:
       message: |-
         Hej @%{username}, samo vas provjeravam jer nisam vas čuo neko vrijeme.

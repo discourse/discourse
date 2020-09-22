@@ -119,6 +119,9 @@ fr:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber}"
       close: "fermer"
+      twitter: "Partager sur Twitter"
+      facebook: "Partager sur Facebook"
+      email: "Envoyer par e-mail"
     action_codes:
       public_topic: "a rendu ce sujet public %{when}"
       private_topic: "a rendu ce sujet message direct %{when}"
@@ -260,7 +263,9 @@ fr:
         unbookmark: "Cliquer pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquer pour supprimer tous les signets et rappels de ce sujet. Vous avez un rappel pour %{reminder_at} sur ce sujet."
     bookmarks:
+      created: "Vous avez mis un signet à ce message. %{name}"
       not_bookmarked: "mettre un signet à ce message"
+      created_with_reminder: "Vous avez placé un signet à ce message avec un rappel pour %{date}. %{name}"
       remove: "Retirer le signet"
       delete: "Supprimer le signet"
       confirm_delete: "Êtes-vous sûr de vouloir supprimer ce signet ? Le rappel sera aussi supprimé."
@@ -269,6 +274,13 @@ fr:
       no_timezone: 'Vous n''avez pas encore défini un fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       invalid_custom_datetime: "La date et l'heure sont invalides, veuillez réessayer."
       list_permission_denied: "Vous n'avez pas la permission de voir les signets de cet utilisateur."
+      no_user_bookmarks: "Vous n'avez pas de messages dans vos signets ; les signets vous permettent de retrouver rapidement des sujets d'intérêt."
+      auto_delete_preference:
+        label: "Supprimer automatiquement"
+        never: "Jamais"
+        when_reminder_sent: "Une fois le rappel envoyé"
+        on_owner_reply: "Après avoir répondu à ce sujet"
+      search_placeholder: "Rechercher des signets par nom, titre de sujet ou contenu de message"
       search: "Recherche"
       reminders:
         later_today: "Plus tard aujourd'hui"
@@ -285,6 +297,7 @@ fr:
         today_with_time: "aujourd'hui à %{time}"
         tomorrow_with_time: "demain à %{time}"
         at_time: "à %{date_time}"
+        existing_reminder: "Vous avez un rappel configuré pour ce signet qui sera envoyé %{at_date_time}"
     copy_codeblock:
       copied: "copié !"
     drafts:
@@ -508,6 +521,7 @@ fr:
       sent_by_user: "Envoyé par <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Envoyé par <a href='%{userUrl}'>vous</a>"
     directory:
+      username: "Nom d'utilisateur"
       filter_name: "filtrer par nom d'utilisateur"
       title: "Utilisateurs"
       likes_given: "Donnés"
@@ -538,6 +552,12 @@ fr:
     groups:
       member_added: "Ajouté"
       member_requested: "Demandé à"
+      add_members:
+        title: "Ajouter des membres à %{group_name}"
+        description: "Vous pouvez également insérer une liste séparée par des virgules."
+        usernames: "Entrez les noms d'utilisateur ou courriels"
+        input_placeholder: "Noms d'utilisateur ou courriels"
+        notify_users: "Notifications aux utilisateurs"
       requests:
         title: "Demandes"
         reason: "Raison"
@@ -561,6 +581,7 @@ fr:
           notification: Notification
         email:
           title: "Courriel"
+          status: "Synchronisés %{old_emails} / %{total_emails} courriels via IMAP."
           credentials:
             title: "Identifiants"
             smtp_server: "Serveur SMTP"
@@ -571,9 +592,17 @@ fr:
             imap_ssl: "Utiliser SSL pour IMAP"
             username: "Nom d'utilisateur"
             password: "Mot de passe"
+          mailboxes:
+            synchronized: "Boîte aux lettres synchronisée"
+            none_found: "Aucune boîte aux lettres n'a été trouvée pour ce compte de courriel."
+            disabled: "désactivé"
         membership:
           title: Adhésion
           access: Accès
+        categories:
+          title: Catégories
+        tags:
+          title: Étiquettes
         logs:
           title: "Journaux"
           when: "Date"
@@ -829,6 +858,10 @@ fr:
         not_first_time: "Pas votre première fois ?"
         skip_link: "Ignorer ces conseils"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
+      color_schemes:
+        dark: "Mode sombre"
+      dark_mode: "Mode sombre"
+      dark_mode_enable: "Activer le jeu de couleurs automatique du mode sombre"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
@@ -1717,7 +1750,6 @@ fr:
         draft: Brouillon
         edit: Modifier
         reply_to_post:
-          label: Répondre au message %{postNumber} de %{postUsername}
           desc: Répondre à un message spécifique
         reply_as_new_topic:
           label: Répondre via un sujet lié
@@ -2138,7 +2170,7 @@ fr:
           "2_8": "Vous verrez un compteur de nouvelles réponses car vous suivez cette catégorie."
           "2_4": "Vous verrez un compteur de nouvelles réponses car vous avez répondu dans ce sujet."
           "2_2": "Vous verrez un compteur de nouvelles réponses car vous suivez ce sujet."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
           "1": "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
           "0_7": "Vous ignorez toutes les notifications de cette catégorie."

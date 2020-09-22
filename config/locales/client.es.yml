@@ -1714,7 +1714,6 @@ es:
         draft: Borrador
         edit: Editar
         reply_to_post:
-          label: Responder a la publicación %{postNumber} de %{postUsername}
           desc: Responder a una publicación específica
         reply_as_new_topic:
           label: Responder como tema enlazado
@@ -2135,7 +2134,7 @@ es:
           "2_8": "Verás el número de respuestas  nuevas porque estás siguiendo esta categoría."
           "2_4": "Verás el número de respuestas nuevas porque has publicado una respuesta en este tema."
           "2_2": "Verás el número de respuestas nuevas porque estás siguiendo este tema."
-          "2": 'Verás un contador con las nuevas respuestas porque has <a href="%{basePath}u/%{username}/preferences/notifications">leído este tema</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Se te notificará si alguien menciona tu @nombre o te responde."
           "1": "Se te notificará si alguien menciona tu @nombre o te responde."
           "0_7": "Estás ignorando todas las notificaciones en esta categoría."

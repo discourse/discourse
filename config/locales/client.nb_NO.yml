@@ -1356,7 +1356,6 @@ nb_NO:
         draft: Utkast
         edit: Rediger
         reply_to_post:
-          label: Svar på innlegg %{postNumber} av %{postUsername}
           desc: Svar på et spesifikt innlegg
         reply_as_new_topic:
           label: Svar med lenket emne
@@ -1717,7 +1716,7 @@ nb_NO:
           "2_8": "Du vil se antall nye svar fordi du følger denne kategorien."
           "2_4": "Du vil se antall nye svar fordi du skrev et svar i dette emnet."
           "2_2": "Du vil se antall nye svar fordi du overvåker dette emnet."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "1": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "0_7": "Du ignorerer alle varsler i denne kategorien."

@@ -521,6 +521,7 @@ de:
       sent_by_user: "Von <a href='%{userUrl}'>%{user}</a> gesendet"
       sent_by_you: "Von <a href='%{userUrl}'>dir</a> gesendet"
     directory:
+      username: "Benutzername"
       filter_name: "nach Benutzername filtern"
       title: "Benutzer"
       likes_given: "Gegeben"
@@ -872,6 +873,16 @@ de:
         not_first_time: "Nicht dein erstes Mal?"
         skip_link: "Überspringe diese Tipps"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
+      color_scheme_default_on_all_devices: "Mache diese Farbschemas zum Standard für alle meine Geräte"
+      color_scheme: "Farbschema"
+      color_schemes:
+        default_description: "Standard"
+        disable_dark_scheme: "gleich wie regulär"
+        dark_instructions: "Du kannst das dunkle Farbschema ausprobieren, indem du das dunkle Design auf deinem Gerät einschaltest."
+        undo: "Zurücksetzen"
+        regular: "Regulär"
+        dark: "Dunkler Modus"
+        default_dark_scheme: "(Standard)"
       dark_mode: "Dunkler Modus"
       dark_mode_enable: "Dunkles Design automatisch aktivieren"
       text_size_default_on_all_devices: "Mache diese Schriftgröße zum Standard für alle meine Geräte"
@@ -1005,6 +1016,7 @@ de:
       second_factor:
         title: "Zwei-Faktor-Authentifizierung"
         enable: "Zwei-Faktor-Authentifizierung verwalten"
+        disable_all: "Alle deaktivieren"
         forgot_password: "Passwort vergessen?"
         confirm_password_description: "Bitte bestätige dein Passwort um fortzufahren"
         name: "Name"
@@ -1587,6 +1599,29 @@ de:
       categories_and_top_topics: "Kategorien und angesagte Themen"
       categories_boxes: "Boxen mit Unterkategorien"
       categories_boxes_with_topics: "Spalten mit hervorgehobenen Themen"
+    base_font_setting:
+      helvetica: "Helvetica / Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "RobotoCondensed"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -1609,6 +1644,9 @@ de:
         one: "Wähle mindestens einen Eintrag aus."
         other: "Wähle mindestens %{count} Einträge aus."
       invalid_selection_length: "Es müssen wenigstens%{count} Zeichen markiert sein."
+      components:
+        categories_admin_dropdown:
+          title: "Kategorien verwalten"
     date_time_picker:
       from: Von
       to: An
@@ -1743,7 +1781,6 @@ de:
         draft: Entwurf
         edit: Bearbeiten
         reply_to_post:
-          label: Antworte auf Beitrag %{postNumber} von %{postUsername}
           desc: Antworte auf einen bestimmten Beitrag
         reply_as_new_topic:
           label: Antworte als verknüpftes Thema
@@ -2169,7 +2206,7 @@ de:
           "2_8": "Du wirst eine Anzahl neuer Antworten sehen, weil du diese Kategorie verfolgst."
           "2_4": "Du wirst eine Anzahl neuer Antworten sehen, weil du einen Beitrag in diesem Thema geschrieben hast."
           "2_2": "Du wirst eine Anzahl neuer Antworten sehen, weil du dieses Thema verfolgst."
-          "2": 'Du siehst eine Anzahl neuer Antworten, weil du <a href="%{basePath}u/%{username}/preferences/notifications">dieses Thema liest</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
           "1": "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
           "0_7": "Du ignorierst alle Benachrichtigungen dieser Kategorie."

@@ -1253,7 +1253,6 @@ id:
         draft: Konsep
         edit: Ubah
         reply_to_post:
-          label: Membalas tulisan %{postNumber} oleh %{postUsername}
           desc: Membalas tulisan tertentu
         reply_as_new_topic:
           desc: Buat topik baru yang ditautkan dengan topik ini
@@ -1352,7 +1351,7 @@ id:
       notifications:
         reasons:
           "3": "You will receive notifications because you are watching this topic."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
           "1": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
           "0": "You are ignoring all notifications on this topic."

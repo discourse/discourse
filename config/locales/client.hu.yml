@@ -1481,7 +1481,6 @@ hu:
         draft: Vázlat
         edit: Szerkesztés
         reply_to_post:
-          label: Válasz a posztra%{postNumber}által%{postUsername}
           desc: Válasz egy adott bejegyzésre
         reply_as_new_topic:
           label: Válasz egy csatolt témaként
@@ -1766,7 +1765,7 @@ hu:
           "3_2": "Értesítést fogsz kapni, mert figyeled ezt a témát."
           "3_1": "Értesítést fogsz kapni, mert te hoztad létre ezt a témát."
           "3": "Értesítést fogsz kapni, mert figyeled ezt a témát."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Csak akkor leszel értesítve, ha valaki megemlíti a @nevedet vagy válaszol neked."
           "1": "Csak akkor leszel értesítve, ha valaki megemlíti a @nevedet vagy válaszol neked."
           "0_7": "Nem kapsz értesítést erről a kategóriáról."

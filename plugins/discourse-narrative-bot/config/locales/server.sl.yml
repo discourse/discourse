@@ -28,12 +28,6 @@ sl:
     bio: "Pozdravljeni, jaz nisem prava oseba. Sem robot, ki te lahko naučim o tej strani. Za pogovor z menoj mi pošlji sporočilo ali me omeni z **`@%{discobot_username}`**."
     tl2_promotion_message:
       subject_template: "Čestitamo vam za napredovanje na višjo raven zaupanja!"
-      text_body_template: |
-        Zdaj, ko ste napredovali, je čas, da se seznanite z nekaterimi naprednimi funkcijami!
-
-        Odgovorite na to sporočilo z `@%{discobot_username} %{reset_trigger}`, če želite izvedeti več.
-
-        Vabimo vas, da sodelujete še naprej — užitek je biti v vaši družbi.
     timeout:
       message: |-
         Pozdravljeni @%{username}, samo preverjam, ker vas že nekaj časa nisem slišal.

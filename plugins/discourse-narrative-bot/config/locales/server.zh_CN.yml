@@ -28,12 +28,6 @@ zh_CN:
     bio: "你好，我不是真人，而是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`@%{discobot_username}`** 与我交互。"
     tl2_promotion_message:
       subject_template: "恭喜！你的信任等级提升了！"
-      text_body_template: |
-        现在你已经晋升了了，是时候学习一些高级特性了!
-
-        用 `@%{discobot_username} %{reset_trigger}` 来回复这条信息，了解更多你能做的事情。
-
-        我们邀请你继续参与社区活动——我们喜欢有你在身边。
     timeout:
       message: |-
         你好， @%{username}。好久没见到你了，一切可好？

@@ -1733,7 +1733,6 @@ zh_CN:
         draft: 草稿
         edit: 编辑
         reply_to_post:
-          label: 通过%{postUsername}回复帖子%{postNumber}
           desc: 回复特定帖子
         reply_as_new_topic:
           label: 回复为联结主题
@@ -2145,7 +2144,7 @@ zh_CN:
           "2_8": "因为你追踪了该分类，所以你会看到新回复的数量。"
           "2_4": "你会看到新回复的数量的原因是你曾经回复过该主题。"
           "2_2": "你会看到新回复数量的原因是你正在追踪该主题。"
-          "2": '因为你<a href="%{basePath}u/%{username}/preferences/notifications">阅读过本主题</a>，所以你将看到新回复的计数。'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "有人@你或回复你时会通知你。"
           "1": "如果有人@你或回复你，将通知你。"
           "0_7": "你将忽略关于该分类的所有通知。"

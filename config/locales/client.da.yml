@@ -1553,7 +1553,6 @@ da:
         draft: Kladde
         edit: Rediger
         reply_to_post:
-          label: Besvar et indlæg %{postNumber} af %{postUsername}
           desc: Besvar et specifikt indlæg
         reply_as_new_topic:
           label: Besvar som linket emne
@@ -1945,7 +1944,7 @@ da:
           "2_8": "Du vil se antallet af nye svar, fordi du følger denne kategori."
           "2_4": "Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne."
           "2_2": "Du vil se antallet af nye svar, fordi du følger dette emne."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "1": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "0_7": "Du ignorerer alle notifikationer i denne kategori."

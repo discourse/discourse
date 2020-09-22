@@ -1229,8 +1229,6 @@ lt:
         reply: Atsakyti
         draft: Juodraštis
         edit: Redaguoti
-        reply_to_post:
-          label: Atsakyti į %{postNumber} įrašą, %{postUsername}autoriaus
         reply_as_private_message:
           label: Nauja žinutė
           desc: Sukurti naują asmeninę žinutę
@@ -1559,7 +1557,7 @@ lt:
           "3_2": "Gausite pranešimus, nes Stebite šią temą."
           "3_1": "Gausite pranešimus, nes sukūrėte šią temą."
           "3": "Gausite pranešimus, nes Stebite šią temą."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
           "1": "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
           "0_7": "Jūs ignoruojate visus šios temos pranešimus"

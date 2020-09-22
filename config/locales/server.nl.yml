@@ -2456,6 +2456,12 @@ nl:
     account_second_factor_disabled:
       title: "Twee-factor-authenticatie uitgeschakeld"
       subject_template: "[%{email_prefix}] Twee-factor-authenticatie uitgeschakeld"
+      text_body_template: |
+        Twee-factor-authenticatie is uitgeschakeld voor uw account op %{site_name}. U kunt zich nu aanmelden met alleen uw wachtwoord; er is geen extra authenticatiecode meer nodig.
+
+        Als u er niet voor hebt gekozen twee-factor-authenticatie uit te schakelen, kan iemand uw account hebben overgenomen.
+
+        Als u vragen hebt, [neem dan contact op met onze vriendelijke stafleden](%{base_url}/about).
     digest:
       why: "Een korte samenvatting van %{site_link} sinds uw laatste bezoek op %{last_seen_at}."
       since_last_visit: "Sinds uw laatste bezoek"

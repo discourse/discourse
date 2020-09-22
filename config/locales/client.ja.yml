@@ -1352,7 +1352,6 @@ ja:
         reply: 返信
         edit: 編集
         reply_to_post:
-          label: '%{postUsername}による投稿%{postNumber}に返信する'
           desc: 特定の投稿に返信する
         reply_as_new_topic:
           label: トピックのリンクを付けて返信
@@ -1667,7 +1666,7 @@ ja:
           "2_8": "このカテゴリを追跡しているので、新たな返信のカウント数が表示されます。"
           "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
           "2_2": "このトピックを追跡しているので、新たな返信のカウント数が表示されます。"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "1": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "0_7": "このカテゴリに関して一切通知を受け取りません。"

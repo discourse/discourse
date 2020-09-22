@@ -27,8 +27,6 @@ pl_PL:
     bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby skomunikować się ze mną, wyślij do mnie wiadomość lub oznacz **`@%{discobot_username}`** w dowolnym miejscu."
     tl2_promotion_message:
       subject_template: "Gratuluję zdobycia nowego poziomu zaufania!"
-      text_body_template: |
-        Po awansie nadszedł czas, aby dowiedzieć się o niektórych zaawansowanych funkcjach! Odpowiedz na tę wiadomość za pomocą „@ %{discobot_username} %{reset_trigger}”, aby dowiedzieć się więcej o tym, co możesz zrobić. Zapraszamy do dalszego angażowania się - cieszymy się, że jesteśmy w pobliżu.
     timeout:
       message: |-
         Witaj @%{username}, przypominam o sobie bo od dawna do mnie nie zaglądałeś.

@@ -1787,7 +1787,6 @@ nl:
         draft: Concept
         edit: Bewerken
         reply_to_post:
-          label: Antwoorden op bericht %{postNumber} van %{postUsername}
           desc: Antwoorden op een bepaald bericht
         reply_as_new_topic:
           label: Antwoorden als gekoppeld topic
@@ -2215,7 +2214,7 @@ nl:
           "2_8": "U ziet het aantal nieuwe antwoorden, omdat u deze categorie volgt."
           "2_4": "U ziet het aantal nieuwe antwoorden, omdat u een antwoord in dit topic hebt geplaatst."
           "2_2": "U ziet het aantal nieuwe antwoorden, omdat u dit topic volgt."
-          "2": 'U ziet een aantal nieuwe antwoorden, omdat u <a href="%{basePath}u/%{username}/preferences/notifications">dit topic hebt gelezen</a>.'
+          "2": 'U ziet een aantal nieuwe antwoorden, omdat u <a href="%{basePath}/u/%{username}/preferences/notifications">dit topic hebt gelezen</a>.'
           "1_2": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "1": "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
           "0_7": "U negeert alle meldingen in deze categorie."

@@ -1423,7 +1423,6 @@ zh_TW:
         draft: 草稿
         edit: 編輯
         reply_to_post:
-          label: 回應%{postUsername}的 %{postNumber}貼文
           desc: 回應特定貼文
         reply_as_new_topic:
           label: 以「連結話題」回應
@@ -1783,7 +1782,7 @@ zh_TW:
           "2_8": "您將會看到新回覆的數量，因為你正在追蹤這個分類。"
           "2_4": "您將會看到新回覆的數量，因為你回覆了此話題。"
           "2_2": "您將會看到新回覆的數量，因為你正在追蹤這個話題。"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "如果有人@你或回覆你，將通知你。"
           "1": "如果有人@你或回覆你，將通知你。"
           "0_7": "你正忽略此分類中的所有通知。"

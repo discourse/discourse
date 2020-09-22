@@ -8,7 +8,7 @@ he:
   js:
     number:
       format:
-        separator: " ."
+        separator: "."
         delimiter: ","
       human:
         storage_units:
@@ -1895,7 +1895,6 @@ he:
         draft: טיוטה
         edit: עריכה
         reply_to_post:
-          label: תגובה לפוסט %{postNumber} ע"י %{postUsername}
           desc: תגובה לפוסט ספיציפי
         reply_as_new_topic:
           label: תגובה כנושא מקושר
@@ -2355,7 +2354,7 @@ he:
           "2_8": "תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר קטגוריה זו."
           "2_4": "תראו ספירה של תגובות חדשות כיוון שפרסמתם תגובה לנושא זה."
           "2_2": "תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר נושא זה:"
-          "2": 'יופיע עיטור עם מספר התגובות החדשות מכיוון ש<a href="%{basePath}u/%{username}/preferences/notifications">קראת את הנושא הזה</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "תישלח התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב לך."
           "1": "תישלח התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב לך."
           "0_7": "אתם מתעלמים מכל ההתראות בקטגוריה זו."
@@ -4598,6 +4597,9 @@ he:
           external_name: "שם"
           external_email: "כתובת דוא״ל"
           external_avatar_url: "כתובת URL לתמונת הפרופיל"
+          last_payload: "מטען אחרון"
+          delete_sso_record: "מחיקת רשומת SSO"
+          confirm_delete: "למחוק את רשומת הכניסה האחודה (SSO)?"
       user_fields:
         title: "שדות משתמש"
         help: "הוספת שדות שהמשתמשים שלך יוכלו למלא."

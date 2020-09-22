@@ -1464,6 +1464,7 @@ sv:
     site_contact_group_name: "Ett giltigt gruppnamn som ska bjudas in för alla automatiserade meddelanden."
     send_welcome_message: "Skicka ett välkomstmeddelande till alla nya användare tillsammans med en snabbstartsguide."
     send_tl1_welcome_message: "Skicka nya användare på förtroendenivå 1 ett välkomstmeddelande."
+    send_tl2_promotion_message: "Skicka ett meddelande om marknadsföring till nya Förtroendenivå 2-användare."
     suppress_reply_directly_below: "Visa inte den utvidgade inläggsräknaren på ett inlägg när det bara finns ett svar direkt nedanför det här inlägget."
     suppress_reply_directly_above: "Visa inte den utvidgade som-svar-till på ett inlägg när det endast finns ett svar direkt ovanför det här inlägget."
     remove_full_quote: "Ta automatiskt bort fullständiga citattecken vid direkta svar."
@@ -1906,6 +1907,7 @@ sv:
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar som går innan en användare anses återkomma."
+    review_media_unless_trust_level: "Personalen kommer att granska inlägg från användare med lägre förtroendenivåer om de innehåller inbäddade medier."
     enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
     show_published_pages_login_required: "Anonyma användare kan se publicerade sidor även när inloggning krävs."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar sammanfattningen som skickas via e-post."
@@ -2510,6 +2512,12 @@ sv:
       title: "Välkomstinbjudan"
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: "Tack för att du tackade ja till din inbjudan till %{site_name} -- välkommen!\n\nVi har skapat ett nytt konto **%{username}** till dig. Du kan byta namn eller lösenord genom att besöka [din användarprofil][prefs].\n\n- När du loggar in ber vi dig **använda samma e-postadress som i din ursprungliga inbjudan** — annars kan vi inte bekräfta att det är du! \n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i gemenskapen](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n\n[prefs]: %{user_preferences_url}\n"
+    tl2_promotion_message:
+      subject_template: "Grattis till din högre förtroendenivå!"
+      text_body_template: |
+        Vi har gett dig en högre [förtroendenivå](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        Vi hoppas att du fortsätter att engagera dig - vi tycker om att ha dig här!
     backup_succeeded:
       title: "Säkerhetskopieringen var framgångsrik"
       subject_template: "Säkerhetskopia skapades utan problem"
@@ -3971,6 +3979,7 @@ sv:
       email_auth_res_enqueue: "Det här e-postmeddelandet underkändes i en DMARC-kontroll och kommer sannolikt inte från den som det verkar komma från. Mer information finns i rubrikerna för e-postmeddelandets rådata."
       email_spam: "Det här e-postmeddelandet flaggades som skräppost av rubriken som definierats i `email_in_spam_header."
       suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se `approve_suspect_users`."
+      contains_media: "Dessa inlägg inkluderar inbäddade medier. Se `review_media_unless_trust_level`."
     actions:
       agree:
         title: "Godkänn..."

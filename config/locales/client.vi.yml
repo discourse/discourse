@@ -1607,7 +1607,7 @@ vi:
           "3_1": "Bạn sẽ được nhận các tin báo bởi bạn đã tạo chủ để này."
           "3": "Bạn sẽ nhận được các tin báo bởi vì bạn đang theo dõi chủ đề này."
           "2_8": "Bạn sẽ thấy được 1 số lượng bài viết mới bởi vì bạn đang theo dấu chuyên mục này."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
           "1": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
           "0_7": "Bạn đang bỏ qua tất cả các tin báo trong chuyên mục này."

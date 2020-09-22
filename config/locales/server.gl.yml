@@ -115,7 +115,10 @@ gl:
         bounced_email_error: "O correo electrónico é un informe dun correo devolto."
         screened_email_error: "Sucede cando o enderezo electrónico do destinatario xa foi bloqueado. "
         unsubscribe_not_allowed: "Sucede cando a este usuario non se lle permite cancelar a subscrición vía correo electrónico."
+        email_not_allowed: "Sucede cando o enderezo electrónico non está na listaxe de elementos permitidos ou está na de bloqueados."
       unrecognized_error: "Erro non recoñecido"
+    secure_media_placeholder: "Redactado: este sitio ten habilitados elementos multimedia seguros; visita o tema ou preme en Ver contido multimedia para ver o contido multimedia anexado."
+    view_redacted_media: "Ver contido multimedia"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -208,6 +211,7 @@ gl:
   topic_invite:
     failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
     user_exists: "Este usuario xa foi invitado. Só se pode invitar a un usuario a un tema unha única vez."
+    not_allowed: "Este usuario non pode ser invitado."
   backup:
     operation_already_running: "Estase a executar unha operación. Nestes intres non se pode iniciar un novo traballo."
     backup_file_should_be_tar_gz: "O ficheiro da copia de seguranza debe ter formato .tar.gz."
@@ -277,6 +281,11 @@ gl:
   too_many_mentions_newuser:
     one: "Sentímolo, mais os novos usuarios só poden mencionar un usuario nunha publicación."
     other: "Sentímolo, mais os novos usuarios só poden mencionar a %{count} usuarios nunha publicación."
+  no_embedded_media_allowed_trust: "Non podes inserir elementos multimedia nunha publicación."
+  no_embedded_media_allowed: "Os novos usuarios non poden inserir elementos multimedia nas publicacións."
+  too_many_embedded_media:
+    one: "Os novos usuarios só poden inserir un elemento multimedia nunha publicación."
+    other: "Os novos usuarios só poden inserir %{count} elementos multimedia nunha publicación."
   no_attachments_allowed: "Sentímolo, mais os novos usuarios non poden anexar ficheiros nas publicacións."
   too_many_attachments:
     one: "Sentímolo, mais os novos usuarios só poden anexar un ficheiro nunha publicación."
@@ -367,6 +376,7 @@ gl:
       email_already_used_in_category: "'%{email}' xa está en uso pola categoría '%{category_name}'."
       cant_allow_membership_requests: "Non podes permitir solicitudes para ser membros de grupos que carecen de propietario."
       already_requested_membership: "Xa solicitaches ser membro deste grupo. "
+      adding_too_many_users: "Máximo de %{limit} usuarios que poden ser engadidos á vez"
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -926,6 +936,7 @@ gl:
     submit: "Gardar preferencias"
     digest_frequency:
       title: "Estás a recibir correos electrónicos de resumo %{frequency}"
+      never_title: "Non estás a recibir correos electrónicos de resumo"
       select_title: "Establecer a frecuencia dos correos electrónicos resumo:"
       never: "nunca"
       every_30_minutes: "cada 30 minutos"
@@ -1314,6 +1325,7 @@ gl:
     delete_old_hidden_posts: "Eliminar automaticamente as publicacións ocultas durante máis de 30 días."
     default_locale: "O idioma por defecto desta instancia de Discourse. Podes substituír o texto das categorías e dos temas xerados en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizar / Texto</a>."
     allow_user_locale: "Permitir aos usuarios escoller o idioma da interface da súa preferencia"
+    set_locale_from_accept_language_header: "definir o idioma da interface para usuarios anónimos a partir das cabeceiras de idioma do seu navegador"
     support_mixed_text_direction: "Admite direccións mixtas de texto de esquerda a dereita e de dereita a esquerda."
     min_post_length: "Extensión mínima das publicacións en número de caracteres"
     min_first_post_length: "Extensión mínima na primeira publicación (corpo do tema) en número de caracteres"
@@ -1370,6 +1382,9 @@ gl:
     show_pinned_excerpt_mobile: "Mostrar o extracto de temas destacados na vista móbil."
     show_pinned_excerpt_desktop: "Mostrar o extracto de temas destacados na vista de escritorio."
     post_onebox_maxlength: "Lonxitude máxima en caracteres dunha publicación de Discourse en formato caixa (onebox)."
+    blocked_onebox_domains: "Unha listaxe de dominios que nunca se mostrarán en formato onebox."
+    allowed_inline_onebox_domains: "Unha listaxe de dominios que se mostrarán en formato onebox en miniatura se son ligados sen un título."
+    enable_inline_onebox_on_all_domains: "Ignorar o axuste do sitio inline_onebox_domain_whitelist e permitir incluír onebox en todos os dominios."
     force_custom_user_agent_hosts: "Hosts que se utilizarán para o axente usuario personalizado de onebox en todas as solicitudes (especialmente útil para hosts que limitan o acceso por usuario axente)."
     max_oneboxes_per_post: "Número máximo de caixas (onboxes) nunha publicación."
     logo: "A imaxe do logotipo na parte superior esquerda do teu sitio. Utiliza unha imaxe rectangular larga cunha altura de 120 e unha relación de aspecto superior a 3:1. Se se deixa en branco, mostrarase o texto do título do sitio."
@@ -1421,12 +1436,15 @@ gl:
     invite_code: "O usuario debe inserir este código para que se lle permita o rexistro da conta, ignorado cando está baleiro (non distingue entre maiúsculas e minúsculas)"
     approve_suspect_users: "Engadir usuarios sospeitosos á cola de revisión. Usuarios sospeitosos que inseriron unha biografía ou sitio web, pero non teñen actividade de lectura."
     pending_users_reminder_delay: "Notificarlles aos moderadores se hai novos usuarios que estiveran á espera da súa aprobación por máis tempo desta cantidade de horas. Valor -1 para deshabilitar notificacións. "
+    persistent_sessions: "Os usuarios permanecerán conectados cando o navegador estea pechado"
     maximum_session_age: "O usuario permanecerá coa sesión iniciada durante n horas desde a última visita."
     ga_universal_tracking_code: "Código de seguimento de Google Universal Analytics (analytics.js) , ex: UA-12345678-9; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nome do dominio establecido en Google Universal Analytics (analytics.js), ex: mysite.com; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Habilitar o seguimento multidominio de Google Universal Analytics (analytics.js). As ligazóns saíntes destes dominios terán a ID do cliente agregadas. Revisa <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>A guía de Google para o seguimento multidominio."
     enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún  webcrawler is detected. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories_and_groups: "Permitir aos moderadores administrar categorías e grupos"
     cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadeiro para activar CORS."
+    use_admin_ip_allowlist: "Os administradores só poden iniciar sesión se están nun enderezo IP definido na listaxe de enderezos IP revisados (Administración > Rexistros > IP revisados)."
     allowed_iframes: "Unha listaxe de prefixos de dominios para iframe src que Discourse pode permitir de forma segura en publicacións"
     slow_down_crawler_user_agents: "Axentes de usuario de rastrexadores web aos que se lles debe aplicar unha cota limitada en robots.txt utilizando a directiva de atraso no rastrexo"
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents está especificado, este valor aplicarase a todos os rastrexadores (número de segundos de demora entre respostas)"

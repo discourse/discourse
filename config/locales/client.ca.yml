@@ -1647,7 +1647,6 @@ ca:
         draft: Esborrany
         edit: Edita
         reply_to_post:
-          label: Respon a la publicació %{postNumber} de %{postUsername}
           desc: Respon a una publicació específica
         reply_as_new_topic:
           label: Respon com a tema enllaçat
@@ -2042,7 +2041,7 @@ ca:
           "2_8": "Veureu un recompte de respostes perquè seguiu aquesta categoria. "
           "2_4": "Rebreu notificacions perquè heu escrit una resposta a aquest tema."
           "2_2": "Rebreu notificacions perquè seguiu aquest tema."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Sereu notificat si algú menciona el vostre @nom o us respon."
           "1": "Sereu notificat si algú us @menciona o us respon."
           "0_7": "No esteu fent cas de les notificacions d'aquesta categoria."

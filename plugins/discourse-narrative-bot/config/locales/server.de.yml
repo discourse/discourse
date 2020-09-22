@@ -27,12 +27,6 @@ de:
     bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne irgendwo **`@%{discobot_username}`**, um mit mir zu interagieren."
     tl2_promotion_message:
       subject_template: "Herzlichen Glückwunsch zur Beförderung ihrer Vertrauensstufe!"
-      text_body_template: |
-        Da du befördert worden bist, ist es an der Zeit etwas über die erweiterten Funktionen zu lernen!
-
-        Antworte auf diese Nachricht mit `@%{discobot_username} %{reset_trigger}` um herauszufinden, was du noch alles machen kannst.
-
-        Wir laden dich ein, dich weiter zu engagieren – wir freuen uns, dass du hier bist.
     timeout:
       message: |-
         Hallo @%{username}! Ich wollte mich nur wieder einmal melden, weil ich schon länger nichts von dir gehört habe.

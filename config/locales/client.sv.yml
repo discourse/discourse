@@ -1787,7 +1787,7 @@ sv:
         draft: Utkast
         edit: Redigera
         reply_to_post:
-          label: Svara på inlägg %{postNumber} av %{postUsername}
+          label: Svara på ett inlägg av %{postUsername}
           desc: Svara på ett specifikt inlägg
         reply_as_new_topic:
           label: Svara som länkat ämne
@@ -2215,7 +2215,7 @@ sv:
           "2_8": "Du kommer att se en räknare för nya svar eftersom du följer denna kategorin."
           "2_4": "Du kommer att se en räknare för nya svar eftersom du postat ett svar i detta ämne."
           "2_2": "Du kommer att se en räknare för nya svar eftersom du följer detta ämne."
-          "2": 'Du kommer att se en räknare för nya svar eftersom du <a href="%{basePath}u/%{username}/preferences/notifications">läser detta ämne</a>.'
+          "2": 'Du kommer att se en räknare för nya svar eftersom du <a href="%{basePath}/u/%{username}/preferences/notifications">läser detta ämne</a>.'
           "1_2": "Du aviseras om någon nämner ditt @namn eller svarar dig."
           "1": "Du aviseras om någon nämner ditt @namn eller svarar dig."
           "0_7": "Du ignorerar alla aviseringar i den här kategorin."
