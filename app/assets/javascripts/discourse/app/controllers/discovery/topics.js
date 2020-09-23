@@ -111,8 +111,8 @@ const controllerOpts = {
     },
   },
 
-  afterRefresh(filter, list, listWithParams = list) {
-    this.setProperties({ model: listWithParams });
+  afterRefresh(filter, list, listModel = list) {
+    this.setProperties({ model: listModel });
     this.resetSelected();
 
     if (this.topicTrackingState) {
