@@ -935,10 +935,10 @@ escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-config-discourse@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.4.tgz#cff9f93f17dfcefe4852bb417f747c28444b4bd7"
-  integrity sha512-4Yilkkmdkz/LdEiQCbng6evI2w33HDs9lXgiae0DutjTboqs/TauQXySusxHagKr9GFtefPOxovzNKwD2s1ggw==
+eslint-config-discourse@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-1.1.5.tgz#29e274eeccd3071d86aaa9333c6550ceeb23b1cd"
+  integrity sha512-/2DgKfIAKRHP+ktNvYCvK2z0NVmgpMe4le1HcrXtj0EzRswqsUN1kbaU81X3cnG4iEuKxyf0n0Hp+2kHuneatg==
   dependencies:
     babel-eslint "^10.1.0"
     ember-template-lint "^2.11.0"
@@ -948,7 +948,7 @@ eslint-config-discourse@^1.1.4:
     eslint-plugin-ember "^6.10.0"
     eslint-plugin-lodash "^7.1.0"
     eslint-plugin-node "^8.0.0"
-    prettier "^2.1.1"
+    prettier "2.1.2"
 
 eslint-plugin-discourse-ember@latest:
   version "0.0.3"
@@ -2353,7 +2353,7 @@ pretender@^1.6:
     fake-xml-http-request "^1.6.0"
     route-recognizer "^0.3.3"
 
-prettier@^2.1.1:
+prettier@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.1.2.tgz#3050700dae2e4c8b67c4c3f666cdb8af405e1ce5"
   integrity sha512-16c7K+x4qVlJg9rEbXl7HEGmQyZlG4R9AgP+oHKRMsMsuk8s+ATStlf1NpDqyBI1HpVyfjLOeMhH2LvuNvV5Vg==
@@ -3110,9 +3110,9 @@ workbox-sw@^4.3.1:
   integrity sha512-0jXdusCL2uC5gM3yYFT6QMBzKfBr2XTk0g5TPAV4y8IZDyVNDyj1a8uSXy3/XrvkVTmQvLN4O5k3JawGReXr9w==
 
 workerpool@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/workerpool/-/workerpool-6.0.0.tgz#85aad67fa1a2c8ef9386a1b43539900f61d03d58"
-  integrity sha512-fU2OcNA/GVAJLLyKUoHkAgIhKb0JoCpSjLC/G2vYKxUjVmQwGbRVeoPJ1a8U4pnVofz4AQV5Y/NEw8oKqxEBtA==
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/workerpool/-/workerpool-6.0.1.tgz#9e661102e074138125cb12197a7867547f2558d4"
+  integrity sha512-4I1YJngJuIAsJHOOJNPHQUjoA/Kr1QNtdRoPX8w92BtNy2pIo7zr6hQHDqm3d0CWnxmfcWsqxcFWN1Ni3w4C+g==
 
 wrap-ansi@^6.2.0:
   version "6.2.0"
