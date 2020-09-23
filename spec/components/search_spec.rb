@@ -290,12 +290,10 @@ describe Search do
 
       TopicAllowedGroup.create!(group_id: group.id, topic_id: topic.id)
 
-      results = Search.execute(
-        'mars in:personal',
-        guardian: Guardian.new(user)
-      )
-
-      expect(results.posts).to contain_exactly(reply)
+      ["mars in:personal", "mars IN:PERSONAL"].each do |query|
+        results = Search.execute(query, guardian: Guardian.new(user))
+        expect(results.posts).to contain_exactly(reply)
+      end
     end
 
     context 'personal_messages filter' do
@@ -359,19 +357,27 @@ describe Search do
         _pm_2 = create_pm(users: [participant_2, participant])
         pm_3 = create_pm(users: [participant, current])
         pm_4 = create_pm(users: [participant_2, current])
-        results = Search.execute("in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(3)
-        expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
+
+        ["in:personal-direct", "In:PeRsOnAl-DiReCt"].each do |query|
+          results = Search.execute(query, guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(3)
+          expect(results.posts.map(&:topic_id)).to eq([pm_4.id, pm_3.id, pm.id])
+        end
       end
 
       it 'can filter direct PMs by @username' do
         pm = create_pm(users: [current, participant])
         pm_2 = create_pm(users: [participant, current])
         _pm_3 = create_pm(users: [participant_2, current])
-        results = Search.execute("@#{participant.username} in:personal-direct", guardian: Guardian.new(current))
-        expect(results.posts.size).to eq(2)
-        expect(results.posts.map(&:topic_id)).to eq([pm_2.id, pm.id])
-        expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
+        [
+          "@#{participant.username} in:personal-direct",
+          "@#{participant.username} iN:pErSoNaL-dIrEcT"
+        ].each do |query|
+          results = Search.execute(query, guardian: Guardian.new(current))
+          expect(results.posts.size).to eq(2)
+          expect(results.posts.map(&:topic_id)).to eq([pm_2.id, pm.id])
+          expect(results.posts.map(&:user_id).uniq).to eq([participant.id])
+        end
       end
 
       it "doesn't include PMs that have more than 2 participants" do
@@ -405,6 +411,10 @@ describe Search do
       it 'finds private messages' do
         TopicAllowedUser.create!(user_id: u1.id, topic_id: private_topic.id)
         TopicAllowedUser.create!(user_id: u2.id, topic_id: private_topic.id)
+
+        # case insensitive only
+        results = Search.execute('iN:aLL cheese', guardian: Guardian.new(u1))
+        expect(results.posts).to contain_exactly(private_post1)
 
         # private only
         results = Search.execute('in:all cheese', guardian: Guardian.new(u1))
@@ -1110,6 +1120,7 @@ describe Search do
       guardian = Guardian.new(user)
 
       expect(Search.execute('boom in:pinned').posts.length).to eq(1)
+      expect(Search.execute('boom IN:PINNED').posts.length).to eq(1)
     end
 
     it 'supports wiki' do
@@ -1120,6 +1131,7 @@ describe Search do
 
       expect(Search.execute('test 248').posts.length).to eq(2)
       expect(Search.execute('test 248 in:wiki').posts.first).to eq(post)
+      expect(Search.execute('test 248 IN:WIKI').posts.first).to eq(post)
     end
 
     it 'supports searching for posts that the user has seen/unseen' do
@@ -1144,6 +1156,9 @@ describe Search do
       expect(Search.execute('longan in:seen', guardian: Guardian.new(post.user)).posts)
         .to eq([post])
 
+      expect(Search.execute('longan IN:SEEN', guardian: Guardian.new(post.user)).posts)
+        .to eq([post])
+
       expect(Search.execute('longan in:seen').posts.sort).to eq([post, post_2])
 
       expect(Search.execute('longan in:seen', guardian: Guardian.new(post_2.user)).posts)
@@ -1156,6 +1171,9 @@ describe Search do
         .to eq([post, post_2])
 
       expect(Search.execute('longan in:unseen', guardian: Guardian.new(post.user)).posts)
+        .to eq([post_2])
+
+      expect(Search.execute('longan IN:UNSEEN', guardian: Guardian.new(post.user)).posts)
         .to eq([post_2])
     end
 
@@ -1180,6 +1198,7 @@ describe Search do
       post_2 = Fabricate(:post, raw: 'boom boom shake the room test', topic: topic)
 
       expect(Search.execute('test in:first').posts).to contain_exactly(post_1)
+      expect(Search.execute('test IN:FIRST').posts).to contain_exactly(post_1)
 
       expect(Search.execute('boom').posts).to contain_exactly(post_2)
 
@@ -1216,6 +1235,7 @@ describe Search do
       UserBadge.create!(user_id: post.user_id, badge_id: badge.id, granted_at: 1.minute.ago, granted_by_id: -1)
 
       expect(Search.execute('badge:"like a boss"').posts.length).to eq(1)
+      expect(Search.execute('BADGE:"LIKE A BOSS"').posts.length).to eq(1)
       expect(Search.execute('badge:"test"').posts.length).to eq(0)
     end
 
@@ -1255,6 +1275,7 @@ describe Search do
       expect(Search.execute('test status:public').posts.length).to eq(1)
       expect(Search.execute('test status:closed').posts.length).to eq(0)
       expect(Search.execute('test status:open').posts.length).to eq(1)
+      expect(Search.execute('test STATUS:OPEN').posts.length).to eq(1)
       expect(Search.execute('test posts_count:1').posts.length).to eq(1)
       expect(Search.execute('test min_post_count:1').posts.length).to eq(1)
 
@@ -1277,6 +1298,7 @@ describe Search do
       expect(Search.execute('test in:likes', guardian: Guardian.new(topic.user)).posts.length).to eq(0)
 
       expect(Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length).to eq(2)
+      expect(Search.execute('test In:PoStEd', guardian: Guardian.new(topic.user)).posts.length).to eq(2)
 
       in_created = Search.execute('test in:created', guardian: Guardian.new(topic.user)).posts
       created_by_user = Search.execute("test created:@#{topic.user.username}", guardian: Guardian.new(topic.user)).posts
@@ -1309,7 +1331,7 @@ describe Search do
       post2 = Fabricate(:post, raw: 'that Sam I am, that Sam I am', created_at: 5.minutes.ago)
 
       expect(Search.execute('sam').posts.map(&:id)).to eq([post1.id, post2.id])
-      expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
+      expect(Search.execute('sam ORDER:LATEST').posts.map(&:id)).to eq([post2.id, post1.id])
       expect(Search.execute('sam l').posts.map(&:id)).to eq([post2.id, post1.id])
       expect(Search.execute('l sam').posts.map(&:id)).to eq([post2.id, post1.id])
     end
@@ -1662,6 +1684,9 @@ describe Search do
       results = Search.execute('title in:title')
       expect(results.posts.map(&:id)).to eq([post.id])
 
+      results = Search.execute('title iN:tItLe')
+      expect(results.posts.map(&:id)).to eq([post.id])
+
       results = Search.execute('first in:title')
       expect(results.posts).to eq([])
     end
@@ -1770,6 +1795,9 @@ describe Search do
 
       results = Search.execute('in:tagged')
       expect(results.posts.length).to eq(1)
+
+      results = Search.execute('In:TaGgEd')
+      expect(results.posts.length).to eq(1)
     end
   end
 
@@ -1778,7 +1806,7 @@ describe Search do
       topic = Fabricate(:topic, title: 'I am testing a untagged search')
       _post = Fabricate(:post, topic: topic, raw: 'this is the first post')
 
-      results = Search.execute('in:untagged')
+      results = Search.execute('iN:uNtAgGeD')
       expect(results.posts.length).to eq(1)
 
       results = Search.execute('in:tagged')

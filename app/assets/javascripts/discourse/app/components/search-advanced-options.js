@@ -114,7 +114,7 @@ export default Component.extend({
     this.setSearchedTermValueForTags();
 
     let regExpInMatch = this.inOptions.map((option) => option.value).join("|");
-    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`);
+    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`, "i");
 
     this.setSearchedTermValue(
       "searchedTerms.in",
@@ -145,7 +145,10 @@ export default Component.extend({
     let regExpStatusMatch = this.statusOptions
       .map((status) => status.value)
       .join("|");
-    const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
+    const REGEXP_STATUS_MATCH = new RegExp(
+      `status:(${regExpStatusMatch})`,
+      "i"
+    );
 
     this.setSearchedTermValue(
       "searchedTerms.status",
@@ -203,7 +206,7 @@ export default Component.extend({
 
     let val = this.get(key);
     if (match.length !== 0) {
-      const userInput = match[0].replace(replaceRegEx, "");
+      const userInput = match[0].replace(replaceRegEx, "").toLowerCase();
 
       if (val !== userInput && userInput.length) {
         this.set(key, userInput);
@@ -298,7 +301,9 @@ export default Component.extend({
 
     if (match.length !== 0) {
       const existingInputWhen = this.get("searchedTerms.time.when");
-      const userInputWhen = match[0].match(REGEXP_POST_TIME_WHEN)[0];
+      const userInputWhen = match[0]
+        .match(REGEXP_POST_TIME_WHEN)[0]
+        .toLowerCase();
       const existingInputDays = this.get("searchedTerms.time.days");
       const userInputDays = match[0].replace(REGEXP_POST_TIME_PREFIX, "");
       const properties = {};
@@ -549,7 +554,7 @@ export default Component.extend({
 
   _updateSearchTermForIn() {
     let regExpInMatch = this.inOptions.map((option) => option.value).join("|");
-    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`);
+    const REGEXP_IN_MATCH = new RegExp(`(in|with):(${regExpInMatch})`, "i");
 
     const match = this.filterBlocks(REGEXP_IN_MATCH);
     const inFilter = this.get("searchedTerms.in");
@@ -577,7 +582,10 @@ export default Component.extend({
     let regExpStatusMatch = this.statusOptions
       .map((status) => status.value)
       .join("|");
-    const REGEXP_STATUS_MATCH = new RegExp(`status:(${regExpStatusMatch})`);
+    const REGEXP_STATUS_MATCH = new RegExp(
+      `status:(${regExpStatusMatch})`,
+      "i"
+    );
 
     const match = this.filterBlocks(REGEXP_STATUS_MATCH);
     const statusFilter = this.get("searchedTerms.status");
