@@ -40,3 +40,6 @@ ad5082d969ab1f60b5c5b1e89a616117906289f8
 
 # DEV: apply coding standards to plugins (#10594)
 bf88410126f73aab47b7e694e3c5b46453cec1b6
+
+# REFACTOR: Support bundling our `admin` section as an ember addon
+ce3fe2f4c4ddf166949ee3cec3d9ecbf9108ab52
