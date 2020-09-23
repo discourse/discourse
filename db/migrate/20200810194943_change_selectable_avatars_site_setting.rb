@@ -12,7 +12,7 @@ class ChangeSelectableAvatarsSiteSetting < ActiveRecord::Migration[6.0]
       WHERE name = 'selectable_avatars'
     SQL
 
-    # Extract SHA1s from URLs and then use them for upload ID lookups.
+    # Extract SHA1s from URLs and then use them for upload ID lookups
     urls = []
     sha1s = []
     selectable_avatars.first["value"].split("\n").each do |url|
@@ -25,12 +25,15 @@ class ChangeSelectableAvatarsSiteSetting < ActiveRecord::Migration[6.0]
       end
     end
 
-    upload_ids = execute <<~SQL
-      SELECT id
-      FROM uploads
-      WHERE url IN (#{urls.map { |url| "'#{url}'" }.join(',')})
-         OR sha1 IN (#{sha1s.map { |sha1| "'#{sha1}'" }.join(',')})
-    SQL
+    # Ensure at least one URL or SHA1 exists so the query below can be valid
+    return if urls.size == 0 && sha1s.size == 0
+
+    uploads_query = []
+    uploads_query << "url IN (#{urls.map { |url| "'#{url}'" }.join(',')})" if urls.size > 0
+    uploads_query << "sha1 IN (#{sha1s.map { |sha1| "'#{sha1}'" }.join(',')})" if sha1s.size > 0
+    uploads_query = "SELECT id FROM uploads WHERE #{uploads_query.join(" OR ")}"
+
+    upload_ids = execute(uploads_query)
     upload_ids = upload_ids.map { |row| row["id"] }
     return if upload_ids.size == 0
 
