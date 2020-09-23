@@ -64,7 +64,11 @@ export function avatarFor(wanted, attrs) {
     "a",
     {
       className: `trigger-user-card ${attrs.className || ""}`,
-      attributes: { href: attrs.url, "data-user-card": attrs.username },
+      attributes: {
+        href: attrs.url,
+        "data-user-card": attrs.username,
+        "aria-hidden": true,
+      },
     },
     avatarImg(wanted, attrs)
   );
