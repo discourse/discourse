@@ -1277,6 +1277,29 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
         end
 
+        describe "when first post is locked" do
+          it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
+            SiteSetting.trusted_users_can_edit_others = true
+            user.update(trust_level: 3)
+            topic.first_post.update(locked_by_id: admin.id)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: topic.title + " hello"
+            }
+            expect(response.status).to eq(403)
+          end
+
+          it "allows staff to edit" do
+            sign_in(Fabricate(:admin))
+            topic.first_post.update(locked_by_id: admin.id)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: topic.title + " hello"
+            }
+            expect(response.status).to eq(200)
+          end
+        end
+
         context 'tags' do
           fab!(:tag) { Fabricate(:tag) }
 
