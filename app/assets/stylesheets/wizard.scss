@@ -11,7 +11,7 @@
 
 body.wizard {
   background-color: var(--secondary);
-  background-image: asset-url("/images/wizard/bubbles.png");
+  // background-image: asset-url("/images/wizard/bubbles.png");
   background-repeat: repeat;
   background-position: left top;
   color: var(--primary-very-high);
@@ -67,7 +67,8 @@ body.wizard {
   width: 400px;
 }
 
-.wizard-canvas {
+.wizard-canvas,
+.wizard-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -179,6 +180,7 @@ body.wizard {
 }
 
 .wizard-column {
+  display: none;
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
