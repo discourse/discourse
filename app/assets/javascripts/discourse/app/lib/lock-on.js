@@ -113,10 +113,7 @@ export default class LockOn {
       return this.clearLock();
     }
 
-    if (
-      !within(4, top, this.previousTop) ||
-      !within(4, window.scrollTop, top)
-    ) {
+    if (!within(4, top, this.previousTop) || !within(4, window.scrollY, top)) {
       window.scrollTo(window.pageXOffset, top);
       this.previousTop = top;
     }
