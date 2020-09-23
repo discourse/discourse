@@ -257,7 +257,8 @@ module Stylesheet
     end
 
     def category_css(category)
-      "body.category-#{category.slug}, body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+      full_slug = category.full_slug.split("-")[0..-2].join("-")
+      "body.category-#{category.slug}, body.category-#{full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
     end
 
     def font_css(font)
