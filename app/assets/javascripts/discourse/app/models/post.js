@@ -22,10 +22,11 @@ const Post = RestModel.extend({
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
-    const userSuffix = user ? `?u=${user.username_lower}` : "";
+    const badgesEnabled = this.siteSettings.enable_badges;
+    const userSuffix = user && badgesEnabled ? `?u=${user.username_lower}` : "";
 
     if (this.firstPost) {
-      return this.get("topic.url") + userSuffix;
+      return this.topic.url + userSuffix;
     } else {
       return url + userSuffix;
     }

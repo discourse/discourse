@@ -242,8 +242,10 @@ const Topic = RestModel.extend({
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
-    const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
-    return `${url}${userQueryString}`;
+    const badgesEnabled = this.siteSettings.enable_badges;
+    const userSuffix = user && badgesEnabled ? `?u=${user.username_lower}` : "";
+
+    return url + userSuffix;
   },
 
   printUrl: fmt("url", "%@/print"),
