@@ -445,7 +445,8 @@ const Composer = RestModel.extend({
     return (
       canCategorize &&
       !categoryId &&
-      !this.siteSettings.allow_uncategorized_topics
+      !this.siteSettings.allow_uncategorized_topics &&
+      !!this._hasTopicTemplates
     );
   },
 
@@ -752,6 +753,10 @@ const Composer = RestModel.extend({
         this.set("categoryId", categories[0].id);
       }
     }
+
+    this._hasTopicTemplates = this.site.categories.some(
+      (c) => c.topic_template
+    );
 
     if (opts.postId) {
       promise = promise.then(() =>
