@@ -23,7 +23,7 @@ import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
-import { resolveShareUrl } from "discourse/helpers/share-url"
+import { resolveShareUrl } from "discourse/helpers/share-url";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
