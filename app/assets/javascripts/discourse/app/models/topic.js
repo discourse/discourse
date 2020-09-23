@@ -21,7 +21,6 @@ import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
-import User from "discourse/models/user";
 import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
 import { resolveShareUrl } from "discourse/helpers/share-url"
@@ -242,8 +241,7 @@ const Topic = RestModel.extend({
 
   @discourseComputed("url")
   shareUrl(url) {
-    const context = this;
-    return resolveShareUrl(url, context);
+    return resolveShareUrl(url);
   },
 
   printUrl: fmt("url", "%@/print"),
