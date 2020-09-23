@@ -3,10 +3,10 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Share and Invite modal - mobile", {
   loggedIn: true,
-  mobileView: true,
+  mobileView: true
 });
 
-QUnit.test("Topic footer mobile button", async (assert) => {
+QUnit.test("Topic footer mobile button", async assert => {
   await visit("/t/internationalization-localization/280");
 
   assert.ok(
@@ -54,7 +54,7 @@ QUnit.test("Topic footer mobile button", async (assert) => {
   );
 });
 
-QUnit.test("Post date link", async (assert) => {
+QUnit.test("Post date link", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#post_2 .post-info.post-date a");
 
@@ -71,7 +71,10 @@ acceptance("Share url with badges disabled - mobile", {
 
 QUnit.test("topic footer button - badges disabled - mobile", async assert => {
   await visit("/t/internationalization-localization/280");
-  await click("#topic-footer-button-share-and-invite");
+
+  const subject = selectKit(".topic-footer-mobile-dropdown");
+  await subject.expand();
+  await subject.selectRowByValue("share-and-invite");
 
   assert.notOk(
     find(".share-and-invite.modal .modal-panel.share .topic-share-url")
