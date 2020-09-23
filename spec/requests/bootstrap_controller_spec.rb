@@ -39,4 +39,16 @@ describe BootstrapController do
     expect(preloaded['topicTrackingStates']).to be_present
   end
 
+  it "returns extra locales (admin) when staff" do
+    user = Fabricate(:admin)
+    sign_in(user)
+    get "/bootstrap.json"
+    expect(response.status).to eq(200)
+
+    json = response.parsed_body
+    expect(json).to be_present
+
+    bootstrap = json['bootstrap']
+    expect(bootstrap['extra_locales']).to be_present
+  end
 end

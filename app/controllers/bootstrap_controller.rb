@@ -34,6 +34,14 @@ class BootstrapController < ApplicationController
     end
     add_style(mobile_view? ? :mobile_theme : :desktop_theme) if theme_ids.present?
 
+    extra_locales = []
+    if ExtraLocalesController.client_overrides_exist?
+      extra_locales << ExtraLocalesController.url('overrides')
+    end
+    if staff?
+      extra_locales << ExtraLocalesController.url('admin')
+    end
+
     bootstrap = {
       theme_ids: theme_ids,
       title: SiteSetting.title,
@@ -41,8 +49,9 @@ class BootstrapController < ApplicationController
       locale_script: locale,
       stylesheets: @stylesheets,
       setup_data: client_side_setup_data,
-      preloaded: @preloaded
+      preloaded: @preloaded,
     }
+    bootstrap[:extra_locales] = extra_locales if extra_locales.present?
 
     render_json_dump(bootstrap: bootstrap)
   end
