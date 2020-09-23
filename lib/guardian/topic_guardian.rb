@@ -74,6 +74,7 @@ module TopicGuardian
   def can_edit_topic?(topic)
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
     return false unless can_see?(topic)
+    return false if topic.first_post&.locked? && !is_staff?
 
     return true if is_admin?
     return true if is_moderator? && can_create_post?(topic)
