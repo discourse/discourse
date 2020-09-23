@@ -153,12 +153,16 @@ class PostDestroyer
       trash_user_actions
       remove_associated_replies
       remove_associated_notifications
-      if @post.topic && @post.is_first_post?
-        StaffActionLogger.new(@user).log_topic_delete_recover(@post.topic, "delete_topic", @opts.slice(:context)) if @user.id != @post.user_id
-        @post.topic.trash!(@user)
-      elsif @user.id != @post.user_id
-        StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
+
+      if @user.id != @post.user_id && !@opts[:skip_staff_log]
+        if @post.topic && @post.is_first_post?
+          StaffActionLogger.new(@user).log_topic_delete_recover(@post.topic, "delete_topic", @opts.slice(:context))
+        else
+          StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
+        end
       end
+
+      @post.topic.trash!(@user) if @post.topic && @post.is_first_post?
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)

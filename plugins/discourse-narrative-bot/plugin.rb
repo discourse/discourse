@@ -194,7 +194,7 @@ after_initialize do
     return if topic.blank?
 
     first_post = topic.ordered_posts.first
-    PostDestroyer.new(Discourse.system_user, first_post, context: I18n.t('discourse_narrative_bot.new_user_narrative.delete_reason')).destroy
+    PostDestroyer.new(Discourse.system_user, first_post, skip_staff_log: true).destroy
     DiscourseNarrativeBot::Store.remove(self.id)
   end
 
