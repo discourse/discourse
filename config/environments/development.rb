@@ -15,6 +15,8 @@ Discourse::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  config.action_controller.asset_host = GlobalSetting.cdn_url
+
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
