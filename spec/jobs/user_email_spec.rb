@@ -174,6 +174,21 @@ describe Jobs::UserEmail do
       MD
     end
 
+    it "sends a PM email to a user that's been recently seen and has email_messages_level set to always" do
+      user.user_option.update(email_messages_level: UserOption.email_level_types[:always])
+      user.user_option.update(email_level: UserOption.email_level_types[:never])
+      Jobs::UserEmail.new.execute(
+        type: :user_private_message,
+        user_id: user.id,
+        post_id: post.id,
+        notification_id: notification.id
+      )
+
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+        user.email
+      )
+    end
+
     it "doesn't send a PM email to a user that's been recently seen and has email_messages_level set to never" do
       user.user_option.update(email_messages_level: UserOption.email_level_types[:never])
       user.user_option.update(email_level: UserOption.email_level_types[:always])
