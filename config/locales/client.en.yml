@@ -2172,7 +2172,8 @@ en:
         new: "You have no new topics."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
-        latest: "There are no latest topics. That's sad."
+        ready_to_create: "Ready to "
+        latest: "You're all caught up!"
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no %{category} topics."
         top: "There are no top topics."
@@ -2280,7 +2281,7 @@ en:
       browse_all_tags: Browse all tags
 
       view_latest_topics: view latest topics
-      suggest_create_topic: Why not create a topic?
+      suggest_create_topic: start a new conversation?
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
