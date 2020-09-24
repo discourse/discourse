@@ -424,6 +424,8 @@ login:
   external_auth_skip_create_confirm:
     default: false
     client: true
+  external_auth_immediately:
+    default: true
   enable_sso:
     client: true
     default: false
