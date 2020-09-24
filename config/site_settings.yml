@@ -50,6 +50,7 @@ required:
   exclude_rel_nofollow_domains:
     default: ""
     type: list
+    list_type: simple
   company_name:
     default: ""
   governing_law:
@@ -148,6 +149,7 @@ basic:
   ga_universal_auto_link_domains:
     default: ""
     type: list
+    list_type: simple
   gtm_container_id:
     client: true
     default: ""
@@ -418,6 +420,7 @@ login:
   discord_trusted_guilds:
     default: ""
     type: list
+    list_type: simple
   external_auth_skip_create_confirm:
     default: false
     client: true
@@ -467,12 +470,15 @@ login:
   blocked_email_domains:
     default: "mailinator.com"
     type: list
+    list_type: simple
   allowed_email_domains:
     default: ""
     type: list
+    list_type: simple
   auto_approve_email_domains:
     default: ""
     type: list
+    list_type: simple
   hide_email_address_taken: false
   log_out_strict: true
   pending_users_reminder_delay:
@@ -570,9 +576,11 @@ users:
     max: 36500
   public_user_custom_fields:
     type: list
+    list_type: simple
     default: ""
   staff_user_custom_fields:
     type: list
+    list_type: simple
     default: ""
   enable_user_directory:
     client: true
@@ -598,6 +606,7 @@ users:
   allowed_user_website_domains:
     default: ""
     type: list
+    list_type: simple
   hide_suspension_reasons:
     default: false
     client: true
@@ -1103,9 +1112,11 @@ email:
   auto_generated_allowlist:
     default: ""
     type: list
+    list_type: simple
   block_auto_generated_emails: true
   ignore_by_title:
     type: list
+    list_type: simple
     default: ""
   mailgun_api_key:
     default: ""
@@ -1225,6 +1236,7 @@ files:
   download_remote_images_threshold: 10
   disabled_image_download_domains:
     type: list
+    list_type: simple
     default: ""
   create_thumbnails: true
   clean_up_uploads: true
@@ -1487,6 +1499,7 @@ security:
   cors_origins:
     default: ""
     type: list
+    list_type: simple
   keep_old_ip_address_count:
     default: 0
     hidden: true
@@ -1508,6 +1521,7 @@ security:
   allowed_iframes:
     default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/"
     type: list
+    list_type: simple
     client: true
   allowed_crawler_user_agents:
     type: list
@@ -1584,6 +1598,7 @@ spam:
   allowed_spam_host_domains:
     default: ""
     type: list
+    list_type: simple
   levenshtein_distance_spammer_emails:
     default: 2
     max: 3
@@ -1922,6 +1937,7 @@ uncategorized:
   permalink_normalizations:
     default: ""
     type: list
+    list_type: simple
 
   max_similar_results: 5
   minimum_topics_similar: 50
