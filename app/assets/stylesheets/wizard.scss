@@ -18,6 +18,18 @@ body.wizard {
   font-size: 15px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  #wizard-main:before {
+    mask: asset-url("/images/wizard/bubbles.svg");
+    -webkit-mask: asset-url("/images/wizard/bubbles.svg");
+    background-color: var(--primary-low-mid);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: "";
+    opacity: 0.6;
+  }
 }
 
 .finish-installation {
@@ -36,11 +48,15 @@ body.wizard {
 }
 
 .discourse-logo {
-  background-image: asset-url("/images/wizard/discourse.png");
-  height: 30px;
-  width: 110px;
-  background-size: 110px 30px;
-  background-repeat: no-repeat;
+  &,
+  svg {
+    height: 30px;
+    width: 110px;
+  }
+
+  .logo-contour {
+    fill: var(--primary);
+  }
 }
 
 .wizard-warning {
@@ -175,12 +191,6 @@ body.wizard {
       }
     }
   }
-}
-
-.wizard-background {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .wizard-column {
