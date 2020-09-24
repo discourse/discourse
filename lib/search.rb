@@ -637,11 +637,11 @@ class Search
     )", file_extensions: file_extensions)
   end
 
-  advanced_filter(/^min_view_count:(\d+)$/i) do |posts, match|
+  advanced_filter(/^min_views:(\d+)$/i) do |posts, match|
     posts.where("topics.views >= ?", match.to_i)
   end
 
-  advanced_filter(/^max_view_count:(\d+)$/i) do |posts, match|
+  advanced_filter(/^max_views:(\d+)$/i) do |posts, match|
     posts.where("topics.views <= ?", match.to_i)
   end
 

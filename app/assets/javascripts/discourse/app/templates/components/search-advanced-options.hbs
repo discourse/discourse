@@ -162,27 +162,27 @@
   </div>
 
   <div class="control-group pull-left">
-    <label class="control-label" for="search-min-view-count">{{i18n "search.advanced.min_view_count.label"}}</label>
+    <label class="control-label" for="search-min-views">{{i18n "search.advanced.min_views.label"}}</label>
     <div class="controls">
       {{input
         type="number"
-        value=(readonly searchedTerms.min_view_count)
+        value=(readonly searchedTerms.min_views)
         class="input-small"
-        id="search-min-view-count"
-        input=(action "onChangeSearchTermMinViewCount" value="target.value")
+        id="search-min-views"
+        input=(action "onChangeSearchTermMinViews" value="target.value")
       }}
     </div>
   </div>
 
   <div class="control-group pull-left">
-    <label class="control-label" for="search-max-view-count">{{i18n "search.advanced.max_view_count.label"}}</label>
+    <label class="control-label" for="search-max-views">{{i18n "search.advanced.max_views.label"}}</label>
     <div class="controls">
       {{input
         type="number"
-        value=(readonly searchedTerms.max_view_count)
+        value=(readonly searchedTerms.max_views)
         class="input-small"
-        id="search-max-view-count"
-        input=(action "onChangeSearchTermMaxViewCount" value="target.value")
+        id="search-max-views"
+        input=(action "onChangeSearchTermMaxViews" value="target.value")
       }}
     </div>
   </div>

@@ -1399,8 +1399,8 @@ describe Search do
       post = Fabricate(:post, raw: 'Topic', topic: topic)
       post2 = Fabricate(:post, raw: 'Topic', topic: topic2)
 
-      expect(Search.execute('Topic min_view_count:150').posts.map(&:id)).to eq([post2.id])
-      expect(Search.execute('Topic max_view_count:150').posts.map(&:id)).to eq([post.id])
+      expect(Search.execute('Topic min_views:150').posts.map(&:id)).to eq([post2.id])
+      expect(Search.execute('Topic max_views:150').posts.map(&:id)).to eq([post.id])
     end
 
     it 'can search for terms with dots' do

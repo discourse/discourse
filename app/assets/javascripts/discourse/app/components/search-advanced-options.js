@@ -12,8 +12,8 @@ const REGEXP_TAGS_PREFIX = /^(tags?:|#(?=[a-z0-9\-]+::tag))/gi;
 const REGEXP_IN_PREFIX = /^(in|with):/gi;
 const REGEXP_STATUS_PREFIX = /^status:/gi;
 const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/gi;
-const REGEXP_MIN_VIEW_COUNT_PREFIX = /^min_view_count:/gi;
-const REGEXP_MAX_VIEW_COUNT_PREFIX = /^max_view_count:/gi;
+const REGEXP_MIN_VIEWS_PREFIX = /^min_views:/gi;
+const REGEXP_MAX_VIEWS_PREFIX = /^max_views:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
 const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
@@ -95,8 +95,8 @@ export default Component.extend({
         },
         status: null,
         min_post_count: null,
-        min_view_count: null,
-        max_view_count: null,
+        min_views: null,
+        max_views: null,
         time: {
           when: "before",
           days: null,
@@ -167,13 +167,13 @@ export default Component.extend({
     );
 
     this.setSearchedTermValue(
-      "searchedTerms.min_view_count",
-      REGEXP_MIN_VIEW_COUNT_PREFIX
+      "searchedTerms.min_views",
+      REGEXP_MIN_VIEWS_PREFIX
     );
 
     this.setSearchedTermValue(
-      "searchedTerms.max_view_count",
-      REGEXP_MAX_VIEW_COUNT_PREFIX
+      "searchedTerms.max_views",
+      REGEXP_MAX_VIEWS_PREFIX
     );
   },
 
@@ -360,15 +360,15 @@ export default Component.extend({
   },
 
   @action
-  onChangeSearchTermMinViewCount(value) {
-    this.set("searchedTerms.min_view_count", value.length ? value : null);
-    this._updateSearchTermForMinViewCount();
+  onChangeSearchTermMinViews(value) {
+    this.set("searchedTerms.min_views", value.length ? value : null);
+    this._updateSearchTermForMinViews();
   },
 
   @action
-  onChangeSearchTermMaxViewCount(value) {
-    this.set("searchedTerms.max_view_count", value.length ? value : null);
-    this._updateSearchTermForMaxViewCount();
+  onChangeSearchTermMaxViews(value) {
+    this.set("searchedTerms.max_views", value.length ? value : null);
+    this._updateSearchTermForMaxViews();
   },
 
   @action
@@ -653,19 +653,19 @@ export default Component.extend({
     }
   },
 
-  _updateSearchTermForMinViewCount() {
-    const match = this.filterBlocks(REGEXP_MIN_VIEW_COUNT_PREFIX);
-    const viewsCountFilter = this.get("searchedTerms.min_view_count");
+  _updateSearchTermForMinViews() {
+    const match = this.filterBlocks(REGEXP_MIN_VIEWS_PREFIX);
+    const viewsCountFilter = this.get("searchedTerms.min_views");
     let searchTerm = this.searchTerm || "";
 
     if (viewsCountFilter) {
       if (match.length !== 0) {
         searchTerm = searchTerm.replace(
           match[0],
-          `min_view_count:${viewsCountFilter}`
+          `min_views:${viewsCountFilter}`
         );
       } else {
-        searchTerm += ` min_view_count:${viewsCountFilter}`;
+        searchTerm += ` min_views:${viewsCountFilter}`;
       }
 
       this._updateSearchTerm(searchTerm);
@@ -675,19 +675,19 @@ export default Component.extend({
     }
   },
 
-  _updateSearchTermForMaxViewCount() {
-    const match = this.filterBlocks(REGEXP_MAX_VIEW_COUNT_PREFIX);
-    const viewsCountFilter = this.get("searchedTerms.max_view_count");
+  _updateSearchTermForMaxViews() {
+    const match = this.filterBlocks(REGEXP_MAX_VIEWS_PREFIX);
+    const viewsCountFilter = this.get("searchedTerms.max_views");
     let searchTerm = this.searchTerm || "";
 
     if (viewsCountFilter) {
       if (match.length !== 0) {
         searchTerm = searchTerm.replace(
           match[0],
-          `max_view_count:${viewsCountFilter}`
+          `max_views:${viewsCountFilter}`
         );
       } else {
-        searchTerm += ` max_view_count:${viewsCountFilter}`;
+        searchTerm += ` max_views:${viewsCountFilter}`;
       }
 
       this._updateSearchTerm(searchTerm);
