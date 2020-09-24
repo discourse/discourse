@@ -21,6 +21,8 @@ body.wizard {
   #wizard-main:before {
     mask: asset-url("/images/wizard/bubbles.svg");
     -webkit-mask: asset-url("/images/wizard/bubbles.svg");
+    mask-size: 30%;
+    -webkit-mask-size: 30%;
     background-color: var(--primary-low-mid);
     position: absolute;
     top: 0;
