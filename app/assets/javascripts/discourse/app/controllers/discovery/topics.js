@@ -134,6 +134,11 @@ const controllerOpts = {
   weekly: equal("period", "weekly"),
   daily: equal("period", "daily"),
 
+  @discourseComputed("model")
+  canCreateTopicOnCategory(model) {
+    return model.can_create_topic;
+  },
+
   @discourseComputed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {
     if (!allLoaded) {
