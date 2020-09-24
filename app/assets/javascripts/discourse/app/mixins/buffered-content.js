@@ -5,19 +5,19 @@ import BufferedProxy from "ember-buffered-proxy/proxy";
 
 export function bufferedProperty(property) {
   const mixin = {
-    buffered: computed(property, function() {
+    buffered: computed(property, function () {
       return EmberObjectProxy.extend(BufferedProxy).create({
-        content: this.get(property)
+        content: this.get(property),
       });
     }),
 
-    rollbackBuffer: function() {
+    rollbackBuffer: function () {
       this.buffered.discardBufferedChanges();
     },
 
-    commitBuffer: function() {
+    commitBuffer: function () {
       this.buffered.applyBufferedChanges();
-    }
+    },
   };
 
   // It's a good idea to null out fields when declaring objects

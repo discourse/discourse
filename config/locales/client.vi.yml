@@ -97,6 +97,9 @@ vi:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
       post: "đăng #%{postNumber}"
       close: "đóng"
+      twitter: "Chia sẻ trên Twitter"
+      facebook: "Chia sẻ trên Facebook"
+      email: "Gửi qua email"
     action_codes:
       public_topic: "hiển thị chủ đề này công khai lúc %{when}"
       private_topic: "tạo một tin nhắn từ chủ đề này %{when}"
@@ -234,8 +237,11 @@ vi:
       help:
         bookmark: "Chọn bài viết đầu tiên của chủ đề cho vào dấu trang"
         unbookmark: "Chọn để xoá toàn bộ dấu trang trong chủ đề này"
+        unbookmark_with_reminder: "Nhấp để xóa tất cả dấu trang và lời nhắc trong chủ đề này. Bạn có lời nhắc đặt %{reminder_at} cho chủ đề này."
     bookmarks:
+      created: "Bạn đã đánh dấu bài đăng này. %{name}"
       not_bookmarked: "đánh dấu bài viết này"
+      created_with_reminder: "Bạn đã đánh dấu bài đăng này với lời nhắc %{date}. %{name}"
       remove: "Xóa dấu trang"
       delete: "Xóa chỉ mục"
       confirm_clear: "Bạn có chắc muốn xóa toàn bộ đánh dấu trong chủ đề này?"
@@ -244,7 +250,6 @@ vi:
       list_permission_denied: "Bạn không có quyền xem chỉ mục của người dùng này"
       search: "Tìm kiếm"
       reminders:
-        at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
         tomorrow: "Ngày mai"
         next_week: "Tuần tới"
         next_month: "Tháng t"
@@ -1602,7 +1607,7 @@ vi:
           "3_1": "Bạn sẽ được nhận các tin báo bởi bạn đã tạo chủ để này."
           "3": "Bạn sẽ nhận được các tin báo bởi vì bạn đang theo dõi chủ đề này."
           "2_8": "Bạn sẽ thấy được 1 số lượng bài viết mới bởi vì bạn đang theo dấu chuyên mục này."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
           "1": "Bạn sẽ được tin báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn."
           "0_7": "Bạn đang bỏ qua tất cả các tin báo trong chuyên mục này."
@@ -1831,20 +1836,7 @@ vi:
         grant_badge: "Cấp huy hiệu"
         delete_topic: "xóa chủ đề"
       actions:
-        flag: "Gắn cờ"
-        undo:
-          off_topic: "Hủy gắn cờ"
-          spam: "Hủy gắn cờ"
-          inappropriate: "Hủy gắn cờ"
-          bookmark: "Hủy đánh dấu"
-          like: "Hủy like"
         people:
-          off_topic: "đánh dấu là chủ đề đóng"
-          spam: "đánh dấu là spam"
-          inappropriate: "đánh dấu là không phù hợp"
-          notify_moderators: "đã thông báo với BQT"
-          notify_user: "đã gửi tin nhắn"
-          bookmark: "đã đánh dấu bài này"
           like:
             other: "thích này"
           like_capped:
@@ -1855,8 +1847,6 @@ vi:
           inappropriate: "Bạn đã đánh dấu cái này là không phù hợp"
           notify_moderators: "Bạn đã đánh dấu cái này cho điều tiết"
           notify_user: "Bạn đã gửi một tin nhắn đến người dùng này"
-          bookmark: "Bạn đã đánh dấu bài viết này"
-          like: "Bạn đã thích cái này"
       revisions:
         controls:
           first: "Sửa đổi đầu tiên"
@@ -2247,14 +2237,6 @@ vi:
           latest: "Không có chủ đề mới nhất"
           bookmarks: "Bạn chưa chủ đề nào được đánh dấu."
           top: "Không có chủ đề top."
-        bottom:
-          latest: "Không còn thêm chủ đề nào nữa."
-          posted: "Ở đây không có thêm chủ đề nào được đăng."
-          read: "Không còn thêm chủ đề chưa đọc nào nữa."
-          new: "Không còn thêm chủ đề mới nào nữa."
-          unread: "Không còn thêm chủ đề chưa đọc nào nữa."
-          top: "Không còn của đề top nào nữa."
-          bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     footer_nav:
       back: "Quay lại"
       share: "Chia sẻ"

@@ -10,6 +10,6 @@ export default ComboBoxComponent.extend({
   },
 
   selectKitOptions: {
-    translatedNone: I18n.t("admin.customize.theme.default_light_scheme")
-  }
+    translatedNone: I18n.t("admin.customize.theme.default_light_scheme"),
+  },
 });

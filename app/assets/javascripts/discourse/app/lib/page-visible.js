@@ -6,7 +6,7 @@ var hiddenProperty =
     ? "webkitHidden"
     : undefined;
 
-export default function() {
+export default function () {
   if (hiddenProperty !== undefined) {
     return !document[hiddenProperty];
   } else {

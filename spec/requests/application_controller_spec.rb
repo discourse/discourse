@@ -45,6 +45,24 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/login")
     end
 
+    it "should not redirect to SSO when external_auth_immediately is disabled" do
+      SiteSetting.external_auth_immediately = false
+      SiteSetting.sso_url = 'http://someurl.com'
+      SiteSetting.enable_sso = true
+
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    it "should not redirect to authenticator when external_auth_immediately is disabled" do
+      SiteSetting.external_auth_immediately = false
+      SiteSetting.enable_google_oauth2_logins = true
+      SiteSetting.enable_local_logins = false
+
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
     context "with omniauth in test mode" do
       before do
         OmniAuth.config.test_mode = true

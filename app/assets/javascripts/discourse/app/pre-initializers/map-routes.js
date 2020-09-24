@@ -13,9 +13,9 @@ export default {
     const originalBuildInstance =
       originalBuildInstance || Application.prototype.buildInstance;
 
-    Application.prototype.buildInstance = function() {
+    Application.prototype.buildInstance = function () {
       this.buildRegistry();
       return originalBuildInstance.apply(this);
     };
-  }
+  },
 };

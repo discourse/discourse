@@ -7,7 +7,9 @@ export default Component.extend({
 
   @discourseComputed("text")
   translatedText(text) {
-    if (text) return I18n.t(text);
+    if (text) {
+      return I18n.t(text);
+    }
   },
 
   click(event) {
@@ -16,5 +18,5 @@ export default Component.extend({
     }
 
     return false;
-  }
+  },
 });

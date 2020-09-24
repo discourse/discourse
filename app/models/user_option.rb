@@ -163,6 +163,7 @@ class UserOption < ActiveRecord::Base
     when 3 then "unread"
     when 4 then "new"
     when 5 then "top"
+    when 6 then "bookmarks"
     else SiteSetting.homepage
     end
   end
@@ -236,6 +237,9 @@ end
 #  enable_defer                     :boolean          default(FALSE), not null
 #  timezone                         :string
 #  enable_allowed_pm_users          :boolean          default(FALSE), not null
+#  dark_scheme_id                   :integer
+#  skip_new_user_tips               :boolean          default(FALSE), not null
+#  color_scheme_id                  :integer
 #
 # Indexes
 #

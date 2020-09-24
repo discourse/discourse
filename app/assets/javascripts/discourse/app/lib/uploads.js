@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import { isAppleDevice } from "discourse/lib/utilities";
+import bootbox from "bootbox";
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -47,13 +48,17 @@ export function validateUploadedFiles(files, opts) {
 }
 
 function validateUploadedFile(file, opts) {
-  if (opts.skipValidation) return true;
+  if (opts.skipValidation) {
+    return true;
+  }
 
   opts = opts || {};
   let user = opts.user;
   let staff = user && user.staff;
 
-  if (!authorizesOneOrMoreExtensions(staff, opts.siteSettings)) return false;
+  if (!authorizesOneOrMoreExtensions(staff, opts.siteSettings)) {
+    return false;
+  }
 
   const name = file && file.name;
 
@@ -75,7 +80,7 @@ function validateUploadedFile(file, opts) {
           authorized_extensions: authorizedImagesExtensions(
             staff,
             opts.siteSettings
-          )
+          ),
         })
       );
       return false;
@@ -92,7 +97,7 @@ function validateUploadedFile(file, opts) {
     ) {
       bootbox.alert(
         I18n.t("post.errors.upload_not_authorized", {
-          authorized_extensions: authorizedExtensions(staff, opts.siteSettings)
+          authorized_extensions: authorizedExtensions(staff, opts.siteSettings),
         })
       );
       return false;
@@ -120,7 +125,7 @@ function extensionsToArray(exts) {
     .toLowerCase()
     .replace(/[\s\.]+/g, "")
     .split("|")
-    .filter(ext => ext.indexOf("*") === -1);
+    .filter((ext) => ext.indexOf("*") === -1);
 }
 
 function extensions(siteSettings) {
@@ -132,14 +137,14 @@ function staffExtensions(siteSettings) {
 }
 
 function imagesExtensions(staff, siteSettings) {
-  let exts = extensions(siteSettings).filter(ext =>
+  let exts = extensions(siteSettings).filter((ext) =>
     IMAGES_EXTENSIONS_REGEX.test(ext)
   );
   if (staff) {
-    const staffExts = staffExtensions(siteSettings).filter(ext =>
+    const staffExts = staffExtensions(siteSettings).filter((ext) =>
       IMAGES_EXTENSIONS_REGEX.test(ext)
     );
-    exts = _.union(exts, staffExts);
+    exts = exts.concat(staffExts);
   }
   return exts;
 }
@@ -172,7 +177,7 @@ export function authorizedExtensions(staff, siteSettings) {
   const exts = staff
     ? [...extensions(siteSettings), ...staffExtensions(siteSettings)]
     : extensions(siteSettings);
-  return exts.filter(ext => ext.length > 0).join(", ");
+  return exts.filter((ext) => ext.length > 0).join(", ");
 }
 
 function authorizedImagesExtensions(staff, siteSettings) {
@@ -189,15 +194,20 @@ export function authorizesAllExtensions(staff, siteSettings) {
 }
 
 export function authorizesOneOrMoreExtensions(staff, siteSettings) {
-  if (authorizesAllExtensions(staff, siteSettings)) return true;
+  if (authorizesAllExtensions(staff, siteSettings)) {
+    return true;
+  }
 
   return (
-    siteSettings.authorized_extensions.split("|").filter(ext => ext).length > 0
+    siteSettings.authorized_extensions.split("|").filter((ext) => ext).length >
+    0
   );
 }
 
 export function authorizesOneOrMoreImageExtensions(staff, siteSettings) {
-  if (authorizesAllExtensions(staff, siteSettings)) return true;
+  if (authorizesAllExtensions(staff, siteSettings)) {
+    return true;
+  }
   return imagesExtensions(staff, siteSettings).length > 0;
 }
 
@@ -269,8 +279,9 @@ export function getUploadMarkdown(upload) {
 export function displayErrorForUpload(data, siteSettings) {
   if (data.jqXHR) {
     switch (data.jqXHR.status) {
-      // cancelled by the user
+      // didn't get headers from server, or browser refuses to tell us
       case 0:
+        bootbox.alert(I18n.t("post.errors.upload"));
         return;
 
       // entity too large, usually returned from the web server

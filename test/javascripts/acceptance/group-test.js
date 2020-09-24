@@ -5,24 +5,24 @@ import pretender from "helpers/create-pretender";
 
 let groupArgs = {
   settings: {
-    enable_group_directory: true
+    enable_group_directory: true,
   },
   pretend(pretenderServer, helper) {
     pretenderServer.post("/groups/Macdonald/request_membership", () => {
       return helper.response({
-        relative_url: "/t/internationalization-localization/280"
+        relative_url: "/t/internationalization-localization/280",
       });
     });
-  }
+  },
 };
 
 acceptance("Group", groupArgs);
 
-const response = object => {
+const response = (object) => {
   return [200, { "Content-Type": "application/json" }, object];
 };
 
-QUnit.test("Anonymous Viewing Group", async function(assert) {
+QUnit.test("Anonymous Viewing Group", async function (assert) {
   await visit("/g/discourse");
 
   assert.equal(
@@ -77,7 +77,7 @@ QUnit.test("Anonymous Viewing Group", async function(assert) {
   );
 });
 
-QUnit.test("Anonymous Viewing Automatic Group", async assert => {
+QUnit.test("Anonymous Viewing Automatic Group", async (assert) => {
   await visit("/g/moderators");
 
   assert.equal(
@@ -89,14 +89,12 @@ QUnit.test("Anonymous Viewing Automatic Group", async assert => {
 
 acceptance("Group", Object.assign({ loggedIn: true }, groupArgs));
 
-QUnit.test("User Viewing Group", async assert => {
+QUnit.test("User Viewing Group", async (assert) => {
   await visit("/g");
   await click(".group-index-request");
 
   assert.equal(
-    find(".modal-header")
-      .text()
-      .trim(),
+    find(".modal-header").text().trim(),
     I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
   );
 
@@ -108,9 +106,7 @@ QUnit.test("User Viewing Group", async assert => {
   await click(".modal-footer .btn-primary");
 
   assert.equal(
-    find(".fancy-title")
-      .text()
-      .trim(),
+    find(".fancy-title").text().trim(),
     "Internationalization / localization"
   );
 
@@ -128,7 +124,7 @@ QUnit.test("User Viewing Group", async assert => {
 
 QUnit.test(
   "Admin viewing group messages when there are no messages",
-  async assert => {
+  async (assert) => {
     pretender.get(
       "/topics/private-messages-group/eviltrout/discourse.json",
       () => {
@@ -140,16 +136,14 @@ QUnit.test(
     await click(".nav-pills li a[title='Messages']");
 
     assert.equal(
-      find(".alert")
-        .text()
-        .trim(),
+      find(".alert").text().trim(),
       I18n.t("choose_topic.none_found"),
       "it should display the right alert"
     );
   }
 );
 
-QUnit.test("Admin viewing group messages", async assert => {
+QUnit.test("Admin viewing group messages", async (assert) => {
   pretender.get(
     "/topics/private-messages-group/eviltrout/discourse.json",
     () => {
@@ -159,14 +153,14 @@ QUnit.test("Admin viewing group messages", async assert => {
             id: 2,
             username: "bruce1",
             avatar_template:
-              "/user_avatar/meta.discourse.org/bruce1/{size}/5245.png"
+              "/user_avatar/meta.discourse.org/bruce1/{size}/5245.png",
           },
           {
             id: 3,
             username: "CodingHorror",
             avatar_template:
-              "/user_avatar/meta.discourse.org/codinghorror/{size}/5245.png"
-          }
+              "/user_avatar/meta.discourse.org/codinghorror/{size}/5245.png",
+          },
         ],
         primary_groups: [],
         topic_list: {
@@ -210,26 +204,26 @@ QUnit.test("Admin viewing group messages", async assert => {
                   extras: "latest single",
                   description: "Original Poster, Most Recent Poster",
                   user_id: 2,
-                  primary_group_id: null
-                }
+                  primary_group_id: null,
+                },
               ],
               participants: [
                 {
                   extras: "latest",
                   description: null,
                   user_id: 2,
-                  primary_group_id: null
+                  primary_group_id: null,
                 },
                 {
                   extras: null,
                   description: null,
                   user_id: 3,
-                  primary_group_id: null
-                }
-              ]
-            }
-          ]
-        }
+                  primary_group_id: null,
+                },
+              ],
+            },
+          ],
+        },
       });
     }
   );
@@ -238,15 +232,13 @@ QUnit.test("Admin viewing group messages", async assert => {
   await click(".nav-pills li a[title='Messages']");
 
   assert.equal(
-    find(".topic-list-item .link-top-line")
-      .text()
-      .trim(),
+    find(".topic-list-item .link-top-line").text().trim(),
     "This is a private message 1",
     "it should display the list of group topics"
   );
 });
 
-QUnit.test("Admin Viewing Group", async assert => {
+QUnit.test("Admin Viewing Group", async (assert) => {
   await visit("/g/discourse");
 
   assert.ok(

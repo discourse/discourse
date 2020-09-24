@@ -62,9 +62,7 @@ export default Component.extend({
   },
 
   _clearFlash() {
-    $("#modal-alert")
-      .hide()
-      .removeClass("alert-error", "alert-success");
+    $("#modal-alert").hide().removeClass("alert-error", "alert-success");
   },
 
   _flash(msg) {
@@ -74,5 +72,5 @@ export default Component.extend({
       .addClass(`alert alert-${msg.messageClass || "success"}`)
       .html(msg.text || "")
       .fadeIn();
-  }
+  },
 });

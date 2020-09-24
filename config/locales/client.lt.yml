@@ -1229,8 +1229,6 @@ lt:
         reply: Atsakyti
         draft: Juodraštis
         edit: Redaguoti
-        reply_to_post:
-          label: Atsakyti į %{postNumber} įrašą, %{postUsername}autoriaus
         reply_as_private_message:
           label: Nauja žinutė
           desc: Sukurti naują asmeninę žinutę
@@ -1510,7 +1508,6 @@ lt:
         remove: "Pašalinti laikmatį"
         publish_to: "Publikuoki į:"
         when: "Kada:"
-        public_timer_types: Temos laikmačiai
       auto_update_input:
         later_today: "Šiandien vėliau"
         tomorrow: "Rytoj"
@@ -1560,7 +1557,7 @@ lt:
           "3_2": "Gausite pranešimus, nes Stebite šią temą."
           "3_1": "Gausite pranešimus, nes sukūrėte šią temą."
           "3": "Gausite pranešimus, nes Stebite šią temą."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
           "1": "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
           "0_7": "Jūs ignoruojate visus šios temos pranešimus"
@@ -1842,15 +1839,7 @@ lt:
         unlock_post: "Atrakinti įrašą"
         delete_topic: "ištrinti temą"
       actions:
-        flag: "Uždėk vėliavą"
-        undo:
-          off_topic: "Nuimti vėliavą"
-          spam: "Nuimti vėliavą"
-          inappropriate: "Nuimti vėliavą"
-          bookmark: "Anuliuoti žymę"
-          like: "Anuliuoti Patinka"
         people:
-          spam: "pažymėtas kaip šlamštas"
           like_capped:
             one: "ir %{count}kitas mėgsta tai"
             few: "ir %{count}kitų mėgsta tai"
@@ -1862,8 +1851,6 @@ lt:
           inappropriate: "Tu pažymėjai tai, kaip nepriimtiną"
           notify_moderators: "Tu pasiūlei moderavimą."
           notify_user: "Jūs išsiuntėt žinutę šiam vartotojui"
-          bookmark: "Jūs uždėjot žymą ant šio įrašo"
-          like: "Jūs tai mėgstate"
       revisions:
         controls:
           first: "Pirmoji peržiūra"
@@ -2296,14 +2283,6 @@ lt:
           posted: "Jūs dar nerašėte jokiose temose."
           bookmarks: "Jūs dar neturite pažymėtų temų."
           top: "Nėra jokių TOP temų."
-        bottom:
-          latest: "Daugiau nėra jokių naujausių temų."
-          posted: "Daugiau nėra jokių paskelbtų temų."
-          read: "Daugiau nėra jokių perskaitytų temų."
-          new: "Daugiau nėra jokių naujų temų."
-          unread: "Daugiau nėra jokių neperskaitytų temų."
-          top: "Daugiau nėra jokių populiarių temų."
-          bookmarks: "Daugiau pažymėtų temų nėra"
     invite:
       custom_message_placeholder: "Įveskite savo pasirinktinę žinutę"
       custom_message_template_forum: "Labas, užsiregistruok ir tu!\nČia bus vienas geriausių forumų..."
@@ -2404,7 +2383,6 @@ lt:
             visibility_levels:
               title: "Kas gali matyti šia grupę?"
               public: "Visi"
-              staff: "Grupės valdytojai ir moderatoriai"
           membership:
             automatic: Automatini
             trust_levels_title: "Pasitikėjimo lygis automatiškai suteikiamas nariui kai jis prideda:"

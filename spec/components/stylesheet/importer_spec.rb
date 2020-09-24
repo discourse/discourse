@@ -13,12 +13,13 @@ describe Stylesheet::Importer do
     expect(compile_css("category_backgrounds")).to_not include("background-image")
 
     background = Fabricate(:upload)
-    category = Fabricate(:category, uploaded_background: background)
+    parent_category = Fabricate(:category)
+    category = Fabricate(:category, parent_category_id: parent_category.id, uploaded_background: background)
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{category.full_slug}{background-image:url(#{background.url})}")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
 
     GlobalSetting.stubs(:cdn_url).returns("//awesome.cdn")
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{category.full_slug}{background-image:url(//awesome.cdn#{background.url})}")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
   end
 
   it "applies S3 CDN to background category images" do
@@ -32,7 +33,20 @@ describe Stylesheet::Importer do
     background = Fabricate(:upload_s3)
     category = Fabricate(:category, uploaded_background: background)
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.full_slug}{background-image:url(https://s3.cdn/original")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug}{background-image:url(https://s3.cdn/original")
+  end
+
+  it "includes font variable" do
+    expect(compile_css("desktop"))
+      .to include(":root{--font-family: Helvetica, Arial, sans-serif}")
+  end
+
+  it "includes all fonts in wizard" do
+    expect(compile_css("wizard").scan(/\.font-/).count)
+      .to eq(DiscourseFonts.fonts.count)
+
+    expect(compile_css("wizard").scan(/@font-face/).count)
+      .to eq(DiscourseFonts.fonts.map { |f| f[:variants]&.count || 0 }.sum)
   end
 
   context "#theme_variables" do
@@ -125,4 +139,40 @@ describe Stylesheet::Importer do
 
   end
 
+  context "#import_color_definitions" do
+    let(:scss) { ":root { --custom-color: green}" }
+    let(:scss_child) { ":root { --custom-color: red}" }
+
+    let(:theme) do
+      Fabricate(:theme).tap do |t|
+        t.set_field(target: :common, name: "color_definitions", value: scss)
+        t.save!
+      end
+    end
+
+    let(:child) { Fabricate(:theme, component: true).tap { |t|
+      t.set_field(target: :common, name: "color_definitions", value: scss_child)
+      t.save!
+    }}
+
+    it "should include color definitions in the theme" do
+      styles = Stylesheet::Importer.import_color_definitions(theme.id)
+      expect(styles).to include(scss)
+    end
+
+    it "should include color definitions from components" do
+      theme.add_relative_theme!(:child, child)
+      theme.save!
+
+      styles = Stylesheet::Importer.import_color_definitions(theme.id)
+      expect(styles).to include(scss_child)
+    end
+
+    it "should include default theme color definitions" do
+      SiteSetting.default_theme_id = theme.id
+      styles = Stylesheet::Importer.import_color_definitions(nil)
+      expect(styles).to include(scss)
+    end
+
+  end
 end

@@ -3,7 +3,7 @@ import pretender from "helpers/create-pretender";
 
 acceptance("Tags", { loggedIn: true });
 
-QUnit.test("list the tags", async assert => {
+QUnit.test("list the tags", async (assert) => {
   await visit("/tags");
 
   assert.ok($("body.tags-page").length, "has the body class");
@@ -16,11 +16,11 @@ QUnit.test("list the tags", async assert => {
 acceptance("Tags listed by group", {
   loggedIn: true,
   settings: {
-    tags_listed_by_group: true
-  }
+    tags_listed_by_group: true,
+  },
 });
 
-QUnit.test("list the tags in groups", async assert => {
+QUnit.test("list the tags in groups", async (assert) => {
   await visit("/tags");
   assert.equal(
     $(".tag-list").length,
@@ -30,7 +30,7 @@ QUnit.test("list the tags in groups", async assert => {
   assert.deepEqual(
     $(".tag-list h3")
       .toArray()
-      .map(i => {
+      .map((i) => {
         return $(i).text();
       }),
     ["Ford Cars", "Honda Cars", "Makes", "Other Tags"],
@@ -39,7 +39,7 @@ QUnit.test("list the tags in groups", async assert => {
   assert.deepEqual(
     $(".tag-list:first .discourse-tag")
       .toArray()
-      .map(i => {
+      .map((i) => {
         return $(i).text();
       }),
     ["focus", "Escort"],
@@ -48,7 +48,7 @@ QUnit.test("list the tags in groups", async assert => {
   assert.deepEqual(
     $(".tag-list:first .discourse-tag")
       .toArray()
-      .map(i => {
+      .map((i) => {
         return $(i).attr("href");
       }),
     ["/tag/focus", "/tag/escort"],
@@ -61,11 +61,11 @@ QUnit.test("list the tags in groups", async assert => {
   );
 });
 
-test("new topic button is not available for staff-only tags", async assert => {
+test("new topic button is not available for staff-only tags", async (assert) => {
   pretender.get("/tag/regular-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
-    { tag_notification: { id: "regular-tag", notification_level: 1 } }
+    { tag_notification: { id: "regular-tag", notification_level: 1 } },
   ]);
 
   pretender.get("/tag/regular-tag/l/latest.json", () => [
@@ -84,18 +84,18 @@ test("new topic button is not available for staff-only tags", async assert => {
           {
             id: 1,
             name: "regular-tag",
-            topic_count: 1
-          }
+            topic_count: 1,
+          },
         ],
-        topics: []
-      }
-    }
+        topics: [],
+      },
+    },
   ]);
 
   pretender.get("/tag/staff-only-tag/notifications", () => [
     200,
     { "Content-Type": "application/json" },
-    { tag_notification: { id: "staff-only-tag", notification_level: 1 } }
+    { tag_notification: { id: "staff-only-tag", notification_level: 1 } },
   ]);
 
   pretender.get("/tag/staff-only-tag/l/latest.json", () => [
@@ -115,12 +115,12 @@ test("new topic button is not available for staff-only tags", async assert => {
             id: 1,
             name: "staff-only-tag",
             topic_count: 1,
-            staff: true
-          }
+            staff: true,
+          },
         ],
-        topics: []
-      }
-    }
+        topics: [],
+      },
+    },
   ]);
 
   updateCurrentUser({ moderator: false, admin: false });
@@ -143,12 +143,12 @@ test("new topic button is not available for staff-only tags", async assert => {
 acceptance("Tag info", {
   loggedIn: true,
   settings: {
-    tags_listed_by_group: true
+    tags_listed_by_group: true,
   },
   pretend(server, helper) {
     server.get("/tag/planters/notifications", () => {
       return helper.response({
-        tag_notification: { id: "planters", notification_level: 1 }
+        tag_notification: { id: "planters", notification_level: 1 },
       });
     });
 
@@ -166,11 +166,11 @@ acceptance("Tag info", {
             {
               id: 1,
               name: "planters",
-              topic_count: 1
-            }
+              topic_count: 1,
+            },
           ],
-          topics: []
-        }
+          topics: [],
+        },
       });
     });
 
@@ -185,15 +185,15 @@ acceptance("Tag info", {
           synonyms: [
             {
               id: "containers",
-              text: "containers"
+              text: "containers",
             },
             {
               id: "planter",
-              text: "planter"
-            }
+              text: "planter",
+            },
           ],
           tag_group_names: ["Gardening"],
-          category_ids: [7]
+          category_ids: [7],
         },
         categories: [
           {
@@ -209,15 +209,15 @@ acceptance("Tag info", {
             topic_url: "/t/category-definition-for-outdoors/1026",
             read_restricted: false,
             permission: null,
-            notification_level: null
-          }
-        ]
+            notification_level: null,
+          },
+        ],
       });
     });
-  }
+  },
 });
 
-test("tag info can show synonyms", async assert => {
+test("tag info can show synonyms", async (assert) => {
   updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/tag/planters");
@@ -226,9 +226,7 @@ test("tag info can show synonyms", async assert => {
   await click("#show-tag-info");
   assert.ok(exists(".tag-info .tag-name"), "show tag");
   assert.ok(
-    find(".tag-info .tag-associations")
-      .text()
-      .indexOf("Gardening") >= 0,
+    find(".tag-info .tag-associations").text().indexOf("Gardening") >= 0,
     "show tag group names"
   );
   assert.ok(
@@ -244,11 +242,11 @@ test("tag info can show synonyms", async assert => {
   assert.ok(!exists("#delete-tag"), "can't delete tag");
 });
 
-test("admin can manage tags", async assert => {
+test("admin can manage tags", async (assert) => {
   pretender.delete("/tag/planters/synonyms/containers", () => [
     200,
     { "Content-Type": "application/json" },
-    { success: true }
+    { success: true },
   ]);
 
   updateCurrentUser({ moderator: false, admin: true });

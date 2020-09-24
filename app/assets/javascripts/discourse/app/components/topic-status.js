@@ -87,5 +87,5 @@ export default Component.extend({
     this.set(`${name}Icon`, null);
     this.set(`${name}Title`, null);
     return false;
-  }
+  },
 });

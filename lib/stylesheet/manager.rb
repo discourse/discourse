@@ -135,7 +135,10 @@ class Stylesheet::Manager
     return '' if !stylesheet
 
     href = stylesheet[:new_href]
-    %[<link href="#{href}" media="#{media}" rel="stylesheet"/>].html_safe
+
+    css_class = media == 'all' ? "light-scheme" : "dark-scheme"
+
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"/>].html_safe
   end
 
   def self.color_scheme_cache_key(color_scheme, theme_id = nil)
@@ -241,6 +244,10 @@ class Stylesheet::Manager
       if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
         # no special errors for theme, handled in theme editor
         ["", nil]
+      elsif @target.to_s == COLOR_SCHEME_STYLESHEET
+        # log error but do not crash for errors in color definitions SCSS
+        Rails.logger.error "SCSS compilation error: #{e.message}"
+        ["", nil]
       else
         raise Discourse::ScssError, e.message
       end
@@ -310,7 +317,7 @@ class Stylesheet::Manager
     if is_theme?
       "#{@target}_#{theme.id}"
     elsif @color_scheme
-      "#{@target}_#{Slug.for(@color_scheme.name)}_#{@color_scheme&.id.to_s}"
+      "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}"
     else
       scheme_string = theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"
@@ -328,6 +335,10 @@ class Stylesheet::Manager
 
   def is_theme?
     !!(@target.to_s =~ THEME_REGEX)
+  end
+
+  def scheme_slug
+    Slug.for(ActiveSupport::Inflector.transliterate(@color_scheme.name), 'scheme')
   end
 
   # digest encodes the things that trigger a recompile
@@ -398,9 +409,9 @@ class Stylesheet::Manager
 
     if cs || category_updated > 0
       theme_color_defs = theme&.resolve_baked_field(:common, :color_definitions)
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}"
+      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{SiteSetting.base_font}"
     else
-      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}"
+      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}-#{SiteSetting.base_font}"
 
       if cdn_url = GlobalSetting.cdn_url
         digest_string = "#{digest_string}-#{cdn_url}"

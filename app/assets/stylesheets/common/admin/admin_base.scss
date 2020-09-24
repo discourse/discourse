@@ -80,7 +80,7 @@ $mobile-breakpoint: 700px;
 
 .nav-stacked {
   @media screen and (max-width: 700px) {
-    margin: 0 10px 0 -10px;
+    margin: 0 15px 0 -10px;
   }
 }
 
@@ -658,7 +658,8 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-nav {
-  width: 18.018%;
+  width: 18%;
+  box-sizing: border-box;
   position: relative; // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
@@ -671,21 +672,14 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-detail {
-  width: 76.5765%;
-  @media (max-width: $mobile-breakpoint) {
-    z-index: z("base");
-    width: 100%;
-  }
-
-  background-color: var(
-    --secondary
-  ); // Todo: set this properly - it needs to be >= the menu height
-  min-height: 875px;
+  background-color: var(--secondary);
   margin-left: 0;
   border-left: solid 1px var(--primary-low);
   padding: 30px 0 30px 30px;
+  width: 82%;
+  box-sizing: border-box;
   @media (max-width: $mobile-breakpoint) {
-    padding: 30px 0;
+    width: 95%;
     border: none;
   }
 }
@@ -706,7 +700,6 @@ $mobile-breakpoint: 700px;
     transition: transform 0.3s ease;
     @include transform(translateX(0));
     margin-left: -10px;
-    padding-left: 10px;
   }
 }
 

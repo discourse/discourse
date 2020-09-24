@@ -6,5 +6,5 @@ export default RestModel.extend({
   @discourseComputed("action")
   actionTitle(action) {
     return I18n.t(`group_histories.actions.${action}`);
-  }
+  },
 });

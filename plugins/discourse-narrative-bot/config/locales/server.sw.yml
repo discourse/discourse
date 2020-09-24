@@ -146,12 +146,6 @@ sw:
           Picha nzuri -- Nimebonyeza kitufe cha :moyo: kuonyesha shukrani yangu kwako :heart_eyes_:
         like_not_found: |-
           Je ulisahau kuipenda :heart: [taarifa] yangu?(%{url}) :crying_cate_face:
-        not_found: |-
-          Inaonekana haujaweka picha kwa hiyo nimechagua picha_na uhakika_utaipenda.
-
-          `%{image_url}`
-
-          Jaribu kuweka ya kwako mwenyewe baada ya hii, au bandika kiungo kimoja kwenye mstari pekee!
       formatting:
         instructions: |-
           Unaweza **kukoza** au _italiki_kwenye jibu lako?

@@ -6,7 +6,7 @@ import { htmlSafe } from "@ember/template";
   Display logic for dates. It is unbound in Ember but will use jQuery to
   update the dates on a regular interval.
 **/
-registerUnbound("format-date", function(val, params) {
+registerUnbound("format-date", function (val, params) {
   var leaveAgo,
     format = "medium",
     title = true;
@@ -27,7 +27,7 @@ registerUnbound("format-date", function(val, params) {
       autoUpdatingRelativeAge(date, {
         format: format,
         title: title,
-        leaveAgo: leaveAgo
+        leaveAgo: leaveAgo,
       })
     );
   }

@@ -29,10 +29,10 @@ export default Component.extend({
       formData: {
         synchronous: true,
         type: `wizard_${id}`,
-        authenticity_token: getToken()
+        authenticity_token: getToken(),
       },
       dataType: "json",
-      dropZone: $upload
+      dropZone: $upload,
     });
 
     $upload.on("fileuploadsubmit", () => this.set("uploading", true));
@@ -53,9 +53,9 @@ export default Component.extend({
         title: "",
         text: message,
         type: "warning",
-        confirmButtonColor: "#6699ff"
+        confirmButtonColor: "#6699ff",
       });
       this.set("uploading", false);
     });
-  }
+  },
 });

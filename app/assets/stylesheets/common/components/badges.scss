@@ -189,14 +189,15 @@
 
   &.new-topic {
     background-color: transparent;
-    color: var(--tertiary-high);
-    font-weight: normal;
-    font-size: $font-down-1;
   }
 
   &.new-topic::before {
-    content: "●";
-    margin-right: 2px;
+    content: "";
+    background: var(--tertiary-high);
+    display: inline-block;
+    height: 0.4em;
+    width: 0.4em;
+    border-radius: 50%;
   }
 
   // Click count

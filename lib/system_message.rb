@@ -21,8 +21,8 @@ class SystemMessage
     params = defaults.merge(params)
     from_system = params[:from_system] || false
 
-    title = I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.subject_template", params) }
-    raw = I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.text_body_template", params) }
+    title = params[:message_title] || I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.subject_template", params) }
+    raw = params[:message_raw] || I18n.with_locale(@recipient.effective_locale) { I18n.t("system_messages.#{type}.text_body_template", params) }
 
     if from_system
       user = Discourse.system_user
@@ -42,6 +42,8 @@ class SystemMessage
                        skip_validations: true)
 
     post = I18n.with_locale(@recipient.effective_locale) { creator.create }
+
+    DiscourseEvent.trigger(:system_message_sent, post: post, message_type: type)
 
     if creator.errors.present?
       raise StandardError, creator.errors.full_messages.join(" ")

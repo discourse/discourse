@@ -11,11 +11,11 @@ export default Controller.extend({
 
   @discourseComputed
   notificationLevels() {
-    return topicLevels.map(level => {
+    return topicLevels.map((level) => {
       return {
         id: level.id.toString(),
         name: I18n.t(`topic.notifications.${level.key}.title`),
-        description: I18n.t(`topic.notifications.${level.key}.description`)
+        description: I18n.t(`topic.notifications.${level.key}.description`),
       };
     });
   },
@@ -26,8 +26,8 @@ export default Controller.extend({
     changeNotificationLevel() {
       this.topicBulkActions.performAndRefresh({
         type: "change_notification_level",
-        notification_level_id: this.notificationLevelId
+        notification_level_id: this.notificationLevelId,
       });
-    }
-  }
+    },
+  },
 });

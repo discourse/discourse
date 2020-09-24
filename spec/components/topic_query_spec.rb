@@ -9,7 +9,7 @@ describe TopicQuery do
   #  it indeed happens first, but is not obvious later in the tests we depend on the user being
   #  created so early otherwise finding new topics does not work
   #  we should remove the let! here and use freeze time to communicate how the clock moves
-  let!(:user) { Fabricate(:coding_horror) }
+  let!(:user) { Fabricate(:user) }
 
   fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
@@ -162,6 +162,18 @@ describe TopicQuery do
     end
   end
 
+  describe 'include_pms option' do
+    it "includes users own pms in regular topic lists" do
+      topic = Fabricate(:topic)
+      own_pm = Fabricate(:private_message_topic, user: user)
+      other_pm = Fabricate(:private_message_topic, user: Fabricate(:user))
+
+      expect(TopicQuery.new(user).list_latest.topics).to contain_exactly(topic)
+      expect(TopicQuery.new(admin).list_latest.topics).to contain_exactly(topic)
+      expect(TopicQuery.new(user, include_pms: true).list_latest.topics).to contain_exactly(topic, own_pm)
+    end
+  end
+
   context 'category filter' do
     let(:category) { Fabricate(:category_with_definition) }
     let(:diff_category) { Fabricate(:category_with_definition, name: "Different Category") }
@@ -286,7 +298,7 @@ describe TopicQuery do
 
       before do
         SiteSetting.remove_muted_tags_from_latest = 'always'
-        SiteSetting.default_tags_muted = tag.id.to_s
+        SiteSetting.default_tags_muted = tag.name
       end
 
       it 'removes default muted tag topics for anonymous users' do

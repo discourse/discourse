@@ -515,6 +515,14 @@ describe Topic do
       end
     end
 
+    it 'does not result in a syntax error when raw is blank after cooking' do
+      expect(Topic.similar_to('some title', '#')).to eq([])
+    end
+
+    it 'does not result in invalid statement when prepared data is blank' do
+      expect(Topic.similar_to('some title', 'https://discourse.org/#INCORRECT#URI')).to be_empty
+    end
+
     context 'with a similar topic' do
       fab!(:post) {
         SearchIndexer.enable
@@ -890,9 +898,9 @@ describe Topic do
   end
 
   context 'private message' do
-    let(:coding_horror) { User.find_by(username: "CodingHorror") }
+    let(:coding_horror) { Fabricate(:coding_horror) }
     fab!(:evil_trout) { Fabricate(:evil_trout) }
-    let(:topic) { Fabricate(:private_message_topic) }
+    let(:topic) { Fabricate(:private_message_topic, recipient: coding_horror) }
 
     it "should integrate correctly" do
       expect(Guardian.new(topic.user).can_see?(topic)).to eq(true)
@@ -1576,6 +1584,7 @@ describe Topic do
         describe 'when new category is set to auto close by default' do
           before do
             new_category.update!(auto_close_hours: 5)
+            topic.user.update!(admin: true)
           end
 
           it 'should set a topic timer' do
@@ -1588,6 +1597,7 @@ describe Topic do
 
             topic_timer = TopicTimer.last
 
+            expect(topic_timer.user).to eq(Discourse.system_user)
             expect(topic_timer.topic).to eq(topic)
             expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
           end
@@ -1702,20 +1712,6 @@ describe Topic do
         expect(Topic.in_category_and_subcategories(c1.id)).to include(t2)
         expect(Topic.in_category_and_subcategories(c1.id)).to include(t1)
       end
-    end
-  end
-
-  describe '#private_topic_timer' do
-    let(:topic_timer) do
-      Fabricate(:topic_timer,
-        public_type: false,
-        user: user,
-        status_type: TopicTimer.private_types[:reminder]
-      )
-    end
-
-    it 'should return the right record' do
-      expect(topic_timer.topic.private_topic_timer(user)).to eq(topic_timer)
     end
   end
 
@@ -1867,38 +1863,6 @@ describe Topic do
 
         TopicTimer.ensure_consistency!
         expect(topic.reload.closed).to eq(true)
-      end
-    end
-
-    describe "private status type" do
-      fab!(:topic) { Fabricate(:topic) }
-      let(:reminder) { Fabricate(:topic_timer, user: admin, topic: topic, status_type: TopicTimer.types[:reminder]) }
-      fab!(:other_admin) { Fabricate(:admin) }
-
-      it "lets two users have their own record" do
-        reminder
-        expect {
-          topic.set_or_create_timer(TopicTimer.types[:reminder], 2, by_user: other_admin)
-        }.to change { TopicTimer.count }.by(1)
-      end
-
-      it 'should not be override when setting a public topic timer' do
-        reminder
-
-        expect do
-          topic.set_or_create_timer(TopicTimer.types[:close], 3, by_user: reminder.user)
-        end.to change { TopicTimer.count }.by(1)
-      end
-
-      it "can update a user's existing record" do
-        freeze_time now
-
-        reminder
-        expect {
-          topic.set_or_create_timer(TopicTimer.types[:reminder], 11, by_user: admin)
-        }.to_not change { TopicTimer.count }
-        reminder.reload
-        expect(reminder.execute_at).to eq_time(11.hours.from_now)
       end
     end
   end

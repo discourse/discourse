@@ -57,7 +57,7 @@ export default Component.extend({
       return I18n.t("flagging.custom_message.more", { count: minLen - len });
     } else {
       return I18n.t("flagging.custom_message.left", {
-        count: MAX_MESSAGE_LENGTH - len
+        count: MAX_MESSAGE_LENGTH - len,
       });
     }
   },
@@ -65,6 +65,6 @@ export default Component.extend({
   actions: {
     changePostActionType(at) {
       this.changePostActionType(at);
-    }
-  }
+    },
+  },
 });

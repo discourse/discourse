@@ -209,6 +209,22 @@ class Wizard
         step.add_field(id: 'popular-themes', type: 'component')
       end
 
+      @wizard.append_step('fonts') do |step|
+        field = step.add_field(
+          id: 'font_previews',
+          type: 'component',
+          value: SiteSetting.base_font
+        )
+
+        DiscourseFonts.fonts.each do |font|
+          field.add_choice(font[:key], data: { class: font[:key].tr("_", "-"), font_stack: font[:stack] })
+        end
+
+        step.on_update do |updater|
+          updater.update_setting(:base_font, updater.fields[:font_previews])
+        end
+      end
+
       @wizard.append_step('logos') do |step|
         step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
         step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)

@@ -17,6 +17,6 @@ export default DiscourseRoute.extend({
   actions: {
     willTransition() {
       this.controllerFor("group-manage-logs").reset();
-    }
-  }
+    },
+  },
 });

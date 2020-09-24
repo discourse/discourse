@@ -1,5 +1,7 @@
 import I18n from "I18n";
 import { later } from "@ember/runloop";
+import bootbox from "bootbox";
+
 //  Subscribe to "asset-version" change events via the Message Bus
 export default {
   name: "asset-version",
@@ -17,7 +19,7 @@ export default {
       session.requiresRefresh = true;
     });
 
-    messageBus.subscribe("/global/asset-version", function(version) {
+    messageBus.subscribe("/global/asset-version", function (version) {
       if (session.assetVersion !== version) {
         session.requiresRefresh = true;
       }
@@ -26,7 +28,7 @@ export default {
         // Since we can do this transparently for people browsing the forum
         // hold back the message 24 hours.
         timeout = later(() => {
-          bootbox.confirm(I18n.t("assets_changed_confirm"), function(result) {
+          bootbox.confirm(I18n.t("assets_changed_confirm"), function (result) {
             if (result) {
               document.location.reload();
             }
@@ -34,5 +36,5 @@ export default {
         }, 1000 * 60 * 24 * 60);
       }
     });
-  }
+  },
 };

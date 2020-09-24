@@ -4,10 +4,10 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Category Edit", {
   loggedIn: true,
-  settings: { email_in: true }
+  settings: { email_in: true },
 });
 
-QUnit.test("Can open the category modal", async assert => {
+QUnit.test("Can open the category modal", async (assert) => {
   await visit("/c/bug");
 
   await click(".edit-category");
@@ -17,7 +17,7 @@ QUnit.test("Can open the category modal", async assert => {
   assert.ok(!visible(".d-modal"), "it closes the modal");
 });
 
-QUnit.test("Editing the category", async assert => {
+QUnit.test("Editing the category", async (assert) => {
   await visit("/c/bug");
 
   await click(".edit-category");
@@ -46,8 +46,8 @@ QUnit.test("Editing the category", async assert => {
   );
 });
 
-QUnit.skip("Edit the description without loosing progress", async assert => {
-  let win = { focus: function() {} };
+QUnit.skip("Edit the description without loosing progress", async (assert) => {
+  let win = { focus: function () {} };
   let windowOpen = sandbox.stub(window, "open").returns(win);
   sandbox.stub(win, "focus");
 
@@ -61,7 +61,7 @@ QUnit.skip("Edit the description without loosing progress", async assert => {
   );
 });
 
-QUnit.test("Error Saving", async assert => {
+QUnit.test("Error Saving", async (assert) => {
   await visit("/c/bug");
 
   await click(".edit-category");
@@ -72,7 +72,7 @@ QUnit.test("Error Saving", async assert => {
   assert.equal(find("#modal-alert").html(), "duplicate email");
 });
 
-QUnit.test("Subcategory list settings", async assert => {
+QUnit.test("Subcategory list settings", async (assert) => {
   const categoryChooser = selectKit(
     ".edit-category-tab-general .category-chooser"
   );

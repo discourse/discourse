@@ -31,14 +31,14 @@ export default Controller.extend(ModalFunctionality, {
       "newTopic",
       "existingTopic",
       "newMessage",
-      "existingMessage"
+      "existingMessage",
     ];
 
     this.moveTypes = [
       "newTopic",
       "existingTopic",
       "newMessage",
-      "existingMessage"
+      "existingMessage",
     ];
   },
 
@@ -81,7 +81,7 @@ export default Controller.extend(ModalFunctionality, {
       categoryId: null,
       topicName: "",
       tags: null,
-      participants: null
+      participants: null,
     });
 
     const isPrivateMessage = this.get("model.isPrivateMessage");
@@ -113,7 +113,7 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     performMove() {
-      this.moveTypes.forEach(type => {
+      this.moveTypes.forEach((type) => {
         if (this.get(type)) {
           this.send("movePostsTo", type);
         }
@@ -135,7 +135,7 @@ export default Controller.extend(ModalFunctionality, {
         mergeOptions = {
           destination_topic_id: this.selectedTopicId,
           participants: this.participants,
-          archetype: "private_message"
+          archetype: "private_message",
         };
         moveOptions = Object.assign(
           { post_ids: this.get("topicController.selectedPostIds") },
@@ -147,7 +147,7 @@ export default Controller.extend(ModalFunctionality, {
           title: this.topicName,
           post_ids: this.get("topicController.selectedPostIds"),
           category_id: this.categoryId,
-          tags: this.tags
+          tags: this.tags,
         };
       } else {
         mergeOptions = {};
@@ -155,7 +155,7 @@ export default Controller.extend(ModalFunctionality, {
           title: this.topicName,
           post_ids: this.get("topicController.selectedPostIds"),
           tags: this.tags,
-          archetype: "private_message"
+          archetype: "private_message",
         };
       }
 
@@ -164,12 +164,12 @@ export default Controller.extend(ModalFunctionality, {
         : movePosts(topicId, moveOptions);
 
       promise
-        .then(result => {
+        .then((result) => {
           this.send("closeModal");
           this.topicController.send("toggleMultiSelect");
           DiscourseURL.routeTo(result.url);
         })
-        .catch(xhr => {
+        .catch((xhr) => {
           this.flash(extractError(xhr, I18n.t("topic.move_to.error")));
         })
         .finally(() => {
@@ -177,6 +177,6 @@ export default Controller.extend(ModalFunctionality, {
         });
 
       return false;
-    }
-  }
+    },
+  },
 });

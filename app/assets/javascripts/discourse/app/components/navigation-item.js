@@ -8,7 +8,7 @@ export default Component.extend(FilterModeMixin, {
     "active",
     "content.hasIcon:has-icon",
     "content.classNames",
-    "isHidden:hidden"
+    "isHidden:hidden",
   ],
   attributeBindings: ["content.title:title"],
   hidden: false,
@@ -68,5 +68,5 @@ export default Component.extend(FilterModeMixin, {
     this.set("hrefLink", href);
 
     this.set("activeClass", this.active ? "active" : "");
-  }
+  },
 });

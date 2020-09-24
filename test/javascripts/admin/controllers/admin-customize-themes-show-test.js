@@ -5,21 +5,21 @@ moduleFor("controller:admin-customize-themes-show", {
   beforeEach() {
     this.registry.register("router:main", mapRoutes());
   },
-  needs: ["controller:adminUser"]
+  needs: ["controller:adminUser"],
 });
 
-QUnit.test("can display source url for remote themes", function(assert) {
+QUnit.test("can display source url for remote themes", function (assert) {
   const repoUrl = "https://github.com/discourse/discourse-brand-header.git";
   const remoteTheme = Theme.create({
     id: 2,
     default: true,
     name: "default",
     remote_theme: {
-      remote_url: repoUrl
-    }
+      remote_url: repoUrl,
+    },
   });
   const controller = this.subject({
-    model: remoteTheme
+    model: remoteTheme,
   });
 
   assert.deepEqual(
@@ -29,7 +29,7 @@ QUnit.test("can display source url for remote themes", function(assert) {
   );
 });
 
-QUnit.test("can display source url for remote theme branches", function(
+QUnit.test("can display source url for remote theme branches", function (
   assert
 ) {
   const remoteTheme = Theme.create({
@@ -38,11 +38,11 @@ QUnit.test("can display source url for remote theme branches", function(
     name: "default",
     remote_theme: {
       remote_url: "https://github.com/discourse/discourse-brand-header.git",
-      branch: "beta"
-    }
+      branch: "beta",
+    },
   });
   const controller = this.subject({
-    model: remoteTheme
+    model: remoteTheme,
   });
 
   assert.deepEqual(

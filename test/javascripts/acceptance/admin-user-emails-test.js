@@ -3,7 +3,7 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Admin - User Emails", { loggedIn: true });
 
-const assertNoSecondary = assert => {
+const assertNoSecondary = (assert) => {
   assert.equal(
     find(".display-row.email .value a").text(),
     "eviltrout@example.com",
@@ -11,9 +11,7 @@ const assertNoSecondary = assert => {
   );
 
   assert.equal(
-    find(".display-row.secondary-emails .value")
-      .text()
-      .trim(),
+    find(".display-row.secondary-emails .value").text().trim(),
     I18n.t("user.email.no_secondary"),
     "it should not display secondary emails"
   );
@@ -33,13 +31,13 @@ const assertMultipleSecondary = (assert, firstEmail, secondEmail) => {
   );
 };
 
-QUnit.test("viewing self without secondary emails", async assert => {
+QUnit.test("viewing self without secondary emails", async (assert) => {
   await visit("/admin/users/1/eviltrout");
 
   assertNoSecondary(assert);
 });
 
-QUnit.test("viewing self with multiple secondary emails", async assert => {
+QUnit.test("viewing self with multiple secondary emails", async (assert) => {
   await visit("/admin/users/3/markvanlan");
 
   assert.equal(
@@ -55,14 +53,14 @@ QUnit.test("viewing self with multiple secondary emails", async assert => {
   );
 });
 
-QUnit.test("viewing another user with no secondary email", async assert => {
+QUnit.test("viewing another user with no secondary email", async (assert) => {
   await visit("/admin/users/1234/regular");
   await click(`.display-row.secondary-emails button`);
 
   assertNoSecondary(assert);
 });
 
-QUnit.test("viewing another account with secondary emails", async assert => {
+QUnit.test("viewing another account with secondary emails", async (assert) => {
   await visit("/admin/users/1235/regular1");
   await click(`.display-row.secondary-emails button`);
 

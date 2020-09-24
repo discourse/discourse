@@ -856,6 +856,11 @@ class TopicsController < ApplicationController
           topics = topics.where('category_id = ?', params[:category_id])
         end
       end
+
+      if params[:tag_name].present?
+        topics = topics.joins(:tags).where("tags.name": params[:tag_name])
+      end
+
       topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)
@@ -863,7 +868,7 @@ class TopicsController < ApplicationController
 
     operation = params
       .require(:operation)
-      .permit(:type, :group, :category_id, :notification_level_id, tags: [])
+      .permit(:type, :group, :category_id, :notification_level_id, *DiscoursePluginRegistry.permitted_bulk_action_parameters, tags: [])
       .to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?

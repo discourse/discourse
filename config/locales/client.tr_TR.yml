@@ -263,7 +263,6 @@ tr_TR:
       no_timezone: 'Henüz bir saat dilimi belirlemediniz. Hatırlatıcı ayarlayamazsınız. <a href="%{basePath}/my/preferences/profile">Profilinizde</a> bir tane oluşturun.'
       search: "Arama"
       reminders:
-        at_desktop: "Bir dahaki sefere masaüstümdeyim"
         later_today: "Bugün ilerleyen saatlerde"
         tomorrow: "Yarın"
         next_week: "Gelecek hafta"
@@ -923,7 +922,6 @@ tr_TR:
         use: "Authenticator uygulamasını kullan"
         enforced_notice: "Bu siteye erişmeden önce iki faktörlü kimlik doğrulamasını etkinleştirmeniz gerekir."
         disable: "Devre dışı bırak"
-        disable_confirm: "Bütün ikinci faktörleri inaktifleştirmek istediğinize emin misiniz?"
         save: "Kaydet"
         edit: "Düzenle"
         edit_title: "İkinci Faktörü Düzenle"
@@ -1594,7 +1592,6 @@ tr_TR:
         draft: Taslak
         edit: Düzenle
         reply_to_post:
-          label: ' %{postUsername} tarafından %{postNumber} gönderi cevaplandı.'
           desc: İlgili gönderiyi cevapla
         reply_as_new_topic:
           label: Bağlantılı konu olarak yanıtla
@@ -1906,9 +1903,6 @@ tr_TR:
       toggle_information: "konu ayrıntılarını değiştir"
       read_more_in_category: "Daha fazlası için %{catLink} kategorisine göz atabilir ya da %{latestLink}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? %{catLink} ya da %{latestLink}."
-      group_request: "Bu konuyu görebilmek için `%{name}` grubundan üyelik talebinde bulunmalısınız."
-      group_join: "Bu konuyu görebilmek için %{name} grubuna katılmalısınız."
-      group_request_sent: "Grup üyeliği isteğiniz gönderildi. Kabul edildiğinde bilgilendirileceksiniz."
       unread_indicator: "Bu konunun son mesajını henüz hiç üye okumamış."
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 okunmamış mesaj</a> } other { <a href='{basePath}/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='{basePath}/new'>1 yeni</a> konu} other { {BOTH, select, true{ve } false {} other{}} <a href='{basePath}/new'># yeni</a> konu} } var. {CATEGORY, select, true {{catLink} kategorisine} false {{latestLink}} other {}} göz atabilirsin."
       browse_all_categories: Bütün kategorilere göz at
@@ -1924,8 +1918,6 @@ tr_TR:
         remove: "Zamanlayıcıyı Kaldır"
         publish_to: "Şuraya Yayınla:"
         when: "Ne zaman:"
-        public_timer_types: Konu Zamanlayıcıları
-        private_timer_types: Kullanıcı Konu Zamanlayıcıları
         time_frame_required: Bir zaman dilimi seç
       auto_update_input:
         none: "Zaman aralığı seç"
@@ -2006,7 +1998,7 @@ tr_TR:
           "2_8": "Bu kategoriyi takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
           "2_4": "Bu konuyu yanıtladığınız için yeni cevapların sayısını göreceksiniz."
           "2_2": "Bu konuyu takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Birisi @isminden bahsederse ya da sana cevap verirse bildirim alacaksın."
           "1": "Birisi @isminden bahsederse veya sana cevap verirse bildirim alacaksın."
           "0_7": "Bu kategoriye ait tüm bildirimleri yok sayıyorsun."
@@ -2331,23 +2323,7 @@ tr_TR:
         remove_post_notice: "Personel Bilgisini Kaldır"
         remove_timer: "zamanlayıcıyı kaldır"
       actions:
-        flag: "Bayrakla işaretle"
-        defer_flags:
-          one: "Bildirimi yoksay"
-          other: "Bildirimleri yoksay"
-        undo:
-          off_topic: "Bayrakla işaretlemeyi geri al"
-          spam: "Bayrakla işaretlemeyi geri al"
-          inappropriate: "Bayrakla işaretlemeyi geri al"
-          bookmark: "İşaretlemeyi geri al"
-          like: "Beğenini geri al"
         people:
-          off_topic: "Bayrakla \"konu dışı\" olarak işaretlendi"
-          spam: "Bayrakla \"istenmeyen e-posta\" olarak işaretlendi"
-          inappropriate: "Bayrakla \"uygunsuz\" olarak işaretlendi"
-          notify_moderators: "bilgilendirilen moderatörler "
-          notify_user: "mesaj gönderdi"
-          bookmark: "bunu işaretledi"
           like:
             one: "bu beğenildi"
             other: "bunlar beğenildi"
@@ -2366,8 +2342,6 @@ tr_TR:
           inappropriate: "Bunu bayrakla \"uygunsuz\" olarak işaretledin"
           notify_moderators: "Bunu moderatörün denetlemesi için bayrakla işaretledin"
           notify_user: "Bu kullanıcıya mesaj gönderdin"
-          bookmark: "Bu gönderiyi işaretledin"
-          like: "Bunu beğendin"
       delete:
         confirm:
           one: "Bu gönderiyi silmek istediğinize emin misiniz?"
@@ -2927,14 +2901,6 @@ tr_TR:
           latest: "Yeni eklenen konu bulunmuyor."
           bookmarks: "Henüz işaretlenmemiş bir konun bulunmuyor."
           top: "Güncel bir konu bulunmuyor."
-        bottom:
-          latest: "Yeni eklenmiş konu bulunmuyor."
-          posted: "Daha fazla gönderilmiş konu bulunmuyor."
-          read: "Okunacak daha fazla konu bulunmuyor."
-          new: "Daha fazla yeni konu bulunmuyor."
-          unread: "Daha fazla okunmamış konu bulunmuyor."
-          top: "Daha fazla güncel konu bulunmuyor."
-          bookmarks: "Daha fazla işaretlenmiş konu bulunmuyor."
     invite:
       custom_message: "Davetini az da olsa kişiselleştirilmiş <a href>özel bir mesajla</a> yaz"
       custom_message_placeholder: "Kişiselleştirilmiş mesajlarını düzenle"
@@ -3072,8 +3038,6 @@ tr_TR:
               title: "Bu grubu kimler görebilir?"
               public: "Herkes"
               logged_on_users: "Giriş yapan kullanıcılar"
-              members: "Grup yöneticileri, üyeler"
-              staff: "Grup sahipleri ve personel"
               owners: "Grup yöneticileri"
               description: "Yöneticiler tüm grupları görebilir."
             members_visibility_levels:
@@ -3136,7 +3100,6 @@ tr_TR:
         save: Kaydet
         new_key: Yeni API Anahtarı
         revoked: İptal edilmiş
-        delete: Kalıcı Sil
         not_shown_again: Bu anahtar bir daha gösterilmez. Devam etmeden önce bir kopyasını aldığınızdan emin olun.
         continue: Devam et
       web_hooks:

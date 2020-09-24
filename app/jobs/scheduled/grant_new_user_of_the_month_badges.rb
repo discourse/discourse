@@ -4,7 +4,7 @@ module Jobs
   class GrantNewUserOfTheMonthBadges < ::Jobs::Scheduled
     every 1.day
 
-    MAX_AWARDED ||= 2
+    MAX_AWARDED = 2
 
     def execute(args)
       badge = Badge.find(Badge::NewUserOfTheMonth)

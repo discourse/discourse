@@ -260,10 +260,7 @@ pt_BR:
         unbookmark: "Clique para remover todos os favoritos neste tópico"
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes deste tópico. Você tem um lembrete definido %{reminder_at} para este tópico."
     bookmarks:
-      created: "você favoritou esta postagem %{name}"
       not_bookmarked: "marcar postagem como favorita"
-      created_with_reminder: "você favoritou esta postagem com um lembrete %{date} %{name}"
-      created_with_at_desktop_reminder: "você favoritou esta postagem e será lembrado na próxima vez que estiver em seu desktop %{name}"
       remove: "Remover Favorito"
       delete: "Excluir Favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
@@ -274,7 +271,6 @@ pt_BR:
       list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário."
       search: "Pesquisar"
       reminders:
-        at_desktop: "Da próxima vez que estiver em meu desktop"
         later_today: "Mais tarde hoje"
         next_business_day: "Próximo dia útil"
         tomorrow: "Amanhã"
@@ -288,7 +284,6 @@ pt_BR:
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
         at_time: "em %{date_time}"
-        existing_reminder: "Você tem um lembrete definido para este favorito que será enviado"
     copy_codeblock:
       copied: "copiado!"
     drafts:
@@ -962,7 +957,6 @@ pt_BR:
         use: "Use o Aplicativo Autenticador"
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
         disable: "Desabilitar"
-        disable_confirm: "Tem certeza que você quer desabilitar todos os segundos fatores?"
         save: "Salvar"
         edit: "Editar"
         edit_title: "Editar Segundo Fator"
@@ -1540,9 +1534,6 @@ pt_BR:
         one: "Selecione pelo menos %{count} item."
         other: "Selecione pelo menos %{count} itens."
       invalid_selection_length: "A seleção deve ter pelo menos %{count} caracteres."
-      components:
-        categories_admin_dropdown:
-          title: "Categorias na caixa de seleção da administração"
     date_time_picker:
       from: De
       to: Para
@@ -1677,7 +1668,6 @@ pt_BR:
         draft: Rascunho
         edit: Editar
         reply_to_post:
-          label: Responder à postagem %{postNumber} por %{postUsername}
           desc: Responder à uma postagem específica
         reply_as_new_topic:
           label: Responder como tópico relacionado
@@ -1994,9 +1984,6 @@ pt_BR:
       toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Quer ler mais? Veja outros tópicos em %{catLink} ou %{latestLink}."
       read_more: "Quer ler mais? %{catLink} ou %{latestLink}."
-      group_request: "Você precisa solicitar filiação ao grupo `%{name}` para ver este tópico"
-      group_join: "Você precisa juntar-se ao grupo `%{name}` para ver este tópico"
-      group_request_sent: "Sua solicitação de filiação ao grupo foi enviada. Você será informado(a) quando ela for aceita."
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
       read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 não lido</a> } other { <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -2014,8 +2001,6 @@ pt_BR:
         remove: "Remover Temporizador"
         publish_to: "Publicar Em:"
         when: "Quando:"
-        public_timer_types: Temporizadores de Tópico
-        private_timer_types: Temporizadores de Tópico do Usuário
         time_frame_required: Por favor selecione um período de tempo
       auto_update_input:
         none: "Selecione um período de tempo"
@@ -2099,7 +2084,7 @@ pt_BR:
           "2_8": "Você verá uma contagem de novas respostas porque está acompanhando esta categoria."
           "2_4": "Você verá uma contagem de novas respostas porque postou uma resposta a este tópico."
           "2_2": "Você verá uma contagem de novas respostas porque está acompanhando este tópico."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "1": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "0_7": "Você está ignorando todas as notificações nesta categoria."
@@ -2439,23 +2424,7 @@ pt_BR:
         remove_post_notice: "Remover Aviso da Staff"
         remove_timer: "remover contador"
       actions:
-        flag: "Sinalização"
-        defer_flags:
-          one: "Ignorar sinalizações"
-          other: "Ignorar sinalizações"
-        undo:
-          off_topic: "Desfazer sinalização"
-          spam: "Desfazer sinalização"
-          inappropriate: "Desfazer sinalização"
-          bookmark: "Remover favorito"
-          like: "Desfazer curtida"
         people:
-          off_topic: "marcado como off-topic"
-          spam: "marcado como spam"
-          inappropriate: "marcado como inapropriado"
-          notify_moderators: "notificaram os moderadores"
-          notify_user: "enviou uma mensagem"
-          bookmark: "favoritaram isto"
           like:
             one: "curtiu"
             other: "curtiram"
@@ -2474,8 +2443,6 @@ pt_BR:
           inappropriate: "Você sinalizou isto como inapropriado"
           notify_moderators: "Você sinalizou isto para a moderação"
           notify_user: "Você enviou uma mensagem particular para este usuário"
-          bookmark: "Você favoritou esta resposta"
-          like: "Você curtiu"
       delete:
         confirm:
           one: "Tem certeza de que deseja excluir esta postagem?"
@@ -3065,14 +3032,6 @@ pt_BR:
           latest: "Não há tópicos recentes."
           bookmarks: "Você ainda não tem tópicos nos favoritos."
           top: "Não há tópicos em alta."
-        bottom:
-          latest: "Não há mais tópicos recentes."
-          posted: "Não há mais tópicos postados."
-          read: "Não há mais tópicos lidos."
-          new: "Não há mais tópicos novos."
-          unread: "Não há mais tópicos não lidos."
-          top: "Não há mais tópicos em alta."
-          bookmarks: "Não há mais tópicos nos favoritos."
     invite:
       custom_message: "Faça o seu convite um pouco mais pessoal escrevendo uma <a href>mensagem personalizada</a>."
       custom_message_placeholder: "Insira a sua mensagem personalizada"
@@ -3214,8 +3173,6 @@ pt_BR:
               title: "Quem pode ver este grupo?"
               public: "Todos"
               logged_on_users: "Usuários conectados"
-              members: "Proprietários do grupo, membros"
-              staff: "Proprietários e funcionários do grupo"
               owners: "Proprietários do grupo"
               description: "Administradores podem ver todos os grupos."
             members_visibility_levels:
@@ -3279,7 +3236,6 @@ pt_BR:
         save: Salvar
         new_key: Nova Chave de API
         revoked: Revogada
-        delete: Permanentemente excluída
         not_shown_again: Esta chave não será exibida novamente. Certifique-se de tirar uma cópia antes de continuar.
         continue: Continuar
       web_hooks:

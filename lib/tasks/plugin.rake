@@ -68,6 +68,7 @@ task 'plugin:update_all' do |t|
     Rake::Task['plugin:update'].invoke(plugin)
     Rake::Task['plugin:update'].reenable
   end
+  Rake::Task['plugin:versions'].invoke
 end
 
 desc 'update a plugin'
@@ -213,4 +214,25 @@ namespace 'plugin:migrate' do
       sh cmd(:up, migration_number)
     end
   end
+end
+
+desc 'display all plugin versions'
+task 'plugin:versions' do |t, args|
+  versions =
+    Dir
+      .glob('*', base: 'plugins')
+      .map { |plugin|
+        [plugin, "plugins/#{plugin}", "plugins/#{plugin}/.git"]
+      }
+      .select { |plugin, plugin_dir, plugin_git_dir|
+        File.directory?(plugin_dir) && File.directory?(plugin_git_dir)
+      }
+      .map { |plugin, _, plugin_git_dir|
+        version = `git --git-dir \"#{plugin_git_dir}\" rev-parse HEAD`
+        abort("unable to get #{plugin} version") unless version
+        [plugin, version.strip[0...8]]
+      }
+      .to_h
+
+  puts JSON.pretty_generate(versions)
 end

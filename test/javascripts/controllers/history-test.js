@@ -1,11 +1,11 @@
 moduleFor("controller:history");
 
-QUnit.test("displayEdit", async function(assert) {
+QUnit.test("displayEdit", async function (assert) {
   const HistoryController = this.subject();
 
   HistoryController.setProperties({
     model: { last_revision: 3, current_revision: 3, can_edit: false },
-    topicController: {}
+    topicController: {},
   });
 
   assert.equal(
@@ -99,9 +99,9 @@ QUnit.test("displayEdit", async function(assert) {
     viewMode: "side_by_side",
     model: {
       body_changes: {
-        side_by_side: html
-      }
-    }
+        side_by_side: html,
+      },
+    },
   });
 
   await HistoryController.bodyDiffChanged();

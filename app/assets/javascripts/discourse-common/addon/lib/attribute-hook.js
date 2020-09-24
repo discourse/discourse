@@ -10,7 +10,7 @@ function AttributeHook(namespace, value) {
   this.value = value;
 }
 
-AttributeHook.prototype.hook = function(node, prop, prev) {
+AttributeHook.prototype.hook = function (node, prop, prev) {
   if (
     prev &&
     prev.type === "AttributeHook" &&
@@ -23,7 +23,7 @@ AttributeHook.prototype.hook = function(node, prop, prev) {
   node.setAttributeNS(this.namespace, prop, this.value);
 };
 
-AttributeHook.prototype.unhook = function(node, prop, next) {
+AttributeHook.prototype.unhook = function (node, prop, next) {
   if (
     next &&
     next.type === "AttributeHook" &&

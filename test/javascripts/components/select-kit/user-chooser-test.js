@@ -16,7 +16,7 @@ componentTest("displays usernames", {
 
   async test(assert) {
     assert.equal(this.subject.header().name(), "bob,martin");
-  }
+  },
 });
 
 componentTest("can remove a username", {
@@ -29,5 +29,5 @@ componentTest("can remove a username", {
   async test(assert) {
     await this.subject.deselectItem("bob");
     assert.equal(this.subject.header().name(), "martin");
-  }
+  },
 });

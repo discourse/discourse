@@ -14,5 +14,5 @@ export default Component.extend({
         ? " "
         : I18n.t("filters.new.lower_title")
     );
-  }
+  },
 });

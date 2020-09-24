@@ -1277,6 +1277,30 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
         end
 
+        describe "when first post is locked" do
+          it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
+            SiteSetting.trusted_users_can_edit_others = true
+            user.update!(trust_level: 3)
+            topic.first_post.update!(locked_by_id: admin.id)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: topic.title + " hello"
+            }
+
+            expect(response.status).to eq(403)
+          end
+
+          it "allows staff to edit" do
+            sign_in(Fabricate(:admin))
+            topic.first_post.update!(locked_by_id: admin.id)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: topic.title + " hello"
+            }
+            expect(response.status).to eq(200)
+          end
+        end
+
         context 'tags' do
           fab!(:tag) { Fabricate(:tag) }
 
@@ -2497,6 +2521,26 @@ RSpec.describe TopicsController do
         put "/topics/bulk.json", params: {
           category_id: category.id,
           include_subcategories: true,
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' }
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
+      end
+
+      it "can mark tag topics unread" do
+        tag = Fabricate(:tag)
+        TopicTag.create!(
+          topic_id: topic.id,
+          tag_id: tag.id
+        )
+
+        post1 = create_post(user: user, topic_id: topic.id)
+        create_post(topic_id: topic.id)
+
+        put "/topics/bulk.json", params: {
+          tag_name: tag.name,
           filter: 'unread',
           operation: { type: 'dismiss_posts' }
         }

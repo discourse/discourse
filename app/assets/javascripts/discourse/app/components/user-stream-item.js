@@ -8,7 +8,7 @@ export default Component.extend({
     ":item", // DEPRECATED: 'item' class
     "item.hidden",
     "item.deleted:deleted",
-    "moderatorAction"
+    "moderatorAction",
   ],
 
   moderatorAction: propertyEqual(
@@ -19,5 +19,5 @@ export default Component.extend({
     "item.action_code",
     "item.created_at",
     "item.action_code_who"
-  )
+  ),
 });

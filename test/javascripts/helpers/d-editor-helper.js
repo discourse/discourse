@@ -6,6 +6,6 @@ export default function formatTextWithSelection(text, [start, len]) {
     text.substr(start, len),
     ">",
     text.substr(start + len),
-    '"'
+    '"',
   ].join("");
 }

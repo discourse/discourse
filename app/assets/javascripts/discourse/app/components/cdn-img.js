@@ -16,5 +16,5 @@ export default Component.extend({
     if (width && height) {
       return htmlSafe(`--aspect-ratio: ${width / height};`);
     }
-  }
+  },
 });

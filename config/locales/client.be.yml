@@ -964,7 +964,7 @@ be:
           "3_2": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
           "3_1": "Вы будзеце атрымліваць апавяшчэнні, таму што вы стварылі гэтую тэму."
           "3": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1": "You will be notified if someone mentions your @name or replies to you."
           "0_7": "Вы ігнаруеце ўсе паведамленні ў гэтай катэгорыі."
           "0_2": "Вы ігнаруеце ўсе паведамлення па гэтай тэме."
@@ -1056,11 +1056,6 @@ be:
         grant_badge: "даць Значок"
         delete_topic: "выдаліць тэму"
       actions:
-        flag: "Пазначыць"
-        people:
-          off_topic: "заўважана гэта, як ад тэмы"
-          spam: "пазначаны як спам"
-          inappropriate: "пазначыў гэта як непрыстойныя"
         by_you:
           notify_moderators: "Вы пазначылі гэта для мадэрацыі"
       revisions:
@@ -1280,14 +1275,6 @@ be:
           posted: "Вы яшчэ не дапісвалі ў адну тэму."
           bookmarks: "У вас пакуль няма тэмаў у закладках."
           top: "There are no top topics."
-        bottom:
-          latest: "Усе апошнія тэмы адлюстраваныя."
-          posted: "There are no more posted topics."
-          read: "Больш няма прачытаных тэм."
-          new: "Больш няма новых тэм."
-          unread: "Непрачытаныя тэмы скончыліся."
-          top: "There are no more top topics."
-          bookmarks: "Тэмы ў закладках адсутнічаюць."
     footer_nav:
       back: "Назад"
       share: "Падзяліцца"

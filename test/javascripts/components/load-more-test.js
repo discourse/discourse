@@ -13,7 +13,7 @@ componentTest("updates once after initialization", {
     this.set("loadMore", () => this.set("loadedMore", true));
     configureEyeline({
       skipUpdate: false,
-      rootElement: "#ember-testing"
+      rootElement: "#ember-testing",
     });
   },
 
@@ -23,5 +23,5 @@ componentTest("updates once after initialization", {
 
   test(assert) {
     assert.ok(this.loadedMore);
-  }
+  },
 });

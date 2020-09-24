@@ -12,5 +12,5 @@ export default DiscourseRoute.extend({
     if (group.get("automatic")) {
       this.replaceWith("group.manage.interaction", group);
     }
-  }
+  },
 });

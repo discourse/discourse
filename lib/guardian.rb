@@ -206,6 +206,7 @@ class Guardian
     return false if group.blank?
     return true if is_admin? || group.members_visibility_level == Group.visibility_levels[:public]
     return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:staff]
+    return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:members]
     return true if authenticated? && group.members_visibility_level == Group.visibility_levels[:logged_on_users]
     return false if user.blank?
 
@@ -222,6 +223,7 @@ class Guardian
     return false if groups.blank?
     return true if is_admin? || groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
     return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
+    return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:members] }
     return true if authenticated? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:logged_on_users] }
     return false if user.blank?
 

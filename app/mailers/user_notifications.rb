@@ -356,24 +356,11 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false)
-    result = +"#{post.with_secure_media? ? strip_secure_urls(post.raw) : post.raw}\n\n"
+    result = +"#{post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end
     result
-  end
-
-  def strip_secure_urls(raw)
-    urls = Set.new
-    raw.scan(Discourse::Utils::URI_REGEXP) { urls << $& }
-
-    urls.each do |url|
-      if (url.start_with?(Discourse.store.s3_upload_host) && FileHelper.is_supported_media?(url))
-        raw = raw.sub(url, "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>")
-      end
-    end
-
-    raw
   end
 
   def self.get_context_posts(post, topic_user, user)

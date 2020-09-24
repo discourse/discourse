@@ -257,9 +257,7 @@ gl:
         unbookmark: "Preme para retirar todos os marcadores deste tema"
         unbookmark_with_reminder: "Preme para eliminar todos os marcadores e recordatorios deste tema. Configuraches o recordatorio %{reminder_at} para este tema."
     bookmarks:
-      created: "marcaches esta publicación%{name}"
       not_bookmarked: "marcar esta publicación"
-      created_with_reminder: "marcaches esta publicación cun recordatorio %{date}%{name}"
       remove: "Eliminar marcador"
       delete: "Eliminar marcador"
       confirm_delete: "Confirmas a eliminación deste marcador? O recordatorio tamén se eliminará."
@@ -270,7 +268,6 @@ gl:
       list_permission_denied: "Non tes permiso para ver os marcadores deste usuario."
       search: "Buscar"
       reminders:
-        at_desktop: "A vindeira vez que estea no meu ordenador"
         later_today: "Hoxe, máis tarde"
         next_business_day: "O vindeiro día laborable"
         tomorrow: "Mañá"
@@ -282,7 +279,6 @@ gl:
         today_with_time: "hoxe á(s) %{time}"
         tomorrow_with_time: "mañá á(s) %{time}"
         at_time: "á(s) %{date_time}"
-        existing_reminder: "Configuraches un recordatorio para este marcador que se enviará"
     copy_codeblock:
       copied: "copiado!"
     drafts:
@@ -912,7 +908,6 @@ gl:
         use: "Usar aplicación de autenticador"
         enforced_notice: "Antes de acceder a este sitio debes activar a autenticación de dobre factor."
         disable: "Desactivar"
-        disable_confirm: "Confirmas que queres deshabilitar todos os factores secundarios?"
         save: "Gardar"
         edit: "Editar"
         edit_title: "Editar factor secundario"
@@ -1574,7 +1569,6 @@ gl:
         draft: Borrador
         edit: Editar
         reply_to_post:
-          label: Responder á publicación %{postNumber} de %{postUsername}
           desc: Responder a unha publicación específica
         reply_as_new_topic:
           label: Responder como tema ligado
@@ -1865,9 +1859,6 @@ gl:
       toggle_information: "cambiar detalles do tema"
       read_more_in_category: "Queres ler máis? explora outros temas en %{catLink} ou %{latestLink}."
       read_more: "Queres ler máis? %{catLink} ou %{latestLink}."
-      group_request: "Debes solicitar a afiliación ao grupo \"%{name}\" para ver este tema"
-      group_join: "Debes unirte ao grupo \"%{name}\" para ver este tema"
-      group_request_sent: "Enviouse a túa solicitude de afiliación ao grupo. Recibirás información cando sexa aceptada. "
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
       read_more_MF: "Hai { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 sen ler</a> } other { <a href='{basePath}/unread'># sen ler</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e} false { } other{}} <a href='{basePath}/new'>1 novo</a> topic} other { {BOTH, select, true{e} false { } other{}} <a href='{basePath}/new'># novos</a> topics} } restantes, ou {CATEGORY, select, true {explora outros temas en {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -1885,8 +1876,6 @@ gl:
         remove: "Eliminar temporizador"
         publish_to: "Publicar en:"
         when: "Cando:"
-        public_timer_types: Temporizadores do tema
-        private_timer_types: Temporizadores do tema do usuario
         time_frame_required: Escribe un marco temporal
       auto_update_input:
         none: "Selecciona un intervalo de tempo"
@@ -1966,7 +1955,7 @@ gl:
           "2_8": "Verás o número de novas respostas porque estás a seguir esta categoría."
           "2_4": "Verás o número de novas respostas porque publicaches unha resposta neste tema."
           "2_2": "Verás o número de novas respostas porque estás a seguir este tema."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Notificarémosche se alguén menciona o teu @nome ou che responde."
           "1": "Notificarémosche se alguén menciona o teu @nome ou che responde."
           "0_7": "Estás ignorando todas as notificacións desta categoría."
@@ -2150,7 +2139,6 @@ gl:
         topic_published: "O teu tema publicouse en:"
         preview_url: "A túa páxina publicarase en:"
         invalid_slug: "Sentímolo pero non podes publicar esta páxina."
-        update: "Actualizar"
         publishing_settings: "Axustes da publicación"
       change_owner:
         title: "Cambiar propietario"
@@ -2291,23 +2279,7 @@ gl:
         delete_topic: "eliminar tema"
         remove_timer: "eliminar temporizador"
       actions:
-        flag: "Denunciar"
-        defer_flags:
-          one: "Ignorar denuncia"
-          other: "Ignorar denuncias"
-        undo:
-          off_topic: "Desfacer denuncia"
-          spam: "Desfacer denuncia"
-          inappropriate: "Desfacer denuncia"
-          bookmark: "Desfacer marcador"
-          like: "Desfacer o gústame"
         people:
-          off_topic: "notificado como sen relación co tema"
-          spam: "denunciou isto como spam"
-          inappropriate: "denunciou isto como inapropiado"
-          notify_moderators: "moderadores notificados"
-          notify_user: "enviou unha mensaxe"
-          bookmark: "marcou isto"
           read:
             one: "leu isto"
             other: "leron isto"
@@ -2323,8 +2295,6 @@ gl:
           inappropriate: "Denunciaches isto como inapropiado"
           notify_moderators: "Denunciaches isto para moderación"
           notify_user: "Enviaches unha mensaxe a este usuario"
-          bookmark: "Marcaches esta publicación"
-          like: "Gustouche isto"
       delete:
         confirm:
           one: "Confirmas a eliminación desta publicación?"
@@ -2866,14 +2836,6 @@ gl:
           posted: "Aínda non publicaches en ningún tema."
           bookmarks: "Aínda non marcaches este tema."
           top: "Non hai temas destacados."
-        bottom:
-          latest: "Non hai máis últimos temas."
-          posted: "Non hai máis temas publicados."
-          read: "Non hai máis temas lidos."
-          new: "Non hai máis temas novos."
-          unread: "Non hai máis temas sen ler."
-          top: "Non hai máis temas destacados."
-          bookmarks: "Non hai máis temas marcados."
     invite:
       custom_message: "Podes facer o convite un pouco máis persoal escribindo unha  <a href>mensaxe personalizada</a>."
       custom_message_placeholder: "Escribe a túa mensaxe personalizada"
@@ -3001,7 +2963,6 @@ gl:
               title: "Quen pode ver este grupo?"
               public: "Todos"
               logged_on_users: "Usuarios conectados"
-              staff: "Propietarios e membros do grupo"
               owners: "Propietarios do grupo"
               description: "Os administradores poden ver todos os grupos."
             members_visibility_levels:
@@ -3058,7 +3019,6 @@ gl:
         description_placeholder: Para que se usa esta chave?
         save: Gardar
         revoked: Revogada
-        delete: Eliminar permanentemente
         continue: Continuar
       web_hooks:
         create: "Crear"

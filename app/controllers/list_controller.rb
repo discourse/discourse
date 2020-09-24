@@ -154,6 +154,7 @@ class ListController < ApplicationController
     when :private_messages_group, :private_messages_group_archive
       define_method("#{action}") do
         group = Group.find_by(name: params[:group_name])
+        raise Discourse::NotFound if !group
         raise Discourse::NotFound unless guardian.can_see_group_messages?(group)
 
         message_route(action)
@@ -372,6 +373,10 @@ class ListController < ApplicationController
 
     if current_slug != real_slug
       url = request.fullpath.gsub(current_slug, real_slug)
+      if ActionController::Base.config.relative_url_root
+        url = url.sub(ActionController::Base.config.relative_url_root, "")
+      end
+
       return redirect_to path(url), status: 301
     end
 

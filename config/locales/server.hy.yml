@@ -1212,7 +1212,6 @@ hy:
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) դոմենի անուն, օրինակ՝ mysite.com; այցելեք <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Միացնել Google Universal Analytics (analytics.js) խաչաձև դոմենի դիտումը: Այս դոմնեների ելքային հղումները կունենան իրենց ավելացված հաճախորդի id: Այցելեք <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     enable_escaped_fragments: "Վերադարձ դեպի Google's Ajax-Crawling API , եթե ոչ մի ցանցային տվայլների հավաքագրիչ (webcrawler) հայտնաբերված չէ: Այցելեք <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_create_categories: "Թույլատրել մոդերատորներին ստեղծել նոր կատեգորիաներ"
     cors_origins: "Թույլատրելի origin-ներ խաչաձև origin հարցումների համար (CORS): Յուրաքանչյուր origin պետք է ներառի http:// կամ https://: DISCOURSE_ENABLE_CORS env փոփոխականը պետք է սահմանված լինի true ՝ CORS -ի միացման համար:"
     allowed_iframes: "iframe src դոմենի նախամասնիկներ, որ discourse-ը կարող է ապահով թույլատրել գրառումներում"
     slow_down_crawler_user_agents: "Ցանցային տվյալների հավաքագրիչների օգտատերերի գործակալներ, որոնք պետք է սահմանափակված լինեն robots.txt-ով՝ օգտագործելով Crawl-delay ուղղորդիչը"

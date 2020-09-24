@@ -8,8 +8,8 @@ export default DiscourseRoute.extend({
   model() {
     const username = this.modelFor("user").get("username_lower");
     return ajax(`/tags/personal_messages/${username}`)
-      .then(result => {
-        return result.tags.map(tag => EmberObject.create(tag));
+      .then((result) => {
+        return result.tags.map((tag) => EmberObject.create(tag));
       })
       .catch(popupAjaxError);
   },
@@ -24,11 +24,11 @@ export default DiscourseRoute.extend({
       sortProperties: this.siteSettings.tags_sort_alphabetically
         ? ["id"]
         : ["count:desc", "id"],
-      tagsForUser: this.modelFor("user").get("username_lower")
+      tagsForUser: this.modelFor("user").get("username_lower"),
     });
     this.controllerFor("user-private-messages").setProperties({
       showToggleBulkSelect: false,
-      pmView: "tags"
+      pmView: "tags",
     });
-  }
+  },
 });

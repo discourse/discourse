@@ -53,5 +53,5 @@ export default ArrayProxy.extend({
     return this.store
       .refreshResults(this, this.__type, refreshUrl)
       .finally(() => this.set("refreshing", false));
-  }
+  },
 });

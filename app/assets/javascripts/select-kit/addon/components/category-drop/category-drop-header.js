@@ -2,10 +2,10 @@ import { readOnly } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
 import discourseComputed from "discourse-common/utils/decorators";
+import layout from "select-kit/templates/components/category-drop/category-drop-header";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
-  layoutName:
-    "select-kit/templates/components/category-drop/category-drop-header",
+  layout,
   classNames: ["category-drop-header"],
   classNameBindings: ["categoryStyleClass"],
   categoryStyleClass: readOnly("site.category_style"),
@@ -28,7 +28,9 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
   categoryStyle(category, categoryBackgroundColor, categoryTextColor) {
     const categoryStyle = this.siteSettings.category_style;
 
-    if (categoryStyle === "bullet") return;
+    if (categoryStyle === "bullet") {
+      return;
+    }
 
     if (category) {
       if (categoryBackgroundColor || categoryTextColor) {
@@ -57,5 +59,5 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
           .setAttribute("style", this.categoryStyle);
       }
     });
-  }
+  },
 });

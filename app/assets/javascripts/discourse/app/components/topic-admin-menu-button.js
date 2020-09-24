@@ -7,5 +7,5 @@ export default MountWidget.extend({
 
   buildArgs() {
     return this.getProperties("topic", "openUpwards", "rightSide");
-  }
+  },
 });

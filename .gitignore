@@ -87,6 +87,7 @@ config/multisite.yml
 config/multisite1.yml
 config/fog_credentials.yml
 
+/public/fonts
 /public/uploads
 /public/backups
 /public/stylesheet-cache/*
@@ -140,3 +141,5 @@ dist
 
 # Copyright Deposits
 copyright
+
+yarn-error.log

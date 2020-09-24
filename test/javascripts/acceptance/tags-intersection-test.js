@@ -7,7 +7,7 @@ acceptance("Tags intersection", {
   pretend(server, helper) {
     server.get("/tag/first/notifications", () => {
       return helper.response({
-        tag_notification: { id: "first", notification_level: 1 }
+        tag_notification: { id: "first", notification_level: 1 },
       });
     });
     server.get("/tags/intersection/first/second.json", () => {
@@ -20,23 +20,21 @@ acceptance("Tags intersection", {
           topics: [{ id: 16, posters: [] }],
           tags: [
             { id: 1, name: "second", topic_count: 1 },
-            { id: 2, name: "first", topic_count: 1 }
-          ]
-        }
+            { id: 2, name: "first", topic_count: 1 },
+          ],
+        },
       });
     });
-  }
+  },
 });
 
-QUnit.test("Populate tags when creating new topic", async assert => {
+QUnit.test("Populate tags when creating new topic", async (assert) => {
   await visit("/tags/intersection/first/second");
   await click("#create-topic");
 
   assert.ok(exists(".mini-tag-chooser"), "The tag selector appears");
   assert.equal(
-    $(".mini-tag-chooser")
-      .text()
-      .trim(),
+    $(".mini-tag-chooser").text().trim(),
     "first, second",
     "populates the tags when clicking 'New topic'"
   );

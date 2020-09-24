@@ -40,6 +40,39 @@ module Stylesheet
         end
       end
 
+      register_import "font" do
+        font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+
+        contents = if font.present?
+          <<~EOF
+            #{font_css(font)}
+
+            :root {
+              --font-family: #{font[:stack]};
+            }
+          EOF
+        else
+          ""
+        end
+
+        Import.new("font.scss", source: contents)
+      end
+
+      register_import "wizard_fonts" do
+        contents = +""
+
+        DiscourseFonts.fonts.each do |font|
+          contents << font_css(font)
+          contents << <<~EOF
+            .font-#{font[:key].tr("_", "-")} {
+              font-family: #{font[:stack]};
+            }
+          EOF
+        end
+
+        Import.new("wizard_fonts.scss", source: contents)
+      end
+
       register_import "plugins_variables" do
         import_files(DiscoursePluginRegistry.sass_variables)
       end
@@ -123,8 +156,12 @@ module Stylesheet
         contents << "\n\n"
       end
 
-      if theme_id
-        Theme.list_baked_fields([theme_id], :common, :color_definitions).each do |row|
+      theme_id ||= SiteSetting.default_theme_id
+      resolved_ids = Theme.transform_ids([theme_id])
+
+      if resolved_ids
+        contents << " @import \"theme_variables\";"
+        Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |row|
           contents << "// Color definitions from #{Theme.find_by_id(theme_id)&.name}\n\n"
           contents << row.value
         end
@@ -220,7 +257,26 @@ module Stylesheet
     end
 
     def category_css(category)
-      "body.category-#{category.slug}, body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+      full_slug = category.full_slug.split("-")[0..-2].join("-")
+      "body.category-#{category.slug}, body.category-#{full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+    end
+
+    def font_css(font)
+      contents = +""
+
+      if font[:variants].present?
+        font[:variants].each do |variant|
+          contents << <<~EOF
+            @font-face {
+              font-family: #{font[:name]};
+              src: asset-url("/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}") format("#{variant[:format]}");
+              font-weight: #{variant[:weight]};
+            }
+          EOF
+        end
+      end
+
+      contents
     end
 
     def to_scss_variable(name, value)

@@ -59,4 +59,11 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
       end
     end
   end
+
+  it 'will not send notification when topic is not available' do
+    bookmark1.topic.destroy
+    bookmark2.topic.destroy
+    bookmark3.topic.destroy
+    expect { subject.execute }.not_to change { Notification.where(notification_type: Notification.types[:bookmark_reminder]).count }
+  end
 end

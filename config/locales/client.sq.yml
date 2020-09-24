@@ -1250,7 +1250,7 @@ sq:
           "2_8": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë kategori. "
           "2_4": "Ju do të shikoni numrin e përgjigjeve të reja sepse ju postuat një përgjigje në këtë temë. "
           "2_2": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë temë. "
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "1": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "0_7": "Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. "
@@ -1491,28 +1491,12 @@ sq:
         grant_badge: "Dhuroni Stemë"
         delete_topic: "fshi temën"
       actions:
-        flag: "Sinjalizoni"
-        undo:
-          off_topic: "Anulo sinjalizimin"
-          spam: "Anulo sinjalizimin"
-          inappropriate: "Anulo sinjalizimin"
-          bookmark: "Hiqe nga të preferuarat"
-          like: "Anulo pëlqimin"
-        people:
-          off_topic: "sinjalizoi këtë postim si jashtë teme"
-          spam: "sinjalizoi këtë postim si spam"
-          inappropriate: "sinjalizoi këtë postim si të papërshtatshëm"
-          notify_moderators: "njoftoi moderatorët"
-          notify_user: "dërgoi një mesazh"
-          bookmark: "e shtoi këtë tek të preferuarat"
         by_you:
           off_topic: "Ti sinjalizove këtë postim si jashtë teme"
           spam: "Ti sinjalizove këtë postim si spam"
           inappropriate: "Ti sinjalizove këtë postim si të papërshtatshëm"
           notify_moderators: "Ti sinjalizove këtë postim për moderim"
           notify_user: "Ju i dërguat një mesazh këtij përdoruesi"
-          bookmark: "E ruajte këtë temë tek të preferuarat e tua"
-          like: "Ju e pëlqyet këtë"
       revisions:
         controls:
           first: "Revizioni i parë"
@@ -1923,14 +1907,6 @@ sq:
           latest: "Nuk ka tema të reja."
           bookmarks: "Nuk keni ende tema të preferuara. "
           top: "Nuk ka tema popullore."
-        bottom:
-          latest: "Nuk ka më tema të reja."
-          posted: "Nuk ka më tema të publikuara."
-          read: "Nuk ka më tema të lexuara."
-          new: "Nuk ka më tema të reja."
-          unread: "Nuk ka më tema të palexuara."
-          top: "Nuk ka më tema popullore."
-          bookmarks: "Nuk ka më tema të preferuara."
     invite:
       custom_message_placeholder: "Vendosni mesazhin"
       custom_message_template_forum: "Hej, hajde bashkoju këtij forumi!"

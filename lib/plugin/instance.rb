@@ -206,6 +206,17 @@ class Plugin::Instance
     Search.advanced_filter(trigger, &block)
   end
 
+  # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
+  # Example usage:
+  #   register_search_topic_eager_load do |opts|
+  #     %i(example_table)
+  #   end
+  # OR
+  #   register_search_topic_eager_load(%i(example_table))
+  def register_search_topic_eager_load(tables = nil, &block)
+    Search.custom_topic_eager_load(tables, &block)
+  end
+
   # Request a new size for topic thumbnails
   # Will respect plugin enabled setting is enabled
   # Size should be an array with two elements [max_width, max_height]
@@ -782,6 +793,21 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
 
+  # Register a route which can be authenticated using an api key or user api key
+  # in a query parameter rather than a header. For example:
+  #
+  # add_api_parameter_route(
+  #   method: :get,
+  #   route: "users#bookmarks",
+  #   format: :ics
+  # )
+  #
+  # See Auth::DefaultCurrentUserProvider::PARAMETER_API_PATTERNS for more examples
+  # and Auth::DefaultCurrentUserProvider#api_parameter_allowed? for implementation
+  def add_api_parameter_route(method:, route:, format:)
+    DiscoursePluginRegistry.register_api_parameter_route({ method: method, route: route, format: format }, self)
+  end
+
   protected
 
   def self.js_path
@@ -883,5 +909,9 @@ class Plugin::Instance
       return [locale, filename] if File.exist?(filename)
     end
     nil
+  end
+
+  def register_permitted_bulk_action_parameter(name)
+    DiscoursePluginRegistry.register_permitted_bulk_action_parameter(name, self)
   end
 end

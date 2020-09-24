@@ -12,8 +12,8 @@ createWidgetFrom(
 
       return I18n.t("notifications.group_message_summary", {
         count,
-        group_name
+        group_name,
       });
-    }
+    },
   }
 );

@@ -19,5 +19,5 @@ componentTest("appends the html into the iframe", {
       1,
       "inserts the passed in html into the iframe"
     );
-  }
+  },
 });

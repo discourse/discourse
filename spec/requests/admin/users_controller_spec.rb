@@ -149,6 +149,22 @@ RSpec.describe Admin::UsersController do
       expect(log.details).to match(/because I said so/)
     end
 
+    it "requires suspend_until and reason" do
+      expect(user).not_to be_suspended
+      put "/admin/users/#{user.id}/suspend.json", params: {}
+      expect(response.status).to eq(400)
+      user.reload
+      expect(user).not_to be_suspended
+
+      expect(user).not_to be_suspended
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now
+      }
+      expect(response.status).to eq(400)
+      user.reload
+      expect(user).not_to be_suspended
+    end
+
     context "with an associated post" do
       it "can have an associated post" do
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params
@@ -1030,6 +1046,19 @@ RSpec.describe Admin::UsersController do
       expect(response.parsed_body["user"]["id"]).to eq(target_user.id)
       expect(topic.reload.user_id).to eq(target_user.id)
       expect(first_post.reload.user_id).to eq(target_user.id)
+    end
+  end
+
+  describe '#sso_record' do
+    fab!(:sso_record) { SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', external_email: user.email, last_payload: '') }
+
+    it "deletes the record" do
+      SiteSetting.sso_url = "https://www.example.com/sso"
+      SiteSetting.enable_sso = true
+
+      delete "/admin/users/#{user.id}/sso_record.json"
+      expect(response.status).to eq(200)
+      expect(user.single_sign_on_record).to eq(nil)
     end
   end
 

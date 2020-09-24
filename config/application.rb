@@ -53,6 +53,8 @@ end
 
 require 'pry-rails' if Rails.env.development?
 
+require 'discourse_fonts'
+
 if defined?(Bundler)
   bundler_groups = [:default]
 
@@ -259,6 +261,7 @@ module Discourse
     # Our templates shouldn't start with 'discourse/app/templates'
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
+      'admin/addon/templates' => 'admin/templates/',
       'select-kit/addon/templates' => 'select-kit/templates/'
     }
 
@@ -306,6 +309,10 @@ module Discourse
     Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
       config.assets.precompile << "#{file}.js"
     end
+
+    # Use discourse-fonts gem to symlink fonts and generate .scss file
+    fonts_path = File.join(config.root, 'public/fonts')
+    Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
 
     require_dependency 'stylesheet/manager'
     require_dependency 'svg_sprite/svg_sprite'

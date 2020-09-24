@@ -1,7 +1,7 @@
 /**
  * Copy text to the clipboard. Must be called from within a user gesture (Chrome).
  */
-export default function(text, element) {
+export default function (text, element) {
   let supported = false;
   try {
     // Chrome: This only returns true within a user gesture.

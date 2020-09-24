@@ -52,6 +52,9 @@ RSpec.describe ListController do
 
       get "/latest.json?page=2147483647"
       expect(response.status).to eq(200)
+
+      get "/latest?search="
+      expect(response.status).to eq(200)
     end
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
@@ -173,15 +176,54 @@ RSpec.describe ListController do
   end
 
   describe '#private_messages_group' do
-    let(:user) do
-      user = Fabricate(:user)
-      group.add(user)
-      sign_in(user)
-      user
+    let(:user) { Fabricate(:user) }
+
+    describe 'with personal_messages disabled' do
+      let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
+
+      before do
+        group.add(user)
+        SiteSetting.enable_personal_messages = false
+      end
+
+      it 'should display group private messages for an admin' do
+        sign_in(Fabricate(:admin))
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["topic_list"]["topics"].first["id"])
+          .to eq(topic.id)
+      end
+
+      it "should not display group private messages for a moderator's group" do
+        moderator = Fabricate(:moderator)
+        sign_in(moderator)
+        group.add(moderator)
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(404)
+      end
     end
 
     describe 'with unicode_usernames' do
-      before { SiteSetting.unicode_usernames = false }
+      before do
+        group.add(user)
+        sign_in(user)
+        SiteSetting.unicode_usernames = false
+      end
+
+      it 'should return the right response when user does not belong to group' do
+        Fabricate(:private_message_topic, allowed_groups: [group])
+
+        group.remove(user)
+
+        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+        expect(response.status).to eq(404)
+      end
 
       it 'should return the right response when user does not belong to group' do
         Fabricate(:private_message_topic, allowed_groups: [group])
@@ -205,7 +247,10 @@ RSpec.describe ListController do
     end
 
     describe 'with unicode_usernames' do
-      before { SiteSetting.unicode_usernames = true }
+      before do
+        sign_in(user)
+        SiteSetting.unicode_usernames = true
+      end
 
       it 'Returns a 200 with unicode group name' do
         unicode_group = Fabricate(:group, name: '群群组')
@@ -408,9 +453,9 @@ RSpec.describe ListController do
         end
 
         context "with invalid slug" do
-          xit "redirects" do
+          it "redirects" do
             get "/c/random_slug/another_random_slug/#{child_category.id}/l/latest"
-            expect(response).to redirect_to(child_category.url)
+            expect(response).to redirect_to("#{child_category.url}/l/latest")
           end
         end
       end
@@ -603,26 +648,35 @@ RSpec.describe ListController do
     end
   end
 
-  describe "private_messages_unread" do
-    before do
-      u = Fabricate(:user)
-      pm = Fabricate(:private_message_topic, user: u)
-      Fabricate(:post, user: u, topic: pm, post_number: 1)
-      pm.topic_allowed_users.create!(user: user)
+  describe "#private_messages_unread" do
+    fab!(:pm_user) { Fabricate(:user) }
+
+    fab!(:pm) do
+      Fabricate(:private_message_topic).tap do |t|
+        t.allowed_users << pm_user
+        create_post(user: pm_user, topic_id: t.id)
+      end
     end
 
     it "returns 403 error when the user can't see private message" do
       sign_in(Fabricate(:user))
-      get "/topics/private-messages-unread/#{user.username}.json"
-      expect(response).to be_forbidden
+      get "/topics/private-messages-unread/#{pm_user.username}.json"
+      expect(response.status).to eq(403)
     end
 
     it "succeeds when the user can see private messages" do
-      sign_in(user)
-      get "/topics/private-messages-unread/#{user.username}.json"
+      TopicUser.find_by(topic: pm, user: pm_user).update!(
+        notification_level: TopicUser.notification_levels[:tracking],
+        last_read_post_number: 0,
+      )
+
+      sign_in(pm_user)
+      get "/topics/private-messages-unread/#{pm_user.username}.json"
+
       expect(response.status).to eq(200)
       json = response.parsed_body
       expect(json["topic_list"]["topics"].size).to eq(1)
+      expect(json["topic_list"]["topics"][0]["id"]).to eq(pm.id)
     end
   end
 
@@ -685,7 +739,15 @@ RSpec.describe ListController do
     end
 
     context "with subfolder" do
-      it "redirects to URL containing the updated slug" do
+      it "main category redirects to URL containing the updated slug" do
+        set_subfolder "/forum"
+        get "/c/#{category.slug}"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}")
+      end
+
+      it "sub-sub-category redirects to URL containing the updated slug" do
         set_subfolder "/forum"
         get "/c/hello/world/bye/#{subsubcategory.id}"
 

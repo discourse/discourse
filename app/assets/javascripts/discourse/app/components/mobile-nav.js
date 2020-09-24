@@ -46,7 +46,7 @@ export default Component.extend({
         if (this.expanded) {
           $(window)
             .off("click.mobile-nav")
-            .on("click.mobile-nav", e => {
+            .on("click.mobile-nav", (e) => {
               if (!this.element || this.isDestroying || this.isDestroyed) {
                 return;
               }
@@ -59,6 +59,6 @@ export default Component.extend({
             });
         }
       });
-    }
-  }
+    },
+  },
 });

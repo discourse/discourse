@@ -74,12 +74,12 @@ function init(messageBus, appEvents) {
 function confirmNotification(siteSettings) {
   const notification = new Notification(
     I18n.t("notifications.popup.confirm_title", {
-      site_title: siteSettings.title
+      site_title: siteSettings.title,
     }),
     {
       body: I18n.t("notifications.popup.confirm_body"),
       icon: siteSettings.site_logo_small_url || siteSettings.site_logo_url,
-      tag: "confirm-subscription"
+      tag: "confirm-subscription",
     }
   );
 
@@ -94,7 +94,7 @@ function confirmNotification(siteSettings) {
 
 // This function is only called if permission was granted
 function setupNotifications(appEvents) {
-  window.addEventListener("storage", function(e) {
+  window.addEventListener("storage", function (e) {
     // note: This event only fires when other tabs setItem()
     const key = e.key;
     if (key !== `${context}${focusTrackerKey}`) {
@@ -103,7 +103,7 @@ function setupNotifications(appEvents) {
     primaryTab = false;
   });
 
-  window.addEventListener("focus", function() {
+  window.addEventListener("focus", function () {
     if (!primaryTab) {
       primaryTab = true;
       keyValueStore.setItem(focusTrackerKey, mbClientId);
@@ -153,7 +153,7 @@ function onNotification(data, siteSettings) {
   const notificationTitle = I18n.t(i18nKey(data.notification_type), {
     site_title: siteSettings.title,
     topic: data.topic_title,
-    username: formatUsername(data.username)
+    username: formatUsername(data.username),
   });
 
   const notificationBody = data.excerpt;
@@ -164,12 +164,12 @@ function onNotification(data, siteSettings) {
   const notificationTag =
     "discourse-notification-" + siteSettings.title + "-" + data.topic_id;
 
-  requestPermission().then(function() {
+  requestPermission().then(function () {
     // This shows the notification!
     const notification = new Notification(notificationTitle, {
       body: notificationBody,
       icon: notificationIcon,
-      tag: notificationTag
+      tag: notificationTag,
     });
 
     function clickEventHandler() {
@@ -195,8 +195,8 @@ function requestPermission() {
   } else if (havePermission === false) {
     return Promise.reject();
   } else {
-    return new Promise(function(resolve, reject) {
-      Notification.requestPermission(function(status) {
+    return new Promise(function (resolve, reject) {
+      Notification.requestPermission(function (status) {
         if (status === "granted") {
           resolve();
         } else {
@@ -233,5 +233,5 @@ export {
   unsubscribe,
   alertChannel,
   confirmNotification,
-  disable
+  disable,
 };

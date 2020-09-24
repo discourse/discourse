@@ -16,7 +16,7 @@ Hello, this is a test!
 
 This part should be elided.`.trim();
 
-QUnit.test("shows selected and elided text", async assert => {
+QUnit.test("shows selected and elided text", async (assert) => {
   pretender.post("/admin/email/advanced-test", () => {
     return [
       200,
@@ -24,8 +24,8 @@ QUnit.test("shows selected and elided text", async assert => {
       {
         format: 1,
         text: "Hello, this is a test!",
-        elided: "---\n\nThis part should be elided."
-      }
+        elided: "---\n\nThis part should be elided.",
+      },
     ];
   });
 

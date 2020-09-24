@@ -7,5 +7,5 @@ export default Component.extend({
   @discourseComputed("user", "category")
   searchParams() {
     return `@${this.get("user.username")} #${this.get("category.slug")}`;
-  }
+  },
 });

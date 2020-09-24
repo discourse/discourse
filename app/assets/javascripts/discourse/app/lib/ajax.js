@@ -1,8 +1,6 @@
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
 import { run } from "@ember/runloop";
 import userPresent from "discourse/lib/user-presence";
-import logout from "discourse/lib/logout";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
@@ -11,7 +9,7 @@ import User from "discourse/models/user";
 
 let _trackView = false;
 let _transientHeader = null;
-let _showingLogout = false;
+let _logoffCallback;
 
 export function setTransientHeader(key, value) {
   _transientHeader = { key, value };
@@ -21,19 +19,13 @@ export function viewTrackingRequired() {
   _trackView = true;
 }
 
+export function setLogoffCallback(cb) {
+  _logoffCallback = cb;
+}
+
 export function handleLogoff(xhr) {
-  if (xhr && xhr.getResponseHeader("Discourse-Logged-Out") && !_showingLogout) {
-    _showingLogout = true;
-    const messageBus = Discourse.__container__.lookup("message-bus:main");
-    messageBus.stop();
-    bootbox.dialog(
-      I18n.t("logout"),
-      { label: I18n.t("refresh"), callback: logout },
-      {
-        onEscape: () => logout(),
-        backdrop: "static"
-      }
-    );
+  if (xhr && xhr.getResponseHeader("Discourse-Logged-Out") && _logoffCallback) {
+    _logoffCallback();
   }
 }
 
@@ -49,7 +41,7 @@ function handleRedirect(data) {
 }
 
 export function updateCsrfToken() {
-  return ajax("/session/csrf").then(result => {
+  return ajax("/session/csrf").then((result) => {
     Session.currentProp("csrfToken", result.csrf);
   });
 }
@@ -137,7 +129,9 @@ export function ajax() {
       }
 
       // If it's a parsererror, don't reject
-      if (xhr.status === 200) return args.success(xhr);
+      if (xhr.status === 200) {
+        return args.success(xhr);
+      }
 
       // Fill in some extra info
       xhr.jqTextStatus = textStatus;
@@ -146,7 +140,7 @@ export function ajax() {
       run(null, reject, {
         jqXHR: xhr,
         textStatus: textStatus,
-        errorThrown: errorThrown
+        errorThrown: errorThrown,
       });
     };
 
@@ -157,9 +151,12 @@ export function ajax() {
 
     // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
     // it will not be parsed as an object.
-    if (!args.type) args.type = "GET";
-    if (!args.dataType && args.type.toUpperCase() === "GET")
+    if (!args.type) {
+      args.type = "GET";
+    }
+    if (!args.dataType && args.type.toUpperCase() === "GET") {
       args.dataType = "json";
+    }
 
     if (args.dataType === "script") {
       args.headers["Discourse-Script"] = true;

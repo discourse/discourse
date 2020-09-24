@@ -119,6 +119,9 @@ fr:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber}"
       close: "fermer"
+      twitter: "Partager sur Twitter"
+      facebook: "Partager sur Facebook"
+      email: "Envoyer par e-mail"
     action_codes:
       public_topic: "a rendu ce sujet public %{when}"
       private_topic: "a rendu ce sujet message direct %{when}"
@@ -260,10 +263,9 @@ fr:
         unbookmark: "Cliquer pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquer pour supprimer tous les signets et rappels de ce sujet. Vous avez un rappel pour %{reminder_at} sur ce sujet."
     bookmarks:
-      created: "vous avez mis un signet à ce message %{name}"
+      created: "Vous avez mis un signet à ce message. %{name}"
       not_bookmarked: "mettre un signet à ce message"
-      created_with_reminder: "vous avez épinglé ce message avec un rappel pour %{date} %{name}"
-      created_with_at_desktop_reminder: "vous avez épinglé ce message et vous recevrez un rappel la prochaine fois que vous êtes à votre bureau %{name}"
+      created_with_reminder: "Vous avez placé un signet à ce message avec un rappel pour %{date}. %{name}"
       remove: "Retirer le signet"
       delete: "Supprimer le signet"
       confirm_delete: "Êtes-vous sûr de vouloir supprimer ce signet ? Le rappel sera aussi supprimé."
@@ -272,9 +274,15 @@ fr:
       no_timezone: 'Vous n''avez pas encore défini un fuseau horaire. Vous ne pourrez pas définir de rappels. Configurez-en un <a href="%{basePath}/my/preferences/profile">dans votre profil</a>.'
       invalid_custom_datetime: "La date et l'heure sont invalides, veuillez réessayer."
       list_permission_denied: "Vous n'avez pas la permission de voir les signets de cet utilisateur."
+      no_user_bookmarks: "Vous n'avez pas de messages dans vos signets ; les signets vous permettent de retrouver rapidement des sujets d'intérêt."
+      auto_delete_preference:
+        label: "Supprimer automatiquement"
+        never: "Jamais"
+        when_reminder_sent: "Une fois le rappel envoyé"
+        on_owner_reply: "Après avoir répondu à ce sujet"
+      search_placeholder: "Rechercher des signets par nom, titre de sujet ou contenu de message"
       search: "Recherche"
       reminders:
-        at_desktop: "La prochaine fois je suis à mon bureau"
         later_today: "Plus tard aujourd'hui"
         next_business_day: "Prochain jour ouvré"
         tomorrow: "Demain"
@@ -289,7 +297,7 @@ fr:
         today_with_time: "aujourd'hui à %{time}"
         tomorrow_with_time: "demain à %{time}"
         at_time: "à %{date_time}"
-        existing_reminder: "Vous avez un rappel configuré pour ce signet qui sera envoyé"
+        existing_reminder: "Vous avez un rappel configuré pour ce signet qui sera envoyé %{at_date_time}"
     copy_codeblock:
       copied: "copié !"
     drafts:
@@ -513,6 +521,7 @@ fr:
       sent_by_user: "Envoyé par <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Envoyé par <a href='%{userUrl}'>vous</a>"
     directory:
+      username: "Nom d'utilisateur"
       filter_name: "filtrer par nom d'utilisateur"
       title: "Utilisateurs"
       likes_given: "Donnés"
@@ -543,6 +552,12 @@ fr:
     groups:
       member_added: "Ajouté"
       member_requested: "Demandé à"
+      add_members:
+        title: "Ajouter des membres à %{group_name}"
+        description: "Vous pouvez également insérer une liste séparée par des virgules."
+        usernames: "Entrez les noms d'utilisateur ou courriels"
+        input_placeholder: "Noms d'utilisateur ou courriels"
+        notify_users: "Notifications aux utilisateurs"
       requests:
         title: "Demandes"
         reason: "Raison"
@@ -566,6 +581,7 @@ fr:
           notification: Notification
         email:
           title: "Courriel"
+          status: "Synchronisés %{old_emails} / %{total_emails} courriels via IMAP."
           credentials:
             title: "Identifiants"
             smtp_server: "Serveur SMTP"
@@ -576,9 +592,17 @@ fr:
             imap_ssl: "Utiliser SSL pour IMAP"
             username: "Nom d'utilisateur"
             password: "Mot de passe"
+          mailboxes:
+            synchronized: "Boîte aux lettres synchronisée"
+            none_found: "Aucune boîte aux lettres n'a été trouvée pour ce compte de courriel."
+            disabled: "désactivé"
         membership:
           title: Adhésion
           access: Accès
+        categories:
+          title: Catégories
+        tags:
+          title: Étiquettes
         logs:
           title: "Journaux"
           when: "Date"
@@ -834,6 +858,10 @@ fr:
         not_first_time: "Pas votre première fois ?"
         skip_link: "Ignorer ces conseils"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
+      color_schemes:
+        dark: "Mode sombre"
+      dark_mode: "Mode sombre"
+      dark_mode_enable: "Activer le jeu de couleurs automatique du mode sombre"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
@@ -978,7 +1006,6 @@ fr:
         use: "Utiliser l'application Authenticator"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs pour accéder à ce site."
         disable: "Désactiver"
-        disable_confirm: "Êtes-vous sûr de vouloir désactiver tous les facteurs secondaires ?"
         save: "Sauvegarder"
         edit: "Modifier"
         edit_title: "Modifier le second facteur"
@@ -1544,6 +1571,29 @@ fr:
       categories_and_top_topics: "Catégories et meilleurs sujets"
       categories_boxes: "Boîtes avec sous-catégories"
       categories_boxes_with_topics: "Boîtes avec sujets à la une"
+    base_font_setting:
+      helvetica: "Helvetica / Arial"
+      open_sans: "Open Sans"
+      oxanium: "Oxanium"
+      roboto: "Roboto"
+      lato: "Lato"
+      noto_sans_jp: "NotoSansJP"
+      montserrat: "Montserrat"
+      roboto_condensed: "Roboto Condensé"
+      source_sans_pro: "SourceSansPro"
+      oswald: "Oswald"
+      raleway: "Raleway"
+      roboto_mono: "RobotoMono"
+      poppins: "Poppins"
+      noto_sans: "NotoSans"
+      roboto_slab: "RobotoSlab"
+      merriweather: "Merriweather"
+      ubuntu: "Ubuntu"
+      pt_sans: "PTSans"
+      playfair_display: "PlayfairDisplay"
+      nunito: "Nunito"
+      lora: "Lora"
+      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -1566,9 +1616,6 @@ fr:
         one: "Sélectionner au moins %{count} élément."
         other: "Sélectionner au moins %{count} éléments."
       invalid_selection_length: "La sélection doit faire au minimum %{count} caractères ."
-      components:
-        categories_admin_dropdown:
-          title: "Menu déroulant d'administration des catégories"
     date_time_picker:
       from: De
       to: À
@@ -1703,7 +1750,6 @@ fr:
         draft: Brouillon
         edit: Modifier
         reply_to_post:
-          label: Répondre au message %{postNumber} de %{postUsername}
           desc: Répondre à un message spécifique
         reply_as_new_topic:
           label: Répondre via un sujet lié
@@ -2023,9 +2069,6 @@ fr:
       toggle_information: "basculer l'affichage des détails du sujet"
       read_more_in_category: "Vous voulez en lire plus ? Découvrez d'autres sujets dans %{catLink} ou %{latestLink}."
       read_more: "Vous voulez en lire plus ? %{catLink} ou %{latestLink}."
-      group_request: "Effectuez une demande d'adhésion au groupe « %{name} » pour afficher ce sujet"
-      group_join: "Vous devez rejoindre le groupe « %{name} » pour voir ce sujet"
-      group_request_sent: "Votre demande d'adhésion au groupe a été envoyée. Vous serez averti de son acceptation."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
       read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='{basePath}/unread'>1 sujet non lu</a> } other { a <a href='{basePath}/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST} : {CREATED_AT}\n{LAST_POST} : {BUMPED_AT}"
@@ -2043,8 +2086,6 @@ fr:
         remove: "Supprimer la planification"
         publish_to: "Publier dans :"
         when: "Quand :"
-        public_timer_types: Actions planifiées pour le sujet
-        private_timer_types: Actions utilisateurs planifiées pour le sujet
         time_frame_required: Veuillez sélectionner un intervalle de temps
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
@@ -2129,7 +2170,7 @@ fr:
           "2_8": "Vous verrez un compteur de nouvelles réponses car vous suivez cette catégorie."
           "2_4": "Vous verrez un compteur de nouvelles réponses car vous avez répondu dans ce sujet."
           "2_2": "Vous verrez un compteur de nouvelles réponses car vous suivez ce sujet."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
           "1": "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
           "0_7": "Vous ignorez toutes les notifications de cette catégorie."
@@ -2318,7 +2359,6 @@ fr:
         preview_url: "Votre page sera publiée sur :"
         invalid_slug: "Désolé, vous ne pouvez pas publier cette page."
         unpublish: "Annuler la publication"
-        update: "Mettre à jour"
         unpublished: "La publication de votre page a été annulée et elle n'est plus accessible."
         publishing_settings: "Paramètres de publication"
       change_owner:
@@ -2473,23 +2513,7 @@ fr:
         remove_post_notice: "Retirer la note pour les responsables"
         remove_timer: "supprimer la planification"
       actions:
-        flag: "Signaler"
-        defer_flags:
-          one: "Ignorer le signalement"
-          other: "Ignorer les signalements"
-        undo:
-          off_topic: "Annuler le signalement"
-          spam: "Annuler le signalement"
-          inappropriate: "Annuler le signalement"
-          bookmark: "Retirer le signet"
-          like: "Annuler le J'aime"
         people:
-          off_topic: "signalé comme hors-sujet"
-          spam: "signalé comme spam"
-          inappropriate: "signalé comme inapproprié"
-          notify_moderators: "signalé aux modérateurs"
-          notify_user: "a envoyé un message"
-          bookmark: "signet ajouté"
           like:
             one: "a aimé ceci"
             other: "ont aimé ceci"
@@ -2508,8 +2532,6 @@ fr:
           inappropriate: "Vous l'avez signalé comme étant inapproprié"
           notify_moderators: "Vous l'avez signalé pour modération"
           notify_user: "Vous avez envoyé un message à cet utilisateur"
-          bookmark: "Vous avez mis un signet à ce message"
-          like: "Vous l'avez aimé"
       delete:
         confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
@@ -3110,14 +3132,6 @@ fr:
           latest: "Il n'y a pas de sujets récents."
           bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
           top: "Il n'y a pas de meilleurs sujets."
-        bottom:
-          latest: "Il n'y a plus de sujets récents."
-          posted: "Il n'y a plus de sujets publiés."
-          read: "Il n'y a plus de sujets lus."
-          new: "Il n'y a plus de nouveaux sujets."
-          unread: "Il n'y a plus de sujets non lus."
-          top: "Il n'y a plus de meilleurs sujets."
-          bookmarks: "Il n'y a plus de sujets avec des signets."
     invite:
       custom_message: "Rendez votre invitation plus personnelle en écrivant un <a href>message personnalisé</a>."
       custom_message_placeholder: "Entrez votre message personnalisé"
@@ -3260,8 +3274,6 @@ fr:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"
               logged_on_users: "Utilisateurs connectés"
-              members: "Propriétaires du groupe, membres"
-              staff: "Propriétaires du groupe et responsables"
               owners: "Propriétaires du groupe"
               description: "Les administrateurs peuvent voir tous les groupes."
             members_visibility_levels:
@@ -3325,7 +3337,6 @@ fr:
         save: Sauvegarder
         new_key: Nouvelle clé pour l’API
         revoked: Révoquée
-        delete: Supprimer de façon permanente
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
         continue: Poursuivre
       web_hooks:

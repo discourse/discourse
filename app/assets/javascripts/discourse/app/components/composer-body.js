@@ -4,7 +4,7 @@ import {
   schedule,
   later,
   debounce,
-  throttle
+  throttle,
 } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
@@ -40,7 +40,7 @@ export default Component.extend(KeyEnterEscape, {
     "composer.whisper:composing-whisper",
     "composer.sharedDraft:composing-shared-draft",
     "showPreview:show-preview:hide-preview",
-    "currentUserPrimaryGroupClass"
+    "currentUserPrimaryGroupClass",
   ],
 
   @discourseComputed("composer.action")
@@ -116,7 +116,7 @@ export default Component.extend(KeyEnterEscape, {
     let origComposerSize = 0;
     let lastMousePos = 0;
 
-    const performDrag = event => {
+    const performDrag = (event) => {
       $composer.trigger("div-resizing");
       $composer.addClass("clear-transitions");
       const currentMousePos = mouseYPos(event);
@@ -129,7 +129,7 @@ export default Component.extend(KeyEnterEscape, {
       $composer.height(size);
     };
 
-    const throttledPerformDrag = (event => {
+    const throttledPerformDrag = ((event) => {
       event.preventDefault();
       throttle(this, performDrag, event, THROTTLE_RATE);
     }).bind(this);
@@ -142,7 +142,7 @@ export default Component.extend(KeyEnterEscape, {
       $composer.focus();
     }).bind(this);
 
-    $grippie.on(START_EVENTS, event => {
+    $grippie.on(START_EVENTS, (event) => {
       event.preventDefault();
       origComposerSize = $composer.height();
       lastMousePos = mouseYPos(event);
@@ -210,5 +210,5 @@ export default Component.extend(KeyEnterEscape, {
 
   click() {
     this.openIfDraft();
-  }
+  },
 });

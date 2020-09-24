@@ -4,6 +4,7 @@ require 'rails_helper'
 require 'email'
 
 describe Email::Styles do
+  let(:attachments) { {} }
 
   def basic_fragment(html)
     styler = Email::Styles.new(html)
@@ -186,23 +187,57 @@ describe Email::Styles do
     end
   end
 
-  context "replace_relative_urls" do
+  context "replace_secure_media_urls" do
+    let(:attachments) { { 'testimage.png' => stub(url: 'email/test.png') } }
     it "replaces secure media within a link with a placeholder" do
       frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
-      expect(frag.at('p.secure-media-notice')).to be_present
       expect(frag.at('img')).not_to be_present
-      expect(frag.at('a')).not_to be_present
+      expect(frag.to_s).to include("Redacted")
     end
 
     it "replaces secure images with a placeholder" do
       frag = html_fragment("<img src=\"/secure-media-uploads/original/1X/testimage.png\">")
-      expect(frag.at('p.secure-media-notice')).to be_present
       expect(frag.at('img')).not_to be_present
+      expect(frag.to_s).to include("Redacted")
     end
 
     it "does not replace topic links with secure-media-uploads in the name" do
       frag = html_fragment("<a href=\"#{Discourse.base_url}\/t/secure-media-uploads/235723\">Visit Topic</a>")
-      expect(frag.at('p.secure-media-notice')).not_to be_present
+      expect(frag.to_s).not_to include("Redacted")
+    end
+  end
+
+  context "inline_secure_images" do
+    let(:attachments) { { 'testimage.png' => stub(url: 'cid:email/test.png') } }
+    fab!(:upload) { Fabricate(:upload, original_filename: 'testimage.png', secure: true, sha1: '123456') }
+
+    def strip_and_inline
+      html = "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\"></a>"
+
+      # strip out the secure media
+      styler = Email::Styles.new(html)
+      styler.format_basic
+      styler.format_html
+      html = styler.to_html
+
+      # pass in the attachments to match uploads based on sha + original filename
+      styler = Email::Styles.new(html)
+      styler.inline_secure_images(attachments)
+      @frag = Nokogiri::HTML5.fragment(styler.to_s)
+    end
+
+    it "inlines attachments where stripped-secure-media data attr is present" do
+      strip_and_inline
+      expect(@frag.to_s).to include("cid:email/test.png")
+      expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+    end
+
+    it "does not inline anything if the upload cannot be found" do
+      upload.update(sha1: 'blah12')
+      strip_and_inline
+
+      expect(@frag.to_s).not_to include("cid:email/test.png")
+      expect(@frag.css('[data-stripped-secure-media]')).to be_present
     end
   end
 end

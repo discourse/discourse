@@ -8,6 +8,6 @@ export default NotificationOptionsComponent.extend({
 
   selectKitOptions: {
     i18nPrefix: "category.notifications",
-    showFullTitle: false
-  }
+    showFullTitle: false,
+  },
 });

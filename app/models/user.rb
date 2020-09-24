@@ -273,8 +273,8 @@ class User < ActiveRecord::Base
 
   def self.editable_user_custom_fields(by_staff: false)
     fields = []
-    fields.push *DiscoursePluginRegistry.self_editable_user_custom_fields
-    fields.push *DiscoursePluginRegistry.staff_editable_user_custom_fields if by_staff
+    fields.push(*DiscoursePluginRegistry.self_editable_user_custom_fields)
+    fields.push(*DiscoursePluginRegistry.staff_editable_user_custom_fields) if by_staff
 
     fields.uniq
   end
@@ -297,18 +297,18 @@ class User < ActiveRecord::Base
   def self.allowed_user_custom_fields(guardian)
     fields = []
 
-    fields.push *DiscoursePluginRegistry.public_user_custom_fields
+    fields.push(*DiscoursePluginRegistry.public_user_custom_fields)
 
     if SiteSetting.public_user_custom_fields.present?
-      fields.push *SiteSetting.public_user_custom_fields.split('|')
+      fields.push(*SiteSetting.public_user_custom_fields.split('|'))
     end
 
     if guardian.is_staff?
       if SiteSetting.staff_user_custom_fields.present?
-        fields.push *SiteSetting.staff_user_custom_fields.split('|')
+        fields.push(*SiteSetting.staff_user_custom_fields.split('|'))
       end
 
-      fields.push *DiscoursePluginRegistry.staff_user_custom_fields
+      fields.push(*DiscoursePluginRegistry.staff_user_custom_fields)
     end
 
     fields.uniq
@@ -399,6 +399,11 @@ class User < ActiveRecord::Base
   def enqueue_member_welcome_message
     return unless SiteSetting.send_tl1_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: id, message_type: "welcome_tl1_user")
+  end
+
+  def enqueue_tl2_promotion_message
+    return unless SiteSetting.send_tl2_promotion_message
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: "tl2_promotion_message")
   end
 
   def enqueue_staff_welcome_message(role)
@@ -724,16 +729,51 @@ class User < ActiveRecord::Base
   def update_ip_address!(new_ip_address)
     unless ip_address == new_ip_address || new_ip_address.blank?
       update_column(:ip_address, new_ip_address)
+
+      if SiteSetting.keep_old_ip_address_count > 0
+        DB.exec(<<~SQL, user_id: self.id, ip_address: new_ip_address, current_timestamp: Time.zone.now)
+        INSERT INTO user_ip_address_histories (user_id, ip_address, created_at, updated_at)
+        VALUES (:user_id, :ip_address, :current_timestamp, :current_timestamp)
+        ON CONFLICT (user_id, ip_address)
+        DO
+          UPDATE SET updated_at = :current_timestamp
+        SQL
+
+        DB.exec(<<~SQL, user_id: self.id, offset: SiteSetting.keep_old_ip_address_count)
+        DELETE FROM user_ip_address_histories
+        WHERE id IN (
+          SELECT
+            id
+          FROM user_ip_address_histories
+          WHERE user_id = :user_id
+          ORDER BY updated_at DESC
+          OFFSET :offset
+        )
+        SQL
+      end
     end
   end
 
-  def update_last_seen!(now = Time.zone.now)
+  def last_seen_redis_key(now)
     now_date = now.to_date
-    # Only update last seen once every minute
-    redis_key = "user:#{id}:#{now_date}"
-    return unless Discourse.redis.setnx(redis_key, "1")
+    "user:#{id}:#{now_date}"
+  end
 
-    Discourse.redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
+  def clear_last_seen_cache!(now = Time.zone.now)
+    Discourse.redis.del(last_seen_redis_key(now))
+  end
+
+  def update_last_seen!(now = Time.zone.now)
+    redis_key = last_seen_redis_key(now)
+
+    if SiteSetting.active_user_rate_limit_secs > 0
+      return if !Discourse.redis.set(
+        redis_key, "1",
+        nx: true,
+        ex: SiteSetting.active_user_rate_limit_secs
+      )
+    end
+
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
@@ -1064,7 +1104,10 @@ class User < ActiveRecord::Base
 
     avatar = user_avatar || create_user_avatar
 
-    if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
+    if self.primary_email.present? &&
+        SiteSetting.automatically_download_gravatars? &&
+        !avatar.last_gravatar_download_attempt
+
       Jobs.cancel_scheduled_job(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
       Jobs.enqueue_in(1.second, :update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end

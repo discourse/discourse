@@ -16,13 +16,13 @@ export default ArrayProxy.extend({
       renderIconIf("archived", "lock", "archived");
     }
 
-    this.forEach(args => renderIconIf(...args));
-  }
+    this.forEach((args) => renderIconIf(...args));
+  },
 }).create({
   content: [
     ["is_warning", "envelope", "warning"],
     ["pinned", "thumbtack", "pinned"],
     ["unpinned", "thumbtack", "unpinned"],
-    ["invisible", "far-eye-slash", "unlisted"]
-  ]
+    ["invisible", "far-eye-slash", "unlisted"],
+  ],
 });

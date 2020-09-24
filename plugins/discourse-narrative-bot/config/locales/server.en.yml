@@ -30,8 +30,6 @@ en:
 
         Reply to this message with `@%{discobot_username} %{reset_trigger}` to find out more about what you can do.
 
-        We invite you to keep getting involved – we enjoy having you around.
-
     timeout:
       message: |-
         Hey @%{username}, just checking in because I haven’t heard from you in a while.
@@ -156,7 +154,6 @@ en:
       reset_trigger: "tutorial"
       title: "New user tutorial completion certificate"
       cert_title: "In recognition of successful completion of the new user tutorial"
-      delete_reason: "User skipped the new user tips"
 
       hello:
         title: "Greetings!"
@@ -201,11 +198,23 @@ en:
         like_not_found: |-
           Did you forget to like :heart: my [post?](%{url}) :crying_cat_face:
         not_found: |-
-          Looks like you didn’t upload an image so I’ve choosen a picture that I’m _sure_ you will enjoy.
+          Looks like you didn’t upload an image so I’ve chosen a picture that I’m _sure_ you will enjoy.
 
           `%{image_url}`
 
           Try uploading that one next, or pasting the link in on a line by itself!
+
+      likes:
+        instructions: |-
+          Here’s a picture of a unicorn:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          If you like it (and who wouldn’t!) go ahead and press the like :heart: button below this post to let me know.
+        reply: |-
+          Thanks for liking my post!
+        not_found: |-
+          Did you forget to like :heart: my [post?](%{url}) :crying_cat_face:
 
       formatting:
         instructions: |-

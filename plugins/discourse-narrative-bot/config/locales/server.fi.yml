@@ -27,12 +27,6 @@ fi:
     bio: "Moi! En ole ihminen. Olen botti, ja tarjoan opetusta sivuston käyttämisestä. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
     tl2_promotion_message:
       subject_template: "Onnittelut luottamustasonoususta!"
-      text_body_template: |
-        Nyt kun olet noussut, on aika oppia joitakin kehittyneempiä ominaisuuksia!
-
-        Vastaa tähän viestiin `@%{discobot_username} %{reset_trigger}` niin opit lisää, mitä kaikkia valtuuksia sinulla on.
-
-        Toivon mukaan jatkat osallistumista – on mukavaa että olet täällä.
     timeout:
       message: |-
         Hei @%{username}, kyselen kuulumisia, kun en ole kuullut sinusta hetkeen.
@@ -185,12 +179,6 @@ fi:
           Loistava kuva – Painoin tykkää-nappia :heart:, jotta tiedät että pidin siitä kovasti! :heart_eyes:
         like_not_found: |-
           Unohditko tykätä :heart: [viestistäni?](%{url}) :crying_cat_face:
-        not_found: |-
-          Näyttää ettet laittanut kuvaa, joten valitsin kuvan josta _takuulla_ pidät.
-
-          `%{image_url}`
-
-          Kokeilepa liittää tämä kuva tai liittää linkin osoite omalle rivilleen!
       formatting:
         instructions: |-
           **Lihavoi** tai **kursivoi** sanoja seuraavasta vastauksestasi.

@@ -9,7 +9,7 @@ export default Component.extend({
     removeIgnoredUser(item) {
       this.set("saved", false);
       this.items.removeObject(item);
-      User.findByUsername(item).then(user => {
+      User.findByUsername(item).then((user) => {
         user
           .updateNotificationLevel("normal")
           .catch(popupAjaxError)
@@ -18,14 +18,14 @@ export default Component.extend({
     },
     newIgnoredUser() {
       const modal = showModal("ignore-duration-with-username", {
-        model: this.model
+        model: this.model,
       });
       modal.setProperties({
         ignoredUsername: null,
-        onUserIgnored: username => {
+        onUserIgnored: (username) => {
           this.items.addObject(username);
-        }
+        },
       });
-    }
-  }
+    },
+  },
 });

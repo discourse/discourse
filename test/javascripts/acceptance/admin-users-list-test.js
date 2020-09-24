@@ -3,14 +3,14 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Admin - Users List", { loggedIn: true });
 
-QUnit.test("lists users", async assert => {
+QUnit.test("lists users", async (assert) => {
   await visit("/admin/users/list/active");
 
   assert.ok(exists(".users-list .user"));
   assert.ok(!exists(".user:eq(0) .email small"), "escapes email");
 });
 
-QUnit.test("sorts users", async assert => {
+QUnit.test("sorts users", async (assert) => {
   await visit("/admin/users/list/active");
 
   assert.ok(exists(".users-list .user"));
@@ -34,7 +34,7 @@ QUnit.test("sorts users", async assert => {
   );
 });
 
-QUnit.test("toggles email visibility", async assert => {
+QUnit.test("toggles email visibility", async (assert) => {
   await visit("/admin/users/list/active");
 
   assert.ok(exists(".users-list .user"));
@@ -56,7 +56,7 @@ QUnit.test("toggles email visibility", async assert => {
   );
 });
 
-QUnit.test("switching tabs", async assert => {
+QUnit.test("switching tabs", async (assert) => {
   const activeUser = "eviltrout";
   const suspectUser = "sam";
   const activeTitle = I18n.t("admin.users.titles.active");
@@ -66,9 +66,7 @@ QUnit.test("switching tabs", async assert => {
 
   assert.equal(find(".admin-title h2").text(), activeTitle);
   assert.ok(
-    find(".users-list .user:nth-child(1) .username")
-      .text()
-      .includes(activeUser)
+    find(".users-list .user:nth-child(1) .username").text().includes(activeUser)
   );
 
   await click('a[href="/admin/users/list/new"]');
@@ -93,8 +91,6 @@ QUnit.test("switching tabs", async assert => {
 
   assert.equal(find(".admin-title h2").text(), activeTitle);
   assert.ok(
-    find(".users-list .user:nth-child(1) .username")
-      .text()
-      .includes(activeUser)
+    find(".users-list .user:nth-child(1) .username").text().includes(activeUser)
   );
 });

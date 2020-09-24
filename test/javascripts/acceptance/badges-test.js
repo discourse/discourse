@@ -3,7 +3,7 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Badges", { loggedIn: true });
 
-QUnit.test("Visit Badge Pages", async assert => {
+QUnit.test("Visit Badge Pages", async (assert) => {
   await visit("/badges");
 
   assert.ok($("body.badges-page").length, "has body class");
@@ -16,7 +16,7 @@ QUnit.test("Visit Badge Pages", async assert => {
   assert.ok(!exists(".badge-card:eq(0) script"));
 });
 
-QUnit.test("shows correct badge titles to choose from", async assert => {
+QUnit.test("shows correct badge titles to choose from", async (assert) => {
   const availableBadgeTitles = selectKit(".select-kit");
   await visit("/badges/50/custombadge");
   await availableBadgeTitles.expand();

@@ -1001,13 +1001,16 @@ def analyze_missing_s3
     SELECT post_id, url, sha1, extension, uploads.id
     FROM post_uploads pu
     RIGHT JOIN uploads on uploads.id = pu.upload_id
-    WHERE NOT verified
+    WHERE verification_status = :invalid_etag
     ORDER BY created_at
   SQL
 
   lookup = {}
   other = []
-  DB.query(sql).each do |r|
+  all = []
+
+  DB.query(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |r|
+    all << r
     if r.post_id
       lookup[r.post_id] ||= []
       lookup[r.post_id] << [r.url, r.sha1, r.extension]
@@ -1026,31 +1029,73 @@ def analyze_missing_s3
     puts
   end
 
-  puts "Total missing uploads: #{Upload.where(verified: false).count}"
+  missing_uploads = Upload.where(verification_status: Upload.verification_statuses[:invalid_etag])
+  puts "Total missing uploads: #{missing_uploads.count}, newest is #{missing_uploads.maximum(:created_at)}"
   puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
   puts "Other missing uploads count: #{other.count}"
-  if other.count > 0
-    ids = other.map { |r| r.id }
-    count = DB.query_single(<<~SQL, ids: ids).first
-      SELECT COUNT(*) FROM users WHERE uploaded_avatar_id IN (:ids)
-    SQL
-    if count > 0
-      puts "Found #{count} uploaded avatars"
+
+  if all.count > 0
+    ids = all.map { |r| r.id }
+
+    lookups = [
+      [:post_uploads, :upload_id],
+      [:users, :uploaded_avatar_id],
+      [:user_avatars, :gravatar_upload_id],
+      [:user_avatars, :custom_upload_id],
+      [:site_settings, ["NULLIF(value, '')::integer", "data_type = #{SiteSettings::TypeSupervisor.types[:upload].to_i}"]],
+      [:user_profiles, :profile_background_upload_id],
+      [:user_profiles, :card_background_upload_id],
+      [:categories, :uploaded_logo_id],
+      [:categories, :uploaded_background_id],
+      [:custom_emojis, :upload_id],
+      [:theme_fields, :upload_id],
+      [:user_exports, :upload_id],
+      [:groups, :flair_upload_id],
+    ]
+
+    lookups.each do |table, (column, where)|
+      count = DB.query_single(<<~SQL, ids: ids).first
+        SELECT COUNT(*) FROM #{table} WHERE #{column} IN (:ids) #{"AND #{where}" if where}
+      SQL
+      if count > 0
+        puts "Found #{count} missing row#{"s" if count > 1} in #{table}(#{column})"
+      end
     end
-    count = DB.query_single(<<~SQL, ids: ids).first
-      SELECT COUNT(*) FROM user_avatars WHERE gravatar_upload_id IN (:ids)
-    SQL
-    if count > 0
-      puts "Found #{count} gravatars"
-    end
-    count = DB.query_single(<<~SQL, ids: ids).first
-      SELECT COUNT(*) FROM user_avatars WHERE custom_upload_id IN (:ids)
-    SQL
-    if count > 0
-      puts "Found #{count} custom uploaded avatars"
-    end
+
   end
 
+end
+
+def delete_missing_s3
+  missing = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).order(:created_at)
+  count = missing.count
+  if count > 0
+    puts "The following uploads will be deleted from the database"
+    missing.each do |upload|
+      puts "#{upload.id} - #{upload.url} - #{upload.created_at}"
+    end
+    puts "Please confirm you wish to delete #{count} upload records by typing YES"
+    confirm = STDIN.gets.strip
+    if confirm == "YES"
+      missing.destroy_all
+      puts "#{count} records were deleted"
+    else
+      STDERR.puts "Aborting"
+      exit 1
+    end
+  end
+end
+
+task "uploads:delete_missing_s3" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    delete_missing_s3
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      delete_missing_s3
+    end
+  end
 end
 
 task "uploads:analyze_missing_s3" => :environment do
@@ -1067,7 +1112,9 @@ def fix_missing_s3
   Jobs.run_immediately!
 
   puts "Attempting to download missing uploads and recreate"
-  ids = Upload.where(verified: false).pluck(:id)
+  ids = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).pluck(:id)
   ids.each do |id|
     upload = Upload.find(id)
 
@@ -1095,11 +1142,11 @@ def fix_missing_s3
       end
 
       if fix_error
-        puts "Failed to fix upload #{e}"
+        puts "Failed to fix upload #{fix_error}"
       else
         # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
         # we may end up breaking posts
-        upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verified: nil)
+        upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
 
         OptimizedImage.where(upload_id: upload.id).destroy_all
         rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
@@ -1122,14 +1169,18 @@ def fix_missing_s3
     SELECT post_id
     FROM post_uploads pu
     JOIN uploads on uploads.id = pu.upload_id
-    WHERE NOT verified
+    WHERE verification_status = :invalid_etag
     ORDER BY post_id DESC
   SQL
 
-  DB.query_single(sql).each do |post_id|
-    post = Post.find(post_id)
-    post.rebake!
-    print "."
+  DB.query_single(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |post_id|
+    post = Post.find_by(id: post_id)
+    if post
+      post.rebake!
+      print "."
+    else
+      puts "Skipping #{post_id} since it is deleted"
+    end
   end
   puts
 end

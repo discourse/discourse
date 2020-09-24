@@ -9,7 +9,7 @@ export default Component.extend({
     ":tags-list",
     ":tag-list",
     "categoryClass",
-    "tagGroupNameClass"
+    "tagGroupNameClass",
   ],
 
   isPrivateMessage: false,
@@ -39,5 +39,5 @@ export default Component.extend({
         .toLowerCase();
       return groupName && `tag-group-${groupName}`;
     }
-  }
+  },
 });

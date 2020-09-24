@@ -15,5 +15,5 @@ export default Component.extend({
   @discourseComputed("model.isSaving")
   savingText(saving) {
     return saving ? "saving" : "save";
-  }
+  },
 });

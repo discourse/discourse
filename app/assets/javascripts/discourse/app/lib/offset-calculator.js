@@ -13,7 +13,9 @@ export default function offsetCalculator() {
   const min = minimumOffset();
 
   // on mobile, just use the header
-  if ($("html").hasClass("mobile-view")) return min;
+  if ($("html").hasClass("mobile-view")) {
+    return min;
+  }
 
   const $window = $(window);
   const windowHeight = $window.height();
@@ -21,7 +23,9 @@ export default function offsetCalculator() {
   const topicBottomOffsetTop = $("#topic-bottom").offset().top;
 
   // the footer is bigger than the window, we can scroll down past the last post
-  if (documentHeight - windowHeight > topicBottomOffsetTop) return min;
+  if (documentHeight - windowHeight > topicBottomOffsetTop) {
+    return min;
+  }
 
   const scrollTop = $window.scrollTop();
   const visibleBottomHeight = scrollTop + windowHeight - topicBottomOffsetTop;

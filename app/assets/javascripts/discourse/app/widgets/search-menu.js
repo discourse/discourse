@@ -52,10 +52,10 @@ const SearchHelper = {
       this._activeSearch = searchForTerm(term, {
         typeFilter,
         searchContext,
-        fullSearchUrl
+        fullSearchUrl,
       });
       this._activeSearch
-        .then(content => {
+        .then((content) => {
           // we ensure the current search term is the one used
           // when starting the query
           if (term === searchData.term) {
@@ -76,7 +76,7 @@ const SearchHelper = {
           widget.scheduleRerender();
         });
     }
-  }
+  },
 };
 
 export default createWidget("search-menu", {
@@ -98,22 +98,31 @@ export default createWidget("search-menu", {
       query += `q=${encodeURIComponent(searchData.term)}`;
 
       if (contextEnabled && ctx) {
-        if (
-          this.currentUser &&
-          ctx.id.toString().toLowerCase() ===
-            this.currentUser.get("username_lower") &&
-          type === "private_messages"
-        ) {
-          query += " in:personal";
+        if (type === "private_messages") {
+          if (
+            this.currentUser &&
+            ctx.id.toString().toLowerCase() ===
+              this.currentUser.get("username_lower")
+          ) {
+            query += " in:personal";
+          } else {
+            query += encodeURIComponent(
+              ` personal_messages:${ctx.id.toString().toLowerCase()}`
+            );
+          }
         } else {
           query += encodeURIComponent(" " + type + ":" + ctx.id);
         }
       }
 
-      if (query) params.push(query);
+      if (query) {
+        params.push(query);
+      }
     }
 
-    if (opts && opts.expanded) params.push("expanded=true");
+    if (opts && opts.expanded) {
+      params.push("expanded=true");
+    }
 
     if (params.length > 0) {
       url = `${url}?${params.join("&")}`;
@@ -126,7 +135,7 @@ export default createWidget("search-menu", {
     const contextEnabled = searchData.contextEnabled;
 
     let searchInput = [
-      this.attach("search-term", { value: searchData.term, contextEnabled })
+      this.attach("search-term", { value: searchData.term, contextEnabled }),
     ];
     if (searchData.term && searchData.loading) {
       searchInput.push(h("div.searching", h("div.spinner")));
@@ -136,8 +145,8 @@ export default createWidget("search-menu", {
       h("div.search-input", searchInput),
       this.attach("search-context", {
         contextEnabled,
-        url: this.fullSearchUrl({ expanded: true })
-      })
+        url: this.fullSearchUrl({ expanded: true }),
+      }),
     ];
 
     if (searchData.term && !searchData.loading) {
@@ -147,7 +156,7 @@ export default createWidget("search-menu", {
           noResults: searchData.noResults,
           results: searchData.results,
           invalidTerm: searchData.invalidTerm,
-          searchContextEnabled: searchData.contextEnabled
+          searchContextEnabled: searchData.contextEnabled,
         })
       );
     }
@@ -187,7 +196,7 @@ export default createWidget("search-menu", {
 
     return this.attach("menu-panel", {
       maxWidth: 500,
-      contents: () => this.panelContents()
+      contents: () => this.panelContents(),
     });
   },
 
@@ -213,7 +222,7 @@ export default createWidget("search-menu", {
           // add a link and focus composer
 
           this.appEvents.trigger("composer:insert-text", focused[0].href, {
-            ensureSpace: true
+            ensureSpace: true,
           });
           this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
 
@@ -310,5 +319,5 @@ export default createWidget("search-menu", {
       this.sendWidgetEvent("linkClicked");
       DiscourseURL.routeTo(url);
     }
-  }
+  },
 });

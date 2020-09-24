@@ -13,9 +13,9 @@ export default Mixin.create({
 
     let userFields = this.site.get("user_fields");
     if (userFields) {
-      userFields = _.sortBy(userFields, "position").map(function(f) {
-        return EmberObject.create({ value: null, field: f });
-      });
+      userFields = userFields
+        .sortBy("position")
+        .map((f) => EmberObject.create({ value: null, field: f }));
     }
     this.set("userFields", userFields);
   },
@@ -28,7 +28,7 @@ export default Mixin.create({
       userFields = userFields.filterBy("field.required");
     }
     if (!isEmpty(userFields)) {
-      const emptyUserField = userFields.find(uf => {
+      const emptyUserField = userFields.find((uf) => {
         const val = uf.get("value");
         return !val || isEmpty(val);
       });
@@ -37,10 +37,10 @@ export default Mixin.create({
         return EmberObject.create({
           failed: true,
           message: I18n.t("user_fields.required", { name: userField.name }),
-          element: userField.element
+          element: userField.element,
         });
       }
     }
     return EmberObject.create({ ok: true });
-  }
+  },
 });

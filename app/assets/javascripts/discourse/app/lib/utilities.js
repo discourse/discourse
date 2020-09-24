@@ -3,6 +3,8 @@ import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
 import Handlebars from "handlebars";
 import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
+import { helperContext } from "discourse-common/lib/helpers";
+import { deepMerge } from "discourse-common/lib/object";
 
 let _defaultHomepage;
 
@@ -37,7 +39,7 @@ export function escapeExpression(string) {
   return escape(string);
 }
 
-let _usernameFormatDelegate = username => username;
+let _usernameFormatDelegate = (username) => username;
 
 export function formatUsername(username) {
   return _usernameFormatDelegate(username || "");
@@ -84,7 +86,7 @@ export function avatarImg(options, customGetURL) {
 
 export function tinyAvatar(avatarTemplate, options) {
   return avatarImg(
-    _.merge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
+    deepMerge({ avatarTemplate: avatarTemplate, size: "tiny" }, options)
   );
 }
 
@@ -169,7 +171,7 @@ export function caretRowCol(el) {
 
   var colNum =
     cp -
-    rows.splice(0, rowNum - 1).reduce(function(sum, row) {
+    rows.splice(0, rowNum - 1).reduce(function (sum, row) {
       return sum + row.length + 1;
     }, 0);
 
@@ -185,7 +187,9 @@ export function caretPosition(el) {
   if (document.selection) {
     el.focus();
     r = document.selection.createRange();
-    if (!r) return 0;
+    if (!r) {
+      return 0;
+    }
 
     re = el.createTextRange();
     rc = re.duplicate();
@@ -236,7 +240,7 @@ export function setDefaultHomepage(homepage) {
 export function determinePostReplaceSelection({
   selection,
   needle,
-  replacement
+  replacement,
 }) {
   const diff =
     replacement.end - replacement.start - (needle.end - needle.start);
@@ -271,7 +275,7 @@ export function determinePostReplaceSelection({
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  const caps = Discourse.__container__.lookup("capabilities:main");
+  let caps = helperContext().capabilities;
   return caps.isIOS && !navigator.userAgent.match(/Trident/g);
 }
 
@@ -291,7 +295,9 @@ export function isiPad() {
 }
 
 export function safariHacksDisabled() {
-  if (iOSWithVisualViewport()) return false;
+  if (iOSWithVisualViewport()) {
+    return false;
+  }
 
   let pref = localStorage.getItem("safari-hacks-disabled");
   let result = false;
@@ -301,7 +307,7 @@ export function safariHacksDisabled() {
   return result;
 }
 
-const toArray = items => {
+const toArray = (items) => {
   items = items || [];
 
   if (!Array.isArray(items)) {
@@ -322,12 +328,12 @@ export function clipboardHelpers(e, opts) {
 
   if (types.includes("Files") && files.length === 0) {
     // for IE
-    files = toArray(clipboard.items).filter(i => i.kind === "file");
+    files = toArray(clipboard.items).filter((i) => i.kind === "file");
   }
 
   let canUpload = files && opts.canUpload && types.includes("Files");
   const canUploadImage =
-    canUpload && files.filter(f => f.type.match("^image/"))[0];
+    canUpload && files.filter((f) => f.type.match("^image/"))[0];
   const canPasteHtml =
     opts.siteSettings.enable_rich_text_paste &&
     types.includes("text/html") &&
@@ -381,9 +387,7 @@ export function fillMissingDates(data, startDate, endDate) {
         data.splice(i, 0, { x: currentMoment, y: 0 });
       }
     }
-    currentMoment = moment(currentMoment)
-      .add(1, "day")
-      .format("YYYY-MM-DD");
+    currentMoment = moment(currentMoment).add(1, "day").format("YYYY-MM-DD");
   }
   return data;
 }
@@ -401,7 +405,7 @@ export function areCookiesEnabled() {
 }
 
 export function isiOSPWA() {
-  const caps = Discourse.__container__.lookup("capabilities:main");
+  let caps = helperContext().capabilities;
   return window.matchMedia("(display-mode: standalone)").matches && caps.isIOS;
 }
 
@@ -418,13 +422,13 @@ export function postRNWebviewMessage(prop, value) {
 function reportToLogster(name, error) {
   const data = {
     message: `${name} theme/component is throwing errors`,
-    stacktrace: error.stack
+    stacktrace: error.stack,
   };
 
   Ember.$.ajax(getURL("/logs/report_js_error"), {
     data,
     type: "POST",
-    cache: false
+    cache: false,
   });
 }
 // this function is used in lib/theme_javascript_compiler.rb
@@ -441,7 +445,7 @@ export function rescueThemeError(name, error, api) {
   const path = getURL(`/admin/customize/themes`);
   const message = I18n.t("themes.broken_theme_alert", {
     theme: name,
-    path: `<a href="${path}">${path}</a>`
+    path: `<a href="${path}">${path}</a>`,
   });
   const alertDiv = document.createElement("div");
   alertDiv.classList.add("broken-theme-alert");

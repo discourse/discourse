@@ -27,12 +27,6 @@ tr_TR:
     bio: "Merhaba, ben gerçek bir insan değilim. Bu site hakkındaki şeyleri size öğretebilecek bir robotum. Benimle etkileşime geçmek için bana bir mesaj gönderin veya ** `@%{discobot_username}` ** şekliyle herhangi bir yerde beni etiketleyin."
     tl2_promotion_message:
       subject_template: "Güven seviyesi terfiniz için tebrikler!"
-      text_body_template: |
-        Artık terfi ettiğinize göre, bazı gelişmiş özellikleri öğrenme zamanı!
-
-        Bu mesaja `@%{discobot_username} %{reset_trigger}`  olarak cevap verin ve neler yapabileceğinizi görün.
-
-        Sizi sürece dahil olmaya davet ediyoruz - sizi etrafta görmekten keyif alıyoruz.
     timeout:
       message: |-
         Merhaba @ %{username}, uzun süredir sizden haber alamadık.
@@ -177,12 +171,6 @@ tr_TR:
           Şık resim -  :heart: :heart_eyes:
         like_not_found: |-
           Beğenmeyi unuttun mu? :heart: [post?] (%{url}) :crying_cat_face:
-        not_found: |-
-          Görünüşe göre bir resim yüklemediniz, bu yüzden sizin yerinize hoş bir resim seçtim.
-
-          `%{image_url}`
-
-          Bir dahaki sefere yüklemeyi veya bağlantıyı tek başına bir satıra yapıştırmayı deneyin!
       formatting:
         instructions: |-
           Yanıtınızda bazı kelimeleri **kalın** veya _italic_ yapabilir misiniz?

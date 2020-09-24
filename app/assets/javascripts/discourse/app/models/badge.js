@@ -17,10 +17,10 @@ const Badge = RestModel.extend({
 
   updateFromJson(json) {
     if (json.badge) {
-      Object.keys(json.badge).forEach(key => this.set(key, json.badge[key]));
+      Object.keys(json.badge).forEach((key) => this.set(key, json.badge[key]));
     }
     if (json.badge_types) {
-      json.badge_types.forEach(badgeType => {
+      json.badge_types.forEach((badgeType) => {
         if (badgeType.id === this.badge_type_id) {
           this.set("badge_type", Object.create(badgeType));
         }
@@ -45,22 +45,24 @@ const Badge = RestModel.extend({
     }
 
     return ajax(url, { type, data })
-      .then(json => {
+      .then((json) => {
         this.updateFromJson(json);
         return this;
       })
-      .catch(error => {
+      .catch((error) => {
         throw new Error(error);
       });
   },
 
   destroy() {
-    if (this.newBadge) return Promise.resolve();
+    if (this.newBadge) {
+      return Promise.resolve();
+    }
 
     return ajax(`/admin/badges/${this.id}`, {
-      type: "DELETE"
+      type: "DELETE",
     });
-  }
+  },
 });
 
 Badge.reopenClass({
@@ -69,7 +71,7 @@ Badge.reopenClass({
     const badgeTypes = {};
     if ("badge_types" in json) {
       json.badge_types.forEach(
-        badgeTypeJson =>
+        (badgeTypeJson) =>
           (badgeTypes[badgeTypeJson.id] = EmberObject.create(badgeTypeJson))
       );
     }
@@ -77,7 +79,7 @@ Badge.reopenClass({
     const badgeGroupings = {};
     if ("badge_groupings" in json) {
       json.badge_groupings.forEach(
-        badgeGroupingJson =>
+        (badgeGroupingJson) =>
           (badgeGroupings[badgeGroupingJson.id] = BadgeGrouping.create(
             badgeGroupingJson
           ))
@@ -91,11 +93,11 @@ Badge.reopenClass({
     } else if (json.badges) {
       badges = json.badges;
     }
-    badges = badges.map(badgeJson => {
+    badges = badges.map((badgeJson) => {
       const badge = Badge.create(badgeJson);
       badge.setProperties({
         badge_type: badgeTypes[badge.badge_type_id],
-        badge_grouping: badgeGroupings[badge.badge_grouping_id]
+        badge_grouping: badgeGroupings[badge.badge_grouping_id],
       });
       return badge;
     });
@@ -113,16 +115,16 @@ Badge.reopenClass({
       listable = "?only_listable=true";
     }
 
-    return ajax(`/badges.json${listable}`, { data: opts }).then(badgesJson =>
+    return ajax(`/badges.json${listable}`, { data: opts }).then((badgesJson) =>
       Badge.createFromJson(badgesJson)
     );
   },
 
   findById(id) {
-    return ajax(`/badges/${id}`).then(badgeJson =>
+    return ajax(`/badges/${id}`).then((badgeJson) =>
       Badge.createFromJson(badgeJson)
     );
-  }
+  },
 });
 
 export default Badge;

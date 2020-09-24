@@ -669,6 +669,7 @@ pre {
   overflow: visible;
 
   .copy-cmd {
+    @include unselectable;
     position: absolute;
     top: 0;
     right: 0;
@@ -676,7 +677,6 @@ pre {
     font-size: $font-down-2;
     min-height: 0;
     font-size: $font-down-2;
-    user-select: none;
 
     &.copied {
       .d-icon {

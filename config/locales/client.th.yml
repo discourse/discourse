@@ -229,7 +229,6 @@ th:
         bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
         unbookmark: "คลิกเพื่อลบบุ๊กมาร์กทั้งหมดในกระทู้นี้"
     bookmarks:
-      created: "คุณได้บุ๊กมาร์กโพสต์นี้%{name}"
       not_bookmarked: "บุ๊กมาร์กโพสต์นี้"
       remove: "ลบบุ๊กมาร์ก"
       delete: "ลบบุ๊กมาร์ก"
@@ -1404,7 +1403,6 @@ th:
         draft: แบบร่าง
         edit: แก้ไข
         reply_to_post:
-          label: ตอบกลับไปยังโพสต์ %{postNumber}โดย %{postUsername}
           desc: ตอบกลับโพสต์ที่เจาะจง
         reply_as_private_message:
           label: ข้อความใหม่
@@ -1662,9 +1660,6 @@ th:
       show_links: "แสดงลิงก์ในกระทู้นี้"
       read_more_in_category: "ต้องการอ่านเพิ่มใช่ไหม ลองดูกระทู้อื่นใน %{catLink} หรือ %{latestLink}"
       read_more: "ต้องการอ่านเพิ่มใช่ไหม %{catLink} หรือ %{latestLink}"
-      group_request: "คุณต้องส่งคำขอเป็นสมาชิกในกลุ่ม `%{name}` เพื่อดูกระทู้นี้"
-      group_join: "คุณต้องเข้ากลุ่ม `%{name}` เพื่อดูกระทู้นี้"
-      group_request_sent: "คำขอเป็นสมาชิกกลุ่มของคุณได้ถูกส่งไปแล้ว คุณจะได้รับการแจ้งเตือนเมื่อถูกตอบรับ"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
       view_latest_topics: ดูกระทู้ล่าสุด
       suggest_create_topic: ทำไมไม่สร้างกระทู้ล่ะ
@@ -1747,7 +1742,7 @@ th:
           "2_8": "คุณจะเห็นจำนวนคำตอบใหม่เพราะคุณกำลังติดตามหมวดหมู่นี้"
           "2_4": "คุณจะเห็นจำนวนคำตอบใหม่เพราะคุณได้โพสต์คำตอบไปยังกระทู้นี้"
           "2_2": "คุณจะเห็นจำนวนคำตอบใหม่เพราะคุณกำลังติดตามกระทู้นี้"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "คุณจะได้รับการแจ้งเตือนเมื่อมีคนกล่าวถึงชื่อของคุณ @name หรือตอบคุณ"
           "1": "คุณจะได้รับการแจ้งเตือนเมื่อมีคนกล่าวถึงชื่อของคุณ @name หรือตอบคุณ"
           "0_2": "คุณไม่ต้องการรับการแจ้งเตือนทั้งหมดจากกระทู้นี้"
@@ -1900,7 +1895,6 @@ th:
         preview_url: "เพจของคุณจะถูกเผยแพร่เมื่อ:"
         invalid_slug: "ขออภัย คุณไม่สามารถเผยแพร่เพจนี้"
         unpublish: "ไม่เผยแพร่"
-        update: "อัปเดต"
         unpublished: "เพจของคุณถูกหยุดการเผยแพร่และไม่สามารถเข้าถึงได้อีกต่อไป"
         publishing_settings: "ตั้งค่าการเผยแพร่"
       change_owner:
@@ -2019,20 +2013,7 @@ th:
         delete_topic_disallowed: "คุณไม่ได้รับอนุญาตให้ลบกระทู้นี้"
         delete_topic: "ลบกระทู้"
       actions:
-        flag: "ธง"
-        defer_flags:
-          other: "ละทิ้งธง"
-        undo:
-          off_topic: "เลิกปักธง"
-          spam: "เลิกปักธง"
-          inappropriate: "เลิกปักธง"
-          bookmark: "เลิกบุ๊กมาร์ก"
-          like: "เลิกถูกใจ"
         people:
-          spam: "ปักธงไว้ว่าเป็นสแปม"
-          inappropriate: "ปักธงไว้ว่าไม่เหมาะสม"
-          notify_user: "ส่งข้อความ"
-          bookmark: "บุ๊กมาร์กแล้ว"
           like:
             other: "ถูกใจแล้ว"
           read:
@@ -2045,8 +2026,6 @@ th:
           spam: "คุณปักธงไว้ว่าเป็นสแปม"
           inappropriate: "คุณปักธงไว้ว่าไม่เหมาะสม"
           notify_user: "คุณได้ส่งข้อความไปหาผู้ใช้นี้แล้ว"
-          bookmark: "คุณได้บุ๊กมาร์กโพสต์นี้แล้ว"
-          like: "คุณถูกใจสิ่งนี้"
       delete:
         confirm:
           other: "คุณแน่ใจหรือว่าต้องการลบ %{count}โพสต์นี้"
@@ -2450,14 +2429,6 @@ th:
           latest: "ไม่มีกระทู้ล่าสุด"
           bookmarks: "คุณยังไม่ได้บุ๊กมาร์กกระทู้ใดๆเลย"
           top: "ไม่มีกระทู้ยอดนิยม"
-        bottom:
-          latest: "ไม่มีกระทู้ล่าสุดอีกแล้ว"
-          posted: "ไม่มีกระทู้ที่โพสต์อีกแล้ว"
-          read: "ไม่มีกระทู้ที่อ่านแล้วอีก"
-          new: "ไม่มีกระทู้ใหม่อีกแล้ว"
-          unread: "ไม่มีกระทู้ที่ยังไม่อ่านอีกแล้ว"
-          top: "ไม่มีกระทู้ยอดนิยมอีกแล้ว"
-          bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     invite:
       custom_message_template_topic: "สวัสดี ฉันคิดว่าคุณอาจชอบกระทู้นี้!"
     footer_nav:
@@ -2546,8 +2517,6 @@ th:
             visibility_levels:
               title: "ใครสามารถเห็นกลุ่มนี้"
               public: "ทุกคน"
-              members: "เจ้าของกลุ่ม สมาชิก"
-              staff: "เจ้าของกลุ่มและทีมงาน"
               owners: "เจ้าของกลุ่ม"
               description: "แอดมินสามารถกลุ่มทั้งหมดได้"
             members_visibility_levels:
@@ -2587,7 +2556,6 @@ th:
         description: รายละเอียด
         user_placeholder: กรอกชื่อผู้ใช้
         save: บันทึก
-        delete: ลบถาวร
         continue: ดำเนินการต่อ
       web_hooks:
         create: "สร้าง"

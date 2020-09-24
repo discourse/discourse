@@ -27,12 +27,6 @@ id:
     bio: "Salam, saya bukan manusia asli. Saya adalah robot yang akan memandu Anda menggunakan forum ini. Untuk berkomunikasi dengan saya, kirimi saya pesan atau panggil **`@%{discobot_username}`** dimana saja."
     tl2_promotion_message:
       subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
-      text_body_template: |
-        Sekarang setelah Anda dipromosikan, saatnya untuk belajar tentang beberapa fitur lanjutan!
-
-        Balas pesan ini dengan `@ %{discobot_username} %{reset_trigger}` untuk mencari tahu lebih lanjut tentang apa yang dapat Anda lakukan.
-
-        Kami mengundang Anda untuk terus terlibat - kami menikmati kehadiran Anda.
     timeout:
       message: |-
         Salam @%{username}, hanya ingin menyapa karena saya tidak melihat Anda beberapa waktu.
@@ -143,12 +137,6 @@ id:
           Gambar yang menarik – Saya telah menekan tombol :heart: supaya Anda tahu kalau saya menghargainya :heart_eyes:
         like_not_found: |-
           Apakah Anda lupa menyukai :heart: kiriman saya [post?](%{url}) :crying_cat_face:
-        not_found: |-
-          Sepertinya Anda tidak memasukkan sebuah gambar jadi saya pilihkan sebuah gambar yang sepertinya I’m _sure_ you Anda akan suka.
-
-          `%{image_url}`
-
-          Coba selanjutnya unggah gambar lagi, atau tempelkan tautannya dalam sebuah baris tersendiri!
       formatting:
         instructions: |-
           Bisakah Anda menjadikan beberapa kata menjadi **bold** atau _italic_ dalam balasan Anda?

@@ -6,18 +6,18 @@ discourseModule("lib:category-link");
 
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
-QUnit.test("categoryBadge without a category", assert => {
+QUnit.test("categoryBadge without a category", (assert) => {
   assert.blank(categoryBadgeHTML(), "it returns no HTML");
 });
 
-QUnit.test("Regular categoryBadge", assert => {
+QUnit.test("Regular categoryBadge", (assert) => {
   const store = createStore();
   const category = store.createRecord("category", {
     name: "hello",
     id: 123,
     description_text: "cool description",
     color: "ff0",
-    text_color: "f00"
+    text_color: "f00",
   });
   const tag = $.parseHTML(categoryBadgeHTML(category))[0];
 
@@ -37,7 +37,7 @@ QUnit.test("Regular categoryBadge", assert => {
   );
 });
 
-QUnit.test("undefined color", assert => {
+QUnit.test("undefined color", (assert) => {
   const store = createStore();
   const noColor = store.createRecord("category", { name: "hello", id: 123 });
   const tag = $.parseHTML(categoryBadgeHTML(noColor))[0];
@@ -48,7 +48,7 @@ QUnit.test("undefined color", assert => {
   );
 });
 
-QUnit.test("topic count", assert => {
+QUnit.test("topic count", (assert) => {
   const store = createStore();
   const category = store.createRecord("category", { name: "hello", id: 123 });
 
@@ -63,11 +63,11 @@ QUnit.test("topic count", assert => {
   );
 });
 
-QUnit.test("allowUncategorized", assert => {
+QUnit.test("allowUncategorized", (assert) => {
   const store = createStore();
   const uncategorized = store.createRecord("category", {
     name: "uncategorized",
-    id: 345
+    id: 345,
   });
 
   sandbox
@@ -85,7 +85,7 @@ QUnit.test("allowUncategorized", assert => {
   );
 });
 
-QUnit.test("category names are wrapped in dir-spans", function(assert) {
+QUnit.test("category names are wrapped in dir-spans", function (assert) {
   this.siteSettings.support_mixed_text_direction = true;
   const store = createStore();
   const rtlCategory = store.createRecord("category", {
@@ -93,12 +93,12 @@ QUnit.test("category names are wrapped in dir-spans", function(assert) {
     id: 123,
     description_text: "cool description",
     color: "ff0",
-    text_color: "f00"
+    text_color: "f00",
   });
 
   const ltrCategory = store.createRecord("category", {
     name: "Programming in Ruby",
-    id: 234
+    id: 234,
   });
 
   let tag = $.parseHTML(categoryBadgeHTML(rtlCategory))[0];
@@ -110,24 +110,24 @@ QUnit.test("category names are wrapped in dir-spans", function(assert) {
   assert.equal(dirSpan.dir, "ltr");
 });
 
-QUnit.test("recursive", function(assert) {
+QUnit.test("recursive", function (assert) {
   const store = createStore();
 
   const foo = store.createRecord("category", {
     name: "foo",
-    id: 1
+    id: 1,
   });
 
   const bar = store.createRecord("category", {
     name: "bar",
     id: 2,
-    parent_category_id: foo.id
+    parent_category_id: foo.id,
   });
 
   const baz = store.createRecord("category", {
     name: "baz",
     id: 3,
-    parent_category_id: bar.id
+    parent_category_id: bar.id,
   });
 
   this.siteSettings.max_category_nesting = 0;

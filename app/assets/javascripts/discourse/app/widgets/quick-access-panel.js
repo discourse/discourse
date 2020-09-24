@@ -72,7 +72,7 @@ export default createWidget("quick-access-panel", {
     }
 
     this.findNewItems()
-      .then(newItems => this.setItems(newItems))
+      .then((newItems) => this.setItems(newItems))
       .catch(() => this.setItems([]))
       .finally(() => {
         state.loading = false;
@@ -80,7 +80,7 @@ export default createWidget("quick-access-panel", {
         this.newItemsLoaded();
         this.sendWidgetAction("itemsLoaded", {
           hasUnread: this.hasUnread(),
-          markRead: () => this.markRead()
+          markRead: () => this.markRead(),
         });
         this.scheduleRerender();
       });
@@ -97,7 +97,7 @@ export default createWidget("quick-access-panel", {
 
     let bottomItems = [];
     const items = this.getItems().length
-      ? this.getItems().map(item => this.itemHtml(item))
+      ? this.getItems().map((item) => this.itemHtml(item))
       : [this.emptyStatePlaceholderItem()];
 
     if (!this.hideBottomItems()) {
@@ -107,7 +107,7 @@ export default createWidget("quick-access-panel", {
           title: "view_all",
           icon: "chevron-down",
           className: "btn btn-default btn-icon no-text show-all",
-          href: this.showAllHref()
+          href: this.showAllHref(),
         })
       );
     }
@@ -119,7 +119,7 @@ export default createWidget("quick-access-panel", {
           icon: "check",
           label: "user.dismiss",
           className: "notifications-dismiss",
-          action: "dismissNotifications"
+          action: "dismissNotifications",
         })
       );
     }
@@ -133,5 +133,5 @@ export default createWidget("quick-access-panel", {
 
   setItems(newItems) {
     Session.currentProp(`${this.key}-items`, newItems);
-  }
+  },
 });

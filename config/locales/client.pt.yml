@@ -245,7 +245,6 @@ pt:
         bookmark: "Clique para adicionar um marcador à primeira publicação neste tópico"
         unbookmark: "Clique para remover todos os marcadores deste tópico"
     bookmarks:
-      created: "adicionou esta mensagem %{name} aos marcadores"
       not_bookmarked: "adicionar esta mensagem aos marcadores"
       remove: "Remover Marcador"
       confirm_clear: "De certeza que pretende remover todos os marcadores deste tópico?"
@@ -1377,7 +1376,6 @@ pt:
         draft: Rascunho
         edit: Editar
         reply_to_post:
-          label: Responder à publicação %{postNumber} de %{postUsername}
           desc: Responder a uma publicação específica
         reply_as_new_topic:
           label: Responder como tópico relacionado
@@ -1667,8 +1665,6 @@ pt:
         remove: "Remover Temporizador"
         publish_to: "Publicar para:"
         when: "Quando:"
-        public_timer_types: Temporizadores de Tópico
-        private_timer_types: Temporizadores de Tópico dos Utilizadores
         time_frame_required: Por favor selecione um intervalo de tempo
       auto_update_input:
         none: "Selecione um intervalo de tempo"
@@ -1746,7 +1742,7 @@ pt:
           "2_8": "Irá ver uma contagem de novas respostas porque está a seguir esta categoria."
           "2_4": "Irá ver uma contagem de novas respostas porque publicou uma resposta a este tópico."
           "2_2": "Irá ver uma contagem de novas respostas porque está a seguir este tópico."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
           "1": "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
           "0_7": "Está a ignorar todas as notificações nesta categoria."
@@ -2017,28 +2013,12 @@ pt:
         grant_badge: "Atribuir Crachá"
         delete_topic: "eliminar tópico"
       actions:
-        flag: "Denunciar"
-        undo:
-          off_topic: "Retirar denúncia"
-          spam: "Retirar denúncia"
-          inappropriate: "Retirar denúncia"
-          bookmark: "Remover marcador"
-          like: "Retirar gosto"
-        people:
-          off_topic: "denunciou isto como fora de contexto"
-          spam: "denunciou isto como spam"
-          inappropriate: "denunciou isto como inapropriado"
-          notify_moderators: "moderadores notificados"
-          notify_user: "enviou uma mensagem"
-          bookmark: "adicionou um marcador disto"
         by_you:
           off_topic: "Denunciou isto como fora de contexto"
           spam: "Denunciou isto como spam"
           inappropriate: "Denunciou isto como inapropriado"
           notify_moderators: "Denunciou isto para moderação"
           notify_user: "Enviou uma mensagem a este utilizador"
-          bookmark: "Adicionou um marcador a esta publicação"
-          like: "Gostou disto"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -2469,14 +2449,6 @@ pt:
           latest: "Não há tópicos recentes."
           bookmarks: "Ainda não marcou nenhum tópico."
           top: "Não há melhores tópicos."
-        bottom:
-          latest: "Não existem mais tópicos recentes."
-          posted: "Não existem mais tópicos publicados."
-          read: "Não existem mais tópicos lidos."
-          new: "Não existem mais tópicos novos."
-          unread: "Não existem mais tópicos não lidos."
-          top: "Não existem mais melhores tópicos."
-          bookmarks: "Não há mais tópicos marcados."
     invite:
       custom_message_placeholder: "Insira a sua mensagem personalizada"
       custom_message_template_forum: "Olá, devia juntar-se a este fórum!"
@@ -2560,7 +2532,6 @@ pt:
             visibility_levels:
               title: "Quem pode ver este grupo?"
               public: "Todos"
-              staff: "Donos do grupo e equipa"
           membership:
             automatic: Automático
             trust_levels_title: "Nível de confiança concedido automaticamente a membros quando são adicionados:"

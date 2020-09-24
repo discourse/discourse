@@ -34,8 +34,8 @@ module GroupGuardian
   end
 
   def can_see_group_messages?(group)
-    SiteSetting.enable_personal_messages? && (
-      is_admin? || group.users.include?(user)
-    )
+    return true if is_admin?
+
+    SiteSetting.enable_personal_messages? && group.users.include?(user)
   end
 end

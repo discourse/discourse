@@ -17,7 +17,7 @@ componentTest("displays tags", {
 
   async test(assert) {
     assert.equal(this.subject.header().value(), "foo,bar");
-  }
+  },
 });
 
 componentTest("create a tag", {
@@ -32,23 +32,13 @@ componentTest("create a tag", {
 
     await this.subject.expand();
     await this.subject.fillInFilter("mon");
-    assert.equal(
-      find(".select-kit-row")
-        .text()
-        .trim(),
-      "monkey x1"
-    );
+    assert.equal(find(".select-kit-row").text().trim(), "monkey x1");
     await this.subject.fillInFilter("key");
-    assert.equal(
-      find(".select-kit-row")
-        .text()
-        .trim(),
-      "monkey x1"
-    );
+    assert.equal(find(".select-kit-row").text().trim(), "monkey x1");
     await this.subject.keyboard("enter");
 
     assert.equal(this.subject.header().value(), "foo,bar,monkey");
-  }
+  },
 });
 
 componentTest("max_tags_per_topic", {
@@ -70,8 +60,8 @@ componentTest("max_tags_per_topic", {
     assert.equal(
       error,
       I18n.t("select_kit.max_content_reached", {
-        count: this.siteSettings.max_tags_per_topic
+        count: this.siteSettings.max_tags_per_topic,
       })
     );
-  }
+  },
 });

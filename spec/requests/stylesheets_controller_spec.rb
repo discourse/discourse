@@ -57,4 +57,26 @@ describe StylesheetsController do
 
     expect(response.status).to eq(200)
   end
+
+  context "#color_scheme" do
+    it 'works as expected' do
+      scheme = ColorScheme.last
+      get "/color-scheme-stylesheet/#{scheme.id}.json"
+
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["color_scheme_id"]).to eq(scheme.id)
+    end
+
+    it 'works with a theme parameter' do
+      scheme = ColorScheme.last
+      theme = Theme.last
+      get "/color-scheme-stylesheet/#{scheme.id}/#{theme.id}.json"
+
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      expect(json["color_scheme_id"]).to eq(scheme.id)
+    end
+
+  end
 end

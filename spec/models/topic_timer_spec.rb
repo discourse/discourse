@@ -18,23 +18,6 @@ RSpec.describe TopicTimer, type: :model do
         expect { Fabricate(:topic_timer, topic: topic) }
           .to raise_error(ActiveRecord::RecordInvalid)
       end
-
-      it 'should ensure that only one active private topic timer exists per user' do
-        Fabricate(:topic_timer, topic: topic, user: admin, status_type: TopicTimer.types[:reminder])
-
-        expect { Fabricate(:topic_timer, topic: topic, user: admin, status_type: TopicTimer.types[:reminder]) }
-          .to raise_error(ActiveRecord::RecordInvalid)
-      end
-
-      it 'should allow users to have their own private topic timer' do
-        expect do
-          Fabricate(:topic_timer,
-            topic: topic,
-            user: Fabricate(:admin),
-            status_type: TopicTimer.types[:reminder]
-          )
-        end.to_not raise_error
-      end
     end
 
     describe '#execute_at' do
@@ -232,45 +215,47 @@ RSpec.describe TopicTimer, type: :model do
 
       Fabricate(:topic_timer, execute_at: Time.zone.now + 1.hour)
 
-      Fabricate(:topic_timer,
-        execute_at: Time.zone.now - 1.hour,
-        created_at: Time.zone.now - 2.hour
-      ).topic.trash!
-
-      # creating topic timers already enqueues jobs
-      # let's delete them to test ensure_consistency!
-      Sidekiq::Worker.clear_all
-
-      expect { described_class.ensure_consistency! }
-        .to change { Jobs::ToggleTopicClosed.jobs.count }.by(2)
-
-      job_args = Jobs::ToggleTopicClosed.jobs.first["args"].first
-
-      expect(job_args["topic_timer_id"]).to eq(close_topic_timer.id)
-      expect(job_args["state"]).to eq(true)
-
-      job_args = Jobs::ToggleTopicClosed.jobs.last["args"].first
-
-      expect(job_args["topic_timer_id"]).to eq(open_topic_timer.id)
-      expect(job_args["state"]).to eq(false)
-    end
-
-    it "should enqueue remind me jobs that have been missed" do
-      reminder = Fabricate(:topic_timer,
-        status_type: described_class.types[:reminder],
+      trashed_close_topic_timer = Fabricate(:topic_timer,
         execute_at: Time.zone.now - 1.hour,
         created_at: Time.zone.now - 2.hour
       )
 
+      trashed_close_topic_timer.topic.trash!
+
+      trashed_open_topic_timer = Fabricate(:topic_timer,
+        execute_at: Time.zone.now - 1.hour,
+        created_at: Time.zone.now - 2.hour,
+        status_type: described_class.types[:open]
+      )
+
+      trashed_open_topic_timer.topic.trash!
+
       # creating topic timers already enqueues jobs
       # let's delete them to test ensure_consistency!
       Sidekiq::Worker.clear_all
 
       expect { described_class.ensure_consistency! }
-        .to change { Jobs::TopicReminder.jobs.count }.by(1)
+        .to change { Jobs::ToggleTopicClosed.jobs.count }.by(4)
 
-      job_args = Jobs::TopicReminder.jobs.first["args"].first
-      expect(job_args["topic_timer_id"]).to eq(reminder.id)
+      expect(job_enqueued?(job: :toggle_topic_closed, args: {
+        topic_timer_id: close_topic_timer.id,
+        state: true
+      })).to eq(true)
+
+      expect(job_enqueued?(job: :toggle_topic_closed, args: {
+        topic_timer_id: open_topic_timer.id,
+        state: false
+      })).to eq(true)
+
+      expect(job_enqueued?(job: :toggle_topic_closed, args: {
+        topic_timer_id: trashed_close_topic_timer.id,
+        state: true
+      })).to eq(true)
+
+      expect(job_enqueued?(job: :toggle_topic_closed, args: {
+        topic_timer_id: trashed_open_topic_timer.id,
+        state: false
+      })).to eq(true)
     end
   end
 end

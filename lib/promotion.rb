@@ -33,7 +33,11 @@ class Promotion
   end
 
   def review_tl1
-    Promotion.tl2_met?(@user) && change_trust_level!(TrustLevel[2])
+    if Promotion.tl2_met?(@user) && change_trust_level!(TrustLevel[2])
+      @user.enqueue_tl2_promotion_message
+      return true
+    end
+    false
   end
 
   def review_tl2

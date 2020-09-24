@@ -6,7 +6,7 @@ const TITLE_SUBS = {
   yearly: "this_year",
   quarterly: "this_quarter",
   monthly: "this_month",
-  daily: "today"
+  daily: "today",
 };
 
 export default htmlHelper((period, options) => {
@@ -16,9 +16,7 @@ export default htmlHelper((period, options) => {
     let finish;
 
     if (options.hash.fullDay) {
-      finish = moment()
-        .utc()
-        .subtract(1, "days");
+      finish = moment().utc().subtract(1, "days");
     } else {
       finish = moment();
     }

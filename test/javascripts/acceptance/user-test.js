@@ -5,7 +5,7 @@ import { Promise } from "rsvp";
 
 acceptance("User", { loggedIn: true });
 
-QUnit.test("Invalid usernames", async assert => {
+QUnit.test("Invalid usernames", async (assert) => {
   pretender.get("/u/eviltrout%2F..%2F..%2F.json", () => {
     return [400, { "Content-Type": "application/json" }, {}];
   });
@@ -15,23 +15,23 @@ QUnit.test("Invalid usernames", async assert => {
   assert.equal(currentPath(), "exception-unknown");
 });
 
-QUnit.test("Unicode usernames", async assert => {
+QUnit.test("Unicode usernames", async (assert) => {
   await visit("/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary");
 
   assert.equal(currentPath(), "user.summary");
 });
 
-QUnit.test("Invites", async assert => {
+QUnit.test("Invites", async (assert) => {
   await visit("/u/eviltrout/invited/pending");
   assert.ok($("body.user-invites-page").length, "has the body class");
 });
 
-QUnit.test("Messages", async assert => {
+QUnit.test("Messages", async (assert) => {
   await visit("/u/eviltrout/messages");
   assert.ok($("body.user-messages-page").length, "has the body class");
 });
 
-QUnit.test("Notifications", async assert => {
+QUnit.test("Notifications", async (assert) => {
   await visit("/u/eviltrout/notifications");
   assert.ok($("body.user-notifications-page").length, "has the body class");
 
@@ -44,7 +44,7 @@ QUnit.test("Notifications", async assert => {
   );
 });
 
-QUnit.test("Root URL - Viewing Self", async assert => {
+QUnit.test("Root URL - Viewing Self", async (assert) => {
   await visit("/u/eviltrout");
   assert.ok($("body.user-activity-page").length, "has the body class");
   assert.equal(
@@ -55,7 +55,7 @@ QUnit.test("Root URL - Viewing Self", async assert => {
   assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
 });
 
-QUnit.test("Viewing Summary", async assert => {
+QUnit.test("Viewing Summary", async (assert) => {
   await visit("/u/eviltrout/summary");
 
   assert.ok(exists(".replies-section li a"), "replies");
@@ -68,11 +68,11 @@ QUnit.test("Viewing Summary", async assert => {
   assert.ok(exists(".top-categories-section .category-link"), "top categories");
 });
 
-QUnit.test("Viewing Drafts", async assert => {
+QUnit.test("Viewing Drafts", async (assert) => {
   sandbox.stub(Draft, "get").returns(
     Promise.resolve({
       draft: null,
-      draft_sequence: 0
+      draft_sequence: 0,
     })
   );
 

@@ -19,7 +19,6 @@ fi:
           insert: Lisää
           advanced_mode: Lisäasetukset
           simple_mode: Piilota lisäasetukset
-          format_description: "Missä formaatissa aika näytetään käyttäjälle. Näytä käyttäjän aikavyöhyke sanallisesti (esim. Europe/Paris) lisäämällä \"\\T\\Z\"."
           timezones_title: Näytettävät aikavyöhykkeet
           timezones_description: Aikavyöhykkeitä käytetään esikatselussa sekä varana virhetilanteissa.
           recurring_title: Toistuvuus

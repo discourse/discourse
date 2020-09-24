@@ -9,5 +9,5 @@ createWidget("header-contents", {
       {{header-topic-info attrs=attrs}}
     {{/if}}
     <div class="panel clearfix">{{yield}}</div>
-  `
+  `,
 });

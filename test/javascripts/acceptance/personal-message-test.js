@@ -2,10 +2,10 @@ import I18n from "I18n";
 import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Personal Message", {
-  loggedIn: true
+  loggedIn: true,
 });
 
-QUnit.test("footer edit button", async assert => {
+QUnit.test("footer edit button", async (assert) => {
   await visit("/t/pm-for-testing/12");
 
   assert.ok(
@@ -14,13 +14,11 @@ QUnit.test("footer edit button", async assert => {
   );
 });
 
-QUnit.test("suggested messages", async assert => {
+QUnit.test("suggested messages", async (assert) => {
   await visit("/t/pm-for-testing/12");
 
   assert.equal(
-    find("#suggested-topics .suggested-topics-title")
-      .text()
-      .trim(),
+    find("#suggested-topics .suggested-topics-title").text().trim(),
     I18n.t("suggested_topics.pm_title")
   );
 });

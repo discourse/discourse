@@ -7,5 +7,5 @@ export default SelectedNameComponent.extend({
   @discourseComputed("name")
   footerContent(name) {
     return `<span class="color-preview" style="background:#${name}"></span>`.htmlSafe();
-  }
+  },
 });

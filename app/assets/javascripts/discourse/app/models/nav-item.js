@@ -8,6 +8,8 @@ import { reads } from "@ember/object/computed";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { deepMerge } from "discourse-common/lib/object";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -38,7 +40,7 @@ const NavItem = EmberObject.extend({
   href(filterType, category, noSubcategories, tagId) {
     let customHref = null;
 
-    NavItem.customNavItemHrefs.forEach(function(cb) {
+    NavItem.customNavItemHrefs.forEach(function (cb) {
       customHref = cb.call(this, this);
       if (customHref) {
         return false;
@@ -80,7 +82,7 @@ const NavItem = EmberObject.extend({
     if (state) {
       return state.lookupCount(name, category, tagId);
     }
-  }
+  },
 });
 
 const ExtraNavItem = NavItem.extend({
@@ -95,12 +97,12 @@ const ExtraNavItem = NavItem.extend({
 
     set(key, value) {
       return (this._href = value);
-    }
+    },
   }),
 
   count: 0,
 
-  customFilter: null
+  customFilter: null,
 });
 
 NavItem.reopenClass({
@@ -162,8 +164,12 @@ NavItem.reopenClass({
       }
     }
 
-    if (!Category.list() && filterType === "categories") return null;
-    if (!Site.currentProp("top_menu_items").includes(filterType)) return null;
+    if (!Category.list() && filterType === "categories") {
+      return null;
+    }
+    if (!Site.currentProp("top_menu_items").includes(filterType)) {
+      return null;
+    }
 
     var args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
@@ -178,11 +184,11 @@ NavItem.reopenClass({
     if (opts.noSubcategories) {
       args.noSubcategories = true;
     }
-    NavItem.extraArgsCallbacks.forEach(cb =>
-      _.merge(args, cb.call(this, filterType, opts))
+    NavItem.extraArgsCallbacks.forEach((cb) =>
+      deepMerge(args, cb.call(this, filterType, opts))
     );
 
-    const store = Discourse.__container__.lookup("service:store");
+    let store = getOwner(this).lookup("service:store");
     return store.createRecord("nav-item", args);
   },
 
@@ -196,40 +202,45 @@ NavItem.reopenClass({
     if (!args.siteSettings) {
       deprecated("You must supply `buildList` with a `siteSettings` object", {
         since: "2.6.0",
-        dropFrom: "2.7.0"
+        dropFrom: "2.7.0",
       });
-      args.siteSettings = Discourse.SiteSettings;
+      args.siteSettings = getOwner(this).lookup("site-settings:main");
     }
     let items = args.siteSettings.top_menu.split("|");
 
     const filterType = (args.filterMode || "").split("/").pop();
 
-    if (!items.some(i => filterType === i)) {
+    if (!items.some((i) => filterType === i)) {
       items.push(filterType);
     }
 
     items = items
-      .map(i => NavItem.fromText(i, args))
+      .map((i) => NavItem.fromText(i, args))
       .filter(
-        i => i !== null && !(category && i.get("name").indexOf("categor") === 0)
+        (i) =>
+          i !== null && !(category && i.get("name").indexOf("categor") === 0)
       );
 
     const context = {
       category: args.category,
       tagId: args.tagId,
-      noSubcategories: args.noSubcategories
+      noSubcategories: args.noSubcategories,
     };
 
     const extraItems = NavItem.extraNavItemDescriptors
-      .map(descriptor => ExtraNavItem.create(_.merge({}, context, descriptor)))
-      .filter(item => {
-        if (!item.customFilter) return true;
+      .map((descriptor) =>
+        ExtraNavItem.create(deepMerge({}, context, descriptor))
+      )
+      .filter((item) => {
+        if (!item.customFilter) {
+          return true;
+        }
         return item.customFilter(category, args);
       });
 
     let forceActive = false;
 
-    extraItems.forEach(item => {
+    extraItems.forEach((item) => {
       if (item.init) {
         item.init(item, category, args);
       }
@@ -260,14 +271,14 @@ NavItem.reopenClass({
     });
 
     if (forceActive) {
-      items.forEach(i => {
+      items.forEach((i) => {
         if (i.active === undefined) {
           i.active = false;
         }
       });
     }
     return items;
-  }
+  },
 });
 
 export default NavItem;

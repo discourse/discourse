@@ -2,17 +2,19 @@ import Badge from "discourse/models/badge";
 
 QUnit.module("model:badge");
 
-QUnit.test("newBadge", assert => {
+QUnit.test("newBadge", (assert) => {
   const badge1 = Badge.create({ name: "New Badge" }),
     badge2 = Badge.create({ id: 1, name: "Old Badge" });
   assert.ok(badge1.get("newBadge"), "badges without ids are new");
   assert.ok(!badge2.get("newBadge"), "badges with ids are not new");
 });
 
-QUnit.test("createFromJson array", assert => {
+QUnit.test("createFromJson array", (assert) => {
   const badgesJson = {
     badge_types: [{ id: 6, name: "Silver 1" }],
-    badges: [{ id: 1126, name: "Badge 1", description: null, badge_type_id: 6 }]
+    badges: [
+      { id: 1126, name: "Badge 1", description: null, badge_type_id: 6 },
+    ],
   };
 
   const badges = Badge.createFromJson(badgesJson);
@@ -26,10 +28,10 @@ QUnit.test("createFromJson array", assert => {
   );
 });
 
-QUnit.test("createFromJson single", assert => {
+QUnit.test("createFromJson single", (assert) => {
   const badgeJson = {
     badge_types: [{ id: 6, name: "Silver 1" }],
-    badge: { id: 1126, name: "Badge 1", description: null, badge_type_id: 6 }
+    badge: { id: 1126, name: "Badge 1", description: null, badge_type_id: 6 },
   };
 
   const badge = Badge.createFromJson(badgeJson);
@@ -37,10 +39,10 @@ QUnit.test("createFromJson single", assert => {
   assert.ok(!Array.isArray(badge), "does not returns an array");
 });
 
-QUnit.test("updateFromJson", assert => {
+QUnit.test("updateFromJson", (assert) => {
   const badgeJson = {
     badge_types: [{ id: 6, name: "Silver 1" }],
-    badge: { id: 1126, name: "Badge 1", description: null, badge_type_id: 6 }
+    badge: { id: 1126, name: "Badge 1", description: null, badge_type_id: 6 },
   };
   const badge = Badge.create({ name: "Badge 1" });
   badge.updateFromJson(badgeJson);
@@ -52,22 +54,22 @@ QUnit.test("updateFromJson", assert => {
   );
 });
 
-QUnit.test("save", assert => {
+QUnit.test("save", (assert) => {
   assert.expect(0);
   const badge = Badge.create({
     name: "New Badge",
     description: "This is a new badge.",
-    badge_type_id: 1
+    badge_type_id: 1,
   });
   return badge.save(["name", "description", "badge_type_id"]);
 });
 
-QUnit.test("destroy", assert => {
+QUnit.test("destroy", (assert) => {
   assert.expect(0);
   const badge = Badge.create({
     name: "New Badge",
     description: "This is a new badge.",
-    badge_type_id: 1
+    badge_type_id: 1,
   });
   badge.destroy();
   badge.set("id", 3);

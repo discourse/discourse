@@ -9,7 +9,7 @@ export default Component.extend({
     "type",
     "value",
     "checked:checked",
-    "disabled:disabled"
+    "disabled:disabled",
   ],
 
   click() {
@@ -28,5 +28,5 @@ export default Component.extend({
   @discourseComputed("value", "selection")
   checked(value, selection) {
     return value === selection;
-  }
+  },
 });

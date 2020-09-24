@@ -9,16 +9,16 @@ import { Promise } from "rsvp";
 acceptance("Composer Actions", {
   loggedIn: true,
   settings: {
-    enable_whispers: true
+    enable_whispers: true,
   },
   site: {
-    can_tag_topics: true
-  }
+    can_tag_topics: true,
+  },
 });
 
 QUnit.test(
   "creating new topic and then reply_as_private_message keeps attributes",
-  async assert => {
+  async (assert) => {
     await visit("/");
     await click("button#create-topic");
 
@@ -34,7 +34,7 @@ QUnit.test(
   }
 );
 
-QUnit.test("replying to post", async assert => {
+QUnit.test("replying to post", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   await visit("/t/internationalization-localization/280");
@@ -52,7 +52,7 @@ QUnit.test("replying to post", async assert => {
   assert.equal(composerActions.rowByIndex(5).value(), undefined);
 });
 
-QUnit.test("replying to post - reply_as_private_message", async assert => {
+QUnit.test("replying to post - reply_as_private_message", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   await visit("/t/internationalization-localization/280");
@@ -63,13 +63,11 @@ QUnit.test("replying to post - reply_as_private_message", async assert => {
 
   assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
   assert.ok(
-    find(".d-editor-input")
-      .val()
-      .indexOf("Continuing the discussion") >= 0
+    find(".d-editor-input").val().indexOf("Continuing the discussion") >= 0
   );
 });
 
-QUnit.test("replying to post - reply_to_topic", async assert => {
+QUnit.test("replying to post - reply_to_topic", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   await visit("/t/internationalization-localization/280");
@@ -83,9 +81,7 @@ QUnit.test("replying to post - reply_to_topic", async assert => {
   await composerActions.selectRowByValue("reply_to_topic");
 
   assert.equal(
-    find(".action-title .topic-link")
-      .text()
-      .trim(),
+    find(".action-title .topic-link").text().trim(),
     "Internationalization / localization"
   );
   assert.equal(
@@ -98,7 +94,7 @@ QUnit.test("replying to post - reply_to_topic", async assert => {
   );
 });
 
-QUnit.test("replying to post - toggle_whisper", async assert => {
+QUnit.test("replying to post - toggle_whisper", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   await visit("/t/internationalization-localization/280");
@@ -116,7 +112,7 @@ QUnit.test("replying to post - toggle_whisper", async assert => {
   );
 });
 
-QUnit.test("replying to post - reply_as_new_topic", async assert => {
+QUnit.test("replying to post - reply_as_new_topic", async (assert) => {
   sandbox
     .stub(Draft, "get")
     .returns(Promise.resolve({ draft: "", draft_sequence: 0 }));
@@ -140,20 +136,14 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
 
   assert.equal(categoryChooserReplyArea.header().name(), "faq");
   assert.equal(
-    find(".action-title")
-      .text()
-      .trim(),
+    find(".action-title").text().trim(),
     I18n.t("topic.create_long")
   );
-  assert.ok(
-    find(".d-editor-input")
-      .val()
-      .includes(quote)
-  );
+  assert.ok(find(".d-editor-input").val().includes(quote));
   sandbox.restore();
 });
 
-QUnit.test("reply_as_new_topic without a new_topic draft", async assert => {
+QUnit.test("reply_as_new_topic without a new_topic draft", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click(".create.reply");
   const composerActions = selectKit(".composer-actions");
@@ -162,7 +152,7 @@ QUnit.test("reply_as_new_topic without a new_topic draft", async assert => {
   assert.equal(exists(find(".bootbox")), false);
 });
 
-QUnit.test("reply_as_new_group_message", async assert => {
+QUnit.test("reply_as_new_group_message", async (assert) => {
   // eslint-disable-next-line
   server.get("/t/130.json", () => {
     return [
@@ -209,20 +199,20 @@ QUnit.test("reply_as_new_group_message", async assert => {
               actions_summary: [
                 {
                   id: 3,
-                  can_act: true
+                  can_act: true,
                 },
                 {
                   id: 4,
-                  can_act: true
+                  can_act: true,
                 },
                 {
                   id: 8,
-                  can_act: true
+                  can_act: true,
                 },
                 {
                   id: 7,
-                  can_act: true
-                }
+                  can_act: true,
+                },
               ],
               moderator: false,
               admin: true,
@@ -237,10 +227,10 @@ QUnit.test("reply_as_new_group_message", async assert => {
               wiki: false,
               reviewable_id: 0,
               reviewable_score_count: 0,
-              reviewable_score_pending_count: 0
-            }
+              reviewable_score_pending_count: 0,
+            },
           ],
-          stream: [133]
+          stream: [133],
         },
         timeline_lookup: [[1, 0]],
         related_messages: [],
@@ -286,26 +276,25 @@ QUnit.test("reply_as_new_group_message", async assert => {
             id: 4,
             count: 0,
             hidden: false,
-            can_act: true
+            can_act: true,
           },
           {
             id: 8,
             count: 0,
             hidden: false,
-            can_act: true
+            can_act: true,
           },
           {
             id: 7,
             count: 0,
             hidden: false,
-            can_act: true
-          }
+            can_act: true,
+          },
         ],
         chunk_size: 20,
         bookmarked: false,
         message_archived: false,
         topic_timer: null,
-        private_topic_timer: null,
         message_bus_last_id: 5,
         participant_count: 1,
         pm_with_non_human_user: false,
@@ -339,8 +328,8 @@ QUnit.test("reply_as_new_group_message", async assert => {
               primary_group_name: null,
               primary_group_flair_url: null,
               primary_group_flair_color: null,
-              primary_group_flair_bg_color: null
-            }
+              primary_group_flair_bg_color: null,
+            },
           ],
           allowed_users: [
             {
@@ -348,22 +337,22 @@ QUnit.test("reply_as_new_group_message", async assert => {
               username: "foo",
               name: null,
               avatar_template:
-                "/letter_avatar_proxy/v4/letter/f/b19c9b/{size}.png"
-            }
+                "/letter_avatar_proxy/v4/letter/f/b19c9b/{size}.png",
+            },
           ],
           created_by: {
             id: 1,
             username: "bianca",
             name: null,
             avatar_template:
-              "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png"
+              "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
           },
           last_poster: {
             id: 1,
             username: "bianca",
             name: null,
             avatar_template:
-              "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png"
+              "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
           },
           allowed_groups: [
             {
@@ -394,11 +383,11 @@ QUnit.test("reply_as_new_group_message", async assert => {
               membership_request_template: null,
               members_visibility_level: 0,
               can_see_members: true,
-              publish_read_state: false
-            }
-          ]
-        }
-      }
+              publish_read_state: false,
+            },
+          ],
+        },
+      },
     ];
   });
 
@@ -416,7 +405,7 @@ QUnit.test("reply_as_new_group_message", async assert => {
   assert.deepEqual(items, ["foo", "foo_group"]);
 });
 
-QUnit.test("hide component if no content", async assert => {
+QUnit.test("hide component if no content", async (assert) => {
   await visit("/");
   await click("button#create-topic");
 
@@ -432,7 +421,7 @@ QUnit.test("hide component if no content", async assert => {
   assert.equal(composerActions.rows().length, 2);
 });
 
-QUnit.test("interactions", async assert => {
+QUnit.test("interactions", async (assert) => {
   const composerActions = selectKit(".composer-actions");
   const quote = "Life is like riding a bicycle.";
 
@@ -443,9 +432,7 @@ QUnit.test("interactions", async assert => {
   await composerActions.selectRowByValue("reply_to_topic");
 
   assert.equal(
-    find(".action-title")
-      .text()
-      .trim(),
+    find(".action-title").text().trim(),
     "Internationalization / localization"
   );
   assert.equal(find(".d-editor-input").val(), quote);
@@ -466,12 +453,7 @@ QUnit.test("interactions", async assert => {
   await composerActions.expand();
 
   assert.ok(exists(find(".action-title img.avatar")));
-  assert.equal(
-    find(".action-title .user-link")
-      .text()
-      .trim(),
-    "codinghorror"
-  );
+  assert.equal(find(".action-title .user-link").text().trim(), "codinghorror");
   assert.equal(find(".d-editor-input").val(), quote);
   assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
   assert.equal(
@@ -487,16 +469,10 @@ QUnit.test("interactions", async assert => {
   await composerActions.expand();
 
   assert.equal(
-    find(".action-title")
-      .text()
-      .trim(),
+    find(".action-title").text().trim(),
     I18n.t("topic.create_long")
   );
-  assert.ok(
-    find(".d-editor-input")
-      .val()
-      .includes(quote)
-  );
+  assert.ok(find(".d-editor-input").val().includes(quote));
   assert.equal(composerActions.rowByIndex(0).value(), "reply_to_post");
   assert.equal(
     composerActions.rowByIndex(1).value(),
@@ -510,15 +486,11 @@ QUnit.test("interactions", async assert => {
   await composerActions.expand();
 
   assert.equal(
-    find(".action-title")
-      .text()
-      .trim(),
+    find(".action-title").text().trim(),
     I18n.t("topic.private_message")
   );
   assert.ok(
-    find(".d-editor-input")
-      .val()
-      .indexOf("Continuing the discussion") === 0
+    find(".d-editor-input").val().indexOf("Continuing the discussion") === 0
   );
   assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
   assert.equal(composerActions.rowByIndex(1).value(), "reply_to_post");
@@ -526,7 +498,7 @@ QUnit.test("interactions", async assert => {
   assert.equal(composerActions.rows().length, 3);
 });
 
-QUnit.test("replying to post - toggle_topic_bump", async assert => {
+QUnit.test("replying to post - toggle_topic_bump", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   await visit("/t/internationalization-localization/280");
@@ -554,7 +526,7 @@ QUnit.test("replying to post - toggle_topic_bump", async assert => {
   );
 });
 
-QUnit.test("replying to post as staff", async assert => {
+QUnit.test("replying to post as staff", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   updateCurrentUser({ admin: true });
@@ -566,7 +538,7 @@ QUnit.test("replying to post as staff", async assert => {
   assert.equal(composerActions.rowByIndex(4).value(), "toggle_topic_bump");
 });
 
-QUnit.test("replying to post as TL3 user", async assert => {
+QUnit.test("replying to post as TL3 user", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });
@@ -575,7 +547,7 @@ QUnit.test("replying to post as TL3 user", async assert => {
   await composerActions.expand();
 
   assert.equal(composerActions.rows().length, 3);
-  Array.from(composerActions.rows()).forEach(row => {
+  Array.from(composerActions.rows()).forEach((row) => {
     assert.notEqual(
       row.value,
       "toggle_topic_bump",
@@ -584,7 +556,7 @@ QUnit.test("replying to post as TL3 user", async assert => {
   });
 });
 
-QUnit.test("replying to post as TL4 user", async assert => {
+QUnit.test("replying to post as TL4 user", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
@@ -598,7 +570,7 @@ QUnit.test("replying to post as TL4 user", async assert => {
 
 QUnit.test(
   "replying to first post - reply_as_private_message",
-  async assert => {
+  async (assert) => {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -609,14 +581,12 @@ QUnit.test(
 
     assert.equal(find(".users-input .item:eq(0)").text(), "uwe_keim");
     assert.ok(
-      find(".d-editor-input")
-        .val()
-        .indexOf("Continuing the discussion") >= 0
+      find(".d-editor-input").val().indexOf("Continuing the discussion") >= 0
     );
   }
 );
 
-QUnit.test("editing post", async assert => {
+QUnit.test("editing post", async (assert) => {
   const composerActions = selectKit(".composer-actions");
 
   await visit("/t/internationalization-localization/280");
@@ -631,17 +601,17 @@ QUnit.test("editing post", async assert => {
 acceptance("Composer Actions With New Topic Draft", {
   loggedIn: true,
   settings: {
-    enable_whispers: true
+    enable_whispers: true,
   },
   site: {
-    can_tag_topics: true
+    can_tag_topics: true,
   },
   beforeEach() {
     _clearSnapshots();
   },
   afterEach() {
     _clearSnapshots();
-  }
+  },
 });
 
 const stubDraftResponse = () => {
@@ -649,12 +619,12 @@ const stubDraftResponse = () => {
     Promise.resolve({
       draft:
         '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
-      draft_sequence: 0
+      draft_sequence: 0,
     })
   );
 };
 
-QUnit.test("shared draft", async assert => {
+QUnit.test("shared draft", async (assert) => {
   stubDraftResponse();
   try {
     toggleCheckDraftPopup(true);
@@ -696,7 +666,7 @@ QUnit.test("shared draft", async assert => {
   sandbox.restore();
 });
 
-QUnit.test("reply_as_new_topic with new_topic draft", async assert => {
+QUnit.test("reply_as_new_topic with new_topic draft", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click(".create.reply");
   const composerActions = selectKit(".composer-actions");

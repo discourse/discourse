@@ -1095,7 +1095,7 @@ sr:
           "3_2": "Primaćete obaveštenja jer posmatrate temu."
           "3_1": "Primaćete obaveštenja jer ste vi otvorili temu."
           "3": "Primaćete obaveštenja jer posmatrate temu."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "1": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "0_7": "Ignorirate sva obaveštenja iz ove kategorije."
@@ -1271,20 +1271,11 @@ sr:
         grant_badge: "Dodeli Značku"
         delete_topic: "obriši temu"
       actions:
-        flag: "Označi Zastavom"
-        undo:
-          off_topic: "Poništi oznaku zastavom"
-          spam: "Poništi oznaku zastavom"
-          inappropriate: "Poništi oznaku zastavom"
-          bookmark: "Poništi Marker"
-          like: "Poništi Lajk"
         by_you:
           off_topic: "Označili ste ovo kao van teme"
           spam: "Označili ste ovo kao nepoželjno."
           inappropriate: "Označili ste ovo kao neprikladno"
           notify_moderators: "Označili ste ovo za moderatore"
-          bookmark: "Markirali ste ovu poruku"
-          like: "Sviđa vam se ovo"
       revisions:
         controls:
           first: "Prva revizija"
@@ -1589,14 +1580,6 @@ sr:
           posted: "Niste se još objavljivali ni u jendoj temi."
           bookmarks: "Nemate markiranih tema još."
           top: "Nema glavnih tema."
-        bottom:
-          latest: "Nema više najnovijih tema."
-          posted: "Nema više objavljenih tema."
-          read: "Nema više pročitanih tema."
-          new: "Nema više novih tema."
-          unread: "Nema više nepročitanih tema."
-          top: "Nema više glavnih tema."
-          bookmarks: "Nema više markiranih tema."
     footer_nav:
       back: "Nazad"
       share: "Podeli"

@@ -26,7 +26,7 @@
     {{#if showExistingReminderAt }}
       <div class="alert alert-info existing-reminder-at-alert">
         {{d-icon "far-clock"}}
-        <span>{{i18n "bookmarks.reminders.existing_reminder"}} {{existingReminderAtFormatted}}</span>
+        <span>{{i18n "bookmarks.reminders.existing_reminder" at_date_time=existingReminderAtFormatted}}</span>
       </div>
     {{/if}}
 
@@ -99,7 +99,7 @@
         {{/tap-tile-grid}}
 
       {{else}}
-        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-uri))}}</div>
+        <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-path))}}</div>
       {{/if}}
     </div>
 

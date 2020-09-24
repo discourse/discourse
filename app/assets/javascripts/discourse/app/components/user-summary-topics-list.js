@@ -10,5 +10,5 @@ export default Component.extend({
   @discourseComputed("items.length")
   hasMore(length) {
     return length >= MAX_SUMMARY_RESULTS;
-  }
+  },
 });

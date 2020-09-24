@@ -35,12 +35,13 @@ class ListableTopicSerializer < BasicTopicSerializer
   end
 
   def thumbnails
-    extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
+    extra_sizes = theme_modifier_helper.topic_thumbnail_sizes
     object.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
   end
 
   def include_thumbnails?
-    ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes.present? || DiscoursePluginRegistry.topic_thumbnail_sizes.present?
+    theme_modifier_helper.topic_thumbnail_sizes.present? ||
+      DiscoursePluginRegistry.topic_thumbnail_sizes.present?
   end
 
   def include_unicode_title?
@@ -125,7 +126,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   alias :include_new_posts? :has_user_data
 
   def include_excerpt?
-    pinned || SiteSetting.always_include_topic_excerpts || ThemeModifierHelper.new(request: scope.request).serialize_topic_excerpts
+    pinned || SiteSetting.always_include_topic_excerpts || theme_modifier_helper.serialize_topic_excerpts
   end
 
   def pinned
@@ -152,6 +153,12 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   def unread_helper
     @unread_helper ||= Unread.new(object, object.user_data, scope)
+  end
+
+  private
+
+  def theme_modifier_helper
+    @theme_modifier_helper ||= ThemeModifierHelper.new(request: scope.request)
   end
 
 end

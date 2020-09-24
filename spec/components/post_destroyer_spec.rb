@@ -611,6 +611,13 @@ describe PostDestroyer do
       expect(events[1][:event_name]).to eq(:topic_destroyed)
       expect(events[1][:params].first).to eq(first_post.topic)
     end
+
+    it 'should not log a personal message view' do
+      SiteSetting.log_personal_messages_views = true
+      Fabricate(:topic_web_hook)
+      StaffActionLogger.any_instance.expects(:log_check_personal_message).never
+      PostDestroyer.new(admin, first_post).destroy
+    end
   end
 
   context 'deleting the second post in a topic' do

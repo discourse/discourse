@@ -1,7 +1,7 @@
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Managing Group Profile");
-QUnit.test("As an anonymous user", async assert => {
+QUnit.test("As an anonymous user", async (assert) => {
   await visit("/g/discourse/manage/profile");
 
   assert.ok(
@@ -12,7 +12,7 @@ QUnit.test("As an anonymous user", async assert => {
 
 acceptance("Managing Group Profile", { loggedIn: true });
 
-QUnit.test("As an admin", async assert => {
+QUnit.test("As an admin", async (assert) => {
   await visit("/g/discourse/manage/profile");
 
   assert.ok(
@@ -33,11 +33,11 @@ QUnit.test("As an admin", async assert => {
   );
 });
 
-QUnit.test("As a group owner", async assert => {
+QUnit.test("As a group owner", async (assert) => {
   updateCurrentUser({
     moderator: false,
     admin: false,
-    can_create_group: false
+    can_create_group: false,
   });
 
   await visit("/g/discourse/manage/profile");

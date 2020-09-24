@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import { moduleForWidget, widgetTest } from "helpers/widget-test";
 
@@ -19,8 +20,8 @@ widgetTest("can vote", {
       post: EmberObject.create({
         id: 42,
         topic: {
-          archived: false
-        }
+          archived: false,
+        },
       }),
       poll: EmberObject.create({
         name: "poll",
@@ -29,13 +30,13 @@ widgetTest("can vote", {
         results: "always",
         options: [
           { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 }
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
         ],
         voters: 0,
-        chart_type: "bar"
+        chart_type: "bar",
       }),
       vote: [],
-      groupableUserFields: []
+      groupableUserFields: [],
     });
   },
 
@@ -56,13 +57,13 @@ widgetTest("can vote", {
             results: "always",
             options: [
               { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 }
+              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
             ],
             voters: 1,
-            chart_type: "bar"
+            chart_type: "bar",
           },
-          vote: ["1f972d1df351de3ce35a787c89faad29"]
-        }
+          vote: ["1f972d1df351de3ce35a787c89faad29"],
+        },
       ];
     });
 
@@ -70,7 +71,7 @@ widgetTest("can vote", {
     assert.equal(requests, 1);
     assert.equal(find(".chosen").length, 1);
     assert.equal(find(".chosen").text(), "100%yes");
-  }
+  },
 });
 
 widgetTest("cannot vote if not member of the right group", {
@@ -81,8 +82,8 @@ widgetTest("cannot vote if not member of the right group", {
       post: EmberObject.create({
         id: 42,
         topic: {
-          archived: false
-        }
+          archived: false,
+        },
       }),
       poll: EmberObject.create({
         name: "poll",
@@ -91,14 +92,14 @@ widgetTest("cannot vote if not member of the right group", {
         results: "always",
         options: [
           { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 }
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
         ],
         voters: 0,
         chart_type: "bar",
-        groups: "foo"
+        groups: "foo",
       }),
       vote: [],
-      groupableUserFields: []
+      groupableUserFields: [],
     });
   },
 
@@ -119,14 +120,14 @@ widgetTest("cannot vote if not member of the right group", {
             results: "always",
             options: [
               { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 }
+              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
             ],
             voters: 1,
             chart_type: "bar",
-            groups: "foo"
+            groups: "foo",
           },
-          vote: ["1f972d1df351de3ce35a787c89faad29"]
-        }
+          vote: ["1f972d1df351de3ce35a787c89faad29"],
+        },
       ];
     });
 
@@ -137,5 +138,5 @@ widgetTest("cannot vote if not member of the right group", {
     );
     assert.equal(requests, 0);
     assert.equal(find(".chosen").length, 0);
-  }
+  },
 });

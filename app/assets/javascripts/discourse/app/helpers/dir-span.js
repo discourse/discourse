@@ -12,6 +12,6 @@ function setDir(text) {
   return content;
 }
 
-export default registerUnbound("dir-span", function(str) {
+export default registerUnbound("dir-span", function (str) {
   return htmlSafe(setDir(str));
 });

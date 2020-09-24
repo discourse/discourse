@@ -43,11 +43,15 @@
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 0;
+  right: 1em;
   bottom: 0;
   z-index: z("timeline");
   &:not(.docked) {
     margin-bottom: env(safe-area-inset-bottom);
+  }
+  html.rtl & {
+    right: 0;
+    left: 1em;
   }
 }
 
@@ -135,8 +139,7 @@
   }
 }
 
-.topic-error,
-.topic-notice {
+.topic-error {
   padding: 18px;
   width: 90%;
   margin-left: auto;
@@ -144,8 +147,7 @@
   font-size: $font-up-4;
   line-height: $line-height-medium;
 
-  .topic-retry,
-  .topic-join-group {
+  .topic-retry {
     display: block;
     margin-top: 20px;
     margin-left: auto;

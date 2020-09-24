@@ -21,5 +21,5 @@ export default DiscourseRoute.extend({
     if (!this.get("currentUser.can_create_group")) {
       this.transitionTo("groups");
     }
-  }
+  },
 });

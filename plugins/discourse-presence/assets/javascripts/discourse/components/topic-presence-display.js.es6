@@ -23,5 +23,5 @@ export default Component.extend({
   @on("willDestroyElement")
   _destroyed() {
     this.presenceManager.unsubscribe(this.get("topic.id"), TOPIC_TYPE);
-  }
+  },
 });

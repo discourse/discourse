@@ -1,7 +1,7 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Admin - Watched Words", { loggedIn: true });
 
-QUnit.test("list words in groups", async assert => {
+QUnit.test("list words in groups", async (assert) => {
   await visit("/admin/logs/watched_words/action/block");
 
   assert.ok(exists(".watched-words-list"));
@@ -38,7 +38,7 @@ QUnit.test("list words in groups", async assert => {
   assert.ok(!exists(".watched-words-list .watched-word"), "Empty word list.");
 });
 
-QUnit.test("add words", async assert => {
+QUnit.test("add words", async (assert) => {
   await visit("/admin/logs/watched_words/action/block");
 
   click(".show-words-checkbox");
@@ -48,29 +48,21 @@ QUnit.test("add words", async assert => {
 
   let found = [];
   $.each(find(".watched-words-list .watched-word"), (index, elem) => {
-    if (
-      $(elem)
-        .text()
-        .trim() === "poutine"
-    ) {
+    if ($(elem).text().trim() === "poutine") {
       found.push(true);
     }
   });
   assert.equal(found.length, 1);
 });
 
-QUnit.test("remove words", async assert => {
+QUnit.test("remove words", async (assert) => {
   await visit("/admin/logs/watched_words/action/block");
   await click(".show-words-checkbox");
 
   let word = null;
 
   $.each(find(".watched-words-list .watched-word"), (index, elem) => {
-    if (
-      $(elem)
-        .text()
-        .trim() === "anise"
-    ) {
+    if ($(elem).text().trim() === "anise") {
       word = elem;
     }
   });

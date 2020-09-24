@@ -1,6 +1,7 @@
 import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import Category from "discourse/models/category";
+import cookie from "discourse/lib/cookie";
 
 export default DiscourseRoute.extend({
   beforeModel(transition) {
@@ -40,17 +41,17 @@ export default DiscourseRoute.extend({
           params = {
             category,
             parentSlug: category.parentCategory.slug,
-            slug: category.slug
+            slug: category.slug,
           };
         }
 
-        this.replaceWith(route, params).then(e => {
+        this.replaceWith(route, params).then((e) => {
           if (this.controllerFor("navigation/category").canCreateTopic) {
             this._sendTransition(e, transition, categoryId);
           }
         });
       } else {
-        this.replaceWith("discovery.latest").then(e => {
+        this.replaceWith("discovery.latest").then((e) => {
           if (this.controllerFor("navigation/default").canCreateTopic) {
             this._sendTransition(e, transition);
           }
@@ -58,7 +59,7 @@ export default DiscourseRoute.extend({
       }
     } else {
       // User is not logged in
-      $.cookie("destination_url", window.location.href);
+      cookie("destination_url", window.location.href);
       this.replaceWith("login");
     }
   },
@@ -83,7 +84,7 @@ export default DiscourseRoute.extend({
       const categories = this.site.categories;
       const main = categories.findBy(type, mainCategory.toLowerCase());
       if (main) {
-        category = categories.find(item => {
+        category = categories.find((item) => {
           return (
             item &&
             item[type] === subCategory.toLowerCase() &&
@@ -94,5 +95,5 @@ export default DiscourseRoute.extend({
     }
 
     return category;
-  }
+  },
 });

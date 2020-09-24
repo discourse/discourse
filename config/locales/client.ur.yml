@@ -903,7 +903,6 @@ ur:
         oauth_enabled_warning: "براہ مہربانی نوٹ کریں کہ ایک بار جب آپ کے اکاؤنٹ پر دو فیکٹر توثیق فعال ہو جائے تو سَوشَل لاگ اِن غیر فعال ہوجائیں گے۔"
         enforced_notice: "اِس سائٹ تک رسائی حاصل کرنے کیلئے آپ کا دو فیکٹر توثیق فعال کرنا ضروری ہے۔"
         disable: "غیر فعال کریں"
-        disable_confirm: "کیا آپ واقعی تمام دوسرے فیکٹر غیر فعال کرنا چاہتے ہیں؟"
         save: "محفوظ کریں"
         edit: "ترمیم"
         edit_title: "دوسرا فیکٹر ترمیم کریں"
@@ -1543,7 +1542,6 @@ ur:
         draft: ڈرافٹ
         edit: ترمیم
         reply_to_post:
-          label: '%{postUsername} کی طرف سے پوسٹ %{postNumber} کا جواب دیں'
           desc: ایک مخصوص پوسٹ پر جواب دیں
         reply_as_new_topic:
           label: مُنسلِک ٹاپک کے طور پر جواب دیں
@@ -1842,9 +1840,6 @@ ur:
       toggle_information: "ٹاپک تفصیلات ٹَوگل کریں"
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
-      group_request: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `%{name}` گروپ میں رکنیت کیلئے درخواست کی ضرورت ہے"
-      group_join: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `%{name}` گروپ میں شامل ہونے کی ضرورت ہے"
-      group_request_sent: "آپ کی گروپ میں رکنیت کی درخواست بھیج دی گئی ہے۔ اُس کے قبول ہونے پر آپ کو مطلع کر دیا جائے گا۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
@@ -1860,8 +1855,6 @@ ur:
         remove: "ٹائمر ہٹائیں"
         publish_to: "شائع کریں:"
         when: "کب:"
-        public_timer_types: ٹاپک ٹائمر
-        private_timer_types: صارف کے ٹاپک ٹائمر
         time_frame_required: براہ کرم ایک ٹائم فریم منتخب کریں
       auto_update_input:
         none: "ایک ٹائم فریم منتخب کریں"
@@ -1942,7 +1935,7 @@ ur:
           "2_8": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ اِس زمرہ کو ٹرَیک کر رہے ہیں۔"
           "2_4": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ نے اِس ٹاپک پر ایک جواب پوسٹ کیا۔"
           "2_2": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ اِس ٹاپک کو ٹرَیک کر رہے ہیں۔"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
           "1": "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
           "0_7": "آپ اِس زمرہ میں تمام اطلاعات کو نظر انداز کر رہے ہیں۔"
@@ -2265,23 +2258,7 @@ ur:
         remove_post_notice: "اسٹاف نوٹِس ہٹائیں"
         remove_timer: "ٹائمر ہٹائیں"
       actions:
-        flag: "فلَیگ"
-        defer_flags:
-          one: "فلَیگ نظر انداز کریں"
-          other: "فلَیگز نظر انداز کریں"
-        undo:
-          off_topic: "فلَیگ کالعدم کریں"
-          spam: "فلَیگ کالعدم کریں"
-          inappropriate: "فلَیگ کالعدم کریں"
-          bookmark: "بُک مارک کالعدم کریں"
-          like: "لائیک کالعدم کریں"
         people:
-          off_topic: "اِس کو موضوع سے ہٹ کر ہونے کے طور پر فلَیگ کیا گیا"
-          spam: "اِس کو سپَیم ہونے کے طور پر فلَیگ کیا گیا"
-          inappropriate: "اِس کو نامناسب ہونے کے طور پر فلَیگ کیا گیا"
-          notify_moderators: "مطلع کردہ ماڈریٹرز"
-          notify_user: "ایک پیغام بھیجا"
-          bookmark: "اِس کو بُک مارک"
           like_capped:
             one: "اور %{count} دوسرے شخص نے اِس کو لائیک کیا"
             other: "اور %{count} دوسرے لوگوں نے اِس کو لائیک کیا"
@@ -2291,8 +2268,6 @@ ur:
           inappropriate: "آپ نے اِس کو نامناسب ہونے کے طور پر فلَیگ کیا"
           notify_moderators: "آپ نے اِس کو اعتدال کیلئے فلَیگ کیا"
           notify_user: "آپ نے اِس صارف کو پیغام بھیجا"
-          bookmark: "آپ نے اِس پوسٹ کو بُک مارک کیا"
-          like: "آپ نے اِس کو لائیک کیا"
       delete:
         confirm:
           one: "کیا آپ واقعی اُس پوسٹ کو حذف کرنا چاہتے ہیں؟"
@@ -2821,14 +2796,6 @@ ur:
           latest: "کوئی تازہ ترین ٹاپک موجود نہیں ہیں۔"
           bookmarks: "ابھی تک آپ کے بُک مارک کیے ہوے کوئی ٹاپک نہیں ہیں۔"
           top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
-        bottom:
-          latest: "کوئی مزید تازہ ترین ٹاپک موجود نہیں ہیں۔"
-          posted: "کوئی مزید پوسٹ کیے گئے ٹاپک موجود نہیں ہیں۔"
-          read: "کوئی مزید پڑھ لیے گئے ٹاپک موجود نہیں ہیں۔"
-          new: "کوئی مزید نئے ٹاپک موجود نہیں ہیں۔"
-          unread: "کوئی مزید بغیر پڑھے ٹاپک موجود نہیں ہیں۔"
-          top: "مزید کوئی ٹاپ ٹاپک موجود نہیں۔"
-          bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
     invite:
       custom_message: "<a href>اپنی مرضی کا پیغام</a> لکھ کر، اپنے دعوت نامہ کو ذرا سا مذید ذاتی بنائیں۔"
       custom_message_placeholder: "اپنی مرضی کے پیغام درج کریں"
@@ -2966,8 +2933,6 @@ ur:
               title: "کون اِس گروپ کو دیکھ سکتا ہے؟"
               public: "ہر کوئی"
               logged_on_users: "لاگ شدہ صارفین"
-              members: "گروپ کے مالکان، اراکین"
-              staff: "گروپ کے مالکان اور اسٹاف"
               owners: "گروپ مالکان"
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
             members_visibility_levels:

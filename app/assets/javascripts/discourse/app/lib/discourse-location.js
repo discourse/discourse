@@ -182,10 +182,12 @@ const DiscourseLocation = EmberObject.extend({
       // Ignore initial page load popstate event in Chrome
       if (!popstateFired) {
         popstateFired = true;
-        if (url === this._previousURL) return;
+        if (url === this._previousURL) {
+          return;
+        }
       }
 
-      popstateCallbacks.forEach(cb => cb(url));
+      popstateCallbacks.forEach((cb) => cb(url));
       callback(url);
     });
   },
@@ -217,7 +219,7 @@ const DiscourseLocation = EmberObject.extend({
 
     const guid = guidFor(this);
     $(window).off(`popstate.ember-location-${guid}`);
-  }
+  },
 });
 
 export default DiscourseLocation;

@@ -3,7 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 
 export default DiscourseRoute.extend({
   beforeModel({ params, _discourse_anchor }) {
-    return ajax(`/p/${params.post.id}`).then(t => {
+    return ajax(`/p/${params.post.id}`).then((t) => {
       const transition = this.transitionTo(
         "topic.fromParamsNear",
         t.slug,
@@ -13,5 +13,5 @@ export default DiscourseRoute.extend({
 
       transition._discourse_anchor = _discourse_anchor;
     });
-  }
+  },
 });

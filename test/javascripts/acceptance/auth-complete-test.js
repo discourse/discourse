@@ -4,7 +4,7 @@ acceptance("Auth Complete", {
     const node = document.createElement("meta");
     node.dataset.authenticationData = JSON.stringify({
       auth_provider: "test",
-      email: "blah@example.com"
+      email: "blah@example.com",
     });
     node.id = "data-authentication";
     document.querySelector("head").appendChild(node);
@@ -13,10 +13,10 @@ acceptance("Auth Complete", {
     document
       .querySelector("head")
       .removeChild(document.getElementById("data-authentication"));
-  }
+  },
 });
 
-QUnit.test("when login not required", async assert => {
+QUnit.test("when login not required", async (assert) => {
   await visit("/");
 
   assert.equal(currentPath(), "discovery.latest", "it stays on the homepage");
@@ -27,7 +27,7 @@ QUnit.test("when login not required", async assert => {
   );
 });
 
-QUnit.test("when login required", async function(assert) {
+QUnit.test("when login required", async function (assert) {
   this.siteSettings.login_required = true;
   await visit("/");
 

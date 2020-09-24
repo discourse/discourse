@@ -10,7 +10,7 @@ export function dateNode(dt) {
     const attributes = {
       title: longDate(dt),
       "data-time": dt.getTime(),
-      "data-format": "tiny"
+      "data-format": "tiny",
     };
 
     return h("span.relative-date", { attributes }, relativeAge(dt));

@@ -16,6 +16,8 @@ import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
 import { extractError } from "discourse/lib/ajax-error";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import bootbox from "bootbox";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -23,7 +25,7 @@ const AuthErrors = [
   "awaiting_approval",
   "awaiting_activation",
   "admin_not_allowed_from_ip_address",
-  "not_allowed_from_ip_address"
+  "not_allowed_from_ip_address",
 ];
 
 export default Controller.extend(ModalFunctionality, {
@@ -51,7 +53,7 @@ export default Controller.extend(ModalFunctionality, {
       showSecondFactor: false,
       showSecurityKey: false,
       showLoginButtons: true,
-      awaitingApproval: false
+      awaitingApproval: false,
     });
   },
 
@@ -68,8 +70,12 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("awaitingApproval", "hasAtLeastOneLoginButton")
   modalBodyClasses(awaitingApproval, hasAtLeastOneLoginButton) {
     const classes = ["login-modal"];
-    if (awaitingApproval) classes.push("awaiting-approval");
-    if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
+    if (awaitingApproval) {
+      classes.push("awaiting-approval");
+    }
+    if (hasAtLeastOneLoginButton) {
+      classes.push("has-alt-auth");
+    }
     return classes.join(" ");
   },
 
@@ -123,10 +129,10 @@ export default Controller.extend(ModalFunctionality, {
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.secondFactorMethod,
-          timezone: moment.tz.guess()
-        }
+          timezone: moment.tz.guess(),
+        },
       }).then(
-        result => {
+        (result) => {
           // Successful login
           if (result && result.error) {
             this.set("loggingIn", false);
@@ -148,7 +154,7 @@ export default Controller.extend(ModalFunctionality, {
                   ? SECOND_FACTOR_METHODS.SECURITY_KEY
                   : SECOND_FACTOR_METHODS.TOTP,
                 securityKeyChallenge: result.challenge,
-                securityKeyAllowedCredentialIds: result.allowed_credential_ids
+                securityKeyAllowedCredentialIds: result.allowed_credential_ids,
               });
 
               // only need to focus the 2FA input for TOTP
@@ -166,7 +172,7 @@ export default Controller.extend(ModalFunctionality, {
               this.send("showNotActivated", {
                 username: this.loginName,
                 sentTo: escape(result.sent_to_email),
-                currentEmail: escape(result.current_email)
+                currentEmail: escape(result.current_email),
               });
             } else if (result.reason === "suspended") {
               this.send("closeModal");
@@ -181,24 +187,26 @@ export default Controller.extend(ModalFunctionality, {
               "hidden-login-form"
             );
             const applyHiddenFormInputValue = (value, key) => {
-              if (!hiddenLoginForm) return;
+              if (!hiddenLoginForm) {
+                return;
+              }
 
               hiddenLoginForm.querySelector(`input[name=${key}]`).value = value;
             };
 
-            const destinationUrl = $.cookie("destination_url");
-            const ssoDestinationUrl = $.cookie("sso_destination_url");
+            const destinationUrl = cookie("destination_url");
+            const ssoDestinationUrl = cookie("sso_destination_url");
 
             applyHiddenFormInputValue(this.loginName, "username");
             applyHiddenFormInputValue(this.loginPassword, "password");
 
             if (ssoDestinationUrl) {
-              $.removeCookie("sso_destination_url");
+              removeCookie("sso_destination_url");
               window.location.assign(ssoDestinationUrl);
               return;
             } else if (destinationUrl) {
               // redirect client to the original URL
-              $.removeCookie("destination_url");
+              removeCookie("destination_url");
 
               applyHiddenFormInputValue(destinationUrl, "redirect");
             } else {
@@ -221,7 +229,7 @@ export default Controller.extend(ModalFunctionality, {
             return;
           }
         },
-        e => {
+        (e) => {
           // Failed to login
           if (e.jqXHR && e.jqXHR.status === 429) {
             this.flash(I18n.t("login.rate_limit"), "error");
@@ -282,9 +290,9 @@ export default Controller.extend(ModalFunctionality, {
 
       ajax("/u/email-login", {
         data: { login: this.loginName.trim() },
-        type: "POST"
+        type: "POST",
       })
-        .then(data => {
+        .then((data) => {
           const loginName = escapeExpression(this.loginName);
           const isEmail = loginName.match(/@/);
           let key = `email_login.complete_${isEmail ? "email" : "username"}`;
@@ -292,7 +300,7 @@ export default Controller.extend(ModalFunctionality, {
             this.flash(
               I18n.t(`${key}_not_found`, {
                 email: loginName,
-                username: loginName
+                username: loginName,
               }),
               "error"
             );
@@ -301,12 +309,12 @@ export default Controller.extend(ModalFunctionality, {
             this.flash(
               I18n.t(`${key}${postfix}`, {
                 email: loginName,
-                username: loginName
+                username: loginName,
               })
             );
           }
         })
-        .catch(e => this.flash(extractError(e), "error"))
+        .catch((e) => this.flash(extractError(e), "error"))
         .finally(() => this.set("processingEmailLink", false));
     },
 
@@ -314,15 +322,15 @@ export default Controller.extend(ModalFunctionality, {
       getWebauthnCredential(
         this.securityKeyChallenge,
         this.securityKeyAllowedCredentialIds,
-        credentialData => {
+        (credentialData) => {
           this.set("securityKeyCredential", credentialData);
           this.send("login");
         },
-        errorMessage => {
+        (errorMessage) => {
           this.flash(errorMessage, "error");
         }
       );
-    }
+    },
   },
 
   authenticationComplete(options) {
@@ -330,7 +338,9 @@ export default Controller.extend(ModalFunctionality, {
       showModal("login");
 
       next(() => {
-        if (callback) callback();
+        if (callback) {
+          callback();
+        }
         this.flash(errorMsg, className || "success");
       });
     };
@@ -347,7 +357,7 @@ export default Controller.extend(ModalFunctionality, {
       return loginError(I18n.t("login.omniauth_disallow_totp"), "error", () => {
         this.setProperties({
           loginName: options.email,
-          showLoginButtons: false
+          showLoginButtons: false,
         });
 
         document.getElementById("login-account-password").focus();
@@ -368,10 +378,10 @@ export default Controller.extend(ModalFunctionality, {
     // Reload the page if we're authenticated
     if (options.authenticated) {
       const destinationUrl =
-        $.cookie("destination_url") || options.destination_url;
+        cookie("destination_url") || options.destination_url;
       if (destinationUrl) {
         // redirect client to the original URL
-        $.removeCookie("destination_url");
+        removeCookie("destination_url");
         window.location.href = destinationUrl;
       } else if (window.location.pathname === getURL("/login")) {
         window.location = getURL("/");
@@ -390,9 +400,9 @@ export default Controller.extend(ModalFunctionality, {
       accountUsername: options.username,
       accountName: options.name,
       authOptions: EmberObject.create(options),
-      skipConfirmation
+      skipConfirmation,
     });
 
     showModal("createAccount", { modalClass: "create-account" });
-  }
+  },
 });

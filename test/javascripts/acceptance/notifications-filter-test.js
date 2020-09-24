@@ -2,16 +2,16 @@ import { acceptance } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
 
 acceptance("NotificationsFilter", {
-  loggedIn: true
+  loggedIn: true,
 });
 
-test("Notifications filter true", async assert => {
+test("Notifications filter true", async (assert) => {
   await visit("/u/eviltrout/notifications");
 
   assert.ok(find(".large-notification").length >= 0);
 });
 
-test("Notifications filter read", async assert => {
+test("Notifications filter read", async (assert) => {
   await visit("/u/eviltrout/notifications");
 
   const dropdown = selectKit(".notifications-filter");
@@ -21,7 +21,7 @@ test("Notifications filter read", async assert => {
   assert.ok(find(".large-notification").length >= 0);
 });
 
-test("Notifications filter unread", async assert => {
+test("Notifications filter unread", async (assert) => {
   await visit("/u/eviltrout/notifications");
 
   const dropdown = selectKit(".notifications-filter");

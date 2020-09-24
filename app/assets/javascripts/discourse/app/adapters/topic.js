@@ -8,5 +8,5 @@ export default RestAdapter.extend({
     } else {
       return this._super(store, type, findArgs);
     }
-  }
+  },
 });

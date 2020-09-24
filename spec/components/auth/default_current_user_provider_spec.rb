@@ -244,13 +244,16 @@ describe Auth::DefaultCurrentUserProvider do
       cookies["_t"][:value]
     end
 
+    before do
+      @orig = freeze_time
+      user.clear_last_seen_cache!(@orig)
+    end
+
     after do
-      Discourse.redis.flushdb
+      user.clear_last_seen_cache!(@orig)
     end
 
     it "should not update last seen for suspended users" do
-      freeze_time
-
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
       u = provider2.current_user
       u.reload
@@ -262,7 +265,8 @@ describe Auth::DefaultCurrentUserProvider do
       u.suspended_till = 1.year.from_now
       u.save!
 
-      Discourse.redis.del("user:#{user.id}:#{Time.now.to_date}")
+      u.clear_last_seen_cache!
+
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
       expect(provider2.current_user).to eq(nil)
 
@@ -317,6 +321,16 @@ describe Auth::DefaultCurrentUserProvider do
 
     expect(provider("/topic/anything/goes", params).should_update_last_seen?).to eq(false)
     expect(provider("/topic/anything/goes", params.merge("HTTP_DISCOURSE_PRESENT" => "true")).should_update_last_seen?).to eq(true)
+  end
+
+  it "supports non persistent sessions" do
+    SiteSetting.persistent_sessions = false
+
+    @provider = provider('/')
+    cookies = {}
+    @provider.log_on_user(user, {}, cookies)
+
+    expect(cookies["_t"][:expires]).to eq(nil)
   end
 
   it "correctly rotates tokens" do

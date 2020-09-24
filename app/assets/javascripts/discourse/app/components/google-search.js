@@ -12,5 +12,5 @@ export default Component.extend({
   @discourseComputed
   siteUrl() {
     return `${location.protocol}//${location.host}${getURL("/")}`;
-  }
+  },
 });

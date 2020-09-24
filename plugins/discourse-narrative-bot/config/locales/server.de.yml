@@ -27,12 +27,6 @@ de:
     bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne irgendwo **`@%{discobot_username}`**, um mit mir zu interagieren."
     tl2_promotion_message:
       subject_template: "Herzlichen Glückwunsch zur Beförderung ihrer Vertrauensstufe!"
-      text_body_template: |
-        Da du befördert worden bist, ist es an der Zeit etwas über die erweiterten Funktionen zu lernen!
-
-        Antworte auf diese Nachricht mit `@%{discobot_username} %{reset_trigger}` um herauszufinden, was du noch alles machen kannst.
-
-        Wir laden dich ein, dich weiter zu engagieren – wir freuen uns, dass du hier bist.
     timeout:
       message: |-
         Hallo @%{username}! Ich wollte mich nur wieder einmal melden, weil ich schon länger nichts von dir gehört habe.
@@ -185,12 +179,6 @@ de:
           Hübsches Bild – ich habe die Like-Schaltfläche :heart: gedrückt, um dich wissen zu lassen, wie sehr es mir gefällt :heart_eyes:
         like_not_found: |-
           Hast du vergessen meinen [Beitrag](%{url}) mit einem Like :heart: zu markieren? :crying_cat_face:
-        not_found: |-
-          Sieht so aus, als hättest du kein Bild hochgeladen. Deshalb habe ich ein Bild ausgesucht, von dem ich _sicher_ bin, dass es dir gefällt.
-
-          `%{image_url}`
-
-          Versuche dieses als nächstes hochzuladen, oder füge den Link auf einer eigenen Zeile ein!
       formatting:
         instructions: |-
           Kannst du einige Wörter in deiner Antwort **fett** oder _kursiv_ markieren?

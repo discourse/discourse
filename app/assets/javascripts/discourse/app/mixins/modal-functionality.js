@@ -18,6 +18,6 @@ export default Mixin.create({
     closeModal() {
       this.modal.send("closeModal");
       this.set("panels", []);
-    }
-  }
+    },
+  },
 });

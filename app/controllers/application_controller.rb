@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
+  before_action :set_mp_snapshot_fields
   before_action :clear_notifications
   around_action :with_resolved_locale
   before_action :set_mobile_view
@@ -293,6 +294,12 @@ class ApplicationController < ActionController::Base
       response.headers["X-Discourse-Username"] = current_user.username
     end
     response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
+  end
+
+  def set_mp_snapshot_fields
+    if defined?(Rack::MiniProfiler)
+      Rack::MiniProfiler.add_snapshot_custom_field("application version", Discourse.git_version)
+    end
   end
 
   def clear_notifications
@@ -700,11 +707,11 @@ class ApplicationController < ActionController::Base
   def redirect_to_login
     dont_cache_page
 
-    if SiteSetting.enable_sso?
+    if SiteSetting.external_auth_immediately && SiteSetting.enable_sso?
       # save original URL in a session so we can redirect after login
       session[:destination_url] = destination_url
       redirect_to path('/session/sso')
-    elsif !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+    elsif SiteSetting.external_auth_immediately && !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url

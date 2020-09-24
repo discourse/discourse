@@ -1,7 +1,8 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { schedule } from "@ember/runloop";
 import hbs from "discourse/widgets/hbs-compiler";
+import { schedule } from "@ember/runloop";
+import { createPopper } from "@popperjs/core";
 
 /*
 
@@ -92,7 +93,7 @@ export const WidgetDropdownHeaderClass = {
 
   _buildLabel(attrs) {
     return attrs.translatedLabel ? attrs.translatedLabel : I18n.t(attrs.label);
-  }
+  },
 };
 
 createWidget("widget-dropdown-header", WidgetDropdownHeaderClass);
@@ -109,21 +110,21 @@ export const WidgetDropdownItemClass = {
           ? attrs.item.html
           : attrs.item.translatedLabel
           ? attrs.item.translatedLabel
-          : I18n.t(attrs.item.label)
+          : I18n.t(attrs.item.label),
     };
   },
 
   buildAttributes(attrs) {
     return {
       "data-id": attrs.item.id,
-      tabindex: attrs.item === "separator" ? -1 : 0
+      tabindex: attrs.item === "separator" ? -1 : 0,
     };
   },
 
   buildClasses(attrs) {
     return [
       "widget-dropdown-item",
-      attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`
+      attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`,
     ].join(" ");
   },
 
@@ -145,7 +146,7 @@ export const WidgetDropdownItemClass = {
       {{d-icon attrs.item.icon}}
     {{/if}}
     {{{transformed.content}}}
-  `
+  `,
 };
 
 createWidget("widget-dropdown-item", WidgetDropdownItemClass);
@@ -168,7 +169,7 @@ export const WidgetDropdownBodyClass = {
         attrs=(hash item=item)
       }}
     {{/each}}
-  `
+  `,
 };
 
 createWidget("widget-dropdown-body", WidgetDropdownBodyClass);
@@ -190,7 +191,7 @@ export const WidgetDropdownClass = {
     }
   },
 
-  buildKey: attrs => {
+  buildKey: (attrs) => {
     return attrs.id;
   },
 
@@ -200,7 +201,7 @@ export const WidgetDropdownClass = {
 
   defaultState() {
     return {
-      opened: false
+      opened: false,
     };
   },
 
@@ -212,7 +213,7 @@ export const WidgetDropdownClass = {
 
   transform(attrs) {
     return {
-      options: attrs.options || {}
+      options: attrs.options || {},
     };
   },
 
@@ -239,40 +240,50 @@ export const WidgetDropdownClass = {
     }
   },
 
-  _onTrigger() {
-    this.state.opened = !this.state.opened;
+  willRerenderWidget() {
+    this._popper && this._popper.destroy();
+  },
 
-    schedule("afterRender", () => {
-      const dropdownHeader = document.querySelector(
-        `#${this.attrs.id} .widget-dropdown-header`
-      );
-      const dropdownBody = document.querySelector(
-        `#${this.attrs.id} .widget-dropdown-body`
-      );
+  didRenderWidget() {
+    if (this.state.opened) {
+      schedule("afterRender", () => {
+        const dropdownHeader = document.querySelector(
+          `#${this.attrs.id} .widget-dropdown-header`
+        );
 
-      if (this.state.opened && dropdownHeader && dropdownBody) {
-        if (this.state.popper) {
-          this.state.popper.destroy();
+        if (!dropdownHeader) {
+          return;
         }
 
-        /* global Popper:true */
-        this.state.popper = Popper.createPopper(dropdownHeader, dropdownBody, {
+        const dropdownBody = document.querySelector(
+          `#${this.attrs.id} .widget-dropdown-body`
+        );
+
+        if (!dropdownBody) {
+          return;
+        }
+
+        this._popper = createPopper(dropdownHeader, dropdownBody, {
           strategy: "fixed",
           placement: "bottom-start",
           modifiers: [
             {
-              name: "preventOverflow"
+              name: "preventOverflow",
             },
             {
               name: "offset",
               options: {
-                offset: [0, 5]
-              }
-            }
-          ]
+                offset: [0, 5],
+              },
+            },
+          ],
         });
-      }
-    });
+      });
+    }
+  },
+
+  _onTrigger() {
+    this.state.opened = !this.state.opened;
   },
 
   template: hbs`
@@ -299,7 +310,7 @@ export const WidgetDropdownClass = {
         }}
       {{/if}}
     {{/if}}
-  `
+  `,
 };
 
 export default createWidget("widget-dropdown", WidgetDropdownClass);

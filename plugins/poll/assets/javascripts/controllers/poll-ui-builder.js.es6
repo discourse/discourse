@@ -18,12 +18,12 @@ export default Controller.extend({
   pollChartTypes: [
     {
       name: I18n.t("poll.ui_builder.poll_chart_type.bar"),
-      value: BAR_CHART_TYPE
+      value: BAR_CHART_TYPE,
     },
     {
       name: I18n.t("poll.ui_builder.poll_chart_type.pie"),
-      value: PIE_CHART_TYPE
-    }
+      value: PIE_CHART_TYPE,
+    },
   ],
 
   pollType: null,
@@ -39,16 +39,16 @@ export default Controller.extend({
     return [
       {
         name: I18n.t("poll.ui_builder.poll_type.regular"),
-        value: regularPollType
+        value: regularPollType,
       },
       {
         name: I18n.t("poll.ui_builder.poll_type.number"),
-        value: numberPollType
+        value: numberPollType,
       },
       {
         name: I18n.t("poll.ui_builder.poll_type.multiple"),
-        value: multiplePollType
-      }
+        value: multiplePollType,
+      },
     ];
   },
 
@@ -72,21 +72,21 @@ export default Controller.extend({
     let options = [
       {
         name: I18n.t("poll.ui_builder.poll_result.always"),
-        value: alwaysPollResult
+        value: alwaysPollResult,
       },
       {
         name: I18n.t("poll.ui_builder.poll_result.vote"),
-        value: votePollResult
+        value: votePollResult,
       },
       {
         name: I18n.t("poll.ui_builder.poll_result.closed"),
-        value: closedPollResult
-      }
+        value: closedPollResult,
+      },
     ];
     if (this.get("currentUser.staff")) {
       options.push({
         name: I18n.t("poll.ui_builder.poll_result.staff"),
-        value: staffPollResult
+        value: staffPollResult,
       });
     }
     return options;
@@ -95,7 +95,7 @@ export default Controller.extend({
   @discourseComputed("site.groups")
   siteGroups(groups) {
     return groups
-      .map(g => {
+      .map((g) => {
         // prevents group "everyone" to be listed
         if (g.id !== 0) {
           return { name: g.name };
@@ -126,12 +126,16 @@ export default Controller.extend({
 
   @discourseComputed("pollOptions")
   pollOptionsCount(pollOptions) {
-    if (pollOptions.length === 0) return 0;
+    if (pollOptions.length === 0) {
+      return 0;
+    }
 
     let length = 0;
 
-    pollOptions.split("\n").forEach(option => {
-      if (option.length !== 0) length += 1;
+    pollOptions.split("\n").forEach((option) => {
+      if (option.length !== 0) {
+        length += 1;
+      }
     });
 
     return length;
@@ -141,7 +145,9 @@ export default Controller.extend({
   _setPollMax() {
     const isMultiple = this.isMultiple;
     const isNumber = this.isNumber;
-    if (!isMultiple && !isNumber) return;
+    if (!isMultiple && !isNumber) {
+      return;
+    }
 
     if (isMultiple) {
       this.set("pollMax", this.pollOptionsCount);
@@ -152,7 +158,9 @@ export default Controller.extend({
 
   @discourseComputed("isRegular", "isMultiple", "isNumber", "pollOptionsCount")
   pollMinOptions(isRegular, isMultiple, isNumber, count) {
-    if (isRegular) return;
+    if (isRegular) {
+      return;
+    }
 
     if (isMultiple) {
       return this._comboboxOptions(1, count + 1);
@@ -173,7 +181,9 @@ export default Controller.extend({
     "pollStep"
   )
   pollMaxOptions(isRegular, isMultiple, isNumber, count, pollMin, pollStep) {
-    if (isRegular) return;
+    if (isRegular) {
+      return;
+    }
     const pollMinInt = parseInt(pollMin, 10) || 1;
 
     if (isMultiple) {
@@ -192,7 +202,9 @@ export default Controller.extend({
 
   @discourseComputed("isNumber", "pollMax")
   pollStepOptions(isNumber, pollMax) {
-    if (!isNumber) return;
+    if (!isNumber) {
+      return;
+    }
     return this._comboboxOptions(1, (parseInt(pollMax, 10) || 1) + 1);
   },
 
@@ -244,14 +256,27 @@ export default Controller.extend({
       step = 1;
     }
 
-    if (pollType) pollHeader += ` type=${pollType}`;
-    if (pollResult) pollHeader += ` results=${pollResult}`;
-    if (pollMin && showMinMax) pollHeader += ` min=${pollMin}`;
-    if (pollMax) pollHeader += ` max=${pollMax}`;
-    if (isNumber) pollHeader += ` step=${step}`;
-    if (publicPoll) pollHeader += ` public=true`;
-    if (chartType && pollType !== "number")
+    if (pollType) {
+      pollHeader += ` type=${pollType}`;
+    }
+    if (pollResult) {
+      pollHeader += ` results=${pollResult}`;
+    }
+    if (pollMin && showMinMax) {
+      pollHeader += ` min=${pollMin}`;
+    }
+    if (pollMax) {
+      pollHeader += ` max=${pollMax}`;
+    }
+    if (isNumber) {
+      pollHeader += ` step=${step}`;
+    }
+    if (publicPoll) {
+      pollHeader += ` public=true`;
+    }
+    if (chartType && pollType !== "number") {
       pollHeader += ` chartType=${chartType}`;
+    }
     if (pollGroups && pollGroups.length > 0) {
       pollHeader += ` groups=${pollGroups}`;
     }
@@ -260,15 +285,19 @@ export default Controller.extend({
         date + " " + time,
         "YYYY-MM-DD HH:mm"
       ).toISOString();
-      if (closeDate) pollHeader += ` close=${closeDate}`;
+      if (closeDate) {
+        pollHeader += ` close=${closeDate}`;
+      }
     }
 
     pollHeader += "]";
     output += `${pollHeader}\n`;
 
     if (pollOptions.length > 0 && !isNumber) {
-      pollOptions.split("\n").forEach(option => {
-        if (option.length !== 0) output += `* ${option}\n`;
+      pollOptions.split("\n").forEach((option) => {
+        if (option.length !== 0) {
+          output += `* ${option}\n`;
+        }
       });
     }
 
@@ -299,7 +328,7 @@ export default Controller.extend({
     if (pollMin >= pollMax) {
       options = {
         failed: true,
-        reason: I18n.t("poll.ui_builder.help.invalid_values")
+        reason: I18n.t("poll.ui_builder.help.invalid_values"),
       };
     }
 
@@ -313,7 +342,7 @@ export default Controller.extend({
     if (pollStep < 1) {
       options = {
         failed: true,
-        reason: I18n.t("poll.ui_builder.help.min_step_value")
+        reason: I18n.t("poll.ui_builder.help.min_step_value"),
       };
     }
 
@@ -327,17 +356,18 @@ export default Controller.extend({
     if (disableInsert) {
       options = {
         failed: true,
-        reason: I18n.t("poll.ui_builder.help.options_count")
+        reason: I18n.t("poll.ui_builder.help.options_count"),
       };
     }
 
     return EmberObject.create(options);
   },
 
-  _comboboxOptions(start_index, end_index) {
-    return _.range(start_index, end_index).map(number => {
-      return { value: number, name: number };
-    });
+  _comboboxOptions(startIndex, endIndex) {
+    return [...Array(endIndex - startIndex).keys()].map((number) => ({
+      value: number + startIndex,
+      name: number + startIndex,
+    }));
   },
 
   _setupPoll() {
@@ -352,12 +382,8 @@ export default Controller.extend({
       chartType: BAR_CHART_TYPE,
       pollResult: this.alwaysPollResult,
       pollGroups: null,
-      date: moment()
-        .add(1, "day")
-        .format("YYYY-MM-DD"),
-      time: moment()
-        .add(1, "hour")
-        .format("HH:mm")
+      date: moment().add(1, "day").format("YYYY-MM-DD"),
+      time: moment().add(1, "hour").format("HH:mm"),
     });
   },
 
@@ -366,6 +392,6 @@ export default Controller.extend({
       this.toolbarEvent.addText(this.pollOutput);
       this.send("closeModal");
       this._setupPoll();
-    }
-  }
+    },
+  },
 });

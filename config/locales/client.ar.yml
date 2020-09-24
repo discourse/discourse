@@ -359,7 +359,6 @@ ar:
       no_timezone: 'لم تحدد منظقتك الزمنية بعد. لن تتمكن من تفعيل التذكيرات. حددها <a href="%{basePath}/my/preferences/profile">في ملفك الشخصي</a>.'
       search: "البحث"
       reminders:
-        at_desktop: "في المرة القادمة سأكون عند مكتبي"
         later_today: "في وقت لاحق اليوم"
         tomorrow: "غداً"
         next_week: "الاسبوع القادم"
@@ -398,6 +397,7 @@ ar:
     choose_message:
       none_found: "لم يتم العثور على أي رسالة"
     review:
+      in_reply_to: "ردا على"
       explain:
         total: "مجموع"
       awaiting_approval: "بأنتضار موافقة"
@@ -1711,7 +1711,7 @@ ar:
           "2_8": "سوف تشاهد عداد للردود الجديدة لانك تتابع هذا القسم."
           "2_4": "سوف تشاهد عداد للردود الجديدة لانك قمت بالمشاركة برد في هذا الموضوع."
           "2_2": "سوف تشاهد عداد للردود الجديدة لانك تتابع هذا الموضوع."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك."
           "1": "سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك."
           "0_7": "لن يصلك أي إشعار يخص هذا القسم."
@@ -2008,28 +2008,12 @@ ar:
         grant_badge: "منح شارة"
         delete_topic: "احذف الموضوع"
       actions:
-        flag: "ابلاغ"
-        undo:
-          off_topic: "تراجع عن التبليغ"
-          spam: "تراجع عن البلاغ"
-          inappropriate: "تراجع عن البلاغ"
-          bookmark: "تراجع عن البلاغ"
-          like: "تراجع عن الإعجاب"
-        people:
-          off_topic: "ابلغ عنه انه خارج الموضوع"
-          spam: "ابلغ عنه انه سبام"
-          inappropriate: "ابلغ عنه انه غير لائق"
-          notify_moderators: "تم تنبية المشرفين"
-          notify_user: "ارسلت رساله"
-          bookmark: "وضع علية علامة مرجعية"
         by_you:
           off_topic: "لقد ابلغت ان هذا المنشور خارج الموضوع"
           spam: "لقد ابلغت ان هذا المنشور سبام"
           inappropriate: "لقد ابلغت ان هذا المنشور غير لائق"
           notify_moderators: "لقد ابلغت المشرفين عن هذا المنشور"
           notify_user: "لقد أرسلت رسالة إلى هذا العضو"
-          bookmark: "لقد وضعت علامة مرجعية علي هذا المنشور"
-          like: "أعجبت بهذا المنشور"
       merge:
         confirm:
           zero: "لا يوجد منشورات لدمجها"
@@ -2570,14 +2554,6 @@ ar:
           latest: "لا يوجد موضوعات حديثة."
           bookmarks: "لم تقم بوضع علامات مرجعية علي اي موضوع بعد."
           top: "لا يوجد موضوعات الاكثر مشاهدة."
-        bottom:
-          latest: "لا يوجد المزيد من الموضوعات الحديثة."
-          posted: "لا يوجد المزيد من الموضوعات المنشورة."
-          read: "لا يوجد المزيد من الموضوعات المقروءة."
-          new: "لا يوجد المزيد من الموضوعات الجديدة."
-          unread: "لا يوجد المزيد من الموضوعات غير مقروءة."
-          top: "لا يوجد المزيد من الموضوعات الاكثر مشاهدة."
-          bookmarks: "لا يوجد المزيد من الموضوعات التي عليها علامة مرجعية."
     invite:
       custom_message_placeholder: "ادخل رسالتك المخصصة"
       custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المجتمع!"
@@ -2676,7 +2652,6 @@ ar:
             visibility_levels:
               title: "من يستطيع رؤية هذه المجموعة؟"
               public: "الكل"
-              staff: "مالكي المجموعة و طاقم العمل"
           membership:
             automatic: تلقائي
             trust_levels_title: "مستوى الثقة الذي يُعطى للأعضاء آليا عندما يضافون:"

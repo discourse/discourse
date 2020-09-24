@@ -4,7 +4,7 @@ module Jobs
   class OldKeysReminder < ::Jobs::Scheduled
     every 1.month
 
-    OLD_CREDENTIALS_PERIOD ||= 2.years
+    OLD_CREDENTIALS_PERIOD = 2.years
 
     def execute(_args)
       return if SiteSetting.send_old_credential_reminder_days.to_i == 0

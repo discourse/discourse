@@ -4,7 +4,7 @@ import Category from "discourse/models/category";
 
 moduleForWidget("topic-admin-menu-button");
 
-const createArgs = topic => {
+const createArgs = (topic) => {
   return {
     topic: topic,
     openUpwards: "true",
@@ -19,7 +19,7 @@ const createArgs = topic => {
     showChangeTimestamp: () => {},
     resetBumpDate: () => {},
     convertToPublicTopic: () => {},
-    convertToPrivateMessage: () => {}
+    convertToPrivateMessage: () => {},
   };
 };
 
@@ -30,7 +30,7 @@ widgetTest("topic-admin-menu-button is present for admin/moderators", {
     this.currentUser.setProperties({
       admin: true,
       moderator: true,
-      id: 123
+      id: 123,
     });
     const topic = Topic.create({ user_id: this.currentUser.id });
     topic.category = Category.create({ read_restricted: true });
@@ -40,7 +40,7 @@ widgetTest("topic-admin-menu-button is present for admin/moderators", {
 
   test(assert) {
     assert.ok(exists(".toggle-admin-menu"), "admin wrench is present");
-  }
+  },
 });
 
 widgetTest(
@@ -52,7 +52,7 @@ widgetTest(
       this.currentUser.setProperties({
         admin: false,
         moderator: false,
-        id: 123
+        id: 123,
       });
       const topic = Topic.create({ user_id: this.currentUser.id });
       topic.category = Category.create({ read_restricted: true });
@@ -62,6 +62,6 @@ widgetTest(
 
     test(assert) {
       assert.ok(!exists(".toggle-admin-menu"), "admin wrench is not present");
-    }
+    },
   }
 );

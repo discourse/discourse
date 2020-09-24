@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 # Ensure that scheduled jobs are loaded before mini_scheduler is configured.
-if Rails.env == "development"
+if Rails.env == "development" && Sidekiq.server?
   require "jobs/base"
+
   Dir.glob("#{Rails.root}/app/jobs/scheduled/*.rb") do |f|
-    load(f)
+    require(f)
   end
 end
 

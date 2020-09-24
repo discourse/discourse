@@ -27,61 +27,44 @@ acceptance("Admin - User Index", {
           public_admission: false,
           allow_membership_requests: true,
           membership_request_template: "Please add me",
-          full_name: null
-        }
+          full_name: null,
+        },
       ]);
     });
-  }
+  },
 });
 
-QUnit.test("can edit username", async assert => {
+QUnit.test("can edit username", async (assert) => {
   pretender.put("/users/sam/preferences/username", () => [
     200,
     {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    { id: 2, username: "new-sam" }
+    { id: 2, username: "new-sam" },
   ]);
 
   await visit("/admin/users/2/sam");
 
-  assert.equal(
-    find(".display-row.username .value")
-      .text()
-      .trim(),
-    "sam"
-  );
+  assert.equal(find(".display-row.username .value").text().trim(), "sam");
 
   // Trying cancel.
   await click(".display-row.username button");
   await fillIn(".display-row.username .value input", "new-sam");
   await click(".display-row.username a");
-  assert.equal(
-    find(".display-row.username .value")
-      .text()
-      .trim(),
-    "sam"
-  );
+  assert.equal(find(".display-row.username .value").text().trim(), "sam");
 
   // Doing edit.
   await click(".display-row.username button");
   await fillIn(".display-row.username .value input", "new-sam");
   await click(".display-row.username button");
-  assert.equal(
-    find(".display-row.username .value")
-      .text()
-      .trim(),
-    "new-sam"
-  );
+  assert.equal(find(".display-row.username .value").text().trim(), "new-sam");
 });
 
-QUnit.test("will clear unsaved groups when switching user", async assert => {
+QUnit.test("will clear unsaved groups when switching user", async (assert) => {
   await visit("/admin/users/2/sam");
 
   assert.equal(
-    find(".display-row.username .value")
-      .text()
-      .trim(),
+    find(".display-row.username .value").text().trim(),
     "sam",
     "the name should be correct"
   );
@@ -94,9 +77,7 @@ QUnit.test("will clear unsaved groups when switching user", async assert => {
   await visit("/admin/users/1/eviltrout");
 
   assert.equal(
-    find(".display-row.username .value")
-      .text()
-      .trim(),
+    find(".display-row.username .value").text().trim(),
     "eviltrout",
     "the name should be correct"
   );

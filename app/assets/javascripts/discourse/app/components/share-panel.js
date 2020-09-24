@@ -62,8 +62,8 @@ export default Component.extend({
     share(source) {
       Sharing.shareSource(source, {
         url: this.shareUrl,
-        title: this.get("topic.title")
+        title: this.get("topic.title"),
       });
-    }
-  }
+    },
+  },
 });

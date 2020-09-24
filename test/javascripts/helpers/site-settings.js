@@ -97,7 +97,7 @@ const ORIGINAL_SETTINGS = {
   enable_mentions: true,
   enable_personal_messages: true,
   unicode_usernames: false,
-  secure_media: false
+  secure_media: false,
 };
 
 let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);

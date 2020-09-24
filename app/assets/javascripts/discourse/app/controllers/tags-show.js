@@ -6,6 +6,8 @@ import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import NavItem from "discourse/models/nav-item";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import { queryParams } from "discourse/controllers/discovery-sortable";
+import bootbox from "bootbox";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
   application: controller(),
@@ -62,7 +64,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       tagId,
       filterType,
       noSubcategories,
-      siteSettings: this.siteSettings
+      siteSettings: this.siteSettings,
     });
   },
 
@@ -87,22 +89,38 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
   @discourseComputed("navMode", "list.topics.length", "loading")
   footerMessage(navMode, listTopicsLength, loading) {
-    if (loading || listTopicsLength !== 0) {
+    if (loading) {
       return;
     }
 
     if (listTopicsLength === 0) {
       return I18n.t(`tagging.topics.none.${navMode}`, {
-        tag: this.get("tag.id")
+        tag: this.get("tag.id"),
       });
     } else {
-      return I18n.t(`tagging.topics.bottom.${navMode}`, {
-        tag: this.get("tag.id")
+      return I18n.t(`topics.bottom.tag`, {
+        tag: this.get("tag.id"),
       });
     }
   },
 
+  isFilterPage: function (filter, filterType) {
+    if (!filter) {
+      return false;
+    }
+    return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
+  },
+
+  @discourseComputed("list.filter", "list.topics.length")
+  showDismissRead(filter, topicsLength) {
+    return this.isFilterPage(filter, "unread") && topicsLength > 0;
+  },
+
   actions: {
+    dismissReadPosts() {
+      showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
+    },
+
     changeSort(order) {
       if (order === this.order) {
         this.toggleProperty("ascending");
@@ -111,7 +129,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
       }
 
       this.transitionToRoute({
-        queryParams: { order, ascending: this.ascending }
+        queryParams: { order, ascending: this.ascending },
       });
     },
 
@@ -121,8 +139,10 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
 
     refresh() {
       return this.store
-        .findFiltered("topicList", { filter: "tags/" + this.get("tag.id") })
-        .then(list => {
+        .findFiltered("topicList", {
+          filter: this.get("list.filter"),
+        })
+        .then((list) => {
           this.set("list", list);
           this.resetSelected();
         });
@@ -141,12 +161,14 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
         confirmText +=
           " " +
           I18n.t("tagging.delete_confirm_synonyms", {
-            count: tagInfo.synonyms.length
+            count: tagInfo.synonyms.length,
           });
       }
 
-      bootbox.confirm(confirmText, result => {
-        if (!result) return;
+      bootbox.confirm(confirmText, (result) => {
+        if (!result) {
+          return;
+        }
 
         this.tag
           .destroyRecord()
@@ -158,7 +180,7 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     changeTagNotificationLevel(notificationLevel) {
       this.tagNotification
         .update({ notification_level: notificationLevel })
-        .then(response => {
+        .then((response) => {
           this.currentUser.set(
             "muted_tag_ids",
             this.currentUser.calculateMutedIds(
@@ -168,6 +190,6 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
             )
           );
         });
-    }
-  }
+    },
+  },
 });

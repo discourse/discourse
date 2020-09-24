@@ -248,7 +248,7 @@ describe GroupsController do
 
         expect(response.status).to eq(200)
         group_names = response.parsed_body["groups"].map { |g| g["name"] }
-        expect(group_names).to contain_exactly("0_0", "0_1", "0_3", "1_0", "1_1", "1_3", "3_0", "3_1", "3_3")
+        expect(group_names).to contain_exactly("0_0", "0_1", "0_2", "0_3", "1_0", "1_1", "1_2", "1_3", "2_0", "2_1", "2_2", "2_3", "3_0", "3_1", "3_2", "3_3")
 
         # admin
         sign_in(admin)
@@ -362,6 +362,7 @@ describe GroupsController do
 
     it "returns the right response" do
       sign_in(user)
+      mod_group = Group.find(moderator_group_id)
       get "/groups/#{group.name}.json"
 
       expect(response.status).to eq(200)
@@ -369,7 +370,7 @@ describe GroupsController do
       body = response.parsed_body
 
       expect(body['group']['id']).to eq(group.id)
-      expect(body['extras']["visible_group_names"]).to eq([group.name])
+      expect(body['extras']["visible_group_names"]).to eq([mod_group.name, group.name])
       expect(response.headers['X-Robots-Tag']).to eq('noindex')
     end
 
@@ -844,7 +845,7 @@ describe GroupsController do
       end
 
       it 'should not be able to update a group it cannot see' do
-        group.update!(visibility_level: 2)
+        group.update!(visibility_level: Group.visibility_levels[:owners])
 
         put "/groups/#{group.id}.json", params: { group: { name: 'testing' } }
 
@@ -1213,10 +1214,24 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
-        it 'fails when multiple member already exists' do
+        it 'adds missing users even if some exists' do
           user2.update!(username: 'alice')
           user3 = Fabricate(:user, username: 'bob')
           [user2, user3].each { |user| group.add(user) }
+
+          expect do
+            put "/groups/#{group.id}/members.json",
+              params: { user_emails: [user1.email, user2.email, user3.email].join(",") }
+          end.to change { group.users.count }.by(1)
+
+          expect(response.status).to eq(200)
+        end
+
+        it 'displays warning when all members already exists' do
+          user1.update!(username: 'john')
+          user2.update!(username: 'alice')
+          user3 = Fabricate(:user, username: 'bob')
+          [user1, user2, user3].each { |user| group.add(user) }
 
           expect do
             put "/groups/#{group.id}/members.json",
@@ -1227,9 +1242,32 @@ describe GroupsController do
 
           expect(response.parsed_body["errors"]).to include(I18n.t(
             "groups.errors.member_already_exist",
-            username: "alice, bob",
-            count: 2
+            username: "alice, bob, john",
+            count: 3
           ))
+        end
+
+        it 'display error when try to add to many users at once' do
+          begin
+            old_constant = GroupsController.const_get("ADD_MEMBERS_LIMIT")
+            GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
+            GroupsController.const_set("ADD_MEMBERS_LIMIT", 1)
+
+            expect do
+              put "/groups/#{group.id}/members.json",
+                params: { user_emails: [user1.email, user2.email].join(",") }
+            end.to change { group.reload.users.count }.by(0)
+
+            expect(response.status).to eq(422)
+
+            expect(response.parsed_body["errors"]).to include(I18n.t(
+              "groups.errors.adding_too_many_users",
+              limit: 1
+            ))
+          ensure
+            GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
+            GroupsController.const_set("ADD_MEMBERS_LIMIT", old_constant)
+          end
         end
       end
 

@@ -12,5 +12,5 @@ export default RestModel.extend({
   displayName() {
     const i18nKey = `badges.badge_grouping.${this.i18nNameKey}.name`;
     return I18n.t(i18nKey, { defaultValue: this.name });
-  }
+  },
 });

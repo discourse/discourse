@@ -545,6 +545,19 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(cookie_data["destination_url"]).to eq('/t/123')
         end
 
+        it "redirects to internal origin on subfolder" do
+          set_subfolder "/subpath"
+
+          post "/auth/google_oauth2?origin=http://test.localhost/subpath/t/123"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/subpath/t/123"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/subpath/t/123')
+        end
+
         it "never redirects to /auth/ origin" do
           post "/auth/google_oauth2?origin=http://test.localhost/auth/google_oauth2"
           get "/auth/google_oauth2/callback"
@@ -554,6 +567,19 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           cookie_data = JSON.parse(response.cookies['authentication_data'])
           expect(cookie_data["destination_url"]).to eq('/')
+        end
+
+        it "never redirects to /auth/ origin on subfolder" do
+          set_subfolder "/subpath"
+
+          post "/auth/google_oauth2?origin=http://test.localhost/subpath/auth/google_oauth2"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/subpath"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/subpath')
         end
 
         it "redirects to relative origin" do

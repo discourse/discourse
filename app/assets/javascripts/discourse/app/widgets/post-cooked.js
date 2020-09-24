@@ -6,8 +6,9 @@ import { number } from "discourse/lib/formatter";
 import highlightSearch from "discourse/lib/highlight-search";
 import {
   default as highlightHTML,
-  unhighlightHTML
+  unhighlightHTML,
 } from "discourse/lib/highlight-html";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -68,11 +69,11 @@ export default class PostCooked {
   }
 
   _decorateAndAdopt(cooked) {
-    _beforeAdoptDecorators.forEach(d => d(cooked, this.decoratorHelper));
+    _beforeAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
 
     document.adoptNode(cooked);
 
-    _afterAdoptDecorators.forEach(d => d(cooked, this.decoratorHelper));
+    _afterAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
   }
 
   _applySearchHighlight($html) {
@@ -131,7 +132,7 @@ export default class PostCooked {
       return;
     }
 
-    linkCounts.forEach(lc => {
+    linkCounts.forEach((lc) => {
       if (!lc.clicks || lc.clicks < 1) {
         return;
       }
@@ -184,10 +185,10 @@ export default class PostCooked {
 
       const originalText =
         $blockQuote.text().trim() ||
-        $("> blockquote", this.attrs.cooked)
-          .text()
-          .trim();
-      $blockQuote.html(I18n.t("loading"));
+        $("> blockquote", this.attrs.cooked).text().trim();
+
+      $blockQuote.html(spinnerHTML);
+
       let topicId = this.attrs.topicId;
       if ($aside.data("topic")) {
         topicId = $aside.data("topic");
@@ -197,7 +198,7 @@ export default class PostCooked {
       topicId = parseInt(topicId, 10);
 
       ajax(`/posts/by_number/${topicId}/${postId}`)
-        .then(result => {
+        .then((result) => {
           const post = this.decoratorHelper.getModel();
           const quotedPosts = post.quoted || {};
           quotedPosts[result.id] = result;
@@ -211,11 +212,11 @@ export default class PostCooked {
           this._decorateAndAdopt(div);
 
           highlightHTML(div, originalText, {
-            matchCase: true
+            matchCase: true,
           });
           $blockQuote.showHtml(div, "fast", finished);
         })
-        .catch(e => {
+        .catch((e) => {
           if ([403, 404].includes(e.jqXHR.status)) {
             const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
             $blockQuote.showHtml(
@@ -264,11 +265,7 @@ export default class PostCooked {
       $(".title", $aside).css("cursor", "pointer");
     }
     if (this.ignoredUsers && this.ignoredUsers.length > 0) {
-      const username = $aside
-        .find(".title")
-        .text()
-        .trim()
-        .slice(0, -1);
+      const username = $aside.find(".title").text().trim().slice(0, -1);
       if (username.length > 0 && this.ignoredUsers.includes(username)) {
         $aside.find("p").remove();
         $aside.addClass("ignored-user");
@@ -291,7 +288,7 @@ export default class PostCooked {
 
         // Unless it's a full quote, allow click to expand
         if (!($aside.data("full") || $title.data("has-quote-controls"))) {
-          $title.on("click", e2 => {
+          $title.on("click", (e2) => {
             let $target = $(e2.target);
             if ($target.closest("a").length) {
               return true;

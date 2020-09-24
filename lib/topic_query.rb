@@ -70,7 +70,8 @@ class TopicQuery
          visible
          guardian
          no_definitions
-         destination_category_id)
+         destination_category_id
+         include_pms)
   end
 
   # Maps `order` to a columns in `topics`
@@ -327,7 +328,15 @@ class TopicQuery
 
   def list_private_messages_unread(user)
     list = private_messages_for(user, :user)
-    list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
+
+    list = TopicQuery.unread_filter(
+      list,
+      user.id,
+      staff: user.staff?
+    )
+
+    first_unread_pm_at = UserStat.where(user_id: user.id).pluck(:first_unread_pm_at).first
+    list = list.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
     create_list(:private_messages, {}, list)
   end
 
@@ -528,23 +537,19 @@ class TopicQuery
     options = @options
     options.reverse_merge!(per_page: per_page_setting)
 
-    result = Topic.includes(:tags)
+    result = Topic.includes(:tags, :allowed_users)
 
     if type == :group
-      result = result
-        .includes(:allowed_users)
-        .joins("INNER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id IN (SELECT id FROM groups WHERE LOWER(name) = '#{PG::Connection.escape_string(@options[:group_name].downcase)}')")
+      result = result.joins(
+        "INNER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id AND tag.group_id IN (SELECT id FROM groups WHERE LOWER(name) = '#{PG::Connection.escape_string(@options[:group_name].downcase)}')"
+      )
 
       unless user.admin?
         result = result.joins("INNER JOIN group_users gu ON gu.group_id = tag.group_id AND gu.user_id = #{user.id.to_i}")
       end
-
-      result
     elsif type == :user
-      result = result.includes(:allowed_users)
       result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
     elsif type == :all
-      result = result.includes(:allowed_users)
       result = result.where("topics.id IN (
             SELECT topic_id
             FROM topic_allowed_users
@@ -728,7 +733,15 @@ class TopicQuery
     end
 
     result = apply_ordering(result, options)
-    result = result.listable_topics
+
+    all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
+
+    if options[:include_pms]
+      all_pm_topics = Topic.unscoped.private_messages_for_user(@user)
+      result = result.merge(all_listable_topics.or(all_pm_topics))
+    else
+      result = result.merge(all_listable_topics)
+    end
 
     # Don't include the category topics if excluded
     if options[:no_definitions]
@@ -748,7 +761,7 @@ class TopicQuery
       result = result.where('topics.id in (?)', options[:topic_ids]).references(:topics)
     end
 
-    if search = options[:search]
+    if search = options[:search].presence
       result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(term: search.to_s)})")
     end
 
@@ -855,7 +868,7 @@ class TopicQuery
 
     result = TopicQuery.apply_custom_filters(result, self)
 
-    @guardian.filter_allowed_categories(result)
+    result
   end
 
   def remove_muted_topics(list, user)
@@ -910,7 +923,8 @@ class TopicQuery
     if user.present?
       muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
     else
-      muted_tag_ids = SiteSetting.default_tags_muted.split("|").map(&:to_i)
+      muted_tag_names = SiteSetting.default_tags_muted.split("|")
+      muted_tag_ids = Tag.where(name: muted_tag_names).pluck(:id)
     end
 
     if muted_tag_ids.blank?
@@ -950,18 +964,27 @@ class TopicQuery
   end
 
   def new_messages(params)
-    query = TopicQuery
+    TopicQuery
       .new_filter(messages_for_groups_or_user(params[:my_group_ids]), Time.at(SiteSetting.min_new_topics_time).to_datetime)
       .limit(params[:count])
-    query
   end
 
   def unread_messages(params)
     query = TopicQuery.unread_filter(
       messages_for_groups_or_user(params[:my_group_ids]),
-      @user&.id,
-      staff: @user&.staff?)
-      .limit(params[:count])
+      @user.id,
+      staff: @user.staff?
+    )
+
+    first_unread_pm_at =
+      if params[:my_group_ids].present?
+        GroupUser.where(user_id: @user.id, group_id: params[:my_group_ids]).minimum(:first_unread_pm_at)
+      else
+        UserStat.where(user_id: @user.id).pluck(:first_unread_pm_at).first
+      end
+
+    query = query.where("topics.updated_at >= ?", first_unread_pm_at) if first_unread_pm_at
+    query = query.limit(params[:count]) if params[:count]
     query
   end
 

@@ -2,7 +2,7 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Admin - Site Texts", { loggedIn: true });
 
-QUnit.test("search for a key", async assert => {
+QUnit.test("search for a key", async (assert) => {
   await visit("/admin/customize/site_texts");
 
   await fillIn(".site-text-search", "Test");
@@ -23,7 +23,7 @@ QUnit.test("search for a key", async assert => {
   assert.ok(exists(".site-text.overridden"));
 });
 
-QUnit.test("edit and revert a site text by key", async assert => {
+QUnit.test("edit and revert a site text by key", async (assert) => {
   await visit("/admin/customize/site_texts/site.test");
 
   assert.equal(find(".title h3").text(), "site.test");

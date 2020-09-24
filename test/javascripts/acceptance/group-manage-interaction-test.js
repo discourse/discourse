@@ -3,15 +3,15 @@ import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 acceptance("Managing Group Interaction Settings", {
   loggedIn: true,
   settings: {
-    email_in: true
-  }
+    email_in: true,
+  },
 });
 
-QUnit.test("As an admin", async assert => {
+QUnit.test("As an admin", async (assert) => {
   updateCurrentUser({
     moderator: false,
     admin: true,
-    can_create_group: true
+    can_create_group: true,
   });
 
   await visit("/g/alternative-group/manage/interaction");
@@ -47,11 +47,11 @@ QUnit.test("As an admin", async assert => {
   );
 });
 
-QUnit.test("As a group owner", async assert => {
+QUnit.test("As a group owner", async (assert) => {
   updateCurrentUser({
     moderator: false,
     admin: false,
-    can_create_group: false
+    can_create_group: false,
   });
 
   await visit("/g/discourse/manage/interaction");

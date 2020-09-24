@@ -2,10 +2,10 @@ import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
 import selectKit from "helpers/select-kit-helper";
 
 acceptance("Managing Group Membership", {
-  loggedIn: true
+  loggedIn: true,
 });
 
-QUnit.test("As an admin", async assert => {
+QUnit.test("As an admin", async (assert) => {
   updateCurrentUser({ can_create_group: true });
 
   await visit("/g/alternative-group/manage/membership");
@@ -72,7 +72,7 @@ QUnit.test("As an admin", async assert => {
   assert.equal(emailDomains.header().value(), "foo.com");
 });
 
-QUnit.test("As a group owner", async assert => {
+QUnit.test("As a group owner", async (assert) => {
   updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/g/discourse/manage/membership");

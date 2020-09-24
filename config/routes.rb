@@ -144,6 +144,7 @@ Discourse::Application.routes.draw do
         post "merge"
         post "reset_bounce_score"
         put "disable_second_factor"
+        delete "sso_record"
       end
       get "users/:id.json" => 'users#show', defaults: { format: 'json' }
       get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }
@@ -518,6 +519,7 @@ Discourse::Application.routes.draw do
 
     get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
     get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
+    get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
     get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
 
     post "uploads/lookup-metadata" => "uploads#metadata"

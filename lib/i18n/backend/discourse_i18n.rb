@@ -82,20 +82,29 @@ module I18n
         overrides = options.dig(:overrides, locale)
 
         if overrides
-          if existing_translations && options[:count]
-            remapped_translations =
-              if existing_translations.is_a?(Hash)
-                Hash[existing_translations.map { |k, v| ["#{key}.#{k}", v] }]
-              elsif existing_translations.is_a?(String)
-                Hash[[[key, existing_translations]]]
+          if options[:count]
+            if !existing_translations
+              I18n.fallbacks[locale].drop(1).each do |fallback|
+                existing_translations = super(fallback, key, scope, options)
+                break if existing_translations.present?
               end
-
-            result = {}
-
-            remapped_translations.merge(overrides).each do |k, v|
-              result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
             end
-            return result if result.size > 0
+
+            if existing_translations
+              remapped_translations =
+                if existing_translations.is_a?(Hash)
+                  Hash[existing_translations.map { |k, v| ["#{key}.#{k}", v] }]
+                elsif existing_translations.is_a?(String)
+                  Hash[[[key, existing_translations]]]
+                end
+
+              result = {}
+
+              remapped_translations.merge(overrides).each do |k, v|
+                result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
+              end
+              return result if result.size > 0
+            end
           end
 
           return overrides[key] if overrides[key]
@@ -103,7 +112,6 @@ module I18n
 
         existing_translations
       end
-
     end
   end
 end

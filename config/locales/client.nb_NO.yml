@@ -257,7 +257,6 @@ nb_NO:
       no_timezone: 'Du har ikke ennå satt tidssone. Du vil ikke kunne sette påminnelser. Sett tidssone <a href="%{basePath}/my/preferences/profile">i profilen din</a>.'
       search: "Søk"
       reminders:
-        at_desktop: "Neste gang jeg er på datamaskinen min"
         later_today: "Senere i dag"
         tomorrow: "I morgen"
         next_week: "Neste uke"
@@ -1357,7 +1356,6 @@ nb_NO:
         draft: Utkast
         edit: Rediger
         reply_to_post:
-          label: Svar på innlegg %{postNumber} av %{postUsername}
           desc: Svar på et spesifikt innlegg
         reply_as_new_topic:
           label: Svar med lenket emne
@@ -1642,8 +1640,6 @@ nb_NO:
         remove: "Fjern tidsbestemt handling"
         publish_to: "Publiser til:"
         when: "Når:"
-        public_timer_types: Tidsbestemte handlinger for emne
-        private_timer_types: Brukerstyrte tidsbestemte handlinger for emne
       auto_update_input:
         none: "Velg et tidsrom"
         later_today: "Senere i dag"
@@ -1720,7 +1716,7 @@ nb_NO:
           "2_8": "Du vil se antall nye svar fordi du følger denne kategorien."
           "2_4": "Du vil se antall nye svar fordi du skrev et svar i dette emnet."
           "2_2": "Du vil se antall nye svar fordi du overvåker dette emnet."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "1": "Du vil bli varslet om noen nevner @navnet ditt eller svarer på innlegget ditt."
           "0_7": "Du ignorerer alle varsler i denne kategorien."
@@ -1998,23 +1994,7 @@ nb_NO:
         delete_topic_disallowed: "du har ikke rettigheter til å slette dette emnet"
         delete_topic: "slett emne"
       actions:
-        flag: "Rapportering"
-        defer_flags:
-          one: "Ignorer flagg"
-          other: "Ignorer flagg"
-        undo:
-          off_topic: "Angre rapportering"
-          spam: "Angre rapportering"
-          inappropriate: "Angre rapportering"
-          bookmark: "Angre bokmerking"
-          like: "Angre liker"
         people:
-          off_topic: "markerte dette som utenfor temaet"
-          spam: "flagget dette som søppelpost"
-          inappropriate: "flagget dette som upassende"
-          notify_moderators: "varslet moderatorer"
-          notify_user: "sendte en melding"
-          bookmark: "bokmerket dette"
           like_capped:
             one: "og %{count} annen likte dette"
             other: "og %{count} andre likte dette"
@@ -2024,8 +2004,6 @@ nb_NO:
           inappropriate: "Du rapporterte dette som upassende"
           notify_moderators: "Du rapporterte dette for moderering"
           notify_user: "Du sendte en melding til denne brukeren"
-          bookmark: "Du bokmerket dette innlegget"
-          like: "Du likte dette"
       delete:
         confirm:
           one: "Er du sikker på at du ønsker å slette dette innlegget?"
@@ -2511,14 +2489,6 @@ nb_NO:
           latest: "Det finnes ingen flere siste emner."
           bookmarks: "Du har ikke bokmerket noen emner ennå."
           top: "Det finnes ingen populære emner."
-        bottom:
-          latest: "Det finnes ingen flere siste emner."
-          posted: "Det finnes ingen flere emner med innlegg."
-          read: "Det finnes ingen flere leste emner."
-          new: "Det finnes ingen flere nye emner."
-          unread: "Det finnes ingen flere uleste emner."
-          top: "Det finnes ingen flere populære emner."
-          bookmarks: "Det finnes ingen bokmerkede emner."
     invite:
       custom_message_placeholder: "Skriv inn din egendefinerte melding"
       custom_message_template_forum: "Hei, du burde ta del i dette forumet!"
@@ -2638,7 +2608,6 @@ nb_NO:
             visibility_levels:
               title: "Hvem kan se denne gruppen?"
               public: "Alle"
-              staff: "Gruppeeiere og stab"
           membership:
             automatic: Automatisk
             trust_levels_title: "Tillitsnivå som automatisk gis til nye medlemmer når de legges til:"

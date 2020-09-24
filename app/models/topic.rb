@@ -380,6 +380,7 @@ class Topic < ActiveRecord::Base
       self.set_or_create_timer(
         TopicTimer.types[:close],
         self.category.auto_close_hours,
+        by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
         duration: duration
       )
@@ -553,7 +554,6 @@ class Topic < ActiveRecord::Base
   def reload(options = nil)
     @post_numbers = nil
     @public_topic_timer = nil
-    @private_topic_timer = nil
     @is_category_topic = nil
     super(options)
   end
@@ -597,12 +597,16 @@ class Topic < ActiveRecord::Base
         PrettyText.cook(raw[0...MAX_SIMILAR_BODY_LENGTH].strip)
       )
 
-      raw_tsquery = Search.set_tsquery_weight_filter(
-        Search.prepare_data(cooked),
-        'B'
-      )
+      prepared_data = cooked.present? && Search.prepare_data(cooked)
 
-      tsquery = "#{tsquery} & #{raw_tsquery}"
+      if prepared_data.present?
+        raw_tsquery = Search.set_tsquery_weight_filter(
+          prepared_data,
+          'B'
+        )
+
+        tsquery = "#{tsquery} & #{raw_tsquery}"
+      end
     end
 
     tsquery = Search.to_tsquery(term: tsquery, joiner: "|")
@@ -1304,10 +1308,6 @@ class Topic < ActiveRecord::Base
 
   def public_topic_timer
     @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
-  end
-
-  def private_topic_timer(user)
-    @private_topic_Timer ||= topic_timers.find_by(deleted_at: nil, public_type: false, user_id: user.id)
   end
 
   def delete_topic_timer(status_type, by_user: Discourse.system_user)

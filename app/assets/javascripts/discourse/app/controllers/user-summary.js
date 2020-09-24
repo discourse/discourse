@@ -31,5 +31,5 @@ export default Controller.extend({
     return recentTimeReadSeconds > 0
       ? durationTiny(recentTimeReadSeconds)
       : null;
-  }
+  },
 });

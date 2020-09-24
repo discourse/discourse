@@ -7,5 +7,5 @@ export default NavigationDefaultController.extend(FilterModeMixin, {
   showingSubcategoryList: and(
     "category.show_subcategory_list",
     "showingParentCategory"
-  )
+  ),
 });

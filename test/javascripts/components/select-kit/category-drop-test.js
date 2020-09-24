@@ -5,7 +5,7 @@ import componentTest from "helpers/component-test";
 import { testSelectKitModule } from "helpers/select-kit-helper";
 import {
   NO_CATEGORIES_ID,
-  ALL_CATEGORIES_ID
+  ALL_CATEGORIES_ID,
 } from "select-kit/components/category-drop";
 import { set } from "@ember/object";
 
@@ -15,20 +15,20 @@ function initCategories(context) {
   const categories = context.site.categoriesList;
   context.setProperties({
     category: categories.firstObject,
-    categories
+    categories,
   });
 }
 
 function initCategoriesWithParentCategory(context) {
   const parentCategory = Category.findById(2);
-  const childCategories = context.site.categoriesList.filter(c => {
+  const childCategories = context.site.categoriesList.filter((c) => {
     return c.parentCategory === parentCategory;
   });
 
   context.setProperties({
     parentCategory,
     category: null,
-    categories: childCategories
+    categories: childCategories,
   });
 }
 
@@ -60,7 +60,7 @@ componentTest("caretUpIcon", {
       exists($header.find(`.d-icon-caret-right`)),
       "it uses the correct default icon"
     );
-  }
+  },
 });
 
 componentTest("none", {
@@ -78,7 +78,7 @@ componentTest("none", {
       I18n.t("category.all").toLowerCase(),
       "it uses the noneLabel"
     );
-  }
+  },
 });
 
 componentTest("[not staff - TL0] displayCategoryDescription", {
@@ -99,7 +99,7 @@ componentTest("[not staff - TL0] displayCategoryDescription", {
       exists(row.el().find(".category-desc")),
       "it shows category description for newcomers"
     );
-  }
+  },
 });
 
 componentTest("[not staff - TL1] displayCategoryDescription", {
@@ -120,7 +120,7 @@ componentTest("[not staff - TL1] displayCategoryDescription", {
       !exists(row.el().find(".category-desc")),
       "it doesn't shows category description for TL0+"
     );
-  }
+  },
 });
 
 componentTest("[staff - TL0] displayCategoryDescription", {
@@ -141,7 +141,7 @@ componentTest("[staff - TL0] displayCategoryDescription", {
       !exists(row.el().find(".category-desc")),
       "it doesn't show category description for staff"
     );
-  }
+  },
 });
 
 componentTest("hideParentCategory (default: false)", {
@@ -157,7 +157,7 @@ componentTest("hideParentCategory (default: false)", {
     const row = this.subject.rowByValue(this.category.id);
     assert.equal(row.value(), this.category.id);
     assert.equal(this.category.parent_category_id, null);
-  }
+  },
 });
 
 componentTest("hideParentCategory (true)", {
@@ -179,13 +179,8 @@ componentTest("hideParentCategory (true)", {
     assert.ok(childRow.exists(), "the child row is showing");
 
     const $categoryStatus = childRow.el().find(".category-status");
-    assert.ok(
-      $categoryStatus
-        .text()
-        .trim()
-        .match(/^spec/)
-    );
-  }
+    assert.ok($categoryStatus.text().trim().match(/^spec/));
+  },
 });
 
 componentTest("allow_uncategorized_topics (true)", {
@@ -202,7 +197,7 @@ componentTest("allow_uncategorized_topics (true)", {
     const uncategorizedCategoryId = this.site.uncategorized_category_id;
     const row = this.subject.rowByValue(uncategorizedCategoryId);
     assert.ok(row.exists(), "the uncategorized row is showing");
-  }
+  },
 });
 
 componentTest("allow_uncategorized_topics (false)", {
@@ -219,7 +214,7 @@ componentTest("allow_uncategorized_topics (false)", {
     const uncategorizedCategoryId = this.site.uncategorized_category_id;
     const row = this.subject.rowByValue(uncategorizedCategoryId);
     assert.notOk(row.exists(), "the uncategorized row is not showing");
-  }
+  },
 });
 
 componentTest("countSubcategories (default: false)", {
@@ -234,18 +229,14 @@ componentTest("countSubcategories (default: false)", {
 
     const category = Category.findById(7);
     const row = this.subject.rowByValue(category.id);
-    const topicCount = row
-      .el()
-      .find(".topic-count")
-      .text()
-      .trim();
+    const topicCount = row.el().find(".topic-count").text().trim();
 
     assert.equal(
       topicCount,
       "× 481",
       "it doesn't include the topic count of subcategories"
     );
-  }
+  },
 });
 
 componentTest("countSubcategories (true)", {
@@ -260,18 +251,14 @@ componentTest("countSubcategories (true)", {
 
     const category = Category.findById(7);
     const row = this.subject.rowByValue(category.id);
-    const topicCount = row
-      .el()
-      .find(".topic-count")
-      .text()
-      .trim();
+    const topicCount = row.el().find(".topic-count").text().trim();
 
     assert.equal(
       topicCount,
       "× 584",
       "it includes the topic count of subcategories"
     );
-  }
+  },
 });
 
 componentTest("shortcuts:default", {
@@ -290,7 +277,7 @@ componentTest("shortcuts:default", {
       this.categories.firstObject.id,
       "Shortcuts are not prepended when no category is selected"
     );
-  }
+  },
 });
 
 componentTest("shortcuts:category is set", {
@@ -304,7 +291,7 @@ componentTest("shortcuts:category is set", {
     await this.subject.expand();
 
     assert.equal(this.subject.rowByIndex(0).value(), ALL_CATEGORIES_ID);
-  }
+  },
 });
 
 componentTest("shortcuts with parentCategory/subCategory=true:default", {
@@ -318,7 +305,7 @@ componentTest("shortcuts with parentCategory/subCategory=true:default", {
     await this.subject.expand();
 
     assert.equal(this.subject.rowByIndex(0).value(), NO_CATEGORIES_ID);
-  }
+  },
 });
 
 componentTest(
@@ -336,7 +323,7 @@ componentTest(
 
       assert.equal(this.subject.rowByIndex(0).value(), ALL_CATEGORIES_ID);
       assert.equal(this.subject.rowByIndex(1).value(), NO_CATEGORIES_ID);
-    }
+    },
   }
 );
 
@@ -356,5 +343,5 @@ componentTest("category url", {
       DiscourseURL.routeTo.calledWith("/c/feature/spec/26"),
       "it builds a correct URL"
     );
-  }
+  },
 });

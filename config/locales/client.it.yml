@@ -263,10 +263,7 @@ it:
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
         unbookmark_with_reminder: "Fare clic per rimuovere tutti i segnalibri e i promemoria in questo argomento. Hai un promemoria impostato %{reminder_at} per questo argomento."
     bookmarks:
-      created: "hai aggiunto questo messaggio ai segnalibri %{name}"
       not_bookmarked: "aggiungi ai segnalibri"
-      created_with_reminder: "hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}%{name}"
-      created_with_at_desktop_reminder: "hai aggiunto ai segnalibri questo messaggio e ti verrà ricordato la prossima volta che sarai sul desktop%{name}"
       remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
       confirm_delete: "Sicuro di voler eliminare questo segnalibro? Anche il promemoria verrà eliminato."
@@ -283,7 +280,6 @@ it:
       search_placeholder: "Cerca nei segnalibri per nome, titolo dell'argomento o contenuto del messaggio"
       search: "Cerca"
       reminders:
-        at_desktop: "La prossima volta che sarò al mio desktop"
         later_today: "Più tardi oggi"
         next_business_day: "Il prossimo giorno lavorativo"
         tomorrow: "Domani"
@@ -298,7 +294,6 @@ it:
         today_with_time: "oggi alle %{time}"
         tomorrow_with_time: "domani alle %{time}"
         at_time: "a %{date_time}"
-        existing_reminder: "È stato impostato un promemoria per questo segnalibro che verrà inviato"
     copy_codeblock:
       copied: "copiato!"
     drafts:
@@ -987,7 +982,6 @@ it:
         use: "Usa l'app Authenticator"
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
         disable: "Disabilita"
-        disable_confirm: "Sei sicuro di voler disabilitare tutti i secondi fattori?"
         save: "Salva"
         edit: "Modifica"
         edit_title: "Modifica secondo fattore"
@@ -1704,7 +1698,6 @@ it:
         draft: Bozza
         edit: Modifica
         reply_to_post:
-          label: Rispondi al messaggio %{postNumber} di %{postUsername}
           desc: Rispondi a uno specifico messaggio
         reply_as_new_topic:
           label: Rispondi con un argomento correlato
@@ -2024,9 +2017,6 @@ it:
       toggle_information: "commuta i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
       read_more: "Vuoi saperne di più? %{catLink} o %{latestLink}."
-      group_request: "Per vedere questo Argomento devi richiedere l&#39;iscrizioneal gruppo `%{name}`"
-      group_join: "È necessario iscriversi al gruppo `%{name}` per visualizzare questo Argomento"
-      group_request_sent: "La tua richiesta di iscrizione al gruppo è stata inviata. Sarai informato quando sarà accettato."
       unread_indicator: "Nessun utente ha ancora letto l&#39;ultimo post di questo Argomento."
       read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
@@ -2044,8 +2034,6 @@ it:
         remove: "Rimuovi Timer"
         publish_to: "Pubblica Su:"
         when: "Quando:"
-        public_timer_types: Timer Argomento
-        private_timer_types: Timer Argomento per Utente
         time_frame_required: Per favore, seleziona un lasso di tempo
       auto_update_input:
         none: "Seleziona un lasso di tempo"
@@ -2130,7 +2118,7 @@ it:
           "2_8": "Vedrai un conteggio delle nuove risposte perché stai seguendo questa categoria."
           "2_4": "Vedrai un conteggio delle nuove risposte perché hai pubblicato una risposta in questo argomento."
           "2_2": "Vedrai un conteggio delle nuove risposte perché stai seguendo questo argomento."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "1": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "0_7": "Stai ignorando tutte le notifiche di questa categoria."
@@ -2318,7 +2306,6 @@ it:
         preview_url: "La tua pagina sarà pubblicata su:"
         invalid_slug: "Spiacenti, non puoi pubblicare questa pagina."
         unpublish: "Non pubblicato"
-        update: "Aggiorna"
         unpublished: "La tua pagina non è stata pubblicata e non è più accessibile."
         publishing_settings: "Impostazioni di Pubblicazione"
       change_owner:
@@ -2474,23 +2461,7 @@ it:
         remove_post_notice: "Rimuovi Note Staff"
         remove_timer: "rimuovi il timer"
       actions:
-        flag: "Segnala"
-        defer_flags:
-          one: "Ignore flag"
-          other: "Ignora le segnalazioni"
-        undo:
-          off_topic: "Rimuovi segnalazione"
-          spam: "Rimuovi segnalazione"
-          inappropriate: "Rimuovi segnalazione"
-          bookmark: "Annulla segnalibro"
-          like: "Annulla il \"Mi piace\""
         people:
-          off_topic: "l'hanno segnalato come fuori tema"
-          spam: "l'hanno segnalato come spam"
-          inappropriate: "l'hanno segnalato come inappropriato"
-          notify_moderators: "hanno informato i moderatori"
-          notify_user: "hanno inviato un messaggio"
-          bookmark: "l'hanno aggiunto ai segnalibri"
           like:
             one: "ha messo \"Mi piace\""
             other: "ha messo \"Mi piace\""
@@ -2509,8 +2480,6 @@ it:
           inappropriate: "L'hai segnalato come inappropriato"
           notify_moderators: "L'hai segnalato per la moderazione"
           notify_user: "Hai inviato un messaggio a questo utente"
-          bookmark: "Hai inserito questo messaggio nei segnalibri"
-          like: "Ti piace"
       delete:
         confirm:
           one: "Vuoi davvero eliminare quel messaggio?"
@@ -3102,14 +3071,6 @@ it:
           latest: "Non ci sono argomenti più recenti."
           bookmarks: "Non hai ancora argomenti nei segnalibri."
           top: "Non ci sono argomenti popolari."
-        bottom:
-          latest: "Non ci sono ulteriori argomenti più recenti."
-          posted: "Non ci sono ulteriori argomenti inseriti."
-          read: "Non ci sono ulteriori argomenti letti."
-          new: "Non ci sono ulteriori nuovi argomenti."
-          unread: "Non ci sono ulteriori argomenti non letti."
-          top: "Non ci sono ulteriori argomenti popolari."
-          bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
     invite:
       custom_message: "Rendi il tuo invito un po' più personale scrivendo un <a href>messaggio personalizzato</a>."
       custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"
@@ -3252,8 +3213,6 @@ it:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
               logged_on_users: "Utenti connessi"
-              members: "Proprietari del gruppo, membri"
-              staff: "Proprietari del gruppo e staff"
               owners: "Proprietari del gruppo"
               description: "Gli amministratori possono vedere tutti i gruppi."
             members_visibility_levels:
@@ -3317,7 +3276,6 @@ it:
         save: Salva
         new_key: Nuova Chiave API
         revoked: Revocata
-        delete: Cancellata Permanentemente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
         use_global_key: Chiave globale (consente tutte le azioni)

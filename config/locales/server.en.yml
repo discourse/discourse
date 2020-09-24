@@ -125,7 +125,8 @@ en:
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
       unrecognized_error: "Unrecognized Error"
-    secure_media_placeholder: "Redacted: this site has secure media enabled, visit the topic to see the attached image/audio/video."
+    secure_media_placeholder: "Redacted: This site has secure media enabled, visit the topic or click View Media to see the attached media."
+    view_redacted_media: "View Media"
 
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -411,6 +412,7 @@ en:
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       cant_allow_membership_requests: "You cannot allow membership requests for a group without any owners."
       already_requested_membership: "You have already requested membership for this group."
+      adding_too_many_users: "Maximum %{limit} users can be added at once"
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -427,7 +429,6 @@ en:
       title: "You've been accepted into @%{group_name}"
       body: |
         Your request to enter @%{group_name} has been accepted and you are now a member.
-    view_hidden_topic_request_reason: "I would like to join the group '%{group_name}', so I may access [this topic](%{topic_url})"
 
   education:
     until_posts:
@@ -1542,6 +1543,7 @@ en:
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
+    persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1553,6 +1555,7 @@ en:
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
+    allowed_onebox_iframes: "A list of iframe src domains which are allowed via Onebox embeds. `*` will allow all default Onebox engines."
     allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
     allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
@@ -1571,6 +1574,7 @@ en:
     site_contact_group_name: "A valid group name to be invited to all automated messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
+    send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     remove_full_quote: "Automatically remove full quotes on direct replies."
@@ -1618,6 +1622,7 @@ en:
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
     external_auth_skip_create_confirm: When signing up via external auth, skip the create account popup. Best used alongside sso_overrides_email, sso_overrides_username and sso_overrides_name.
+    external_auth_immediately: "Automatically redirect to the external login system without user interaction. This only takes effect when login_required is true, and there is only one external authentication method"
 
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     verbose_sso_logging: "Log verbose SSO related diagnostics to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1754,7 +1759,6 @@ en:
     png_to_jpg_quality: "Quality of the converted JPG file (1 is lowest quality, 99 is best quality, 100 to disable)."
 
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
-    convert_heif_to_jpeg: "Convert '.heic' or '.heif' image uploads to jpeg."
 
     strip_image_metadata: "Strip image metadata."
 
@@ -1881,7 +1885,7 @@ en:
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
     allowed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
-    staff_like_weight: "How much extra weighting factor to give staff likes."
+    staff_like_weight: "How much weight to give staff likes (non-staff likes have a weight of 1.)"
     topic_view_duration_hours: "Count a new topic view once per IP/User every N hours"
     user_profile_view_duration_hours: "Count a new user profile view once per IP/User every N hours"
 
@@ -2116,6 +2120,8 @@ en:
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
     secure_media: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If “login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">the secure media topic on Meta</a> for details.'
+    secure_media_allow_embed_images_in_emails: "Allows embedding secure images that would normally be redacted in emails, if their size is smaller than the 'secure media max email embed image size kb' setting."
+    secure_media_max_email_embed_image_size_kb: "The size cutoff for secure images that will be embedded in emails if the 'secure media allow embed in emails' setting is enabled. Without that setting enabled, this setting has no effect."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
 
     enable_emoji: "Enable emoji"
@@ -2141,6 +2147,7 @@ en:
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
+    review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if it contains embedded media."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
     show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
 
@@ -2172,7 +2179,7 @@ en:
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
-    default_categories_regular: "List of categories that are normal by default. Useful when `mute_all_categories_by_default` site setting is enabled."
+    default_categories_regular: "List of categories that are not muted by default. Useful when `mute_all_categories_by_default` site setting is enabled."
     mute_all_categories_by_default: "Set the default notification level of all the categories to muted. Require users opt-in to categories for them to appear in 'latest' and 'categories' pages. If you wish to amend the defaults for anonymous users set 'default_categories_' settings."
 
     default_tags_watching: "List of tags that are watched by default."
@@ -2220,6 +2227,8 @@ en:
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
+
+    base_font: "Font to use in most places on the site. Themes can override."
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
@@ -2840,6 +2849,13 @@ en:
 
         [prefs]: %{user_preferences_url}
 
+    tl2_promotion_message:
+      subject_template: "Congratulations on your trust level promotion!"
+      text_body_template: |
+        We’ve promoted you up a [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        We invite you to keep getting involved – we enjoy having you around.
+
     backup_succeeded:
       title: "Backup Succeeded"
       subject_template: "Backup completed successfully"
@@ -2906,11 +2922,17 @@ en:
         ``` text
         %{logs}
         ```
-    user_added_to_group:
-      title: "Added to Group"
-      subject_template: "You have been added as %{membership_level} of the %{group_name} group"
+    user_added_to_group_as_owner:
+      title: "Added to Group as Owner"
+      subject_template: "You have been added as an owner of the %{group_name} group"
       text_body_template: |
-        You have been added as a %{membership_level} of the [%{group_name}](%{base_url}%{group_path}) group.
+        You have been added as an owner of the [%{group_name}](%{base_url}%{group_path}) group.
+
+    user_added_to_group_as_member:
+      title: "Added to Group as Member"
+      subject_template: "You have been added as a member of the %{group_name} group"
+      text_body_template: |
+        You have been added as a member of the [%{group_name}](%{base_url}%{group_path}) group.
 
     csv_export_succeeded:
       title: "CSV Export Succeeded"
@@ -3874,7 +3896,6 @@ en:
   color_schemes:
     base_theme_name: "Base"
     light: "Light"
-    light_default: "Light (default)"
     dark: "Dark"
     neutral: "Neutral"
     grey_amber: "Grey Amber"
@@ -4680,6 +4701,9 @@ en:
           </ul>
           Popular theme components (for more, browse <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
 
+      fonts:
+        title: "Fonts"
+
       logos:
         title: "Logos"
         fields:
@@ -4798,6 +4822,7 @@ en:
       email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
       email_spam: "This email was flagged as spam by the header defined in `email_in_spam_header`."
       suspect_user: "This new user entered profile information without reading any topics or posts, which strongly suggests they may be a spammer. See `approve_suspect_users`."
+      contains_media: "This posts includes embedded media. See `review_media_unless_trust_level`."
 
     actions:
       agree:

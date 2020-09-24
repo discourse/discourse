@@ -1481,7 +1481,6 @@ hu:
         draft: Vázlat
         edit: Szerkesztés
         reply_to_post:
-          label: Válasz a posztra%{postNumber}által%{postUsername}
           desc: Válasz egy adott bejegyzésre
         reply_as_new_topic:
           label: Válasz egy csatolt témaként
@@ -1712,7 +1711,6 @@ hu:
         remove: "Időzítő eltávolítása"
         publish_to: "Közzététel itt:"
         when: "Mikor:"
-        private_timer_types: Téma időzítésének használata
         time_frame_required: Kérjük, válassz ki egy időkeretet
       auto_update_input:
         later_today: "A mai nap folyamán"
@@ -1767,7 +1765,7 @@ hu:
           "3_2": "Értesítést fogsz kapni, mert figyeled ezt a témát."
           "3_1": "Értesítést fogsz kapni, mert te hoztad létre ezt a témát."
           "3": "Értesítést fogsz kapni, mert figyeled ezt a témát."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Csak akkor leszel értesítve, ha valaki megemlíti a @nevedet vagy válaszol neked."
           "1": "Csak akkor leszel értesítve, ha valaki megemlíti a @nevedet vagy válaszol neked."
           "0_7": "Nem kapsz értesítést erről a kategóriáról."
@@ -1979,18 +1977,7 @@ hu:
         unlock_post: "Bejegyzés zárolásának feloldása"
         delete_topic: "témakör törlése"
       actions:
-        flag: "Megjelölés"
-        undo:
-          off_topic: "Megjelölés visszavonása"
-          spam: "Megjelölés visszavonása"
-          inappropriate: "Megjelölés visszavonása"
-          bookmark: "Könyvjelző eltávolítása"
-          like: "Kedvelés visszavonása"
         people:
-          off_topic: "megjelölve mint off-topic"
-          spam: "spamnek jelölve"
-          inappropriate: "nem a témába tartozónak jelölve"
-          notify_user: "üzenet küldése"
           like_capped:
             one: "és %{count} ezt likeolták"
             other: "és %{count} embernek tetszett"
@@ -2000,8 +1987,6 @@ hu:
           inappropriate: "Ide nem illőnek jelölted"
           notify_moderators: "Moderálásra jelölted"
           notify_user: "Üzenetet küldtél ennek a felhasználónak"
-          bookmark: "A bejegyzést hozzáadtad a könyvjelzőkhöz"
-          like: "Kedvelted ezt a bejegyzést"
       revisions:
         controls:
           edit_wiki: "Wiki szerkesztése"
@@ -2386,14 +2371,6 @@ hu:
           latest: "Nincsenek legutóbbi témák"
           bookmarks: "Még nem adtál hozzá témakört a könyvjelzőidhez."
           top: "Nincsenek top témák"
-        bottom:
-          latest: "Nincsen több újabb téma"
-          posted: "Nincsen több közzétett téma"
-          read: "Nincs több olvasott téma."
-          new: "Nincsen több új témájú bejegyzés"
-          unread: "Nincsen több olvasatlan témájú bejegyzés"
-          top: "Nincsen több top témájó bejegyzés"
-          bookmarks: "Nincs több témakör a könyvjelzőben"
     invite:
       custom_message_placeholder: "Add meg az egyéni üzenetedet"
       custom_message_template_forum: "Hej, csatlakoznód kéne ehez a fórumhoz"
@@ -2501,7 +2478,6 @@ hu:
             visibility_levels:
               title: "Ki láthatja ezt a csoportot?"
               public: "Mindenki"
-              staff: "Csoport tulajdonosok és a stáb tagjai"
           membership:
             automatic: Autómatikus
             trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott Bizalmi szint: "

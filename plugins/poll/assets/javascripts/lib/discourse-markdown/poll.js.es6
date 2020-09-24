@@ -15,7 +15,7 @@ const WHITELISTED_ATTRIBUTES = [
   "groups",
   "status",
   "step",
-  "type"
+  "type",
 ];
 
 function replaceToken(tokens, target, list) {
@@ -84,14 +84,14 @@ function invalidPoll(state, tag) {
 const rule = {
   tag: "poll",
 
-  before: function(state, tagInfo, raw) {
+  before: function (state, tagInfo, raw) {
     let token = state.push("text", "", 0);
     token.content = raw;
     token.bbcode_attrs = tagInfo.attrs;
     token.bbcode_type = "poll_open";
   },
 
-  after: function(state, openToken, raw) {
+  after: function (state, openToken, raw) {
     let items = getListItems(state.tokens, openToken);
     if (!items) {
       return invalidPoll(state, raw);
@@ -106,7 +106,7 @@ const rule = {
       attributes.push([DATA_PREFIX + "status", "open"]);
     }
 
-    WHITELISTED_ATTRIBUTES.forEach(name => {
+    WHITELISTED_ATTRIBUTES.forEach((name) => {
       if (attrs[name]) {
         attributes.push([DATA_PREFIX + name, attrs[name]]);
       }
@@ -221,7 +221,7 @@ const rule = {
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
-  }
+  },
 };
 
 function newApiInit(helper) {
@@ -230,7 +230,7 @@ function newApiInit(helper) {
     opts.pollMaximumOptions = siteSettings.poll_maximum_options;
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.block.bbcode.ruler.push("poll", rule);
   });
 }
@@ -247,7 +247,7 @@ export function setup(helper) {
     "span.info-label",
     "a.button.cast-votes",
     "a.button.toggle-results",
-    "li[data-*]"
+    "li[data-*]",
   ]);
 
   newApiInit(helper);
@@ -378,12 +378,15 @@ function md51(s) {
   }
   s = s.substring(i - 64);
   var tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  for (i = 0; i < s.length; i++)
+  for (i = 0; i < s.length; i++) {
     tail[i >> 2] |= s.charCodeAt(i) << (i % 4 << 3);
+  }
   tail[i >> 2] |= 0x80 << (i % 4 << 3);
   if (i > 55) {
     md5cycle(state, tail);
-    for (i = 0; i < 16; i++) tail[i] = 0;
+    for (i = 0; i < 16; i++) {
+      tail[i] = 0;
+    }
   }
   tail[14] = n * 8;
   md5cycle(state, tail);
@@ -409,13 +412,16 @@ var hex_chr = "0123456789abcdef".split("");
 function rhex(n) {
   var s = "",
     j = 0;
-  for (; j < 4; j++)
+  for (; j < 4; j++) {
     s += hex_chr[(n >> (j * 8 + 4)) & 0x0f] + hex_chr[(n >> (j * 8)) & 0x0f];
+  }
   return s;
 }
 
 function hex(x) {
-  for (var i = 0; i < x.length; i++) x[i] = rhex(x[i]);
+  for (var i = 0; i < x.length; i++) {
+    x[i] = rhex(x[i]);
+  }
   return x.join("");
 }
 

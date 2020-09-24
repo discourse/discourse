@@ -72,5 +72,5 @@ componentTest("can add users", {
       find(".users-list .invite-list-user").length === 0,
       "removed the user"
     );
-  }
+  },
 });

@@ -25,7 +25,7 @@ componentTest("with value", {
   async test(assert) {
     assert.equal(this.subject.header().value(), 2);
     assert.equal(this.subject.header().label(), "feature");
-  }
+  },
 });
 
 componentTest("with excludeCategoryId", {
@@ -34,7 +34,7 @@ componentTest("with excludeCategoryId", {
     await this.subject.expand();
 
     assert.notOk(this.subject.rowByValue(2).exists());
-  }
+  },
 });
 
 componentTest("with scopedCategoryId", {
@@ -62,7 +62,7 @@ componentTest("with scopedCategoryId", {
       "bug",
       "search finds outside of scope"
     );
-  }
+  },
 });
 
 componentTest("with allowUncategorized=null", {
@@ -75,7 +75,7 @@ componentTest("with allowUncategorized=null", {
   test(assert) {
     assert.equal(this.subject.header().value(), null);
     assert.equal(this.subject.header().label(), "category…");
-  }
+  },
 });
 
 componentTest("with allowUncategorized=null rootNone=true", {
@@ -88,7 +88,7 @@ componentTest("with allowUncategorized=null rootNone=true", {
   test(assert) {
     assert.equal(this.subject.header().value(), null);
     assert.equal(this.subject.header().label(), "(no category)");
-  }
+  },
 });
 
 componentTest("with disallowed uncategorized, none", {
@@ -102,7 +102,7 @@ componentTest("with disallowed uncategorized, none", {
   test(assert) {
     assert.equal(this.subject.header().value(), null);
     assert.equal(this.subject.header().label(), "root none label");
-  }
+  },
 });
 
 componentTest("with allowed uncategorized", {
@@ -115,7 +115,7 @@ componentTest("with allowed uncategorized", {
   test(assert) {
     assert.equal(this.subject.header().value(), null);
     assert.equal(this.subject.header().label(), "uncategorized");
-  }
+  },
 });
 
 componentTest("with allowed uncategorized and none=true", {
@@ -128,7 +128,7 @@ componentTest("with allowed uncategorized and none=true", {
   test(assert) {
     assert.equal(this.subject.header().value(), null);
     assert.equal(this.subject.header().label(), "(no category)");
-  }
+  },
 });
 
 componentTest("with allowed uncategorized and none", {
@@ -142,5 +142,5 @@ componentTest("with allowed uncategorized and none", {
   test(assert) {
     assert.equal(this.subject.header().value(), null);
     assert.equal(this.subject.header().label(), "root none label");
-  }
+  },
 });

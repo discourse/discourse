@@ -24,5 +24,5 @@ export default {
   willDestroyElement() {
     this._super(...arguments);
     this._cleanUp();
-  }
+  },
 };

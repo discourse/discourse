@@ -7,6 +7,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import { default as getURL, withoutPrefix } from "discourse-common/lib/get-url";
 import Session from "discourse/models/session";
+import { setOwner } from "@ember/application";
 
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
@@ -32,15 +33,20 @@ const SERVER_SIDE_ONLY = [
   /^\/logs($|\/)/,
   /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
-  /^\/invites\//
+  /^\/invites\//,
 ];
+
+// The amount of height (in pixles) that we factor in when jumpEnd is called so
+// that we show a little bit of the post text even on mobile devices instead of
+// scrolling to "suggested topics".
+const JUMP_END_BUFFER = 250;
 
 export function rewritePath(path) {
   const params = path.split("?");
 
   let result = params[0];
-  rewrites.forEach(rw => {
-    if ((rw.opts.exceptions || []).some(ex => path.indexOf(ex) === 0)) {
+  rewrites.forEach((rw) => {
+    if ((rw.opts.exceptions || []).some((ex) => path.indexOf(ex) === 0)) {
       return;
     }
     result = result.replace(rw.regexp, rw.replacement);
@@ -77,7 +83,7 @@ export function jumpToElement(elementId) {
   const selector = `#main #${elementId}, a[name=${elementId}]`;
   _jumpScheduled = true;
 
-  schedule("afterRender", function() {
+  schedule("afterRender", function () {
     if (lockon) {
       lockon.clearLock();
     }
@@ -86,7 +92,7 @@ export function jumpToElement(elementId) {
       finished() {
         _jumpScheduled = false;
         lockon = null;
-      }
+      },
     });
     lockon.lock();
   });
@@ -110,13 +116,9 @@ const DiscourseURL = EmberObject.extend({
         let holderHeight = $holder.height();
         let windowHeight = $(window).height() - offsetCalculator();
 
-        // scroll to the bottom of the post and if the post is yuge we go back up the
-        // timeline by a small % of the post height so we can see the bottom of the text.
-        //
-        // otherwise just jump to the top of the post using the lock & holder method.
         if (holderHeight > windowHeight) {
           $(window).scrollTop(
-            $holder.offset().top + (holderHeight - holderHeight / 10)
+            $holder.offset().top + (holderHeight - JUMP_END_BUFFER)
           );
           _transitioning = false;
           return;
@@ -150,7 +152,7 @@ const DiscourseURL = EmberObject.extend({
         finished() {
           _transitioning = false;
           lockon = null;
-        }
+        },
       });
 
       if (holder && opts.skipIfOnScreen) {
@@ -188,7 +190,7 @@ const DiscourseURL = EmberObject.extend({
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
       // which triggers a replaceState even though the topic hasn't fully loaded yet!
       next(() => {
-        const location = DiscourseURL.get("router.location");
+        const location = this.get("router.location");
         if (location && location.replaceURL) {
           location.replaceURL(path);
         }
@@ -230,11 +232,11 @@ const DiscourseURL = EmberObject.extend({
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
-    if (!DiscourseURL.isInternal(path)) {
+    if (!this.isInternal(path)) {
       return redirectTo(path);
     }
 
-    const serverSide = SERVER_SIDE_ONLY.some(r => {
+    const serverSide = SERVER_SIDE_ONLY.some((r) => {
       if (pathname.match(r)) {
         return redirectTo(path);
       }
@@ -360,10 +362,9 @@ const DiscourseURL = EmberObject.extend({
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
-        DiscourseURL.replaceState(path);
+        this.replaceState(path);
 
-        const container = Discourse.__container__;
-        const topicController = container.lookup("controller:topic");
+        const topicController = this.container.lookup("controller:topic");
         const opts = {};
         const postStream = topicController.get("model.postStream");
 
@@ -380,13 +381,13 @@ const DiscourseURL = EmberObject.extend({
           const closest = postStream.closestPostNumberFor(opts.nearPost || 1);
           topicController.setProperties({
             "model.currentPost": closest,
-            enteredAt: Date.now().toString()
+            enteredAt: Date.now().toString(),
           });
 
           this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen,
-            jumpEnd: routeOpts.jumpEnd
+            jumpEnd: routeOpts.jumpEnd,
           };
 
           const anchorMatch = /#(.+)$/.exec(path);
@@ -435,29 +436,16 @@ const DiscourseURL = EmberObject.extend({
     return window.location.origin + (prefix === "/" ? "" : prefix);
   },
 
-  // TODO: These container calls can be replaced eventually if we migrate this to a service
-  // object.
-
-  /**
-    @private
-
-    Get a handle on the application's router. Note that currently it uses `__container__` which is not
-    advised but there is no other way to access the router.
-
-    @property router
-  **/
   get router() {
-    return Discourse.__container__.lookup("router:main");
+    return this.container.lookup("router:main");
   },
 
   get appEvents() {
-    return Discourse.__container__.lookup("service:app-events");
+    return this.container.lookup("service:app-events");
   },
 
-  // Get a controller. Note that currently it uses `__container__` which is not
-  // advised but there is no other way to access the router.
   controllerFor(name) {
-    return Discourse.__container__.lookup("controller:" + name);
+    return this.container.lookup("controller:" + name);
   },
 
   /**
@@ -496,7 +484,13 @@ const DiscourseURL = EmberObject.extend({
 
     const promise = transition.promise || transition;
     promise.then(() => jumpToElement(elementId));
-  }
-}).create();
+  },
+});
+let _urlInstance = DiscourseURL.create();
 
-export default DiscourseURL;
+export function setURLContainer(container) {
+  _urlInstance.container = container;
+  setOwner(_urlInstance, container);
+}
+
+export default _urlInstance;

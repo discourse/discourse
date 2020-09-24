@@ -52,7 +52,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :skip_new_user_tips
 
   def groups
-    object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
+    object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }
   end
 
   def link_posting_access

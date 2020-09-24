@@ -6,7 +6,12 @@ class ExportCsvController < ApplicationController
 
   def export_entity
     guardian.ensure_can_export_entity!(export_params[:entity])
-    Jobs.enqueue(:export_csv_file, entity: export_params[:entity], user_id: current_user.id, args: export_params[:args])
+
+    if export_params[:entity] == 'user_archive'
+      Jobs.enqueue(:export_user_archive, user_id: current_user.id, args: export_params[:args])
+    else
+      Jobs.enqueue(:export_csv_file, entity: export_params[:entity], user_id: current_user.id, args: export_params[:args])
+    end
     StaffActionLogger.new(current_user).log_entity_export(export_params[:entity])
     render json: success_json
   rescue Discourse::InvalidAccess

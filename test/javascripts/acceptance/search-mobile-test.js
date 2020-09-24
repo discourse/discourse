@@ -2,7 +2,7 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Search - Mobile", { mobileView: true });
 
-QUnit.test("search", async assert => {
+QUnit.test("search", async (assert) => {
   await visit("/");
 
   await click("#search-button");

@@ -698,7 +698,7 @@ describe Group do
 
       expect(can_view?(admin, group)).to eq(true)
       expect(can_view?(owner, group)).to eq(true)
-      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(moderator, group)).to eq(true)
       expect(can_view?(member, group)).to eq(true)
       expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
@@ -763,7 +763,7 @@ describe Group do
 
       expect(can_view?(admin, group)).to eq(true)
       expect(can_view?(owner, group)).to eq(true)
-      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(moderator, group)).to eq(true)
       expect(can_view?(member, group)).to eq(true)
       expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)

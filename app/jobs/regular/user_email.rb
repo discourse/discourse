@@ -244,11 +244,11 @@ module Jobs
     end
 
     def always_email_private_message?(user, type)
-      type == :user_private_message && user.user_option.email_messages_level == UserOption.email_level_types[:always]
+      type.to_s == "user_private_message" && user.user_option.email_messages_level == UserOption.email_level_types[:always]
     end
 
     def always_email_regular?(user, type)
-      type != :user_private_message && user.user_option.email_level == UserOption.email_level_types[:always]
+      type.to_s != "user_private_message" && user.user_option.email_level == UserOption.email_level_types[:always]
     end
   end
 

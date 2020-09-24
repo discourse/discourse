@@ -309,7 +309,6 @@ describe 'posts' do
           chunk_size: { type: :integer },
           bookmarked: { type: :boolean },
           topic_timer: { type: :string, nullable: true },
-          private_topic_timer: { type: :string, nullable: true },
           message_bus_last_id: { type: :integer },
           participant_count: { type: :integer },
           show_read_indicator: { type: :boolean },
@@ -760,7 +759,7 @@ describe 'posts' do
         description: 'Enum: `all`, `yearly`, `quarterly`, `monthly`, `weekly`, `daily`')
 
       produces 'application/json'
-      response '200', 'topic updated' do
+      response '200', 'response' do
         schema type: :object, properties: {
           users: {
             type: :array,

@@ -310,9 +310,7 @@ pl_PL:
         bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
     bookmarks:
-      created: "wpis już dodano do zakładek%{name}"
       not_bookmarked: "dodaj do zakładek"
-      created_with_reminder: "dodałeś ten wpis do zakładek z przypomnieniem %{date}%{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
@@ -321,10 +319,10 @@ pl_PL:
       invalid_custom_datetime: "Podana data i godzina są nieprawidłowe, spróbuj ponownie."
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
       auto_delete_preference:
+        label: "Usuń automatycznie"
         never: "Nigdy"
       search: "Wyszukaj"
       reminders:
-        at_desktop: "Następnym razem będę na swoim pulpicie"
         later_today: "Później dzisiaj"
         next_business_day: "Następny dzień roboczy"
         tomorrow: "Jutro"
@@ -583,6 +581,7 @@ pl_PL:
       sent_by_user: "Wysłano przez <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Wysłano przez <a href='%{userUrl}'>Ciebie</a>"
     directory:
+      username: "Nazwa użytkownika"
       filter_name: "sortuj po nazwie użytkownika"
       title: "Użytkownicy"
       likes_given: "Oddane"
@@ -654,6 +653,10 @@ pl_PL:
         membership:
           title: Członkostwo
           access: Dostęp
+        categories:
+          title: Kategorie
+        tags:
+          title: Tagi
         logs:
           title: "Logi"
           when: "Kiedy"
@@ -769,6 +772,7 @@ pl_PL:
       flair_preview_image: "Podgląd obrazka"
       flair_type:
         icon: "Wybierz ikonę"
+        image: "Prześlij obraz"
     user_action_groups:
       "1": "Polobienia"
       "2": "Otrzymane polubienia"
@@ -851,6 +855,7 @@ pl_PL:
       private_messages: "Wiadomości"
       user_notifications:
         filters:
+          filter_by: "Filtruj według"
           all: "Wszystkie"
           read: "Przeczytane"
           unread: "Nieprzeczytane"
@@ -905,6 +910,8 @@ pl_PL:
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
+      color_schemes:
+        default_description: "Domyślny"
       text_size_default_on_all_devices: "Ustaw ten domyślny rozmiar tekstu na wszystkich urządzeniach"
       allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
@@ -1043,7 +1050,6 @@ pl_PL:
         use: "Użyj aplikacji Authenticator"
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
-        disable_confirm: "Czy na pewno chcesz wyłączyć wszystkie drugie czynniki?"
         save: "Zapisz"
         edit: "Edytuj"
         edit_title: "Edytuj drugi czynnik"
@@ -1769,7 +1775,6 @@ pl_PL:
         draft: Wersja robocza
         edit: Edycja
         reply_to_post:
-          label: Odpowiedz na wpis %{postNumber} przez %{postUsername}
           desc: Odpowiedz na określony wpis
         reply_as_new_topic:
           label: Odpowiedz jako powiązany temat
@@ -2113,9 +2118,6 @@ pl_PL:
       toggle_information: "przełącz szczegóły tematu"
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{catLink} lub %{latestLink}."
       read_more: "Chcesz przeczytać więcej? %{catLink} lub %{latestLink}."
-      group_request: "Aby zobaczyć ten temat, musisz poprosić o członkostwo w grupie `%{name}`"
-      group_join: "Musisz dołączyć do grupy `%{name}`, aby zobaczyć ten temat"
-      group_request_sent: "Twoja prośba o członkostwo w grupie została wysłana. Zostaniesz poinformowany, kiedy zostanie zaakceptowane."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
       read_more_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 nieprzeczytany</a> } other { are <a href='{basePath}/unread'># nieprzeczytanych</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nowy</a> temat} other { {BOTH, select, true{and } false {} other{}} <a href='{basePath}/new'># nowych</a> tematów} }, lub {CATEGORY, select, true {przeglądaj inne tematy w {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT} {LAST_POST}: {BUMPED_AT}"
@@ -2133,7 +2135,6 @@ pl_PL:
         remove: "Usuń czas"
         publish_to: "Opublikuj do:"
         when: "Kiedy:"
-        public_timer_types: Timery tematów
         time_frame_required: Wybierz przedział czasowy
       auto_update_input:
         none: "Wybierz przedział czasowy"
@@ -2214,7 +2215,7 @@ pl_PL:
           "2_8": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz kategorię wątku."
           "2_4": "Widzisz ilość nowych odpowiedzi, ponieważ wypowiedziałeś się w tym wątku."
           "2_2": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz ten wątek."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Otrzymasz powiadomienie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
           "1": "Otrzymasz powiadomienie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
           "0_7": "Ignorujesz wszystkie powiadomienia z tej kategorii."
@@ -2570,33 +2571,12 @@ pl_PL:
         add_post_notice: "Dodaj notatkę personelu"
         remove_post_notice: "Usuń wiadomość dla zespołu zarządzającego"
       actions:
-        flag: "Oflaguj"
-        defer_flags:
-          one: "Ignoruj flagę"
-          few: "Ignoruj oflagowanie"
-          many: "Ignoruj flagi"
-          other: "Ignoruj flagi"
-        undo:
-          off_topic: "Cofnij flagę"
-          spam: "Cofnij flagę"
-          inappropriate: "Cofnij flagę"
-          bookmark: "Cofnij zakładkę"
-          like: "Cofnij"
-        people:
-          off_topic: "Oflagowano jako nie-na-temat"
-          spam: "oznacz jako spam"
-          inappropriate: "Oflagowano jako nieodpowiednie"
-          notify_moderators: "Powiadomiono moderatorów"
-          notify_user: "Wysłano wiadomość"
-          bookmark: "dodaj do zakładek"
         by_you:
           off_topic: "Oznaczono jako nie-na-temat"
           spam: "Oflagowano jako spam"
           inappropriate: "Oznaczono jako niewłaściwe"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
-          bookmark: "Dodano zakładkę w tym wpisie"
-          like: "Polubiłeś/aś ten wpis"
       delete:
         confirm:
           one: "Czy na pewno chcesz usunąć ten post?"
@@ -3149,14 +3129,6 @@ pl_PL:
           latest: "Brak najnowszych tematów."
           bookmarks: "Nie posiadasz tematów dodanych do zakładek."
           top: "Brak najlepszych tematów."
-        bottom:
-          latest: "Nie ma więcej najnowszych tematów."
-          posted: "Nie ma więcej tematów, w których pisałeś."
-          read: "Nie ma więcej przeczytanych tematów."
-          new: "Nie ma więcej nowych tematów."
-          unread: "Nie ma więcej nieprzeczytanych tematów."
-          top: "Nie ma już więcej najlepszych tematów."
-          bookmarks: "Nie ma więcej dodanych tematów do zakładek."
     invite:
       custom_message_placeholder: "Wpisz swoją niestandardową wiadomość"
       custom_message_template_forum: "Hej, należy dołączyć do tego forum!"
@@ -3292,8 +3264,6 @@ pl_PL:
               title: "Kto może widzieć tę grupę?"
               public: "Wszyscy"
               logged_on_users: "Zalogowani użytkownicy"
-              members: "Właściciele grupy, członkowie"
-              staff: "Właściciele grupy i zespół"
               owners: "Właściciele grupy"
               description: "Administratorzy mogą widzieć wszystkie grupy."
             members_visibility_levels:
@@ -3356,7 +3326,6 @@ pl_PL:
         save: Zapisz
         new_key: Nowy klucz API
         revoked: Unieważniono
-        delete: Permanentnie usuń
         continue: Kontynuuj
       web_hooks:
         title: "Webhooks"
