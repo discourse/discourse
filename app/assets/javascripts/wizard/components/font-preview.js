@@ -38,6 +38,10 @@ export default createPreviewComponent(305, 165, {
   paint(ctx, colors, font, width, height) {
     const headerHeight = height * 0.3;
 
+    if (font === "-apple-system") {
+      font = "System";
+    }
+
     this.drawFullHeader(colors, font);
 
     const margin = width * 0.04;
