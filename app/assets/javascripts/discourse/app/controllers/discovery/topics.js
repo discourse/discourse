@@ -136,7 +136,7 @@ const controllerOpts = {
 
   @discourseComputed("model")
   canCreateTopicOnCategory(model) {
-    return model.can_create_topic
+    return model.can_create_topic;
   },
 
   @discourseComputed("allLoaded", "model.topics.length")
