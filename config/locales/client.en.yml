@@ -2124,6 +2124,10 @@ en:
             label: Posted
             before: before
             after: after
+        min_view_count:
+          label: Minimum View Count
+        max_view_count:
+          label: Maximum View Count
 
     hamburger_menu: "go to another topic list or category"
     new_item: "new"

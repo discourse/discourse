@@ -160,6 +160,33 @@
       }}
     </div>
   </div>
+
+  <div class="control-group pull-left">
+    <label class="control-label" for="search-min-view-count">{{i18n "search.advanced.min_view_count.label"}}</label>
+    <div class="controls">
+      {{input
+        type="number"
+        value=(readonly searchedTerms.min_view_count)
+        class="input-small"
+        id="search-min-view-count"
+        input=(action "onChangeSearchTermMinViewCount" value="target.value")
+      }}
+    </div>
+  </div>
+
+  <div class="control-group pull-left">
+    <label class="control-label" for="search-max-view-count">{{i18n "search.advanced.max_view_count.label"}}</label>
+    <div class="controls">
+      {{input
+        type="number"
+        value=(readonly searchedTerms.max_view_count)
+        class="input-small"
+        id="search-max-view-count"
+        input=(action "onChangeSearchTermMaxViewCount" value="target.value")
+      }}
+    </div>
+  </div>
+
 </div>
 
 {{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}

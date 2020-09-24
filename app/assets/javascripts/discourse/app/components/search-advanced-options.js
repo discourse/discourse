@@ -12,6 +12,8 @@ const REGEXP_TAGS_PREFIX = /^(tags?:|#(?=[a-z0-9\-]+::tag))/gi;
 const REGEXP_IN_PREFIX = /^(in|with):/gi;
 const REGEXP_STATUS_PREFIX = /^status:/gi;
 const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/gi;
+const REGEXP_MIN_VIEW_COUNT_PREFIX = /^min_view_count:/gi;
+const REGEXP_MAX_VIEW_COUNT_PREFIX = /^max_view_count:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
 const REGEXP_TAGS_REPLACE = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/gi;
 
@@ -93,6 +95,8 @@ export default Component.extend({
         },
         status: null,
         min_post_count: null,
+        min_view_count: null,
+        max_view_count: null,
         time: {
           when: "before",
           days: null,
@@ -160,6 +164,16 @@ export default Component.extend({
     this.setSearchedTermValue(
       "searchedTerms.min_post_count",
       REGEXP_MIN_POST_COUNT_PREFIX
+    );
+
+    this.setSearchedTermValue(
+      "searchedTerms.min_view_count",
+      REGEXP_MIN_VIEW_COUNT_PREFIX
+    );
+
+    this.setSearchedTermValue(
+      "searchedTerms.max_view_count",
+      REGEXP_MAX_VIEW_COUNT_PREFIX
     );
   },
 
@@ -343,6 +357,18 @@ export default Component.extend({
   onChangeSearchTermMinPostCount(value) {
     this.set("searchedTerms.min_post_count", value.length ? value : null);
     this._updateSearchTermForMinPostCount();
+  },
+
+  @action
+  onChangeSearchTermMinViewCount(value) {
+    this.set("searchedTerms.min_view_count", value.length ? value : null);
+    this._updateSearchTermForMinViewCount();
+  },
+
+  @action
+  onChangeSearchTermMaxViewCount(value) {
+    this.set("searchedTerms.max_view_count", value.length ? value : null);
+    this._updateSearchTermForMaxViewCount();
   },
 
   @action
@@ -618,6 +644,50 @@ export default Component.extend({
         );
       } else {
         searchTerm += ` min_post_count:${postsCountFilter}`;
+      }
+
+      this._updateSearchTerm(searchTerm);
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], "");
+      this._updateSearchTerm(searchTerm);
+    }
+  },
+
+  _updateSearchTermForMinViewCount() {
+    const match = this.filterBlocks(REGEXP_MIN_VIEW_COUNT_PREFIX);
+    const viewsCountFilter = this.get("searchedTerms.min_view_count");
+    let searchTerm = this.searchTerm || "";
+
+    if (viewsCountFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(
+          match[0],
+          `min_view_count:${viewsCountFilter}`
+        );
+      } else {
+        searchTerm += ` min_view_count:${viewsCountFilter}`;
+      }
+
+      this._updateSearchTerm(searchTerm);
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], "");
+      this._updateSearchTerm(searchTerm);
+    }
+  },
+
+  _updateSearchTermForMaxViewCount() {
+    const match = this.filterBlocks(REGEXP_MAX_VIEW_COUNT_PREFIX);
+    const viewsCountFilter = this.get("searchedTerms.max_view_count");
+    let searchTerm = this.searchTerm || "";
+
+    if (viewsCountFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(
+          match[0],
+          `max_view_count:${viewsCountFilter}`
+        );
+      } else {
+        searchTerm += ` max_view_count:${viewsCountFilter}`;
       }
 
       this._updateSearchTerm(searchTerm);

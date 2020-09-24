@@ -637,6 +637,14 @@ class Search
     )", file_extensions: file_extensions)
   end
 
+  advanced_filter(/^min_view_count:(\d+)$/i) do |posts, match|
+    posts.where("topics.views >= ?", match.to_i)
+  end
+
+  advanced_filter(/^max_view_count:(\d+)$/i) do |posts, match|
+    posts.where("topics.views <= ?", match.to_i)
+  end
+
   private
 
   def search_tags(posts, match, positive:)
