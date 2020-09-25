@@ -82,7 +82,14 @@ module Stylesheet
         EOF
 
         DiscourseFonts.fonts.each do |font|
-          next if font[:key] == "system"
+          if font[:key] == "system"
+            # Overwrite font definition because the preview canvases in the wizard do not like "-apple-system" and require explicit @font-face definitions.
+            font[:stack] = "System"
+            font[:variants] = [
+              { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
+              { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
+            ]
+          end
 
           contents << font_css(font)
           contents << <<~EOF
