@@ -338,6 +338,23 @@ QUnit.test("Quoting a quote keeps the original poster name", async (assert) => {
 });
 
 QUnit.test(
+  "Quoting a quote of a different topic keeps the original topic title",
+  async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    selectText("#post_9 blockquote");
+    await click(".quote-button .insert-quote");
+
+    assert.ok(
+      find(".d-editor-input")
+        .val()
+        .indexOf(
+          'quote="A new topic with a link to another topic, post:3, topic:62"'
+        ) !== -1
+    );
+  }
+);
+
+QUnit.test(
   "Quoting a quote with the Reply button keeps the original poster name",
   async (assert) => {
     await visit("/t/internationalization-localization/280");

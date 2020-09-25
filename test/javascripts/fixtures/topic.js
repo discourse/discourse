@@ -851,7 +851,7 @@ export default {
           uploaded_avatar_id: 5253,
           created_at: "2013-02-07T14:14:12.666Z",
           cooked:
-            '<p><aside class="quote" data-post="8" data-topic="280"><div class="title">\n<div class="quote-controls"></div>\n<img width="20" height="20" src="/user_avatar/meta.discourse.org/sam/40/5243.png" class="avatar">sam said:</div>\n<blockquote><p>one letter change and all your translators need to validate it.</p></blockquote></aside></p>\n\n<p>Yeah, that\'s why I\'ve always been a friend of <code>message_error_nametooshort</code> placeholders, until I asked the SO question linked above. The accepted answer makes a good argument against those placeholders: you <em>want</em> translations to break even on small changes in the English original because the translations will probably need to reflect the change, too.  Maybe that\'s not the case right now as new stuff is being checked in pretty much every couple of hours, but in the long run, it\'ll be overwhelmingly true.</p>',
+            '<aside class="quote no-group\" data-post="3" data-topic="62">\n<div class="title">\n<div class="quote-controls"></div>\n<img alt="" width="20" height="20" src="/user_avatar/meta.discourse.org/sam/40/5243.png" class="avatar"><a href="/t/a-new-topic-with-a-link-to-another-topic/62/3">A new topic with a link to another topic</a>\n</div>\n<blockquote>\n<p>Thanks for posting this</p>\n</blockquote>\n</aside>\n<p>repost after a reload thank you!</p>',
           post_number: 9,
           post_type: 1,
           updated_at: "2013-02-07T14:18:09.569Z",
