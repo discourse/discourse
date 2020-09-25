@@ -11,4 +11,5 @@ export const PUBLIC_JS_VERSIONS = {
   "pikaday.js": "pikaday/1.8.0/pikaday.js",
   "spectrum.js": "spectrum-colorpicker/1.8.0/spectrum.js",
   "spectrum.css": "spectrum-colorpicker/1.8.0/spectrum.css",
+  workbox: "workbox/4.3.1",
 };
