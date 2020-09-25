@@ -303,6 +303,7 @@ body.wizard {
     background-color: var(--secondary);
     color: var(--primary-very-high);
     box-shadow: 0 1px 4px rgba(var(--always-black-rgb), 0.4);
+    cursor: pointer;
 
     &.small {
       padding: 0.25em 0.5em;
