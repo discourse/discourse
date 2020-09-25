@@ -18,6 +18,14 @@ body.wizard {
   font-size: 15px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+  #wizard-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
+  }
+
   #wizard-main:before {
     mask: asset-url("/images/wizard/bubbles.svg");
     -webkit-mask: asset-url("/images/wizard/bubbles.svg");
