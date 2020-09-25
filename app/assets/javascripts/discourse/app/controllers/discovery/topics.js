@@ -72,7 +72,6 @@ const controllerOpts = {
       this.set("discovery.loading", true);
 
       this.topicTrackingState.resetTracking();
-      let self = this;
 
       this.store.findFiltered("topicList", { filter }).then((list) => {
         TopicList.hideUniformCategory(list, this.category);
@@ -85,10 +84,10 @@ const controllerOpts = {
           this.store
             .findFiltered("topicList", { filter, params })
             .then((listWithParams) => {
-              self.afterRefresh(filter, list, listWithParams);
+              this.afterRefresh(filter, list, listWithParams);
             });
         } else {
-          self.afterRefresh(filter, list);
+          this.afterRefresh(filter, list);
         }
       });
     },
