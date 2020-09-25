@@ -2567,6 +2567,36 @@ RSpec.describe TopicsController do
           topic_ids: topic_ids, operation: operation
         }
       end
+
+      it "respects the tracked parameter" do
+        # untracked topic
+        category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:regular],
+                                                     category.id)
+        create_post(user: user, topic_id: topic.id)
+        topic.update!(category_id: category.id)
+        create_post(topic_id: topic.id)
+
+        # tracked topic
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+        tracked_topic = create_post(user: user).topic
+        tracked_topic.update!(category_id: tracked_category.id)
+        create_post(topic_id: tracked_topic.id)
+
+        put "/topics/bulk.json", params: {
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' },
+          tracked: true
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(topic, user).last_read_post_number).to eq(topic.posts.count - 1)
+        expect(TopicUser.get(tracked_topic, user).last_read_post_number).to eq(tracked_topic.posts.count)
+      end
     end
   end
 
@@ -2655,7 +2685,6 @@ RSpec.describe TopicsController do
       sign_in(user)
 
       old_date = 2.years.ago
-
       user.user_stat.update_column(:new_since, old_date)
 
       TopicTrackingState.expects(:publish_dismiss_new).with(user.id)
@@ -2664,6 +2693,35 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
+    end
+
+    describe "when tracked param is true" do
+      it "does not update user_stat.new_since" do
+        sign_in(user)
+
+        old_date = 2.years.ago
+        user.user_stat.update_column(:new_since, old_date)
+
+        put "/topics/reset-new.json?tracked=true"
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
+      end
+
+      it "creates topic user records for each unread topic" do
+        sign_in(user)
+        user.user_stat.update_column(:new_since, 2.years.ago)
+
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+        tracked_topic = create_post.topic
+        tracked_topic.update!(category_id: tracked_category.id)
+
+        create_post # This is a new post, but is not tracked so a record will not be created for it
+        expect { put "/topics/reset-new.json?tracked=true" }.to change { TopicUser.where(user_id: user.id, last_read_post_number: 0).count }.by(1)
+      end
     end
 
     context 'category' do

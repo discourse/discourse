@@ -394,6 +394,33 @@ class TopicQuery
                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
+  def self.tracked_filter(list, user_id)
+    sql = +<<~SQL
+      topics.category_id IN (
+        SELECT cu.category_id FROM category_users cu
+        WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
+      )
+    SQL
+
+    if SiteSetting.tagging_enabled
+      sql << <<~SQL
+        OR topics.id IN (
+          SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (
+            SELECT tu.tag_id
+            FROM tag_users tu
+            WHERE tu.user_id = :user_id AND tu.notification_level >= :tracking
+          )
+        )
+      SQL
+    end
+
+    list.where(
+      sql,
+      user_id: user_id,
+      tracking: NotificationLevels.all[:tracking]
+    )
+  end
+
   def prioritize_pinned_topics(topics, options)
     pinned_clause = if options[:category_id]
       +"topics.category_id = #{options[:category_id].to_i} AND"
@@ -833,30 +860,7 @@ class TopicQuery
       end
 
       if filter == "tracked"
-        sql = +<<~SQL
-          topics.category_id IN (
-            SELECT cu.category_id FROM category_users cu
-            WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
-          )
-        SQL
-
-        if SiteSetting.tagging_enabled
-          sql << <<~SQL
-            OR topics.id IN (
-              SELECT tt.topic_id FROM topic_tags tt WHERE tt.tag_id IN (
-                SELECT tu.tag_id
-                FROM tag_users tu
-                WHERE tu.user_id = :user_id AND tu.notification_level >= :tracking
-              )
-            )
-          SQL
-        end
-
-        result = result.where(
-          sql,
-          user_id: @user.id,
-          tracking: NotificationLevels.all[:tracking]
-        )
+        result = TopicQuery.tracked_filter(result, @user.id)
       end
     end
 

@@ -799,18 +799,21 @@ Topic.reopenClass({
     return promise;
   },
 
-  bulkOperation(topics, operation) {
+  bulkOperation(topics, operation, tracked) {
+    const data = {
+      topic_ids: topics.mapBy("id"),
+      operation,
+      tracked,
+    };
+
     return ajax("/topics/bulk", {
       type: "PUT",
-      data: {
-        topic_ids: topics.map((t) => t.get("id")),
-        operation,
-      },
+      data,
     });
   },
 
-  bulkOperationByFilter(filter, operation, options) {
-    let data = { filter, operation };
+  bulkOperationByFilter(filter, operation, options, tracked) {
+    const data = { filter, operation, tracked };
 
     if (options) {
       if (options.categoryId) {
@@ -830,10 +833,12 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories) {
-    const data = category
-      ? { category_id: category.id, include_subcategories }
-      : {};
+  resetNew(category, include_subcategories, tracked = false) {
+    const data = { tracked };
+    if (category) {
+      data.category_id = category.id;
+      data.include_subcategories = include_subcategories;
+    }
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 
