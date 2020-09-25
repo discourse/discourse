@@ -126,7 +126,9 @@ export function performEmojiUnescape(string, opts) {
       isReplacableInlineEmoji(string, index, inlineEmoji);
 
     return url && isReplacable
-      ? `<img src='${url}' ${opts.skipTitle ? "" : `title='${emojiVal}'`} ${
+      ? `<img width="20" height="20" src='${url}' ${
+          opts.skipTitle ? "" : `title='${emojiVal}'`
+        } ${
           opts.lazy ? "loading='lazy' " : ""
         }alt='${emojiVal}' class='${classes}'>`
       : m;
