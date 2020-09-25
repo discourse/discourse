@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class SvgSpriteController < ApplicationController
-  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :search, :svg_icon]
+  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, :block_cdn_requests, only: [:show, :search, :svg_icon]
+
+  before_action :add_cors_header, only: [:show, :search, :svg_icon]
 
   requires_login except: [:show, :svg_icon]
 

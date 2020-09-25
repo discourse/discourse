@@ -17,6 +17,7 @@ end
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
+  REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
 
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
@@ -905,6 +906,15 @@ module Discourse
 
   def self.is_parallel_test?
     ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
+  end
+
+  def self.is_cdn_request?(env)
+    return unless GlobalSetting.cdn_url
+
+    cdn_hostname = URI.parse(GlobalSetting.cdn_url).host
+    requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
+
+    cdn_hostname == requested_hostname
   end
 end
 

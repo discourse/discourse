@@ -5,10 +5,10 @@ require "mini_mime"
 class UploadsController < ApplicationController
   requires_login except: [:show, :show_short, :show_secure]
 
-  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
+  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, :block_cdn_requests, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
 
-  before_action :is_asset_path, only: [:show, :show_short, :show_secure]
+  before_action :is_asset_path, :add_cors_header, only: [:show, :show_short, :show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 

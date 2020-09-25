@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
   before_action :preload_json
   before_action :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   before_action :check_xhr
+  before_action :block_cdn_requests
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
@@ -653,6 +654,18 @@ class ApplicationController < ActionController::Base
     # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
     return if !request.get? && (is_api? || is_user_api?)
     raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
+  end
+
+  def block_cdn_requests
+    raise Discourse::NotFound if Discourse.is_cdn_request?(request.env)
+  end
+
+  def add_cors_header
+    if Discourse.is_cdn_request?(request.env) && ["GET", "OPTIONS"].include?(request.method)
+      response.headers['Access-Control-Allow-Origin'] = '*'
+      response.headers['Access-Control-Allow-Credentials'] = 'false'
+      response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+    end
   end
 
   def self.requires_login(arg = {})
