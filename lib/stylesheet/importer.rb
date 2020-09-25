@@ -62,6 +62,15 @@ module Stylesheet
         contents = +""
 
         DiscourseFonts.fonts.each do |font|
+          if font[:key] == "system"
+            # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
+            # uses same technique as https://github.com/jonathantneal/system-font-css
+            font[:variants] = [
+              { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
+              { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
+            ]
+          end
+
           contents << font_css(font)
           contents << <<~EOF
             .font-#{font[:key].tr("_", "-")} {
@@ -266,10 +275,11 @@ module Stylesheet
 
       if font[:variants].present?
         font[:variants].each do |variant|
+          src = variant[:src] ? variant[:src] : "asset-url(\"/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
           contents << <<~EOF
             @font-face {
               font-family: #{font[:name]};
-              src: asset-url("/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}") format("#{variant[:format]}");
+              src: #{src};
               font-weight: #{variant[:weight]};
             }
           EOF

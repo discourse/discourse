@@ -217,7 +217,7 @@ class Wizard
         )
 
         DiscourseFonts.fonts.each do |font|
-          field.add_choice(font[:key], data: { class: font[:key].tr("_", "-"), font_stack: font[:stack] })
+          field.add_choice(font[:key], data: { class: font[:key].tr("_", "-"), name: font[:name] })
         end
 
         step.on_update do |updater|
