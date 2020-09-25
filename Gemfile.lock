@@ -351,7 +351,7 @@ GEM
       rubocop-ast (>= 0.5.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.5.0)
+    rubocop-ast (0.5.1)
       parser (>= 2.7.1.5)
     rubocop-discourse (2.3.2)
       rubocop (>= 0.69.0)
