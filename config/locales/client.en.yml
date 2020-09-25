@@ -2119,7 +2119,7 @@ en:
           single_user: contain a single user
         post:
           count:
-            label: Minimum Post Count
+            label: Minimum Posts
           time:
             label: Posted
             before: before
