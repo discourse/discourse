@@ -80,7 +80,7 @@ const Wizard = EmberObject.extend({
       return;
     }
 
-    return option.data.font_stack.split(",")[0];
+    return option.data.name;
   },
 });
 

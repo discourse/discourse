@@ -61,30 +61,10 @@ module Stylesheet
       register_import "wizard_fonts" do
         contents = +""
 
-        # this ensures system font can be used in wizard canvas preview
-        # technique via: https://github.com/jonathantneal/system-font-css
-        contents << <<~EOF
-          @font-face {
-            font-family: system;
-            font-style: normal;
-            src: local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma");
-            font-weight: 400;
-          }
-          @font-face {
-            font-family: system;
-            font-style: normal;
-            font-weight: 700;
-            src: local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold");
-          }
-          .font-system {
-            font-family: system;
-          }
-        EOF
-
         DiscourseFonts.fonts.each do |font|
           if font[:key] == "system"
-            # Overwrite font definition because the preview canvases in the wizard do not like "-apple-system" and require explicit @font-face definitions.
-            font[:stack] = "System"
+            # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
+            # uses same technique as https://github.com/jonathantneal/system-font-css
             font[:variants] = [
               { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
               { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
@@ -295,10 +275,11 @@ module Stylesheet
 
       if font[:variants].present?
         font[:variants].each do |variant|
+          src = variant[:src] ? variant[:src] : "asset-url(\"/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
           contents << <<~EOF
             @font-face {
               font-family: #{font[:name]};
-              src: asset-url("/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}") format("#{variant[:format]}");
+              src: #{src};
               font-weight: #{variant[:weight]};
             }
           EOF
