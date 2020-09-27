@@ -22,7 +22,8 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 const Post = RestModel.extend({
   @discourseComputed("url")
   shareUrl(url) {
-    return resolveShareUrl(url);
+    const user = User.current();
+    return resolveShareUrl(url, user);
   },
 
   new_user: equal("trust_level", 0),
