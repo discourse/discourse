@@ -732,4 +732,12 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
       end
     end
   end
+
+  it 'invites to advanced training when user is promoted to TL2' do
+    expect {
+      DiscourseEvent.trigger(:system_message_sent, post: Post.last, message_type: 'tl2_promotion_message', target_user: user)
+    }.to change { Topic.count }
+    expect(Topic.last.title).to eq(I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"))
+    expect(Topic.last.topic_users.map(&:user_id).sort).to eq([DiscourseNarrativeBot::Base.new.discobot_user.id, user.id])
+  end
 end

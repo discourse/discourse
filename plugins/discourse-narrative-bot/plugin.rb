@@ -297,8 +297,9 @@ after_initialize do
         ::DiscourseNarrativeBot::Base.new.discobot_user,
         title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
         raw: raw,
-        topic_id: args[:post].topic_id,
-        skip_validations: true
+        skip_validations: true,
+        archetype: Archetype.private_message,
+        target_usernames: args[:target_user].username
       )
     end
   end
