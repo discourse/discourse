@@ -1278,6 +1278,7 @@ describe Search do
       expect(Search.execute('test STATUS:OPEN').posts.length).to eq(1)
       expect(Search.execute('test posts_count:1').posts.length).to eq(1)
       expect(Search.execute('test min_post_count:1').posts.length).to eq(1)
+      expect(Search.execute('test min_posts:1').posts.length).to eq(1)
 
       topic.update(closed: true)
       second_topic.update(category: public_category)
