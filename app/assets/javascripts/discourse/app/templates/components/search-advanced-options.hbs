@@ -148,22 +148,39 @@
       }}
     </div>
   </div>
-  <div class="control-group pull-left">
+
+  <div class="count-group control-group pull-left">
     <label class="control-label" for="search-min-post-count">{{i18n "search.advanced.post.count.label"}}</label>
-    <div class="controls">
-      {{input
-        type="number"
-        value=(readonly searchedTerms.min_posts)
-        class="input-small"
-        id="search-min-post-count"
-        input=(action "onChangeSearchTermMinPostCount" value="target.value")
-      }}
+    <div class="count pull-left">
+      <div class="controls">
+        {{input
+          type="number"
+          value=(readonly searchedTerms.min_posts)
+          class="input-small"
+          id="search-min-post-count"
+          input=(action "onChangeSearchTermMinPostCount" value="target.value")
+          placeholder=(i18n "search.advanced.post.min.placeholder")
+        }}
+      </div>
+    </div>
+    <span class="count-dash">&mdash;</span>
+    <div class="count pull-right">
+      <div class="controls">
+        {{input
+          type="number"
+          value=(readonly searchedTerms.max_posts)
+          class="input-small"
+          id="search-max-post-count"
+          input=(action "onChangeSearchTermMaxPostCount" value="target.value")
+          placeholder=(i18n "search.advanced.post.max.placeholder")
+        }}
+      </div>
     </div>
   </div>
 
-  <div class="views control-group pull-left">
+  <div class="count-group control-group pull-left">
     <label class="control-label">{{i18n "search.advanced.views.label"}}</label>
-    <div class="views-count pull-left">
+    <div class="count pull-left">
       <div class="controls">
         {{input
           type="number"
@@ -175,8 +192,8 @@
         }}
       </div>
     </div>
-    <span class="views-count-dash">–</span>
-    <div class="views-count pull-right">
+    <span class="count-dash">&mdash;</span>
+    <div class="count pull-right">
       <div class="controls">
         {{input
           type="number"

@@ -12,6 +12,7 @@ const REGEXP_TAGS_PREFIX = /^(tags?:|#(?=[a-z0-9\-]+::tag))/gi;
 const REGEXP_IN_PREFIX = /^(in|with):/gi;
 const REGEXP_STATUS_PREFIX = /^status:/gi;
 const REGEXP_MIN_POSTS_PREFIX = /^min_posts:/gi;
+const REGEXP_MAX_POSTS_PREFIX = /^max_posts:/gi;
 const REGEXP_MIN_VIEWS_PREFIX = /^min_views:/gi;
 const REGEXP_MAX_VIEWS_PREFIX = /^max_views:/gi;
 const REGEXP_POST_TIME_PREFIX = /^(before|after):/gi;
@@ -95,6 +96,7 @@ export default Component.extend({
         },
         status: null,
         min_posts: null,
+        max_posts: null,
         min_views: null,
         max_views: null,
         time: {
@@ -164,6 +166,11 @@ export default Component.extend({
     this.setSearchedTermValue(
       "searchedTerms.min_posts",
       REGEXP_MIN_POSTS_PREFIX
+    );
+
+    this.setSearchedTermValue(
+      "searchedTerms.max_posts",
+      REGEXP_MAX_POSTS_PREFIX
     );
 
     this.setSearchedTermValue(
@@ -357,6 +364,12 @@ export default Component.extend({
   onChangeSearchTermMinPostCount(value) {
     this.set("searchedTerms.min_posts", value.length ? value : null);
     this._updateSearchTermForMinPostCount();
+  },
+
+  @action
+  onChangeSearchTermMaxPostCount(value) {
+    this.set("searchedTerms.max_posts", value.length ? value : null);
+    this._updateSearchTermForMaxPostCount();
   },
 
   @action
@@ -644,6 +657,28 @@ export default Component.extend({
         );
       } else {
         searchTerm += ` min_posts:${postsCountFilter}`;
+      }
+
+      this._updateSearchTerm(searchTerm);
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], "");
+      this._updateSearchTerm(searchTerm);
+    }
+  },
+
+  _updateSearchTermForMaxPostCount() {
+    const match = this.filterBlocks(REGEXP_MAX_POSTS_PREFIX);
+    const postsCountFilter = this.get("searchedTerms.max_posts");
+    let searchTerm = this.searchTerm || "";
+
+    if (postsCountFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(
+          match[0],
+          `max_posts:${postsCountFilter}`
+        );
+      } else {
+        searchTerm += ` max_posts:${postsCountFilter}`;
       }
 
       this._updateSearchTerm(searchTerm);

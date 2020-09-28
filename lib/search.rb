@@ -369,12 +369,16 @@ class Search
     posts.where("topics.posts_count = ?", match.to_i)
   end
 
+  advanced_filter(/^min_post_count:(\d+)$/i) do |posts, match|
+    posts.where("topics.posts_count >= ?", match.to_i)
+  end
+
   advanced_filter(/^min_posts:(\d+)$/i) do |posts, match|
     posts.where("topics.posts_count >= ?", match.to_i)
   end
 
-  advanced_filter(/^min_post_count:(\d+)$/i) do |posts, match|
-    posts.where("topics.posts_count >= ?", match.to_i)
+  advanced_filter(/^max_posts:(\d+)$/i) do |posts, match|
+    posts.where("topics.posts_count <= ?", match.to_i)
   end
 
   advanced_filter(/^in:first|^f$/i) do |posts|
