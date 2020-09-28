@@ -293,12 +293,15 @@ after_initialize do
                   discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
                   reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
 
+      recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last.user
+
       PostCreator.create!(
         ::DiscourseNarrativeBot::Base.new.discobot_user,
         title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
         raw: raw,
-        topic_id: args[:post].topic_id,
-        skip_validations: true
+        skip_validations: true,
+        archetype: Archetype.private_message,
+        target_usernames: recipient.username
       )
     end
   end
