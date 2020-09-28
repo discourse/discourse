@@ -390,8 +390,8 @@ QUnit.test(
     );
     assert.equal(
       find(".search-query").val(),
-      "none min_post_count:5",
-      'has updated search term to "none min_post_count:5"'
+      "none min_posts:5",
+      'has updated search term to "none min_posts:5"'
     );
   }
 );
