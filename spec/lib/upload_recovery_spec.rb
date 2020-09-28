@@ -115,6 +115,35 @@ RSpec.describe UploadRecovery do
         .to eq(File.read(file_from_fixtures("smallest.png")))
     end
 
+    describe 'when the upload exists but its file is missing' do
+      before do
+        setup_s3
+        stub_s3_store
+      end
+
+      it 'recovers the file' do
+        upload.verification_status = Upload.verification_statuses[:invalid_etag]
+        upload.save!
+
+        original_key = Discourse.store.get_path_for_upload(upload)
+        tombstone_key = original_key.sub("original", "tombstone/original")
+
+        tombstone_copy = stub
+        tombstone_copy.expects(:key).returns(tombstone_key)
+
+        Discourse.store.s3_helper.expects(:list).with("original").returns([])
+        Discourse.store.s3_helper.expects(:list).with("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").returns([tombstone_copy])
+        Discourse.store.s3_helper.expects(:copy).with(tombstone_key, original_key, options: { acl: "public-read" })
+
+        FileHelper.expects(:download).returns(file_from_fixtures("smallest.png"))
+        stub_request(:get, upload.url).to_return(body: file_from_fixtures("smallest.png"))
+
+        expect do
+          upload_recovery.recover
+        end.to_not change { post.reload.uploads.count }
+      end
+    end
+
     describe 'image tag' do
       let(:post) do
         Fabricate(:post,

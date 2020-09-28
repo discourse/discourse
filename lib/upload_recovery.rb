@@ -31,12 +31,13 @@ class UploadRecovery
           data = Upload.extract_url(url)
           next unless data
 
-          sha1 = data[2]
+          upload = Upload.get_from_url(url)
 
-          unless upload = Upload.get_from_url(url)
+          if !upload || upload.verification_status == Upload.verification_statuses[:invalid_etag]
             if @dry_run
               puts "#{post.full_url} #{url}"
             else
+              sha1 = data[2]
               recover_post_upload(post, sha1)
             end
           end
