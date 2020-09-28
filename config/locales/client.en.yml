@@ -1148,6 +1148,7 @@ en:
         taken: "Sorry, that email is not available."
         error: "There was an error changing your email. Perhaps that address is already in use?"
         success: "We've sent an email to that address. Please follow the confirmation instructions."
+        success_via_admin: "Because you are changing the email of the user, we assume that they have lost access to their original email account. We sent a reset password email to the new email address for this user. Please note the user must complete the reset password process for the email address change to take effect."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
 
       change_avatar:
@@ -1190,6 +1191,7 @@ en:
         sso_override_instructions: "Email can be updated from SSO provider."
         no_secondary: "No secondary emails"
         instructions: "Never shown to the public."
+        admin_note: "Note: An admin user changing another non-admin user's email indicates the user has lost access to their original email account, so a reset password email will be sent to their new address. The user's email will not change until they complete the reset password process."
         ok: "We will email you to confirm"
         required: "Please enter an email address"
         invalid: "Please enter a valid email address"
