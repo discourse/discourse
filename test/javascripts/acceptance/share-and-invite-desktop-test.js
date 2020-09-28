@@ -70,3 +70,25 @@ QUnit.test("Post date link", async (assert) => {
 
   assert.ok(exists("#share-link"), "it shows the share modal");
 });
+
+acceptance("Share url with badges disabled - desktop", {
+  loggedIn: true,
+  settings: {
+    enable_badges: false,
+  },
+});
+
+QUnit.test(
+  "topic footer button - badges disabled - desktop",
+  async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-button-share-and-invite");
+
+    assert.notOk(
+      find(".share-and-invite.modal .modal-panel.share .topic-share-url")
+        .val()
+        .includes("?u=eviltrout"),
+      "it doesn't add the username param when badges are disabled"
+    );
+  }
+);
