@@ -147,9 +147,6 @@ class UserApiKeysController < ApplicationController
     if current_key = request.env['HTTP_USER_API_KEY']
       request_key = UserApiKey.with_key(current_key).first
       revoke_key ||= request_key
-      if request_key && request_key.id != revoke_key.id && !request_key.scopes.any? { |s| s.name == "write" }
-        raise Discourse::InvalidAccess
-      end
     end
 
     raise Discourse::NotFound unless revoke_key
