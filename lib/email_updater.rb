@@ -120,6 +120,7 @@ class EmailUpdater
     else
       @user.user_emails.create!(email: new_email)
     end
+    @user.reload
 
     DiscourseEvent.trigger(:user_updated, @user)
     @user.set_automatic_groups

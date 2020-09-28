@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { empty, or } from "@ember/object/computed";
+import { empty, or, alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { propertyEqual } from "discourse/lib/computed";
 import EmberObject from "@ember/object";
@@ -15,6 +15,7 @@ export default Controller.extend({
   success: false,
   oldEmail: null,
   newEmail: null,
+  successMessage: null,
 
   newEmailEmpty: empty("newEmail"),
 
@@ -27,6 +28,8 @@ export default Controller.extend({
   ),
 
   unchanged: propertyEqual("newEmailLower", "oldEmail"),
+
+  currentUserAdmin: alias("currentUser.admin"),
 
   @discourseComputed("newEmail")
   newEmailLower(newEmail) {
@@ -77,7 +80,25 @@ export default Controller.extend({
         ? this.model.addEmail(this.newEmail)
         : this.model.changeEmail(this.newEmail)
       ).then(
-        () => this.set("success", true),
+        () => {
+          this.set("success", true);
+
+          if (this.model.staff) {
+            this.set(
+              "successMessage",
+              I18n.t("user.change_email.success_staff")
+            );
+          } else {
+            if (this.currentUser.admin) {
+              this.set(
+                "successMessage",
+                I18n.t("user.change_email.success_via_admin")
+              );
+            } else {
+              this.set("successMessage", I18n.t("user.change_email.success"));
+            }
+          }
+        },
         (e) => {
           this.setProperties({ error: true, saving: false });
           if (
