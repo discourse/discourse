@@ -95,7 +95,7 @@ describe PrettyText do
 
     cooked = PrettyText.cook md
 
-    expected = <<~MD
+    expected = <<~HTML
       <div class="poll" data-poll-status="open" data-poll-type="multiple" data-poll-name="poll">
       <div>
       <div class="poll-container">
@@ -113,7 +113,7 @@ describe PrettyText do
       </div>
       </div>
       </div>
-    MD
+    HTML
 
     # note, hashes should remain stable even if emoji changes cause text content is hashed
     expect(n cooked).to eq(n expected)
@@ -152,5 +152,21 @@ describe PrettyText do
 
     excerpt = PrettyText.excerpt(post.cooked, SiteSetting.post_onebox_maxlength)
     expect(excerpt).to eq("A post with a poll \npoll")
+  end
+
+  it "supports the title attribute" do
+    cooked = PrettyText.cook <<~MD
+      [poll]
+      # What's your favorite *berry*? :wink: https://google.com/
+      * Strawberry
+      * Raspberry
+      * Blueberry
+      [/poll]
+    MD
+
+    expect(cooked).to include(<<~HTML)
+      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=9" title=":wink:" class="emoji" alt=":wink:"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
+      </div>
+    HTML
   end
 end

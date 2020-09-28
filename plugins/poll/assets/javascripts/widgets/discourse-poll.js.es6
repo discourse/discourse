@@ -356,6 +356,8 @@ createWidget("discourse-poll-container", {
     } else if (options) {
       const contents = [];
 
+      contents.push(new RawHtml({ html: attrs.titleHTML }));
+
       if (!checkUserGroups(this.currentUser, poll)) {
         contents.push(
           h(
@@ -510,6 +512,8 @@ createWidget("discourse-poll-pie-chart", {
 
       contents.push(button);
     }
+
+    contents.push(new RawHtml({ html: attrs.titleHTML }));
 
     const chart = this.attach("discourse-poll-pie-canvas", attrs);
     contents.push(chart);

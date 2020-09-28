@@ -2,6 +2,7 @@ import I18n from "I18n";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { classify } from "@ember/string";
+import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import loadScript from "discourse/lib/load-script";
@@ -14,6 +15,15 @@ export default Controller.extend(ModalFunctionality, {
   groupedBy: null,
   highlightedOption: null,
   displayMode: "percentage",
+
+  @discourseComputed("model.poll.title", "model.post.topic.title")
+  title(pollTitle, topicTitle) {
+    if (pollTitle) {
+      return htmlSafe(pollTitle);
+    }
+
+    return topicTitle;
+  },
 
   @discourseComputed("model.groupableUserFields")
   groupableUserFields(fields) {
