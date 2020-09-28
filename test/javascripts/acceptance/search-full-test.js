@@ -396,6 +396,26 @@ QUnit.test(
   }
 );
 
+QUnit.test(
+  "update max post count through advanced search ui",
+  async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await fillIn("#search-max-post-count", "5");
+
+    assert.equal(
+      find(".search-advanced-options #search-max-post-count").val(),
+      "5",
+      'has "5" populated'
+    );
+    assert.equal(
+      find(".search-query").val(),
+      "none max_posts:5",
+      'has updated search term to "none max_posts:5"'
+    );
+  }
+);
+
 QUnit.test("validate advanced search when initially empty", async (assert) => {
   await visit("/search?expanded=true");
   await click(".search-advanced-options .in-likes");
