@@ -168,7 +168,7 @@ class Upload < ActiveRecord::Base
     # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
     route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
-  rescue ActionController::RoutingError
+  rescue ActionController::RoutingError, Addressable::URI::InvalidURIError
     false
   end
 
