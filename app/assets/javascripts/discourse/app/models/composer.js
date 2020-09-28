@@ -113,6 +113,7 @@ const Composer = RestModel.extend({
   noBump: false,
   draftSaving: false,
   draftSaved: false,
+  draftForceSave: false,
 
   archetypes: reads("site.archetypes"),
 
@@ -1171,7 +1172,8 @@ const Composer = RestModel.extend({
       this.draftKey,
       this.draftSequence,
       data,
-      this.messageBus.clientId
+      this.messageBus.clientId,
+      { forceSave: this.draftForceSave }
     )
       .then((result) => {
         if (result.draft_sequence) {
@@ -1186,6 +1188,7 @@ const Composer = RestModel.extend({
           this.setProperties({
             draftSaved: true,
             draftConflictUser: null,
+            draftForceSave: false,
           });
         }
       })
@@ -1203,10 +1206,29 @@ const Composer = RestModel.extend({
           const json = e.jqXHR.responseJSON;
           draftStatus = json.errors[0];
           if (json.extras && json.extras.description) {
-            bootbox.alert(json.extras.description);
+            const buttons = [];
+
+            // ignore and force save draft
+            buttons.push({
+              label: I18n.t("composer.ignore"),
+              class: "btn",
+              callback: () => {
+                this.set("draftForceSave", true);
+              },
+            });
+
+            // reload
+            buttons.push({
+              label: I18n.t("composer.reload"),
+              class: "btn btn-primary",
+              callback: () => {
+                window.location.reload();
+              },
+            });
+
+            bootbox.dialog(json.extras.description, buttons);
           }
         }
-
         this.setProperties({
           draftStatus: draftStatus || I18n.t("composer.drafts_offline"),
           draftConflictUser: null,

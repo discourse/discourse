@@ -1942,6 +1942,9 @@ en:
           label: "Toggle topic bump"
           desc: "Reply without changing latest reply date"
 
+      reload: "Reload"
+      ignore: "Ignore"
+
     notifications:
       tooltip:
         regular:
