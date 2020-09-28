@@ -161,32 +161,34 @@
     </div>
   </div>
 
-  <div class="control-group pull-left">
-    <label class="control-label" for="search-min-views">{{i18n "search.advanced.min_views.label"}}</label>
-    <div class="controls">
-      {{input
-        type="number"
-        value=(readonly searchedTerms.min_views)
-        class="input-small"
-        id="search-min-views"
-        input=(action "onChangeSearchTermMinViews" value="target.value")
-      }}
+  <div class="views control-group pull-left">
+    <label class="control-label">{{i18n "search.advanced.views.label"}}</label>
+    <div class="views-count pull-left">
+      <div class="controls">
+        {{input
+          type="number"
+          value=(readonly searchedTerms.min_views)
+          class="input-small"
+          id="search-min-views"
+          input=(action "onChangeSearchTermMinViews" value="target.value")
+          placeholder=(i18n "search.advanced.min_views.placeholder")
+        }}
+      </div>
+    </div>
+    <span class="views-count-dash">–</span>
+    <div class="views-count pull-right">
+      <div class="controls">
+        {{input
+          type="number"
+          value=(readonly searchedTerms.max_views)
+          class="input-small"
+          id="search-max-views"
+          input=(action "onChangeSearchTermMaxViews" value="target.value")
+          placeholder=(i18n "search.advanced.max_views.placeholder")
+        }}
+      </div>
     </div>
   </div>
-
-  <div class="control-group pull-left">
-    <label class="control-label" for="search-max-views">{{i18n "search.advanced.max_views.label"}}</label>
-    <div class="controls">
-      {{input
-        type="number"
-        value=(readonly searchedTerms.max_views)
-        class="input-small"
-        id="search-max-views"
-        input=(action "onChangeSearchTermMaxViews" value="target.value")
-      }}
-    </div>
-  </div>
-
 </div>
 
 {{plugin-outlet name="advanced-search-options-below" args=(hash searchedTerms=searchedTerms onChangeSearchedTermField=onChangeSearchedTermField) tagName=""}}

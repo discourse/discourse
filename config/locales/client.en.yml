@@ -2124,10 +2124,12 @@ en:
             label: Posted
             before: before
             after: after
+        views:
+          label: Views
         min_views:
-          label: Minimum Views
+          placeholder: minimum
         max_views:
-          label: Maximum Views
+          placeholder: maximum
 
     hamburger_menu: "go to another topic list or category"
     new_item: "new"

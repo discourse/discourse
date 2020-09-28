@@ -163,6 +163,17 @@
           min-width: unset;
         }
       }
+
+      .views {
+        .views-count {
+          margin-bottom: 15px;
+          width: 45%;
+        }
+        .views-count-dash {
+          padding-left: 10px;
+          vertical-align: middle;
+        }
+      }
     }
   }
 }
