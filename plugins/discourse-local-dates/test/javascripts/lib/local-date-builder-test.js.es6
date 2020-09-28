@@ -259,8 +259,16 @@ QUnit.test("option[calendar]", (assert) => {
 
   freezeTime({ date: "2020-03-20 23:59" }, () =>
     assert.buildsCorrectDate(
+      { date: "2020-03-21", time: "01:00", timezone: PARIS },
+      { formated: "Tomorrow 1:00 AM" }
+    )
+  );
+
+  freezeTime({ date: "2020-03-20 23:59" }, () =>
+    assert.buildsCorrectDate(
       { date: "2020-03-21", time: "00:00", timezone: PARIS },
-      { formated: "Tomorrow 12:00 AM" }
+      { formated: "Saturday" },
+      "it displays the day with no time when the time in the displayed timezone is 00:00"
     )
   );
 
