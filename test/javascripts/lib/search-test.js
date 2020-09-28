@@ -32,7 +32,7 @@ QUnit.test("unescapesEmojisInBlurbs", (assert) => {
   const blurb = results.posts[0].get("blurb");
 
   assert.ok(blurb.indexOf("thinking.png"));
-  assert.ok(blurb.indexOf("<img src") === 0);
+  assert.ok(blurb.indexOf('<img width="20" height="20" src') === 0);
   assert.ok(blurb.indexOf(":thinking:") === -1);
 });
 
