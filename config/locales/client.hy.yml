@@ -1425,7 +1425,6 @@ hy:
       accept_invite: "Ընդունել Հրավերը"
       success: "Ձեր հաշիվը ստեղծված է, և այժմ Դուք մուտք եք գործել:"
       name_label: "Անուն"
-      password_label: "Առաջադրել Գաղտնաբառ"
       optional_description: "(ընտրովի)"
     password_reset:
       continue: "Շարունակել դեպի %{site_name}"
@@ -1785,8 +1784,6 @@ hy:
           noreplies: պատասխաններ չունեն
           single_user: պարունակում են մեկ օգտատեր
         post:
-          count:
-            label: Գրառումների Նվազագույն Քանակը
           time:
             label: Հրապարակվել է
             before: մինչև
@@ -1832,7 +1829,6 @@ hy:
         new: "Դուք չունեք նոր թեմաներ:"
         read: "Դուք դեռևս չեք կարդացել ոչ մի թեմա:"
         posted: "Դուք դեռևս գրառում չեք կատարել ոչ մի թեմայում:"
-        latest: "Վերջերս կատարված հրապարակումներ չկան: Տխուր է:"
         bookmarks: "Դուք դեռևս չունեք էջանշված թեմաներ:"
         category: " %{category}-ում թեմաներ չկան:"
         top: "Թոփ թեմաներ չկան:"
@@ -1918,7 +1914,6 @@ hy:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Դիտել բոլոր կատեգորիաները
       view_latest_topics: դիտեք վերջին թեմաները
-      suggest_create_topic: Միգուցե՞ չստեղծել նոր թեմա
       jump_reply_up: ցատկել դեպի ավելի վաղ պատասխան
       jump_reply_down: ցատկել դեպի ավելի հին պատասխան
       deleted: "Թեման ջնջվել է"

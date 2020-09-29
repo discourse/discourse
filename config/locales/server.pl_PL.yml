@@ -1767,7 +1767,6 @@ pl_PL:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     log_anonymizer_details: "Określa, czy zachować dane użytkownika w dzienniku po ich anonimizacji. Aby zachować zgodność z RODO, musisz to wyłączyć."
     newuser_spam_host_threshold: "Jak wiele razy użytkownik może zamieścić link\" original-title=\"<span class=\"glossary-highlight\" title=\"link (click to copy)\" data-copy-glossary=\"link\"> link (click to copy)\">link do tego samego hosta wewnątrz wpisów `newuser_spam_host_threshold` przed rozważeniem spamu."
-    staff_like_weight: "O ile większą wagę mają mieć polubienia przyznawane przez członków zespołu?"
     topic_view_duration_hours: "Licz wyświetlanie nowego tematu na IP/Użytkownika co N godzin"
     user_profile_view_duration_hours: "Licz nowe wyświetlenia profilu użytkownika na IP/Użytkownika co N godzin"
     levenshtein_distance_spammer_emails: "Przy dopasowywaniu emaili spamowych, różnica liczby znaków, która w dalszym ciągu pozwoli na przybliżone dopasowanie."

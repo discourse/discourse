@@ -122,6 +122,7 @@ it:
       twitter: "Condividi su Twitter"
       facebook: "Condividi su Facebook"
       email: "Invia per email"
+      url: "Copia e condividi l'URL"
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
       private_topic: "ha reso questo argomento un messaggio personale %{when}"
@@ -263,7 +264,9 @@ it:
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
         unbookmark_with_reminder: "Fare clic per rimuovere tutti i segnalibri e i promemoria in questo argomento. Hai un promemoria impostato %{reminder_at} per questo argomento."
     bookmarks:
+      created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
       not_bookmarked: "aggiungi ai segnalibri"
+      created_with_reminder: "Hai aggiunto ai segnalibri questo messaggio con un promemoria %{date}. %{name}"
       remove: "Rimuovi Segnalibro"
       delete: "Cancella Segnalibro"
       confirm_delete: "Sicuro di voler eliminare questo segnalibro? Anche il promemoria verrà eliminato."
@@ -272,6 +275,7 @@ it:
       no_timezone: 'Non hai ancora impostato un fuso orario. Non sarai in grado di impostare promemoria. Creane uno <a href="%{basePath}/my/preferences/profile">nel tuo profilo</a> .'
       invalid_custom_datetime: "La data e l'ora fornite non sono valide, riprova."
       list_permission_denied: "Non sei autorizzato a visualizzare i segnalibri di questo utente."
+      no_user_bookmarks: "Non hai nessun messaggio nei Segnalibri. I Segnalibri ti permettono di fare riferimento rapidamente a specifici messaggi."
       auto_delete_preference:
         label: "Elimina automaticamente"
         never: "Mai"
@@ -294,6 +298,7 @@ it:
         today_with_time: "oggi alle %{time}"
         tomorrow_with_time: "domani alle %{time}"
         at_time: "a %{date_time}"
+        existing_reminder: "Hai un promemoria impostato per questo segnalibro, che verrà inviato il %{at_date_time}"
     copy_codeblock:
       copied: "copiato!"
     drafts:
@@ -517,6 +522,7 @@ it:
       sent_by_user: "Inviato da <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Inviato da <a href='%{userUrl}'>te</a>"
     directory:
+      username: "Nome utente"
       filter_name: "filtra per nome utente"
       title: "Utenti"
       likes_given: "Dati"
@@ -547,6 +553,12 @@ it:
     groups:
       member_added: "Aggiunto"
       member_requested: "Richiesto alle"
+      add_members:
+        title: "Aggiungi membri a %{group_name}"
+        description: "Puoi anche incollare in un elenco separato da virgole."
+        usernames: "Inserisci nomi utente o indirizzi email"
+        input_placeholder: "Nomi utente o email"
+        notify_users: "Notifica gli utenti"
       requests:
         title: "Richieste"
         reason: "Motivo"
@@ -588,6 +600,18 @@ it:
         membership:
           title: Iscrizione
           access: Accesso
+        categories:
+          title: Categorie
+          long_title: "Notifiche predefinite di categoria"
+          description: "Quando gli utenti vengono aggiunti a questo gruppo, le loro impostazioni di notifica di categoria verranno impostate su questi valori predefiniti. Potranno essere cambiati in un secondo momento."
+          watched_categories_instructions: "Osserva automaticamente tutti gli argomenti in queste categorie. I membri del Gruppo riceveranno notifica di tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
+          tracked_categories_instructions: "Seguirai automaticamente tutti gli argomenti appartenenti a queste categorie. Accanto all'argomento comparirà il conteggio dei nuovi messaggi."
+          watching_first_post_categories_instructions: "Gli utenti riceveranno una notifica alla pubblicazione del primo messaggio in ogni nuovo argomento in queste categorie."
+          regular_categories_instructions: "Se queste categorie saranno silenziate, saranno silenziate per tutti i membri del gruppo. Gli utenti saranno avvisati se menzionati o se qualcuno risponde ai loro messaggi."
+          muted_categories_instructions: "Gli utenti non riceveranno alcuna notifica su nuovi argomenti in queste categorie, né verranno visualizzati nella pagina delle Categorie o degli argomenti Recenti."
+        tags:
+          title: Etichette
+          long_title: "Notifiche predefinite delle Etichette"
         logs:
           title: "Log"
           when: "Quando"
@@ -1020,6 +1044,7 @@ it:
         taken: "Spiacenti, questa email non è disponibile."
         error: "C'è stato un errore nel cambio dell'email; potrebbe essere già usata da un altro utente."
         success: "Abbiamo inviato una email a questo indirizzo. Segui le indicazioni di conferma."
+        success_via_admin: "Dal momento che stai cambiando l'email di questo utente, supponiamo che non abbia più accesso al suo indirizzo email originale. Abbiamo inviato una email di reimpostazione della password al nuovo indirizzo email. Tieni presente che l'utente dovrà completare il processo di reimpostazione della password perché il cambio di indirizzo abbia effetto."
         success_staff: "Abbiamo inviato una email al tuo indirizzo corrente. Segui le istruzioni di conferma."
       change_avatar:
         title: "Cambia l'immagine del tuo profilo"
@@ -1057,6 +1082,7 @@ it:
         sso_override_instructions: "L'email può essere aggiornata dal provider SSO."
         no_secondary: "Nessuna email secondaria"
         instructions: "Mai mostrato pubblicamente"
+        admin_note: "Nota: un utente amministratore che modifica l'email di un utente non amministratore implica che l'utente abbia perso l'accesso al proprio account email originale, e quindi l'email di reimpostazione della password verrà inviata al nuovo indirizzo. L'email dell'utente non cambierà finché non completerà il processo di reimpostazione della password."
         ok: "Ti invieremo una email di conferma"
         required: "Inserisci un indirizzo email"
         invalid: "Inserisci un indirizzo email valido"
@@ -1523,7 +1549,6 @@ it:
       accept_invite: "Accetta Invito"
       success: "Il tuo account è stato creato e ora sei connesso."
       name_label: "Nome"
-      password_label: "Imposta Password"
       optional_description: "(opzionale)"
     password_reset:
       continue: "Procedi su %{site_name}"
@@ -1889,8 +1914,6 @@ it:
           noreplies: hanno zero risposte
           single_user: contengono un singolo utente
         post:
-          count:
-            label: Conteggio Messaggi Minimo
           time:
             label: Pubblicato
             before: prima del
@@ -1936,7 +1959,6 @@ it:
         new: "Non ci sono nuovi argomenti."
         read: "Non hai ancora letto nessun argomento."
         posted: "Non hai ancora scritto in nessun argomento."
-        latest: "Non ci sono argomenti più recenti. Ciò è triste."
         bookmarks: "Non hai ancora argomenti nei segnalibri."
         category: "Non ci sono argomenti in %{category}."
         top: "Non ci sono argomenti di punta."
@@ -2022,7 +2044,6 @@ it:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza gli argomenti più recenti
-      suggest_create_topic: Perché non crei un argomento?
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato eliminato"

@@ -1594,7 +1594,6 @@ pl_PL:
       accept_invite: "Akceptuj zaproszenie"
       success: "Twje konto zostało utworzone i zostałeś zalogowany."
       name_label: "Nazwa"
-      password_label: "Ustaw hasło"
       optional_description: "(opcjonalne)"
     password_reset:
       continue: "Przejdź do %{site_name}"
@@ -1974,8 +1973,6 @@ pl_PL:
           noreplies: ma zero odpowiedzi
           single_user: zawierają użytkownika
         post:
-          count:
-            label: Minimalna liczba wpisów
           time:
             label: Opublikowano
             before: przed
@@ -2023,7 +2020,6 @@ pl_PL:
         new: "Nie masz nowych tematów."
         read: "You haven't read any topics yet."
         posted: "Jeszcze nie zamieściłeś wpisu w żadnym z tematów."
-        latest: "Nie ma najnowszych tematów. Smutne."
         bookmarks: "Nie posiadasz tematów dodanych do zakładek."
         category: "Nie ma tematów w kategorii %{category}."
         top: "Brak najlepszych tematów."
@@ -2123,7 +2119,6 @@ pl_PL:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT} {LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Przeglądaj wszystkie kategorie
       view_latest_topics: pokaż aktualne tematy
-      suggest_create_topic: Może rozpoczniesz temat?
       jump_reply_up: przeskocz do wcześniejszej odpowiedzi
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"

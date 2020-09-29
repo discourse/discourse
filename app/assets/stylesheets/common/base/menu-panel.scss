@@ -90,8 +90,14 @@
   }
 }
 
-.hamburger-panel .panel-body {
-  overflow-y: auto;
+.hamburger-panel {
+  .panel-body {
+    overflow-y: auto;
+  }
+
+  span.badge-category {
+    max-width: 100px;
+  }
 }
 
 .menu-links.columned {
@@ -177,10 +183,6 @@
     color: var(--primary-med-or-secondary-med);
     font-weight: normal;
     font-size: $font-down-1;
-  }
-
-  span.badge-category {
-    max-width: 100px;
   }
 
   div.discourse-tags {

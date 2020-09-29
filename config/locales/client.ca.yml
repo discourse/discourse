@@ -1473,7 +1473,6 @@ ca:
       accept_invite: "Accepta la invitació"
       success: "S'ha creat el compte i ara heu iniciat la sessió."
       name_label: "Nom"
-      password_label: "Estableix la contrasenya"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continua a %{site_name}"
@@ -1825,8 +1824,6 @@ ca:
           noreplies: tenen zero respostes
           single_user: contenen un únic usuari
         post:
-          count:
-            label: Recompte mínim de publicacions
           time:
             label: Publicat
             before: abans de
@@ -1872,7 +1869,6 @@ ca:
         new: "No teniu cap tema nou."
         read: "Encara no heu llegit cap tema."
         posted: "Encara no heu publicat cap tema."
-        latest: "No hi ha temes més recents. És una llàstima."
         bookmarks: "Encara no heu marcat temes com a preferits."
         category: "No hi ha temes de %{category}."
         top: "No hi ha temes principals."
@@ -1950,7 +1946,6 @@ ca:
       read_more_MF: "Hi ha { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no llegit</a> } other { are <a href='{basePath}/unread'># no llegits</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nou</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nous</a> temes} } restants, or {CATEGORY, select, true {navegueu per altres temes en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Navega per totes les categories
       view_latest_topics: mira els temes més recents
-      suggest_create_topic: Per què no creeu un tema?
       jump_reply_up: salta a la resposta anterior
       jump_reply_down: salta a la resposta posterior
       deleted: "El tema ha estat suprimit"

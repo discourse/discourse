@@ -25,8 +25,6 @@ id:
         Lencana ini diberikan atas keberhasilan menyelesaikan panduan interaktif pengguna anggota forum lanjutan. Anda telah ahli menggunakan fasilitas lanjutan dalam diskusi — sekarang Anda telah bersertifikat penuh menjadi anggota forum.
   discourse_narrative_bot:
     bio: "Salam, saya bukan manusia asli. Saya adalah robot yang akan memandu Anda menggunakan forum ini. Untuk berkomunikasi dengan saya, kirimi saya pesan atau panggil **`@%{discobot_username}`** dimana saja."
-    tl2_promotion_message:
-      subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
     timeout:
       message: |-
         Salam @%{username}, hanya ingin menyapa karena saya tidak melihat Anda beberapa waktu.

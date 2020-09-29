@@ -24,6 +24,7 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
+import { resolveShareUrl } from "discourse/helpers/share-url";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -242,8 +243,7 @@ const Topic = RestModel.extend({
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
-    const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
-    return `${url}${userQueryString}`;
+    return resolveShareUrl(url, user);
   },
 
   printUrl: fmt("url", "%@/print"),

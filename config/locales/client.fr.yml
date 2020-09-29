@@ -122,6 +122,7 @@ fr:
       twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
       email: "Envoyer par e-mail"
+      url: "Copier et partager l'URL"
     action_codes:
       public_topic: "a rendu ce sujet public %{when}"
       private_topic: "a rendu ce sujet message direct %{when}"
@@ -601,8 +602,11 @@ fr:
           access: Accès
         categories:
           title: Catégories
+          long_title: "Notifications par défaut de la catégorie"
+          description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification de catégorie seront définis à ces valeurs par défaut. Ensuite, ils pourront les modifier."
         tags:
           title: Étiquettes
+          long_title: "Notifications par défaut des étiquettes"
         logs:
           title: "Journaux"
           when: "Date"
@@ -918,6 +922,8 @@ fr:
       users: "Utilisateurs"
       muted_users: "Silencieux"
       muted_users_instructions: "Ignorer toutes les notifications et messages directs provenant de ces utilisateurs."
+      allowed_pm_users: "Autorisés"
+      allowed_pm_users_instructions: "Autoriser uniquement les messages directs de ces utilisateurs."
       ignored_users: "Ignorés"
       ignored_users_instructions: "Ignorer tous les messages, notifications et messages directs provenant de ces utilisateurs."
       tracked_topics_link: "Afficher"
@@ -1552,7 +1558,6 @@ fr:
       accept_invite: "Accepter l'invitation"
       success: "Votre compte a été créé et vous êtes maintenant connecté."
       name_label: "Nom"
-      password_label: "Définir le mot de passe"
       optional_description: "(facultatif)"
     password_reset:
       continue: "Continuer vers %{site_name}"
@@ -1571,29 +1576,6 @@ fr:
       categories_and_top_topics: "Catégories et meilleurs sujets"
       categories_boxes: "Boîtes avec sous-catégories"
       categories_boxes_with_topics: "Boîtes avec sujets à la une"
-    base_font_setting:
-      helvetica: "Helvetica / Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "Roboto Condensé"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Maj"
       ctrl: "Ctrl"
@@ -1750,6 +1732,7 @@ fr:
         draft: Brouillon
         edit: Modifier
         reply_to_post:
+          label: Répondre à un message de %{postUsername}
           desc: Répondre à un message spécifique
         reply_as_new_topic:
           label: Répondre via un sujet lié
@@ -1941,8 +1924,6 @@ fr:
           noreplies: n'ont aucune réponse
           single_user: contiennent un unique utilisateur
         post:
-          count:
-            label: Nombre minimum de messages
           time:
             label: Date
             before: avant
@@ -1988,7 +1969,6 @@ fr:
         new: "Vous n'avez aucun nouveau sujet."
         read: "Vous n'avez lu aucun sujet pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
-        latest: "Il n'y a aucun sujet pour le moment. C'est triste…"
         bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
@@ -2073,8 +2053,8 @@ fr:
       read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='{basePath}/unread'>1 sujet non lu</a> } other { a <a href='{basePath}/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST} : {CREATED_AT}\n{LAST_POST} : {BUMPED_AT}"
       browse_all_categories: Voir toutes les catégories
+      browse_all_tags: Parcourir toutes les étiquettes
       view_latest_topics: voir les derniers sujets
-      suggest_create_topic: Pourquoi ne pas créer un sujet ?
       jump_reply_up: aller à des réponses précédentes
       jump_reply_down: aller à des réponses ultérieures
       deleted: "Ce sujet a été supprimé"

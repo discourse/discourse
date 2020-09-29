@@ -100,6 +100,7 @@ zh_CN:
       twitter: "分享到Twitter"
       facebook: "分享到Facebook"
       email: "通过电子邮件发送"
+      url: "复制并分享网址"
     action_codes:
       public_topic: "于%{when}将此主题设为公开"
       private_topic: "于%{when}将该主题转换为私信"
@@ -489,8 +490,8 @@ zh_CN:
       username: "用户名"
       filter_name: "按用户名筛选"
       title: "用户"
-      likes_given: "点赞"
-      likes_received: "获得赞"
+      likes_given: "送出"
+      likes_received: "收到"
       topics_entered: "浏览"
       topics_entered_long: "浏览主题"
       time_read: "阅读时长"
@@ -902,7 +903,7 @@ zh_CN:
       admin_delete: "删除"
       users: "用户"
       muted_users: "静音"
-      muted_users_instructions: "封禁来自这些用户的所有通知和私信。"
+      muted_users_instructions: "屏蔽来自这些用户的所有通知以及私信。"
       allowed_pm_users: "允许的"
       allowed_pm_users_instructions: "仅允许来自这些用户的私信。"
       allow_private_messages_from_specific_users: "仅允许特定用户向我发送私信"
@@ -1153,10 +1154,10 @@ zh_CN:
         notifications: "新通知"
         contextual: "新建页面内容"
       like_notification_frequency:
-        title: "用户被赞时通知提醒"
+        title: "被赞时通知提醒"
         always: "始终"
-        first_time_and_daily: "每天首个被赞"
-        first_time: "历史首个被赞"
+        first_time_and_daily: "每天帖子首个被赞"
+        first_time: "帖子第一次被赞"
         never: "从不"
       email_previous_replies:
         title: "邮件底部包含历史回复"
@@ -1272,7 +1273,7 @@ zh_CN:
         title: "概要"
         stats: "统计"
         time_read: "阅读时间"
-        recent_time_read: "最近阅读时间"
+        recent_time_read: "近期阅读时间"
         topic_count:
           other: "创建主题"
         post_count:
@@ -1286,7 +1287,7 @@ zh_CN:
         topics_entered:
           other: "已阅主题"
         posts_read:
-          other: "阅读帖子"
+          other: "已读帖子"
         bookmark_count:
           other: "收藏"
         top_replies: "热门回复"
@@ -1300,7 +1301,7 @@ zh_CN:
         more_badges: "更多徽章"
         top_links: "热门链接"
         no_links: "暂无链接。"
-        most_liked_by: "谁赞得最多"
+        most_liked_by: "被谁赞得最多"
         most_liked_users: "赞谁最多"
         most_replied_to_users: "最多回复至"
         no_likes: "暂无赞。"
@@ -1356,7 +1357,7 @@ zh_CN:
     refresh: "刷新"
     home: "首页"
     read_only_mode:
-      enabled: "站点正处于只读模式。你可以继续浏览，但是回复、赞和其他操作暂时被禁用。"
+      enabled: "站点正处于只读模式。你可以继续浏览，但是回复、点赞和其它操作暂时被禁用。"
       login_disabled: "只读模式下不允许登录。"
       logout_disabled: "站点处于只读模式时退出登录被禁用。"
     too_few_topics_and_posts_notice_MF: >-
@@ -1533,7 +1534,7 @@ zh_CN:
       accept_invite: "接受邀请"
       success: "已创建你的账户，你现在可以登录了。"
       name_label: "昵称"
-      password_label: "设置密码"
+      password_label: "密码"
       optional_description: "（可选）"
     password_reset:
       continue: "转入到 %{site_name}"
@@ -1552,29 +1553,6 @@ zh_CN:
       categories_and_top_topics: "分类和最热主题"
       categories_boxes: "带子分类的框"
       categories_boxes_with_topics: "有特色主题的框"
-    base_font_setting:
-      helvetica: "Helvetica/Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "RobotoCondensed"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1658,7 +1636,7 @@ zh_CN:
         title_too_long: "标题过长，最多 %{max} 个字"
         post_missing: "帖子不能为空"
         post_length: "帖子至少要有%{min} 个字符"
-        try_like: "试试%{heart}按钮？"
+        try_like: "你尝试过使用%{heart}按钮了吗？"
         category_missing: "未选择分类"
         tags_missing: "你必须至少选择%{count}个标签"
         topic_template_not_modified: "请通过编辑主题模板来为主题添加详情。"
@@ -1733,6 +1711,7 @@ zh_CN:
         draft: 草稿
         edit: 编辑
         reply_to_post:
+          label: 以%{postUsername}的身份回复
           desc: 回复特定帖子
         reply_as_new_topic:
           label: 回复为联结主题
@@ -1779,9 +1758,9 @@ zh_CN:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span>%{username}、%{username2}</span> %{description}"
       liked_many:
-        other: "<span>%{username}, %{username2} 和其他 %{count} 人</span> %{description}"
+        other: "<span>%{username}和%{username2}还有其余%{count}人</span> %{description}"
       liked_consolidated_description:
         other: "你的帖子有%{count}个赞"
       liked_consolidated: "<span>%{username}</span>%{description}"
@@ -1818,7 +1797,7 @@ zh_CN:
         replied: "新回复"
         quoted: "引用"
         edited: "编辑"
-        liked: "新到赞"
+        liked: "新的赞"
         private_message: "新私信"
         invited_to_private_message: "邀请进行私下交流"
         invitee_accepted: "邀请已接受"
@@ -1922,12 +1901,16 @@ zh_CN:
           noreplies: 没有回复
           single_user: 只有一个用户参与
         post:
-          count:
-            label: 最小帖子数
           time:
             label: 发表于
             before: 之前
             after: 之后
+        views:
+          label: 点阅量
+        min_views:
+          placeholder: 最小值
+        max_views:
+          placeholder: 最大值
     hamburger_menu: "转到另一个主题列表或分类"
     new_item: "新"
     go_back: "返回"
@@ -1968,7 +1951,7 @@ zh_CN:
         new: "你没有近期主题可读。"
         read: "你尚未阅读任何主题。"
         posted: "你尚未在任何主题中发帖。"
-        latest: "没有新的主题。"
+        ready_to_create: "准备好 "
         bookmarks: "你没有收藏任何主题。"
         category: "%{category}分类中没有主题。"
         top: "没有热门主题。"
@@ -2036,7 +2019,7 @@ zh_CN:
       new_posts:
         other: "自你上一次阅读此主题后，又有 %{count} 个新帖子发表了"
       likes:
-        other: "这个主题收到了 %{count} 个赞"
+        other: "这个主题收到了%{count}个赞"
       back_to_list: "返回列表"
       options: "主题选项"
       show_links: "显示此主题中的链接"
@@ -2049,7 +2032,7 @@ zh_CN:
       browse_all_categories: 浏览所有分类
       browse_all_tags: 浏览所有标签
       view_latest_topics: 查阅最新主题
-      suggest_create_topic: 创建一个新的主题吧！
+      suggest_create_topic: 开始讨论一个新的话题？
       jump_reply_up: 转到更早的回复
       jump_reply_down: 转到更新的回复
       deleted: "此主题已被删除"
@@ -2144,7 +2127,7 @@ zh_CN:
           "2_8": "因为你追踪了该分类，所以你会看到新回复的数量。"
           "2_4": "你会看到新回复的数量的原因是你曾经回复过该主题。"
           "2_2": "你会看到新回复数量的原因是你正在追踪该主题。"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": '你会看到新回复的计数是因为你<a href="%{basePath}/u/%{username}/preferences/notifications">浏览过该主题</a>。'
           "1_2": "有人@你或回复你时会通知你。"
           "1": "如果有人@你或回复你，将通知你。"
           "0_7": "你将忽略关于该分类的所有通知。"
@@ -2388,17 +2371,17 @@ zh_CN:
       gap:
         other: "查看 %{count} 个隐藏回复"
       notice:
-        new_user: "这是 %{user} 发的第一个帖子 - 让我们欢迎他加入社区！"
+        new_user: "这是%{user}的首个发帖 - 让我们欢迎他加入社区吧！"
         returning_user: "从我们上一次看到 %{user} 有一阵子了 — 他上次发帖是 %{time}."
       unread: "未读帖子"
       has_replies:
         other: "%{count} 回复"
       unknown_user: "（未知或已删除的用户）"
       has_likes_title:
-        other: "%{count} 人赞了该贴"
-      has_likes_title_only_you: "你喜欢了这个帖子"
+        other: "%{count}人赞了该贴"
+      has_likes_title_only_you: "你赞了这个帖子"
       has_likes_title_you:
-        other: "你和其他 %{count} 人赞了该贴"
+        other: "你和另外的%{count}人赞了帖"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -2431,7 +2414,7 @@ zh_CN:
       controls:
         reply: "开始撰写本帖的回复"
         like: "点赞此帖"
-        has_liked: "已赞"
+        has_liked: "你已赞了这个帖子"
         read_indicator: "阅读了帖子的用户"
         undo_like: "取消赞"
         edit: "编辑本帖"
@@ -2476,7 +2459,7 @@ zh_CN:
           read:
             other: "看过"
           like_capped:
-            other: "和其他 %{count} 人赞了它"
+            other: "还有其他%{count}人赞了它"
           read_capped:
             other: "还有%{count}个其他用户看过"
         by_you:
@@ -2651,7 +2634,7 @@ zh_CN:
       sort_options:
         default: "默认"
         likes: "赞"
-        op_likes: "原始帖子赞"
+        op_likes: "原始帖子的赞"
         views: "阅览量"
         posts: "帖子"
         activity: "最后活跃时间"
@@ -2744,10 +2727,10 @@ zh_CN:
     posts: "帖子"
     posts_long: "本主题有 %{number} 个帖子"
     posts_likes_MF: |
-      这个主题有 {count, plural, other {# 个帖子}}{ratio, select,
-      low {，有很多人赞了该帖}
-      med {，有非常多人赞了该帖}
-      high {，大多数人赞了该帖}
+      这个主题共有{count, plural, other {#个回复}}{ratio, select,
+      low {，赞/帖比较高}
+      med {，赞/帖比很高}
+      high {，赞/帖比非常之高}
       other {}}
     original_post: "原始帖"
     views: "浏览"
@@ -2760,7 +2743,7 @@ zh_CN:
     likes: "赞"
     likes_lowercase:
       other: "赞"
-    likes_long: "本主题已有 %{number} 次赞"
+    likes_long: "这个主题已收到%{number}个赞"
     users: "用户"
     users_lowercase:
       other: "用户"
@@ -2915,7 +2898,7 @@ zh_CN:
         reply_topic: "%{shortcut} 回复主题"
         reply_post: "%{shortcut} 回复帖子"
         quote_post: "%{shortcut} 引用帖子"
-        like: "%{shortcut} 赞帖子"
+        like: "%{shortcut} 点赞帖子"
         flag: "%{shortcut} 标记帖子"
         bookmark: "%{shortcut} 收藏帖子"
         edit: "%{shortcut} 编辑帖子"
@@ -3506,7 +3489,7 @@ zh_CN:
           create: "创建"
           create_type: "类型"
           create_name: "名称"
-          long_title: "修改你站点的色彩、CSS 和 HTML"
+          long_title: "修改你的站点的色彩、CSS 和HTML内容"
           edit: "编辑"
           edit_confirm: "这是一个远程主题。如果你编辑了CSS/HTML，在下一次更新该主题后这些自定义项目将会被删除。"
           update_confirm: "这些本地更改将被更新删除。你确定你要继续吗？"
@@ -3538,7 +3521,7 @@ zh_CN:
           convert_component_tooltip: "转换此组件到主题"
           convert_theme_alert: "你确定转换此组件到主题吗？它将作为%{relatives}的父级删除。"
           convert_theme_tooltip: "转换此主题到组件"
-          inactive_themes: "非活动主题："
+          inactive_themes: "未使用的主题："
           inactive_components: "未使用的组件："
           broken_theme_tooltip: "此主题的CSS，HTML或YAML中存在错误"
           disabled_component_tooltip: "此组件已被停用"
@@ -3614,17 +3597,17 @@ zh_CN:
             text: "CSS"
             title: "输入自定义 CSS，我们接受所有有效的 CSS 和 SCSS 样式"
           header:
-            text: "头部"
-            title: "输入显示在站点头部的 HTML"
+            text: "Header"
+            title: "输入需要显示在网站顶部的HTML"
           after_header:
-            text: "添加头部"
-            title: "输入显示在所有页面的头部之后的 HTML"
+            text: "After Header"
+            title: "输入需要显示在所有页面的Header下方的HTML"
           footer:
-            text: "页脚"
-            title: "输入显示在页面尾部后的 HTML"
+            text: "Footer"
+            title: "输入需要显示在页面底部的HTML"
           embedded_scss:
-            text: "嵌入使用的 CSS"
-            title: "输入用于嵌入评论的自定义 CSS "
+            text: "Embedded CSS"
+            title: "输入自定义的CSS"
           color_definitions:
             text: "颜色配置"
             title: "输入自定义颜色配置（仅限高级用户）"
@@ -3682,7 +3665,7 @@ zh_CN:
             description: "用于指示操作成功。"
           love:
             name: "赞"
-            description: "赞按钮的颜色。"
+            description: "赞同按钮的颜色。"
         robots:
           title: "覆盖你的站点的robots.txt文件："
           warning: "这会永久性地覆盖所有相关的站点设置。"
@@ -4046,7 +4029,7 @@ zh_CN:
         delete_all_posts: "删除所有帖子"
         delete_posts_progress: "删除帖子..."
         delete_posts_failed: "删除帖子时出现问题。"
-        penalty_post_actions: "你想对相关帖子做什么？"
+        penalty_post_actions: "你想对关联帖子做什么？"
         penalty_post_delete: "删除帖子"
         penalty_post_delete_replies: "删除帖子+所有回复"
         penalty_post_edit: "编辑帖子"
@@ -4191,9 +4174,9 @@ zh_CN:
           flagged_posts: "被标记的帖子"
           flagged_by_users: "标记其的用户"
           likes_given: "点赞"
-          likes_received: "获得赞"
-          likes_received_days: "获得赞：独立天数"
-          likes_received_users: "获得赞：每用户"
+          likes_received: "获赞"
+          likes_received_days: "获赞：独立天数"
+          likes_received_users: "获赞：每用户"
           suspended: "已封禁（最近6个月）"
           silenced: "禁言（最近6个月）"
           qualifies: "符合信任等级3要求"
@@ -4210,6 +4193,8 @@ zh_CN:
           external_name: "外部系统中的名字"
           external_email: "电子邮件"
           external_avatar_url: "头像URL"
+          delete_sso_record: "删除SSO记录"
+          confirm_delete: "你确定要删除此单点登录（SSO）记录吗？"
       user_fields:
         title: "用户属性"
         help: "增加用户能填写的字段。"
@@ -4307,7 +4292,7 @@ zh_CN:
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:
-          modal_description: "你想在已存在的设置上应用此更改吗？这将更改%{count}位现有用户的首选项。"
+          modal_description: "你想在已存在的设置上应用此更改吗？这将更改%{count}位现有用户的自定义设置。"
           modal_yes: "是"
           modal_no: "不，仅应用以后的更改"
         simple_list:
@@ -4405,7 +4390,7 @@ zh_CN:
         alt: "自定义表情符号预览"
         delete_confirm: "你确定要删除 :%{name}: emoji 么？"
       embedding:
-        get_started: "如果你想要将 Discourse 嵌入至其他网站，添加他们的主机地址。"
+        get_started: "如果你想要将 Discourse 嵌入至其他网站，请添加他们的域名。"
         confirm_delete: "你确定要删除这个主机吗？"
         sample: "使用下列 HTML 代码至你的站点创建和嵌入 Discourse 主题。把<b>REPLACE_ME</b> 替换成你将嵌入至的网址。"
         title: "嵌入"

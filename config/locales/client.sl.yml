@@ -1437,7 +1437,6 @@ sl:
       accept_invite: "Sprejmi povabilo"
       success: "Vaš račun je ustvarjen in vi ste prijavljeni."
       name_label: "Ime"
-      password_label: "Nastavi geslo"
       optional_description: "(neobvezno)"
     password_reset:
       continue: "Nadaljujte na %{site_name}"
@@ -1803,8 +1802,6 @@ sl:
           noreplies: brez odgovora
           single_user: od samo enega uporabnika
         post:
-          count:
-            label: Minimalno število prispevkov
           time:
             label: Objavljeno
             before: pred
@@ -1852,7 +1849,6 @@ sl:
         new: "Nimate novih tem."
         read: "Niste prebrali še nobene teme."
         posted: "Niste objavili še v nobeni temi."
-        latest: "Ni najnovejših tem."
         bookmarks: "Nimate tem z zaznamki."
         category: "Ni tem v kategoriji %{category} ."
         top: "Ni najboljših tem."
@@ -1943,7 +1939,6 @@ sl:
       read_more_MF: "{ UNREAD, plural, =0 {} one { Je še <a href='{basePath}/unread'>1 neprebrana</a> } two { Sta še <a href='{basePath}/unread'>2 neprebrani</a> } other { Je še<a href='{basePath}/unread'># neprebranih } } { NEW, plural, =0 {} one { {BOTH, select, true{in} false {je } other{}} <a href='{basePath}/new'>1 nova</a> tema ostala} two { {BOTH, select, true{in } false {sta } other{}} <a href='{basePath}/new'>2 novi</a> temi ostali} other { {BOTH, select, true{in } false {so } other{}} <a href='{basePath}/new'># nove</a> teme ostale} }, ali {CATEGORY, select, true {brskaj druge teme v {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Brskajte po vseh kategorijah
       view_latest_topics: poglej najnovejše teme
-      suggest_create_topic: Ustvari novo temo?
       jump_reply_up: pojdi na prejšni odgovor
       jump_reply_down: pojdi na naslednji odgovor
       deleted: "Tema je bila izbrisana"

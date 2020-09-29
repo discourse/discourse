@@ -1209,7 +1209,6 @@ nb_NO:
       accept_invite: "Godta invitasjon"
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
       name_label: "Navn"
-      password_label: "Sett passord"
       optional_description: "(valgfritt)"
     password_reset:
       continue: "Fortsett til %{site_name}"
@@ -1507,8 +1506,6 @@ nb_NO:
           noreplies: har ingen svar
           single_user: inneholder bare én bruker
         post:
-          count:
-            label: Minimum antall innlegg
           time:
             label: Skrevet
             before: før
@@ -1553,7 +1550,6 @@ nb_NO:
         new: "Du har ingen nye emner å lese."
         read: "Du har ikke lest noen emner enda."
         posted: "Du har ikke skrevet innlegg i noen emner enda."
-        latest: "Det finnes ingen siste emner. Det er sørgelig."
         bookmarks: "Du har ingen bokmerkede emner enda."
         category: "Det finnes ingen %{category}-emner."
         top: "Det finnes ingen populære emner."
@@ -1629,7 +1625,6 @@ nb_NO:
       read_more_MF: "Det { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulest</a> } other { finnes <a href='{basePath}/unread'># uleste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {finnes } other{}} <a href='{basePath}/new'>1 nytt</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emner} } igjen, eller {CATEGORY, select, true {se andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
-      suggest_create_topic: Kanskje du kan lage et nytt emne?
       jump_reply_up: hopp til tidligere svar
       jump_reply_down: hopp til senere svar
       deleted: "Emnet ble slettet"

@@ -1620,7 +1620,6 @@ tr_TR:
     privacy_policy_url: "Başka yerde barındırılan bir Gizlilik İlkeleri dökümanını kullanmak istiyorsanız, ilgili URL adresini buraya eksiksiz şekilde girin."
     log_anonymizer_details: "Anonimleştirildikten sonra kullanıcının ayrıntılarını günlükte tutup tutmayacağı. GDPR'ye uyarken bunu kapatmanız gerekir."
     newuser_spam_host_threshold: "Yeni bir kullanıcı, `newuser_spam_host_threshold` gönderileri içerisinde aynı makineye, kaç kere bağlantı paylaşınca spam olarak algılansın."
-    staff_like_weight: "Görevlilerin beğenilere verilecek ekstra ağırlık faktörü."
     topic_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni konu görüntülemesi say"
     user_profile_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni profil görüntülemesi say"
     levenshtein_distance_spammer_emails: "İstenmeyen e-postaları eşleştirilirken, bulanık eşleşme için tahammül edilecek karakter sayısı farklılığı."

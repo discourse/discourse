@@ -1371,7 +1371,6 @@ ur:
       accept_invite: "دعوت قبول کریں"
       success: "آپ کا اکاؤنٹ بنا دیا گیا ہے اور اب آپ لاگ اِن کر سکتے ہیں۔"
       name_label: "نام"
-      password_label: "پاس ورڈ رکھیں"
       optional_description: "(اختیاری)"
     password_reset:
       continue: "%{site_name} پر جاری رکھیں"
@@ -1719,8 +1718,6 @@ ur:
           noreplies: کے صفر جوابات ہوں
           single_user: صرف ایک صارف پر مشتمل ہوں
         post:
-          count:
-            label: کم از کم پوسٹ شمار
           time:
             label: پوسٹ کیا
             before: سے پہلے
@@ -1766,7 +1763,6 @@ ur:
         new: "آپ کے پاس کوئی نئے ٹاپک موجود نہیں۔"
         read: "ابھی تک آپ نے کوئی ٹاپکس نہیں پڑھے۔"
         posted: "ابھی تک آپ نے کسی ٹاپک میں پوسٹ نہیں کیا۔"
-        latest: "کوئی تازہ ٹاپک موجود نہیں ہیں۔ یہ اداس کر دینے والی بات ہے۔"
         bookmarks: "ابھی تک آپ کے بُک مارک کیے ہوے کوئی ٹاپک نہیں ہیں۔"
         category: "کوئی %{category} کے ٹاپک موجود نہیں ہیں۔"
         top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
@@ -1844,7 +1840,6 @@ ur:
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
-      suggest_create_topic: کیوں نہ ایک ٹاپک بنائیں؟
       jump_reply_up: اِس سے پرانے جواب پر جائیں
       jump_reply_down: اِس سے نئے جواب پر جائیں
       deleted: "ٹاپک حذف کردیا گیا ہے"

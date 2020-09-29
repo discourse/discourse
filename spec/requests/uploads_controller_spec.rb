@@ -402,6 +402,14 @@ describe UploadsController do
           get upload.short_path
 
           expect(response).to redirect_to(Discourse.store.signed_url_for_path(Discourse.store.get_path_for_upload(upload)))
+          expect(response.header['Location']).not_to include('response-content-disposition=attachment')
+        end
+
+        it "respects the force download (dl) param" do
+          sign_in(user)
+          freeze_time
+          get upload.short_path, params: { dl: '1' }
+          expect(response.header['Location']).to include('response-content-disposition=attachment')
         end
 
         it "has the correct caching header" do

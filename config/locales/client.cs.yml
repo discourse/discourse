@@ -1239,7 +1239,6 @@ cs:
       accept_invite: "Přijmout pozvání"
       success: "Váš účet byl vytvořen a nyní jste přihlášeni."
       name_label: "Jméno"
-      password_label: "Nastavit heslo"
       optional_description: "(volitelné)"
     password_reset:
       continue: "Pokračovat na %{site_name}"
@@ -1558,8 +1557,6 @@ cs:
           noreplies: jsou bez odpovědi
           single_user: obsahují jen jednoho uživatele
         post:
-          count:
-            label: Minimální počet příspěvků
           time:
             label: Přidáno
             before: před
@@ -1606,7 +1603,6 @@ cs:
         new: "Nemáte žádná nová témata ke čtení."
         read: "Zatím jste nečetli žádná témata."
         posted: "Zatím jste nepřispěli do žádného tématu."
-        latest: "Nejsou tu žádná témata z poslední doby. To je docela smutné."
         bookmarks: "V tématech nemáte žádné záložky."
         category: "V kategorii %{category} nejsou žádná témata."
         top: "Nejsou tu žádná populární témata."
@@ -1696,7 +1692,6 @@ cs:
       read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='{basePath}/unread'>1 nepřečtené</a> téma } other { Je tu <a href='{basePath}/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: zobrazte si populární témata
-      suggest_create_topic: Co takhle založit nové téma?
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"

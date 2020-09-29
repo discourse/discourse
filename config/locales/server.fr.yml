@@ -1682,7 +1682,6 @@ fr:
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité hébergée ailleurs que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
     log_anonymizer_details: "Conserver les détails d'un utilisateur rendu anonyme dans les journaux. Si vous vous conformerez au RGPD, vous devez désactiver cette fonction."
     newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur `newuser_spam_host_threshold` messages avant d'être considéré comme du spam."
-    staff_like_weight: "Quel poids supplémentaire donner aux J'aime de l'équipe."
     topic_view_duration_hours: "Compter la vue d'un sujet une seule fois par IP ou par utilisateur toutes les N heures"
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse courriel sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."

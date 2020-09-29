@@ -1601,7 +1601,6 @@ pt_BR:
     privacy_policy_url: "Se você tem um documento de Política de Privacidade hospedado em algum outro local que você queira usar, forneça a URL completa aqui."
     log_anonymizer_details: "Se deseja manter os detalhes de um usuário no log depois de ser anonimizado. Ao cumprir com o GDPR, você precisará desativá-lo."
     newuser_spam_host_threshold: "Quantas vezes um novo usuário pode postar um link para o mesmo host em suas postagens `newuser_spam_host_threshold` antes de ser considerado spam."
-    staff_like_weight: "Qual o fator de ênfase extra a dar para curtidas da staff."
     topic_view_duration_hours: "Conte uma nova visualização de tópico uma vez por IP / Usuário a cada N horas"
     user_profile_view_duration_hours: "Conte uma nova visualização de perfil de usuário uma vez por IP / Usuário a cada N horas"
     levenshtein_distance_spammer_emails: "Ao equiparar emails de spammers, o número da diferença de caracteres que ainda assim irá permitir uma equiparação imprecisa."

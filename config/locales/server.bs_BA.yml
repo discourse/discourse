@@ -703,7 +703,6 @@ bs_BA:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    staff_like_weight: "How much extra weighting factor to give staff likes."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     min_ban_entries_for_roll_up: "Kada kliknete tipku Roll up, stvorit ćete novi unos za subnet ban ako ima najmanje (N) unosa."
     reply_by_email_enabled: "Enable replying to topics via email."

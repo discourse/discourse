@@ -1213,7 +1213,6 @@ pt:
       accept_invite: "Aceitar Convite"
       success: "A sua conta foi criada e está agora com a sessão iniciada."
       name_label: "Nome"
-      password_label: "Definir Palavra-passe"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
@@ -1532,8 +1531,6 @@ pt:
           noreplies: têm zero respostas
           single_user: contêm um único utilizador
         post:
-          count:
-            label: Número Mínimo de Publicações
           time:
             label: Publicada
             before: antes
@@ -1578,7 +1575,6 @@ pt:
         new: "Não tem novos tópicos."
         read: "Ainda não leu nenhum tópico."
         posted: "Ainda não publicou em nenhum tópico."
-        latest: "Não há tópicos recentes."
         bookmarks: "Ainda não marcou nenhum tópico."
         category: "Não há tópicos na categoria %{category}."
         top: "Não existem tópicos recentes."
@@ -1654,7 +1650,6 @@ pt:
       read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='{basePath}/unread'>1 não lido </a> } other { Existem <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {pesquise outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pesquisar em todas as categorias
       view_latest_topics: ver os tópicos mais recentes
-      suggest_create_topic: Porque não começar um tópico?
       jump_reply_up: avançar para resposta mais recente
       jump_reply_down: avançar para resposta mais antiga
       deleted: "Este tópico foi eliminado"

@@ -1455,6 +1455,7 @@ nl:
     site_contact_group_name: "Een geldige groepsnaam voor uitnodiging in alle automatische berichten."
     send_welcome_message: "Alle nieuwe gebruikers een welkomstbericht met een snelstartgids sturen."
     send_tl1_welcome_message: "Nieuwe gebruikers met vertrouwensniveau 1 een welkomstbericht sturen."
+    send_tl2_promotion_message: "Nieuwe gebruikers met vertrouwensniveau 2 een bericht over promotie sturen."
     suppress_reply_directly_below: "Het uitvouwbare aantal antwoorden bij een bericht niet tonen als er maar één antwoord direct onder dit bericht staat."
     suppress_reply_directly_above: "Het uitvouwbare 'in antwoord op' bij een bericht niet tonen als er maar één antwoord direct boven dit bericht staat."
     remove_full_quote: "Volledige citaten bij directe antwoorden automatisch verwijderen."
@@ -1688,7 +1689,6 @@ nl:
     privacy_policy_url: "Als u ergens anders een document met een Privacybeleid hebt gehost, geef hier dan de volledige URL op."
     log_anonymizer_details: "Of de details van een gebruiker in het logboek worden behouden nadat ze zijn geanonimiseerd. Om aan de GDPR te voldoen, dient u dit uit te schakelen."
     newuser_spam_host_threshold: "Hoe vaak een nieuwe gebruiker een koppeling naar dezelfde host kan plaatsen binnen de `newuser_spam_host_threshold` berichten ervan voordat deze als spam worden beschouwd."
-    staff_like_weight: "Hoeveel zwaarder de weegfactor moet zijn voor likes die door stafleden zijn gegeven."
     topic_view_duration_hours: "Elke N uur één keer per IP/Gebruiker een nieuw-topicweergave tellen."
     user_profile_view_duration_hours: "Elke N uur één keer per IP/Gebruiker een nieuw-gebruikersprofielweergave tellen."
     levenshtein_distance_spammer_emails: "Bij het vergelijken van spam-e-mails, het aantal verschillende tekens waarbij nog steeds een wazige overeenkomst kan bestaan."
@@ -1880,6 +1880,7 @@ nl:
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."
     returning_users_days: "Het aantal dagen dat voorbij moet gaan voordat een gebruiker als terugkerend wordt beschouwd."
+    review_media_unless_trust_level: "Stafleden beoordelen berichten van gebruikers met lagere vertrouwensniveaus als deze ingebedde media bevatten."
     enable_page_publishing: "Stafleden mogen topics naar nieuwe URL's publiceren met hun eigen stijlen."
     show_published_pages_login_required: "Anonieme gebruikers kunnen gepubliceerde pagina's zien, zelfs wanneer aanmelding is vereist."
     default_email_digest_frequency: "Hoe vaak gebruikers standaard e-mailsamenvattingen ontvangen."
@@ -2302,6 +2303,12 @@ nl:
     welcome_invite:
       title: "Welkomstuitnodiging"
       subject_template: "Welkom bij %{site_name}!"
+    tl2_promotion_message:
+      subject_template: "Gefeliciteerd met de promotie van uw vertrouwensniveau!"
+      text_body_template: |
+        We hebben uw [vertrouwensniveau](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) gepromoveerd!
+
+        We nodigen u uit om mee te blijven doen – we vinden het leuk om u in de buurt te hebben.
     backup_succeeded:
       title: "Back-up geslaagd"
       subject_template: "Back-up voltooid"
@@ -2951,6 +2958,7 @@ nl:
       email_auth_res_enqueue: "Een DMARC-controle op deze e-mail is mislukt; het bericht komt zeer waarschijnlijk niet van wie het lijkt te komen. Controleer de onbewerkte e-mailheader voor meer informatie."
       email_spam: "Deze e-mail is als spam gemarkeerd door de header zoals gedefinieerd in `email_in_spam_header`."
       suspect_user: "Deze nieuwe gebruiker heeft profielgegevens ingevoerd zonder topics of berichten te hebben gelezen, wat sterk doet vermoeden dat het een spammer kan zijn. Zie `approve_suspect_users`."
+      contains_media: "Dit bericht bevat ingebedde media. Zie ‘review_media_unless_trust_level’."
     actions:
       agree:
         title: "Akkoord..."

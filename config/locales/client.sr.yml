@@ -854,7 +854,6 @@ sr:
       welcome_to: "Dobrodošao na %{site_name}!"
       success: "Tvoj nalog je kreiran i sada si ulogovan."
       name_label: "Ime foruma"
-      password_label: "Postavi Šifru"
     emoji_set:
       apple_international: "Apple/International"
       google: "Google"
@@ -996,7 +995,6 @@ sr:
         new: "Nemate novih tema."
         read: "Niste još pročitali ni jednu temu."
         posted: "Niste se još objavljivali ni u jendoj temi."
-        latest: "Nema poslednjih tema. To je tužno."
         bookmarks: "Nemate markiranih tema još."
         category: "Nema tema u %{category}."
         top: "Nema glavnih tema."
@@ -1065,7 +1063,6 @@ sr:
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pregledaj sve kategorije
       view_latest_topics: pogledaj najnovije teme
-      suggest_create_topic: Zašto ne otvorite temu?
       jump_reply_up: skoči na raniji odgovor
       jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"

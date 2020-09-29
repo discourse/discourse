@@ -955,7 +955,6 @@ sk:
     faq_url: "Ak máte FAQ stránku uloženú na iných stránkach, napište sem plný odkaz na ňu."
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
-    staff_like_weight: "Koľkonásobne viac sa má dať zamestnaneckým páči sa mi."
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
     levenshtein_distance_spammer_emails: "Počet rozdielnych znakov, ktoré stále umožnia fuzzy zhodu, keď sa hľadájú emaily od spammerov."

@@ -1573,7 +1573,6 @@ el:
       accept_invite: "Αποδοχή Πρόσκλησης"
       success: "Ο λογαριασμός σας έχει δημιουργηθεί και έχετε συνδεθεί. "
       name_label: "Όνομα"
-      password_label: "Ορισμός Κωδικού Πρόσβασης"
       optional_description: "(προεραιτικό)"
     password_reset:
       continue: "Συνεχίστε στην %{site_name}"
@@ -1592,29 +1591,6 @@ el:
       categories_and_top_topics: "Κατηγορίες και κορυφαία θέματα"
       categories_boxes: "Κουτιά με υποκατηγορίες"
       categories_boxes_with_topics: "Κουτιά με προτεινόμενα θέματα"
-    base_font_setting:
-      helvetica: "Helvetica/Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "RobotoCondensed"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: " Shift"
       ctrl: "Ctrl"
@@ -1970,8 +1946,6 @@ el:
           noreplies: έχουν μηδέν απαντήσεις
           single_user: περιέχουν ένα μόνο χρήστη
         post:
-          count:
-            label: Ελάχιστος αριθμός αναρτήσεων
           time:
             label: Αναρτήθηκε
             before: πριν
@@ -2017,7 +1991,6 @@ el:
         new: "Δεν υπάρχουν νέα νήματα."
         read: "Δεν έχεις διαβάσει κανένα νήμα ακόμη."
         posted: "Δεν έχεις αναρτήσει σε κάποιο νήμα ακόμη."
-        latest: "Δεν υπάρχουν νέα νήματα. Αυτό είναι λυπηρό."
         bookmarks: "Δεν έχεις βάλει σελιδοδείκτη σε κανένα νήμα."
         category: "Δεν υπάρχουν νήματα στην κατηγορία %{category}."
         top: "Δεν υπάρχουν κορυφαία νήματα."
@@ -2105,7 +2078,6 @@ el:
       browse_all_categories: Περιήγηση σε όλες τις κατηγορίες
       browse_all_tags: Περιηγηθείτε σε όλες τις ετικέτες
       view_latest_topics: δες τα πρόσφατα νήματα
-      suggest_create_topic: Γιατί δεν φτιάχνεις ένα νέο νήμα;
       jump_reply_up: μετάβαση στην απάντηση που προηγείται
       jump_reply_down: μετάβαση στην απάντηση που ακολουθεί
       deleted: "Το νήμα έχει διαγραφεί "

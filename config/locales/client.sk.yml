@@ -1188,7 +1188,6 @@ sk:
       accept_invite: "Prijať pozvánku"
       success: "Váš účet bol vytvorený a ste prihlásený."
       name_label: "Meno"
-      password_label: "Nastaviť heslo"
       optional_description: "(nepovinné)"
     password_reset:
       continue: "Pokračujte na %{site_name}"
@@ -1363,8 +1362,6 @@ sk:
           noreplies: majú nula odpovedí
           single_user: obsahujú jediného používateľa
         post:
-          count:
-            label: Minimálny počet príspevkov
           time:
             label: Odoslané
             before: pred
@@ -1406,7 +1403,6 @@ sk:
         new: "Nemáte žiadnu novú tému"
         read: "Neprečítali ste ešte žiadnu tému."
         posted: "Nanapísali ste ešte žiadnu tému."
-        latest: "Nie sú žiadne nové témy. To je smutné."
         bookmarks: "Nemáte zatiaľ žiadne témy v záložkách."
         category: "V kategórii %{category} nie je žiadna téma"
         top: "Nie sú žiadne populárne témy."
@@ -1494,7 +1490,6 @@ sk:
       read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 neprečítanú</a> } other { <a href='{basePath}/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='{basePath}/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='{basePath}/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Prezrieť všetky kategórie
       view_latest_topics: zobraziť najnošie témy
-      suggest_create_topic: Čo tak vytvoriť novú tému?
       jump_reply_up: prejsť na predchádzajúcu odpoveď
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"

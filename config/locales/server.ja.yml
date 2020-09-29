@@ -930,7 +930,6 @@ ja:
     faq_url: "FAQが他のサイトにある場合、URLをここに指定します。"
     tos_url: "他のサイトに利用規約を掲載している場合は、URLをここに指定してください。"
     privacy_policy_url: "他のサイトにプライバシーポリシーを掲載している場合は、URLをここに指定してください。"
-    staff_like_weight: "スタッフにより「いいね!」された場合、どのくらい重み付けをするか"
     levenshtein_distance_spammer_emails: "スパマーのメールアドレスとマッチさせるとき、数文字違いの曖昧な一致でも許可する"
     max_new_accounts_per_registration_ip: "もし既にトラストレベル0のユーザーがそのIPから(N)個作成されていたら、そのIPから登録できないようにする(スタッフメンバー、トラストレベル2以上は除く)"
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."

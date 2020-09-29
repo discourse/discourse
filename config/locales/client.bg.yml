@@ -1184,7 +1184,6 @@ bg:
       accept_invite: "Приеми поканата."
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
-      password_label: "Задайте парола"
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -1393,7 +1392,6 @@ bg:
         new: "Нямате нови теми."
         read: "Все още не сте прочели нито една тема."
         posted: "Все още не сте публикували нито една тема."
-        latest: "Няма повече теми в Последни. Това е тъжно."
         bookmarks: "Все още нямате теми в Отметки."
         category: "Няма теми в категория %{category}."
         top: "Няма топ теми."
@@ -1465,7 +1463,6 @@ bg:
       read_more_MF: "Има { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочетено</a> } other { <a href='{basePath}/unread'># непрочетени </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 нова </a> тема} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># теми </a>} } или {CATEGORY, select, true {потърси други теми в {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Прегледай всички категории
       view_latest_topics: виж последните теми
-      suggest_create_topic: Защо не създадете тема ?
       jump_reply_up: към по ранен отговор
       jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"

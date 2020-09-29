@@ -1234,7 +1234,6 @@ ar:
       accept_invite: "قُبول الدعوة "
       success: "تم إنشاء حسابك و تسجيل دخولك للموقع"
       name_label: "الإسم"
-      password_label: "حدد كلمة المرور"
       optional_description: "(إختياري)"
     password_reset:
       continue: "تابع نحو %{site_name}"
@@ -1477,8 +1476,6 @@ ar:
           noreplies: ليس فيها أيّ ردّ
           single_user: تحتوي عضوا واحدا
         post:
-          count:
-            label: أدنى عدد للمنشورات
           time:
             label: المُرسَلة
             before: قبل
@@ -1527,7 +1524,6 @@ ar:
         new: "ليست هناك مواضيع جديدة."
         read: "لم تقرأ أيّ موضوع بعد."
         posted: "لم تشارك في أيّ موضوع بعد."
-        latest: "لا مواضيع حديثة. يا للأسف."
         bookmarks: "لا مواضيع معلّمة بعد."
         category: "لا يوجد موضوعات في قسم ’%{category}‘."
         top: "لا يوجد موضوعات مشاهدة بكثرة"
@@ -1629,7 +1625,6 @@ ar:
       read_more_MF: "{UNREAD, plural, zero {} one {تبقى <a href='{basePath}/unread'>موضوع واحد غير مقروء</a>} two {تبقى <a href='{basePath}/unread'>موضوعان غير مقروءان</a>} few {تبقت <a href='{basePath}/unread'># مواضيع غير مقروءة</a>} many {تبقى <a href='{basePath}/unread'># موضوعا غير مقروء</a>} other {تبقى <a href='{basePath}/unread'># موضوع غير مقروء</a>}} {BOTH, select, true { و} false {} other {}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تصفّح كل الأقسام
       view_latest_topics: اعرض اخر الموضوعات
-      suggest_create_topic: لمَ لا تكتب موضوعًا؟
       jump_reply_up: انتقل إلى أول رد
       jump_reply_down: انتقل إلى آخر رد
       deleted: "الموضوع محذوف"

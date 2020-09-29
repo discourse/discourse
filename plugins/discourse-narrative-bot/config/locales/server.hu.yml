@@ -25,8 +25,6 @@ hu:
         Ez a jelvényt az interaktív haladó felhasználói eligazítás sikeres teljesítéséért jár. Elsajátította a beszélgetés speciális eszközeit, és ezzel teljesen hivatalos lett!
   discourse_narrative_bot:
     bio: "Üdv, nem igazi személy vagyok. Egy bot vagyok, és megtanítom az oldal használatát. A velem történő interakcióhoz küldjön nekem egy üzenetet, vagy említsen meg így bárhol: **`@%{discobot_username}`**."
-    tl2_promotion_message:
-      subject_template: "Gratulálunk az első bizalmi szint előléptetéséért!"
     timeout:
       message: |-
         Üdv @%{username}, csak beköszönök, mert nem hallottam Önről egy ideje.

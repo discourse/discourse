@@ -17,18 +17,13 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import showModal from "discourse/lib/show-modal";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { resolveShareUrl } from "discourse/helpers/share-url";
 
 const Post = RestModel.extend({
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
-    const userSuffix = user ? `?u=${user.username_lower}` : "";
-
-    if (this.firstPost) {
-      return this.get("topic.url") + userSuffix;
-    } else {
-      return url + userSuffix;
-    }
+    return resolveShareUrl(url, user);
   },
 
   new_user: equal("trust_level", 0),

@@ -26,8 +26,6 @@ bs_BA:
         Ovaj bedž je dodjeljen prilikom uspješnog završetka interaktivnog tutorijala za nove korisnike. Postali ste majstor naprednih alata u diskusiji - sada ste potpuno licencirani!
   discourse_narrative_bot:
     bio: "Pozdrav, ja nisam stvarna osoba. Ja sam automatski robot koji će vas naučiti kako da koristite ovaj web sajt. Kako bi komunicirali sa mnom, pošaljite mi poruku ili me spomenite pisajući **`@%{discobot_username}`** bilo gdje."
-    tl2_promotion_message:
-      subject_template: "Čestitamo na povišenju vašeg nivoa povjerenja!"
     timeout:
       message: |-
         Hej @%{username}, samo vas provjeravam jer nisam vas čuo neko vrijeme.
@@ -141,7 +139,6 @@ bs_BA:
       reset_trigger: "kurs"
       title: "Potvrda o završetku korisničkog kursa"
       cert_title: "Kao priznanje za uspješan završetak novog korisničkog kursa"
-      delete_reason: "Korisnik je preskočio nove korisničke savjete"
       hello:
         title: "Pozdrav!"
         message: |-

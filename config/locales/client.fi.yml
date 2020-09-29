@@ -1498,7 +1498,6 @@ fi:
       accept_invite: "Hyväksy kutsu"
       success: "Tili luotiin, ja olet nyt kirjautunut sisään."
       name_label: "Nimi"
-      password_label: "Aseta salasana"
       optional_description: "(ei pakollinen)"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
@@ -1861,8 +1860,6 @@ fi:
           noreplies: ei ole vastattu
           single_user: on kirjoittanut vain yksi käyttäjä
         post:
-          count:
-            label: Viestejä vähintään
           time:
             label: Kirjoitettu
             before: ennen
@@ -1908,7 +1905,6 @@ fi:
         new: "Sinulla ei ole uusia ketjuja."
         read: "Et ole lukenut vielä yhtään yhtään ketjua."
         posted: "Et ole kirjoittanut vielä yhteenkään ketjuun."
-        latest: "Tuoreimpia ketjuja ei ole. Onpa harmi."
         bookmarks: "Et ole vielä merkinnyt kirjanmerkkejä."
         category: "Alueella %{category} ei ole ketjua."
         top: "Kuumia ketjuja ei ole."
@@ -1994,7 +1990,6 @@ fi:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Selaa keskustelualueita
       view_latest_topics: tuoreimpia ketjuja
-      suggest_create_topic: Jospa aloittaisit uuden ketjun?
       jump_reply_up: hyppää aiempaan vastaukseen
       jump_reply_down: hyppää myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"

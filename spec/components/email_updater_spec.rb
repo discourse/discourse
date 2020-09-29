@@ -49,7 +49,7 @@ describe EmailUpdater do
 
       it "creates a change request authorizing the new email and immediately confirms it " do
         updater.change_to(new_email)
-        change_req = user.email_change_requests.first
+        user.reload
         expect(user.reload.email).to eq(new_email)
       end
 
@@ -59,6 +59,8 @@ describe EmailUpdater do
             updater.change_to(new_email)
           end
         end
+
+        expect(EmailToken.where(user: user).last.email).to eq(new_email)
       end
     end
 

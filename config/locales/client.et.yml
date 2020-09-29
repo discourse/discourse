@@ -1099,7 +1099,6 @@ et:
       accept_invite: "Võta kutse vastu"
       success: "Teie konto on loodud ning olete nüüd sisse logitud."
       name_label: "Nimi"
-      password_label: "Määra parool"
       optional_description: "(valikuline)"
     password_reset:
       continue: "Edasi saidile %{site_name}"
@@ -1346,8 +1345,6 @@ et:
           noreplies: ilma vastusteta
           single_user: on ainult ühe kasutaja postitustega
         post:
-          count:
-            label: Minimaalne postituste arv
           time:
             label: Postitatud
             before: enne
@@ -1391,7 +1388,6 @@ et:
         new: "Sul ei ole uusi teemasid."
         read: "Sa ei ole veel ühtegi teemat lugenud."
         posted: "Sa ei ole veel ühtegi teemasse postitanud."
-        latest: "Ühtegi värsket teemat pole. Nukker."
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
         category: "Foorumis %{category} teemad puuduvad."
         top: "Tippteemad puuduvad."
@@ -1466,7 +1462,6 @@ et:
       read_more_MF: "Sul on { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 lugemata</a> } other { are <a href='{basePath}/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># uut</a> teemat} } jäänud või {CATEGORY, select, true {loe teisi teemasid {catLink} alafoorumis} false {{latestLink}} other {}}"
       browse_all_categories: Vaata kõiki foorumeid
       view_latest_topics: vaata värskeid teemasid
-      suggest_create_topic: Teeks äkki teema?
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"

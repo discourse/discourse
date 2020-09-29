@@ -25,10 +25,10 @@ ru:
       many: "В опросе может быть не более %{count} вариантов ответов."
       other: "В опросе может быть не более %{count} вариантов ответов."
     named_poll_must_have_less_options:
-      one: 'В опросе под названием "<strong>%{name}</strong>" должно быть не более %{count} варианта ответа.'
-      few: 'В опросе под названием "<strong>%{name}</strong>" должно быть не более %{count} вариантов ответов.'
-      many: 'В опросе под названием "<strong>%{name}</strong>" должно быть не более %{count} вариантов ответов.'
-      other: 'В опросе под названием "<strong>%{name}</strong>" должно быть не более %{count} вариантов ответов.'
+      one: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count} варианта ответа."
+      few: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count} вариантов ответов."
+      many: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count} вариантов ответов."
+      other: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count} вариантов ответов."
     default_poll_must_have_different_options: "В опросе не должно быть одинаковых вариантов ответа."
     named_poll_must_have_different_options: "В опросе <strong>%{name}</strong> не должно быть одинаковых вариантов ответа."
     default_poll_must_not_have_any_empty_options: "Настройки опроса не могут быть пустыми."
