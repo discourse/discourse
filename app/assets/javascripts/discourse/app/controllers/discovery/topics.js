@@ -27,6 +27,7 @@ const controllerOpts = {
   router: service(),
 
   period: null,
+  canCreateTopicOnCategory: null,
 
   canStar: alias("currentUser.id"),
   showTopicPostBadges: not("discoveryTopics.new"),
@@ -157,11 +158,6 @@ const controllerOpts = {
   monthly: equal("period", "monthly"),
   weekly: equal("period", "weekly"),
   daily: equal("period", "daily"),
-
-  @discourseComputed("model")
-  canCreateTopicOnCategory(model) {
-    return model.can_create_topic;
-  },
 
   @discourseComputed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {
