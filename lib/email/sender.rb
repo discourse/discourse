@@ -332,8 +332,11 @@ module Email
         content = Mail::Part.new do
           content_type "multipart/alternative"
 
-          part html_part
-          part text_part
+          # we have to re-specify the charset and give the part the decoded body
+          # here otherwise the parts will get encoded with US-ASCII which makes
+          # a bunch of characters not render correctly in the email
+          part content_type: "text/html; charset=utf-8", body: html_part.body.decoded
+          part content_type: "text/plain; charset=utf-8", body: text_part.body.decoded
         end
 
         @message.parts.unshift(content)
