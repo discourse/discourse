@@ -1852,6 +1852,16 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+lg-zoom.js@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/lg-zoom.js/-/lg-zoom.js-1.2.0.tgz#ba67b5b96acc93774a2c4021eae85ac3cfddd3ed"
+  integrity sha512-IDT2mcvkUTcE8R5QGbqgHE6VeWEG6xykvq9xKHCW3G4xDwGQoQY0VOH+41aNHN+z9ilD6/Tu8mtsF2bnJyv/nw==
+
+lightgallery.js@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/lightgallery.js/-/lightgallery.js-1.3.1.tgz#11f8f8beeabee6593076239d2221eac78683e42f"
+  integrity sha512-U2XSkjvIZ0PEN+UYq2B9sFFzUu/JnAnc/sKaHorL+Ux8PbVEFm0skmwGjhoaW//LCsjyZwQZfS1yMKSwOS31OA==
+
 lighthouse-logger@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/lighthouse-logger/-/lighthouse-logger-1.2.0.tgz#b76d56935e9c137e86a04741f6bb9b2776e886ca"

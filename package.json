@@ -24,6 +24,8 @@
     "jquery-resize": "https://github.com/cowboy/jquery-resize/",
     "jquery-tags-input": "1.3.5",
     "jquery.autoellipsis": "https://github.com/pvdspek/jquery.autoellipsis",
+    "lg-zoom.js": "^1.2.0",
+    "lightgallery.js": "^1.3.1",
     "magnific-popup": "1.1.0",
     "markdown-it": "10.0.0",
     "moment": "2.24.0",
