@@ -333,8 +333,8 @@ class ApplicationController < ActionController::Base
   end
 
   def with_resolved_locale(check_current_user: true)
-    if check_current_user && current_user
-      locale = current_user.effective_locale
+    if check_current_user && (user = current_user rescue nil)
+      locale = user.effective_locale
     else
       if SiteSetting.set_locale_from_accept_language_header
         locale = locale_from_header
