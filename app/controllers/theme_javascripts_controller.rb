@@ -8,10 +8,11 @@ class ThemeJavascriptsController < ApplicationController
     :preload_json,
     :redirect_to_login_if_required,
     :verify_authenticity_token,
+    :block_cdn_requests,
     only: [:show]
   )
 
-  before_action :is_asset_path, :no_cookies, only: [:show]
+  before_action :is_asset_path, :no_cookies, :add_cors_header, only: [:show]
 
   def show
     raise Discourse::NotFound unless last_modified.present?
