@@ -1,7 +1,7 @@
 {{#if visible}}
   <div class="row">
     <div id="banner" class={{overlay}}>
-      {{d-button icon="times" action="dismiss" class="btn btn-flat close" title="banner.close"}}
+      {{d-button icon="times" action=(action "dismiss") class="btn btn-flat close" title="banner.close"}}
       <div id="banner-content">
         {{html-safe content}}
         {{#if currentUser.staff}}

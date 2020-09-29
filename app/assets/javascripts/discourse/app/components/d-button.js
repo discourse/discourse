@@ -94,6 +94,8 @@ export default Component.extend({
 
     if (action) {
       if (typeof action === "string") {
+        // Note: This is deprecated in new Embers and needs to be removed in the future.
+        // There is already a warning in the console.
         this.sendAction("action", this.actionParam);
       } else if (typeof action === "object" && action.value) {
         action.value(this.actionParam);
