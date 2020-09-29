@@ -13,7 +13,7 @@ $breakpoints: (
   tablet: 768px,
   medium: 850px,
   large: 1000px,
-  extra-large: 1140px
+  extra-large: 1140px,
 );
 
 @mixin breakpoint($bp, $rule: max-width, $type: screen) {
