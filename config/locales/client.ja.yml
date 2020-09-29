@@ -1216,7 +1216,6 @@ ja:
       accept_invite: "招待に応じる"
       success: "あなたのアカウントは作成されて、ログインされました。"
       name_label: "氏名"
-      password_label: "パスワードを設定"
       optional_description: "(任意)"
     password_reset:
       continue: "%{site_name} に進む"
@@ -1477,8 +1476,6 @@ ja:
           noreplies: 返信がまったくない
           single_user: 一人しか参加者がいない
         post:
-          count:
-            label: 投稿数の下限
           time:
             label: 投稿されたタイミング
             before: より前
@@ -1522,7 +1519,6 @@ ja:
         new: "新しいトピックはありません。"
         read: "まだトピックを一つも読んでいません。"
         posted: "トピックは一つもありません。"
-        latest: "最新のトピックはありません。"
         bookmarks: "ブックマークしたトピックはありません。"
         category: "%{category} トピックはありません。"
         top: "トップトピックはありません。"
@@ -1591,7 +1587,6 @@ ja:
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1つの未読 </a>} other { are <a href='{basePath}/unread'># つの未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'>1 つの新着</a> トピック} other { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'># つの新着</a> トピック} } が残っています、あるいは {CATEGORY, select, true { {catLink}の他のトピックを見てみてください。} false {{latestLink}} other {}}"
       browse_all_categories: 全てのカテゴリを閲覧する
       view_latest_topics: 最新のトピックを見る
-      suggest_create_topic: 新しいトピックを作成しませんか?
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"

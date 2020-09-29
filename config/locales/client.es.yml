@@ -122,6 +122,7 @@ es:
       twitter: "Compartir en Twitter"
       facebook: "Compartir en Facebook"
       email: "Enviar por correo electrónico"
+      url: "Copias y compartir URL"
     action_codes:
       public_topic: "hizo este tema público %{when}"
       private_topic: "hizo este tema un mensaje personal %{when}"
@@ -263,6 +264,7 @@ es:
         unbookmark: "Haz clic para eliminar todos los marcadores en este tema"
         unbookmark_with_reminder: "Haz clic para quitar todos los marcadores y recordatorios en este tema. Tienes un recordatorio puesto %{reminder_at} para este tema."
     bookmarks:
+      created: "Has guardado esta publicación en marcadores. %{name}"
       not_bookmarked: "marcar esta publicación"
       remove: "Eliminar marcador"
       delete: "Borrar marcador"
@@ -517,6 +519,7 @@ es:
       sent_by_user: "Enviado por <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Enviado por <a href='%{userUrl}'>ti</a>"
     directory:
+      username: "Nombre de usuario"
       filter_name: "filtrar por nombre de usuario"
       title: "Usuarios"
       likes_given: "Dados"
@@ -549,9 +552,9 @@ es:
       member_requested: "Solicitado el"
       add_members:
         title: "Agregar miembros a %{group_name}"
-        description: "También puede pegar en una lista separada por comas."
+        description: "También puedes pegar una lista separada por comas."
         usernames: "Ingrese nombres de usuario o direcciones de correo electrónico"
-        input_placeholder: "Nombre de usuario o correo electrónico"
+        input_placeholder: "Nombres de usuario o correos electrónicos"
         notify_users: "Notificaciones a usuarios"
       requests:
         title: "Solicitudes"
@@ -598,6 +601,8 @@ es:
           title: Categorías
           long_title: "Notificaciones predeterminadas de categoría"
           regular_categories_instructions: "Si estas categorías están silenciadas, no estarán silenciadas para los miembros del grupo. Se les notificará a los usuarios si son mencionados o si alguien les responde."
+        tags:
+          title: Etiquetas
         logs:
           title: "Registros"
           when: "Cuándo"
@@ -608,6 +613,10 @@ es:
           details: "Detalles"
           from: "Desde"
           to: "Hasta"
+      permissions:
+        title: "Permisos"
+        none: "No hay categorías asociadas a este grupo."
+        description: "Los miembros de este grupo pueden acceder a estas categorías"
       public_admission: "Permitir que los usuarios se unan al grupo libremente (Se requiere que el grupo sea publicamente visible)"
       public_exit: "Permitir a los usuarios abandonar el grupo libremente"
       empty:
@@ -845,7 +854,20 @@ es:
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
       first_notification: "¡Tu primera notificación! Selecciónala para comenzar."
       dynamic_favicon: "Mostrar número en el icono del navegador"
+      skip_new_user_tips:
+        description: "Omitir consejos de bienvenida"
+        not_first_time: "¿No es tu primera vez?"
+        skip_link: "Saltarse estos consejos"
       theme_default_on_all_devices: "Hacer que este sea el tema por defecto en todos mis dispositivos"
+      color_scheme_default_on_all_devices: "Establecer la combinación de colores como predeterminadas en todos mis dispositivos"
+      color_scheme: "Combinación de colores"
+      color_schemes:
+        default_description: "Predeterminado"
+        undo: "Restablecer"
+        dark: "Modo oscuro"
+        default_dark_scheme: "(valor predeterminado por el sitio)"
+      dark_mode: "Modo oscuro"
+      dark_mode_enable: "Activar modo oscuro automático"
       text_size_default_on_all_devices: "Hacer que este sea el tamaño por defecto en todos mis dispositivos"
       allow_private_messages: "Permitir que otros usuarios me envíen mensajes privados"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
@@ -976,6 +998,7 @@ es:
       second_factor:
         title: "Autenticación en dos pasos"
         enable: "Gestionar autenticación en dos pasos"
+        disable_all: "Desactivar todo"
         forgot_password: "¿Olvidaste tu contraseña?"
         confirm_password_description: "Por favor, confirma tu contraseña para continuar"
         name: "Nombre"
@@ -1539,7 +1562,6 @@ es:
       accept_invite: "Aceptar invitación"
       success: "Tu cuenta ha sido creada y has iniciado sesión."
       name_label: "Nombre"
-      password_label: "Establecer contraseña"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continuar a %{site_name}"
@@ -1580,6 +1602,9 @@ es:
         one: "Seleccionar al menos %{count} item."
         other: "Selecciona al menos %{count} elementos."
       invalid_selection_length: "La selección debe tener al menos %{count} caracteres."
+      components:
+        categories_admin_dropdown:
+          title: "Gestionar categorías"
     date_time_picker:
       from: Desde
       to: Hasta
@@ -1702,6 +1727,8 @@ es:
       abandon: "cerrar el editor y descartar borrador"
       enter_fullscreen: "ingresar al editor en pantalla completa"
       exit_fullscreen: "salir del editor en pantalla completa"
+      show_toolbar: "mostrar la barra de herramientas del editor"
+      hide_toolbar: "ocultar la barra de herramientas del editor"
       modal_ok: "OK"
       modal_cancel: "Cancelar"
       cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
@@ -1714,6 +1741,7 @@ es:
         draft: Borrador
         edit: Editar
         reply_to_post:
+          label: Responder a una publicación de %{postUsername}
           desc: Responder a una publicación específica
         reply_as_new_topic:
           label: Responder como tema enlazado
@@ -1820,6 +1848,8 @@ es:
         liked_consolidated: "nuevos me gusta"
         post_approved: "publicación aprobada"
         membership_request_consolidated: "nuevas solicitudes de membresía"
+        reaction: "nueva reacción"
+        votes_released: "Voto liberado"
     upload_selector:
       title: "Agregar imagen"
       title_with_attachments: "Agregar una imagen o archivo"
@@ -1905,8 +1935,6 @@ es:
           noreplies: no tienen respuestas
           single_user: contienen un solo usuario
         post:
-          count:
-            label: Número mínimo de publicaciones
           time:
             label: Fecha de publicación
             before: antes de
@@ -1952,7 +1980,6 @@ es:
         new: "No tienes temas nuevos."
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
-        latest: "No hay temas recientes. Qué pena."
         bookmarks: "Todavía no tienes temas guardados en marcadores."
         category: "No hay temas con la categoría %{category}."
         top: "No hay temas destacados."
@@ -2037,8 +2064,8 @@ es:
       read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no leído</a> } other { <a href='{basePath}/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Ver todas las categorías
+      browse_all_tags: Ver todas las etiquetas
       view_latest_topics: ver los temas recientes
-      suggest_create_topic: '¿Por qué no creas un tema?'
       jump_reply_up: saltar a la primera respuesta
       jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido eliminado"
@@ -2244,6 +2271,7 @@ es:
         success: "Hemos invitado a ese usuario a participar en este mensaje."
         success_group: "Hemos invitado a ese grupo a participar en este mensaje."
         error: "Lo sentimos, se produjo un error al invitar a ese usuario."
+        not_allowed: "Lo sentimos, no se puede invitar a ese usuario."
         group_name: "nombre del grupo"
       controls: "Controles del tema"
       invite_reply:
@@ -2894,6 +2922,8 @@ es:
         profile: "%{shortcut} Perfil"
         messages: "%{shortcut} Mensajes"
         drafts: "%{shortcut} Borradores"
+        next: "%{shortcut} Tema siguiente"
+        previous: "%{shortcut} Tema anterior"
       navigation:
         title: "Navegación"
         jump: "%{shortcut} Ir a la publicación #"
@@ -3042,6 +3072,7 @@ es:
       delete_unused_confirmation_more_tags:
         one: "%{tags} y %{count} más"
         other: "%{tags} y %{count} más"
+      delete_no_unused_tags: "No hay etiquetas sin usar."
       delete_unused: "Eliminar etiquetas sin usar"
       delete_unused_description: "Eliminar todas las etiquetas que no estén asociadas a ningún tema o mensaje personal"
       cancel_delete_unused: "Cancelar"
@@ -3184,6 +3215,9 @@ es:
           view_table: "tabla"
           view_graph: "gráfico"
           refresh_report: "Actualizar reporte"
+          daily: Día
+          monthly: Mes
+          weekly: Semana
           dates: "Fechas (UTC)"
           groups: "Todos los grupos"
           disabled: "Este reporte está inhabilitado"
@@ -3296,6 +3330,7 @@ es:
         save: Guardar
         new_key: Nueva clave de API
         revoked: Revocada
+        delete: Eliminar permanentemente
         not_shown_again: Esta clave no se volverá a mostrar. Asegúrate de copiarla correctamente antes de continuar.
         continue: Continuar
         use_global_key: Clave global (permite todas las acciones)
@@ -3306,6 +3341,15 @@ es:
           allowed_parameters: Parámetros permitidos
           optional_allowed_parameters: Parámetros permitidos (opcional)
           any_parameter: (cualquier parámetro)
+          allowed_urls: Direcciones URL permitidas
+          descriptions:
+            topics:
+              read: Leer un tema o una publicación específica del mismo. También usando RSS.
+              write: Crear un nuevo tema o publicar en uno existente.
+            users:
+              sync_sso: Sincronizar usuario usando SSO.
+              show: Obtener información sobre un usuario.
+              check_emails: Obtener una lista de los correos electrónicos del usuario.
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."
@@ -3545,6 +3589,7 @@ es:
           is_default: "El tema está habilitado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
           color_scheme: "Paleta de color"
+          default_light_scheme: "Claro (predeterminado)"
           color_scheme_select: "Selecciona colores para usar en el tema"
           custom_sections: "Secciones personalizadas:"
           theme_components: "Componentes del tema"
@@ -4431,6 +4476,7 @@ es:
         title: "Insertado"
         host: "Hosts permitidos"
         class_name: "Nombre de clase"
+        allowed_paths: "Lista de rutas permitidas"
         edit: "editar"
         category: "Publicar en categoría"
         add_host: "Añadir host"

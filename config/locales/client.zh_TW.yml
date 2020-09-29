@@ -1261,7 +1261,6 @@ zh_TW:
       accept_invite: "接受邀請"
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
-      password_label: "設定密碼"
       optional_description: "(選擇性)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
@@ -1578,8 +1577,6 @@ zh_TW:
           noreplies: 沒有回覆
           single_user: 只有一個使用者參與
         post:
-          count:
-            label: 最少貼文數
           time:
             label: 發表於
             before: 之前
@@ -1624,7 +1621,6 @@ zh_TW:
         new: "沒有新的話題。"
         read: "你尚未閱讀任何話題。"
         posted: "你尚未在任何話題裡發表貼文。"
-        latest: "沒有最近的話題。真令人難過。"
         bookmarks: "您目前沒有把任何話題加入書籤。"
         category: "沒有 %{category} 的話題。"
         top: "沒有精選話題。"
@@ -1693,7 +1689,6 @@ zh_TW:
       read_more_MF: "還有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 個未讀的話題</a>} other { <a href='{basePath}/unread'># 個未讀的話題</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 個新</a>的話題} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 個最近</a>的話題} }可以閱讀，或者{CATEGORY, select, true {瀏覽{catLink}中的其他話題} false {{latestLink}} other {}}"
       browse_all_categories: 瀏覽所有分類
       view_latest_topics: 檢視最近的貼文
-      suggest_create_topic: 開啟一個新話題吧？
       jump_reply_up: 跳到更早的回覆
       jump_reply_down: 跳到更晚的回覆
       deleted: "此話題已被刪除"

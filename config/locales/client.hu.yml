@@ -1346,7 +1346,6 @@ hu:
       accept_invite: "Meghívás elfogadása"
       success: "A fiók elkészült és mostmár be vagy jelentkezve"
       name_label: "Név"
-      password_label: "Állíts be jelszót"
       optional_description: "(opcionális)"
     password_reset:
       continue: "Tovább a%{site_name}"
@@ -1634,7 +1633,6 @@ hu:
         new: "Nincsenek új témakörök."
         read: "Még egy témakört sem olvastál el."
         posted: "Még egy témakörhöz sem szóltál hozzá."
-        latest: "Szomorú, de nem állnak rendelkezésre friss témakörök."
         bookmarks: "Még nem adtál hozzá témakört a könyvjelzőidhez."
         category: "Nincsenek témakörök a %{category} kategóriában."
         top: "Nincsenek top témák"
@@ -1700,7 +1698,6 @@ hu:
       read_more_MF: "{ UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Böngéssz a kategóriák között
       view_latest_topics: legújabb témák megtekintése
-      suggest_create_topic: Miért nem hozol létre egy témakört?
       jump_reply_up: ugrás régebbi válaszhoz
       jump_reply_down: ugrás újabb válaszhoz
       deleted: "Ez a témakör ki lett törölve"

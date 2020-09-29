@@ -1611,7 +1611,6 @@ de:
     privacy_policy_url: "Die vollständige URL zu deinen extern gehosteten Datenschutzrichtlinien, sofern vorhanden."
     log_anonymizer_details: "Sollen die Details eines Benutzers nach der Anonymisierung im Protokoll aufbewahrt werden. Zur Einhaltung der DSGVO muss dies abgeschaltet werden."
     newuser_spam_host_threshold: "Wie häufig kann ein neuer Benutzer Links der gleichen Domain innerhalb ihrer `newuser_spam_host_threshold` Beiträge schreiben, ohne als Spam eingeordnet zu werden."
-    staff_like_weight: "Zusätzlicher Gewichtungsfaktor für Likes vom Team."
     topic_view_duration_hours: "Alle (n) Stunden einen neuen Themenaufruf pro IP/Benutzer zählen."
     user_profile_view_duration_hours: "Alle (n) Stunden einen neuen Profilaufruf pro IP/Benutzer zählen."
     levenshtein_distance_spammer_emails: "E-Mail-Adressen, die sich um so viele Zeichen unterscheiden, werden beim Abgleich mit Adressen der Spammer dennoch als identisch betrachtet."

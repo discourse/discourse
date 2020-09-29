@@ -1146,7 +1146,6 @@ id:
       invited_by: "Anda telah diundang oleh:"
       accept_invite: "Terima Undangan"
       name_label: "Nama"
-      password_label: "Atur Kata Sandi"
       optional_description: "(opsional)"
     password_reset:
       continue: "Lanjut ke %{site_name}"
@@ -1344,7 +1343,6 @@ id:
       show_links: "tampilkan pranala dalam topik ini"
       browse_all_categories: Lihat semua kategori
       view_latest_topics: lihat topik terbaru
-      suggest_create_topic: Buat topik baru?
       jump_reply_up: lompat ke balasan sebelumnya
       progress:
         jump_prompt_or: "atau"

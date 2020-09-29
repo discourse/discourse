@@ -166,6 +166,7 @@ uk:
       twitter: "Поділитися в Twitter"
       facebook: "Поділитися у Facebook"
       email: "Надіслати електронною поштою"
+      url: "Скопіювати та поширити посилання"
     action_codes:
       public_topic: "робить цю тему публічною %{when}"
       private_topic: "робить цю тему особистим повідомленням %{when}"
@@ -1509,6 +1510,17 @@ uk:
       enabled: "Сайт працює в режимі \"тільки для читання\". Зараз ви можете продовжувати переглядати сайт, але інші дії будуть недоступні. "
       login_disabled: "Вхід вимкнено, поки сайт перебуває в режимі лише для читання."
       logout_disabled: "Вихід відключений, поки сайт в режимі «тільки для читання»"
+    too_few_topics_and_posts_notice_MF: >-
+      Почнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">дискусію!</a> Там {currentTopics, plural, one {is <strong>#</strong> тема} few {are <strong>#</strong> тем} many {are <strong>#</strong> тем} other {are <strong>#</strong> тем}} та {currentPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописів} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Відвідувачам потрібно більше читати та відповідати - ми рекомендуємо {requiredTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> тем} many {<strong>#</strong> тем} other {<strong>#</strong> тем}} and {requiredPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописів} many {<strong>#</strong> дописів} other {<strong>#</strong> posts}}. Це повідомлення може бачити лише персонал.
+    too_few_topics_notice_MF: >-
+      Розпочнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">старт дискусії!</a> Там {currentTopics, plural, one {is <strong>#</strong> тема} few {are <strong>#</strong> тем} many {are <strong>#</strong> topics} other {are <strong>#</strong> тем}}. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо {requiredTopics, plural, one {<strong>#</strong> тем} few {<strong>#</strong> тем} many {<strong>#</strong> тем} other {<strong>#</strong> тем}}. Це повідомлення може бачити лише персонал.
+    too_few_posts_notice_MF: >-
+      Почнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">старт дискусії!</a> Там {currentPosts, plural, one {is <strong>#</strong> post} few {are <strong>#</strong> допис} many {are <strong>#</strong> дописи} other {are <strong>#</strong> дописів}}. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо {requiredPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> posts} other {<strong>#</strong> дописів}}. Це повідомлення може бачити лише персонал.
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# error/hour} other {# errors/hour}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# error/minute} other {# errors/minute}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}."
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}."
     learn_more: "дізнатися більше..."
     all_time: "всього"
     all_time_desc: "всього створено тем"
@@ -1675,7 +1687,7 @@ uk:
       accept_invite: "Прийняти запрошення"
       success: "Ваш аккаунт створений та ви можете тепер увійти."
       name_label: "Ім'я"
-      password_label: "Встановити пароль"
+      password_label: "Пароль"
       optional_description: "(опціонально)"
     password_reset:
       continue: "Продовжити на %{site_name}"
@@ -1694,29 +1706,6 @@ uk:
       categories_and_top_topics: "Категорії та головні теми"
       categories_boxes: "Коробки з підкатегорій"
       categories_boxes_with_topics: "Коробки з Обраними Темами"
-    base_font_setting:
-      helvetica: "Helvetica/Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "RobotoCondensed"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1884,6 +1873,7 @@ uk:
         draft: Чернетка
         edit: Редагувати
         reply_to_post:
+          label: Відповідь на допис від %{postUsername}
           desc: Відповідь на конкретний пост
         reply_as_new_topic:
           label: Відповісти в новій пов’язаної темі
@@ -2095,11 +2085,21 @@ uk:
           single_user: зез відповідей
         post:
           count:
-            label: Мінімум повідомлень в темі
+            label: Дописи
+          min:
+            placeholder: мінімум
+          max:
+            placeholder: максимум
           time:
             label: Дата
             before: перед
             after: після
+        views:
+          label: Перегляди
+        min_views:
+          placeholder: мінімум
+        max_views:
+          placeholder: максимум
     hamburger_menu: "перейти до іншого переліку або категорії тем"
     new_item: "новий"
     go_back: "повернутися назад"
@@ -2143,7 +2143,8 @@ uk:
         new: "У Вас немає нових тем."
         read: "Ви ще не прочитали жодної теми."
         posted: "Ви ще не дописували в жодну тему."
-        latest: "Останніх тем немає. Шкода."
+        ready_to_create: "Готовий до "
+        latest: "Немає оновлених чи нових тем!"
         bookmarks: "У вас немає обраних тем."
         category: "В категорії %{category} немає тем."
         top: "There are no top topics."
@@ -2245,7 +2246,7 @@ uk:
       browse_all_categories: Переглянути всі категорії
       browse_all_tags: Переглянути всі теги
       view_latest_topics: перегляньте останні теми
-      suggest_create_topic: Чому б не створити тему?
+      suggest_create_topic: розпочати нову бесіду?
       jump_reply_up: перейти до ранішої відповіді
       jump_reply_down: перейти до пізнішої відповіді
       deleted: "Тему було видалено"
@@ -2343,7 +2344,7 @@ uk:
           "2_8": "Ви побачите кількість нових відповідей, тому що стежте за цим розділом."
           "2_4": "Ви побачите кількість нових відповідей, тому що ви розміщували відповідь в цій темі."
           "2_2": "Ви побачите кількість нових відповідей, тому що стежте за цією темою."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'Ви побачите кількість нових відповідей, оскільки ви <a href="%{basePath}/u/%{username}/preferences/notifications">прочитали цю тему</a>.'
           "1_2": "Ви будете сповіщені, якщо хтось згадує ваше @ім'я чи відповідає вам."
           "1": "Ви будете сповіщені, якщо хтось згадує ваше @ім'я чи відповідає вам."
           "0_7": "Ви ігноруєте всі сповіщення у цій категорії."
@@ -3989,6 +3990,7 @@ uk:
           color_definitions:
             text: "Визначення кольорів"
             title: "Введіть власні визначення кольорів (лише для досвідчених користувачів)"
+            placeholder: "\\r\nВикористовуйте цю таблицю стилів, щоб додати власні кольори до списку CSS властивостей.\\r\n\\r\nПриклад: \\r\n\\r\n:root {\\r\n  --thetheme-terciary-or-quaternary: # {dark-light-choose ($tertiary, $quaternary)};\\r\n}\\r\n\\r\nДодавайте префікс до імен, щоб уникнути конфліктів з плагінами та / або ядром discourse."
           head_tag:
             text: "</head>"
             title: "HTML-код, який буде вставлений перед міткою </head>"
@@ -4585,6 +4587,9 @@ uk:
           external_name: "Ім'я"
           external_email: "Електронна пошта"
           external_avatar_url: "URL фону профілю"
+          last_payload: "Останнє корисне навантаження"
+          delete_sso_record: "Видалити запис SSO"
+          confirm_delete: "Ви впевнені, що хочете видалити цей запис системи єдиного входу (SSO)?"
       user_fields:
         title: "Поля користувача"
         help: "Додати поля, які користувачі зможуть заповнювати."

@@ -122,6 +122,7 @@ fa_IR:
       twitter: "در توییتر به اشتراک بگذارید"
       facebook: "در فیس‌بوک به اشتراک بگذارید"
       email: "ارسال از طریق ایمیل"
+      url: "کپی و اشتراک‌گذاری نشانی وب"
     action_codes:
       public_topic: "این موضوع در %{when} عمومی شده"
       private_topic: "این موضوع در %{when} یک پیغام خصوصی شده"
@@ -1477,7 +1478,6 @@ fa_IR:
       accept_invite: "پذیرفتن دعوت"
       success: "حساب‌کاربری شما با موفقیت ایجاد شد و می‌توانید وارد سایت شوید."
       name_label: "نام"
-      password_label: "تنظیم رمز عبور"
       optional_description: "(اختیاری)"
     password_reset:
       continue: "برو به %{site_name}"
@@ -1818,8 +1818,6 @@ fa_IR:
           noreplies: پاسخی ندارند
           single_user: یک کاربر دارند
         post:
-          count:
-            label: کمترین تعداد فرسته
           time:
             label: ارسال شده
             before: قبل از
@@ -1865,7 +1863,7 @@ fa_IR:
         new: "شما هیچ موضوع تازه‌ای ندارید"
         read: "هنوز هیچ موضوعی را نخوانده‌اید."
         posted: "هنوز در هیچ موضوعی نوشته نگذاشته‌اید."
-        latest: "هیچ موضوع تازه‌ای نیست. چه بد!"
+        ready_to_create: "آماده به "
         bookmarks: "هنوز هیچ موضوع نشانک‌داری ندارید."
         category: "هیچ موضوعی در %{category} نیست."
         top: "موضوع برتری وجود ندارد."
@@ -1943,7 +1941,6 @@ fa_IR:
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>یک پیام خوانده نشده</a> } other { <a href='{basePath}/unread'># پیام خوانده نشده</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'>1 موضوع جدید</a> } other { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'># موضوع جدید</a> } } وجود دارد, یا {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همه‌ی دسته‌‌بندی‌ها
       view_latest_topics: مشاهده آخرین موضوع
-      suggest_create_topic: چطور است یک موضوع بسازیم؟
       jump_reply_up: رفتن به جدید ترین پاسخ
       jump_reply_down: رفتن به پاسخ بعدی
       deleted: "موضوع پاک شده است"

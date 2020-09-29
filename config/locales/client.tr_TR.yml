@@ -1417,7 +1417,6 @@ tr_TR:
       accept_invite: "Daveti kabul et"
       success: "Hesabın oluşturuldu ve şimdi giriş yaptın."
       name_label: "İsim"
-      password_label: "Şifre Belirle"
       optional_description: "(isteğe bağlı)"
     password_reset:
       continue: "%{site_name} devam et"
@@ -1775,8 +1774,6 @@ tr_TR:
           noreplies: sıfır cevabı olan
           single_user: tek kullanıcı içeren
         post:
-          count:
-            label: En az gönderi sayısı
           time:
             label: Gönderilen
             before: önce
@@ -1822,7 +1819,6 @@ tr_TR:
         new: "Yeni konun yok."
         read: "Henüz herhangi bir konu okumadın."
         posted: "Henüz herhangi bir konuda gönderi yapmadın"
-        latest: "Güncel bir konu yok. Bu üzücü."
         bookmarks: "Henüz bir konu işaretlememişsin. "
         category: "%{category} konusu yok."
         top: "Popüler bir konu yok."
@@ -1907,7 +1903,6 @@ tr_TR:
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 okunmamış mesaj</a> } other { <a href='{basePath}/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='{basePath}/new'>1 yeni</a> konu} other { {BOTH, select, true{ve } false {} other{}} <a href='{basePath}/new'># yeni</a> konu} } var. {CATEGORY, select, true {{catLink} kategorisine} false {{latestLink}} other {}} göz atabilirsin."
       browse_all_categories: Bütün kategorilere göz at
       view_latest_topics: Son konuları görüntüle
-      suggest_create_topic: Konu oluşturmaya ne dersin?
       jump_reply_up: Önceki cevaba geç
       jump_reply_down: Sonraki cevaba geç
       deleted: "Konu silindi "

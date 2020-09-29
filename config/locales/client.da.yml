@@ -1383,7 +1383,6 @@ da:
       accept_invite: "Accepter Invitation"
       success: "Din konto er blevet oprettet, og du er nu logget ind."
       name_label: "Navn"
-      password_label: "Sæt Kodeord"
       optional_description: "(valgfri)"
     password_reset:
       continue: "Fortsæt til %{site_name}"
@@ -1729,8 +1728,6 @@ da:
           noreplies: har ingen svar
           single_user: indeholder en enkelt bruger
         post:
-          count:
-            label: Minimum for antal indlæg
           time:
             label: Sendt
             before: før
@@ -1776,7 +1773,6 @@ da:
         new: "Du har ingen nye emner."
         read: "Du har ikke læst nogen emner endnu."
         posted: "Du har ikke skrevet nogen indlæg endnu."
-        latest: "Der er ikke nogen nye emner. Det er sørgeligt."
         bookmarks: "Du har ingen bogmærkede emner endnu."
         category: "Der er ingen emner i kategorien %{category}."
         top: "Der er ingen top emner"
@@ -1853,7 +1849,6 @@ da:
       read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulæst</a> } other { er <a href='{basePath}/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
-      suggest_create_topic: Hvorfor ikke oprette et emne?
       jump_reply_up: hop til tidligere svar
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"

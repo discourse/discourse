@@ -1054,7 +1054,6 @@ pt:
     tos_url: "Se tem um documento de Termos de Serviço alojado noutro local e que queira usar, forneça a URL completa aqui."
     privacy_policy_url: "Se tem um documento de Política de Privacidade alojado noutro local e que queira usar, forneça a URL completa aqui."
     newuser_spam_host_threshold: "Quantas vezes um novo utilizador pode colocar um link para o mesmo endereço dentro do número de publicações `newuser_spam_host_threshold` , antes de ser considerado spam."
-    staff_like_weight: "Quanto é o fator de ponderação extra a dar aos gostos provenientes do pessoal."
     topic_view_duration_hours: "Contar uma nova visualização do tópico uma vez por IP/Utilizador a cada N horas"
     user_profile_view_duration_hours: "Contar visualização de novo perfil de utilizador uma vez por IP/utilizador a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer a correspondência de e-mails de spam, o número de caracteres de diferença que ainda permitirá uma correspondência difusa."

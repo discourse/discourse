@@ -1675,7 +1675,6 @@ gl:
     privacy_policy_url: "Se tes un documento coa política de privacidade aloxado en calquera outro sitio e queres usalo, insire aquí o seu URL completo."
     log_anonymizer_details: "Manter ou non os detalles dun usuario no rexistro despois de seren anonimizados. Para cumprir co RXPD, deberás desactivalo."
     newuser_spam_host_threshold: "Número de veces que un novo usuario pode publicar unha ligazón ao mesmo dominio dentro de `newuser_spam_host_threshold` das súas publicacións antes de ser considerado lixo."
-    staff_like_weight: "Factor de peso adicional que outorgan os gústames dados polos membros do equipo."
     topic_view_duration_hours: "Contar unha visita a un novo tema por IP/usuario cada N horas"
     user_profile_view_duration_hours: "Contar unha visita de perfil por IP/usuario cada N horas"
     levenshtein_distance_spammer_emails: "Ao revisar coincidencias en correos electrónicos de remitentes non desexados, número de caracteres diferentes que permiten una coincidencia parcial."

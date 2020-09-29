@@ -122,6 +122,7 @@ nl:
       twitter: "Delen op Twitter"
       facebook: "Delen op Facebook"
       email: "Verzenden via e-mail"
+      url: "URL kopiëren en delen"
     action_codes:
       public_topic: "heeft dit topic openbaar gemaakt op %{when}"
       private_topic: "heeft dit topic een privébericht gemaakt op %{when}"
@@ -1074,6 +1075,7 @@ nl:
         taken: "Sorry, dat e-mailadres is niet beschikbaar."
         error: "Er is een fout opgetreden bij het wijzigen van uw e-mailadres. Misschien is dat adres al in gebruik?"
         success: "We hebben een e-mail naar dat adres gestuurd. Volg de instructies voor bevestiging."
+        success_via_admin: "Omdat u het e-mailadres van de gebruiker wijzigt, nemen we aan dat deze geen toegang meer heeft tot zijn of haar oorspronkelijke e-mailaccount. We hebben een e-mail voor opnieuw instellen van het wachtwoord naar het nieuwe e-mailadres van deze gebruiker gestuurd. Houd er rekening mee dat de gebruiker het proces voor opnieuw instellen van het wachtwoord moet voltooien om de wijziging van het e-mailadres van kracht te laten worden."
         success_staff: "Er is een e-mail naar uw huidige adres verzonden. Volg de bevestigingsinstructies."
       change_avatar:
         title: "Uw profielafbeelding wijzigen"
@@ -1111,6 +1113,7 @@ nl:
         sso_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
         no_secondary: "Geen extra e-mailadressen"
         instructions: "Nooit openbaar zichtbaar."
+        admin_note: "Opmerking: een beheerder die het e-mailadres van een andere niet-beheerder wijzigt, geeft aan dat de gebruiker geen toegang meer heeft tot zijn of haar e-mailaccount, dus er wordt een e-mail voor opnieuw instellen van het wachtwoord naar zijn of haar nieuwe adres gestuurd. Het e-mailadres van de gebruiker wordt pas gewijzigd nadat hij of zij het proces voor opnieuw instellen van het wachtwoord heeft voltooid."
         ok: "We sturen een e-mail ter bevestiging"
         required: "Voer een e-mailadres in"
         invalid: "Voer een geldig e-mailadres in"
@@ -1584,7 +1587,7 @@ nl:
       accept_invite: "Uitnodiging accepteren"
       success: "Uw account is gemaakt en u bent nu aangemeld."
       name_label: "Naam"
-      password_label: "Wachtwoord instellen"
+      password_label: "Wachtwoord"
       optional_description: "(optioneel)"
     password_reset:
       continue: "Doorgaan naar %{site_name}"
@@ -1603,29 +1606,6 @@ nl:
       categories_and_top_topics: "Categorieën en toptopics"
       categories_boxes: "Vakken met subcategorieën"
       categories_boxes_with_topics: "Vakken met aanbevolen topics"
-    base_font_setting:
-      helvetica: "Helvetica/Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "RobotoCondensed"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1787,6 +1767,7 @@ nl:
         draft: Concept
         edit: Bewerken
         reply_to_post:
+          label: Antwoorden op een bericht van %{postUsername}
           desc: Antwoorden op een bepaald bericht
         reply_as_new_topic:
           label: Antwoorden als gekoppeld topic
@@ -1984,11 +1965,21 @@ nl:
           single_user: maar één gebruiker bevatten
         post:
           count:
-            label: Minimaal berichtaantal
+            label: Berichten
+          min:
+            placeholder: minimaal
+          max:
+            placeholder: maximaal
           time:
             label: Geplaatst
             before: voor
             after: na
+        views:
+          label: Weergaven
+        min_views:
+          placeholder: minimaal
+        max_views:
+          placeholder: maximaal
     hamburger_menu: "naar een andere topiclijst of categorie"
     new_item: "nieuw"
     go_back: "terug"
@@ -2030,7 +2021,8 @@ nl:
         new: "U hebt geen nieuwe topics."
         read: "U hebt nog geen topics gelezen."
         posted: "U hebt nog niet in een topic gereageerd."
-        latest: "Er zijn geen nieuwste topics. Dat is jammer."
+        ready_to_create: "Klaar om "
+        latest: "U bent helemaal bij!"
         bookmarks: "U hebt nog geen bladwijzers voor topics gemaakt."
         category: "Er zijn geen topics in %{category}."
         top: "Er zijn geen toptopics."
@@ -2118,7 +2110,7 @@ nl:
       browse_all_categories: Alle categorieën bekijken
       browse_all_tags: Alle tags bekijken
       view_latest_topics: nieuwste topics bekijken
-      suggest_create_topic: Waarom maakt u geen topic aan?
+      suggest_create_topic: een nieuwe conversatie te starten?
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"

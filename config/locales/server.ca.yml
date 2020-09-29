@@ -1605,7 +1605,6 @@ ca:
     privacy_policy_url: "Si teniu un document de política de privacitat que voleu utilitzar allotjat en un altre lloc, faciliteu l'adreça URL completa aquí."
     log_anonymizer_details: "Si s'han de mantenir o no els detalls d'un usuari en el registre (log) després de ser anonimitzat. Si compliu amb GDPR, heu de desactivar-ho."
     newuser_spam_host_threshold: "Quantes vegades un usuari nou pot publicar un enllaç al mateix amfitrió dins de les seves `newuser_spam_host_threshold` publicacions abans de ser considerat brossa."
-    staff_like_weight: "Factor de ponderació addicional per als 'M'agrada' de l'equip responsable."
     topic_view_duration_hours: "Compta una nova vista de tema una vegada per IP/usuari cada N hores"
     user_profile_view_duration_hours: "Compta una nova vista de perfil d'usuari una vegada per IP/usuari cada N hores."
     levenshtein_distance_spammer_emails: "En cercar coincidències de correus brossa, diferència de nombre de caràcters que encara permetrà una coincidència difusa (fuzzy match)."

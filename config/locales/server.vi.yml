@@ -861,7 +861,6 @@ vi:
     faq_url: "Nếu bạn có một địa chỉ FAQ muốn sử dụng, điền URL đầy đủ ở đây."
     tos_url: "Nếu bạn có một địa chỉ Quy Định Sử Dụng muốn sử dụng, điền URL đầy đủ ở đây."
     privacy_policy_url: "Nếu bạn có một địa chỉ Quyền Riêng Tư muốn sử dụng, điền URL đầy đủ ở đây."
-    staff_like_weight: "Trọng số cộng thêm khi BQT like là bao nhiêu."
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
     levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."

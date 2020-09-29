@@ -375,6 +375,7 @@ es:
       email_already_used_in_category: "«%{email}» ya está siendo utilizado por la categoría «%{category_name}»."
       cant_allow_membership_requests: "No puedes permitir solicitudes de membresía de un grupo sin ningún propietario."
       already_requested_membership: "Ya has solicitado la membresía de este grupo."
+      adding_too_many_users: "Se pueden añadir un máximo de %{limit} usuarios a la vez"
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -1448,11 +1449,13 @@ es:
     invite_code: "El usuario debe ingresar este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
     approve_suspect_users: "Agregar usuarios sospechosos a la lista por revisión. Los usuarios sospechosos que hayan ingresado una biografía/página web pero que no hayan registrado ninguna actividad de lectura."
     pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
+    persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Habilitar el seguimiento multidominio de Google Universal Analytics (analytics.js). Los enlaces salientes de estos dominios tendrán la ID del cliente agregados. Revisa <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>La guía de Google para el seguimiento multidominio.</a>"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita </a>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories_and_groups: "Permitir a los moderadores administrar categorías y grupos"
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
     allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
     slow_down_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe aplicar una cuota limitada en robots.txt utilizando la directiva de retardo de rastreo"
@@ -1702,7 +1705,6 @@ es:
     privacy_policy_url: "Si tienes un documento de política de privacidad alojado en algún otro sitio y que quieras utilizar, ingresa la URL completa aquí."
     log_anonymizer_details: "Mantener o no los detalles de un usuario en el registro después de ser anonimizados. Para cumplir con la RGPD, deberás apagarlo."
     newuser_spam_host_threshold: "Cantidad de veces que un usuario nuevo puede publicar un enlace al mismo host dentro del `newuser_spam_host_threshold` de sus publicaciones antes de ser considerado spam."
-    staff_like_weight: "Factor de peso adicional que otorgan los me gusta dados por los miembros del staff."
     topic_view_duration_hours: "Contar una visita a un nuevo tema por IP/Usuario cada N horas"
     user_profile_view_duration_hours: "Contar una nueva visita de perfil por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, cantidad de caracteres diferentes que permiten una coincidencia parcial."
@@ -2006,6 +2008,9 @@ es:
         low_weight_invalid: "No puedes poner el peso a un valor superior o igual a 1 o menor que «category_search_priority_very_low_weight»."
         high_weight_invalid: "No puedes establecer el peso como menor o igual a 1 ni mayor a 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "No puedes poner el peso a un valor inferior a «category_search_priority_high_weight»."
+      allowed_unicode_usernames:
+        regex_invalid: "La expresión regular no es válida: %{error}"
+        leading_trailing_slash: "La expresión regular no puede empezar y terminar con una barra."
       unicode_usernames_avatars: "El sistema interno de avatares no soporta nombres de usuario Unicode."
       list_value_count: "La lista debe contener exactamente %{count} valores."
     placeholder:
@@ -2488,6 +2493,8 @@ es:
         ¡Disfruta de tu estancia!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "¡Enhorabuena por llegar a un nivel de confianza más!"
     backup_succeeded:
       title: "Copia de respaldo realizada con éxito"
       subject_template: "La copia de respaldo se completó exitosamente"

@@ -1475,7 +1475,6 @@ zh_TW:
     privacy_policy_url: "如果你想要使用一個部署在某個地方的隱私政策文檔，那麼請在此填寫其完整URL地址。"
     log_anonymizer_details: "是否在匿名後將使用者的詳細資訊保留在系統日誌（log）中。 若網站遵守一般資料保護規範（GDPR）時，您需要關閉它。"
     newuser_spam_host_threshold: "新使用者能添加至指向同一主機的連結的 newuser_spam_host_threshold 次數。超過閾值後將使用者視為垃圾投遞者。"
-    staff_like_weight: "管理員按讚時所給予的額外加權係數。"
     topic_view_duration_hours: "按照每 IP/使用者每 N 小時來記錄一次新的主題訪問"
     user_profile_view_duration_hours: "按照每 IP/使用者每 N 小時來記錄使用者資料訪問數"
     levenshtein_distance_spammer_emails: "當比對廣告Email時，數字與文字將仍使用模糊比對"

@@ -166,6 +166,7 @@ ru:
       twitter: "Поделиться в Твиттере"
       facebook: "Поделиться в Фейсбуке"
       email: "Отправить по электронной почте"
+      url: "Копировать и поделиться ссылкой"
     action_codes:
       public_topic: "Сделал эту тему публичной %{when}"
       private_topic: "Сделал эту тему личным сообщением %{when}"
@@ -201,7 +202,7 @@ ru:
     topic_admin_menu: "Действия администратора над темой"
     wizard_required: "Добро пожаловать в ваш новый Discourse! Начните с <a href='%{url}' data-auto-route='true'>мастера настройки</a> ✨"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Уведомления любого вида не будут отправляться на почту."
-    bootstrap_mode_enabled: "Для скорейшего развития вашего нового сайта был включен специальный режим его работы. В этом режиме всем новым пользователям при регистрации автоматически присваивается 1-й уровень доверия и включается ежедневная почтовая рассылка сводки новостей. Этот режим будет автоматически выключен , как только количество зарегистрированных пользователей достигнет %{min_users}."
+    bootstrap_mode_enabled: "Для скорейшего развития вашего нового сайта был включен специальный режим его работы. В этом режиме всем новым пользователям при регистрации автоматически присваивается 1-й уровень доверия и включается ежедневная почтовая рассылка сводки новостей. Этот режим будет автоматически выключен, как только количество зарегистрированных пользователей достигнет %{min_users}."
     bootstrap_mode_disabled: "Специальный режим будет отключён в течение 24 часов."
     themes:
       default_description: "По умолчанию"
@@ -968,7 +969,7 @@ ru:
       text_size_default_on_all_devices: "Сделать это размер текста размером по умолчанию на всех моих устройствах"
       allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
-      enable_quoting: "Позволить отвечать с цитированием выделенного текста"
+      enable_quoting: "Разрешить отвечать с цитированием выделенного текста"
       enable_defer: "Включить кнопку 'Отложить', чтобы помечать темы как непрочитанные"
       change: "изменить"
       featured_topic: "Избранная тема:"
@@ -1510,11 +1511,11 @@ ru:
       login_disabled: "Вход отключён, пока сайт находится в режиме «только для чтения»"
       logout_disabled: "Выход отключён, пока сайт находится в режиме «только для чтения»"
     too_few_topics_and_posts_notice_MF: >-
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
     too_few_topics_notice_MF: >-
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}}. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}}. Только сотрудники могут видеть это сообщение.
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}}. Пользователи должны больше читать и отвечать – мы рекомендуем по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}}. Только сотрудники могут видеть это сообщение.
     too_few_posts_notice_MF: >-
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем, по крайней мере {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем по крайней мере {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} other {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> достигнут предел настройки сайта {limit, plural, one {# error/minute} other {# errors/minute}}."
@@ -1686,7 +1687,6 @@ ru:
       accept_invite: "Принять приглашение"
       success: "Ваш аккаунт создан и теперь вы можете войти."
       name_label: "Имя"
-      password_label: "Установить пароль"
       optional_description: "(опционально)"
     password_reset:
       continue: "Далее на %{site_name}"
@@ -1705,29 +1705,6 @@ ru:
       categories_and_top_topics: "Разделы и популярные темы"
       categories_boxes: "Блоки с подразделами"
       categories_boxes_with_topics: "Блоки с избранными темами"
-    base_font_setting:
-      helvetica: "Helvetica/Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "RobotoCondensed"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2106,8 +2083,6 @@ ru:
           noreplies: Без ответов
           single_user: С одним пользователем
         post:
-          count:
-            label: Минимум сообщений в теме
           time:
             label: Дата
             before: До (включая)
@@ -2155,7 +2130,8 @@ ru:
         new: "У вас нет новых тем."
         read: "Вы ещё не прочитали ни одной темы."
         posted: "Вы ещё не принимали участие в обсуждении."
-        latest: "Новых тем нет."
+        ready_to_create: "Готовы "
+        latest: "Нет обновлённых или недавно созданных тем."
         bookmarks: "У вас пока нет тем, добавленных в закладки."
         category: "В разделе %{category} отсутствуют темы."
         top: "Нет обсуждаемых тем."
@@ -2257,7 +2233,7 @@ ru:
       browse_all_categories: Просмотреть все разделы
       browse_all_tags: Просмотреть все теги
       view_latest_topics: Просмотреть последние темы
-      suggest_create_topic: Почему бы вам не создать новую тему?
+      suggest_create_topic: начать новое обсуждение?
       jump_reply_up: Перейти к более ранним ответам
       jump_reply_down: Перейти к более поздним ответам
       deleted: "Тема удалена"
@@ -2310,8 +2286,8 @@ ru:
       auto_delete_replies:
         title: "Автоматическое удаление ответов"
       status_update_notice:
-        auto_open: "Эта тема автоматически откроется через %{timeLeft}."
-        auto_close: "Эта тема автоматически закроется через %{timeLeft}."
+        auto_open: "Эта тема автоматически откроется %{timeLeft}."
+        auto_close: "Эта тема автоматически закроется %{timeLeft}."
         auto_publish_to_category: "Эта тема будет опубликована в разделе <a href=%{categoryUrl}>#%{categoryName}</a> через %{timeLeft}."
         auto_close_based_on_last_post: "Эта тема будет закрыта через %{duration} после последнего ответа."
         auto_delete: "Эта тема будет автоматически удалена %{timeLeft}."
@@ -2814,7 +2790,7 @@ ru:
         updated: "Обновлено"
         name: "Имя"
         name_placeholder: "Присвоить имя закладке (необязательно)"
-        set_reminder: "Настроить напоминание (необязательно) "
+        set_reminder: "Настроить напоминание (необязательно)"
         actions:
           delete_bookmark:
             name: "Удалить закладку"
@@ -2836,12 +2812,12 @@ ru:
       tags: "Теги"
       tags_allowed_tags: "Ограничить теги этим разделом:"
       tags_allowed_tag_groups: "Ограничить группы тегов этим разделом:"
-      tags_placeholder: "(Необязательно) Список доступных тегов"
+      tags_placeholder: "(Необязат.) Доступные теги"
       tags_tab_description: "Теги и группы тегов, указанные здесь, будут доступны только в этом разделе и других разделах, в которых они были указаны. Они не будут доступны для использования в других разделах."
-      tag_groups_placeholder: "(Необязательно) Список доступных групп тегов"
+      tag_groups_placeholder: "(Необязат.) Доступные группы тегов"
       manage_tag_groups_link: "Управление группами тегов."
       allow_global_tags_label: "Также разрешить другие теги"
-      tag_group_selector_placeholder: "(Необязательно) Группа тегов"
+      tag_group_selector_placeholder: "(Необязат.) Группа тегов"
       required_tag_group_description: "Требовать, чтобы новые темы имели теги из группы тегов:"
       min_tags_from_required_group_label: "Номер тега:"
       required_tag_group_label: "Группа тегов:"
@@ -2851,7 +2827,7 @@ ru:
       create_long: "Создать новый раздел"
       save: "Сохранить раздел"
       slug: "Ссылка на раздел"
-      slug_placeholder: "(Необязательно) слова для URL, разделённые дефисами"
+      slug_placeholder: "(Необязат.) Слова для URL, разделённые дефисами"
       creation_error: При создании нового раздела возникла ошибка.
       save_error: При сохранении раздела возникла ошибка.
       name: "Название раздела"
@@ -2880,12 +2856,12 @@ ru:
       email_in_allow_strangers: "Принимать письма от анонимных пользователей, не имеющих учётных записей"
       email_in_disabled: "Создание новых тем через электронную почту отключено в настройках сайта. Чтобы разрешить создание новых тем через электронную почту,"
       email_in_disabled_click: 'активируйте настройку "email in".'
-      mailinglist_mirror: "Категория отражает список рассылки"
+      mailinglist_mirror: "Раздел отражает список рассылки"
       show_subcategory_list: "Показывать список подразделов над списком тем в этом разделе."
       read_only_banner: "Текст баннера, когда пользователь не может создавать темы в этом разделе:"
       num_featured_topics: "Количество тем, отображаемых на странице раздела:"
       subcategory_num_featured_topics: "Количество избранных тем на странице родительского раздела:"
-      all_topics_wiki: "Создание новых тем в виде вики-сообщений"
+      all_topics_wiki: "Создавать новые темы в виде вики-сообщений"
       subcategory_list_style: "Стиль списка подразделов:"
       sort_order: "Порядок сортировки тем:"
       default_view: "Вид списка тем по умолчанию:"
@@ -2904,8 +2880,8 @@ ru:
       position_disabled_click: 'включите настройку "fixed category positions".'
       minimum_required_tags: "Минимальное количество тегов, требуемых в теме:"
       parent: "Родительский раздел"
-      num_auto_bump_daily: "Число открытых тем для автоматического поднятия ежедневно:"
-      navigate_to_first_post_after_read: "Перейдите к первому сообщению после прочтения тем"
+      num_auto_bump_daily: "Число открытых тем для автоматического ежедневного поднятия:"
+      navigate_to_first_post_after_read: "Перейти к первому сообщению после прочтения тем"
       notifications:
         watching:
           title: "Наблюдать"
@@ -3285,7 +3261,7 @@ ru:
         few: "выдано %{count}"
         many: "выдано %{count}"
         other: "выдано %{count}"
-      select_badge_for_title: Использовать награду в качестве Вашего титула
+      select_badge_for_title: Использовать награду в качестве титула
       none: "(нет)"
       successfully_granted: "Награда %{badge} успешно присвоена пользователю %{username}"
       badge_grouping:
@@ -3431,7 +3407,7 @@ ru:
       enabled: "Включён безопасный режим, чтобы выйти из безопасного режима, закройте текущее окно браузера"
     image_removed: "(изображение удалено)"
   admin_js:
-    type_to_filter: "Введите текст для фильтрации..."
+    type_to_filter: "Фильтрация настроек..."
     admin:
       title: "Discourse Admin"
       moderator: "Модератор"
@@ -3570,7 +3546,7 @@ ru:
             members_visibility_levels:
               title: "Кто может видеть участников этой группы?"
               description: "Администраторы могут видеть участников всех групп."
-            publish_read_state: "В сообщениях группы публикуют состояние чтения группы"
+            publish_read_state: "В сообщениях группы публиковать состояние чтения группы"
           membership:
             automatic: Автоматическая
             trust_levels_title: "Уровень доверия, автоматически присваиваемый участникам при их добавлении:"
@@ -4076,7 +4052,7 @@ ru:
         preview_digest: "Предварительный просмотр"
         advanced_test:
           title: "Расширенный тест"
-          desc: "Посмотрите, как Discourse обрабатывает полученные письма. Вставьте ниже оригинальное сообщение и убедитесь, что письмо обработано правильно."
+          desc: "Посмотрите как Discourse обрабатывает полученные письма. Вставьте ниже оригинальное сообщение и убедитесь, что письмо обработано правильно."
           email: "Исходное сообщение"
           run: "Выполнить тест"
           text: "Выбранный текст сообщения"
@@ -4643,11 +4619,11 @@ ru:
         revert: "Отменить изменения"
         revert_confirm: "Вы уверены что хотите отменить внесённые изменения?"
         go_back: "Вернуться к поиску"
-        recommended: "Мы рекомендуем изменить следующий текст под ваши требования:"
-        show_overriden: "Показывать только изменённый"
+        recommended: "Мы рекомендуем изменить текст этих шаблонов под ваши требования:"
+        show_overriden: "Показывать только изменённые значения"
         more_than_50_results: "Найдено более 50 результатов. Пожалуйста, уточните параметры поиска."
       settings:
-        show_overriden: "Показывать только изменённый"
+        show_overriden: "Показывать только изменённые значения"
         reset: "Сброс"
         none: "(нет)"
       site_settings:
@@ -4665,7 +4641,7 @@ ru:
             label: "Загрузить"
             title: "Загрузить изображение(я)"
         selectable_avatars:
-          title: "Список аватаров, которые пользователи могут выбрать"
+          title: "Список доступных для выбора аватаров."
         categories:
           all_results: "Все настройки"
           required: "Обязательное"
@@ -4681,7 +4657,7 @@ ru:
           seo: "Поисковая оптимизация (SEO)"
           spam: "Спам"
           rate_limits: "Ограничения"
-          developer: "Программистам"
+          developer: "Разработчикам"
           embedding: "Встраивание"
           legal: "Юридическое"
           api: "API"
@@ -4698,9 +4674,9 @@ ru:
         secret_list:
           invalid_input: "Поля ввода не могут быть пустыми или содержать символ вертикальной черты."
         default_categories:
-          modal_description: "Хотели бы вы применить это изменение исторически? Это изменит настройки для %{count} существующих пользователей."
+          modal_description: "Хотели бы вы применить это изменение к уже настроенным процессам? Это изменит настройки для %{count} существующих пользователей."
           modal_yes: "Да"
-          modal_no: "Нет, только применить изменения в будущем"
+          modal_no: "Нет, применять изменения только в будущем"
         simple_list:
           add_item: "Добавить элемент..."
       badges:
@@ -4734,13 +4710,13 @@ ru:
         no_badges: Нет наград, которые можно было бы выдать.
         none_selected: "Выберите награду в списке слева"
         allow_title: Разрешить использовать название награды в качестве титула
-        multiple_grant: Может быть предоставлен несколько раз
+        multiple_grant: Может быть предоставлена несколько раз
         listable: Отображать награду на публичной странице наград
-        enabled: Активировать использование награды
+        enabled: Активировать использование этой награды
         icon: Иконка
         image: Картинка
-        icon_help: "Введите имя значка Font Awesome (используйте префикс 'far-' для обычных значков и 'fab-' для значков брендов)"
-        image_help: "Введите URL-адрес изображения (переопределяет поле награды, если установлены оба)"
+        icon_help: "Введите имя иконки из коллекции Font Awesome (используйте префикс 'far-' для обычных значков и 'fab-' для значков брендов)"
+        image_help: "Введите URL-адрес изображения (отображается вместо иконки, если указаны оба параметра)"
         query: Выборка награды (SQL)
         target_posts: Выборка целевых сообщений
         auto_revoke: Запускать ежедневно запрос на отзыв
@@ -4787,9 +4763,9 @@ ru:
           upload_csv: Загрузите файл в формате CSV с электронными адресами или псевдонимами пользователей
           aborted: Пожалуйста, загрузите файл в формате CSV, содержащий адреса электронной почты или псевдонимы пользователей.
           success: Файл успешно загружен, пользователи получат награды в ближайшее время.
-          replace_owners: Удалить значок от предыдущих владельцев
+          replace_owners: Удалять эту награду у предыдущих владельцев
       emoji:
-        title: "Иконки"
+        title: "Смайлы"
         help: "Добавить новые смайлики-emoji, которые будут доступны всем. (Подсказка: можно перетаскивать несколько файлов за раз)"
         add: "Добавить новую иконку"
         uploading: "Загрузка..."
@@ -4853,7 +4829,7 @@ ru:
   wizard_js:
     wizard:
       done: "Готово"
-      finish: "Закончено"
+      finish: "Закончить"
       back: "Назад"
       next: "Далее"
       step: "%{current} из %{total}"

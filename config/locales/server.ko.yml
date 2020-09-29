@@ -705,11 +705,11 @@ ko:
     authorizing_new:
       title: "새 이메일 확인"
       description: "이메일 주소를 다음으로 변경할 것인지 확인하십시오:"
-      description_add: "대체 이메일 주소를 추가 할 것인지 확인하십시오:"
+      description_add: "보조 이메일 주소를 추가하시겠습니까?"
     authorizing_old:
       title: "이메일 주소 변경"
       description: "이메일 주소 변경을 확인하십시오"
-      description_add: "대체 이메일 주소를 추가 할 것인지 확인하십시오:"
+      description_add: "보조 이메일 주소를 추가 할 것인지 확인하십시오:"
       old_email: "오래된 이메일 : %{email}"
       new_email: "새로운 이메일 : %{email}"
       almost_done_title: "새 이메일 주소 확인"
@@ -1632,7 +1632,6 @@ ko:
     privacy_policy_url: "개인정보 보호가 있으면 전체 URL을 적어주세요."
     log_anonymizer_details: "익명화 된 후 사용자 세부 정보를 로그에 유지할지 여부 GDPR을 준수 할 때는이 기능을 해제해야합니다."
     newuser_spam_host_threshold: "새로운 사용자가 동일한 호스트의 링크를 포스팅하더라도 스팸으로 간주되지 않는 최대 포스팅 수 `newuser_spam_host_threshold`"
-    staff_like_weight: "스태프가 좋아요를 눌렀을 때 부여할 가산점"
     topic_view_duration_hours: "N 시간마다 IP/User 별로 새 토픽 조회수를 셉니다."
     user_profile_view_duration_hours: "N 시간마다 IP/User 별로 새 프로필 조회수를 셉니다."
     levenshtein_distance_spammer_emails: "스패머 메일을 체크할 때, 허용할 다른 글자 개수(fuzzy match)"
@@ -2379,18 +2378,56 @@ ko:
     visit_link_to_respond_pm: "[방문 메시지] (%{base_url}%{url})는 %{participants}에 응답합니다."
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
     pm_participants: "참가자 : %{participants}"
+    invited_to_topic_body: |
+      %{username}님이 사용자님을 대화에 초대했습니다.
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      에서
+
+      > %{site_title} - %{site_description}
+
+      대화에 참여 하시려면 아래 링크를 클릭 하세요:
+
+      %{topic_url}
     user_invited_to_private_message_pm_group:
       title: "PM에 사용자 초대 그룹"
       subject_template: "[%{email_prefix}] %{username} 님이 @ %{group_name}를 &#39;%{topic_title}&#39;메시지에 초대했습니다"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "PM에 초대 된 사용자"
       subject_template: "[%{email_prefix}] %{username}가 &#39;%{topic_title}&#39;메시지에 초대했습니다."
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       title: "PM 단계별 사용자 초대"
       subject_template: "[%{email_prefix}] %{username}가 &#39;%{topic_title}&#39;메시지에 초대했습니다."
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_topic:
       title: "주제에 초대 된 사용자"
       subject_template: "[%{email_prefix}] %{username} 님이 &#39;%{topic_title}&#39;에 초대했습니다."
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_replied:
       title: "응답 한 사용자"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2532,9 +2569,23 @@ ko:
     account_exists:
       title: "계정이 이미 존재합니다"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
+      text_body_template: |
+        %{site_name}에서 계정을 만들려고 했거나 계정의 이메일을 %{email}로 변경하려고했습니다. 그러나, %{email}의 계정이 이미 존재합니다.
+
+        비밀번호를 잊은 경우 [지금 재설정](%{base_url}/password-reset).
+
+         %{email}의 계정을 만들지 않았거나 이메일 주소를 변경하지 않았다면 걱정하지 마십시오. 이 메시지를 무시해도됩니다.
+
+        궁금한 점이 있으면 [관리자에게 문의](%{base_url}/about)하세요.
     account_second_factor_disabled:
       title: "2단계 인증 사용 안 함"
       subject_template: "[%{email_prefix}] 2 단계 인증 비활성화"
+      text_body_template: |
+        %{site_name}의 계정에서 2단계 인증이 비활성화 되었습니다. 이제 비밀번호만으로 로그인 할 수 있습니다. 추가 인증 코드가 더 이상 필요하지 않습니다.
+
+        2단계 인증을 비활성화하지 않은 경우 누군가 사용자님의 계정을 도용했을 수도 있습니다.
+
+        궁금한 점이 있으면 [관리자에게 문의](%{base_url}/about)하세요.
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       since_last_visit: "마지막 방문 후 경과시간"
@@ -2577,12 +2628,31 @@ ko:
     set_password:
       title: "비밀번호 설정"
       subject_template: "[%{email_prefix}] 비밀번호 설정"
+      text_body_template: |
+        누군가 [%{site_name}](%{base_url})에서 사용자님의 계정에 비밀번호를 추가하도록 요청했습니다. 또는 소셜 로그인 (Google, Facebook 등)을 사용하여 로그인 할 수 있습니다.
+
+        이 요청을하지 않았면 이 이메일을 무시 하셔도됩니다.
+
+        비밀번호를 입력 하려면 다음 링크를 클릭하십시오:
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "관리자 로그인"
       subject_template: "[%{email_prefix}] 로그인"
+      text_body_template: |
+        누군가 [%{site_name}](%{base_url})에서 사용자님의 계정에 로그인을 요청했습니다.
+
+        이 요청을 하지 않았다면 이 이메일을 무시 하셔도됩니다.
+
+        로그인하려면 다음 링크를 클릭하십시오:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "계정 생성"
       subject_template: "[%{email_prefix}] 새 계정"
+      text_body_template: |
+        %{site_name}에서 새로운 계정이 만들어졌습니다.
+
+        새 계정의 비밀번호를 선택하려면 다음 링크를 클릭하십시오:
+        %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "새 이메일 확인"
       subject_template: "[%{email_prefix}] 새 이메일 주소 확인"
@@ -2602,24 +2672,86 @@ ko:
     confirm_old_email_add:
       title: "이전 이메일 확인 (추가)"
       subject_template: "[%{email_prefix}] 현재 이메일 주소 확인"
+      text_body_template: |
+        새로운 이메일 주소를 추가하기 위해서는 현재 이메일 계정에 대한 사용자님의 확인이 필요합니다. 이 단계를 완료 한 후, 새로운 이메일 주소를 입력해야 합니다.
+
+        다음 링크를 클릭하여 %{site_name}의 현재 이메일 주소를 확인하십시오:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "오래된 이메일 알림"
       subject_template: "[%{email_prefix}] 귀하의 이메일 주소가 변경되었습니다"
+      text_body_template: |
+        이것은 %{site_name}에서 사용자님의 계정 이메일 주소가 변경되었음을 알리는 자동 메일입니다. 오류가 발생한 경우
+        사이트 관리자에게 문의하십시오.
+
+        사용자님의 이메일 주소는 다음으로 변경되었습니다:
+
+        %{new_email}
     notify_old_email_add:
       title: "이전 이메일 알림 (추가)"
       subject_template: "[%{email_prefix}] 새 이메일 주소가 추가되었습니다."
+      text_body_template: |
+        %{site_name}에서 사용자님의 이메일 주소가 추가되었음을 알리는 자동 메시지입니다. 오류가 발생한 경우 사이트 관리자에게 문의하십시오.
+
+        추가 된 이메일 주소:
+
+        %{new_email}
     signup_after_approval:
       title: "승인 후 가입"
       subject_template: "당신은 %{site_name} 가입이 승인되었습니다!"
+      text_body_template: |
+        %{site_name}에 오신 것을 환영합니다!
+
+        %{site_name}에서 사용자님의 계정이 승인되었습니다.
+
+        아래 링크를 클릭하면 새 계정에 로그인 할 수 있습니다.
+        %{base_url}
+
+        위 링크를 클릭 할 수 없으면 웹 브라우저의 주소 표시 줄에 복사하여 붙여 넣으십시오.
+
+        %{new_user_tips}
+
+        사이트 이용은 [커뮤니티의 가이드라인](%{base_url}/guidelines)을 참고해 주시기 바랍니다.
+
+        즐거운 시간 되세요!
     signup:
       title: "가입하기"
       subject_template: "[%{email_prefix}] 새 계정 확인"
+      text_body_template: |
+        %{site_name}에 오신 것을 환영합니다!
+
+        다음 링크를 클릭하여 새 계정을 확인하고 활성화하십시오:
+        %{base_url}/u/activate-account/%{email_token}
+
+        위 링크를 클릭 할 수 없는 경우 웹 브라우저의 주소 표시 줄에 복사하여 붙여 넣으십시오.
     activation_reminder:
       title: "활성화 알림"
       subject_template: "[%{email_prefix}] 계정 확인 알림"
+      text_body_template: |
+        %{site_name}에 오신 것을 환영합니다!
+
+        사용자님의 계정을 활성화하기 위한 알림입니다.
+
+        다음 링크를 클릭하여 새 계정을 확인하고 활성화하십시오:
+        %{base_url}/u/activate-account/%{email_token}
+
+        위 링크를 클릭 할 수 없는 경우 웹 브라우저의 주소 표시 줄에 복사하여 붙여 넣으십시오.
     suspicious_login:
       title: "새로운 로그인 알림"
       subject_template: "[%{site_name}] %{location}에서 새 로그인"
+      text_body_template: |
+        안녕하세요,
+
+        사용자님이 평소에 사용하지 않는 장치 또는 위치에서 로그인 한 것을 감지했습니다.
+
+         - 위치: %{location} (%{client_ip})
+         - 브라우저: %{browser}
+         - 기기: %{device} – %{os}
+
+        이것이 사용자님이 로그인 한 것이라면 다른 조치를 취하실 필요가 없습니다.
+
+        만약 사용자님이 아니라면 [기존 세션을 검토](%{base_url}/my/preferences/account)하고 비밀번호 변경을 고려하십시오.
   page_forbidden:
     title: "죄송합니다! 비공개 페이지 입니다."
   page_not_found:
@@ -2732,6 +2864,8 @@ ko:
     wiki_editor:
       name: 위키 에디터
       description: 첫 위키 편집
+      long_description: |
+        이 배지는 처음으로 위키 게시물을 편집하면 부여됩니다.
     basic_user:
       name: 초보회원
       description: 모든 필수 커뮤니티 기능 <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">부여</a>
@@ -2760,6 +2894,8 @@ ko:
     autobiographer:
       name: 자서전 작가
       description: <a href="%{base_uri}/my/preferences/profile">프로필</a> 정보 작성
+      long_description: |
+        이 배지는 <a href="%{base_uri}/my/preferences/profile">프로필</a>을 작성하고 프로필 사진을 추가하면 부여됩니다. 사용자님이 누구인지, 무엇에 관심이 있는지에 대해 커뮤니티에 조금 더 알리면 더 나은 소통을 할 수 있습니다!
     anniversary:
       name: 1주년
       description: 1년동안 활동하고 글도 1개이상 썼습니다
@@ -2804,6 +2940,8 @@ ko:
     good_share:
       name: 훌륭한 공유
       description: 공유한 포스트로 외부 방문자 300명이 들어왔습니다
+      long_description: |
+        이 배지는 사용자님이 공유한 링크를 300명 이상이 클릭하면 부여됩니다. 사용자님은 많은 새로운 사람들에게 훌륭한 정보를 보여 주었고, 이 커뮤니티가 성장하도록 도왔습니다.
     great_share:
       name: 위대한 공유
       description: 공유한 포스트로 외부 방문자 1000명이 들어왔습니다

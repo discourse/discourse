@@ -309,6 +309,11 @@ he:
     other: "משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בפוסט, עמך הסליחה."
   no_embedded_media_allowed_trust: "אין לך אפשרות להטמיע פריטי מדיה בפוסט הזה, עמך הסליחה."
   no_embedded_media_allowed: "משתמשים חדשים לא יכולים להטמיע פריטי מדיה בפוסטים, עמך הסליחה."
+  too_many_embedded_media:
+    one: "משתמשים חדשים יכולים להוסיף רק פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
+    two: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
+    many: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
+    other: "משתמשים חדשים יכולים להוסיף רק %{count} פרטי מדיה מוטמעים לפוסט, עמך הסליחה."
   no_attachments_allowed: "משתמשים חדשים לא יכולים להוסיף קבצים לפוסטים, עמך הסליחה."
   too_many_attachments:
     one: "משתמשים חדשים יכולים לצרף רק קובץ אחד לפוסט, עמך הסליחה."
@@ -1591,6 +1596,7 @@ he:
     password_unique_characters: "מספר מינימלי של תווים ייחודיים שחייבים להיות בסיסמאות."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
     external_auth_skip_create_confirm: בעת הרשמה דרך אימות חיצוני, יש לדלג על החלונית ליצירת חשבון. עדיף להשתמש לצד sso_overrides_email (דריסת דוא״ל מאימות חיצוני), sso_overrides_username (דריסת שם משתמש מאימות חיצוני) ו־sso_overrides_name (דריסת שם מאימות חיצוני).
+    external_auth_immediately: "להפנות למערת הכניסה החיצונית ללא מעורבות המשתמש. מתרחש רק כאשר login_required (נדרשת כניסה) הוא true (אמת) ויש לפחות שיטת אימות חיצונית אחת."
     enable_sso: "הפעלת כניסה אחודה (Single Sign On) באמצעות אתר חיצוני (א-ז-ה-ר-ה: כתובות הדוא״ל של משתמשים *חייבות* לעבור אימות על ידי האתר החיצוני!)"
     verbose_sso_logging: "תיעוד ניתוח מורחב בנושא SSO אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     enable_sso_provider: "הטמעת פרוטוקול ספק SSO מטעם Discourse תחת נקודת הקצה ‎/session/sso_provider, נדרשת הפעלת ההגדרה sso_provider_secrets (סודות ספק SSO)"
@@ -1797,7 +1803,7 @@ he:
     log_anonymizer_details: "האם להשאיר את פרטי המשתמש ביומן לאחר שזהותו טושטשה. כדי לעמוד בהגבלות ה־GDPR יש לכבות את האפשרות הזאת."
     newuser_spam_host_threshold: "מספר הפעמים שמשתמשים חדשים יכולים לקשר לאותו מחשב במסגרת `newuser_spam_host_threshold` הפרסומים שלהם לפני שייחשבו ספאם."
     allowed_spam_host_domains: "רשימה של שמות תחום (domains) שיוחרגו מבדיקת הספאם. משתמשים חדשים לעולם לא יוגבלו ביצירת פוסטים חדשים עם קישורים לשמות תחום אלו."
-    staff_like_weight: "כמה משקל עודף יש להעניק ללייקים של הצוות."
+    staff_like_weight: "כמה משקל לתת ללייקים מהסגל (לייקים שאינם מהסגל נשקלים כ־1.)"
     topic_view_duration_hours: "ספרו צפיות חדשות בנושא פעם אחת לכל IP/משתמש לכל N שעות"
     user_profile_view_duration_hours: "ספרו צפיות בפרופיל משתמש פעם אחת לכל IP/משתמש בכל N שעות"
     levenshtein_distance_spammer_emails: "כאשר מתאימים דוא\"ל של ספאמרים, מספר ההבדלים בתווים שעדיין מאפשרים התאמה מטושטשת."
@@ -2681,6 +2687,10 @@ he:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "ברכותינו על התקדמותך בסולם דרגות האמון!"
+      text_body_template: |
+        קידמנו אותך בסולם [דרגות האמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        אנו מעודדים אותך להמשיך ולגלות מעורבות – נוכחותך חשובה לנו.
     backup_succeeded:
       title: "גיבוי הצליח"
       subject_template: "הגיבוי הושלם בהצלחה."

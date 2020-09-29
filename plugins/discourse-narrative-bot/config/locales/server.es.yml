@@ -26,8 +26,6 @@ es:
         Esta medalla se otorga al completar con éxito el tutorial interactivo para usuarios avanzados. Has dominado las herramientas avanzadas de discusión y ¡ahora tienes licencia completa!
   discourse_narrative_bot:
     bio: "¡Hola! No soy una persona real, soy un bot que te puede enseñar acerca este sitio. Para interactuar conmigo, envíame un mensaje o menciona **`%{discobot_username}`** en cualquier lugar."
-    tl2_promotion_message:
-      subject_template: "¡Felicitaciones por tu promoción del nivel de confianza!"
     timeout:
       message: |-
         Hey, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.
@@ -145,7 +143,6 @@ es:
       reset_trigger: "tutorial"
       title: "Certificado de finalización del tutorial de usuario nuevo"
       cert_title: "En reconocimiento a la finalización exitosa del tutorial de nuevo usuario"
-      delete_reason: "El usuario omitió las sugerencias para nuevos usuarios"
       hello:
         title: "¡Saludos!"
         message: |-
@@ -186,6 +183,15 @@ es:
           Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié heart_eyes
         like_not_found: |-
           ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
+      likes:
+        instructions: |-
+          Aquí va una foto de un unicornio:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Si te gusta (¡y a quién no le gustaría!), pulsa el botón me gusta :heart: debajo de este mensaje para que lo sepa.
+        reply: |-
+          ¡Gracias por darle me gusta a mi mensaje!
       formatting:
         instructions: |-
           ¿Puedes poner algunas letras en **negrita** o _cursiva_ en tu respuesta?

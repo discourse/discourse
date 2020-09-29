@@ -27,7 +27,9 @@ zh_CN:
   discourse_narrative_bot:
     bio: "你好，我不是真人，而是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`@%{discobot_username}`** 与我交互。"
     tl2_promotion_message:
-      subject_template: "恭喜！你的信任等级提升了！"
+      subject_template: "现在你已经晋升了，是时候学习高级功能了！"
+      text_body_template: |
+        使用`@%{discobot_username} %{reset_trigger}`回复本消息可以找出更多功能。
     timeout:
       message: |-
         你好， @%{username}。好久没见到你了，一切可好？
@@ -145,7 +147,6 @@ zh_CN:
       reset_trigger: "教程"
       title: "新用户教程完成证明"
       cert_title: "你已经成功完成新用户教程了"
-      delete_reason: "用户跳过了新用户提示"
       hello:
         title: "欢迎！"
         message: |-
@@ -185,7 +186,7 @@ zh_CN:
         reply: |-
           好赞的图片—我点了赞 :heart: ，你知道我很乐意看见它的 :heart_eyes:
         like_not_found: |-
-          你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
+          你忘记点赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
         not_found: |-
           看起来你还没有上传一张图片，因此我选择了一张可以令你满意的。
 
@@ -200,7 +201,7 @@ zh_CN:
 
           如果你喜欢的话（谁会不喜欢呢！）点击帖子底部的赞:heart:按钮让我知道。
         reply: |-
-          谢谢你喜欢我的帖子！
+          感谢你喜欢我的帖子！
         not_found: |-
           你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
       formatting:

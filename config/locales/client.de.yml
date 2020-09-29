@@ -1580,7 +1580,6 @@ de:
       accept_invite: "Einladung annehmen"
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
       name_label: "Name"
-      password_label: "Wähle ein Passwort"
       optional_description: "(optional)"
     password_reset:
       continue: "Weiter zu %{site_name}"
@@ -1599,29 +1598,6 @@ de:
       categories_and_top_topics: "Kategorien und angesagte Themen"
       categories_boxes: "Boxen mit Unterkategorien"
       categories_boxes_with_topics: "Spalten mit hervorgehobenen Themen"
-    base_font_setting:
-      helvetica: "Helvetica / Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "RobotoCondensed"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -1977,8 +1953,6 @@ de:
           noreplies: Themen ohne Antwort
           single_user: Themen mit nur einem Benutzer
         post:
-          count:
-            label: Themen mit … oder mehr Beiträgen
           time:
             label: 'Zeitraum einschränken:'
             before: Beiträge vor dem
@@ -2024,7 +1998,6 @@ de:
         new: "Es gibt für dich keine neuen Themen."
         read: "Du hast noch keine Themen gelesen."
         posted: "Du hast noch keine Beiträge verfasst."
-        latest: "Es gibt keine aktuellen Themen. Das ist schade."
         bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
         top: "Es gibt keine Top-Themen."
@@ -2110,7 +2083,6 @@ de:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle Kategorien durchsehen
       view_latest_topics: aktuelle Themen anzeigen
-      suggest_create_topic: Möchtest du ein neues Thema erstellen?
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"

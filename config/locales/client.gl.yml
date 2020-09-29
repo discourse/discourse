@@ -1414,7 +1414,6 @@ gl:
       accept_invite: "Aceptar convite"
       success: "A túa conta acaba de ser creada e tes a sesión iniciada."
       name_label: "Nome"
-      password_label: "Estabelecer o contrasinal"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continuar a %{site_name}"
@@ -1782,7 +1781,6 @@ gl:
         new: "Non tes novos temas."
         read: "Aínda non liches ningún tema."
         posted: "Aínda non publicaches en ningún tema."
-        latest: "Non hai últimos temas. Triste."
         bookmarks: "Aínda non marcaches este tema."
         category: "Non hai temas en %{category}."
         top: "Non hai temas destacados."
@@ -1864,7 +1862,6 @@ gl:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Explorar todas as categorías
       view_latest_topics: ver últimos temas
-      suggest_create_topic: Porque non crear un tema?
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"

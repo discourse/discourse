@@ -166,6 +166,7 @@ he:
       twitter: "שיתוף בטוויטר"
       facebook: "שיתוף בפייסבוק"
       email: "שליחה בדוא״ל"
+      url: "העתקה ושיתוף של כתובת"
     action_codes:
       public_topic: "נושא זה הפך לציבורי ב־%{when}"
       private_topic: "נושא זה הפך להודעה פרטית ב־%{when}"
@@ -1154,6 +1155,7 @@ he:
         taken: "סליחה, הכתובת הזו אינה זמינה."
         error: "הייתה שגיאה בשינוי כתובת הדואר האלקטרוני שלך. אולי היא תפוסה?"
         success: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. בבקשה עיקבו אחרי הוראות האישור שם."
+        success_via_admin: "כיוון שבחרת לשנות את כתובת הדוא״ל של המשתמש אנו מניחים שאבדה הגישה לחשבון הדוא״ל המקורי. שלחנו בקשת איפוס ססמה לכתובת הדוא״ל החדשה של המשתמש הזה. נא לשים לב שעל המשתמש להשלים את תהליך איפוס הססמה עבור כתובת הדוא״ל כדי שזו תיכנס לתוקף."
         success_staff: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. אנא עיקבו אחרי הוראות האישור."
       change_avatar:
         title: "שינוי תמונת הפרופיל"
@@ -1191,6 +1193,7 @@ he:
         sso_override_instructions: "ניתן לעדכן את כתובת הדוא״ל דרך ספק ה־SSO."
         no_secondary: "אין כתובות דוא״ל משניות"
         instructions: "לעולם לא מוצג לציבור."
+        admin_note: "הערה: משתמש ניהולי שמשנה כתובת דוא״ל למשתמש שאינו ניהולי מציינת שהגישה של המשתמש לכתובת הדוא״ל המקורית אבדה, לכן תישלח הודעת איפוס ססמה לכתובת החדשה בדוא״ל. כתובת הדוא״ל של המשתמש לא תוחלף עד לביצוע תהליך איפוס הססמה."
         ok: "נשלח אליכם דואר אלקטרוני לאישור"
         required: "נא למלא כתובת דוא״ל"
         invalid: "בבקשה הכניסו כתובת דואר אלקטרוני תקינה"
@@ -1686,7 +1689,6 @@ he:
       accept_invite: "קבלת הזמנה"
       success: "החשבון נוצר ונכנסת אליו."
       name_label: "שם"
-      password_label: "הגדרת ססמה"
       optional_description: "(רשות)"
     password_reset:
       continue: "המשיכו ל-%{site_name}"
@@ -1705,29 +1707,6 @@ he:
       categories_and_top_topics: "קטגוריות ונושאים מובילים"
       categories_boxes: "תיבות עם תתי קטגוריות"
       categories_boxes_with_topics: "תיבות עם נושאים מומלצים"
-    base_font_setting:
-      helvetica: "Helvetica/Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "RobotoCondensed"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1895,6 +1874,7 @@ he:
         draft: טיוטה
         edit: עריכה
         reply_to_post:
+          label: תגובה לפוסט מאת %{postUsername}
           desc: תגובה לפוסט ספיציפי
         reply_as_new_topic:
           label: תגובה כנושא מקושר
@@ -2105,12 +2085,20 @@ he:
           noreplies: אין להם תגובות
           single_user: מכילים משתמש/ת יחידים
         post:
-          count:
-            label: מספר פוסטים מינימלי
+          min:
+            placeholder: מזערי
+          max:
+            placeholder: מרבי
           time:
             label: פורסמו
             before: לפני
             after: אחרי
+        views:
+          label: צפיות
+        min_views:
+          placeholder: מזערי
+        max_views:
+          placeholder: מרבי
     hamburger_menu: "עיברו לרשימת נושאים אחרת או קטגוריה"
     new_item: "חדש"
     go_back: "חזור אחורה"
@@ -2154,7 +2142,8 @@ he:
         new: "אין לך נושאים חדשים."
         read: "עדיין לא קראת אף נושא."
         posted: "עדיין לא פרסמתם באף נושא."
-        latest: "אין נושאים אחרונים. זה עצוב."
+        ready_to_create: "הסתיימו ההכנות לקראת "
+        latest: "התעדכנת בהכול!"
         bookmarks: "אין לך עדיין סימניות לנושאים."
         category: "אין נושאים בקטגוריה %{category}."
         top: "אין נושאים מובילים."
@@ -2256,7 +2245,7 @@ he:
       browse_all_categories: עיינו בכל הקטגוריות
       browse_all_tags: עיון בכל התגיות
       view_latest_topics: הצגת נושאים אחרונים
-      suggest_create_topic: למה לא ליצור נושא חדש?
+      suggest_create_topic: לפתוח דיון חדש?
       jump_reply_up: קפיצה לתגובה קודמת
       jump_reply_down: קפיצה לתגובה מאוחרת
       deleted: "הנושא הזה נמחק"
@@ -2354,7 +2343,7 @@ he:
           "2_8": "תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר קטגוריה זו."
           "2_4": "תראו ספירה של תגובות חדשות כיוון שפרסמתם תגובה לנושא זה."
           "2_2": "תראו ספירה של תגובות חדשות כיוון שאתם עוקבים אחר נושא זה:"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'יופיע עיטור עם מספר התגובות החדשות מכיוון ש<a href="%{basePath}/u/%{username}/preferences/notifications">קראת את הנושא הזה</a>.'
           "1_2": "תישלח התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב לך."
           "1": "תישלח התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב לך."
           "0_7": "אתם מתעלמים מכל ההתראות בקטגוריה זו."

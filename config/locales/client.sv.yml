@@ -122,6 +122,7 @@ sv:
       twitter: "Dela på Twitter"
       facebook: "Dela på Facebook"
       email: "Skicka via e-post"
+      url: "Kopiera och dela URL"
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
       private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
@@ -1074,6 +1075,7 @@ sv:
         taken: "Tyvärr är den e-postadressen inte tillgänglig."
         error: "Det uppstod ett problem under bytet av din e-postadress. Kanske används den redan?"
         success: "Vi har skickat e-post till den adressen. Var god följ bekräftelseinstruktionerna."
+        success_via_admin: "Eftersom du ändrar användarens e-postadress antar vi att användaren har förlorat tillgången till sitt ursprungliga e-postkonto. Vi skickade ett återställningslösenord via e-post till den nya e-postadressen för den här användaren. Observera att användaren måste slutföra processen för återställning av lösenord för att e-postadressändringen ska träda i kraft."
         success_staff: "Vi har skickat e-post till din nuvarande adress. Vänligen följ instruktionerna för konfirmering."
       change_avatar:
         title: "Ändra din profilbild"
@@ -1111,6 +1113,7 @@ sv:
         sso_override_instructions: "E-postadressen kan uppdateras från SSO-leverantören."
         no_secondary: "Inga sekundära e-postadresser"
         instructions: "Visas aldrig offentligt."
+        admin_note: "Obs! En administratörsanvändare som ändrar annan icke-administratörsanvändares e-postadress anger att användaren har förlorat tillgången till sin ursprungliga adress, så ett återställnings-e-postmeddelande kommer att skickas till den nya adressen. Inget ändras förrän användaren har slutfört lösenordsåterställningsprocessen."
         ok: "Vi skickar e-post till dig för bekräftelse"
         required: "Vi ber dig ange en e-postadress"
         invalid: "Vi ber dig ange en giltig e-postadress"
@@ -1584,7 +1587,7 @@ sv:
       accept_invite: "Acceptera inbjudan"
       success: "Ditt konto har skapats och du är nu inloggad."
       name_label: "Namn"
-      password_label: "Välj lösenord"
+      password_label: "Lösenord"
       optional_description: "(valfri)"
     password_reset:
       continue: "Fortsätt till %{site_name}"
@@ -1603,29 +1606,6 @@ sv:
       categories_and_top_topics: "Kategorier och toppämnen"
       categories_boxes: "Boxar med underkategorier"
       categories_boxes_with_topics: "Boxar med utvalda ämnen"
-    base_font_setting:
-      helvetica: "Helvetica/Arial"
-      open_sans: "Open Sans"
-      oxanium: "Oxanium"
-      roboto: "Roboto"
-      lato: "Lato"
-      noto_sans_jp: "NotoSansJP"
-      montserrat: "Montserrat"
-      roboto_condensed: "RobotoCondensed"
-      source_sans_pro: "SourceSansPro"
-      oswald: "Oswald"
-      raleway: "Raleway"
-      roboto_mono: "RobotoMono"
-      poppins: "Poppins"
-      noto_sans: "NotoSans"
-      roboto_slab: "RobotoSlab"
-      merriweather: "Merriweather"
-      ubuntu: "Ubuntu"
-      pt_sans: "PTSans"
-      playfair_display: "PlayfairDisplay"
-      nunito: "Nunito"
-      lora: "Lora"
-      mukta: "Mukta"
     shortcut_modifier_key:
       shift: "Skift"
       ctrl: "Ctrl"
@@ -1985,11 +1965,21 @@ sv:
           single_user: innehåller en ensam användare
         post:
           count:
-            label: Minsta antalet inlägg
+            label: Inlägg
+          min:
+            placeholder: minst
+          max:
+            placeholder: maximalt
           time:
             label: Publicerad
             before: innan
             after: efter
+        views:
+          label: Visningar
+        min_views:
+          placeholder: minst
+        max_views:
+          placeholder: maximalt
     hamburger_menu: "gå till en annan ämneslista eller kategori"
     new_item: "ny"
     go_back: "gå tillbaka"
@@ -2031,7 +2021,8 @@ sv:
         new: "Du har inga nya ämnen."
         read: "Du har inte läst några ämnen ännu."
         posted: "Du har inte postat i några ämnen ännu."
-        latest: "Det finns inga senaste ämnen, tråkigt nog."
+        ready_to_create: "Redo att "
+        latest: "Ni är alla ikapp!"
         bookmarks: "Du har inga bokmärkta ämnen ännu."
         category: "Det finns inga ämnen i %{category}."
         top: "Det finns inga toppämnen."
@@ -2119,7 +2110,7 @@ sv:
       browse_all_categories: Bläddra bland alla kategorier
       browse_all_tags: Bläddra bland alla taggar
       view_latest_topics: visa senaste ämnen
-      suggest_create_topic: Varför inte skapa ett ämne?
+      suggest_create_topic: starta en ny konversation?
       jump_reply_up: hoppa till tidigare svar
       jump_reply_down: hoppa till senare svar
       deleted: "Ämnet har raderats"

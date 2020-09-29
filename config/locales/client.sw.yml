@@ -1120,7 +1120,6 @@ sw:
       accept_invite: "Kubali mwaliko"
       success: "Akaunti yako imetengenezwa na sasa unaweza kuingia."
       name_label: "Jina"
-      password_label: "Andika Neno la siri"
       optional_description: "(sio muhimu)"
     password_reset:
       continue: "endelea kwenye %{site_name}"
@@ -1414,8 +1413,6 @@ sw:
           noreplies: haina majibu
           single_user: ina mtumiaji mmoja
         post:
-          count:
-            label: Namba ya Chini ya Chapisho
           time:
             label: Chapishwa
             before: kabla
@@ -1460,7 +1457,6 @@ sw:
         new: "Hauna mada mpya."
         read: "Haujasoma mada yoyote."
         posted: "Bado haujachapisha kwenye mada yoyote."
-        latest: "Hakuna mada mpya. Hii ni huzuni."
         bookmarks: "Hauja alamisha mada yoyote."
         category: "Hakuna %{category} mada."
         top: "Hakuna mada za juu."
@@ -1534,7 +1530,6 @@ sw:
       read_more_MF: "Kuna { UNREAD, plural, =0 {} one { ni <a href='{basePath}/unread'>haijasomwa 1</a> } other { ni <a href='{basePath}/unread'>haijasomwa #</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{na } false {ni } other {}} mada<a href='{basePath}/new'>mpya 1</a>} other { {BOTH, select, true{na } false {ni } other{}} <a href='{basePath}/new'>mada mpya #</a>} } zilizobaki, au {CATEGORY, select, true {vinjari mada zingine ndani ya {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vinjari kategoria zote
       view_latest_topics: tembelea mada mpya
-      suggest_create_topic: Kwa nini usitengeneze mada?
       jump_reply_up: fikia jibu la awali
       jump_reply_down: fikia jibu la baadaye
       deleted: "Mada imefutwa"
