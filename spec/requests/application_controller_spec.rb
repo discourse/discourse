@@ -647,6 +647,58 @@ RSpec.describe ApplicationController do
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
   end
 
+  context "default locale" do
+    before do
+      SiteSetting.default_locale = :fr
+      sign_in(Fabricate(:user))
+    end
+
+    after do
+      I18n.reload!
+    end
+
+    context "with rate limits" do
+      before { RateLimiter.enable }
+      after { RateLimiter.disable }
+
+      it "serves a LimitExceeded error in the preferred locale" do
+        SiteSetting.max_likes_per_day = 1
+        post1 = Fabricate(:post)
+        post2 = Fabricate(:post)
+        override = TranslationOverride.create(
+          locale: "fr",
+          translation_key: "rate_limiter.by_type.create_like",
+          value: "French LimitExceeded error message"
+        )
+        I18n.reload!
+
+        post "/post_actions.json", params: {
+          id: post1.id, post_action_type_id: PostActionType.types[:like]
+        }
+        expect(response.status).to eq(200)
+
+        post "/post_actions.json", params: {
+          id: post2.id, post_action_type_id: PostActionType.types[:like]
+        }
+        expect(response.status).to eq(429)
+        expect(response.parsed_body["errors"].first).to eq(override.value)
+      end
+    end
+
+    it "serves an InvalidParameters error with the default locale" do
+      override = TranslationOverride.create(
+        locale: "fr",
+        translation_key: "invalid_params",
+        value: "French InvalidParameters error message"
+      )
+      I18n.reload!
+
+      get "/search.json", params: { q: "hello\0hello" }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to eq(override.value)
+    end
+  end
+
   describe "set_locale" do
     # Using /bootstrap.json because it returns a locale-dependent value
     def headers(locale)

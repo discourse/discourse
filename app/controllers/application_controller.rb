@@ -152,13 +152,15 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
-    render_json_error(
-      e.description,
-      type: :rate_limit,
-      status: 429,
-      extras: { wait_seconds: retry_time_in_seconds },
-      headers: { 'Retry-After': retry_time_in_seconds },
-    )
+    with_resolved_locale do
+      render_json_error(
+        e.description,
+        type: :rate_limit,
+        status: 429,
+        extras: { wait_seconds: retry_time_in_seconds },
+        headers: { 'Retry-After': retry_time_in_seconds }
+      )
+    end
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
@@ -170,11 +172,15 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::InvalidParameters do |e|
-    message = I18n.t('invalid_params', message: e.message)
+    opts = {
+      custom_message: 'invalid_params',
+      custom_message_params: { message: e.message }
+    }
+
     if (request.format && request.format.json?) || request.xhr? || !request.get?
-      rescue_discourse_actions(:invalid_parameters, 400, include_ember: true, custom_message_translated: message)
+      rescue_discourse_actions(:invalid_parameters, 400, opts.merge(include_ember: true))
     else
-      rescue_discourse_actions(:not_found, 400, custom_message_translated: message)
+      rescue_discourse_actions(:not_found, 400, opts)
     end
   end
 
@@ -238,10 +244,8 @@ class ApplicationController < ActionController::Base
 
     message = title = nil
     with_resolved_locale(check_current_user: false) do
-      if opts[:custom_message_translated]
-        title = message = opts[:custom_message_translated]
-      elsif opts[:custom_message]
-        title = message = I18n.t(opts[:custom_message])
+      if opts[:custom_message]
+        title = message = I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
       else
         message = I18n.t(type)
         if status_code == 403
@@ -329,8 +333,8 @@ class ApplicationController < ActionController::Base
   end
 
   def with_resolved_locale(check_current_user: true)
-    if check_current_user && current_user
-      locale = current_user.effective_locale
+    if check_current_user && (user = current_user rescue nil)
+      locale = user.effective_locale
     else
       if SiteSetting.set_locale_from_accept_language_header
         locale = locale_from_header
