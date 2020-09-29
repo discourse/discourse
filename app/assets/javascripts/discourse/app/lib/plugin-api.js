@@ -61,6 +61,10 @@ import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import {
+  addSaveableUserField,
+  addSaveableUserOptionField,
+} from "discourse/models/user";
 
 // If you add any methods to the API ensure you bump up this number
 const PLUGIN_API_VERSION = "0.11.0";
@@ -1206,6 +1210,13 @@ class PluginApi {
    **/
   addAdvancedSearchOptions(options) {
     addAdvancedSearchOptions(options);
+  }
+
+  addSaveableUserField(fieldName) {
+    addSaveableUserField(fieldName);
+  }
+  addSaveableUserOptionField(fieldName) {
+    addSaveableUserOptionField(fieldName);
   }
 }
 

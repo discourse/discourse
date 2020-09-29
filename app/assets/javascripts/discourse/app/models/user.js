@@ -41,6 +41,68 @@ export const SECOND_FACTOR_METHODS = {
 
 const isForever = (dt) => moment().diff(dt, "years") < -500;
 
+let userFields = [
+  "bio_raw",
+  "website",
+  "location",
+  "name",
+  "title",
+  "locale",
+  "custom_fields",
+  "user_fields",
+  "muted_usernames",
+  "ignored_usernames",
+  "allowed_pm_usernames",
+  "profile_background_upload_url",
+  "card_background_upload_url",
+  "muted_tags",
+  "tracked_tags",
+  "watched_tags",
+  "watching_first_post_tags",
+  "date_of_birth",
+  "primary_group_id",
+];
+
+export function addSaveableUserField(fieldName) {
+  userFields.push(fieldName);
+}
+
+let userOptionFields = [
+  "mailing_list_mode",
+  "mailing_list_mode_frequency",
+  "external_links_in_new_tab",
+  "email_digests",
+  "email_in_reply_to",
+  "email_messages_level",
+  "email_level",
+  "email_previous_replies",
+  "color_scheme_id",
+  "dark_scheme_id",
+  "dynamic_favicon",
+  "enable_quoting",
+  "enable_defer",
+  "automatically_unpin_topics",
+  "digest_after_minutes",
+  "new_topic_duration_minutes",
+  "auto_track_topics_after_msecs",
+  "notification_level_when_replying",
+  "like_notification_frequency",
+  "include_tl0_in_digests",
+  "theme_ids",
+  "allow_private_messages",
+  "enable_allowed_pm_users",
+  "homepage_id",
+  "hide_profile_and_presence",
+  "text_size",
+  "title_count_mode",
+  "timezone",
+  "skip_new_user_tips",
+];
+
+export function addSaveableUserOptionField(fieldName) {
+  userOptionFields.push(fieldName);
+}
+
 const User = RestModel.extend({
   hasPMs: gt("private_messages_stats.all", 0),
   hasStartedPMs: gt("private_messages_stats.mine", 0),
@@ -267,63 +329,9 @@ const User = RestModel.extend({
   },
 
   save(fields) {
-    let userFields = [
-      "bio_raw",
-      "website",
-      "location",
-      "name",
-      "title",
-      "locale",
-      "custom_fields",
-      "user_fields",
-      "muted_usernames",
-      "ignored_usernames",
-      "allowed_pm_usernames",
-      "profile_background_upload_url",
-      "card_background_upload_url",
-      "muted_tags",
-      "tracked_tags",
-      "watched_tags",
-      "watching_first_post_tags",
-      "date_of_birth",
-      "primary_group_id",
-    ];
-
     const data = this.getProperties(
       userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
     );
-
-    let userOptionFields = [
-      "mailing_list_mode",
-      "mailing_list_mode_frequency",
-      "external_links_in_new_tab",
-      "email_digests",
-      "email_in_reply_to",
-      "email_messages_level",
-      "email_level",
-      "email_previous_replies",
-      "color_scheme_id",
-      "dark_scheme_id",
-      "dynamic_favicon",
-      "enable_quoting",
-      "enable_defer",
-      "automatically_unpin_topics",
-      "digest_after_minutes",
-      "new_topic_duration_minutes",
-      "auto_track_topics_after_msecs",
-      "notification_level_when_replying",
-      "like_notification_frequency",
-      "include_tl0_in_digests",
-      "theme_ids",
-      "allow_private_messages",
-      "enable_allowed_pm_users",
-      "homepage_id",
-      "hide_profile_and_presence",
-      "text_size",
-      "title_count_mode",
-      "timezone",
-      "skip_new_user_tips",
-    ];
 
     if (fields) {
       userOptionFields = userOptionFields.filter(
