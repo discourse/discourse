@@ -15,7 +15,7 @@
 //= require locales/en_US
 //= require discourse-loader
 
-// Stuff we need to load first
+// Our base application
 //= require vendor
 //= require discourse-shims
 //= require pretty-text-bundle
@@ -28,15 +28,17 @@
 //= require handlebars
 //= require ember-template-compiler
 
+// Test helpers
 //= require sinon/pkg/sinon
-
-//= require helpers/assertions
-
+//= require_tree ./helpers
 //= require break_string
-//= require helpers/qunit-helpers
+
+// Finally, the tests themselves
 //= require_tree ./fixtures
-//= require_tree ./lib
-//= require_tree .
+//= require_tree ./acceptance
+//= require_tree ./integration
+//= require_tree ./unit
+//= require_tree ./admin
 //= require plugin_tests
 //= require_self
 //
@@ -55,7 +57,7 @@ sinon.config = {
   injectInto: null,
   properties: ["spy", "stub", "mock", "clock", "sandbox"],
   useFakeTimers: true,
-  useFakeServer: false
+  useFakeServer: false,
 };
 
 let MessageBus = require("message-bus-client").default;
@@ -110,13 +112,13 @@ function resetSite(siteSettings, extras) {
   return Site.resetCurrent(Site.create(siteAttrs));
 }
 
-QUnit.testStart(function(ctx) {
+QUnit.testStart(function (ctx) {
   let settings = resetSettings();
   server = createPretender.default;
   createPretender.applyDefaultHandlers(server);
   server.handlers = [];
 
-  server.prepareBody = function(body) {
+  server.prepareBody = function (body) {
     if (body && typeof body === "object") {
       return JSON.stringify(body);
     }
@@ -124,12 +126,12 @@ QUnit.testStart(function(ctx) {
   };
 
   if (QUnit.config.logAllRequests) {
-    server.handledRequest = function(verb, path, request) {
+    server.handledRequest = function (verb, path, request) {
       console.log("REQ: " + verb + " " + path);
     };
   }
 
-  server.unhandledRequest = function(verb, path) {
+  server.unhandledRequest = function (verb, path) {
     if (QUnit.config.logAllRequests) {
       console.log("REQ: " + verb + " " + path + " missing");
     }
@@ -141,14 +143,14 @@ QUnit.testStart(function(ctx) {
     throw new Error(error);
   };
 
-  server.checkPassthrough = request =>
+  server.checkPassthrough = (request) =>
     request.requestHeaders["Discourse-Script"];
 
   if (ctx.module.startsWith(acceptanceModulePrefix)) {
     var helper = {
       parsePostData: createPretender.parsePostData,
       response: createPretender.response,
-      success: createPretender.success
+      success: createPretender.success,
     };
 
     applyPretender(
@@ -170,11 +172,11 @@ QUnit.testStart(function(ctx) {
   createHelperContext({
     siteSettings: settings,
     capabilities: {},
-    site
+    site,
   });
 
   _DiscourseURL.redirectedTo = null;
-  _DiscourseURL.redirectTo = function(url) {
+  _DiscourseURL.redirectTo = function (url) {
     _DiscourseURL.redirectedTo = url;
   };
 
@@ -187,10 +189,10 @@ QUnit.testStart(function(ctx) {
   window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
 
   // Unless we ever need to test this, let's leave it off.
-  $.fn.autocomplete = function() {};
+  $.fn.autocomplete = function () {};
 });
 
-QUnit.testDone(function() {
+QUnit.testDone(function () {
   window.sandbox.restore();
 
   // Destroy any modals
@@ -224,7 +226,7 @@ var pluginPath = getUrlParameter("qunit_single_plugin")
   ? "/" + getUrlParameter("qunit_single_plugin") + "/"
   : "/plugins/";
 
-Object.keys(requirejs.entries).forEach(function(entry) {
+Object.keys(requirejs.entries).forEach(function (entry) {
   var isTest = /\-test/.test(entry);
   var regex = new RegExp(pluginPath);
   var isPlugin = regex.test(entry);
