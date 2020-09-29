@@ -378,7 +378,7 @@ describe Email::Sender do
     fab!(:post) { Fabricate(:post) }
     fab!(:reply) do
       raw = <<~RAW
-        Hello world!
+        Hello world! It’s a great day!
         #{UploadMarkdown.new(small_pdf).attachment_markdown}
         #{UploadMarkdown.new(large_pdf).attachment_markdown}
         #{UploadMarkdown.new(image).image_markdown}
@@ -460,6 +460,13 @@ describe Email::Sender do
           expect(message.html_part.body).to include("embedded-secure-image")
           expect(message.attachments.length).to eq(4)
         end
+
+        it "uses correct UTF-8 encoding for the body of the email" do
+          Email::Sender.new(message, :valid_type).send
+          expect(message.html_part.body).not_to include("Itâ\u0080\u0099s")
+          expect(message.html_part.body).to include("It’s")
+          expect(message.html_part.charset.downcase).to eq("utf-8")
+        end
       end
     end
 
@@ -490,6 +497,13 @@ describe Email::Sender do
       expect(message.parts.size).to eq(4)
       expect(message.parts[0].content_type).to start_with("multipart/alternative")
       expect(message.parts[0].parts.size).to eq(2)
+    end
+
+    it "uses correct UTF-8 encoding for the body of the email" do
+      Email::Sender.new(message, :valid_type).send
+      expect(message.html_part.body).not_to include("Itâ\u0080\u0099s")
+      expect(message.html_part.body).to include("It’s")
+      expect(message.html_part.charset.downcase).to eq("utf-8")
     end
   end
 
