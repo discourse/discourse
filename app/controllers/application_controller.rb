@@ -663,9 +663,13 @@ class ApplicationController < ActionController::Base
   def add_cors_header
     if Discourse.is_cdn_request?(request.env) && ["GET", "OPTIONS"].include?(request.method)
       response.headers['Access-Control-Allow-Origin'] = '*'
-      response.headers['Access-Control-Allow-Credentials'] = 'false'
       response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
     end
+  end
+
+  def self.cdn_action(args = {})
+    skip_before_action :block_cdn_requests, args
+    before_action :add_cors_header, args
   end
 
   def self.requires_login(arg = {})

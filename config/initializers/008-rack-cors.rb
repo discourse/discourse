@@ -33,7 +33,6 @@ class Discourse::Cors
   def self.apply_headers(cors_origins, env, headers)
     if env['SCRIPT_NAME'] == "/assets" && ['GET', 'OPTIONS'].include?(env['REQUEST_METHOD']) && Discourse.is_cdn_request?(env)
       headers['Access-Control-Allow-Origin'] = '*'
-      headers['Access-Control-Allow-Credentials'] = 'false'
       headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
     elsif cors_origins
       origin = nil
