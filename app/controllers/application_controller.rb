@@ -657,19 +657,16 @@ class ApplicationController < ActionController::Base
   end
 
   def block_cdn_requests
-    raise Discourse::NotFound if Discourse.is_cdn_request?(request.env)
+    raise Discourse::NotFound if Discourse.is_cdn_request?(request.env, request.method)
   end
 
-  def add_cors_header
-    if Discourse.is_cdn_request?(request.env) && ["GET", "OPTIONS"].include?(request.method)
-      response.headers['Access-Control-Allow-Origin'] = '*'
-      response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    end
+  def apply_cdn_headers
+    Discourse.apply_cdn_headers(response.headers) if Discourse.is_cdn_request?(request.env, request.method)
   end
 
   def self.cdn_action(args = {})
     skip_before_action :block_cdn_requests, args
-    before_action :add_cors_header, args
+    before_action :apply_cdn_headers, args
   end
 
   def self.requires_login(arg = {})

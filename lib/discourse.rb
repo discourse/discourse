@@ -908,12 +908,22 @@ module Discourse
     ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
   end
 
-  def self.is_cdn_request?(env)
+  CDN_REQUEST_METHODS ||= ["GET", "HEAD", "OPTIONS"]
+
+  def self.is_cdn_request?(env, request_method)
+    return unless CDN_REQUEST_METHODS.include?(request_method)
+
     cdn_hostnames = GlobalSetting.cdn_hostnames
     return if cdn_hostnames.blank?
 
     requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
     cdn_hostnames.include?(requested_hostname)
+  end
+
+  def self.apply_cdn_headers(headers)
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = CDN_REQUEST_METHODS.join(", ")
+    headers
   end
 end
 
