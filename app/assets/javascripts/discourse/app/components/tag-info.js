@@ -74,7 +74,7 @@ export default Component.extend({
     },
 
     deleteTag() {
-      this.sendAction("deleteAction", this.tagInfo);
+      this.deleteAction(this.tagInfo);
     },
 
     unlinkSynonym(tag) {
