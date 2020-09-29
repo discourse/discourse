@@ -307,7 +307,7 @@ class Auth::DefaultCurrentUserProvider
   protected
 
   def lookup_user_api_user_and_update_key(user_api_key, client_id)
-    if api_key = UserApiKey.active.with_key(user_api_key).includes(:user).first
+    if api_key = UserApiKey.active.with_key(user_api_key).includes(:user, :scopes).first
       unless api_key.allow?(@env)
         raise Discourse::InvalidAccess
       end

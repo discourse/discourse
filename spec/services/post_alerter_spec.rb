@@ -724,7 +724,7 @@ describe PostAlerter do
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
                            application_name: "iPhone#{i}",
-                           scopes: ['notifications'],
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
                            push_url: "https://site2.com/push")
       end
 
@@ -739,7 +739,7 @@ describe PostAlerter do
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
                            application_name: "iPhone#{i}",
-                           scopes: ['notifications'],
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
                            push_url: "https://site2.com/push")
       end
 

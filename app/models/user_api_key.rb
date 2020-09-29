@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UserApiKey < ActiveRecord::Base
+  self.ignored_columns = [
+    "scopes" # TODO(2020-12-18): remove
+  ]
 
   SCOPES = {
     read: [:get],
@@ -19,6 +22,7 @@ class UserApiKey < ActiveRecord::Base
   }
 
   belongs_to :user
+  has_many :scopes, class_name: "UserApiKeyScope", dependent: :destroy
 
   scope :active, -> { where(revoked_at: nil) }
   scope :with_key, ->(key) { where(key_hash: ApiKey.hash_key(key)) }
@@ -41,6 +45,7 @@ class UserApiKey < ActiveRecord::Base
     @key.present?
   end
 
+  # Scopes allowed to be requested by external services
   def self.allowed_scopes
     Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))
   end
@@ -78,19 +83,27 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def has_push?
-    (scopes.include?("push") || scopes.include?("notifications")) && push_url.present? && SiteSetting.allowed_user_api_push_urls.include?(push_url)
+    scopes.any? { |s| s.name == "push" || s.name == "notifications" } &&
+      push_url.present? &&
+      SiteSetting.allowed_user_api_push_urls.include?(push_url)
   end
 
   def allow?(env)
-    scopes.any? do |name|
-      UserApiKey.allow_scope?(name, env)
-    end
+    scopes.any? do |s|
+      UserApiKey.allow_scope?(s.name, env)
+    end || is_revoke_self_request?(env)
   end
 
   def self.invalid_auth_redirect?(auth_redirect)
     SiteSetting.allowed_user_api_auth_redirects
       .split('|')
       .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
+  end
+
+  private
+
+  def is_revoke_self_request?(env)
+    UserApiKey.allow_permission?([:post, 'user_api_keys#revoke'], env) && (env[:id].nil? || env[:id].to_i == id)
   end
 end
 
