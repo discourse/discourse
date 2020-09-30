@@ -29,7 +29,7 @@ describe InvitesController do
 
       body = response.body
       expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found', base_url: Discourse.base_url))
+      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.expired', base_url: Discourse.base_url))
     end
 
     it "renders the accept invite page if invite exists" do
