@@ -4,9 +4,7 @@ export function scrollTopFor(y) {
 
 export function minimumOffset() {
   const header = document.querySelector("header.d-header");
-  if (header) {
-    return header.offsetHeight;
-  }
+  return header ? header.offsetHeight : 0;
 }
 
 export default function offsetCalculator() {
