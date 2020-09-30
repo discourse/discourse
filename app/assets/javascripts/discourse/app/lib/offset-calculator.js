@@ -26,7 +26,7 @@ export default function offsetCalculator() {
     return min;
   }
 
-  const scrollTop = window.scrollTop;
+  const scrollTop = window.scrollY;
   const visibleBottomHeight = scrollTop + windowHeight - topicBottomOffsetTop;
 
   if (visibleBottomHeight > 0) {
