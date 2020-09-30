@@ -82,9 +82,9 @@ export default Component.extend(UploadMixin, {
   },
 
   _openLightbox() {
-    next(() =>
-      $(this.element.querySelector("a.lightbox")).magnificPopup("open")
-    );
+    next(() => {
+      this.element.querySelector(".lightbox").click();
+    });
   },
 
   _applyLightbox() {
