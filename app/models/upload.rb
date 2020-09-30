@@ -167,6 +167,7 @@ class Upload < ActiveRecord::Base
     # we do not want to exclude topic links that for whatever reason
     # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
+    return false if route.blank?
     route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
   rescue ActionController::RoutingError
     false

@@ -493,5 +493,10 @@ describe Upload do
       url = "/uploads/default/test_0/original/1X/e1864389d8252958586c76d747b069e9f68827e3.png"
       expect(Upload.secure_media_url?(url)).to eq(false)
     end
+
+    it "does not raise for invalid URLs" do
+      url = "http://URL:%20https://google.com"
+      expect(Upload.secure_media_url?(url)).to eq(false)
+    end
   end
 end
