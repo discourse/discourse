@@ -16,6 +16,20 @@
     color: white;
   }
 
+  .lg-actions {
+    .rtl & {
+      .lg-next {
+        left: unset;
+        right: 20px;
+      }
+
+      .lg-prev {
+        right: unset;
+        left: 20px;
+      }
+    }
+  }
+
   .lg-actions .lg-next:before,
   .lg-actions .lg-prev:after {
     display: none;
