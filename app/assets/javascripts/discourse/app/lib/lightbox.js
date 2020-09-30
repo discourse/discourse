@@ -1,4 +1,4 @@
-import loadScript from "discourse/lib/load-script";
+import loadScript, { loadCSS } from "discourse/lib/load-script";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import User from "discourse/models/user";
 
@@ -8,21 +8,23 @@ export default function (elem, siteSettings) {
   }
 
   loadScript("/javascripts/light-gallery/lightgallery.min.js").then(() => {
-    loadScript("/javascripts/light-gallery/lg-zoom.min.js");
-
-    lightGallery(elem, {
-      selector: "*:not(.spoiler):not(.spoiled) a.lightbox",
-      mode: "lg-fade",
-      speed: "300",
-      cssEasing: "cubic-bezier(0.25, 0, 0.25, 1)",
-      startClass: "lg-start-fade",
-      showAfterLoad: false,
-      supportLegacyBrowser: false,
-      preload: 5,
-      nextHtml: iconHTML("chevron-right"),
-      prevHtml: iconHTML("chevron-left"),
-      download:
-        !siteSettings.prevent_anons_from_downloading_files || User.current(),
+    loadScript("/javascripts/light-gallery/lg-zoom.min.js").then(() => {
+      loadCSS("/javascripts/light-gallery/lightgallery.min.css").then(() => {
+        lightGallery(elem, {
+          selector: "*:not(.spoiler):not(.spoiled) a.lightbox",
+          mode: "lg-fade",
+          speed: "300",
+          cssEasing: "cubic-bezier(0.25, 0, 0.25, 1)",
+          startClass: "lg-start-fade",
+          preload: 10,
+          nextHtml: iconHTML("chevron-right"),
+          prevHtml: iconHTML("chevron-left"),
+          hideBarsDelay: 100000,
+          download:
+            !siteSettings.prevent_anons_from_downloading_files ||
+            User.current(),
+        });
+      });
     });
   });
 
