@@ -18,7 +18,7 @@
           content=allGroups
           value=groupIds
           labelProperty="name"
-          onChange=(action (mut groupIds))}}
+          onChange=(mut groupIds)}}
       </div>
     {{/if}}
 
@@ -37,7 +37,7 @@
         includeDateTime=true
         includeMidFuture=true
         clearable=true
-        onChangeInput=(action (mut inviteExpiresAt))
+        onChangeInput=(mut inviteExpiresAt)
       }}
     </div>
 

@@ -14,7 +14,7 @@
         includeNow=includeNow
         clearable=clearable
         onChangeInput=onChangeInput
-        onChange=(action (mut selection))
+        onChange=(mut selection)
         options=(hash
           none="topic.auto_update_input.none"
         )
@@ -28,7 +28,7 @@
       {{date-picker-future
         value=date
         defaultDate=date
-        onSelect=(action (mut date))
+        onSelect=(mut date)
       }}
     </div>
 

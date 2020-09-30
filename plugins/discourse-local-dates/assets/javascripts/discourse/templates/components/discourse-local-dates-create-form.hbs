@@ -21,6 +21,7 @@
     <div class="date-time-configuration">
       <div class="inputs-panel">
         <div class="date-time-control from {{if fromSelected 'is-selected'}} {{if fromFilled 'is-filled'}}">
+        <div class="date-time-control from {{if fromSelected "is-selected"}} {{if fromFilled "is-filled"}}">
           {{d-icon "calendar-alt"}}
           {{d-button
             id="from-date-time"
@@ -30,6 +31,7 @@
         </div>
 
         <div class="date-time-control to {{if toSelected 'is-selected'}} {{if toFilled 'is-filled'}}">
+        <div class="date-time-control to {{if toSelected "is-selected"}} {{if toFilled "is-filled"}}">
           {{d-icon "calendar-alt"}}
           {{d-button
             action=(action "focusTo")
@@ -44,7 +46,7 @@
           {{timezone-input
             options=(hash icon="globe")
             value=timezone
-            onChange=(action (mut timezone))
+            onChange=(mut timezone)
           }}
         {{/unless}}
       </div>
@@ -67,6 +69,7 @@
             {{input maxlength=5 placeholder="hh:mm" input=(action "setToTime") type="time" value=toTime class="time-picker"}}
           </div>
         {{/if}}
+          {{/if}}
         {{/if}}
       </div>
 
@@ -74,7 +77,7 @@
         {{timezone-input
           value=timezone
           options=(hash icon="globe")
-          onChange=(action (mut timezone))
+          onChange=(mut timezone)
         }}
       {{/if}}
     </div>
@@ -92,7 +95,7 @@
                 content=recurringOptions
                 class="recurrence-input"
                 value=recurring
-                onChange=(action (mut recurring))
+                onChange=(mut recurring)
                 none="discourse_local_dates.create.form.recurring_none"}}
             </div>
           </div>
@@ -103,6 +106,7 @@
           <p>
             {{i18n "discourse_local_dates.create.form.format_description"}}
             <a target="_blank" rel="noopener" href="https://momentjs.com/docs/#/parsing/string-format/">
+            <a target="_blank" rel="noopener noreferrer" href="https://momentjs.com/docs/#/parsing/string-format/">
               {{d-icon "question-circle"}}
             </a>
           </p>

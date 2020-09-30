@@ -22,7 +22,7 @@
       {{combo-box
         value=filterStatus
         content=statuses
-        onChange=(action (mut filterStatus))
+        onChange=(mut filterStatus)
       }}
     </div>
 
@@ -36,7 +36,7 @@
           value=filterType
           content=allTypes
           none="review.filters.type.all"
-          onChange=(action (mut filterType))
+          onChange=(mut filterType)
         }}
       </div>
 
@@ -45,7 +45,7 @@
         {{combo-box
           value=filterPriority
           content=priorities
-          onChange=(action (mut filterPriority))
+          onChange=(mut filterPriority)
         }}
       </div>
 
@@ -54,7 +54,7 @@
         {{category-chooser
           none="review.filters.all_categories"
           value=filterCategoryId
-          onChange=(action (mut filterCategoryId))
+          onChange=(mut filterCategoryId)
         }}
       </div>
 
@@ -91,7 +91,7 @@
         {{combo-box
           value=filterSortOrder
           content=sortOrders
-          onChange=(action (mut filterSortOrder))
+          onChange=(mut filterSortOrder)
         }}
       </div>
     {{/if}}

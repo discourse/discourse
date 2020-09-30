@@ -8,7 +8,7 @@
           value=pollType
           valueProperty="value"
           class="poll-type"
-          onChange=(action (mut pollType))
+          onChange=(mut pollType)
         }}
       </div>
 
@@ -19,7 +19,7 @@
           value=pollResult
           class="poll-result"
           valueProperty="value"
-          onChange=(action (mut pollResult))
+          onChange=(mut pollResult)
         }}
       </div>
 
@@ -28,7 +28,7 @@
         {{group-chooser
           content=siteGroups
           value=pollGroups
-          onChange=(action (mut pollGroups))
+          onChange=(mut pollGroups)
           labelProperty="name"
           valueProperty="name"}}
       </div>
@@ -41,7 +41,7 @@
             content=pollChartTypes
             value=chartType
             valueProperty="value"
-            onChange=(action (mut chartType))
+            onChange=(mut chartType)
           }}
         </div>
       {{/unless}}

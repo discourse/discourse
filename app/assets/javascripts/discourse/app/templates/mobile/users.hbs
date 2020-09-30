@@ -4,7 +4,7 @@
       {{plugin-outlet name="users-top" connectorTagName="div" args=(hash model=model)}}
 
       <div class="directory-controls">
-        {{period-chooser period=period onChange=(action (mut period)) fullDay=false}}
+        {{period-chooser period=period onChange=(mut period) fullDay=false}}
         {{#if lastUpdatedAt}}
           <div class="directory-last-updated">
             {{i18n "directory.last_updated"}}

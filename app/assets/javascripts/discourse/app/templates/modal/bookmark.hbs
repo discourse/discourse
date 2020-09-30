@@ -19,7 +19,7 @@
         content=autoDeletePreferences
         value=autoDeletePreference
         class="bookmark-option-selector"
-        onChange=(action (mut autoDeletePreference))
+        onChange=(mut autoDeletePreference)
       }}
     </div>
 
@@ -75,7 +75,7 @@
                 {{d-icon "calendar-alt"}}
                 {{date-picker-future
                   value=customReminderDate
-                  onSelect=(action (mut customReminderDate))
+                  onSelect=(mut customReminderDate)
                   id="bookmark-custom-date"
                 }}
               </div>
