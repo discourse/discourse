@@ -196,4 +196,14 @@ describe UrlHelper do
     end
   end
 
+  describe "rails_route_from_url" do
+    it "returns a rails route from the path" do
+      expect(described_class.rails_route_from_url("/u")).to eq({ controller: "users", action: "index" })
+    end
+
+    it "does not raise for invalid URLs" do
+      url = "http://URL:%20https://google.com"
+      expect(described_class.rails_route_from_url(url)).to eq(nil)
+    end
+  end
 end

@@ -70,6 +70,8 @@ class UrlHelper
   def self.rails_route_from_url(url)
     path = URI.parse(encode(url)).path
     Rails.application.routes.recognize_path(path)
+  rescue Addressable::URI::InvalidURIError
+    nil
   end
 
   def self.s3_presigned_url?(url)
