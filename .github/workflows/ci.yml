@@ -91,6 +91,7 @@ jobs:
           gem install bundler -v 2.1.4 --no-doc
           bundle config deployment 'true'
           bundle config without 'development'
+          bundle config path vendor/bundle
 
       - name: Bundler cache
         uses: actions/cache@v1
