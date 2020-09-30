@@ -658,7 +658,11 @@ RSpec.describe ApplicationController do
     end
 
     context "with rate limits" do
-      before { RateLimiter.enable }
+      before do
+        RateLimiter.clear_all!
+        RateLimiter.enable
+      end
+
       after { RateLimiter.disable }
 
       it "serves a LimitExceeded error in the preferred locale" do
