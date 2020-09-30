@@ -1,0 +1,37 @@
+.lg-backdrop.in {
+  background: #00000095;
+}
+
+.lg {
+  .lg-img-wrap {
+    img {
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+      background: linear-gradient(45deg, #111 0%, #333 100%);
+    }
+  }
+
+  .lg-actions .lg-next,
+  .lg-actions .lg-prev {
+    background: #00000090;
+    color: white;
+  }
+
+  .lg-actions .lg-next:before,
+  .lg-actions .lg-prev:after {
+    display: none;
+  }
+
+  .lg-toolbar {
+    background-color: #000000;
+    color: white;
+  }
+
+  .lg-sub-html {
+    color: white;
+    background-color: #000000;
+  }
+}
+
+.profiler-result {
+  display: none;
+}
