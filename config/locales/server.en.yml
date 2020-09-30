@@ -205,7 +205,7 @@ en:
       <<: *errors
 
   invite:
-    expired: "Your invite token is expired. Please <a href='%{base_url}/about'>contact staff</a>."
+    expired: "Your invite token has expired. Please <a href='%{base_url}/about'>contact staff</a>."
     not_found: "Your invite token is invalid. Please <a href='%{base_url}/about'>contact staff</a>."
     not_found_json: "Your invite token is invalid. Please contact staff."
     not_found_template: |
