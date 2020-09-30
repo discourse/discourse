@@ -4,8 +4,9 @@ export function scrollTopFor(y) {
 
 export function minimumOffset() {
   const header = document.querySelector("header.d-header");
-  const headerHeight = header.offsetHeight;
-  return headerHeight;
+  if (header) {
+    return header.offsetHeight;
+  }
 }
 
 export default function offsetCalculator() {
@@ -16,7 +17,7 @@ export default function offsetCalculator() {
     return min;
   }
 
-  const windowHeight = window.innerWidth;
+  const windowHeight = window.innerHeight;
   const documentHeight = document.body.clientHeight;
   const topicBottomOffsetTop = document.getElementById("topic-bottom")
     .offsetTop;
