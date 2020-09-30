@@ -47,7 +47,15 @@ def dependencies
       source: 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js',
       public: true
     }, {
-      source: 'magnific-popup/dist/jquery.magnific-popup.min.js',
+      source: 'light-gallery/lightgallery.min.js',
+      public: true
+    },
+    {
+      source: 'light-gallery/lg-zoom.min.js',
+      public: true
+    },
+    {
+      source: 'light-gallery/lightgallery.min.css',
       public: true
     }, {
       source: 'pikaday/pikaday.js',
