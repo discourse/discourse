@@ -43,3 +43,6 @@ bf88410126f73aab47b7e694e3c5b46453cec1b6
 
 # REFACTOR: Support bundling our `admin` section as an ember addon
 ce3fe2f4c4ddf166949ee3cec3d9ecbf9108ab52
+
+# REFACTOR: Move qunit tests to a different directory structure
+bc97c79a35d8acd283d4d8b79aa079bce9d127c6
