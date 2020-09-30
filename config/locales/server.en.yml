@@ -1,6 +1,6 @@
 en:
   dates:
-    # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+    # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/ test
     short_date_no_year: "D MMM"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date: "D MMM YYYY"
