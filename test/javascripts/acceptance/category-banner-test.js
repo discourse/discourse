@@ -29,7 +29,7 @@ acceptance("Category Banners", {
         slug: "test-read-only-with-banner",
         permission: null,
         read_only_banner:
-          "You need to video yourself doing the secret handshake to post here",
+          "You need to video yourself <div class='inner'>doing</div> the secret handshake to post here",
       },
     ],
   },
@@ -55,6 +55,10 @@ QUnit.test("Displays category banners when set", async (assert) => {
   await click(".modal-footer>.btn-primary");
   assert.ok(!visible(".bootbox.modal"), "it closes the modal");
   assert.ok(visible(".category-read-only-banner"), "it shows a banner");
+  assert.ok(
+    find(".category-read-only-banner .inner").length === 1,
+    "it allows staff to embed html in the message"
+  );
 });
 
 acceptance("Anonymous Category Banners", {
