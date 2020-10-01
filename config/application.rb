@@ -134,8 +134,7 @@ module Discourse
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
     if Rails.env == "development" || Rails.env == "test"
-      config.assets.paths << "#{config.root}/test/javascripts"
-      config.assets.paths << "#{config.root}/test/stylesheets"
+      config.assets.paths << "#{config.root}/app/assets/javascripts/discourse/tests"
       config.assets.paths << "#{config.root}/node_modules"
     end
 
@@ -356,7 +355,7 @@ module Discourse
             %w{qunit.js
               qunit.css
               test_helper.css
-              test_helper.js
+              discourse/tests/test_helper.js
               wizard/test/test_helper.js
             }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||
