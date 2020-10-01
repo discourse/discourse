@@ -3,6 +3,23 @@
 }
 
 .lg {
+  .lg-item {
+    background: none !important;
+    &:after {
+      content: "";
+      z-index: -1;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      animation: rotate-forever 1s infinite linear;
+      height: 30px;
+      width: 30px;
+      border: 4px solid var(--primary-low-mid);
+      border-right-color: transparent;
+      border-radius: 50%;
+    }
+  }
+
   .lg-img-wrap {
     img {
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
