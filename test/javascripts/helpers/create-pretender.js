@@ -416,7 +416,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/u/action/send_activation_email", success);
   pretender.put("/u/update-activation-email", success);
 
-  pretender.get("/u/hp.json", function () {
+  pretender.get("/session/hp.json", function () {
     return response({
       value: "32faff1b1ef1ac3",
       challenge: "61a3de0ccf086fb9604b76e884d75801",

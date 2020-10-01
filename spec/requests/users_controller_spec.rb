@@ -9,7 +9,7 @@ describe UsersController do
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
 
-      get '/u/hp.json'
+      get '/session/hp.json'
       expect(response.status).to eq(200)
 
       json = response.parsed_body
@@ -584,7 +584,7 @@ describe UsersController do
 
   describe '#create' do
     def honeypot_magic(params)
-      get '/u/hp.json'
+      get '/session/hp.json'
       json = response.parsed_body
       params[:password_confirmation] = json["value"]
       params[:challenge] = json["challenge"].reverse
@@ -1297,6 +1297,8 @@ describe UsersController do
       before do
         UsersController.any_instance.stubs(:honeypot_value).returns("abc")
         UsersController.any_instance.stubs(:challenge_value).returns("efg")
+        SessionController.any_instance.stubs(:honeypot_value).returns("abc")
+        SessionController.any_instance.stubs(:challenge_value).returns("efg")
       end
 
       let!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }

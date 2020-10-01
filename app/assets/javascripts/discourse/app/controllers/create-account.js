@@ -229,7 +229,7 @@ export default Controller.extend(
         return this._hpPromise;
       }
 
-      this._hpPromise = ajax(userPath("hp.json"))
+      this._hpPromise = ajax("/session/hp.json")
         .then((json) => {
           this._challengeDate = new Date();
           // remove 30 seconds for jitter, make sure this works for at least
