@@ -787,14 +787,14 @@ describe PostRevisor do
           end
 
           it "can't add staff-only tags" do
-            create_staff_tags(['important'])
+            create_staff_only_tags(['important'])
             result = subject.revise!(user, raw: "lets totally update the body", tags: ['important', 'stuff'])
             expect(result).to eq(false)
             expect(post.topic.errors.present?).to eq(true)
           end
 
           it "staff can add staff-only tags" do
-            create_staff_tags(['important'])
+            create_staff_only_tags(['important'])
             result = subject.revise!(admin, raw: "lets totally update the body", tags: ['important', 'stuff'])
             expect(result).to eq(true)
             post.reload
@@ -803,7 +803,7 @@ describe PostRevisor do
 
           context "with staff-only tags" do
             before do
-              create_staff_tags(['important'])
+              create_staff_only_tags(['important'])
               topic = post.topic
               topic.tags = [Fabricate(:tag, name: "super"), Tag.where(name: "important").first, Fabricate(:tag, name: "stuff")]
             end

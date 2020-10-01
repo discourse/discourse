@@ -103,7 +103,7 @@ describe TopicCreator do
 
       context 'staff-only tags' do
         before do
-          create_staff_tags(['alpha'])
+          create_staff_only_tags(['alpha'])
         end
 
         it "regular users can't add staff-only tags" do
