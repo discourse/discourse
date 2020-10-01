@@ -1,117 +1,43 @@
 import loadScript, { loadCSS } from "discourse/lib/load-script";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { isRTL } from "discourse/lib/text-direction";
 import User from "discourse/models/user";
+
+const LIGHTBOX_SELECTOR = "*:not(.spoiler):not(.spoiled) a.lightbox";
+const NEXT_ICON = isRTL()
+  ? iconHTML("chevron-left")
+  : iconHTML("chevron-right");
+const PREV_ICON = isRTL()
+  ? iconHTML("chevron-right")
+  : iconHTML("chevron-left");
+const PRELOAD_COUNT = 10;
 
 export default function (elem, siteSettings) {
   if (!elem) {
     return;
   }
 
+  const showDownloadIcon =
+    !siteSettings.prevent_anons_from_downloading_files || User.current();
+
+  // main lib
   loadScript("/javascripts/light-gallery/lightgallery.min.js").then(() => {
+    // lib zoom module
     loadScript("/javascripts/light-gallery/lg-zoom.min.js").then(() => {
+      // lib base css
       loadCSS("/javascripts/light-gallery/lightgallery.min.css").then(() => {
+        // eslint-disable-next-line
         lightGallery(elem, {
-          selector: "*:not(.spoiler):not(.spoiled) a.lightbox",
-          mode: "lg-fade",
-          speed: "300",
-          cssEasing: "cubic-bezier(0.25, 0, 0.25, 1)",
-          startClass: "lg-start-fade",
-          preload: 10,
-          nextHtml: iconHTML("chevron-right"),
-          prevHtml: iconHTML("chevron-left"),
-          hideBarsDelay: 100000,
-          download:
-            !siteSettings.prevent_anons_from_downloading_files ||
-            User.current(),
+          mode: "lg-fade", // default is ugly
+          startClass: "", // default is ugly
+          selector: LIGHTBOX_SELECTOR,
+          preload: PRELOAD_COUNT,
+          nextHtml: NEXT_ICON,
+          prevHtml: PREV_ICON,
+          enableDrag: false, // no support for RTL for now
+          download: showDownloadIcon,
         });
       });
     });
   });
-
-  /*
-
-loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
-  const lightboxes = elem.querySelectorAll(
-    "*:not(.spoiler):not(.spoiled) a.lightbox"
-  );
-  $(lightboxes).magnificPopup({
-    type: "image",
-    closeOnContentClick: false,
-    removalDelay: 300,
-    mainClass: "mfp-zoom-in",
-    tClose: I18n.t("lightbox.close"),
-    tLoading: spinnerHTML,
-
-    gallery: {
-      enabled: true,
-      tPrev: I18n.t("lightbox.previous"),
-      tNext: I18n.t("lightbox.next"),
-      tCounter: I18n.t("lightbox.counter"),
-    },
-
-    ajax: {
-      tError: I18n.t("lightbox.content_load_error"),
-    },
-
-    callbacks: {
-      open() {
-        const wrap = this.wrap,
-          img = this.currItem.img,
-          maxHeight = img.css("max-height");
-
-        wrap.on("click.pinhandler", "img", function () {
-          wrap.toggleClass("mfp-force-scrollbars");
-          img.css(
-            "max-height",
-            wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
-          );
-        });
-
-        if (isAppWebview()) {
-          postRNWebviewMessage(
-            "headerBg",
-            $(".mfp-bg").css("background-color")
-          );
-        }
-      },
-      beforeClose() {
-        this.wrap.off("click.pinhandler");
-        this.wrap.removeClass("mfp-force-scrollbars");
-        if (isAppWebview()) {
-          postRNWebviewMessage(
-            "headerBg",
-            $(".d-header").css("background-color")
-          );
-        }
-      },
-    },
-
-    image: {
-      tError: I18n.t("lightbox.image_load_error"),
-      titleSrc(item) {
-        const href = item.el.data("download-href") || item.src;
-        let src = [
-          escapeExpression(item.el.attr("title")),
-          $("span.informations", item.el).text(),
-        ];
-        if (
-          !siteSettings.prevent_anons_from_downloading_files ||
-          User.current()
-        ) {
-          src.push(
-            '<a class="image-source-link" href="' +
-              href +
-              '">' +
-              renderIcon("string", "download") +
-              I18n.t("lightbox.download") +
-              "</a>"
-          );
-        }
-        return src.join(" &middot; ");
-      },
-    },
-  });
-});
-
-*/
 }
