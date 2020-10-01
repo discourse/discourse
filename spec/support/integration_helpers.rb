@@ -2,7 +2,7 @@
 
 module IntegrationHelpers
   def create_user
-    get "/u/hp.json"
+    get "/token/hp.json"
 
     expect(response.status).to eq(200)
 

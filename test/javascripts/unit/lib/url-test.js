@@ -59,14 +59,12 @@ QUnit.test("isInternal on subfolder install", (assert) => {
 QUnit.test("userPath", (assert) => {
   assert.equal(userPath(), "/u");
   assert.equal(userPath("eviltrout"), "/u/eviltrout");
-  assert.equal(userPath("hp.json"), "/u/hp.json");
 });
 
 QUnit.test("userPath with prefix", (assert) => {
   setPrefix("/forum");
   assert.equal(userPath(), "/forum/u");
   assert.equal(userPath("eviltrout"), "/forum/u/eviltrout");
-  assert.equal(userPath("hp.json"), "/forum/u/hp.json");
 });
 
 QUnit.test("routeTo with prefix", async (assert) => {
