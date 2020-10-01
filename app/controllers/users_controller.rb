@@ -35,7 +35,6 @@ class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   skip_before_action :redirect_to_login_if_required, only: [:check_username,
                                                             :create,
-                                                            :get_honeypot_value,
                                                             :account_created,
                                                             :activate_account,
                                                             :perform_account_activation,
@@ -640,17 +639,6 @@ class UsersController < ApplicationController
     render json: {
       success: false,
       message: I18n.t("login.something_already_taken")
-    }
-  end
-
-  def get_honeypot_value
-    secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
-    secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
-
-    render json: {
-      value: honeypot_value,
-      challenge: challenge_value,
-      expires_in: SecureSession.expiry
     }
   end
 
@@ -1520,19 +1508,6 @@ class UsersController < ApplicationController
         @bookmark_reminders = Bookmark.where(user_id: user.id).where.not(reminder_at: nil).joins(:topic)
       end
     end
-  end
-
-  HONEYPOT_KEY ||= 'HONEYPOT_KEY'
-  CHALLENGE_KEY ||= 'CHALLENGE_KEY'
-
-  protected
-
-  def honeypot_value
-    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
-  end
-
-  def challenge_value
-    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
   end
 
   private
