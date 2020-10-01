@@ -142,6 +142,8 @@ class UploadRecovery
       end
     end
 
+    upload_exists = Upload.exists?(sha1: sha1)
+
     @object_keys.each do |key|
       if key =~ /#{sha1}/
         tombstone_prefix = FileStore::S3Store::TOMBSTONE_PREFIX
@@ -156,6 +158,8 @@ class UploadRecovery
             options: { acl: "public-read" }
           )
         end
+
+        next if upload_exists
 
         url = "https:#{SiteSetting.Upload.absolute_base_url}/#{key}"
 

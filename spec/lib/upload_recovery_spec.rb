@@ -21,9 +21,7 @@ RSpec.describe UploadRecovery do
 
   let(:post) do
     Fabricate(:post,
-      raw: <<~SQL,
-      ![logo.png](#{upload.short_url})
-      SQL
+      raw: "![logo.png](#{upload.short_url})",
       user: user
     ).tap(&:link_post_uploads)
   end
@@ -135,12 +133,29 @@ RSpec.describe UploadRecovery do
         Discourse.store.s3_helper.expects(:list).with("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").returns([tombstone_copy])
         Discourse.store.s3_helper.expects(:copy).with(tombstone_key, original_key, options: { acl: "public-read" })
 
-        FileHelper.expects(:download).returns(file_from_fixtures("smallest.png"))
-        stub_request(:get, upload.url).to_return(body: file_from_fixtures("smallest.png"))
+        expect do
+          upload_recovery.recover
+        end.to_not change { [post.reload.uploads.count, Upload.count] }
+      end
+
+      it 'does not create a duplicate upload when secure uploads are enabled' do
+        SiteSetting.secure_media = true
+        upload.verification_status = Upload.verification_statuses[:invalid_etag]
+        upload.save!
+
+        original_key = Discourse.store.get_path_for_upload(upload)
+        tombstone_key = original_key.sub("original", "tombstone/original")
+
+        tombstone_copy = stub
+        tombstone_copy.expects(:key).returns(tombstone_key)
+
+        Discourse.store.s3_helper.expects(:list).with("original").returns([])
+        Discourse.store.s3_helper.expects(:list).with("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").returns([tombstone_copy])
+        Discourse.store.s3_helper.expects(:copy).with(tombstone_key, original_key, options: { acl: "public-read" })
 
         expect do
           upload_recovery.recover
-        end.to_not change { post.reload.uploads.count }
+        end.to_not change { [post.reload.uploads.count, Upload.count] }
       end
     end
 
