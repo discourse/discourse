@@ -25,7 +25,16 @@ export class Tag {
     }
 
     if (this.inline) {
-      text = " " + text + " ";
+      const prev = this.element.prev;
+      const next = this.element.next;
+
+      if (prev && prev.name !== "#text") {
+        text = " " + text;
+      }
+
+      if (next && next.name !== "#text") {
+        text = text + " ";
+      }
     }
 
     return text;

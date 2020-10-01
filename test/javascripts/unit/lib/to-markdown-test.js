@@ -8,6 +8,7 @@ QUnit.test("converts styles between normal words", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 
   assert.equal(toMarkdown("A <b>bold </b>word"), "A **bold** word");
+  assert.equal(toMarkdown("A <b>bold</b>, word"), "A **bold**, word");
 });
 
 QUnit.test("converts inline nested styles", (assert) => {
@@ -239,7 +240,7 @@ helloWorld();</code></pre>
     return;
 }
 helloWorld();</code>consectetur.`;
-  output = `Lorem ipsum dolor sit amet, \`var helloWorld = () => {\n  alert('    hello \t\t world    ');\n    return;\n}\nhelloWorld();\` consectetur.`;
+  output = `Lorem ipsum dolor sit amet, \`var helloWorld = () => {\n  alert('    hello \t\t world    ');\n    return;\n}\nhelloWorld();\`consectetur.`;
 
   assert.equal(toMarkdown(html), output);
 });
