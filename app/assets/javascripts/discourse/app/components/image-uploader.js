@@ -17,14 +17,6 @@ export default Component.extend(UploadMixin, {
     this._applyLightbox();
   },
 
-  willDestroyElement() {
-    this._super(...arguments);
-    const elem = $("a.lightbox");
-    if (elem && typeof elem.magnificPopup === "function") {
-      $("a.lightbox").magnificPopup("close");
-    }
-  },
-
   @discourseComputed("imageUrl", "placeholderUrl")
   showingPlaceholder(imageUrl, placeholderUrl) {
     return !imageUrl && placeholderUrl;

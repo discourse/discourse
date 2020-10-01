@@ -1,3 +1,4 @@
+import { scheduleOnce } from "@ember/runloop";
 import loadScript, { loadCSS } from "discourse/lib/load-script";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import User from "discourse/models/user";
@@ -18,7 +19,6 @@ export default function (elem, siteSettings) {
       mode: "lg-fade",
       startClass: "", // prevents default zoom transition
       selector: LIGHTBOX_SELECTOR,
-      preload: 3, // how many extra images to preload when opened
       nextHtml: isRTL ? iconHTML("chevron-left") : iconHTML("chevron-right"),
       prevHtml: isRTL ? iconHTML("chevron-right") : iconHTML("chevron-left"),
       download:
@@ -31,8 +31,10 @@ export default function (elem, siteSettings) {
       loadScript("/javascripts/light-gallery/lg-zoom.min.js").then(() => {
         // lib base css
         loadCSS("/javascripts/light-gallery/lightgallery.min.css").then(() => {
-          // eslint-disable-next-line
-          lightGallery(elem, options);
+          scheduleOnce("afterRender", this, () => {
+            // eslint-disable-next-line
+            lightGallery(elem, options);
+          });
         });
       });
     });

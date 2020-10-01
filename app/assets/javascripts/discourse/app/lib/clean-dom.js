@@ -8,10 +8,20 @@ function _clean() {
   // Close some elements that may be open
   $("header ul.icons li").removeClass("active");
   $('[data-toggle="dropdown"]').parent().removeClass("open");
-  // close the lightbox
-  if ($.magnificPopup && $.magnificPopup.instance) {
-    $.magnificPopup.instance.close();
-    $("body").removeClass("mfp-zoom-out-cur");
+
+  // close lightboxs
+  if (window.lgData) {
+    Object.keys(window.lgData).forEach((key) => {
+      // lightGallery adds a uid property to the object. It's not a gallery, so
+      // we skip it.
+      if (key !== "uid") {
+        const gallery = window.lgData[key];
+        // lightGallery saves and restores the previous ScrollTop position when
+        // it's closed. We don't need that here since this is a full page treansition
+        gallery.prevScrollTop = 0;
+        gallery.destroy(true);
+      }
+    });
   }
 
   // Remove any link focus
