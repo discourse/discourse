@@ -37,7 +37,7 @@ module Email
       return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
 
       if SiteSetting.disable_emails == "non-staff" && !bypass_disable
-        return unless User.find_by_email(to_address)&.staff?
+        return unless find_user&.staff?
       end
 
       return skip(SkippedEmailLog.reason_types[:sender_message_to_invalid]) if to_address.end_with?(".invalid")
@@ -230,6 +230,18 @@ module Email
 
       email_log.save!
       email_log
+    end
+
+    def find_user
+      return @user if @user
+      if @email_type.to_s == "confirm_new_email"
+        user = EmailChangeRequest.find_by(
+          new_email: to_address,
+          change_state: EmailChangeRequest.states[:authorizing_new]
+        )&.user
+        return user if user
+      end
+      User.find_by_email(to_address)
     end
 
     def to_address
