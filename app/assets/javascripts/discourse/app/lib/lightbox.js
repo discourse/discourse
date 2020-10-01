@@ -1,29 +1,19 @@
 import loadScript, { loadCSS } from "discourse/lib/load-script";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { isRTL } from "discourse/lib/text-direction";
 import User from "discourse/models/user";
 
 export default function (elem, siteSettings) {
-  // Discourse defaults
-  const LIGHTBOX_SELECTOR = "*:not(.spoiler):not(.spoiled) a.lightbox";
-  const PRELOAD_COUNT = 10;
-  const SHOW_DOWNLOAD_ICON =
-    !siteSettings.prevent_anons_from_downloading_files || User.current();
-  const NEXT_ICON = isRTL()
-    ? iconHTML("chevron-left")
-    : iconHTML("chevron-right");
-  const PREV_ICON = isRTL()
-    ? iconHTML("chevron-right")
-    : iconHTML("chevron-left");
+  const isRTL = document.querySelector("html").classList.contains("rtl");
 
-  // window.lightboxOptions is for theme extensibility, We fallback to the
-  // defaults defined above
-  const options = window.lightboxOptions || {
-    selector: LIGHTBOX_SELECTOR,
-    preload: PRELOAD_COUNT,
-    nextHtml: NEXT_ICON,
-    prevHtml: PREV_ICON,
-    download: SHOW_DOWNLOAD_ICON,
+  const options = {
+    mode: "lg-fade",
+    startClass: "", // prevents default zoom transition
+    selector: "*:not(.spoiler):not(.spoiled) a.lightbox",
+    preload: 3, // how many extra images to preload when opened
+    nextHtml: isRTL ? iconHTML("chevron-left") : iconHTML("chevron-right"),
+    prevHtml: isRTL ? iconHTML("chevron-right") : iconHTML("chevron-left"),
+    download:
+      !siteSettings.prevent_anons_from_downloading_files || User.current(),
   };
 
   // main lib
