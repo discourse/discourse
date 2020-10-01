@@ -18,11 +18,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("model.poll.title", "model.post.topic.title")
   title(pollTitle, topicTitle) {
-    if (pollTitle) {
-      return htmlSafe(pollTitle);
-    }
-
-    return topicTitle;
+    return pollTitle ? htmlSafe(pollTitle) : topicTitle;
   },
 
   @discourseComputed("model.groupableUserFields")
