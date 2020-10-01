@@ -1,12 +1,17 @@
 var define, requirejs;
 
 (function () {
-  var JS_MODULES = {};
-  var ALIASES = {
+  let JS_MODULES = {};
+  const ALIASES = {
     "ember-addons/ember-computed-decorators":
       "discourse-common/utils/decorators",
     "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
     "preload-store": "discourse/lib/preload-store",
+    "fixtures/user_fixtures": "discourse/tests/fixtures/user-fixtures",
+  };
+  const ALIAS_PREPEND = {
+    fixtures: "discourse/tests/",
+    helpers: "discourse/tests/",
   };
 
   // In future versions of ember we don't need this
@@ -299,11 +304,15 @@ var define, requirejs;
   }
 
   function transformForAliases(name) {
-    var alias = ALIASES[name];
+    let alias = ALIASES[name];
     if (!alias) {
-      return name;
+      let segment = name.split("/")[0];
+      let prepend = ALIAS_PREPEND[segment];
+      if (!prepend) {
+        return name;
+      }
+      alias = prepend + name;
     }
-
     deprecatedModule(name, alias);
     return alias;
   }
