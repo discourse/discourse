@@ -26,11 +26,11 @@ export default function (elem, siteSettings) {
     };
 
     // main lib
-    loadScript("/javascripts/light-gallery/lightgallery.min.js").then(() => {
+    loadScript("/javascripts/lightgallery.min.js").then(() => {
       // lib zoom module
-      loadScript("/javascripts/light-gallery/lg-zoom.min.js").then(() => {
+      loadScript("/javascripts/lg-zoom.min.js").then(() => {
         // lib base css
-        loadCSS("/javascripts/light-gallery/lightgallery.min.css").then(() => {
+        loadCSS("/javascripts/lightgallery.min.css").then(() => {
           scheduleOnce("afterRender", this, () => {
             // eslint-disable-next-line
             lightGallery(elem, options);
