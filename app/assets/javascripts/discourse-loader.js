@@ -1,15 +1,15 @@
 var define, requirejs;
 
 (function () {
-  let JS_MODULES = {};
-  const ALIASES = {
+  var JS_MODULES = {};
+  var ALIASES = {
     "ember-addons/ember-computed-decorators":
       "discourse-common/utils/decorators",
     "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
     "preload-store": "discourse/lib/preload-store",
     "fixtures/user_fixtures": "discourse/tests/fixtures/user-fixtures",
   };
-  const ALIAS_PREPEND = {
+  var ALIAS_PREPEND = {
     fixtures: "discourse/tests/",
     helpers: "discourse/tests/",
   };
@@ -304,10 +304,10 @@ var define, requirejs;
   }
 
   function transformForAliases(name) {
-    let alias = ALIASES[name];
+    var alias = ALIASES[name];
     if (!alias) {
-      let segment = name.split("/")[0];
-      let prepend = ALIAS_PREPEND[segment];
+      var segment = name.split("/")[0];
+      var prepend = ALIAS_PREPEND[segment];
       if (!prepend) {
         return name;
       }
