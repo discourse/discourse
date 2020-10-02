@@ -75,7 +75,14 @@ export default Component.extend(UploadMixin, {
 
   _openLightbox() {
     next(() => {
-      this.element.querySelector(".lightbox").click();
+      // get the gallery for current uploader. "lg-uid" is added by lightgallery
+      const uid = this.element.getAttribute("lg-uid");
+      const gallery = window.lgData[uid];
+      // disable zoom and counter options since they're not needed here
+      gallery.s.zoom = false;
+      gallery.s.counter = false;
+      // 0 - index - because image uploader only has 1 image at a time
+      gallery.build(0);
     });
   },
 
