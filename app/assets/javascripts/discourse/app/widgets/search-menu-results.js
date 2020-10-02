@@ -151,9 +151,7 @@ createSearchResult({
       h(
         "span.topic-title",
         { attributes: { "data-topic-id": topic.id } },
-        this.siteSettings.use_pg_headlines_for_excerpt
-          ? new RawHtml({ html: `<span>${result.topic_title_headline}</span>` })
-          : new Highlighted(topic.fancyTitle, term)
+        new Highlighted(topic.fancyTitle, term)
       ),
     ];
 
