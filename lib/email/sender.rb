@@ -234,13 +234,6 @@ module Email
 
     def find_user
       return @user if @user
-      if @email_type.to_s == "confirm_new_email"
-        user = EmailChangeRequest.find_by(
-          new_email: to_address,
-          change_state: EmailChangeRequest.states[:authorizing_new]
-        )&.user
-        return user if user
-      end
       User.find_by_email(to_address)
     end
 
