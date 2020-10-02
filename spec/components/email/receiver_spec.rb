@@ -1565,7 +1565,7 @@ describe Email::Receiver do
       EOF
 
       receiver = Email::Receiver.new(email)
-      text, elided, format = receiver.select_body
+      text, _elided, _format = receiver.select_body
       expect(text).to be_blank
     end
   end
