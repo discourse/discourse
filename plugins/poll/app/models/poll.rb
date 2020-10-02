@@ -83,6 +83,7 @@ end
 #  updated_at       :datetime         not null
 #  chart_type       :integer          default("bar"), not null
 #  groups           :string
+#  title            :string
 #
 # Indexes
 #

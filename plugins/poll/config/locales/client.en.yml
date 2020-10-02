@@ -112,6 +112,8 @@ en:
           step: Step
         poll_public:
           label: Show who voted
+        poll_title:
+          label: Title (optional)
         poll_options:
           label: Enter one poll option per line
         automatic_close:
