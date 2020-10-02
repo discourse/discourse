@@ -194,6 +194,15 @@ after_initialize do
     return if topic.blank?
 
     first_post = topic.ordered_posts.first
+
+    notification = Notification.where(topic_id: topic.id, post_number: first_post.post_number).first
+    if notification.present?
+      Notification.read(self, notification.id)
+      self.saw_notification_id(notification.id)
+      self.reload
+      self.publish_notifications_state
+    end
+
     PostDestroyer.new(Discourse.system_user, first_post, skip_staff_log: true).destroy
     DiscourseNarrativeBot::Store.remove(self.id)
   end
