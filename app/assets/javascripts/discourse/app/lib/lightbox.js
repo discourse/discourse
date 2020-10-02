@@ -16,9 +16,11 @@ export default function (elem, siteSettings) {
     const isRTL = document.querySelector("html").classList.contains("rtl");
 
     const options = {
+      mousewheel: true,
       mode: "lg-fade",
       startClass: "", // prevents default zoom transition
-      selector: LIGHTBOX_SELECTOR,
+      selector: LIGHTBOX_SELECTOR, // which element to show in the gallery
+      hideBarsDelay: 3000, // hide controls after 3s
       nextHtml: isRTL ? iconHTML("chevron-left") : iconHTML("chevron-right"),
       prevHtml: isRTL ? iconHTML("chevron-right") : iconHTML("chevron-left"),
       download:
