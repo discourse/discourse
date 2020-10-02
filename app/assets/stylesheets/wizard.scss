@@ -157,8 +157,7 @@ body.wizard {
   }
 }
 
-.wizard-step-colors,
-.wizard-step-fonts {
+.wizard-step-colors {
   max-height: 465px;
   overflow-y: auto;
   .grid {
@@ -200,6 +199,16 @@ body.wizard {
         }
       }
     }
+  }
+}
+
+.wizard-step-fonts {
+  .dropdown-field {
+    float: left;
+    margin-right: 1.5em;
+  }
+  .component-field {
+    clear: both;
   }
 }
 

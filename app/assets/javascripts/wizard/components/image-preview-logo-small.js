@@ -13,7 +13,7 @@ export default createPreviewComponent(375, 100, {
     return { image: this.get("field.value") };
   },
 
-  paint(ctx, colors, font, width, height) {
+  paint(ctx, colors, font, headingFont, width, height) {
     const headerHeight = height / 2;
 
     drawHeader(ctx, colors, width, headerHeight);
@@ -39,7 +39,8 @@ export default createPreviewComponent(375, 100, {
 
     const afterLogo = headerMargin * 1.7 + imageWidth;
     const fontSize = Math.round(headerHeight * 0.4);
-    ctx.font = `Bold ${fontSize}px '${font}'`;
+
+    ctx.font = `Bold ${fontSize}px '${headingFont}'`;
     ctx.fillStyle = colors.primary;
     const title = LOREM.substring(0, 27);
     ctx.fillText(

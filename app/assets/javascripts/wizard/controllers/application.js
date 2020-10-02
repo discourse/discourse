@@ -16,7 +16,7 @@ export default Controller.extend({
       return [];
     }
 
-    const fontField = fontsStep.get("fieldsById.font_previews");
-    return fontField.choices.map((choice) => `font-${choice.data.class}`);
+    const fontField = fontsStep.get("fieldsById.body_font");
+    return fontField.choices.map((choice) => `body_font-${choice.id}`);
   },
 });

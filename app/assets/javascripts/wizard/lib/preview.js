@@ -93,6 +93,10 @@ export function createPreviewComponent(width, height, obj) {
         }
 
         const font = this.wizard.getCurrentFont(this.fontId);
+        const headingFont = this.wizard.getCurrentFont(
+          this.fontId,
+          "heading_font"
+        );
         if (!font) {
           return;
         }
@@ -102,7 +106,7 @@ export function createPreviewComponent(width, height, obj) {
         ctx.fillStyle = colors.secondary;
         ctx.fillRect(0, 0, width, height);
 
-        this.paint(ctx, colors, font, this.width, this.height);
+        this.paint(ctx, colors, font, headingFont, this.width, this.height);
 
         // draw border
         ctx.beginPath();
@@ -142,7 +146,7 @@ export function createPreviewComponent(width, height, obj) {
         ctx.drawImage(scaled[key], x, y, w, h);
       },
 
-      drawFullHeader(colors, font) {
+      drawFullHeader(colors, font, logo) {
         const { ctx } = this;
 
         const headerHeight = height * 0.15;
@@ -154,10 +158,16 @@ export function createPreviewComponent(width, height, obj) {
         const headerMargin = headerHeight * 0.2;
         const logoHeight = headerHeight - headerMargin * 2;
 
-        ctx.beginPath();
-        ctx.fillStyle = colors.header_primary;
-        ctx.font = `bold ${logoHeight}px '${font}'`;
-        ctx.fillText("Discourse", headerMargin, headerHeight - headerMargin);
+        const ratio = logoHeight / logo.height;
+        this.scaleImage(
+          logo,
+          headerMargin,
+          headerMargin,
+          logo.width * ratio,
+          logoHeight
+        );
+
+        this.scaleImage(logo, width, headerMargin);
 
         // Top right menu
         this.scaleImage(

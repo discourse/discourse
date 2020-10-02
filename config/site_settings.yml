@@ -329,6 +329,10 @@ basic:
     default: "helvetica"
     enum: "BaseFontSetting"
     refresh: true
+  heading_font:
+    default: "helvetica"
+    enum: "BaseFontSetting"
+    refresh: true
 
 login:
   invite_only:
