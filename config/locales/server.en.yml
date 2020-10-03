@@ -218,6 +218,10 @@ en:
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
+    disabled_errors:
+      sso_enabled: "Invites are disabled because SSO is enabled."
+      local_logins_disabled: "Invites are disabled because the 'enable local logins' setting is disabled."
+      invalid_access: "You are not permitted to view the requested resource."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."

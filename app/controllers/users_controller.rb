@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited
+    :bookmarks, :invited, :invite_links
   ]
 
   skip_before_action :check_xhr, only: [
@@ -369,57 +369,87 @@ class UsersController < ApplicationController
   end
 
   def invited
-    guardian.ensure_can_invite_to_forum!
+    if guardian.can_invite_to_forum?
+      offset = params[:offset].to_i || 0
+      filter_by = params[:filter] || "redeemed"
+      inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
 
-    offset = params[:offset].to_i || 0
-    filter_by = params[:filter] || "redeemed"
-    inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
+      invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
+        Invite.find_pending_invites_from(inviter, offset)
+      elsif filter_by == "redeemed"
+        Invite.find_redeemed_invites_from(inviter, offset)
+      else
+        []
+      end
 
-    invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
-      Invite.find_pending_invites_from(inviter, offset)
-    elsif filter_by == "redeemed"
-      Invite.find_redeemed_invites_from(inviter, offset)
+      show_emails = guardian.can_see_invite_emails?(inviter)
+      if params[:search].present? && invites.present?
+        filter_sql = '(LOWER(users.username) LIKE :filter)'
+        filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
+        invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
+      end
+
+      render json: MultiJson.dump(InvitedSerializer.new(
+        OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter, type: filter_by),
+        scope: guardian,
+        root: false
+      ))
     else
-      []
-    end
+      if current_user&.staff?
+        message = if SiteSetting.enable_sso
+          I18n.t("invite.disabled_errors.sso_enabled")
+        elsif !SiteSetting.enable_local_logins
+          I18n.t("invite.disabled_errors.local_logins_disabled")
+        end
 
-    show_emails = guardian.can_see_invite_emails?(inviter)
-    if params[:search].present? && invites.present?
-      filter_sql = '(LOWER(users.username) LIKE :filter)'
-      filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
-      invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
+        render_invite_error(message)
+      else
+        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
+      end
     end
-
-    render json: MultiJson.dump(InvitedSerializer.new(
-      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter, type: filter_by),
-      scope: guardian,
-      root: false
-    ))
   end
 
   def invite_links
-    guardian.ensure_can_invite_to_forum!
+    if guardian.can_invite_to_forum?
+      inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+      guardian.ensure_can_see_invite_details!(inviter)
 
-    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
-    guardian.ensure_can_see_invite_details!(inviter)
+      offset = params[:offset].to_i || 0
+      invites = Invite.find_links_invites_from(inviter, offset)
 
-    offset = params[:offset].to_i || 0
-    invites = Invite.find_links_invites_from(inviter, offset)
+      render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
+    else
+      if current_user&.staff?
+        message = if SiteSetting.enable_sso
+          I18n.t("invite.disabled_errors.sso_enabled")
+        elsif !SiteSetting.enable_local_logins
+          I18n.t("invite.disabled_errors.local_logins_disabled")
+        end
 
-    render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
+        render_invite_error(message)
+      else
+        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
+      end
+    end
   end
 
   def invited_count
-    guardian.ensure_can_invite_to_forum!
+    if guardian.can_invite_to_forum?
+      inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
-    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+      pending_count = Invite.find_pending_invites_count(inviter)
+      redeemed_count = Invite.find_redeemed_invites_count(inviter)
+      links_count = Invite.find_links_invites_count(inviter)
 
-    pending_count = Invite.find_pending_invites_count(inviter)
-    redeemed_count = Invite.find_redeemed_invites_count(inviter)
-    links_count = Invite.find_links_invites_count(inviter)
-
-    render json: { counts: { pending: pending_count, redeemed: redeemed_count, links: links_count,
-                             total: (pending_count.to_i + redeemed_count.to_i) } }
+      render json: { counts: { pending: pending_count, redeemed: redeemed_count, links: links_count,
+                               total: (pending_count.to_i + redeemed_count.to_i) } }
+    else
+      if current_user&.staff?
+        render json: { counts: 0 }
+      else
+        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
+      end
+    end
   end
 
   def is_local_username
@@ -1638,5 +1668,13 @@ class UsersController < ApplicationController
 
   def summary_cache_key(user)
     "user_summary:#{user.id}:#{current_user ? current_user.id : 0}"
+  end
+
+  def render_invite_error(message)
+    render json: {
+      invites: [],
+      can_see_invite_details: false,
+      error: message
+    }
   end
 end
