@@ -220,7 +220,7 @@ en:
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
     disabled_errors:
       sso_enabled: "Invites are disabled because SSO is enabled."
-      local_logins_disabled: "Invites are disabled because 'enable local logins' setting is disabled."
+      local_logins_disabled: "Invites are disabled because the 'enable local logins' setting is disabled."
       invalid_access: "You are not permitted to view the requested resource."
 
   bulk_invite:

@@ -397,17 +397,13 @@ class UsersController < ApplicationController
       ))
     else
       if current_user&.staff?
-        error = if SiteSetting.enable_sso
+        message = if SiteSetting.enable_sso
           I18n.t("invite.disabled_errors.sso_enabled")
         elsif !SiteSetting.enable_local_logins
           I18n.t("invite.disabled_errors.local_logins_disabled")
         end
 
-        render json: {
-          invites: [],
-          can_see_invite_details: false,
-          error: error
-        }
+        render_invite_error(message)
       else
         render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
       end
@@ -425,17 +421,13 @@ class UsersController < ApplicationController
       render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
     else
       if current_user&.staff?
-        error = if SiteSetting.enable_sso
+        message = if SiteSetting.enable_sso
           I18n.t("invite.disabled_errors.sso_enabled")
         elsif !SiteSetting.enable_local_logins
           I18n.t("invite.disabled_errors.local_logins_disabled")
         end
 
-        render json: {
-          invites: [],
-          can_see_invite_details: false,
-          error: error
-        }
+        render_invite_error(message)
       else
         render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
       end
@@ -1701,5 +1693,13 @@ class UsersController < ApplicationController
 
   def summary_cache_key(user)
     "user_summary:#{user.id}:#{current_user ? current_user.id : 0}"
+  end
+
+  def render_invite_error(message)
+    render json: {
+      invites: [],
+      can_see_invite_details: false,
+      error: message
+    }
   end
 end
