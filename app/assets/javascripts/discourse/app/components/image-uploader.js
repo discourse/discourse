@@ -78,7 +78,9 @@ export default Component.extend(UploadMixin, {
       // get the gallery for current uploader. "lg-uid" is added by lightgallery
       const uid = this.element.getAttribute("lg-uid");
       const gallery = window.lgData[uid];
-      // disable zoom and counter options since they're not needed here
+      // disable zoom, title, and counter options since they're not needed here
+      // gallery.s is lightGallery settings for this gallery
+      gallery.s.getCaptionFromTitleOrAlt = false;
       gallery.s.zoom = false;
       gallery.s.counter = false;
       // 0 - index - because image uploader only has 1 image at a time

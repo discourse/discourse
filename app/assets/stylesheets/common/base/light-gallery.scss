@@ -1,10 +1,14 @@
-.lg-backdrop.in {
-  background: rgba(black, 0.9);
+.lg-open {
+  overflow: hidden;
+
+  .lg-backdrop.in {
+    opacity: 0.9;
+  }
 }
 
-.lg {
+.lg-outer {
   .lg-item {
-    background: none !important;
+    background: none !important; // don't load the default spinner gif
     &:after {
       content: "";
       z-index: -1;
@@ -33,10 +37,11 @@
 
   .lg-actions .lg-next,
   .lg-actions .lg-prev {
-    background: #00000090;
+    background: rgba(#000, 0.7);
     color: white;
   }
 
+  // flip arrows for RTL
   .lg-actions {
     .rtl & {
       .lg-next {
@@ -51,19 +56,12 @@
     }
   }
 
-  .lg-actions .lg-next:before,
-  .lg-actions .lg-prev:after {
-    display: none;
-  }
-
-  .lg-toolbar {
-    background-color: #000000;
-    color: white;
-  }
-
-  .lg-sub-html {
-    color: white;
-    background-color: #000000;
+  // hide default nav arrows
+  .lg-actions {
+    .lg-next:before,
+    .lg-prev:after {
+      display: none;
+    }
   }
 }
 
