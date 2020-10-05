@@ -37,6 +37,11 @@ describe Jobs::ExportUserArchive do
       _ = post
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.save
+      # force a UserAuthTokenLog entry
+      Discourse.current_user_provider.new({
+        'HTTP_USER_AGENT' => 'MyWebBrowser',
+        'REQUEST_PATH' => '/some_path/456852',
+      }).log_on_user(user, {}, {})
     end
 
     after do
@@ -169,6 +174,35 @@ describe Jobs::ExportUserArchive do
       expect(payload['bio_raw']).to match("Doe\n\nHere")
       expect(payload['user_option']['automatically_unpin_topics']).to eq(false)
       expect(payload['user_option']['text_size']).to eq('smaller')
+    end
+  end
+
+  context 'auth tokens' do
+    let(:component) { 'auth_tokens' }
+
+    before do
+      Discourse.current_user_provider.new({
+        'HTTP_USER_AGENT' => 'MyWebBrowser',
+        'REQUEST_PATH' => '/some_path/456852',
+      }).log_on_user(user, {}, {})
+    end
+
+    it 'properly includes session records' do
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(1)
+
+      expect(data[0]['user_agent']).to eq('MyWebBrowser')
+    end
+
+    context 'auth token logs' do
+      let(:component) { 'auth_token_logs' }
+      it 'includes details such as the path' do
+        data, csv_out = make_component_csv
+        expect(data.length).to eq(1)
+
+        expect(data[0]['action']).to eq('generate')
+        expect(data[0]['path']).to eq('/some_path/456852')
+      end
     end
   end
 
