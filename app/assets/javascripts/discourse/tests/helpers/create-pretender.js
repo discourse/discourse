@@ -1,4 +1,5 @@
 import User from "discourse/models/user";
+import Pretender from "pretender";
 
 export function parsePostData(query) {
   const result = {};
