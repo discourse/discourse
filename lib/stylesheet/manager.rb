@@ -406,12 +406,13 @@ class Stylesheet::Manager
     cs = @color_scheme || theme&.color_scheme
 
     category_updated = Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
+    fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
 
     if cs || category_updated > 0
       theme_color_defs = theme&.resolve_baked_field(:common, :color_definitions)
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{SiteSetting.base_font}"
+      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{fonts}"
     else
-      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}-#{SiteSetting.base_font}"
+      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}-#{fonts}"
 
       if cdn_url = GlobalSetting.cdn_url
         digest_string = "#{digest_string}-#{cdn_url}"

@@ -210,18 +210,22 @@ class Wizard
       end
 
       @wizard.append_step('fonts') do |step|
-        field = step.add_field(
-          id: 'font_previews',
-          type: 'component',
-          value: SiteSetting.base_font
-        )
+        body_font = step.add_field(id: 'body_font', type: 'dropdown', value: SiteSetting.base_font)
+        heading_font = step.add_field(id: 'heading_font', type: 'dropdown', value: SiteSetting.heading_font)
 
         DiscourseFonts.fonts.each do |font|
-          field.add_choice(font[:key], data: { class: font[:key].tr("_", "-"), name: font[:name] })
+          body_font.add_choice(font[:key], label: font[:name])
+          heading_font.add_choice(font[:key], label: font[:name])
         end
 
+        step.add_field(
+          id: 'font_preview',
+          type: 'component'
+        )
+
         step.on_update do |updater|
-          updater.update_setting(:base_font, updater.fields[:font_previews])
+          updater.update_setting(:base_font, updater.fields[:body_font])
+          updater.update_setting(:heading_font, updater.fields[:heading_font])
         end
       end
 

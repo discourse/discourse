@@ -41,18 +41,28 @@ module Stylesheet
       end
 
       register_import "font" do
-        font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+        body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+        heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
+        contents = +""
 
-        contents = if font.present?
-          <<~EOF
-            #{font_css(font)}
+        if body_font.present?
+          contents << <<~EOF
+            #{font_css(body_font)}
 
             :root {
-              --font-family: #{font[:stack]};
+              --font-family: #{body_font[:stack]};
             }
           EOF
-        else
-          ""
+        end
+
+        if heading_font.present?
+          contents << <<~EOF
+            #{font_css(heading_font)}
+
+            :root {
+              --heading-font-family: #{heading_font[:stack]};
+            }
+          EOF
         end
 
         Import.new("font.scss", source: contents)
@@ -73,7 +83,10 @@ module Stylesheet
 
           contents << font_css(font)
           contents << <<~EOF
-            .font-#{font[:key].tr("_", "-")} {
+            .body-font-#{font[:key].tr("_", "-")} {
+              font-family: #{font[:stack]};
+            }
+            .heading-font-#{font[:key].tr("_", "-")} h2 {
               font-family: #{font[:stack]};
             }
           EOF
