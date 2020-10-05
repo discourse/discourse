@@ -13,8 +13,7 @@ export default createPreviewComponent(400, 100, {
     return { image: this.get("field.value") };
   },
 
-  paint(options) {
-    const { ctx, colors, font, width, height } = options;
+  paint({ ctx, colors, font, width, height }) {
     const headerHeight = height / 2;
 
     drawHeader(ctx, colors, width, headerHeight);

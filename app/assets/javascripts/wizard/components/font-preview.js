@@ -31,8 +31,7 @@ export default createPreviewComponent(659, 320, {
     };
   },
 
-  paint(options) {
-    const { ctx, colors, font, headingFont, width, height } = options;
+  paint({ ctx, colors, font, headingFont, width, height }) {
     const headerHeight = height * 0.3;
 
     this.drawFullHeader(colors, headingFont, this.logo);
