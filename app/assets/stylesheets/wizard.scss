@@ -257,7 +257,8 @@ body.wizard {
   }
   .wizard-step-banner {
     margin-bottom: 2em;
-    width: 660px;
+    width: 620px;
+    display: block;
   }
 
   .wizard-footer {
@@ -493,22 +494,6 @@ body.wizard {
   }
 }
 
-.wizard-step-themes-further-reading {
-  .wizard-field .input-area {
-    margin-top: 0;
-  }
-
-  .popular-themes {
-    display: flex;
-    a.popular-theme-item {
-      background: var(--secondary-very-high);
-      padding: 8px;
-      margin: 0px 4px;
-      width: 25%;
-    }
-  }
-}
-
 .textarea-field {
   textarea {
     width: 100%;
@@ -636,17 +621,6 @@ body.wizard {
   }
   .wizard-column-contents {
     padding: 1em !important;
-  }
-  .wizard-step-themes-further-reading {
-    .popular-themes {
-      a.popular-theme-item {
-        width: 33.3%;
-        &:nth-child(4),
-        &:nth-child(5) {
-          display: none;
-        }
-      }
-    }
   }
   .emoji-preview img {
     width: 16px !important;

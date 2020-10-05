@@ -204,11 +204,6 @@ class Wizard
         end
       end
 
-      @wizard.append_step('themes-further-reading') do |step|
-        step.banner = "further-reading.png"
-        step.add_field(id: 'popular-themes', type: 'component')
-      end
-
       @wizard.append_step('fonts') do |step|
         body_font = step.add_field(id: 'body_font', type: 'dropdown', value: SiteSetting.base_font)
         heading_font = step.add_field(id: 'heading_font', type: 'dropdown', value: SiteSetting.heading_font)
