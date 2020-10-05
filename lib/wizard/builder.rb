@@ -204,11 +204,6 @@ class Wizard
         end
       end
 
-      @wizard.append_step('themes-further-reading') do |step|
-        step.banner = "further-reading.png"
-        step.add_field(id: 'popular-themes', type: 'component')
-      end
-
       @wizard.append_step('fonts') do |step|
         field = step.add_field(
           id: 'font_previews',
