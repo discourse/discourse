@@ -197,6 +197,17 @@ RSpec.describe ListController do
           .to eq(topic.id)
       end
 
+      it 'should display moderator group private messages for a moderator' do
+        moderator = Fabricate(:moderator)
+        group = Group.find(Group::AUTO_GROUPS[:moderators])
+        topic = Fabricate(:private_message_topic, allowed_groups: [group])
+
+        sign_in(moderator)
+
+        get "/topics/private-messages-group/#{moderator.username}/#{group.name}.json"
+        expect(response.status).to eq(200)
+      end
+
       it "should not display group private messages for a moderator's group" do
         moderator = Fabricate(:moderator)
         sign_in(moderator)
