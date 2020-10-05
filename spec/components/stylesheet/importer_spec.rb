@@ -53,10 +53,10 @@ describe Stylesheet::Importer do
   end
 
   it "includes all fonts in wizard" do
-    expect(compile_css("wizard").scan(/\.body_font-/).count)
+    expect(compile_css("wizard").scan(/\.body-font-/).count)
       .to eq(DiscourseFonts.fonts.count)
 
-    expect(compile_css("wizard").scan(/\.heading_font-/).count)
+    expect(compile_css("wizard").scan(/\.heading-font-/).count)
       .to eq(DiscourseFonts.fonts.count)
 
     expect(compile_css("wizard").scan(/@font-face/).count)

@@ -83,10 +83,10 @@ module Stylesheet
 
           contents << font_css(font)
           contents << <<~EOF
-            .body_font-#{font[:key]} {
+            .body-font-#{font[:key].tr("_", "-")} {
               font-family: #{font[:stack]};
             }
-            .heading_font-#{font[:key]} h2 {
+            .heading-font-#{font[:key].tr("_", "-")} h2 {
               font-family: #{font[:stack]};
             }
           EOF
