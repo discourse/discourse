@@ -21,7 +21,8 @@ export default createPreviewComponent(659, 320, {
     };
   },
 
-  paint(ctx, colors, font, headingFont, width, height) {
+  paint(options) {
+    const { ctx, colors, font, width, height } = options;
     this.drawFullHeader(colors, font, this.logo);
 
     if (this.get("step.fieldsById.homepage_style.value") === "latest") {

@@ -106,7 +106,15 @@ export function createPreviewComponent(width, height, obj) {
         ctx.fillStyle = colors.secondary;
         ctx.fillRect(0, 0, width, height);
 
-        this.paint(ctx, colors, font, headingFont, this.width, this.height);
+        const options = {
+          ctx,
+          colors,
+          font,
+          headingFont,
+          width: this.width,
+          height: this.height,
+        };
+        this.paint(options);
 
         // draw border
         ctx.beginPath();
