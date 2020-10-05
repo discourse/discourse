@@ -101,7 +101,6 @@ const ORIGINAL_SETTINGS = {
 };
 
 let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);
-Discourse.SiteSettings = siteSettings;
 
 export function currentSettings() {
   return siteSettings;
