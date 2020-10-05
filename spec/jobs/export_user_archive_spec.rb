@@ -26,6 +26,10 @@ describe Jobs::ExportUserArchive do
     [data_rows, csv_out]
   end
 
+  def make_component_json
+    JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
+  end
+
   context '#execute' do
     let(:post) { Fabricate(:post, user: user) }
 
@@ -143,20 +147,28 @@ describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'user_archive_profile' do
-    let(:component) { 'user_archive_profile' }
+  context 'preferences' do
+    let(:component) { 'preferences' }
 
     before do
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.bio_raw = "I am John Doe\n\nHere I am"
       user.user_profile.save
+      user.user_option.text_size = :smaller
+      user.user_option.automatically_unpin_topics = false
+      user.user_option.save
     end
 
     it 'properly includes the profile fields' do
-      _, csv_out = make_component_csv
+      serializer = job.preferences_export
+      # puts MultiJson.dump(serializer, indent: 4)
+      output = make_component_json
+      payload = output['user']
 
-      expect(csv_out).to match('doe.example.com')
-      expect(csv_out).to match("Doe\n\nHere")
+      expect(payload['website']).to match('doe.example.com')
+      expect(payload['bio_raw']).to match("Doe\n\nHere")
+      expect(payload['user_option']['automatically_unpin_topics']).to eq(false)
+      expect(payload['user_option']['text_size']).to eq('smaller')
     end
   end
 

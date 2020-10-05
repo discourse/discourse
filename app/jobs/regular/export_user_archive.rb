@@ -12,7 +12,7 @@ module Jobs
 
     COMPONENTS ||= %w(
       user_archive
-      user_archive_profile
+      preferences
       badges
       bookmarks
       category_preferences
@@ -38,12 +38,11 @@ module Jobs
       COMPONENTS.each do |name|
         h = { name: name, method: :"#{name}_export" }
         h[:filetype] = :csv
-        filename_method = :"#{name}_filename"
-        if respond_to? filename_method
-          h[:filename] = public_send(filename_method)
-        else
-          h[:filename] = name
+        filetype_method = :"#{name}_filetype"
+        if respond_to? filetype_method
+          h[:filetype] = public_send(filetype_method)
         end
+        h[:filename] = name
         components.push(h)
       end
 
@@ -66,6 +65,10 @@ module Jobs
             CSV.open("#{dirname}/#{component[:filename]}.csv", "w") do |csv|
               csv << get_header(component[:name])
               public_send(component[:method]) { |d| csv << d }
+            end
+          when :json
+            File.open("#{dirname}/#{component[:filename]}.json", "w") do |file|
+              file.write MultiJson.dump(public_send(component[:method]), indent: 4)
             end
           else
             raise 'unknown export filetype'
@@ -130,6 +133,14 @@ module Jobs
         .each do |user_profile|
         yield get_user_archive_profile_fields(user_profile)
       end
+    end
+
+    def preferences_export
+      UserSerializer.new(@current_user, scope: guardian)
+    end
+
+    def preferences_filetype
+      :json
     end
 
     def badges_export
