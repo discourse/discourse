@@ -150,6 +150,9 @@ var define, requirejs;
         // eslint-disable-next-line
         default: I18n,
       },
+      pretender: {
+        default: window.Pretender,
+      },
     };
   }
 
