@@ -49,7 +49,7 @@ class Category < ActiveRecord::Base
 
   validates :user_id, presence: true
 
-  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? },
+  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? || c.will_save_change_to_parent_category_id? },
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
