@@ -537,6 +537,7 @@ class GroupsController < ApplicationController
   def search
     groups = Group.visible_groups(current_user)
       .where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
+      .includes(:flair_upload)
       .order(:name)
 
     if (term = params[:term]).present?
