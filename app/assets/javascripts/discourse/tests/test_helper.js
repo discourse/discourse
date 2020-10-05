@@ -45,8 +45,10 @@
 //= require jquery.magnific-popup.min.js
 
 let App = window.Discourse;
-let resetSettings = require("discourse/tests/helpers/site-settings")
-  .resetSettings;
+let {
+  resetSettings,
+  currentSettings,
+} = require("discourse/tests/helpers/site-settings");
 let createHelperContext = require("discourse-common/lib/helpers")
   .createHelperContext;
 
@@ -78,6 +80,7 @@ d.write(
 App.rootElement = "#ember-testing";
 App.setupForTesting();
 App.injectTestHelpers();
+App.SiteSettings = currentSettings();
 App.start();
 
 // disable logster error reporting
