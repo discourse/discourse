@@ -205,5 +205,10 @@ describe UrlHelper do
       url = "http://URL:%20https://google.com"
       expect(described_class.rails_route_from_url(url)).to eq(nil)
     end
+
+    it "does not raise for invalid mailtos" do
+      url = "mailto:eviltrout%2540example.com"
+      expect(described_class.rails_route_from_url(url)).to eq(nil)
+    end
   end
 end
