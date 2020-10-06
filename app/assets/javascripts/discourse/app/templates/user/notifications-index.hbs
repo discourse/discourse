@@ -9,7 +9,7 @@
 {{/if}}
 
 <div class="user-notifications-filter-select-kit">
-  {{notifications-filter value=filter onChange=(action (mut filter))}}
+  {{notifications-filter value=filter onChange=(fn (mut filter))}}
 </div>
 
 {{#if hasFilteredNotifications}}

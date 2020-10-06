@@ -371,7 +371,7 @@
         content=site.trustLevels
         nameProperty="detailedName"
         value=model.trustLevel.id
-        onChange=(action (mut model.trust_level))
+        onChange=(mut model.trust_level)
       }}
 
       {{#if model.dirty}}
@@ -537,7 +537,7 @@
           content=availableGroups
           value=customGroupIdsBuffer
           labelProperty="name"
-          onChange=(action (mut customGroupIdsBuffer))
+          onChange=(fn (mut customGroupIdsBuffer))
         }}
       </div>
       {{#if customGroupsDirty}}
@@ -555,7 +555,7 @@
             content=model.customGroups
             value=model.primary_group_id
             none="admin.groups.no_primary"
-            onChange=(action (mut model.primary_group_id))
+            onChange=(mut model.primary_group_id)
           }}
         </div>
         {{#if primaryGroupDirty}}

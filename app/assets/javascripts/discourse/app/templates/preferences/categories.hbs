@@ -9,7 +9,7 @@
     {{category-selector
       categories=model.watchedCategories
       blockedCategories=selectedCategories
-      onChange=(action (mut model.watchedCategories))
+      onChange=(mut model.watchedCategories)
     }}
   </div>
   <div class="instructions">{{i18n "user.watched_categories_instructions"}}</div>
@@ -22,7 +22,7 @@
     {{category-selector
       categories=model.trackedCategories
       blockedCategories=selectedCategories
-      onChange=(action (mut model.trackedCategories))
+      onChange=(mut model.trackedCategories)
     }}
   </div>
   <div class="instructions">{{i18n "user.tracked_categories_instructions"}}</div>
@@ -32,7 +32,7 @@
     {{category-selector
       categories=model.watchedFirstPostCategories
       blockedCategories=selectedCategories
-      onChange=(action (mut model.watchedFirstPostCategories))
+      onChange=(mut model.watchedFirstPostCategories)
     }}
   </div>
   <div class="instructions">{{i18n "user.watched_first_post_categories_instructions"}}</div>
@@ -43,7 +43,7 @@
       {{category-selector
         categories=model.regularCategories
         blockedCategories=selectedCategories
-        onChange=(action (mut model.regularCategories))
+        onChange=(mut model.regularCategories)
       }}
     </div>
     <div class="instructions">{{i18n "user.regular_categories_instructions"}}</div>
@@ -56,7 +56,7 @@
       {{category-selector
         categories=model.mutedCategories
         blockedCategories=selectedCategories
-        onChange=(action (mut model.mutedCategories))
+        onChange=(mut model.mutedCategories)
       }}
     </div>
     <div class="instructions">{{i18n (if hideMutedTags "user.muted_categories_instructions" "user.muted_categories_instructions_dont_hide")}}</div>
