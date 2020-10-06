@@ -409,14 +409,6 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todo mundo ler tópicos que possuem poucas respostas com muita informação em vez de muitas respostas individuais com pouca informação cada.
-    get_a_room: |
-      ### Incentive todos a se envolverem na conversa
-
-      Você respondeu %{count} vezes para @%{reply_username} neste tópico em particular!
-
-      Uma boa discussão envolve muitas vozes e perspectivas. Você consegue envolver mais alguém?
-
-      E não se esqueça, se você quiser continuar sua conversa com este usuário em particular fora da visão pública, [envie-o uma mensagem pessoal](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
 
@@ -1723,7 +1715,6 @@ pt_BR:
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
     show_time_gap_days: "Se duas mensagens são feitas com N dias de intervalo, mostre o intervalo no tópico."
     short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
-    default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
     highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) veja: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para uma demonstração"
@@ -3598,8 +3589,6 @@ pt_BR:
             placeholder: "São Francisco, Califórnia"
       colors:
         title: "Tema"
-      themes_further_reading:
-        title: "Temas"
       logos:
         title: "Logotipos"
         fields:
@@ -3647,9 +3636,6 @@ pt_BR:
         disabled: "Como os logins locais estão desabilitados, não é possível enviar convites para ninguém. Por favor, prossiga para o próximo passo."
       finished:
         title: "Seu Discourse está pronto!"
-        description: |
-          <p>Se você sentir vontade de alterar estas configurações, <b>execute novamente este assistente a qualquer momento</b> ou visite <a href='%{base_path}/admin' target='_blank'>a seção de administradores</a>; encontre-a ao lado do ícone de chave inglesa no menu do site.</p>
-          <p>Divirta-se e boa sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construindo sua nova comunidade!</a></p>
   search_logs:
     graph_title: "Contagem de pesquisa"
   joined: "Ingressou"

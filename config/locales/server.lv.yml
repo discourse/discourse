@@ -368,8 +368,6 @@ lv:
         title: "Organizācija"
       colors:
         title: "Tēma"
-      themes_further_reading:
-        title: "Dizaini"
       homepage:
         fields:
           homepage_style:

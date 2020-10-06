@@ -923,6 +923,7 @@ ro:
         taken: "Această adresă există deja în baza de date."
         error: "A apărut o eroare la schimbarea de email. Poate această adresă este deja utilizată?"
         success: "Am trimis un email către adresa respectivă. Urmează instrucțiunile de confirmare."
+        success_via_admin: "Deoarece schimbați adresa de e-mail a utilizatorului, presupunem că acesta a pierdut accesul la contul de e-mail original. Am trimis un e-mail de resetare a parolei la noua adresă de e-mail pentru acest utilizator. Vă rugăm să rețineți că utilizatorul trebuie să finalizeze procesul de resetare a parolei pentru ca schimbarea adresei email să aibă efect."
         success_staff: "Ți-am trimis un email la adresa curentă. Urmează instrucțiunile de confirmare."
       change_avatar:
         title: "Schimbă poza de profil"
@@ -939,6 +940,7 @@ ro:
         primary_label: "primar"
         update_email: "Schimbă email"
         instructions: "Niciodată arătat publicului."
+        admin_note: "Notă: Un utilizator de administrator care modifică adresa email a altui utilizator non-administrator indică faptul că utilizatorul a pierdut accesul la contul de email original, astfel încât un email de resetare a parolei va fi trimis la noua adresă. Adresa email a utilizatorului nu se va schimba până când acesta nu finalizează procesul de resetare a parolei."
         ok: "Îți vom trimite un email pentru confirmare."
         invalid: "Introduceți o adresă de email validă."
         authenticated: "Emailul a fost autentificat de către %{provider}."
@@ -1452,6 +1454,8 @@ ro:
           desc: "Pregătește o ciornă a unei discuții care va fi vizibilă doar pentru personal"
         toggle_topic_bump:
           label: "Comută bump pentru subiect"
+      reload: "Reîncarcă"
+      ignore: "Ignoră"
     notifications:
       tooltip:
         message:
@@ -1564,6 +1568,10 @@ ro:
           noreplies: nu au nici un răspuns
           single_user: au un singur utilizator
         post:
+          min:
+            placeholder: minim
+          max:
+            placeholder: maxim
           time:
             label: Postat(e)
             before: înainte

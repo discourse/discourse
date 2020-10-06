@@ -394,14 +394,6 @@ tr_TR:
 
       Herkesin benzersiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
     sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi denediniz \nBunun yerine yerine, lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt veriniz.\nMetni vurgulayıp görünen <b>alıntı</b> düğmesini seçerek önceki yanıtınızı düzenleyebilirsiniz. Böylece diğer kullanıcıların, yanıtlarınızı okuması daha kolay olacaktır.\n"
-    get_a_room: |
-      ### Herkesi sohbete katılmaya teşvik edin
-
-      Bu konu hakkında %{reply_username}i %{count}kere cevapladın!
-
-      İyi bir tartışma birçok ses ve perspektifi içerir. Başka birini dahil edebilir misin?
-
-      Şunu unutma ki, eğer bu özel kullanıcı ile daha kişisel bir konuşma gerçekleştirmek istiyorsan[ona özel mesaj gönder](%{base_path}/u/%{reply_username})
     too_many_replies: |
       ### Bu konu için cevap limitinizi doldurdunuz
 
@@ -1757,7 +1749,6 @@ tr_TR:
     display_name_on_posts: "Gönderilerde @kullanıcıadı'na ek olarak kullanıcının tam adını da göster."
     show_time_gap_days: "İki gönderinin tarihleri arasında bu kadar gün farkı varsa, konuda zaman aralığına yer ver."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktığında, ilerleme çubuğunda sadece şu anki gönderi sayısını göster. İlerleme çubuğunun kalınlığını değiştirirseniz, bu değeri de değiştirmeniz gerekebilir."
-    default_code_lang: "GitHub kod parçalarına (lang-auto, ruby, python vs.) uygulanacak olan öntanımlı programlama dili söz dizimi vurgulaması."
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı iletisi çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
     autohighlight_all_code: "Tüm önceden biçimlendirilen kod parçalarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
     highlighted_languages: "Sözdizimi vurgulama kuralları dahil. (Uyarı: çok fazla dil dahil etmek performansı etkileyebilir) bkz: demo için <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -3536,8 +3527,6 @@ tr_TR:
             placeholder: "San Francisco, Kaliforniya"
       colors:
         title: "Tema"
-      themes_further_reading:
-        title: "Temalar"
       logos:
         title: "Görseller"
         fields:
@@ -3585,8 +3574,6 @@ tr_TR:
         disabled: "Yerel girişler devre dışı bırakıldığından, kimseye davet göndermek mümkün değildir. Lütfen bir sonraki adıma geçin."
       finished:
         title: "Discourse'unuz hazır! "
-        description: |
-          <p> Bu ayarları değiştirmek isterseniz, <b>bu sihirbazı istediğiniz zaman yeniden çalıştırın</b> veya <a href='%{base_path}/admin' target='_blank'>yönetici bölümünüzü</a> ziyaret <a href='%{base_path}/admin' target='_blank'>edin</a> ; site menüsündeki İngiliz anahtarı simgesinin yanında bulabilirsiniz. </p><p> <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>Yeni topluluğunuzu oluşturmak için</a> iyi eğlenceler <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>!</a> </p>
   search_logs:
     graph_title: "Arama Sayısı"
   joined: "Katıldı"

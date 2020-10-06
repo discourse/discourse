@@ -1035,6 +1035,7 @@ zh_CN:
         taken: "抱歉，此邮箱不可用。"
         error: "修改你的邮箱时出错了，可能邮箱已经被使用了？"
         success: "我们已经发送了一封确认信到该邮箱，请按照邮箱内指示完成确认。"
+        success_via_admin: "由于你正在更改用户的电子邮件，我们假定他们失去了其原始电子邮件帐户的访问权限。我们已向该用户的新电子邮件地址发送了重置密码的邮件。请注意，用户必须完成重置密码流程才能使电子邮件地址的变更生效。"
         success_staff: "我们已经发送了一封确认信到你现在的邮箱，请按照邮件内指示完成确认。"
       change_avatar:
         title: "更换头像"
@@ -1072,6 +1073,7 @@ zh_CN:
         sso_override_instructions: "电子邮件地址可以通过SSO登录来更新。"
         no_secondary: "没有次邮箱"
         instructions: "绝不会被公开显示"
+        admin_note: "注意：一位管理员用户更改另一位非管理员用户的电子邮件，则表明该用户已失去了其原始电子邮件帐户的访问权限，因此重置密码的电子邮件将发送到其新邮箱。在用户完成重置密码流程之前，用户的电子邮件不会被更改。"
         ok: "将通过邮件验证确认"
         required: "请输入一个电子邮件地址"
         invalid: "请填写正确的邮箱地址"
@@ -1735,8 +1737,10 @@ zh_CN:
           label: "共享草稿"
           desc: "起草一个只对管理人员可见的主题"
         toggle_topic_bump:
-          label: "切换主题置顶"
-          desc: "回复而不更改最新回复日期"
+          label: "切换主题顶帖"
+          desc: "回复但不改变最新回复的日期"
+      reload: "重新加载"
+      ignore: "忽略"
     notifications:
       tooltip:
         regular:
@@ -1901,6 +1905,12 @@ zh_CN:
           noreplies: 没有回复
           single_user: 只有一个用户参与
         post:
+          count:
+            label: 帖子
+          min:
+            placeholder: 最小值
+          max:
+            placeholder: 最大值
           time:
             label: 发表于
             before: 之前
@@ -2090,7 +2100,7 @@ zh_CN:
         auto_publish_to_category: "主题将在%{timeLeft}后被发布到<a href=%{categoryUrl}>#%{categoryName}</a> 。"
         auto_close_based_on_last_post: "如在 %{duration}内没有新回复后主题将被关闭。"
         auto_delete: "主题在%{timeLeft}后将被自动删除。"
-        auto_bump: "此主题将在%{timeLeft}后自动顶起。"
+        auto_bump: "这个主题将在%{timeLeft}后自动顶帖。"
         auto_reminder: "你将在%{timeLeft}后收到该主题的提醒。"
         auto_delete_replies: "此主题的回复会在%{duration}后自动删除。"
       auto_close_title: "自动关闭设置"
@@ -2245,7 +2255,7 @@ zh_CN:
         help: "通过电子邮件或通知邀请其他人到该主题"
         to_forum: "将发送一封简洁的邮件，让你的朋友无需注册即可用链接参与讨论。"
         sso_enabled: "输入其用户名，邀请其人到本主题。"
-        to_topic_blank: "输入其用户名或者 Email 地址，邀请其人到本主题。"
+        to_topic_blank: "输入你要邀请到这个主题的用户名或电子邮件地址。"
         to_topic_email: "你输入了邮箱地址。我们将发送一封邮件邀请，让你的朋友可直接回复该主题。"
         to_topic_username: "你输入了用户名。我们将发送一个至该主题链接的邀请通知。"
         to_username: "输入你想邀请的人的用户名。我们将发送一个至该主题链接的邀请通知。"
@@ -2604,7 +2614,7 @@ zh_CN:
       position_disabled_click: '启用“固定分类位置”设置。'
       minimum_required_tags: "在一个主题中至少含有多少个标签："
       parent: "上级分类"
-      num_auto_bump_daily: "每天自动碰撞的主题的数量"
+      num_auto_bump_daily: "每天自动顶贴的主题的数量"
       navigate_to_first_post_after_read: "阅读主题后导航到第一个帖子"
       notifications:
         watching:
@@ -3611,7 +3621,7 @@ zh_CN:
           color_definitions:
             text: "颜色配置"
             title: "输入自定义颜色配置（仅限高级用户）"
-            placeholder: "\\r\n使用该样式将自定义颜色添加到CSS自定义属性列表。\\r\n\\r\n例如：\\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\n强烈建议使用前缀为属性命名以避免与插件或主程序发生冲突。"
+            placeholder: "\\r\n使用该样式将自定义的颜色添加到CSS自定义属性列表。\\r\n\\r\n例如：\\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\n强烈建议使用前缀为属性命名以避免与插件或主程序发生冲突。"
           head_tag:
             text: "</head>"
             title: "将在 </head> 标签前插入的 HTML"

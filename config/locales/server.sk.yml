@@ -1013,7 +1013,6 @@ sk:
     display_name_on_posts: "Na príspevkoch zobraziť okrem @loginpoužívateľa i plné meno používateľa."
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
     short_progress_text_threshold: "Ak počet príspevkov v téme presiahne toto číslo, ukazateľ priebehu zobrazí iba aktuálne číslo príspevku. Túto hodnotu možno budete potrebovať zmeniť, ak zmeníte šírku ukazateľa priebehu."
-    default_code_lang: "Vysvietenie syntaxe pre štandardné programovacie jazyky, aplikované na GitHub bloky kódu (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Zobrazenie varovania, ak niekto začne odpovedať na tému, kde je posledná odpoveď staršia ako uvedený počet dní. Na vypnutie varozania zadajte 0."
     autohighlight_all_code: "Zapnúť vysvietenie syntaxe kódu na všetky formátované bloky kódu, i keď nie je explicitne zadaný jazyk."
     embed_truncate: "Orezať vkladané príspevky."

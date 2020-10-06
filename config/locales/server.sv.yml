@@ -8,7 +8,7 @@ sv:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
+    long_date: "D MMMM YYYY LT"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
@@ -49,7 +49,7 @@ sv:
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Borttaget av författaren"
   redirect_warning: "Vi kunde inte verifiera att länken som du valt faktiskt har lagts upp i forumet. Välj länken nedan om du vill fortsätta ändå."
-  on_another_topic: "Om annat ämne"
+  on_another_topic: "I ett annat ämne"
   themes:
     bad_color_scheme: "Kan inte uppdatera tema, ogiltig färgpalett"
     other_error: "Något blev fel när temat uppdaterades"
@@ -191,6 +191,7 @@ sv:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan inte aktivera S3-uppladdningar eftersom S3-uppladdningar redan är aktiverade globalt, och aktivering av denna webbplatsnivå kan orsaka kritiska problem med uppladdningar"
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
+    expired: "Din inbjudningskod har löpt ut. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found: "Din inbjudningskod är ogiltig. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found_json: "Din inbjudningskod är ogiltig. Kontakta personalen."
     not_found_template: |
@@ -203,6 +204,10 @@ sv:
     user_exists: "Det finns inget behov av att bjuda in <b>%{email}</b>: De har <a href='%{base_path}/u/%{username}/summary'>redan ett konto!</a>"
     confirm_email: "<p>Du är nästan klar! Vi skickade ett aktiveringsmeddelande till din e-postadress. Följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte ser det kan du kolla i din skräppostmapp.</p>"
     cant_invite_to_group: "Du är inte behörig att bjuda in användare till specificerade grupper. Kontrollera att du är ägare för de grupper som du försöker bjuda in till."
+    disabled_errors:
+      sso_enabled: "Inbjudningar är inaktiverade eftersom SSO är aktiverat."
+      local_logins_disabled: "Inbjudningar är inaktiverade eftersom inställningen 'enable local logins' (aktivera lokala inloggningar) är inaktiverad."
+      invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -418,7 +423,7 @@ sv:
 
       - Konstruktiv kritik välkomnas, men kritisera då *idéer* och inte personer.
 
-      För mer information kan du läsa [riktlinjerna](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
+      För mer information kan du läsa [forumets riktlinjer](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
     avatar: |
       ### Hur vore det med en bild för ditt konto?
 
@@ -553,7 +558,7 @@ sv:
 
       Det första stycket i detta fästa ämne kommer att visas som ett välkomstmeddelande för alla nya besökare på din hemsida. Det är viktigt!
 
-      **Ändra detta** till en kort beskrivning av din gemenskap:
+      **Ändra detta** till en kort beskrivning av ditt forum:
 
       -Vem är det till för?
       -Vad kan de hitta här?
@@ -804,8 +809,8 @@ sv:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Olämpligt"
-      description: 'Detta inläggs innehåll omfattar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="%{base_path}/guidelines">våra riktlinjer</a>.'
-      short_description: 'En överträdelse av <a href="%{base_path}/guidelines">våra riktlinjer</a>'
+      description: 'Detta inläggs innehåll omfattar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
+      short_description: 'En överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>'
       long_form: "flagga detta som olämpligt"
     notify_user:
       title: "Skicka ett meddelande till @%{username}"
@@ -876,9 +881,9 @@ sv:
       short_description: "Detta är en annons"
     inappropriate:
       title: "Olämpligt"
-      description: 'Detta inläggs innehåll omfattar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="%{base_path}/guidelines">våra riktlinjer</a>.'
+      description: 'Detta inläggs innehåll omfattar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
       long_form: "flaggade detta som olämpligt"
-      short_description: 'En överträdelse av <a href="%{base_path}/guidelines">våra riktlinjer</a>'
+      short_description: 'En överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>'
     notify_moderators:
       title: "Annat"
       description: 'Det här inlägget kräver generell uppmärksamhet från personalen baserat på <a href="%{base_path}/guidelines">riktlinjerna</a>, <a href="%{tos_url}">användarvillkoren</a> eller på grund av en annan anledning som inte finns med ovan.'
@@ -1320,7 +1325,7 @@ sv:
     min_personal_message_post_length: "Lägsta antal tillåtna tecken i inlägg för meddelanden"
     max_post_length: "Högsta tillåtna längd på inlägg uttryckt i tecken"
     topic_featured_link_enabled: "Tillåt att lägga upp en länk med ämnen."
-    show_topic_featured_link_in_digest: "Visa ämnets visade länk i det sammanfattade e-postmeddelandet."
+    show_topic_featured_link_in_digest: "Visa den aktuella länken i det sammanfattade e-postmeddelandet."
     min_topic_title_length: "Lägsta tillåtna längd på ämnesrubrik uttryckt i tecken"
     max_topic_title_length: "Högsta tillåtna längd på ämnesrubrik uttryckt i tecken"
     min_personal_message_title_length: "Lägst tillåtna längd på rubrik för ett meddelande uttryckt i tecken"
@@ -1412,7 +1417,7 @@ sv:
     hide_post_sensitivity: "Sannolikheten för att ett flaggat inlägg döljs"
     silence_new_user_sensitivity: "Sannolikheten för att en ny användare kommer att tystas baserat på skräppost-flaggor"
     auto_close_topic_sensitivity: "Sannolikheten för att ett flaggat ämne stängs automatiskt"
-    cooldown_minutes_after_hiding_posts: "Antal minuter en användare måste vänta innan de kan redigera ett inlägg som dolts på grund av flaggningar från användare"
+    cooldown_minutes_after_hiding_posts: "Antal minuter en användare måste vänta innan de kan redigera ett inlägg som dolts på grund av flaggningar från forumets användare"
     max_topics_in_first_day: "Högsta antal ämnen en användare får skapa under de första 24 timmarna efter att ha skapat sitt första inlägg"
     max_replies_in_first_day: "Högsta antal svar en användare får skapa under de första 24 timmarna efter att ha skapat sitt första inlägg"
     tl2_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 2 (medlem) genom att multiplicera med det här numret"
@@ -1865,7 +1870,7 @@ sv:
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
-    default_code_lang: "Standardspråk för syntaxmarkering som appliceras på kodblock från GitHub (lang-auto, ruby, python etc)."
+    default_code_lang: "Standardprogrameringsspråk för syntaxmarkering som appliceras på kodblock från GitHub (auto, nohighlight, ruby, python etc)."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvångstillämpa syntaxmarkering på alla förformatterade kodblock även när de inte uttryckligt har specificerat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -1973,7 +1978,8 @@ sv:
     shared_drafts_category: "Aktivera funktionen Delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin undantas från ämneslistor för personalanvändare."
     push_notifications_prompt: "Visa användarens samtycke genast."
     push_notifications_icon: "Utmärkelseikonen som visas i aviseringshörnet. En svartvit 96 x 96 stor PNG med genomskinlighet rekommenderas."
-    base_font: "Typsnitt att använda på de flesta platser för webbplatsen. Teman kan åsidosätta detta."
+    base_font: "Bastypsnitt att använda för de flesta texter på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--font-family`."
+    heading_font: "Typsnitt som används för rubriker på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--heading-font-family`."
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2405,7 +2411,7 @@ sv:
     ignored: "Tack för att du meddelade oss. Vi undersöker det."
     ignored_and_deleted: "Tack för att du meddelade oss. Vi har raderat inlägget."
   temporarily_closed_due_to_flags:
-    one: "Detta ämne är tillfälligt stängt i minst %{count} timme på grund av ett stort antal flaggor."
+    one: "Detta ämne är tillfälligt stängt i minst %{count} timme på grund av ett stort antal forumflaggor."
     other: "Detta ämne är tillfälligt stängt i minst %{count} timmar på grund av ett stort antal flaggor."
   system_messages:
     private_topic_title: "Ämne #%{id}"
@@ -2426,7 +2432,7 @@ sv:
 
         Däremot, om meddelandet flaggas av medlemmarna och döljs en andra gång så kommer det fortsatt att döljas tills det har hanterats av personal.
 
-        För ytterligare information, se våra [gemensamma riktlinjer](%{base_url}/guidelines).
+        För ytterligare information, se våra [forumriktlinjer](%{base_url}/guidelines).
     post_hidden_again:
       title: "Inlägget dolt igen"
       subject_template: "Inlägget döljdes på grund av att det flaggats av forumets medlemmar, personal har aviserats"
@@ -2450,7 +2456,7 @@ sv:
 
         Detta är ett automatiskt meddelande från %{site_name} för att informera dig om att [ditt inlägg](%{base_url}%{url}) återställdes.
          
-        Detta inlägg flaggades av gemenskapen och personalen valde att återställa det.
+        Detta inlägg flaggades av forumet och personalen valde att återställa det.
 
         [details="Klicka för att expandera det återställda inlägget
          "]
@@ -2468,7 +2474,7 @@ sv:
 
         %{flag_reason}
 
-        Detta inlägg flaggades av gemenskapen och personalen valde att radera det.
+        Detta inlägg flaggades av forumet och personalen valde att radera det.
 
         [details="Klicka för att expandera raderade inlägget"]
         ``` markdown
@@ -2476,12 +2482,12 @@ sv:
         ```
         [/details]
 
-        Läs våra [gemensamma riktlinjer](%{base_url}/riktlinjer) för mer information.
+        Läs våra [forumriktlinjer](%{base_url}/riktlinjer) för mer information.
     usage_tips:
       text_body_template: |
         För att få ett par tips och förslag hur du kommer igång som ny användare, [gå till detta blogginlägg](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        I takt med att du deltar här, lär vi känna dig, och därmed kommer tillfälliga begränsningar för nya medlemmar att tas bort. Med tiden når du [förtroendenivåer](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) som omfattar särskilda funktioner för att hantera vår gemenskap tillsammans.
+        I takt med att du deltar här, lär vi känna dig, och därmed kommer tillfälliga begränsningar för nya medlemmar att tas bort. Med tiden når du [förtroendenivåer](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) som omfattar särskilda funktioner för att hantera vårt forum tillsammans.
     welcome_user:
       title: "Välkommen Användare!"
       subject_template: "Välkommen till %{site_name}!"
@@ -2490,7 +2496,7 @@ sv:
 
         %{new_user_tips}
 
-        Vi tror på [ett civiliserat beteende i gemenskapen](%{base_url}/guidelines) vid alla tillfällen.
+        Vi tror på [ett civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.
 
         Hoppas du kommer att trivas!
     welcome_tl1_user:
@@ -2512,7 +2518,7 @@ sv:
     welcome_invite:
       title: "Välkomstinbjudan"
       subject_template: "Välkommen till %{site_name}!"
-      text_body_template: "Tack för att du tackade ja till din inbjudan till %{site_name} -- välkommen!\n\nVi har skapat ett nytt konto **%{username}** till dig. Du kan byta namn eller lösenord genom att besöka [din användarprofil][prefs].\n\n- När du loggar in ber vi dig **använda samma e-postadress som i din ursprungliga inbjudan** — annars kan vi inte bekräfta att det är du! \n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i gemenskapen](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: "Tack för att du tackade ja till din inbjudan till %{site_name} -- välkommen!\n\nVi har skapat ett nytt konto **%{username}** till dig. Du kan byta namn eller lösenord genom att besöka [din användarprofil][prefs].\n\n- När du loggar in ber vi dig **använda samma e-postadress som i din ursprungliga inbjudan** — annars kan vi inte bekräfta att det är du! \n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n\n[prefs]: %{user_preferences_url}\n"
     tl2_promotion_message:
       subject_template: "Grattis till din högre förtroendenivå!"
       text_body_template: |
@@ -2798,19 +2804,19 @@ sv:
     ignored_users_summary:
       title: "Ignorerad användare passerade gränsvärde"
       subject_template: "En användare ignoreras av många andra användare"
-      text_body_template: "Hej! \n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att @%{username} har ignorerats av %{ignores_threshold}. Detta kan indikera att ett problem håller på att uppstå i din gemenskap.  \n\nDu kanske vill [granska senaste inlägg](%{base_url}/u/%{username}/summary) för denna användare, och eventuellt andra användare i [rapporten över ignorerade och tystade](%{base_url}/admin/reports/top_ignored_users).\n\nFör ytterligare vägledning, se våra [gemenskapsriktlinjer](%{base_url}/guidelines).\n"
+      text_body_template: "Hej! \n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att @%{username} har ignorerats av %{ignores_threshold}. Detta kan indikera att ett problem håller på att uppstå i ditt forum. \n\nDu kanske vill [granska senaste inlägg](%{base_url}/u/%{username}/summary) för denna användare, och eventuellt andra användare i [rapporten över ignorerade och tystade](%{base_url}/admin/reports/top_ignored_users).\n\nFör ytterligare vägledning, se våra [forumriktlinjer](%{base_url}/guidelines).\n"
     too_many_spam_flags:
       title: "För många skräppostsflaggningar"
       subject_template: "Nytt konto pausat"
-      text_body_template: "Hej!\n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att dina inlägg har dolts tillfälligt på grund av att de flaggades av medlemmar. \n\nSom en förebyggande åtgärd har ditt nya konto tystats och kommer inte kunna skapa svar eller ämnen tills det har granskats av personal. Vi ber om ursäkt för besväret. \n\nFör ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).\n"
+      text_body_template: "Hej!\n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att dina inlägg har dolts tillfälligt på grund av att de flaggades av medlemmar. \n\nSom en förebyggande åtgärd har ditt nya konto tystats och kommer inte kunna skapa svar eller ämnen tills det har granskats av personal. Vi ber om ursäkt för besväret. \n\nFör ytterligare information, se våra [forumriktlinjer](%{base_url}/guidelines).\n"
     too_many_tl3_flags:
       title: "För många FN3-flaggningar"
       subject_template: "Nytt konto pausat"
-      text_body_template: "Hej! \n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att dina inlägg har pausats tillfälligt på grund av att de flaggades av ett stort antal medlemmar. \n\nSom en förebyggande åtgärd har ditt nya konto tystats från att skapa nya inlägg eller ämnen tills det har granskats av personal. Vi ber om ursäkt för besväret. \n\nFör ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).\n"
+      text_body_template: "Hej! \n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att dina inlägg har pausats tillfälligt på grund av att de flaggades av ett stort antal medlemmar. \n\nSom en förebyggande åtgärd har ditt nya konto tystats från att skapa nya inlägg eller ämnen tills det har granskats av personal. Vi ber om ursäkt för besväret. \n\nFör ytterligare information, se våra [forumriktlinjer](%{base_url}/guidelines).\n"
     silenced_by_staff:
       title: "Tystat av personal"
       subject_template: "Konto tillfälligt pausat"
-      text_body_template: "Hej!\n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt konto har pausats tillfälligt som en försiktighetsåtgärd. \n\nDet går bra att fortsätta besöka sidan men du kommer inte att kunna skriva inlägg eller skapa nya ämnen förrän [personalen](%{base_url}/about) granskar dina senaste inlägg. Vi ber om ursäkt för besväret. \n\nFör mer information, se våra [riktlinjer](%{base_url}/guidelines).\n"
+      text_body_template: "Hej!\n\nDet här är ett automatiskt meddelande från %{site_name} för att informera dig om att ditt konto har pausats tillfälligt som en försiktighetsåtgärd. \n\nDet går bra att fortsätta besöka sidan men du kommer inte att kunna skriva inlägg eller skapa nya ämnen förrän [personalen](%{base_url}/about) granskar dina senaste inlägg. Vi ber om ursäkt för besväret. \n\nFör mer information, se våra [forumriktlinjer](%{base_url}/guidelines).\n"
     user_automatically_silenced:
       title: "Användare automatiskt tystad"
       subject_template: "Ny användare  %{username} tystad på grund av flaggningar från forumet"
@@ -2857,7 +2863,7 @@ sv:
 
         Denna utmärkelse beviljas endast till två nya användare per månad och den kommer att visas permanent på [sidan för utmärkelser] (%{url}).
 
-        Du har snabbt blivit en värdefull medlem i vår gemenskap. Tack för att du gick med och fortsätt med det fantastiska arbetet!
+        Du har snabbt blivit en värdefull medlem i vårt forum. Tack för att du gick med och fortsätt med det fantastiska arbetet!
     queued_posts_reminder:
       title: "Påminnelse om köande inlägg"
       subject_template:
@@ -3177,7 +3183,7 @@ sv:
     signup_after_approval:
       title: "Ny medlem efter godkännande"
       subject_template: "Du har blivit godkänd på %{site_name}!"
-      text_body_template: "Välkommen till %{site_name}! \n\nEn administratör har godkänt ditt konto hos %{site_name}.\n\nDu har nu tillgång till ditt nya konto genom att logga in från:\n%{base_url}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.\n\n%{new_user_tips}\n\nVi tror på ett [civiliserat gemenskapsbeteende](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n"
+      text_body_template: "Välkommen till %{site_name}! \n\nEn administratör har godkänt ditt konto hos %{site_name}.\n\nDu har nu tillgång till ditt nya konto genom att logga in från:\n%{base_url}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.\n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n"
     signup:
       title: "Bli medlem"
       subject_template: "%{email_prefix} Bekräfta ditt nya konto"
@@ -3390,7 +3396,7 @@ sv:
 
       ## [Drivs av dig](#power)
 
-      Denna webbplats drivs av din [vänliga lokala personal](%{base_path}/about) och _dig_, som tillsammans utgör gemenskapen. Om du har ytterligare frågor om hur saker och ting ska fungera här, öppna ett nytt ämne i [kategorin för feedback](%{base_path}/c/site-feedback) och låt oss diskutera! Om det finns en kritisk eller brådskande fråga som inte kan hanteras av en flaggning eller ämnestaggning, kontakta oss via [personalsidan](%{base_path}/about).
+      Denna webbplats drivs av din [vänliga lokala personal](%{base_path}/about) och _dig_, som tillsammans utgör forumet. Om du har ytterligare frågor om hur saker och ting ska fungera här, öppna ett nytt ämne i [kategorin för feedback](%{base_path}/c/site-feedback) och låt oss diskutera! Om det finns en kritisk eller brådskande fråga som inte kan hanteras av en flaggning eller ämnestaggning, kontakta oss via [personalsidan](%{base_path}/about).
 
       <a name="tos"></a>
 
@@ -3597,7 +3603,7 @@ sv:
       name: Förespråkare
       description: Bjöd in 3 grundläggande användare
       long_description: |
-        Den här utmärkelsen beviljas när du bjudit in 3 personer som sedan tillbringade tillräckligt mycket tid på webbplatsen för att bli grundläggande användare. Ett levande forum behöver ständig tillförsel av nykomlingar som regelbundet deltar och förnyar konversationerna.
+        Den här utmärkelsen beviljas när du bjudit in 3 personer som sedan tillbringade tillräckligt mycket tid på webbplatsen för att bli grundläggande användare. Ett levande forum behöver ständig tillförsel av nykomlingar som regelbundet deltar och förnyar samtalen.
     champion:
       name: Förkämpe
       description: Bjöd in 5 medlemmar
@@ -3647,22 +3653,22 @@ sv:
       name: Uppskattad
       description: Fick 1 gillning på 20 inlägg
       long_description: |
-        Den här utmärkelsen beviljas när du får minst en gillning på 20 olika inlägg. Medlemmarna uppskattar dina bidrag till samtalen här!
+        Den här utmärkelsen beviljas när du får minst en gillning på 20 olika inlägg. Forumet uppskattar dina bidrag till samtalen här!
     respected:
       name: Respekterad
       description: Fick 2 gillningar på 100 inlägg
       long_description: |
-        Den här utmärkelsen beviljas när du får minst 2 gillningar på 100 olika inlägg. Medlemmarnas respekt för dig ökar med dina många bidrag till samtalen här.
+        Den här utmärkelsen beviljas när du får minst 2 gillningar på 100 olika inlägg. Forumets respekt för dig ökar med dina många bidrag till samtalen här.
     admired:
       name: Beundrad
       description: Fick 5 gillningar på 300 inlägg
       long_description: |
-        Den här utmärkelsen beviljas när du får minst 5 gillningar på 300 olika inlägg. Wow! Medlemmarna beundrar dina frekventa, högkvalitativa bidrag till samtalen här.
+        Den här utmärkelsen beviljas när du får minst 5 gillningar på 300 olika inlägg. Wow! Forumet beundrar dina frekventa, högkvalitativa bidrag till samtalen här.
     out_of_love:
       name: Av kärlek
       description: Använde %{max_likes_per_day} gillningar på en dag
       long_description: |
-        Den här utmärkelsen beviljas när du använder alla dina %{max_likes_per_day} gillningar under en dag. Att komma ihåg att ta ett ögonblick och gilla inläggen som du tycker om och uppskattar uppmuntrar medlemmarna på forumet till att skapa ännu fler intressanta diskussioner i framtiden.
+        Den här utmärkelsen beviljas när du använder alla dina %{max_likes_per_day} gillningar under en dag. Att komma ihåg att ta ett ögonblick och gilla inläggen som du tycker om och uppskattar uppmuntrar forumets medlemmar till att skapa ännu fler intressanta diskussioner i framtiden.
     higher_love:
       name: Mer kärlek
       description: Använde %{max_likes_per_day} gillningar på en dag 5 gånger
@@ -3672,7 +3678,7 @@ sv:
       name: Galet kär
       description: Använde %{max_likes_per_day} gillningar på en dag 20 gånger
       long_description: |
-        Den här utmärkelsen beviljas när du använder alla dina %{max_likes_per_day} gillningar varje dag under 20 dagar. Wow! Du är en förebild som regelbundet uppmuntrar medlemmarna på forumet!
+        Den här utmärkelsen beviljas när du använder alla dina %{max_likes_per_day} gillningar varje dag under 20 dagar. Wow! Du är en förebild som regelbundet uppmuntrar forumets medlemmar!
     thank_you:
       name: Tack
       description: Har 20 gillade inlägg och gav 10 gillningar
@@ -3791,10 +3797,10 @@ sv:
         title: "Välkommen till din Discourse!"
         fields:
           default_locale:
-            description: "Vilket är standardspråket för din gemenskap?"
+            description: "Vilket är standardspråket för ditt forum?"
       forum_title:
         title: "Namn"
-        description: "Ditt namn är en skylt som syns på avstånd, det <i>första</i> som potentiella besökare kommer att notera om ditt forum. Vad säger ditt namn och titel om ditt forum?"
+        description: "Ditt namn är en skylt som syns på avstånd, det <i>första</i> som potentiella besökare kommer att notera om ditt forum. Vad säger ditt namn och din titel om forumet?"
         fields:
           title:
             label: "Ditt forums namn"
@@ -3863,16 +3869,15 @@ sv:
             placeholder: "San Francisco, Kalifornien"
       colors:
         title: "Tema"
-      themes_further_reading:
-        title: "Teman"
-        description:
-        - <ul>
-        - <li><a href='https://meta.discourse.org/t/63682' target='_blank'>Hur installerar jag ett tema eller en temakomponent?</a></li>
-        - <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Snabbreferensguide för temautvecklare </a></li>
-        - </ul>
-        - 'Populära temakomponenter (för fler, bläddra bland <a href=''https://meta.discourse.org/c/theme/l/latest'' target=''_blank''>#theme</a>) "'
       fonts:
         title: "Typsnitt"
+        fields:
+          body_font:
+            label: "Typsnitt för brödtext"
+          heading_font:
+            label: "Typsnitt för rubrik"
+          font_preview:
+            label: "Förhandsgranska"
       logos:
         title: "Logotyper"
         fields:
@@ -3920,9 +3925,6 @@ sv:
         disabled: "Eftersom lokala inloggningar har inaktiverats är det inte möjligt att skicka inbjudningar till någon. Fortsätt till nästa steg."
       finished:
         title: "Din Discourse är redo!"
-        description: |
-          <p>Om du någonsin känner för att ändra dessa inställningar, <b>kör du bara denna guide igen</b>, eller går till <a href='%{base_path}/admin' target='_blank'>din administratörsavdelning</a>; du hittar den intill skiftnyckeln i webbplatsens meny.</p>
-          <p>Ha roligt, och lycka till <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>med att bygga ditt nya forum!</a></p>
   search_logs:
     graph_title: "Sökningar"
   joined: "Gick med"

@@ -1689,6 +1689,7 @@ he:
       accept_invite: "קבלת הזמנה"
       success: "החשבון נוצר ונכנסת אליו."
       name_label: "שם"
+      password_label: "ססמה"
       optional_description: "(רשות)"
     password_reset:
       continue: "המשיכו ל-%{site_name}"
@@ -1900,6 +1901,8 @@ he:
         toggle_topic_bump:
           label: "החלפת מצב הקפצת נושא"
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
+      reload: "רענון"
+      ignore: "התעלמות"
     notifications:
       tooltip:
         regular:
@@ -2085,6 +2088,8 @@ he:
           noreplies: אין להם תגובות
           single_user: מכילים משתמש/ת יחידים
         post:
+          count:
+            label: פוסטים
           min:
             placeholder: מזערי
           max:

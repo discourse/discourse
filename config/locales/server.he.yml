@@ -201,6 +201,7 @@ he:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "לא ניתן להפעיל העלאות ל־S3 כיוון שהעלאות ל־S3 כבר פעילות באופן גלובלי והפעלת האפשרות הזאת ברמת האתר עשויה להוביל לתקלות חמורות בהעלאה."
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
+    expired: "תוקף אסימון ההזמנה שלך פג. נא <a href='%{base_url}/about'>ליצור קשר עם הסגל</a>."
     not_found: "אסימון ההזמנה שלך שגוי. נא <a href='%{base_url}/about'>ליצור קשר עם הסגל</a>."
     not_found_json: "אסימון ההזמנה שלך שגוי. נא ליצור קשר עם הסגל."
     not_found_template: |
@@ -213,6 +214,10 @@ he:
     user_exists: "אין צורך להזמין את <b>%{email}</b>, כבר <a href='%{base_path}/u/%{username}/summary'>קיים חשבון לכתובת זו!</a>"
     confirm_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה לכתובת הדוא״ל שלך. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
     cant_invite_to_group: "אסור לך להזמין משתמשים לקבוצות מסוימות. נא לוודא שהקבוצות אליהן ייעדת להזמין הן בבעלותך."
+    disabled_errors:
+      sso_enabled: "הזמנות מושבתות כיוון שה־SSO מופעל."
+      local_logins_disabled: "הזמנות מושבתות כיוון שההגדרה ‚הפעלת כניסה מקומית’ מושבתת."
+      invalid_access: "אין לך הרשאות לצפות במשאב המבוקש."
   bulk_invite:
     file_should_be_csv: "הקובץ שנשלח אמור להיות בתסדיר csv."
     max_rows: "%{max_bulk_invites} ההזמנות הראשונות נשלחו. כדאי לנסות לפצל את הקובץ לחלקים קטנים יותר."
@@ -1959,7 +1964,7 @@ he:
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפוסטים שלהם, בנוסף ל@שם_המשתמש שלהם."
     show_time_gap_days: "אם שני פוסטים נוצרים מספר זה של ימים אחד מהשני, הציגו את מרווח הזמן בנושא."
     short_progress_text_threshold: "לאחר שמספר הפוסטים בנושא עוברים את המספר הזה, מד ההתקדמות יציג רק את המספר של הפוסט הנוכחי. אם תשנו את רוחב מד ההתקדמות, ייתכן שתצטרכו לשנות ערך זה."
-    default_code_lang: "תחביר שפת תכנות שיסופק כברירת מחדל על קטעי קוד מגיטהאב (לאנג-אוטו, רובי, פיתון וכד׳)"
+    default_code_lang: "הדגשת תחביר כבררת מחדל שתחול על מקטעי קוד מ־GitHub (auto,‏ nohighlight,‏ ruby,‏ python וכו׳)"
     warn_reviving_old_topic_age: "כאשר מישהם מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. נטרלו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כללי הדגשת תחביר להכללה. (אזהרה: הכללה של שפות רבות מדי פוגעת בביצועים) להדגמה: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2067,7 +2072,7 @@ he:
     shared_drafts_category: "הפעלת תכונת הטיוטות המשותפות על ידי הקצאת קטגוריה שתשמש לטובת טיוטות לנושאים. נושאים בקטגוריה זו יוסתרו מרשימות הנושאים לחברי הסגל."
     push_notifications_prompt: "הצגת בקשה להסכמת המשתמש."
     push_notifications_icon: "סמל העיטור שמופיע בפינת ההתרעה. מומלץ PNG בצבעים אחידים עם שקיפות בגודל 96 × 96."
-    base_font: "גופן לשימוש ברוב המקומות באתר. אפשר לדרוס עם ערכות עיצוב."
+    heading_font: "גופן לשימוש כותרות באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות המאפיין ‎`--heading-font-family`‎"
     short_title: "בכותרת הקצרה ייעשה שימוש במסך הבית של המשתמש, במשגר או במקומות אחרים שבהם המקום מוגבל. אורכה לא יעלה על 12 תווים."
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
@@ -4201,16 +4206,15 @@ he:
             placeholder: "סן פרנסיסקו, קליפורניה"
       colors:
         title: "תמה"
-      themes_further_reading:
-        title: "תמות"
-        description:
-        - <ul>
-        - <li><a href='https://meta.discourse.org/t/63682' target='_blank'>איך אפשר להתקין ערכת עיצוב או רכיב של ערכת עיצוב?</a></li>
-        - <li><a href='https://meta.discourse.org/t/110448' target='_blank'>המדריך המקוצר למפתחי ערכות עיצוב</a></li>
-        - </ul>
-        - 'רכיבי ערכת עיצוב נפוצים (כדי לצפות בנוספים, ניתן לעיין ב־<a href=''https://meta.discourse.org/c/theme/l/latest'' target=''_blank''>‎#theme</a>)"'
       fonts:
         title: "גופנים"
+        fields:
+          body_font:
+            label: "גופן גוף"
+          heading_font:
+            label: "גופן כותרת"
+          font_preview:
+            label: "תצוגה מקדימה"
       logos:
         title: "לוגואים"
         fields:
@@ -4258,9 +4262,6 @@ he:
         disabled: "מאחר שכניסה בשליטה מקומית מנוטרלת, אי אפשר לשלוח לכולם הזמנות. נא להמשיך לשלב הבא."
       finished:
         title: "ה־Discourse שלך מוכן!"
-        description: |
-          <p>אם חשקה נפשך בשינוי ההגדרות האלו, <b>יש להפעיל את האשף הזה מחדש</b>, או לבקר ב<a href='%{base_path}/admin' target='_blank'>אגף הניהול</a>; ניתן למצוא אותו ליד סמל מפתח הברגים בתפריט האתר.</p>
-          <p>מאחלים לך הנאה מרובה ובהצלחה <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>בהקמת הקהילה החדשה שלך!</a></p>
   search_logs:
     graph_title: "מניין חיפושים"
   joined: "הצטרפו"

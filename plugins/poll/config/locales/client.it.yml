@@ -97,6 +97,8 @@ it:
           step: Passo
         poll_public:
           label: Mostra i votanti
+        poll_title:
+          label: Titolo (facoltativo)
         poll_options:
           label: Inserisci un'opzione di sondaggio per riga
         automatic_close:

@@ -416,14 +416,6 @@ fi:
       Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
 
       Ketju voisi olla vielä parempi, jos useammilla olisi tilaa jakaa omia näkökulmiaan. Voisit kutsua heitä tänne?
-    get_a_room: |
-      ### Rohkaise kaikkia osallistumaan keskusteluun
-
-      Olet vastannut %{count} kertaa käyttäjälle @%{reply_username} tässä ketjussa!
-
-      Parhaissa keskusteluissa on monia ääniä ja näkökulmia. Voitko saada jonkun liittymään keskusteluun?
-
-      Pidä mielessä, että jos haluat keskustella syvällisemmin tämän käyttäjän kanssa ei-julkisesti, [lähetä hänelle yksityisviesti](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
 
@@ -1772,7 +1764,6 @@ fi:
     display_name_on_posts: "Näytä käyttäjän pitkä nimi viesteissä @nimen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
     short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
-    default_code_lang: "Oletusarvoinen ohjelmointikieli syntaksin korostukseen Github koodiblokeissa (lang-auto, ruby, python jne.)"
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin tekstiblokkeihin, vaikka käyttäjä ei määrittelisi kieltä."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa palstan suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -3820,8 +3811,6 @@ fi:
             placeholder: "San Francisco, Kalifornia"
       colors:
         title: "Värimaailma"
-      themes_further_reading:
-        title: "Teemat"
       logos:
         title: "Logot"
         fields:
@@ -3869,9 +3858,6 @@ fi:
         disabled: "Koska paikalliset kirjautumiset ovat pois käytöstä, ei ole mahdollista kutsua ketään. Ole hyvä jatka seuraavaan vaiheeseen."
       finished:
         title: "Discoursesi on valmis!"
-        description: |
-          <p>Jos sinun joskus tekee mieli muuttaa näitä asetuksia, <b>käy läpi tämä ohjattu asennus milloin vain</b> tai käy <a href='%{base_path}/admin' target='_blank'>ylläpito-osiossa</a>; löydät sen jakoavaimen ohesta sivuston valikosta.</p>
-          <p>Pidä hauskaa, ja onnea matkaan <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>uuden yhteisön rakentamiseen!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
   joined: "Liittyi"

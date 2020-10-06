@@ -1822,6 +1822,12 @@ fa_IR:
             label: ارسال شده
             before: قبل از
             after: بعد از
+        views:
+          label: بازدید
+        min_views:
+          placeholder: حداقل
+        max_views:
+          placeholder: حداکثر
     hamburger_menu: "به فهرست مبحث یا دسته بندی دیگر بروید"
     new_item: "تازه"
     go_back: "برگردید"

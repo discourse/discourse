@@ -1793,6 +1793,8 @@ nl:
         toggle_topic_bump:
           label: "Topicbump in-/uitschakelen"
           desc: "Antwoorden zonder datum van laatste antwoord te wijzigen"
+      reload: "Opnieuw laden"
+      ignore: "Negeren"
     notifications:
       tooltip:
         regular:
@@ -1967,9 +1969,9 @@ nl:
           count:
             label: Berichten
           min:
-            placeholder: minimaal
+            placeholder: minimum
           max:
-            placeholder: maximaal
+            placeholder: maximum
           time:
             label: Geplaatst
             before: voor

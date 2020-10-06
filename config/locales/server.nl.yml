@@ -187,6 +187,7 @@ nl:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "U kunt geen S3-uploads inschakelen, omdat S3-uploads al globaal zijn ingeschakeld, en inschakelen hiervan op websiteniveau kan kritieke problemen met uploads veroorzaken"
     conflicting_google_user_id: 'De Google-account-ID voor deze account is gewijzigd; om beveiligingsredenen is stafinterventie vereist. Neem contact op met een staflid en wijs hem of haar op <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
+    expired: "Uw uitnodigingstoken is verlopen. <a href='%{base_url}/about'>Neem contact op</a> met een staflid."
     not_found: "Uw uitnodigingstoken is ongeldig. <a href='%{base_url}/about'>Neem contact op</a> met een staflid."
     not_found_json: "Uw uitnodigingstoken is ongeldig. Neem contact op met een staflid."
     not_found_template: |
@@ -199,6 +200,10 @@ nl:
     user_exists: "<b>%{email}</b> hoeft niet te worden uitgenodigd; hij of zij <a href='%{base_path}/u/%{username}/summary'>heeft al een account!</a>"
     confirm_email: "<p>U bent er bijna! We hebben een activeringsmail naar uw e-mailadres gestuurd. Volg de instructies in het e-mailbericht om uw account te activeren.</p><p>Als dit niet aankomt, controleer dan uw spammap.</p>"
     cant_invite_to_group: "U mag geen gebruikers uitnodigen voor bepaalde groepen. Zorg ervoor dat u eigenaar bent van de groep(en) waarvoor u probeert uit te nodigen."
+    disabled_errors:
+      sso_enabled: "Uitnodigingen zijn uitgeschakeld, omdat SSO is ingeschakeld."
+      local_logins_disabled: "Uitnodigingen zijn uitgeschakeld, omdat de instelling 'lokale aanmeldingen inschakelen' is uitgeschakeld."
+      invalid_access: "U mag de opgevraagde bron niet bekijken."
   bulk_invite:
     file_should_be_csv: "Het geüploade bestand dient de CSV-indeling te hebben."
     max_rows: "De eerste %{max_bulk_invites} uitnodigingen zijn verstuurd. Probeer het bestand in kleinere delen op te splitsen."
@@ -431,14 +436,6 @@ nl:
       Dit topic is duidelijk belangrijk voor u &ndash; u hebt hier meer dan %{percent}% van de antwoorden geplaatst.
 
       Het zou nog beter kunnen zijn als u ook anderen de ruimte geeft om hun ideeën te delen. Kunt u ze uitnodigen?
-    get_a_room: |
-      ### Overweeg iedereen aan de conversatie te laten deelnemen
-
-      U hebt in dit specifieke topic %{count} keer op @%{reply_username} geantwoord!
-
-      Een goede discussie omvat veel meningen en perspectieven. Kunt u hier nog anderen bij betrekken?
-
-      Denk eraan: als u uw conversatie met deze bepaalde gebruiker wilt verbergen, kunt u [hem of haar een persoonlijk bericht sturen](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### U hebt de antwoordlimiet voor dit topic bereikt
 
@@ -1840,7 +1837,6 @@ nl:
     display_name_on_posts: "Volledige naam van een gebruiker tonen bij berichten, naast de @gebruikersnaam."
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
     short_progress_text_threshold: "Als het aantal berichten in een topic hoger is dan dit aantal, toont de voortgangsbalk alleen het nummer van het huidige bericht. Als u de breedte van de voortgangsbalk wijzigt, dient u deze waarde mogelijk ook te wijzigen."
-    default_code_lang: "Standaard programmeertaal-syntaxismarkering die op GitHub-codeblokken wordt toegepast (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Wanneer iemand begint te antwoorden op een topic waarin het laatste antwoord ouder is dan dit aantal dagen, wordt een waarschuwing weergegeven. Schakel uit door dit op 0 te zetten."
     autohighlight_all_code: "Toepassen van codemarkering bij alle vooraf opgemaakte codeblokken afdwingen, zelfs als de codetaal niet expliciet is opgeven."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> voor een demo."
@@ -1944,6 +1940,7 @@ nl:
     shared_drafts_category: "Schakel de functie Gedeelde concepten in door een categorie voor topicconcepten aan te geven. Topics in deze categorie worden onderdrukt in topiclijsten voor stafgebruikers."
     push_notifications_prompt: "Prompt voor gebruikerstoestemming weergeven."
     push_notifications_icon: "Het badgepictogram dat in de meldingshoek verschijnt. Een eenkleurige PNG van 96×96 met transparantie wordt aanbevolen."
+    heading_font: "Te gebruiken lettertypen voor kopteksten op de website. Thema's kunnen worden overschreven via de aangepaste CSS-eigenschap '--heading-font-family'."
     short_title: "De korte titel wordt gebruikt op het startscherm van de gebruiker, de starter, of andere plaatsen waar ruimte beperkt kan zijn. Beperk de naam tot 12 tekens."
     dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
     dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
@@ -2864,8 +2861,14 @@ nl:
             placeholder: "San Francisco, Californië"
       colors:
         title: "Thema"
-      themes_further_reading:
-        title: "Thema's"
+      fonts:
+        fields:
+          body_font:
+            label: "Lettertype voor hoofdtekst"
+          heading_font:
+            label: "Lettertype voor koptekst"
+          font_preview:
+            label: "Voorbeeld"
       logos:
         title: "Logo's"
         fields:
@@ -2910,9 +2913,6 @@ nl:
         disabled: "Omdat sociale aanmeldingen zijn uitgeschakeld, is het niet mogelijk om uitnodigingen naar iedereen te versturen. Ga verder met de volgende stap."
       finished:
         title: "Uw Discourse is gereed!"
-        description: |
-          <p>Als u deze instellingen ooit wilt wijzigen, <b>voer deze wizard dan opnieuw uit</b>, of bezoek <a href='%{base_path}/admin' target='_blank'>uw beheersectie</a>; deze vindt u naast het moersleutelpictogram in het websitemenu.</p>
-          <p>Veel plezier, en succes met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>opbouwen van uw nieuwe gemeenschap!</a></p>
   search_logs:
     graph_title: "Aantal zoekopdrachten"
   joined: "Lid sinds"

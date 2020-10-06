@@ -350,14 +350,6 @@ zh_TW:
       你可以編輯你先前的回應訊息，選擇字句後點選 <b>引用</b> 來回應。
 
       對於大家而言，閱讀包含較多回覆的少量貼文，會比閱讀多篇瑣碎貼文更為輕鬆。
-    get_a_room: |
-      ### 考慮回應更多參與者
-
-      你已經在這個討論話題中，回應了 @%{reply_username} %{count} 次。
-
-      你有考慮回應討論中的 *其他人* 嗎？一個好的討論，需要納入更多人的觀點與意見。
-
-      如果你還是想要與他繼續討論，請考慮透過[個人訊息](%{base_path}/u/%{reply_username})來進行。
     too_many_replies: |
       ### 你的回應數量已經達到本主題的回覆上限
 
@@ -1597,7 +1589,6 @@ zh_TW:
     display_name_on_posts: "在使用者的貼文中顯示他們的全名以及他們的 @username。"
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
     short_progress_text_threshold: "在主題中的貼文數超過這個設定後，進度條將只顯示當前的貼文數。如果你更改了進度條的寬度，你需要修改這個值。"
-    default_code_lang: "預設語法高亮語言，使用 GitHub 代碼塊（lang-auto、ruby、python或者其他等等。）"
     warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
     autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"
     highlighted_languages: "已包含語法突顯（Syntax Highlighting）規則。（警告：包含太多語言可能會影響論壇效能）請參閱：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>看更多範例。"
@@ -3354,8 +3345,6 @@ zh_TW:
             placeholder: "舊金山，加洲（California）"
       colors:
         title: "主題"
-      themes_further_reading:
-        title: "佈景主題"
       logos:
         title: "標誌"
         fields:
@@ -3403,9 +3392,6 @@ zh_TW:
         disabled: "由於禁用了本地登入（local logins），因此無法向任何人發送邀請，請繼續下一步。"
       finished:
         title: "你的 Discourse 已經準備就緒！"
-        description: |
-          <p>如果你覺得需要修改這些設定，訪問<b>管理員面板</b>；你可以在網站導覽列找到板手圖示（icon），板手圖示旁找到這些設定。</p>
-          <p>祝你玩得開心，還有祝你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建設新社群好運！</a></p>
   search_logs:
     graph_title: "搜尋計數"
   joined: "建立日期"
