@@ -1,6 +1,9 @@
 import I18n from "I18n";
 import EmberObject from "@ember/object";
-import { moduleForWidget, widgetTest } from "discourse/tests/helpers/widget-test";
+import {
+  moduleForWidget,
+  widgetTest,
+} from "discourse/tests/helpers/widget-test";
 
 moduleForWidget("discourse-poll");
 
@@ -71,6 +74,14 @@ widgetTest("can vote", {
     assert.equal(requests, 1);
     assert.equal(find(".chosen").length, 1);
     assert.equal(find(".chosen").text(), "100%yes");
+    assert.equal(find(".toggle-results").text(), "Show vote");
+
+    await click(".toggle-results");
+    assert.equal(
+      find("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']").length,
+      1
+    );
+    assert.equal(find(".toggle-results").text(), "Show results");
   },
 });
 

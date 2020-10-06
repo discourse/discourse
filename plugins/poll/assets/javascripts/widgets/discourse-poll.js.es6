@@ -356,7 +356,9 @@ createWidget("discourse-poll-container", {
     } else if (options) {
       const contents = [];
 
-      contents.push(new RawHtml({ html: attrs.titleHTML }));
+      if (attrs.titleHTML) {
+        contents.push(new RawHtml({ html: attrs.titleHTML }));
+      }
 
       if (!checkUserGroups(this.currentUser, poll)) {
         contents.push(
