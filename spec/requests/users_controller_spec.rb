@@ -9,7 +9,7 @@ describe UsersController do
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
 
-      get '/u/hp.json'
+      get '/session/hp.json'
       expect(response.status).to eq(200)
 
       json = response.parsed_body
@@ -584,7 +584,7 @@ describe UsersController do
 
   describe '#create' do
     def honeypot_magic(params)
-      get '/u/hp.json'
+      get '/session/hp.json'
       json = response.parsed_body
       params[:password_confirmation] = json["value"]
       params[:challenge] = json["challenge"].reverse
@@ -1297,6 +1297,8 @@ describe UsersController do
       before do
         UsersController.any_instance.stubs(:honeypot_value).returns("abc")
         UsersController.any_instance.stubs(:challenge_value).returns("efg")
+        SessionController.any_instance.stubs(:honeypot_value).returns("abc")
+        SessionController.any_instance.stubs(:challenge_value).returns("efg")
       end
 
       let!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
@@ -1554,7 +1556,7 @@ describe UsersController do
     it "fails for anonymous users" do
       user = Fabricate(:user)
       get "/u/#{user.username}/invited_count.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "works for users who can see invites" do
@@ -1711,7 +1713,7 @@ describe UsersController do
             end
 
             get "/u/#{inviter.username}/invited/pending.json"
-            expect(response.status).to eq(403)
+            expect(response.status).to eq(422)
           end
         end
       end
@@ -1756,6 +1758,21 @@ describe UsersController do
 
             get "/u/#{inviter.username}/invite_links.json"
             expect(response.status).to eq(403)
+          end
+        end
+
+        context 'when local logins are disabled' do
+          it 'explains why invites are disabled to staff users' do
+            SiteSetting.enable_local_logins = false
+            inviter = sign_in(Fabricate(:admin))
+            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invite_links.json"
+            expect(response.status).to eq(200)
+
+            expect(response.parsed_body['error']).to include(I18n.t(
+              'invite.disabled_errors.local_logins_disabled'
+            ))
           end
         end
       end

@@ -75,7 +75,7 @@ task 'docker:test' do
       else
         @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("yarn eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("yarn eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
 
         # TODO: remove --global I18n once plugins can be updated
         @good &&= run_or_fail("yarn eslint --global I18n --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins") unless ENV["SKIP_PLUGINS"]
@@ -85,7 +85,7 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
-          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.{js,es6}" "test/javascripts/**/*.{js,es6}"')
+          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.{js,es6}"')
         end
 
         unless ENV["SKIP_PLUGINS"]

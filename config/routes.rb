@@ -358,6 +358,7 @@ Discourse::Application.routes.draw do
     get "session/sso_provider" => "session#sso_provider"
     get "session/current" => "session#current"
     get "session/csrf" => "session#csrf"
+    get "session/hp" => "session#get_honeypot_value"
     get "session/email-login/:token" => "session#email_login_info"
     post "session/email-login/:token" => "session#email_login"
     get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
@@ -406,7 +407,6 @@ Discourse::Application.routes.draw do
       put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
 
       put "#{root_path}/update-activation-email" => "users#update_activation_email"
-      get "#{root_path}/hp" => "users#get_honeypot_value"
       post "#{root_path}/email-login" => "users#email_login"
       get "#{root_path}/admin-login" => "users#admin_login"
       put "#{root_path}/admin-login" => "users#admin_login"

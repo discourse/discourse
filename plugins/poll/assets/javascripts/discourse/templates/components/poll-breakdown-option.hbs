@@ -3,6 +3,7 @@
   style={{this.colorBackgroundStyle}}
   {{on "mouseover" @onMouseOver}}
   {{on "mouseout" @onMouseOut}}
+  role="button"
 >
   <span class="poll-breakdown-option-color" style={{this.colorPreviewStyle}}></span>
 
@@ -13,5 +14,5 @@
       {{@option.votes}}
     {{/if}}
   </span>
-  <span class="poll-breakdown-option-text">{{{@option.html}}}</span>
+  <span class="poll-breakdown-option-text">{{html-safe @option.html}}</span>
 </li>

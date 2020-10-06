@@ -168,12 +168,13 @@ describe Wizard::StepUpdater do
   end
 
   context "fonts step" do
-    it "updates the font" do
-      updater = wizard.create_updater('fonts', font_previews: 'open_sans')
+    it "updates fonts" do
+      updater = wizard.create_updater('fonts', body_font: 'open_sans', heading_font: 'oswald')
       updater.update
       expect(updater.success?).to eq(true)
       expect(wizard.completed_steps?('fonts')).to eq(true)
       expect(SiteSetting.base_font).to eq('open_sans')
+      expect(SiteSetting.heading_font).to eq('oswald')
     end
   end
 

@@ -14,7 +14,8 @@ class PollSerializer < ApplicationSerializer
              :close,
              :preloaded_voters,
              :chart_type,
-             :groups
+             :groups,
+             :title
 
   def public
     true

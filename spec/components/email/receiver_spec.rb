@@ -1549,6 +1549,25 @@ describe Email::Receiver do
       expect(text).to eq(stripped_text)
     end
 
+    it "works with empty mail body" do
+      SiteSetting.strip_incoming_email_lines = true
+
+      email = <<~EOF
+        Date: Tue, 01 Jan 2019 00:00:00 +0300
+        Subject: An email with whitespaces
+        From: Foo <foo@discourse.org>
+        To: bar@discourse.org
+        Content-Type: text/plain; charset="UTF-8"
+
+        --
+        my signature
+
+      EOF
+
+      receiver = Email::Receiver.new(email)
+      text, _elided, _format = receiver.select_body
+      expect(text).to be_blank
+    end
   end
 
   describe "replying to digest" do

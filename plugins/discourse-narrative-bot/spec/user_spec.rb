@@ -123,6 +123,8 @@ describe User do
           user.user_option.save!
         }.to change { Topic.count }.by(-1)
           .and change { UserHistory.count }.by(0)
+          .and change { user.unread_high_priority_notifications }.by(-1)
+          .and change { user.notifications.count }.by(-1)
       end
     end
 

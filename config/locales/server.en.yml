@@ -218,6 +218,10 @@ en:
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
+    disabled_errors:
+      sso_enabled: "Invites are disabled because SSO is enabled."
+      local_logins_disabled: "Invites are disabled because the 'enable local logins' setting is disabled."
+      invalid_access: "You are not permitted to view the requested resource."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -2229,7 +2233,8 @@ en:
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
 
-    base_font: "Font to use in most places on the site. Themes can override."
+    base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
+    heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
@@ -4692,18 +4697,15 @@ en:
       colors:
         title: "Theme"
 
-      themes_further_reading:
-        title: "Themes"
-        description:
-          "Looking to customize your Discourse? Take advantage of our powerful theming system:
-          <ul>
-          <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
-          <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
-          </ul>
-          Popular theme components (for more, browse <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
-
       fonts:
         title: "Fonts"
+        fields:
+          body_font:
+            label: "Body font"
+          heading_font:
+            label: "Heading font"
+          font_preview:
+            label: "Preview"
 
       logos:
         title: "Logos"
@@ -4760,6 +4762,7 @@ en:
         title: "Your Discourse is Ready!"
         description: |
           <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
+          <p>It is easy to customize your Discourse even further using our powerful theming system. For examples, check out the <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">top themes and components</a> on <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
           <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
 
   search_logs:

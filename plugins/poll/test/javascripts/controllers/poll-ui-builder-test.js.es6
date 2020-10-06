@@ -1,4 +1,4 @@
-import { controllerModule } from "helpers/qunit-helpers";
+import { controllerModule } from "discourse/tests/helpers/qunit-helpers";
 
 controllerModule("controller:poll-ui-builder", {
   setupController(controller) {

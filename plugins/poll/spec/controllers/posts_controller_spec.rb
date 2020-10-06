@@ -139,6 +139,17 @@ describe PostsController do
       expect(Poll.where(post_id: json["id"]).count).to eq(1)
     end
 
+    it "accepts polls with titles" do
+      post :create, params: {
+        title: title, raw: "[poll]\n# What's up?\n- one\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_successful
+      poll = Poll.last
+      expect(poll).to_not be_nil
+      expect(poll.title).to eq("What’s up?")
+    end
+
     describe "edit window" do
 
       describe "within the first 5 minutes" do

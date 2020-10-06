@@ -40,8 +40,23 @@ describe Stylesheet::Importer do
       .to include(":root{--font-family: Helvetica, Arial, sans-serif}")
   end
 
+  it "includes separate body and heading font declarations" do
+    base_font = DiscourseFonts.fonts[2]
+    heading_font = DiscourseFonts.fonts[3]
+
+    SiteSetting.base_font = base_font[:key]
+    SiteSetting.heading_font = heading_font[:key]
+
+    expect(compile_css("desktop"))
+      .to include(":root{--font-family: #{base_font[:stack]}}")
+      .and include(":root{--heading-font-family: #{heading_font[:stack]}}")
+  end
+
   it "includes all fonts in wizard" do
-    expect(compile_css("wizard").scan(/\.font-/).count)
+    expect(compile_css("wizard").scan(/\.body-font-/).count)
+      .to eq(DiscourseFonts.fonts.count)
+
+    expect(compile_css("wizard").scan(/\.heading-font-/).count)
       .to eq(DiscourseFonts.fonts.count)
 
     expect(compile_css("wizard").scan(/@font-face/).count)

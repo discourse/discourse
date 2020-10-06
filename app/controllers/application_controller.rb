@@ -47,6 +47,9 @@ class ApplicationController < ActionController::Base
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
 
+  HONEYPOT_KEY ||= 'HONEYPOT_KEY'
+  CHALLENGE_KEY ||= 'CHALLENGE_KEY'
+
   layout :set_layout
 
   def has_escaped_fragment?
@@ -832,6 +835,14 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def honeypot_value
+    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
+  end
+
+  def challenge_value
+    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
+  end
 
   def render_post_json(post, add_raw: true)
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)

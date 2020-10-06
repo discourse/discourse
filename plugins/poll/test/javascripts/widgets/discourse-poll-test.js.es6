@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import EmberObject from "@ember/object";
-import { moduleForWidget, widgetTest } from "helpers/widget-test";
+import { moduleForWidget, widgetTest } from "discourse/tests/helpers/widget-test";
 
 moduleForWidget("discourse-poll");
 
