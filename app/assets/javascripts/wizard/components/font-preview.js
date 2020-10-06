@@ -34,7 +34,9 @@ export default createPreviewComponent(659, 320, {
   paint({ ctx, colors, font, headingFont, width, height }) {
     const headerHeight = height * 0.3;
 
-    this.drawFullHeader(colors, headingFont, this.logo);
+    if (this.logo) {
+      this.drawFullHeader(colors, headingFont, this.logo);
+    }
 
     const margin = width * 0.04;
     const avatarSize = height * 0.2;
