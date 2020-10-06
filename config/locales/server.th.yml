@@ -406,8 +406,6 @@ th:
         title: "องค์กร"
       colors:
         title: "ธีม"
-      themes_further_reading:
-        title: "ธีม"
       homepage:
         fields:
           homepage_style:

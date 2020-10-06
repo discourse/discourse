@@ -475,7 +475,6 @@ pl_PL:
       Ten temat jest dla Ciebie wyraźnie ważny &ndash; opublikowałeś tutaj ponad %{percent}% odpowiedzi.
 
       Byłoby jeszcze lepiej, gdybyś dał innym ludziom przestrzeń do podzielenia się swoimi punktami widzenia. Możesz ich zaprosić?
-    get_a_room: "### Zachęć każdego do zaangażowania się w rozmowę\n\nW tym temacie odpowiedziałaś/łeś %{reply_username} już %{count} razy!\n\nDobra dyskusja uwzględnia wiele głosów i perspektyw. Czy możesz tu zaangażować kogoś jeszcze?\n\nNie zapominaj, że jeśli chciał(a)byś kontynuować rozmowę z tym użytkownikiem bez publiczności, to możesz [wysłać im prywatną wiadomość](%{base_path}/u/{%reply_username}).\n \n"
     too_many_replies: |
       ### Osiągnąłeś limit odpowiedzi w tym temacie
 
@@ -1887,7 +1886,6 @@ pl_PL:
     display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego wpisach, a także jego @nazwę użytkownika."
     show_time_gap_days: "Jeśli dwa wpisy zostały dodane w dużej przerwie, wyświetl okres w temacie."
     short_progress_text_threshold: "Po tym jak liczba wpisów w tym temacie przekroczy ten numer, ten pasek postępu pokaże tylko bieżącą liczbę wpisów. Jeśli zmienisz szerokość paska postępu, możliwe, że będziesz musiał zmienić tą wartość."
-    default_code_lang: "Domyślny język programowania syntax podświetlający zastosowany do bloków kodu GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
     autohighlight_all_code: "Narzuć dodawanie podświetlenia kodu do wszystkich bloków kodu, w przypadku gdy nie jest dokładnie określony język."
     embed_truncate: "Okrój osadzone wpisy."
@@ -3261,8 +3259,6 @@ pl_PL:
             placeholder: "Kalifornia, San Francisco"
       colors:
         title: "Motyw"
-      themes_further_reading:
-        title: "Motywy"
       logos:
         title: "Loga"
         fields:

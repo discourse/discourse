@@ -266,6 +266,7 @@ es:
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       not_bookmarked: "marcar esta publicación"
+      created_with_reminder: "Has marcado esta publicación con un recordatorio %{date}. %{name}"
       remove: "Eliminar marcador"
       delete: "Borrar marcador"
       confirm_delete: "¿Seguro que quieres borrar este marcados? El recordatorio también se borrará."
@@ -274,6 +275,7 @@ es:
       no_timezone: 'No has establecido una zona horaria todavía. No podrás establecer recordatorios. Puedes elegir una <a href="%{basePath}/my/preferences/profile">en tu perfil</a>.'
       invalid_custom_datetime: "La fecha y hora que suministraste es inválida. Por favor, intenta de nuevo."
       list_permission_denied: "No tienes permiso para ver los marcadores de este usuario."
+      no_user_bookmarks: "No tiene publicaciones marcadas; los marcadores le permiten referirse rápidamente a publicaciones específicas."
       auto_delete_preference:
         label: "Borrar automáticamente"
         never: "Nunca"
@@ -296,6 +298,7 @@ es:
         today_with_time: "hoy a las %{time}"
         tomorrow_with_time: "mañana a las %{time}"
         at_time: "a las %{date_time}"
+        existing_reminder: "Tiene un recordatorio establecido para este marcador que se enviará %{at_date_time}"
     copy_codeblock:
       copied: "¡copiado!"
     drafts:
@@ -600,9 +603,16 @@ es:
         categories:
           title: Categorías
           long_title: "Notificaciones predeterminadas de categoría"
+          description: "Cuando se agregan usuarios a este grupo, la configuración de notificaciones de categorías será establecida a estos valores predeterminados. Después, pueden cambiarla."
+          watched_categories_instructions: "Vigilar automáticamente todos los temas en estas categorías. Los miembros del grupo serán notificados de cada nueva respuesta y tema, y un contador de respuestas nuevas al lado del tema."
+          tracked_categories_instructions: "Seguir automáticamente todos los temas en estas categorías. Aparecerá un contador de nuevas respuestas al lado del tema."
+          watching_first_post_categories_instructions: "Los usuarios serán notificados de la primera respuesta en cada tema nuevo en estas categorías."
           regular_categories_instructions: "Si estas categorías están silenciadas, no estarán silenciadas para los miembros del grupo. Se les notificará a los usuarios si son mencionados o si alguien les responde."
+          muted_categories_instructions: "Los usuarios no serán notificados acerca de temas nuevos en estas categorías, y no aparecerán en las categorías o páginas de temas recientes."
         tags:
           title: Etiquetas
+          long_title: "Etiqueta notificaciones predeterminadas"
+          description: "Cuando se agregan usuarios a este grupo, su configuración de notificaciones de etiquetas será establecida a estos valores predeterminados. Después, pueden cambiarla."
         logs:
           title: "Registros"
           when: "Cuándo"
@@ -863,6 +873,7 @@ es:
       color_scheme: "Combinación de colores"
       color_schemes:
         default_description: "Predeterminado"
+        disable_dark_scheme: "Igual que regular"
         undo: "Restablecer"
         dark: "Modo oscuro"
         default_dark_scheme: "(valor predeterminado por el sitio)"
@@ -1091,6 +1102,7 @@ es:
         sso_override_instructions: "El correo electrónico puede actualizarse desde el proveedor de SSO."
         no_secondary: "Sin correos electrónicos secundarios"
         instructions: "Nunca se mostrará al público."
+        admin_note: "Nota: Un usuario administrador que cambia el correo electrónico de otro usuario no administrador indica que el usuario ha perdido el acceso a su cuenta de correo electrónico original, por lo que se enviará un correo electrónico para restablecer la contraseña a su nueva dirección. El correo electrónico del usuario no cambiará hasta que complete el proceso de restablecimiento de contraseña."
         ok: "Te enviaremos un correo electrónico para confirmar"
         required: "Por favor, introduce un correo electrónico"
         invalid: "Por favor, ingresa una dirección de correo electrónico válida"
@@ -1445,6 +1457,8 @@ es:
       title: "Mensaje"
       invite: "Invitar a otros..."
       edit: "Añadir o quitar..."
+      remove: "Eliminar ..."
+      add: "Añadir ..."
       leave_message: "¿Estás seguro de que quieres abandonar este mensaje?"
       remove_allowed_user: "¿Estás seguro de que quieres eliminar a %{name} de este mensaje?"
       remove_allowed_group: "¿Estás seguro de que quieres eliminar a %{name} de este mensaje?"
@@ -1562,6 +1576,7 @@ es:
       accept_invite: "Aceptar invitación"
       success: "Tu cuenta ha sido creada y has iniciado sesión."
       name_label: "Nombre"
+      password_label: "Contraseña"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continuar a %{site_name}"
@@ -1767,6 +1782,8 @@ es:
         toggle_topic_bump:
           label: "Alternar bump del tema"
           desc: "Responder sin alterar la fecha de última respuesta"
+      reload: "Recargar"
+      ignore: "Ignorar"
     notifications:
       tooltip:
         regular:
@@ -1935,10 +1952,22 @@ es:
           noreplies: no tienen respuestas
           single_user: contienen un solo usuario
         post:
+          count:
+            label: Publicaciones
+          min:
+            placeholder: mínimo
+          max:
+            placeholder: máximo
           time:
             label: Fecha de publicación
             before: antes de
             after: después de
+        views:
+          label: Visitas
+        min_views:
+          placeholder: mínimo
+        max_views:
+          placeholder: máximo
     hamburger_menu: "ir a otra lista de temas o categoría"
     new_item: "nuevo"
     go_back: "volver"
@@ -1980,6 +2009,8 @@ es:
         new: "No tienes temas nuevos."
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
+        ready_to_create: "Listo para "
+        latest: "¡Estás al día!"
         bookmarks: "Todavía no tienes temas guardados en marcadores."
         category: "No hay temas con la categoría %{category}."
         top: "No hay temas destacados."
@@ -2066,6 +2097,7 @@ es:
       browse_all_categories: Ver todas las categorías
       browse_all_tags: Ver todas las etiquetas
       view_latest_topics: ver los temas recientes
+      suggest_create_topic: '¿iniciar una nueva conversación?'
       jump_reply_up: saltar a la primera respuesta
       jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido eliminado"
@@ -3267,6 +3299,7 @@ es:
               title: "¿Quién puede ver este grupo?"
               public: "Todos"
               logged_on_users: "Usuarios que hayan iniciado sesión"
+              staff: "Propietarios y moderadores de grupos"
               owners: "Propietarios del grupo"
               description: "Los administradores pueden ver todos los grupos."
             members_visibility_levels:

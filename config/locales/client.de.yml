@@ -2178,7 +2178,7 @@ de:
           "2_8": "Du wirst eine Anzahl neuer Antworten sehen, weil du diese Kategorie verfolgst."
           "2_4": "Du wirst eine Anzahl neuer Antworten sehen, weil du einen Beitrag in diesem Thema geschrieben hast."
           "2_2": "Du wirst eine Anzahl neuer Antworten sehen, weil du dieses Thema verfolgst."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'Du wirst eine Anzahl neuer Antworten sehen, weil du <a href="%{basePath}/u/%{username}/preferences/notifications">dieses Thema gelesen</a> hast.'
           "1_2": "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
           "1": "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
           "0_7": "Du ignorierst alle Benachrichtigungen dieser Kategorie."

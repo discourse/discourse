@@ -612,6 +612,12 @@ it:
         tags:
           title: Etichette
           long_title: "Notifiche predefinite delle Etichette"
+          description: "Quando vengono aggiunti utenti a questo gruppo, le loro impostazioni di notifica delle etichette verranno impostate su questi valori predefiniti, che potranno essere cambiati in seguito."
+          watched_tags_instructions: "Osserva automaticamente tutti gli argomenti con queste etichette. Ai membri del gruppo saranno notificati tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà anche il numero di nuovi messaggi."
+          tracked_tags_instructions: "Segui automaticamente tutti gli argomenti con queste etichette. Accanto all'argomento apparirà il numero di nuovi messaggi."
+          watching_first_post_tags_instructions: "Gli utenti riceveranno una notifica alla pubblicazione del primo messaggio in ogni nuovo argomento con queste etichette."
+          regular_tags_instructions: "Se queste etichette vengono silenziate, ciò non si applicherà ai membri del gruppo. Agli utenti arriverà una notifica quando verranno menzionati o riceveranno una risposta."
+          muted_tags_instructions: "Gli utenti non riceveranno notifiche su nessun nuovo argomento con queste etichette, e non appariranno in Recenti."
         logs:
           title: "Log"
           when: "Quando"
@@ -622,6 +628,8 @@ it:
           details: "Dettagli"
           from: "Da"
           to: "A"
+      permissions:
+        title: "Autorizzazioni"
       public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (richiede che il gruppo abbia visibilità pubblica)"
       public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
       empty:
@@ -759,6 +767,7 @@ it:
       latest_by: "i più recenti di"
       toggle_ordering: "inverti l'ordinamento"
       subcategories: "Sottocategorie"
+      muted: "Categorie silenziate"
       topic_sentence:
         one: "%{count} argomento"
         other: "%{count} argomenti"
@@ -858,7 +867,22 @@ it:
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
+      skip_new_user_tips:
+        not_first_time: "Non è la tua prima volta?"
+        skip_link: "Ignora questi consigli"
       theme_default_on_all_devices: "Rendi questo il tema di default su tutti i miei dispositivi."
+      color_scheme_default_on_all_devices: "Imposta questa combinazione (o combinazioni) di colori come predefinita/e su tutti i miei dispositivi"
+      color_scheme: "Combinazione di colori"
+      color_schemes:
+        default_description: "Predefinito"
+        disable_dark_scheme: "Come di norma"
+        dark_instructions: "Puoi provare i colori del tema scuro attivando il tema scuro sul tuo dispositivo."
+        undo: "Reimposta"
+        regular: "Abituale"
+        dark: "Modo scuro"
+        default_dark_scheme: "(predefinito del sito)"
+      dark_mode: "Modo scuro"
+      dark_mode_enable: "Attiva lo schema di colori automatico del modo scuro"
       text_size_default_on_all_devices: "Rendi questa dimensione del testo di default su tutti i miei dispositivi"
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi personali"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
@@ -905,6 +929,8 @@ it:
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non riceverai notifiche riguardanti i contenuti di queste categorie, e non appariranno nelle pagine delle Categorie o dei Recenti."
       muted_categories_instructions_dont_hide: "Non riceverai alcuna notifica relativa a nuovi argomenti in queste categorie."
+      regular_categories: "Abituale"
+      regular_categories_instructions: "Vedrai queste categorie nelle liste di argomenti \"Recenti\" e \"Popolari\"."
       no_category_access: "Come moderatore hai accesso limitato alla categoria, il salvataggio è disabilitato."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
@@ -989,6 +1015,7 @@ it:
       second_factor:
         title: "Autenticazione a Due Fattori"
         enable: "Gestione autenticazione a due fattori"
+        disable_all: "Disattiva tutto"
         forgot_password: "Ha dimenticato la password?"
         confirm_password_description: "Per favore conferma la tua password per continuare"
         name: "Nome"
@@ -1006,6 +1033,7 @@ it:
         use: "Usa l'app Authenticator"
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
         disable: "Disabilita"
+        disable_confirm: "Vuoi davvero disabilitare tutti i metodi a due fattori?"
         save: "Salva"
         edit: "Modifica"
         edit_title: "Modifica secondo fattore"
@@ -1387,6 +1415,8 @@ it:
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono<strong>#</strong> argomenti}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}}. Solo lo staff può vedere questo messaggio.
     too_few_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentPosts, plural, one {C'è <strong>#</strong> messaggio} other {Ci sono <strong>#</strong> messaggi}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# error/hour} other {# errors/hour}} impostato dal sito."
     learn_more: "per saperne di più..."
     all_time: "totale"
     all_time_desc: "totale argomenti creati"
@@ -1432,6 +1462,8 @@ it:
       title: "Messaggio"
       invite: "Invita altri..."
       edit: "Aggiungi o rimuovi..."
+      remove: "Rimuovi..."
+      add: "Aggiungi..."
       leave_message: "Vuoi veramente abbandonare questo messaggio?"
       remove_allowed_user: "Davvero vuoi rimuovere %{name} da questo messaggio?"
       remove_allowed_group: "Vuoi veramente rimuovere %{name} da questo messaggio?"
@@ -1549,6 +1581,7 @@ it:
       accept_invite: "Accetta Invito"
       success: "Il tuo account è stato creato e ora sei connesso."
       name_label: "Nome"
+      password_label: "Password"
       optional_description: "(opzionale)"
     password_reset:
       continue: "Procedi su %{site_name}"
@@ -1589,6 +1622,9 @@ it:
         one: "Seleziona almeno %{count} elemento."
         other: "Seleziona almeno %{count} elementi."
       invalid_selection_length: "La selezione deve contenere almeno %{count} caratteri."
+      components:
+        categories_admin_dropdown:
+          title: "Gestisci le categorie"
     date_time_picker:
       from: Da
       to: A
@@ -1748,6 +1784,7 @@ it:
         toggle_topic_bump:
           label: "Commuta riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
+      ignore: "Ignora"
     notifications:
       tooltip:
         regular:
@@ -1791,6 +1828,9 @@ it:
       watching_first_post: "<span>Nuovo Argomento</span> %{description}"
       membership_request_accepted: "Iscrizione accettata in &quot;%{group_name}&quot;"
       membership_request_consolidated: "%{count} richieste di iscrizione aperte per &#39;%{group_name}&#39;"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - completato"
       group_message_summary:
         one: "%{count} messaggi in arrivo nella casella %{group_name}"
         other: "%{count} messaggi in arrivo nella casella %{group_name}"
@@ -1829,6 +1869,8 @@ it:
         liked_consolidated: "nuovi \"Mi piace\""
         post_approved: "messaggio approvato"
         membership_request_consolidated: "nuove richieste di iscrizione"
+        reaction: "nuova reazione"
+        votes_released: "Il voto è stato sbloccato"
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -1914,10 +1956,22 @@ it:
           noreplies: hanno zero risposte
           single_user: contengono un singolo utente
         post:
+          count:
+            label: Messaggi
+          min:
+            placeholder: minimo
+          max:
+            placeholder: massimo
           time:
             label: Pubblicato
             before: prima del
             after: dopo il
+        views:
+          label: Visualizzazioni
+        min_views:
+          placeholder: minimo
+        max_views:
+          placeholder: massimo
     hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
     new_item: "nuovo"
     go_back: "indietro"
@@ -1959,6 +2013,8 @@ it:
         new: "Non ci sono nuovi argomenti."
         read: "Non hai ancora letto nessun argomento."
         posted: "Non hai ancora scritto in nessun argomento."
+        ready_to_create: "Pronto a "
+        latest: "Non hai nuovi messaggi da leggere!"
         bookmarks: "Non hai ancora argomenti nei segnalibri."
         category: "Non ci sono argomenti in %{category}."
         top: "Non ci sono argomenti di punta."
@@ -1972,6 +2028,7 @@ it:
         new: "Non ci sono altri argomenti nuovi."
         unread: "Non ci sono altri argomenti non letti"
         category: "Non ci sono altri argomenti nella categoria %{category}."
+        tag: "Non ci sono altri argomenti con l'etichetta %{tag}."
         top: "Non ci sono altri argomenti di punta."
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
     topic:
@@ -2043,6 +2100,7 @@ it:
       read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
+      browse_all_tags: Sfoglia tutte le etichette
       view_latest_topics: visualizza gli argomenti più recenti
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
@@ -3043,6 +3101,7 @@ it:
       delete_unused_confirmation_more_tags:
         one: "%{tags} e %{count} altra"
         other: "%{tags} e %{count} altre"
+      delete_no_unused_tags: "Non ci sono etichette inutilizzate."
       delete_unused: "Elimina Etichette Inutilizzate"
       delete_unused_description: "Elimina tutte le etichette che non sono usate in alcun argomento o messaggio personale"
       cancel_delete_unused: "Annulla"

@@ -67,6 +67,8 @@ ro:
           step: Pas
         poll_public:
           label: Arată cine a votat
+        poll_title:
+          label: Titlu (opţional)
         poll_options:
           label: Arată o singură opțiune de sondaj pe linie
         automatic_close:

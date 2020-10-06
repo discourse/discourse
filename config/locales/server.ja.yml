@@ -977,7 +977,6 @@ ja:
     display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"
     show_time_gap_days: "２つの投稿の作成日が離れていた場合、time gapをトピックに表示する。"
     short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
-    default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
     autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
     embed_truncate: "embedされた投稿をtruncateする"

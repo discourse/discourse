@@ -1139,7 +1139,6 @@ pt:
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
-    default_code_lang: "O destaque de sintaxe da linguagem de programação predefinida aplicada aos blocos de código do GitHub (lang-auto, ruby, python, etc.)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
     autohighlight_all_code: "Forçar a aplicação do destaque de código para todos os blocos de código pré-formatados mesmo quando estes não especificam explicitamente a linguagem."
     embed_truncate: "Truncar mensagens incorporadas."

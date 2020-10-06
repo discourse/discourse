@@ -403,14 +403,6 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige tiefgehende Antworten haben statt vielen kleinen und einzelnen Antworten.
-    get_a_room: |
-      ### Ermutige jeden, bei dieser Konversation mitzumachen.
-
-      Du hast @%{reply_username} zu diesem Thema %{count} mal geantwortet!
-
-      Eine großartige Diskkussion bezieht viele Stimmen und Sichtweisen ein. Kannst du noch andere einbeziehen?
-
-      Und vergiss nicht, wenn du ein Gespräch mit dieser bestimmten Person ausserhalb der Öffentlichkeit ausführlich fortsetzen möchtest, [schicke ihr eine persönliche Nachricht](%{base_path} (/u/) %{reply_username}).
     too_many_replies: |
       ### Du hast das Antwort-Beschränkung für dieses Thema erreicht
 
@@ -1748,7 +1740,6 @@ de:
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
     show_time_gap_days: "Wenn zwei Beiträge eine bestimmte Anzahl an Tagen auseinander liegen, zeige die Zeitdifferenz im Beitrag an."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die die Breite des Fortschrittsbalkens verändert wird."
-    default_code_lang: "Standard Syntax Highlighting, dass auf GitHub Code Blöcke angewendet wird. (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Wenn jemand beginnt auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Deaktiviere dies durch setzen auf 0."
     autohighlight_all_code: "Erzwinge Syntaxhervorhebung für alle Quellcode-Blöcke, auch dann wenn keine Sprache angeben wurde."
     highlighted_languages: "Aktivierter Regeln für das Syntax-Hervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen) siehe: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
@@ -3857,8 +3848,6 @@ de:
             placeholder: "Berlin"
       colors:
         title: "Design"
-      themes_further_reading:
-        title: "Designs"
       logos:
         title: "Logos"
         fields:
@@ -3906,9 +3895,6 @@ de:
         disabled: "Lokale Anmeldungen sind deaktiviert. Daher ist es nicht möglich, Einladungen zu verschicken. Bitte fahre mit dem nächsten Schritt fort."
       finished:
         title: "Dein Discourse ist bereit!"
-        description: |
-          <p>Wenn du diese Einstellungen jemals ändern möchtest, <b>führe diesen Assistenten jederzeit erneut aus</b> oder besuche <a href='%{base_path}/admin' target='_blank'>deinen Administrationsbereich</a>; du findest ihn neben dem Schraubenschüssel-Symbol im Seitenmenü..</p>
-          <p>Viel Spaß, und viel Glück <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>beim Aufbauen deiner neuen Community!</a></p>
   search_logs:
     graph_title: "Anzahl Suchen"
   joined: "Beigetreten"

@@ -24,11 +24,11 @@ ko:
         thousands: "%{number}천"
         millions: "%{number}백만"
     dates:
-      time: "a h:mm"
-      time_with_zone: "HH : mm (z)"
-      time_short_day: "ddd, HH : mm"
+      time: "HH:mm"
+      time_with_zone: "HH:mm (z)"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY MMM"
-      long_no_year: "D MMM, HH : mm"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "YYYY MMM D a h:mm"
@@ -45,7 +45,7 @@ ko:
         less_than_x_seconds:
           other: "< %{count}초"
         x_seconds:
-          other: "%{count}초전"
+          other: "%{count}초"
         less_than_x_minutes:
           other: "< %{count}분"
         x_minutes:
@@ -110,7 +110,7 @@ ko:
       user_left: "%{who}님이 %{when}에 이 메시지에서 자신을 제거 했습니다"
       removed_user: "%{when}에 %{who}님이 삭제됨"
       removed_group: "%{when}에 %{who}님이 삭제됨"
-      autobumped: "%{when}에 자동으로 끌어올려짐"
+      autobumped: "%{when}에 자동으로 끌어 올려짐"
       autoclosed:
         enabled: "%{when}에 닫힘"
         disabled: "%{when}에 열림"
@@ -127,7 +127,7 @@ ko:
         enabled: "%{when}에 전체적으로 고정됨"
         disabled: "%{when}에 고정 해제됨"
       visible:
-        enabled: "%{when}에 목록에 게시됨"
+        enabled: "%{when}에 목록에 게시"
         disabled: "%{when}에 목록에서 감춤"
       banner:
         enabled: "%{when}에 배너를 만들었습니다. 사용자가 닫을 때까지 모든 페이지의 상단에 나타납니다."
@@ -143,7 +143,7 @@ ko:
       broken_theme_alert: "테마 / %{theme} 구성 요소에 오류가있어 사이트가 작동하지 않을 수 있습니다. %{path}에서 비활성화 하십시오."
     s3:
       regions:
-        ap_northeast_1: "아시아 태평양 (토쿄)"
+        ap_northeast_1: "아시아 태평양 (도쿄)"
         ap_northeast_2: "아시아 태평양 (서울)"
         ap_south_1: "아시아 태평양 (뭄바이)"
         ap_southeast_1: "아시아 태평양 (싱가폴)"
@@ -157,7 +157,7 @@ ko:
         eu_west_2: "EU (런던)"
         eu_west_3: "EU (파리)"
         sa_east_1: "남아메리카 (상파울루)"
-        us_east_1: "미국 동부 (N. 버지니아)"
+        us_east_1: "미국 동부 (버지니아 북부)"
         us_east_2: "미국 동부 (오하이오)"
         us_gov_east_1: "AWS GovCloud (미국 동부)"
         us_gov_west_1: "AWS GovCloud (미국 서부)"
@@ -1035,6 +1035,7 @@ ko:
         taken: "죄송합니다. 해당 이메일은 사용 할 수 없습니다."
         error: "이메일 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일인지 확인해주세요."
         success: "이메일 발송이 완료되었습니다. 확인하신 후 절차에 따라주세요."
+        success_via_admin: "이 사용자의 이메일을 변경하려 하기 때문에 원래 이메일 계정에 대한 액세스 권한을 잃어버린 것으로 가정합니다. 이 사용자의 새 이메일 주소로 비밀번호 재설정 이메일을 보냈습니다. 이메일 주소 변경이 적용되려면 이 사용자가 비밀번호 재설정 프로세스를 완료해야만 합니다."
         success_staff: "현재 주소로 이메일을 보냈습니다. 확인 절차에 따라 진행해 주세요."
       change_avatar:
         title: "프로필 사진 변경"
@@ -1364,6 +1365,11 @@ ko:
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}}가 있습니다. 방문자는 더 읽고 답장해야합니다. 적어도 {requiredTopics, plural, one { <strong>#</strong> topic} other { <strong>#</strong> topics}}을 (를) 권장합니다. 직원 만이 메시지를 볼 수 있습니다.
     too_few_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}가 있습니다. 방문자는 더 읽고 답장해야합니다. – {requiredPosts, plural, one { <strong>#</strong> post} other { <strong>#</strong> posts}} 이상을 권장합니다. 직원 만이 메시지를 볼 수 있습니다.
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> 사이트 설정 한계에 도달 {limit, plural, one {# error/hour} other {# errors/hour}}."
+      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> 사이트 설정 한계에 도달 {limit, plural, one {# error/minute} other {# errors/minute}}."
+      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> 사이트 설정 제한 초과 {limit, plural, one {# error/hour} other {# errors/hour}}"
+      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> 사이트 설정 제한 초과 {limit, plural, one {# error/minute} other {# errors/minute}}"
     learn_more: "더 알아보기..."
     all_time: "합계"
     all_time_desc: "생성 된 총 글"
@@ -1729,6 +1735,8 @@ ko:
         toggle_topic_bump:
           label: "글 범프 전환"
           desc: "최신 회신 날짜를 변경하지 않고 회신"
+      reload: "새로 고침"
+      ignore: "무시"
     notifications:
       tooltip:
         regular:
@@ -1950,6 +1958,7 @@ ko:
         read: "아직 읽은 글이 없습니다."
         posted: "아직 어떤 글도 게시하지 않았습니다."
         ready_to_create: "지금 "
+        latest: "모두 확인했습니다!"
         bookmarks: "아직 북마크된 글이 없습니다."
         category: "%{category}에 글이 없습니다."
         top: "주요 글이 없습니다."
@@ -2025,7 +2034,7 @@ ko:
       read_more_in_category: "더 읽을거리가 필요하신가요? %{catLink} 또는 %{latestLink}를 살펴보세요."
       read_more: "%{catLink} 또는 %{latestLink}에서 더 많은 글을 찾으실 수 있습니다."
       unread_indicator: "아직 이 글의 마지막 게시물을 읽은 회원이 없습니다."
-      read_more_MF: "읽지 않은 글 { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 개</a> }other { are <a href='{basePath}/unread'># 개</a> } }, 새 글은 { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 개</a> } other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># 개</a> } } 을 확인해보세요, {CATEGORY, select, true {{catLink} 카테고리의 다른 글들도 살펴보세요.} false {{latestLink}} other {}}"
+      read_more_MF: "읽지 않은 글 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 개</a> }other {  <a href='{basePath}/unread'># 개</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{와 } false {를 } other{}} 새 글 <a href='{basePath}/new'>1 개</a> } other { {BOTH, select, true{와 } false {를 } other{}} 새 글 <a href='{basePath}/new'># 개</a> } } 를 확인해보세요, {CATEGORY, select, true {{catLink} 카테고리의 다른 글들도 살펴보세요.} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: 모든 카테고리 보기
       browse_all_tags: 모든 태그 보기
@@ -2084,7 +2093,7 @@ ko:
         title: "답글 자동 삭제"
       status_update_notice:
         auto_open: "이 글은 %{timeLeft}후에 자동으로 열립니다."
-        auto_close: "이 글은 %{timeLeft}후에 자동으로 닫힙니다."
+        auto_close: "이 글은 %{timeLeft}에 자동으로 닫힙니다."
         auto_publish_to_category: "이 글은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
         auto_close_based_on_last_post: "이 글은 마지막 댓글이 달린 %{duration} 후 닫힙니다."
         auto_delete: "이 글은 %{timeLeft}후에 자동으로 삭제됩니다."
@@ -2243,7 +2252,7 @@ ko:
         help: "이메일을 통해 다른 사람을 이 주제에 초대합니다."
         to_forum: "친구에게 요약 이메일을 보내고 이 포럼에 가입할 수 있도록 링크를 전송합니다."
         sso_enabled: "이 주제에 초대하고 싶은 사람의 아이디를 입력하세요."
-        to_topic_blank: "이 주제에 초대하고 싶은 사람의 아이디나 이메일주소를 입력하세요."
+        to_topic_blank: "이 글에 초대 할 사람의 사용자명 또는 이메일 주소를 입력하십시오."
         to_topic_email: "이메일 주소를 입력하셨습니다. 친구들에게 이 주제에 답변 달기가 가능하도록 조치하는 초대장을 보내겠습니다."
         to_topic_username: "아이디를 입력하셨습니다. 이 주제에 초대하는 링크와 함께 알림을 보내겠습니다."
         to_username: "초대하려는 사용자의 아이디를 입력하세요. 이 주제에 초대하는 링크와 함께 알림을 보내겠습니다."
@@ -2287,6 +2296,8 @@ ko:
         action: "기존 메시지로 이동"
         radio_label: "기존 메시지"
         participants: "참여자"
+        instructions:
+          other: "이동하고자 하는 <b>%{count}</b>개의 게시물을 선택하십시오."
       merge_posts:
         title: "선택한 게시글 합치기"
         action: "선택한 게시글 합치기"
@@ -2297,6 +2308,7 @@ ko:
         description: "주제가 페이지로 게시되면 해당 URL을 공유 할 수 있으며 사용자 정의 스타일과 함께 표시됩니다."
         slug: "강타"
         public: "공개"
+        public_description: "관련 글이 비공개인 경우에도 해당 페이지를 볼 수 있습니다."
         publish_url: "귀하의 페이지는 다음 위치에 게시되었습니다."
         topic_published: "귀하의 주제는 다음 위치에 게시되었습니다."
         preview_url: "귀하의 페이지는 다음 위치에 게시됩니다."
@@ -2309,6 +2321,10 @@ ko:
         action: "작성자 바꾸기"
         error: "작성자를 바꾸는 중 에러가 발생하였습니다."
         placeholder: "새로운 작성자의 아이디"
+        instructions:
+          other: "%{count}개의 <b>@%{old_user}</b>님 게시물에 대한 새 소유자를 선택하십시오."
+        instructions_without_old_user:
+          other: "%{count}개의 게시물에 대한 새 소유자를 선택하십시오."
       change_timestamp:
         title: "타임스탬프 변경하기..."
         action: "타임스탬프 변경"
@@ -2336,6 +2352,8 @@ ko:
         deselect_all: 전체 선택 해제
         description:
           other: "<b>%{count}</b>개의 개시글을 선택하셨어요."
+      deleted_by_author:
+        other: "(작성자에 의해 취소된 글입니다. 글이 신고된 것이 아닌 한 %{count} 시간 뒤에 자동으로 삭제됩니다)"
     post:
       quote_reply: "인용하기"
       quote_share: "공유"
@@ -3058,10 +3076,10 @@ ko:
         up_to_date: "최신상태입니다!"
         critical_available: "중요 업데이트를 사용할 수 있습니다."
         updates_available: "업데이트를 사용할 수 있습니다."
-        please_upgrade: "업그레이드하세요."
+        please_upgrade: "업그레이드하세요!"
         no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하십시오."
         stale_data: "최근 업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하십시오."
-        version_check_pending: "최근에 업데이트 되었군요! 환상적입니다!!"
+        version_check_pending: "최근에 업그레이드 한 것 같습니다. 환상적입니다!"
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 조언"
@@ -3077,7 +3095,7 @@ ko:
         mobile_title: "모바일"
         space_used: "사용 된 %{usedSize}"
         space_used_and_free: "%{usedSize} (%{freeSize} 무료)"
-        uploads: "업로드할 파일"
+        uploads: "업로드된 파일"
         backups: "백업"
         backup_count:
           other: "%{location}에 %{count}개의 백업"
@@ -3110,8 +3128,8 @@ ko:
           last_7_days: "최근 7일"
           last_30_days: "최근 30일"
           all_time: "모든 시간"
-          7_days_ago: "7일전"
-          30_days_ago: "30일전"
+          7_days_ago: "7일 전"
+          30_days_ago: "30일 전"
           all: "전체"
           view_table: "테이블"
           view_graph: "그래프"
@@ -3255,6 +3273,7 @@ ko:
               read_lists: 주요 글, 새 글, 최근 글 등과 같은 글 목록을 읽으십시오. RSS도 지원됩니다.
               wordpress: 워드프레스 wp-discourse 플러그인이 작동하는데 필요합니다.
             users:
+              bookmarks: 사용자 북마크를 나열합니다. ICS 형식을 사용하면 북마크 알림을 반환합니다.
               sync_sso: SSO를 사용하여 사용자를 동기화합니다.
               show: 사용자에 대한 정보를 얻습니다.
               check_emails: 사용자 이메일을 나열합니다.
@@ -3514,7 +3533,7 @@ ko:
           updates_available_tooltip: "이 테마에 대한 업데이트가 있습니다"
           and_x_more: "그리고 %{count} 더."
           collapse: 축소
-          uploads: "업로드할 파일"
+          uploads: "업로드된 파일"
           no_uploads: "폰트나 이미지같은 테마와 관련된 파일만 업로드 가능합니다"
           add_upload: "업로드할 파일 추가하기"
           upload_file_tip: "업로드할 파일 선택하기(png, woff2, 기타..)"
@@ -3595,6 +3614,8 @@ ko:
             title: "임베디드 버전 코멘트를 보내기 위한 사용자 정의 CSS를 입력하세요"
           color_definitions:
             text: "색상 정의"
+            title: "사용자 색상 정의 입력 (고급 사용자용)"
+            placeholder: "\\r\n이 스타일 시트를 사용하여 CSS 사용자 정의 속성 목록에 사용자 정의 색상을 추가합니다.\\r\n\\r\n예 : \\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\n플러그인 또는 코어와의 충돌을 피하기 위해 속성 이름에 접두사를 붙이는 것이 좋습니다."
           head_tag:
             text: "</head>"
             title: "</head> 태그 전에 들어갈 HTML"
@@ -4083,6 +4104,13 @@ ko:
             cancel: "취소"
           confirmation:
             title: "전송 및 삭제 @ %{username}"
+            description: |
+              <p> <b>@%{username}</b> 님의 모든 컨텐츠는 <b>@%{targetUsername}</b>님의 계정에 귀속됩니다. 컨텐츠 전송 후 <b>@%{username}</b> 계정은 삭제됩니다.</p>
+
+              <p><b>이것은 취소 할 수 없습니다!</b></p>
+
+              <p>계속하려면: <code>%{text}</code></p>
+            text: "@%{username} 에서 @%{targetUsername} 으로 옮기기"
             transfer_and_delete: "전송 및 삭제 @ %{username}"
             cancel: "취소"
         merging_user: "사용자 병합 중 ..."
@@ -4169,6 +4197,7 @@ ko:
           external_name: "Name"
           external_email: "Email"
           external_avatar_url: "프로필 사진 URL"
+          last_payload: "마지막 페이로드"
           delete_sso_record: "SSO 레코드 삭제"
           confirm_delete: "이 단일 사인온 (SSO) 레코드를 삭제하시겠습니까?"
       user_fields:

@@ -197,6 +197,10 @@ it:
     error_message: "Si è verificato un errore accettando l'invito. Si prega di contattare l'amministratore del sito."
     user_exists: "Non è necessario invitare X, hanno già un account!\nNon è necessario invitare <b>%{email}</b>,  <a href='%{base_path}/u/%{username}/summary'>hanno già un account!</a>"
     confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per favore per attivare il tuo account segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
+    disabled_errors:
+      sso_enabled: "Gli inviti sono disattivati perché SSO è attivato."
+      local_logins_disabled: "Gli inviti sono disattivati perché l'impostazione 'abilita login locali' è disattivata."
+      invalid_access: "Non hai il permesso di visualizzare la risorsa richiesta."
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
     max_rows: "I primi %{max_bulk_invites} inviti sono stati spediti. Prova a dividere il file in parti più piccole."
@@ -424,7 +428,6 @@ it:
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte individuali.
     dominating_topic: |
       ### Consenti ad altri di partecipare alla conversazione Questo argomento è chiaramente importante per te: hai pubblicato più di %{percent}% delle risposte. Potrebbe essere ancora meglio se dessi ad altre persone lo spazio per condividere anche i loro punti di vista. Puoi invitarli?
-    get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione privatamente con questo particolare utente, [invia un messaggio personale](%{base_path}/u/%{reply_username}).\n"
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
@@ -1785,7 +1788,6 @@ it:
     display_name_on_posts: "Mostra il nome completo dell'utente sui messaggi oltre allo @username."
     show_time_gap_days: "Se due messaggi vengono creati dopo tale numero di giorni, mostrare l'intervallo di tempo nell'argomento."
     short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero di messaggi attuale. Se modifichi l'ampiezza della barra di avanzamento, potresti dover cambiare questo valore."
-    default_code_lang: "Ai blocchi di codice GitHub viene applicata l'evidenziazione della sintassi del linguaggio di programmazione di default (lang-auto, ruby, python ecc.)"
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un argomento in cui l'ultima risposta è più vecchia di tale numero di giorni, verrà visualizzato un avviso. Disabilita impostando su 0."
     autohighlight_all_code: "Forza l'evidenziazione della sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione. "
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per una demo"
@@ -3543,9 +3545,9 @@ it:
     upload_row_too_long: "Il file CSV dovrebbe avere un'Etichetta per riga. Opzionalmente l'Etichetta può essere seguita da una virgola, quindi dal nome del gruppo dell'Etichetta."
     forbidden:
       invalid:
-        one: "Il tag selezionato non può essere utilizzato"
-        other: "Nessuno dei tags selezionati può essere utilizzato"
-      in_this_category: '''%{tag_name}'' non può essere utilizzato in questa categoria'
+        one: "Non si può usare l'etichetta selezionata"
+        other: "Non si può usare nessuna delle etichette selezionate"
+      in_this_category: 'Non si può usare ''%{tag_name}'' in questa categoria'
       restricted_to:
         one: '"%{tag_name}" è limitato alla categoria "%{category_names}"'
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
@@ -3654,8 +3656,6 @@ it:
             placeholder: "San Francisco, California"
       colors:
         title: "Tema"
-      themes_further_reading:
-        title: "Temi"
       logos:
         title: "Loghi"
         fields:
@@ -3703,9 +3703,6 @@ it:
         disabled: "Poiché le connessioni locali sono disabilitate, non è possibile inviare inviti a nessuno. Per favore, prosegui con il passo successivo."
       finished:
         title: "Il tuo Discourse è Pronto!"
-        description: |
-          <p> Se volessi modificare queste impostazioni, <b>esegui nuovamente questa procedura guidata in qualsiasi momento</b> o visita la <a href='%{base_path}/admin' target='_blank'>tua sezione di amministrazione</a> ; la troverai accanto all'icona a forma di chiave inglese nel menu del sito. </p>
-          <p> Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>per la costruzione della tua nuova comunità!</a> </p>
   search_logs:
     graph_title: "Conteggio Ricerche"
   joined: "Iscritto"

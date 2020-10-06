@@ -20,12 +20,14 @@ ko:
       long_description: |
         이 배지는 유저 튜토리얼을 성공적으로 마친 유저들에게 부여됩니다. 토론을 위한 기본적인 도구를 익혀 인증받은 사용자가 되었습니다!
     licensed:
-      name: Discourse 사용 면허
+      name: 고급 라이센스
       description: "고급 사용자 튜토리얼을 완료하였습니다"
       long_description: |
         이 배지는 고급 유저 튜토리얼을 성공적으로 완료한 사용자에게 부여됩니다. 당신은 고급 토론 도구를 숙지하여 면허를 취득하였습니다!
   discourse_narrative_bot:
     bio: "안녕, 사실 나는 사람이 아니야. 이 사이트에 대해서 알려주는 로봇이지. 나한테 물어보고 싶은 게 있다면 메세지를 보내거나 **`@%{discobot_username}`** 를 멘션하면 돼."
+    tl2_promotion_message:
+      subject_template: "이제 승격 했으므로 몇 가지 고급 기능에 대해 알아볼 차례입니다!"
     timeout:
       message: |-
         안녕 @%{username}, 너한테서 소식이 없어서 한 번 말 걸어봤어.
