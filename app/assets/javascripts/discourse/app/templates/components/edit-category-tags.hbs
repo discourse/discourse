@@ -6,7 +6,7 @@
     everyTag=true
     excludeSynonyms=true
     unlimitedTagCount=true
-    onChange=(mut category.allowed_tags)
+    onChange=(action (mut category.allowed_tags))
     options=(hash
       filterPlaceholder="category.tags_placeholder"
     )

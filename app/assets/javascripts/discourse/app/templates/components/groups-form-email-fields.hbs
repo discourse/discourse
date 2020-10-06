@@ -63,7 +63,7 @@
                   valueProperty="value"
                   content=mailboxes
                   none="groups.manage.email.mailboxes.disabled"
-                  onChange=(mut model.imap_mailbox_name)}}
+                  onChange=(action (mut model.imap_mailbox_name))}}
     {{else}}
       {{i18n "groups.manage.email.mailboxes.none_found"}}
     {{/if}}

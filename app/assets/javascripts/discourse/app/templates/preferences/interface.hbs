@@ -101,7 +101,7 @@
         valueProperty="value"
         content=availableLocales
         value=model.locale
-        onChange=(fn (mut model.locale))
+        onChange=(action (mut model.locale))
         options=(hash
           filterable=true
           none="user.locale.default"
@@ -121,7 +121,7 @@
       content=userSelectableHome
       valueProperty="value"
       value=homepageId
-      onChange=(fn (mut model.user_option.homepage_id))
+      onChange=(action (mut model.user_option.homepage_id))
     }}
   </div>
 </div>
@@ -147,7 +147,7 @@
       content=titleCountModes
       value=model.user_option.title_count_mode
       id="user-title-count-mode"
-      onChange=(fn (mut model.user_option.title_count_mode))
+      onChange=(action (mut model.user_option.title_count_mode))
     }}
   </div>
   {{preference-checkbox labelKey="user.skip_new_user_tips.description" checked=model.user_option.skip_new_user_tips  class="pref-new-user-tips"}}

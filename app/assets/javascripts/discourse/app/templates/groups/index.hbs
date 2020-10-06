@@ -21,7 +21,7 @@
         value=type
         content=types
         class="groups-header-filters-type"
-        onChange=(mut type)
+        onChange=(action (mut type))
         options=(hash
           clearable=true
           none="groups.index.filter"

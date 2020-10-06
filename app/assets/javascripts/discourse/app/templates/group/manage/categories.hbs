@@ -10,7 +10,7 @@
     {{category-selector
       categories=model.watchingCategories
       blockedCategories=selectedCategories
-      onChange=(mut model.watchingCategories)
+      onChange=(action (mut model.watchingCategories))
     }}
 
     <div class="control-instructions">
@@ -24,7 +24,7 @@
     {{category-selector
       categories=model.trackingCategories
       blockedCategories=selectedCategories
-      onChange=(mut model.trackingCategories)
+      onChange=(action (mut model.trackingCategories))
     }}
 
     <div class="control-instructions">
@@ -38,7 +38,7 @@
     {{category-selector
       categories=model.watchingFirstPostCategories
       blockedCategories=selectedCategories
-      onChange=(mut model.watchingFirstPostCategories)
+      onChange=(action (mut model.watchingFirstPostCategories))
     }}
 
     <div class="control-instructions">
@@ -52,7 +52,7 @@
     {{category-selector
       categories=model.regularCategories
       blockedCategories=selectedCategories
-      onChange=(mut model.regularCategories)
+      onChange=(action (mut model.regularCategories))
     }}
 
     <div class="control-instructions">
@@ -66,7 +66,7 @@
     {{category-selector
       categories=model.mutedCategories
       blockedCategories=selectedCategories
-      onChange=(mut model.mutedCategories)
+      onChange=(action (mut model.mutedCategories))
     }}
 
     <div class="control-instructions">

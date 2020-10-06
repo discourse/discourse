@@ -1,7 +1,7 @@
 {{combo-box
   content=setting.validValues
   value=value
-  onChange=(mut value)
+  onChange=(action (mut value))
   valueProperty=setting.computedValueProperty
   nameProperty=setting.computedNameProperty
   options=(hash

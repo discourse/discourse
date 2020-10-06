@@ -8,7 +8,7 @@
       valueProperty="value"
       content=considerNewTopicOptions
       value=model.user_option.new_topic_duration_minutes
-      onChange=(mut model.user_option.new_topic_duration_minutes)
+      onChange=(action (mut model.user_option.new_topic_duration_minutes))
     }}
   </div>
 
@@ -18,7 +18,7 @@
       valueProperty="value"
       content=autoTrackDurations
       value=model.user_option.auto_track_topics_after_msecs
-      onChange=(mut model.user_option.auto_track_topics_after_msecs)
+      onChange=(action (mut model.user_option.auto_track_topics_after_msecs))
     }}
   </div>
 
@@ -28,7 +28,7 @@
       valueProperty="value"
       content=notificationLevelsForReplying
       value=model.user_option.notification_level_when_replying
-      onChange=(mut model.user_option.notification_level_when_replying)
+      onChange=(action (mut model.user_option.notification_level_when_replying))
     }}
   </div>
 
@@ -38,7 +38,7 @@
       valueProperty="value"
       content=likeNotificationFrequencies
       value=model.user_option.like_notification_frequency
-      onChange=(mut model.user_option.like_notification_frequency)
+      onChange=(action (mut model.user_option.like_notification_frequency))
     }}
   </div>
 </div>

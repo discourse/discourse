@@ -38,7 +38,7 @@
         id="category-search-priority"
         content=searchPrioritiesOptions
         value=category.search_priority
-        onChange=(mut category.search_priority)
+        onChange=(action (mut category.search_priority))
         options=(hash
           placementStrategy="absolute"
         )
@@ -190,7 +190,7 @@
         options=(hash
           none="category.sort_options.default"
         )
-        onChange=(mut category.sort_order)
+        onChange=(action (mut category.sort_order))
       }}
       {{#unless isDefaultSortOrder}}
         {{combo-box
@@ -201,7 +201,7 @@
             none="category.sort_options.default"
             placementStrategy="absolute"
           )
-          onChange=(mut category.sort_ascending)
+          onChange=(action (mut category.sort_ascending))
         }}
       {{/unless}}
     </div>

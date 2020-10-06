@@ -81,7 +81,7 @@
           {{category-chooser
             value=categoryId
             class="small"
-            onChange=(mut categoryId)
+            onChange=(action (mut categoryId))
           }}
           {{#if canAddTags}}
             <label>{{i18n "tagging.tags"}}</label>
