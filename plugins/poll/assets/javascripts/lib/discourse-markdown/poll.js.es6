@@ -81,18 +81,25 @@ function invalidPoll(state, tag) {
   token.content = "[/" + tag + "]";
 }
 
-function getTitle(tokens) {
-  const open = tokens.findIndex((token) => token.type === "heading_open");
-  const close = tokens.findIndex((token) => token.type === "heading_close");
+function getTitle(tokens, startToken) {
+  const startIndex = tokens.indexOf(startToken);
+
+  if (startIndex === -1) {
+    return;
+  }
+
+  const pollTokens = tokens.slice(startIndex);
+  const open = pollTokens.findIndex((token) => token.type === "heading_open");
+  const close = pollTokens.findIndex((token) => token.type === "heading_close");
 
   if (open === -1 || close === -1) {
     return;
   }
 
-  const titleTokens = tokens.slice(open + 1, close);
+  const titleTokens = pollTokens.slice(open + 1, close);
 
   // Remove the heading element
-  tokens.splice(open, close - open + 1);
+  tokens.splice(startIndex + open, close - open + 1);
 
   return titleTokens;
 }
@@ -108,7 +115,7 @@ const rule = {
   },
 
   after: function (state, openToken, raw) {
-    const titleTokens = getTitle(state.tokens);
+    const titleTokens = getTitle(state.tokens, openToken);
     let items = getListItems(state.tokens, openToken);
 
     if (!items) {
