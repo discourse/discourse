@@ -797,15 +797,37 @@ class Plugin::Instance
   # in a query parameter rather than a header. For example:
   #
   # add_api_parameter_route(
-  #   method: :get,
-  #   route: "users#bookmarks",
-  #   format: :ics
+  #   methods: :get,
+  #   actions: "users#bookmarks",
+  #   formats: :ics
   # )
   #
   # See Auth::DefaultCurrentUserProvider::PARAMETER_API_PATTERNS for more examples
   # and Auth::DefaultCurrentUserProvider#api_parameter_allowed? for implementation
-  def add_api_parameter_route(method:, route:, format:)
-    DiscoursePluginRegistry.register_api_parameter_route({ method: method, route: route, format: format }, self)
+  def add_api_parameter_route(method: nil, methods: nil,
+                              route: nil, actions: nil,
+                              format: nil, formats: nil)
+
+    if Array(format).include?("*")
+      Discourse.deprecate("* is no longer a valid api_parameter_route format matcher. Use `nil` instead", drop_from: "2.7")
+      # Old API used * as wildcard. New api uses `nil`
+      format = nil
+    end
+
+    # Backwards compatibility with old parameter names:
+    if method || route || format
+      Discourse.deprecate("method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.", drop_from: "2.7")
+      methods ||= method
+      actions ||= route
+      formats ||= format
+    end
+
+    DiscoursePluginRegistry.register_api_parameter_route(
+      RouteMatcher.new(
+        methods: methods,
+        actions: actions,
+        formats: formats
+      ), self)
   end
 
   protected
