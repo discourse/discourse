@@ -68,6 +68,10 @@ addBulkButton("showAppendTagTopics", "append_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
 });
+addBulkButton("removeTags", "remove_tags", {
+  icon: "tag",
+  class: "btn-danger",
+});
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
   class: "btn-danger",
@@ -200,6 +204,10 @@ export default Controller.extend(ModalFunctionality, {
 
     resetRead() {
       this.performAndRefresh({ type: "reset_read" });
+    },
+
+    removeTags() {
+      this.performAndRefresh({ type: "remove_tags" });
     },
   },
 });
