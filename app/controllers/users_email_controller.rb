@@ -20,9 +20,7 @@ class UsersEmailController < ApplicationController
 
   before_action :require_login, only: [
     :confirm_old_email,
-    :show_confirm_old_email,
-    :confirm_new_email,
-    :show_confirm_new_email
+    :show_confirm_old_email
   ]
 
   def index
@@ -218,7 +216,7 @@ class UsersEmailController < ApplicationController
       @error = I18n.t("change_email.already_done")
     end
 
-    if current_user.id != @user&.id
+    if current_user && current_user.id != @user&.id
       @error = I18n.t 'change_email.wrong_account_error'
     end
   end

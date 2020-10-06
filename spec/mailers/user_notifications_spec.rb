@@ -78,7 +78,33 @@ describe UserNotifications do
       expect(subject.from).to eq([SiteSetting.notification_email])
       expect(subject.body).to be_present
     end
+  end
 
+  describe ".confirm_new_email" do
+    let(:opts) { { requested_by_admin: requested_by_admin, email_token: token } }
+    let(:token) { "test123" }
+
+    context "when requested by admin" do
+      let(:requested_by_admin) { true }
+
+      it "uses the requested by admin template" do
+        UserNotifications.any_instance.expects(:build_user_email_token_by_template).with(
+          "user_notifications.confirm_new_email_via_admin", user, token
+        )
+        UserNotifications.confirm_new_email(user, opts).body
+      end
+    end
+
+    context "when not requested by admin" do
+      let(:requested_by_admin) { false }
+
+      it "uses the normal template" do
+        UserNotifications.any_instance.expects(:build_user_email_token_by_template).with(
+          "user_notifications.confirm_new_email", user, token
+        )
+        UserNotifications.confirm_new_email(user, opts).body
+      end
+    end
   end
 
   describe '.email_login' do
