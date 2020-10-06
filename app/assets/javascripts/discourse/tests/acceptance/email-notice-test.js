@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
@@ -7,7 +8,7 @@ acceptance("Email Disabled Banner", {
   loggedIn: true,
 });
 
-QUnit.test("when disabled", async function (assert) {
+test("when disabled", async function (assert) {
   this.siteSettings.disable_emails = "no";
   await visit("/");
   assert.notOk(
@@ -16,7 +17,7 @@ QUnit.test("when disabled", async function (assert) {
   );
 });
 
-QUnit.test("when enabled", async function (assert) {
+test("when enabled", async function (assert) {
   this.siteSettings.disable_emails = "yes";
   await visit("/latest");
   assert.ok(
@@ -25,7 +26,7 @@ QUnit.test("when enabled", async function (assert) {
   );
 });
 
-QUnit.test("when non-staff", async function (assert) {
+test("when non-staff", async function (assert) {
   this.siteSettings.disable_emails = "non-staff";
   await visit("/");
   assert.ok(

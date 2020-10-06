@@ -1,7 +1,8 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login redirect");
-QUnit.test("redirects login to default homepage", async function (assert) {
+test("redirects login to default homepage", async function (assert) {
   await visit("/login");
   assert.equal(
     currentPath(),
@@ -16,7 +17,7 @@ acceptance("Login redirect - categories default", {
   },
 });
 
-QUnit.test("when site setting is categories", async function (assert) {
+test("when site setting is categories", async function (assert) {
   await visit("/login");
   assert.equal(
     currentPath(),

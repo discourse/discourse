@@ -1,10 +1,11 @@
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Managing Group Category Notification Defaults");
-QUnit.test("As an anonymous user", async (assert) => {
+test("As an anonymous user", async (assert) => {
   await visit("/g/discourse/manage/categories");
 
   assert.ok(
@@ -15,7 +16,7 @@ QUnit.test("As an anonymous user", async (assert) => {
 
 acceptance("Managing Group Category Notification Defaults", { loggedIn: true });
 
-QUnit.test("As an admin", async (assert) => {
+test("As an admin", async (assert) => {
   await visit("/g/discourse/manage/categories");
 
   assert.ok(
@@ -24,7 +25,7 @@ QUnit.test("As an admin", async (assert) => {
   );
 });
 
-QUnit.test("As a group owner", async (assert) => {
+test("As a group owner", async (assert) => {
   updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/g/discourse/manage/categories");

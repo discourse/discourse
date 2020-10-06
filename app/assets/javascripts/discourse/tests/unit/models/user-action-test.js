@@ -1,8 +1,9 @@
+import { test, module } from "qunit";
 import UserAction from "discourse/models/user-action";
 
-QUnit.module("model: user-action");
+module("model: user-action");
 
-QUnit.test("collapsing likes", (assert) => {
+test("collapsing likes", (assert) => {
   var actions = UserAction.collapseStream([
     UserAction.create({
       action_type: UserAction.TYPES.likes_given,

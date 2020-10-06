@@ -1,4 +1,5 @@
 import componentTest from "discourse/tests/helpers/component-test";
+import { moduleForComponent } from "ember-qunit";
 
 moduleForComponent("ace-editor", { integration: true });
 

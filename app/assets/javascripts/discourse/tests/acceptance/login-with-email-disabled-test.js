@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login with email disabled", {
@@ -7,7 +8,7 @@ acceptance("Login with email disabled", {
   },
 });
 
-QUnit.test("with email button", async (assert) => {
+test("with email button", async (assert) => {
   await visit("/");
   await click("header .login-button");
 

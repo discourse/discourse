@@ -1,13 +1,14 @@
+import { test, module } from "qunit";
 import createStore from "discourse/tests/helpers/create-store";
 import Site from "discourse/models/site";
 
-QUnit.module("model:site");
+module("model:site");
 
-QUnit.test("create", (assert) => {
+test("create", (assert) => {
   assert.ok(Site.create(), "it can create with no parameters");
 });
 
-QUnit.test("instance", (assert) => {
+test("instance", (assert) => {
   const site = Site.current();
 
   assert.present(site, "We have a current site singleton");
@@ -25,7 +26,7 @@ QUnit.test("instance", (assert) => {
   );
 });
 
-QUnit.test("create categories", (assert) => {
+test("create categories", (assert) => {
   const store = createStore();
   const site = store.createRecord("site", {
     categories: [

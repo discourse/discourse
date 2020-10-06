@@ -1,7 +1,8 @@
+import { test, module } from "qunit";
 import Report from "admin/models/report";
 import { setPrefix } from "discourse-common/lib/get-url";
 
-QUnit.module("Report");
+module("Report");
 
 function reportWithData(data) {
   return Report.create({
@@ -15,7 +16,7 @@ function reportWithData(data) {
   });
 }
 
-QUnit.test("counts", (assert) => {
+test("counts", (assert) => {
   const report = reportWithData([5, 4, 3, 2, 1, 100, 99, 98, 1000]);
 
   assert.equal(report.get("todayCount"), 5);
@@ -39,7 +40,7 @@ QUnit.test("counts", (assert) => {
   );
 });
 
-QUnit.test("percentChangeString", (assert) => {
+test("percentChangeString", (assert) => {
   const report = reportWithData([]);
 
   assert.equal(report.percentChangeString(5, 8), "+60%", "value increased");
@@ -56,19 +57,19 @@ QUnit.test("percentChangeString", (assert) => {
   );
 });
 
-QUnit.test("yesterdayCountTitle with valid values", (assert) => {
+test("yesterdayCountTitle with valid values", (assert) => {
   const title = reportWithData([6, 8, 5, 2, 1]).get("yesterdayCountTitle");
   assert.ok(title.indexOf("+60%") !== -1);
   assert.ok(title.match(/Was 5/));
 });
 
-QUnit.test("yesterdayCountTitle when two days ago was 0", (assert) => {
+test("yesterdayCountTitle when two days ago was 0", (assert) => {
   const title = reportWithData([6, 8, 0, 2, 1]).get("yesterdayCountTitle");
   assert.equal(title.indexOf("%"), -1);
   assert.ok(title.match(/Was 0/));
 });
 
-QUnit.test("sevenDaysCountTitle", (assert) => {
+test("sevenDaysCountTitle", (assert) => {
   const title = reportWithData([
     100,
     1,
@@ -92,7 +93,7 @@ QUnit.test("sevenDaysCountTitle", (assert) => {
   assert.ok(title.match(/Was 14/));
 });
 
-QUnit.test("thirtyDaysCountTitle", (assert) => {
+test("thirtyDaysCountTitle", (assert) => {
   const report = reportWithData([5, 5, 5, 5]);
   report.set("prev30Days", 10);
   const title = report.get("thirtyDaysCountTitle");
@@ -101,7 +102,7 @@ QUnit.test("thirtyDaysCountTitle", (assert) => {
   assert.ok(title.match(/Was 10/));
 });
 
-QUnit.test("sevenDaysTrend", (assert) => {
+test("sevenDaysTrend", (assert) => {
   let report;
   let trend;
 
@@ -126,7 +127,7 @@ QUnit.test("sevenDaysTrend", (assert) => {
   assert.ok(trend === "trending-down");
 });
 
-QUnit.test("yesterdayTrend", (assert) => {
+test("yesterdayTrend", (assert) => {
   let report;
   let trend;
 
@@ -151,7 +152,7 @@ QUnit.test("yesterdayTrend", (assert) => {
   assert.ok(trend === "trending-down");
 });
 
-QUnit.test("thirtyDaysTrend", (assert) => {
+test("thirtyDaysTrend", (assert) => {
   let report;
   let trend;
 
@@ -341,7 +342,7 @@ QUnit.test("thirtyDaysTrend", (assert) => {
   assert.ok(trend === "trending-down");
 });
 
-QUnit.test("higher is better false", (assert) => {
+test("higher is better false", (assert) => {
   let report;
   let trend;
 
@@ -366,7 +367,7 @@ QUnit.test("higher is better false", (assert) => {
   assert.ok(trend === "trending-up");
 });
 
-QUnit.test("small variation (-2/+2% change) is no-change", (assert) => {
+test("small variation (-2/+2% change) is no-change", (assert) => {
   let report;
   let trend;
 
@@ -379,7 +380,7 @@ QUnit.test("small variation (-2/+2% change) is no-change", (assert) => {
   assert.ok(trend === "no-change");
 });
 
-QUnit.test("average", (assert) => {
+test("average", (assert) => {
   let report;
 
   report = reportWithData([5, 5, 5, 5, 5, 5, 5, 5]);
@@ -391,7 +392,7 @@ QUnit.test("average", (assert) => {
   assert.ok(report.get("lastSevenDaysCount") === 35);
 });
 
-QUnit.test("computed labels", (assert) => {
+test("computed labels", (assert) => {
   const data = [
     {
       username: "joffrey",

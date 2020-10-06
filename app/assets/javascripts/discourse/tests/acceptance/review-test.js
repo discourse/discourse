@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -7,7 +8,7 @@ acceptance("Review", {
 
 const user = ".reviewable-item[data-reviewable-id=1234]";
 
-QUnit.test("It returns a list of reviewable items", async (assert) => {
+test("It returns a list of reviewable items", async (assert) => {
   await visit("/review");
 
   assert.ok(find(".reviewable-item").length, "has a list of items");
@@ -26,7 +27,7 @@ QUnit.test("It returns a list of reviewable items", async (assert) => {
   );
 });
 
-QUnit.test("Grouped by topic", async (assert) => {
+test("Grouped by topic", async (assert) => {
   await visit("/review/topics");
   assert.ok(
     find(".reviewable-topic").length,
@@ -34,7 +35,7 @@ QUnit.test("Grouped by topic", async (assert) => {
   );
 });
 
-QUnit.test("Settings", async (assert) => {
+test("Settings", async (assert) => {
   await visit("/review/settings");
 
   assert.ok(find(".reviewable-score-type").length, "has a list of bonuses");
@@ -47,7 +48,7 @@ QUnit.test("Settings", async (assert) => {
   assert.ok(find(".reviewable-settings .saved").length, "it saved");
 });
 
-QUnit.test("Flag related", async (assert) => {
+test("Flag related", async (assert) => {
   await visit("/review");
 
   assert.ok(
@@ -63,7 +64,7 @@ QUnit.test("Flag related", async (assert) => {
   assert.equal(find(".reviewable-flagged-post .reviewable-score").length, 2);
 });
 
-QUnit.test("Flag related", async (assert) => {
+test("Flag related", async (assert) => {
   await visit("/review/1");
 
   assert.ok(
@@ -72,13 +73,13 @@ QUnit.test("Flag related", async (assert) => {
   );
 });
 
-QUnit.test("Clicking the buttons triggers actions", async (assert) => {
+test("Clicking the buttons triggers actions", async (assert) => {
   await visit("/review");
   await click(`${user} .reviewable-action.approve`);
   assert.equal(find(user).length, 0, "it removes the reviewable on success");
 });
 
-QUnit.test("Editing a reviewable", async (assert) => {
+test("Editing a reviewable", async (assert) => {
   const topic = ".reviewable-item[data-reviewable-id=4321]";
   await visit("/review");
   assert.ok(find(`${topic} .reviewable-action.approve`).length);

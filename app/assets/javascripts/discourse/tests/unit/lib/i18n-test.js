@@ -1,5 +1,6 @@
+import { test, module } from "qunit";
 import I18n from "I18n";
-QUnit.module("lib:i18n", {
+module("lib:i18n", {
   _locale: I18n.locale,
   _fallbackLocale: I18n.fallbackLocale,
   _translations: I18n.translations,
@@ -98,12 +99,12 @@ QUnit.module("lib:i18n", {
   },
 });
 
-QUnit.test("defaults", (assert) => {
+test("defaults", (assert) => {
   assert.equal(I18n.defaultLocale, "en", "it has English as default locale");
   assert.ok(I18n.pluralizationRules["en"], "it has English pluralizer");
 });
 
-QUnit.test("translations", (assert) => {
+test("translations", (assert) => {
   assert.equal(
     I18n.t("topic.reply.title"),
     "Répondre",
@@ -122,7 +123,7 @@ QUnit.test("translations", (assert) => {
   assert.equal(I18n.t("hello.universe"), "", "allows empty strings");
 });
 
-QUnit.test("extra translations", (assert) => {
+test("extra translations", (assert) => {
   I18n.locale = "pl_PL";
   I18n.extras = {
     en: {
@@ -194,7 +195,7 @@ QUnit.test("extra translations", (assert) => {
   );
 });
 
-QUnit.test("pluralizations", (assert) => {
+test("pluralizations", (assert) => {
   assert.equal(I18n.t("character_count", { count: 0 }), "0 ZERO");
   assert.equal(I18n.t("character_count", { count: 1 }), "1 ONE");
   assert.equal(I18n.t("character_count", { count: 2 }), "2 TWO");
@@ -210,7 +211,7 @@ QUnit.test("pluralizations", (assert) => {
   assert.equal(I18n.t("word_count", { count: 100 }), "100 words");
 });
 
-QUnit.test("fallback", (assert) => {
+test("fallback", (assert) => {
   assert.equal(
     I18n.t("days", { count: 1 }),
     "1 day",
@@ -242,7 +243,7 @@ QUnit.test("fallback", (assert) => {
   );
 });
 
-QUnit.test("Dollar signs are properly escaped", (assert) => {
+test("Dollar signs are properly escaped", (assert) => {
   assert.equal(
     I18n.t("dollar_sign", {
       description: "$& $&",

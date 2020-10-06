@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import EmberObject from "@ember/object";
 import {
   discourseModule,
@@ -28,7 +29,7 @@ function openComposer(opts) {
   return composer;
 }
 
-QUnit.test("replyLength", (assert) => {
+test("replyLength", (assert) => {
   const replyLength = function (val, expectedLength) {
     const composer = createComposer({ reply: val });
     assert.equal(composer.get("replyLength"), expectedLength);
@@ -49,7 +50,7 @@ QUnit.test("replyLength", (assert) => {
   );
 });
 
-QUnit.test("missingReplyCharacters", function (assert) {
+test("missingReplyCharacters", function (assert) {
   this.siteSettings.min_first_post_length = 40;
   const missingReplyCharacters = function (
     val,
@@ -109,7 +110,7 @@ QUnit.test("missingReplyCharacters", function (assert) {
   );
 });
 
-QUnit.test("missingTitleCharacters", function (assert) {
+test("missingTitleCharacters", function (assert) {
   const missingTitleCharacters = function (val, isPM, expected, message) {
     const composer = createComposer({
       title: val,
@@ -132,7 +133,7 @@ QUnit.test("missingTitleCharacters", function (assert) {
   );
 });
 
-QUnit.test("replyDirty", (assert) => {
+test("replyDirty", (assert) => {
   const composer = createComposer();
   assert.ok(!composer.get("replyDirty"), "by default it's false");
 
@@ -149,7 +150,7 @@ QUnit.test("replyDirty", (assert) => {
   assert.ok(composer.get("replyDirty"), "it's true when the reply changes");
 });
 
-QUnit.test("appendText", (assert) => {
+test("appendText", (assert) => {
   const composer = createComposer();
 
   assert.blank(composer.get("reply"), "the reply is blank by default");
@@ -182,7 +183,7 @@ QUnit.test("appendText", (assert) => {
   assert.equal(composer.get("reply"), "c\n\nab");
 });
 
-QUnit.test("prependText", (assert) => {
+test("prependText", (assert) => {
   const composer = createComposer();
 
   assert.blank(composer.get("reply"), "the reply is blank by default");
@@ -205,7 +206,7 @@ QUnit.test("prependText", (assert) => {
   );
 });
 
-QUnit.test("Title length for regular topics", function (assert) {
+test("Title length for regular topics", function (assert) {
   this.siteSettings.min_topic_title_length = 5;
   this.siteSettings.max_topic_title_length = 10;
   const composer = createComposer();
@@ -220,7 +221,7 @@ QUnit.test("Title length for regular topics", function (assert) {
   assert.ok(composer.get("titleLengthValid"), "in the range is okay");
 });
 
-QUnit.test("Title length for private messages", function (assert) {
+test("Title length for private messages", function (assert) {
   this.siteSettings.min_personal_message_title_length = 5;
   this.siteSettings.max_topic_title_length = 10;
   const composer = createComposer({ action: PRIVATE_MESSAGE });
@@ -235,18 +236,15 @@ QUnit.test("Title length for private messages", function (assert) {
   assert.ok(composer.get("titleLengthValid"), "in the range is okay");
 });
 
-QUnit.test(
-  "Post length for private messages with non human users",
-  (assert) => {
-    const composer = createComposer({
-      topic: EmberObject.create({ pm_with_non_human_user: true }),
-    });
+test("Post length for private messages with non human users", (assert) => {
+  const composer = createComposer({
+    topic: EmberObject.create({ pm_with_non_human_user: true }),
+  });
 
-    assert.equal(composer.get("minimumPostLength"), 1);
-  }
-);
+  assert.equal(composer.get("minimumPostLength"), 1);
+});
 
-QUnit.test("editingFirstPost", (assert) => {
+test("editingFirstPost", (assert) => {
   const composer = createComposer();
   assert.ok(!composer.get("editingFirstPost"), "it's false by default");
 
@@ -264,7 +262,7 @@ QUnit.test("editingFirstPost", (assert) => {
   );
 });
 
-QUnit.test("clearState", (assert) => {
+test("clearState", (assert) => {
   const composer = createComposer({
     originalText: "asdf",
     reply: "asdf2",
@@ -280,7 +278,7 @@ QUnit.test("clearState", (assert) => {
   assert.blank(composer.get("title"));
 });
 
-QUnit.test("initial category when uncategorized is allowed", function (assert) {
+test("initial category when uncategorized is allowed", function (assert) {
   this.siteSettings.allow_uncategorized_topics = true;
   const composer = openComposer({
     action: CREATE_TOPIC,
@@ -290,9 +288,7 @@ QUnit.test("initial category when uncategorized is allowed", function (assert) {
   assert.ok(!composer.get("categoryId"), "Uncategorized by default");
 });
 
-QUnit.test("initial category when uncategorized is not allowed", function (
-  assert
-) {
+test("initial category when uncategorized is not allowed", function (assert) {
   this.siteSettings.allow_uncategorized_topics = false;
   const composer = openComposer({
     action: CREATE_TOPIC,
@@ -305,7 +301,7 @@ QUnit.test("initial category when uncategorized is not allowed", function (
   );
 });
 
-QUnit.test("open with a quote", (assert) => {
+test("open with a quote", (assert) => {
   const quote =
     '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
   const newComposer = function () {
@@ -329,7 +325,7 @@ QUnit.test("open with a quote", (assert) => {
   );
 });
 
-QUnit.test("Title length for static page topics as admin", function (assert) {
+test("Title length for static page topics as admin", function (assert) {
   this.siteSettings.min_topic_title_length = 5;
   this.siteSettings.max_topic_title_length = 10;
   const composer = createComposer();
@@ -357,7 +353,7 @@ QUnit.test("Title length for static page topics as admin", function (assert) {
   );
 });
 
-QUnit.test("title placeholder depends on what you're doing", function (assert) {
+test("title placeholder depends on what you're doing", function (assert) {
   let composer = createComposer({ action: CREATE_TOPIC });
   assert.equal(
     composer.get("titlePlaceholder"),
@@ -389,9 +385,7 @@ QUnit.test("title placeholder depends on what you're doing", function (assert) {
   );
 });
 
-QUnit.test("allows featured link before choosing a category", function (
-  assert
-) {
+test("allows featured link before choosing a category", function (assert) {
   this.siteSettings.topic_featured_link_enabled = true;
   this.siteSettings.allow_uncategorized_topics = false;
   let composer = createComposer({ action: CREATE_TOPIC });
@@ -403,7 +397,7 @@ QUnit.test("allows featured link before choosing a category", function (
   assert.ok(composer.get("canEditTopicFeaturedLink"), "can paste link");
 });
 
-QUnit.test("targetRecipientsArray contains types", (assert) => {
+test("targetRecipientsArray contains types", (assert) => {
   let composer = createComposer({
     targetRecipients: "test,codinghorror,staff,foo@bar.com",
   });

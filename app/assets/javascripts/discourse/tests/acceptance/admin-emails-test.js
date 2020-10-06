@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import pretender from "discourse/tests/helpers/create-pretender";
 
@@ -16,7 +17,7 @@ Hello, this is a test!
 
 This part should be elided.`.trim();
 
-QUnit.test("shows selected and elided text", async (assert) => {
+test("shows selected and elided text", async (assert) => {
   pretender.post("/admin/email/advanced-test", () => {
     return [
       200,

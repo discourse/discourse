@@ -1,3 +1,5 @@
+import { skip } from "qunit";
+import { test } from "qunit";
 import I18n from "I18n";
 import { run } from "@ember/runloop";
 import {
@@ -24,7 +26,7 @@ acceptance("Modal", {
   },
 });
 
-QUnit.skip("modal", async function (assert) {
+skip("modal", async function (assert) {
   await visit("/");
 
   assert.ok(
@@ -74,7 +76,7 @@ QUnit.skip("modal", async function (assert) {
   );
 });
 
-QUnit.test("rawTitle in modal panels", async function (assert) {
+test("rawTitle in modal panels", async function (assert) {
   Ember.TEMPLATES["modal/test-raw-title-panels"] = Ember.HTMLBars.compile("");
   const panels = [
     { id: "test1", rawTitle: "Test 1" },
@@ -91,7 +93,7 @@ QUnit.test("rawTitle in modal panels", async function (assert) {
   );
 });
 
-QUnit.test("modal title", async function (assert) {
+test("modal title", async function (assert) {
   Ember.TEMPLATES["modal/test-title"] = Ember.HTMLBars.compile("");
   Ember.TEMPLATES["modal/test-title-with-body"] = Ember.HTMLBars.compile(
     "{{#d-modal-body}}test{{/d-modal-body}}"
@@ -126,7 +128,7 @@ QUnit.test("modal title", async function (assert) {
 
 acceptance("Modal Keyboard Events", { loggedIn: true });
 
-QUnit.test("modal-keyboard-events", async function (assert) {
+test("modal-keyboard-events", async function (assert) {
   await visit("/t/internationalization-localization/280");
 
   await click(".toggle-admin-menu");

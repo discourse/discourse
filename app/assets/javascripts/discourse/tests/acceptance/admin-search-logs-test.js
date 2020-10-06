@@ -1,7 +1,8 @@
+import { skip } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Search Logs", { loggedIn: true });
 
-QUnit.skip("show search logs", async (assert) => {
+skip("show search logs", async (assert) => {
   await visit("/admin/logs/search_logs");
 
   assert.ok($("table.search-logs-list.grid").length, "has the div class");

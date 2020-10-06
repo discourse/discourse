@@ -1,10 +1,11 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Share and Invite modal - desktop", {
   loggedIn: true,
 });
 
-QUnit.test("Topic footer button", async (assert) => {
+test("Topic footer button", async (assert) => {
   await visit("/t/internationalization-localization/280");
 
   assert.ok(
@@ -64,7 +65,7 @@ QUnit.test("Topic footer button", async (assert) => {
   );
 });
 
-QUnit.test("Post date link", async (assert) => {
+test("Post date link", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#post_2 .post-info.post-date a");
 
@@ -78,17 +79,14 @@ acceptance("Share url with badges disabled - desktop", {
   },
 });
 
-QUnit.test(
-  "topic footer button - badges disabled - desktop",
-  async (assert) => {
-    await visit("/t/internationalization-localization/280");
-    await click("#topic-footer-button-share-and-invite");
+test("topic footer button - badges disabled - desktop", async (assert) => {
+  await visit("/t/internationalization-localization/280");
+  await click("#topic-footer-button-share-and-invite");
 
-    assert.notOk(
-      find(".share-and-invite.modal .modal-panel.share .topic-share-url")
-        .val()
-        .includes("?u=eviltrout"),
-      "it doesn't add the username param when badges are disabled"
-    );
-  }
-);
+  assert.notOk(
+    find(".share-and-invite.modal .modal-panel.share .topic-share-url")
+      .val()
+      .includes("?u=eviltrout"),
+    "it doesn't add the username param when badges are disabled"
+  );
+});

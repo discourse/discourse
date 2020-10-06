@@ -1,8 +1,9 @@
+import { test, module } from "qunit";
 /* global BreakString:true */
 
-QUnit.module("lib:breakString", {});
+module("lib:breakString", {});
 
-QUnit.test("breakString", (assert) => {
+test("breakString", (assert) => {
   var b = function (s, hint) {
     return new BreakString(s).break(hint);
   };

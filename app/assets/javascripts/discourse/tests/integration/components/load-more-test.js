@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import { configureEyeline } from "discourse/lib/eyeline";
 import componentTest from "discourse/tests/helpers/component-test";
 

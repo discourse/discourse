@@ -1,7 +1,8 @@
+import { test, module } from "qunit";
 import StaffActionLog from "admin/models/staff-action-log";
 
-QUnit.module("StaffActionLog");
+module("StaffActionLog");
 
-QUnit.test("create", (assert) => {
+test("create", (assert) => {
   assert.ok(StaffActionLog.create(), "it can be created without arguments");
 });

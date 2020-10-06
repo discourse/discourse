@@ -1,12 +1,13 @@
+import { test, module } from "qunit";
 import I18n from "I18n";
 import {
   translateResults,
   searchContextDescription,
 } from "discourse/lib/search";
 
-QUnit.module("lib:search");
+module("lib:search");
 
-QUnit.test("unescapesEmojisInBlurbs", (assert) => {
+test("unescapesEmojisInBlurbs", (assert) => {
   const source = {
     posts: [
       {
@@ -36,7 +37,7 @@ QUnit.test("unescapesEmojisInBlurbs", (assert) => {
   assert.ok(blurb.indexOf(":thinking:") === -1);
 });
 
-QUnit.test("searchContextDescription", (assert) => {
+test("searchContextDescription", (assert) => {
   assert.equal(
     searchContextDescription("topic"),
     I18n.t("search.context.topic")

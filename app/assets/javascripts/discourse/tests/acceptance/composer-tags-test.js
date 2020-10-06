@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import Category from "discourse/models/category";
 import {
   acceptance,
@@ -17,7 +18,7 @@ acceptance("Composer - Tags", {
   },
 });
 
-QUnit.test("staff bypass tag validation rule", async (assert) => {
+test("staff bypass tag validation rule", async (assert) => {
   await visit("/");
   await click("#create-topic");
 
@@ -34,7 +35,7 @@ QUnit.test("staff bypass tag validation rule", async (assert) => {
   assert.notEqual(currentURL(), "/");
 });
 
-QUnit.test("users do not bypass tag validation rule", async (assert) => {
+test("users do not bypass tag validation rule", async (assert) => {
   await visit("/");
   await click("#create-topic");
 

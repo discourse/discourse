@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import {
   acceptance,
@@ -69,7 +70,7 @@ acceptance("User Preferences", {
   pretend: preferencesPretender,
 });
 
-QUnit.test("update some fields", async (assert) => {
+test("update some fields", async (assert) => {
   await visit("/u/eviltrout/preferences");
 
   assert.ok($("body.user-preferences-page").length, "has the body class");
@@ -124,12 +125,12 @@ QUnit.test("update some fields", async (assert) => {
   );
 });
 
-QUnit.test("username", async (assert) => {
+test("username", async (assert) => {
   await visit("/u/eviltrout/preferences/username");
   assert.ok(exists("#change_username"), "it has the input element");
 });
 
-QUnit.test("email", async (assert) => {
+test("email", async (assert) => {
   await visit("/u/eviltrout/preferences/email");
 
   assert.ok(exists("#change-email"), "it has the input element");
@@ -143,7 +144,7 @@ QUnit.test("email", async (assert) => {
   );
 });
 
-QUnit.test("email field always shows up", async (assert) => {
+test("email field always shows up", async (assert) => {
   await visit("/u/eviltrout/preferences/email");
 
   assert.ok(exists("#change-email"), "it has the input element");
@@ -157,7 +158,7 @@ QUnit.test("email field always shows up", async (assert) => {
   assert.ok(exists("#change-email"), "it has the input element");
 });
 
-QUnit.test("connected accounts", async (assert) => {
+test("connected accounts", async (assert) => {
   await visit("/u/eviltrout/preferences/account");
 
   assert.ok(
@@ -178,7 +179,7 @@ QUnit.test("connected accounts", async (assert) => {
     .indexOf("Connect") > -1;
 });
 
-QUnit.test("second factor totp", async (assert) => {
+test("second factor totp", async (assert) => {
   await visit("/u/eviltrout/preferences/second-factor");
 
   assert.ok(exists("#password"), "it has a password input");
@@ -198,7 +199,7 @@ QUnit.test("second factor totp", async (assert) => {
   );
 });
 
-QUnit.test("second factor security keys", async (assert) => {
+test("second factor security keys", async (assert) => {
   await visit("/u/eviltrout/preferences/second-factor");
 
   assert.ok(exists("#password"), "it has a password input");
@@ -224,7 +225,7 @@ QUnit.test("second factor security keys", async (assert) => {
   }
 });
 
-QUnit.test("default avatar selector", async (assert) => {
+test("default avatar selector", async (assert) => {
   await visit("/u/eviltrout/preferences");
 
   await click(".pref-avatar .btn");
@@ -260,7 +261,7 @@ acceptance("Second Factor Backups", {
     });
   },
 });
-QUnit.test("second factor backup", async (assert) => {
+test("second factor backup", async (assert) => {
   updateCurrentUser({ second_factor_enabled: true });
   await visit("/u/eviltrout/preferences/second-factor");
   await click(".edit-2fa-backup");
@@ -287,7 +288,7 @@ acceptance("Avatar selector when selectable avatars is enabled", {
   },
 });
 
-QUnit.test("selectable avatars", async (assert) => {
+test("selectable avatars", async (assert) => {
   await visit("/u/eviltrout/preferences");
 
   await click(".pref-avatar .btn");
@@ -301,7 +302,7 @@ acceptance("User Preferences when badges are disabled", {
   pretend: preferencesPretender,
 });
 
-QUnit.test("visit my preferences", async (assert) => {
+test("visit my preferences", async (assert) => {
   await visit("/u/eviltrout/preferences");
   assert.ok($("body.user-preferences-page").length, "has the body class");
   assert.equal(
@@ -312,7 +313,7 @@ QUnit.test("visit my preferences", async (assert) => {
   assert.ok(exists(".user-preferences"), "it shows the preferences");
 });
 
-QUnit.test("recently connected devices", async (assert) => {
+test("recently connected devices", async (assert) => {
   await visit("/u/eviltrout/preferences");
 
   assert.equal(
@@ -367,7 +368,7 @@ acceptance(
   }
 );
 
-QUnit.test("setting featured topic on profile", async (assert) => {
+test("setting featured topic on profile", async (assert) => {
   await visit("/u/eviltrout/preferences/profile");
 
   assert.ok(
@@ -418,7 +419,7 @@ acceptance("Custom User Fields", {
   pretend: preferencesPretender,
 });
 
-QUnit.test("can select an option from a dropdown", async (assert) => {
+test("can select an option from a dropdown", async (assert) => {
   await visit("/u/eviltrout/preferences/profile");
   assert.ok(exists(".user-field"), "it has at least one user field");
   await click(".user-field.dropdown");
@@ -441,22 +442,19 @@ acceptance(
   }
 );
 
-QUnit.test(
-  "selecting bookmarks as home directs home to bookmarks",
-  async (assert) => {
-    await visit("/u/eviltrout/preferences/interface");
-    assert.ok(exists(".home .combo-box"), "it has a home selector combo-box");
+test("selecting bookmarks as home directs home to bookmarks", async (assert) => {
+  await visit("/u/eviltrout/preferences/interface");
+  assert.ok(exists(".home .combo-box"), "it has a home selector combo-box");
 
-    const field = selectKit(".home .combo-box");
-    await field.expand();
-    await field.selectRowByValue("6");
-    await click(".save-changes");
-    await visit("/");
-    assert.ok(exists(".topic-list"), "The list of topics was rendered");
-    assert.equal(
-      currentPath(),
-      "discovery.bookmarks",
-      "it navigates to bookmarks"
-    );
-  }
-);
+  const field = selectKit(".home .combo-box");
+  await field.expand();
+  await field.selectRowByValue("6");
+  await click(".save-changes");
+  await visit("/");
+  assert.ok(exists(".topic-list"), "The list of topics was rendered");
+  assert.equal(
+    currentPath(),
+    "discovery.bookmarks",
+    "it navigates to bookmarks"
+  );
+});

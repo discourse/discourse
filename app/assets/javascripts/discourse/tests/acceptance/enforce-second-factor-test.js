@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
@@ -15,7 +16,7 @@ acceptance("Enforce Second Factor", {
   },
 });
 
-QUnit.test("as an admin", async function (assert) {
+test("as an admin", async function (assert) {
   await visit("/u/eviltrout/preferences/second-factor");
   this.siteSettings.enforce_second_factor = "staff";
 
@@ -37,7 +38,7 @@ QUnit.test("as an admin", async function (assert) {
   );
 });
 
-QUnit.test("as a user", async function (assert) {
+test("as a user", async function (assert) {
   updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/u/eviltrout/preferences/second-factor");
@@ -61,7 +62,7 @@ QUnit.test("as a user", async function (assert) {
   );
 });
 
-QUnit.test("as an anonymous user", async function (assert) {
+test("as an anonymous user", async function (assert) {
   updateCurrentUser({ moderator: false, admin: false, is_anonymous: true });
 
   await visit("/u/eviltrout/preferences/second-factor");

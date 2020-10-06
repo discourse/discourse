@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import EmberObject from "@ember/object";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest from "discourse/tests/helpers/component-test";

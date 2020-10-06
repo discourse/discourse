@@ -1,6 +1,7 @@
 import { afterRender } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import componentTest from "discourse/tests/helpers/component-test";
+import { moduleForComponent } from "ember-qunit";
 
 const fooComponent = Component.extend({
   layoutName: "foo-component",

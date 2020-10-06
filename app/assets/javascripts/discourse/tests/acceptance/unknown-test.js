@@ -1,13 +1,14 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import pretender from "discourse/tests/helpers/create-pretender";
 acceptance("Unknown");
 
-QUnit.test("Permalink Unknown URL", async (assert) => {
+test("Permalink Unknown URL", async (assert) => {
   await visit("/url-that-doesn't-exist");
   assert.ok(exists(".page-not-found"), "The not found content is present");
 });
 
-QUnit.test("Permalink URL to a Topic", async (assert) => {
+test("Permalink URL to a Topic", async (assert) => {
   pretender.get("/permalink-check.json", () => {
     return [
       200,
@@ -24,7 +25,7 @@ QUnit.test("Permalink URL to a Topic", async (assert) => {
   assert.ok(exists(".topic-post"));
 });
 
-QUnit.test("Permalink URL to a static page", async (assert) => {
+test("Permalink URL to a static page", async (assert) => {
   pretender.get("/permalink-check.json", () => {
     return [
       200,

@@ -1,9 +1,10 @@
 import highlightSearch, { CLASS_NAME } from "discourse/lib/highlight-search";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
-QUnit.module("lib:highlight-search");
+module("lib:highlight-search");
 
-QUnit.test("highlighting text", (assert) => {
+test("highlighting text", (assert) => {
   fixture().html(
     `
     <p>This is some text to highlight</p>
@@ -25,7 +26,7 @@ QUnit.test("highlighting text", (assert) => {
   );
 });
 
-QUnit.test("highlighting unicode text", (assert) => {
+test("highlighting unicode text", (assert) => {
   fixture().html(
     `
     <p>This is some தமிழ் & русский text to highlight</p>

@@ -1,9 +1,10 @@
+import { test, module } from "qunit";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { hrefAllowed } from "pretty-text/sanitizer";
 
-QUnit.module("lib:sanitizer");
+module("lib:sanitizer");
 
-QUnit.test("sanitize", (assert) => {
+test("sanitize", (assert) => {
   const pt = new PrettyText(
     buildOptions({
       siteSettings: {
@@ -130,7 +131,7 @@ QUnit.test("sanitize", (assert) => {
   cooked(`<div dir="rtl">RTL text</div>`, `<div dir="rtl">RTL text</div>`);
 });
 
-QUnit.test("ids on headings", (assert) => {
+test("ids on headings", (assert) => {
   const pt = new PrettyText(buildOptions({ siteSettings: {} }));
   assert.equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
   assert.equal(
@@ -159,7 +160,7 @@ QUnit.test("ids on headings", (assert) => {
   );
 });
 
-QUnit.test("poorly formed ids on headings", (assert) => {
+test("poorly formed ids on headings", (assert) => {
   let pt = new PrettyText(buildOptions({ siteSettings: {} }));
   assert.equal(
     pt.sanitize(`<h1 id="evil-trout">Test Heading</h1>`),
@@ -187,7 +188,7 @@ QUnit.test("poorly formed ids on headings", (assert) => {
   );
 });
 
-QUnit.test("urlAllowed", (assert) => {
+test("urlAllowed", (assert) => {
   const allowed = (url, msg) => assert.equal(hrefAllowed(url), url, msg);
 
   allowed("/foo/bar.html", "allows relative urls");

@@ -1,10 +1,11 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Reports", {
   loggedIn: true,
 });
 
-QUnit.test("Visit reports page", async (assert) => {
+test("Visit reports page", async (assert) => {
   await visit("/admin/reports");
 
   assert.equal($(".reports-list .report").length, 1);
@@ -19,7 +20,7 @@ QUnit.test("Visit reports page", async (assert) => {
   );
 });
 
-QUnit.test("Visit report page", async (assert) => {
+test("Visit report page", async (assert) => {
   await visit("/admin/reports/staff_logins");
 
   assert.ok(exists(".export-csv-btn"));

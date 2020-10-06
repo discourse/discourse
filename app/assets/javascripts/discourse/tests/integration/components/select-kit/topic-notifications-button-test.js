@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest from "discourse/tests/helpers/component-test";

@@ -1,15 +1,16 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { setCustomHTML } from "discourse/helpers/custom-html";
 import PreloadStore from "discourse/lib/preload-store";
 
 acceptance("CustomHTML set");
 
-QUnit.test("has no custom HTML in the top", async (assert) => {
+test("has no custom HTML in the top", async (assert) => {
   await visit("/static/faq");
   assert.ok(!exists("span.custom-html-test"), "it has no markup");
 });
 
-QUnit.test("renders set HTML", async (assert) => {
+test("renders set HTML", async (assert) => {
   setCustomHTML("top", '<span class="custom-html-test">HTML</span>');
 
   await visit("/static/faq");
@@ -20,7 +21,7 @@ QUnit.test("renders set HTML", async (assert) => {
   );
 });
 
-QUnit.test("renders preloaded HTML", async (assert) => {
+test("renders preloaded HTML", async (assert) => {
   PreloadStore.store("customHTML", {
     top: "<span class='cookie'>monster</span>",
   });

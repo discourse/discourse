@@ -1,7 +1,9 @@
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 import EmberObject from "@ember/object";
 moduleFor("controller:preferences/account");
 
-QUnit.test("updating of associated accounts", function (assert) {
+test("updating of associated accounts", function (assert) {
   const controller = this.subject({
     siteSettings: {
       enable_google_oauth2_logins: true,

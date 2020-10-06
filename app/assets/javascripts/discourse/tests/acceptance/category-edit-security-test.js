@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -5,7 +6,7 @@ acceptance("Category Edit - security", {
   loggedIn: true,
 });
 
-QUnit.test("default", async (assert) => {
+test("default", async (assert) => {
   await visit("/c/bug");
 
   await click(".edit-category");
@@ -20,7 +21,7 @@ QUnit.test("default", async (assert) => {
   assert.equal(permission, "Create / Reply / See");
 });
 
-QUnit.test("removing a permission", async (assert) => {
+test("removing a permission", async (assert) => {
   const availableGroups = selectKit(".available-groups");
 
   await visit("/c/bug");
@@ -46,7 +47,7 @@ QUnit.test("removing a permission", async (assert) => {
   );
 });
 
-QUnit.test("adding a permission", async (assert) => {
+test("adding a permission", async (assert) => {
   const availableGroups = selectKit(".available-groups");
   const permissionSelector = selectKit(".permission-selector");
 
@@ -72,7 +73,7 @@ QUnit.test("adding a permission", async (assert) => {
   assert.equal(permission, "Reply / See");
 });
 
-QUnit.test("adding a previously removed permission", async (assert) => {
+test("adding a previously removed permission", async (assert) => {
   const availableGroups = selectKit(".available-groups");
 
   await visit("/c/bug");

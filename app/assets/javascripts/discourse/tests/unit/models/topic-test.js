@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import EmberObject from "@ember/object";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import Category from "discourse/models/category";
@@ -7,14 +8,14 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("model:topic");
 
-QUnit.test("defaults", (assert) => {
+test("defaults", (assert) => {
   const topic = Topic.create({ id: 1234 });
 
   assert.blank(topic.get("deleted_at"), "deleted_at defaults to blank");
   assert.blank(topic.get("deleted_by"), "deleted_by defaults to blank");
 });
 
-QUnit.test("visited", (assert) => {
+test("visited", (assert) => {
   const topic = Topic.create({
     highest_post_number: 2,
     last_read_post_number: 1,
@@ -35,7 +36,7 @@ QUnit.test("visited", (assert) => {
   );
 });
 
-QUnit.test("lastUnreadUrl", (assert) => {
+test("lastUnreadUrl", (assert) => {
   const category = EmberObject.create({
     navigate_to_first_post_after_read: true,
   });
@@ -52,7 +53,7 @@ QUnit.test("lastUnreadUrl", (assert) => {
   assert.equal(topic.get("lastUnreadUrl"), "/t/hello/101/1");
 });
 
-QUnit.test("has details", (assert) => {
+test("has details", (assert) => {
   const topic = Topic.create({ id: 1234 });
   const topicDetails = topic.get("details");
 
@@ -64,7 +65,7 @@ QUnit.test("has details", (assert) => {
   );
 });
 
-QUnit.test("has a postStream", (assert) => {
+test("has a postStream", (assert) => {
   const topic = Topic.create({ id: 1234 });
   const postStream = topic.get("postStream");
 
@@ -76,7 +77,7 @@ QUnit.test("has a postStream", (assert) => {
   );
 });
 
-QUnit.test("has suggestedTopics", (assert) => {
+test("has suggestedTopics", (assert) => {
   const topic = Topic.create({ suggested_topics: [{ id: 1 }, { id: 2 }] });
   const suggestedTopics = topic.get("suggestedTopics");
 
@@ -84,7 +85,7 @@ QUnit.test("has suggestedTopics", (assert) => {
   assert.containsInstance(suggestedTopics, Topic);
 });
 
-QUnit.test("category relationship", (assert) => {
+test("category relationship", (assert) => {
   // It finds the category by id
   const category = Category.list()[0];
   const topic = Topic.create({ id: 1111, category_id: category.get("id") });
@@ -92,7 +93,7 @@ QUnit.test("category relationship", (assert) => {
   assert.equal(topic.get("category"), category);
 });
 
-QUnit.test("updateFromJson", (assert) => {
+test("updateFromJson", (assert) => {
   const topic = Topic.create({ id: 1234 });
   const category = Category.list()[0];
 
@@ -109,7 +110,7 @@ QUnit.test("updateFromJson", (assert) => {
   assert.equal(topic.get("category"), category);
 });
 
-QUnit.test("recover", (assert) => {
+test("recover", (assert) => {
   const user = User.create({ username: "eviltrout" });
   const topic = Topic.create({
     id: 1234,
@@ -122,7 +123,7 @@ QUnit.test("recover", (assert) => {
   assert.blank(topic.get("deleted_by"), "it clears deleted_by");
 });
 
-QUnit.test("fancyTitle", (assert) => {
+test("fancyTitle", (assert) => {
   const topic = Topic.create({
     fancy_title: ":smile: with all :) the emojis :pear::peach:",
   });
@@ -134,7 +135,7 @@ QUnit.test("fancyTitle", (assert) => {
   );
 });
 
-QUnit.test("fancyTitle direction", function (assert) {
+test("fancyTitle direction", function (assert) {
   const rtlTopic = Topic.create({ fancy_title: "هذا اختبار" });
   const ltrTopic = Topic.create({ fancy_title: "This is a test" });
 
@@ -151,7 +152,7 @@ QUnit.test("fancyTitle direction", function (assert) {
   );
 });
 
-QUnit.test("excerpt", (assert) => {
+test("excerpt", (assert) => {
   const topic = Topic.create({
     excerpt: "This is a test topic :smile:",
     pinned: true,

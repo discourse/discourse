@@ -1,3 +1,4 @@
+import { test, module } from "qunit";
 import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
 import createStore from "discourse/tests/helpers/create-store";
@@ -5,7 +6,7 @@ import User from "discourse/models/user";
 import { Promise } from "rsvp";
 import pretender from "discourse/tests/helpers/create-pretender";
 
-QUnit.module("model:post-stream");
+module("model:post-stream");
 
 const buildStream = function (id, stream) {
   const store = createStore();
@@ -19,7 +20,7 @@ const buildStream = function (id, stream) {
 
 const participant = { username: "eviltrout" };
 
-QUnit.test("create", (assert) => {
+test("create", (assert) => {
   const store = createStore();
   assert.ok(
     store.createRecord("postStream"),
@@ -27,7 +28,7 @@ QUnit.test("create", (assert) => {
   );
 });
 
-QUnit.test("defaults", (assert) => {
+test("defaults", (assert) => {
   const postStream = buildStream(1234);
   assert.blank(
     postStream.get("posts"),
@@ -37,7 +38,7 @@ QUnit.test("defaults", (assert) => {
   assert.present(postStream.get("topic"));
 });
 
-QUnit.test("appending posts", (assert) => {
+test("appending posts", (assert) => {
   const postStream = buildStream(4567, [1, 3, 4]);
   const store = postStream.store;
 
@@ -108,7 +109,7 @@ QUnit.test("appending posts", (assert) => {
   );
 });
 
-QUnit.test("closestPostNumberFor", (assert) => {
+test("closestPostNumberFor", (assert) => {
   const postStream = buildStream(1231);
   const store = postStream.store;
 
@@ -142,7 +143,7 @@ QUnit.test("closestPostNumberFor", (assert) => {
   );
 });
 
-QUnit.test("closestDaysAgoFor", (assert) => {
+test("closestDaysAgoFor", (assert) => {
   const postStream = buildStream(1231);
   postStream.set("timelineLookup", [
     [1, 10],
@@ -165,14 +166,14 @@ QUnit.test("closestDaysAgoFor", (assert) => {
   assert.equal(postStream.closestDaysAgoFor(1), undefined);
 });
 
-QUnit.test("closestDaysAgoFor - empty", (assert) => {
+test("closestDaysAgoFor - empty", (assert) => {
   const postStream = buildStream(1231);
   postStream.set("timelineLookup", []);
 
   assert.equal(postStream.closestDaysAgoFor(1), null);
 });
 
-QUnit.test("updateFromJson", (assert) => {
+test("updateFromJson", (assert) => {
   const postStream = buildStream(1231);
 
   postStream.updateFromJson({
@@ -187,7 +188,7 @@ QUnit.test("updateFromJson", (assert) => {
   assert.equal(postStream.get("extra_property"), 12);
 });
 
-QUnit.test("removePosts", (assert) => {
+test("removePosts", (assert) => {
   const postStream = buildStream(10000001, [1, 2, 3]);
   const store = postStream.store;
 
@@ -208,7 +209,7 @@ QUnit.test("removePosts", (assert) => {
   assert.deepEqual(postStream.get("stream"), [2]);
 });
 
-QUnit.test("cancelFilter", (assert) => {
+test("cancelFilter", (assert) => {
   const postStream = buildStream(1235);
 
   sandbox.stub(postStream, "refresh").returns(Promise.resolve());
@@ -225,7 +226,7 @@ QUnit.test("cancelFilter", (assert) => {
   );
 });
 
-QUnit.test("findPostIdForPostNumber", (assert) => {
+test("findPostIdForPostNumber", (assert) => {
   const postStream = buildStream(1234, [10, 20, 30, 40, 50, 60, 70]);
   postStream.set("gaps", { before: { 60: [55, 58] } });
 
@@ -247,7 +248,7 @@ QUnit.test("findPostIdForPostNumber", (assert) => {
   assert.equal(postStream.findPostIdForPostNumber(8), 60, "it respects gaps");
 });
 
-QUnit.test("fillGapBefore", (assert) => {
+test("fillGapBefore", (assert) => {
   const postStream = buildStream(1234, [60]);
   sandbox.stub(postStream, "findPostsByIds").returns(Promise.resolve([]));
   let post = postStream.store.createRecord("post", { id: 60, post_number: 60 });
@@ -264,7 +265,7 @@ QUnit.test("fillGapBefore", (assert) => {
   );
 });
 
-QUnit.test("toggleParticipant", (assert) => {
+test("toggleParticipant", (assert) => {
   const postStream = buildStream(1236);
   sandbox.stub(postStream, "refresh").returns(Promise.resolve());
 
@@ -287,7 +288,7 @@ QUnit.test("toggleParticipant", (assert) => {
   );
 });
 
-QUnit.test("streamFilters", (assert) => {
+test("streamFilters", (assert) => {
   const postStream = buildStream(1237);
   sandbox.stub(postStream, "refresh").returns(Promise.resolve());
 
@@ -316,7 +317,7 @@ QUnit.test("streamFilters", (assert) => {
   );
 });
 
-QUnit.test("loading", (assert) => {
+test("loading", (assert) => {
   let postStream = buildStream(1234);
   assert.ok(!postStream.get("loading"), "we're not loading by default");
 
@@ -332,7 +333,7 @@ QUnit.test("loading", (assert) => {
   assert.ok(postStream.get("loading"), "we're loading if loading a filter");
 });
 
-QUnit.test("nextWindow", (assert) => {
+test("nextWindow", (assert) => {
   const postStream = buildStream(1234, [
     1,
     2,
@@ -374,7 +375,7 @@ QUnit.test("nextWindow", (assert) => {
   );
 });
 
-QUnit.test("previousWindow", (assert) => {
+test("previousWindow", (assert) => {
   const postStream = buildStream(1234, [
     1,
     2,
@@ -416,7 +417,7 @@ QUnit.test("previousWindow", (assert) => {
   );
 });
 
-QUnit.test("storePost", (assert) => {
+test("storePost", (assert) => {
   const postStream = buildStream(1234),
     store = postStream.store,
     post = store.createRecord("post", {
@@ -464,7 +465,7 @@ QUnit.test("storePost", (assert) => {
   assert.equal(stored, postWithoutId, "it returns the same post back");
 });
 
-QUnit.test("identity map", async (assert) => {
+test("identity map", async (assert) => {
   const postStream = buildStream(1234);
   const store = postStream.store;
 
@@ -490,12 +491,12 @@ QUnit.test("identity map", async (assert) => {
   assert.equal(result.objectAt(2), p3);
 });
 
-QUnit.test("loadIntoIdentityMap with no data", async (assert) => {
+test("loadIntoIdentityMap with no data", async (assert) => {
   const result = await buildStream(1234).loadIntoIdentityMap([]);
   assert.equal(result.length, 0, "requesting no posts produces no posts");
 });
 
-QUnit.test("loadIntoIdentityMap with post ids", async (assert) => {
+test("loadIntoIdentityMap with post ids", async (assert) => {
   const postStream = buildStream(1234);
   await postStream.loadIntoIdentityMap([10]);
 
@@ -505,7 +506,7 @@ QUnit.test("loadIntoIdentityMap with post ids", async (assert) => {
   );
 });
 
-QUnit.test("appendMore for megatopic", async (assert) => {
+test("appendMore for megatopic", async (assert) => {
   const postStream = buildStream(1234);
   const store = createStore();
   const post = store.createRecord("post", { id: 1, post_number: 1 });
@@ -528,7 +529,7 @@ QUnit.test("appendMore for megatopic", async (assert) => {
   );
 });
 
-QUnit.test("prependMore for megatopic", async (assert) => {
+test("prependMore for megatopic", async (assert) => {
   const postStream = buildStream(1234);
   const store = createStore();
   const post = store.createRecord("post", { id: 6, post_number: 6 });
@@ -551,7 +552,7 @@ QUnit.test("prependMore for megatopic", async (assert) => {
   );
 });
 
-QUnit.test("staging and undoing a new post", (assert) => {
+test("staging and undoing a new post", (assert) => {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
@@ -652,7 +653,7 @@ QUnit.test("staging and undoing a new post", (assert) => {
   );
 });
 
-QUnit.test("staging and committing a post", (assert) => {
+test("staging and committing a post", (assert) => {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
@@ -731,7 +732,7 @@ QUnit.test("staging and committing a post", (assert) => {
   );
 });
 
-QUnit.test("loadedAllPosts when the id changes", (assert) => {
+test("loadedAllPosts when the id changes", (assert) => {
   // This can happen in a race condition between staging a post and it coming through on the
   // message bus. If the id of a post changes we should reconsider the loadedAllPosts property.
   const postStream = buildStream(10101, [1, 2]);
@@ -751,7 +752,7 @@ QUnit.test("loadedAllPosts when the id changes", (assert) => {
   );
 });
 
-QUnit.test("triggerRecoveredPost", async (assert) => {
+test("triggerRecoveredPost", async (assert) => {
   const postStream = buildStream(4567);
   const store = postStream.store;
 
@@ -784,7 +785,7 @@ QUnit.test("triggerRecoveredPost", async (assert) => {
   );
 });
 
-QUnit.test("comitting and triggerNewPostInStream race condition", (assert) => {
+test("comitting and triggerNewPostInStream race condition", (assert) => {
   const postStream = buildStream(4964);
   const store = postStream.store;
 
@@ -818,7 +819,7 @@ QUnit.test("comitting and triggerNewPostInStream race condition", (assert) => {
   );
 });
 
-QUnit.test("triggerNewPostInStream for ignored posts", async (assert) => {
+test("triggerNewPostInStream for ignored posts", async (assert) => {
   const postStream = buildStream(280, [1]);
   const store = postStream.store;
   User.resetCurrent(
@@ -876,7 +877,7 @@ QUnit.test("triggerNewPostInStream for ignored posts", async (assert) => {
   );
 });
 
-QUnit.test("postsWithPlaceholders", async (assert) => {
+test("postsWithPlaceholders", async (assert) => {
   const postStream = buildStream(4964, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const postsWithPlaceholders = postStream.get("postsWithPlaceholders");
   const store = postStream.store;
@@ -925,7 +926,7 @@ QUnit.test("postsWithPlaceholders", async (assert) => {
   assert.equal(testProxy.objectAt(3), p4);
 });
 
-QUnit.test("filteredPostsCount", (assert) => {
+test("filteredPostsCount", (assert) => {
   const postStream = buildStream(4567, [1, 3, 4]);
 
   assert.equal(postStream.get("filteredPostsCount"), 3);
@@ -937,7 +938,7 @@ QUnit.test("filteredPostsCount", (assert) => {
   assert.equal(postStream.get("filteredPostsCount"), 4);
 });
 
-QUnit.test("firstPostId", (assert) => {
+test("firstPostId", (assert) => {
   const postStream = buildStream(4567, [1, 3, 4]);
 
   assert.equal(postStream.get("firstPostId"), 1);
@@ -950,7 +951,7 @@ QUnit.test("firstPostId", (assert) => {
   assert.equal(postStream.get("firstPostId"), 2);
 });
 
-QUnit.test("lastPostId", (assert) => {
+test("lastPostId", (assert) => {
   const postStream = buildStream(4567, [1, 3, 4]);
 
   assert.equal(postStream.get("lastPostId"), 4);
@@ -963,7 +964,7 @@ QUnit.test("lastPostId", (assert) => {
   assert.equal(postStream.get("lastPostId"), 2);
 });
 
-QUnit.test("progressIndexOfPostId", (assert) => {
+test("progressIndexOfPostId", (assert) => {
   const postStream = buildStream(4567, [1, 3, 4]);
   const store = createStore();
   const post = store.createRecord("post", { id: 1, post_number: 5 });

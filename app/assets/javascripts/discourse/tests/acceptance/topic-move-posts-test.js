@@ -1,8 +1,9 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Topic move posts", { loggedIn: true });
 
-QUnit.test("default", async (assert) => {
+test("default", async (assert) => {
   await visit("/t/internationalization-localization");
   await click(".toggle-admin-menu");
   await click(".topic-admin-multi-select .btn");
@@ -45,7 +46,7 @@ QUnit.test("default", async (assert) => {
   );
 });
 
-QUnit.test("moving all posts", async (assert) => {
+test("moving all posts", async (assert) => {
   await visit("/t/internationalization-localization");
   await click(".toggle-admin-menu");
   await click(".topic-admin-multi-select .btn");
@@ -81,7 +82,7 @@ QUnit.test("moving all posts", async (assert) => {
   );
 });
 
-QUnit.test("moving posts from personal message", async (assert) => {
+test("moving posts from personal message", async (assert) => {
   await visit("/t/pm-for-testing/12");
   await click(".toggle-admin-menu");
   await click(".topic-admin-multi-select .btn");
@@ -117,7 +118,7 @@ QUnit.test("moving posts from personal message", async (assert) => {
   );
 });
 
-QUnit.test("group moderator moving posts", async (assert) => {
+test("group moderator moving posts", async (assert) => {
   await visit("/t/topic-for-group-moderators/2480");
   await click(".toggle-admin-menu");
   await click(".topic-admin-multi-select .btn");

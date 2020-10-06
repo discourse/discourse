@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
@@ -19,7 +20,7 @@ acceptance("Redirect to Top", {
   loggedIn: true,
 });
 
-QUnit.test("redirects categories to weekly top", async (assert) => {
+test("redirects categories to weekly top", async (assert) => {
   updateCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {
@@ -32,7 +33,7 @@ QUnit.test("redirects categories to weekly top", async (assert) => {
   assert.equal(currentPath(), "discovery.topWeekly", "it works for categories");
 });
 
-QUnit.test("redirects latest to monthly top", async (assert) => {
+test("redirects latest to monthly top", async (assert) => {
   updateCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {
@@ -45,7 +46,7 @@ QUnit.test("redirects latest to monthly top", async (assert) => {
   assert.equal(currentPath(), "discovery.topMonthly", "it works for latest");
 });
 
-QUnit.test("redirects root to All top", async (assert) => {
+test("redirects root to All top", async (assert) => {
   updateCurrentUser({
     should_be_redirected_to_top: true,
     redirected_to_top: {

@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -17,7 +18,7 @@ let searchArgs = {
 
 acceptance("Search", searchArgs);
 
-QUnit.test("search", async (assert) => {
+test("search", async (assert) => {
   await visit("/");
 
   await click("#search-button");
@@ -43,7 +44,7 @@ QUnit.test("search", async (assert) => {
   assert.ok(exists(".search-advanced-options"), "advanced search is expanded");
 });
 
-QUnit.test("search for a tag", async (assert) => {
+test("search for a tag", async (assert) => {
   await visit("/");
 
   await click("#search-button");
@@ -53,7 +54,7 @@ QUnit.test("search for a tag", async (assert) => {
   assert.ok(exists(".search-menu .results ul li"), "it shows results");
 });
 
-QUnit.test("search scope checkbox", async (assert) => {
+test("search scope checkbox", async (assert) => {
   await visit("/tag/important");
   await click("#search-button");
   assert.ok(
@@ -86,7 +87,7 @@ QUnit.test("search scope checkbox", async (assert) => {
   );
 });
 
-QUnit.test("Search with context", async (assert) => {
+test("Search with context", async (assert) => {
   await visit("/t/internationalization-localization/280/1");
 
   await click("#search-button");
@@ -126,7 +127,7 @@ QUnit.test("Search with context", async (assert) => {
   assert.ok(!$(".search-context input[type=checkbox]").is(":checked"));
 });
 
-QUnit.test("Right filters are shown to anonymous users", async (assert) => {
+test("Right filters are shown to anonymous users", async (assert) => {
   const inSelector = selectKit(".select-kit#in");
 
   await visit("/search?expanded=true");
@@ -151,7 +152,7 @@ QUnit.test("Right filters are shown to anonymous users", async (assert) => {
 
 acceptance("Search", Object.assign({ loggedIn: true, searchArgs }));
 
-QUnit.test("Right filters are shown to logged-in users", async (assert) => {
+test("Right filters are shown to logged-in users", async (assert) => {
   const inSelector = selectKit(".select-kit#in");
 
   await visit("/search?expanded=true");
@@ -183,7 +184,7 @@ acceptance(
   })
 );
 
-QUnit.test("displays tags", async (assert) => {
+test("displays tags", async (assert) => {
   await visit("/");
 
   await click("#search-button");

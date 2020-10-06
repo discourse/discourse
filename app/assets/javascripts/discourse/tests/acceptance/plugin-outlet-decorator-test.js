@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
@@ -38,24 +39,21 @@ acceptance("Plugin Outlet - Decorator", {
   },
 });
 
-QUnit.test(
-  "Calls the plugin callback with the rendered outlet",
-  async (assert) => {
-    await visit("/");
+test("Calls the plugin callback with the rendered outlet", async (assert) => {
+  await visit("/");
 
-    const fooConnector = find(".discovery-list-container-top-outlet.foo ")[0];
-    const barConnector = find(".discovery-list-container-top-outlet.bar ")[0];
+  const fooConnector = find(".discovery-list-container-top-outlet.foo ")[0];
+  const barConnector = find(".discovery-list-container-top-outlet.bar ")[0];
 
-    assert.ok(exists(fooConnector));
-    assert.equal(fooConnector.style.backgroundColor, "yellow");
-    assert.equal(barConnector.style.backgroundColor, "");
+  assert.ok(exists(fooConnector));
+  assert.equal(fooConnector.style.backgroundColor, "yellow");
+  assert.equal(barConnector.style.backgroundColor, "");
 
-    await visit("/c/bug");
+  await visit("/c/bug");
 
-    assert.ok(fooConnector.classList.contains("in-category"));
+  assert.ok(fooConnector.classList.contains("in-category"));
 
-    await visit("/");
+  await visit("/");
 
-    assert.notOk(fooConnector.classList.contains("in-category"));
-  }
-);
+  assert.notOk(fooConnector.classList.contains("in-category"));
+});

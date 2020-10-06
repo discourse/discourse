@@ -1,8 +1,9 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("New Message");
 
-QUnit.test("accessing new-message route when logged out", async (assert) => {
+test("accessing new-message route when logged out", async (assert) => {
   await visit(
     "/new-message?username=charlie&title=message%20title&body=message%20body"
   );
@@ -11,7 +12,7 @@ QUnit.test("accessing new-message route when logged out", async (assert) => {
 });
 
 acceptance("New Message", { loggedIn: true });
-QUnit.test("accessing new-message route when logged in", async (assert) => {
+test("accessing new-message route when logged in", async (assert) => {
   await visit(
     "/new-message?username=charlie&title=message%20title&body=message%20body"
   );

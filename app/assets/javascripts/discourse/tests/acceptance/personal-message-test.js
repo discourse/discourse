@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -5,7 +6,7 @@ acceptance("Personal Message", {
   loggedIn: true,
 });
 
-QUnit.test("footer edit button", async (assert) => {
+test("footer edit button", async (assert) => {
   await visit("/t/pm-for-testing/12");
 
   assert.ok(
@@ -14,7 +15,7 @@ QUnit.test("footer edit button", async (assert) => {
   );
 });
 
-QUnit.test("suggested messages", async (assert) => {
+test("suggested messages", async (assert) => {
   await visit("/t/pm-for-testing/12");
 
   assert.equal(

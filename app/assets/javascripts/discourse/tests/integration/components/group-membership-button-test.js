@@ -1,6 +1,9 @@
+import { test } from "qunit";
+import { moduleFor } from "ember-qunit";
+
 moduleFor("component:group-membership-button");
 
-QUnit.test("canJoinGroup", function (assert) {
+test("canJoinGroup", function (assert) {
   this.subject().setProperties({
     model: { public_admission: false, is_group_user: true },
   });
@@ -28,7 +31,7 @@ QUnit.test("canJoinGroup", function (assert) {
   );
 });
 
-QUnit.test("canLeaveGroup", function (assert) {
+test("canLeaveGroup", function (assert) {
   this.subject().setProperties({
     model: { public_exit: false, is_group_user: false },
   });
@@ -56,7 +59,7 @@ QUnit.test("canLeaveGroup", function (assert) {
   );
 });
 
-QUnit.test("canRequestMembership", function (assert) {
+test("canRequestMembership", function (assert) {
   this.subject().setProperties({
     model: { allow_membership_requests: true, is_group_user: true },
   });
@@ -76,7 +79,7 @@ QUnit.test("canRequestMembership", function (assert) {
   );
 });
 
-QUnit.test("userIsGroupUser", function (assert) {
+test("userIsGroupUser", function (assert) {
   this.subject().setProperties({
     model: { is_group_user: true },
   });

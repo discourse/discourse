@@ -1,16 +1,17 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Users List", { loggedIn: true });
 
-QUnit.test("lists users", async (assert) => {
+test("lists users", async (assert) => {
   await visit("/admin/users/list/active");
 
   assert.ok(exists(".users-list .user"));
   assert.ok(!exists(".user:eq(0) .email small"), "escapes email");
 });
 
-QUnit.test("sorts users", async (assert) => {
+test("sorts users", async (assert) => {
   await visit("/admin/users/list/active");
 
   assert.ok(exists(".users-list .user"));
@@ -34,7 +35,7 @@ QUnit.test("sorts users", async (assert) => {
   );
 });
 
-QUnit.test("toggles email visibility", async (assert) => {
+test("toggles email visibility", async (assert) => {
   await visit("/admin/users/list/active");
 
   assert.ok(exists(".users-list .user"));
@@ -56,7 +57,7 @@ QUnit.test("toggles email visibility", async (assert) => {
   );
 });
 
-QUnit.test("switching tabs", async (assert) => {
+test("switching tabs", async (assert) => {
   const activeUser = "eviltrout";
   const suspectUser = "sam";
   const activeTitle = I18n.t("admin.users.titles.active");

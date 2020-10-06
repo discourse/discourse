@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -31,13 +32,13 @@ const assertMultipleSecondary = (assert, firstEmail, secondEmail) => {
   );
 };
 
-QUnit.test("viewing self without secondary emails", async (assert) => {
+test("viewing self without secondary emails", async (assert) => {
   await visit("/admin/users/1/eviltrout");
 
   assertNoSecondary(assert);
 });
 
-QUnit.test("viewing self with multiple secondary emails", async (assert) => {
+test("viewing self with multiple secondary emails", async (assert) => {
   await visit("/admin/users/3/markvanlan");
 
   assert.equal(
@@ -53,14 +54,14 @@ QUnit.test("viewing self with multiple secondary emails", async (assert) => {
   );
 });
 
-QUnit.test("viewing another user with no secondary email", async (assert) => {
+test("viewing another user with no secondary email", async (assert) => {
   await visit("/admin/users/1234/regular");
   await click(`.display-row.secondary-emails button`);
 
   assertNoSecondary(assert);
 });
 
-QUnit.test("viewing another account with secondary emails", async (assert) => {
+test("viewing another account with secondary emails", async (assert) => {
   await visit("/admin/users/1235/regular1");
   await click(`.display-row.secondary-emails button`);
 

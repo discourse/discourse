@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -6,7 +7,7 @@ acceptance("Share and Invite modal - mobile", {
   mobileView: true,
 });
 
-QUnit.test("Topic footer mobile button", async (assert) => {
+test("Topic footer mobile button", async (assert) => {
   await visit("/t/internationalization-localization/280");
 
   assert.ok(
@@ -54,7 +55,7 @@ QUnit.test("Topic footer mobile button", async (assert) => {
   );
 });
 
-QUnit.test("Post date link", async (assert) => {
+test("Post date link", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#post_2 .post-info.post-date a");
 
@@ -69,7 +70,7 @@ acceptance("Share url with badges disabled - mobile", {
   },
 });
 
-QUnit.test("topic footer button - badges disabled - mobile", async (assert) => {
+test("topic footer button - badges disabled - mobile", async (assert) => {
   await visit("/t/internationalization-localization/280");
 
   const subject = selectKit(".topic-footer-mobile-dropdown");

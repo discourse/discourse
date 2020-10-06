@@ -1,6 +1,7 @@
+import { test, module } from "qunit";
 import Sharing from "discourse/lib/sharing";
 
-QUnit.module("lib:sharing", {
+module("lib:sharing", {
   beforeEach() {
     Sharing._reset();
   },
@@ -9,7 +10,7 @@ QUnit.module("lib:sharing", {
   },
 });
 
-QUnit.test("addSource", (assert) => {
+test("addSource", (assert) => {
   const sharingSettings = "facebook|twitter";
 
   assert.blank(Sharing.activeSources(sharingSettings));
@@ -21,7 +22,7 @@ QUnit.test("addSource", (assert) => {
   assert.equal(Sharing.activeSources(sharingSettings).length, 1);
 });
 
-QUnit.test("addSharingId", (assert) => {
+test("addSharingId", (assert) => {
   const sharingSettings = "";
 
   assert.blank(Sharing.activeSources(sharingSettings));

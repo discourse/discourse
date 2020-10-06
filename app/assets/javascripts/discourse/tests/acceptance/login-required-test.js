@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login Required", {
@@ -6,7 +7,7 @@ acceptance("Login Required", {
   },
 });
 
-QUnit.test("redirect", async (assert) => {
+test("redirect", async (assert) => {
   await visit("/latest");
   assert.equal(currentPath(), "login", "it redirects them to login");
 

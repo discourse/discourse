@@ -1,11 +1,12 @@
+import { test, module } from "qunit";
 import User from "discourse/models/user";
 import Group from "discourse/models/group";
 import * as ajaxlib from "discourse/lib/ajax";
 import pretender from "discourse/tests/helpers/create-pretender";
 
-QUnit.module("model:user");
+module("model:user");
 
-QUnit.test("staff", (assert) => {
+test("staff", (assert) => {
   var user = User.create({ id: 1, username: "eviltrout" });
 
   assert.ok(!user.get("staff"), "user is not staff");
@@ -17,7 +18,7 @@ QUnit.test("staff", (assert) => {
   assert.ok(user.get("staff"), "admins are staff");
 });
 
-QUnit.test("searchContext", (assert) => {
+test("searchContext", (assert) => {
   var user = User.create({ id: 1, username: "EvilTrout" });
 
   assert.deepEqual(
@@ -27,7 +28,7 @@ QUnit.test("searchContext", (assert) => {
   );
 });
 
-QUnit.test("isAllowedToUploadAFile", (assert) => {
+test("isAllowedToUploadAFile", (assert) => {
   var user = User.create({ trust_level: 0, admin: true });
   assert.ok(
     user.isAllowedToUploadAFile("image"),
@@ -41,7 +42,7 @@ QUnit.test("isAllowedToUploadAFile", (assert) => {
   );
 });
 
-QUnit.test("canMangeGroup", (assert) => {
+test("canMangeGroup", (assert) => {
   let user = User.create({ admin: true });
   let group = Group.create({ automatic: true });
 
@@ -70,7 +71,7 @@ QUnit.test("canMangeGroup", (assert) => {
   );
 });
 
-QUnit.test("resolvedTimezone", (assert) => {
+test("resolvedTimezone", (assert) => {
   const tz = "Australia/Brisbane";
   let user = User.create({ timezone: tz, username: "chuck", id: 111 });
   let stub = sandbox.stub(moment.tz, "guess").returns("America/Chicago");
@@ -122,7 +123,7 @@ QUnit.test("resolvedTimezone", (assert) => {
   stub.restore();
 });
 
-QUnit.test("muted ids", (assert) => {
+test("muted ids", (assert) => {
   let user = User.create({ username: "chuck", muted_category_ids: [] });
 
   assert.deepEqual(user.calculateMutedIds(0, 1, "muted_category_ids"), [1]);

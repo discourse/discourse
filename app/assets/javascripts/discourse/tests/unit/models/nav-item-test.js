@@ -1,10 +1,11 @@
+import { test, module } from "qunit";
 import { run } from "@ember/runloop";
 import createStore from "discourse/tests/helpers/create-store";
 import NavItem from "discourse/models/nav-item";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 
-QUnit.module("NavItem", {
+module("NavItem", {
   beforeEach() {
     run(function () {
       const asianCategory = Category.create({
@@ -16,7 +17,7 @@ QUnit.module("NavItem", {
   },
 });
 
-QUnit.test("href", (assert) => {
+test("href", (assert) => {
   assert.expect(2);
 
   function href(text, expected, label) {
@@ -27,7 +28,7 @@ QUnit.test("href", (assert) => {
   href("categories", "/categories", "categories");
 });
 
-QUnit.test("count", (assert) => {
+test("count", (assert) => {
   const navItem = createStore().createRecord("nav-item", { name: "new" });
 
   assert.equal(navItem.get("count"), 0, "it has no count by default");

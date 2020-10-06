@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 
@@ -35,7 +36,7 @@ acceptance("Category Banners", {
   },
 });
 
-QUnit.test("Does not display category banners when not set", async (assert) => {
+test("Does not display category banners when not set", async (assert) => {
   await visit("/c/test-read-only-without-banner");
 
   await click("#create-topic");
@@ -46,7 +47,7 @@ QUnit.test("Does not display category banners when not set", async (assert) => {
   );
 });
 
-QUnit.test("Displays category banners when set", async (assert) => {
+test("Displays category banners when set", async (assert) => {
   await visit("/c/test-read-only-with-banner");
 
   await click("#create-topic");
@@ -84,7 +85,7 @@ acceptance("Anonymous Category Banners", {
   },
 });
 
-QUnit.test("Does not display category banners when set", async (assert) => {
+test("Does not display category banners when set", async (assert) => {
   await visit("/c/test-read-only-with-banner");
   assert.ok(
     !visible(".category-read-only-banner"),

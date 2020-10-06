@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import EmberObject from "@ember/object";
 import {
@@ -24,7 +25,7 @@ discourseModule("lib:computed", {
   },
 });
 
-QUnit.test("setting", function (assert) {
+test("setting", function (assert) {
   let t = EmberObject.extend({
     siteSettings: this.siteSettings,
     vehicle: setting("vehicle"),
@@ -43,7 +44,7 @@ QUnit.test("setting", function (assert) {
   );
 });
 
-QUnit.test("propertyEqual", (assert) => {
+test("propertyEqual", (assert) => {
   var t = EmberObject.extend({
     same: propertyEqual("cookies", "biscuits"),
   }).create({
@@ -56,7 +57,7 @@ QUnit.test("propertyEqual", (assert) => {
   assert.ok(!t.get("same"), "it isn't true when one property is different");
 });
 
-QUnit.test("propertyNotEqual", (assert) => {
+test("propertyNotEqual", (assert) => {
   var t = EmberObject.extend({
     diff: propertyNotEqual("cookies", "biscuits"),
   }).create({
@@ -69,7 +70,7 @@ QUnit.test("propertyNotEqual", (assert) => {
   assert.ok(t.get("diff"), "it is true when one property is different");
 });
 
-QUnit.test("fmt", (assert) => {
+test("fmt", (assert) => {
   var t = EmberObject.extend({
     exclaimyUsername: fmt("username", "!!! %@ !!!"),
     multiple: fmt("username", "mood", "%@ is %@"),
@@ -103,7 +104,7 @@ QUnit.test("fmt", (assert) => {
   );
 });
 
-QUnit.test("i18n", (assert) => {
+test("i18n", (assert) => {
   var t = EmberObject.extend({
     exclaimyUsername: i18n("username", "!!! %@ !!!"),
     multiple: i18n("username", "mood", "%@ is %@"),
@@ -137,7 +138,7 @@ QUnit.test("i18n", (assert) => {
   );
 });
 
-QUnit.test("url", (assert) => {
+test("url", (assert) => {
   var t, testClass;
 
   testClass = EmberObject.extend({
@@ -160,7 +161,7 @@ QUnit.test("url", (assert) => {
   );
 });
 
-QUnit.test("htmlSafe", (assert) => {
+test("htmlSafe", (assert) => {
   const cookies = "<p>cookies and <b>biscuits</b></p>";
   const t = EmberObject.extend({
     desc: htmlSafe("cookies"),

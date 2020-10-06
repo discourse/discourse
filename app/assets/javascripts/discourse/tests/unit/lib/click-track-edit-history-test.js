@@ -1,10 +1,11 @@
+import { skip } from "qunit";
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
 import User from "discourse/models/user";
 import pretender from "discourse/tests/helpers/create-pretender";
 
-QUnit.module("lib:click-track-edit-history", {
+module("lib:click-track-edit-history", {
   beforeEach() {
     logIn();
 
@@ -58,7 +59,7 @@ function generateClickEventOn(selector) {
   return $.Event("click", { currentTarget: fixture(selector).first() });
 }
 
-QUnit.skip("tracks internal URLs", async (assert) => {
+skip("tracks internal URLs", async (assert) => {
   assert.expect(2);
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
@@ -74,7 +75,7 @@ QUnit.skip("tracks internal URLs", async (assert) => {
   assert.notOk(track(generateClickEventOn("#same-site")));
 });
 
-QUnit.skip("tracks external URLs", async (assert) => {
+skip("tracks external URLs", async (assert) => {
   assert.expect(2);
 
   const done = assert.async();
@@ -89,22 +90,19 @@ QUnit.skip("tracks external URLs", async (assert) => {
   assert.notOk(track(generateClickEventOn("a")));
 });
 
-QUnit.skip(
-  "tracks external URLs when opening in another window",
-  async (assert) => {
-    assert.expect(3);
-    User.currentProp("external_links_in_new_tab", true);
+skip("tracks external URLs when opening in another window", async (assert) => {
+  assert.expect(3);
+  User.currentProp("external_links_in_new_tab", true);
 
-    const done = assert.async();
-    pretender.post("/clicks/track", (request) => {
-      assert.equal(
-        request.requestBody,
-        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-      );
-      done();
-    });
+  const done = assert.async();
+  pretender.post("/clicks/track", (request) => {
+    assert.equal(
+      request.requestBody,
+      "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
+    );
+    done();
+  });
 
-    assert.notOk(track(generateClickEventOn("a")));
-    assert.ok(window.open.calledWith("http://www.google.com", "_blank"));
-  }
-);
+  assert.notOk(track(generateClickEventOn("a")));
+  assert.ok(window.open.calledWith("http://www.google.com", "_blank"));
+});

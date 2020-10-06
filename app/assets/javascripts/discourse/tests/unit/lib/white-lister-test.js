@@ -1,8 +1,9 @@
+import { test, module } from "qunit";
 import WhiteLister from "pretty-text/white-lister";
 
-QUnit.module("lib:whiteLister");
+module("lib:whiteLister");
 
-QUnit.test("whiteLister", (assert) => {
+test("whiteLister", (assert) => {
   const whiteLister = new WhiteLister();
 
   assert.ok(

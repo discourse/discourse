@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
@@ -10,7 +11,7 @@ acceptance("Opening the hamburger menu with some reviewables", {
   },
 });
 
-QUnit.test("As a staff member", async (assert) => {
+test("As a staff member", async (assert) => {
   updateCurrentUser({ moderator: true, admin: false });
 
   await visit("/");

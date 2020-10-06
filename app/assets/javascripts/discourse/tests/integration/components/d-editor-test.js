@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import { next } from "@ember/runloop";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";

@@ -1,9 +1,10 @@
+import { test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Emoji", { loggedIn: true });
 
-QUnit.test("emoji is cooked properly", async (assert) => {
+test("emoji is cooked properly", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 
@@ -14,7 +15,7 @@ QUnit.test("emoji is cooked properly", async (assert) => {
   );
 });
 
-QUnit.test("skin toned emoji is cooked properly", async (assert) => {
+test("skin toned emoji is cooked properly", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 

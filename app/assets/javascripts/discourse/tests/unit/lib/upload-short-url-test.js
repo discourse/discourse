@@ -1,3 +1,4 @@
+import { test, module } from "qunit";
 import {
   lookupCachedUploadUrl,
   resolveAllShortUrls,
@@ -85,13 +86,13 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
         .join("")
   );
 }
-QUnit.module("lib:pretty-text/upload-short-url", {
+module("lib:pretty-text/upload-short-url", {
   afterEach() {
     resetCache();
   },
 });
 
-QUnit.test("resolveAllShortUrls", async (assert) => {
+test("resolveAllShortUrls", async (assert) => {
   stubUrls();
   let lookup;
 
@@ -142,71 +143,62 @@ QUnit.test("resolveAllShortUrls", async (assert) => {
   });
 });
 
-QUnit.test(
-  "resolveAllShortUrls - href + src replaced correctly",
-  async (assert) => {
-    stubUrls();
-    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+test("resolveAllShortUrls - href + src replaced correctly", async (assert) => {
+  stubUrls();
+  await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
 
-    let image1 = fixture().find("img").eq(0);
-    let image2 = fixture().find("img").eq(1);
-    let link = fixture().find("a");
-    let audio = fixture().find("audio").eq(0);
-    let video = fixture().find("video").eq(0);
+  let image1 = fixture().find("img").eq(0);
+  let image2 = fixture().find("img").eq(1);
+  let link = fixture().find("a");
+  let audio = fixture().find("audio").eq(0);
+  let video = fixture().find("video").eq(0);
 
-    assert.equal(image1.attr("src"), "/images/avatar.png?a");
-    assert.equal(image2.attr("src"), "/images/avatar.png?b");
-    assert.equal(link.attr("href"), "/uploads/short-url/c.pdf");
-    assert.equal(
-      video.find("source").attr("src"),
-      "/uploads/default/original/3X/c/b/4.mp4"
-    );
-    assert.equal(
-      audio.find("source").attr("src"),
-      "/uploads/default/original/3X/c/b/5.mp3"
-    );
-  }
-);
+  assert.equal(image1.attr("src"), "/images/avatar.png?a");
+  assert.equal(image2.attr("src"), "/images/avatar.png?b");
+  assert.equal(link.attr("href"), "/uploads/short-url/c.pdf");
+  assert.equal(
+    video.find("source").attr("src"),
+    "/uploads/default/original/3X/c/b/4.mp4"
+  );
+  assert.equal(
+    audio.find("source").attr("src"),
+    "/uploads/default/original/3X/c/b/5.mp3"
+  );
+});
 
-QUnit.test(
-  "resolveAllShortUrls - url with full origin replaced correctly",
-  async (assert) => {
-    stubUrls();
-    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
-    let video = fixture().find("video").eq(1);
+test("resolveAllShortUrls - url with full origin replaced correctly", async (assert) => {
+  stubUrls();
+  await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+  let video = fixture().find("video").eq(1);
 
-    assert.equal(
-      video.find("source").attr("src"),
-      "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4"
-    );
-  }
-);
+  assert.equal(
+    video.find("source").attr("src"),
+    "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4"
+  );
+});
 
-QUnit.test(
-  "resolveAllShortUrls - when secure media is enabled use the attachment full URL",
-  async (assert) => {
-    stubUrls(
-      null,
-      [
-        {
-          short_url: "upload://c.pdf",
-          url: "/secure-media-uploads/default/original/3X/c/b/3.pdf",
-          short_path: "/uploads/short-url/c.pdf",
-        },
-      ],
-      null
-    );
-    await resolveAllShortUrls(ajax, { secure_media: true }, fixture()[0]);
+test("resolveAllShortUrls - when secure media is enabled use the attachment full URL", async (assert) => {
+  stubUrls(
+    null,
+    [
+      {
+        short_url: "upload://c.pdf",
+        url: "/secure-media-uploads/default/original/3X/c/b/3.pdf",
+        short_path: "/uploads/short-url/c.pdf",
+      },
+    ],
+    null
+  );
+  await resolveAllShortUrls(ajax, { secure_media: true }, fixture()[0]);
 
-    let link = fixture().find("a");
-    assert.equal(
-      link.attr("href"),
-      "/secure-media-uploads/default/original/3X/c/b/3.pdf"
-    );
-  }
-);
+  let link = fixture().find("a");
+  assert.equal(
+    link.attr("href"),
+    "/secure-media-uploads/default/original/3X/c/b/3.pdf"
+  );
+});
 
-QUnit.test("resolveAllShortUrls - scoped", async (assert) => {
+test("resolveAllShortUrls - scoped", async (assert) => {
   stubUrls();
   let lookup;
 

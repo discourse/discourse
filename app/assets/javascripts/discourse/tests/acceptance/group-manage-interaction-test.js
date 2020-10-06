@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
@@ -10,7 +11,7 @@ acceptance("Managing Group Interaction Settings", {
   },
 });
 
-QUnit.test("As an admin", async (assert) => {
+test("As an admin", async (assert) => {
   updateCurrentUser({
     moderator: false,
     admin: true,
@@ -50,7 +51,7 @@ QUnit.test("As an admin", async (assert) => {
   );
 });
 
-QUnit.test("As a group owner", async (assert) => {
+test("As a group owner", async (assert) => {
   updateCurrentUser({
     moderator: false,
     admin: false,

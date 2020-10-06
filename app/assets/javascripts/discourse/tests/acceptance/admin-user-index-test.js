@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -34,7 +35,7 @@ acceptance("Admin - User Index", {
   },
 });
 
-QUnit.test("can edit username", async (assert) => {
+test("can edit username", async (assert) => {
   pretender.put("/users/sam/preferences/username", () => [
     200,
     {
@@ -60,7 +61,7 @@ QUnit.test("can edit username", async (assert) => {
   assert.equal(find(".display-row.username .value").text().trim(), "new-sam");
 });
 
-QUnit.test("will clear unsaved groups when switching user", async (assert) => {
+test("will clear unsaved groups when switching user", async (assert) => {
   await visit("/admin/users/2/sam");
 
   assert.equal(

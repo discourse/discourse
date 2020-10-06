@@ -6,6 +6,7 @@ import User from "discourse/models/user";
 import Site from "discourse/models/site";
 import Session from "discourse/models/session";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
+import { test } from "qunit";
 
 export default function (name, opts) {
   opts = opts || {};

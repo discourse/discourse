@@ -1,9 +1,10 @@
+import { test } from "qunit";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Click Track", {});
 
-QUnit.test("Do not track mentions", async (assert) => {
+test("Do not track mentions", async (assert) => {
   pretender.post("/clicks/track", () => assert.ok(false));
 
   await visit("/t/internationalization-localization/280");

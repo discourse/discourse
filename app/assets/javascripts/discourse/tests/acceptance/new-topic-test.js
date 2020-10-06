@@ -1,16 +1,17 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("New Topic");
 
-QUnit.test("accessing new-topic route when logged out", async (assert) => {
+test("accessing new-topic route when logged out", async (assert) => {
   await visit("/new-topic?title=topic%20title&body=topic%20body");
 
   assert.ok(exists(".modal.login-modal"), "it shows the login modal");
 });
 
 acceptance("New Topic", { loggedIn: true });
-QUnit.test("accessing new-topic route when logged in", async (assert) => {
+test("accessing new-topic route when logged in", async (assert) => {
   await visit("/new-topic?title=topic%20title&body=topic%20body&category=bug");
 
   assert.ok(exists(".composer-fields"), "it opens composer");

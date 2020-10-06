@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -10,7 +11,7 @@ acceptance("Topic Notifications button", {
   },
 });
 
-QUnit.test("Updating topic notification level", async (assert) => {
+test("Updating topic notification level", async (assert) => {
   const notificationOptions = selectKit(
     "#topic-footer-buttons .topic-notifications-options"
   );

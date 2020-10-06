@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -22,7 +23,7 @@ const response = (object) => {
   return [200, { "Content-Type": "application/json" }, object];
 };
 
-QUnit.test("Anonymous Viewing Group", async function (assert) {
+test("Anonymous Viewing Group", async function (assert) {
   await visit("/g/discourse");
 
   assert.equal(
@@ -77,7 +78,7 @@ QUnit.test("Anonymous Viewing Group", async function (assert) {
   );
 });
 
-QUnit.test("Anonymous Viewing Automatic Group", async (assert) => {
+test("Anonymous Viewing Automatic Group", async (assert) => {
   await visit("/g/moderators");
 
   assert.equal(
@@ -89,7 +90,7 @@ QUnit.test("Anonymous Viewing Automatic Group", async (assert) => {
 
 acceptance("Group", Object.assign({ loggedIn: true }, groupArgs));
 
-QUnit.test("User Viewing Group", async (assert) => {
+test("User Viewing Group", async (assert) => {
   await visit("/g");
   await click(".group-index-request");
 
@@ -122,28 +123,25 @@ QUnit.test("User Viewing Group", async (assert) => {
   );
 });
 
-QUnit.test(
-  "Admin viewing group messages when there are no messages",
-  async (assert) => {
-    pretender.get(
-      "/topics/private-messages-group/eviltrout/discourse.json",
-      () => {
-        return response({ topic_list: { topics: [] } });
-      }
-    );
+test("Admin viewing group messages when there are no messages", async (assert) => {
+  pretender.get(
+    "/topics/private-messages-group/eviltrout/discourse.json",
+    () => {
+      return response({ topic_list: { topics: [] } });
+    }
+  );
 
-    await visit("/g/discourse");
-    await click(".nav-pills li a[title='Messages']");
+  await visit("/g/discourse");
+  await click(".nav-pills li a[title='Messages']");
 
-    assert.equal(
-      find(".alert").text().trim(),
-      I18n.t("choose_topic.none_found"),
-      "it should display the right alert"
-    );
-  }
-);
+  assert.equal(
+    find(".alert").text().trim(),
+    I18n.t("choose_topic.none_found"),
+    "it should display the right alert"
+  );
+});
 
-QUnit.test("Admin viewing group messages", async (assert) => {
+test("Admin viewing group messages", async (assert) => {
   pretender.get(
     "/topics/private-messages-group/eviltrout/discourse.json",
     () => {
@@ -238,7 +236,7 @@ QUnit.test("Admin viewing group messages", async (assert) => {
   );
 });
 
-QUnit.test("Admin Viewing Group", async (assert) => {
+test("Admin Viewing Group", async (assert) => {
   await visit("/g/discourse");
 
   assert.ok(

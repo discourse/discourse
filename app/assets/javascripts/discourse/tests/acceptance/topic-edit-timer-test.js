@@ -1,3 +1,5 @@
+import { skip } from "qunit";
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
@@ -22,7 +24,7 @@ acceptance("Topic - Edit timer", {
   },
 });
 
-QUnit.test("default", async (assert) => {
+test("default", async (assert) => {
   updateCurrentUser({ moderator: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -34,7 +36,7 @@ QUnit.test("default", async (assert) => {
   assert.equal(futureDateInputSelector.header().value(), null);
 });
 
-QUnit.test("autoclose - specific time", async (assert) => {
+test("autoclose - specific time", async (assert) => {
   updateCurrentUser({ moderator: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -53,7 +55,7 @@ QUnit.test("autoclose - specific time", async (assert) => {
   assert.ok(regex.test(html));
 });
 
-QUnit.skip("autoclose", async (assert) => {
+skip("autoclose", async (assert) => {
   updateCurrentUser({ moderator: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -106,7 +108,7 @@ QUnit.skip("autoclose", async (assert) => {
   assert.ok(regex3.test(html3));
 });
 
-QUnit.test("close temporarily", async (assert) => {
+test("close temporarily", async (assert) => {
   updateCurrentUser({ moderator: true });
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
@@ -144,7 +146,7 @@ QUnit.test("close temporarily", async (assert) => {
   assert.ok(regex2.test(html2));
 });
 
-QUnit.test("schedule", async (assert) => {
+test("schedule", async (assert) => {
   updateCurrentUser({ moderator: true });
   const timerType = selectKit(".select-kit.timer-type");
   const categoryChooser = selectKit(".modal-body .category-chooser");
@@ -177,7 +179,7 @@ QUnit.test("schedule", async (assert) => {
   assert.ok(regex.test(text));
 });
 
-QUnit.test("TL4 can't auto-delete", async (assert) => {
+test("TL4 can't auto-delete", async (assert) => {
   updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
 
   await visit("/t/internationalization-localization");
@@ -191,7 +193,7 @@ QUnit.test("TL4 can't auto-delete", async (assert) => {
   assert.ok(!timerType.rowByValue("delete").exists());
 });
 
-QUnit.test("auto delete", async (assert) => {
+test("auto delete", async (assert) => {
   updateCurrentUser({ moderator: true });
   const timerType = selectKit(".select-kit.timer-type");
   const futureDateInputSelector = selectKit(".future-date-input-selector");
@@ -217,7 +219,7 @@ QUnit.test("auto delete", async (assert) => {
   assert.ok(regex.test(html));
 });
 
-QUnit.test("Inline delete timer", async (assert) => {
+test("Inline delete timer", async (assert) => {
   updateCurrentUser({ moderator: true });
   const futureDateInputSelector = selectKit(".future-date-input-selector");
 

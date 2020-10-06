@@ -1,6 +1,7 @@
+import { test, module } from "qunit";
 import User from "discourse/models/user";
 
-QUnit.module("model:topic-details");
+module("model:topic-details");
 
 import Topic from "discourse/models/topic";
 
@@ -9,13 +10,13 @@ var buildDetails = function (id) {
   return topic.get("details");
 };
 
-QUnit.test("defaults", (assert) => {
+test("defaults", (assert) => {
   var details = buildDetails(1234);
   assert.present(details, "the details are present by default");
   assert.ok(!details.get("loaded"), "details are not loaded by default");
 });
 
-QUnit.test("updateFromJson", (assert) => {
+test("updateFromJson", (assert) => {
   var details = buildDetails(1234);
 
   details.updateFromJson({

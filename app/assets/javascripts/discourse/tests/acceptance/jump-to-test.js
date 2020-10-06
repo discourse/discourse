@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Jump to", {
@@ -20,7 +21,7 @@ acceptance("Jump to", {
   },
 });
 
-QUnit.test("default", async (assert) => {
+test("default", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("nav#topic-progress .nums");
   await click("button.jump-to-post");
@@ -37,7 +38,7 @@ QUnit.test("default", async (assert) => {
   );
 });
 
-QUnit.test("invalid date", async (assert) => {
+test("invalid date", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("nav#topic-progress .nums");
   await click("button.jump-to-post");

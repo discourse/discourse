@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { emojiSearch } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { emojiUnescape } from "discourse/lib/text";
@@ -5,7 +6,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("lib:emoji");
 
-QUnit.test("emojiUnescape", function (assert) {
+test("emojiUnescape", function (assert) {
   const testUnescape = (input, expected, description, settings = {}) => {
     const originalSettings = {};
     for (const [key, value] of Object.entries(settings)) {
@@ -130,7 +131,7 @@ QUnit.test("emojiUnescape", function (assert) {
   );
 });
 
-QUnit.test("Emoji search", (assert) => {
+test("Emoji search", (assert) => {
   // able to find an alias
   assert.equal(emojiSearch("+1").length, 1);
 

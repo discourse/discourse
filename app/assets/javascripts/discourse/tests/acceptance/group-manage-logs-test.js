@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Group logs", {
@@ -92,7 +93,7 @@ acceptance("Group logs", {
   },
 });
 
-QUnit.test("Browsing group logs", async (assert) => {
+test("Browsing group logs", async (assert) => {
   await visit("/g/snorlax/manage/logs");
   assert.ok(
     find("tr.group-manage-logs-row").length === 2,
