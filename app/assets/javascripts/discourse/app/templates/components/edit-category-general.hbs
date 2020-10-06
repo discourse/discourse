@@ -19,7 +19,7 @@
         allowSubCategories=true
         allowUncategorized=false
         allowRestrictedCategories=true
-        onChange=(action (mut category.parent_category_id))
+        onChange=(fn (mut category.parent_category_id))
       }}
     </section>
   {{/if}}
