@@ -1,8 +1,9 @@
+import { test, module } from "qunit";
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import pretender from "discourse/tests/helpers/create-pretender";
 
-QUnit.module("lib:user-search", {
+module("lib:user-search", {
   beforeEach() {
     const response = (object) => {
       return [200, { "Content-Type": "application/json" }, object];
@@ -85,7 +86,7 @@ QUnit.module("lib:user-search", {
   },
 });
 
-QUnit.test("it flushes cache when switching categories", async (assert) => {
+test("it flushes cache when switching categories", async (assert) => {
   let results = await userSearch({ term: "hello", categoryId: 1 });
   assert.equal(results[0].username, "category_1");
   assert.equal(results.length, 1);
@@ -100,46 +101,40 @@ QUnit.test("it flushes cache when switching categories", async (assert) => {
   assert.equal(results.length, 1);
 });
 
-QUnit.test(
-  "it returns cancel when eager completing with no results",
-  async (assert) => {
-    // Do everything twice, to check the cache works correctly
+test("it returns cancel when eager completing with no results", async (assert) => {
+  // Do everything twice, to check the cache works correctly
 
-    for (let i = 0; i < 2; i++) {
-      // No topic or category, will always cancel
-      let result = await userSearch({ term: "" });
-      assert.equal(result, CANCELLED_STATUS);
-    }
-
-    for (let i = 0; i < 2; i++) {
-      // Unsecured category, so has no recommendations
-      let result = await userSearch({ term: "", categoryId: 3 });
-      assert.equal(result, CANCELLED_STATUS);
-    }
-
-    for (let i = 0; i < 2; i++) {
-      // Secured category, will have 1 recommendation
-      let results = await userSearch({ term: "", categoryId: 1 });
-      assert.equal(results[0].username, "category_1");
-      assert.equal(results.length, 1);
-    }
+  for (let i = 0; i < 2; i++) {
+    // No topic or category, will always cancel
+    let result = await userSearch({ term: "" });
+    assert.equal(result, CANCELLED_STATUS);
   }
-);
 
-QUnit.test(
-  "it places groups unconditionally for exact match",
-  async (assert) => {
-    let results = await userSearch({ term: "Team" });
-    assert.equal(results[results.length - 1]["name"], "team");
+  for (let i = 0; i < 2; i++) {
+    // Unsecured category, so has no recommendations
+    let result = await userSearch({ term: "", categoryId: 3 });
+    assert.equal(result, CANCELLED_STATUS);
   }
-);
 
-QUnit.test("it strips @ from the beginning", async (assert) => {
+  for (let i = 0; i < 2; i++) {
+    // Secured category, will have 1 recommendation
+    let results = await userSearch({ term: "", categoryId: 1 });
+    assert.equal(results[0].username, "category_1");
+    assert.equal(results.length, 1);
+  }
+});
+
+test("it places groups unconditionally for exact match", async (assert) => {
+  let results = await userSearch({ term: "Team" });
+  assert.equal(results[results.length - 1]["name"], "team");
+});
+
+test("it strips @ from the beginning", async (assert) => {
   let results = await userSearch({ term: "@Team" });
   assert.equal(results[results.length - 1]["name"], "team");
 });
 
-QUnit.test("it skips a search depending on punctuations", async (assert) => {
+test("it skips a search depending on punctuations", async (assert) => {
   let results;
   let skippedTerms = [
     "@sam  s", // double space is not allowed

@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 
 const LONG_CODE_BLOCK = "puts a\n".repeat(15000);

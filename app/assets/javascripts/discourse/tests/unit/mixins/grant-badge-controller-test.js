@@ -1,8 +1,9 @@
+import { test, module } from "qunit";
 import Controller from "@ember/controller";
 import GrantBadgeControllerMixin from "discourse/mixins/grant-badge-controller";
 import Badge from "discourse/models/badge";
 
-QUnit.module("mixin:grant-badge-controller", {
+module("mixin:grant-badge-controller", {
   before: function () {
     this.GrantBadgeController = Controller.extend(GrantBadgeControllerMixin);
 
@@ -52,7 +53,7 @@ QUnit.module("mixin:grant-badge-controller", {
   },
 });
 
-QUnit.test("grantableBadges", function (assert) {
+test("grantableBadges", function (assert) {
   const sortedNames = [
     this.badgeFirst.name,
     this.badgeMiddle.name,
@@ -73,7 +74,7 @@ QUnit.test("grantableBadges", function (assert) {
   assert.deepEqual(badgeNames, sortedNames, "sorts badges by name");
 });
 
-QUnit.test("selectedBadgeGrantable", function (assert) {
+test("selectedBadgeGrantable", function (assert) {
   this.subject.set("selectedBadgeId", this.badgeDisabled.id);
   assert.not(this.subject.get("selectedBadgeGrantable"));
 

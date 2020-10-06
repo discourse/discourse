@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { action } from "@ember/object";
@@ -64,7 +65,7 @@ acceptance("Plugin Outlet - Connector Class", {
   },
 });
 
-QUnit.test("Renders a template into the outlet", async (assert) => {
+test("Renders a template into the outlet", async (assert) => {
   await visit("/u/eviltrout");
   assert.ok(
     find(".user-profile-primary-outlet.hello").length === 1,

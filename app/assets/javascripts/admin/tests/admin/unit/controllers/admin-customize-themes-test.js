@@ -1,3 +1,5 @@
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 import { mapRoutes } from "discourse/mapping-router";
 import Theme from "admin/models/theme";
 
@@ -8,7 +10,7 @@ moduleFor("controller:admin-customize-themes", {
   needs: ["controller:adminUser"],
 });
 
-QUnit.test("can list themes correctly", function (assert) {
+test("can list themes correctly", function (assert) {
   const defaultTheme = Theme.create({ id: 2, default: true, name: "default" });
   const userTheme = Theme.create({
     id: 3,

@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -23,7 +24,7 @@ acceptance("Admin - Suspend User", {
   },
 });
 
-QUnit.test("suspend a user - cancel", async (assert) => {
+test("suspend a user - cancel", async (assert) => {
   await visit("/admin/users/1234/regular");
   await click(".suspend-user");
 
@@ -34,7 +35,7 @@ QUnit.test("suspend a user - cancel", async (assert) => {
   assert.equal(find(".suspend-user-modal:visible").length, 0);
 });
 
-QUnit.test("suspend a user - cancel with input", async (assert) => {
+test("suspend a user - cancel with input", async (assert) => {
   await visit("/admin/users/1234/regular");
   await click(".suspend-user");
 
@@ -61,7 +62,7 @@ QUnit.test("suspend a user - cancel with input", async (assert) => {
   assert.equal(find(".bootbox.modal:visible").length, 0);
 });
 
-QUnit.test("suspend, then unsuspend a user", async (assert) => {
+test("suspend, then unsuspend a user", async (assert) => {
   const suspendUntilCombobox = selectKit(".suspend-until .combobox");
 
   await visit("/admin/flags/active");

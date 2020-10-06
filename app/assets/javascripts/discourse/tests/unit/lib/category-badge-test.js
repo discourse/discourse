@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import createStore from "discourse/tests/helpers/create-store";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import Site from "discourse/models/site";
@@ -6,11 +7,11 @@ discourseModule("lib:category-link");
 
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
-QUnit.test("categoryBadge without a category", (assert) => {
+test("categoryBadge without a category", (assert) => {
   assert.blank(categoryBadgeHTML(), "it returns no HTML");
 });
 
-QUnit.test("Regular categoryBadge", (assert) => {
+test("Regular categoryBadge", (assert) => {
   const store = createStore();
   const category = store.createRecord("category", {
     name: "hello",
@@ -37,7 +38,7 @@ QUnit.test("Regular categoryBadge", (assert) => {
   );
 });
 
-QUnit.test("undefined color", (assert) => {
+test("undefined color", (assert) => {
   const store = createStore();
   const noColor = store.createRecord("category", { name: "hello", id: 123 });
   const tag = $.parseHTML(categoryBadgeHTML(noColor))[0];
@@ -48,7 +49,7 @@ QUnit.test("undefined color", (assert) => {
   );
 });
 
-QUnit.test("topic count", (assert) => {
+test("topic count", (assert) => {
   const store = createStore();
   const category = store.createRecord("category", { name: "hello", id: 123 });
 
@@ -63,7 +64,7 @@ QUnit.test("topic count", (assert) => {
   );
 });
 
-QUnit.test("allowUncategorized", (assert) => {
+test("allowUncategorized", (assert) => {
   const store = createStore();
   const uncategorized = store.createRecord("category", {
     name: "uncategorized",
@@ -85,7 +86,7 @@ QUnit.test("allowUncategorized", (assert) => {
   );
 });
 
-QUnit.test("category names are wrapped in dir-spans", function (assert) {
+test("category names are wrapped in dir-spans", function (assert) {
   this.siteSettings.support_mixed_text_direction = true;
   const store = createStore();
   const rtlCategory = store.createRecord("category", {
@@ -110,7 +111,7 @@ QUnit.test("category names are wrapped in dir-spans", function (assert) {
   assert.equal(dirSpan.dir, "ltr");
 });
 
-QUnit.test("recursive", function (assert) {
+test("recursive", function (assert) {
   const store = createStore();
 
   const foo = store.createRecord("category", {

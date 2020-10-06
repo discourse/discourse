@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 
 export function moduleForWidget(name, options = {}) {

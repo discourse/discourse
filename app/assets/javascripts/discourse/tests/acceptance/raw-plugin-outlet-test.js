@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import compile from "handlebars-compiler";
 import {
@@ -21,7 +22,7 @@ acceptance("Raw Plugin Outlet", {
   },
 });
 
-QUnit.test("Renders the raw plugin outlet", async (assert) => {
+test("Renders the raw plugin outlet", async (assert) => {
   await visit("/");
   assert.ok(find(".topic-lala").length > 0, "it renders the outlet");
   assert.equal(

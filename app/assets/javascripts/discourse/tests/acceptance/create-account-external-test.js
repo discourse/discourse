@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Create Account - external auth", {
@@ -19,7 +20,7 @@ acceptance("Create Account - external auth", {
   },
 });
 
-QUnit.test("when skip is disabled (default)", async (assert) => {
+test("when skip is disabled (default)", async (assert) => {
   await visit("/");
 
   assert.ok(
@@ -30,7 +31,7 @@ QUnit.test("when skip is disabled (default)", async (assert) => {
   assert.ok(exists("#new-account-username"), "it shows the fields");
 });
 
-QUnit.test("when skip is enabled", async function (assert) {
+test("when skip is enabled", async function (assert) {
   this.siteSettings.external_auth_skip_create_confirm = true;
   await visit("/");
 

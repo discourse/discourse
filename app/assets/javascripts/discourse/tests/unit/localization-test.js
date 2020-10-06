@@ -1,7 +1,8 @@
+import { test, module } from "qunit";
 import I18n from "I18n";
 import LocalizationInitializer from "discourse/initializers/localization";
 
-QUnit.module("initializer:localization", {
+module("initializer:localization", {
   _locale: I18n.locale,
   _translations: I18n.translations,
   _overrides: I18n._overrides,
@@ -36,7 +37,7 @@ QUnit.module("initializer:localization", {
   },
 });
 
-QUnit.test("translation overrides", function (assert) {
+test("translation overrides", function (assert) {
   I18n._overrides = {
     "js.composer.reply": "WAT",
     "js.topic.reply.help": "foobar",
@@ -55,15 +56,12 @@ QUnit.test("translation overrides", function (assert) {
   );
 });
 
-QUnit.test(
-  "skip translation override if parent node is not an object",
-  function (assert) {
-    I18n._overrides = {
-      "js.composer.reply": "WAT",
-      "js.composer.reply.help": "foobar",
-    };
-    LocalizationInitializer.initialize(this.registry);
+test("skip translation override if parent node is not an object", function (assert) {
+  I18n._overrides = {
+    "js.composer.reply": "WAT",
+    "js.composer.reply.help": "foobar",
+  };
+  LocalizationInitializer.initialize(this.registry);
 
-    assert.equal(I18n.t("composer.reply.help"), "[fr.composer.reply.help]");
-  }
-);
+  assert.equal(I18n.t("composer.reply.help"), "[fr.composer.reply.help]");
+});

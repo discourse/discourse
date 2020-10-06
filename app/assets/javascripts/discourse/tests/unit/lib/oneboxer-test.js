@@ -1,3 +1,4 @@
+import { test, module } from "qunit";
 import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
@@ -14,9 +15,9 @@ function loadOnebox(element) {
   });
 }
 
-QUnit.module("lib:oneboxer");
+module("lib:oneboxer");
 
-QUnit.test("load - failed onebox", async (assert) => {
+test("load - failed onebox", async (assert) => {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
 
@@ -34,7 +35,7 @@ QUnit.test("load - failed onebox", async (assert) => {
   );
 });
 
-QUnit.test("load - successful onebox", async (assert) => {
+test("load - successful onebox", async (assert) => {
   const html = `
     <aside class="onebox allowlistedgeneric">
       <header class="source">

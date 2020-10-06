@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Create Account - User Fields", {
@@ -25,7 +26,7 @@ acceptance("Create Account - User Fields", {
   },
 });
 
-QUnit.test("create account with user fields", async (assert) => {
+test("create account with user fields", async (assert) => {
   await visit("/");
   await click("header .sign-up-button");
 

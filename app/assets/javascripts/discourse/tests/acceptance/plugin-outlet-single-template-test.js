@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const CONNECTOR =
@@ -14,7 +15,7 @@ acceptance("Plugin Outlet - Single Template", {
   },
 });
 
-QUnit.test("Renders a template into the outlet", async (assert) => {
+test("Renders a template into the outlet", async (assert) => {
   await visit("/u/eviltrout");
   assert.ok(
     find(".user-profile-primary-outlet.hello").length === 1,

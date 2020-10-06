@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -35,7 +36,7 @@ acceptance("Topic footer buttons mobile", {
   },
 });
 
-QUnit.test("default", async (assert) => {
+test("default", async (assert) => {
   await visit("/t/internationalization-localization/280");
 
   assert.equal(_test, null);

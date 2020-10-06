@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 
 moduleForComponent("user-selector", { integration: true });

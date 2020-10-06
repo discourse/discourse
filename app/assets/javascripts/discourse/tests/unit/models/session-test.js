@@ -1,8 +1,9 @@
+import { test, module } from "qunit";
 import Session from "discourse/models/session";
 
-QUnit.module("model:session");
+module("model:session");
 
-QUnit.test("highestSeenByTopic", (assert) => {
+test("highestSeenByTopic", (assert) => {
   const session = Session.current();
   assert.deepEqual(
     session.get("highestSeenByTopic"),

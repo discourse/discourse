@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("CustomHTML template", {
@@ -12,7 +13,7 @@ acceptance("CustomHTML template", {
   },
 });
 
-QUnit.test("renders custom template", async (assert) => {
+test("renders custom template", async (assert) => {
   await visit("/static/faq");
   assert.equal(find("span.top-span").text(), "TOP", "it inserted the template");
 });

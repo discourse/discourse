@@ -1,7 +1,8 @@
+import { test, module } from "qunit";
 import Invite from "discourse/models/invite";
 
-QUnit.module("model:invite");
+module("model:invite");
 
-QUnit.test("create", (assert) => {
+test("create", (assert) => {
   assert.ok(Invite.create(), "it can be created without arguments");
 });

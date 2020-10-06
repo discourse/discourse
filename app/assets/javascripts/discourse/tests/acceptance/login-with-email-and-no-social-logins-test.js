@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login with email - no social logins", {
@@ -9,14 +10,14 @@ acceptance("Login with email - no social logins", {
   },
 });
 
-QUnit.test("with login with email enabled", async (assert) => {
+test("with login with email enabled", async (assert) => {
   await visit("/");
   await click("header .login-button");
 
   assert.ok(exists(".login-with-email-button"));
 });
 
-QUnit.test("with login with email disabled", async (assert) => {
+test("with login with email disabled", async (assert) => {
   await visit("/");
   await click("header .login-button");
 

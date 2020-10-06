@@ -1,11 +1,12 @@
+import { test, module } from "qunit";
 import I18n from "I18n";
 import UserDraft from "discourse/models/user-draft";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import User from "discourse/models/user";
 
-QUnit.module("model:user-drafts");
+module("model:user-drafts");
 
-QUnit.test("stream", (assert) => {
+test("stream", (assert) => {
   const user = User.create({ id: 1, username: "eviltrout" });
   const stream = user.get("userDraftsStream");
   assert.present(stream, "a user has a drafts stream by default");
@@ -13,7 +14,7 @@ QUnit.test("stream", (assert) => {
   assert.blank(stream.get("content"), "no content by default");
 });
 
-QUnit.test("draft", (assert) => {
+test("draft", (assert) => {
   const drafts = [
     UserDraft.create({
       draft_key: "topic_1",

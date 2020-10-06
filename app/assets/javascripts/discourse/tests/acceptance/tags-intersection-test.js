@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Tags intersection", {
@@ -28,7 +29,7 @@ acceptance("Tags intersection", {
   },
 });
 
-QUnit.test("Populate tags when creating new topic", async (assert) => {
+test("Populate tags when creating new topic", async (assert) => {
   await visit("/tags/intersection/first/second");
   await click("#create-topic");
 

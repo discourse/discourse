@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Page Publishing", {
@@ -22,7 +23,7 @@ acceptance("Page Publishing", {
     });
   },
 });
-QUnit.test("can publish a page via modal", async (assert) => {
+test("can publish a page via modal", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click(".topic-post:eq(0) button.show-more-actions");
   await click(".topic-post:eq(0) button.show-post-admin-menu");

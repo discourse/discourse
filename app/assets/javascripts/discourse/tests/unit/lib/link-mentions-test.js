@@ -1,3 +1,4 @@
+import { test, module } from "qunit";
 import {
   fetchUnseenMentions,
   linkSeenMentions,
@@ -5,9 +6,9 @@ import {
 import { Promise } from "rsvp";
 import pretender from "discourse/tests/helpers/create-pretender";
 
-QUnit.module("lib:link-mentions");
+module("lib:link-mentions");
 
-QUnit.test("linkSeenMentions replaces users and groups", async (assert) => {
+test("linkSeenMentions replaces users and groups", async (assert) => {
   pretender.get("/u/is_local_username", () => [
     200,
     { "Content-Type": "application/json" },

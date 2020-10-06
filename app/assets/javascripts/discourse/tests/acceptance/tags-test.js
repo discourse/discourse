@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import {
   updateCurrentUser,
   acceptance,
@@ -6,7 +7,7 @@ import pretender from "discourse/tests/helpers/create-pretender";
 
 acceptance("Tags", { loggedIn: true });
 
-QUnit.test("list the tags", async (assert) => {
+test("list the tags", async (assert) => {
   await visit("/tags");
 
   assert.ok($("body.tags-page").length, "has the body class");
@@ -23,7 +24,7 @@ acceptance("Tags listed by group", {
   },
 });
 
-QUnit.test("list the tags in groups", async (assert) => {
+test("list the tags in groups", async (assert) => {
   await visit("/tags");
   assert.equal(
     $(".tag-list").length,

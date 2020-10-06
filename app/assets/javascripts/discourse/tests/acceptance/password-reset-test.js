@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
@@ -54,7 +55,7 @@ acceptance("Password Reset", {
   },
 });
 
-QUnit.test("Password Reset Page", async (assert) => {
+test("Password Reset Page", async (assert) => {
   PreloadStore.store("password_reset", { is_developer: false });
 
   await visit("/u/password-reset/myvalidtoken");
@@ -86,7 +87,7 @@ QUnit.test("Password Reset Page", async (assert) => {
   assert.ok(!exists(".password-reset form"), "form is gone");
 });
 
-QUnit.test("Password Reset Page With Second Factor", async (assert) => {
+test("Password Reset Page With Second Factor", async (assert) => {
   PreloadStore.store("password_reset", {
     is_developer: false,
     second_factor_required: true,

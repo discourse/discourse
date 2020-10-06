@@ -1,3 +1,5 @@
+import { skip } from "qunit";
+import { test, module } from "qunit";
 import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
@@ -5,7 +7,7 @@ import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
 import User from "discourse/models/user";
 import pretender from "discourse/tests/helpers/create-pretender";
 
-QUnit.module("lib:click-track", {
+module("lib:click-track", {
   beforeEach() {
     logIn();
 
@@ -51,7 +53,7 @@ function generateClickEventOn(selector) {
   return $.Event("click", { currentTarget: fixture(selector).first() });
 }
 
-QUnit.skip("tracks internal URLs", async (assert) => {
+skip("tracks internal URLs", async (assert) => {
   assert.expect(2);
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
@@ -67,11 +69,11 @@ QUnit.skip("tracks internal URLs", async (assert) => {
   assert.notOk(track(generateClickEventOn("#same-site")));
 });
 
-QUnit.test("does not track elements with no href", async (assert) => {
+test("does not track elements with no href", async (assert) => {
   assert.ok(track(generateClickEventOn(".a-without-href")));
 });
 
-QUnit.test("does not track attachments", async (assert) => {
+test("does not track attachments", async (assert) => {
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   pretender.post("/clicks/track", () => assert.ok(false));
@@ -84,7 +86,7 @@ QUnit.test("does not track attachments", async (assert) => {
   );
 });
 
-QUnit.skip("tracks external URLs", async (assert) => {
+skip("tracks external URLs", async (assert) => {
   assert.expect(2);
 
   const done = assert.async();
@@ -99,75 +101,69 @@ QUnit.skip("tracks external URLs", async (assert) => {
   assert.notOk(track(generateClickEventOn("a")));
 });
 
-QUnit.skip(
-  "tracks external URLs when opening in another window",
-  async (assert) => {
-    assert.expect(3);
-    User.currentProp("external_links_in_new_tab", true);
+skip("tracks external URLs when opening in another window", async (assert) => {
+  assert.expect(3);
+  User.currentProp("external_links_in_new_tab", true);
 
-    const done = assert.async();
-    pretender.post("/clicks/track", (request) => {
-      assert.ok(
-        request.requestBody,
-        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-      );
-      done();
-    });
+  const done = assert.async();
+  pretender.post("/clicks/track", (request) => {
+    assert.ok(
+      request.requestBody,
+      "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
+    );
+    done();
+  });
 
-    assert.notOk(track(generateClickEventOn("a")));
-    assert.ok(window.open.calledWith("http://www.google.com", "_blank"));
-  }
-);
+  assert.notOk(track(generateClickEventOn("a")));
+  assert.ok(window.open.calledWith("http://www.google.com", "_blank"));
+});
 
-QUnit.test("does not track clicks on lightboxes", async (assert) => {
+test("does not track clicks on lightboxes", async (assert) => {
   assert.notOk(track(generateClickEventOn(".lightbox")));
 });
 
-QUnit.test("does not track clicks when forcibly disabled", async (assert) => {
+test("does not track clicks when forcibly disabled", async (assert) => {
   assert.notOk(track(generateClickEventOn(".no-track-link")));
 });
 
-QUnit.test("does not track clicks on back buttons", async (assert) => {
+test("does not track clicks on back buttons", async (assert) => {
   assert.notOk(track(generateClickEventOn(".back")));
 });
 
-QUnit.test("does not track right clicks inside quotes", async (assert) => {
+test("does not track right clicks inside quotes", async (assert) => {
   const event = generateClickEventOn(".quote a:first-child");
   event.which = 3;
   assert.ok(track(event));
 });
 
-QUnit.test("does not track clicks links in quotes", async (assert) => {
+test("does not track clicks links in quotes", async (assert) => {
   User.currentProp("external_links_in_new_tab", true);
   assert.notOk(track(generateClickEventOn(".quote a:last-child")));
   assert.ok(window.open.calledWith("https://google.com/", "_blank"));
 });
 
-QUnit.test("does not track clicks on category badges", async (assert) => {
+test("does not track clicks on category badges", async (assert) => {
   assert.notOk(track(generateClickEventOn(".hashtag")));
 });
 
-QUnit.test("does not track clicks on mailto", async (assert) => {
+test("does not track clicks on mailto", async (assert) => {
   assert.ok(track(generateClickEventOn(".mailto")));
 });
 
-QUnit.test(
-  "removes the href and put it as a data attribute",
-  async (assert) => {
-    User.currentProp("external_links_in_new_tab", true);
+test("removes the href and put it as a data attribute", async (assert) => {
+  User.currentProp("external_links_in_new_tab", true);
 
-    assert.notOk(track(generateClickEventOn("a")));
+  assert.notOk(track(generateClickEventOn("a")));
 
-    var $link = fixture("a").first();
-    assert.ok($link.hasClass("no-href"));
-    assert.equal($link.data("href"), "http://www.google.com/");
-    assert.blank($link.attr("href"));
-    assert.ok($link.data("auto-route"));
-    assert.ok(window.open.calledWith("http://www.google.com/", "_blank"));
-  }
-);
+  var $link = fixture("a").first();
+  assert.ok($link.hasClass("no-href"));
+  assert.equal($link.data("href"), "http://www.google.com/");
+  assert.blank($link.attr("href"));
+  assert.ok($link.data("auto-route"));
+  assert.ok(window.open.calledWith("http://www.google.com/", "_blank"));
+});
 
-QUnit.test("restores the href after a while", async (assert) => {
+test("restores the href after a while", async (assert) => {
   assert.expect(2);
 
   assert.notOk(track(generateClickEventOn("a")));
@@ -187,24 +183,24 @@ function badgeClickCount(assert, id, expected) {
   assert.equal(parseInt($badge.html(), 10), expected);
 }
 
-QUnit.test("does not update badge clicks on my own link", async (assert) => {
+test("does not update badge clicks on my own link", async (assert) => {
   sandbox.stub(User, "currentProp").withArgs("id").returns(314);
   badgeClickCount(assert, "with-badge", 1);
 });
 
-QUnit.test("does not update badge clicks in my own post", async (assert) => {
+test("does not update badge clicks in my own post", async (assert) => {
   sandbox.stub(User, "currentProp").withArgs("id").returns(3141);
   badgeClickCount(assert, "with-badge-but-not-mine", 1);
 });
 
-QUnit.test("updates badge counts correctly", async (assert) => {
+test("updates badge counts correctly", async (assert) => {
   badgeClickCount(assert, "inside-onebox", 1);
   badgeClickCount(assert, "inside-onebox-forced", 2);
   badgeClickCount(assert, "with-badge", 2);
 });
 
 function testOpenInANewTab(description, clickEventModifier) {
-  QUnit.test(description, async (assert) => {
+  test(description, async (assert) => {
     var clickEvent = generateClickEventOn("a");
     clickEventModifier(clickEvent);
     assert.ok(track(clickEvent));

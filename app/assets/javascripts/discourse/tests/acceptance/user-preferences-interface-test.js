@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import Site from "discourse/models/site";
@@ -8,7 +9,7 @@ acceptance("User Preferences - Interface", {
   loggedIn: true,
 });
 
-QUnit.test("font size change", async (assert) => {
+test("font size change", async (assert) => {
   removeCookie("text_size");
 
   const savePreferences = async () => {
@@ -53,15 +54,12 @@ QUnit.test("font size change", async (assert) => {
   removeCookie("text_size");
 });
 
-QUnit.test(
-  "does not show option to disable dark mode by default",
-  async (assert) => {
-    await visit("/u/eviltrout/preferences/interface");
-    assert.equal($(".control-group.dark-mode").length, 0);
-  }
-);
+test("does not show option to disable dark mode by default", async (assert) => {
+  await visit("/u/eviltrout/preferences/interface");
+  assert.equal($(".control-group.dark-mode").length, 0);
+});
 
-QUnit.test("shows light/dark color scheme pickers", async (assert) => {
+test("shows light/dark color scheme pickers", async (assert) => {
   let site = Site.current();
   site.set("user_color_schemes", [
     { id: 2, name: "Cool Breeze" },
@@ -87,7 +85,7 @@ acceptance("User Preferences Color Schemes (with default dark scheme)", {
   pretend: interfacePretender,
 });
 
-QUnit.test("show option to disable dark mode", async (assert) => {
+test("show option to disable dark mode", async (assert) => {
   await visit("/u/eviltrout/preferences/interface");
 
   assert.ok(
@@ -96,7 +94,7 @@ QUnit.test("show option to disable dark mode", async (assert) => {
   );
 });
 
-QUnit.test("no color scheme picker by default", async (assert) => {
+test("no color scheme picker by default", async (assert) => {
   let site = Site.current();
   site.set("user_color_schemes", []);
 
@@ -104,7 +102,7 @@ QUnit.test("no color scheme picker by default", async (assert) => {
   assert.equal($(".control-group.color-scheme").length, 0);
 });
 
-QUnit.test("light color scheme picker", async (assert) => {
+test("light color scheme picker", async (assert) => {
   let site = Site.current();
   site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
@@ -117,7 +115,7 @@ QUnit.test("light color scheme picker", async (assert) => {
   );
 });
 
-QUnit.test("light and dark color scheme pickers", async (assert) => {
+test("light and dark color scheme pickers", async (assert) => {
   let site = Site.current();
   let session = Session.current();
   session.userDarkSchemeId = 1; // same as default set in site settings

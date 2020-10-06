@@ -1,3 +1,5 @@
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 import { mapRoutes } from "discourse/mapping-router";
 import Theme from "admin/models/theme";
 
@@ -8,7 +10,7 @@ moduleFor("controller:admin-customize-themes-show", {
   needs: ["controller:adminUser"],
 });
 
-QUnit.test("can display source url for remote themes", function (assert) {
+test("can display source url for remote themes", function (assert) {
   const repoUrl = "https://github.com/discourse/discourse-brand-header.git";
   const remoteTheme = Theme.create({
     id: 2,
@@ -29,9 +31,7 @@ QUnit.test("can display source url for remote themes", function (assert) {
   );
 });
 
-QUnit.test("can display source url for remote theme branches", function (
-  assert
-) {
+test("can display source url for remote theme branches", function (assert) {
   const remoteTheme = Theme.create({
     id: 2,
     default: true,

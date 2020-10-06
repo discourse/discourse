@@ -1,8 +1,9 @@
+import { test, module } from "qunit";
 import { isRTL, isLTR } from "discourse/lib/text-direction";
 
-QUnit.module("lib:text-direction");
+module("lib:text-direction");
 
-QUnit.test("isRTL", (assert) => {
+test("isRTL", (assert) => {
   // Hebrew
   assert.equal(isRTL("זה מבחן"), true);
 
@@ -16,7 +17,7 @@ QUnit.test("isRTL", (assert) => {
   assert.equal(isRTL(""), false);
 });
 
-QUnit.test("isLTR", (assert) => {
+test("isLTR", (assert) => {
   assert.equal(isLTR("This is a test"), true);
   assert.equal(isLTR("זה מבחן"), false);
 });

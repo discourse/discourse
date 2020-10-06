@@ -1,9 +1,10 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("New Group");
 
-QUnit.test("As an anon user", async (assert) => {
+test("As an anon user", async (assert) => {
   await visit("/g");
 
   assert.equal(
@@ -15,7 +16,7 @@ QUnit.test("As an anon user", async (assert) => {
 
 acceptance("New Group", { loggedIn: true });
 
-QUnit.test("Creating a new group", async (assert) => {
+test("Creating a new group", async (assert) => {
   await visit("/g");
   await click(".groups-header-new");
 

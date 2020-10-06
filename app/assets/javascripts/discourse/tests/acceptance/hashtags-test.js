@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Category and Tag Hashtags", {
@@ -16,7 +17,7 @@ acceptance("Category and Tag Hashtags", {
   },
 });
 
-QUnit.test("hashtags are cooked properly", async (assert) => {
+test("hashtags are cooked properly", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-footer-buttons .btn.create");
 

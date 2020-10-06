@@ -1,3 +1,5 @@
+import { skip } from "qunit";
+import { test } from "qunit";
 import {
   escapeExpression,
   emailValid,
@@ -20,7 +22,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("lib:utilities");
 
-QUnit.test("escapeExpression", (assert) => {
+test("escapeExpression", (assert) => {
   assert.equal(escapeExpression(">"), "&gt;", "escapes unsafe characters");
 
   assert.equal(
@@ -36,7 +38,7 @@ QUnit.test("escapeExpression", (assert) => {
   );
 });
 
-QUnit.test("emailValid", (assert) => {
+test("emailValid", (assert) => {
   assert.ok(
     emailValid("Bob@example.com"),
     "allows upper case in the first part of emails"
@@ -47,7 +49,7 @@ QUnit.test("emailValid", (assert) => {
   );
 });
 
-QUnit.test("extractDomainFromUrl", (assert) => {
+test("extractDomainFromUrl", (assert) => {
   assert.equal(
     extractDomainFromUrl("http://meta.discourse.org:443/random"),
     "meta.discourse.org",
@@ -70,7 +72,7 @@ QUnit.test("extractDomainFromUrl", (assert) => {
   );
 });
 
-QUnit.test("avatarUrl", (assert) => {
+test("avatarUrl", (assert) => {
   var rawSize = getRawSize;
   assert.blank(avatarUrl("", "tiny"), "no template returns blank");
   assert.equal(
@@ -93,7 +95,7 @@ var setDevicePixelRatio = function (value) {
   }
 };
 
-QUnit.test("avatarImg", (assert) => {
+test("avatarImg", (assert) => {
   var oldRatio = window.devicePixelRatio;
   setDevicePixelRatio(2);
 
@@ -132,7 +134,7 @@ QUnit.test("avatarImg", (assert) => {
   setDevicePixelRatio(oldRatio);
 });
 
-QUnit.test("defaultHomepage via meta tag", function (assert) {
+test("defaultHomepage via meta tag", function (assert) {
   let meta = document.createElement("meta");
   meta.name = "discourse_current_homepage";
   meta.content = "hot";
@@ -146,7 +148,7 @@ QUnit.test("defaultHomepage via meta tag", function (assert) {
   document.body.removeChild(meta);
 });
 
-QUnit.test("defaultHomepage via site settings", function (assert) {
+test("defaultHomepage via site settings", function (assert) {
   this.siteSettings.top_menu = "top|latest|hot";
   initializeDefaultHomepage(this.siteSettings);
   assert.equal(
@@ -156,14 +158,14 @@ QUnit.test("defaultHomepage via site settings", function (assert) {
   );
 });
 
-QUnit.test("setDefaultHomepage", function (assert) {
+test("setDefaultHomepage", function (assert) {
   initializeDefaultHomepage(this.siteSettings);
   assert.equal(defaultHomepage(), "latest");
   setDefaultHomepage("top");
   assert.equal(defaultHomepage(), "top");
 });
 
-QUnit.test("caretRowCol", (assert) => {
+test("caretRowCol", (assert) => {
   var textarea = document.createElement("textarea");
   const content = document.createTextNode("01234\n56789\n012345");
   textarea.appendChild(content);
@@ -194,7 +196,7 @@ QUnit.test("caretRowCol", (assert) => {
   document.body.removeChild(textarea);
 });
 
-QUnit.test("toAsciiPrintable", (assert) => {
+test("toAsciiPrintable", (assert) => {
   const accentedString = "Créme_Brûlée!";
   const unicodeString = "談話";
 
@@ -217,7 +219,7 @@ QUnit.test("toAsciiPrintable", (assert) => {
   );
 });
 
-QUnit.test("slugify", (assert) => {
+test("slugify", (assert) => {
   const asciiString = "--- 0__( Some-cool Discourse Site! )__0 --- ";
   const accentedString = "Créme_Brûlée!";
   const unicodeString = "談話";
@@ -237,7 +239,7 @@ QUnit.test("slugify", (assert) => {
   assert.equal(slugify(unicodeString), "", "it removes unicode characters");
 });
 
-QUnit.test("fillMissingDates", (assert) => {
+test("fillMissingDates", (assert) => {
   const startDate = "2017-11-12"; // YYYY-MM-DD
   const endDate = "2017-12-12"; // YYYY-MM-DD
   const data =
@@ -250,7 +252,7 @@ QUnit.test("fillMissingDates", (assert) => {
   );
 });
 
-QUnit.test("inCodeBlock", (assert) => {
+test("inCodeBlock", (assert) => {
   const text =
     "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`000";
   for (let i = 0; i < text.length; ++i) {
@@ -262,7 +264,7 @@ QUnit.test("inCodeBlock", (assert) => {
   }
 });
 
-QUnit.skip("inCodeBlock - runs fast", (assert) => {
+skip("inCodeBlock - runs fast", (assert) => {
   const phrase = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
   const text = `${phrase}\n\n\`\`\`\n${phrase}\n\`\`\`\n\n${phrase}\n\n\`${phrase}\n${phrase}\n\n${phrase}\n\n[code]\n${phrase}\n[/code]\n\n${phrase}\n\n    ${phrase}\n\n\`${phrase}\`\n\n${phrase}`;
 

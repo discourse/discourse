@@ -1,9 +1,10 @@
+import { test, module } from "qunit";
 import EmberObject from "@ember/object";
 import Setting from "admin/mixins/setting-object";
 
-QUnit.module("mixin:setting-object");
+module("mixin:setting-object");
 
-QUnit.test("flat array", (assert) => {
+test("flat array", (assert) => {
   const FooSetting = EmberObject.extend(Setting);
 
   const fooSettingInstance = FooSetting.create({
@@ -14,7 +15,7 @@ QUnit.test("flat array", (assert) => {
   assert.equal(fooSettingInstance.computedNameProperty, null);
 });
 
-QUnit.test("object", (assert) => {
+test("object", (assert) => {
   const FooSetting = EmberObject.extend(Setting);
 
   const fooSettingInstance = FooSetting.create({
@@ -25,7 +26,7 @@ QUnit.test("object", (assert) => {
   assert.equal(fooSettingInstance.computedNameProperty, "name");
 });
 
-QUnit.test("no values", (assert) => {
+test("no values", (assert) => {
   const FooSetting = EmberObject.extend(Setting);
 
   const fooSettingInstance = FooSetting.create({
@@ -36,7 +37,7 @@ QUnit.test("no values", (assert) => {
   assert.equal(fooSettingInstance.computedNameProperty, null);
 });
 
-QUnit.test("value/name properties defined", (assert) => {
+test("value/name properties defined", (assert) => {
   const FooSetting = EmberObject.extend(Setting);
 
   const fooSettingInstance = FooSetting.create({

@@ -1,9 +1,10 @@
+import { test, module } from "qunit";
 import createStore from "discourse/tests/helpers/create-store";
 import Category from "discourse/models/category";
 
-QUnit.module("model:category");
+module("model:category");
 
-QUnit.test("slugFor", (assert) => {
+test("slugFor", (assert) => {
   const store = createStore();
 
   const slugFor = function (cat, val, text) {
@@ -58,7 +59,7 @@ QUnit.test("slugFor", (assert) => {
   );
 });
 
-QUnit.test("findBySlug", (assert) => {
+test("findBySlug", (assert) => {
   assert.expect(6);
 
   const store = createStore();
@@ -122,7 +123,7 @@ QUnit.test("findBySlug", (assert) => {
   sandbox.restore();
 });
 
-QUnit.test("findSingleBySlug", (assert) => {
+test("findSingleBySlug", (assert) => {
   assert.expect(6);
 
   const store = createStore();
@@ -184,7 +185,7 @@ QUnit.test("findSingleBySlug", (assert) => {
   );
 });
 
-QUnit.test("findBySlugPathWithID", (assert) => {
+test("findBySlugPathWithID", (assert) => {
   const store = createStore();
 
   const foo = store.createRecord("category", { id: 1, slug: "foo" });
@@ -208,7 +209,7 @@ QUnit.test("findBySlugPathWithID", (assert) => {
   assert.deepEqual(Category.findBySlugPathWithID("foo/baz/3"), baz);
 });
 
-QUnit.test("search with category name", (assert) => {
+test("search with category name", (assert) => {
   const store = createStore(),
     category1 = store.createRecord("category", {
       id: 1,
@@ -297,7 +298,7 @@ QUnit.test("search with category name", (assert) => {
   sandbox.restore();
 });
 
-QUnit.test("search with category slug", (assert) => {
+test("search with category slug", (assert) => {
   const store = createStore(),
     category1 = store.createRecord("category", {
       id: 1,

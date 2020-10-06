@@ -1,10 +1,11 @@
+import { test, module } from "qunit";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import createStore from "discourse/tests/helpers/create-store";
 import Category from "discourse/models/category";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import User from "discourse/models/user";
 
-QUnit.module("model:topic-tracking-state", {
+module("model:topic-tracking-state", {
   beforeEach() {
     this.clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
   },
@@ -14,7 +15,7 @@ QUnit.module("model:topic-tracking-state", {
   },
 });
 
-QUnit.test("tag counts", function (assert) {
+test("tag counts", function (assert) {
   const state = TopicTrackingState.create();
 
   state.loadStates([
@@ -64,7 +65,7 @@ QUnit.test("tag counts", function (assert) {
   assert.equal(states["unread"].newCount, 0, "unread counts");
 });
 
-QUnit.test("forEachTracked", function (assert) {
+test("forEachTracked", function (assert) {
   const state = TopicTrackingState.create();
 
   state.loadStates([
@@ -139,7 +140,7 @@ QUnit.test("forEachTracked", function (assert) {
   assert.equal(sevenUnread, 2, "seven unread");
 });
 
-QUnit.test("sync", function (assert) {
+test("sync", function (assert) {
   const state = TopicTrackingState.create();
   state.states["t111"] = { last_read_post_number: null };
 
@@ -163,7 +164,7 @@ QUnit.test("sync", function (assert) {
   );
 });
 
-QUnit.test("subscribe to category", function (assert) {
+test("subscribe to category", function (assert) {
   const store = createStore();
   const darth = store.createRecord("category", { id: 1, slug: "darth" }),
     luke = store.createRecord("category", {
@@ -227,7 +228,7 @@ QUnit.test("subscribe to category", function (assert) {
   );
 });
 
-QUnit.test("getSubCategoryIds", (assert) => {
+test("getSubCategoryIds", (assert) => {
   const store = createStore();
   const foo = store.createRecord("category", { id: 1, slug: "foo" });
   const bar = store.createRecord("category", {
@@ -248,7 +249,7 @@ QUnit.test("getSubCategoryIds", (assert) => {
   assert.deepEqual(Array.from(state.getSubCategoryIds(3)), [3]);
 });
 
-QUnit.test("countNew", (assert) => {
+test("countNew", (assert) => {
   const store = createStore();
   const foo = store.createRecord("category", {
     id: 1,
@@ -326,7 +327,7 @@ QUnit.test("countNew", (assert) => {
   assert.equal(state.countNew(4), 0);
 });
 
-QUnit.test("mute topic", function (assert) {
+test("mute topic", function (assert) {
   let currentUser = User.create({
     username: "chuck",
     muted_category_ids: [],

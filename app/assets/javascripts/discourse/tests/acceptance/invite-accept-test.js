@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 
@@ -7,7 +8,7 @@ acceptance("Invite Accept", {
   },
 });
 
-QUnit.test("Invite Acceptance Page", async (assert) => {
+test("Invite Acceptance Page", async (assert) => {
   PreloadStore.store("invite_info", {
     invited_by: {
       id: 123,

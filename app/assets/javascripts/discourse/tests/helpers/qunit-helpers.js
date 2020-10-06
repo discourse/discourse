@@ -35,6 +35,7 @@ import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { setURLContainer } from "discourse/lib/url";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import bootbox from "bootbox";
+import { moduleFor } from "ember-qunit";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -134,7 +135,7 @@ export function controllerModule(name, args = {}) {
 }
 
 export function discourseModule(name, hooks) {
-  QUnit.module(name, {
+  module(name, {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
@@ -157,7 +158,7 @@ export function acceptance(name, options) {
     _pretenderCallbacks[name] = options.pretend;
   }
 
-  QUnit.module("Acceptance: " + name, {
+  module("Acceptance: " + name, {
     beforeEach() {
       resetMobile();
 

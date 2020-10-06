@@ -1,9 +1,10 @@
+import { skip } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
 
 acceptance("Group Card");
 
-QUnit.skip("group card", async (assert) => {
+skip("group card", async (assert) => {
   await visit("/t/-/301/1");
   assert.ok(invisible(".group-card"), "user card is invisible by default");
 

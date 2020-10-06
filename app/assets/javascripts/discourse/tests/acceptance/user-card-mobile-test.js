@@ -1,9 +1,10 @@
+import { skip } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
 
 acceptance("User Card - Mobile", { mobileView: true });
 
-QUnit.skip("user card", async (assert) => {
+skip("user card", async (assert) => {
   await visit("/t/internationalization-localization/280");
   assert.ok(
     invisible(".user-card"),

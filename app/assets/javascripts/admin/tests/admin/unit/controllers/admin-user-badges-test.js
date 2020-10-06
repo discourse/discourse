@@ -1,3 +1,5 @@
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 import Badge from "discourse/models/badge";
 import { mapRoutes } from "discourse/mapping-router";
 
@@ -8,7 +10,7 @@ moduleFor("controller:admin-user-badges", {
   needs: ["controller:adminUser"],
 });
 
-QUnit.test("grantableBadges", function (assert) {
+test("grantableBadges", function (assert) {
   const badgeFirst = Badge.create({
     id: 3,
     name: "A Badge",

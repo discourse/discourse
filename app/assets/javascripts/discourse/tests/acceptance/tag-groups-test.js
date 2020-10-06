@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -20,7 +21,7 @@ acceptance("Tag Groups", {
   },
 });
 
-QUnit.test("tag groups can be saved and deleted", async (assert) => {
+test("tag groups can be saved and deleted", async (assert) => {
   const tags = selectKit(".tag-chooser");
 
   await visit("/tag_groups");

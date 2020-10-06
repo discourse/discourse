@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import { isEmpty } from "@ember/utils";
 
 function checkSelectKitIsNotExpanded(selector) {

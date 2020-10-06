@@ -1,7 +1,8 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Watched Words", { loggedIn: true });
 
-QUnit.test("list words in groups", async (assert) => {
+test("list words in groups", async (assert) => {
   await visit("/admin/logs/watched_words/action/block");
 
   assert.ok(exists(".watched-words-list"));
@@ -38,7 +39,7 @@ QUnit.test("list words in groups", async (assert) => {
   assert.ok(!exists(".watched-words-list .watched-word"), "Empty word list.");
 });
 
-QUnit.test("add words", async (assert) => {
+test("add words", async (assert) => {
   await visit("/admin/logs/watched_words/action/block");
 
   click(".show-words-checkbox");
@@ -55,7 +56,7 @@ QUnit.test("add words", async (assert) => {
   assert.equal(found.length, 1);
 });
 
-QUnit.test("remove words", async (assert) => {
+test("remove words", async (assert) => {
   await visit("/admin/logs/watched_words/action/block");
   await click(".show-words-checkbox");
 

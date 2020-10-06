@@ -1,3 +1,5 @@
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import Topic from "discourse/models/topic";
@@ -25,7 +27,7 @@ function topicWithStream(streamDetails) {
   return topic;
 }
 
-QUnit.test("editTopic", function (assert) {
+test("editTopic", function (assert) {
   const model = Topic.create();
   const controller = this.subject({ model });
 
@@ -60,7 +62,7 @@ QUnit.test("editTopic", function (assert) {
   );
 });
 
-QUnit.test("toggleMultiSelect", function (assert) {
+test("toggleMultiSelect", function (assert) {
   const model = Topic.create();
   const controller = this.subject({ model });
 
@@ -100,7 +102,7 @@ QUnit.test("toggleMultiSelect", function (assert) {
   );
 });
 
-QUnit.test("selectedPosts", function (assert) {
+test("selectedPosts", function (assert) {
   let model = topicWithStream({ posts: [{ id: 1 }, { id: 2 }, { id: 3 }] });
   const controller = this.subject({ model });
 
@@ -117,7 +119,7 @@ QUnit.test("selectedPosts", function (assert) {
   );
 });
 
-QUnit.test("selectedAllPosts", function (assert) {
+test("selectedAllPosts", function (assert) {
   let model = topicWithStream({ stream: [1, 2, 3] });
   const controller = this.subject({ model });
 
@@ -147,7 +149,7 @@ QUnit.test("selectedAllPosts", function (assert) {
   );
 });
 
-QUnit.test("selectedPostsUsername", function (assert) {
+test("selectedPostsUsername", function (assert) {
   let model = topicWithStream({
     posts: [
       { id: 1, username: "gary" },
@@ -198,7 +200,7 @@ QUnit.test("selectedPostsUsername", function (assert) {
   );
 });
 
-QUnit.test("showSelectedPostsAtBottom", function (assert) {
+test("showSelectedPostsAtBottom", function (assert) {
   const site = EmberObject.create({ mobileView: false });
   const model = Topic.create({ posts_count: 3 });
   const controller = this.subject({ model, site });
@@ -220,7 +222,7 @@ QUnit.test("showSelectedPostsAtBottom", function (assert) {
   );
 });
 
-QUnit.test("canDeleteSelected", function (assert) {
+test("canDeleteSelected", function (assert) {
   const currentUser = User.create({ admin: false });
   this.registry.register("current-user:main", currentUser, {
     instantiate: false,
@@ -271,7 +273,7 @@ QUnit.test("canDeleteSelected", function (assert) {
   );
 });
 
-QUnit.test("Can split/merge topic", function (assert) {
+test("Can split/merge topic", function (assert) {
   let model = topicWithStream({
     posts: [
       { id: 1, post_number: 1, post_type: 1 },
@@ -316,7 +318,7 @@ QUnit.test("Can split/merge topic", function (assert) {
   );
 });
 
-QUnit.test("canChangeOwner", function (assert) {
+test("canChangeOwner", function (assert) {
   const currentUser = User.create({ admin: false });
   this.registry.register("current-user:main", currentUser, {
     instantiate: false,
@@ -358,7 +360,7 @@ QUnit.test("canChangeOwner", function (assert) {
   );
 });
 
-QUnit.test("canMergePosts", function (assert) {
+test("canMergePosts", function (assert) {
   let model = topicWithStream({
     posts: [
       { id: 1, username: "gary", can_delete: true },
@@ -405,7 +407,7 @@ QUnit.test("canMergePosts", function (assert) {
   );
 });
 
-QUnit.test("Select/deselect all", function (assert) {
+test("Select/deselect all", function (assert) {
   let model = topicWithStream({ stream: [1, 2, 3] });
   const controller = this.subject({ model });
 
@@ -432,7 +434,7 @@ QUnit.test("Select/deselect all", function (assert) {
   );
 });
 
-QUnit.test("togglePostSelection", function (assert) {
+test("togglePostSelection", function (assert) {
   const controller = this.subject();
   const selectedPostIds = controller.get("selectedPostIds");
 
@@ -455,7 +457,7 @@ QUnit.test("togglePostSelection", function (assert) {
   );
 });
 
-// QUnit.test("selectReplies", function(assert) {
+// test("selectReplies", function(assert) {
 //   const controller = this.subject();
 //   const selectedPostIds = controller.get("selectedPostIds");
 //
@@ -468,7 +470,7 @@ QUnit.test("togglePostSelection", function (assert) {
 //   assert.equal(selectedPostIds[2], 100, "selected post #100");
 // });
 
-QUnit.test("selectBelow", function (assert) {
+test("selectBelow", function (assert) {
   const site = EmberObject.create({
     post_types: { small_action: 3, whisper: 4 },
   });
@@ -493,7 +495,7 @@ QUnit.test("selectBelow", function (assert) {
   assert.equal(selectedPostIds[3], 8, "also selected 3rd post below post #3");
 });
 
-QUnit.test("topVisibleChanged", function (assert) {
+test("topVisibleChanged", function (assert) {
   let model = topicWithStream({
     posts: [{ id: 1 }],
   });
@@ -509,38 +511,35 @@ QUnit.test("topVisibleChanged", function (assert) {
   );
 });
 
-QUnit.test(
-  "deletePost - no modal is shown if post does not have replies",
-  function (assert) {
-    pretender.get("/posts/2/reply-ids.json", () => {
-      return [200, { "Content-Type": "application/json" }, []];
-    });
+test("deletePost - no modal is shown if post does not have replies", function (assert) {
+  pretender.get("/posts/2/reply-ids.json", () => {
+    return [200, { "Content-Type": "application/json" }, []];
+  });
 
-    let destroyed;
-    const post = EmberObject.create({
-      id: 2,
-      post_number: 2,
-      can_delete: true,
-      reply_count: 3,
-      destroy: () => {
-        destroyed = true;
-        return Promise.resolve();
-      },
-    });
+  let destroyed;
+  const post = EmberObject.create({
+    id: 2,
+    post_number: 2,
+    can_delete: true,
+    reply_count: 3,
+    destroy: () => {
+      destroyed = true;
+      return Promise.resolve();
+    },
+  });
 
-    const currentUser = EmberObject.create({ moderator: true });
-    let model = topicWithStream({
-      stream: [2, 3, 4],
-      posts: [post, { id: 3 }, { id: 4 }],
-    });
-    const controller = this.subject({ model, currentUser });
+  const currentUser = EmberObject.create({ moderator: true });
+  let model = topicWithStream({
+    stream: [2, 3, 4],
+    posts: [post, { id: 3 }, { id: 4 }],
+  });
+  const controller = this.subject({ model, currentUser });
 
-    const done = assert.async();
-    controller.send("deletePost", post);
+  const done = assert.async();
+  controller.send("deletePost", post);
 
-    next(() => {
-      assert.ok(destroyed, "post was destroyed");
-      done();
-    });
-  }
-);
+  next(() => {
+    assert.ok(destroyed, "post was destroyed");
+    done();
+  });
+});

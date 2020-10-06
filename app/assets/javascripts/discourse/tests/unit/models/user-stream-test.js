@@ -1,9 +1,10 @@
+import { test, module } from "qunit";
 import UserAction from "discourse/models/user-action";
 import User from "discourse/models/user";
 
-QUnit.module("model: UserStream");
+module("model: UserStream");
 
-QUnit.test("basics", (assert) => {
+test("basics", (assert) => {
   var user = User.create({ id: 1, username: "eviltrout" });
   var stream = user.get("stream");
   assert.present(stream, "a user has a stream by default");
@@ -16,7 +17,7 @@ QUnit.test("basics", (assert) => {
   assert.ok(!stream.get("loaded"), "the stream is not loaded by default");
 });
 
-QUnit.test("filterParam", (assert) => {
+test("filterParam", (assert) => {
   var user = User.create({ id: 1, username: "eviltrout" });
   var stream = user.get("stream");
 

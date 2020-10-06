@@ -1,8 +1,9 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("User Drafts", { loggedIn: true });
 
-QUnit.test("Stream", async (assert) => {
+test("Stream", async (assert) => {
   await visit("/u/eviltrout/activity/drafts");
   assert.ok(find(".user-stream-item").length === 3, "has drafts");
 
@@ -13,7 +14,7 @@ QUnit.test("Stream", async (assert) => {
   );
 });
 
-QUnit.test("Stream - resume draft", async (assert) => {
+test("Stream - resume draft", async (assert) => {
   await visit("/u/eviltrout/activity/drafts");
   assert.ok(find(".user-stream-item").length > 0, "has drafts");
 

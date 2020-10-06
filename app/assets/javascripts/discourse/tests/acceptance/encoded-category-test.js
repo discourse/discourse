@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 
@@ -41,7 +42,7 @@ acceptance("Encoded Sub Category Discovery", {
   },
 });
 
-QUnit.test("Visit subcategory by slug", async (assert) => {
+test("Visit subcategory by slug", async (assert) => {
   let bodySelector =
     "body.category-\\%E6\\%BC\\%A2\\%E5\\%AD\\%97-parent-\\%E6\\%BC\\%A2\\%E5\\%AD\\%97-subcategory";
   await visit("/c/%E6%BC%A2%E5%AD%97-parent/%E6%BC%A2%E5%AD%97-subcategory");

@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Auth Complete", {
   beforeEach() {
@@ -16,7 +17,7 @@ acceptance("Auth Complete", {
   },
 });
 
-QUnit.test("when login not required", async (assert) => {
+test("when login not required", async (assert) => {
   await visit("/");
 
   assert.equal(currentPath(), "discovery.latest", "it stays on the homepage");
@@ -27,7 +28,7 @@ QUnit.test("when login not required", async (assert) => {
   );
 });
 
-QUnit.test("when login required", async function (assert) {
+test("when login required", async function (assert) {
   this.siteSettings.login_required = true;
   await visit("/");
 

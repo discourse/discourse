@@ -1,6 +1,8 @@
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 moduleFor("controller:history");
 
-QUnit.test("displayEdit", async function (assert) {
+test("displayEdit", async function (assert) {
   const HistoryController = this.subject();
 
   HistoryController.setProperties({

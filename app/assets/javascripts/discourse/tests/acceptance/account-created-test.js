@@ -1,9 +1,10 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 
 acceptance("Account Created");
 
-QUnit.test("account created - message", async (assert) => {
+test("account created - message", async (assert) => {
   PreloadStore.store("accountCreated", {
     message: "Hello World",
   });
@@ -18,7 +19,7 @@ QUnit.test("account created - message", async (assert) => {
   assert.notOk(exists(".activation-controls"));
 });
 
-QUnit.test("account created - resend email", async (assert) => {
+test("account created - resend email", async (assert) => {
   PreloadStore.store("accountCreated", {
     message: "Hello World",
     username: "eviltrout",
@@ -42,7 +43,7 @@ QUnit.test("account created - resend email", async (assert) => {
   assert.equal(email, "eviltrout@example.com");
 });
 
-QUnit.test("account created - update email - cancel", async (assert) => {
+test("account created - update email - cancel", async (assert) => {
   PreloadStore.store("accountCreated", {
     message: "Hello World",
     username: "eviltrout",
@@ -62,7 +63,7 @@ QUnit.test("account created - update email - cancel", async (assert) => {
   assert.equal(currentPath(), "account-created.index");
 });
 
-QUnit.test("account created - update email - submit", async (assert) => {
+test("account created - update email - submit", async (assert) => {
   PreloadStore.store("accountCreated", {
     message: "Hello World",
     username: "eviltrout",

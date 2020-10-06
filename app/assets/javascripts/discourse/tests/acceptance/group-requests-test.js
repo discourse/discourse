@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
 
@@ -80,7 +81,7 @@ acceptance("Group Requests", {
   },
 });
 
-QUnit.test("Group Requests", async (assert) => {
+test("Group Requests", async (assert) => {
   await visit("/g/Macdonald/requests");
 
   assert.equal(find(".group-members tr").length, 2);

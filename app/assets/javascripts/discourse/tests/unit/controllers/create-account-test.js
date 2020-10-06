@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import { controllerModule } from "discourse/tests/helpers/qunit-helpers";
 

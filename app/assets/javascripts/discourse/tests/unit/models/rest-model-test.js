@@ -1,10 +1,11 @@
-QUnit.module("rest-model");
+import { test, module } from "qunit";
+module("rest-model");
 
 import createStore from "discourse/tests/helpers/create-store";
 import RestModel from "discourse/models/rest";
 import RestAdapter from "discourse/adapters/rest";
 
-QUnit.test("munging", (assert) => {
+test("munging", (assert) => {
   const store = createStore();
   const Grape = RestModel.extend();
   Grape.reopenClass({
@@ -18,7 +19,7 @@ QUnit.test("munging", (assert) => {
   assert.equal(g.get("inverse"), 0.6, "it runs `munge` on `create`");
 });
 
-QUnit.test("update", async (assert) => {
+test("update", async (assert) => {
   const store = createStore();
   const widget = await store.find("widget", 123);
   assert.equal(widget.get("name"), "Trout Lure");
@@ -39,7 +40,7 @@ QUnit.test("update", async (assert) => {
   assert.equal(result.target.name, widget.get("name"));
 });
 
-QUnit.test("updating simultaneously", async (assert) => {
+test("updating simultaneously", async (assert) => {
   assert.expect(2);
 
   const store = createStore();
@@ -57,7 +58,7 @@ QUnit.test("updating simultaneously", async (assert) => {
   });
 });
 
-QUnit.test("save new", async (assert) => {
+test("save new", async (assert) => {
   const store = createStore();
   const widget = store.createRecord("widget");
 
@@ -83,7 +84,7 @@ QUnit.test("save new", async (assert) => {
   assert.equal(result.target.name, widget.get("name"));
 });
 
-QUnit.test("creating simultaneously", (assert) => {
+test("creating simultaneously", (assert) => {
   assert.expect(2);
 
   const store = createStore();
@@ -100,14 +101,14 @@ QUnit.test("creating simultaneously", (assert) => {
   });
 });
 
-QUnit.test("destroyRecord", async (assert) => {
+test("destroyRecord", async (assert) => {
   const store = createStore();
   const widget = await store.find("widget", 123);
 
   assert.ok(await widget.destroyRecord());
 });
 
-QUnit.test("custom api name", async (assert) => {
+test("custom api name", async (assert) => {
   const store = createStore((type) => {
     if (type === "adapter:my-widget") {
       return RestAdapter.extend({

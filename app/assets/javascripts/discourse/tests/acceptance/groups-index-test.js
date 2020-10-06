@@ -1,8 +1,9 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Groups");
 
-QUnit.test("Browsing Groups", async (assert) => {
+test("Browsing Groups", async (assert) => {
   await visit("/g?username=eviltrout");
 
   assert.equal(count(".group-box"), 1, "it displays user's groups");

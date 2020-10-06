@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -18,7 +19,7 @@ acceptance("Login with email - hide email address taken", {
   },
 });
 
-QUnit.test("with hide_email_address_taken enabled", async (assert) => {
+test("with hide_email_address_taken enabled", async (assert) => {
   await visit("/");
   await click("header .login-button");
   await fillIn("#login-account-name", "someuser@example.com");

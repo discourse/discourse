@@ -1,7 +1,8 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Static");
 
-QUnit.test("Static Pages", async (assert) => {
+test("Static Pages", async (assert) => {
   await visit("/faq");
   assert.ok($("body.static-faq").length, "has the body class");
   assert.ok(exists(".body-page"), "The content is present");

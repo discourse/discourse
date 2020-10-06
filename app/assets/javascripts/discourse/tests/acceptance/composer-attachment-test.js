@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 function setupPretender(server, helper) {
@@ -33,7 +34,7 @@ acceptance("Composer Attachment", {
   },
 });
 
-QUnit.test("attachments are cooked properly", async (assert) => {
+test("attachments are cooked properly", async (assert) => {
   await writeInComposer(assert);
   assert.equal(
     find(".d-editor-preview:visible").html().trim(),
@@ -51,13 +52,10 @@ acceptance("Composer Attachment - Secure Media Enabled", {
   },
 });
 
-QUnit.test(
-  "attachments are cooked properly when secure media is enabled",
-  async (assert) => {
-    await writeInComposer(assert);
-    assert.equal(
-      find(".d-editor-preview:visible").html().trim(),
-      '<p><a class="attachment" href="/secure-media-uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
-    );
-  }
-);
+test("attachments are cooked properly when secure media is enabled", async (assert) => {
+  await writeInComposer(assert);
+  assert.equal(
+    find(".d-editor-preview:visible").html().trim(),
+    '<p><a class="attachment" href="/secure-media-uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
+  );
+});

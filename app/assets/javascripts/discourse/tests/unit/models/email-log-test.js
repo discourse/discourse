@@ -1,13 +1,14 @@
+import { test, module } from "qunit";
 import EmailLog from "admin/models/email-log";
 import { setPrefix } from "discourse-common/lib/get-url";
 
-QUnit.module("model:email-log");
+module("model:email-log");
 
-QUnit.test("create", (assert) => {
+test("create", (assert) => {
   assert.ok(EmailLog.create(), "it can be created without arguments");
 });
 
-QUnit.test("subfolder support", (assert) => {
+test("subfolder support", (assert) => {
   setPrefix("/forum");
   const attrs = {
     id: 60,

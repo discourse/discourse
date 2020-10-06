@@ -1,3 +1,5 @@
+import { skip } from "qunit";
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -7,7 +9,7 @@ acceptance("Category Edit", {
   settings: { email_in: true },
 });
 
-QUnit.test("Can open the category modal", async (assert) => {
+test("Can open the category modal", async (assert) => {
   await visit("/c/bug");
 
   await click(".edit-category");
@@ -17,7 +19,7 @@ QUnit.test("Can open the category modal", async (assert) => {
   assert.ok(!visible(".d-modal"), "it closes the modal");
 });
 
-QUnit.test("Editing the category", async (assert) => {
+test("Editing the category", async (assert) => {
   await visit("/c/bug");
 
   await click(".edit-category");
@@ -46,7 +48,7 @@ QUnit.test("Editing the category", async (assert) => {
   );
 });
 
-QUnit.skip("Edit the description without loosing progress", async (assert) => {
+skip("Edit the description without loosing progress", async (assert) => {
   let win = { focus: function () {} };
   let windowOpen = sandbox.stub(window, "open").returns(win);
   sandbox.stub(win, "focus");
@@ -61,7 +63,7 @@ QUnit.skip("Edit the description without loosing progress", async (assert) => {
   );
 });
 
-QUnit.test("Error Saving", async (assert) => {
+test("Error Saving", async (assert) => {
   await visit("/c/bug");
 
   await click(".edit-category");
@@ -72,7 +74,7 @@ QUnit.test("Error Saving", async (assert) => {
   assert.equal(find("#modal-alert").html(), "duplicate email");
 });
 
-QUnit.test("Subcategory list settings", async (assert) => {
+test("Subcategory list settings", async (assert) => {
   const categoryChooser = selectKit(
     ".edit-category-tab-general .category-chooser"
   );

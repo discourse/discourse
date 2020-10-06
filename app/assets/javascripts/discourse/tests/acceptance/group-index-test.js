@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import I18n from "I18n";
 import {
   acceptance,
@@ -6,7 +7,7 @@ import {
 
 acceptance("Group Members");
 
-QUnit.test("Viewing Members as anon user", async (assert) => {
+test("Viewing Members as anon user", async (assert) => {
   await visit("/g/discourse");
 
   assert.ok(
@@ -29,7 +30,7 @@ QUnit.test("Viewing Members as anon user", async (assert) => {
 
 acceptance("Group Members", { loggedIn: true });
 
-QUnit.test("Viewing Members as a group owner", async (assert) => {
+test("Viewing Members as a group owner", async (assert) => {
   updateCurrentUser({ moderator: false, admin: false });
 
   await visit("/g/discourse");
@@ -42,7 +43,7 @@ QUnit.test("Viewing Members as a group owner", async (assert) => {
   );
 });
 
-QUnit.test("Viewing Members as an admin user", async (assert) => {
+test("Viewing Members as an admin user", async (assert) => {
   await visit("/g/discourse");
 
   assert.ok(

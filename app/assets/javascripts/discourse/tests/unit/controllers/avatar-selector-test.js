@@ -1,3 +1,5 @@
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 import { mapRoutes } from "discourse/mapping-router";
 
 moduleFor("controller:avatar-selector", "controller:avatar-selector", {
@@ -7,7 +9,7 @@ moduleFor("controller:avatar-selector", "controller:avatar-selector", {
   needs: ["controller:modal"],
 });
 
-QUnit.test("avatarTemplate", function (assert) {
+test("avatarTemplate", function (assert) {
   const avatarSelectorController = this.subject();
 
   avatarSelectorController.setProperties({

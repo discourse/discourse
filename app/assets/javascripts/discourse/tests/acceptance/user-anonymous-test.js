@@ -1,3 +1,4 @@
+import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("User Anonymous");
 
@@ -11,13 +12,13 @@ function hasTopicList(assert) {
   assert.ok(count(".topic-list tr") > 0, "it has a topic list");
 }
 
-QUnit.test("Root URL", async (assert) => {
+test("Root URL", async (assert) => {
   await visit("/u/eviltrout");
   assert.ok($("body.user-summary-page").length, "has the body class");
   assert.equal(currentPath(), "user.summary", "it defaults to summary");
 });
 
-QUnit.test("Filters", async (assert) => {
+test("Filters", async (assert) => {
   await visit("/u/eviltrout/activity");
   assert.ok($("body.user-activity-page").length, "has the body class");
   hasStream(assert);
@@ -31,13 +32,13 @@ QUnit.test("Filters", async (assert) => {
   assert.ok(exists(".user-stream.filter-5"), "stream has filter class");
 });
 
-QUnit.test("Badges", async (assert) => {
+test("Badges", async (assert) => {
   await visit("/u/eviltrout/badges");
   assert.ok($("body.user-badges-page").length, "has the body class");
   assert.ok(exists(".user-badges-list .badge-card"), "shows a badge");
 });
 
-QUnit.test("Restricted Routes", async (assert) => {
+test("Restricted Routes", async (assert) => {
   await visit("/u/eviltrout/preferences");
 
   assert.equal(
