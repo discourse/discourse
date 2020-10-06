@@ -9,6 +9,8 @@ module Jobs
       topic = topic_timer.topic
       return if topic.blank?
 
+      return unless Guardian.new(topic_timer.user).can_see?(topic)
+
       TopicTimer.transaction do
         TopicPublisher.new(topic, Discourse.system_user, topic_timer.category_id).publish!
       end

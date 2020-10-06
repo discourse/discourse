@@ -3028,6 +3028,23 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    context 'when logged in as a TL4 user' do
+      it "raises an error if the user can't see the topic" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        pm_topic = Fabricate(:private_message_topic)
+
+        post "/t/#{pm_topic.id}/timer.json", params: {
+          time: '24',
+          status_type: TopicTimer.types[1]
+        }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq('invalid_access')
+      end
+    end
   end
 
   describe '#invite' do
