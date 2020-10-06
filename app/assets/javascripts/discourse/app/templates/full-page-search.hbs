@@ -59,7 +59,7 @@
             value=sortOrder
             content=sortOrders
             castInteger=true
-            onChange=(mut sortOrder)
+            onChange=(action (mut sortOrder))
           }}
         </div>
       </div>
@@ -213,7 +213,7 @@
         <div class="search-advanced-filters">
           {{search-advanced-options
             searchTerm=(readonly searchTerm)
-            onChangeSearchTerm=(fn (mut searchTerm))
+            onChangeSearchTerm=(action (mut searchTerm))
           }}
         </div>
       {{/if}}
@@ -221,8 +221,8 @@
       <div class="search-advanced-filters">
         {{search-advanced-options
           searchTerm=(readonly searchTerm)
-          onChangeSearchTerm=(fn (mut searchTerm))
-          onChangeCategory=(fn (mut category))
+          onChangeSearchTerm=(action (mut searchTerm))
+          onChangeCategory=(action (mut category))
         }}
 
         {{d-button

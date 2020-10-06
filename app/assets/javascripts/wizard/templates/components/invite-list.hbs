@@ -16,7 +16,7 @@
     value=inviteRole
     content=roles
     nameProperty="label"
-    onChange=(mut inviteRole)
+    onChange=(action (mut inviteRole))
   }}
 
   <button type="button" class="wizard-btn small add-user" {{action "addUser"}}>

@@ -13,7 +13,7 @@
       {{category-chooser
         value=topicTimer.category_id
         excludeCategoryId=excludeCategoryId
-        onChange=(fn (mut topicTimer.category_id))
+        onChange=(action (mut topicTimer.category_id))
       }}
     </div>
   {{/if}}

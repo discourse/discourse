@@ -10,7 +10,7 @@
       content=visibilityLevelOptions
       castInteger=true
       class="groups-form-visibility-level"
-      onChange=(mut model.visibility_level)
+      onChange=(action (mut model.visibility_level))
     }}
 
     <div class="control-instructions">
@@ -26,7 +26,7 @@
       value=membersVisibilityLevel
       content=visibilityLevelOptions
       class="groups-form-members-visibility-level"
-      onChange=(mut model.members_visibility_level)
+      onChange=(action (mut model.members_visibility_level))
     }}
 
     <div class="control-instructions">
@@ -45,7 +45,7 @@
     value=mentionableLevel
     content=aliasLevelOptions
     class="groups-form-mentionable-level"
-    onChange=(mut model.mentionable_level)
+    onChange=(action (mut model.mentionable_level))
   }}
 </div>
 
@@ -58,7 +58,7 @@
     value=messageableLevel
     content=aliasLevelOptions
     class="groups-form-messageable-level"
-    onChange=(mut model.messageable_level)
+    onChange=(action (mut model.messageable_level))
   }}
 </div>
 

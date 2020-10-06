@@ -15,7 +15,7 @@
       content=emailLevelOptions
       value=model.user_option.email_messages_level
       id="user-email-messages-level"
-      onChange=(mut model.user_option.email_messages_level)
+      onChange=(action (mut model.user_option.email_messages_level))
     }}
     {{#if emailMessagesLevelAway}}
       <div class="instructions">{{emailFrequencyInstructions}}</div>
@@ -29,7 +29,7 @@
       content=emailLevelOptions
       value=model.user_option.email_level
       id="user-email-level"
-      onChange=(mut model.user_option.email_level)
+      onChange=(action (mut model.user_option.email_level))
     }}
     {{#if emailLevelAway}}
       <div class="instructions">{{emailFrequencyInstructions}}</div>
@@ -42,7 +42,7 @@
       valueProperty="value"
       content=previousRepliesOptions
       value=model.user_option.email_previous_replies
-      onChange=(mut model.user_option.email_previous_replies)
+      onChange=(action (mut model.user_option.email_previous_replies))
     }}
   </div>
   {{preference-checkbox labelKey="user.email_in_reply_to" checked=model.user_option.email_in_reply_to}}
@@ -61,7 +61,7 @@
           filterable=true
           content=digestFrequencies
           value=model.user_option.digest_after_minutes
-          onChange=(mut model.user_option.digest_after_minutes)
+          onChange=(action (mut model.user_option.digest_after_minutes))
         }}
       </div>
       {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}
@@ -80,7 +80,7 @@
           valueProperty="value"
           content=mailingListModeOptions
           value=model.user_option.mailing_list_mode_frequency
-          onChange=(mut model.user_option.mailing_list_mode_frequency)
+          onChange=(action (mut model.user_option.mailing_list_mode_frequency))
         }}
       </div>
     {{/if}}

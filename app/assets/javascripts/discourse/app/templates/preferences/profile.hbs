@@ -11,7 +11,7 @@
   <label class="control-label">{{i18n "user.timezone"}}</label>
   {{timezone-input
     value=model.user_option.timezone
-    onChange=(mut model.user_option.timezone)
+    onChange=(action (mut model.user_option.timezone))
     class="input-xxlarge"
   }}
   {{d-button icon="globe" label="user.use_current_timezone" action=(action "useCurrentTimezone") }}

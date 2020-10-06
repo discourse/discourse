@@ -17,7 +17,7 @@
         options=(hash
           maximum=1
         )
-        onChange=(fn (mut buffered.icon))
+        onChange=(action (mut buffered.icon))
       }}
 
       <p class="help">{{i18n "admin.badges.icon_help"}}</p>
@@ -35,7 +35,7 @@
         name="badge_type_id"
         value=buffered.badge_type_id
         content=badgeTypes
-        onChange=(fn (mut buffered.badge_type_id))
+        onChange=(action (mut buffered.badge_type_id))
         isDisabled=readOnly
       }}
     </div>
@@ -50,7 +50,7 @@
           content=badgeGroupings
           class="badge-selector"
           nameProperty="name"
-          onChange=(fn (mut buffered.badge_grouping_id))
+          onChange=(action (mut buffered.badge_grouping_id))
         }}
         {{d-button
           class="btn-default"
@@ -112,7 +112,7 @@
             name="trigger"
             value=buffered.trigger
             content=badgeTriggers
-            onChange=(fn (mut buffered.trigger))
+            onChange=(action (mut buffered.trigger))
             disabled=readOnly
           }}
         </div>

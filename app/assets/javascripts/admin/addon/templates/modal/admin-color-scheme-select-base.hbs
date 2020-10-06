@@ -4,7 +4,7 @@
     {{combo-box
       content=model
       value=selectedBaseThemeId
-      onChange=(mut selectedBaseThemeId)
+      onChange=(action (mut selectedBaseThemeId))
       valueProperty="base_scheme_id"
     }}
   {{/d-modal-body}}

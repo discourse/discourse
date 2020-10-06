@@ -18,7 +18,7 @@
         content=contentTypes
         name="content-type"
         value=model.content_type
-        onChange=(mut model.content_type)
+        onChange=(action (mut model.content_type))
       }}
     </div>
 
@@ -53,7 +53,7 @@
         <label>{{d-icon "circle" class="tracking"}}{{i18n "admin.web_hooks.categories_filter"}}</label>
         {{category-selector
           categories=model.categories
-          onChange=(mut model.categories)
+          onChange=(action (mut model.categories))
         }}
         <div class="instructions">{{i18n "admin.web_hooks.categories_filter_instructions"}}</div>
       </div>

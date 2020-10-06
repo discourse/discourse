@@ -9,7 +9,7 @@
           value=selectedBadgeId
           content=grantableBadges
           none="badges.none"
-          onChange=(mut selectedBadgeId)
+          onChange=(action (mut selectedBadgeId))
         }}
       </p>
     {{/if}}

@@ -75,7 +75,7 @@
                     {{category-chooser
                       value=model.categoryId
                       tabindex="3"
-                      onChange=(fn (mut model.categoryId))
+                      onChange=(action (mut model.categoryId))
                       isDisabled=disableCategoryChooser
                       options=(hash
                         scopedCategoryId=scopedCategoryId
@@ -89,7 +89,7 @@
                     value=model.tags
                     tabindex=4
                     isDisabled=disableTagsChooser
-                    onChange=(fn (mut model.tags))
+                    onChange=(action (mut model.tags))
                     options=(hash
                       categoryId=model.categoryId
                       minimum=model.minimumRequiredTags
