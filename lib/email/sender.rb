@@ -12,7 +12,15 @@ require 'uri'
 require 'net/smtp'
 
 SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
-BYPASS_DISABLE_TYPES = ["admin_login", "test_message"]
+BYPASS_DISABLE_TYPES = %w(
+  admin_login
+  test_message
+  new_version
+  group_smtp
+  invite
+  download_backup_message
+  admin_confirmation_message
+)
 
 module Email
   class Sender
