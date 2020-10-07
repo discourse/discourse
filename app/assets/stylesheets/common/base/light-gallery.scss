@@ -1,70 +1,83 @@
-.lg-open {
-  overflow: hidden;
 
-  .lg-backdrop.in {
-    opacity: 0.9;
+
+.lg-on {
+  // important overides lib defaults
+  .lg-backdrop {
+    opacity: 0.9 !important;
+  }
+
+  .lg-outer {
+    .lg-item {
+      // don't load the default spinner gif
+      background: none !important;
+      // use the default Discourse spinnner instead
+      &:after {
+        content: "";
+        z-index: -1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        animation: rotate-forever 1s infinite linear;
+        height: 30px;
+        width: 30px;
+        border: 4px solid var(--primary-low-mid);
+        border-right-color: transparent;
+        border-radius: 50%;
+      }
+    }
+
+    .group {
+      margin-top: 0;
+    }
+
+    .lg-img-wrap {
+      img {
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+        background: linear-gradient(45deg, #111 0%, #333 100%);
+      }
+    }
+
+    .lg-actions .lg-next,
+    .lg-actions .lg-prev {
+      background: rgba(#000, 0.7);
+      color: white;
+    }
+
+    // flip arrows for RTL
+    .lg-actions {
+      .rtl & {
+        .lg-next {
+          left: unset;
+          right: 20px;
+        }
+
+        .lg-prev {
+          right: unset;
+          left: 20px;
+        }
+      }
+    }
+
+    // hide default nav arrows
+    .lg-actions {
+      .lg-next:before,
+      .lg-prev:after {
+        display: none;
+      }
+    }
   }
 }
 
-.lg-outer {
-  .lg-item {
-    background: none !important; // don't load the default spinner gif
-    &:after {
-      content: "";
-      z-index: -1;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      animation: rotate-forever 1s infinite linear;
-      height: 30px;
-      width: 30px;
-      border: 4px solid var(--primary-low-mid);
-      border-right-color: transparent;
-      border-radius: 50%;
-    }
-  }
 
-  .group {
-    margin-top: 0;
-  }
 
-  .lg-img-wrap {
-    img {
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
-      background: linear-gradient(45deg, #111 0%, #333 100%);
-    }
-  }
-
-  .lg-actions .lg-next,
-  .lg-actions .lg-prev {
-    background: rgba(#000, 0.7);
-    color: white;
-  }
-
-  // flip arrows for RTL
-  .lg-actions {
-    .rtl & {
-      .lg-next {
-        left: unset;
-        right: 20px;
-      }
-
-      .lg-prev {
-        right: unset;
-        left: 20px;
-      }
-    }
-  }
-
-  // hide default nav arrows
-  .lg-actions {
-    .lg-next:before,
-    .lg-prev:after {
-      display: none;
-    }
-  }
-}
 
 .profiler-result {
   display: none;
+}
+
+// CSS for extra modules
+
+// remove html scrollbars when lightbox is open
+.lg-open {
+  overflow: hidden;
 }
