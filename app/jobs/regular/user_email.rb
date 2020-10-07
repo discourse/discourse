@@ -24,7 +24,7 @@ module Jobs
 
       send_user_email(args)
 
-      if args[:user_id].present? && args[:type] == :digest
+      if args[:user_id].present? && args[:type].to_s == "digest"
         # Record every attempt at sending a digest email, even if it was skipped
         UserStat.where(user_id: args[:user_id]).update_all(digest_attempted_at: Time.zone.now)
       end
