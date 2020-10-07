@@ -77,12 +77,15 @@ export default Component.extend(bufferedProperty("model"), {
       return [];
     }
 
-    return Object.keys(permissions).filter(name => name !== 'everyone');
+    return Object.keys(permissions).filter((name) => name !== "everyone");
   },
 
   actions: {
     setPermissionsType(permissionName) {
-      let updatedPermissions = Object.assign({}, this.buffered.get("permissions"));
+      let updatedPermissions = Object.assign(
+        {},
+        this.buffered.get("permissions")
+      );
 
       if (permissionName === "private") {
         delete updatedPermissions.everyone;
@@ -116,7 +119,10 @@ export default Component.extend(bufferedProperty("model"), {
       );
 
       // If 'everyone' is set to full, we can remove any groups.
-      if (!attrs.permissions || attrs.permissions.everyone === PermissionType.FULL) {
+      if (
+        !attrs.permissions ||
+        attrs.permissions.everyone === PermissionType.FULL
+      ) {
         attrs.permissions = { everyone: PermissionType.FULL };
       }
 
