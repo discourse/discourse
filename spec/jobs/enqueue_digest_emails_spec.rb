@@ -121,6 +121,20 @@ describe Jobs::EnqueueDigestEmails do
 
     let(:user) { Fabricate(:user) }
 
+    it "limits jobs enqueued per max_digests_enqueued_per_30_mins_per_site" do
+      Fabricate(:user, last_seen_at: 2.months.ago, last_emailed_at: 2.months.ago)
+      Fabricate(:user, last_seen_at: 2.months.ago, last_emailed_at: 2.months.ago)
+
+      global_setting :max_digests_enqueued_per_30_mins_per_site, 1
+
+      # I don't love fakes, but no point sending this fake email
+      Sidekiq::Testing.fake! do
+        expect do
+          Jobs::EnqueueDigestEmails.new.execute(nil)
+        end.to change(Jobs::UserEmail.jobs, :size).by (1)
+      end
+    end
+
     context "digest emails are enabled" do
       before do
         Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).returns([user.id])
