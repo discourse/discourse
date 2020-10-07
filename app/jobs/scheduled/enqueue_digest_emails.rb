@@ -7,7 +7,13 @@ module Jobs
 
     def execute(args)
       return if SiteSetting.disable_digest_emails? || SiteSetting.private_email?
-      target_user_ids.each do |user_id|
+      users = target_user_ids
+
+      if users.length > GlobalSetting.max_digests_enqueued_per_30_mins_per_site
+        users = users.shuffle[0...GlobalSetting.max_digests_enqueued_per_30_mins_per_site]
+      end
+
+      users.each do |user_id|
         ::Jobs.enqueue(:user_email, type: :digest, user_id: user_id)
       end
     end
