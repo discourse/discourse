@@ -153,7 +153,18 @@ module Jobs
       # Make sure that mailer exists
       raise Discourse::InvalidParameters.new("type=#{type}") unless UserNotifications.respond_to?(type)
 
-      email_args[:email_token] = email_token if email_token.present?
+      if email_token.present?
+        email_args[:email_token] = email_token
+
+        if type.to_s == "confirm_new_email"
+          change_req = EmailChangeRequest.find_by_new_token(email_token)
+
+          if change_req
+            email_args[:requested_by_admin] = change_req.requested_by_admin?
+          end
+        end
+      end
+
       email_args[:new_email] = args[:new_email] || user.email if type.to_s == "notify_old_email" || type.to_s == "notify_old_email_add"
 
       if args[:client_ip] && args[:user_agent]

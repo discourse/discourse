@@ -288,6 +288,37 @@ describe Jobs::UserEmail do
       expect(mail.body).to include("asdfasdf")
     end
 
+    context "confirm_new_email" do
+      let(:email_token) { Fabricate(:email_token, user: user) }
+      before do
+        EmailChangeRequest.create!(
+          user: user,
+          requested_by: requested_by,
+          new_email_token: email_token,
+          new_email: "testnew@test.com",
+          change_state: EmailChangeRequest.states[:authorizing_new]
+        )
+      end
+
+      context "when the change was requested by admin" do
+        let(:requested_by) { Fabricate(:admin) }
+        it "passes along true for the requested_by_admin param which changes the wording in the email" do
+          Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id, email_token: email_token.token)
+          mail = ActionMailer::Base.deliveries.first
+          expect(mail.body).to include("This email change was requested by a site admin.")
+        end
+      end
+
+      context "when the change was requested by the user" do
+        let(:requested_by) { user }
+        it "passes along false for the requested_by_admin param which changes the wording in the email" do
+          Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id, email_token: email_token.token)
+          mail = ActionMailer::Base.deliveries.first
+          expect(mail.body).not_to include("This email change was requested by a site admin.")
+        end
+      end
+    end
+
     context "post" do
       fab!(:post) { Fabricate(:post, user: user) }
 

@@ -3715,6 +3715,18 @@ en:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
+        If you did not request this change, please contact %{site_name} admin.
+
+    confirm_new_email_via_admin:
+      title: "Confirm New Email"
+      subject_template: "[%{email_prefix}] Confirm your new email address"
+      text_body_template: |
+        Confirm your new email address for %{site_name} by clicking on the following link:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        This email change was requested by a site admin. If you did not request this change, please contact %{site_name} admin.
+
     confirm_old_email:
       title: "Confirm Old Email"
       subject_template: "[%{email_prefix}] Confirm your current email address"

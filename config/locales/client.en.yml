@@ -1148,7 +1148,7 @@ en:
         taken: "Sorry, that email is not available."
         error: "There was an error changing your email. Perhaps that address is already in use?"
         success: "We've sent an email to that address. Please follow the confirmation instructions."
-        success_via_admin: "Because you are changing the email of the user, we assume that they have lost access to their original email account. We sent a reset password email to the new email address for this user. Please note the user must complete the reset password process for the email address change to take effect."
+        success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
 
       change_avatar:
