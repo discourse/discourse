@@ -122,16 +122,29 @@ describe Jobs::EnqueueDigestEmails do
     let(:user) { Fabricate(:user) }
 
     it "limits jobs enqueued per max_digests_enqueued_per_30_mins_per_site" do
-      Fabricate(:user, last_seen_at: 2.months.ago, last_emailed_at: 2.months.ago)
-      Fabricate(:user, last_seen_at: 2.months.ago, last_emailed_at: 2.months.ago)
+      user1 = Fabricate(:user, last_seen_at: 2.months.ago, last_emailed_at: 2.months.ago)
+      user2 = Fabricate(:user, last_seen_at: 2.months.ago, last_emailed_at: 2.months.ago)
+
+      user1.user_stat.update(digest_attempted_at: 2.week.ago)
+      user2.user_stat.update(digest_attempted_at: 3.weeks.ago)
 
       global_setting :max_digests_enqueued_per_30_mins_per_site, 1
 
-      # I don't love fakes, but no point sending this fake email
-      Sidekiq::Testing.fake! do
-        expect do
-          Jobs::EnqueueDigestEmails.new.execute(nil)
-        end.to change(Jobs::UserEmail.jobs, :size).by (1)
+      expect_enqueued_with(job: :user_email, args: { type: :digest, user_id: user2.id }) do
+        expect { Jobs::EnqueueDigestEmails.new.execute(nil) }.to change(Jobs::UserEmail.jobs, :size).by (1)
+      end
+
+      # The job didn't actually run, so fake the user_stat update
+      user2.user_stat.update(digest_attempted_at: Time.zone.now)
+
+      expect_enqueued_with(job: :user_email, args: { type: :digest, user_id: user1.id }) do
+        expect { Jobs::EnqueueDigestEmails.new.execute(nil) }.to change(Jobs::UserEmail.jobs, :size).by (1)
+      end
+
+      user1.user_stat.update(digest_attempted_at: Time.zone.now)
+
+      expect_not_enqueued_with(job: :user_email) do
+        Jobs::EnqueueDigestEmails.new.execute(nil)
       end
     end
 
