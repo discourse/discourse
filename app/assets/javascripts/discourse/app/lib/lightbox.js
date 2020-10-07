@@ -1,4 +1,4 @@
-import { scheduleOnce } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import loadScript, { loadCSS } from "discourse/lib/load-script";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import User from "discourse/models/user";
@@ -40,7 +40,7 @@ export default function (elem, siteSettings) {
       loadScript("/javascripts/lg-zoom.min.js").then(() => {
         // lib base css
         loadCSS("/javascripts/lightgallery.min.css").then(() => {
-          scheduleOnce("afterRender", this, () => {
+          schedule("afterRender", this, () => {
             // add new Discourse specific modules here
             window.lgModules.removeWindowScrollbars = removeWindowScrollbars;
             // eslint-disable-next-line
