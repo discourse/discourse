@@ -82,7 +82,7 @@ export function createData(store) {
   // This bg image is public domain: http://hubblesite.org/image/3999/gallery
   let user = createUser({
     profile_background:
-      "/plugins/discourse-styleguide/images/hubble-orion-nebula-bg.jpg",
+      "/plugins/styleguide/images/hubble-orion-nebula-bg.jpg",
     has_profile_background: true,
   });
 

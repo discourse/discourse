@@ -1,4 +1,4 @@
-import { allCategories } from "discourse/plugins/discourse-styleguide/discourse/lib/styleguide";
+import { allCategories } from "discourse/plugins/styleguide/discourse/lib/styleguide";
 
 export default Ember.Route.extend({
   model() {

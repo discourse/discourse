@@ -63,7 +63,7 @@ class Plugin::Metadata
     "discourse-solved",
     "discourse-spoiler-alert",
     "discourse-user-notes",
-    "discourse-styleguide",
+    "styleguide",
     "discourse-tooltips",
     "discourse-translator",
     "discourse-user-card-badges",

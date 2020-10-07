@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module DiscourseStyleguide
+module Styleguide
   class StyleguideController < ApplicationController
-    requires_plugin DiscourseStyleguide::PLUGIN_NAME
+    requires_plugin Styleguide::PLUGIN_NAME
     skip_before_action :check_xhr
 
     def index

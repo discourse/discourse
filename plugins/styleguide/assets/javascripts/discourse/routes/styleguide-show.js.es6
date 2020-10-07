@@ -1,8 +1,8 @@
 import {
   sectionById,
   findNote,
-} from "discourse/plugins/discourse-styleguide/discourse/lib/styleguide";
-import { createData } from "discourse/plugins/discourse-styleguide/discourse/lib/dummy-data";
+} from "discourse/plugins/styleguide/discourse/lib/styleguide";
+import { createData } from "discourse/plugins/styleguide/discourse/lib/dummy-data";
 
 export default Ember.Route.extend({
   model(params) {
