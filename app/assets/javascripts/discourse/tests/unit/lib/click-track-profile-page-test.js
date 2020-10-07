@@ -1,4 +1,4 @@
-import { skip } from "qunit";
+import { module, skip } from "qunit";
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";

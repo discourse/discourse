@@ -36,6 +36,7 @@ import { setURLContainer } from "discourse/lib/url";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import bootbox from "bootbox";
 import { moduleFor } from "ember-qunit";
+import { module } from "qunit";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
