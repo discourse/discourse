@@ -1793,6 +1793,8 @@ sv:
         toggle_topic_bump:
           label: "Växla ämnesknuff"
           desc: "Svara utan att ändra senaste svarsdatum"
+      reload: "Ladda om"
+      ignore: "Ignorera"
     notifications:
       tooltip:
         regular:

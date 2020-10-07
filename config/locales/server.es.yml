@@ -188,6 +188,7 @@ es:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "No puedes habilitar las cargas S3 porque las cargas S3 ya están habilitadas globalmente, y habilitar este nivel de sitio podría causar problemas críticos con las cargas."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor, ponte en contacto con el staff y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
+    expired: "Su token de invitación ha caducado. Por favor, <a href='%{base_url}/about'>póngase en contacto con el personal</a>."
     not_found: "El código de invitación es inválido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro equipo</a>."
     not_found_json: "El código de invitación es inválido. Por favor, ponte en contacto con nuestro equipo."
     not_found_template: |
@@ -200,6 +201,8 @@ es:
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
     confirm_email: "<p>¡Ya casi terminas! Te enviamos un correo de activación a tu dirección de correo electrónico. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
+    disabled_errors:
+      invalid_access: "No tienes permitido ver el recurso solicitado."
   bulk_invite:
     file_should_be_csv: "El archivo subido debería estar en formato csv."
     max_rows: "Las primeras %{max_bulk_invites} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
@@ -438,14 +441,6 @@ es:
       Este tema es claramente importante para ti &ndash; has publicado más del %{percent}% de las respuestas.
 
       Podría mejor todavía si le dieras a otras personas la oportunidad de compartir sus puntos de vista también. ¿Podrías invitarles?
-    get_a_room: |
-      ### Anima a todos a participar en la conversación
-
-      ¡Has respondido %{count} veces a @%{reply_username} en este tema en particular!
-
-      Una gran discusión involucra muchas voces y perspectivas. ¿Puedes involucrar a alguien más?
-
-      Y no olvides que si deseas continuar tu conversación con este usuario en particular en privado, puedes [enviarle un mensaje privado](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Has alcanzado el límite de respuestas para este tema
 
@@ -1856,7 +1851,6 @@ es:
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
     short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
-    default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para deshabilitar."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) Ver: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
@@ -4148,14 +4142,6 @@ es:
             placeholder: "San Francisco, California"
       colors:
         title: "Tema"
-      themes_further_reading:
-        title: "Tema"
-        description:
-        - <ul>
-        - <li><a href='https://meta.discourse.org/t/63682' target='_blank'>¿Cómo instalo un tema o un componente de tema?</a></li>
-        - <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Guía de referencia para el desarrollo de temas</a></li>
-        - </ul>
-        - 'Componentes de tema populares (para ver más, ve a <a href=''https://meta.discourse.org/c/theme/l/latest'' target=''_blank''>#theme</a>)'
       logos:
         title: "Logos"
         fields:
@@ -4203,9 +4189,6 @@ es:
         disabled: "Ya que los inicios de sesión locales están desactivados, no es posible enviar invitaciones a nadie. Por favor, ve al siguiente paso."
       finished:
         title: "¡Tu foro de Discourse está listo!"
-        description: |
-          <p>Si en algún momento quieres cambiar alguno de estos ajustes, <b>vuelve a lanzar este ayudante en cualquier momento</b> o visita <a href='%{base_path}/admin' target='_blank'>el panel de administrador</a>; lo encontrarás al lado del icono de la llave inglesa en el menú.</p>
-          <p>¡Pásala bien y buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>
   search_logs:
     graph_title: "Análisis de búsquedas"
   joined: "Registrado"

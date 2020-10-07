@@ -169,4 +169,49 @@ describe PrettyText do
       </div>
     HTML
   end
+
+  it "does not break when there are headings before/after a poll with a title" do
+    cooked = PrettyText.cook <<~MD
+      # Pre-heading
+
+      [poll]
+      # What's your favorite *berry*? :wink: https://google.com/
+      * Strawberry
+      * Raspberry
+      * Blueberry
+      [/poll]
+
+      # Post-heading
+    MD
+
+    expect(cooked).to include(<<~HTML)
+      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=9" title=":wink:" class="emoji" alt=":wink:"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
+      </div>
+    HTML
+
+    expect(cooked).to include("<h1>Pre-heading</h1>")
+    expect(cooked).to include("<h1>Post-heading</h1>")
+  end
+
+  it "does not break when there are headings before/after a poll without a title" do
+    cooked = PrettyText.cook <<~MD
+      # Pre-heading
+
+      [poll]
+      * Strawberry
+      * Raspberry
+      * Blueberry
+      [/poll]
+
+      # Post-heading
+    MD
+
+    expect(cooked).to_not include('<div class="poll-title">')
+    expect(cooked).to include(<<~HTML)
+      <div class="poll" data-poll-status="open" data-poll-name="poll">
+    HTML
+
+    expect(cooked).to include("<h1>Pre-heading</h1>")
+    expect(cooked).to include("<h1>Post-heading</h1>")
+  end
 end

@@ -103,6 +103,8 @@ sv:
           step: Steg
         poll_public:
           label: Visa vem som röstat
+        poll_title:
+          label: Titel (valfritt)
         poll_options:
           label: Ange ett omröstningsalternativ per rad
         automatic_close:

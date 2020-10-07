@@ -389,14 +389,6 @@ ca:
       Podeu editar la vostra darrera resposta per a afegir una citació. Per a fer-ho, seleccioneu text i premeu el botó de <b>cita resposta</b> que apareixerà.
 
       És més fàcil seguir un tema quan té poques respostes en profunditat que no pas moltes respostes curtes i individuals.
-    get_a_room: |
-      ### Anima tothom a participar en la conversa
-
-      Heu respost %{count} vegades a @%{reply_username} en aquest tema en particular.
-
-      Una gran discussió implica moltes veus i perspectives. ¿Podeu implicar algú més?
-
-      I no us en descuideu: si voleu continuar la conversa amb aquest usuari en concret fora de la vista pública, [envieu-li un missatge personal] (%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Heu assolit el límit de respostes per a aquest tema
 
@@ -1738,7 +1730,6 @@ ca:
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
     short_progress_text_threshold: "Després que el nombre de publicacions en un tema superi aquesta xifra, la barra de progrés només mostrarà el nombre actual de publicacions. Si voleu canviar l'amplada de la barra de progrés, cal modificar aquest valor."
-    default_code_lang: "Ressaltament de sintaxi del llenguatge de programació per defecte aplicat a blocs de codi de GitHub (lang-auto, ruby, python, etc.)."
     warn_reviving_old_topic_age: "Es mostra un avís quan algú comença una resposta a un tema on la darrera resposta té més dies que els indicats. Per a inhabilitar-ho, deixeu-ho a 0."
     autohighlight_all_code: "Obliga l'ús de codi ressaltat per a tots els blocs de codi preformatat, fins i tot quan no n'hagin especificat el llenguatge."
     highlighted_languages: "Regles incloses de ressaltat de sintaxi. (Advertència: incloure-hi massa llenguatges pot afectar el rendiment.) Vegeu: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per a una demostració."
@@ -3192,8 +3183,6 @@ ca:
             placeholder: "San Francisco, Califòrnia"
       colors:
         title: "Aparença"
-      themes_further_reading:
-        title: "Aparences"
       logos:
         title: "Logos"
         fields:
@@ -3241,8 +3230,6 @@ ca:
         disabled: "Atès que els inicis de sessió locals no estan habilitats, no és possible enviar invitacions a ningú. Procediu al pas següent."
       finished:
         title: "El vostre Discourse està a punt!"
-        description: |
-          <p> Si mai us ve de gust canviar aquests paràmetres, <b>torneu a executar l'assistent en qualsevol moment</b> o visiteu <a href='%{base_path}/admin' target='_blank'>la secció d'administració</a>; la trobareu vora la icona de clau anglesa en el menú del lloc web. </p><p>Divertiu-vos i bona sort construint la vostra nova comunitat!</a> </p>
   search_logs:
     graph_title: "Recompte de cerques"
   joined: "Registrat"

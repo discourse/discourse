@@ -2177,6 +2177,7 @@ en:
         choose_new_tags: "Choose new tags for these topics:"
         choose_append_tags: "Choose new tags to append for these topics:"
         changed_tags: "The tags of those topics were changed."
+        remove_tags: "Remove Tags"
 
       none:
         unread: "You have no unread topics."

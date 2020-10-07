@@ -61,6 +61,7 @@ ko:
       breakdown:
         title: "투표 결과"
         votes: "%{count} 투표"
+        breakdown: "분석"
         percentage: "백분율"
         count: "수"
       error_while_toggling_status: "죄송합니다. 이 투표의 상태를 바꾸는 도중 에러가 발생하였습니다."
@@ -97,6 +98,8 @@ ko:
           step: 단계
         poll_public:
           label: 투표한 사람 보기
+        poll_title:
+          label: 제목 (선택 사항)
         poll_options:
           label: 투표 선택지는 한줄에 하나씩 입력하세요
         automatic_close:

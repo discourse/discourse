@@ -122,6 +122,7 @@ hu:
       twitter: "Megosztás Twitteren"
       facebook: "Megosztás Facebookon"
       email: "Küldés e-mailben"
+      url: "URL másolása és megosztása"
     action_codes:
       public_topic: "téma nyilvánossá téve: %{when}"
       private_topic: "téma privát üzenetté alakítva: %{when}"

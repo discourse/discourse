@@ -869,7 +869,6 @@ cs:
     digest_posts: "Maximální počet populárních příspěvků zařazených do email přehledu."
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zruště pokud chcete používat vlastní plně responzivní kaskádový styl."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -1132,8 +1131,6 @@ cs:
         title: "Organizace"
       colors:
         title: "Téma"
-      themes_further_reading:
-        title: "Motivy"
       logos:
         title: "Loga"
         fields:

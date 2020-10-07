@@ -186,6 +186,7 @@ zh_CN:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "你无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
     conflicting_google_user_id: '此账户的Google账户ID已更改; 出于安全原因，需要管理人员干预。请联系工作人员并指引他们前往<a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
+    expired: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found_json: "你的邀请码不正确。请联系工作人员。"
     not_found_template: |
@@ -198,6 +199,10 @@ zh_CN:
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有账户了！</a>"
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
     cant_invite_to_group: "你未被允许邀请用户到指定的群组。请确保你是群组的所有者。"
+    disabled_errors:
+      sso_enabled: "由于已启用 SSO，邀请功能已被禁用。"
+      local_logins_disabled: "由于“启用本地登录”设置为禁用，邀请功能也被禁用。"
+      invalid_access: "您没有权限查看所请求的资源。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     max_rows: "前%{max_bulk_invites}个邀请已经被发出。尝试将文件分割成更小的部分。"
@@ -422,13 +427,13 @@ zh_CN:
 
       留一点空间给其他人分享他们自己的见解会更好。你能邀请他们吗？
     get_a_room: |
-      ### 鼓励大家参与讨论
+      ### 鼓励每一个人都参与到讨论当中
 
       你已经在这个主题中给@%{reply_username}回复了%{count}次了！
 
       良好讨论应该包含许多不同的声音和观点。你能让其他人也参与进来吗？
 
-      不要忘记了，如果你想私下继续与特定用户进行对话，可以[给他们发私信](%{base_path}/u/%{reply_username})。
+      不要忘记了，如果你想私下继续与特定用户进行对话，可以[给他们发送私信](%{base_path}/u/%{reply_username})。
     too_many_replies: |
       ### 你发表的回复数量已经达到了上限。
 
@@ -1838,7 +1843,7 @@ zh_CN:
     display_name_on_posts: "在用户的帖子中显示他们的全名以及他们的 @username。"
     show_time_gap_days: "两个帖子的发表时间相隔多少天内时，在主题中以时间间隔显示。"
     short_progress_text_threshold: "在主题中的帖子数超过这个数量后，进度条将只显示当前的帖子数量。如果你更改了进度条的宽度，你需要修改这个值。"
-    default_code_lang: "默认的编程语言语法高亮应用 GitHub 代码块（lang-auto、ruby、python等。）"
+    default_code_lang: "使用Github code block(auto, nohighlight, ruby, python etc)作为默认的编程语言语法高亮。"
     warn_reviving_old_topic_age: "当有人开始回复一个最后回复于设定天数之前的主题时，将显示一个警告。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式声明语言，仍为所有预格式化代码块应用语法高亮。"
     highlighted_languages: "包含语法突出显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>用于演示"
@@ -1946,7 +1951,7 @@ zh_CN:
     shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "在通知中所使用的图标。推荐使用一个96×96的单色且为透明背景的PNG图像。"
-    base_font: "被用在本站点上大多数地方的字体。可用主题覆盖。"
+    heading_font: "网站标题使用的字体。主题可以通过 `--heading-font-family` CSS 自定义属性来覆盖。"
     short_title: "短标题将用于用户主页、启动器或其他可能空间有限的地方。应该控制在12个字符内。"
     dashboard_hidden_reports: "允许从仪表盘中隐藏指定的报告。"
     dashboard_visible_tabs: "选择可见的仪表盘标签页"
@@ -2428,7 +2433,7 @@ zh_CN:
       text_body_template: |
         嘿。我们看到你一直在忙着阅读，这太棒了，所以我们已经提升你了[信任等级！](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
-        我们很高兴你和我们共度时光，我们很想知道更多关于你的事情。花一点时间[填写你的个人资料](%{base_url}/我的/设置/个人信息)，或随时[开始一个新主题](%{base_url}/categories)。
+        我们很高兴你和我们共度时光，我们很想知道更多关于你的事情。花一点时间[填写你的个人资料](%{base_url}/my/preferences/profile)，或随时[开始一个新主题](%{base_url}/categories)。
     welcome_staff:
       title: "欢迎管理人员"
       subject_template: "恭喜，你已获得%{role}身份！"
@@ -4124,16 +4129,15 @@ zh_CN:
             placeholder: "旧金山，加利福尼亚"
       colors:
         title: "主题"
-      themes_further_reading:
-        title: "主题"
-        description:
-        - <ul>
-        - <li><a href='https://meta.discourse.org/t/63682' target='_blank'>如何安装一个主题或主题组件?</a></li>
-        - <li><a href='https://meta.discourse.org/t/110448' target='_blank'>主题开发者快速参考指南</a></li>
-        - </ul>
-        - '热门的主题组件（更多内容请浏览<a href=''https://meta.discourse.org/c/theme/l/latest'' target=''_blank''>#theme</a>）”'
       fonts:
         title: "字体"
+        fields:
+          body_font:
+            label: "正文字体"
+          heading_font:
+            label: "标题字体"
+          font_preview:
+            label: "预览"
       logos:
         title: "标志"
         fields:
@@ -4181,9 +4185,6 @@ zh_CN:
         disabled: "由于禁用了本地登录，因此无法向任何人发送邀请。请继续下一步。"
       finished:
         title: "你的 Discourse 已经准备就绪！"
-        description: |
-          <p>如果你觉得需要修改这些设置，<b>随时重新运行此向导</b>或访问<a href='%{base_path}/admin' target='_blank'>管理员分块</a>；你可以在站点菜单找到扳手图标旁找到。</p>
-          <p>祝你玩得开心，还有祝你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建设新社区好运！</a></p>
   search_logs:
     graph_title: "搜索计数"
   joined: "已加入"
