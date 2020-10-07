@@ -160,7 +160,7 @@ module Jobs
           change_req = EmailChangeRequest.find_by(new_email_token: EmailToken.find_by(token: email_token))
 
           if change_req
-            email_args[:requested_by_admin] = change_req.requested_by_admin? && !change_req.self_requested?
+            email_args[:requested_by_admin] = change_req.requested_by_admin?
           end
         end
       end

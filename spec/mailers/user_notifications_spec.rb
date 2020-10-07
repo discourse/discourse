@@ -81,7 +81,9 @@ describe UserNotifications do
   end
 
   describe ".confirm_new_email" do
-    let(:opts) { { requested_by_admin: requested_by_admin, email_token: token } }
+    let(:opts) do
+      { requested_by_admin: requested_by_admin, email_token: token }
+    end
     let(:token) { "test123" }
 
     context "when requested by admin" do
