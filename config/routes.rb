@@ -804,6 +804,7 @@ Discourse::Application.routes.draw do
     put "t/:topic_id/bookmark" => "topics#bookmark", constraints: { topic_id: /\d+/ }
     put "t/:topic_id/remove_bookmarks" => "topics#remove_bookmarks", constraints: { topic_id: /\d+/ }
     put "t/:topic_id/tags" => "topics#update_tags", constraints: { topic_id: /\d+/ }
+    put "t/:topic_id/slow_mode" => "topics#set_slow_mode", constraints: { topic_id: /\d+/ }
 
     post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: { topic_id: /\d+/ }
 

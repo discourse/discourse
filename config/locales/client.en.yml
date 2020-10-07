@@ -2313,6 +2313,23 @@ en:
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
 
+      slow_mode_update:
+        title: "Slow Mode"
+        select: "Interval:"
+        description: "Users will have to wait this interval to be able to post again."
+        current: "Current interval is %{hours} hours, %{minutes} minutes, and %{seconds} seconds."
+        save: "Save"
+        remove: "Disable"
+        hours: "Hours"
+        minutes: "Minutes"
+        seconds: "Seconds"
+        intervals:
+          15_minutes: "15 Minutes"
+          1_hour: "1 Hour"
+          4_hours: "4 Hours"
+          1_day: "1 Day"
+          1_week: "1 Week"
+          custom: "Pick Interval"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
@@ -2447,6 +2464,7 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
+        slow_mode: "Set Slow Mode"
         timed_update: "Set Topic Timer..."
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"
