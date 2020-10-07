@@ -1,6 +1,6 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Rendering polls with pie charts - desktop", {
+acceptance("Rendering polls with pie charts", {
   loggedIn: true,
   settings: { poll_enabled: true, poll_groupable_user_fields: "something" },
 });

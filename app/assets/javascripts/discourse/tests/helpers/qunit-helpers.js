@@ -1,8 +1,6 @@
 import { Promise } from "rsvp";
 import { isEmpty } from "@ember/utils";
 import { later } from "@ember/runloop";
-/* global QUnit, resetSite */
-
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import HeaderComponent from "discourse/components/site-header";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
@@ -36,7 +34,10 @@ import { setURLContainer } from "discourse/lib/url";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import bootbox from "bootbox";
 import { moduleFor } from "ember-qunit";
-import { module } from "qunit";
+import QUnit, { module } from "qunit";
+import siteFixtures from "discourse/tests/fixtures/site-fixtures";
+import Site from "discourse/models/site";
+import createStore from "discourse/tests/helpers/create-store";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -114,6 +115,13 @@ $.fn.modal = AcceptanceModal;
 
 let _pretenderCallbacks = {};
 
+export function resetSite(siteSettings, extras) {
+  let siteAttrs = $.extend({}, siteFixtures["site.json"].site, extras || {});
+  siteAttrs.store = createStore();
+  siteAttrs.siteSettings = siteSettings;
+  return Site.resetCurrent(Site.create(siteAttrs));
+}
+
 export function applyPretender(name, server, helper) {
   const cb = _pretenderCallbacks[name];
   if (cb) {
@@ -152,14 +160,19 @@ export function discourseModule(name, hooks) {
   });
 }
 
+export function addPretenderCallback(name, fn) {
+  if (name && fn) {
+    _pretenderCallbacks[name] = fn;
+  }
+}
+
 export function acceptance(name, options) {
+  name = `Acceptance: ${name}`;
   options = options || {};
 
-  if (options.pretend) {
-    _pretenderCallbacks[name] = options.pretend;
-  }
+  addPretenderCallback(name, options.pretend);
 
-  module("Acceptance: " + name, {
+  module(name, {
     beforeEach() {
       resetMobile();
 

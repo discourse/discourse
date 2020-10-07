@@ -5,7 +5,58 @@ import {
   widgetTest,
 } from "discourse/tests/helpers/widget-test";
 
-moduleForWidget("discourse-poll");
+let requests = 0;
+
+moduleForWidget("discourse-poll", {
+  pretend(server) {
+    server.put("/polls/vote", () => {
+      ++requests;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          poll: {
+            name: "poll",
+            type: "regular",
+            status: "open",
+            results: "always",
+            options: [
+              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+            ],
+            voters: 1,
+            chart_type: "bar",
+          },
+          vote: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      ];
+    });
+
+    server.put("/polls/vote", () => {
+      ++requests;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          poll: {
+            name: "poll",
+            type: "regular",
+            status: "open",
+            results: "always",
+            options: [
+              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+            ],
+            voters: 1,
+            chart_type: "bar",
+            groups: "foo",
+          },
+          vote: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      ];
+    });
+  },
+});
 
 const template = `{{mount-widget
                     widget="discourse-poll"
@@ -44,31 +95,7 @@ widgetTest("can vote", {
   },
 
   async test(assert) {
-    let requests = 0;
-
-    /* global server */
-    server.put("/polls/vote", () => {
-      ++requests;
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          poll: {
-            name: "poll",
-            type: "regular",
-            status: "open",
-            results: "always",
-            options: [
-              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-            ],
-            voters: 1,
-            chart_type: "bar",
-          },
-          vote: ["1f972d1df351de3ce35a787c89faad29"],
-        },
-      ];
-    });
+    requests = 0;
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(requests, 1);
@@ -115,32 +142,7 @@ widgetTest("cannot vote if not member of the right group", {
   },
 
   async test(assert) {
-    let requests = 0;
-
-    /* global server */
-    server.put("/polls/vote", () => {
-      ++requests;
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          poll: {
-            name: "poll",
-            type: "regular",
-            status: "open",
-            results: "always",
-            options: [
-              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-            ],
-            voters: 1,
-            chart_type: "bar",
-            groups: "foo",
-          },
-          vote: ["1f972d1df351de3ce35a787c89faad29"],
-        },
-      ];
-    });
+    requests = 0;
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(

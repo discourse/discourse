@@ -41,6 +41,10 @@ export let fixturesByUrl;
 
 export default new Pretender();
 
+export function pretenderHelpers() {
+  return { parsePostData, response, success };
+}
+
 export function applyDefaultHandlers(pretender) {
   // Autoload any `*-pretender` files
   Object.keys(requirejs.entries).forEach((e) => {

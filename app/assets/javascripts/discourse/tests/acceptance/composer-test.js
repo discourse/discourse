@@ -10,8 +10,8 @@ import { Promise } from "rsvp";
 
 acceptance("Composer", {
   loggedIn: true,
-  pretend(pretenderServer, helper) {
-    pretenderServer.post("/uploads/lookup-urls", () => {
+  pretend(server, helper) {
+    server.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });
   },
@@ -809,21 +809,4 @@ test("Image resizing buttons", async (assert) => {
     find("script").length === 0,
     "it does not unescapes script tags in code blocks"
   );
-});
-
-test("can reply to a private message", async (assert) => {
-  let submitted;
-
-  /* global server */
-  server.post("/posts", () => {
-    submitted = true;
-    return [200, { "Content-Type": "application/json" }, {}];
-  });
-
-  await visit("/t/34");
-  await click(".topic-post:eq(0) button.reply");
-  await fillIn(".d-editor-input", "this is the *content* of the reply");
-  await click("#reply-control button.create");
-
-  assert.ok(submitted);
 });
