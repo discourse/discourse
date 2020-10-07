@@ -400,6 +400,12 @@ class TopicQuery
         SELECT cu.category_id FROM category_users cu
         WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
       )
+      OR topics.category_id IN (
+        SELECT c.id FROM categories c WHERE c.parent_category_id IN (
+          SELECT cd.category_id FROM category_users cd
+          WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
+        )
+      )
     SQL
 
     if SiteSetting.tagging_enabled
