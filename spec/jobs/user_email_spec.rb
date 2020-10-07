@@ -42,17 +42,20 @@ describe Jobs::UserEmail do
 
     context 'not emailed recently' do
       before do
+        freeze_time
         user.update!(last_emailed_at: 8.days.ago)
       end
 
       it "calls the mailer when the user exists" do
         Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
         expect(ActionMailer::Base.deliveries).to_not be_empty
+        expect(user.user_stat.reload.digest_attempted_at).to eq_time(Time.zone.now)
       end
     end
 
     context 'recently emailed' do
       before do
+        freeze_time
         user.update!(last_emailed_at: 2.hours.ago)
         user.user_option.update!(digest_after_minutes: 1.day.to_i / 60)
       end
@@ -60,6 +63,7 @@ describe Jobs::UserEmail do
       it 'skips sending digest email' do
         Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
         expect(ActionMailer::Base.deliveries).to eq([])
+        expect(user.user_stat.reload.digest_attempted_at).to eq_time(Time.zone.now)
       end
     end
   end
