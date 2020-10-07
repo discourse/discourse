@@ -13,7 +13,6 @@ describe UsersEmailController do
       get "/u/confirm-new-email/asdfasdf"
 
       expect(response.status).to eq(200)
-      expect(response.redirect_url).not_to eq("http://test.localhost/login")
     end
 
     it 'errors out for invalid tokens' do
