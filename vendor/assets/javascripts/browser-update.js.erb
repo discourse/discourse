@@ -23,7 +23,7 @@ var $buo = function() {
   var noscriptElements = document.getElementsByTagName("noscript");
   // find the element with the "data-path" attribute set
   for (var i = 0; i < noscriptElements.length; ++i) {
-    if (noscriptElements[i].dataset["path"]) {
+    if (noscriptElements[i].getAttribute("data-path")) {
       // noscriptElements[i].innerHTML contains encoded HTML
       mainElement.innerHTML = noscriptElements[i].childNodes[0].nodeValue;
       break;
