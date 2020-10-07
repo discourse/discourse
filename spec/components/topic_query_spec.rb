@@ -217,6 +217,11 @@ describe TopicQuery do
         expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
       end
 
+      it "shows a subcategory definition topic in its parent list with the right site setting" do
+        SiteSetting.show_category_definitions_in_topic_lists = true
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(2)
+      end
+
       it "works with subsubcategories" do
         SiteSetting.max_category_nesting = 3
 
