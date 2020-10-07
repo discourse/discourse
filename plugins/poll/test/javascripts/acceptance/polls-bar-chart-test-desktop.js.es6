@@ -7,6 +7,37 @@ acceptance("Rendering polls with bar charts - desktop", {
   beforeEach() {
     clearPopupMenuOptionsCallback();
   },
+  pretend(server) {
+    server.get("/polls/voters.json", (request) => {
+      let body = {};
+      if (
+        request.queryParams.option_id === "68b434ff88aeae7054e42cd05a4d9056"
+      ) {
+        body = {
+          voters: {
+            "68b434ff88aeae7054e42cd05a4d9056": [
+              {
+                id: 777,
+                username: "bruce777",
+                avatar_template: "/images/avatar.png",
+                name: "Bruce Wayne",
+              },
+            ],
+          },
+        };
+      } else {
+        body = {
+          voters: Array.from(new Array(5), (_, i) => ({
+            id: 600 + i,
+            username: `bruce${600 + i}`,
+            avatar_template: "/images/avatar.png",
+            name: "Bruce Wayne",
+          })),
+        };
+      }
+      return [200, { "Content-Type": "application/json" }, body];
+    });
+  },
 });
 
 test("Polls", async (assert) => {
@@ -43,24 +74,6 @@ test("Public poll", async (assert) => {
     "it should display the right number of voters"
   );
 
-  // eslint-disable-next-line
-  server.get("/polls/voters.json", () => {
-    const body = {
-      voters: {
-        "68b434ff88aeae7054e42cd05a4d9056": [
-          {
-            id: 777,
-            username: "bruce777",
-            avatar_template: "/images/avatar.png",
-            name: "Bruce Wayne",
-          },
-        ],
-      },
-    };
-
-    return [200, { "Content-Type": "application/json" }, body];
-  });
-
   await click(".poll-voters-toggle-expand:first a");
 
   assert.equal(
@@ -88,20 +101,6 @@ test("Public number poll", async (assert) => {
     find(".poll-voters:first li:first a").attr("href"),
     "user URL does not exist"
   );
-
-  // eslint-disable-next-line
-  server.get("/polls/voters.json", () => {
-    const body = {
-      voters: Array.from(new Array(5), (_, i) => ({
-        id: 600 + i,
-        username: `bruce${600 + i}`,
-        avatar_template: "/images/avatar.png",
-        name: "Bruce Wayne",
-      })),
-    };
-
-    return [200, { "Content-Type": "application/json" }, body];
-  });
 
   await click(".poll-voters-toggle-expand:first a");
 

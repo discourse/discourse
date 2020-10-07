@@ -62,7 +62,7 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
     ];
   }
   // prettier-ignore
-  pretender.post("/uploads/lookup-urls", () => { //eslint-disable-line
+  pretender.post("/uploads/lookup-urls", () => {
     return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
   });
 
