@@ -90,10 +90,9 @@ describe UserNotifications do
       let(:requested_by_admin) { true }
 
       it "uses the requested by admin template" do
-        UserNotifications.any_instance.expects(:build_user_email_token_by_template).with(
-          "user_notifications.confirm_new_email_via_admin", user, token
+        expect(UserNotifications.confirm_new_email(user, opts).body).to include(
+          "This email change was requested by a site admin."
         )
-        UserNotifications.confirm_new_email(user, opts).body
       end
     end
 
@@ -101,10 +100,9 @@ describe UserNotifications do
       let(:requested_by_admin) { false }
 
       it "uses the normal template" do
-        UserNotifications.any_instance.expects(:build_user_email_token_by_template).with(
-          "user_notifications.confirm_new_email", user, token
+        expect(UserNotifications.confirm_new_email(user, opts).body).not_to include(
+          "This email change was requested by a site admin."
         )
-        UserNotifications.confirm_new_email(user, opts).body
       end
     end
   end

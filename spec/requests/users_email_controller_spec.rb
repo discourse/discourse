@@ -12,7 +12,7 @@ describe UsersEmailController do
     it 'does not redirect to login for signed out accounts, this route works fine as anon user' do
       get "/u/confirm-new-email/asdfasdf"
 
-      expect(response.status).not_to eq(302)
+      expect(response.status).to eq(200)
       expect(response.redirect_url).not_to eq("http://test.localhost/login")
     end
 

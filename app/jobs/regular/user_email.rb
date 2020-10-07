@@ -157,7 +157,7 @@ module Jobs
         email_args[:email_token] = email_token
 
         if type.to_s == "confirm_new_email"
-          change_req = EmailChangeRequest.find_by(new_email_token: EmailToken.find_by(token: email_token))
+          change_req = EmailChangeRequest.find_by_new_token(email_token)
 
           if change_req
             email_args[:requested_by_admin] = change_req.requested_by_admin?
