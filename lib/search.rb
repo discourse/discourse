@@ -89,15 +89,16 @@ class Search
     end
 
     data.gsub!(/\S+/) do |str|
-      if str.match?(/^(https?:\/\/)[\S]+$/)
+      if str =~ /^["]?((https?:\/\/)[\S]+)["]?$/
         begin
-          uri = URI.parse(str)
+          uri = URI.parse(Regexp.last_match[1])
           uri.query = nil
           str = uri.to_s
         rescue URI::Error
           # don't fail if uri does not parse
         end
       end
+
       str
     end
 
