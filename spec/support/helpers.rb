@@ -152,6 +152,23 @@ module Helpers
     end
   end
 
+  def setup_git_repo(files)
+    dir = Dir.tmpdir
+    repo_dir = "#{dir}/#{SecureRandom.hex}"
+    `mkdir #{repo_dir}`
+    `cd #{repo_dir} && git init . `
+    `cd #{repo_dir} && git config user.email 'someone@cool.com'`
+    `cd #{repo_dir} && git config user.name 'The Cool One'`
+    `cd #{repo_dir} && git config commit.gpgsign 'false'`
+    files.each do |name, data|
+      FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
+      File.write("#{repo_dir}/#{name}", data)
+      `cd #{repo_dir} && git add #{name}`
+    end
+    `cd #{repo_dir} && git commit -am 'first commit'`
+    repo_dir
+  end
+
   class StubbedJob
     def initialize; end
     def perform(args); end
