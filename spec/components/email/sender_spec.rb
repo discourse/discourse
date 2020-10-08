@@ -52,6 +52,20 @@ describe Email::Sender do
         message = Mail::Message.new(to: moderator.email, body: "hello")
         Email::Sender.new(message, :hello).send
       end
+
+      it "delivers mail to staff user when confirming new email if user is provided" do
+        Mail::Message.any_instance.expects(:deliver_now).once
+        Fabricate(:email_change_request, {
+          user: moderator,
+          new_email: "newemail@testmoderator.com",
+          old_email: moderator.email,
+          change_state: EmailChangeRequest.states[:authorizing_new]
+        })
+        message = Mail::Message.new(
+          to: "newemail@testmoderator.com", body: "hello"
+        )
+        Email::Sender.new(message, :confirm_new_email, moderator).send
+      end
     end
   end
 
