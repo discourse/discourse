@@ -153,9 +153,7 @@ module Helpers
   end
 
   def setup_git_repo(files)
-    dir = Dir.tmpdir
-    repo_dir = "#{dir}/#{SecureRandom.hex}"
-    `mkdir #{repo_dir}`
+    repo_dir = Dir.mktmpdir
     `cd #{repo_dir} && git init . `
     `cd #{repo_dir} && git config user.email 'someone@cool.com'`
     `cd #{repo_dir} && git config user.name 'The Cool One'`
