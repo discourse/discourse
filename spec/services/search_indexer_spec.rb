@@ -158,7 +158,6 @@ describe SearchIndexer do
 
       post.rebake!
       post.reload
-      post.topic
 
       expect(post.post_search_data.raw_data).to eq(
         "https://meta.discourse.org/some.png"
@@ -228,7 +227,6 @@ describe SearchIndexer do
 
       post.rebake!
       post.reload
-      post.topic
 
       expect(post.cooked).to include(
         CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS
