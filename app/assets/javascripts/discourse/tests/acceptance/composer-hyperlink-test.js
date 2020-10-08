@@ -24,8 +24,8 @@ test("add a hyperlink to a reply", async (assert) => {
 
   assert.equal(
     find(".d-editor-input").val(),
-    "This is a link to [Google](http://google.com)",
-    "adds link with url and text, prepends 'http://'"
+    "This is a link to [Google](https://google.com)",
+    "adds link with url and text, prepends 'https://'"
   );
 
   assert.ok(
@@ -43,7 +43,7 @@ test("add a hyperlink to a reply", async (assert) => {
   assert.equal(
     find(".d-editor-input").val(),
     "Reset textarea contents.",
-    "adds link with url and text, prepends 'http://'"
+    "doesn’t insert anything after cancelling"
   );
 
   assert.ok(
@@ -61,7 +61,7 @@ test("add a hyperlink to a reply", async (assert) => {
 
   assert.equal(
     find(".d-editor-input").val(),
-    "[Reset](http://somelink.com) textarea contents.",
+    "[Reset](https://somelink.com) textarea contents.",
     "adds link to a selected text"
   );
 

@@ -4,6 +4,7 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { searchForTerm } from "discourse/lib/search";
 import { bind } from "discourse-common/utils/decorators";
+import { prefixProtocol } from "discourse/lib/url";
 
 export default Controller.extend(ModalFunctionality, {
   _debounced: null,
@@ -144,8 +145,7 @@ export default Controller.extend(ModalFunctionality, {
   actions: {
     ok() {
       const origLink = this.linkUrl;
-      const linkUrl =
-        origLink.indexOf("://") === -1 ? `http://${origLink}` : origLink;
+      const linkUrl = prefixProtocol(origLink);
       const sel = this.toolbarEvent.selected;
 
       if (isEmpty(linkUrl)) {

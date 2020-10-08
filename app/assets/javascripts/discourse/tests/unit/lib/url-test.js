@@ -1,5 +1,5 @@
 import { test, module } from "qunit";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath, prefixProtocol } from "discourse/lib/url";
 import { setPrefix } from "discourse-common/lib/get-url";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import User from "discourse/models/user";
@@ -78,5 +78,21 @@ test("routeTo with prefix", async (assert) => {
   assert.ok(
     DiscourseURL.handleURL.calledWith(`/u/${user.username}/messages`),
     "it should navigate to the messages page"
+  );
+});
+
+test("prefixProtocol", async (assert) => {
+  assert.equal(
+    prefixProtocol("mailto:mr-beaver@aol.com"),
+    "mailto:mr-beaver@aol.com"
+  );
+  assert.equal(prefixProtocol("discourse.org"), "https://discourse.org");
+  assert.equal(
+    prefixProtocol("www.discourse.org"),
+    "https://www.discourse.org"
+  );
+  assert.equal(
+    prefixProtocol("www.discourse.org/mailto:foo"),
+    "https://www.discourse.org/mailto:foo"
   );
 });
