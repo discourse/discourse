@@ -2997,7 +2997,17 @@ en:
     flagging:
       title: "Thanks for helping to keep our community civil!"
       action: "Flag Post"
-      take_action: "Take Action"
+      take_action: "Take Action..."
+      take_action_options:
+        default:
+          title: "Take Action"
+          details: "Reach the flag threshold immediately, rather than waiting for more community flags"
+        suspend:
+          title: "Suspend User"
+          details: "Reach the flag threshold, and suspend the user"
+        silence:
+          title: "Silence User"
+          details: "Reach the flag threshold, and silence the user"
       notify_action: "Message"
       official_warning: "Official Warning"
       delete_spammer: "Delete Spammer"
