@@ -3921,7 +3921,7 @@ en:
     latte: "Latte"
     summer: "Summer"
     dark_rose: "Dark Rose"
-    default_theme_name: "Light"
+    default_theme_name: "Default"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
     neutral_theme_name: "Neutral"
@@ -4707,7 +4707,7 @@ en:
             placeholder: "San Francisco, California"
 
       colors:
-        title: "Theme"
+        title: "Colors"
 
       fonts:
         title: "Fonts"
