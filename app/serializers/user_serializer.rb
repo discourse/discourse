@@ -131,7 +131,7 @@ class UserSerializer < UserCardSerializer
       {
         id: k.id,
         application_name: k.application_name,
-        scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s}") },
+        scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s.name}") },
         created_at: k.created_at,
         last_used_at: k.last_used_at,
       }
