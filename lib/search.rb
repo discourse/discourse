@@ -95,7 +95,7 @@ class Search
           uri.query = nil
           str = uri.to_s
         rescue URI::Error
-          # don't faile if uri does not pars
+          # don't fail if uri does not parse
         end
       end
       str
