@@ -1,3 +1,4 @@
+import createStore from "discourse/tests/helpers/create-store";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";
 import { testSelectKitModule } from "discourse/tests/helpers/select-kit-helper";
@@ -142,5 +143,54 @@ componentTest("with allowed uncategorized and none", {
   test(assert) {
     assert.equal(this.subject.header().value(), null);
     assert.equal(this.subject.header().label(), "root none label");
+  },
+});
+
+componentTest("filter is case insensitive", {
+  template: template(),
+
+  async test(assert) {
+    await this.subject.expand();
+    await this.subject.fillInFilter("bug");
+
+    assert.ok(this.subject.rows().length, 1);
+    assert.equal(this.subject.rowByIndex(0).name(), "bug");
+
+    await this.subject.emptyFilter();
+    await this.subject.fillInFilter("Bug");
+
+    assert.ok(this.subject.rows().length, 1);
+    assert.equal(this.subject.rowByIndex(0).name(), "bug");
+  },
+});
+
+componentTest("filter works with non english characters", {
+  template: `
+    {{category-chooser
+      value=value
+      content=content
+    }}
+  `,
+
+  beforeEach() {
+    const store = createStore();
+    const nonEnglishCat = store.createRecord("category", {
+      id: 1,
+      name: "chữ Quốc ngữ",
+    });
+    const englishCat = store.createRecord("category", {
+      id: 2,
+      name: "Baz",
+    });
+
+    this.set("content", [nonEnglishCat, englishCat]);
+  },
+
+  async test(assert) {
+    await this.subject.expand();
+    await this.subject.fillInFilter("hữ");
+
+    assert.ok(this.subject.rows().length, 1);
+    assert.equal(this.subject.rowByIndex(0).name(), "chữ Quốc ngữ");
   },
 });
