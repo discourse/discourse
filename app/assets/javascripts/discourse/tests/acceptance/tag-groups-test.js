@@ -64,7 +64,7 @@ QUnit.test(
     await tags.selectRowByValue("monkey");
 
     await click("#private-permission");
-    assert.ok(find(".tag-group-content .btn.btn-default")[0].disabled);
+    assert.ok(find(".tag-group-content .btn.btn-default:disabled").length);
 
     await groups.expand();
     await groups.selectRowByIndex(1);
