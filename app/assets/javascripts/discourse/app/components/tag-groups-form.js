@@ -44,7 +44,7 @@ export default Component.extend(bufferedProperty("model"), {
       return true;
     }
 
-    return permissions["everyone"] !== PermissionType.READONLY;
+    return permissions.everyone !== PermissionType.READONLY;
   },
 
   @discourseComputed("buffered.permissions", "allGroups")
@@ -55,7 +55,7 @@ export default Component.extend(bufferedProperty("model"), {
 
     const selectedGroupNames = Object.keys(permissions);
     let groupIds = [];
-    allGroups.forEach(function (group) {
+    allGroups.forEach((group) => {
       if (selectedGroupNames.includes(group.name)) {
         groupIds.push(group.id);
       }
@@ -69,7 +69,7 @@ export default Component.extend(bufferedProperty("model"), {
       return true;
     }
 
-    return permissions["everyone"] === PermissionType.FULL;
+    return permissions.everyone === PermissionType.FULL;
   },
 
   selectedGroupNames(permissions) {
@@ -100,7 +100,7 @@ export default Component.extend(bufferedProperty("model"), {
 
     setPermissionsGroups(groupIds) {
       let permissions = {};
-      this.allGroups.forEach(function (group) {
+      this.allGroups.forEach((group) => {
         if (groupIds.includes(group.id)) {
           permissions[group.name] = PermissionType.FULL;
         }

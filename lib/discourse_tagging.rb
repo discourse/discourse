@@ -392,7 +392,7 @@ module DiscourseTagging
   def self.permitted_group_ids(guardian = nil)
     group_ids = [Group::AUTO_GROUPS[:everyone]]
 
-    if guardian&.user.present?
+    if guardian.authenticated?
       group_ids.concat(guardian.user.groups.pluck(:id))
     end
 
