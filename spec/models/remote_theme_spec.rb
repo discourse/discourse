@@ -245,6 +245,13 @@ describe RemoteTheme do
       remote.update!(local_version: "new version", commits_behind: 0)
       expect(described_class.out_of_date_themes).to eq([])
     end
+
+    it "ignores disabled out of date themes" do
+      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
+      theme.update!(enabled: false)
+      expect(described_class.out_of_date_themes).to eq([])
+    end
+
   end
 
   context ".unreachable_themes" do

@@ -104,6 +104,7 @@ class RemoteTheme < ActiveRecord::Base
 
   def self.out_of_date_themes
     self.joined_remotes.where("commits_behind > 0 OR remote_version <> local_version")
+      .where(themes: { enabled: true })
       .pluck("themes.name", "themes.id")
   end
 
