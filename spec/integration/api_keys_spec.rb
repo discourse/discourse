@@ -99,4 +99,33 @@ describe 'user api keys' do
     expect(response.status).to eq(302)
   end
 
+  it "can restrict scopes by parameters" do
+    admin = Fabricate(:admin)
+
+    calendar_key = Fabricate(:bookmarks_calendar_user_api_key, user: admin)
+
+    get "/u/#{user.username}/bookmarks.json", headers: {
+      HTTP_USER_API_KEY: calendar_key.key,
+    }
+    expect(response.status).to eq(403) # Does not allow json
+
+    get "/u/#{user.username}/bookmarks.ics", headers: {
+      HTTP_USER_API_KEY: calendar_key.key,
+    }
+    expect(response.status).to eq(200) # Allows ICS
+
+    # Now restrict the key
+    calendar_key.scopes.first.update(allowed_parameters: { username: admin.username })
+
+    get "/u/#{user.username}/bookmarks.ics", headers: {
+      HTTP_USER_API_KEY: calendar_key.key,
+    }
+    expect(response.status).to eq(403) # Cannot access another users calendar
+
+    get "/u/#{admin.username}/bookmarks.ics", headers: {
+      HTTP_USER_API_KEY: calendar_key.key,
+    }
+    expect(response.status).to eq(200) # Can access own calendar
+  end
+
 end

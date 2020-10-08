@@ -12,7 +12,8 @@ class UserApiKeyScope < ActiveRecord::Base
       RouteMatcher.new(methods: :get, actions: 'notifications#index'),
       RouteMatcher.new(methods: :put, actions: 'notifications#mark_read')
     ],
-    session_info: [ RouteMatcher.new(methods: :get, actions: 'session#current') ]
+    session_info: [ RouteMatcher.new(methods: :get, actions: 'session#current') ],
+    bookmarks_calendar: [ RouteMatcher.new(methods: :get, actions: 'users#bookmarks', formats: :ics, params: %i[username]) ]
   }
 
   def self.all_scopes
@@ -20,7 +21,7 @@ class UserApiKeyScope < ActiveRecord::Base
   end
 
   def permits?(env)
-    matchers.any? { |m| m.match?(env: env) }
+    matchers.any? { |m| m.with_allowed_param_values(allowed_parameters).match?(env: env) }
   end
 
   private
@@ -35,11 +36,12 @@ end
 #
 # Table name: user_api_key_scopes
 #
-#  id              :bigint           not null, primary key
-#  user_api_key_id :integer          not null
-#  name            :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                 :bigint           not null, primary key
+#  user_api_key_id    :integer          not null
+#  name               :string           not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  allowed_parameters :jsonb
 #
 # Indexes
 #
