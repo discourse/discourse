@@ -168,6 +168,16 @@ task 'javascript:update_constants' => :environment do
     export const SEARCH_PHRASE_REGEXP = '#{Search::PHRASE_MATCH_REGEXP_PATTERN}';
   JS
 
+  pretty_notifications = Notification.types.map do |n|
+    "  #{n[0]}: #{n[1]},"
+  end.join("\n")
+
+  write_template("discourse/tests/fixtures/concerns/notification-types.js", task_name, <<~JS)
+    export const NOTIFICATION_TYPES = {
+    #{pretty_notifications}
+    };
+  JS
+
   write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
     export const emojis = #{Emoji.standard.map(&:name).flatten.inspect};
     export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
