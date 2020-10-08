@@ -4,12 +4,7 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { searchForTerm } from "discourse/lib/search";
 import { bind } from "discourse-common/utils/decorators";
-
-function prefixProtocol(url) {
-  return url.indexOf("://") === -1 && url.indexOf("mailto:") === -1
-    ? "https://" + url
-    : url;
-}
+import { prefixProtocol } from "discourse/lib/url";
 
 export default Controller.extend(ModalFunctionality, {
   _debounced: null,

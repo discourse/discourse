@@ -33,23 +33,6 @@ test("add a hyperlink to a reply", async (assert) => {
     "modal dismissed after submitting link"
   );
 
-  await fillIn(".d-editor-input", "");
-  await click(".d-editor button.link");
-  await fillIn(".modal-body .link-url", "mailto:mr-beaver@aol.com");
-  await fillIn(".modal-body .link-text", "Mister Beaver");
-  await click(".modal-footer button.btn-primary");
-
-  assert.equal(
-    find(".d-editor-input").val(),
-    "[Mister Beaver](mailto:mr-beaver@aol.com)",
-    "works with mailto"
-  );
-
-  assert.ok(
-    !exists(".insert-link.modal-body"),
-    "modal dismissed after submitting link"
-  );
-
   await fillIn(".d-editor-input", "Reset textarea contents.");
 
   await click(".d-editor button.link");
