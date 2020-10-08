@@ -67,7 +67,6 @@ export default ComboBoxComponent.extend({
 
   search(filter) {
     if (filter) {
-      filter = filter.toLowerCase();
       return this.content.filter((item) => {
         const category = Category.findById(this.getValue(item));
         const categoryName = this.getName(item);
@@ -147,6 +146,7 @@ export default ComboBoxComponent.extend({
   },
 
   _matchCategory(filter, categoryName) {
-    return this._normalize(categoryName).indexOf(filter) > -1;
+    const regex = RegExp(filter, "i");
+    return regex.test(categoryName);
   },
 });

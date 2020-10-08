@@ -25,19 +25,3 @@ test("prefill category when category_id is set", async (assert) => {
 
   assert.equal(selectKit(".category-chooser").header().value(), 1);
 });
-
-test("filter is case insensitive", async (assert) => {
-  const categoryChooser = selectKit(".category-chooser");
-
-  await visit("/");
-  await click("#create-topic");
-  await categoryChooser.expand();
-  await categoryChooser.fillInFilter("bug");
-
-  assert.ok(categoryChooser.rows().length, 1);
-
-  await categoryChooser.emptyFilter();
-  await categoryChooser.fillInFilter("Bug");
-
-  assert.ok(categoryChooser.rows().length, 1);
-});
