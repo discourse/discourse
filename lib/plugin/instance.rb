@@ -793,6 +793,35 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
 
+  # Register a new UserApiKey scope, and its allowed routes. Scope will be prefixed
+  # with the (parametetized) plugin name followed by a colon.
+  #
+  # For example, if discourse-awesome-plugin registered this:
+  #
+  # add_user_api_key_scope(:read_my_route,
+  #   methods: :get,
+  #   actions: "mycontroller#myaction",
+  #   formats: :ics,
+  #   parameters: :testparam
+  # )
+  #
+  # The scope registered would be `discourse-awesome-plugin:read_my_route`
+  #
+  # Multiple matchers can be attached by supplying an array of parameter hashes
+  #
+  # See UserApiKeyScope::SCOPES for more examples
+  # And lib/route_matcher.rb for the route matching logic
+  def add_user_api_key_scope(scope_name, matcher_parameters)
+    raise ArgumentError.new("scope_name must be a symbol") if !scope_name.is_a?(Symbol)
+    matcher_parameters = [matcher_parameters] if !matcher_parameters.is_a?(Array)
+
+    prefixed_scope_name = :"#{(name || directory_name).parameterize}:#{scope_name}"
+    DiscoursePluginRegistry.register_user_api_key_scope_mapping(
+      {
+        prefixed_scope_name => matcher_parameters&.map { |m| RouteMatcher.new(**m) }
+      }, self)
+  end
+
   # Register a route which can be authenticated using an api key or user api key
   # in a query parameter rather than a header. For example:
   #
