@@ -102,7 +102,11 @@ const Presence = EmberObject.extend({
   },
 
   publish(state, whisper, postId, staffOnly) {
-    var hiddenProfile = this.get(
+    // NOTE: `user_option` is the correct place to get this value from, but
+    //       it may not have been set yet. It will always have been set directly
+    //       on the currentUser, via the preloaded_json payload.
+    // TODO: Remove this when preloaded_json is refactored.
+    let hiddenProfile = this.get(
       "currentUser.user_option.hide_profile_and_presence"
     );
     if (hiddenProfile === undefined) {
