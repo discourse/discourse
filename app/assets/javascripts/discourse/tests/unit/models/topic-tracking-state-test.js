@@ -4,6 +4,7 @@ import createStore from "discourse/tests/helpers/create-store";
 import Category from "discourse/models/category";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import User from "discourse/models/user";
+import sinon from "sinon";
 
 module("model:topic-tracking-state", {
   beforeEach() {

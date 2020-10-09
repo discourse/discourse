@@ -1,6 +1,5 @@
 // discourse-skip-module
 
-/*global document, sinon, QUnit, Logster */
 //= require env
 //= require jquery.debug
 //= require jquery.ui.widget
@@ -41,8 +40,7 @@
 //= require_tree ../../admin/tests/admin
 //= require plugin_tests
 //= require setup-tests
-//= require_self
-//
+//= require test-shims
 //= require jquery.magnific-popup.min.js
 
 let setupTests = require("discourse/tests/setup-tests").default;
