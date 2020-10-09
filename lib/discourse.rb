@@ -406,7 +406,7 @@ module Discourse
   end
 
   def self.base_url
-    base_url_no_prefix + base_uri
+    base_url_no_prefix + base_path
   end
 
   def self.route_for(uri)
