@@ -47,17 +47,12 @@ def dependencies
       source: 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js',
       public: true
     }, {
-      source: 'light-gallery/lightgallery.min.js',
-      public: true
+      source: 'lightgallery.js/dist/js/lightgallery.min.js'
     },
     {
-      source: 'light-gallery/lg-zoom.min.js',
-      public: true
+      source: 'lg-zoom.js/dist/lg-zoom.min.js'
     },
     {
-      source: 'light-gallery/lightgallery.min.css',
-      public: true
-    }, {
       source: 'pikaday/pikaday.js',
       public: true
     }, {
