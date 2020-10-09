@@ -478,7 +478,7 @@ class TagsController < ::ApplicationController
     permalink = Permalink.find_by_url(url)
 
     if permalink.present? && permalink.category_id
-      redirect_to "#{Discourse::base_uri}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
+      redirect_to "#{Discourse.base_path}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
     else
       # redirect to 404
       raise Discourse::NotFound

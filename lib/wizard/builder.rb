@@ -280,7 +280,7 @@ class Wizard
 
         EmojiSetSiteSetting.values.each do |set|
           imgs = emoji.map do |e|
-            "<img src='#{Discourse.base_uri}/images/emoji/#{set[:value]}/#{e}.png'>"
+            "<img src='#{Discourse.base_path}/images/emoji/#{set[:value]}/#{e}.png'>"
           end
 
           sets.add_choice(set[:value],

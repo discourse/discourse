@@ -108,7 +108,7 @@ after_initialize do
       private
 
       def fetch_avatar(user)
-        avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
+        avatar_url = UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub('{size}', '250'))
         FileHelper.download(
           avatar_url.to_s,
           max_file_size: SiteSetting.max_image_size_kb.kilobytes,

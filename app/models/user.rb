@@ -826,14 +826,14 @@ class User < ActiveRecord::Base
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
       url = SiteSetting.external_system_avatars_url.dup
-      url = +"#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
+      url = +"#{Discourse.base_path}#{url}" unless url =~ /^https?:\/\//
       url.gsub! "{color}", letter_avatar_color(normalized_username)
       url.gsub! "{username}", UrlHelper.encode_component(username)
       url.gsub! "{first_letter}", UrlHelper.encode_component(normalized_username.grapheme_clusters.first)
       url.gsub! "{hostname}", Discourse.current_hostname
       url
     else
-      "#{Discourse.base_uri}/letter_avatar/#{normalized_username}/{size}/#{LetterAvatar.version}.png"
+      "#{Discourse.base_path}/letter_avatar/#{normalized_username}/{size}/#{LetterAvatar.version}.png"
     end
   end
 
