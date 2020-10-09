@@ -8,6 +8,7 @@ import {
   durationTiny,
 } from "discourse/lib/formatter";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import sinon from "sinon";
 
 discourseModule("lib:formatter", {
   beforeEach() {
