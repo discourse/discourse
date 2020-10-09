@@ -18,17 +18,20 @@ var $buo = function() {
     return;
   }
 
-  document.getElementsByTagName('body')[0].classList.add("crawler");
+  document.getElementsByTagName('body')[0].className += " crawler";
   var mainElement = document.getElementById("main");
   var noscriptElements = document.getElementsByTagName("noscript");
   // find the element with the "data-path" attribute set
   for (var i = 0; i < noscriptElements.length; ++i) {
     if (noscriptElements[i].getAttribute("data-path")) {
       // noscriptElements[i].innerHTML contains encoded HTML
-      mainElement.innerHTML = noscriptElements[i].childNodes[0].nodeValue;
-      break;
+      if (noscriptElements[i].childNodes.length > 0) {
+        mainElement.innerHTML = noscriptElements[i].childNodes[0].nodeValue;
+        break;
+      }
     }
   }
+
   // retrieve localized browser upgrade text
   var t = <%= "'" + I18n.t('js.browser_update') + "'" %>;
 
