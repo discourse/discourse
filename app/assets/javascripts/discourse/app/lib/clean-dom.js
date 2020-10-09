@@ -9,7 +9,7 @@ function _clean() {
   $("header ul.icons li").removeClass("active");
   $('[data-toggle="dropdown"]').parent().removeClass("open");
 
-  // close lightboxs
+  // destroy all open lightboxes and their listeners
   if (window.lgData) {
     Object.keys(window.lgData).forEach((key) => {
       // lightGallery adds a uid property to the object. It's not a gallery, so

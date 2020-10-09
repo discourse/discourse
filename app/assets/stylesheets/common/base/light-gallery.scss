@@ -67,7 +67,26 @@
 }
 
 // CSS for extra modules
-// remove html scrollbars when lightbox is open
+// remove html scrollbars when lightbox is open.
 .lg-open {
   overflow: hidden;
+
+  .d-header {
+    box-sizing: border-box;
+  }
+
+  // scrollbar on the right
+  &:not(.rtl) {
+    padding-right: var(--scrollbar-width);
+    .d-header {
+      padding-right: var(--scrollbar-width);
+    }
+  }
+  // scrollbar on the left
+  &.rtl {
+    padding-left: var(--scrollbar-width);
+    .d-header {
+      padding-left: var(--scrollbar-width);
+    }
+  }
 }
