@@ -45,8 +45,8 @@ class RobotsTxtController < ApplicationController
   end
 
   def self.fetch_default_robots_info
-    deny_paths = DISALLOWED_PATHS.map { |p| Discourse.base_uri + p }
-    deny_all = [ "#{Discourse.base_uri}/" ]
+    deny_paths = DISALLOWED_PATHS.map { |p| Discourse.base_path + p }
+    deny_all = [ "#{Discourse.base_path}/" ]
 
     result = {
       header: "# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file",

@@ -11,14 +11,14 @@ module DiscourseNarrativeBot
       begin: {
         init: {
           next_state: :tutorial_bookmark,
-          next_instructions: Proc.new { I18n.t("#{I18N_KEY}.bookmark.instructions", base_uri: Discourse.base_uri) },
+          next_instructions: Proc.new { I18n.t("#{I18N_KEY}.bookmark.instructions", base_uri: Discourse.base_path) },
           action: :say_hello
         }
       },
 
       tutorial_bookmark: {
         next_state: :tutorial_onebox,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.onebox.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.onebox.instructions", base_uri: Discourse.base_path) },
 
         bookmark: {
           action: :reply_to_bookmark
@@ -32,7 +32,7 @@ module DiscourseNarrativeBot
 
       tutorial_onebox: {
         next_state: :tutorial_emoji,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.emoji.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.emoji.instructions", base_uri: Discourse.base_path) },
 
         reply: {
           action: :reply_to_onebox
@@ -45,7 +45,7 @@ module DiscourseNarrativeBot
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.mention.instructions",
             discobot_username: self.discobot_username,
-            base_uri: Discourse.base_uri)
+            base_uri: Discourse.base_path)
         },
         reply: {
           action: :reply_to_emoji
@@ -55,7 +55,7 @@ module DiscourseNarrativeBot
       tutorial_mention: {
         prerequisite: Proc.new { SiteSetting.enable_mentions },
         next_state: :tutorial_formatting,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.formatting.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.formatting.instructions", base_uri: Discourse.base_path) },
 
         reply: {
           action: :reply_to_mention
@@ -64,7 +64,7 @@ module DiscourseNarrativeBot
 
       tutorial_formatting: {
         next_state: :tutorial_quote,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.quoting.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.quoting.instructions", base_uri: Discourse.base_path) },
 
         reply: {
           action: :reply_to_formatting
@@ -73,7 +73,7 @@ module DiscourseNarrativeBot
 
       tutorial_quote: {
         next_state: :tutorial_images,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.images.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.images.instructions", base_uri: Discourse.base_path) },
 
         reply: {
           action: :reply_to_quote
@@ -85,7 +85,7 @@ module DiscourseNarrativeBot
       tutorial_images: {
         prerequisite: Proc.new { @user.has_trust_level?(SiteSetting.min_trust_to_post_embedded_media) },
         next_state: :tutorial_likes,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.likes.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.likes.instructions", base_uri: Discourse.base_path) },
         reply: {
           action: :reply_to_image
         },
@@ -101,7 +101,7 @@ module DiscourseNarrativeBot
           I18n.t("#{I18N_KEY}.flag.instructions",
             guidelines_url: url_helpers(:guidelines_url),
             about_url: url_helpers(:about_index_url),
-            base_uri: Discourse.base_uri)
+            base_uri: Discourse.base_path)
         },
         like: {
           action: :reply_to_likes
@@ -115,7 +115,7 @@ module DiscourseNarrativeBot
       tutorial_flag: {
         prerequisite: Proc.new { SiteSetting.allow_flagging_staff },
         next_state: :tutorial_search,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.search.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.search.instructions", base_uri: Discourse.base_path) },
         flag: {
           action: :reply_to_flag
         },

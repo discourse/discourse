@@ -184,7 +184,7 @@ module DiscourseNarrativeBot
     end
 
     def i18n_post_args(extra = {})
-      { base_uri: Discourse.base_uri }.merge(extra)
+      { base_uri: Discourse.base_path }.merge(extra)
     end
 
     def valid_topic?(topic_id)

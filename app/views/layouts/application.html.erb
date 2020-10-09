@@ -45,7 +45,7 @@
 
     <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
-    <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.webmanifest" crossorigin="use-credentials">
+    <link rel="manifest" href="<%= Discourse.base_path %>/manifest.webmanifest" crossorigin="use-credentials">
 
     <%- if include_ios_native_app_banner? %>
         <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
@@ -59,7 +59,7 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
-    <%- if !current_user && (data = cookies.delete(:authentication_data, path: Discourse.base_uri("/"))) %>
+    <%- if !current_user && (data = cookies.delete(:authentication_data, path: Discourse.base_path("/"))) %>
       <meta id="data-authentication" data-authentication-data="<%= data %>">
     <%- end %>
   </head>

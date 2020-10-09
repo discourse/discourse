@@ -415,8 +415,8 @@ module Discourse
     return unless uri
 
     path = +(uri.path || "")
-    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_uri))
-      path.slice!(Discourse.base_uri)
+    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_path))
+      path.slice!(Discourse.base_path)
       return Rails.application.routes.recognize_path(path)
     end
 

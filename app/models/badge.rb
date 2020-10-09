@@ -263,7 +263,7 @@ class Badge < ActiveRecord::Base
 
   def long_description
     key = "badges.#{i18n_name}.long_description"
-    I18n.t(key, default: self[:long_description] || '', base_uri: Discourse.base_uri, max_likes_per_day: SiteSetting.max_likes_per_day)
+    I18n.t(key, default: self[:long_description] || '', base_uri: Discourse.base_path, max_likes_per_day: SiteSetting.max_likes_per_day)
   end
 
   def long_description=(val)
@@ -273,7 +273,7 @@ class Badge < ActiveRecord::Base
 
   def description
     key = "badges.#{i18n_name}.description"
-    I18n.t(key, default: self[:description] || '', base_uri: Discourse.base_uri, max_likes_per_day: SiteSetting.max_likes_per_day)
+    I18n.t(key, default: self[:description] || '', base_uri: Discourse.base_path, max_likes_per_day: SiteSetting.max_likes_per_day)
   end
 
   def description=(val)
