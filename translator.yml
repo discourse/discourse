@@ -42,3 +42,8 @@ files:
     destination_path: plugins/poll/client.yml
   - source_path: plugins/poll/config/locales/server.en.yml
     destination_path: plugins/poll/server.yml
+
+  - source_path: plugins/styleguide/config/locales/client.en.yml
+    destination_path: plugins/styleguide/client.yml
+  - source_path: plugins/styleguide/config/locales/server.en.yml
+    destination_path: plugins/styleguide/server.yml
