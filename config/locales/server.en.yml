@@ -3921,6 +3921,8 @@ en:
     latte: "Latte"
     summer: "Summer"
     dark_rose: "Dark Rose"
+    wcag: "WCAG Light"
+    wcag_dark: "WCAG Dark"
     default_theme_name: "Light"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
