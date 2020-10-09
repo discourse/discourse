@@ -153,7 +153,7 @@ JS
           }
         )
       else
-        // transform-template-literals is causing issues with hbs`` when used in others
+        # transform-template-literals is causing issues with hbs`` when used in others
         BabelHelper.build(
           js_source,
           [
