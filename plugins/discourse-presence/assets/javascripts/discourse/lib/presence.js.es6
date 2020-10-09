@@ -102,15 +102,14 @@ const Presence = EmberObject.extend({
   },
 
   publish(state, whisper, postId, staffOnly) {
-    var hiddenProfile = this.get("currentUser.user_option.hide_profile_and_presence");
+    var hiddenProfile = this.get(
+      "currentUser.user_option.hide_profile_and_presence"
+    );
     if (hiddenProfile === undefined) {
       hiddenProfile = this.get("currentUser.hide_profile_and_presence");
     }
 
-    if (
-      hiddenProfile &&
-      this.get("siteSettings.allow_users_to_hide_profile")
-    ) {
+    if (hiddenProfile && this.get("siteSettings.allow_users_to_hide_profile")) {
       return;
     }
 
