@@ -1,4 +1,5 @@
 import { scheduleOnce } from "@ember/runloop";
+import { currentGalleries } from "lightgallery";
 
 function _clean() {
   if (window.MiniProfiler) {
@@ -10,18 +11,17 @@ function _clean() {
   $('[data-toggle="dropdown"]').parent().removeClass("open");
 
   // destroy all open lightboxes and their listeners
-  if (window.lgData) {
-    Object.keys(window.lgData).forEach((key) => {
-      // lightGallery adds a uid property to the object. It's not a gallery, so
-      // we skip it.
-      if (key !== "uid") {
-        const gallery = window.lgData[key];
-        // lightGallery saves and restores the previous ScrollTop position when
-        // it's closed. We don't need that here since this is a full page treansition
-        gallery.prevScrollTop = 0;
-        gallery.destroy(true);
-      }
-    });
+  for (const [key] of Object.entries(currentGalleries)) {
+    // lightGallery adds a uid property to the object. It's not a gallery, so
+    // we skip it.
+    if (key !== "uid") {
+      // lightGallery saves and restores the previous ScrollTop position when
+      // it's closed. We don't need that here since this is a full page treansition
+      currentGalleries[key].prevScrollTop = 0;
+      // we need to pass true here for a "full" destroy. Otherwise event listeners
+      // won't be removed.
+      currentGalleries[key].destroy(true);
+    }
   }
 
   // Remove any link focus
