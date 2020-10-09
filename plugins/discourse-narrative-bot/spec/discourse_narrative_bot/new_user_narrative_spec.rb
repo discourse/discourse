@@ -745,7 +745,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           it "should use correct path to images on subfolder installs" do
             GlobalSetting.stubs(:relative_url_root).returns('/forum')
-            Discourse.stubs(:base_uri).returns("/forum")
+            Discourse.stubs(:base_path).returns("/forum")
 
             post.update!(raw: skip_trigger)
 
