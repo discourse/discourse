@@ -603,10 +603,23 @@ RSpec.describe ListController do
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
 
-    it "returns 404 if `hide_profile_and_presence` user option is checked" do
-      user.user_option.update_columns(hide_profile_and_presence: true)
-      get "/topics/created-by/#{user.username}.json"
-      expect(response.status).to eq(404)
+    context 'when `hide_profile_and_presence` is true' do
+      before do
+        user.user_option.update_columns(hide_profile_and_presence: true)
+      end
+
+      it "returns 404" do
+        get "/topics/created-by/#{user.username}.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "should respond with a list when `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+        get "/topics/created-by/#{user.username}.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topic_list"]["topics"].size).to eq(2)
+      end
     end
   end
 

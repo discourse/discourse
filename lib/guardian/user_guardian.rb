@@ -111,6 +111,7 @@ module UserGuardian
 
   def can_see_profile?(user)
     return false if user.blank?
+    return true if !SiteSetting.allow_users_to_hide_profile?
 
     # If a user has hidden their profile, restrict it to them and staff
     if user.user_option.try(:hide_profile_and_presence?)
