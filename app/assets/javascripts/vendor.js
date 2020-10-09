@@ -28,3 +28,6 @@
 //= require virtual-dom-amd
 //= require intersection-observer
 //= require discourse-shims
+
+//= require lightgallery.min.js
+//= require lg-zoom.min.js

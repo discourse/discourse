@@ -6,8 +6,6 @@ export const PUBLIC_JS_VERSIONS = {
   "Chart.min.js": "chart.js/2.9.3/Chart.min.js",
   "chartjs-plugin-datalabels.min.js":
     "chartjs-plugin-datalabels/0.7.0/chartjs-plugin-datalabels.min.js",
-  "jquery.magnific-popup.min.js":
-    "magnific-popup/1.1.0/jquery.magnific-popup.min.js",
   "pikaday.js": "pikaday/1.8.0/pikaday.js",
   "spectrum.js": "spectrum-colorpicker/1.8.0/spectrum.js",
   "spectrum.css": "spectrum-colorpicker/1.8.0/spectrum.css",

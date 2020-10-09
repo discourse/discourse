@@ -1,6 +1,6 @@
 import { schedule } from "@ember/runloop";
-import loadScript, { loadCSS } from "discourse/lib/load-script";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { createGallery, lightGalleryExtensions } from "lightgallery";
 import User from "discourse/models/user";
 
 // TODO: move this function to a helper
@@ -49,22 +49,14 @@ export default function (elem, siteSettings) {
       download: canDownload,
     };
 
-    // main lib
-    loadScript("/javascripts/lightgallery.min.js").then(() => {
-      // lib zoom module
-      loadScript("/javascripts/lg-zoom.min.js").then(() => {
-        // lib base css
-        loadCSS("/javascripts/lightgallery.min.css").then(() => {
-          schedule("afterRender", this, () => {
-            // add new Discourse specific modules here
-            window.lgModules.removeWindowScrollbars = removeWindowScrollbars;
-            window.lgModules.translatableTitles = translatableTitles;
+    // load new gallery modules here
+    Object.assign(lightGalleryExtensions, {
+      removeWindowScrollbars: removeWindowScrollbars,
+      translatableTitles: translatableTitles,
+    });
 
-            // eslint-disable-next-line
-            lightGallery(elem, options);
-          });
-        });
-      });
+    schedule("afterRender", () => {
+      createGallery(elem, options);
     });
   }
 }
