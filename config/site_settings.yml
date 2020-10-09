@@ -601,6 +601,9 @@ users:
   anonymous_account_duration_minutes:
     default: 10080
     max: 99000
+  allow_users_to_hide_profile:
+    default: true
+    client: true
   hide_user_profiles_from_public:
     default: false
     client: true
