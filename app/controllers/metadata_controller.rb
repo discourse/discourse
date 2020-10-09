@@ -51,7 +51,7 @@ class MetadataController < ApplicationController
       icons: [
       ],
       share_target: {
-        action: "/new-topic",
+        action: "#{Discourse.base_uri}/new-topic",
         method: "GET",
         enctype: "application/x-www-form-urlencoded",
         params: {
@@ -63,7 +63,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.topic.create_long'),
           short_name: I18n.t('js.topic.create'),
-          url: "/new-topic",
+          url: "#{Discourse.base_uri}/new-topic",
           icons: [
             {
               src: "#{icon_url_base}/plus.svg",
@@ -75,7 +75,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.user.messages.inbox'),
           short_name: I18n.t('js.user.messages.inbox'),
-          url: "/my/messages",
+          url: "#{Discourse.base_uri}/my/messages",
           icons: [
             {
               src: "#{icon_url_base}/envelope.svg",
@@ -87,7 +87,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.user.bookmarks'),
           short_name: I18n.t('js.user.bookmarks'),
-          url: "/my/bookmarks",
+          url: "#{Discourse.base_uri}/my/bookmarks",
           icons: [
             {
               src: "#{icon_url_base}/bookmark.svg",
@@ -99,7 +99,7 @@ class MetadataController < ApplicationController
         {
           name: I18n.t('js.filters.top.title'),
           short_name: I18n.t('js.filters.top.title'),
-          url: "/top",
+          url: "#{Discourse.base_uri}/top",
           icons: [
             {
               src: "#{icon_url_base}/signal.svg",
