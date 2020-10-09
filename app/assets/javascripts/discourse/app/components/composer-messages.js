@@ -4,6 +4,7 @@ import EmberObject from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import LinkLookup from "discourse/lib/link-lookup";
+import { intervalTextFromSeconds } from "discourse/helpers/slow-mode";
 
 let _messagesCache = {};
 
@@ -180,11 +181,24 @@ export default Component.extend({
 
     const composer = this.composer;
     const args = { composer_action: composer.get("action") };
-    const topicId = composer.get("topic.id");
+    const topic = composer.get("topic");
     const postId = composer.get("post.id");
 
-    if (topicId) {
-      args.topic_id = topicId;
+    if (topic && topic.slow_mode_seconds) {
+      const msg = composer.store.createRecord("composer-message", {
+        id: "slow-mode-enabled",
+        extraClass: "custom-body",
+        templateName: "custom-body",
+        title: I18n.t("composer.slow_mode.title"),
+        body: I18n.t("composer.slow_mode.body", {
+          interval: intervalTextFromSeconds(topic.slow_mode_seconds),
+        }),
+      });
+      this.send("popup", msg);
+    }
+
+    if (topic && topic.id) {
+      args.topic_id = topic.id;
     }
     if (postId) {
       args.post_id = postId;

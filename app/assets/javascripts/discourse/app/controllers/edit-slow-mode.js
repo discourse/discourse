@@ -3,6 +3,8 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
+import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   selectedSlowMode: null,
@@ -34,8 +36,8 @@ export default Controller.extend(ModalFunctionality, {
     },
     {
       id: "custom",
-      name: I18n.t("topic.slow_mode_update.intervals.custom")
-    }
+      name: I18n.t("topic.slow_mode_update.intervals.custom"),
+    },
   ],
 
   onShow() {
@@ -44,7 +46,7 @@ export default Controller.extend(ModalFunctionality, {
     if (currentInterval) {
       const selectedInterval = this.slowModes.find((mode) => {
         return mode.id === currentInterval.toString();
-      })
+      });
 
       if (selectedInterval) {
         this.set("selectedSlowMode", currentInterval.toString());
@@ -63,45 +65,18 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("hours", "minutes", "seconds")
   submitDisabled(hours, minutes, seconds) {
-    return this.saveDisabled || !(this.hours || this.minutes || this.seconds);
+    return this.saveDisabled || !(hours || minutes || seconds);
   },
 
   _setFromSeconds(seconds) {
-    let initialSeconds = seconds
-
-    let hours = initialSeconds / 3600
-    if (hours >= 1) {
-      initialSeconds = initialSeconds - (3600 * hours)
-    } else {
-      hours = 0
-    }
-
-    let minutes = initialSeconds / 60
-    if (minutes >= 1) {
-      initialSeconds = initialSeconds - (60 * minutes)  
-    } else {
-      minutes = 0
-    }
-
-    this.setProperties({
-      hours: hours,
-      minutes: minutes,
-      seconds: initialSeconds
-    })
-  },
-
-  _toSeconds() {
-    const hoursAsSeconds = parseInt(this.hours, 10) * 60 * 60
-    const minutesAsSeconds = parseInt(this.minutes, 10) * 60
-
-    return parseInt(this.seconds, 10) + hoursAsSeconds + minutesAsSeconds
+    this.setProperties(fromSeconds(seconds));
   },
 
   actions: {
     setSlowModeInterval(interval) {
       if (interval !== "custom") {
         let seconds = parseInt(interval, 10);
-        
+
         this._setFromSeconds(seconds);
       }
 
@@ -110,21 +85,25 @@ export default Controller.extend(ModalFunctionality, {
 
     enableSlowMode() {
       this.set("saveDisabled", true);
-      const seconds = this._toSeconds()
-      Topic.setSlowMode(this.model.id, seconds).finally(() => {
-        this.set("model.slow_mode_seconds", seconds);
-        this.set("saveDisabled", false);
-      });
+      const seconds = toSeconds(this.hours, this.minutes, this.seconds);
+      Topic.setSlowMode(this.model.id, seconds)
+        .catch(popupAjaxError)
+        .then(() => {
+          this.set("model.slow_mode_seconds", seconds);
+          this.send("closeModal");
+        })
+        .finally(() => this.set("saveDisabled", false));
     },
 
     disableSlowMode() {
       this.set("saveDisabled", true);
-      Topic.setSlowMode(this.model.id, 0).finally(() => { 
-        this.set("model.slow_mode_seconds", 0);
-        this.set("saveDisabled", false);
-      });
+      Topic.setSlowMode(this.model.id, 0)
+        .catch(popupAjaxError)
+        .then(() => {
+          this.set("model.slow_mode_seconds", 0);
+          this.send("closeModal");
+        })
+        .finally(() => this.set("saveDisabled", false));
     },
-  }
-})
-
-
+  },
+});

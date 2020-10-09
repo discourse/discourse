@@ -849,7 +849,7 @@ Topic.reopenClass({
   setSlowMode(topicId, seconds) {
     const data = { seconds };
     return ajax(`/t/${topicId}/slow_mode`, { type: "PUT", data });
-  }
+  },
 });
 
 function moveResult(result) {

@@ -1922,6 +1922,9 @@ en:
       yourself_confirm:
         title: "Did you forget to add recipients?"
         body: "Right now this message is only being sent to yourself!"
+      slow_mode:
+        title: "This topic is in slow mode."
+        body: "After submitting a post, you'll need to wait %{interval} before being able to post again."
 
       admin_options_title: "Optional staff settings for this topic"
 
@@ -2313,6 +2316,13 @@ en:
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
 
+      slow_mode_intervals:
+        weeks: "%{weeks} weeks"
+        days: "%{days} days"
+        hours_and_minutes: "%{hours} hours and %{minutes} minutes"
+        hours: "%{hours} hours"
+        minutes: "%{minutes} minutes"
+        seconds: "%{seconds} seconds"
       slow_mode_update:
         title: "Slow Mode"
         select: "Interval:"
@@ -2330,6 +2340,8 @@ en:
           1_day: "1 Day"
           1_week: "1 Week"
           custom: "Pick Interval"
+      slow_mode_notice:
+        interval: "You need to wait at least %{interval} between posts in this topic"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
