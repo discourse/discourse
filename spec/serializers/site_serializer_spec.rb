@@ -30,12 +30,9 @@ describe SiteSerializer do
   end
 
   it "includes user-selectable color schemes" do
-    scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
-    scheme.user_selectable = true
-    scheme.save!
-
+    # it includes seeded color schemes
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq (1)
+    expect(serialized[:user_color_schemes].count).to eq(1)
 
     dark_scheme = ColorScheme.create_from_base(name: "ADarkScheme", base_scheme_id: "Dark")
     dark_scheme.user_selectable = true
