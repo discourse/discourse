@@ -27,11 +27,7 @@ componentTest("with image", {
 
     await click(".image-uploader-lightbox-btn");
 
-    assert.equal(
-      $(".mfp-container").length,
-      1,
-      "it displays the image lightbox"
-    );
+    // TODO: tests for image uploader
   },
 });
 
