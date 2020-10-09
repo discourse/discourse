@@ -318,18 +318,18 @@ module DiscourseTagging
       builder.where(<<~SQL, group_ids, group_ids)
         id NOT IN (
           (SELECT tgm.tag_id
-             FROM tag_group_permissions tgp
-       INNER JOIN tag_groups tg ON tgp.tag_group_id = tg.id
-       INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id
-            WHERE tgp.group_id NOT IN (?))
+           FROM tag_group_permissions tgp
+           INNER JOIN tag_groups tg ON tgp.tag_group_id = tg.id
+           INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id
+           WHERE tgp.group_id NOT IN (?))
 
           EXCEPT
 
           (SELECT tgm.tag_id
-             FROM tag_group_permissions tgp
-       INNER JOIN tag_groups tg ON tgp.tag_group_id = tg.id
-       INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id
-            WHERE tgp.group_id IN (?))
+           FROM tag_group_permissions tgp
+           INNER JOIN tag_groups tg ON tgp.tag_group_id = tg.id
+           INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id
+           WHERE tgp.group_id IN (?))
         )
       SQL
     end
