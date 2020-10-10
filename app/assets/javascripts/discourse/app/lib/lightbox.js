@@ -49,10 +49,9 @@ export default function (elem, siteSettings) {
       download: canDownload,
     };
 
-    // load new gallery modules here
+    // load new gallery modules here for now
     Object.assign(lightGalleryExtensions, {
-      removeWindowScrollbars: removeWindowScrollbars,
-      translatableTitles: translatableTitles,
+      galleryExtensions,
     });
 
     schedule("afterRender", () => {
@@ -63,9 +62,19 @@ export default function (elem, siteSettings) {
 
 // Discourse specific modules
 
-// Module: translatable counter
-// TODO: use YAML keys
-const setTranslatableTitles = () => {
+const galleryExtensions = function (elem) {
+  this.elem = elem;
+  this.init();
+
+  return this;
+};
+
+const onGalleryOpen = () => {
+  docElement.style.setProperty("--scrollbar-width", getScrollbarWidth() + "px");
+  docElement.classList.add("lg-open");
+
+  // Module: translatable counter
+  // TODO: use YAML keys
   const translations = {
     nextArrow: "next",
     prevArrow: "previous",
@@ -96,58 +105,25 @@ const setTranslatableTitles = () => {
   }
 };
 
-const translatableTitles = function (elem) {
-  this.elem = elem;
-  this.init();
-
-  return this;
-};
-
-translatableTitles.prototype.init = function () {
-  this.elem.addEventListener("onBeforeOpen", setTranslatableTitles, {
-    passive: true,
-  });
-};
-
-translatableTitles.prototype.destroy = function () {
-  this.elem.removeEventListener("onBeforeOpen", setTranslatableTitles, {
-    passive: true,
-  });
-};
-
-// Module: remove HTML scrollbars when open
-
-const addNoScrollClass = () => {
-  docElement.style.setProperty("--scrollbar-width", getScrollbarWidth() + "px");
-  docElement.classList.add("lg-open");
-};
-
-const removeNoScrollClass = () => {
+const onGalleryClose = () => {
   docElement.style.removeProperty("--scrollbar-width");
   docElement.classList.remove("lg-open");
 };
 
-const removeWindowScrollbars = function (elem) {
-  this.elem = elem;
-  this.init();
-
-  return this;
-};
-
-removeWindowScrollbars.prototype.init = function () {
-  this.elem.addEventListener("onBeforeOpen", addNoScrollClass, {
+galleryExtensions.prototype.init = function () {
+  this.elem.addEventListener("onBeforeOpen", onGalleryOpen, {
     passive: true,
   });
-  this.elem.addEventListener("onBeforeClose", removeNoScrollClass, {
+  this.elem.addEventListener("onBeforeClose", onGalleryClose, {
     passive: true,
   });
 };
 
-removeWindowScrollbars.prototype.destroy = function () {
-  this.elem.removeEventListener("onBeforeOpen", addNoScrollClass, {
+galleryExtensions.prototype.destroy = function () {
+  this.elem.removeEventListener("onBeforeOpen", onGalleryOpen, {
     passive: true,
   });
-  this.elem.removeEventListener("onBeforeClose", removeNoScrollClass, {
+  this.elem.removeEventListener("onBeforeClose", onGalleryClose, {
     passive: true,
   });
 };
