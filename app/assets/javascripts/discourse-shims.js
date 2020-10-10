@@ -36,7 +36,7 @@ define("mousetrap", ["exports"], function (__exports__) {
 define("lightgallery", ["exports"], function (__exports__) {
   __exports__.createGallery = window.lightGallery;
   __exports__.currentGalleries = window.lgData;
-  __exports__.lightGalleryExtensions = window.lgModules;
+  __exports__.galleryExtensions = window.lgModules;
 });
 
 define("@popperjs/core", ["exports"], function (__exports__) {

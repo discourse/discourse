@@ -1,6 +1,6 @@
 import { schedule } from "@ember/runloop";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { createGallery, lightGalleryExtensions } from "lightgallery";
+import { createGallery, galleryExtensions } from "lightgallery";
 import User from "discourse/models/user";
 
 // TODO: move this function to a helper
@@ -50,8 +50,8 @@ export default function (elem, siteSettings) {
     };
 
     // load new gallery modules here for now
-    Object.assign(lightGalleryExtensions, {
-      galleryExtensions,
+    Object.assign(galleryExtensions, {
+      extendForDiscourse,
     });
 
     schedule("afterRender", () => {
@@ -62,7 +62,7 @@ export default function (elem, siteSettings) {
 
 // Discourse specific modules
 
-const galleryExtensions = function (elem) {
+const extendForDiscourse = function (elem) {
   this.elem = elem;
   this.init();
 
@@ -110,7 +110,7 @@ const onGalleryClose = () => {
   docElement.classList.remove("lg-open");
 };
 
-galleryExtensions.prototype.init = function () {
+extendForDiscourse.prototype.init = function () {
   this.elem.addEventListener("onBeforeOpen", onGalleryOpen, {
     passive: true,
   });
@@ -119,7 +119,7 @@ galleryExtensions.prototype.init = function () {
   });
 };
 
-galleryExtensions.prototype.destroy = function () {
+extendForDiscourse.prototype.destroy = function () {
   this.elem.removeEventListener("onBeforeOpen", onGalleryOpen, {
     passive: true,
   });
