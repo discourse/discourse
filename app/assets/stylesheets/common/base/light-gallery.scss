@@ -6,8 +6,6 @@
 
   .lg-outer {
     .lg-item {
-      // don't load the default spinner gif
-      background: none !important;
       // use the default Discourse spinnner instead
       &:after {
         content: "";
@@ -29,6 +27,7 @@
     }
 
     .lg-img-wrap {
+      padding: 3.5em;
       img {
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
         background: linear-gradient(45deg, #111 0%, #333 100%);
