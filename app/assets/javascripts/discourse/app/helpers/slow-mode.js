@@ -58,3 +58,10 @@ export function intervalTextFromSeconds(seconds) {
     return I18n.t("topic.slow_mode_intervals.minutes", { minutes: minutes });
   }
 }
+
+export function cannotPostAgain(interval, last_posted_at) {
+  let threshold = new Date(last_posted_at);
+  threshold = new Date(threshold.getTime() + interval * 1000);
+
+  return new Date() < threshold;
+}

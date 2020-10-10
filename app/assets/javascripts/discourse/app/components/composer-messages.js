@@ -117,6 +117,21 @@ export default Component.extend({
       }
     }
 
+    const topic = composer.get("topic");
+    if (topic && topic.slow_mode_seconds) {
+      const msg = composer.store.createRecord("composer-message", {
+        id: "slow-mode-enabled",
+        extraClass: "custom-body",
+        templateName: "custom-body",
+        title: I18n.t("composer.slow_mode.title"),
+        body: I18n.t("composer.slow_mode.body", {
+          interval: intervalTextFromSeconds(topic.slow_mode_seconds),
+        }),
+      });
+
+      this.send("popup", msg);
+    }
+
     this.queuedForTyping.forEach((msg) => this.send("popup", msg));
   },
 
@@ -181,21 +196,8 @@ export default Component.extend({
 
     const composer = this.composer;
     const args = { composer_action: composer.get("action") };
-    const topic = composer.get("topic");
+    const topic = composer.get("topic.id");
     const postId = composer.get("post.id");
-
-    if (topic && topic.slow_mode_seconds) {
-      const msg = composer.store.createRecord("composer-message", {
-        id: "slow-mode-enabled",
-        extraClass: "custom-body",
-        templateName: "custom-body",
-        title: I18n.t("composer.slow_mode.title"),
-        body: I18n.t("composer.slow_mode.body", {
-          interval: intervalTextFromSeconds(topic.slow_mode_seconds),
-        }),
-      });
-      this.send("popup", msg);
-    }
 
     if (topic && topic.id) {
       args.topic_id = topic.id;
