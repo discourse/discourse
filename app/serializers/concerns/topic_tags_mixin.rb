@@ -11,7 +11,8 @@ module TopicTagsMixin
 
   def tags
     # Calling method `pluck` along with `includes` causing N+1 queries
-    tags = topic.tags.map(&:name)
+    order_setting = SiteSetting.tags_sort_alphabetically ? { name: :asc } : { topic_count: :desc }
+    tags = topic.tags.order(order_setting).map(&:name)
 
     if scope.is_staff?
       tags
