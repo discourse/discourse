@@ -224,14 +224,14 @@ JS
       ['proposal-decorators', { legacy: true }]
     ]
 
-    def self.build(source, plugins = [], options = {})
+    def self.build(source, extra_plugins = [], options = {})
       options[:ast] ||= false
 
       options_string = options.map do |k, v|
         v.is_a?(String) ? "#{k}: '#{v}'" : "#{k}: #{v}"
       end.join(', ')
 
-      plugins_string = (PLUGINS + plugins).map  { |plugin| plugin.to_json }.join(', ')
+      plugins_string = (PLUGINS + extra_plugins).map  { |plugin| plugin.to_json }.join(', ')
 
       "Babel.transform(#{source}, { plugins: [#{plugins_string}], #{options_string} }).code"
     end
