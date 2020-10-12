@@ -106,7 +106,7 @@ describe Discourse::VERSION do
 
         # Simulate a remote upstream
         `cd #{path} && git remote add origin #{path}/.git && git fetch -q`
-        `cd #{path} && git branch -u origin/main`
+        `cd #{path} && git branch -u origin/$(git branch --show-current)`
       end
 
       path
