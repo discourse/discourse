@@ -102,11 +102,11 @@ describe Discourse::VERSION do
 
       capture_stdout do
         # Note the lack of colon between version and hash
-        path = setup_git_repo(".discourse-compatibility" => "1.0.0.beta1 12f82d5").tap do |path|
-          # Simulate a remote upstream
-          `cd #{path} && git remote add origin #{path}/.git && git fetch -q`
-          `cd #{path} && git branch -u origin/main`
-        end
+        path = setup_git_repo(".discourse-compatibility" => "1.0.0.beta1 12f82d5")
+
+        # Simulate a remote upstream
+        `cd #{path} && git remote add origin #{path}/.git && git fetch -q`
+        `cd #{path} && git branch -u origin/main`
       end
 
       path
