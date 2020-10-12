@@ -627,7 +627,7 @@ export default RestModel.extend({
         this.set("loadingLastPost", true);
         return this.findPostsByIds(this._loadingPostIds, opts)
           .then((posts) => {
-            this._loadingPostIds = undefined;
+            this._loadingPostIds = null;
             const ignoredUsers =
               User.current() && User.current().get("ignored_users");
             posts.forEach((p) => {
