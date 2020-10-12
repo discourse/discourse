@@ -144,8 +144,8 @@ JS
         BabelHelper.build(
           js_source,
           [
-            "['transform-modules-amd', { noInterop: true }]",
-            'exports.WidgetHbsCompiler',
+            ['transform-modules-amd', { noInterop: true }],
+            WidgetHbsCompiler,
           ],
           {
             moduleId: opts[:module_name],
@@ -158,7 +158,7 @@ JS
           js_source,
           [
             'transform-template-literals',
-            'exports.WidgetHbsCompiler',
+            WidgetHbsCompiler,
           ]
         )
       end
@@ -178,6 +178,18 @@ JS
 
       # We need to strip the app subdirectory to replicate how ember-cli works.
       path || logical_path&.gsub('app/', '')&.gsub('addon/', '')&.gsub('admin/addon', 'admin')
+    end
+  end
+
+  class Exports
+    def self.to_json
+      self.to_s
+    end
+  end
+
+  class WidgetHbsCompiler < Exports
+    def self.to_s
+      'exports.WidgetHbsCompiler'
     end
   end
 
@@ -209,7 +221,7 @@ JS
       'proposal-object-rest-spread',
       'proposal-optional-chaining',
       'proposal-unicode-property-regex',
-      "['proposal-decorators', { legacy: true }]"
+      ['proposal-decorators', { legacy: true }]
     ]
 
     def self.build(source, plugins = [], options = {})
@@ -219,16 +231,7 @@ JS
         v.is_a?(String) ? "#{k}: '#{v}'" : "#{k}: #{v}"
       end.join(', ')
 
-      plugins_string = (PLUGINS + plugins).map do |plugin|
-        # eg: "['proposal-decorators', { legacy: true }]"
-        # should be treated as an array in the generated script and not a string
-        # same for exports
-        if plugin.start_with?('[') || plugin.start_with?('exports')
-          plugin
-        else
-          "'#{plugin}'"
-        end
-      end.join(', ')
+      plugins_string = (PLUGINS + plugins).map  { |plugin| plugin.to_json }.join(', ')
 
       "Babel.transform(#{source}, { plugins: [#{plugins_string}], #{options_string} }).code"
     end
