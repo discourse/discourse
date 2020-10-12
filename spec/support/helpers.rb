@@ -128,18 +128,29 @@ module Helpers
     expect(sorted_tag_names(a)).to eq(sorted_tag_names(b))
   end
 
-  def capture_stdout
-    old_stdout = $stdout
+  def capture_output(output_name)
     if ENV['RAILS_ENABLE_TEST_STDOUT']
       yield
       return
     end
+
+    previous_output = output_name == :stdout ? $stdout : $stderr
+
     io = StringIO.new
-    $stdout = io
+    output_name == :stdout ? $stdout = io : $stderr = io
+
     yield
     io.string
   ensure
-    $stdout = old_stdout
+    output_name == :stdout ? $stdout = previous_output : $stderr = previous_output
+  end
+
+  def capture_stdout(&block)
+    capture_output(:stdout, &block)
+  end
+
+  def capture_stderr(&block)
+    capture_output(:stderr, &block)
   end
 
   def set_subfolder(f)
