@@ -1302,6 +1302,10 @@ export default Controller.extend(bufferedProperty("model"), {
       return;
     }
 
+    if (this.retryRateLimited) {
+      return;
+    }
+
     promise().catch((e) => {
       const xhr = e.jqXHR;
       if (
@@ -1316,7 +1320,10 @@ export default Controller.extend(bufferedProperty("model"), {
           waitSeconds = 5;
         }
 
+        this.retryRateLimited = true;
+
         later(() => {
+          this.retryRateLimited = false;
           this.retryOnRateLimit(times - 1, promise, topicId);
         }, waitSeconds * 1000);
       }
@@ -1394,11 +1401,21 @@ export default Controller.extend(bufferedProperty("model"), {
             break;
           }
           case "created": {
-            this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () =>
-              postStream
-                .triggerNewPostInStream(data.id, { background: true })
+            this.newPostsInStream = this.newPostsInStream || [];
+            this.newPostsInStream.push(data.id);
+
+            this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
+              const postIds = this.newPostsInStream;
+              this.newPostsInStream = [];
+
+              return postStream
+                .triggerNewPostsInStream(postIds, { background: true })
                 .then(() => refresh())
-            );
+                .catch((e) => {
+                  this.newPostsInStream = postIds.concat(this.newPostsInStream);
+                  throw e;
+                });
+            });
 
             if (this.get("currentUser.id") !== data.user_id) {
               this.documentTitle.incrementBackgroundContextCount();
