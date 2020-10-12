@@ -604,7 +604,7 @@ export default RestModel.extend({
     from the message bus indicating there's a new post. We'll only insert it if we currently
     have no filters.
   **/
-  triggerNewPostInStream(postId) {
+  triggerNewPostInStream(postId, opts) {
     const resolved = Promise.resolve();
 
     if (!postId) {
@@ -617,13 +617,17 @@ export default RestModel.extend({
     }
 
     const loadedAllPosts = this.loadedAllPosts;
+    this._loadingPostIds = this._loadingPostIds || [];
 
     if (this.stream.indexOf(postId) === -1) {
-      this.stream.addObject(postId);
       if (loadedAllPosts) {
+        if (this._loadingPostIds.indexOf(postId) === -1) {
+          this._loadingPostIds.push(postId);
+        }
         this.set("loadingLastPost", true);
-        return this.findPostsByIds([postId])
+        return this.findPostsByIds(this._loadingPostIds, opts)
           .then((posts) => {
+            this._loadingPostIds = undefined;
             const ignoredUsers =
               User.current() && User.current().get("ignored_users");
             posts.forEach((p) => {
@@ -631,12 +635,15 @@ export default RestModel.extend({
                 this.stream.removeObject(postId);
                 return;
               }
+              this.stream.addObject(p.id);
               this.appendPost(p);
             });
           })
           .finally(() => {
             this.set("loadingLastPost", false);
           });
+      } else {
+        this.stream.addObject(postId);
       }
     }
 
@@ -972,17 +979,17 @@ export default RestModel.extend({
     });
   },
 
-  findPostsByIds(postIds) {
+  findPostsByIds(postIds, opts) {
     const identityMap = this._identityMap;
     const unloaded = postIds.filter((p) => !identityMap[p]);
 
     // Load our unloaded posts by id
-    return this.loadIntoIdentityMap(unloaded).then(() => {
+    return this.loadIntoIdentityMap(unloaded, opts).then(() => {
       return postIds.map((p) => identityMap[p]).compact();
     });
   },
 
-  loadIntoIdentityMap(postIds) {
+  loadIntoIdentityMap(postIds, opts) {
     if (isEmpty(postIds)) {
       return Promise.resolve([]);
     }
@@ -993,7 +1000,15 @@ export default RestModel.extend({
     const data = { post_ids: postIds, include_suggested: includeSuggested };
     const store = this.store;
 
-    return ajax(url, { data }).then((result) => {
+    let headers = {};
+    if (opts && opts.background) {
+      headers["Discourse-Background"] = "true";
+    }
+
+    return ajax(url, {
+      data,
+      headers,
+    }).then((result) => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }

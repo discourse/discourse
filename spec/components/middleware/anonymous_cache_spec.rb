@@ -127,6 +127,48 @@ describe Middleware::AnonymousCache do
     end
   end
 
+  context 'background request rate limit' do
+    it 'will rate limit background requests' do
+
+      app = Middleware::AnonymousCache.new(
+        lambda do |env|
+          [200, {}, ["ok"]]
+        end
+      )
+
+      global_setting :background_requests_max_queue_length, 1
+
+      env = {
+        "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+        "HOST" => "site.com",
+        "REQUEST_METHOD" => "GET",
+        "REQUEST_URI" => "/somewhere/rainbow",
+        "REQUEST_QUEUE_SECONDS" => 2.1,
+        "rack.input" => StringIO.new
+      }
+
+      # non background ... long request
+      env["REQUEST_QUEUE_SECONDS"] = 2
+
+      status, _ = app.call(env.dup)
+      expect(status).to eq(200)
+
+      env["HTTP_DISCOURSE_BACKGROUND"] = "true"
+
+      status, headers, body = app.call(env.dup)
+      expect(status).to eq(429)
+      expect(headers["content-type"]).to eq("application/json; charset=utf-8")
+      json = JSON.parse(body.join)
+      expect(json["extras"]["wait_seconds"]).to be > 4.9
+
+      env["REQUEST_QUEUE_SECONDS"] = 0.5
+
+      status, _ = app.call(env.dup)
+      expect(status).to eq(200)
+
+    end
+  end
+
   context 'force_anonymous!' do
     before do
       RateLimiter.enable
