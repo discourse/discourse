@@ -351,7 +351,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     raw.gsub!("   ", "\n\n")
 
     hoisted.each do |hoist, code|
-      raw.gsub!(hoist, "\n```\n" << code << "\n```\n")
+      raw.gsub!(hoist, "\n```\n#{code}\n```\n")
     end
 
     raw = CGI.unescapeHTML(raw)
@@ -365,9 +365,10 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     Topic.listable_topics.find_each do |topic|
       tcf = topic.first_post.custom_fields
       if tcf && tcf["import_id"]
-        slug = @topic_slug[tcf["import_id"]]
-        slug = slug.gsub(OLD_DOMAIN, "")
-        Permalink.create(url: slug, topic_id: topic.id)
+        if slug = @topic_slug[tcf["import_id"]]
+          slug.gsub!(OLD_DOMAIN, "")
+          Permalink.find_or_create_by(url: slug, topic_id: topic.id) if slug.present?
+        end
       end
     end
   end

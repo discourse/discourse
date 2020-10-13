@@ -172,6 +172,16 @@ describe "translate accelerator" do
       expect(I18n.t('items', count: 1)).to eq('one fish')
     end
 
+    it "supports one and other with fallback locale" do
+      override_translation('en_US', 'items.one', 'one fish')
+      override_translation('en_US', 'items.other', '%{count} fishies')
+
+      I18n.with_locale(:en_US) do
+        expect(I18n.t('items', count: 13)).to eq('13 fishies')
+        expect(I18n.t('items', count: 1)).to eq('one fish')
+      end
+    end
+
     it "supports one and other when only a single pluralization key is overridden" do
       override_translation('en', 'keys.magic.other', 'no magic keys')
       expect(I18n.t('keys.magic', count: 1)).to eq('one magic key')

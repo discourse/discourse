@@ -3,6 +3,7 @@
 require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
+require_relative 'vanilla_body_parser'
 
 class ImportScripts::VanillaSQL < ImportScripts::Base
 
@@ -20,6 +21,13 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       username: "root",
       password: "pa$$word",
       database: VANILLA_DB
+    )
+
+    VanillaBodyParser.configure(
+      lookup: @lookup,
+      uploader: @uploader,
+      host: 'vanilla.yourforum.com', # your Vanilla forum domain
+      uploads_path: 'uploads' # relative path to your vanilla uploads folder
     )
 
     @import_tags = false
@@ -42,6 +50,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     import_categories
     import_topics
     import_posts
+    import_messages
 
     update_tl0
 
@@ -59,8 +68,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
-        "SELECT UserID, Name, Title, Location, About, Email,
-                DateInserted, DateLastActive, InsertIPAddress, Admin
+        "SELECT UserID, Name, Title, Location, About, Email, Admin, Banned, CountComments,
+                DateInserted, DateLastActive, InsertIPAddress
          FROM #{TABLE_PREFIX}User
          WHERE UserID > #{@last_user_id}
          ORDER BY UserID ASC
@@ -71,7 +80,9 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       next if all_records_exist? :users, results.map { |u| u['UserID'].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
-        next if user['Email'].blank?
+        email = user['Email'].squish
+
+        next if email.blank?
         next if user['Name'].blank?
         next if @lookup.user_id_from_imported_user_id(user['UserID'])
         if user['Name'] == '[Deleted User]'
@@ -84,8 +95,11 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           username = user['Name']
         end
 
+        banned = user['Banned'] != 0
+        commented = (user['CountComments'] || 0) > 0
+
         { id: user['UserID'],
-          email: user['Email'],
+          email: email,
           username: username,
           name: user['Name'],
           created_at: user['DateInserted'] == nil ? 0 : Time.zone.at(user['DateInserted']),
@@ -94,9 +108,20 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           last_seen_at: user['DateLastActive'] == nil ? 0 : Time.zone.at(user['DateLastActive']),
           location: user['Location'],
           admin: user['Admin'] == 1,
+          trust_level: !banned && commented ? 2 : 0,
           post_create_action: proc do |newuser|
             if @user_is_deleted
               @last_deleted_username = newuser.username
+            end
+            if banned
+              newuser.suspended_at = Time.now
+              # banning on Vanilla doesn't have an end, so a thousand years seems equivalent
+              newuser.suspended_till = 1000.years.from_now
+              if newuser.save
+                StaffActionLogger.new(Discourse.system_user).log_user_suspend(newuser, 'Imported from Vanilla Forum')
+              else
+                puts "Failed to suspend user #{newuser.username}. #{newuser.errors.full_messages.join(', ')}"
+              end
             end
           end }
       end
@@ -204,8 +229,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       discussions = mysql_query(
-        "SELECT DiscussionID, CategoryID, Name, Body,
-                DateInserted, InsertUserID
+        "SELECT DiscussionID, CategoryID, Name, Body, Format, CountViews, Closed, Announce,
+                DateInserted, InsertUserID, DateLastComment
          FROM #{TABLE_PREFIX}Discussion
          WHERE DiscussionID > #{@last_topic_id}
          ORDER BY DiscussionID ASC
@@ -216,12 +241,17 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       next if all_records_exist? :posts, discussions.map { |t| "discussion#" + t['DiscussionID'].to_s }
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
+        user_id = user_id_from_imported_user_id(discussion['InsertUserID']) || Discourse::SYSTEM_USER_ID
         {
           id: "discussion#" + discussion['DiscussionID'].to_s,
-          user_id: user_id_from_imported_user_id(discussion['InsertUserID']) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id,
           title: discussion['Name'],
           category: category_id_from_imported_category_id(discussion['CategoryID']),
-          raw: clean_up(discussion['Body']),
+          raw: VanillaBodyParser.new(discussion, user_id).parse,
+          views: discussion['CountViews'] || 0,
+          closed: discussion['Closed'] == 1,
+          pinned_at: discussion['Announce'] == 0 ? nil : Time.zone.at(discussion['DateLastComment'] || discussion['DateInserted']),
+          pinned_globally: discussion['Announce'] == 1,
           created_at: Time.zone.at(discussion['DateInserted']),
           post_create_action: proc do |post|
             if @import_tags
@@ -241,7 +271,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     @last_post_id = -1
     batches(BATCH_SIZE) do |offset|
       comments = mysql_query(
-        "SELECT CommentID, DiscussionID, Body,
+        "SELECT CommentID, DiscussionID, Body, Format,
                 DateInserted, InsertUserID
          FROM #{TABLE_PREFIX}Comment
          WHERE CommentID > #{@last_post_id}
@@ -255,102 +285,77 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
+        user_id = user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID
         {
           id: "comment#" + comment['CommentID'].to_s,
-          user_id: user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id,
           topic_id: t[:topic_id],
-          raw: clean_up(comment['Body']),
+          raw: VanillaBodyParser.new(comment, user_id).parse,
           created_at: Time.zone.at(comment['DateInserted'])
         }
       end
     end
   end
 
-  def clean_up(raw)
-    return "" if raw.blank?
+  def import_messages
+    puts "", "importing messages..."
 
-    # decode HTML entities
-    raw = @htmlentities.decode(raw)
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}ConversationMessage;").first['count']
 
-    # fix whitespaces
-    raw = raw.gsub(/(\\r)?\\n/, "\n")
-      .gsub("\\t", "\t")
+    @last_message_id = -1
 
-    # [HTML]...[/HTML]
-    raw = raw.gsub(/\[html\]/i, "\n```html\n")
-      .gsub(/\[\/html\]/i, "\n```\n")
+    batches(BATCH_SIZE) do |offset|
+      messages = mysql_query(
+        "SELECT m.MessageID, m.Body, m.Format,
+                m.InsertUserID, m.DateInserted,
+                m.ConversationID, c.Contributors
+         FROM #{TABLE_PREFIX}ConversationMessage m
+         INNER JOIN #{TABLE_PREFIX}Conversation c on c.ConversationID = m.ConversationID
+         WHERE m.MessageID > #{@last_message_id}
+         ORDER BY m.MessageID ASC
+         LIMIT #{BATCH_SIZE};")
 
-    # [PHP]...[/PHP]
-    raw = raw.gsub(/\[php\]/i, "\n```php\n")
-      .gsub(/\[\/php\]/i, "\n```\n")
+      break if messages.size < 1
+      @last_message_id = messages.to_a.last['MessageID']
+      next if all_records_exist? :posts, messages.map { |t| "message#" + t['MessageID'].to_s }
 
-    # [HIGHLIGHT="..."]
-    raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
+      create_posts(messages, total: total_count, offset: offset) do |message|
+        user_id = user_id_from_imported_user_id(message['InsertUserID']) || Discourse::SYSTEM_USER_ID
+        body = VanillaBodyParser.new(message, user_id).parse
 
-    # [CODE]...[/CODE]
-    # [HIGHLIGHT]...[/HIGHLIGHT]
-    raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-      .gsub(/\[\/?highlight\]/i, "\n```\n")
+        common = {
+          user_id: user_id,
+          raw: body,
+          created_at: Time.zone.at(message['DateInserted']),
+          custom_fields: {
+            conversation_id: message['ConversationID'],
+            participants: message['Contributors'],
+            message_id: message['MessageID']
+          }
+        }
 
-    # [SAMP]...[/SAMP]
-    raw.gsub!(/\[\/?samp\]/i, "`")
+        conversation_id = "conversation#" + message['ConversationID'].to_s
+        message_id = "message#" + message['MessageID'].to_s
 
-    unless CONVERT_HTML
-      # replace all chevrons with HTML entities
-      # NOTE: must be done
-      #  - AFTER all the "code" processing
-      #  - BEFORE the "quote" processing
-      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-        .gsub("<", "&lt;")
-        .gsub("\u2603", "<")
+        imported_conversation = topic_lookup_from_imported_post_id(conversation_id)
 
-      raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-        .gsub(">", "&gt;")
-        .gsub("\u2603", ">")
+        if imported_conversation.present?
+          common.merge(id: message_id, topic_id: imported_conversation[:topic_id])
+        else
+          user_ids = (message['Contributors'] || '').scan(/\"(\d+)\"/).flatten.map(&:to_i)
+          usernames = user_ids.map { |id| @lookup.find_user_by_import_id(id).try(:username) }.compact
+          usernames = [@lookup.find_user_by_import_id(message['InsertUserID']).try(:username)].compact if usernames.empty?
+          title = body.truncate(40)
+
+          {
+            id: conversation_id,
+            title: title,
+            archetype: Archetype.private_message,
+            target_usernames: usernames.uniq,
+          }.merge(common)
+        end
+      end
     end
-
-    # [URL=...]...[/URL]
-    raw.gsub!(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
-
-    # [IMG]...[/IMG]
-    raw.gsub!(/\[\/?img\]/i, "")
-
-    # [URL]...[/URL]
-    # [MP3]...[/MP3]
-    raw = raw.gsub(/\[\/?url\]/i, "")
-      .gsub(/\[\/?mp3\]/i, "")
-
-    # [QUOTE]...[/QUOTE]
-    raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { "\n> #{$1}\n" }
-
-    # [YOUTUBE]<id>[/YOUTUBE]
-    raw.gsub!(/\[youtube\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # [youtube=425,350]id[/youtube]
-    raw.gsub!(/\[youtube="?(.+?)"?\](.+)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$2}\n" }
-
-    # [MEDIA=youtube]id[/MEDIA]
-    raw.gsub!(/\[MEDIA=youtube\](.+?)\[\/MEDIA\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # [VIDEO=youtube;<id>]...[/VIDEO]
-    raw.gsub!(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # Convert image bbcode
-    raw.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
-
-    # Remove the color tag
-    raw.gsub!(/\[color=[#a-z0-9]+\]/i, "")
-    raw.gsub!(/\[\/color\]/i, "")
-
-    # remove attachments
-    raw.gsub!(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
-
-    # sanitize img tags
-    # This regexp removes everything between the first and last img tag. The .* is too much.
-    # If it's needed, it needs to be fixed.
-    # raw.gsub!(/\<img.*src\="([^\"]+)\".*\>/i) {"\n<img src='#{$1}'>\n"}
-
-    raw
   end
 
   def staff_guardian
@@ -368,7 +373,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
-        Permalink.create(url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}") rescue nil
+        encoded_username = CGI.escape(ucf['import_username']).gsub('+', '%20')
+        Permalink.create(url: "profile/#{ucf['import_id']}/#{encoded_username}", external_url: "/users/#{u.username}") rescue nil
         print '.'
       end
     end

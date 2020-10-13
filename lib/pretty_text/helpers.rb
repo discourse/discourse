@@ -4,6 +4,8 @@ module PrettyText
   module Helpers
     extend self
 
+    TAG_HASHTAG_POSTFIX = "::tag"
+
     # functions here are available to v8
     def t(key, opts)
       key = "js." + key
@@ -41,7 +43,7 @@ module PrettyText
 
     def category_hashtag_lookup(category_slug)
       if category = Category.query_from_hashtag_slug(category_slug)
-        [category.url_with_id, category_slug]
+        [category.url, category_slug]
       else
         nil
       end
@@ -102,13 +104,12 @@ module PrettyText
     end
 
     def category_tag_hashtag_lookup(text)
-      tag_postfix = '::tag'
-      is_tag = text =~ /#{tag_postfix}$/
+      is_tag = text =~ /#{TAG_HASHTAG_POSTFIX}$/
 
       if !is_tag && category = Category.query_from_hashtag_slug(text)
-        [category.url_with_id, text]
+        [category.url, text]
       elsif (!is_tag && tag = Tag.find_by(name: text)) ||
-            (is_tag && tag = Tag.find_by(name: text.gsub!("#{tag_postfix}", '')))
+            (is_tag && tag = Tag.find_by(name: text.gsub!(TAG_HASHTAG_POSTFIX, '')))
         ["#{Discourse.base_url}/tag/#{tag.name}", text]
       else
         nil

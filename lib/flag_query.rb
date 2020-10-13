@@ -137,7 +137,7 @@ module FlagQuery
 
     guardian = Guardian.new(current_user)
     users = User.includes(:user_stat).where(id: user_ids.to_a).to_a
-    User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
+    User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
 
     [
       posts,

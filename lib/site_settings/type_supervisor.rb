@@ -34,7 +34,8 @@ class SiteSettings::TypeSupervisor
       group: 19,
       group_list: 20,
       tag_list: 21,
-      color: 22
+      color: 22,
+      simple_list: 23
     )
   end
 
@@ -181,6 +182,8 @@ class SiteSettings::TypeSupervisor
       type = get_data_type(name, val)
     elsif type == self.class.types[:enum]
       val = @defaults_provider[name].is_a?(Integer) ? val.to_i : val.to_s
+    elsif type == self.class.types[:uploaded_image_list] && val.present?
+      val = val.is_a?(String) ? val : val.map(&:id).join("|")
     elsif type == self.class.types[:upload] && val.present?
       val = val.is_a?(Integer) ? val : val.id
     end

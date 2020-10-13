@@ -1,20 +1,3 @@
-# encoding: utf-8
-# This file contains content for the client portion of the poll plugin, sent out
-# to the Javascript app.
-#
-# To work with us on translations, see:
-# https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
-
 en:
   js:
     poll:
@@ -43,15 +26,15 @@ en:
       multiple:
         help:
           at_least_min_options:
-            one: "Choose at least <strong>%{count}</strong> option"
-            other: "Choose at least <strong>%{count}</strong> options"
+            one: "Choose at least <strong>%{count}</strong> option."
+            other: "Choose at least <strong>%{count}</strong> options."
           up_to_max_options:
-            one: "Choose up to <strong>%{count}</strong> option"
-            other: "Choose up to <strong>%{count}</strong> options"
+            one: "Choose up to <strong>%{count}</strong> option."
+            other: "Choose up to <strong>%{count}</strong> options."
           x_options:
-            one: "Choose <strong>%{count}</strong> option"
-            other: "Choose <strong>%{count}</strong> options"
-          between_min_and_max_options: "Choose between <strong>%{min}</strong> and <strong>%{max}</strong> options"
+            one: "Choose <strong>%{count}</strong> option."
+            other: "Choose <strong>%{count}</strong> options."
+          between_min_and_max_options: "Choose between <strong>%{min}</strong> and <strong>%{max}</strong> options."
 
       cast-votes:
         title: "Cast your votes"
@@ -68,10 +51,6 @@ en:
       group-results:
         title: "Group votes by user field"
         label: "Show breakdown"
-
-      ungroup-results:
-        title: "Combine all votes"
-        label: "Hide breakdown"
 
       export-results:
         title: "Export the poll results"
@@ -90,6 +69,13 @@ en:
       automatic_close:
         closes_in: "Closes in <strong>%{timeLeft}</strong>."
         age: "Closed <strong>%{age}</strong>"
+
+      breakdown:
+        title: "Poll results"
+        votes: "%{count} votes"
+        breakdown: "Breakdown"
+        percentage: "Percentage"
+        count: "Count"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."
@@ -118,12 +104,16 @@ en:
           label: Allowed groups
         poll_chart_type:
           label: Chart type
+          bar: Bar
+          pie: Pie
         poll_config:
           max: Max
           min: Min
           step: Step
         poll_public:
           label: Show who voted
+        poll_title:
+          label: Title (optional)
         poll_options:
           label: Enter one poll option per line
         automatic_close:

@@ -4,14 +4,14 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  background-color: $secondary;
+  background-color: var(--secondary);
   min-height: 30px;
   box-sizing: border-box;
 }
 
 .ignored-user-list-item {
-  border: 1px solid $primary-medium;
-  border-radius: 0.25em;
+  border: 1px solid var(--primary-medium);
+  border-radius: 5px;
   padding: 0;
   display: flex;
   align-items: center;

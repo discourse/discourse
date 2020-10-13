@@ -17,7 +17,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.exists?(post_id: json["id"])).to eq(true)
     end
@@ -30,7 +30,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.exists?(post_id: json["id"])).to eq(true)
     end
@@ -49,7 +49,7 @@ describe PostsController do
              change { Poll.count }.by(1)
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       post_id = json["id"]
 
       expect(Poll.find_by(post_id: post_id).close_at).to eq_time(close_date)
@@ -67,7 +67,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_different_options"))
     end
 
@@ -77,7 +77,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_at_least_1_option"))
     end
 
@@ -91,7 +91,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_less_options", count: SiteSetting.poll_maximum_options))
     end
 
@@ -101,7 +101,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"))
     end
 
@@ -111,7 +111,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(json["cooked"]).to include("&lt;script&gt;")
       expect(Poll.find_by(post_id: json["id"]).name).to eq("&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;")
@@ -123,7 +123,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.exists?(post_id: json["id"])).to eq(true)
     end
@@ -134,9 +134,20 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.where(post_id: json["id"]).count).to eq(1)
+    end
+
+    it "accepts polls with titles" do
+      post :create, params: {
+        title: title, raw: "[poll]\n# What's up?\n- one\n[/poll]"
+      }, format: :json
+
+      expect(response).to be_successful
+      poll = Poll.last
+      expect(poll).to_not be_nil
+      expect(poll.title).to eq("What’s up?")
     end
 
     describe "edit window" do
@@ -149,7 +160,7 @@ describe PostsController do
               title: title, raw: "[poll]\n- A\n- B\n[/poll]"
             }, format: :json
 
-            ::JSON.parse(response.body)["id"]
+            response.parsed_body["id"]
           end
         end
 
@@ -159,7 +170,7 @@ describe PostsController do
           }, format: :json
 
           expect(response.status).to eq(200)
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["post"]["polls"][0]["options"][2]["html"]).to eq("C")
         end
 
@@ -171,7 +182,7 @@ describe PostsController do
           }, format: :json
 
           expect(response.status).to eq(200)
-          json = ::JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["post"]["polls_votes"]).to_not be
         end
 
@@ -189,7 +200,7 @@ describe PostsController do
               title: title, raw: poll
             }, format: :json
 
-            ::JSON.parse(response.body)["id"]
+            response.parsed_body["id"]
           end
         end
 
@@ -207,14 +218,14 @@ describe PostsController do
             }, format: :json
 
             expect(response.status).to eq(200)
-            json = ::JSON.parse(response.body)
+            json = response.parsed_body
             expect(json["post"]["polls"][0]["options"][1]["html"]).to eq("C")
           end
 
           it "support changes on the post" do
             put :update, params: { id: post_id, post: { raw: updated } }, format: :json
             expect(response.status).to eq(200)
-            json = ::JSON.parse(response.body)
+            json = response.parsed_body
             expect(json["post"]["cooked"]).to match("before")
           end
 
@@ -232,7 +243,7 @@ describe PostsController do
             }, format: :json
 
             expect(response).not_to be_successful
-            json = ::JSON.parse(response.body)
+            json = response.parsed_body
             expect(json["errors"][0]).to eq(I18n.t(
               "poll.edit_window_expired.cannot_edit_default_poll_with_votes",
               minutes: poll_edit_window_mins
@@ -242,7 +253,7 @@ describe PostsController do
           it "support changes on the post" do
             put :update, params: { id: post_id, post: { raw: updated } }, format: :json
             expect(response.status).to eq(200)
-            json = ::JSON.parse(response.body)
+            json = response.parsed_body
             expect(json["post"]["cooked"]).to match("before")
           end
 
@@ -262,7 +273,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_different_options", name: "foo"))
     end
 
@@ -272,7 +283,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_at_least_1_option", name: "foo"))
     end
 
@@ -286,7 +297,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.where(post_id: json["id"]).count).to eq(2)
     end
@@ -297,7 +308,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_without_name"))
     end
 
@@ -307,7 +318,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.multiple_polls_with_same_name", name: "foo"))
     end
 
@@ -326,7 +337,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to eq("<p>[poll]</p>\n<ul>\n<li>A</li>\n<li>B<br>\n[/poll]</li>\n</ul>")
     end
   end
@@ -344,7 +355,7 @@ describe PostsController do
       }, format: :json
 
       expect(response).not_to be_successful
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"][0]).to eq(I18n.t("poll.insufficient_rights_to_create"))
     end
 
@@ -362,7 +373,7 @@ describe PostsController do
         topic_id: topic.id, raw: "[poll]\n- A\n- B\n[/poll]"
       }, format: :json
 
-      expect(::JSON.parse(response.body)["errors"]).to eq(nil)
+      expect(response.parsed_body["errors"]).to eq(nil)
     end
   end
 
@@ -379,7 +390,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.exists?(post_id: json["id"])).to eq(true)
     end
@@ -398,7 +409,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.exists?(post_id: json["id"])).to eq(true)
     end
@@ -417,7 +428,7 @@ describe PostsController do
       }, format: :json
 
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["cooked"]).to match("data-poll-")
       expect(Poll.exists?(post_id: json["id"])).to eq(true)
     end

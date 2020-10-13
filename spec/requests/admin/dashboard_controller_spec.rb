@@ -29,7 +29,7 @@ describe Admin::DashboardController do
           get "/admin/dashboard.json"
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)['version_check']).to be_present
+          expect(response.parsed_body['version_check']).to be_present
         end
       end
 
@@ -41,7 +41,7 @@ describe Admin::DashboardController do
         it 'does not return discourse version info' do
           get "/admin/dashboard.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json['version_check']).not_to be_present
         end
       end
@@ -57,7 +57,7 @@ describe Admin::DashboardController do
           get "/admin/dashboard/problems.json"
 
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json['problems'].size).to eq(0)
         end
       end
@@ -70,7 +70,7 @@ describe Admin::DashboardController do
         it 'returns an array of strings' do
           get "/admin/dashboard/problems.json"
           expect(response.status).to eq(200)
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json['problems'].size).to eq(2)
           expect(json['problems'][0]).to be_a(String)
           expect(json['problems'][1]).to be_a(String)

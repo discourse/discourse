@@ -96,7 +96,7 @@ class PostCreator
     end
 
     if @opts[:target_usernames].present? && !skip_validations? && !@user.staff?
-      names = @opts[:target_usernames].split(',')
+      names = @opts[:target_usernames].split(',').flatten.map(&:downcase)
 
       # Make sure max_allowed_message_recipients setting is respected
       max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
@@ -110,8 +110,8 @@ class PostCreator
         return false
       end
 
-      # Make sure none of the users have muted the creator
-      users = User.where(username: names).pluck(:id, :username).to_h
+      # Make sure none of the users have muted or ignored the creator
+      users = User.where(username_lower: names).pluck(:id, :username).to_h
 
       User
         .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
@@ -126,6 +126,23 @@ class PostCreator
         .pluck(:id).each do |m|
 
         errors.add(:base, I18n.t(:not_accepting_pms, username: users[m]))
+      end
+
+      # Is Allowed PM users list enabled for any recipients?
+      users_with_allowed_pms = allowed_pms_enabled(users).pluck(:id).uniq
+
+      # If any of the users has allowed_pm_users enabled check to see if the creator
+      # is in their list
+      if users_with_allowed_pms.any?
+        users_sender_can_pm = allowed_pms_enabled(users)
+          .where("allowed_pm_users.allowed_pm_user_id" => @user.id.to_i)
+          .pluck(:id).uniq
+
+        # If not in the list add an error
+        users_not_allowed = users_with_allowed_pms - users_sender_can_pm
+        users_not_allowed.each do |id|
+          errors.add(:base, I18n.t(:not_accepting_pms, username: users[id]))
+        end
       end
 
       return false if errors[:base].present?
@@ -185,11 +202,10 @@ class PostCreator
         create_embedded_topic
         @post.link_post_uploads
         update_uploads_secure_status
+        delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
-        unarchive_message
-        if !@opts[:import_mode]
-          DraftSequence.next!(@user, draft_key)
-        end
+        unarchive_message if !@opts[:import_mode]
+        DraftSequence.next!(@user, draft_key) if !@opts[:import_mode]
         @post.save_reply_relationships
       end
     end
@@ -240,7 +256,7 @@ class PostCreator
   end
 
   def self.track_post_stats
-    Rails.env != "test".freeze || @track_post_stats
+    Rails.env != "test" || @track_post_stats
   end
 
   def self.track_post_stats=(val)
@@ -303,7 +319,7 @@ class PostCreator
 
   def draft_key
     @draft_key ||= @opts[:draft_key]
-    @draft_key ||= @topic ? "topic_#{@topic.id}" : "new_topic"
+    @draft_key ||= @topic ? @topic.draft_key : Draft::NEW_TOPIC
   end
 
   def build_post_stats
@@ -335,7 +351,8 @@ class PostCreator
         :closed, true, Discourse.system_user,
         message: I18n.t(
           'topic_statuses.autoclosed_message_max_posts',
-          count: SiteSetting.auto_close_messages_post_count
+          count: SiteSetting.auto_close_messages_post_count,
+          locale: SiteSetting.default_locale
         )
       )
     elsif !is_private_message &&
@@ -347,7 +364,8 @@ class PostCreator
         :closed, true, Discourse.system_user,
         message: I18n.t(
           'topic_statuses.autoclosed_topic_max_posts',
-          count: SiteSetting.auto_close_topics_post_count
+          count: SiteSetting.auto_close_topics_post_count,
+          locale: SiteSetting.default_locale
         )
       )
     end
@@ -374,14 +392,26 @@ class PostCreator
   # discourse post.
   def create_embedded_topic
     return unless @opts[:embed_url].present?
+
+    original_uri = URI.parse(@opts[:embed_url])
+    raise Discourse::InvalidParameters.new(:embed_url) unless original_uri.is_a?(URI::HTTP)
+
     embed = TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
     rollback_from_errors!(embed) unless embed.save
   end
 
   def update_uploads_secure_status
-    if SiteSetting.secure_media? || SiteSetting.prevent_anons_from_downloading_files?
-      @post.update_uploads_secure_status
-    end
+    return if !SiteSetting.secure_media?
+    @post.update_uploads_secure_status
+  end
+
+  def delete_owned_bookmarks
+    return if !@post.topic_id
+    BookmarkManager.new(@user).destroy_for_topic(
+      Topic.with_deleted.find(@post.topic_id),
+      { auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply] },
+      @opts
+    )
   end
 
   def handle_spam
@@ -429,6 +459,17 @@ class PostCreator
 
   private
 
+  def allowed_pms_enabled(users)
+    User
+      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
+      .joins("LEFT JOIN allowed_pm_users ON allowed_pm_users.user_id = users.id")
+      .where("
+        user_options.user_id IS NOT NULL AND
+        user_options.user_id IN (:user_ids) AND
+        user_options.enable_allowed_pm_users
+      ", user_ids: users.keys)
+  end
+
   def create_topic
     return if @topic
     begin
@@ -470,11 +511,12 @@ class PostCreator
 
       if topic_timer &&
          topic_timer.based_on_last_post &&
-         topic_timer.duration > 0
+         topic_timer.duration.to_i > 0
 
         @topic.set_or_create_timer(TopicTimer.types[:close],
-          topic_timer.duration,
-          based_on_last_post: topic_timer.based_on_last_post
+          nil,
+          based_on_last_post: topic_timer.based_on_last_post,
+          duration: topic_timer.duration
         )
       end
     end
@@ -537,11 +579,6 @@ class PostCreator
     unless @post.topic.private_message?
       @user.user_stat.post_count += 1 if @post.post_type == Post.types[:regular] && !@post.is_first_post?
       @user.user_stat.topic_count += 1 if @post.is_first_post?
-    end
-
-    # We don't count replies to your own topics
-    if !@opts[:import_mode] && @user.id != @topic.user_id
-      @user.user_stat.update_topic_reply_count
     end
 
     @user.user_stat.save!

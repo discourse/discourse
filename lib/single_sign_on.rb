@@ -27,6 +27,7 @@ class SingleSignOn
     title
     username
     website
+    location
   }
 
   FIXNUMS = []

@@ -1,0 +1,5 @@
+plugins:
+  styleguide_enabled:
+    default: false
+  styleguide_admin_only:
+    default: true

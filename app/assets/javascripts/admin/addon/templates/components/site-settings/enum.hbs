@@ -1,0 +1,19 @@
+{{combo-box
+  content=setting.validValues
+  value=value
+  onChange=(action (mut value))
+  valueProperty=setting.computedValueProperty
+  nameProperty=setting.computedNameProperty
+  options=(hash
+    castInteger=true
+    allowAny=setting.allowsNone
+  )
+}}
+
+{{preview}}
+
+{{setting-validation-message message=validationMessage}}
+
+<div class="desc">
+  {{html-safe setting.description}}
+</div>

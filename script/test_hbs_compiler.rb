@@ -6,6 +6,7 @@ template = <<~HBS
   {{actions-summary-item attrs=as}}
   {{attach widget="actions-summary-item" attrs=as}}
   {{testing value="hello"}}
+  {{date "today"}}
 HBS
 
 ctx = MiniRacer::Context.new(timeout: 15000)
@@ -22,7 +23,7 @@ console = {
 }
 
 JS
-source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js.es6")
+source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
 ctx.eval(source)
 
 js_source = ::JSON.generate(template, quirks_mode: true)

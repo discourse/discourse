@@ -18,11 +18,24 @@ class ScreenedEmail < ActiveRecord::Base
     self.email = email.downcase
   end
 
+  def self.canonical(email)
+    name, domain = email.split('@', 2)
+    name = name.gsub(/\+.*/, '')
+    if ['gmail.com', 'googlemail.com'].include?(domain.downcase)
+      name = name.gsub('.', '')
+    end
+    "#{name}@#{domain}".downcase
+  end
+
   def self.block(email, opts = {})
-    find_by_email(Email.downcase(email)) || create(opts.slice(:action_type, :ip_address).merge(email: email))
+    email = canonical(email)
+    find_by_email(email) || create!(opts.slice(:action_type, :ip_address).merge(email: email))
   end
 
   def self.should_block?(email)
+
+    email = canonical(email)
+
     screened_emails = ScreenedEmail.order(created_at: :desc).limit(100)
 
     distances = {}

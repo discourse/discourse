@@ -1,0 +1,9 @@
+{{#styleguide-section section=section}}
+  {{#if note}}
+    <div class="styleguide-note">
+      {{component (concat "notes/" note)}}
+    </div>
+  {{/if}}
+
+  {{outlet}}
+{{/styleguide-section}}

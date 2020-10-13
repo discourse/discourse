@@ -20,9 +20,11 @@ class Admin::UsersController < Admin::AdminController
                                     :remove_group,
                                     :primary_group,
                                     :anonymize,
+                                    :merge,
                                     :reset_bounce_score,
                                     :disable_second_factor,
-                                    :delete_posts_batch]
+                                    :delete_posts_batch,
+                                    :sso_record]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
@@ -91,6 +93,8 @@ class Admin::UsersController < Admin::AdminController
 
   def suspend
     guardian.ensure_can_suspend!(@user)
+    params.require([:suspend_until, :reason])
+
     @user.suspended_till = params[:suspend_until]
     @user.suspended_at = DateTime.now
 
@@ -197,7 +201,9 @@ class Admin::UsersController < Admin::AdminController
 
   def add_group
     group = Group.find(params[:group_id].to_i)
-    return render_json_error group unless group && !group.automatic
+
+    raise Discourse::NotFound unless group
+    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
 
     group.add(@user)
     GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
@@ -207,7 +213,9 @@ class Admin::UsersController < Admin::AdminController
 
   def remove_group
     group = Group.find(params[:group_id].to_i)
-    return render_json_error group unless group && !group.automatic
+
+    raise Discourse::NotFound unless group
+    return render_json_error(I18n.t('groups.errors.can_not_modify_automatic')) if group.automatic
 
     group.remove(@user)
     GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
@@ -356,9 +364,11 @@ class Admin::UsersController < Admin::AdminController
   def disable_second_factor
     guardian.ensure_can_disable_second_factor!(@user)
     user_second_factor = @user.user_second_factors
-    raise Discourse::InvalidParameters unless !user_second_factor.empty?
+    user_security_key = @user.security_keys
+    raise Discourse::InvalidParameters if user_second_factor.empty? && user_security_key.empty?
 
     user_second_factor.destroy_all
+    user_security_key.destroy_all
     StaffActionLogger.new(current_user).log_disable_second_factor_auth(@user)
 
     Jobs.enqueue(
@@ -467,9 +477,31 @@ class Admin::UsersController < Admin::AdminController
     end
   end
 
+  def merge
+    target_username = params.require(:target_username)
+    target_user = User.find_by_username(target_username)
+    raise Discourse::NotFound if target_user.blank?
+
+    guardian.ensure_can_merge_users!(@user, target_user)
+    serializer_opts = { root: false, scope: guardian }
+
+    if user = UserMerger.new(@user, target_user, current_user).merge!
+      user_json = AdminDetailedUserSerializer.new(user, serializer_opts).as_json
+      render json: success_json.merge(merged: true, user: user_json)
+    else
+      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, serializer_opts).as_json)
+    end
+  end
+
   def reset_bounce_score
     guardian.ensure_can_reset_bounce_score!(@user)
     @user.user_stat&.reset_bounce_score!
+    render json: success_json
+  end
+
+  def sso_record
+    guardian.ensure_can_delete_sso_record!(@user)
+    @user.single_sign_on_record.destroy!
     render json: success_json
   end
 

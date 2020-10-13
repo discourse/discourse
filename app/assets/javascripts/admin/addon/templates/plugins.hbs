@@ -1,0 +1,30 @@
+<div class="admin-controls">
+  <div class="controls">
+    {{d-button action=(action "toggleMenu") class="menu-toggle" icon="bars"}}
+
+    {{#if currentUser.admin}}
+      {{d-button
+        label="admin.plugins.change_settings"
+        icon="cog"
+        class="btn-default settings-button"
+        action=(route-action "showSettings")
+      }}
+    {{/if}}
+  </div>
+</div>
+
+<div class="admin-nav pull-left">
+  <ul class="nav nav-stacked">
+    {{nav-item route="adminPlugins.index" label="admin.plugins.title"}}
+
+    {{#each adminRoutes as |route|}}
+      {{nav-item route=route.full_location label=route.label}}
+    {{/each}}
+  </ul>
+</div>
+
+<div class="admin-detail pull-left mobile-closed">
+  {{outlet}}
+</div>
+
+<div class="clearfix"></div>

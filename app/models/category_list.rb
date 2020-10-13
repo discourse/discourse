@@ -1,16 +1,11 @@
 # frozen_string_literal: true
 
-class CategoryList
-  include ActiveModel::Serialization
-
+class CategoryList < DraftableList
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
   attr_accessor :categories,
-                :uncategorized,
-                :draft,
-                :draft_key,
-                :draft_sequence
+                :uncategorized
 
   def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
@@ -23,6 +18,7 @@ class CategoryList
     find_user_data
     sort_unpinned
     trim_results
+    demote_muted
 
     if preloaded_topic_custom_fields.present?
       displayable_topics = @categories.map(&:displayable_topics)
@@ -36,10 +32,12 @@ class CategoryList
         )
       end
     end
+
+    super(@guardian.user)
   end
 
   def preload_key
-    "categories_list".freeze
+    "categories_list"
   end
 
   def self.order_categories(categories)
@@ -160,6 +158,12 @@ class CategoryList
         end
       end
     end
+  end
+
+  def demote_muted
+    muted_categories = @categories.select { |category| category.notification_level == 0 }
+    @categories = @categories.reject { |category| category.notification_level == 0 }
+    @categories.concat muted_categories
   end
 
   def trim_results

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sk:
   js:
@@ -13,7 +12,6 @@ sk:
           insert: Vložiť
           advanced_mode: Pokročilý režim
           simple_mode: Jednoduchý režim
-          format_description: "Formát použitý na zobrazenie dátumu používateľovi. Použite \"\\T\\Z\" na zobrazenie časového pásma používateľa slovami (Európa/Paríž)"
           timezones_title: Časové pásma na zobrazenie
           timezones_description: Časové pásma sa použijú na zobrazenie dátumov v náhľade a núdzových situáciách.
           recurring_title: Opakovanie

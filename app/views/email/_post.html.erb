@@ -20,7 +20,7 @@
           <span class='user-title'><%= post.user.title %></span>
         <% end %>
         <br>
-        <span class='notification-date'><%= l post.created_at, format: :short_no_year %></span>
+        <span class='notification-date'><%= short_date(post.created_at) %></span>
       </td>
     </tr>
   </table>

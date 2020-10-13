@@ -1,0 +1,51 @@
+<div class="themes-list-header">
+  {{d-button
+    action=(action "changeView")
+    actionParam=THEMES
+    class=(concat "themes-tab " "tab " (if themesTabActive "btn-danger active" ""))
+    label="admin.customize.theme.title"
+  }}
+  {{d-button
+    action=(action "changeView")
+    actionParam=COMPONENTS
+    class=(concat "components-tab " "tab " (if componentsTabActive "btn-danger active" ""))
+    label="admin.customize.theme.components"
+    icon="puzzle-piece"
+  }}
+</div>
+
+<div class="themes-list-container">
+  {{#if hasThemes}}
+    {{#if hasActiveThemes}}
+      {{#each activeThemes as |theme|}}
+        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+      {{/each}}
+
+      {{#if hasInactiveThemes}}
+        <div class="themes-list-item inactive-indicator">
+          <span class="empty">
+            {{#if themesTabActive}}
+              {{i18n "admin.customize.theme.inactive_themes"}}
+            {{else}}
+              {{i18n "admin.customize.theme.inactive_components"}}
+            {{/if}}
+          </span>
+        </div>
+      {{/if}}
+    {{/if}}
+
+    {{#if hasInactiveThemes}}
+      {{#each inactiveThemes as |theme|}}
+        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+      {{/each}}
+    {{/if}}
+  {{else}}
+    <div class="themes-list-item">
+      <span class="empty">{{i18n "admin.customize.theme.empty"}}</span>
+    </div>
+  {{/if}}
+</div>
+
+<div class="create-actions">
+  {{d-button action=installModal icon="upload" label="admin.customize.install" class="btn-primary"}}
+</div>

@@ -17,7 +17,7 @@ class UploadRecovery
       analyzer.cooked_stripped.css("img", "a").each do |media|
         if media.name == "img" && orig_src = media["data-orig-src"]
           if dom_class = media["class"]
-            if (Post.white_listed_image_classes & dom_class.split).count > 0
+            if (Post.allowed_image_classes & dom_class.split).count > 0
               next
             end
           end
@@ -31,12 +31,13 @@ class UploadRecovery
           data = Upload.extract_url(url)
           next unless data
 
-          sha1 = data[2]
+          upload = Upload.get_from_url(url)
 
-          unless upload = Upload.get_from_url(url)
+          if !upload || upload.verification_status == Upload.verification_statuses[:invalid_etag]
             if @dry_run
               puts "#{post.full_url} #{url}"
             else
+              sha1 = data[2]
               recover_post_upload(post, sha1)
             end
           end
@@ -95,21 +96,14 @@ class UploadRecovery
   end
 
   def recover_from_local(sha1:, user_id:)
-    public_path = Rails.root.join("public")
-
     @paths ||= begin
       Dir.glob(File.join(
-        public_path,
-        'uploads',
-        'tombstone',
-        RailsMultisite::ConnectionManagement.current_db,
+        Discourse.store.tombstone_dir,
         'original',
         '**',
         '*.*'
       )).concat(Dir.glob(File.join(
-        public_path,
-        'uploads',
-        RailsMultisite::ConnectionManagement.current_db,
+        Discourse.store.upload_path,
         'original',
         '**',
         '*.*'
@@ -148,6 +142,8 @@ class UploadRecovery
       end
     end
 
+    upload_exists = Upload.exists?(sha1: sha1)
+
     @object_keys.each do |key|
       if key =~ /#{sha1}/
         tombstone_prefix = FileStore::S3Store::TOMBSTONE_PREFIX
@@ -162,6 +158,8 @@ class UploadRecovery
             options: { acl: "public-read" }
           )
         end
+
+        next if upload_exists
 
         url = "https:#{SiteSetting.Upload.absolute_base_url}/#{key}"
 

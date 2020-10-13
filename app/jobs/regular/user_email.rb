@@ -22,20 +22,30 @@ module Jobs
       # of extra work when emails are disabled.
       return if quit_email_early?
 
+      send_user_email(args)
+
+      if args[:user_id].present? && args[:type].to_s == "digest"
+        # Record every attempt at sending a digest email, even if it was skipped
+        UserStat.where(user_id: args[:user_id]).update_all(digest_attempted_at: Time.zone.now)
+      end
+    end
+
+    def send_user_email(args)
       post = nil
       notification = nil
       type = args[:type]
       user = User.find_by(id: args[:user_id])
-      to_address = args[:to_address].presence || user.try(:email).presence || "no_email_found"
+      to_address = args[:to_address].presence || user&.primary_email&.email.presence || "no_email_found"
 
       set_skip_context(type, args[:user_id], to_address, args[:post_id])
 
-      return skip(SkippedEmailLog.reason_types[:user_email_no_user]) unless user
+      return skip(SkippedEmailLog.reason_types[:user_email_no_user]) if !user
+      return skip(SkippedEmailLog.reason_types[:user_email_no_email]) if to_address == "no_email_found"
 
       if args[:post_id].present?
         post = Post.find_by(id: args[:post_id])
 
-        unless post.present?
+        if post.blank?
           return skip(SkippedEmailLog.reason_types[:user_email_post_not_found])
         end
 
@@ -152,8 +162,19 @@ module Jobs
       # Make sure that mailer exists
       raise Discourse::InvalidParameters.new("type=#{type}") unless UserNotifications.respond_to?(type)
 
-      email_args[:email_token] = email_token if email_token.present?
-      email_args[:new_email] = user.email if type.to_s == "notify_old_email"
+      if email_token.present?
+        email_args[:email_token] = email_token
+
+        if type.to_s == "confirm_new_email"
+          change_req = EmailChangeRequest.find_by_new_token(email_token)
+
+          if change_req
+            email_args[:requested_by_admin] = change_req.requested_by_admin?
+          end
+        end
+      end
+
+      email_args[:new_email] = args[:new_email] || user.email if type.to_s == "notify_old_email" || type.to_s == "notify_old_email_add"
 
       if args[:client_ip] && args[:user_agent]
         email_args[:client_ip] = args[:client_ip]
@@ -219,7 +240,7 @@ module Jobs
           return SkippedEmailLog.reason_types[:user_email_post_deleted]
         end
 
-        if user.suspended? && !post.user&.staff?
+        if user.suspended? && (!post.user&.staff? || !post.user&.human?)
           return SkippedEmailLog.reason_types[:user_email_user_suspended]
         end
 
@@ -243,11 +264,11 @@ module Jobs
     end
 
     def always_email_private_message?(user, type)
-      type == :user_private_message && user.user_option.email_messages_level == UserOption.email_level_types[:always]
+      type.to_s == "user_private_message" && user.user_option.email_messages_level == UserOption.email_level_types[:always]
     end
 
     def always_email_regular?(user, type)
-      type != :user_private_message && user.user_option.email_level == UserOption.email_level_types[:always]
+      type.to_s != "user_private_message" && user.user_option.email_level == UserOption.email_level_types[:always]
     end
   end
 

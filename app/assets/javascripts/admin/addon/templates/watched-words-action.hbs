@@ -1,0 +1,50 @@
+<h2>{{model.name}}</h2>
+
+<p class="about">{{actionDescription}}</p>
+
+<div class="watched-word-controls">
+  {{watched-word-form
+    actionKey=actionNameKey
+    action=(action "recordAdded")
+    filteredContent=filteredContent
+    regularExpressions=adminWatchedWords.regularExpressions}}
+
+  <div class="download-upload-controls">
+    <div class="download">
+      {{d-button
+        class="btn-default download-link"
+        href=downloadLink
+        icon="download"
+        label="admin.watched_words.download"}}
+    </div>
+    {{watched-word-uploader uploading=uploading actionKey=actionNameKey done=(action "uploadComplete")}}
+  </div>
+</div>
+
+<div>
+  <label class="show-words-checkbox">
+    {{input type="checkbox" checked=adminWatchedWords.showWords disabled=adminWatchedWords.disableShowWords}}
+    {{i18n "admin.watched_words.show_words"}}
+  </label>
+</div>
+<div class="watched-words-list">
+  {{#if showWordsList}}
+    {{#each filteredContent as |word| }}
+      <div class="watched-word-box">{{admin-watched-word word=word action=(action "recordRemoved")}}</div>
+    {{/each}}
+  {{else}}
+    {{i18n "admin.watched_words.word_count" count=wordCount}}
+  {{/if}}
+</div>
+
+<div class="clear-all-row">
+  {{d-button
+    label="admin.watched_words.test.button_label"
+    icon="far-eye"
+    action=(action "test")}}
+  {{d-button
+    class="btn-danger clear-all"
+    label="admin.watched_words.clear_all"
+    icon="trash-alt"
+    action=(action "clearAll")}}
+</div>

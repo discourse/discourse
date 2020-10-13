@@ -1,0 +1,19 @@
+<label class="control-label" for={{concat "user-" this.elementId}}>
+  {{html-safe this.field.name}}
+  {{#if this.field.required}}
+    <span class="required">*</span>
+  {{/if}}
+</label>
+
+<div class="controls">
+  {{combo-box
+    id=(concat "user-" this.elementId)
+    content=this.field.options
+    valueProperty=null
+    nameProperty=null
+    value=this.value
+    none=this.noneLabel
+    onChange=(action (mut this.value))
+  }}
+  <div class="instructions">{{html-safe this.field.description}}</div>
+</div>

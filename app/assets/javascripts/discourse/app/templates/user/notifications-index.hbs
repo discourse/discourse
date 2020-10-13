@@ -1,0 +1,20 @@
+{{#if model.error}}
+  <div class="item error">
+    {{#if model.forbidden}}
+      {{i18n "errors.reasons.forbidden"}}
+    {{else}}
+      {{i18n "errors.desc.unknown"}}
+    {{/if}}
+  </div>
+{{/if}}
+
+<div class="user-notifications-filter-select-kit">
+  {{notifications-filter value=filter onChange=(action (mut filter))}}
+</div>
+
+{{#if hasFilteredNotifications}}
+  {{user-notifications-large notifications=model filter=filter}}
+  {{conditional-loading-spinner condition=loading}}
+{{else}}
+  <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
+{{/if}}

@@ -19,14 +19,14 @@ RSpec.describe Admin::UsersController do
     it 'returns success with JSON' do
       get "/admin/users/list.json"
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)).to be_present
+      expect(response.parsed_body).to be_present
     end
 
     context 'when showing emails' do
       it "returns email for all the users" do
         get "/admin/users/list.json", params: { show_emails: "true" }
         expect(response.status).to eq(200)
-        data = ::JSON.parse(response.body)
+        data = response.parsed_body
         data.each do |user|
           expect(user["email"]).to be_present
         end
@@ -124,11 +124,11 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#suspend' do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:created_post) { Fabricate(:post) }
     let(:suspend_params) do
       { suspend_until: 5.hours.from_now,
         reason: "because of this post",
-        post_id: post.id }
+        post_id: created_post.id }
     end
 
     it "works properly" do
@@ -149,6 +149,22 @@ RSpec.describe Admin::UsersController do
       expect(log.details).to match(/because I said so/)
     end
 
+    it "requires suspend_until and reason" do
+      expect(user).not_to be_suspended
+      put "/admin/users/#{user.id}/suspend.json", params: {}
+      expect(response.status).to eq(400)
+      user.reload
+      expect(user).not_to be_suspended
+
+      expect(user).not_to be_suspended
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now
+      }
+      expect(response.status).to eq(400)
+      user.reload
+      expect(user).not_to be_suspended
+    end
+
     context "with an associated post" do
       it "can have an associated post" do
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params
@@ -156,13 +172,13 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
 
         log = UserHistory.where(target_user_id: user.id).order('id desc').first
-        expect(log.post_id).to eq(post.id)
+        expect(log.post_id).to eq(created_post.id)
       end
 
       it "can delete an associated post" do
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params.merge(post_action: 'delete')
-        post.reload
-        expect(post.deleted_at).to be_present
+        created_post.reload
+        expect(created_post.deleted_at).to be_present
         expect(response.status).to eq(200)
       end
 
@@ -200,17 +216,17 @@ RSpec.describe Admin::UsersController do
         reply = PostCreator.create(
           Fabricate(:user),
           raw: 'this is the reply text',
-          reply_to_post_number: post.post_number,
-          topic_id: post.topic_id
+          reply_to_post_number: created_post.post_number,
+          topic_id: created_post.topic_id
         )
         nested_reply = PostCreator.create(
           Fabricate(:user),
           raw: 'this is the reply text2',
           reply_to_post_number: reply.post_number,
-          topic_id: post.topic_id
+          topic_id: created_post.topic_id
         )
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params.merge(post_action: 'delete_replies')
-        expect(post.reload.deleted_at).to be_present
+        expect(created_post.reload.deleted_at).to be_present
         expect(reply.reload.deleted_at).to be_present
         expect(nested_reply.reload.deleted_at).to be_present
         expect(response.status).to eq(200)
@@ -223,9 +239,9 @@ RSpec.describe Admin::UsersController do
         )
 
         expect(response.status).to eq(200)
-        post.reload
-        expect(post.deleted_at).to be_blank
-        expect(post.raw).to eq("this is the edited content")
+        created_post.reload
+        expect(created_post.deleted_at).to be_blank
+        expect(created_post.raw).to eq("this is the edited content")
         expect(response.status).to eq(200)
       end
     end
@@ -252,11 +268,9 @@ RSpec.describe Admin::UsersController do
 
     it "also prevents use of any api keys" do
       api_key = Fabricate(:api_key, user: user)
-
-      put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
-        bookmarked: "true",
-        api_key: api_key.key
-      }
+      post "/bookmarks.json", params: {
+        post_id: Fabricate(:post).id
+      }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(200)
 
       put "/admin/users/#{user.id}/suspend.json", params: suspend_params
@@ -265,10 +279,9 @@ RSpec.describe Admin::UsersController do
       user.reload
       expect(user).to be_suspended
 
-      put "/posts/#{Fabricate(:post).id}/bookmark.json", params: {
-        bookmarked: "true",
-        api_key: api_key.key
-      }
+      post "/bookmarks.json", params: {
+        post_id: Fabricate(:post).id
+      }, headers: { HTTP_API_KEY: api_key.key }
       expect(response.status).to eq(403)
     end
   end
@@ -296,7 +309,7 @@ RSpec.describe Admin::UsersController do
     fab!(:another_user) { Fabricate(:coding_horror) }
 
     after do
-      Discourse.redis.flushall
+      Discourse.redis.flushdb
     end
 
     it "raises an error when the user doesn't have permission" do
@@ -343,17 +356,54 @@ RSpec.describe Admin::UsersController do
 
       expect(response.status).to eq(200)
     end
+
+    it 'returns not-found error when there is no group' do
+      group.destroy!
+
+      put "/admin/users/#{user.id}/groups.json", params: {
+        group_id: group.id
+      }
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does not allow adding users to an automatic group' do
+      group.update!(automatic: true)
+
+      expect do
+        post "/admin/users/#{user.id}/groups.json", params: {
+          group_id: group.id
+        }
+      end.to_not change { group.users.count }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
+    end
   end
 
   describe '#remove_group' do
     it "also clears the user's primary group" do
-      u = Fabricate(:user)
-      g = Fabricate(:group, users: [u])
-      u.update!(primary_group_id: g.id)
-      delete "/admin/users/#{u.id}/groups/#{g.id}.json"
+      group = Fabricate(:group, users: [user])
+      user.update!(primary_group_id: group.id)
+      delete "/admin/users/#{user.id}/groups/#{group.id}.json"
 
       expect(response.status).to eq(200)
-      expect(u.reload.primary_group).to eq(nil)
+      expect(user.reload.primary_group).to eq(nil)
+    end
+
+    it 'returns not-found error when there is no group' do
+      delete "/admin/users/#{user.id}/groups/9090.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does not allow removing owners from an automatic group' do
+      group = Fabricate(:group, users: [user], automatic: true)
+
+      delete "/admin/users/#{user.id}/groups/#{group.id}.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
     end
   end
 
@@ -419,8 +469,14 @@ RSpec.describe Admin::UsersController do
     end
 
     it 'updates the moderator flag' do
-      Jobs.expects(:enqueue).with(:send_system_message, user_id: another_user.id, message_type: 'welcome_staff', message_options: { role: :moderator })
-      put "/admin/users/#{another_user.id}/grant_moderation.json"
+      expect_enqueued_with(job: :send_system_message, args: {
+        user_id: another_user.id,
+        message_type: 'welcome_staff',
+        message_options: { role: :moderator }
+      }) do
+        put "/admin/users/#{another_user.id}/grant_moderation.json"
+      end
+
       expect(response.status).to eq(200)
       another_user.reload
       expect(another_user.moderator).to eq(true)
@@ -548,7 +604,7 @@ RSpec.describe Admin::UsersController do
       it "returns an api response that the user can't be deleted because it has posts" do
         delete "/admin/users/#{delete_me.id}.json"
         expect(response.status).to eq(403)
-        json = ::JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['deleted']).to eq(false)
       end
 
@@ -574,7 +630,7 @@ RSpec.describe Admin::UsersController do
     it "returns success" do
       put "/admin/users/#{reg_user.id}/activate.json"
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['success']).to eq("OK")
       reg_user.reload
       expect(reg_user.active).to eq(true)
@@ -600,7 +656,7 @@ RSpec.describe Admin::UsersController do
     it "returns success" do
       put "/admin/users/#{reg_user.id}/deactivate.json"
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['success']).to eq("OK")
       reg_user.reload
       expect(reg_user.active).to eq(false)
@@ -613,7 +669,7 @@ RSpec.describe Admin::UsersController do
     it "returns success" do
       post "/admin/users/#{reg_user.id}/log_out.json"
       expect(response.status).to eq(200)
-      json = ::JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['success']).to eq("OK")
     end
 
@@ -731,7 +787,7 @@ RSpec.describe Admin::UsersController do
 
       get "/admin/users/ip-info.json", params: { ip: ip }
       expect(response.status).to eq(200)
-      expect(JSON.parse(response.body).symbolize_keys).to eq(
+      expect(response.parsed_body.symbolize_keys).to eq(
         city: "London",
         country: "United Kingdom",
         country_code: "GB",
@@ -814,7 +870,7 @@ RSpec.describe Admin::UsersController do
 
       post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
       expect(response.status).to eq(403)
-      expect(JSON.parse(response.body)["message"]).to include("Primary email can't be blank")
+      expect(response.parsed_body["message"]).to include("Primary email can't be blank")
     end
 
     it 'should return the right message if the signature is invalid' do
@@ -826,8 +882,8 @@ RSpec.describe Admin::UsersController do
       correct_payload = Rack::Utils.parse_query(sso.payload)
       post "/admin/users/sync_sso.json", params: correct_payload.merge(sig: "someincorrectsignature")
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.login_error'))
-      expect(JSON.parse(response.body)["message"]).not_to include(correct_payload["sig"])
+      expect(response.parsed_body["message"]).to include(I18n.t('sso.login_error'))
+      expect(response.parsed_body["message"]).not_to include(correct_payload["sig"])
     end
 
     it "returns 404 if the external id does not exist" do
@@ -837,19 +893,21 @@ RSpec.describe Admin::UsersController do
       sso.external_id = ""
       post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
       expect(response.status).to eq(422)
-      expect(JSON.parse(response.body)["message"]).to include(I18n.t('sso.blank_id_error'))
+      expect(response.parsed_body["message"]).to include(I18n.t('sso.blank_id_error'))
     end
   end
 
   describe '#disable_second_factor' do
     let(:second_factor) { user.create_totp(enabled: true) }
     let(:second_factor_backup) { user.generate_backup_codes }
+    let(:security_key) { Fabricate(:user_security_key, user: user) }
 
     describe 'as an admin' do
       before do
         sign_in(admin)
         second_factor
         second_factor_backup
+        security_key
         expect(user.reload.user_second_factors.totps.first).to eq(second_factor)
       end
 
@@ -860,6 +918,7 @@ RSpec.describe Admin::UsersController do
 
         expect(response.status).to eq(200)
         expect(user.reload.user_second_factors).to be_empty
+        expect(user.reload.security_keys).to be_empty
 
         job_args = Jobs::CriticalUserEmail.jobs.first["args"].first
 
@@ -873,9 +932,27 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(403)
       end
 
+      describe 'when user has only one second factor type enabled' do
+        it 'should succeed with security keys' do
+          user.user_second_factors.destroy_all
+
+          put "/admin/users/#{user.id}/disable_second_factor.json"
+
+          expect(response.status).to eq(200)
+        end
+        it 'should succeed with totp' do
+          user.security_keys.destroy_all
+
+          put "/admin/users/#{user.id}/disable_second_factor.json"
+
+          expect(response.status).to eq(200)
+        end
+      end
+
       describe 'when user does not have second factor enabled' do
         it 'should raise the right error' do
           user.user_second_factors.destroy_all
+          user.security_keys.destroy_all
 
           put "/admin/users/#{user.id}/disable_second_factor.json"
 
@@ -941,7 +1018,7 @@ RSpec.describe Admin::UsersController do
       it 'returns how many posts were deleted' do
         put "/admin/users/#{user.id}/delete_posts_batch.json"
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["posts_deleted"]).to eq(3)
+        expect(response.parsed_body["posts_deleted"]).to eq(3)
       end
     end
 
@@ -949,8 +1026,39 @@ RSpec.describe Admin::UsersController do
       it "returns correct json" do
         put "/admin/users/#{user.id}/delete_posts_batch.json"
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)["posts_deleted"]).to eq(0)
+        expect(response.parsed_body["posts_deleted"]).to eq(0)
       end
+    end
+  end
+
+  describe "#merge" do
+    fab!(:target_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
+
+    it 'should merge source user to target user' do
+      post "/admin/users/#{user.id}/merge.json", params: {
+        target_username: target_user.username
+      }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["merged"]).to be_truthy
+      expect(response.parsed_body["user"]["id"]).to eq(target_user.id)
+      expect(topic.reload.user_id).to eq(target_user.id)
+      expect(first_post.reload.user_id).to eq(target_user.id)
+    end
+  end
+
+  describe '#sso_record' do
+    fab!(:sso_record) { SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', external_email: user.email, last_payload: '') }
+
+    it "deletes the record" do
+      SiteSetting.sso_url = "https://www.example.com/sso"
+      SiteSetting.enable_sso = true
+
+      delete "/admin/users/#{user.id}/sso_record.json"
+      expect(response.status).to eq(200)
+      expect(user.single_sign_on_record).to eq(nil)
     end
   end
 

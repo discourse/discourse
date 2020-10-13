@@ -143,6 +143,12 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   context "creating a topic" do
     let(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
 
+    before do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
+    end
+
     context "editing" do
 
       it "is editable and returns the fields" do

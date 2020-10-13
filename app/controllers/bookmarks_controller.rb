@@ -11,11 +11,14 @@ class BookmarksController < ApplicationController
       post_id: params[:post_id],
       name: params[:name],
       reminder_type: params[:reminder_type],
-      reminder_at: params[:reminder_at]
+      reminder_at: params[:reminder_at],
+      options: {
+        auto_delete_preference: params[:auto_delete_preference] || 0
+      }
     )
 
     if bookmark_manager.errors.empty?
-      return render json: success_json
+      return render json: success_json.merge(id: bookmark.id)
     end
 
     render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
@@ -23,7 +26,28 @@ class BookmarksController < ApplicationController
 
   def destroy
     params.require(:id)
-    BookmarkManager.new(current_user).destroy(params[:id])
-    render json: success_json
+    result = BookmarkManager.new(current_user).destroy(params[:id])
+    render json: success_json.merge(result)
+  end
+
+  def update
+    params.require(:id)
+
+    bookmark_manager = BookmarkManager.new(current_user)
+    bookmark_manager.update(
+      bookmark_id: params[:id],
+      name: params[:name],
+      reminder_type: params[:reminder_type],
+      reminder_at: params[:reminder_at],
+      options: {
+        auto_delete_preference: params[:auto_delete_preference] || 0
+      }
+    )
+
+    if bookmark_manager.errors.empty?
+      return render json: success_json
+    end
+
+    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
   end
 end

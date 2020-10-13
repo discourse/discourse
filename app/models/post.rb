@@ -10,6 +10,11 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
+  self.ignored_columns = [
+    "avg_time", # TODO(2021-01-04): remove
+    "image_url" # TODO(2021-06-01): remove
+  ]
+
   cattr_accessor :plugin_permitted_create_params
   self.plugin_permitted_create_params = {}
 
@@ -33,7 +38,7 @@ class Post < ActiveRecord::Base
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
 
-  has_many :post_uploads
+  has_many :post_uploads, dependent: :delete_all
   has_many :uploads, through: :post_uploads
 
   has_one :post_stat
@@ -48,9 +53,11 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
+  belongs_to :image_upload, class_name: "Upload"
+
   validates_with PostValidator, unless: :skip_validation
 
-  after_save :index_search
+  after_commit :index_search
 
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
@@ -65,19 +72,15 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS ||= 1200
 
+  register_custom_field_type(LARGE_IMAGES, :json)
+  register_custom_field_type(BROKEN_IMAGES, :json)
+  register_custom_field_type(DOWNLOADED_IMAGES, :json)
+
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
 
   scope :private_posts_for_user, ->(user) {
-    where("posts.topic_id IN (SELECT topic_id
-             FROM topic_allowed_users
-             WHERE user_id = :user_id
-             UNION ALL
-             SELECT tg.topic_id
-             FROM topic_allowed_groups tg
-             JOIN group_users gu ON gu.user_id = :user_id AND
-                                      gu.group_id = tg.group_id)",
-                                              user_id: user.id)
+    where("posts.topic_id IN (#{Topic::PRIVATE_MESSAGES_SQL})", user_id: user.id)
   }
 
   scope :by_newest, -> { order('created_at DESC, id DESC') }
@@ -135,7 +138,8 @@ class Post < ActiveRecord::Base
                                  flagged_by_tl3_user: 4,
                                  email_spam_header_found: 5,
                                  flagged_by_tl4_user: 6,
-                                 email_authentication_result_header: 7)
+                                 email_authentication_result_header: 7,
+                                 imported_as_unlisted: 8)
   end
 
   def self.types
@@ -159,14 +163,6 @@ class Post < ActiveRecord::Base
 
   def self.find_by_detail(key, value)
     includes(:post_details).find_by(post_details: { key: key, value: value })
-  end
-
-  def self.excerpt_size=(sz)
-    @excerpt_size = sz
-  end
-
-  def self.excerpt_size
-    @excerpt_size || 220
   end
 
   def whisper?
@@ -222,7 +218,9 @@ class Post < ActiveRecord::Base
         .pluck(:id)
     end
 
-    MessageBus.publish(channel, message, opts)
+    if opts[:user_ids] != [] && opts[:group_ids] != []
+      MessageBus.publish(channel, message, opts)
+    end
   end
 
   def trash!(trashed_by = nil)
@@ -262,8 +260,8 @@ class Post < ActiveRecord::Base
     Digest::SHA1.hexdigest(raw)
   end
 
-  def self.white_listed_image_classes
-    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji']
+  def self.allowed_image_classes
+    @allowed_image_classes ||= ['avatar', 'favicon', 'thumbnail', 'emoji', 'ytp-thumbnail-image']
   end
 
   def post_analyzer
@@ -273,7 +271,7 @@ class Post < ActiveRecord::Base
 
   %w{raw_mentions
     linked_hosts
-    image_count
+    embedded_media_count
     attachment_count
     link_count
     raw_links
@@ -308,7 +306,11 @@ class Post < ActiveRecord::Base
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
-          raw = raw.sub(Discourse.store.s3_upload_host, "#{Discourse.base_url}/#{Upload::SECURE_MEDIA_ROUTE}")
+          raw = raw.sub(
+            url, Rails.application.routes.url_for(
+              controller: "uploads", action: "show_secure", path: uri.path[1..-1], host: Discourse.current_hostname
+            )
+          )
         end
       end
     end
@@ -343,9 +345,9 @@ class Post < ActiveRecord::Base
     self.last_editor_id ? (User.find_by_id(self.last_editor_id) || user) : user
   end
 
-  def whitelisted_spam_hosts
+  def allowed_spam_hosts
     hosts = SiteSetting
-      .white_listed_spam_host_domains
+      .allowed_spam_host_domains
       .split('|')
       .map { |h| h.strip }
       .reject { |h| !h.include?('.') }
@@ -357,10 +359,10 @@ class Post < ActiveRecord::Base
 
   def total_hosts_usage
     hosts = linked_hosts.clone
-    whitelisted = whitelisted_spam_hosts
+    allowlisted = allowed_spam_hosts
 
     hosts.reject! do |h|
-      whitelisted.any? do |w|
+      allowlisted.any? do |w|
         h.end_with?(w)
       end
     end
@@ -484,13 +486,17 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, Post.excerpt_size, strip_links: true, strip_images: true, post: self)
+    Post.excerpt(cooked, SiteSetting.topic_excerpt_maxlength, strip_links: true, strip_images: true, post: self)
   end
 
   def is_first_post?
     post_number.blank? ?
       topic.try(:highest_post_number) == 0 :
       post_number == 1
+  end
+
+  def is_category_description?
+    topic.present? && topic.is_category_topic? && is_first_post?
   end
 
   def is_reply_by_email?
@@ -660,6 +666,10 @@ class Post < ActiveRecord::Base
       baked_version: BAKED_VERSION
     )
 
+    if is_first_post?
+      topic&.update_excerpt(excerpt_for_topic)
+    end
+
     if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)
       save_custom_fields
@@ -754,28 +764,36 @@ class Post < ActiveRecord::Base
   end
 
   # Enqueue post processing for this post
-  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false)
+  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false, skip_pull_hotlinked_images: false)
     args = {
-      post_id: id,
       bypass_bump: bypass_bump,
+      cooking_options: self.cooking_options,
       new_post: new_post,
+      post_id: id,
+      skip_pull_hotlinked_images: skip_pull_hotlinked_images,
     }
-    args[:image_sizes] = image_sizes if image_sizes.present?
-    args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
-    args[:cooking_options] = self.cooking_options
 
-    if priority && priority != :normal
-      args[:queue] = priority.to_s
-    end
+    args[:image_sizes] = image_sizes if self.image_sizes.present?
+    args[:invalidate_oneboxes] = true if self.invalidate_oneboxes.present?
+    args[:queue] = priority.to_s if priority && priority != :normal
 
     Jobs.enqueue(:process_post, args)
     DiscourseEvent.trigger(:after_trigger_post_process, self)
   end
 
-  def self.public_posts_count_per_day(start_date, end_date, category_id = nil)
-    result = public_posts.where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
+  def self.public_posts_count_per_day(start_date, end_date, category_id = nil, include_subcategories = false)
+    result = public_posts
+      .where('posts.created_at >= ? AND posts.created_at <= ?', start_date, end_date)
       .where(post_type: Post.types[:regular])
-    result = result.where('topics.category_id = ?', category_id) if category_id
+
+    if category_id
+      if include_subcategories
+        result = result.where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
+      else
+        result = result.where('topics.category_id = ?', category_id)
+      end
+    end
+
     result
       .group('date(posts.created_at)')
       .order('date(posts.created_at)')
@@ -886,7 +904,9 @@ class Post < ActiveRecord::Base
   end
 
   def index_search
-    SearchIndexer.index(self)
+    Scheduler::Defer.later "Index post for search" do
+      SearchIndexer.index(self)
+    end
   end
 
   def locked?
@@ -903,7 +923,6 @@ class Post < ActiveRecord::Base
       upload_ids << upload.id if upload.present?
     end
 
-    upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
     post_uploads = upload_ids.map do |upload_id|
       { post_id: self.id, upload_id: upload_id }
     end
@@ -934,9 +953,7 @@ class Post < ActiveRecord::Base
   end
 
   def downloaded_images
-    JSON.parse(self.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}")
-  rescue JSON::ParserError
-    {}
+    self.custom_fields[Post::DOWNLOADED_IMAGES] || {}
   end
 
   def each_upload_url(fragments: nil, include_local_upload: true)
@@ -948,7 +965,7 @@ class Post < ActiveRecord::Base
       /\/uploads\/short-url\/[a-zA-Z0-9]+(\.[a-z0-9]+)?/
     ]
 
-    fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    fragments ||= Nokogiri::HTML5::fragment(self.cooked)
     selectors = fragments.css("a/@href", "img/@src", "source/@src", "track/@src", "video/@poster")
 
     links = selectors.map do |media|
@@ -979,7 +996,7 @@ class Post < ActiveRecord::Base
       next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-      next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
+      next unless Discourse.store.has_been_uploaded?(src) || Upload.secure_media_url?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
 
       path = begin
         URI(UrlHelper.unencode(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src))&.path
@@ -1057,6 +1074,10 @@ class Post < ActiveRecord::Base
     Upload.where(access_control_post_id: self.id)
   end
 
+  def image_url
+    image_upload&.url
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1105,7 +1126,6 @@ end
 #  like_count              :integer          default(0), not null
 #  incoming_link_count     :integer          default(0), not null
 #  bookmark_count          :integer          default(0), not null
-#  avg_time                :integer
 #  score                   :float
 #  reads                   :integer          default(0), not null
 #  post_type               :integer          default(1), not null
@@ -1138,8 +1158,8 @@ end
 #  raw_email               :text
 #  public_version          :integer          default(1), not null
 #  action_code             :string
-#  image_url               :string
 #  locked_by_id            :integer
+#  image_upload_id         :bigint
 #
 # Indexes
 #
@@ -1148,6 +1168,7 @@ end
 #  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                      (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
 #  index_posts_on_id_and_baked_version       (id DESC,baked_version) WHERE (deleted_at IS NULL)
+#  index_posts_on_image_upload_id            (image_upload_id)
 #  index_posts_on_reply_to_post_number       (reply_to_post_number)
 #  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE

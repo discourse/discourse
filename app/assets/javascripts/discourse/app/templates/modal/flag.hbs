@@ -1,0 +1,57 @@
+{{#d-modal-body class="flag-modal-body" title=title}}
+  <form>
+    {{#flag-selection nameKey=selected.name_key flags=flagsAvailable as |f|}}
+      {{flag-action-type
+        flag=f
+        message=message
+        isWarning=isWarning
+        selectedFlag=selected
+        username=model.username
+        staffFlagsAvailable=staffFlagsAvailable
+        changePostActionType=(action "changePostActionType")
+      }}
+    {{/flag-selection}}
+  </form>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button
+    class="btn-primary"
+    action=(action "createFlag")
+    disabled=submitDisabled
+    title="flagging.submit_tooltip"
+    icon=submitIcon
+    label=submitLabel
+  }}
+
+  {{#if canSendWarning}}
+    {{d-button
+      class="btn-danger"
+      action=(action "createFlagAsWarning")
+      disabled=submitDisabled
+      icon="exclamation-triangle"
+      label="flagging.official_warning"
+    }}
+  {{/if}}
+
+  {{#if canTakeAction}}
+    {{d-button
+      class="btn-danger"
+      action=(action "takeAction")
+      disabled=submitDisabled
+      title="flagging.take_action_tooltip"
+      icon="gavel"
+      label="flagging.take_action"
+    }}
+  {{/if}}
+
+  {{#if showDeleteSpammer}}
+    {{d-button
+      class="btn-danger"
+      action=(action "deleteSpammer")
+      disabled=submitDisabled
+      icon="exclamation-triangle"
+      label="flagging.delete_spammer"
+    }}
+  {{/if}}
+</div>

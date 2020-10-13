@@ -1,0 +1,56 @@
+<section class="field">
+  <label for="category-allowed-tags">{{i18n "category.tags_allowed_tags"}}</label>
+  {{tag-chooser
+    id="category-allowed-tags"
+    tags=category.allowed_tags
+    everyTag=true
+    excludeSynonyms=true
+    unlimitedTagCount=true
+    onChange=(action (mut category.allowed_tags))
+    options=(hash
+      filterPlaceholder="category.tags_placeholder"
+    )
+  }}
+</section>
+
+<section class="field">
+  <label for="category-allowed-tag-groups">{{i18n "category.tags_allowed_tag_groups"}}</label>
+  {{tag-group-chooser
+    id="category-allowed-tag-groups"
+    tagGroups=category.allowed_tag_groups
+  }}
+  {{#link-to "tagGroups"}}{{i18n "category.manage_tag_groups_link"}}{{/link-to}}
+</section>
+
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.allow_global_tags id="allow_global_tags" disabled=disableAllowGlobalTags}}
+    {{i18n "category.allow_global_tags_label"}}
+  </label>
+</section>
+
+<section class="field">
+  {{i18n "category.tags_tab_description"}}
+</section>
+
+<section class="field">
+  {{i18n "category.required_tag_group_description"}}
+</section>
+
+<section class="field with-items">
+  <section class="field-item">
+    <label>{{i18n "category.min_tags_from_required_group_label"}}</label>
+    {{text-field value=category.min_tags_from_required_group id="category-min-tags-from-group" type="number" min="1"}}
+  </section>
+  <section class="field-item">
+    <label>{{i18n "category.required_tag_group_label"}}</label>
+    {{tag-group-chooser
+      id="category-required-tag-group"
+      tagGroups=category.required_tag_groups
+      options=(hash
+        maximum=1
+        filterPlaceholder="category.tag_group_selector_placeholder"
+      )
+    }}
+  </section>
+</section>

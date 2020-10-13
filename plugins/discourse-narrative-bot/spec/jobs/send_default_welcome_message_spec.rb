@@ -24,10 +24,11 @@ RSpec.describe Jobs::SendDefaultWelcomeMessage do
   end
 
   describe 'for an invited user' do
-    let(:invite) { Fabricate(:invite, user: user, redeemed_at: Time.zone.now) }
+    let(:invite) { Fabricate(:invite, email: 'foo@bar.com') }
+    let(:invited_user) { Fabricate(:invited_user, invite: invite, user: Fabricate(:user, email: 'foo@bar.com'), redeemed_at: Time.zone.now) }
 
     it 'should send the right welcome message' do
-      described_class.new.execute(user_id: invite.user_id)
+      described_class.new.execute(user_id: invited_user.user_id)
 
       topic = Topic.last
 
@@ -38,7 +39,7 @@ RSpec.describe Jobs::SendDefaultWelcomeMessage do
 
       expect(topic.first_post.raw).to eq(I18n.t(
         "system_messages.welcome_invite.text_body_template",
-        SystemMessage.new(user).defaults
+        SystemMessage.new(invited_user.user).defaults
       ).chomp)
 
       expect(topic.closed).to eq(true)

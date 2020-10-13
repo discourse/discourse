@@ -34,7 +34,7 @@ RSpec.describe TagGroupsController do
 
         expect(response.status).to eq(200)
 
-        tag_groups = JSON.parse(response.body)["tag_groups"]
+        tag_groups = response.parsed_body["tag_groups"]
 
         expect(tag_groups.count).to eq(1)
         expect(tag_groups.first["id"]).to eq(tag_group.id)

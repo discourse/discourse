@@ -34,10 +34,10 @@
     }
 
     a {
-      color: $primary-medium;
+      color: var(--primary-medium);
 
       &.active {
-        color: $primary;
+        color: var(--primary);
         font-weight: bold;
         background-color: transparent;
 
@@ -50,9 +50,9 @@
 }
 
 .user-content {
-  padding-bottom: s(3);
-  margin-bottom: s(3);
-  background-color: $secondary;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  background-color: var(--secondary);
   box-sizing: border-box;
 
   &.user-badges-list {
@@ -78,6 +78,10 @@
 
 .pref-second-factor {
   margin-top: 10px;
+}
+
+.invite-controls .btn {
+  margin-right: 0px;
 }
 
 .user-invite-list {
@@ -107,7 +111,7 @@
       .details {
         padding: 15px 0;
         margin: 0;
-        color: dark-light-choose(lighten($primary, 10%), $secondary);
+        color: var(--secondary);
       }
     }
 
@@ -118,7 +122,7 @@
 
       .primary {
         .primary-textual {
-          padding: s(0 1 1);
+          padding: 0 4px 4px;
           a[href] {
             text-decoration: underline;
           }
@@ -146,7 +150,7 @@
       }
 
       .secondary {
-        margin-top: s(4);
+        margin-top: 16px;
       }
     }
 
@@ -183,7 +187,7 @@
           display: inline-flex;
           > li {
             display: inline;
-            margin-left: s(3);
+            margin-left: 12px;
             .d-button-label {
               line-height: 1;
             }
@@ -200,7 +204,7 @@
         position: relative;
         padding: 0;
         margin-top: 0;
-        border-bottom: 1px solid $primary-low;
+        border-bottom: 1px solid var(--primary-low);
       }
     }
   }
@@ -232,7 +236,7 @@
   }
 
   h3 {
-    color: $primary;
+    color: var(--primary);
     margin: 20px 0 10px 0;
   }
 
@@ -242,11 +246,6 @@
   input.user-selector,
   .user-chooser {
     width: 100%;
-  }
-
-  .instructions {
-    display: inline-block;
-    margin-top: s(1);
   }
 }
 

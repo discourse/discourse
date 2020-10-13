@@ -2,8 +2,16 @@
 // To style group content differently, use the existing classes with a .group parent class.
 // For example: .group .user-secondary-navigation
 
+span.mention-group {
+  color: var(--primary-high-or-secondary-low);
+  padding: 2px 4px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: $font-down-1;
+}
+
 .group-details-container {
-  background: $primary-very-low;
+  background: var(--primary-very-low);
   padding: 20px;
   margin-bottom: 15px;
   position: relative;
@@ -34,12 +42,12 @@
   .group-info-name {
     font-size: $font-up-3;
     font-weight: bold;
-    color: $primary;
+    color: var(--primary);
   }
 
   .group-info-full-name {
     font-size: $font-up-2;
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: var(--primary-high-or-secondary-low);
   }
 
   span {
@@ -75,7 +83,7 @@
   margin-right: 10px;
 
   &:hover {
-    background-color: $danger;
+    background-color: var(--danger);
   }
 }
 
@@ -90,7 +98,7 @@ table.group-manage-logs {
     cursor: pointer;
 
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 }
@@ -120,7 +128,7 @@ table.group-members {
     .user-info {
       display: block;
       .avatar-flair {
-        color: $primary;
+        color: var(--primary);
       }
     }
 
@@ -130,28 +138,42 @@ table.group-members {
 
     td {
       text-align: center;
-      color: $primary-medium;
+      color: var(--primary-medium);
       padding: 0.8em 0;
     }
   }
 }
 
 .group-owner-label {
-  color: $primary;
+  color: var(--primary);
 }
 
-.form-vertical {
-  .group-flair-inputs {
-    display: inline-block;
-  }
+.group-flair-inputs {
+  display: inline-block;
 
   .avatar-flair-preview {
     position: relative;
     width: 45px;
 
     .avatar-wrapper {
-      background-color: #f4f4f4;
+      background-color: var(--primary-very-low);
     }
+  }
+
+  .radios {
+    margin-bottom: 5px;
+  }
+
+  .radio-label {
+    display: inline-flex;
+    padding-right: 10px;
+    margin-bottom: 0;
+    align-items: center;
+  }
+
+  .uploaded-image-preview {
+    height: 75px;
+    width: 275px;
   }
 }
 
@@ -172,6 +194,24 @@ table.group-members {
 
     input[type="checkbox"] {
       vertical-align: middle;
+    }
+  }
+}
+
+label.group-category-permissions-desc {
+  font-size: 1.15em;
+  margin-bottom: 1em;
+}
+
+table.group-category-permissions {
+  width: 100%;
+
+  tr {
+    line-height: 3em;
+    width: 100%;
+
+    .category-name {
+      font-size: 1.25em;
     }
   }
 }

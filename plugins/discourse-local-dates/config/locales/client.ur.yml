@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ur:
   js:
@@ -20,7 +19,6 @@ ur:
           insert: شامل
           advanced_mode: اَیڈوانسڈ مَوڈ
           simple_mode: سادہ مَوڈ
-          format_description: "صارف کو تاریخ ظاہر کرنے کیلئے استعمال کیے جانے والا فارمیٹ۔ الفاظ (یورپ/پیرس) میں صارف ٹائم زَون کو ظاہر کرنے کیلئے \"\\T\\Z\" استعمال کریں"
           timezones_title: ظاہر کیے جانے والے ٹائم زَونز
           timezones_description: پیشگی اور فالبَیک میں تاریخیں ظاہر کرنے کیلئے ٹائم زَونز استعمال کیے جائیں گے۔
           recurring_title: دوبارہ آنا

@@ -1,0 +1,73 @@
+<div class="clearfix info">
+  <a href={{@item.userUrl}} data-user-card={{@item.username}} class="avatar-link"><div class="avatar-wrapper">{{avatar @item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
+  <span class="time">{{format-date @item.created_at}}</span>
+  {{#if @item.draftType}}
+    <span class="draft-type">{{html-safe @item.draftType}}</span>
+  {{else}}
+    {{expand-post item=@item}}
+  {{/if}}
+  <div class="stream-topic-details">
+    <div class="stream-topic-title">
+      {{topic-status topic=@item disableActions=true}}
+      <span class="title">
+        {{#if @item.postUrl}}
+          <a href={{@item.postUrl}}>{{html-safe @item.title}}</a>
+        {{else}}
+          {{html-safe @item.title}}
+        {{/if}}
+      </span>
+    </div>
+    <div class="category">{{category-link @item.category}}</div>
+  </div>
+
+  {{#if @item.deleted_by}}
+    <span class="delete-info">
+      {{d-icon "far-trash-alt"}}
+      {{avatar @item.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}
+      {{format-date @item.deleted_at leaveAgo="true"}}
+    </span>
+  {{/if}}
+
+  {{plugin-outlet name="user-stream-item-header" args=(hash item=@item)}}
+</div>
+
+{{#if this.actionDescription}}
+  <p class="excerpt">{{this.actionDescription}}</p>
+{{/if}}
+
+<p data-topic-id={{@item.topic_id}} data-post-id={{@item.post_id}} data-user-id={{@item.user_id}} class="excerpt">
+  {{!-- template-lint-disable no-triple-curlies --}}
+  {{~#if @item.expandedExcerpt}}
+    {{~{@item.expandedExcerpt}~}}
+  {{else}}
+    {{~{@item.excerpt}~}}
+  {{/if~}}
+  {{!-- template-lint-enable --}}
+</p>
+
+{{#each @item.children as |child|}}
+  {{!-- DEPRECATED: 'child-actions' class --}}
+  <div class="user-stream-item-actions child-actions">
+    {{d-icon child.icon class="icon"}}
+    {{#each child.items as |grandChild|}}
+      {{#if grandChild.removableBookmark}}
+        {{d-button
+          class="btn-default remove-bookmark"
+          action=(action @removeBookmark grandChild)
+          icon="times"
+          label="bookmarks.remove"
+        }}
+      {{else}}
+        <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class="avatar-link"><div class="avatar-wrapper">{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}</div></a>
+        {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
+      {{/if}}
+    {{/each}}
+  </div>
+{{/each}}
+
+{{#if @item.editableDraft}}
+  <div class="user-stream-item-draft-actions">
+    {{d-button action=@resumeDraft actionParam=@item icon="pencil-alt" label="drafts.resume" class="btn-default resume-draft"}}
+    {{d-button action=@removeDraft actionParam=@item icon="far-trash-alt" label="drafts.remove" class="btn-default remove-draft"}}
+  </div>
+{{/if}}

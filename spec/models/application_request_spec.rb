@@ -4,11 +4,12 @@ require 'rails_helper'
 
 describe ApplicationRequest do
   before do
+    ApplicationRequest.enable
     ApplicationRequest.last_flush = Time.now.utc
-    Discourse.redis.flushall
   end
 
   after do
+    ApplicationRequest.disable
     ApplicationRequest.clear_cache!
   end
 
@@ -44,7 +45,7 @@ describe ApplicationRequest do
   end
 
   it 'logs nothing for an unflushed increment' do
-    ApplicationRequest.increment!(:anon)
+    ApplicationRequest.increment!(:page_view_anon)
     expect(ApplicationRequest.count).to eq(0)
   end
 
@@ -90,7 +91,7 @@ describe ApplicationRequest do
 
   it 'clears cache correctly' do
     # otherwise we have test pollution
-    inc(:anon)
+    inc(:page_view_anon)
     ApplicationRequest.clear_cache!
     ApplicationRequest.write_cache!
 

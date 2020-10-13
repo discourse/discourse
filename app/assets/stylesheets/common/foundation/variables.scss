@@ -13,17 +13,24 @@ $input-padding: 4px 10px;
 $topic-body-width: 690px;
 $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
+$reply-area-max-width: 1475px !default;
 
 // Brand color variables
 // --------------------------------------------------
 
 $google: #ffffff !default;
+$google-hover: darken($google, 5%) !default;
 $instagram: #e1306c !default;
+$instagram-hover: darken($instagram, 15%) !default;
 $facebook: #4267b2 !default;
+$facebook-hover: darken($facebook, 15%) !default;
 $cas: #70ba61 !default;
 $twitter: #1da1f2 !default;
+$twitter-hover: darken($twitter, 10%) !default;
 $github: #100e0f !default;
+$github-hover: lighten($github, 20%) !default;
 $discord: #7289da !default;
+$discord-hover: darken($discord, 10%) !default;
 
 // Badge color variables
 // --------------------------------------------------
@@ -35,11 +42,13 @@ $bronze: #cd7f32 !default;
 // Fonts
 // --------------------------------------------------
 
-$base-font-size-smaller: 14px !default;
-$base-font-size: 15px !default;
-$base-font-size-larger: 17px !default;
-$base-font-size-largest: 19px !default;
-$base-font-family: Helvetica, Arial, sans-serif !default;
+$base-font-size-smallest: 0.815em !default; // eq. to 13px
+$base-font-size-smaller: 0.875em !default; // eq. to 14px
+$base-font-size: 0.938em !default; // eq. to 15px
+$base-font-size-larger: 1.063em !default; // eq. to 17px
+$base-font-size-largest: 1.118em !default; // eq. to 19px
+$base-font-family: var(--font-family) !default;
+$heading-font-family: var(--heading-font-family) !default;
 
 // Font-size defintions, multiplier ^ (step / interval)
 $font-up-6: 2.296em;
@@ -82,7 +91,7 @@ $z-layers: (
     "popover": 1500,
     "dropdown": 1400,
     "content": 1300,
-    "overlay": 1200
+    "overlay": 1200,
   ),
   "fullscreen": 1150,
   "mobile-composer": 1100,
@@ -94,12 +103,12 @@ $z-layers: (
     "dropdown": 700,
     "tooltip": 600,
     "popover": 500,
-    "content": 400
+    "content": 400,
   ),
   "dropdown": 300,
   "usercard": 200,
   "timeline": 100,
-  "base": 1
+  "base": 1,
 );
 
 @function map-has-nested-keys($map, $keys...) {
@@ -139,10 +148,10 @@ $box-shadow: (
   "footer-nav": 0 0 2px 0 rgba(0, 0, 0, 0.25),
   "kbd": (
     0 2px 0 rgba(0, 0, 0, 0.2),
-    0 0 0 1px dark-light-choose(#fff, #000) inset
+    0 0 0 1px dark-light-choose(#fff, #000) inset,
   ),
   "focus": 0 0 6px 0 $tertiary,
-  "focus-danger": 0 0 6px 0 $danger
+  "focus-danger": 0 0 6px 0 $danger,
 );
 
 @function shadow($key) {

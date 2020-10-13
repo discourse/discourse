@@ -11,5 +11,41 @@ dafd3c3b47f116c6c1dc56cb18df614c11747733
 # Rename many `.js.es6` files to `.js`
 032205e2029cbf82dc8f05b459fb93adf2503c60
 
-# Rename admin app es6 -> js
-181758e3248b14ad8b53abe063da8dc6a82d3089
+# Rename pretty-text from es6 -> js
+c15056650647e8650288f973d9038500dc9cf7bb
+
+# Rename wizard from es6 -> js
+1ac02422011f89716ab27250d39b0e0212e03892
+
+# DEV: enforces block-indentation of ember-template-lint rules
+b66b277dc44bcd2122dc21965dab209c30636214
+
+# DEV: enforces double quotes ember-template-lint
+c4644c61d97c823b7dd940ffaf0967a104f4b58c
+
+# Migrate to app directory
+7a2e8d3ead63c7d99e1069fc7823e933f931ba85
+
+# DEV: Fix indentation for routes.rb
+985900818ff985b04def6aa4c5d99c1aa6dbd45c
+
+# Add rubocop to our build.
+5012d46cbd3bcf79b7351f7d2d41003496a796c5
+
+# Make rubocop happy again.
+ad5082d969ab1f60b5c5b1e89a616117906289f8
+
+# DEV: apply new coding standards (#10592)
+52672b9eabccb1184d85dc7f08062d5a7c18cb73
+
+# DEV: apply coding standards to plugins (#10594)
+bf88410126f73aab47b7e694e3c5b46453cec1b6
+
+# REFACTOR: Support bundling our `admin` section as an ember addon
+ce3fe2f4c4ddf166949ee3cec3d9ecbf9108ab52
+
+# REFACTOR: Move qunit tests to a different directory structure
+bc97c79a35d8acd283d4d8b79aa079bce9d127c6
+
+# REFACTOR: Move javascript tests inside discourse app
+23f24bfb510edb25b18b6a0d5485270c88df9b24

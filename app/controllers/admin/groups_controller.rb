@@ -37,6 +37,8 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def create
+    guardian.ensure_can_create_group!
+
     attributes = group_params.to_h.except(:owner_usernames, :usernames)
     group = Group.new(attributes)
 
@@ -99,6 +101,10 @@ class Admin::GroupsController < Admin::AdminController
       end
       group.group_users.where(user_id: user.id).update_all(owner: true)
       group_action_logger.log_make_user_group_owner(user)
+
+      if group_params[:notify_users] == "true" || group_params[:notify_users] == true
+        group.notify_added_to_group(user, owner: true)
+      end
     end
 
     group.restore_user_count!
@@ -121,10 +127,32 @@ class Admin::GroupsController < Admin::AdminController
     render json: success_json
   end
 
+  def automatic_membership_count
+    domains = Group.get_valid_email_domains(params.require(:automatic_membership_email_domains))
+    group_id = params[:id]
+    user_count = 0
+
+    if domains.present?
+      if group_id.present?
+        group = Group.find_by(id: group_id)
+        raise Discourse::NotFound unless group
+
+        return can_not_modify_automatic if group.automatic
+
+        existing_domains = group.automatic_membership_email_domains&.split("|") || []
+        domains -= existing_domains
+      end
+
+      user_count = Group.automatic_membership_users(domains.join("|")).count
+    end
+
+    render json: { user_count: user_count }
+  end
+
   protected
 
   def can_not_modify_automatic
-    render json: { errors: I18n.t('groups.errors.can_not_modify_automatic') }, status: 422
+    render_json_error(I18n.t('groups.errors.can_not_modify_automatic'))
   end
 
   private
@@ -137,12 +165,12 @@ class Admin::GroupsController < Admin::AdminController
       :visibility_level,
       :members_visibility_level,
       :automatic_membership_email_domains,
-      :automatic_membership_retroactive,
       :title,
       :primary_group,
       :grant_trust_level,
       :incoming_email,
-      :flair_url,
+      :flair_icon,
+      :flair_upload_id,
       :flair_bg_color,
       :flair_color,
       :bio_raw,
@@ -154,9 +182,10 @@ class Admin::GroupsController < Admin::AdminController
       :membership_request_template,
       :owner_usernames,
       :usernames,
-      :publish_read_state
+      :publish_read_state,
+      :notify_users
     ]
-    custom_fields = Group.editable_group_custom_fields
+    custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
     permitted << { custom_fields: custom_fields } unless custom_fields.blank?
 
     params.require(:group).permit(permitted)

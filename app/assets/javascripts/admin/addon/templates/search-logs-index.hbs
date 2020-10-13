@@ -1,0 +1,38 @@
+<div class="admin-title">
+  {{period-chooser period=period onChange=(action (mut period))}}
+  {{combo-box
+    content=searchTypeOptions
+    value=searchType
+    class="search-logs-filter"
+    onChange=(action (mut searchType))
+  }}
+</div>
+
+{{#conditional-loading-spinner condition=loading}}
+  {{#if model.length}}
+
+    <table class="search-logs-list grid">
+      <thead>
+        <th class="col heading term">{{i18n "admin.logs.search_logs.term"}}</th>
+        <th class="col heading">{{i18n "admin.logs.search_logs.searches"}}</th>
+        <th class="col heading">{{i18n "admin.logs.search_logs.click_through_rate"}}</th>
+      </thead>
+      <tbody>
+        {{#each model as |item|}}
+          <tr class="admin-list-item">
+            <td class="col term">
+              {{#link-to "adminSearchLogs.term" (query-params term=item.term period=period) class="test"}}
+                {{item.term}}
+              {{/link-to}}
+            </td>
+            <td class="col"><div class="label">{{i18n "admin.logs.search_logs.searches"}}</div>{{item.searches}}</td>
+            <td class="col"><div class="label">{{i18n "admin.logs.search_logs.click_through_rate"}}</div>{{item.ctr}}%</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+  {{else}}
+    {{i18n "search.no_results"}}
+  {{/if}}
+{{/conditional-loading-spinner}}

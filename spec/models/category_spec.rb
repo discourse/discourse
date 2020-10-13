@@ -58,13 +58,13 @@ describe Category do
     fab!(:user) { Fabricate(:user) }
 
     it "will add the group to the reviewable" do
-      SiteSetting.enable_category_group_review = true
+      SiteSetting.enable_category_group_moderation = true
       reviewable = PostActionCreator.spam(user, post).reviewable
       expect(reviewable.reviewable_by_group_id).to eq(group.id)
     end
 
     it "will add the group to the reviewable even if created manually" do
-      SiteSetting.enable_category_group_review = true
+      SiteSetting.enable_category_group_moderation = true
       reviewable = ReviewableFlaggedPost.create!(
         created_by: user,
         payload: { raw: 'test raw' },
@@ -74,7 +74,7 @@ describe Category do
     end
 
     it "will not add add the group to the reviewable" do
-      SiteSetting.enable_category_group_review = false
+      SiteSetting.enable_category_group_moderation = false
       reviewable = PostActionCreator.spam(user, post).reviewable
       expect(reviewable.reviewable_by_group_id).to be_nil
     end
@@ -87,7 +87,7 @@ describe Category do
     end
 
     it "will remove the reviewable_by_group if the category is updated" do
-      SiteSetting.enable_category_group_review = true
+      SiteSetting.enable_category_group_moderation = true
       reviewable = PostActionCreator.spam(user, post).reviewable
       category.reviewable_by_group_id = nil
       category.save!
@@ -403,6 +403,16 @@ describe Category do
       expect(@category.topics_year).to eq(0)
     end
 
+    it "cooks the definition" do
+      category = Category.create(
+        name: 'little-test',
+        user_id: Discourse.system_user.id,
+        description: "click the link [here](https://fakeurl.com)"
+      )
+      expect(category.description.include?("[here]")).to eq(false)
+      expect(category.description).to eq(category.topic.first_post.cooked)
+    end
+
     it "renames the definition when renamed" do
       @category.update(name: 'Troutfishing')
       @topic.reload
@@ -420,7 +430,7 @@ describe Category do
     end
 
     it "reuses existing permalink when category slug is changed" do
-      permalink = Permalink.create!(url: "c/#{@category.slug}", category_id: 42)
+      permalink = Permalink.create!(url: "c/#{@category.slug}/#{@category.id}", category_id: 42)
 
       expect { @category.update(slug: 'new-slug') }.to_not change { Permalink.count }
       expect(permalink.reload.category_id).to eq(@category.id)
@@ -661,39 +671,44 @@ describe Category do
   end
 
   describe "#url" do
-    it "builds a url for normal categories" do
-      category = Fabricate(:category_with_definition, name: "cats")
-      expect(category.url).to eq "/c/cats"
+    before_all do
+      SiteSetting.max_category_nesting = 3
+    end
+
+    fab!(:category) { Fabricate(:category, name: "root") }
+
+    fab!(:sub_category) do
+      Fabricate(
+        :category,
+        name: "child",
+        parent_category_id: category.id,
+      )
+    end
+
+    fab!(:sub_sub_category) do
+      Fabricate(
+        :category,
+        name: "child_of_child",
+        parent_category_id: sub_category.id,
+      )
+    end
+
+    describe "for normal categories" do
+      it "builds a url" do
+        expect(category.url).to eq("/c/root/#{category.id}")
+      end
     end
 
     describe "for subcategories" do
-      it "includes the parent category" do
-        parent_category = Fabricate(:category_with_definition, name: "parent")
-
-        subcategory =
-          Fabricate(
-            :category_with_definition,
-            name: "child",
-            parent_category_id: parent_category.id
-          )
-
-        expect(subcategory.url).to eq "/c/parent/child"
+      it "builds a url" do
+        expect(sub_category.url).to eq("/c/root/child/#{sub_category.id}")
       end
     end
-  end
 
-  describe "#url_with_id" do
-    fab!(:category) { Fabricate(:category_with_definition, name: 'cats') }
-
-    it "includes the id in the URL" do
-      expect(category.url_with_id).to eq("/c/cats/#{category.id}")
-    end
-
-    context "child category" do
-      fab!(:child_category) { Fabricate(:category_with_definition, parent_category_id: category.id, name: 'dogs') }
-
-      it "includes the id in the URL" do
-        expect(child_category.url_with_id).to eq("/c/cats/dogs/#{child_category.id}")
+    describe "for sub-sub-categories" do
+      it "builds a url" do
+        expect(sub_sub_category.url)
+          .to eq("/c/root/child/child-of-child/#{sub_sub_category.id}")
       end
     end
   end
@@ -1116,6 +1131,24 @@ describe Category do
       it "should be 1 when the category has an ancestor" do
         expect(subcategory.height_of_ancestors).to eq(1)
       end
+    end
+  end
+
+  describe "messageBus" do
+    it "does not publish notification level when publishing to /categories" do
+      category = Fabricate(:category)
+      category.name = "Amazing category"
+      messages = MessageBus.track_publish("/categories") do
+        category.save!
+      end
+
+      expect(messages.length).to eq(1)
+      message = messages.first
+
+      category_hash = message.data[:categories].first
+
+      expect(category_hash[:name]).to eq(category.name)
+      expect(category_hash.key?(:notification_level)).to eq(false)
     end
   end
 

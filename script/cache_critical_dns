@@ -58,7 +58,7 @@ end
 
 def send_counter(name, description, labels, value)
   host = "localhost"
-  port = 9405
+  port = ENV.fetch("DISCOURSE_PROMETHEUS_COLLECTOR_PORT", 9405).to_i
 
   if labels
     labels = labels.map do |k, v|

@@ -93,6 +93,10 @@ task "uploads:migrate_from_s3" => :environment do
   ENV["RAILS_DB"] ? migrate_from_s3 : migrate_all_from_s3
 end
 
+task "uploads:batch_migrate_from_s3", [:limit] => :environment do |_, args|
+  ENV["RAILS_DB"] ? migrate_from_s3(limit: args[:limit]) : migrate_all_from_s3(limit: args[:limit])
+end
+
 def guess_filename(url, raw)
   begin
     uri = URI.parse("http:#{url}")
@@ -110,17 +114,17 @@ def guess_filename(url, raw)
   end
 end
 
-def migrate_all_from_s3
-  RailsMultisite::ConnectionManagement.each_connection { migrate_from_s3 }
+def migrate_all_from_s3(limit: nil)
+  RailsMultisite::ConnectionManagement.each_connection { migrate_from_s3(limit: limit) }
 end
 
-def migrate_from_s3
+def migrate_from_s3(limit: nil)
   require "file_store/s3_store"
 
   # make sure S3 is disabled
   if SiteSetting.Upload.enable_s3_uploads
     puts "You must disable S3 uploads before running that task."
-    return
+    exit 1
   end
 
   db = RailsMultisite::ConnectionManagement.current_db
@@ -129,10 +133,12 @@ def migrate_from_s3
 
   max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
-  Post
+  migrate_posts = Post
     .where("user_id > 0")
-    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%(upload://%'")
-    .find_each do |post|
+    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%#{SiteSetting.Upload.absolute_base_url}%' OR raw LIKE '%(upload://%'")
+  migrate_posts = migrate_posts.limit(limit.to_i) if limit
+
+  migrate_posts.find_each do |post|
     begin
       updated = false
 
@@ -710,13 +716,6 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
       # secure based on site settings.
       uploads_to_update = Upload.includes(:posts, :optimized_images).joins(:post_uploads)
 
-      # we do this to avoid a heavier post query, and to make sure we only
-      # get unique posts AND include deleted posts (unscoped)
-      unique_access_control_posts = Post.unscoped.select(:id, :topic_id).includes(topic: :category).where(id: uploads_to_update.pluck(:access_control_post_id).uniq)
-      uploads_to_update.each do |upload|
-        upload.access_control_post = unique_access_control_posts.find { |post| post.id == upload.access_control_post_id }
-      end
-
       puts "There are #{uploads_to_update.count} upload(s) that could be marked secure.", ""
 
       # Simply mark all these uploads as secure if login_required because no anons will be able to access them
@@ -768,7 +767,7 @@ def adjust_acls(uploads_to_adjust_acl_for)
     Discourse.store.update_upload_ACL(upload)
     i += 1
   end
-  RakeHelpers.print_status_with_label("Updaing ACLs complete!        ", i, total_count)
+  RakeHelpers.print_status_with_label("Updating ACLs complete!        ", i, total_count)
 end
 
 def mark_all_as_secure_login_required(uploads_to_update)
@@ -840,8 +839,20 @@ def determine_upload_security_and_posts_to_rebake(uploads_to_update, mark_secure
   uploads_to_adjust_acl_for = []
   posts_to_rebake = {}
 
+  # we do this to avoid a heavier post query, and to make sure we only
+  # get unique posts AND include deleted posts (unscoped)
+  unique_access_control_posts = {}
+  Post.unscoped.select(:id, :topic_id)
+    .includes(topic: :category)
+    .where(id: uploads_to_update.pluck(:access_control_post_id).uniq).find_each do |post|
+    unique_access_control_posts[post.id] = post
+  end
+
   i = 0
-  uploads_to_update.find_each(batch_size: 50) do |upload_to_update|
+  uploads_to_update.find_each do |upload_to_update|
+
+    # fetch the post out of the already populated map to avoid n1s
+    upload_to_update.access_control_post = unique_access_control_posts[upload_to_update.access_control_post_id]
 
     # we just need to determine the post security here so the ACL is set to the correct thing,
     # because the update_upload_ACL method uses upload.secure?
@@ -980,6 +991,206 @@ task "uploads:fix_relative_upload_links" => :environment do
   else
     RailsMultisite::ConnectionManagement.each_connection do
       fix_relative_links
+    end
+  end
+end
+
+def analyze_missing_s3
+  puts "List of posts with missing images:"
+  sql = <<~SQL
+    SELECT post_id, url, sha1, extension, uploads.id
+    FROM post_uploads pu
+    RIGHT JOIN uploads on uploads.id = pu.upload_id
+    WHERE verification_status = :invalid_etag
+    ORDER BY created_at
+  SQL
+
+  lookup = {}
+  other = []
+  all = []
+
+  DB.query(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |r|
+    all << r
+    if r.post_id
+      lookup[r.post_id] ||= []
+      lookup[r.post_id] << [r.url, r.sha1, r.extension]
+    else
+      other << r
+    end
+  end
+
+  posts = Post.where(id: lookup.keys)
+  posts.order(:created_at).each do |post|
+    puts "#{Discourse.base_url}/p/#{post.id} #{lookup[post.id].length} missing, #{post.created_at}"
+    lookup[post.id].each do |url, sha1, extension|
+      puts url
+      puts "#{Upload.base62_sha1(sha1)}.#{extension}"
+    end
+    puts
+  end
+
+  missing_uploads = Upload.where(verification_status: Upload.verification_statuses[:invalid_etag])
+  puts "Total missing uploads: #{missing_uploads.count}, newest is #{missing_uploads.maximum(:created_at)}"
+  puts "Total problem posts: #{lookup.keys.count} with #{lookup.values.sum { |a| a.length } } missing uploads"
+  puts "Other missing uploads count: #{other.count}"
+
+  if all.count > 0
+    ids = all.map { |r| r.id }
+
+    lookups = [
+      [:post_uploads, :upload_id],
+      [:users, :uploaded_avatar_id],
+      [:user_avatars, :gravatar_upload_id],
+      [:user_avatars, :custom_upload_id],
+      [:site_settings, ["NULLIF(value, '')::integer", "data_type = #{SiteSettings::TypeSupervisor.types[:upload].to_i}"]],
+      [:user_profiles, :profile_background_upload_id],
+      [:user_profiles, :card_background_upload_id],
+      [:categories, :uploaded_logo_id],
+      [:categories, :uploaded_background_id],
+      [:custom_emojis, :upload_id],
+      [:theme_fields, :upload_id],
+      [:user_exports, :upload_id],
+      [:groups, :flair_upload_id],
+    ]
+
+    lookups.each do |table, (column, where)|
+      count = DB.query_single(<<~SQL, ids: ids).first
+        SELECT COUNT(*) FROM #{table} WHERE #{column} IN (:ids) #{"AND #{where}" if where}
+      SQL
+      if count > 0
+        puts "Found #{count} missing row#{"s" if count > 1} in #{table}(#{column})"
+      end
+    end
+
+  end
+
+end
+
+def delete_missing_s3
+  missing = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).order(:created_at)
+  count = missing.count
+  if count > 0
+    puts "The following uploads will be deleted from the database"
+    missing.each do |upload|
+      puts "#{upload.id} - #{upload.url} - #{upload.created_at}"
+    end
+    puts "Please confirm you wish to delete #{count} upload records by typing YES"
+    confirm = STDIN.gets.strip
+    if confirm == "YES"
+      missing.destroy_all
+      puts "#{count} records were deleted"
+    else
+      STDERR.puts "Aborting"
+      exit 1
+    end
+  end
+end
+
+task "uploads:delete_missing_s3" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    delete_missing_s3
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      delete_missing_s3
+    end
+  end
+end
+
+task "uploads:analyze_missing_s3" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    analyze_missing_s3
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      analyze_missing_s3
+    end
+  end
+end
+
+def fix_missing_s3
+  Jobs.run_immediately!
+
+  puts "Attempting to download missing uploads and recreate"
+  ids = Upload.where(
+    verification_status: Upload.verification_statuses[:invalid_etag]
+  ).pluck(:id)
+  ids.each do |id|
+    upload = Upload.find(id)
+
+    tempfile = nil
+
+    begin
+      tempfile = FileHelper.download(upload.url, max_file_size: 30.megabyte, tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}")
+    rescue => e
+      puts "Failed to download #{upload.url} #{e}"
+    end
+
+    if tempfile
+      puts "Successfully downloaded upload id: #{upload.id} - #{upload.url} fixing upload"
+
+      fixed_upload = nil
+      fix_error = nil
+      Upload.transaction do
+        begin
+          upload.update!(sha1: SecureRandom.hex)
+          fixed_upload = UploadCreator.new(tempfile, "temp.#{upload.extension}").create_for(Discourse.system_user.id)
+        rescue => fix_error
+          # invalid extension is the most common issue
+        end
+        raise ActiveRecord::Rollback
+      end
+
+      if fix_error
+        puts "Failed to fix upload #{fix_error}"
+      else
+        # we do not fix sha, it may be wrong for arbitrary reasons, if we correct it
+        # we may end up breaking posts
+        upload.update!(etag: fixed_upload.etag, url: fixed_upload.url, verification_status: Upload.verification_statuses[:unchecked])
+
+        OptimizedImage.where(upload_id: upload.id).destroy_all
+        rebake_ids = PostUpload.where(upload_id: upload.id).pluck(:post_id)
+
+        if rebake_ids.present?
+          Post.where(id: rebake_ids).each do |post|
+            puts "rebake post #{post.id}"
+            post.rebake!
+          end
+        end
+      end
+    end
+  end
+
+  puts "Attempting to automatically fix problem uploads"
+  puts
+  puts "Rebaking posts with missing uploads, this can take a while as all rebaking runs inline"
+
+  sql = <<~SQL
+    SELECT post_id
+    FROM post_uploads pu
+    JOIN uploads on uploads.id = pu.upload_id
+    WHERE verification_status = :invalid_etag
+    ORDER BY post_id DESC
+  SQL
+
+  DB.query_single(sql, invalid_etag: Upload.verification_statuses[:invalid_etag]).each do |post_id|
+    post = Post.find_by(id: post_id)
+    if post
+      post.rebake!
+      print "."
+    else
+      puts "Skipping #{post_id} since it is deleted"
+    end
+  end
+  puts
+end
+
+task "uploads:fix_missing_s3" => :environment do
+  if RailsMultisite::ConnectionManagement.current_db != "default"
+    fix_missing_s3
+  else
+    RailsMultisite::ConnectionManagement.each_connection do
+      fix_missing_s3
     end
   end
 end

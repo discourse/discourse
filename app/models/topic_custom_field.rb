@@ -17,6 +17,7 @@ end
 #
 # Indexes
 #
-#  index_topic_custom_fields_on_topic_id_and_name  (topic_id,name)
-#  topic_custom_fields_value_key_idx               (value,name) WHERE ((value IS NOT NULL) AND (char_length(value) < 400))
+#  idx_topic_custom_fields_topic_post_event_starts_at  (name,topic_id) UNIQUE WHERE ((name)::text = 'TopicEventStartsAt'::text)
+#  index_topic_custom_fields_on_topic_id_and_name      (topic_id,name)
+#  topic_custom_fields_value_key_idx                   (value,name) WHERE ((value IS NOT NULL) AND (char_length(value) < 400))
 #

@@ -2,47 +2,170 @@
 
 require "rails_helper"
 
-describe Middleware::AnonymousCache::Helper do
+describe Middleware::AnonymousCache do
+  let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
   def env(opts = {})
-    {
-      "HTTP_HOST" => "http://test.com",
-      "REQUEST_URI" => "/path?bla=1",
-      "REQUEST_METHOD" => "GET",
-      "rack.input" => ""
-    }.merge(opts)
+    Rack::MockRequest.env_for("http://test.com/path?bla=1").merge(opts)
   end
 
-  def new_helper(opts = {})
-    Middleware::AnonymousCache::Helper.new(env(opts))
+  describe Middleware::AnonymousCache::Helper do
+    def new_helper(opts = {})
+      Middleware::AnonymousCache::Helper.new(env(opts))
+    end
+
+    context "cachable?" do
+      it "true by default" do
+        expect(new_helper.cacheable?).to eq(true)
+      end
+
+      it "is false for non GET" do
+        expect(new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?).to eq(false)
+      end
+
+      it "is false if it has an auth cookie" do
+        expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1" * 32}; jill=2").cacheable?).to eq(false)
+      end
+    end
+
+    context "per theme cache" do
+      it "handles theme keys" do
+        theme = Fabricate(:theme, user_selectable: true)
+
+        with_bad_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=abc").cache_key
+        with_no_theme_key = new_helper().cache_key
+
+        expect(with_bad_theme_key).to eq(with_no_theme_key)
+
+        with_good_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=#{theme.id}").cache_key
+
+        expect(with_good_theme_key).not_to eq(with_no_theme_key)
+      end
+    end
+
+    context "with header-based locale locale" do
+      it "handles different languages" do
+        # Normally does not check the language header
+        french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
+        french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
+        english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
+        none = new_helper.cache_key
+
+        expect(none).to eq(french1)
+        expect(none).to eq(french2)
+        expect(none).to eq(english)
+
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_accept_language_header = true
+
+        french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
+        french2 = new_helper("HTTP_ACCEPT_LANGUAGE" => "FR").cache_key
+        english = new_helper("HTTP_ACCEPT_LANGUAGE" => SiteSetting.default_locale).cache_key
+        none = new_helper.cache_key
+
+        expect(none).to eq(english)
+        expect(french1).to eq(french2)
+        expect(french1).not_to eq(none)
+      end
+    end
+
+    context "cached" do
+      let!(:helper) do
+        new_helper("ANON_CACHE_DURATION" => 10)
+      end
+
+      let!(:crawler) do
+        new_helper("ANON_CACHE_DURATION" => 10, "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)")
+      end
+
+      after do
+        helper.clear_cache
+        crawler.clear_cache
+      end
+
+      before do
+        global_setting :anon_cache_store_threshold, 1
+      end
+
+      it "compresses body on demand" do
+        global_setting :compress_anon_cache, true
+
+        payload = "x" * 1000
+        helper.cache([200, { "HELLO" => "WORLD" }, [payload]])
+
+        helper = new_helper("ANON_CACHE_DURATION" => 10)
+        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, [payload]])
+
+        # depends on i7z implementation, but lets assume it is stable unless we discover
+        # otherwise
+        expect(Discourse.redis.get(helper.cache_key_body).length).to eq(16)
+      end
+
+      it "handles brotli switching" do
+        helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
+
+        helper = new_helper("ANON_CACHE_DURATION" => 10)
+        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
+
+        helper = new_helper("ANON_CACHE_DURATION" => 10, "HTTP_ACCEPT_ENCODING" => "gz, br")
+        expect(helper.cached).to eq(nil)
+      end
+
+      it "returns cached data for cached requests" do
+        helper.is_mobile = true
+        expect(helper.cached).to eq(nil)
+        helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
+
+        helper = new_helper("ANON_CACHE_DURATION" => 10)
+        helper.is_mobile = true
+        expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
+
+        expect(crawler.cached).to eq(nil)
+        crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
+        expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
+      end
+    end
   end
 
-  context "cachable?" do
-    it "true by default" do
-      expect(new_helper.cacheable?).to eq(true)
-    end
+  context 'background request rate limit' do
+    it 'will rate limit background requests' do
 
-    it "is false for non GET" do
-      expect(new_helper("ANON_CACHE_DURATION" => 10, "REQUEST_METHOD" => "POST").cacheable?).to eq(false)
-    end
+      app = Middleware::AnonymousCache.new(
+        lambda do |env|
+          [200, {}, ["ok"]]
+        end
+      )
 
-    it "is false if it has an auth cookie" do
-      expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1" * 32}; jill=2").cacheable?).to eq(false)
-    end
-  end
+      global_setting :background_requests_max_queue_length, "0.5"
 
-  context "per theme cache" do
-    it "handles theme keys" do
-      theme = Fabricate(:theme, user_selectable: true)
+      env = {
+        "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+        "HOST" => "site.com",
+        "REQUEST_METHOD" => "GET",
+        "REQUEST_URI" => "/somewhere/rainbow",
+        "REQUEST_QUEUE_SECONDS" => 2.1,
+        "rack.input" => StringIO.new
+      }
 
-      with_bad_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=abc").cache_key
-      with_no_theme_key = new_helper().cache_key
+      # non background ... long request
+      env["REQUEST_QUEUE_SECONDS"] = 2
 
-      expect(with_bad_theme_key).to eq(with_no_theme_key)
+      status, _ = app.call(env.dup)
+      expect(status).to eq(200)
 
-      with_good_theme_key = new_helper("HTTP_COOKIE" => "theme_ids=#{theme.id}").cache_key
+      env["HTTP_DISCOURSE_BACKGROUND"] = "true"
 
-      expect(with_good_theme_key).not_to eq(with_no_theme_key)
+      status, headers, body = app.call(env.dup)
+      expect(status).to eq(429)
+      expect(headers["content-type"]).to eq("application/json; charset=utf-8")
+      json = JSON.parse(body.join)
+      expect(json["extras"]["wait_seconds"]).to be > 4.9
+
+      env["REQUEST_QUEUE_SECONDS"] = 0.4
+
+      status, _ = app.call(env.dup)
+      expect(status).to eq(200)
+
     end
   end
 
@@ -114,60 +237,13 @@ describe Middleware::AnonymousCache::Helper do
     end
   end
 
-  context "cached" do
-    let!(:helper) do
-      new_helper("ANON_CACHE_DURATION" => 10)
-    end
+  context 'invalid request payload' do
+    it 'returns 413 for GET request with payload' do
+      status, _, _ = middleware.call(env.tap do |environment|
+        environment[Rack::RACK_INPUT].write("test")
+      end)
 
-    let!(:crawler) do
-      new_helper("ANON_CACHE_DURATION" => 10, "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)")
-    end
-
-    after do
-      helper.clear_cache
-      crawler.clear_cache
-    end
-
-    before do
-      global_setting :anon_cache_store_threshold, 1
-    end
-
-    it "compresses body on demand" do
-      global_setting :compress_anon_cache, true
-
-      payload = "x" * 1000
-      helper.cache([200, { "HELLO" => "WORLD" }, [payload]])
-
-      helper = new_helper("ANON_CACHE_DURATION" => 10)
-      expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, [payload]])
-
-      # depends on i7z implementation, but lets assume it is stable unless we discover
-      # otherwise
-      expect(Discourse.redis.get(helper.cache_key_body).length).to eq(16)
-    end
-
-    it "handles brotli switching" do
-      helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
-
-      helper = new_helper("ANON_CACHE_DURATION" => 10)
-      expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
-
-      helper = new_helper("ANON_CACHE_DURATION" => 10, "HTTP_ACCEPT_ENCODING" => "gz, br")
-      expect(helper.cached).to eq(nil)
-    end
-
-    it "returns cached data for cached requests" do
-      helper.is_mobile = true
-      expect(helper.cached).to eq(nil)
-      helper.cache([200, { "HELLO" => "WORLD" }, ["hello ", "my world"]])
-
-      helper = new_helper("ANON_CACHE_DURATION" => 10)
-      helper.is_mobile = true
-      expect(helper.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello my world"]])
-
-      expect(crawler.cached).to eq(nil)
-      crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
-      expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
+      expect(status).to eq(413)
     end
   end
 
@@ -180,7 +256,6 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     def get(path, options)
-      middleware = Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] })
       @env = env({
         "REQUEST_URI" => path,
         "PATH_INFO" => path,
@@ -189,8 +264,8 @@ describe Middleware::AnonymousCache::Helper do
       @status, @response_header, @response = middleware.call(@env)
     end
 
-    it "applies whitelisted_crawler_user_agents correctly" do
-      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+    it "applies allowed_crawler_user_agents correctly" do
+      SiteSetting.allowed_crawler_user_agents = 'Googlebot'
 
       get '/', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
@@ -210,7 +285,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "doesn't block api requests" do
-      SiteSetting.whitelisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.allowed_crawler_user_agents = 'Googlebot'
       api_key = Fabricate(:api_key)
 
       get "/latest?api_key=#{api_key.key}&api_username=system", headers: {
@@ -219,8 +294,8 @@ describe Middleware::AnonymousCache::Helper do
       expect(@status).to eq(200)
     end
 
-    it "applies blacklisted_crawler_user_agents correctly" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+    it "applies blocked_crawler_user_agents correctly" do
+      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
 
       get '/', headers: non_crawler
       expect(@status).to eq(200)
@@ -239,7 +314,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "should never block robots.txt" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
 
       get '/robots.txt', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
@@ -249,7 +324,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "should never block srv/status" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
 
       get '/srv/status', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
@@ -259,7 +334,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "blocked crawlers shouldn't log page views" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
 
       get '/', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'
@@ -269,7 +344,7 @@ describe Middleware::AnonymousCache::Helper do
     end
 
     it "blocks json requests" do
-      SiteSetting.blacklisted_crawler_user_agents = 'Googlebot'
+      SiteSetting.blocked_crawler_user_agents = 'Googlebot'
 
       get '/srv/status.json', headers: {
         'HTTP_USER_AGENT' => 'Googlebot/2.1 (+http://www.google.com/bot.html)'

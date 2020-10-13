@@ -72,15 +72,15 @@ module HasCustomFields
 
     # To avoid n+1 queries, use this function to retrieve lots of custom fields in one go
     # and create a "sideloaded" version for easy querying by id.
-    def self.custom_fields_for_ids(ids, whitelisted_fields)
+    def self.custom_fields_for_ids(ids, allowed_fields)
       klass = "#{name}CustomField".constantize
       foreign_key = "#{name.underscore}_id".to_sym
 
       result = {}
 
-      return result if whitelisted_fields.blank?
+      return result if allowed_fields.blank?
 
-      klass.where(foreign_key => ids, :name => whitelisted_fields)
+      klass.where(foreign_key => ids, :name => allowed_fields)
         .pluck(foreign_key, :name, :value).each do |cf|
         result[cf[0]] ||= {}
         append_custom_field(result[cf[0]], cf[1], cf[2])
@@ -203,7 +203,7 @@ module HasCustomFields
 
   def save_custom_fields(force = false)
     if force || !custom_fields_clean?
-      dup = @custom_fields.dup
+      dup = @custom_fields.dup.with_indifferent_access
       array_fields = {}
 
       ActiveRecord::Base.transaction do
@@ -274,7 +274,7 @@ module HasCustomFields
 protected
 
   def refresh_custom_fields_from_db
-    target = Hash.new
+    target = HashWithIndifferentAccess.new
     _custom_fields.order('id asc').pluck(:name, :value).each do |key, value|
       self.class.append_custom_field(target, key, value)
     end

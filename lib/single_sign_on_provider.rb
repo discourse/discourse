@@ -19,6 +19,7 @@ class SingleSignOnProvider < SingleSignOn
     decoded = Base64.decode64(parsed["sso"])
     decoded_hash = Rack::Utils.parse_query(decoded)
 
+    raise ParseError unless decoded_hash.key? 'return_sso_url'
     @return_sso_url = decoded_hash['return_sso_url']
   end
 

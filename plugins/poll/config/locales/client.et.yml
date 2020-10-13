@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 et:
   js:
@@ -15,18 +14,6 @@ et:
         one: "häält kokku"
         other: "hääli kokku"
       average_rating: "Keskmine hinnang: <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Tee vähemalt <strong>%{count}</strong> valik"
-            other: "Tee vähemalt <strong>%{count}</strong> valikut"
-          up_to_max_options:
-            one: "Võid teha <strong>%{count}</strong> valiku"
-            other: "Võid teha kuni <strong>%{count}</strong> valikut"
-          x_options:
-            one: "Tee <strong>%{count}</strong> valik"
-            other: "Tee <strong>%{count}</strong> valikut"
-          between_min_and_max_options: "Tee <strong>%{min}</strong> kuni <strong>%{max}</strong> valikut"
       cast-votes:
         title: "Anna oma hääl"
         label: "Hääleta nüüd!"

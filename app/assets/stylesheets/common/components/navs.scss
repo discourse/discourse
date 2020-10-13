@@ -28,7 +28,7 @@
     > a {
       border: none;
       padding: 6px 12px;
-      color: $primary;
+      color: var(--primary);
       font-size: $font-up-1;
       line-height: $line-height-small;
       box-sizing: border-box;
@@ -43,14 +43,14 @@
       }
 
       &:hover {
-        color: $quaternary;
-        background-color: $quaternary-low;
+        color: var(--quaternary);
+        background-color: var(--quaternary-low);
       }
     }
 
     a.active {
-      color: $secondary;
-      background-color: $quaternary;
+      color: var(--secondary);
+      background-color: var(--quaternary);
 
       .d-icon {
         opacity: 1;
@@ -66,10 +66,10 @@
   @extend %nav;
   padding: 0;
   overflow: hidden;
-  background: $primary-low;
+  background: var(--primary-low);
 
   li {
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
     position: relative;
 
     &:last-of-type {
@@ -87,11 +87,11 @@
     font-size: $font-up-1;
     line-height: $line-height-small;
     cursor: pointer;
-    color: $primary;
+    color: var(--primary);
 
     &.active {
-      color: $secondary;
-      background-color: $quaternary;
+      color: var(--secondary);
+      background-color: var(--quaternary);
 
       &::after {
         left: 90%;
@@ -99,7 +99,7 @@
         content: " ";
         position: absolute;
         border: 8px solid transparent;
-        border-left-color: $secondary;
+        border-left-color: var(--secondary);
       }
     }
   }

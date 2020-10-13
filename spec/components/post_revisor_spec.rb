@@ -6,7 +6,7 @@ require 'post_revisor'
 describe PostRevisor do
 
   fab!(:topic) { Fabricate(:topic) }
-  fab!(:newuser) { Fabricate(:newuser) }
+  fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:moderator) { Fabricate(:moderator) }
@@ -195,6 +195,19 @@ describe PostRevisor do
         expect {
           subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
         }.to change { post.topic.bumped_at }
+      end
+
+      it "should send muted and latest message" do
+        TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
+        messages = MessageBus.track_publish("/latest") do
+          subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds)
+        end
+
+        muted_message = messages.find { |message| message.data["message_type"] == "muted" }
+        latest_message = messages.find { |message| message.data["message_type"] == "latest" }
+
+        expect(muted_message.data["topic_id"]).to eq(topic.id)
+        expect(latest_message.data["topic_id"]).to eq(topic.id)
       end
     end
 
@@ -412,7 +425,7 @@ describe PostRevisor do
       fab!(:changed_by) { Fabricate(:admin) }
 
       before do
-        SiteSetting.newuser_max_images = 0
+        SiteSetting.newuser_max_embedded_media = 0
         url = "http://i.imgur.com/wfn7rgU.jpg"
         Oneboxer.stubs(:onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(changed_by, raw: "So, post them here!\n#{url}")
@@ -430,7 +443,7 @@ describe PostRevisor do
 
     describe "new user editing their own post" do
       before do
-        SiteSetting.newuser_max_images = 0
+        SiteSetting.newuser_max_embedded_media = 0
         url = "http://i.imgur.com/FGg7Vzu.gif"
         Oneboxer.stubs(:cached_onebox).with(url, anything).returns("<img src='#{url}'>")
         subject.revise!(post.user, raw: "So, post them here!\n#{url}")
@@ -582,6 +595,28 @@ describe PostRevisor do
           action: UserHistory.actions[:post_edit]
         )
         expect(log).to be_blank
+      end
+    end
+
+    context "logging group moderator edits" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group_id: group_user.group.id, topic: topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        topic.update!(category: category)
+        post.update!(topic: topic)
+      end
+
+      it "logs an edit when a group moderator revises the category description" do
+        PostRevisor.new(post).revise!(group_user.user, raw: "a group moderator can update the description")
+
+        log = UserHistory.where(
+          acting_user_id: group_user.user.id,
+          action: UserHistory.actions[:post_edit]
+        ).first
+        expect(log).to be_present
+        expect(log.details).to eq("Hello world\n\n---\n\na group moderator can update the description")
       end
     end
 
@@ -914,6 +949,38 @@ describe PostRevisor do
             expect(post.topic.tags.map(&:name)).to eq(['totally'])
           end
         end
+      end
+    end
+
+    context "uploads" do
+      let(:image1) { Fabricate(:upload) }
+      let(:image2) { Fabricate(:upload) }
+      let(:image3) { Fabricate(:upload) }
+      let(:image4) { Fabricate(:upload) }
+      let(:post_args) do
+        {
+          user: user,
+          topic: topic,
+          raw: <<~RAW
+            This is a post with multiple uploads
+            ![image1](#{image1.short_url})
+            ![image2](#{image2.short_url})
+          RAW
+        }
+      end
+
+      it "updates linked post uploads" do
+        post.link_post_uploads
+        expect(post.post_uploads.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
+
+        subject.revise!(user, raw: <<~RAW)
+            This is a post with multiple uploads
+            ![image2](#{image2.short_url})
+            ![image3](#{image3.short_url})
+            ![image4](#{image4.short_url})
+        RAW
+
+        expect(post.reload.post_uploads.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
     end
   end

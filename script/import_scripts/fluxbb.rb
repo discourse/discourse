@@ -63,7 +63,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
   def import_users
     puts '', "creating users"
 
-    total_count = mysql_query(`SELECT count(*) count FROM #{FLUXBB_PREFIX}users;`).first['count']
+    total_count = mysql_query("SELECT count(*) count FROM #{FLUXBB_PREFIX}users;").first['count']
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(

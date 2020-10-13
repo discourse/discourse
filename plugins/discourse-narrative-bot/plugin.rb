@@ -33,7 +33,6 @@ after_initialize do
     '../autoload/jobs/narrative_timeout.rb',
     '../autoload/jobs/narrative_init.rb',
     '../autoload/jobs/send_default_welcome_message.rb',
-    '../autoload/jobs/send_advanced_tutorial_message.rb',
     '../autoload/jobs/onceoff/grant_badges.rb',
     '../autoload/jobs/onceoff/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
@@ -55,6 +54,7 @@ after_initialize do
 
   module ::DiscourseNarrativeBot
     PLUGIN_NAME = "discourse-narrative-bot".freeze
+    BOT_USER_ID = -2
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
@@ -92,10 +92,10 @@ after_initialize do
 
         user = User.find_by(id: params[:user_id])
         raise Discourse::NotFound if user.blank?
-        cdn_avatar_url = fetch_avatar_url(user)
 
         hijack do
-          generator = CertificateGenerator.new(user, params[:date], cdn_avatar_url)
+          avatar_data = fetch_avatar(user)
+          generator = CertificateGenerator.new(user, params[:date], avatar_data)
 
           svg = params[:type] == 'advanced' ? generator.advanced_user_track : generator.new_user_track
 
@@ -107,8 +107,8 @@ after_initialize do
 
       private
 
-      def fetch_avatar_url(user)
-        avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
+      def fetch_avatar(user)
+        avatar_url = UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub('{size}', '250'))
         FileHelper.download(
           avatar_url.to_s,
           max_file_size: SiteSetting.max_image_size_kb.kilobytes,
@@ -149,6 +149,12 @@ after_initialize do
     user.enqueue_bot_welcome_post
   end
 
+  self.add_model_callback(UserOption, :after_save) do
+    if saved_change_to_skip_new_user_tips? && self.skip_new_user_tips
+      user.delete_bot_welcome_post
+    end
+  end
+
   self.add_to_class(:user, :enqueue_bot_welcome_post) do
     return if SiteSetting.disable_discourse_narrative_bot_welcome_post
 
@@ -172,7 +178,33 @@ after_initialize do
       self.human? &&
       !self.anonymous? &&
       !self.staged &&
+      !user_option&.skip_new_user_tips &&
       !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)
+  end
+
+  self.add_to_class(:user, :delete_bot_welcome_post) do
+    data = DiscourseNarrativeBot::Store.get(self.id) || {}
+    topic_id = data[:topic_id]
+    return if topic_id.blank? || data[:track] != DiscourseNarrativeBot::NewUserNarrative.to_s
+
+    topic_user = topic_users.find_by(topic_id: topic_id)
+    return if topic_user.present? && (topic_user.last_read_post_number.present? || topic_user.highest_seen_post_number.present?)
+
+    topic = Topic.find_by(id: topic_id)
+    return if topic.blank?
+
+    first_post = topic.ordered_posts.first
+
+    notification = Notification.where(topic_id: topic.id, post_number: first_post.post_number).first
+    if notification.present?
+      Notification.read(self, notification.id)
+      self.saw_notification_id(notification.id)
+      self.reload
+      self.publish_notifications_state
+    end
+
+    PostDestroyer.new(Discourse.system_user, first_post, skip_staff_log: true).destroy
+    DiscourseNarrativeBot::Store.remove(self.id)
   end
 
   self.on(:post_created) do |post, options|
@@ -222,8 +254,8 @@ after_initialize do
     if self.post && self.user.enqueue_narrative_bot_job?
       input =
         case self.post_action_type_id
-        when *PostActionType.flag_types_without_custom.values
-          :flag
+        when *PostActionType.flag_types.values
+          self.post_action_type_id == PostActionType.types[:inappropriate] ? :flag : :reply
         when PostActionType.types[:like]
           :like
         when PostActionType.types[:bookmark]
@@ -240,6 +272,12 @@ after_initialize do
     end
   end
 
+  self.add_model_callback(Bookmark, :after_commit, on: :create) do
+    if self.post && self.user.enqueue_narrative_bot_job?
+      Jobs.enqueue(:bot_input, user_id: self.user_id, post_id: self.post_id, input: :bookmark)
+    end
+  end
+
   self.on(:topic_notification_level_changed) do |_, user_id, topic_id|
     user = User.find_by(id: user_id)
 
@@ -252,17 +290,41 @@ after_initialize do
     end
   end
 
-  self.on(:user_promoted) do |args|
-    promoted_from_tl1 = args[:new_trust_level] == TrustLevel[2] &&
-      args[:old_trust_level] == TrustLevel[1]
+  UserAvatar.register_custom_user_gravatar_email_hash(
+    DiscourseNarrativeBot::BOT_USER_ID,
+    "discobot@discourse.org"
+  )
 
-    if SiteSetting.discourse_narrative_bot_enabled && promoted_from_tl1
-      # The event 'user_promoted' is sometimes called from inside a transaction.
-      # Use this helper to ensure the job is enqueued after commit to prevent
-      # any race conditions.
-      DB.after_commit do
-        Jobs.enqueue(:send_advanced_tutorial_message, user_id: args[:user_id])
-      end
+  self.on(:system_message_sent) do |args|
+    if args[:message_type] == 'tl2_promotion_message' && SiteSetting.discourse_narrative_bot_enabled
+
+      raw = I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template",
+                  discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
+                  reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
+
+      recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last.user
+
+      PostCreator.create!(
+        ::DiscourseNarrativeBot::Base.new.discobot_user,
+        title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
+        raw: raw,
+        skip_validations: true,
+        archetype: Archetype.private_message,
+        target_usernames: recipient.username
+      )
     end
   end
+
+  PostGuardian.class_eval do
+    alias_method :existing_can_create_post?, :can_create_post?
+
+    def can_create_post?(parent)
+      return true if SiteSetting.discourse_narrative_bot_enabled &&
+        parent.try(:subtype) == "system_message" &&
+        parent.try(:user) == ::DiscourseNarrativeBot::Base.new.discobot_user
+
+      existing_can_create_post?(parent)
+    end
+  end
+
 end

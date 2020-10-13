@@ -49,27 +49,5 @@ RSpec.describe SsoOverridesEmailValidator do
         end
       end
     end
-
-    describe "when 'enable sso' is false" do
-      before do
-        SiteSetting.enable_sso = false
-      end
-
-      describe 'when value is false' do
-        it 'should be valid' do
-          expect(subject.valid_value?('f')).to eq(true)
-        end
-      end
-
-      describe 'when value is true' do
-        it 'should not be valid' do
-          expect(subject.valid_value?('t')).to eq(false)
-
-          expect(subject.error_message).to eq(I18n.t(
-            'site_settings.errors.enable_sso_disabled'
-          ))
-        end
-      end
-    end
   end
 end

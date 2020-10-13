@@ -475,7 +475,7 @@ describe DiscourseTagging do
 
     describe "clean_tag" do
       it "downcases new tags if setting enabled" do
-        expect(DiscourseTagging.clean_tag("HeLlO".freeze)).to eq("hello")
+        expect(DiscourseTagging.clean_tag("HeLlO")).to eq("hello")
 
         SiteSetting.force_lowercase_tags = false
         expect(DiscourseTagging.clean_tag("HeLlO")).to eq("HeLlO")
@@ -514,6 +514,16 @@ describe DiscourseTagging do
         expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "can add an existing tag when both tags added to same topic" do
+      topic = Fabricate(:topic, tags: [tag1, tag2, tag3])
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect_same_tag_names(topic.reload.tags, [tag1, tag3])
       expect(tag2.reload.target_tag).to eq(tag1)
     end
 

@@ -36,5 +36,17 @@ describe CategoryHashtag do
       expect(Category.query_from_hashtag_slug("apple")).to eq(nil)
       expect(Category.query_from_hashtag_slug("apple#{CategoryHashtag::SEPARATOR}orange")).to eq(nil)
     end
+
+    context "multi-level categories" do
+      before do
+        SiteSetting.max_category_nesting = 3
+      end
+
+      it "should return the right result for a grand child category slug" do
+        category = Fabricate(:category, parent_category: child_category)
+        expect(Category.query_from_hashtag_slug("#{child_category.slug}#{CategoryHashtag::SEPARATOR}#{category.slug}"))
+          .to eq(category)
+      end
+    end
   end
 end

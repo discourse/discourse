@@ -13,7 +13,7 @@ Discourse::Application.configure do
   config.public_file_server.enabled = true
 
   # don't consider reqs local so we can properly handle exceptions like we do in prd
-  config.consider_all_requests_local       = false
+  config.consider_all_requests_local = false
 
   # disable caching
   config.action_controller.perform_caching = false

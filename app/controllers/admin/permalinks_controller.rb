@@ -15,6 +15,11 @@ class Admin::PermalinksController < Admin::AdminController
     params.require(:permalink_type)
     params.require(:permalink_type_value)
 
+    if params[:permalink_type] == "tag_name"
+      params[:permalink_type] = "tag_id"
+      params[:permalink_type_value] = Tag.find_by_name(params[:permalink_type_value])&.id
+    end
+
     permalink = Permalink.new(:url => params[:url], params[:permalink_type] => params[:permalink_type_value])
     if permalink.save
       render_serialized(permalink, PermalinkSerializer)

@@ -1,27 +1,30 @@
-#topic-footer-buttons {
-  .topic-notifications-button {
-    min-width: auto;
-    margin: 1em 0;
+.topic-notifications-button {
+  &.is-loading {
+    @include unselectable;
+    pointer-events: none;
 
-    .btn {
+    .d-icon-spinner {
       margin: 0;
     }
 
-    .reason {
-      display: inline;
-      line-height: $line-height-medium;
+    .selected-name .d-icon {
+      display: none;
+    }
+
+    .topic-notifications-options {
+      opacity: 0.5;
     }
   }
 }
 
-.topic-notifications-button .topic-notifications-options {
-  min-width: auto;
-}
-
-.topic-notifications-button {
-  margin: 0;
-
-  .topic-notifications-options {
-    display: inline-flex;
+// This is a weird fix for a weird issue in iOS/iPadOS, the browser freezes
+// when changing the notification level while in the fullscreen topic footer.
+// This prevents the selected option icon from being hidden while saving,
+// and somehow that makes Safari happy.
+.timeline-fullscreen {
+  .topic-notifications-button.is-loading {
+    .selected-name .d-icon {
+      display: inline-flex;
+    }
   }
 }

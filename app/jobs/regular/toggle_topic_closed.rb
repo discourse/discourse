@@ -6,17 +6,18 @@ module Jobs
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])
       state = !!args[:state]
 
-      if topic_timer.blank? ||
-         topic_timer.execute_at > Time.zone.now ||
-         (topic = topic_timer.topic).blank? ||
-         topic.closed == state
+      if topic_timer.blank? || topic_timer.execute_at > Time.zone.now
+        return
+      end
 
+      if (topic = topic_timer.topic).blank? || topic.closed == state
+        topic_timer.destroy!
         return
       end
 
       user = topic_timer.user
 
-      if Guardian.new(user).can_close?(topic)
+      if Guardian.new(user).can_close_topic?(topic)
         if state == false && topic.auto_close_threshold_reached?
           topic.set_or_create_timer(
             TopicTimer.types[:open],
@@ -28,6 +29,13 @@ module Jobs
         end
 
         topic.inherit_auto_close_from_category if state == false
+      else
+        topic_timer.destroy!
+        topic.reload
+
+        if topic_timer.based_on_last_post
+          topic.inherit_auto_close_from_category
+        end
       end
     end
   end

@@ -153,14 +153,41 @@ describe User do
     let(:user) { Fabricate(:user) }
 
     it 'enqueues the system message' do
-      Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_user')
-      user.enqueue_welcome_message('welcome_user')
+      expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
+        user.enqueue_welcome_message('welcome_user')
+      end
     end
 
     it "doesn't enqueue the system message when the site settings disable it" do
       SiteSetting.send_welcome_message = false
-      Jobs.expects(:enqueue).with(:send_system_message, user_id: user.id, message_type: 'welcome_user').never
-      user.enqueue_welcome_message('welcome_user')
+
+      expect_not_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_user' }) do
+        user.enqueue_welcome_message('welcome_user')
+      end
+    end
+  end
+
+  context 'enqueue_staff_welcome_message' do
+    let!(:first_admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+
+    it 'enqueues message for admin' do
+      expect {
+        user.grant_admin!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
+    end
+
+    it 'enqueues message for moderator' do
+      expect {
+        user.grant_moderation!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
+    end
+
+    it 'skips the message if already an admin' do
+      user.update(admin: true)
+      expect {
+        user.grant_admin!
+      }.to change { Jobs::SendSystemMessage.jobs.count }.by 0
     end
   end
 
@@ -728,108 +755,108 @@ describe User do
       expect(user).to be_valid
     end
 
-    it 'should reject some emails based on the email_domains_blacklist site setting' do
-      SiteSetting.email_domains_blacklist = 'mailinator.com'
+    it 'should reject some emails based on the blocked_email_domains site setting' do
+      SiteSetting.blocked_email_domains = 'mailinator.com'
       expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
       expect(Fabricate.build(:user, email: 'mailinator@gmail.com')).to be_valid
     end
 
-    it 'should reject some emails based on the email_domains_blacklist site setting' do
-      SiteSetting.email_domains_blacklist = 'mailinator.com|trashmail.net'
+    it 'should reject some emails based on the blocked_email_domains site setting' do
+      SiteSetting.blocked_email_domains = 'mailinator.com|trashmail.net'
       expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
       expect(Fabricate.build(:user, email: 'notgood@trashmail.net')).not_to be_valid
       expect(Fabricate.build(:user, email: 'mailinator.com@gmail.com')).to be_valid
     end
 
     it 'should not reject partial matches' do
-      SiteSetting.email_domains_blacklist = 'mail.com'
+      SiteSetting.blocked_email_domains = 'mail.com'
       expect(Fabricate.build(:user, email: 'mailinator@gmail.com')).to be_valid
     end
 
-    it 'should reject some emails based on the email_domains_blacklist site setting ignoring case' do
-      SiteSetting.email_domains_blacklist = 'trashmail.net'
+    it 'should reject some emails based on the blocked_email_domains site setting ignoring case' do
+      SiteSetting.blocked_email_domains = 'trashmail.net'
       expect(Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET')).not_to be_valid
     end
 
-    it 'should reject emails based on the email_domains_blacklist site setting matching subdomain' do
-      SiteSetting.email_domains_blacklist = 'domain.com'
+    it 'should reject emails based on the blocked_email_domains site setting matching subdomain' do
+      SiteSetting.blocked_email_domains = 'domain.com'
       expect(Fabricate.build(:user, email: 'notgood@sub.domain.com')).not_to be_valid
     end
 
-    it 'skips the blacklist if skip_email_validation is set' do
-      SiteSetting.email_domains_blacklist = 'domain.com'
+    it 'skips the blocklist if skip_email_validation is set' do
+      SiteSetting.blocked_email_domains = 'domain.com'
       user = Fabricate.build(:user, email: 'notgood@sub.domain.com')
       user.skip_email_validation = true
       expect(user).to be_valid
     end
 
-    it 'blacklist should not reject developer emails' do
+    it 'blocklist should not reject developer emails' do
       Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
-      SiteSetting.email_domains_blacklist = 'discourse.org'
+      SiteSetting.blocked_email_domains = 'discourse.org'
       expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
     end
 
     it 'should not interpret a period as a wildcard' do
-      SiteSetting.email_domains_blacklist = 'trashmail.net'
+      SiteSetting.blocked_email_domains = 'trashmail.net'
       expect(Fabricate.build(:user, email: 'good@trashmailinet.com')).to be_valid
     end
 
     it 'should not be used to validate existing records' do
-      u = Fabricate(:user, email: 'in_before_blacklisted@fakemail.com')
-      SiteSetting.email_domains_blacklist = 'fakemail.com'
+      u = Fabricate(:user, email: 'in_before_blocklisted@fakemail.com')
+      SiteSetting.blocked_email_domains = 'fakemail.com'
       expect(u).to be_valid
     end
 
     it 'should be used when email is being changed' do
-      SiteSetting.email_domains_blacklist = 'mailinator.com'
+      SiteSetting.blocked_email_domains = 'mailinator.com'
       u = Fabricate(:user, email: 'good@gmail.com')
       u.email = 'nope@mailinator.com'
       expect(u).not_to be_valid
     end
 
-    it 'whitelist should reject some emails based on the email_domains_whitelist site setting' do
-      SiteSetting.email_domains_whitelist = 'vaynermedia.com'
+    it 'allowlist should reject some emails based on the allowed_email_domains site setting' do
+      SiteSetting.allowed_email_domains = 'vaynermedia.com'
       user = Fabricate.build(:user, email: 'notgood@mailinator.com')
       expect(user).not_to be_valid
       expect(user.errors.messages[:primary_email]).to include(I18n.t('user.email.not_allowed'))
       expect(Fabricate.build(:user, email: 'sbauch@vaynermedia.com')).to be_valid
     end
 
-    it 'should reject some emails based on the email_domains_whitelist site setting when whitelisting multiple domains' do
-      SiteSetting.email_domains_whitelist = 'vaynermedia.com|gmail.com'
+    it 'should reject some emails based on the allowed_email_domains site setting when allowlisting multiple domains' do
+      SiteSetting.allowed_email_domains = 'vaynermedia.com|gmail.com'
       expect(Fabricate.build(:user, email: 'notgood@mailinator.com')).not_to be_valid
       expect(Fabricate.build(:user, email: 'notgood@trashmail.net')).not_to be_valid
       expect(Fabricate.build(:user, email: 'mailinator.com@gmail.com')).to be_valid
       expect(Fabricate.build(:user, email: 'mailinator.com@vaynermedia.com')).to be_valid
     end
 
-    it 'should accept some emails based on the email_domains_whitelist site setting ignoring case' do
-      SiteSetting.email_domains_whitelist = 'vaynermedia.com'
+    it 'should accept some emails based on the allowed_email_domains site setting ignoring case' do
+      SiteSetting.allowed_email_domains = 'vaynermedia.com'
       expect(Fabricate.build(:user, email: 'good@VAYNERMEDIA.COM')).to be_valid
     end
 
-    it 'whitelist should accept developer emails' do
+    it 'allowlist should accept developer emails' do
       Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
-      SiteSetting.email_domains_whitelist = 'awesome.org'
+      SiteSetting.allowed_email_domains = 'awesome.org'
       expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
     end
 
-    it 'email whitelist should not be used to validate existing records' do
-      u = Fabricate(:user, email: 'in_before_whitelisted@fakemail.com')
-      SiteSetting.email_domains_blacklist = 'vaynermedia.com'
+    it 'email allowlist should not be used to validate existing records' do
+      u = Fabricate(:user, email: 'in_before_allowlisted@fakemail.com')
+      SiteSetting.blocked_email_domains = 'vaynermedia.com'
       expect(u).to be_valid
     end
 
-    it 'email whitelist should be used when email is being changed' do
-      SiteSetting.email_domains_whitelist = 'vaynermedia.com'
+    it 'email allowlist should be used when email is being changed' do
+      SiteSetting.allowed_email_domains = 'vaynermedia.com'
       u = Fabricate(:user, email: 'good@vaynermedia.com')
       u.email = 'nope@mailinator.com'
       expect(u).not_to be_valid
     end
 
     it "doesn't validate email address for staged users" do
-      SiteSetting.email_domains_whitelist = "foo.com"
-      SiteSetting.email_domains_blacklist = "bar.com"
+      SiteSetting.allowed_email_domains = "foo.com"
+      SiteSetting.blocked_email_domains = "bar.com"
 
       user = Fabricate.build(:user, staged: true, email: "foo@bar.com")
 
@@ -873,6 +900,10 @@ describe User do
       SiteSetting.previous_visit_timeout_hours = 1
     end
 
+    after do
+      reset_last_seen_cache!(user)
+    end
+
     it "should act correctly" do
       expect(user.previous_visit_at).to eq(nil)
 
@@ -902,6 +933,10 @@ describe User do
     let(:user) { Fabricate(:user) }
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
+
+    after do
+      reset_last_seen_cache!(user)
+    end
 
     it "should update the last seen value" do
       expect(user.last_seen_at).to eq nil
@@ -976,7 +1011,9 @@ describe User do
 
     describe 'with no previous values' do
       after do
-        Discourse.redis.flushall
+        reset_last_seen_cache!(user)
+        unfreeze_time
+        reset_last_seen_cache!(user)
       end
 
       it "updates last_seen_at" do
@@ -1305,6 +1342,9 @@ describe User do
       let!(:user) { Fabricate(:user) }
       let!(:now) { Time.zone.now }
       before { user.update_last_seen!(now) }
+      after do
+        reset_last_seen_cache!(user)
+      end
 
       it "with existing UserVisit record, increments the posts_read value" do
         expect {
@@ -1396,9 +1436,9 @@ describe User do
 
       user = Fabricate(:user)
 
-      Jobs.expects(:enqueue).with(:update_gravatar, anything)
-
-      user.refresh_avatar
+      expect_enqueued_with(job: :update_gravatar, args: { user_id: user.id }) do
+        user.refresh_avatar
+      end
     end
   end
 
@@ -1565,20 +1605,15 @@ describe User do
 
     describe '#number_of_rejected_posts' do
       it 'counts rejected posts' do
-        post = Fabricate(:post, user: user)
-
-        Fabricate(:reviewable_queued_post, target: post, status: Reviewable.statuses[:rejected])
+        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:rejected])
 
         expect(user.number_of_rejected_posts).to eq(1)
       end
 
       it 'ignore non-rejected posts' do
-        post = Fabricate(:post, user: user)
-
-        Fabricate(:reviewable_queued_post, target: post, status: Reviewable.statuses[:approved])
+        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:approved])
 
         expect(user.number_of_rejected_posts).to eq(0)
-
       end
     end
   end
@@ -1610,6 +1645,7 @@ describe User do
     fab!(:category1) { Fabricate(:category) }
     fab!(:category2) { Fabricate(:category) }
     fab!(:category3) { Fabricate(:category) }
+    fab!(:category4) { Fabricate(:category) }
 
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
@@ -1623,6 +1659,7 @@ describe User do
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_enable_quoting = false
       SiteSetting.default_other_dynamic_favicon = true
+      SiteSetting.default_other_skip_new_user_tips = true
 
       SiteSetting.default_topics_automatic_unpin = false
 
@@ -1630,6 +1667,7 @@ describe User do
       SiteSetting.default_categories_tracking = category1.id.to_s
       SiteSetting.default_categories_muted = category2.id.to_s
       SiteSetting.default_categories_watching_first_post = category3.id.to_s
+      SiteSetting.default_categories_regular = category4.id.to_s
     end
 
     it "has overriden preferences" do
@@ -1642,6 +1680,7 @@ describe User do
       expect(options.external_links_in_new_tab).to eq(true)
       expect(options.enable_quoting).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
+      expect(options.skip_new_user_tips).to eq(true)
       expect(options.automatically_unpin_topics).to eq(false)
       expect(options.new_topic_duration_minutes).to eq(-1)
       expect(options.auto_track_topics_after_msecs).to eq(0)
@@ -1651,6 +1690,7 @@ describe User do
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([category1.id])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([category2.id])
       expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([category3.id])
+      expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([category4.id])
     end
 
     it "does not set category preferences for staged users" do
@@ -1659,6 +1699,7 @@ describe User do
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([])
       expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([])
+      expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([])
     end
   end
 
@@ -1726,6 +1767,14 @@ describe User do
         expect(user.read_first_notification?).to eq(true)
       end
     end
+
+    describe 'when user skipped new user tips' do
+      it 'should return the right value' do
+        user.user_option.update!(skip_new_user_tips: true)
+
+        expect(user.read_first_notification?).to eq(true)
+      end
+    end
   end
 
   describe "#featured_user_badges" do
@@ -1779,7 +1828,7 @@ describe User do
   end
 
   describe '#publish_notifications_state' do
-    it 'should publish the right message' do
+    it 'should publish the right message sorted by ID desc' do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
 
@@ -1788,8 +1837,41 @@ describe User do
       end.first
 
       expect(message.data[:recent]).to eq([
-                                            [notification2.id, true], [notification.id, false]
-                                          ])
+        [notification2.id, true], [notification.id, false]
+      ])
+    end
+
+    it 'floats the unread high priority notifications to the top' do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+      notification3 = Fabricate(:notification, user: user, notification_type: Notification.types[:private_message])
+      notification4 = Fabricate(:notification, user: user, notification_type: Notification.types[:bookmark_reminder])
+
+      message = MessageBus.track_publish("/notification/#{user.id}") do
+        user.publish_notifications_state
+      end.first
+
+      expect(message.data[:recent]).to eq([
+        [notification4.id, false], [notification3.id, false],
+        [notification2.id, true], [notification.id, false]
+      ])
+    end
+
+    it "has the correct counts" do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user, read: true)
+      notification3 = Fabricate(:notification, user: user, notification_type: Notification.types[:private_message])
+      notification4 = Fabricate(:notification, user: user, notification_type: Notification.types[:bookmark_reminder])
+
+      message = MessageBus.track_publish("/notification/#{user.id}") do
+        user.publish_notifications_state
+      end.first
+
+      expect(message.data[:unread_notifications]).to eq(1)
+      # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
+      #       to be remonved in 2.5
+      expect(message.data[:unread_private_messages]).to eq(2)
+      expect(message.data[:unread_high_priority_notifications]).to eq(2)
     end
   end
 
@@ -1821,6 +1903,7 @@ describe User do
   end
 
   describe "#unread_notifications" do
+    fab!(:user) { Fabricate(:user) }
     before do
       User.max_unread_notifications = 3
     end
@@ -1830,54 +1913,57 @@ describe User do
     end
 
     it "limits to MAX_UNREAD_NOTIFICATIONS" do
-      user = Fabricate(:user)
-
       4.times do
         Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
       end
 
       expect(user.unread_notifications).to eq(3)
     end
+
+    it "does not include high priority notifications" do
+      Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: Notification.types[:private_message], read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: Notification.types[:bookmark_reminder], read: false, data: '{}')
+
+      expect(user.unread_notifications).to eq(1)
+    end
   end
 
-  describe "#unstage" do
-    let!(:staged_user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
-    let(:params) { { email: 'staged@account.com', active: true, username: 'unstaged1', name: 'Foo Bar' } }
+  describe "#unread_high_priority_notifications" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "only returns an unread count of PM and bookmark reminder notifications" do
+      Notification.create!(user_id: user.id, notification_type: 1, read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: Notification.types[:private_message], read: false, data: '{}')
+      Notification.create!(user_id: user.id, notification_type: Notification.types[:bookmark_reminder], read: false, data: '{}')
+
+      expect(user.unread_high_priority_notifications).to eq(2)
+    end
+  end
+
+  describe "#unstage!" do
+    let!(:user) { Fabricate(:staged, email: 'staged@account.com', active: true, username: 'staged1', name: 'Stage Name') }
 
     it "correctly unstages a user" do
-      user = User.unstage(params)
-
-      expect(user.id).to eq(staged_user.id)
-      expect(user.username).to eq('unstaged1')
-      expect(user.name).to eq('Foo Bar')
-      expect(user.active).to eq(false)
-      expect(user.email).to eq('staged@account.com')
+      user.unstage!
       expect(user.staged).to eq(false)
     end
 
-    it "returns nil when the user cannot be unstaged" do
-      Fabricate(:coding_horror)
-      expect(User.unstage(email: 'jeff@somewhere.com')).to be_nil
-      expect(User.unstage(email: 'no@account.com')).to be_nil
-    end
-
     it "removes all previous notifications during unstaging" do
-      Fabricate(:notification, user: staged_user)
-      Fabricate(:private_message_notification, user: staged_user)
-      staged_user.reload
+      Fabricate(:notification, user: user)
+      Fabricate(:private_message_notification, user: user)
+      expect(user.total_unread_notifications).to eq(2)
 
-      expect(staged_user.total_unread_notifications).to eq(2)
-      user = User.unstage(params)
+      user.unstage!
+      user.reload
       expect(user.total_unread_notifications).to eq(0)
       expect(user.staged).to eq(false)
     end
 
     it "triggers an event" do
-      unstaged_user = nil
-      event = DiscourseEvent.track_events { unstaged_user = User.unstage(params) }.first
-
+      event = DiscourseEvent.track_events { user.unstage! }.first
       expect(event[:event_name]).to eq(:user_unstaged)
-      expect(event[:params].first).to eq(unstaged_user)
+      expect(event[:params].first).to eq(user)
     end
   end
 
@@ -1964,8 +2050,8 @@ describe User do
     it "sets a random avatar when selectable avatars is enabled" do
       avatar1 = Fabricate(:upload)
       avatar2 = Fabricate(:upload)
+      SiteSetting.selectable_avatars = [avatar1, avatar2]
       SiteSetting.selectable_avatars_enabled = true
-      SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
 
       user = Fabricate(:user)
       expect(user.uploaded_avatar_id).not_to be(nil)
@@ -2155,6 +2241,7 @@ describe User do
       UserAction.create!(user_id: user.id, action_type: UserAction::LIKE)
       UserAction.create!(user_id: -1, action_type: UserAction::LIKE, target_user_id: user.id)
       UserAction.create!(user_id: -1, action_type: UserAction::LIKE, acting_user_id: user.id)
+      Developer.create!(user_id: user.id)
 
       user.reload
 
@@ -2164,6 +2251,7 @@ describe User do
       expect(UserAction.where(target_user_id: user.id).length).to eq(0)
       expect(UserAction.where(acting_user_id: user.id).length).to eq(0)
       expect(PostAction.with_deleted.where(user_id: user.id).length).to eq(0)
+      expect(Developer.where(user_id: user.id).length).to eq(0)
     end
   end
 
@@ -2322,6 +2410,75 @@ describe User do
 
       expect(user.recent_time_read).to eq(60)
       expect(user2.recent_time_read).to eq(50)
+    end
+  end
+
+  def reset_last_seen_cache!(user)
+    Discourse.redis.del("user:#{user.id}:#{Time.zone.now.to_date}")
+  end
+
+  describe ".encoded_username" do
+    it "doesn't encoded ASCII usernames" do
+      user = Fabricate(:user, username: "John")
+      expect(user.encoded_username).to eq("John")
+      expect(user.encoded_username(lower: true)).to eq("john")
+    end
+
+    it "encodes Unicode characters" do
+      SiteSetting.unicode_usernames = true
+      user = Fabricate(:user, username: "Löwe")
+      expect(user.encoded_username).to eq("L%C3%B6we")
+      expect(user.encoded_username(lower: true)).to eq("l%C3%B6we")
+    end
+  end
+
+  describe '#update_ip_address!' do
+    it 'updates ip_address correctly' do
+      expect do
+        user.update_ip_address!('127.0.0.1')
+      end.to change { user.reload.ip_address.to_s }.to('127.0.0.1')
+
+      expect do
+        user.update_ip_address!('127.0.0.1')
+      end.to_not change { user.reload.ip_address }
+    end
+
+    describe 'keeping old ip address' do
+      before do
+        SiteSetting.keep_old_ip_address_count = 2
+      end
+
+      it 'tracks old user record correctly' do
+        expect do
+          user.update_ip_address!('127.0.0.1')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(1)
+
+        freeze_time 10.minutes.from_now
+
+        expect do
+          user.update_ip_address!('0.0.0.0')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(1)
+
+        freeze_time 11.minutes.from_now
+
+        expect do
+          user.update_ip_address!('127.0.0.1')
+        end.to_not change { UserIpAddressHistory.where(user_id: user.id).count }
+
+        expect(UserIpAddressHistory.find_by(
+          user_id: user.id, ip_address: '127.0.0.1'
+        ).updated_at).to eq_time(Time.zone.now)
+
+        freeze_time 12.minutes.from_now
+
+        expect do
+          user.update_ip_address!('0.0.0.1')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(0)
+
+        expect(
+          UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)
+        ).to eq(['127.0.0.1', '0.0.0.1'])
+      end
     end
   end
 end

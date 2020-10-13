@@ -1,0 +1,50 @@
+<div class="container email-login clearfix">
+  <div class="pull-left col-image">
+    <img src={{lockImageUrl}} class="password-reset-img" alt={{i18n "email_login.emoji"}}>
+  </div>
+
+  <div class="pull-left col-form">
+    <form>
+      {{#if model.error}}
+        <div class="alert alert-error">
+          {{model.error}}
+        </div>
+      {{/if}}
+
+      {{#if model.can_login}}
+        {{#if secondFactorRequired }}
+          {{#if model.security_key_required }}
+            {{#security-key-form
+              allowedCredentialIds=model.allowed_credential_ids
+              challenge=model.security_key_challenge
+              showSecurityKey=model.security_key_required
+              showSecondFactor=false
+              secondFactorMethod=secondFactorMethod
+              otherMethodAllowed=secondFactorRequired
+              action=(action "authenticateSecurityKey")}}
+            {{/security-key-form}}
+          {{else}}
+            {{#second-factor-form
+              secondFactorMethod=secondFactorMethod
+              secondFactorToken=secondFactorToken
+              backupEnabled=model.backup_codes_enabled
+              isLogin=true}}
+              {{second-factor-input value=secondFactorToken secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+            {{/second-factor-form}}
+          {{/if}}
+        {{else}}
+          <h2>{{i18n "email_login.confirm_title" site_name=siteSettings.title}}</h2>
+          <p>{{i18n "email_login.logging_in_as" email=model.token_email}}</p>
+        {{/if}}
+
+        {{#unless model.security_key_required }}
+          {{d-button
+            label="email_login.confirm_button"
+            action=(action "finishLogin")
+            type="submit"
+            class="btn-primary"}}
+        {{/unless}}
+      {{/if}}
+    </form>
+  </div>
+</div>

@@ -5,6 +5,7 @@ module TopicGuardian
 
   def can_remove_allowed_users?(topic, target_user = nil)
     is_staff? ||
+    (topic.user == @user && @user.has_trust_level?(TrustLevel[2])) ||
     (
       topic.allowed_users.count > 1 &&
       topic.user != target_user &&
@@ -16,10 +17,7 @@ module TopicGuardian
     return false if anonymous? || topic.nil?
     return true if is_staff?
 
-    SiteSetting.enable_category_group_review? &&
-      topic.category.present? &&
-      topic.category.reviewable_by_group_id.present? &&
-      GroupUser.where(group_id: topic.category.reviewable_by_group_id, user_id: user.id).exists?
+    is_category_group_moderator?(topic.category)
   end
 
   def can_create_shared_draft?
@@ -28,6 +26,10 @@ module TopicGuardian
 
   def can_create_whisper?
     is_staff? && SiteSetting.enable_whispers?
+  end
+
+  def can_see_whispers?(_topic)
+    is_staff?
   end
 
   def can_publish_topic?(topic, category)
@@ -63,7 +65,7 @@ module TopicGuardian
     return false if topic.trashed?
     return true if is_admin?
 
-    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator?
+    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator? || can_perform_action_available_to_group_moderators?(topic)
 
     (!(topic.closed? || topic.archived?) || trusted) && can_create_post?(topic)
   end
@@ -72,6 +74,7 @@ module TopicGuardian
   def can_edit_topic?(topic)
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
     return false unless can_see?(topic)
+    return false if topic.first_post&.locked? && !is_staff?
 
     return true if is_admin?
     return true if is_moderator? && can_create_post?(topic)
@@ -198,4 +201,22 @@ module TopicGuardian
 
     false
   end
+
+  def can_perform_action_available_to_group_moderators?(topic)
+    return false if anonymous? || topic.nil?
+    return true if is_staff?
+    return true if @user.has_trust_level?(TrustLevel[4])
+
+    is_category_group_moderator?(topic.category)
+  end
+  alias :can_archive_topic? :can_perform_action_available_to_group_moderators?
+  alias :can_close_topic? :can_perform_action_available_to_group_moderators?
+  alias :can_split_merge_topic? :can_perform_action_available_to_group_moderators?
+  alias :can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
+
+  def can_move_posts?(topic)
+    return false if is_silenced?
+    can_perform_action_available_to_group_moderators?(topic)
+  end
+
 end

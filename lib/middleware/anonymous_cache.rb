@@ -3,6 +3,7 @@
 require_dependency "mobile_detection"
 require_dependency "crawler_detection"
 require_dependency "guardian"
+require_dependency "http_language_parser"
 
 module Middleware
   class AnonymousCache
@@ -13,7 +14,8 @@ module Middleware
         c: 'key_is_crawler?',
         b: 'key_has_brotli?',
         t: 'key_cache_theme_ids',
-        ca: 'key_compress_anon'
+        ca: 'key_compress_anon',
+        l: 'key_locale'
       }
     end
 
@@ -89,6 +91,14 @@ module Middleware
         @has_brotli == :true
       end
 
+      def key_locale
+        if SiteSetting.set_locale_from_accept_language_header
+          HttpLanguageParser.parse(@env["HTTP_ACCEPT_LANGUAGE"])
+        else
+          "" # No need to key, it is the same for all anon users
+        end
+      end
+
       def is_crawler?
         @is_crawler ||=
           begin
@@ -107,7 +117,7 @@ module Middleware
       def cache_key
         return @cache_key if defined?(@cache_key)
 
-        @cache_key = +"ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
+        @cache_key = +"ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env[Rack::RACK_URL_SCHEME]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}"
         @cache_key << AnonymousCache.build_cache_key(self)
         @cache_key
       end
@@ -297,7 +307,15 @@ module Middleware
       @app = app
     end
 
+    PAYLOAD_INVALID_REQUEST_METHODS = ["GET", "HEAD"]
+
     def call(env)
+      if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
+        env[Rack::RACK_INPUT].size > 0
+
+        return [413, {}, []]
+      end
+
       helper = Helper.new(env)
       force_anon = false
 
@@ -309,6 +327,24 @@ module Middleware
       if helper.should_force_anonymous?
         force_anon = env["DISCOURSE_FORCE_ANON"] = true
         helper.force_anonymous!
+      end
+
+      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") && (queue_time = env["REQUEST_QUEUE_SECONDS"])
+        max_time = GlobalSetting.background_requests_max_queue_length.to_f
+        if max_time > 0 && queue_time.to_f > max_time
+          return [
+            429,
+            {
+              "content-type" => "application/json; charset=utf-8"
+            },
+            [{
+              errors: I18n.t("rate_limiter.slow_down"),
+              extras: {
+                wait_seconds: 5 + (5 * rand).round(2)
+              }
+            }.to_json]
+          ]
+        end
       end
 
       result =

@@ -1,0 +1,22 @@
+<div class="form-horizontal bookmark-search-form">
+  {{input type="text"
+          value=searchTerm
+          placeholder=(i18n "bookmarks.search_placeholder")
+          enter=(action "search")
+          id="bookmark-search" autocomplete="discourse"}}
+  {{d-button
+      class="btn-primary"
+      action=(action "search")
+      type="button"
+      icon="search"}}
+</div>
+{{#if noContent}}
+  <div class="alert alert-info">{{noResultsHelpMessage}}</div>
+{{else}}
+  {{bookmark-list
+    loadMore=(action "loadMore")
+    reload=(action "reload")
+    loading=loading
+    loadingMore=loadingMore
+    content=content}}
+{{/if}}

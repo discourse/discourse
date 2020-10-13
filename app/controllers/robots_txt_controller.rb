@@ -10,28 +10,13 @@ class RobotsTxtController < ApplicationController
   DISALLOWED_PATHS ||= %w{
     /auth/
     /assets/browser-update*.js
-    /users/
-    /u/
-    /my/
-    /badges/
-    /search
-    /search/
-    /tags
-    /tags/
     /email/
     /session
     /session/
-    /admin
-    /admin/
     /user-api-key
     /user-api-key/
     /*?api_key*
     /*?*api_key*
-    /groups
-    /groups/
-    /t/*/*.rss
-    /tags/*.rss
-    /c/*.rss
   }
 
   def index
@@ -60,23 +45,23 @@ class RobotsTxtController < ApplicationController
   end
 
   def self.fetch_default_robots_info
-    deny_paths = DISALLOWED_PATHS.map { |p| Discourse.base_uri + p }
-    deny_all = [ "#{Discourse.base_uri}/" ]
+    deny_paths = DISALLOWED_PATHS.map { |p| Discourse.base_path + p }
+    deny_all = [ "#{Discourse.base_path}/" ]
 
     result = {
       header: "# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file",
       agents: []
     }
 
-    if SiteSetting.whitelisted_crawler_user_agents.present?
-      SiteSetting.whitelisted_crawler_user_agents.split('|').each do |agent|
+    if SiteSetting.allowed_crawler_user_agents.present?
+      SiteSetting.allowed_crawler_user_agents.split('|').each do |agent|
         result[:agents] << { name: agent, disallow: deny_paths }
       end
 
       result[:agents] << { name: '*', disallow: deny_all }
-    elsif SiteSetting.blacklisted_crawler_user_agents.present?
+    elsif SiteSetting.blocked_crawler_user_agents.present?
       result[:agents] << { name: '*', disallow: deny_paths }
-      SiteSetting.blacklisted_crawler_user_agents.split('|').each do |agent|
+      SiteSetting.blocked_crawler_user_agents.split('|').each do |agent|
         result[:agents] << { name: agent, disallow: deny_all }
       end
     else

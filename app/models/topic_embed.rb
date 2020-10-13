@@ -53,12 +53,18 @@ class TopicEmbed < ActiveRecord::Base
           Post.cook_methods[:raw_html]
         end
 
-        creator = PostCreator.new(user,
-                                  title: title,
-                                  raw: absolutize_urls(url, contents),
-                                  skip_validations: true,
-                                  cook_method: cook_method,
-                                  category: eh.try(:category_id))
+        create_args = {
+          title: title,
+          raw: absolutize_urls(url, contents),
+          skip_validations: true,
+          cook_method: cook_method,
+          category: eh.try(:category_id)
+        }
+        if SiteSetting.embed_unlisted?
+          create_args[:visible] = false
+        end
+
+        creator = PostCreator.new(user, create_args)
         post = creator.create
         if post.present?
           TopicEmbed.create!(topic_id: post.topic_id,
@@ -85,13 +91,11 @@ class TopicEmbed < ActiveRecord::Base
           post.reload
         end
 
-        if content_sha1 != embed.content_sha1
-          post.revise(
-            user,
-            { raw: absolutize_urls(url, contents) },
-            skip_validations: true,
-            bypass_rate_limiter: true
-          )
+        if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title)
+          changes = { raw: absolutize_urls(url, contents) }
+          changes[:title] = title if title.present?
+
+          post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)
           embed.update!(content_sha1: content_sha1)
         end
       end
@@ -105,15 +109,24 @@ class TopicEmbed < ActiveRecord::Base
 
     url = UrlHelper.escape_uri(url)
     original_uri = URI.parse(url)
+    fd = FinalDestination.new(
+      url,
+      validate_uri: true,
+      max_redirects: 5
+    )
+
+    url = fd.resolve
+    return if url.blank?
+
     opts = {
       tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
       attributes: %w[href src class],
       remove_empty_nodes: false
     }
 
-    opts[:whitelist] = SiteSetting.embed_whitelist_selector if SiteSetting.embed_whitelist_selector.present?
-    opts[:blacklist] = SiteSetting.embed_blacklist_selector if SiteSetting.embed_blacklist_selector.present?
-    embed_classname_whitelist = SiteSetting.embed_classname_whitelist if SiteSetting.embed_classname_whitelist.present?
+    opts[:whitelist] = SiteSetting.allowed_embed_selectors if SiteSetting.allowed_embed_selectors.present?
+    opts[:blacklist] = SiteSetting.blocked_embed_selectors if SiteSetting.blocked_embed_selectors.present?
+    allowed_embed_classnames = SiteSetting.allowed_embed_classnames if SiteSetting.allowed_embed_classnames.present?
 
     response = FetchResponse.new
     begin
@@ -122,7 +135,7 @@ class TopicEmbed < ActiveRecord::Base
       return
     end
 
-    raw_doc = Nokogiri::HTML(html)
+    raw_doc = Nokogiri::HTML5(html)
     auth_element = raw_doc.at('meta[@name="author"]')
     if auth_element.present?
       response.author = User.where(username_lower: auth_element[:content].strip).first
@@ -138,7 +151,7 @@ class TopicEmbed < ActiveRecord::Base
       title.strip!
     end
     response.title = title
-    doc = Nokogiri::HTML(read_doc.content)
+    doc = Nokogiri::HTML5(read_doc.content)
 
     tags = { 'img' => 'src', 'script' => 'src', 'a' => 'href' }
     doc.search(tags.keys.join(',')).each do |node|
@@ -156,8 +169,8 @@ class TopicEmbed < ActiveRecord::Base
           # If there is a mistyped URL, just do nothing
         end
       end
-      # only allow classes in the whitelist
-      allowed_classes = if embed_classname_whitelist.blank? then [] else embed_classname_whitelist.split(/[ ,]+/i) end
+      # only allow classes in the allowlist
+      allowed_classes = if allowed_embed_classnames.blank? then [] else allowed_embed_classnames.split(/[ ,]+/i) end
       doc.search('[class]:not([class=""])').each do |classnode|
         classes = classnode[:class].split(' ').select { |classname| allowed_classes.include?(classname) }
         if classes.length === 0
@@ -192,9 +205,9 @@ class TopicEmbed < ActiveRecord::Base
       return contents
     end
     prefix = "#{uri.scheme}://#{uri.host}"
-    prefix << ":#{uri.port}" if uri.port != 80 && uri.port != 443
+    prefix += ":#{uri.port}" if uri.port != 80 && uri.port != 443
 
-    fragment = Nokogiri::HTML.fragment("<div>#{contents}</div>")
+    fragment = Nokogiri::HTML5.fragment("<div>#{contents}</div>")
     fragment.css('a').each do |a|
       href = a['href']
       if href.present? && href.start_with?('/')
@@ -216,7 +229,7 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.first_paragraph_from(html)
-    doc = Nokogiri::HTML(html)
+    doc = Nokogiri::HTML5(html)
 
     result = +""
     doc.css('p').each do |p|

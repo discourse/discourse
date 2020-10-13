@@ -8,7 +8,6 @@ describe Jobs::Tl3Promotions do
     user.create_user_stat if user.user_stat.nil?
     user.user_stat.update!(
       days_visited: 1000,
-      topic_reply_count: 1000,
       topics_entered: 1000,
       posts_read_count: 1000,
       likes_given: 1000,
@@ -132,6 +131,15 @@ describe Jobs::Tl3Promotions do
       expect(user).to be_on_tl3_grace_period
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
+      run_job
+      expect(user.reload.trust_level).to eq(TrustLevel[3])
+    end
+
+    it "doesn't demote if default trust level for all users is 3" do
+      SiteSetting.default_trust_level = 3
+      user = Fabricate(:user, trust_level: TrustLevel[3], created_at: 1.year.ago)
+      expect(user).to_not be_on_tl3_grace_period
+      TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       run_job
       expect(user.reload.trust_level).to eq(TrustLevel[3])
     end

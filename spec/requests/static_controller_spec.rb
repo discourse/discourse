@@ -52,9 +52,7 @@ describe StaticController do
       end
 
       before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_access_key_id = 'X'
-        SiteSetting.s3_secret_access_key = 'X'
+        setup_s3
       end
 
       it 'can proxy a favicon correctly' do
@@ -316,7 +314,7 @@ describe StaticController do
       it "redirects to the root" do
         post "/login.json", params: { redirect: ["/foo"] }
         expect(response.status).to eq(400)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["errors"]).to be_present
         expect(json["errors"]).to include(
           I18n.t("invalid_params", message: "redirect")

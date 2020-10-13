@@ -7,6 +7,10 @@ plugins:
   discourse_narrative_bot_welcome_post_type:
     default: 'new_user_track'
     enum: 'DiscourseNarrativeBot::WelcomePostTypeSiteSetting'
+  discourse_narrative_bot_skip_tutorials:
+    default: ''
+    type: list
+    hidden: true
   discourse_narrative_bot_welcome_post_delay:
     default: 0
   discourse_narrative_bot_ignored_usernames:

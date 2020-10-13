@@ -8,6 +8,7 @@
 # => SKIP_TESTS                set to 1 to skip all tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
+# => SKIP_INSTALL_PLUGINS      comma seperated list of plugins you want to skip installing
 # => INSTALL_OFFICIAL_PLUGINS  set to 1 to install all core plugins before running tests
 # => RUBY_ONLY                 set to 1 to skip all qunit tests
 # => JS_ONLY                   set to 1 to skip all rspec tests
@@ -66,24 +67,30 @@ task 'docker:test' do
 
       if ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
-        @good &&= run_or_fail("yarn eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
+        @good &&= run_or_fail("bundle exec ruby script/i18n_lint.rb plugins/#{ENV["SINGLE_PLUGIN"]}/config/locales/{client,server}.en.yml")
+        @good &&= run_or_fail("yarn eslint --global I18n --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/#{ENV['SINGLE_PLUGIN']}")
 
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
-        @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6")
+        @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.{js,es6}")
       else
         @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("yarn eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("yarn eslint --ext .es6 app/assets/javascripts test/javascripts plugins") unless ENV["SKIP_PLUGINS"]
+        @good &&= run_or_fail("yarn eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
+
+        # TODO: remove --global I18n once plugins can be updated
+        @good &&= run_or_fail("yarn eslint --global I18n --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins") unless ENV["SKIP_PLUGINS"]
+
+        @good &&= run_or_fail('bundle exec ruby script/i18n_lint.rb "config/locales/{client,server}.en.yml"') unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail('bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"') unless ENV["SKIP_PLUGINS"]
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
-          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"')
+          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.{js,es6}"')
         end
 
         unless ENV["SKIP_PLUGINS"]
           puts "Listing prettier offenses in plugins:"
-          @good &&= run_or_fail('yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"')
+          @good &&= run_or_fail('yarn prettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"')
         end
       end
       puts "travis_fold:end:lint" if ENV["TRAVIS"]
@@ -97,7 +104,7 @@ task 'docker:test' do
       puts "Starting background redis"
       @redis_pid = Process.spawn('redis-server --dir tmp/test_data/redis')
 
-      @postgres_bin = "/usr/lib/postgresql/10/bin/"
+      @postgres_bin = "/usr/lib/postgresql/#{ENV['PG_MAJOR']}/bin/"
       `#{@postgres_bin}initdb -D tmp/test_data/pg`
 
       # speed up db, never do this in production mmmmk
@@ -125,6 +132,13 @@ task 'docker:test' do
 
       if ENV["UPDATE_ALL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:update_all")
+      end
+
+      if skip_install = ENV["SKIP_INSTALL_PLUGINS"]
+        skip_install.split(",").map(&:strip).each do |plugin|
+          puts "[SKIP_INSTALL_PLUGINS] Removing #{plugin}"
+          `rm -fr plugins/#{plugin}`
+        end
       end
 
       command_prefix =
@@ -182,7 +196,7 @@ task 'docker:test' do
           end
 
           if ENV['USE_TURBO']
-            @good &&= run_or_fail("bundle exec ./bin/turbo_rspec #{params.join(' ')}".strip)
+            @good &&= run_or_fail("bundle exec ./bin/turbo_rspec --verbose #{params.join(' ')}".strip)
           else
             @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
           end

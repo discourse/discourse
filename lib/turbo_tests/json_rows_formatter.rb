@@ -9,6 +9,7 @@ module TurboTests
       :example_failed,
       :example_passed,
       :example_pending,
+      :message,
       :seed
     )
 
@@ -92,6 +93,13 @@ module TurboTests
     def close(notification)
       output_row(
         type: :close,
+      )
+    end
+
+    def message(notification)
+      output_row(
+        type: :message,
+        message: notification.message
       )
     end
 

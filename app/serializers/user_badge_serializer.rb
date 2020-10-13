@@ -10,7 +10,7 @@ class UserBadgeSerializer < ApplicationSerializer
                :admin
   end
 
-  attributes :id, :granted_at, :count, :post_id, :post_number
+  attributes :id, :granted_at, :created_at, :count, :post_id, :post_number
 
   has_one :badge
   has_one :user, serializer: UserSerializer, root: :users

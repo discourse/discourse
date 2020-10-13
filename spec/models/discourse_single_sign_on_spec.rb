@@ -33,6 +33,7 @@ describe DiscourseSingleSignOn do
     sso.custom_fields["a"] = "Aa"
     sso.custom_fields["b.b"] = "B.b"
     sso.website = "https://www.discourse.org/"
+    sso.location = "Home"
     sso
   end
 
@@ -53,6 +54,7 @@ describe DiscourseSingleSignOn do
     expect(parsed.custom_fields["a"]).to eq "Aa"
     expect(parsed.custom_fields["b.b"]).to eq "B.b"
     expect(parsed.website).to eq sso.website
+    expect(parsed.location).to eq sso.location
   end
 
   it "can do round trip parsing correctly" do

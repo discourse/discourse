@@ -50,8 +50,8 @@ describe SpamRule::FlagSockpuppets do
       expect(described_class.new(post2).reply_is_from_sockpuppet?).to eq(true)
     end
 
-    it 'is false if the ip address is whitelisted' do
-      ScreenedIpAddress.stubs(:is_whitelisted?).with(user1.ip_address).returns(true)
+    it 'is false if the ip address is allowlisted' do
+      ScreenedIpAddress.stubs(:is_allowed?).with(user1.ip_address).returns(true)
       post2 = Fabricate(:post, user: Fabricate(:user, ip_address: user1.ip_address), topic: post1.topic)
       expect(described_class.new(post2).reply_is_from_sockpuppet?).to eq(false)
     end
@@ -149,6 +149,29 @@ describe SpamRule::FlagSockpuppets do
 
       expect(PostAction.where(user: system, post: post2, post_action_type_id: spam).exists?).to eq(true)
       expect(PostAction.where(user: system, post: post1, post_action_type_id: spam).exists?).to eq(false)
+    end
+
+    it "doesn't flag the first post if it was already rejected by staff before" do
+      flagged_post = Fabricate(
+        :reviewable_flagged_post,
+        target: post1, status: Reviewable.statuses[:rejected], target_created_by: post1.user
+      )
+
+      described_class.new(post2).perform
+
+      expect(flagged_post.reload.status).to eq(Reviewable.statuses[:rejected])
+    end
+
+    it "doesn't flag the post if another post of the same user was rejected by staff before" do
+      another_post = Fabricate(:post, user: user1)
+      flagged_post = Fabricate(
+        :reviewable_flagged_post,
+        target: another_post, status: Reviewable.statuses[:rejected], target_created_by: another_post.user
+      )
+
+      described_class.new(post2).perform
+
+      expect(ReviewableFlaggedPost.where(target_created_by: user1).count).to eq(1)
     end
   end
 end

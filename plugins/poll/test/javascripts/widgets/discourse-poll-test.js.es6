@@ -1,7 +1,62 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
-import { moduleForWidget, widgetTest } from "helpers/widget-test";
+import {
+  moduleForWidget,
+  widgetTest,
+} from "discourse/tests/helpers/widget-test";
 
-moduleForWidget("discourse-poll");
+let requests = 0;
+
+moduleForWidget("discourse-poll", {
+  pretend(server) {
+    server.put("/polls/vote", () => {
+      ++requests;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          poll: {
+            name: "poll",
+            type: "regular",
+            status: "open",
+            results: "always",
+            options: [
+              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+            ],
+            voters: 1,
+            chart_type: "bar",
+          },
+          vote: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      ];
+    });
+
+    server.put("/polls/vote", () => {
+      ++requests;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          poll: {
+            name: "poll",
+            type: "regular",
+            status: "open",
+            results: "always",
+            options: [
+              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+            ],
+            voters: 1,
+            chart_type: "bar",
+            groups: "foo",
+          },
+          vote: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      ];
+    });
+  },
+});
 
 const template = `{{mount-widget
                     widget="discourse-poll"
@@ -19,8 +74,8 @@ widgetTest("can vote", {
       post: EmberObject.create({
         id: 42,
         topic: {
-          archived: false
-        }
+          archived: false,
+        },
       }),
       poll: EmberObject.create({
         name: "poll",
@@ -29,48 +84,32 @@ widgetTest("can vote", {
         results: "always",
         options: [
           { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 }
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
         ],
         voters: 0,
-        chart_type: "bar"
+        chart_type: "bar",
       }),
       vote: [],
-      groupableUserFields: []
+      groupableUserFields: [],
     });
   },
 
   async test(assert) {
-    let requests = 0;
-
-    /* global server */
-    server.put("/polls/vote", () => {
-      ++requests;
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          poll: {
-            name: "poll",
-            type: "regular",
-            status: "open",
-            results: "always",
-            options: [
-              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 }
-            ],
-            voters: 1,
-            chart_type: "bar"
-          },
-          vote: ["1f972d1df351de3ce35a787c89faad29"]
-        }
-      ];
-    });
+    requests = 0;
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(requests, 1);
     assert.equal(find(".chosen").length, 1);
     assert.equal(find(".chosen").text(), "100%yes");
-  }
+    assert.equal(find(".toggle-results").text(), "Show vote");
+
+    await click(".toggle-results");
+    assert.equal(
+      find("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']").length,
+      1
+    );
+    assert.equal(find(".toggle-results").text(), "Show results");
+  },
 });
 
 widgetTest("cannot vote if not member of the right group", {
@@ -81,8 +120,8 @@ widgetTest("cannot vote if not member of the right group", {
       post: EmberObject.create({
         id: 42,
         topic: {
-          archived: false
-        }
+          archived: false,
+        },
       }),
       poll: EmberObject.create({
         name: "poll",
@@ -91,44 +130,19 @@ widgetTest("cannot vote if not member of the right group", {
         results: "always",
         options: [
           { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 }
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
         ],
         voters: 0,
         chart_type: "bar",
-        groups: "foo"
+        groups: "foo",
       }),
       vote: [],
-      groupableUserFields: []
+      groupableUserFields: [],
     });
   },
 
   async test(assert) {
-    let requests = 0;
-
-    /* global server */
-    server.put("/polls/vote", () => {
-      ++requests;
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          poll: {
-            name: "poll",
-            type: "regular",
-            status: "open",
-            results: "always",
-            options: [
-              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 }
-            ],
-            voters: 1,
-            chart_type: "bar",
-            groups: "foo"
-          },
-          vote: ["1f972d1df351de3ce35a787c89faad29"]
-        }
-      ];
-    });
+    requests = 0;
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(
@@ -137,5 +151,5 @@ widgetTest("cannot vote if not member of the right group", {
     );
     assert.equal(requests, 0);
     assert.equal(find(".chosen").length, 0);
-  }
+  },
 });

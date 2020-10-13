@@ -30,7 +30,12 @@ module DiscourseNarrativeBot
             next_opts = self.class::TRANSITION_TABLE.fetch(next_state)
             prerequisite = next_opts[:prerequisite]
 
-            break if !prerequisite || instance_eval(&prerequisite)
+            if (!prerequisite || instance_eval(&prerequisite)) && !(
+              SiteSetting.discourse_narrative_bot_skip_tutorials.present? &&
+              SiteSetting.discourse_narrative_bot_skip_tutorials.split("|").include?(next_state.to_s))
+
+              break
+            end
 
             [:next_state, :next_instructions].each do |key|
               opts[key] = next_opts[key]
@@ -74,7 +79,7 @@ module DiscourseNarrativeBot
               cancel_timeout_job(user)
 
               BadgeGranter.grant(
-                Badge.find_by(name: self.class::BADGE_NAME),
+                Badge.find_by(name: self.class.badge_name),
                 user
               )
 
@@ -179,7 +184,7 @@ module DiscourseNarrativeBot
     end
 
     def i18n_post_args(extra = {})
-      { base_uri: Discourse.base_uri }.merge(extra)
+      { base_uri: Discourse.base_path }.merge(extra)
     end
 
     def valid_topic?(topic_id)

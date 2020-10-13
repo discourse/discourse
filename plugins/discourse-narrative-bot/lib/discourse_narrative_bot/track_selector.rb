@@ -115,11 +115,10 @@ module DiscourseNarrativeBot
     end
 
     def selected_track(klass)
-      post_raw = @post.raw
       trigger = "#{self.class.reset_trigger} #{klass.reset_trigger}"
 
-      if post_raw.length < RESET_TRIGGER_EXACT_MATCH_LENGTH && @is_pm_to_bot
-        post_raw.match(Regexp.new("\\b\\W\?#{trigger}\\W\?\\b", 'i'))
+      if @post.raw.length < RESET_TRIGGER_EXACT_MATCH_LENGTH && @is_pm_to_bot
+        @post.raw.match(Regexp.new("\\b\\W\?#{trigger}\\W\?\\b", 'i'))
       else
         match_trigger?(trigger)
       end
@@ -137,7 +136,7 @@ module DiscourseNarrativeBot
           help_message
         elsif hint
           message = I18n.t(self.class.i18n_key('random_mention.reply'),
-            discobot_username: self.discobot_user.username,
+            discobot_username: self.discobot_username,
             help_trigger: self.class.help_trigger
           )
 
@@ -165,17 +164,15 @@ module DiscourseNarrativeBot
     end
 
     def help_message
-      discobot_username = self.discobot_user.username
-
       message = I18n.t(
         self.class.i18n_key('random_mention.tracks'),
-        discobot_username: discobot_username,
+        discobot_username: self.discobot_username,
         reset_trigger: self.class.reset_trigger,
         tracks: [NewUserNarrative.reset_trigger, AdvancedUserNarrative.reset_trigger].join(', ')
       )
 
       message << "\n\n#{I18n.t(self.class.i18n_key('random_mention.bot_actions'),
-        discobot_username: discobot_username,
+        discobot_username: self.discobot_username,
         dice_trigger: self.class.dice_trigger,
         quote_trigger: self.class.quote_trigger,
         quote_sample: DiscourseNarrativeBot::QuoteGenerator.generate(@user),
@@ -219,16 +216,22 @@ module DiscourseNarrativeBot
 
     def skip_track?
       if @is_pm_to_bot
-        post_raw = @post.raw
-        post_raw.match(/((^@#{self.discobot_user.username} #{self.class.skip_trigger})|(^#{self.class.skip_trigger}$))/i)
+        @post.raw.match(/((^@#{self.discobot_username} #{self.class.skip_trigger})|(^#{self.class.skip_trigger}$))/i)
       else
         false
       end
     end
 
+    @@cooked_triggers = {}
+
+    def cook(trigger)
+      @@cooked_triggers[trigger] ||= PrettyText.cook("@#{self.discobot_username} #{trigger}")
+    end
+
     def match_trigger?(trigger)
-      discobot_username = self.discobot_user.username
-      regexp = Regexp.new("<a class=\"mention\".*>@#{discobot_username}</a> #{trigger}</p>", 'i')
+      # we remove the leading <p> to allow for trigger to be at the end of a paragraph
+      cooked_trigger = cook(trigger)[3..-1]
+      regexp = Regexp.new(cooked_trigger, 'i')
       match = @post.cooked.match(regexp)
 
       if @is_pm_to_bot
@@ -245,9 +248,7 @@ module DiscourseNarrativeBot
     end
 
     def bot_mentioned?
-      @bot_mentioned ||= PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(
-        self.discobot_user.username_lower
-      )
+      @bot_mentioned ||= PostAnalyzer.new(@post.raw, @post.topic_id).raw_mentions.include?(self.discobot_username)
     end
 
     def public_reply?

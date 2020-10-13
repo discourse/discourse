@@ -67,7 +67,13 @@ class PostAction < ActiveRecord::Base
     result = unscoped.where(post_action_type_id: post_action_type)
     result = result.where('post_actions.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
     result = result.where('post_actions.created_at <= ?', opts[:end_date]) if opts[:end_date]
-    result = result.joins(post: :topic).merge(Topic.in_category_and_subcategories(opts[:category_id])) if opts[:category_id]
+    if opts[:category_id]
+      if opts[:include_subcategories]
+        result = result.joins(post: :topic).where('topics.category_id IN (?)', Category.subcategory_ids(opts[:category_id]))
+      else
+        result = result.joins(post: :topic).where('topics.category_id = ?', opts[:category_id])
+      end
+    end
     result.group('date(post_actions.created_at)')
       .order('date(post_actions.created_at)')
       .count
@@ -218,7 +224,7 @@ class PostAction < ActiveRecord::Base
     topic_id = Post.with_deleted.where(id: post_id).pluck_first(:topic_id)
 
     # topic_user
-    if [:like, :bookmark].include? post_action_type_key
+    if post_action_type_key == :like
       TopicUser.update_post_action_cache(user_id: user_id,
                                          topic_id: topic_id,
                                          post_action_type: post_action_type_key)

@@ -4,19 +4,13 @@ module SiteSettings; end
 
 module SiteSettings::DeprecatedSettings
   SETTINGS = [
-    ['logo_url', 'logo', false, '2.3'],
-    ['logo_small_url', 'logo_small', false, '2.3'],
-    ['digest_logo_url', 'digest_logo', false, '2.3'],
-    ['mobile_logo_url', 'mobile_logo', false, '2.3'],
-    ['large_icon_url', 'large_icon', false, '2.3'],
-    ['favicon_url', 'favicon', false, '2.3'],
-    ['apple_touch_icon_url', 'apple_touch_icon', false, '2.3'],
-    ['default_opengraph_image_url', 'opengraph_image', false, '2.3'],
-    ['twitter_summary_large_image_url', 'twitter_summary_large_image', false, '2.3'],
-    ['push_notifications_icon_url', 'push_notifications_icon', false, '2.3'],
     ['show_email_on_profile', 'moderators_view_emails', true, '2.4'],
     ['allow_moderators_to_create_categories', 'moderators_create_categories', true, '2.4'],
-    ['disable_edit_notifications', 'disable_system_edit_notifications', true, '2.4']
+    ['disable_edit_notifications', 'disable_system_edit_notifications', true, '2.4'],
+    ['enable_category_group_review', 'enable_category_group_moderation', true, '2.7'],
+    ['newuser_max_images', 'newuser_max_embedded_media', true, '2.7'],
+    ['min_trust_to_post_images', 'min_trust_to_post_embedded_media', true, '2.7'],
+    ['moderators_create_categories', 'moderators_manage_categories_and_groups', '2.7']
   ]
 
   def setup_deprecated_methods

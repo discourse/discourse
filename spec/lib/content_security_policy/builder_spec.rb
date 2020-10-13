@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 describe ContentSecurityPolicy::Builder do
-  let(:builder) { described_class.new }
+  let(:builder) { described_class.new(base_url: Discourse.base_url) }
 
   describe '#<<' do
     it 'normalizes directive name' do

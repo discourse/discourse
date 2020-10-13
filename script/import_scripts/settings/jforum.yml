@@ -1,0 +1,33 @@
+database:
+  host: localhost
+  port: 3306
+  username: root
+  password: password
+  schema: db_name
+
+avatar_directory: /shared/import/avatar
+attachment_directory: /shared/import/upload
+
+# folder name of old forum in URL
+permalink_prefix: foo
+
+import_categories_as_tags: true
+
+additional_tags:
+  - old_category_name: !ruby/regexp '/something/'
+    tag_names:
+      - "Foo"
+      - "Bar"
+
+category_mappings:
+  - old_category_name: !ruby/regexp '/HIDDEN/'
+    category_id: 23
+
+custom_fields:
+  - name: "State"
+    column: "state_porvince"
+  - name: "Country"
+    column: "user_from"
+  - name: "Company"
+    column: "company_name"
+    alias: "company"

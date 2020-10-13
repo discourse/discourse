@@ -89,7 +89,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
   def message_for_autoclosed(locale_key)
     num_minutes =
       if @topic_status_update&.based_on_last_post
-        @topic_status_update.duration.hours
+        (@topic_status_update.duration || 0).hours
       elsif @topic_status_update&.created_at
         Time.zone.now - @topic_status_update.created_at
       else

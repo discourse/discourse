@@ -21,7 +21,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
 
   def posters
-    object.posters || []
+    object.posters || object.posters_summary || []
   end
 
   def op_like_count
@@ -88,7 +88,8 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def allowed_user_count
-    object.allowed_users.count
+    # Don't use count as it will result in a query
+    object.allowed_users.length
   end
 
   def include_allowed_user_count?

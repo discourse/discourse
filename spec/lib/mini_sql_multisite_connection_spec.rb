@@ -49,6 +49,19 @@ describe MiniSqlMultisiteConnection do
 
       expect(outputString).to eq("123")
     end
+
+    it "runs immediately if there is no transaction" do
+      outputString = "1"
+
+      DB.after_commit do
+        outputString += "2"
+      end
+
+      outputString += "3"
+
+      expect(outputString).to eq("123")
+    end
+
   end
 
 end

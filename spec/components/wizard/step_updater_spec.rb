@@ -167,6 +167,17 @@ describe Wizard::StepUpdater do
     end
   end
 
+  context "fonts step" do
+    it "updates fonts" do
+      updater = wizard.create_updater('fonts', body_font: 'open_sans', heading_font: 'oswald')
+      updater.update
+      expect(updater.success?).to eq(true)
+      expect(wizard.completed_steps?('fonts')).to eq(true)
+      expect(SiteSetting.base_font).to eq('open_sans')
+      expect(SiteSetting.heading_font).to eq('oswald')
+    end
+  end
+
   context "colors step" do
     context "with an existing color scheme" do
       fab!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }

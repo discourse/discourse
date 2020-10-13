@@ -31,16 +31,6 @@ WebHookEventType.seed do |b|
 end
 
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::FLAG
-  b.name = "flag"
-end
-
-WebHookEventType.seed do |b|
-  b.id = WebHookEventType::QUEUED_POST
-  b.name = "queued_post"
-end
-
-WebHookEventType.seed do |b|
   b.id = WebHookEventType::REVIEWABLE
   b.name = "reviewable"
 end
@@ -58,4 +48,9 @@ end
 WebHookEventType.seed do |b|
   b.id = WebHookEventType::ASSIGN
   b.name = "assign"
+end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::USER_BADGE
+  b.name = "user_badge"
 end

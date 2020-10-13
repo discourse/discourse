@@ -46,7 +46,7 @@ class UserAvatarsController < ApplicationController
 
     hijack do
       begin
-        proxy_avatar("https://avatars.discourse.org/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
+        proxy_avatar("https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
       rescue OpenURI::HTTPError
         render_blank
       end
@@ -109,7 +109,7 @@ class UserAvatarsController < ApplicationController
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a, b| (size - a).abs <=> (size - b).abs }
-      avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, upload_id, closest)
+      avatar_url = UserAvatar.local_avatar_url(hostname, user.encoded_username(lower: true), upload_id, closest)
       return redirect_to cdn_path(avatar_url)
     end
 
@@ -117,7 +117,7 @@ class UserAvatarsController < ApplicationController
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
 
     if user.uploaded_avatar && !upload
-      avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, user.uploaded_avatar_id, size)
+      avatar_url = UserAvatar.local_avatar_url(hostname, user.encoded_username(lower: true), user.uploaded_avatar_id, size)
       return redirect_to cdn_path(avatar_url)
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?

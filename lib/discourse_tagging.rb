@@ -78,7 +78,7 @@ module DiscourseTagging
         parent_tags_map = DB.query("
           SELECT tgm.tag_id, tg.parent_tag_id
             FROM tag_groups tg
-      INNER JOIN tag_group_memberships tgm
+          INNER JOIN tag_group_memberships tgm
               ON tgm.tag_group_id = tg.id
            WHERE tg.parent_tag_id IS NOT NULL
              AND tgm.tag_id IN (?)
@@ -112,8 +112,9 @@ module DiscourseTagging
         topic.tags = []
       end
       topic.tags_changed = true
+      return true
     end
-    true
+    false
   end
 
   def self.validate_min_required_tags_for_category(guardian, topic, category, tags = [])
@@ -423,7 +424,9 @@ module DiscourseTagging
       target_tag.synonyms << Tag.create(name: name)
     end
     successful = existing.select { |t| !t.errors.present? }
-    TopicTag.where(tag_id: successful.map(&:id)).update_all(tag_id: target_tag.id)
+    synonyms_ids = successful.map(&:id)
+    TopicTag.where(topic_id: target_tag.topics.with_deleted, tag_id: synonyms_ids).delete_all
+    TopicTag.where(tag_id: synonyms_ids).update_all(tag_id: target_tag.id)
     Scheduler::Defer.later "Update tag topic counts" do
       Tag.ensure_consistency!
     end

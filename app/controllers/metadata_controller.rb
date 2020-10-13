@@ -5,20 +5,24 @@ class MetadataController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required
 
   def manifest
+    expires_in 1.minutes
     render json: default_manifest.to_json, content_type: 'application/manifest+json'
   end
 
   def opensearch
+    expires_in 1.minutes
     render template: "metadata/opensearch.xml"
   end
 
   def app_association_android
     raise Discourse::NotFound unless SiteSetting.app_association_android.present?
+    expires_in 1.minutes
     render plain: SiteSetting.app_association_android, content_type: 'application/json'
   end
 
   def app_association_ios
     raise Discourse::NotFound unless SiteSetting.app_association_ios.present?
+    expires_in 1.minutes
     render plain: SiteSetting.app_association_ios, content_type: 'application/json'
   end
 
@@ -33,24 +37,78 @@ class MetadataController < ApplicationController
       end
     end
 
+    scheme_id = view_context.scheme_id
+    primary_color = ColorScheme.hex_for_name('primary', scheme_id)
+    icon_url_base = UrlHelper.absolute("/svg-sprite/#{Discourse.current_hostname}/icon/#{primary_color}")
+
     manifest = {
       name: SiteSetting.title,
       short_name: SiteSetting.short_title.presence || SiteSetting.title.truncate(12, separator: ' ', omission: ''),
       display: display,
-      start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
-      background_color: "##{ColorScheme.hex_for_name('secondary', view_context.scheme_id)}",
-      theme_color: "##{ColorScheme.hex_for_name('header_background', view_context.scheme_id)}",
+      start_url: Discourse.base_path.present? ? "#{Discourse.base_path}/" : '.',
+      background_color: "##{ColorScheme.hex_for_name('secondary', scheme_id)}",
+      theme_color: "##{ColorScheme.hex_for_name('header_background', scheme_id)}",
       icons: [
       ],
       share_target: {
-        action: "/new-topic",
+        action: "#{Discourse.base_path}/new-topic",
         method: "GET",
         enctype: "application/x-www-form-urlencoded",
         params: {
           title: "title",
           text: "body"
         }
-      }
+      },
+      shortcuts: [
+        {
+          name: I18n.t('js.topic.create_long'),
+          short_name: I18n.t('js.topic.create'),
+          url: "#{Discourse.base_path}/new-topic",
+          icons: [
+            {
+              src: "#{icon_url_base}/plus.svg",
+              sizes: "131x150",
+              type: "image/svg"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.user.messages.inbox'),
+          short_name: I18n.t('js.user.messages.inbox'),
+          url: "#{Discourse.base_path}/my/messages",
+          icons: [
+            {
+              src: "#{icon_url_base}/envelope.svg",
+              sizes: "150x150",
+              type: "image/svg"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.user.bookmarks'),
+          short_name: I18n.t('js.user.bookmarks'),
+          url: "#{Discourse.base_path}/my/bookmarks",
+          icons: [
+            {
+              src: "#{icon_url_base}/bookmark.svg",
+              sizes: "113x150",
+              type: "image/svg"
+            }
+          ]
+        },
+        {
+          name: I18n.t('js.filters.top.title'),
+          short_name: I18n.t('js.filters.top.title'),
+          url: "#{Discourse.base_path}/top",
+          icons: [
+            {
+              src: "#{icon_url_base}/signal.svg",
+              sizes: "188x150",
+              type: "image/svg"
+            }
+          ]
+        }
+      ]
     }
 
     logo = SiteSetting.site_manifest_icon_url

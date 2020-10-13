@@ -24,12 +24,15 @@ describe PostOwnerChanger do
 
     it "changes the user" do
       bumped_at = freeze_time topic.bumped_at
+      now = Time.zone.now
+      freeze_time(now - 1.day)
 
       old_user = p1.user
       PostActionCreator.like(user_a, p1)
       p1.reload
       expect(p1.topic.like_count).to eq(1)
 
+      freeze_time(now)
       PostOwnerChanger.new(post_ids: [p1.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner!
       p1.reload
       expect(p1.topic.like_count).to eq(0)
@@ -111,14 +114,12 @@ describe PostOwnerChanger do
           topic_count: 1,
           post_count: 1,
           first_post_created_at: p1.created_at,
-          topic_reply_count: 0
         )
 
         p2user.user_stat.update!(
           topic_count: 0,
           post_count: 1,
           first_post_created_at: p2.created_at,
-          topic_reply_count: 1
         )
 
         UserAction.create!(action_type: UserAction::NEW_TOPIC, user_id: p1user.id, acting_user_id: p1user.id,
@@ -155,13 +156,11 @@ describe PostOwnerChanger do
         p1_user_stat = p1user.user_stat
 
         expect(p1_user_stat.first_post_created_at).to eq(nil)
-        expect(p1_user_stat.topic_reply_count).to eq(0)
         expect(p1_user_stat.likes_received).to eq(0)
 
         p2_user_stat = p2user.user_stat
 
         expect(p2_user_stat.first_post_created_at).to eq(nil)
-        expect(p2_user_stat.topic_reply_count).to eq(0)
 
         user_a_stat = user_a.user_stat
 

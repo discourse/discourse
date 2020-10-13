@@ -1,7 +1,7 @@
 #topic-entrance {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   padding: 5px;
-  background: $secondary;
+  background: var(--secondary);
   box-shadow: shadow("card");
   z-index: z("dropdown");
 

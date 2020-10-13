@@ -28,31 +28,49 @@ describe TopicLink do
   end
 
   describe 'external links' do
-    fab!(:post2) do
-      Fabricate(:post, raw: <<~RAW, user: user, topic: topic)
+    it 'correctly handles links' do
+
+      non_png = "https://b.com/#{SecureRandom.hex}"
+
+      # prepare a title for one of the links
+      stub_request(:get, non_png).
+        with(headers: {
+          'Accept' => '*/*',
+          'Accept-Encoding' => 'gzip',
+          'Host' => 'b.com',
+        }).
+        to_return(status: 200, body: "<html><head><title>amazing</title></head></html>", headers: {})
+
+      # so we run crawl_topic_links
+      Jobs.run_immediately!
+
+      png_title = "#{SecureRandom.hex}.png"
+      png = "https://awesome.com/#{png_title}"
+
+      post = Fabricate(:post, raw: <<~RAW, user: user, topic: topic)
         http://a.com/
-        https://b.com/b
+        #{non_png}
         http://#{'a' * 200}.com/invalid
         //b.com/#{'a' * 500}
+        #{png}
       RAW
-    end
 
-    before do
-      TopicLink.extract_from(post2)
-    end
+      TopicLink.extract_from(post)
 
-    it 'works' do
+      # we have a special rule for images title where we pull them out of the filename
+      expect(topic.topic_links.where(url: png).pluck(:title).first).to eq(png_title)
+      expect(topic.topic_links.where(url: non_png).pluck(:title).first).to eq("amazing")
+
       expect(topic.topic_links.pluck(:url)).to contain_exactly(
+        png,
+        non_png,
         "http://a.com/",
-        "https://b.com/b",
         "//b.com/#{'a' * 500}"[0...TopicLink.max_url_length]
       )
-    end
 
-    it "doesn't reset them when rebaking" do
       old_ids = topic.topic_links.pluck(:id)
 
-      TopicLink.extract_from(post2)
+      TopicLink.extract_from(post)
 
       new_ids = topic.topic_links.pluck(:id)
 
@@ -107,15 +125,17 @@ describe TopicLink do
         # this is subtle, but we had a bug were second time
         # TopicLink.extract_from was called a reflection was nuked
         2.times do
-          topic.reload
           TopicLink.extract_from(linked_post)
+
+          topic.reload
+          other_topic.reload
 
           link = topic.topic_links.first
           expect(link).to be_present
           expect(link).to be_internal
           expect(link.url).to eq(url)
           expect(link.domain).to eq(test_uri.host)
-          link.link_topic_id == other_topic.id
+          expect(link.link_topic_id). to eq(other_topic.id)
           expect(link).not_to be_reflection
 
           reflection = other_topic.topic_links.first

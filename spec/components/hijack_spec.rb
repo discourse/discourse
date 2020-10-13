@@ -108,7 +108,7 @@ describe Hijack do
 
     expected = {
       "Access-Control-Allow-Origin" => "www.rainbows.com",
-      "Access-Control-Allow-Headers" => "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Visible, User-Api-Key, User-Api-Client-Id, Authorization",
+      "Access-Control-Allow-Headers" => "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
       "Access-Control-Allow-Credentials" => "true",
       "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE"
     }

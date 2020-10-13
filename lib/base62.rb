@@ -3,7 +3,7 @@
 # Modified version of: https://github.com/steventen/base62-rb
 
 module Base62
-  KEYS ||= "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".freeze
+  KEYS ||= "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
   KEYS_HASH ||= KEYS.each_char.with_index.to_h
   BASE ||= KEYS.length
 

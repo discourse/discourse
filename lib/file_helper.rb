@@ -17,6 +17,10 @@ class FileHelper
     (filename =~ supported_images_regexp).present?
   end
 
+  def self.is_inline_image?(filename)
+    (filename =~ inline_images_regexp).present?
+  end
+
   def self.is_supported_media?(filename)
     (filename =~ supported_media_regexp).present?
   end
@@ -136,6 +140,11 @@ class FileHelper
     @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico webp}
   end
 
+  def self.inline_images
+    # SVG cannot safely be shown as a document
+    @@inline_images ||= supported_images - %w{svg}
+  end
+
   def self.supported_audio
     @@supported_audio ||= Set.new %w{mp3 ogg wav m4a}
   end
@@ -146,6 +155,10 @@ class FileHelper
 
   def self.supported_images_regexp
     @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
+  end
+
+  def self.inline_images_regexp
+    @@inline_images_regexp ||= /\.(#{inline_images.to_a.join("|")})$/i
   end
 
   def self.supported_media_regexp

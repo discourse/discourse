@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 da:
   site_settings:
@@ -49,34 +48,34 @@ da:
         > :game_die: %{results}
     quote:
       trigger: "citat"
-      '1':
+      "1":
         quote: "Midt i enhver vanskelighed ligger muligheden"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Frihed er ikke værd at have, hvis det ikke giver frihed til at fejle."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Græd ikke, fordi det er forbi, smil fordi det skete."
         author: "Dr. Seuss"
-      '4':
+      "4":
         quote: "Hvis man vil have noget gjort rigtigt, må man gøre det selv."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Tro på du kan og du er allerede halvvejs."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Livet er som en æske chokolade. Du ved aldrig, hvad du får."
         author: "Forrest Gumps mor"
-      '7':
+      "7":
         quote: "Det er et lille skridt for en mand, et kæmpespring for menneskeheden."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Gør en ting hver dag, der skræmmer dig."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Fejl er altid tilforladelige, hvis man har modet til at indrømme dem."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Uanset hvad menneskets sind kan begribe og tro på, kan det opnå."
         author: "Napoleon Hill"
       results: |-
@@ -84,24 +83,26 @@ da:
     magic_8_ball:
       trigger: "formue"
       answers:
-        '1': "Det er sikkert"
-        '2': "Det er bestemt"
-        '3': "Uden tvivl"
-        '4': "Ja helt sikkert"
-        '5': "Du kan stole på det"
-        '6': "Som jeg ser det, ja"
-        '7': "Højst sandsynlig"
-        '9': "Ja"
-        '10': "Det tyder på ja"
-        '11': "Svar uklar, prøv igen"
-        '12': "Spørg igen senere"
-        '13': "Bedre ikke at fortælle dig nu"
-        '14': "Kan ikke forudsige nu"
-        '15': "Koncentrer dig og spørg igen"
-        '16': "Stol ikke på det"
-        '17': "Mit svar er nej"
-        '18': "Mine kilder siger nej"
-        '20': "Meget tvivlsom"
+        "1": "Det er sikkert"
+        "2": "Det er bestemt"
+        "3": "Uden tvivl"
+        "4": "Ja helt sikkert"
+        "5": "Du kan stole på det"
+        "6": "Som jeg ser det, ja"
+        "7": "Højst sandsynlig"
+        "8": "Outlook good"
+        "9": "Ja"
+        "10": "Det tyder på ja"
+        "11": "Svar uklar, prøv igen"
+        "12": "Spørg igen senere"
+        "13": "Bedre ikke at fortælle dig nu"
+        "14": "Kan ikke forudsige nu"
+        "15": "Koncentrer dig og spørg igen"
+        "16": "Stol ikke på det"
+        "17": "Mit svar er nej"
+        "18": "Mine kilder siger nej"
+        "19": "Outlook not so good"
+        "20": "Meget tvivlsom"
       result: |-
         > :crystal_ball: %{result}
     track_selector:

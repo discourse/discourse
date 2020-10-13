@@ -1,0 +1,17 @@
+<div class="themes-intro admin-intro">
+  <img src={{womanArtistEmojiURL}} alt={{i18n "admin.customize.theme.themes_intro_emoji"}}>
+  <div class="content-wrapper">
+    <h1>{{i18n "admin.customize.theme.themes_intro"}}</h1>
+    <div class="create-actions">
+      {{d-button action=(route-action "installModal") icon="upload" label="admin.customize.install" class="btn-primary"}}
+    </div>
+    <div class="external-resources">
+      {{#each externalResources as |resource|}}
+        <a href={{resource.link}} class="external-link" rel="noopener noreferrer" target="_blank">
+          {{d-icon resource.icon}}
+          {{i18n resource.key}}
+        </a>
+      {{/each}}
+    </div>
+  </div>
+</div>

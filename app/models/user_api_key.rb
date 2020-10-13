@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UserApiKey < ActiveRecord::Base
+  self.ignored_columns = [
+    "scopes" # TODO(2020-12-18): remove
+  ]
 
   SCOPES = {
     read: [:get],
@@ -19,7 +22,30 @@ class UserApiKey < ActiveRecord::Base
   }
 
   belongs_to :user
+  has_many :scopes, class_name: "UserApiKeyScope", dependent: :destroy
 
+  scope :active, -> { where(revoked_at: nil) }
+  scope :with_key, ->(key) { where(key_hash: ApiKey.hash_key(key)) }
+
+  after_initialize :generate_key
+
+  def generate_key
+    if !self.key_hash
+      @key ||= SecureRandom.hex
+      self.key_hash = ApiKey.hash_key(@key)
+    end
+  end
+
+  def key
+    raise ApiKey::KeyAccessError.new "API key is only accessible immediately after creation" unless key_available?
+    @key
+  end
+
+  def key_available?
+    @key.present?
+  end
+
+  # Scopes allowed to be requested by external services
   def self.allowed_scopes
     Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))
   end
@@ -57,19 +83,27 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def has_push?
-    (scopes.include?("push") || scopes.include?("notifications")) && push_url.present? && SiteSetting.allowed_user_api_push_urls.include?(push_url)
+    scopes.any? { |s| s.name == "push" || s.name == "notifications" } &&
+      push_url.present? &&
+      SiteSetting.allowed_user_api_push_urls.include?(push_url)
   end
 
   def allow?(env)
-    scopes.any? do |name|
-      UserApiKey.allow_scope?(name, env)
-    end
+    scopes.any? do |s|
+      UserApiKey.allow_scope?(s.name, env)
+    end || is_revoke_self_request?(env)
   end
 
   def self.invalid_auth_redirect?(auth_redirect)
     SiteSetting.allowed_user_api_auth_redirects
       .split('|')
       .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
+  end
+
+  private
+
+  def is_revoke_self_request?(env)
+    UserApiKey.allow_permission?([:post, 'user_api_keys#revoke'], env) && (env[:id].nil? || env[:id].to_i == id)
   end
 end
 
@@ -80,7 +114,6 @@ end
 #  id               :integer          not null, primary key
 #  user_id          :integer          not null
 #  client_id        :string           not null
-#  key              :string           not null
 #  application_name :string           not null
 #  push_url         :string
 #  created_at       :datetime         not null
@@ -88,10 +121,11 @@ end
 #  revoked_at       :datetime
 #  scopes           :text             default([]), not null, is an Array
 #  last_used_at     :datetime         not null
+#  key_hash         :string           not null
 #
 # Indexes
 #
 #  index_user_api_keys_on_client_id  (client_id) UNIQUE
-#  index_user_api_keys_on_key        (key) UNIQUE
+#  index_user_api_keys_on_key_hash   (key_hash) UNIQUE
 #  index_user_api_keys_on_user_id    (user_id)
 #

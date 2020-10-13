@@ -14,6 +14,26 @@
 # on the current secure? status, otherwise there would be a lot of additional
 # complex queries and joins to perform.
 class UploadSecurity
+  @@custom_public_types = []
+
+  PUBLIC_TYPES = %w[
+    avatar
+    custom_emoji
+    profile_background
+    card_background
+    category_logo
+    category_background
+  ]
+
+  def self.register_custom_public_type(type)
+    @@custom_public_types << type if !@@custom_public_types.include?(type)
+  end
+
+  # used in tests
+  def self.reset_custom_public_types
+    @@custom_public_types = []
+  end
+
   def initialize(upload, opts = {})
     @upload = upload
     @opts = opts
@@ -23,21 +43,16 @@ class UploadSecurity
   def should_be_secure?
     return false if !SiteSetting.secure_media?
     return false if uploading_in_public_context?
-    (secure_attachment? || supported_media?) && uploading_in_secure_context?
+    uploading_in_secure_context?
   end
-
-  private
 
   def uploading_in_public_context?
-    @upload.for_theme || @upload.for_site_setting || @upload.for_gravatar || public_type? || used_for_custom_emoji? || based_on_regular_emoji?
-  end
-
-  def supported_media?
-    FileHelper.is_supported_media?(@upload.original_filename)
-  end
-
-  def secure_attachment?
-    !supported_media? && SiteSetting.prevent_anons_from_downloading_files
+    @upload.for_theme ||
+      @upload.for_site_setting ||
+      @upload.for_gravatar ||
+      public_type? ||
+      used_for_custom_emoji? ||
+      based_on_regular_emoji?
   end
 
   def uploading_in_secure_context?
@@ -47,6 +62,8 @@ class UploadSecurity
     end
     uploading_in_composer? || @upload.for_private_message || @upload.for_group_message || @upload.secure?
   end
+
+  private
 
   # whether the upload should remain secure or not after posting depends on its context,
   # which is based on the post it is linked to via access_control_post_id.
@@ -61,7 +78,7 @@ class UploadSecurity
   end
 
   def public_type?
-    %w[avatar custom_emoji profile_background card_background].include?(@upload_type)
+    PUBLIC_TYPES.include?(@upload_type) || @@custom_public_types.include?(@upload_type)
   end
 
   def uploading_in_composer?

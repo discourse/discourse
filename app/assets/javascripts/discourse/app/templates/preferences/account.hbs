@@ -1,0 +1,269 @@
+<div class="control-group pref-username">
+  <label class="control-label">{{i18n "user.username.title"}}</label>
+  <div class="controls">
+    <span class="static">{{model.username}}</span>
+    {{#if model.can_edit_username}}
+      {{#link-to "preferences.username" class="btn btn-default btn-small btn-icon pad-left no-text"}}
+        {{d-icon "pencil-alt"}}
+      {{/link-to}}
+    {{/if}}
+  </div>
+  {{#if siteSettings.enable_mentions}}
+    <div class="instructions">
+      {{html-safe (i18n "user.username.short_instructions" username=model.username)}}
+    </div>
+  {{/if}}
+</div>
+
+{{#unless siteSettings.sso_overrides_avatar}}
+  <div class="control-group pref-avatar">
+    <label class="control-label" id="profile-picture">{{i18n "user.avatar.title"}}</label>
+    <div class="controls">
+      {{! we want the "huge" version even though we're downsizing it in CSS }}
+      {{bound-avatar model "huge"}}
+      {{d-button action=(route-action "showAvatarSelector") actionParam=model class="btn-default pad-left" icon="pencil-alt"}}
+    </div>
+  </div>
+{{/unless}}
+
+{{#if canEditName}}
+  <div class="control-group pref-name">
+    <label class="control-label">{{i18n "user.name.title"}}</label>
+    <div class="controls">
+      {{#if model.can_edit_name}}
+        {{text-field value=newNameInput classNames="input-xxlarge" maxlength="255"}}
+      {{else}}
+        <span class="static">{{model.name}}</span>
+      {{/if}}
+    </div>
+    <div class="instructions">
+      {{nameInstructions}}
+    </div>
+  </div>
+{{/if}}
+
+{{#if canCheckEmails}}
+  <div class="control-group pref-email">
+    <label class="control-label">{{i18n "user.email.title"}}</label>
+    {{#if model.email}}
+      {{#if siteSettings.enable_secondary_emails}}
+        <div class="emails">
+          {{#each emails as |email|}}
+            <div class="row email">
+              {{#if model.can_edit_email}}
+                {{email-dropdown email=email
+                                setPrimaryEmail=(action "setPrimaryEmail")
+                                destroyEmail=(action "destroyEmail")}}
+              {{/if}}
+
+              <div class="email-first">{{email.email}}</div>
+
+              <div class="email-second">
+                {{#if email.primary}}
+                  <span class="primary">{{i18n "user.email.primary_label"}}</span>
+                {{/if}}
+
+                {{#unless email.confirmed}}
+                  <span class="unconfirmed">{{i18n "user.email.unconfirmed_label"}}</span>
+                  &bull;
+                  {{#if email.resending}}
+                    <span>{{i18n "user.email.resending_label"}}</span>
+                  {{else if email.resent}}
+                    <span>{{i18n "user.email.resent_label"}}</span>
+                  {{else}}
+                    <a {{action "resendConfirmationEmail" email}} href>{{i18n "user.email.resend_label"}}</a>
+                  {{/if}}
+                {{/unless}}
+              </div>
+            </div>
+          {{/each}}
+        </div>
+
+        {{#if model.can_edit_email}}
+          {{#link-to "preferences.email" (query-params new=1) class="pull-right"}}
+            {{d-icon "plus"}} {{i18n "user.email.add_email"}}
+          {{/link-to}}
+        {{/if}}
+      {{else}}
+        <div class="controls">
+          <span class="static">{{model.email}}</span>
+          {{#if model.can_edit_email}}
+            {{#link-to "preferences.email" class="btn btn-default btn-small btn-icon pad-left no-text"}}{{d-icon "pencil-alt"}}{{/link-to}}
+          {{/if}}
+        </div>
+      {{/if}}
+
+      <div class="instructions">
+        {{#if siteSettings.sso_overrides_email}}
+          {{i18n "user.email.sso_override_instructions"}}
+        {{/if}}
+        {{i18n "user.email.instructions"}}
+      </div>
+    {{else}}
+      <div class="controls">
+        {{d-button action=(route-action "checkEmail") class="btn-default" actionParam=model title="admin.users.check_email.title" icon="far-envelope" label="admin.users.check_email.text"}}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if canChangePassword}}
+  <div class="control-group pref-password">
+    <label class="control-label">{{i18n "user.password.title"}}</label>
+    <div class="controls">
+      <a href {{action "changePassword"}} class="btn btn-default">
+        {{d-icon "envelope"}}
+        {{#if model.no_password}}
+          {{i18n "user.change_password.set_password"}}
+        {{else}}
+          {{i18n "user.change_password.action"}}
+        {{/if}}
+      </a>
+
+      {{passwordProgress}}
+    </div>
+  </div>
+
+  <div class="control-group pref-second-factor">
+    <label class="control-label">{{i18n "user.second_factor.title"}}</label>
+    {{#unless model.second_factor_enabled}}
+      <label>
+        {{i18n "user.second_factor.short_description"}}
+      </label>
+    {{/unless}}
+    <div class="controls pref-second-factor">
+      {{#if isCurrentUser}}
+        {{#link-to "preferences.second-factor" class="btn btn-default"}}
+          {{d-icon "lock"}} <span>{{i18n "user.second_factor.enable"}}</span>
+        {{/link-to}}
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
+
+{{#if canUpdateAssociatedAccounts}}
+  <div class="control-group pref-associated-accounts">
+    <label class="control-label">{{i18n "user.associated_accounts.title"}}</label>
+    {{#if associatedAccountsLoaded}}
+      <table>
+        <tbody>
+          {{#each authProviders as |authProvider|}}
+            {{#if authProvider.account}}
+              <tr class="{{dasherize authProvider.method.name}} account-connected">
+                <td>{{authProvider.method.prettyName}}</td>
+                <td>{{authProvider.account.description}}</td>
+                <td>
+                  {{#if authProvider.method.can_revoke}}
+                    {{d-button action=(action "revokeAccount") actionParam=authProvider.account title="user.associated_accounts.revoke" class="btn-danger no-text" icon="trash-alt" disabled=(get revoking authProvider.method.name) }}
+                  {{/if}}
+                </td>
+              </tr>
+            {{else}}
+              <tr class={{dasherize authProvider.method.name}}>
+                <td>{{authProvider.method.prettyName}}</td>
+                <td colspan="2">
+                  {{#if authProvider.method.can_connect}}
+                    {{d-button action=(action "connectAccount") actionParam=authProvider.method label="user.associated_accounts.connect" class="btn-default" icon="plug" disabled=disableConnectButtons}}
+                  {{else}}
+                    {{i18n "user.associated_accounts.not_connected"}}
+                  {{/if}}
+                </td>
+              </tr>
+            {{/if}}
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <div class="controls">
+        {{d-button action=(route-action "checkEmail") actionParam=model title="admin.users.check_email.title" icon="far-envelope" label="admin.users.check_email.text"}}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if canSelectTitle}}
+  <div class="control-group pref-title">
+    <label class="control-label">{{i18n "user.title.title"}}</label>
+    <div class="controls">
+      {{combo-box
+        value=newTitleInput
+        content=model.availableTitles
+        none="user.title.none"
+        onChange=(action (mut newTitleInput))
+      }}
+    </div>
+  </div>
+{{/if}}
+
+{{#if canSelectPrimaryGroup}}
+  <div class="control-group pref-primary-group">
+    <label class="control-label">{{i18n "user.primary_group.title"}}</label>
+    <div class="controls">
+      {{combo-box
+        value=newPrimaryGroupInput
+        content=model.filteredGroups
+        none="user.primary_group.none"}}
+    </div>
+  </div>
+{{/if}}
+
+{{#if canCheckEmails}}
+  <div class="control-group pref-auth-tokens">
+    <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
+
+    <div class="auth-tokens">
+      {{#each authTokens as |token|}}
+        <div class="row auth-token">
+          <div class="auth-token-icon">{{d-icon token.icon}}</div>
+          {{#unless token.is_active}}
+            {{auth-token-dropdown token=token
+                                  revokeAuthToken=(action "revokeAuthToken")
+                                  showToken=(action "showToken")}}
+          {{/unless}}
+          <div class="auth-token-first">
+            <span class="auth-token-device">{{token.device}}</span> &ndash; <span title="{{i18n "user.auth_tokens.ip"}}: {{token.client_ip}}">{{token.location}}</span>
+          </div>
+          <div class="auth-token-second">
+            {{token.browser}} |
+            {{#if token.is_active}}
+              <span class="active">{{i18n "user.auth_tokens.active"}}</span>
+            {{else}}
+              {{format-date token.seen_at}}
+            {{/if}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    {{#if canShowAllAuthTokens}}
+      <a href {{action "toggleShowAllAuthTokens"}}>
+        {{#if showAllAuthTokens}}
+          {{d-icon "caret-up"}} {{i18n "user.auth_tokens.show_few"}}
+        {{else}}
+          {{d-icon "caret-down"}} {{i18n "user.auth_tokens.show_all" count=model.user_auth_tokens.length}}
+        {{/if}}
+      </a>
+    {{/if}}
+
+    <a href {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n "user.auth_tokens.log_out_all"}}</a>
+  </div>
+{{/if}}
+
+{{plugin-outlet name="user-preferences-account" args=(hash model=model save=(action "save"))}}
+
+<br>
+
+{{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+{{#if canSaveUser}}
+  {{save-controls model=model action=(action "save") saved=saved}}
+{{/if}}
+
+{{#if model.canDeleteAccount}}
+  <div class="control-group delete-account">
+    <br>
+    <div class="controls">
+      {{d-button action=(action "delete") disabled=deleteDisabled class="btn-danger" icon="far-trash-alt" label="user.delete_account"}}
+    </div>
+  </div>
+{{/if}}

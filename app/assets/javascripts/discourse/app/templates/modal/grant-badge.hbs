@@ -1,0 +1,25 @@
+{{#d-modal-body class="grant-badge"}}
+  {{#conditional-loading-spinner condition=loading}}
+    {{#if noGrantableBadges}}
+      <p>{{i18n "admin.badges.no_badges"}}</p>
+    {{else}}
+      <p>
+        {{combo-box
+          filterable=true
+          value=selectedBadgeId
+          content=grantableBadges
+          none="badges.none"
+          onChange=(action (mut selectedBadgeId))
+        }}
+      </p>
+    {{/if}}
+  {{/conditional-loading-spinner}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button
+    class="btn-primary"
+    disabled=buttonDisabled
+    action=(action "grantBadge")
+    label="admin.badges.grant"}}
+</div>

@@ -26,7 +26,7 @@ describe InlineOneboxer do
     fab!(:topic) { Fabricate(:topic) }
 
     before do
-      InlineOneboxer.purge(topic.url)
+      InlineOneboxer.invalidate(topic.url)
     end
 
     it "puts an entry in the cache" do
@@ -34,7 +34,7 @@ describe InlineOneboxer do
       url = "https://example.com/random-url"
       stub_request(:get, url).to_return(status: 200, body: "<html><head><title>a blog</title></head></html>")
 
-      InlineOneboxer.purge(url)
+      InlineOneboxer.invalidate(url)
       expect(InlineOneboxer.cache_lookup(url)).to be_blank
 
       result = InlineOneboxer.lookup(url)
@@ -49,7 +49,7 @@ describe InlineOneboxer do
       SiteSetting.enable_inline_onebox_on_all_domains = true
       url = "https://example.com/random-url"
 
-      InlineOneboxer.purge(url)
+      InlineOneboxer.invalidate(url)
       expect(InlineOneboxer.cache_lookup(url)).to be_blank
 
       result = InlineOneboxer.lookup(url)
@@ -116,7 +116,7 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
     end
 
-    it "will not crawl domains that aren't whitelisted" do
+    it "will not crawl domains that aren't allowlisted" do
       onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
       expect(onebox).to be_blank
     end
@@ -153,8 +153,8 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq(nil)
     end
 
-    it "will lookup whitelisted domains" do
-      SiteSetting.inline_onebox_domains_whitelist = "eviltrout.com"
+    it "will lookup allowlisted domains" do
+      SiteSetting.allowed_inline_onebox_domains = "eviltrout.com"
       RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")
 
       onebox = InlineOneboxer.lookup(

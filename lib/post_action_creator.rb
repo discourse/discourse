@@ -7,8 +7,15 @@ class PostActionCreator
 
   # Shortcut methods for easier invocation
   class << self
-    def create(created_by, post, action_key, message: nil, created_at: nil)
-      new(created_by, post, PostActionType.types[action_key], message: message, created_at: created_at).perform
+    def create(created_by, post, action_key, message: nil, created_at: nil, reason: nil)
+      new(
+        created_by,
+        post,
+        PostActionType.types[action_key],
+        message: message,
+        created_at: created_at,
+        reason: reason
+      ).perform
     end
 
     [:like, :off_topic, :spam, :inappropriate, :bookmark].each do |action|
@@ -31,7 +38,8 @@ class PostActionCreator
     message: nil,
     take_action: false,
     flag_topic: false,
-    created_at: nil
+    created_at: nil,
+    reason: nil
   )
     @created_by = created_by
     @created_at = created_at || Time.zone.now
@@ -46,6 +54,7 @@ class PostActionCreator
     @message = message
     @flag_topic = flag_topic
     @meta_post = nil
+    @reason = reason
   end
 
   def post_can_act?
@@ -132,11 +141,11 @@ private
 
   def cannot_flag_again?(reviewable)
     return false if @post_action_type_id == PostActionType.types[:notify_moderators]
-    flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id }
+    flag_type_already_used = reviewable.reviewable_scores.any? { |rs| rs.reviewable_score_type == @post_action_type_id && rs.status != ReviewableScore.statuses[:pending] }
     not_edited_since_last_review = @post.last_version_at.blank? || reviewable.updated_at > @post.last_version_at
     handled_recently = reviewable.updated_at > SiteSetting.cooldown_hours_until_reflag.to_i.hours.ago
 
-    !reviewable.pending? && flag_type_already_used && not_edited_since_last_review && handled_recently
+    flag_type_already_used && not_edited_since_last_review && handled_recently
   end
 
   def notify_subscribers
@@ -179,13 +188,7 @@ private
     return if !@created_by.staff? && @post.user&.staff?
     return unless PostActionType.auto_action_flag_types.include?(@post_action_name)
 
-    # Special case: If you have TL3 and the user is TL0, and the flag is spam,
-    # hide it immediately.
-    if SiteSetting.high_trust_flaggers_auto_hide_posts &&
-        @post_action_name == :spam &&
-        @created_by.has_trust_level?(TrustLevel[3]) &&
-        @post.user&.trust_level == TrustLevel[0]
-
+    if trusted_spam_flagger?
       @post.hide!(@post_action_type_id, Post.hidden_reasons[:flagged_by_tl3_user])
       return
     end
@@ -194,6 +197,15 @@ private
     if score >= Reviewable.score_required_to_hide_post
       @post.hide!(@post_action_type_id)
     end
+  end
+
+  # Special case: If you have TL3 and the user is TL0, and the flag is spam,
+  # hide it immediately.
+  def trusted_spam_flagger?
+    SiteSetting.high_trust_flaggers_auto_hide_posts &&
+      @post_action_name == :spam &&
+      @created_by.has_trust_level?(TrustLevel[3]) &&
+      @post.user&.trust_level == TrustLevel[0]
   end
 
   def create_post_action
@@ -306,6 +318,8 @@ private
       created_at: @created_at,
       take_action: @take_action,
       meta_topic_id: @meta_post&.topic_id,
+      reason: @reason,
+      force_review: trusted_spam_flagger?
     )
   end
 

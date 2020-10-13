@@ -13,7 +13,6 @@ class AdminUserListSerializer < BasicUserSerializer
              :last_seen_age,
              :last_emailed_age,
              :created_at_age,
-             :username_lower,
              :trust_level,
              :manual_locked_trust_level,
              :flag_level,

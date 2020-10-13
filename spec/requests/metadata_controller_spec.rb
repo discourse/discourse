@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Discourse/NoJsonParseResponse
 
 require 'rails_helper'
 
@@ -21,6 +22,8 @@ RSpec.describe MetadataController do
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       expect(response.media_type).to eq('application/manifest+json')
+      expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
+
       manifest = JSON.parse(response.body)
 
       expect(manifest["name"]).to eq(title)
@@ -55,18 +58,18 @@ RSpec.describe MetadataController do
       expect(manifest["display"]).to eq("standalone")
     end
 
-    it 'defaults to display browser for iPhone' do
-      get "/manifest.webmanifest", params: {}, headers: { 'USER-AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1' }
-      manifest = JSON.parse(response.body)
-      expect(manifest["display"]).to eq("browser")
-    end
-
-    it 'can be changed to display standalone for iPhones using a site setting' do
-      SiteSetting.pwa_display_browser_regex = "a^" # this never matches
-
+    it 'defaults to display standalone for iPhone' do
       get "/manifest.webmanifest", params: {}, headers: { 'USER-AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1' }
       manifest = JSON.parse(response.body)
       expect(manifest["display"]).to eq("standalone")
+    end
+
+    it 'can be changed to display browser for iPhones using a site setting' do
+      SiteSetting.pwa_display_browser_regex = "iPhone"
+
+      get "/manifest.webmanifest", params: {}, headers: { 'USER-AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1' }
+      manifest = JSON.parse(response.body)
+      expect(manifest["display"]).to eq("browser")
     end
 
     it 'uses the short_title if it is set' do
@@ -85,6 +88,14 @@ RSpec.describe MetadataController do
       manifest = JSON.parse(response.body)
       expect(manifest["short_name"]).to eq("foo")
     end
+
+    it 'contains valid shortcuts by default' do
+      get "/manifest.webmanifest"
+      expect(response.status).to eq(200)
+      manifest = JSON.parse(response.body)
+      expect(manifest["shortcuts"].size).to be > 0
+      expect { URI.parse(manifest["shortcuts"][0]["icons"][0]["src"]) }.not_to raise_error
+    end
   end
 
   describe 'opensearch.xml' do
@@ -95,6 +106,8 @@ RSpec.describe MetadataController do
       SiteSetting.title = title
       SiteSetting.favicon = upload
       get "/opensearch.xml"
+
+      expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
 
       expect(response.status).to eq(200)
       expect(response.body).to include(title)
@@ -120,6 +133,8 @@ RSpec.describe MetadataController do
         }]
       EOF
       get "/.well-known/assetlinks.json"
+
+      expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
 
       expect(response.status).to eq(200)
       expect(response.body).to include("hash_of_app_certificate")
@@ -147,6 +162,7 @@ RSpec.describe MetadataController do
       expect(response.status).to eq(200)
       expect(response.body).to include("applinks")
       expect(response.media_type).to eq('application/json')
+      expect(response.headers["Cache-Control"]).to eq('max-age=60, private')
 
       get "/apple-app-site-association.json"
       expect(response.status).to eq(404)

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ru:
   js:
@@ -23,7 +22,7 @@ ru:
         title: "Голосов <strong>публичных</strong>."
       results:
         groups:
-          title: "Вы должны быть участником %{groups} чтобы голосовать в этом опросе."
+          title: "Вы должны быть участником группы %{groups}, чтобы голосовать в этом опросе."
         vote:
           title: "Результаты будут показаны при <strong>голосовании</strong>."
         closed:
@@ -33,54 +32,57 @@ ru:
       multiple:
         help:
           at_least_min_options:
-            one: "Выберите хотя бы <strong>%{count}</strong> вариант ответа"
-            few: "Выберите хотя бы <strong>%{count}</strong> варианта ответов"
-            many: "Выберите хотя бы <strong>%{count}</strong> вариантов ответов"
-            other: "Выберите хотя бы <strong>%{count}</strong> вариантов ответов"
+            one: "Выберите как минимум %{count} вариант ответа ."
+            few: "Выберите как минимум %{count} варианта ответа ."
+            many: "Выберите как минимум %{count} вариантов ответа ."
+            other: "Выберите как минимум <strong>%{count}</strong> вариантов ответа."
           up_to_max_options:
-            one: "Выберите не более <strong>%{count}</strong> варианта ответа"
-            few: "Выберите не более <strong>%{count}</strong> вариантов ответов"
-            many: "Выберите не более <strong>%{count}</strong> вариантов ответов"
-            other: "Выберите не более <strong>%{count}</strong> вариантов ответов"
+            one: "Выберите не более <strong>%{count}</strong> варианта ответа."
+            few: "Выберите не более <strong>%{count}</strong> вариантов ответа."
+            many: "Выберите не более <strong>%{count}</strong> вариантов ответа."
+            other: "Выберите не более <strong>%{count}</strong> вариантов ответа."
           x_options:
-            one: "Выберите <strong>%{count}</strong> вариант ответа"
-            few: "Выберите <strong>%{count}</strong> варианта ответотв"
-            many: "Выберите <strong>%{count}</strong> вариантов ответов"
-            other: "Выберите <strong>%{count}</strong> вариантов ответов"
-          between_min_and_max_options: "Выберите от <strong>%{min}</strong> до <strong>%{max}</strong> вариантов ответов"
+            one: "Выберите <strong>%{count}</strong> вариант ответа."
+            few: "Выберите <strong>%{count}</strong> варианта ответа."
+            many: "Выберите <strong>%{count}</strong> вариантов ответа."
+            other: "Выберите <strong>%{count}</strong> вариантов ответа."
+          between_min_and_max_options: "Выберите варианты ответов в диапазоне от <strong>%{min}</strong> до <strong>%{max}</strong>."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосовать!"
       show-results:
-        title: "Показать результаты"
+        title: "Показать результаты опроса"
         label: "Показать результаты"
       hide-results:
         title: "Вернуться к опросу"
         label: "Показать голосование"
       group-results:
-        title: "Группировать голоса по полю пользователя"
+        title: "Группировать голоса по пользователям"
         label: "Показать распределение"
-      ungroup-results:
-        title: "Объединить все голоса"
-        label: "Скрыть распределение"
       export-results:
         title: "Экспорт результатов опроса"
         label: "Экспорт"
       open:
-        title: "Снова начать принимать новые голоса"
+        title: "Снова открыть опрос"
         label: "Открыть"
-        confirm: "Вы уверены, что хотите открыть этот опрос и принимать новые голоса?"
+        confirm: "Вы действительно хотите открыть этот опрос и принимать новые голоса?"
       close:
         title: "Завершить этот опрос, не принимать новые голоса"
         label: "Завершить"
-        confirm: "Вы уверены, что хотите завершить этот опрос и больше не принимать голоса?"
+        confirm: "Вы действительно хотите завершить этот опрос и больше не принимать голоса?"
       automatic_close:
         closes_in: "Закроется через <strong>%{timeLeft}</strong>."
         age: "Закрыто <strong>%{age}</strong>"
+      breakdown:
+        title: "Результаты опроса"
+        votes: "%{count} голосов"
+        breakdown: "Распределение"
+        percentage: "Процент"
+        count: "Количество"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
-      error_while_fetching_voters: "В процессе получения списка проголосовавших произошла ошибка."
-      error_while_exporting_results: "В процессе экспорта списка проголосовавших в опросе произошла ошибка."
+      error_while_fetching_voters: "Произошла ошибка в процессе получения списка проголосовавших."
+      error_while_exporting_results: "Произошла ошибка в процессе экспорта результатов опроса."
       ui_builder:
         title: Создать опрос
         insert: Вставить опрос в сообщение
@@ -100,16 +102,20 @@ ru:
           closed: При закрытии
           staff: Только для персонала
         poll_groups:
-          label: Разрешенные группы
+          label: Разрешённые группы
         poll_chart_type:
           label: Тип диаграммы
+          bar: Гистограмма
+          pie: Круговая
         poll_config:
           max: Макс.
           min: Мин.
           step: Шаг
         poll_public:
-          label: Показывать, кто голосовал (не отмечайте флажок, чтобы голосование было анонимным)
+          label: Показывать проголосовавших (не отмечайте, чтобы голосование было анонимным)
+        poll_title:
+          label: Заголовок (необязательно)
         poll_options:
-          label: Введите варианты ответа, по одному на строку
+          label: Введите варианты ответа, по одному в строке
         automatic_close:
           label: Автоматически закрыть опрос

@@ -10,7 +10,7 @@
 }
 
 .topic-post article {
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding: 15px 0 8px 0;
 }
 
@@ -28,71 +28,77 @@ span.badge-posts {
 
 .topic-post {
   nav.post-controls {
-    color: dark-light-choose($primary-low-mid, $secondary-high);
+    color: var(--primary-low-mid-or-secondary-high);
+    &.expanded {
+      // on small devices with many buttons this can overflow
+      overflow-x: scroll;
+    }
     .actions {
       display: flex;
-    }
-    // Handles the like and flag buttons in the post menu.
-    .double-button {
-      display: flex;
-      flex: 0 1 auto;
-      button {
-        &.like,
-        &.read-indicator,
-        &.create-flag {
-          flex: 1 1 auto;
-        }
-        &.button-count {
-          padding: s(2 1 2 2);
-          + .toggle-like,
-          + .create-flag {
-            padding: s(2 2 2 1);
+
+      // Handles the like and flag buttons in the post menu.
+      .double-button {
+        display: flex;
+        flex: 0 1 auto;
+        align-items: center;
+        button {
+          &.like,
+          &.read-indicator,
+          &.create-flag {
+            flex: 1 1 auto;
           }
-          &.my-likes,
-          &.regular-likes {
-            display: flex;
-            max-width: unset;
-            padding: s(2);
-            .d-icon {
-              padding-left: s(2);
+          &.button-count {
+            padding: 8px 4px 8px 8px;
+            + .toggle-like,
+            + .create-flag {
+              padding: 8px 8px 8px 4px;
+            }
+            &.my-likes,
+            &.regular-likes {
+              display: flex;
+              max-width: unset;
+              padding: 8px;
+              .d-icon {
+                padding-left: 8px;
+              }
             }
           }
         }
       }
-    }
-    .d-icon {
-      opacity: 1;
-    }
-    button {
-      border: none;
-      font-size: $font-up-1;
-      padding: 10px 8px;
-      background: transparent;
-      flex: 1 1 auto;
-      max-width: 45px;
-      &.hidden {
-        display: none;
+      .d-icon {
+        opacity: 1;
       }
-      &.admin {
-        position: relative;
-      }
-      &.expand-post {
-        margin: 10px 0 10px 0;
-      }
-      &.reply {
-        .d-icon {
-          color: $primary-high;
+      button {
+        border: none;
+        font-size: $font-up-1;
+        padding: 10px 8px;
+        background: transparent;
+        flex: 1 1 auto;
+        max-width: 45px;
+        &.hidden {
+          display: none;
         }
-        margin-left: auto;
-      }
-      &.has-like {
-        .d-icon {
-          color: $love;
+        &.admin {
+          position: relative;
         }
-      }
-      &.bookmarked {
-        .d-icon {
-          color: $tertiary;
+        &.expand-post {
+          margin: 10px 0 10px 0;
+        }
+        &.reply {
+          .d-icon {
+            color: var(--primary-high);
+          }
+          margin-left: auto;
+        }
+        &.has-like {
+          .d-icon {
+            color: var(--love);
+          }
+        }
+        &.bookmarked {
+          .d-icon {
+            color: var(--tertiary);
+          }
         }
       }
     }
@@ -100,37 +106,10 @@ span.badge-posts {
 }
 
 .post-admin-menu {
-  display: inline-flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  background-color: $secondary;
-  width: auto;
-  max-width: 320px;
-  padding: 10px;
-  border: 1px solid $primary-low;
-  position: absolute;
-  text-align: left;
   bottom: -50px;
   left: 135px;
   @media screen and (max-width: 374px) {
     left: 50px;
-  }
-  z-index: z("dropdown");
-  h3 {
-    margin-top: 0;
-    color: $primary;
-    font-size: $font-0;
-  }
-  ul {
-    list-style: none;
-    margin: 10px 0 0 0;
-  }
-  li {
-    margin-bottom: 5px;
-    .d-icon {
-      width: 14px;
-      margin-right: 10px;
-    }
   }
 }
 
@@ -156,7 +135,7 @@ span.badge-posts {
 
 a.reply-to-tab {
   z-index: z("base") + 1;
-  color: dark-light-choose($primary-medium, $secondary-medium);
+  color: var(--primary-med-or-secondary-med);
   margin-right: 0.5em;
 }
 
@@ -191,7 +170,7 @@ a.reply-to-tab {
     }
     .number,
     .d-icon {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: var(--primary-high-or-secondary-low);
       font-size: $font-up-1;
     }
     .avatar + a {
@@ -205,7 +184,7 @@ a.reply-to-tab {
   .information,
   .avatars {
     padding: 10px;
-    color: $primary;
+    color: var(--primary);
     overflow: auto;
   }
   .information {
@@ -217,9 +196,9 @@ a.reply-to-tab {
     .btn {
       border: 0;
       padding: 0 15px;
-      color: dark-light-choose($primary-medium, $secondary-high);
-      background: blend-primary-secondary(5%);
-      border-left: 1px solid $primary-low;
+      color: var(--primary-med-or-secondary-high);
+      background: var(--blend-primary-secondary-5);
+      border-left: 1px solid var(--primary-low);
       .fa {
         margin: 0;
         font-size: $font-up-2;
@@ -228,26 +207,23 @@ a.reply-to-tab {
     }
   }
   .link-summary .btn {
-    color: dark-light-choose($primary-medium, $secondary-high);
-    background: blend-primary-secondary(5%);
+    color: var(--primary-med-or-secondary-high);
+    background: var(--blend-primary-secondary-5);
     width: 100%;
   }
 }
 
 #topic-footer-buttons {
-  @include clearfix;
-  padding: 20px 0 0 0;
-  .d-icon-bookmark.bookmarked {
-    color: $tertiary;
+  .d-icon-bookmark.bookmarked,
+  .d-icon-discourse-bookmark-clock.bookmarked {
+    color: var(--tertiary);
   }
-  .combobox {
-    margin-right: 0.5em;
-    width: 160px;
-    margin-bottom: 0.5em;
-  }
-}
 
-#topic-footer-buttons {
+  .topic-footer-mobile-dropdown {
+    margin: 0 0.5em 0.5em 0;
+    width: 160px;
+  }
+
   .topic-notifications-button,
   .pinned-button {
     display: flex;
@@ -260,11 +236,6 @@ a.reply-to-tab {
       }
     }
   }
-}
-
-#topic-footer-button {
-  width: 100px;
-  margin: 0 auto;
 }
 
 .suggested-topics {
@@ -286,16 +257,9 @@ a.reply-to-tab {
 }
 
 span.post-count {
-  background: $primary;
-  color: $secondary;
+  background: var(--primary);
+  color: var(--secondary);
   opacity: 0.8;
-}
-
-#topic-footer-buttons {
-  .btn {
-    margin-bottom: 0.5em;
-    margin-right: 0.5em;
-  }
 }
 
 #topic-title {
@@ -319,31 +283,11 @@ span.post-count {
 }
 
 .quote-button.visible {
-  display: block;
   z-index: z("tooltip");
 }
 
 iframe {
   max-width: 100%;
-}
-
-.open > .dropdown-menu {
-  display: block;
-}
-
-.dropdown-menu li {
-  margin: 5px 0;
-  .fa {
-    float: left;
-    margin-right: 5px;
-    padding-top: 1px;
-  }
-  span {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-  span.title {
-    color: $primary;
-  }
 }
 
 .btn-group {
@@ -372,12 +316,7 @@ button.select-post {
 
 .deleted {
   .topic-body {
-    background-color: dark-light-diff(
-      rgba($danger, 0.7),
-      $secondary,
-      50%,
-      -60%
-    );
+    background-color: var(--danger-low-mid);
   }
 }
 
@@ -396,6 +335,10 @@ blockquote {
   margin-right: 0;
 }
 
+pre.copy-codeblocks code {
+  padding-right: 2.75em;
+}
+
 .gap {
   padding: 0.25em 0;
 }
@@ -405,7 +348,7 @@ blockquote {
 }
 
 span.highlighted {
-  background-color: $highlight-low;
+  background-color: var(--highlight-low);
 }
 
 .topic-avatar {
@@ -451,11 +394,11 @@ span.highlighted {
 }
 
 .username.new-user a {
-  color: $primary-low-mid;
+  color: var(--primary-low-mid);
 }
 
 .user-title {
-  color: $primary-medium;
+  color: var(--primary-medium);
   overflow: hidden;
   margin-right: 50px;
 }
@@ -473,22 +416,6 @@ span.highlighted {
   }
   button {
     margin-right: 7px;
-  }
-}
-
-.popup-menu,
-#topic-footer-buttons .popup-menu {
-  h3 {
-    margin-bottom: 0;
-  }
-
-  ul div li {
-    border-bottom: 0.25em solid transparent;
-    border-top: 0.25em solid transparent;
-
-    button.btn {
-      margin-bottom: 0;
-    }
   }
 }
 

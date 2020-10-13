@@ -5,7 +5,7 @@ require 'rails_helper'
 describe UserApiKey do
   context "#allow?" do
     it "can look up permissions correctly" do
-      key = UserApiKey.new(scopes: ['message_bus', 'notifications'])
+      key = UserApiKey.new(scopes: ['message_bus', 'notifications'].map { |name| UserApiKeyScope.new(name: name) })
 
       expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "GET")).to eq(false)
       expect(key.allow?("PATH_INFO" => "/message-bus/1234/poll", "REQUEST_METHOD" => "POST")).to eq(true)
@@ -20,7 +20,7 @@ describe UserApiKey do
 
     it "can allow all correct scopes to write" do
 
-      key = UserApiKey.new(scopes: ["write"])
+      key = UserApiKey.new(scopes: ["write"].map { |name| UserApiKeyScope.new(name: name) })
 
       expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "GET")).to eq(true)
       expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "PUT")).to eq(true)
@@ -31,7 +31,7 @@ describe UserApiKey do
 
     it "can allow blanket read" do
 
-      key = UserApiKey.new(scopes: ["read"])
+      key = UserApiKey.new(scopes: ["read"].map { |name| UserApiKeyScope.new(name: name) })
 
       expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "GET")).to eq(true)
       expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "PUT")).to eq(false)

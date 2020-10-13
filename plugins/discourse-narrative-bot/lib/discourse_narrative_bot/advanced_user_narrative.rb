@@ -41,7 +41,7 @@ module DiscourseNarrativeBot
       tutorial_recover: {
         next_state: :tutorial_category_hashtag,
         next_instructions: Proc.new do
-          category = Category.secured.last
+          category = Category.secured(Guardian.new(@user)).last
           slug = category.slug
 
           if parent_category = category.parent_category
@@ -98,6 +98,10 @@ module DiscourseNarrativeBot
       }
     }
 
+    def self.badge_name
+      BADGE_NAME
+    end
+
     def self.reset_trigger
       I18n.t('discourse_narrative_bot.advanced_user_narrative.reset_trigger')
     end
@@ -119,13 +123,13 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      post = PostCreator.create!(@user,         raw: I18n.t(
-          "#{I18N_KEY}.edit.bot_created_post_raw",
-          i18n_post_args(discobot_username: self.discobot_user.username)
-        ),
-                                                topic_id: data[:topic_id],
-                                                skip_bot: true,
-                                                skip_validations: true)
+      post = PostCreator.create!(
+        @user,
+        raw: I18n.t("#{I18N_KEY}.edit.bot_created_post_raw", i18n_post_args(discobot_username: self.discobot_username)),
+        topic_id: data[:topic_id],
+        skip_bot: true,
+        skip_validations: true
+      )
 
       set_state_data(:post_id, post.id)
       post
@@ -134,11 +138,9 @@ module DiscourseNarrativeBot
     def init_tutorial_recover
       data = get_data(@user)
 
-      post = PostCreator.create!(@user,
-        raw: I18n.t(
-          "#{I18N_KEY}.recover.deleted_post_raw",
-          i18n_post_args(discobot_username: self.discobot_user.username)
-        ),
+      post = PostCreator.create!(
+        @user,
+        raw: I18n.t("#{I18N_KEY}.recover.deleted_post_raw", i18n_post_args(discobot_username: self.discobot_username)),
         topic_id: data[:topic_id],
         skip_bot: true,
         skip_validations: true
@@ -276,7 +278,7 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css('.hashtag').size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css('.hashtag').size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.category_hashtag.reply", i18n_post_args)}
 
@@ -327,7 +329,7 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css(".poll").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css(".poll").size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.poll.reply", i18n_post_args)}
 
@@ -350,7 +352,7 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      if Nokogiri::HTML.fragment(@post.cooked).css("details").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css("details").size > 0
         reply_to(@post, I18n.t("#{I18N_KEY}.details.reply", i18n_post_args))
       else
         reply_to(@post, I18n.t("#{I18N_KEY}.details.not_found", i18n_post_args)) unless @data[:attempted]

@@ -17,7 +17,6 @@
 
 .badge-wrapper {
   font-size: $font-down-1;
-  font-weight: bold;
   white-space: nowrap;
   position: relative;
   display: inline-flex;
@@ -43,11 +42,11 @@
   &.bullet {
     margin-right: 12px;
     span.badge-category {
-      color: $primary-high;
+      color: var(--primary-high);
       overflow: hidden;
       text-overflow: ellipsis;
       .extra-info-wrapper & {
-        color: $header-primary;
+        color: var(--header-primary);
       }
     }
     .badge-category-parent-bg,
@@ -67,7 +66,7 @@
       }
     }
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 
@@ -116,13 +115,13 @@
     margin-right: 5px;
 
     span.badge-category {
-      color: $primary-high;
+      color: var(--primary-high);
       padding: 1px 3px;
       overflow: hidden;
       text-overflow: ellipsis;
 
       .extra-info-wrapper & {
-        color: $header-primary;
+        color: var(--header-primary);
       }
     }
 
@@ -141,7 +140,7 @@
   // ----- No category style
 
   &.none {
-    color: $primary-high;
+    color: var(--primary-high);
     margin-right: 5px;
   }
 }
@@ -166,47 +165,48 @@
   @extend %badge;
   padding: 0.21em 0.42em;
   min-width: 0.5em;
-  color: $secondary;
+  color: var(--secondary);
   font-size: $font-down-2;
   line-height: $line-height-small;
   text-align: center;
-  background-color: dark-light-choose($primary-low-mid, $secondary-low);
+  background-color: var(--primary-low-mid-or-secondary-low);
   &[href] {
-    color: $secondary;
+    color: var(--secondary);
   }
 
   &:hover {
-    color: $secondary;
+    color: var(--secondary);
   }
 
   // New posts
 
   &.new-posts,
   &.unread-posts {
-    background-color: dark-light-choose($tertiary-medium, $tertiary);
-    color: dark-light-choose($secondary, $secondary);
+    background-color: var(--tertiary-med-or-tertiary);
+    color: var(--secondary);
     font-weight: dark-light-choose(normal, bold);
   }
 
   &.new-topic {
     background-color: transparent;
-    color: $tertiary-high;
-    font-weight: normal;
-    font-size: $font-down-1;
   }
 
   &.new-topic::before {
-    content: "●";
-    margin-right: 2px;
+    content: "";
+    background: var(--tertiary-high);
+    display: inline-block;
+    height: 0.4em;
+    width: 0.4em;
+    border-radius: 50%;
   }
 
   // Click count
 
   &.clicks {
     font-weight: normal;
-    background-color: $primary-low;
+    background-color: var(--primary-low);
     top: -1px;
-    color: $primary-medium;
+    color: var(--primary-medium);
     position: relative;
     border: none;
   }
@@ -220,7 +220,7 @@
   font-size: $font-0;
   line-height: $line-height-small;
   &[href] {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
   }
 }
 
@@ -230,8 +230,8 @@
 .badge-group {
   @extend %badge;
   padding: 2px 5px;
-  color: $primary;
-  background-color: $primary-low;
-  border-color: $primary-low;
+  color: var(--primary);
+  background-color: var(--primary-low);
+  border-color: var(--primary-low);
   font-size: $font-down-1;
 }

@@ -12,7 +12,6 @@ class SiteSerializer < ApplicationSerializer
     :top_menu_items,
     :anonymous_top_menu_items,
     :uncategorized_category_id, # this is hidden so putting it here
-    :is_readonly,
     :disabled_plugins,
     :user_field_max_length,
     :post_action_types,
@@ -25,8 +24,11 @@ class SiteSerializer < ApplicationSerializer
     :wizard_required,
     :topic_featured_link_allowed_category_ids,
     :user_themes,
+    :user_color_schemes,
+    :default_dark_color_scheme,
     :censored_regexp,
-    :shared_drafts_category_id
+    :shared_drafts_category_id,
+    :custom_emoji_translation
   )
 
   has_many :categories, serializer: SiteCategorySerializer, embed: :objects
@@ -40,10 +42,21 @@ class SiteSerializer < ApplicationSerializer
       Theme.where('id = :default OR user_selectable',
                     default: SiteSetting.default_theme_id)
         .order(:name)
-        .pluck(:id, :name)
-        .map { |id, n| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id } }
+        .pluck(:id, :name, :color_scheme_id)
+        .map { |id, n, cs| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id, color_scheme_id: cs } }
         .as_json
     end
+  end
+
+  def user_color_schemes
+    cache_fragment("user_color_schemes") do
+      schemes = ColorScheme.where('user_selectable').order(:name)
+      ActiveModel::ArraySerializer.new(schemes, each_serializer: ColorSchemeSelectableSerializer).as_json
+    end
+  end
+
+  def default_dark_color_scheme
+    ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id).as_json
   end
 
   def groups
@@ -92,10 +105,6 @@ class SiteSerializer < ApplicationSerializer
 
   def uncategorized_category_id
     SiteSetting.uncategorized_category_id
-  end
-
-  def is_readonly
-    Discourse.readonly_mode?
   end
 
   def disabled_plugins
@@ -152,6 +161,10 @@ class SiteSerializer < ApplicationSerializer
 
   def censored_regexp
     WordWatcher.word_matcher_regexp(:censor)&.source
+  end
+
+  def custom_emoji_translation
+    Plugin::CustomEmoji.translations
   end
 
   def shared_drafts_category_id

@@ -1,11 +1,10 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ru:
   site_settings:
-    presence_enabled: "Показать пользователей, которые отвечают на текущую тему или редактируют текущий пост прямо сейчас?"
-    presence_max_users_shown: "Максимальное отражаемое количество пользователей, которые отвечают прямо сейчас."
+    presence_enabled: "Показывать пользователей, которые в данный момент отвечают на текущую тему или редактируют текущее сообщение"
+    presence_max_users_shown: "Максимальное количество показываемых пользователей, отвечающих в данный момент."

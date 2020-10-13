@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nb_NO:
   dates:
@@ -17,12 +16,25 @@ nb_NO:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, januar, februar, mars, april, mai, juni, juli, august, september, oktober, november, desember]
+    month_names:
+    - null
+    - januar
+    - februar
+    - mars
+    - april
+    - mai
+    - juni
+    - juli
+    - august
+    - september
+    - oktober
+    - november
+    - desember
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "innlegg"
@@ -46,7 +58,6 @@ nb_NO:
       no_multilevels_components: "Drakter som inneholder underdrakter kan ikke selv være en underdrakt"
     settings_errors:
       invalid_yaml: "YAML koden er ikke gyldig."
-      data_type_not_a_number: "Innstilling `%{name}` typen er ikke støttet. Støttede typer er `integer`, `bool`, `list` og `enum`"
       name_too_long: "En eller flere innstillinger har for langt navn. Maksimal lengde er 255 tegn"
       default_value_missing: "Innstilling `%{name}` har ingen standardverdi"
       default_not_match_type: "Innstilling `%{name}` har en type standardverdi som ikke stemmer med den definerte typen for innstillingen."
@@ -83,10 +94,9 @@ nb_NO:
         bounced_email_error: "E-posten er en returnert e-postrapport."
         screened_email_error: "Skjer når avsenderens e-postadresse allerede var filtrert."
         unsubscribe_not_allowed: "Skjer når avmelding via e-post ikke er tillatt for denne brukeren."
-        email_not_allowed: "Skjer når e-postadressen ikke er på hvitlisten eller er svartelistet."
       unrecognized_error: "Ukjent feil"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "er begrenset til %{max} tegn; du brukte %{length}."
@@ -95,24 +105,24 @@ nb_NO:
       accepted: må bli godkjent
       blank: kan ikke være tom
       present: må være tom
-      confirmation: "er ikke like %{attribute}"
+      confirmation: ! "er ikke like %{attribute}"
       empty: kan ikke være tom
-      equal_to: "må være lik %{count}"
+      equal_to: må være lik %{count}
       even: må være jevnt antall
       exclusion: er reservert
-      greater_than: "må være større enn %{count}"
-      greater_than_or_equal_to: "må være lik eller større enn %{count}"
+      greater_than: må være større enn %{count}
+      greater_than_or_equal_to: må være lik eller større enn %{count}
       has_already_been_used: "har allerede blitt brukt"
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
       is_invalid: "virker uklart, er det en komplett setning?"
       contains_censored_words: "inneholder følgende sensurerte ord: %{censored_words}"
-      less_than: "må være mindre enn %{count}"
-      less_than_or_equal_to: "må være lik eller mindre enn %{count}"
+      less_than: må være mindre enn %{count}
+      less_than_or_equal_to: må være lik eller mindre enn %{count}
       not_a_number: er ikke et nummer
       not_an_integer: må være ett heltall
       odd: må være oddetall
-      record_invalid: "Validering feilet: %{errors}"
+      record_invalid: ! "Validering feilet: %{errors}"
       max_emojis: "kan ikke ha over %{max_emojis_count} emoji"
       ip_address_already_screened: "er allerede inkludert i en eksisterende regel"
       restrict_dependent_destroy:
@@ -129,10 +139,10 @@ nb_NO:
         other: feil lengde på tekst (skal være %{count} tegn)
       other_than: "må være annet enn %{count}"
     template:
-      body: "Dette er problemene med de følgene feltene:"
+      body: ! "Dette er problemene med de følgene feltene:"
       header:
         one: "%{count} feil forhindret lagring av %{model}"
-        other: "%{count} feil forhindret lagring av %{model}"
+        other: ! "%{count} feil forhindret lagring av %{model}"
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
     site_settings:
@@ -142,9 +152,6 @@ nb_NO:
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     not_found_template: |
       <p>Invitasjonen din til <a href="%{base_url}">%{site_name}</a> er allerede brukt.</p>
@@ -202,11 +209,6 @@ nb_NO:
   too_many_mentions_newuser:
     one: "Beklager, nye brukere kan bare nevne én annen bruker i et innlegg."
     other: "Beklager, nye brukere kan bare nevne %{count} brukere i et innlegg."
-  no_images_allowed_trust: "Beklager, du kan ikke legge til bilder i et innlegg."
-  no_images_allowed: "Beklager, nye brukere kan ikke legge til bilder i et innlegg."
-  too_many_images:
-    one: "Beklager, nye brukere kan bare legge til ett bilde i et innlegg."
-    other: "Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg."
   no_attachments_allowed: "Beklager, nye brukere kan ikke laste opp vedlegg til et innlegg."
   too_many_attachments:
     one: "Beklager, nye brukere kan bare laste opp ett vedlegg til et innlegg."
@@ -232,9 +234,6 @@ nb_NO:
   topics_in_category: "Emner i '%{category}'-kategorien"
   rss_posts_in_topic: "RSS-strøm av '%{topic}'"
   rss_topics_in_category: "RSS-strøm av emner i '%{category}'-kategorien"
-  author_wrote: "%{author} skrev:"
-  num_posts: "Innlegg:"
-  num_participants: "Deltakere:"
   read_full_topic: "Les hele emnet"
   private_message_abbrev: "Mld"
   rss_description:
@@ -257,6 +256,14 @@ nb_NO:
   too_late_to_edit: "Det er for lenge siden det innlegget ble skrevet. Det kan ikke lenger redigeres eller slettes."
   revert_version_same: "Den gjeldende versjonen er den samme som den du prøver å rulle tilbake til."
   excerpt_image: "bilde"
+  bookmarks:
+    reminders:
+      at_desktop: "Neste gang jeg er på datamaskinen min"
+      later_today: "Senere i dag"
+      tomorrow: "I morgen"
+      next_week: "Neste uke"
+      next_month: "Neste måned"
+      custom: "Egendefinert dato og tid"
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' er ikke et gyldig tillitsnivå."
@@ -346,7 +353,6 @@ nb_NO:
       user_profile:
         bio_raw: "Om meg"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -401,6 +407,7 @@ nb_NO:
           attributes:
             word:
               too_many: "For mange ord for den handlingen"
+      <<: *errors
   uncategorized_category_name: "Ukategorisert"
   vip_category_name: "Salong"
   vip_category_description: "En kategori tilgjengelig for brukere på tillitsnivå 3 og høyere."
@@ -611,7 +618,7 @@ nb_NO:
       title: "Upassende"
       long_form: "markerte dette som upassende"
     notify_user:
-      title: "Send en melding til @{{username}}"
+      title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
       short_description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
       long_form: "sendt melding til bruker"
@@ -703,7 +710,7 @@ nb_NO:
     read_write: "les/skriv"
     description: '"%{application_name}" ber om følgende tilgang til kontoen din:'
     otp_confirmation:
-      confirm_title: "Fortsett til %{site_name}"
+      confirm_title: Fortsett til %{site_name}
     no_trust_level: "Beklager, du har ikke det nødvendige tillitsnivået for tilgang til API for brukere"
     generic_error: "Beklager, vi kan ikke utstede API nøkler for brukere, denne funksjonen kan være deaktivert av administratoren"
     scopes:
@@ -973,7 +980,6 @@ nb_NO:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
     allow_user_locale: "Tillat brukere å velge eget språk"
-    set_locale_from_accept_language_header: "sett språket i grensesnittet for anonyme brukere basert på hva nettleseren deres rapporterer. (EKSPERIMENTELL, fungerer ikke med anonym cache) "
     support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
     min_post_length: "Minimum tillatt lengde for innlegg i tegn"
     min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
@@ -1001,7 +1007,6 @@ nb_NO:
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_to_local: "Konverter eksterne bilder ved å laste de ned lokalt, dette forhindrer ødelagte bilder."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
-    download_remote_images_max_days_old: "Ikke last ned eksterne bilder for innlegg som er eldre enn dette antall dager."
     disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
     editing_grace_period: "(n) sekunder etter publisering vil redigering ikke opprette en ny versjon i redigeringsloggen."
     editing_grace_period_max_diff: "Maksimalt antall tegn for en endring utført i nådeperioden, hvis antallet overskrides lagres en ny revisjon av innlegget (tillitsnivå 0 og 1)"
@@ -1019,24 +1024,18 @@ nb_NO:
     show_pinned_excerpt_mobile: "Vis utdrag fra festede emner i mobil visning."
     show_pinned_excerpt_desktop: "Vis utdrag fra festede emner i desktop visning."
     post_onebox_maxlength: "Maksimal lengde på et onebox Discourse innlegg i antall tegn."
-    onebox_domains_blacklist: "En liste over domener som aldri vil bli forsøkt oneboxet."
-    inline_onebox_domains_whitelist: "En liste over domener hvor onebox brukes i miniatyrstørrelse hvis lenken ikke har en tittel"
-    enable_inline_onebox_on_all_domains: "Ignorer inline_onebox_domain_whitelist innstillingen og tillat inline onebox på alle domener."
     max_oneboxes_per_post: "Maksimalt antall oneboxer i hvert innlegg."
     notification_email: "Adressen som skal brukes som avsender: på alle viktige system e-poster. Domenet som spesifiseres her må ha SPF, DKIM og reverse PTR record satt korrekt for at e-post skal nå frem."
     email_custom_headers: "En liste over tilpassede e-posthoder med pipe-tegn mellom hvert element"
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
     same_site_cookies: "Bruk Same-Site cookies/kapsler, de eliminerer alle former for Cross Site Request Forgery på nettlesere som støtter dem (Lax eller Strict). Avarsel: Strict vil kun fungere på nettsteder som tvinger innlogging og bruker SSO."
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
-    summary_posts_required: "Minste antall innlegg før 'Sammendrag for Emnet' aktiveres"
-    summary_likes_required: "Minste antall 'likes' i et emne før 'Sammendrag for Emnet' aktiveres"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
     num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
     must_approve_users: "Stab må godkjenne alle nye brukere før de får lov til å ta i bruk siden."
-    moderators_create_categories: "Tillat moderatorer å opprette nye kategorier"
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall emner som vises i standard oppsummering av mest populære emner."
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."
@@ -1053,7 +1052,6 @@ nb_NO:
     max_logins_per_ip_per_hour: "Maksimalt antall innlogginger som tillates for hver IP-adresse per time."
     allow_staff_to_upload_any_file_in_pm: "Tillat medlemmer av staben å laste opp hvilken som helst fil i private samtaler"
     newuser_max_links: "Hvor mange linker en ny bruker kan legge til i et innlegg."
-    newuser_max_images: "Hvor mange bilder en ny bruker kan legge til i et innlegg."
     title_prettify: "Unngå vanlige skrivefeil i titler, sånn som store bokstaver, liten bokstav først, mange !, ? og punktum på slutten, osv."
     faq_url: "Hvis du har O-S-S på et annet nettsted du gjerne vil bruke, skriv inn nettadressen her."
     tos_url: "Dersom du har et bruksvilkår-dokument et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."
@@ -1098,15 +1096,21 @@ nb_NO:
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
   search:
+    within_post: "#%{post_number} av %{username}"
     types:
       category: "Kategorier"
       topic: "Resultater"
       user: "Brukere"
+    results_page: "Søkeresultater for \"%{term}\""
   most_posts: "Flest innlegg"
   most_recent_poster: "Ferskeste innlegg av"
   redirected_to_top_reasons:
     new_user: "Velkommen til felleskapet vårt! Dette er de mest populære emnene for tiden. "
     not_seen_in_a_month: "Velkommen tilbake! Vi har ikke sett deg på en stund. Dette er de mest populære emnene siden du var her sist."
+  publish_page:
+    slug_errors:
+      blank: "kan ikke være tom"
+      invalid: "inneholder ugyldige tegn"
   topic_statuses:
     autoclosed_enabled_days:
       one: "Denne tråden ble automatisk lukket etter %{count} dag. Nye svar er ikke lenger tillatt. "
@@ -1218,7 +1222,6 @@ nb_NO:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"
       new_topics: "Nye emner"
-      unread_messages: "Uleste meldinger"
       unread_notifications: "Uleste varslinger."
       liked_received: "Likes mottatt"
       new_users: "Nye brukere"
@@ -1375,7 +1378,7 @@ nb_NO:
       name: Selvbiograf
     anniversary:
       name: Jubileum
-      description: "Aktivt medlem i over ett år, postet minst en gang"
+      description: Aktivt medlem i over ett år, postet minst en gang
     nice_topic:
       name: Fint emne
     good_topic:
@@ -1477,8 +1480,6 @@ nb_NO:
         title: "Organisasjon"
       colors:
         title: "Drakt"
-      themes_further_reading:
-        title: "Drakter"
       logos:
         title: "Logoer"
         fields:
@@ -1509,6 +1510,12 @@ nb_NO:
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
+      quoted: '%{username} siterte deg i "%{topic}" - %{site_title}'
+      replied: '%{username} svarte deg i "%{topic}" - %{site_title}'
+      posted: '%{username} skrev noe i "%{topic}" - %{site_title}'
+      linked: '%{username} lenket til innlegget ditt i "%{topic}" - %{site_title}'
       confirm_title: "Varslinger aktivert - %{site_title}"
       confirm_body: "Suksess! Varslinger er nå aktivert."
   reviewables:
@@ -1548,3 +1555,6 @@ nb_NO:
         title: "Avvis"
       delete_user:
         title: "Slett bruker"
+  activemodel:
+    errors:
+      <<: *errors

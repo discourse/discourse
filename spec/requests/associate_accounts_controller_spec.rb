@@ -52,7 +52,7 @@ RSpec.describe Users::AssociateAccountsController do
       # Request associate info
       uri = URI.parse(response.redirect_url)
       get "#{uri.path}.json"
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(data["provider_name"]).to eq("google_oauth2")
       expect(data["account_description"]).to eq("someemail@test.com")
 
@@ -64,7 +64,7 @@ RSpec.describe Users::AssociateAccountsController do
       # Back to first user
       sign_in(user)
       get "#{uri.path}.json"
-      data = JSON.parse(response.body)
+      data = response.parsed_body
       expect(data["provider_name"]).to eq("google_oauth2")
 
       # Make the connection

@@ -28,10 +28,13 @@ class SearchController < ApplicationController
       raise Discourse::InvalidParameters.new("string contains null byte")
     end
 
+    rate_limit_errors = rate_limit_search
+
+    discourse_expires_in 1.minute
+
     search_args = {
       type_filter: 'topic',
       guardian: guardian,
-      include_blurbs: true,
       blurb_length: 300,
       page: if params[:page].to_i <= 10
               [params[:page].to_i, 1].max
@@ -48,12 +51,25 @@ class SearchController < ApplicationController
     search_args[:ip_address] = request.remote_ip
     search_args[:user_id] = current_user.id if current_user.present?
 
-    if site_overloaded?
-      result = Search::GroupedSearchResults.new(search_args[:type_filter], @search_term, context, false, 0)
+    if rate_limit_errors
+      result = Search::GroupedSearchResults.new(
+        type_filter: search_args[:type_filter],
+        term: @search_term,
+        search_context: context
+      )
+
+      result.error = I18n.t("rate_limiter.slow_down")
+    elsif site_overloaded?
+      result = Search::GroupedSearchResults.new(
+        type_filter: search_args[:type_filter],
+        term: @search_term,
+        search_context: context
+      )
+
       result.error = I18n.t("search.extreme_load_error")
     else
       search = Search.new(@search_term, search_args)
-      result = search.execute
+      result = search.execute(readonly_mode: @readonly_mode)
       result.find_user_data(guardian) if result
     end
 
@@ -76,10 +92,13 @@ class SearchController < ApplicationController
       raise Discourse::InvalidParameters.new("string contains null byte")
     end
 
+    rate_limit_errors = rate_limit_search
+
+    discourse_expires_in 1.minute
+
     search_args = { guardian: guardian }
 
     search_args[:type_filter] = params[:type_filter]                 if params[:type_filter].present?
-    search_args[:include_blurbs] = params[:include_blurbs] == "true" if params[:include_blurbs].present?
     search_args[:search_for_id] = true                               if params[:search_for_id].present?
 
     context, type = lookup_search_context
@@ -94,11 +113,23 @@ class SearchController < ApplicationController
     search_args[:user_id] = current_user.id if current_user.present?
     search_args[:restrict_to_archetype] = params[:restrict_to_archetype] if params[:restrict_to_archetype].present?
 
-    if site_overloaded?
-      result = GroupedSearchResults.new(search_args["type_filter"], params[:term], context, false, 0)
+    if rate_limit_errors
+      result = Search::GroupedSearchResults.new(
+        type_filter: search_args[:type_filter],
+        term: params[:term],
+        search_context: context
+      )
+
+      result.error = I18n.t("rate_limiter.slow_down")
+    elsif site_overloaded?
+      result = GroupedSearchResults.new(
+        type_filter: search_args["type_filter"],
+        term: params[:term],
+        search_context: context
+      )
     else
       search = Search.new(params[:term], search_args)
-      result = search.execute
+      result = search.execute(readonly_mode: @readonly_mode)
     end
     render_serialized(result, GroupedSearchResultSerializer, result: result)
   end
@@ -138,6 +169,20 @@ class SearchController < ApplicationController
     (queue_time = request.env['REQUEST_QUEUE_SECONDS']) &&
       (GlobalSetting.disable_search_queue_threshold > 0) &&
       (queue_time > GlobalSetting.disable_search_queue_threshold)
+  end
+
+  def rate_limit_search
+    begin
+      if current_user.present?
+        RateLimiter.new(current_user, "search-min", SiteSetting.rate_limit_search_user, 1.minute).performed!
+      else
+        RateLimiter.new(nil, "search-min-#{request.remote_ip}", SiteSetting.rate_limit_search_anon_user, 1.minute).performed!
+        RateLimiter.new(nil, "search-min-anon-global", SiteSetting.rate_limit_search_anon_global, 1.minute).performed!
+      end
+    rescue RateLimiter::LimitExceeded => e
+      return e
+    end
+    false
   end
 
   def cancel_overloaded_search

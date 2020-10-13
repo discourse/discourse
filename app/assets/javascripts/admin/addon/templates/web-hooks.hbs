@@ -1,0 +1,38 @@
+<div class="web-hooks-listing">
+  <p>{{i18n "admin.web_hooks.instruction"}}</p>
+  <div class="new-webhook">
+    {{#link-to "adminWebHooks.show" "new" tagName="button" classNames="btn btn-default"}}
+      {{d-icon "plus"}} {{i18n "admin.web_hooks.new"}}
+    {{/link-to}}
+  </div>
+  {{#if model}}
+    {{#load-more selector=".web-hooks tr" action=(action "loadMore")}}
+      <table class="web-hooks grid">
+        <thead>
+          <tr>
+            <th>{{i18n "admin.web_hooks.delivery_status.title"}}</th>
+            <th>{{i18n "admin.web_hooks.payload_url"}}</th>
+            <th>{{i18n "admin.web_hooks.description"}}</th>
+            <th>{{i18n "admin.web_hooks.controls"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each model as |webHook|}}
+            <tr>
+              <td class="delivery-status">{{#link-to "adminWebHooks.showEvents" webHook.id}}{{admin-web-hook-status deliveryStatuses=deliveryStatuses model=webHook}}{{/link-to}}</td>
+              <td class="payload-url">{{#link-to "adminWebHooks.show" webHook}}{{webHook.payload_url}}{{/link-to}}</td>
+              <td class="description">{{webHook.description}}</td>
+              <td class="controls">
+                {{#link-to "adminWebHooks.show" webHook tagName="button" classNames="btn btn-default no-text"}}{{d-icon "far-edit"}}{{/link-to}}
+                {{d-button class="destroy btn-danger" action=(action "destroy") actionParam=webHook icon="times"}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{conditional-loading-spinner condition=model.loadingMore}}
+    {{/load-more}}
+  {{else}}
+    <p>{{i18n "admin.web_hooks.none"}}</p>
+  {{/if}}
+</div>

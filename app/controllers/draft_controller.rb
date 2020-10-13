@@ -22,7 +22,8 @@ class DraftController < ApplicationController
           params[:draft_key],
           params[:sequence].to_i,
           params[:data],
-          params[:owner]
+          params[:owner],
+          force_save: params[:force_save]
         )
       rescue Draft::OutOfSequence
 
@@ -51,7 +52,13 @@ class DraftController < ApplicationController
 
     json = success_json.merge(draft_sequence: sequence)
 
-    if data = JSON::parse(params[:data])
+    begin
+      data = JSON::parse(params[:data])
+    rescue JSON::ParserError
+      raise Discourse::InvalidParameters.new(:data)
+    end
+
+    if data.present?
       # this is a bit of a kludge we need to remove (all the parsing) too many special cases here
       # we need to catch action edit and action editSharedDraft
       if data["postId"].present? && data["originalText"].present? && data["action"].to_s.start_with?("edit")

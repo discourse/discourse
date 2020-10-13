@@ -82,7 +82,8 @@ Discourse is designed to offer safe defaults for public communities, even with n
 All new users start out in a sandbox with restrictions for everyone's safety. **Trust level 0 (new) users _cannot_** &hellip;
 
 - post more than 2 hyperlinks
-- post any images or file attachments
+- post more than 1 image
+- post file attachments
 - send personal messages
 - flag posts or topics
 - have actual links in the "about me" field of their profile

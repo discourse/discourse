@@ -1,0 +1,31 @@
+<div class="current-style {{if maximized "maximized"}}">
+  <div class="wrapper">
+    <h2>{{i18n "admin.customize.theme.edit_css_html"}} {{#link-to showRouteName model.id replace=true}}{{model.name}}{{/link-to}}</h2>
+
+    {{admin-theme-editor
+      theme=model
+      editRouteName=editRouteName
+      currentTargetName=currentTargetName
+      fieldName=fieldName
+      fieldAdded=(action "fieldAdded")
+      maximized=maximized
+      onlyOverriddenChanged=(action "onlyOverriddenChanged")
+    }}
+
+    <div class="admin-footer">
+      <div class="status-actions">
+        {{#unless model.changed}}
+          <a href={{previewUrl}} rel="noopener noreferrer" title={{i18n "admin.customize.explain_preview"}} class="preview-link" target="_blank">
+            {{i18n "admin.customize.preview"}}
+          </a>
+        {{/unless}}
+      </div>
+
+      <div class="buttons">
+        {{#d-button action=(action "save") disabled=saveDisabled class="btn-primary"}}
+          {{saveButtonText}}
+        {{/d-button}}
+      </div>
+    </div>
+  </div>
+</div>

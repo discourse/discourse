@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StylesheetsController < ApplicationController
-  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_source_map]
+  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_source_map, :color_scheme]
 
   def show_source_map
     show_resource(source_map: true)
@@ -13,6 +13,13 @@ class StylesheetsController < ApplicationController
     show_resource
   end
 
+  def color_scheme
+    params.require("id")
+    params.permit("theme_id")
+
+    stylesheet = Stylesheet::Manager.color_scheme_stylesheet_details(params[:id], 'all', params[:theme_id])
+    render json: stylesheet
+  end
   protected
 
   def show_resource(source_map: false)
@@ -28,15 +35,20 @@ class StylesheetsController < ApplicationController
     if !Rails.env.production?
       # TODO add theme
       # calling this method ensures we have a cache for said target
-      # we hold of re-compilation till someone asks for asset
-      if target.include?("theme")
-        split_target, theme_id = target.split(/_(-?[0-9]+)/)
-        theme = Theme.find_by(id: theme_id) if theme_id.present?
-      else
+      # we hold off re-compilation till someone asks for asset
+      if target.include?("color_definitions")
         split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
-        theme = Theme.find_by(color_scheme_id: color_scheme_id)
+        Stylesheet::Manager.color_scheme_stylesheet_link_tag(color_scheme_id)
+      else
+        if target.include?("theme")
+          split_target, theme_id = target.split(/_(-?[0-9]+)/)
+          theme = Theme.find_by(id: theme_id) if theme_id.present?
+        else
+          split_target, color_scheme_id = target.split(/_(-?[0-9]+)/)
+          theme = Theme.find_by(color_scheme_id: color_scheme_id)
+        end
+        Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.id)
       end
-      Stylesheet::Manager.stylesheet_link_tag(split_target, nil, theme&.id)
     end
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]

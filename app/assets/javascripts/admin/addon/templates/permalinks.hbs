@@ -1,0 +1,55 @@
+<div class="permalink-title">
+  <h2>{{i18n "admin.permalink.title"}}</h2>
+</div>
+<div class="permalink-description">
+  <span>{{i18n "admin.permalink.description"}}</span>
+</div>
+<div class="permalink-search">
+  {{text-field value=filter class="url-input" placeholderKey="admin.permalink.form.filter" autocorrect="off" autocapitalize="off"}}
+</div>
+{{permalink-form action=(action "recordAdded")}}
+<br>
+
+{{#conditional-loading-spinner condition=loading}}
+  {{#if model.length}}
+    <table class="admin-logs-table permalinks grid">
+      <thead class="heading-container">
+        <th class="col heading first url">{{i18n "admin.permalink.url"}}</th>
+        <th class="col heading destination">{{i18n "admin.permalink.destination"}}</th>
+        <th class="col heading actions"></th>
+      </thead>
+      <tbody>
+        {{#each model as |pl|}}
+          <tr class="admin-list-item">
+            <td class="col first url">{{d-button title="admin.permalink.copy_to_clipboard" icon="far-clipboard" action=(action "copyUrl" pl)}} <span id="admin-permalink-{{pl.id}}" title={{pl.url}}>{{pl.url}}</span></td>
+            <td class="col destination">
+              {{#if pl.topic_id}}
+                <a href={{pl.topic_url}}>{{pl.topic_title}}</a>
+              {{/if}}
+              {{#if pl.post_id}}
+                <a href={{pl.post_url}}>{{pl.post_topic_title}} #{{pl.post_number}}</a>
+              {{/if}}
+              {{#if pl.category_id}}
+                {{category-link pl.category}}
+              {{/if}}
+              {{#if pl.tag_id}}
+                <a href={{pl.tag_url}}>{{pl.tag_name}}</a>
+              {{/if}}
+              {{#if pl.external_url}}
+                {{#if pl.linkIsExternal}}
+                  {{d-icon "external-link-alt"}}
+                {{/if}}
+                <a href={{pl.external_url}}>{{pl.external_url}}</a>
+              {{/if}}
+            </td>
+            <td class="col action" style="text-align: right;">
+              {{d-button action=(action "destroy") actionParam=pl icon="far-trash-alt" class="btn-danger"}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    {{i18n "search.no_results"}}
+  {{/if}}
+{{/conditional-loading-spinner}}

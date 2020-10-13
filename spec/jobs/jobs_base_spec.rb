@@ -47,4 +47,41 @@ describe ::Jobs::Base do
     ::Jobs::Base.new.perform('hello' => 'world', 'sync_exec' => true)
   end
 
+  context "with fake jobs" do
+    let(:common_state) { [] }
+
+    let(:test_job_1) {
+      Class.new(Jobs::Base).tap do |klass|
+        state = common_state
+        klass.define_method(:execute) do |args|
+          state << "job_1_executed"
+        end
+      end
+    }
+
+    let(:test_job_2) {
+      Class.new(Jobs::Base).tap do |klass|
+        state = common_state
+        job_1 = test_job_1
+        klass.define_method(:execute) do |args|
+          state << "job_2_started"
+          Jobs.enqueue(job_1)
+          state << "job_2_finished"
+        end
+      end
+    }
+
+    it "runs jobs synchronously sequentially in tests" do
+      Jobs.run_immediately!
+      Jobs.enqueue(test_job_2)
+
+      expect(common_state).to eq([
+        "job_2_started",
+        "job_2_finished",
+        "job_1_executed"
+      ])
+    end
+
+  end
+
 end

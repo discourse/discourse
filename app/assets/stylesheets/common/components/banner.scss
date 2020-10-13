@@ -3,9 +3,9 @@
 // --------------------------------------------------
 
 #banner {
-  padding: 10px;
-  background: $tertiary-low;
-  color: $primary;
+  padding: 0.5em 1em;
+  background: var(--tertiary-low);
+  color: var(--primary);
   z-index: z("base") + 1;
   overflow: auto;
 
@@ -14,13 +14,21 @@
   }
 
   .close {
-    margin-top: -5px;
-    color: $primary-low-mid;
+    color: var(--primary-low-mid);
     padding-left: 5px;
     float: right;
+    .d-icon {
+      color: var(--primary-medium);
+    }
   }
 
   .meta {
     display: none;
+  }
+}
+
+#banner-content {
+  hr {
+    border-color: var(--primary-medium);
   }
 }

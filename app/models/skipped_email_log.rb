@@ -37,7 +37,8 @@ class SkippedEmailLog < ActiveRecord::Base
       sender_post_deleted: 20,
       sender_message_to_invalid: 21,
       user_email_access_denied: 22,
-      sender_topic_deleted: 23
+      sender_topic_deleted: 23,
+      user_email_no_email: 24,
       # you need to add the reason in server.en.yml below the "skipped_email_log" key
       # when you add a new enum value
     )

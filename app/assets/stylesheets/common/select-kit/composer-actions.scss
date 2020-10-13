@@ -7,14 +7,14 @@
         outline: none;
         padding: 0;
         margin-right: 5px;
-        border: 1px solid $primary-low;
+        border: 1px solid var(--primary-low);
         min-height: unset;
         .d-icon {
           padding: 5px 6px;
         }
         &:hover,
         &:focus {
-          background: $primary-low;
+          background: var(--primary-low);
         }
       }
       .d-icon {

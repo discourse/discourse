@@ -19,7 +19,8 @@ RSpec.describe EmailController do
     it 'can fully unsubscribe' do
       user.user_option.update_columns(email_digests: true,
                                       email_level: UserOption.email_level_types[:never],
-                                      email_messages_level: UserOption.email_level_types[:never])
+                                      email_messages_level: UserOption.email_level_types[:never],
+                                      mailing_list_mode: true)
 
       post "/email/unsubscribe/#{key}.json",
         params: { unsubscribe_all: "1" }
@@ -36,6 +37,7 @@ RSpec.describe EmailController do
       expect(user.user_option.email_digests).to eq(false)
       expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
       expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
+      expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
     it 'can disable mailing list' do
@@ -169,22 +171,6 @@ RSpec.describe EmailController do
     end
   end
 
-  context '#preferences_redirect' do
-    it 'requires you to be logged in' do
-      get "/email_preferences.json"
-      expect(response.status).to eq(403)
-    end
-
-    context 'when logged in' do
-      let!(:user) { sign_in(Fabricate(:user)) }
-
-      it 'redirects to your user preferences' do
-        get "/email_preferences.json"
-        expect(response).to redirect_to("/u/#{user.username}/preferences")
-      end
-    end
-  end
-
   context '#unsubscribe' do
     it 'displays not found if key is not found' do
       navigate_to_unsubscribe(SecureRandom.hex)
@@ -205,6 +191,24 @@ RSpec.describe EmailController do
 
         expect(response.body).to include(I18n.t("unsubscribe.log_out"))
         expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
+      end
+
+      it 'displays correct label when email_digests is set to false' do
+        user.user_option.update!(email_digests: false, digest_after_minutes: 10080)
+
+        navigate_to_unsubscribe
+
+        expect(body).to include("You are not receiving summary emails")
+        expect(body).to include("Don&#39;t send me any mail from Discourse")
+      end
+
+      it 'hides unsubscribe from all checkbox when user already unsubscribed' do
+        user.user_option.update!(email_digests: false, mailing_list_mode: false, email_level: 2, email_messages_level: 2)
+
+        navigate_to_unsubscribe
+
+        expect(body).to include("You are not receiving summary emails")
+        expect(body).not_to include("Don&#39;t send me any mail from Discourse")
       end
 
       it 'correctly handles mailing list mode' do
@@ -231,7 +235,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option").map(&:inner_text)).to eq(slow_digest_frequencies)
       end
 
@@ -242,7 +246,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(six_months_freq.to_s)
       end
 
@@ -253,7 +257,7 @@ RSpec.describe EmailController do
 
         navigate_to_unsubscribe
 
-        source = Nokogiri::HTML::fragment(response.body)
+        source = Nokogiri::HTML5::fragment(response.body)
         expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(never_frequency.to_s)
       end
     end

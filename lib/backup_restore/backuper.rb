@@ -12,7 +12,7 @@ module BackupRestore
       @user_id = user_id
       @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
-      @with_uploads = opts[:with_uploads].nil? ? true : opts[:with_uploads]
+      @with_uploads = opts[:with_uploads].nil? ? include_uploads? : opts[:with_uploads]
       @filename_override = opts[:filename]
 
       ensure_no_operation_is_running
@@ -33,20 +33,7 @@ module BackupRestore
       ensure_directory_exists(@archive_directory)
 
       update_metadata
-
-      ### READ-ONLY / START ###
-      enable_readonly_mode
-
-      begin
-        pause_sidekiq
-        wait_for_sidekiq
-        dump_public_schema
-      ensure
-        unpause_sidekiq
-      end
-
-      disable_readonly_mode
-      ### READ-ONLY / END ###
+      dump_public_schema
 
       log "Finalizing backup..."
 
@@ -106,7 +93,6 @@ module BackupRestore
         end
 
       @logs = []
-      @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
 
     def listen_for_shutdown_signal
@@ -132,38 +118,6 @@ module BackupRestore
       BackupMetadata.create!(name: "s3_cdn_url", value: SiteSetting.Upload.enable_s3_uploads ? SiteSetting.Upload.s3_cdn_url : nil)
       BackupMetadata.create!(name: "db_name", value: RailsMultisite::ConnectionManagement.current_db)
       BackupMetadata.create!(name: "multisite", value: Rails.configuration.multisite)
-    end
-
-    def enable_readonly_mode
-      return if @readonly_mode_was_enabled
-      log "Enabling readonly mode..."
-      Discourse.enable_readonly_mode
-    end
-
-    def pause_sidekiq
-      log "Pausing sidekiq..."
-      Sidekiq.pause!
-    end
-
-    def wait_for_sidekiq
-      log "Waiting for sidekiq to finish running jobs..."
-      iterations = 1
-      while sidekiq_has_running_jobs?
-        log "Waiting for sidekiq to finish running jobs... ##{iterations}"
-        sleep 5
-        iterations += 1
-        raise "Sidekiq did not finish running all the jobs in the allowed time!" if iterations > 6
-      end
-    end
-
-    def sidekiq_has_running_jobs?
-      Sidekiq::Workers.new.each do |_, _, worker|
-        payload = worker.try(:payload)
-        return true if payload.try(:all_sites)
-        return true if payload.try(:current_site_id) == @current_db
-      end
-
-      false
     end
 
     def dump_public_schema
@@ -207,6 +161,7 @@ module BackupRestore
       [ password_argument,            # pass the password to pg_dump (if any)
         "pg_dump",                    # the pg_dump command
         "--schema=public",            # only public schema
+        "-T public.pg_*",             # exclude tables and views whose name starts with "pg_"
         "--file='#{@dump_filename}'", # output to the dump.sql file
         "--no-owner",                 # do not output commands to set ownership of objects
         "--no-privileges",            # prevent dumping of access privileges
@@ -263,12 +218,30 @@ module BackupRestore
       )
     end
 
+    def include_uploads?
+      has_local_uploads? || SiteSetting.include_s3_uploads_in_backups
+    end
+
+    def local_uploads_directory
+      @local_uploads_directory ||= File.join(Rails.root, "public", Discourse.store.upload_path)
+    end
+
+    def has_local_uploads?
+      File.directory?(local_uploads_directory) && !Dir.empty?(local_uploads_directory)
+    end
+
     def add_local_uploads_to_archive(tar_filename)
       log "Archiving uploads..."
-      upload_directory = Discourse.store.upload_path
 
-      if File.directory?(File.join(Rails.root, "public", upload_directory))
-        exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
+      if has_local_uploads?
+        upload_directory = Discourse.store.upload_path
+
+        if SiteSetting.include_thumbnails_in_backups
+          exclude_optimized = ""
+        else
+          optimized_path = File.join(upload_directory, 'optimized')
+          exclude_optimized = "--exclude=#{optimized_path}"
+        end
 
         Discourse::Utils.execute_command(
           'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
@@ -303,19 +276,16 @@ module BackupRestore
           log "Failed to download file with upload ID #{upload.id} from S3", ex
         end
 
-        if File.exists?(filename)
-          Discourse::Utils.execute_command(
-            'tar', '--append', '--file', tar_filename, upload_directory,
-            failure_message: "Failed to add #{upload.original_filename} to archive.", success_status_codes: [0, 1],
-            chdir: @tmp_directory
-          )
-
-          File.delete(filename)
-        end
-
         count += 1
         log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
       end
+
+      log "Appending uploads to archive..."
+      Discourse::Utils.execute_command(
+        'tar', '--append', '--file', tar_filename, upload_directory,
+        failure_message: "Failed to append uploads to archive.", success_status_codes: [0, 1],
+        chdir: @tmp_directory
+      )
 
       log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
     end
@@ -364,7 +334,6 @@ module BackupRestore
       log "Cleaning stuff up..."
       delete_uploaded_archive
       remove_tar_leftovers
-      disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       refresh_disk_space
     end
@@ -401,22 +370,6 @@ module BackupRestore
       FileUtils.rm_rf(@tmp_directory) if Dir[@tmp_directory].present?
     rescue => ex
       log "Something went wrong while removing the following tmp directory: #{@tmp_directory}", ex
-    end
-
-    def unpause_sidekiq
-      return unless Sidekiq.paused?
-      log "Unpausing sidekiq..."
-      Sidekiq.unpause!
-    rescue => ex
-      log "Something went wrong while unpausing Sidekiq.", ex
-    end
-
-    def disable_readonly_mode
-      return if @readonly_mode_was_enabled
-      log "Disabling readonly mode..."
-      Discourse.disable_readonly_mode
-    rescue => ex
-      log "Something went wrong while disabling readonly mode.", ex
     end
 
     def mark_backup_as_not_running

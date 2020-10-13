@@ -33,7 +33,10 @@ class PostAnalyzer
 
     result = Oneboxer.apply(cooked) do |url|
       @onebox_urls << url
-      Oneboxer.invalidate(url) if opts[:invalidate_oneboxes]
+      if opts[:invalidate_oneboxes]
+        Oneboxer.invalidate(url)
+        InlineOneboxer.invalidate(url)
+      end
       onebox = Oneboxer.cached_onebox(url)
       @found_oneboxes = true if onebox.present?
       onebox
@@ -44,12 +47,13 @@ class PostAnalyzer
   end
 
   # How many images are present in the post
-  def image_count
+  def embedded_media_count
     return 0 unless @raw.present?
 
-    cooked_stripped.css("img").reject do |t|
+    # TODO - do we need to look for tags other than img, video and audio?
+    cooked_stripped.css("img", "video", "audio").reject do |t|
       if dom_class = t["class"]
-        (Post.white_listed_image_classes & dom_class.split).count > 0
+        (Post.allowed_image_classes & dom_class.split).count > 0
       end
     end.count
   end
@@ -131,7 +135,7 @@ class PostAnalyzer
 
   def cooked_stripped
     @cooked_stripped ||= begin
-      doc = Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
+      doc = Nokogiri::HTML5.fragment(cook(@raw, topic_id: @topic_id))
       doc.css("pre .mention, aside.quote > .title, aside.quote .mention, aside.quote .mention-group, .onebox, .elided").remove
       doc
     end

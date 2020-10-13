@@ -12,6 +12,9 @@
 
           span.badge-category {
             margin: 0;
+            .d-icon-lock {
+              margin-right: 5px;
+            }
           }
         }
       }
@@ -36,23 +39,19 @@
         }
       }
 
-      .select-kit-body {
-        min-width: 300px;
-      }
-
       .select-kit-row {
         flex-direction: column;
         align-items: flex-start;
 
         &[data-value="all-categories"],
         &[data-value="no-categories"] {
-          color: $tertiary;
+          color: var(--tertiary);
           font-weight: 700;
         }
 
         .category-desc {
           font-weight: normal;
-          color: $primary-medium;
+          color: var(--primary-medium);
           margin-top: 2px;
         }
 
@@ -61,13 +60,14 @@
         }
 
         .topic-count {
-          margin-left: 5px;
+          margin-left: 0.5em;
           font-weight: normal;
+          color: var(--primary-medium);
+          font-size: $font-down-1;
         }
 
         .badge-wrapper {
           margin: 0;
-          font-weight: bold;
 
           &:nth-child(2) {
             margin-left: 10px;

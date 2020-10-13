@@ -3,13 +3,16 @@
 require "digest/sha1"
 
 class Upload < ActiveRecord::Base
+  self.ignored_columns = [
+    "verified" # TODO(2020-12-10): remove
+  ]
+
   include ActionView::Helpers::NumberHelper
   include HasUrl
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
-  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
-  SECURE_MEDIA_ROUTE = "secure-media-uploads".freeze
+  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -25,6 +28,7 @@ class Upload < ActiveRecord::Base
 
   has_many :optimized_images, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
+  has_many :topic_thumbnails
 
   attr_accessor :for_group_message
   attr_accessor :for_theme
@@ -38,6 +42,11 @@ class Upload < ActiveRecord::Base
 
   validates_with UploadValidator
 
+  before_destroy do
+    UserProfile.where(card_background_upload_id: self.id).update_all(card_background_upload_id: nil)
+    UserProfile.where(profile_background_upload_id: self.id).update_all(profile_background_upload_id: nil)
+  end
+
   after_destroy do
     User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
     UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
@@ -45,6 +54,14 @@ class Upload < ActiveRecord::Base
   end
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
+
+  def self.verification_statuses
+    @verification_statuses ||= Enum.new(
+      unchecked: 1,
+      verified: 2,
+      invalid_etag: 3
+    )
+  end
 
   def to_s
     self.url
@@ -123,29 +140,55 @@ class Upload < ActiveRecord::Base
     "upload://#{short_url_basename}"
   end
 
+  def uploaded_before_secure_media_enabled?
+    original_sha1.blank?
+  end
+
+  def matching_access_control_post?(post)
+    access_control_post_id == post.id
+  end
+
+  def copied_from_other_post?(post)
+    return false if access_control_post_id.blank?
+    !matching_access_control_post?(post)
+  end
+
   def short_path
     self.class.short_path(sha1: self.sha1, extension: self.extension)
   end
 
   def self.consider_for_reuse(upload, post)
     return upload if !SiteSetting.secure_media? || upload.blank? || post.blank?
-    return nil if upload.access_control_post_id != post.id || upload.original_sha1.blank?
+    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_media_enabled?
     upload
   end
 
   def self.secure_media_url?(url)
     # we do not want to exclude topic links that for whatever reason
     # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
-    url.include?(SECURE_MEDIA_ROUTE) && !url.include?("/t/") && FileHelper.is_supported_media?(url)
+    route = UrlHelper.rails_route_from_url(url)
+    return false if route.blank?
+    route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
+  rescue ActionController::RoutingError
+    false
   end
 
   def self.signed_url_from_secure_media_url(url)
-    secure_upload_s3_path = url.sub(Discourse.base_url, "").sub("/#{SECURE_MEDIA_ROUTE}/", "")
+    route = UrlHelper.rails_route_from_url(url)
+    url = Rails.application.routes.url_for(route.merge(only_path: true))
+    secure_upload_s3_path = url[url.index(route[:path])..-1]
     Discourse.store.signed_url_for_path(secure_upload_s3_path)
   end
 
   def self.secure_media_url_from_upload_url(url)
-    url.sub(SiteSetting.Upload.absolute_base_url, "/#{SECURE_MEDIA_ROUTE}")
+    return url if !url.include?(SiteSetting.Upload.absolute_base_url)
+    uri = URI.parse(url)
+    Rails.application.routes.url_for(
+      controller: "uploads",
+      action: "show_secure",
+      path: uri.path[1..-1],
+      only_path: true
+    )
   end
 
   def self.short_path(sha1:, extension:)
@@ -315,7 +358,7 @@ class Upload < ActiveRecord::Base
                   follow_redirect: true
                 )
               rescue OpenURI::HTTPError
-                retry if (retires += 1) < 1
+                retry if (retries += 1) < 1
                 next
               end
 
@@ -387,10 +430,6 @@ class Upload < ActiveRecord::Base
     problems
   end
 
-  def self.reset_unknown_extensions!
-    Upload.where(extension: "unknown").update_all(extension: nil)
-  end
-
   private
 
   def short_url_basename
@@ -422,6 +461,8 @@ end
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
 #  original_sha1          :string
+#  verified               :boolean
+#  verification_status    :integer          default(1), not null
 #
 # Indexes
 #
@@ -433,8 +474,4 @@ end
 #  index_uploads_on_sha1                    (sha1) UNIQUE
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (access_control_post_id => posts.id)
 #

@@ -6,7 +6,7 @@ module Email
   class MessageBuilder
     attr_reader :template_args
 
-    ALLOW_REPLY_BY_EMAIL_HEADER = 'X-Discourse-Allow-Reply-By-Email'.freeze
+    ALLOW_REPLY_BY_EMAIL_HEADER = 'X-Discourse-Allow-Reply-By-Email'
 
     def initialize(to, opts = nil)
       @to = to
@@ -127,13 +127,17 @@ module Email
     end
 
     def build_args
-      {
+      args = {
         to: @to,
         subject: subject,
         body: body,
         charset: 'UTF-8',
         from: from_value
       }
+
+      args[:delivery_method_options] = @opts[:delivery_method_options] if @opts[:delivery_method_options]
+
+      args
     end
 
     def header_args

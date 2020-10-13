@@ -171,14 +171,14 @@ describe UserNameSuggester do
           .to eq('য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া')
       end
 
-      it "uses whitelist" do
-        SiteSetting.unicode_username_character_whitelist = "[äöüßÄÖÜẞ]"
+      it "uses allowlist" do
+        SiteSetting.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]"
 
         expect(UserNameSuggester.suggest('πουλί')).to eq('111')
         expect(UserNameSuggester.suggest('a鳥b')).to eq('a_b')
         expect(UserNameSuggester.suggest('Löwe')).to eq('Löwe')
 
-        SiteSetting.unicode_username_character_whitelist = "[য়া]"
+        SiteSetting.allowed_unicode_username_characters = "[য়া]"
         expect(UserNameSuggester.suggest('aয়াb鳥c')).to eq('aয়াb_c')
       end
     end

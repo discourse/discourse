@@ -56,19 +56,21 @@ class OptimizedImage < ActiveRecord::Base
 
     return thumbnail if thumbnail
 
+    # create the thumbnail otherwise
+    original_path = Discourse.store.path_for(upload)
+
+    if original_path.blank?
+      # download is protected with a DistributedMutex
+      external_copy = Discourse.store.download(upload) rescue nil
+      original_path = external_copy.try(:path)
+    end
+
     lock(upload.id, width, height) do
       # may have been generated since we got the lock
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
       # return the previous thumbnail if any
       return thumbnail if thumbnail
-
-      # create the thumbnail otherwise
-      original_path = Discourse.store.path_for(upload)
-      if original_path.blank?
-        external_copy = Discourse.store.download(upload) rescue nil
-        original_path = external_copy.try(:path)
-      end
 
       if original_path.blank?
         Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
@@ -154,9 +156,7 @@ class OptimizedImage < ActiveRecord::Base
     if size = read_attribute(:filesize)
       size
     else
-      # we may have a bad optimized image so just skip for now
-      # and do not break here
-      size = calculate_filesize rescue nil
+      size = calculate_filesize
 
       write_attribute(:filesize, size)
       if !new_record?
@@ -236,11 +236,12 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.resize_instructions_animated(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
+    resize_method = opts[:scale_image] ? "scale" : "resize-fit"
 
     %W{
       gifsicle
       --colors=#{opts[:colors] || 256}
-      --resize-fit #{dimensions}
+      --#{resize_method} #{dimensions}
       --optimize=3
       --output #{to}
       #{from}
@@ -359,16 +360,18 @@ end
 #
 # Table name: optimized_images
 #
-#  id        :integer          not null, primary key
-#  sha1      :string(40)       not null
-#  extension :string(10)       not null
-#  width     :integer          not null
-#  height    :integer          not null
-#  upload_id :integer          not null
-#  url       :string           not null
-#  filesize  :integer
-#  etag      :string
-#  version   :integer
+#  id         :integer          not null, primary key
+#  sha1       :string(40)       not null
+#  extension  :string(10)       not null
+#  width      :integer          not null
+#  height     :integer          not null
+#  upload_id  :integer          not null
+#  url        :string           not null
+#  filesize   :integer
+#  etag       :string
+#  version    :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #

@@ -168,7 +168,7 @@ class DiscourseDiff
   end
 
   def tokenize_html_blocks(html)
-    Nokogiri::HTML.fragment(html).search("./*").map(&:to_html)
+    Nokogiri::HTML5.fragment(html).search("./*").map(&:to_html)
   end
 
   def tokenize_html(html)

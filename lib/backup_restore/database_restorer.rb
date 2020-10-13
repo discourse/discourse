@@ -27,7 +27,7 @@ module BackupRestore
       migrate_database
       reconnect_database
 
-      self.class.update_last_restore_date
+      BackupMetadata.update_last_restore_date
     end
 
     def rollback
@@ -51,14 +51,6 @@ module BackupRestore
       end
     end
 
-    def self.update_last_restore_date
-      BackupMetadata.where(name: BackupMetadata::LAST_RESTORE_DATE).delete_all
-      BackupMetadata.create!(
-        name: BackupMetadata::LAST_RESTORE_DATE,
-        value: Time.zone.now.iso8601
-      )
-    end
-
     protected
 
     def restore_dump
@@ -70,7 +62,7 @@ module BackupRestore
 
       log_thread = Thread.new do
         RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
-        while psql_running
+        while psql_running || !logs.empty?
           message = logs.pop.strip
           log(message) if message.present?
         end
@@ -95,7 +87,8 @@ module BackupRestore
       raise DatabaseRestoreError.new("psql failed: #{last_line}") if Process.last_status&.exitstatus != 0
     end
 
-    # Removes unwanted SQL added by certain versions of pg_dump.
+    # Removes unwanted SQL added by certain versions of pg_dump and modifies
+    # the dump so that it works on the current version of PostgreSQL.
     def sed_command
       unwanted_sql = [
         "DROP SCHEMA", # Discourse <= v1.5
@@ -104,11 +97,15 @@ module BackupRestore
         "SET default_table_access_method" # PostgreSQL 12
       ].join("|")
 
-      "sed -E '/^(#{unwanted_sql})/d'"
+      command = "sed -E '/^(#{unwanted_sql})/d' #{@db_dump_path}"
+      if BackupRestore.postgresql_major_version < 11
+        command = "#{command} | sed -E 's/^(CREATE TRIGGER.+EXECUTE) FUNCTION/\\1 PROCEDURE/'"
+      end
+      command
     end
 
     def restore_dump_command
-      "#{sed_command} #{@db_dump_path} | #{self.class.psql_command} 2>&1"
+      "#{sed_command} | #{self.class.psql_command} 2>&1"
     end
 
     def self.psql_command
@@ -203,14 +200,11 @@ module BackupRestore
     def self.backup_schema_dropable?
       return false unless ActiveRecord::Base.connection.schema_exists?(BACKUP_SCHEMA)
 
-      last_restore_date = BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE)
-
-      if last_restore_date.present?
-        last_restore_date = Time.zone.parse(last_restore_date)
+      if last_restore_date = BackupMetadata.last_restore_date
         return last_restore_date + DROP_BACKUP_SCHEMA_AFTER_DAYS.days < Time.zone.now
       end
 
-      update_last_restore_date
+      BackupMetadata.update_last_restore_date
       false
     end
     private_class_method :backup_schema_dropable?

@@ -22,7 +22,7 @@ module ActiveSupport
         uncached = "#{method_name}_without_cache"
         alias_method uncached, method_name
 
-        define_method(method_name) do |*arguments|
+        m = define_method(method_name) do |*arguments|
           # this avoids recursive locks
           found = true
           data = cache.fetch(arguments) { found = false }
@@ -31,6 +31,11 @@ module ActiveSupport
           end
           # so cache is never corrupted
           data.dup
+        end
+
+        # https://bugs.ruby-lang.org/issues/16897
+        if Module.respond_to?(:ruby2_keywords, true)
+          ruby2_keywords(m)
         end
       end
     end

@@ -4,15 +4,67 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
+  # TODO(2021-05-13): Remove
+  self.ignored_columns = ["topic_reply_count"]
+
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
     update_distinct_badge_count
     update_view_counts(last_seen)
     update_first_unread(last_seen)
+    update_first_unread_pm(last_seen)
   end
 
-  def self.update_first_unread(last_seen, limit: 10_000)
-    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: 10.minutes.ago)
+  UPDATE_UNREAD_MINUTES_AGO = 10
+  UPDATE_UNREAD_USERS_LIMIT = 10_000
+
+  def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
+    DB.exec(<<~SQL, archetype: Archetype.private_message, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago, last_seen: last_seen, limit: limit)
+    UPDATE user_stats us
+    SET first_unread_pm_at = COALESCE(Z.min_date, :now)
+    FROM (
+      SELECT
+        Y.user_id,
+        Y.min_date
+      FROM (
+        SELECT
+          u1.id user_id,
+          X.min_date
+        FROM users u1
+        LEFT JOIN (
+          SELECT
+            tau.user_id,
+            MIN(t.updated_at) min_date
+          FROM topic_allowed_users tau
+          INNER JOIN topics t ON t.id = tau.topic_id
+          INNER JOIN users u ON u.id = tau.user_id
+          LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
+          WHERE t.deleted_at IS NULL
+          AND t.archetype = :archetype
+          AND tu.last_read_post_number < CASE
+                                         WHEN u.admin OR u.moderator
+                                         THEN t.highest_staff_post_number
+                                         ELSE t.highest_post_number
+                                         END
+          AND (COALESCE(tu.notification_level, 1) >= 2)
+          GROUP BY tau.user_id
+        ) AS X ON X.user_id = u1.id
+      ) AS Y
+      WHERE Y.user_id IN (
+        SELECT id
+        FROM users
+        WHERE last_seen_at IS NOT NULL
+        AND last_seen_at > :last_seen
+        ORDER BY last_seen_at DESC
+        LIMIT :limit
+      )
+    ) AS Z
+    WHERE us.user_id = Z.user_id
+    SQL
+  end
+
+  def self.update_first_unread(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
+    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
       UPDATE user_stats us
       SET first_unread_at = COALESCE(Y.min_date, :now)
       FROM (
@@ -151,12 +203,26 @@ class UserStat < ActiveRecord::Base
   end
 
   # topic_reply_count is a count of posts in other users' topics
-  def update_topic_reply_count
-    self.topic_reply_count = Topic
-      .joins("INNER JOIN posts ON topics.id = posts.topic_id AND topics.user_id <> posts.user_id")
-      .where("posts.deleted_at IS NULL AND posts.user_id = ?", self.user_id)
-      .distinct
-      .count
+  def calc_topic_reply_count!(start_time = nil)
+    sql = <<~SQL
+      SELECT COUNT(DISTINCT posts.topic_id) AS count
+      FROM posts
+      INNER JOIN topics ON topics.id = posts.topic_id
+      WHERE posts.user_id = ?
+      AND topics.user_id <> posts.user_id
+      AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
+      AND topics.archetype <> 'private_message'
+      #{start_time.nil? ? '' : 'AND posts.created_at > ?'}
+    SQL
+    if start_time.nil?
+      DB.query_single(sql, self.user_id).first
+    else
+      DB.query_single(sql, self.user_id, start_time).first
+    end
+  end
+
+  def any_posts
+    user.posts.exists?
   end
 
   MAX_TIME_READ_DIFF = 100
@@ -212,7 +278,6 @@ end
 #  posts_read_count         :integer          default(0), not null
 #  likes_given              :integer          default(0), not null
 #  likes_received           :integer          default(0), not null
-#  topic_reply_count        :integer          default(0), not null
 #  new_since                :datetime         not null
 #  read_faq                 :datetime
 #  first_post_created_at    :datetime
@@ -225,4 +290,5 @@ end
 #  flags_ignored            :integer          default(0), not null
 #  first_unread_at          :datetime         not null
 #  distinct_badge_count     :integer          default(0), not null
+#  digest_attempted_at      :datetime
 #

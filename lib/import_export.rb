@@ -5,6 +5,7 @@ require "import_export/base_exporter"
 require "import_export/category_structure_exporter"
 require "import_export/category_exporter"
 require "import_export/topic_exporter"
+require "import_export/group_exporter"
 require "json"
 
 module ImportExport
@@ -24,6 +25,10 @@ module ImportExport
 
   def self.export_topics(topic_ids, filename = nil)
     ImportExport::TopicExporter.new(topic_ids).perform.save_to_file(filename)
+  end
+
+  def self.export_groups(include_users, filename = nil)
+    ImportExport::GroupExporter.new(include_users).perform.save_to_file(filename)
   end
 
 end

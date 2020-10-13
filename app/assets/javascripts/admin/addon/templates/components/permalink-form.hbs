@@ -1,0 +1,30 @@
+<b>{{i18n "admin.permalink.form.label"}}</b>
+
+{{text-field
+  value=url
+  disabled=formSubmitted
+  class="permalink-url"
+  placeholderKey="admin.permalink.url"
+  autocorrect="off"
+  autocapitalize="off"}}
+
+{{combo-box
+  content=permalinkTypes
+  value=permalinkType
+  onChange=(action (mut permalinkType))
+  class="permalink-type"
+}}
+
+{{text-field
+  value=permalink_type_value
+  disabled=formSubmitted
+  class="external-url"
+  placeholderKey=permalinkTypePlaceholder
+  autocorrect="off"
+  autocapitalize="off"}}
+
+{{d-button
+  class="btn-default"
+  action=(action "submit")
+  disabled=formSubmitted
+  label="admin.permalink.form.add"}}

@@ -1,0 +1,31 @@
+{{#if collection}}
+  <div class="values">
+    {{#each collection as |value index|}}
+      <div data-index={{index}} class="value">
+        {{d-button
+          action=(action "removeValue")
+          actionParam=value
+          icon="times"
+          class="remove-value-btn btn-small"
+        }}
+
+        {{input
+          title=value
+          value=value
+          class="value-input"
+          focus-out=(action "changeValue" index)
+        }}
+      </div>
+    {{/each}}
+  </div>
+{{/if}}
+
+{{combo-box
+  allowAny=true
+  none=noneKey
+  valueProperty=null
+  nameProperty=null
+  value=newValue
+  content=filteredChoices
+  onChange=(action "selectChoice")
+}}

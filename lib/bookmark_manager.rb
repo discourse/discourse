@@ -7,24 +7,35 @@ class BookmarkManager
     @user = user
   end
 
-  def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil)
-    reminder_type = Bookmark.reminder_types[reminder_type.to_sym] if reminder_type.present?
+  def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil, options: {})
+    post = Post.find_by(id: post_id)
+    reminder_type = parse_reminder_type(reminder_type)
+
+    # no bookmarking deleted posts or topics
+    raise Discourse::InvalidAccess if post.blank? || post.topic.blank?
+
+    if !Guardian.new(@user).can_see_post?(post) || !Guardian.new(@user).can_see_topic?(post.topic)
+      raise Discourse::InvalidAccess
+    end
 
     bookmark = Bookmark.create(
-      user_id: @user.id,
-      topic_id: topic_id_for_post(post_id),
-      post_id: post_id,
-      name: name,
-      reminder_type: reminder_type,
-      reminder_at: reminder_at,
-      reminder_set_at: Time.zone.now
+      {
+        user_id: @user.id,
+        topic: post.topic,
+        post: post,
+        name: name,
+        reminder_type: reminder_type,
+        reminder_at: reminder_at,
+        reminder_set_at: Time.zone.now
+      }.merge(options)
     )
 
     if bookmark.errors.any?
       return add_errors_from(bookmark)
     end
 
-    BookmarkReminderNotificationHandler.cache_pending_at_desktop_reminder(@user)
+    update_topic_user_bookmarked(post.topic)
+
     bookmark
   end
 
@@ -35,20 +46,24 @@ class BookmarkManager
     raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
 
     bookmark.destroy
-    clear_at_desktop_cache_if_required
+
+    bookmarks_remaining_in_topic = update_topic_user_bookmarked(bookmark.topic)
+
+    { topic_bookmarked: bookmarks_remaining_in_topic }
   end
 
-  def destroy_for_topic(topic)
+  def destroy_for_topic(topic, filter = {}, opts = {})
     topic_bookmarks = Bookmark.where(user_id: @user.id, topic_id: topic.id)
+    topic_bookmarks = topic_bookmarks.where(filter)
 
     Bookmark.transaction do
       topic_bookmarks.each do |bookmark|
         raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_delete?(bookmark)
         bookmark.destroy
       end
-    end
 
-    clear_at_desktop_cache_if_required
+      update_topic_user_bookmarked(topic, opts)
+    end
   end
 
   def self.send_reminder_notification(id)
@@ -56,18 +71,44 @@ class BookmarkManager
     BookmarkReminderNotificationHandler.send_notification(bookmark)
   end
 
+  def update(bookmark_id:, name:, reminder_type:, reminder_at:, options: {})
+    bookmark = Bookmark.find_by(id: bookmark_id)
+
+    raise Discourse::NotFound if bookmark.blank?
+    raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_edit?(bookmark)
+
+    reminder_type = parse_reminder_type(reminder_type)
+
+    success = bookmark.update(
+      {
+        name: name,
+        reminder_at: reminder_at,
+        reminder_type: reminder_type,
+        reminder_set_at: Time.zone.now
+      }.merge(options)
+    )
+
+    if bookmark.errors.any?
+      return add_errors_from(bookmark)
+    end
+
+    success
+  end
+
   private
 
-  def topic_id_for_post(post_id)
-    Post.where(id: post_id).pluck_first(:topic_id)
+  def update_topic_user_bookmarked(topic, opts = {})
+    # PostCreator can specify whether auto_track is enabled or not, don't want to
+    # create a TopicUser in that case
+    bookmarks_remaining_in_topic = Bookmark.exists?(topic_id: topic.id, user: @user)
+    return bookmarks_remaining_in_topic if opts.key?(:auto_track) && !opts[:auto_track]
+
+    TopicUser.change(@user.id, topic, bookmarked: bookmarks_remaining_in_topic)
+    bookmarks_remaining_in_topic
   end
 
-  def clear_at_desktop_cache_if_required
-    return if user_has_any_pending_at_desktop_reminders?
-    Discourse.redis.del(BookmarkReminderNotificationHandler::PENDING_AT_DESKTOP_KEY_PREFIX + @user.id.to_s)
-  end
-
-  def user_has_any_pending_at_desktop_reminders?
-    Bookmark.at_desktop_reminders_for_user(@user).any?
+  def parse_reminder_type(reminder_type)
+    return if reminder_type.blank?
+    reminder_type.is_a?(Integer) ? reminder_type : Bookmark.reminder_types[reminder_type.to_sym]
   end
 end

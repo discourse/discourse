@@ -78,7 +78,7 @@ module Oneboxer
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(string_or_doc, extra_paths: [])
     doc = string_or_doc
-    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
 
     onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
     if onebox_links.present?
@@ -94,14 +94,14 @@ module Oneboxer
 
   def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc
-    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML5::fragment(doc) if doc.is_a?(String)
     changed = false
 
     each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
 
       if onebox
-        parsed_onebox = Nokogiri::HTML::fragment(onebox)
+        parsed_onebox = Nokogiri::HTML5::fragment(onebox)
         next unless parsed_onebox.children.count > 0
 
         if element&.parent&.node_name&.downcase == "p" &&
@@ -138,7 +138,9 @@ module Oneboxer
   end
 
   def self.engine(url)
-    Onebox::Matcher.new(url).oneboxed
+    Onebox::Matcher.new(url, {
+      allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(allowed_iframe_origins)
+    }).oneboxed
   end
 
   def self.recently_failed?(url)
@@ -219,9 +221,7 @@ module Oneboxer
       end
     end
 
-    topic = Topic.find_by(id: route[:topic_id])
-
-    return unless topic
+    return unless topic = Topic.find_by(id: route[:id] || route[:topic_id])
     return if topic.private_message?
 
     if current_category.blank? || current_category.id != topic.category_id
@@ -294,28 +294,38 @@ module Oneboxer
     end
   end
 
-  def self.blacklisted_domains
-    SiteSetting.onebox_domains_blacklist.split("|")
+  def self.blocked_domains
+    SiteSetting.blocked_onebox_domains.split("|")
   end
 
   def self.preserve_fragment_url_hosts
     @preserve_fragment_url_hosts ||= ['http://github.com']
   end
 
+  def self.allowed_iframe_origins
+    allowed = SiteSetting.allowed_onebox_iframes.split("|")
+    if allowed.include?("*")
+      allowed = Onebox::Engine.all_iframe_origins
+    end
+    allowed += SiteSetting.allowed_iframes.split("|")
+  end
+
   def self.external_onebox(url)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url,
                               ignore_redirects: ignore_redirects,
-                              ignore_hostnames: blacklisted_domains,
+                              ignore_hostnames: blocked_domains,
                               force_get_hosts: force_get_hosts,
                               force_custom_user_agent_hosts: force_custom_user_agent_hosts,
                               preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
-      return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
+      return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
         max_width: 695,
-        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX
+        sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
+        allowed_iframe_origins: allowed_iframe_origins,
+        hostname: GlobalSetting.hostname,
       }
 
       options[:cookie] = fd.cookie if fd.cookie

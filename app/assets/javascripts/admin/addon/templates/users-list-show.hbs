@@ -1,0 +1,105 @@
+<div class="admin-title">
+  <h2>{{title}}</h2>
+  {{#if canCheckEmails}}
+    {{#if showEmails}}
+      {{d-button
+        action=(action "toggleEmailVisibility")
+        class="hide-emails btn-default"
+        label="admin.users.hide_emails"}}
+    {{else}}
+      {{d-button
+        action=(action "toggleEmailVisibility")
+        class="show-emails btn-default"
+        label="admin.users.show_emails"}}
+    {{/if}}
+  {{/if}}
+</div>
+
+<div class="username controls">
+  {{text-field value=listFilter placeholder=searchHint}}
+</div>
+
+{{#load-more selector=".users-list tr" action=(action "loadMore")}}
+  {{#if model}}
+    <table class="table users-list grid">
+      <thead>
+        {{table-header-toggle field="username" labelKey="username" order=order asc=asc}}
+        {{table-header-toggle field="email" labelKey="email" order=order asc=asc}}
+        {{table-header-toggle field="last_emailed" labelKey="admin.users.last_emailed" order=order asc=asc}}
+        {{table-header-toggle field="seen" labelKey="last_seen" order=order asc=asc}}
+        {{table-header-toggle field="topics_viewed" labelKey="admin.user.topics_entered" order=order asc=asc}}
+        {{table-header-toggle field="posts_read" labelKey="admin.user.posts_read_count" order=order asc=asc}}
+        {{table-header-toggle field="read_time" labelKey="admin.user.time_read" order=order asc=asc}}
+        {{table-header-toggle field="created" labelKey="created" order=order asc=asc}}
+        {{#if siteSettings.must_approve_users}}
+          <th>{{i18n "admin.users.approved"}}</th>
+        {{/if}}
+        <th>&nbsp;</th>
+      </thead>
+      <tbody>
+        {{#each model as |user|}}
+          <tr class="user {{user.selected}} {{unless user.active "not-activated"}}">
+            <td class="username">
+              <a href={{user.path}} data-user-card={{user.username}}>
+                {{avatar user imageSize="small"}}
+              </a>
+              {{#link-to "adminUser" user}}{{user.username}}{{/link-to}}
+              {{#if user.staged}}
+                {{d-icon "far-envelope" title="user.staged" }}
+              {{/if}}
+            </td>
+            <td class="email">
+              {{~user.email~}}
+            </td>
+            <td class="last-emailed">
+              <div class="label">{{i18n "admin.users.last_emailed"}}</div>
+              <div>{{format-duration user.last_emailed_age}}</div>
+            </td>
+            <td class="last-seen">
+              <div class="label">{{i18n "last_seen"}}</div>
+              <div>{{format-duration user.last_seen_age}}</div>
+            </td>
+            <td class="topics-entered">
+              <div class="label">{{i18n "admin.user.topics_entered"}}</div>
+              <div>{{number user.topics_entered}}</div>
+            </td>
+            <td class="posts-read">
+              <div class="label">{{i18n "admin.user.posts_read_count"}}</div>
+              <div>{{number user.posts_read_count}}</div>
+            </td>
+            <td class="time-read">
+              <div class="label">{{i18n "admin.user.time_read"}}</div>
+              <div>{{format-duration user.time_read}}</div>
+            </td>
+
+            <td class="created">
+              <div class="label">{{i18n "created"}}</div>
+              <div>{{format-duration user.created_at_age}}</div>
+            </td>
+
+            {{#if siteSettings.must_approve_users}}
+              <td>{{i18n-yes-no user.approved}}</td>
+            {{/if}}
+
+            <td class="user-status">
+              {{#if user.admin}}
+                {{d-icon "shield-alt" title="admin.title" }}
+              {{/if}}
+              {{#if user.moderator}}
+                {{d-icon "shield-alt" title="admin.moderator" }}
+              {{/if}}
+              {{#if user.second_factor_enabled}}
+                {{d-icon "lock" title="admin.user.second_factor_enabled" }}
+              {{/if}}
+              {{plugin-outlet name="admin-users-list-icon" tagName="" args=(hash user=user query=query)}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{conditional-loading-spinner condition=refreshing}}
+
+  {{else}}
+    <p>{{i18n "search.no_results"}}</p>
+  {{/if}}
+{{/load-more}}

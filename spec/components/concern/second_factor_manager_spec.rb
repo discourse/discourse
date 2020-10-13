@@ -44,19 +44,19 @@ RSpec.describe SecondFactorManager do
   describe '#totp_provisioning_uri' do
     it 'should return the right uri' do
       expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
-        "otpauth://totp/#{SiteSetting.title}:#{user.email}?secret=#{user_second_factor_totp.data}&issuer=#{SiteSetting.title}"
+        "otpauth://totp/#{SiteSetting.title}:#{ERB::Util.url_encode(user.email)}?secret=#{user_second_factor_totp.data}&issuer=#{SiteSetting.title}"
       )
     end
     it 'should handle a colon in the site title' do
       SiteSetting.title = 'Spaceballs: The Discourse'
       expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
-        "otpauth://totp/Spaceballs%20The%20Discourse:#{user.email}?secret=#{user_second_factor_totp.data}&issuer=Spaceballs+The+Discourse"
+        "otpauth://totp/Spaceballs%20The%20Discourse:#{ERB::Util.url_encode(user.email)}?secret=#{user_second_factor_totp.data}&issuer=Spaceballs%20The%20Discourse"
       )
     end
     it 'should handle a two words before a colon in the title' do
       SiteSetting.title = 'Our Spaceballs: The Discourse'
       expect(user.user_second_factors.totps.first.totp_provisioning_uri).to eq(
-        "otpauth://totp/Our%20Spaceballs%20The%20Discourse:#{user.email}?secret=#{user_second_factor_totp.data}&issuer=Our+Spaceballs+The+Discourse"
+        "otpauth://totp/Our%20Spaceballs%20The%20Discourse:#{ERB::Util.url_encode(user.email)}?secret=#{user_second_factor_totp.data}&issuer=Our%20Spaceballs%20The%20Discourse"
       )
     end
   end

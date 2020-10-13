@@ -4,6 +4,10 @@ require 'mini_racer'
 
 class DiscourseJsProcessor
 
+  def self.plugin_transpile_paths
+    @@plugin_transpile_paths ||= Set.new
+  end
+
   def self.call(input)
     root_path = input[:load_path] || ''
     logical_path = (input[:filename] || '').sub(root_path, '').gsub(/\.(js|es6).*$/, '').sub(/^\//, '')
@@ -36,8 +40,29 @@ class DiscourseJsProcessor
     return false unless filename.end_with?(".js") || filename.end_with?(".js.erb")
 
     relative_path = filename.sub(Rails.root.to_s, '').sub(/^\/*/, '')
-    relative_path.start_with?("app/assets/javascripts/discourse/") ||
-      relative_path.start_with?("app/assets/javascripts/admin/")
+
+    js_root = "app/assets/javascripts"
+    test_root = "test/javascripts"
+
+    return false if relative_path.start_with?("#{js_root}/locales/")
+    return false if relative_path.start_with?("#{js_root}/plugins/")
+
+    return true if %w(
+      start-discourse
+      wizard-start
+      onpopstate-handler
+      google-tag-manager
+      google-universal-analytics
+      activate-account
+      auto-redirect
+      embed-application
+      app-boot
+    ).any? { |f| relative_path == "#{js_root}/#{f}.js" }
+
+    return true if plugin_transpile_paths.any? { |prefix| relative_path.start_with?(prefix) }
+
+    !!(relative_path =~ /^#{js_root}\/[^\/]+\// ||
+      relative_path =~ /^#{test_root}\/[^\/]+\//)
   end
 
   def self.skip_module?(data)
@@ -54,7 +79,7 @@ class DiscourseJsProcessor
 
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
-      ctx = MiniRacer::Context.new(timeout: 15000)
+      ctx = MiniRacer::Context.new(timeout: 15000, ensure_gc_after_idle: 2000)
       ctx.eval("var self = this; #{File.read("#{Rails.root}/vendor/assets/javascripts/babel.js")}")
       ctx.eval(File.read(Ember::Source.bundled_path_for('ember-template-compiler.js')))
       ctx.eval("module = {}; exports = {};")
@@ -68,9 +93,9 @@ class DiscourseJsProcessor
       }
 
 JS
-      source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js.es6")
+      source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
       js_source = ::JSON.generate(source, quirks_mode: true)
-      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex'] }).code")
+      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex'] }).code")
       ctx.eval(js)
 
       ctx
@@ -117,9 +142,9 @@ JS
 
       if opts[:module_name] && !@skip_module
         filename = opts[:filename] || 'unknown'
-        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-es2015-modules-amd', {noInterop: true}], 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
+        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-modules-amd', {noInterop: true}], ['proposal-decorators', {legacy: true} ], exports.WidgetHbsCompiler] }).code"
       else
-        "Babel.transform(#{js_source}, { ast: false, plugins: ['check-es2015-constants', 'transform-es2015-arrow-functions', 'transform-es2015-block-scoped-functions', 'transform-es2015-block-scoping', 'transform-es2015-classes', 'transform-es2015-computed-properties', 'transform-es2015-destructuring', 'transform-es2015-duplicate-keys', 'transform-es2015-for-of', 'transform-es2015-function-name', 'transform-es2015-literals', 'transform-es2015-object-super', 'transform-es2015-parameters', 'transform-es2015-shorthand-properties', 'transform-es2015-spread', 'transform-es2015-sticky-regex', 'transform-es2015-template-literals', 'transform-es2015-typeof-symbol', 'transform-es2015-unicode-regex', 'transform-regenerator', 'transform-decorators-legacy', exports.WidgetHbsCompiler] }).code"
+        "Babel.transform(#{js_source}, { ast: false, plugins: ['proposal-json-strings', 'proposal-nullish-coalescing-operator', 'proposal-logical-assignment-operators', 'proposal-numeric-separator', 'proposal-optional-catch-binding', 'transform-dotall-regex', 'proposal-unicode-property-regex', 'transform-named-capturing-groups-regex', 'proposal-object-rest-spread', 'proposal-optional-chaining', 'transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex', ['proposal-decorators', {legacy: true}], exports.WidgetHbsCompiler] }).code"
       end
     end
 
@@ -135,7 +160,8 @@ JS
         path = "discourse/plugins/#{plugin.name}/#{logical_path.sub(/javascripts\//, '')}" if plugin
       end
 
-      path || logical_path
+      # We need to strip the app subdirectory to replicate how ember-cli works.
+      path || logical_path&.gsub('app/', '')&.gsub('addon/', '')&.gsub('admin/addon', 'admin')
     end
 
   end

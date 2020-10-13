@@ -49,9 +49,10 @@ describe EmbedController do
 
         it "returns information about the topic" do
           get '/embed/info.json',
-            params: { embed_url: topic_embed.embed_url, api_key: api_key.key, api_username: "system" }
+            params: { embed_url: topic_embed.embed_url },
+            headers: { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: "system" }
 
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json['topic_id']).to eq(topic_embed.topic.id)
           expect(json['post_id']).to eq(topic_embed.post.id)
           expect(json['topic_slug']).to eq(topic_embed.topic.slug)
@@ -61,9 +62,10 @@ describe EmbedController do
       context "without invalid embed url" do
         it "returns error response" do
           get '/embed/info.json',
-            params: { embed_url: "http://nope.com", api_key: api_key.key, api_username: "system" }
+            params: { embed_url: "http://nope.com" },
+            headers: { HTTP_API_KEY: api_key.key, HTTP_API_USERNAME: "system" }
 
-          json = JSON.parse(response.body)
+          json = response.parsed_body
           expect(json["error_type"]).to eq("not_found")
         end
       end
@@ -144,7 +146,7 @@ describe EmbedController do
 
       get '/embed/comments', params: { embed_url: embed_url }, headers: headers
 
-      html = Nokogiri::HTML.fragment(response.body)
+      html = Nokogiri::HTML5.fragment(response.body)
       css_link = html.at("link[data-target=embedded_theme]").attribute("href").value
 
       get css_link

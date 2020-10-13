@@ -170,9 +170,7 @@ $use-visuallyhidden: false !default; // Hide content from browsers, but make it 
 .mfp-arrow,
 .mfp-preloader,
 .mfp-counter {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+  @include unselectable;
 }
 
 // Hide the image during the loading

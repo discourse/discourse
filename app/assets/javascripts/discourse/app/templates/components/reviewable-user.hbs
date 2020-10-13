@@ -1,0 +1,46 @@
+<div class="reviewable-user-info">
+  <div class="reviewable-user-fields">
+    <div class="reviewable-user-details username">
+      <div class="name">{{i18n "review.user.username"}}</div>
+      <div class="value">
+        {{#if reviewable.link_admin}}
+          <a href={{get-url (concat "/admin/users/" reviewable.user_id "/" reviewable.payload.username)}}>
+            {{reviewable.payload.username}}
+          </a>
+        {{else}}
+          {{reviewable.payload.username}}
+        {{/if}}
+      </div>
+    </div>
+
+    {{reviewable-field classes="reviewable-user-details name"
+                       name=(i18n "review.user.name")
+                       value=reviewable.payload.name}}
+
+    {{reviewable-field classes="reviewable-user-details email"
+                       name=(i18n "review.user.email")
+                       value=reviewable.payload.email}}
+
+    {{reviewable-field classes="reviewable-user-details bio"
+                       name=(i18n "review.user.bio")
+                       value=reviewable.payload.bio}}
+
+    {{#if reviewable.payload.website}}
+      <div class="reviewable-user-details website">
+        <div class="name">{{i18n "review.user.website"}}</div>
+        <div class="value">
+          <a href={{reviewable.payload.website}} target="_blank" rel="noopener noreferrer">{{reviewable.payload.website}}</a>
+        </div>
+      </div>
+    {{/if}}
+
+    {{#each userFields as |f|}}
+      {{reviewable-field classes="reviewable-user-details user-field"
+                         name=f.name
+                         value=f.value
+                         tagName=""}}
+    {{/each}}
+  </div>
+
+  {{yield}}
+</div>

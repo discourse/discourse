@@ -8,7 +8,7 @@ module FileStore
 
     def store_file(file, path)
       copy_file(file, "#{public_dir}#{path}")
-      "#{Discourse.base_uri}#{path}"
+      "#{Discourse.base_path}#{path}"
     end
 
     def remove_file(url, _)
@@ -36,7 +36,7 @@ module FileStore
     end
 
     def relative_base_url
-      File.join(Discourse.base_uri, upload_path)
+      File.join(Discourse.base_path, upload_path)
     end
 
     def external?

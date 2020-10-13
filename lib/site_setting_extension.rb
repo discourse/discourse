@@ -110,6 +110,10 @@ module SiteSettingExtension
     @secret_settings ||= []
   end
 
+  def plugins
+    @plugins ||= {}
+  end
+
   def setting(name_arg, default = nil, opts = {})
     name = name_arg.to_sym
 
@@ -135,7 +139,7 @@ module SiteSettingExtension
       if GlobalSetting.respond_to?(name)
         val = GlobalSetting.public_send(name)
 
-        unless val.nil? || (val == ''.freeze)
+        unless val.nil? || (val == '')
           shadowed_val = val
           hidden_settings << name
           shadowed_settings << name
@@ -156,6 +160,10 @@ module SiteSettingExtension
 
       if opts[:secret]
         secret_settings << name
+      end
+
+      if opts[:plugin]
+        plugins[name] = opts[:plugin]
       end
 
       type_supervisor.load_setting(
@@ -201,6 +209,7 @@ module SiteSettingExtension
     MultiJson.dump(Hash[*@client_settings.map do |name|
       value = self.public_send(name)
       value = value.to_s if type_supervisor.get_type(name) == :upload
+      value = value.map(&:to_s).join("|") if type_supervisor.get_type(name) == :uploaded_image_list
       [name, value]
     end.flatten])
   end
@@ -225,9 +234,11 @@ module SiteSettingExtension
       .reject { |s, _| !include_hidden && hidden_settings.include?(s) }
       .map do |s, v|
 
-      value = public_send(s)
       type_hash = type_supervisor.type_hash(s)
       default = defaults.get(s, default_locale).to_s
+
+      value = public_send(s)
+      value = value.map(&:to_s).join("|") if type_hash[:type].to_s == "uploaded_image_list"
 
       if type_hash[:type].to_s == "upload" &&
          default.to_i < Upload::SEEDED_ID_THRESHOLD
@@ -245,6 +256,8 @@ module SiteSettingExtension
         secret: secret_settings.include?(s),
         placeholder: placeholder(s)
       }.merge!(type_hash)
+
+      opts[:plugin] = plugins[s] if plugins[s]
 
       opts
     end.unshift(locale_setting_hash)
@@ -368,8 +381,8 @@ module SiteSettingExtension
   end
 
   HOSTNAME_SETTINGS ||= %w{
-    disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains
-    email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains
+    disabled_image_download_domains blocked_onebox_domains exclude_rel_nofollow_domains
+    blocked_email_domains allowed_email_domains allowed_spam_host_domains
   }
 
   def filter_value(name, value)
@@ -472,7 +485,21 @@ module SiteSettingExtension
   def setup_methods(name)
     clean_name = name.to_s.sub("?", "").to_sym
 
-    if type_supervisor.get_type(name) == :upload
+    if type_supervisor.get_type(name) == :uploaded_image_list
+      define_singleton_method clean_name do
+        uploads_list = uploads[name]
+        return uploads_list if uploads_list
+
+        if (value = current[name]).nil?
+          refresh!
+          value = current[name]
+        end
+
+        value = value.split("|").map(&:to_i)
+        uploads_list = Upload.where(id: value).to_a
+        uploads[name] = uploads_list if uploads_list
+      end
+    elsif type_supervisor.get_type(name) == :upload
       define_singleton_method clean_name do
         upload = uploads[name]
         return upload if upload
@@ -542,7 +569,7 @@ module SiteSettingExtension
   end
 
   def clear_uploads_cache(name)
-    if type_supervisor.get_type(name) == :upload && uploads.has_key?(name)
+    if (type_supervisor.get_type(name) == :upload || type_supervisor.get_type(name) == :uploaded_image_list) && uploads.has_key?(name)
       uploads.delete(name)
     end
   end

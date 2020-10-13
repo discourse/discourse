@@ -5,6 +5,14 @@ class UserAvatar < ActiveRecord::Base
   belongs_to :gravatar_upload, class_name: 'Upload'
   belongs_to :custom_upload, class_name: 'Upload'
 
+  @@custom_user_gravatar_email_hash = {
+    Discourse::SYSTEM_USER_ID => User.email_hash("info@discourse.org")
+  }
+
+  def self.register_custom_user_gravatar_email_hash(user_id, email)
+    @@custom_user_gravatar_email_hash[user_id] = User.email_hash(email)
+  end
+
   def contains_upload?(id)
     gravatar_upload_id == id || custom_upload_id == id
   end
@@ -12,15 +20,15 @@ class UserAvatar < ActiveRecord::Base
   def update_gravatar!
     DistributedMutex.synchronize("update_gravatar_#{user_id}") do
       begin
-        self.update!(last_gravatar_download_attempt: Time.now)
+        self.update!(last_gravatar_download_attempt: Time.zone.now)
 
         max = Discourse.avatar_sizes.max
 
         # The user could be deleted before this executes
         return if user.blank? || user.primary_email.blank?
 
-        email_hash = user_id == Discourse::SYSTEM_USER_ID ? User.email_hash("info@discourse.org") : user.email_hash
-        gravatar_url = "https://#{SiteSetting.gravatar_base_url}/avatar/#{email_hash}.png?s=#{max}&d=404"
+        email_hash = @@custom_user_gravatar_email_hash[user_id] || user.email_hash
+        gravatar_url = "https://#{SiteSetting.gravatar_base_url}/avatar/#{email_hash}.png?s=#{max}&d=404&reset_cache=#{SecureRandom.urlsafe_base64(5)}"
 
         # follow redirects in case gravatar change rules on us
         tempfile = FileHelper.download(
@@ -70,7 +78,7 @@ class UserAvatar < ActiveRecord::Base
 
   def self.local_avatar_template(hostname, username, upload_id)
     version = self.version(upload_id)
-    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
+    "#{Discourse.base_path}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
   end
 
   def self.external_avatar_url(user_id, upload_id, size)

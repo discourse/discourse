@@ -1,0 +1,27 @@
+<div class="container tag-groups-container">
+  <h2>{{i18n "tagging.groups.title"}}</h2>
+
+  <div class="content-list">
+    <ul>
+      {{#each model as |tagGroup|}}
+        <li>
+          {{#link-to "tagGroups.edit" tagGroup}}
+            {{tagGroup.name}}
+          {{/link-to}}
+        </li>
+      {{/each}}
+    </ul>
+
+    {{#if this.siteSettings.tagging_enabled}}
+      {{d-button
+        class="btn-default"
+        action=(action "newTagGroup")
+        icon="plus"
+        label="tagging.groups.new"}}
+    {{/if}}
+  </div>
+
+  {{outlet}}
+
+  <div class="clearfix"></div>
+</div>

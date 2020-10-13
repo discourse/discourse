@@ -164,7 +164,7 @@ module I18n
 
       by_site[locale].with_indifferent_access
     rescue ActiveRecord::StatementInvalid => e
-      if PG::UndefinedTable === e.cause
+      if PG::UndefinedTable === e.cause || PG::UndefinedColumn === e.cause
         {}
       else
         raise

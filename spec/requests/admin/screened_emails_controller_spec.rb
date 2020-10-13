@@ -16,7 +16,7 @@ describe Admin::ScreenedEmailsController do
       Fabricate(:screened_email)
       get "/admin/logs/screened_emails.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json.size).to eq(1)
     end
   end

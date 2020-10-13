@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    styleguide_enabled: "启用 `/styleguide` 路径来帮助 Discourse 风格化"
+    styleguide_admin_only: "样式指南仅对管理员可见"

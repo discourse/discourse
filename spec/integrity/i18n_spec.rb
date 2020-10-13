@@ -7,22 +7,6 @@ def extract_locale(path)
   path[/\.([^.]{2,})\.yml$/, 1]
 end
 
-PLURALIZATION_KEYS ||= ['zero', 'one', 'two', 'few', 'many', 'other']
-ENGLISH_KEYS ||= ['one', 'other']
-
-def find_pluralizations(hash, parent_key = '', pluralizations = Hash.new)
-  hash.each do |key, value|
-    if Hash === value
-      current_key = parent_key.blank? ? key : "#{parent_key}.#{key}"
-      find_pluralizations(value, current_key, pluralizations)
-    elsif PLURALIZATION_KEYS.include? key
-      pluralizations[parent_key] = hash
-    end
-  end
-
-  pluralizations
-end
-
 def is_yaml_compatible?(english, translated)
   english.each do |k, v|
     if translated.has_key?(k)
@@ -37,18 +21,6 @@ def is_yaml_compatible?(english, translated)
   end
 
   true
-end
-
-def each_translation(hash, parent_key = '', &block)
-  hash.each do |key, value|
-    current_key = parent_key.blank? ? key : "#{parent_key}.#{key}"
-
-    if Hash === value
-      each_translation(value, current_key, &block)
-    else
-      yield(current_key, value.to_s)
-    end
-  end
 end
 
 describe "i18n integrity checks" do
@@ -106,59 +78,6 @@ describe "i18n integrity checks" do
       it "has no duplicate keys" do
         english_duplicates = DuplicateKeyFinder.new.find_duplicates(english_path)
         expect(english_duplicates).to be_empty
-      end
-
-      context "pluralizations" do
-        wrong_keys = []
-        invald_one_keys = []
-
-        find_pluralizations(english_yaml).each do |key, hash|
-          next if key["messages.restrict_dependent_destroy"]
-
-          wrong_keys << key if hash.keys.sort != ENGLISH_KEYS
-
-          if one_value = hash['one']
-            invald_one_keys << key if one_value.include?('1') && !one_value.match?(/%{count}|{{count}}/)
-          end
-        end
-
-        it "has valid pluralizations keys" do
-          keys = wrong_keys.join("\n")
-          expect(wrong_keys).to be_empty, <<~MSG
-            Pluralized strings must have only the sub-keys 'one' and 'other'.
-            The following keys have missing or additional keys:\n\n#{keys}
-          MSG
-        end
-
-        it "should use %{count} instead of 1 in 'one' keys" do
-          keys = invald_one_keys.join(".one\n")
-          expect(invald_one_keys).to be_empty, <<~MSG
-            The following keys contain the number 1 instead of the interpolation key %{count}:\n\n#{keys}
-          MSG
-        end
-      end
-
-      context "valid translations" do
-        invalid_relative_links = {}
-        invalid_relative_image_sources = {}
-
-        each_translation(english_yaml) do |key, value|
-          if value.match?(/href\s*=\s*["']\/[^\/]|\]\(\/[^\/]/i)
-            invalid_relative_links[key] = value
-          elsif value.match?(/src\s*=\s*["']\/[^\/]/i)
-            invalid_relative_image_sources[key] = value
-          end
-        end
-
-        it "uses %{base_url} or %{base_path} for relative links" do
-          keys = invalid_relative_links.keys.join("\n")
-          expect(invalid_relative_links).to be_empty, "The following keys have relative links, but do not start with %{base_url} or %{base_path}:\n\n#{keys}"
-        end
-
-        it "uses %{base_url} or %{base_path} for relative image src" do
-          keys = invalid_relative_image_sources.keys.join("\n")
-          expect(invalid_relative_image_sources).to be_empty, "The following keys have relative image sources, but do not start with %{base_url} or %{base_path}:\n\n#{keys}"
-        end
       end
     end
 
