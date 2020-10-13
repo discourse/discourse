@@ -523,6 +523,10 @@ describe Topic do
       expect(Topic.similar_to('some title', 'https://discourse.org/#INCORRECT#URI')).to be_empty
     end
 
+    it 'does not result in an invalid statement with trailing slash' do
+      expect(Topic.similar_to('Title with trailing slashes\\\\', 'no body')).to be_empty
+    end
+
     context 'with a similar topic' do
       fab!(:post) {
         SearchIndexer.enable

@@ -1106,6 +1106,7 @@ class Search
   end
 
   def self.set_tsquery_weight_filter(term, weight_filter)
+    term = term.gsub(/\\+$/, '') # Remove any trailing '\' to avoid quote escaping issues
     term = term.gsub("'", "''")
     "''#{PG::Connection.escape_string(term)}'':*#{weight_filter}"
   end
