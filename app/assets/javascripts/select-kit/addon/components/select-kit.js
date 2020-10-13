@@ -42,7 +42,7 @@ export default Component.extend(
     classNameBindings: [
       "selectKit.isLoading:is-loading",
       "selectKit.isExpanded:is-expanded",
-      "selectKit.isDisabled:is-disabled",
+      "selectKit.options.disabled:is-disabled",
       "selectKit.isHidden:is-hidden",
       "selectKit.hasSelection:has-selection",
     ],
@@ -177,8 +177,6 @@ export default Component.extend(
 
     didUpdateAttrs() {
       this._super(...arguments);
-
-      this.set("selectKit.isDisabled", this.isDisabled || false);
 
       this.handleDeprecations();
     },
@@ -985,7 +983,7 @@ export default Component.extend(
         allowUncategorized: "options.allowUncategorized",
         none: "options.none",
         rootNone: "options.none",
-        isDisabled: "options.isDisabled",
+        disabled: "options.disabled",
         rootNoneLabel: "options.none",
         showFullTitle: "options.showFullTitle",
         title: "options.translatedNone",
