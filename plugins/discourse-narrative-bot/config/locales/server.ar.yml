@@ -6,12 +6,12 @@
 
 ar:
   site_settings:
-    discourse_narrative_bot_enabled: "تفعيل روبوت ديسكورس المتحدث "
-    disable_discourse_narrative_bot_welcome_post: "عطل منشور الترحيب المنشور بواسطة روبوت ديسكورس المتحدث"
-    discourse_narrative_bot_ignored_usernames: "اسماء الاعضاء التي يتوجب على روبوت ديسكورس المتحدث تجاهلها"
-    discourse_narrative_bot_disable_public_replies: "عطل الردود العامة بواسطة روبوت ديسكورس المتحدث"
-    discourse_narrative_bot_welcome_post_type: "نوع منشور الترحيب التي يتوجب على روبوت ديسكورس المتحدث ارسالها"
-    discourse_narrative_bot_welcome_post_delay: "انتظر هذا العدد من الثوان قبل ارسال منشور الترحيب بواسطة روبوت ديسكورس المتحدث"
+    discourse_narrative_bot_enabled: "فعّل آلة التحدّث من دسكورس (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "عطّل مشاركة الترحيب من آلة التحدّث من دسكورس"
+    discourse_narrative_bot_ignored_usernames: "أسماء المستخدمين التي ستتجاهلها آلة التحدّث من دسكورس"
+    discourse_narrative_bot_disable_public_replies: "عطّل الردود العمومية من آلة التحدّث من دسكورس"
+    discourse_narrative_bot_welcome_post_type: "نوع المشاركة الترحيبية التي على آلة التحدّث من دسكورس إرسالها"
+    discourse_narrative_bot_welcome_post_delay: "انتظر (كذا) ثانية قبل إرسال آلة التحدّث من دسكورس للمشاركة الترحيبية."
   badges:
     certified:
       name: مُعتمد

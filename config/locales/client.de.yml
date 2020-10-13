@@ -1953,6 +1953,8 @@ de:
           noreplies: Themen ohne Antwort
           single_user: Themen mit nur einem Benutzer
         post:
+          count:
+            label: Beiträge
           time:
             label: 'Zeitraum einschränken:'
             before: Beiträge vor dem

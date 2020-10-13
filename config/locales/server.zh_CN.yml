@@ -182,6 +182,7 @@ zh_CN:
       share_quote_facebook_requirements: "你必须设置一个Facebook app id 才能启用Facebook的引用分享功能。"
       second_factor_cannot_enforce_with_socials: "你不能在启用社交登录时强制启用双重认证。你必须先禁用以下登录方式：%{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录则无法强制启用2FA。"
+      second_factor_cannot_be_enforced_with_sso_enabled: "如果启用了 SSO，则无法强制启用 2FA。"
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制启用2FA则不能禁用本地登录。在禁用本地登录之前，请禁用强制启用2FA。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "你无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
     conflicting_google_user_id: '此账户的Google账户ID已更改; 出于安全原因，需要管理人员干预。请联系工作人员并指引他们前往<a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1333,8 +1334,8 @@ zh_CN:
     editing_grace_period_max_diff: "允许在编辑宽限期内修改的字符数量最大值，如修改多于此数量将保存另一个修订版（信任级别0和1）"
     editing_grace_period_max_diff_high_trust: "编辑宽限期允许的最大字符更改数，如果更改存储后的另一个修订版（信任级别2和更高）"
     staff_edit_locks_post: "如果管理人员编辑过帖子，将锁定编辑"
-    post_edit_time_limit: "信任等级0或信任等级1的作者可以在发表的（n）分钟后编辑帖子。设置为0为永远（不可以编辑）。"
-    tl2_post_edit_time_limit: "信任等级2以上的的作者可以在发表的（n）分钟后编辑帖子。设置为0为永远（不可以编辑）。"
+    post_edit_time_limit: "信任等级 0 或信任等级 1 的作者可以在发表的(n)分钟后编辑帖子。设置为 0 为永远可以编辑。"
+    tl2_post_edit_time_limit: "信任等级 2 以上的的作者可以在发表的(n)分钟后编辑帖子。设置为 0 为永远可以编辑。"
     edit_history_visible_to_public: "允许任何人查看编辑过的帖子的老版本。当禁用时，只有管理人员才能查看浏览。"
     delete_removed_posts_after: "帖子被作者删除，将在(n)小时后被自动删除。"
     max_image_width: "帖子中图片允许的最大缩略图宽度"
@@ -3207,10 +3208,15 @@ zh_CN:
     confirm_new_email:
       title: "确认新邮箱"
       subject_template: "[%{email_prefix}] 确认你的新电子邮箱地址"
+    confirm_new_email_via_admin:
+      title: "确认新邮箱"
+      subject_template: "[%{email_prefix}] 确认你的新电子邮箱地址"
       text_body_template: |
-        点击以下链接以确认你在%{site_name}的邮件地址：
+        点击以下链接确认你在%{site_name}的新电子邮件地址：
 
         %{base_url}/u/confirm-new-email/%{email_token}
+
+        此电子邮件的更改由网站管理员发送。如果你没有要求此更改，请联系 %{site_name} 管理员。
     confirm_old_email:
       title: "确认旧邮箱"
       subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"

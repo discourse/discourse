@@ -455,21 +455,62 @@ ro:
         all_categories: "(toate categoriile)"
         type:
           title: "Tip"
+        minimum_score: "Scor minim:"
         refresh: "Reîmprospătează"
+        status: "Status"
         category: "Categorie"
+        orders:
+          score: "Scor"
+          score_asc: "Scor (invers)"
+          created_at: "Creat la"
+          created_at_asc: "Creat la (invers)"
+        priority:
+          title: "Prioritate minimă"
+          low: "(oricare)"
+          medium: "Medie"
+          high: "Ridicată"
+      conversation:
+        view_full: "vezi conversația completă"
       scores:
+        about: "Acest scor este calculat pe baza nivelului de încredere al reclamantului, a acurateței notificărilor anterioare și a priorității elementului raportat."
+        score: "Scor"
+        date: "Dată"
         type: "Tip"
+        status: "Status"
+        submitted_by: "Trimis de"
+        reviewed_by: "Evaluat de"
       statuses:
         pending:
           title: "În așteptare"
+        approved:
+          title: "Aprobat"
         rejected:
           title: "Respinse"
+        ignored:
+          title: "Ignorat"
+        deleted:
+          title: "Șters"
+        reviewed:
+          title: "(toate revizuite)"
+        all:
+          title: "(totul)"
       types:
+        reviewable_flagged_post:
+          title: "Postare semnalată"
+          flagged_by: "Semnalat de"
+        reviewable_queued_topic:
+          title: "Subiect în așteptare"
+        reviewable_queued_post:
+          title: "Postare în așteptare"
         reviewable_user:
           title: "Utilizatori"
       approval:
         title: "Necesită aprobare"
         description: "Am primit noua postare dar trebuie să fie aprobată de un moderator înainte că ea să apară pe site. Te rugăm să ai răbdare."
+        pending_posts:
+          one: "Ai <strong>%{count}</strong> postare în așteptare."
+          few: "Ai <strong>%{count}</strong> postări în așteptare."
+          other: "Ai <strong>%{count}</strong> postări în așteptare."
         ok: "Ok"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a postat <a href='%{topicUrl}'>discuția</a>"
@@ -486,6 +527,7 @@ ro:
       sent_by_user: "Trimis de <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Trimis de <a href='%{userUrl}'>tine</a>"
     directory:
+      username: "Nume de utilizator"
       filter_name: "Filtrează după nume utilizator"
       title: "Utilizatori"
       likes_given: "Oferite"
@@ -502,6 +544,7 @@ ro:
       days_visited_long: "Zile de vizită"
       posts_read: "Citite"
       posts_read_long: "Postări citite"
+      last_updated: "Ultima actualizare:"
       total_rows:
         one: "%{count} utilizator"
         few: "%{count} utilizatori"
@@ -514,8 +557,18 @@ ro:
         make_user_group_owner: "Fă proprietar"
         remove_user_as_group_owner: "Revocă proprietar"
     groups:
+      member_added: "Adăugat"
+      member_requested: "Solicitat la"
+      add_members:
+        title: "Adaugă membri la %{group_name}"
+        description: "De asemenea, poți insera o listă separată prin virgulă."
+        usernames: "Introdu nume de utilizator sau adrese de e-mail"
+        input_placeholder: "Nume de utilizator sau e-mailuri"
+        notify_users: "Notifică utilizatorii"
       requests:
+        title: "Cereri"
         reason: "Motiv"
+        accept: "Acceptă"
         accepted: "acceptat"
         deny: "Respinge"
         denied: "respinse"
@@ -788,6 +841,9 @@ ro:
       dismiss_notifications: "Elimină tot"
       dismiss_notifications_tooltip: "Marchează toate notificările ca citite"
       first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
+      color_schemes:
+        default_description: "Implicit"
+        disable_dark_scheme: "La fel ca de obicei"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
@@ -923,7 +979,6 @@ ro:
         taken: "Această adresă există deja în baza de date."
         error: "A apărut o eroare la schimbarea de email. Poate această adresă este deja utilizată?"
         success: "Am trimis un email către adresa respectivă. Urmează instrucțiunile de confirmare."
-        success_via_admin: "Deoarece schimbați adresa de e-mail a utilizatorului, presupunem că acesta a pierdut accesul la contul de e-mail original. Am trimis un e-mail de resetare a parolei la noua adresă de e-mail pentru acest utilizator. Vă rugăm să rețineți că utilizatorul trebuie să finalizeze procesul de resetare a parolei pentru ca schimbarea adresei email să aibă efect."
         success_staff: "Ți-am trimis un email la adresa curentă. Urmează instrucțiunile de confirmare."
       change_avatar:
         title: "Schimbă poza de profil"

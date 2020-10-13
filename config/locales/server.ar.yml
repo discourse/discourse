@@ -35,24 +35,50 @@ ar:
     am: "ص"
     pm: "م"
     <<: *datetime_formats
-  title: "دسكورس"
-  topics: "الموضوعات "
-  posts: "المنشورات"
-  loading: "يحمّل"
-  powered_by_html: 'مدعومة من <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه و جافاسكربت مفعّل'
-  sign_up: "إنشاء حساب"
+  title: "دِسكورس"
+  topics: "الموضوعات"
+  posts: "المشاركات"
+  loading: "يُحمّل"
+  powered_by_html: 'تدعمه <a href="http://www.discourse.org">دِسكورس </a>، يفضّل عرضه بتفعيل جافاسكربت'
+  sign_up: "سجّل حسابًا"
   log_in: "لِج"
-  submit: "أرسل"
-  purge_reason: "حُذف آليًّا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
+  submit: "أرسِل"
+  purge_reason: "حُذف تلقائيًا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
   anonymous: "مجهول"
   remove_posts_deleted_by_author: "حذفها الكاتب"
+  redirect_warning: "تعذّر تأكيد أنّ الرابط الذي حدّدته نُشر في هذا المنتدى حقًا. مع ذلك إن أردت المواصلة، فحدّد الرابط أسفله."
   themes:
-    other_error: "حصل خطأ عند تحديث الواجهة"
+    bad_color_scheme: "تعذّر تحديث السمة، مخطّط الألوان غير صالح"
+    other_error: "حدث خطب ما أثناء تحديث السمة"
+    compile_error:
+      unrecognized_extension: "امتداد الملف غير مفهوم: %{extension}"
+    import_error:
+      generic: حدث عُطل أثناء استيراد هذه السمة
+      about_json: "عُطل أثناء الاستيراد: about.json غير موجود، أو غير صالح. أمتأكّد بأنّ هذه سمة دِسكورس حقًا؟"
+      about_json_values: "يحتوي about.json قيم غير صالحة: %{errors}"
+      modifier_values: "تحتوي مُعدّلت about.json قيم غير صالحة: %{errors}"
+      git: "حدث عُطل أثناء استنساخ مستودع غِت، الوصول ممنوع أو لم يُوجد المستودع"
+      file_too_big: "الملف غير المضغوط كبير جدًا."
+      unknown_file_type: "لا يظهر بأنّ الملف الذي رفعته سمة دِسكورس صالحة."
+    settings_errors:
+      invalid_yaml: "ملف YAML الذي قُدّم غير صالح."
+      data_type_not_a_number: "ضبط النوع ”%{name}“ غير مدعوم. الأنواع المدعومة هي: الأعداد الصحيحة ”integer“ والقيم المنطقية ”bool“ والقوائم ”list“ والتعدادات ”enum“ والرفع ”upload“"
+      name_too_long: "لأحد الإعدادا اسم طويل جدًا. الطول الأقصى هو 255"
+      enum_value_not_valid: "القيمة المحدّدة ليست إحدى خيارات التعداد enum."
+      number_value_not_valid: "القيمة الجديدة ليست ضمن المجال المسموح."
+      number_value_not_valid_min_max: "يجب أن تكون بين %{min} و%{max}."
+      number_value_not_valid_min: "يجب أن تكون أكبر من أو تساوي %{min}."
+      number_value_not_valid_max: "يجب أن تكون أصغر من أو تساوي %{max}."
+      string_value_not_valid: "طول القيمة الجديدة ليس ضمن المجال المسموح."
+      string_value_not_valid_min: "يجب أن يكون عدد المحارف على الأقل %{min}."
+      string_value_not_valid_max: "يجب أن يكون عدد المحارف على الأكثر %{max}."
+    locale_errors:
+      invalid_yaml: "ملف YAML الترجمي غير صالحة"
   emails:
     incoming:
       default_subject: "يحتاج هذا الموضوع عنوانًا"
-      show_trimmed_content: "اظهر محتوى أقل"
+      show_trimmed_content: "اعرف المحتوى المقصوص"
       maximum_staged_user_per_email_reached: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم بالبريد الالكتروني."
       errors:
         empty_email_error: "يحدث عندما يكون البريد المستَلم فارغ"
@@ -982,9 +1008,11 @@ ar:
     email_token_valid_hours: "أمارات نسيان كلمة السّرّ/تنشيط الحساب صالحة لمدّة (n) ساعة."
     enable_badges: "تفعيل نظام الأوسمة."
     enable_whispers: "السماح للطاقم بعمل نقاشات سرية داخل الموضوعات."
+    hide_email_address_taken: "لا تُخبر المستخدمين بوجود حساب بنفس عنوان البريد الإلكتروني أثناء تسجيل الحسابات وفي استمارة نسيان كلمة السر."
     log_out_strict: "عند الخروج، اخرج من كلّ جلسات المستخدم في كلّ الأجهزة"
     new_version_emails: "إرسال بريد إلكتروني إلى عنوان contact_email عندما نسخة جديدة من ديسكورس هو متاح."
     invite_expiry_days: "مدة صلاحية مفاتيح دعوة عضو، بالأيام."
+    invite_only: "يجب على المستخدمين الموثوقين أو طاقم الموقع دعوة كلّ المستخدمين الجدد. التسجيل للعموم معطّل."
     login_required: "اطلب تسجيل دخول لقرائة محتوي هذا الموقع."
     min_username_length: "أدنى طول لاسم المستخدم (بالمحارف). تحذير: إن كان هناك أيّة مستخدمين أو مجموعات تملك أسماء أقصر من هذه، فسيعطب الموقع!"
     min_password_length: "أدنى طول لكلمة السّرّ."

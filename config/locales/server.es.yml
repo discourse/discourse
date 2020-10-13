@@ -3213,10 +3213,6 @@ es:
     confirm_new_email:
       title: "Confirmar correo electrónico nuevo"
       subject_template: "[%{email_prefix}] Confirma tu nueva dirección de correo electrónico"
-      text_body_template: |
-        Confirma tu nueva dirección de correo electrónico para %{site_name} haciendo clic en el siguiente enlace:
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email:
       title: "Confirmar correo electrónico antiguo"
       subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"

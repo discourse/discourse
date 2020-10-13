@@ -2964,10 +2964,6 @@ de:
     confirm_new_email:
       title: "E-Mail-Adresse bestätigen (an neue)"
       subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
-      text_body_template: |
-        Bestätige bitte deine neue E-Mail Adresse für %{site_name} durch einen Klick auf den folgenden Link:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "E-Mail-Adresse bestätigen (an alte)"
       subject_template: "[%{email_prefix}] Bestätige deine aktuelle E-Mail-Adresse"
