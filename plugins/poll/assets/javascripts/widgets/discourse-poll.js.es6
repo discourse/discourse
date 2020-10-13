@@ -558,7 +558,7 @@ function pieChartConfig(data, labels, opts = {}) {
 }
 
 function stripHtml(html) {
-  var doc = new DOMParser().parseFromString(html, "text/html");
+  let doc = new DOMParser().parseFromString(html, "text/html");
   return doc.body.textContent || "";
 }
 
