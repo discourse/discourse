@@ -115,6 +115,15 @@ ko:
       random_mention:
         reply: |-
           내가 뭘 할 수 있는지 알고 싶다면 `@%{discobot_username} %{help_trigger}` 라고 말하렴.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: 답글을 쓸 수 있습니다
       do_not_understand:
         first_response: |-
           우와, 답글을 써줘서 고마워!

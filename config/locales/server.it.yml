@@ -182,6 +182,7 @@ it:
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
       secure_media_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i supporti sicuri."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare 2FA se i login locali sono disabilitati."
+      second_factor_cannot_be_enforced_with_sso_enabled: "Non si può applicare 2FA se SSO è attivato."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non puoi abilitare i caricamenti S3 perché sono già abilitati a livello globale e l'abilitazione dei caricamenti S3 a livello di sito potrebbe causare problemi critici con i caricamenti"
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1757,6 +1758,7 @@ it:
     anonymous_posting_min_trust_level: "Livello di esperienza minimo richiesto per abilitare la pubblicazione in modalità anonima"
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
     hide_user_profiles_from_public: "Disabilita schede utenti, profili utenti e directory utenti per gli utenti anonimi."
+    allow_users_to_hide_profile: "Permetti agli utenti di nascondere il loro profilo e la loro presenza"
     show_inactive_accounts: "Consenti agli utenti registrati di consultare i profili degli account inattivi."
     hide_suspension_reasons: "Non visualizzare pubblicamente i motivi della sospensione sui profili utente."
     log_personal_messages_views: "Registra le visualizzazioni fatte da Amministratore dei messaggi personali di altri utenti/gruppi ."
@@ -2957,6 +2959,15 @@ it:
     confirm_new_email:
       title: "Conferma Nuova Email"
       subject_template: "[%{email_prefix}] Conferma il tuo nuovo indizzo email"
+    confirm_new_email_via_admin:
+      title: "Conferma nuova e-mail"
+      subject_template: "[%{email_prefix}] Conferma il tuo nuovo indirizzo mail"
+      text_body_template: |
+        Conferma il tuo nuovo indirizzo mail per %{site_name} by cliccando sul seguente link:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Questa modifica dell'e-mail è stata richiesta da un amministratore del sito. Se non hai richiesto questa modifica, contatta l'amministratore di %{site_name}.
     confirm_old_email:
       title: "Conferma Vecchia Email"
       subject_template: "[%{email_prefix}] Conferma il tuo attuale indirizzo email"

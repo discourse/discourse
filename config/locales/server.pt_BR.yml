@@ -2961,7 +2961,6 @@ pt_BR:
     confirm_new_email:
       title: "Confirmar novo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu novo endereço de e-mail"
-      text_body_template: "Confirme seu novo endereço de email para %{site_name} clicando no seguinte link: \n\n%{base_url}/u/confirm-new-email/%{email_token}\n"
     confirm_old_email:
       title: "Confirmar Antigo e-mail"
       subject_template: "[%{email_prefix}] Confirme seu endereço de e-mail atual"

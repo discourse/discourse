@@ -2925,10 +2925,6 @@ gl:
     confirm_new_email:
       title: "Confirmar novo correo electrónico"
       subject_template: "[%{email_prefix}] Confirma o teu novo enderezo de correo electrónico"
-      text_body_template: |
-        Confirma o teu novo enderezo de correo electrónico para %{site_name} premendo na seguinte ligazón:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmar o correo electrónico antigo"
       subject_template: "[%{email_prefix}] Confirma o teu enderezo de correo electrónico actual"

@@ -1075,7 +1075,7 @@ sv:
         taken: "Tyvärr är den e-postadressen inte tillgänglig."
         error: "Det uppstod ett problem under bytet av din e-postadress. Kanske används den redan?"
         success: "Vi har skickat e-post till den adressen. Var god följ bekräftelseinstruktionerna."
-        success_via_admin: "Eftersom du ändrar användarens e-postadress antar vi att användaren har förlorat tillgången till sitt ursprungliga e-postkonto. Vi skickade ett återställningslösenord via e-post till den nya e-postadressen för den här användaren. Observera att användaren måste slutföra processen för återställning av lösenord för att e-postadressändringen ska träda i kraft."
+        success_via_admin: "Vi har skickat e-post till den adressen. Var god följ bekräftelseinstruktionerna."
         success_staff: "Vi har skickat e-post till din nuvarande adress. Vänligen följ instruktionerna för konfirmering."
       change_avatar:
         title: "Ändra din profilbild"
@@ -2018,6 +2018,7 @@ sv:
         choose_new_tags: "Välj nya taggar för de här ämnena:"
         choose_append_tags: "Välj nya taggar att lägga till för dessa ämnen:"
         changed_tags: "Taggarna för de här ämnena ändrades."
+        remove_tags: "Ta bort taggar"
       none:
         unread: "Du har inga olästa ämnen."
         new: "Du har inga nya ämnen."

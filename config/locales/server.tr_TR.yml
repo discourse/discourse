@@ -3016,10 +3016,6 @@ tr_TR:
     confirm_new_email:
       title: "Yeni E-postayı Onayla"
       subject_template: "[%{email_prefix}] Yeni e-posta adresinizi onaylayın"
-      text_body_template: |
-        Aşağıdaki bağlantıya tıklayarak %{site_name} için yeni e-posta adresinizi doğrulayınız:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Eski E-postayı Onayla"
       subject_template: "[%{email_prefix}] Mevcut e-posta adresinizi onaylayın"

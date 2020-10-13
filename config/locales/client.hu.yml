@@ -495,7 +495,7 @@ hu:
       days_visited: "Látogatás"
       days_visited_long: "Látogatott nap"
       posts_read: "Olvasott"
-      posts_read_long: "Elolvasott bejegyzések"
+      posts_read_long: "Olvasott bejegyzések"
       last_updated: "Legutóbb frissítve:"
       total_rows:
         one: "%{count} felhasználó"

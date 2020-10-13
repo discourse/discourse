@@ -6,12 +6,17 @@
 
 ar:
   site_settings:
-    poll_enabled: "السماح بالإستفتاء"
-    poll_maximum_options: "أقصى عدد للخيارات في كلّ تصويت."
-    poll_edit_window_mins: "عدد الدقائق بعد نشر المنشور المسموح فيها بتعديل التصويت."
+    poll_enabled: "هل تسمح بالاستطلاعات؟"
+    poll_maximum_options: "أقصى عدد من الخيارات في كلّ استطلاع."
+    poll_edit_window_mins: "عدد الدقائق المسموح خلالها تعديل الاستطلاع بعد نشر المشاركة."
+    poll_minimum_trust_level_to_create: "حدّد أدنى ”مستوى ثقة“ مطلوب لصنع الاستطلاعات."
+    poll_groupable_user_fields: "مجموعة من أسماء حقول المستخدمين لتجميع نتائج الاستطلاعات وترشيحها."
   poll:
-    multiple_polls_without_name: "توجد بضعة تصويتات بلا اسم. استخدم خاصية '<code>name</code>' لتمييزها."
-    multiple_polls_with_same_name: "توجد بضعة تصويتات بالاسم <strong>%{name}</strong> نفسه. استخدم خاصية '<code>name</code>' لتمييزها."
+    invalid_argument: "القيمة ”%{value}“ غير صالحة حسب المُعطى ”%{argument}“"
+    multiple_polls_without_name: "هناك أكثر من استطلاع واحد لا اسم له. استعمل صفة ”<code>name</code>“ لتعريف استطلاعاتك تعريفًا فريدًا."
+    multiple_polls_with_same_name: "هناك أكثر من استطلاع واحد يحمل نفس الاسم: <strong>%{name}</strong>. استعمل صفة ”<code>name</code>“ لتعريف استطلاعاتك تعريفًا فريدًا."
+    default_poll_must_have_at_least_1_option: "يجب أن يكون للاستطلاع خيارًا واحدًا على الأقلّ."
+    named_poll_must_have_at_least_1_option: "يجب أن يكون للاستطلاع بالاسم <strong>%{name}</strong> خيارًا واحدًا على الأقلّ."
     default_poll_must_have_less_options:
       zero: "على التصويت ألا يوفّر أي خيار."
       one: "على التصويت توفير خيار واحد على الأقل."

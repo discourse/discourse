@@ -2688,10 +2688,6 @@ ca:
     confirm_new_email:
       title: "Confirmeu l'adreça de correu nova"
       subject_template: "[%{email_prefix}] Confirmeu la vostra nova adreça de correu"
-      text_body_template: |
-        Confirmeu la vostra nova adreça electrònica per a %{site_name} fent clic en l'enllaç següent:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmeu l'adreça de correu antiga"
       subject_template: "[%{email_prefix}] Confirmeu la vostra adreça de correu actual"
