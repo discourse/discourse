@@ -55,7 +55,7 @@ module Jobs
         .where("ss.value IS NULL")
 
       if SiteSetting.selectable_avatars.present?
-        result = result.where("uploads.id NOT IN (?)", SiteSetting.selectable_avatars.map(&:id))
+        result = result.where.not(id: SiteSetting.selectable_avatars.map(&:id))
       end
 
       result.find_each do |upload|

@@ -229,7 +229,7 @@ describe Upload do
     end
   end
 
-  context ".get_from_url" do
+  context ".get_from_urls" do
     let(:upload) { Fabricate(:upload, sha1: "10f73034616a796dfd70177dc54b6def44c4ba6f") }
     let(:upload2) { Fabricate(:upload, sha1: "2a7081e615f9075befd87a9a6d273935c0262cd5") }
 
@@ -237,19 +237,16 @@ describe Upload do
       expect(Upload.get_from_urls([upload.url, upload2.url])).to contain_exactly(upload, upload2)
     end
 
-    it "works when the file has been uploaded" do
-      expect(Upload.get_from_urls([upload.url])).to contain_exactly(upload)
-    end
-
     it "works for an extensionless URL" do
-      upload.update!(url: upload.url.sub('.png', ''))
-      expect(Upload.get_from_urls([upload.reload.url])).to contain_exactly(upload)
+      url = upload.url.sub('.png', '')
+      upload.update!(url: url)
+      expect(Upload.get_from_urls([url])).to contain_exactly(upload)
     end
 
     it "works with uploads with mismatched URLs" do
       upload.update!(url: "/uploads/default/12345/971308e535305c51.png")
       expect(Upload.get_from_urls([upload.url])).to contain_exactly(upload)
-      expect(Upload.get_from_urls(["/uploads/default/123131/971308e535305c51.png"])).to contain_exactly()
+      expect(Upload.get_from_urls(["/uploads/default/123131/971308e535305c51.png"])).to be_empty
     end
 
     it "works with an upload with a URL containing a deep tree" do
@@ -276,7 +273,7 @@ describe Upload do
       ])).to contain_exactly(upload)
     end
 
-    it "works with invalid URIs" do
+    it "handles invalid URIs" do
       urls = ["http://ip:port/index.html", "mailto:admin%40example.com", "mailto:example"]
       expect { Upload.get_from_urls(urls) }.not_to raise_error
     end

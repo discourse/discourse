@@ -66,15 +66,7 @@ module HasUrl
         end
       end
 
-      if urls.present? && sha1s.present?
-        self.where(url: urls).or(self.where(sha1: sha1s))
-      elsif urls.present?
-        self.where(url: urls)
-      elsif sha1s.present?
-        self.where(sha1: sha1s)
-      else
-        []
-      end
+      self.where(url: urls).or(self.where(sha1: sha1s))
     end
   end
 end

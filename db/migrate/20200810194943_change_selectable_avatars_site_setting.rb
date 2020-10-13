@@ -31,7 +31,7 @@ class ChangeSelectableAvatarsSiteSetting < ActiveRecord::Migration[6.0]
     uploads_query = []
     uploads_query << "url IN (#{urls.map { |url| ActiveRecord::Base.connection.quote(url) }.join(',')})" if urls.size > 0
     uploads_query << "sha1 IN (#{sha1s.map { |sha1| ActiveRecord::Base.connection.quote(sha1) }.join(',')})" if sha1s.size > 0
-    uploads_query = "SELECT id FROM uploads WHERE #{uploads_query.join(" OR ")}"
+    uploads_query = "SELECT DISTINCT id FROM uploads WHERE #{uploads_query.join(" OR ")}"
 
     upload_ids = execute(uploads_query).map { |row| row["id"] }
     return if upload_ids.size == 0
