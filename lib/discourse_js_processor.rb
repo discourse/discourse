@@ -3,7 +3,6 @@ require 'execjs'
 require 'mini_racer'
 
 class DiscourseJsProcessor
-
   def self.plugin_transpile_paths
     @@plugin_transpile_paths ||= Set.new
   end
@@ -95,7 +94,7 @@ class DiscourseJsProcessor
 JS
       source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
       js_source = ::JSON.generate(source, quirks_mode: true)
-      js = ctx.eval("Babel.transform(#{js_source}, { ast: false, plugins: ['transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex'] }).code")
+      js = ctx.eval(BabelHelper.build(js_source))
       ctx.eval(js)
 
       ctx
@@ -139,12 +138,29 @@ JS
       opts ||= {}
 
       js_source = ::JSON.generate(source, quirks_mode: true)
-
       if opts[:module_name] && !@skip_module
         filename = opts[:filename] || 'unknown'
-        "Babel.transform(#{js_source}, { moduleId: '#{opts[:module_name]}', filename: '#{filename}', ast: false, presets: ['es2015'], plugins: [['transform-modules-amd', {noInterop: true}], ['proposal-decorators', {legacy: true} ], exports.WidgetHbsCompiler] }).code"
+
+        BabelHelper.build(
+          js_source,
+          [
+            ['transform-modules-amd', { noInterop: true }],
+            WidgetHbsCompiler,
+          ],
+          {
+            moduleId: opts[:module_name],
+            filename: filename,
+          }
+        )
       else
-        "Babel.transform(#{js_source}, { ast: false, plugins: ['proposal-json-strings', 'proposal-nullish-coalescing-operator', 'proposal-logical-assignment-operators', 'proposal-numeric-separator', 'proposal-optional-catch-binding', 'transform-dotall-regex', 'proposal-unicode-property-regex', 'transform-named-capturing-groups-regex', 'proposal-object-rest-spread', 'proposal-optional-chaining', 'transform-arrow-functions', 'transform-block-scoped-functions', 'transform-block-scoping', 'transform-computed-properties', 'transform-destructuring', 'transform-duplicate-keys', 'transform-for-of', 'transform-function-name', 'transform-literals', 'transform-object-super', 'transform-parameters', 'transform-shorthand-properties', 'transform-spread', 'transform-sticky-regex', 'transform-template-literals', 'transform-typeof-symbol', 'transform-unicode-regex', ['proposal-decorators', {legacy: true}], exports.WidgetHbsCompiler] }).code"
+        # transform-template-literals is causing issues with hbs`` when used in others
+        BabelHelper.build(
+          js_source,
+          [
+            'transform-template-literals',
+            WidgetHbsCompiler,
+          ]
+        )
       end
     end
 
@@ -163,6 +179,61 @@ JS
       # We need to strip the app subdirectory to replicate how ember-cli works.
       path || logical_path&.gsub('app/', '')&.gsub('addon/', '')&.gsub('admin/addon', 'admin')
     end
+  end
 
+  class Exports
+    def self.to_json
+      self.to_s
+    end
+  end
+
+  class WidgetHbsCompiler < Exports
+    def self.to_s
+      'exports.WidgetHbsCompiler'
+    end
+  end
+
+  class BabelHelper
+    PLUGINS = [
+      'transform-literals',
+      'transform-named-capturing-groups-regex',
+      'transform-sticky-regex',
+      'transform-unicode-regex',
+      'transform-for-of',
+      'transform-function-name',
+      'transform-spread',
+      'transform-typeof-symbol',
+      'transform-computed-properties',
+      'transform-destructuring',
+      'transform-duplicate-keys',
+      'transform-arrow-functions',
+      'transform-block-scoped-functions',
+      'transform-block-scoping',
+      'transform-object-super',
+      'transform-parameters',
+      'transform-shorthand-properties',
+      'transform-dotall-regex',
+      'proposal-json-strings',
+      'proposal-nullish-coalescing-operator',
+      'proposal-logical-assignment-operators',
+      'proposal-numeric-separator',
+      'proposal-optional-catch-binding',
+      'proposal-object-rest-spread',
+      'proposal-optional-chaining',
+      'proposal-unicode-property-regex',
+      ['proposal-decorators', { legacy: true }]
+    ]
+
+    def self.build(source, extra_plugins = [], options = {})
+      options[:ast] ||= false
+
+      options_string = options.map do |k, v|
+        v.is_a?(String) ? "#{k}: '#{v}'" : "#{k}: #{v}"
+      end.join(', ')
+
+      plugins_string = (PLUGINS + extra_plugins).map  { |plugin| plugin.to_json }.join(', ')
+
+      "Babel.transform(#{source}, { plugins: [#{plugins_string}], #{options_string} }).code"
+    end
   end
 end
