@@ -495,6 +495,7 @@ end
 #  posted                   :boolean          default(FALSE), not null
 #  last_read_post_number    :integer
 #  highest_seen_post_number :integer
+#  last_posted_at          :datetime
 #  last_visited_at          :datetime
 #  first_visited_at         :datetime
 #  notification_level       :integer          default(1), not null
