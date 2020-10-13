@@ -1297,12 +1297,12 @@ export default Controller.extend(bufferedProperty("model"), {
   retryOnRateLimit(times, promise, topicId) {
     const currentTopicId = this.get("model.id");
     topicId = topicId || currentTopicId;
-    if (topicId !== currentTopicId || times <= 0) {
+    if (topicId !== currentTopicId) {
       // we navigated to another topic, so skip
       return;
     }
 
-    if (this.retryRateLimited) {
+    if (this.retryRateLimited || times <= 0) {
       return;
     }
 
