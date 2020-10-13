@@ -74,7 +74,7 @@ describe ContentSecurityPolicy do
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
       script_srcs = parse(policy)['script-src']
-      expect(script_srcs).to include('https://www.google-analytics.com/analytics.js')
+      expect(script_srcs).to include('https://www.googletagmanager.com/gtag/js')
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
     end
 
