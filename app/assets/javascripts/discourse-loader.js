@@ -1,4 +1,5 @@
-let define, requirejs;
+// eslint-disable-next-line
+var define, requirejs;
 
 (function () {
   let JS_MODULES = {};

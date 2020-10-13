@@ -1,5 +1,6 @@
 // Instantiate the object
-let I18n = I18n || {};
+// eslint-disable-next-line
+var I18n = I18n || {};
 
 // Set default locale to english
 I18n.defaultLocale = "en";
