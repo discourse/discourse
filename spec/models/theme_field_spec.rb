@@ -194,7 +194,7 @@ HTML
         var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
 
         var themePrefix = function themePrefix(key) {
-          return `theme_translations.#{theme.id}.${key}`;
+          return "theme_translations.#{theme.id}.".concat(key);
         };
 
         console.log('hello from .js.es6');
