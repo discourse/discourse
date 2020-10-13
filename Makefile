@@ -11,7 +11,9 @@ init:
 	# not our fork, and we cannot change it as it's hard-coded in the Dockerfile.
 	# That is why you may experience errors during the `bundle install` step
 	# and later in the application.
-	d/boot_dev --init
+	d/boot_dev
+	d/bundle install
+	d/migrate
 
 run:
 	# Start the Rails server
@@ -23,3 +25,34 @@ down:
 
 bash:
 	docker exec -it discourse_dev bash
+
+#####################################
+############ Database ###############
+.PHONY: db_bash db_grant_privileges db_clean db_restore
+
+#####################################
+db_bash:
+	docker exec -u postgres -it discourse_dev bash -c "psql -d discourse_development"
+
+db_grant_privileges:
+	# The discourse user, used by each Discourse command in their Docker configuration,
+	# does not have enough privileges do dump or recreate the database,
+	# only the postgres user can do it.
+	# Grant privileges to manipulate the DB as we want.
+	docker exec -u postgres discourse_dev bash -c "psql discourse_development --command '\
+	GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO discourse;\
+	GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO discourse;'"
+
+db_clean:
+	# /data/postgres is a mounted in the container and used to
+	# make data persistent between two runs.
+	sudo rm -rf /data/postgres
+	make db_grant_privileges
+	docker exec -it -u discourse -w /src discourse_dev /bin/bash -c "rake db:truncate_all"
+
+# We need to clean the whole database beforehand because seed is called each db:migrate.
+# See /lib/tasks/db.rake
+db_restore: db_clean
+	sudo cp discourse_dump.sql data/postgres/discourse_dump.sql | true
+
+	docker exec -it -u postgres discourse_dev pg_restore -d discourse_development --no-owner --no-privileges --format=c "/shared/postgres_data/discourse_dump.sql"
