@@ -223,7 +223,7 @@ test("supporting html tags by keeping them", (assert) => {
 
 test("converts code tags", (assert) => {
   let html = `Lorem ipsum dolor sit amet,
-  <pre><code>let helloWorld = () => {
+  <pre><code>var helloWorld = () => {
   alert('    hello \t\t world    ');
     return;
 }
@@ -233,12 +233,12 @@ helloWorld();</code></pre>
 
   assert.equal(toMarkdown(html), output);
 
-  html = `Lorem ipsum dolor sit amet, <code>let helloWorld = () => {
+  html = `Lorem ipsum dolor sit amet, <code>var helloWorld = () => {
   alert('    hello \t\t world    ');
     return;
 }
 helloWorld();</code>consectetur.`;
-  output = `Lorem ipsum dolor sit amet, \`let helloWorld = () => {\n  alert('    hello \t\t world    ');\n    return;\n}\nhelloWorld();\`consectetur.`;
+  output = `Lorem ipsum dolor sit amet, \`var helloWorld = () => {\n  alert('    hello \t\t world    ');\n    return;\n}\nhelloWorld();\`consectetur.`;
 
   assert.equal(toMarkdown(html), output);
 });
