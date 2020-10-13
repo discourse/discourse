@@ -1,15 +1,15 @@
-{{#d-modal-body title="topic.slow_mode_update.title" autoFocus="false"}}
+{{#d-modal-body title="topic.slow_mode_update.title" autoFocus=false}}
   <div class="control-group">
-    <label>{{i18n "topic.slow_mode_update.description"}}</label>
+    <label class="slow-mode-label">{{i18n "topic.slow_mode_update.description"}}</label>
   </div>
 
   <div class="control-group">
-    <label>{{i18n "topic.slow_mode_update.select"}}</label>
+    <label class="slow-mode-label">{{i18n "topic.slow_mode_update.select"}}</label>
     {{combo-box
       class="slow-mode-type"
       content=slowModes
       value=selectedSlowMode
-      onChange=(action "setSlowModeInterval")
+      onChange=(action "setSlowModeDuration")
     }}
   </div>
 
@@ -40,9 +40,9 @@
   {{conditional-loading-spinner size="small" condition=loading}}
 
   {{#if model.slow_mode_seconds}}
-    {{d-button class="pull-right btn-danger"
-        action=(action "disableSlowMode")
-        disabled=submitDisabled
-        label="topic.slow_mode_update.remove"}}
+    {{d-button class="btn-danger"
+               action=(action "disableSlowMode")
+               disabled=submitDisabled
+               label="topic.slow_mode_update.remove"}}
   {{/if}}
 </div>

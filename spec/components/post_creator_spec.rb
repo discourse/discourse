@@ -736,7 +736,7 @@ describe PostCreator do
 
         expect(post).to be_blank
         expect(creator.errors.count).to eq 1
-        expect(creator.errors.messages[:base][0]).to match I18n.t(:slow_mode)
+        expect(creator.errors.messages[:base][0]).to match I18n.t(:slow_mode_enabled)
       end
 
       it 'creates the topic if the user last post is older than the slow mode interval' do

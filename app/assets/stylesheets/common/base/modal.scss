@@ -813,7 +813,7 @@
 }
 
 .modal.edit-slow-mode-modal {
-  label {
+  .slow-mode-label {
     display: inline-flex;
   }
 
@@ -822,6 +822,6 @@
   }
 
   .input-small {
-    width: 83px;
+    width: 15%;
   }
 }

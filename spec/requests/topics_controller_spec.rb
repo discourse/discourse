@@ -3049,7 +3049,7 @@ RSpec.describe TopicsController do
 
   describe '#set_slow_mode' do
     context 'when not logged in' do
-      it 'xxx' do
+      it 'returns a forbidden response' do
         put "/t/#{topic.id}/slow_mode.json", params: {
           seconds: '3600'
         }

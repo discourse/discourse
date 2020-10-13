@@ -1,5 +1,3 @@
-import I18n from "I18n";
-
 export function fromSeconds(seconds) {
   let initialSeconds = seconds;
 
@@ -17,11 +15,7 @@ export function fromSeconds(seconds) {
     minutes = 0;
   }
 
-  return {
-    hours: hours,
-    minutes: minutes,
-    seconds: initialSeconds,
-  };
+  return { hours, minutes, seconds: initialSeconds };
 }
 
 export function toSeconds(hours, minutes, seconds) {
@@ -31,37 +25,6 @@ export function toSeconds(hours, minutes, seconds) {
   return parseInt(seconds, 10) + hoursAsSeconds + minutesAsSeconds;
 }
 
-export function intervalTextFromSeconds(seconds) {
-  const { hours, minutes, secs } = fromSeconds(seconds);
-  let hasHours = hours > 0;
-  let hasMinutes = minutes > 0;
-
-  if (!hasHours && !hasMinutes) {
-    return I18n.t("topic.slow_mode_intervals.seconds", { seconds: secs });
-  }
-
-  if (hasHours && hours >= 24) {
-    let days = hours / 24;
-    return I18n.t("topic.slow_mode_intervals.days", { days: days });
-  }
-
-  if (hasHours) {
-    if (hasMinutes) {
-      return I18n.t("topic.slow_mode_intervals.hours_and_minutes", {
-        hours: hours,
-        minutes: minutes,
-      });
-    } else {
-      return I18n.t("topic.slow_mode_intervals.hours", { hours: hours });
-    }
-  } else {
-    return I18n.t("topic.slow_mode_intervals.minutes", { minutes: minutes });
-  }
-}
-
-export function cannotPostAgain(interval, last_posted_at) {
-  let threshold = new Date(last_posted_at);
-  threshold = new Date(threshold.getTime() + interval * 1000);
-
-  return new Date() < threshold;
+export function durationTextFromSeconds(seconds) {
+  return moment.duration(seconds, "seconds").humanize();
 }
