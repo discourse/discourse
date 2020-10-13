@@ -329,6 +329,23 @@ module Middleware
         helper.force_anonymous!
       end
 
+      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") && (queue_time = env["REQUEST_QUEUE_SECONDS"])
+        if queue_time > GlobalSetting.background_requests_max_queue_length
+          return [
+            429,
+            {
+              "content-type" => "application/json; charset=utf-8"
+            },
+            [{
+              errors: I18n.t("rate_limiter.slow_down"),
+              extras: {
+                wait_seconds: 5 + (5 * rand).round(2)
+              }
+            }.to_json]
+          ]
+        end
+      end
+
       result =
         if helper.cacheable?
           helper.cached(env) || helper.cache(@app.call(env), env)

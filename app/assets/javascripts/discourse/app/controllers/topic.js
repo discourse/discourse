@@ -2,7 +2,7 @@ import I18n from "I18n";
 import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { next, schedule } from "@ember/runloop";
+import { next, schedule, later } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
@@ -29,6 +29,8 @@ import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
 
 let customPostMessageCallbacks = {};
+
+const RETRIES_ON_RATE_LIMIT = 4;
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
@@ -1292,6 +1294,42 @@ export default Controller.extend(bufferedProperty("model"), {
     this.model.destroy(this.currentUser);
   },
 
+  retryOnRateLimit(times, promise, topicId) {
+    const currentTopicId = this.get("model.id");
+    topicId = topicId || currentTopicId;
+    if (topicId !== currentTopicId) {
+      // we navigated to another topic, so skip
+      return;
+    }
+
+    if (this.retryRateLimited || times <= 0) {
+      return;
+    }
+
+    promise().catch((e) => {
+      const xhr = e.jqXHR;
+      if (
+        xhr &&
+        xhr.status === 429 &&
+        xhr.responseJSON &&
+        xhr.responseJSON.extras &&
+        xhr.responseJSON.extras.wait_seconds
+      ) {
+        let waitSeconds = xhr.responseJSON.extras.wait_seconds;
+        if (waitSeconds < 5) {
+          waitSeconds = 5;
+        }
+
+        this.retryRateLimited = true;
+
+        later(() => {
+          this.retryRateLimited = false;
+          this.retryOnRateLimit(times - 1, promise, topicId);
+        }, waitSeconds * 1000);
+      }
+    });
+  },
+
   subscribe() {
     this.unsubscribe();
 
@@ -1363,7 +1401,22 @@ export default Controller.extend(bufferedProperty("model"), {
             break;
           }
           case "created": {
-            postStream.triggerNewPostInStream(data.id).then(() => refresh());
+            this.newPostsInStream = this.newPostsInStream || [];
+            this.newPostsInStream.push(data.id);
+
+            this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
+              const postIds = this.newPostsInStream;
+              this.newPostsInStream = [];
+
+              return postStream
+                .triggerNewPostsInStream(postIds, { background: true })
+                .then(() => refresh())
+                .catch((e) => {
+                  this.newPostsInStream = postIds.concat(this.newPostsInStream);
+                  throw e;
+                });
+            });
+
             if (this.get("currentUser.id") !== data.user_id) {
               this.documentTitle.incrementBackgroundContextCount();
             }
