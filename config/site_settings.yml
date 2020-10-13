@@ -1339,6 +1339,7 @@ files:
     validator: "SelectableAvatarsEnabledValidator"
   selectable_avatars:
     default: ""
+    client: true
     type: uploaded_image_list
   allow_all_attachments_for_group_messages: false
   png_to_jpg_quality:

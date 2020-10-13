@@ -2368,7 +2368,7 @@ describe UsersController do
       context 'selectable avatars is enabled' do
 
         before do
-          SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+          SiteSetting.selectable_avatars = [avatar1, avatar2]
           SiteSetting.selectable_avatars_enabled = true
         end
 
