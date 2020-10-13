@@ -136,7 +136,7 @@ describe Middleware::AnonymousCache do
         end
       )
 
-      global_setting :background_requests_max_queue_length, 1
+      global_setting :background_requests_max_queue_length, "0.5"
 
       env = {
         "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
@@ -161,7 +161,7 @@ describe Middleware::AnonymousCache do
       json = JSON.parse(body.join)
       expect(json["extras"]["wait_seconds"]).to be > 4.9
 
-      env["REQUEST_QUEUE_SECONDS"] = 0.5
+      env["REQUEST_QUEUE_SECONDS"] = 0.4
 
       status, _ = app.call(env.dup)
       expect(status).to eq(200)

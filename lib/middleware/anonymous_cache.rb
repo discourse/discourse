@@ -330,7 +330,8 @@ module Middleware
       end
 
       if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") && (queue_time = env["REQUEST_QUEUE_SECONDS"])
-        if queue_time > GlobalSetting.background_requests_max_queue_length
+        max_time = GlobalSetting.background_requests_max_queue_length.to_f
+        if max_time > 0 && queue_time.to_f > max_time
           return [
             429,
             {
