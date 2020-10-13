@@ -166,7 +166,7 @@
     let settings = $.extend(defaultSettings, newSettings);
 
     return this.each(function () {
-      var $el = $(this).addClass(settings.container_class);
+      let $el = $(this).addClass(settings.container_class);
       setUp($el, settings);
     });
   };
