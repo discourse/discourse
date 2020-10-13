@@ -13,7 +13,8 @@ init:
 	# and later in the application.
 	d/boot_dev
 	d/bundle install
-	d/migrate
+	# d/migrate	
+	# Disable initial migrations to work with the prod database.		
 
 run:
 	# Start the Rails server
@@ -43,6 +44,8 @@ db_grant_privileges:
 	GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO discourse;\
 	GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO discourse;'"
 
+# We need to clean the whole database beforehand because seed is called each db:migrate.
+# See /lib/tasks/db.rake
 db_clean:
 	# /data/postgres is a mounted in the container and used to
 	# make data persistent between two runs.
@@ -50,9 +53,7 @@ db_clean:
 	make db_grant_privileges
 	docker exec -it -u discourse -w /src discourse_dev /bin/bash -c "rake db:truncate_all"
 
-# We need to clean the whole database beforehand because seed is called each db:migrate.
-# See /lib/tasks/db.rake
-db_restore: db_clean
+db_restore:
 	sudo cp discourse_dump.sql data/postgres/discourse_dump.sql | true
 
-	docker exec -it -u postgres discourse_dev pg_restore -d discourse_development --no-owner --no-privileges --format=c "/shared/postgres_data/discourse_dump.sql"
+	docker exec -it -u postgres discourse_dev pg_restore -d discourse_development --clean --create  --no-owner --no-privileges --format=c "/shared/postgres_data/discourse_dump.sql"
