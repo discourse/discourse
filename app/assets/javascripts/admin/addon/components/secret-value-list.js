@@ -94,9 +94,9 @@ export default Component.extend({
   _splitValues(values, delimiter) {
     if (values && values.length) {
       const keys = ["key", "secret"];
-      var res = [];
+      let res = [];
       values.split(delimiter).forEach(function (str) {
-        var object = {};
+        let object = {};
         str.split("|").forEach(function (a, i) {
           object[keys[i]] = a;
         });

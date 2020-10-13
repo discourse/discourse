@@ -1,5 +1,5 @@
 // for android we test webkit
-var hiddenProperty =
+let hiddenProperty =
   document.hidden !== undefined
     ? "hidden"
     : document.webkitHidden !== undefined

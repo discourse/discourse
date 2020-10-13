@@ -12,7 +12,7 @@
     User.reopenClass(Singleton);
 
     // Retrieve the current instance:
-    var instance = User.current();
+    let instance = User.current();
 
   ```
 
@@ -67,7 +67,7 @@ const Singleton = Mixin.create({
 
   // Returns OR sets a property on the singleton instance.
   currentProp(property, value) {
-    var instance = this.current();
+    let instance = this.current();
     if (!instance) {
       return;
     }

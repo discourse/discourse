@@ -438,7 +438,7 @@ export default createWidget("header", {
     if (this.site.mobileView) {
       const searchService = this.register.lookup("search-service:main");
       const context = searchService.get("searchContext");
-      var params = "";
+      let params = "";
 
       if (context) {
         params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;

@@ -113,7 +113,7 @@ export function mapRoutes() {
   // can define admin routes.
   Object.keys(requirejs._eak_seen).forEach(function (key) {
     if (/route-map$/.test(key)) {
-      var module = requirejs(key, null, null, true);
+      let module = requirejs(key, null, null, true);
       if (!module || !module.default) {
         throw new Error(key + " must export a route map.");
       }

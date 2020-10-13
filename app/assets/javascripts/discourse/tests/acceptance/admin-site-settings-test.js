@@ -2,7 +2,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 
-var titleOverride = undefined;
+let titleOverride = undefined;
 
 acceptance("Admin - Site Settings", {
   loggedIn: true,

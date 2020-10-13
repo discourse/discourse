@@ -1,15 +1,15 @@
-var define, requirejs;
+let define, requirejs;
 
 (function () {
-  var JS_MODULES = {};
-  var ALIASES = {
+  let JS_MODULES = {};
+  let ALIASES = {
     "ember-addons/ember-computed-decorators":
       "discourse-common/utils/decorators",
     "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
     "preload-store": "discourse/lib/preload-store",
     "fixtures/user_fixtures": "discourse/tests/fixtures/user-fixtures",
   };
-  var ALIAS_PREPEND = {
+  let ALIAS_PREPEND = {
     fixtures: "discourse/tests/",
     helpers: "discourse/tests/",
   };
@@ -156,7 +156,7 @@ var define, requirejs;
     };
   }
 
-  var _isArray;
+  let _isArray;
   if (!Array.isArray) {
     _isArray = function (x) {
       return Object.prototype.toString.call(x) === "[object Array]";
@@ -165,11 +165,11 @@ var define, requirejs;
     _isArray = Array.isArray;
   }
 
-  var registry = {};
-  var seen = {};
-  var FAILED = false;
+  let registry = {};
+  let seen = {};
+  let FAILED = false;
 
-  var uuid = 0;
+  let uuid = 0;
 
   function tryFinally(tryable, finalizer) {
     try {
@@ -188,7 +188,7 @@ var define, requirejs;
   }
 
   function deprecatedModule(depricated, useInstead) {
-    var warning = "[DEPRECATION] `" + depricated + "` is deprecated.";
+    let warning = "[DEPRECATION] `" + depricated + "` is deprecated.";
     if (useInstead) {
       warning += " Please use `" + useInstead + "` instead.";
     }
@@ -196,7 +196,7 @@ var define, requirejs;
     console.warn(warning);
   }
 
-  var defaultDeps = ["require", "exports", "module"];
+  let defaultDeps = ["require", "exports", "module"];
 
   function Module(name, deps, callback, exports) {
     this.id = uuid++;
@@ -209,7 +209,7 @@ var define, requirejs;
   }
 
   Module.prototype.makeRequire = function () {
-    var name = transformForAliases(this.name);
+    let name = transformForAliases(this.name);
 
     return (
       this._require ||
@@ -246,15 +246,15 @@ var define, requirejs;
   };
 
   function reify(mod, name, rseen) {
-    var deps = mod.deps;
-    var length = deps.length;
-    var reified = new Array(length);
-    var dep;
+    let deps = mod.deps;
+    let length = deps.length;
+    let reified = new Array(length);
+    let dep;
     // TODO: new Module
     // TODO: seen refactor
-    var module = {};
+    let module = {};
 
-    for (var i = 0, l = length; i < l; i++) {
+    for (let i = 0, l = length; i < l; i++) {
       dep = deps[i];
       if (dep === "exports") {
         module.exports = reified[i] = rseen;
@@ -293,7 +293,7 @@ var define, requirejs;
       name = "@ember/object";
     }
 
-    var mod = JS_MODULES[name] || registry[name];
+    let mod = JS_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
         "Could not find module `" + name + "` imported from `" + origin + "`"
@@ -307,10 +307,10 @@ var define, requirejs;
   }
 
   function transformForAliases(name) {
-    var alias = ALIASES[name];
+    let alias = ALIASES[name];
     if (!alias) {
-      var segment = name.split("/")[0];
-      var prepend = ALIAS_PREPEND[segment];
+      let segment = name.split("/")[0];
+      let prepend = ALIAS_PREPEND[segment];
       if (!prepend) {
         return name;
       }
@@ -326,7 +326,7 @@ var define, requirejs;
       return JS_MODULES[name];
     }
 
-    var mod = registry[name];
+    let mod = registry[name];
 
     if (mod && mod.callback instanceof Alias) {
       mod = registry[mod.callback.name];
@@ -340,9 +340,9 @@ var define, requirejs;
       return seen[name];
     }
 
-    var reified;
-    var module;
-    var loaded = false;
+    let reified;
+    let module;
+    let loaded = false;
 
     seen[name] = {}; // placeholder for run-time cycles
 
@@ -359,7 +359,7 @@ var define, requirejs;
       }
     );
 
-    var obj;
+    let obj;
     if (module === undefined && reified.module.exports) {
       obj = reified.module.exports;
     } else {
@@ -383,12 +383,12 @@ var define, requirejs;
       return child;
     }
 
-    var parts = child.split("/");
-    var nameParts = name.split("/");
-    var parentBase = nameParts.slice(0, -1);
+    let parts = child.split("/");
+    let nameParts = name.split("/");
+    let parentBase = nameParts.slice(0, -1);
 
-    for (var i = 0, l = parts.length; i < l; i++) {
-      var part = parts[i];
+    for (let i = 0, l = parts.length; i < l; i++) {
+      let part = parts[i];
 
       if (part === "..") {
         if (parentBase.length === 0) {

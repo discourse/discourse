@@ -51,7 +51,7 @@ if (!String.prototype.padEnd) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
 if (!Object.entries) {
   Object.entries = function (obj) {
-    var ownProps = Object.keys(obj),
+    let ownProps = Object.keys(obj),
       i = ownProps.length,
       resArray = new Array(i); // preallocate the Array
     while (i--) resArray[i] = [ownProps[i], obj[ownProps[i]]];
@@ -64,7 +64,7 @@ if (!Object.entries) {
 // adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
 if (!Object.values) {
   Object.values = function (obj) {
-    var ownProps = Object.keys(obj),
+    let ownProps = Object.keys(obj),
       i = ownProps.length,
       resArray = new Array(i); // preallocate the Array
     while (i--) resArray[i] = obj[ownProps[i]];
@@ -78,7 +78,7 @@ if (!Object.values) {
 if (window.NodeList && !NodeList.prototype.forEach) {
   NodeList.prototype.forEach = function (callback, thisArg) {
     thisArg = thisArg || window;
-    for (var i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
       callback.call(thisArg, this[i], i, this);
     }
   };
@@ -96,11 +96,11 @@ if (window.NodeList && !NodeList.prototype.forEach) {
       enumerable: true,
       writable: true,
       value: function before() {
-        var argArr = Array.prototype.slice.call(arguments),
+        let argArr = Array.prototype.slice.call(arguments),
           docFrag = document.createDocumentFragment();
 
         argArr.forEach(function (argItem) {
-          var isNode = argItem instanceof Node;
+          let isNode = argItem instanceof Node;
           docFrag.appendChild(
             isNode ? argItem : document.createTextNode(String(argItem))
           );

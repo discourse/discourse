@@ -5,10 +5,10 @@ import Singleton from "discourse/mixins/singleton";
 module("mixin:singleton");
 
 test("current", (assert) => {
-  var DummyModel = EmberObject.extend({});
+  let DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
 
-  var current = DummyModel.current();
+  let current = DummyModel.current();
   assert.present(current, "current returns the current instance");
   assert.equal(
     current,
@@ -23,9 +23,9 @@ test("current", (assert) => {
 });
 
 test("currentProp reading", (assert) => {
-  var DummyModel = EmberObject.extend({});
+  let DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
-  var current = DummyModel.current();
+  let current = DummyModel.current();
 
   assert.blank(
     DummyModel.currentProp("evil"),
@@ -40,14 +40,14 @@ test("currentProp reading", (assert) => {
 });
 
 test("currentProp writing", (assert) => {
-  var DummyModel = EmberObject.extend({});
+  let DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
 
   assert.blank(
     DummyModel.currentProp("adventure"),
     "by default attributes are blank"
   );
-  var result = DummyModel.currentProp("adventure", "time");
+  let result = DummyModel.currentProp("adventure", "time");
   assert.equal(result, "time", "it returns the new value");
   assert.equal(
     DummyModel.currentProp("adventure"),
@@ -67,7 +67,7 @@ test("currentProp writing", (assert) => {
 });
 
 test("createCurrent", (assert) => {
-  var Shoe = EmberObject.extend({});
+  let Shoe = EmberObject.extend({});
   Shoe.reopenClass(Singleton, {
     createCurrent: function () {
       return Shoe.create({ toes: 5 });
@@ -82,7 +82,7 @@ test("createCurrent", (assert) => {
 });
 
 test("createCurrent that returns null", (assert) => {
-  var Missing = EmberObject.extend({});
+  let Missing = EmberObject.extend({});
   Missing.reopenClass(Singleton, {
     createCurrent: function () {
       return null;

@@ -1,13 +1,13 @@
 import { htmlHelper } from "discourse-common/lib/helpers";
 
 function renderSpinner(cssClass) {
-  var html = "<div class='spinner";
+  let html = "<div class='spinner";
   if (cssClass) {
     html += " " + cssClass;
   }
   return html + "'></div>";
 }
-var spinnerHTML = renderSpinner();
+let spinnerHTML = renderSpinner();
 
 export default htmlHelper((params) => {
   const hash = params.hash;

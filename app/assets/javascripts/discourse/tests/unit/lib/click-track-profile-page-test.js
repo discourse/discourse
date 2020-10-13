@@ -46,7 +46,7 @@ module("lib:click-track-profile-page", {
   },
 });
 
-var track = ClickTrack.trackClick;
+let track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
   return $.Event("click", { currentTarget: fixture(selector).first() });

@@ -536,10 +536,10 @@ export default Component.extend({
 
   _warnMentionedGroups($preview) {
     schedule("afterRender", () => {
-      var found = this.warnedGroupMentions || [];
+      let found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
-        var name = $e.data("name");
+        let name = $e.data("name");
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {

@@ -47,7 +47,7 @@ module("lib:click-track", {
   },
 });
 
-var track = ClickTrack.trackClick;
+let track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
   return $.Event("click", { currentTarget: fixture(selector).first() });
@@ -155,7 +155,7 @@ test("removes the href and put it as a data attribute", async (assert) => {
 
   assert.notOk(track(generateClickEventOn("a")));
 
-  var $link = fixture("a").first();
+  let $link = fixture("a").first();
   assert.ok($link.hasClass("no-href"));
   assert.equal($link.data("href"), "http://www.google.com/");
   assert.blank($link.attr("href"));
@@ -179,7 +179,7 @@ test("restores the href after a while", async (assert) => {
 
 function badgeClickCount(assert, id, expected) {
   track(generateClickEventOn("#" + id));
-  var $badge = $("span.badge", fixture("#" + id).first());
+  let $badge = $("span.badge", fixture("#" + id).first());
   assert.equal(parseInt($badge.html(), 10), expected);
 }
 
@@ -201,7 +201,7 @@ test("updates badge counts correctly", async (assert) => {
 
 function testOpenInANewTab(description, clickEventModifier) {
   test(description, async (assert) => {
-    var clickEvent = generateClickEventOn("a");
+    let clickEvent = generateClickEventOn("a");
     clickEventModifier(clickEvent);
     assert.ok(track(clickEvent));
     assert.notOk(clickEvent.defaultPrevented);

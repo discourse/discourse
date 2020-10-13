@@ -190,7 +190,7 @@ export default (filterArg, params) => {
         canCreateTopic: canCreateTopic,
       });
 
-      var topicOpts = {
+      let topicOpts = {
         model: topics,
         category,
         period:

@@ -113,7 +113,7 @@ const rule = {
       if (offTopicQuote) {
         const topicInfo = options.getTopicInfo(topicId);
         if (topicInfo) {
-          var href = topicInfo.href;
+          let href = topicInfo.href;
           if (postNumber > 0) {
             href += "/" + postNumber;
           }

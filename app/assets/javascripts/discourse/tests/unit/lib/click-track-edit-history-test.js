@@ -53,7 +53,7 @@ module("lib:click-track-edit-history", {
   },
 });
 
-var track = ClickTrack.trackClick;
+let track = ClickTrack.trackClick;
 
 function generateClickEventOn(selector) {
   return $.Event("click", { currentTarget: fixture(selector).first() });

@@ -45,7 +45,7 @@ test("setting", function (assert) {
 });
 
 test("propertyEqual", (assert) => {
-  var t = EmberObject.extend({
+  let t = EmberObject.extend({
     same: propertyEqual("cookies", "biscuits"),
   }).create({
     cookies: 10,
@@ -58,7 +58,7 @@ test("propertyEqual", (assert) => {
 });
 
 test("propertyNotEqual", (assert) => {
-  var t = EmberObject.extend({
+  let t = EmberObject.extend({
     diff: propertyNotEqual("cookies", "biscuits"),
   }).create({
     cookies: 10,
@@ -71,7 +71,7 @@ test("propertyNotEqual", (assert) => {
 });
 
 test("fmt", (assert) => {
-  var t = EmberObject.extend({
+  let t = EmberObject.extend({
     exclaimyUsername: fmt("username", "!!! %@ !!!"),
     multiple: fmt("username", "mood", "%@ is %@"),
   }).create({
@@ -105,7 +105,7 @@ test("fmt", (assert) => {
 });
 
 test("i18n", (assert) => {
-  var t = EmberObject.extend({
+  let t = EmberObject.extend({
     exclaimyUsername: i18n("username", "!!! %@ !!!"),
     multiple: i18n("username", "mood", "%@ is %@"),
   }).create({
@@ -139,7 +139,7 @@ test("i18n", (assert) => {
 });
 
 test("url", (assert) => {
-  var t, testClass;
+  let t, testClass;
 
   testClass = EmberObject.extend({
     userUrl: url("username", "/u/%@"),

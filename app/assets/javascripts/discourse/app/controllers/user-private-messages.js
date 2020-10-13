@@ -40,7 +40,7 @@ export default Controller.extend({
 
   bulkOperation(operation) {
     const selected = this.selected;
-    var params = { type: operation };
+    let params = { type: operation };
     if (this.isGroup) {
       params.group = this.groupFilter;
     }

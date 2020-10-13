@@ -5,8 +5,8 @@ import User from "discourse/models/user";
 module("model: UserStream");
 
 test("basics", (assert) => {
-  var user = User.create({ id: 1, username: "eviltrout" });
-  var stream = user.get("stream");
+  let user = User.create({ id: 1, username: "eviltrout" });
+  let stream = user.get("stream");
   assert.present(stream, "a user has a stream by default");
   assert.equal(stream.get("user"), user, "the stream points back to the user");
 
@@ -18,8 +18,8 @@ test("basics", (assert) => {
 });
 
 test("filterParam", (assert) => {
-  var user = User.create({ id: 1, username: "eviltrout" });
-  var stream = user.get("stream");
+  let user = User.create({ id: 1, username: "eviltrout" });
+  let stream = user.get("stream");
 
   // defaults to posts/topics
   assert.equal(stream.get("filterParam"), "4,5");

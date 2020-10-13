@@ -1,5 +1,5 @@
 // Instantiate the object
-var I18n = I18n || {};
+let I18n = I18n || {};
 
 // Set default locale to english
 I18n.defaultLocale = "en";
@@ -29,7 +29,7 @@ I18n.isValidNode = function(obj, node, undefined) {
 I18n.lookup = function(scope, options) {
   options = options || {};
 
-  var translations = this.prepareOptions(I18n.translations),
+  let translations = this.prepareOptions(I18n.translations),
     locale = options.locale || I18n.currentLocale(),
     messages = translations[locale] || {},
     currentScope;
@@ -44,7 +44,7 @@ I18n.lookup = function(scope, options) {
     scope = options.scope.toString() + this.SEPARATOR + scope;
   }
 
-  var originalScope = scope;
+  let originalScope = scope;
   scope = scope.split(this.SEPARATOR);
 
   if (scope.length > 0 && scope[0] !== "js") {
@@ -80,18 +80,18 @@ I18n.lookup = function(scope, options) {
 //   #=> {name: "John Doe", role: "user"}
 //
 I18n.prepareOptions = function() {
-  var options = {},
+  let options = {},
     opts,
     count = arguments.length;
 
-  for (var i = 0; i < count; i++) {
+  for (let i = 0; i < count; i++) {
     opts = arguments[i];
 
     if (!opts) {
       continue;
     }
 
-    for (var key in opts) {
+    for (let key in opts) {
       if (!this.isValidNode(options, key)) {
         options[key] = opts[key];
       }
@@ -104,7 +104,7 @@ I18n.prepareOptions = function() {
 I18n.interpolate = function(message, options) {
   options = this.prepareOptions(options);
 
-  var matches = message.match(this.PLACEHOLDER),
+  let matches = message.match(this.PLACEHOLDER),
     placeholder,
     value,
     name;
@@ -113,7 +113,7 @@ I18n.interpolate = function(message, options) {
     return message;
   }
 
-  for (var i = 0; (placeholder = matches[i]); i++) {
+  for (let i = 0; (placeholder = matches[i]); i++) {
     name = placeholder.replace(this.PLACEHOLDER, "$1");
 
     if (typeof options[name] === "string") {
@@ -130,7 +130,7 @@ I18n.interpolate = function(message, options) {
       value = "[missing " + placeholder + " value]";
     }
 
-    var regex = new RegExp(
+    let regex = new RegExp(
       placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}")
     );
     message = message.replace(regex, value);
@@ -144,7 +144,7 @@ I18n.translate = function(scope, options) {
   options.needsPluralization = typeof options.count === "number";
   options.ignoreMissing = !this.noFallbacks;
 
-  var translation = this.findTranslation(scope, options);
+  let translation = this.findTranslation(scope, options);
 
   if (!this.noFallbacks) {
     if (!translation && this.fallbackLocale) {
@@ -173,7 +173,7 @@ I18n.translate = function(scope, options) {
 };
 
 I18n.findTranslation = function(scope, options) {
-  var translation = this.lookup(scope, options);
+  let translation = this.lookup(scope, options);
 
   if (translation && options.needsPluralization) {
     translation = this.pluralize(translation, scope, options);
@@ -190,7 +190,7 @@ I18n.toNumber = function(number, options) {
     strip_insignificant_zeros: false
   });
 
-  var negative = number < 0,
+  let negative = number < 0,
     string = Math.abs(number)
       .toFixed(options.precision)
       .toString(),
@@ -216,7 +216,7 @@ I18n.toNumber = function(number, options) {
   }
 
   if (options.strip_insignificant_zeros) {
-    var regex = {
+    let regex = {
       separator: new RegExp(options.separator.replace(/\./, "\\.") + "$"),
       zeros: /0+$/
     };
@@ -230,7 +230,7 @@ I18n.toNumber = function(number, options) {
 };
 
 I18n.toHumanSize = function(number, options) {
-  var kb = 1024,
+  let kb = 1024,
     size = number,
     iterations = 0,
     unit,
@@ -265,14 +265,14 @@ I18n.toHumanSize = function(number, options) {
 };
 
 I18n.pluralizer = function(locale) {
-  var pluralizer = this.pluralizationRules[locale];
+  let pluralizer = this.pluralizationRules[locale];
   if (pluralizer !== undefined) return pluralizer;
   return this.pluralizationRules["en"];
 };
 
 I18n.findAndTranslateValidNode = function(keys, translation) {
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
+  for (let i = 0; i < keys.length; i++) {
+    let key = keys[i];
     if (this.isValidNode(translation, key)) return translation[key];
   }
   return null;
@@ -282,13 +282,13 @@ I18n.pluralize = function(translation, scope, options) {
   if (typeof translation !== "object") return translation;
 
   options = this.prepareOptions(options);
-  var count = options.count.toString();
+  let count = options.count.toString();
 
-  var pluralizer = this.pluralizer(options.locale || this.currentLocale());
-  var key = pluralizer(Math.abs(count));
-  var keys = typeof key === "object" && key instanceof Array ? key : [key];
+  let pluralizer = this.pluralizer(options.locale || this.currentLocale());
+  let key = pluralizer(Math.abs(count));
+  let keys = typeof key === "object" && key instanceof Array ? key : [key];
 
-  var message = this.findAndTranslateValidNode(keys, translation);
+  let message = this.findAndTranslateValidNode(keys, translation);
 
   if (message !== null || options.ignoreMissing) {
     return message;
@@ -298,7 +298,7 @@ I18n.pluralize = function(translation, scope, options) {
 };
 
 I18n.missingTranslation = function(scope, key) {
-  var message = "[" + this.currentLocale() + this.SEPARATOR + scope;
+  let message = "[" + this.currentLocale() + this.SEPARATOR + scope;
   if (key) {
     message += this.SEPARATOR + key;
   }
@@ -310,17 +310,17 @@ I18n.currentLocale = function() {
 };
 
 I18n.enableVerboseLocalization = function() {
-  var counter = 0;
-  var keys = {};
-  var t = I18n.t;
+  let counter = 0;
+  let keys = {};
+  let t = I18n.t;
 
   I18n.noFallbacks = true;
 
   I18n.t = I18n.translate = function(scope, value) {
-    var current = keys[scope];
+    let current = keys[scope];
     if (!current) {
       current = keys[scope] = ++counter;
-      var message = "Translation #" + current + ": " + scope;
+      let message = "Translation #" + current + ": " + scope;
       if (value && Object.keys(value).length > 0) {
         message += ", parameters: " + JSON.stringify(value);
       }

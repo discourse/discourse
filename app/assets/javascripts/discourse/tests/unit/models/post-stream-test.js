@@ -845,7 +845,7 @@ test("triggerNewPostInStream for ignored posts", async (assert) => {
     username: "ignoreduser",
   });
 
-  var stub = sandbox
+  let stub = sandbox
     .stub(postStream, "findPostsByIds")
     .returns(Promise.resolve([post2]));
 

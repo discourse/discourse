@@ -5,7 +5,7 @@
 // this is a freedom patch, so careful, may break on updates
 
 function newline(state, silent) {
-  var token,
+  let token,
     pmax,
     max,
     pos = state.pos;

@@ -5,7 +5,7 @@
 const REGEX = /^<img.*\\?>\s*$/i;
 
 function rule(state, startLine, endLine) {
-  var nextLine,
+  let nextLine,
     token,
     lineText,
     pos = state.bMarks[startLine] + state.tShift[startLine],

@@ -30,7 +30,7 @@ export default DiscourseRoute.extend({
 
   model(params) {
     const cached = getTransient("lastSearch");
-    var args = { q: params.q };
+    let args = { q: params.q };
     if (params.context_id && !args.skip_context) {
       args.search_context = {
         type: params.context,

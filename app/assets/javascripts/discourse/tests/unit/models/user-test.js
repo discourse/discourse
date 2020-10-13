@@ -7,7 +7,7 @@ import pretender from "discourse/tests/helpers/create-pretender";
 module("model:user");
 
 test("staff", (assert) => {
-  var user = User.create({ id: 1, username: "eviltrout" });
+  let user = User.create({ id: 1, username: "eviltrout" });
 
   assert.ok(!user.get("staff"), "user is not staff");
 
@@ -19,7 +19,7 @@ test("staff", (assert) => {
 });
 
 test("searchContext", (assert) => {
-  var user = User.create({ id: 1, username: "EvilTrout" });
+  let user = User.create({ id: 1, username: "EvilTrout" });
 
   assert.deepEqual(
     user.get("searchContext"),
@@ -29,7 +29,7 @@ test("searchContext", (assert) => {
 });
 
 test("isAllowedToUploadAFile", (assert) => {
-  var user = User.create({ trust_level: 0, admin: true });
+  let user = User.create({ trust_level: 0, admin: true });
   assert.ok(
     user.isAllowedToUploadAFile("image"),
     "admin can always upload a file"

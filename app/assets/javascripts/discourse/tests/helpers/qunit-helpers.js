@@ -88,9 +88,9 @@ const Modal = Plugin.Constructor;
 
 function AcceptanceModal(option, _relatedTarget) {
   return this.each(function () {
-    var $this = $(this);
-    var data = $this.data("bs.modal");
-    var options = $.extend(
+    let $this = $(this);
+    let data = $this.data("bs.modal");
+    let options = $.extend(
       {},
       Modal.DEFAULTS,
       $this.data(),

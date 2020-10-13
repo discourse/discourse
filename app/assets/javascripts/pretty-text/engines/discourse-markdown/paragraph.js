@@ -4,7 +4,7 @@
 // link starts with a space, so we can bypass a onebox
 // this is a freedom patch, so careful, may break on updates
 function paragraph(state, startLine /*, endLine*/) {
-  var content,
+  let content,
     terminate,
     i,
     l,

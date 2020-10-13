@@ -1419,8 +1419,8 @@ test("quote formatting", (assert) => {
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<pre><code class=\"lang-javascript\">var foo ='foo';
-var bar = 'bar';
+<pre><code class=\"lang-javascript\">let foo ='foo';
+let bar = 'bar';
 </code></pre>
 </blockquote>
 </aside>`,
@@ -1434,8 +1434,8 @@ var bar = 'bar';
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<pre><code class=\"lang-javascript\">var foo ='foo';
-var bar = 'bar';
+<pre><code class=\"lang-javascript\">let foo ='foo';
+let bar = 'bar';
 </code></pre>
 </blockquote>
 </aside>`,

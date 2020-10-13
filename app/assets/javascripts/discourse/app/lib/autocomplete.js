@@ -107,7 +107,7 @@ export default function (options) {
   }
 
   function addInputSelectedItem(item, triggerChangeCallback) {
-    var transformed,
+    let transformed,
       transformedItem = item;
 
     if (options.transformComplete) {
@@ -163,7 +163,7 @@ export default function (options) {
       });
   }
 
-  var completeTerm = function (term) {
+  let completeTerm = function (term) {
     if (term) {
       if (isInput) {
         me.val("");
@@ -177,7 +177,7 @@ export default function (options) {
         }
 
         if (term) {
-          var text = me.val();
+          let text = me.val();
           text =
             text.substring(0, completeStart) +
             (options.key || "") +
@@ -224,7 +224,7 @@ export default function (options) {
       options.updateData ? this.attr("name") : this.attr("name") + "-renamed"
     );
 
-    var vals = this.val().split(",");
+    let vals = this.val().split(",");
     vals.forEach((x) => {
       if (x !== "") {
         if (options.reverseTransform) {
@@ -273,7 +273,7 @@ export default function (options) {
 
     div = $(options.template({ options: autocompleteOptions }));
 
-    var ul = div.find("ul");
+    let ul = div.find("ul");
     selectedOption = 0;
     markSelected();
     ul.find("li").click(function () {
@@ -284,9 +284,9 @@ export default function (options) {
       }
       return false;
     });
-    var pos = null;
-    var vOffset = 0;
-    var hOffset = 0;
+    let pos = null;
+    let vOffset = 0;
+    let hOffset = 0;
 
     if (isInput) {
       pos = {
@@ -338,9 +338,9 @@ export default function (options) {
       }
     }
 
-    var mePos = me.position();
+    let mePos = me.position();
 
-    var borderTop = parseInt(me.css("border-top-width"), 10) || 0;
+    let borderTop = parseInt(me.css("border-top-width"), 10) || 0;
 
     let left = mePos.left + pos.left + hOffset;
     if (left < 0) {
@@ -450,7 +450,7 @@ export default function (options) {
 
     if (completeStart === null && cp > 0) {
       if (key === options.key) {
-        var prevChar = me.val().charAt(cp - 2);
+        let prevChar = me.val().charAt(cp - 2);
         if (
           checkTriggerRule() &&
           (!prevChar || allowedLettersRegex.test(prevChar))
@@ -466,7 +466,7 @@ export default function (options) {
   }
 
   $(this).on("keydown.autocomplete", function (e) {
-    var c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
+    let c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
     let cp;
 
     if (e.ctrlKey || e.altKey || e.metaKey) {

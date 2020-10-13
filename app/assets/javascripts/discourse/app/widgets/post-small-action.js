@@ -12,7 +12,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);
   const when = autoUpdatingRelativeAge(dt, { format: "medium-with-ago" });
 
-  var who = "";
+  let who = "";
   if (username) {
     if (actionCode === "invited_group" || actionCode === "removed_group") {
       who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;

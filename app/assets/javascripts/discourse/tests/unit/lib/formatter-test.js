@@ -141,7 +141,7 @@ test("formating tiny dates", function (assert) {
   assert.equal(formatDays(500), shortDateYear(500));
   assert.equal(formatDays(365 * 2 + 1), shortDateYear(365 * 2 + 1)); // one leap year
 
-  var originalValue = this.siteSettings.relative_date_duration;
+  let originalValue = this.siteSettings.relative_date_duration;
   this.siteSettings.relative_date_duration = 7;
   assert.equal(formatDays(7), "7d");
   assert.equal(formatDays(8), shortDate(8));
@@ -185,9 +185,9 @@ test("formating tiny dates", function (assert) {
 });
 
 test("autoUpdatingRelativeAge", function (assert) {
-  var d = moment().subtract(1, "day").toDate();
+  let d = moment().subtract(1, "day").toDate();
 
-  var $elem = $(autoUpdatingRelativeAge(d));
+  let $elem = $(autoUpdatingRelativeAge(d));
   assert.equal($elem.data("format"), "tiny");
   assert.equal($elem.data("time"), d.getTime());
   assert.equal($elem.attr("title"), undefined);
@@ -215,8 +215,8 @@ test("autoUpdatingRelativeAge", function (assert) {
 });
 
 test("updateRelativeAge", function (assert) {
-  var d = new Date();
-  var $elem = $(autoUpdatingRelativeAge(d));
+  let d = new Date();
+  let $elem = $(autoUpdatingRelativeAge(d));
   $elem.data("time", d.getTime() - 2 * 60 * 1000);
 
   updateRelativeAge($elem);

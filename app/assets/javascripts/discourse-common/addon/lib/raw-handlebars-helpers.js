@@ -38,10 +38,10 @@ export function registerRawHelpers(hbs, handlebarsClass) {
     if (typeof contextName === "undefined") {
       return;
     }
-    var list = get(this, contextName);
-    var output = [];
-    var innerContext = Object.create(this);
-    for (var i = 0; i < list.length; i++) {
+    let list = get(this, contextName);
+    let output = [];
+    let innerContext = Object.create(this);
+    for (let i = 0; i < list.length; i++) {
       innerContext[localName] = list[i];
       output.push(options.fn(innerContext));
     }

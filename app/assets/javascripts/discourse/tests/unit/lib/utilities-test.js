@@ -73,7 +73,7 @@ test("extractDomainFromUrl", (assert) => {
 });
 
 test("avatarUrl", (assert) => {
-  var rawSize = getRawSize;
+  let rawSize = getRawSize;
   assert.blank(avatarUrl("", "tiny"), "no template returns blank");
   assert.equal(
     avatarUrl("/fake/template/{size}.png", "tiny"),
@@ -87,7 +87,7 @@ test("avatarUrl", (assert) => {
   );
 });
 
-var setDevicePixelRatio = function (value) {
+let setDevicePixelRatio = function (value) {
   if (Object.defineProperty && !window.hasOwnProperty("devicePixelRatio")) {
     Object.defineProperty(window, "devicePixelRatio", { value: 2 });
   } else {
@@ -96,10 +96,10 @@ var setDevicePixelRatio = function (value) {
 };
 
 test("avatarImg", (assert) => {
-  var oldRatio = window.devicePixelRatio;
+  let oldRatio = window.devicePixelRatio;
   setDevicePixelRatio(2);
 
-  var avatarTemplate = "/path/to/avatar/{size}.png";
+  let avatarTemplate = "/path/to/avatar/{size}.png";
   assert.equal(
     avatarImg({ avatarTemplate: avatarTemplate, size: "tiny" }),
     "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
@@ -166,7 +166,7 @@ test("setDefaultHomepage", function (assert) {
 });
 
 test("caretRowCol", (assert) => {
-  var textarea = document.createElement("textarea");
+  let textarea = document.createElement("textarea");
   const content = document.createTextNode("01234\n56789\n012345");
   textarea.appendChild(content);
   document.body.appendChild(textarea);

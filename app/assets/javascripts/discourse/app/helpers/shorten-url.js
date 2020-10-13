@@ -1,7 +1,7 @@
 import { registerUnbound } from "discourse-common/lib/helpers";
 
 registerUnbound("shorten-url", function (url) {
-  var matches = url.match(/\//g);
+  let matches = url.match(/\//g);
 
   if (matches && matches.length === 3) {
     url = url.replace(/\/$/, "");

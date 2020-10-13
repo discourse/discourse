@@ -171,7 +171,7 @@ NavItem.reopenClass({
       return null;
     }
 
-    var args = { name: filterType, hasIcon: filterType === "unread" };
+    let args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
       args.category = opts.category;
     }

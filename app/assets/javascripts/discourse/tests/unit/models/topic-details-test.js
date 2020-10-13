@@ -5,19 +5,19 @@ module("model:topic-details");
 
 import Topic from "discourse/models/topic";
 
-var buildDetails = function (id) {
-  var topic = Topic.create({ id: id });
+let buildDetails = function (id) {
+  let topic = Topic.create({ id: id });
   return topic.get("details");
 };
 
 test("defaults", (assert) => {
-  var details = buildDetails(1234);
+  let details = buildDetails(1234);
   assert.present(details, "the details are present by default");
   assert.ok(!details.get("loaded"), "details are not loaded by default");
 });
 
 test("updateFromJson", (assert) => {
-  var details = buildDetails(1234);
+  let details = buildDetails(1234);
 
   details.updateFromJson({
     allowed_users: [{ username: "eviltrout" }],

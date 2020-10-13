@@ -1056,7 +1056,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-14T08:28:00Z",
         excerpt:
-          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  var discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    var d = document.createEleme&hellip;",
+          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  let discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    let d = document.createEleme&hellip;",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1202,7 +1202,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-13T20:50:34Z",
         excerpt:
-          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  var discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    var d = document.createEleme&hellip;",
+          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  let discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    let d = document.createEleme&hellip;",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template: "/images/avatar.png",
@@ -1319,7 +1319,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-13T19:01:19Z",
         excerpt:
-          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  var discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    var d = document.createEleme&hellip;",
+          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  let discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    let d = document.createEleme&hellip;",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1349,7 +1349,7 @@ export default {
         action_type: 2,
         created_at: "2014-01-13T18:50:14Z",
         excerpt:
-          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  var discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    var d = document.createEleme&hellip;",
+          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  let discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    let d = document.createEleme&hellip;",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:
@@ -1409,7 +1409,7 @@ export default {
         action_type: 5,
         created_at: "2014-01-13T18:45:41Z",
         excerpt:
-          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  var discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    var d = document.createEleme&hellip;",
+          "I&#39;ve just added the ability to list reply counts on your blog index and archive pages as you <a href='http://eviltrout.com/archives/' rel='nofollow'>can see here</a>.  \n\nIt works with a similar API to embedding comments: \n\n &lt;script type=&quot;text/javascript&quot;&gt;\n  let discourseUrl = &quot;http://fishtank.eviltrout.com/&quot;;\n\n  (function() {\n    let d = document.createEleme&hellip;",
         avatar_template:
           "//www.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9.png?s={size}&r=pg&d=identicon",
         acting_avatar_template:

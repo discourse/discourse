@@ -10,7 +10,7 @@ export default Component.extend({
 
   @discourseComputed("topicList.loaded")
   loaded() {
-    var topicList = this.topicList;
+    let topicList = this.topicList;
     if (topicList) {
       return topicList.get("loaded");
     } else {

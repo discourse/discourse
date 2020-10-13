@@ -29,7 +29,7 @@ createWidget("avatar-flair", {
   },
 
   buildAttributes(attrs) {
-    var style = "";
+    let style = "";
     if (!this.isIcon(attrs)) {
       style +=
         "background-image: url(" +

@@ -90,8 +90,8 @@ export function setup(helper) {
         const imageIndex = token.attrIndex("index-image");
 
         if (scaleIndex !== -1) {
-          var selectedScale = token.attrs[scaleIndex][1];
-          var index = token.attrs[imageIndex][1];
+          let selectedScale = token.attrs[scaleIndex][1];
+          let index = token.attrs[imageIndex][1];
 
           let result = "<span class='image-wrapper'>";
           result += oldRule(tokens, idx, options, env, slf);
