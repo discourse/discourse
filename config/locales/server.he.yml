@@ -197,6 +197,7 @@ he:
       share_quote_facebook_requirements: "עליך להגדיר מזהה יישומון פייסבוק כדי להפעיל שיתוף ציטוטים עבור פייסבוק"
       second_factor_cannot_enforce_with_socials: "לא ניתן לאכוף אימות דו־שלבי כאשר מופעלת כניסה דרך רשתות חברתיות. תחילה עליך להשבית כניסה דרך: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "אי אפשר לאכוף אימות דו־שלבי אם כניסה מקומית מושבתת."
+      second_factor_cannot_be_enforced_with_sso_enabled: "אי אפשר לאכוף אימות דו־שלבי אם מופעל SSO."
       local_login_cannot_be_disabled_if_second_factor_enforced: "אי אפשר להשבית כניסה מקומית אם נאכף אימות דו־שלבי. יש להשבית את אכיפת האימות הדו־שלבי בטרם השבתת כניסה מקומית."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "לא ניתן להפעיל העלאות ל־S3 כיוון שהעלאות ל־S3 כבר פעילות באופן גלובלי והפעלת האפשרות הזאת ברמת האתר עשויה להוביל לתקלות חמורות בהעלאה."
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1924,6 +1925,7 @@ he:
     anonymous_posting_min_trust_level: "רמת האמון המינמלית הנדרשת כדי לאפשר פרסום אנונימי"
     anonymous_account_duration_minutes: "בכדי להגן על האנונימות צרו חשבון אנונימי כל N דקות לכל משתמש. לדוגמה: אם מכוון ל-600, כאשר יעברו 600 דקות מהפרסום האחרון והמשתמש/ת יחליפו לזהות אנונימית, חשבון אנונימי חדש יווצר."
     hide_user_profiles_from_public: "נטרלו כרטיסי משתמשים, פרופילי משתמשים ומדריך משתמשים למשתמשים אנונימיים."
+    allow_users_to_hide_profile: "לאפשר למשתמשים להחביא את הפרופיל והנוכחות שלהם"
     allow_featured_topic_on_user_profiles: "לאפשר למשתמשים להציג קישור לנושא בכרטיס המשתמש ובפרופיל שלהם."
     show_inactive_accounts: "לאפשר למשתמשים שנכנסו לעיין בפרופילים של חשבונות לא פעילים."
     hide_suspension_reasons: "לא להציג את סיבות ההשעיה באופן ציבורי בפרופילי המשתמשים."
@@ -2072,6 +2074,7 @@ he:
     shared_drafts_category: "הפעלת תכונת הטיוטות המשותפות על ידי הקצאת קטגוריה שתשמש לטובת טיוטות לנושאים. נושאים בקטגוריה זו יוסתרו מרשימות הנושאים לחברי הסגל."
     push_notifications_prompt: "הצגת בקשה להסכמת המשתמש."
     push_notifications_icon: "סמל העיטור שמופיע בפינת ההתרעה. מומלץ PNG בצבעים אחידים עם שקיפות בגודל 96 × 96."
+    base_font: "גופן בסיס לשימוש רוב הטקסט באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות מאפיין ה־CSS‏ ‎`--font-family`‎."
     heading_font: "גופן לשימוש כותרות באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות המאפיין ‎`--heading-font-family`‎"
     short_title: "בכותרת הקצרה ייעשה שימוש במסך הבית של המשתמש, במשגר או במקומות אחרים שבהם המקום מוגבל. אורכה לא יעלה על 12 תווים."
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
@@ -3432,9 +3435,20 @@ he:
       title: "אישור מייל חדש"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל החדשה שלכם"
       text_body_template: |
-        נא לאשר את כתובת הדוא״ל שתשמש אותך לגשת אל %{site_name} על ידי לחיצה על הקישור הבא:
+        לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
 
-        %{base_url}/u/confirm-new-email/%{email_token}
+        ‎%{base_url}/u/confirm-new-email/%{email_token}
+
+        אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם ההנהלה של %{site_name}.
+    confirm_new_email_via_admin:
+      title: "אישור כתובת דוא״ל חדשה"
+      subject_template: "[%{email_prefix}] אישור כתובת הדוא״ל החדשה שלך"
+      text_body_template: |
+        לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
+
+        ‎%{base_url}/u/confirm-new-email/%{email_token}
+
+        החלפת כתובת הדוא״ל הוגשה על ידי הנהלת האתר. אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם ההנהלה של %{site_name}.
     confirm_old_email:
       title: "אישור מייל ישן"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
@@ -4262,6 +4276,10 @@ he:
         disabled: "מאחר שכניסה בשליטה מקומית מנוטרלת, אי אפשר לשלוח לכולם הזמנות. נא להמשיך לשלב הבא."
       finished:
         title: "ה־Discourse שלך מוכן!"
+        description: |
+          <p>אם אי פעם יתחשק לך לשנות את ההגדרות האלו, <b>ניתן להפעיל את האשף הזה מחדש בכל עת</b>, או לבקר <a href='%{base_path}/admin' target='_blank'>בסעיף הניהול שלך</a>; ניתן למצוא אותו ליד סמל מפתח הצינורות בתפריט האתר.</p>
+          <p>קל ופשוט להתאים את Discourse לטעמך עם מערכת עצמתית לעיצוב לפי נושא. למשל, הנה <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">ערכות עיצוב ורכיבים מובילים</a> ב־<a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
+          <p>רצוי להתפרע והמון הצלחה <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>בבניית הקהילה החדשה שלך!</a></p>
   search_logs:
     graph_title: "מניין חיפושים"
   joined: "הצטרפו"

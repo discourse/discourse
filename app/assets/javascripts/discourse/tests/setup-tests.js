@@ -24,9 +24,11 @@ import { clearAppEventsCache } from "discourse/services/app-events";
 import QUnit from "qunit";
 import MessageBus from "message-bus-client";
 import deprecated from "discourse-common/lib/deprecated";
+import sinon from "sinon";
+import { setResolver } from "@ember/test-helpers";
 
 export default function setupTests(App) {
-  window.setResolver(buildResolver("discourse").create({ namespace: App }));
+  setResolver(buildResolver("discourse").create({ namespace: App }));
 
   sinon.config = {
     injectIntoThis: false,

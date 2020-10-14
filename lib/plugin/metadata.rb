@@ -64,6 +64,7 @@ class Plugin::Metadata
     "discourse-spoiler-alert",
     "discourse-user-notes",
     "styleguide",
+    "discourse-teambuild",
     "discourse-tooltips",
     "discourse-translator",
     "discourse-user-card-badges",

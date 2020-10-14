@@ -3169,10 +3169,15 @@ fr:
     confirm_new_email:
       title: "Confirmer votre nouvelle adresse courriel"
       subject_template: "[%{email_prefix}] Confirmez votre nouvelle adresse courriel"
+    confirm_new_email_via_admin:
+      title: "Confirmer votre nouvelle adresse courriel"
+      subject_template: "[%{email_prefix}] Confirmez votre nouvelle adresse courriel"
       text_body_template: |
-        Confirmez votre nouvelle adresse courriel pour %{site_name} en cliquant sur le lien suivant :
+        Confirmez votre nouvelle adresse courriel pour %{site_name} en cliquant sur le lien suivant:
 
         %{base_url}/u/confirm-new-email/%{email_token}
+
+        Ce changement de courriel a été demandé par un administrateur du site. Si vous n'avez pas demandé ce changement, veuillez contacter l'administrateur de %{site_name}.
     confirm_old_email:
       title: "Confirmez votre ancienne adresse courriel"
       subject_template: "[%{email_prefix}] Confirmez votre adresse courriel actuelle"

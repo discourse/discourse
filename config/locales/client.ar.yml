@@ -205,6 +205,10 @@ ar:
       topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور رقم %{postNumber}"
       close: "أغلق"
+      twitter: "شارِك على تويتر"
+      facebook: "شارِك على فيسبوك"
+      email: "شارِك عبر البريد الإلكتروني"
+      url: "انسخ العنوان وشارِكه"
     action_codes:
       public_topic: "أجعل هذا الموضوع عامًّا %{when}"
       private_topic: "تحويل هذا الموضوع إلى رسالة شخصية %{when}"
@@ -351,12 +355,25 @@ ar:
       help:
         bookmark: "انقر لوضع علامة مرجعية علي أوّل منشور في هذا الموضوع"
         unbookmark: "انقر لإزالة كلّ العلامات المرجعية في هذا الموضوع"
+        unbookmark_with_reminder: "انقر لإزالة كلّ العلامات والتذكيرات في هذا الموضوع. ضبطت تذكيرًا %{reminder_at} لهذا الموضوع."
     bookmarks:
+      created: "وضعت علامة على هذه المشاركة. %{name}"
       not_bookmarked: "أشر هذا المكتوب"
       remove: "أزل العلامة المرجعية"
+      delete: "احذف العلامة"
+      confirm_delete: "أمتأكّد من حذف هذه العلامة؟ سيُحذف التذكير أيضًا."
       confirm_clear: "هل أنت متأكد من مسح جميع الاشعارات المرجعية من هذا الموضوع؟"
       save: "احفظ"
       no_timezone: 'لم تحدد منظقتك الزمنية بعد. لن تتمكن من تفعيل التذكيرات. حددها <a href="%{basePath}/my/preferences/profile">في ملفك الشخصي</a>.'
+      invalid_custom_datetime: "التاريخ والوقت الذين كتبتهما غير صالحين، من فضلك أعِد المحاولة."
+      list_permission_denied: "لا تملك صلاحية عرض علامات هذا المستخدم."
+      no_user_bookmarks: "ما من مشاركات عليها علامة. تتيح لك العلامات الرجوع إلى المشاركات التي تريد بسرعة."
+      auto_delete_preference:
+        label: "احذفها تلقائيًا"
+        never: "(لا تحذفها)"
+        when_reminder_sent: "ما إن أضبط التذكير"
+        on_owner_reply: "بعد أن أردّ على هذه المشاركة"
+      search_placeholder: "ابحث في العلامات حسب الاسم أو عنوان الموضوع أو محتوى المشاركة"
       search: "البحث"
       reminders:
         later_today: "في وقت لاحق اليوم"
@@ -370,6 +387,7 @@ ar:
       new_topic: "مسودة موضوع جديد"
       topic_reply: "مسودة الرد"
       abandon:
+        confirm: "فتحت مسودّة أخرى في هذا الموضوع فعلًا. أمتأكّد من تركها؟"
         yes_value: "نعم، لا أريده"
         no_value: "لا, إبقاء"
     preview: "معاينة"
@@ -379,6 +397,8 @@ ar:
     saved: "حُفظت!"
     upload: "ارفع"
     uploading: "يرفع..."
+    uploading_filename: "يرفع: %{filename}..."
+    clipboard: "الحافظة"
     uploaded: "رُفع!"
     pasting: "جاري النسخ"
     enable: "فعّل"
@@ -392,14 +412,24 @@ ar:
     banner:
       close: "تجاهل هذا الإعلان."
       edit: "عدل هذا الإعلان >>"
+    pwa:
+      install_banner: "أتريد <a href>تثبيت %{title} على هذا الجهاز؟</a>"
     choose_topic:
       none_found: "لم نجد اي موضوعات."
+      title:
+        search: "ابحث عن موضوع"
+        placeholder: "اكتب هنا اسم الموضوع أو عنوانه أو معرّفه"
     choose_message:
       none_found: "لم يتم العثور على أي رسالة"
+      title:
+        search: "ابحث عن رسالة"
     review:
+      order_by: "افرز حسب"
       in_reply_to: "ردا على"
       explain:
         total: "مجموع"
+      claim_help:
+        claimed_by_other: "فقط <b>%{username}</b> من يمكنه مراجعة هذا العنصر."
       awaiting_approval: "بأنتضار موافقة"
       delete: "أحذف"
       settings:
@@ -408,27 +438,44 @@ ar:
         title: "إعدادات"
       moderation_history: "تاريخ الادارة"
       view_all: "اظهار الكل"
+      none: "ما من عناصر لمراجعتها."
+      view_pending: "اعرض المُرجأ"
       topic: "الموضوع:"
       filtered_user: "مستخدم"
+      show_all_topics: "اعرض كلّ المواضيع"
       user:
         username: "اسم المستخدم"
         email: "البريد الإلكتروني"
         name: "الإسم"
       topics:
         topic: "موضوع"
+        deleted: "[حُذف الموضوع]"
+        original: "(الموضوع الأصلي)"
         details: "التفاصيل"
       edit: "عدّل"
       save: "احفظ"
       cancel: "ألغِ"
+      new_topic: "بالموافقة على هذا العنصر سيُنشأ موضوع جديد"
       filters:
         all_categories: "(جميع الأقسام)"
         type:
           title: "النوع"
+          all: "(كلّ الأنواع)"
         refresh: "تحديث"
+        status: "الحالة"
         category: "تصنيف"
+        orders:
+          created_at: "تاريخ الإنشاء"
+          created_at_asc: "تاريخ الإنشاء (بالعكس)"
+        priority:
+          medium: "متوسّطة"
+          high: "عالية"
+      conversation:
+        view_full: "اعرض المحادثة كاملةً"
       scores:
         date: "التاريخ"
         type: "النوع"
+        reviewed_by: "راجَعها"
       statuses:
         pending:
           title: "قيد الانتظار"
@@ -491,6 +538,8 @@ ar:
         remove_user_as_group_owner: "سحب صلاحية المالك"
     groups:
       member_added: "تم الإضافة"
+      add_members:
+        input_placeholder: "أسماء المستخدمين أو عناوين البريد"
       requests:
         reason: "سبب"
         accepted: "مقبول"
@@ -509,11 +558,24 @@ ar:
         email:
           title: "البريد الإلكتروني"
           credentials:
+            title: "بيانات الولوج"
+            smtp_server: "خادوم SMTP"
+            smtp_port: "منفذ SMTP"
+            smtp_ssl: "استعمل SSL لِ‍ SMTP"
+            imap_server: "خادوم IMAP"
+            imap_port: "منفذ IMAP"
+            imap_ssl: "استعمل SSL لِ‍ IMAP"
             username: "اسم المستخدم"
             password: "كلمة المرور"
+          mailboxes:
+            none_found: "لم توجد صناديق بريد في حساب البريد الإلكتروني هذا."
         membership:
           title: العضوية
           access: صلاحية
+        categories:
+          title: الفئات
+        tags:
+          watching_first_post_tags_instructions: "سيُرسل إخطار للمستخدمين بأولّ مشاركة في كلّ موضوع يحمل هذه الوسوم."
         logs:
           title: "السّجلّات"
           when: "متى"
@@ -524,11 +586,16 @@ ar:
           details: "تفاصيل"
           from: "من"
           to: "إلى"
+      permissions:
+        title: "التصاريح"
+        none: "ما من فئات مرتبطة بهذه المجموعة."
+        description: "يمكن لأعضاء هذه المجموعة الوصول إلى هذه الفئات"
       public_admission: "السماح للاعضاء بالانضمام إلى المجموعة بحرية (يتطلب أن تكون المجموعة مرئية للجميع )"
       public_exit: "السماح للأعضاء بمغادرة المجموعة بحرية"
       empty:
         posts: "لا منشورات من أعضاء هذه المجموعة."
         members: "لا أعضاء في هذه المجموعة."
+        requests: "ما من طلبات اشتراك لهذه المجموعة."
         mentions: "لم يُشِر أحد إلى هذه المجموعة."
         messages: "لا رسائل لهذه المجموعة."
         topics: "لا موضوعات من أعضاء هذه المجموعة."
@@ -538,6 +605,8 @@ ar:
       leave: "غادر"
       request: "طلب"
       message: "رسالة"
+      confirm_leave: "أمتأكّد من ترك هذه المجموعة؟"
+      allow_membership_requests: "اسمح للمستخدمين بإرسال طلبات الاشتراك إلى مالكي المجموعة (يطلب أن تكون المجموعة ظاهرة للعموم)"
       membership_request_template: "لوحة مخصص تظهر للأعضاء عندما يرسلون طلب عضوية"
       membership_request:
         submit: "ارسل الطلب"
@@ -545,6 +614,7 @@ ar:
         reason: "دع مدراء المجموعة يعرفون لماذا انت تنتمي لهذه المجموعة"
       membership: "العضوية"
       name: "الاسم"
+      group_name: "اسم المجموعة"
       user_count: "الأعضاء"
       bio: "عن المجموعة"
       selector_placeholder: "أدخل اسم المستخدم"
@@ -553,7 +623,9 @@ ar:
         title: "المجموعات"
         all: "كل المجموعات"
         empty: "لا توجد مجموعات ظاهرة"
+        filter: "رشّح حسب اسم المجموعة"
         owner_groups: "مجموعاتي"
+        close_groups: "المجموعات المُغلقة"
         automatic: "تلقائي"
         closed: "مغلق"
         automatic_group: مجموعة تلقائية
@@ -571,10 +643,13 @@ ar:
       activity: "النشاط"
       members:
         title: "الأعضاء"
+        filter_placeholder_admin: "اسم المستخدم أو البريد الإلكتروني"
         filter_placeholder: "اسم المستخدم"
         remove_member: "حذف عضو"
+        remove_member_description: "أزِل <b>%{username}</b> من هذه المجموعة"
         remove_owner: "حذف كمالك"
         owner: "المالك"
+        forbidden: "ليس مسموحًا لك عرض الأعضاء."
       topics: "المواضيع"
       posts: "المنشورات"
       mentions: "الإشارات"
@@ -609,6 +684,9 @@ ar:
       flair_color_placeholder: "(إختياري) اللون بترميز Hexadecimal"
       flair_preview_icon: "معاينة الأيقونة"
       flair_preview_image: "معاينة الصورة"
+      flair_type:
+        icon: "اختر أيقونةً"
+        image: "ارفع صورةً"
     user_action_groups:
       "1": "الإعجابات المعطاة"
       "2": "الإعجابات المتلقاة"
@@ -622,7 +700,7 @@ ar:
       "12": "العناصر المرسلة"
       "13": "البريد الوارد"
       "14": "قيد الانتظار"
-      "15": "Drafts"
+      "15": "المسودّات"
     categories:
       all: "كل الأقسام"
       all_subcategories: "الكل"
@@ -688,6 +766,7 @@ ar:
         ignore_duration_save: "تجاهل"
         mute_option: "مكتومة"
         normal_option: "عادي"
+        normal_option_title: "سنُرسل إليك إخطارًا لو ردّ هذا المستخدم عليك أو اقتبس كلامك أو أشار إليك."
       activity_stream: "النّشاط"
       preferences: " التّفضيلات"
       feature_topic_on_profile:
@@ -718,6 +797,13 @@ ar:
       dismiss_notifications: "تجاهل الكل"
       dismiss_notifications_tooltip: "اجعل كل الإشعارات مقروءة"
       first_notification: "إشعارك الأول! قم بالضغط عليه للبدء."
+      color_schemes:
+        dark_instructions: "يمكنك معاينة مخطّط الوضع الداكن اللوني بتفعيل الوضع الداكن من جهازك."
+        undo: "صفّر"
+        regular: "العادي"
+        dark: "الوضع الداكن"
+        default_dark_scheme: "(مبدئيّات الموقع)"
+      dark_mode: "الوضع الداكن"
       external_links_in_new_tab: "فتح الروابط الخارجية في تبويب جديد"
       enable_quoting: "فعل خاصية إقتباس النصوص المظللة"
       change: "غيّر"
@@ -756,10 +842,12 @@ ar:
       watched_first_post_tags: "مراقبة أول منشور"
       watched_first_post_tags_instructions: "سيصلك إشعار بأول منشور في كل موضوع يستخدم هذة الأوسمة."
       muted_categories: "مكتوم"
+      regular_categories_instructions: "سترى هذه الفئات في قوائم المواضيع ”الحديثة“ و”النشيطة“."
       no_category_access: "كمشرف لديك صلاحيات وصول محدودة للأقسام, الحفظ معطل"
       delete_account: "أحذف الحسابي"
       delete_account_confirm: "أمتأكّد من حذف حسابك للأبد؟ هذا إجراء لا عودة فيه!"
       deleted_yourself: "حُذف حسابك بنجاح."
+      delete_yourself_not_allowed: "من فضلك راسِل أحد أعضاء الطاقم إن أردت حذف حسابك."
       unread_message_count: "الرسائل"
       admin_delete: "أحذف"
       users: "الأعضاء"
@@ -818,12 +906,15 @@ ar:
       second_factor:
         name: "الإسم"
         label: "كود"
+        enable_description: |
+          امسح رمز QR ضوئيًا في أحد التطبيقات المدعومة (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">أندرويد</a> و<a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">آي‌أو‌إس</a>) وأدخِل رمز الاستيثاق.
         disable_description: "يرجى ادخال رمز التوثيق من التطبيق الخاص بك"
         show_key_description: "أضف يدويا"
         short_description: |
           قم بحماية الحساب الخاص بك مع رمز الامان ذو الاستخدام الواحد.
         oauth_enabled_warning: "يرجى الملاحظة ان تسجيل الدخول عن طريق حسابات مواقع التواصل الاجتماعي سيتم تعطيلها بمجرد تفعيل خاصية التوثيق بعاملين الحساب"
         disable: "عطل"
+        disable_confirm: "أمتأكّد من تعطيل كلّ طرائق الاستيثاق بخطوتين؟"
         save: "احفظ"
         edit: "عدّل"
         security_key:
@@ -833,6 +924,7 @@ ar:
         error: "حدث عطل أثناء تغيير هذه القيمة."
       change_username:
         title: "تغيير اسم المستخدم"
+        confirm: "أمتأكّد كلّ التأكيد من تغيير اسم المستخدم؟"
         taken: "عذرا، اسم المستخدم غير متاح."
         invalid: "اسم المستخدم غير صالح. يمكنه احتواء احرف و ارقام انجليزية فحسب"
       add_email:
@@ -978,6 +1070,7 @@ ar:
         expired: "الدعوة انتهت صلاحيتها "
         rescind: "حذف"
         rescinded: "الدعوة حذفت"
+        rescind_all_confirm: "أمتأكّد من إزالة كلّ الدعوات المنضية؟"
         reinvite: "اعادة ارسال الدعوة"
         reinvite_all: "أعد إرسال كل الدعوات"
         reinvite_all_confirm: "هل انت متأكد من رغبتك في اعادة ارسال كل الدعوات؟"
@@ -996,7 +1089,7 @@ ar:
         invite_link:
           success: "وُلّد رابط الدعوة بنجاح!"
         bulk_invite:
-          none: "لم تدعُ أحدًا إلى هنا بعد. أرسل الدّعوات إمّا فرديّة، أو إلى مجموعة أشخاص عبر <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>رفع ملفّ CSV</a>."
+          none: "لم تدعُ أحدًا إلى هنا بعد. أرسِل الدعوات فردية أو جماعية عبر <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>رفع ملف CSV</a>."
           success: "رُفع الملف بنجاح. سيصلك إشعارا عبر رسالة عند اكتمال العملية."
           error: "عذرا، يجب أن يكون الملفّ بنسق CSV."
       password:
@@ -1114,6 +1207,10 @@ ar:
       enabled: "هذا الموقع في وضع القراءة فقط. نأمل أن تتابع تصفحه، ولكن الرد، والإعجاب وغيرها من الصلاحيات معطلة حاليا."
       login_disabled: "تسجيل الدخول معطل في حال كان الموقع في وضع القراءة فقط."
       logout_disabled: "تسجيل الخروج معطّل في حال كان الموقع في وضع القراءة فقط."
+    too_few_topics_notice_MF: >-
+      هيًا بنا <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ نقاشًا!</a> هناك حاليًا {currentTopics, plural, zero {} one {موضوع <strong>واحد</strong>} two {موضوعين <strong>اثنين</strong>} few {<strong>#</strong> مواضيع} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}}. يحتاج الزوّار إلى أكثر لقراءته والردّ عليه، ولذلك ننصح بوجود {requiredTopics, plural, one {موضوع <strong>واحد</strong>} two {موضوعين <strong>اثنين</strong>} few {<strong>#</strong> مواضيع} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} على الأقل. يرى طاقم الموقع فقط هذه الرسالة.
+    too_few_posts_notice_MF: >-
+      هيًا بنا <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ نقاشًا!</a> هناك حاليًا {currentPosts, plural, zero {} one {مشاركة <strong>واحدة</strong>} two {مشاركتين <strong>اثنتين</strong>} few {<strong>#</strong> مشاركات} many {<strong>#</strong> مشاركةً} other {<strong>#</strong> مشاركة}}. يحتاج الزوّار إلى أكثر لقراءتها والردّ عليها، ولذلك ننصح بوجود {requiredPosts, plural, one {مشاركة <strong>واحدة</strong>} two {مشاركتين <strong>اثنتين</strong>} few {<strong>#</strong> مشاركات} many {<strong>#</strong> مشاركةً} other {<strong>#</strong> مشاركة}} على الأقل. يرى طاقم الموقع فقط هذه الرسالة.
     learn_more: "اطّلع على المزيد..."
     all_time: "المجموع"
     all_time_desc: "عدد المواضيع المنشأة"
@@ -1142,6 +1239,7 @@ ar:
       hide_session: "ذكرني غدا"
       hide_forever: "لا شكرا"
       hidden_for_session: "لا بأس، سأسلك غدًا. يمكنك دوما استخدام 'تسجيل الدخول' لإنشاء حساب ايضا."
+      value_prop: "حين تسجّل حسابًا نتذكّر بالضبك ما كنت تقرأه، فلا تخشَ من أن تعود ولا ترى ما كان أمامك البتّة. كما وستستلم الإخطارات (هنا وعبر البريد) متى ما ردّ أحدهم عليك. وطبعًا، يمكنك إبداء إعجابك بالمشاركات ومشاركة الجميع الشعور بالرفق. :heartpulse:"
     summary:
       enabled_description: "أنت تطالع ملخّصًا لهذا الموضوع، أي أكثر المنشورات الجديرة بالاهتمام حسب نظرة المجتمع."
       description: "هناك <b>%{replyCount}</b> من الردود."
@@ -1176,7 +1274,7 @@ ar:
       complete_email: "إن تطابق حساب ما مع <b>%{email}</b>، يفترض أن تستلم قريبًا بريدًا به إرشادات إعادة تعيين كلمة المرور."
       complete_username_not_found: "لا يوجد حساب يطابق اسم المستخدم <b>%{username}</b>"
       complete_email_not_found: "لا حساب يطابق <b>%{email}</b>"
-      help: "لم يصل البريد؟ تفحص مجلد السبام<p>لست متأكداً اي عنوان بريد الكتروني قمت بأستخدامة؟ قم بأدخال عنوان البريد الالكتروني و سنعلمك ان كان موجوداً هنا</p><p> ان لم يعد بأمكانك الوصول الى البريد الالكتروني في حسابك, رجاء اتصل بـ <a href='%{basePath}/about'>طاقم الدعم الخاص بنا</a></p>"
+      help: "ألم يصل البريد بعد؟ تفحّص مجلد السخام أولًا.<p>ألست متأكّدًا من العنوان الذي استعملته؟ أدخِل عنوان البريد الإلكتروني وسنُعلمك لو كان موجودًا هنا.</p><p>إن فقدت إمكانية الدخول على عنوان البريد المرتبط بحسابك، فمن فضلك راسِل <a href='%{basePath}/about'>طاقمنا الجاهز دومًا لمساعدتك.</a></p>"
       button_ok: "حسنا"
       button_help: "مساعدة"
     email_login:
@@ -1274,6 +1372,11 @@ ar:
       medium_dark_tone: لون البشرة اسمر قاتم
       dark_tone: لون البشرة داكن
       default: الرموز التعبيرية المخصصة
+    shared_drafts:
+      title: "المسودّات المشتركة"
+      notice: "لا يظهر هذا الموضوع إلّا لمن يرى الفئة <b>%{category}</b>."
+      confirm_publish: "أمتأكّد من نشر هذه المسودّة؟"
+      publishing: "ينشر الموضوع..."
     composer:
       emoji: "الرموز التعبيرية :)"
       more_emoji: "أكثر..."
@@ -1288,6 +1391,7 @@ ar:
       saved_local_draft_tip: "حُفظ محليا"
       similar_topics: "موضوعك يشابه..."
       drafts_offline: "مسودات محفوظة "
+      group_mentioned_limit: "<b>تحذير!</b> لقد أشرت إلى <a href='%{group_link}'>%{group}</a> ولكن عدد الأعضاء في هذه المجموعة يفوق الحدّ الأقصى الذي ضبطه المدير للإشارات (وهو %{max} من المستخدمين). لن يصل الإخطار لأحد."
       group_mentioned:
         zero: "الإشارة إلى %{group} تعني <a href='%{group_link}'>عدم إخطار أحد</a>. أمتأكّد؟"
         one: "الإشارة إلى %{group} تعني إخطار <a href='%{group_link}'>شخص واحد</a>. أمتأكّد؟"
@@ -1298,12 +1402,14 @@ ar:
       cannot_see_mention:
         category: "لقد قمت بالإشارة إلي %{username} لكن لن يتم إشعارهم لأن ليس لديهم صلاحية الوصول لهذا القسم. عليك ان تقوم باضافتهم لمجموعة لديها حق الوصول لهذا القسم."
         private: "لقد قمت بالإشارة إلي %{username} لكن لن يتم إشعارهم لأن ليس لديهم صلاحية الوصول لهذه الرسالة الخاصة. عليك ان تقوم باضافتهم إلي هذة الرسالة."
-      duplicate_link: "يبدوا ان هذا الرابط <b>%{domain}</b> تم ذكرة فعلا في الموضوع من قبل <b>@%{username}</b> في <a href='%{post_url}'>رد منذ %{ago}</a> – هل انت متاكد انك تريد نشرة مرة اخري؟"
+      duplicate_link: "يظهر بأن الرابط الذي يُشير إلى <b>%{domain}</b> نشره <b>@%{username}</b> في الموضوع فعلًا في <a href='%{post_url}'>ردّ بتاريخ %{ago}</a>. أمتأكّد من نشره ثانيةً؟"
       error:
         title_missing: "العنوان مطلوب"
         title_too_short: "العنوان يجب أن يكون علي الاقل %{min} حرف"
         title_too_long: "العنوان يجب أن لا يزيد عن %{max} حرف"
+        post_missing: "لا يمكن أن تكون المشاركة فارغة"
         post_length: "المنشور يجب أن يكون علي الاقل %{min} حرف"
+        try_like: "هل جرّبت نقر زر %{heart}؟"
         category_missing: "يجب عليك إختيار احد الأقسام"
       save_edit: "أحفظ التعديل"
       reply_original: "التعليق على الموضوع الأصلي"
@@ -1320,9 +1426,12 @@ ar:
       topic_featured_link_placeholder: "ضع رابطاً يظهر مع العنوان"
       remove_featured_link: "حذف الرابط من الموضوع"
       reply_placeholder: "اكتب ما تريد هنا. استخدم Markdown، أو BBCode، أو HTML للتنسيق. اسحب الصور أو ألصقها."
+      reply_placeholder_no_images: "أدخِل ما تريد هنا. استعمل مارك‌داون أو BBCode أو HTML لتنسيق النص."
+      reply_placeholder_choose_category: "اختر فئةً قبل الكتابة هنا."
       view_new_post: "شاهد منشورك الجديد."
       saving: "يحفظ"
       saved: "حُفظ!"
+      saved_draft: "كنتَ تكتب مسودّة لمشاركة. انقر لمواصلتها."
       uploading: "يرفع..."
       show_preview: "أظهر المعاينة &raquo;"
       hide_preview: "&laquo; أخفِ المعاينة"
@@ -1337,6 +1446,7 @@ ar:
       link_description: "ادخل وصف الرابط هنا "
       link_dialog_title: "اضف الرابط"
       link_optional_text: "عنوان اختياري"
+      link_url_placeholder: "ألصِق عنوانًا أو اكتب للبحث في المواضيع"
       quote_title: "اقتباس فقرة"
       quote_text: "اقتباس فقرة"
       code_title: "المحافظة على التنسيق"
@@ -1347,7 +1457,10 @@ ar:
       olist_title: "قائمة مرقمة"
       ulist_title: "قائمة نقطية"
       list_item: "قائمة العناصر"
+      toggle_direction: "بدّل الاتجاه"
       help: "مساعدة في رموز التنسيق"
+      collapse: "صغّر لوحة الكتابة"
+      open: "افتح لوحة الكتابة"
       modal_ok: "حسنا"
       modal_cancel: "إلغاء"
       cant_send_pm: "نأسف، لا يمكنك إرسال الرسائل إلى %{username}."
@@ -1431,10 +1544,12 @@ ar:
       clear_all: "إلغ إختيار الكل"
       too_short: "عبارة البحث قصيرة جدًّا."
       title: "أبحث في الموضوعات أو المنشورات أو الأعضاء أو الأقسام"
+      full_page_title: "ابحث في المواضيع أو المشاركات"
       no_results: "لا يوجد نتائج."
       no_more_results: "لا يوجد نتائج أخرى."
       searching: "يبحث..."
       post_format: "#%{post_number} كتبها %{username}"
+      results_page: "نتائج البحث عن ”%{term}“"
       more_results: "يوجد عدد كبير من النتائج, يرجى تضييق نطاق البحث."
       cant_find: "لا تستطيع ايجاد ما تبحث عنة؟"
       start_new_topic: "افتح موضوع جديد."
@@ -1458,8 +1573,11 @@ ar:
         with_tags:
           label: موسوم
         filters:
+          label: أرجِع المواضيع/المشاركات التي...
+          title: تتطابق في العنوان فقط
           likes: أعجبتني
           posted: نشرت بها
+          created: أنشأتها
           watching: أراقبها
           tracking: أتابعها
           bookmarks: وضعت علية علامة مرجعية
@@ -1529,7 +1647,7 @@ ar:
         top: "لا يوجد موضوعات مشاهدة بكثرة"
         educate:
           new: '<p>سوف تظهر موضوعاتك هنا.</p><p>بشكل افتراضي تعتبر الموضوعات جديدة و يظهر بجانبها كلمه <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جديد</span> إذا لم يمضي علي نشرها اكثر من يومين.</p><p>زور صفحة <a href="%{userPrefsUrl}">التفضيلات</a> لتغيير هذا السلوك</p>'
-          unread: '<p>الموضوعات الغير مقروءة تظهر هنا.</p><p>بشكل افتراضي تعتبر الموضوعات غير مقروءة و يظهر بجانبها عداد <span class="badge new-posts badge-notification">1</span> في حال:</p><ul><li>انشأت الموضوع</li><li>رددت علي الموضوع</li><li>قرأت الموضوع لاكثر من اربع دقائق</li></ul><p>او قمت بضبط مستوي اشعارات الموضوع إلي مراقب او متابع.</p><p>زور صفحة <a href="%{userPrefsUrl}">التفضيلات</a> لتغيير هذا السلوك.</p>'
+          unread: '<p>تظهر المواضيع غير المقروءة هنا.</p><p>تكون المواضيع (مبدئيًا) غير مقروءة وتعرض أعداد <span class="badge new-posts badge-notification">1</span> غير مقروءة إن:</p><ul><li>كتبت الموضوع</li><li>رددت على موضوع</li><li>قرأت الموضوع لمدّة أربع دقائق فأكثر</li></ul><p>أو أنّك ضبطت الموضوع ليُراقب أو يُتابع عبر زرّ التحكّم بالإخطارات أسفل كلّ موضوع.</p><p>إن أردت تعديل هذا السلوك، فزُر <a href="%{userPrefsUrl}">تفضيلاتك</a>.</p>'
       bottom:
         latest: "لا يوجد موضوعات حديثة أخرى."
         posted: "لا يوجد مواضيع منشورة أخرى."
@@ -1549,6 +1667,7 @@ ar:
         other: "%{count} منشور في الموضوع"
       create: "موضوع جديد"
       create_long: "كتابة موضوع جديد"
+      open_draft: "افتح المسودّة"
       private_message: "أرسل رسالة خاصة"
       archive_message:
         help: "انقل الرسالة للأرشيف لديك"
@@ -1704,7 +1823,7 @@ ar:
           "3_1": "ستصلك إشعارات لأنك أنشأت هذا الموضوع."
           "3": "ستصلك إشعارات لأنك تراقب هذا الموضوع."
           "2_8": "سوف تشاهد عداد للردود الجديدة لانك تتابع هذا القسم."
-          "2_4": "سوف تشاهد عداد للردود الجديدة لانك قمت بالمشاركة برد في هذا الموضوع."
+          "2_4": "سترى عدّادًا بالردود الجديدة لأنّك نشرت ردًا في هذا الموضوع."
           "2_2": "سوف تشاهد عداد للردود الجديدة لانك تتابع هذا الموضوع."
           "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "سيصلك إشعار إن أشار أحد إلى @اسمك أو رد عليك."
@@ -1832,7 +1951,7 @@ ar:
         to_topic_username: "لقد أدخلت اسم مستخدم. سنرسل إشعارًا يحتوي رابطًا يدعوهم إلى هذا الموضوع."
         to_username: "أدخل اسم المستخدم للشخص الذي تريد دعوته. سنرسل إشعارًا يحتوي رابطًا يدعوهم إلى هذا الموضوع."
         email_placeholder: "name@example.com"
-        success_email: "قمنا بإرسال دعوة بالبريد لـ <b>%{emailOrUsername}</b> . سيتم تنبيهك عند قبول الدعوة , تحقق من تبويب الدعوات في صفحتك الشخصية لمتابعة دعوتك."
+        success_email: "أرسلنا دعوة إلى <b>%{emailOrUsername}</b> بالبريد. سنُرسل إليك إخطارًا متى قبل الدعوة. طالِع لسان الدعوات في صفحة المستخدم عندك لتتابع دعواتك المُرسلة."
         success_username: "دعونا هذا العضو للمشاركة في هذا الموضوع."
         error: "عذرا, لا يمكنك دعوة هذا الشخص, ربما لأن تم دعوتة مسبقا؟ (الدعوات محدودة)"
         success_existing_email: "العضو ذو عنوان البريد الإلكتروني <b>%{emailOrUsername}</b> مسجل بالفعل. لقد قمنا بدعوتة للمشاركة بهذا الموضوع."
@@ -1958,12 +2077,14 @@ ar:
         create: "عذرا، حدثت مشكلة اثناء إنشاء منشورك. من فضلك حاول مجددا."
         edit: "عذرا، حدثت مشكلة اثناء تعديل منشورك. من فضلك حاول مجددا."
         upload: "عذرا، حدثت مشكلة اثناء رفع الملف. من فضلك حاول مجددا."
+        file_too_large: "معذرةً ولكن الملف كبير جدًا (أقصى حجم هو %{max_size_kb} ك.بايت). لماذا لا ترفع الملف الكبير هذا إلى خدمة مشاركة سحابية وتلصق الرابط؟"
         too_many_uploads: "عذرا، يمكنك فقط رفع ملف واحد كل مرة."
         upload_not_authorized: "عذرا, نوع الملف الذي تحاول رفعة محذور ( الانواع المسموح بها: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع الصور."
         attachment_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع المرفقات."
         attachment_download_requires_login: "عذرا، عليك تسجيل الدخول لتحميل المرفقات."
       abandon_edit:
+        confirm: "أمتأكّد من إهمال تعديلاتك؟"
         no_value: "لا, إبقاء"
       abandon:
         confirm: "أمتأكد من التخلي عن المنشور؟"
@@ -2383,6 +2504,7 @@ ar:
         this_month: "شهر"
         this_week: "أسبوع"
         today: "يوم"
+    browser_update: 'للأسف <a href="https://www.discourse.org/faq/#browser">فمتصفّح الإنترنت الذي تستعمل قديم جدًا ليعمل عليه هذا الموقع</a>. من فضلك <a href="https://browsehappy.com">حدّث متصفّحك</a> لترى المحتوى الغني والولوج والردّ.'
     permission_types:
       full: "انشاء / رد / مشاهدة"
       create_post: "رد / مشاهدة"
@@ -2599,6 +2721,7 @@ ar:
         general_tab: "عام"
         security_tab: "الأمن"
         report_filter_any: "أي"
+        too_many_requests: لقد نفّذت هذا الإجراء مرّات كثيرة جدًا. من فضلك انتظر قليلًا قبل معاودة المحاولة.
         reports:
           today: "اليوم"
           yesterday: "امس"
@@ -2829,6 +2952,7 @@ ar:
         new: "جديد"
         new_style: "واجهة جديدة"
         delete: "أحذف"
+        delete_confirm: 'أمتأكّد من حذف ”%{theme_name}“؟'
         color: "لون"
         opacity: "الشفافية"
         copy: "نسخ"
@@ -2861,6 +2985,8 @@ ar:
           color_scheme_select: "حدد الألوان لاستخدامها في الواجهة"
           custom_sections: "أقسام مخصصة:"
           theme_components: "مكونات المواجهة"
+          convert_component_alert: "أمتأكّد من تحويل هذا المكوّن إلى سمة؟ سيُزال من %{relatives} باعتباره مكوّن."
+          convert_theme_alert: "أمتأكّد من تحويل هذه السمة إلى مكوّ،؟ ستُزال من %{relatives} باعتبارها أبًا."
           collapse: إخفاء
           uploads: "الملفات المساعدة"
           no_uploads: "يمكنك رفع ملفات خاصة بواجهة المستخدم الخاصة بك مثل الخطوط و الصور"
@@ -2884,18 +3010,30 @@ ar:
           updating: "تحديث..."
           up_to_date: "الواجة محدثة, اخر مره تم التحقق من التحديث:"
           add: "اضافة"
+          theme_settings: "إعدادت السمة"
+          no_settings: "ليس لهذه السمة أيّ إعدادات."
+          theme_translations: "ترجمات السمة"
+          empty: "ما من عناصر"
+          compare_commits: "(طالِع الإيداعات الجديدة)"
+          repo_unreachable: "تعذّر الاتصال بمستودع غِت لهذه السمة. رسالة العُطل:"
+          imported_from_archive: "استُوردت هذه السمة من ملف ‎.zip"
           scss:
             text: "CSS"
+            title: "أدخِل CSS صالح، نقبل كلّ أنماط CSS وSCSS الصالحة"
           header:
             text: "Header"
             title: "ادخل الـ HTML لعرضه فوق هيدر الموقع"
           after_header:
             text: "بعد الـ Header"
+            title: "أدخِل HTML لعرضه في كلّ الصفحات بعد الترويسة"
           footer:
             text: "تذييل "
             title: "ادخل نص الـ HTML ليتم عرضه في ذيل الصفحة (الفوتر)"
           embedded_scss:
             text: "CSS مضمن"
+          color_definitions:
+            text: "تعريفات الألوان"
+            title: "أدخِل تعريفات الألوان المخصّصة (للمستخدمين المتقدّمين فقط)"
           head_tag:
             text: "</head>"
             title: "رقْم HTML الذي سيُدرج قبل وسم ‎</head>‎"
@@ -2903,11 +3041,20 @@ ar:
             text: "</body>"
             title: "رقْم HTML الذي سيُدرج قبل وسم ‎</body>‎"
         colors:
+          select_base:
+            title: "اختر مخطّط الألوان الأساس"
+            description: "المخطّط الأساس:"
           title: "الألوان"
+          edit: "حرّر مخطّطات الألوان"
+          long_title: "مخطّطات الألوان"
+          about: "عدّل الألوان التي تستعملها السمات. أنشِئ مخطّط ألوان جديد لتبدأ."
+          new_name: "مخطّط ألوان جديد"
           copy_name_prefix: "نسخة من"
+          delete_confirm: "أنحذف مخطّط الألوان هذا؟"
           undo: "تراجع"
           undo_title: "التراجع عن تغيير اللن الى اللون السابق"
           revert: "تراجع"
+          revert_title: "صفّر هذا اللون إلى مخطّط ألوان دِسكورس المبدئي."
           primary:
             name: "الأساسي"
             description: "أغلب النّصوص، والأيقونات والحدود."
@@ -2938,13 +3085,22 @@ ar:
           love:
             name: "إعجاب"
             description: "لون زر الإعجاب."
+        robots:
+          title: "بدّل ملف robots.txt في الموقع:"
         email_style:
+          title: "نمط الرسائل الإلكترونية"
+          heading: "خصّص نمط الرسائل الإلكترونية"
+          html: "قالب HTML"
           css: "CSS"
+          reset: "صفّر إلى المبدئي"
+          save_error_with_reason: "لم تُحفظ التعديلات. %{error}"
       email:
         title: "البريد الالكتروني"
         settings: "إعدادات"
         templates: "القوالب"
         preview_digest: "ملخص المعاينة."
+        advanced_test:
+          email: "الرسالة الأصلية"
         sending_test: "يرسل بريدا إلكترونيا اختباريا..."
         error: "<b>خطأ</b> - %{server_error}"
         test_error: "حدث خطأ أثناء إرسال رسالة تجريبية. الرجاء فحص إعدادات البريد الإلكتروني و التأكد من أن الاستضافة لا تمنع مرور البريد الإلكتروني والمحاولة مرة أخرى."

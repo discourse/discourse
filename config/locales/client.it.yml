@@ -630,6 +630,8 @@ it:
           to: "A"
       permissions:
         title: "Autorizzazioni"
+        none: "Non ci sono categorie associate a questo gruppo."
+        description: "I membri di questo gruppo possono accedere a queste categorie"
       public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (richiede che il gruppo abbia visibilità pubblica)"
       public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
       empty:
@@ -1072,7 +1074,6 @@ it:
         taken: "Spiacenti, questa email non è disponibile."
         error: "C'è stato un errore nel cambio dell'email; potrebbe essere già usata da un altro utente."
         success: "Abbiamo inviato una email a questo indirizzo. Segui le indicazioni di conferma."
-        success_via_admin: "Dal momento che stai cambiando l'email di questo utente, supponiamo che non abbia più accesso al suo indirizzo email originale. Abbiamo inviato una email di reimpostazione della password al nuovo indirizzo email. Tieni presente che l'utente dovrà completare il processo di reimpostazione della password perché il cambio di indirizzo abbia effetto."
         success_staff: "Abbiamo inviato una email al tuo indirizzo corrente. Segui le istruzioni di conferma."
       change_avatar:
         title: "Cambia l'immagine del tuo profilo"
@@ -1747,6 +1748,8 @@ it:
       abandon: "chiudi il composer e scarta la bozza"
       enter_fullscreen: "Espandi il composer a tutto schermo"
       exit_fullscreen: "Lascia il composer a tutto schermo"
+      show_toolbar: "mostra la barra degli strumenti del Composer"
+      hide_toolbar: "nascondi la barra degli strumenti del Composer"
       modal_ok: "OK"
       modal_cancel: "Annulla"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
@@ -1759,6 +1762,7 @@ it:
         draft: Bozza
         edit: Modifica
         reply_to_post:
+          label: Rispondi al messaggio di %{postUsername}
           desc: Rispondi a uno specifico messaggio
         reply_as_new_topic:
           label: Rispondi con un argomento correlato
@@ -1784,6 +1788,7 @@ it:
         toggle_topic_bump:
           label: "Commuta riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
+      reload: "Ricarica"
       ignore: "Ignora"
     notifications:
       tooltip:
@@ -2008,6 +2013,7 @@ it:
         choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
         choose_append_tags: "Scegli nuove etichette da aggiungere a questi argomenti:"
         changed_tags: "Le etichette per quegli argomenti sono state cambiate."
+        remove_tags: "Rimuovi etichette"
       none:
         unread: "Non ci sono argomenti non letti."
         new: "Non ci sono nuovi argomenti."
@@ -2102,6 +2108,7 @@ it:
       browse_all_categories: Scorri tutte le categorie
       browse_all_tags: Sfoglia tutte le etichette
       view_latest_topics: visualizza gli argomenti più recenti
+      suggest_create_topic: iniziare una nuova conversazione?
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato eliminato"
@@ -2197,7 +2204,7 @@ it:
           "2_8": "Vedrai un conteggio delle nuove risposte perché stai seguendo questa categoria."
           "2_4": "Vedrai un conteggio delle nuove risposte perché hai pubblicato una risposta in questo argomento."
           "2_2": "Vedrai un conteggio delle nuove risposte perché stai seguendo questo argomento."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'Vedrai un conteggio delle nuove risposte perché <a href="%{basePath}/u/%{username}/preferences/notifications">hai letto questo argomento</a>.'
           "1_2": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "1": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "0_7": "Stai ignorando tutte le notifiche di questa categoria."
@@ -2307,6 +2314,7 @@ it:
         success: "Abbiamo invitato l'utente a partecipare a questo messaggio."
         success_group: "Abbiamo invitato il gruppo a partecipare a questo messaggio."
         error: "Spiacenti, si è verificato un errore durante l'invito dell'utente."
+        not_allowed: "Spiacenti, l'utente non può essere invitato."
         group_name: "nome gruppo"
       controls: "Impostazioni Argomento"
       invite_reply:
@@ -2953,6 +2961,8 @@ it:
         profile: "%{shortcut} Profilo"
         messages: "%{shortcut} Messaggi"
         drafts: "%{shortcut} Bozze"
+        next: "%{shortcut} Argomento successivo"
+        previous: "%{shortcut} Argomento precedente"
       navigation:
         title: "Navigazione"
         jump: "%{shortcut} Vai al messaggio n°"
@@ -3244,6 +3254,9 @@ it:
           view_table: "tabella"
           view_graph: "grafico"
           refresh_report: "Aggiorna Rapporto"
+          daily: Ogni giorno
+          monthly: Mensile
+          weekly: Settimanale
           dates: "Date (UTC)"
           groups: "Tutti i gruppi"
           disabled: "Il rapporto è disabilitato"
@@ -3293,6 +3306,8 @@ it:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
               logged_on_users: "Utenti connessi"
+              members: "Proprietari, membri e moderatori del gruppo"
+              staff: "Proprietari e moderatori del gruppo"
               owners: "Proprietari del gruppo"
               description: "Gli amministratori possono vedere tutti i gruppi."
             members_visibility_levels:
@@ -3356,6 +3371,7 @@ it:
         save: Salva
         new_key: Nuova Chiave API
         revoked: Revocata
+        delete: Elimina definitivamente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
         use_global_key: Chiave globale (consente tutte le azioni)
@@ -3363,6 +3379,11 @@ it:
           allowed_parameters: Parametri consentiti
           optional_allowed_parameters: Parametri Consentiti (Opzionali)
           any_parameter: (qualsiasi parametro)
+          allowed_urls: URL consentiti
+          descriptions:
+            topics:
+              read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
+              write: Crea un nuovo argomento o pubblica su uno esistente.
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."
@@ -3602,6 +3623,7 @@ it:
           is_default: "Il tema è abilitato di default"
           user_selectable: "Il tema può essere selezionato dagli utenti"
           color_scheme: "Tavolozza dei colori"
+          default_light_scheme: "Light (predefinito)"
           color_scheme_select: "Seleziona i colori da usare nel tema"
           custom_sections: "Sezioni personalizzate:"
           theme_components: "Componenti Tema"
@@ -3699,6 +3721,9 @@ it:
           embedded_scss:
             text: "CSS incorporato"
             title: "Inserisci CSS personalizzato da inviare con la versione incorporata dei commenti"
+          color_definitions:
+            text: "Definizioni dei colori"
+            title: "Inserisci definizioni di colore personalizzate (solo utenti avanzati)"
           head_tag:
             text: "</head>"
             title: "HTML che sarà inserito prima del tag </head> "
@@ -4284,6 +4309,7 @@ it:
           external_name: "Nome"
           external_email: "Email"
           external_avatar_url: "URL dell'Immagine Profilo"
+          delete_sso_record: "Elimina record SSO"
       user_fields:
         title: "Campi Utente"
         help: "Tutti i campi che i tuoi utenti possono riempire."
@@ -4486,6 +4512,7 @@ it:
         title: "Incorporo"
         host: "Host Abilitati"
         class_name: "Nome Classe"
+        allowed_paths: "Lista path permessi"
         edit: "modifica"
         category: "Pubblica nella Categoria"
         add_host: "Aggiungi Host"
@@ -4550,5 +4577,6 @@ it:
           regular: "Utente Normale"
       previews:
         topic_title: "Argomento di discussione"
+        font_title: "Font %{font}"
         share_button: "Condividi"
         reply_button: "Rispondi"

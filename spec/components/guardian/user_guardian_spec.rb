@@ -143,6 +143,10 @@ describe UserGuardian do
         expect(Guardian.new(admin).can_see_profile?(hidden_user)).to eq(true)
       end
 
+      it "is true if hiding profiles is disabled" do
+        SiteSetting.allow_users_to_hide_profile = false
+        expect(Guardian.new(user).can_see_profile?(hidden_user)).to eq(true)
+      end
     end
   end
 

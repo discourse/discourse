@@ -34,6 +34,7 @@ const SERVER_SIDE_ONLY = [
   /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
   /^\/invites\//,
+  /^\/styleguide\//,
 ];
 
 // The amount of height (in pixles) that we factor in when jumpEnd is called so

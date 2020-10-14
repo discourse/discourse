@@ -23,6 +23,7 @@
 //= require_tree ./models
 //= require_tree ./components
 //= require ./wizard-pretender
+//= require test-shims
 
 // Trick JSHint into allow document.write
 var d = document;

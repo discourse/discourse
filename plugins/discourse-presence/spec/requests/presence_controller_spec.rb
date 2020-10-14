@@ -45,6 +45,15 @@ describe ::Presence::PresencesController do
         expect(response.status).to eq(404)
       end
 
+      it 'returns the right response when user disables the presence feature and allow_users_to_hide_profile is disabled' do
+        user.user_option.update_column(:hide_profile_and_presence, true)
+        SiteSetting.allow_users_to_hide_profile = false
+
+        post '/presence/publish.json', params: { topic_id: public_topic.id, state: 'replying' }
+
+        expect(response.status).to eq(200)
+      end
+
       it 'returns the right response when the presence site settings is disabled' do
         SiteSetting.presence_enabled = false
 

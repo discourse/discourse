@@ -130,6 +130,7 @@ fa_IR:
     site_settings:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
+      second_factor_cannot_be_enforced_with_sso_enabled: "اگر SSO فعال باشد، نمی‌توانید 2FA را اجرا کنید."
   invite:
     expired: "توکن دعوت‌نامه شما منقضی شده است. لطفا با <a href='%{base_url}/about'>مدیران تماس</a> بگیرید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='%{base_path}/u/%{username}/summary'>حساب کاربری دارند!</a> "
@@ -1928,6 +1929,9 @@ fa_IR:
     confirm_new_email:
       title: "تایید ایمیل"
       subject_template: "[%{email_prefix}] ایمیل جدیدتان را تایید کنید"
+    confirm_new_email_via_admin:
+      title: "تایید ایمیل جدید"
+      subject_template: "[%{email_prefix}] آدرس ایمیل جدیدتان را تایید کنید"
     confirm_old_email:
       title: "تایید ایمیل قبلی"
       subject_template: "[%{email_prefix}] ایمیل فعلی خود را تایید کنید"

@@ -12,6 +12,31 @@ export default Controller.extend(ModalFunctionality, {
   gravatarLoginUrl: setting("gravatar_login_url"),
 
   @discourseComputed(
+    "siteSettings.selectable_avatars_enabled",
+    "siteSettings.selectable_avatars"
+  )
+  selectableAvatars(enabled, list) {
+    if (enabled) {
+      return list ? list.split("|") : [];
+    }
+  },
+
+  @discourseComputed(
+    "user.avatar_template",
+    "user.system_avatar_template",
+    "user.gravatar_avatar_template"
+  )
+  selected(avatarTemplate, systemAvatarTemplate, gravatarAvatarTemplate) {
+    if (avatarTemplate === systemAvatarTemplate) {
+      return "system";
+    } else if (avatarTemplate === gravatarAvatarTemplate) {
+      return "gravatar";
+    } else {
+      return "custom";
+    }
+  },
+
+  @discourseComputed(
     "selected",
     "user.system_avatar_upload_id",
     "user.gravatar_avatar_upload_id",
@@ -55,7 +80,7 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     uploadComplete() {
-      this.set("selected", "uploaded");
+      this.set("selected", "custom");
     },
 
     refreshGravatar() {

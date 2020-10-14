@@ -1,4 +1,4 @@
-{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id)}}
+{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) "")}}
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>

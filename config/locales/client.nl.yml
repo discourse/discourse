@@ -1075,7 +1075,7 @@ nl:
         taken: "Sorry, dat e-mailadres is niet beschikbaar."
         error: "Er is een fout opgetreden bij het wijzigen van uw e-mailadres. Misschien is dat adres al in gebruik?"
         success: "We hebben een e-mail naar dat adres gestuurd. Volg de instructies voor bevestiging."
-        success_via_admin: "Omdat u het e-mailadres van de gebruiker wijzigt, nemen we aan dat deze geen toegang meer heeft tot zijn of haar oorspronkelijke e-mailaccount. We hebben een e-mail voor opnieuw instellen van het wachtwoord naar het nieuwe e-mailadres van deze gebruiker gestuurd. Houd er rekening mee dat de gebruiker het proces voor opnieuw instellen van het wachtwoord moet voltooien om de wijziging van het e-mailadres van kracht te laten worden."
+        success_via_admin: "We hebben een e-mail naar dat adres gestuurd. Volg de instructies voor bevestiging in de e-mail."
         success_staff: "Er is een e-mail naar uw huidige adres verzonden. Volg de bevestigingsinstructies."
       change_avatar:
         title: "Uw profielafbeelding wijzigen"
@@ -2018,6 +2018,7 @@ nl:
         choose_new_tags: "Kies nieuwe tags voor deze topics:"
         choose_append_tags: "Kies nieuwe tags om voor deze topics toe te voegen:"
         changed_tags: "De tags van deze topics zijn gewijzigd."
+        remove_tags: "Tags verwijderen"
       none:
         unread: "U hebt geen ongelezen topics."
         new: "U hebt geen nieuwe topics."

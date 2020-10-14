@@ -1752,6 +1752,17 @@ describe PostsController do
       get "/u/#{user.username}/activity.json"
       expect(response.status).to eq(404)
     end
+
+    it "succeeds when `allow_users_to_hide_profile` is false" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+      SiteSetting.allow_users_to_hide_profile = false
+
+      get "/u/#{user.username}/activity.rss"
+      expect(response.status).to eq(200)
+
+      get "/u/#{user.username}/activity.json"
+      expect(response.status).to eq(200)
+    end
   end
 
   describe '#latest' do

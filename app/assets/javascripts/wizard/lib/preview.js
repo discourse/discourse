@@ -161,21 +161,22 @@ export function createPreviewComponent(width, height, obj) {
         drawHeader(ctx, colors, width, headerHeight);
 
         const avatarSize = height * 0.1;
-
-        // Logo
         const headerMargin = headerHeight * 0.2;
-        const logoHeight = headerHeight - headerMargin * 2;
 
-        const ratio = logoHeight / logo.height;
-        this.scaleImage(
-          logo,
-          headerMargin,
-          headerMargin,
-          logo.width * ratio,
-          logoHeight
-        );
+        if (logo) {
+          const logoHeight = headerHeight - headerMargin * 2;
 
-        this.scaleImage(logo, width, headerMargin);
+          const ratio = logoHeight / logo.height;
+          this.scaleImage(
+            logo,
+            headerMargin,
+            headerMargin,
+            logo.width * ratio,
+            logoHeight
+          );
+
+          this.scaleImage(logo, width, headerMargin);
+        }
 
         // Top right menu
         this.scaleImage(

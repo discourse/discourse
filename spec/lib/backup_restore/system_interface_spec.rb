@@ -69,6 +69,15 @@ describe BackupRestore::SystemInterface do
         thread.join
       end.to raise_error(SystemExit)
     end
+
+    it "clears an existing shutdown signal before it starts to listen" do
+      BackupRestore.set_shutdown_signal!
+      expect(BackupRestore.should_shutdown?).to eq(true)
+
+      thread = subject.listen_for_shutdown_signal
+      expect(BackupRestore.should_shutdown?).to eq(false)
+      Thread.kill(thread)
+    end
   end
 
   describe "#pause_sidekiq" do

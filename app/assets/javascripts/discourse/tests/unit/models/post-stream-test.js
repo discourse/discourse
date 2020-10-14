@@ -785,7 +785,7 @@ test("triggerRecoveredPost", async (assert) => {
   );
 });
 
-test("comitting and triggerNewPostInStream race condition", (assert) => {
+test("comitting and triggerNewPostsInStream race condition", (assert) => {
   const postStream = buildStream(4964);
   const store = postStream.store;
 
@@ -808,7 +808,7 @@ test("comitting and triggerNewPostInStream race condition", (assert) => {
   stagedPost.set("id", 123);
 
   sandbox.stub(postStream, "appendMore");
-  postStream.triggerNewPostInStream(123);
+  postStream.triggerNewPostsInStream([123]);
   assert.equal(postStream.get("filteredPostsCount"), 1, "it added the post");
 
   postStream.commitPost(stagedPost);
@@ -849,7 +849,7 @@ test("triggerNewPostInStream for ignored posts", async (assert) => {
     .stub(postStream, "findPostsByIds")
     .returns(Promise.resolve([post2]));
 
-  await postStream.triggerNewPostInStream(101);
+  await postStream.triggerNewPostsInStream([101]);
   assert.equal(
     postStream.posts.length,
     2,
@@ -864,7 +864,7 @@ test("triggerNewPostInStream for ignored posts", async (assert) => {
   stub.restore();
   sandbox.stub(postStream, "findPostsByIds").returns(Promise.resolve([post3]));
 
-  await postStream.triggerNewPostInStream(102);
+  await postStream.triggerNewPostsInStream([102]);
   assert.equal(
     postStream.posts.length,
     2,

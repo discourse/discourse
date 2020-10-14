@@ -229,6 +229,56 @@ describe Upload do
     end
   end
 
+  context ".get_from_urls" do
+    let(:upload) { Fabricate(:upload, sha1: "10f73034616a796dfd70177dc54b6def44c4ba6f") }
+    let(:upload2) { Fabricate(:upload, sha1: "2a7081e615f9075befd87a9a6d273935c0262cd5") }
+
+    it "works with multiple uploads" do
+      expect(Upload.get_from_urls([upload.url, upload2.url])).to contain_exactly(upload, upload2)
+    end
+
+    it "works for an extensionless URL" do
+      url = upload.url.sub('.png', '')
+      upload.update!(url: url)
+      expect(Upload.get_from_urls([url])).to contain_exactly(upload)
+    end
+
+    it "works with uploads with mismatched URLs" do
+      upload.update!(url: "/uploads/default/12345/971308e535305c51.png")
+      expect(Upload.get_from_urls([upload.url])).to contain_exactly(upload)
+      expect(Upload.get_from_urls(["/uploads/default/123131/971308e535305c51.png"])).to be_empty
+    end
+
+    it "works with an upload with a URL containing a deep tree" do
+      upload.update!(url: Discourse.store.get_path_for("original", 16001, upload.sha1, ".#{upload.extension}"))
+      expect(Upload.get_from_urls([upload.url])).to contain_exactly(upload)
+    end
+
+    it "works when using a CDN" do
+      begin
+        original_asset_host = Rails.configuration.action_controller.asset_host
+        Rails.configuration.action_controller.asset_host = 'http://my.cdn.com'
+
+        expect(Upload.get_from_urls([
+          URI.join("http://my.cdn.com", upload.url).to_s
+        ])).to contain_exactly(upload)
+      ensure
+        Rails.configuration.action_controller.asset_host = original_asset_host
+      end
+    end
+
+    it "works with full URLs" do
+      expect(Upload.get_from_urls([
+        URI.join("http://discourse.some.com:3000/", upload.url).to_s
+      ])).to contain_exactly(upload)
+    end
+
+    it "handles invalid URIs" do
+      urls = ["http://ip:port/index.html", "mailto:admin%40example.com", "mailto:example"]
+      expect { Upload.get_from_urls(urls) }.not_to raise_error
+    end
+  end
+
   describe '.generate_digest' do
     it "should return the right digest" do
       expect(Upload.generate_digest(image.path)).to eq('bc975735dfc6409c1c2aa5ebf2239949bcbdbd65')

@@ -119,6 +119,10 @@ pt_BR:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber}"
       close: "fechar"
+      twitter: "Compartilhar no Twitter"
+      facebook: "Compartilhar no Facebook"
+      email: "Enviar por e-mail"
+      url: "Copiar e compartilhar a URL"
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
       private_topic: "tornou este tópico em uma mensagem pessoal %{when}"
@@ -260,7 +264,9 @@ pt_BR:
         unbookmark: "Clique para remover todos os favoritos neste tópico"
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes deste tópico. Você tem um lembrete definido %{reminder_at} para este tópico."
     bookmarks:
+      created: "Você marcou esta mensagem como favorita. %{name}"
       not_bookmarked: "marcar postagem como favorita"
+      created_with_reminder: "Você marcou esta publicação com um lembrete %{date}. %{name}"
       remove: "Remover Favorito"
       delete: "Excluir Favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
@@ -269,6 +275,13 @@ pt_BR:
       no_timezone: 'Você ainda não definiu um fuso horário. VOcê não poderá definir lembretes. Configure um <a href="%{basePath}/my/preferences/profile">no seu perfil</a>.'
       invalid_custom_datetime: "A data e a hora que você forneceu são inválidas, por favor tente novamente."
       list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário."
+      no_user_bookmarks: "Você não possui mensagens marcadas como favoritas; os favoritos permitem que você acesse, rapidamente, mensagens específicas."
+      auto_delete_preference:
+        label: "Excluir automaticamente"
+        never: "Nunca"
+        when_reminder_sent: "Assim que o lembrete for enviado"
+        on_owner_reply: "Após eu responder a este tópico"
+      search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da mensagem"
       search: "Pesquisar"
       reminders:
         later_today: "Mais tarde hoje"
@@ -276,6 +289,7 @@ pt_BR:
         tomorrow: "Amanhã"
         next_week: "Próxima semana"
         later_this_week: "Mais tarde nesta semana"
+        start_of_next_business_week: "Segunda-feira"
         start_of_next_business_week_alt: "Próxima segunda-feira"
         next_month: "Próximo mês"
         custom: "Data e hora personalizadas"
@@ -284,6 +298,7 @@ pt_BR:
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
         at_time: "em %{date_time}"
+        existing_reminder: "Você possui um lembrete definido para esta mensagem que será enviado %{at_date_time}"
     copy_codeblock:
       copied: "copiado!"
     drafts:
@@ -507,6 +522,7 @@ pt_BR:
       sent_by_user: "Enviado por <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Enviado por <a href='%{userUrl}'>você</a>"
     directory:
+      username: "Nome de usuário"
       filter_name: "filtrar por nome de usuário"
       title: "Usuários"
       likes_given: "Dados"
@@ -537,6 +553,12 @@ pt_BR:
     groups:
       member_added: "Adicionado"
       member_requested: "Solicitado em"
+      add_members:
+        title: "Adicionar membros a %{group_name}"
+        description: "Você também pode colocar aqui uma lista de usuários separados por vírgulas."
+        usernames: "Digite nomes de usuários ou endereços de email"
+        input_placeholder: "Nomes de usuário ou endereços de email"
+        notify_users: "Notificar usuários"
       requests:
         title: "Solicitações"
         reason: "Motivo"
@@ -560,12 +582,32 @@ pt_BR:
           notification: Notificação
         email:
           title: "E-mail"
+          status: "Sincronizado %{old_emails} / %{total_emails} dos emails via IMAP."
           credentials:
+            title: "Credenciais"
+            smtp_server: "Servidor SMTP"
+            smtp_port: "Porta SMTP"
+            smtp_ssl: "Utilizar SSL para SMTP"
+            imap_server: "IMAP Server"
+            imap_port: "Porta IMAP"
+            imap_ssl: "Usar SSL para IMAP"
             username: "Nome de Usuário"
             password: "Senha"
+          mailboxes:
+            synchronized: "Caixa de Correio Sincronizada"
+            none_found: "Nenhuma caixa de correio foi encontrada nesta conta de e-mail."
+            disabled: "desativado"
         membership:
           title: Associação
           access: Acesso
+        categories:
+          title: Categorias
+          long_title: "Notificações padrão da categoria"
+          description: "Quando usuários são adicionados a esse grupo, suas configurações de notificação de categoria serão definidas com esses padrões. Depois, eles poderão alterá-las."
+          watched_categories_instructions: "Você será inscrito automaticamente em todos os tópicos destas categorias. Você será notificado de todas as novas postagens e tópicos, e uma contagem de novas postagens também aparecerá ao lado do tópico."
+          tracked_categories_instructions: "Você será inscrito automaticamente em todos os tópicos nestas categorias. Uma contagem de postagens novas aparecerá ao lado do tópico."
+          watching_first_post_categories_instructions: "Usuários serão notificados sobre a primeira mensagem postada em cada tópico novo destas categorias."
+          regular_categories_instructions: "Se estas categorias forem silenciadas, elas apenas não serão silenciadas para membros do grupo. Os usuários serão notificados se forem mencionados ou se alguém responder a eles."
         logs:
           title: "Registros"
           when: "Quando"
