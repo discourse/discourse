@@ -43,6 +43,9 @@ export default createWidget("link", {
         ? I18n.t(attrs.title, attrs.titleOptions)
         : this.label(attrs),
     };
+    if (attrs.target) {
+      ret["target"] = attrs.target;
+    }
     if (attrs.attributes) {
       Object.keys(attrs.attributes).forEach(
         (k) => (ret[k] = attrs.attributes[k])
@@ -97,12 +100,11 @@ export default createWidget("link", {
         );
       }
     }
-
     return result;
   },
 
   click(e) {
-    if (wantsNewWindow(e)) {
+    if (wantsNewWindow(e) || this.attrs.target === "_blank") {
       return;
     }
     e.preventDefault();
