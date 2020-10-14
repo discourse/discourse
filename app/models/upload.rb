@@ -462,8 +462,8 @@ end
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
 #  original_sha1          :string
-#  animated               :boolean          default(FALSE)
 #  verification_status    :integer          default(1), not null
+#  animated               :boolean
 #
 # Indexes
 #

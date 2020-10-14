@@ -2,6 +2,6 @@
 
 class AddAnimatedToUploads < ActiveRecord::Migration[6.0]
   def change
-    add_column :uploads, :animated, :boolean, default: false
+    add_column :uploads, :animated, :boolean
   end
 end
