@@ -18,6 +18,19 @@ acceptance("Tag Groups", {
         },
       });
     });
+
+    server.get("/groups/search.json", () => {
+      return helper.response([
+        {
+          id: 88,
+          name: "tl1",
+        },
+        {
+          id: 89,
+          name: "tl2",
+        },
+      ]);
+    });
   },
 });
 
@@ -36,3 +49,26 @@ test("tag groups can be saved and deleted", async (assert) => {
   await click(".tag-chooser .choice:first");
   assert.ok(!find(".tag-group-content .btn.btn-danger")[0].disabled);
 });
+
+QUnit.test(
+  "tag groups can have multiple groups added to them",
+  async (assert) => {
+    const tags = selectKit(".tag-chooser");
+    const groups = selectKit(".group-chooser");
+
+    await visit("/tag_groups");
+    await click(".content-list .btn");
+
+    await fillIn(".tag-group-content h1 input", "test tag group");
+    await tags.expand();
+    await tags.selectRowByValue("monkey");
+
+    await click("#private-permission");
+    assert.ok(find(".tag-group-content .btn.btn-default:disabled").length);
+
+    await groups.expand();
+    await groups.selectRowByIndex(1);
+    await groups.selectRowByIndex(0);
+    assert.ok(!find(".tag-group-content .btn.btn-default")[0].disabled);
+  }
+);

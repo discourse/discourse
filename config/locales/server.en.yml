@@ -4564,8 +4564,8 @@ en:
 
   tags:
     title: "Tags"
-    staff_tag_disallowed: 'The tag "%{tag}" may only be applied by staff.'
-    staff_tag_remove_disallowed: 'The tag "%{tag}" may only be removed by staff.'
+    restricted_tag_disallowed: 'You cannot apply the tag "%{tag}".'
+    restricted_tag_remove_disallowed: 'You cannot remove the tag "%{tag}".'
     minimum_required_tags:
       one: "You must select at least %{count} tag."
       other: "You must select at least %{count} tags."

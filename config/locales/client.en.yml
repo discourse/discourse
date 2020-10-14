@@ -3409,8 +3409,8 @@ en:
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
         everyone_can_use: "Tags can be used by everyone"
-        usable_only_by_staff: "Tags are visible to everyone, but only staff can use them"
-        visible_only_to_staff: "Tags are visible only to staff"
+        usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
+        visible_only_to_groups: "Tags are visible only to the following groups"
 
       topics:
         none:

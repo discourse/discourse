@@ -93,16 +93,20 @@ module Helpers
     fixture_file("emails/#{email_name}.eml")
   end
 
-  def create_staff_tags(tag_names)
-    tag_group = Fabricate(:tag_group, name: 'Staff Tags')
-    TagGroupPermission.create!(
+  def create_staff_only_tags(tag_names)
+    create_limited_tags('Staff Tags', Group::AUTO_GROUPS[:staff], tag_names)
+  end
+
+  def create_limited_tags(tag_group_name, group_id, tag_names)
+    tag_group = Fabricate(:tag_group, name: tag_group_name)
+    TagGroupPermission.where(
       tag_group: tag_group,
       group_id: Group::AUTO_GROUPS[:everyone],
-      permission_type: TagGroupPermission.permission_types[:readonly]
-    )
+      permission_type: TagGroupPermission.permission_types[:full]
+    ).update(permission_type: TagGroupPermission.permission_types[:readonly])
     TagGroupPermission.create!(
       tag_group: tag_group,
-      group_id: Group::AUTO_GROUPS[:staff],
+      group_id: group_id,
       permission_type: TagGroupPermission.permission_types[:full]
     )
     tag_names.each do |name|
