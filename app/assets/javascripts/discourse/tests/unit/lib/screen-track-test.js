@@ -13,8 +13,8 @@ test("consolidateTimings", (assert) => {
   assert.deepEqual(
     consolidated,
     [
-      [{ 1: 5, 3: 1 }, 3, 2],
-      [{ 1: 15, 2: 5, 3: 1 }, 13, 1],
+      { timings: { 1: 15, 2: 5, 3: 1 }, topicTime: 13, topicId: 1 },
+      { timings: { 1: 5, 3: 1 }, topicTime: 3, topicId: 2 },
     ],
     "expecting consolidated timings to match correctly"
   );

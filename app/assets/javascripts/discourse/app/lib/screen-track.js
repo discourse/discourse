@@ -1,7 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
-import { Promise } from "rsvp";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -92,53 +91,59 @@ export default class {
   consolidateTimings(timings, topicTime, topicId) {
     this._consolidatedTimings = this._consolidatedTimings || [];
 
-    let found = this._consolidatedTimings.find((elem) => elem[2] === topicId);
+    let foundIndex = this._consolidatedTimings.findIndex(
+      (elem) => elem.topicId === topicId
+    );
 
-    if (found) {
-      this._consolidatedTimings.removeObject(found);
+    if (foundIndex > -1) {
+      let found = this._consolidatedTimings[foundIndex];
 
-      const oldTimings = found[0];
+      const lastIndex = this._consolidatedTimings.length - 1;
+
+      if (foundIndex !== lastIndex) {
+        const last = this._consolidatedTimings[lastIndex];
+        this._consolidatedTimings[lastIndex] = found;
+        this._consolidatedTimings[lastIndex - 1] = last;
+      }
+
+      const oldTimings = found.timings;
       Object.keys(oldTimings).forEach((id) => {
         if (timings[id]) {
           oldTimings[id] += timings[id];
         }
       });
-      found[1] += topicTime;
-      found[0] = Object.assign({}, timings, found[0]);
+      found.topicTime += topicTime;
+      found.timings = Object.assign({}, timings, found.timings);
+    } else {
+      this._consolidatedTimings.push({ timings, topicTime, topicId });
     }
-
-    found = found || [timings, topicTime, topicId];
-    this._consolidatedTimings.unshift(found);
 
     return this._consolidatedTimings;
   }
 
   sendNextConsolidatedTiming() {
     if (!this._consolidatedTimings || this._consolidatedTimings.length === 0) {
-      return Promise.resolve();
+      return;
     }
 
     if (this._inProgress) {
-      return Promise.resolve();
+      return;
     }
 
     if (
       this._blockSendingToServerTill &&
       this._blockSendingToServerTill > Date.now()
     ) {
-      return Promise.resolve();
+      return;
     }
 
     this._ajaxFailures = this._ajaxFailures || 0;
 
-    const item = this._consolidatedTimings.shift();
-    const timings = item[0];
-    const topicTime = item[1];
-    const topicId = item[2];
+    const { timings, topicTime, topicId } = this._consolidatedTimings.pop();
 
     this._inProgress = true;
 
-    return ajax("/topics/timings", {
+    ajax("/topics/timings", {
       data: {
         timings: timings,
         topic_time: topicTime,
@@ -160,7 +165,7 @@ export default class {
         }
       })
       .catch((e) => {
-        if (ALLOWED_AJAX_FAILURES.indexOf(e.jqXHR.status) >= -1) {
+        if (ALLOWED_AJAX_FAILURES.indexOf(e.jqXHR.status) > -1) {
           const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
           this._ajaxFailures += 1;
 
