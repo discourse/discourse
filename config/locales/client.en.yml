@@ -1067,7 +1067,7 @@ en:
         choose: "Choose a password"
 
       second_factor_backup:
-        title: "Two Factor Backup Codes"
+        title: "Two-Factor Backup Codes"
         regenerate: "Regenerate"
         disable: "Disable"
         enable: "Enable"
@@ -1079,14 +1079,14 @@ en:
         download_backup_codes: "Download backup codes"
         remaining_codes: "You have <strong>%{count}</strong> backup codes remaining."
         use: "Use a backup code"
-        enable_prerequisites: "You must enable a primary second factor before generating backup codes."
+        enable_prerequisites: "You must enable a primary two-factor method before generating backup codes."
         codes:
           title: "Backup Codes Generated"
           description: "Each of these backup codes can only be used once. Keep them somewhere safe but accessible."
 
       second_factor:
-        title: "Two Factor Authentication"
-        enable: "Manage Two Factor Authentication"
+        title: "Two-Factor Authentication"
+        enable: "Manage Two-Factor Authentication"
         disable_all: "Disable All"
         forgot_password: "Forgot password?"
         confirm_password_description: "Please confirm your password to continue"
@@ -1100,16 +1100,16 @@ en:
         short_description: |
           Protect your account with one-time use security codes.
         extended_description: |
-          Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
-        oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
+          Two-factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
+        oauth_enabled_warning: "Please note that social logins will be disabled once two-factor authentication has been enabled on your account."
         use: "Use Authenticator app"
-        enforced_notice: "You are required to enable two factor authentication before accessing this site."
+        enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         disable: "Disable"
-        disable_confirm: "Are you sure you want to disable all second factor methods?"
+        disable_confirm: "Are you sure you want to disable all two-factor methods?"
         save: "Save"
         edit: "Edit"
-        edit_title: "Edit Second Factor"
-        edit_description: "Second Factor Name"
+        edit_title: "Edit Authenticator"
+        edit_description: "Authenticator Name"
         enable_security_key_description: |
           When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> prepared, press the Register button below.
         totp:
@@ -1642,10 +1642,10 @@ en:
       title: "Log In"
       username: "User"
       password: "Password"
-      second_factor_title: "Two Factor Authentication"
+      second_factor_title: "Two-Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
       second_factor_backup: "Log in using a backup code"
-      second_factor_backup_title: "Two Factor Backup"
+      second_factor_backup_title: "Two-Factor Backup"
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
@@ -1672,7 +1672,7 @@ en:
       not_allowed_from_ip_address: "You can't login from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
-      omniauth_disallow_totp: "Your account has two factor authentication enabled. Please log in with your password."
+      omniauth_disallow_totp: "Your account has two-factor authentication enabled. Please log in with your password."
 
       resend_title: "Resend Activation Email"
       change_email: "Change Email Address"
@@ -4255,7 +4255,7 @@ en:
             post_edit: "post edit"
             post_unlocked: "post unlocked"
             check_personal_message: "check personal message"
-            disabled_second_factor: "disable Two Factor Authentication"
+            disabled_second_factor: "disable Two-Factor Authentication"
             topic_published: "topic published"
             post_approved: "post approved"
             post_rejected: "post rejected"
@@ -4490,7 +4490,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
-        second_factor_enabled: Two Factor Authentication Enabled
+        second_factor_enabled: Two-Factor Authentication Enabled
         topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received

@@ -1503,7 +1503,7 @@ en:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Forces users to enable second factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
+    enforce_second_factor: "Forces users to enable two-factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -2415,8 +2415,8 @@ en:
     auto_deleted_by_timer: "Automatically deleted by timer."
 
   login:
-    invalid_second_factor_method: "The selected second factor method is invalid."
-    not_enabled_second_factor_method: "The selected second factor method is not enabled for your account."
+    invalid_second_factor_method: "The selected two-factor method is invalid."
+    not_enabled_second_factor_method: "The selected two-factor method is not enabled for your account."
     security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
     security_key_alternative: "Try another way"
     security_key_authenticate: "Authenticate with Security Key"
@@ -2457,10 +2457,10 @@ en:
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
-    second_factor_title: "Two Factor Authentication"
+    second_factor_title: "Two-Factor Authentication"
     second_factor_description: "Please enter the required authentication code from your app:"
     second_factor_backup_description: "Please enter one of your backup codes:"
-    second_factor_backup_title: "Two Factor Backup Code"
+    second_factor_backup_title: "Two-Factor Backup Code"
     invalid_second_factor_code: "Invalid authentication code. Each code can only be used once."
     invalid_security_key: "Invalid security key."
     missing_second_factor_name: "Please provide a name."
@@ -3605,12 +3605,12 @@ en:
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
     account_second_factor_disabled:
-      title: "Two Factor Authentication disabled"
-      subject_template: "[%{email_prefix}] Two Factor Authentication disabled"
+      title: "Two-Factor Authentication disabled"
+      subject_template: "[%{email_prefix}] Two-Factor Authentication disabled"
       text_body_template: |
-        Two factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
+        Two-factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
 
-        If you did not choose to disable two factor authentication, someone may have compromised your account.
+        If you did not choose to disable two-factor authentication, someone may have compromised your account.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
