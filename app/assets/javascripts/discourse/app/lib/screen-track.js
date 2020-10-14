@@ -17,6 +17,7 @@ export default class {
     this.session = session;
     this.currentUser = currentUser;
     this.reset();
+    this._consolidatedTimings = [];
   }
 
   start(topicId, topicController) {
@@ -89,8 +90,6 @@ export default class {
   }
 
   consolidateTimings(timings, topicTime, topicId) {
-    this._consolidatedTimings = this._consolidatedTimings || [];
-
     let foundIndex = this._consolidatedTimings.findIndex(
       (elem) => elem.topicId === topicId
     );
@@ -122,7 +121,7 @@ export default class {
   }
 
   sendNextConsolidatedTiming() {
-    if (!this._consolidatedTimings || this._consolidatedTimings.length === 0) {
+    if (this._consolidatedTimings.length === 0) {
       return;
     }
 
