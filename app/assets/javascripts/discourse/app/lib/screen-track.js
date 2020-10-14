@@ -1,11 +1,15 @@
 import { ajax } from "discourse/lib/ajax";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
+import { Promise } from "rsvp";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
 const MAX_TRACKING_TIME = 1000 * 60 * 6;
 const ANON_MAX_TOPIC_IDS = 5;
+
+const AJAX_FAILURE_DELAYS = [5000, 10000, 20000, 40000];
+const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
 export default class {
   constructor(topicTrackingState, siteSettings, session, currentUser) {
@@ -85,6 +89,99 @@ export default class {
     this._anonCallback = cb;
   }
 
+  consolidateTimings(timings, topicTime, topicId) {
+    this._consolidatedTimings = this._consolidatedTimings || [];
+
+    let found = this._consolidatedTimings.find((elem) => elem[2] === topicId);
+
+    if (found) {
+      this._consolidatedTimings.removeObject(found);
+
+      const oldTimings = found[0];
+      Object.keys(oldTimings).forEach((id) => {
+        if (timings[id]) {
+          oldTimings[id] += timings[id];
+        }
+      });
+      found[1] += topicTime;
+      found[0] = Object.assign({}, timings, found[0]);
+    }
+
+    found = found || [timings, topicTime, topicId];
+    this._consolidatedTimings.unshift(found);
+
+    return this._consolidatedTimings;
+  }
+
+  sendNextConsolidatedTiming() {
+    if (!this._consolidatedTimings || this._consolidatedTimings.length === 0) {
+      return Promise.resolve();
+    }
+
+    if (this._inProgress) {
+      return Promise.resolve();
+    }
+
+    if (
+      this._blockSendingToServerTill &&
+      this._blockSendingToServerTill > Date.now()
+    ) {
+      return Promise.resolve();
+    }
+
+    this._ajaxFailures = this._ajaxFailures || 0;
+
+    const item = this._consolidatedTimings.shift();
+    const timings = item[0];
+    const topicTime = item[1];
+    const topicId = item[2];
+
+    this._inProgress = true;
+
+    return ajax("/topics/timings", {
+      data: {
+        timings: timings,
+        topic_time: topicTime,
+        topic_id: topicId,
+      },
+      cache: false,
+      type: "POST",
+      headers: {
+        "X-SILENCE-LOGGER": "true",
+        "Discourse-Background": "true",
+      },
+    })
+      .then(() => {
+        this._ajaxFailures = 0;
+        const topicController = this._topicController;
+        if (topicController) {
+          const postNumbers = Object.keys(timings).map((v) => parseInt(v, 10));
+          topicController.readPosts(topicId, postNumbers);
+        }
+      })
+      .catch((e) => {
+        if (ALLOWED_AJAX_FAILURES.indexOf(e.jqXHR.status) >= -1) {
+          const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
+          this._ajaxFailures += 1;
+
+          if (delay) {
+            this._blockSendingToServerTill = Date.now() + delay;
+            // we did not send to the server, got to re-queue it
+            this.consolidateTimings(timings, topicTime, topicId);
+          }
+        }
+        // TODO decide if we want to log this anywhere, at the moment we simply eat the
+        // errors and do not report anywhere (it may still show up on server logs though)
+        //
+        // User will be aware of this problem cause the blue dot will be "stuck" and they
+        // should notice that.
+      })
+      .finally(() => {
+        this._inProgress = false;
+        this._lastFlush = 0;
+      });
+  }
+
   flush() {
     const newTimings = {};
     const totalTimings = this._totalTimings;
@@ -140,42 +237,8 @@ export default class {
 
     if (!$.isEmptyObject(newTimings)) {
       if (this.currentUser && !isTesting()) {
-        this._inProgress = true;
-
-        ajax("/topics/timings", {
-          data: {
-            timings: newTimings,
-            topic_time: this._topicTime,
-            topic_id: topicId,
-          },
-          cache: false,
-          type: "POST",
-          headers: {
-            "X-SILENCE-LOGGER": "true",
-          },
-        })
-          .then(() => {
-            const topicController = this._topicController;
-            if (topicController) {
-              const postNumbers = Object.keys(newTimings).map((v) =>
-                parseInt(v, 10)
-              );
-              topicController.readPosts(topicId, postNumbers);
-            }
-          })
-          .catch((e) => {
-            const error = e.jqXHR;
-            if (
-              error.status === 405 &&
-              error.responseJSON.error_type === "read_only"
-            ) {
-              return;
-            }
-          })
-          .finally(() => {
-            this._inProgress = false;
-            this._lastFlush = 0;
-          });
+        this.consolidateTimings(newTimings, this._topicTime, topicId);
+        this.sendNextConsolidatedTiming();
       } else if (this._anonCallback) {
         // Anonymous viewer - save to localStorage
         const storage = this.keyValueStore;
@@ -238,6 +301,11 @@ export default class {
 
     if (!this._inProgress && (this._lastFlush > nextFlush || rush)) {
       this.flush();
+    }
+
+    if (!this._inProgress) {
+      // handles retries so there is no situation where we are stuck with a backlog
+      this.sendNextConsolidatedTiming();
     }
 
     if (this.session.hasFocus) {
