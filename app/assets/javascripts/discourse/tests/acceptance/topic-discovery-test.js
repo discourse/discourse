@@ -1,3 +1,4 @@
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";

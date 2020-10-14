@@ -50,7 +50,6 @@ export default function setupTests(App) {
 
   App.rootElement = "#ember-testing";
   App.setupForTesting();
-  App.injectTestHelpers();
   App.SiteSettings = currentSettings();
   App.start();
 

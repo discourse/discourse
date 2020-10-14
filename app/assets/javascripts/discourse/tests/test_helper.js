@@ -43,5 +43,6 @@
 //= require test-shims
 //= require jquery.magnific-popup.min.js
 
+Discourse.injectTestHelpers();
 let setupTests = require("discourse/tests/setup-tests").default;
 setupTests(window.Discourse);
