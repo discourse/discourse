@@ -330,6 +330,16 @@ describe GroupsController do
           end
         end
 
+        describe 'non automatic groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group)
+            expect_type_to_return_right_groups(
+              'non_automatic',
+              [group.id, group2.id]
+            )
+          end
+        end
+
         describe 'public groups' do
           it 'should return the right response' do
             group2 = Fabricate(:group, public_admission: true)

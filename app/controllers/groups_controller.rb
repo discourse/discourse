@@ -34,6 +34,9 @@ class GroupsController < ApplicationController
     },
     automatic: Proc.new { |groups|
       groups.where(automatic: true)
+    },
+    non_automatic: Proc.new { |groups|
+      groups.where(automatic: false)
     }
   }
   ADD_MEMBERS_LIMIT = 1000
