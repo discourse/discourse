@@ -450,12 +450,16 @@ describe ApplicationHelper do
   end
 
   describe "dark_color_scheme?" do
-    it 'returns nil for the base color scheme' do
+    it 'returns false for the base color scheme' do
       expect(helper.dark_color_scheme?).to eq(false)
     end
 
     it 'works correctly for a dark scheme' do
-      dark_theme = Theme.where(name: "Dark").first
+      dark_theme = Theme.create(
+        name: "Dark",
+        user_id: -1,
+        color_scheme_id: ColorScheme.find_by(base_scheme_id: "Dark").id
+      )
       helper.request.env[:resolved_theme_ids] = [dark_theme.id]
 
       expect(helper.dark_color_scheme?).to eq(true)

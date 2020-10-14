@@ -204,6 +204,13 @@ describe Wizard::StepUpdater do
           wizard.create_updater('colors', {}).update
         end.to_not change { SiteSetting.default_theme_id }
       end
+
+      it "should update the color scheme of the default theme" do
+        updater = wizard.create_updater('colors', theme_previews: 'Neutral')
+        expect { updater.update }.not_to change { Theme.count }
+        theme.reload
+        expect(theme.color_scheme.base_scheme_id).to eq('Neutral')
+      end
     end
 
     context "without an existing theme" do
@@ -257,8 +264,6 @@ describe Wizard::StepUpdater do
 
         theme = Theme.find_by(id: SiteSetting.default_theme_id)
         expect(theme.color_scheme_id).to eq(color_scheme.id)
-
-        expect(Theme.where(user_selectable: true).count).to eq(2)
       end
     end
   end
