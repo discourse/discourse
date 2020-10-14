@@ -33,6 +33,10 @@ down:
 bash:
 	docker exec -it discourse_dev bash
 
+update_discourse:
+	git fetch upstream
+	git merge upstream/master
+
 #####################################
 ############ Database ###############
 #####################################
