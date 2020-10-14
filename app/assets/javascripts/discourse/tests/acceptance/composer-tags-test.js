@@ -1,3 +1,4 @@
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Category from "discourse/models/category";
 import {

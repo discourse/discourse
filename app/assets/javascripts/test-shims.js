@@ -20,6 +20,9 @@ define("ember-qunit", () => {
 define("@ember/test-helpers", () => {
   return {
     setResolver: window.setResolver,
+    visit() {
+      return window.visit(...arguments);
+    },
   };
 });
 define("pretender", () => {

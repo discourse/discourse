@@ -1,3 +1,4 @@
+import { visit } from "@ember/test-helpers";
 import { skip } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Search Log Term", { loggedIn: true });
