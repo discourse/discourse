@@ -97,14 +97,18 @@ export default createWidget("link", {
         );
       }
     }
-
     return result;
   },
 
   click(e) {
+    if (this.attrs.attributes && this.attrs.attributes.target === "_blank") {
+      return;
+    }
+
     if (wantsNewWindow(e)) {
       return;
     }
+
     e.preventDefault();
 
     if (this.attrs.action) {
