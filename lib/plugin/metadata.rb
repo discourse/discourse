@@ -46,7 +46,7 @@ class Plugin::Metadata
     "discourse-no-bump",
     "discourse-oauth2-basic",
     "discourse-patreon",
-    "discourse-perspective",
+    "discourse-perspective-api",
     "discourse-plugin-discord-auth",
     "discourse-plugin-linkedin-auth",
     "discourse-plugin-office365-auth",
