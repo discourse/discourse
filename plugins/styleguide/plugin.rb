@@ -16,6 +16,6 @@ end
 
 after_initialize do
   register_asset_filter do |type, request|
-    request.fullpath && request.fullpath.start_with?('/styleguide')
+    request&.fullpath&.start_with?('/styleguide')
   end
 end
