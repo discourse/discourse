@@ -2154,7 +2154,7 @@ en:
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
-    review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if it contains embedded media."
+    review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if they contain embedded media."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
     show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
 
