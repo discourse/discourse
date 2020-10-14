@@ -13,3 +13,9 @@ load File.expand_path('../lib/styleguide/engine.rb', __FILE__)
 Discourse::Application.routes.append do
   mount ::Styleguide::Engine, at: '/styleguide'
 end
+
+after_initialize do
+  register_asset_filter do |type, request|
+    request&.fullpath&.start_with?('/styleguide')
+  end
+end
