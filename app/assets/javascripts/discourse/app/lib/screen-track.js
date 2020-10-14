@@ -174,11 +174,12 @@ export default class {
             this.consolidateTimings(timings, topicTime, topicId);
           }
         }
-        // TODO decide if we want to log this anywhere, at the moment we simply eat the
-        // errors and do not report anywhere (it may still show up on server logs though)
-        //
-        // User will be aware of this problem cause the blue dot will be "stuck" and they
-        // should notice that.
+
+        if (window.console && window.console.warn) {
+          window.console.warn(
+            `Failed to update topic times for topic ${topicId} due to ${e.jqXHR.status} error`
+          );
+        }
       })
       .finally(() => {
         this._inProgress = false;
