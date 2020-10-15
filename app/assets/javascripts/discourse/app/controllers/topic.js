@@ -68,6 +68,31 @@ export default Controller.extend(bufferedProperty("model"), {
   filter: null,
   quoteState: null,
 
+  init() {
+    this._super(...arguments);
+
+    this._retryInProgress = false;
+    this._retryRateLimited = false;
+    this._newPostsInStream = [];
+
+    this.appEvents.on("post:show-revision", this, "_showRevision");
+    this.appEvents.on("post:created", this, () => {
+      this._removeDeleteOnOwnerReplyBookmarks();
+      this.appEvents.trigger("post-stream:refresh", { force: true });
+    });
+
+    this.setProperties({
+      selectedPostIds: [],
+      quoteState: new QuoteState(),
+    });
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    this.appEvents.off("post:show-revision", this, "_showRevision");
+  },
+
   canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
     "buffered.featured_link"
@@ -113,27 +138,6 @@ export default Controller.extend(bufferedProperty("model"), {
   @discourseComputed("model")
   pmPath(topic) {
     return this.currentUser && this.currentUser.pmPath(topic);
-  },
-
-  init() {
-    this._super(...arguments);
-
-    this.appEvents.on("post:show-revision", this, "_showRevision");
-    this.appEvents.on("post:created", this, () => {
-      this._removeDeleteOnOwnerReplyBookmarks();
-      this.appEvents.trigger("post-stream:refresh", { force: true });
-    });
-
-    this.setProperties({
-      selectedPostIds: [],
-      quoteState: new QuoteState(),
-    });
-  },
-
-  willDestroy() {
-    this._super(...arguments);
-
-    this.appEvents.off("post:show-revision", this, "_showRevision");
   },
 
   _showRevision(postNumber, revision) {
@@ -1302,32 +1306,45 @@ export default Controller.extend(bufferedProperty("model"), {
       return;
     }
 
-    if (this.retryRateLimited || times <= 0) {
+    if (this._retryRateLimited || times <= 0) {
       return;
     }
 
-    promise().catch((e) => {
-      const xhr = e.jqXHR;
-      if (
-        xhr &&
-        xhr.status === 429 &&
-        xhr.responseJSON &&
-        xhr.responseJSON.extras &&
-        xhr.responseJSON.extras.wait_seconds
-      ) {
-        let waitSeconds = xhr.responseJSON.extras.wait_seconds;
-        if (waitSeconds < 5) {
-          waitSeconds = 5;
+    if (this._retryInProgress) {
+      later(() => {
+        this.retryOnRateLimit(times, promise, topicId);
+      }, 100);
+      return;
+    }
+
+    this._retryInProgress = true;
+
+    promise()
+      .catch((e) => {
+        const xhr = e.jqXHR;
+        if (
+          xhr &&
+          xhr.status === 429 &&
+          xhr.responseJSON &&
+          xhr.responseJSON.extras &&
+          xhr.responseJSON.extras.wait_seconds
+        ) {
+          let waitSeconds = xhr.responseJSON.extras.wait_seconds;
+          if (waitSeconds < 5) {
+            waitSeconds = 5;
+          }
+
+          this._retryRateLimited = true;
+
+          later(() => {
+            this._retryRateLimited = false;
+            this.retryOnRateLimit(times - 1, promise, topicId);
+          }, waitSeconds * 1000);
         }
-
-        this.retryRateLimited = true;
-
-        later(() => {
-          this.retryRateLimited = false;
-          this.retryOnRateLimit(times - 1, promise, topicId);
-        }, waitSeconds * 1000);
-      }
-    });
+      })
+      .finally(() => {
+        this._retryInProgress = false;
+      });
   },
 
   subscribe() {
@@ -1401,18 +1418,19 @@ export default Controller.extend(bufferedProperty("model"), {
             break;
           }
           case "created": {
-            this.newPostsInStream = this.newPostsInStream || [];
-            this.newPostsInStream.push(data.id);
+            this._newPostsInStream.push(data.id);
 
             this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
-              const postIds = this.newPostsInStream;
-              this.newPostsInStream = [];
+              const postIds = this._newPostsInStream;
+              this._newPostsInStream = [];
 
               return postStream
                 .triggerNewPostsInStream(postIds, { background: true })
                 .then(() => refresh())
                 .catch((e) => {
-                  this.newPostsInStream = postIds.concat(this.newPostsInStream);
+                  this._newPostsInStream = postIds.concat(
+                    this._newPostsInStream
+                  );
                   throw e;
                 });
             });
