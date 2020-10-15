@@ -1,0 +1,17 @@
+<div class="d-color-picker">
+  <span class="hex">#</span>
+
+  {{input
+    value=(readonly @color)
+    class="color-value"
+    type="search"
+    input=(action "onPickColor" value="target.value")
+  }}
+
+  {{input
+    type="color"
+    value=(readonly this.colorPickerValue)
+    class="color-picker"
+    input=(action "onPickColor" value="target.value")
+  }}
+</div>

@@ -1,0 +1,36 @@
+.d-color-picker {
+  display: inline-flex;
+  border: 1px solid var(--primary-medium);
+  padding: 0 0.25em 0 0.5em;
+  align-items: center;
+
+  &:focus {
+    border-color: red;
+  }
+
+  .color-value,
+  .color-picker {
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  .color-picker {
+    width: 40px;
+    cursor: pointer;
+  }
+
+  .color-value {
+    width: 80px;
+  }
+
+  .hex {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
+}
