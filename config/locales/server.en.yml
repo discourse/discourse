@@ -1672,9 +1672,9 @@ en:
     facebook_app_id: "App id for Facebook authentication and sharing, registered at <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App secret for Facebook authentication, registered at <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
 
-    enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret. See <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
-    github_client_id: "Client id for Github authentication, registered at <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Client secret for Github authentication, registered at <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    enable_github_logins: "Enable GitHub authentication, requires github_client_id and github_client_secret. See <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
+    github_client_id: "Client id for GitHub authentication, registered at <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Client secret for GitHub authentication, registered at <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
 
     enable_discord_logins: "Allow users to authenticate using Discord?"
     discord_client_id: 'Discord Client ID (need one? visit <a href="https://discordapp.com/developers/applications/me">the Discord developer portal</a>)'

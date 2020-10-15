@@ -963,7 +963,7 @@ en:
       suspended_notice: "This user is suspended until %{date}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
-      github_profile: "Github"
+      github_profile: "GitHub"
       email_activity_summary: "Activity Summary"
       mailing_list_mode:
         label: "Mailing list mode"
