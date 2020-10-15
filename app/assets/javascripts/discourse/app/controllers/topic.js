@@ -67,6 +67,8 @@ export default Controller.extend(bufferedProperty("model"), {
   username_filters: null,
   filter: null,
   quoteState: null,
+  _retryRateLimited: false,
+  _newPostsInStream: [],
 
   canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
@@ -1302,7 +1304,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return;
     }
 
-    if (this.retryRateLimited || times <= 0) {
+    if (this._retryRateLimited || times <= 0) {
       return;
     }
 
@@ -1320,10 +1322,10 @@ export default Controller.extend(bufferedProperty("model"), {
           waitSeconds = 5;
         }
 
-        this.retryRateLimited = true;
+        this._retryRateLimited = true;
 
         later(() => {
-          this.retryRateLimited = false;
+          this._retryRateLimited = false;
           this.retryOnRateLimit(times - 1, promise, topicId);
         }, waitSeconds * 1000);
       }
@@ -1401,18 +1403,19 @@ export default Controller.extend(bufferedProperty("model"), {
             break;
           }
           case "created": {
-            this.newPostsInStream = this.newPostsInStream || [];
-            this.newPostsInStream.push(data.id);
+            this._newPostsInStream.push(data.id);
 
             this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
-              const postIds = this.newPostsInStream;
-              this.newPostsInStream = [];
+              const postIds = this._newPostsInStream;
+              this._newPostsInStream = [];
 
               return postStream
                 .triggerNewPostsInStream(postIds, { background: true })
                 .then(() => refresh())
                 .catch((e) => {
-                  this.newPostsInStream = postIds.concat(this.newPostsInStream);
+                  this._newPostsInStream = postIds.concat(
+                    this._newPostsInStream
+                  );
                   throw e;
                 });
             });
