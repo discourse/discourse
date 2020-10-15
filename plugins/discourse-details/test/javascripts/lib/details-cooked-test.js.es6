@@ -1,6 +1,6 @@
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 
-QUnit.module("lib:details-cooked-test");
+module("lib:details-cooked-test");
 
 const defaultOpts = buildOptions({
   siteSettings: {

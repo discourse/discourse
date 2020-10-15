@@ -97,6 +97,8 @@ fr:
           step: Pas
         poll_public:
           label: Afficher les votants
+        poll_title:
+          label: Titre (facultatif)
         poll_options:
           label: Entrez une option de sondage par ligne
         automatic_close:

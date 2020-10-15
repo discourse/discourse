@@ -193,7 +193,9 @@ RSpec.describe UploadCreator do
       let(:opts) { { type: "composer" } }
 
       before do
-        enable_s3_uploads
+        setup_s3
+        stub_s3_store
+
         SiteSetting.secure_media = true
         SiteSetting.authorized_extensions = 'pdf|svg|jpg'
       end
@@ -221,7 +223,8 @@ RSpec.describe UploadCreator do
       let(:opts) { { type: "composer" } }
 
       before do
-        enable_s3_uploads
+        setup_s3
+        stub_s3_store
       end
 
       it 'should store the file and return etag' do
@@ -280,7 +283,9 @@ RSpec.describe UploadCreator do
 
       context "when SiteSetting.secure_media is enabled" do
         before do
-          enable_s3_uploads
+          setup_s3
+          stub_s3_store
+
           SiteSetting.secure_media = true
         end
 
@@ -298,7 +303,9 @@ RSpec.describe UploadCreator do
 
       context "when SiteSetting.secure_media enabled" do
         before do
-          enable_s3_uploads
+          setup_s3
+          stub_s3_store
+
           SiteSetting.secure_media = true
         end
 
@@ -433,19 +440,5 @@ RSpec.describe UploadCreator do
         file.unlink
       end
     end
-  end
-
-  def enable_s3_uploads
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "s3-access-key-id"
-    SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-    SiteSetting.s3_region = 'us-west-1'
-    SiteSetting.enable_s3_uploads = true
-
-    store = FileStore::S3Store.new
-    s3_helper = store.instance_variable_get(:@s3_helper)
-    client = Aws::S3::Client.new(stub_responses: true)
-    s3_helper.stubs(:s3_client).returns(client)
-    Discourse.stubs(:store).returns(store)
   end
 end

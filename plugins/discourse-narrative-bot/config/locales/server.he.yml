@@ -27,7 +27,9 @@ he:
   discourse_narrative_bot:
     bio: "היי, אני לא בן אדם אמיתי. אני בוט שיכול ללמד אותך על האתר הזה. כדי לתקשר איתי, יש לשלוח אלי הודעה או לאזכר את **‎`@%{discobot_username}`** בכל מקום שהוא."
     tl2_promotion_message:
-      subject_template: "ברכותינו על התקדמותך בסולם דרגות האמון!"
+      subject_template: "עכשיו מכשקודמת, הגיע הזמן ללמוד על כמה מהתכונות המתקדמות!"
+      text_body_template: |
+        יש להגיב להודעה הזאת עם `‎@%{discobot_username} %{reset_trigger}` כדי ללמוד עוד על מה שניתן לעשות.
     timeout:
       message: |-
         היי @%{username}, מוודא מה אתך כי לא שמעתי ממך זמן מה.
@@ -145,7 +147,6 @@ he:
       reset_trigger: "מדריך"
       title: "תעודת השלמת הדרכה למשתמשים חדשים"
       cert_title: "כהוקרה על סיום מוצלח של מדריך המשתמשים החדשים"
-      delete_reason: "המשתמש דילג על עצות המשתמשים החדשים"
       hello:
         title: "ברכות!"
         message: |-

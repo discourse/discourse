@@ -1028,7 +1028,6 @@ da:
     faq_url: "Hvis du hoster en FAQ et andet sted kan du indtaste den fulde URL her."
     tos_url: "Hvis du hoster dine forretningsbetingelser et andet sted kan du indtaste den fulde URL her."
     privacy_policy_url: "Hvis du hoster din privatlivspolitik et andet sted kan du indtaste den fulde URL her."
-    staff_like_weight: "Hvor meget ekstra vægt har hjælperteamets likes."
     max_new_accounts_per_registration_ip: "Hvis der allerede er (n) kontoer med tillidsniveau 0 fra en IP (og ingen er en del af hjælperteamet eller på TL2 eller højere), så accepteres nye kontooprettelser fra denne IP ikke."
     num_flaggers_to_close_topic: "Minimum antal flagmarkeringer fra unikke brugere, der skal til for automatisk at pause et emne til ingriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en flagmarkering fjernes."
@@ -1057,7 +1056,6 @@ da:
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
-    default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
@@ -1751,8 +1749,6 @@ da:
         title: "Organisation"
       colors:
         title: "Tema"
-      themes_further_reading:
-        title: "Temaer"
       logos:
         title: "Logoer"
         fields:

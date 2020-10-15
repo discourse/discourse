@@ -10,12 +10,12 @@ describe SelectableAvatarsEnabledValidator do
       SiteSetting.selectable_avatars = ""
       expect(validator.valid_value?("f")).to eq(true)
 
-      SiteSetting.selectable_avatars = [Fabricate(:image_upload).url, Fabricate(:image_upload).url].join("\n")
+      SiteSetting.selectable_avatars = [Fabricate(:image_upload), Fabricate(:image_upload)]
       expect(validator.valid_value?("f")).to eq(true)
     end
 
     it "returns true when there are at least two selectable avatars" do
-      SiteSetting.selectable_avatars = [Fabricate(:image_upload).url, Fabricate(:image_upload).url].join("\n")
+      SiteSetting.selectable_avatars = [Fabricate(:image_upload), Fabricate(:image_upload)]
       expect(validator.valid_value?("t")).to eq(true)
     end
 
@@ -23,7 +23,7 @@ describe SelectableAvatarsEnabledValidator do
       SiteSetting.selectable_avatars = ""
       expect(validator.valid_value?("t")).to eq(false)
 
-      SiteSetting.selectable_avatars = Fabricate(:image_upload).url
+      SiteSetting.selectable_avatars = [Fabricate(:image_upload)]
       expect(validator.valid_value?("t")).to eq(false)
     end
   end

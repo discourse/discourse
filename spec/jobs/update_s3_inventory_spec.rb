@@ -5,9 +5,8 @@ require "file_store/s3_store"
 
 describe Jobs::UpdateS3Inventory do
   before do
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_access_key_id = "abc"
-    SiteSetting.s3_secret_access_key = "def"
+    setup_s3
+    SiteSetting.s3_upload_bucket = "special-bucket"
     SiteSetting.enable_s3_inventory = true
 
     store = FileStore::S3Store.new
@@ -21,17 +20,17 @@ describe Jobs::UpdateS3Inventory do
     path = File.join(S3Inventory::INVENTORY_PREFIX, S3Inventory::INVENTORY_VERSION)
 
     @client.expects(:put_bucket_policy).with(
-      bucket: "bucket",
-      policy: %Q|{"Version":"2012-10-17","Statement":[{"Sid":"InventoryAndAnalyticsPolicy","Effect":"Allow","Principal":{"Service":"s3.amazonaws.com"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::bucket/#{path}/*"],"Condition":{"ArnLike":{"aws:SourceArn":"arn:aws:s3:::bucket"},"StringEquals":{"s3:x-amz-acl":"bucket-owner-full-control"}}}]}|
+      bucket: "special-bucket",
+      policy: %Q|{"Version":"2012-10-17","Statement":[{"Sid":"InventoryAndAnalyticsPolicy","Effect":"Allow","Principal":{"Service":"s3.amazonaws.com"},"Action":["s3:PutObject"],"Resource":["arn:aws:s3:::special-bucket/#{path}/*"],"Condition":{"ArnLike":{"aws:SourceArn":"arn:aws:s3:::special-bucket"},"StringEquals":{"s3:x-amz-acl":"bucket-owner-full-control"}}}]}|
     )
     @client.expects(:put_bucket_inventory_configuration)
     @client.expects(:put_bucket_inventory_configuration).with(
-      bucket: "bucket",
+      bucket: "special-bucket",
       id: id,
       inventory_configuration: {
         destination: {
           s3_bucket_destination: {
-            bucket: "arn:aws:s3:::bucket",
+            bucket: "arn:aws:s3:::special-bucket",
             prefix: path,
             format: "CSV"
           }

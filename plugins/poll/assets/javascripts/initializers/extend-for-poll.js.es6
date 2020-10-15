@@ -88,11 +88,14 @@ function initializePolls(api) {
       }
 
       if (poll) {
+        const titleElement = pollElem.querySelector(".poll-title");
+
         const attrs = {
           id: `${pollName}-${pollPost.id}`,
           post: pollPost,
           poll,
           vote,
+          titleHTML: titleElement && titleElement.outerHTML,
           groupableUserFields: (
             api.container.lookup("site-settings:main")
               .poll_groupable_user_fields || ""

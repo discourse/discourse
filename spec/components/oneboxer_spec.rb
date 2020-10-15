@@ -69,7 +69,7 @@ describe Oneboxer do
       expect(onebox).to include(%{data-post="2"})
       expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
 
-      short_url = "#{Discourse.base_uri}/t/#{public_topic.id}"
+      short_url = "#{Discourse.base_path}/t/#{public_topic.id}"
       expect(preview(short_url, user, public_category)).to include(public_topic.title)
 
       onebox = preview(public_moderator_action.url, user, public_category)

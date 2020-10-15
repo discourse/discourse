@@ -946,7 +946,6 @@ sq:
       accept_invite: "Prano ftesën"
       success: "Llogaria juaj u krijua dhe ju tani mund të identifikoheni."
       name_label: "Emri"
-      password_label: "Vendos Fjalëkalim"
     password_reset:
       continue: "Vazhdo tek %{site_name}"
     emoji_set:
@@ -1139,7 +1138,6 @@ sq:
         new: "Nuk ka tema të reja."
         read: "Nuk keni lexuar asnjë temë deri tani."
         posted: "Nuk keni shkruajtur tek asnjë temë deri tani."
-        latest: "Nuk ka tema të fundit. Oh sa keq."
         bookmarks: "Nuk keni ende tema të preferuara. "
         category: "Nuk ka tema në: %{category}."
         top: "Nuk ka tema popullore."
@@ -1213,7 +1211,6 @@ sq:
       read_more_MF: "Keni { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 shkrim të palexuar</a> } other { <a href='{basePath}/unread'># shkrime të palexuara</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{dhe } false {është } other{}} <a href='{basePath}/new'>1 shkrim të ri</a>} other { {BOTH, select, true{dhe } false {} other{}} <a href='{basePath}/new'># shkrime të reja</a>} } akoma, ose {CATEGORY, select, true {shiko temat e tjera në kategorinë {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Shfleto kategoritë
       view_latest_topics: shiko temat më të fundit
-      suggest_create_topic: Pse nuk hapni një temë të re?
       jump_reply_up: hidhe tek përgjigja paraardhëse
       jump_reply_down: hidhu tek përgjigja pasardhëse
       deleted: "Tema është fshirë"

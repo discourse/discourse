@@ -163,6 +163,16 @@
           min-width: unset;
         }
       }
+
+      .count-group {
+        .count {
+          width: 45%;
+        }
+        .count-dash {
+          padding-left: 6px;
+          vertical-align: middle;
+        }
+      }
     }
   }
 }

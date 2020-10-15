@@ -166,10 +166,8 @@ describe TopicLinkClick do
         context "s3 cdns" do
 
           it "works with s3 urls" do
+            setup_s3
             SiteSetting.s3_cdn_url = "https://discourse-s3-cdn.global.ssl.fastly.net"
-            SiteSetting.s3_access_key_id = 'X'
-            SiteSetting.s3_secret_access_key = 'X'
-            SiteSetting.enable_s3_uploads = true
 
             post = Fabricate(:post, topic: @topic, raw: "[test](//test.localhost/uploads/default/my-test-link)")
             TopicLink.extract_from(post)

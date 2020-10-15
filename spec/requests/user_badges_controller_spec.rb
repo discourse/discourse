@@ -44,13 +44,6 @@ describe UserBadgesController do
       expect(parsed["user_badges"].length).to eq(1)
     end
 
-    it "returns 404 if `hide_profile_and_presence` user option is checked" do
-      user.user_option.update_columns(hide_profile_and_presence: true)
-
-      get "/user-badges/#{user.username}.json"
-      expect(response.status).to eq(404)
-    end
-
     it 'returns user_badges for a user with period in username' do
       user.update!(username: "myname.test")
       get "/user-badges/#{user.username}", xhr: true
@@ -76,6 +69,24 @@ describe UserBadgesController do
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["user_badges"].first.has_key?('count')).to eq(true)
+    end
+
+    context 'hidden profiles' do
+      before do
+        user.user_option.update_columns(hide_profile_and_presence: true)
+      end
+
+      it "returns 404 if `hide_profile_and_presence` user option is checked" do
+        get "/user-badges/#{user.username}.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns user_badges if `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+
+        get "/user-badges/#{user.username}.json"
+        expect(response.status).to eq(200)
+      end
     end
   end
 

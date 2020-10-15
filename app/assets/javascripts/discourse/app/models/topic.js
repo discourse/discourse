@@ -24,6 +24,7 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
+import { resolveShareUrl } from "discourse/helpers/share-url";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -242,8 +243,7 @@ const Topic = RestModel.extend({
   @discourseComputed("url")
   shareUrl(url) {
     const user = User.current();
-    const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
-    return `${url}${userQueryString}`;
+    return resolveShareUrl(url, user);
   },
 
   printUrl: fmt("url", "%@/print"),
@@ -799,18 +799,21 @@ Topic.reopenClass({
     return promise;
   },
 
-  bulkOperation(topics, operation) {
+  bulkOperation(topics, operation, tracked) {
+    const data = {
+      topic_ids: topics.mapBy("id"),
+      operation,
+      tracked,
+    };
+
     return ajax("/topics/bulk", {
       type: "PUT",
-      data: {
-        topic_ids: topics.map((t) => t.get("id")),
-        operation,
-      },
+      data,
     });
   },
 
-  bulkOperationByFilter(filter, operation, options) {
-    let data = { filter, operation };
+  bulkOperationByFilter(filter, operation, options, tracked) {
+    const data = { filter, operation, tracked };
 
     if (options) {
       if (options.categoryId) {
@@ -830,10 +833,12 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories) {
-    const data = category
-      ? { category_id: category.id, include_subcategories }
-      : {};
+  resetNew(category, include_subcategories, tracked = false) {
+    const data = { tracked };
+    if (category) {
+      data.category_id = category.id;
+      data.include_subcategories = include_subcategories;
+    }
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 

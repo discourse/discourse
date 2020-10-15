@@ -1083,11 +1083,17 @@ describe PostsController do
         user_2 = Fabricate(:user)
         user_3 = Fabricate(:user, username: "foo_bar")
 
+        # In certain edge cases, it's possible to end up with a username
+        # containing characters that would normally fail to validate
+        user_4 = Fabricate(:user, username: "Iyi_Iyi")
+        user_4.update_attribute(:username, "İyi_İyi")
+        user_4.update_attribute(:username_lower, "İyi_İyi".downcase)
+
         post "/posts.json", params: {
           raw: 'this is the test content',
           archetype: 'private_message',
           title: "this is some post",
-          target_recipients: "#{user_2.username},Foo_Bar"
+          target_recipients: "#{user_2.username},Foo_Bar,İyi_İyi"
         }
 
         expect(response.status).to eq(200)
@@ -1097,7 +1103,7 @@ describe PostsController do
 
         expect(new_post.user).to eq(user)
         expect(new_topic.private_message?).to eq(true)
-        expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3)
+        expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3, user_4)
       end
 
       context "when target_recipients not provided" do
@@ -1745,6 +1751,17 @@ describe PostsController do
 
       get "/u/#{user.username}/activity.json"
       expect(response.status).to eq(404)
+    end
+
+    it "succeeds when `allow_users_to_hide_profile` is false" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+      SiteSetting.allow_users_to_hide_profile = false
+
+      get "/u/#{user.username}/activity.rss"
+      expect(response.status).to eq(200)
+
+      get "/u/#{user.username}/activity.json"
+      expect(response.status).to eq(200)
     end
   end
 

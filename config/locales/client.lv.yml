@@ -1062,7 +1062,6 @@ lv:
       accept_invite: "Pieņemt ielūgumu"
       success: "Jūsu konts ir izveidots un jūs esat ielogojies "
       name_label: "Vārds"
-      password_label: "Iestatīt paroli"
       optional_description: "(pēc izvēles)"
     password_reset:
       continue: "Turpināt %{site_name}"
@@ -1254,8 +1253,6 @@ lv:
           noreplies: ir bez atbildēm
           single_user: ir rakstījis tikai viens lietotājs
         post:
-          count:
-            label: Minimālais ierakstu skaits
           time:
             label: Ierakstīts
             before: līdz
@@ -1301,7 +1298,6 @@ lv:
         new: "Jums nav jaunu tēmu."
         read: "Jūs vēl neesat izlasījuši nevienu tēmu."
         posted: "Jūs vel neesat rakstījuši nevienā tēmā."
-        latest: "Nav jaunu tēmu. Neraža."
         bookmarks: "Jūs vēl neesat pievienojuši grāmatzīmēm nevienu tēmu."
         category: "Sadaļā %{category} nav tēmu."
         top: "Nav svarīgu tēmu."
@@ -1382,7 +1378,6 @@ lv:
       read_more_MF: "{ UNREAD, plural, =0 {} one { Palikusi <a href='{basePath}/unread'>1 nelasīta</a> } other { Palikušas <a href='{basePath}/unread'># nelasītas</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 jauna</a> tēma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># jaunas</a> tēmas} } remaining, or {CATEGORY, select, true {pārlūkot citas tēmas iekš {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pārlūkot visas sadaļas
       view_latest_topics: Skatīt jaunākās tēmas
-      suggest_create_topic: Kādēļ gan neizveidot jaunu tēmu?
       jump_reply_up: pāriet uz agrāku atbildi
       jump_reply_down: pāriet uz vēlāku atbildi
       deleted: "Tēma ir dzēsta "

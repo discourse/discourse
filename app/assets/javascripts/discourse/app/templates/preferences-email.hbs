@@ -11,13 +11,7 @@
       <div class="control-group">
         <div class="controls">
           <div class="instructions">
-            <p>
-              {{#if model.staff}}
-                {{i18n "user.change_email.success_staff"}}
-              {{else}}
-                {{i18n "user.change_email.success"}}
-              {{/if}}
-            </p>
+            <p>{{ successMessage }}</p>
           </div>
         </div>
       </div>

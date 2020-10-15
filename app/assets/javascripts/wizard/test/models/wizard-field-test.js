@@ -1,3 +1,5 @@
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 import WizardField from "wizard/models/wizard-field";
 
 moduleFor("model:wizard-field");

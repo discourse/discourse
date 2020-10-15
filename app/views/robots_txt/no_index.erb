@@ -5,9 +5,9 @@
 # we return the X-Robots-Tag with noindex, nofollow which will ensure
 # indexing is minimized and nothing shows up in Google search results
 User-agent: googlebot
-Allow: <%= Discourse.base_uri + "/" %>
-Disallow: <%= Discourse.base_uri + "/uploads/*" %>
+Allow: <%= Discourse.base_path + "/" %>
+Disallow: <%= Discourse.base_path + "/uploads/*" %>
 
 User-agent: *
-Disallow: <%= Discourse.base_uri + "/" %>
+Disallow: <%= Discourse.base_path + "/" %>
 

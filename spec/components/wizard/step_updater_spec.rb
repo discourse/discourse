@@ -168,12 +168,13 @@ describe Wizard::StepUpdater do
   end
 
   context "fonts step" do
-    it "updates the font" do
-      updater = wizard.create_updater('fonts', font_previews: 'open_sans')
+    it "updates fonts" do
+      updater = wizard.create_updater('fonts', body_font: 'open_sans', heading_font: 'oswald')
       updater.update
       expect(updater.success?).to eq(true)
       expect(wizard.completed_steps?('fonts')).to eq(true)
       expect(SiteSetting.base_font).to eq('open_sans')
+      expect(SiteSetting.heading_font).to eq('oswald')
     end
   end
 
@@ -202,6 +203,13 @@ describe Wizard::StepUpdater do
         expect do
           wizard.create_updater('colors', {}).update
         end.to_not change { SiteSetting.default_theme_id }
+      end
+
+      it "should update the color scheme of the default theme" do
+        updater = wizard.create_updater('colors', theme_previews: 'Neutral')
+        expect { updater.update }.not_to change { Theme.count }
+        theme.reload
+        expect(theme.color_scheme.base_scheme_id).to eq('Neutral')
       end
     end
 
@@ -256,8 +264,6 @@ describe Wizard::StepUpdater do
 
         theme = Theme.find_by(id: SiteSetting.default_theme_id)
         expect(theme.color_scheme_id).to eq(color_scheme.id)
-
-        expect(Theme.where(user_selectable: true).count).to eq(2)
       end
     end
   end

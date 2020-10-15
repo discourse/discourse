@@ -188,12 +188,16 @@ export default class LocalDateBuilder {
         );
 
       if (inCalendarRange && sameTimezone) {
-        return localDate
-          .datetimeWithZone(this.localTimezone)
-          .calendar(
-            moment.tz(localDate.timezone),
-            this._calendarFormats(this.time ? this.time : null)
-          );
+        const date = localDate.datetimeWithZone(this.localTimezone);
+
+        if (date.hours() === 0 && date.minutes() === 0) {
+          return date.format("dddd");
+        }
+
+        return date.calendar(
+          moment.tz(localDate.timezone),
+          this._calendarFormats(this.time ? this.time : null)
+        );
       }
     }
 

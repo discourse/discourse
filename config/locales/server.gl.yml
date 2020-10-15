@@ -439,14 +439,6 @@ gl:
       Parece claro que este tema che importa &ndash; publicaches máis do %{percent}% das respostas.
 
       Aínda podería ser mellor se lles deses espazo a outras persoas para compartiren o seu punto de vista. Que tal se as convidas?
-    get_a_room: |
-      ### Anima a máis xente a participar na conversa
-
-      Neste tema en concreto respondícheslle %{count} veces a @%{reply_username}!
-
-      Unha discusión é boa cando involucra moitas voces e perspectivas. Que tal se involucras a alguén máis?
-
-      E non esquezas que se queres continuar a conversa con este usuario en particular e en privado, [podes enviarlle unha mensaxe privada](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Alcanzaches o límite de respostas para este tema.
 
@@ -1675,7 +1667,6 @@ gl:
     privacy_policy_url: "Se tes un documento coa política de privacidade aloxado en calquera outro sitio e queres usalo, insire aquí o seu URL completo."
     log_anonymizer_details: "Manter ou non os detalles dun usuario no rexistro despois de seren anonimizados. Para cumprir co RXPD, deberás desactivalo."
     newuser_spam_host_threshold: "Número de veces que un novo usuario pode publicar unha ligazón ao mesmo dominio dentro de `newuser_spam_host_threshold` das súas publicacións antes de ser considerado lixo."
-    staff_like_weight: "Factor de peso adicional que outorgan os gústames dados polos membros do equipo."
     topic_view_duration_hours: "Contar unha visita a un novo tema por IP/usuario cada N horas"
     user_profile_view_duration_hours: "Contar unha visita de perfil por IP/usuario cada N horas"
     levenshtein_distance_spammer_emails: "Ao revisar coincidencias en correos electrónicos de remitentes non desexados, número de caracteres diferentes que permiten una coincidencia parcial."
@@ -2934,10 +2925,6 @@ gl:
     confirm_new_email:
       title: "Confirmar novo correo electrónico"
       subject_template: "[%{email_prefix}] Confirma o teu novo enderezo de correo electrónico"
-      text_body_template: |
-        Confirma o teu novo enderezo de correo electrónico para %{site_name} premendo na seguinte ligazón:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Confirmar o correo electrónico antigo"
       subject_template: "[%{email_prefix}] Confirma o teu enderezo de correo electrónico actual"
@@ -3486,8 +3473,6 @@ gl:
             placeholder: "Lei de California"
       colors:
         title: "Tema"
-      themes_further_reading:
-        title: "Temas"
       logos:
         title: "Logotipos"
         fields:
@@ -3534,9 +3519,6 @@ gl:
         disabled: "Como os inicios de sesión locais están desactivados, non é posible enviar invitacións a ninguén. Vai ao seguinte paso."
       finished:
         title: "O teu Discourse está pronto!"
-        description: |
-          <p> Se nalgún momento queres cambiar algún axuste, <b>volve lanzar este asistente en calquera momento</b>, ou visita <a href='%{base_path}/admin' target='_blank'>o teu panel de administración</a>; atoparalo ao lado da icona coa chave inglesa no menú.</p>
-          <p>Pásao ben e boa sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construíndo a túa nova comunidade!</a></p>
   search_logs:
     graph_title: "Análise das buscas"
   joined: "Uniuse"

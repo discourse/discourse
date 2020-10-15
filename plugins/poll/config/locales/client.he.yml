@@ -113,6 +113,8 @@ he:
           step: צעד
         poll_public:
           label: להציג מי המצביעים
+        poll_title:
+          label: כותרת (רשות)
         poll_options:
           label: נא למלא אפשרות בחירה אחת בכל שורה
         automatic_close:

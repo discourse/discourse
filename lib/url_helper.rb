@@ -38,7 +38,7 @@ class UrlHelper
   def self.is_local(url)
     url.present? && (
       Discourse.store.has_been_uploaded?(url) ||
-      !!(url =~ Regexp.new("^#{Discourse.base_uri}/(assets|plugins|images)/")) ||
+      !!(url =~ Regexp.new("^#{Discourse.base_path}/(assets|plugins|images)/")) ||
       url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
     )
   end
@@ -70,6 +70,8 @@ class UrlHelper
   def self.rails_route_from_url(url)
     path = URI.parse(encode(url)).path
     Rails.application.routes.recognize_path(path)
+  rescue Addressable::URI::InvalidURIError, URI::InvalidComponentError
+    nil
   end
 
   def self.s3_presigned_url?(url)

@@ -188,6 +188,7 @@ es:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "No puedes habilitar las cargas S3 porque las cargas S3 ya están habilitadas globalmente, y habilitar este nivel de sitio podría causar problemas críticos con las cargas."
     conflicting_google_user_id: 'El ID de la cuenta Google para esta cuenta ha cambiado; el staff debe intervenir por razones de seguridad. Por favor, ponte en contacto con el staff y envía esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
+    expired: "Su token de invitación ha caducado. Por favor, <a href='%{base_url}/about'>póngase en contacto con el personal</a>."
     not_found: "El código de invitación es inválido. Por favor, <a href='%{base_url}/about'>ponte en contacto con nuestro equipo</a>."
     not_found_json: "El código de invitación es inválido. Por favor, ponte en contacto con nuestro equipo."
     not_found_template: |
@@ -200,6 +201,8 @@ es:
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>¡ya tienen una cuenta!</a>"
     confirm_email: "<p>¡Ya casi terminas! Te enviamos un correo de activación a tu dirección de correo electrónico. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo no deseado.</p>"
     cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres dueño en los grupos a los que estás intentando invitar."
+    disabled_errors:
+      invalid_access: "No tienes permitido ver el recurso solicitado."
   bulk_invite:
     file_should_be_csv: "El archivo subido debería estar en formato csv."
     max_rows: "Las primeras %{max_bulk_invites} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
@@ -375,6 +378,7 @@ es:
       email_already_used_in_category: "«%{email}» ya está siendo utilizado por la categoría «%{category_name}»."
       cant_allow_membership_requests: "No puedes permitir solicitudes de membresía de un grupo sin ningún propietario."
       already_requested_membership: "Ya has solicitado la membresía de este grupo."
+      adding_too_many_users: "Se pueden añadir un máximo de %{limit} usuarios a la vez"
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -437,14 +441,6 @@ es:
       Este tema es claramente importante para ti &ndash; has publicado más del %{percent}% de las respuestas.
 
       Podría mejor todavía si le dieras a otras personas la oportunidad de compartir sus puntos de vista también. ¿Podrías invitarles?
-    get_a_room: |
-      ### Anima a todos a participar en la conversación
-
-      ¡Has respondido %{count} veces a @%{reply_username} en este tema en particular!
-
-      Una gran discusión involucra muchas voces y perspectivas. ¿Puedes involucrar a alguien más?
-
-      Y no olvides que si deseas continuar tu conversación con este usuario en particular en privado, puedes [enviarle un mensaje privado](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Has alcanzado el límite de respuestas para este tema
 
@@ -1448,11 +1444,13 @@ es:
     invite_code: "El usuario debe ingresar este código para que se le permita el registro de la cuenta, ignorado cuando está vacío (no distingue entre mayúsculas y minúsculas)"
     approve_suspect_users: "Agregar usuarios sospechosos a la lista por revisión. Los usuarios sospechosos que hayan ingresado una biografía/página web pero que no hayan registrado ninguna actividad de lectura."
     pending_users_reminder_delay: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de horas. Usa -1 para desactivar estas notificaciones."
+    persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Habilitar el seguimiento multidominio de Google Universal Analytics (analytics.js). Los enlaces salientes de estos dominios tendrán la ID del cliente agregados. Revisa <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>La guía de Google para el seguimiento multidominio.</a>"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita </a>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories_and_groups: "Permitir a los moderadores administrar categorías y grupos"
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
     allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
     slow_down_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe aplicar una cuota limitada en robots.txt utilizando la directiva de retardo de rastreo"
@@ -1702,7 +1700,6 @@ es:
     privacy_policy_url: "Si tienes un documento de política de privacidad alojado en algún otro sitio y que quieras utilizar, ingresa la URL completa aquí."
     log_anonymizer_details: "Mantener o no los detalles de un usuario en el registro después de ser anonimizados. Para cumplir con la RGPD, deberás apagarlo."
     newuser_spam_host_threshold: "Cantidad de veces que un usuario nuevo puede publicar un enlace al mismo host dentro del `newuser_spam_host_threshold` de sus publicaciones antes de ser considerado spam."
-    staff_like_weight: "Factor de peso adicional que otorgan los me gusta dados por los miembros del staff."
     topic_view_duration_hours: "Contar una visita a un nuevo tema por IP/Usuario cada N horas"
     user_profile_view_duration_hours: "Contar una nueva visita de perfil por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, cantidad de caracteres diferentes que permiten una coincidencia parcial."
@@ -1854,7 +1851,6 @@ es:
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
     short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
-    default_code_lang: "Lenguaje de programación por defecto para aplicar el resaltado de la sintaxis en los bloques de código de GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para deshabilitar."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) Ver: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
@@ -2006,6 +2002,9 @@ es:
         low_weight_invalid: "No puedes poner el peso a un valor superior o igual a 1 o menor que «category_search_priority_very_low_weight»."
         high_weight_invalid: "No puedes establecer el peso como menor o igual a 1 ni mayor a 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "No puedes poner el peso a un valor inferior a «category_search_priority_high_weight»."
+      allowed_unicode_usernames:
+        regex_invalid: "La expresión regular no es válida: %{error}"
+        leading_trailing_slash: "La expresión regular no puede empezar y terminar con una barra."
       unicode_usernames_avatars: "El sistema interno de avatares no soporta nombres de usuario Unicode."
       list_value_count: "La lista debe contener exactamente %{count} valores."
     placeholder:
@@ -2488,6 +2487,8 @@ es:
         ¡Disfruta de tu estancia!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "¡Enhorabuena por llegar a un nivel de confianza más!"
     backup_succeeded:
       title: "Copia de respaldo realizada con éxito"
       subject_template: "La copia de respaldo se completó exitosamente"
@@ -3212,10 +3213,6 @@ es:
     confirm_new_email:
       title: "Confirmar correo electrónico nuevo"
       subject_template: "[%{email_prefix}] Confirma tu nueva dirección de correo electrónico"
-      text_body_template: |
-        Confirma tu nueva dirección de correo electrónico para %{site_name} haciendo clic en el siguiente enlace:
-
-        %{base_url}/u/confirm-old-email/%{email_token}
     confirm_old_email:
       title: "Confirmar correo electrónico antiguo"
       subject_template: "[%{email_prefix}] Confirma tu dirección actual de correo electrónico"
@@ -4141,14 +4138,6 @@ es:
             placeholder: "San Francisco, California"
       colors:
         title: "Tema"
-      themes_further_reading:
-        title: "Tema"
-        description:
-        - <ul>
-        - <li><a href='https://meta.discourse.org/t/63682' target='_blank'>¿Cómo instalo un tema o un componente de tema?</a></li>
-        - <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Guía de referencia para el desarrollo de temas</a></li>
-        - </ul>
-        - 'Componentes de tema populares (para ver más, ve a <a href=''https://meta.discourse.org/c/theme/l/latest'' target=''_blank''>#theme</a>)'
       logos:
         title: "Logos"
         fields:
@@ -4196,9 +4185,6 @@ es:
         disabled: "Ya que los inicios de sesión locales están desactivados, no es posible enviar invitaciones a nadie. Por favor, ve al siguiente paso."
       finished:
         title: "¡Tu foro de Discourse está listo!"
-        description: |
-          <p>Si en algún momento quieres cambiar alguno de estos ajustes, <b>vuelve a lanzar este ayudante en cualquier momento</b> o visita <a href='%{base_path}/admin' target='_blank'>el panel de administrador</a>; lo encontrarás al lado del icono de la llave inglesa en el menú.</p>
-          <p>¡Pásala bien y buena suerte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>construyendo tu nueva comunidad!</a></p>
   search_logs:
     graph_title: "Análisis de búsquedas"
   joined: "Registrado"

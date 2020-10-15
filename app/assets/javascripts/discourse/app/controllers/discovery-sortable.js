@@ -39,10 +39,12 @@ export function changeSort(sortBy) {
   }
 }
 
-export function resetParams() {
+export function resetParams(skipParams = []) {
   let { controller } = this;
   controllerOpts.queryParams.forEach((p) => {
-    controller.set(p, queryParams[p].default);
+    if (!skipParams.includes(p)) {
+      controller.set(p, queryParams[p].default);
+    }
   });
 }
 

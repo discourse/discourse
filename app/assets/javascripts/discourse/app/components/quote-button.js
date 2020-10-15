@@ -19,6 +19,12 @@ function getQuoteTitle(element) {
   if (!titleEl) {
     return;
   }
+
+  const titleLink = titleEl.querySelector("a:not(.back)");
+  if (titleLink) {
+    return titleLink.textContent.trim();
+  }
+
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 

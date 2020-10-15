@@ -20,14 +20,14 @@ ko:
       long_description: |
         이 배지는 유저 튜토리얼을 성공적으로 마친 유저들에게 부여됩니다. 토론을 위한 기본적인 도구를 익혀 인증받은 사용자가 되었습니다!
     licensed:
-      name: Discourse 사용 면허
+      name: 고급 라이센스
       description: "고급 사용자 튜토리얼을 완료하였습니다"
       long_description: |
         이 배지는 고급 유저 튜토리얼을 성공적으로 완료한 사용자에게 부여됩니다. 당신은 고급 토론 도구를 숙지하여 면허를 취득하였습니다!
   discourse_narrative_bot:
     bio: "안녕, 사실 나는 사람이 아니야. 이 사이트에 대해서 알려주는 로봇이지. 나한테 물어보고 싶은 게 있다면 메세지를 보내거나 **`@%{discobot_username}`** 를 멘션하면 돼."
     tl2_promotion_message:
-      subject_template: "신뢰 수준 프로모션을 축하합니다!"
+      subject_template: "이제 승격 했으므로 몇 가지 고급 기능에 대해 알아볼 차례입니다!"
     timeout:
       message: |-
         안녕 @%{username}, 너한테서 소식이 없어서 한 번 말 걸어봤어.
@@ -115,6 +115,15 @@ ko:
       random_mention:
         reply: |-
           내가 뭘 할 수 있는지 알고 싶다면 `@%{discobot_username} %{help_trigger}` 라고 말하렴.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: 답글을 쓸 수 있습니다
       do_not_understand:
         first_response: |-
           우와, 답글을 써줘서 고마워!
@@ -131,7 +140,6 @@ ko:
       reset_trigger: "지도 시간"
       title: "새로운 사용자 튜토리얼 수료증"
       cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
-      delete_reason: "사용자가 새 사용자 팁을 건너뛰었습니다."
       hello:
         title: "인사말!"
         message: |-
@@ -173,8 +181,16 @@ ko:
 
           다음엔 니가 한번 업로드 해봐. 사진 링크만 있는 한 줄을 남겨도 돼!
       likes:
+        instructions: |-
+          다음은 유니콘 사진입니다.
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          마음에 들면 글 아래의 좋아요 :heart: 버튼을 눌러 알려주세요.
         reply: |-
           내 글을 좋아해 주셔서 감사합니다!
+        not_found: |-
+          내 글(%{url})에 좋아요 :heart: 안 눌러 줄거에요? :crying_cat_face:
       formatting:
         instructions: |-
           답글에서 글을 **진하게** 만들거나 _이탤릭_처리를 할 수 있니?

@@ -28,6 +28,7 @@ export default Controller.extend({
 
   pollType: null,
   pollResult: null,
+  pollTitle: null,
 
   init() {
     this._super(...arguments);
@@ -214,6 +215,7 @@ export default Controller.extend({
     "pollType",
     "pollResult",
     "publicPoll",
+    "pollTitle",
     "pollOptions",
     "pollMin",
     "pollMax",
@@ -230,6 +232,7 @@ export default Controller.extend({
     pollType,
     pollResult,
     publicPoll,
+    pollTitle,
     pollOptions,
     pollMin,
     pollMax,
@@ -292,6 +295,10 @@ export default Controller.extend({
 
     pollHeader += "]";
     output += `${pollHeader}\n`;
+
+    if (pollTitle) {
+      output += `# ${pollTitle.trim()}\n`;
+    }
 
     if (pollOptions.length > 0 && !isNumber) {
       pollOptions.split("\n").forEach((option) => {
@@ -382,6 +389,7 @@ export default Controller.extend({
       chartType: BAR_CHART_TYPE,
       pollResult: this.alwaysPollResult,
       pollGroups: null,
+      pollTitle: null,
       date: moment().add(1, "day").format("YYYY-MM-DD"),
       time: moment().add(1, "hour").format("HH:mm"),
     });

@@ -29,6 +29,10 @@ span.badge-posts {
 .topic-post {
   nav.post-controls {
     color: var(--primary-low-mid-or-secondary-high);
+    &.expanded {
+      // on small devices with many buttons this can overflow
+      overflow-x: scroll;
+    }
     .actions {
       display: flex;
 

@@ -4,23 +4,6 @@ require 'rails_helper'
 
 describe RemoteTheme do
   context '#import_remote' do
-    def setup_git_repo(files)
-      dir = Dir.tmpdir
-      repo_dir = "#{dir}/#{SecureRandom.hex}"
-      `mkdir #{repo_dir}`
-      `cd #{repo_dir} && git init . `
-      `cd #{repo_dir} && git config user.email 'someone@cool.com'`
-      `cd #{repo_dir} && git config user.name 'The Cool One'`
-      `cd #{repo_dir} && git config commit.gpgsign 'false'`
-      files.each do |name, data|
-        FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
-        File.write("#{repo_dir}/#{name}", data)
-        `cd #{repo_dir} && git add #{name}`
-      end
-      `cd #{repo_dir} && git commit -am 'first commit'`
-      repo_dir
-    end
-
     def about_json(love_color: "FAFAFA", tertiary_low_color: "FFFFFF", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON
         {
@@ -245,6 +228,13 @@ describe RemoteTheme do
       remote.update!(local_version: "new version", commits_behind: 0)
       expect(described_class.out_of_date_themes).to eq([])
     end
+
+    it "ignores disabled out of date themes" do
+      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
+      theme.update!(enabled: false)
+      expect(described_class.out_of_date_themes).to eq([])
+    end
+
   end
 
   context ".unreachable_themes" do

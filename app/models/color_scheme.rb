@@ -196,6 +196,7 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme = new(name: params[:name])
     new_color_scheme.via_wizard = true if params[:via_wizard]
     new_color_scheme.base_scheme_id = params[:base_scheme_id]
+    new_color_scheme.user_selectable = true if params[:user_selectable]
 
     colors = CUSTOM_SCHEMES[params[:base_scheme_id].to_sym]&.map do |name, hex|
       { name: name, hex: hex }

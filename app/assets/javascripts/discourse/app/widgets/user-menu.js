@@ -27,8 +27,8 @@ createWidget("user-menu-links", {
     return {
       label: "user.preferences",
       className: "user-preferences-link",
-      icon: "cog",
-      href: `${this.attrs.path}/preferences`,
+      icon: "user",
+      href: `${this.attrs.path}/summary`,
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.PROFILE,
     };

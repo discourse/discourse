@@ -273,14 +273,6 @@ hu:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
-    get_a_room: |
-      ### Biztasson mindenkit, hogy csatlakozzanak a beszélgetéshez
-
-      %{count} alkalommal válaszoz @%{reply_username} felhasználónak ebben a témában.
-
-      A jó beszélgetések számos hangot és perspektívát tartalmaznak. Be tud valaki mást is vonni?
-
-      És ne feledje, ha nem nyilvánosan szeretné folytatni a párbeszédet ezzel a felhasználóval, akkor [személyes üzenetet is küldhet neki](%{base_path}/u/%{reply_username}).
   activerecord:
     attributes:
       category:
@@ -1244,8 +1236,6 @@ hu:
             placeholder: "Példa szervezet"
       colors:
         title: "Téma"
-      themes_further_reading:
-        title: "Témák"
       logos:
         title: "Logók"
         fields:

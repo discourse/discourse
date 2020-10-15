@@ -1609,7 +1609,6 @@ bs_BA:
       accept_invite: "Prihvati pozivnicu"
       success: "Vaš račun je napravljen i sada ste prijavljeni."
       name_label: "Ime"
-      password_label: "Postavi šifru"
       optional_description: "(opciono)"
     password_reset:
       continue: "Nastavi ka %{site_name}"
@@ -1969,8 +1968,6 @@ bs_BA:
           noreplies: imaju nula odgovora
           single_user: sadrži jednog korisnika
         post:
-          count:
-            label: Minimalan broj objava
           time:
             label: Objavljeno
             before: prije
@@ -2016,7 +2013,6 @@ bs_BA:
         new: "Nemate novih tema."
         read: "Niste pročitali nijednu temu."
         posted: "Niste odgovorili ni na jednu temu."
-        latest: "Nema posljednjih tema. To je tužno."
         bookmarks: "Još nemate zabilježenih tema."
         category: "Nema tema u %{category}."
         top: "Nema top tema."
@@ -2100,7 +2096,6 @@ bs_BA:
       read_more_MF: "Postoj{ UNREAD, plural, =0 {} one {i <a href='{basePath}/unread'>1 nepročitana</a> } few {e <a href='{basePath}/unread'># nepročitane</a> } other {i <a href='{basePath}/unread'># nepročitanih</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {i } other{}} <a href='{basePath}/new'>1 nova</a> tema} few {} other { {BOTH, select, true{i } false {e } other{}} <a href='{basePath}/new'># novih</a> tema} } preostalih za čitati, ili {CATEGORY, select, true {pogledajte ostale teme u {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pregledaj sve kategorije
       view_latest_topics: pogledaj najnovije teme
-      suggest_create_topic: Zašto ne kreirati novu temu?
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "Ova tema je obrisana"

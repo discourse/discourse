@@ -148,6 +148,20 @@ describe TopicQuery do
 
       query = TopicQuery.new(user, filter: 'tracked').list_latest
       expect(query.topics.length).to eq(2)
+
+      # includes subcategories of tracked categories
+      parentcat = Fabricate(:category)
+      subcat = Fabricate(:category, parent_category_id: parentcat.id)
+      topic3 = Fabricate(:topic, category_id: subcat.id)
+
+      CategoryUser.create!(
+        category_id: parentcat.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:tracking]
+      )
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(3)
     end
   end
 
@@ -201,6 +215,11 @@ describe TopicQuery do
         expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
         expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(1)
         expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
+      end
+
+      it "shows a subcategory definition topic in its parent list with the right site setting" do
+        SiteSetting.show_category_definitions_in_topic_lists = true
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(2)
       end
 
       it "works with subsubcategories" do

@@ -149,6 +149,18 @@ describe SiteSettings::Validations do
           expect { subject.validate_enforce_second_factor("all") }.to raise_error(Discourse::InvalidParameters, error_message)
         end
       end
+
+      context "when SSO is enabled" do
+        let(:error_message) { I18n.t("errors.site_settings.second_factor_cannot_be_enforced_with_sso_enabled") }
+        before do
+          SiteSetting.sso_url = "https://www.example.com/sso"
+          SiteSetting.enable_sso = true
+        end
+
+        it "should raise an error" do
+          expect { subject.validate_enforce_second_factor("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+        end
+      end
     end
 
     describe "#validate_enable_local_logins" do

@@ -12,7 +12,9 @@ module Jobs
 
     COMPONENTS ||= %w(
       user_archive
-      user_archive_profile
+      preferences
+      auth_tokens
+      auth_token_logs
       badges
       bookmarks
       category_preferences
@@ -22,6 +24,8 @@ module Jobs
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
       user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
       user_archive_profile: ['location', 'website', 'bio', 'views'],
+      auth_tokens: ['id', 'auth_token_hash', 'prev_auth_token_hash', 'auth_token_seen', 'client_ip', 'user_agent', 'seen_at', 'rotated_at', 'created_at', 'updated_at'],
+      auth_token_logs: ['id', 'action', 'user_auth_token_id', 'client_ip', 'auth_token_hash', 'created_at', 'path', 'user_agent'],
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
       bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_type', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
@@ -38,12 +42,15 @@ module Jobs
       COMPONENTS.each do |name|
         h = { name: name, method: :"#{name}_export" }
         h[:filetype] = :csv
-        filename_method = :"#{name}_filename"
-        if respond_to? filename_method
-          h[:filename] = public_send(filename_method)
-        else
-          h[:filename] = name
+        filetype_method = :"#{name}_filetype"
+        if respond_to? filetype_method
+          h[:filetype] = public_send(filetype_method)
         end
+        condition_method = :"include_#{name}?"
+        if respond_to? condition_method
+          h[:skip] = !public_send(condition_method)
+        end
+        h[:filename] = name
         components.push(h)
       end
 
@@ -61,11 +68,16 @@ module Jobs
       zip_filename = nil
       begin
         components.each do |component|
+          next if component[:skip]
           case component[:filetype]
           when :csv
             CSV.open("#{dirname}/#{component[:filename]}.csv", "w") do |csv|
               csv << get_header(component[:name])
               public_send(component[:method]) { |d| csv << d }
+            end
+          when :json
+            File.open("#{dirname}/#{component[:filename]}.json", "w") do |file|
+              file.write MultiJson.dump(public_send(component[:method]), indent: 4)
             end
           else
             raise 'unknown export filetype'
@@ -129,6 +141,59 @@ module Jobs
         .select(:location, :website, :bio_raw, :views)
         .each do |user_profile|
         yield get_user_archive_profile_fields(user_profile)
+      end
+    end
+
+    def preferences_export
+      UserSerializer.new(@current_user, scope: guardian)
+    end
+
+    def preferences_filetype
+      :json
+    end
+
+    def auth_tokens_export
+      return enum_for(:auth_tokens) unless block_given?
+
+      UserAuthToken
+        .where(user_id: @current_user.id)
+        .each do |token|
+        yield [
+          token.id,
+          token.auth_token.to_s[0..4] + "...", # hashed and truncated
+          token.prev_auth_token[0..4] + "...",
+          token.auth_token_seen,
+          token.client_ip,
+          token.user_agent,
+          token.seen_at,
+          token.rotated_at,
+          token.created_at,
+          token.updated_at,
+        ]
+      end
+    end
+
+    def include_auth_token_logs?
+      # SiteSetting.verbose_auth_token_logging
+      UserAuthTokenLog.where(user_id: @current_user.id).exists?
+    end
+
+    def auth_token_logs_export
+      return enum_for(:auth_token_logs) unless block_given?
+
+      UserAuthTokenLog
+        .where(user_id: @current_user.id)
+        .each do |log|
+        yield [
+          log.id,
+          log.action,
+          log.user_auth_token_id,
+          log.client_ip,
+          log.auth_token.to_s[0..4] + "...", # hashed and truncated
+          log.created_at,
+          log.path,
+          log.user_agent,
+        ]
       end
     end
 

@@ -952,7 +952,7 @@ describe Search do
       end
 
       it 'shows staff tags' do
-        create_staff_tags(["#{tag.name}9"])
+        create_staff_only_tags(["#{tag.name}9"])
 
         expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
         expect(search.tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
@@ -1278,6 +1278,8 @@ describe Search do
       expect(Search.execute('test STATUS:OPEN').posts.length).to eq(1)
       expect(Search.execute('test posts_count:1').posts.length).to eq(1)
       expect(Search.execute('test min_post_count:1').posts.length).to eq(1)
+      expect(Search.execute('test min_posts:1').posts.length).to eq(1)
+      expect(Search.execute('test max_posts:2').posts.length).to eq(1)
 
       topic.update(closed: true)
       second_topic.update(category: public_category)

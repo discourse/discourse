@@ -1,4 +1,4 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
 acceptance("Rendering polls with bar charts - mobile", {
@@ -7,6 +7,21 @@ acceptance("Rendering polls with bar charts - mobile", {
   settings: { poll_enabled: true },
   beforeEach() {
     clearPopupMenuOptionsCallback();
+  },
+  pretend(server) {
+    // eslint-disable-next-line
+    server.get("/polls/voters.json", () => {
+      const body = {
+        voters: Array.from(new Array(10), (_, i) => ({
+          id: 500 + i,
+          username: `bruce${500 + i}`,
+          avatar_template: "/images/avatar.png",
+          name: "Bruce Wayne",
+        })),
+      };
+
+      return [200, { "Content-Type": "application/json" }, body];
+    });
   },
 });
 
@@ -28,20 +43,6 @@ test("Public number poll", async (assert) => {
     find(".poll-voters:first li:first a").attr("href"),
     "user URL does not exist"
   );
-
-  // eslint-disable-next-line
-  server.get("/polls/voters.json", () => {
-    const body = {
-      voters: Array.from(new Array(10), (_, i) => ({
-        id: 500 + i,
-        username: `bruce${500 + i}`,
-        avatar_template: "/images/avatar.png",
-        name: "Bruce Wayne",
-      })),
-    };
-
-    return [200, { "Content-Type": "application/json" }, body];
-  });
 
   await click(".poll-voters-toggle-expand:first a");
 

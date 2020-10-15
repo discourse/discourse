@@ -196,6 +196,7 @@ en:
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
       second_factor_cannot_enforce_with_socials: "You cannot enforce 2FA with social logins enabled. You must first disable login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
+      second_factor_cannot_be_enforced_with_sso_enabled: "You cannot enforce 2FA if SSO is enabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -205,6 +206,7 @@ en:
       <<: *errors
 
   invite:
+    expired: "Your invite token has expired. Please <a href='%{base_url}/about'>contact staff</a>."
     not_found: "Your invite token is invalid. Please <a href='%{base_url}/about'>contact staff</a>."
     not_found_json: "Your invite token is invalid. Please contact staff."
     not_found_template: |
@@ -217,6 +219,10 @@ en:
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
     cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
+    disabled_errors:
+      sso_enabled: "Invites are disabled because SSO is enabled."
+      local_logins_disabled: "Invites are disabled because the 'enable local logins' setting is disabled."
+      invalid_access: "You are not permitted to view the requested resource."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -487,7 +493,7 @@ en:
 
       You’ve replied %{count} times to @%{reply_username} in this particular topic!
 
-      A great discussion involves many voices and perspectives. Can you get anybody else involved?
+      A great discussion includes many voices and perspectives. Can you get anybody else involved?
 
       And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
 
@@ -2023,6 +2029,7 @@ en:
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
+    allow_users_to_hide_profile: "Allow users to hide their profile and presence"
 
     allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
 
@@ -2095,7 +2102,7 @@ en:
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     show_time_gap_days: "If two posts are made this many days apart, display the time gap in the topic."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (auto, nohighlight, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
@@ -2228,7 +2235,8 @@ en:
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
 
-    base_font: "Font to use in most places on the site. Themes can override."
+    base_font: "Base font to use for most text on the site. Themes can override via the `--font-family` CSS custom property."
+    heading_font: "Font to use for headings on the site. Themes can override via the `--heading-font-family` CSS custom property."
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
@@ -3709,6 +3717,18 @@ en:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
+        If you did not request this change, please contact %{site_name} admin.
+
+    confirm_new_email_via_admin:
+      title: "Confirm New Email"
+      subject_template: "[%{email_prefix}] Confirm your new email address"
+      text_body_template: |
+        Confirm your new email address for %{site_name} by clicking on the following link:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        This email change was requested by a site admin. If you did not request this change, please contact %{site_name} admin.
+
     confirm_old_email:
       title: "Confirm Old Email"
       subject_template: "[%{email_prefix}] Confirm your current email address"
@@ -3903,7 +3923,7 @@ en:
     latte: "Latte"
     summer: "Summer"
     dark_rose: "Dark Rose"
-    default_theme_name: "Light"
+    default_theme_name: "Default"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
     neutral_theme_name: "Neutral"
@@ -4544,8 +4564,8 @@ en:
 
   tags:
     title: "Tags"
-    staff_tag_disallowed: 'The tag "%{tag}" may only be applied by staff.'
-    staff_tag_remove_disallowed: 'The tag "%{tag}" may only be removed by staff.'
+    restricted_tag_disallowed: 'You cannot apply the tag "%{tag}".'
+    restricted_tag_remove_disallowed: 'You cannot remove the tag "%{tag}".'
     minimum_required_tags:
       one: "You must select at least %{count} tag."
       other: "You must select at least %{count} tags."
@@ -4689,20 +4709,17 @@ en:
             placeholder: "San Francisco, California"
 
       colors:
-        title: "Theme"
-
-      themes_further_reading:
-        title: "Themes"
-        description:
-          "Looking to customize your Discourse? Take advantage of our powerful theming system:
-          <ul>
-          <li><a href='https://meta.discourse.org/t/63682' target='_blank'>How do I install a theme or theme component?</a></li>
-          <li><a href='https://meta.discourse.org/t/110448' target='_blank'>Theme Developer Quick Reference Guide</a></li>
-          </ul>
-          Popular theme components (for more, browse <a href='https://meta.discourse.org/c/theme/l/latest' target='_blank'>#theme</a>)"
+        title: "Colors"
 
       fonts:
         title: "Fonts"
+        fields:
+          body_font:
+            label: "Body font"
+          heading_font:
+            label: "Heading font"
+          font_preview:
+            label: "Preview"
 
       logos:
         title: "Logos"
@@ -4759,6 +4776,7 @@ en:
         title: "Your Discourse is Ready!"
         description: |
           <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
+          <p>It is easy to customize your Discourse even further using our powerful theming system. For examples, check out the <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">top themes and components</a> on <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
           <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
 
   search_logs:

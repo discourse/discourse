@@ -1148,6 +1148,7 @@ en:
         taken: "Sorry, that email is not available."
         error: "There was an error changing your email. Perhaps that address is already in use?"
         success: "We've sent an email to that address. Please follow the confirmation instructions."
+        success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
 
       change_avatar:
@@ -1190,6 +1191,7 @@ en:
         sso_override_instructions: "Email can be updated from SSO provider."
         no_secondary: "No secondary emails"
         instructions: "Never shown to the public."
+        admin_note: "Note: An admin user changing another non-admin user's email indicates the user has lost access to their original email account, so a reset password email will be sent to their new address. The user's email will not change until they complete the reset password process."
         ok: "We will email you to confirm"
         required: "Please enter an email address"
         invalid: "Please enter a valid email address"
@@ -1714,7 +1716,7 @@ en:
       accept_invite: "Accept Invitation"
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
-      password_label: "Set Password"
+      password_label: "Password"
       optional_description: "(optional)"
 
     password_reset:
@@ -1940,6 +1942,9 @@ en:
           label: "Toggle topic bump"
           desc: "Reply without changing latest reply date"
 
+      reload: "Reload"
+      ignore: "Ignore"
+
     notifications:
       tooltip:
         regular:
@@ -2119,15 +2124,21 @@ en:
           single_user: contain a single user
         post:
           count:
-            label: Minimum Post Count
+            label: Posts
+          min:
+            placeholder: minimum
+          max:
+            placeholder: maximum
           time:
             label: Posted
             before: before
             after: after
+        views:
+          label: Views
         min_views:
-          label: Minimum Views
+          placeholder: minimum
         max_views:
-          label: Maximum Views
+          placeholder: maximum
 
     hamburger_menu: "go to another topic list or category"
     new_item: "new"
@@ -2166,6 +2177,7 @@ en:
         choose_new_tags: "Choose new tags for these topics:"
         choose_append_tags: "Choose new tags to append for these topics:"
         changed_tags: "The tags of those topics were changed."
+        remove_tags: "Remove Tags"
 
       none:
         unread: "You have no unread topics."
@@ -2178,7 +2190,7 @@ en:
         category: "There are no %{category} topics."
         top: "There are no top topics."
         educate:
-          new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+          new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "There are no more latest topics."
@@ -3397,8 +3409,8 @@ en:
         delete: "Delete"
         confirm_delete: "Are you sure you want to delete this tag group?"
         everyone_can_use: "Tags can be used by everyone"
-        usable_only_by_staff: "Tags are visible to everyone, but only staff can use them"
-        visible_only_to_staff: "Tags are visible only to staff"
+        usable_only_by_groups: "Tags are visible to everyone, but only the following groups can use them"
+        visible_only_to_groups: "Tags are visible only to the following groups"
 
       topics:
         none:

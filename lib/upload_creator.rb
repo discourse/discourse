@@ -6,11 +6,14 @@ class UploadCreator
 
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 
-  WHITELISTED_SVG_ELEMENTS ||= %w{
+  ALLOWED_SVG_ELEMENTS ||= %w{
     circle clippath defs ellipse feGaussianBlur filter g line linearGradient
     marker path polygon polyline radialGradient rect stop style svg text
     textpath tref tspan use
   }.each(&:freeze)
+
+  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
+  deprecate_constant 'WHITELISTED_SVG_ELEMENTS', 'UploadCreator::ALLOWED_SVG_ELEMENTS'
 
   # Available options
   #  - type (string)
@@ -403,7 +406,7 @@ class UploadCreator
   end
 
   def svg_allowlist_xpath
-    @@svg_allowlist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+    @@svg_allowlist_xpath ||= "//*[#{ALLOWED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
   end
 
   def add_metadata!

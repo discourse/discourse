@@ -55,26 +55,26 @@
 
   <div class="metadata control-unit">
     {{#if model.remote_theme}}
-        {{#if model.remote_theme.remote_url}}
-          {{#if sourceIsHttp}}
-            <a class="remote-url" href={{remoteThemeLink}}>{{i18n "admin.customize.theme.source_url"}}{{d-icon "link"}}</a>
-          {{else}}
-            <div class="remote-url"><code>{{model.remote_theme.remote_url}}</code></div>
-          {{/if}}
+      {{#if model.remote_theme.remote_url}}
+        {{#if sourceIsHttp}}
+          <a class="remote-url" href={{remoteThemeLink}}>{{i18n "admin.customize.theme.source_url"}}{{d-icon "link"}}</a>
+        {{else}}
+          <div class="remote-url"><code>{{model.remote_theme.remote_url}}</code></div>
         {{/if}}
-        {{#if model.remote_theme.about_url}}
-          <a class="url about-url" href={{model.remote_theme.about_url}}>{{i18n "admin.customize.theme.about_theme"}}{{d-icon "link"}}</a>
-        {{/if}}
-        {{#if model.remote_theme.license_url}}
-          <a class="url license-url" href={{model.remote_theme.license_url}}>{{i18n "admin.customize.theme.license"}}{{d-icon "link"}}</a>
-        {{/if}}
+      {{/if}}
+      {{#if model.remote_theme.about_url}}
+        <a class="url about-url" href={{model.remote_theme.about_url}}>{{i18n "admin.customize.theme.about_theme"}}{{d-icon "link"}}</a>
+      {{/if}}
+      {{#if model.remote_theme.license_url}}
+        <a class="url license-url" href={{model.remote_theme.license_url}}>{{i18n "admin.customize.theme.license"}}{{d-icon "link"}}</a>
+      {{/if}}
 
-        {{#if model.description}}
-          <span class="theme-description">{{model.description}}</span>
-        {{/if}}
+      {{#if model.description}}
+        <span class="theme-description">{{model.description}}</span>
+      {{/if}}
 
-        {{#if model.remote_theme.authors}}<span class="authors"><span class="heading">{{i18n "admin.customize.theme.authors"}}</span> {{model.remote_theme.authors}}</span>{{/if}}
-        {{#if model.remote_theme.theme_version}}<span class="version"><span class="heading">{{i18n "admin.customize.theme.version"}}</span> {{model.remote_theme.theme_version}}</span>{{/if}}
+      {{#if model.remote_theme.authors}}<span class="authors"><span class="heading">{{i18n "admin.customize.theme.authors"}}</span> {{model.remote_theme.authors}}</span>{{/if}}
+      {{#if model.remote_theme.theme_version}}<span class="version"><span class="heading">{{i18n "admin.customize.theme.version"}}</span> {{model.remote_theme.theme_version}}</span>{{/if}}
 
       <div class="control-unit">
         {{#if model.remote_theme.is_git}}
@@ -119,15 +119,14 @@
         {{/if}}
       </div>
     {{else}}
-        <span class="heading">{{i18n "admin.customize.theme.creator"}}</span>
-        <span>
-          {{#user-link user=model.user}}
-            {{format-username model.user.username}}
-          {{/user-link}}
-        </span>
+      <span class="heading">{{i18n "admin.customize.theme.creator"}}</span>
+      <span>
+        {{#user-link user=model.user}}
+          {{format-username model.user.username}}
+        {{/user-link}}
+      </span>
     {{/if}}
   </div>
-
 
   {{#unless model.component}}
     <div class="control-unit">
@@ -135,7 +134,6 @@
       {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
     </div>
   {{/unless}}
-
 
   {{#unless model.component}}
     {{#d-section class="form-horizontal theme settings control-unit"}}
@@ -253,7 +251,7 @@
       <div class="mini-title">{{i18n "admin.customize.theme.theme_settings"}}</div>
       {{#d-section class="form-horizontal theme settings control-unit"}}
         {{#each settings as |setting|}}
-          {{theme-setting-editor setting=setting model=model class="theme-setting"}}
+          {{theme-setting-editor setting=setting model=model class="theme-setting control-unit"}}
         {{/each}}
       {{/d-section}}
     </div>
@@ -271,7 +269,7 @@
   {{/if}}
 
   <div class="theme-controls">
-    
+
     <a href={{previewUrl}} title={{i18n "admin.customize.explain_preview"}} rel="noopener noreferrer" target="_blank" class="btn btn-default">{{d-icon "desktop"}}{{i18n "admin.customize.theme.preview"}}</a>
     <a class="btn btn-default export" rel="noopener noreferrer" target="_blank" href={{downloadUrl}}>{{d-icon "download"}} {{i18n "admin.export_json.button_text"}}</a>
 

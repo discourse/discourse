@@ -15,6 +15,7 @@ ro:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names:
     - null
@@ -117,6 +118,9 @@ ro:
     site_settings:
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
+      second_factor_cannot_be_enforced_with_sso_enabled: "Nu puteți impune 2FA dacă SSO este activat."
+  invite:
+    expired: "Codul tău de invitație a expirat. Te rugăm <a href='%{base_url}/about'>contactezi personalul</a> forumului."
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
@@ -1006,7 +1010,6 @@ ro:
     tos_url: "Dacă ai un document Condițiile generale de utilizare găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     privacy_policy_url: "Dacă ai un document cu Politica de Confidențialitate găzduit în altă parte, pe care dorești să-l folosești, postează-i întregul URL aici."
     newuser_spam_host_threshold: "De câte ori poate un utilizator nou să posteze un link către aceeași gazdă în limita de `newuser_spam_host_threshold` postări înainte ca să fie considerat spam."
-    staff_like_weight: "Ce pondere adițională să aibă aprecierile de la membrii echipei."
     topic_view_duration_hours: "Contorizează încă o vizualizare a unui subiect nou o singură dată per IP/Utilizator la fiecare N ore."
     user_profile_view_duration_hours: "Contorizează câte vizualizare de profil utilizator o singură dată per IP/Utilizator la fiecare N ore"
     levenshtein_distance_spammer_emails: "Când se face detectarea spam pe bază de potrivire cu un set de criterii, care este diferența de numere de caractere care încă mai permite o potrivire aproximativă (fuzzy match)."
@@ -1075,6 +1078,7 @@ ro:
     anonymous_posting_min_trust_level: "Nivelul minim de încredere necesar pentru a putea activa postarea anonimă."
     anonymous_account_duration_minutes: "Pentru protejarea anonimității, creează un nou cont anonim la fiecare N minute pentru fiecare utilizator. Exemplu: dacă e setat la 600, imediat ce au trecut 600 de minute de la ultima postare șI utilizatorul a comutat pe anonim, va fi creat un nou cont anonim."
     hide_user_profiles_from_public: "Dezactivează cardurile, profilurile și „cartea de telefon” pentru utilizatorii anonimi."
+    allow_users_to_hide_profile: "Permite utilizatorilor să-şi ascundă profilul şi prezenţa"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
     sequential_replies_threshold: "Numărul de postări succesive pe care un utilizator trebuie sa le facă într-un subiect înainte să i se reamintească că a postat un număr excesiv de postări succesive."
     get_a_room_threshold: "Numărul de postări pe care un utilizator poate să le facă la adresa aceleiași persoane înainte de a primi un avertisment."
@@ -1092,7 +1096,6 @@ ro:
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
     short_progress_text_threshold: "După ce numărul de postări într-un subiect devine mai mare decât acest număr, bara de progres va afișa doar numărul postării curente. Dacă schiimbi lățimea barei de progres, va trebui să schimbi această valoare."
-    default_code_lang: "Evidențierea de sintaxa de limbaj de programare aplicată implicit blocurilor de cod GitHub (lang-auto, Ruby, Python etc.)"
     warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
     autohighlight_all_code: "Forțează aplicarea de punere în evidență cod pe toate blocurile de cod preformatate, chiar și atunci când nu le este explicit specificată limba."
     embed_truncate: "Retează postările încorporate."
@@ -1300,6 +1303,8 @@ ro:
     private_topic_title: "Discuția #%{id}"
     post_hidden:
       subject_template: "Postare ascunsă din cauza marcajelor de avertizare ale comunității"
+    post_hidden_again:
+      subject_template: "Postare ascunsă de flagurile comunității, staff notificat"
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
     welcome_tl1_user:
@@ -1969,8 +1974,6 @@ ro:
         title: "Organizație"
       colors:
         title: "Temă"
-      themes_further_reading:
-        title: "Teme"
       logos:
         title: "Logo-uri"
         fields:

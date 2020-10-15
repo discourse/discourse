@@ -392,7 +392,7 @@ describe Email::Sender do
     fab!(:post) { Fabricate(:post) }
     fab!(:reply) do
       raw = <<~RAW
-        Hello world!
+        Hello world! It’s a great day!
         #{UploadMarkdown.new(small_pdf).attachment_markdown}
         #{UploadMarkdown.new(large_pdf).attachment_markdown}
         #{UploadMarkdown.new(image).image_markdown}
@@ -422,25 +422,10 @@ describe Email::Sender do
     end
 
     context "when secure media enabled" do
-      def enable_s3_uploads
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secrets3_region key"
-        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-        stub_request(
-          :put,
-          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image.sha1}.#{image.extension}?acl"
-        )
-        store = FileStore::S3Store.new
-        s3_helper = store.instance_variable_get(:@s3_helper)
-        client = Aws::S3::Client.new(stub_responses: true)
-        s3_helper.stubs(:s3_client).returns(client)
-        Discourse.stubs(:store).returns(store)
-      end
-
       before do
-        enable_s3_uploads
+        setup_s3
+        stub_s3_store
+
         SiteSetting.secure_media = true
         SiteSetting.login_required = true
         SiteSetting.email_total_attachment_size_limit_kb = 14_000
@@ -489,6 +474,13 @@ describe Email::Sender do
           expect(message.html_part.body).to include("embedded-secure-image")
           expect(message.attachments.length).to eq(4)
         end
+
+        it "uses correct UTF-8 encoding for the body of the email" do
+          Email::Sender.new(message, :valid_type).send
+          expect(message.html_part.body).not_to include("Itâ\u0080\u0099s")
+          expect(message.html_part.body).to include("It’s")
+          expect(message.html_part.charset.downcase).to eq("utf-8")
+        end
       end
     end
 
@@ -519,6 +511,13 @@ describe Email::Sender do
       expect(message.parts.size).to eq(4)
       expect(message.parts[0].content_type).to start_with("multipart/alternative")
       expect(message.parts[0].parts.size).to eq(2)
+    end
+
+    it "uses correct UTF-8 encoding for the body of the email" do
+      Email::Sender.new(message, :valid_type).send
+      expect(message.html_part.body).not_to include("Itâ\u0080\u0099s")
+      expect(message.html_part.body).to include("It’s")
+      expect(message.html_part.charset.downcase).to eq("utf-8")
     end
   end
 

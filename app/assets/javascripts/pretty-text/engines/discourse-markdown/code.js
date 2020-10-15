@@ -37,6 +37,7 @@ export function setup(helper) {
     opts.defaultCodeLang = siteSettings.default_code_lang;
     opts.acceptableCodeClasses = (siteSettings.highlighted_languages || "")
       .split("|")
+      .filter(Boolean)
       .concat(["auto", "nohighlight"]);
   });
 

@@ -4,9 +4,7 @@ require 'rails_helper'
 require 'version'
 
 describe Discourse::VERSION do
-
   context "has_needed_version?" do
-
     it "works for major comparisons" do
       expect(Discourse.has_needed_version?('1.0.0', '1.0.0')).to eq(true)
       expect(Discourse.has_needed_version?('2.0.0', '1.0.0')).to eq(true)
@@ -44,10 +42,9 @@ describe Discourse::VERSION do
       expect(Discourse.has_needed_version?('1.3.0.beta4', '1.3.0.beta3')).to eq(true)
       expect(Discourse.has_needed_version?('1.3.0', '1.3.0.beta3')).to eq(true)
     end
-
   end
 
-  context "compatible_resource" do
+  context "find_compatible_resource" do
     shared_examples "test compatible resource" do
       it "returns nil when the current version is above all pinned versions" do
         expect(Discourse.find_compatible_resource(version_list, "2.6.0")).to be_nil
@@ -68,6 +65,10 @@ describe Discourse::VERSION do
 
     it "returns nil when nil" do
       expect(Discourse.find_compatible_resource(nil)).to be_nil
+    end
+
+    it "raises an error on invalid input" do
+      expect { Discourse.find_compatible_resource("1.0.0.beta1 12f82d5") }.to raise_error(Discourse::InvalidVersionListError)
     end
 
     context "with a regular compatible list" do
@@ -92,6 +93,35 @@ describe Discourse::VERSION do
         VERSION_LIST
       }
       include_examples "test compatible resource"
+    end
+  end
+
+  context "find_compatible_git_resource" do
+    let!(:git_directory) do
+      path = nil
+
+      capture_stdout do
+        # Note the lack of colon between version and hash
+        path = setup_git_repo(".discourse-compatibility" => "1.0.0.beta1 12f82d5")
+
+        # Simulate a remote upstream
+        `cd #{path} && git remote add origin #{path}/.git && git fetch -q`
+        `cd #{path} && git branch -u origin/$(git rev-parse --abbrev-ref HEAD)`
+      end
+
+      path
+    end
+
+    after do
+      FileUtils.remove_entry(git_directory)
+    end
+
+    it "gracefully handles invalid input" do
+      output = capture_stderr do
+        expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil
+      end
+
+      expect(output).to include("Invalid version list")
     end
   end
 end

@@ -547,7 +547,7 @@ describe Auth::DefaultCurrentUserProvider do
       UserApiKey.create!(
         application_name: 'my app',
         client_id: '1234',
-        scopes: ['read'],
+        scopes: ['read'].map { |name| UserApiKeyScope.new(name: name) },
         user_id: user.id
       )
     end
@@ -556,7 +556,7 @@ describe Auth::DefaultCurrentUserProvider do
       dupe = UserApiKey.create!(
         application_name: 'my app',
         client_id: '12345',
-        scopes: ['read'],
+        scopes: ['read'].map { |name| UserApiKeyScope.new(name: name) },
         user_id: user.id
       )
 

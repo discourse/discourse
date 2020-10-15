@@ -737,7 +737,6 @@ be:
     invites:
       welcome_to: "Сардэчна запрашаем да сайта %{site_name}!"
       name_label: "Назва"
-      password_label: "ўсталяваць пароль"
     password_reset:
       continue: "Працягваюць% {site_name}"
     emoji_set:
@@ -892,7 +891,6 @@ be:
         new: "У вас няма новых тэм."
         read: "Вы яшчэ не прачыталі ніводнай тэмы."
         posted: "Вы яшчэ не дапісвалі ў адну тэму."
-        latest: "Апошніх тэм няма. Шкада."
         bookmarks: "У вас пакуль няма тэмаў у закладках."
         category: "У катэгорыі %{category} няма тэм."
         top: "There are no top topics."
@@ -936,7 +934,6 @@ be:
       read_more: "Хочаце пачытаць яшчэ? %{CatLink} або %{latestLink}."
       browse_all_categories: Паглядзець усе катэгорыі
       view_latest_topics: Праглядзіце апошнія тэмы
-      suggest_create_topic: Чаму б не стварыць тэму?
       jump_reply_up: перайсці да больш ранняй адказы
       jump_reply_down: перайсці да больш позняй адказы
       deleted: "Тэма была выдаленая"

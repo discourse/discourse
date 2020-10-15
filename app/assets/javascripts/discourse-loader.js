@@ -7,6 +7,11 @@ var define, requirejs;
       "discourse-common/utils/decorators",
     "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
     "preload-store": "discourse/lib/preload-store",
+    "fixtures/user_fixtures": "discourse/tests/fixtures/user-fixtures",
+  };
+  var ALIAS_PREPEND = {
+    fixtures: "discourse/tests/",
+    helpers: "discourse/tests/",
   };
 
   // In future versions of ember we don't need this
@@ -140,6 +145,9 @@ var define, requirejs;
       },
       "@ember/object/internals": {
         guidFor: Ember.guidFor,
+      },
+      "@ember/test-helpers": {
+        setResolver: window.setResolver,
       },
       I18n: {
         // eslint-disable-next-line
@@ -301,9 +309,13 @@ var define, requirejs;
   function transformForAliases(name) {
     var alias = ALIASES[name];
     if (!alias) {
-      return name;
+      var segment = name.split("/")[0];
+      var prepend = ALIAS_PREPEND[segment];
+      if (!prepend) {
+        return name;
+      }
+      alias = prepend + name;
     }
-
     deprecatedModule(name, alias);
     return alias;
   }

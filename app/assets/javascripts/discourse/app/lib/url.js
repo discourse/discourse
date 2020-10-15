@@ -34,6 +34,7 @@ const SERVER_SIDE_ONLY = [
   /^\/admin\/logs\/watched_words\/action\/[^\/]+\/download$/,
   /^\/pub\//,
   /^\/invites\//,
+  /^\/styleguide/,
 ];
 
 // The amount of height (in pixles) that we factor in when jumpEnd is called so
@@ -491,6 +492,12 @@ let _urlInstance = DiscourseURL.create();
 export function setURLContainer(container) {
   _urlInstance.container = container;
   setOwner(_urlInstance, container);
+}
+
+export function prefixProtocol(url) {
+  return url.indexOf("://") === -1 && url.indexOf("mailto:") !== 0
+    ? "https://" + url
+    : url;
 }
 
 export default _urlInstance;
