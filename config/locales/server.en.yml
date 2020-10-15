@@ -3717,7 +3717,7 @@ en:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        If you did not request this change, please contact %{site_name} admin.
+        If you did not request this change, please contact a [site admin](%{base_url}/about).
 
     confirm_new_email_via_admin:
       title: "Confirm New Email"
@@ -3727,7 +3727,7 @@ en:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        This email change was requested by a site admin. If you did not request this change, please contact %{site_name} admin.
+        This email change was requested by a site admin. If you did not request this change, please contact a [site admin](%{base_url}/about).
 
     confirm_old_email:
       title: "Confirm Old Email"
