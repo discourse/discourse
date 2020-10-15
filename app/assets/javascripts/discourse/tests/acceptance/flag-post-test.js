@@ -35,7 +35,7 @@ acceptance("flagging", {
         public_admission: false,
         allow_membership_requests: true,
         membership_request_template: "Please add me",
-        full_name: null
+        full_name: null,
       });
     });
     pretenderServer.get("/admin/users/5.json", () => {
@@ -60,20 +60,20 @@ acceptance("flagging", {
         public_admission: false,
         allow_membership_requests: true,
         membership_request_template: "Please add me",
-        full_name: null
+        full_name: null,
       });
     });
     pretenderServer.put("admin/users/5/silence", () => {
       return helper.response({
-        silenced: true
+        silenced: true,
       });
     });
     pretenderServer.post("post_actions", () => {
       return helper.response({
-        response: true
+        response: true,
       });
     });
-  }
+  },
 });
 
 async function openFlagModal() {
@@ -84,13 +84,13 @@ async function openFlagModal() {
   await click(".topic-post:first-child button.create-flag");
 }
 
-test("Flag modal opening", async assert => {
+test("Flag modal opening", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await openFlagModal();
   assert.ok(exists(".flag-modal-body"), "it shows the flag modal");
 });
 
-test("Flag take action dropdown exists", async assert => {
+test("Flag take action dropdown exists", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await openFlagModal();
   await click("#radio_inappropriate");
@@ -103,7 +103,7 @@ test("Flag take action dropdown exists", async assert => {
   assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 });
 
-test("Can silence from take action", async assert => {
+test("Can silence from take action", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await openFlagModal();
   await click("#radio_inappropriate");
@@ -118,7 +118,7 @@ test("Can silence from take action", async assert => {
   assert.equal(find(".bootbox.modal:visible").length, 0);
 });
 
-test("Gets dismissable warning from canceling incomplete silence from take action", async assert => {
+test("Gets dismissable warning from canceling incomplete silence from take action", async (assert) => {
   await visit("/t/internationalization-localization/280");
   await openFlagModal();
   await click("#radio_inappropriate");

@@ -29,23 +29,23 @@ export default Controller.extend(ModalFunctionality, {
         id: "agree_and_keep",
         icon: "thumbs-up",
         label: I18n.t("flagging.take_action_options.default.title"),
-        description: I18n.t("flagging.take_action_options.default.details")
+        description: I18n.t("flagging.take_action_options.default.details"),
       },
       {
         id: "agree_and_suspend",
         icon: "ban",
         label: I18n.t("flagging.take_action_options.suspend.title"),
         description: I18n.t("flagging.take_action_options.suspend.details"),
-        client_action: "suspend"
+        client_action: "suspend",
       },
       {
         id: "agree_and_silence",
         icon: "microphone-slash",
         label: I18n.t("flagging.take_action_options.silence.title"),
         description: I18n.t("flagging.take_action_options.silence.details"),
-        client_action: "silence"
-      }
-    ]
+        client_action: "silence",
+      },
+    ],
   },
 
   clientSuspend(performAction) {
@@ -65,7 +65,7 @@ export default Controller.extend(ModalFunctionality, {
       return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
-        before: performAction
+        before: performAction,
       });
     }
   },
@@ -73,12 +73,12 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.setProperties({
       selected: null,
-      spammerDetails: null
+      spammerDetails: null,
     });
 
     let adminTools = this.adminTools;
     if (adminTools) {
-      adminTools.checkSpammer(this.get("model.user_id")).then(result => {
+      adminTools.checkSpammer(this.get("model.user_id")).then((result) => {
         this.set("spammerDetails", result);
       });
     }
@@ -114,15 +114,15 @@ export default Controller.extend(ModalFunctionality, {
       // flagging topic
       let lookup = EmberObject.create();
       let model = this.model;
-      model.get("actions_summary").forEach(a => {
+      model.get("actions_summary").forEach((a) => {
         a.flagTopic = model;
         a.actionType = this.site.topicFlagTypeById(a.id);
         lookup.set(a.actionType.get("name_key"), ActionSummary.create(a));
       });
       this.set("topicActionByName", lookup);
 
-      return this.site.get("topic_flag_types").filter(item => {
-        return this.get("model.actions_summary").some(a => {
+      return this.site.get("topic_flag_types").filter((item) => {
+        return this.get("model.actions_summary").some((a) => {
           return a.id === item.get("id") && a.can_act;
         });
       });
@@ -249,10 +249,10 @@ export default Controller.extend(ModalFunctionality, {
             this.set("message", "");
           }
           this.appEvents.trigger("post-stream:refresh", {
-            id: this.get("model.id")
+            id: this.get("model.id"),
           });
         })
-        .catch(error => {
+        .catch((error) => {
           this.send("closeModal");
           popupAjaxError(error);
         });
@@ -265,7 +265,7 @@ export default Controller.extend(ModalFunctionality, {
 
     changePostActionType(action) {
       this.set("selected", action);
-    }
+    },
   },
 
   @discourseComputed("flagTopic", "selected.name_key")
@@ -273,5 +273,5 @@ export default Controller.extend(ModalFunctionality, {
     return (
       !flagTopic && this.currentUser.get("staff") && nameKey === "notify_user"
     );
-  }
+  },
 });
