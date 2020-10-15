@@ -587,29 +587,17 @@ class Topic < ActiveRecord::Base
     return [] if title.blank?
     raw = raw.presence || ""
 
-    tsquery = Search.set_tsquery_weight_filter(
-      Search.prepare_data(title.strip),
-      'A'
-    )
+    prepared_data = Search.prepare_data(title.strip)
 
     if raw.present?
       cooked = SearchIndexer::HtmlScrubber.scrub(
         PrettyText.cook(raw[0...MAX_SIMILAR_BODY_LENGTH].strip)
       )
 
-      prepared_data = cooked.present? && Search.prepare_data(cooked)
-
-      if prepared_data.present?
-        raw_tsquery = Search.set_tsquery_weight_filter(
-          prepared_data,
-          'B'
-        )
-
-        tsquery = "#{tsquery} & #{raw_tsquery}"
-      end
+      prepared_data << " " << Search.prepare_data(cooked) if cooked.present?
     end
 
-    tsquery = Search.to_tsquery(term: tsquery, joiner: "|")
+    tsquery = Search.plain_to_tsquery(term: prepared_data, joiner: "|")
 
     candidates = Topic
       .visible

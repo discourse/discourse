@@ -523,6 +523,12 @@ describe Topic do
       expect(Topic.similar_to('some title', 'https://discourse.org/#INCORRECT#URI')).to be_empty
     end
 
+    it 'does not result in an invalid statement with stray punctuation' do
+      expect(Topic.similar_to('Title with trailing backslash\\', 'no body')).to be_empty
+      expect(Topic.similar_to('Title with trailing question mark?', 'no body')).to be_empty
+      expect(Topic.similar_to('Title with & | :b', 'no body')).to be_empty
+    end
+
     context 'with a similar topic' do
       fab!(:post) {
         SearchIndexer.enable
@@ -547,7 +553,7 @@ describe Topic do
         topic.update!(title: '1 2 3 numbered titles')
         post.update!(raw: 'random toy poodle')
 
-        expect(Topic.similar_to("unrelated term", "1 2 3 poddle")).to eq([])
+        expect(Topic.similar_to("unrelated term", "numbered titles")).to eq([])
       end
 
       it 'doesnt match numbered lists against numbers in Post#raw' do

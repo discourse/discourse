@@ -1098,8 +1098,20 @@ class Search
     )
   end
 
+  def self.plain_to_tsquery(ts_config: nil, term:, joiner: nil)
+    ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
+    tsquery = "PLAINTO_TSQUERY(#{ts_config || default_ts_config}, #{ActiveRecord::Base.connection.quote(term)})"
+    tsquery = "REPLACE(#{tsquery}::text, '&', '#{PG::Connection.escape_string(joiner)}')::tsquery" if joiner
+    tsquery
+  end
+
+  private
+
+  # note: this function is not usable with custom combinations of weight filters.
+  # A structured data type on the Ruby side is likely needed to do fancy weighted queries.
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
+    # safety: term was already escaped by set_tsquery_weight_filter
     tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{term}')"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{PG::Connection.escape_string(joiner)}')::tsquery" if joiner
     tsquery
@@ -1109,6 +1121,8 @@ class Search
     term = term.gsub("'", "''")
     "''#{PG::Connection.escape_string(term)}'':*#{weight_filter}"
   end
+
+  public
 
   def ts_query(ts_config = nil, weight_filter: nil)
     @ts_query_cache ||= {}
