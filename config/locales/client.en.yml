@@ -1074,7 +1074,9 @@ en:
         disable: "Disable"
         enable: "Enable"
         enable_long: "Enable backup codes"
-        manage: "Manage backup codes. You have <strong>%{count}</strong> backup codes remaining."
+        manage:
+          one: "Manage backup codes. You have <strong>%{count}</strong> backup code remaining."
+          other: "Manage backup codes. You have <strong>%{count}</strong> backup codes remaining."
         copy_to_clipboard: "Copy to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
