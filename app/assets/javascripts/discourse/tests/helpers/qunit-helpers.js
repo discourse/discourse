@@ -39,6 +39,7 @@ import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import Site from "discourse/models/site";
 import createStore from "discourse/tests/helpers/create-store";
 import { getApplication } from "@ember/test-helpers";
+import deprecated from "discourse-common/lib/deprecated";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -64,24 +65,6 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
     now: now.valueOf(),
     shouldAdvanceTime: advanceTime,
   });
-}
-
-export async function acceptanceUseFakeClock(
-  timeString,
-  callback,
-  timezone = null
-) {
-  if (!timezone) {
-    let user = loggedInUser();
-    if (user) {
-      timezone = user.resolvedTimezone(user);
-    } else {
-      timezone = "America/Denver";
-    }
-  }
-  let clock = fakeTime(timeString, timezone, true);
-  await callback();
-  clock.reset();
 }
 
 const Plugin = $.fn.modal;
@@ -167,13 +150,28 @@ export function addPretenderCallback(name, fn) {
   }
 }
 
-export function acceptance(name, options) {
+export function acceptance(name, optionsOrCallback) {
   name = `Acceptance: ${name}`;
-  options = options || {};
+
+  let callback;
+  let options = {};
+  if (typeof optionsOrCallback === "function") {
+    callback = optionsOrCallback;
+  } else if (typeof optionsOrCallback === "object") {
+    deprecated(
+      "The second parameter to `acceptance` should be a function that encloses your tests.",
+      { since: "2.6.0" }
+    );
+    options = optionsOrCallback;
+  }
 
   addPretenderCallback(name, options.pretend);
 
-  module(name, {
+  let loggedIn = false;
+  let siteChanges;
+  let settingChanges;
+
+  const setup = {
     beforeEach() {
       resetMobile();
 
@@ -185,12 +183,12 @@ export function acceptance(name, options) {
         forceMobile();
       }
 
-      if (options.loggedIn) {
+      if (loggedIn) {
         logIn();
       }
 
-      if (options.settings) {
-        mergeSettings(options.settings);
+      if (settingChanges) {
+        mergeSettings(settingChanges);
       }
       this.siteSettings = currentSettings();
 
@@ -198,8 +196,8 @@ export function acceptance(name, options) {
       clearHTMLCache();
       resetPluginApi();
 
-      if (options.site) {
-        resetSite(currentSettings(), options.site);
+      if (siteChanges) {
+        resetSite(currentSettings(), siteChanges);
       }
 
       getApplication().reset();
@@ -248,7 +246,45 @@ export function acceptance(name, options) {
       // We do this after reset so that the willClearRender will have already fired
       resetWidgetCleanCallbacks();
     },
-  });
+  };
+
+  const needs = {
+    user() {
+      loggedIn = true;
+    },
+    pretender(fn) {
+      addPretenderCallback(name, fn);
+    },
+    site(changes) {
+      siteChanges = changes;
+    },
+    settings(changes) {
+      settingChanges = changes;
+    },
+  };
+
+  if (options.loggedIn) {
+    needs.user();
+  }
+  if (options.site) {
+    needs.site(options.site);
+  }
+  if (options.settings) {
+    needs.settings(options.settings);
+  }
+
+  if (callback) {
+    // New, preferred way
+    module(name, function (hooks) {
+      hooks.beforeEach(setup.beforeEach);
+      hooks.afterEach(setup.afterEach);
+      needs.hooks = hooks;
+      callback(needs);
+    });
+  } else {
+    // Old way
+    module(name, setup);
+  }
 }
 
 export function controllerFor(controller, model) {
