@@ -20,32 +20,36 @@ export default Controller.extend(ModalFunctionality, {
   isWarning: false,
   topicActionByName: null,
   spammerDetails: null,
+  flagActions: null,
 
-  flagActions: {
-    icon: "gavel",
-    label: I18n.t("flagging.take_action"),
-    actions: [
-      {
-        id: "agree_and_keep",
-        icon: "thumbs-up",
-        label: I18n.t("flagging.take_action_options.default.title"),
-        description: I18n.t("flagging.take_action_options.default.details"),
-      },
-      {
-        id: "agree_and_suspend",
-        icon: "ban",
-        label: I18n.t("flagging.take_action_options.suspend.title"),
-        description: I18n.t("flagging.take_action_options.suspend.details"),
-        client_action: "suspend",
-      },
-      {
-        id: "agree_and_silence",
-        icon: "microphone-slash",
-        label: I18n.t("flagging.take_action_options.silence.title"),
-        description: I18n.t("flagging.take_action_options.silence.details"),
-        client_action: "silence",
-      },
-    ],
+  init() {
+    this._super(...arguments);
+    this.flagActions = {
+      icon: "gavel",
+      label: I18n.t("flagging.take_action"),
+      actions: [
+        {
+          id: "agree_and_keep",
+          icon: "thumbs-up",
+          label: I18n.t("flagging.take_action_options.default.title"),
+          description: I18n.t("flagging.take_action_options.default.details"),
+        },
+        {
+          id: "agree_and_suspend",
+          icon: "ban",
+          label: I18n.t("flagging.take_action_options.suspend.title"),
+          description: I18n.t("flagging.take_action_options.suspend.details"),
+          client_action: "suspend",
+        },
+        {
+          id: "agree_and_silence",
+          icon: "microphone-slash",
+          label: I18n.t("flagging.take_action_options.silence.title"),
+          description: I18n.t("flagging.take_action_options.silence.details"),
+          client_action: "silence",
+        },
+      ],
+    };
   },
 
   clientSuspend(performAction) {
@@ -57,12 +61,11 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   async _penalize(adminToolMethod, performAction) {
-    let adminTools = this.adminTools;
-    if (adminTools) {
+    if (this.adminTools) {
       let createdBy = await User.findByUsername(this.model.username);
       let postId = this.model.id;
       let postEdit = this.model.cooked;
-      return adminTools[adminToolMethod](createdBy, {
+      return this.adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
         before: performAction,
@@ -76,9 +79,8 @@ export default Controller.extend(ModalFunctionality, {
       spammerDetails: null,
     });
 
-    let adminTools = this.adminTools;
-    if (adminTools) {
-      adminTools.checkSpammer(this.get("model.user_id")).then((result) => {
+    if (this.adminTools) {
+      this.adminTools.checkSpammer(this.get("model.user_id")).then((result) => {
         this.set("spammerDetails", result);
       });
     }
