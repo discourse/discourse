@@ -4058,6 +4058,12 @@ en:
           primary:
             name: "primary"
             description: "Most text, icons, and borders."
+          primary-medium:
+            name: "primary-medium"
+            description: ""
+          primary-low-mid:
+            name: "primary-low-mid"
+            description: ""
           secondary:
             name: "secondary"
             description: "The main background color, and text color of some buttons."
@@ -4076,6 +4082,15 @@ en:
           highlight:
             name: "highlight"
             description: "The background color of highlighted elements on the page, such as posts and topics."
+          highlight-high:
+            name: "highlight-high"
+            description: ""
+          highlight-medium:
+            name: "highlight-medium"
+            description: ""
+          highlight-low:
+            name: "highlight-low"
+            description: ""
           danger:
             name: "danger"
             description: "Highlight color for actions like deleting posts and topics."

@@ -94,6 +94,37 @@ class ColorScheme < ActiveRecord::Base
       "danger" =>            '6c3e63',
       "success" =>           'd9b2bb',
       "love" =>              'd9b2bb'
+    },
+    "WCAG": {
+      "primary" =>           '000000',
+      "primary-medium" =>    '696969',
+      "primary-low-mid" =>   '909090',
+      "secondary" =>         'ffffff',
+      "tertiary" =>          '3369FF',
+      "quaternary" =>        '3369FF',
+      "header_background" => 'ffffff',
+      "header_primary" =>    '000000',
+      "highlight" =>         '3369FF',
+      "highlight-high" =>    '0036E6',
+      "highlight-medium" =>  'e0e9ff',
+      "highlight-low" =>     'e0e9ff',
+      "danger" =>            'BB1122',
+      "success" =>           '3d854d',
+      "love" =>              '9D256B'
+    },
+    "WCAG Dark": {
+      "primary" =>           'ffffff',
+      "primary-medium" =>    '999999',
+      "primary-low-mid" =>   '888888',
+      "secondary" =>         '0c0c0c',
+      "tertiary" =>          '759AFF',
+      "quaternary" =>        '759AFF',
+      "header_background" => '000000',
+      "header_primary" =>    'ffffff',
+      "highlight" =>         '3369FF',
+      "danger" =>            'BB1122',
+      "success" =>           '3d854d',
+      "love" =>              '9D256B'
     }
   }
 
@@ -305,6 +336,10 @@ class ColorScheme < ActiveRecord::Base
     secondary_b = brightness(colors_by_name["secondary"].hex)
 
     primary_b > secondary_b
+  end
+
+  def is_wcag?
+    base_scheme_id&.start_with?('WCAG')
   end
 
   # Equivalent to dc-color-brightness() in variables.scss
