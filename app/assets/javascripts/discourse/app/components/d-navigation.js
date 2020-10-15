@@ -25,14 +25,20 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed(
     "createTopicDisabled",
     "hasDraft",
-    "categoryReadOnlyBanner"
+    "categoryReadOnlyBanner",
+    "canCreateTopicOnTag",
+    "tagId"
   )
   createTopicButtonDisabled(
     createTopicDisabled,
     hasDraft,
-    categoryReadOnlyBanner
+    categoryReadOnlyBanner,
+    canCreateTopicOnTag,
+    tagId
   ) {
-    if (categoryReadOnlyBanner && !hasDraft) {
+    if (tagId && !canCreateTopicOnTag) {
+      return true;
+    } else if (categoryReadOnlyBanner && !hasDraft) {
       return false;
     }
     return createTopicDisabled;
@@ -60,12 +66,12 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed("category.can_edit")
   showCategoryEdit: (canEdit) => canEdit,
 
-  @discourseComputed("additionalTags", "category", "tag.id")
+  @discourseComputed("additionalTags", "category", "tagId")
   showToggleInfo(additionalTags, category, tagId) {
     return !additionalTags && !category && tagId !== "none";
   },
 
-  @discourseComputed("filterType", "category", "noSubcategories", "tag.id")
+  @discourseComputed("filterType", "category", "noSubcategories", "tagId")
   navItems(filterType, category, noSubcategories, tagId) {
     const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
 
