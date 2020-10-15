@@ -33,13 +33,13 @@
 
 {{#if tagId}}
   {{#if showToggleInfo}}
-    {{d-button icon="tag" class="btn-default" label="tagging.info" action=(action "toggleTagInfo") id="show-tag-info"}}
+    {{d-button icon="tag" class="btn-default" label="tagging.info" action=toggleInfo id="show-tag-info"}}
   {{/if}}
 
   {{#if tagNotification}}
     {{#unless additionalTags}}
       {{tag-notifications-button
-        onChange=(action "changeTagNotificationLevel")
+        onChange=changeTagNotificationLevel
         value=tagNotification.notification_level
       }}
     {{/unless}}

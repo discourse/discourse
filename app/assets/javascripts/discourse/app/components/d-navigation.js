@@ -107,24 +107,5 @@ export default Component.extend(FilterModeMixin, {
         this.createTopic();
       }
     },
-
-    toggleTagInfo() {
-      return this.toggleProperty("showInfo");
-    },
-
-    changeTagNotificationLevel(notificationLevel) {
-      this.tagNotification
-        .update({ notification_level: notificationLevel })
-        .then((response) => {
-          this.currentUser.set(
-            "muted_tag_ids",
-            this.currentUser.calculateMutedIds(
-              notificationLevel,
-              response.responseJson.tag_id,
-              "muted_tag_ids"
-            )
-          );
-        });
-    },
   },
 });
