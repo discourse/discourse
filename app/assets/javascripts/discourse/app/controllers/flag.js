@@ -7,6 +7,9 @@ import ActionSummary from "discourse/models/action-summary";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
+import User from "discourse/models/user";
+import { Promise } from "rsvp";
 
 export default Controller.extend(ModalFunctionality, {
   adminTools: optionalService(),
@@ -17,6 +20,58 @@ export default Controller.extend(ModalFunctionality, {
   isWarning: false,
   topicActionByName: null,
   spammerDetails: null,
+  flagActions: null,
+
+  init() {
+    this._super(...arguments);
+    this.flagActions = {
+      icon: "gavel",
+      label: I18n.t("flagging.take_action"),
+      actions: [
+        {
+          id: "agree_and_keep",
+          icon: "thumbs-up",
+          label: I18n.t("flagging.take_action_options.default.title"),
+          description: I18n.t("flagging.take_action_options.default.details"),
+        },
+        {
+          id: "agree_and_suspend",
+          icon: "ban",
+          label: I18n.t("flagging.take_action_options.suspend.title"),
+          description: I18n.t("flagging.take_action_options.suspend.details"),
+          client_action: "suspend",
+        },
+        {
+          id: "agree_and_silence",
+          icon: "microphone-slash",
+          label: I18n.t("flagging.take_action_options.silence.title"),
+          description: I18n.t("flagging.take_action_options.silence.details"),
+          client_action: "silence",
+        },
+      ],
+    };
+  },
+
+  clientSuspend(performAction) {
+    this._penalize("showSuspendModal", performAction);
+  },
+
+  clientSilence(performAction) {
+    this._penalize("showSilenceModal", performAction);
+  },
+
+  async _penalize(adminToolMethod, performAction) {
+    if (this.adminTools) {
+      let createdBy = await User.findByUsername(this.model.username);
+      let postId = this.model.id;
+      let postEdit = this.model.cooked;
+      return this.adminTools[adminToolMethod](createdBy, {
+        postId,
+        postEdit,
+        before: performAction,
+      });
+    }
+  },
 
   onShow() {
     this.setProperties({
@@ -24,9 +79,8 @@ export default Controller.extend(ModalFunctionality, {
       spammerDetails: null,
     });
 
-    let adminTools = this.adminTools;
-    if (adminTools) {
-      adminTools.checkSpammer(this.get("model.user_id")).then((result) => {
+    if (this.adminTools) {
+      this.adminTools.checkSpammer(this.get("model.user_id")).then((result) => {
         this.set("spammerDetails", result);
       });
     }
@@ -133,9 +187,28 @@ export default Controller.extend(ModalFunctionality, {
       }
     },
 
-    takeAction() {
-      this.send("createFlag", { takeAction: true });
-      this.set("model.hidden", true);
+    takeAction(action) {
+      let performAction = (o = {}) => {
+        o.takeAction = true;
+        this.send("createFlag", o);
+        return Promise.resolve();
+      };
+
+      if (action.client_action) {
+        let actionMethod = this[`client${action.client_action.classify()}`];
+        if (actionMethod) {
+          return actionMethod.call(this, () =>
+            performAction({ skipClose: true })
+          );
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(`No handler for ${action.client_action} found`);
+          return;
+        }
+      } else {
+        this.set("model.hidden", true);
+        return performAction();
+      }
     },
 
     createFlag(opts) {
@@ -171,7 +244,9 @@ export default Controller.extend(ModalFunctionality, {
       postAction
         .act(this.model, params)
         .then(() => {
-          this.send("closeModal");
+          if (!opts.skipClose) {
+            this.send("closeModal");
+          }
           if (params.message) {
             this.set("message", "");
           }
