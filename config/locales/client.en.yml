@@ -1841,7 +1841,9 @@ en:
         post_length: "Post must be at least %{min} characters"
         try_like: "Have you tried the %{heart} button?"
         category_missing: "You must choose a category"
-        tags_missing: "You must choose at least %{count} tags"
+        tags_missing:
+          one: "You must choose at least %{count} tag"
+          other: "You must choose at least %{count} tags"
         topic_template_not_modified: "Please add details and specifics to your topic by editing the topic template."
 
       save_edit: "Save Edit"
