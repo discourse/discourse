@@ -17,7 +17,7 @@ export function addTagsHtmlCallback(callback, options) {
   callbacks.splice(i, 0, callback);
 }
 
-export default function(topic, params) {
+export default function (topic, params) {
   let tags = topic.tags;
   let buffer = "";
   let tagsForUser = null;
@@ -38,7 +38,7 @@ export default function(topic, params) {
 
   let customHtml = null;
   if (callbacks) {
-    callbacks.forEach(c => {
+    callbacks.forEach((c) => {
       const html = c(topic, params);
       if (html) {
         if (customHtml) {

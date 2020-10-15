@@ -16,12 +16,12 @@ export default htmlHelper((user, args) => {
 
   if (currentUser && user.get("admin") && currentUser.get("staff")) {
     return iconHTML("shield-alt", {
-      label: I18n.t("user.admin", { user: name })
+      label: I18n.t("user.admin", { user: name }),
     });
   }
   if (user.get("moderator")) {
     return iconHTML("shield-alt", {
-      label: I18n.t("user.moderator", { user: name })
+      label: I18n.t("user.moderator", { user: name }),
     });
   }
 });

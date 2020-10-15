@@ -18,5 +18,5 @@ export default Component.extend(UploadMixin, {
 
   uploadDone(upload) {
     this.done(upload);
-  }
+  },
 });

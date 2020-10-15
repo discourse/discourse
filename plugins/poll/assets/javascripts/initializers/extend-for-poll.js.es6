@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { observes } from "discourse-common/utils/decorators";
-import { getRegister } from "discourse-common/lib/get-owner";
 import WidgetGlue from "discourse/widgets/glue";
+import { getRegister } from "discourse-common/lib/get-owner";
+import { observes } from "discourse-common/utils/decorators";
 
 function initializePolls(api) {
   const register = getRegister(api);
@@ -10,7 +10,7 @@ function initializePolls(api) {
   api.modifyClass("controller:topic", {
     subscribe() {
       this._super(...arguments);
-      this.messageBus.subscribe("/polls/" + this.get("model.id"), msg => {
+      this.messageBus.subscribe("/polls/" + this.get("model.id"), (msg) => {
         const post = this.get("model.postStream").findLoadedPost(msg.post_id);
         if (post) {
           post.set("polls", msg.polls);
@@ -20,14 +20,14 @@ function initializePolls(api) {
     unsubscribe() {
       this.messageBus.unsubscribe("/polls/*");
       this._super(...arguments);
-    }
+    },
   });
 
   let _glued = [];
   let _interval = null;
 
   function rerender() {
-    _glued.forEach(g => g.queueRerender());
+    _glued.forEach((g) => g.queueRerender());
   }
 
   api.modifyClass("model:post", {
@@ -40,7 +40,7 @@ function initializePolls(api) {
       const polls = this.polls;
       if (polls) {
         this._polls = this._polls || {};
-        polls.forEach(p => {
+        polls.forEach((p) => {
           const existing = this._polls[p.name];
           if (existing) {
             this._polls[p.name].setProperties(p);
@@ -51,7 +51,7 @@ function initializePolls(api) {
         this.set("pollsObject", this._polls);
         rerender();
       }
-    }
+    },
   });
 
   function attachPolls($elem, helper) {
@@ -60,7 +60,7 @@ function initializePolls(api) {
       return;
     }
 
-    let post = helper.getModel();
+    const post = helper.getModel();
     api.preventCloak(post.id);
     post.pollsChanged();
 
@@ -73,33 +73,35 @@ function initializePolls(api) {
       const $poll = $(pollElem);
       const pollName = $poll.data("poll-name");
       let poll = polls[pollName];
+      let pollPost = post;
       let vote = votes[pollName] || [];
 
       const quotedId = $poll.parent(".expanded-quote").data("post-id");
-      if (quotedId) {
-        const quotedPost = post.quoted[quotedId];
-        if (quotedPost) {
-          post = EmberObject.create(quotedPost);
-          poll = EmberObject.create(
-            quotedPost.polls.find(p => p.name === pollName)
-          );
-          vote = quotedPost.polls_votes || {};
-          vote = vote[pollName] || [];
-        }
+      if (quotedId && post.quoted[quotedId]) {
+        pollPost = post.quoted[quotedId];
+        pollPost = EmberObject.create(pollPost);
+        poll = EmberObject.create(
+          pollPost.polls.find((p) => p.name === pollName)
+        );
+        vote = pollPost.polls_votes || {};
+        vote = vote[pollName] || [];
       }
 
       if (poll) {
+        const titleElement = pollElem.querySelector(".poll-title");
+
         const attrs = {
-          id: `${pollName}-${post.id}`,
-          post,
+          id: `${pollName}-${pollPost.id}`,
+          post: pollPost,
           poll,
           vote,
+          titleHTML: titleElement && titleElement.outerHTML,
           groupableUserFields: (
             api.container.lookup("site-settings:main")
               .poll_groupable_user_fields || ""
           )
             .split("|")
-            .filter(Boolean)
+            .filter(Boolean),
         };
         const glue = new WidgetGlue("discourse-poll", register, attrs);
         glue.appendTo(pollElem);
@@ -114,7 +116,7 @@ function initializePolls(api) {
       _interval = null;
     }
 
-    _glued.forEach(g => g.cleanUp());
+    _glued.forEach((g) => g.cleanUp());
     _glued = [];
   }
 
@@ -128,5 +130,5 @@ export default {
 
   initialize() {
     withPluginApi("0.8.7", initializePolls);
-  }
+  },
 };

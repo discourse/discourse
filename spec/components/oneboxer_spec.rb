@@ -69,7 +69,7 @@ describe Oneboxer do
       expect(onebox).to include(%{data-post="2"})
       expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
 
-      short_url = "#{Discourse.base_uri}/t/#{public_topic.id}"
+      short_url = "#{Discourse.base_path}/t/#{public_topic.id}"
       expect(preview(short_url, user, public_category)).to include(public_topic.title)
 
       onebox = preview(public_moderator_action.url, user, public_category)
@@ -155,8 +155,8 @@ describe Oneboxer do
     end
   end
 
-  it "does not crawl blacklisted URLs" do
-    SiteSetting.onebox_domains_blacklist = "git.*.com|bitbucket.com"
+  it "does not crawl blocklisted URLs" do
+    SiteSetting.blocked_onebox_domains = "git.*.com|bitbucket.com"
     url = 'https://github.com/discourse/discourse/commit/21b562852885f883be43032e03c709241e8e6d4f'
     stub_request(:head, 'https://discourse.org/').to_return(status: 302, body: "", headers: { location: url })
 
@@ -164,7 +164,7 @@ describe Oneboxer do
     expect(Oneboxer.external_onebox('https://discourse.org/')[:onebox]).to be_empty
   end
 
-  it "does not consider ignore_redirects domains as blacklisted" do
+  it "does not consider ignore_redirects domains as blocklisted" do
     url = 'https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/'
     stub_request(:head, url).to_return(status: 200, body: "", headers: {})
     stub_request(:get, url).to_return(status: 200, body: "", headers: {})
@@ -183,4 +183,69 @@ describe Oneboxer do
 
     expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to be_present
   end
+
+  context "with youtube stub" do
+    let(:html) do
+      <<~HTML
+        <html>
+        <head>
+          <meta property="og:title" content="Onebox1">
+          <meta property="og:description" content="this is bodycontent">
+        </head>
+        <body>
+           <p>body</p>
+        </body>
+        <html>
+      HTML
+    end
+
+    before do
+      stub_request(:any, "https://www.youtube.com/watch?v=dQw4w9WgXcQ").to_return(status: 200, body: html)
+    end
+
+    it "allows restricting engines based on the allowed_onebox_iframes setting" do
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(output).to include("<iframe") # Regular youtube onebox
+
+      # Disable all onebox iframes:
+      SiteSetting.allowed_onebox_iframes = ""
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(output).not_to include("<iframe") # Generic onebox
+      expect(output).to include("allowlistedgeneric")
+
+      # Just enable youtube:
+      SiteSetting.allowed_onebox_iframes = "https://www.youtube.com"
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(output).to include("<iframe") # Regular youtube onebox
+    end
+  end
+
+  it "allows iframes from generic sites via the allowed_iframes setting" do
+    allowlisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://allowlist.ed/iframes.json" />'
+    blocklisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://blocklist.ed/iframes.json" />'
+
+    allowlisted_oembed = {
+      type: "rich",
+      height: "100",
+      html: "<iframe src='https://ifram.es/foo/bar'></iframe>"
+    }
+
+    blocklisted_oembed = {
+      type: "rich",
+      height: "100",
+      html: "<iframe src='https://malicious/discourse.org/'></iframe>"
+    }
+
+    stub_request(:any, "https://blocklist.ed/iframes").to_return(status: 200, body: blocklisted_body)
+    stub_request(:any, "https://blocklist.ed/iframes.json").to_return(status: 200, body: blocklisted_oembed.to_json)
+
+    stub_request(:any, "https://allowlist.ed/iframes").to_return(status: 200, body: allowlisted_body)
+    stub_request(:any, "https://allowlist.ed/iframes.json").to_return(status: 200, body: allowlisted_oembed.to_json)
+
+    SiteSetting.allowed_iframes = "discourse.org|https://ifram.es"
+
+    expect(Oneboxer.onebox("https://blocklist.ed/iframes", invalidate_oneboxes: true)).to be_empty
+    expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match("iframe src")
+  end
+
 end

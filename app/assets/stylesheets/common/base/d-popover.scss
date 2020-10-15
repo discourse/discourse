@@ -1,5 +1,5 @@
-$d-popover-background: $secondary;
-$d-popover-border: $primary-medium;
+$d-popover-background: var(--secondary);
+$d-popover-border: var(--primary-medium);
 
 @-webkit-keyframes popoverFadeIn {
   from {

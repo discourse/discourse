@@ -224,9 +224,12 @@ class Auth::DefaultCurrentUserProvider
     hash = {
       value: unhashed_auth_token,
       httponly: true,
-      expires: SiteSetting.maximum_session_age.hours.from_now,
       secure: SiteSetting.force_https
     }
+
+    if SiteSetting.persistent_sessions
+      hash[:expires] = SiteSetting.maximum_session_age.hours.from_now
+    end
 
     if SiteSetting.same_site_cookies != "Disabled"
       hash[:same_site] = SiteSetting.same_site_cookies
@@ -290,7 +293,7 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def should_update_last_seen?
-    return false if Discourse.pg_readonly_mode?
+    return false unless can_write?
 
     api = !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
 
@@ -304,22 +307,24 @@ class Auth::DefaultCurrentUserProvider
   protected
 
   def lookup_user_api_user_and_update_key(user_api_key, client_id)
-    if api_key = UserApiKey.active.with_key(user_api_key).includes(:user).first
+    if api_key = UserApiKey.active.with_key(user_api_key).includes(:user, :scopes).first
       unless api_key.allow?(@env)
         raise Discourse::InvalidAccess
       end
 
-      api_key.update_columns(last_used_at: Time.zone.now)
+      if can_write?
+        api_key.update_columns(last_used_at: Time.zone.now)
 
-      if client_id.present? && client_id != api_key.client_id
+        if client_id.present? && client_id != api_key.client_id
 
-        # invalidate old dupe api key for client if needed
-        UserApiKey
-          .where(client_id: client_id, user_id: api_key.user_id)
-          .where('id <> ?', api_key.id)
-          .destroy_all
+          # invalidate old dupe api key for client if needed
+          UserApiKey
+            .where(client_id: client_id, user_id: api_key.user_id)
+            .where('id <> ?', api_key.id)
+            .destroy_all
 
-        api_key.update_columns(client_id: client_id)
+          api_key.update_columns(client_id: client_id)
+        end
       end
 
       api_key.user
@@ -347,7 +352,7 @@ class Auth::DefaultCurrentUserProvider
           SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
         end
 
-      if user
+      if user && can_write?
         api_key.update_columns(last_used_at: Time.zone.now)
       end
 
@@ -356,6 +361,10 @@ class Auth::DefaultCurrentUserProvider
   end
 
   private
+
+  def parameter_api_patterns
+    PARAMETER_API_PATTERNS + DiscoursePluginRegistry.api_parameter_routes
+  end
 
   # By default we only allow headers for sending API credentials
   # However, in some scenarios it is essential to send them via url parameters
@@ -367,7 +376,7 @@ class Auth::DefaultCurrentUserProvider
     path_params = @env['action_dispatch.request.path_parameters']
     request_route = "#{path_params[:controller]}##{path_params[:action]}" if path_params
 
-    PARAMETER_API_PATTERNS.any? do |p|
+    parameter_api_patterns.any? do |p|
       (p[:method] == "*" || Array(p[:method]).include?(request_method)) &&
       (p[:format] == "*" || Array(p[:format]).include?(request_format)) &&
       (p[:route] == "*" || Array(p[:route]).include?(request_route))
@@ -387,6 +396,10 @@ class Auth::DefaultCurrentUserProvider
       GlobalSetting.max_admin_api_reqs_per_key_per_minute,
       60
     ).performed!
+  end
+
+  def can_write?
+    @can_write ||= !Discourse.pg_readonly_mode?
   end
 
 end

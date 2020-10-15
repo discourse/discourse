@@ -7,31 +7,24 @@ export default DropdownSelectBoxComponent.extend({
 
   selectKitOptions: {
     icon: "bars",
-    showFullTitle: false
+    showFullTitle: false,
   },
 
-  content: computed(function() {
+  content: computed(function () {
     const items = [
       {
         id: "showAddMembersModal",
-        name: I18n.t("groups.add_members.title"),
-        icon: "user-plus"
-      }
+        name: I18n.t("groups.add_members.title", {
+          group_name: this.groupName,
+        }),
+        icon: "user-plus",
+      },
     ];
-
-    if (this.currentUser.admin) {
-      items.push({
-        id: "showBulkAddModal",
-        name: I18n.t("admin.groups.bulk_add.title"),
-        icon: "users"
-      });
-    }
-
     return items;
   }),
 
   @action
   onChange(id) {
     this.attrs && this.attrs[id] && this.attrs[id]();
-  }
+  },
 });

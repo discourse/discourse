@@ -138,7 +138,9 @@ module Oneboxer
   end
 
   def self.engine(url)
-    Onebox::Matcher.new(url).oneboxed
+    Onebox::Matcher.new(url, {
+      allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(allowed_iframe_origins)
+    }).oneboxed
   end
 
   def self.recently_failed?(url)
@@ -292,28 +294,37 @@ module Oneboxer
     end
   end
 
-  def self.blacklisted_domains
-    SiteSetting.onebox_domains_blacklist.split("|")
+  def self.blocked_domains
+    SiteSetting.blocked_onebox_domains.split("|")
   end
 
   def self.preserve_fragment_url_hosts
     @preserve_fragment_url_hosts ||= ['http://github.com']
   end
 
+  def self.allowed_iframe_origins
+    allowed = SiteSetting.allowed_onebox_iframes.split("|")
+    if allowed.include?("*")
+      allowed = Onebox::Engine.all_iframe_origins
+    end
+    allowed += SiteSetting.allowed_iframes.split("|")
+  end
+
   def self.external_onebox(url)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url,
                               ignore_redirects: ignore_redirects,
-                              ignore_hostnames: blacklisted_domains,
+                              ignore_hostnames: blocked_domains,
                               force_get_hosts: force_get_hosts,
                               force_custom_user_agent_hosts: force_custom_user_agent_hosts,
                               preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
-      return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
+      return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
         max_width: 695,
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
+        allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
       }
 

@@ -9,7 +9,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import {
   postUrl,
   escapeExpression,
-  formatUsername
+  formatUsername,
 } from "discourse/lib/utilities";
 import { setTransientHeader } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
@@ -67,6 +67,17 @@ export const DefaultNotificationItem = createWidget(
         return escapeExpression(badgeName);
       }
 
+      const groupName = data.group_name;
+
+      if (groupName) {
+        if (this.attrs.fancy_title) {
+          if (this.attrs.topic_id) {
+            return `<span class="mention-group notify">@${groupName}</span><span data-topic-id="${this.attrs.topic_id}"> ${this.attrs.fancy_title}</span>`;
+          }
+          return `<span class="mention-group notify">@${groupName}</span> ${this.attrs.fancy_title}`;
+        }
+      }
+
       if (this.attrs.fancy_title) {
         if (this.attrs.topic_id) {
           return `<span data-topic-id="${this.attrs.topic_id}">${this.attrs.fancy_title}</span>`;
@@ -81,11 +92,11 @@ export const DefaultNotificationItem = createWidget(
 
     text(notificationName, data) {
       const username = formatUsername(data.display_username);
-      const description = this.description(data);
+      const description = this.description(data, notificationName);
 
       return I18n.t(`notifications.${notificationName}`, {
         description,
-        username
+        username,
       });
     },
 
@@ -154,7 +165,7 @@ export const DefaultNotificationItem = createWidget(
             this.attrs.post_number,
             this.attrs.data.revision_number
           );
-        }
+        },
       });
     },
 
@@ -164,9 +175,9 @@ export const DefaultNotificationItem = createWidget(
         this.attrs.set("read", true);
         ajax("/notifications/mark-read", {
           method: "PUT",
-          data: { id: this.attrs.id }
+          data: { id: this.attrs.id },
         });
       }
-    }
+    },
   }
 );

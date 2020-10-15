@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class BookmarkManager
-  DEFAULT_OPTIONS = { delete_when_reminder_sent: false }
-
   include HasErrors
 
   def initialize(user)
@@ -10,10 +8,15 @@ class BookmarkManager
   end
 
   def create(post_id:, name: nil, reminder_type: nil, reminder_at: nil, options: {})
-    post = Post.unscoped.includes(:topic).find(post_id)
+    post = Post.find_by(id: post_id)
     reminder_type = parse_reminder_type(reminder_type)
 
-    raise Discourse::InvalidAccess.new if !Guardian.new(@user).can_see_post?(post)
+    # no bookmarking deleted posts or topics
+    raise Discourse::InvalidAccess if post.blank? || post.topic.blank?
+
+    if !Guardian.new(@user).can_see_post?(post) || !Guardian.new(@user).can_see_topic?(post.topic)
+      raise Discourse::InvalidAccess
+    end
 
     bookmark = Bookmark.create(
       {
@@ -24,14 +27,14 @@ class BookmarkManager
         reminder_type: reminder_type,
         reminder_at: reminder_at,
         reminder_set_at: Time.zone.now
-      }.merge(default_options(options))
+      }.merge(options)
     )
 
     if bookmark.errors.any?
       return add_errors_from(bookmark)
     end
 
-    update_topic_user_bookmarked(topic: post.topic, bookmarked: true)
+    update_topic_user_bookmarked(post.topic)
 
     bookmark
   end
@@ -44,16 +47,14 @@ class BookmarkManager
 
     bookmark.destroy
 
-    bookmarks_remaining_in_topic = Bookmark.exists?(topic_id: bookmark.topic_id, user: @user)
-    if !bookmarks_remaining_in_topic
-      update_topic_user_bookmarked(topic: bookmark.topic, bookmarked: false)
-    end
+    bookmarks_remaining_in_topic = update_topic_user_bookmarked(bookmark.topic)
 
     { topic_bookmarked: bookmarks_remaining_in_topic }
   end
 
-  def destroy_for_topic(topic)
+  def destroy_for_topic(topic, filter = {}, opts = {})
     topic_bookmarks = Bookmark.where(user_id: @user.id, topic_id: topic.id)
+    topic_bookmarks = topic_bookmarks.where(filter)
 
     Bookmark.transaction do
       topic_bookmarks.each do |bookmark|
@@ -61,7 +62,7 @@ class BookmarkManager
         bookmark.destroy
       end
 
-      update_topic_user_bookmarked(topic: topic, bookmarked: false)
+      update_topic_user_bookmarked(topic, opts)
     end
   end
 
@@ -84,7 +85,7 @@ class BookmarkManager
         reminder_at: reminder_at,
         reminder_type: reminder_type,
         reminder_set_at: Time.zone.now
-      }.merge(default_options(options))
+      }.merge(options)
     )
 
     if bookmark.errors.any?
@@ -96,16 +97,18 @@ class BookmarkManager
 
   private
 
-  def update_topic_user_bookmarked(topic:, bookmarked:)
-    TopicUser.change(@user.id, topic, bookmarked: bookmarked)
+  def update_topic_user_bookmarked(topic, opts = {})
+    # PostCreator can specify whether auto_track is enabled or not, don't want to
+    # create a TopicUser in that case
+    bookmarks_remaining_in_topic = Bookmark.exists?(topic_id: topic.id, user: @user)
+    return bookmarks_remaining_in_topic if opts.key?(:auto_track) && !opts[:auto_track]
+
+    TopicUser.change(@user.id, topic, bookmarked: bookmarks_remaining_in_topic)
+    bookmarks_remaining_in_topic
   end
 
   def parse_reminder_type(reminder_type)
     return if reminder_type.blank?
     reminder_type.is_a?(Integer) ? reminder_type : Bookmark.reminder_types[reminder_type.to_sym]
-  end
-
-  def default_options(options)
-    DEFAULT_OPTIONS.merge(options) { |key, old, new| new.nil? ? old : new }
   end
 end

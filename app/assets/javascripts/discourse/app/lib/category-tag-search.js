@@ -19,7 +19,7 @@ function updateCache(term, results) {
 }
 
 function searchTags(term, categories, limit) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const clearPromise = later(
       () => {
         resolve(CANCELLED_STATUS);
@@ -31,16 +31,16 @@ function searchTags(term, categories, limit) {
       oldSearch = $.ajax(getURL("/tags/filter/search"), {
         type: "GET",
         cache: true,
-        data: { limit: limit, q }
+        data: { limit: limit, q },
       });
 
       var returnVal = CANCELLED_STATUS;
 
       oldSearch
-        .then(r => {
-          const categoryNames = cats.map(c => c.model.get("name"));
+        .then((r) => {
+          const categoryNames = cats.map((c) => c.model.get("name"));
 
-          const tags = r.results.map(tag => {
+          const tags = r.results.map((tag) => {
             const tagName = tag.text;
 
             return {
@@ -48,7 +48,7 @@ function searchTags(term, categories, limit) {
               text: categoryNames.includes(tagName)
                 ? `${tagName}${TAG_HASHTAG_POSTFIX}`
                 : tagName,
-              count: tag.count
+              count: tag.count,
             };
           });
 
@@ -60,7 +60,7 @@ function searchTags(term, categories, limit) {
         });
     }, 300);
 
-    debouncedSearch(term, categories, result => {
+    debouncedSearch(term, categories, (result) => {
       cancel(clearPromise);
       resolve(updateCache(term, result));
     });
@@ -73,15 +73,19 @@ export function search(term, siteSettings) {
     oldSearch = null;
   }
 
-  if (new Date() - cacheTime > 30000) cache = {};
+  if (new Date() - cacheTime > 30000) {
+    cache = {};
+  }
   const cached = cache[term];
-  if (cached) return cached;
+  if (cached) {
+    return cached;
+  }
 
   const limit = 5;
   var categories = Category.search(term, { limit });
   var numOfCategories = categories.length;
 
-  categories = categories.map(category => {
+  categories = categories.map((category) => {
     return { model: category, text: Category.slugFor(category, SEPARATOR, 2) };
   });
 

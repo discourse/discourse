@@ -8,28 +8,33 @@ export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["category-selector"],
   classNames: ["category-selector"],
   categories: null,
-  blacklist: null,
+  blockedCategories: null,
 
   selectKitOptions: {
     filterable: true,
     allowAny: false,
     allowUncategorized: "allowUncategorized",
     displayCategoryDescription: false,
-    selectedNameComponent: "multi-select/selected-category"
+    selectedNameComponent: "multi-select/selected-category",
   },
 
   init() {
     this._super(...arguments);
 
-    if (!this.categories) this.set("categories", []);
-    if (!this.blacklist) this.set("blacklist", []);
+    if (!this.categories) {
+      this.set("categories", []);
+    }
+    if (!this.blockedCategories) {
+      this.set("blockedCategories", []);
+    }
   },
 
-  content: computed("categories.[]", "blacklist.[]", function() {
-    const blacklist = makeArray(this.blacklist);
-    return Category.list().filter(category => {
+  content: computed("categories.[]", "blockedCategories.[]", function () {
+    const blockedCategories = makeArray(this.blockedCategories);
+    return Category.list().filter((category) => {
       return (
-        this.categories.includes(category) || !blacklist.includes(category)
+        this.categories.includes(category) ||
+        !blockedCategories.includes(category)
       );
     });
   }),
@@ -38,7 +43,7 @@ export default MultiSelectComponent.extend({
 
   filterComputedContent(computedContent, filter) {
     const regex = new RegExp(filter, "i");
-    return computedContent.filter(category =>
+    return computedContent.filter((category) =>
       this._normalize(get(category, "name")).match(regex)
     );
   },
@@ -50,9 +55,9 @@ export default MultiSelectComponent.extend({
   actions: {
     onChange(values) {
       this.attrs.onChange(
-        values.map(v => Category.findById(v)).filter(Boolean)
+        values.map((v) => Category.findById(v)).filter(Boolean)
       );
       return false;
-    }
-  }
+    },
+  },
 });

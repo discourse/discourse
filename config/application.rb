@@ -53,6 +53,8 @@ end
 
 require 'pry-rails' if Rails.env.development?
 
+require 'discourse_fonts'
+
 if defined?(Bundler)
   bundler_groups = [:default]
 
@@ -132,8 +134,7 @@ module Discourse
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
     if Rails.env == "development" || Rails.env == "test"
-      config.assets.paths << "#{config.root}/test/javascripts"
-      config.assets.paths << "#{config.root}/test/stylesheets"
+      config.assets.paths << "#{config.root}/app/assets/javascripts/discourse/tests"
       config.assets.paths << "#{config.root}/node_modules"
     end
 
@@ -259,6 +260,7 @@ module Discourse
     # Our templates shouldn't start with 'discourse/app/templates'
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
+      'admin/addon/templates' => 'admin/templates/',
       'select-kit/addon/templates' => 'select-kit/templates/'
     }
 
@@ -307,6 +309,10 @@ module Discourse
       config.assets.precompile << "#{file}.js"
     end
 
+    # Use discourse-fonts gem to symlink fonts and generate .scss file
+    fonts_path = File.join(config.root, 'public/fonts')
+    Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
+
     require_dependency 'stylesheet/manager'
     require_dependency 'svg_sprite/svg_sprite'
 
@@ -349,7 +355,7 @@ module Discourse
             %w{qunit.js
               qunit.css
               test_helper.css
-              test_helper.js
+              discourse/tests/test_helper.js
               wizard/test/test_helper.js
             }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||

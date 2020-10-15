@@ -7,5 +7,5 @@ export default Component.extend({
   @discourseComputed("user.role")
   roleName(role) {
     return this.roles.findBy("id", role).label;
-  }
+  },
 });

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ur:
   js:
@@ -117,9 +116,6 @@ ur:
       topic_html: 'ٹاپک: <span class="topic-title">%{topicTitle}</span>'
       post: "پوسٹ #%{postNumber}"
       close: "بند کریں"
-      twitter: "ٹوئٹر پر اِس لِنک کو شیئرکریں"
-      facebook: "فَیسبُک پر اِس لِنک کو شیئرکریں"
-      email: "اِس لِنک کو ایک ایمَیل میں بھیجیں"
     action_codes:
       public_topic: "اس ٹاپک کو پبلک بنایا گیا %{when}"
       private_topic: "اس ٹاپک کو ذاتی پیغام بنایا گیا %{when}"
@@ -262,6 +258,7 @@ ur:
       remove: "بُک مارک ہٹائیں"
       confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس ٹاپک سے اپنے تمام بُک مارکس ہٹانا چاہتے ہیں؟"
       save: "محفوظ کریں"
+      search: "تلاش کریں"
       reminders:
         later_today: "آج بعد میں"
         tomorrow: "کَل"
@@ -510,10 +507,6 @@ ur:
     groups:
       member_added: "شامل کر دیا گیا"
       member_requested: "درخواست کیا گیا"
-      add_members:
-        title: "ممبران شامل کریں"
-        description: "اِس گروپ کی رکنیت کو مَینَیج کریں"
-        usernames: "صارف نام"
       requests:
         title: "درخواستیں"
         reason: "وجہ"
@@ -535,8 +528,13 @@ ur:
           title: تعامل
           posting: پوسٹ کرنا
           notification: اطلاع
+        email:
+          title: "اِی میل"
+          credentials:
+            username: "صارف کا نام"
+            password: "پاسورڈ"
         membership:
-          title: "ممبرشپ "
+          title: ممبرشپ
           access: رسائی
         logs:
           title: "لاگز"
@@ -905,7 +903,6 @@ ur:
         oauth_enabled_warning: "براہ مہربانی نوٹ کریں کہ ایک بار جب آپ کے اکاؤنٹ پر دو فیکٹر توثیق فعال ہو جائے تو سَوشَل لاگ اِن غیر فعال ہوجائیں گے۔"
         enforced_notice: "اِس سائٹ تک رسائی حاصل کرنے کیلئے آپ کا دو فیکٹر توثیق فعال کرنا ضروری ہے۔"
         disable: "غیر فعال کریں"
-        disable_confirm: "کیا آپ واقعی تمام دوسرے فیکٹر غیر فعال کرنا چاہتے ہیں؟"
         save: "محفوظ کریں"
         edit: "ترمیم"
         edit_title: "دوسرا فیکٹر ترمیم کریں"
@@ -1304,8 +1301,8 @@ ur:
       complete_email_found: "ہمیں ایک ایسا اکاؤنٹ مل گیا جو <b>%{email}</b> سے میچ کرتا ہے، آپ کو جلد ہی لاگ اِن لِنک کے ساتھ ایک ای میل موصول ہو جانی چاہئے۔"
       complete_username_not_found: "کوئی اکاؤنٹ صارف نام <b>%{username}</b> سے میچ نہیں کرتا"
       complete_email_not_found: "کوئی اکاؤنٹ <b>%{email}</b> سے میچ نہیں کرتا"
-      confirm_title: "%{site_name} پر جاری رکھیں"
-      logging_in_as: "%{email} کے طور پر لاگ اِن"
+      confirm_title: '%{site_name} پر جاری رکھیں'
+      logging_in_as: '%{email} کے طور پر لاگ اِن'
       confirm_button: لاگ اِن مکمل
     login:
       title: "لاگ اِن"
@@ -1374,7 +1371,6 @@ ur:
       accept_invite: "دعوت قبول کریں"
       success: "آپ کا اکاؤنٹ بنا دیا گیا ہے اور اب آپ لاگ اِن کر سکتے ہیں۔"
       name_label: "نام"
-      password_label: "پاس ورڈ رکھیں"
       optional_description: "(اختیاری)"
     password_reset:
       continue: "%{site_name} پر جاری رکھیں"
@@ -1545,7 +1541,6 @@ ur:
         draft: ڈرافٹ
         edit: ترمیم
         reply_to_post:
-          label: "%{postUsername} کی طرف سے پوسٹ %{postNumber} کا جواب دیں"
           desc: ایک مخصوص پوسٹ پر جواب دیں
         reply_as_new_topic:
           label: مُنسلِک ٹاپک کے طور پر جواب دیں
@@ -1723,8 +1718,6 @@ ur:
           noreplies: کے صفر جوابات ہوں
           single_user: صرف ایک صارف پر مشتمل ہوں
         post:
-          count:
-            label: کم از کم پوسٹ شمار
           time:
             label: پوسٹ کیا
             before: سے پہلے
@@ -1770,7 +1763,6 @@ ur:
         new: "آپ کے پاس کوئی نئے ٹاپک موجود نہیں۔"
         read: "ابھی تک آپ نے کوئی ٹاپکس نہیں پڑھے۔"
         posted: "ابھی تک آپ نے کسی ٹاپک میں پوسٹ نہیں کیا۔"
-        latest: "کوئی تازہ ٹاپک موجود نہیں ہیں۔ یہ اداس کر دینے والی بات ہے۔"
         bookmarks: "ابھی تک آپ کے بُک مارک کیے ہوے کوئی ٹاپک نہیں ہیں۔"
         category: "کوئی %{category} کے ٹاپک موجود نہیں ہیں۔"
         top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
@@ -1844,14 +1836,10 @@ ur:
       toggle_information: "ٹاپک تفصیلات ٹَوگل کریں"
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
-      group_request: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `%{name}` گروپ میں رکنیت کیلئے درخواست کی ضرورت ہے"
-      group_join: "آپ کو اِس ٹاپک کو دیکھنے کیلئے `%{name}` گروپ میں شامل ہونے کی ضرورت ہے"
-      group_request_sent: "آپ کی گروپ میں رکنیت کی درخواست بھیج دی گئی ہے۔ اُس کے قبول ہونے پر آپ کو مطلع کر دیا جائے گا۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
-      suggest_create_topic: کیوں نہ ایک ٹاپک بنائیں؟
       jump_reply_up: اِس سے پرانے جواب پر جائیں
       jump_reply_down: اِس سے نئے جواب پر جائیں
       deleted: "ٹاپک حذف کردیا گیا ہے"
@@ -1862,8 +1850,6 @@ ur:
         remove: "ٹائمر ہٹائیں"
         publish_to: "شائع کریں:"
         when: "کب:"
-        public_timer_types: ٹاپک ٹائمر
-        private_timer_types: صارف کے ٹاپک ٹائمر
         time_frame_required: براہ کرم ایک ٹائم فریم منتخب کریں
       auto_update_input:
         none: "ایک ٹائم فریم منتخب کریں"
@@ -1944,6 +1930,7 @@ ur:
           "2_8": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ اِس زمرہ کو ٹرَیک کر رہے ہیں۔"
           "2_4": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ نے اِس ٹاپک پر ایک جواب پوسٹ کیا۔"
           "2_2": "آپ نئے جوابات کا شمار دیکھ سکیں گے کیونکہ آپ اِس ٹاپک کو ٹرَیک کر رہے ہیں۔"
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
           "1": "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
           "0_7": "آپ اِس زمرہ میں تمام اطلاعات کو نظر انداز کر رہے ہیں۔"
@@ -2266,23 +2253,7 @@ ur:
         remove_post_notice: "اسٹاف نوٹِس ہٹائیں"
         remove_timer: "ٹائمر ہٹائیں"
       actions:
-        flag: "فلَیگ"
-        defer_flags:
-          one: "فلَیگ نظر انداز کریں"
-          other: "فلَیگز نظر انداز کریں"
-        undo:
-          off_topic: "فلَیگ کالعدم کریں"
-          spam: "فلَیگ کالعدم کریں"
-          inappropriate: "فلَیگ کالعدم کریں"
-          bookmark: "بُک مارک کالعدم کریں"
-          like: "لائیک کالعدم کریں"
         people:
-          off_topic: "اِس کو موضوع سے ہٹ کر ہونے کے طور پر فلَیگ کیا گیا"
-          spam: "اِس کو سپَیم ہونے کے طور پر فلَیگ کیا گیا"
-          inappropriate: "اِس کو نامناسب ہونے کے طور پر فلَیگ کیا گیا"
-          notify_moderators: "مطلع کردہ ماڈریٹرز"
-          notify_user: "ایک پیغام بھیجا"
-          bookmark: "اِس کو بُک مارک"
           like_capped:
             one: "اور %{count} دوسرے شخص نے اِس کو لائیک کیا"
             other: "اور %{count} دوسرے لوگوں نے اِس کو لائیک کیا"
@@ -2292,8 +2263,6 @@ ur:
           inappropriate: "آپ نے اِس کو نامناسب ہونے کے طور پر فلَیگ کیا"
           notify_moderators: "آپ نے اِس کو اعتدال کیلئے فلَیگ کیا"
           notify_user: "آپ نے اِس صارف کو پیغام بھیجا"
-          bookmark: "آپ نے اِس پوسٹ کو بُک مارک کیا"
-          like: "آپ نے اِس کو لائیک کیا"
       delete:
         confirm:
           one: "کیا آپ واقعی اُس پوسٹ کو حذف کرنا چاہتے ہیں؟"
@@ -2401,7 +2370,6 @@ ur:
       default_top_period: "پہلے سے طے شدہ ٹاپ کی مدت:"
       allow_badges_label: "اس زُمرہ میں بیجز دینے کی اجازت دیں"
       edit_permissions: "ترمیم کرنے کی اجازتیں"
-      reviewable_by_group: "اسٹاف کے علاوہ، اِس زمرہ میں پوسٹس اور فلیگز کا جائزہ لیا جا سکتا ہے، کی طرف سے:"
       review_group_name: "گروپ نام"
       require_topic_approval: "تمام نئے ٹاپکس کیلئے ماڈریٹر کی منظوری لازمی کریں"
       require_reply_approval: "تمام نئے جوابات کیلئے ماڈریٹر کی منظوری لازمی کریں"
@@ -2804,9 +2772,7 @@ ur:
         about: "زیادہ آسانی سے ٹیگز کو منظم کرنے کے لیے اُن کو گروپوں میں شامل کریں۔"
         new: "نیا گروپ"
         tags_label: "اِس گروپ میں ٹیگز:"
-        tags_placeholder: "ٹیگز"
         parent_tag_label: "بالائی ٹیگ:"
-        parent_tag_placeholder: "اختیاری"
         parent_tag_description: "جب تک بالائی ٹیگ موجود نہیں ہوگا اِس گروپ کے ٹیگز استعمال نہیں کیے جاسکتے۔"
         one_per_topic_label: "اِس گروپ سے ایک ٹیگ فی ٹاپک محدود کریں"
         new_name: "نیا ٹیگ گروپ"
@@ -2825,14 +2791,6 @@ ur:
           latest: "کوئی تازہ ترین ٹاپک موجود نہیں ہیں۔"
           bookmarks: "ابھی تک آپ کے بُک مارک کیے ہوے کوئی ٹاپک نہیں ہیں۔"
           top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
-        bottom:
-          latest: "کوئی مزید تازہ ترین ٹاپک موجود نہیں ہیں۔"
-          posted: "کوئی مزید پوسٹ کیے گئے ٹاپک موجود نہیں ہیں۔"
-          read: "کوئی مزید پڑھ لیے گئے ٹاپک موجود نہیں ہیں۔"
-          new: "کوئی مزید نئے ٹاپک موجود نہیں ہیں۔"
-          unread: "کوئی مزید بغیر پڑھے ٹاپک موجود نہیں ہیں۔"
-          top: "مزید کوئی ٹاپ ٹاپک موجود نہیں۔"
-          bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
     invite:
       custom_message: "<a href>اپنی مرضی کا پیغام</a> لکھ کر، اپنے دعوت نامہ کو ذرا سا مذید ذاتی بنائیں۔"
       custom_message_placeholder: "اپنی مرضی کے پیغام درج کریں"
@@ -2970,8 +2928,6 @@ ur:
               title: "کون اِس گروپ کو دیکھ سکتا ہے؟"
               public: "ہر کوئی"
               logged_on_users: "لاگ شدہ صارفین"
-              members: "گروپ کے مالکان، اراکین"
-              staff: "گروپ کے مالکان اور اسٹاف"
               owners: "گروپ مالکان"
               description: "ایڈمن تمام گروپس دیکھ سکتے ہیں۔"
             members_visibility_levels:
@@ -3215,7 +3171,6 @@ ur:
           subject: "موضوع"
           multiple_subjects: "اِس اِیمیل ٹَیمپلیٹ کے ایک سے زیادہ مضامین ہیں۔"
           body: "متن"
-          none_selected: "ترمیم شروع کرنے کیلئے ایک اِیمیل ٹَیمپلیٹ منتخب کریں۔"
           revert: "تبدیلیاں لوٹائیں"
           revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
         theme:
@@ -3606,7 +3561,6 @@ ur:
           domain: "ڈومین"
         screened_ips:
           title: "سکرین کیے گئے IP"
-          description: 'IP ایڈریس جن پر نظر رکھی ہوئی ہے۔ IP ایڈریسوں کو وائٹ لِسٹ کرنے کیلئے "اجازت دیں" کو استعمال کریں۔'
           delete_confirm: "کیا آپ واقعی %{ip_address} کیلئے اصول کو ہٹانا چاہتے ہیں؟"
           roll_up_confirm: "کیا آپ واقعی عام سکرین کیے گئے IP ایڈریسوں کو subnets میں رول اَپ کرنا چاہتے ہیں؟"
           rolled_up_some_subnets: "کامیابی کے ساتھ IP بین اندراجات کو اِن subnets میں رول اَپ کر دیا گیا: %{subnets}۔"
@@ -4052,10 +4006,10 @@ ur:
             other: "تفویض کرنے کیلئے <b>%{count}</b> بَیج موجود ہیں۔"
           sample: "نمونہ:"
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> اِس %{link} میں پوسٹ کیلئے"
-            with_post_time: "<span class=\"username\">%{username}</span> <span class=\"time\">%{time}</span> پر اِس %{link} میں پوسٹ کیلئے"
-            with_time: "<span class=\"username\">%{username}</span> <span class=\"time\">%{time}</span> پر"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> اِس %{link} میں پوسٹ کیلئے
+            with_post_time: <span class="username">%{username}</span> <span class="time">%{time}</span> پر اِس %{link} میں پوسٹ کیلئے
+            with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> پر
         badge_intro:
           title: "شروعات کیلئے، ایک موجودہ بَیج منتخب کریں یا ایک نیا بنائیں"
           what_are_badges_title: "بَیج کیا ہیں؟"
@@ -4076,7 +4030,6 @@ ur:
         title: "اَیمبَیڈ کرنا"
         host: "اجازت یافتہ ہَوسٹ"
         class_name: "کلاس کا نام"
-        path_whitelist: "پاتھ وائِٹ لِسٹ"
         edit: "ترمیم"
         category: "زمرہ میں پوسٹ کریں"
         add_host: "ہَوسٹ شامل کریں"
@@ -4087,9 +4040,6 @@ ur:
         embed_post_limit: "پعسٹس اَیمبَیڈ کرنے کی زیادہ سے زیادہ تعداد۔"
         embed_title_scrubber: "پوسٹس کے عنوان صاف کرنے کیلئے استعمال ہونے والا رَیگولَر اَیکسپرَیشن"
         embed_truncate: "اَیمبَیڈ کی گئی پوسٹس کو تراشیں"
-        embed_whitelist_selector: "عناصر کیلئے CSS سلیکٹر جن کی اَیمبَیڈ میں اجازت ہے"
-        embed_blacklist_selector: "عناصر کیلئے CSS سلیکٹر جن کو اَیمبَیڈ سے ہٹایا گیا ہے"
-        embed_classname_whitelist: "اجازت یافتہ CSS کلاسوں کے نام"
         save: "اَیمبَیڈ کرنے کی سیٹِنگ محفوظ کریں"
       permalink:
         title: "دائمی لِنکس"
@@ -4100,7 +4050,6 @@ ur:
         post_title: "پوسٹ"
         category_id: "زمرہ ID"
         category_title: "زمرہ"
-        external_url: "بیرونی URL"
         delete_confirm: کیا آپ واقعی اِس دائمی لِنک کو حذف کرنا چاہتے ہیں؟
         form:
           label: "نیا:"

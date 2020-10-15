@@ -11,5 +11,5 @@ export default Mixin.create({
     "isCurrentUser",
     "canStaffCheckEmails",
     "canAdminCheckEmails"
-  )
+  ),
 });

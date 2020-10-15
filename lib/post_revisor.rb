@@ -192,8 +192,13 @@ class PostRevisor
       PostLocker.new(@post, @editor).lock
     end
 
-    # We log staff edits to posts
-    if @editor.staff? && @editor.id != @post.user_id && @fields.has_key?('raw') && !@opts[:skip_staff_log]
+    # We log staff/group moderator edits to posts
+    if (
+      (@editor.staff? || (@post.is_category_description? && Guardian.new(@editor).can_edit_category_description?(@post.topic.category))) &&
+      @editor.id != @post.user_id &&
+      @fields.has_key?('raw') &&
+      !@opts[:skip_staff_log]
+    )
       StaffActionLogger.new(@editor).log_post_edit(
         @post,
         old_raw: old_raw
@@ -381,6 +386,7 @@ class PostRevisor
     @post.extract_quoted_post_numbers
 
     @post_successfully_saved = @post.save(validate: @validate_post)
+    @post.link_post_uploads
     @post.save_reply_relationships
 
     # post owner changed

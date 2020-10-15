@@ -1,12 +1,10 @@
-import { alias } from "@ember/object/computed";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
-import DiscourseNavigation from "discourse/components/d-navigation";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
   order: { replace: true, refreshModel: true },
-  ascending: { replace: true, refreshModel: true },
+  ascending: { replace: true, refreshModel: true, default: false },
   status: { replace: true, refreshModel: true },
   state: { replace: true, refreshModel: true },
   search: { replace: true, refreshModel: true },
@@ -14,34 +12,50 @@ export const queryParams = {
   q: { replace: true, refreshModel: true },
   tags: { replace: true },
   before: { replace: true, refreshModel: true },
-  bumped_before: { replace: true, refreshModel: true }
+  bumped_before: { replace: true, refreshModel: true },
+  f: { replace: true, refreshModel: true },
 };
 
 // Basic controller options
 const controllerOpts = {
   discoveryTopics: inject("discovery/topics"),
-  queryParams: Object.keys(queryParams)
+  queryParams: Object.keys(queryParams),
 };
 
-// Aliases for the values
-controllerOpts.queryParams.forEach(
-  p => (controllerOpts[p] = alias(`discoveryTopics.${p}`))
-);
+// Default to `null`
+controllerOpts.queryParams.forEach((p) => {
+  controllerOpts[p] = queryParams[p].default;
+});
+
+export function changeSort(sortBy) {
+  let { controller } = this;
+  let model = this.controllerFor("discovery.topics").model;
+  if (sortBy === controller.order) {
+    controller.toggleProperty("ascending");
+    model.updateSortParams(sortBy, controller.ascending);
+  } else {
+    controller.setProperties({ order: sortBy, ascending: false });
+    model.updateSortParams(sortBy, false);
+  }
+}
+
+export function resetParams(skipParams = []) {
+  let { controller } = this;
+  controllerOpts.queryParams.forEach((p) => {
+    if (!skipParams.includes(p)) {
+      controller.set(p, queryParams[p].default);
+    }
+  });
+}
 
 const SortableController = Controller.extend(controllerOpts);
 
-export const addDiscoveryQueryParam = function(p, opts) {
+export const addDiscoveryQueryParam = function (p, opts) {
   queryParams[p] = opts;
   const cOpts = {};
-  cOpts[p] = alias(`discoveryTopics.${p}`);
+  cOpts[p] = null;
   cOpts["queryParams"] = Object.keys(queryParams);
   SortableController.reopen(cOpts);
-
-  if (opts && opts.persisted) {
-    DiscourseNavigation.reopen({
-      persistedQueryParams: queryParams
-    });
-  }
 };
 
 export default SortableController;

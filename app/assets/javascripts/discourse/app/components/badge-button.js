@@ -7,7 +7,7 @@ export default Component.extend({
   classNameBindings: [
     ":user-badge",
     "badge.badgeTypeClassName",
-    "badge.enabled::disabled"
+    "badge.enabled::disabled",
   ],
 
   @discourseComputed("badge.description")
@@ -16,5 +16,5 @@ export default Component.extend({
   },
 
   attributeBindings: ["data-badge-name", "title"],
-  "data-badge-name": alias("badge.name")
+  "data-badge-name": alias("badge.name"),
 });

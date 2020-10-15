@@ -3,6 +3,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
+import { deepMerge } from "discourse-common/lib/object";
 
 export default DiscourseRoute.extend({
   titleToken() {
@@ -11,8 +12,8 @@ export default DiscourseRoute.extend({
 
   model(params) {
     if (PreloadStore.get("password_reset")) {
-      return PreloadStore.getAndRemove("password_reset").then(json =>
-        _.merge(params, json)
+      return PreloadStore.getAndRemove("password_reset").then((json) =>
+        deepMerge(params, json)
       );
     }
   },
@@ -22,8 +23,8 @@ export default DiscourseRoute.extend({
     if (model) {
       return ajax({
         url: userPath(`confirm-email-token/${model.token}.json`),
-        dataType: "json"
+        dataType: "json",
       });
     }
-  }
+  },
 });

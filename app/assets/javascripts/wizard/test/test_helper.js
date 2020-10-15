@@ -1,18 +1,20 @@
 // discourse-skip-module
-/*global document, sinon, Logster, QUnit */
+/*global document, Logster, QUnit */
 
 //= require env
 //= require jquery.debug
 //= require ember.debug
 //= require locales/i18n
 //= require locales/en_US
+//= require route-recognizer/dist/route-recognizer
+//= require fake_xml_http_request
+//= require pretender/pretender
+//= require qunit/qunit/qunit
+//= require ember-qunit
 //= require discourse-loader
 //= require jquery.debug
 //= require handlebars
 //= require ember-template-compiler
-//= require qunit/qunit/qunit
-//= require ember-qunit
-//= require discourse-shims
 //= require wizard-application
 //= require wizard-vendor
 //= require helpers/assertions
@@ -20,10 +22,8 @@
 //= require_tree ./acceptance
 //= require_tree ./models
 //= require_tree ./components
-//= require fake_xml_http_request
-//= require route-recognizer/dist/route-recognizer
-//= require pretender/pretender
 //= require ./wizard-pretender
+//= require test-shims
 
 // Trick JSHint into allow document.write
 var d = document;
@@ -49,11 +49,11 @@ var createPretendServer = requirejs(
 ).default;
 
 var server;
-QUnit.testStart(function() {
+QUnit.testStart(function () {
   server = createPretendServer();
 });
 
-QUnit.testDone(function() {
+QUnit.testDone(function () {
   server.shutdown();
 });
 
@@ -61,7 +61,7 @@ var _testApp = requirejs("wizard/test/helpers/start-app").default();
 var _buildResolver = requirejs("discourse-common/resolver").buildResolver;
 window.setResolver(_buildResolver("wizard").create({ namespace: _testApp }));
 
-Object.keys(requirejs.entries).forEach(function(entry) {
+Object.keys(requirejs.entries).forEach(function (entry) {
   if (/\-test/.test(entry)) {
     requirejs(entry, null, null, true);
   }

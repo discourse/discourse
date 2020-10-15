@@ -38,6 +38,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :seen_notification_id,
              :primary_group_id,
              :can_create_topic,
+             :can_create_group,
              :link_posting_access,
              :external_id,
              :top_category_ids,
@@ -47,10 +48,11 @@ class CurrentUserSerializer < BasicUserSerializer
              :ignored_users,
              :title_count_mode,
              :timezone,
-             :featured_topic
+             :featured_topic,
+             :skip_new_user_tips
 
   def groups
-    object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
+    object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }
   end
 
   def link_posting_access
@@ -59,6 +61,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_create_topic
     scope.can_create_topic?(nil)
+  end
+
+  def can_create_group
+    scope.can_create_group?
+  end
+
+  def include_can_create_group?
+    scope.can_create_group?
   end
 
   def read_faq
@@ -202,6 +212,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def mailing_list_mode
     object.user_option.mailing_list_mode
+  end
+
+  def skip_new_user_tips
+    object.user_option.skip_new_user_tips
   end
 
   def include_primary_group_id?

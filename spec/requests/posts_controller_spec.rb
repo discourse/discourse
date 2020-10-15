@@ -125,7 +125,7 @@ describe PostsController do
       let(:url) { "/posts/#{post.id}/reply-history.json" }
     end
 
-    it "returns the replies with whitelisted user custom fields" do
+    it "returns the replies with allowlisted user custom fields" do
       parent = Fabricate(:post)
       child = Fabricate(:post, topic: parent.topic, reply_to_post_number: parent.post_number)
 
@@ -426,6 +426,53 @@ describe PostsController do
       end
     end
 
+    describe "when logged in as group moderator" do
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic) }
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:user_gm) { group_user.user }
+      let(:group) { group_user.group }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: topic.id)
+        sign_in(user_gm)
+      end
+
+      it "allows updating the category description" do
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response.status).to eq(200)
+
+        post.reload
+        expect(post.raw).to eq('edited body')
+        expect(UserHistory.where(action: UserHistory.actions[:post_edit]).count).to eq(1)
+      end
+
+      it "can not update other posts within the primary category topic" do
+        second_post = Fabricate(:post, user: user, topic: topic)
+
+        put "/posts/#{second_post.id}.json", params: update_params
+        expect(response.status).to eq(403)
+      end
+
+      it "can not update other first posts of topics in the same category" do
+        second_topic_in_category = Fabricate(:topic, category: category)
+        post_in_second_topic = Fabricate(:post, user: user, topic: second_topic_in_category)
+
+        put "/posts/#{post_in_second_topic.id}.json", params: update_params
+        expect(response.status).to eq(403)
+      end
+
+      it "can not update category descriptions in other categories" do
+        second_category = Fabricate(:category)
+        topic.update!(category: second_category)
+
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response.status).to eq(403)
+      end
+
+    end
+
     it 'can not change category to a disallowed category' do
       post = create_post
       sign_in(post.user)
@@ -582,7 +629,7 @@ describe PostsController do
 
       it "will invalidate broken images cache" do
         sign_in(moderator)
-        post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"].to_json
+        post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"]
         post.save_custom_fields
         put "/posts/#{post.id}/rebake.json"
         post.reload
@@ -892,7 +939,7 @@ describe PostsController do
         expect(response.status).to eq(422)
       end
 
-      it 'can not create a post in a disallowed category' do
+      it 'cannot create a post in a disallowed category' do
         category.set_permissions(staff: :full)
         category.save!
 
@@ -906,7 +953,7 @@ describe PostsController do
         expect(response.status).to eq(403)
       end
 
-      it 'can not create a post with a tag that is restricted' do
+      it 'cannot create a post with a tag that is restricted' do
         SiteSetting.tagging_enabled = true
         tag = Fabricate(:tag)
         category.allowed_tags = [tag.name]
@@ -921,6 +968,51 @@ describe PostsController do
         expect(response.status).to eq(422)
         json = response.parsed_body
         expect(json['errors']).to be_present
+      end
+
+      it 'cannot create a post with a tag when tagging is disabled' do
+        SiteSetting.tagging_enabled = false
+        tag = Fabricate(:tag)
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(422)
+        json = response.parsed_body
+        expect(json['errors']).to be_present
+      end
+
+      it 'cannot create a post with a tag without tagging permission' do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.min_trust_level_to_tag_topics = 4
+        tag = Fabricate(:tag)
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(422)
+        json = response.parsed_body
+        expect(json['errors']).to be_present
+      end
+
+      it 'can create a post with a tag when tagging is enabled' do
+        SiteSetting.tagging_enabled = true
+        tag = Fabricate(:tag)
+
+        post "/posts.json", params: {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          tags: [tag.name],
+        }
+
+        expect(response.status).to eq(200)
+        expect(Post.last.topic.tags.count).to eq(1)
       end
 
       it 'creates the post' do
@@ -991,11 +1083,17 @@ describe PostsController do
         user_2 = Fabricate(:user)
         user_3 = Fabricate(:user, username: "foo_bar")
 
+        # In certain edge cases, it's possible to end up with a username
+        # containing characters that would normally fail to validate
+        user_4 = Fabricate(:user, username: "Iyi_Iyi")
+        user_4.update_attribute(:username, "İyi_İyi")
+        user_4.update_attribute(:username_lower, "İyi_İyi".downcase)
+
         post "/posts.json", params: {
           raw: 'this is the test content',
           archetype: 'private_message',
           title: "this is some post",
-          target_recipients: "#{user_2.username},Foo_Bar"
+          target_recipients: "#{user_2.username},Foo_Bar,İyi_İyi"
         }
 
         expect(response.status).to eq(200)
@@ -1005,7 +1103,7 @@ describe PostsController do
 
         expect(new_post.user).to eq(user)
         expect(new_topic.private_message?).to eq(true)
-        expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3)
+        expect(new_topic.allowed_users).to contain_exactly(user, user_2, user_3, user_4)
       end
 
       context "when target_recipients not provided" do
@@ -1654,6 +1752,17 @@ describe PostsController do
       get "/u/#{user.username}/activity.json"
       expect(response.status).to eq(404)
     end
+
+    it "succeeds when `allow_users_to_hide_profile` is false" do
+      user.user_option.update_columns(hide_profile_and_presence: true)
+      SiteSetting.allow_users_to_hide_profile = false
+
+      get "/u/#{user.username}/activity.rss"
+      expect(response.status).to eq(200)
+
+      get "/u/#{user.username}/activity.json"
+      expect(response.status).to eq(200)
+    end
   end
 
   describe '#latest' do
@@ -1795,11 +1904,9 @@ describe PostsController do
   end
 
   describe "#notice" do
-    before do
+    it 'can create and remove notices as a moderator' do
       sign_in(moderator)
-    end
 
-    it 'can create and remove notices' do
       put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
 
       expect(response.status).to eq(200)
@@ -1807,6 +1914,7 @@ describe PostsController do
       expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
+      expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_create]).count).to eq(1)
 
       put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
 
@@ -1814,6 +1922,53 @@ describe PostsController do
       public_post.reload
       expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
       expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+      expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_destroy]).count).to eq(1)
+    end
+
+    describe 'group moderators' do
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:user) { group_user.user }
+      let(:group) { group_user.group }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        topic.category.update!(reviewable_by_group_id: group.id)
+
+        sign_in(user)
+      end
+
+      it 'can create and remove notices as a group moderator' do
+        put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
+
+        expect(response.status).to eq(200)
+        public_post.reload
+        expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
+        expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
+        expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
+
+        put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
+
+        expect(response.status).to eq(200)
+        public_post.reload
+        expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
+        expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+      end
+
+      it 'prevents a group moderator from altering notes outside of their category' do
+        moderatable_group = Fabricate(:group)
+        topic.category.update!(reviewable_by_group_id: moderatable_group.id)
+
+        put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
+
+        expect(response.status).to eq(404)
+      end
+
+      it 'prevents a normal user from altering notes' do
+        group_user.destroy!
+        put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
+
+        expect(response.status).to eq(404)
+      end
     end
   end
 

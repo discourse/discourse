@@ -23,7 +23,7 @@ createWidget("topic-header-participant", {
     if (attrs.type === "user") {
       content = avatarImg("tiny", {
         template: user.avatar_template,
-        username: user.username
+        username: user.username,
       });
       url = user.get("path");
     } else {
@@ -38,8 +38,8 @@ createWidget("topic-header-participant", {
         attributes: {
           href: url,
           "data-auto-route": true,
-          title: attrs.username
-        }
+          title: attrs.username,
+        },
       },
       content
     );
@@ -53,7 +53,7 @@ createWidget("topic-header-participant", {
       $target
     );
     e.preventDefault();
-  }
+  },
 });
 
 export default createWidget("header-topic-info", {
@@ -68,14 +68,11 @@ export default createWidget("header-topic-info", {
 
   buildFancyTitleClass() {
     const baseClass = ["topic-link"];
-    const flatten = array => [].concat.apply([], array);
+    const flatten = (array) => [].concat.apply([], array);
     const extraClass = flatten(
       applyDecorators(this, "fancyTitleClass", this.attrs, this.state)
     );
-    return baseClass
-      .concat(extraClass)
-      .filter(Boolean)
-      .join(" ");
+    return baseClass.concat(extraClass).filter(Boolean).join(" ");
   },
 
   buildAttributes(attrs, state) {
@@ -91,7 +88,7 @@ export default createWidget("header-topic-info", {
           h(
             "a.private-message-glyph-wrapper",
             {
-              attributes: { href, "aria-label": I18n.t("user.messages.inbox") }
+              attributes: { href, "aria-label": I18n.t("user.messages.inbox") },
             },
             iconNode("envelope", { class: "private-message-glyph" })
           )
@@ -112,7 +109,7 @@ export default createWidget("header-topic-info", {
           action: "jumpToTopPost",
           href,
           attributes: { "data-topic-id": topic.get("id") },
-          contents: () => titleHTML
+          contents: () => titleHTML,
         })
       );
     }
@@ -152,7 +149,7 @@ export default createWidget("header-topic-info", {
           topicDetails.allowed_users.length +
           topicDetails.allowed_groups.length;
 
-        topicDetails.allowed_users.some(user => {
+        topicDetails.allowed_users.some((user) => {
           if (participants.length >= maxHeaderParticipants) {
             return true;
           }
@@ -161,12 +158,12 @@ export default createWidget("header-topic-info", {
             this.attach("topic-header-participant", {
               type: "user",
               user,
-              username: user.username
+              username: user.username,
             })
           );
         });
 
-        topicDetails.allowed_groups.some(group => {
+        topicDetails.allowed_groups.some((group) => {
           if (participants.length >= maxHeaderParticipants) {
             return true;
           }
@@ -175,7 +172,7 @@ export default createWidget("header-topic-info", {
             this.attach("topic-header-participant", {
               type: "group",
               group,
-              username: group.name
+              username: group.name,
             })
           );
         });
@@ -188,7 +185,7 @@ export default createWidget("header-topic-info", {
               action: "jumpToTopPost",
               href,
               attributes: { "data-topic-id": topic.get("id") },
-              contents: () => `+${remaining}`
+              contents: () => `+${remaining}`,
             })
           );
         }
@@ -228,5 +225,5 @@ export default createWidget("header-topic-info", {
     if (topic) {
       DiscourseURL.routeTo(topic.get("firstPostUrl"));
     }
-  }
+  },
 });

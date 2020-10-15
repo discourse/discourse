@@ -1,10 +1,11 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
 import showModal from "discourse/lib/show-modal";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
 
 export default DiscourseRoute.extend({
   model(params) {
-    Invite.findInvitedCount(this.modelFor("user")).then(result =>
+    Invite.findInvitedCount(this.modelFor("user")).then((result) =>
       this.set("invitesCount", result)
     );
     this.inviteFilter = params.filter;
@@ -24,7 +25,7 @@ export default DiscourseRoute.extend({
       filter: this.inviteFilter,
       searchTerm: "",
       totalInvites: model.invites.length,
-      invitesCount: this.invitesCount
+      invitesCount: this.invitesCount,
     });
   },
 
@@ -36,9 +37,9 @@ export default DiscourseRoute.extend({
           title: "user.invited.single_user",
           model: {
             inviteModel: this.currentUser,
-            userInvitedShow: this.controllerFor("user-invited-show")
-          }
-        }
+            userInvitedShow: this.controllerFor("user-invited-show"),
+          },
+        },
       ];
 
       if (this.get("currentUser.staff")) {
@@ -47,19 +48,19 @@ export default DiscourseRoute.extend({
           title: "user.invited.multiple_user",
           model: {
             inviteModel: this.currentUser,
-            userInvitedShow: this.controllerFor("user-invited-show")
-          }
+            userInvitedShow: this.controllerFor("user-invited-show"),
+          },
         });
       }
 
       showModal("share-and-invite", {
         modalClass: "share-and-invite",
-        panels
+        panels,
       });
     },
 
     editInvite(inviteKey) {
-      const inviteLink = `${Discourse.BaseUrl}/invites/${inviteKey}`;
+      const inviteLink = getAbsoluteURL(`/invites/${inviteKey}`);
       this.currentUser.setProperties({ finished: true, inviteLink });
       const panels = [
         {
@@ -67,15 +68,15 @@ export default DiscourseRoute.extend({
           title: "user.invited.generate_link",
           model: {
             inviteModel: this.currentUser,
-            userInvitedShow: this.controllerFor("user-invited-show")
-          }
-        }
+            userInvitedShow: this.controllerFor("user-invited-show"),
+          },
+        },
       ];
 
       showModal("share-and-invite", {
         modalClass: "share-and-invite",
-        panels
+        panels,
       });
-    }
-  }
+    },
+  },
 });

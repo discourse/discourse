@@ -13,7 +13,7 @@
   <%= preload_script "ember_jquery" %>
   <%= preload_script "vendor" %>
   <%= render_google_universal_analytics_code %>
-  <%= tag.meta id: 'data-activate-account', data: { path: path('/u/hp') } %>
+  <%= tag.meta id: 'data-activate-account', data: { path: path('/session/hp') } %>
 <%- end %>
 
 <%= preload_script "activate-account" %>

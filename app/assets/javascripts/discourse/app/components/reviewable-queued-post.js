@@ -5,6 +5,6 @@ export default Component.extend({
   actions: {
     showRawEmail() {
       showModal("raw-email").set("rawEmail", this.reviewable.payload.raw_email);
-    }
-  }
+    },
+  },
 });

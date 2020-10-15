@@ -286,6 +286,8 @@ describe TopicView do
     context '.post_counts_by_user' do
       it 'returns the two posters with their appropriate counts' do
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
+        # Should not be counted
+        Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper], action_code: 'assign')
 
         expect(TopicView.new(topic.id, admin).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
 
@@ -344,6 +346,24 @@ describe TopicView do
         expect(TopicView.new(topic.id, user).user_post_bookmarks.pluck(:id)).to match_array(
           [bookmark1.id, bookmark2.id]
         )
+      end
+    end
+
+    context "#first_post_bookmark_reminder_at" do
+      let!(:user) { Fabricate(:user) }
+      let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
+
+      it "gets the first post bookmark reminder at for the user" do
+        expect(TopicView.new(topic.id, user).first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+      end
+
+      context "when the topic is deleted" do
+        it "gets the first post bookmark reminder at for the user" do
+          topic_view = TopicView.new(topic, user)
+          PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
+          topic.reload
+          expect(topic_view.first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+        end
       end
     end
 

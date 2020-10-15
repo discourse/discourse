@@ -10,7 +10,7 @@ const context = {
       return;
     }
     $(document).scrollTop(0);
-  }
+  },
 };
 
 function scrollTop() {
@@ -27,7 +27,7 @@ export default Mixin.create({
     );
     this._super(...arguments);
     scrollTop();
-  }
+  },
 });
 
 export { scrollTop };

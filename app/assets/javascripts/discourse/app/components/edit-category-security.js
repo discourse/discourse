@@ -15,7 +15,7 @@ export default buildCategoryPanel("security", {
       selectedGroup: this.get("category.availableGroups.firstObject"),
       selectedPermission: this.get(
         "category.availablePermissions.firstObject.id"
-      )
+      ),
     });
   },
 
@@ -37,14 +37,14 @@ export default buildCategoryPanel("security", {
     onSelectGroup(selectedGroup) {
       this.setProperties({
         interactedWithDropdowns: true,
-        selectedGroup
+        selectedGroup,
       });
     },
 
     onSelectPermission(selectedPermission) {
       this.setProperties({
         interactedWithDropdowns: true,
-        selectedPermission
+        selectedPermission,
       });
     },
 
@@ -58,14 +58,14 @@ export default buildCategoryPanel("security", {
       if (!this.get("category.is_special")) {
         this.category.addPermission({
           group_name: group + "",
-          permission: PermissionType.create({ id: parseInt(id, 10) })
+          permission: PermissionType.create({ id: parseInt(id, 10) }),
         });
       }
 
       this.setProperties({
         selectedGroup: this.get("category.availableGroups.firstObject"),
         showPendingGroupChangesAlert: false,
-        interactedWithDropdowns: false
+        interactedWithDropdowns: false,
       });
     },
 
@@ -73,6 +73,6 @@ export default buildCategoryPanel("security", {
       if (!this.get("category.is_special")) {
         this.category.removePermission(permission);
       }
-    }
-  }
+    },
+  },
 });

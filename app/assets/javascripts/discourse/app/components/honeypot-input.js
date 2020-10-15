@@ -13,5 +13,5 @@ export default TextField.extend({
     } else {
       this.set("type", "password");
     }
-  }
+  },
 });

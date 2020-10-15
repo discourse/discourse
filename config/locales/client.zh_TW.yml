@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 zh_TW:
   js:
@@ -95,9 +94,6 @@ zh_TW:
       topic_html: '話題<span class="topic-title">%{topicTitle}</span>'
       post: "貼文 #%{postNumber} "
       close: "關閉"
-      twitter: "分享連結到Twitter"
-      facebook: "分享連結到Facebook"
-      email: "以電子郵件傳送連結"
     action_codes:
       public_topic: "於 %{when}發佈這個話題"
       private_topic: "於 %{when} 私訊這個話題"
@@ -236,6 +232,7 @@ zh_TW:
       remove: "移除書籤"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
       save: "儲存"
+      search: "搜索"
       reminders:
         later_today: "今日稍晚"
         tomorrow: "明天"
@@ -439,10 +436,6 @@ zh_TW:
     groups:
       member_added: "已新增"
       member_requested: "請求"
-      add_members:
-        title: "新增成員"
-        description: "管理這個群組的成員"
-        usernames: "使用者名稱"
       requests:
         title: "請求"
         reason: "原因"
@@ -457,13 +450,18 @@ zh_TW:
         name: "名稱"
         full_name: "全名"
         add_members: "新增成員"
-        delete_member_confirm: "確定要從群組「\b%{group}」中移除「%{username}'」嗎？"
+        delete_member_confirm: "確定要從群組「\\b%{group}」中移除「%{username}'」嗎？"
         profile:
           title: 個人檔案
         interaction:
           title: 互動
           posting: 張貼
           notification: 通知
+        email:
+          title: "電子信箱"
+          credentials:
+            username: "使用者名稱"
+            password: "密碼"
         membership:
           title: 會員身份
           access: 存取
@@ -616,7 +614,7 @@ zh_TW:
       title: IP 位址查詢
       hostname: 伺服器名稱
       location: 位置
-      location_not_found: （未知）
+      location_not_found: '（未知）'
       organisation: 組織
       phone: 電話
       other_accounts: "使用相同 IP 位置的帳號："
@@ -691,7 +689,7 @@ zh_TW:
       dismiss_notifications: "忽略全部"
       dismiss_notifications_tooltip: "將所有未讀通知設為已讀"
       first_notification: "你的第一則通知！選擇以開始。"
-      dynamic_favicon: "在瀏覽器小圖示上顯示計數\bIcon"
+      dynamic_favicon: "在瀏覽器小圖示上顯示計數\\bIcon"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
@@ -1199,7 +1197,7 @@ zh_TW:
       complete_email_found: "有一個帳號符合<b>%{email}</b>，您很快會收到一封含有登入連結的email。"
       complete_username_not_found: "沒有符合使用者名稱<b>%{username}</b>的帳號"
       complete_email_not_found: "沒有符合<b>%{email}</b>的帳號"
-      confirm_title: "繼續連接至 %{site_name}"
+      confirm_title: 繼續連接至 %{site_name}
     login:
       title: "登入"
       username: "使用者"
@@ -1263,7 +1261,6 @@ zh_TW:
       accept_invite: "接受邀請"
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
-      password_label: "設定密碼"
       optional_description: "(選擇性)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
@@ -1323,7 +1320,7 @@ zh_TW:
       default: 自訂表情符號
     shared_drafts:
       title: "共享草稿"
-      notice: "\b只有能瀏覽<b>%{category}</b>分類的使用者能看到這個話題"
+      notice: "\\b只有能瀏覽<b>%{category}</b>分類的使用者能看到這個話題"
       destination_category: "指定分類"
       publish: "發佈共享草稿"
       confirm_publish: "您確定要發佈這份草稿嗎？"
@@ -1425,7 +1422,6 @@ zh_TW:
         draft: 草稿
         edit: 編輯
         reply_to_post:
-          label: "回應%{postUsername}的 %{postNumber}貼文"
           desc: 回應特定貼文
         reply_as_new_topic:
           label: 以「連結話題」回應
@@ -1581,8 +1577,6 @@ zh_TW:
           noreplies: 沒有回覆
           single_user: 只有一個使用者參與
         post:
-          count:
-            label: 最少貼文數
           time:
             label: 發表於
             before: 之前
@@ -1627,7 +1621,6 @@ zh_TW:
         new: "沒有新的話題。"
         read: "你尚未閱讀任何話題。"
         posted: "你尚未在任何話題裡發表貼文。"
-        latest: "沒有最近的話題。真令人難過。"
         bookmarks: "您目前沒有把任何話題加入書籤。"
         category: "沒有 %{category} 的話題。"
         top: "沒有精選話題。"
@@ -1696,7 +1689,6 @@ zh_TW:
       read_more_MF: "還有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 個未讀的話題</a>} other { <a href='{basePath}/unread'># 個未讀的話題</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 個新</a>的話題} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 個最近</a>的話題} }可以閱讀，或者{CATEGORY, select, true {瀏覽{catLink}中的其他話題} false {{latestLink}} other {}}"
       browse_all_categories: 瀏覽所有分類
       view_latest_topics: 檢視最近的貼文
-      suggest_create_topic: 開啟一個新話題吧？
       jump_reply_up: 跳到更早的回覆
       jump_reply_down: 跳到更晚的回覆
       deleted: "此話題已被刪除"
@@ -1707,8 +1699,6 @@ zh_TW:
         remove: "移除計時器"
         publish_to: "發佈至："
         when: "當："
-        public_timer_types: 話題計時器
-        private_timer_types: 使用者話題計時器
         time_frame_required: 請選擇一個有效時間範圍
       auto_update_input:
         none: "選擇有效時間範圍"
@@ -1787,6 +1777,7 @@ zh_TW:
           "2_8": "您將會看到新回覆的數量，因為你正在追蹤這個分類。"
           "2_4": "您將會看到新回覆的數量，因為你回覆了此話題。"
           "2_2": "您將會看到新回覆的數量，因為你正在追蹤這個話題。"
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "如果有人@你或回覆你，將通知你。"
           "1": "如果有人@你或回覆你，將通知你。"
           "0_7": "你正忽略此分類中的所有通知。"
@@ -2085,22 +2076,7 @@ zh_TW:
         add_post_notice: "加入工作人員通知"
         remove_post_notice: "移除工作人員通知"
       actions:
-        flag: "檢舉"
-        defer_flags:
-          other: "忽略檢舉"
-        undo:
-          off_topic: "撤回檢舉"
-          spam: "撤回檢舉"
-          inappropriate: "撤回檢舉"
-          bookmark: "移除書籤"
-          like: "撤回讚"
         people:
-          off_topic: "檢舉為離題內容"
-          spam: "檢舉為垃圾內容"
-          inappropriate: "檢舉為不當內容"
-          notify_moderators: "已通知的版主"
-          notify_user: "已送出一則訊息"
-          bookmark: "收藏"
           like_capped:
             other: "和其他%{count}人都說讚"
         by_you:
@@ -2109,8 +2085,6 @@ zh_TW:
           inappropriate: "你已檢舉此貼文內容不妥"
           notify_moderators: "你已通知版主此貼文"
           notify_user: "您已送出訊息給這位使用者"
-          bookmark: "你已將此貼文加上書籤"
-          like: "你已在此貼文按讚"
       delete:
         confirm:
           other: "您是否確定要刪除%{count}篇貼文？"
@@ -2215,7 +2189,6 @@ zh_TW:
       default_top_period: "預設熱門時段"
       allow_badges_label: "允許授予本分類的徽章"
       edit_permissions: "編輯權限"
-      reviewable_by_group: "除了管理員以外，此類別的話題、投訴也可以通過以下方式審查："
       review_group_name: "群組名稱"
       require_topic_approval: "所有新話題皆需要通過管理員審核"
       require_reply_approval: "所有新回覆皆需要通過管理員審核"
@@ -2587,7 +2560,6 @@ zh_TW:
         new: "新標籤組"
         tags_label: "標籤組內標籤："
         parent_tag_label: "上級標籤："
-        parent_tag_placeholder: "可選"
         parent_tag_description: "未設置上級標籤前群組內標籤無法使用。"
         one_per_topic_label: "只可給話題設置一個該組內的標籤"
         new_name: "新標籤組名"
@@ -2606,14 +2578,6 @@ zh_TW:
           latest: "沒有最新話題。"
           bookmarks: "你還沒有收藏話題。"
           top: "沒有最佳話題。"
-        bottom:
-          latest: "沒有更多的最新話題。"
-          posted: "沒有更多的發佈話題。"
-          read: "沒有更多已閲話題可看了。"
-          new: "已經沒有其他新話題了。"
-          unread: "沒有更多未讀話題了。"
-          top: "沒有更多最佳話題了。"
-          bookmarks: "沒有更多收藏的話題了。"
     invite:
       custom_message: "撰寫<a href>自訂訊息</a>，來個人化您的邀請"
       custom_message_placeholder: "輸入留言"
@@ -2745,7 +2709,6 @@ zh_TW:
             visibility_levels:
               title: "誰能看到這個群組？"
               public: "所有使用者"
-              staff: "群組管理人及管理人員"
           membership:
             automatic: 自動
             trust_levels_title: "當這些成員加入時，自動提升信任等級："
@@ -2978,7 +2941,6 @@ zh_TW:
           subject: "主旨"
           multiple_subjects: "這個電子郵件範本有多重主旨."
           body: "內容"
-          none_selected: "選擇一個電子郵件範本開始編輯"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
         theme:
@@ -3330,7 +3292,7 @@ zh_TW:
             change_name: "變更名稱"
             topic_timestamps_changed: "話題時間標籤已變更"
             approve_user: "審核使用者"
-            web_hook_create: "\bwebhook 建立"
+            web_hook_create: "\\bwebhook 建立"
             web_hook_update: "webhook 更新"
             web_hook_destroy: "webhook 銷毀"
             web_hook_deactivate: "webhook停用"
@@ -3350,7 +3312,6 @@ zh_TW:
           domain: "網域"
         screened_ips:
           title: "過濾的 IP 位址"
-          description: '受監控的 IP 位址，使用 "允許" 將 IP 位址加入白名單。'
           delete_confirm: "你確定要刪除 %{ip_address} 的規則嗎?"
           roll_up_confirm: "您確定要將常用的 IP 地址歸類為子網域位址嗎？"
           rolled_up_some_subnets: "成功地 roll up 了 IP 封鎖記錄至這些子網域： %{subnets}。"
@@ -3731,11 +3692,11 @@ zh_TW:
         reason_help: (連結至貼文或話題)
         save: 儲存
         delete: 刪除
-        delete_confirm: "你確定要刪除徽章 ?"
+        delete_confirm: 你確定要刪除徽章 ?
         revoke: 撤回
         reason: 原因
-        expand: "展開 &hellip; "
-        revoke_confirm: "你確定要撤回這個徽章?"
+        expand: 展開 &hellip;
+        revoke_confirm: 你確定要撤回這個徽章?
         edit_badges: 編輯徽章
         grant_badge: 升級徽章
         granted_badges: 已升級的徽章
@@ -3776,10 +3737,10 @@ zh_TW:
             other: "指定了 <b>%{count}</b> 個徽章。"
           sample: "樣本："
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> 的貼文 %{link} "
-            with_post_time: "<span class=\"username\">%{username}</span> 的貼文 %{link} 在 <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> 在 <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> 的貼文 %{link}
+            with_post_time: <span class="username">%{username}</span> 的貼文 %{link} 在 <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
         badge_intro:
           title: "選擇一個現存的徽章或建立全新的徽章以開始"
           what_are_badges_title: "什麼是徽章？"
@@ -3800,7 +3761,6 @@ zh_TW:
         title: "嵌入"
         host: "允許的主機"
         class_name: "階級名稱"
-        path_whitelist: "路徑白名單"
         edit: "編輯"
         category: "張貼到分類"
         add_host: "新增主機"
@@ -3811,9 +3771,6 @@ zh_TW:
         embed_post_limit: "嵌入的最大貼文數量。"
         embed_title_scrubber: "從貼文中提取標題的正則表達式 \"regular expression\""
         embed_truncate: "截斷嵌入的貼文"
-        embed_whitelist_selector: "使用 CSS 選擇器選擇允許的嵌入元素"
-        embed_blacklist_selector: "使用 CSS 選擇器移除嵌入元素"
-        embed_classname_whitelist: "允許 CSS class 名稱"
         save: "儲存崁入設定"
       permalink:
         title: "固定連結"
@@ -3824,7 +3781,6 @@ zh_TW:
         post_title: "貼文"
         category_id: "分類 ID"
         category_title: "分類"
-        external_url: "外部網址"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："

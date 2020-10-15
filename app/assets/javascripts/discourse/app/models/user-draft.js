@@ -6,7 +6,7 @@ import { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
 import {
   NEW_TOPIC_KEY,
-  NEW_PRIVATE_MESSAGE_KEY
+  NEW_PRIVATE_MESSAGE_KEY,
 } from "discourse/models/composer";
 
 export default RestModel.extend({
@@ -22,7 +22,9 @@ export default RestModel.extend({
 
   @discourseComputed("topic_id")
   postUrl(topicId) {
-    if (!topicId) return;
+    if (!topicId) {
+      return;
+    }
 
     return postUrl(this.slug, this.topic_id, this.post_number);
   },
@@ -37,5 +39,5 @@ export default RestModel.extend({
       default:
         return false;
     }
-  }
+  },
 });

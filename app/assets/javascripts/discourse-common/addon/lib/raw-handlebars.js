@@ -10,11 +10,11 @@ function buildPath(blk, args) {
     type: "PathExpression",
     data: false,
     depth: blk.path.depth,
-    loc: blk.path.loc
+    loc: blk.path.loc,
   };
 
   // Server side precompile doesn't have jquery.extend
-  Object.keys(args).forEach(function(a) {
+  Object.keys(args).forEach(function (a) {
     result[a] = args[a];
   });
 
@@ -25,14 +25,14 @@ function replaceGet(ast) {
   var visitor = new Handlebars.Visitor();
   visitor.mutating = true;
 
-  visitor.MustacheStatement = function(mustache) {
+  visitor.MustacheStatement = function (mustache) {
     if (!(mustache.params.length || mustache.hash)) {
       mustache.params[0] = mustache.path;
       mustache.path = buildPath(mustache, {
         parts: ["get"],
         original: "get",
         strict: true,
-        falsy: true
+        falsy: true,
       });
     }
     return Handlebars.Visitor.prototype.MustacheStatement.call(this, mustache);
@@ -40,13 +40,13 @@ function replaceGet(ast) {
 
   // rewrite `each x as |y|` as each y in x`
   // This allows us to use the same syntax in all templates
-  visitor.BlockStatement = function(block) {
+  visitor.BlockStatement = function (block) {
     if (block.path.original === "each" && block.params.length === 1) {
       var paramName = block.program.blockParams[0];
       block.params = [
         buildPath(block, { original: paramName }),
         { type: "CommentStatement", value: "in" },
-        block.params[0]
+        block.params[0],
       ];
       delete block.program.blockParams;
     }
@@ -58,13 +58,13 @@ function replaceGet(ast) {
 }
 
 if (Handlebars.Compiler) {
-  RawHandlebars.Compiler = function() {};
+  RawHandlebars.Compiler = function () {};
   RawHandlebars.Compiler.prototype = Object.create(
     Handlebars.Compiler.prototype
   );
   RawHandlebars.Compiler.prototype.compiler = RawHandlebars.Compiler;
 
-  RawHandlebars.JavaScriptCompiler = function() {};
+  RawHandlebars.JavaScriptCompiler = function () {};
 
   RawHandlebars.JavaScriptCompiler.prototype = Object.create(
     Handlebars.JavaScriptCompiler.prototype
@@ -73,16 +73,16 @@ if (Handlebars.Compiler) {
     RawHandlebars.JavaScriptCompiler;
   RawHandlebars.JavaScriptCompiler.prototype.namespace = "RawHandlebars";
 
-  RawHandlebars.precompile = function(value, asObject) {
+  RawHandlebars.precompile = function (value, asObject) {
     var ast = Handlebars.parse(value);
     replaceGet(ast);
 
     var options = {
       knownHelpers: {
-        get: true
+        get: true,
       },
       data: true,
-      stringParams: true
+      stringParams: true,
     };
 
     asObject = asObject === undefined ? true : asObject;
@@ -96,7 +96,7 @@ if (Handlebars.Compiler) {
     );
   };
 
-  RawHandlebars.compile = function(string) {
+  RawHandlebars.compile = function (string) {
     var ast = Handlebars.parse(string);
     replaceGet(ast);
 

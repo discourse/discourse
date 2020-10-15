@@ -53,6 +53,7 @@ bootsnap-compile-cache/
 !/plugins/discourse-nginx-performance-report
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
+!/plugins/styleguide
 !/plugins/discourse-local-dates
 /plugins/*/auto_generated/
 
@@ -87,6 +88,7 @@ config/multisite.yml
 config/multisite1.yml
 config/fog_credentials.yml
 
+/public/fonts
 /public/uploads
 /public/backups
 /public/stylesheet-cache/*
@@ -140,3 +142,5 @@ dist
 
 # Copyright Deposits
 copyright
+
+yarn-error.log

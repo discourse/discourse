@@ -112,6 +112,13 @@ class GlobalSetting
     @use_s3 = nil
   end
 
+  def self.cdn_hostnames
+    hostnames = []
+    hostnames << URI.parse(cdn_url).host if cdn_url.present?
+    hostnames << cdn_origin_hostname if cdn_origin_hostname.present?
+    hostnames
+  end
+
   def self.database_config
     hash = { "adapter" => "postgresql" }
 
@@ -204,15 +211,15 @@ class GlobalSetting
   end
 
   # test only
-  def self.reset_whitelisted_theme_ids!
-    @whitelisted_theme_ids = nil
+  def self.reset_allowed_theme_ids!
+    @allowed_theme_ids = nil
   end
 
-  def self.whitelisted_theme_ids
-    return nil if whitelisted_theme_repos.blank?
+  def self.allowed_theme_ids
+    return nil if allowed_theme_repos.blank?
 
-    @whitelisted_theme_ids ||= begin
-      urls = whitelisted_theme_repos.split(",").map(&:strip)
+    @allowed_theme_ids ||= begin
+      urls = allowed_theme_repos.split(",").map(&:strip)
       Theme
         .joins(:remote_theme)
         .where('remote_themes.remote_url in (?)', urls)

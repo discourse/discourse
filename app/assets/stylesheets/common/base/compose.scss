@@ -8,7 +8,7 @@
   left: 0;
   margin-left: auto;
   margin-right: auto;
-  max-width: 1475px;
+  max-width: $reply-area-max-width;
   width: 100%;
   &.hide-preview {
     max-width: 740px;
@@ -19,7 +19,7 @@
   z-index: z("composer", "content");
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
     max-width 250ms ease, padding-bottom 250ms ease;
-  background-color: $secondary;
+  background-color: var(--secondary);
   box-shadow: shadow("composer");
 
   .reply-area {
@@ -33,11 +33,11 @@
     padding-left: 10px;
     .spinner {
       margin-left: 5px;
-      border-color: $secondary;
+      border-color: var(--secondary);
       border-right-color: transparent;
     }
     .d-icon {
-      color: $secondary;
+      color: var(--secondary);
     }
   }
 
@@ -56,8 +56,8 @@
   &.saving {
     height: 40px !important;
     align-items: center;
-    background: $tertiary;
-    color: $secondary;
+    background: var(--tertiary);
+    color: var(--secondary);
     flex-direction: row;
     width: 100%;
     .composer-controls {
@@ -68,7 +68,7 @@
         display: none;
       }
       .d-icon {
-        color: $secondary;
+        color: var(--secondary);
       }
     }
   }
@@ -93,12 +93,12 @@
   }
 
   .reply-to {
-    color: $primary-high;
+    color: var(--primary-high);
     margin: 5px 0 10px 0;
     display: flex;
     align-items: center;
     .d-icon {
-      color: $primary-high;
+      color: var(--primary-high);
     }
     .reply-details {
       max-width: calc(100% - 175px);
@@ -180,7 +180,7 @@
     }
     .d-icon {
       padding: 0.3em 0.5em;
-      color: $tertiary;
+      color: var(--tertiary);
     }
   }
 
@@ -191,7 +191,6 @@
   .user-selector,
   .title-and-category {
     display: flex;
-    flex-wrap: wrap;
     width: 100%;
     align-items: center;
     margin-bottom: 5px;
@@ -219,7 +218,8 @@
 
   .category-input {
     display: flex;
-    flex: 1 0 35%;
+    flex: 1 0 40%;
+    max-width: 40%;
     margin: 0 0 5px 10px;
     @media screen and (max-width: 955px) {
       flex: 1 0 100%;
@@ -228,15 +228,42 @@
     .category-chooser {
       display: flex;
       flex: 1 0 auto;
+      max-width: 100%;
       width: auto;
+      .select-kit-header {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      // below needed for text-overflow: ellipsis;
+      .selected-name {
+        max-width: 100%;
+        overflow: hidden;
+        .name {
+          max-width: 100%;
+          overflow: hidden;
+          display: flex;
+          .badge-wrapper {
+            overflow: hidden;
+          }
+          // This prevents the first category from being too-truncated at the expense of a long subcategory
+          .badge-wrapper:first-of-type:not(:last-of-type) {
+            flex: 1 0 auto;
+            max-width: 50%;
+          }
+        }
+      }
     }
   }
 
   .with-tags {
+    .title-and-category {
+      flex-wrap: wrap;
+    }
     .category-input {
-      flex-basis: 25%;
       margin-left: 0;
-      margin-right: 5px;
+      min-width: 0; // allows flex to shrink
+      flex-wrap: wrap;
+      max-width: 50%;
       @media screen and (max-width: 920px) {
         flex-basis: 100%;
         margin-right: 0;
@@ -256,17 +283,17 @@
   #reply-title {
     margin: 0 0 5px 0;
     flex-basis: 50%;
+    width: unset;
+    &:focus {
+      box-shadow: none;
+    }
   }
 
   .mini-tag-chooser {
-    flex: 1 1 25%;
-    margin: 0 0 5px 0;
-    background: $secondary;
+    width: 49%;
+    margin: 0 0 5px auto;
+    background: var(--secondary);
     z-index: z("composer", "dropdown");
-    @media all and (max-width: 900px) {
-      margin: 0;
-      flex: 1 1 100%;
-    }
   }
 
   .popup-tip {
@@ -298,10 +325,10 @@
     .cancel {
       margin-left: 1.25em;
       line-height: normal;
-      color: $primary-high;
+      color: var(--primary-high);
       transition: color 250ms;
       &:hover {
-        color: $danger;
+        color: var(--danger);
       }
     }
     #draft-status,
@@ -313,14 +340,14 @@
       align-items: center;
       a {
         margin-left: 5px;
-        color: $primary-high;
+        color: var(--primary-high);
       }
       .spinner {
         margin-right: 5px;
       }
     }
     #draft-status .d-icon-user-edit {
-      color: $danger;
+      color: var(--danger);
       font-size: 20px;
       vertical-align: -5.5px;
     }
@@ -328,7 +355,7 @@
 
   #draft-status,
   #file-uploading {
-    color: $primary-high;
+    color: var(--primary-high);
   }
 }
 
@@ -340,8 +367,8 @@
   z-index: z("composer", "dropdown") + 1;
   position: absolute;
   width: 240px;
-  background-color: $secondary;
-  border: 1px solid $primary-low;
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low);
   ul {
     list-style: none;
     padding: 0;
@@ -349,11 +376,11 @@
 
     li {
       .d-icon-users {
-        color: lighten($primary, 40%);
+        color: var(--primary-medium);
         padding: 0 2px;
       }
 
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
 
       a {
         padding: 5px;
@@ -361,17 +388,17 @@
         @include ellipsis;
 
         span.username {
-          color: $primary;
+          color: var(--primary);
         }
         span.name {
           font-size: $font-down-1;
           vertical-align: middle;
         }
         &.selected {
-          background-color: $tertiary-low;
+          background-color: var(--tertiary-low);
         }
         @include hover {
-          background-color: $highlight-low;
+          background-color: var(--highlight-low);
           text-decoration: none;
         }
       }
@@ -396,12 +423,12 @@ div.ac-wrap div.item a.remove,
   padding: 1px 3.5px;
   border-radius: 12px;
   box-sizing: border-box;
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   &:hover {
-    background-color: $danger-low;
-    border: 1px solid $danger-medium;
+    background-color: var(--danger-low);
+    border: 1px solid var(--danger-medium);
     text-decoration: none;
-    color: $danger;
+    color: var(--danger);
   }
 }
 
@@ -411,8 +438,8 @@ div.ac-wrap {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  background-color: $secondary;
-  border: 1px solid $primary-medium;
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-medium);
   min-height: 30px;
   box-sizing: border-box;
   div.item {
@@ -449,7 +476,7 @@ div.ac-wrap {
 
 .future-date-input {
   .examples {
-    color: $primary-medium;
+    color: var(--primary-medium);
   }
 }
 
@@ -504,5 +531,13 @@ body.ios-safari-composer-hacks {
 body:not(.ios-safari-composer-hacks) {
   #reply-control.open {
     padding-bottom: var(--composer-ipad-padding);
+  }
+}
+
+.show-preview {
+  @media screen and (max-width: 850px) {
+    .d-editor-button-bar {
+      font-size: $font-down-1;
+    }
   }
 }

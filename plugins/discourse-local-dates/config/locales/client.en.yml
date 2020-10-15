@@ -13,7 +13,7 @@ en:
           insert: Insert
           advanced_mode: Advanced mode
           simple_mode: Simple mode
-          format_description: "Format used to display the date to the user. Use \"\\T\\Z\" to display the user timezone in words (Europe/Paris)"
+          format_description: "Format used to display the date to the user. Use Z to show the offset and zz for the timezone name."
           timezones_title: Timezones to display
           timezones_description: Timezones will be used to display dates in preview and fallback.
           recurring_title: Recurrence

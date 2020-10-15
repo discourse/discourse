@@ -8,7 +8,7 @@ export default Component.extend({
     ":tag-badge-wrapper",
     ":badge-wrapper",
     ":bullet",
-    "tagClass"
+    "tagClass",
   ],
   attributeBindings: ["href"],
 
@@ -30,5 +30,5 @@ export default Component.extend({
     e.preventDefault();
     DiscourseURL.routeTo(this.href);
     return true;
-  }
+  },
 });

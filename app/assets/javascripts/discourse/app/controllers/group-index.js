@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { gt, readOnly } from "@ember/object/computed";
+import { gt } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -16,11 +16,10 @@ export default Controller.extend({
   filterInput: null,
 
   loading: false,
-  isOwner: readOnly("model.is_group_owner"),
   showActions: false,
 
   @observes("filterInput")
-  _setFilter: discourseDebounce(function() {
+  _setFilter: discourseDebounce(function () {
     this.set("filter", this.filterInput);
   }, 500),
 
@@ -44,7 +43,7 @@ export default Controller.extend({
       this.setProperties({
         "application.showFooter":
           this.model.members.length >= this.model.user_count,
-        loading: false
+        loading: false,
       });
     });
   },
@@ -118,5 +117,5 @@ export default Controller.extend({
         .then(() => this.set("usernames", []))
         .catch(popupAjaxError);
     }
-  }
+  },
 });

@@ -8,9 +8,9 @@ export default Component.extend({
       this.valueChanged &&
         this.valueChanged({
           target: {
-            value: tags
-          }
+            value: tags,
+          },
         });
-    }
-  }
+    },
+  },
 });

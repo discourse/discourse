@@ -28,7 +28,7 @@ class SpamRule::FlagSockpuppets
     @post.user != first_post.user &&
     @post.user.ip_address == first_post.user.ip_address &&
     @post.user.new_user? &&
-    !ScreenedIpAddress.is_whitelisted?(@post.user.ip_address)
+    !ScreenedIpAddress.is_allowed?(@post.user.ip_address)
   end
 
   def flag_sockpuppet_users

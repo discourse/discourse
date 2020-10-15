@@ -1,7 +1,7 @@
 export default {
   name: "ember-events",
 
-  initialize: function() {
+  initialize: function () {
     // By default Ember listens to too many events. This tells it the only events
     // we're interested in.
     Ember.EventDispatcher.reopen({
@@ -30,8 +30,8 @@ export default {
         dragleave: "dragLeave",
         dragover: "dragOver",
         drop: "drop",
-        dragend: "dragEnd"
-      }
+        dragend: "dragEnd",
+      },
     });
-  }
+  },
 };

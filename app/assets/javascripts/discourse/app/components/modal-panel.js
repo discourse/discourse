@@ -8,5 +8,5 @@ export default Component.extend({
 
   classNameBindings: ["panel.id"],
 
-  classNames: ["modal-panel"]
+  classNames: ["modal-panel"],
 });

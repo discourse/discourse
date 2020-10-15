@@ -19,16 +19,19 @@
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
+  max-height: 80vh;
 }
 
 .menu-panel {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   box-shadow: shadow("menu-panel");
-  background-color: $secondary;
+  background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
   width: 300px;
-
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   hr {
     margin: 3px 0;
   }
@@ -45,14 +48,55 @@
   }
 
   .panel-body {
+    display: flex;
     touch-action: pan-y pinch-zoom;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100vh;
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .panel-body-contents {
+    max-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-body-bottom {
+    display: flex;
+    flex: 1 0 0%; // safari height fix
+    margin-top: 0.5em;
+    .show-all {
+      flex: 1 1 auto;
+      button {
+        width: 100%;
+      }
+    }
+    .notifications-dismiss {
+      margin-left: 0.5em;
+    }
+
+    .btn {
+      background-color: var(--primary-very-low);
+      color: var(--primary-high);
+      &:hover {
+        background: var(--primary-low);
+        color: var(--primary);
+      }
+    }
   }
 
   .badge-notification {
     vertical-align: text-bottom;
+  }
+}
+
+.hamburger-panel {
+  .panel-body {
+    overflow-y: auto;
+  }
+
+  span.badge-category {
+    max-width: 100px;
   }
 }
 
@@ -70,22 +114,22 @@
     a.categories-link {
       padding: 0.25em 0.5em;
       display: block;
-      color: $primary;
+      color: var(--primary);
       &:hover,
       &:focus {
-        background-color: $highlight-medium;
+        background-color: var(--highlight-medium);
         outline: none;
       }
 
       .d-icon {
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
     }
 
     .new {
       font-size: $font-down-1;
       margin-left: 0.5em;
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: var(--primary-med-or-secondary-med);
     }
   }
 
@@ -104,12 +148,12 @@
         background: transparent;
 
         .category-name {
-          color: $primary;
+          color: var(--primary);
         }
       }
     }
     .badge-notification {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: var(--primary-med-or-secondary-med);
       background-color: transparent;
       display: inline;
       padding: 0;
@@ -119,11 +163,11 @@
     .badge-wrapper {
       &.bar,
       &.bullet {
-        color: $primary;
+        color: var(--primary);
         padding: 0 0 0 0.15em;
       }
       &.box {
-        color: $secondary;
+        color: var(--secondary);
         + a.badge.badge-notification {
           padding-top: 2px;
         }
@@ -136,13 +180,9 @@
 
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
     font-weight: normal;
     font-size: $font-down-1;
-  }
-
-  span.badge-category {
-    max-width: 100px;
   }
 
   div.discourse-tags {
@@ -153,11 +193,13 @@
 .user-menu {
   .quick-access-panel {
     width: 100%;
-    display: table;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100%;
+    border-top: 1px solid var(--primary-low);
+    padding-top: 0.75em;
     margin-top: -1px;
-    border-top: 1px solid $primary-low;
-    padding-top: 0.5em;
-
     h3 {
       padding: 0 0.4em;
       font-weight: bold;
@@ -166,14 +208,23 @@
 
     .d-icon,
     &:hover .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
     .icon {
-      color: $primary-high;
+      color: var(--primary-high);
+    }
+
+    ul {
+      display: flex;
+      flex-flow: column wrap;
+      overflow: hidden;
+      max-height: 100%;
     }
 
     li {
-      background-color: $tertiary-low;
+      background-color: var(--tertiary-low);
+      box-sizing: border-box;
+      list-style-type: none;
 
       // This is until other languages remove the HTML from within
       // notifications. It can then be removed
@@ -182,17 +233,18 @@
       }
 
       span:first-child {
-        color: $primary;
+        color: var(--primary);
       }
 
       &:hover,
       &:focus {
-        background-color: $highlight-medium;
+        background-color: var(--highlight-medium);
         outline: none;
       }
 
       a {
-        padding: 0;
+        display: flex;
+        padding: 0.25em 0.5em;
 
         > div {
           overflow: hidden; // clears the text from wrapping below icons
@@ -202,9 +254,7 @@
           }
 
           // Truncate items with more than 2 lines.
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
+          @include line-clamp(2);
         }
       }
 
@@ -215,11 +265,8 @@
     }
     li:not(.show-all) {
       padding: 0;
-
-      a {
-        display: flex;
-        padding: 0.25em 0.5em;
-      }
+      align-self: flex-start;
+      width: 100%;
       .d-icon {
         padding-top: 0.2em;
         margin-right: 0.5em;
@@ -227,11 +274,11 @@
     }
     .is-warning {
       .d-icon-far-envelope {
-        color: $danger;
+        color: var(--danger);
       }
     }
     .read {
-      background-color: $secondary;
+      background-color: var(--secondary);
     }
     .none {
       padding-top: 5px;
@@ -251,11 +298,11 @@
       justify-content: center;
       align-items: center;
       min-height: 30px;
-      color: dark-light-choose($primary-medium, $secondary-high);
-      background: blend-primary-secondary(5%);
+      color: var(--primary-med-or-secondary-high);
+      background: var(--blend-primary-secondary-5);
       &:hover {
-        color: $primary;
-        background: dark-light-diff($primary, $secondary, 90%, -80%);
+        color: var(--primary);
+        background: var(--primary-low);
       }
     }
     /* as a big ol' click target, don't let text inside be selected */
@@ -263,21 +310,16 @@
 
     &.quick-access-profile {
       li:not(.show-all) a {
-        color: $primary;
-        .d-icon {
-          color: $primary-medium;
-        }
-
-        // accounts for menu "ears" 4px + border 1px
-        padding: 0.25em calc(0.5em + 4px + 1px);
+        color: var(--primary);
+        display: flex;
       }
     }
   }
+}
 
-  .dismiss-link {
-    display: inline-block;
-    float: right;
-  }
+.user-notifications-link {
+  // keep this in leftmost position consistently
+  order: -1;
 }
 
 div.menu-links-header {
@@ -285,27 +327,25 @@ div.menu-links-header {
   .menu-links-row {
     box-sizing: border-box;
     display: flex;
+    width: 100%;
     z-index: 2;
-    // Tabs should have "ears".
-    padding: 0 4px;
 
     li {
       display: inline-flex;
       align-items: center;
       flex-wrap: wrap;
-      &.user {
-        margin-right: auto;
-        flex: 1 1 0;
-        overflow: hidden;
-      }
+
       &.glyphs {
         flex-wrap: nowrap;
-        text-align: right;
+        width: 100%;
+        justify-content: space-between;
+        padding: 0;
 
         a {
-          // Expand the click area a bit.
-          padding-left: 0.6em;
-          padding-right: 0.6em;
+          display: flex;
+          flex: 1 1 auto;
+          padding: 0.65em 0.25em 0.75em;
+          justify-content: center;
         }
       }
 
@@ -320,9 +360,13 @@ div.menu-links-header {
       }
 
       a.active {
-        border: 1px solid dark-light-choose($primary-low, $secondary-medium);
-        border-bottom: 1px solid $secondary;
+        border: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--secondary);
         position: relative;
+
+        .d-icon {
+          color: var(--primary-high);
+        }
 
         &:focus,
         &:hover {
@@ -333,32 +377,13 @@ div.menu-links-header {
   }
   a:hover,
   a:focus {
-    background-color: $highlight-medium;
+    background-color: var(--highlight-medium);
     outline: none;
   }
   a {
     padding: 0.3em 0.5em;
   }
-  a.user-activity-link {
-    box-sizing: border-box;
-    align-items: center;
-    display: flex;
-    max-width: 100%;
 
-    // `overflow: hidden` on `.user-activity-link` would hide the `::after`
-    // pseudo element (used to create the tab-looking effect). Sets `overflow:
-    // hidden` on the child username label instead.
-    overflow: visible;
-
-    span.d-label {
-      display: block;
-      @include ellipsis;
-    }
-
-    @include breakpoint(mobile-medium) {
-      max-width: 125px;
-    }
-  }
   li {
     display: table-cell;
     width: auto;
@@ -373,10 +398,6 @@ div.menu-links-header {
   }
   .fa,
   a {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-
-  .d-icon-user {
-    margin-right: 0.475em;
+    color: var(--primary-med-or-secondary-med);
   }
 }

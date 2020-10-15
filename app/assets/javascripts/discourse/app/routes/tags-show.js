@@ -1,16 +1,21 @@
+import { makeArray } from "discourse-common/lib/helpers";
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import Composer from "discourse/models/composer";
 import showModal from "discourse/lib/show-modal";
 import {
   filterQueryParams,
-  findTopicList
+  findTopicList,
 } from "discourse/routes/build-topic-route";
-import { queryParams } from "discourse/controllers/discovery-sortable";
+import {
+  resetParams,
+  queryParams,
+} from "discourse/controllers/discovery-sortable";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import { escapeExpression } from "discourse/lib/utilities";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",
@@ -24,14 +29,14 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
   model(params) {
     const tag = this.store.createRecord("tag", {
-      id: escapeExpression(params.tag_id)
+      id: escapeExpression(params.tag_id),
     });
     if (params.additional_tags) {
       this.set(
         "additionalTags",
-        params.additional_tags.split("/").map(t => {
+        params.additional_tags.split("/").map((t) => {
           return this.store.createRecord("tag", {
-            id: escapeExpression(t)
+            id: escapeExpression(t),
           }).id;
         })
       );
@@ -47,7 +52,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       // If logged in, we should get the tag's user settings
       return this.store
         .find("tagNotification", tag.get("id").toLowerCase())
-        .then(tn => {
+        .then((tn) => {
           this.set("tagNotification", tn);
           return tag;
         });
@@ -60,7 +65,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     const controller = this.controllerFor("tags.show");
     controller.setProperties({
       loading: true,
-      showInfo: false
+      showInfo: false,
     });
 
     const params = filterQueryParams(transition.to.queryParams, {});
@@ -90,22 +95,25 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     }
 
     return findTopicList(this.store, this.topicTrackingState, filter, params, {
-      cached: true
-    }).then(list => {
+      cached: true,
+    }).then((list) => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)
         tag.setProperties({
           id: list.topic_list.tags[0].name,
-          staff: list.topic_list.tags[0].staff
+          staff: list.topic_list.tags[0].staff,
         });
       }
+
+      setTopicList(list);
+
       controller.setProperties({
         list,
         canCreateTopic: list.get("can_create_topic"),
         loading: false,
         canCreateTopicOnCategory:
           this.get("category.permission") === PermissionType.FULL,
-        canCreateTopicOnTag: !tag.get("staff") || this.get("currentUser.staff")
+        canCreateTopicOnTag: !tag.get("staff") || this.get("currentUser.staff"),
       });
     });
   },
@@ -121,23 +129,23 @@ export default DiscourseRoute.extend(FilterModeMixin, {
         return I18n.t("tagging.filters.with_category", {
           filter: filterText,
           tag: controller.get("model.id"),
-          category: this.get("category.name")
+          category: this.get("category.name"),
         });
       } else {
         return I18n.t("tagging.filters.without_category", {
           filter: filterText,
-          tag: controller.get("model.id")
+          tag: controller.get("model.id"),
         });
       }
     } else {
       if (this.category) {
         return I18n.t("tagging.filters.untagged_with_category", {
           filter: filterText,
-          category: this.get("category.name")
+          category: this.get("category.name"),
         });
       } else {
         return I18n.t("tagging.filters.untagged_without_category", {
-          filter: filterText
+          filter: filterText,
         });
       }
     }
@@ -152,7 +160,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       filterType: this.filterType,
       navMode: this.navMode,
       tagNotification: this.tagNotification,
-      noSubcategories: this.noSubcategories
+      noSubcategories: this.noSubcategories,
     });
     this.searchService.set("searchContext", model.get("searchContext"));
   },
@@ -182,30 +190,51 @@ export default DiscourseRoute.extend(FilterModeMixin, {
             categoryId: controller.get("category.id"),
             action: Composer.CREATE_TOPIC,
             draftKey: controller.get("list.draft_key"),
-            draftSequence: controller.get("list.draft_sequence")
+            draftSequence: controller.get("list.draft_sequence"),
           })
           .then(() => {
             // Pre-fill the tags input field
             if (controller.get("model.id")) {
               const composerModel = this.controllerFor("composer").get("model");
-
               composerModel.set(
                 "tags",
-                _.compact(
-                  _.flatten([
-                    controller.get("model.id"),
-                    controller.get("additionalTags")
-                  ])
-                )
+                [
+                  controller.get("model.id"),
+                  ...makeArray(controller.additionalTags),
+                ].filter(Boolean)
               );
             }
           });
       }
     },
 
+    dismissReadTopics(dismissTopics) {
+      const operationType = dismissTopics ? "topics" : "posts";
+      this.send("dismissRead", operationType);
+    },
+
+    dismissRead(operationType) {
+      const controller = this.controllerFor("tags-show");
+      let options = {
+        tagName: controller.get("tag.id"),
+      };
+      const categoryId = controller.get("category.id");
+
+      if (categoryId) {
+        options = $.extend({}, options, {
+          categoryId: categoryId,
+          includeSubcategories: !controller.noSubcategories,
+        });
+      }
+
+      controller.send("dismissRead", operationType, options);
+    },
+
+    resetParams,
+
     didTransition() {
       this.controllerFor("tags.show")._showFooter();
       return true;
-    }
-  }
+    },
+  },
 });

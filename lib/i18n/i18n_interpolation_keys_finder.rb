@@ -2,7 +2,8 @@
 
 class I18nInterpolationKeysFinder
   def self.find(text)
-    keys = text.scan(Regexp.union(I18n::INTERPOLATION_PATTERN, /\{\{(\w+)\}\}/))
+    pattern = Regexp.union([*I18n.config.interpolation_patterns, /\{\{(\w+)\}\}/])
+    keys = text.scan(pattern)
     keys.flatten!
     keys.compact!
     keys.uniq!

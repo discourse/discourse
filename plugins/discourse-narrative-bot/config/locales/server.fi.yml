@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fi:
   site_settings:
@@ -26,14 +25,6 @@ fi:
         Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
   discourse_narrative_bot:
     bio: "Moi! En ole ihminen. Olen botti, ja tarjoan opetusta sivuston käyttämisestä. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
-    tl2_promotion_message:
-      subject_template: "Onnittelut luottamustasonoususta!"
-      text_body_template: |
-        Nyt kun olet noussut, on aika oppia joitakin kehittyneempiä ominaisuuksia!
-
-        Vastaa tähän viestiin `@%{discobot_username} %{reset_trigger}` niin opit lisää, mitä kaikkia valtuuksia sinulla on.
-
-        Toivon mukaan jatkat osallistumista – on mukavaa että olet täällä.
     timeout:
       message: |-
         Hei @%{username}, kyselen kuulumisia, kun en ole kuullut sinusta hetkeen.
@@ -57,34 +48,34 @@ fi:
         > :game_die: %{results}
     quote:
       trigger: "sitaatti"
-      '1':
+      "1":
         quote: "Tutki parhaita kirjailijoita siten avartaaksesi mielikuvituksesi piiriä."
         author: "Aleksis Kivi"
-      '2':
+      "2":
         quote: "On ihan mahdollista, että todellisuus on olemassa."
         author: "Esko Valtaoja"
-      '3':
+      "3":
         quote: "Jokainen syy, joka estää kuntoilun, on tekosyy."
         author: "Urho Kekkonen"
-      '4':
+      "4":
         quote: "Älkää kiinnittäkö huomiota mitä kriitikot sanovat, kriitikoille ei ole koskaan pystytetty yhtään patsasta."
         author: "Jean Sibelius"
-      '5':
+      "5":
         quote: "Kahdesta vaihtoehdosta koetan valita aina sen, joka pelottaa enemmän."
         author: "Jouko Turkka"
-      '6':
+      "6":
         quote: "Jos Suomessa juodaankin jokunen Koskenkorva liikaa, on siihen hyvä syy: paljon muuta tekemistä ei löydy."
         author: "Linus Torvalds"
-      '7':
+      "7":
         quote: "Kaikki lähtee siitä kun sä opit syömään lihapullat haarukalla. Silloin sä osaat tehdä mitä tahansa."
         author: "Matti Nykänen"
-      '8':
+      "8":
         quote: "Käsitykseni on, että se, mitä Suomen kansa tällä hetkellä ennen kaikkea kaipaa, on läheistä, asiallisuuteen pohjautuvaa ymmärtämystä eri yhteiskuntalukkien, eri kieliryhmien ja eri puolueiden kesken. Se takaa jatkuvan yhteiskunnallisen rauhan ja siitä riippuu, missä määrin tämä kansa kykenee vapauttansa ja itsenäisyytensä lujittamaan ja tarvittaessa puolustamaan."
         author: "Lauri Kristian Relander"
-      '9':
+      "9":
         quote: "Naisen työala tulevaisuudessa on laaja, hänen tehtävänsä tärkeä. Mitä vuosisadat, vuosituhannet ovat rikkoneet ja laiminlyöneet, se kaikki tulee hänen korjata ja parantaa."
         author: "Minna Canth"
-      '10':
+      "10":
         quote: "Joskus pitää laittaa viatonkin vankilaan. Joskus täytyy poliisin laittaa viaton lusimaan. Arvovalta säilyy. Pelote säilyy. Aina siellä muutama viaton istuu, viaton pulmunen istuu siellä."
         author: "Rauno Repomies televisiosarjassa Pasila"
       results: |-
@@ -92,26 +83,26 @@ fi:
     magic_8_ball:
       trigger: "ennustus"
       answers:
-        '1': "Se on varmaakin varmempaa"
-        '2': "Niin on tapahtuva"
-        '3': "Epäilemättä"
-        '4': "Kyllä, ehdottomasti"
-        '5': "Voit laskea sen varaan"
-        '6': "Näkemykseni on, että kyllä"
-        '7': "Todennäköisesti"
-        '8': "Siltä näyttäisi"
-        '9': "Kyllä"
-        '10': "Merkit viittaavat siihen suuntaan"
-        '11': "Näky epäselvä, yritä uudelleen"
-        '12': "Palaa myöhemmin asiaan"
-        '13': "Parempi, etten kerro vielä"
-        '14': "En pysty sanomaan juuri nyt"
-        '15': "Keskity ja kyse sitten uudelleen"
-        '16': "Älä laske sen varaan"
-        '17': "Vastaukseni on ei"
-        '18': "Lähteeni kertovat, että ei"
-        '19': "Ei siltä vaikuta"
-        '20': "Epäilen sitä vahvasti"
+        "1": "Se on varmaakin varmempaa"
+        "2": "Niin on tapahtuva"
+        "3": "Epäilemättä"
+        "4": "Kyllä, ehdottomasti"
+        "5": "Voit laskea sen varaan"
+        "6": "Näkemykseni on, että kyllä"
+        "7": "Todennäköisesti"
+        "8": "Siltä näyttäisi"
+        "9": "Kyllä"
+        "10": "Merkit viittaavat siihen suuntaan"
+        "11": "Näky epäselvä, yritä uudelleen"
+        "12": "Palaa myöhemmin asiaan"
+        "13": "Parempi, etten kerro vielä"
+        "14": "En pysty sanomaan juuri nyt"
+        "15": "Keskity ja kyse sitten uudelleen"
+        "16": "Älä laske sen varaan"
+        "17": "Vastaukseni on ei"
+        "18": "Lähteeni kertovat, että ei"
+        "19": "Ei siltä vaikuta"
+        "20": "Epäilen sitä vahvasti"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -148,7 +139,7 @@ fi:
       cert_title: "Tunnustuksena palstan käytön peruskurssin menestyksekkäästä suorittamisesta"
       hello:
         title: "Tervehdys!"
-        message: |
+        message: |-
           Kiitos kun liityit sivustolle %{title}. Tervetuloa!
 
           - Olen vain robotti, mutta [avulias henkilökuntamme](%{base_uri}/about) on myös täällä auttamassa, jos sinun tarvitsee saada yhteys ihmiseen.
@@ -186,12 +177,6 @@ fi:
           Loistava kuva – Painoin tykkää-nappia :heart:, jotta tiedät että pidin siitä kovasti! :heart_eyes:
         like_not_found: |-
           Unohditko tykätä :heart: [viestistäni?](%{url}) :crying_cat_face:
-        not_found: |-
-          Näyttää ettet laittanut kuvaa, joten valitsin kuvan josta _takuulla_ pidät.
-
-          `%{image_url}`
-
-          Kokeilepa liittää tämä kuva tai liittää linkin osoite omalle rivilleen!
       formatting:
         instructions: |-
           **Lihavoi** tai **kursivoi** sanoja seuraavasta vastauksestasi.
@@ -268,8 +253,6 @@ fi:
           Tiedät mitä tehdä. **Liputa tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> sopimattomaksi!
         reply: |-
           [Henkilökuntamme](%{base_uri}/groups/staff) saa ei-julkisen ilmoituksen lipusta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin liputuksesi.)
-        not_found: |-
-          Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
       search:
         instructions: |-
           _psst_ … I’ve hidden a surprise in this topic. If you’re up for the challenge, **select the search icon** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> at the top right &#8599; to search for it.

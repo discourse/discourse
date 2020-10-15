@@ -170,13 +170,32 @@ RSpec.describe UploadCreator do
       end
     end
 
+    describe 'converting HEIF to jpeg' do
+      let(:filename) { "should_be_jpeg.heic" }
+      let(:file) { file_from_fixtures(filename, "images") }
+
+      it 'should store the upload with the right extension' do
+        expect do
+          UploadCreator.new(file, filename).create_for(user.id)
+        end.to change { Upload.count }.by(1)
+
+        upload = Upload.last
+
+        expect(upload.extension).to eq('jpeg')
+        expect(File.extname(upload.url)).to eq('.jpeg')
+        expect(upload.original_filename).to eq('should_be_jpeg.jpg')
+      end
+    end
+
     describe 'secure attachments' do
       let(:filename) { "small.pdf" }
       let(:file) { file_from_fixtures(filename, "pdf") }
       let(:opts) { { type: "composer" } }
 
       before do
-        enable_s3_uploads
+        setup_s3
+        stub_s3_store
+
         SiteSetting.secure_media = true
         SiteSetting.authorized_extensions = 'pdf|svg|jpg'
       end
@@ -204,7 +223,8 @@ RSpec.describe UploadCreator do
       let(:opts) { { type: "composer" } }
 
       before do
-        enable_s3_uploads
+        setup_s3
+        stub_s3_store
       end
 
       it 'should store the file and return etag' do
@@ -263,7 +283,9 @@ RSpec.describe UploadCreator do
 
       context "when SiteSetting.secure_media is enabled" do
         before do
-          enable_s3_uploads
+          setup_s3
+          stub_s3_store
+
           SiteSetting.secure_media = true
         end
 
@@ -281,7 +303,9 @@ RSpec.describe UploadCreator do
 
       context "when SiteSetting.secure_media enabled" do
         before do
-          enable_s3_uploads
+          setup_s3
+          stub_s3_store
+
           SiteSetting.secure_media = true
         end
 
@@ -380,7 +404,7 @@ RSpec.describe UploadCreator do
     end
   end
 
-  describe '#whitelist_svg!' do
+  describe '#clean_svg!' do
     let(:b64) do
       Base64.encode64('<svg onmouseover="alert(alert)" />')
     end
@@ -406,7 +430,7 @@ RSpec.describe UploadCreator do
 
     it 'removes event handlers' do
       begin
-        UploadCreator.new(file, 'file.svg').whitelist_svg!
+        UploadCreator.new(file, 'file.svg').clean_svg!
         file_content = file.read
         expect(file_content).not_to include('onload')
         expect(file_content).to include('#pathdef')
@@ -416,19 +440,5 @@ RSpec.describe UploadCreator do
         file.unlink
       end
     end
-  end
-
-  def enable_s3_uploads
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "s3-access-key-id"
-    SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-    SiteSetting.s3_region = 'us-west-1'
-    SiteSetting.enable_s3_uploads = true
-
-    store = FileStore::S3Store.new
-    s3_helper = store.instance_variable_get(:@s3_helper)
-    client = Aws::S3::Client.new(stub_responses: true)
-    s3_helper.stubs(:s3_client).returns(client)
-    Discourse.stubs(:store).returns(store)
   end
 end

@@ -7,7 +7,7 @@ export function iconHTML(id, params) {
   return renderIcon("string", id, params);
 }
 
-registerUnbound("fa-icon", function(icon, params) {
+registerUnbound("fa-icon", function (icon, params) {
   deprecated("Use `{{d-icon}}` instead of `{{fa-icon}}");
   return htmlSafe(iconHTML(icon, params));
 });

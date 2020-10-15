@@ -199,9 +199,18 @@ class PostAlerter
     end
   end
 
-  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned, :watching_first_post].map { |t|
-    Notification.types[t]
-  }
+  NOTIFIABLE_TYPES = [
+    :mentioned,
+    :replied,
+    :quoted,
+    :posted,
+    :linked,
+    :private_message,
+    :group_mentioned,
+    :watching_first_post,
+    :event_reminder,
+    :event_invitation
+  ].map { |t| Notification.types[t] }
 
   def group_stats(topic)
     sql = <<~SQL
@@ -214,7 +223,7 @@ class PostAlerter
     topic.allowed_groups.map do |g|
       {
         group_id: g.id,
-        group_name: g.name.downcase,
+        group_name: g.name,
         inbox_count: DB.query_single(sql, group_id: g.id).first.to_i
       }
     end
@@ -461,7 +470,8 @@ class PostAlerter
 
     if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
       clients = user.user_api_keys
-        .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes))")
+        .joins(:scopes)
+        .where("user_api_key_scopes.name IN ('push', 'notifications')")
         .where("push_url IS NOT NULL AND push_url <> ''")
         .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
         .where("revoked_at IS NULL")
@@ -613,21 +623,28 @@ class PostAlerter
     end
   end
 
-  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true, new_record: false)
+  def notify_post_users(post, notified, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)
     return unless post.topic
 
     warn_if_not_sidekiq
 
     condition = +<<~SQL
       id IN (
+        SELECT id FROM users WHERE false
+        /*topic*/
+        /*category*/
+        /*tags*/
+      )
+    SQL
+    if include_topic_watchers
+      condition.sub! "/*topic*/", <<~SQL
+        UNION
         SELECT user_id
           FROM topic_users
          WHERE notification_level = :watching
            AND topic_id = :topic_id
-         /*category*/
-         /*tags*/
-      )
-    SQL
+      SQL
+    end
 
     if include_category_watchers
       condition.sub! "/*category*/", <<~SQL
@@ -639,7 +656,7 @@ class PostAlerter
                              AND tu.topic_id = :topic_id
          WHERE cu.notification_level = :watching
            AND cu.category_id = :category_id
-           AND tu.user_id IS NULL
+           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
       SQL
     end
 
@@ -655,7 +672,7 @@ class PostAlerter
                              AND tu.topic_id = :topic_id
          WHERE tag_users.notification_level = :watching
            AND tag_users.tag_id IN (:tag_ids)
-           AND tu.user_id IS NULL
+           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
       SQL
     end
 
@@ -665,6 +682,10 @@ class PostAlerter
       category_id: post.topic.category_id,
       tag_ids: tag_ids
     )
+
+    if post.topic.private_message?
+      notify = notify.where(staged: false).staff
+    end
 
     exclude_user_ids = notified.map(&:id)
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?

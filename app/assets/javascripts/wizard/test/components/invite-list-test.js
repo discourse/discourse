@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import { componentTest } from "wizard/test/helpers/component-test";
 moduleForComponent("invite-list", { integration: true });
 
@@ -72,5 +73,5 @@ componentTest("can add users", {
       find(".users-list .invite-list-user").length === 0,
       "removed the user"
     );
-  }
+  },
 });

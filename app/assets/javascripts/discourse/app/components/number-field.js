@@ -20,11 +20,11 @@ export default TextField.extend({
         this.set("number", num);
         return num.toString();
       }
-    }
+    },
   },
 
   @discourseComputed("placeholderKey")
   placeholder(key) {
     return key ? I18n.t(key) : "";
-  }
+  },
 });

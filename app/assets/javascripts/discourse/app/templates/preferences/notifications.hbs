@@ -43,7 +43,7 @@
   </div>
 </div>
 
-{{#unless isIOS}}
+{{#unless capabilities.isIOS}}
   <div class="control-group desktop-notifications">
     <label class="control-label">{{i18n "user.desktop_notifications.label"}}</label>
     {{desktop-notification-config}}

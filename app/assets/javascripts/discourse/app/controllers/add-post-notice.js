@@ -20,7 +20,7 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.setProperties({
       notice: "",
-      saving: false
+      saving: false,
     });
   },
 
@@ -46,10 +46,10 @@ export default Controller.extend(ModalFunctionality, {
       post
         .updatePostField("notice", notice)
         .then(() => cookAsync(notice, { features: { onebox: false } }))
-        .then(cookedNotice => {
+        .then((cookedNotice) => {
           post.setProperties({
             notice_type: "custom",
-            notice_args: cookedNotice.string
+            notice_args: cookedNotice.string,
           });
           resolve();
           this.send("closeModal");
@@ -58,6 +58,6 @@ export default Controller.extend(ModalFunctionality, {
           reject();
           this.send("closeModal");
         });
-    }
-  }
+    },
+  },
 });

@@ -12,8 +12,8 @@ function sendSubscriptionToServer(subscription, sendConfirmation) {
     type: "POST",
     data: {
       subscription: subscription.toJSON(),
-      send_confirmation: sendConfirmation
-    }
+      send_confirmation: sendConfirmation,
+    },
   });
 }
 
@@ -21,8 +21,12 @@ function userAgentVersionChecker(agent, version, mobileView) {
   const uaMatch = navigator.userAgent.match(
     new RegExp(`${agent}\/(\\d+)\\.\\d`)
   );
-  if (uaMatch && mobileView) return false;
-  if (!uaMatch || parseInt(uaMatch[1], 10) < version) return false;
+  if (uaMatch && mobileView) {
+    return false;
+  }
+  if (!uaMatch || parseInt(uaMatch[1], 10) < version) {
+    return false;
+  }
   return true;
 }
 
@@ -77,13 +81,17 @@ export function isPushNotificationsEnabled(user, mobileView) {
 }
 
 export function register(user, mobileView, router, appEvents) {
-  if (!isPushNotificationsSupported(mobileView)) return;
-  if (Notification.permission === "denied" || !user) return;
+  if (!isPushNotificationsSupported(mobileView)) {
+    return;
+  }
+  if (Notification.permission === "denied" || !user) {
+    return;
+  }
 
-  navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
+  navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
     serviceWorkerRegistration.pushManager
       .getSubscription()
-      .then(subscription => {
+      .then((subscription) => {
         if (subscription) {
           sendSubscriptionToServer(subscription, false);
           // Resync localStorage
@@ -91,13 +99,13 @@ export function register(user, mobileView, router, appEvents) {
         }
         setupActivityListeners(appEvents);
       })
-      .catch(e => {
+      .catch((e) => {
         // eslint-disable-next-line no-console
         console.error(e);
       });
   });
 
-  navigator.serviceWorker.addEventListener("message", event => {
+  navigator.serviceWorker.addEventListener("message", (event) => {
     if ("url" in event.data) {
       const url = event.data.url;
       router.handleURL(url);
@@ -106,19 +114,23 @@ export function register(user, mobileView, router, appEvents) {
 }
 
 export function subscribe(callback, applicationServerKey, mobileView) {
-  if (!isPushNotificationsSupported(mobileView)) return;
+  if (!isPushNotificationsSupported(mobileView)) {
+    return;
+  }
 
-  navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
+  navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
     serviceWorkerRegistration.pushManager
       .subscribe({
         userVisibleOnly: true,
-        applicationServerKey: new Uint8Array(applicationServerKey.split("|")) // eslint-disable-line no-undef
+        applicationServerKey: new Uint8Array(applicationServerKey.split("|")), // eslint-disable-line no-undef
       })
-      .then(subscription => {
+      .then((subscription) => {
         sendSubscriptionToServer(subscription, true);
-        if (callback) callback();
+        if (callback) {
+          callback();
+        }
       })
-      .catch(e => {
+      .catch((e) => {
         // eslint-disable-next-line no-console
         console.error(e);
       });
@@ -126,29 +138,33 @@ export function subscribe(callback, applicationServerKey, mobileView) {
 }
 
 export function unsubscribe(user, callback, mobileView) {
-  if (!isPushNotificationsSupported(mobileView)) return;
+  if (!isPushNotificationsSupported(mobileView)) {
+    return;
+  }
 
   keyValueStore.setItem(userSubscriptionKey(user), "");
-  navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
+  navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
     serviceWorkerRegistration.pushManager
       .getSubscription()
-      .then(subscription => {
+      .then((subscription) => {
         if (subscription) {
-          subscription.unsubscribe().then(successful => {
+          subscription.unsubscribe().then((successful) => {
             if (successful) {
               ajax("/push_notifications/unsubscribe", {
                 type: "POST",
-                data: { subscription: subscription.toJSON() }
+                data: { subscription: subscription.toJSON() },
               });
             }
           });
         }
       })
-      .catch(e => {
+      .catch((e) => {
         // eslint-disable-next-line no-console
         console.error(e);
       });
 
-    if (callback) callback();
+    if (callback) {
+      callback();
+    }
   });
 }

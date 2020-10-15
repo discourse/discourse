@@ -2,14 +2,14 @@ import getURL from "discourse-common/lib/get-url";
 // Initialize the message bus to receive messages.
 import userPresent from "discourse/lib/user-presence";
 import { handleLogoff } from "discourse/lib/ajax";
-import { isProduction } from "discourse-common/config/environment";
+import { isProduction, isTesting } from "discourse-common/config/environment";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
 function ajax(opts) {
   if (opts.complete) {
     const oldComplete = opts.complete;
-    opts.complete = function(xhr, stat) {
+    opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
     };
@@ -26,7 +26,7 @@ export default {
 
   initialize(container) {
     // We don't use the message bus in testing
-    if (Discourse.testing) {
+    if (isTesting()) {
       return;
     }
 
@@ -66,7 +66,7 @@ export default {
 
     if (messageBus.baseUrl !== "/") {
       // zepto compatible, 1 param only
-      messageBus.ajax = function(opts) {
+      messageBus.ajax = function (opts) {
         opts.headers = opts.headers || {};
         opts.headers["X-Shared-Session-Key"] = $(
           "meta[name=shared_session_key]"
@@ -77,7 +77,7 @@ export default {
         return ajax(opts);
       };
     } else {
-      messageBus.ajax = function(opts) {
+      messageBus.ajax = function (opts) {
         opts.headers = opts.headers || {};
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
@@ -92,5 +92,5 @@ export default {
       messageBus.callbackInterval = siteSettings.polling_interval;
       messageBus.enableLongPolling = true;
     }
-  }
+  },
 };

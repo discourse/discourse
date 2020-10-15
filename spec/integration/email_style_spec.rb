@@ -8,8 +8,8 @@ describe EmailStyle do
     it "does not evaluate ERB outside of the email itself" do
       SiteSetting.email_custom_template = "<hello>%{email_content}</hello><%= (111 * 333) %>"
       html = Email::Renderer.new(UserNotifications.signup(Fabricate(:user))).html
-      expect(html).not_to match("36963")
-      expect(html.starts_with?('<hello>')).to eq(true)
+      expect(html).not_to include("36963")
+      expect(html).to include('<hello>')
     end
   end
 
@@ -94,14 +94,14 @@ describe EmailStyle do
       context 'translation override' do
         before do
           TranslationOverride.upsert!(
-            'en',
+            SiteSetting.default_locale,
             'user_notifications.signup.text_body_template',
             "CLICK THAT LINK: %{base_url}/u/activate-account/%{email_token}"
           )
         end
 
         after do
-          TranslationOverride.revert!('en', ['user_notifications.signup.text_body_template'])
+          TranslationOverride.revert!(SiteSetting.default_locale, ['user_notifications.signup.text_body_template'])
         end
 
         it "applies customizations when translation override exists" do

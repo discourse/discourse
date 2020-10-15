@@ -94,7 +94,7 @@ export default createWidget("post-stream", {
       transformed.canCreatePost = attrs.canCreatePost;
       transformed.mobileView = mobileView;
 
-      if (transformed.canManage) {
+      if (transformed.canManage || transformed.canSplitMergeTopic) {
         transformed.multiSelect = attrs.multiSelect;
 
         if (attrs.multiSelect) {
@@ -157,5 +157,5 @@ export default createWidget("post-stream", {
       prevPost = post;
     }
     return result;
-  }
+  },
 });

@@ -5,7 +5,7 @@ import { userPath } from "discourse/lib/url";
 export function resendActivationEmail(username) {
   return ajax(userPath("action/send_activation_email"), {
     type: "POST",
-    data: { username }
+    data: { username },
   }).catch(popupAjaxError);
 }
 

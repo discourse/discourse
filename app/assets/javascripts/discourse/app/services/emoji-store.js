@@ -35,7 +35,7 @@ export default Service.extend({
 
   track(code) {
     const normalizedCode = code.replace(/(^:)|(:$)/g, "");
-    const recent = this.favorites.filter(r => r !== normalizedCode);
+    const recent = this.favorites.filter((r) => r !== normalizedCode);
     recent.unshift(normalizedCode);
     recent.length = Math.min(recent.length, TRACKED_EMOJIS);
     this.favorites = recent;
@@ -45,5 +45,5 @@ export default Service.extend({
     const store = new KeyValueStore(STORE_NAMESPACE);
     store.setObject({ key: EMOJI_USAGE, value: [] });
     store.setObject({ key: EMOJI_SELECTED_DIVERSITY, value: 1 });
-  }
+  },
 });

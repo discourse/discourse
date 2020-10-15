@@ -3,13 +3,16 @@
 require "digest/sha1"
 
 class Upload < ActiveRecord::Base
+  self.ignored_columns = [
+    "verified" # TODO(2020-12-10): remove
+  ]
+
   include ActionView::Helpers::NumberHelper
   include HasUrl
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
-  SECURE_MEDIA_ROUTE = "secure-media-uploads"
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -39,6 +42,11 @@ class Upload < ActiveRecord::Base
 
   validates_with UploadValidator
 
+  before_destroy do
+    UserProfile.where(card_background_upload_id: self.id).update_all(card_background_upload_id: nil)
+    UserProfile.where(profile_background_upload_id: self.id).update_all(profile_background_upload_id: nil)
+  end
+
   after_destroy do
     User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
     UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
@@ -46,6 +54,14 @@ class Upload < ActiveRecord::Base
   end
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
+
+  def self.verification_statuses
+    @verification_statuses ||= Enum.new(
+      unchecked: 1,
+      verified: 2,
+      invalid_etag: 3
+    )
+  end
 
   def to_s
     self.url
@@ -150,16 +166,29 @@ class Upload < ActiveRecord::Base
   def self.secure_media_url?(url)
     # we do not want to exclude topic links that for whatever reason
     # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
-    url.include?(SECURE_MEDIA_ROUTE) && !url.include?("/t/") && FileHelper.is_supported_media?(url)
+    route = UrlHelper.rails_route_from_url(url)
+    return false if route.blank?
+    route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
+  rescue ActionController::RoutingError
+    false
   end
 
   def self.signed_url_from_secure_media_url(url)
-    secure_upload_s3_path = url.sub(Discourse.base_url, "").sub("/#{SECURE_MEDIA_ROUTE}/", "")
+    route = UrlHelper.rails_route_from_url(url)
+    url = Rails.application.routes.url_for(route.merge(only_path: true))
+    secure_upload_s3_path = url[url.index(route[:path])..-1]
     Discourse.store.signed_url_for_path(secure_upload_s3_path)
   end
 
   def self.secure_media_url_from_upload_url(url)
-    url.sub(SiteSetting.Upload.absolute_base_url, "/#{SECURE_MEDIA_ROUTE}")
+    return url if !url.include?(SiteSetting.Upload.absolute_base_url)
+    uri = URI.parse(url)
+    Rails.application.routes.url_for(
+      controller: "uploads",
+      action: "show_secure",
+      path: uri.path[1..-1],
+      only_path: true
+    )
   end
 
   def self.short_path(sha1:, extension:)
@@ -401,10 +430,6 @@ class Upload < ActiveRecord::Base
     problems
   end
 
-  def self.reset_unknown_extensions!
-    Upload.where(extension: "unknown").update_all(extension: nil)
-  end
-
   private
 
   def short_url_basename
@@ -436,6 +461,8 @@ end
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
 #  original_sha1          :string
+#  verified               :boolean
+#  verification_status    :integer          default(1), not null
 #
 # Indexes
 #

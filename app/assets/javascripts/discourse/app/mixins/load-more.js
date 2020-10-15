@@ -28,5 +28,5 @@ export default Mixin.create(Scrolling, {
   @on("willDestroyElement")
   _removeEyeline() {
     this.unbindScrolling();
-  }
+  },
 });

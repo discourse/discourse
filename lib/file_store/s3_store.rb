@@ -169,9 +169,9 @@ module FileStore
       url.sub(File.join("#{schema}#{absolute_base_url}", folder), File.join(SiteSetting.Upload.s3_cdn_url, "/"))
     end
 
-    def signed_url_for_path(path, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+    def signed_url_for_path(path, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS, force_download: false)
       key = path.sub(absolute_base_url + "/", "")
-      presigned_url(key, expires_in: expires_in)
+      presigned_url(key, expires_in: expires_in, force_download: force_download)
     end
 
     def cache_avatar(avatar, user_id)

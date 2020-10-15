@@ -5,8 +5,6 @@
 // Requires chrome-launcher and chrome-remote-interface from npm
 // An up-to-date version of chrome is also required
 
-/* globals Promise */
-
 var args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 3) {
@@ -23,12 +21,13 @@ const fs = require("fs");
 if (QUNIT_RESULT) {
   (async () => {
     await fs.stat(QUNIT_RESULT, (err, stats) => {
-      if (stats && stats.isFile())
-        fs.unlink(QUNIT_RESULT, unlinkErr => {
+      if (stats && stats.isFile()) {
+        fs.unlink(QUNIT_RESULT, (unlinkErr) => {
           if (unlinkErr) {
             console.log("Error deleting " + QUNIT_RESULT + " " + unlinkErr);
           }
         });
+      }
     });
   })();
 }
@@ -42,8 +41,8 @@ async function runAllTests() {
         "--no-sandbox",
         "--disable-dev-shm-usage",
         "--mute-audio",
-        "--window-size=1440,900"
-      ]
+        "--window-size=1440,900",
+      ],
     };
 
     if (process.env.REMOTE_DEBUG) {
@@ -68,7 +67,8 @@ async function runAllTests() {
         console.log(
           "Unable to establish connection to chrome target - trying again..."
         );
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // eslint-disable-next-line
+        await new Promise((resolve) => setTimeout(resolve, 100));
       } else {
         throw e;
       }
@@ -77,22 +77,23 @@ async function runAllTests() {
 
   const { Inspector, Page, Runtime } = protocol;
 
+  // eslint-disable-next-line
   await Promise.all([Inspector.enable(), Page.enable(), Runtime.enable()]);
 
-  Inspector.targetCrashed(entry => {
+  Inspector.targetCrashed((entry) => {
     console.log("Chrome target crashed:");
     console.log(entry);
   });
 
-  Runtime.exceptionThrown(exceptionInfo => {
+  Runtime.exceptionThrown((exceptionInfo) => {
     console.log(exceptionInfo.exceptionDetails.exception.description);
   });
 
-  Runtime.consoleAPICalled(response => {
+  Runtime.consoleAPICalled((response) => {
     const message = response["args"][0].value;
 
-    // If it's a simple test result, write without newline
-    if (message === "." || message === "F") {
+    // Not finished yet, don't add a newline
+    if (message && message.startsWith && message.startsWith("↪")) {
       process.stdout.write(message);
     } else if (
       message &&
@@ -109,13 +110,20 @@ async function runAllTests() {
   Page.navigate({ url: args[0] });
 
   Page.loadEventFired(async () => {
+    let qff = process.env.QUNIT_FAIL_FAST;
     await Runtime.evaluate({
-      expression: `(${qunit_script})()`
+      expression:
+        `const QUNIT_FAIL_FAST = ` +
+        (qff === "1" || qff === "true").toString() +
+        ";",
+    });
+    await Runtime.evaluate({
+      expression: `(${qunit_script})();`,
     });
 
     if (args[0].indexOf("report_requests=1") > -1) {
       await Runtime.evaluate({
-        expression: "QUnit.config.logAllRequests = true"
+        expression: "QUnit.config.logAllRequests = true",
       });
     }
 
@@ -124,16 +132,16 @@ async function runAllTests() {
 
     var interval;
 
-    let runTests = async function() {
+    let runTests = async function () {
       if (Date.now() > start + timeout) {
-        console.error("Tests timed out");
+        console.error("\n\nTests timed out\n");
         protocol.close();
         chrome.kill();
         process.exit(124);
       }
 
       let numFails = await Runtime.evaluate({
-        expression: `(${check_script})()`
+        expression: `(${check_script})()`,
       });
 
       if (numFails && numFails.result && numFails.result.type !== "undefined") {
@@ -153,7 +161,7 @@ async function runAllTests() {
   });
 }
 
-runAllTests().catch(e => {
+runAllTests().catch((e) => {
   console.log("Failed to run tests: " + e);
   process.exit(1);
 });
@@ -161,45 +169,51 @@ runAllTests().catch(e => {
 // The following functions are converted to strings
 // And then sent to chrome to be evalaluated
 function logQUnit() {
-  var moduleErrors = [];
-  var testErrors = [];
-  var assertionErrors = [];
+  let testErrors = [];
+  let assertionErrors = [];
 
   console.log("\nRunning: " + JSON.stringify(QUnit.urlParams) + "\n");
 
   QUnit.config.testTimeout = 10000;
 
-  QUnit.moduleDone(function(context) {
-    if (context.failed) {
-      var msg = "Module Failed: " + context.name + "\n" + testErrors.join("\n");
-      moduleErrors.push(msg);
-      testErrors = [];
-    }
-  });
-
   let durations = {};
 
-  QUnit.testStart(function(context) {
-    console.log("\n" + context.module + "::" + context.name);
+  let inTest = false;
+  QUnit.testStart(function (context) {
+    console.log("↪ " + context.module + "::" + context.name);
+    inTest = true;
   });
 
-  QUnit.testDone(function(context) {
+  QUnit.testDone(function (context) {
     durations[context.module + "::" + context.name] = context.runtime;
 
     if (context.failed) {
-      var msg = "  Test Failed: " + context.name + assertionErrors.join("    ");
-
-      /* QUNIT_RESULT */
-
+      const msg =
+        "  Test Failed: " +
+        context.name +
+        assertionErrors.join("    ") +
+        "\n" +
+        context.source;
       testErrors.push(msg);
       assertionErrors = [];
-      console.log("F");
+
+      // Pass QUNIT_FAIL_FAST on the command line to quit after the first failure
+      // eslint-disable-next-line
+      if (QUNIT_FAIL_FAST) {
+        QUnit.config.queue.length = 0;
+      }
+      if (inTest) {
+        console.log(" [✘]");
+      }
     } else {
-      console.log(".");
+      if (inTest) {
+        console.log(" [✔]");
+      }
     }
+    inTest = false;
   });
 
-  QUnit.log(function(context) {
+  QUnit.log(function (context) {
     if (context.result) {
       return;
     }
@@ -217,23 +231,26 @@ function logQUnit() {
     assertionErrors.push(msg);
   });
 
-  QUnit.done(function(context) {
+  QUnit.done(function (context) {
     console.log("\n");
 
-    if (moduleErrors.length > 0) {
-      for (var idx = 0; idx < moduleErrors.length; idx++) {
-        console.error(moduleErrors[idx] + "\n");
-      }
+    if (testErrors.length) {
+      console.log("Test Errors");
+      console.log("----------------------------------------------");
+      testErrors.forEach((e) => {
+        console.error(e);
+      });
+      console.log("\n");
     }
 
     console.log("Slowest tests");
     console.log("----------------------------------------------");
-    let ary = Object.keys(durations).map(key => ({
+    let ary = Object.keys(durations).map((key) => ({
       key: key,
-      value: durations[key]
+      value: durations[key],
     }));
     ary.sort((p1, p2) => p2.value - p1.value);
-    ary.slice(0, 30).forEach(pair => {
+    ary.slice(0, 30).forEach((pair) => {
       console.log(pair.key + ": " + pair.value + "ms");
     });
 
@@ -241,9 +258,24 @@ function logQUnit() {
       "Time: " + context.runtime + "ms",
       "Total: " + context.total,
       "Passed: " + context.passed,
-      "Failed: " + context.failed
+      "Failed: " + context.failed,
     ];
     console.log(stats.join(", "));
+
+    if (context.failed) {
+      console.log("\nUse this filter to run in the same order:");
+      console.log(
+        "QUNIT_FAIL_FAST=1 QUNIT_SEED=" +
+          QUnit.config.seed +
+          " rake qunit:test\n"
+      );
+      console.log("If you have a web environment running, you can visit:");
+      console.log(
+        "http://localhost:3000/qunit?hidepassed&seed=" +
+          QUnit.config.seed +
+          "\n\n"
+      );
+    }
 
     window.qunitDone = context;
   });

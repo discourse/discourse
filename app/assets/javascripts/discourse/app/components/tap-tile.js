@@ -12,5 +12,5 @@ export default Component.extend({
     this.onChange(this.tileId);
   },
 
-  active: propertyEqual("activeTile", "tileId")
+  active: propertyEqual("activeTile", "tileId"),
 });

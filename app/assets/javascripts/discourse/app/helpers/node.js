@@ -10,16 +10,11 @@ export function dateNode(dt) {
     const attributes = {
       title: longDate(dt),
       "data-time": dt.getTime(),
-      "data-format": "tiny"
+      "data-format": "tiny",
     };
 
     return h("span.relative-date", { attributes }, relativeAge(dt));
   }
-}
-
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.dateNode = dateNode;
 }
 
 export function numberNode(num, opts) {

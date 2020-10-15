@@ -3,7 +3,7 @@ import I18n from "I18n";
 
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL_NAME = "poll";
-const WHITELISTED_ATTRIBUTES = [
+const ALLOWED_ATTRIBUTES = [
   "close",
   "max",
   "min",
@@ -15,7 +15,7 @@ const WHITELISTED_ATTRIBUTES = [
   "groups",
   "status",
   "step",
-  "type"
+  "type",
 ];
 
 function replaceToken(tokens, target, list) {
@@ -81,18 +81,43 @@ function invalidPoll(state, tag) {
   token.content = "[/" + tag + "]";
 }
 
+function getTitle(tokens, startToken) {
+  const startIndex = tokens.indexOf(startToken);
+
+  if (startIndex === -1) {
+    return;
+  }
+
+  const pollTokens = tokens.slice(startIndex);
+  const open = pollTokens.findIndex((token) => token.type === "heading_open");
+  const close = pollTokens.findIndex((token) => token.type === "heading_close");
+
+  if (open === -1 || close === -1) {
+    return;
+  }
+
+  const titleTokens = pollTokens.slice(open + 1, close);
+
+  // Remove the heading element
+  tokens.splice(startIndex + open, close - open + 1);
+
+  return titleTokens;
+}
+
 const rule = {
   tag: "poll",
 
-  before: function(state, tagInfo, raw) {
+  before: function (state, tagInfo, raw) {
     let token = state.push("text", "", 0);
     token.content = raw;
     token.bbcode_attrs = tagInfo.attrs;
     token.bbcode_type = "poll_open";
   },
 
-  after: function(state, openToken, raw) {
+  after: function (state, openToken, raw) {
+    const titleTokens = getTitle(state.tokens, openToken);
     let items = getListItems(state.tokens, openToken);
+
     if (!items) {
       return invalidPoll(state, raw);
     }
@@ -106,7 +131,7 @@ const rule = {
       attributes.push([DATA_PREFIX + "status", "open"]);
     }
 
-    WHITELISTED_ATTRIBUTES.forEach(name => {
+    ALLOWED_ATTRIBUTES.forEach((name) => {
       if (attrs[name]) {
         attributes.push([DATA_PREFIX + name, attrs[name]]);
       }
@@ -139,8 +164,18 @@ const rule = {
 
     token = new state.Token("poll_open", "div", 1);
     token.attrs = [["class", "poll-container"]];
-
     header.push(token);
+
+    if (titleTokens) {
+      token = new state.Token("title_open", "div", 1);
+      token.attrs = [["class", "poll-title"]];
+      header.push(token);
+
+      header.push(...titleTokens);
+
+      token = new state.Token("title_close", "div", -1);
+      header.push(token);
+    }
 
     // generate the options when the type is "number"
     if (attrs["type"] === "number") {
@@ -175,6 +210,7 @@ const rule = {
         token = new state.Token("list_item_close", "li", -1);
         header.push(token);
       }
+
       token = new state.Token("bullet_item_close", "", -1);
       header.push(token);
     }
@@ -221,7 +257,7 @@ const rule = {
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
-  }
+  },
 };
 
 function newApiInit(helper) {
@@ -230,7 +266,7 @@ function newApiInit(helper) {
     opts.pollMaximumOptions = siteSettings.poll_maximum_options;
   });
 
-  helper.registerPlugin(md => {
+  helper.registerPlugin((md) => {
     md.block.bbcode.ruler.push("poll", rule);
   });
 }
@@ -240,6 +276,7 @@ export function setup(helper) {
     "div.poll",
     "div.poll-info",
     "div.poll-container",
+    "div.poll-title",
     "div.poll-buttons",
     "div[data-*]",
     "span.info-number",
@@ -247,7 +284,7 @@ export function setup(helper) {
     "span.info-label",
     "a.button.cast-votes",
     "a.button.toggle-results",
-    "li[data-*]"
+    "li[data-*]",
   ]);
 
   newApiInit(helper);
@@ -378,12 +415,15 @@ function md51(s) {
   }
   s = s.substring(i - 64);
   var tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  for (i = 0; i < s.length; i++)
+  for (i = 0; i < s.length; i++) {
     tail[i >> 2] |= s.charCodeAt(i) << (i % 4 << 3);
+  }
   tail[i >> 2] |= 0x80 << (i % 4 << 3);
   if (i > 55) {
     md5cycle(state, tail);
-    for (i = 0; i < 16; i++) tail[i] = 0;
+    for (i = 0; i < 16; i++) {
+      tail[i] = 0;
+    }
   }
   tail[14] = n * 8;
   md5cycle(state, tail);
@@ -409,13 +449,16 @@ var hex_chr = "0123456789abcdef".split("");
 function rhex(n) {
   var s = "",
     j = 0;
-  for (; j < 4; j++)
+  for (; j < 4; j++) {
     s += hex_chr[(n >> (j * 8 + 4)) & 0x0f] + hex_chr[(n >> (j * 8)) & 0x0f];
+  }
   return s;
 }
 
 function hex(x) {
-  for (var i = 0; i < x.length; i++) x[i] = rhex(x[i]);
+  for (var i = 0; i < x.length; i++) {
+    x[i] = rhex(x[i]);
+  }
   return x.join("");
 }
 

@@ -3,13 +3,11 @@
   "version": "1.0.0",
   "description": "Discourse's select widget",
   "author": "Discourse",
-  "license": "GPLv2",
+  "license": "GPL-2.0-only",
   "keywords": [
     "ember-addon"
   ],
   "repository": "",
-  "license": "",
-  "author": "",
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",

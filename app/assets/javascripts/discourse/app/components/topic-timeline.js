@@ -27,7 +27,7 @@ export default MountWidget.extend(Docking, {
       enteredIndex: this.enteredIndex,
       dockAt: this.dockAt,
       dockBottom: this.dockBottom,
-      mobileView: this.get("site.mobileView")
+      mobileView: this.get("site.mobileView"),
     };
 
     let event = this.prevEvent;
@@ -118,5 +118,5 @@ export default MountWidget.extend(Docking, {
       this.appEvents.off("composer:resized", this, this.queueRerender);
       this.appEvents.off("composer:closed", this, this.queueRerender);
     }
-  }
+  },
 });

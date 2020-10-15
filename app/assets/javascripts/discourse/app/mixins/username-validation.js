@@ -14,8 +14,8 @@ export default Mixin.create({
 
   minUsernameLength: setting("min_username_length"),
 
-  fetchExistingUsername: discourseDebounce(function() {
-    User.checkUsername(null, this.accountEmail).then(result => {
+  fetchExistingUsername: discourseDebounce(function () {
+    User.checkUsername(null, this.accountEmail).then((result) => {
       if (
         result.suggestion &&
         (isEmpty(this.accountUsername) ||
@@ -23,7 +23,7 @@ export default Mixin.create({
       ) {
         this.setProperties({
           accountUsername: result.suggestion,
-          prefilledUsername: result.suggestion
+          prefilledUsername: result.suggestion,
         });
       }
     });
@@ -33,14 +33,14 @@ export default Mixin.create({
   basicUsernameValidation(accountUsername) {
     const failedAttrs = {
       failed: true,
-      element: document.querySelector("#new-account-username")
+      element: document.querySelector("#new-account-username"),
     };
     this.set("uniqueUsernameValidation", null);
 
     if (accountUsername && accountUsername === this.prefilledUsername) {
       return EmberObject.create({
         ok: true,
-        reason: I18n.t("user.username.prefilled")
+        reason: I18n.t("user.username.prefilled"),
       });
     }
 
@@ -48,7 +48,7 @@ export default Mixin.create({
     if (isEmpty(accountUsername)) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
-          message: I18n.t("user.username.required")
+          message: I18n.t("user.username.required"),
         })
       );
     }
@@ -57,7 +57,7 @@ export default Mixin.create({
     if (accountUsername.length < this.siteSettings.min_username_length) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
-          reason: I18n.t("user.username.too_short")
+          reason: I18n.t("user.username.too_short"),
         })
       );
     }
@@ -66,7 +66,7 @@ export default Mixin.create({
     if (accountUsername.length > this.maxUsernameLength) {
       return EmberObject.create(
         Object.assign(failedAttrs, {
-          reason: I18n.t("user.username.too_long")
+          reason: I18n.t("user.username.too_long"),
         })
       );
     }
@@ -75,7 +75,7 @@ export default Mixin.create({
     // Let's check it out asynchronously
     return EmberObject.create(
       Object.assign(failedAttrs, {
-        reason: I18n.t("user.username.checking")
+        reason: I18n.t("user.username.checking"),
       })
     );
   },
@@ -87,10 +87,10 @@ export default Mixin.create({
     );
   },
 
-  checkUsernameAvailability: discourseDebounce(function() {
+  checkUsernameAvailability: discourseDebounce(function () {
     if (this.shouldCheckUsernameAvailability()) {
       return User.checkUsername(this.accountUsername, this.accountEmail).then(
-        result => {
+        (result) => {
           this.set("isDeveloper", false);
           if (result.available) {
             if (result.is_developer) {
@@ -100,13 +100,13 @@ export default Mixin.create({
               "uniqueUsernameValidation",
               EmberObject.create({
                 ok: true,
-                reason: I18n.t("user.username.available")
+                reason: I18n.t("user.username.available"),
               })
             );
           } else {
             const failedAttrs = {
               failed: true,
-              element: document.querySelector("#new-account-username")
+              element: document.querySelector("#new-account-username"),
             };
 
             if (result.suggestion) {
@@ -114,7 +114,7 @@ export default Mixin.create({
                 "uniqueUsernameValidation",
                 EmberObject.create(
                   Object.assign(failedAttrs, {
-                    reason: I18n.t("user.username.not_available", result)
+                    reason: I18n.t("user.username.not_available", result),
                   })
                 )
               );
@@ -125,7 +125,7 @@ export default Mixin.create({
                   Object.assign(failedAttrs, {
                     reason: result.errors
                       ? result.errors.join(" ")
-                      : I18n.t("user.username.not_available_no_suggestion")
+                      : I18n.t("user.username.not_available_no_suggestion"),
                   })
                 )
               );
@@ -142,5 +142,5 @@ export default Mixin.create({
     const basicValidation = this.basicUsernameValidation;
     const uniqueUsername = this.uniqueUsernameValidation;
     return uniqueUsername ? uniqueUsername : basicValidation;
-  }
+  },
 });

@@ -5,8 +5,12 @@ module.exports = {
   options: {
     autoImport: {
       alias: {
-        handlebars: "handlebars/dist/cjs/handlebars.js"
-      }
-    }
-  }
+        handlebars: "handlebars/dist/cjs/handlebars.js",
+      },
+    },
+  },
+
+  isDevelopingAddon() {
+    return true;
+  },
 };

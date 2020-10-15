@@ -72,15 +72,8 @@ describe ShrinkUploadedImage do
     let(:upload) { Fabricate(:s3_image_upload, width: 200, height: 200) }
 
     before do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_access_key_id = "fakeid7974664"
-      SiteSetting.s3_secret_access_key = "fakesecretid7974664"
-
-      store = FileStore::S3Store.new
-      s3_helper = store.instance_variable_get(:@s3_helper)
-      client = Aws::S3::Client.new(stub_responses: true)
-      s3_helper.stubs(:s3_client).returns(client)
-      Discourse.stubs(:store).returns(store)
+      setup_s3
+      stub_s3_store
     end
 
     it "resizes the image" do

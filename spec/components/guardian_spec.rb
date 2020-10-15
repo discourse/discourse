@@ -51,8 +51,8 @@ describe Guardian do
       expect(Guardian.new(user).link_posting_access).to eq('none')
     end
 
-    it "is limited for a user of a low trust level with a whitelist" do
-      SiteSetting.whitelisted_link_domains = 'example.com'
+    it "is limited for a user of a low trust level with a allowlist" do
+      SiteSetting.allowed_link_domains = 'example.com'
       user.trust_level = 0
       SiteSetting.min_trust_to_post_links = 1
       expect(Guardian.new(user).link_posting_access).to eq('limited')
@@ -78,9 +78,9 @@ describe Guardian do
       expect(Guardian.new(user).can_post_link?(host: host)).to eq(false)
     end
 
-    describe "whitelisted host" do
+    describe "allowlisted host" do
       before do
-        SiteSetting.whitelisted_link_domains = host
+        SiteSetting.allowed_link_domains = host
       end
 
       it "allows a new user to post the link to the host" do
@@ -112,6 +112,8 @@ describe Guardian do
     it "returns false when the post is deleted" do
       post.deleted_at = Time.now
       expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
+      expect(Guardian.new(admin).post_can_act?(post, :spam)).to be_truthy
+      expect(Guardian.new(admin).post_can_act?(post, :notify_user)).to be_truthy
     end
 
     it "works as expected for silenced users" do
@@ -548,7 +550,6 @@ describe Guardian do
       let(:private_category)  { Fabricate(:private_category, group: group) }
       let(:group_private_topic) { Fabricate(:topic, category: private_category) }
       let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
-      fab!(:pm) { Fabricate(:topic) }
 
       it 'returns true if user has sufficient trust level' do
         SiteSetting.min_trust_to_allow_pm_invite = 2
@@ -1802,6 +1803,28 @@ describe Guardian do
     end
   end
 
+  context "can_edit_staff_notes?" do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_edit_staff_notes?(nil)).to eq(false)
+    end
+
+    it 'returns true for a staff user' do
+      expect(Guardian.new(moderator).can_edit_staff_notes?(topic)).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      expect(Guardian.new(user).can_edit_staff_notes?(topic)).to eq(false)
+    end
+
+    it 'returns true for a group member with reviewable status' do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      topic.category.update!(reviewable_by_group_id: group.id)
+      expect(Guardian.new(user).can_edit_staff_notes?(topic)).to eq(true)
+    end
+  end
+
   context "can_create_topic?" do
     it 'returns true for staff user' do
       expect(Guardian.new(moderator).can_create_topic?(topic)).to eq(true)
@@ -2933,17 +2956,17 @@ describe Guardian do
     let!(:theme) { Fabricate(:theme) }
     let!(:theme2) { Fabricate(:theme) }
 
-    context "whitelist mode" do
+    context "allowlist mode" do
       before do
-        GlobalSetting.reset_whitelisted_theme_ids!
-        global_setting :whitelisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+        GlobalSetting.reset_allowed_theme_ids!
+        global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
       end
 
       after do
-        GlobalSetting.reset_whitelisted_theme_ids!
+        GlobalSetting.reset_allowed_theme_ids!
       end
 
-      it "should respect theme whitelisting" do
+      it "should respect theme allowlisting" do
         r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
         theme.update!(remote_theme_id: r.id)
 
@@ -3193,7 +3216,7 @@ describe Guardian do
       group.add_owner(owner)
       group.reload
 
-      expect(Guardian.new(moderator).can_see_group?(group)).to eq(false)
+      expect(Guardian.new(moderator).can_see_group?(group)).to eq(true)
       expect(Guardian.new.can_see_group?(group)).to eq(false)
       expect(Guardian.new(another_user).can_see_group?(group)).to eq(false)
       expect(Guardian.new(admin).can_see_group?(group)).to eq(true)
@@ -3277,7 +3300,7 @@ describe Guardian do
       group.add_owner(owner)
       group.reload
 
-      expect(Guardian.new(moderator).can_see_group_members?(group)).to eq(false)
+      expect(Guardian.new(moderator).can_see_group_members?(group)).to eq(true)
       expect(Guardian.new.can_see_group_members?(group)).to eq(false)
       expect(Guardian.new(another_user).can_see_group_members?(group)).to eq(false)
       expect(Guardian.new(admin).can_see_group_members?(group)).to eq(true)
@@ -3383,7 +3406,7 @@ describe Guardian do
       group.reload
 
       expect(Guardian.new(another_user).can_see_groups?([group])).to eq(false)
-      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(false)
+      expect(Guardian.new(moderator).can_see_groups?([group])).to eq(true)
       expect(Guardian.new.can_see_groups?([group])).to eq(false)
       expect(Guardian.new(admin).can_see_groups?([group])).to eq(true)
       expect(Guardian.new(member).can_see_groups?([group])).to eq(true)
@@ -3422,7 +3445,7 @@ describe Guardian do
       group1.add_owner(owner)
       group1.reload
 
-      expect(Guardian.new(moderator).can_see_groups?([group1, group2])).to eq(false)
+      expect(Guardian.new(moderator).can_see_groups?([group1, group2])).to eq(true)
       expect(Guardian.new.can_see_groups?([group1, group2])).to eq(false)
       expect(Guardian.new(admin).can_see_groups?([group1, group2])).to eq(true)
       expect(Guardian.new(member).can_see_groups?([group1, group2])).to eq(false)

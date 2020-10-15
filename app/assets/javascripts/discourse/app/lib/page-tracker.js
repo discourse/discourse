@@ -18,11 +18,11 @@ export function resetPageTracking() {
   cache = {};
 }
 
-export function startPageTracking(router, appEvents) {
+export function startPageTracking(router, appEvents, documentTitle) {
   if (_started) {
     return;
   }
-  router.on("routeDidChange", transition => {
+  router.on("routeDidChange", (transition) => {
     // we ocassionally prevent tracking of replaced pages when only query params changed
     // eg: google analytics
     const replacedOnlyQueryParams =
@@ -34,18 +34,16 @@ export function startPageTracking(router, appEvents) {
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
     next(() => {
-      let title = Discourse.get("_docTitle");
-
       appEvents.trigger("page:changed", {
         url,
-        title,
+        title: documentTitle.getTitle(),
         currentRouteName: router.currentRouteName,
-        replacedOnlyQueryParams
+        replacedOnlyQueryParams,
       });
     });
 
     transitionCount++;
-    Object.keys(cache).forEach(k => {
+    Object.keys(cache).forEach((k) => {
       const v = cache[k];
       if (v && v.target && v.target < transitionCount) {
         delete cache[k];
@@ -67,11 +65,11 @@ export function googleTagManagerPageChanged(data) {
     event: "virtualPageView",
     page: {
       title: data.title,
-      url: data.url
-    }
+      url: data.url,
+    },
   };
 
-  _gtmPageChangedCallbacks.forEach(callback => callback(gtmData));
+  _gtmPageChangedCallbacks.forEach((callback) => callback(gtmData));
 
   window.dataLayer.push(gtmData);
 }

@@ -4,13 +4,14 @@ import extractValue from "discourse-common/utils/extract-value";
 import decoratorAlias from "discourse-common/utils/decorator-alias";
 import macroAlias from "discourse-common/utils/macro-alias";
 import { schedule, next } from "@ember/runloop";
+import { bind as emberBind } from "@ember/runloop";
 
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
   if (isDescriptor(params[params.length - 1])) {
     return handleDescriptor(...arguments);
   } else {
-    return function(/* target, key, desc */) {
+    return function (/* target, key, desc */) {
       return handleDescriptor(...arguments, params);
     };
   }
@@ -18,7 +19,7 @@ export default function discourseComputedDecorator(...params) {
 
 export function afterRender(target, name, descriptor) {
   const originalFunction = descriptor.value;
-  descriptor.value = function() {
+  descriptor.value = function () {
     next(() => {
       schedule("afterRender", () => {
         if (this.element && !this.isDestroying && !this.isDestroyed) {
@@ -29,15 +30,31 @@ export function afterRender(target, name, descriptor) {
   };
 }
 
+export function bind(target, name, descriptor) {
+  return {
+    configurable: true,
+    get() {
+      const bound = emberBind(this, descriptor.value);
+      const attributes = Object.assign({}, descriptor, {
+        value: bound,
+      });
+
+      Object.defineProperty(this, name, attributes);
+
+      return bound;
+    },
+  };
+}
+
 export function readOnly(target, name, desc) {
   return {
     writable: false,
     enumerable: desc.enumerable,
     configurable: desc.configurable,
-    initializer: function() {
+    initializer: function () {
       var value = extractValue(desc);
       return value.readOnly();
-    }
+    },
   };
 }
 

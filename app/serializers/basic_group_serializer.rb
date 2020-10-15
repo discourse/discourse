@@ -9,7 +9,6 @@ class BasicGroupSerializer < ApplicationSerializer
              :mentionable_level,
              :messageable_level,
              :visibility_level,
-             :automatic_membership_email_domains,
              :primary_group,
              :title,
              :grant_trust_level,
@@ -31,31 +30,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :is_group_owner,
              :members_visibility_level,
              :can_see_members,
+             :can_admin_group,
              :publish_read_state
-
-  def self.admin_attributes(*attrs)
-    attributes(*attrs)
-    attrs.each do |attr|
-      define_method "include_#{attr}?" do
-        scope.is_admin?
-      end
-    end
-  end
-
-  admin_attributes :automatic_membership_email_domains,
-                   :smtp_server,
-                   :smtp_port,
-                   :smtp_ssl,
-                   :imap_server,
-                   :imap_port,
-                   :imap_ssl,
-                   :imap_mailbox_name,
-                   :imap_mailboxes,
-                   :email_username,
-                   :email_password,
-                   :imap_last_error,
-                   :imap_old_emails,
-                   :imap_new_emails
 
   def include_display_name?
     object.automatic
@@ -93,6 +69,14 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def include_is_group_owner?
     owner_group_ids.present?
+  end
+
+  def can_admin_group
+    scope.can_admin_group?(object)
+  end
+
+  def include_can_admin_group?
+    scope.can_admin_group?(object)
   end
 
   def is_group_owner

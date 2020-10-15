@@ -3,11 +3,13 @@ import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { observes } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   discoveryTopics: controller("discovery/topics"),
   navigationCategory: controller("navigation/category"),
   application: controller(),
+  router: service(),
 
   loading: false,
 
@@ -17,7 +19,7 @@ export default Controller.extend({
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
   @observes("loadedAllItems")
-  _showFooter: function() {
+  _showFooter: function () {
     this.set("application.showFooter", this.loadedAllItems);
   },
 
@@ -32,12 +34,22 @@ export default Controller.extend({
     }
 
     url += "/top/" + period;
+
+    const queryParams = this.router.currentRoute.queryParams;
+    if (Object.keys(queryParams).length) {
+      url =
+        `${url}?` +
+        Object.keys(queryParams)
+          .map((key) => `${key}=${queryParams[key]}`)
+          .join("&");
+    }
+
     return url;
   },
 
   actions: {
     changePeriod(p) {
       DiscourseURL.routeTo(this.showMoreUrl(p));
-    }
-  }
+    },
+  },
 });

@@ -131,7 +131,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def website_domain_validator
-    allowed_domains = SiteSetting.user_website_domains_whitelist
+    allowed_domains = SiteSetting.allowed_user_website_domains
     return if (allowed_domains.blank? || self.website.blank?)
 
     domain = begin

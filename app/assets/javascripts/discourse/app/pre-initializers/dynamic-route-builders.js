@@ -19,15 +19,15 @@ export default {
     app.DiscoveryCategoryRoute = buildCategoryRoute("default");
     app.DiscoveryParentCategoryRoute = buildCategoryRoute("default");
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute("default", {
-      no_subcategories: true
+      no_subcategories: true,
     });
     app.DiscoveryCategoryAllRoute = buildCategoryRoute("default", {
-      no_subcategories: false
+      no_subcategories: false,
     });
     app.DiscoveryCategoryWithIDRoute = buildCategoryRoute("default");
 
     const site = Site.current();
-    site.get("filters").forEach(filter => {
+    site.get("filters").forEach((filter) => {
       const filterCapitalized = filter.capitalize();
       app[
         `Discovery${filterCapitalized}Controller`
@@ -41,7 +41,10 @@ export default {
       app[
         `Discovery${filterCapitalized}CategoryNoneController`
       ] = DiscoverySortableController.extend();
-      app[`Discovery${filterCapitalized}Route`] = buildTopicRoute(filter);
+      if (filter !== "top") {
+        app[`Discovery${filterCapitalized}Route`] = buildTopicRoute(filter);
+      }
+
       app[`Discovery${filterCapitalized}CategoryRoute`] = buildCategoryRoute(
         filter
       );
@@ -53,27 +56,17 @@ export default {
       ] = buildCategoryRoute(filter, { no_subcategories: true });
     });
 
-    Discourse.DiscoveryTopController = DiscoverySortableController.extend();
-    Discourse.DiscoveryTopCategoryController = DiscoverySortableController.extend();
-    Discourse.DiscoveryTopParentCategoryController = DiscoverySortableController.extend();
-    Discourse.DiscoveryTopCategoryNoneController = DiscoverySortableController.extend();
-
-    Discourse.DiscoveryTopRoute = buildTopicRoute("top", {
+    app.DiscoveryTopRoute = buildTopicRoute("top", {
       actions: {
         willTransition() {
           User.currentProp("should_be_redirected_to_top", false);
           User.currentProp("redirected_to_top.reason", null);
           return this._super(...arguments);
-        }
-      }
-    });
-    Discourse.DiscoveryTopCategoryRoute = buildCategoryRoute("top");
-    Discourse.DiscoveryTopParentCategoryRoute = buildCategoryRoute("top");
-    Discourse.DiscoveryTopCategoryNoneRoute = buildCategoryRoute("top", {
-      no_subcategories: true
+        },
+      },
     });
 
-    site.get("periods").forEach(period => {
+    site.get("periods").forEach((period) => {
       const periodCapitalized = period.capitalize();
       app[
         `DiscoveryTop${periodCapitalized}Controller`
@@ -103,18 +96,18 @@ export default {
 
     app["TagsShowCategoryRoute"] = TagsShowRoute.extend();
     app["TagsShowCategoryNoneRoute"] = TagsShowRoute.extend({
-      noSubcategories: true
+      noSubcategories: true,
     });
     app["TagsShowParentCategoryRoute"] = TagsShowRoute.extend();
 
     app["TagShowRoute"] = TagsShowRoute;
 
-    site.get("filters").forEach(function(filter) {
+    site.get("filters").forEach(function (filter) {
       app["TagsShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
-        navMode: filter
+        navMode: filter,
       });
       app["TagShow" + filter.capitalize() + "Route"] = TagsShowRoute.extend({
-        navMode: filter
+        navMode: filter,
       });
       app[
         "TagsShowCategory" + filter.capitalize() + "Route"
@@ -126,5 +119,5 @@ export default {
         "TagsShowParentCategory" + filter.capitalize() + "Route"
       ] = TagsShowRoute.extend({ navMode: filter });
     });
-  }
+  },
 };

@@ -1,24 +1,25 @@
+import { test, module } from "qunit";
 import { run } from "@ember/runloop";
 import startApp from "wizard/test/helpers/start-app";
 
 var wizard;
-QUnit.module("Acceptance: wizard", {
+module("Acceptance: wizard", {
   beforeEach() {
     wizard = startApp();
   },
 
   afterEach() {
     run(wizard, "destroy");
-  }
+  },
 });
 
-test("Wizard starts", async assert => {
+test("Wizard starts", async (assert) => {
   await visit("/");
   assert.ok(exists(".wizard-column-contents"));
   assert.equal(currentPath(), "step");
 });
 
-test("Going back and forth in steps", async assert => {
+test("Going back and forth in steps", async (assert) => {
   await visit("/steps/hello-world");
   assert.ok(exists(".wizard-step"));
   assert.ok(

@@ -35,6 +35,9 @@ module Jobs
       UserStat.ensure_consistency!(13.hours.ago)
       measure(UserStat)
 
+      GroupUser.ensure_consistency!(13.hours.ago)
+      measure(GroupUser)
+
       Rails.logger.debug(format_measure)
       nil
     end
@@ -42,7 +45,7 @@ module Jobs
     private
 
     def format_measure
-      result = +"EnsureDbConsitency Times\n"
+      result = +"EnsureDbConsistency Times\n"
       result << @measure_times.map do |name, duration|
         "  #{name}: #{duration}"
       end.join("\n")

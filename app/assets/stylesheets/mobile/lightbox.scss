@@ -6,8 +6,8 @@
 
 .meta {
   align-items: center;
-  background: $secondary;
-  color: $primary-high;
+  background: var(--secondary);
+  color: var(--primary-high);
   height: 25px;
   width: 25px;
   bottom: 0;
@@ -20,6 +20,6 @@
   }
 
   .d-icon-discourse-expand {
-    color: $primary-high;
+    color: var(--primary-high);
   }
 }

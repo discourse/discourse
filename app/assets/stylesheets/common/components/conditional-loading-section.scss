@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $primary-very-low;
+    background: var(--primary-very-low);
     flex-direction: column;
 
     .title {

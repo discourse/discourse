@@ -99,6 +99,8 @@ RSpec.describe TopicsController do
       end
 
       context 'success' do
+        fab!(:category) { Fabricate(:category) }
+
         before { sign_in(admin) }
 
         it "returns success" do
@@ -106,7 +108,7 @@ RSpec.describe TopicsController do
             post "/t/#{topic.id}/move-posts.json", params: {
               title: 'Logan is a good movie',
               post_ids: [p2.id],
-              category_id: 123,
+              category_id: category.id,
               tags: ["tag1", "tag2"]
             }
           end.to change { Topic.count }.by(1)
@@ -116,7 +118,10 @@ RSpec.describe TopicsController do
           result = response.parsed_body
 
           expect(result['success']).to eq(true)
-          expect(result['url']).to eq(Topic.last.relative_url)
+
+          new_topic = Topic.last
+          expect(result['url']).to eq(new_topic.relative_url)
+          expect(new_topic.excerpt).to eq(p2.excerpt_for_topic)
           expect(Tag.all.pluck(:name)).to contain_exactly("tag1", "tag2")
         end
 
@@ -130,7 +135,7 @@ RSpec.describe TopicsController do
               post "/t/#{topic.id}/move-posts.json", params: {
                 title: 'Logan is a good movie',
                 post_ids: [p2.id],
-                category_id: 123
+                category_id: category.id
               }
             end.to change { Topic.count }.by(1)
 
@@ -182,6 +187,59 @@ RSpec.describe TopicsController do
             expect(p2.reply_to_post_number).to eq(p1.post_number)
           end
         end
+      end
+    end
+
+    describe "moving to a new topic as a group moderator" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
+      let(:user) { group_user.user }
+
+      before do
+        sign_in(user)
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it "moves the posts" do
+        expect do
+          post "/t/#{topic.id}/move-posts.json", params: {
+            title: 'Logan is a good movie',
+            post_ids: [p2.id],
+            category_id: category.id
+          }
+        end.to change { Topic.count }.by(1)
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result['success']).to eq(true)
+        expect(result['url']).to eq(Topic.last.relative_url)
+      end
+
+      it "does not allow posts to be moved to a private category" do
+        staff_category = Fabricate(:category)
+        staff_category.set_permissions(staff: :full)
+        staff_category.save!
+
+        post "/t/#{topic.id}/move-posts.json", params: {
+          title: 'Logan is a good movie',
+          post_ids: [p2.id],
+          category_id: staff_category.id
+        }
+
+        expect(response).to be_forbidden
+      end
+
+      it "does not allow posts outside of the category to be moved" do
+        topic.update!(category: nil)
+
+        post "/t/#{topic.id}/move-posts.json", params: {
+          title: 'blah', post_ids: [p1.post_number, p2.post_number]
+        }
+
+        expect(response).to be_forbidden
       end
     end
 
@@ -243,6 +301,59 @@ RSpec.describe TopicsController do
           expect(result['success']).to eq(false)
           expect(result['url']).to be_blank
         end
+      end
+    end
+
+    describe "moving to an existing topic as a group moderator" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
+      fab!(:dest_topic) { Fabricate(:topic) }
+
+      let(:user) { group_user.user }
+
+      before do
+        sign_in(user)
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it "moves the posts" do
+        post "/t/#{topic.id}/move-posts.json", params: {
+          post_ids: [p2.id],
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result['success']).to eq(true)
+        expect(result['url']).to be_present
+      end
+
+      it "does not allow posts to be moved to a private category" do
+        staff_category = Fabricate(:category)
+        staff_category.set_permissions(staff: :full)
+        staff_category.save!
+        dest_topic.update!(category: staff_category)
+
+        post "/t/#{topic.id}/move-posts.json", params: {
+          post_ids: [p2.id],
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response).to be_forbidden
+      end
+
+      it "does not allow posts outside of the category to be moved" do
+        topic.update!(category: nil)
+
+        post "/t/#{topic.id}/move-posts.json", params: {
+          post_ids: [p1.post_number, p2.post_number],
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response).to be_forbidden
       end
     end
 
@@ -417,6 +528,55 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe "merging into another topic as a group moderator" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:p1) { Fabricate(:post, post_number: 1, topic: topic) }
+      fab!(:p2) { Fabricate(:post, post_number: 2, topic: topic) }
+      fab!(:dest_topic) { Fabricate(:topic) }
+      let(:user) { group_user.user }
+
+      before do
+        sign_in(user)
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it "moves the posts" do
+        post "/t/#{topic.id}/merge-topic.json", params: {
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result['success']).to eq(true)
+        expect(result['url']).to be_present
+      end
+
+      it "does not allow posts to be moved to a private category" do
+        staff_category = Fabricate(:category)
+        staff_category.set_permissions(staff: :full)
+        staff_category.save!
+        dest_topic.update!(category: staff_category)
+
+        post "/t/#{topic.id}/merge-topic.json", params: {
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response).to be_forbidden
+      end
+
+      it "does not allow posts outside of the category to be moved" do
+        topic.update!(category: nil)
+
+        post "/t/#{topic.id}/merge-topic.json", params: {
+          destination_topic_id: dest_topic.id
+        }
+
+        expect(response).to be_forbidden
+      end
+    end
+
     describe 'merging into another message' do
       let(:message) { Fabricate(:private_message_topic, user: user) }
       let!(:p1) { Fabricate(:post, topic: message, user: trust_level_4) }
@@ -555,6 +715,23 @@ RSpec.describe TopicsController do
         expect(t2.deleted_at).to be_nil
         expect(p3.user).to eq(user_a)
       end
+
+      it "removes likes by new owner" do
+        now = Time.zone.now
+        freeze_time(now - 1.day)
+        PostActionCreator.like(user_a, p1)
+        p1.reload
+        freeze_time(now)
+        post "/t/#{topic.id}/change-owner.json", params: {
+          username: user_a.username_lower, post_ids: [p1.id]
+        }
+        topic.reload
+        p1.reload
+        expect(response.status).to eq(200)
+        expect(topic.user.username).to eq(user_a.username)
+        expect(p1.user.username).to eq(user_a.username)
+        expect(p1.like_count).to eq(0)
+      end
     end
   end
 
@@ -679,7 +856,7 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
-      it 'raises an error with a status not in the whitelist' do
+      it 'raises an error with a status not in the allowlist' do
         put "/t/#{topic.id}/status.json", params: {
           status: 'title', enabled: 'true'
         }
@@ -708,9 +885,7 @@ RSpec.describe TopicsController do
       fab!(:group_user) { Fabricate(:group_user) }
       fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
       fab!(:topic) { Fabricate(:topic, category: category) }
-
       let(:user) { group_user.user }
-      let(:group) { group_user.group }
 
       before do
         sign_in(user)
@@ -724,15 +899,45 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(topic.reload.closed).to eq(true)
+        expect(topic.posts.last.action_code).to eq('closed.enabled')
+      end
+
+      it 'should allow a group moderator to open a closed topic' do
+        topic.update!(closed: true)
+
+        expect do
+          put "/t/#{topic.id}/status.json", params: {
+            status: 'closed', enabled: 'false'
+          }
+        end.to change { topic.reload.posts.count }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.closed).to eq(false)
+        expect(topic.posts.last.action_code).to eq('closed.disabled')
       end
 
       it 'should allow a group moderator to archive a topic' do
-        put "/t/#{topic.id}/status.json", params: {
-          status: 'archived', enabled: 'true'
-        }
+        expect do
+          put "/t/#{topic.id}/status.json", params: {
+            status: 'archived', enabled: 'true'
+          }
+        end.to change { topic.reload.posts.count }.by(1)
 
         expect(response.status).to eq(200)
         expect(topic.reload.archived).to eq(true)
+        expect(topic.posts.last.action_code).to eq('archived.enabled')
+      end
+
+      it 'should allow a group moderator to unarchive an archived topic' do
+        topic.update!(archived: true)
+
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'archived', enabled: 'false'
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.archived).to eq(false)
+        expect(topic.posts.last.action_code).to eq('archived.disabled')
       end
 
       it 'should not allow a group moderator to pin a topic' do
@@ -743,7 +948,6 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
         expect(topic.reload.pinned_at).to eq(nil)
       end
-
     end
   end
 
@@ -1071,6 +1275,30 @@ RSpec.describe TopicsController do
           end.not_to change(PostRevision.all, :count)
 
           expect(response.status).to eq(200)
+        end
+
+        describe "when first post is locked" do
+          it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
+            SiteSetting.trusted_users_can_edit_others = true
+            user.update!(trust_level: 3)
+            topic.first_post.update!(locked_by_id: admin.id)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: topic.title + " hello"
+            }
+
+            expect(response.status).to eq(403)
+          end
+
+          it "allows staff to edit" do
+            sign_in(Fabricate(:admin))
+            topic.first_post.update!(locked_by_id: admin.id)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: topic.title + " hello"
+            }
+            expect(response.status).to eq(200)
+          end
         end
 
         context 'tags' do
@@ -1993,94 +2221,6 @@ RSpec.describe TopicsController do
       end
     end
 
-    describe "set_locale" do
-      def headers(locale)
-        { HTTP_ACCEPT_LANGUAGE: locale }
-      end
-
-      context "allow_user_locale disabled" do
-        context "accept-language header differs from default locale" do
-          before do
-            SiteSetting.allow_user_locale = false
-            SiteSetting.default_locale = "en"
-          end
-
-          context "with an anonymous user" do
-            it "uses the default locale" do
-              get "/t/#{topic.id}.json", headers: headers("fr")
-
-              expect(response.status).to eq(200)
-              expect(I18n.locale).to eq(:en)
-            end
-          end
-
-          context "with a logged in user" do
-            it "it uses the default locale" do
-              user = Fabricate(:user, locale: :fr)
-              sign_in(user)
-
-              get "/t/#{topic.id}.json", headers: headers("fr")
-
-              expect(response.status).to eq(200)
-              expect(I18n.locale).to eq(:en)
-            end
-          end
-        end
-      end
-
-      context "set_locale_from_accept_language_header enabled" do
-        context "accept-language header differs from default locale" do
-          before do
-            SiteSetting.allow_user_locale = true
-            SiteSetting.set_locale_from_accept_language_header = true
-            SiteSetting.default_locale = "en"
-          end
-
-          context "with an anonymous user" do
-            it "uses the locale from the headers" do
-              get "/t/#{topic.id}.json", headers: headers("fr")
-              expect(response.status).to eq(200)
-              expect(I18n.locale).to eq(:fr)
-            end
-          end
-
-          context "with a logged in user" do
-            it "uses the user's preferred locale" do
-              user = Fabricate(:user, locale: :fr)
-              sign_in(user)
-
-              get "/t/#{topic.id}.json", headers: headers("fr")
-              expect(response.status).to eq(200)
-              expect(I18n.locale).to eq(:fr)
-            end
-          end
-        end
-
-        context "the preferred locale includes a region" do
-          it "returns the locale and region separated by an underscore" do
-            SiteSetting.allow_user_locale = true
-            SiteSetting.set_locale_from_accept_language_header = true
-            SiteSetting.default_locale = "en"
-
-            get "/t/#{topic.id}.json", headers: headers("zh-CN")
-            expect(response.status).to eq(200)
-            expect(I18n.locale).to eq(:zh_CN)
-          end
-        end
-
-        context 'accept-language header is not set' do
-          it 'uses the site default locale' do
-            SiteSetting.allow_user_locale = true
-            SiteSetting.default_locale = 'en'
-
-            get "/t/#{topic.id}.json", headers: headers("")
-            expect(response.status).to eq(200)
-            expect(I18n.locale).to eq(:en)
-          end
-        end
-      end
-    end
-
     describe "read only header" do
       it "returns no read only header by default" do
         get "/t/#{topic.id}.json"
@@ -2389,6 +2529,26 @@ RSpec.describe TopicsController do
         expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
       end
 
+      it "can mark tag topics unread" do
+        tag = Fabricate(:tag)
+        TopicTag.create!(
+          topic_id: topic.id,
+          tag_id: tag.id
+        )
+
+        post1 = create_post(user: user, topic_id: topic.id)
+        create_post(topic_id: topic.id)
+
+        put "/topics/bulk.json", params: {
+          tag_name: tag.name,
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' }
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
+      end
+
       it "can find unread" do
         # mark all unread muted
         put "/topics/bulk.json", params: {
@@ -2406,6 +2566,36 @@ RSpec.describe TopicsController do
         put "/topics/bulk.json", params: {
           topic_ids: topic_ids, operation: operation
         }
+      end
+
+      it "respects the tracked parameter" do
+        # untracked topic
+        category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:regular],
+                                                     category.id)
+        create_post(user: user, topic_id: topic.id)
+        topic.update!(category_id: category.id)
+        create_post(topic_id: topic.id)
+
+        # tracked topic
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+        tracked_topic = create_post(user: user).topic
+        tracked_topic.update!(category_id: tracked_category.id)
+        create_post(topic_id: tracked_topic.id)
+
+        put "/topics/bulk.json", params: {
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' },
+          tracked: true
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(topic, user).last_read_post_number).to eq(topic.posts.count - 1)
+        expect(TopicUser.get(tracked_topic, user).last_read_post_number).to eq(tracked_topic.posts.count)
       end
     end
   end
@@ -2495,7 +2685,6 @@ RSpec.describe TopicsController do
       sign_in(user)
 
       old_date = 2.years.ago
-
       user.user_stat.update_column(:new_since, old_date)
 
       TopicTrackingState.expects(:publish_dismiss_new).with(user.id)
@@ -2504,6 +2693,35 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
+    end
+
+    describe "when tracked param is true" do
+      it "does not update user_stat.new_since" do
+        sign_in(user)
+
+        old_date = 2.years.ago
+        user.user_stat.update_column(:new_since, old_date)
+
+        put "/topics/reset-new.json?tracked=true"
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
+      end
+
+      it "creates topic user records for each unread topic" do
+        sign_in(user)
+        user.user_stat.update_column(:new_since, 2.years.ago)
+
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+        tracked_topic = create_post.topic
+        tracked_topic.update!(category_id: tracked_category.id)
+
+        create_post # This is a new post, but is not tracked so a record will not be created for it
+        expect { put "/topics/reset-new.json?tracked=true" }.to change { TopicUser.where(user_id: user.id, last_read_post_number: 0).count }.by(1)
+      end
     end
 
     context 'category' do
@@ -2808,6 +3026,23 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(400)
           expect(response.body).to include('status_type')
         end
+      end
+    end
+
+    context 'when logged in as a TL4 user' do
+      it "raises an error if the user can't see the topic" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        pm_topic = Fabricate(:private_message_topic)
+
+        post "/t/#{pm_topic.id}/timer.json", params: {
+          time: '24',
+          status_type: TopicTimer.types[1]
+        }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq('invalid_access')
       end
     end
   end

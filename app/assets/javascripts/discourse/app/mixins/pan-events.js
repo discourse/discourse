@@ -25,14 +25,14 @@ export default Mixin.create({
   addTouchListeners($element) {
     if (this.site.mobileView) {
       $element
-        .on("touchstart", e => e.touches && this._panStart(e.touches[0]))
-        .on("touchmove", e => {
+        .on("touchstart", (e) => e.touches && this._panStart(e.touches[0]))
+        .on("touchmove", (e) => {
           const touchEvent = e.touches[0];
           touchEvent.type = "pointermove";
           this._panMove(touchEvent, e);
         })
-        .on("touchend", e => this._panMove({ type: "pointerup" }, e))
-        .on("touchcancel", e => this._panMove({ type: "pointercancel" }, e));
+        .on("touchend", (e) => this._panMove({ type: "pointerup" }, e))
+        .on("touchcancel", (e) => this._panMove({ type: "pointercancel" }, e));
     }
   },
 
@@ -94,7 +94,7 @@ export default Mixin.create({
       distance,
       start: false,
       timestamp: newTimestamp,
-      direction: this._calculateDirection(oldState, deltaX, deltaY)
+      direction: this._calculateDirection(oldState, deltaX, deltaY),
     };
   },
 
@@ -110,7 +110,7 @@ export default Mixin.create({
       distance: 0,
       start: true,
       timestamp: Date.now(),
-      direction: null
+      direction: null,
     };
     this.set("_panState", newState);
   },
@@ -137,5 +137,5 @@ export default Mixin.create({
     } else if (e.type === "pointermove" && "panMove" in this) {
       this.panMove(newState);
     }
-  }
+  },
 });

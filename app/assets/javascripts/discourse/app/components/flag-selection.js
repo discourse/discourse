@@ -18,5 +18,5 @@ export default Component.extend({
   @observes("nameKey")
   selectedChanged() {
     next(this, this._selectRadio);
-  }
+  },
 });

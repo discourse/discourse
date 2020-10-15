@@ -42,11 +42,15 @@ export default Component.extend({
       h = "ajax-icon-holder",
       singleIconEl = `${c} .${h}`;
 
-    if (!icon) return;
+    if (!icon) {
+      return;
+    }
 
     if (!$(`${c} symbol#${icon}`).length) {
-      ajax(`/svg-sprite/search/${icon}`).then(function(data) {
-        if ($(singleIconEl).length === 0) $(c).append(`<div class="${h}">`);
+      ajax(`/svg-sprite/search/${icon}`).then(function (data) {
+        if ($(singleIconEl).length === 0) {
+          $(c).append(`<div class="${h}">`);
+        }
 
         $(singleIconEl).html(
           `<svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>${data}</svg>`
@@ -87,14 +91,18 @@ export default Component.extend({
       style += `background-color: #${flairBackgroundHexColor};`;
     }
 
-    if (flairHexColor) style += `color: #${flairHexColor};`;
+    if (flairHexColor) {
+      style += `color: #${flairHexColor};`;
+    }
 
     return htmlSafe(style);
   },
 
   @discourseComputed("model.flairBackgroundHexColor")
   flairPreviewClasses(flairBackgroundHexColor) {
-    if (flairBackgroundHexColor) return "rounded";
+    if (flairBackgroundHexColor) {
+      return "rounded";
+    }
   },
 
   @discourseComputed("flairPreviewImage")
@@ -107,7 +115,7 @@ export default Component.extend({
   setFlairImage(upload) {
     this.model.setProperties({
       flair_url: getURL(upload.url),
-      flair_upload_id: upload.id
+      flair_upload_id: upload.id,
     });
   },
 
@@ -115,7 +123,7 @@ export default Component.extend({
   removeFlairImage() {
     this.model.setProperties({
       flair_url: null,
-      flair_upload_id: null
+      flair_upload_id: null,
     });
-  }
+  },
 });

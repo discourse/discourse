@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sl:
   site_settings:
@@ -13,6 +12,7 @@ sl:
     discourse_narrative_bot_disable_public_replies: "Onemogočite javne odgovore od Discobota"
     discourse_narrative_bot_welcome_post_type: "Napišite sporočilo dobrodošlice, ki naj ga Discobot pošlje novim uporabnikom"
     discourse_narrative_bot_welcome_post_delay: "Počakajte (n) sekund preden Discobot pošlje sporočilo dobrodošlice."
+    discourse_narrative_bot_skip_tutorials: "Preskoči vaje Discourse pripovednega robota"
   badges:
     certified:
       name: Certificirani
@@ -49,34 +49,34 @@ sl:
         > :game_die: %{results}
     quote:
       trigger: "citati"
-      '1':
+      "1":
         quote: "V centru vsake težave leži priložnost"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Svobodo se ne splača imeti, če ne vključuje tudi pravico do napake."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Ne jokaj zato ker je konec, ampak se nasmej ker se je zgodilo."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Če hočeš da je nekaj narejeno pravilno, potem naredi sam."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Verjemi da zmoreš in si že na pol poti."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Življenje je kot škatla s čokoladicami. Nikoli ne veš, katero boš dobil."
         author: "Forrest Gumpova mama"
-      '7':
+      "7":
         quote: "To je majhen korak za človeka, velik za človeštvo."
         author: "Neil Armstrong"
-      '8':
+      "8":
         quote: "Vsak dan naredi eno stvar ki te straši."
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         quote: "Napake so vedno odpustljive, če le imaš pogum da jih priznaš."
         author: "Bruce Lee"
-      '10':
+      "10":
         quote: "Karkoli si človek lahko zamisli ali verjame, lahko tudi doseže."
         author: "Napoleon Hill"
       results: |-
@@ -84,26 +84,26 @@ sl:
     magic_8_ball:
       trigger: "prihodnost"
       answers:
-        '1': "Zagotovo"
-        '2': "Zatrdno je tako"
-        '3': "Brez dvoma"
-        '4': "Ja, zagotovo"
-        '5': "Lahko računaš na to"
-        '6': "Kakor jaz vidim, da"
-        '7': "Najbrž"
-        '8': "Dober obet"
-        '9': "Ja"
-        '10': "Znaki kažejo na da"
-        '11': "Odgovor meglen, poskusi znova"
-        '12': "Vprašaj ponovno kasneje"
-        '13': "Trenutno bolje da ti ne povem"
-        '14': "Trenutno ne morem predvideti"
-        '15': "Osredotoči se in vprašaj ponovno"
-        '16': "Ne računaj na to"
-        '17': "Moj odgovor je ne"
-        '18': "Moji viri trdijo da ne"
-        '19': "Obeti niso najboljši"
-        '20': "Zelo dvomljivo"
+        "1": "Zagotovo"
+        "2": "Zatrdno je tako"
+        "3": "Brez dvoma"
+        "4": "Ja, zagotovo"
+        "5": "Lahko računaš na to"
+        "6": "Kakor jaz vidim, da"
+        "7": "Najbrž"
+        "8": "Dober obet"
+        "9": "Ja"
+        "10": "Znaki kažejo na da"
+        "11": "Odgovor meglen, poskusi znova"
+        "12": "Vprašaj ponovno kasneje"
+        "13": "Trenutno bolje da ti ne povem"
+        "14": "Trenutno ne morem predvideti"
+        "15": "Osredotoči se in vprašaj ponovno"
+        "16": "Ne računaj na to"
+        "17": "Moj odgovor je ne"
+        "18": "Moji viri trdijo da ne"
+        "19": "Obeti niso najboljši"
+        "20": "Zelo dvomljivo"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -113,6 +113,20 @@ sl:
       random_mention:
         reply: |-
           Pozdravljeni! Da izveste, kaj znam, recite `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Trenutno znam narediti naslednje stvari:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > V osebnem sporočilu za vas prične interaktivni vodič.`{name-of-tutorial}"je lahko eden od:"%{tracks}«.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Lahko se zanesete nanjo
       do_not_understand:
         first_response: |-
           Hvala za odgovor!
@@ -170,11 +184,22 @@ sl:
         like_not_found: |-
           Ali ste pozabili všečkati :heart: moj [prispevek?](%{url}) :crying_cat_face:
         not_found: |-
-          Izgleda da niste uspeli naložiti slike, zato sem jaz izbral sliko, v kateri boste _zagotovo_ uživali.
+          Kaže da niste uspeli naložiti slike, zato sem jaz izbral takšno, ki vam bo _zagotovo_ všeč.
 
           `%{image_url}`
 
-          Poskusite naložiti to sliko ali da prilepite povezavo v svojo vrstico!
+          Poskusite naložiti to sliko ali pa prilepite povezavo do slike v svojo vrstico!
+      likes:
+        instructions: |-
+          Tu je slika samoroga:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Če vam je všeč (in komu ne bi bila?), potem izberite gumb :heart: pod tem sporočilom, da mi to sporočite.
+        reply: |-
+          Hvala, da ste všečkali mojo objavo!
+        not_found: |-
+          Ali ste pozabili všečkati :heart: moj [prispevek?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Ali lahko naredite nekaj besed **krepkih** ali _poudarjenih_ v vašem odgovoru?
@@ -210,6 +235,8 @@ sl:
       bookmark:
         instructions: |-
           Da se naučite kaj novega, kliknite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> spodaj in <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **zaznamujte to zasebno sporočilo**. Če to storite se vam v prihodnje mogoče obeta :gift:!
+        reply: |-
+          Odlično! Zdaj lahko kadarkoli preprosto poiščete svojo pot nazaj v najin zasebni pogovor neposredno iz [zavihka zaznamkov v vašem profilu] (%{bookmark_url}) tako, da izberete sliko profila v desnem zgornjem kotu &#8599;
         not_found: |-
           Oh, ne vidim nobenega zaznamka v tej temi. Ali ste našli zaznamek pod vsakim prispevkom? Uporabite prikaži več <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> za prikaz ostalih akcij.
       emoji:
@@ -252,12 +279,18 @@ sl:
         reply: |-
           [Naše osebje](%{base_uri}/groups/staff) bo zasebno obveščeno o vaši prijavi. Če bo dovolj članov skupnosti prijavilo ta prispevek, se bo samodejno skril zaradi previdnosti. (Ker pa jaz dejansko nisem napisal nič neprimernega :angel:, sem odstranil prijavo za zdaj.)
         not_found: |-
-          Oh ne, moj neprimeren prispevek še vedno ni bil prijavljen. :worried: Ali ga lahko prijavite kot neprimernega tako da uporabite **Prijavi** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne pozabite uporabiti prikaži več gumb <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, da vam prikaže vse akcije na prispevku.
+          Oh ne, moja grda objava še vedno ni bila označena kot neprimerna. :worried: Ali jo lahko označite kot neprimerno z uporabo **zastavice** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne pozabite uporabiti gumba <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , ki razkrije več dejanj za vsako objavo.
       search:
         instructions: |-
           _psst_ … V to temo sem skril presenečenje. Če ste pripravljeni sprejeti ta izziv, **izberite išči ikono** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> zgoraj desno &#8599; za iskanje.
 
           Poskusite poiskati "capy&#8203;bara" v tej temi.
+        hidden_message: |-
+          Kako ste lahko zgrešili to kapibaro? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Ste opazili, da ste zopet na začetku? Nahranite to ubogo lačno kapibaro tako, da **odgovorite z emojijem "%{search_answer}"** in samodejno boste skočili na konec.
         reply: |-
           Super, našli ste ga :tada:
 

@@ -8,6 +8,6 @@ createWidgetFrom(
   {
     url(data) {
       return userPath(data.display_username);
-    }
+    },
   }
 );

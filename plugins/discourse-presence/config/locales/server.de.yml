@@ -1,11 +1,10 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 de:
   site_settings:
-    presence_enabled: "Benutzer anzeigen, die gerade im aktuellen Thema antworten, oder den aktuellen Beitrag bearbeiten?"
-    presence_max_users_shown: "Maximale Anzahl an angezeigten Benutzern."
+    presence_enabled: "Benutzer anzeigen, die gerade auf das aktuelle Thema antworten oder den aktuellen Beitrag bearbeiten?"
+    presence_max_users_shown: "Maximale Anzahl der angezeigten Benutzer."

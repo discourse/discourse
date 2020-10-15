@@ -122,6 +122,38 @@ RSpec.describe Admin::GroupsController do
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
     end
+
+    it 'does not notify users when the param is not present' do
+      put "/admin/groups/#{group.id}/owners.json", params: {
+        group: {
+          usernames: user.username
+        }
+      }
+      expect(response.status).to eq(200)
+
+      topic = Topic.find_by(
+        title: I18n.t("system_messages.user_added_to_group_as_owner.subject_template", group_name: group.name),
+        archetype: "private_message"
+      )
+      expect(topic.nil?).to eq(true)
+    end
+
+    it 'notifies users when the param is present' do
+      put "/admin/groups/#{group.id}/owners.json", params: {
+        group: {
+          usernames: user.username,
+          notify_users: true
+        }
+      }
+      expect(response.status).to eq(200)
+
+      topic = Topic.find_by(
+        title: I18n.t("system_messages.user_added_to_group_as_owner.subject_template", group_name: group.name),
+        archetype: "private_message"
+      )
+      expect(topic.nil?).to eq(false)
+      expect(topic.topic_users.map(&:user_id)).to include(-1, user.id)
+    end
   end
 
   describe '#remove_owner' do

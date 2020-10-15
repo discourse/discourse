@@ -13,12 +13,12 @@ export default Controller.extend(ModalFunctionality, {
 
     editActivationEmail() {
       const modal = this.showModal("activation-edit", {
-        title: "login.change_email"
+        title: "login.change_email",
       });
 
       const currentEmail = this.currentEmail;
       modal.set("currentEmail", currentEmail);
       modal.set("newEmail", currentEmail);
-    }
-  }
+    },
+  },
 });

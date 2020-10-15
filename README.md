@@ -17,8 +17,9 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 <a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://user-images.githubusercontent.com/1681963/52239245-04ad8280-289c-11e9-9c88-8c173d4a0422.png" width="720px"></a>
 <a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
-<a href="https://discuss.howtogeek.com"><img src="https://user-images.githubusercontent.com/1681963/52239247-04ad8280-289c-11e9-9706-fd66bc0749dc.png" width="720px"></a>
-<a href="https://talk.turtlerockstudios.com/"><img src="https://user-images.githubusercontent.com/1681963/52239249-04ad8280-289c-11e9-9155-f0ccc5decc50.png" width="720px"></a>
+<a href="https://discuss.atom.io/"><img src="https://user-images.githubusercontent.com/1681963/89088039-6735f080-d364-11ea-93a6-5629ea8738fe.png" width="720px"></a>
+<a href="https://forums.gearboxsoftware.com/"><img src="https://user-images.githubusercontent.com/1681963/89088042-68ffb400-d364-11ea-93be-161ea04d8b29.png" width="720px"></a>
+
 
 <img src="https://user-images.githubusercontent.com/1681963/52239118-b304f800-289b-11e9-9904-16450680d9ec.jpg" alt="Mobile" width="414">
 
@@ -61,6 +62,7 @@ Discourse supports the **latest, stable releases** of all major browsers and pla
 - [Ember.js](https://github.com/emberjs/ember.js) &mdash; Our front end is an Ember.js app that communicates with the Rails API.
 - [PostgreSQL](https://www.postgresql.org/) &mdash; Our main data store is in Postgres.
 - [Redis](https://redis.io/) &mdash; We use Redis as a cache and for transient data.
+- [BrowserStack](https://www.browserstack.com/) &mdash; We use BrowserStack to test on real devices and browsers.
 
 Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
 
@@ -89,7 +91,6 @@ We take security very seriously at Discourse; all our code is 100% open source a
 ## The Discourse Team
 
 The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/AUTHORS.md). For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to [the official Discourse blog](https://blog.discourse.org/2013/02/the-discourse-team/) and [GitHub's list of contributors](https://github.com/discourse/discourse/contributors).
-
 
 ## Copyright / License
 

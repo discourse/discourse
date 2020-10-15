@@ -36,18 +36,18 @@ export default DiscourseRoute.extend({
       filterToDate: isPresent(meta.to_date) ? moment(meta.to_date) : null,
       filterSortOrder: meta.sort_order,
       sort_order: meta.sort_order,
-      additionalFilters: meta.additional_filters || {}
+      additionalFilters: meta.additional_filters || {},
     });
   },
 
   activate() {
-    this.messageBus.subscribe("/reviewable_claimed", data => {
+    this.messageBus.subscribe("/reviewable_claimed", (data) => {
       const reviewables = this.controller.reviewables;
       if (reviewables) {
         const user = data.user
           ? this.store.createRecord("user", data.user)
           : null;
-        reviewables.forEach(reviewable => {
+        reviewables.forEach((reviewable) => {
           if (data.topic_id === reviewable.topic.id) {
             reviewable.set("claimed_by", user);
           }
@@ -63,6 +63,6 @@ export default DiscourseRoute.extend({
   actions: {
     refreshRoute() {
       this.refresh();
-    }
-  }
+    },
+  },
 });

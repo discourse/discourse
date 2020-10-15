@@ -8,12 +8,12 @@
 }
 
 .install-theme-item {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   border-bottom: none;
   position: relative;
 
   &:last-child {
-    border-bottom: 1px solid $primary-low;
+    border-bottom: 1px solid var(--primary-low);
   }
 
   input,
@@ -29,11 +29,11 @@
   }
 
   input:checked + label {
-    color: $secondary;
-    background-color: $tertiary;
+    color: var(--secondary);
+    background-color: var(--tertiary);
     + .d-icon {
       display: block;
-      color: $secondary;
+      color: var(--secondary);
     }
   }
 
@@ -63,7 +63,7 @@
 }
 
 .popular-theme-item {
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
   padding: 8px 0px;
   display: flex;
   align-items: center;
@@ -72,16 +72,16 @@
     .popular-theme-type {
       font-weight: normal;
       font-size: $font-down-2;
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
 
     a {
-      color: $primary-very-high;
+      color: var(--primary-very-high);
       font-weight: bold;
       &:hover,
       &:visited,
       &:active {
-        color: $primary-high;
+        color: var(--primary-high);
       }
     }
 
@@ -94,7 +94,7 @@
     > span {
       font-style: italic;
       font-size: $font-down-1;
-      color: $primary-medium;
+      color: var(--primary-medium);
       margin-right: 8px;
     }
 

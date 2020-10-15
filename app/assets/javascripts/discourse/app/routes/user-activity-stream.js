@@ -3,7 +3,7 @@ import ViewingActionType from "discourse/mixins/viewing-action-type";
 
 export default DiscourseRoute.extend(ViewingActionType, {
   queryParams: {
-    acting_username: { refreshModel: true }
+    acting_username: { refreshModel: true },
   },
 
   model() {
@@ -14,7 +14,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
     return model.filterBy({
       filter: this.userActionType,
       noContentHelpKey: this.noContentHelpKey || "user_activity.no_default",
-      actingUsername: transition.to.queryParams.acting_username
+      actingUsername: transition.to.queryParams.acting_username,
     });
   },
 
@@ -31,6 +31,6 @@ export default DiscourseRoute.extend(ViewingActionType, {
     didTransition() {
       this.controllerFor("user-activity")._showFooter();
       return true;
-    }
-  }
+    },
+  },
 });

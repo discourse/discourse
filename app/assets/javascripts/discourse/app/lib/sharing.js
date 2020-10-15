@@ -66,10 +66,10 @@ export default {
         resizable: "yes",
         scrollbars: "yes",
         width: 600,
-        height: source.popupHeight || 315
+        height: source.popupHeight || 315,
       };
       const stringOptions = Object.keys(options)
-        .map(k => `${k}=${options[k]}`)
+        .map((k) => `${k}=${options[k]}`)
         .join(",");
 
       if (source.shouldOpenInPopup) {
@@ -86,16 +86,16 @@ export default {
     const sources = linksSetting
       .split("|")
       .concat(_customSharingIds)
-      .map(s => _sources[s])
+      .map((s) => _sources[s])
       .compact();
 
     return privateContext
-      ? sources.filter(s => s.showInPrivateContext)
+      ? sources.filter((s) => s.showInPrivateContext)
       : sources;
   },
 
   _reset() {
     _sources = {};
     _customSharingIds = [];
-  }
+  },
 };

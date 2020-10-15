@@ -17,15 +17,15 @@ export default Component.extend(FilterModeMixin, {
 
   @discourseComputed("filterType", "navItems")
   selectedNavItem(filterType, navItems) {
-    let item = navItems.find(i => i.active === true);
+    let item = navItems.find((i) => i.active === true);
 
-    item = item || navItems.find(i => i.get("filterType") === filterType);
+    item = item || navItems.find((i) => i.get("filterType") === filterType);
 
     if (!item) {
       let connectors = this.connectors;
       let category = this.category;
       if (connectors && category) {
-        connectors.forEach(c => {
+        connectors.forEach((c) => {
           if (
             c.connectorClass &&
             typeof c.connectorClass.path === "function" &&
@@ -34,7 +34,7 @@ export default Component.extend(FilterModeMixin, {
             let path = c.connectorClass.path(category);
             if (path.indexOf(filterType) > 0) {
               item = {
-                displayName: c.connectorClass.displayName()
+                displayName: c.connectorClass.displayName(),
               };
             }
           }
@@ -90,6 +90,6 @@ export default Component.extend(FilterModeMixin, {
           });
         });
       }
-    }
-  }
+    },
+  },
 });

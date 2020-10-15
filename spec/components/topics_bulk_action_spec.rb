@@ -305,4 +305,38 @@ describe TopicsBulkAction do
       end
     end
   end
+
+  describe "remove_tags" do
+    fab!(:tag1)  { Fabricate(:tag) }
+    fab!(:tag2)  { Fabricate(:tag) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.min_trust_level_to_tag_topics = 0
+      topic.tags = [tag1, tag2]
+    end
+
+    it "can remove all tags" do
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'remove_tags')
+      topic_ids = tba.perform!
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      expect(topic.tags.size).to eq(0)
+    end
+
+    context "when user can't edit topic" do
+      before do
+        Guardian.any_instance.expects(:can_edit?).returns(false)
+      end
+
+      it "doesn't remove the tags" do
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'remove_tags')
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([])
+        topic.reload
+        expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+      end
+    end
+  end
+
 end

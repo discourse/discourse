@@ -143,7 +143,7 @@ class TrustLevel3Requirements
   end
 
   def num_topics_replied_to
-    @user.user_stat.calc_topic_reply_count!(min_topics_replied_to + 1, time_period.days.ago)
+    @user.user_stat.calc_topic_reply_count!(time_period.days.ago)
   end
 
   def min_topics_replied_to

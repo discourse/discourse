@@ -15,7 +15,7 @@ import {
   createWidget,
   reopenWidget,
   decorateWidget,
-  changeSetting
+  changeSetting,
 } from "discourse/widgets/widget";
 import { preventCloak } from "discourse/widgets/post-stream";
 import { h } from "virtual-dom";
@@ -30,11 +30,11 @@ import { addPostClassesCallback } from "discourse/widgets/post";
 import { addPostTransformCallback } from "discourse/widgets/post-stream";
 import {
   attachAdditionalPanel,
-  addToHeaderIcons
+  addToHeaderIcons,
 } from "discourse/widgets/header";
 import {
   registerIconRenderer,
-  replaceIcon
+  replaceIcon,
 } from "discourse-common/lib/icon-library";
 import { replaceCategoryLinkRenderer } from "discourse/helpers/category-link";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
@@ -49,7 +49,7 @@ import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1
 import Sharing from "discourse/lib/sharing";
 import {
   addComposerUploadHandler,
-  addComposerUploadMarkdownResolver
+  addComposerUploadMarkdownResolver,
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { addExtraIconRenderer } from "discourse/helpers/category-link";
@@ -59,9 +59,15 @@ import { on } from "@ember/object/evented";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import {
+  addSaveableUserField,
+  addSaveableUserOptionField,
+} from "discourse/models/user";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.10.2";
+const PLUGIN_API_VERSION = "0.11.0";
 
 class PluginApi {
   constructor(version, container) {
@@ -288,7 +294,7 @@ class PluginApi {
     const site = this._lookupContainer("site:main");
     const loc = site && site.mobileView ? "before" : "after";
 
-    decorateWidget(`poster-name:${loc}`, dec => {
+    decorateWidget(`poster-name:${loc}`, (dec) => {
       const attrs = dec.attrs;
       const result = cb(attrs.userCustomFields || {}, attrs);
 
@@ -298,9 +304,11 @@ class PluginApi {
         if (result.icon) {
           iconBody = iconNode(result.icon);
         } else if (result.emoji) {
-          iconBody = result.emoji.split("|").map(name => {
+          iconBody = result.emoji.split("|").map((name) => {
             let widgetAttrs = { name };
-            if (result.emojiTitle) widgetAttrs.title = true;
+            if (result.emojiTitle) {
+              widgetAttrs.title = true;
+            }
             return dec.attach("emoji", widgetAttrs);
           });
         }
@@ -490,7 +498,7 @@ class PluginApi {
    ```
    **/
   onPageChange(fn) {
-    this.onAppEvent("page:changed", data => fn(data.url, data.title));
+    this.onAppEvent("page:changed", (data) => fn(data.url, data.title));
   }
 
   /**
@@ -809,7 +817,7 @@ class PluginApi {
       const customHref = item.customHref;
       if (customHref) {
         const router = this.container.lookup("service:router");
-        item.customHref = function(category, args) {
+        item.customHref = function (category, args) {
           return customHref(category, args, router);
         };
       }
@@ -817,7 +825,7 @@ class PluginApi {
       const customFilter = item.customFilter;
       if (customFilter) {
         const router = this.container.lookup("service:router");
-        item.customFilter = function(category, args) {
+        item.customFilter = function (category, args) {
           return customFilter(category, args, router);
         };
       }
@@ -825,7 +833,7 @@ class PluginApi {
       const forceActive = item.forceActive;
       if (forceActive) {
         const router = this.container.lookup("service:router");
-        item.forceActive = function(category, args) {
+        item.forceActive = function (category, args) {
           return forceActive(category, args, router);
         };
       }
@@ -833,7 +841,7 @@ class PluginApi {
       const init = item.init;
       if (init) {
         const router = this.container.lookup("service:router");
-        item.init = function(navItem, category, args) {
+        item.init = function (navItem, category, args) {
           init(navItem, category, args, router);
         };
       }
@@ -1179,6 +1187,37 @@ class PluginApi {
   addFeaturedLinkMetaDecorator(decorator) {
     addFeaturedLinkMetaDecorator(decorator);
   }
+
+  /**
+   * Adds items to dropdown's in search-advanced-options.
+   *
+   * ```
+   * api.addAdvancedSearchOptions({
+   *   inOptionsForUsers:[{
+   *     name: I18n.t("search.advanced.in.assigned"),
+   *     value: "assigned",
+   *   },
+   *   {
+   *     name: I18n.t("search.advanced.in.not_assigned"),
+   *     value: "not_assigned",
+   *   },]
+   *   statusOptions: [{
+   *     name: I18n.t("search.advanced.status.open"),
+   *     value: "open"
+   *   }]
+   * ```
+   *
+   **/
+  addAdvancedSearchOptions(options) {
+    addAdvancedSearchOptions(options);
+  }
+
+  addSaveableUserField(fieldName) {
+    addSaveableUserField(fieldName);
+  }
+  addSaveableUserOptionField(fieldName) {
+    addSaveableUserOptionField(fieldName);
+  }
 }
 
 let _pluginv01;
@@ -1204,7 +1243,7 @@ function getPluginApi(version) {
   version = version.toString();
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
-      _pluginv01 = new PluginApi(version, Discourse.__container__);
+      _pluginv01 = new PluginApi(version, getOwner(this));
     }
 
     // We are recycling the compatible object, but let's update to the higher version
@@ -1256,7 +1295,7 @@ function decorate(klass, evt, cb, id) {
   }
 
   const mixin = {};
-  mixin["_decorate_" + _decorateId++] = on(evt, function(elem) {
+  mixin["_decorate_" + _decorateId++] = on(evt, function (elem) {
     elem = elem || this.element;
     if (elem) {
       cb(elem);

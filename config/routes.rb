@@ -66,7 +66,6 @@ Discourse::Application.routes.draw do
 
     get "site/basic-info" => 'site#basic_info'
     get "site/statistics" => 'site#statistics'
-    get "site/selectable-avatars" => "site#selectable_avatars"
 
     get "srv/status" => "forums#status"
 
@@ -92,7 +91,8 @@ Discourse::Application.routes.draw do
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
 
-      resources :groups, constraints: AdminConstraint.new do
+      resources :groups, only: [:create]
+      resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
           get 'bulk'
           get 'bulk-complete' => 'groups#bulk'
@@ -143,6 +143,7 @@ Discourse::Application.routes.draw do
         post "merge"
         post "reset_bounce_score"
         put "disable_second_factor"
+        delete "sso_record"
       end
       get "users/:id.json" => 'users#show', defaults: { format: 'json' }
       get 'users/:id/:username' => 'users#show', constraints: { username: RouteFormat.username }
@@ -338,6 +339,7 @@ Discourse::Application.routes.draw do
     get "review" => "reviewables#index" # For ember app
     get "review/:reviewable_id" => "reviewables#show", constraints: { reviewable_id: /\d+/ }
     get "review/:reviewable_id/explain" => "reviewables#explain", constraints: { reviewable_id: /\d+/ }
+    get "review/count" => "reviewables#count"
     get "review/topics" => "reviewables#topics"
     get "review/settings" => "reviewables#settings"
     put "review/settings" => "reviewables#settings"
@@ -355,6 +357,7 @@ Discourse::Application.routes.draw do
     get "session/sso_provider" => "session#sso_provider"
     get "session/current" => "session#current"
     get "session/csrf" => "session#csrf"
+    get "session/hp" => "session#get_honeypot_value"
     get "session/email-login/:token" => "session#email_login_info"
     post "session/email-login/:token" => "session#email_login"
     get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
@@ -403,7 +406,6 @@ Discourse::Application.routes.draw do
       put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
 
       put "#{root_path}/update-activation-email" => "users#update_activation_email"
-      get "#{root_path}/hp" => "users#get_honeypot_value"
       post "#{root_path}/email-login" => "users#email_login"
       get "#{root_path}/admin-login" => "users#admin_login"
       put "#{root_path}/admin-login" => "users#admin_login"
@@ -516,6 +518,7 @@ Discourse::Application.routes.draw do
 
     get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
     get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
+    get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
     get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
 
     post "uploads/lookup-metadata" => "uploads#metadata"
@@ -559,7 +562,7 @@ Discourse::Application.routes.draw do
 
         collection do
           get "check-name" => 'groups#check_name'
-          get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
+          get 'custom/new' => 'groups#new', constraints: StaffConstraint.new
           get "search" => "groups#search"
         end
 
@@ -577,11 +580,14 @@ Discourse::Application.routes.draw do
             manage/membership
             manage/interaction
             manage/email
+            manage/categories
+            manage/tags
             manage/logs
           }.each do |path|
             get path => 'groups#show'
           end
 
+          get "permissions" => "groups#permissions"
           put "members" => "groups#add_members"
           delete "members" => "groups#remove_member"
           post "request_membership" => "groups#request_membership"
@@ -679,8 +685,6 @@ Discourse::Application.routes.draw do
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", format: :rss
     scope path: 'c/*category_slug_path_with_id' do
       get "/none" => "list#category_none_latest"
-      get "/none/l/top" => "list#category_none_top", as: "category_none_top"
-      get "/l/top" => "list#category_top", as: "category_top"
 
       TopTopic.periods.each do |period|
         get "/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"
@@ -711,7 +715,6 @@ Discourse::Application.routes.draw do
       get "#{filter}" => "list##{filter}"
     end
 
-    get "top" => "list#top"
     get "search/query" => "search#query"
     get "search" => "search#show"
     post "search/click" => "search#click"
@@ -943,8 +946,6 @@ Discourse::Application.routes.draw do
     end
     # special case for categories
     root to: "categories#index", constraints: HomePageConstraint.new("categories"), as: "categories_index"
-    # special case for top
-    root to: "list#top", constraints: HomePageConstraint.new("top"), as: "top_lists"
 
     root to: 'finish_installation#index', constraints: HomePageConstraint.new("finish_installation"), as: 'installation_redirect'
 

@@ -114,7 +114,8 @@ class DbHelper
 
     DB.query(REMAP_SQL).each do |r|
       next if excluded_tables.include?(r.table_name) ||
-        triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name))
+        triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name)) ||
+        triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name))
 
       text_columns[r.table_name] << {
         name: r.column_name,

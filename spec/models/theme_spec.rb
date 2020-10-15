@@ -292,7 +292,7 @@ HTML
       expect(javascript_cache.content).to include("_registerPluginCode('0.1'")
     end
 
-    it "converts errors to a script type that is not evaluated" do
+    it "wraps constants calls in a readOnlyError function" do
       html = <<HTML
         <script type='text/discourse-plugin' version='0.1'>
           const x = 1;
@@ -302,8 +302,8 @@ HTML
 
       baked, javascript_cache = transpile(html)
       expect(baked).to include(javascript_cache.url)
-      expect(javascript_cache.content).to include('Theme Transpilation Error')
-      expect(javascript_cache.content).to include('read-only')
+      expect(javascript_cache.content).to include('var x = 1;')
+      expect(javascript_cache.content).to include('x = (_readOnlyError("x"), 2);')
     end
   end
 
@@ -380,16 +380,21 @@ HTML
       (function () {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
           var __theme_name__ = "awesome theme\\\"";
+
           var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
           var themePrefix = function themePrefix(key) {
-            return 'theme_translations.#{theme.id}.' + key;
+            return "theme_translations.#{theme.id}.".concat(key);
           };
 
           Discourse._registerPluginCode('1.0', function (api) {
             try {
-              alert(settings.name);var a = function a() {};
+              alert(settings.name);
+
+              var a = function a() {};
             } catch (err) {
               var rescue = require("discourse/lib/utilities").rescueThemeError;
+
               rescue(__theme_name__, err, api);
             }
           });
@@ -416,16 +421,21 @@ HTML
       (function () {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
           var __theme_name__ = "awesome theme\\\"";
+
           var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
           var themePrefix = function themePrefix(key) {
-            return 'theme_translations.#{theme.id}.' + key;
+            return "theme_translations.#{theme.id}.".concat(key);
           };
 
           Discourse._registerPluginCode('1.0', function (api) {
             try {
-              alert(settings.name);var a = function a() {};
+              alert(settings.name);
+
+              var a = function a() {};
             } catch (err) {
               var rescue = require("discourse/lib/utilities").rescueThemeError;
+
               rescue(__theme_name__, err, api);
             }
           });

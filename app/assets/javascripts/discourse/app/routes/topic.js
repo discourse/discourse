@@ -4,19 +4,23 @@ import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
+import { setTopicId } from "discourse/lib/topic-list-tracker";
+import { inject as service } from "@ember/service";
 
 const SCROLL_DELAY = 500;
 
 import showModal from "discourse/lib/show-modal";
 
 const TopicRoute = DiscourseRoute.extend({
+  screenTrack: service(),
+
   init() {
     this._super(...arguments);
 
     this.setProperties({
       isTransitioning: false,
       scheduledReplace: null,
-      lastScrollPos: null
+      lastScrollPos: null,
     });
   },
 
@@ -26,7 +30,7 @@ const TopicRoute = DiscourseRoute.extend({
 
   queryParams: {
     filter: { replace: true },
-    username_filters: { replace: true }
+    username_filters: { replace: true },
   },
 
   titleToken() {
@@ -76,10 +80,10 @@ const TopicRoute = DiscourseRoute.extend({
             id: "invite",
             title: invitePanelTitle,
             model: {
-              inviteModel: this.modelFor("topic")
-            }
-          }
-        ]
+              inviteModel: this.modelFor("topic"),
+            },
+          },
+        ],
       });
     },
 
@@ -98,7 +102,7 @@ const TopicRoute = DiscourseRoute.extend({
       const model = this.modelFor("topic");
       showModal("publish-page", {
         model,
-        title: "topic.publish_page.title"
+        title: "topic.publish_page.title",
       });
     },
 
@@ -110,11 +114,6 @@ const TopicRoute = DiscourseRoute.extend({
         model.set("topic_timer", {});
       }
 
-      const privateTopicTimer = model.get("private_topic_timer");
-      if (!privateTopicTimer) {
-        model.set("private_topic_timer", {});
-      }
-
       showModal("edit-topic-timer", { model });
       this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
     },
@@ -122,14 +121,14 @@ const TopicRoute = DiscourseRoute.extend({
     showChangeTimestamp() {
       showModal("change-timestamp", {
         model: this.modelFor("topic"),
-        title: "topic.change_timestamp.title"
+        title: "topic.change_timestamp.title",
       });
     },
 
     showFeatureTopic() {
       showModal("featureTopic", {
         model: this.modelFor("topic"),
-        title: "topic.feature_topic.title"
+        title: "topic.feature_topic.title",
       });
       this.controllerFor("modal").set("modalClass", "feature-topic-modal");
       this.controllerFor("feature_topic").reset();
@@ -138,7 +137,7 @@ const TopicRoute = DiscourseRoute.extend({
     showHistory(model, revision) {
       let historyController = showModal("history", {
         model,
-        modalClass: "history-modal"
+        modalClass: "history-modal",
       });
       historyController.refresh(model.get("id"), revision || "latest");
       historyController.set("post", model);
@@ -148,7 +147,7 @@ const TopicRoute = DiscourseRoute.extend({
     showGrantBadgeModal() {
       showModal("grant-badge", {
         model: this.modelFor("topic"),
-        title: "admin.badges.grant_badge"
+        title: "admin.badges.grant_badge",
       });
     },
 
@@ -160,14 +159,14 @@ const TopicRoute = DiscourseRoute.extend({
     moveToTopic() {
       showModal("move-to-topic", {
         model: this.modelFor("topic"),
-        title: "topic.move_to.title"
+        title: "topic.move_to.title",
       });
     },
 
     changeOwner() {
       showModal("change-owner", {
         model: this.modelFor("topic"),
-        title: "topic.change_owner.title"
+        title: "topic.change_owner.title",
       });
     },
 
@@ -194,13 +193,16 @@ const TopicRoute = DiscourseRoute.extend({
             "_replaceUnlessScrolling",
             postUrl,
             Ember.Test ? 0 : SCROLL_DELAY
-          )
+          ),
         });
       }
     },
 
     didTransition() {
-      this.controllerFor("topic")._showFooter();
+      const controller = this.controllerFor("topic");
+      controller._showFooter();
+      const topicId = controller.get("model.id");
+      setTopicId(topicId);
       return true;
     },
 
@@ -209,7 +211,7 @@ const TopicRoute = DiscourseRoute.extend({
       cancel(this.scheduledReplace);
       this.set("isTransitioning", true);
       return true;
-    }
+    },
   },
 
   // replaceState can be very slow on Android Chrome. This function debounces replaceState
@@ -228,7 +230,7 @@ const TopicRoute = DiscourseRoute.extend({
         "_replaceUnlessScrolling",
         url,
         SCROLL_DELAY
-      )
+      ),
     });
   },
 
@@ -252,7 +254,7 @@ const TopicRoute = DiscourseRoute.extend({
       transition.abort();
 
       DiscourseURL.routeTo(`/t/topic/${params.slug}/${params.id}`, {
-        replaceURL: true
+        replaceURL: true,
       });
 
       return;
@@ -265,10 +267,10 @@ const TopicRoute = DiscourseRoute.extend({
       this.setupParams(topic, queryParams);
       return topic;
     } else {
-      topic = this.store.createRecord(
-        "topic",
-        _.omit(params, "username_filters", "filter")
-      );
+      let props = Object.assign({}, params);
+      delete props.username_filters;
+      delete props.filter;
+      topic = this.store.createRecord("topic", props);
       return this.setupParams(topic, queryParams);
     }
   },
@@ -308,7 +310,7 @@ const TopicRoute = DiscourseRoute.extend({
     controller.setProperties({
       model,
       editingTopic: false,
-      firstPostExpanded: false
+      firstPostExpanded: false,
     });
 
     this.searchService.set("searchContext", model.get("searchContext"));
@@ -326,7 +328,7 @@ const TopicRoute = DiscourseRoute.extend({
     schedule("afterRender", () =>
       this.appEvents.trigger("header:update-topic", model)
     );
-  }
+  },
 });
 
 export default TopicRoute;

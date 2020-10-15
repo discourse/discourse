@@ -19,7 +19,7 @@ createWidget("toggle-summary-description", {
       );
       return I18n.t("summary.description_time", {
         replyCount: attrs.topicReplyCount,
-        readingTime
+        readingTime,
       });
     }
     return I18n.t("summary.description", { replyCount: attrs.topicReplyCount });
@@ -28,7 +28,7 @@ createWidget("toggle-summary-description", {
   html(attrs) {
     // vdom makes putting html in the i18n difficult
     return new RawHtml({ html: `<p>${this.description(attrs)}</p>` });
-  }
+  },
 });
 
 export default createWidget("toggle-topic-summary", {
@@ -39,8 +39,8 @@ export default createWidget("toggle-topic-summary", {
       this.attach("button", {
         className: "btn btn-primary",
         label: attrs.topicSummaryEnabled ? "summary.disable" : "summary.enable",
-        action: "toggleSummary"
-      })
+        action: "toggleSummary",
+      }),
     ];
-  }
+  },
 });

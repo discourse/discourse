@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import EmberObject, { action, computed } from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import { alias, and, equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
@@ -57,8 +57,12 @@ export default Component.extend({
     saving,
     can_invite_to
   ) {
-    if (saving) return true;
-    if (isEmpty(emailOrUsername)) return true;
+    if (saving) {
+      return true;
+    }
+    if (isEmpty(emailOrUsername)) {
+      return true;
+    }
 
     const emailTrimmed = emailOrUsername.trim();
 
@@ -77,7 +81,9 @@ export default Component.extend({
       return true;
     }
 
-    if (can_invite_to) return false;
+    if (can_invite_to) {
+      return false;
+    }
 
     return false;
   },
@@ -98,9 +104,15 @@ export default Component.extend({
     groupIds,
     hasCustomMessage
   ) {
-    if (hasCustomMessage) return true;
-    if (saving) return true;
-    if (isEmpty(emailOrUsername)) return true;
+    if (hasCustomMessage) {
+      return true;
+    }
+    if (saving) {
+      return true;
+    }
+    if (isEmpty(emailOrUsername)) {
+      return true;
+    }
 
     const email = emailOrUsername.trim();
 
@@ -160,7 +172,7 @@ export default Component.extend({
   @discourseComputed("isAdmin", "inviteModel.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {
     return (
-      isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner))
+      isAdmin || (groupUsers && groupUsers.some((groupUser) => groupUser.owner))
     );
   },
 
@@ -188,10 +200,6 @@ export default Component.extend({
       (emailValid(emailOrUsername) || isPrivateTopic || !invitingToTopic)
     );
   },
-
-  showContactPicker: computed(function() {
-    return this.capabilities.hasContactPicker;
-  }),
 
   @discourseComputed("emailOrUsername")
   showCustomMessage(emailOrUsername) {
@@ -257,7 +265,7 @@ export default Component.extend({
       return I18n.t("topic.invite_private.success");
     } else if (invitingExistingUserToTopic) {
       return I18n.t("topic.invite_reply.success_existing_email", {
-        emailOrUsername
+        emailOrUsername,
       });
     } else if (emailValid(emailOrUsername)) {
       return I18n.t("topic.invite_reply.success_email", { emailOrUsername });
@@ -289,14 +297,14 @@ export default Component.extend({
       hasCustomMessage: false,
       customMessage: null,
       invitingExistingUserToTopic: false,
-      groupIds: []
+      groupIds: [],
     });
 
     this.inviteModel.setProperties({
       error: false,
       saving: false,
       finished: false,
-      inviteLink: null
+      inviteLink: null,
     });
   },
 
@@ -305,7 +313,7 @@ export default Component.extend({
   },
 
   setGroupOptions() {
-    Group.findAll().then(groups => {
+    Group.findAll().then((groups) => {
       this.set("allGroups", groups.filterBy("automatic", false));
     });
   },
@@ -322,7 +330,7 @@ export default Component.extend({
     const model = this.inviteModel;
     model.setProperties({ saving: true, error: false });
 
-    const onerror = e => {
+    const onerror = (e) => {
       if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
         this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
       } else {
@@ -339,7 +347,7 @@ export default Component.extend({
     if (this.hasGroups) {
       return this.inviteModel
         .createGroupInvite(this.emailOrUsername.trim())
-        .then(data => {
+        .then((data) => {
           model.setProperties({ saving: false, finished: true });
           this.get("inviteModel.details.allowed_groups").pushObject(
             EmberObject.create(data.group)
@@ -350,23 +358,23 @@ export default Component.extend({
     } else {
       return this.inviteModel
         .createInvite(this.emailOrUsername.trim(), groupIds, this.customMessage)
-        .then(result => {
+        .then((result) => {
           model.setProperties({ saving: false, finished: true });
           if (!this.invitingToTopic && userInvitedController) {
             Invite.findInvitedBy(
               this.currentUser,
               userInvitedController.get("filter")
-            ).then(inviteModel => {
+            ).then((inviteModel) => {
               userInvitedController.setProperties({
                 model: inviteModel,
-                totalInvites: inviteModel.invites.length
+                totalInvites: inviteModel.invites.length,
               });
             });
           } else if (this.isPM && result && result.user) {
             this.get("inviteModel.details.allowed_users").pushObject(
               EmberObject.create(result.user)
             );
-            this.appEvents.trigger("post-stream:refresh");
+            this.appEvents.trigger("post-stream:refresh", { force: true });
           } else if (
             this.invitingToTopic &&
             emailValid(this.emailOrUsername.trim()) &&
@@ -398,26 +406,26 @@ export default Component.extend({
 
     return model
       .generateInviteLink(this.emailOrUsername.trim(), groupIds, topicId)
-      .then(result => {
+      .then((result) => {
         model.setProperties({
           saving: false,
           finished: true,
-          inviteLink: result
+          inviteLink: result,
         });
 
         if (userInvitedController) {
           Invite.findInvitedBy(
             this.currentUser,
             userInvitedController.get("filter")
-          ).then(inviteModel => {
+          ).then((inviteModel) => {
             userInvitedController.setProperties({
               model: inviteModel,
-              totalInvites: inviteModel.invites.length
+              totalInvites: inviteModel.invites.length,
             });
           });
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
           this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
         } else {
@@ -454,8 +462,8 @@ export default Component.extend({
 
   @action
   searchContact() {
-    getNativeContact(["email"], false).then(result => {
+    getNativeContact(this.capabilities, ["email"], false).then((result) => {
       this.set("emailOrUsername", result[0].email[0]);
     });
-  }
+  },
 });

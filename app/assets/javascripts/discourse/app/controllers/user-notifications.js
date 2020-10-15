@@ -24,19 +24,19 @@ export default Controller.extend({
   @discourseComputed("model.content.@each.read")
   allNotificationsRead() {
     return !this.get("model.content").some(
-      notification => !notification.get("read")
+      (notification) => !notification.get("read")
     );
   },
 
   actions: {
     resetNew() {
       ajax("/notifications/mark-read", { type: "PUT" }).then(() => {
-        this.model.forEach(n => n.set("read", true));
+        this.model.forEach((n) => n.set("read", true));
       });
     },
 
     loadMore() {
       this.model.loadMore();
-    }
-  }
+    },
+  },
 });

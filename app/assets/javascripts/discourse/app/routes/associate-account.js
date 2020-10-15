@@ -10,9 +10,9 @@ export default DiscourseRoute.extend({
     this.replaceWith(`preferences.account`, this.currentUser).then(() =>
       next(() =>
         ajax(`/associate/${encodeURIComponent(params.token)}.json`)
-          .then(model => showModal("associate-account-confirm", { model }))
+          .then((model) => showModal("associate-account-confirm", { model }))
           .catch(popupAjaxError)
       )
     );
-  }
+  },
 });

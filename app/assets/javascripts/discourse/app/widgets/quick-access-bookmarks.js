@@ -10,11 +10,6 @@ const ICON = "bookmark";
 createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   buildKey: () => "quick-access-bookmarks",
 
-  hasMore() {
-    // Always show the button to the bookmarks page.
-    return true;
-  },
-
   showAllHref() {
     return `${this.attrs.path}/activity/bookmarks`;
   },
@@ -36,7 +31,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
         bookmark.post_number || bookmark.linked_post_number
       ),
       content: bookmark.title,
-      username: bookmark.post_user_username
+      username: bookmark.post_user_username,
     });
   },
 
@@ -50,10 +45,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
   loadBookmarksWithReminders() {
     return ajax(`/u/${this.currentUser.username}/bookmarks.json`, {
       cache: "false",
-      data: {
-        limit: this.estimateItemLimit()
-      }
-    }).then(result => {
+    }).then((result) => {
       result = result.user_bookmark_list;
 
       // The empty state help text for bookmarks page is localized on the
@@ -71,14 +63,13 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
       data: {
         username: this.currentUser.username,
         filter: UserAction.TYPES.bookmarks,
-        limit: this.estimateItemLimit(),
-        no_results_help_key: "user_activity.no_bookmarks"
-      }
+        no_results_help_key: "user_activity.no_bookmarks",
+      },
     }).then(({ user_actions, no_results_help }) => {
       // The empty state help text for bookmarks page is localized on the
       // server.
       this.state.emptyStatePlaceholderItemText = no_results_help;
       return user_actions;
     });
-  }
+  },
 });

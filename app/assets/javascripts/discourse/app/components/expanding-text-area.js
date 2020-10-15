@@ -23,5 +23,5 @@ export default TextArea.extend({
   @on("willDestroyElement")
   _disableAutosize() {
     autosize.destroy($(this.element));
-  }
+  },
 });

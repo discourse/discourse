@@ -9,6 +9,6 @@ export default UserActivityStreamRoute.extend({
     didTransition() {
       this.controllerFor("application").set("showFooter", true);
       return true;
-    }
-  }
+    },
+  },
 });

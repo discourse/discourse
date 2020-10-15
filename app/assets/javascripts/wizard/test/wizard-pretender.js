@@ -1,9 +1,11 @@
+import Pretender from "pretender";
+
 // TODO: This file has some copied and pasted functions from `create-pretender` - would be good
 // to centralize that code at some point.
 
 function parsePostData(query) {
   const result = {};
-  query.split("&").forEach(function(part) {
+  query.split("&").forEach(function (part) {
     const item = part.split("=");
     const firstSeg = decodeURIComponent(item[0]);
     const m = /^([^\[]+)\[([^\]]+)\]/.exec(firstSeg);
@@ -27,8 +29,8 @@ function response(code, obj) {
   return [code, { "Content-Type": "application/json" }, obj];
 }
 
-export default function() {
-  const server = new Pretender(function() {
+export default function () {
+  const server = new Pretender(function () {
     this.get("/wizard.json", () => {
       return response(200, {
         wizard: {
@@ -45,10 +47,10 @@ export default function() {
                   id: "full_name",
                   type: "text",
                   required: true,
-                  description: "Your name"
-                }
+                  description: "Your name",
+                },
               ],
-              next: "second-step"
+              next: "second-step",
             },
             {
               id: "second-step",
@@ -56,7 +58,7 @@ export default function() {
               index: 1,
               fields: [{ id: "some-title", type: "text" }],
               previous: "hello-world",
-              next: "last-step"
+              next: "last-step",
             },
             {
               id: "last-step",
@@ -64,21 +66,21 @@ export default function() {
               fields: [
                 { id: "snack", type: "dropdown", required: true },
                 { id: "theme-preview", type: "component" },
-                { id: "an-image", type: "image" }
+                { id: "an-image", type: "image" },
               ],
-              previous: "second-step"
-            }
-          ]
-        }
+              previous: "second-step",
+            },
+          ],
+        },
       });
     });
 
-    this.put("/wizard/steps/:id", request => {
+    this.put("/wizard/steps/:id", (request) => {
       const body = parsePostData(request.requestBody);
 
       if (body.fields.full_name === "Server Fail") {
         return response(422, {
-          errors: [{ field: "full_name", description: "Invalid name" }]
+          errors: [{ field: "full_name", description: "Invalid name" }],
         });
       } else {
         return response(200, { success: true });
@@ -86,14 +88,14 @@ export default function() {
     });
   });
 
-  server.prepareBody = function(body) {
+  server.prepareBody = function (body) {
     if (body && typeof body === "object") {
       return JSON.stringify(body);
     }
     return body;
   };
 
-  server.unhandledRequest = function(verb, path) {
+  server.unhandledRequest = function (verb, path) {
     const error =
       "Unhandled request in test environment: " + path + " (" + verb + ")";
     window.console.error(error);

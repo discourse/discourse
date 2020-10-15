@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 es:
   js:
@@ -26,6 +25,18 @@ es:
           title: "Los resultados se mostrarán una vez que la encuesta esté <strong>cerrada</strong>."
         staff:
           title: "Los resultados solo se muestran a miembros del <strong>staff</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Selecciona al menos <strong>%{count}</strong> opción."
+            other: "Selecciona al menos <strong>%{count}</strong> opciones."
+          up_to_max_options:
+            one: "Selecciona como máximo <strong>%{count}</strong> opción."
+            other: "Selecciona como máximo <strong>%{count}</strong> opciones."
+          x_options:
+            one: "Selecciona <strong>%{count}</strong> opción."
+            other: "Selecciona <strong>%{count}</strong> opciones."
+          between_min_and_max_options: "Selecciona de <strong>%{min}</strong> a <strong>%{max}</strong> opciones."
       cast-votes:
         title: "Emite tus votos"
         label: "¡Vota ahora!"
@@ -38,9 +49,6 @@ es:
       group-results:
         title: "Agrupar votos por campo de usuario"
         label: "Mostrar desglose"
-      ungroup-results:
-        title: "Combinar todos los votos"
-        label: "Ocultar desglose"
       export-results:
         title: "Exportar los resultados de la encuesta"
         label: "Exportar"
@@ -55,6 +63,12 @@ es:
       automatic_close:
         closes_in: "Cierra en <strong>%{timeLeft}</strong>."
         age: "Cerrado <strong>%{age}</strong>"
+      breakdown:
+        title: "Resultados de la encuesta"
+        votes: "%{count} votos"
+        breakdown: "Desglose"
+        percentage: "Porcentaje"
+        count: "Contar"
       error_while_toggling_status: "Lo sentimos, se produjo un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, se produjo un error al emitir tus votos."
       error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."

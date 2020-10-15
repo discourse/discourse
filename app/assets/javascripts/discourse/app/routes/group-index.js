@@ -17,7 +17,7 @@ export default DiscourseRoute.extend({
     controller.setProperties({
       model,
       filterInput: this._params.filter,
-      showing: "members"
+      showing: "members",
     });
 
     controller.findMembers(true);
@@ -29,13 +29,8 @@ export default DiscourseRoute.extend({
   },
 
   @action
-  showBulkAddModal() {
-    showModal("group-bulk-add", { model: this.modelFor("group") });
-  },
-
-  @action
   didTransition() {
     this.controllerFor("group-index").set("filterInput", this._params.filter);
     return true;
-  }
+  },
 });

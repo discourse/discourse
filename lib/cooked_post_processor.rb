@@ -178,21 +178,11 @@ class CookedPostProcessor
   end
 
   def large_images
-    @large_images ||=
-      begin
-        JSON.parse(@post.custom_fields[Post::LARGE_IMAGES].presence || "[]")
-      rescue JSON::ParserError
-        []
-      end
+    @large_images ||= @post.custom_fields[Post::LARGE_IMAGES].presence || []
   end
 
   def broken_images
-    @broken_images ||=
-      begin
-        JSON.parse(@post.custom_fields[Post::BROKEN_IMAGES].presence || "[]")
-      rescue JSON::ParserError
-        []
-      end
+    @broken_images ||= @post.custom_fields[Post::BROKEN_IMAGES].presence || []
   end
 
   def downloaded_images
@@ -592,7 +582,7 @@ class CookedPostProcessor
           found = false
           parent = img
           while parent = parent.parent
-            if parent["class"] && parent["class"].include?("whitelistedgeneric")
+            if parent["class"] && parent["class"].include?("allowlistedgeneric")
               found = true
               break
             end
@@ -666,9 +656,8 @@ class CookedPostProcessor
   end
 
   def enforce_nofollow
-    if !@omit_nofollow && SiteSetting.add_rel_nofollow_to_user_content
-      PrettyText.add_rel_nofollow_to_user_content(@doc)
-    end
+    add_nofollow = !@omit_nofollow && SiteSetting.add_rel_nofollow_to_user_content
+    PrettyText.add_rel_attributes_to_user_content(@doc, add_nofollow)
   end
 
   def pull_hotlinked_images

@@ -5,16 +5,23 @@ import RSVP from "rsvp";
 import {
   setEnvironment,
   isTesting,
-  isProduction
+  isProduction,
+  isDevelopment,
 } from "discourse-common/config/environment";
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import deprecated from "discourse-common/lib/deprecated";
+import { setIconList } from "discourse-common/lib/icon-library";
+import { setURLContainer } from "discourse/lib/url";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 export default {
   name: "discourse-bootstrap",
 
   // The very first initializer to run
   initialize(container, app) {
+    setURLContainer(container);
+    setDefaultOwner(container);
+
     // Our test environment has its own bootstrap code
     if (isTesting()) {
       return;
@@ -25,7 +32,7 @@ export default {
     if (preloadedDataElement) {
       const preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
 
-      Object.keys(preloaded).forEach(function(key) {
+      Object.keys(preloaded).forEach(function (key) {
         PreloadStore.store(key, JSON.parse(preloaded[key]));
 
         if (setupData.debugPreloadedAppData === "true") {
@@ -36,65 +43,66 @@ export default {
       });
     }
 
-    app.CDN = setupData.cdn;
-
     let baseUrl = setupData.baseUrl;
     Object.defineProperty(app, "BaseUrl", {
       get() {
         deprecated(`use "get-url" helpers instead of Discourse.BaseUrl`, {
           since: "2.5",
-          dropFrom: "2.6"
+          dropFrom: "2.6",
         });
         return baseUrl;
-      }
+      },
     });
     let baseUri = setupData.baseUri;
     Object.defineProperty(app, "BaseUri", {
       get() {
         deprecated(`use "get-url" helpers instead of Discourse.BaseUri`, {
           since: "2.5",
-          dropFrom: "2.6"
+          dropFrom: "2.6",
         });
         return baseUri;
-      }
+      },
     });
     setupURL(setupData.cdn, baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
     app.SiteSettings = PreloadStore.get("siteSettings");
-    app.ThemeSettings = PreloadStore.get("themeSettings");
-    app.LetterAvatarVersion = setupData.letterAvatarVersion;
-    app.MarkdownItURL = setupData.markdownItUrl;
-    app.ServiceWorkerURL = setupData.serviceWorkerUrl;
     I18n.defaultLocale = setupData.defaultLocale;
 
     window.Logster = window.Logster || {};
     window.Logster.enabled = setupData.enableJsErrorReporting === "true";
 
-    app.set("assetVersion", setupData.assetVersion);
-
-    Session.currentProp(
-      "disableCustomCSS",
-      setupData.disableCustomCss === "true"
-    );
+    let session = Session.current();
+    session.serviceWorkerURL = setupData.serviceWorkerUrl;
+    session.assetVersion = setupData.assetVersion;
+    session.disableCustomCSS = setupData.disableCustomCss === "true";
+    session.markdownItURL = setupData.markdownItUrl;
 
     if (setupData.safeMode) {
-      Session.currentProp("safe_mode", setupData.safeMode);
+      session.safe_mode = setupData.safeMode;
     }
 
-    app.HighlightJSPath = setupData.highlightJsPath;
-    app.SvgSpritePath = setupData.svgSpritePath;
+    session.darkModeAvailable =
+      document.head.querySelectorAll(
+        'link[media="(prefers-color-scheme: dark)"]'
+      ).length > 0;
 
-    if (app.Environment === "development") {
-      app.SvgIconList = setupData.svgIconList;
+    session.defaultColorSchemeIsDark = setupData.colorSchemeIsDark === "true";
+
+    session.highlightJsPath = setupData.highlightJsPath;
+    session.svgSpritePath = setupData.svgSpritePath;
+    session.userColorSchemeId =
+      parseInt(setupData.userColorSchemeId, 10) || null;
+    session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10) || -1;
+
+    if (isDevelopment()) {
+      setIconList(setupData.svgIconList);
     }
 
     if (setupData.s3BaseUrl) {
-      app.S3CDN = setupData.s3Cdn;
-      app.S3BaseUrl = setupData.s3BaseUrl;
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn);
     }
 
-    RSVP.configure("onerror", function(e) {
+    RSVP.configure("onerror", function (e) {
       // Ignore TransitionAborted exceptions that bubble up
       if (e && e.message === "TransitionAborted") {
         return;
@@ -117,5 +125,23 @@ export default {
 
       window.onerror(e && e.message, null, null, null, e);
     });
-  }
+
+    // Deprecate lodash usage
+    let lo = window._;
+    if (lo) {
+      Object.keys(lo).forEach((m) => {
+        let old = lo[m];
+        lo[m] = function () {
+          deprecated(
+            `lodash is deprecated and will be removed from Discourse.`,
+            {
+              since: "2.6",
+              dropFrom: "2.7",
+            }
+          );
+          return old(...arguments);
+        };
+      });
+    }
+  },
 };

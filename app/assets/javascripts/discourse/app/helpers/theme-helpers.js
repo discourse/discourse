@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 
 registerUnbound("theme-i18n", (themeId, key, params) => {
@@ -18,7 +18,5 @@ registerUnbound("theme-setting", (themeId, key, hash) => {
       { since: "v2.2.0.beta8", dropFrom: "v2.3.0" }
     );
   }
-  return Discourse.__container__
-    .lookup("service:theme-settings")
-    .getSetting(themeId, key);
+  return helperContext().themeSettings.getSetting(themeId, key);
 });

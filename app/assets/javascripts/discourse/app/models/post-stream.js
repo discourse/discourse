@@ -10,6 +10,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { loadTopicView } from "discourse/models/topic";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
+import { deepMerge } from "discourse-common/lib/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -31,7 +33,7 @@ export default RestModel.extend({
     const posts = [];
     const postsWithPlaceholders = PostsWithPlaceholders.create({
       posts,
-      store: this.store
+      store: this.store,
     });
 
     this.setProperties({
@@ -45,7 +47,7 @@ export default RestModel.extend({
       loadingBelow: false,
       loadingFilter: false,
       stagingPost: false,
-      timelineLookup: []
+      timelineLookup: [],
     });
   },
 
@@ -145,8 +147,12 @@ export default RestModel.extend({
   **/
   @discourseComputed("posts.[]", "stream.[]")
   previousWindow() {
+    if (!this.posts) {
+      return [];
+    }
+
     // If we can't find the last post loaded, bail
-    const firstPost = _.first(this.posts);
+    const firstPost = this.posts[0];
     if (!firstPost) {
       return [];
     }
@@ -270,19 +276,19 @@ export default RestModel.extend({
     this.set("loadingFilter", true);
     this.set("loadingNearPost", opts.nearPost);
 
-    opts = _.merge(opts, this.streamFilters);
+    opts = deepMerge(opts, this.streamFilters);
 
     // Request a topicView
     return loadTopicView(topic, opts)
-      .then(json => {
+      .then((json) => {
         this.updateFromJson(json.post_stream);
         this.setProperties({
           loadingFilter: false,
           timelineLookup: json.timeline_lookup,
-          loaded: true
+          loaded: true,
         });
       })
-      .catch(result => {
+      .catch((result) => {
         this.errorLoading(result);
         throw new Error(result);
       })
@@ -300,16 +306,16 @@ export default RestModel.extend({
 
     if (idx !== -1) {
       // Insert the gap at the appropriate place
-      stream.splice.apply(stream, [idx, 0].concat(gap));
 
       let postIdx = currentPosts.indexOf(post);
       const origIdx = postIdx;
 
       let headGap = gap.slice(0, this.topic.chunk_size);
       let tailGap = gap.slice(this.topic.chunk_size);
+      stream.splice.apply(stream, [idx, 0].concat(headGap));
       if (postIdx !== -1) {
-        return this.findPostsByIds(headGap).then(posts => {
-          posts.forEach(p => {
+        return this.findPostsByIds(headGap).then((posts) => {
+          posts.forEach((p) => {
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
               currentPosts.insertAt(postIdx++, stored);
@@ -362,13 +368,15 @@ export default RestModel.extend({
     if (this.isMegaTopic) {
       this.set("loadingBelow", true);
 
-      const fakePostIds = _.range(-1, -this.get("topic.chunk_size"), -1);
+      const fakePostIds = [
+        ...Array(this.get("topic.chunk_size") - 1).keys(),
+      ].map((i) => -i - 1);
       postsWithPlaceholders.appending(fakePostIds);
 
       return this.fetchNextWindow(
         this.get("posts.lastObject.post_number"),
         true,
-        p => {
+        (p) => {
           this.appendPost(p);
         }
       ).finally(() => {
@@ -377,13 +385,15 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.nextWindow;
-      if (isEmpty(postIds)) return Promise.resolve();
+      if (isEmpty(postIds)) {
+        return Promise.resolve();
+      }
       this.set("loadingBelow", true);
       postsWithPlaceholders.appending(postIds);
 
       return this.findPostsByIds(postIds)
-        .then(posts => {
-          posts.forEach(p => this.appendPost(p));
+        .then((posts) => {
+          posts.forEach((p) => this.appendPost(p));
           return posts;
         })
         .finally(() => {
@@ -407,7 +417,7 @@ export default RestModel.extend({
       return this.fetchNextWindow(
         this.get("posts.firstObject.post_number"),
         false,
-        p => {
+        (p) => {
           this.prependPost(p);
           prependedIds.push(p.get("id"));
         }
@@ -418,12 +428,14 @@ export default RestModel.extend({
       });
     } else {
       const postIds = this.previousWindow;
-      if (isEmpty(postIds)) return Promise.resolve();
+      if (isEmpty(postIds)) {
+        return Promise.resolve();
+      }
       this.set("loadingAbove", true);
 
       return this.findPostsByIds(postIds.reverse())
-        .then(posts => {
-          posts.forEach(p => this.prependPost(p));
+        .then((posts) => {
+          posts.forEach((p) => this.prependPost(p));
         })
         .finally(() => {
           const postsWithPlaceholders = this.postsWithPlaceholders;
@@ -451,14 +463,14 @@ export default RestModel.extend({
       posts_count: (topic.get("posts_count") || 0) + 1,
       last_posted_at: new Date(),
       "details.last_poster": user,
-      highest_post_number: (topic.get("highest_post_number") || 0) + 1
+      highest_post_number: (topic.get("highest_post_number") || 0) + 1,
     });
 
     post.setProperties({
       post_number: topic.get("highest_post_number"),
       topic: topic,
       created_at: new Date(),
-      id: -1
+      id: -1,
     });
 
     // If we're at the end of the stream, add the post
@@ -499,7 +511,7 @@ export default RestModel.extend({
 
     topic.setProperties({
       highest_post_number: (topic.get("highest_post_number") || 0) - 1,
-      posts_count: (topic.get("posts_count") || 0) - 1
+      posts_count: (topic.get("posts_count") || 0) - 1,
     });
 
     // TODO unfudge reply count on parent post
@@ -542,12 +554,12 @@ export default RestModel.extend({
 
     this.postsWithPlaceholders.refreshAll(() => {
       const allPosts = this.posts;
-      const postIds = posts.map(p => p.get("id"));
+      const postIds = posts.map((p) => p.get("id"));
       const identityMap = this._identityMap;
 
       this.stream.removeObjects(postIds);
       allPosts.removeObjects(posts);
-      postIds.forEach(id => delete identityMap[id]);
+      postIds.forEach((id) => delete identityMap[id]);
     });
   },
 
@@ -560,7 +572,7 @@ export default RestModel.extend({
     const url = `/posts/by_number/${this.get("topic.id")}/${postNumber}`;
     const store = this.store;
 
-    return ajax(url).then(post => {
+    return ajax(url).then((post) => {
       return this.storePost(store.createRecord("post", post));
     });
   },
@@ -569,7 +581,7 @@ export default RestModel.extend({
     const url = `/posts/by-date/${this.get("topic.id")}/${date}`;
     const store = this.store;
 
-    return ajax(url).then(post => {
+    return ajax(url).then((post) => {
       return this.storePost(store.createRecord("post", post));
     });
   },
@@ -579,7 +591,7 @@ export default RestModel.extend({
     const store = this.store;
     const existing = this._identityMap[postId];
 
-    return ajax(url).then(p => {
+    return ajax(url).then((p) => {
       if (existing) {
         p.cooked = existing.cooked;
       }
@@ -588,15 +600,25 @@ export default RestModel.extend({
     });
   },
 
+  /* mainly for backwards compatability with plugins, used in quick messages plugin
+   * TODO: remove July 2021
+   * */
+  triggerNewPostInStream(postId, opts) {
+    deprecated(
+      "Please use triggerNewPostsInStream, this method will be removed July 2021"
+    );
+    return this.triggerNewPostsInStream([postId], opts);
+  },
+
   /**
-    Finds and adds a post to the stream by id. Typically this would happen if we receive a message
+    Finds and adds posts to the stream by id. Typically this would happen if we receive a message
     from the message bus indicating there's a new post. We'll only insert it if we currently
     have no filters.
   **/
-  triggerNewPostInStream(postId) {
+  triggerNewPostsInStream(postIds, opts) {
     const resolved = Promise.resolve();
 
-    if (!postId) {
+    if (!postIds || postIds.length === 0) {
       return resolved;
     }
 
@@ -606,27 +628,46 @@ export default RestModel.extend({
     }
 
     const loadedAllPosts = this.loadedAllPosts;
+    this._loadingPostIds = this._loadingPostIds || [];
 
-    if (this.stream.indexOf(postId) === -1) {
-      this.stream.addObject(postId);
-      if (loadedAllPosts) {
-        this.set("loadingLastPost", true);
-        return this.findPostsByIds([postId])
-          .then(posts => {
-            const ignoredUsers =
-              User.current() && User.current().get("ignored_users");
-            posts.forEach(p => {
-              if (ignoredUsers && ignoredUsers.includes(p.username)) {
-                this.stream.removeObject(postId);
-                return;
-              }
-              this.appendPost(p);
-            });
-          })
-          .finally(() => {
-            this.set("loadingLastPost", false);
-          });
+    let missingIds = [];
+
+    postIds.forEach((postId) => {
+      if (postId && this.stream.indexOf(postId) === -1) {
+        missingIds.push(postId);
       }
+    });
+
+    if (missingIds.length === 0) {
+      return resolved;
+    }
+
+    if (loadedAllPosts) {
+      missingIds.forEach((postId) => {
+        if (this._loadingPostIds.indexOf(postId) === -1) {
+          this._loadingPostIds.push(postId);
+        }
+      });
+      this.set("loadingLastPost", true);
+      return this.findPostsByIds(this._loadingPostIds, opts)
+        .then((posts) => {
+          this._loadingPostIds = null;
+          const ignoredUsers =
+            User.current() && User.current().get("ignored_users");
+          posts.forEach((p) => {
+            if (ignoredUsers && ignoredUsers.includes(p.username)) {
+              this.stream.removeObject(p.id);
+              return;
+            }
+            this.stream.addObject(p.id);
+            this.appendPost(p);
+          });
+        })
+        .finally(() => {
+          this.set("loadingLastPost", false);
+        });
+    } else {
+      missingIds.forEach((postId) => this.stream.addObject(postId));
     }
 
     return resolved;
@@ -642,7 +683,7 @@ export default RestModel.extend({
       const url = `/posts/${postId}`;
       const store = this.store;
 
-      return ajax(url).then(p => {
+      return ajax(url).then((p) => {
         const post = store.createRecord("post", p);
         const stream = this.stream;
         const posts = this.posts;
@@ -650,7 +691,7 @@ export default RestModel.extend({
 
         // we need to zip this into the stream
         let index = 0;
-        stream.forEach(pid => {
+        stream.forEach((pid) => {
           if (pid < p.id) {
             index += 1;
           }
@@ -659,7 +700,7 @@ export default RestModel.extend({
         stream.insertAt(index, p.id);
 
         index = 0;
-        posts.forEach(_post => {
+        posts.forEach((_post) => {
           if (_post.id < p.id) {
             index += 1;
           }
@@ -686,7 +727,7 @@ export default RestModel.extend({
       const store = this.store;
 
       return ajax(url)
-        .then(p => {
+        .then((p) => {
           this.storePost(store.createRecord("post", p));
         })
         .catch(() => {
@@ -708,7 +749,7 @@ export default RestModel.extend({
     if (existing && existing.updated_at !== updatedAt) {
       const url = "/posts/" + postId;
       const store = this.store;
-      return ajax(url).then(p => {
+      return ajax(url).then((p) => {
         if (opts.preserveCooked) {
           p.cooked = existing.get("cooked");
         }
@@ -737,7 +778,7 @@ export default RestModel.extend({
       return;
     }
 
-    return this.posts.find(p => {
+    return this.posts.find((p) => {
       return p.get("post_number") === postNumber;
     });
   },
@@ -753,7 +794,7 @@ export default RestModel.extend({
     }
 
     let closest = null;
-    this.posts.forEach(p => {
+    this.posts.forEach((p) => {
       if (!closest) {
         closest = p;
         return;
@@ -778,11 +819,11 @@ export default RestModel.extend({
   // Get the index in the stream of a post id. (Use this for the topic progress bar.)
   progressIndexOfPostId(post) {
     const postId = post.get("id");
-    const index = this.stream.indexOf(postId);
 
     if (this.isMegaTopic) {
       return post.get("post_number");
     } else {
+      const index = this.stream.indexOf(postId);
       return index + 1;
     }
   },
@@ -798,7 +839,7 @@ export default RestModel.extend({
     }
 
     let closest = null;
-    this.posts.forEach(p => {
+    this.posts.forEach((p) => {
       if (closest === postNumber) {
         return;
       }
@@ -837,7 +878,9 @@ export default RestModel.extend({
     }
 
     const val = timelineLookup[high] || timelineLookup[low];
-    if (val) return val[1];
+    if (val) {
+      return val[1];
+    }
   },
 
   // Find a postId for a postNumber, respecting gaps
@@ -880,7 +923,7 @@ export default RestModel.extend({
     if (postStreamData) {
       // Load posts if present
       const store = this.store;
-      postStreamData.posts.forEach(p =>
+      postStreamData.posts.forEach((p) =>
         this.appendPost(store.createRecord("post", p))
       );
       delete postStreamData.posts;
@@ -934,13 +977,13 @@ export default RestModel.extend({
     let data = {
       post_number: postNumber,
       asc: asc,
-      include_suggested: includeSuggested
+      include_suggested: includeSuggested,
     };
 
-    data = _.merge(data, this.streamFilters);
+    data = deepMerge(data, this.streamFilters);
     const store = this.store;
 
-    return ajax(url, { data }).then(result => {
+    return ajax(url, { data }).then((result) => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }
@@ -948,7 +991,7 @@ export default RestModel.extend({
       const posts = get(result, "post_stream.posts");
 
       if (posts) {
-        posts.forEach(p => {
+        posts.forEach((p) => {
           p = this.storePost(store.createRecord("post", p));
 
           if (callback) {
@@ -959,17 +1002,17 @@ export default RestModel.extend({
     });
   },
 
-  findPostsByIds(postIds) {
+  findPostsByIds(postIds, opts) {
     const identityMap = this._identityMap;
-    const unloaded = postIds.filter(p => !identityMap[p]);
+    const unloaded = postIds.filter((p) => !identityMap[p]);
 
     // Load our unloaded posts by id
-    return this.loadIntoIdentityMap(unloaded).then(() => {
-      return postIds.map(p => identityMap[p]).compact();
+    return this.loadIntoIdentityMap(unloaded, opts).then(() => {
+      return postIds.map((p) => identityMap[p]).compact();
     });
   },
 
-  loadIntoIdentityMap(postIds) {
+  loadIntoIdentityMap(postIds, opts) {
     if (isEmpty(postIds)) {
       return Promise.resolve([]);
     }
@@ -980,7 +1023,15 @@ export default RestModel.extend({
     const data = { post_ids: postIds, include_suggested: includeSuggested };
     const store = this.store;
 
-    return ajax(url, { data }).then(result => {
+    let headers = {};
+    if (opts && opts.background) {
+      headers["Discourse-Background"] = "true";
+    }
+
+    return ajax(url, {
+      data,
+      headers,
+    }).then((result) => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }
@@ -988,7 +1039,7 @@ export default RestModel.extend({
       const posts = get(result, "post_stream.posts");
 
       if (posts) {
-        posts.forEach(p => this.storePost(store.createRecord("post", p)));
+        posts.forEach((p) => this.storePost(store.createRecord("post", p)));
       }
     });
   },
@@ -1021,15 +1072,15 @@ export default RestModel.extend({
     }
 
     let data = {
-      post_ids: postIds
+      post_ids: postIds,
     };
 
     this._excerpts.loading = ajax(
       "/t/" + this.get("topic.id") + "/excerpts.json",
       { data }
     )
-      .then(excerpts => {
-        excerpts.forEach(obj => {
+      .then((excerpts) => {
+        excerpts.forEach((obj) => {
           this._excerpts[obj.post_id] = obj;
         });
       })
@@ -1042,7 +1093,7 @@ export default RestModel.extend({
 
   excerpt(streamPosition) {
     if (this.isMegaTopic) {
-      return new Promise(resolve => resolve(""));
+      return new Promise((resolve) => resolve(""));
     }
 
     const stream = this.stream;
@@ -1059,7 +1110,7 @@ export default RestModel.extend({
         .then(() => {
           resolve(this._excerpts[stream[streamPosition]]);
         })
-        .catch(e => reject(e));
+        .catch((e) => reject(e));
     });
   },
 
@@ -1081,5 +1132,5 @@ export default RestModel.extend({
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", result.jqXHR.status === 403);
     }
-  }
+  },
 });

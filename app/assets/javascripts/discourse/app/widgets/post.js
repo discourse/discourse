@@ -13,12 +13,13 @@ import { dateNode } from "discourse/helpers/node";
 import {
   translateSize,
   avatarUrl,
-  formatUsername
+  formatUsername,
 } from "discourse/lib/utilities";
 import hbs from "discourse/widgets/hbs-compiler";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { Promise } from "rsvp";
+import bootbox from "bootbox";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -34,7 +35,12 @@ export function avatarImg(wanted, attrs) {
   if (!url || url.length === 0) {
     return;
   }
-  const title = attrs.name || formatUsername(attrs.username);
+
+  let title;
+
+  if (!attrs.hideTitle) {
+    title = attrs.name || formatUsername(attrs.username);
+  }
 
   let className =
     "avatar" + (attrs.extraClasses ? " " + attrs.extraClasses : "");
@@ -45,9 +51,9 @@ export function avatarImg(wanted, attrs) {
       width: size,
       height: size,
       src: getURLWithCDN(url),
-      title
+      title,
     },
-    className
+    className,
   };
 
   return h("img", properties);
@@ -58,15 +64,14 @@ export function avatarFor(wanted, attrs) {
     "a",
     {
       className: `trigger-user-card ${attrs.className || ""}`,
-      attributes: { href: attrs.url, "data-user-card": attrs.username }
+      attributes: {
+        href: attrs.url,
+        "data-user-card": attrs.username,
+        "aria-hidden": true,
+      },
     },
     avatarImg(wanted, attrs)
   );
-}
-
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.avatar = avatarFor;
 }
 
 createWidget("select-post", {
@@ -82,7 +87,7 @@ createWidget("select-post", {
             label: "topic.multi_select.select_replies.label",
             title: "topic.multi_select.select_replies.title",
             action: "selectReplies",
-            className: "select-replies"
+            className: "select-replies",
           })
         );
       }
@@ -91,7 +96,7 @@ createWidget("select-post", {
           label: "topic.multi_select.select_below.label",
           title: "topic.multi_select.select_below.title",
           action: "selectBelow",
-          className: "select-below"
+          className: "select-below",
         })
       );
     }
@@ -104,17 +109,17 @@ createWidget("select-post", {
         label: key + ".label",
         title: key + ".title",
         action: "togglePostSelection",
-        className: "select-post"
+        className: "select-post",
       })
     );
 
     return buttons;
-  }
+  },
 });
 
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
-  buildKey: attrs => `reply-to-tab-${attrs.id}`,
+  buildKey: (attrs) => `reply-to-tab-${attrs.id}`,
 
   defaultState() {
     return { loading: false };
@@ -130,10 +135,10 @@ createWidget("reply-to-tab", {
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
-        username: attrs.replyToUsername
+        username: attrs.replyToUsername,
       }),
       " ",
-      h("span", formatUsername(attrs.replyToUsername))
+      h("span", formatUsername(attrs.replyToUsername)),
     ];
   },
 
@@ -142,7 +147,7 @@ createWidget("reply-to-tab", {
     this.sendWidgetAction("toggleReplyAbove").then(
       () => (this.state.loading = false)
     );
-  }
+  },
 });
 
 createWidget("post-avatar-user-info", {
@@ -150,7 +155,7 @@ createWidget("post-avatar-user-info", {
 
   html(attrs) {
     return this.attach("poster-name", attrs);
-  }
+  },
 });
 
 createWidget("post-avatar", {
@@ -158,7 +163,7 @@ createWidget("post-avatar", {
 
   settings: {
     size: "large",
-    displayPosterName: false
+    displayPosterName: false,
   },
 
   html(attrs) {
@@ -171,7 +176,8 @@ createWidget("post-avatar", {
         username: attrs.username,
         name: attrs.name,
         url: attrs.usernameUrl,
-        className: "main-avatar"
+        className: "main-avatar",
+        hideTitle: true,
       });
     }
 
@@ -188,13 +194,13 @@ createWidget("post-avatar", {
     }
 
     return result;
-  }
+  },
 });
 
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
   template: hbs`{{d-icon "lock"}}`,
-  title: () => I18n.t("post.locked")
+  title: () => I18n.t("post.locked"),
 });
 
 createWidget("post-email-indicator", {
@@ -220,7 +226,7 @@ createWidget("post-email-indicator", {
     if (this.attrs.canViewRawEmail) {
       this.sendWidgetAction("showRawEmail");
     }
-  }
+  },
 });
 
 function showReplyTab(attrs, siteSettings) {
@@ -234,7 +240,7 @@ createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
 
   settings: {
-    displayPosterName: true
+    displayPosterName: true,
   },
 
   html(attrs) {
@@ -245,7 +251,7 @@ createWidget("post-meta-data", {
         h(
           "div.post-info.whisper",
           {
-            attributes: { title: I18n.t("post.whisper") }
+            attributes: { title: I18n.t("post.whisper") },
           },
           iconNode("far-eye-slash")
         )
@@ -260,7 +266,7 @@ createWidget("post-meta-data", {
       class: "post-date",
       href: attrs.shareUrl,
       "data-share-url": attrs.shareUrl,
-      "data-post-number": attrs.post_number
+      "data-post-number": attrs.post_number,
     };
 
     if (lastWikiEdit) {
@@ -295,8 +301,8 @@ createWidget("post-meta-data", {
         {
           className: attrs.read ? "read" : null,
           attributes: {
-            title: I18n.t("post.unread")
-          }
+            title: I18n.t("post.unread"),
+          },
         },
         iconNode("circle")
       )
@@ -309,7 +315,7 @@ createWidget("post-meta-data", {
     result.push(h("div.post-infos", postInfo));
 
     return result;
-  }
+  },
 });
 
 createWidget("expand-hidden", {
@@ -321,12 +327,12 @@ createWidget("expand-hidden", {
 
   click() {
     this.sendWidgetAction("expandHidden");
-  }
+  },
 });
 
 createWidget("expand-post-button", {
   tagName: "button.btn.expand-post",
-  buildKey: attrs => `expand-post-button-${attrs.id}`,
+  buildKey: (attrs) => `expand-post-button-${attrs.id}`,
 
   defaultState() {
     return { loadingExpanded: false };
@@ -343,11 +349,11 @@ createWidget("expand-post-button", {
   click() {
     this.state.loadingExpanded = true;
     this.sendWidgetAction("expandFirstPost");
-  }
+  },
 });
 
 createWidget("post-group-request", {
-  buildKey: attrs => `post-group-request-${attrs.id}`,
+  buildKey: (attrs) => `post-group-request-${attrs.id}`,
 
   buildClasses() {
     return ["group-request"];
@@ -359,11 +365,11 @@ createWidget("post-group-request", {
     );
 
     return h("a", { attributes: { href } }, I18n.t("groups.requests.handle"));
-  }
+  },
 });
 
 createWidget("post-contents", {
-  buildKey: attrs => `post-contents-${attrs.id}`,
+  buildKey: (attrs) => `post-contents-${attrs.id}`,
 
   defaultState() {
     return { expandedFirstPost: false, repliesBelow: [] };
@@ -382,7 +388,7 @@ createWidget("post-contents", {
 
   html(attrs, state) {
     let result = [
-      new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)
+      new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),
     ];
 
     if (attrs.requestedGroupName) {
@@ -406,7 +412,7 @@ createWidget("post-contents", {
     if (repliesBelow.length) {
       result.push(
         h("section.embedded-posts.bottom", [
-          repliesBelow.map(p => {
+          repliesBelow.map((p) => {
             return this.attach("embedded-post", p, { model: p.asPost });
           }),
           this.attach("button", {
@@ -414,8 +420,8 @@ createWidget("post-contents", {
             icon: "chevron-up",
             action: "toggleRepliesBelow",
             actionParam: "true",
-            className: "btn collapse-up"
-          })
+            className: "btn collapse-up",
+          }),
         ])
       );
     }
@@ -445,8 +451,8 @@ createWidget("post-contents", {
     const topicUrl = post ? post.get("topic.url") : null;
     return this.store
       .find("post-reply", { postId: this.attrs.id })
-      .then(posts => {
-        this.state.repliesBelow = posts.map(p => {
+      .then((posts) => {
+        this.state.repliesBelow = posts.map((p) => {
           let result = transformWithCallbacks(p);
           result.shareUrl = `${topicUrl}/${p.post_number}`;
           result.asPost = this.store.createRecord("post", p);
@@ -458,7 +464,7 @@ createWidget("post-contents", {
   expandFirstPost() {
     const post = this.findAncestorModel();
     return post.expand().then(() => (this.state.expandedFirstPost = true));
-  }
+  },
 });
 
 createWidget("post-notice", {
@@ -496,13 +502,13 @@ createWidget("post-notice", {
         "p",
         I18n.t("post.notice.returning_user", {
           user,
-          time: relativeAgeMediumSpan(distance, true)
+          time: relativeAgeMediumSpan(distance, true),
         })
       );
     }
 
     return [iconNode(icon), text];
-  }
+  },
 });
 
 createWidget("post-body", {
@@ -522,12 +528,12 @@ createWidget("post-body", {
     }
 
     return result;
-  }
+  },
 });
 
 createWidget("post-article", {
   tagName: "article.boxed.onscreen-post",
-  buildKey: attrs => `post-article-${attrs.id}`,
+  buildKey: (attrs) => `post-article-${attrs.id}`,
 
   defaultState() {
     return { repliesAbove: [] };
@@ -552,21 +558,21 @@ createWidget("post-article", {
     return {
       "data-post-id": attrs.id,
       "data-topic-id": attrs.topicId,
-      "data-user-id": attrs.user_id
+      "data-user-id": attrs.user_id,
     };
   },
 
   html(attrs, state) {
     const rows = [
       h("a.tabLoc", {
-        attributes: { href: "", "aria-hidden": true, tabindex: -1 }
-      })
+        attributes: { href: "", "aria-hidden": true, tabindex: -1 },
+      }),
     ];
     if (state.repliesAbove.length) {
-      const replies = state.repliesAbove.map(p => {
+      const replies = state.repliesAbove.map((p) => {
         return this.attach("embedded-post", p, {
           model: p.asPost,
-          state: { above: true }
+          state: { above: true },
         });
       });
 
@@ -579,9 +585,9 @@ createWidget("post-article", {
               icon: "chevron-down",
               action: "toggleReplyAbove",
               actionParam: "true",
-              className: "btn collapse-down"
+              className: "btn collapse-down",
             }),
-            replies
+            replies,
           ])
         )
       );
@@ -594,7 +600,7 @@ createWidget("post-article", {
     rows.push(
       h("div.row", [
         this.attach("post-avatar", attrs),
-        this.attach("post-body", attrs)
+        this.attach("post-body", attrs),
       ])
     );
     return rows;
@@ -629,14 +635,14 @@ createWidget("post-article", {
       const topicUrl = this._getTopicUrl();
       return this.store
         .find("post-reply-history", { postId: this.attrs.id })
-        .then(posts => {
-          this.state.repliesAbove = posts.map(p => {
+        .then((posts) => {
+          this.state.repliesAbove = posts.map((p) => {
             p.shareUrl = `${topicUrl}/${p.post_number}`;
             return transformWithCallbacks(p);
           });
         });
     }
-  }
+  },
 });
 
 let addPostClassesCallbacks = null;
@@ -646,7 +652,7 @@ export function addPostClassesCallback(callback) {
 }
 
 export default createWidget("post", {
-  buildKey: attrs => `post-${attrs.id}`,
+  buildKey: (attrs) => `post-${attrs.id}`,
   shadowTree: true,
 
   buildAttributes(attrs) {
@@ -673,6 +679,9 @@ export default createWidget("post", {
     }
     if (attrs.topicOwner) {
       classNames.push("topic-owner");
+    }
+    if (attrs.groupModerator) {
+      classNames.push("category-moderator");
     }
     if (attrs.hidden) {
       classNames.push("post-hidden");
@@ -718,7 +727,7 @@ export default createWidget("post", {
     const likeAction = post.get("likeAction");
 
     if (likeAction && likeAction.get("canToggle")) {
-      return likeAction.togglePromise(post).then(result => {
+      return likeAction.togglePromise(post).then((result) => {
         this.appEvents.trigger("page:like-toggled", post, likeAction);
         return this._warnIfClose(result);
       });
@@ -745,5 +754,5 @@ export default createWidget("post", {
       bootbox.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
-  }
+  },
 });

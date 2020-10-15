@@ -689,7 +689,7 @@ class TopicsController < ApplicationController
 
         render json: json, status: 422
       end
-    rescue Topic::UserExists => e
+    rescue Topic::UserExists, Topic::NotAllowed => e
       render json: { errors: [e.message] }, status: 422
     end
   end
@@ -710,6 +710,9 @@ class TopicsController < ApplicationController
 
     topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
+
+    destination_topic = Topic.find_by(id: destination_topic_id)
+    guardian.ensure_can_create_post_on_topic!(destination_topic)
 
     args = {}
     args[:destination_topic_id] = destination_topic_id.to_i
@@ -736,9 +739,15 @@ class TopicsController < ApplicationController
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
 
-    # when creating a new topic, ensure the 1st post is a regular post
-    if params[:title].present? && Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) != Post.types[:regular]
-      return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
+    if params[:title].present?
+      # when creating a new topic, ensure the 1st post is a regular post
+      if Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) != Post.types[:regular]
+        return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
+      end
+
+      if params[:category_id].present?
+        guardian.ensure_can_create_topic_on_category!(params[:category_id])
+      end
     end
 
     destination_topic = move_posts_to_destination(topic)
@@ -836,6 +845,7 @@ class TopicsController < ApplicationController
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
       topics = TopicQuery.unread_filter(tq.joined_topic_user, current_user.id, staff: guardian.is_staff?).listable_topics
+      topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
 
       if params[:category_id]
         if params[:include_subcategories]
@@ -847,6 +857,11 @@ class TopicsController < ApplicationController
           topics = topics.where('category_id = ?', params[:category_id])
         end
       end
+
+      if params[:tag_name].present?
+        topics = topics.joins(:tags).where("tags.name": params[:tag_name])
+      end
+
       topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)
@@ -854,7 +869,7 @@ class TopicsController < ApplicationController
 
     operation = params
       .require(:operation)
-      .permit(:type, :group, :category_id, :notification_level_id, tags: [])
+      .permit(:type, :group, :category_id, :notification_level_id, *DiscoursePluginRegistry.permitted_bulk_action_parameters, tags: [])
       .to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
@@ -878,8 +893,14 @@ class TopicsController < ApplicationController
         TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
       end
     else
-      current_user.user_stat.update_column(:new_since, Time.zone.now)
-      TopicTrackingState.publish_dismiss_new(current_user.id)
+      if params[:tracked].to_s == "true"
+        topics = TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)
+        topic_users = topics.map { |topic| { topic_id: topic.id, user_id: current_user.id, last_read_post_number: 0 } }
+        TopicUser.insert_all(topic_users) if !topic_users.empty?
+      else
+        current_user.user_stat.update_column(:new_since, Time.zone.now)
+        TopicTrackingState.publish_dismiss_new(current_user.id)
+      end
     end
     render body: nil
   end

@@ -2,7 +2,7 @@
   &.icon-picker {
     .multi-select-header {
       .select-kit-selected-name .d-icon {
-        color: $primary-high;
+        color: var(--primary-high);
       }
     }
   }

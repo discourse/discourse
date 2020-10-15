@@ -7,7 +7,7 @@
 </div>
 
 <div>
-  <input type="text">
+  <input type="text" aria-label={{i18n "share.url"}}>
 </div>
 
 <div class="actions">
@@ -34,6 +34,12 @@
       </div>
     {{/if}}
 
-    {{d-button action="close" class="btn btn-flat close" icon="times" aria-label="share.close" title="share.close"}}
+    {{d-button
+      action=(action "close")
+      class="btn btn-flat close"
+      icon="times"
+      aria-label="share.close"
+      title="share.close"
+    }}
   </div>
 </div>

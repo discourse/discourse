@@ -46,12 +46,14 @@
     </div>
   </section>
 
-  <section class="field">
-    <label>
-      {{input type="checkbox" checked=category.allow_badges}}
-      {{i18n "category.allow_badges_label"}}
-    </label>
-  </section>
+  {{#if siteSettings.enable_badges}}
+    <section class="field allow-badges">
+      <label>
+        {{input type="checkbox" checked=category.allow_badges}}
+        {{i18n "category.allow_badges_label"}}
+      </label>
+    </section>
+  {{/if}}
 
   {{#if siteSettings.topic_featured_link_enabled}}
     <section class="field">

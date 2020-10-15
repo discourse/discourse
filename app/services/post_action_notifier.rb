@@ -10,6 +10,11 @@ class PostActionNotifier
     @disabled = false
   end
 
+  # For testing purposes
+  def self.reset!
+    @custom_post_revision_notifier_recipients = nil
+  end
+
   def self.alerter
     @alerter ||= PostAlerter.new
   end
@@ -114,6 +119,10 @@ class PostActionNotifier
       )
     end
 
+    custom_post_revision_notifier_recipients.each do |block|
+      user_ids.concat(Array(block.call(post_revision)))
+    end
+
     if user_ids.present?
       DB.after_commit do
         Jobs.enqueue(:notify_post_revision,
@@ -136,5 +145,13 @@ class PostActionNotifier
         acting_user_id: post.last_editor.id
       )
     end
+  end
+
+  def self.custom_post_revision_notifier_recipients
+    @custom_post_revision_notifier_recipients ||= Set.new
+  end
+
+  def self.add_post_revision_notifier_recipients(&block)
+    custom_post_revision_notifier_recipients << block
   end
 end

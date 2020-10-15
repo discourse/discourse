@@ -7,5 +7,5 @@ export default highlightSearch.extend({
     deprecated(
       "`highlight-text` component is deprecated,  use the `highlight-search` instead."
     );
-  }
+  },
 });

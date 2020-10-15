@@ -10,7 +10,7 @@ function clipboardCopy(text) {
   // Use the Async Clipboard API when available. Requires a secure browsing
   // context (i.e. HTTPS)
   if (navigator.clipboard) {
-    return navigator.clipboard.writeText(text).catch(function(err) {
+    return navigator.clipboard.writeText(text).catch(function (err) {
       throw err !== undefined
         ? err
         : new DOMException("The request is not allowed", "NotAllowedError");
@@ -63,13 +63,13 @@ export default {
   name: "copy-codeblocks",
 
   initialize(container) {
-    withPluginApi("0.8.7", api => {
+    withPluginApi("0.8.7", (api) => {
       function _cleanUp() {
-        Object.values(_copyCodeblocksClickHandlers || {}).forEach(handler =>
+        Object.values(_copyCodeblocksClickHandlers || {}).forEach((handler) =>
           handler.removeEventListener("click", _handleClick)
         );
 
-        Object.values(_fadeCopyCodeblocksRunners || {}).forEach(runner =>
+        Object.values(_fadeCopyCodeblocksRunners || {}).forEach((runner) =>
           cancel(runner)
         );
 
@@ -135,7 +135,7 @@ export default {
 
         const postElement = postElements[0];
 
-        commands.forEach(command => {
+        commands.forEach((command) => {
           const button = document.createElement("button");
           button.classList.add("btn", "nohighlight", "copy-cmd");
           button.innerHTML = iconHTML("copy");
@@ -158,10 +158,10 @@ export default {
 
       api.decorateCooked(_attachCommands, {
         onlyStream: true,
-        id: "copy-codeblocks"
+        id: "copy-codeblocks",
       });
 
       api.cleanupStream(_cleanUp);
     });
-  }
+  },
 };

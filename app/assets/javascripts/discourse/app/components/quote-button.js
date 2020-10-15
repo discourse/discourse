@@ -5,17 +5,26 @@ import toMarkdown from "discourse/lib/to-markdown";
 import {
   selectedText,
   selectedElement,
-  postUrl
+  postUrl,
 } from "discourse/lib/utilities";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import Sharing from "discourse/lib/sharing";
+import { alias } from "@ember/object/computed";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
-  if (!titleEl) return;
+  if (!titleEl) {
+    return;
+  }
+
+  const titleLink = titleEl.querySelector("a:not(.back)");
+  if (titleLink) {
+    return titleLink.textContent.trim();
+  }
+
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 
@@ -23,6 +32,7 @@ export default Component.extend({
   classNames: ["quote-button"],
   classNameBindings: ["visible"],
   visible: false,
+  privateCategory: alias("topic.category.read_restricted"),
 
   _isMouseDown: false,
   _reselected: false,
@@ -75,7 +85,7 @@ export default Component.extend({
     const postBody = toMarkdown(cooked.innerHTML);
 
     let opts = {
-      full: _selectedText === postBody
+      full: _selectedText === postBody,
     };
 
     for (
@@ -179,7 +189,7 @@ export default Component.extend({
     );
 
     $(document)
-      .on("mousedown.quote-button", e => {
+      .on("mousedown.quote-button", (e) => {
         this._prevSelection = null;
         this._isMouseDown = true;
         this._reselected = false;
@@ -209,14 +219,16 @@ export default Component.extend({
       .off("selectionchange.quote-button");
   },
 
-  @discourseComputed
-  quoteSharingEnabled() {
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
+  quoteSharingEnabled(topic) {
     if (
       this.site.mobileView ||
       this.siteSettings.share_quote_visibility === "none" ||
-      this.quoteSharingSources.length === 0 ||
       (this.currentUser &&
-        this.siteSettings.share_quote_visibility === "anonymous")
+        this.siteSettings.share_quote_visibility === "anonymous") ||
+      this.quoteSharingSources.length === 0 ||
+      this.privateCategory ||
+      (this.currentUser && topic.invisible)
     ) {
       return false;
     }
@@ -232,7 +244,7 @@ export default Component.extend({
     );
   },
 
-  @discourseComputed
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
   quoteSharingShowLabel() {
     return this.quoteSharingSources.length > 1;
   },
@@ -261,7 +273,7 @@ export default Component.extend({
     Sharing.shareSource(source, {
       url: this.shareUrl,
       title: this.topic.title,
-      quote: window.getSelection().toString()
+      quote: window.getSelection().toString(),
     });
-  }
+  },
 });

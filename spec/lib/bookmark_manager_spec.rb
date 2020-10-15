@@ -21,6 +21,16 @@ RSpec.describe BookmarkManager do
       expect(bookmark.topic_id).to eq(post.topic_id)
     end
 
+    it "when topic is deleted it raises invalid access from guardian check" do
+      post.topic.trash!
+      expect { subject.create(post_id: post.id, name: name) }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "when post is deleted it raises invalid access from guardian check" do
+      post.trash!
+      expect { subject.create(post_id: post.id, name: name) }.to raise_error(Discourse::InvalidAccess)
+    end
+
     it "updates the topic user bookmarked column to true if any post is bookmarked" do
       subject.create(post_id: post.id, name: name, reminder_type: reminder_type, reminder_at: reminder_at)
       tu = TopicUser.find_by(user: user)
@@ -43,24 +53,13 @@ RSpec.describe BookmarkManager do
     end
 
     context "when options are provided" do
-      let(:options) { { delete_when_reminder_sent: true } }
+      let(:options) { { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] } }
 
       it "saves any additional options successfully" do
         subject.create(post_id: post.id, name: name, options: options)
         bookmark = Bookmark.find_by(user: user)
 
-        expect(bookmark.delete_when_reminder_sent).to eq(true)
-      end
-    end
-
-    context "when options are provided with null values" do
-      let(:options) { { delete_when_reminder_sent: nil } }
-
-      it "saves defaults successfully" do
-        subject.create(post_id: post.id, name: name, options: options)
-        bookmark = Bookmark.find_by(user: user)
-
-        expect(bookmark.delete_when_reminder_sent).to eq(false)
+        expect(bookmark.auto_delete_preference).to eq(1)
       end
     end
 
@@ -192,12 +191,12 @@ RSpec.describe BookmarkManager do
     end
 
     context "when options are provided" do
-      let(:options) { { delete_when_reminder_sent: true } }
+      let(:options) { { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent] } }
 
       it "saves any additional options successfully" do
         update_bookmark
         bookmark.reload
-        expect(bookmark.delete_when_reminder_sent).to eq(true)
+        expect(bookmark.auto_delete_preference).to eq(1)
       end
     end
 

@@ -14,7 +14,7 @@ try {
   safeLocalStorage = null;
 }
 
-const KeyValueStore = function(ctx) {
+const KeyValueStore = function (ctx) {
   this.context = ctx;
 };
 
@@ -81,13 +81,13 @@ KeyValueStore.prototype = {
     try {
       return JSON.parse(safeLocalStorage[this.context + key]);
     } catch (e) {}
-  }
+  },
 };
 
 // API compatibility with `localStorage`
 KeyValueStore.prototype.getItem = KeyValueStore.prototype.get;
 KeyValueStore.prototype.removeItem = KeyValueStore.prototype.remove;
-KeyValueStore.prototype.setItem = function(key, value) {
+KeyValueStore.prototype.setItem = function (key, value) {
   this.set({ key, value });
 };
 

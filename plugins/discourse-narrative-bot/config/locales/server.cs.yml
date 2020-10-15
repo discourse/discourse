@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 cs:
   site_settings:
@@ -48,56 +47,57 @@ cs:
         > :game_die: %{results}
     quote:
       trigger: "citace"
-      '1':
+      "1":
         quote: "Uprostřed každé těžkosti leží příležitost"
         author: "Albert Einstein"
-      '2':
+      "2":
         quote: "Nemá cenu mít svobodu, pokud nemáte svobodu dělat chyby."
         author: "Mahatma Gandhi"
-      '3':
+      "3":
         quote: "Neplačte proto, že je po všem, radujte se, protože se to stalo."
         author: "Dr Seuss"
-      '4':
+      "4":
         quote: "Pokud chcete udělat nějakou správnou věc, tak ji udělejte sami."
         author: "Charles-Guillaume Étienne"
-      '5':
+      "5":
         quote: "Věř tomu, že na to máš, a budeš na půli cesty k úspěchu."
         author: "Theodore Roosevelt"
-      '6':
+      "6":
         quote: "Život je jako bonboniéra, nikdy nevíš, co ochutnáš."
         author: "Máma Forresta Gumpa"
-      '7':
+      "7":
         quote: "Je to malý krůček pro člověka, ale velký skok pro lidstvo."
         author: "Neil Armstrong"
-      '8':
+      "8":
         author: "Eleanor Roosevelt"
-      '9':
+      "9":
         author: "Bruce Lee"
-      '10':
+      "10":
         author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       answers:
-        '1': "To je jisté"
-        '2': "Naprostá pravda"
-        '3': "Bez zaváhání"
-        '4': "Rozhodně ano"
-        '5': "Na to se můžeš spolehnout"
-        '6': "Podle mě ano"
-        '7': "Asi jo"
-        '8': "Vypadá to dobře"
-        '9': "Ano"
-        '10': "Dle znamení ano"
-        '12': "Zeptej se později"
-        '13': "To ti teď raději neřeknu"
-        '14': "To nyní nedokážu předpovědět"
-        '15': "Soustřeď se a zeptej se znovu"
-        '16': "S tím nepočítej"
-        '17': "Moje odpověď zní ne"
-        '18': "Dle mých zdrojů ne"
-        '19': "To nevypadá dobře"
-        '20': "To sotva"
+        "1": "To je jisté"
+        "2": "Naprostá pravda"
+        "3": "Bez zaváhání"
+        "4": "Rozhodně ano"
+        "5": "Na to se můžeš spolehnout"
+        "6": "Podle mě ano"
+        "7": "Asi jo"
+        "8": "Vypadá to dobře"
+        "9": "Ano"
+        "10": "Dle znamení ano"
+        "11": "Reply hazy, try again"
+        "12": "Zeptej se později"
+        "13": "To ti teď raději neřeknu"
+        "14": "To nyní nedokážu předpovědět"
+        "15": "Soustřeď se a zeptej se znovu"
+        "16": "S tím nepočítej"
+        "17": "Moje odpověď zní ne"
+        "18": "Dle mých zdrojů ne"
+        "19": "To nevypadá dobře"
+        "20": "To sotva"
       result: |-
         > :crystal_ball: %{result}
     track_selector:

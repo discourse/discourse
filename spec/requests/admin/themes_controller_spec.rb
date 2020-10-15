@@ -100,17 +100,17 @@ describe Admin::ThemesController do
       file_from_fixtures("logo.png")
     end
 
-    context 'when theme whitelist mode is enabled' do
+    context 'when theme allowlist mode is enabled' do
       before do
-        GlobalSetting.reset_whitelisted_theme_ids!
-        global_setting :whitelisted_theme_repos, "https://github.com/discourse/discourse-brand-header"
+        GlobalSetting.reset_allowed_theme_ids!
+        global_setting :allowed_theme_repos, "https://github.com/discourse/discourse-brand-header"
       end
 
       after do
-        GlobalSetting.reset_whitelisted_theme_ids!
+        GlobalSetting.reset_allowed_theme_ids!
       end
 
-      it "allows whitelisted imports" do
+      it "allows allowlisted imports" do
         RemoteTheme.stubs(:import_theme)
         post "/admin/themes/import.json", params: {
           remote: '    https://github.com/discourse/discourse-brand-header       '
@@ -252,7 +252,7 @@ describe Admin::ThemesController do
 
       json = response.parsed_body
 
-      expect(json["extras"]["color_schemes"].length).to eq(2)
+      expect(json["extras"]["color_schemes"].length).to eq(1)
       theme_json = json["themes"].find { |t| t["id"] == theme.id }
       expect(theme_json["theme_fields"].length).to eq(2)
       expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
@@ -308,14 +308,14 @@ describe Admin::ThemesController do
       expect(SiteSetting.default_theme_id).to eq(-1)
     end
 
-    context 'when theme whitelist mode is enabled' do
+    context 'when theme allowlist mode is enabled' do
       before do
-        GlobalSetting.reset_whitelisted_theme_ids!
-        global_setting :whitelisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+        GlobalSetting.reset_allowed_theme_ids!
+        global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
       end
 
       after do
-        GlobalSetting.reset_whitelisted_theme_ids!
+        GlobalSetting.reset_allowed_theme_ids!
       end
 
       it 'unconditionally bans theme_fields from updating' do

@@ -2,10 +2,7 @@ import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
-import { isRTL } from "discourse/lib/text-direction";
-import { censor } from "pretty-text/censored-words";
-import { emojiUnescape } from "discourse/lib/text";
-import Site from "discourse/models/site";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
 import { computed } from "@ember/object";
@@ -14,6 +11,12 @@ import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+
+export const AUTO_DELETE_PREFERENCES = {
+  NEVER: 0,
+  WHEN_REMINDER_SENT: 1,
+  ON_OWNER_REPLY: 2,
+};
 
 const Bookmark = RestModel.extend({
   newBookmark: none("id"),
@@ -24,10 +27,12 @@ const Bookmark = RestModel.extend({
   },
 
   destroy() {
-    if (this.newBookmark) return Promise.resolve();
+    if (this.newBookmark) {
+      return Promise.resolve();
+    }
 
     return ajax(this.url, {
-      type: "DELETE"
+      type: "DELETE",
     });
   },
 
@@ -66,22 +71,13 @@ const Bookmark = RestModel.extend({
       FIRST_POST: firstPost,
       CREATED_AT: createdAtDate,
       LAST_POST: lastPost,
-      BUMPED_AT: bumpedAtDate
+      BUMPED_AT: bumpedAtDate,
     });
   },
 
   @discourseComputed("title")
   fancyTitle(title) {
-    let fancyTitle = censor(
-      emojiUnescape(title) || "",
-      Site.currentProp("censored_regexp")
-    );
-
-    if (this.siteSettings.support_mixed_text_direction) {
-      const titleDir = isRTL(title) ? "rtl" : "ltr";
-      return `<span dir="${titleDir}">${fancyTitle}</span>`;
-    }
-    return fancyTitle;
+    return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
   },
 
   @discourseComputed("created_at")
@@ -98,7 +94,7 @@ const Bookmark = RestModel.extend({
     const title = this.title;
     const newTags = [];
 
-    tags.forEach(function(tag) {
+    tags.forEach(function (tag) {
       if (title.toLowerCase().indexOf(tag) === -1) {
         newTags.push(tag);
       }
@@ -163,17 +159,17 @@ const Bookmark = RestModel.extend({
     return User.create({
       username: post_user_username,
       avatar_template: avatarTemplate,
-      name: name
+      name: name,
     });
-  }
+  },
 });
 
 Bookmark.reopenClass({
   create(args) {
     args = args || {};
-    args.currentUser = args.currentUser || Discourse.currentUser;
+    args.currentUser = args.currentUser || User.current();
     return this._super(args);
-  }
+  },
 });
 
 export default Bookmark;

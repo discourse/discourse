@@ -19,7 +19,7 @@ export default ComboBoxComponent.extend({
     allowSubCategories: true,
     permissionType: PermissionType.FULL,
     excludeCategoryId: null,
-    scopedCategoryId: null
+    scopedCategoryId: null,
   },
 
   modifyComponentForRow() {
@@ -57,7 +57,7 @@ export default ComboBoxComponent.extend({
           link: false,
           hideParent: category ? !!category.parent_category_id : true,
           allowUncategorized: true,
-          recursive: true
+          recursive: true,
         }).htmlSafe()
       );
     }
@@ -67,8 +67,8 @@ export default ComboBoxComponent.extend({
 
   search(filter) {
     if (filter) {
-      filter = filter.toLowerCase();
-      return this.content.filter(item => {
+      filter = this._normalize(filter);
+      return this.content.filter((item) => {
         const category = Category.findById(this.getValue(item));
         const categoryName = this.getName(item);
 
@@ -90,7 +90,7 @@ export default ComboBoxComponent.extend({
   content: computed(
     "selectKit.filter",
     "selectKit.options.scopedCategoryId",
-    function() {
+    function () {
       if (!this.selectKit.filter && this.selectKit.options.scopedCategoryId) {
         return this.categoriesByScope(this.selectKit.options.scopedCategoryId);
       } else {
@@ -111,7 +111,7 @@ export default ComboBoxComponent.extend({
 
     const excludeCategoryId = this.selectKit.options.excludeCategoryId;
 
-    return categories.filter(category => {
+    return categories.filter((category) => {
       const categoryId = this.getValue(category);
 
       if (
@@ -138,7 +138,7 @@ export default ComboBoxComponent.extend({
       }
 
       const permissionType = this.selectKit.options.permissionType;
-      if (permissionType) {
+      if (permissionType && !this.allowRestrictedCategories) {
         return permissionType === category.permission;
       }
 
@@ -148,5 +148,5 @@ export default ComboBoxComponent.extend({
 
   _matchCategory(filter, categoryName) {
     return this._normalize(categoryName).indexOf(filter) > -1;
-  }
+  },
 });

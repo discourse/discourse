@@ -9,14 +9,17 @@ import { later } from "@ember/runloop";
 
 export default Component.extend({
   tagName: null,
-
   type: alias("panel.model.type"),
-
   topic: alias("panel.model.topic"),
+  privateCategory: alias("panel.model.topic.category.read_restricted"),
 
-  @discourseComputed("topic.isPrivateMessage")
-  sources(isPM) {
-    const privateContext = this.siteSettings.login_required || isPM;
+  @discourseComputed("topic.{isPrivateMessage,invisible,category}")
+  sources(topic) {
+    const privateContext =
+      this.siteSettings.login_required ||
+      (topic && topic.isPrivateMessage) ||
+      (topic && topic.invisible) ||
+      this.privateCategory;
     return Sharing.activeSources(this.siteSettings.share_links, privateContext);
   },
 
@@ -59,8 +62,8 @@ export default Component.extend({
     share(source) {
       Sharing.shareSource(source, {
         url: this.shareUrl,
-        title: this.get("topic.title")
+        title: this.get("topic.title"),
       });
-    }
-  }
+    },
+  },
 });

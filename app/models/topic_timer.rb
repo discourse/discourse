@@ -126,8 +126,7 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def schedule_auto_open_job(time)
-    return unless topic
-    topic.update_status('closed', true, user) if !topic.closed
+    topic.update_status('closed', true, user) if topic && !topic.closed
 
     Jobs.enqueue_at(time, :toggle_topic_closed,
       topic_timer_id: id,
@@ -136,8 +135,7 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def schedule_auto_close_job(time)
-    return unless topic
-    topic.update_status('closed', false, user) if topic.closed
+    topic.update_status('closed', false, user) if topic&.closed
 
     Jobs.enqueue_at(time, :toggle_topic_closed,
       topic_timer_id: id,
@@ -158,7 +156,7 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def schedule_auto_reminder_job(time)
-    Jobs.enqueue_at(time, :topic_reminder, topic_timer_id: id)
+    # noop, TODO(martin 2021-03-11): Remove this after timers migrated and outstanding jobs cancelled
   end
 end
 

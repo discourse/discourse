@@ -7,15 +7,8 @@ import {
   allowsAttachments,
   authorizedExtensions,
   authorizesAllExtensions,
-  uploadIcon
+  uploadIcon,
 } from "discourse/lib/uploads";
-
-function uploadTranslate(key, user) {
-  if (allowsAttachments(user.staff)) {
-    key += "_with_attachments";
-  }
-  return `upload_selector.${key}`;
-}
 
 export default Controller.extend(ModalFunctionality, {
   imageUrl: null,
@@ -23,25 +16,33 @@ export default Controller.extend(ModalFunctionality, {
   remote: equal("selection", "remote"),
   selection: "local",
 
+  uploadTranslate(key) {
+    if (allowsAttachments(this.currentUser.staff, this.siteSettings)) {
+      key += "_with_attachments";
+    }
+    return `upload_selector.${key}`;
+  },
+
   @discourseComputed()
   uploadIcon() {
-    return uploadIcon(this.currentUser.staff);
+    return uploadIcon(this.currentUser.staff, this.siteSettings);
   },
 
   @discourseComputed()
   title() {
-    return uploadTranslate("title", this.currentUser);
+    return this.uploadTranslate("title");
   },
 
   @discourseComputed("selection")
   tip(selection) {
     const authorized_extensions = authorizesAllExtensions(
-      this.currentUser.staff
+      this.currentUser.staff,
+      this.siteSettings
     )
       ? ""
-      : `(${authorizedExtensions(this.currentUser.staff)})`;
-    return I18n.t(uploadTranslate(`${selection}_tip`, this.currentUser), {
-      authorized_extensions
+      : `(${authorizedExtensions(this.currentUser.staff, this.siteSettings)})`;
+    return I18n.t(this.uploadTranslate(`${selection}_tip`), {
+      authorized_extensions,
     });
   },
 
@@ -49,19 +50,19 @@ export default Controller.extend(ModalFunctionality, {
     upload() {
       if (this.local) {
         $(".wmd-controls").fileupload("add", {
-          fileInput: $("#filename-input")
+          fileInput: $("#filename-input"),
         });
       } else {
         const imageUrl = this.imageUrl || "";
         const toolbarEvent = this.toolbarEvent;
 
-        if (imageUrl.match(/\.(jpg|jpeg|png|gif)$/)) {
+        if (imageUrl.match(/\.(jpg|jpeg|png|gif|heic|heif)$/)) {
           toolbarEvent.addText(`![](${imageUrl})`);
         } else {
           toolbarEvent.addText(imageUrl);
         }
       }
       this.send("closeModal");
-    }
-  }
+    },
+  },
 });

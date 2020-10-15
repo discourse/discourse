@@ -1,13 +1,12 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ar:
   js:
     discourse_narrative_bot:
       welcome_post_type:
-        new_user_track: "ابدأ برنامج تعليم الأعضاء الجدد لكل الأعضاء الجدد !"
-        welcome_message: "أرسل إلى كلّ الاعضاء الجدد رسالة ترحيبيّة فيها دليل البدء سريع"
+        new_user_track: "ابدأ البرنامج التعليمي للمستخدمين الجدد، لكلّ المستخدمين الجدد"
+        welcome_message: "أرسِل رسالة ترحيبيّة فيها دليل بدء سريع إلى كلّ المستخدمين الجدد"

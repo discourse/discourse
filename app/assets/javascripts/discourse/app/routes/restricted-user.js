@@ -6,5 +6,5 @@ export default DiscourseRoute.extend({
     if (!this.modelFor("user").get("can_edit")) {
       this.replaceWith("userActivity");
     }
-  }
+  },
 });

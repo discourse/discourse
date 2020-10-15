@@ -14,7 +14,7 @@ export default class WhiteLister {
     this._cache = null;
 
     if (options && options.features) {
-      Object.keys(options.features).forEach(f => {
+      Object.keys(options.features).forEach((f) => {
         if (options.features[f]) {
           this._enabled[f] = true;
         }
@@ -42,7 +42,9 @@ export default class WhiteLister {
     const custom = [];
 
     this._rawFeatures.forEach(([name, info]) => {
-      if (!this._enabled[name]) return;
+      if (!this._enabled[name]) {
+        return;
+      }
 
       if (info.custom) {
         custom.push(info.custom);
@@ -53,7 +55,7 @@ export default class WhiteLister {
         info = [info];
       }
 
-      (info || []).forEach(tag => {
+      (info || []).forEach((tag) => {
         const classes = tag.split(".");
         const tagWithAttr = classes.shift();
 
@@ -108,7 +110,7 @@ export default class WhiteLister {
   }
 }
 
-// Only add to `default` when you always want your whitelist to occur. In other words,
+// Only add to `default` when you always want your allowlist to occur. In other words,
 // don't change this for a plugin or a feature that can be disabled
 export const DEFAULT_LIST = [
   "a.attachment",
@@ -178,6 +180,7 @@ export const DEFAULT_LIST = [
   "ol[start]",
   "p",
   "p[lang]",
+  "picture",
   "pre",
   "s",
   "small",
@@ -191,8 +194,9 @@ export const DEFAULT_LIST = [
   "strong",
   "sub",
   "sup",
-  "source[src]",
   "source[data-orig-src]",
+  "source[src]",
+  "source[srcset]",
   "source[type]",
   "track",
   "track[default]",
@@ -209,6 +213,7 @@ export const DEFAULT_LIST = [
   "video[height]",
   "video[loop]",
   "video[muted]",
+  "video[playsinline]",
   "video[poster]",
   "video[preload]",
   "video[width]",
@@ -218,5 +223,5 @@ export const DEFAULT_LIST = [
   "rb[lang]",
   "rp",
   "rt",
-  "rt[lang]"
+  "rt[lang]",
 ];

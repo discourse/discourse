@@ -16,7 +16,7 @@ function extractByKey(collection, klass) {
     return retval;
   }
 
-  collection.forEach(function(item) {
+  collection.forEach(function (item) {
     retval[item.id] = klass.create(item);
   });
   return retval;
@@ -46,17 +46,17 @@ const TopicList = RestModel.extend({
   forEachNew(topics, callback) {
     const topicIds = [];
 
-    this.topics.forEach(topic => (topicIds[topic.id] = true));
+    this.topics.forEach((topic) => (topicIds[topic.id] = true));
 
-    topics.forEach(topic => {
+    topics.forEach((topic) => {
       if (!topicIds[topic.id]) {
         callback(topic);
       }
     });
   },
 
-  refreshSort(order, ascending) {
-    let params = this.params || {};
+  updateSortParams(order, ascending) {
+    let params = Object.assign({}, this.params || {});
 
     if (params.q) {
       // search is unique, nothing else allowed with it
@@ -91,21 +91,21 @@ const TopicList = RestModel.extend({
 
       this.set("loadingMore", true);
 
-      return ajax({ url: moreUrl }).then(result => {
+      return ajax({ url: moreUrl }).then((result) => {
         let topicsAdded = 0;
 
         if (result) {
           // the new topics loaded from the server
           const newTopics = TopicList.topicsFrom(this.store, result);
 
-          this.forEachNew(newTopics, t => {
+          this.forEachNew(newTopics, (t) => {
             t.set("highlight", topicsAdded++ === 0);
             this.topics.pushObject(t);
           });
 
           this.setProperties({
             loadingMore: false,
-            more_topics_url: result.topic_list.more_topics_url
+            more_topics_url: result.topic_list.more_topics_url,
           });
 
           Session.currentProp("topicList", this);
@@ -122,30 +122,34 @@ const TopicList = RestModel.extend({
   loadBefore(topic_ids, storeInSession) {
     // refresh dupes
     this.topics.removeObjects(
-      this.topics.filter(topic => topic_ids.indexOf(topic.id) >= 0)
+      this.topics.filter((topic) => topic_ids.indexOf(topic.id) >= 0)
     );
 
     const url = `${getURL("/")}${this.filter}.json?topic_ids=${topic_ids.join(
       ","
     )}`;
 
-    return ajax({ url, data: this.params }).then(result => {
+    return ajax({ url, data: this.params }).then((result) => {
       let i = 0;
-      this.forEachNew(TopicList.topicsFrom(this.store, result), t => {
+      this.forEachNew(TopicList.topicsFrom(this.store, result), (t) => {
         // highlight the first of the new topics so we can get a visual feedback
         t.set("highlight", true);
         this.topics.insertAt(i, t);
         i++;
       });
 
-      if (storeInSession) Session.currentProp("topicList", this);
+      if (storeInSession) {
+        Session.currentProp("topicList", this);
+      }
     });
-  }
+  },
 });
 
 TopicList.reopenClass({
   topicsFrom(store, result, opts) {
-    if (!result) return;
+    if (!result) {
+      return;
+    }
 
     opts = opts || {};
     let listKey = opts.listKey || "topics";
@@ -156,9 +160,9 @@ TopicList.reopenClass({
       users = extractByKey(result.users, User),
       groups = extractByKey(result.primary_groups, EmberObject);
 
-    return result.topic_list[listKey].map(t => {
+    return result.topic_list[listKey].map((t) => {
       t.category = categories.findBy("id", t.category_id);
-      t.posters.forEach(p => {
+      t.posters.forEach((p) => {
         p.user = users[p.user_id];
         p.extraClasses = p.extras;
         if (p.primary_group_id) {
@@ -172,7 +176,7 @@ TopicList.reopenClass({
       });
 
       if (t.participants) {
-        t.participants.forEach(p => (p.user = users[p.user_id]));
+        t.participants.forEach((p) => (p.user = users[p.user_id]));
       }
 
       return store.createRecord("topic", t);
@@ -193,7 +197,7 @@ TopicList.reopenClass({
 
     if (json.topic_list.shared_drafts) {
       json.sharedDrafts = this.topicsFrom(store, json, {
-        listKey: "shared_drafts"
+        listKey: "shared_drafts",
       });
     }
 
@@ -208,7 +212,7 @@ TopicList.reopenClass({
   // hide the category when it has no children
   hideUniformCategory(list, category) {
     list.set("hideCategory", !displayCategoryInList(list.site, category));
-  }
+  },
 });
 
 export default TopicList;

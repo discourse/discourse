@@ -1,5 +1,6 @@
-import { bind } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -27,8 +28,7 @@ export default class {
     // Create an interval timer if we don't have one.
     if (!this._interval) {
       this._interval = setInterval(() => this.tick(), 1000);
-      this._boundScrolled = bind(this, this.scrolled);
-      $(window).on("scroll.screentrack", this._boundScrolled);
+      $(window).on("scroll.screentrack", this.scrolled);
     }
 
     this._topicId = topicId;
@@ -41,9 +41,7 @@ export default class {
       return;
     }
 
-    if (this._boundScrolled) {
-      $(window).off("scroll.screentrack", this._boundScrolled);
-    }
+    $(window).off("scroll.screentrack", this.scrolled);
 
     this.tick();
     this.flush();
@@ -78,6 +76,7 @@ export default class {
     this._inProgress = false;
   }
 
+  @bind
   scrolled() {
     this._lastScrolled = Date.now();
   }
@@ -91,7 +90,7 @@ export default class {
     const totalTimings = this._totalTimings;
 
     const timings = this._timings;
-    Object.keys(this._timings).forEach(postNumber => {
+    Object.keys(this._timings).forEach((postNumber) => {
       const time = timings[postNumber];
       totalTimings[postNumber] = totalTimings[postNumber] || 0;
 
@@ -128,7 +127,7 @@ export default class {
       ] = 1;
     }
 
-    Object.keys(newTimings).forEach(postNumber => {
+    Object.keys(newTimings).forEach((postNumber) => {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
 
@@ -140,37 +139,38 @@ export default class {
     this.topicTrackingState.updateSeen(topicId, highestSeen);
 
     if (!$.isEmptyObject(newTimings)) {
-      if (this.currentUser) {
+      if (this.currentUser && !isTesting()) {
         this._inProgress = true;
 
         ajax("/topics/timings", {
           data: {
             timings: newTimings,
             topic_time: this._topicTime,
-            topic_id: topicId
+            topic_id: topicId,
           },
           cache: false,
           type: "POST",
           headers: {
-            "X-SILENCE-LOGGER": "true"
-          }
+            "X-SILENCE-LOGGER": "true",
+          },
         })
           .then(() => {
             const topicController = this._topicController;
             if (topicController) {
-              const postNumbers = Object.keys(newTimings).map(v =>
+              const postNumbers = Object.keys(newTimings).map((v) =>
                 parseInt(v, 10)
               );
               topicController.readPosts(topicId, postNumbers);
             }
           })
-          .catch(e => {
+          .catch((e) => {
             const error = e.jqXHR;
             if (
               error.status === 405 &&
               error.responseJSON.error_type === "read_only"
-            )
+            ) {
               return;
+            }
           })
           .finally(() => {
             this._inProgress = false;
@@ -187,7 +187,7 @@ export default class {
         // Save unique topic IDs up to a max
         let topicIds = storage.get("anon-topic-ids");
         if (topicIds) {
-          topicIds = topicIds.split(",").map(e => parseInt(e, 10));
+          topicIds = topicIds.split(",").map((e) => parseInt(e, 10));
         } else {
           topicIds = [];
         }
@@ -228,7 +228,7 @@ export default class {
     const timings = this._timings;
     const nextFlush = this.siteSettings.flush_timings_secs * 1000;
 
-    const rush = Object.keys(timings).some(postNumber => {
+    const rush = Object.keys(timings).some((postNumber) => {
       return (
         timings[postNumber] > 0 &&
         !totalTimings[postNumber] &&
@@ -240,14 +240,15 @@ export default class {
       this.flush();
     }
 
-    if (Discourse.get("hasFocus")) {
+    if (this.session.hasFocus) {
       this._topicTime += diff;
 
       this._onscreen.forEach(
-        postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
+        (postNumber) =>
+          (timings[postNumber] = (timings[postNumber] || 0) + diff)
       );
 
-      this._readOnscreen.forEach(postNumber => {
+      this._readOnscreen.forEach((postNumber) => {
         this._readPosts[postNumber] = true;
       });
     }

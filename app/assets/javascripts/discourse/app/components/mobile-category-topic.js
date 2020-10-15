@@ -6,7 +6,7 @@ export default Component.extend({
   classNameBindings: [
     ":category-topic-link",
     "topic.archived",
-    "topic.visited"
+    "topic.visited",
   ],
-  click: showEntrance
+  click: showEntrance,
 });

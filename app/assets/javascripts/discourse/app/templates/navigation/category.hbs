@@ -12,6 +12,8 @@
         <p>{{dir-span category.description}}</p>
       {{/if}}
     {{/if}}
+
+    {{plugin-outlet name="category-heading" args=(hash category=category)}}
   </section>
 
   <div class="category-navigation">

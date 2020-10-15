@@ -9,6 +9,7 @@ import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
 import PreloadStore from "discourse/lib/preload-store";
 import deprecated from "discourse-common/lib/deprecated";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const Site = RestModel.extend({
   isReadOnly: alias("is_readonly"),
@@ -23,7 +24,7 @@ const Site = RestModel.extend({
   notificationLookup(notificationTypes) {
     const result = [];
     Object.keys(notificationTypes).forEach(
-      k => (result[notificationTypes[k]] = k)
+      (k) => (result[notificationTypes[k]] = k)
     );
     return result;
   },
@@ -31,7 +32,9 @@ const Site = RestModel.extend({
   @discourseComputed("post_action_types.[]")
   flagTypes() {
     const postActionTypes = this.post_action_types;
-    if (!postActionTypes) return [];
+    if (!postActionTypes) {
+      return [];
+    }
     return postActionTypes.filterBy("is_flag", true);
   },
 
@@ -43,7 +46,7 @@ const Site = RestModel.extend({
     let siteFields = this.user_fields;
 
     if (!isEmpty(siteFields)) {
-      return siteFields.map(f => {
+      return siteFields.map((f) => {
         let value = fields ? fields[f.id.toString()] : null;
         value = value || "&mdash;".htmlSafe();
         return { name: f.name, value };
@@ -58,7 +61,7 @@ const Site = RestModel.extend({
     const result = [],
       remaining = {};
 
-    cats.forEach(c => {
+    cats.forEach((c) => {
       const parentCategoryId = parseInt(c.get("parent_category_id"), 10);
       if (!parentCategoryId) {
         result.pushObject(c);
@@ -68,7 +71,7 @@ const Site = RestModel.extend({
       }
     });
 
-    Object.keys(remaining).forEach(parentCategoryId => {
+    Object.keys(remaining).forEach((parentCategoryId) => {
       const category = result.findBy("id", parseInt(parentCategoryId, 10)),
         index = result.indexOf(category);
 
@@ -125,13 +128,13 @@ const Site = RestModel.extend({
       this.categoriesById[categoryId] = newCategory;
       return newCategory;
     }
-  }
+  },
 });
 
 Site.reopenClass(Singleton, {
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    const store = Discourse.__container__.lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
     return store.createRecord("site", siteAttributes);
@@ -145,7 +148,7 @@ Site.reopenClass(Singleton, {
       let subcatMap = {};
 
       result.categoriesById = {};
-      result.categories = result.categories.map(c => {
+      result.categories = result.categories.map((c) => {
         if (c.parent_category_id) {
           subcatMap[c.parent_category_id] =
             subcatMap[c.parent_category_id] || [];
@@ -158,12 +161,12 @@ Site.reopenClass(Singleton, {
       });
 
       // Associate the categories with their parents
-      result.categories.forEach(c => {
+      result.categories.forEach((c) => {
         let subcategoryIds = subcatMap[c.get("id")];
         if (subcategoryIds) {
           c.set(
             "subcategories",
-            subcategoryIds.map(id => result.categoriesById[id])
+            subcategoryIds.map((id) => result.categoriesById[id])
           );
         }
         if (c.get("parent_category_id")) {
@@ -176,13 +179,15 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.trust_levels) {
-      result.trustLevels = result.trust_levels.map(tl => TrustLevel.create(tl));
+      result.trustLevels = result.trust_levels.map((tl) =>
+        TrustLevel.create(tl)
+      );
       delete result.trust_levels;
     }
 
     if (result.post_action_types) {
       result.postActionByIdLookup = EmberObject.create();
-      result.post_action_types = result.post_action_types.map(p => {
+      result.post_action_types = result.post_action_types.map((p) => {
         const actionType = PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
         return actionType;
@@ -191,7 +196,7 @@ Site.reopenClass(Singleton, {
 
     if (result.topic_flag_types) {
       result.topicFlagByIdLookup = EmberObject.create();
-      result.topic_flag_types = result.topic_flag_types.map(p => {
+      result.topic_flag_types = result.topic_flag_types.map((p) => {
         const actionType = PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
         return actionType;
@@ -199,18 +204,20 @@ Site.reopenClass(Singleton, {
     }
 
     if (result.archetypes) {
-      result.archetypes = result.archetypes.map(a => {
+      result.archetypes = result.archetypes.map((a) => {
         a.site = result;
         return Archetype.create(a);
       });
     }
 
     if (result.user_fields) {
-      result.user_fields = result.user_fields.map(uf => EmberObject.create(uf));
+      result.user_fields = result.user_fields.map((uf) =>
+        EmberObject.create(uf)
+      );
     }
 
     return result;
-  }
+  },
 });
 
 if (typeof Discourse !== "undefined") {
@@ -220,12 +227,12 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
-          dropFrom: "2.6.0"
+          dropFrom: "2.6.0",
         });
         warned = true;
       }
       return Site;
-    }
+    },
   });
 }
 

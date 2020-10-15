@@ -3,10 +3,11 @@ import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
+import layout from "select-kit/templates/components/multi-select";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
-  layoutName: "select-kit/templates/components/multi-select",
+  layout,
   classNames: ["multi-select"],
   multiSelect: true,
 
@@ -19,12 +20,12 @@ export default SelectKitComponent.extend({
     closeOnChange: false,
     autoInsertNoneItem: false,
     headerComponent: "multi-select/multi-select-header",
-    filterComponent: "multi-select/multi-select-filter"
+    filterComponent: "multi-select/multi-select-filter",
   },
 
   search(filter) {
     return this._super(filter).filter(
-      content => !makeArray(this.selectedContent).includes(content)
+      (content) => !makeArray(this.selectedContent).includes(content)
     );
   },
 
@@ -32,7 +33,7 @@ export default SelectKitComponent.extend({
     this.clearErrors();
 
     const newContent = this.selectedContent.filter(
-      content => this.getValue(item) !== this.getValue(content)
+      (content) => this.getValue(item) !== this.getValue(content)
     );
 
     this.selectKit.change(
@@ -80,15 +81,15 @@ export default SelectKitComponent.extend({
     }
   },
 
-  selectedContent: computed("value.[]", "content.[]", function() {
-    const value = makeArray(this.value).map(v =>
+  selectedContent: computed("value.[]", "content.[]", function () {
+    const value = makeArray(this.value).map((v) =>
       this.selectKit.options.castInteger && this._isNumeric(v) ? Number(v) : v
     );
 
     if (value.length) {
       let content = [];
 
-      value.forEach(v => {
+      value.forEach((v) => {
         if (this.selectKit.valueProperty) {
           const c = makeArray(this.content).findBy(
             this.selectKit.valueProperty,
@@ -135,7 +136,7 @@ export default SelectKitComponent.extend({
       const selected = this.element.querySelectorAll(
         ".select-kit-header .choice.select-kit-selected-name"
       );
-      selected.forEach(s => s.classList.remove("is-highlighted"));
+      selected.forEach((s) => s.classList.remove("is-highlighted"));
     }
 
     return true;
@@ -152,11 +153,11 @@ export default SelectKitComponent.extend({
       deprecated(
         "The `values` property is deprecated for multi-select. Use `value` instead",
         {
-          since: "v2.4.0"
+          since: "v2.4.0",
         }
       );
 
       this.set("value", this.values);
     }
-  }
+  },
 });

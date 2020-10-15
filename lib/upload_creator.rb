@@ -6,11 +6,14 @@ class UploadCreator
 
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 
-  WHITELISTED_SVG_ELEMENTS ||= %w{
+  ALLOWED_SVG_ELEMENTS ||= %w{
     circle clippath defs ellipse feGaussianBlur filter g line linearGradient
-    path polygon polyline radialGradient rect stop style svg text textpath
-    tref tspan use
+    marker path polygon polyline radialGradient rect stop style svg text
+    textpath tref tspan use
   }.each(&:freeze)
+
+  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
+  deprecate_constant 'WHITELISTED_SVG_ELEMENTS', 'UploadCreator::ALLOWED_SVG_ELEMENTS'
 
   # Available options
   #  - type (string)
@@ -39,15 +42,19 @@ class UploadCreator
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
 
-    DiscourseEvent.trigger(:before_upload_creation, @file, is_image)
-
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
+      # We need to convert HEIFs early because FastImage does not consider them as images
+      if convert_heif_to_jpeg?
+        convert_heif!
+        is_image = FileHelper.is_supported_image?("test.#{@image_info.type}")
+      end
+
       if is_image
         extract_image_info!
         return @upload if @upload.errors.present?
 
         if @image_info.type.to_s == "svg"
-          whitelist_svg!
+          clean_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if convert_png_to_jpeg?
           downsize!        if should_downsize?
@@ -124,6 +131,8 @@ class UploadCreator
       add_metadata!
       return @upload unless @upload.save
 
+      DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
+
       # store the file and update its url
       File.open(@file.path) do |f|
         url = Discourse.store.store_upload(f, @upload)
@@ -162,6 +171,8 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.empty"))
     elsif pixels == 0
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+    elsif max_image_pixels > 0 && pixels >= max_image_pixels * 2
+      @upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels * 2))
     end
   end
 
@@ -209,6 +220,28 @@ class UploadCreator
     else
       jpeg_tempfile.close!
     end
+  end
+
+  def convert_heif_to_jpeg?
+    File.extname(@filename).downcase.match?(/\.hei(f|c)$/)
+  end
+
+  def convert_heif!
+    jpeg_tempfile = Tempfile.new(["image", ".jpg"])
+    from = @file.path
+    to = jpeg_tempfile.path
+    OptimizedImage.ensure_safe_paths!(from, to)
+
+    begin
+      execute_convert(from, to)
+    rescue
+      # retry with debugging enabled
+      execute_convert(from, to, true)
+    end
+
+    @file.respond_to?(:close!) ? @file.close! : @file.close
+    @file = jpeg_tempfile
+    extract_image_info!
   end
 
   def execute_convert(from, to, debug = false)
@@ -274,9 +307,9 @@ class UploadCreator
     end
   end
 
-  def whitelist_svg!
+  def clean_svg!
     doc = Nokogiri::XML(@file)
-    doc.xpath(svg_whitelist_xpath).remove
+    doc.xpath(svg_allowlist_xpath).remove
     doc.xpath("//@*[starts-with(name(), 'on')]").remove
     doc.css('use').each do |use_el|
       if use_el.attr('href')
@@ -372,8 +405,8 @@ class UploadCreator
     @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
   end
 
-  def svg_whitelist_xpath
-    @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+  def svg_allowlist_xpath
+    @@svg_allowlist_xpath ||= "//*[#{ALLOWED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
   end
 
   def add_metadata!

@@ -32,7 +32,7 @@ export default Component.extend({
         this.setProperties({
           selection: "pick_date_and_time",
           date: datetime.format("YYYY-MM-DD"),
-          time: datetime.format("HH:mm")
+          time: datetime.format("HH:mm"),
         });
         this._updateInput();
       }
@@ -104,7 +104,9 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    if (this.label) this.set("displayLabel", I18n.t(this.label));
+    if (this.label) {
+      this.set("displayLabel", I18n.t(this.label));
+    }
   },
 
   @discourseComputed(
@@ -129,7 +131,9 @@ export default Component.extend({
     displayNumberInput,
     duration
   ) {
-    if (!statusType || willCloseImmediately) return false;
+    if (!statusType || willCloseImmediately) {
+      return false;
+    }
 
     if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && isEmpty(categoryId)) {
       return false;
@@ -164,5 +168,5 @@ export default Component.extend({
       );
       return I18n.t("topic.auto_close_immediate", { count: diff });
     }
-  }
+  },
 });

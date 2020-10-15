@@ -57,15 +57,16 @@ class PostDestroyer
     payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
     topic = @post.topic
     is_first_post = @post.is_first_post? && topic
+    has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic).exists?
 
-    if is_first_post
-      topic_view = TopicView.new(topic.id, Discourse.system_user)
-      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer) if WebHook.active_web_hooks(:topic).exists?
+    if has_topic_web_hooks
+      topic_view = TopicView.new(topic.id, Discourse.system_user, skip_staff_action: true)
+      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
     end
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
-    if @user.staff? || delete_removed_posts_after < 1
+    if @user.staff? || delete_removed_posts_after < 1 || post_is_reviewable?
       perform_delete
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
@@ -80,12 +81,12 @@ class PostDestroyer
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
       UserActionManager.topic_destroyed(topic)
       DiscourseEvent.trigger(:topic_destroyed, topic, @user)
-      WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload)
+      WebHook.enqueue_topic_hooks(:topic_destroyed, topic, topic_payload) if has_topic_web_hooks
     end
   end
 
   def recover
-    if @user.staff? && @post.deleted_at
+    if (@user.staff? || post_is_reviewable?) && @post.deleted_at
       staff_recovered
     elsif @user.staff? || @user.id == @post.user_id
       user_recovered
@@ -100,6 +101,7 @@ class PostDestroyer
       UserActionManager.topic_created(topic)
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
       StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
+      update_imap_sync(@post, false)
     end
   end
 
@@ -151,12 +153,16 @@ class PostDestroyer
       trash_user_actions
       remove_associated_replies
       remove_associated_notifications
-      if @post.topic && @post.is_first_post?
-        StaffActionLogger.new(@user).log_topic_delete_recover(@post.topic, "delete_topic", @opts.slice(:context)) if @user.id != @post.user_id
-        @post.topic.trash!(@user)
-      elsif @user.id != @post.user_id
-        StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
+
+      if @user.id != @post.user_id && !@opts[:skip_staff_log]
+        if @post.topic && @post.is_first_post?
+          StaffActionLogger.new(@user).log_topic_delete_recover(@post.topic, "delete_topic", @opts.slice(:context))
+        else
+          StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
+        end
       end
+
+      @post.topic.trash!(@user) if @post.topic && @post.is_first_post?
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
@@ -170,6 +176,7 @@ class PostDestroyer
       end
     end
 
+    update_imap_sync(@post, true) if @post.topic&.deleted_at
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients! :deleted if @post.topic
     TopicTrackingState.publish_delete(@post.topic) if @post.topic && @post.post_number == 1
@@ -212,6 +219,11 @@ class PostDestroyer
   end
 
   private
+
+  def post_is_reviewable?
+    topic = @post.topic || Topic.with_deleted.find(@post.topic_id)
+    Guardian.new(@user).can_review_topic?(topic) && Reviewable.exists?(target: @post)
+  end
 
   # we need topics to change if ever a post in them is deleted or created
   # this ensures users relying on this information can keep unread tracking
@@ -368,6 +380,13 @@ class PostDestroyer
         end
       end
     end
+  end
+
+  def update_imap_sync(post, sync)
+    return if !SiteSetting.enable_imap
+    incoming = IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id)
+    return if !incoming || !incoming.imap_uid
+    incoming.update(imap_sync: sync)
   end
 
 end

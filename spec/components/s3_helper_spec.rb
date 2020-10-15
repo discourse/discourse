@@ -6,11 +6,8 @@ require "rails_helper"
 describe "S3Helper" do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
 
-  before(:each) do
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_access_key_id = "abc"
-    SiteSetting.s3_secret_access_key = "def"
-    SiteSetting.s3_region = "us-east-1"
+  before do
+    setup_s3
 
     @lifecycle = <<~XML
       <?xml version="1.0" encoding="UTF-8"?>
@@ -41,10 +38,10 @@ describe "S3Helper" do
     stub_request(:get, "http://169.254.169.254/latest/meta-data/iam/security-credentials/").
       to_return(status: 404, body: "", headers: {})
 
-    stub_request(:get, "https://bob.s3.amazonaws.com/?lifecycle").
+    stub_request(:get, "https://bob.s3.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle").
       to_return(status: 200, body: @lifecycle, headers: {})
 
-    stub_request(:put, "https://bob.s3.amazonaws.com/?lifecycle").
+    stub_request(:put, "https://bob.s3.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle").
       with do |req|
 
       hash = Hash.from_xml(req.body.to_s)

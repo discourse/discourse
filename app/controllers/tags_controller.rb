@@ -78,12 +78,13 @@ class TagsController < ::ApplicationController
       @additional_tags = params[:additional_tag_ids].to_s.split('/').map { |t| t.force_encoding("UTF-8") }
 
       list_opts = build_topic_list_options
+      @list = nil
 
-      @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
-
-      @list.draft_key = Draft::NEW_TOPIC
-      @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-      @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
+      if filter == :top
+        @list = TopicQuery.new(current_user, list_opts).public_send("list_top_for", SiteSetting.top_page_default_timeframe.to_sym)
+      else
+        @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+      end
 
       @list.more_topics_url = construct_url_with(:next, list_opts)
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
@@ -477,7 +478,7 @@ class TagsController < ::ApplicationController
     permalink = Permalink.find_by_url(url)
 
     if permalink.present? && permalink.category_id
-      redirect_to "#{Discourse::base_uri}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
+      redirect_to "#{Discourse.base_path}/tags#{permalink.target_url}/#{params[:tag_id]}", status: :moved_permanently
     else
       # redirect to 404
       raise Discourse::NotFound

@@ -5,6 +5,7 @@ require 'rails_helper'
 describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
+  fab!(:user) { Fabricate(:user) }
 
   context 'index' do
 
@@ -52,6 +53,26 @@ describe CategoriesController do
       expect(response.status).to eq(301)
       expect(response.body).to include(category.slug)
     end
+
+    it 'returns the right response for a normal user' do
+      sign_in(user)
+
+      Draft.set(user, Draft::NEW_TOPIC, 0, 'hello')
+
+      get "/categories.json"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      expect(category_list["categories"].map { |c| c["id"] }).to contain_exactly(
+        SiteSetting.get(:uncategorized_category_id), category.id
+      )
+
+      expect(category_list["draft_sequence"]).to eq(0)
+      expect(category_list["draft_key"]).to eq(Draft::NEW_TOPIC)
+      expect(category_list["draft"]).to eq('hello')
+    end
   end
 
   context 'extensibility event' do
@@ -96,16 +117,6 @@ describe CategoriesController do
 
       it "raises an exception when the name is missing" do
         post "/categories.json", params: { color: "ff0", text_color: "fff" }
-        expect(response.status).to eq(400)
-      end
-
-      it "raises an exception when the color is missing" do
-        post "/categories.json", params: { name: "hello", text_color: "fff" }
-        expect(response.status).to eq(400)
-      end
-
-      it "raises an exception when the text color is missing" do
-        post "/categories.json", params: { name: "hello", color: "ff0" }
         expect(response.status).to eq(400)
       end
 
@@ -293,27 +304,6 @@ describe CategoriesController do
         expect(response).to be_forbidden
       end
 
-      it "requires a name" do
-        put "/categories/#{category.slug}.json", params: {
-          color: 'fff',
-          text_color: '0ff',
-        }
-        expect(response.status).to eq(400)
-      end
-
-      it "requires a color" do
-        put "/categories/#{category.slug}.json", params: {
-          name: 'asdf',
-          text_color: '0ff',
-        }
-        expect(response.status).to eq(400)
-      end
-
-      it "requires a text color" do
-        put "/categories/#{category.slug}.json", params: { name: 'asdf', color: 'fff' }
-        expect(response.status).to eq(400)
-      end
-
       it "returns errors on a duplicate category name" do
         other_category = Fabricate(:category, name: "Other", user: admin)
         put "/categories/#{category.id}.json", params: {
@@ -321,6 +311,17 @@ describe CategoriesController do
           color: "ff0",
           text_color: "fff",
         }
+        expect(response.status).to eq(422)
+      end
+
+      it "returns errors when there is a name conflict while moving a category into another" do
+        parent_category = Fabricate(:category, name: "Parent", user: admin)
+        other_category = Fabricate(:category, name: category.name, user: admin, parent_category: parent_category, slug: "a-different-slug")
+
+        put "/categories/#{category.id}.json", params: {
+          parent_category_id: parent_category.id,
+        }
+
         expect(response.status).to eq(422)
       end
 
@@ -505,8 +506,19 @@ describe CategoriesController do
 
       get '/categories_and_latest.json'
       json = response.parsed_body
-      expect(json['category_list']['categories'].size).to eq(2) # 'Uncategorized' and category
-      expect(json['topic_list']['topics'].size).to eq(5)
+
+      category_list = json['category_list']
+      topic_list = json['topic_list']
+
+      expect(category_list['categories'].size).to eq(2) # 'Uncategorized' and category
+      expect(category_list['draft_key']).to eq(Draft::NEW_TOPIC)
+      expect(category_list['draft_sequence']).to eq(nil)
+      expect(category_list['draft']).to eq(nil)
+
+      expect(topic_list['topics'].size).to eq(5)
+      expect(topic_list['draft_key']).to eq(Draft::NEW_TOPIC)
+      expect(topic_list['draft_sequence']).to eq(nil)
+      expect(topic_list['draft']).to eq(nil)
 
       Fabricate(:category, parent_category: category)
 

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 he:
   site_settings:
@@ -13,6 +12,7 @@ he:
     discourse_narrative_bot_disable_public_replies: "byruk תגובות ציבוריות מאת בוט העלילות של Discourse"
     discourse_narrative_bot_welcome_post_type: "סוג פוסט קבלת הפנים שבוט העלילות של Discourse אמור לשלוח"
     discourse_narrative_bot_welcome_post_delay: "להמתין (n) שניות בטרם שליחת פוסט קבלת פנים של בוט העלילות של Discourse."
+    discourse_narrative_bot_skip_tutorials: "מדריכים של בוט העלילות של Discourse לדילוג"
   badges:
     certified:
       name: הסמכה
@@ -27,13 +27,9 @@ he:
   discourse_narrative_bot:
     bio: "היי, אני לא בן אדם אמיתי. אני בוט שיכול ללמד אותך על האתר הזה. כדי לתקשר איתי, יש לשלוח אלי הודעה או לאזכר את **‎`@%{discobot_username}`** בכל מקום שהוא."
     tl2_promotion_message:
-      subject_template: "ברכותינו על התקדמותך בסולם דרגות האמון!"
+      subject_template: "עכשיו מכשקודמת, הגיע הזמן ללמוד על כמה מהתכונות המתקדמות!"
       text_body_template: |
-        עכשיו, לאחר התקדמותך, הגיע הזמן ללמוד על תכונות מתקדמות!
-
-        יש להגיב להודעה זו עם ‎`@%{discobot_username} %{reset_trigger}‎` כדי ללמוד עוד על דברים שבאפשרותך לבצע.
-
-        אנו מזמינים אותך להמשיך ולהשתתף – פעילותך חשובה לנו.
+        יש להגיב להודעה הזאת עם `‎@%{discobot_username} %{reset_trigger}` כדי ללמוד עוד על מה שניתן לעשות.
     timeout:
       message: |-
         היי @%{username}, מוודא מה אתך כי לא שמעתי ממך זמן מה.
@@ -57,34 +53,34 @@ he:
         > :game_die: %{results}
     quote:
       trigger: "ציטוט"
-      '1':
+      "1":
         quote: "בלב ליבו של הקושי מונחת ההזדמנות"
         author: "אלברט איינשטיין"
-      '2':
+      "2":
         quote: "חופש לא שווה כלום אם הוא לא כולל את החופש לטעות."
         author: "מהטמה גנדי"
-      '3':
+      "3":
         quote: "אל תבכה כי זה נגמר, חייך כי זה קרה."
         author: "ד״ר סוס"
-      '4':
+      "4":
         quote: "אם אתם רוצים שמשהו יתבצע כמו שצריך, עשו זאת בעצמכם."
         author: "צ׳ארלס-גילאום אטין"
-      '5':
+      "5":
         quote: "האמינו שאתם יכולים ואתם מחצית הדרך לשם."
         author: "תאודור רוזוולט"
-      '6':
+      "6":
         quote: "החיים הם כמו קופסת שוקולד. אתם אף פעם לא יודעים מה תקבלו."
         author: "אימא של פורסט גאמפ"
-      '7':
+      "7":
         quote: "זהו צעד אחד קטן לאדם, צעד גדול לאנושות."
         author: "ניל ארמסטרונג"
-      '8':
+      "8":
         quote: "עשו דבר אחד בכל יום שמפחיד אתכם"
         author: "אלינור רוזוולט"
-      '9':
+      "9":
         quote: "טעויות תמיד נסלחות, אם יש את האומץ להודות בהן."
         author: "ברוס לי"
-      '10':
+      "10":
         quote: "מה ששכל האדם מסוגל להגות ולהאמין, ניתן להשגה."
         author: "נפוליאון היל"
       results: |-
@@ -92,26 +88,26 @@ he:
     magic_8_ball:
       trigger: "מזלות"
       answers:
-        '1': "בוודאות מוחלטת"
-        '2': "כך הוחלט"
-        '3': "ללא ספק"
-        '4': "כן כמובן"
-        '5': "אפשר לסמוך על זה"
-        '6': "בעיני, כן"
-        '7': "קרוב לוודאי"
-        '8': "תחזית טובה"
-        '9': "כן"
-        '10': "הסימנים מראים שכן"
-        '11': "תגובה מעורפלת, נא לנסות שוב"
-        '12': "כדאי לשאול שוב מאוחר יותר"
-        '13': "עדיף לא לענות עכשיו"
-        '14': "קשה לחזות עכשיו"
-        '15': "נא להתרכז ולשאול שוב"
-        '16': "לא כדאי לסמוך על זה"
-        '17': "התשובה שלי היא לא"
-        '18': "המקורות שלי אומרים לא"
-        '19': "תחזית לא כל כך טובה"
-        '20': "מאוד בספק"
+        "1": "בוודאות מוחלטת"
+        "2": "כך הוחלט"
+        "3": "ללא ספק"
+        "4": "כן כמובן"
+        "5": "אפשר לסמוך על זה"
+        "6": "בעיני, כן"
+        "7": "קרוב לוודאי"
+        "8": "תחזית טובה"
+        "9": "כן"
+        "10": "הסימנים מראים שכן"
+        "11": "תגובה מעורפלת, נא לנסות שוב"
+        "12": "כדאי לשאול שוב מאוחר יותר"
+        "13": "עדיף לא לענות עכשיו"
+        "14": "קשה לחזות עכשיו"
+        "15": "נא להתרכז ולשאול שוב"
+        "16": "לא כדאי לסמוך על זה"
+        "17": "התשובה שלי היא לא"
+        "18": "המקורות שלי אומרים לא"
+        "19": "תחזית לא כל כך טובה"
+        "20": "מאוד בספק"
       result: |-
         > :crystal_ball: %{result}
     track_selector:
@@ -197,6 +193,17 @@ he:
           `%{image_url}`
 
           עכשיו יש לנסות להעלות אותה, או להדביק את הקישור בשורה נפרדת!
+      likes:
+        instructions: |-
+          הנה תמונה של חד־קרן:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          אם הוא נושא חן בעיניך (ברור שכן!) אז כפתור הלייק :heart: שמתחת לפוסט הזה מחכה ללחיצה ממך כדי שאדע שאהבת.
+        reply: |-
+          תודה שסימנת את הפוסט שלי בלייק!
+        not_found: |-
+          שכחת לעשות לייק :heart: ל[פוסט](%{url}) שלי? :crying_cat_face:
       formatting:
         instructions: |-
           למה שלא **נדגיש** או _נטה_ מספר מילים בתגובה שלך?
@@ -207,9 +214,9 @@ he:
         reply: |-
           כל הכבוד! ניתן להשתמש גם ב־HTML וב־BBCode כדי לעצב - למידע נוסף, [ניתן להתנסות עם המדריך הזה](http://commonmark.org/help) :nerd:
         not_found: |-
-          אללי, לא מצאתי סימוני עיצוב בתגובה שלכם. :pencil2:
+          אללי, לא מצאתי סימוני עיצוב בתגובה שלך. :pencil2:
 
-          אולי ננסה שוב? כדאי לנסות להשתמש בכפתורי <kbd><b>B</b></kbd> ההדגשה או <kbd><i>I</i></kbd> ההטיה בעורך אם משהו לא מסתדר.
+          אולי ננסה שוב? כדאי לנסות להשתמש בכפתורי <kbd><b>B</b></kbd> להדגשה או <kbd><i>I</i></kbd> להטיה בעורך אם משהו לא מסתדר.
       quoting:
         instructions: |-
           תוכלו לצטט אותי כשאתם משיבים, כדי שאדע בדיוק על איזה חלק אתם משיבים?
@@ -276,7 +283,7 @@ he:
         reply: |-
           [הסגל שלנו](%{base_uri}/groups/staff) יקבל התראה פרטית על הדגל שלך. אם מספיק חברים בקהילה מסמנים פוסט בדגל, הוא יוסתר ליתר ביטחון. (מאחר שלא באמת כתבתי כאן משהו נבזי :angel:, הרשיתי לעצמי להסיר את הדגל בינתיים.)
         not_found: |-
-          אללי, טרם סימנת בדגל פוסט נבזי. :worried: אפשר לבקש ממך לסמן דגל כתוכן בלתי הולם באמצעות ה**דגל** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
+          אללי, הפוסט הנבזי שלי עדיין לא סומן בגדל כבלתי הולם. :worried: אפשר לבקש ממך לסמן אותו ב**דגל** כתוכן בלתי הולם <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
       search:
         instructions: |-
           _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599; כדי לחפש אותה.

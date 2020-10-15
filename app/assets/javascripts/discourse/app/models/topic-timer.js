@@ -14,19 +14,25 @@ TopicTimer.reopenClass({
   ) {
     let data = {
       time,
-      status_type: statusType
+      status_type: statusType,
     };
 
-    if (basedOnLastPost) data.based_on_last_post = basedOnLastPost;
-    if (categoryId) data.category_id = categoryId;
-    if (duration) data.duration = duration;
+    if (basedOnLastPost) {
+      data.based_on_last_post = basedOnLastPost;
+    }
+    if (categoryId) {
+      data.category_id = categoryId;
+    }
+    if (duration) {
+      data.duration = duration;
+    }
 
     return ajax({
       url: `/t/${topicId}/timer`,
       type: "POST",
-      data
+      data,
     });
-  }
+  },
 });
 
 export default TopicTimer;

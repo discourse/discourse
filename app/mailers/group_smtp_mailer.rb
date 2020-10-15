@@ -79,7 +79,7 @@ class GroupSmtpMailer < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false)
-    result = +"#{post.with_secure_media? ? strip_secure_urls(post.raw) : post.raw}\n\n"
+    result = +"#{post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end

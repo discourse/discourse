@@ -38,6 +38,23 @@ class UserAction < ActiveRecord::Base
     ASSIGNED,
   ].each_with_index.to_a.flatten]
 
+  def self.types
+    @types ||= Enum.new(
+      like: 1,
+      was_liked: 2,
+      bookmark: 3,
+      new_topic: 4,
+      reply: 5,
+      response: 6,
+      mention: 7,
+      quote: 9,
+      edit: 11,
+      new_private_message: 12,
+      got_private_message: 13,
+      solved: 15,
+      assigned: 16)
+  end
+
   def self.last_action_in_topic(user_id, topic_id)
     UserAction.where(user_id: user_id,
                      target_topic_id: topic_id,

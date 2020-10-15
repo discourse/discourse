@@ -1,5 +1,4 @@
 //= require logster
-//= require ./discourse-objects
 
 //= require template_include.js
 //= require i18n-patches
@@ -14,7 +13,6 @@
 //= require favcount.js
 //= require jquery.ba-resize.js
 //= require jquery.color.js
-//= require jquery.cookie.js
 //= require jquery.fileupload.js
 //= require jquery.iframe-transport.js
 //= require jquery.tagsinput.js

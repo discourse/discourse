@@ -12,7 +12,6 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { getOwner } from "@ember/application";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -23,7 +22,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     "showBadges",
     "user.card_background::no-bg",
     "isFixed:fixed",
-    "usernameClass"
+    "usernameClass",
   ],
   allowBackgrounds: setting("allow_profile_backgrounds"),
   showBadges: setting("enable_badges"),
@@ -62,14 +61,14 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showUserLocalTime: setting("display_local_time_in_user_card"),
 
   @discourseComputed("user.staff")
-  staff: isStaff => (isStaff ? "staff" : ""),
+  staff: (isStaff) => (isStaff ? "staff" : ""),
 
   @discourseComputed("user.trust_level")
-  newUser: trustLevel => (trustLevel === 0 ? "new-user" : ""),
+  newUser: (trustLevel) => (trustLevel === 0 ? "new-user" : ""),
 
   @discourseComputed("user.name")
   nameFirst(name) {
-    return prioritizeNameInUx(name, this.siteSettings);
+    return prioritizeNameInUx(name);
   },
 
   @discourseComputed("user")
@@ -86,7 +85,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   },
 
   @discourseComputed("username")
-  usernameClass: username => (username ? `user-card-${username}` : ""),
+  usernameClass: (username) => (username ? `user-card-${username}` : ""),
 
   @discourseComputed("username", "topicPostCount")
   togglePostsLabel(username, count) {
@@ -101,7 +100,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       return siteUserFields
         .filterBy("show_on_user_card", true)
         .sortBy("position")
-        .map(field => {
+        .map((field) => {
           set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields ? userFields[field.get("id")] : null;
           return isEmpty(value) ? null : EmberObject.create({ value, field });
@@ -133,11 +132,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     if (showRecent) {
       return I18n.t("time_read_recently_tooltip", {
         time_read: durationTiny(timeRead),
-        recent_time_read: recentTimeRead
+        recent_time_read: recentTimeRead,
       });
     } else {
       return I18n.t("time_read_tooltip", {
-        time_read: durationTiny(timeRead)
+        time_read: durationTiny(timeRead),
       });
     }
   },
@@ -164,11 +163,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
     const args = {
       forCard: true,
-      include_post_count_for: this.get("topic.id")
+      include_post_count_for: this.get("topic.id"),
     };
 
     User.findByUsername(username, args)
-      .then(user => {
+      .then((user) => {
         if (user.topic_post_count) {
           this.set(
             "topicPostCount",
@@ -184,7 +183,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   _close() {
     this.setProperties({
       user: null,
-      topicPostCount: null
+      topicPostCount: null,
     });
 
     this._super(...arguments);
@@ -201,10 +200,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
     composePM(user, post) {
       this._close();
-
-      getOwner(this)
-        .lookup("router:main")
-        .send("composePrivateMessage", user, post);
+      this.composePrivateMessage(user, post);
     },
 
     cancelFilter() {
@@ -231,6 +227,6 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
     checkEmail(user) {
       user.checkEmail();
-    }
-  }
+    },
+  },
 });

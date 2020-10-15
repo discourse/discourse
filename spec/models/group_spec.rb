@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative '../components/imap/imap_helper'
 
 describe Group do
   let(:admin) { Fabricate(:admin) }
@@ -697,7 +698,7 @@ describe Group do
 
       expect(can_view?(admin, group)).to eq(true)
       expect(can_view?(owner, group)).to eq(true)
-      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(moderator, group)).to eq(true)
       expect(can_view?(member, group)).to eq(true)
       expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
@@ -762,7 +763,7 @@ describe Group do
 
       expect(can_view?(admin, group)).to eq(true)
       expect(can_view?(owner, group)).to eq(true)
-      expect(can_view?(moderator, group)).to eq(false)
+      expect(can_view?(moderator, group)).to eq(true)
       expect(can_view?(member, group)).to eq(true)
       expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
@@ -972,12 +973,208 @@ describe Group do
     end
   end
 
+  describe "#imap_mailboxes" do
+    let(:group) { Fabricate(:group) }
+
+    def mock_imap
+      @mocked_imap_provider = MockedImapProvider.new(
+        group.imap_server,
+        port: group.imap_port,
+        ssl: group.imap_ssl,
+        username: group.email_username,
+        password: group.email_password
+      )
+      Imap::Providers::Detector.stubs(:init_with_detected_provider).returns(
+        @mocked_imap_provider
+      )
+    end
+
+    def configure_imap
+      group.update(
+        imap_server: "imap.gmail.com",
+        imap_port: 993,
+        imap_ssl: true,
+        email_username: "test@gmail.com",
+        email_password: "testPassword1!"
+      )
+    end
+
+    def enable_imap
+      SiteSetting.enable_imap = true
+      @mocked_imap_provider.stubs(:connect!)
+      @mocked_imap_provider.stubs(:list_mailboxes).returns(["Inbox"])
+      @mocked_imap_provider.stubs(:disconnect!)
+    end
+
+    before do
+      Discourse.redis.del("group_imap_mailboxes_#{group.id}")
+    end
+
+    it "returns an empty array if group imap is not configured" do
+      expect(group.imap_mailboxes).to eq([])
+    end
+
+    it "returns an empty array and does not contact IMAP server if group imap is configured but the setting is disabled" do
+      configure_imap
+      Imap::Providers::Detector.expects(:init_with_detected_provider).never
+      expect(group.imap_mailboxes).to eq([])
+    end
+
+    it "logs the imap error if one occurs" do
+      configure_imap
+      mock_imap
+      SiteSetting.enable_imap = true
+      @mocked_imap_provider.stubs(:connect!).raises(Net::IMAP::NoResponseError)
+      group.imap_mailboxes
+      expect(group.reload.imap_last_error).not_to eq(nil)
+    end
+
+    it "returns a list of mailboxes from the IMAP provider" do
+      configure_imap
+      mock_imap
+      enable_imap
+      expect(group.imap_mailboxes).to eq(["Inbox"])
+    end
+
+    it "caches the login and mailbox fetch" do
+      configure_imap
+      mock_imap
+      enable_imap
+      group.imap_mailboxes
+      Imap::Providers::Detector.expects(:init_with_detected_provider).never
+      group.imap_mailboxes
+    end
+  end
+
   context "Unicode usernames and group names" do
     before { SiteSetting.unicode_usernames = true }
 
     it "should normalize the name" do
       group = Fabricate(:group, name: "Bücherwurm") # NFD
       expect(group.name).to eq("Bücherwurm") # NFC
+    end
+  end
+
+  describe "default notifications" do
+    let(:category1) { Fabricate(:category) }
+    let(:category2) { Fabricate(:category) }
+    let(:category3) { Fabricate(:category) }
+    let(:category4) { Fabricate(:category) }
+    let(:tag1) { Fabricate(:tag) }
+    let(:tag2) { Fabricate(:tag) }
+    let(:tag3) { Fabricate(:tag) }
+    let(:tag4) { Fabricate(:tag) }
+    let(:synonym1) { Fabricate(:tag, target_tag: tag1) }
+    let(:synonym2) { Fabricate(:tag, target_tag: tag2) }
+
+    it "can set category notifications" do
+      group.watching_category_ids = [category1.id, category2.id]
+      group.tracking_category_ids = [category3.id]
+      group.regular_category_ids = [category4.id]
+      group.save!
+      expect(GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id)).to contain_exactly(category1.id, category2.id)
+      expect(GroupCategoryNotificationDefault.lookup(group, :tracking).pluck(:category_id)).to eq([category3.id])
+      expect(GroupCategoryNotificationDefault.lookup(group, :regular).pluck(:category_id)).to eq([category4.id])
+
+      new_group = Fabricate.build(:group)
+      new_group.watching_category_ids = [category1.id, category2.id]
+      new_group.save!
+      expect(GroupCategoryNotificationDefault.lookup(new_group, :watching).pluck(:category_id)).to contain_exactly(category1.id, category2.id)
+    end
+
+    it "can remove categories" do
+      [category1, category2].each do |category|
+        GroupCategoryNotificationDefault.create!(
+          group: group,
+          category: category,
+          notification_level: GroupCategoryNotificationDefault.notification_levels[:watching]
+        )
+      end
+
+      group.watching_category_ids = [category2.id]
+      group.save!
+      expect(GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id)).to eq([category2.id])
+
+      group.watching_category_ids = []
+      group.save!
+      expect(GroupCategoryNotificationDefault.lookup(group, :watching).pluck(:category_id)).to be_empty
+    end
+
+    it "can set tag notifications" do
+      group.regular_tags = [tag4.name]
+      group.watching_tags = [tag1.name, tag2.name]
+      group.tracking_tags = [tag3.name]
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :regular).pluck(:tag_id)).to eq([tag4.id])
+      expect(GroupTagNotificationDefault.lookup(group, :watching).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id)
+      expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to eq([tag3.id])
+
+      new_group = Fabricate.build(:group)
+      new_group.watching_first_post_tags = [tag1.name, tag3.name]
+      new_group.save!
+      expect(GroupTagNotificationDefault.lookup(new_group, :watching_first_post).pluck(:tag_id)).to contain_exactly(tag1.id, tag3.id)
+    end
+
+    it "can take tag synonyms" do
+      group.tracking_tags = [synonym1.name, synonym2.name, tag3.name]
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id, tag3.id)
+
+      group.tracking_tags = [synonym1.name, synonym2.name, tag1.name, tag2.name, tag3.name]
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id, tag3.id)
+    end
+
+    it "can remove tags" do
+      [tag1, tag2].each do |tag|
+        GroupTagNotificationDefault.create!(
+          group: group,
+          tag: tag,
+          notification_level: GroupTagNotificationDefault.notification_levels[:watching]
+        )
+      end
+
+      group.watching_tags = [tag2.name]
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :watching).pluck(:tag_id)).to eq([tag2.id])
+
+      group.watching_tags = []
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :watching)).to be_empty
+    end
+
+    it "can apply default notifications for admins group" do
+      group = Group.find(Group::AUTO_GROUPS[:admins])
+      group.tracking_category_ids = [category1.id]
+      group.tracking_tags = [tag1.name]
+      group.save!
+      user.grant_admin!
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([category1.id])
+      expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to eq([tag1.id])
+    end
+
+    it "can apply default notifications for staff group" do
+      group = Group.find(Group::AUTO_GROUPS[:staff])
+      group.tracking_category_ids = [category1.id]
+      group.tracking_tags = [tag1.name]
+      group.save!
+      user.grant_admin!
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([category1.id])
+      expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to eq([tag1.id])
+    end
+
+    it "can apply default notifications from two automatic groups" do
+      staff = Group.find(Group::AUTO_GROUPS[:staff])
+      staff.tracking_category_ids = [category1.id]
+      staff.tracking_tags = [tag1.name]
+      staff.save!
+      admins = Group.find(Group::AUTO_GROUPS[:admins])
+      admins.tracking_category_ids = [category2.id]
+      admins.tracking_tags = [tag2.name]
+      admins.save!
+      user.grant_admin!
+      expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to contain_exactly(category1.id, category2.id)
+      expect(TagUser.lookup(user, :tracking).pluck(:tag_id)).to contain_exactly(tag1.id, tag2.id)
     end
   end
 end

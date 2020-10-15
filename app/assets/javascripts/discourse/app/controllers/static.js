@@ -10,7 +10,7 @@ export default Controller.extend({
   showLoginButton: equal("model.path", "login"),
 
   @discourseComputed("model.path")
-  bodyClass: path => `static-${path}`,
+  bodyClass: (path) => `static-${path}`,
 
   @discourseComputed("model.path")
   showSignupButton() {
@@ -27,6 +27,6 @@ export default Controller.extend({
           currentUser.set("read_faq", true);
         });
       }
-    }
-  }
+    },
+  },
 });

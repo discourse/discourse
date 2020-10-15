@@ -49,7 +49,7 @@ class Category < ActiveRecord::Base
 
   validates :user_id, presence: true
 
-  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? },
+  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? || c.will_save_change_to_parent_category_id? },
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
@@ -368,8 +368,22 @@ class Category < ActiveRecord::Base
   end
 
   def publish_category
-    group_ids = self.groups.pluck(:id) if self.read_restricted
-    MessageBus.publish('/categories', { categories: ActiveModel::ArraySerializer.new([self]).as_json }, group_ids: group_ids)
+    if self.read_restricted
+      group_ids = self.groups.pluck(:id)
+
+      if group_ids.present?
+        MessageBus.publish(
+          '/categories',
+          { categories: ActiveModel::ArraySerializer.new([self]).as_json },
+          group_ids: group_ids
+        )
+      end
+    else
+      MessageBus.publish(
+        '/categories',
+        { categories: ActiveModel::ArraySerializer.new([self]).as_json }
+      )
+    end
   end
 
   def remove_site_settings
@@ -710,7 +724,7 @@ class Category < ActiveRecord::Base
   end
 
   def full_slug(separator = "-")
-    start_idx = "#{Discourse.base_uri}/c/".size
+    start_idx = "#{Discourse.base_path}/c/".size
     url[start_idx..-1].gsub("/", separator)
   end
 
@@ -721,7 +735,7 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache[self.id] ||= "#{Discourse.base_uri}/c/#{slug_path.join('/')}/#{self.id}"
+    @@url_cache[self.id] ||= "#{Discourse.base_path}/c/#{slug_path.join('/')}/#{self.id}"
   end
 
   def url_with_id
@@ -742,7 +756,7 @@ class Category < ActiveRecord::Base
   def create_category_permalink
     old_slug = saved_changes.transform_values(&:first)["slug"]
 
-    url = +"#{Discourse.base_uri}/c"
+    url = +"#{Discourse.base_path}/c"
     url << "/#{parent_category.slug_path.join('/')}" if parent_category_id
     url << "/#{old_slug}/#{id}"
     url = Permalink.normalize_url(url)

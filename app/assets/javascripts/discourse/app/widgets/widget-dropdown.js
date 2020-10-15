@@ -1,7 +1,8 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { schedule } from "@ember/runloop";
 import hbs from "discourse/widgets/hbs-compiler";
+import { schedule } from "@ember/runloop";
+import { createPopper } from "@popperjs/core";
 
 /*
 
@@ -92,7 +93,7 @@ export const WidgetDropdownHeaderClass = {
 
   _buildLabel(attrs) {
     return attrs.translatedLabel ? attrs.translatedLabel : I18n.t(attrs.label);
-  }
+  },
 };
 
 createWidget("widget-dropdown-header", WidgetDropdownHeaderClass);
@@ -109,19 +110,29 @@ export const WidgetDropdownItemClass = {
           ? attrs.item.html
           : attrs.item.translatedLabel
           ? attrs.item.translatedLabel
-          : I18n.t(attrs.item.label)
+          : I18n.t(attrs.item.label),
     };
   },
 
   buildAttributes(attrs) {
-    return { "data-id": attrs.item.id };
+    return {
+      "data-id": attrs.item.id,
+      tabindex: attrs.item === "separator" ? -1 : 0,
+    };
   },
 
   buildClasses(attrs) {
     return [
       "widget-dropdown-item",
-      attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`
+      attrs.item === "separator" ? "separator" : `item-${attrs.item.id}`,
     ].join(" ");
+  },
+
+  keyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.sendWidgetAction("_onChange", this.attrs.item);
+    }
   },
 
   click(event) {
@@ -135,7 +146,7 @@ export const WidgetDropdownItemClass = {
       {{d-icon attrs.item.icon}}
     {{/if}}
     {{{transformed.content}}}
-  `
+  `,
 };
 
 createWidget("widget-dropdown-item", WidgetDropdownItemClass);
@@ -145,43 +156,6 @@ export const WidgetDropdownBodyClass = {
 
   buildClasses(attrs) {
     return `widget-dropdown-body ${attrs.class || ""}`;
-  },
-
-  init(attrs) {
-    schedule("afterRender", () => {
-      const dropdownHeader = document.querySelector(
-        `#${attrs.id} .widget-dropdown-header`
-      );
-      const dropdownBody = document.querySelector(
-        `#${attrs.id} .widget-dropdown-body`
-      );
-
-      if (dropdownHeader && dropdownBody) {
-        /* global Popper:true */
-        this._popper = Popper.createPopper(dropdownHeader, dropdownBody, {
-          strategy: "fixed",
-          placement: "bottom-start",
-          modifiers: [
-            {
-              name: "preventOverflow"
-            },
-            {
-              name: "offset",
-              options: {
-                offset: [0, 5]
-              }
-            }
-          ]
-        });
-      }
-    });
-  },
-
-  destroy() {
-    if (this._popper) {
-      this._popper.destroy();
-      this._popper = null;
-    }
   },
 
   clickOutside() {
@@ -195,7 +169,7 @@ export const WidgetDropdownBodyClass = {
         attrs=(hash item=item)
       }}
     {{/each}}
-  `
+  `,
 };
 
 createWidget("widget-dropdown-body", WidgetDropdownBodyClass);
@@ -217,7 +191,7 @@ export const WidgetDropdownClass = {
     }
   },
 
-  buildKey: attrs => {
+  buildKey: (attrs) => {
     return attrs.id;
   },
 
@@ -227,7 +201,7 @@ export const WidgetDropdownClass = {
 
   defaultState() {
     return {
-      opened: false
+      opened: false,
     };
   },
 
@@ -239,7 +213,7 @@ export const WidgetDropdownClass = {
 
   transform(attrs) {
     return {
-      options: attrs.options || {}
+      options: attrs.options || {},
     };
   },
 
@@ -256,6 +230,55 @@ export const WidgetDropdownClass = {
       } else {
         this.attrs.onChange(params);
       }
+    }
+  },
+
+  destroy() {
+    if (this._popper) {
+      this._popper.destroy();
+      this._popper = null;
+    }
+  },
+
+  willRerenderWidget() {
+    this._popper && this._popper.destroy();
+  },
+
+  didRenderWidget() {
+    if (this.state.opened) {
+      schedule("afterRender", () => {
+        const dropdownHeader = document.querySelector(
+          `#${this.attrs.id} .widget-dropdown-header`
+        );
+
+        if (!dropdownHeader) {
+          return;
+        }
+
+        const dropdownBody = document.querySelector(
+          `#${this.attrs.id} .widget-dropdown-body`
+        );
+
+        if (!dropdownBody) {
+          return;
+        }
+
+        this._popper = createPopper(dropdownHeader, dropdownBody, {
+          strategy: "fixed",
+          placement: "bottom-start",
+          modifiers: [
+            {
+              name: "preventOverflow",
+            },
+            {
+              name: "offset",
+              options: {
+                offset: [0, 5],
+              },
+            },
+          ],
+        });
+      });
     }
   },
 
@@ -287,7 +310,7 @@ export const WidgetDropdownClass = {
         }}
       {{/if}}
     {{/if}}
-  `
+  `,
 };
 
 export default createWidget("widget-dropdown", WidgetDropdownClass);

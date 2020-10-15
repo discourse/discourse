@@ -21,39 +21,36 @@ export default Mixin.create({
       this.selected.clear();
     },
 
-    dismissRead(operationType, categoryOptions) {
-      let operation;
-      if (operationType === "posts") {
-        operation = { type: "dismiss_posts" };
-      } else {
-        operation = {
-          type: "change_notification_level",
-          notification_level_id: NotificationLevels.REGULAR
-        };
-      }
+    dismissRead(operationType, options) {
+      const operation =
+        operationType === "posts"
+          ? { type: "dismiss_posts" }
+          : {
+              type: "change_notification_level",
+              notification_level_id: NotificationLevels.REGULAR,
+            };
 
-      let promise;
-      if (this.selected.length > 0) {
-        promise = Topic.bulkOperation(this.selected, operation);
-      } else {
-        promise = Topic.bulkOperationByFilter(
-          "unread",
-          operation,
-          this.get("category.id"),
-          categoryOptions
-        );
-      }
+      const tracked =
+        (this.router.currentRoute.queryParams["f"] ||
+          this.router.currentRoute.queryParams["filter"]) === "tracked";
 
-      promise.then(result => {
+      const promise = this.selected.length
+        ? Topic.bulkOperation(this.selected, operation, tracked)
+        : Topic.bulkOperationByFilter("unread", operation, options, tracked);
+
+      promise.then((result) => {
         if (result && result.topic_ids) {
           const tracker = this.topicTrackingState;
-          result.topic_ids.forEach(t => tracker.removeTopic(t));
+          result.topic_ids.forEach((t) => tracker.removeTopic(t));
           tracker.incrementMessageCount();
         }
 
         this.send("closeModal");
-        this.send("refresh");
+        this.send(
+          "refresh",
+          tracked ? { skipResettingParams: ["filter", "f"] } : {}
+        );
       });
-    }
-  }
+    },
+  },
 });
