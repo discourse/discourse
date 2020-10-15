@@ -1077,7 +1077,9 @@ en:
         copy_to_clipboard_error: "Error copying data to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         download_backup_codes: "Download backup codes"
-        remaining_codes: "You have <strong>%{count}</strong> backup codes remaining."
+        remaining_codes:
+          one: "You have <strong>%{count}</strong> backup code remaining."
+          other: "You have <strong>%{count}</strong> backup codes remaining."
         use: "Use a backup code"
         enable_prerequisites: "You must enable a primary two-factor method before generating backup codes."
         codes:
