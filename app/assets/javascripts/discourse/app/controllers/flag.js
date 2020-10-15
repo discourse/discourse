@@ -60,15 +60,16 @@ export default Controller.extend(ModalFunctionality, {
     this._penalize("showSilenceModal", performAction);
   },
 
-  async _penalize(adminToolMethod, performAction) {
+  _penalize(adminToolMethod, performAction) {
     if (this.adminTools) {
-      let createdBy = await User.findByUsername(this.model.username);
-      let postId = this.model.id;
-      let postEdit = this.model.cooked;
-      return this.adminTools[adminToolMethod](createdBy, {
-        postId,
-        postEdit,
-        before: performAction,
+      return User.findByUsername(this.model.username).then((createdBy) => {
+        let postId = this.model.id;
+        let postEdit = this.model.cooked;
+        return this.adminTools[adminToolMethod](createdBy, {
+          postId,
+          postEdit,
+          before: performAction,
+        });
       });
     }
   },
