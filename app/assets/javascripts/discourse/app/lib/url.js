@@ -12,11 +12,6 @@ import { setOwner } from "@ember/application";
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 
-function redirectTo(url) {
-  document.location = url;
-  return true;
-}
-
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
   /^\/assets\//,
@@ -228,22 +223,18 @@ const DiscourseURL = EmberObject.extend({
     }
 
     if (Session.currentProp("requiresRefresh")) {
-      return redirectTo(getURL(path));
+      return this.redirectTo(getURL(path));
     }
 
     const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     if (!this.isInternal(path)) {
-      return redirectTo(path);
+      return this.redirectTo(path);
     }
 
-    const serverSide = SERVER_SIDE_ONLY.some((r) => {
-      if (pathname.match(r)) {
-        return redirectTo(path);
-      }
-    });
-
+    const serverSide = SERVER_SIDE_ONLY.some((r) => pathname.match(r));
     if (serverSide) {
+      this.redirectTo(path);
       return;
     }
 
@@ -268,7 +259,7 @@ const DiscourseURL = EmberObject.extend({
           userPath(currentUser.get("username_lower"))
         );
       } else {
-        return redirectTo("/login-preferences");
+        return this.redirectTo("/login-preferences");
       }
     }
 
@@ -316,6 +307,7 @@ const DiscourseURL = EmberObject.extend({
 
   redirectTo(url) {
     window.location = getURL(url);
+    return true;
   },
 
   /**
