@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Jobs
-  class RebakeGifImages < ::Jobs::Scheduled
+  class UpdateAnimatedUploads < ::Jobs::Scheduled
     every 1.hour
 
     MAX_PROCESSED_GIF_IMAGES ||= 200
 
     def execute(args)
       Upload
-        .where("original_filename LIKE '%.gif'")
+        .where("extension = 'gif' OR (extension IS NULL AND original_filename LIKE '%.gif')")
         .where(animated: nil)
         .limit(MAX_PROCESSED_GIF_IMAGES)
         .find do |upload|
