@@ -62,7 +62,7 @@ export default Controller.extend(ModalFunctionality, {
 
   _penalize(adminToolMethod, performAction) {
     if (this.adminTools) {
-      User.findByUsername(this.model.username).then((createdBy) => {
+      return User.findByUsername(this.model.username).then((createdBy) => {
         let postId = this.model.id;
         let postEdit = this.model.cooked;
         return this.adminTools[adminToolMethod](createdBy, {
