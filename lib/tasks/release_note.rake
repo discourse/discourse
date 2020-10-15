@@ -11,7 +11,7 @@ task "release_note:generate", :from, :to do |t, args|
   sec_changes = Set.new
   perf_changes = Set.new
 
-  `git log #{from}..#{to}`.each_line do |comment|
+  `git log --pretty="tformat:%s" #{from}..#{to}`.each_line do |comment|
     next if comment =~ /^\s*Revert/
     split_comments(comment).each do |line|
       if line =~ /^FIX:/
