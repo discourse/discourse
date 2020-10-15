@@ -1253,10 +1253,8 @@ en:
 
       auth_tokens:
         title: "Recently Used Devices"
-        ip: "IP"
         details: "Details"
         log_out_all: "Log out all"
-        active: "active now"
         not_you: "Not you?"
         show_all: "Show all (%{count})"
         show_few: "Show fewer"
@@ -1265,6 +1263,9 @@ en:
         browser_and_device: "%{browser} on %{device}"
         secure_account: "Secure my Account"
         latest_post: "You last posted…"
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">active now</span>'
+        browser_last_seen: "%{browser} | %{date}"
 
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
