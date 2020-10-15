@@ -133,17 +133,20 @@ export default Controller.extend(ModalFunctionality, {
     this.send("closeModal");
   },
 
-  _confirmBeforePinning(count, name, action) {
+  _confirmBeforePinningGlobally() {
+    const count = this.pinnedGloballyCount;
     if (count < 4) {
-      this._forwardAction(action);
+      this._forwardAction("pinGlobally");
     } else {
       this.send("hideModal");
       bootbox.confirm(
-        I18n.t("topic.feature_topic.confirm_" + name, { count }),
+        I18n.t("topic.feature_topic.confirm_pin_globally", { count }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         (confirmed) =>
-          confirmed ? this._forwardAction(action) : this.send("reopenModal")
+          confirmed
+            ? this._forwardAction("pinGlobally")
+            : this.send("reopenModal")
       );
     }
   },
@@ -161,11 +164,7 @@ export default Controller.extend(ModalFunctionality, {
       if (this.pinGloballyDisabled) {
         this.set("pinGloballyTipShownAt", Date.now());
       } else {
-        this._confirmBeforePinning(
-          this.pinnedGloballyCount,
-          "pin_globally",
-          "pinGlobally"
-        );
+        this._confirmBeforePinningGlobally();
       }
     },
 

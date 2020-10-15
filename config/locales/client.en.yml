@@ -2479,7 +2479,6 @@ en:
       feature_topic:
         title: "Feature this topic"
         pin: "Make this topic appear at the top of the %{categoryLink} category until"
-        confirm_pin: "You already have %{count} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
         unpin: "Remove this topic from the top of the %{categoryLink} category."
         unpin_until: "Remove this topic from the top of the %{categoryLink} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
@@ -2489,7 +2488,9 @@ en:
           one: "Topics currently pinned in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Topics currently pinned in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Make this topic appear at the top of all topic lists until"
-        confirm_pin_globally: "You already have %{count} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
+        confirm_pin_globally:
+          one: "You already have %{count} globally pinned topic. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
+          other: "You already have %{count} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Users can unpin the topic individually for themselves."
