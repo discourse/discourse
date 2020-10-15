@@ -60,14 +60,20 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed("category.can_edit")
   showCategoryEdit: (canEdit) => canEdit,
 
-  @discourseComputed("filterType", "category", "noSubcategories")
-  navItems(filterType, category, noSubcategories) {
+  @discourseComputed("additionalTags", "category", "tag.id")
+  showToggleInfo(additionalTags, category, tagId) {
+    return !additionalTags && !category && tagId !== "none";
+  },
+
+  @discourseComputed("filterType", "category", "noSubcategories", "tag.id")
+  navItems(filterType, category, noSubcategories, tagId) {
     const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
 
     return NavItem.buildList(category, {
       filterType,
       noSubcategories,
       currentRouteQueryParams,
+      tagId,
       siteSettings: this.siteSettings,
     });
   },
@@ -94,6 +100,25 @@ export default Component.extend(FilterModeMixin, {
       } else {
         this.createTopic();
       }
+    },
+
+    toggleTagInfo() {
+      return this.toggleProperty("showInfo");
+    },
+
+    changeTagNotificationLevel(notificationLevel) {
+      this.tagNotification
+        .update({ notification_level: notificationLevel })
+        .then((response) => {
+          this.currentUser.set(
+            "muted_tag_ids",
+            this.currentUser.calculateMutedIds(
+              notificationLevel,
+              response.responseJson.tag_id,
+              "muted_tag_ids"
+            )
+          );
+        });
     },
   },
 });
