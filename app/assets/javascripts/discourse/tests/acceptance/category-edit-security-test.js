@@ -3,110 +3,110 @@ import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Category Edit - security", {
-  loggedIn: true,
-});
+acceptance("Category Edit - security", function (needs) {
+  needs.user();
 
-test("default", async (assert) => {
-  await visit("/c/bug");
+  test("default", async (assert) => {
+    await visit("/c/bug");
 
-  await click(".edit-category");
-  await click("li.edit-category-security a");
+    await click(".edit-category");
+    await click("li.edit-category-security a");
 
-  const $permissionListItems = find(".permission-list li");
+    const $permissionListItems = find(".permission-list li");
 
-  const badgeName = $permissionListItems.eq(0).find(".badge-group").text();
-  assert.equal(badgeName, "everyone");
+    const badgeName = $permissionListItems.eq(0).find(".badge-group").text();
+    assert.equal(badgeName, "everyone");
 
-  const permission = $permissionListItems.eq(0).find(".permission").text();
-  assert.equal(permission, "Create / Reply / See");
-});
+    const permission = $permissionListItems.eq(0).find(".permission").text();
+    assert.equal(permission, "Create / Reply / See");
+  });
 
-test("removing a permission", async (assert) => {
-  const availableGroups = selectKit(".available-groups");
+  test("removing a permission", async (assert) => {
+    const availableGroups = selectKit(".available-groups");
 
-  await visit("/c/bug");
+    await visit("/c/bug");
 
-  await click(".edit-category");
-  await click("li.edit-category-security a");
-  await click(".edit-category-tab-security .edit-permission");
-  await availableGroups.expand();
+    await click(".edit-category");
+    await click("li.edit-category-security a");
+    await click(".edit-category-tab-security .edit-permission");
+    await availableGroups.expand();
 
-  assert.notOk(
-    availableGroups.rowByValue("everyone").exists(),
-    "everyone is already used and is not in the available groups"
-  );
+    assert.notOk(
+      availableGroups.rowByValue("everyone").exists(),
+      "everyone is already used and is not in the available groups"
+    );
 
-  await click(
-    ".edit-category-tab-security .permission-list li:first-of-type .remove-permission"
-  );
-  await availableGroups.expand();
+    await click(
+      ".edit-category-tab-security .permission-list li:first-of-type .remove-permission"
+    );
+    await availableGroups.expand();
 
-  assert.ok(
-    availableGroups.rowByValue("everyone").exists(),
-    "everyone has been removed and appears in the available groups"
-  );
-});
+    assert.ok(
+      availableGroups.rowByValue("everyone").exists(),
+      "everyone has been removed and appears in the available groups"
+    );
+  });
 
-test("adding a permission", async (assert) => {
-  const availableGroups = selectKit(".available-groups");
-  const permissionSelector = selectKit(".permission-selector");
+  test("adding a permission", async (assert) => {
+    const availableGroups = selectKit(".available-groups");
+    const permissionSelector = selectKit(".permission-selector");
 
-  await visit("/c/bug");
+    await visit("/c/bug");
 
-  await click(".edit-category");
-  await click("li.edit-category-security a");
-  await click(".edit-category-tab-security .edit-permission");
-  await availableGroups.expand();
-  await availableGroups.selectRowByValue("staff");
-  await permissionSelector.expand();
-  await permissionSelector.selectRowByValue("2");
-  await click(".edit-category-tab-security .add-permission");
+    await click(".edit-category");
+    await click("li.edit-category-security a");
+    await click(".edit-category-tab-security .edit-permission");
+    await availableGroups.expand();
+    await availableGroups.selectRowByValue("staff");
+    await permissionSelector.expand();
+    await permissionSelector.selectRowByValue("2");
+    await click(".edit-category-tab-security .add-permission");
 
-  const $addedPermissionItem = find(
-    ".edit-category-tab-security .permission-list li:nth-child(2)"
-  );
+    const $addedPermissionItem = find(
+      ".edit-category-tab-security .permission-list li:nth-child(2)"
+    );
 
-  const badgeName = $addedPermissionItem.find(".badge-group").text();
-  assert.equal(badgeName, "staff");
+    const badgeName = $addedPermissionItem.find(".badge-group").text();
+    assert.equal(badgeName, "staff");
 
-  const permission = $addedPermissionItem.find(".permission").text();
-  assert.equal(permission, "Reply / See");
-});
+    const permission = $addedPermissionItem.find(".permission").text();
+    assert.equal(permission, "Reply / See");
+  });
 
-test("adding a previously removed permission", async (assert) => {
-  const availableGroups = selectKit(".available-groups");
+  test("adding a previously removed permission", async (assert) => {
+    const availableGroups = selectKit(".available-groups");
 
-  await visit("/c/bug");
+    await visit("/c/bug");
 
-  await click(".edit-category");
-  await click("li.edit-category-security a");
-  await click(".edit-category-tab-security .edit-permission");
-  await click(
-    ".edit-category-tab-security .permission-list li:first-of-type .remove-permission"
-  );
+    await click(".edit-category");
+    await click("li.edit-category-security a");
+    await click(".edit-category-tab-security .edit-permission");
+    await click(
+      ".edit-category-tab-security .permission-list li:first-of-type .remove-permission"
+    );
 
-  assert.equal(
-    find(".edit-category-tab-security .permission-list li").length,
-    0,
-    "it removes the permission from the list"
-  );
+    assert.equal(
+      find(".edit-category-tab-security .permission-list li").length,
+      0,
+      "it removes the permission from the list"
+    );
 
-  await availableGroups.expand();
-  await availableGroups.selectRowByValue("everyone");
-  await click(".edit-category-tab-security .add-permission");
+    await availableGroups.expand();
+    await availableGroups.selectRowByValue("everyone");
+    await click(".edit-category-tab-security .add-permission");
 
-  assert.equal(
-    find(".edit-category-tab-security .permission-list li").length,
-    1,
-    "it adds the permission to the list"
-  );
+    assert.equal(
+      find(".edit-category-tab-security .permission-list li").length,
+      1,
+      "it adds the permission to the list"
+    );
 
-  const $permissionListItems = find(".permission-list li");
+    const $permissionListItems = find(".permission-list li");
 
-  const badgeName = $permissionListItems.eq(0).find(".badge-group").text();
-  assert.equal(badgeName, "everyone");
+    const badgeName = $permissionListItems.eq(0).find(".badge-group").text();
+    assert.equal(badgeName, "everyone");
 
-  const permission = $permissionListItems.eq(0).find(".permission").text();
-  assert.equal(permission, "Create / Reply / See");
+    const permission = $permissionListItems.eq(0).find(".permission").text();
+    assert.equal(permission, "Create / Reply / See");
+  });
 });

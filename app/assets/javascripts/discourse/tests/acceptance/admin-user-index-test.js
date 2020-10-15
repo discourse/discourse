@@ -2,12 +2,11 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import pretender from "discourse/tests/helpers/create-pretender";
 
-acceptance("Admin - User Index", {
-  loggedIn: true,
-  pretend(pretenderServer, helper) {
-    pretenderServer.get("/groups/search.json", () => {
+acceptance("Admin - User Index", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/groups/search.json", () => {
       return helper.response([
         {
           id: 42,
@@ -33,60 +32,56 @@ acceptance("Admin - User Index", {
         },
       ]);
     });
-  },
-});
 
-test("can edit username", async (assert) => {
-  pretender.put("/users/sam/preferences/username", () => [
-    200,
-    {
-      "Content-Type": "application/json",
-    },
-    { id: 2, username: "new-sam" },
-  ]);
+    server.put("/users/sam/preferences/username", () => {
+      return helper.response({ id: 2, username: "new-sam" });
+    });
+  });
 
-  await visit("/admin/users/2/sam");
+  test("can edit username", async (assert) => {
+    await visit("/admin/users/2/sam");
 
-  assert.equal(find(".display-row.username .value").text().trim(), "sam");
+    assert.equal(find(".display-row.username .value").text().trim(), "sam");
 
-  // Trying cancel.
-  await click(".display-row.username button");
-  await fillIn(".display-row.username .value input", "new-sam");
-  await click(".display-row.username a");
-  assert.equal(find(".display-row.username .value").text().trim(), "sam");
+    // Trying cancel.
+    await click(".display-row.username button");
+    await fillIn(".display-row.username .value input", "new-sam");
+    await click(".display-row.username a");
+    assert.equal(find(".display-row.username .value").text().trim(), "sam");
 
-  // Doing edit.
-  await click(".display-row.username button");
-  await fillIn(".display-row.username .value input", "new-sam");
-  await click(".display-row.username button");
-  assert.equal(find(".display-row.username .value").text().trim(), "new-sam");
-});
+    // Doing edit.
+    await click(".display-row.username button");
+    await fillIn(".display-row.username .value input", "new-sam");
+    await click(".display-row.username button");
+    assert.equal(find(".display-row.username .value").text().trim(), "new-sam");
+  });
 
-test("will clear unsaved groups when switching user", async (assert) => {
-  await visit("/admin/users/2/sam");
+  test("will clear unsaved groups when switching user", async (assert) => {
+    await visit("/admin/users/2/sam");
 
-  assert.equal(
-    find(".display-row.username .value").text().trim(),
-    "sam",
-    "the name should be correct"
-  );
+    assert.equal(
+      find(".display-row.username .value").text().trim(),
+      "sam",
+      "the name should be correct"
+    );
 
-  const groupChooser = selectKit(".group-chooser");
-  await groupChooser.expand();
-  await groupChooser.selectRowByValue(42);
-  assert.equal(groupChooser.header().value(), 42, "group should be set");
+    const groupChooser = selectKit(".group-chooser");
+    await groupChooser.expand();
+    await groupChooser.selectRowByValue(42);
+    assert.equal(groupChooser.header().value(), 42, "group should be set");
 
-  await visit("/admin/users/1/eviltrout");
+    await visit("/admin/users/1/eviltrout");
 
-  assert.equal(
-    find(".display-row.username .value").text().trim(),
-    "eviltrout",
-    "the name should be correct"
-  );
+    assert.equal(
+      find(".display-row.username .value").text().trim(),
+      "eviltrout",
+      "the name should be correct"
+    );
 
-  assert.equal(
-    find('.group-chooser span[title="Macdonald"]').length,
-    0,
-    "group should not be set"
-  );
+    assert.equal(
+      find('.group-chooser span[title="Macdonald"]').length,
+      0,
+      "group should not be set"
+    );
+  });
 });
