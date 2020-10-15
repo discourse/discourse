@@ -38,6 +38,7 @@ import QUnit, { module } from "qunit";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import Site from "discourse/models/site";
 import createStore from "discourse/tests/helpers/create-store";
+import { getApplication } from "@ember/test-helpers";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -201,7 +202,7 @@ export function acceptance(name, options) {
         resetSite(currentSettings(), options.site);
       }
 
-      Discourse.reset();
+      getApplication().reset();
       this.container = getOwner(this);
       setURLContainer(this.container);
       setDefaultOwner(this.container);
@@ -212,6 +213,7 @@ export function acceptance(name, options) {
     },
 
     afterEach() {
+      let app = getApplication();
       if (options && options.afterEach) {
         options.afterEach.call(this);
       }
@@ -236,15 +238,12 @@ export function acceptance(name, options) {
       _clearSnapshots();
       setURLContainer(null);
       setDefaultOwner(null);
-      Discourse._runInitializer(
-        "instanceInitializers",
-        (initName, initializer) => {
-          if (initializer && initializer.teardown) {
-            initializer.teardown(this.container);
-          }
+      app._runInitializer("instanceInitializers", (initName, initializer) => {
+        if (initializer && initializer.teardown) {
+          initializer.teardown(this.container);
         }
-      );
-      Discourse.reset();
+      });
+      app.reset();
 
       // We do this after reset so that the willClearRender will have already fired
       resetWidgetCleanCallbacks();
