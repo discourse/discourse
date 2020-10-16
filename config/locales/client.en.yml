@@ -1772,7 +1772,9 @@ en:
       min_content_not_reached:
         one: "Select at least %{count} item."
         other: "Select at least %{count} items."
-      invalid_selection_length: "Selection must be at least %{count} characters."
+      invalid_selection_length:
+        one: "Selection must be at least %{count} character."
+        other: "Selection must be at least %{count} characters."
       components:
         categories_admin_dropdown:
           title: "Manage categories"
