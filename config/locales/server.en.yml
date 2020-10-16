@@ -340,6 +340,7 @@ en:
   removed_direct_reply_full_quotes: "Automatically removed quote of whole previous post."
   secure_upload_not_allowed_in_public_topic: "Sorry, the following secure upload(s) cannot be used in a public topic: %{upload_filenames}."
   create_pm_on_existing_topic: "Sorry, you can't create a PM on an existing topic."
+  slow_mode_enabled: "You recently posted on this topic, which is in slow mode. Please wait so other users can have their chance to participate."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"

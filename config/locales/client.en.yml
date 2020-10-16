@@ -1922,6 +1922,9 @@ en:
       yourself_confirm:
         title: "Did you forget to add recipients?"
         body: "Right now this message is only being sent to yourself!"
+      slow_mode:
+        title: "This topic is in slow mode."
+        body: "After submitting a post, you'll need to wait %{duration} before being able to post again."
 
       admin_options_title: "Optional staff settings for this topic"
 
@@ -2313,6 +2316,25 @@ en:
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
 
+      slow_mode_update:
+        title: "Slow Mode"
+        select: "Duration:"
+        description: "Users will have to wait to be able to post again."
+        current: "Current duration is %{hours} hours, %{minutes} minutes, and %{seconds} seconds."
+        save: "Save"
+        remove: "Disable"
+        hours: "Hours"
+        minutes: "Minutes"
+        seconds: "Seconds"
+        durations:
+          15_minutes: "15 Minutes"
+          1_hour: "1 Hour"
+          4_hours: "4 Hours"
+          1_day: "1 Day"
+          1_week: "1 Week"
+          custom: "Pick Duration"
+      slow_mode_notice:
+        duration: "You need to wait %{duration} between posts in this topic"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
@@ -2447,6 +2469,7 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
+        slow_mode: "Set Slow Mode"
         timed_update: "Set Topic Timer..."
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"

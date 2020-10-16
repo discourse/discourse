@@ -811,3 +811,17 @@
     }
   }
 }
+
+.modal.edit-slow-mode-modal {
+  .slow-mode-label {
+    display: inline-flex;
+  }
+
+  .alert.alert-info {
+    margin-bottom: 0;
+  }
+
+  .input-small {
+    width: 15%;
+  }
+}

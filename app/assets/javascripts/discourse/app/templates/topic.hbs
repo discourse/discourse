@@ -145,6 +145,7 @@
             jumpToIndex=(action "jumpToIndex")
             replyToPost=(action "replyToPost")
             toggleMultiSelect=(action "toggleMultiSelect")
+            showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
             deleteTopic=(action "deleteTopic")
             recoverTopic=(action "recoverTopic")
             toggleClosed=(action "toggleClosed")
@@ -168,6 +169,7 @@
               openUpwards="true"
               rightSide="true"
               toggleMultiSelect=(action "toggleMultiSelect")
+              showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
               deleteTopic=(action "deleteTopic")
               recoverTopic=(action "recoverTopic")
               toggleClosed=(action "toggleClosed")
@@ -286,6 +288,8 @@
                 </div>
               {{/if}}
 
+              {{slow-mode-info topic=model user=currentUser}}
+
               {{topic-timer-info
                   topicClosed=model.closed
                   statusType=model.topic_timer.status_type
@@ -305,6 +309,7 @@
                   {{topic-footer-buttons
                     topic=model
                     toggleMultiSelect=(action "toggleMultiSelect")
+                    showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
                     deleteTopic=(action "deleteTopic")
                     recoverTopic=(action "recoverTopic")
                     toggleClosed=(action "toggleClosed")

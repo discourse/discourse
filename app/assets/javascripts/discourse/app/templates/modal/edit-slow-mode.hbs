@@ -1,0 +1,48 @@
+{{#d-modal-body title="topic.slow_mode_update.title" autoFocus=false}}
+  <div class="control-group">
+    <label class="slow-mode-label">{{i18n "topic.slow_mode_update.description"}}</label>
+  </div>
+
+  <div class="control-group">
+    <label class="slow-mode-label">{{i18n "topic.slow_mode_update.select"}}</label>
+    {{combo-box
+      class="slow-mode-type"
+      content=slowModes
+      value=selectedSlowMode
+      onChange=(action "setSlowModeDuration")
+    }}
+  </div>
+
+  {{#if showCustomSelect}}
+    <div class="control-group">
+      {{d-icon "hourglass-end"}}
+      {{input value=hours type="number" class="input-small" placeholder=(i18n "topic.slow_mode_update.hours")}}
+      {{input value=minutes type="number" class="input-small" placeholder=(i18n "topic.slow_mode_update.minutes")}}
+      {{input value=seconds type="number" class="input-small" placeholder=(i18n "topic.slow_mode_update.seconds")}}
+    </div>
+  {{/if}}
+
+  {{#if model.slow_mode_seconds}}
+    <div class="alert alert-info">
+      <b>
+        {{i18n "topic.slow_mode_update.current" hours=hours minutes=minutes seconds=seconds}}
+      </b>
+    </div>
+  {{/if}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button class="btn-primary"
+      disabled=submitDisabled
+      label="topic.slow_mode_update.save"
+      action=(action "enableSlowMode")}}
+
+  {{conditional-loading-spinner size="small" condition=loading}}
+
+  {{#if model.slow_mode_seconds}}
+    {{d-button class="btn-danger"
+               action=(action "disableSlowMode")
+               disabled=submitDisabled
+               label="topic.slow_mode_update.remove"}}
+  {{/if}}
+</div>
